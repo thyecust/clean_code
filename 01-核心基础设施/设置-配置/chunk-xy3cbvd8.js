@@ -13,7 +13,7 @@ import { b, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { qt } from "../共享小工具-未细化/chunk-km6n9zrg.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { Or, QN } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSettingsFilePathForSource, getLocalSettingsValidationErrors, getSettingsWithErrors } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { cw, MCP_SETTINGS_SCOPES, getMcpConfigsByScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -115,7 +115,7 @@ var yan = "published-floor.json",
   y = 1,
   R = 32,
   S = 65536,
-  D = m(() =>
+  D = createLazyValue(() =>
     c({
       version: k(y),
       sources: fe(

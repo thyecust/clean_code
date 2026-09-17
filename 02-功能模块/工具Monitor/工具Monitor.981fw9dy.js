@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -17,7 +17,7 @@ import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方
 import { Ext } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
 import { Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { rU, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   nH,
   isHostAllowedBySandboxNetworkPolicy,
@@ -42,10 +42,10 @@ import {
 import { Ys } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { hWn, Vqe } from "../../01-核心基础设施/共享小工具-未细化/chunk-3k9e6gxt.js";
 import { Dh, Md } from "../Teammates团队/chunk-mrfx53ye.js";
-import { ybn, QI, Sbn, bbn } from "./chunk-kxk3njnj.js";
-import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
+import { getMonitorPushNotificationHint, isMonitorToolEnabled, getMonitorToolDescription, MONITOR_WS_SOURCE_HELP } from "./monitor-tool-description.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { s, T, O, v, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { isIP as oe } from "net";
 import { lookup } from "dns/promises";
 import { isIP as Y } from "net";
@@ -433,14 +433,14 @@ function q(e) {
   };
 }
 function ue(...e) {
-  return G(e, Boolean) === 1;
+  return countMatching(e, Boolean) === 1;
 }
-var me = m(() =>
+var me = createLazyValue(() =>
   Qe({ ...ae(), command: se().optional().describe(ne), ws: ie().optional() })
     .refine((e) => ue(e.command, e.ws), "exactly one of command or ws")
     .refine(le, ce),
 );
-var de = m(() =>
+var de = createLazyValue(() =>
   c({
     taskId: s().describe("ID of the background monitor task."),
     timeoutMs: T().describe(
@@ -588,12 +588,12 @@ function he(e) {
   };
 }
 var be = {
-    name: ia,
+    name: MONITOR_TOOL_NAME,
     enablesCodeExecution: !0,
     maxResultSizeChars: 1e4,
     shouldDefer: !0,
     permissionCheckFailureDecision(e, t) {
-      return PBt(ia, t);
+      return PBt(MONITOR_TOOL_NAME, t);
     },
     userFacingName() {
       return "Monitor";
@@ -606,7 +606,7 @@ var be = {
       return e?.description ? `Monitoring: ${e.description}` : "Monitoring";
     },
     isEnabled() {
-      return QI() && Ys();
+      return isMonitorToolEnabled() && Ys();
     },
     isConcurrencySafe() {
       return !0;
@@ -626,15 +626,15 @@ var be = {
       };
     },
   },
-  MonitorTool = Tt({
+  MonitorTool = buildTool({
     ...be,
     searchHint:
       "watch, monitor, or keep an eye on a process/log/command or WebSocket \u2014 stream each stdout line as a live notification",
     async description() {
-      return Sbn() + bbn + ybn();
+      return getMonitorToolDescription() + MONITOR_WS_SOURCE_HELP + getMonitorPushNotificationHint();
     },
     async prompt() {
-      return Sbn() + bbn + ybn();
+      return getMonitorToolDescription() + MONITOR_WS_SOURCE_HELP + getMonitorPushNotificationHint();
     },
     get inputSchema() {
       return me();

@@ -10,5 +10,5 @@
 
 // [preload stripped] 原本在此预载 146 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { k0t } from "../../01-核心基础设施/共享小工具-未细化/chunk-4q59mpqf.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 export { k0t as ApproveApiKey };

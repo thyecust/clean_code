@@ -10,33 +10,33 @@
 
 // [preload stripped] 原本在此预载 71 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Ir } from "../../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, Kd, Vje } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { E, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { T$ } from "../../01-核心基础设施/共享小工具-未细化/chunk-1avr3bqa.js";
+import { createJsonFileStore } from "../../01-核心基础设施/共享小工具-未细化/json-file-store.js";
 import { s, T, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 F();
 import { join as V } from "path";
-var q = m(() => c({ number: T(), title: s(), closedAt: s() })),
-  L = m(() => v(q())),
+var q = createLazyValue(() => c({ number: T(), title: s(), closedAt: s() })),
+  L = createLazyValue(() => v(q())),
   W = 5000,
   Q = 86400000,
   X = 30;
 function B() {
-  return T$(V(be(), "cache", "my-closed-issues.json"), L, {
+  return createJsonFileStore(V(be(), "cache", "my-closed-issues.json"), L, {
     defaultValue: () => [],
     ensureDir: !0,
   });
@@ -89,7 +89,7 @@ async function O(e) {
       n(`Failed to parse gh issue list output: ${r}`, { level: "error" });
     }
   if (g !== null)
-    if (M() && e !== void 0)
+    if (isHoverRestEnabled() && e !== void 0)
       try {
         let r = await e.write(K(), b(g), { mode: 438 & ~process.umask() });
         if (!r.ok)
@@ -183,7 +183,7 @@ function y(e) {
 function x(e, t) {
   if (e.length === 0) return;
   let o = ee().closedIssuesAcknowledged ?? [],
-    a = Y([...o, ...e]);
+    a = dedupe([...o, ...e]);
   if (a.length === o.length) return;
   Te((u) => ({ ...u, closedIssuesAcknowledged: a }), t);
 }
@@ -223,8 +223,8 @@ function G(e) {
 }
 function ClosedIssueNotice() {
   let Ge = _(4),
-    { storageV5: I } = _e(),
-    { addNotification: A } = Ir(),
+    { storageV5: I } = useStorageV5Context(),
+    { addNotification: A } = useNotificationQueue(),
     se = C(!1),
     te,
     oe;
@@ -241,7 +241,7 @@ function ClosedIssueNotice() {
             return;
           }
           (D.push(...N),
-            i("tengu_closed_issue_notice_shown", {
+            logEvent("tengu_closed_issue_notice_shown", {
               newClosedIssueCount: N.length,
               totalClosedIssueCount: D.length,
             }),

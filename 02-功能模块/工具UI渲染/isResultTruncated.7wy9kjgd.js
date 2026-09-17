@@ -14,9 +14,9 @@ import { Sht, Fjt } from "../../03-入口与运行时/核心应用-Agent循环/�
 import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { e0e, Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 function B(v) {
   return v === "" ? " " : v;
@@ -81,7 +81,7 @@ function isResultTruncated(n) {
 }
 function renderToolResultMessage(n, i, { verbose: s }) {
   if (n.outcome !== "ok") return null;
-  return e(xe, {
+  return e(ToolResultRow, {
     children: r(o, {
       flexDirection: "column",
       children: [
@@ -98,7 +98,7 @@ function renderToolUseErrorMessage(n, { verbose: i }) {
 `),
     c = Sn(l === -1 ? s : s.slice(0, l)),
     a = l === -1 ? [] : Sht(s.slice(l + 1));
-  return e(xe, {
+  return e(ToolResultRow, {
     children: r(o, {
       flexDirection: "column",
       children: [

@@ -27,9 +27,9 @@ import {
   yYt,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le, li, Xo, BL, RS } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
@@ -37,7 +37,7 @@ import { R, A, Jg } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.j
 import { q2e, Ri, On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { We, Et, dv, b, z, WP, Wur, Xg, Sh, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { lr, le, Zt, Io, cr, nt, Cu, ru, Rmr } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { OP, yi, zl, r8t, ts, fke, Oa, hasPolicySettingsNotified } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -58,14 +58,14 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { dy } from "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
+import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
 import { v7t } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getSettingsForSource, getInitialSettings, getSettings_DEPRECATED, isAdminPolicyUnreadable } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { iA } from "../权限系统/chunk-t3b7pg2x.js";
 import { Pl, lP, bEt, Ud } from "../Teammates团队/chunk-thxapyam.js";
 import { iP, OG, rEt, tme, Oc, $d, bR, ZYe, iEt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
-import { rf } from "../权限系统/chunk-qdy0h5k2.js";
+import { createDefaultToolPermissionContext } from "../权限系统/chunk-qdy0h5k2.js";
 import { userAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { cG, $k, evictTaskOutput } from "./chunk-x3txegas.js";
 import {
@@ -112,7 +112,7 @@ import {
   clearCommandMemoizationCaches,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Jn } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { no } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
+import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { PAe, MNe } from "../图片-截图-ComputerUse/chunk-b8jsase9.js";
 import { $h, $fe, ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { DYn, hw, ONe, FYn, $pe, LNe, X3 } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
@@ -120,51 +120,51 @@ import { pauseWorkflowTask } from "../Workflow编排/chunk-va9cgbfs.js";
 import { ize } from "../Artifact发布-渲染/chunk-5gz5xvw9.js";
 import { y9e, Gye } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
 import {
-  jut,
-  Wut,
-  Gut,
-  qut,
-  zut,
-  Vut,
-  Kut,
-  Xut,
-  Yut,
-  Jut,
-  Qut,
-  Zut,
-  rbe,
-} from "../../01-核心基础设施/共享小工具-未细化/chunk-cj5z5g82.js";
+  EMPTY_ARTIFACT_PLAN_PUBLISH_CONSENT_PATHS,
+  EMPTY_ARTIFACT_DB_READ_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_DB_READ_HUMAN_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_READ_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_ASSET_READ_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_ASSET_READ_HUMAN_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_ASSET_UPLOAD_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_ASSET_UPLOAD_HUMAN_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_HANDLERS_READ_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_HANDLERS_READ_HUMAN_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_HANDLERS_WRITE_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_HANDLERS_WRITE_HUMAN_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_ROOM_JOIN_CONSENT_SLUGS,
+} from "../../01-核心基础设施/共享小工具-未细化/empty-artifact-consent-slugs.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { rO, qOt, zOt, VOt } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { WOt } from "../../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js";
-import { K0e, _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { NotificationProvider } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
+import { StorageV5ContextProvider, useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { r7, KB, U0e, XB, p4 } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { ga } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
-import { wve } from "../认证-OAuth登录/chunk-s51acx6w.js";
-import { mtn, S9e, N0e, sl } from "../键位绑定(Keybindings)/chunk-qy43nqgh.js";
-import { $Ot, Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
-import { qye } from "../../01-核心基础设施/共享小工具-未细化/chunk-vke340te.js";
+import { sessionServicesFor } from "../认证-OAuth登录/credentials-store.js";
+import { buildInkKeyEvent, createKeyHandlerRegistry, KeybindingProvider, useKeybindingContext } from "../键位绑定(Keybindings)/keybinding-context.js";
+import { SessionProvider, useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
+import { CommandQueueProvider } from "../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
 import { xh } from "../MCP客户端/chunk-g4gdwpa0.js";
 import { ctn, jOt } from "../Hooks钩子/chunk-22aft7vr.js";
-import { ma } from "../../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js";
+import { isRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { UOt, BOt } from "../工具TodoWrite-Tasks/chunk-5a7p8d2p.js";
-import { oF } from "../../01-核心基础设施/共享小工具-未细化/chunk-vz37aa8z.js";
-import { GOt } from "../../01-核心基础设施/共享小工具-未细化/chunk-ejtvp07p.js";
+import { worktreeStateStore } from "../../01-核心基础设施/共享小工具-未细化/worktree-state-store.js";
+import { VoiceProvider } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import { N, e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { tIe } from "../权限系统/chunk-2ttypdwq.js";
 import { a7, Rv } from "./chunk-nhnqmzyt.js";
-import { QB } from "../插件系统/chunk-5ztq0v89.js";
+import { PluginStateStore } from "../插件系统/plugin-state-store.js";
 import { Hv } from "../MCP客户端/chunk-k2gczbnj.js";
-import { eH } from "../Workflow编排/chunk-hdhsmge4.js";
+import { getWorkflowTranscriptDir } from "../Workflow编排/workflow-snapshots.js";
 import { Pbe, lte, Spt, eOe, bpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js";
 import { Qt, re, De, E, vr, dn, V, C, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
-import { zK, Xa } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+import { createFieldAccessor, createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { isBypassPermissionsModeDisabled } from "../权限系统/chunk-pcxn6gwz.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 var Tr = 120000,
   Rr = 1800000,
@@ -259,7 +259,7 @@ class FleetNudgeStore {
       let v = c !== void 0 && o > c.needsInput;
       if (
         ((this.#s = { needsInput: o, done: r, succeeded: s }),
-        i("tengu_fleet_nudge_state", {
+        logEvent("tengu_fleet_nudge_state", {
           needs_input_count: o,
           done_count: r,
           succeeded_count: s,
@@ -374,8 +374,8 @@ function cn(t) {
     agentId: le().regex(ct).optional(),
   });
 }
-var Lr = m(() => cn(Fr)),
-  Or = m(() =>
+var Lr = createLazyValue(() => cn(Fr)),
+  Or = createLazyValue(() =>
     nt({
       id: le(),
       cron: le(),
@@ -389,7 +389,7 @@ var Lr = m(() => cn(Fr)),
       keepalive: Cu(!0).optional(),
     }),
   ),
-  Nr = m(() =>
+  Nr = createLazyValue(() =>
     nt({
       taskId: le().regex(ct),
       workflowRunId: le().regex(/^wf_[a-z0-9-]{6,}$/),
@@ -403,7 +403,7 @@ var Lr = m(() => cn(Fr)),
       transcriptDir: kt(() => [Pl()]),
     }),
   ),
-  Br = m(() =>
+  Br = createLazyValue(() =>
     nt({
       agentId: le().regex(ct),
       agentType: le().optional(),
@@ -416,7 +416,7 @@ var Lr = m(() => cn(Fr)),
       forkedSkillName: le().min(1).max(256).optional(),
     }),
   ),
-  jr = m(() =>
+  jr = createLazyValue(() =>
     nt({
       slug: le().uuid(),
       title: le().min(1).max(256).optional(),
@@ -437,7 +437,7 @@ function un(t = Lr()) {
     prefill: nt({ text: le(), boundaryUuid: le().optional() }).optional(),
   });
 }
-var pn = m(() => un());
+var pn = createLazyValue(() => un());
 function fn(t) {
   let o = Array.isArray(t) ? t : [t];
   return un(cn(() => [bR(), ...o]));
@@ -499,7 +499,7 @@ async function detachAndSerializeShell(t, o) {
           if (T.nlink !== 1) return await k("gate target has another name");
           let x = await dt(
             w,
-            P() === "windows" ? "r" : constants.O_RDONLY | (constants.O_NONBLOCK ?? 0) | dy,
+            P() === "windows" ? "r" : constants.O_RDONLY | (constants.O_NONBLOCK ?? 0) | O_NOFOLLOW_NONBLOCK_FLAGS,
           );
           try {
             let I = await x.stat();
@@ -596,7 +596,7 @@ async function serializeAdoptAgent(t, o = {}) {
   };
 }
 async function serializeAdoptWorkflow(t, o = {}) {
-  let r = o.derivedTranscriptDir ?? eH(t.workflowRunId);
+  let r = o.derivedTranscriptDir ?? getWorkflowTranscriptDir(t.workflowRunId);
   return {
     taskId: t.id,
     workflowRunId: t.workflowRunId,
@@ -809,7 +809,7 @@ async function Ur(t, o) {
 async function writeAdoptJson(t, o, r = {}, s) {
   let l = Ae(t, "adopt.json"),
     k = basename(t),
-    c = M() && s !== void 0 && _n(k) && t === getJobDir(k) ? s : void 0,
+    c = isHoverRestEnabled() && s !== void 0 && _n(k) && t === getJobDir(k) ? s : void 0,
     v = o;
   try {
     let w = c ? await Ur(c, k) : await readFile(l, "utf-8");
@@ -864,14 +864,14 @@ async function readAndConsumeAdoptJson(t, o = {}) {
       let T = A(w);
       if (T === "ENOENT") {
         if (Date.now() < l) {
-          await Z(Ir);
+          await sleep(Ir);
           continue;
         }
-        return (i("tengu_adopt_claim", { result: S("enoent") }), null);
+        return (logEvent("tengu_adopt_claim", { result: S("enoent") }), null);
       }
       return (
         n(`[adopt] rename failed: ${w}`, { level: "warn" }),
-        i("tengu_adopt_claim", {
+        logEvent("tengu_adopt_claim", {
           result: T !== void 0 && q2e.has(T) ? S("ebusy_gave_up") : Jg(w),
         }),
         null
@@ -887,7 +887,7 @@ async function readAndConsumeAdoptJson(t, o = {}) {
     if (!L.success)
       return (
         n(`[adopt] schema rejected: ${L.error.message}`, { level: "warn" }),
-        i("tengu_adopt_claim", { result: S("schema_rejected") }),
+        logEvent("tengu_adopt_claim", { result: S("schema_rejected") }),
         null
       );
     let D = c - L.data.writtenAtMs;
@@ -895,9 +895,9 @@ async function readAndConsumeAdoptJson(t, o = {}) {
       n(`[adopt] stale (age ${D}ms)`, { level: "warn" });
       let O = L.data.frameLive ?? [];
       if (O.length === 0)
-        return (i("tengu_adopt_claim", { result: S("stale") }), null);
+        return (logEvent("tengu_adopt_claim", { result: S("stale") }), null);
       return (
-        i("tengu_adopt_claim", {
+        logEvent("tengu_adopt_claim", {
           result: S("stale"),
           frame_live_stale: S("true"),
         }),
@@ -923,24 +923,24 @@ async function readAndConsumeAdoptJson(t, o = {}) {
             ? { ...H, writtenAtMs: W }
             : { ...H, writtenAtMs: W, stale: !0 };
         }),
-        U = G(O, (H) => "stale" in H);
+        U = countMatching(O, (H) => "stale" in H);
       if (U > 0)
         n(`[adopt] ${U}/${O.length} frameLive entries marked stale`, {
           level: "warn",
         });
       return (
-        i("tengu_adopt_claim", {
+        logEvent("tengu_adopt_claim", {
           result: v,
           ...(U > 0 && { frame_live_stale: S("true") }),
         }),
         Object.assign(L.data, { frameLive: O })
       );
     }
-    return (i("tengu_adopt_claim", { result: v }), L.data);
+    return (logEvent("tengu_adopt_claim", { result: v }), L.data);
   } catch (w) {
     return (
       n(`[adopt] read/parse failed: ${w}`, { level: "warn" }),
-      i("tengu_adopt_claim", { result: S("parse_failed") }),
+      logEvent("tengu_adopt_claim", { result: S("parse_failed") }),
       null
     );
   } finally {
@@ -1043,7 +1043,7 @@ async function Gr(t, o, r, s) {
   return { method: "copy", fallbackCode: l, identity: k };
 }
 async function Vr(t, o, r) {
-  let s = await dt(t, constants.O_RDONLY | dy);
+  let s = await dt(t, constants.O_RDONLY | O_NOFOLLOW_NONBLOCK_FLAGS);
   try {
     let l = await s.stat();
     if (!l.isFile() || l.dev !== r.dev || l.ino !== r.ino)
@@ -1135,7 +1135,7 @@ async function linkAdoptedAgentTranscript(t, { storageV5: o, linkFn: r = on } = 
   try {
     let s = await Yr(t, r);
     if (s.method !== void 0)
-      i("tengu_adopt_link", {
+      logEvent("tengu_adopt_link", {
         kind: S("agent"),
         method: fromEnum(s.method),
         fallback_code: Jg({ code: s.fallbackCode }),
@@ -1143,7 +1143,7 @@ async function linkAdoptedAgentTranscript(t, { storageV5: o, linkFn: r = on } = 
     return s;
   } catch (s) {
     throw (
-      i("tengu_adopt_link", {
+      logEvent("tengu_adopt_link", {
         kind: S("agent"),
         method: fromEnum("fail"),
         error_code: Jg(s),
@@ -1457,17 +1457,17 @@ async function ei(t, o) {
     `[adopt] relink sweep: ${H} hard-linked, ${W} copied, ${j.length - (x > 0 ? 1 : 0) + x} left as is${j.length > 0 ? ` (${j.slice(0, 5).join(", ")})` : ""}`,
     { level: j.length > 0 || W > 0 ? "warn" : "debug" },
   ),
-    i("tengu_adopt_relink", {
+    logEvent("tengu_adopt_relink", {
       linked: H,
       copied: W,
       left: j.length - (x > 0 ? 1 : 0) + x,
     }));
 }
 var at = 65536,
-  ti = m(() => nt({ agentType: le() })),
-  oi = m(() => nt({ agentId: le() }));
+  ti = createLazyValue(() => nt({ agentType: le() })),
+  oi = createLazyValue(() => nt({ agentId: le() }));
 async function hn(t, o, r) {
-  let s = await dt(t, constants.O_RDONLY | dy);
+  let s = await dt(t, constants.O_RDONLY | O_NOFOLLOW_NONBLOCK_FLAGS);
   try {
     let l = await s.stat();
     if (l.dev !== o.dev || l.ino !== o.ino)
@@ -1587,7 +1587,7 @@ function killOrphanedAdoptedShell(t) {
   return Gye(t.pid, t.startTimeTicks, t.procStart);
 }
 async function linkAdoptedWorkflowDir(t) {
-  let o = eH(t.workflowRunId);
+  let o = getWorkflowTranscriptDir(t.workflowRunId);
   if (o === t.transcriptDir) return;
   if (
     (await realpath(o).catch(() => {
@@ -1740,7 +1740,7 @@ function isAdoptableTask(t, o) {
 function countAdoptable(t, o = computeAdoptability(t)) {
   let r = carriedFrameLiveSlugs(t);
   return (
-    G(Object.values(t), (s) => isAdoptableTask(s, o)) + G(kg(), (s) => isAdoptableCron(s, o)) + r.size
+    countMatching(Object.values(t), (s) => isAdoptableTask(s, o)) + countMatching(kg(), (s) => isAdoptableCron(s, o)) + r.size
   );
 }
 function countAbandonable(t, o = computeAdoptability(t)) {
@@ -1821,7 +1821,7 @@ function aF() {
     replBridgeSessionActive: !1,
     replBridgeSkipNextArchive: !1,
     replBridgeSessionGroupingId: void 0,
-    toolPermissionContext: { ...rf(), mode: o },
+    toolPermissionContext: { ...createDefaultToolPermissionContext(), mode: o },
     attentionBudget: rmt,
     proactivityLevel: v4e,
     agent: void 0,
@@ -1861,21 +1861,21 @@ function aF() {
     artifactWatchApproved: !1,
     artifactDbWriteApproved: !1,
     artifactDbWriteHumanApproved: !1,
-    artifactDbReadConsentSlugs: Wut,
-    artifactDbReadHumanConsentSlugs: Gut,
-    artifactReadConsentSlugs: qut,
-    artifactAssetUploadConsentSlugs: Kut,
-    artifactAssetUploadHumanConsentSlugs: Xut,
-    artifactAssetReadConsentSlugs: zut,
-    artifactAssetReadHumanConsentSlugs: Vut,
-    artifactHandlersReadConsentSlugs: Yut,
-    artifactHandlersReadHumanConsentSlugs: Jut,
-    artifactHandlersWriteConsentSlugs: Qut,
-    artifactHandlersWriteHumanConsentSlugs: Zut,
-    artifactRoomJoinConsentSlugs: rbe,
+    artifactDbReadConsentSlugs: EMPTY_ARTIFACT_DB_READ_CONSENT_SLUGS,
+    artifactDbReadHumanConsentSlugs: EMPTY_ARTIFACT_DB_READ_HUMAN_CONSENT_SLUGS,
+    artifactReadConsentSlugs: EMPTY_ARTIFACT_READ_CONSENT_SLUGS,
+    artifactAssetUploadConsentSlugs: EMPTY_ARTIFACT_ASSET_UPLOAD_CONSENT_SLUGS,
+    artifactAssetUploadHumanConsentSlugs: EMPTY_ARTIFACT_ASSET_UPLOAD_HUMAN_CONSENT_SLUGS,
+    artifactAssetReadConsentSlugs: EMPTY_ARTIFACT_ASSET_READ_CONSENT_SLUGS,
+    artifactAssetReadHumanConsentSlugs: EMPTY_ARTIFACT_ASSET_READ_HUMAN_CONSENT_SLUGS,
+    artifactHandlersReadConsentSlugs: EMPTY_ARTIFACT_HANDLERS_READ_CONSENT_SLUGS,
+    artifactHandlersReadHumanConsentSlugs: EMPTY_ARTIFACT_HANDLERS_READ_HUMAN_CONSENT_SLUGS,
+    artifactHandlersWriteConsentSlugs: EMPTY_ARTIFACT_HANDLERS_WRITE_CONSENT_SLUGS,
+    artifactHandlersWriteHumanConsentSlugs: EMPTY_ARTIFACT_HANDLERS_WRITE_HUMAN_CONSENT_SLUGS,
+    artifactRoomJoinConsentSlugs: EMPTY_ARTIFACT_ROOM_JOIN_CONSENT_SLUGS,
     artifactReadPageDataApproved: !1,
     artifactReadPageDataHumanApproved: !1,
-    artifactPlanPublishConsentPaths: jut,
+    artifactPlanPublishConsentPaths: EMPTY_ARTIFACT_PLAN_PUBLISH_CONSENT_PATHS,
     ultrareviewOverageConfirmed: !1,
     thinkingEnabled: JN(),
     promptSuggestionEnabled: ght(),
@@ -1963,11 +1963,11 @@ function Ne(gl) {
   let yn = _(4),
     { children: Sn } = gl,
     ii;
-  if (yn[0] === p) ((ii = []), (yn[0] = ii));
+  if (yn[0] === MEMO_CACHE_SENTINEL) ((ii = []), (yn[0] = ii));
   else ii = yn[0];
   let wt = C(ii),
     si;
-  if (yn[1] === p)
+  if (yn[1] === MEMO_CACHE_SENTINEL)
     ((si = {
       getDenials: () => wt.current,
       recordDenial: (hl) => {
@@ -2075,17 +2075,17 @@ function Ct(Nl) {
   let Tn = _(8),
     { store: Bl, children: An } = Nl,
     ui;
-  if (Tn[0] === p) ((ui = HOt()), (Tn[0] = ui));
+  if (Tn[0] === MEMO_CACHE_SENTINEL) ((ui = HOt()), (Tn[0] = ui));
   else ui = Tn[0];
   let Be = Bl ?? ui,
-    { storageV5: Pt } = _e(),
+    { storageV5: Pt } = useStorageV5Context(),
     fi,
     mi;
   if (Tn[1] !== Pt || Tn[2] !== Be)
     ((fi = () => {
       let gi = !1;
       let Wl =
-        M() && Pt !== void 0
+        isHoverRestEnabled() && Pt !== void 0
           ? dv(async () => {
               let hi = Be.getAll();
               if (Object.keys(hi).length > 0)
@@ -2151,7 +2151,7 @@ var Wi = 1000;
 function ble(pd) {
   let bi = _(4),
     { children: ut } = pd;
-  if (sl()) {
+  if (useKeybindingContext()) {
     let _t;
     if (bi[0] !== ut)
       ((_t = e(N, { children: ut })), (bi[0] = ut), (bi[1] = _t));
@@ -2174,14 +2174,14 @@ function Nn({ children: t }) {
         x
       );
     }),
-    s = vt(),
+    s = useClock(),
     l = C(null),
     [k, c] = d(null),
     v = C(null),
     w = C(new Map()),
     T = C(new Set()),
     L = C(new Set()),
-    [D] = d(S9e),
+    [D] = d(createKeyHandlerRegistry),
     O = re((x) => {
       T.current.add(x);
     }, []),
@@ -2216,7 +2216,7 @@ function Nn({ children: t }) {
         (x(), H());
       };
     }, [H]),
-    e(N0e, {
+    e(KeybindingProvider, {
       bindings: o,
       pendingChordRef: l,
       pendingChord: k,
@@ -2253,7 +2253,7 @@ function Wn(fd) {
       children: Mn,
     } = fd,
     vi;
-  if (je[0] === p) ((vi = []), (je[0] = vi));
+  if (je[0] === MEMO_CACHE_SENTINEL) ((vi = []), (je[0] = vi));
   else vi = je[0];
   let so = C(vi),
     ao = C(null),
@@ -2495,7 +2495,7 @@ function Wn(fd) {
     Fi;
   if (je[18] !== gt)
     ((Fi = (Lt) => {
-      let { input: Dd, key: Id } = mtn(Lt);
+      let { input: Dd, key: Id } = buildInkKeyEvent(Lt);
       gt(Lt, Lt, Dd, Id, Lt.sequence, () => Bt(Lt));
     }),
       (je[18] = gt),
@@ -2546,7 +2546,7 @@ function Wn(fd) {
     fo = C(null),
     Oi,
     Ni;
-  if (je[22] === p)
+  if (je[22] === MEMO_CACHE_SENTINEL)
     ((Oi = () => {
       if (!fo.current) {
         return;
@@ -2757,7 +2757,7 @@ class v0e {
     this.#e = t;
   }
   static over(t) {
-    return new v0e(zK(t.getState, t.setState, "mcp"));
+    return new v0e(createFieldAccessor(t.getState, t.setState, "mcp"));
   }
   get() {
     return this.#e.get();
@@ -2994,7 +2994,7 @@ function Je(gc) {
     { children: Gn } = gc,
     Vi = C(null),
     qi;
-  if (zi[0] === p)
+  if (zi[0] === MEMO_CACHE_SENTINEL)
     ((qi = {
       setHandler: (hc) => {
         Vi.current = hc;
@@ -3070,7 +3070,7 @@ function Ht(xc) {
   let Qi = _(3),
     { children: Vn } = xc,
     Xi;
-  if (Qi[0] === p) ((Xi = new Wt()), (Qi[0] = Xi));
+  if (Qi[0] === MEMO_CACHE_SENTINEL) ((Xi = new Wt()), (Qi[0] = Xi));
   else Xi = Qi[0];
   let Mc = Xi,
     Zi;
@@ -3099,7 +3099,7 @@ function R0e(t, o) {
   return t.open.some((r) => r.kind === o);
 }
 function ho() {
-  let t = Xa({ open: [] }),
+  let t = createStore({ open: [] }),
     o = Le(),
     r = Number.NEGATIVE_INFINITY,
     s = new Set(),
@@ -3130,7 +3130,7 @@ function ho() {
               T.open.some((W) => go(W, w)) ||
               (w.userInvoked !== !0 &&
                 T.open.some((W) => W.userInvoked === !0)),
-            U = w.userInvoked !== !0 && ma(r),
+            U = w.userInvoked !== !0 && isRecent(r),
             H = O || U ? { ...w, shownAt: Date.now() } : w;
           return { open: [...T.open, H] };
         });
@@ -3271,7 +3271,7 @@ function ns(t) {
 var rs = 2000,
   zn = "exit-handoff agent flush timeout";
 function qn() {
-  let t = oF.of(B().host).last;
+  let t = worktreeStateStore.of(B().host).last;
   return [
     ...(Jh()?.adoptShellOutputReadRoot ? [Jh().adoptShellOutputReadRoot] : []),
     ...(t ? [ZYe(iEt(t.worktreePath))] : []),
@@ -3338,7 +3338,7 @@ function Yn(t) {
         k.map((O) => [O.agentId, Ud(oo(O.agentId))]),
       ),
       workflowTranscriptDirs: Object.fromEntries(
-        l.map((O) => [O.workflowRunId, eH(O.workflowRunId)]),
+        l.map((O) => [O.workflowRunId, getWorkflowTranscriptDir(O.workflowRunId)]),
       ),
       projectTempDir: Jh()?.adoptShellOutputRoot ?? bR(),
       mergeShellOutputReadRoots: qn(),
@@ -3367,7 +3367,7 @@ function Qn(
     let U = [];
     if (r.length > 0) {
       try {
-        await Dt(
+        await withTimeout(
           (async () => {
             (await OP(), await flushSessionStorage());
           })(),
@@ -3419,7 +3419,7 @@ function Qn(
           { mergeShellOutputRoot: [T, ...(L ?? [])] },
           D,
         ),
-        i("tengu_adopt_exit_handoff", {
+        logEvent("tengu_adopt_exit_handoff", {
           adopted_shells: H.length,
           adopted_workflows: W.length,
           adopted_agents: U.length,
@@ -3467,7 +3467,7 @@ function $t(t, o = new Set()) {
     if (r.status !== "running" || o.has(r.id)) continue;
     try {
       if (bp(r)) (r.shellCommand?.kill(), r.shellCommand?.cleanup());
-      else if (no()) {
+      else if (isExiting()) {
         evictTaskOutput(r.id);
         continue;
       } else if ("abortController" in r) r.abortController?.abort();
@@ -3487,7 +3487,7 @@ function Tat(t) {
   return sc((o, r, s) => {
     if (!s) return;
     (is(s, t),
-      i("tengu_refusal_fallback_latch_reset", {
+      logEvent("tengu_refusal_fallback_latch_reset", {
         source: fromEnum(r),
         restored_to_explicit_override: s.restoredToExplicitOverride,
         model_scope: fromEnum(FF(s.fallbackModel)),
@@ -3715,7 +3715,7 @@ function qt(jp) {
   }
   let ds;
   if (te[0] !== Xn || te[1] !== Zn)
-    ((ds = () => Xa(Xn ?? getDefaultAppState(), Zn)),
+    ((ds = () => createStore(Xn ?? getDefaultAppState(), Zn)),
       (te[0] = Xn),
       (te[1] = Zn),
       (te[2] = ds));
@@ -3727,8 +3727,8 @@ function qt(jp) {
   let [or] = d(cs),
     [ir] = d(ho),
     [sr] = d(ctn),
-    { storageV5: be } = _e(),
-    fe = Ye(),
+    { storageV5: be } = useStorageV5Context(),
+    fe = useSession(),
     us;
   if (te[5] !== be || te[6] !== oe)
     ((us = () => new UOt(be, globalThis, () => oe.setState(Fs))),
@@ -3779,7 +3779,7 @@ function qt(jp) {
   else Ss = te[19];
   let [ue] = d(Ss),
     ys;
-  if (te[20] !== oe) ((ys = () => QB.over(oe)), (te[20] = oe), (te[21] = ys));
+  if (te[20] !== oe) ((ys = () => PluginStateStore.over(oe)), (te[20] = oe), (te[21] = ys));
   else ys = te[21];
   let [ur] = d(ys),
     ks;
@@ -3854,7 +3854,7 @@ function qt(jp) {
       (te[49] = Es));
   else Es = te[49];
   let Ds;
-  if (te[50] === p) ((Ds = []), (te[50] = Ds));
+  if (te[50] === MEMO_CACHE_SENTINEL) ((Ds = []), (te[50] = Ds));
   else Ds = te[50];
   E(Es, Ds);
   let Ao;
@@ -3897,7 +3897,7 @@ function qt(jp) {
   let _o;
   if (te[65] !== ir || te[66] !== Co)
     ((_o = e(Ht, {
-      children: e(GOt, {
+      children: e(VoiceProvider, {
         children: e(Uye.Provider, { value: ir, children: Co }),
       }),
     })),
@@ -3963,7 +3963,7 @@ function AppRoot(ff) {
     } = ff,
     br = Ls === void 0 ? !0 : Ls,
     Os;
-  if (Oe[0] !== Fo) ((Os = wve(Fo)), (Oe[0] = Fo), (Oe[1] = Os));
+  if (Oe[0] !== Fo) ((Os = sessionServicesFor(Fo)), (Oe[0] = Fo), (Oe[1] = Os));
   else Os = Oe[1];
   let Ar = Os,
     No;
@@ -3975,7 +3975,7 @@ function AppRoot(ff) {
   else No = Oe[4];
   let Bo;
   if (Oe[5] !== No)
-    ((Bo = e(WOt, { children: e(Ne, { children: e(Je, { children: No }) }) })),
+    ((Bo = e(NotificationProvider, { children: e(Ne, { children: e(Je, { children: No }) }) })),
       (Oe[5] = No),
       (Oe[6] = Bo));
   else Bo = Oe[6];
@@ -4006,7 +4006,7 @@ function AppRoot(ff) {
   else jo = Oe[13];
   let Wo;
   if (Oe[14] !== fr || Oe[15] !== jo)
-    ((Wo = e($Ot, { session: fr, children: jo })),
+    ((Wo = e(SessionProvider, { session: fr, children: jo })),
       (Oe[14] = fr),
       (Oe[15] = jo),
       (Oe[16] = Wo));
@@ -4028,7 +4028,7 @@ function AppRoot(ff) {
   let $o = Ns,
     Bs;
   if (Oe[23] !== Lo || Oe[24] !== $o)
-    ((Bs = Lo === void 0 ? $o : e(qye, { queue: Lo, children: $o })),
+    ((Bs = Lo === void 0 ? $o : e(CommandQueueProvider, { queue: Lo, children: $o })),
       (Oe[23] = Lo),
       (Oe[24] = $o),
       (Oe[25] = Bs));
@@ -4039,7 +4039,7 @@ function AppRoot(ff) {
   }
   let js;
   if (Oe[26] !== Ko || Oe[27] !== Ar)
-    ((js = e(K0e, { ...Ar, children: Ko })),
+    ((js = e(StorageV5ContextProvider, { ...Ar, children: Ko })),
       (Oe[26] = Ko),
       (Oe[27] = Ar),
       (Oe[28] = js));

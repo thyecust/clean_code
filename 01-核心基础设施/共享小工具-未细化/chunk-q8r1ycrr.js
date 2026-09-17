@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "./chunk-an83zrbx.js";
+import { logEvent } from "./analytics-event-queue.js";
 import { fromEnum } from "./analytics-fields.js";
 import { getProcessStartTimeAsync } from "../核心工具-进程与信号/chunk-qjqntsq2.js";
-import { Uy } from "./chunk-sp33tdvc.js";
+import { killProcessTree } from "./kill-process-tree.js";
 import { readFile } from "fs/promises";
 class n {
   firedSites = new Set();
   fire(e) {
     if (this.firedSites.has(e)) return;
     (this.firedSites.add(e),
-      i("tengu_dead_probe_adopt_ticks_token", { site: fromEnum(e) }));
+      logEvent("tengu_dead_probe_adopt_ticks_token", { site: fromEnum(e) }));
   }
   reset() {
     this.firedSites.clear();
@@ -40,6 +40,6 @@ async function Gye(e, t, r) {
   } else if (t !== void 0) {
     if ((itn("kill_gate"), (await y9e(e)) !== t)) return;
   } else return;
-  await Uy(e, "SIGTERM").catch(() => {});
+  await killProcessTree(e, "SIGTERM").catch(() => {});
 }
 export { itn, y9e, Gye };

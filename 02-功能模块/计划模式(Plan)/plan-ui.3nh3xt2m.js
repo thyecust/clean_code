@@ -10,21 +10,21 @@
 
 // [preload stripped] 原本在此预载 223 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { h8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { jn, Pt, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _6e, B0t, Q1n } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { OS, f9 } from "../../03-入口与运行时/会话UI(REPL)/chunk-zds66w6y.js";
+import { resolveEditorCommand, editFileInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
 import { Ng, prepareContextForPlanMode, Re } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Oc } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { notePlanFileForgotten, peekPlanSlug, getPlanFilePath, getPlanAsync } from "./计划模式(Plan).e5mh1avy.js";
-import { uat } from "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
-import { uc } from "../../01-核心基础设施/共享小工具-未细化/chunk-2gabx7f1.js";
+import { renderToPlainText } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
+import { TitleWithSubtitle } from "../../01-核心基础设施/共享小工具-未细化/title-with-subtitle.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 var x = 15000,
   G = 1e4,
@@ -34,7 +34,7 @@ function A(fe) {
     { planContent: F, planPath: L, editorName: h, canShare: U } = fe,
     E;
   if (w[0] !== L)
-    ((E = e(uc, { subtitle: L, children: "Current Plan" })),
+    ((E = e(TitleWithSubtitle, { subtitle: L, children: "Current Plan" })),
       (w[0] = L),
       (w[1] = E));
   else E = w[1];
@@ -154,7 +154,7 @@ async function me(a, l, m) {
         null
       );
     try {
-      let p = await Dt(
+      let p = await withTimeout(
         s.sendControlRequest({ subtype: "get_plan" }),
         G,
         "get_plan timed out",
@@ -170,7 +170,7 @@ async function me(a, l, m) {
           null
         );
       logFeatureOk("plan_remote_view");
-      let d = lo(l.session),
+      let d = mayHaveRemoteClient(l.session),
         u = p.content,
         b = (I) =>
           e(A, {
@@ -182,8 +182,8 @@ async function me(a, l, m) {
             editorName: void 0,
             canShare: !1,
           }),
-        B = await uat(b(d), { storageV5: l.storageV5 });
-      if (!d && lo(l.session)) B = await uat(b(!0), { storageV5: l.storageV5 });
+        B = await renderToPlainText(b(d), { storageV5: l.storageV5 });
+      if (!d && mayHaveRemoteClient(l.session)) B = await renderToPlainText(b(!0), { storageV5: l.storageV5 });
       return (a(B), null);
     } catch (p) {
       let d = p instanceof Error ? p.message : String(p),
@@ -224,9 +224,9 @@ async function me(a, l, m) {
     );
   let V = m.trim().split(/\s+/);
   if (V[0] === "open") {
-    let s = await f9(g);
+    let s = await editFileInExternalEditor(g);
     notePlanFileForgotten(g);
-    let i = lo(l.session);
+    let i = mayHaveRemoteClient(l.session);
     if (s.error) {
       if (i) n(`/plan open failed: ${s.error}`, { level: "error" });
       a(i ? "Couldn't open the plan in the editor" : s.error);
@@ -259,9 +259,9 @@ async function me(a, l, m) {
     }
     return null;
   }
-  let N = OS(),
+  let N = resolveEditorCommand(),
     H = N ? Ng(N) : void 0,
-    k = lo(l.session),
+    k = mayHaveRemoteClient(l.session),
     q = (s) =>
       e(A, {
         planContent: C,
@@ -269,8 +269,8 @@ async function me(a, l, m) {
         editorName: H,
         canShare: _6e.isPlanArtifactEnabled(),
       }),
-    v = await uat(q(k), { storageV5: l.storageV5 });
-  if (!k && lo(l.session)) v = await uat(q(!0), { storageV5: l.storageV5 });
+    v = await renderToPlainText(q(k), { storageV5: l.storageV5 });
+  if (!k && mayHaveRemoteClient(l.session)) v = await renderToPlainText(q(!0), { storageV5: l.storageV5 });
   return (a(v), null);
 }
 export { me as call };

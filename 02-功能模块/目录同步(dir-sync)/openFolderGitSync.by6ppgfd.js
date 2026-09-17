@@ -15,7 +15,7 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Ct, vht, xk, TKn, Fht, jht, pH, tj, $_ } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import "../文件同步-Sync/chunk-ht8ydg1v.js";
@@ -47,9 +47,9 @@ import {
   qpt,
 } from "./chunk-gbhqtdpn.js";
 import { zpt } from "./chunk-1vkmxx3s.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nbvmqw0g.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ca2zxbyk.js";
-import { Y4, Qce } from "../../01-核心基础设施/共享小工具-未细化/chunk-vcb9z55e.js";
+import "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
+import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
+import { sanitizePathSegment, resolveDirSyncRecordLocation } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { mkdir } from "fs/promises";
 import { join as q } from "path";
@@ -605,7 +605,7 @@ async function openFolderGitSync({
   let r = await xk(t);
   if (r === null) throw Error("launch folder cannot be resolved");
   let o = toInfraSessionId(e),
-    c = await Qce(t, o, p),
+    c = await resolveDirSyncRecordLocation(t, o, p),
     b = d !== void 0,
     F = await Gpt(t, p),
     E = V9n(F, o),
@@ -638,7 +638,7 @@ async function openFolderGitSync({
     n(`folder sync: ${_.kind} for session ${o} (${_.detail})`);
     let a = _.kind;
     return (
-      i("tengu_dir_sync_folder_store_lost", { reason: fromEnum(a), at_create: b }),
+      logEvent("tengu_dir_sync_folder_store_lost", { reason: fromEnum(a), at_create: b }),
       Fht(
         y,
         _.kind === "seed_not_stored" ? "store_unwritable" : "store_unreadable",
@@ -744,7 +744,7 @@ async function ue({
 }) {
   let b = await j9n({
     root: d,
-    sessionId: Y4(s),
+    sessionId: sanitizePathSegment(s),
     objectFormat: "sha1",
     budgetBytes: o,
     ...(c !== void 0 && { signal: c }),
@@ -828,7 +828,7 @@ async function ue({
 function fe(e) {
   switch (e.kind) {
     case "tree":
-      i(Wbe.repoPass, {
+      logEvent(Wbe.repoPass, {
         pass: S("tree"),
         listed_paths: e.listedPaths,
         hashed_files: e.hashedFiles,
@@ -843,7 +843,7 @@ function fe(e) {
       });
       return;
     case "push":
-      i(Wbe.repoPass, {
+      logEvent(Wbe.repoPass, {
         pass: S("push"),
         objects: e.objects,
         pack_bytes: e.packBytes,
@@ -851,7 +851,7 @@ function fe(e) {
       });
       return;
     case "receive":
-      i(Wbe.repoPass, {
+      logEvent(Wbe.repoPass, {
         pass: S("receive"),
         objects_read: e.objectsRead,
         decode_ms: e.decodeMs,

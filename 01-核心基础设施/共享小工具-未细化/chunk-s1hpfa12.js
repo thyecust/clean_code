@@ -9,13 +9,13 @@
 // Version: 2.1.263
 import { ke, ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "./chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
 import { Jh, isBgSession, isBeingWatched, isBeingWatchedV5, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { eE } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ta } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
-import { KI } from "./chunk-mvw7xg6n.js";
+import { getBgJobRuntimeState } from "./bg-job-runtime-state.js";
 var u = new Set(["remote", "remote_cowork", "remote_desktop", "remote_mobile"]);
 function detectSurfaces(e) {
   if (isBgSession()) return new Set(["bg"]);
@@ -38,7 +38,7 @@ function hasCcrSurface() {
   return !1;
 }
 async function watchedForSurfaces(e) {
-  return M() && e !== void 0 ? isBeingWatchedV5(e) : void 0;
+  return isHoverRestEnabled() && e !== void 0 ? isBeingWatchedV5(e) : void 0;
 }
 var i = {
   bg: ["state"],
@@ -66,8 +66,8 @@ function c(e) {
     let r = s.trim();
     if (!r) continue;
     if (r in i) t.add(r);
-    else if (!KI().warnedUnknownDisabledSurface)
-      ((KI().warnedUnknownDisabledSurface = !0),
+    else if (!getBgJobRuntimeState().warnedUnknownDisabledSurface)
+      ((getBgJobRuntimeState().warnedUnknownDisabledSurface = !0),
         n(
           `[classifier] tengu_classifier_disabled_surfaces: unknown surface '${r}' ignored`,
         ));

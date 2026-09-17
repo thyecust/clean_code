@@ -10,12 +10,12 @@
 
 // [preload stripped] 原本在此预载 134 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { isClaudeAISubscriber, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -25,15 +25,15 @@ import { HI, CHROME_EXTENSION_RECONNECT_URL, isChromeExtensionInstalled } from "
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { openInChrome } from "./chunk-hnp84hf6.js";
 import { GI } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { Gp } from "../../01-核心基础设施/共享小工具-未细化/chunk-c8g7bday.js";
+import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
 import { s, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
-var fo = m(() =>
+var fo = createLazyValue(() =>
   c({
     deviceId: s(),
     name: s().default("Browser"),
@@ -48,7 +48,7 @@ function ce(jo) {
     [He, Go] = d(!1),
     X = C(!1),
     oo;
-  if (x[0] === p) ((oo = ee().chromeExtension?.pairedDeviceId), (x[0] = oo));
+  if (x[0] === MEMO_CACHE_SENTINEL) ((oo = ee().chromeExtension?.pairedDeviceId), (x[0] = oo));
   else oo = x[0];
   let no = oo,
     ro,
@@ -135,7 +135,7 @@ function ce(jo) {
   }
   if (O === null) {
     let B;
-    if (x[16] === p)
+    if (x[16] === MEMO_CACHE_SENTINEL)
       ((B = e(t, {
         dimColor: !0,
         children: "Looking for connected browsers\u2026",
@@ -150,7 +150,7 @@ function ce(jo) {
   }
   if (O.length === 0) {
     let B;
-    if (x[19] === p)
+    if (x[19] === MEMO_CACHE_SENTINEL)
       ((B = e(t, {
         children:
           "No browsers are connected. Open Chrome with the Claude extension and make sure you're signed in to the same claude.ai account.",
@@ -166,7 +166,7 @@ function ce(jo) {
   let B;
   if (x[22] !== O) {
     let g;
-    if (x[24] === p)
+    if (x[24] === MEMO_CACHE_SENTINEL)
       ((g = (ye) => ({
         value: ye.deviceId,
         label: r(N, {
@@ -227,7 +227,7 @@ function W(en) {
   let Ue = _(6),
     { onDone: Ie, children: $e } = en,
     uo;
-  if (Ue[0] === p)
+  if (Ue[0] === MEMO_CACHE_SENTINEL)
     ((uo = [{ value: "back", label: "\u2039 Back" }]), (Ue[0] = uo));
   else uo = Ue[0];
   let Re;
@@ -292,7 +292,7 @@ function Je(Sn) {
       isWSL: ke,
     } = Sn,
     qe = U(So),
-    { storageV5: Le } = _e(),
+    { storageV5: Le } = useStorageV5Context(),
     [Ve, Be] = d(0),
     [oe, _n] = d(kn ?? !1),
     [je, ho] = d(!1),
@@ -304,11 +304,11 @@ function Je(Sn) {
   let le = bo,
     j = le !== void 0,
     Co;
-  if (i[2] === p) ((Co = ee().chromeExtension?.pairedDeviceName), (i[2] = Co));
+  if (i[2] === MEMO_CACHE_SENTINEL) ((Co = ee().chromeExtension?.pairedDeviceName), (i[2] = Co));
   else Co = i[2];
   let wo = Co,
     vo;
-  if (i[3] === p)
+  if (i[3] === MEMO_CACHE_SENTINEL)
     ((vo = function ae(Mn) {
       openInChrome(Mn).catch(logError);
     }),
@@ -359,7 +359,7 @@ function Je(Sn) {
     let ne = V ? "" : " (requires extension)";
     if (!V) {
       let S;
-      if (i[11] === p)
+      if (i[11] === MEMO_CACHE_SENTINEL)
         ((S = {
           label: "Install Chrome extension",
           value: "install-extension",
@@ -370,14 +370,14 @@ function Je(Sn) {
     }
     if (j) {
       let S;
-      if (i[12] === p)
+      if (i[12] === MEMO_CACHE_SENTINEL)
         ((S = { label: "Select browser\u2026", value: "select-browser" }),
           (i[12] = S));
       else S = i[12];
       K.push(S);
     }
     let S;
-    if (i[13] === p)
+    if (i[13] === MEMO_CACHE_SENTINEL)
       ((S = e(t, { children: "Manage permissions" })), (i[13] = S));
     else S = i[13];
     let ue;
@@ -390,7 +390,7 @@ function Je(Sn) {
         (i[15] = ue));
     else ue = i[15];
     let G;
-    if (i[16] === p)
+    if (i[16] === MEMO_CACHE_SENTINEL)
       ((G = e(t, { children: "Reconnect extension" })), (i[16] = G));
     else G = i[16];
     let J;
@@ -415,7 +415,7 @@ function Je(Sn) {
   if (i[21] !== Z) ((S = () => Z()), (i[21] = Z), (i[22] = S));
   else S = i[22];
   let ue;
-  if (i[23] === p)
+  if (i[23] === MEMO_CACHE_SENTINEL)
     ((ue = e(t, {
       children:
         "Claude in Chrome works with the Chrome extension to let you control your browser directly from Claude Code. Navigate websites, fill forms, capture screenshots, record GIFs, and debug with console logs and network requests.",
@@ -537,8 +537,8 @@ function Je(Sn) {
       (i[38] = T));
   else T = i[38];
   let pe;
-  if (i[39] === p)
-    ((pe = e(Gp, { url: "https://code.claude.com/docs/en/chrome" })),
+  if (i[39] === MEMO_CACHE_SENTINEL)
+    ((pe = e(LearnMoreLink, { url: "https://code.claude.com/docs/en/chrome" })),
       (i[39] = pe));
   else pe = i[39];
   let Me;

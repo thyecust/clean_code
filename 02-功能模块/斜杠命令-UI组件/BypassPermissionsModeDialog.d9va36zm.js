@@ -9,25 +9,25 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 255 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { o, t, ct, zb } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Pr, $s } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function R() {
-  i("tengu_bypass_permissions_mode_dialog_shown", {});
+  logEvent("tengu_bypass_permissions_mode_dialog_shown", {});
 }
 function BypassPermissionsModeDialog(T) {
   let s = _(8),
     { onAccept: d, storageV5: m } = T,
     b;
-  if (s[0] === p) ((b = []), (s[0] = b));
+  if (s[0] === MEMO_CACHE_SENTINEL) ((b = []), (s[0] = b));
   else b = s[0];
   E(R, b);
   let l = C(!1),
@@ -39,7 +39,7 @@ function BypassPermissionsModeDialog(T) {
       }
       bb10: switch (((l.current = !0), V)) {
         case "accept": {
-          (i("tengu_bypass_permissions_mode_dialog_accept", {}),
+          (logEvent("tengu_bypass_permissions_mode_dialog_accept", {}),
             updateSettingsForSource(
               "userSettings",
               { skipDangerousModePermissionPrompt: !0 },
@@ -60,7 +60,7 @@ function BypassPermissionsModeDialog(T) {
   else h = s[3];
   let n = h,
     k;
-  if (s[4] === p)
+  if (s[4] === MEMO_CACHE_SENTINEL)
     ((k = () => {
       ((l.current = !0), Pr(0));
     }),
@@ -68,7 +68,7 @@ function BypassPermissionsModeDialog(T) {
   else k = s[4];
   let G = k,
     B;
-  if (s[5] === p)
+  if (s[5] === MEMO_CACHE_SENTINEL)
     ((B = r(o, {
       flexDirection: "column",
       gap: 1,
@@ -97,7 +97,7 @@ function BypassPermissionsModeDialog(T) {
       onCancel: G,
       children: [
         B,
-        e(En, {
+        e(ConfirmPrompt, {
           hideIndexes: !0,
           cancelFirst: !0,
           focus: "cancel",

@@ -18,13 +18,13 @@ import { dt, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js"
 import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wm4s322b.js";
+import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 import { getMainLoopModel, qe, Bt, tt, Mn, co, ro, Wl, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { vo } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { tA, DT } from "../MCP客户端/chunk-3kmsshb6.js";
-import { rf, ar, LT, ID, oA } from "../权限系统/chunk-qdy0h5k2.js";
+import { createDefaultToolPermissionContext, findToolByName, parseToolInput, getToolRemoteExecution, isBatchToolDefinition } from "../权限系统/chunk-qdy0h5k2.js";
 import { createAbortController, createChildAbortController, userAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { i5 } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
+import { getHostCapabilityState } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import {
   wmt,
   Xm,
@@ -48,15 +48,15 @@ import { CC } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { kGt } from "../插件系统/chunk-ajtn749s.js";
 import { JHt } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { aF } from "../后台任务-Shell管理/chunk-c7mzes79.js";
-import { Tw } from "../认证-OAuth登录/chunk-s51acx6w.js";
+import { credentialsStoreFor } from "../认证-OAuth登录/credentials-store.js";
 import { elt, tlt, i7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
-import { Vat } from "../../01-核心基础设施/共享小工具-未细化/chunk-bw0cgdrm.js";
-import { uO } from "../../01-核心基础设施/共享小工具-未细化/chunk-pvrtr3v0.js";
-import { tct } from "./chunk-c8267s4e.js";
-import { o2 } from "../工具WebFetch-WebSearch/chunk-62z2xwnm.js";
-import { Vtt } from "../../01-核心基础设施/共享小工具-未细化/chunk-fpr1vv1t.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-36nx9gcx.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-c0wtcn4y.js";
+import { noopSessionHooksRegistry } from "../../01-核心基础设施/共享小工具-未细化/noop-session-hooks-registry.js";
+import { PerClassInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/per-class-instance-registry.js";
+import { noopAgentLifecycle } from "./agent-lifecycle.js";
+import { noopTaskRegistry } from "../工具WebFetch-WebSearch/noop-task-registry.js";
+import { BufferCoercingStdioServerTransport } from "../../01-核心基础设施/共享小工具-未细化/buffer-coercing-stdio-transport.js";
+import "../../01-核心基础设施/共享小工具-未细化/stdio-server-transport.js";
+import "../../01-核心基础设施/共享小工具-未细化/stdio-message-framing.js";
 var N = new Set([qe, tt, Bt, Mn, ro, co, Wl, Ut]),
   k = BWt;
 function G(e, m) {
@@ -71,10 +71,10 @@ function G(e, m) {
 async function startMCPServer(e, m, d, S, a) {
   pu(e);
   let C = q(m, d, B(), "stdio", S, a),
-    L = new Vtt();
+    L = new BufferCoercingStdioServerTransport();
   (await C.connect(L), Et(() => C.close()));
 }
-class D extends uO {
+class D extends PerClassInstanceRegistry {
   #e;
   constructor(e) {
     super();
@@ -85,16 +85,16 @@ class D extends uO {
   }
 }
 function q(e, m, d, S, a, C = "raw") {
-  let L = Tw(a),
+  let L = credentialsStoreFor(a),
     p = S === "http";
   if (p) {
-    let r = i5();
+    let r = getHostCapabilityState();
     (r.disableBackgroundTasks(), r.disableUnsandboxedCommands());
   }
   if ((N8n(pgn()), d3(), Nb())) JHt(a).catch(logError);
   if ((kGt(), HW())) wmt().catch(logError);
   let H = DT(tA),
-    U = new uO(),
+    U = new PerClassInstanceRegistry(),
     E = new A1(
       {
         name: "claude/tengu",
@@ -120,9 +120,9 @@ function q(e, m, d, S, a, C = "raw") {
       P.abort(userAbortReason("shutdown"));
     }),
     E.setRequestHandler(ListToolsRequestSchema, async () => {
-      let r = rf(),
+      let r = createDefaultToolPermissionContext(),
         R = dC(r, { skipReplFilter: !0, skipSimpleModeFilter: p }).filter(
-          (i) => !oA(i),
+          (i) => !isBatchToolDefinition(i),
         ),
         T = p ? R.filter((i) => N.has(i.name)) : R;
       return {
@@ -139,7 +139,7 @@ function q(e, m, d, S, a, C = "raw") {
               }),
               inputSchema: G(v, [
                 ...(p ? k : []),
-                ...(ID(i).supported ? [vo] : []),
+                ...(getToolRemoteExecution(i).supported ? [vo] : []),
               ]),
               outputSchema: void 0,
             };
@@ -150,12 +150,12 @@ function q(e, m, d, S, a, C = "raw") {
     E.setRequestHandler(
       CallToolRequestSchema,
       async ({ params: { name: r, arguments: R } }, { signal: T }) => {
-        let i = rf(),
+        let i = createDefaultToolPermissionContext(),
           v = dC(i, { skipReplFilter: !0, skipSimpleModeFilter: p }).filter(
-            (o) => !oA(o),
+            (o) => !isBatchToolDefinition(o),
           ),
           _ = p ? v.filter((o) => N.has(o.name)) : v,
-          s = ar(_, r);
+          s = findToolByName(_, r);
         if (!s) throw Error(`Tool ${r} not found`);
         let I = createChildAbortController(P),
           M = () => I.abort(userAbortReason("remote-cancel"));
@@ -190,16 +190,16 @@ function q(e, m, d, S, a, C = "raw") {
             getWebBrowser: () => aF().webBrowser,
             setToolPermissionContext: () => {},
             setSessionToolPermissionContext: () => {},
-            taskRegistry: o2,
+            taskRegistry: noopTaskRegistry,
             queuedNotificationsRegistry: $_t,
-            sessionHooksRegistry: Vat,
+            sessionHooksRegistry: noopSessionHooksRegistry,
             setWebBrowserSlice: () => {},
             setArtifactReadVersion: () => {},
             getArtifactReadObservation: artifactReadObservationIn(aF),
             artifactRegistries: elt(),
             setArtifactContractTarget: () => {},
             getArtifactContractTarget: () => ({ targetSlug: void 0, pins: {} }),
-            agentLifecycle: tct,
+            agentLifecycle: noopAgentLifecycle,
             teammateColors: tlt,
             rootToolSurface: { tools: _, mainLoopModel: getMainLoopModel() },
             messages: [],
@@ -229,7 +229,7 @@ function q(e, m, d, S, a, C = "raw") {
           if (p) {
             for (let t of k) if (t in o) (delete o[t], O.push(t));
           }
-          let c = LT(s, o);
+          let c = parseToolInput(s, o);
           if (!c.success) {
             let t = `Tool ${r} arguments failed schema validation: ${c.error.message}`;
             return (

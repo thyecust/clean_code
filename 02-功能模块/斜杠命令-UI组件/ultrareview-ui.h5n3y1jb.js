@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 249 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isExtraUsageAllowed, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -18,18 +18,18 @@ import { policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5
 import { POST_IGNORED_NOTE, POST_DISABLED_NOTE, parseUltrareviewArgs, precheckLaunchScope, previewInstructions, checkOverageGate, launchRemoteReview, ultrareviewLaunchAcknowledgementNudge } from "../CodeReview/CodeReview.ddrd6y06.js";
 import { getReviewCostNote, getReviewDurationNote, BOe, Km, q3 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { o, t, ct, bs } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { cu } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { l9e, o4 } from "../状态栏-主题/chunk-jrr487ty.js";
 import { b6e, sst } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { Ai } from "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dn, kn, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function qe() {
   return !ee().hasSeenUltrareviewTerms;
@@ -53,12 +53,12 @@ function me(ho) {
       onCancel: x,
     } = ho;
   Rs("ultrareview-launch");
-  let { storageV5: we } = _e(),
+  let { storageV5: we } = useStorageV5Context(),
     [T] = d(qe),
     [Ce, De] = d(!1),
     [ye, po] = d(null),
     xe;
-  if (O[0] === p) ((xe = new AbortController()), (O[0] = xe));
+  if (O[0] === MEMO_CACHE_SENTINEL) ((xe = new AbortController()), (O[0] = xe));
   else xe = O[0];
   let Re = C(xe),
     Ae;
@@ -107,7 +107,7 @@ function me(ho) {
       (O[11] = Q));
   else Q = O[11];
   let Ee;
-  if (O[12] === p)
+  if (O[12] === MEMO_CACHE_SENTINEL)
     ((Ee = e(t, { dimColor: !0, children: "Loading\u2026" })), (O[12] = Ee));
   else Ee = O[12];
   let Y;
@@ -338,10 +338,10 @@ function ce(go) {
 }
 function ue() {
   let ae = _(12),
-    $e = Ai(),
+    $e = useSettings(),
     Ve;
   if (ae[0] !== $e.prefersReducedMotion)
-    ((Ve = cu($e.prefersReducedMotion)),
+    ((Ve = shouldReduceMotion($e.prefersReducedMotion)),
       (ae[0] = $e.prefersReducedMotion),
       (ae[1] = Ve));
   else Ve = ae[1];
@@ -438,7 +438,7 @@ var $o = async (l, f, b, n) => {
     R = !1,
     w = (y) => {
       if (m.mode === "branch" && m.noMergeBase)
-        i("tengu_review_remote_precondition_recovery", {
+        logEvent("tengu_review_remote_precondition_recovery", {
           reason: S("no_merge_base"),
           method: S("empty_tree_bundle"),
           outcome: fromEnum(y),
@@ -450,7 +450,7 @@ var $o = async (l, f, b, n) => {
     });
   switch (s.kind) {
     case "blocked": {
-      i("tengu_review_overage_blocked", { reason: Ub(s.reason) });
+      logEvent("tengu_review_overage_blocked", { reason: Ub(s.reason) });
       let k = s.actionUrl
           ? `
   \u2192 ${s.actionUrl}`
@@ -465,7 +465,7 @@ var $o = async (l, f, b, n) => {
     case "needs-confirm":
     case "proceed":
       if (s.kind === "needs-confirm")
-        i("tengu_review_overage_dialog_shown", {});
+        logEvent("tengu_review_overage_dialog_shown", {});
       let y = !BOe(),
         v =
           m.mode === "pr" && Do(m.host) && g !== !1 && !y

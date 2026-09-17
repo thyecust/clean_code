@@ -53,7 +53,7 @@ import { os, Yg, ln } from "../../01-核心基础设施/核心工具-字符串�
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../react/react.zhnvc798.js";
 import { cz } from "../which-isexe/ isexe.knmpyrza.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
@@ -61,12 +61,12 @@ import { usr, zg, n5t, Isr, Psr, Dsr, H } from "../../02-功能模块/认证-OAu
 import { ie, $Ze } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { CT, xYn, HYn, iK, HNe, jY, IYn } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import { rue, Nze, aft } from "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
-import { Ei } from "../../02-功能模块/Hooks钩子/chunk-9em0d4k5.js";
+import { getSessionFeatureCache } from "../../02-功能模块/Hooks钩子/session-feature-cache.js";
 import { CF } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
 import { dG, Ta, zSn } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
-import { no } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
+import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { mw, z_, vNe, kAe, xAe, BSt, jSt, z8e } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
-import { ws } from "../../01-核心基础设施/共享小工具-未细化/chunk-0a6nmdka.js";
+import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
 import {
   cee,
   H9e,
@@ -111,16 +111,16 @@ import {
 import { Lyn, Pre, $I, kYn } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
 import { fBn, mBn, hBn, Btn } from "../../01-核心基础设施/共享小工具-未细化/chunk-ewa397cg.js";
 import { Ev, xtn, Htn } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
-import { Ol } from "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
+import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { e, r } from "../react/react.kwtapczy.js";
-import { Jw } from "../../01-核心基础设施/共享小工具-未细化/chunk-j4vveza5.js";
-import { M7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-j3qyvdwg.js";
+import { trySetRawMode } from "../../01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js";
+import { toNumber } from "../../01-核心基础设施/共享小工具-未细化/lodash-to-number.js";
 import { Cln, Uze, Qt, vln, V, F } from "../_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { Hve } from "../../01-核心基础设施/共享小工具-未细化/chunk-w4swsde7.js";
+import { expandTabs } from "../../01-核心基础设施/共享小工具-未细化/expand-tabs.js";
 import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { pe, w, Wo, p, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { toESM, commonJS, initESM, MEMO_CACHE_SENTINEL, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function Uf(t, s) {
   var c = t.length;
   t.push(s);
@@ -308,7 +308,7 @@ var Li = void 0,
     );
   },
   Zf;
-var Oy = Wo(() => {
+var Oy = initESM(() => {
   if (typeof performance === "object" && typeof performance.now === "function")
     ((Ff = performance),
       (Li = function () {
@@ -342,7 +342,7 @@ var Oy = Wo(() => {
     };
   Zf = _y;
 });
-var wy = w(function (r2, Ya) {
+var wy = commonJS(function (r2, Ya) {
   F();
   Oy();
   Ya.exports = function (t) {
@@ -8352,14 +8352,14 @@ No matching component was found for:
   Ya.exports.default = Ya.exports;
   Object.defineProperty(Ya.exports, "__esModule", { value: !0 });
 });
-var Fv = w(function (lM, Uv) {
+var Fv = commonJS(function (lM, Uv) {
   var RE = /[|\\{}()[\]^$+*?.-]/g;
   Uv.exports = (t) => {
     if (typeof t !== "string") throw TypeError("Expected a string");
     return t.replace(RE, "\\$&");
   };
 });
-var kv = w(function (rM, Kv) {
+var kv = commonJS(function (rM, Kv) {
   var TE = Fv(),
     NE =
       typeof process === "object" &&
@@ -8368,7 +8368,7 @@ var kv = w(function (rM, Kv) {
         ? process.cwd()
         : ".",
     Yv = []
-      .concat(Ae("module").builtinModules, "bootstrap_node", "node")
+      .concat(importMetaRequire("module").builtinModules, "bootstrap_node", "node")
       .map(
         (t) =>
           new RegExp(
@@ -8918,7 +8918,7 @@ function lS() {
 }
 function rS() {
   try {
-    let s = Ae("bun:ffi").dlopen("/usr/lib/libSystem.B.dylib", {
+    let s = importMetaRequire("bun:ffi").dlopen("/usr/lib/libSystem.B.dylib", {
       ttyname_r: { args: ["i32", "ptr", "u64"], returns: "i32" },
     });
     try {
@@ -9307,10 +9307,10 @@ function SS(t, s, c) {
     D = !1,
     N = !0;
   if (typeof t != "function") throw TypeError(vS);
-  if (((s = M7(s) || 0), Fm(c)))
+  if (((s = toNumber(s) || 0), Fm(c)))
     ((C = !!c.leading),
       (D = "maxWait" in c),
-      (y = D ? gS(M7(c.maxWait) || 0, s) : y),
+      (y = D ? gS(toNumber(c.maxWait) || 0, s) : y),
       (N = "trailing" in c ? !!c.trailing : N));
   function T(Z) {
     var J = f,
@@ -11980,7 +11980,7 @@ function My(t, s) {
   }
   return Hf(c, null, s);
 }
-var Qy = pe(wy(), 1);
+var Qy = toESM(wy(), 1);
 function Hy(t, s) {
   if (t.pendingClears) t.pendingClears.push(s);
   else t.pendingClears = [s];
@@ -12166,7 +12166,7 @@ var Yy = (t) => {
   },
   N1 = function (t, s, c) {
     let f = t.nodeName === "#text" ? t.nodeValue : zy(t),
-      m = Hve(f),
+      m = expandTabs(f),
       y = t.style?.textWrap ?? "wrap";
     if (y === "wrap-stream") {
       let E = A9e(Vm(m, s, "wrap"), s);
@@ -14161,7 +14161,7 @@ var CE = (t, s) => {
   },
   Td = ME;
 F();
-var Xa = pe(kv(), 1);
+var Xa = toESM(kv(), 1);
 import { readFileSync } from "fs";
 function BE(Gv) {
   let { value: pM } = Gv;
@@ -14181,7 +14181,7 @@ function Cu(Gv) {
   let qa = _(22),
     { error: ei } = Gv,
     OE;
-  if (qa[0] === p)
+  if (qa[0] === MEMO_CACHE_SENTINEL)
     ((OE = new Xa.default({
       cwd: process.cwd(),
       internals: Xa.default.nodeInternals(),
@@ -14221,7 +14221,7 @@ function Cu(Gv) {
     _d = "column";
     Dd = 1;
     let Bo;
-    if (qa[9] === p)
+    if (qa[9] === MEMO_CACHE_SENTINEL)
       ((Bo = r(sa, {
         backgroundColor: "ansi:red",
         color: "ansi:white",
@@ -14528,7 +14528,7 @@ Read about how to prevent this error on https://github.com/vadimdemedes/ink/#isr
           (CF(),
           this.props.onRawModeEnter?.(),
           s.ref(),
-          Jw(s, !0),
+          trySetRawMode(s, !0),
           s.addListener("readable", this.handleReadable),
           P() === "windows")
         )
@@ -14564,9 +14564,9 @@ Read about how to prevent this error on https://github.com/vadimdemedes/ink/#isr
             c.reset("themeReports") +
             c.reset("bracketedPaste"),
         ),
-        !ws().get(this.props.stdout)?.isHandoffRawMode)
+        !getInkInstanceRegistry().get(this.props.stdout)?.isHandoffRawMode)
       )
-        Jw(s, !1);
+        trySetRawMode(s, !1);
       (s.removeListener("readable", this.handleReadable), s.unref());
     }
   };
@@ -14626,8 +14626,8 @@ Read about how to prevent this error on https://github.com/vadimdemedes/ink/#isr
   get hasReleasedTerminal() {
     return (
       this.appUnmounted ||
-      no() ||
-      ws().get(this.props.stdout)?.hasUnmounted === !0
+      isExiting() ||
+      getInkInstanceRegistry().get(this.props.stdout)?.hasUnmounted === !0
     );
   }
   handleTerminalFocus = (t) => {
@@ -14635,7 +14635,7 @@ Read about how to prevent this error on https://github.com/vadimdemedes/ink/#isr
     if (!t || Date.now() - this.lastActivationInputTime >= Zv)
       this.windowActivationClickArmed = !0;
     if ((Lyn(t), t && s === "blurred"))
-      ws().get(this.props.stdout)?.proactiveAtlasResetOnFocus();
+      getInkInstanceRegistry().get(this.props.stdout)?.proactiveAtlasResetOnFocus();
     if (
       t &&
       s !== "focused" &&
@@ -14692,7 +14692,7 @@ function UE(t, s, c, f) {
   if (!m && s.some(zd)) (Ez(), n5t());
   let y = ZUn(t.jediTermInput, s, performance.now(), t.emitJediTermScrollBug);
   KE(t, y);
-  let b = G(y, zd) === 1;
+  let b = countMatching(y, zd) === 1;
   for (let S of y) {
     if (m && zd(S) && !(S.kind === "key" && S.name === "left")) {
       n(
@@ -14989,7 +14989,7 @@ function Qa(t) {
 }
 var kl = 256;
 function Lo(t, s) {
-  if (!Ol().claim(`ink_tree_depth_cap:${t}`)) return;
+  if (!getClaimRegistry().claim(`ink_tree_depth_cap:${t}`)) return;
   logError(
     new R(
       `${t}: ink tree depth exceeded MAX_TREE_DEPTH (${kl}) at <${s}>; skipping deeper subtree instead of overflowing the call stack`,
@@ -16710,7 +16710,7 @@ var cx = (t) =>
     t.getComputedBorder(0) -
     t.getComputedBorder(2),
   hg = cx;
-var pg = pe(o3t(), 1);
+var pg = toESM(o3t(), 1);
 var fx = {
   dashed: {
     top: "\u254C",
@@ -19388,7 +19388,7 @@ ${re}`
       else this.repaint();
     }
     if (t.droppedBytes > 0 || t.durationMs >= 1000)
-      i("tengu_stdout_backpressure", {
+      logEvent("tengu_stdout_backpressure", {
         duration_ms: t.durationMs,
         peak_queued_bytes: t.peakQueuedBytes,
         dropped_bytes: t.droppedBytes,
@@ -19424,7 +19424,7 @@ ${re}`
       this.scheduleRender.cancel?.(),
       this.unsubscribeTTYHandlers?.());
     let t = this.options.stdin;
-    if ((this.drainStdin(), t.isTTY && t.isRaw)) Jw(t, !1);
+    if ((this.drainStdin(), t.isTTY && t.isRaw)) trySetRawMode(t, !1);
     for (let s of new Set([t, process.stdin]))
       (s.removeAllListeners("readable"),
         s.removeAllListeners("data"),
@@ -19667,7 +19667,7 @@ ${re}`
           t.removeListener("readable", f));
       }));
     let c = t;
-    if (c.isRaw) (Jw(c, !1), (this.wasRawMode = !0));
+    if (c.isRaw) (trySetRawMode(c, !1), (this.wasRawMode = !0));
   }
   resumeStdin() {
     let t = this.options.stdin;
@@ -19687,7 +19687,7 @@ ${re}`
       (this.stdinListeners = []),
       this.wasRawMode)
     )
-      (Jw(t, !0), (this.wasRawMode = !1));
+      (trySetRawMode(t, !0), (this.wasRawMode = !1));
   }
   writeRaw(t) {
     this.options.stdout.write(t);
@@ -19790,7 +19790,7 @@ ${re}`
       (clearTimeout(this.drainTimer), (this.drainTimer = null));
     (zi.updateContainerSync(null, this.container, null, Ere),
       zi.flushSyncWork(),
-      ws().delete(this.options.stdout),
+      getInkInstanceRegistry().delete(this.options.stdout),
       this.rootNode.yogaNode?.free(),
       (this.rootNode.yogaNode = void 0));
   }
@@ -19949,7 +19949,7 @@ function Wx(t) {
 }
 function lee() {
   {
-    let t = Ei();
+    let t = getSessionFeatureCache();
     if (t.decstbmRendererEnabled !== void 0) return t.decstbmRendererEnabled;
     if (!process.stdout.isTTY) return (t.decstbmRendererEnabled = !1);
     if (dG()) return (t.decstbmRendererEnabled = !1);

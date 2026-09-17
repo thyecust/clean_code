@@ -20,13 +20,13 @@ import {
   mF,
 } from "../../../01-核心基础设施/遥测-OpenTelemetry/遥测-OpenTelemetry.0xhcvej6.js";
 import { Ls, Mc } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { w, Ae } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var To = w(function (Co) {
+import { commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var To = commonJS(function (Co) {
   Object.defineProperty(Co, "__esModule", { value: !0 });
   Co.VERSION = void 0;
   Co.VERSION = "0.208.0";
 });
-var N = w(function (wo) {
+var N = commonJS(function (wo) {
   Object.defineProperty(wo, "__esModule", { value: !0 });
   wo.DEFAULT_MAX_RECEIVE_MESSAGE_LENGTH =
     wo.DEFAULT_MAX_SEND_MESSAGE_LENGTH =
@@ -72,7 +72,7 @@ var N = w(function (wo) {
   wo.DEFAULT_MAX_SEND_MESSAGE_LENGTH = -1;
   wo.DEFAULT_MAX_RECEIVE_MESSAGE_LENGTH = 4194304;
 });
-var qs = w(function (Ow, Yg) {
+var qs = commonJS(function (Ow, Yg) {
   Yg.exports = {
     name: "@grpc/grpc-js",
     version: "1.14.4",
@@ -161,14 +161,14 @@ var qs = w(function (Ow, Yg) {
     ],
   };
 });
-var B = w(function (Mo) {
+var B = commonJS(function (Mo) {
   var Us, Bs, zs, Hs;
   Object.defineProperty(Mo, "__esModule", { value: !0 });
   Mo.log = Mo.setLoggerVerbosity = Mo.setLogger = Mo.getLogger = void 0;
   Mo.trace = nm;
   Mo.isTracerEnabled = No;
   var at = N(),
-    Kg = Ae("process"),
+    Kg = importMetaRequire("process"),
     Jg = qs().version,
     Xg = {
       error: (e, ...t) => {
@@ -266,7 +266,7 @@ var B = w(function (Mo) {
     return !Po.has(e) && (sm || Ws.has(e));
   }
 });
-var li = w(function (Io) {
+var li = commonJS(function (Io) {
   Object.defineProperty(Io, "__esModule", { value: !0 });
   Io.getErrorMessage = dm;
   Io.getErrorCode = hm;
@@ -285,7 +285,7 @@ var li = w(function (Io) {
     else return null;
   }
 });
-var Q = w(function (Do) {
+var Q = commonJS(function (Do) {
   Object.defineProperty(Do, "__esModule", { value: !0 });
   Do.Metadata = void 0;
   var gm = B(),
@@ -432,7 +432,7 @@ var Q = w(function (Do) {
   Do.Metadata = ui;
   var Tm = (e) => (Buffer.isBuffer(e) ? e.toString("base64") : e);
 });
-var hi = w(function (Fo) {
+var hi = commonJS(function (Fo) {
   Object.defineProperty(Fo, "__esModule", { value: !0 });
   Fo.CallCredentials = void 0;
   var Gs = Q();
@@ -536,11 +536,11 @@ var hi = w(function (Fo) {
     }
   }
 });
-var Ks = w(function (Bo) {
+var Ks = commonJS(function (Bo) {
   Object.defineProperty(Bo, "__esModule", { value: !0 });
   Bo.CIPHER_SUITES = void 0;
   Bo.getDefaultRootsData = Om;
-  var bm = Ae("fs");
+  var bm = importMetaRequire("fs");
   Bo.CIPHER_SUITES = process.env.GRPC_SSL_CIPHER_SUITES;
   var Uo = process.env.GRPC_DEFAULT_SSL_ROOTS_FILE_PATH,
     Ys = null;
@@ -552,7 +552,7 @@ var Ks = w(function (Bo) {
     return null;
   }
 });
-var le = w(function (Wo) {
+var le = commonJS(function (Wo) {
   Object.defineProperty(Wo, "__esModule", { value: !0 });
   Wo.parseUri = Pm;
   Wo.splitHostPort = Nm;
@@ -598,7 +598,7 @@ var le = w(function (Wo) {
     return ((t += e.path), t);
   }
 });
-var we = w(function (jo) {
+var we = commonJS(function (jo) {
   Object.defineProperty(jo, "__esModule", { value: !0 });
   jo.CHANNEL_ARGS_CONFIG_SELECTOR_KEY = void 0;
   jo.registerResolver = Fm;
@@ -636,11 +636,11 @@ var we = w(function (jo) {
     return e;
   }
 });
-var Ut = w(function (Ko) {
+var Ut = commonJS(function (Ko) {
   Object.defineProperty(Ko, "__esModule", { value: !0 });
   Ko.ChannelCredentials = void 0;
   Ko.createCertificateProviderChannelCredentials = Jm;
-  var mr = Ae("tls"),
+  var mr = importMetaRequire("tls"),
     gi = hi(),
     Zs = Ks(),
     $o = le(),
@@ -1031,7 +1031,7 @@ var Ut = w(function (Ko) {
     }
   }
 });
-var lt = w(function (Qo) {
+var lt = commonJS(function (Qo) {
   Object.defineProperty(Qo, "__esModule", { value: !0 });
   Qo.createChildChannelControlHelper = ev;
   Qo.registerLoadBalancerType = tv;
@@ -1135,12 +1135,12 @@ var lt = w(function (Qo) {
     else return null;
   }
 });
-var tn = w(function (tl) {
+var tn = commonJS(function (tl) {
   Object.defineProperty(tl, "__esModule", { value: !0 });
   tl.validateRetryThrottling = Zo;
   tl.validateServiceConfig = el;
   tl.extractAndSelectServiceConfig = Rv;
-  var gv = Ae("os"),
+  var gv = importMetaRequire("os"),
     mi = N(),
     vi = /^\d+(\.\d{1,9})?s$/,
     mv = "node";
@@ -1441,7 +1441,7 @@ var tn = w(function (tl) {
     return null;
   }
 });
-var ce = w(function (il) {
+var ce = commonJS(function (il) {
   Object.defineProperty(il, "__esModule", { value: !0 });
   il.ConnectivityState = void 0;
   var rl;
@@ -1453,7 +1453,7 @@ var ce = w(function (il) {
       (e[(e.SHUTDOWN = 4)] = "SHUTDOWN"));
   })(rl || (il.ConnectivityState = rl = {}));
 });
-var Ke = w(function (ol) {
+var Ke = commonJS(function (ol) {
   Object.defineProperty(ol, "__esModule", { value: !0 });
   ol.QueuePicker = ol.UnavailablePicker = ol.PickResultType = void 0;
   var Av = Q(),
@@ -1512,7 +1512,7 @@ var Ke = w(function (ol) {
   }
   ol.QueuePicker = al;
 });
-var Bt = w(function (cl) {
+var Bt = commonJS(function (cl) {
   Object.defineProperty(cl, "__esModule", { value: !0 });
   cl.BackoffTimeout = void 0;
   var Iv = N(),
@@ -1628,7 +1628,7 @@ var Bt = w(function (cl) {
   cl.BackoffTimeout = _i;
   _i.nextId = 0;
 });
-var Si = w(function (hl) {
+var Si = commonJS(function (hl) {
   Object.defineProperty(hl, "__esModule", { value: !0 });
   hl.ChildLoadBalancerHandler = void 0;
   var Bv = lt(),
@@ -1731,7 +1731,7 @@ var Si = w(function (hl) {
   }
   hl.ChildLoadBalancerHandler = dl;
 });
-var _l = w(function (vl) {
+var _l = commonJS(function (vl) {
   Object.defineProperty(vl, "__esModule", { value: !0 });
   vl.ResolvingLoadBalancer = void 0;
   var Wv = lt(),
@@ -1977,7 +1977,7 @@ var _l = w(function (vl) {
   }
   vl.ResolvingLoadBalancer = ml;
 });
-var El = w(function (Sl) {
+var El = commonJS(function (Sl) {
   Object.defineProperty(Sl, "__esModule", { value: !0 });
   Sl.recognizedOptions = void 0;
   Sl.channelOptionsEqual = ry;
@@ -2024,7 +2024,7 @@ var El = w(function (Sl) {
     return !0;
   }
 });
-var he = w(function (wl) {
+var he = commonJS(function (wl) {
   Object.defineProperty(wl, "__esModule", { value: !0 });
   wl.EndpointMap = void 0;
   wl.isTcpSubchannelAddress = Sr;
@@ -2034,7 +2034,7 @@ var he = w(function (wl) {
   wl.endpointEqual = ay;
   wl.endpointToString = oy;
   wl.endpointHasAddress = bl;
-  var Tl = Ae("net");
+  var Tl = importMetaRequire("net");
   function Sr(e) {
     return "port" in e;
   }
@@ -2140,7 +2140,7 @@ var he = w(function (wl) {
   }
   wl.EndpointMap = Ol;
 });
-var Fl = w(function (Ll) {
+var Fl = commonJS(function (Ll) {
   Object.defineProperty(Ll, "t", { value: !0 });
   class sn {
     constructor(e, t, r = 1) {
@@ -2705,7 +2705,7 @@ var Fl = w(function (Ll) {
   }
   Ll.OrderedMap = Dl;
 });
-var Ei = w(function (Ul) {
+var Ei = commonJS(function (Ul) {
   Object.defineProperty(Ul, "__esModule", { value: !0 });
   Ul.registerAdminService = my;
   Ul.addAdminServicesToServer = vy;
@@ -2718,7 +2718,7 @@ var Ei = w(function (Ul) {
       e.addService(t(), r());
   }
 });
-var $l = w(function (jl) {
+var $l = commonJS(function (jl) {
   Object.defineProperty(jl, "__esModule", { value: !0 });
   jl.ClientDuplexStreamImpl =
     jl.ClientWritableStreamImpl =
@@ -2726,8 +2726,8 @@ var $l = w(function (jl) {
     jl.ClientUnaryCallImpl =
       void 0;
   jl.callErrorFromStatus = Cy;
-  var Sy = Ae("events"),
-    nn = Ae("stream"),
+  var Sy = importMetaRequire("events"),
+    nn = importMetaRequire("stream"),
     Cr = N();
   function Cy(e, t) {
     let r = `${e.code} ${Cr.Status[e.code]}: ${e.details}`,
@@ -2890,7 +2890,7 @@ ${t}`;
   }
   jl.ClientDuplexStreamImpl = Wl;
 });
-var Tt = w(function (Yl) {
+var Tt = commonJS(function (Yl) {
   Object.defineProperty(Yl, "__esModule", { value: !0 });
   Yl.InterceptingListenerImpl = void 0;
   Yl.statusOrFromValue = wy;
@@ -2961,7 +2961,7 @@ var Tt = w(function (Yl) {
   }
   Yl.InterceptingListenerImpl = Vl;
 });
-var ln = w(function (sc) {
+var ln = commonJS(function (sc) {
   Object.defineProperty(sc, "__esModule", { value: !0 });
   sc.InterceptingCall =
     sc.RequesterBuilder =
@@ -3355,7 +3355,7 @@ var ln = w(function (sc) {
     )(n);
   }
 });
-var un = w(function (oc) {
+var un = commonJS(function (oc) {
   Object.defineProperty(oc, "__esModule", { value: !0 });
   oc.Client = void 0;
   var Fe = $l(),
@@ -3748,7 +3748,7 @@ var un = w(function (oc) {
   }
   oc.Client = ac;
 });
-var Ri = w(function (uc) {
+var Ri = commonJS(function (uc) {
   Object.defineProperty(uc, "__esModule", { value: !0 });
   uc.makeClientConstructor = cc;
   uc.loadPackageDefinition = $y;
@@ -3818,7 +3818,7 @@ var Ri = w(function (uc) {
     return t;
   }
 });
-var Lc = w(function (Zw, Dc) {
+var Lc = commonJS(function (Zw, Dc) {
   var Ky = 1 / 0,
     Jy = "[object Symbol]",
     Xy = /[^\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g,
@@ -4172,7 +4172,7 @@ var Lc = w(function (Zw, Dc) {
   }
   Dc.exports = q_;
 });
-var qc = w(function (eA, Fc) {
+var qc = commonJS(function (eA, Fc) {
   Fc.exports = vn;
   var W_ =
     /^(?:do|if|in|for|let|new|try|var|case|else|enum|eval|false|null|this|true|void|with|break|catch|class|const|super|throw|while|yield|delete|export|import|public|return|static|switch|typeof|default|extends|finally|package|private|continue|debugger|function|arguments|interface|protected|implements|instanceof)$/;
@@ -4242,7 +4242,7 @@ var qc = w(function (eA, Fc) {
     return W_.test(e) ? e + "_" : e;
   }
 });
-var Uc = w(function (exports, module) {
+var Uc = commonJS(function (exports, module) {
   module.exports = inquire;
   function inquire(moduleName) {
     try {
@@ -4250,16 +4250,16 @@ var Uc = w(function (exports, module) {
         moduleName === "long"
           ? zDt()
           : moduleName === "buffer"
-            ? Ae("buffer")
+            ? importMetaRequire("buffer")
             : moduleName === "fs"
-              ? Ae("fs")
+              ? importMetaRequire("fs")
               : eval("quire".replace(/^/, "re"))(moduleName);
       if (mod && (mod.length || Object.keys(mod).length)) return mod;
     } catch (e) {}
     return null;
   }
 });
-var zc = w(function (tA, Bc) {
+var zc = commonJS(function (tA, Bc) {
   Bc.exports = br;
   var G_ = jnn(),
     $_ = Uc(),
@@ -4305,7 +4305,7 @@ var zc = w(function (tA, Bc) {
     (s.open("GET", t), s.send());
   };
 });
-var jc = w(function (Wc) {
+var jc = commonJS(function (Wc) {
   var Sn = Wc,
     Hc = (Sn.isAbsolute = function (t) {
       return /^(?:\/|\w+:)/.test(t);
@@ -4332,7 +4332,7 @@ var jc = w(function (Wc) {
     return (t = t.replace(/(?:\/|^)[^/]+$/, "")).length ? _n(t + "/" + r) : r;
   };
 });
-var $c = w(function (Gc) {
+var $c = commonJS(function (Gc) {
   var Ai = Gc;
   Ai.numberRe = /^(?![eE])[0-9]*(?:\.[0-9]*)?(?:[eE][+-]?[0-9]+)?$/;
   Ai.typeRefRe = /^(?:\.?[a-zA-Z_][a-zA-Z_0-9]*)(?:\.[a-zA-Z_][a-zA-Z_0-9]*)*$/;
@@ -4340,7 +4340,7 @@ var $c = w(function (Gc) {
     /^(?:do|if|in|for|let|new|try|var|case|else|enum|eval|false|null|this|true|void|with|break|catch|class|const|super|throw|while|yield|delete|export|import|public|return|static|switch|typeof|default|extends|finally|package|private|continue|debugger|function|arguments|interface|protected|implements|instanceof)$/;
   Ai.unsafePropertyRe = /^(?:__proto__|prototype|constructor)$/;
 });
-var Yt = w(function (sA, Kc) {
+var Yt = commonJS(function (sA, Kc) {
   Kc.exports = k;
   var Pi = dt();
   ((k.prototype = Object.create(Pi.prototype)).constructor = k).className =
@@ -4598,7 +4598,7 @@ var Yt = w(function (sA, Kc) {
     ((Rt = e), ($t = t), (bt = r));
   };
 });
-var Ni = w(function (nA, Jc) {
+var Ni = commonJS(function (nA, Jc) {
   Jc.exports = Xe;
   var En = ut();
   ((Xe.prototype = Object.create(En.prototype)).constructor = Xe).className =
@@ -4644,7 +4644,7 @@ var Ni = w(function (nA, Jc) {
     };
   };
 });
-var Mi = w(function (aA, Xc) {
+var Mi = commonJS(function (aA, Xc) {
   Xc.exports = At;
   var Tn = dt();
   ((At.prototype = Object.create(Tn.prototype)).constructor = At).className =
@@ -4711,7 +4711,7 @@ var Mi = w(function (aA, Xc) {
     );
   };
 });
-var Ii = w(function (oA, Zc) {
+var Ii = commonJS(function (oA, Zc) {
   Zc.exports = ge;
   var Qe = Yt();
   ((ge.prototype = Object.create(Qe.prototype)).constructor = ge).className =
@@ -4818,7 +4818,7 @@ var Ii = w(function (oA, Zc) {
     return s;
   };
 });
-var xi = w(function (lA, eu) {
+var xi = commonJS(function (lA, eu) {
   eu.exports = qe;
   var X_ = See();
   function qe(e) {
@@ -4857,7 +4857,7 @@ var xi = w(function (lA, eu) {
     return this.$type.toObject(this, X_.toJSONOptions);
   };
 });
-var bn = w(function (cA, ru) {
+var bn = commonJS(function (cA, ru) {
   ru.exports = eS;
   var Q_ = Me(),
     Ze = wt(),
@@ -4959,7 +4959,7 @@ var bn = w(function (cA, ru) {
     return t("return m");
   }
 });
-var An = w(function (uA, iu) {
+var An = commonJS(function (uA, iu) {
   iu.exports = iS;
   var tS = Me(),
     On = Z();
@@ -5108,7 +5108,7 @@ var An = w(function (uA, iu) {
     return t("return null");
   }
 });
-var Mn = w(function (nu) {
+var Mn = commonJS(function (nu) {
   var su = nu,
     wr = Me(),
     Ue = Z();
@@ -5392,7 +5392,7 @@ var Mn = w(function (nu) {
     return i("return d");
   };
 });
-var In = w(function (au) {
+var In = commonJS(function (au) {
   var sS = au,
     nS = xi();
   sS[".google.protobuf.Any"] = {
@@ -5436,7 +5436,7 @@ var In = w(function (au) {
     },
   };
 });
-var Li = w(function (fA, lu) {
+var Li = commonJS(function (fA, lu) {
   lu.exports = z;
   var Ee = Yt();
   ((z.prototype = Object.create(Ee.prototype)).constructor = z).className =
@@ -5746,7 +5746,7 @@ var Li = w(function (fA, lu) {
     };
   };
 });
-var Bi = w(function (pA, du) {
+var Bi = commonJS(function (pA, du) {
   du.exports = me;
   var Ui = Yt();
   ((me.prototype = Object.create(Ui.prototype)).constructor = me).className =
@@ -5928,7 +5928,7 @@ var Bi = w(function (pA, du) {
     ((qn = e), (Un = t), (Ar = r));
   };
 });
-var Z = w(function (gA, pu) {
+var Z = commonJS(function (gA, pu) {
   var W = (pu.exports = See()),
     hu = Gnn(),
     Bn,
@@ -6040,7 +6040,7 @@ var Z = w(function (gA, pu) {
     },
   });
 });
-var wt = w(function (gu) {
+var wt = commonJS(function (gu) {
   var Pr = gu,
     yS = Z(),
     _S = [
@@ -6090,7 +6090,7 @@ var wt = w(function (gu) {
   Pr.mapKey = Nr([0, 0, 0, 5, 5, 0, 0, 0, 1, 1, 0, 2], 2);
   Pr.packed = Nr([1, 5, 0, 0, 0, 5, 5, 0, 0, 0, 1, 1, 0]);
 });
-var ut = w(function (vA, vu) {
+var ut = commonJS(function (vA, vu) {
   vu.exports = ee;
   var Ir = dt();
   ((ee.prototype = Object.create(Ir.prototype)).constructor = ee).className =
@@ -6279,7 +6279,7 @@ var ut = w(function (vA, vu) {
     Mr = t;
   };
 });
-var Ot = w(function (yA, Su) {
+var Ot = commonJS(function (yA, Su) {
   Su.exports = ve;
   var Hi = dt();
   ((ve.prototype = Object.create(Hi.prototype)).constructor = ve).className =
@@ -6367,7 +6367,7 @@ var Ot = w(function (yA, Su) {
     };
   };
 });
-var dt = w(function (_A, Cu) {
+var dt = commonJS(function (_A, Cu) {
   Cu.exports = ne;
   ne.className = "ReflectionObject";
   var CS = Ot(),
@@ -6534,7 +6534,7 @@ var dt = w(function (_A, Cu) {
     Wi = e;
   };
 });
-var Me = w(function (SA, Tu) {
+var Me = commonJS(function (SA, Tu) {
   Tu.exports = Ie;
   var Wn = dt();
   ((Ie.prototype = Object.create(Wn.prototype)).constructor = Ie).className =
@@ -6640,7 +6640,7 @@ var Me = w(function (SA, Tu) {
     return Eu.isReservedName(this.reserved, t);
   };
 });
-var Ln = w(function (CA, bu) {
+var Ln = commonJS(function (CA, bu) {
   bu.exports = OS;
   var bS = Me(),
     jn = wt(),
@@ -6721,7 +6721,7 @@ var Ln = w(function (CA, bu) {
     return t("return w");
   }
 });
-var wu = w(function (EA, Ou) {
+var wu = commonJS(function (EA, Ou) {
   var D = (Ou.exports = qnn());
   D.build = "light";
   function wS(e, t, r) {
@@ -6758,7 +6758,7 @@ var wu = w(function (EA, Ou) {
   D.Root._configure(D.Type);
   D.Field._configure(D.Type);
 });
-var Vn = w(function (TA, Nu) {
+var Vn = commonJS(function (TA, Nu) {
   Nu.exports = Pu;
   var $n = /[\s{}=;:[\],'"()<>]/g,
     PS = /(?:"([^"\\]*(?:\\.[^"\\]*)*)")/g,
@@ -6974,7 +6974,7 @@ var Vn = w(function (TA, Nu) {
     );
   }
 });
-var Lu = w(function (RA, Du) {
+var Lu = commonJS(function (RA, Du) {
   Du.exports = tt;
   tt.filename = null;
   tt.defaults = { keepCase: !1 };
@@ -7556,7 +7556,7 @@ var Lu = w(function (RA, Du) {
     );
   }
 });
-var Uu = w(function (bA, qu) {
+var Uu = commonJS(function (bA, qu) {
   qu.exports = xe;
   var XS = /\/|\./;
   function xe(e, t) {
@@ -7633,7 +7633,7 @@ var Uu = w(function (bA, qu) {
     return xe[t] || null;
   };
 });
-var Gi = w(function (OA, Bu) {
+var Gi = commonJS(function (OA, Bu) {
   var ht = (Bu.exports = wu());
   ht.build = "full";
   ht.tokenize = Vn();
@@ -7641,7 +7641,7 @@ var Gi = w(function (OA, Bu) {
   ht.common = Uu();
   ht.Root._configure(ht.Type, ht.parse, ht.common);
 });
-var Yn = w(function (wA, QS) {
+var Yn = commonJS(function (wA, QS) {
   QS.exports = {
     nested: {
       google: {
@@ -8460,7 +8460,7 @@ var Yn = w(function (wA, QS) {
     },
   };
 });
-var Yu = w(function (P, Vu) {
+var Yu = commonJS(function (P, Vu) {
   var fe = Gi();
   Vu.exports =
     P =
@@ -9050,7 +9050,7 @@ var Yu = w(function (P, Vu) {
       }
   }
 });
-var Ku = w(function (AA, dC) {
+var Ku = commonJS(function (AA, dC) {
   dC.exports = {
     nested: {
       google: {
@@ -9102,7 +9102,7 @@ var Ku = w(function (AA, dC) {
     },
   };
 });
-var Ju = w(function (PA, hC) {
+var Ju = commonJS(function (PA, hC) {
   hC.exports = {
     nested: {
       google: {
@@ -9119,7 +9119,7 @@ var Ju = w(function (PA, hC) {
     },
   };
 });
-var Xu = w(function (NA, fC) {
+var Xu = commonJS(function (NA, fC) {
   fC.exports = {
     nested: {
       google: {
@@ -9222,14 +9222,14 @@ var Xu = w(function (NA, fC) {
     },
   };
 });
-var id = w(function (td) {
+var id = commonJS(function (td) {
   Object.defineProperty(td, "__esModule", { value: !0 });
   td.addCommonProtos =
     td.loadProtosWithOptionsSync =
     td.loadProtosWithOptions =
       void 0;
-  var Qu = Ae("fs"),
-    Zu = Ae("path"),
+  var Qu = importMetaRequire("fs"),
+    Zu = importMetaRequire("path"),
     Zt = Gi();
   function ed(e, t) {
     let r = e.resolvePath;
@@ -9283,7 +9283,7 @@ var id = w(function (td) {
   }
   td.addCommonProtos = mC;
 });
-var ta = w(function (cd) {
+var ta = commonJS(function (cd) {
   Object.defineProperty(cd, "__esModule", { value: !0 });
   cd.loadFileDescriptorSetFromObject =
     cd.loadFileDescriptorSetFromBuffer =
@@ -9460,7 +9460,7 @@ var ta = w(function (cd) {
   cd.loadFileDescriptorSetFromObject = kC;
   (0, ea.addCommonProtos)();
 });
-var pt = w(function (Rd) {
+var pt = commonJS(function (Rd) {
   var __dirname =
     "/home/runner/work/claude-cli-internal/claude-cli-internal/node_modules/@grpc/grpc-js/build/src";
   Object.defineProperty(Rd, "__esModule", { value: !0 });
@@ -9479,7 +9479,7 @@ var pt = w(function (Rd) {
   Rd.getChannelzHandlers = Ed;
   Rd.getChannelzServiceDefinition = Td;
   Rd.setup = rE;
-  var Xi = Ae("net"),
+  var Xi = importMetaRequire("net"),
     Pt = Fl(),
     Lr = ce(),
     Fr = N(),
@@ -9961,7 +9961,7 @@ var pt = w(function (Rd) {
     (0, HC.registerAdminService)(Td, Ed);
   }
 });
-var es = w(function (Od) {
+var es = commonJS(function (Od) {
   Object.defineProperty(Od, "__esModule", { value: !0 });
   Od.getNextCallNumber = vE;
   var mE = 0;
@@ -9969,7 +9969,7 @@ var es = w(function (Od) {
     return mE++;
   }
 });
-var oa = w(function (Ad) {
+var oa = commonJS(function (Ad) {
   Object.defineProperty(Ad, "__esModule", { value: !0 });
   Ad.CompressionAlgorithms = void 0;
   var wd;
@@ -9979,7 +9979,7 @@ var oa = w(function (Ad) {
       (e[(e.gzip = 2)] = "gzip"));
   })(wd || (Ad.CompressionAlgorithms = wd = {}));
 });
-var la = w(function (Md) {
+var la = commonJS(function (Md) {
   Object.defineProperty(Md, "__esModule", { value: !0 });
   Md.BaseFilter = void 0;
   class Nd {
@@ -10001,10 +10001,10 @@ var la = w(function (Md) {
   }
   Md.BaseFilter = Nd;
 });
-var ua = w(function (Ud) {
+var ua = commonJS(function (Ud) {
   Object.defineProperty(Ud, "__esModule", { value: !0 });
   Ud.CompressionFilterFactory = Ud.CompressionFilter = void 0;
-  var ts = Ae("zlib"),
+  var ts = importMetaRequire("zlib"),
     kd = oa(),
     gt = N(),
     _E = la(),
@@ -10271,7 +10271,7 @@ var ua = w(function (Ud) {
   }
   Ud.CompressionFilterFactory = qd;
 });
-var Ur = w(function (zd) {
+var Ur = commonJS(function (zd) {
   Object.defineProperty(zd, "__esModule", { value: !0 });
   zd.restrictControlPlaneStatusCode = RE;
   var Ge = N(),
@@ -10294,7 +10294,7 @@ var Ur = w(function (zd) {
     else return { code: e, details: t };
   }
 });
-var tr = w(function (Hd) {
+var tr = commonJS(function (Hd) {
   Object.defineProperty(Hd, "__esModule", { value: !0 });
   Hd.minDeadline = OE;
   Hd.getDeadlineTimeoutString = AE;
@@ -10346,7 +10346,7 @@ var tr = w(function (Hd) {
     return ((t.getTime() - e.getTime()) / 1000).toFixed(3) + "s";
   }
 });
-var rs = w(function (Wd) {
+var rs = commonJS(function (Wd) {
   Object.defineProperty(Wd, "__esModule", { value: !0 });
   Wd.FilterStackFactory = Wd.FilterStack = void 0;
   class da {
@@ -10407,7 +10407,7 @@ var rs = w(function (Wd) {
   }
   Wd.FilterStackFactory = ha;
 });
-var Kd = w(function (Vd) {
+var Kd = commonJS(function (Vd) {
   Object.defineProperty(Vd, "__esModule", { value: !0 });
   Vd.SingleSubchannelChannel = void 0;
   var UE = es(),
@@ -10647,7 +10647,7 @@ var Kd = w(function (Vd) {
   }
   Vd.SingleSubchannelChannel = $d;
 });
-var Zd = w(function (Xd) {
+var Zd = commonJS(function (Xd) {
   Object.defineProperty(Xd, "__esModule", { value: !0 });
   Xd.Subchannel = void 0;
   var q = ce(),
@@ -10985,7 +10985,7 @@ var Zd = w(function (Xd) {
   }
   Xd.Subchannel = Jd;
 });
-var rh = w(function (eh) {
+var rh = commonJS(function (eh) {
   var ga;
   Object.defineProperty(eh, "__esModule", { value: !0 });
   eh.GRPC_NODE_USE_ALTERNATIVE_RESOLVER = void 0;
@@ -10995,12 +10995,12 @@ var rh = w(function (eh) {
       ? ga
       : "false") === "true";
 });
-var ya = w(function (oh) {
+var ya = commonJS(function (oh) {
   Object.defineProperty(oh, "__esModule", { value: !0 });
   oh.DEFAULT_PORT = void 0;
   oh.setup = nT;
   var ih = we(),
-    ma = Ae("dns"),
+    ma = importMetaRequire("dns"),
     QE = tn(),
     va = N(),
     rr = Tt(),
@@ -11008,7 +11008,7 @@ var ya = w(function (oh) {
     eT = B(),
     tT = N(),
     mt = le(),
-    sh = Ae("net"),
+    sh = importMetaRequire("net"),
     rT = Bt(),
     nh = rh(),
     iT = "dns_resolver";
@@ -11293,19 +11293,19 @@ var ya = w(function (oh) {
     ((0, ih.registerResolver)("dns", ah), (0, ih.registerDefaultScheme)("dns"));
   }
 });
-var _a = w(function (hh) {
+var _a = commonJS(function (hh) {
   Object.defineProperty(hh, "__esModule", { value: !0 });
   hh.parseCIDR = uh;
   hh.mapProxyName = mT;
   hh.getProxiedConnection = vT;
   var Hr = B(),
     ir = N(),
-    ch = Ae("net"),
-    oT = Ae("http"),
+    ch = importMetaRequire("net"),
+    oT = importMetaRequire("http"),
     lT = B(),
     lh = he(),
     Wr = le(),
-    cT = Ae("url"),
+    cT = importMetaRequire("url"),
     uT = ya(),
     dT = "proxy";
   function sr(e) {
@@ -11485,7 +11485,7 @@ var _a = w(function (hh) {
     );
   }
 });
-var Sa = w(function (ph) {
+var Sa = commonJS(function (ph) {
   Object.defineProperty(ph, "__esModule", { value: !0 });
   ph.StreamDecoder = void 0;
   var Ye;
@@ -11579,11 +11579,11 @@ var Sa = w(function (ph) {
   }
   ph.StreamDecoder = fh;
 });
-var _h = w(function (vh) {
+var _h = commonJS(function (vh) {
   Object.defineProperty(vh, "__esModule", { value: !0 });
   vh.Http2SubchannelCall = void 0;
-  var st = Ae("http2"),
-    CT = Ae("os"),
+  var st = importMetaRequire("http2"),
+    CT = importMetaRequire("os"),
     U = N(),
     nt = Q(),
     ET = Sa(),
@@ -11982,11 +11982,11 @@ var _h = w(function (vh) {
   }
   vh.Http2SubchannelCall = mh;
 });
-var Rh = w(function (Eh) {
+var Rh = commonJS(function (Eh) {
   Object.defineProperty(Eh, "__esModule", { value: !0 });
   Eh.Http2SubchannelConnector = void 0;
-  var Nt = Ae("http2"),
-    wT = Ae("tls"),
+  var Nt = importMetaRequire("http2"),
+    wT = importMetaRequire("tls"),
     as = pt(),
     jr = N(),
     AT = _a(),
@@ -11994,7 +11994,7 @@ var Rh = w(function (Eh) {
     PT = we(),
     os = he(),
     Ea = le(),
-    NT = Ae("net"),
+    NT = importMetaRequire("net"),
     MT = _h(),
     IT = es(),
     Ta = "transport",
@@ -12568,7 +12568,7 @@ var Rh = w(function (Eh) {
   }
   Eh.Http2SubchannelConnector = Ch;
 });
-var wh = w(function (bh) {
+var wh = commonJS(function (bh) {
   Object.defineProperty(bh, "__esModule", { value: !0 });
   bh.SubchannelPool = void 0;
   bh.getSubchannelPool = JT;
@@ -12636,7 +12636,7 @@ var wh = w(function (bh) {
     else return new ls();
   }
 });
-var xh = w(function (Mh) {
+var xh = commonJS(function (Mh) {
   Object.defineProperty(Mh, "__esModule", { value: !0 });
   Mh.LoadBalancingCall = void 0;
   var Ah = ce(),
@@ -12647,7 +12647,7 @@ var xh = w(function (Mh) {
     QT = le(),
     ZT = B(),
     Ra = Ur(),
-    e0 = Ae("http2"),
+    e0 = importMetaRequire("http2"),
     t0 = "load_balancing_call";
   class Nh {
     constructor(e, t, r, i, s, n, a) {
@@ -12954,7 +12954,7 @@ var xh = w(function (Mh) {
   }
   Mh.LoadBalancingCall = Nh;
 });
-var qh = w(function (Lh) {
+var qh = commonJS(function (Lh) {
   Object.defineProperty(Lh, "__esModule", { value: !0 });
   Lh.ResolvingCall = void 0;
   var r0 = hi(),
@@ -13255,7 +13255,7 @@ var qh = w(function (Lh) {
   }
   Lh.ResolvingCall = Dh;
 });
-var jh = w(function (Hh) {
+var jh = commonJS(function (Hh) {
   Object.defineProperty(Hh, "__esModule", { value: !0 });
   Hh.RetryingCall = Hh.MessageBufferTracker = Hh.RetryThrottler = void 0;
   var ds = N(),
@@ -13905,7 +13905,7 @@ var jh = w(function (Hh) {
   }
   Hh.RetryingCall = zh;
 });
-var $r = w(function ($h) {
+var $r = commonJS(function ($h) {
   Object.defineProperty($h, "__esModule", { value: !0 });
   $h.BaseSubchannelWrapper = void 0;
   class Gh {
@@ -13986,7 +13986,7 @@ var $r = w(function ($h) {
   }
   $h.BaseSubchannelWrapper = Gh;
 });
-var Pa = w(function (Zh) {
+var Pa = commonJS(function (Zh) {
   Object.defineProperty(Zh, "__esModule", { value: !0 });
   Zh.InternalChannel = Zh.SUBCHANNEL_ARGS_EXCLUDE_KEY_PREFIX = void 0;
   var f0 = Ut(),
@@ -14577,7 +14577,7 @@ var Pa = w(function (Zh) {
   }
   Zh.InternalChannel = Qh;
 });
-var dn = w(function (sf) {
+var dn = commonJS(function (sf) {
   Object.defineProperty(sf, "__esModule", { value: !0 });
   sf.ChannelImplementation = void 0;
   var N0 = Ut(),
@@ -14623,7 +14623,7 @@ var dn = w(function (sf) {
   }
   sf.ChannelImplementation = rf;
 });
-var ff = w(function (df) {
+var ff = commonJS(function (df) {
   Object.defineProperty(df, "__esModule", { value: !0 });
   df.ServerDuplexStreamImpl =
     df.ServerWritableStreamImpl =
@@ -14631,8 +14631,8 @@ var ff = w(function (df) {
     df.ServerUnaryCallImpl =
       void 0;
   df.serverErrorToStatus = Ia;
-  var I0 = Ae("events"),
-    Na = Ae("stream"),
+  var I0 = importMetaRequire("events"),
+    Na = importMetaRequire("stream"),
     Ma = N(),
     af = Q();
   function Ia(e, t) {
@@ -14833,7 +14833,7 @@ var ff = w(function (df) {
   }
   df.ServerDuplexStreamImpl = uf;
 });
-var gs = w(function (pf) {
+var gs = commonJS(function (pf) {
   Object.defineProperty(pf, "__esModule", { value: !0 });
   pf.ServerCredentials = void 0;
   pf.createCertificateProviderServerCredentials = F0;
@@ -15067,7 +15067,7 @@ var gs = w(function (pf) {
     return new Fa(e, t);
   }
 });
-var Yr = w(function (mf) {
+var Yr = commonJS(function (mf) {
   Object.defineProperty(mf, "__esModule", { value: !0 });
   mf.durationMessageToDuration = z0;
   mf.msToDuration = H0;
@@ -15109,7 +15109,7 @@ var Yr = w(function (mf) {
     return `${e.seconds}.${e.nanos / t}s`;
   }
 });
-var vs = w(function (wf) {
+var vs = commonJS(function (wf) {
   var __dirname =
     "/home/runner/work/claude-cli-internal/claude-cli-internal/node_modules/@grpc/grpc-js/build/src";
   Object.defineProperty(wf, "__esModule", { value: !0 });
@@ -15371,7 +15371,7 @@ var vs = w(function (wf) {
     return new bf(e);
   }
 });
-var Ha = w(function (Wf) {
+var Ha = commonJS(function (Wf) {
   Object.defineProperty(Wf, "__esModule", { value: !0 });
   Wf.BaseServerInterceptingCall =
     Wf.ServerInterceptingCall =
@@ -15382,12 +15382,12 @@ var Ha = w(function (Wf) {
   Wf.getServerInterceptingCall = CR;
   var Ss = Q(),
     ue = N(),
-    or = Ae("http2"),
+    or = importMetaRequire("http2"),
     Nf = li(),
-    Mf = Ae("zlib"),
+    Mf = importMetaRequire("zlib"),
     pR = Sa(),
     Lf = B(),
-    gR = Ae("tls"),
+    gR = importMetaRequire("tls"),
     If = vs(),
     Ff = "server_call";
   function xt(e) {
@@ -16109,7 +16109,7 @@ var Ha = w(function (Wf) {
     return e.reduce((l, c) => c(a, l), o);
   }
 });
-var Xf = w(function (_t) {
+var Xf = commonJS(function (_t) {
   var wR =
       (_t && _t.__runInitializers) ||
       function (e, t, r) {
@@ -16163,8 +16163,8 @@ var Xf = w(function (_t) {
       };
   Object.defineProperty(_t, "__esModule", { value: !0 });
   _t.Server = void 0;
-  var pe = Ae("http2"),
-    PR = Ae("util"),
+  var pe = importMetaRequire("http2"),
+    PR = importMetaRequire("util"),
     G = N(),
     ur = ff(),
     Wa = gs(),
@@ -17640,7 +17640,7 @@ var Xf = w(function (_t) {
     });
   }
 });
-var tp = w(function (Zf) {
+var tp = commonJS(function (Zf) {
   Object.defineProperty(Zf, "__esModule", { value: !0 });
   Zf.StatusBuilder = void 0;
   class Qf {
@@ -17666,7 +17666,7 @@ var tp = w(function (Zf) {
   }
   Zf.StatusBuilder = Qf;
 });
-var Xr = w(function (cp) {
+var Xr = commonJS(function (cp) {
   Object.defineProperty(cp, "__esModule", { value: !0 });
   cp.LeafLoadBalancer =
     cp.PickFirstLoadBalancer =
@@ -17681,7 +17681,7 @@ var Xr = w(function (cp) {
     BR = B(),
     zR = N(),
     ip = he(),
-    sp = Ae("net"),
+    sp = importMetaRequire("net"),
     HR = Tt(),
     WR = "pick_first";
   function Kr(e) {
@@ -18093,13 +18093,13 @@ var Xr = w(function (cp) {
       (0, $a.registerDefaultLoadBalancerType)(Jr));
   }
 });
-var pp = w(function (hp) {
+var pp = commonJS(function (hp) {
   Object.defineProperty(hp, "__esModule", { value: !0 });
   hp.FileWatcherCertificateProvider = void 0;
-  var QR = Ae("fs"),
+  var QR = importMetaRequire("fs"),
     ZR = B(),
     eb = N(),
-    tb = Ae("util"),
+    tb = importMetaRequire("util"),
     rb = "certificate_provider";
   function Es(e) {
     ZR.trace(eb.LogVerbosity.DEBUG, rb, e);
@@ -18215,7 +18215,7 @@ var pp = w(function (hp) {
   }
   hp.FileWatcherCertificateProvider = dp;
 });
-var Ja = w(function (I) {
+var Ja = commonJS(function (I) {
   Object.defineProperty(I, "__esModule", { value: !0 });
   I.SUBCHANNEL_ARGS_EXCLUDE_KEY_PREFIX =
     I.createCertificateProviderChannelCredentials =
@@ -18483,7 +18483,7 @@ var Ja = w(function (I) {
     },
   });
 });
-var Ep = w(function (Cp) {
+var Ep = commonJS(function (Cp) {
   Object.defineProperty(Cp, "__esModule", { value: !0 });
   Cp.setup = mb;
   var pb = we(),
@@ -18520,10 +18520,10 @@ var Ep = w(function (Cp) {
     (0, pb.registerResolver)("unix", Sp);
   }
 });
-var Pp = w(function (Ap) {
+var Pp = commonJS(function (Ap) {
   Object.defineProperty(Ap, "__esModule", { value: !0 });
   Ap.setup = Eb;
-  var Tp = Ae("net"),
+  var Tp = importMetaRequire("net"),
     Rp = Tt(),
     Rs = N(),
     Xa = Q(),
@@ -18621,7 +18621,7 @@ var Pp = w(function (Ap) {
     ((0, bp.registerResolver)(Qa, eo), (0, bp.registerResolver)(Za, eo));
   }
 });
-var Lp = w(function (kp) {
+var Lp = commonJS(function (kp) {
   Object.defineProperty(kp, "__esModule", { value: !0 });
   kp.RoundRobinLoadBalancer = void 0;
   kp.setup = Pb;
@@ -18807,7 +18807,7 @@ var Lp = w(function (kp) {
     (0, Ip.registerLoadBalancerType)(bs, to, Os);
   }
 });
-var jp = w(function (Hp) {
+var jp = commonJS(function (Hp) {
   var ro;
   Object.defineProperty(Hp, "__esModule", { value: !0 });
   Hp.OutlierDetectionLoadBalancer = Hp.OutlierDetectionLoadBalancingConfig =
@@ -19395,7 +19395,7 @@ var jp = w(function (Hp) {
     if (qb) (0, qp.registerLoadBalancerType)(ao, oo, ei);
   }
 });
-var Yp = w(function ($p) {
+var Yp = commonJS(function ($p) {
   Object.defineProperty($p, "__esModule", { value: !0 });
   $p.PriorityQueue = void 0;
   var fr = 0,
@@ -19458,7 +19458,7 @@ var Yp = w(function ($p) {
   }
   $p.PriorityQueue = Gp;
 });
-var ig = w(function (tg) {
+var ig = commonJS(function (tg) {
   Object.defineProperty(tg, "__esModule", { value: !0 });
   tg.WeightedRoundRobinLoadBalancingConfig = void 0;
   tg.setup = eO;
@@ -19851,7 +19851,7 @@ var ig = w(function (tg) {
     (0, Xp.registerLoadBalancerType)(uo, eg, ri);
   }
 });
-var ii = w(function (F) {
+var ii = commonJS(function (F) {
   Object.defineProperty(F, "__esModule", { value: !0 });
   F.experimental =
     F.ServerMetricRecorder =
@@ -20127,7 +20127,7 @@ var ii = w(function (F) {
       wO.setup());
   })();
 });
-var ug = w(function (lg) {
+var ug = commonJS(function (lg) {
   Object.defineProperty(lg, "__esModule", { value: !0 });
   lg.createServiceClientConstructor = void 0;
   var LO = ii();
@@ -20147,7 +20147,7 @@ var ug = w(function (lg) {
   }
   lg.createServiceClientConstructor = FO;
 });
-var si = w(function (hg) {
+var si = commonJS(function (hg) {
   Object.defineProperty(hg, "__esModule", { value: !0 });
   hg.createOtlpGrpcExporterTransport =
     hg.GrpcExporterTransport =
@@ -20233,7 +20233,7 @@ var si = w(function (hg) {
   }
   hg.createOtlpGrpcExporterTransport = $O;
 });
-var Sg = w(function (yg) {
+var Sg = commonJS(function (yg) {
   Object.defineProperty(yg, "__esModule", { value: !0 });
   yg.getOtlpGrpcDefaultConfiguration =
     yg.mergeOtlpGrpcConfigurationWithDefaults =
@@ -20241,7 +20241,7 @@ var Sg = w(function (yg) {
       void 0;
   var mg = pO(),
     ni = si(),
-    XO = Ae("url"),
+    XO = importMetaRequire("url"),
     pg = Ls();
   function vg(e) {
     if (((e = e.trim()), !e.match(/^([\w]{1,8}):\/\//))) e = `https://${e}`;
@@ -20292,14 +20292,14 @@ var Sg = w(function (yg) {
   }
   yg.getOtlpGrpcDefaultConfiguration = ZO;
 });
-var wg = w(function (bg) {
+var wg = commonJS(function (bg) {
   Object.defineProperty(bg, "__esModule", { value: !0 });
   bg.getOtlpGrpcConfigurationFromEnv = void 0;
   var Cg = Mc(),
     ai = si(),
     rw = mF(),
-    iw = Ae("fs"),
-    sw = Ae("path"),
+    iw = importMetaRequire("fs"),
+    sw = importMetaRequire("path"),
     Tg = Ls();
   function mo(e, t) {
     if (e != null && e !== "") return e;
@@ -20401,7 +20401,7 @@ var wg = w(function (bg) {
   }
   bg.getOtlpGrpcConfigurationFromEnv = hw;
 });
-var Mg = w(function (Pg) {
+var Mg = commonJS(function (Pg) {
   Object.defineProperty(Pg, "__esModule", { value: !0 });
   Pg.convertLegacyOtlpGrpcOptions = void 0;
   var fw = Ls(),
@@ -20427,7 +20427,7 @@ var Mg = w(function (Pg) {
   }
   Pg.convertLegacyOtlpGrpcOptions = mw;
 });
-var kg = w(function (Ig) {
+var kg = commonJS(function (Ig) {
   Object.defineProperty(Ig, "__esModule", { value: !0 });
   Ig.createOtlpGrpcExportDelegate = void 0;
   var vw = pO(),
@@ -20449,7 +20449,7 @@ var kg = w(function (Ig) {
   }
   Ig.createOtlpGrpcExportDelegate = _w;
 });
-var m3e = w(function (xs) {
+var m3e = commonJS(function (xs) {
   Object.defineProperty(xs, "__esModule", { value: !0 });
   xs.createOtlpGrpcExportDelegate = xs.convertLegacyOtlpGrpcOptions = void 0;
   var Sw = Mg();

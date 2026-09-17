@@ -101,8 +101,8 @@ import {
   kMn,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, Le, Dr, Xo, FW } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z, Dt, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep, withTimeout, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import {
   Lt,
   Xl,
@@ -156,7 +156,7 @@ import {
   U0,
   To,
 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
@@ -175,7 +175,7 @@ import {
   logMCPError,
   logMCPDebug,
 } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { LE, lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { sessionTransportRegistry, mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { yQ, ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import {
   XJ,
@@ -348,10 +348,10 @@ import {
   bq,
   ql,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { cmdFeature, logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { SW } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { fn, Fo, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import {
@@ -1339,7 +1339,7 @@ import {
   yC,
   oR,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { l6, Ol } from "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
+import { claimRegistriesByHost, getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import {
   O$e,
   Knr,
@@ -1458,7 +1458,7 @@ import {
   eU,
 } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { so, getToolPermissionContext, getSessionEffort } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
-import { rf, Kt, ar, LT } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
+import { createDefaultToolPermissionContext, matchesToolName, findToolByName, parseToolInput } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import { createAbortController, userAbortReason, unwrapAbortReason } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
   Jc,
@@ -1479,7 +1479,7 @@ import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共�
 import { ds } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
 import { b7e, PJn } from "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { getSessionNamingState, takePendingYield, reclaimSessionNameOnResume } from "../../02-功能模块/跨会话消息(UDS)/chunk-9kzxq41e.js";
-import { Es } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
+import { ASK_USER_QUESTION_TOOL_NAME } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import {
   Cr,
   Efe,
@@ -1503,7 +1503,7 @@ import { isCustomizationDisabled, isClaudeMdLoadingDisabled } from "../../02-功
 import { bo, eG } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
 import { Cl, BW } from "../../02-功能模块/Workflow编排/chunk-0t0sve49.js";
 import { isViolinWoodEnabledCached, isSettingsToCloudEnabledCached, isCloudPluginForwardingEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
-import { Dl } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
+import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { Uk, hD, XS, ZY, V_, lR, ti, X7e, isCoordinatorMode } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { Tj } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import {
@@ -1578,10 +1578,10 @@ import {
   planApprovalResumeText,
 } from "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
 import { isBridgeEnabled, getRemoteControlPolicyVerdict, isPolicyLimitsCacheLoaded, isBridgeAuthReviveEnabled, getCcrAutoConnectDefault, isPersistentRemoteSessionEnabled, isRemoteControlInternalEventsEnabled, getBridgeSubagentFrameGate } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
-import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
+import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import { toe, ig, Ui, cwt, lJ } from "../../02-功能模块/插件系统/chunk-ajtn749s.js";
 import { bd, Hc } from "../../02-功能模块/插件系统/chunk-hh8f1qrw.js";
-import { KE, ef, LH, uoe, doe } from "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
+import { AGENT_COLOR_THEME_KEYS, AGENT_COLOR_NAMES, isAgentColorName, resolveAgentColorName, getAgentTypeColorThemeKey } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { JNe } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
 import { Jn, GI, CH } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { Eo, XH } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
@@ -1642,7 +1642,7 @@ import {
   rg,
 } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { _$ } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
-import { HH } from "../../02-功能模块/图片-截图-ComputerUse/chunk-bvxymt09.js";
+import { getComputerUseNativeModule } from "../../02-功能模块/图片-截图-ComputerUse/computer-use-session.js";
 import { RAe, CNe, W8e, Lpe } from "../../02-功能模块/Bridge-RemoteControl/chunk-ct52ffwb.js";
 import { ny } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
 import { qHe, vWe, Eit, IWe, eF, rle, Cit } from "../../02-功能模块/后台任务-Shell管理/chunk-xmxjyg29.js";
@@ -1665,7 +1665,7 @@ import {
 } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { P9e, Qye, Cv, vv } from "../../01-核心基础设施/共享小工具-未细化/chunk-z3y2y7w9.js";
 import { dk, FFt } from "../../02-功能模块/状态栏-主题/chunk-q7ekqy5h.js";
-import { ZR } from "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { Uit, KWe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import {
   Vm,
@@ -1693,7 +1693,7 @@ import {
 } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { Mze, rue } from "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
 import { gOe } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
-import { ws } from "../../01-核心基础设施/共享小工具-未细化/chunk-0a6nmdka.js";
+import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Ev, Va, vle, cF, ok } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
 import { VAn } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
@@ -1732,7 +1732,7 @@ import {
   y4,
 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
 import { rk, cn, Ty } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import {
   sO,
   gi,
@@ -1761,8 +1761,8 @@ import {
   Od,
   _tn,
 } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { htn, Me } from "../../01-核心基础设施/共享小工具-未细化/chunk-0dh9gct8.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { subscribeToNothing, useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import { rO, b9e, l4, d_, U, It, gtn, Yn, Os } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { mle, Rs, Een, Aen, hOt, eM, p9e, _Ot } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
 import {
@@ -1780,26 +1780,26 @@ import {
   Wb,
 } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { cE, ui, Gm, fa, c9e, $o, nl, qm, vs, ve } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { Xw, mo, ma } from "../../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js";
+import { Xw, REFUSE_INPUT_WINDOW_MS, isRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { u_, Ma, ks, s4, $ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { dat, et, cu } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { S9e, N0e, sl, nM } from "../../02-功能模块/键位绑定(Keybindings)/chunk-qy43nqgh.js";
-import { Ne, Ze, rF } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { dc } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdk55p8n.js";
-import { t9, D } from "../../02-功能模块/键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue, Y0 } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { Qd } from "../../01-核心基础设施/共享小工具-未细化/chunk-ejtvp07p.js";
-import { L0e, Ir, M0e } from "./chunk-fgcep5na.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { STATUS_PRESENTATION, StatusIndicator, shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { createKeyHandlerRegistry, KeybindingProvider, useKeybindingContext, useActiveKeybindingContext } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-context.js";
+import { useKeybinding, useKeybindings, useKeybindingPreDispatch } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { useKeybindingChordText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-chord-text.js";
+import { formatKeybindingChord, KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList, useDoublePressConfirm } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useVoiceSelector } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
+import { shouldShowNotification, useNotificationQueue, NOTIFICATION_PRIORITY_RANK } from "./notification-queue.js";
 import { nat, rat, f9e, hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
-import { Zr } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js";
-import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
+import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
+import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { WA, Vx, Sv, Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { _M, x3n, tue, mln, ift, MFt, Oze, gln } from "../../01-核心基础设施/共享小工具-未细化/chunk-dhg3raay.js";
 import { Pze, sendRv, markReplayNoOp } from "../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js";
-import { qye, qc } from "../../01-核心基础设施/共享小工具-未细化/chunk-vke340te.js";
-import { wf } from "../../01-核心基础设施/共享小工具-未细化/chunk-pbd0pf42.js";
+import { CommandQueueProvider, useCommandQueue } from "../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
+import { useTaskRegistry } from "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import { HBn, S4 } from "../../02-功能模块/会话-历史-恢复/chunk-ybcvb652.js";
 import { registerAdoptedWorkflowTask, pauseWorkflowTask, killWorkflowTask, skipWorkflowAgent, retryWorkflowAgent } from "../../02-功能模块/Workflow编排/chunk-va9cgbfs.js";
 import { sze, gpt, o9n, ate } from "../../02-功能模块/Artifact发布-渲染/chunk-5gz5xvw9.js";
@@ -1945,11 +1945,11 @@ import {
   CJt,
   b0t,
 } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
+import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { Act, Cct, ir, xh, xct, gE, Qx, Oct } from "../../02-功能模块/MCP客户端/chunk-g4gdwpa0.js";
 import { Tv, a4, ptn } from "../../02-功能模块/Hooks钩子/chunk-22aft7vr.js";
 import { Ale, atn, ltn, qUn } from "../../02-功能模块/工具TodoWrite-Tasks/chunk-5a7p8d2p.js";
-import { oF } from "../../01-核心基础设施/共享小工具-未细化/chunk-vz37aa8z.js";
+import { worktreeStateStore } from "../../01-核心基础设施/共享小工具-未细化/worktree-state-store.js";
 import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
 import { P7 } from "../../02-功能模块/Artifact发布-渲染/chunk-qdg189tc.js";
 import {
@@ -1977,7 +1977,7 @@ import {
   teardownFrameLiveForProcessHandoff,
   watchArtifactFromStartup,
 } from "../../02-功能模块/Artifact发布-渲染/chunk-kshc4v5t.js";
-import { wv } from "../../01-核心基础设施/共享小工具-未细化/chunk-ajpjkvdj.js";
+import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工具-未细化/base-render-options.js";
 import {
   $8,
   pye,
@@ -2021,7 +2021,7 @@ import {
   hp,
   C$n,
 } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
-import { IS } from "./chunk-vwjrfkgt.js";
+import { ScrollBox } from "./scroll-box.js";
 import {
   TWe,
   DIFF_SIDEBAR_MIN_COLS,
@@ -2075,26 +2075,26 @@ import {
   Q_e,
 } from "../../02-功能模块/Vim模式/Vim模式.nnewe0gf.js";
 import { xIt, XQt, JQt, QQt, r$n } from "../../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
-import { BA, eO } from "../../01-核心基础设施/共享小工具-未细化/chunk-csjxh2sy.js";
-import { KPt, Wit, Git, qa } from "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
+import { useFeatureFlagVersion, useFeatureFlagValue } from "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
+import { resolveMainLoopModelSetting, resolveMainLoopModel, useMainLoopModelSetting, useMainLoopModel } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import { getProTrialState, shouldAutoOpenProTrialExpired, formatTrialBadge } from "../../01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js";
-import { UB } from "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
-import { yy } from "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
+import { VirtualScrollViewportContext } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
+import { OffscreenFrozenContent } from "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
 import { pit, YW, F8, jIt, WIt, fit } from "../../02-功能模块/成本-Token统计/chunk-adrc9xt1.js";
-import { aM } from "../../01-核心基础设施/共享小工具-未细化/chunk-c9wxfdax.js";
+import { getSessionAnnouncementState } from "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
 import { POWERUP_DISCOVERY_COPY, resolvePowerupDiscoveryArm } from "../../01-核心基础设施/共享小工具-未细化/chunk-aeg1pn1f.js";
 import { isChannelsEnabled } from "../../02-功能模块/插件系统/chunk-rbjz1q03.js";
 import {
-  VPe,
-  P1t,
-  Hin,
-  KPe,
-  Ydt,
-  Pin,
-  Ebe,
-  ste,
-  XPe,
-} from "../../02-功能模块/插件系统/chunk-4k4dssd9.js";
+  ChannelMessageNotificationSchema,
+  CHANNEL_PERMISSION_METHOD,
+  ChannelPermissionNotificationSchema,
+  wrapChannelMessage,
+  getEffectiveChannelAllowlist,
+  isChannelGateHardRevocation,
+  isChannelsPolicyBlocked,
+  findChannelEntry,
+  gateChannelServer,
+} from "../../02-功能模块/插件系统/channel-gate.js";
 import {
   JZ,
   Jit,
@@ -2111,7 +2111,7 @@ import {
   La,
   jA,
 } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import { yle } from "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import { renderToAnsiText } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import {
   Yqe,
   _Wn,
@@ -2184,21 +2184,21 @@ import {
 } from "../../02-功能模块/后台任务-Shell管理/chunk-n6g2zfwn.js";
 import { js, XZt } from "../../02-功能模块/语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import { pDt, Kat, mDt, gDt } from "../../02-功能模块/跨会话消息(UDS)/chunk-t2esphmv.js";
-import { yp, Qlt, Zlt } from "../../02-功能模块/上下文压缩-Compact/chunk-1ntrf0ja.js";
-import { K8 } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import { localJsxDialog, resetTransientSessionState, closeAllWebViews } from "../../02-功能模块/上下文压缩-Compact/chunk-1ntrf0ja.js";
+import { K8 } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { QP } from "../../02-功能模块/Diff引擎/chunk-p2gj9dsf.js";
 import { vh, WZt } from "./chunk-sn6am10p.js";
-import { U7, P3n, D3n } from "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
-import { tat } from "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import { AUTO_CONTINUE_PREFILL_TEXT, stripAutoContinuePrefill, resetRateLimitCheckpoint } from "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
+import { ExpandedContentProvider } from "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import { pOt } from "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import { HS } from "../../01-核心基础设施/共享小工具-未细化/chunk-nj1exzcd.js";
-import { Sye, GHe } from "../../01-核心基础设施/共享小工具-未细化/chunk-7m5aewa3.js";
-import { Bb } from "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
+import { useElapsedDuration } from "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
+import { renderToolUseMessageForTool, renderToolUseMessageByToolName } from "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
+import { resolveAgentColor } from "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
 import { Wm, lPt, EZt, AZt, MB } from "../../02-功能模块/GitHub集成/chunk-bfz9rjjm.js";
 import { _it, x$n, H$n, TZt, yit, P$n, O$n, D$n } from "../../02-功能模块/Bridge-RemoteControl/chunk-sc8n0cp3.js";
-import { zle, OS, nI, f9, Yx } from "./chunk-zds66w6y.js";
+import { openFileInEditor, resolveEditorCommand, getEditorDisplayName, editFileInExternalEditor, editTextInExternalEditor } from "./external-editor.js";
 import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
-import { Ah } from "../../01-核心基础设施/共享小工具-未细化/chunk-hxt46tkz.js";
+import { useAnswerRefusalState } from "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
 import { lSe } from "../../02-功能模块/斜杠命令-UI组件/chunk-d9snm4c7.js";
 import { Enn, glt, Cnn, VBn } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
 import {
@@ -2234,9 +2234,9 @@ import {
 import { Ole, Dle, yDt } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
 import { iM } from "../../02-功能模块/文件监听-Watch/chunk-mmg1rsp2.js";
 import { mergeAndFilterTools, stripSoleNonDeniableTool } from "../../01-核心基础设施/共享小工具-未细化/chunk-1m91n7yv.js";
-import { X0 } from "../../02-功能模块/Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
+import { activeTimeTracker } from "../../02-功能模块/Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import { checkEnabledPlugins } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
-import { NHe, FHe, ait } from "../../01-核心基础设施/共享小工具-未细化/chunk-8r3h1dwe.js";
+import { buildAutoModeGateNotification, runAutoModeGateCheck, rearmAutoModeCheck } from "../../01-核心基础设施/共享小工具-未细化/chunk-8r3h1dwe.js";
 import { xZ, EFn, Dst, D6e, V_e, Lst, Mst } from "../../02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js";
 import {
   eFn,
@@ -2284,7 +2284,7 @@ import {
 } from "../../02-功能模块/权限系统/chunk-jsd70b22.js";
 import { Xjn, A7 } from "../../02-功能模块/Bridge-RemoteControl/chunk-ga43tr2w.js";
 import { JGe, vce, udt, QGe, ZGe, eqe, tqe } from "../../02-功能模块/Bridge-RemoteControl/chunk-jpq2fv3g.js";
-import { Ust } from "../../02-功能模块/Bridge-RemoteControl/chunk-2mm1aqzx.js";
+import { createClientPresenceReporter } from "../../02-功能模块/Bridge-RemoteControl/client-presence.js";
 import {
   z_e,
   Est,
@@ -2301,10 +2301,10 @@ import {
 import { isSlashCommandBlockedByEndedByModel, looksLikeCommand, commandThrowTextForTranscript } from "../../02-功能模块/斜杠命令-框架/chunk-s195n5de.js";
 import { globalFileIndexCache, findLongestCommonPrefix, startBackgroundCacheRefresh, generateFileSuggestions, applyFileSuggestion } from "../../02-功能模块/工具Glob-Grep-搜索/chunk-57axeagj.js";
 import { pLt } from "../../02-功能模块/工具WebFetch-WebSearch/chunk-1mxgbqzj.js";
-import { Q9e, fnn } from "../../02-功能模块/Teammates团队/chunk-r8fvp46d.js";
+import { generateSessionName, buildSessionNameYieldedNotice } from "../../02-功能模块/Teammates团队/rename-session.js";
 import { NGe, Tjn, ebe } from "../../02-功能模块/Artifact发布-渲染/chunk-fx5ekm7e.js";
 import { ljn } from "../../01-核心基础设施/共享小工具-未细化/chunk-mybtnk9f.js";
-import { g2 } from "../../01-核心基础设施/共享小工具-未细化/chunk-6k8nm416.js";
+import { GOAL_PROPOSAL_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
 import { makeSetWebBrowserSlice } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import { Ou, d2, KSe, uM, y9, Dee, S9 } from "../../02-功能模块/工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
 import { G6n } from "../../02-功能模块/Workflow编排/chunk-bkcg0nbj.js";
@@ -2325,7 +2325,7 @@ import {
   OPe,
 } from "../../02-功能模块/权限系统/chunk-4tar9p3n.js";
 import { JNt, ZNt, e1t, n1t, wsn, Tsn, Asn } from "../../02-功能模块/Teammates团队/chunk-nhk351pe.js";
-import { Z1 } from "../../01-核心基础设施/共享小工具-未细化/chunk-0k3bh4m8.js";
+import { REMOTE_CALLOUT_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
 import { Sen, dOt, Lye } from "../../01-核心基础设施/设置-配置/chunk-9m8zsynn.js";
 import { lOt, qf, Xit, cOt, uOt, yo, IUn } from "../../02-功能模块/状态栏-主题/chunk-jrr487ty.js";
 import { pWe, $He } from "../../02-功能模块/Workflow编排/chunk-dyq13fbm.js";
@@ -2354,11 +2354,11 @@ import { K6e, X6e } from "../../02-功能模块/Skills技能/Skills技能.dpy2ke
 import { oPe } from "../../02-功能模块/图片-截图-ComputerUse/chunk-1c6fx285.js";
 import { r2, Aee, ak, x4 } from "../../02-功能模块/MCP客户端/chunk-z2a573sr.js";
 import { Ch } from "../../02-功能模块/语法高亮-Markdown渲染/chunk-mnn6q099.js";
-import { GPe } from "../../01-核心基础设施/共享小工具-未细化/chunk-t0dp6656.js";
-import { a2, h9, Lrn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jq60dfkn.js";
+import { it2SetupDialog } from "../../01-核心基础设施/共享小工具-未细化/it2-setup-dialog.js";
+import { MCP_ELICITATION_DIALOG, MCP_ELICITATION_WAITING_DIALOG, isMcpElicitationDialogKind } from "../../01-核心基础设施/共享小工具-未细化/mcp-elicitation-dialogs.js";
 import { bwe, hGn } from "../../02-功能模块/工具Bash-Shell/chunk-8sjdj5bm.js";
-import { Vz } from "../../01-核心基础设施/共享小工具-未细化/chunk-4w3ae8h6.js";
-import { Dye } from "../../01-核心基础设施/共享小工具-未细化/chunk-1phhhgcj.js";
+import { AltScreenContainer } from "../../01-核心基础设施/共享小工具-未细化/alt-screen-container.js";
+import { AuthenticationStatusBox } from "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import { cIt } from "./chunk-7gt0xchv.js";
 import { D7, L7, W4 } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { vFn, uQt, dQt } from "../../02-功能模块/插件系统/chunk-d0tph3ay.js";
@@ -2367,54 +2367,54 @@ import { oM, G9e, tnn, oIe, sIe, ABn, q9e } from "../../02-功能模块/用量�
 import { Ree, vSe, O4, _7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-3eztvm1y.js";
 import { O_, as } from "../../02-功能模块/认证-OAuth登录/chunk-7jz937t3.js";
 import { deviceToolNotices } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdeyn1dg.js";
-import { $A } from "../../02-功能模块/Bridge-RemoteControl/chunk-x4nk7xx6.js";
-import { qz } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
-import { Wx } from "../../01-核心基础设施/共享小工具-未细化/chunk-c172f2at.js";
+import { REMOTE_APPROVAL_MESSAGES } from "../../02-功能模块/Bridge-RemoteControl/remote-approval-messages.js";
+import { NOT_HELD_STATE } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
+import { useDetailDialogKeys } from "../../01-核心基础设施/共享小工具-未细化/detail-dialog-keys.js";
 import { nZt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tfspgges.js";
 import { zL, uWe, dWe, rZt } from "../../02-功能模块/权限系统/chunk-hv6z01db.js";
-import { Xz } from "./chunk-mmzy53cr.js";
-import { GZ } from "../../01-核心基础设施/共享小工具-未细化/chunk-bhcz98rd.js";
+import { ClawdMascot } from "./clawd-mascot.js";
+import { DiffHunks } from "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
 import { zZ, vZt } from "../../02-功能模块/工具Bash-Shell/chunk-ktp8xtmy.js";
-import { G8 } from "../../01-核心基础设施/共享小工具-未细化/chunk-s4b7deyq.js";
-import { Sy } from "../../01-核心基础设施/共享小工具-未细化/chunk-vwjqzjhr.js";
-import { ZW, gs } from "../../02-功能模块/权限系统/chunk-n5mgv42x.js";
+import { MAX_VISIBLE_LIST_ITEMS } from "../../01-核心基础设施/共享小工具-未细化/max-visible-list-items.js";
+import { DashedBorderBox } from "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
+import { PermissionRequestHeader, PermissionDialogFrame } from "../../02-功能模块/权限系统/permission-dialog.js";
 import { xye } from "../../02-功能模块/反馈-错误上报/chunk-rmpn4ety.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import { Gp } from "../../01-核心基础设施/共享小工具-未细化/chunk-c8g7bday.js";
-import { Gc } from "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
+import { BackgroundText } from "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { yv } from "../../02-功能模块/通知(Notifications)/通知(Notifications).g4xng0pg.js";
-import { _s } from "../../01-核心基础设施/共享小工具-未细化/chunk-1371sqbk.js";
-import { Ur } from "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import { ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import { I_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import { Ai } from "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
-import { kh } from "../../01-核心基础设施/共享小工具-未细化/chunk-tw8akhx1.js";
-import { za } from "../../01-核心基础设施/共享小工具-未细化/chunk-951vj555.js";
-import { c_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-xc85bfby.js";
-import { lu } from "../../01-核心基础设施/共享小工具-未细化/chunk-qck6h2yw.js";
+import { TitledBorderBox } from "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
+import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import { ProgressBar } from "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
+import { isKbCohesionFixesEnabled } from "../../01-核心基础设施/共享小工具-未细化/kb-cohesion-fixes.js";
+import { Divider } from "../../01-核心基础设施/共享小工具-未细化/divider.js";
+import { useReducedMotion } from "../../01-核心基础设施/共享小工具-未细化/reduced-motion.js";
+import { BulletItem } from "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { Sle, kOt } from "../../01-核心基础设施/共享小工具-未细化/chunk-ga0qgvpz.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { uO } from "../../01-核心基础设施/共享小工具-未细化/chunk-pvrtr3v0.js";
+import { PerClassInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/per-class-instance-registry.js";
 import { ik, rSe, ztn, SBn, oSe, N9e, F9e, Xtn } from "../../02-功能模块/Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import { sSe, dee, pee } from "../../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js";
 import { $9e } from "../../02-功能模块/权限系统/chunk-2ttypdwq.js";
 import { iSe, enn, U9e, aSe } from "../../02-功能模块/成本-Token统计/chunk-f1ehes3v.js";
 import { a7, CBn, iIe, Rv, Nle, RBn } from "../../02-功能模块/后台任务-Shell管理/chunk-nhnqmzyt.js";
-import { fee, ann } from "../../02-功能模块/Teammates团队/chunk-2j84y871.js";
-import { EDt, Xx, mee } from "../../02-功能模块/MCP客户端/chunk-49ds54j4.js";
-import { QB } from "../../02-功能模块/插件系统/chunk-5ztq0v89.js";
+import { formatBackgroundTaskSummary, isSingleUltraplanTask } from "../../02-功能模块/Teammates团队/background-task-summary.js";
+import { EDt, refreshActivePlugins, getPluginReloadCacheImpact } from "../../02-功能模块/MCP客户端/plugin-reload-cache-impact.js";
+import { PluginStateStore } from "../../02-功能模块/插件系统/plugin-state-store.js";
 import { dIe, DDt, LDt, MDt } from "../../01-核心基础设施/共享小工具-未细化/chunk-v5nz99k6.js";
 import { Rlt, Gle, y2n, Mnn, Nnn } from "../../01-核心基础设施/共享小工具-未细化/chunk-ey89qg3e.js";
 import { b2n, Vle } from "../../01-核心基础设施/共享小工具-未细化/chunk-tc59qdh4.js";
-import { Plt } from "../../02-功能模块/权限系统/chunk-3bdrfpdv.js";
-import { T4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-nkg0z9p5.js";
+import { buildCacheSafeParams } from "../../02-功能模块/权限系统/cache-safe-params.js";
+import { get1MContextSuggestion } from "../../01-核心基础设施/共享小工具-未细化/model-1m-context-suggestion.js";
 import { vIe, Ynn, Flt, RIe } from "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import { E4, Jnn, Xle, A4, tLt, R3e, k3e, x3e, H3e } from "../../01-核心基础设施/设置-配置/chunk-992erern.js";
-import { _Se } from "../../02-功能模块/上下文压缩-Compact/chunk-525y6trw.js";
-import { ut } from "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
+import { applyFlagSettingsPatch } from "../../02-功能模块/上下文压缩-Compact/apply-flag-settings.js";
+import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import {
   p7,
   C2n,
@@ -2427,11 +2427,11 @@ import {
   n2,
   Qle,
 } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
-import { ect, ESe } from "../../02-功能模块/Teammates团队/chunk-c8267s4e.js";
-import { sI } from "../../01-核心基础设施/共享小工具-未细化/chunk-g2fqhcwj.js";
+import { pruneAgentNameRegistry, createAgentLifecycle } from "../../02-功能模块/Teammates团队/agent-lifecycle.js";
+import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
 import { Cee, s2, NIe, Hrn, Hv, Irn } from "../../02-功能模块/MCP客户端/chunk-k2gczbnj.js";
 import { hF, yGe } from "../../01-核心基础设施/共享小工具-未细化/chunk-j66gwpg8.js";
-import { wut } from "../../01-核心基础设施/共享小工具-未细化/chunk-zh4679df.js";
+import { getPlanApprovalPermissionMode } from "../../01-核心基础设施/共享小工具-未细化/plan-approval-permission-mode.js";
 import {
   Tut,
   hNt,
@@ -2448,16 +2448,16 @@ import {
 } from "../../02-功能模块/后台任务-Shell管理/chunk-531ast3t.js";
 import { nbe } from "../../01-核心基础设施/共享小工具-未细化/chunk-1rpyafm2.js";
 import { A9, adt, wF } from "../../02-功能模块/Bridge-RemoteControl/chunk-z5v9hvat.js";
-import { zee } from "../../01-核心基础设施/共享小工具-未细化/chunk-s5e85mz9.js";
-import { TF, Usn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
-import { Bsn, Sqe, Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { truncateForDisplay } from "../../01-核心基础设施/共享小工具-未细化/text-truncation.js";
+import { hasFirstPartyDesignAuth, takePendingScopeExpansionNotice } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
+import { ALLOWED_HYPERLINK_SCHEMES, openHyperlink, tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { gM } from "../../01-核心基础设施/共享小工具-未细化/chunk-febx58tg.js";
 import { nWn, zPe, iWn } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 import { Jdt, jqe, aWn, Wqe, cWn, uWn, dWn } from "../../02-功能模块/权限系统/chunk-n4x6jsp3.js";
-import { zqe } from "../../02-功能模块/Teammates团队/chunk-4ma81w0c.js";
+import { queueTeammateUserMessage } from "../../02-功能模块/Teammates团队/teammate-task-messages.js";
 import { Vqe } from "../../01-核心基础设施/共享小工具-未细化/chunk-3k9e6gxt.js";
 import { j4, S9n, Pbe, bpt, wpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js";
-import { V4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-nbvmqw0g.js";
+import { truncateWithEllipsis } from "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
 import { nue, Og, Qb } from "../../01-核心基础设施/共享小工具-未细化/chunk-zdf7z1m1.js";
 import { $7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
 import {
@@ -2491,27 +2491,27 @@ import { Mu } from "../../02-功能模块/MCP客户端/chunk-0mwqsv0r.js";
 import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
 import { Bg, lK, Z3, hSn } from "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { rG } from "../../02-功能模块/MCP客户端/chunk-tznd4407.js";
-import { QI } from "../../02-功能模块/工具Monitor/chunk-kxk3njnj.js";
+import { isMonitorToolEnabled } from "../../02-功能模块/工具Monitor/monitor-tool-description.js";
 import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
 import { Hj } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { v1e, Awt, soe, Cwt, Ubn, yZn, SZn, OGt } from "../../02-功能模块/Teammates团队/chunk-eey53z5b.js";
-import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
-import { Y$, zK, Xa } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
+import { createFieldUpdater, createFieldAccessor, createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { mt } from "../../02-功能模块/工具Task-Agent调度/chunk-1px84m19.js";
 import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
-import { qse, Kr, oir } from "../../02-功能模块/对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
+import { INVALID_TOOL_NAME_PLACEHOLDER, defineDialog, createDialogRequester } from "../../02-功能模块/对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
-import { fs, Tet } from "../../02-功能模块/Teammates团队/chunk-enjekn9t.js";
+import { TEAM_LEAD_AGENT_NAME, getSwarmTmuxSocketName } from "../../02-功能模块/Teammates团队/chunk-enjekn9t.js";
 import { PQ, gmr } from "../../01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js";
-import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
-import { Ike } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
+import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
+import { createMutex } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
 import { s, T, O, se, T7t, v, c, $e, fe, X, k, qd } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { sz } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { gy } from "../../01-核心基础设施/共享小工具-未细化/chunk-1adkzsnc.js";
-import { b8, G, Y, lc } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { au, p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MAX_SERIALIZED_ARRAY_ELEMENTS } from "../../01-核心基础设施/共享小工具-未细化/max-serialized-array-elements.js";
+import { intersperse, countMatching, dedupe, asStringArray } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { defineExportGetters, MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { randomUUID as vJe } from "crypto";
 import {
   appendFile,
@@ -2561,7 +2561,7 @@ async function t8(w, I) {
   if (!w.name) return w;
   let ne;
   try {
-    ne = (await Dt(listJobs(void 0, I), p$t, "seed name settle")).flatMap((be) =>
+    ne = (await withTimeout(listJobs(void 0, I), p$t, "seed name settle")).flatMap((be) =>
       be.state.name ? [be.state.name] : [],
     );
   } catch (pe) {
@@ -2632,7 +2632,7 @@ function rme(eKo) {
   else ome = OV[11];
   let nme;
   if (OV[12] !== NV || OV[13] !== cJe || OV[14] !== ome)
-    ((nme = e(En, {
+    ((nme = e(ConfirmPrompt, {
       confirmLabel: ome,
       cancelLabel: "Stay",
       onConfirm: cJe,
@@ -2674,7 +2674,7 @@ function q$t(x2o) {
   return x2o.tasks;
 }
 var Vmr = async (w, I, ne) => {
-    if (isBgSession()) return (i("tengu_background_already_bg", {}), w(), HB(), null);
+    if (isBgSession()) return (logEvent("tengu_background_already_bg", {}), w(), HB(), null);
     if (isTranscriptPersistenceDisabled())
       return (
         w(
@@ -2754,11 +2754,11 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
   let po = !1;
   try {
     if (He?.keepParent) await dF(Oe, He.storageV5);
-    (await Dt(flushSessionStorage(), He?.keepParent ? 1e4 : 2000, "flush timeout"), (po = !0));
+    (await withTimeout(flushSessionStorage(), He?.keepParent ? 1e4 : 2000, "flush timeout"), (po = !0));
   } catch {
     if (He?.keepParent)
       return (
-        i("tengu_background_spawn_failed", { via: fromEnum(Ae) }),
+        logEvent("tengu_background_spawn_failed", { via: fromEnum(Ae) }),
         {
           ok: !1,
           error:
@@ -2794,7 +2794,7 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
     } catch (no) {
       return (
         await X1n(wn, He.storageV5),
-        i("tengu_background_spawn_failed", { via: fromEnum(Ae) }),
+        logEvent("tengu_background_spawn_failed", { via: fromEnum(Ae) }),
         {
           ok: !1,
           error: `Couldn't fork \u2014 ${l(no)}`,
@@ -2873,7 +2873,7 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
     }));
   if (!Kn.ok) {
     if (
-      (i("tengu_background_spawn_failed", { via: fromEnum(Ae) }),
+      (logEvent("tengu_background_spawn_failed", { via: fromEnum(Ae) }),
       wn !== void 0 && !Kn.alive)
     )
       X1n(wn, He?.storageV5);
@@ -2913,7 +2913,7 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
     };
   }
   if (
-    (i("tengu_background", { via_flag: !1, via: fromEnum(Ae) }), Ae === "left_arrow")
+    (logEvent("tengu_background", { via_flag: !1, via: fromEnum(Ae) }), Ae === "left_arrow")
   )
     logFeatureOk("repl_background_fork");
   let nn = Kn.sessionId ?? An;
@@ -2925,7 +2925,7 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
   }
   if (it.name === void 0 && Kn.sessionId && !He?.keepParent) {
     let no = Kn.short,
-      jo = Q9e(ya([...Oe]), AbortSignal.timeout(F$t), {
+      jo = generateSessionName(ya([...Oe]), AbortSignal.timeout(F$t), {
         credentials: He?.credentials,
       })
         .then((Cn) => (Cn ? syncJobName(no, Cn, "auto", He?.storageV5) : void 0))
@@ -3072,7 +3072,7 @@ async function U$t(w, I) {
 }
 async function Rdr(w, I, ne) {
   let me = getJobDir(w),
-    pe = M() && ne !== void 0 ? ne : void 0;
+    pe = isHoverRestEnabled() && ne !== void 0 ? ne : void 0;
   if (pe === void 0) await CJe(me, { recursive: !0, mode: 448 });
   await writeAdoptJson(me, I, { parent: "create" }, pe);
 }
@@ -3165,9 +3165,9 @@ function U0t(g2o) {
   let S$t = _(11),
     { messages: o8, isMidTurn: ime, responseStreaming: sme } = g2o,
     ame = Yn(),
-    cme = wf(),
-    { storageV5: ume, credentials: dme } = _e(),
-    mme = qc(),
+    cme = useTaskRegistry(),
+    { storageV5: ume, credentials: dme } = useStorageV5Context(),
+    mme = useCommandQueue(),
     b$t = C(!1),
     k$t,
     v$t;
@@ -3262,7 +3262,7 @@ ${_$t}`
   else ((k$t = S$t[8]), (v$t = S$t[9]));
   E(k$t, v$t);
   let T$t;
-  if (S$t[10] === p)
+  if (S$t[10] === MEMO_CACHE_SENTINEL)
     ((T$t = e(t, { dimColor: !0, children: "Moving to background\u2026" })),
       (S$t[10] = T$t));
   else T$t = S$t[10];
@@ -3303,7 +3303,7 @@ function Uae(w, I, ne = "(backgrounded)") {
       : Ae
         ? "auto"
         : void 0,
-    color: LH(He) ? He : void 0,
+    color: isAgentColorName(He) ? He : void 0,
     detail: be,
   };
 }
@@ -3318,9 +3318,9 @@ function RJe(S2o) {
     tG = U($$t),
     oG = U(W$t),
     Vh = U(q$t),
-    nG = wf(),
-    { storageV5: iG, credentials: sG } = _e(),
-    aG = qc(),
+    nG = useTaskRegistry(),
+    { storageV5: iG, credentials: sG } = useStorageV5Context(),
+    aG = useCommandQueue(),
     x$t;
   if (jy[0] !== Vh) ((x$t = Nle(Vh)), (jy[0] = Vh), (jy[1] = x$t));
   else x$t = jy[1];
@@ -3412,7 +3412,7 @@ function RJe(S2o) {
             credentials: sG,
           });
           if (pM.ok)
-            (i("tengu_background_fork", {
+            (logEvent("tengu_background_fork", {
               confirmed: m_.count > 0 || l_.running > 0,
               inflight_count: mM.count,
               carryover_count: r0,
@@ -3434,7 +3434,7 @@ function RJe(S2o) {
               }));
           else
             Ax(
-              lo($V)
+              mayHaveRemoteClient($V)
                 ? _4(
                     "Couldn't start the background session (detail withheld on this connection).",
                     pM.error,
@@ -3533,7 +3533,7 @@ function RJe(S2o) {
   else E$t = jy[54];
   if ((E(I$t, E$t), TB)) {
     let n8;
-    if (jy[55] === p)
+    if (jy[55] === MEMO_CACHE_SENTINEL)
       ((n8 = e(t, { dimColor: !0, children: "Backgrounding\u2026" })),
         (jy[55] = n8));
     else n8 = jy[55];
@@ -3542,7 +3542,7 @@ function RJe(S2o) {
   let n8;
   if (jy[56] !== mM.count || jy[57] !== Ax)
     ((n8 = () => {
-      (i("tengu_background_declined", { inflight_count: mM.count }), Ax());
+      (logEvent("tengu_background_declined", { inflight_count: mM.count }), Ax());
     }),
       (jy[56] = mM.count),
       (jy[57] = Ax),
@@ -3586,11 +3586,11 @@ function RJe(S2o) {
       (jy[72] = wme));
   else wme = jy[72];
   let N$t;
-  if (jy[73] === p) ((N$t = () => v2o(!0)), (jy[73] = N$t));
+  if (jy[73] === MEMO_CACHE_SENTINEL) ((N$t = () => v2o(!0)), (jy[73] = N$t));
   else N$t = jy[73];
   let Cme;
   if (jy[74] !== lG || jy[75] !== wme)
-    ((Cme = e(En, {
+    ((Cme = e(ConfirmPrompt, {
       confirmLabel: wme,
       cancelLabel: "Stay",
       onConfirm: N$t,
@@ -3644,12 +3644,12 @@ function Q1(W2o) {
   let AJe = _(4),
     { message: MJe, onCancel: V$t } = W2o,
     K$t;
-  if (AJe[0] === p) ((K$t = { context: "Settings" }), (AJe[0] = K$t));
+  if (AJe[0] === MEMO_CACHE_SENTINEL) ((K$t = { context: "Settings" }), (AJe[0] = K$t));
   else K$t = AJe[0];
-  (Ne("confirm:no", V$t, K$t), Ne("app:interrupt", V$t));
+  (useKeybinding("confirm:no", V$t, K$t), useKeybinding("app:interrupt", V$t));
   let z$t;
-  if (AJe[1] === p)
-    ((z$t = e(D, { chord: "escape", action: "cancel", parens: !0 })),
+  if (AJe[1] === MEMO_CACHE_SENTINEL)
+    ((z$t = e(KeybindingHint, { chord: "escape", action: "cancel", parens: !0 })),
       (AJe[1] = z$t));
   else z$t = AJe[1];
   let Y$t;
@@ -3666,14 +3666,14 @@ function i8(Y2o) {
     { cooldown: J2o } = Y2o;
   if (J2o) {
     let r8;
-    if (J$t[0] === p)
+    if (J$t[0] === MEMO_CACHE_SENTINEL)
       ((r8 = e(t, { color: "promptBorder", dimColor: !0, children: Gq })),
         (J$t[0] = r8));
     else r8 = J$t[0];
     return r8;
   }
   let r8;
-  if (J$t[1] === p)
+  if (J$t[1] === MEMO_CACHE_SENTINEL)
     ((r8 = e(t, { color: "fastMode", children: Gq })), (J$t[1] = r8));
   else r8 = J$t[1];
   return r8;
@@ -3704,13 +3704,13 @@ function nst(Mzo) {
     [Pme, fM] = d(!1),
     [Mme, EJe] = d(null),
     X$t;
-  if (Wy[0] === p) ((X$t = EQe()), (Wy[0] = X$t));
+  if (Wy[0] === MEMO_CACHE_SENTINEL) ((X$t = EQe()), (Wy[0] = X$t));
   else X$t = Wy[0];
   let Ame = X$t,
     t1t = Ame.status === "cooldown",
     _w = a8 !== null,
     o1t;
-  if (Wy[1] === p) {
+  if (Wy[1] === MEMO_CACHE_SENTINEL) {
     let r1t = getMainLoopModel();
     let Izo = af(r1t) ? getCanonicalName(r1t) : "claude-opus-5";
     o1t = Ese(Gve(Izo));
@@ -3781,7 +3781,7 @@ function nst(Mzo) {
       let l1t = g8 === void 0 ? [] : g8;
       let Lzo = A4(Rme.getState()) !== void 0;
       let c1t = x3e(Ex, $y, RB, void 0, cG, Nzo);
-      i("tengu_fast_mode_toggled", {
+      logEvent("tengu_fast_mode_toggled", {
         enabled: $y,
         source: S("picker"),
         remote: Ks(),
@@ -3872,11 +3872,11 @@ ${l1t.map(Rl).join(`
       (Wy[22] = m1t));
   else m1t = Wy[22];
   let p1t;
-  if (Wy[23] === p) ((p1t = { context: "Confirmation" }), (Wy[23] = p1t));
+  if (Wy[23] === MEMO_CACHE_SENTINEL) ((p1t = { context: "Confirmation" }), (Wy[23] = p1t));
   else p1t = Wy[23];
-  Ze(m1t, p1t);
+  useKeybindings(m1t, p1t);
   let f1t;
-  if (Wy[24] === p)
+  if (Wy[24] === MEMO_CACHE_SENTINEL)
     ((f1t = r(t, {
       children: [e(i8, { cooldown: t1t }), " Fast mode (research preview)"],
     })),
@@ -3900,7 +3900,7 @@ ${l1t.map(Rl).join(`
       return i0;
     }
     let i0;
-    if (Wy[28] === p)
+    if (Wy[28] === MEMO_CACHE_SENTINEL)
       ((i0 = e(t, {
         dimColor: !0,
         children: Ks()
@@ -3912,17 +3912,17 @@ ${l1t.map(Rl).join(`
     return i0;
   }
   let i0;
-  if (Wy[29] === p) ((i0 = RR()), (Wy[29] = i0));
+  if (Wy[29] === MEMO_CACHE_SENTINEL) ((i0 = RR()), (Wy[29] = i0));
   else i0 = Wy[29];
   let Nme;
   if (Wy[30] !== _w)
     ((Nme = _w
-      ? e(D, { chord: "escape", action: "cancel" })
-      : r(ue, {
+      ? e(KeybindingHint, { chord: "escape", action: "cancel" })
+      : r(DotSeparatedList, {
           children: [
-            e(D, { chord: "tab", action: "toggle" }),
-            e(D, { chord: "enter", action: "confirm" }),
-            e(D, { chord: "escape", action: "cancel" }),
+            e(KeybindingHint, { chord: "tab", action: "toggle" }),
+            e(KeybindingHint, { chord: "enter", action: "confirm" }),
+            e(KeybindingHint, { chord: "escape", action: "cancel" }),
           ],
         })),
       (Wy[30] = _w),
@@ -3931,7 +3931,7 @@ ${l1t.map(Rl).join(`
   let Lme;
   if (Wy[32] !== $y || Wy[33] !== a8)
     ((Lme = a8
-      ? e(o, { marginLeft: 2, children: e(Ur, { error: a8 }) })
+      ? e(o, { marginLeft: 2, children: e(ErrorMessage, { error: a8 }) })
       : r(N, {
           children: [
             e(o, {
@@ -3974,8 +3974,8 @@ ${l1t.map(Rl).join(`
       (Wy[34] = Lme));
   else Lme = Wy[34];
   let g1t;
-  if (Wy[35] === p)
-    ((g1t = e(Gp, { url: "https://code.claude.com/docs/en/fast-mode" })),
+  if (Wy[35] === MEMO_CACHE_SENTINEL)
+    ((g1t = e(LearnMoreLink, { url: "https://code.claude.com/docs/en/fast-mode" })),
       (Wy[35] = g1t));
   else g1t = Wy[35];
   let h1t;
@@ -4065,7 +4065,7 @@ function LJe(Wzo) {
     }
     case "applying": {
       let mG;
-      if (S8[14] === p)
+      if (S8[14] === MEMO_CACHE_SENTINEL)
         ((mG = e(t, {
           dimColor: !0,
           children: Ks()
@@ -4105,10 +4105,10 @@ async function Kmr(w, I, ne) {
   let me = ne?.trim().toLowerCase();
   if (me === "on" || me === "off")
     return e(LJe, { enable: me === "on", context: I, onDone: w });
-  await kt(bse(I.storageV5, I.credentials), Jnn);
+  await withDeadline(bse(I.storageV5, I.credentials), Jnn);
   let pe = dU();
   return (
-    i("tengu_fast_mode_picker_shown", { unavailable_reason: pe ?? "" }),
+    logEvent("tengu_fast_mode_picker_shown", { unavailable_reason: pe ?? "" }),
     e(nst, { onDone: w, unavailableReason: pe, storageV5: I.storageV5 })
   );
 }
@@ -4196,7 +4196,7 @@ var Xmr = async (w, I, ne) => {
     if (zt)
       return (
         w(
-          lo(I.session)
+          mayHaveRemoteClient(I.session)
             ? "Failed to save setting (detail withheld on this connection)."
             : `Failed to save setting: ${zt.message}`,
           { display: "system" },
@@ -4206,7 +4206,7 @@ var Xmr = async (w, I, ne) => {
     await d0t(I.storageV5);
     let ao = Av();
     return (
-      i("tengu_tui_command", {
+      logEvent("tengu_tui_command", {
         fullscreen: be === "fullscreen",
         from: fromEnum(pe),
         to: fromEnum(be),
@@ -4243,11 +4243,11 @@ var Xmr = async (w, I, ne) => {
   let it = (to) => {
       let zt = rK(getToolPermissionContext(I), qP());
       if (zt.length > 0)
-        return (i("tengu_tui_refused", { uncarriable: !0 }), kdr(be, zt));
+        return (logEvent("tengu_tui_refused", { uncarriable: !0 }), kdr(be, zt));
       let ao = Ke();
       if (ao !== void 0)
         return (
-          i("tengu_tui_refused", {
+          logEvent("tengu_tui_refused", {
             active_tasks: ao.activeTasks,
             comment_monitor: ao.kind === "comment_monitor",
             ...(to && { deferred: to }),
@@ -4272,7 +4272,7 @@ var Xmr = async (w, I, ne) => {
   if (Ct)
     return (
       w(
-        lo(I.session)
+        mayHaveRemoteClient(I.session)
           ? "Failed to save setting (detail withheld on this connection)."
           : `Failed to save setting: ${Ct.message}`,
         { display: "system" },
@@ -4287,7 +4287,7 @@ var Xmr = async (w, I, ne) => {
         XI.downsellGateCached === !0) &&
       be === "default";
   if (
-    (i("tengu_tui_command", {
+    (logEvent("tengu_tui_command", {
       fullscreen: Je,
       from: fromEnum(pe),
       to: fromEnum(be),
@@ -4331,7 +4331,7 @@ var Xmr = async (w, I, ne) => {
     (to) => (
       logError(to),
       w(
-        lo(I.session)
+        mayHaveRemoteClient(I.session)
           ? _4(
               "Couldn't switch renderers (detail withheld on this connection). The setting was saved; restart Claude Code to apply it.",
               l(to),
@@ -4345,7 +4345,7 @@ var Xmr = async (w, I, ne) => {
 };
 function Ume(w, I, ne) {
   return (
-    i("tengu_tui_refused", {
+    logEvent("tengu_tui_refused", {
       active_tasks: I.activeTasks,
       comment_monitor: I.kind === "comment_monitor",
       deferred: !0,
@@ -4374,10 +4374,10 @@ function KJe(IQo) {
     [FJe, EQo] = d(""),
     [UJe, DQo] = d(0),
     [Nx, NQo] = d(null),
-    { columns: LQo } = Se(),
+    { columns: LQo } = useTerminalSize(),
     A1t = C(!1),
     I1t;
-  if (bM[0] === p)
+  if (bM[0] === MEMO_CACHE_SENTINEL)
     ((I1t = (OQo) => {
       if (A1t.current) {
         return;
@@ -4420,12 +4420,12 @@ function KJe(IQo) {
               downsell_seen_count: ee().fullscreenDownsellSeenCount ?? 0,
             }).catch(logError);
           }
-          if ((await Z(Ev * 2), D1t)) {
+          if ((await sleep(Ev * 2), D1t)) {
             return;
           }
           let N1t = rK(AB().toolPermissionContext, qP());
           if (N1t.length > 0) {
-            (i("tengu_tui_refused", { uncarriable: !0 }),
+            (logEvent("tengu_tui_refused", { uncarriable: !0 }),
               s0(Z1n(N1t), { display: "system" }));
             return;
           }
@@ -4439,7 +4439,7 @@ function KJe(IQo) {
           }).catch(($Je) => {
             (logError($Je),
               s0(
-                lo(OJe)
+                mayHaveRemoteClient(OJe)
                   ? _4(
                       "Couldn't switch renderers (detail withheld on this connection). The setting was saved; restart Claude Code to apply it.",
                       l($Je),
@@ -4498,15 +4498,15 @@ function KJe(IQo) {
   else O1t = bM[25];
   E(E1t, O1t);
   let F1t, B1t;
-  if (bM[26] === p)
+  if (bM[26] === MEMO_CACHE_SENTINEL)
     ((F1t = () => HJe("")),
       (B1t = { context: "Settings" }),
       (bM[26] = F1t),
       (bM[27] = B1t));
   else ((F1t = bM[26]), (B1t = bM[27]));
-  if ((Ne("confirm:no", F1t, B1t), Nx !== null)) {
+  if ((useKeybinding("confirm:no", F1t, B1t), Nx !== null)) {
     let w8;
-    if (bM[28] === p)
+    if (bM[28] === MEMO_CACHE_SENTINEL)
       ((w8 = e(o, {
         paddingX: 1,
         children: e(t, {
@@ -4519,14 +4519,14 @@ function KJe(IQo) {
     return w8;
   }
   let w8;
-  if (bM[29] === p) ((w8 = () => HJe("")), (bM[29] = w8));
+  if (bM[29] === MEMO_CACHE_SENTINEL) ((w8 = () => HJe("")), (bM[29] = w8));
   else w8 = bM[29];
   let U1t, j1t;
-  if (bM[30] === p)
-    ((U1t = r(ue, {
+  if (bM[30] === MEMO_CACHE_SENTINEL)
+    ((U1t = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "send" }),
-        e(je, {
+        e(KeybindingHint, { chord: "enter", action: "send" }),
+        e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Confirmation",
           fallback: "Esc",
@@ -4542,7 +4542,7 @@ function KJe(IQo) {
       (bM[31] = j1t));
   else ((U1t = bM[30]), (j1t = bM[31]));
   let $1t;
-  if (bM[32] === p) (($1t = e(t, { children: ">" })), (bM[32] = $1t));
+  if (bM[32] === MEMO_CACHE_SENTINEL) (($1t = e(t, { children: ">" })), (bM[32] = $1t));
   else $1t = bM[32];
   const qJe = Math.max(10, LQo - 8);
   let W1t;
@@ -4598,7 +4598,7 @@ function q1t(w) {
   };
 }
 function zJe() {
-  let w = Xa({ raw: null, transformed: null, salvage: null, exact: !1 }),
+  let w = createStore({ raw: null, transformed: null, salvage: null, exact: !1 }),
     I = null,
     ne = null;
   function me() {
@@ -4647,10 +4647,10 @@ function EB({ turn: w, messages: I, screen: ne }) {
       Fat(),
     ),
     be = U((Qe) => Qe.briefTranscript),
-    xe = Me(w, (Qe) => Qe.isLoading) ?? !1,
-    Ae = Me(w?.stream, (Qe) => Qe.streamingToolUses.length) ?? 0,
+    xe = useStoreSelector(w, (Qe) => Qe.isLoading) ?? !1,
+    Ae = useStoreSelector(w?.stream, (Qe) => Qe.streamingToolUses.length) ?? 0,
     Oe = w?.stream.previewStore,
-    He = At(Oe ? Oe.subscribe : htn, Oe ? Oe.getFlags : V1t),
+    He = At(Oe ? Oe.subscribe : subscribeToNothing, Oe ? Oe.getFlags : V1t),
     Ke = (He & $me) !== 0,
     Je = V(
       () => xe && be && ne !== "transcript" && me && (Ke || Ae > 0 || z4n(I)),
@@ -4777,7 +4777,7 @@ class x8 {
   onClearSubmitted() {
     if (!this.#r) return;
     let w = this.#e.getMessages();
-    (i("tengu_idle_return_action", {
+    (logEvent("tengu_idle_return_action", {
       action: S("hint_converted"),
       idleMinutes: Math.round(
         (this.#e.now() - this.#t.lastQueryCompletionTime) / 60000,
@@ -4861,7 +4861,7 @@ class x8 {
             timeoutMs: 2147483647,
           }),
             (this.#r = !0),
-            i("tengu_idle_return_action", {
+            logEvent("tengu_idle_return_action", {
               action: S("hint_shown"),
               idleMinutes: Math.round(He),
               messageCount: Ae,
@@ -4892,7 +4892,7 @@ function Vme() {
 async function JJe(w, I, ne) {
   (xoe(), teardownFrameLiveForProcessHandoff(), Hy(n3), vJ());
   let me = listJobs(void 0, ne?.storageV5).catch(() => []);
-  await Dt(flushSessionStorage(), 2000, "flush timeout").catch(() => {});
+  await withTimeout(flushSessionStorage(), 2000, "flush timeout").catch(() => {});
   let pe = _tn(process.stdout);
   if (pe) showScreen(pe, null);
   process.env.CLAUDE_AGENTS_SELECT = w;
@@ -4904,10 +4904,10 @@ async function JJe(w, I, ne) {
     { createFleetViewHost: He },
   ] = await (I ?? Vme());
   Ae();
-  let Ke = pe ?? (await be(wv(!1))),
+  let Ke = pe ?? (await be(getBaseRenderOptions(!1))),
     Je = He();
   Je.fleetNudgeStore = ne?.fleetNudgeStore ?? null;
-  let Qe = await Dt(me, 50, "listJobs seed").catch(() => null);
+  let Qe = await withTimeout(me, 50, "listJobs seed").catch(() => null);
   if (Qe !== null) xe(Je, Qe, ne?.storageV5);
   (n("[PERF:bg-leftarrow-mounted]"),
     await Oe(Ke, {
@@ -4943,7 +4943,7 @@ function J1t(w) {
 async function X1t(w, I, ne) {
   let me = K();
   if (a.CLAUDE_CODE_TASK_LIST_ID || zE() !== me) return;
-  if (M() && ne) {
+  if (isHoverRestEnabled() && ne) {
     await eWt(ne, me, w, I);
     return;
   }
@@ -5054,7 +5054,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
       let it = Uae(w, "");
       if (it !== null && isTranscriptPersistenceDisabled())
         return (
-          i("tengu_left_arrow_blocked", {
+          logEvent("tengu_left_arrow_blocked", {
             reason: S("persistence"),
             inflight_count: Oe?.inflightCount ?? 0,
             inflight_kinds: fromEnumArr(Oe?.inflightKinds ?? []),
@@ -5116,7 +5116,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
       let ho =
           ao === void 0
             ? 0
-            : G(ro?.payload.frameLive ?? [], (nn) => !ao.has(nn.slug)),
+            : countMatching(ro?.payload.frameLive ?? [], (nn) => !ao.has(nn.slug)),
         _o = getReplBridgeHandle(),
         Ho = 16384,
         po = Oe?.partialText?.trimEnd() ?? "",
@@ -5165,7 +5165,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
         }
       let wn = Oe?.fleetNudgeStore?.recordOpenViaLeft();
       if (
-        (i("tengu_open_agents_via_left", {
+        (logEvent("tengu_open_agents_via_left", {
           was_empty: it === null,
           nudge_active: wn !== void 0 && wn.needsInput > 0,
           nudge_needs_input_count: wn?.needsInput ?? 0,
@@ -5187,8 +5187,8 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
         _o)
       ) {
         let nn = Oe?.replyOnResume ? 5000 : 2000;
-        (await Dt(_o.flush(), nn, "bridge flush").catch(() => {
-          i("tengu_bg_bridge_flush_truncated", {
+        (await withTimeout(_o.flush(), nn, "bridge flush").catch(() => {
+          logEvent("tengu_bg_bridge_flush_truncated", {
             via: fromEnum(Oe?.via ?? "idle-fork"),
             cap_ms: nn,
           });
@@ -5196,10 +5196,10 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
           _o.teardown({ skipArchive: !0 }));
       }
       if (Oe?.abortAfterFlush)
-        await Dt(flushSessionStorage(), 2000, "flush timeout").catch(() => {});
+        await withTimeout(flushSessionStorage(), 2000, "flush timeout").catch(() => {});
       let yn = 2000,
         vo = new AbortController();
-      await Dt(X1t(eo, vo.signal, He), yn, "task-list carry").catch(() =>
+      await withTimeout(X1t(eo, vo.signal, He), yn, "task-list carry").catch(() =>
         vo.abort(),
       );
       let zo = { settled: !1, ok: !1, forkSessionId: eo };
@@ -5316,9 +5316,9 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
     );
   }
 }
-var SM = Kr({
+var SM = defineDialog({
   kind: "left_arrow_confirm",
-  payload: m(() =>
+  payload: createLazyValue(() =>
     c({
       summary: s(),
       carryOverCount: T(),
@@ -5326,7 +5326,7 @@ var SM = Kr({
       workflowAgents: c({ running: T(), finished: T(), rerun: T() }),
     }),
   ),
-  result: m(() => X(["confirm", "stay", "cancelled"])),
+  result: createLazyValue(() => X(["confirm", "stay", "cancelled"])),
   default: "cancelled",
   hideWhile: [],
 });
@@ -5395,7 +5395,7 @@ class R8 {
   confirm = () => {
     let w = this.#o;
     if (w === null) return;
-    i("tengu_left_arrow_confirm", {
+    logEvent("tengu_left_arrow_confirm", {
       accepted: !0,
       count: w.inFlight.count,
       kinds: fromEnumArr(w.inFlight.kinds),
@@ -5411,7 +5411,7 @@ class R8 {
   cancelConfirm = () => {
     let w = this.#o;
     if (w === null) return;
-    (i("tengu_left_arrow_confirm", {
+    (logEvent("tengu_left_arrow_confirm", {
       accepted: !1,
       count: w.inFlight.count,
       kinds: fromEnumArr(w.inFlight.kinds),
@@ -5494,7 +5494,7 @@ class R8 {
             return [...Tt, Ht(jt, "warning")];
           });
       if (isTranscriptPersistenceDisabled()) {
-        (i("tengu_left_arrow_blocked", {
+        (logEvent("tengu_left_arrow_blocked", {
           reason: S("persistence"),
           inflight_count: Ke.count,
           inflight_kinds: fromEnumArr(Ke.kinds),
@@ -5524,7 +5524,7 @@ class R8 {
         ),
       );
       if (at > 0) {
-        (i("tengu_left_arrow_blocked", {
+        (logEvent("tengu_left_arrow_blocked", {
           reason: S("queued-commands"),
           inflight_count: at,
           inflight_kinds: fromEnumArr(Ke.kinds),
@@ -5535,7 +5535,7 @@ class R8 {
         return;
       }
       if (xe().trim() !== "") {
-        (i("tengu_left_arrow_blocked", {
+        (logEvent("tengu_left_arrow_blocked", {
           reason: S("draft"),
           inflight_count: Ke.count,
           inflight_kinds: fromEnumArr(Ke.kinds),
@@ -5548,7 +5548,7 @@ class R8 {
       let Zt = (jt) => {
         ((this.#r = !1),
           it(
-            lo(this.#e.session)
+            mayHaveRemoteClient(this.#e.session)
               ? _4(
                   "Couldn't open the agents view (detail withheld on this connection).",
                   jt,
@@ -5610,7 +5610,7 @@ class R8 {
         inFlight: Ke,
       });
       if (!Ct.ok) {
-        i("tengu_left_arrow_blocked", {
+        logEvent("tengu_left_arrow_blocked", {
           reason: fromEnum(Ct.reason),
           inflight_count: Ct.inFlight.count,
           inflight_kinds: fromEnumArr(Ct.inFlight.kinds),
@@ -5634,7 +5634,7 @@ class R8 {
             inFlight: Tt,
           });
         if (!go.ok) {
-          (i("tengu_left_arrow_blocked", {
+          (logEvent("tengu_left_arrow_blocked", {
             reason: fromEnum(go.reason),
             inflight_count: Tt.count,
             inflight_kinds: fromEnumArr(Tt.kinds),
@@ -5667,14 +5667,14 @@ class R8 {
               let Wo = this.#n;
               if (!Wo || Wo.armedAtMs !== Ho) return;
               let Ro = w.getState().tasks,
-                on = G(me.getCommandQueue(), (vo) => !OAe(vo));
+                on = countMatching(me.getCommandQueue(), (vo) => !OAe(vo));
               if (
                 on > 0 ||
                 (!Wo.confirmedInterstitial && countAbandonable(Ro) > 0) ||
                 countCarriedSince(Ro, Wo.carriedAtPress) > 0
               ) {
                 if (on > 0)
-                  i("tengu_defer_cap_refused_queued", {
+                  logEvent("tengu_defer_cap_refused_queued", {
                     queue_len: on,
                     wait_ms: be() - Ho,
                   });
@@ -5683,7 +5683,7 @@ class R8 {
               let An = Rv(Ro),
                 wn = An.restartableCount;
               if (wn > 0) {
-                (i("tengu_defer_cap_refused_restartable", {
+                (logEvent("tengu_defer_cap_refused_restartable", {
                   restartable_count: wn,
                   wait_ms: be() - Ho,
                 }),
@@ -6362,7 +6362,7 @@ function o9(OJo) {
       overlay: Zme,
       scrollViewport: FJo,
     } = OJo,
-    gWt = Se(),
+    gWt = useTerminalSize(),
     { columns: Tw, rows: Kh } = gWt,
     epe = C(null),
     hWt = C(null),
@@ -6374,7 +6374,7 @@ function o9(OJo) {
     vWt;
   if (kM[0] !== Tw || kM[1] !== Kh || kM[2] !== ope.handle)
     ((vWt = () => {
-      let EG = ws().get(process.stdout);
+      let EG = getInkInstanceRegistry().get(process.stdout);
       if (!EG) {
         return;
       }
@@ -6441,7 +6441,7 @@ function o9(OJo) {
       (kM[3] = vWt));
   else vWt = kM[3];
   let RWt;
-  if (kM[4] === p) ((RWt = []), (kM[4] = RWt));
+  if (kM[4] === MEMO_CACHE_SENTINEL) ((RWt = []), (kM[4] = RWt));
   else RWt = kM[4];
   _te(vWt, RWt);
   let PWt;
@@ -6474,7 +6474,7 @@ function o9(OJo) {
   else ipe = kM[13];
   let ape;
   if (kM[14] !== dXe || kM[15] !== ipe)
-    ((ape = e(IS, {
+    ((ape = e(ScrollBox, {
       ref: dXe,
       flexGrow: 1,
       flexDirection: "column",
@@ -6549,7 +6549,7 @@ function bXe(w, I, ne, me, pe) {
   let be = w.childNodes[0];
   if (!be) return [];
   if ((w.scrollHeight ?? 0) <= 0 || ne <= I) return [];
-  let Ae = ws().get(process.stdout);
+  let Ae = getInkInstanceRegistry().get(process.stdout);
   if (!Ae) return [];
   let Oe = Math.ceil(ne),
     He = Math.max(0, Math.floor(I), Oe - jB),
@@ -6755,11 +6755,11 @@ function WB() {
 function fpe() {
   let $Wt = _(2),
     WWt;
-  if ($Wt[0] === p) ((WWt = TXe(wXe)), ($Wt[0] = WWt));
+  if ($Wt[0] === MEMO_CACHE_SENTINEL) ((WWt = TXe(wXe)), ($Wt[0] = WWt));
   else WWt = $Wt[0];
   let EXo = WWt,
     qWt;
-  if ($Wt[1] === p)
+  if ($Wt[1] === MEMO_CACHE_SENTINEL)
     ((qWt = r(o, {
       flexDirection: "column",
       marginTop: 1,
@@ -6827,13 +6827,13 @@ function TXe(w) {
 function sVt() {}
 function aVt() {}
 function cVt(L3o) {
-  Sqe(L3o);
+  openHyperlink(L3o);
 }
 function lVt() {
   if (!Ta()) {
     return;
   }
-  let Ppe = ws().get(process.stdout);
+  let Ppe = getInkInstanceRegistry().get(process.stdout);
   if (!Ppe) {
     return;
   }
@@ -6904,7 +6904,7 @@ function d0(T3o) {
     r9 = QWt === void 0 ? 0 : QWt,
     DXe = YWt === void 0 ? !1 : YWt,
     x3o = JWt === void 0 ? !1 : JWt,
-    { rows: xM, columns: GB } = Se(),
+    { rows: xM, columns: GB } = useTerminalSize(),
     KB = xM - mle - 1;
   const NXe = Math.max(1, GB - r9);
   let XWt;
@@ -6931,7 +6931,7 @@ function d0(T3o) {
   let FXe = ZWt,
     [M3o, A3o] = d(null),
     eqt;
-  if (Ru[6] === p) ((eqt = { setStickyPrompt: A3o }), (Ru[6] = eqt));
+  if (Ru[6] === MEMO_CACHE_SENTINEL) ((eqt = { setStickyPrompt: A3o }), (Ru[6] = eqt));
   else eqt = Ru[6];
   let BXe = eqt,
     tqt;
@@ -6949,7 +6949,7 @@ function d0(T3o) {
   else tqt = Ru[9];
   let D3o = tqt,
     nqt;
-  if (Ru[10] === p) ((nqt = Eo("autoScrollEnabled", !0)), (Ru[10] = nqt));
+  if (Ru[10] === MEMO_CACHE_SENTINEL) ((nqt = Eo("autoScrollEnabled", !0)), (Ru[10] = nqt));
   else nqt = Ru[10];
   let rqt = nqt.value,
     iqt;
@@ -6975,7 +6975,7 @@ function d0(T3o) {
       (Ru[13] = iqt));
   else iqt = Ru[13];
   let jXe = At(D3o, iqt),
-    $Xe = Me(Bx, d3e) ?? 0,
+    $Xe = useStoreSelector(Bx, d3e) ?? 0,
     { clearSelection: gpe } = aO(),
     aqt,
     lqt;
@@ -7010,7 +7010,7 @@ function d0(T3o) {
     const Rw = Fx?.attach;
     const MM = N3o ? 0 : 1;
     let s9;
-    if (Ru[22] === p) ((s9 = e(WB, {})), (Ru[22] = s9));
+    if (Ru[22] === MEMO_CACHE_SENTINEL) ((s9 = e(WB, {})), (Ru[22] = s9));
     else s9 = Ru[22];
     let AM;
     if (Ru[23] !== vM)
@@ -7020,7 +7020,7 @@ function d0(T3o) {
     else AM = Ru[24];
     let IM;
     if (Ru[25] !== Rw || Ru[26] !== MM || Ru[27] !== AM)
-      ((IM = e(IS, {
+      ((IM = e(ScrollBox, {
         ref: Rw,
         flexGrow: 1,
         flexDirection: "column",
@@ -7101,7 +7101,7 @@ function d0(T3o) {
     else wpe = Ru[47];
     const qXe = y_ ? "none" : "flex";
     let uqt, dqt;
-    if (Ru[48] === p)
+    if (Ru[48] === MEMO_CACHE_SENTINEL)
       ((uqt = e(BG, {})), (dqt = e(UG, {})), (Ru[48] = uqt), (Ru[49] = dqt));
     else ((uqt = Ru[48]), (dqt = Ru[49]));
     let Cpe;
@@ -7162,7 +7162,7 @@ function d0(T3o) {
             children: [
               e(o, {
                 flexShrink: 0,
-                children: e(za, { color: "permission", char: "\u2594" }),
+                children: e(Divider, { color: "permission", char: "\u2594" }),
               }),
               e(Ype, { scrollViewport: qB, maxRows: KB, children: Lx.content }),
             ],
@@ -7188,7 +7188,7 @@ function d0(T3o) {
   }
   if (lee()) {
     let xw;
-    if (Ru[68] === p) ((xw = e(WB, {})), (Ru[68] = xw));
+    if (Ru[68] === MEMO_CACHE_SENTINEL) ((xw = e(WB, {})), (Ru[68] = xw));
     else xw = Ru[68];
     let Rw;
     if (Ru[69] !== vM)
@@ -7197,7 +7197,7 @@ function d0(T3o) {
         (Ru[70] = Rw));
     else Rw = Ru[70];
     let MM, s9;
-    if (Ru[71] === p)
+    if (Ru[71] === MEMO_CACHE_SENTINEL)
       ((MM = e(BG, {})), (s9 = e(UG, {})), (Ru[71] = MM), (Ru[72] = s9));
     else ((MM = Ru[71]), (s9 = Ru[72]));
     let AM;
@@ -7268,7 +7268,7 @@ function Ype(O3o) {
     Ape = C(null),
     [gqt, F3o] = d(null),
     hqt;
-  if (Yh[0] === p)
+  if (Yh[0] === MEMO_CACHE_SENTINEL)
     ((hqt = (yqt) => {
       ((Ape.current = yqt), F3o(yqt));
     }),
@@ -7290,7 +7290,7 @@ function Ype(O3o) {
   else bqt = Yh[2];
   dn(bqt);
   let Sqt;
-  if (Yh[3] === p)
+  if (Yh[3] === MEMO_CACHE_SENTINEL)
     ((Sqt = { overflows: !1, above: !1, below: !1, hintTop: 0, hintBottom: 0 }),
       (Yh[3] = Sqt));
   else Sqt = Yh[3];
@@ -7447,7 +7447,7 @@ function Ype(O3o) {
   else Bpe = Yh[26];
   let Upe;
   if (Yh[27] !== ZXe || Yh[28] !== Bpe)
-    ((Upe = e(IS, {
+    ((Upe = e(ScrollBox, {
       ref: Ipe,
       flexDirection: "column",
       flexShrink: 0,
@@ -7517,11 +7517,11 @@ function Jpe(V3o) {
   let nU = _(20),
     { count: c9, onClick: e3e } = V3o,
     [G3o, Hqt] = d(!1),
-    { columns: K3o } = Se(),
+    { columns: K3o } = useTerminalSize(),
     t3e,
     Wpe,
     jqt;
-  if (nU[0] === p)
+  if (nU[0] === MEMO_CACHE_SENTINEL)
     ((Wpe = w$()),
       (t3e = Dre(m3e, Wpe)),
       (jqt = Dre(p3e, Wpe)),
@@ -7530,8 +7530,8 @@ function Jpe(V3o) {
       (nU[2] = jqt));
   else ((t3e = nU[0]), (Wpe = nU[1]), (jqt = nU[2]));
   let $qt = jqt,
-    qpe = Zr("scroll:bottom", "Scroll", t3e),
-    Wqt = Zr("scroll:pageDown", "Scroll", $qt),
+    qpe = useKeybindingDisplayText("scroll:bottom", "Scroll", t3e),
+    Wqt = useKeybindingDisplayText("scroll:pageDown", "Scroll", $qt),
     z3o = At(U7e, $7e),
     qqt;
   if (nU[3] !== c9)
@@ -7566,7 +7566,7 @@ function Jpe(V3o) {
       (nU[11] = Vpe));
   else Vpe = nU[11];
   let zqt, Qqt;
-  if (nU[12] === p)
+  if (nU[12] === MEMO_CACHE_SENTINEL)
     ((zqt = () => Hqt(!0)),
       (Qqt = () => Hqt(!1)),
       (nU[12] = zqt),
@@ -7575,7 +7575,7 @@ function Jpe(V3o) {
   const s3e = G3o ? "userMessageBackgroundHover" : "userMessageBackground";
   let Kpe;
   if (nU[14] !== s3e || nU[15] !== i3e)
-    ((Kpe = e(Gc, {
+    ((Kpe = e(BackgroundText, {
       color: s3e,
       textColor: "text",
       padded: !0,
@@ -7614,7 +7614,7 @@ function Xpe(X3o) {
     [Z3o, Jqt] = d(!1);
   const c3e = Z3o ? "userMessageBackgroundHover" : "userMessageBackground";
   let Xqt, Zqt;
-  if (u3e[0] === p)
+  if (u3e[0] === MEMO_CACHE_SENTINEL)
     ((Xqt = () => Jqt(!0)),
       (Zqt = () => Jqt(!1)),
       (u3e[0] = Xqt),
@@ -7736,10 +7736,10 @@ function m9() {
   switch (HG()) {
     case "fullscreen": {
       let d9, uVt, dVt, mVt;
-      if (g3e[0] === p)
+      if (g3e[0] === MEMO_CACHE_SENTINEL)
         ((d9 = r(t, {
           children: [
-            e(et, { status: "success", withSpace: !0 }),
+            e(StatusIndicator, { status: "success", withSpace: !0 }),
             e(t, {
               color: "success",
               children: "Using flicker-free rendering",
@@ -7774,7 +7774,7 @@ function m9() {
           (g3e[3] = mVt));
       else ((d9 = g3e[0]), (uVt = g3e[1]), (dVt = g3e[2]), (mVt = g3e[3]));
       let pVt;
-      if (g3e[4] === p)
+      if (g3e[4] === MEMO_CACHE_SENTINEL)
         ((pVt = r(o, {
           flexDirection: "column",
           children: [
@@ -7799,7 +7799,7 @@ function m9() {
     }
     case "default": {
       let d9;
-      if (g3e[5] === p)
+      if (g3e[5] === MEMO_CACHE_SENTINEL)
         ((d9 = e(t, {
           dimColor: !0,
           children: "Switched back to the classic renderer",
@@ -7824,24 +7824,24 @@ function p9(Zpe) {
   else fVt = Jb[1];
   let { oneShotsAllowed: gVt } = fVt,
     I6o = gVt === void 0 ? !0 : gVt,
-    { columns: E6o } = Se(),
+    { columns: E6o } = useTerminalSize(),
     h3e = tn(),
     D6o = U(DVt),
     N6o = qf(),
-    hVt = Git(),
+    hVt = useMainLoopModelSetting(),
     L6o = parseUserSpecifiedModel(hVt),
     yVt = renderModelSetting(hVt),
     { version: kVt, cwd: vVt, billingType: CVt, agentName: O6o } = PHe(),
     efe = D6o ?? O6o,
     _Vt;
-  if (Jb[2] === p) ((_Vt = HG()), (Jb[2] = _Vt));
+  if (Jb[2] === MEMO_CACHE_SENTINEL) ((_Vt = HG()), (Jb[2] = _Vt));
   else _Vt = Jb[2];
   let F6o = _Vt !== void 0,
     tfe = gi(),
     y3e = jIt(I6o && tfe),
     xVt;
   if (Jb[3] !== y3e || Jb[4] !== tfe)
-    ((xVt = tfe ? e(F8, { sequence: y3e, delayMs: 100 }) : e(Xz, {})),
+    ((xVt = tfe ? e(F8, { sequence: y3e, delayMs: 100 }) : e(ClawdMascot, {})),
       (Jb[3] = y3e),
       (Jb[4] = tfe),
       (Jb[5] = xVt));
@@ -7854,12 +7854,12 @@ function p9(Zpe) {
     v3e = 0,
     PVt,
     w3e;
-  if (Jb[6] === p)
+  if (Jb[6] === MEMO_CACHE_SENTINEL)
     ((w3e = getProTrialState()), (PVt = formatTrialBadge(w3e)), (Jb[6] = PVt), (Jb[7] = w3e));
   else ((PVt = Jb[6]), (w3e = Jb[7]));
   let C3e = PVt;
   if (C3e) {
-    if (Jb[8] === p)
+    if (Jb[8] === MEMO_CACHE_SENTINEL)
       ((v3e = te(` \xB7 ${C3e}`)),
         (jG = r(t, {
           children: [
@@ -7893,7 +7893,7 @@ function p9(Zpe) {
   else MVt = Jb[12];
   let ife = MVt.join(" \xB7 "),
     AVt;
-  if (Jb[13] === p)
+  if (Jb[13] === MEMO_CACHE_SENTINEL)
     ((AVt = e(t, { bold: !0, children: "Claude Code" })), (Jb[13] = AVt));
   else AVt = Jb[13];
   let sfe;
@@ -7952,7 +7952,7 @@ function p9(Zpe) {
       (Jb[29] = ufe));
   else ufe = Jb[29];
   let IVt;
-  if (Jb[30] === p)
+  if (Jb[30] === MEMO_CACHE_SENTINEL)
     ((IVt =
       F6o &&
       e(o, {
@@ -7965,7 +7965,7 @@ function p9(Zpe) {
   else IVt = Jb[30];
   let EVt;
   if (Jb[31] !== ufe)
-    ((EVt = e(yy, {
+    ((EVt = e(OffscreenFrozenContent, {
       children: r(o, { flexDirection: "column", children: [ufe, IVt] }),
     })),
       (Jb[31] = ufe),
@@ -8080,12 +8080,12 @@ function dfe() {
 }
 F();
 function I3e(w) {
-  let I = aM().countedNoticeImpressions;
+  let I = getSessionAnnouncementState().countedNoticeImpressions;
   if (I.has(w)) return !1;
   return (I.add(w), !0);
 }
 function E3e(w) {
-  return aM().countedNoticeImpressions.has(w);
+  return getSessionAnnouncementState().countedNoticeImpressions.has(w);
 }
 var m0 = Qt(!0);
 function fh() {
@@ -8121,8 +8121,8 @@ function JVt(F3e) {
 }
 function g9() {
   let $G = _(16),
-    { storageV5: ffe } = _e(),
-    D3e = Ye().host,
+    { storageV5: ffe } = useStorageV5Context(),
+    D3e = useSession().host,
     N3e = fh(),
     qVt;
   if ($G[0] !== D3e || $G[1] !== N3e)
@@ -8223,18 +8223,18 @@ function b9(w, I, ne) {
   return w.config.type !== "sse-ide" && w.config.type !== "ws-ide";
 }
 function Cfe(w, I, ne) {
-  return G(w, (me) => me.type === "needs-auth" && b9(me, I, ne));
+  return countMatching(w, (me) => me.type === "needs-auth" && b9(me, I, ne));
 }
 function Sf(L4o) {
   let j3e = _(9),
     { status: _fe, children: B3e } = L4o,
-    { color: Tfe } = dat[_fe],
+    { color: Tfe } = STATUS_PRESENTATION[_fe],
     Pfe;
   if (j3e[0] !== _fe)
     ((Pfe = e(o, {
       width: 2,
       flexShrink: 0,
-      children: e(et, { status: _fe }),
+      children: e(StatusIndicator, { status: _fe }),
     })),
       (j3e[0] = _fe),
       (j3e[1] = Pfe));
@@ -8303,12 +8303,12 @@ function rGt() {
   }
   let s8o = v9.map(k_).join(", ");
   let nGt = getSettingsForSource("policySettings");
-  let a8o = Ydt(nGt?.allowedChannelPlugins);
+  let a8o = getEffectiveChannelAllowlist(nGt?.allowedChannelPlugins);
   return {
     channels: v9,
     disabled: !isChannelsEnabled(),
     is3P: getAPIProvider() !== "firstParty",
-    policyBlocked: Ebe(nGt),
+    policyBlocked: isChannelsPolicyBlocked(nGt),
     list: s8o,
     unmatched: W3e(v9, a8o),
   };
@@ -8360,7 +8360,7 @@ function Ffe() {
         (Nk[2] = _f));
     else _f = Nk[2];
     let Lk;
-    if (Nk[3] === p)
+    if (Nk[3] === MEMO_CACHE_SENTINEL)
       ((Lk = e(t, {
         dimColor: !0,
         children: "Channels are not available on third-party providers",
@@ -8384,7 +8384,7 @@ function Ffe() {
         (Nk[8] = _f));
     else _f = Nk[8];
     let Lk;
-    if (Nk[9] === p)
+    if (Nk[9] === MEMO_CACHE_SENTINEL)
       ((Lk = e(t, {
         dimColor: !0,
         children: "Channels are not currently available",
@@ -8411,7 +8411,7 @@ function Ffe() {
         (Nk[14] = _f));
     else _f = Nk[14];
     let Lk, b_;
-    if (Nk[15] === p)
+    if (Nk[15] === MEMO_CACHE_SENTINEL)
       ((Lk = e(t, {
         dimColor: !0,
         children: "Inbound messages will be silently dropped",
@@ -8577,7 +8577,7 @@ function iU() {
 }
 F();
 function Y3e() {
-  let w = Git(),
+  let w = useMainLoopModelSetting(),
     I = V(getModelSourceAnnotation, [w]),
     ne = k9();
   if (!I && !ne) return null;
@@ -8588,7 +8588,7 @@ function Y3e() {
 F();
 var fGt = "tengu-top-of-feed-tip";
 function J3e() {
-  let { storageV5: w } = _e(),
+  let { storageV5: w } = useStorageV5Context(),
     I = V(jfe, []),
     ne = V(() => ee().lastShownEmergencyTip, []),
     me = $fe(I) && (I.persistent || I.tip !== ne);
@@ -8634,7 +8634,7 @@ function t6e() {
   return !!w && w.some((I) => I);
 }
 function w9(w) {
-  let I = aM();
+  let I = getSessionAnnouncementState();
   if (I.companyAnnouncement !== null) return I.companyAnnouncement;
   let ne = (getInitialSettings().companyAnnouncements ?? []).filter((pe) => pe);
   if (ne.length === 0) return null;
@@ -8647,7 +8647,7 @@ function w9(w) {
 function Vfe() {
   let Wfe = _(7),
     hGt;
-  if (Wfe[0] === p) ((hGt = getOauthAccountInfo()), (Wfe[0] = hGt));
+  if (Wfe[0] === MEMO_CACHE_SENTINEL) ((hGt = getOauthAccountInfo()), (Wfe[0] = hGt));
   else hGt = Wfe[0];
   let yGt = hGt,
     X3e = fh(),
@@ -8664,7 +8664,7 @@ function Vfe() {
     return null;
   }
   let SGt;
-  if (Wfe[4] === p)
+  if (Wfe[4] === MEMO_CACHE_SENTINEL)
     ((SGt =
       !a.IS_DEMO &&
       yGt?.organizationName &&
@@ -8718,12 +8718,12 @@ function n6e(w) {
     ),
     w,
   ),
-    i("tengu_guest_passes_upsell_shown", { seen_count: I }));
+    logEvent("tengu_guest_passes_upsell_shown", { seen_count: I }));
 }
 function Gfe() {
   let i9o = _(1),
     wGt;
-  if (i9o[0] === p) {
+  if (i9o[0] === MEMO_CACHE_SENTINEL) {
     let CGt = sAe();
     wGt = r(t, {
       dimColor: !0,
@@ -8746,13 +8746,13 @@ function Gfe() {
 }
 function Kfe() {
   let _Gt = _(3),
-    { storageV5: o6e } = _e(),
+    { storageV5: o6e } = useStorageV5Context(),
     TGt;
   if (_Gt[0] !== o6e) ((TGt = () => n6e(o6e)), (_Gt[0] = o6e), (_Gt[1] = TGt));
   else TGt = _Gt[1];
   Bu("guest-passes", TGt);
   let xGt;
-  if (_Gt[2] === p) ((xGt = e(o, { children: e(Gfe, {}) })), (_Gt[2] = xGt));
+  if (_Gt[2] === MEMO_CACHE_SENTINEL) ((xGt = e(o, { children: e(Gfe, {}) })), (_Gt[2] = xGt));
   else xGt = _Gt[2];
   return xGt;
 }
@@ -8816,7 +8816,7 @@ function x9() {
   return JPe();
 }
 function O6e(w) {
-  let I = aM();
+  let I = getSessionAnnouncementState();
   if (I.fotwContent !== null) return I.fotwContent;
   if (!x9()) return null;
   let ne = h2();
@@ -8847,7 +8847,7 @@ function Zfe(C9o) {
   let UM = _(24),
     { variant: _9 } = C9o,
     NGt;
-  if (UM[0] === p) ((NGt = aM()), (UM[0] = NGt));
+  if (UM[0] === MEMO_CACHE_SENTINEL) ((NGt = getSessionAnnouncementState()), (UM[0] = NGt));
   else NGt = UM[0];
   let Qfe = NGt.fotwContent,
     [LGt] = d(VGt),
@@ -8860,7 +8860,7 @@ function Zfe(C9o) {
       if (!nm) {
         return;
       }
-      i("tengu_fotw_nudge_shown", {
+      logEvent("tengu_fotw_nudge_shown", {
         feature: Ub(nm.feature),
         campaign: S("feature_of_the_week"),
         audience: S(_9 === "credit" ? "claimant" : "viewer"),
@@ -8952,7 +8952,7 @@ function Zfe(C9o) {
       (UM[19] = Jfe));
   else Jfe = UM[19];
   let HGt;
-  if (UM[20] === p)
+  if (UM[20] === MEMO_CACHE_SENTINEL)
     ((HGt = r(t, { dimColor: !0, children: ["Terms apply: ", L6e] })),
       (UM[20] = HGt));
   else HGt = UM[20];
@@ -8967,7 +8967,7 @@ function Zfe(C9o) {
 }
 F();
 function eKt() {
-  return cu(getInitialSettings().prefersReducedMotion);
+  return shouldReduceMotion(getInitialSettings().prefersReducedMotion);
 }
 var sge = 1500,
   ZGt = 2,
@@ -8983,7 +8983,7 @@ function P9(O9o) {
     [QGt, H9o] = d(null),
     [tK, j6e] = bs(eK ? null : 50),
     YGt;
-  if (mU[0] === p) ((YGt = () => U9o(!0)), (mU[0] = YGt));
+  if (mU[0] === MEMO_CACHE_SENTINEL) ((YGt = () => U9o(!0)), (mU[0] = YGt));
   else YGt = mU[0];
   let JGt;
   if (mU[1] !== eK) ((JGt = [eK]), (mU[1] = eK), (mU[2] = JGt));
@@ -9046,13 +9046,13 @@ function Z6e() {
 }
 function lge() {
   let tKt = _(3),
-    { storageV5: V6e } = _e(),
+    { storageV5: V6e } = useStorageV5Context(),
     oKt;
   if (tKt[0] !== V6e) ((oKt = () => G6e(V6e)), (tKt[0] = V6e), (tKt[1] = oKt));
   else oKt = tKt[1];
   Bu("fullscreen-downsell", oKt);
   let nKt;
-  if (tKt[2] === p) ((nKt = e(age, {})), (tKt[2] = nKt));
+  if (tKt[2] === MEMO_CACHE_SENTINEL) ((nKt = e(age, {})), (tKt[2] = nKt));
   else nKt = tKt[2];
   return nKt;
 }
@@ -9066,7 +9066,7 @@ async function G6e(w) {
       ),
       w,
     ),
-    i("tengu_fullscreen_downsell_shown", { seen_count: I }),
+    logEvent("tengu_fullscreen_downsell_shown", { seen_count: I }),
     I >= z6e && getInitialSettings().tui === void 0)
   ) {
     let { error: ne } = await updateSettingsForSource(
@@ -9081,13 +9081,13 @@ async function G6e(w) {
       });
       return;
     }
-    i("tengu_fullscreen_downsell_persisted", { seen_count: I });
+    logEvent("tengu_fullscreen_downsell_persisted", { seen_count: I });
   }
 }
 function age() {
   let t7o = _(1),
     rKt;
-  if (t7o[0] === p)
+  if (t7o[0] === MEMO_CACHE_SENTINEL)
     ((rKt = r(o, {
       flexDirection: "column",
       children: [
@@ -9142,24 +9142,24 @@ function o4e(w) {
       I.hasSeenAutoDefaultNotice ? I : { ...I, hasSeenAutoDefaultNotice: !0 },
     w,
   ),
-    i("tengu_auto_default_notice_shown", {}));
+    logEvent("tengu_auto_default_notice_shown", {}));
 }
 function cge() {
   let t4e = _(5),
-    { storageV5: e4e } = _e(),
+    { storageV5: e4e } = useStorageV5Context(),
     iKt;
   if (t4e[0] !== e4e) ((iKt = () => o4e(e4e)), (t4e[0] = e4e), (t4e[1] = iKt));
   else iKt = t4e[1];
   Bu(fU, iKt);
   let sKt, lKt;
-  if (t4e[2] === p)
+  if (t4e[2] === MEMO_CACHE_SENTINEL)
     ((sKt = e(t, { bold: !0, children: AUTO_DEFAULT_NOTICE_TITLE })),
       (lKt = e(t, { dimColor: !0, children: AUTO_DEFAULT_NOTICE_BODY })),
       (t4e[2] = sKt),
       (t4e[3] = lKt));
   else ((sKt = t4e[2]), (lKt = t4e[3]));
   let cKt;
-  if (t4e[4] === p)
+  if (t4e[4] === MEMO_CACHE_SENTINEL)
     ((cKt = r(o, {
       flexDirection: "column",
       children: [
@@ -9191,18 +9191,18 @@ function s4e(w) {
     let ne = I.seenNotifications ?? {};
     return { ...I, seenNotifications: { ...ne, [dIe]: (ne[dIe] ?? 0) + 1 } };
   }, w),
-    i("tengu_switch_to_subscription_notice_shown", {}));
+    logEvent("tengu_switch_to_subscription_notice_shown", {}));
 }
 function dge(T7o) {
   let i4e = _(5),
     { subscriptionType: n4e } = T7o,
-    { storageV5: r4e } = _e(),
+    { storageV5: r4e } = useStorageV5Context(),
     uKt;
   if (i4e[0] !== r4e) ((uKt = () => s4e(r4e)), (i4e[0] = r4e), (i4e[1] = uKt));
   else uKt = i4e[1];
   Bu("subscription-switch", uKt);
   let dKt;
-  if (i4e[2] === p)
+  if (i4e[2] === MEMO_CACHE_SENTINEL)
     ((dKt = r(t, {
       color: "text",
       dimColor: !0,
@@ -9264,10 +9264,10 @@ function b4e(w, I) {
     let me = ne.seenNotifications ?? {};
     return { ...ne, seenNotifications: { ...me, [LDt]: (me[LDt] ?? 0) + 1 } };
   }, I),
-    i("tengu_cc_ce_migrate_notice_shown", { cohort_group: fromEnum(w) }));
+    logEvent("tengu_cc_ce_migrate_notice_shown", { cohort_group: fromEnum(w) }));
 }
 function M9(w) {
-  let I = aM();
+  let I = getSessionAnnouncementState();
   if (I.ccCeMigrateGroup !== void 0) return I.ccCeMigrateGroup;
   let ne = k4e();
   if (w && ne !== null && I9[ne] !== void 0) I.ccCeMigrateGroup = ne;
@@ -9275,7 +9275,7 @@ function M9(w) {
 }
 function gge() {
   let nK = _(17),
-    { storageV5: d4e } = _e(),
+    { storageV5: d4e } = useStorageV5Context(),
     g4e = fh(),
     [h4e] = d(vKt),
     pKt;
@@ -9336,7 +9336,7 @@ function xKt() {
 }
 function Sge() {
   let gU = _(18),
-    { storageV5: w4e } = _e(),
+    { storageV5: w4e } = useStorageV5Context(),
     C4e = fh(),
     [_4e] = d(xKt),
     wKt;
@@ -9402,7 +9402,7 @@ function S2t() {
   return logFeatureOk("oauth_expiry_warning");
 }
 function v2t() {
-  return i("tengu_powerup_discovery_shown", { arm: fromEnum("banner") });
+  return logEvent("tengu_powerup_discovery_shown", { arm: fromEnum("banner") });
 }
 var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
   LKt = {
@@ -9830,8 +9830,8 @@ function H4e() {
   let een = _(2);
   Bu("oauth-expiry", S2t);
   let RKt, M4e;
-  if (een[0] === p) {
-    M4e = en;
+  if (een[0] === MEMO_CACHE_SENTINEL) {
+    M4e = EARLY_RETURN_SENTINEL;
     bb0: {
       let I4e = iU();
       if (!I4e) {
@@ -9851,7 +9851,7 @@ function H4e() {
     }
     ((een[0] = RKt), (een[1] = M4e));
   } else ((RKt = een[0]), (M4e = een[1]));
-  if (M4e !== en) return M4e;
+  if (M4e !== EARLY_RETURN_SENTINEL) return M4e;
   return RKt;
 }
 var o2t = {
@@ -9878,7 +9878,7 @@ function j4e(ten) {
   else MKt = sK[3];
   let vge = MKt,
     AKt;
-  if (sK[4] === p)
+  if (sK[4] === MEMO_CACHE_SENTINEL)
     ((AKt = e(t, { bold: !0, children: "Keep working from anywhere" })),
       (sK[4] = AKt));
   else AKt = sK[4];
@@ -9892,7 +9892,7 @@ function j4e(ten) {
       (sK[6] = wge));
   else wge = sK[6];
   let IKt;
-  if (sK[7] === p)
+  if (sK[7] === MEMO_CACHE_SENTINEL)
     ((IKt = e(t, { color: "text", children: "/remote-control" })),
       (sK[7] = IKt));
   else IKt = sK[7];
@@ -9931,7 +9931,7 @@ function $4e() {
   let oen = _(1);
   Bu("powerup-discovery", v2t);
   let DKt;
-  if (oen[0] === p) ((DKt = e(Iw, { children: POWERUP_DISCOVERY_COPY.banner })), (oen[0] = DKt));
+  if (oen[0] === MEMO_CACHE_SENTINEL) ((DKt = e(Iw, { children: POWERUP_DISCOVERY_COPY.banner })), (oen[0] = DKt));
   else DKt = oen[0];
   return DKt;
 }
@@ -10118,7 +10118,7 @@ function aK() {
   return isEnterpriseSubscriber() || getAPIProvider() !== "firstParty" || St();
 }
 function Tge(w, I, ne) {
-  let me = aM(),
+  let me = getSessionAnnouncementState(),
     pe = me.announcementSlotGovernance ?? ne,
     be = E9(w, I, pe);
   if (me.announcementSlotWinner === null) {
@@ -10223,10 +10223,10 @@ function O9(xge) {
   else M2t = Rge[1];
   let { latchAnnouncementSlot: A2t } = M2t,
     hU = A2t === void 0 ? !0 : A2t,
-    { storageV5: I2t, credentials: Zen } = _e(),
-    { columns: etn } = Se(),
+    { storageV5: I2t, credentials: Zen } = useStorageV5Context(),
+    { columns: etn } = useTerminalSize(),
     otn = zQt(etn),
-    E2t = Ye(),
+    E2t = useSession(),
     Q4e = Os($2t),
     stn = Os(V2t),
     ctn = Os(G2t),
@@ -10238,7 +10238,7 @@ function O9(xge) {
   else N2t = Rge[3];
   let dtn = Os(N2t),
     mtn = Os(Q2t) ?? 0;
-  (Sfe(), Me(eCn), wfe());
+  (Sfe(), useStoreSelector(eCn), wfe());
   let ftn = Ege(E2t, I2t, Zen);
   const ytn = ee();
   let Pge;
@@ -10279,7 +10279,7 @@ function O9(xge) {
     B2t = Ow.ant.length > 0,
     U2t = Ow.slot?.showAccentBar?.() ?? !0;
   const J4e = m0,
-    X4e = yy,
+    X4e = OffscreenFrozenContent,
     e8e =
       !Y4e && !F2t && !B2t
         ? null
@@ -10374,7 +10374,7 @@ var Bz = Yl(function (Htn) {
   else Fge = Dge[6];
   let X2t;
   if (Dge[7] !== cK || Dge[8] !== Fge)
-    ((X2t = e(yy, { children: e(m0.Provider, { value: cK, children: Fge }) })),
+    ((X2t = e(OffscreenFrozenContent, { children: e(m0.Provider, { value: cK, children: Fge }) })),
       (Dge[7] = cK),
       (Dge[8] = Fge),
       (Dge[9] = X2t));
@@ -10865,7 +10865,7 @@ function rzt(w) {
           typeof w.attachment.label === "string"
             ? [w.attachment.label]
             : []),
-          ...lc(w.attachment.lines),
+          ...asStringArray(w.attachment.lines),
         ].join(`
 `);
       break;
@@ -10913,7 +10913,7 @@ function izt(w) {
     )
       continue;
     let xe = be.length;
-    if (!Number.isSafeInteger(xe) || xe > gy) continue;
+    if (!Number.isSafeInteger(xe) || xe > MAX_SERIALIZED_ARRAY_ELEMENTS) continue;
     let Ae = [],
       Oe = !0;
     for (let He = 0; He < xe; He++) {
@@ -11069,7 +11069,7 @@ function H9(Don) {
   }
   let Kge, pK, zge, C8e;
   if (v8e[0] !== Vge || v8e[1] !== Gge) {
-    C8e = en;
+    C8e = EARLY_RETURN_SENTINEL;
     bb0: {
       let mzt = Yge(Vge) ?? "";
       pK = Gge ? qge(mzt) : _8e(mzt);
@@ -11087,7 +11087,7 @@ function H9(Don) {
       (v8e[4] = zge),
       (v8e[5] = C8e));
   } else ((Kge = v8e[2]), (pK = v8e[3]), (zge = v8e[4]), (C8e = v8e[5]));
-  if (C8e !== en) return C8e;
+  if (C8e !== EARLY_RETURN_SENTINEL) return C8e;
   let Qge;
   if (v8e[6] !== pK)
     ((Qge = e(t, { dimColor: !0, children: pK })),
@@ -11361,7 +11361,7 @@ function j8e(Kon) {
   if (!kK || Rp === null) {
     let SU;
     if (Gy[61] !== vK)
-      ((SU = e(yy, { children: vK })), (Gy[61] = vK), (Gy[62] = SU));
+      ((SU = e(OffscreenFrozenContent, { children: vK })), (Gy[61] = vK), (Gy[62] = SU));
     else SU = Gy[62];
     return SU;
   }
@@ -11401,7 +11401,7 @@ function j8e(Kon) {
   else ehe = Gy[73];
   let Czt;
   if (Gy[74] !== Xge || Gy[75] !== vK || Gy[76] !== ehe)
-    ((Czt = e(yy, {
+    ((Czt = e(OffscreenFrozenContent, {
       children: r(o, {
         width: Xge,
         flexDirection: "column",
@@ -11570,7 +11570,7 @@ var W9 = Yl(function (mnn) {
     return null;
   }
   let Pzt;
-  if (Rzt[0] === p)
+  if (Rzt[0] === MEMO_CACHE_SENTINEL)
     ((Pzt = e(o, {
       minWidth: 2,
       children: e(t, { "aria-label": "claude:", color: "text", children: Ar }),
@@ -11604,7 +11604,7 @@ var W9 = Yl(function (mnn) {
 F();
 F();
 function ep() {
-  let w = qc();
+  let w = useCommandQueue();
   return At(w.subscribe, w.getCommandQueueSnapshot);
 }
 function lhe({
@@ -11629,7 +11629,7 @@ function Bzt() {
 function q9(Lnn) {
   let Q8e = _(13),
     { turn: Onn, hasToolsInProgress: che } = Lnn,
-    uhe = Me(Onn, Ozt),
+    uhe = useStoreSelector(Onn, Ozt),
     K8e = U(Fzt),
     z8e = ep(),
     Azt;
@@ -11641,7 +11641,7 @@ function q9(Lnn) {
   else Azt = Q8e[2];
   let Izt = Azt,
     dhe = Izt.pendingAgents > 0 || Izt.pendingWorkflows > 0,
-    mhe = eO(Bzt),
+    mhe = useFeatureFlagValue(Bzt),
     { progress: b0 } = qA(),
     Y8e = C(null),
     Ezt,
@@ -12093,7 +12093,7 @@ function khe({
   scanElement: Qe,
   setPositions: it,
 }) {
-  let at = Ye().host,
+  let at = useSession().host,
     [Zt] = d(hQt),
     Ct = Oe ?? Zt.extractSearchText,
     eo = C({
@@ -12396,7 +12396,7 @@ function khe({
           Jr = 0,
           ai = performance.now();
         for (let Oi = 0; Oi < gn.length; Oi += On) {
-          await Z(0);
+          await sleep(0);
           let rs = performance.now(),
             Fi = Math.min(Oi + On, gn.length);
           for (let Wi = Oi; Wi < Fi; Wi++) {
@@ -12488,7 +12488,7 @@ function khe({
   );
 }
 function She(w, I, ne, me) {
-  if (!l6.of(w).claim("vml-message-hole")) return;
+  if (!claimRegistriesByHost.of(w).claim("vml-message-hole")) return;
   let pe = (xe) => (xe === void 0 ? "undefined" : l9e(xe).replaceAll("/", ".")),
     be =
       "VirtualMessageList: undefined element in messages[] \u2014 " +
@@ -12496,7 +12496,7 @@ function She(w, I, ne, me) {
   logError(new R(be));
 }
 function kQt(w, I, ne, me) {
-  if (!l6.of(w).claim("vml-keys-desync")) return;
+  if (!claimRegistriesByHost.of(w).claim("vml-keys-desync")) return;
   let pe = `VirtualMessageList: itemKeys/messages length desync (keys=${I} messages=${ne} range=[${me[0]},${me[1]}))`;
   logError(new R(pe));
 }
@@ -12512,7 +12512,7 @@ function a9e(prn) {
       scrollViewport: Pp,
       scratch: e9e,
     } = prn,
-    t9e = Ye().host,
+    t9e = useSession().host,
     { setStickyPrompt: xK } = u9(),
     Gzt;
   if (WM[0] !== Pp.handle)
@@ -12614,7 +12614,7 @@ function a9e(prn) {
   let frn = yhe >= 0 ? yhe - Vzt[S0] : 0,
     r9e = VM >= 0 ? Math.max(0, frn + Vzt[VM]) : -1,
     oQt;
-  if (WM[25] === p) ((oQt = { idx: -1, tries: 0 }), (WM[25] = oQt));
+  if (WM[25] === MEMO_CACHE_SENTINEL) ((oQt = { idx: -1, tries: 0 }), (WM[25] = oQt));
   else oQt = WM[25];
   let wU = C(oQt),
     z9 = C("none"),
@@ -13016,18 +13016,18 @@ function K7e(win) {
     Sd = U(MYt) || rm,
     Che = xQt !== void 0,
     ZM = xQt === "uncapped" || Fk !== void 0,
-    xin = eO(d7),
+    xin = useFeatureFlagValue(d7),
     DK = Cin && xin,
     Min = jA(Sd),
     Ky = IU !== null && Min,
-    { columns: Ap, rows: _he } = Se(),
-    NK = Zr("transcript:toggleShowAll", "Transcript", "Ctrl+E"),
+    { columns: Ap, rows: _he } = useTerminalSize(),
+    NK = useKeybindingDisplayText("transcript:toggleShowAll", "Transcript", "Ctrl+E"),
     Ain = a.CLAUDE_CODE_DISABLE_VIRTUAL_SCROLL,
     Iin = U(AYt),
     The = U(IYt),
     LK = U(EYt),
     Ein = U(DYt),
-    Din = eO(NYt),
+    Din = useFeatureFlagValue(NYt),
     m9e = Ein && Din,
     v9e = Yn(),
     snipDebugEnabled = U(LYt),
@@ -13283,7 +13283,7 @@ function K7e(win) {
   }
   let Lhe = Z9e,
     [Ohe] = d(WYt),
-    HK = Ye().host,
+    HK = useSession().host,
     C0;
   bb2: {
     if (!Ky || Ohe === null) {
@@ -13433,7 +13433,7 @@ function K7e(win) {
     n7e = Qin.count(jw, k0, _in) - 1,
     [Uhe, Yin] = d(VYt),
     i7;
-  if (cc[115] === p)
+  if (cc[115] === MEMO_CACHE_SENTINEL)
     ((i7 = (Jin) => {
       let i7e = f7(Jin);
       Yin((Xin) => {
@@ -13511,7 +13511,7 @@ function K7e(win) {
         return !1;
       }
       let s7e = Uw.toolUseByToolUseID.get(xU.tool_use_id)?.name;
-      let oYt = s7e ? (ar(Mp, s7e) ?? Zae(s7e, HK)) : void 0;
+      let oYt = s7e ? (findToolByName(Mp, s7e) ?? Zae(s7e, HK)) : void 0;
       return (
         (oYt
           ? hp(oYt, "isResultTruncated")?.(x_.toolUseResult, { columns: Ap })
@@ -13529,7 +13529,7 @@ function K7e(win) {
       (cc[126] = l7));
   else l7 = cc[126];
   let a7e = l7,
-    tsn = qb(yp.kind),
+    tsn = qb(localJsxDialog.kind),
     l7e = !Tin && !tsn,
     WK = De(Z0),
     nYt,
@@ -13624,7 +13624,7 @@ function K7e(win) {
               o,
               {
                 marginTop: 1,
-                children: e(za, {
+                children: e(Divider, {
                   title: `${YM.count} new ${x(YM.count, "message")}`,
                   width: Ap,
                   color: "inactive",
@@ -13686,7 +13686,7 @@ function K7e(win) {
         if (d7e && "tool_use_id" in d7e) {
           let m7e = Uw.toolUseByToolUseID.get(d7e.tool_use_id);
           bYt = m7e !== void 0;
-          let SYt = m7e && ar(Mp, m7e.name);
+          let SYt = m7e && findToolByName(Mp, m7e.name);
           let p7e = SYt?.outputSchema?.safeParse(oA.toolUseResult);
           let kYt =
             p7e === void 0 || p7e.success
@@ -13709,7 +13709,7 @@ function K7e(win) {
   if (cc[162] !== Ap || cc[163] !== J9e || cc[164] !== TU || cc[165] !== NK)
     ((Whe =
       J9e &&
-      e(za, {
+      e(Divider, {
         title: `${NK} to show ${ie.bold(TU)} previous messages`,
         width: Ap,
       })),
@@ -13733,7 +13733,7 @@ function K7e(win) {
       Che &&
       TU > 0 &&
       !ZM &&
-      e(za, {
+      e(Divider, {
         title: `${NK} to hide ${ie.bold(TU)} previous messages`,
         width: Ap,
       })),
@@ -13764,7 +13764,7 @@ function K7e(win) {
     cc[188] !== zx
   )
     ((Vhe = zx
-      ? e(UB.Provider, {
+      ? e(VirtualScrollViewportContext.Provider, {
           value: !0,
           children: e(khe, {
             messages: jw,
@@ -13915,11 +13915,11 @@ function jz(g7e) {
     y7e = kd.kind === "live" && kd.focused.isMain,
     Khe = y7e && _0.screen === "prompt",
     AU = kd.kind === "live" ? kd.focused.messages : kd.messages,
-    YK = Me(QK, zYt) ?? !1,
-    S7e = Me((y7e ? QK : null)?.stream, QYt) ?? g7,
+    YK = useStoreSelector(QK, zYt) ?? !1,
+    S7e = useStoreSelector((y7e ? QK : null)?.stream, QYt) ?? g7,
     nA = Khe ? QK : null,
-    ysn = Me(nA?.stream, YYt),
-    k7e = Me(nA?.stream, JYt),
+    ysn = useStoreSelector(nA?.stream, YYt),
+    k7e = useStoreSelector(nA?.stream, JYt),
     CYt;
   if (MU[4] !== nA || MU[5] !== AU || MU[6] !== _0.screen)
     ((CYt = { turn: nA, messages: AU, screen: _0.screen }),
@@ -14103,13 +14103,13 @@ function Y7e(w) {
 function NU() {
   let ZK = _(15),
     e5t;
-  if (ZK[0] === p) ((e5t = []), (ZK[0] = e5t));
+  if (ZK[0] === MEMO_CACHE_SENTINEL) ((e5t = []), (ZK[0] = e5t));
   else e5t = ZK[0];
   let [oye, Lsn] = d(e5t),
     [T0, Osn] = d(0),
     t5t,
     o5t;
-  if (ZK[1] === p)
+  if (ZK[1] === MEMO_CACHE_SENTINEL)
     ((t5t = () => {
       let n5t = SandboxManager.getSandboxViolationStore();
       return n5t.subscribe((Fsn) => {
@@ -14177,7 +14177,7 @@ var J7e = 2,
   Z7e = 50,
   s5t = 200;
 function e2(w, I, ne, me, pe) {
-  let be = vt(),
+  let be = useClock(),
     xe = C(null),
     Ae = C(0),
     Oe = C(0),
@@ -14425,10 +14425,10 @@ function OU({
   isModal: me = !1,
 }) {
   let pe = aO(),
-    be = sl(),
+    be = useKeybindingContext(),
     xe = g9e(),
-    { addNotification: Ae } = Ir(),
-    { storageV5: Oe } = _e(),
+    { addNotification: Ae } = useNotificationQueue(),
+    { storageV5: Oe } = useStorageV5Context(),
     He = p9e(),
     Ke = I && !He,
     Je = C(null),
@@ -14459,7 +14459,7 @@ function OU({
     if (zt) Zt(zt);
   }
   let eo = ne != null;
-  (Ze(
+  (useKeybindings(
     {
       "scroll:pageUp": () => {
         let zt = w.handle;
@@ -14527,7 +14527,7 @@ function OU({
     if (co === null) return;
     ne?.(co, ao);
   }
-  (Ze(
+  (useKeybindings(
     {
       "scroll:halfPageUp": () => jt("halfPageUp"),
       "scroll:halfPageDown": () => jt("halfPageDown"),
@@ -14536,7 +14536,7 @@ function OU({
     },
     { context: "Scroll", isActive: Ke },
   ),
-    Ze(
+    useKeybindings(
       {
         "scroll:lineUp": () => jt("lineUp"),
         "scroll:lineDown": () => jt("lineDown"),
@@ -14577,7 +14577,7 @@ function OU({
     }
     pe.moveFocus(zt);
   }
-  (Ze(
+  (useKeybindings(
     {
       "selection:extendLeft": () => Tt("left"),
       "selection:extendRight": () => Tt("right"),
@@ -14588,7 +14588,7 @@ function OU({
     },
     { context: "Scroll", isActive: Ke },
   ),
-    rF(
+    useKeybindingPreDispatch(
       (zt, ao) => {
         if (!pe.hasSelection()) return;
         if (ao.ctrl && !ao.shift && !ao.meta && zt === "c") {
@@ -14678,7 +14678,7 @@ function N5t(w, I, ne = !0) {
 function lZe(y7) {
   let ban = _(5),
     { internal_eventEmitter: LU } = rk(),
-    lye = vt(),
+    lye = useClock(),
     l5t = C(!1),
     c5t,
     u5t;
@@ -14687,7 +14687,7 @@ function lZe(y7) {
       let cye = function cye(d5t) {
         if (!l5t.current)
           ((l5t.current = !0),
-            i("tengu_scroll_arrows_detected", {
+            logEvent("tengu_scroll_arrows_detected", {
               count: d5t.count,
               up: d5t.direction === "up",
             }));
@@ -14705,7 +14705,7 @@ function lZe(y7) {
         );
       };
       let uye = function uye() {
-        (i("tengu_jediterm_scroll_bug_detected", {}),
+        (logEvent("tengu_jediterm_scroll_bug_detected", {}),
           y7({
             key: "jediterm-scroll-bug",
             kind: "contextual",
@@ -14759,7 +14759,7 @@ function J5t(bZe) {
 }
 function X5t() {}
 function Z5t() {
-  ws().get(process.stdout)?.forceRedraw();
+  getInkInstanceRegistry().get(process.stdout)?.forceRedraw();
 }
 function x0(Oan) {
   let lA = _(22),
@@ -14772,13 +14772,13 @@ function x0(Oan) {
     mZe = L5t === void 0 ? !1 : L5t,
     pZe = U(K5t),
     Bk = It();
-  Ir();
+  useNotificationQueue();
   let fZe = Cc();
-  Ye();
+  useSession();
   let O5t;
   if (lA[0] !== pZe || lA[1] !== Bk)
     ((O5t = () => {
-      (i("tengu_toggle_todos", { is_expanded: pZe === "tasks" }),
+      (logEvent("tengu_toggle_todos", { is_expanded: pZe === "tasks" }),
         logFeatureOk("todo_toggle_panel"),
         Bk(z5t));
     }),
@@ -14824,7 +14824,7 @@ function x0(Oan) {
         Bk(J5t);
         return;
       }
-      (i("tengu_toggle_transcript", {
+      (logEvent("tengu_toggle_transcript", {
         is_entering: dye !== "transcript",
         show_all: mZe,
         message_count: dZe,
@@ -14850,7 +14850,7 @@ function x0(Oan) {
         return;
       }
       let gZe = !FU;
-      (i("tengu_brief_mode_toggled", {
+      (logEvent("tengu_brief_mode_toggled", {
         enabled: gZe,
         gated: !1,
         source: S("keybinding"),
@@ -14868,32 +14868,32 @@ function x0(Oan) {
   else H5t = lA[16];
   let $an = H5t,
     j5t;
-  if (lA[17] === p) ((j5t = { context: "Global" }), (lA[17] = j5t));
+  if (lA[17] === MEMO_CACHE_SENTINEL) ((j5t = { context: "Global" }), (lA[17] = j5t));
   else j5t = lA[17];
-  Ne("app:toggleTodos", Fan, j5t);
+  useKeybinding("app:toggleTodos", Fan, j5t);
   let $5t;
-  if (lA[18] === p) (($5t = { context: "Global" }), (lA[18] = $5t));
+  if (lA[18] === MEMO_CACHE_SENTINEL) (($5t = { context: "Global" }), (lA[18] = $5t));
   else $5t = lA[18];
-  Ne("app:toggleTranscript", Han, $5t);
+  useKeybinding("app:toggleTranscript", Han, $5t);
   let W5t;
-  if (lA[19] === p) ((W5t = { context: "Global" }), (lA[19] = W5t));
+  if (lA[19] === MEMO_CACHE_SENTINEL) ((W5t = { context: "Global" }), (lA[19] = W5t));
   else W5t = lA[19];
-  Ne("app:toggleBrief", $an, W5t);
+  useKeybinding("app:toggleBrief", $an, W5t);
   let Wan = X5t,
     q5t;
-  if (lA[20] === p) ((q5t = { context: "Global" }), (lA[20] = q5t));
+  if (lA[20] === MEMO_CACHE_SENTINEL) ((q5t = { context: "Global" }), (lA[20] = q5t));
   else q5t = lA[20];
-  Ne("app:toggleTerminal", Wan, q5t);
+  useKeybinding("app:toggleTerminal", Wan, q5t);
   let qan = Z5t,
     V5t;
-  if (lA[21] === p) ((V5t = { context: "Global" }), (lA[21] = V5t));
+  if (lA[21] === MEMO_CACHE_SENTINEL) ((V5t = { context: "Global" }), (lA[21] = V5t));
   else V5t = lA[21];
-  return (Ne("app:redraw", qan, V5t), null);
+  return (useKeybinding("app:redraw", qan, V5t), null);
 }
 F();
 function yye() {
   De(m4);
-  let w = ws().get(process.stdout);
+  let w = getInkInstanceRegistry().get(process.stdout);
   return V(() => {
     if (!w)
       return {
@@ -14937,23 +14937,23 @@ function _Ze(wln) {
   let kye = _(7),
     { children: kZe } = wln,
     eJt;
-  if (kye[0] === p) ((eJt = ONe(hw)), (kye[0] = eJt));
+  if (kye[0] === MEMO_CACHE_SENTINEL) ((eJt = ONe(hw)), (kye[0] = eJt));
   else eJt = kye[0];
   let { bindings: Cln } = eJt,
     _ln = C(null),
     tJt;
-  if (kye[1] === p) ((tJt = new Map()), (kye[1] = tJt));
+  if (kye[1] === MEMO_CACHE_SENTINEL) ((tJt = new Map()), (kye[1] = tJt));
   else tJt = kye[1];
   let Tln = C(tJt),
     oJt;
-  if (kye[2] === p) ((oJt = new Set()), (kye[2] = oJt));
+  if (kye[2] === MEMO_CACHE_SENTINEL) ((oJt = new Set()), (kye[2] = oJt));
   else oJt = kye[2];
   let xln = C(oJt),
     [vZe] = d(aJt),
-    [wZe] = d(S9e),
+    [wZe] = d(createKeyHandlerRegistry),
     nJt;
   if (kye[3] !== vZe || kye[4] !== kZe || kye[5] !== wZe)
-    ((nJt = e(N0e, {
+    ((nJt = e(KeybindingProvider, {
       bindings: Cln,
       pendingChordRef: _ln,
       pendingChord: null,
@@ -15003,7 +15003,7 @@ async function sJt(
     Ke = { ...getDefaultAppState(), verbose: be, ...(He && { mainLoopModel: He }) },
     Je = b7(ne),
     Qe = (at) =>
-      yle(
+      renderToAnsiText(
         e(AppRoot, {
           session: w,
           storageV5: Oe,
@@ -15012,7 +15012,7 @@ async function sJt(
           children: r(_Ze, {
             children: [
               at[0] === 0 && e(Bz, { latchAnnouncementSlot: !1 }),
-              e(tat, {
+              e(ExpandedContentProvider, {
                 children: e(jz, {
                   source: {
                     kind: "static",
@@ -15069,12 +15069,12 @@ function f2(ncn) {
       status: S7,
     } = ncn,
     scn = dJt === void 0 ? !1 : dJt,
-    wye = Zr("app:toggleTranscript", "Global", "ctrl+o"),
-    acn = Zr("transcript:toggleShowAll", "Transcript", "ctrl+e"),
+    wye = useKeybindingDisplayText("app:toggleTranscript", "Global", "ctrl+o"),
+    acn = useKeybindingDisplayText("transcript:toggleShowAll", "Transcript", "ctrl+e"),
     Cye = Bye(),
-    { columns: lcn } = Se(),
+    { columns: lcn } = useTerminalSize(),
     mJt;
-  if (R0[0] === p) ((mJt = nI()), (R0[0] = mJt));
+  if (R0[0] === MEMO_CACHE_SENTINEL) ((mJt = getEditorDisplayName()), (R0[0] = mJt));
   else mJt = R0[0];
   let hJt = mJt,
     SJt = hJt ? `open in ${hJt}` : "open in editor",
@@ -15102,7 +15102,7 @@ function f2(ncn) {
       (R0[2] = _ye));
   else _ye = R0[2];
   let vJt;
-  if (R0[3] === p)
+  if (R0[3] === MEMO_CACHE_SENTINEL)
     ((vJt = e(N, { children: "Showing detailed transcript" })), (R0[3] = vJt));
   else vJt = R0[3];
   let Tye;
@@ -15123,7 +15123,7 @@ function f2(ncn) {
     ((Rye = e(t, {
       dimColor: !0,
       wrap: "truncate-end",
-      children: r(ue, { children: [_ye, vJt, Tye, TZe] }),
+      children: r(DotSeparatedList, { children: [_ye, vJt, Tye, TZe] }),
     })),
       (R0[6] = _ye),
       (R0[7] = Tye),
@@ -15131,7 +15131,7 @@ function f2(ncn) {
       (R0[9] = Rye));
   else Rye = R0[9];
   let xJt;
-  if (R0[10] === p) ((xJt = e(o, { flexGrow: 1 })), (R0[10] = xJt));
+  if (R0[10] === MEMO_CACHE_SENTINEL) ((xJt = e(o, { flexGrow: 1 })), (R0[10] = xJt));
   else xJt = R0[10];
   let Pye;
   if (R0[11] !== vye || R0[12] !== S7)
@@ -15186,7 +15186,7 @@ function _be(dcn) {
     return P0;
   }
   let P0;
-  if (xZe[5] === p)
+  if (xZe[5] === MEMO_CACHE_SENTINEL)
     ((P0 = e(t, { dimColor: !0, children: T7 })), (xZe[5] = P0));
   else P0 = xZe[5];
   return P0;
@@ -15201,14 +15201,14 @@ function pet({ indexStatus: w, count: I, current: ne, query: me }) {
 }
 function xbe() {
   let gh = _(23),
-    RZe = Zr("app:toggleTranscript", "Global", "ctrl+o"),
-    PZe = Zr("transcript:exit", "Transcript", "q"),
+    RZe = useKeybindingDisplayText("app:toggleTranscript", "Global", "ctrl+o"),
+    PZe = useKeybindingDisplayText("transcript:exit", "Transcript", "q"),
     PJt;
-  if (gh[0] === p) ((PJt = nI()), (gh[0] = PJt));
+  if (gh[0] === MEMO_CACHE_SENTINEL) ((PJt = getEditorDisplayName()), (gh[0] = PJt));
   else PJt = gh[0];
   let mcn = PJt,
     MJt;
-  if (gh[1] === p)
+  if (gh[1] === MEMO_CACHE_SENTINEL)
     ((MJt = r(t, {
       dimColor: !0,
       children: [`${L.arrowUp}${L.arrowDown} j/k`.padEnd(9), "scroll"],
@@ -15216,7 +15216,7 @@ function xbe() {
       (gh[1] = MJt));
   else MJt = gh[1];
   let IJt;
-  if (gh[2] === p)
+  if (gh[2] === MEMO_CACHE_SENTINEL)
     ((IJt = r(t, {
       dimColor: !0,
       children: ["ctrl+u/d".padEnd(9), "half page"],
@@ -15224,17 +15224,17 @@ function xbe() {
       (gh[2] = IJt));
   else IJt = gh[2];
   let DJt;
-  if (gh[3] === p)
+  if (gh[3] === MEMO_CACHE_SENTINEL)
     ((DJt = r(t, { dimColor: !0, children: ["space b".padEnd(9), "page"] })),
       (gh[3] = DJt));
   else DJt = gh[3];
   let NJt;
-  if (gh[4] === p)
+  if (gh[4] === MEMO_CACHE_SENTINEL)
     ((NJt = r(t, { dimColor: !0, children: ["g/G".padEnd(9), "top/bottom"] })),
       (gh[4] = NJt));
   else NJt = gh[4];
   let LJt;
-  if (gh[5] === p)
+  if (gh[5] === MEMO_CACHE_SENTINEL)
     ((LJt = r(o, {
       flexDirection: "column",
       children: [
@@ -15248,12 +15248,12 @@ function xbe() {
       (gh[5] = LJt));
   else LJt = gh[5];
   let OJt;
-  if (gh[6] === p)
+  if (gh[6] === MEMO_CACHE_SENTINEL)
     ((OJt = r(t, { dimColor: !0, children: ["/".padEnd(5), "search"] })),
       (gh[6] = OJt));
   else OJt = gh[6];
   let FJt;
-  if (gh[7] === p)
+  if (gh[7] === MEMO_CACHE_SENTINEL)
     ((FJt = r(t, {
       dimColor: !0,
       children: ["n/N".padEnd(5), "next/prev match"],
@@ -15261,7 +15261,7 @@ function xbe() {
       (gh[7] = FJt));
   else FJt = gh[7];
   let UJt;
-  if (gh[8] === p)
+  if (gh[8] === MEMO_CACHE_SENTINEL)
     ((UJt = r(t, {
       dimColor: !0,
       children: ["[".padEnd(5), "print to scrollback"],
@@ -15269,10 +15269,10 @@ function xbe() {
       (gh[8] = UJt));
   else UJt = gh[8];
   let HJt;
-  if (gh[9] === p) ((HJt = "v".padEnd(5)), (gh[9] = HJt));
+  if (gh[9] === MEMO_CACHE_SENTINEL) ((HJt = "v".padEnd(5)), (gh[9] = HJt));
   else HJt = gh[9];
   let $Jt;
-  if (gh[10] === p)
+  if (gh[10] === MEMO_CACHE_SENTINEL)
     (($Jt = r(o, {
       flexDirection: "column",
       children: [
@@ -15303,7 +15303,7 @@ function xbe() {
       (gh[18] = Nye));
   else Nye = gh[18];
   let VJt;
-  if (gh[19] === p)
+  if (gh[19] === MEMO_CACHE_SENTINEL)
     ((VJt = r(t, { dimColor: !0, children: ["?".padEnd(7), "close help"] })),
       (gh[19] = VJt));
   else VJt = gh[19];
@@ -15356,7 +15356,7 @@ function Rbe(pcn) {
       onCancel: gcn,
     }),
     Ep = ycn,
-    NZe = vt(),
+    NZe = useClock(),
     [Oye, v7] = d("building"),
     tXt;
   if ($w[0] !== NZe || $w[1] !== o2)
@@ -15386,7 +15386,7 @@ function Rbe(pcn) {
       ($w[2] = tXt));
   else tXt = $w[2];
   let rXt;
-  if ($w[3] === p) ((rXt = []), ($w[3] = rXt));
+  if ($w[3] === MEMO_CACHE_SENTINEL) ((rXt = []), ($w[3] = rXt));
   else rXt = $w[3];
   E(tXt, rXt);
   let i2 = Oye !== "building",
@@ -15412,7 +15412,7 @@ function Rbe(pcn) {
   let cA = bcn,
     OZe = cA < Ep.length ? Ep[cA] : " ",
     aXt;
-  if ($w[12] === p) ((aXt = e(t, { children: "/" })), ($w[12] = aXt));
+  if ($w[12] === MEMO_CACHE_SENTINEL) ((aXt = e(t, { children: "/" })), ($w[12] = aXt));
   else aXt = $w[12];
   let Fye;
   if ($w[13] !== cA || $w[14] !== Ep)
@@ -15436,7 +15436,7 @@ function Rbe(pcn) {
       ($w[22] = Vye));
   else Vye = $w[22];
   let lXt;
-  if ($w[23] === p) ((lXt = e(o, { flexGrow: 1 })), ($w[23] = lXt));
+  if ($w[23] === MEMO_CACHE_SENTINEL) ((lXt = e(o, { flexGrow: 1 })), ($w[23] = lXt));
   else lXt = $w[23];
   let zye;
   if ($w[24] !== MZe || $w[25] !== AZe || $w[26] !== Oye || $w[27] !== Ep)
@@ -15495,7 +15495,7 @@ function Mbe(Scn) {
     uXt;
   if (Yye[0] !== c2 || Yye[1] !== FZe || Yye[2] !== l2)
     ((uXt = () => {
-      (i("tengu_transcript_toggle_show_all", {
+      (logEvent("tengu_transcript_toggle_show_all", {
         is_expanding: !l2,
         message_count: c2,
       }),
@@ -15510,7 +15510,7 @@ function Mbe(Scn) {
     dXt;
   if (Yye[4] !== c2 || Yye[5] !== BZe || Yye[6] !== l2)
     ((dXt = () => {
-      (i("tengu_transcript_exit", { show_all: l2, message_count: c2 }), BZe());
+      (logEvent("tengu_transcript_exit", { show_all: l2, message_count: c2 }), BZe());
     }),
       (Yye[4] = c2),
       (Yye[5] = BZe),
@@ -15525,7 +15525,7 @@ function Mbe(Scn) {
       (Yye[8] = HZe),
       (Yye[9] = mXt));
   else mXt = Yye[9];
-  Ne("transcript:toggleShowAll", wcn, mXt);
+  useKeybinding("transcript:toggleShowAll", wcn, mXt);
   const jZe = !vcn;
   let pXt;
   if (Yye[10] !== jZe)
@@ -15533,7 +15533,7 @@ function Mbe(Scn) {
       (Yye[10] = jZe),
       (Yye[11] = pXt));
   else pXt = Yye[11];
-  return (Ne("transcript:exit", Ccn, pXt), null);
+  return (useKeybinding("transcript:exit", Ccn, pXt), null);
 }
 function x7(_cn) {
   let fg = _(86),
@@ -15553,9 +15553,9 @@ function x7(_cn) {
       onDumpToScrollback: zZe,
       onExit: m2,
     } = _cn,
-    QZe = Ye(),
-    { storageV5: YZe } = _e(),
-    JZe = vt(),
+    QZe = useSession(),
+    { storageV5: YZe } = useStorageV5Context(),
+    JZe = useClock(),
     [Tcn, xcn] = d(!1),
     A_ = Tcn || Ww,
     [XZe, tbe] = d(!1),
@@ -15565,7 +15565,7 @@ function x7(_cn) {
     eet = C(!1),
     gXt,
     hXt;
-  if (fg[0] === p)
+  if (fg[0] === MEMO_CACHE_SENTINEL)
     ((gXt = () => () => {
       ((rbe.current = rbe.current + 1), ZZe.current?.());
     }),
@@ -15580,7 +15580,7 @@ function x7(_cn) {
     [uA, tet] = d(0),
     [sbe, oet] = d(0),
     bXt;
-  if (fg[2] === p)
+  if (fg[2] === MEMO_CACHE_SENTINEL)
     ((bXt = (Rcn, Pcn) => {
       (tet(Rcn), oet(Pcn));
     }),
@@ -15601,7 +15601,7 @@ function x7(_cn) {
       (fg[5] = SXt));
   else SXt = fg[5];
   let ret = SXt,
-    { columns: p2 } = Se(),
+    { columns: p2 } = useTerminalSize(),
     kXt = C(p2),
     vXt,
     wXt;
@@ -15715,7 +15715,7 @@ function x7(_cn) {
               await uet(AXt, { recursive: !0, mode: 448 });
               let cbe = met(AXt, `cc-transcript-${Date.now()}.txt`);
               await writeFile(cbe, Ecn);
-              let Dcn = zle(cbe);
+              let Dcn = openFileInEditor(cbe);
               iet(
                 Dcn
                   ? `opening ${cbe}`
@@ -15835,7 +15835,7 @@ function x7(_cn) {
       (fg[52] = fbe));
   else fbe = fg[52];
   let LXt;
-  if (fg[53] === p) ((LXt = () => xcn(HXt)), (fg[53] = LXt));
+  if (fg[53] === MEMO_CACHE_SENTINEL) ((LXt = () => xcn(HXt)), (fg[53] = LXt));
   else LXt = fg[53];
   let gbe;
   if (
@@ -15977,7 +15977,7 @@ function x7(_cn) {
 }
 F();
 function n3t() {
-  if (!getAutoModeEnvOnboardingShownLogged()) (setAutoModeEnvOnboardingShownLogged(!0), i("tengu_auto_mode_env_onboarding_shown", {}));
+  if (!getAutoModeEnvOnboardingShownLogged()) (setAutoModeEnvOnboardingShownLogged(!0), logEvent("tengu_auto_mode_env_onboarding_shown", {}));
 }
 function r3t(iun) {
   return { ...iun, autoModeEnvSetup: void 0 };
@@ -16028,14 +16028,14 @@ var yet = 500;
 function I7(nun) {
   let pA = _(21),
     { onAccept: fet, onLater: get, onDismiss: het } = nun,
-    y2 = vt(),
+    y2 = useClock(),
     jXt;
   if (pA[0] !== y2) ((jXt = y2.now()), (pA[0] = y2), (pA[1] = jXt));
   else jXt = pA[1];
   let $Xt = C(jXt),
-    { storageV5: R7 } = _e(),
+    { storageV5: R7 } = useStorageV5Context(),
     qXt;
-  if (pA[2] === p) ((qXt = []), (pA[2] = qXt));
+  if (pA[2] === MEMO_CACHE_SENTINEL) ((qXt = []), (pA[2] = qXt));
   else qXt = pA[2];
   E(n3t, qXt);
   let VXt;
@@ -16055,7 +16055,7 @@ function I7(nun) {
       bb12: switch (run) {
         case "accept": {
           if (
-            (i("tengu_auto_mode_env_onboarding_accept", {}),
+            (logEvent("tengu_auto_mode_env_onboarding_accept", {}),
             ee().autoModeEnvSetup)
           )
             Te(r3t, R7);
@@ -16063,11 +16063,11 @@ function I7(nun) {
           break bb12;
         }
         case "later": {
-          (i("tengu_auto_mode_env_onboarding_later", {}), Te(i3t, R7), get());
+          (logEvent("tengu_auto_mode_env_onboarding_later", {}), Te(i3t, R7), get());
           break bb12;
         }
         case "dismiss": {
-          (i("tengu_auto_mode_env_onboarding_dismiss", {}), Te(s3t, R7), het());
+          (logEvent("tengu_auto_mode_env_onboarding_dismiss", {}), Te(s3t, R7), het());
         }
       }
     }),
@@ -16083,7 +16083,7 @@ function I7(nun) {
   if (pA[9] !== N_) ((Abe = () => N_("later")), (pA[9] = N_), (pA[10] = Abe));
   else Abe = pA[10];
   let zXt;
-  if (pA[11] === p)
+  if (pA[11] === MEMO_CACHE_SENTINEL)
     ((zXt = e(o, {
       flexDirection: "column",
       gap: 1,
@@ -16095,7 +16095,7 @@ function I7(nun) {
       (pA[11] = zXt));
   else zXt = pA[11];
   let QXt;
-  if (pA[12] === p)
+  if (pA[12] === MEMO_CACHE_SENTINEL)
     ((QXt = [
       { label: "Yes", value: "accept" },
       { label: "Not now", value: "later" },
@@ -16163,18 +16163,18 @@ function Cet() {
 function Lbe(Hun) {
   let b2 = _(15),
     { answer: jun } = Hun,
-    { storageV5: ket } = _e(),
+    { storageV5: ket } = useStorageV5Context(),
     a3t;
   if (b2[0] !== ket)
     ((a3t = () => {
       let $un = yJt(ket);
-      i("tengu_fullscreen_upsell_dialog_shown", { impression: $un });
+      logEvent("tengu_fullscreen_upsell_dialog_shown", { impression: $un });
     }),
       (b2[0] = ket),
       (b2[1] = a3t));
   else a3t = b2[1];
   zy("impression", a3t);
-  let { answer: S2, refused: Wun, attempts: vet } = Ah(jun),
+  let { answer: S2, refused: Wun, attempts: vet } = useAnswerRefusalState(jun),
     l3t;
   if (b2[2] !== S2)
     ((l3t = function E7() {
@@ -16195,7 +16195,7 @@ function Lbe(Hun) {
   let A0 = c3t,
     qun = !lO(),
     u3t;
-  if (b2[6] === p)
+  if (b2[6] === MEMO_CACHE_SENTINEL)
     ((u3t = r(o, {
       flexDirection: "column",
       children: [
@@ -16230,7 +16230,7 @@ function Lbe(Hun) {
       children: [
         u3t,
         e(
-          En,
+          ConfirmPrompt,
           {
             focus: wet,
             confirmLabel: "Yes, try it",
@@ -16261,10 +16261,10 @@ function Lbe(Hun) {
   else d3t = b2[14];
   return d3t;
 }
-var Obe = Kr({
+var Obe = defineDialog({
   kind: oNe,
-  payload: m(() => c({ currentMode: X(PERMISSION_MODES) })),
-  result: m(() => X(["accept", "decline", "cancelled"])),
+  payload: createLazyValue(() => c({ currentMode: X(PERMISSION_MODES) })),
+  result: createLazyValue(() => X(["accept", "decline", "cancelled"])),
   default: "cancelled",
   hideWhile: ["panel", "draft"],
 });
@@ -16288,7 +16288,7 @@ function m3t(w, I, ne) {
           : { ...pe, hasSeenAutoDefaultNudge: !0 },
       ne.storageV5,
     ).catch(logError);
-  i("tengu_auto_default_nudge_resolved", {
+  logEvent("tengu_auto_default_nudge_resolved", {
     choice: fromEnum(w),
     outcome: fromEnum(me),
     current_mode: fromEnum(I),
@@ -16357,7 +16357,7 @@ function N7(w) {
 function jbe(w) {
   if (w) {
     let I = $7(Eo("theme", "dark").value);
-    return ut("effortUltra", I)("ultracode");
+    return getThemeColor("effortUltra", I)("ultracode");
   }
   return;
 }
@@ -16377,7 +16377,7 @@ var f3t = 500,
   b3t = ["high"],
   Aet = "medium",
   S3t = 200,
-  qbe = m(() =>
+  qbe = createLazyValue(() =>
     c({
       title: s()
         .min(1)
@@ -16556,9 +16556,9 @@ function O7(w) {
 function k2(w) {
   return !h3t.test(w);
 }
-var Kbe = Kr({
+var Kbe = defineDialog({
   kind: _pe,
-  payload: m(() =>
+  payload: createLazyValue(() =>
     c({
       model: s(),
       copy: qbe()
@@ -16571,7 +16571,7 @@ var Kbe = Kr({
         .refine((w) => im.indexOf(w.toLevel) < im.indexOf(w.fromLevel)),
     }),
   ),
-  result: m(() =>
+  result: createLazyValue(() =>
     $e([
       c({
         choice: X(["accept", "decline"]),
@@ -16604,7 +16604,7 @@ async function x3t(
   };
   if (w === "accept" && !R3t(me, pe, Ae)) {
     (logFeatureBad("effort_medium_nudge", "unavailable_at_accept"),
-      i("tengu_effort_medium_nudge_resolved", {
+      logEvent("tengu_effort_medium_nudge_resolved", {
         choice: fromEnum(w),
         outcome: fromEnum("unavailable"),
         ...Oe,
@@ -16624,7 +16624,7 @@ async function x3t(
   if ((Te((Ke) => Net(Ke, me), Ae.storageV5).catch(logError), He === "write_failed"))
     logFeatureBad("effort_medium_nudge", "settings_write_failed");
   else logFeatureOk("effort_medium_nudge");
-  i("tengu_effort_medium_nudge_resolved", {
+  logEvent("tengu_effort_medium_nudge_resolved", {
     choice: fromEnum(w),
     outcome: fromEnum(He),
     ...Oe,
@@ -16673,10 +16673,10 @@ async function P3t({ setAppState: w, addNotification: I, storageV5: ne }, me) {
     "switched"
   );
 }
-var w2 = Kr({
+var w2 = defineDialog({
   kind: X9t,
-  payload: m(() => c({})),
-  result: m(() => X(["accept", "dismiss", "cancelled"])),
+  payload: createLazyValue(() => c({})),
+  result: createLazyValue(() => X(["accept", "dismiss", "cancelled"])),
   default: "cancelled",
 });
 async function Uet(w, I) {
@@ -16688,7 +16688,7 @@ async function M3t(w, I) {
     case "cancelled":
       return;
     case "dismiss":
-      (f0t(I.storageV5), i("tengu_fullscreen_upsell_dialog_dismissed", {}));
+      (f0t(I.storageV5), logEvent("tengu_fullscreen_upsell_dialog_dismissed", {}));
       return;
     case "accept":
       await A3t(I);
@@ -16728,7 +16728,7 @@ async function A3t({
       proactivityLevel: Oe,
     } = be,
     He = [...vre(xe, Ae), ...Rre(xe, Tz())];
-  i("tengu_fullscreen_upsell_dialog_accepted", {});
+  logEvent("tengu_fullscreen_upsell_dialog_accepted", {});
   try {
     await rst(
       "fullscreen",
@@ -16763,16 +16763,16 @@ function Bet(w) {
     rK(w.toolPermissionContext, qP()).length > 0 || iIe(w.tasks) !== void 0
   );
 }
-var I0 = Kr({
+var I0 = defineDialog({
   kind: "managed_settings_security",
-  payload: m(() =>
+  payload: createLazyValue(() =>
     c({
       settings: qd((w) => typeof w === "object" && w !== null),
       baseline: qd((w) => w === null || typeof w === "object"),
       reveal: X(["login_handoff", "default"]),
     }),
   ),
-  result: m(() => X(["approved", "rejected", "deferred_no_consent_surface"])),
+  result: createLazyValue(() => X(["approved", "rejected", "deferred_no_consent_surface"])),
   default: "deferred_no_consent_surface",
 });
 function Het(w) {
@@ -16977,9 +16977,9 @@ class W7 {
   }
 }
 import { randomUUID as $et } from "crypto";
-var $_ = Kr({
+var $_ = defineDialog({
   kind: "sandbox_network_access",
-  payload: m(() =>
+  payload: createLazyValue(() =>
     c({
       host: s(),
       port: T().optional(),
@@ -16987,7 +16987,7 @@ var $_ = Kr({
       workerName: s().optional(),
     }),
   ),
-  result: m(() =>
+  result: createLazyValue(() =>
     $e([
       c({ allow: O(), persistToSettings: O(), persistRow: xFn().optional() }),
       k("cancelled"),
@@ -17094,14 +17094,14 @@ var $k = {
 function V7(kpn) {
   let Qbe = _(8),
     { onSubmit: Vet } = kpn,
-    zbe = sl(),
+    zbe = useKeybindingContext(),
     vpn = eM(),
-    wpn = qb(yp.kind),
+    wpn = qb(localJsxDialog.kind),
     Get;
   bb0: {
     if (!zbe) {
       let C2;
-      if (Qbe[0] === p) ((C2 = new Set()), (Qbe[0] = C2));
+      if (Qbe[0] === MEMO_CACHE_SENTINEL) ((C2 = new Set()), (Qbe[0] = C2));
       else C2 = Qbe[0];
       Get = C2;
       break bb0;
@@ -17134,7 +17134,7 @@ function V7(kpn) {
   if (Qbe[6] !== C2)
     ((B3t = { context: "Chat", isActive: C2 }), (Qbe[6] = C2), (Qbe[7] = B3t));
   else B3t = Qbe[7];
-  return (Ze(Tpn, B3t), null);
+  return (useKeybindings(Tpn, B3t), null);
 }
 var U3t = 16000,
   ott = 600,
@@ -17398,7 +17398,7 @@ function z3t(w, I) {
 function Zet(w, I, ne) {
   let me = null;
   try {
-    let be = ar(w, I),
+    let be = findToolByName(w, I),
       xe = typeof ne === "object" && ne !== null ? ne : void 0;
     me =
       be?.getActivityDescription?.(xe) ?? be?.getToolUseSummary?.(xe) ?? null;
@@ -17524,7 +17524,7 @@ async function ltt(w) {
       let ne = yfn();
       if (ne === null) return;
       let me = w.lastStartedAt + ne - Date.now();
-      if ((await Z(Math.max(me, 0), I.signal, { unref: !0 }), I.signal.aborted))
+      if ((await sleep(Math.max(me, 0), I.signal, { unref: !0 }), I.signal.aborted))
         return;
       if ($I() === "blurred") {
         n("[narration] terminal unfocused \u2014 parked until focus");
@@ -17749,7 +17749,7 @@ class eSe {
       xe = new AbortController();
     if ((this.#r((Oe) => Oe.set(be, w)), pe)) this.#o.set(be, () => xe.abort());
     let Ae = this.#e(
-      yp,
+      localJsxDialog,
       { nodeId: be, commandName: I, immediate: ne, hidesPrompt: me },
       { signal: xe.signal },
     ).then(
@@ -17841,16 +17841,16 @@ class z7 {
   readFileState;
   loadedNestedMemoryPaths = {};
   sessionEnvVars = new Map();
-  toolState = new uO();
+  toolState = new PerClassInstanceRegistry();
   memorySelector = z2();
   isolationLatch;
   contentReplacementState;
   dialogTransport = dtt();
-  requestDialog = oir(this.dialogTransport);
+  requestDialog = createDialogRequester(this.dialogTransport);
   apiKeyVerification = new tSe();
   initialMcpClients;
   localJsx = new eSe(this.requestDialog);
-  workerCommands = Xa(null);
+  workerCommands = createStore(null);
   sessionBinding;
   store;
   storageV5;
@@ -18309,7 +18309,7 @@ async function f6t(w = new Set(), I) {
     (n(
       `refresh-on-miss: ${xe.size} marketplace(s) have enabled plugins missing from local catalog; refreshing`,
     ),
-      await Z(Math.floor(Math.random() * p6t), void 0, { unref: !0 }));
+      await sleep(Math.floor(Math.random() * p6t), void 0, { unref: !0 }));
     for (let [Oe, He] of xe) {
       let Ke;
       try {
@@ -18330,7 +18330,7 @@ async function f6t(w = new Set(), I) {
         let Ct =
           Ke !== void 0 ? "refresh_failed" : Zt ? "resolved" : "still_missing";
         (n(`refresh-on-miss: ${it} \u2192 ${Ct}`),
-          i("tengu_plugin_refresh_on_miss", {
+          logEvent("tengu_plugin_refresh_on_miss", {
             outcome: fromEnum(Ct),
             ...(Ke !== void 0 && { error_kind: fromEnum(GF(Ke)) }),
             ...xy(it),
@@ -18366,7 +18366,7 @@ async function g6t(w, I = mtt) {
           (xe.delete(He), ne.add(He));
       let Oe = Ae.shift();
       if (xe.size === 0 || Oe === void 0) break;
-      await Z(Oe, void 0, { unref: !0 });
+      await sleep(Oe, void 0, { unref: !0 });
     }
   } catch (me) {
     logError(me);
@@ -18409,8 +18409,8 @@ async function ptt(w, I) {
         failed_count: xe.failed.length,
         up_to_date_count: xe.upToDate.length,
       };
-      (i("tengu_marketplace_background_install", Ke),
-        q("info", "tengu_marketplace_background_install", Ke));
+      (logEvent("tengu_marketplace_background_install", Ke),
+        writeDiagnosticsEvent("info", "tengu_marketplace_background_install", Ke));
     }
     let Ae = await f6t(new Set([...xe.installed, ...xe.updated]), I),
       Oe = xe.installed.length > 0 || Ae.size > 0,
@@ -18421,8 +18421,8 @@ async function ptt(w, I) {
           `Auto-refreshing plugins (installed: ${xe.installed.length}, stale-refreshed: ${Ae.size}, missed at session start: ${He.size})`,
         ));
       try {
-        if ((await Xx(w, I, void 0, { applyStagedInstalls: Oe }), He.size > 0))
-          i("tengu_plugin_load_refresh_window_recovered", {
+        if ((await refreshActivePlugins(w, I, void 0, { applyStagedInstalls: Oe }), He.size > 0))
+          logEvent("tengu_plugin_load_refresh_window_recovered", {
             marketplace_count: He.size,
           });
       } catch (Ke) {
@@ -18473,7 +18473,7 @@ function mSe() {
   if (w.probeEventLogged) return;
   w.probeEventLogged = !0;
   let I = kH();
-  (jDn(Obt(I)), i("tengu_terminal_probe", y6t(I)));
+  (jDn(Obt(I)), logEvent("tengu_terminal_probe", y6t(I)));
 }
 function y6t(w) {
   return {
@@ -18491,7 +18491,7 @@ function y6t(w) {
   };
 }
 F();
-var b6t = m(() =>
+var b6t = createLazyValue(() =>
   c({
     method: k("log_event"),
     params: c({ eventName: s(), eventData: c({}).passthrough() }),
@@ -18504,12 +18504,12 @@ function pSe(w) {
     if (I)
       CH(I, b6t(), (ne) => {
         let { eventName: me, eventData: pe } = ne.params;
-        i(`tengu_ide_${me}`, pe);
+        logEvent(`tengu_ide_${me}`, pe);
       });
   }, [w]);
 }
 F();
-var S6t = m(() =>
+var S6t = createLazyValue(() =>
   c({
     method: k("selection_changed"),
     params: c({
@@ -18580,9 +18580,9 @@ async function ftt(w) {
 function gSe({ enabled: w = !0 } = {}) {
   let I = It(),
     ne = U((Oe) => Oe.plugins.needsRefresh),
-    { addNotification: me, removeNotification: pe } = Ir(),
-    { storageV5: be } = _e(),
-    xe = Ye((Oe) => Oe.pluginsSync),
+    { addNotification: me, removeNotification: pe } = useNotificationQueue(),
+    { storageV5: be } = useStorageV5Context(),
+    xe = useSession((Oe) => Oe.pluginsSync),
     Ae = re(async () => {
       try {
         let {
@@ -18777,11 +18777,11 @@ function gSe({ enabled: w = !0 } = {}) {
           ...Ke,
           has_custom_plugin_cache_dir: !!a.CLAUDE_CODE_PLUGIN_CACHE_DIR,
         };
-      (i("tengu_plugins_loaded", {
+      (logEvent("tengu_plugins_loaded", {
         ...Je,
         ...(He !== void 0 && { enabled_names: He }),
       }),
-        q("info", "tengu_plugins_loaded", Je),
+        writeDiagnosticsEvent("info", "tengu_plugins_loaded", Je),
         uQt(be));
     });
   }, [Ae, w, be]),
@@ -18843,17 +18843,17 @@ function hSe() {
     ne = U((He) => He.fastMode),
     me = It(),
     pe = Yn(),
-    { addNotification: be } = Ir(),
-    { host: xe } = Ye(),
+    { addNotification: be } = useNotificationQueue(),
+    { host: xe } = useSession(),
     Ae = C(!0);
   E(() => {
     if (Nn()) return;
     if (Ae.current) Ae.current = !1;
-    else ait(xe);
-    FHe(xe, pe.getState().toolPermissionContext, me, ne, be);
+    else rearmAutoModeCheck(xe);
+    runAutoModeGateCheck(xe, pe.getState().toolPermissionContext, me, ne, be);
   }, [w, I, ne]);
   let Oe = d_();
-  E(() => rtn.of(Oe).subscribe(() => be(NHe(getAutoModeUnavailableNotification("settings")))), [be, Oe]);
+  E(() => rtn.of(Oe).subscribe(() => be(buildAutoModeGateNotification(getAutoModeUnavailableNotification("settings")))), [be, Oe]);
 }
 F();
 async function _6t(w, I, ne) {
@@ -18959,7 +18959,7 @@ async function P6t(w, I, ne) {
 }
 async function ySe(w, I, ne, me, pe = P6t, be = $t().armedMonitorKeys) {
   if (isCustomizationDisabled("pluginMonitors")) return;
-  if (!QI()) return;
+  if (!isMonitorToolEnabled()) return;
   if (ke()) return;
   let xe = !1;
   for (let Ae of await x6t(w, me.credentials)) {
@@ -18979,11 +18979,11 @@ async function ySe(w, I, ne, me, pe = P6t, be = $t().armedMonitorKeys) {
   else logFeatureOk("plugin_arm_monitor");
 }
 function bSe({ enabled: w }) {
-  let I = Ye(),
+  let I = useSession(),
     ne = Yn(),
     me = It(),
-    pe = wf(),
-    { storageV5: be, credentials: xe } = _e(),
+    pe = useTaskRegistry(),
+    { storageV5: be, credentials: xe } = useStorageV5Context(),
     Ae = U((Oe) => Oe.plugins.enabled);
   E(() => {
     if (!w) return;
@@ -19017,7 +19017,7 @@ function B6t(Ebn) {
       level: "error",
     }));
 }
-var L6t = m(() =>
+var L6t = createLazyValue(() =>
   c({
     method: k("notifications/message"),
     params: c({
@@ -19033,7 +19033,7 @@ var L6t = m(() =>
 );
 function Y7($U, SSe) {
   let ytt = _(8),
-    htt = qc();
+    htt = useCommandQueue();
   C(void 0);
   let M6t;
   if (ytt[0] !== $U || ytt[1] !== htt)
@@ -19041,7 +19041,7 @@ function Y7($U, SSe) {
   else M6t = ytt[2];
   E(O6t, M6t);
   let A6t;
-  if (ytt[3] === p) ((A6t = Q7()), (ytt[3] = A6t));
+  if (ytt[3] === MEMO_CACHE_SENTINEL) ((A6t = Q7()), (ytt[3] = A6t));
   else A6t = ytt[3];
   let btt = C(A6t),
     I6t = C(void 0),
@@ -19085,8 +19085,8 @@ var T2 = null;
 function wSe() {
   let w = It(),
     I = U((xe) => xe.mcp.commands),
-    ne = Ye((xe) => xe.project.projectRoot),
-    { storageV5: me } = _e(),
+    ne = useSession((xe) => xe.project.projectRoot),
+    { storageV5: me } = useStorageV5Context(),
     [pe, be] = d(0);
   (E(() => {
     if (!T2 || !ZY() || Rg()) return;
@@ -19129,7 +19129,7 @@ async function CSe(w, I, ne, me, pe) {
     n(`[TeammateInit] Team file not found for team: ${be}`);
     return;
   }
-  let He = ix(fs, be),
+  let He = ix(TEAM_LEAD_AGENT_NAME, be),
     Ke = Oe.teamAllowedPaths;
   if (Ke && Ke.length > 0 && iP())
     (n(
@@ -19160,7 +19160,7 @@ async function CSe(w, I, ne, me, pe) {
         })));
     }
   }
-  let Je = fs;
+  let Je = TEAM_LEAD_AGENT_NAME;
   if (xe === He) {
     n(
       "[TeammateInit] This agent is the team leader - skipping idle notification hook",
@@ -19215,7 +19215,7 @@ async function vtt(w, I, ne, me) {
   if (be === void 0) return;
   setMemberActive(w.teamName, pe, !1, me);
   let { result: xe, summary: Ae } = Tbe(I, { emitTelemetry: !0 }),
-    Oe = fs,
+    Oe = TEAM_LEAD_AGENT_NAME,
     He = createIdleNotification(pe, {
       idleReason: "failed",
       failureReason: be,
@@ -19251,10 +19251,10 @@ async function vtt(w, I, ne, me) {
     ));
 }
 function TSe(w, { enabled: I = !0 } = {}) {
-  let ne = Ye(),
+  let ne = useSession(),
     me = It(),
     pe = VB(),
-    { storageV5: be } = _e();
+    { storageV5: be } = useStorageV5Context();
   E(() => {
     if (!I) return;
     (async () => {
@@ -19307,7 +19307,7 @@ function tZ(VSn) {
       initialMessages: zSn,
       isRemoteSession: gA,
     } = VSn,
-    { storageV5: WU } = _e(),
+    { storageV5: WU } = useStorageV5Context(),
     xSe = l4(),
     J7 = U(Q6t),
     QSn = U(X6t),
@@ -19344,7 +19344,7 @@ function tZ(VSn) {
   else q6t = qU[10];
   (E(Z6t, q6t), uSe());
   let V6t;
-  if (qU[11] === p) ((V6t = []), (qU[11] = V6t));
+  if (qU[11] === MEMO_CACHE_SENTINEL) ((V6t = []), (qU[11] = V6t));
   else V6t = qU[11];
   (Un(mSe, 500, V6t), Y7(gA ? eZ : KSn, J7));
   let G6t, K6t;
@@ -19566,8 +19566,8 @@ function nZ(w, I) {
   );
 }
 function Mtt(w, I) {
-  let ne = typeof w === "string" ? w : qse,
-    me = ar(I, ne);
+  let ne = typeof w === "string" ? w : INVALID_TOOL_NAME_PLACEHOLDER,
+    me = findToolByName(I, ne);
   if (me) return me;
   return e4t(ne);
 }
@@ -19784,7 +19784,7 @@ async function r4t(w) {
   }
 }
 function i4t(w, I) {
-  i("tengu_remote_tool_served_preview", {
+  logEvent("tengu_remote_tool_served_preview", {
     tool: Hn(w.name),
     preview: fromEnum(I.preview),
     reason: fromEnumOpt(I.preview === "remote" ? I.reason : void 0),
@@ -19794,7 +19794,7 @@ var s4t = 1e4;
 async function l4t(w) {
   if (!eE("fileRead")) return;
   try {
-    let I = await Dt(
+    let I = await withTimeout(
       jn().sendControlRequest({
         subtype: "read_file",
         path: w,
@@ -20083,14 +20083,14 @@ function Ftt(w, I) {
   w.lastBroadcast = { mode: I, seq: (w.lastBroadcast?.seq ?? 0) + 1 };
 }
 function Btt(w, I = p4t) {
-  let ne = Me(w, (at) => at.activeRemote),
+  let ne = useStoreSelector(w, (at) => at.activeRemote),
     me = w.modeWire,
-    pe = Ye(),
+    pe = useSession(),
     be = U((at) => at.toolPermissionContext),
     xe = be.mode,
     Ae = It(),
     Oe = Yn(),
-    { addNotification: He } = Ir(),
+    { addNotification: He } = useNotificationQueue(),
     Ke = C({ mode: xe, context: be }),
     Je = C(null),
     Qe = C(null),
@@ -20224,7 +20224,7 @@ function Btt(w, I = p4t) {
           }
           let co = { broadcastSeq: me.lastBroadcast?.seq ?? 0 };
           ((it.current = co),
-            Z(ao).then(() => {
+            sleep(ao).then(() => {
               if (it.current !== co) return;
               if (
                 ((it.current = null),
@@ -20290,7 +20290,7 @@ function aZ({
     }, [co]),
     ho = It(),
     _o = Yn(),
-    { addNotification: Ho, removeNotification: po } = Ir(),
+    { addNotification: Ho, removeNotification: po } = useNotificationQueue(),
     xo = re(
       (no) =>
         ho((jo) =>
@@ -20381,7 +20381,7 @@ function aZ({
               (ho((Mn) =>
                 Mn.activeGoal === Sn ? Mn : { ...Mn, activeGoal: Sn },
               ),
-                i("tengu_remote_active_goal_adopted", {
+                logEvent("tengu_remote_active_goal_adopted", {
                   via: S("thin_client_stream"),
                   active: Sn !== void 0,
                 }));
@@ -20435,7 +20435,7 @@ function aZ({
                     Mn = T6t(_o.getState().notifications, Sn.key);
                   if (Mn !== null) po(Mn);
                   (Ho(Sn),
-                    i("tengu_remote_notification_routed", {
+                    logEvent("tengu_remote_notification_routed", {
                       via: S("thin_client_stream"),
                       priority: fromEnum(Fn.priority),
                     }));
@@ -20875,13 +20875,13 @@ function $tt({
       onConversationReset: Zt,
       retraction: Ct,
     } = I,
-    { credentials: eo, storageV5: jt } = _e(),
-    Tt = Ye((zn) => zn.host),
-    to = Ye(),
+    { credentials: eo, storageV5: jt } = useStorageV5Context(),
+    Tt = useSession((zn) => zn.host),
+    to = useSession(),
     zt = C(void 0),
     ao = vr(() => pe),
     co = vr((zn) => ne(Wz, kst(zn), { signal: zn.signal, place: "under" })),
-    { columns: go } = Se(),
+    { columns: go } = useTerminalSize(),
     fo = vr(() => go),
     ro = re(
       (zn) => {
@@ -20898,11 +20898,11 @@ function $tt({
       (Je.applyStreamingText(() => null),
         Je.setStreamingToolUses((zn) => (zn.length > 0 ? [] : zn)));
     }, [Je]),
-    Wo = vt(),
+    Wo = useClock(),
     Ro = It(),
     on = Yn(),
     An = a4(),
-    { addNotification: wn, removeNotification: yn } = Ir(),
+    { addNotification: wn, removeNotification: yn } = useNotificationQueue(),
     vo = re(
       (zn) =>
         Ro((xi) =>
@@ -21132,7 +21132,7 @@ function $tt({
         let Ri = w?.heldServedCall?.(zn);
         if (Ri?.held) return Ri;
         return (
-          [xi, Ri].find((ns) => ns?.reason === "other_input") ?? Ri ?? xi ?? qz
+          [xi, Ri].find((ns) => ns?.reason === "other_input") ?? Ri ?? xi ?? NOT_HELD_STATE
         );
       },
     },
@@ -21245,11 +21245,11 @@ function $tt({
       function Pa() {
         let Wn = Is;
         if (((Is = !1), _o.current)) {
-          if (Wn) i("tengu_remote_reply_channel_init", {});
+          if (Wn) logEvent("tengu_remote_reply_channel_init", {});
           return;
         }
         ((_o.current = !0),
-          i("tengu_remote_reply_channel_init", {}),
+          logEvent("tengu_remote_reply_channel_init", {}),
           Ro((di) =>
             di.hasRemoteReplyChannel
               ? di
@@ -21262,12 +21262,12 @@ function $tt({
           (Ro((di) => (di.activeGoal === Wn ? di : { ...di, activeGoal: Wn })),
           Wn !== void 0)
         )
-          i("tengu_remote_active_goal_adopted", { via: S("seed"), active: !0 });
+          logEvent("tengu_remote_active_goal_adopted", { via: S("seed"), active: !0 });
       }
       if (w.seedAutocompactState !== void 0) {
         let Wn = w.seedAutocompactState;
         (Ro((di) => ({ ...di, remoteAutocompactState: Wn })),
-          i("tengu_remote_autocompact_state_adopted", {
+          logEvent("tengu_remote_autocompact_state_adopted", {
             via: S("seed"),
             enabled: Wn.enabled,
             enforced: Wn.enforced,
@@ -21403,7 +21403,7 @@ function $tt({
                     !lr.current
                   )
                     ((lr.current = !0),
-                      i("tengu_remote_bootstrap_cycle_hidden", {}));
+                      logEvent("tengu_remote_bootstrap_cycle_hidden", {}));
                   if (
                     (Fn(bu),
                     bu.steps.some((Ei) => Ei.status === "failed") &&
@@ -21547,7 +21547,7 @@ function $tt({
                   }),
                   ys)
                 )
-                  i("tengu_fast_mode_toggled", {
+                  logEvent("tengu_fast_mode_toggled", {
                     enabled: Cs,
                     source: S("remote_wire_adopt"),
                     remote: !0,
@@ -21559,7 +21559,7 @@ function $tt({
               (Ro((Cs) =>
                 Cs.activeGoal === hs ? Cs : { ...Cs, activeGoal: hs },
               ),
-                i("tengu_remote_active_goal_adopted", {
+                logEvent("tengu_remote_active_goal_adopted", {
                   via: S("stream"),
                   active: hs !== void 0,
                 }));
@@ -21582,7 +21582,7 @@ function $tt({
                     Cs = T6t(on.getState().notifications, hs.key);
                   if (Cs !== null) yn(Cs);
                   (wn(hs),
-                    i("tengu_remote_notification_routed", {
+                    logEvent("tengu_remote_notification_routed", {
                       via: S("stream"),
                       priority: fromEnum(Wn.priority),
                     }));
@@ -21643,7 +21643,7 @@ function $tt({
                   }
                   Xs.add(hs.id);
                 }
-                (Pa(), i("tengu_remote_reply_channel_frame", { kind: fromEnum(Cs) }));
+                (Pa(), logEvent("tengu_remote_reply_channel_frame", { kind: fromEnum(Cs) }));
               }
             let Ba = null;
             if (Ba !== null) {
@@ -21659,7 +21659,7 @@ function $tt({
                 let hs = Ba[0].parentToolUseID;
                 if (!Ri.has(hs))
                   (Ri.add(hs),
-                    i("tengu_remote_subagent_frame_nested", {
+                    logEvent("tengu_remote_subagent_frame_nested", {
                       frame_type: fromEnum(Wn.type),
                     }));
                 xe((Cs) => {
@@ -21715,7 +21715,7 @@ function $tt({
                   Cs.some((ys) => ys.type === "tool_result")
                 )
                   ((ns = !0),
-                    i("tengu_remote_tool_result_rendered", {
+                    logEvent("tengu_remote_tool_result_rendered", {
                       viewer_only: fromEnum(w.viewerOnly ? "true" : "false"),
                     }));
               }
@@ -21889,7 +21889,7 @@ function $tt({
                 }
                 if (ai.current !== Fa) return "stale";
                 return (
-                  i("tengu_refusal_retraction_truncation_harvest", {
+                  logEvent("tengu_refusal_retraction_truncation_harvest", {
                     signal_count: Pl,
                     page_count: hs,
                   }),
@@ -22044,7 +22044,7 @@ function $tt({
         try {
           let Wn = on.getState().toolPermissionContext.mode;
           (Ke(Xm),
-            i("tengu_remote_permission_mode_adopted", {
+            logEvent("tengu_remote_permission_mode_adopted", {
               via: S("seed"),
               mode: fromEnum(Xm),
               applied:
@@ -22128,7 +22128,7 @@ function $tt({
             (di) => {
               let Ds = di === "continue";
               if (
-                (i("tengu_dir_sync_offline_told", {
+                (logEvent("tengu_dir_sync_offline_told", {
                   via: fromEnum(Ds ? "dialog" : "dialog_unanswered"),
                   attempts: Wn.attempts,
                   surface: S("terminal"),
@@ -22141,7 +22141,7 @@ function $tt({
             },
             (di) => {
               throw (
-                i("tengu_dir_sync_offline_told", {
+                logEvent("tengu_dir_sync_offline_told", {
                   via: S("failed"),
                   attempts: Wn.attempts,
                   surface: S("terminal"),
@@ -22206,7 +22206,7 @@ function $tt({
               di();
           }, di);
         },
-        Ys = Ust(
+        Ys = createClientPresenceReporter(
           w.sessionId,
           getOauthConfig().BASE_API_URL,
           async () => (
@@ -22832,8 +22832,8 @@ function OSe({
         }),
     ),
     Qe = U((Tt) => Tt.toolPermissionContext),
-    it = Me(be, w4t),
-    at = Me(pe, v4t),
+    it = useStoreSelector(be, w4t),
+    at = useStoreSelector(pe, v4t),
     Zt = $tt({
       config: w,
       sink: Je,
@@ -22879,7 +22879,7 @@ import { dirname as C8t } from "path";
 F();
 F();
 function Qy() {
-  return _M(Ye());
+  return _M(useSession());
 }
 function hA() {
   let w = Qy();
@@ -22975,10 +22975,10 @@ function Jtt(w, I) {
     },
   };
 }
-var L0 = Kr({
+var L0 = defineDialog({
   kind: S8e,
-  payload: m(() => c({ sessionAgeMinutes: T(), estimatedTokens: T() })),
-  result: m(() => X(["compact", "continue", "dismiss", "never", "cancelled"])),
+  payload: createLazyValue(() => c({ sessionAgeMinutes: T(), estimatedTokens: T() })),
+  result: createLazyValue(() => X(["compact", "continue", "dismiss", "never", "cancelled"])),
   default: "cancelled",
   hideWhile: [],
 });
@@ -23004,7 +23004,7 @@ async function Ztt(w, I, { getMessageCount: ne, storage: me, runCompact: pe }) {
   let be = await w(L0, I);
   if (be === "cancelled") return;
   if (
-    (i("tengu_resume_return_action", {
+    (logEvent("tengu_resume_return_action", {
       action: fromEnum(be),
       sessionAgeMinutes: Math.round(I.sessionAgeMinutes),
       messageCount: ne(),
@@ -23371,7 +23371,7 @@ ${ne ?? ""}`;
   templatePin(w) {
     if (this.pinByTemplate.has(w)) return this.pinByTemplate.get(w) ?? null;
     let I = aot(w.replace(cZ, "x"));
-    if (!I || !Bsn.has(I.protocol))
+    if (!I || !ALLOWED_HYPERLINK_SCHEMES.has(I.protocol))
       return (
         n(
           `[footerLinks] url template "${w}" must have a literal origin with an allowlisted scheme (e.g. https://host/...); skipping`,
@@ -23571,7 +23571,7 @@ function hot(w) {
   return G4t.every((I) => w[I] === GSe[I]) ? w : { ...w, ...GSe };
 }
 function K4t(w) {
-  return hot(Qlt(w));
+  return hot(resetTransientSessionState(w));
 }
 function zSe(w) {
   return {
@@ -23586,7 +23586,7 @@ function zSe(w) {
   };
 }
 function j0t(w, I, ne) {
-  (Zlt(w), ne.dismissKind(g2.kind));
+  (closeAllWebViews(w), ne.dismissKind(GOAL_PROPOSAL_DIALOG.kind));
   let me = w().activeGoal;
   if (me !== void 0) Q$(me, "resume_swap");
   I(K4t);
@@ -24142,7 +24142,7 @@ function _ot() {
   };
 }
 function Tot(w) {
-  let I = Y(w.filter((ne) => ne !== ""));
+  let I = dedupe(w.filter((ne) => ne !== ""));
   if (I.length === 0) return "";
   if (I.length === 1) return ` (recipient: ${I[0]})`;
   return ` (recipients: ${I.slice(0, 3).join(", ")}${I.length > 3 ? ", \u2026" : ""})`;
@@ -24195,7 +24195,7 @@ function a8t(w, I, ne) {
   }
 }
 function l8t(w) {
-  return Y(
+  return dedupe(
     w.map((ne) => {
       switch (ne) {
         case "rate-limited":
@@ -24218,9 +24218,9 @@ function l8t(w) {
 function c8t(w, I, ne) {
   return `[Cross-session delivery notice] Do not resend now: ${w === 1 ? "one of your messages to another session was" : `${w} of your messages to another session were`} dropped at that session's inbox${I} and NOT delivered${ne ? ` (${ne})` : ""}. Treat them as unsent. If the content still matters, fold it into ONE later message after you have finished other work; never retry in a loop.`;
 }
-var G_ = Kr({
+var G_ = defineDialog({
   kind: "peer_inbound_approval",
-  payload: m(() =>
+  payload: createLazyValue(() =>
     qd(
       (w) =>
         typeof w === "object" &&
@@ -24229,7 +24229,7 @@ var G_ = Kr({
         "preview" in w,
     ),
   ),
-  result: m(() =>
+  result: createLazyValue(() =>
     qd(
       (w) =>
         typeof w === "object" &&
@@ -24673,7 +24673,7 @@ function S8t({ session: w, storageV5: I, credentials: ne, setAppState: me }) {
             let jt = si(Je.name);
             if (jt) eo.name = jt;
           }
-          if (LH(Je.color) && !Ct?.color) eo.color = Je.color;
+          if (isAgentColorName(Je.color) && !Ct?.color) eo.color = Je.color;
           return Vle(Zt, eo);
         }),
         !Je.name)
@@ -24924,7 +24924,7 @@ function Hot({
         (logFeatureSad("artifact_watch_startup", "fetch_gate"), He(ZSe.fetch_gate), Je());
         return;
       }
-      let at = ar(Qe.options.tools ?? [], ARTIFACT_TOOL_NAME);
+      let at = findToolByName(Qe.options.tools ?? [], ARTIFACT_TOOL_NAME);
       return Bot({
         target: Oe,
         ...(at !== void 0 && { tool: at }),
@@ -25122,7 +25122,7 @@ class fZ {
   applyConversationReset = (w) => {
     (this.turn.resetForConversation({ kind: "fresh" }),
       this._publish({ conversationId: w, haikuTitle: void 0 }),
-      D3n(),
+      resetRateLimitCheckpoint(),
       this._resetTurnEventTail());
   };
   maybePromptStaleResume(w) {
@@ -25219,7 +25219,7 @@ class fZ {
         ...Ho,
         standaloneAgentContext: AHe(I.agentName, I.agentColor),
         sendMessagePins: {},
-        agentNameRegistry: ect(Ho.agentNameRegistry, Ho.tasks),
+        agentNameRegistry: pruneAgentNameRegistry(Ho.agentNameRegistry, Ho.tasks),
       })),
         this.restoreReadFileState(
           jt,
@@ -25308,14 +25308,14 @@ class fZ {
             : I.worktreeSession?.worktreePath,
           Ke,
         );
-        let Ho = DZ(oF.of(me.host), I.worktreeSession, I.projectPath, {
+        let Ho = DZ(worktreeStateStore.of(me.host), I.worktreeSession, I.projectPath, {
           storageV5: Ke,
         });
         if (Ho) jt.push(Ht(RHe(Ho), "warning"));
         if (
           (this._resetReplTabToConvo(),
           (He.isolationLatch.onLatch = void 0),
-          M() && Ke !== void 0)
+          isHoverRestEnabled() && Ke !== void 0)
         )
           await adoptResumedSessionFileAsync(Ke);
         else adoptResumedSessionFile();
@@ -25414,14 +25414,14 @@ class fZ {
       if ((Qwe(jt), nye.of(me).emit(_m(w)), Wue(), Zt(() => jt), ne !== "fork"))
         it.replaceValue("");
       if (ne !== "fork") this.maybePromptStaleResume(jt);
-      i("tengu_session_resumed", {
+      logEvent("tengu_session_resumed", {
         entrypoint: fromEnum(ne),
         success: !0,
         resume_duration_ms: Math.round(performance.now() - Ct),
       });
     } catch (eo) {
       throw (
-        i("tengu_session_resumed", {
+        logEvent("tengu_session_resumed", {
           entrypoint: fromEnum(ne),
           success: !1,
           failure_reason: S("processing_error"),
@@ -25563,10 +25563,10 @@ class fZ {
         if (((xe = Ae), Ae)) this.discloseUnattendedActivity();
       });
     }
-    let pe = G(Object.values(w.getState().tasks), isCarriedFrameLiveWatch),
+    let pe = countMatching(Object.values(w.getState().tasks), isCarriedFrameLiveWatch),
       be = iS(
         [w],
-        () => [G(Object.values(w.getState().tasks), isCarriedFrameLiveWatch)],
+        () => [countMatching(Object.values(w.getState().tasks), isCarriedFrameLiveWatch)],
         (xe) => {
           if (xe === pe) return;
           ((pe = xe), syncLiveInFlightSnapshot(Rv(I.all()), ne));
@@ -25596,7 +25596,7 @@ class fZ {
           credentials: this.credentials,
           setAppState: I.setState,
           onYieldedName: (pe, be) => {
-            let xe = fnn(be, pe);
+            let xe = buildSessionNameYieldedNotice(be, pe);
             if (!getMaterializedSessionFile()) {
               this._requireHost().addNotification({
                 key: "session-name-yielded",
@@ -25687,7 +25687,7 @@ class fZ {
             extraShellOutputRoot: (() => {
               let Qe = Jh();
               if (!Qe?.adoptShellOutputRoot) {
-                let it = oF.of(I.host).last;
+                let it = worktreeStateStore.of(I.host).last;
                 return it ? ZYe(iEt(it.worktreePath)) : void 0;
               }
               return Qe.adoptShellOutputReadRoot
@@ -25769,7 +25769,7 @@ class fZ {
                 }
                 try {
                   (await initTaskOutputAsSymlink(eo.taskId, eo.outputPath, (jt) =>
-                    i("tengu_adopt_link", { kind: S("shell"), method: fromEnum(jt) }),
+                    logEvent("tengu_adopt_link", { kind: S("shell"), method: fromEnum(jt) }),
                   ),
                     s8n(
                       {
@@ -26071,7 +26071,7 @@ class fZ {
     }
     if (I !== "auto_restore_cancel") V2(pe.memorySelector);
     if (
-      (i("tengu_conversation_rewind", {
+      (logEvent("tengu_conversation_rewind", {
         preRewindMessageCount: Ae.length,
         postRewindMessageCount: Oe,
         messagesRemoved: Ae.length - Oe,
@@ -26089,7 +26089,7 @@ class fZ {
     ) {
       if (Je.clearLatch) zOn();
       if (Je.model.action === "restore") ad(Je.model.value);
-      i("tengu_refusal_fallback_rewind_unwind", {
+      logEvent("tengu_refusal_fallback_rewind_unwind", {
         action: fromEnum(
           Je.model.action === "restore"
             ? "model_restored"
@@ -26171,7 +26171,7 @@ class fZ {
           }),
           He = { ...Ae.pastedContents, ...Oe.pastedContents };
         if (me && Oe.display !== me.text) ne.replaceValue(Oe.display);
-        let Ke = Y$(I, "storedImagePaths");
+        let Ke = createFieldUpdater(I, "storedImagePaths");
         for (let Je of Object.values(He))
           if (be[Je.id] === void 0 && xe[Je.id] === void 0)
             (D7(Je, Ke), L7(Je, Ke));
@@ -26200,7 +26200,7 @@ class fZ {
     }
     let Qe = createAbortController(),
       it = pe.buildToolUseContext(Ke, [], Qe, Ae),
-      at = await Plt({
+      at = await buildCacheSafeParams({
         toolUseContext: it,
         forkContextMessages: Ke,
         mainThreadAgentDefinition: this.scope.mainThreadAgentDefinition,
@@ -26288,7 +26288,7 @@ ${Ae}`);
         ne.seedReadState(
           Ae.path,
           He,
-          M() && me !== void 0
+          isHoverRestEnabled() && me !== void 0
             ? Ae.contentDiffersFromDisk
               ? (Ae.rawContent ?? Ae.content)
               : Ae.content
@@ -26431,7 +26431,7 @@ function rnt({
   let Ke = U((Mn) => Mn.fileHistory),
     [Je, Qe] = d(void 0),
     it = fileHistoryEnabled(),
-    { rows: at } = Se(),
+    { rows: at } = useTerminalSize(),
     Zt = gi() ? Math.floor(at / 2) : at,
     Ct = it ? 3 : 2,
     eo = 12,
@@ -26502,7 +26502,7 @@ function rnt({
     return (Or.push({ value: "nevermind", label: "Never mind" }), Or);
   }
   E(() => {
-    i("tengu_message_selector_opened", {});
+    logEvent("tengu_message_selector_opened", {});
   }, []);
   async function nn(Mn) {
     (I(), Ro("conversation"));
@@ -26523,7 +26523,7 @@ ${l(Or)}`));
     let Or = w.indexOf(Mn),
       Br = w.length - 1 - Or;
     if (
-      (i("tengu_message_selector_selected", {
+      (logEvent("tengu_message_selector_selected", {
         index_from_end: Br,
         message_type: fromEnum(Mn.type),
         is_current_prompt: !1,
@@ -26546,7 +26546,7 @@ ${l(Or)}`));
   }
   async function jo(Mn) {
     if (
-      (i("tengu_message_selector_restore_option_selected", { option: fromEnum(Mn) }),
+      (logEvent("tengu_message_selector_restore_option_selected", { option: fromEnum(Mn) }),
       !_o)
     ) {
       Qe("Message not found.");
@@ -26623,7 +26623,7 @@ ${l(Br)}`
         Ho(void 0);
         return;
       }
-      (i("tengu_message_selector_cancelled", {}), be());
+      (logEvent("tengu_message_selector_cancelled", {}), be());
     }, [be, _o, xe]),
     un = re(() => go((Mn) => Math.max(0, Mn - 1)), []),
     lr = re(() => go((Mn) => Math.min(ao.length - 1, Mn + 1)), [ao.length]),
@@ -26633,10 +26633,10 @@ ${l(Br)}`
       let Mn = ao[co];
       if (Mn) no(Mn);
     }, [ao, co, no]);
-  is(void 0, void 0, !!_o);
+  useGlobalExitKeybinding(void 0, void 0, !!_o);
   let In = !on && !Je && !_o && ho;
-  (nM("MessageSelector", In),
-    Ze(
+  (useActiveKeybindingContext("MessageSelector", In),
+    useKeybindings(
       {
         "messageSelector:up": un,
         "messageSelector:down": lr,
@@ -26674,15 +26674,15 @@ ${l(Br)}`
     onCancel: Cn,
     isCancelActive: !_o || !ho,
     hideInputGuide: !!_o && ho,
-    inputGuide: r(ue, {
+    inputGuide: r(DotSeparatedList, {
       children: [
-        !Je && ho && e(D, { chord: "enter", action: "continue" }),
-        e(D, { chord: "escape", action: "cancel" }),
+        !Je && ho && e(KeybindingHint, { chord: "enter", action: "continue" }),
+        e(KeybindingHint, { chord: "escape", action: "cancel" }),
       ],
     }),
     children: [
-      e(Ur, { error: Je }),
-      !ho && e(Rn, { children: "Nothing to rewind to yet." }),
+      e(ErrorMessage, { error: Je }),
+      !ho && e(EmptyStateMessage, { children: "Nothing to rewind to yet." }),
       !Je &&
         _o &&
         ho &&
@@ -26950,7 +26950,7 @@ function bke(lIn) {
   }
   if (!Zy.filesChanged || !Zy.filesChanged[0]) {
     let xf;
-    if (JU[0] === p)
+    if (JU[0] === MEMO_CACHE_SENTINEL)
       ((xf = e(t, {
         dimColor: !0,
         children: "The code has not changed (nothing will be restored).",
@@ -27016,7 +27016,7 @@ function Ske(dIn) {
       isCurrent: mIn,
       paddingRight: uke,
     } = dIn,
-    { columns: ent } = Se();
+    { columns: ent } = useTerminalSize();
   if (mIn) {
     let ZU;
     if (XU[0] !== aS || XU[1] !== lS)
@@ -27043,7 +27043,7 @@ function Ske(dIn) {
     XU[6] !== uke ||
     XU[7] !== cke
   ) {
-    D2 = en;
+    D2 = EARLY_RETURN_SENTINEL;
     bb0: {
       let pIn = Rf(cke)?.trim() || "(no prompt)";
       let yA = Uxt(pIn);
@@ -27071,7 +27071,7 @@ function Ske(dIn) {
         let R8t = Lr(yA, "bash-input");
         if (R8t) {
           let uS;
-          if (XU[19] === p)
+          if (XU[19] === MEMO_CACHE_SENTINEL)
             ((uS = e(t, { color: "bashBorder", children: "!" })),
               (XU[19] = uS));
           else uS = XU[19];
@@ -27161,7 +27161,7 @@ function Ske(dIn) {
       (hke = XU[13]),
       (yke = XU[14]),
       (D2 = XU[15]));
-  if (D2 !== en) return D2;
+  if (D2 !== EARLY_RETURN_SENTINEL) return D2;
   let uS;
   if (XU[24] !== dke || XU[25] !== ZU || XU[26] !== pke || XU[27] !== gke)
     ((uS = e(dke, { color: ZU, dimColor: pke, children: gke })),
@@ -27201,8 +27201,8 @@ function M8t(w, I, ne) {
         xe += Ke.content.split(/\r?\n/).length;
       else
         for (let Je of Ke.structuredPatch) {
-          let Qe = G(Je.lines, (at) => at.startsWith("+")),
-            it = G(Je.lines, (at) => at.startsWith("-"));
+          let Qe = countMatching(Je.lines, (at) => at.startsWith("+")),
+            it = countMatching(Je.lines, (at) => at.startsWith("-"));
           ((xe += Qe), (Ae += it));
         }
     } catch {
@@ -27254,10 +27254,10 @@ function kke({ localJsx: w, turn: I, sessionController: ne }) {
   return pe;
 }
 function A8t({ turn: w, sessionController: I, onClose: ne }) {
-  let { storageV5: me } = _e(),
+  let { storageV5: me } = useStorageV5Context(),
     pe = Yn(),
     be = It(),
-    xe = Ye(),
+    xe = useSession(),
     { messages: Ae } = nS(ze());
   return e(rnt, {
     messages: Ae,
@@ -27299,7 +27299,7 @@ function yZ(OIn) {
   let unt = _(8),
     { name: vke, color: cnt } = OIn,
     I8t;
-  if (unt[0] !== cnt) ((I8t = Bb(cnt)), (unt[0] = cnt), (unt[1] = I8t));
+  if (unt[0] !== cnt) ((I8t = resolveAgentColor(cnt)), (unt[0] = cnt), (unt[1] = I8t));
   else I8t = unt[1];
   let dnt = I8t;
   const pnt = `@${vke}`;
@@ -27331,19 +27331,19 @@ function eH(KIn) {
   let Q_ = _(15),
     { toolName: fnt, description: gnt } = KIn,
     D8t;
-  if (Q_[0] === p) ((D8t = getTeamName()), (Q_[0] = D8t));
+  if (Q_[0] === MEMO_CACHE_SENTINEL) ((D8t = getTeamName()), (Q_[0] = D8t));
   else D8t = Q_[0];
   let N8t = D8t,
     L8t;
-  if (Q_[1] === p) ((L8t = getAgentName()), (Q_[1] = L8t));
+  if (Q_[1] === MEMO_CACHE_SENTINEL) ((L8t = getAgentName()), (Q_[1] = L8t));
   else L8t = Q_[1];
   let O8t = L8t,
     F8t;
-  if (Q_[2] === p) ((F8t = getTeammateColor()), (Q_[2] = F8t));
+  if (Q_[2] === MEMO_CACHE_SENTINEL) ((F8t = getTeammateColor()), (Q_[2] = F8t));
   else F8t = Q_[2];
   let B8t = F8t,
     U8t;
-  if (Q_[3] === p)
+  if (Q_[3] === MEMO_CACHE_SENTINEL)
     ((U8t = r(o, {
       children: [
         e(yo, {}),
@@ -27357,7 +27357,7 @@ function eH(KIn) {
       (Q_[3] = U8t));
   else U8t = Q_[3];
   let H8t;
-  if (Q_[4] === p)
+  if (Q_[4] === MEMO_CACHE_SENTINEL)
     ((H8t =
       O8t &&
       B8t &&
@@ -27365,7 +27365,7 @@ function eH(KIn) {
       (Q_[4] = H8t));
   else H8t = Q_[4];
   let j8t;
-  if (Q_[5] === p)
+  if (Q_[5] === MEMO_CACHE_SENTINEL)
     ((j8t = e(t, { dimColor: !0, children: "Tool: " })), (Q_[5] = j8t));
   else j8t = Q_[5];
   let Cke;
@@ -27375,7 +27375,7 @@ function eH(KIn) {
       (Q_[7] = Cke));
   else Cke = Q_[7];
   let $8t;
-  if (Q_[8] === p)
+  if (Q_[8] === MEMO_CACHE_SENTINEL)
     (($8t = e(t, { dimColor: !0, children: "Action: " })), (Q_[8] = $8t));
   else $8t = Q_[8];
   let _ke;
@@ -27385,7 +27385,7 @@ function eH(KIn) {
       (Q_[10] = _ke));
   else _ke = Q_[10];
   let W8t;
-  if (Q_[11] === p)
+  if (Q_[11] === MEMO_CACHE_SENTINEL)
     ((W8t =
       N8t &&
       e(o, {
@@ -27405,7 +27405,7 @@ function eH(KIn) {
   else W8t = Q_[11];
   let q8t;
   if (Q_[12] !== Cke || Q_[13] !== _ke)
-    ((q8t = r(_s, {
+    ((q8t = r(TitledBorderBox, {
       color: "warning",
       children: [
         U8t,
@@ -27489,7 +27489,7 @@ function Ake(w) {
   };
 }
 function Np(w, I) {
-  (i("tengu_transcript_view_enter", {}),
+  (logEvent("tengu_transcript_view_enter", {}),
     I((ne) => {
       let me = ne.tasks[w],
         pe = ne.viewingAgentTaskId,
@@ -27517,7 +27517,7 @@ function Np(w, I) {
     }));
 }
 function Mf(w) {
-  (i("tengu_transcript_view_exit", {}),
+  (logEvent("tengu_transcript_view_exit", {}),
     w((I) => {
       let ne = I.viewingAgentTaskId,
         me = { ...I, viewingAgentTaskId: void 0, viewSelectionMode: "none" };
@@ -27631,7 +27631,7 @@ function BJt({
     }
     if (Ct.current !== it) ((Ct.current = it), Zt(it));
   }, [it, w]),
-    Ze(
+    useKeybindings(
       {
         "select:next": () => at(1),
         "select:previous": () => at(-1),
@@ -27905,7 +27905,7 @@ function Art(w, I) {
   );
 }
 function rz(w, I) {
-  return G(w, (ne) => Art(ne, I)) > Ave;
+  return countMatching(w, (ne) => Art(ne, I)) > Ave;
 }
 function Bve(w, I, ne, me) {
   if (w < 1) return w;
@@ -28024,7 +28024,7 @@ function cee(Nke) {
   let { showWorkflows: X8t } = J8t,
     U2 = X8t === void 0 ? !1 : X8t,
     sm = U(L7t),
-    bnt = qa(),
+    bnt = useMainLoopModel(),
     Snt = qf(),
     knt = U(O7t),
     Z8t;
@@ -28036,7 +28036,7 @@ function cee(Nke) {
       (gg[5] = Z8t));
   else Z8t = gg[5];
   let CZ = Z8t,
-    { columns: Lke } = Se(),
+    { columns: Lke } = useTerminalSize(),
     vnt = Yn(),
     Oke = U(F7t),
     SA = U(B7t),
@@ -28049,8 +28049,8 @@ function cee(Nke) {
     gDn = U(G7t),
     Fke = fDn ? pDn : void 0,
     Y_ = It(),
-    AZ = wf();
-  _e();
+    AZ = useTaskRegistry();
+  useStorageV5Context();
   let hh = Op(sm, Oke, SA, gDn),
     hDn = Object.values(sm).some(Af),
     t9t;
@@ -28096,7 +28096,7 @@ function cee(Nke) {
         if (B0 && !JP(xnt.status) && !iR.has(xnt.id))
           (iR.add(xnt.id),
             logFeatureOk("workflow_size_warning"),
-            i("tengu_workflow_size_warning_shown", {
+            logEvent("tengu_workflow_size_warning_shown", {
               axis: fromEnum(B0.axis),
               scheduled_agents: B0.scheduledAgents,
               total_tokens: B0.totalTokens,
@@ -28495,8 +28495,8 @@ function Uve() {
     QZ = U(cZt),
     Gnt = U(uZt),
     Gke = U(dZt),
-    Knt = Zr("chat:killAgents", "Chat", "ctrl+x ctrl+k"),
-    { columns: ZDn } = Se(),
+    Knt = useKeybindingDisplayText("chat:killAgents", "Chat", "ctrl+x ctrl+k"),
+    { columns: ZDn } = useTerminalSize(),
     znt = ZDn >= 90,
     Q2;
   if (J9t === "tasks" && QZ >= 0) {
@@ -28514,27 +28514,27 @@ function Uve() {
       let Ynt = QZ >= 1 ? Z9t[QZ - 1] : void 0;
       $0 = Ynt
         ? lm(Ynt)
-          ? e(ue, { children: e(D, { chord: "enter", action: "expand" }) })
-          : r(ue, {
+          ? e(DotSeparatedList, { children: e(KeybindingHint, { chord: "enter", action: "expand" }) })
+          : r(DotSeparatedList, {
               children: [
-                e(D, { chord: "enter", action: "view" }),
-                e(D, { chord: "x", action: dH(Ynt) ? "stop" : "clear" }),
+                e(KeybindingHint, { chord: "enter", action: "view" }),
+                e(KeybindingHint, { chord: "x", action: dH(Ynt) ? "stop" : "clear" }),
                 Gke &&
                   rz(Z9t, Vke) &&
-                  e(D, { chord: "esc", action: "collapse" }),
+                  e(KeybindingHint, { chord: "esc", action: "collapse" }),
                 znt &&
-                  G(Object.values(sH), fZt) > 1 &&
-                  e(D, {
+                  countMatching(Object.values(sH), fZt) > 1 &&
+                  e(KeybindingHint, {
                     chord: Knt,
                     action: "stop all agents",
                     format: { keyCase: "lower" },
                   }),
               ],
             })
-        : r(ue, {
+        : r(DotSeparatedList, {
             children: [
-              e(D, { chord: ["up", "down"], action: "select" }),
-              e(D, { chord: "enter", action: "view" }),
+              e(KeybindingHint, { chord: ["up", "down"], action: "select" }),
+              e(KeybindingHint, { chord: "enter", action: "view" }),
             ],
           });
       ((Qnt[0] = QZ),
@@ -28552,16 +28552,16 @@ function Uve() {
     if (Qnt[8] !== sH || Qnt[9] !== Gnt) {
       let e7t = bA(sH)[Gnt];
       $0 = e7t
-        ? r(ue, {
+        ? r(DotSeparatedList, {
             children: [
-              e(D, { chord: "enter", action: "view" }),
-              e(D, { chord: "x", action: JP(e7t.status) ? "clear" : "stop" }),
+              e(KeybindingHint, { chord: "enter", action: "view" }),
+              e(KeybindingHint, { chord: "x", action: JP(e7t.status) ? "clear" : "stop" }),
             ],
           })
-        : r(ue, {
+        : r(DotSeparatedList, {
             children: [
-              e(D, { chord: ["up", "down"], action: "select" }),
-              e(D, { chord: "enter", action: "view" }),
+              e(KeybindingHint, { chord: ["up", "down"], action: "select" }),
+              e(KeybindingHint, { chord: "enter", action: "view" }),
             ],
           });
       ((Qnt[8] = sH), (Qnt[9] = Gnt), (Qnt[10] = $0));
@@ -28607,7 +28607,7 @@ function Dve(a0n) {
     Kke = o7t > 0 ? `${sv} ${o7t} more` : "",
     i7t,
     s7t;
-  if (XZ[0] === p)
+  if (XZ[0] === MEMO_CACHE_SENTINEL)
     ((i7t = () => r7t(!0)),
       (s7t = () => r7t(!1)),
       (XZ[0] = i7t),
@@ -28728,7 +28728,7 @@ function Nve(c0n) {
     crt = Math.max(0, u0n - m7t);
   if (Xke?.content !== void 0) {
     let eee, oee;
-    if (Hd[20] === p)
+    if (Hd[20] === MEMO_CACHE_SENTINEL)
       ((eee = () => eve(!0)),
         (oee = () => eve(!1)),
         (Hd[20] = eee),
@@ -28780,7 +28780,7 @@ function Nve(c0n) {
     return lH;
   }
   let eee, oee;
-  if (Hd[35] === p)
+  if (Hd[35] === MEMO_CACHE_SENTINEL)
     ((eee = () => eve(!0)),
       (oee = () => eve(!1)),
       (Hd[35] = eee),
@@ -28939,14 +28939,14 @@ function Lve(g0n) {
     xA = !y7t,
     b7t,
     S7t;
-  if (cH[0] === p)
+  if (cH[0] === MEMO_CACHE_SENTINEL)
     ((b7t = () => h7t(!0)),
       (S7t = () => h7t(!1)),
       (cH[0] = b7t),
       (cH[1] = S7t));
   else ((b7t = cH[0]), (S7t = cH[1]));
   let v7t;
-  if (cH[2] === p) ((v7t = tb()), (cH[2] = v7t));
+  if (cH[2] === MEMO_CACHE_SENTINEL) ((v7t = tb()), (cH[2] = v7t));
   else v7t = cH[2];
   let pve;
   if (cH[3] !== xA || cH[4] !== mrt)
@@ -29007,14 +29007,14 @@ function Fve(S0n) {
     op = !_7t,
     R7t,
     P7t;
-  if (fS[0] === p)
+  if (fS[0] === MEMO_CACHE_SENTINEL)
     ((R7t = () => C7t(!0)),
       (P7t = () => C7t(!1)),
       (fS[0] = R7t),
       (fS[1] = P7t));
   else ((R7t = fS[0]), (P7t = fS[1]));
   let M7t;
-  if (fS[2] === p) ((M7t = tb()), (fS[2] = M7t));
+  if (fS[2] === MEMO_CACHE_SENTINEL) ((M7t = tb()), (fS[2] = M7t));
   else M7t = fS[2];
   let bve;
   if (fS[3] !== op || fS[4] !== yrt)
@@ -29269,12 +29269,12 @@ function qve(w) {
     it = Yn(),
     at = It(),
     Zt = a4(),
-    Ct = wf(),
-    eo = Ye(),
-    { storageV5: jt } = _e(),
-    Tt = qc(),
+    Ct = useTaskRegistry(),
+    eo = useSession(),
+    { storageV5: jt } = useStorageV5Context(),
+    Tt = useCommandQueue(),
     to = ep(),
-    { addNotification: zt, removeNotification: ao } = Ir(),
+    { addNotification: zt, removeNotification: ao } = useNotificationQueue(),
     co = C(0),
     go = C(0),
     fo = U((In) => In.viewSelectionMode),
@@ -29343,7 +29343,7 @@ function qve(w) {
         if (Xi) (uee(zt, In), (Ln = !0));
         if (R2n() && fi) (uee(zt, In), (Ln = !0));
         if ((be !== void 0 && !be.aborted) || xe)
-          return ((go.current = Date.now()), i("tengu_cancel", Mn), I(), !0);
+          return ((go.current = Date.now()), logEvent("tengu_cancel", Mn), I(), !0);
         let gn = Object.values(it.getState().tasks).some(isClaimableAutoReactSubscription),
           On = Tt.getCommandQueueSnapshot().some(T_t),
           Jr = !Fn && (Ro || gn || On || hasStoppableAutoReactSupervision()),
@@ -29364,7 +29364,7 @@ function qve(w) {
             QLe(),
             XO(0, DV(Tt), { passive: !0 }),
             (go.current = Date.now()),
-            i("tengu_cancel", Mn),
+            logEvent("tengu_cancel", Mn),
             Ln || Fr
           );
         let Fi = Object.values(it.getState().tasks).some(Ert);
@@ -29376,19 +29376,19 @@ function qve(w) {
           if (ta || Fi || Wi > 0 || qs.length > 0)
             return (
               (go.current = Date.now()),
-              i("tengu_cancel", Mn),
+              logEvent("tengu_cancel", Mn),
               ta || Fi || Ln || Fr
             );
         }
         if (Ln) return !0;
         if (I() === !1 && !Fr) return !1;
-        return (i("tengu_cancel", Mn), !0);
+        return (logEvent("tengu_cancel", Mn), !0);
       },
       [be, xe, Ae, I, Qe, ro, Ro, wn, it, Zt, Ct, zt, Tt, eo, jt, Wo],
     ),
     vo = Aen(),
     zo = Een() && !vo,
-    Sr = qb(yp.kind),
+    Sr = qb(localJsxDialog.kind),
     Kn = M2() === "visible",
     nn = (be !== void 0 && !be.aborted) || xe,
     no = to.some((In) => Vte(In, Je)),
@@ -29398,7 +29398,7 @@ function qve(w) {
     lr = un && !zo && !Kn && (nn || no || _o || xo) && !jo && !He && !Cn,
     Io =
       un && (nn || (zo ? !1 : no || _o || po || Ro || on || An || hasStoppableAutoReactSupervision() || Cn));
-  Ne(
+  useKeybinding(
     "chat:cancel",
     () => {
       if (it.getState().queueEditIndex !== null) return !1;
@@ -29426,7 +29426,7 @@ function qve(w) {
     if (zo && !In) return !1;
     if (!yn({ gesture: "ctrl_c" })) return !1;
   }, [Cn, zo, be, xe, it, Ct, eo, at, jt, nn, no, _o, xo, yn]);
-  Ne("app:interrupt", So, { context: "Global", isActive: Io });
+  useKeybinding("app:interrupt", So, { context: "Global", isActive: Io });
   let Go = re(() => {
     let In = it.getState().tasks,
       Fn = Object.values(In).some(Wve),
@@ -29452,7 +29452,7 @@ function qve(w) {
     if (Br - co.current <= Irt) {
       ((co.current = 0), ao("kill-agents-confirm"));
       let Ln = Xy(getMainLoopModel(), ro);
-      i("tengu_cancel", {
+      logEvent("tengu_cancel", {
         source: S("kill_agents"),
         ...(Ln && { effort_level: fromEnum(Ln) }),
       });
@@ -29511,7 +29511,7 @@ ${Nt(
       timeoutMs: Irt,
     });
   }, [it, zt, ao, wn, ne, ro, Ct, eo, Tt, jt]);
-  return (Ne("chat:killAgents", Go, { context: "Chat" }), null);
+  return (useKeybinding("chat:killAgents", Go, { context: "Chat" }), null);
 }
 function kZt(eLn) {
   return eLn.abortController;
@@ -29545,12 +29545,12 @@ function yee(YNn) {
       screen: Lrt,
       isExternalLoading: Ort,
     } = YNn,
-    ZNn = Me(pH, kZt),
-    Frt = Me(XNn, wZt),
-    Urt = Me(Vve, xZt),
-    Hrt = Me(Vve, RZt),
-    jrt = Me(Vve, PZt),
-    $rt = Me(Vve, MZt),
+    ZNn = useStoreSelector(pH, kZt),
+    Frt = useStoreSelector(XNn, wZt),
+    Urt = useStoreSelector(Vve, xZt),
+    Hrt = useStoreSelector(Vve, RZt),
+    jrt = useStoreSelector(Vve, PZt),
+    $rt = useStoreSelector(Vve, MZt),
     Kve;
   if (hee[0] !== az.submit)
     ((Kve = e(V7, { onSubmit: az.submit })),
@@ -29857,7 +29857,7 @@ function nwe(w) {
   logError(w);
 }
 function rwe(w, I) {
-  let { storageV5: ne } = _e(),
+  let { storageV5: ne } = useStorageV5Context(),
     {
       setValue: me,
       setCursorOffset: pe,
@@ -29906,7 +29906,7 @@ function rwe(w, I) {
         while (!0) {
           if (xo?.aborted) return;
           let An = await Ro.next();
-          if (Ol().claim("history_search_scan_ok")) logFeatureOk("history_search_scan");
+          if (getClaimRegistry().claim("history_search_scan_ok")) logFeatureOk("history_search_scan");
           if (eo.current !== Ro) return;
           if (An.done) {
             Qe(!0);
@@ -29986,7 +29986,7 @@ function rwe(w, I) {
     } else logFeatureSad("history_search_execute", "execute_no_match");
     zt();
   }, [He, it, I, me, be, zt]);
-  Ne("history:search", co, { context: "Global", isActive: h_() ? !1 : !Ae });
+  useKeybinding("history:search", co, { context: "Global", isActive: h_() ? !1 : !Ae });
   let _o = V(
     () => ({
       "historySearch:next": go,
@@ -29996,7 +29996,7 @@ function rwe(w, I) {
     }),
     [go, fo, ro, ho],
   );
-  Ze(_o, { context: "HistorySearch", isActive: Ae });
+  useKeybindings(_o, { context: "HistorySearch", isActive: Ae });
   let Ho = re(
     (po) => {
       if (!Ae) return;
@@ -30091,7 +30091,7 @@ function iwe({ hasInput: w, isAssistantResponding: I }) {
           zt = to || jt === xe,
           ao = zt ? He || Date.now() : Date.now();
         if (
-          (i("tengu_prompt_suggestion", {
+          (logEvent("tengu_prompt_suggestion", {
             source: S("cli"),
             outcome: S(zt ? "accepted" : "ignored"),
             prompt_id: S("user_intent"),
@@ -32351,7 +32351,7 @@ async function neo(w, I) {
     return (n(`Failed to fetch Slack channels: ${me}`), []);
   }
 }
-var reo = m(() => nt({ results: le() }));
+var reo = createLazyValue(() => nt({ results: le() }));
 function ieo(w) {
   let I = w.trim();
   if (!I.startsWith("{")) return w;
@@ -32481,7 +32481,7 @@ function deo(w, I, ne = !1) {
       displayText: `${be.agentType} (agent)`,
       description: pz(be.whenToUse),
       agentType: be.agentType,
-      color: doe(be.agentType),
+      color: getAgentTypeColorThemeKey(be.agentType),
     }));
     if (!I) return me;
     let pe = I.toLowerCase();
@@ -32593,8 +32593,8 @@ async function Iee(w, I, ne, me, pe) {
       };
     });
   }
-  let Ke = rn(xe),
-    Je = ne.find((zt) => rn(zt.name) === Ke && ts(zt));
+  let Ke = normalizeMcpName(xe),
+    Je = ne.find((zt) => normalizeMcpName(zt.name) === Ke && ts(zt));
   if (!Je) return [];
   let Qe = {};
   for (let [zt, ao] of Object.entries(He.resolvedArgs))
@@ -32693,7 +32693,7 @@ function Eee(w, I, ne) {
   return me === void 0 ? -1 : I.findIndex((pe) => pe.id === me);
 }
 function Mwe() {
-  return Xa(bit);
+  return createStore(bit);
 }
 var bit = {
   suggestions: [],
@@ -32758,7 +32758,7 @@ async function veo(w, I, ne, me, pe) {
     let be = new AbortController();
     return ((w.current = be), await Vrt(I, ne, me, be.signal, pe));
   } catch {
-    return (i("tengu_shell_completion_failed", {}), []);
+    return (logEvent("tengu_shell_completion_failed", {}), []);
   }
 }
 function mit(w, I, ne, me, pe) {
@@ -32820,9 +32820,9 @@ function Awe({
   markAccepted: xe,
   sessionEnvVars: Ae,
 }) {
-  let Oe = Me(w, sR),
-    He = Me(w, lz),
-    Ke = Me(w, PA),
+  let Oe = useStoreSelector(w, sR),
+    He = useStoreSelector(w, lz),
+    Ke = useStoreSelector(w, PA),
     { setValue: Je, setCursorOffset: Qe, setMode: it } = w,
     {
       suggestions: at,
@@ -32832,10 +32832,10 @@ function Awe({
       commandArgumentHint: jt,
       suggestionsEmptyMessage: Tt,
       maxColumnWidth: to,
-    } = Me(pe),
+    } = useStoreSelector(pe),
     zt = pe.setState,
-    { addNotification: ao } = Ir(),
-    co = Zr("chat:thinkingToggle", "Chat", "alt+t"),
+    { addNotification: ao } = useNotificationQueue(),
+    co = useKeybindingDisplayText("chat:thinkingToggle", "Chat", "alt+t"),
     go = C(eo);
   go.current = eo ?? null;
   let fo = V(() => {
@@ -32847,9 +32847,9 @@ function Awe({
     ho = U((Ko) => Ko.mcp.resourceTemplates),
     _o = Yn(),
     Ho = It(),
-    xo = Ai().emojiCompletionEnabled !== !1,
-    Wo = Ye(),
-    { storageV5: Ro } = _e(),
+    xo = useSettings().emojiCompletionEnabled !== !1,
+    Wo = useSession(),
+    { storageV5: Ro } = useStorageV5Context(),
     on = re(() => {
       let Ko = _o.getState();
       if (!Ko.mcp.clients.some((pr) => pr.type === "connected")) return;
@@ -32885,7 +32885,7 @@ function Awe({
     }, [_o, Ho]),
     An = U((Ko) => Ko.promptSuggestion),
     wn = U((Ko) => !!Ko.viewingAgentTaskId),
-    yn = sl(),
+    yn = useKeybindingContext(),
     [vo, zo] = d(void 0),
     Sr = V(() => {
       if (Ke !== "prompt" || be) return;
@@ -33114,7 +33114,7 @@ function Awe({
             xi = new Set();
           if (zr() && hi.teamContext)
             for (let Ri of Object.values(hi.teamContext.teammates ?? {})) {
-              if (Ri.name === fs) continue;
+              if (Ri.name === TEAM_LEAD_AGENT_NAME) continue;
               if (!slugify(Ri.name).startsWith(yi)) continue;
               (xi.add(Ri.name),
                 zn.push({
@@ -33971,8 +33971,8 @@ function Awe({
     Bi = at.length > 0 || !!nn,
     ss = eM();
   (Rs("autocomplete", Bi),
-    nM("Autocomplete", Bi),
-    Ze(va, { context: "Autocomplete", isActive: Bi && !ss }));
+    useActiveKeybindingContext("Autocomplete", Bi),
+    useKeybindings(va, { context: "Autocomplete", isActive: Bi && !ss }));
   function oc(Ko) {
     let cr = Og(Ko);
     if (cr !== "prompt") {
@@ -34169,7 +34169,7 @@ function Hwe(w) {
   }
 }
 function Oee(w, I) {
-  i("tengu_rc_pill_clicked", { trigger: fromEnum(w), label: fromEnum(I) });
+  logEvent("tengu_rc_pill_clicked", { trigger: fromEnum(w), label: fromEnum(I) });
 }
 function qwe(w) {
   let { label: I } = oSe({
@@ -34269,7 +34269,7 @@ function Vee(GBn) {
   let wd = _(111),
     { onDone: cR } = GBn;
   Rs("bridge-dialog");
-  let { storageV5: vit } = _e(),
+  let { storageV5: vit } = useStorageV5Context(),
     wit = U(Oeo),
     MA = U(Feo),
     Tit = U(Beo),
@@ -34283,18 +34283,18 @@ function Vee(GBn) {
     yz = U(Geo),
     nN = U(Keo),
     Gwe = It(),
-    { removeNotification: Kwe } = Ir(),
+    { removeNotification: Kwe } = useNotificationQueue(),
     [TH, QBn] = d(!1),
     [zwe, Rit] = d(""),
     [bz, YBn] = d(""),
-    Pit = Ye(zeo),
+    Pit = useSession(zeo),
     Teo;
   if (wd[0] !== Pit) ((Teo = Ait(Pit)), (wd[0] = Pit), (wd[1] = Teo));
   else Teo = wd[1];
   let Sz = Teo,
     xeo,
     Reo;
-  if (wd[2] === p)
+  if (wd[2] === MEMO_CACHE_SENTINEL)
     ((xeo = () => {
       getBranch().then(YBn).catch(Qeo);
     }),
@@ -34332,7 +34332,7 @@ function Vee(GBn) {
   else ((Peo = wd[6]), (Meo = wd[7]));
   E(Peo, Meo);
   let Ywe;
-  if (wd[8] === p)
+  if (wd[8] === MEMO_CACHE_SENTINEL)
     ((Ywe = () => {
       QBn(Yeo);
     }),
@@ -34345,9 +34345,9 @@ function Vee(GBn) {
       (wd[10] = Aeo));
   else Aeo = wd[10];
   let Ieo;
-  if (wd[11] === p) ((Ieo = { context: "Confirmation" }), (wd[11] = Ieo));
+  if (wd[11] === MEMO_CACHE_SENTINEL) ((Ieo = { context: "Confirmation" }), (wd[11] = Ieo));
   else Ieo = wd[11];
-  Ze(Aeo, Ieo);
+  useKeybindings(Aeo, Ieo);
   let Eeo;
   if (
     wd[12] !== vH ||
@@ -34469,7 +34469,7 @@ function Vee(GBn) {
     oCe = "Remote Control";
     nCe = cR;
     rCe = !0;
-    Jwe = mr;
+    Jwe = FocusableBox;
     Zwe = 1;
     eCe = Fee;
     let sN;
@@ -34495,7 +34495,7 @@ function Vee(GBn) {
     else IA = wd[68];
     let EA;
     if (wd[69] !== cm)
-      ((EA = e(Ur, { error: cm })), (wd[69] = cm), (wd[70] = EA));
+      ((EA = e(ErrorMessage, { error: cm })), (wd[69] = cm), (wd[70] = EA));
     else EA = wd[70];
     let PH;
     if (wd[71] !== hz || wd[72] !== nN)
@@ -34570,7 +34570,7 @@ function Vee(GBn) {
   const sN = cm !== void 0 ? "dismiss" : "disconnect";
   let AA;
   if (wd[84] !== sN)
-    ((AA = e(D, { chord: "d", action: sN })), (wd[84] = sN), (wd[85] = AA));
+    ((AA = e(KeybindingHint, { chord: "d", action: sN })), (wd[84] = sN), (wd[85] = AA));
   else AA = wd[85];
   let IA;
   if (wd[86] !== vH || wd[87] !== cm || wd[88] !== Z_)
@@ -34578,7 +34578,7 @@ function Vee(GBn) {
       cm !== void 0 &&
       !vH &&
       Z_ === "auth" &&
-      e(D, { chord: "r", action: "reconnect" })),
+      e(KeybindingHint, { chord: "r", action: "reconnect" })),
       (wd[86] = vH),
       (wd[87] = cm),
       (wd[88] = Z_),
@@ -34591,15 +34591,15 @@ function Vee(GBn) {
       (wd[91] = EA));
   else EA = wd[91];
   let PH;
-  if (wd[92] === p)
-    ((PH = e(D, { chord: ["enter", "escape"], action: "close" })),
+  if (wd[92] === MEMO_CACHE_SENTINEL)
+    ((PH = e(KeybindingHint, { chord: ["enter", "escape"], action: "close" })),
       (wd[92] = PH));
   else PH = wd[92];
   let DA;
   if (wd[93] !== AA || wd[94] !== IA || wd[95] !== EA)
     ((DA = e(t, {
       dimColor: !0,
-      children: r(ue, { children: [AA, IA, EA, PH] }),
+      children: r(DotSeparatedList, { children: [AA, IA, EA, PH] }),
     })),
       (wd[93] = AA),
       (wd[94] = IA),
@@ -34688,9 +34688,9 @@ function S6e(EUn) {
     uCe = sto === void 0 ? "select" : sto,
     qit = ato === void 0 ? "cancel" : ato,
     Vit = Va(),
-    { rows: NUn, columns: LUn } = Se(),
+    { rows: NUn, columns: LUn } = useTerminalSize(),
     lto;
-  if (Vu[0] === p) ((lto = { focus: 0, window: 0 }), (Vu[0] = lto));
+  if (Vu[0] === MEMO_CACHE_SENTINEL) ((lto = { focus: 0, window: 0 }), (Vu[0] = lto));
   else lto = Vu[0];
   let [FUn, bh, gCe] = qm(lto),
     { focus: hCe, window: IH } = FUn,
@@ -35015,12 +35015,12 @@ function S6e(EUn) {
   const zst = Nto && Ato,
     Qst = !Nto && Ato;
   let Lto;
-  if (Vu[81] === p) ((Lto = ["up", "down"]), (Vu[81] = Lto));
+  if (Vu[81] === MEMO_CACHE_SENTINEL) ((Lto = ["up", "down"]), (Vu[81] = Lto));
   else Lto = Vu[81];
   const Zst = bCe ? "nav" : "navigate";
   let TCe;
   if (Vu[82] !== Zst)
-    ((TCe = e(D, { chord: Lto, action: Zst })), (Vu[82] = Zst), (Vu[83] = TCe));
+    ((TCe = e(KeybindingHint, { chord: Lto, action: Zst })), (Vu[82] = Zst), (Vu[83] = TCe));
   else TCe = Vu[83];
   let xCe;
   if (Vu[84] !== bCe || Vu[85] !== uCe)
@@ -35031,19 +35031,19 @@ function S6e(EUn) {
   else xCe = Vu[86];
   let RCe;
   if (Vu[87] !== xCe)
-    ((RCe = e(D, { chord: "enter", action: xCe })),
+    ((RCe = e(KeybindingHint, { chord: "enter", action: xCe })),
       (Vu[87] = xCe),
       (Vu[88] = RCe));
   else RCe = Vu[88];
   let PCe;
   if (Vu[89] !== aN)
-    ((PCe = aN && e(D, { chord: "tab", action: aN.action })),
+    ((PCe = aN && e(KeybindingHint, { chord: "tab", action: aN.action })),
       (Vu[89] = aN),
       (Vu[90] = PCe));
   else PCe = Vu[90];
   let MCe;
   if (Vu[91] !== qit)
-    ((MCe = e(D, { chord: "escape", action: qit })),
+    ((MCe = e(KeybindingHint, { chord: "escape", action: qit })),
       (Vu[91] = qit),
       (Vu[92] = MCe));
   else MCe = Vu[92];
@@ -35057,7 +35057,7 @@ function S6e(EUn) {
   )
     ((ACe = e(t, {
       dimColor: !0,
-      children: r(ue, { children: [TCe, RCe, PCe, MCe, Hit] }),
+      children: r(DotSeparatedList, { children: [TCe, RCe, PCe, MCe, Hit] }),
     })),
       (Vu[93] = Hit),
       (Vu[94] = TCe),
@@ -35119,7 +35119,7 @@ function NCe(GUn) {
   if (FH.length === 0) {
     let jH;
     if (kz[0] !== oat)
-      ((jH = e(Rn, { children: oat })), (kz[0] = oat), (kz[1] = jH));
+      ((jH = e(EmptyStateMessage, { children: oat })), (kz[0] = oat), (kz[1] = jH));
     else jH = kz[1];
     let NA;
     if (kz[2] !== jH || kz[3] !== eT)
@@ -35247,8 +35247,8 @@ function Gto(w, I) {
 }
 function LCe({ initialQuery: w, onSelect: I, onCancel: ne }) {
   Rs("history-search");
-  let { columns: me } = Se(),
-    { storageV5: pe } = _e(),
+  let { columns: me } = useTerminalSize(),
+    { storageV5: pe } = useStorageV5Context(),
     [be, xe] = d("everywhere"),
     [Ae, Oe] = d(null),
     [He, Ke] = d(w ?? ""),
@@ -35317,13 +35317,13 @@ function LCe({ initialQuery: w, onSelect: I, onCancel: ne }) {
         }
       );
     }, [be, pe]));
-  let Qe = dc("historySearch:cycleScope", "HistorySearch", "ctrl+s");
-  Ne(
+  let Qe = useKeybindingChordText("historySearch:cycleScope", "HistorySearch", "ctrl+s");
+  useKeybinding(
     "historySearch:cycleScope",
     () => {
       let jt = Q$t.indexOf(be),
         Tt = Q$t[(jt + 1) % Q$t.length];
-      (xe(Tt), i("tengu_history_picker_scope", { from: fromEnum(be), to: fromEnum(Tt) }));
+      (xe(Tt), logEvent("tengu_history_picker_scope", { from: fromEnum(be), to: fromEnum(Tt) }));
     },
     { context: "HistorySearch" },
   );
@@ -35367,7 +35367,7 @@ function LCe({ initialQuery: w, onSelect: I, onCancel: ne }) {
     getKey: (jt) => String(jt.entry.timestamp),
     onQueryChange: Ke,
     onSelect: (jt) => {
-      (i("tengu_history_picker_select", {
+      (logEvent("tengu_history_picker_select", {
         result_count: it.length,
         query_length: He.length,
       }),
@@ -35383,7 +35383,7 @@ function LCe({ initialQuery: w, onSelect: I, onCancel: ne }) {
     onCancel: ne,
     resetKey: be,
     extraHints: [
-      e(D, { chord: Qe, action: "scope" }, "scope"),
+      e(KeybindingHint, { chord: Qe, action: "scope" }, "scope"),
       zz() && e(t, { children: "Esc i / for slash commands" }, "vim"),
     ],
     emptyMessage: (jt) => Gto(Ae, jt),
@@ -35458,7 +35458,7 @@ function OCe({ canEnter: w, onEnter: I }) {
       (I?.(), (pe.current = !0), me(!0));
     }, [I]);
   return (
-    Ze(
+    useKeybindings(
       {
         "settings:search": () => {
           if (pe.current) return !1;
@@ -35520,14 +35520,14 @@ function RZ({
   options: Oe,
   skipSettingsWrite: He,
 }) {
-  let { storageV5: Ke, credentials: Je } = _e(),
+  let { storageV5: Ke, credentials: Je } = useStorageV5Context(),
     Qe = It(),
-    { rows: it } = ks(Se()),
+    { rows: it } = ks(useTerminalSize()),
     at = U((Ki) => (Mr() ? Ki.fastMode : !1)),
     [Zt] = d(at ?? !1),
     Ct = V(() => Oe ?? fdn(Zt), [Oe, Zt]),
-    eo = BA(),
-    jt = Ai(),
+    eo = useFeatureFlagVersion(),
+    jt = useSettings(),
     Tt = V(() => Tne(I, w), [I, w, eo, jt]),
     to = Tt ?? w,
     zt = to === null ? Qw : (umt(Ct, to) ?? to),
@@ -35591,7 +35591,7 @@ function RZ({
                   : Ls
                 : Ki.description) ?? ""
             )
-              .replaceAll("Fable 5.1", ut("claude", ro)("Fable 5.1"))
+              .replaceAll("Fable 5.1", getThemeColor("claude", ro)("Fable 5.1"))
               .replace(/\$[\d.]+\/\$[\d.]+ per Mtok/, (ss) =>
                 Ki.promoListPrice && Uit() && ie.level > 0
                   ? `${ie.dim.strikethrough(Ki.promoListPrice)} ${ss}`
@@ -35691,7 +35691,7 @@ function RZ({
       },
       [Fn, go, Cn, jo],
     );
-  Ze(
+  useKeybindings(
     {
       "modelPicker:decreaseEffort": () => {
         if (Ro.current) return !1;
@@ -35717,7 +35717,7 @@ function RZ({
     let qi = oT(Ki),
       As = qi && Io !== void 0 && Io !== "ultracode" ? Z$(Io, qi) : Io;
     if (
-      (i("tengu_model_command_menu_effort", { effort: fromEnumOpt(As) }),
+      (logEvent("tengu_model_command_menu_effort", { effort: fromEnumOpt(As) }),
       As === "ultracode" && no && !He)
     ) {
       iA(Ke);
@@ -35811,7 +35811,7 @@ function RZ({
               }),
               on !== "" &&
                 Fn.length === 0 &&
-                e(Rn, { children: `No models match "${on}"` }),
+                e(EmptyStateMessage, { children: `No models match "${on}"` }),
               Sn > 0 &&
                 e(o, {
                   paddingLeft: 3,
@@ -35841,7 +35841,7 @@ function RZ({
                               color: "subtle",
                               children: [
                                 " ",
-                                e(D, {
+                                e(KeybindingHint, {
                                   chord: ["left", "right"],
                                   action: "adjust",
                                 }),
@@ -35896,29 +35896,29 @@ function RZ({
         ],
       }),
       be &&
-        e(ci, {
+        e(InputGuide, {
           children: Wo
-            ? r(ue, {
+            ? r(DotSeparatedList, {
                 children: [
                   e(t, { children: "Type to filter" }),
-                  e(D, { chord: ["enter", "down"], action: "list" }),
-                  e(D, { chord: "escape", action: "clear" }),
+                  e(KeybindingHint, { chord: ["enter", "down"], action: "list" }),
+                  e(KeybindingHint, { chord: "escape", action: "clear" }),
                 ],
               })
-            : r(ue, {
+            : r(DotSeparatedList, {
                 children: [
                   Mn !== void 0 &&
                     !fi &&
-                    e(D, {
+                    e(KeybindingHint, {
                       chord: "enter",
                       action: me ? "set as default" : "confirm",
                     }),
                   Mn !== void 0 &&
                     !fi &&
                     me &&
-                    e(D, { chord: "s", action: "use this session only" }),
+                    e(KeybindingHint, { chord: "s", action: "use this session only" }),
                   !1,
-                  e(je, {
+                  e(ActionKeybindingHint, {
                     action: "select:cancel",
                     context: "Select",
                     fallback: "Esc",
@@ -36007,7 +36007,7 @@ function bte(v$n) {
     } = v$n,
     [bS, Uoo] = d(null),
     Hoo;
-  if (pR[0] === p)
+  if (pR[0] === MEMO_CACHE_SENTINEL)
     ((Hoo = [
       {
         value: "true",
@@ -36034,9 +36034,9 @@ function bte(v$n) {
       (pR[3] = joo));
   else joo = pR[3];
   let $oo;
-  if (pR[4] === p) (($oo = { context: "Confirmation" }), (pR[4] = $oo));
+  if (pR[4] === MEMO_CACHE_SENTINEL) (($oo = { context: "Confirmation" }), (pR[4] = $oo));
   else $oo = pR[4];
-  Ne("confirm:no", joo, $oo);
+  useKeybinding("confirm:no", joo, $oo);
   let Woo;
   if (pR[5] !== bS || pR[6] !== Oz)
     ((Woo = () => {
@@ -36053,7 +36053,7 @@ function bte(v$n) {
       (pR[8] = rlt),
       (pR[9] = qoo));
   else qoo = pR[9];
-  Ne("confirm:yes", Woo, qoo);
+  useKeybinding("confirm:yes", Woo, qoo);
   let Voo;
   if (pR[10] !== ej || pR[11] !== nlt || pR[12] !== Oz)
     ((Voo = function yte(T$n) {
@@ -36068,7 +36068,7 @@ function bte(v$n) {
   else Voo = pR[13];
   let yte = Voo,
     Goo;
-  if (pR[14] === p)
+  if (pR[14] === MEMO_CACHE_SENTINEL)
     ((Goo = r(o, {
       marginBottom: 1,
       flexDirection: "column",
@@ -36124,13 +36124,13 @@ function bte(v$n) {
   else f_e = pR[19];
   let g_e;
   if (pR[20] !== bS)
-    ((g_e = e(ci, {
+    ((g_e = e(InputGuide, {
       children:
         bS !== null
-          ? r(ue, {
+          ? r(DotSeparatedList, {
               children: [
-                e(D, { chord: "enter", action: "confirm" }),
-                e(je, {
+                e(KeybindingHint, { chord: "enter", action: "confirm" }),
+                e(ActionKeybindingHint, {
                   action: "confirm:no",
                   context: "Confirmation",
                   fallback: "Esc",
@@ -36138,10 +36138,10 @@ function bte(v$n) {
                 }),
               ],
             })
-          : r(ue, {
+          : r(DotSeparatedList, {
               children: [
-                e(D, { chord: "enter", action: "confirm" }),
-                e(je, {
+                e(KeybindingHint, { chord: "enter", action: "confirm" }),
+                e(ActionKeybindingHint, {
                   action: "confirm:no",
                   context: "Confirmation",
                   fallback: "Esc",
@@ -36225,7 +36225,7 @@ var ino = Yl(function ($1n) {
       } = $1n;
     (Rs("proactivity-dialog"), U(ano));
     let w_e = U(fR),
-      C_e = qb(yp.kind),
+      C_e = qb(localJsxDialog.kind),
       Qoo,
       Yoo;
     if (rb[0] !== w_e || rb[1] !== kte || rb[2] !== C_e)
@@ -36243,10 +36243,10 @@ var ino = Yl(function ($1n) {
         (rb[4] = Yoo));
     else ((Qoo = rb[3]), (Yoo = rb[4]));
     (E(Qoo, Yoo),
-      dc("confirm:previous", "Confirmation", "up"),
-      dc("confirm:next", "Confirmation", "down"),
-      dc("proactivityMenu:previousMode", "ProactivityMenu", "left"),
-      dc("proactivityMenu:nextMode", "ProactivityMenu", "right"));
+      useKeybindingChordText("confirm:previous", "Confirmation", "up"),
+      useKeybindingChordText("confirm:next", "Confirmation", "down"),
+      useKeybindingChordText("proactivityMenu:previousMode", "ProactivityMenu", "left"),
+      useKeybindingChordText("proactivityMenu:nextMode", "ProactivityMenu", "right"));
     let Joo;
     if (rb[5] !== $z || rb[6] !== Hz)
       ((Joo = function zk(q1n) {
@@ -36340,13 +36340,13 @@ var ino = Yl(function ($1n) {
     else eno = rb[38];
     let vte = eno,
       tno;
-    if (rb[39] === p) ((tno = { context: "Confirmation" }), (rb[39] = tno));
+    if (rb[39] === MEMO_CACHE_SENTINEL) ((tno = { context: "Confirmation" }), (rb[39] = tno));
     else tno = rb[39];
-    Ze(vte.confirmation, tno);
+    useKeybindings(vte.confirmation, tno);
     let ono;
-    if (rb[40] === p) ((ono = { context: "ProactivityMenu" }), (rb[40] = ono));
+    if (rb[40] === MEMO_CACHE_SENTINEL) ((ono = { context: "ProactivityMenu" }), (rb[40] = ono));
     else ono = rb[40];
-    Ze(vte.modeRow, ono);
+    useKeybindings(vte.modeRow, ono);
     let nno;
     if (rb[41] !== vte.vimSteps || rb[42] !== dlt || rb[43] !== clt)
       ((nno = (eWn, tWn, oWn) => {
@@ -36365,7 +36365,7 @@ var ino = Yl(function ($1n) {
         (rb[43] = clt),
         (rb[44] = nno));
     else nno = rb[44];
-    return (rF(nno), null);
+    return (useKeybindingPreDispatch(nno), null);
   }),
   sno = [
     "ctrl",
@@ -36413,7 +36413,7 @@ function F_e() {
 }
 F();
 async function Kz(w, I, ne, me, pe, be) {
-  (await Fde.kill(w, ne, me, void 0, be), i("tengu_review_remote_stopped", {}));
+  (await Fde.kill(w, ne, me, void 0, be), logEvent("tengu_review_remote_stopped", {}));
   let xe = wa(I, a.SESSION_INGRESS_URL, { from: "cli" });
   (pe.enqueuePendingNotification({
     value: `Ultrareview stopped.
@@ -36432,15 +36432,15 @@ Session: ${xe}`,
 }
 F();
 function tj(w, I, ne) {
-  let me = ar(I, w.toolName);
+  let me = findToolByName(I, w.toolName);
   if (!me) return w.toolName;
   try {
     let pe = oL(w.input),
-      be = LT(me, w.input),
+      be = parseToolInput(me, w.input),
       xe = be.success ? be.data : {},
       Ae = me.userFacingName(xe);
     if (!Ae) return w.toolName;
-    let Oe = pe ?? Sye(me, xe, { theme: ne, verbose: !1 });
+    let Oe = pe ?? renderToolUseMessageForTool(me, xe, { theme: ne, verbose: !1 });
     if (Oe) return r(t, { children: [Ae, "(", Oe, ")"] });
     return Ae;
   } catch {
@@ -36452,24 +36452,24 @@ function _h(dqn) {
     { showBack: blt, showStop: Slt, children: klt } = dqn,
     U_e;
   if (B_e[0] !== blt)
-    ((U_e = blt && e(D, { chord: "left", action: "go back" })),
+    ((U_e = blt && e(KeybindingHint, { chord: "left", action: "go back" })),
       (B_e[0] = blt),
       (B_e[1] = U_e));
   else U_e = B_e[1];
   let cno;
-  if (B_e[2] === p)
-    ((cno = e(D, { chord: ["escape", "enter", "space"], action: "close" })),
+  if (B_e[2] === MEMO_CACHE_SENTINEL)
+    ((cno = e(KeybindingHint, { chord: ["escape", "enter", "space"], action: "close" })),
       (B_e[2] = cno));
   else cno = B_e[2];
   let H_e;
   if (B_e[3] !== Slt)
-    ((H_e = Slt && e(D, { chord: "x", action: "stop" })),
+    ((H_e = Slt && e(KeybindingHint, { chord: "x", action: "stop" })),
       (B_e[3] = Slt),
       (B_e[4] = H_e));
   else H_e = B_e[4];
   let uno;
   if (B_e[5] !== klt || B_e[6] !== U_e || B_e[7] !== H_e)
-    ((uno = r(ue, { children: [U_e, cno, H_e, klt] })),
+    ((uno = r(DotSeparatedList, { children: [U_e, cno, H_e, klt] })),
       (B_e[5] = klt),
       (B_e[6] = U_e),
       (B_e[7] = H_e),
@@ -36489,10 +36489,10 @@ function xte(Nqn) {
     } = Nqn,
     [vlt] = cn(),
     mno;
-  if (Mm[0] === p) ((mno = dC(rf(), { skipReplFilter: !0 })), (Mm[0] = mno));
+  if (Mm[0] === MEMO_CACHE_SENTINEL) ((mno = dC(createDefaultToolPermissionContext(), { skipReplFilter: !0 })), (Mm[0] = mno));
   else mno = Mm[0];
   let Lqn = mno,
-    wlt = HS(
+    wlt = useElapsedDuration(
       Za.startTime,
       Za.status === "running",
       1000,
@@ -36513,7 +36513,7 @@ function xte(Nqn) {
       (Mm[5] = Clt),
       (Mm[6] = fno));
   else fno = Mm[6];
-  let _lt = Wx(fno),
+  let _lt = useDetailDialogKeys(fno),
     gno;
   if (Mm[7] !== _lt || Mm[8] !== nj)
     ((gno = (Cte) => {
@@ -36622,7 +36622,7 @@ function xte(Nqn) {
     Nlt = wte && !!dno;
   let aTe;
   if (Mm[34] !== nj)
-    ((aTe = nj && e(D, { chord: "f", action: "foreground" })),
+    ((aTe = nj && e(KeybindingHint, { chord: "f", action: "foreground" })),
       (Mm[34] = nj),
       (Mm[35] = aTe));
   else aTe = Mm[35];
@@ -36631,7 +36631,7 @@ function xte(Nqn) {
     ((lTe =
       wte &&
       X_e &&
-      e(D, {
+      e(KeybindingHint, {
         chord: X_e,
         action: "stop all agents",
         format: { keyCase: "lower" },
@@ -36751,7 +36751,7 @@ function xte(Nqn) {
   else gTe = Mm[63];
   let kno;
   if (Mm[64] !== Tlt || Mm[65] !== gTe)
-    ((kno = e(mr, { onKeyDown: Tlt, children: gTe })),
+    ((kno = e(FocusableBox, { onKeyDown: Tlt, children: gTe })),
       (Mm[64] = Tlt),
       (Mm[65] = gTe),
       (Mm[66] = kno));
@@ -36836,11 +36836,11 @@ function bN(UA, rj, Jqn) {
 function xTe(tVn) {
   let HA = _(20),
     { session: kTe } = tVn,
-    Hlt = Ai(),
+    Hlt = useSettings(),
     jlt = tn(),
     Rno;
   if (HA[0] !== jlt || HA[1] !== Hlt.prefersReducedMotion)
-    ((Rno = cu(Hlt.prefersReducedMotion) || jlt),
+    ((Rno = shouldReduceMotion(Hlt.prefersReducedMotion) || jlt),
       (HA[0] = jlt),
       (HA[1] = Hlt.prefersReducedMotion),
       (HA[2] = Rno));
@@ -36859,14 +36859,14 @@ function xTe(tVn) {
     lVn = Math.floor(vTe / (Ate * 3)) % 7;
   if (kTe.status === "completed") {
     let hN, Pte;
-    if (HA[3] === p)
+    if (HA[3] === MEMO_CACHE_SENTINEL)
       ((hN = r(t, { color: "background", children: [r_, " "] })),
         (Pte = e(yN, { text: "ultrareview", phase: 0 })),
         (HA[3] = hN),
         (HA[4] = Pte));
     else ((hN = HA[3]), (Pte = HA[4]));
     let tQ;
-    if (HA[5] === p)
+    if (HA[5] === MEMO_CACHE_SENTINEL)
       ((tQ = r(N, {
         children: [
           hN,
@@ -36875,7 +36875,7 @@ function xTe(tVn) {
             dimColor: !0,
             children: [
               " ready \xB7 ",
-              e(D, { chord: "shift+down", action: "view" }),
+              e(KeybindingHint, { chord: "shift+down", action: "view" }),
             ],
           }),
         ],
@@ -36886,7 +36886,7 @@ function xTe(tVn) {
   }
   if (kTe.status === "failed") {
     let hN;
-    if (HA[6] === p)
+    if (HA[6] === MEMO_CACHE_SENTINEL)
       ((hN = r(N, {
         children: [
           r(t, { color: "background", children: [r_, " "] }),
@@ -36909,7 +36909,7 @@ function xTe(tVn) {
   else hN = HA[11];
   let zlt = hN,
     Pte;
-  if (HA[12] === p)
+  if (HA[12] === MEMO_CACHE_SENTINEL)
     ((Pte = r(t, { color: "background", children: [Dp, " "] })),
       (HA[12] = Pte));
   else Pte = HA[12];
@@ -36947,7 +36947,7 @@ function VA(cVn) {
   }
   if (SS.status === "completed") {
     let kS;
-    if (oQ[2] === p)
+    if (oQ[2] === MEMO_CACHE_SENTINEL)
       ((kS = e(t, {
         bold: !0,
         color: "success",
@@ -36960,7 +36960,7 @@ function VA(cVn) {
   }
   if (SS.status === "failed") {
     let kS;
-    if (oQ[3] === p)
+    if (oQ[3] === MEMO_CACHE_SENTINEL)
       ((kS = e(t, {
         bold: !0,
         color: "error",
@@ -36982,7 +36982,7 @@ function VA(cVn) {
   }
   let kS;
   if (oQ[6] !== SS.todoList)
-    ((kS = G(SS.todoList, Ino)), (oQ[6] = SS.todoList), (oQ[7] = kS));
+    ((kS = countMatching(SS.todoList, Ino)), (oQ[6] = SS.todoList), (oQ[7] = kS));
   else kS = oQ[7];
   let Xlt = kS,
     tct = SS.todoList.length,
@@ -37023,21 +37023,21 @@ function Ete(CVn) {
   switch (_Vn.status) {
     case "completed": {
       let rT;
-      if (ATe[0] === p)
+      if (ATe[0] === MEMO_CACHE_SENTINEL)
         ((rT = e(np, { status: "completed", label: "done" })), (ATe[0] = rT));
       else rT = ATe[0];
       return rT;
     }
     case "failed": {
       let rT;
-      if (ATe[1] === p)
+      if (ATe[1] === MEMO_CACHE_SENTINEL)
         ((rT = e(np, { status: "failed", label: "error" })), (ATe[1] = rT));
       else rT = ATe[1];
       return rT;
     }
     case "killed": {
       let rT;
-      if (ATe[2] === p)
+      if (ATe[2] === MEMO_CACHE_SENTINEL)
         ((rT = e(np, { status: "killed", label: "stopped" })), (ATe[2] = rT));
       else rT = ATe[2];
       return rT;
@@ -37045,7 +37045,7 @@ function Ete(CVn) {
     case "running":
     case "pending": {
       let rT;
-      if (ATe[3] === p) ((rT = e(np, { status: "running" })), (ATe[3] = rT));
+      if (ATe[3] === MEMO_CACHE_SENTINEL) ((rT = e(np, { status: "running" })), (ATe[3] = rT));
       else rT = ATe[3];
       return rT;
     }
@@ -37103,7 +37103,7 @@ function Ute(WVn) {
           (nc[14] = bc));
       else bc = nc[14];
       let Pu;
-      if (nc[15] === p)
+      if (nc[15] === MEMO_CACHE_SENTINEL)
         ((Pu = e(t, { dimColor: !0, children: " \xB7 " })), (nc[15] = Pu));
       else Pu = nc[15];
       let Mc;
@@ -37178,7 +37178,7 @@ function Ute(WVn) {
         NTe = t;
         let Mc;
         if (nc[47] !== Qi.identity.color)
-          ((Mc = Bb(Qi.identity.color)),
+          ((Mc = resolveAgentColor(Qi.identity.color)),
             (nc[47] = Qi.identity.color),
             (nc[48] = Mc));
         else Mc = nc[48];
@@ -37270,7 +37270,7 @@ function Ute(WVn) {
       else Pc = nc[75];
       let sct = Pc;
       let rc;
-      if (nc[76] === p)
+      if (nc[76] === MEMO_CACHE_SENTINEL)
         ((rc = e(t, { dimColor: !0, children: "\u23F3 " })), (nc[76] = rc));
       else rc = nc[76];
       let bc;
@@ -37430,7 +37430,7 @@ function Bte(w) {
 function Hte(nGn) {
   let KA = _(25),
     { task: vS, onDone: nQ, onBack: LTe, onKill: Lno } = nGn,
-    uct = HS(vS.startTime, vS.status === "running", 1000, 0, vS.endTime);
+    uct = useElapsedDuration(vS.startTime, vS.status === "running", 1000, 0, vS.endTime);
   const dct = vS.status === "running" ? Lno : void 0;
   let Ono;
   if (KA[0] !== LTe || KA[1] !== nQ || KA[2] !== dct)
@@ -37440,7 +37440,7 @@ function Hte(nGn) {
       (KA[2] = dct),
       (KA[3] = Ono));
   else Ono = KA[3];
-  let mct = Wx(Ono),
+  let mct = useDetailDialogKeys(Ono),
     FTe;
   if (KA[4] !== uct)
     ((FTe = e(t, { dimColor: !0, children: uct })),
@@ -37457,7 +37457,7 @@ function Hte(nGn) {
       (KA[8] = BTe));
   else BTe = KA[8];
   let Fno;
-  if (KA[9] === p)
+  if (KA[9] === MEMO_CACHE_SENTINEL)
     ((Fno = e(t, { bold: !0, children: "Status:" })), (KA[9] = Fno));
   else Fno = KA[9];
   let UTe;
@@ -37515,7 +37515,7 @@ function Hte(nGn) {
   else qTe = KA[21];
   let Bno;
   if (KA[22] !== mct || KA[23] !== qTe)
-    ((Bno = e(mr, { onKeyDown: mct, children: qTe })),
+    ((Bno = e(FocusableBox, { onKeyDown: mct, children: qTe })),
       (KA[22] = mct),
       (KA[23] = qTe),
       (KA[24] = Bno));
@@ -37553,7 +37553,7 @@ var wct = 6;
 function zte(gGn) {
   let iT = _(59),
     { task: ru, onDone: rQ, onBack: sQ, onKill: VTe } = gGn,
-    jte = HS(ru.startTime, ru.status === "running", 1000, 0, ru.endTime);
+    jte = useElapsedDuration(ru.startTime, ru.status === "running", 1000, 0, ru.endTime);
   const hct = ru.status === "running" ? VTe : void 0;
   let Uno;
   if (iT[0] !== sQ || iT[1] !== rQ || iT[2] !== hct)
@@ -37563,7 +37563,7 @@ function zte(gGn) {
       (iT[2] = hct),
       (iT[3] = Uno));
   else Uno = iT[3];
-  let yct = Wx(Uno),
+  let yct = useDetailDialogKeys(Uno),
     GTe,
     zTe,
     QTe,
@@ -37591,7 +37591,7 @@ function zte(gGn) {
     let Hno = ru.turns.filter($no);
     let bct = Hno.slice(-wct);
     let Sct = Hno.length - bct.length;
-    QTe = mr;
+    QTe = FocusableBox;
     JTe = yct;
     zTe = de;
     txe = "Memory consolidation";
@@ -37649,7 +37649,7 @@ function zte(gGn) {
     XTe = "column";
     ZTe = 1;
     let jno;
-    if (iT[38] === p)
+    if (iT[38] === MEMO_CACHE_SENTINEL)
       ((jno = e(t, { bold: !0, children: "Status:" })), (iT[38] = jno));
     else jno = iT[38];
     if (iT[39] !== ru.status)
@@ -37785,10 +37785,10 @@ function Xte($Gn) {
     } = $Gn,
     [_ct] = cn(),
     Vno;
-  if (Vd[0] === p) ((Vno = dC(rf(), { skipReplFilter: !0 })), (Vd[0] = Vno));
+  if (Vd[0] === MEMO_CACHE_SENTINEL) ((Vno = dC(createDefaultToolPermissionContext(), { skipReplFilter: !0 })), (Vd[0] = Vno));
   else Vno = Vd[0];
   let WGn = Vno,
-    Tct = HS(
+    Tct = useElapsedDuration(
       ba.startTime,
       ba.status === "running",
       1000,
@@ -37804,7 +37804,7 @@ function Xte($Gn) {
       (Vd[3] = Rct),
       (Vd[4] = Gno));
   else Gno = Vd[4];
-  let Pct = Wx(Gno),
+  let Pct = useDetailDialogKeys(Gno),
     Kno;
   if (Vd[5] !== Pct || Vd[6] !== cj || Vd[7] !== ba.status)
     ((Kno = (Yte) => {
@@ -37847,7 +37847,7 @@ function Xte($Gn) {
   let Ict = Yno,
     axe;
   if (Vd[16] !== ba.identity.color)
-    ((axe = Bb(ba.identity.color)),
+    ((axe = resolveAgentColor(ba.identity.color)),
       (Vd[16] = ba.identity.color),
       (Vd[17] = axe));
   else axe = Vd[17];
@@ -37943,7 +37943,7 @@ function Xte($Gn) {
     ((gxe =
       ba.status === "running" &&
       cj &&
-      e(D, { chord: "f", action: "foreground" })),
+      e(KeybindingHint, { chord: "f", action: "foreground" })),
       (Vd[42] = cj),
       (Vd[43] = ba.status),
       (Vd[44] = gxe));
@@ -37990,7 +37990,7 @@ function Xte($Gn) {
       (Vd[52] = yxe));
   else yxe = Vd[52];
   let Zno;
-  if (Vd[53] === p)
+  if (Vd[53] === MEMO_CACHE_SENTINEL)
     ((Zno = e(t, { bold: !0, dimColor: !0, children: "Prompt" })),
       (Vd[53] = Zno));
   else Zno = Vd[53];
@@ -38050,7 +38050,7 @@ function Xte($Gn) {
   else kxe = Vd[66];
   let ero;
   if (Vd[67] !== Mct || Vd[68] !== kxe)
-    ((ero = e(mr, { onKeyDown: Mct, children: kxe })),
+    ((ero = e(FocusableBox, { onKeyDown: Mct, children: kxe })),
       (Vd[67] = Mct),
       (Vd[68] = kxe),
       (Vd[69] = ero));
@@ -38062,7 +38062,7 @@ F();
 function tut(w, I, ne) {
   if (w === Jc) return "Review the plan in Claude Code on the web";
   if (!I || typeof I !== "object") return w;
-  if (w === Es && "questions" in I) {
+  if (w === ASK_USER_QUESTION_TOOL_NAME && "questions" in I) {
     let me = I.questions;
     if (Array.isArray(me) && me[0] && typeof me[0] === "object") {
       let pe =
@@ -38094,7 +38094,7 @@ function iut(CKn) {
     Zte = hR.status === "running" || hR.status === "pending",
     Th = hR.ultraplanPhase,
     Uct = Zte ? (Th ? out[Th] : "running") : hR.status,
-    Hct = HS(hR.startTime, Zte, 1000, 0, hR.endTime),
+    Hct = useElapsedDuration(hR.startTime, Zte, 1000, 0, hR.endTime),
     eoe = rjt(hR.id),
     mQ = 1 + (eoe?.agentSpawnCount ?? 0),
     vxe = eoe?.toolCallCount ?? 0,
@@ -38122,7 +38122,7 @@ function iut(CKn) {
     if (cd[5] !== JA) ((SN = () => JA(!1)), (cd[5] = JA), (cd[6] = SN));
     else SN = cd[6];
     let uj;
-    if (cd[7] === p)
+    if (cd[7] === MEMO_CACHE_SENTINEL)
       ((uj = e(t, {
         dimColor: !0,
         children: "This will terminate the Claude Code on the web session.",
@@ -38152,7 +38152,7 @@ function iut(CKn) {
         gap: 1,
         children: [
           uj,
-          e(En, {
+          e(ConfirmPrompt, {
             confirmLabel: pQ,
             cancelLabel: "Back",
             onConfirm: XA,
@@ -38188,7 +38188,7 @@ function iut(CKn) {
       (cd[21] = uj));
   else uj = cd[21];
   let pQ;
-  if (cd[22] === p)
+  if (cd[22] === MEMO_CACHE_SENTINEL)
     ((pQ = e(t, { bold: !0, children: "ultraplan" })), (cd[22] = pQ));
   else pQ = cd[22];
   let XA;
@@ -38310,7 +38310,7 @@ function iut(CKn) {
       (cd[56] = Lxe));
   else Lxe = cd[56];
   let nro;
-  if (cd[57] === p) ((nro = { label: "Back", value: "back" }), (cd[57] = nro));
+  if (cd[57] === MEMO_CACHE_SENTINEL) ((nro = { label: "Back", value: "back" }), (cd[57] = nro));
   else nro = cd[57];
   let Oxe;
   if (cd[58] !== Nxe || cd[59] !== Lxe)
@@ -38324,7 +38324,7 @@ function iut(CKn) {
     ((Fxe = (EKn) => {
       switch (EKn) {
         case "open": {
-          (Gr(QA), uQ());
+          (tryOpenUrlInBrowser(QA), uQ());
           return;
         }
         case "stop": {
@@ -38401,7 +38401,7 @@ function oRe(DKn) {
       (gQ[3] = jxe));
   else jxe = gQ[3];
   let sro;
-  if (gQ[4] === p)
+  if (gQ[4] === MEMO_CACHE_SENTINEL)
     ((sro = e(t, { dimColor: !0, children: " \u2192 " })), (gQ[4] = sro));
   else sro = gQ[4];
   let $xe;
@@ -38424,7 +38424,7 @@ function oRe(DKn) {
   else $xe = gQ[8];
   let Wxe;
   if (gQ[9] !== fj)
-    ((Wxe = fj && r(t, { children: [" ", e(et, { status: "success" })] })),
+    ((Wxe = fj && r(t, { children: [" ", e(StatusIndicator, { status: "success" })] })),
       (gQ[9] = fj),
       (gQ[10] = Wxe));
   else Wxe = gQ[10];
@@ -38456,7 +38456,7 @@ function sut(OKn) {
     kN = wS.status === "completed",
     ooe = wS.status === "running" || wS.status === "pending",
     [BKn, zct] = d(!1),
-    Qct = HS(wS.startTime, ooe, 1000, 0, wS.endTime),
+    Qct = useElapsedDuration(wS.startTime, ooe, 1000, 0, wS.endTime),
     uro;
   if (Am[0] !== bQ)
     ((uro = () => bQ("Cloud session details dismissed", { display: "system" })),
@@ -38473,10 +38473,10 @@ function sut(OKn) {
     Yct = kN ? "ready" : ooe ? "running" : wS.status;
   if (BKn) {
     let noe;
-    if (Am[4] === p) ((noe = () => zct(!1)), (Am[4] = noe));
+    if (Am[4] === MEMO_CACHE_SENTINEL) ((noe = () => zct(!1)), (Am[4] = noe));
     else noe = Am[4];
     let roe;
-    if (Am[5] === p)
+    if (Am[5] === MEMO_CACHE_SENTINEL)
       ((roe = e(t, {
         dimColor: !0,
         children:
@@ -38485,7 +38485,7 @@ function sut(OKn) {
         (Am[5] = roe));
     else roe = Am[5];
     let kQ;
-    if (Am[6] === p)
+    if (Am[6] === MEMO_CACHE_SENTINEL)
       ((kQ = [
         { label: "Stop ultrareview", value: "stop" },
         { label: "Back", value: "back" },
@@ -38542,7 +38542,7 @@ function sut(OKn) {
     ((roe = (HKn) => {
       bb47: switch (HKn) {
         case "open": {
-          (Gr(oI), bQ());
+          (tryOpenUrlInBrowser(oI), bQ());
           break bb47;
         }
         case "stop": {
@@ -38573,7 +38573,7 @@ function sut(OKn) {
       (Am[20] = gj));
   else gj = Am[20];
   let mro;
-  if (Am[21] === p)
+  if (Am[21] === MEMO_CACHE_SENTINEL)
     ((mro = e(t, { bold: !0, children: "ultrareview" })), (Am[21] = mro));
   else mro = Am[21];
   let Vxe;
@@ -38591,11 +38591,11 @@ function sut(OKn) {
       (Am[27] = Gxe));
   else Gxe = Am[27];
   let pro;
-  if (Am[28] === p)
-    ((pro = r(ue, {
+  if (Am[28] === MEMO_CACHE_SENTINEL)
+    ((pro = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "select" }),
-        e(D, { chord: "escape", action: "go back" }),
+        e(KeybindingHint, { chord: "enter", action: "select" }),
+        e(KeybindingHint, { chord: "escape", action: "go back" }),
       ],
     })),
       (Am[28] = pro));
@@ -38690,7 +38690,7 @@ function nRe({
         .slice(-3);
     }, [w.isUltraplan, w.isRemoteReview, Ke]),
     Qe = w.status === "running" || w.status === "pending",
-    it = HS(w.startTime, Qe, 1000, 0, w.endTime);
+    it = useElapsedDuration(w.startTime, Qe, 1000, 0, w.endTime);
   if (w.isUltraplan)
     return e(iut, { session: w, onDone: ne, onBack: me, onKill: pe });
   if (w.isRemoteReview)
@@ -38717,17 +38717,17 @@ function nRe({
   }
   let eo = truncateToWidth(w.title, 50),
     jt = w.status === "pending" ? "starting" : w.status;
-  return e(mr, {
+  return e(FocusableBox, {
     onKeyDown: Zt,
     children: r(de, {
       title: "Cloud session details",
       onCancel: at,
       color: "background",
-      inputGuide: r(ue, {
+      inputGuide: r(DotSeparatedList, {
         children: [
-          me && e(D, { chord: "left", action: "go back" }),
-          e(D, { chord: ["escape", "enter", "space"], action: "close" }),
-          !be && e(D, { chord: "t", action: "teleport" }),
+          me && e(KeybindingHint, { chord: "left", action: "go back" }),
+          e(KeybindingHint, { chord: ["escape", "enter", "space"], action: "close" }),
+          !be && e(KeybindingHint, { chord: "t", action: "teleport" }),
         ],
       }),
       children: [
@@ -38790,7 +38790,7 @@ function nRe({
                 flexDirection: "column",
                 height: 10,
                 overflowY: "hidden",
-                children: e(tat, {
+                children: e(ExpandedContentProvider, {
                   children: Je.map((Tt, to) =>
                     e(
                       VL,
@@ -38964,7 +38964,7 @@ function fut(ZKn) {
 function gut(t2n) {
   let hro = _(12),
     { columns: hj, children: uut, forceWidth: o2n } = t2n,
-    { columns: n2n } = Se(),
+    { columns: n2n } = useTerminalSize(),
     dut = o2n ?? n2n,
     sRe,
     aRe,
@@ -39023,7 +39023,7 @@ async function yoe(w) {
 function boe(M2n) {
   let rp = _(51),
     { shell: iu, onDone: hut, onKillShell: Rro, onBack: dRe } = M2n,
-    { columns: mRe } = Se(),
+    { columns: mRe } = useTerminalSize(),
     Pro;
   if (rp[0] !== iu) ((Pro = () => yoe(iu)), (rp[0] = iu), (rp[1] = Pro));
   else Pro = rp[1];
@@ -39049,7 +39049,7 @@ function boe(M2n) {
       (rp[8] = but),
       (rp[9] = Iro));
   else Iro = rp[9];
-  let Sut = Wx(Iro),
+  let Sut = useDetailDialogKeys(Iro),
     Ero = iu.kind === "monitor",
     Dro;
   if (rp[10] !== iu.command)
@@ -39067,12 +39067,12 @@ function boe(M2n) {
       (rp[14] = pRe));
   else pRe = rp[14];
   let Nro;
-  if (rp[15] === p)
+  if (rp[15] === MEMO_CACHE_SENTINEL)
     ((Nro = [{ bold: !0 }, { width: { ratio: 1 } }]), (rp[15] = Nro));
   else Nro = rp[15];
   const xut = mRe - 6;
   let Lro;
-  if (rp[16] === p) ((Lro = e(N, { children: "Status:" })), (rp[16] = Lro));
+  if (rp[16] === MEMO_CACHE_SENTINEL) ((Lro = e(N, { children: "Status:" })), (rp[16] = Lro));
   else Lro = rp[16];
   let fRe;
   if (rp[17] !== iu.result || rp[18] !== iu.status)
@@ -39111,7 +39111,7 @@ function boe(M2n) {
       (rp[19] = fRe));
   else fRe = rp[19];
   let Oro;
-  if (rp[20] === p) ((Oro = e(N, { children: "Runtime:" })), (rp[20] = Oro));
+  if (rp[20] === MEMO_CACHE_SENTINEL) ((Oro = e(N, { children: "Runtime:" })), (rp[20] = Oro));
   else Oro = rp[20];
   let Fro;
   if (rp[21] !== iu.endTime)
@@ -39153,11 +39153,11 @@ function boe(M2n) {
       (rp[36] = SRe));
   else SRe = rp[36];
   let Bro;
-  if (rp[37] === p)
+  if (rp[37] === MEMO_CACHE_SENTINEL)
     ((Bro = e(t, { bold: !0, children: "Output:" })), (rp[37] = Bro));
   else Bro = rp[37];
   let Uro;
-  if (rp[38] === p)
+  if (rp[38] === MEMO_CACHE_SENTINEL)
     ((Uro = e(t, { dimColor: !0, children: "Loading output\u2026" })),
       (rp[38] = Uro));
   else Uro = rp[38];
@@ -39201,7 +39201,7 @@ function boe(M2n) {
   else vRe = rp[47];
   let Hro;
   if (rp[48] !== Sut || rp[49] !== vRe)
-    ((Hro = e(mr, { onKeyDown: Sut, children: vRe })),
+    ((Hro = e(FocusableBox, { onKeyDown: Sut, children: vRe })),
       (rp[48] = Sut),
       (rp[49] = vRe),
       (rp[50] = Hro));
@@ -39214,8 +39214,8 @@ function RRe(D2n) {
     { content: wN, bytesTotal: TQ } = kn(N2n);
   if (!wN) {
     let xQ;
-    if (yj[0] === p)
-      ((xQ = e(Rn, { children: "No output available" })), (yj[0] = xQ));
+    if (yj[0] === MEMO_CACHE_SENTINEL)
+      ((xQ = e(EmptyStateMessage, { children: "No output available" })), (yj[0] = xQ));
     else xQ = yj[0];
     return xQ;
   }
@@ -39414,9 +39414,9 @@ function y6e(Kzn) {
     Iut = Kro === void 0 ? !1 : Kro,
     zzn = U(Vio),
     Fl = It(),
-    Oa = wf(),
+    Oa = useTaskRegistry(),
     CN = Ll.messageQueue,
-    ARe = Zr("chat:killAgents", "Chat", "ctrl+x ctrl+k"),
+    ARe = useKeybindingDisplayText("chat:killAgents", "Chat", "ctrl+x ctrl+k"),
     CS = zzn,
     zro;
   if (ha[0] !== PRe || ha[1] !== CS)
@@ -39462,7 +39462,7 @@ function y6e(Kzn) {
             {
               id: "__leader__",
               type: "leader",
-              label: `@${fs}`,
+              label: `@${TEAM_LEAD_AGENT_NAME}`,
               status: "running",
             },
           ]
@@ -39508,7 +39508,7 @@ function y6e(Kzn) {
       allSelectableItems: Im,
     } = Yro,
     lio;
-  if (ha[5] === p) ((lio = []), (ha[5] = lio));
+  if (ha[5] === MEMO_CACHE_SENTINEL) ((lio = []), (ha[5] = lio));
   else lio = ha[5];
   let cio = C(lio),
     koe = C(!1),
@@ -39597,7 +39597,7 @@ function y6e(Kzn) {
       (ha[26] = But),
       (ha[27] = gio));
   else gio = ha[27];
-  Ze(fio, gio);
+  useKeybindings(fio, gio);
   let hio;
   if (
     ha[28] !== Fl ||
@@ -39839,7 +39839,7 @@ function y6e(Kzn) {
       (ha[80] = xio));
   else xio = ha[80];
   let ud = xio,
-    WRe = G(bR, cso) > 1;
+    WRe = countMatching(bR, cso) > 1;
   if (oy.mode !== "list" && CS) {
     let ji = CS[oy.itemId];
     if (!ji) {
@@ -40290,12 +40290,12 @@ function y6e(Kzn) {
       }
     }
   }
-  let Coe = G(_N, dso),
-    _oe = G(aI, mso) + G(bR, pso),
-    Toe = G(sT, fso),
+  let Coe = countMatching(_N, dso),
+    _oe = countMatching(aI, mso) + countMatching(bR, pso),
+    Toe = countMatching(sT, fso),
     Sc;
   if (ha[212] !== _oe || ha[213] !== Coe || ha[214] !== Toe)
-    ((Sc = b8(
+    ((Sc = intersperse(
       [
         ...(Toe > 0
           ? [
@@ -40346,20 +40346,20 @@ function y6e(Kzn) {
   else Sc = ha[215];
   let Roe = Sc,
     ml;
-  if (ha[216] === p)
-    ((ml = e(D, { chord: ["up", "down"], action: "select" }, "upDown")),
+  if (ha[216] === MEMO_CACHE_SENTINEL)
+    ((ml = e(KeybindingHint, { chord: ["up", "down"], action: "select" }, "upDown")),
       (ha[216] = ml));
   else ml = ha[216];
   let Jl, Ad;
   if (ha[217] !== Uu)
     ((Jl =
       !Uu || wj(Uu.type)
-        ? [e(D, { chord: "enter", action: "view" }, "enter")]
+        ? [e(KeybindingHint, { chord: "enter", action: "view" }, "enter")]
         : []),
       (Ad =
         (Uu?.type === "in_process_teammate" && Uu.status === "running") ||
         (Uu?.type === "local_agent" && Oy(Uu.task) && !dI(Uu))
-          ? [e(D, { chord: "f", action: "foreground" }, "foreground")]
+          ? [e(KeybindingHint, { chord: "f", action: "foreground" }, "foreground")]
           : []),
       (ha[217] = Uu),
       (ha[218] = Jl),
@@ -40381,11 +40381,11 @@ function y6e(Kzn) {
         Uu.status === "running") ||
       (Uu?.type === "local_agent" && GS(Uu.task))
         ? [
-            e(D, { chord: "x", action: "stop" }, "kill"),
+            e(KeybindingHint, { chord: "x", action: "stop" }, "kill"),
             ...(Uu.type === "local_agent" && WRe
               ? [
                   e(
-                    D,
+                    KeybindingHint,
                     {
                       chord: ARe,
                       action: "stop all agents",
@@ -40403,8 +40403,8 @@ function y6e(Kzn) {
       (ha[223] = Jw));
   else Jw = ha[223];
   let woe;
-  if (ha[224] === p)
-    ((woe = e(D, { chord: "escape", action: "close" }, "esc")),
+  if (ha[224] === MEMO_CACHE_SENTINEL)
+    ((woe = e(KeybindingHint, { chord: "escape", action: "close" }, "esc")),
       (ha[224] = woe));
   else woe = ha[224];
   let Rio;
@@ -40426,7 +40426,7 @@ function y6e(Kzn) {
   )
     ((VRe =
       (_N.length > 0 || aI.length > 0 || bR.length > 0 || TN.length > 0) &&
-      e(vg, { label: "Agents", size: G(sT, hso) })),
+      e(vg, { label: "Agents", size: countMatching(sT, hso) })),
       (ha[229] = bR.length),
       (ha[230] = _N.length),
       (ha[231] = TN.length),
@@ -40513,7 +40513,7 @@ function y6e(Kzn) {
         (ha[266] = vj));
     else vj = ha[266];
     let sQn = vj;
-    zRe = mr;
+    zRe = FocusableBox;
     ZRe = Uut;
     KRe = de;
     QRe = "Background";
@@ -40523,11 +40523,11 @@ function y6e(Kzn) {
     YRe = sQn;
     JRe = "background";
     if (ha[269] !== Poe)
-      ((Aoe = e(ue, { children: Poe })), (ha[269] = Poe), (ha[270] = Aoe));
+      ((Aoe = e(DotSeparatedList, { children: Poe })), (ha[269] = Poe), (ha[270] = Aoe));
     else Aoe = ha[270];
     XRe =
       Im.length === 0
-        ? e(Rn, { children: "No tasks currently running" })
+        ? e(EmptyStateMessage, { children: "No tasks currently running" })
         : e(o, {
             flexDirection: "column",
             children: Pio.map(
@@ -40747,10 +40747,10 @@ function vg(IQn) {
 function EN(EQn) {
   let Doe = _(14),
     { item: LQ, isSelected: Kut } = EQn,
-    { columns: DQn } = Se(),
+    { columns: DQn } = useTerminalSize(),
     zut = Math.max(30, DQn - 26),
     Oio;
-  if (Doe[0] === p) ((Oio = isCoordinatorMode()), (Doe[0] = Oio));
+  if (Doe[0] === MEMO_CACHE_SENTINEL) ((Oio = isCoordinatorMode()), (Doe[0] = Oio));
   else Oio = Doe[0];
   let Fio = Oio;
   const Qut = Fio && Kut,
@@ -40767,7 +40767,7 @@ function EN(EQn) {
   if (Doe[4] !== LQ.task || Doe[5] !== LQ.type || Doe[6] !== zut)
     ((nPe =
       LQ.type === "leader"
-        ? r(t, { children: ["@", fs] })
+        ? r(t, { children: ["@", TEAM_LEAD_AGENT_NAME] })
         : e(Ute, { task: LQ.task, maxActivityWidth: zut })),
       (Doe[4] = LQ.task),
       (Doe[5] = LQ.type),
@@ -40919,7 +40919,7 @@ function LPe() {
     rdt = Yn(),
     NN = It(),
     dPe = C(null),
-    idt = vt(),
+    idt = useClock(),
     kso;
   if (sdt[0] !== idt || sdt[1] !== NN || sdt[2] !== rdt)
     ((kso = () => {
@@ -40928,7 +40928,7 @@ function LPe() {
       if (!wso) {
         return !1;
       }
-      (Gr(ON(wso)), logFeatureOk("frame_link_open"));
+      (tryOpenUrlInBrowser(ON(wso)), logFeatureOk("frame_link_open"));
       let Cso = Object.keys(vso).at(-1) ?? null;
       if (
         (NN((joe) =>
@@ -40954,9 +40954,9 @@ function LPe() {
       (sdt[3] = kso));
   else kso = sdt[3];
   let _so;
-  if (sdt[4] === p) ((_so = { context: "Global" }), (sdt[4] = _so));
+  if (sdt[4] === MEMO_CACHE_SENTINEL) ((_so = { context: "Global" }), (sdt[4] = _so));
   else _so = sdt[4];
-  Ne("app:openArtifact", kso, _so);
+  useKeybinding("app:openArtifact", kso, _so);
   let Tso, xso;
   if (sdt[5] !== NN)
     ((Tso = () => () => {
@@ -40975,7 +40975,7 @@ function Qoe() {
     return null;
   }
   let Rso;
-  if (pYn[0] === p) ((Rso = e(FPe, {})), (pYn[0] = Rso));
+  if (pYn[0] === MEMO_CACHE_SENTINEL) ((Rso = e(FPe, {})), (pYn[0] = Rso));
   else Rso = pYn[0];
   return Rso;
 }
@@ -40987,11 +40987,11 @@ var FPe = Yl(function () {
     ldt = U(Zso),
     Pso = U(eao),
     hYn = U(tao),
-    $oe = dc("app:openArtifact", "Global", "ctrl+]"),
-    { columns: Mso } = Se(),
+    $oe = useKeybindingChordText("app:openArtifact", "Global", "ctrl+]"),
+    { columns: Mso } = useTerminalSize(),
     [bYn, Aso] = d(!1),
     cdt = C(null),
-    FQ = vt(),
+    FQ = useClock(),
     Zw = Object.entries(fPe),
     ddt = kR(Zw, gYn),
     gPe;
@@ -41010,7 +41010,7 @@ var FPe = Yl(function () {
   else Iso = ay[4];
   E(gPe, Iso);
   let Eso, Dso;
-  if (ay[5] === p)
+  if (ay[5] === MEMO_CACHE_SENTINEL)
     ((Eso = () => () => {
       cdt.current?.();
     }),
@@ -41022,7 +41022,7 @@ var FPe = Yl(function () {
   let [, SYn] = d(0),
     kYn = Zw.some(oao),
     Nso;
-  if (ay[7] === p) ((Nso = () => SYn(nao)), (ay[7] = Nso));
+  if (ay[7] === MEMO_CACHE_SENTINEL) ((Nso = () => SYn(nao)), (ay[7] = Nso));
   else Nso = ay[7];
   ko(Nso, kYn ? Adt : null);
   let CYn =
@@ -41040,7 +41040,7 @@ var FPe = Yl(function () {
   if (cT) qoe = Ddt + Ndt + (Zw.length > 1 ? Edt : 0);
   else if (Lso) {
     let hPe;
-    if (ay[8] !== $oe) ((hPe = t9([gw($oe)])), (ay[8] = $oe), (ay[9] = hPe));
+    if (ay[8] !== $oe) ((hPe = formatKeybindingChord([gw($oe)])), (ay[8] = $oe), (ay[9] = hPe));
     else hPe = ay[9];
     const Voe = `${hPe} to open`;
     let yPe;
@@ -41060,15 +41060,15 @@ var FPe = Yl(function () {
         ? r(N, {
             children: [
               Zw.length > 1 &&
-                e(D, { chord: ["left", "right"], action: "navigate" }),
+                e(KeybindingHint, { chord: ["left", "right"], action: "navigate" }),
               Zw.length > 1 && Cg,
-              e(D, { chord: "enter", action: "open" }),
+              e(KeybindingHint, { chord: "enter", action: "open" }),
               Cg,
-              e(D, { chord: "x", action: "dismiss" }),
+              e(KeybindingHint, { chord: "x", action: "dismiss" }),
             ],
           })
         : gdt && Lso
-          ? e(D, { chord: $oe, action: "open" })
+          ? e(KeybindingHint, { chord: $oe, action: "open" })
           : null,
     xYn = _j + (gdt ? qoe + Xk : 0),
     RYn = Math.max(8, Mso - xYn),
@@ -41094,7 +41094,7 @@ var FPe = Yl(function () {
       (ay[15] = vPe));
   else vPe = ay[15];
   let Fso;
-  if (ay[16] === p)
+  if (ay[16] === MEMO_CACHE_SENTINEL)
     ((Fso = r(t, { color: "claude", children: [Vl, "  "] })), (ay[16] = Fso));
   else Fso = ay[16];
   let wPe;
@@ -41312,10 +41312,10 @@ function BPe(qYn) {
     [Koe, jso] = d(!1),
     EPe;
   if (APe[0] !== _dt)
-    ((EPe = () => void Gr(ON(_dt))), (APe[0] = _dt), (APe[1] = EPe));
+    ((EPe = () => void tryOpenUrlInBrowser(ON(_dt))), (APe[0] = _dt), (APe[1] = EPe));
   else EPe = APe[1];
   let $so, Wso;
-  if (APe[2] === p)
+  if (APe[2] === MEMO_CACHE_SENTINEL)
     (($so = () => jso(!0)),
       (Wso = () => jso(!1)),
       (APe[2] = $so),
@@ -41365,7 +41365,7 @@ var Joe = "launch-prompt-warning";
 function Xoe() {
   let e5n = _(5),
     Yoe = FSe(),
-    { addNotification: UPe, removeNotification: HPe } = Ir(),
+    { addNotification: UPe, removeNotification: HPe } = useNotificationQueue(),
     rao,
     iao;
   if (e5n[0] !== UPe || e5n[1] !== HPe || e5n[2] !== Yoe)
@@ -41424,14 +41424,14 @@ function jPe(w) {
 var $dt = "persistence-suppressed";
 function Zoe() {
   let p5n = _(4),
-    { host: $Pe } = Ye(),
+    { host: $Pe } = useSession(),
     [BN] = d(getPersistenceSuppressionCause),
     aao,
     lao;
   if (p5n[0] !== BN || p5n[1] !== $Pe)
     ((aao = () => {
       if (BN !== null && jPe($Pe))
-        i("tengu_persistence_suppressed", { cause: fromEnum(BN) });
+        logEvent("tengu_persistence_suppressed", { cause: fromEnum(BN) });
     }),
       (lao = [BN, $Pe]),
       (p5n[0] = BN),
@@ -41485,7 +41485,7 @@ var qdt = "transcript-writer-degraded";
 function one() {
   let v5n = _(1),
     cao;
-  if (v5n[0] === p) ((cao = getTranscriptWriterHealth()), (v5n[0] = cao));
+  if (v5n[0] === MEMO_CACHE_SENTINEL) ((cao = getTranscriptWriterHealth()), (v5n[0] = cao));
   else cao = v5n[0];
   let { degradedStore: uao } = cao,
     w5n = At(uao.subscribe, uao.getState);
@@ -41521,7 +41521,7 @@ function gao(O5n) {
   return O5n.notifications.pinned;
 }
 function hao(U5n, H5n) {
-  return M0e[U5n.priority] - M0e[H5n.priority];
+  return NOTIFICATION_PRIORITY_RANK[U5n.priority] - NOTIFICATION_PRIORITY_RANK[H5n.priority];
 }
 function yao(fao) {
   return e(rMe, { notice: fao }, fao.key);
@@ -41634,7 +41634,7 @@ function Xdt() {
       }
       let be = me >= Sao ? "critical" : me >= bao ? "high" : "normal";
       if (Qdt[be] > Qdt[ne.current])
-        (i("tengu_memory_threshold_crossed", {
+        (logEvent("tengu_memory_threshold_crossed", {
           rss_mb: Math.round(pe / 1024 / 1024),
           heap_used_mb: Math.round(me / 1024 / 1024),
           status: fromEnum(be),
@@ -41680,7 +41680,7 @@ function ine(SJn) {
   let cMe = wao.pctLeft,
     wJn = tC ? tC.enabled : tp(),
     Cao;
-  if (HQ[5] === p) ((Cao = T4("warning")), (HQ[5] = Cao));
+  if (HQ[5] === MEMO_CACHE_SENTINEL) ((Cao = get1MContextSuggestion("warning")), (HQ[5] = Cao));
   else Cao = HQ[5];
   let mMe = Cao,
     Zdt = cMe,
@@ -41739,7 +41739,7 @@ function gMe({ withSeparator: w }) {
   let I = U((at) => at.activeGoal?.setAt),
     ne = I !== void 0,
     [me, pe] = d(0),
-    be = vt(),
+    be = useClock(),
     xe = C(null);
   if (I !== void 0 && xe.current?.setAt !== I)
     xe.current = { setAt: I, clockStart: be.now() - (Date.now() - I) };
@@ -41789,8 +41789,8 @@ function dne() {
   let Dao = _(7),
     [lne, Eao] = d(0),
     cne = C(null),
-    hMe = vt(),
-    omt = Zr("app:toggleTranscript", "Global", "ctrl+o"),
+    hMe = useClock(),
+    omt = useKeybindingDisplayText("app:toggleTranscript", "Global", "ctrl+o"),
     Nao,
     Lao;
   if (Dao[0] !== hMe)
@@ -41858,7 +41858,7 @@ function hlo(zXn) {
   return zXn.isBriefOnly;
 }
 function ylo(elo) {
-  return L0e(elo.notifications.current, elo.diffPanelVisible);
+  return shouldShowNotification(elo.notifications.current, elo.diffPanelVisible);
 }
 function blo() {
   return $gt(null);
@@ -41888,12 +41888,12 @@ var Rmt = import.meta.require("../../02-功能模块/GitHub集成/ClosedIssueNot
       } = OXn,
       $Xn = Hao === void 0 ? !1 : Hao,
       kMe = jao === void 0 ? !1 : jao,
-      vMe = Me(BXn),
+      vMe = useStoreSelector(BXn),
       $ao = vMe === "invalid" || vMe === "missing",
       wMe = !UXn && $ao,
       _Me = SMe && !$ao,
-      wR = Me(jXn, cVe),
-      Ij = qa(),
+      wR = useStoreSelector(jXn, cVe),
+      Ij = useMainLoopModel(),
       mmt = U(flo),
       pmt = U(glo),
       Wao;
@@ -41909,7 +41909,7 @@ var Rmt = import.meta.require("../../02-功能模块/GitHub集成/ClosedIssueNot
       TMe = Rj(),
       RMe = U(hlo),
       WXn = U(ylo),
-      { addNotification: oC, removeNotification: WN } = Ir(),
+      { addNotification: oC, removeNotification: WN } = useNotificationQueue(),
       qXn = QR(),
       qao,
       Vao;
@@ -41937,7 +41937,7 @@ var Rmt = import.meta.require("../../02-功能模块/GitHub集成/ClosedIssueNot
       Kao = BQ(),
       PMe = Kao === "team" || Kao === "enterprise",
       zao;
-    if (fI[8] === p) ((zao = OS()), (fI[8] = zao));
+    if (fI[8] === MEMO_CACHE_SENTINEL) ((zao = resolveEditorCommand()), (fI[8] = zao));
     else zao = fI[8];
     let MMe = zao,
       AMe =
@@ -41947,13 +41947,13 @@ var Rmt = import.meta.require("../../02-功能模块/GitHub集成/ClosedIssueNot
     if (fI[9] !== oC || fI[10] !== WN || fI[11] !== AMe)
       ((Qao = () => {
         if (AMe && MMe)
-          (i("tengu_external_editor_hint_shown", {}),
+          (logEvent("tengu_external_editor_hint_shown", {}),
             oC({
               key: "external-editor-hint",
               kind: "hint",
               jsx: e(t, {
                 dimColor: !0,
-                children: e(je, {
+                children: e(ActionKeybindingHint, {
                   action: "chat:externalEditor",
                   context: "Chat",
                   fallback: "ctrl+g",
@@ -42120,7 +42120,7 @@ function oAe(YXn) {
     [qMe, XXn] = d(null),
     ZXn = !Pt() && Boolean(getConfiguredApiKeyHelper()),
     nlo;
-  if (TS[6] === p)
+  if (TS[6] === MEMO_CACHE_SENTINEL)
     ((nlo = () => {
       let rlo = getApiKeyHelperElapsedMs();
       let ilo = rlo >= 1e4 ? formatDuration(rlo) : null;
@@ -42129,9 +42129,9 @@ function oAe(YXn) {
       (TS[6] = nlo));
   else nlo = TS[6];
   ko(nlo, ZXn ? 1000 : null);
-  let pne = Qd(klo),
+  let pne = useVoiceSelector(klo),
     VMe = JR(),
-    GMe = Qd(vlo);
+    GMe = useVoiceSelector(vlo);
   if (VMe && (pne === "recording" || pne === "processing")) {
     let Ej;
     if (TS[7] !== pne)
@@ -42229,7 +42229,7 @@ function oAe(YXn) {
       (TS[25] = ZMe));
   else ZMe = TS[25];
   let alo;
-  if (TS[26] === p) ((alo = e(Rmt, {})), (TS[26] = alo));
+  if (TS[26] === MEMO_CACHE_SENTINEL) ((alo = e(Rmt, {})), (TS[26] = alo));
   else alo = TS[26];
   let tAe;
   if (TS[27] !== VMe || TS[28] !== GMe)
@@ -42244,7 +42244,7 @@ function oAe(YXn) {
       (TS[29] = tAe));
   else tAe = TS[29];
   let llo, clo, ulo;
-  if (TS[30] === p)
+  if (TS[30] === MEMO_CACHE_SENTINEL)
     ((llo = e(rne, {})),
       (clo = !Pt() && e(dne, {})),
       (ulo = e(Q_e, {})),
@@ -42733,20 +42733,20 @@ function Umt(n6n) {
   let kne = _(40),
     { transcript: hne, vimMode: Dj } = n6n,
     Imt = gi(),
-    Nj = Me(hne, fne),
-    Lj = Me(hne, cVe),
-    yne = Ye(),
-    Emt = vt(),
+    Nj = useStoreSelector(hne, fne),
+    Lj = useStoreSelector(hne, cVe),
+    yne = useSession(),
+    Emt = useClock(),
     Dmt = Yn(),
     Fj = U(Ulo),
     Bj = U(Hlo),
-    GN = Ai();
+    GN = useSettings();
   const Nmt = GN?.statusLine;
   let Ilo;
   if (kne[0] !== Nmt) ((Ilo = Pwe(Nmt)), (kne[0] = Nmt), (kne[1] = Ilo));
   else Ilo = kne[1];
   let KN = Ilo,
-    Uj = qa(),
+    Uj = useMainLoopModel(),
     jj = U(jlo),
     $j = qf(),
     Wj = U($lo),
@@ -42782,7 +42782,7 @@ function Umt(n6n) {
           isVimModeEnabled: qlo,
           isTrustAccepted: Vlo,
           onTrustBlocked: () => Dmt.setState(Glo),
-          logEvent: i,
+          logEvent: logEvent,
         },
         {
           statusLine: KN,
@@ -42869,7 +42869,7 @@ function Umt(n6n) {
       (kne[33] = Nlo));
   else ((Dlo = kne[32]), (Nlo = kne[33]));
   E(Dlo, Nlo);
-  let aAe = Me(vne).text,
+  let aAe = useStoreSelector(vne).text,
     Lmt = KN?.padding ?? 0,
     lAe;
   if (kne[34] !== Imt || kne[35] !== aAe)
@@ -42895,7 +42895,7 @@ function hAe(f6n) {
     gAe,
     Fmt;
   if (Omt[0] !== mAe) {
-    Fmt = en;
+    Fmt = EARLY_RETURN_SENTINEL;
     bb0: {
       let Olo = Bmt(mAe);
       if (Olo.length === 1) {
@@ -42919,7 +42919,7 @@ function hAe(f6n) {
       (Omt[3] = gAe),
       (Omt[4] = Fmt));
   } else ((pAe = Omt[1]), (fAe = Omt[2]), (gAe = Omt[3]), (Fmt = Omt[4]));
-  if (Fmt !== en) return Fmt;
+  if (Fmt !== EARLY_RETURN_SENTINEL) return Fmt;
   let WQ;
   if (Omt[7] !== pAe || Omt[8] !== fAe || Omt[9] !== gAe)
     ((WQ = e(pAe, { flexDirection: fAe, children: gAe })),
@@ -42943,7 +42943,7 @@ function Bmt(w) {
 }
 var yAe = Yl(Umt);
 var iY = {};
-au(iY, {
+defineExportGetters(iY, {
   FooterHintLine: () => MIe,
   HINT_REREAD_MS: () => Fne,
   PromptHintPart: () => Hne,
@@ -42964,7 +42964,7 @@ function wne(R6n) {
     Qlo,
     $mt;
   if (zlo[0] !== qQ || zlo[1] !== jmt || zlo[2] !== Hmt) {
-    $mt = en;
+    $mt = EARLY_RETURN_SENTINEL;
     bb0: {
       let qmt = Object.values(jmt ?? {}).filter(B8);
       if (qmt.length === 0) {
@@ -42977,8 +42977,8 @@ function wne(R6n) {
       else Ylo = zlo[6];
       Qlo = r(N, {
         children: [
-          e(CAe, { selected: Hmt, onClick: Ylo, children: fee(qmt) }),
-          ann(qmt) &&
+          e(CAe, { selected: Hmt, onClick: Ylo, children: formatBackgroundTaskSummary(qmt) }),
+          isSingleUltraplanTask(qmt) &&
             r(t, {
               dimColor: !0,
               children: [" \xB7 ", L.arrowDown, " to view"],
@@ -42992,7 +42992,7 @@ function wne(R6n) {
       (zlo[3] = Qlo),
       (zlo[4] = $mt));
   } else ((Qlo = zlo[3]), ($mt = zlo[4]));
-  if ($mt !== en) return $mt;
+  if ($mt !== EARLY_RETURN_SENTINEL) return $mt;
   return Qlo;
 }
 function CAe(M6n) {
@@ -43012,7 +43012,7 @@ function CAe(M6n) {
     return vAe;
   }
   let Zlo, eco;
-  if (Kmt[3] === p)
+  if (Kmt[3] === MEMO_CACHE_SENTINEL)
     ((Zlo = () => Jlo(!0)),
       (eco = () => Jlo(!1)),
       (Kmt[3] = Zlo),
@@ -43072,7 +43072,7 @@ function Cne($6n) {
     return AAe;
   }
   let ico, sco;
-  if (PAe[7] === p)
+  if (PAe[7] === MEMO_CACHE_SENTINEL)
     ((ico = () => nco(!0)),
       (sco = () => nco(!1)),
       (PAe[7] = ico),
@@ -43098,7 +43098,7 @@ function j_e() {
   let ev = _(32),
     Gj = !tn(),
     _ne = useFleetNudgeStore(),
-    uco = Me(Gj ? _ne : null),
+    uco = useStoreSelector(Gj ? _ne : null),
     Rh = uco?.needsInput,
     Kj = uco?.succeeded,
     IAe = vle(),
@@ -43116,8 +43116,8 @@ function j_e() {
       (ev[4] = mco));
   else ((dco = ev[3]), (mco = ev[4]));
   E(dco, mco);
-  let xne = c_(),
-    Rne = vt(),
+  let xne = useReducedMotion(),
+    Rne = useClock(),
     [Qmt, Ymt] = d("none"),
     [Jmt, Xmt] = d(0),
     pco = C(void 0),
@@ -43125,7 +43125,7 @@ function j_e() {
     _R = C(null),
     gco,
     hco;
-  if (ev[5] === p)
+  if (ev[5] === MEMO_CACHE_SENTINEL)
     ((gco = () => () => _R.current?.clear()),
       (hco = []),
       (ev[5] = gco),
@@ -43185,7 +43185,7 @@ function j_e() {
   else ((yco = ev[11]), (bco = ev[12]));
   if ((E(yco, bco), Gj && (Rh === 0 || Rh === void 0) && Jmt > 0)) {
     let zN;
-    if (ev[13] === p)
+    if (ev[13] === MEMO_CACHE_SENTINEL)
       ((zN = r(t, { dimColor: !0, children: [DP, " "] })), (ev[13] = zN));
     else zN = ev[13];
     const zj = Jmt > 99 ? "99+" : Jmt;
@@ -43196,7 +43196,7 @@ function j_e() {
         (ev[15] = QN));
     else QN = ev[15];
     let VQ;
-    if (ev[16] === p)
+    if (ev[16] === MEMO_CACHE_SENTINEL)
       ((VQ = e(t, { dimColor: !0, children: " done" })), (ev[16] = VQ));
     else VQ = ev[16];
     let Qj;
@@ -43207,14 +43207,14 @@ function j_e() {
   }
   if (!Gj || Rh === void 0 || Rh === 0) {
     let zN;
-    if (ev[19] === p)
+    if (ev[19] === MEMO_CACHE_SENTINEL)
       ((zN = r(t, { dimColor: !0, children: [DP, " for agents"] })),
         (ev[19] = zN));
     else zN = ev[19];
     return zN;
   }
   let zN;
-  if (ev[20] === p)
+  if (ev[20] === MEMO_CACHE_SENTINEL)
     ((zN = r(t, { dimColor: !0, children: [DP, " "] })), (ev[20] = zN));
   else zN = ev[20];
   const zj =
@@ -43249,7 +43249,7 @@ function j_e() {
 }
 F();
 var _co = 5000,
-  Tco = m(() => c({ id: s(), content: s() })),
+  Tco = createLazyValue(() => c({ id: s(), content: s() })),
   tpt = 16;
 function opt(w, I) {
   let ne = new Set();
@@ -43375,8 +43375,8 @@ function FAe() {
       U((He) => He.settings?.subagentStatusLine?.command !== void 0) &&
       (!shouldAllowManagedHooksOnly() || NAe() !== void 0),
     pe = U((He) => (me ? LAe(He.tasks).length : 0)),
-    { columns: be } = Se(),
-    xe = vt(),
+    { columns: be } = useTerminalSize(),
+    xe = useClock(),
     Ae = C(!1),
     Oe = C(new Map());
   E(() => {
@@ -43510,7 +43510,7 @@ F();
 import { watch as Ico } from "fs";
 function WAe() {
   let [w, I] = d(null),
-    ne = _e().storageV5;
+    ne = useStorageV5Context().storageV5;
   return (
     E(() => {
       if (!isBgSession() || Pt()) return;
@@ -43733,8 +43733,8 @@ function Bco(w, I, ne, me) {
   return Math.max(pe, be, xe, w ? 0 : Oco);
 }
 function VAe(w, I = !0) {
-  let ne = vt(),
-    { host: me } = Ye(),
+  let ne = useClock(),
+    { host: me } = useSession(),
     pe = Va(),
     [be] = d(
       () =>
@@ -43787,7 +43787,7 @@ function zAe() {
 }
 function Ine() {
   let w = zAe(),
-    { storageV5: I } = _e();
+    { storageV5: I } = useStorageV5Context();
   return (
     E(() => {
       if (!YO() || !C8n()) return;
@@ -43799,7 +43799,7 @@ function Ine() {
   );
 }
 function GQ() {
-  let w = sl();
+  let w = useKeybindingContext();
   return "chat:cycleMode";
 }
 function huo(G7n) {
@@ -43979,7 +43979,7 @@ function One(H7n) {
   }
   if ($7n) {
     let ov;
-    if (tv[26] === p)
+    if (tv[26] === MEMO_CACHE_SENTINEL)
       ((ov = e(
         t,
         { dimColor: !0, children: "Pasting\u2026" },
@@ -43991,7 +43991,7 @@ function One(H7n) {
   }
   if (W7n && !Ene) {
     let ov;
-    if (tv[27] === p)
+    if (tv[27] === MEMO_CACHE_SENTINEL)
       ((ov = e(
         t,
         { dimColor: !0, children: "paste again to expand" },
@@ -44142,15 +44142,15 @@ function qpt({
   levelStepped: jt,
 }) {
   let Tt = gi(),
-    { storageV5: to } = _e(),
-    { columns: zt } = Se(),
+    { storageV5: to } = useStorageV5Context(),
+    { columns: zt } = useTerminalSize(),
     ao = Ae ?? zt,
     co = U((ki) => U8(ki.sessionMemories)),
     go = Loe() && co > 0,
     fo = U((ki) => ki.footerSelection === "memories");
-  BA();
+  useFeatureFlagVersion();
   let ro = H("tengu_copper_thistle", !1),
-    ho = Zr(GQ(), "Chat", "shift+tab"),
+    ho = useKeybindingDisplayText(GQ(), "Chat", "shift+tab"),
     _o = U((ki) => ki.tasks),
     Ho = U((ki) => ki.taskDecorations),
     po = U(
@@ -44167,16 +44167,16 @@ function qpt({
     yn = U((ki) => ki.attentionBudget),
     vo = U((ki) => ki.proactivityLevel),
     zo = JR(),
-    Sr = Qd((ki) => ki.voiceState),
-    Kn = Qd((ki) => ki.voiceWarmingUp),
+    Sr = useVoiceSelector((ki) => ki.voiceState),
+    Kn = useVoiceSelector((ki) => ki.voiceWarmingUp),
     nn = VUn(),
     no = aO().getState,
     jo = uuo?.isCoordinatorMode() === !0,
-    Cn = V(() => G(Object.values(_o), B8), [_o]),
+    Cn = V(() => countMatching(Object.values(_o), B8), [_o]),
     un = qUn(),
-    lr = Zr("chat:cancel", "Chat", "esc").toLowerCase(),
-    Io = Zr("app:toggleTodos", "Global", "ctrl+t"),
-    So = Zr("voice:pushToTalk", "Chat", "space"),
+    lr = useKeybindingDisplayText("chat:cancel", "Chat", "esc").toLowerCase(),
+    Io = useKeybindingDisplayText("app:toggleTodos", "Global", "ctrl+t"),
+    So = useKeybindingDisplayText("voice:pushToTalk", "Chat", "space"),
     [Go] = d(() => (ee().voiceFooterHintSeenCount ?? 0) < duo),
     In = C(!1);
   E(() => {
@@ -44267,7 +44267,7 @@ function qpt({
               dimColor: !0,
               children: [
                 " ",
-                e(D, {
+                e(KeybindingHint, {
                   chord: ho,
                   action: "cycle",
                   parens: !0,
@@ -44283,8 +44283,8 @@ function qpt({
               children: [
                 " ",
                 it
-                  ? e(D, { chord: "enter", action: "view tasks", parens: !0 })
-                  : e(D, { chord: "down", action: "manage", parens: !0 }),
+                  ? e(KeybindingHint, { chord: "enter", action: "view tasks", parens: !0 })
+                  : e(KeybindingHint, { chord: "down", action: "manage", parens: !0 }),
               ],
             })
           : null,
@@ -44294,13 +44294,13 @@ function qpt({
       wi = e(t, {
         dimColor: !0,
         children: it
-          ? e(D, { chord: "enter", action: "view tasks" })
-          : e(D, { chord: "down", action: "manage" }),
+          ? e(KeybindingHint, { chord: "enter", action: "view tasks" })
+          : e(KeybindingHint, { chord: "down", action: "manage" }),
       });
     else if (Is === "memories")
       wi = e(t, {
         dimColor: !0,
-        children: e(D, { chord: "enter", action: "view memories" }),
+        children: e(KeybindingHint, { chord: "enter", action: "view memories" }),
       });
     else if (Is === "interrupt" || Is === "interrupt_agents")
       wi = r(N, {
@@ -44308,7 +44308,7 @@ function qpt({
           r(t, {
             dimColor: !0,
             children: [
-              e(D, {
+              e(KeybindingHint, {
                 chord: lr,
                 action: Fr ? "return to team lead" : "interrupt",
                 format: { keyCase: "lower" },
@@ -44322,7 +44322,7 @@ function qpt({
     else if (Is === "ctrl_t")
       wi = e(t, {
         dimColor: !0,
-        children: e(D, { chord: Io, action: Pa, format: { keyCase: "lower" } }),
+        children: e(KeybindingHint, { chord: Io, action: Pa, format: { keyCase: "lower" } }),
       });
     else if (Is === "agents") wi = e(j_e, {});
     else if (Is === "voice")
@@ -44449,7 +44449,7 @@ function qpt({
         t,
         {
           dimColor: !0,
-          children: e(D, {
+          children: e(KeybindingHint, {
             chord: lr,
             action: "return to team lead",
             format: { keyCase: "lower" },
@@ -44511,9 +44511,9 @@ function qpt({
         t,
         {
           dimColor: !0,
-          children: r(ue, {
+          children: r(DotSeparatedList, {
             children: [
-              !wr && e(D, { chord: "ctrl+c", action: "copy" }),
+              !wr && e(KeybindingHint, { chord: "ctrl+c", action: "copy" }),
               Zd() &&
                 (yi
                   ? e(t, {
@@ -44554,8 +44554,8 @@ function qpt({
         {
           dimColor: !0,
           children: it
-            ? e(D, { chord: "enter", action: "view tasks" })
-            : e(D, { chord: "down", action: "manage" }),
+            ? e(KeybindingHint, { chord: "enter", action: "view tasks" })
+            : e(KeybindingHint, { chord: "down", action: "manage" }),
         },
         "manage-tasks",
       ),
@@ -44566,7 +44566,7 @@ function qpt({
         t,
         {
           dimColor: !0,
-          children: e(D, { chord: "enter", action: "view memories" }),
+          children: e(KeybindingHint, { chord: "enter", action: "view memories" }),
         },
         "view-memories",
       ),
@@ -44586,7 +44586,7 @@ function qpt({
                   dimColor: !0,
                   children: [
                     " ",
-                    e(D, {
+                    e(KeybindingHint, {
                       chord: ho,
                       action: "cycle",
                       parens: !0,
@@ -44688,7 +44688,7 @@ function qpt({
         r(o, {
           flexShrink: 0,
           children: [
-            e(ue, { children: Bi }),
+            e(DotSeparatedList, { children: Bi }),
             (Vr || go || ss.length > 0) &&
               e(t, { dimColor: !0, children: " \xB7 " }),
           ],
@@ -44710,7 +44710,7 @@ function qpt({
           ],
         }),
       ss.length > 0 &&
-        e(t, { wrap: "truncate", children: e(ue, { children: ss }) }),
+        e(t, { wrap: "truncate", children: e(DotSeparatedList, { children: ss }) }),
     ],
   });
 }
@@ -44720,7 +44720,7 @@ var Gpt = Yl(function (K7n) {
     [Q7n, tuo] = d(!1);
   const jpt = z7n || Q7n;
   let ouo;
-  if (Nne[0] === p)
+  if (Nne[0] === MEMO_CACHE_SENTINEL)
     ((ouo = r(t, { "aria-hidden": !0, children: [Itt, " "] })), (Nne[0] = ouo));
   else ouo = Nne[0];
   let nuo;
@@ -44742,7 +44742,7 @@ var Gpt = Yl(function (K7n) {
   if (Nne[4] !== eIe) ((nIe = () => eIe()), (Nne[4] = eIe), (Nne[5] = nIe));
   else nIe = Nne[5];
   let ruo, iuo;
-  if (Nne[6] === p)
+  if (Nne[6] === MEMO_CACHE_SENTINEL)
     ((ruo = () => tuo(!0)),
       (iuo = () => tuo(!1)),
       (Nne[6] = ruo),
@@ -44772,7 +44772,7 @@ function guo(w, I, ne, me, pe) {
             t,
             {
               dimColor: !0,
-              children: e(D, {
+              children: e(KeybindingHint, {
                 chord: I,
                 action: "interrupt",
                 format: { keyCase: "lower" },
@@ -44788,7 +44788,7 @@ function guo(w, I, ne, me, pe) {
             t,
             {
               dimColor: !0,
-              children: e(D, {
+              children: e(KeybindingHint, {
                 chord: ne,
                 action: be,
                 format: { keyCase: "lower" },
@@ -44863,7 +44863,7 @@ function mIe(Y7n) {
 function pIe() {
   let J7n = _(1),
     luo;
-  if (J7n[0] === p)
+  if (J7n[0] === MEMO_CACHE_SENTINEL)
     ((luo = e(t, { dimColor: !0, children: "/tasks to see subagents" })),
       (J7n[0] = luo));
   else luo = J7n[0];
@@ -44872,18 +44872,18 @@ function pIe() {
 function fIe() {
   let X7n = _(1),
     cuo;
-  if (X7n[0] === p)
+  if (X7n[0] === MEMO_CACHE_SENTINEL)
     ((cuo = e(t, { dimColor: !0, children: "/diff to hide diff" })),
       (X7n[0] = cuo));
   else cuo = X7n[0];
   return cuo;
 }
 var nY = {};
-au(nY, { PromptHintPart: () => Hne, default: () => nY });
+defineExportGetters(nY, { PromptHintPart: () => Hne, default: () => nY });
 F();
 var Fne = 250;
 var sL = {};
-au(sL, { clean: () => Zj, default: () => sL, read: () => gIe });
+defineExportGetters(sL, { clean: () => Zj, default: () => sL, read: () => gIe });
 var Zj = (w) => w.replace(/\s+/g, " ").trim().slice(0, BW);
 function gIe(w, I, ne) {
   let me = Zj(Rtn(w)),
@@ -44898,7 +44898,7 @@ function gIe(w, I, ne) {
   return { ...ne, hint: Ae };
 }
 var XQ = {};
-au(XQ, { PromptHintSite: () => Une, default: () => XQ });
+defineExportGetters(XQ, { PromptHintSite: () => Une, default: () => XQ });
 F();
 function Une(TZn) {
   let hIe = _(13),
@@ -45088,20 +45088,20 @@ var Df = { keyCase: "lower", modSep: " + " };
 function pHe(Mer) {
   let Su = _(90),
     { dimColor: Ha, fixedWidth: Buo, gap: eft, paddingX: tft } = Mer;
-  const oft = Zr("app:toggleTranscript", "Global", "ctrl+o");
+  const oft = useKeybindingDisplayText("app:toggleTranscript", "Global", "ctrl+o");
   let Uuo;
   if (Su[0] !== oft) ((Uuo = qne(oft)), (Su[0] = oft), (Su[1] = Uuo));
   else Uuo = Su[1];
   let nft = Uuo,
-    rft = dc("app:toggleTodos", "Global", "ctrl+t"),
-    sft = dc("chat:undo", "Chat", "ctrl+_"),
-    aft = dc("chat:stash", "Chat", "ctrl+s"),
-    lft = dc(GQ(), "Chat", "shift+tab"),
-    cft = dc("chat:modelPicker", "Chat", "alt+p"),
-    uft = dc("chat:fastMode", "Chat", "alt+o"),
-    dft = dc("chat:externalEditor", "Chat", "ctrl+g");
-  qne(Zr("app:toggleTerminal", "Global", "meta+j"));
-  let mft = dc("chat:imagePaste", "Chat", "ctrl+v");
+    rft = useKeybindingChordText("app:toggleTodos", "Global", "ctrl+t"),
+    sft = useKeybindingChordText("chat:undo", "Chat", "ctrl+_"),
+    aft = useKeybindingChordText("chat:stash", "Chat", "ctrl+s"),
+    lft = useKeybindingChordText(GQ(), "Chat", "shift+tab"),
+    cft = useKeybindingChordText("chat:modelPicker", "Chat", "alt+p"),
+    uft = useKeybindingChordText("chat:fastMode", "Chat", "alt+o"),
+    dft = useKeybindingChordText("chat:externalEditor", "Chat", "ctrl+g");
+  qne(useKeybindingDisplayText("app:toggleTerminal", "Global", "meta+j"));
+  let mft = useKeybindingChordText("chat:imagePaste", "Chat", "ctrl+v");
   Os(fR) ?? !1;
   const pft = Buo ? 24 : void 0;
   let AIe;
@@ -45170,7 +45170,7 @@ function pHe(Mer) {
   else OIe = Su[17];
   let FIe;
   if (Su[18] !== lft)
-    ((FIe = e(D, { chord: lft, action: "auto-accept edits", format: Df })),
+    ((FIe = e(KeybindingHint, { chord: lft, action: "auto-accept edits", format: Df })),
       (Su[18] = lft),
       (Su[19] = FIe));
   else FIe = Su[19];
@@ -45192,7 +45192,7 @@ function pHe(Mer) {
   else UIe = Su[25];
   let jIe;
   if (Su[26] !== rft)
-    ((jIe = e(D, { chord: rft, action: "toggle tasks", format: Df })),
+    ((jIe = e(KeybindingHint, { chord: rft, action: "toggle tasks", format: Df })),
       (Su[26] = rft),
       (Su[27] = jIe));
   else jIe = Su[27];
@@ -45204,7 +45204,7 @@ function pHe(Mer) {
       (Su[30] = $Ie));
   else $Ie = Su[30];
   let Huo;
-  if (Su[31] === p) ((Huo = WQt()), (Su[31] = Huo));
+  if (Su[31] === MEMO_CACHE_SENTINEL) ((Huo = WQt()), (Su[31] = Huo));
   else Huo = Su[31];
   let WIe;
   if (Su[32] !== Ha)
@@ -45236,7 +45236,7 @@ function pHe(Mer) {
   else qIe = Su[40];
   let VIe;
   if (Su[41] !== sft)
-    ((VIe = e(D, { chord: sft, action: "undo", format: Df })),
+    ((VIe = e(KeybindingHint, { chord: sft, action: "undo", format: Df })),
       (Su[41] = sft),
       (Su[42] = VIe));
   else VIe = Su[42];
@@ -45254,7 +45254,7 @@ function pHe(Mer) {
       e(o, {
         children: e(t, {
           dimColor: Ha,
-          children: e(D, { chord: "ctrl+z", action: "suspend", format: Df }),
+          children: e(KeybindingHint, { chord: "ctrl+z", action: "suspend", format: Df }),
         }),
       })),
       (Su[46] = Ha),
@@ -45262,7 +45262,7 @@ function pHe(Mer) {
   else KIe = Su[47];
   let zIe;
   if (Su[48] !== mft)
-    ((zIe = e(D, { chord: mft, action: "paste images", format: Df })),
+    ((zIe = e(KeybindingHint, { chord: mft, action: "paste images", format: Df })),
       (Su[48] = mft),
       (Su[49] = zIe));
   else zIe = Su[49];
@@ -45275,7 +45275,7 @@ function pHe(Mer) {
   else QIe = Su[52];
   let YIe;
   if (Su[53] !== cft)
-    ((YIe = e(D, { chord: cft, action: "switch model", format: Df })),
+    ((YIe = e(KeybindingHint, { chord: cft, action: "switch model", format: Df })),
       (Su[53] = cft),
       (Su[54] = YIe));
   else YIe = Su[54];
@@ -45294,7 +45294,7 @@ function pHe(Mer) {
       e(o, {
         children: e(t, {
           dimColor: Ha,
-          children: e(D, {
+          children: e(KeybindingHint, {
             chord: uft,
             action: "toggle fast mode",
             format: Df,
@@ -45307,7 +45307,7 @@ function pHe(Mer) {
   else XIe = Su[60];
   let ZIe;
   if (Su[61] !== aft)
-    ((ZIe = e(D, { chord: aft, action: "stash prompt", format: Df })),
+    ((ZIe = e(KeybindingHint, { chord: aft, action: "stash prompt", format: Df })),
       (Su[61] = aft),
       (Su[62] = ZIe));
   else ZIe = Su[62];
@@ -45320,7 +45320,7 @@ function pHe(Mer) {
   else eEe = Su[65];
   let oEe;
   if (Su[66] !== dft)
-    ((oEe = e(D, { chord: dft, action: "edit in $EDITOR", format: Df })),
+    ((oEe = e(KeybindingHint, { chord: dft, action: "edit in $EDITOR", format: Df })),
       (Su[66] = dft),
       (Su[67] = oEe));
   else oEe = Su[67];
@@ -45466,7 +45466,7 @@ function zne(otr) {
   else Wuo = _g[4];
   let aY = Wuo,
     Sft = U(ido),
-    { columns: kft } = Se(),
+    { columns: kft } = useTerminalSize(),
     quo;
   if (_g[5] !== Sft || _g[6] !== kft)
     ((quo = Sft && kft >= cY && isBridgeEnabled()),
@@ -45476,9 +45476,9 @@ function zne(otr) {
   else quo = _g[7];
   let vft = quo,
     wft = vfe("hipaa");
-  BA();
+  useFeatureFlagVersion();
   let Vuo;
-  if (_g[8] === p) ((Vuo = H("tengu_copper_thistle", !1)), (_g[8] = Vuo));
+  if (_g[8] === MEMO_CACHE_SENTINEL) ((Vuo = H("tengu_copper_thistle", !1)), (_g[8] = Vuo));
   else Vuo = _g[8];
   let ntr = Vuo,
     cy = U(sdo),
@@ -45501,7 +45501,7 @@ function zne(otr) {
     sb = [];
     if (wft) {
       let Id;
-      if (_g[20] === p)
+      if (_g[20] === MEMO_CACHE_SENTINEL)
         ((Id = e(
           t,
           { color: "permission", wrap: "truncate", children: D6("hipaa") },
@@ -45543,7 +45543,7 @@ function zne(otr) {
     }
     if (yft) {
       let Id;
-      if (_g[31] === p)
+      if (_g[31] === MEMO_CACHE_SENTINEL)
         ((Id = e(
           t,
           { color: "warning", wrap: "truncate", children: "Debug" },
@@ -45630,7 +45630,7 @@ function zne(otr) {
   }
   let sC;
   if (_g[46] !== sb)
-    ((sC = e(ue, { children: sb })), (_g[46] = sb), (_g[47] = sC));
+    ((sC = e(DotSeparatedList, { children: sb })), (_g[46] = sb), (_g[47] = sC));
   else sC = _g[47];
   let Kne;
   if (_g[48] !== uEe || _g[49] !== sC)
@@ -45674,7 +45674,7 @@ var PEe = Yl(function (dtr) {
     ptr = U(udo),
     ftr = U(ddo),
     gtr = U(mdo),
-    { storageV5: Juo } = _e(),
+    { storageV5: Juo } = useStorageV5Context(),
     pEe = U(pdo),
     [htr, Xuo] = d(!1),
     gEe = oSe({
@@ -45705,7 +45705,7 @@ var PEe = Yl(function (dtr) {
       (lY[4] = CEe));
   else CEe = lY[4];
   let edo, tdo;
-  if (lY[5] === p)
+  if (lY[5] === MEMO_CACHE_SENTINEL)
     ((edo = () => Xuo(!0)),
       (tdo = () => Xuo(!1)),
       (lY[5] = edo),
@@ -45718,7 +45718,7 @@ var PEe = Yl(function (dtr) {
       mEe &&
       r(t, {
         dimColor: !0,
-        children: [" \xB7 ", e(D, { chord: "enter", action: "view" })],
+        children: [" \xB7 ", e(KeybindingHint, { chord: "enter", action: "view" })],
       })),
       (lY[7] = mEe),
       (lY[8] = _Ee));
@@ -45773,7 +45773,7 @@ function mY({ turn: w, transcript: I }) {
   let ne = w.stream.previewStore,
     me = At(ne.subscribe, () => (ne.getFlags() & Hme) !== 0),
     pe = re((be) => Tut(be, me), [me]);
-  return Me(I, pe);
+  return useStoreSelector(I, pe);
 }
 function Ado(por) {
   return por.debug;
@@ -45844,10 +45844,10 @@ function Ugt(oor) {
       suggestionsEmptyMessage: p$,
       maxColumnWidth: yY,
       hoveredSuggestionId: Zft,
-    } = Me(nor),
-    tgt = Me(s$, Ado),
-    ogt = Me(s$, Ido),
-    ngt = Me(s$, Edo),
+    } = useStoreSelector(nor),
+    tgt = useStoreSelector(s$, Ado),
+    ogt = useStoreSelector(s$, Ido),
+    ngt = useStoreSelector(s$, Edo),
     bdo;
   if (Ph[0] !== s$)
     ((bdo = () => s$.openSessionMemories("click")),
@@ -45855,8 +45855,8 @@ function Ugt(oor) {
       (Ph[1] = bdo));
   else bdo = Ph[1];
   let sor = bdo,
-    rgt = Me(Qne, Ddo),
-    igt = Me(Qne, Ndo),
+    rgt = useStoreSelector(Qne, Ddo),
+    igt = useStoreSelector(Qne, Ndo),
     Sdo;
   if (Ph[2] !== gI || Ph[3] !== Qne)
     ((Sdo = { turn: Qne, transcript: gI }),
@@ -45866,13 +45866,13 @@ function Ugt(oor) {
   else Sdo = Ph[4];
   let sgt = mY(Sdo),
     lgt = CR(MEe.initialMcpClients, U(Ldo)),
-    aor = Ai(),
-    { columns: IEe } = Se(),
+    aor = useSettings(),
+    { columns: IEe } = useTerminalSize(),
     AR = gi(),
     kdo = tn(),
     cgt = C(null),
     vdo;
-  if (Ph[5] === p)
+  if (Ph[5] === MEMO_CACHE_SENTINEL)
     ((vdo = () => (cgt.current === null ? 0 : Od(cgt.current).width)),
       (Ph[5] = vdo));
   else vdo = Ph[5];
@@ -45880,7 +45880,7 @@ function Ugt(oor) {
     uor = U(Odo);
   const ugt = AR && uor && "focus";
   let wdo;
-  if (Ph[6] === p) ((wdo = AS() && "memory paused"), (Ph[6] = wdo));
+  if (Ph[6] === MEMO_CACHE_SENTINEL) ((wdo = AS() && "memory paused"), (Ph[6] = wdo));
   else wdo = Ph[6];
   let Cdo;
   if (Ph[7] !== ugt)
@@ -45957,7 +45957,7 @@ function Ugt(oor) {
   }
   if (ror) {
     let hI;
-    if (Ph[26] === p)
+    if (Ph[26] === MEMO_CACHE_SENTINEL)
       ((hI = e(pHe, { dimColor: !0, fixedWidth: !0, paddingX: 2 })),
         (Ph[26] = hI));
     else hI = Ph[26];
@@ -46231,7 +46231,7 @@ function Jgt() {
   if (!zr()) return;
   let w = getTeammateColor();
   if (!w) return;
-  if (ef.includes(w)) return KE[w];
+  if (AGENT_COLOR_NAMES.includes(w)) return AGENT_COLOR_THEME_KEYS[w];
   return;
 }
 function kY(Nor) {
@@ -46265,12 +46265,12 @@ function tre(Oor) {
       viewingAgentColor: jdo,
     } = Oor,
     ere = tn();
-  BA();
+  useFeatureFlagVersion();
   let $do;
-  if (Kgt[0] === p) (($do = Jgt()), (Kgt[0] = $do));
+  if (Kgt[0] === MEMO_CACHE_SENTINEL) (($do = Jgt()), (Kgt[0] = $do));
   else $do = Kgt[0];
   let For = $do,
-    Qgt = jdo ? KE[jdo] : void 0;
+    Qgt = jdo ? AGENT_COLOR_THEME_KEYS[jdo] : void 0;
   const Ygt = !ere || (!tDe && XEe === "bash");
   let oDe;
   if (
@@ -46733,16 +46733,16 @@ function rmo(w, I) {
   return -1;
 }
 function uDe(w, I, ne) {
-  let { storageV5: me } = _e(),
-    pe = nmo.of(Ye().host),
-    be = Me(w, sR),
+  let { storageV5: me } = useStorageV5Context(),
+    pe = nmo.of(useSession().host),
+    be = useStoreSelector(w, sR),
     [xe, Ae] = d(0),
     [Oe, He] = d(null),
     Ke = C(0),
     Je = C(!1),
     Qe = C(null),
     it = C(!1),
-    { addNotification: at, removeNotification: Zt } = Ir(),
+    { addNotification: at, removeNotification: Zt } = useNotificationQueue(),
     Ct = C([]),
     eo = C(void 0),
     jt = C(0),
@@ -46786,7 +46786,7 @@ function uDe(w, I, ne) {
         kind: "contextual",
         jsx: e(t, {
           dimColor: !0,
-          children: e(je, {
+          children: e(ActionKeybindingHint, {
             action: "history:search",
             context: "Global",
             fallback: "ctrl+r",
@@ -46978,7 +46978,7 @@ function uDe(w, I, ne) {
 }
 F();
 function dDe({ maxBufferSize: w, debounceMs: I }) {
-  let ne = vt(),
+  let ne = useClock(),
     me = C({ entries: [], index: -1 }),
     [pe, be] = d(me.current),
     xe = C(0),
@@ -47616,7 +47616,7 @@ function fre(w) {
       preserveTrailingWhitespace: pe,
       highlightPastedText: w.highlightPastedText,
       invert: ne ? yQ : (Qe) => Qe,
-      themeText: ut("text", I),
+      themeText: getThemeColor("text", I),
       columns: w.columns,
       maxVisibleLines: w.maxVisibleLines,
       onImagePaste: w.onImagePaste,
@@ -47682,7 +47682,7 @@ function IR(Prr) {
     }
     let xY;
     if (_Y[0] !== Nf.text || _Y[1] !== wY)
-      ((xY = Nf.text && e(Gc, { color: wY, padded: !0, children: Nf.text })),
+      ((xY = Nf.text && e(BackgroundText, { color: wY, padded: !0, children: Nf.text })),
         (_Y[0] = Nf.text),
         (_Y[1] = wY),
         (_Y[2] = xY));
@@ -47728,7 +47728,7 @@ function IR(Prr) {
           children: [
             pT ? ` ${pT} ` : null,
             Nf.text
-              ? e(Gc, { color: wY, padded: !0, children: Nf.text })
+              ? e(BackgroundText, { color: wY, padded: !0, children: Nf.text })
               : null,
             wre,
           ],
@@ -47813,8 +47813,8 @@ function Rht(w, I) {
   );
 }
 function bDe(w) {
-  let I = Me(w, sR),
-    ne = Me(w, cz),
+  let I = useStoreSelector(w, sR),
+    ne = useStoreSelector(w, cz),
     [me, pe] = d(!1);
   (E(() => {
     if (me) return;
@@ -47852,7 +47852,7 @@ function kI(w) {
       Zt = l4e(),
       Ct = xun()?.isNative ?? !1;
     if (be === !1 && !Zt && !Ct)
-      return { text: `View teammates: \`tmux -L ${Tet()} a\``, bgColor: at };
+      return { text: `View teammates: \`tmux -L ${getSwarmTmuxSocketName()} a\``, bgColor: at };
     if ((be === !0 || Zt || Ct) && it)
       return { text: `@${it.identity.agentName}`, bgColor: at };
   }
@@ -47867,7 +47867,7 @@ function kI(w) {
       }
     return {
       text: at ? `@${at}` : it.description,
-      bgColor: doe(it.agentType) ?? "cyan_FOR_SUBAGENTS_ONLY",
+      bgColor: getAgentTypeColorThemeKey(it.agentType) ?? "cyan_FOR_SUBAGENTS_ONLY",
     };
   }
   let Ke = me
@@ -47879,7 +47879,7 @@ function kI(w) {
     return {
       text: Je || me || "",
       bgColor: _re(
-        uoe({ userOverride: Qe, agentDefinitionColor: Ke?.color }),
+        resolveAgentColorName({ userOverride: Qe, agentDefinitionColor: Ke?.color }),
         "promptBorder",
       ),
     };
@@ -47887,7 +47887,7 @@ function kI(w) {
   return null;
 }
 function _re(w, I = "cyan_FOR_SUBAGENTS_ONLY") {
-  return w && ef.includes(w) ? KE[w] : I;
+  return w && AGENT_COLOR_NAMES.includes(w) ? AGENT_COLOR_THEME_KEYS[w] : I;
 }
 function M$(w, I) {
   if (I) return {};
@@ -47903,14 +47903,14 @@ function jmo(w) {
   if (w === "bash") return "bashBorder";
   if (isInProcessTeammate()) return "promptBorder";
   let I = getTeammateColor();
-  return LH(I) ? KE[I] : "promptBorder";
+  return isAgentColorName(I) ? AGENT_COLOR_THEME_KEYS[I] : "promptBorder";
 }
 function A$(
   w,
   { draft: I, vimEnabled: ne, vimMode: me, helpOpen: pe, setHelpOpen: be },
 ) {
   if (w.name === "escape" && ne && me !== "NORMAL") return;
-  let xe = kh() && w.name === "escape";
+  let xe = isKbCohesionFixesEnabled() && w.name === "escape";
   if (
     (I.cursorOffset === 0 || xe) &&
     (w.name === "escape" || wDe(w) || (w.ctrl && w.key === "u"))
@@ -48052,34 +48052,34 @@ function _bt(Wsr) {
       onExpandPasteHintChange: Pre,
       onExternalEditorActiveChange: Mre,
     } = Wsr,
-    Uc = Me(bi, sR),
-    dy = Me(bi, lz),
-    N$ = Me(bi, PA),
-    ADe = Me(bi, cz),
-    FY = Me(bi, Xve),
+    Uc = useStoreSelector(bi, sR),
+    dy = useStoreSelector(bi, lz),
+    N$ = useStoreSelector(bi, PA),
+    ADe = useStoreSelector(bi, cz),
+    FY = useStoreSelector(bi, Xve),
     {
       setValue: Ed,
       setCursorOffset: Ac,
       setMode: DS,
       setPastedContents: Lf,
     } = bi,
-    UY = Me(xre, Ngo),
+    UY = useStoreSelector(xre, Ngo),
     Ysr = CR(xre.initialMcpClients, U(Lgo)),
     $ht = U(Ogo),
     IDe = U(Fgo),
     Wht = U(Bgo),
     um = Yn(),
     aC = It(),
-    Tg = Ye(),
+    Tg = useSession(),
     hT = Qy(),
-    { storageV5: qht } = _e(),
-    NS = qc(),
+    { storageV5: qht } = useStorageV5Context(),
+    NS = useCommandQueue(),
     DR = ep(),
-    Vht = qa(),
-    Jsr = vt(),
-    { columns: L$, rows: Vmo } = Se(),
+    Vht = useMainLoopModel(),
+    Jsr = useClock(),
+    { columns: L$, rows: Vmo } = useTerminalSize(),
     NR = tn(),
-    { addNotification: ku, removeNotification: Lm } = Ir(),
+    { addNotification: ku, removeNotification: Lm } = useNotificationQueue(),
     lC = QU(),
     lp = TR(),
     Ght = C(!1),
@@ -48180,7 +48180,7 @@ function _bt(Wsr) {
       if (tpo === null) {
         return;
       }
-      let Xht = G(DR, th);
+      let Xht = countMatching(DR, th);
       if (Xht === 0) Gd(null);
       else if (tpo > Xht - 1) Gd(Xht - 1);
     }),
@@ -48228,7 +48228,7 @@ function _bt(Wsr) {
   let eyt = spo,
     apo,
     lpo;
-  if (Ts[43] === p)
+  if (Ts[43] === MEMO_CACHE_SENTINEL)
     ((apo = () => () => {
       O$.current?.();
     }),
@@ -48295,7 +48295,7 @@ function _bt(Wsr) {
       (Ts[64] = gpo));
   else ((fpo = Ts[63]), (gpo = Ts[64]));
   E(fpo, gpo);
-  let PI = Zr("chat:workflowKeywordToggle", "Chat", "alt+w"),
+  let PI = useKeybindingDisplayText("chat:workflowKeywordToggle", "Chat", "alt+w"),
     ypo;
   if (Ts[65] !== Cu) ((ypo = findBtwTriggerPositions(Cu)), (Ts[65] = Cu), (Ts[66] = ypo));
   else ypo = Ts[66];
@@ -48312,7 +48312,7 @@ function _bt(Wsr) {
   else bpo = Ts[69];
   let cyt = bpo,
     kpo;
-  if (Ts[70] === p) ((kpo = []), (Ts[70] = kpo));
+  if (Ts[70] === MEMO_CACHE_SENTINEL) ((kpo = []), (Ts[70] = kpo));
   else kpo = Ts[70];
   let tar = kpo,
     vpo;
@@ -48338,14 +48338,14 @@ function _bt(Wsr) {
     bb0: {
       if (!zr()) {
         let kT;
-        if (Ts[82] === p) ((kT = []), (Ts[82] = kT));
+        if (Ts[82] === MEMO_CACHE_SENTINEL) ((kT = []), (Ts[82] = kT));
         else kT = Ts[82];
         $Y = kT;
         break bb0;
       }
       if (!IDe?.teammates) {
         let kT;
-        if (Ts[83] === p) ((kT = []), (Ts[83] = kT));
+        if (Ts[83] === MEMO_CACHE_SENTINEL) ((kT = []), (Ts[83] = kT));
         else kT = Ts[83];
         $Y = kT;
         break bb0;
@@ -48357,7 +48357,7 @@ function _bt(Wsr) {
         break bb0;
       }
       let kT;
-      if (Ts[84] === p) ((kT = /(^|\s)@([\w-]+)/g), (Ts[84] = kT));
+      if (Ts[84] === MEMO_CACHE_SENTINEL) ((kT = /(^|\s)@([\w-]+)/g), (Ts[84] = kT));
       else kT = Ts[84];
       let rar = kT;
       let iar = Object.values(_po);
@@ -48368,8 +48368,8 @@ function _bt(Wsr) {
         let aar = Are[0].trimStart();
         let lar = Are[2];
         let xpo = iar.find((car) => car.name === lar);
-        if (LH(xpo?.color)) {
-          let Rpo = KE[xpo.color];
+        if (isAgentColorName(xpo?.color)) {
+          let Rpo = AGENT_COLOR_THEME_KEYS[xpo.color];
           if (Rpo)
             dyt.push({ start: Tpo, end: Tpo + aar.length, themeColor: Rpo });
         }
@@ -48666,7 +48666,7 @@ function _bt(Wsr) {
       }
       let Qpo = !uC();
       if ((H$(Qpo), Qpo))
-        (i("tengu_workflow_keyword_dismissed", {}),
+        (logEvent("tengu_workflow_keyword_dismissed", {}),
           ku({
             key: "workflow-keyword-ignored",
             text: `Ultracode keyword ignored for this prompt${PI ? ` \xB7 ${PI} to undo` : ""}`,
@@ -48674,7 +48674,7 @@ function _bt(Wsr) {
             timeoutMs: 5000,
           }));
       else
-        (i("tengu_workflow_keyword_restored", {}),
+        (logEvent("tengu_workflow_keyword_restored", {}),
           Lm("workflow-keyword-ignored"));
     }),
       (Ts[133] = ku),
@@ -48724,7 +48724,7 @@ function _bt(Wsr) {
               children: [
                 "Tip:",
                 " ",
-                e(je, {
+                e(ActionKeybindingHint, {
                   action: "chat:stash",
                   context: "Chat",
                   fallback: "ctrl+s",
@@ -48746,7 +48746,7 @@ function _bt(Wsr) {
   else ((Zpo = Ts[144]), (efo = Ts[145]));
   E(Zpo, efo);
   let ofo;
-  if (Ts[146] === p)
+  if (Ts[146] === MEMO_CACHE_SENTINEL)
     ((ofo = { maxBufferSize: 50, debounceMs: 1000 }), (Ts[146] = ofo));
   else ofo = Ts[146];
   let { pushToBuffer: Tyt, undo: VY, canUndo: GY, clearBuffer: jDe } = dDe(ofo),
@@ -48970,9 +48970,9 @@ function _bt(Wsr) {
       if (bfo !== -1 && bi.cursorOffset > bfo) {
         return;
       }
-      if (kh()) {
+      if (isKbCohesionFixesEnabled()) {
         let ZDe = um.getState().queueEditIndex;
-        let Sfo = G(NS.getCommandQueueSnapshot(), th);
+        let Sfo = countMatching(NS.getCommandQueueSnapshot(), th);
         if (ZDe === null && Sfo > 0) {
           Gd(Sfo - 1);
           return;
@@ -49022,10 +49022,10 @@ function _bt(Wsr) {
       if (vfo !== -1 && bi.cursorOffset <= vfo) {
         return;
       }
-      if (kh()) {
+      if (isKbCohesionFixesEnabled()) {
         let jyt = um.getState().queueEditIndex;
         if (jyt !== null) {
-          let Aar = G(NS.getCommandQueueSnapshot(), th);
+          let Aar = countMatching(NS.getCommandQueueSnapshot(), th);
           if (jyt < Aar - 1) Gd(jyt + 1);
           else Gd(null);
           return;
@@ -49125,7 +49125,7 @@ function _bt(Wsr) {
         if (lp && lC !== "NORMAL") {
           return;
         }
-        if (!kh()) {
+        if (!isKbCohesionFixesEnabled()) {
           if (
             (DR.some(th) || NS.getCommandQueueSnapshot().some(th)) &&
             (GDe() || !zY())
@@ -49249,7 +49249,7 @@ function _bt(Wsr) {
       } else mL(II);
     },
     jfo;
-  if (Ts[233] === p)
+  if (Ts[233] === MEMO_CACHE_SENTINEL)
     ((jfo = (jre, War) => {
       if (!jY.current) {
         return jre;
@@ -49307,7 +49307,7 @@ function _bt(Wsr) {
         sourcePath: Gfo,
         continuesGesture: tlr,
       } = Yar ?? {};
-      (i("tengu_paste_image", {}),
+      (logEvent("tengu_paste_image", {}),
         logFeatureOk(Gfo ? "input_image_drag" : "input_image_paste"),
         DS("prompt"));
       let o0e = rC(bi.value, bi.pastedContents);
@@ -49321,7 +49321,7 @@ function _bt(Wsr) {
         dimensions: elr,
         sourcePath: Gfo,
       };
-      let Kfo = Y$(aC, "storedImagePaths");
+      let Kfo = createFieldUpdater(aC, "storedImagePaths");
       (D7(Jyt, Kfo), L7(Jyt, Kfo), Lf((olr) => ({ ...olr, [o0e]: Jyt })));
       let nlr = jY.current ? " " : "";
       (mL(nlr + p4e(o0e), { continuesGesture: tlr }), (jY.current = !0));
@@ -49335,11 +49335,11 @@ function _bt(Wsr) {
       (Ts[245] = Vfo));
   else Vfo = Ts[245];
   let QY = Vfo,
-    Dar = Y0(Vgo, RDe.openMessageSelector),
+    Dar = useDoublePressConfirm(Vgo, RDe.openMessageSelector),
     zfo;
   if (Ts[246] !== bi.cursorOffset || Ts[247] !== bi.value || Ts[248] !== mL)
     ((zfo = (rlr) => {
-      (i("tengu_ext_at_mentioned", {}),
+      (logEvent("tengu_ext_at_mentioned", {}),
         mL(Q6e(rlr, bi.value[bi.cursorOffset - 1])));
     }),
       (Ts[246] = bi.cursorOffset),
@@ -49404,7 +49404,7 @@ function _bt(Wsr) {
     Ts[270] !== xDe
   )
     ((Jfo = async () => {
-      (i("tengu_external_editor_used", {}), Mre(!0));
+      (logEvent("tengu_external_editor_used", {}), Mre(!0));
       let obt = bi.value;
       let EI;
       try {
@@ -49415,7 +49415,7 @@ function _bt(Wsr) {
 `);
           if (Zfo) Xfo = Zfo;
         }
-        EI = await Yx(obt, bi.pastedContents, Xfo);
+        EI = await editTextInExternalEditor(obt, bi.pastedContents, Xfo);
       } catch (i0e) {
         let nbt = i0e;
         if (nbt instanceof Error) logError(nbt);
@@ -49572,7 +49572,7 @@ function _bt(Wsr) {
       (Ts[292] = abt),
       (Ts[293] = rgo));
   else rgo = Ts[293];
-  Ze(mlr, rgo);
+  useKeybindings(mlr, rgo);
   const lbt = !IY && TI.length > 0;
   let igo;
   if (Ts[294] !== lbt)
@@ -49580,7 +49580,7 @@ function _bt(Wsr) {
       (Ts[294] = lbt),
       (Ts[295] = igo));
   else igo = Ts[295];
-  Ne("chat:workflowKeywordToggle", Ypo, igo);
+  useKeybinding("chat:workflowKeywordToggle", Ypo, igo);
   let DI = L$ - wbt,
     NI = gi() ? Math.max(vbt, Math.floor(Vmo / 2) - kbt) : void 0,
     sgo;
@@ -50040,14 +50040,14 @@ function v0e() {
   E(() => {
     if (!ne || !w) return;
     if (I !== "iTerm.app" && I !== "Apple_Terminal") return;
-    let me = ws().get(process.stdout);
+    let me = getInkInstanceRegistry().get(process.stdout);
     if (!me) return;
     let pe = new AbortController();
     return (
       (async () => {
         while (!pe.signal.aborted)
           (await me.probeExternalClear(w),
-            await Z(200, pe.signal, { unref: !0 }));
+            await sleep(200, pe.signal, { unref: !0 }));
       })(),
       () => pe.abort()
     );
@@ -50082,7 +50082,7 @@ function w0e({
         return xe === "oldest"
           ? "Press Enter to edit the selected message, or up again for history"
           : "Press Enter to edit the selected message, or up again for an older one";
-      let Oe = kh();
+      let Oe = isKbCohesionFixesEnabled();
       if (qre())
         return Oe
           ? "Press up to select a queued message to edit, or Enter to send them now"
@@ -50099,8 +50099,8 @@ F();
 var Ygo = 5000;
 function C0e(w) {
   let [I, ne] = d(!1),
-    me = vt(),
-    pe = $Z.of(Ye().host);
+    me = useClock(),
+    pe = $Z.of(useSession().host);
   return (
     E(() => {
       if (pe.fastIconHintShown || !w) return;
@@ -50117,10 +50117,10 @@ F();
 var Jgo = 2500,
   Tbt = 150;
 function _0e(w, I) {
-  let ne = c_(),
-    me = $Z.of(Ye().host),
+  let ne = useReducedMotion(),
+    me = $Z.of(useSession().host),
     [pe, be] = d(!1),
-    xe = vt(),
+    xe = useClock(),
     [, Ae] = bs(pe && !ne ? Tbt : null);
   if (
     (E(() => {
@@ -50138,7 +50138,7 @@ function _0e(w, I) {
   let Oe = Math.floor(Ae / Tbt),
     He = $7(Eo("theme", "dark").value),
     Ke = Array.from({ length: I }, (Je, Qe) =>
-      ut(zC(Qe + Oe), He)("\u2500"),
+      getThemeColor(zC(Qe + Oe), He)("\u2500"),
     ).join("");
   return [
     { content: Ke, position: "top", align: "start", offset: 0 },
@@ -50147,8 +50147,8 @@ function _0e(w, I) {
 }
 F();
 function G$({ gesture: w, turn: I, transcript: ne, onDetachToCaller: me }) {
-  let pe = Me(I, (Oe) => Oe.isLoading),
-    be = Me(I, (Oe) => Oe.isExternalLoading),
+  let pe = useStoreSelector(I, (Oe) => Oe.isLoading),
+    be = useStoreSelector(I, (Oe) => Oe.isExternalLoading),
     xe = mY({ turn: I, transcript: ne }),
     Ae = ee().leftArrowOpensAgents !== !1;
   return V(
@@ -50408,31 +50408,31 @@ function Okt(pmr) {
     } = pmr,
     gC = gi(),
     { submit: XY, submitEmpty: Mbt, submitToAgent: Abt } = Pbt,
-    Ibt = Me(mm, Hbo),
-    E0e = Me(mm, jbo),
-    Ebt = Me(mm, $bo),
-    Nbt = Me(mm, Wbo),
-    Lbt = Me(mm, qbo),
-    fL = Me(ra, twe),
-    e5 = Me(ra, owe),
-    Hp = Me(ra, PA),
-    t5 = Me(ra, ewe),
-    Fbt = Me(Bp, Dkt),
-    Bbt = Me(Bp, Nkt),
+    Ibt = useStoreSelector(mm, Hbo),
+    E0e = useStoreSelector(mm, jbo),
+    Ebt = useStoreSelector(mm, $bo),
+    Nbt = useStoreSelector(mm, Wbo),
+    Lbt = useStoreSelector(mm, qbo),
+    fL = useStoreSelector(ra, twe),
+    e5 = useStoreSelector(ra, owe),
+    Hp = useStoreSelector(ra, PA),
+    t5 = useStoreSelector(ra, ewe),
+    Fbt = useStoreSelector(Bp, Dkt),
+    Bbt = useStoreSelector(Bp, Nkt),
     {
       setValue: UI,
       setCursorOffset: CT,
       setMode: o5,
       setPastedContents: bC,
     } = ra,
-    SC = Me(dm, Vbo),
-    Ubt = Me(dm, Gbo),
-    Hbt = Me(dm, Kbo),
+    SC = useStoreSelector(dm, Vbo),
+    Ubt = useStoreSelector(dm, Gbo),
+    Hbt = useStoreSelector(dm, Kbo),
     jbt = dm.buildToolUseContext,
     _T = U(zbo),
     r5 = F_e(),
     i5 = U(Qbo);
-  const $bt = Me(mm, Ybo);
+  const $bt = useStoreSelector(mm, Ybo);
   let Xgo;
   if ($i[0] !== Rbt || $i[1] !== $bt || $i[2] !== Bp || $i[3] !== dm)
     ((Xgo = { gesture: Rbt, turn: dm, transcript: Bp, onDetachToCaller: $bt }),
@@ -50443,11 +50443,11 @@ function Okt(pmr) {
       ($i[4] = Xgo));
   else Xgo = $i[4];
   let D0e = G$(Xgo),
-    K$ = qa(),
-    fmr = qb(yp.kind),
+    K$ = useMainLoopModel(),
+    fmr = qb(localJsxDialog.kind),
     Wp = eM() || fmr,
     O0e = QU(),
-    LS = Ye(),
+    LS = useSession(),
     qI = C(null),
     gL = TR(),
     [FS, zc] = qm(!1),
@@ -50478,21 +50478,21 @@ function Okt(pmr) {
   E(tho, oho);
   let [a5, nho] = d(!1),
     rho;
-  if ($i[13] === p) ((rho = { show: !1 }), ($i[13] = rho));
+  if ($i[13] === MEMO_CACHE_SENTINEL) ((rho = { show: !1 }), ($i[13] = rho));
   else rho = $i[13];
   let [J$, iho] = d(rho),
     sho;
-  if ($i[14] === p)
+  if ($i[14] === MEMO_CACHE_SENTINEL)
     ((sho = (aho, hmr) => iho(aho ? { show: aho, key: hmr } : { show: !1 })),
       ($i[14] = sho));
   else sho = $i[14];
   let ymr = sho,
     lho;
-  if ($i[15] === p) ((lho = Promise.resolve()), ($i[15] = lho));
+  if ($i[15] === MEMO_CACHE_SENTINEL) ((lho = Promise.resolve()), ($i[15] = lho));
   else lho = $i[15];
   let cho = C(lho),
     uho;
-  if ($i[16] === p) ((uho = new Set()), ($i[16] = uho));
+  if ($i[16] === MEMO_CACHE_SENTINEL) ((uho = new Set()), ($i[16] = uho));
   else uho = $i[16];
   let Vbt = C(uho),
     _u = Yn(),
@@ -50502,13 +50502,13 @@ function Okt(pmr) {
   if ($i[17] !== Ra) ((dho = () => Ra(Xbo)), ($i[17] = Ra), ($i[18] = dho));
   else dho = $i[18];
   let X$ = dho,
-    my = wf(),
-    { storageV5: cp } = _e(),
-    B0e = qc(),
+    my = useTaskRegistry(),
+    { storageV5: cp } = useStorageV5Context(),
+    B0e = useCommandQueue(),
     Eg = U(Zbo),
     mho = U(eSo),
     pho = mho?.taskId,
-    { columns: U0e } = Se(),
+    { columns: U0e } = useTerminalSize(),
     Kbt = U(tSo),
     fho;
   if ($i[19] !== Kbt || $i[20] !== U0e)
@@ -50542,7 +50542,7 @@ function Okt(pmr) {
     hho;
   if ($i[24] !== BR)
     ((hho =
-      BR?.identity.color && ef.includes(BR.identity.color)
+      BR?.identity.color && AGENT_COLOR_NAMES.includes(BR.identity.color)
         ? BR.identity.color
         : void 0),
       ($i[24] = BR),
@@ -50638,14 +50638,14 @@ function Okt(pmr) {
   E(Cho, _ho);
   let [n1, _mr] = d(!1),
     [nSt, xho] = d(!1),
-    g5 = vt(),
+    g5 = useClock(),
     [Tmr, xmr] = d(!1),
     [Rmr, rSt] = d(!1),
     iSt = C(!1),
     [Pmr, sSt] = d(!1),
     [V0e, Rho] = d(null),
     [Mmr, aSt] = d(!1),
-    h5 = Me(dm, bSo),
+    h5 = useStoreSelector(dm, bSo),
     lSt = _T.mode === "auto",
     Pho;
   if ($i[48] !== SC || $i[49] !== lSt || $i[50] !== h5)
@@ -50852,7 +50852,7 @@ function Okt(pmr) {
       logOutcomeAtSubmission: TSt,
       markShown: Lmr,
     } = iwe(Kho),
-    { addNotification: tc, removeNotification: bL } = Ir(),
+    { addNotification: tc, removeNotification: bL } = useNotificationQueue(),
     zho;
   if ($i[99] !== Fbt || $i[100] !== fL || $i[101] !== Hbt || $i[102] !== Jbt)
     ((zho = {
@@ -50871,7 +50871,7 @@ function Okt(pmr) {
     Qho;
   if ($i[104] !== zc)
     ((Qho = () => {
-      (i("tengu_help_toggled", {}), zc(_So));
+      (logEvent("tengu_help_toggled", {}), zc(_So));
     }),
       ($i[104] = zc),
       ($i[105] = Qho));
@@ -50957,7 +50957,7 @@ function Okt(pmr) {
     ASt = C(null),
     Y0e = C(!1),
     oyo;
-  if ($i[122] === p)
+  if ($i[122] === MEMO_CACHE_SENTINEL)
     ((oyo = () => {
       ((ASt.current = null), (Y0e.current = !1));
     }),
@@ -51000,7 +51000,7 @@ function Okt(pmr) {
   else syo = $i[129];
   let Yre = syo,
     ayo;
-  if ($i[130] === p) ((ayo = () => qI.current?.clearBuffer()), ($i[130] = ayo));
+  if ($i[130] === MEMO_CACHE_SENTINEL) ((ayo = () => qI.current?.clearBuffer()), ($i[130] = ayo));
   else ayo = $i[130];
   let DSt = ayo,
     lyo;
@@ -51034,7 +51034,7 @@ function Okt(pmr) {
       jR = jR.trimEnd();
       let cyo = J0e ?? ra.pastedContents;
       let X0e = _u.getState();
-      if (kh() && X0e.queueEditIndex !== null && MSt()) {
+      if (isKbCohesionFixesEnabled() && X0e.queueEditIndex !== null && MSt()) {
         return;
       }
       if (X0e.footerSelection && UR.includes(X0e.footerSelection)) {
@@ -51100,7 +51100,7 @@ function Okt(pmr) {
         let fyo = tH(C5);
         let nNe = fyo && findCommand(fyo.commandName, fC.commands);
         if (!(nNe?.type === "local" || nNe?.type === "local-jsx")) {
-          (i("tengu_transcript_input_to_teammate", {}),
+          (logEvent("tengu_transcript_input_to_teammate", {}),
             Yre(),
             await Abt(
               C5,
@@ -51112,7 +51112,7 @@ function Okt(pmr) {
         }
         let gyo = nNe && uPe(nNe, { isTeammate: BSt.type === "viewed" });
         if (gyo) {
-          (i("tengu_agent_view_leader_command_notice", {}),
+          (logEvent("tengu_agent_view_leader_command_notice", {}),
             tc({
               key: "agent-view-command-notice",
               kind: "feedback",
@@ -51224,7 +51224,7 @@ function Okt(pmr) {
       l1 ||
       Hp !== "prompt" ||
       Gbt !== null ||
-      (!kh() && zbt.some((Gmr) => Vte(Gmr, fL)))),
+      (!isKbCohesionFixesEnabled() && zbt.some((Gmr) => Vte(Gmr, fL)))),
       ($i[164] = fL),
       ($i[165] = l1),
       ($i[166] = z$),
@@ -51248,15 +51248,15 @@ function Okt(pmr) {
       ($i[174] = wyo));
   else ((vyo = $i[173]), (wyo = $i[174]));
   E(vyo, wyo);
-  let Zre = Me(HR, Lkt),
+  let Zre = useStoreSelector(HR, Lkt),
     Cyo;
-  if ($i[175] === p)
+  if ($i[175] === MEMO_CACHE_SENTINEL)
     ((Cyo = (zmr, Qmr) => qI.current?.selectSuggestion(zmr, Qmr)),
       ($i[175] = Cyo));
   else Cyo = $i[175];
   let Ymr = Cyo,
     _yo;
-  if ($i[176] === p)
+  if ($i[176] === MEMO_CACHE_SENTINEL)
     ((_yo = (Jmr) => qI.current?.setHoveredSuggestion(Jmr)), ($i[176] = _yo));
   else _yo = $i[176];
   let Zmr = _yo,
@@ -51307,7 +51307,7 @@ function Okt(pmr) {
       if (iNe === 0) {
         return;
       }
-      ws().get(process.stdout)?.forceRedraw();
+      getInkInstanceRegistry().get(process.stdout)?.forceRedraw();
     }),
       (Ryo = [iNe]),
       ($i[177] = iNe),
@@ -51421,7 +51421,7 @@ function Okt(pmr) {
       (Ra((GSt) =>
         GSt.attentionBudget === uNe ? GSt : { ...GSt, attentionBudget: uNe },
       ),
-        i("tengu_attention_budget_cycle", { to: fromEnum(uNe) }),
+        logEvent("tengu_attention_budget_cycle", { to: fromEnum(uNe) }),
         logFeatureOk("attention_budget"));
     },
     Nyo;
@@ -51444,7 +51444,7 @@ function Okt(pmr) {
       if (YSt) {
         let npr = { ...QSt, mode: YSt.permissionMode };
         let JSt = dWe(npr, void 0);
-        (i("tengu_mode_cycle", { to: fromEnum(JSt), trigger: fromEnum("shift_tab") }),
+        (logEvent("tengu_mode_cycle", { to: fromEnum(JSt), trigger: fromEnum("shift_tab") }),
           logFeatureOk("mode_switch"));
         let Lyo = YSt.id;
         (Ra((tie) => {
@@ -51491,7 +51491,7 @@ function Okt(pmr) {
           : rZt(_T, hL, "shift_tab"));
       H6(`[${dL(YI)} on]`);
       if (
-        (i("tengu_mode_cycle", { to: fromEnum(YI), trigger: fromEnum("shift_tab") }), !Ks())
+        (logEvent("tengu_mode_cycle", { to: fromEnum(YI), trigger: fromEnum("shift_tab") }), !Ks())
       )
         logFeatureOk("mode_switch");
       if (YI === "plan") logFeatureOk("mode_plan_enter");
@@ -51537,11 +51537,11 @@ function Okt(pmr) {
   else Oyo = $i[211];
   let XSt = Oyo,
     Byo;
-  if ($i[212] === p) ((Byo = []), ($i[212] = Byo));
+  if ($i[212] === MEMO_CACHE_SENTINEL) ((Byo = []), ($i[212] = Byo));
   else Byo = $i[212];
   let apr = C(Byo),
     Uyo;
-  if ($i[213] === p) ((Uyo = () => apr.current.splice(0)), ($i[213] = Uyo));
+  if ($i[213] === MEMO_CACHE_SENTINEL) ((Uyo = () => apr.current.splice(0)), ($i[213] = Uyo));
   else Uyo = $i[213];
   let ZSt = Uyo,
     ekt = FSo,
@@ -51567,7 +51567,7 @@ function Okt(pmr) {
       ($i[218] = jyo));
   else jyo = $i[218];
   let mNe = jyo,
-    kL = sl(),
+    kL = useKeybindingContext(),
     $yo;
   if (
     $i[219] !== wC ||
@@ -51654,7 +51654,7 @@ function Okt(pmr) {
     ((pNe = () => D5({ kind: "carousel" })), ($i[241] = D5), ($i[242] = pNe));
   else pNe = $i[242];
   let Kyo, zyo;
-  if ($i[243] === p) ((Kyo = {}), (zyo = {}), ($i[243] = Kyo), ($i[244] = zyo));
+  if ($i[243] === MEMO_CACHE_SENTINEL) ((Kyo = {}), (zyo = {}), ($i[243] = Kyo), ($i[244] = zyo));
   else ((Kyo = $i[243]), (zyo = $i[244]));
   let Qyo;
   if (
@@ -51689,7 +51689,7 @@ function Okt(pmr) {
       ($i[251] = nkt),
       ($i[252] = Yyo));
   else Yyo = $i[252];
-  Ze(cpr, Yyo);
+  useKeybindings(cpr, Yyo);
   let fNe;
   if ($i[253] !== Wp)
     ((fNe = !Wp && Mr() && Jy()), ($i[253] = Wp), ($i[254] = fNe));
@@ -51700,7 +51700,7 @@ function Okt(pmr) {
       ($i[255] = fNe),
       ($i[256] = Jyo));
   else Jyo = $i[256];
-  Ne("chat:fastMode", tpr, Jyo);
+  useKeybinding("chat:fastMode", tpr, Jyo);
   let Xyo;
   if ($i[257] !== zc)
     ((Xyo = () => {
@@ -51715,7 +51715,7 @@ function Okt(pmr) {
       ($i[259] = FS),
       ($i[260] = Zyo));
   else Zyo = $i[260];
-  Ne("help:dismiss", Xyo, Zyo);
+  useKeybinding("help:dismiss", Xyo, Zyo);
   let ebo;
   if ($i[261] !== tc || $i[262] !== zc)
     ((ebo = () => {
@@ -51744,7 +51744,7 @@ function Okt(pmr) {
       ($i[266] = hNe),
       ($i[267] = tbo));
   else tbo = $i[267];
-  Ne("history:search", gNe, tbo);
+  useKeybinding("history:search", gNe, tbo);
   function R5() {
     if (zre) {
       fm(null);
@@ -51915,7 +51915,7 @@ function Okt(pmr) {
           let pbo = _u.getState();
           let fbo = Object.entries(pbo.frameUrls);
           let gbo = fbo[kR(fbo, pbo.frameNavPath)]?.[1]?.url;
-          if (gbo) (Gr(ON(gbo)), logFeatureOk("frame_link_open"));
+          if (gbo) (tryOpenUrlInBrowser(ON(gbo)), logFeatureOk("frame_link_open"));
           Ra(qSo);
         }
       }
@@ -52113,7 +52113,7 @@ function Okt(pmr) {
       ($i[333] = lkt),
       ($i[334] = ybo));
   else ybo = $i[334];
-  Ze(hbo, ybo);
+  useKeybindings(hbo, ybo);
   let xT = tn(),
     RT = A0e(),
     bbo;
@@ -52258,7 +52258,7 @@ function Okt(pmr) {
         priority: "immediate",
         timeoutMs: 3000,
       }),
-        i("tengu_model_picker_hotkey", { model: bt(TL) }));
+        logEvent("tengu_model_picker_hotkey", { model: bt(TL) }));
     }),
       ($i[364] = tc),
       ($i[365] = LS),
@@ -52326,7 +52326,7 @@ function Okt(pmr) {
   else Tbo = $i[374];
   let gkt = Tbo,
     Rbo;
-  if ($i[375] === p)
+  if ($i[375] === MEMO_CACHE_SENTINEL)
     ((Rbo = () => {
       ((ANe.current = !1), rSt(!1));
     }),
@@ -52340,7 +52340,7 @@ function Okt(pmr) {
       break bb1;
     }
     let lie;
-    if ($i[376] === p)
+    if ($i[376] === MEMO_CACHE_SENTINEL)
       ((lie = (xpr) => {
         if (n2(xpr)) {
           return;
@@ -52438,7 +52438,7 @@ function Okt(pmr) {
             max_thinking_tokens: cie ? null : 0,
           })
           .catch(KSo),
-        i("tengu_thinking_toggled_hotkey", { enabled: cie }),
+        logEvent("tengu_thinking_toggled_hotkey", { enabled: cie }),
         logFeatureOk("thinking_toggle"),
         tc({
           key: "thinking-toggled-hotkey",
@@ -52455,7 +52455,7 @@ function Okt(pmr) {
   else RL = $i[394];
   let bkt = RL,
     Ibo;
-  if ($i[395] === p)
+  if ($i[395] === MEMO_CACHE_SENTINEL)
     ((Ibo = () => {
       aSt(!1);
     }),
@@ -52653,7 +52653,7 @@ function Okt(pmr) {
         ($i[452] = up));
     else up = $i[452];
     let Bf;
-    if ($i[453] === p) ((Bf = () => sSt(!1)), ($i[453] = Bf));
+    if ($i[453] === MEMO_CACHE_SENTINEL) ((Bf = () => sSt(!1)), ($i[453] = Bf));
     else Bf = $i[453];
     let $g;
     if ($i[454] !== ra.value || $i[455] !== up)
@@ -52684,7 +52684,7 @@ function Okt(pmr) {
       ((up = M$(Hp, xT)), ($i[459] = xT), ($i[460] = Hp), ($i[461] = up));
     else up = $i[461];
     let Bf;
-    if ($i[462] === p)
+    if ($i[462] === MEMO_CACHE_SENTINEL)
       ((Bf = e(t, {
         dimColor: !0,
         italic: !0,
@@ -52868,7 +52868,7 @@ function Okt(pmr) {
   else d1 = $i[512];
   const wkt = !xT && die;
   let Fbo;
-  if ($i[513] === p) ((Fbo = e(nne, {})), ($i[513] = Fbo));
+  if ($i[513] === MEMO_CACHE_SENTINEL) ((Fbo = e(nne, {})), ($i[513] = Fbo));
   else Fbo = $i[513];
   const Ckt = D0e !== void 0,
     _kt = gL ? O0e : void 0,
@@ -53069,10 +53069,10 @@ function mie(Jfr) {
   let H5 = _(16),
     { onBackgroundSession: Xfr, isLoading: m1 } = Jfr,
     Fkt = Yn(),
-    Bkt = wf(),
-    { storageV5: Ukt } = _e(),
+    Bkt = useTaskRegistry(),
+    { storageV5: Ukt } = useStorageV5Context(),
     [Zfr, egr] = d(!1),
-    Hkt = Y0(egr, Xfr, nko),
+    Hkt = useDoublePressConfirm(egr, Xfr, nko),
     QSo;
   if (
     H5[0] !== Fkt ||
@@ -53082,7 +53082,7 @@ function mie(Jfr) {
     H5[4] !== Bkt
   )
     ((QSo = () => {
-      if (Dl()) {
+      if (areBackgroundTasksDisabled()) {
         return;
       }
       let tgr = Fkt.getState();
@@ -53100,7 +53100,7 @@ function mie(Jfr) {
   let jkt = QSo,
     $kt = U(H_t),
     YSo;
-  if (H5[6] === p) ((YSo = Ie("false")), (H5[6] = YSo));
+  if (H5[6] === MEMO_CACHE_SENTINEL) ((YSo = Ie("false")), (H5[6] = YSo));
   else YSo = H5[6];
   let ogr = YSo,
     JSo;
@@ -53119,7 +53119,7 @@ function mie(Jfr) {
       (H5[12] = XSo));
   else XSo = H5[12];
   let { cohesionFixes: ZSo, gateOnShortcut: ngr } = bWe(XSo),
-    eko = Zr("task:background", "Task", "ctrl+b"),
+    eko = useKeybindingDisplayText("task:background", "Task", "ctrl+b"),
     jNe = ZSo
       ? ngr
       : a.terminal === "tmux" && eko === "ctrl+b"
@@ -53129,7 +53129,7 @@ function mie(Jfr) {
     return null;
   }
   let tko;
-  if (H5[13] === p) ((tko = { keyCase: "lower" }), (H5[13] = tko));
+  if (H5[13] === MEMO_CACHE_SENTINEL) ((tko = { keyCase: "lower" }), (H5[13] = tko));
   else tko = H5[13];
   let oko;
   if (H5[14] !== jNe)
@@ -53137,7 +53137,7 @@ function mie(Jfr) {
       paddingLeft: 2,
       children: e(t, {
         dimColor: !0,
-        children: e(D, { chord: jNe, action: "background", format: tko }),
+        children: e(KeybindingHint, { chord: jNe, action: "background", format: tko }),
       }),
     })),
       (H5[14] = jNe),
@@ -53284,7 +53284,7 @@ function cb({
   debounceMs: xe = KNe,
   mountDelayMs: Ae = fv,
 }) {
-  let Oe = vt(),
+  let Oe = useClock(),
     He = C(w),
     Ke = C(!1),
     Je = C(null),
@@ -53294,8 +53294,8 @@ function cb({
   }, [me, Oe]);
   let it = C({ isValidDigit: I, onDigit: ne });
   it.current = { isValidDigit: I, onDigit: ne };
-  let at = sl();
-  (rF(
+  let at = useKeybindingContext();
+  (useKeybindingPreDispatch(
     (Zt, Ct) => {
       if (
         !be ||
@@ -53354,10 +53354,10 @@ function zNe({
 }) {
   let { notice: pe } = zAe(),
     be = Ine(),
-    { storageV5: xe, credentials: Ae } = _e(),
+    { storageV5: xe, credentials: Ae } = useStorageV5Context(),
     Oe = hA(),
-    { rows: He, columns: Ke } = Se(),
-    Je = vt(),
+    { rows: He, columns: Ke } = useTerminalSize(),
+    Je = useClock(),
     [Qe, it] = d("idle"),
     [at, Zt] = d(null),
     Ct = C(!1),
@@ -53406,7 +53406,7 @@ function zNe({
         if (!(zt.current !== null && Je.now() - zt.current < fv) && !to.current)
           ((to.current = !0),
             $Ne(xe),
-            i("tengu_feedback_turnoff_prompt_declined", {}));
+            logEvent("tengu_feedback_turnoff_prompt_declined", {}));
         it("idle");
       }
     }, [Qe, Oe, xe, Je]),
@@ -53425,7 +53425,7 @@ function zNe({
       [],
     ));
   function xo(Io) {
-    if (A8n(Io.draftId)) i("tengu_feedback_notice_shown", { type: fromEnum(Io.type) });
+    if (A8n(Io.draftId)) logEvent("tengu_feedback_notice_shown", { type: fromEnum(Io.type) });
   }
   function Wo() {
     if (pe === null) return;
@@ -53433,7 +53433,7 @@ function zNe({
   }
   function Ro(Io) {
     if ((Ho(), po(), Io !== "sent"))
-      i(
+      logEvent(
         Io === "dismiss"
           ? "tengu_feedback_notice_dismissed"
           : "tengu_feedback_notice_opened",
@@ -53445,7 +53445,7 @@ function zNe({
     if ((Ro("dismiss"), Vkt()))
       ((zt.current = Je.now()),
         (to.current = !1),
-        i("tengu_feedback_turnoff_prompt_shown", {}),
+        logEvent("tengu_feedback_turnoff_prompt_shown", {}),
         it("dismissPrompt"));
   }
   function An() {
@@ -53458,7 +53458,7 @@ function zNe({
     if (!An() && !to.current)
       ((to.current = !0),
         $Ne(xe),
-        i("tengu_feedback_turnoff_prompt_declined", {}));
+        logEvent("tengu_feedback_turnoff_prompt_declined", {}));
     it("idle");
   }
   function vo() {
@@ -53493,7 +53493,7 @@ function zNe({
       So = { success: !1, error: "Couldn't send feedback." };
     }
     if (
-      (i("tengu_feedback_card_send", {
+      (logEvent("tengu_feedback_card_send", {
         type: fromEnum(pe?.type ?? "bug"),
         success: fromNumber(So.success ? 1 : 0),
       }),
@@ -53542,7 +53542,7 @@ function zNe({
       let Io = nn.current;
       if (((nn.current = ro), Io && !ro)) Kn.current = Je.now();
     }, [ro, Je]),
-    Ne(
+    useKeybinding(
       "chat:cancel",
       () => {
         if (Kn.current !== null && Je.now() - Kn.current < fv) return;
@@ -53577,10 +53577,10 @@ function zNe({
           " ",
           e(t, {
             dimColor: !0,
-            children: r(ue, {
+            children: r(DotSeparatedList, {
               children: [
-                e(D, { chord: "0", action: "turn off" }),
-                e(D, { chord: "escape", action: "keep" }),
+                e(KeybindingHint, { chord: "0", action: "turn off" }),
+                e(KeybindingHint, { chord: "escape", action: "keep" }),
               ],
             }),
           }),
@@ -53593,7 +53593,7 @@ function zNe({
       marginBottom: 1,
       children: r(t, {
         children: [
-          e(et, { status: "success", withSpace: !0 }),
+          e(StatusIndicator, { status: "success", withSpace: !0 }),
           "Claude-drafted feedback is off. Turn back on in /config",
         ],
       }),
@@ -53616,10 +53616,10 @@ function zNe({
               " ",
               e(t, {
                 dimColor: !0,
-                children: r(ue, {
+                children: r(DotSeparatedList, {
                   children: [
-                    e(D, { chord: "2", action: "send" }),
-                    e(D, { chord: "escape", action: "back" }),
+                    e(KeybindingHint, { chord: "2", action: "send" }),
+                    e(KeybindingHint, { chord: "escape", action: "back" }),
                   ],
                 }),
               }),
@@ -53629,20 +53629,20 @@ function zNe({
           ? e(t, { dimColor: !0, children: "Sending\u2026" })
           : Qe === "sent"
             ? r(t, {
-                children: [e(et, { status: "success", withSpace: !0 }), "Sent"],
+                children: [e(StatusIndicator, { status: "success", withSpace: !0 }), "Sent"],
               })
             : Qe === "error"
               ? r(t, {
                   children: [
-                    e(et, { status: "error", withSpace: !0 }),
+                    e(StatusIndicator, { status: "error", withSpace: !0 }),
                     e(t, { color: "error", children: at }),
                     " ",
                     e(t, {
                       dimColor: !0,
-                      children: r(ue, {
+                      children: r(DotSeparatedList, {
                         children: [
-                          e(D, { chord: "1", action: "review & retry" }),
-                          e(D, { chord: "escape", action: "dismiss" }),
+                          e(KeybindingHint, { chord: "1", action: "review & retry" }),
+                          e(KeybindingHint, { chord: "escape", action: "dismiss" }),
                         ],
                       }),
                     }),
@@ -53650,11 +53650,11 @@ function zNe({
                 })
               : e(t, {
                   dimColor: !0,
-                  children: r(ue, {
+                  children: r(DotSeparatedList, {
                     children: [
-                      e(D, { chord: "1", action: "review" }),
-                      e(D, { chord: "2", action: "send" }),
-                      e(D, { chord: "0", action: "dismiss" }),
+                      e(KeybindingHint, { chord: "1", action: "review" }),
+                      e(KeybindingHint, { chord: "2", action: "send" }),
+                      e(KeybindingHint, { chord: "0", action: "dismiss" }),
                       no > 0 && `+${no} more queued`,
                     ],
                   }),
@@ -53675,7 +53675,7 @@ function zNe({
   return e(o, {
     marginTop: 1,
     marginBottom: 1,
-    children: r(_s, {
+    children: r(TitledBorderBox, {
       children: [
         lr,
         e(m6e, {
@@ -53764,7 +53764,7 @@ function p1(rhr) {
   else bko = ML[11];
   cb(bko);
   let Sko;
-  if (ML[12] === p)
+  if (ML[12] === MEMO_CACHE_SENTINEL)
     ((Sko = e(o, {
       minWidth: 2,
       children: e(t, { color: "ansi:cyan", children: "\u25CF" }),
@@ -53868,10 +53868,10 @@ function uvt({
   autoDismissAfterMs: me,
   turnInProgress: pe = !1,
 }) {
-  let be = vt(),
+  let be = useClock(),
     [xe, Ae] = d(""),
     [Oe, He] = d(0),
-    { columns: Ke } = Se(),
+    { columns: Ke } = useTerminalSize(),
     Je = C(!1),
     Qe = C(be.now());
   Rs("survey-followup");
@@ -53888,7 +53888,7 @@ function uvt({
         it({ text: null, method: "turn_yield" });
     }));
   let Tt = C(null),
-    to = Ye();
+    to = useSession();
   E(
     () => () => {
       (Tt.current?.(), MFt(to, !1));
@@ -53920,7 +53920,7 @@ function uvt({
           ((Tt.current = null), MFt(to, !1));
         }, kko)));
     };
-  rF((Ho, po) => {
+  useKeybindingPreDispatch((Ho, po) => {
     if (!po.escape) return;
     if (!at()) {
       if (zt.current.trim() !== "")
@@ -53986,16 +53986,16 @@ function uvt({
         children: r(t, {
           dimColor: !0,
           children: [
-            e(D, { chord: "enter", action: xe.trim() ? "send" : "skip" }),
+            e(KeybindingHint, { chord: "enter", action: xe.trim() ? "send" : "skip" }),
             " \xB7 ",
-            e(D, { chord: "escape", action: xe.trim() ? "clear" : "skip" }),
+            e(KeybindingHint, { chord: "escape", action: xe.trim() ? "clear" : "skip" }),
             eo &&
               r(N, {
                 children: [
                   "  ",
                   e(t, {
                     color: "warning",
-                    children: e(D, {
+                    children: e(KeybindingHint, {
                       chord: eo === "Ctrl-D" ? "ctrl+d" : "ctrl+c",
                       action: "again to skip",
                     }),
@@ -54065,7 +54065,7 @@ ${wko}
 ${yie}`
       : yie,
     Cko;
-  if (dLe[3] === p)
+  if (dLe[3] === MEMO_CACHE_SENTINEL)
     ((Cko = e(t, { dimColor: !0, children: "(optional)" })), (dLe[3] = Cko));
   else Cko = dLe[3];
   let mLe;
@@ -54156,7 +54156,7 @@ function wLe(Yhr) {
   let yLe = _(6),
     { onSelect: _vt } = Yhr,
     Ako;
-  if (yLe[0] === p)
+  if (yLe[0] === MEMO_CACHE_SENTINEL)
     ((Ako = r(o, {
       children: [
         r(t, { color: "ansi:cyan", children: [Ar, " "] }),
@@ -54166,8 +54166,8 @@ function wLe(Yhr) {
       (yLe[0] = Ako));
   else Ako = yLe[0];
   let Iko;
-  if (yLe[1] === p)
-    ((Iko = e(o, { marginLeft: 2, children: e(Gp, { url: V5 }) })),
+  if (yLe[1] === MEMO_CACHE_SENTINEL)
+    ((Iko = e(o, { marginLeft: 2, children: e(LearnMoreLink, { url: V5 }) })),
       (yLe[1] = Iko));
   else Iko = yLe[1];
   let kLe;
@@ -54223,7 +54223,7 @@ function ub(kie) {
   switch (kie.state) {
     case "submitting": {
       let MT;
-      if (G5[0] === p)
+      if (G5[0] === MEMO_CACHE_SENTINEL)
         ((MT = r(t, {
           dimColor: !0,
           children: ["Sharing transcript", "\u2026"],
@@ -54242,7 +54242,7 @@ function ub(kie) {
                 r(t, {
                   color: "success",
                   children: [
-                    e(et, { status: "success", withSpace: !0 }),
+                    e(StatusIndicator, { status: "success", withSpace: !0 }),
                     "Transcript bundle saved",
                   ],
                 }),
@@ -54261,7 +54261,7 @@ function ub(kie) {
           : r(t, {
               color: "success",
               children: [
-                e(et, { status: "success", withSpace: !0 }),
+                e(StatusIndicator, { status: "success", withSpace: !0 }),
                 "Thanks for sharing your transcript!",
               ],
             })),
@@ -54272,11 +54272,11 @@ function ub(kie) {
     }
     case "share_failed": {
       let MT;
-      if (G5[3] === p)
+      if (G5[3] === MEMO_CACHE_SENTINEL)
         ((MT = r(t, {
           color: "error",
           children: [
-            e(et, { status: "error", withSpace: !0 }),
+            e(StatusIndicator, { status: "error", withSpace: !0 }),
             "Couldn't share the transcript.",
           ],
         })),
@@ -54303,7 +54303,7 @@ function ub(kie) {
     }
     case "thanks": {
       let MT;
-      if (G5[8] === p)
+      if (G5[8] === MEMO_CACHE_SENTINEL)
         ((MT = e(t, { color: "success", children: K5 })), (G5[8] = MT));
       else MT = G5[8];
       return MT;
@@ -54436,7 +54436,7 @@ function Uvt(Ayr) {
       (xLe[0] = Mvt),
       (xLe[1] = Oko));
   else Oko = xLe[1];
-  rF(Oko);
+  useKeybindingPreDispatch(Oko);
   let Avt = Pvt && Pvt !== "dismissed" ? Ovt[Pvt] : "",
     RLe;
   if (xLe[2] !== Avt)
@@ -54445,8 +54445,8 @@ function Uvt(Ayr) {
       (xLe[3] = RLe));
   else RLe = xLe[3];
   let Fko;
-  if (xLe[4] === p)
-    ((Fko = e(D, { chord: "escape", action: "undo" })), (xLe[4] = Fko));
+  if (xLe[4] === MEMO_CACHE_SENTINEL)
+    ((Fko = e(KeybindingHint, { chord: "escape", action: "undo" })), (xLe[4] = Fko));
   else Fko = xLe[4];
   let Bko;
   if (xLe[5] !== RLe)
@@ -54514,7 +54514,7 @@ function Hvt(Eyr) {
     ((ELe = () => {
       if (
         (Evt(""),
-        i("tengu_feedback_survey_event", {
+        logEvent("tengu_feedback_survey_event", {
           ...Nvt,
           event_type: S("followup_accepted"),
           response: fromEnumOpt(z5),
@@ -54559,7 +54559,7 @@ function Hvt(Eyr) {
   else jko = X5[15];
   cb(jko);
   let $ko;
-  if (X5[16] === p)
+  if (X5[16] === MEMO_CACHE_SENTINEL)
     (($ko = e(t, { color: "success", children: K5 })), (X5[16] = $ko));
   else $ko = X5[16];
   let DLe;
@@ -54615,7 +54615,7 @@ function Cie(Hyr) {
     { subject: h1 } = Hyr;
   if (!h1) {
     let wie;
-    if (Z5[0] === p)
+    if (Z5[0] === MEMO_CACHE_SENTINEL)
       ((wie = e(t, {
         bold: !0,
         children: "How helpful has this plugin been? (optional)",
@@ -55027,7 +55027,7 @@ function DL(w, I) {
 F();
 var Jko = 2000;
 function Wvt(w, I = Jko) {
-  let ne = vt(),
+  let ne = useClock(),
     [me, pe] = d(!w);
   return (
     E(() => {
@@ -55285,7 +55285,7 @@ function YS({
   onFollowupPromptShown: Qe,
   onFollowupResolve: it,
 }) {
-  let at = vt(),
+  let at = useClock(),
     [Zt, Ct] = d("closed"),
     [eo, jt] = d(null),
     [Tt, to] = d(null),
@@ -55458,12 +55458,12 @@ function ULe({
   surveyType: ne = "session",
   otherSurveyActive: me = !1,
 }) {
-  let { storageV5: pe, credentials: be } = _e(),
+  let { storageV5: pe, credentials: be } = useStorageV5Context(),
     xe = Yn(),
     Ae = Qy(),
-    Oe = Me(w, (gn) => gn.isLoading),
-    He = Me(w, (gn) => gn.submitCount),
-    Ke = Me(I),
+    Oe = useStoreSelector(w, (gn) => gn.isLoading),
+    He = useStoreSelector(w, (gn) => gn.submitCount),
+    Ke = useStoreSelector(I),
     [Je, Qe] = d(() => ({
       timeLastShown: null,
       timeLastShownAtClock: null,
@@ -55476,7 +55476,7 @@ function ULe({
     [eo, jt] = d(Wae),
     [Tt, to] = d(!1),
     zt = getInitialSettings().feedbackSurveyRate,
-    ao = vt(),
+    ao = useClock(),
     co = C(ao.now()),
     go = C(He),
     fo = C(null),
@@ -55490,7 +55490,7 @@ function ULe({
     Ho = C(null),
     po = re(
       (gn, On) => {
-        (i("tengu_feedback_survey_event", {
+        (logEvent("tengu_feedback_survey_event", {
           ..._C(xe),
           event_type: S("transcript_share_yes"),
           appearance_id: Ee(gn),
@@ -55546,7 +55546,7 @@ function ULe({
           _o(),
           (Ho.current = null),
           vo(w.getSnapshot().submitCount),
-          i("tengu_feedback_survey_event", {
+          logEvent("tengu_feedback_survey_event", {
             ..._C(xe),
             event_type: S("appeared"),
             appearance_id: Ee(gn),
@@ -55566,7 +55566,7 @@ function ULe({
     Sr = re(
       (gn, On) => {
         (vo(w.getSnapshot().submitCount),
-          i("tengu_feedback_survey_event", {
+          logEvent("tengu_feedback_survey_event", {
             ..._C(xe),
             event_type: S("responded"),
             appearance_id: Ee(gn),
@@ -55587,7 +55587,7 @@ function ULe({
     ),
     Kn = re(
       (gn) => {
-        (i("tengu_feedback_survey_event", {
+        (logEvent("tengu_feedback_survey_event", {
           ..._C(xe),
           event_type: S("abandoned"),
           appearance_id: Ee(gn),
@@ -55625,7 +55625,7 @@ function ULe({
     no = re(
       (gn, On) => {
         let Jr = BLe(On);
-        (i("tengu_feedback_survey_event", {
+        (logEvent("tengu_feedback_survey_event", {
           ..._C(xe),
           event_type: S("transcript_prompt_appeared"),
           appearance_id: Ee(gn),
@@ -55646,7 +55646,7 @@ function ULe({
       async (gn, On, Jr) => {
         let ai = BLe(Jr);
         if (!(On === "yes" && Ho.current !== null))
-          i("tengu_feedback_survey_event", {
+          logEvent("tengu_feedback_survey_event", {
             ..._C(xe),
             event_type: fromEnum(`transcript_share_${On}`),
             appearance_id: Ee(gn),
@@ -55661,7 +55661,7 @@ function ULe({
           Ho.current = null;
           let rs = await FLe(Oi, ai, gn, be);
           return (
-            i("tengu_feedback_survey_event", {
+            logEvent("tengu_feedback_survey_event", {
               ..._C(xe),
               event_type: S(
                 rs.success
@@ -55719,7 +55719,7 @@ function ULe({
     ),
     un = re(
       (gn, On) => {
-        (i("tengu_feedback_survey_event", {
+        (logEvent("tengu_feedback_survey_event", {
           ..._C(xe),
           event_type: S("followup_prompt_appeared"),
           appearance_id: Ee(gn),
@@ -55739,7 +55739,7 @@ function ULe({
     lr = re(
       (gn, On, Jr) => {
         if (On.text === null) {
-          (i("tengu_feedback_survey_event", {
+          (logEvent("tengu_feedback_survey_event", {
             ..._C(xe),
             event_type: S("followup_skipped"),
             appearance_id: Ee(gn),
@@ -55757,7 +55757,7 @@ function ULe({
           return;
         }
         let ai = On.text;
-        (i("tengu_feedback_survey_event", {
+        (logEvent("tengu_feedback_survey_event", {
           ..._C(xe),
           event_type: S("followup_submitted"),
           appearance_id: Ee(gn),
@@ -55785,7 +55785,7 @@ function ULe({
             credentials: be,
           })
             .then((rs) => {
-              i("tengu_feedback_survey_event", {
+              logEvent("tengu_feedback_survey_event", {
                 ..._C(xe),
                 event_type: S(
                   rs.success
@@ -55968,9 +55968,9 @@ function Nie(DSr) {
     HLe = rvo === void 0 ? !1 : rvo,
     NL = ivo === void 0 ? !0 : ivo,
     k1 = svo === void 0 ? !1 : svo,
-    jLe = Me(nvo, Cvo),
-    Aie = Me(nvo, _vo),
-    tJ = Me(NSr),
+    jLe = useStoreSelector(nvo, Cvo),
+    Aie = useStoreSelector(nvo, _vo),
+    tJ = useStoreSelector(NSr),
     [oJ, LSr] = d(void 0),
     [Iie, OSr] = d("generic"),
     [Eie, FSr] = d("cumulative"),
@@ -55979,10 +55979,10 @@ function Nie(DSr) {
     USr = C(Aie),
     $Le = C(null),
     lvo;
-  if (v1[0] === p)
+  if (v1[0] === MEMO_CACHE_SENTINEL)
     ((lvo = (cvo) => {
       let LL = $Le.current;
-      (i("tengu_long_context_survey_event", {
+      (logEvent("tengu_long_context_survey_event", {
         event_type: S("appeared"),
         question_variant: fromEnum(LL?.variant ?? "generic"),
         trigger_mode: fromEnum(LL?.triggerMode ?? "cumulative"),
@@ -56004,10 +56004,10 @@ function Nie(DSr) {
   else lvo = v1[0];
   let HSr = lvo,
     uvo;
-  if (v1[1] === p)
+  if (v1[1] === MEMO_CACHE_SENTINEL)
     ((uvo = (dvo, mvo) => {
       let FL = $Le.current;
-      (i("tengu_long_context_survey_event", {
+      (logEvent("tengu_long_context_survey_event", {
         event_type: S("responded"),
         question_variant: fromEnum(FL?.variant ?? "generic"),
         trigger_mode: fromEnum(FL?.triggerMode ?? "cumulative"),
@@ -56031,10 +56031,10 @@ function Nie(DSr) {
   else uvo = v1[1];
   let jSr = uvo,
     pvo;
-  if (v1[2] === p)
+  if (v1[2] === MEMO_CACHE_SENTINEL)
     ((pvo = (fvo) => {
       let BL = $Le.current;
-      (i("tengu_long_context_survey_event", {
+      (logEvent("tengu_long_context_survey_event", {
         event_type: S("abandoned"),
         question_variant: fromEnum(BL?.variant ?? "generic"),
         trigger_mode: fromEnum(BL?.triggerMode ?? "cumulative"),
@@ -56211,7 +56211,7 @@ function nJ() {
   return !1;
 }
 function nwo(Yvo, Jvo, Xvo) {
-  (i(IT, { event_type: fromEnum(Yvo), appearance_id: Ee(Jvo), response: fromEnumOpt(Xvo) }),
+  (logEvent(IT, { event_type: fromEnum(Yvo), appearance_id: Ee(Jvo), response: fromEnumOpt(Xvo) }),
     bo("feedback_survey", {
       event_type: Yvo,
       appearance_id: Jvo,
@@ -56223,7 +56223,7 @@ function rwo(Fkr) {
   return Lwt(Fkr);
 }
 function iwo(Zvo, ewo) {
-  (i(IT, {
+  (logEvent(IT, {
     event_type: S("transcript_prompt_appeared"),
     appearance_id: Ee(Zvo),
     trigger: fromEnum(rE),
@@ -56292,11 +56292,11 @@ function Fie(bb, VLe, Tvo, KLe) {
   let { enabled: Rvo, otherSurveyActive: Pvo } = xvo,
     YLe = Rvo === void 0 ? !0 : Rvo,
     C1 = Pvo === void 0 ? !1 : Pvo,
-    { storageV5: T1, credentials: pwt } = _e(),
-    fwt = memoryWatchers.of(Ye().host),
+    { storageV5: T1, credentials: pwt } = useStorageV5Context(),
+    fwt = memoryWatchers.of(useSession().host),
     gwt = It(),
     Mvo;
-  if (TC[2] === p) ((Mvo = new Set()), (TC[2] = Mvo));
+  if (TC[2] === MEMO_CACHE_SENTINEL) ((Mvo = new Set()), (TC[2] = Mvo));
   else Mvo = TC[2];
   let Lie = C(Mvo),
     hwt = C(null),
@@ -56317,15 +56317,15 @@ function Fie(bb, VLe, Tvo, KLe) {
     Nvo = C(null),
     XLe = nwo,
     Lvo;
-  if (TC[6] === p) ((Lvo = (Pkr) => XLe("appeared", Pkr)), (TC[6] = Lvo));
+  if (TC[6] === MEMO_CACHE_SENTINEL) ((Lvo = (Pkr) => XLe("appeared", Pkr)), (TC[6] = Lvo));
   else Lvo = TC[6];
   let Mkr = Lvo,
     Ovo;
-  if (TC[7] === p) ((Ovo = (Akr) => XLe("timeout", Akr)), (TC[7] = Ovo));
+  if (TC[7] === MEMO_CACHE_SENTINEL) ((Ovo = (Akr) => XLe("timeout", Akr)), (TC[7] = Ovo));
   else Ovo = TC[7];
   let Ikr = Ovo,
     Fvo;
-  if (TC[8] === p) ((Fvo = (Ekr) => XLe("abandoned", Ekr)), (TC[8] = Fvo));
+  if (TC[8] === MEMO_CACHE_SENTINEL) ((Fvo = (Ekr) => XLe("abandoned", Ekr)), (TC[8] = Fvo));
   else Fvo = TC[8];
   let Dkr = Fvo,
     Bvo;
@@ -56356,7 +56356,7 @@ function Fie(bb, VLe, Tvo, KLe) {
   if (TC[13] !== pwt || TC[14] !== T1)
     ((Hvo = async (kwt, vwt, jvo) => {
       if (
-        (i(IT, {
+        (logEvent(IT, {
           event_type: fromEnum(`transcript_share_${vwt}`),
           appearance_id: Ee(kwt),
           trigger: fromEnum(rE),
@@ -56368,7 +56368,7 @@ function Fie(bb, VLe, Tvo, KLe) {
       if (vwt === "yes") {
         let wwt = await eJ(Avo.current, rE, kwt, T1, pwt);
         return (
-          i(IT, {
+          logEvent(IT, {
             event_type: S(
               wwt.success
                 ? "transcript_share_submitted"
@@ -56466,10 +56466,10 @@ function Fie(bb, VLe, Tvo, KLe) {
       let Ewt = tOe.filter(awo);
       let Kvo = tOe.length - Ewt.length;
       if (Kvo > 0)
-        i(IT, {
+        logEvent(IT, {
           event_type: S("citation_ineligible"),
           dropped_citation_count: Kvo,
-          dropped_too_long_count: G(tOe, lwo),
+          dropped_too_long_count: countMatching(tOe, lwo),
           eligible_citation_count: Ewt.length,
         });
       let [Nwt] = Ewt;
@@ -56479,7 +56479,7 @@ function Fie(bb, VLe, Tvo, KLe) {
       if (!Hwt() && Math.random() >= Uwt()) {
         return;
       }
-      let zvo = { sentence: Nwt.sentence, filenames: Y(Nwt.filenames) };
+      let zvo = { sentence: Nwt.sentence, filenames: dedupe(Nwt.filenames) };
       ((Nvo.current = zvo), Dvo(zvo), eOe());
     }),
       (Vvo = [YLe, C1, x1, VLe, zLe, R1, bb, eOe]),
@@ -56791,7 +56791,7 @@ function ywo(w, I, ne, me) {
   return xe.sort((Ae, Oe) => Oe.ts - Ae.ts);
 }
 function rOe(w, I, ne, me) {
-  i("tengu_plugin_feedback_survey_event", {
+  logEvent("tengu_plugin_feedback_survey_event", {
     event_type: fromEnum(w),
     appearance_id: Ee(I),
     trigger_type: fromEnum(ne.trigger),
@@ -56845,8 +56845,8 @@ function sOe({
   enabled: ne = !0,
   otherSurveyActive: me = !1,
 }) {
-  let { storageV5: pe, credentials: be } = _e(),
-    xe = Me(w, (fo) => fo.isLoading),
+  let { storageV5: pe, credentials: be } = useStorageV5Context(),
+    xe = useStoreSelector(w, (fo) => fo.isLoading),
     Ae = DL("tengu_plugin_feedback_survey_config", iOe),
     Oe = V(() => ({ ...iOe, ...Ae }), [Ae]),
     [He, Ke] = d(null),
@@ -56969,7 +56969,7 @@ function sOe({
 }
 F();
 function Owo(Ewo) {
-  (i("tengu_post_compact_survey_event", {
+  (logEvent("tengu_post_compact_survey_event", {
     event_type: S("appeared"),
     appearance_id: Ee(Ewo),
   }),
@@ -56980,7 +56980,7 @@ function Owo(Ewo) {
     }));
 }
 function Fwo(Dwo, Nwo) {
-  (i("tengu_post_compact_survey_event", {
+  (logEvent("tengu_post_compact_survey_event", {
     event_type: S("responded"),
     appearance_id: Ee(Dwo),
     response: fromEnum(Nwo),
@@ -56993,7 +56993,7 @@ function Fwo(Dwo, Nwo) {
     }));
 }
 function Bwo(Lwo) {
-  (i("tengu_post_compact_survey_event", {
+  (logEvent("tengu_post_compact_survey_event", {
     event_type: S("abandoned"),
     appearance_id: Ee(Lwo),
   }),
@@ -57032,7 +57032,7 @@ function Hie(P1, aOe, Swo, lOe) {
     UL = vwo === void 0 ? !0 : vwo,
     [uOe, Ovr] = d(null),
     wwo;
-  if (M1[2] === p) ((wwo = new Set()), (M1[2] = wwo));
+  if (M1[2] === MEMO_CACHE_SENTINEL) ((wwo = new Set()), (M1[2] = wwo));
   else wwo = M1[2];
   let Cwo = C(wwo),
     dOe = C(null),
@@ -57040,7 +57040,7 @@ function Hie(P1, aOe, Swo, lOe) {
     Bvr = Fwo,
     Uvr = Bwo,
     _wo;
-  if (M1[3] === p)
+  if (M1[3] === MEMO_CACHE_SENTINEL)
     ((_wo = {
       hideThanksAfterMs: eCt,
       onOpen: Fvr,
@@ -57163,7 +57163,7 @@ function Hie(P1, aOe, Swo, lOe) {
   return Iwo;
 }
 var yJ = {};
-au(yJ, {
+defineExportGetters(yJ, {
   AbovePromptSite: () => POe,
   CollapseHandle: () => rJ,
   CollapsedHint: () => sJ,
@@ -57490,7 +57490,7 @@ function a_o() {
 function POe(GCr) {
   let Ic = _(103),
     { survey: iE, working: L1, setInputValue: aCt } = GCr,
-    { rows: Qie } = Se(),
+    { rows: Qie } = useTerminalSize(),
     Yie = De($B),
     yOe = C(null),
     cCt = C(null),
@@ -57521,7 +57521,7 @@ function POe(GCr) {
   let VR = t7(kCo),
     [jL, zCr] = d(VR),
     CCo;
-  if (Ic[3] === p)
+  if (Ic[3] === MEMO_CACHE_SENTINEL)
     ((CCo = (_Co) => {
       (N1.set(_Co), zCr(_Co));
     }),
@@ -57558,7 +57558,7 @@ function POe(GCr) {
       a_o,
     ),
     MCo;
-  if (Ic[14] === p) ((MCo = I1.get()), (Ic[14] = MCo));
+  if (Ic[14] === MEMO_CACHE_SENTINEL) ((MCo = I1.get()), (Ic[14] = MCo));
   else MCo = Ic[14];
   let [$L, QCr] = d(MCo === !0),
     { drawn: SOe } = bOe,
@@ -57618,9 +57618,9 @@ function POe(GCr) {
   let KL = t7(OCo),
     dCt = hA(),
     hJ = Qy(),
-    mCt = Zr("abovePrompt:toggle", "Chat", "ctrl+x ctrl+a"),
+    mCt = useKeybindingDisplayText("abovePrompt:toggle", "Chat", "ctrl+x ctrl+a"),
     FCo;
-  if (Ic[31] === p)
+  if (Ic[31] === MEMO_CACHE_SENTINEL)
     ((FCo = function tse(BCo) {
       (I1.set(BCo), QCr(BCo), WL(null));
     }),
@@ -57659,7 +57659,7 @@ function POe(GCr) {
   else ((jCo = Ic[38]), ($Co = Ic[39]));
   E(jCo, $Co);
   let WCo;
-  if (Ic[40] === p)
+  if (Ic[40] === MEMO_CACHE_SENTINEL)
     ((WCo = () => {
       WL(null);
     }),
@@ -57693,9 +57693,9 @@ function POe(GCr) {
       (Ic[48] = KCo));
   else KCo = Ic[48];
   let zCo;
-  if (Ic[49] === p) ((zCo = { context: "Chat" }), (Ic[49] = zCo));
+  if (Ic[49] === MEMO_CACHE_SENTINEL) ((zCo = { context: "Chat" }), (Ic[49] = zCo));
   else zCo = Ic[49];
-  Ne("abovePrompt:toggle", KCo, zCo);
+  useKeybinding("abovePrompt:toggle", KCo, zCo);
   let pCt = !iE && !KL && Ih.length > 0,
     QCo;
   if (Ic[50] !== Ih.length || Ic[51] !== pCt)
@@ -57710,12 +57710,12 @@ function POe(GCr) {
       (Ic[52] = QCo));
   else QCo = Ic[52];
   let JCo;
-  if (Ic[53] === p) ((JCo = { context: "Chat" }), (Ic[53] = JCo));
+  if (Ic[53] === MEMO_CACHE_SENTINEL) ((JCo = { context: "Chat" }), (Ic[53] = JCo));
   else JCo = Ic[53];
-  (Ne("abovePrompt:focus", QCo, JCo),
-    nM("AbovePrompt", gv === "Button"),
-    nM("AbovePromptInput", gv === "Input"),
-    nM("AbovePromptSelect", gv === "Select"),
+  (useKeybinding("abovePrompt:focus", QCo, JCo),
+    useActiveKeybindingContext("AbovePrompt", gv === "Button"),
+    useActiveKeybindingContext("AbovePromptInput", gv === "Input"),
+    useActiveKeybindingContext("AbovePromptSelect", gv === "Select"),
     Rs("above-prompt-input", gv === "Input"),
     Rs("above-prompt-select", gv === "Select"));
   let XCo;
@@ -57739,7 +57739,7 @@ function POe(GCr) {
       (Ic[58] = fCt),
       (Ic[59] = ZCo));
   else ZCo = Ic[59];
-  Ze(ose, ZCo);
+  useKeybindings(ose, ZCo);
   const gCt = gv === "Input";
   let e_o;
   if (Ic[60] !== gCt)
@@ -57747,7 +57747,7 @@ function POe(GCr) {
       (Ic[60] = gCt),
       (Ic[61] = e_o));
   else e_o = Ic[61];
-  Ze(ose, e_o);
+  useKeybindings(ose, e_o);
   let t_o;
   if (Ic[62] !== ose || Ic[63] !== GL.handlers)
     ((t_o = { ...ose, ...GL.handlers }),
@@ -57762,13 +57762,13 @@ function POe(GCr) {
       (Ic[65] = hCt),
       (Ic[66] = o_o));
   else o_o = Ic[66];
-  Ze(t_o, o_o);
+  useKeybindings(t_o, o_o);
   const yCt = gv === "Select";
   let n_o;
   if (Ic[67] !== yCt)
     ((n_o = { isActive: yCt }), (Ic[67] = yCt), (Ic[68] = n_o));
   else n_o = Ic[68];
-  rF(GL.intercept, n_o);
+  useKeybindingPreDispatch(GL.intercept, n_o);
   const bCt = !iE && F1.size > 0;
   let kOe;
   if (Ic[69] !== F1 || Ic[70] !== KL)
@@ -57956,15 +57956,15 @@ function x_o(w, I) {
 function sse(K_r) {
   let sE = _(39),
     { turn: hv, transcript: bv, isRemoteSession: AOe, slot: wCt } = K_r,
-    z_r = Ye(),
-    _Ct = Me(bv),
-    u_o = Me(hv, R_o),
+    z_r = useSession(),
+    _Ct = useStoreSelector(bv),
+    u_o = useStoreSelector(hv, R_o),
     OT = Z8(),
     d_o;
   if (sE[0] !== bv) ((d_o = () => new xie(bv)), (sE[0] = bv), (sE[1] = d_o));
   else d_o = sE[1];
   let [nse] = d(d_o),
-    TCt = Me(nse),
+    TCt = useStoreSelector(nse),
     m_o,
     p_o;
   if (sE[2] !== nse)
@@ -58106,8 +58106,8 @@ function sse(K_r) {
 function ase(Y_r) {
   let H1 = _(26),
     { slot: J_r, turn: EOe, draft: aE, submit: SJ } = Y_r,
-    Dh = Me(J_r),
-    kJ = Me(EOe, P_o),
+    Dh = useStoreSelector(J_r),
+    kJ = useStoreSelector(EOe, P_o),
     v_o;
   if (H1[0] !== Dh)
     ((v_o =
@@ -58221,7 +58221,7 @@ function use(lTr) {
       visible: GCt,
       onBackgroundSession: KCt,
     } = lTr,
-    zCt = Me(lse, I_o),
+    zCt = useStoreSelector(lse, I_o),
     HOe;
   if (
     M_o[0] !== WCt ||
@@ -58415,8 +58415,8 @@ function mse() {
   let dse = _(19),
     GOe = U($_o),
     JL = Rv(GOe),
-    KOe = qc().getMainThreadQueueLength(),
-    QCt = Ye(W_o),
+    KOe = useCommandQueue().getMainThreadQueueLength(),
+    QCt = useSession(W_o),
     L_o;
   if (dse[0] !== QCt)
     ((L_o = (ATr) => ATr.todos[QCt]), (dse[0] = QCt), (dse[1] = L_o));
@@ -58504,19 +58504,19 @@ function nFe(JTr) {
     q_o;
   if (dE[0] !== wJ)
     ((q_o = () => {
-      i("tengu_auto_default_nudge_shown", { current_mode: fromEnum(wJ) });
+      logEvent("tengu_auto_default_nudge_shown", { current_mode: fromEnum(wJ) });
     }),
       (dE[0] = wJ),
       (dE[1] = q_o));
   else q_o = dE[1];
-  (zy("impression", q_o), is());
-  let XL = Ah(XTr),
+  (zy("impression", q_o), useGlobalExitKeybinding());
+  let XL = useAnswerRefusalState(XTr),
     [g_t] = d(X_o),
     { refusedWithin: h_t, noteRefused: y_t } = $o(),
     V_o;
   if (dE[2] !== g_t || dE[3] !== y_t || dE[4] !== h_t)
     ((V_o = () => {
-      if (ma(g_t) || h_t()) {
+      if (isRecent(g_t) || h_t()) {
         return (y_t(), !0);
       }
       return !1;
@@ -58542,7 +58542,7 @@ function nFe(JTr) {
   else G_o = dE[8];
   let ZL = G_o,
     z_o;
-  if (dE[9] === p)
+  if (dE[9] === MEMO_CACHE_SENTINEL)
     ((z_o = e(o, {
       marginBottom: 1,
       flexDirection: "column",
@@ -58556,7 +58556,7 @@ function nFe(JTr) {
   const ZTr = XL.attempts,
     b_t = XL.refused ?? void 0;
   let Q_o;
-  if (dE[10] === p)
+  if (dE[10] === MEMO_CACHE_SENTINEL)
     ((Q_o = {
       label: "Yes, set auto mode as my default permission mode",
       value: "accept",
@@ -58586,7 +58586,7 @@ function nFe(JTr) {
     dE[21] !== oFe ||
     dE[22] !== b_t
   )
-    ((J_o = e(gs, {
+    ((J_o = e(PermissionDialogFrame, {
       title: "Make auto mode your default permission mode?",
       children: r(o, {
         flexDirection: "column",
@@ -58669,7 +58669,7 @@ function RFe(Axr) {
     RC[5] !== _J
   )
     ((Z_o = () => {
-      i("tengu_effort_medium_nudge_shown", {
+      logEvent("tengu_effort_medium_nudge_shown", {
         cohort: fromEnum(ec.cohort),
         option_order: fromEnum(_J),
         nudge_model: bt(ec.modelKey),
@@ -58686,19 +58686,19 @@ function RFe(Axr) {
       (RC[5] = _J),
       (RC[6] = Z_o));
   else Z_o = RC[6];
-  (zy("impression", Z_o), is());
-  let { columns: j1 } = Se(),
+  (zy("impression", Z_o), useGlobalExitKeybinding());
+  let { columns: j1 } = useTerminalSize(),
     eTo;
   if (RC[7] !== k_t || RC[8] !== _J)
     ((eTo = (Ixr) => k_t(Ixr, _J)), (RC[7] = k_t), (RC[8] = _J), (RC[9] = eTo));
   else eTo = RC[9];
-  let mE = Ah(eTo),
+  let mE = useAnswerRefusalState(eTo),
     [TJ] = d(iTo),
     { refusedWithin: w_t, noteRefused: C_t } = $o(),
     tTo;
   if (RC[10] !== TJ || RC[11] !== C_t || RC[12] !== w_t)
     ((tTo = () => {
-      if (ma(TJ) || w_t()) {
+      if (isRecent(TJ) || w_t()) {
         return (C_t(), !0);
       }
       return !1;
@@ -58771,7 +58771,7 @@ function RFe(Axr) {
       ec.showWarning === !0
         ? pE(hse(ec.warningText ?? $_t(rFe, ec.fromLevel)), j1, wse)
         : void 0;
-    lFe = gs;
+    lFe = PermissionDialogFrame;
     dFe = Nxr;
     aFe = o;
     fFe = "column";
@@ -58866,7 +58866,7 @@ function RFe(Axr) {
     RC[60] !== wFe
   )
     ((CFe = e(
-      En,
+      ConfirmPrompt,
       {
         openedAt: TJ,
         confirmLabel: uFe,
@@ -58984,7 +58984,7 @@ function FFe(Jxr) {
       sourceCommand: Xxr,
       onResponse: $1,
     } = Jxr,
-    MFe = Un(mo),
+    MFe = Un(REFUSE_INPUT_WINDOW_MS),
     lTo;
   if (Jg[0] !== K_t)
     ((lTo = YH(K_t, "(unnamed plugin)")), (Jg[0] = K_t), (Jg[1] = lTo));
@@ -59006,7 +59006,7 @@ function FFe(Jxr) {
     ((dTo = () => $1(isUnattendedInteractiveSession() ? "cancelled" : "no")), (Jg[6] = $1), (Jg[7] = dTo));
   else dTo = Jg[7];
   let mTo;
-  if (Jg[8] === p) ((mTo = []), (Jg[8] = mTo));
+  if (Jg[8] === MEMO_CACHE_SENTINEL) ((mTo = []), (Jg[8] = mTo));
   else mTo = Jg[8];
   Un(dTo, tTt, mTo);
   let pTo;
@@ -59049,7 +59049,7 @@ function FFe(Jxr) {
   let Cse = fTo,
     X_t = truncateToWidth(Zxr, nTt),
     gTo;
-  if (Jg[14] === p)
+  if (Jg[14] === MEMO_CACHE_SENTINEL)
     ((gTo = [
       { label: e(t, { children: "Yes, install" }), value: "yes" },
       { label: "No", value: "no" },
@@ -59079,7 +59079,7 @@ function FFe(Jxr) {
       (Jg[16] = IFe));
   else IFe = Jg[16];
   let hTo;
-  if (Jg[17] === p)
+  if (Jg[17] === MEMO_CACHE_SENTINEL)
     ((hTo = e(o, {
       flexShrink: 0,
       children: e(t, { dimColor: !0, children: "Plugin:" }),
@@ -59095,7 +59095,7 @@ function FFe(Jxr) {
       (Jg[19] = EFe));
   else EFe = Jg[19];
   let yTo;
-  if (Jg[20] === p)
+  if (Jg[20] === MEMO_CACHE_SENTINEL)
     ((yTo = e(o, {
       flexShrink: 0,
       children: e(t, { dimColor: !0, children: "Marketplace:" }),
@@ -59127,7 +59127,7 @@ function FFe(Jxr) {
       (Jg[24] = NFe));
   else NFe = Jg[24];
   let bTo;
-  if (Jg[25] === p)
+  if (Jg[25] === MEMO_CACHE_SENTINEL)
     ((bTo = e(o, {
       marginTop: 1,
       children: e(t, { children: "Would you like to install it?" }),
@@ -59161,7 +59161,7 @@ function FFe(Jxr) {
     Jg[35] !== OFe ||
     Jg[36] !== IFe
   )
-    ((STo = e(gs, {
+    ((STo = e(PermissionDialogFrame, {
       title: "Plugin recommendation",
       children: r(o, {
         flexDirection: "column",
@@ -59183,7 +59183,7 @@ function HFe(uRr) {
   let BFe = _(7),
     { onDone: PJ } = uRr,
     kTo;
-  if (BFe[0] === p)
+  if (BFe[0] === MEMO_CACHE_SENTINEL)
     ((kTo = r(o, {
       flexDirection: "column",
       children: [
@@ -59194,7 +59194,7 @@ function HFe(uRr) {
       (BFe[0] = kTo));
   else kTo = BFe[0];
   let vTo;
-  if (BFe[1] === p)
+  if (BFe[1] === MEMO_CACHE_SENTINEL)
     ((vTo = [{ value: "ok", label: "Got it, thanks!" }]), (BFe[1] = vTo));
   else vTo = BFe[1];
   let UFe;
@@ -59246,12 +59246,12 @@ function _To(w, I) {
   }
 }
 function ETo() {
-  i("tengu_usage_credits_admin_request_confirm_shown", {});
+  logEvent("tengu_usage_credits_admin_request_confirm_shown", {});
 }
 function tst(IRr) {
   let XR = _(36),
     { extraUsage: _se, onDone: MJ, onOutcome: AJ, wouldTakeAnswer: iTt } = IRr,
-    { credentials: sTt } = _e(),
+    { credentials: sTt } = useStorageV5Context(),
     [ERr, DRr] = d(!1),
     jFe = C(!1),
     fE = ui(),
@@ -59273,7 +59273,7 @@ function tst(IRr) {
     aTt = Gm(),
     lTt = fa(NRr),
     xTo;
-  if (XR[4] === p) ((xTo = []), (XR[4] = xTo));
+  if (XR[4] === MEMO_CACHE_SENTINEL) ((xTo = []), (XR[4] = xTo));
   else xTo = XR[4];
   E(ETo, xTo);
   let RTo;
@@ -59299,7 +59299,7 @@ function tst(IRr) {
         return;
       }
       ((jFe.current = !0),
-        i("tengu_usage_credits_admin_request_confirm_result", {
+        logEvent("tengu_usage_credits_admin_request_confirm_result", {
           action: S("confirmed"),
         }),
         DRr(!0),
@@ -59339,7 +59339,7 @@ function tst(IRr) {
       }
       (AJ?.("cancelled"),
         (jFe.current = !0),
-        i("tengu_usage_credits_admin_request_confirm_result", {
+        logEvent("tengu_usage_credits_admin_request_confirm_result", {
           action: S("cancelled"),
         }));
     }),
@@ -59353,10 +59353,10 @@ function tst(IRr) {
   let tO = MTo;
   if (ERr) {
     let W1;
-    if (XR[20] === p)
+    if (XR[20] === MEMO_CACHE_SENTINEL)
       ((W1 = e(o, {
         paddingTop: 1,
-        children: e($n, { message: "Sending request to your admin\u2026" }),
+        children: e(SpinnerMessageLine, { message: "Sending request to your admin\u2026" }),
       })),
         (XR[20] = W1));
     else W1 = XR[20];
@@ -59381,7 +59381,7 @@ function tst(IRr) {
       (XR[22] = W1));
   else W1 = XR[22];
   let ATo;
-  if (XR[23] === p)
+  if (XR[23] === MEMO_CACHE_SENTINEL)
     ((ATo = e(t, {
       dimColor: !0,
       children:
@@ -59398,7 +59398,7 @@ function tst(IRr) {
     XR[28] !== aTt
   )
     (($Fe = e(
-      En,
+      ConfirmPrompt,
       {
         refuseInput: Tse,
         openedAt: aTt,
@@ -59451,7 +59451,7 @@ function fHe(w) {
       startAtChooseForTesting: pe,
     } = w,
     be = () => w.variant !== "mid-session" || w.wouldTakeAnswer(),
-    { storageV5: xe, credentials: Ae } = _e(),
+    { storageV5: xe, credentials: Ae } = useStorageV5Context(),
     Oe = V(() => R4(me), [me]),
     [He, Ke] = d(
       pe
@@ -59460,14 +59460,14 @@ function fHe(w) {
     ),
     [Je, Qe] = d(He.s),
     [it, at] = d(0),
-    Zt = Ah(() => be());
+    Zt = useAnswerRefusalState(() => be());
   if (Je !== He.s) (Qe(He.s), at(Date.now()));
   let Ct = ui(),
     { refusedWithin: eo, noteRefused: jt, epoch: Tt } = $o(),
     to = C(!1),
     zt = fa(`${it}:${Tt}`);
   function ao() {
-    return (it !== 0 && ma(it)) || eo();
+    return (it !== 0 && isRecent(it)) || eo();
   }
   function co() {
     if (Ct() || ao()) return (jt(), !0);
@@ -59596,7 +59596,7 @@ function fHe(w) {
         title: vo,
         color: "warning",
         onCancel: Wo,
-        children: e($n, { message: "Checking usage credits\u2026" }),
+        children: e(SpinnerMessageLine, { message: "Checking usage credits\u2026" }),
       });
     case "choose": {
       let {
@@ -59688,7 +59688,7 @@ function fHe(w) {
                         }),
                     ],
                   })
-                : e(Gp, { url: DDe }),
+                : e(LearnMoreLink, { url: DDe }),
             e(
               ve,
               {
@@ -59774,7 +59774,7 @@ function fHe(w) {
         title: vo,
         color: "warning",
         onCancel: Wo,
-        children: e($n, {
+        children: e(SpinnerMessageLine, {
           message: He.needsSetup
             ? "Setting up usage credits\u2026"
             : "Opening usage credits\u2026",
@@ -59804,7 +59804,7 @@ function fHe(w) {
 function QFe(_Pr) {
   let JS = _(22),
     { onDone: q1, installationStatus: VFe } = _Pr,
-    { storageV5: TPr } = _e();
+    { storageV5: TPr } = useStorageV5Context();
   mTt(TPr);
   let DTo;
   if (JS[0] !== q1)
@@ -59813,9 +59813,9 @@ function QFe(_Pr) {
       (JS[1] = DTo));
   else DTo = JS[1];
   let NTo;
-  if (JS[2] === p) ((NTo = { context: "Confirmation" }), (JS[2] = NTo));
+  if (JS[2] === MEMO_CACHE_SENTINEL) ((NTo = { context: "Confirmation" }), (JS[2] = NTo));
   else NTo = JS[2];
-  Ze(DTo, NTo);
+  useKeybindings(DTo, NTo);
   let LTo;
   if (JS[3] !== VFe?.ideType)
     ((LTo = VFe?.ideType ?? w2t()), (JS[3] = VFe?.ideType), (JS[4] = LTo));
@@ -59830,7 +59830,7 @@ function QFe(_Pr) {
     RPr = xPr ? "plugin" : "extension",
     PPr = a.platform === "darwin" ? "Cmd+Option+K" : "Ctrl+Alt+K",
     BTo;
-  if (JS[7] === p)
+  if (JS[7] === MEMO_CACHE_SENTINEL)
     ((BTo = e(t, { color: "claude", children: "\u273B " })), (JS[7] = BTo));
   else BTo = JS[7];
   let KFe;
@@ -59843,13 +59843,13 @@ function QFe(_Pr) {
   else KFe = JS[9];
   const dTt = FTo ? `installed ${RPr} v${FTo}` : void 0;
   let UTo;
-  if (JS[10] === p)
+  if (JS[10] === MEMO_CACHE_SENTINEL)
     ((UTo = e(t, { color: "suggestion", children: "\u29C9 open files" })),
       (JS[10] = UTo));
   else UTo = JS[10];
   let HTo;
-  if (JS[11] === p)
-    ((HTo = r(lu, {
+  if (JS[11] === MEMO_CACHE_SENTINEL)
+    ((HTo = r(BulletItem, {
       children: [
         "Claude has context of ",
         UTo,
@@ -59861,8 +59861,8 @@ function QFe(_Pr) {
       (JS[11] = HTo));
   else HTo = JS[11];
   let jTo;
-  if (JS[12] === p)
-    ((jTo = r(lu, {
+  if (JS[12] === MEMO_CACHE_SENTINEL)
+    ((jTo = r(BulletItem, {
       children: [
         "Review Claude Code's changes",
         " ",
@@ -59873,8 +59873,8 @@ function QFe(_Pr) {
       (JS[12] = jTo));
   else jTo = JS[12];
   let $To;
-  if (JS[13] === p)
-    (($To = r(lu, {
+  if (JS[13] === MEMO_CACHE_SENTINEL)
+    (($To = r(BulletItem, {
       children: [
         "Cmd+Esc",
         e(t, { dimColor: !0, children: " for Quick Launch" }),
@@ -59883,7 +59883,7 @@ function QFe(_Pr) {
       (JS[13] = $To));
   else $To = JS[13];
   let WTo;
-  if (JS[14] === p)
+  if (JS[14] === MEMO_CACHE_SENTINEL)
     ((WTo = r(o, {
       flexDirection: "column",
       gap: 1,
@@ -59891,7 +59891,7 @@ function QFe(_Pr) {
         HTo,
         jTo,
         $To,
-        r(lu, {
+        r(BulletItem, {
           children: [
             PPr,
             e(t, {
@@ -59920,13 +59920,13 @@ function QFe(_Pr) {
       (JS[18] = zFe));
   else zFe = JS[18];
   let qTo;
-  if (JS[19] === p)
+  if (JS[19] === MEMO_CACHE_SENTINEL)
     ((qTo = e(o, {
       paddingX: 1,
       children: r(t, {
         dimColor: !0,
         italic: !0,
-        children: ["Press ", e(D, { chord: "enter", action: "continue" })],
+        children: ["Press ", e(KeybindingHint, { chord: "enter", action: "continue" })],
       }),
     })),
       (JS[19] = qTo));
@@ -59959,7 +59959,7 @@ function iBe(HPr) {
       fileExtension: gTt,
       onResponse: V1,
     } = HPr,
-    JFe = Un(mo),
+    JFe = Un(REFUSE_INPUT_WINDOW_MS),
     GTo;
   if (mp[0] !== pTt)
     ((GTo = YH(pTt, "(unnamed plugin)")), (mp[0] = pTt), (mp[1] = GTo));
@@ -59987,7 +59987,7 @@ function iBe(HPr) {
       (mp[9] = YTo));
   else YTo = mp[9];
   let JTo;
-  if (mp[10] === p) ((JTo = []), (mp[10] = JTo));
+  if (mp[10] === MEMO_CACHE_SENTINEL) ((JTo = []), (mp[10] = JTo));
   else JTo = mp[10];
   Un(YTo, vTt, JTo);
   let XTo;
@@ -60033,7 +60033,7 @@ function iBe(HPr) {
   else ZTo = mp[15];
   let Rse = ZTo,
     exo;
-  if (mp[16] === p)
+  if (mp[16] === MEMO_CACHE_SENTINEL)
     ((exo = [
       { label: e(t, { children: "Yes, install" }), value: "yes" },
       { label: "No, not now", value: "no" },
@@ -60044,7 +60044,7 @@ function iBe(HPr) {
   else exo = mp[16];
   let WPr = exo,
     txo;
-  if (mp[17] === p)
+  if (mp[17] === MEMO_CACHE_SENTINEL)
     ((txo = e(o, {
       marginBottom: 1,
       children: e(t, {
@@ -60056,7 +60056,7 @@ function iBe(HPr) {
       (mp[17] = txo));
   else txo = mp[17];
   let oxo;
-  if (mp[18] === p)
+  if (mp[18] === MEMO_CACHE_SENTINEL)
     ((oxo = e(o, {
       flexShrink: 0,
       children: e(t, { dimColor: !0, children: "Plugin:" }),
@@ -60072,7 +60072,7 @@ function iBe(HPr) {
       (mp[20] = ZFe));
   else ZFe = mp[20];
   let nxo;
-  if (mp[21] === p)
+  if (mp[21] === MEMO_CACHE_SENTINEL)
     ((nxo = e(o, {
       flexShrink: 0,
       children: e(t, { dimColor: !0, children: "Marketplace:" }),
@@ -60088,7 +60088,7 @@ function iBe(HPr) {
       (mp[23] = eBe));
   else eBe = mp[23];
   let rxo;
-  if (mp[24] === p)
+  if (mp[24] === MEMO_CACHE_SENTINEL)
     ((rxo = e(o, {
       flexShrink: 0,
       children: e(t, { dimColor: !0, children: "Triggered by:" }),
@@ -60123,7 +60123,7 @@ function iBe(HPr) {
       (mp[28] = oBe));
   else oBe = mp[28];
   let ixo;
-  if (mp[29] === p)
+  if (mp[29] === MEMO_CACHE_SENTINEL)
     ((ixo = e(o, {
       marginTop: 1,
       children: e(t, {
@@ -60159,7 +60159,7 @@ function iBe(HPr) {
     mp[39] !== oBe ||
     mp[40] !== rBe
   )
-    ((sxo = e(gs, {
+    ((sxo = e(PermissionDialogFrame, {
       title: "LSP plugin recommendation",
       children: r(o, {
         flexDirection: "column",
@@ -60180,7 +60180,7 @@ function iBe(HPr) {
 function Mse(ZPr) {
   let Pse = _(12),
     { onDone: wTt, defaultFocusValue: CTt } = ZPr,
-    sBe = Un(mo),
+    sBe = Un(REFUSE_INPUT_WINDOW_MS),
     axo;
   if (Pse[0] !== sBe || Pse[1] !== wTt)
     ((axo = function oO(eMr) {
@@ -60195,7 +60195,7 @@ function Mse(ZPr) {
   else axo = Pse[2];
   let oO = axo,
     lxo;
-  if (Pse[3] === p)
+  if (Pse[3] === MEMO_CACHE_SENTINEL)
     ((lxo = [
       {
         label: "Enable Remote Control",
@@ -60212,7 +60212,7 @@ function Mse(ZPr) {
   else lxo = Pse[3];
   let tMr = lxo,
     cxo;
-  if (Pse[4] === p)
+  if (Pse[4] === MEMO_CACHE_SENTINEL)
     ((cxo = r(o, {
       marginBottom: 1,
       flexDirection: "column",
@@ -60237,7 +60237,7 @@ function Mse(ZPr) {
   else aBe = Pse[6];
   let uxo;
   if (Pse[7] !== CTt || Pse[8] !== oO || Pse[9] !== _Tt || Pse[10] !== aBe)
-    ((uxo = e(gs, {
+    ((uxo = e(PermissionDialogFrame, {
       title: "Remote Control",
       children: r(o, {
         flexDirection: "column",
@@ -60283,7 +60283,7 @@ function uBe(uMr) {
   if (K1[4] !== IJ) ((lBe = () => IJ("dismiss")), (K1[4] = IJ), (K1[5] = lBe));
   else lBe = K1[5];
   let pxo;
-  if (K1[6] === p)
+  if (K1[6] === MEMO_CACHE_SENTINEL)
     ((pxo = e(o, {
       flexDirection: "column",
       children: e(t, {
@@ -60294,7 +60294,7 @@ function uBe(uMr) {
       (K1[6] = pxo));
   else pxo = K1[6];
   let fxo;
-  if (K1[7] === p)
+  if (K1[7] === MEMO_CACHE_SENTINEL)
     ((fxo = [
       { value: "compact", label: "Resume from summary (recommended)" },
       { value: "continue", label: "Resume full session as-is" },
@@ -60738,7 +60738,7 @@ function jJ(uAr) {
   if (BTt[0] !== FTt || BTt[1] !== NTt)
     ((vxo = (...nO) => {
       let wxo = nO;
-      if (wxo[0] !== "cancel" && ma(FTt)) {
+      if (wxo[0] !== "cancel" && isRecent(FTt)) {
         return !1;
       }
       return NTt(...wxo);
@@ -60789,7 +60789,7 @@ function jJ(uAr) {
 }
 function oxt({ serverName: w, params: I, onResponse: ne }) {
   let { message: me, requestedSchema: pe } = I,
-    { credentials: be } = _e(),
+    { credentials: be } = useStorageV5Context(),
     { parseRelatedTaskMetadata: xe } = import.meta
       .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
       .mcpElicitationHandlerModule(),
@@ -60833,7 +60833,7 @@ function oxt({ serverName: w, params: I, onResponse: ne }) {
     [fo, ro] = d(() => new Set()),
     [ho, _o] = d(),
     [Ho, po] = d(0),
-    xo = vt(),
+    xo = useClock(),
     Wo = C(void 0),
     Ro = C(new Map()),
     on = C({ buffer: "", timer: void 0 });
@@ -60847,7 +60847,7 @@ function oxt({ serverName: w, params: I, onResponse: ne }) {
     },
     [],
   );
-  let An = Se(),
+  let An = useTerminalSize(),
     { columns: wn } = An,
     { rows: yn } = ks(An),
     vo = Tt !== void 0 ? jt[Tt] : void 0,
@@ -61004,7 +61004,7 @@ function oxt({ serverName: w, params: I, onResponse: ne }) {
     let wr = cr.findIndex((ur) => ur.startsWith(Vr.buffer));
     if (wr !== -1) pr(wr);
   }
-  Ne(
+  useKeybinding(
     "confirm:no",
     () => {
       if (Sr && vo) {
@@ -61295,32 +61295,32 @@ ${ai}`
     color: "permission",
     onCancel: () => ne("cancel"),
     isCancelActive: (!vo || !!Ke) && !ho,
-    inputGuide: r(ue, {
+    inputGuide: r(DotSeparatedList, {
       children: [
-        e(je, {
+        e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Confirmation",
           fallback: "Esc",
           description: "cancel",
         }),
-        e(D, { chord: ["up", "down"], action: "navigate" }),
-        vo && e(D, { chord: "backspace", action: "unset" }),
+        e(KeybindingHint, { chord: ["up", "down"], action: "navigate" }),
+        vo && e(KeybindingHint, { chord: "backspace", action: "unset" }),
         vo &&
           vo.schema.type === "boolean" &&
-          e(D, { chord: "space", action: "toggle" }),
+          e(KeybindingHint, { chord: "space", action: "toggle" }),
         vo &&
           kv(vo.schema) &&
           (ho
-            ? e(D, { chord: "space", action: "select" })
-            : e(D, { chord: "right", action: "expand" })),
+            ? e(KeybindingHint, { chord: "space", action: "select" })
+            : e(KeybindingHint, { chord: "right", action: "expand" })),
         vo &&
           WT(vo.schema) &&
           (ho
-            ? e(D, { chord: "space", action: "toggle" })
-            : e(D, { chord: "right", action: "expand" })),
+            ? e(KeybindingHint, { chord: "space", action: "toggle" })
+            : e(KeybindingHint, { chord: "right", action: "expand" })),
       ],
     }),
-    children: r(mr, {
+    children: r(FocusableBox, {
       onKeyDown: Fn,
       children: [
         e(rxt, {
@@ -61380,7 +61380,7 @@ function ABe(mAr) {
       initialPhase: UTt,
       onWaitingDismiss: J1,
     } = mAr,
-    { columns: mBe, rows: fAr } = Se(),
+    { columns: mBe, rows: fAr } = useTerminalSize(),
     { message: HTt, url: qT } = pAr,
     Txo;
   if (wc[0] !== qT)
@@ -61530,7 +61530,7 @@ ${Pxo}`,
       }
       ((Lxo.current = !0),
         (Ixo.current = Date.now()),
-        Gr(Kd),
+        tryOpenUrlInBrowser(Kd),
         gAr("waiting"),
         hBe("open"));
     }),
@@ -61575,11 +61575,11 @@ ${Pxo}`,
         if (VT.key === "return") {
           VT.preventDefault();
           let Bxo = Ixo.current;
-          if (Bxo !== void 0 && ma(Bxo)) {
+          if (Bxo !== void 0 && isRecent(Bxo)) {
             return;
           }
           if (Hu === "open") {
-            if (fd) Gr(Kd);
+            if (fd) tryOpenUrlInBrowser(Kd);
           } else if (Hu === "cancel") J1?.("cancel");
           else J1?.(X1 ? "retry" : "dismiss");
         }
@@ -61607,8 +61607,8 @@ ${Pxo}`,
       ((wE = () => J1?.("cancel")), (wc[45] = J1), (wc[46] = wE));
     else wE = wc[46];
     let Use;
-    if (wc[47] === p)
-      ((Use = e(je, {
+    if (wc[47] === MEMO_CACHE_SENTINEL)
+      ((Use = e(ActionKeybindingHint, {
         action: "confirm:no",
         context: "Confirmation",
         fallback: "Esc",
@@ -61617,9 +61617,9 @@ ${Pxo}`,
         (wc[47] = Use));
     else Use = wc[47];
     let jse;
-    if (wc[48] === p)
-      ((jse = r(ue, {
-        children: [Use, e(D, { chord: ["left", "right"], action: "switch" })],
+    if (wc[48] === MEMO_CACHE_SENTINEL)
+      ((jse = r(DotSeparatedList, {
+        children: [Use, e(KeybindingHint, { chord: ["left", "right"], action: "switch" })],
       })),
         (wc[48] = jse));
     else jse = wc[48];
@@ -61671,7 +61671,7 @@ ${Pxo}`,
         (wc[60] = _E));
     else _E = wc[60];
     let tW;
-    if (wc[61] === p)
+    if (wc[61] === MEMO_CACHE_SENTINEL)
       ((tW = e(o, {
         marginBottom: 1,
         children: e(t, {
@@ -61766,7 +61766,7 @@ ${Pxo}`,
     else kBe = wc[83];
     let vBe;
     if (wc[84] !== pO || wc[85] !== _E || wc[86] !== kBe)
-      ((vBe = r(mr, { onKeyDown: pO, children: [_E, tW, kBe] })),
+      ((vBe = r(FocusableBox, { onKeyDown: pO, children: [_E, tW, kBe] })),
         (wc[84] = pO),
         (wc[85] = _E),
         (wc[86] = kBe),
@@ -61799,8 +61799,8 @@ ${Pxo}`,
   if (wc[95] !== vE) ((wE = () => vE("cancel")), (wc[95] = vE), (wc[96] = wE));
   else wE = wc[96];
   let Use;
-  if (wc[97] === p)
-    ((Use = e(je, {
+  if (wc[97] === MEMO_CACHE_SENTINEL)
+    ((Use = e(ActionKeybindingHint, {
       action: "confirm:no",
       context: "Confirmation",
       fallback: "Esc",
@@ -61809,9 +61809,9 @@ ${Pxo}`,
       (wc[97] = Use));
   else Use = wc[97];
   let jse;
-  if (wc[98] === p)
-    ((jse = r(ue, {
-      children: [Use, e(D, { chord: ["left", "right"], action: "switch" })],
+  if (wc[98] === MEMO_CACHE_SENTINEL)
+    ((jse = r(DotSeparatedList, {
+      children: [Use, e(KeybindingHint, { chord: ["left", "right"], action: "switch" })],
     })),
       (wc[98] = jse));
   else jse = wc[98];
@@ -61950,7 +61950,7 @@ ${Pxo}`,
     wc[133] !== fO ||
     wc[134] !== yO
   )
-    ((bO = r(mr, { onKeyDown: pO, children: [_E, tW, fO, yO] })),
+    ((bO = r(FocusableBox, { onKeyDown: pO, children: [_E, tW, fO, yO] })),
       (wc[130] = pO),
       (wc[131] = _E),
       (wc[132] = tW),
@@ -62427,7 +62427,7 @@ function rUe(oIr) {
   let EBe = _(12),
     { reason: nIr } = oIr,
     IBe = Us(nIr),
-    { columns: rIr } = Se(),
+    { columns: rIr } = useTerminalSize(),
     ixt = Math.max(20, rIr - kxt),
     aRo;
   if (EBe[0] !== ixt)
@@ -62540,7 +62540,7 @@ function iUe(uIr) {
     let BBe = [];
     if (!vO.accessibility) {
       let _O;
-      if (xv[12] === p)
+      if (xv[12] === MEMO_CACHE_SENTINEL)
         ((_O = {
           label: "Open System Settings \u2192 Accessibility",
           value: "open_accessibility",
@@ -62551,7 +62551,7 @@ function iUe(uIr) {
     }
     if (!vO.screenRecording) {
       let _O;
-      if (xv[13] === p)
+      if (xv[13] === MEMO_CACHE_SENTINEL)
         ((_O = {
           label: "Open System Settings \u2192 Screen Recording",
           value: "open_screen_recording",
@@ -62580,7 +62580,7 @@ function iUe(uIr) {
       if (!uxt()) {
         return;
       }
-      let fRo = HH();
+      let fRo = getComputerUseNativeModule();
       switch (dIr) {
         case "open_accessibility": {
           (fRo.tcc.requestAccessibility(),
@@ -62642,7 +62642,7 @@ function iUe(uIr) {
       (xv[26] = jBe));
   else jBe = xv[26];
   let gRo;
-  if (xv[27] === p)
+  if (xv[27] === MEMO_CACHE_SENTINEL)
     ((gRo = e(t, {
       dimColor: !0,
       children:
@@ -62732,7 +62732,7 @@ function sUe(mIr) {
         (Gu[3] = sP),
         (Gu[4] = mae));
     else ((sP = Gu[3]), (mae = Gu[4]));
-    if (mae <= G8) {
+    if (mae <= MAX_VISIBLE_LIST_ITEMS) {
       let Pv;
       if (Gu[5] !== Oh)
         ((Pv = { visibleApps: Oh, hiddenCount: 0 }),
@@ -62754,7 +62754,7 @@ function sUe(mIr) {
       xO = new Set();
       let VBe = 0;
       for (const gxt of pIr) {
-        if (VBe + sP[gxt] > G8 - 1) {
+        if (VBe + sP[gxt] > MAX_VISIBLE_LIST_ITEMS - 1) {
           continue;
         }
         (xO.add(gxt), (VBe = VBe + sP[gxt]), VBe);
@@ -62787,7 +62787,7 @@ function sUe(mIr) {
   else mae = Gu[21];
   let [Mv] = d(mae),
     Pv;
-  if (Gu[22] === p)
+  if (Gu[22] === MEMO_CACHE_SENTINEL)
     ((Pv = ["clipboardRead", "clipboardWrite", "systemKeyCombos"]),
       (Gu[22] = Pv));
   else Pv = Gu[22];
@@ -62817,7 +62817,7 @@ function sUe(mIr) {
   let hae = fae,
     hxt = fa(yIr),
     kRo;
-  if (Gu[29] === p)
+  if (Gu[29] === MEMO_CACHE_SENTINEL)
     ((kRo = {
       label: r(t, {
         children: [
@@ -63194,8 +63194,8 @@ function yUe(XIr) {
       (jf[9] = Txt),
       (jf[10] = Sae));
   else Sae = jf[10];
-  let IO = Ah(Sae),
-    cUe = Un(mo),
+  let IO = useAnswerRefusalState(Sae),
+    cUe = Un(REFUSE_INPUT_WINDOW_MS),
     hW;
   if (jf[11] !== cUe || jf[12] !== IO)
     ((hW = function GT(oEr, nEr) {
@@ -63242,7 +63242,7 @@ function yUe(XIr) {
   else kae = jf[16];
   let Cae = kae,
     NRo;
-  if (jf[17] === p) ((NRo = { label: "Yes", value: "yes" }), (jf[17] = NRo));
+  if (jf[17] === MEMO_CACHE_SENTINEL) ((NRo = { label: "Yes", value: "yes" }), (jf[17] = NRo));
   else NRo = jf[17];
   let uUe;
   if (jf[18] !== PO)
@@ -63252,7 +63252,7 @@ function yUe(XIr) {
       (jf[19] = uUe));
   else uUe = jf[19];
   let LRo;
-  if (jf[20] === p)
+  if (jf[20] === MEMO_CACHE_SENTINEL)
     ((LRo = {
       label: r(t, {
         children: [
@@ -63270,7 +63270,7 @@ function yUe(XIr) {
   else ORo = jf[22];
   let Rxt = ORo,
     FRo;
-  if (jf[23] === p)
+  if (jf[23] === MEMO_CACHE_SENTINEL)
     ((FRo = e(t, { dimColor: !0, children: "Host:" })), (jf[23] = FRo));
   else FRo = jf[23];
   const Pxt = QJ.kind === "full" && QJ.needsGutter,
@@ -63289,7 +63289,7 @@ function yUe(XIr) {
       (jf[28] = pUe));
   else pUe = jf[28];
   let BRo;
-  if (jf[29] === p)
+  if (jf[29] === MEMO_CACHE_SENTINEL)
     ((BRo = e(o, {
       marginTop: 1,
       children: e(t, { children: "Do you want to allow this connection?" }),
@@ -63347,7 +63347,7 @@ function yUe(XIr) {
   else hUe = jf[41];
   let URo;
   if (jf[42] !== _xt || jf[43] !== hUe)
-    ((URo = e(gs, {
+    ((URo = e(PermissionDialogFrame, {
       title: "Network request outside of sandbox",
       requestSource: _xt,
       children: hUe,
@@ -63366,8 +63366,8 @@ function CUe(bEr) {
   let DC = _(40),
     { plan: Ext, onDone: SEr } = bEr;
   Rs("ultraplan-choice");
-  let { answer: Dxt, refused: kEr, attempts: Nxt } = Ah(SEr),
-    { rows: vEr, columns: Lxt } = Se(),
+  let { answer: Dxt, refused: kEr, attempts: Nxt } = useAnswerRefusalState(SEr),
+    { rows: vEr, columns: Lxt } = useTerminalSize(),
     KT = Math.min(jxt, Math.max(1, Math.floor(vEr / 2) - $xt)),
     HRo;
   if (DC[0] !== Lxt || DC[1] !== Ext)
@@ -63491,7 +63491,7 @@ function CUe(bEr) {
   else vUe = DC[29];
   const Hxt = kEr ?? void 0;
   let YRo;
-  if (DC[30] === p)
+  if (DC[30] === MEMO_CACHE_SENTINEL)
     ((YRo = [
       {
         label: "Implement here",
@@ -63624,7 +63624,7 @@ function HUe(KEr) {
     ((TUe = () => BO("cancel")), (FO[11] = BO), (FO[12] = TUe));
   else TUe = FO[12];
   let nPo;
-  if (FO[13] === p)
+  if (FO[13] === MEMO_CACHE_SENTINEL)
     ((nPo = e(t, { dimColor: !0, children: "Loading\u2026" })), (FO[13] = nPo));
   else nPo = FO[13];
   let RUe;
@@ -63853,7 +63853,7 @@ function eMo(xDr, RDr) {
 function QHe(gDr) {
   let fp = _(91),
     { onDone: jE, tmuxAvailable: $E, wouldTakeAnswer: lP } = gDr,
-    { storageV5: iX } = _e(),
+    { storageV5: iX } = useStorageV5Context(),
     [Fc, bW] = d("initial"),
     [Dv, fPo] = d(null),
     [sX, pRt] = d(null),
@@ -63864,7 +63864,7 @@ function QHe(gDr) {
     { refusedWithin: kb, noteRefused: vb } = $o(),
     gPo;
   if (fp[0] !== jUe)
-    ((gPo = () => jUe !== 0 && ma(jUe)), (fp[0] = jUe), (fp[1] = gPo));
+    ((gPo = () => jUe !== 0 && isRecent(jUe)), (fp[0] = jUe), (fp[1] = gPo));
   else gPo = fp[1];
   let wb = gPo,
     hPo;
@@ -63884,7 +63884,7 @@ function QHe(gDr) {
   let zT = hPo,
     yPo,
     bPo;
-  if (fp[7] === p)
+  if (fp[7] === MEMO_CACHE_SENTINEL)
     ((yPo = () => {
       Hft().then((SDr) => {
         fPo(SDr);
@@ -63899,7 +63899,7 @@ function QHe(gDr) {
     $Ue = C(!1),
     fRt = C(!1),
     SPo;
-  if (fp[9] === p)
+  if (fp[9] === MEMO_CACHE_SENTINEL)
     ((SPo = () => {
       kW.current = !1;
     }),
@@ -63936,7 +63936,7 @@ function QHe(gDr) {
       (fp[16] = gRt),
       (fp[17] = vPo));
   else vPo = fp[17];
-  Ne("confirm:no", cP, vPo);
+  useKeybinding("confirm:no", cP, vPo);
   let wPo;
   if (fp[18] !== jE)
     ((wPo = () => {
@@ -64076,7 +64076,7 @@ function QHe(gDr) {
   else MPo = fp[43];
   let QT = MPo,
     APo;
-  if (fp[44] === p)
+  if (fp[44] === MEMO_CACHE_SENTINEL)
     ((APo = e(t, {
       bold: !0,
       color: "permission",
@@ -64201,7 +64201,7 @@ function QHe(gDr) {
       Fc !== "installing" &&
       Fc !== "verifying" &&
       Fc !== "success" &&
-      e(ci, { children: e(D, { chord: "escape", action: "cancel" }) })),
+      e(InputGuide, { children: e(KeybindingHint, { chord: "escape", action: "cancel" }) })),
       (fp[79] = Fc),
       (fp[80] = YUe));
   else YUe = fp[80];
@@ -64266,7 +64266,7 @@ function DHe(kDr) {
     cX = [JUe];
     if (hRt) {
       let qO;
-      if (wW[5] === p)
+      if (wW[5] === MEMO_CACHE_SENTINEL)
         ((qO = {
           label: "Use tmux instead",
           value: "tmux",
@@ -64277,7 +64277,7 @@ function DHe(kDr) {
       cX.push(qO);
     }
     let qO;
-    if (wW[6] === p)
+    if (wW[6] === MEMO_CACHE_SENTINEL)
       ((qO = {
         label: "Cancel",
         value: "cancel",
@@ -64289,7 +64289,7 @@ function DHe(kDr) {
     ((wW[2] = JUe), (wW[3] = hRt), (wW[4] = cX));
   } else cX = wW[4];
   let qO, DPo;
-  if (wW[7] === p)
+  if (wW[7] === MEMO_CACHE_SENTINEL)
     ((qO = r(t, {
       children: [
         "To use native iTerm2 split panes for teammates, you need the",
@@ -64361,7 +64361,7 @@ function LHe(wDr) {
   let ZUe = _(6),
     { packageManager: CRt } = wDr,
     LPo;
-  if (ZUe[0] === p) ((LPo = e(yo, {})), (ZUe[0] = LPo));
+  if (ZUe[0] === MEMO_CACHE_SENTINEL) ((LPo = e(yo, {})), (ZUe[0] = LPo));
   else LPo = ZUe[0];
   let nHe;
   if (ZUe[1] !== CRt)
@@ -64375,7 +64375,7 @@ function LHe(wDr) {
       (ZUe[2] = nHe));
   else nHe = ZUe[2];
   let OPo;
-  if (ZUe[3] === p)
+  if (ZUe[3] === MEMO_CACHE_SENTINEL)
     ((OPo = e(t, { dimColor: !0, children: "This may take a moment." })),
       (ZUe[3] = OPo));
   else OPo = ZUe[3];
@@ -64399,7 +64399,7 @@ function HHe(CDr) {
       refuseInput: PRt,
     } = CDr,
     UPo;
-  if (uP[0] === p)
+  if (uP[0] === MEMO_CACHE_SENTINEL)
     ((UPo = {
       label: "Try again",
       value: "retry",
@@ -64412,7 +64412,7 @@ function HHe(CDr) {
     dX = [UPo];
     if (_Rt) {
       let VO;
-      if (uP[3] === p)
+      if (uP[3] === MEMO_CACHE_SENTINEL)
         ((VO = {
           label: "Use tmux instead",
           value: "tmux",
@@ -64423,7 +64423,7 @@ function HHe(CDr) {
       dX.push(VO);
     }
     let VO;
-    if (uP[4] === p)
+    if (uP[4] === MEMO_CACHE_SENTINEL)
       ((VO = {
         label: "Cancel",
         value: "cancel",
@@ -64435,7 +64435,7 @@ function HHe(CDr) {
     ((uP[1] = _Rt), (uP[2] = dX));
   } else dX = uP[2];
   let VO;
-  if (uP[5] === p)
+  if (uP[5] === MEMO_CACHE_SENTINEL)
     ((VO = e(t, { color: "error", children: "Installation failed" })),
       (uP[5] = VO));
   else VO = uP[5];
@@ -64522,7 +64522,7 @@ function WHe() {
     qPo,
     VPo,
     GPo;
-  if (jPo[0] === p) {
+  if (jPo[0] === MEMO_CACHE_SENTINEL) {
     let TDr = vun();
     $Po = o;
     WPo = "column";
@@ -64530,7 +64530,7 @@ function WHe() {
     VPo = r(t, {
       color: "success",
       children: [
-        e(et, { status: "success", withSpace: !0 }),
+        e(StatusIndicator, { status: "success", withSpace: !0 }),
         "it2 installed successfully",
       ],
     });
@@ -64551,7 +64551,7 @@ function WHe() {
       (VPo = jPo[3]),
       (GPo = jPo[4]));
   let KPo;
-  if (jPo[5] === p)
+  if (jPo[5] === MEMO_CACHE_SENTINEL)
     ((KPo = r($Po, {
       flexDirection: WPo,
       gap: qPo,
@@ -64574,7 +64574,7 @@ function WHe() {
 function VHe() {
   let PDr = _(1),
     zPo;
-  if (PDr[0] === p)
+  if (PDr[0] === MEMO_CACHE_SENTINEL)
     ((zPo = r(o, {
       children: [
         e(yo, {}),
@@ -64588,14 +64588,14 @@ function VHe() {
 function KHe() {
   let MDr = _(1),
     QPo;
-  if (MDr[0] === p)
+  if (MDr[0] === MEMO_CACHE_SENTINEL)
     ((QPo = r(o, {
       flexDirection: "column",
       children: [
         r(t, {
           color: "success",
           children: [
-            e(et, { status: "success", withSpace: !0 }),
+            e(StatusIndicator, { status: "success", withSpace: !0 }),
             "iTerm2 split pane support is ready",
           ],
         }),
@@ -64620,7 +64620,7 @@ function zHe(ADr) {
       refuseInput: DRt,
     } = ADr,
     YPo;
-  if (YT[0] === p)
+  if (YT[0] === MEMO_CACHE_SENTINEL)
     ((YPo = {
       label: "Try again",
       value: "retry",
@@ -64633,7 +64633,7 @@ function zHe(ADr) {
     pX = [YPo];
     if (ARt) {
       let GO;
-      if (YT[3] === p)
+      if (YT[3] === MEMO_CACHE_SENTINEL)
         ((GO = {
           label: "Use tmux instead",
           value: "tmux",
@@ -64644,7 +64644,7 @@ function zHe(ADr) {
       pX.push(GO);
     }
     let GO;
-    if (YT[4] === p)
+    if (YT[4] === MEMO_CACHE_SENTINEL)
       ((GO = {
         label: "Cancel",
         value: "cancel",
@@ -64656,7 +64656,7 @@ function zHe(ADr) {
     ((YT[1] = ARt), (YT[2] = pX));
   } else pX = YT[2];
   let GO;
-  if (YT[5] === p)
+  if (YT[5] === MEMO_CACHE_SENTINEL)
     ((GO = e(t, { color: "error", children: "Verification failed" })),
       (YT[5] = GO));
   else GO = YT[5];
@@ -64667,10 +64667,10 @@ function zHe(ADr) {
       (YT[7] = xHe));
   else xHe = YT[7];
   let JPo;
-  if (YT[8] === p) ((JPo = e(t, { children: "Make sure:" })), (YT[8] = JPo));
+  if (YT[8] === MEMO_CACHE_SENTINEL) ((JPo = e(t, { children: "Make sure:" })), (YT[8] = JPo));
   else JPo = YT[8];
   let XPo;
-  if (YT[9] === p)
+  if (YT[9] === MEMO_CACHE_SENTINEL)
     ((XPo = r(o, {
       flexDirection: "column",
       paddingLeft: 2,
@@ -64759,10 +64759,10 @@ var gd = {
 };
 function Lae(LRt) {
   let tMo = _(5),
-    ORt = Ai(),
+    ORt = useSettings(),
     oMo;
   if (tMo[0] !== ORt.syntaxHighlightingDisabled)
-    ((oMo = ORt.syntaxHighlightingDisabled ? null : ZR()),
+    ((oMo = ORt.syntaxHighlightingDisabled ? null : getSyntaxHighlightAdapter()),
       (tMo[0] = ORt.syntaxHighlightingDisabled),
       (tMo[1] = oMo));
   else oMo = tMo[1];
@@ -64787,7 +64787,7 @@ function rje(KDr) {
       highlight: HRt,
     } = KDr,
     jRt = rMo === void 0 ? 40 : rMo,
-    { columns: YDr } = Se(),
+    { columns: YDr } = useTerminalSize(),
     [$Rt] = cn(),
     JHe = QDr ?? YDr - 4,
     gX = zDr ?? 20,
@@ -64957,7 +64957,7 @@ function JT(g0r) {
       hideSubmitTab: pMo,
     } = g0r,
     _W = pMo === void 0 ? !1 : pMo,
-    { columns: JRt } = Se(),
+    { columns: JRt } = useTerminalSize(),
     Fae;
   if (mP[0] !== JRt || mP[1] !== Dd || mP[2] !== _W || mP[3] !== Fh) {
     bb0: {
@@ -65038,7 +65038,7 @@ function JT(g0r) {
         return e(
           o,
           {
-            children: r(Gc, {
+            children: r(BackgroundText, {
               color: R0r ? "permission" : void 0,
               padded: !0,
               children: [P0r, " ", M0r],
@@ -65066,7 +65066,7 @@ function JT(g0r) {
       e(
         o,
         {
-          children: r(Gc, {
+          children: r(BackgroundText, {
             color: Dd === Fh.length ? "permission" : void 0,
             padded: !0,
             children: [L.tick, " Submit"],
@@ -65132,8 +65132,8 @@ function Vae(oNr) {
     [aPt, rNr] = d(0),
     gje,
     CMo;
-  if (Lc[0] === p)
-    ((gje = OS()), (CMo = gje ? Ng(gje) : null), (Lc[0] = gje), (Lc[1] = CMo));
+  if (Lc[0] === MEMO_CACHE_SENTINEL)
+    ((gje = resolveEditorCommand()), (CMo = gje ? Ng(gje) : null), (Lc[0] = gje), (Lc[1] = CMo));
   else ((gje = Lc[0]), (CMo = Lc[1]));
   let _Mo = CMo,
     oh = zO.key,
@@ -65206,7 +65206,7 @@ function Vae(oNr) {
         return;
       }
       let IMo = TX?.textInputValue || "";
-      let wPt = await Yx(IMo);
+      let wPt = await editTextInExternalEditor(IMo);
       if (wPt.content !== null && wPt.content !== IMo) {
         if (!Nv()) {
           return;
@@ -65227,7 +65227,7 @@ function Vae(oNr) {
       (Lc[17] = CPt),
       (Lc[18] = EMo));
   else EMo = Lc[18];
-  Ne("chat:externalEditor", AMo, EMo);
+  useKeybinding("chat:externalEditor", AMo, EMo);
   let DMo;
   if (Lc[19] !== rPt || Lc[20] !== nPt)
     ((DMo = { "tabs:previous": nPt, "tabs:next": rPt }),
@@ -65242,7 +65242,7 @@ function Vae(oNr) {
       (Lc[22] = TPt),
       (Lc[23] = NMo));
   else NMo = Lc[23];
-  Ze(DMo, NMo);
+  useKeybindings(DMo, NMo);
   let LMo;
   if (Lc[24] !== CX)
     ((LMo = () => {
@@ -65278,7 +65278,7 @@ function Vae(oNr) {
   else OMo = Lc[32];
   let xPt = OMo,
     FMo;
-  if (Lc[33] === p)
+  if (Lc[33] === MEMO_CACHE_SENTINEL)
     ((FMo = () => {
       vMo(!0);
     }),
@@ -65286,7 +65286,7 @@ function Vae(oNr) {
   else FMo = Lc[33];
   let lNr = FMo,
     BMo;
-  if (Lc[34] === p)
+  if (Lc[34] === MEMO_CACHE_SENTINEL)
     ((BMo = () => {
       vMo(!1);
     }),
@@ -65357,11 +65357,11 @@ function Vae(oNr) {
         : bPt.preview.kind === "full"
           ? bPt.preview.markdown
           : YHe,
-    { columns: dNr, rows: mNr } = Se(),
+    { columns: dNr, rows: mNr } = useTerminalSize(),
     PPt = dNr - 30 - 4,
     MPt = Math.max(1, mNr - 26),
     jMo;
-  if (Lc[46] === p) ((jMo = e(za, { color: "inactive" })), (Lc[46] = jMo));
+  if (Lc[46] === MEMO_CACHE_SENTINEL) ((jMo = e(Divider, { color: "inactive" })), (Lc[46] = jMo));
   else jMo = Lc[46];
   let hje;
   if (Lc[47] !== tPt || Lc[48] !== ZRt || Lc[49] !== sPt || Lc[50] !== wX)
@@ -65379,7 +65379,7 @@ function Vae(oNr) {
   else hje = Lc[51];
   let yje;
   if (Lc[52] !== zO.displayQuestion.text)
-    ((yje = e(ZW, { title: zO.displayQuestion.text, color: "text" })),
+    ((yje = e(PermissionRequestHeader, { title: zO.displayQuestion.text, color: "text" })),
       (Lc[52] = zO.displayQuestion.text),
       (Lc[53] = yje));
   else yje = Lc[53];
@@ -65449,7 +65449,7 @@ function Vae(oNr) {
       (Lc[70] = kje));
   else kje = Lc[70];
   let qMo;
-  if (Lc[71] === p)
+  if (Lc[71] === MEMO_CACHE_SENTINEL)
     ((qMo = e(t, { color: "suggestion", children: "Notes:" })), (Lc[71] = qMo));
   else qMo = Lc[71];
   let vje;
@@ -65529,7 +65529,7 @@ function Vae(oNr) {
       (Lc[86] = Cje));
   else Cje = Lc[86];
   let VMo;
-  if (Lc[87] === p) ((VMo = e(za, { color: "inactive" })), (Lc[87] = VMo));
+  if (Lc[87] === MEMO_CACHE_SENTINEL) ((VMo = e(Divider, { color: "inactive" })), (Lc[87] = VMo));
   else VMo = Lc[87];
   let _je;
   if (Lc[88] !== JO)
@@ -65561,32 +65561,32 @@ function Vae(oNr) {
       (Lc[94] = xje));
   else xje = Lc[94];
   let GMo;
-  if (Lc[95] === p)
-    ((GMo = e(D, { chord: "enter", action: "select" })), (Lc[95] = GMo));
+  if (Lc[95] === MEMO_CACHE_SENTINEL)
+    ((GMo = e(KeybindingHint, { chord: "enter", action: "select" })), (Lc[95] = GMo));
   else GMo = Lc[95];
   let KMo, zMo;
-  if (Lc[96] === p)
-    ((KMo = e(D, { chord: ["up", "down"], action: "navigate" })),
-      (zMo = e(D, { chord: "n", action: "add notes" })),
+  if (Lc[96] === MEMO_CACHE_SENTINEL)
+    ((KMo = e(KeybindingHint, { chord: ["up", "down"], action: "navigate" })),
+      (zMo = e(KeybindingHint, { chord: "n", action: "add notes" })),
       (Lc[96] = KMo),
       (Lc[97] = zMo));
   else ((KMo = Lc[96]), (zMo = Lc[97]));
   let Rje;
   if (Lc[98] !== wX.length)
     ((Rje =
-      wX.length > 1 && e(D, { chord: "tab", action: "switch questions" })),
+      wX.length > 1 && e(KeybindingHint, { chord: "tab", action: "switch questions" })),
       (Lc[98] = wX.length),
       (Lc[99] = Rje));
   else Rje = Lc[99];
   let Pje;
   if (Lc[100] !== ck)
-    ((Pje = ck && _Mo && e(D, { chord: "ctrl+g", action: `edit in ${_Mo}` })),
+    ((Pje = ck && _Mo && e(KeybindingHint, { chord: "ctrl+g", action: `edit in ${_Mo}` })),
       (Lc[100] = ck),
       (Lc[101] = Pje));
   else Pje = Lc[101];
   let QMo;
-  if (Lc[102] === p)
-    ((QMo = e(D, { chord: "escape", action: "cancel" })), (Lc[102] = QMo));
+  if (Lc[102] === MEMO_CACHE_SENTINEL)
+    ((QMo = e(KeybindingHint, { chord: "escape", action: "cancel" })), (Lc[102] = QMo));
   else QMo = Lc[102];
   let Mje;
   if (Lc[103] !== Rje || Lc[104] !== Pje)
@@ -65595,7 +65595,7 @@ function Vae(oNr) {
       children: e(t, {
         color: "inactive",
         dimColor: !0,
-        children: r(ue, { children: [GMo, KMo, zMo, Rje, Pje, QMo] }),
+        children: r(DotSeparatedList, { children: [GMo, KMo, zMo, Rje, Pje, QMo] }),
       }),
     })),
       (Lc[103] = Rje),
@@ -65686,8 +65686,8 @@ function Jae(FNr) {
     [QE, oAo] = d(!1),
     [EX, UNr] = d(!1),
     nAo;
-  if (hy[0] === p) {
-    let rAo = OS();
+  if (hy[0] === MEMO_CACHE_SENTINEL) {
+    let rAo = resolveEditorCommand();
     nAo = rAo ? Ng(rAo) : null;
     hy[0] = nAo;
   } else nAo = hy[0];
@@ -65703,7 +65703,7 @@ function Jae(FNr) {
   else sAo = hy[2];
   let lAo = sAo,
     cAo;
-  if (hy[3] === p)
+  if (hy[3] === MEMO_CACHE_SENTINEL)
     ((cAo = () => {
       oAo(!0);
     }),
@@ -65711,7 +65711,7 @@ function Jae(FNr) {
   else cAo = hy[3];
   let uAo = cAo,
     dAo;
-  if (hy[4] === p)
+  if (hy[4] === MEMO_CACHE_SENTINEL)
     ((dAo = () => {
       oAo(!1);
     }),
@@ -65768,7 +65768,7 @@ function Jae(FNr) {
       if (!Ov()) {
         return;
       }
-      let Dje = await Yx(fAo);
+      let Dje = await editTextInExternalEditor(fAo);
       if (Dje.content !== null && Dje.content !== fAo) {
         if (!Ov()) {
           return;
@@ -65898,7 +65898,7 @@ function Jae(FNr) {
         flexDirection: "column",
         gap: 0,
         children: [
-          e(za, { color: "inactive" }),
+          e(Divider, { color: "inactive" }),
           r(t, {
             color: "inactive",
             children: ["Planning: ", e(Pg, { filePath: Eje })],
@@ -65910,7 +65910,7 @@ function Jae(FNr) {
       (hy[47] = Qae));
   else Qae = hy[47];
   let kAo;
-  if (hy[48] === p) ((kAo = e(za, { color: "inactive" })), (hy[48] = kAo));
+  if (hy[48] === MEMO_CACHE_SENTINEL) ((kAo = e(Divider, { color: "inactive" })), (hy[48] = kAo));
   else kAo = hy[48];
   let vAo;
   if (hy[49] !== PX || hy[50] !== EW || hy[51] !== IX || hy[52] !== fP)
@@ -65928,7 +65928,7 @@ function Jae(FNr) {
   else vAo = hy[53];
   let Lje;
   if (hy[54] !== $u.displayQuestion.text)
-    ((Lje = e(ZW, { title: $u.displayQuestion.text, color: "text" })),
+    ((Lje = e(PermissionRequestHeader, { title: $u.displayQuestion.text, color: "text" })),
       (hy[54] = $u.displayQuestion.text),
       (hy[55] = Lje));
   else Lje = hy[55];
@@ -65957,7 +65957,7 @@ function Jae(FNr) {
           r(o, {
             flexDirection: "column",
             children: [
-              e(za, { color: "inactive" }),
+              e(Divider, { color: "inactive" }),
               r(o, {
                 flexDirection: "row",
                 gap: 1,
@@ -65978,16 +65978,16 @@ function Jae(FNr) {
             children: e(t, {
               color: "inactive",
               dimColor: !0,
-              children: r(ue, {
+              children: r(DotSeparatedList, {
                 children: [
-                  e(D, { chord: "enter", action: "select" }),
+                  e(KeybindingHint, { chord: "enter", action: "select" }),
                   fP.length === 1
-                    ? e(D, { chord: ["up", "down"], action: "navigate" })
+                    ? e(KeybindingHint, { chord: ["up", "down"], action: "navigate" })
                     : e(t, { children: "Tab/Arrow keys to navigate" }),
                   EX &&
                     iAo &&
-                    e(D, { chord: "ctrl+g", action: `edit in ${iAo}` }),
-                  e(D, { chord: "escape", action: "cancel" }),
+                    e(KeybindingHint, { chord: "ctrl+g", action: `edit in ${iAo}` }),
+                  e(KeybindingHint, { chord: "escape", action: "cancel" }),
                 ],
               }),
             }),
@@ -66113,7 +66113,7 @@ function Xae(pLr) {
       onFinalResponse: Fje,
     } = pLr,
     MAo;
-  if (hP[0] === p) ((MAo = e(za, { color: "inactive" })), (hP[0] = MAo));
+  if (hP[0] === MEMO_CACHE_SENTINEL) ((MAo = e(Divider, { color: "inactive" })), (hP[0] = MAo));
   else MAo = hP[0];
   let Bje;
   if (hP[1] !== uF || hP[2] !== WPt || hP[3] !== DX)
@@ -66124,8 +66124,8 @@ function Xae(pLr) {
       (hP[4] = Bje));
   else Bje = hP[4];
   let AAo;
-  if (hP[5] === p)
-    ((AAo = e(ZW, { title: "Review your answers", color: "text" })),
+  if (hP[5] === MEMO_CACHE_SENTINEL)
+    ((AAo = e(PermissionRequestHeader, { title: "Review your answers", color: "text" })),
       (hP[5] = AAo));
   else AAo = hP[5];
   let Uje;
@@ -66159,7 +66159,7 @@ function Xae(pLr) {
               children: [
                 e(Fs, {
                   multiline: jje?.displayQuestion.needsGutter ?? !1,
-                  children: e(lu, {
+                  children: e(BulletItem, {
                     children: jje?.displayQuestion.text || "Question",
                   }),
                 }),
@@ -66187,7 +66187,7 @@ function Xae(pLr) {
       (hP[12] = $je));
   else $je = hP[12];
   let EAo;
-  if (hP[13] === p)
+  if (hP[13] === MEMO_CACHE_SENTINEL)
     ((EAo = e(t, {
       color: "inactive",
       children: "Ready to submit your answers?",
@@ -66198,7 +66198,7 @@ function Xae(pLr) {
   if (hP[14] !== Fje)
     ((Wje = e(o, {
       marginTop: 1,
-      children: e(En, {
+      children: e(ConfirmPrompt, {
         confirmLabel: "Submit answers",
         cancelLabel: "Cancel",
         onConfirm: () => Fje("submit"),
@@ -66435,16 +66435,16 @@ function NMt(w) {
 function m$e(fOr) {
   let Kje = _(12),
     { payload: Fv, answer: GPt, wouldTakeAnswer: zPt } = fOr,
-    QPt = Ai(),
+    QPt = useSettings(),
     BAo;
   if (Kje[0] !== QPt.syntaxHighlightingDisabled)
-    ((BAo = QPt.syntaxHighlightingDisabled ? null : ZR()),
+    ((BAo = QPt.syntaxHighlightingDisabled ? null : getSyntaxHighlightAdapter()),
       (Kje[0] = QPt.syntaxHighlightingDisabled),
       (Kje[1] = BAo));
   else BAo = Kje[1];
   let JPt = BAo,
     UAo;
-  if (Kje[2] === p) ((UAo = NMt(getAskUserQuestionTimeout())), (Kje[2] = UAo));
+  if (Kje[2] === MEMO_CACHE_SENTINEL) ((UAo = NMt(getAskUserQuestionTimeout())), (Kje[2] = UAo));
   else UAo = Kje[2];
   let gOr = UAo,
     HAo,
@@ -66629,7 +66629,7 @@ function c$e(bOr) {
   } else Yje = Iu[9];
   let rMt = Yje,
     GAo;
-  if (Iu[10] === p) ((GAo = {}), (Iu[10] = GAo));
+  if (Iu[10] === MEMO_CACHE_SENTINEL) ((GAo = {}), (Iu[10] = GAo));
   else GAo = Iu[10];
   let [OC, KAo] = d(GAo),
     iMt = It(),
@@ -66648,7 +66648,7 @@ function c$e(bOr) {
         filename: aMt?.filename || "Pasted image",
         dimensions: aMt?.dimensions,
       };
-      let YAo = Y$(iMt, "storedImagePaths");
+      let YAo = createFieldUpdater(iMt, "storedImagePaths");
       (D7(lMt, YAo),
         L7(lMt, YAo),
         KAo((JAo) => ({ ...JAo, [sMt]: { ...(JAo[sMt] ?? {}), [QAo]: lMt } })));
@@ -66682,7 +66682,7 @@ function c$e(bOr) {
   else oIo = Iu[18];
   let YE = oIo,
     TOr = U(VIo),
-    uMt = qa(),
+    uMt = useMainLoopModel(),
     nIo;
   if (Iu[19] !== uMt) ((nIo = Ka(uMt)), (Iu[19] = uMt), (Iu[20] = nIo));
   else nIo = Iu[20];
@@ -66714,7 +66714,7 @@ function c$e(bOr) {
     ((aIo = () => EM(() => gMt())), (Iu[25] = gMt), (Iu[26] = aIo));
   else aIo = Iu[26];
   let lIo;
-  if (Iu[27] === p) ((lIo = []), (Iu[27] = lIo));
+  if (Iu[27] === MEMO_CACHE_SENTINEL) ((lIo = []), (Iu[27] = lIo));
   else lIo = Iu[27];
   (E(aIo, lIo), Rs("ask-user-question-text-input", iIo));
   let LW = jv < (pl?.length || 0) ? pl?.[jv] : null,
@@ -66735,7 +66735,7 @@ function c$e(bOr) {
         return;
       }
       if (Qp)
-        i("tengu_ask_user_question_rejected", {
+        logEvent("tengu_ask_user_question_rejected", {
           source_hash: Tn(Qp),
           questionCount: pl.length,
           isInPlanMode: nh,
@@ -66753,7 +66753,7 @@ function c$e(bOr) {
     e$e = C("user"),
     yMt = C(null),
     mIo;
-  if (Iu[36] === p)
+  if (Iu[36] === MEMO_CACHE_SENTINEL)
     ((mIo = function BX(pIo) {
       if (yP.current && (pIo === "afk" || e$e.current !== "afk")) {
         return !1;
@@ -66805,7 +66805,7 @@ function c$e(bOr) {
         return;
       }
       if (Qp)
-        i("tengu_ask_user_question_respond_to_claude", {
+        logEvent("tengu_ask_user_question_respond_to_claude", {
           source_hash: Tn(Qp),
           questionCount: pl.length,
           isInPlanMode: nh,
@@ -66828,11 +66828,11 @@ function c$e(bOr) {
     hIo;
   if (Iu[49] !== nh || Iu[50] !== Qp || Iu[51] !== pl)
     ((hIo = (ROr, POr) => {
-      let yIo = G(pl, (MOr) => !ROr[MOr.key]);
+      let yIo = countMatching(pl, (MOr) => !ROr[MOr.key]);
       if (yIo === 0) {
         return;
       }
-      i("tengu_ask_user_question_skipped", {
+      logEvent("tengu_ask_user_question_skipped", {
         ...(Qp && { source_hash: Tn(Qp) }),
         skippedCount: yIo,
         questionCount: pl.length,
@@ -66873,13 +66873,13 @@ function c$e(bOr) {
         return !1;
       }
       if (Qp)
-        i("tengu_ask_user_question_accepted", {
+        logEvent("tengu_ask_user_question_accepted", {
           source_hash: Tn(Qp),
           questionCount: pl.length,
           answerCount: Object.keys(t$e).length,
           isInPlanMode: nh,
         });
-      if ((UX(t$e, "user_submit"), G(pl, (IOr) => !t$e[IOr.key]) === 0))
+      if ((UX(t$e, "user_submit"), countMatching(pl, (IOr) => !t$e[IOr.key]) === 0))
         logFeatureOk("ask_user_question_answer", { questionCount: pl.length });
       else
         logFeatureSad("ask_user_question_answer", "user_skipped_questions", {
@@ -67020,7 +67020,7 @@ function c$e(bOr) {
       (Iu[88] = wMt),
       (Iu[89] = IIo));
   else IIo = Iu[89];
-  Ze(AIo, IIo);
+  useKeybindings(AIo, IIo);
   let EIo;
   if (Iu[90] !== NX || Iu[91] !== UC || Iu[92] !== $m.hasExternalRacer)
     ((EIo =
@@ -67083,7 +67083,7 @@ function c$e(bOr) {
             yP.current = !1;
             return;
           }
-          (i("tengu_ask_user_question_afk_auto_advance", {
+          (logEvent("tengu_ask_user_question_afk_auto_advance", {
             ...(Qp && { source_hash: Tn(Qp) }),
             timeoutMs: NIo,
             questionCount: pl.length,
@@ -67263,13 +67263,13 @@ function d$e(XOr) {
   let s$e = _(8),
     { toolUseId: IMt } = XOr,
     BIo;
-  if (s$e[0] === p) ((BIo = hTe.noticesStore()), (s$e[0] = BIo));
+  if (s$e[0] === MEMO_CACHE_SENTINEL) ((BIo = hTe.noticesStore()), (s$e[0] = BIo));
   else BIo = s$e[0];
   let UIo;
   if (s$e[1] !== IMt)
     ((UIo = (ZOr) => ZOr.get(IMt)), (s$e[1] = IMt), (s$e[2] = UIo));
   else UIo = s$e[2];
-  let OW = Me(BIo, UIo);
+  let OW = useStoreSelector(BIo, UIo);
   if (OW === void 0) {
     return null;
   }
@@ -67377,13 +67377,13 @@ function Yot({
   hideIndexes: Ae,
 }) {
   let { epoch: Oe, noteAttempt: He } = c9e(),
-    Ke = fa(Oe, mo),
+    Ke = fa(Oe, REFUSE_INPUT_WINDOW_MS),
     [Je, Qe] = d(I),
-    it = fa(Je, mo),
+    it = fa(Je, REFUSE_INPUT_WINDOW_MS),
     at = tn(),
     { refusedWithin: Zt, noteRefused: Ct } = $o();
   function eo() {
-    if (!it.settled || Zt(mo)) return (Ct(), !0);
+    if (!it.settled || Zt(REFUSE_INPUT_WINDOW_MS)) return (Ct(), !0);
     return !1;
   }
   function jt() {
@@ -67392,11 +67392,11 @@ function Yot({
   }
   let Tt = C(me),
     to = V(() => Qk(w), [w]),
-    zt = r(ue, {
+    zt = r(DotSeparatedList, {
       children: [
         e(t, { children: "Your setup is saved either way" }),
-        e(D, { chord: "enter", action: "confirm" }),
-        e(D, { chord: "escape", action: "skip" }),
+        e(KeybindingHint, { chord: "enter", action: "confirm" }),
+        e(KeybindingHint, { chord: "escape", action: "skip" }),
       ],
     });
   function ao() {
@@ -67494,7 +67494,7 @@ function d6e(xFr) {
       onCancel: qX,
     } = xFr,
     { epoch: RFr, noteAttempt: XE } = c9e(),
-    f$e = fa(RFr, mo),
+    f$e = fa(RFr, REFUSE_INPUT_WINDOW_MS),
     YIo;
   if (Bh[0] !== f$e.settled || Bh[1] !== XE)
     ((YIo = function cle() {
@@ -67511,11 +67511,11 @@ function d6e(xFr) {
     g$e = p$e === "decline" && !f$e.settled,
     JIo = C(!1),
     XIo;
-  if (Bh[3] === p)
-    ((XIo = r(ue, {
+  if (Bh[3] === MEMO_CACHE_SENTINEL)
+    ((XIo = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "confirm" }),
-        e(D, { chord: "escape", action: "cancel" }),
+        e(KeybindingHint, { chord: "enter", action: "confirm" }),
+        e(KeybindingHint, { chord: "escape", action: "cancel" }),
       ],
     })),
       (Bh[3] = XIo));
@@ -67585,7 +67585,7 @@ function d6e(xFr) {
   else T$e = Bh[19];
   const VMt = g$e ? "held" : "settled";
   let ZIo;
-  if (Bh[20] === p)
+  if (Bh[20] === MEMO_CACHE_SENTINEL)
     ((ZIo = [
       { value: "accept", label: "Looks good \u2014 save it" },
       { value: "decline", label: "Discard and exit" },
@@ -67741,7 +67741,7 @@ function SEo() {
 }
 function zX() {
   let iEo = _(4),
-    GX = vt(),
+    GX = useClock(),
     sEo;
   if (iEo[0] !== GX) ((sEo = GX.now()), (iEo[0] = GX), (iEo[1] = sEo));
   else sEo = iEo[1];
@@ -67751,7 +67751,7 @@ function zX() {
     ((lEo = (qFr) => {
       let cEo = GX.now();
       let uEo = aEo.current;
-      if (((aEo.current = Math.max(cEo, uEo)), cEo - uEo < mo)) {
+      if (((aEo.current = Math.max(cEo, uEo)), cEo - uEo < REFUSE_INPUT_WINDOW_MS)) {
         return !1;
       }
       return (qFr(), !0);
@@ -67762,15 +67762,15 @@ function zX() {
   return lEo;
 }
 class oAt {
-  reviewFocus = Xa(null);
-  flaggedStash = Xa(null);
+  reviewFocus = createStore(null);
+  flaggedStash = createStore(null);
 }
 var dle = new Gt(() => new oAt());
 function Y$e(VFr) {
   let ule = _(18),
     { payload: XMt, answer: ZMt } = VFr,
     F$e = zX(),
-    { reviewFocus: fF } = dle.of(Ye()),
+    { reviewFocus: fF } = dle.of(useSession()),
     GFr = At(fF.subscribe, fF.getState),
     dEo;
   if (ule[0] !== ZMt || ule[1] !== fF)
@@ -67835,7 +67835,7 @@ function J$e(QFr) {
   let KX = _(27),
     { payload: W$e, answer: tAt } = QFr,
     jW = zX(),
-    { flaggedStash: tx } = dle.of(Ye()),
+    { flaggedStash: tx } = dle.of(useSession()),
     bP = W$e.runId,
     q$e = At(tx.subscribe, tx.getState),
     pEo;
@@ -67927,9 +67927,9 @@ function J$e(QFr) {
   else yEo = KX[26];
   return yEo;
 }
-var p6e = Kr({
+var p6e = defineDialog({
     kind: "auto_mode_setup_review",
-    payload: m(() =>
+    payload: createLazyValue(() =>
       c({
         environment: v(s()),
         allow: v(s()),
@@ -67940,13 +67940,13 @@ var p6e = Kr({
         mode: X(["append", "replace"]),
       }),
     ),
-    result: m(() => X(["accept", "decline", "cancelled"])),
+    result: createLazyValue(() => X(["accept", "decline", "cancelled"])),
     default: "cancelled",
   }),
-  f6e = Kr({
+  f6e = defineDialog({
     kind: "auto_mode_flagged_allow",
-    payload: m(() => c({ flagged: v(s()), runId: s() })),
-    result: m(() => $e([c({ toRemove: v(s()) }), k("cancelled")])),
+    payload: createLazyValue(() => c({ flagged: v(s()), runId: s() })),
+    result: createLazyValue(() => $e([c({ toRemove: v(s()) }), k("cancelled")])),
     default: "cancelled",
   });
 F();
@@ -67954,7 +67954,7 @@ var nAt = "\xB7 auto mode handles these prompts for you";
 function X$e() {
   let aBr = _(1),
     kEo;
-  if (aBr[0] === p)
+  if (aBr[0] === MEMO_CACHE_SENTINEL)
     ((kEo = e(t, {
       bold: !0,
       children:
@@ -68078,7 +68078,7 @@ function YX(w, I, ne, me = {}) {
   }
 }
 function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
-  let me = OVe.of(Ye().host),
+  let me = OVe.of(useSession().host),
     pe = w.command,
     be = w.permissionResult.decisionReason,
     xe = V(() => km(w.input.command, { maxUnits: Rm }), [w.input.command]),
@@ -68226,12 +68226,12 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
         Sr,
       ],
     ),
-    nn = Ah(
+    nn = useAnswerRefusalState(
       re(
         (un) => {
           if (!ne()) return !1;
           if (
-            (i("tengu_permission_request_option_selected", {
+            (logEvent("tengu_permission_request_option_selected", {
               option_index: Kn.findIndex((lr) => lr.value === un) + 1,
             }),
             un === "yes")
@@ -68277,7 +68277,7 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       () => (Sr && !Ae && !Ke && !Je ? e(X$e, {}) : void 0),
       [Sr, Ae, Ke, Je],
     );
-  return r(gs, {
+  return r(PermissionDialogFrame, {
     title:
       He !== void 0
         ? `Bash command (runs on ${He})`
@@ -68317,7 +68317,7 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
           it &&
             e(t, {
               dimColor: !0,
-              children: $A["card.standing_unavailable"]({
+              children: REMOTE_APPROVAL_MESSAGES["card.standing_unavailable"]({
                 name: He,
                 kind: "command",
               }),
@@ -68343,8 +68343,8 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
         marginTop: 1,
         children: e(t, {
           dimColor: !0,
-          children: r(ue, {
-            children: [e(D, { chord: "escape", action: "cancel" }), fo],
+          children: r(DotSeparatedList, {
+            children: [e(KeybindingHint, { chord: "escape", action: "cancel" }), fo],
           }),
         }),
       }),
@@ -68458,7 +68458,7 @@ function s1e(lUr) {
   else REo = $v[11];
   let pAt = REo,
     PEo;
-  if ($v[12] === p)
+  if ($v[12] === MEMO_CACHE_SENTINEL)
     ((PEo = { label: "Allow", value: "allow" }), ($v[12] = PEo));
   else PEo = $v[12];
   let MEo;
@@ -68544,7 +68544,7 @@ function s1e(lUr) {
   else r1e = $v[31];
   let IEo;
   if ($v[32] !== uk.requestSource || $v[33] !== r1e || $v[34] !== hAt)
-    ((IEo = e(gs, {
+    ((IEo = e(PermissionDialogFrame, {
       title: hAt,
       requestSource: uk.requestSource,
       children: r1e,
@@ -68582,7 +68582,7 @@ function y1e(SUr) {
   let nD = _(29),
     { payload: $C, answer: c1e } = SUr,
     DEo;
-  if (nD[0] === p)
+  if (nD[0] === MEMO_CACHE_SENTINEL)
     ((DEo = [
       {
         value: "deny",
@@ -68707,7 +68707,7 @@ function y1e(SUr) {
   else h1e = nD[23];
   let LEo;
   if (nD[24] !== u1e || nD[25] !== m1e || nD[26] !== p1e || nD[27] !== h1e)
-    ((LEo = e(gs, {
+    ((LEo = e(PermissionDialogFrame, {
       color: "warning",
       title: "Held message from another session",
       children: r(o, {
@@ -68738,7 +68738,7 @@ function EAt({ payload: w, answer: I }) {
     { refusedWithin: xe, noteRefused: Ae } = $o();
   if (pe.current !== ne) ((pe.current = ne), (be.current = Date.now()));
   function Oe() {
-    if (ma(be.current, mo) || xe(mo)) return (Ae(), !0);
+    if (isRecent(be.current, REFUSE_INPUT_WINDOW_MS) || xe(REFUSE_INPUT_WINDOW_MS)) return (Ae(), !0);
     return !1;
   }
   function He(it) {
@@ -68774,7 +68774,7 @@ function EAt({ payload: w, answer: I }) {
               b1e,
             ]
           : [b1e];
-  return e(gs, {
+  return e(PermissionDialogFrame, {
     color: "permission",
     title: "Setting up Claude in Chrome",
     children: r(o, {
@@ -68795,7 +68795,7 @@ function EAt({ payload: w, answer: I }) {
           children: [
             r(t, {
               children: [
-                e(et, { status: Ke ? "success" : "loading", withSpace: !0 }),
+                e(StatusIndicator, { status: Ke ? "success" : "loading", withSpace: !0 }),
                 "Install the extension",
               ],
             }),
@@ -68811,7 +68811,7 @@ function EAt({ payload: w, answer: I }) {
               }),
             r(t, {
               children: [
-                e(et, { status: Je, withSpace: !0 }),
+                e(StatusIndicator, { status: Je, withSpace: !0 }),
                 "Connect to Chrome",
               ],
             }),
@@ -68866,14 +68866,14 @@ function x1e(KUr) {
   let xb = _(34),
     { payload: ky, answer: DAt } = KUr,
     OEo;
-  if (xb[0] === p) ((OEo = Date.now()), (xb[0] = OEo));
+  if (xb[0] === MEMO_CACHE_SENTINEL) ((OEo = Date.now()), (xb[0] = OEo));
   else OEo = xb[0];
   let zUr = C(OEo),
     FEo = C(!1),
     BEo;
   if (xb[1] !== DAt)
     ((BEo = function gF(QUr) {
-      if (FEo.current || ma(zUr.current, mo)) {
+      if (FEo.current || isRecent(zUr.current, REFUSE_INPUT_WINDOW_MS)) {
         return;
       }
       ((FEo.current = !0), DAt(QUr));
@@ -68903,17 +68903,17 @@ function x1e(KUr) {
     (($Eo =
       ky.lastError === void 0
         ? void 0
-        : V4(ky.lastError.replace(/[\p{Cc}\p{Cf}]+/gu, " "))),
+        : truncateWithEllipsis(ky.lastError.replace(/[\p{Cc}\p{Cf}]+/gu, " "))),
       (xb[9] = ky.lastError),
       (xb[10] = $Eo));
   else $Eo = xb[10];
   let WEo = $Eo,
     qEo;
-  if (xb[11] === p)
-    ((qEo = r(ue, {
+  if (xb[11] === MEMO_CACHE_SENTINEL)
+    ((qEo = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "continue" }),
-        e(D, { chord: "escape", action: "dismiss" }),
+        e(KeybindingHint, { chord: "enter", action: "continue" }),
+        e(KeybindingHint, { chord: "escape", action: "dismiss" }),
       ],
     })),
       (xb[11] = qEo));
@@ -68954,7 +68954,7 @@ function x1e(KUr) {
       (xb[24] = _1e));
   else _1e = xb[24];
   let VEo;
-  if (xb[25] === p)
+  if (xb[25] === MEMO_CACHE_SENTINEL)
     ((VEo = [{ label: "Continue without file sync", value: "continue" }]),
       (xb[25] = VEo));
   else VEo = xb[25];
@@ -68983,7 +68983,7 @@ function x1e(KUr) {
 }
 F();
 function ZEo() {
-  i("tengu_chrome_install_upsell_shown", {});
+  logEvent("tengu_chrome_install_upsell_shown", {});
 }
 var WAt = [
   {
@@ -69006,18 +69006,18 @@ function P1e(lHr) {
   let $W = _(16),
     { answer: BAt } = lHr,
     KEo;
-  if ($W[0] === p) ((KEo = []), ($W[0] = KEo));
+  if ($W[0] === MEMO_CACHE_SENTINEL) ((KEo = []), ($W[0] = KEo));
   else KEo = $W[0];
   E(ZEo, KEo);
   let zEo;
-  if ($W[1] === p) ((zEo = Date.now()), ($W[1] = zEo));
+  if ($W[1] === MEMO_CACHE_SENTINEL) ((zEo = Date.now()), ($W[1] = zEo));
   else zEo = $W[1];
   let cHr = C(zEo),
     { refusedWithin: HAt, noteRefused: jAt, epoch: uHr } = $o(),
     QEo;
   if ($W[2] !== jAt || $W[3] !== HAt)
     ((QEo = function yF() {
-      if (ma(cHr.current, mo) || HAt(mo)) {
+      if (isRecent(cHr.current, REFUSE_INPUT_WINDOW_MS) || HAt(REFUSE_INPUT_WINDOW_MS)) {
         return (jAt(), !0);
       }
       return !1;
@@ -69040,9 +69040,9 @@ function P1e(lHr) {
       ($W[7] = YEo));
   else YEo = $W[7];
   let bF = YEo,
-    $At = fa(uHr, mo),
+    $At = fa(uHr, REFUSE_INPUT_WINDOW_MS),
     JEo;
-  if ($W[8] === p)
+  if ($W[8] === MEMO_CACHE_SENTINEL)
     ((JEo = e(t, {
       children:
         "This task could use your Chrome browser. The Claude in Chrome extension lets Claude navigate sites, click buttons, and fill forms in your existing session.",
@@ -69060,7 +69060,7 @@ function P1e(lHr) {
     $W[13] !== yF ||
     $W[14] !== R1e
   )
-    ((XEo = e(gs, {
+    ((XEo = e(PermissionDialogFrame, {
       color: "permission",
       title: "Claude wants to use your browser",
       children: r(o, {
@@ -69096,16 +69096,16 @@ function P1e(lHr) {
   else XEo = $W[15];
   return XEo;
 }
-var SF = Kr({
+var SF = defineDialog({
   kind: y8e,
-  payload: m(() => c({})),
-  result: m(() => X(["acknowledged", "cancelled"])),
+  payload: createLazyValue(() => c({})),
+  result: createLazyValue(() => X(["acknowledged", "cancelled"])),
   default: "cancelled",
 });
 async function qAt(w, I) {
   if ((await w(SF, {})) === "cancelled") return;
   (Te((me) => ({ ...me, hasAcknowledgedCostThreshold: !0 }), I),
-    i("tengu_cost_threshold_acknowledged", {}));
+    logEvent("tengu_cost_threshold_acknowledged", {}));
 }
 F();
 function lDo(NHr) {
@@ -69148,7 +69148,7 @@ function L1e(EHr) {
     QAt = fa(DHr),
     YAt = U(lDo),
     tDo;
-  if (lD[4] === p) ((tDo = L8("plan")), (lD[4] = tDo));
+  if (lD[4] === MEMO_CACHE_SENTINEL) ((tDo = L8("plan")), (lD[4] = tDo));
   else tDo = lD[4];
   let M1e = tDo,
     oDo;
@@ -69169,7 +69169,7 @@ function L1e(EHr) {
         return;
       }
       if (nDo === "yes" && M1e !== null)
-        (i("tengu_plan_enter", { entryMethod: S("tool") }), h8(YAt, "plan"));
+        (logEvent("tengu_plan_enter", { entryMethod: S("tool") }), h8(YAt, "plan"));
       GAt(JAt(nDo, M1e));
     }),
       (lD[5] = GAt),
@@ -69182,7 +69182,7 @@ function L1e(EHr) {
   else oDo = lD[11];
   let A1e = oDo,
     rDo;
-  if (lD[12] === p)
+  if (lD[12] === MEMO_CACHE_SENTINEL)
     ((rDo = e(t, {
       children:
         "Claude wants to enter plan mode to explore and design an implementation approach.",
@@ -69190,7 +69190,7 @@ function L1e(EHr) {
       (lD[12] = rDo));
   else rDo = lD[12];
   let iDo;
-  if (lD[13] === p)
+  if (lD[13] === MEMO_CACHE_SENTINEL)
     ((iDo = r(o, {
       marginTop: 1,
       flexDirection: "column",
@@ -69214,7 +69214,7 @@ function L1e(EHr) {
       (lD[13] = iDo));
   else iDo = lD[13];
   let sDo;
-  if (lD[14] === p)
+  if (lD[14] === MEMO_CACHE_SENTINEL)
     ((sDo = e(o, {
       marginTop: 1,
       children: e(t, {
@@ -69251,7 +69251,7 @@ function L1e(EHr) {
         e(o, {
           marginTop: 1,
           children: e(
-            En,
+            ConfirmPrompt,
             {
               refuseInput: fle,
               openedAt: zAt,
@@ -69275,7 +69275,7 @@ function L1e(EHr) {
   else N1e = lD[23];
   let aDo;
   if (lD[24] !== VAt.requestSource || lD[25] !== N1e)
-    ((aDo = e(gs, {
+    ((aDo = e(PermissionDialogFrame, {
       color: "planMode",
       title: "Enter plan mode?",
       requestSource: VAt.requestSource,
@@ -69341,7 +69341,7 @@ function NIt(w, I, ne, me, pe) {
     let xe = getBgJobDir();
     if (xe) be = M0o(xe);
   }
-  Q9e([Re({ content: w.slice(0, 1000) })], new AbortController().signal, {
+  generateSessionName([Re({ content: w.slice(0, 1000) })], new AbortController().signal, {
     credentials: pe,
   })
     .then(async (xe) => {
@@ -69542,10 +69542,10 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
   let me = U((ur) => ur.toolPermissionContext),
     pe = It(),
     be = Yn(),
-    { storageV5: xe, credentials: Ae } = _e(),
-    Oe = qc(),
-    He = Ye(),
-    { addNotification: Ke } = Ir(),
+    { storageV5: xe, credentials: Ae } = useStorageV5Context(),
+    Oe = useCommandQueue(),
+    He = useSession(),
+    { addNotification: Ke } = useNotificationQueue(),
     [Je, Qe] = d(""),
     [it, at] = d({}),
     Zt = vr(() => [Je]);
@@ -69553,7 +69553,7 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
   let Ct = U((ur) => ur.settings.showClearContextOnPlanAccept) ?? !1,
     eo = U((ur) => ur.ultraplanSessionUrl),
     jt = U((ur) => ur.ultraplanLaunching),
-    Tt = qa(),
+    Tt = useMainLoopModel(),
     to = JOe(),
     zt = cD() && isPolicyAllowed("allow_remote_sessions") && !eo && !jt && to !== null,
     {
@@ -69605,7 +69605,7 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
   E(() => {
     if (So.current) return;
     ((So.current = !0),
-      i("tengu_plan_exit_dialog_shown", {
+      logEvent("tengu_plan_exit_dialog_shown", {
         planLengthChars: fo?.length ?? 0,
         isEmptyPlan: Wo,
         publishOptionVisible: Ro,
@@ -69624,7 +69624,7 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
         filename: Pi?.filename || "Pasted image",
         dimensions: Pi?.dimensions,
       },
-      hi = Y$(pe, "storedImagePaths");
+      hi = createFieldUpdater(pe, "storedImagePaths");
     (D7(yi, hi), L7(yi, hi), at((zn) => ({ ...zn, [ki]: yi })));
   }
   let Sn = re((ur) => {
@@ -69648,10 +69648,10 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       return (fi(Ln), () => fi(null));
     }, [fi, Ln]));
   let { rows: gn } = ks({ rows: 0, columns: 0 }),
-    On = Se(),
+    On = useTerminalSize(),
     Jr = fi !== null && Br !== null,
     ai = Jr ? Math.max(1, gn - Ln) : Math.max(1, On.rows - Ln - 4),
-    Fr = OS(),
+    Fr = resolveEditorCommand(),
     Oi = Fr ? Ng(Fr) : null,
     rs = C(!1),
     Fi = C(Date.now()),
@@ -69661,7 +69661,7 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
   function qi() {
     let ur = qs.current,
       Pi = ur === null ? Xw : eq;
-    if (Wi() || (ur !== null && ma(ur, Pi)) || ta(Pi)) return (Ki(), !0);
+    if (Wi() || (ur !== null && isRecent(ur, Pi)) || ta(Pi)) return (Ki(), !0);
     return !1;
   }
   function As(ur) {
@@ -69688,7 +69688,7 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
   function ss(ur, Pi) {
     if (Bi.current) return;
     ((Bi.current = !0),
-      i("tengu_plan_review_step", {
+      logEvent("tengu_plan_review_step", {
         choice: fromEnum(ur),
         msSinceShown: Date.now() - Fi.current,
         viaChord: Pi,
@@ -69744,7 +69744,7 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
   async function hc(ur) {
     let Pi = qs.current,
       ki = Pi === null ? Xw : eq;
-    if (Wi() || (Pi !== null && ma(Pi, ki)) || ta(ki)) {
+    if (Wi() || (Pi !== null && isRecent(Pi, ki)) || ta(ki)) {
       Ki();
       return;
     }
@@ -69763,7 +69763,7 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
           keepContextRow: Cn.keepContextRows[ur] ?? null,
         });
     if (ur === "ultraplan" && to) {
-      (i("tengu_plan_exit", {
+      (logEvent("tengu_plan_exit", {
         planLengthChars: _o.length,
         outcome: S("ultraplan"),
         publishRequested: qv(vo.current),
@@ -69820,7 +69820,7 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       else if (ur === "yes-accept-edits") yc = "acceptEdits";
       else if (ur === "yes-auto-clear-context" && Cn.autoModeGateSnapshot)
         ((yc = "auto"), setAutoModeActive(!0));
-      (i("tengu_plan_exit", {
+      (logEvent("tengu_plan_exit", {
         planLengthChars: _o.length,
         outcome: fromEnum(ur),
         clearContext: !0,
@@ -69859,7 +69859,7 @@ ${_o}${wi}${Ms}${da}`,
       return;
     }
     if (ur === "yes-resume-auto-mode" && Cn.autoModeGateSnapshot) {
-      (i("tengu_plan_exit", {
+      (logEvent("tengu_plan_exit", {
         planLengthChars: _o.length,
         outcome: fromEnum(ur),
         clearContext: !1,
@@ -69889,7 +69889,7 @@ ${_o}${wi}${Ms}${da}`,
         return;
       }
       (eG({ from: "plan", to: zu, trigger: "exit_plan_mode" }),
-        i("tengu_plan_exit", {
+        logEvent("tengu_plan_exit", {
           planLengthChars: _o.length,
           outcome: fromEnum(ur),
           clearContext: !1,
@@ -69916,7 +69916,7 @@ ${_o}${wi}${Ms}${da}`,
           }),
         );
       if (I(zn(yc)) === !1) return;
-      i("tengu_plan_exit", {
+      logEvent("tengu_plan_exit", {
         planLengthChars: _o.length,
         outcome: S("no"),
         publishRequested: qv(vo.current),
@@ -69927,12 +69927,12 @@ ${_o}${wi}${Ms}${da}`,
   let Ko = re(() => {
     let ur = qs.current,
       Pi = ur === null ? Xw : eq;
-    if (Wi() || (ur !== null && ma(ur, Pi)) || ta(Pi)) {
+    if (Wi() || (ur !== null && isRecent(ur, Pi)) || ta(Pi)) {
       Ki();
       return;
     }
     if (!ne()) return;
-    (i("tengu_plan_exit", {
+    (logEvent("tengu_plan_exit", {
       planLengthChars: _o.length,
       outcome: S("no"),
       publishRequested: qv(vo.current),
@@ -69951,7 +69951,7 @@ ${_o}${wi}${Ms}${da}`,
         return;
       }
       if (
-        (i("tengu_plan_exit", {
+        (logEvent("tengu_plan_exit", {
           planLengthChars: 0,
           outcome: S("yes-default"),
           publishRequested: !1,
@@ -69976,7 +69976,7 @@ ${_o}${wi}${Ms}${da}`,
         }));
       return;
     }
-    (i("tengu_plan_exit", {
+    (logEvent("tengu_plan_exit", {
       planLengthChars: 0,
       outcome: S("no"),
       publishRequested: !1,
@@ -69994,10 +69994,10 @@ ${_o}${wi}${Ms}${da}`,
         return;
       }
       if (!ne()) return;
-      (i("tengu_plan_external_editor_used", {}),
+      (logEvent("tengu_plan_external_editor_used", {}),
         (async () => {
           if (ro) {
-            let Pi = await f9(ro);
+            let Pi = await editFileInExternalEditor(ro);
             if ((notePlanFileForgotten(ro), Pi.error))
               Ke({
                 key: "external-editor-error",
@@ -70011,7 +70011,7 @@ ${_o}${wi}${Ms}${da}`,
               (xo(Pi.content), In(!0));
             }
           } else {
-            let Pi = await Yx(_o);
+            let Pi = await editTextInExternalEditor(_o);
             if (Pi.error)
               Ke({
                 key: "external-editor-error",
@@ -70048,7 +70048,7 @@ ${_o}${wi}${Ms}${da}`,
     }
   };
   if (Wo)
-    return e(gs, {
+    return e(PermissionDialogFrame, {
       color: "planMode",
       title: "Exit plan mode?",
       requestSource: w.requestSource,
@@ -70075,15 +70075,15 @@ ${_o}${wi}${Ms}${da}`,
       }),
     });
   let wr = OIt(wn);
-  return r(mr, {
+  return r(FocusableBox, {
     onKeyDown: Vr,
     children: [
-      e(IS, {
+      e(ScrollBox, {
         ref: Br?.attach,
         flexDirection: "column",
         height: Jr ? ai : void 0,
         stickyScroll: !1,
-        children: e(gs, {
+        children: e(PermissionDialogFrame, {
           color: "planMode",
           title: "Ready to code?",
           innerPaddingX: 0,
@@ -70097,7 +70097,7 @@ ${_o}${wi}${Ms}${da}`,
                 flexDirection: "column",
                 children: e(t, { children: "Here is Claude's plan:" }),
               }),
-              e(Sy, {
+              e(DashedBorderBox, {
                 marginBottom: 1,
                 children:
                   no !== null
@@ -70186,7 +70186,7 @@ ${_o}${wi}${Ms}${da}`,
                   r(t, {
                     dimColor: !0,
                     children: [
-                      e(D, { chord: "ctrl+g", action: `edit in ${Oi}` }),
+                      e(KeybindingHint, { chord: "ctrl+g", action: `edit in ${Oi}` }),
                       ro && ` \xB7 ${Ao(ro)}`,
                     ],
                   }),
@@ -70197,7 +70197,7 @@ ${_o}${wi}${Ms}${da}`,
                         r(t, {
                           color: "success",
                           children: [
-                            e(et, { status: "success", withSpace: !0 }),
+                            e(StatusIndicator, { status: "success", withSpace: !0 }),
                             "Plan saved!",
                           ],
                         }),
@@ -70238,8 +70238,8 @@ function aWe(Db) {
   else I0o = VIt[4];
   let [GIt] = d(I0o),
     E0o;
-  if (VIt[5] === p)
-    ((E0o = e(Sy, {
+  if (VIt[5] === MEMO_CACHE_SENTINEL)
+    ((E0o = e(DashedBorderBox, {
       paddingX: 0,
       children: e(t, { dimColor: !0, children: "\u2026" }),
     })),
@@ -70261,7 +70261,7 @@ function sWe(u1r) {
   let m1r = _(6),
     { promise: d1r, file_path: KIt } = u1r,
     { patch: zIt, firstLine: XIt, fileContent: ZIt } = kn(d1r),
-    { columns: eEt } = Se(),
+    { columns: eEt } = useTerminalSize(),
     N0o;
   if (
     m1r[0] !== eEt ||
@@ -70270,9 +70270,9 @@ function sWe(u1r) {
     m1r[3] !== XIt ||
     m1r[4] !== zIt
   )
-    ((N0o = e(Sy, {
+    ((N0o = e(DashedBorderBox, {
       paddingX: 0,
-      children: e(GZ, {
+      children: e(DiffHunks, {
         hunks: zIt,
         dim: !1,
         width: eEt,
@@ -70396,7 +70396,7 @@ function H0o(w) {
       return null;
     ne.push(be.ruleContent);
   }
-  let me = Y(ne),
+  let me = dedupe(ne),
     pe = D$e(me, (be) => xS(F6e(be)));
   if (te(pe.join(" and ")) > K_e) return null;
   return r(t, {
@@ -70539,7 +70539,7 @@ function K0o(V1r) {
 function yWe(q1r) {
   let Mle = _(18),
     { file_path: oq, content: gD, fileExists: lWe, oldContent: nq } = q1r,
-    { columns: lEt } = Se(),
+    { columns: lEt } = useTerminalSize(),
     cEt;
   bb0: {
     if (!lWe) {
@@ -70583,7 +70583,7 @@ function yWe(q1r) {
     Mle[14] !== nq
   )
     ((fWe = mWe
-      ? b8(
+      ? intersperse(
           mWe.map((W0o) =>
             e(
               QP,
@@ -70611,7 +70611,7 @@ function yWe(q1r) {
   else fWe = Mle[15];
   let q0o;
   if (Mle[16] !== fWe)
-    ((q0o = e(Sy, { paddingX: 1, children: fWe })),
+    ((q0o = e(DashedBorderBox, { paddingX: 1, children: fWe })),
       (Mle[16] = fWe),
       (Mle[17] = q0o));
   else q0o = Mle[17];
@@ -70720,7 +70720,7 @@ function NWe(pWr) {
       resolvedOldSource: SWe,
     } = pWr,
     nx = Z0o === void 0 ? "replace" : Z0o,
-    gEt = Ye(uNo),
+    gEt = useSession(uNo),
     { notebook: bD, tooLargeForPreview: gWr } = kn(fWr),
     Ble;
   bb0: {
@@ -70920,7 +70920,7 @@ function NWe(pWr) {
               }),
             })
           : wWe
-            ? b8(
+            ? intersperse(
                 wWe.map((iNo) =>
                   e(
                     QP,
@@ -70956,7 +70956,7 @@ function NWe(pWr) {
   if (vy[48] !== EWe || vy[49] !== DWe)
     ((sNo = e(o, {
       flexDirection: "column",
-      children: r(_s, { children: [EWe, DWe] }),
+      children: r(TitledBorderBox, { children: [EWe, DWe] }),
     })),
       (vy[48] = EWe),
       (vy[49] = DWe),
@@ -71053,7 +71053,7 @@ function hNo(w, I, ne) {
           let be = Si(w.input, (xe) =>
             typeof xe === "string" ? jd(an(xe)) : xe,
           );
-          pe = GHe(w.toolName, be, { theme: I, verbose: !0 });
+          pe = renderToolUseMessageByToolName(w.toolName, be, { theme: I, verbose: !0 });
         } catch (be) {
           (logError(
             new R(
@@ -71171,7 +71171,7 @@ function vEt({ payload: w, answer: I }) {
       let Wo = ro.find((Ro) => Ro.option.type === "accept-session");
       if (Wo) ho(Wo.option);
     }, [at, Zt, Ct, ro, ho]);
-  Ze({ "confirm:cycleMode": _o }, { context: "Confirmation" });
+  useKeybindings({ "confirm:cycleMode": _o }, { context: "Confirmation" });
   let Ho = w.symlinkTarget
       ? e(o, {
           paddingX: 1,
@@ -71206,7 +71206,7 @@ function vEt({ payload: w, answer: I }) {
     }, [Tt, ho]);
   return r(N, {
     children: [
-      r(gs, {
+      r(PermissionDialogFrame, {
         title: w.showingDiffInIDE
           ? Qnr`Opened changes in ${JG(w.ideName ?? "IDE")} \u29C9`
           : He !== void 0
@@ -71261,7 +71261,7 @@ function vEt({ payload: w, answer: I }) {
               go &&
                 e(t, {
                   dimColor: !0,
-                  children: $A["card.standing_unavailable"]({
+                  children: REMOTE_APPROVAL_MESSAGES["card.standing_unavailable"]({
                     name: He,
                     kind: "file",
                   }),
@@ -71284,8 +71284,8 @@ function vEt({ payload: w, answer: I }) {
         marginTop: 1,
         children: e(t, {
           dimColor: !0,
-          children: r(ue, {
-            children: [e(D, { chord: "escape", action: "cancel" }), to],
+          children: r(DotSeparatedList, {
+            children: [e(KeybindingHint, { chord: "escape", action: "cancel" }), to],
           }),
         }),
       }),
@@ -71317,7 +71317,7 @@ function qWe(yqr) {
   else yNo = sx[1];
   let xEt = yNo,
     bNo;
-  if (sx[2] === p) ((bNo = Date.now()), (sx[2] = bNo));
+  if (sx[2] === MEMO_CACHE_SENTINEL) ((bNo = Date.now()), (sx[2] = bNo));
   else bNo = sx[2];
   let SNo = C(bNo),
     { refusedWithin: y3, noteRefused: b3, epoch: Sqr } = $o(),
@@ -71325,7 +71325,7 @@ function qWe(yqr) {
     kNo;
   if (sx[3] !== b3 || sx[4] !== y3)
     ((kNo = function jle() {
-      if (ma(SNo.current, mo) || y3(mo)) {
+      if (isRecent(SNo.current, REFUSE_INPUT_WINDOW_MS) || y3(REFUSE_INPUT_WINDOW_MS)) {
         return (b3(), !0);
       }
       return !1;
@@ -71338,7 +71338,7 @@ function qWe(yqr) {
     vNo;
   if (sx[6] !== TEt || sx[7] !== b3 || sx[8] !== y3)
     ((vNo = function k3(kqr) {
-      if (ma(SNo.current, mo) || y3(mo)) {
+      if (isRecent(SNo.current, REFUSE_INPUT_WINDOW_MS) || y3(REFUSE_INPUT_WINDOW_MS)) {
         b3();
         return;
       }
@@ -71350,9 +71350,9 @@ function qWe(yqr) {
       (sx[9] = vNo));
   else vNo = sx[9];
   let k3 = vNo,
-    PEt = fa(Sqr, mo),
+    PEt = fa(Sqr, REFUSE_INPUT_WINDOW_MS),
     wNo;
-  if (sx[10] === p)
+  if (sx[10] === MEMO_CACHE_SENTINEL)
     ((wNo = e(t, {
       bold: !0,
       color: "permission",
@@ -71391,7 +71391,7 @@ function qWe(yqr) {
         children: [
           "Approving replaces the current goal:",
           " ",
-          zee(kr(FWe.condition), 200),
+          truncateForDisplay(kr(FWe.condition), 200),
         ],
       })),
       (sx[15] = FWe),
@@ -71414,7 +71414,7 @@ function qWe(yqr) {
     sx[24] !== $We
   )
     ((WWe = e(
-      En,
+      ConfirmPrompt,
       {
         refuseInput: jle,
         openedAt: REt,
@@ -71425,7 +71425,7 @@ function qWe(yqr) {
         focus: "cancel",
         onConfirm: jWe,
         onCancel: $We,
-        windowMs: mo,
+        windowMs: REFUSE_INPUT_WINDOW_MS,
       },
       PEt.remountKey,
     )),
@@ -71455,16 +71455,16 @@ function qWe(yqr) {
   else CNo = sx[30];
   return CNo;
 }
-var RP = Kr({
+var RP = defineDialog({
   kind: "ide_onboarding",
-  payload: m(() =>
+  payload: createLazyValue(() =>
     c({
       installationStatus: qd(
         (w) => typeof w === "object" && w !== null,
       ).nullable(),
     }),
   ),
-  result: m(() => X(["dismissed", "cancelled"])),
+  result: createLazyValue(() => X(["dismissed", "cancelled"])),
   default: "cancelled",
 });
 F();
@@ -71504,7 +71504,7 @@ function INo(w) {
   } catch {
     return null;
   }
-  let me = Qk(Y(ne), (pe) => xS(pe));
+  let me = Qk(dedupe(ne), (pe) => xS(pe));
   if (te(me.join(" and ")) > K_e) return null;
   return r(t, { children: ["Yes, and don't ask again for ", Kae(me)] });
 }
@@ -71607,7 +71607,7 @@ function iqe(Vqr) {
   else RNo = Lb[7];
   let IEt = RNo,
     PNo;
-  if (Lb[8] === p)
+  if (Lb[8] === MEMO_CACHE_SENTINEL)
     ((PNo = { label: "Yes", value: "yes", feedbackConfig: { type: "accept" } }),
       (Lb[8] = PNo));
   else PNo = Lb[8];
@@ -71769,7 +71769,7 @@ function iqe(Vqr) {
   else nqe = Lb[37];
   let ANo;
   if (Lb[38] !== rl.requestSource || Lb[39] !== JWe || Lb[40] !== nqe)
-    ((ANo = r(gs, { title: ia, requestSource: VWe, children: [JWe, nqe] })),
+    ((ANo = r(PermissionDialogFrame, { title: MONITOR_TOOL_NAME, requestSource: VWe, children: [JWe, nqe] })),
       (Lb[38] = rl.requestSource),
       (Lb[39] = JWe),
       (Lb[40] = nqe),
@@ -71777,9 +71777,9 @@ function iqe(Vqr) {
   else ANo = Lb[41];
   return ANo;
 }
-var PP = Kr({
+var PP = defineDialog({
     kind: "lsp_recommendation",
-    payload: m(() =>
+    payload: createLazyValue(() =>
       c({
         pluginName: s(),
         pluginDescription: s().optional(),
@@ -71787,15 +71787,15 @@ var PP = Kr({
         fileExtension: s(),
       }),
     ),
-    result: m(() =>
+    result: createLazyValue(() =>
       X(["yes", "no", "timeout", "never", "disable", "cancelled"]),
     ),
     default: "cancelled",
     hideWhile: ["panel", "draft"],
   }),
-  MP = Kr({
+  MP = defineDialog({
     kind: "plugin_hint",
-    payload: m(() =>
+    payload: createLazyValue(() =>
       c({
         pluginName: s(),
         pluginDescription: s().optional(),
@@ -71803,7 +71803,7 @@ var PP = Kr({
         sourceCommand: s(),
       }),
     ),
-    result: m(() => X(["yes", "no", "disable", "cancelled"])),
+    result: createLazyValue(() => X(["yes", "no", "disable", "cancelled"])),
     default: "cancelled",
     hideWhile: ["panel", "draft"],
   });
@@ -71812,20 +71812,20 @@ var HEt = null,
 var ENo = {};
 var DNo = {},
   VC = { text: "Claude needs your permission" },
-  NNo = [a2.kind, h9.kind, r2.kind];
+  NNo = [MCP_ELICITATION_DIALOG.kind, MCP_ELICITATION_WAITING_DIALOG.kind, r2.kind];
 function cqe(w) {
   return typeof w === "string" && NNo.includes(w);
 }
 function mqe(w) {
-  let I = yp.payload().safeParse(w);
+  let I = localJsxDialog.payload().safeParse(w);
   return I.success ? I.data : null;
 }
 var fk = {
-    [yp.kind]: {
+    [localJsxDialog.kind]: {
       layout: (w, I) =>
         I === "fullscreen" ? "modal" : mqe(w)?.immediate ? "bottom" : "inline",
     },
-    [GPe.kind]: {
+    [it2SetupDialog.kind]: {
       waitingFor: "input needed",
       needs: "choose: install the iTerm2 integration or use tmux",
       notification: {
@@ -71851,7 +71851,7 @@ var fk = {
       notification: { text: "A sandboxed command needs network access" },
     },
     [SM.kind]: { waitingFor: "dialog open" },
-    [Z1.kind]: { waitingFor: "dialog open" },
+    [REMOTE_CALLOUT_DIALOG.kind]: { waitingFor: "dialog open" },
     [w8e.kind]: {
       waitingFor: "dialog open",
       needs: "choose: run ultraplan in the cloud",
@@ -71866,7 +71866,7 @@ var fk = {
     [_pe]: { waitingFor: "dialog open" },
     [w2.kind]: { waitingFor: "dialog open" },
     ...ENo,
-    [a2.kind]: {
+    [MCP_ELICITATION_DIALOG.kind]: {
       waitingFor: "input needed",
       notification: (w) => ({
         text: $Et,
@@ -71874,7 +71874,7 @@ var fk = {
       }),
       layout: "bottom",
     },
-    [h9.kind]: {
+    [MCP_ELICITATION_WAITING_DIALOG.kind]: {
       waitingFor: "input needed",
       notification: (w) =>
         ONo(w) ? { text: $Et, type: "elicitation_url_dialog" } : void 0,
@@ -71898,7 +71898,7 @@ var fk = {
     [Dqe.kind]: {
       notification: { text: "Claude Code wants to enter plan mode" },
     },
-    [g2.kind]: {
+    [GOAL_PROPOSAL_DIALOG.kind]: {
       waitingFor: "goal proposal",
       notification: { text: "Claude proposed a session goal" },
     },
@@ -71957,11 +71957,11 @@ var fk = {
   },
   $Et = "Claude Code needs your input";
 function LNo(w) {
-  let I = a2.payload().safeParse(w);
+  let I = MCP_ELICITATION_DIALOG.payload().safeParse(w);
   return I.success && I.data.params.mode === "url";
 }
 function ONo(w) {
-  let I = h9.payload().safeParse(w);
+  let I = MCP_ELICITATION_WAITING_DIALOG.payload().safeParse(w);
   return I.success && I.data.waitingState === void 0;
 }
 function MF(w, I) {
@@ -72182,7 +72182,7 @@ function Wle(w, I, ne, me = {}) {
   }
 }
 function KEt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
-  let me = OVe.of(Ye().host),
+  let me = OVe.of(useSession().host),
     pe = w.command,
     be = V(() => Hn(w.toolName), [w.toolName]),
     {
@@ -72279,7 +72279,7 @@ function KEt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       (on) => {
         if (!ne()) return !1;
         if (
-          (i("tengu_permission_request_option_selected", {
+          (logEvent("tengu_permission_request_option_selected", {
             option_index: {
               yes: 1,
               "yes-apply-suggestions": 2,
@@ -72315,7 +72315,7 @@ function KEt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       if (!ne()) return;
       (Zt(), I({ behavior: "deny" }));
     }, [I, ne, Zt]);
-  return r(gs, {
+  return r(PermissionDialogFrame, {
     title:
       go && !fo ? "PowerShell command (unsandboxed)" : "PowerShell command",
     requestSource: w.requestSource,
@@ -72363,8 +72363,8 @@ function KEt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
         marginTop: 1,
         children: e(t, {
           dimColor: !0,
-          children: r(ue, {
-            children: [e(D, { chord: "escape", action: "cancel" }), Ct],
+          children: r(DotSeparatedList, {
+            children: [e(KeybindingHint, { chord: "escape", action: "cancel" }), Ct],
           }),
         }),
       }),
@@ -72375,8 +72375,8 @@ var sq = new Set([
   PP.kind,
   MP.kind,
   SM.kind,
-  g2.kind,
-  Z1.kind,
+  GOAL_PROPOSAL_DIALOG.kind,
+  REMOTE_CALLOUT_DIALOG.kind,
   K9t,
   y8e,
   S8e,
@@ -72456,7 +72456,7 @@ function Iqe(UGr) {
       tf.guidanceText === void 0
         ? ""
         : io(tf.guidanceText, { maxCodeUnits: 512 });
-    yqe = gs;
+    yqe = PermissionDialogFrame;
     bqe = "warning";
     kqe = "Session paused";
     hqe = o;
@@ -72702,7 +72702,7 @@ function eVe(tKr) {
   let Kf = _(47),
     { payload: Eu, answer: T3 } = tKr,
     qNo;
-  if (Kf[0] === p) ((qNo = he()), (Kf[0] = qNo));
+  if (Kf[0] === MEMO_CACHE_SENTINEL) ((qNo = he()), (Kf[0] = qNo));
   else qNo = Kf[0];
   let VNo = qNo,
     GNo;
@@ -72723,7 +72723,7 @@ function eVe(tKr) {
   else zNo = Kf[6];
   let Kle = zNo,
     QNo;
-  if (Kf[7] === p)
+  if (Kf[7] === MEMO_CACHE_SENTINEL)
     ((QNo = { label: "Yes", value: "yes", feedbackConfig: { type: "accept" } }),
       (Kf[7] = QNo));
   else QNo = Kf[7];
@@ -72793,7 +72793,7 @@ function eVe(tKr) {
   let tLo = eLo;
   const rDt = tLo !== null ? `Use skill "${tLo.display}"?` : "Use this skill?";
   let oLo;
-  if (Kf[29] === p)
+  if (Kf[29] === MEMO_CACHE_SENTINEL)
     ((oLo = e(t, {
       children: "Claude may use instructions, code, or files from this Skill.",
     })),
@@ -72850,7 +72850,7 @@ function eVe(tKr) {
     Kf[44] !== Hqe ||
     Kf[45] !== Jqe
   )
-    ((nLo = r(gs, {
+    ((nLo = r(PermissionDialogFrame, {
       title: rDt,
       requestSource: Eu.requestSource,
       children: [oLo, Hqe, Jqe],
@@ -72974,7 +72974,7 @@ function SVe(yKr) {
   else lLo = of[14];
   let kDt = lLo,
     cLo;
-  if (of[15] === p) ((cLo = { label: "Yes", value: "yes" }), (of[15] = cLo));
+  if (of[15] === MEMO_CACHE_SENTINEL) ((cLo = { label: "Yes", value: "yes" }), (of[15] = cLo));
   else cLo = of[15];
   let uLo;
   if (of[16] !== TD) {
@@ -73073,7 +73073,7 @@ function SVe(yKr) {
       (of[40] = dVe));
   else dVe = of[40];
   let dLo;
-  if (of[41] === p)
+  if (of[41] === MEMO_CACHE_SENTINEL)
     ((dLo = e(t, {
       children: "Do you want to allow Claude to fetch this content?",
     })),
@@ -73101,7 +73101,7 @@ function SVe(yKr) {
   else bVe = of[48];
   let mLo;
   if (of[49] !== yd.requestSource || of[50] !== uVe || of[51] !== bVe)
-    ((mLo = r(gs, {
+    ((mLo = r(PermissionDialogFrame, {
       title: "Fetch",
       requestSource: oVe,
       children: [uVe, bVe],
@@ -73186,7 +73186,7 @@ var HDt = null,
 function ZDt(J2r) {
   let Z2r = _(4),
     { answer: X2r } = J2r,
-    Yle = Ah(X2r);
+    Yle = useAnswerRefusalState(X2r);
   const RDt = `remote-callout-${Yle.attempts}`,
     PDt = Yle.refused ?? void 0;
   let fLo;
@@ -73251,7 +73251,7 @@ var GLo = ({ payload: w, answer: I, wouldTakeAnswer: ne }) =>
 function e0t(ezr) {
   let gLo = _(7),
     { payload: ADt, answer: IDt, wouldTakeAnswer: NDt } = ezr,
-    { addNotification: ODt } = Ir(),
+    { addNotification: ODt } = useNotificationQueue(),
     wVe;
   if (gLo[0] !== ODt || gLo[1] !== IDt)
     ((wVe = (hLo, yLo) => {
@@ -73306,9 +73306,9 @@ function t0t(tzr) {
       (ozr[0] = FDt.nodeId),
       (ozr[1] = vLo));
   else vLo = ozr[1];
-  return Me(kLo, vLo);
+  return useStoreSelector(kLo, vLo);
 }
-var XLo = { [yp.kind]: (w) => mqe(w)?.hidesPrompt === !1 };
+var XLo = { [localJsxDialog.kind]: (w) => mqe(w)?.hidesPrompt === !1 };
 function ZLo(w) {
   return XLo[w.kind]?.(w.payload) ?? !1;
 }
@@ -73402,8 +73402,8 @@ function fl(w, I) {
   return { [w.kind]: I };
 }
 var VVe = {
-  ...fl(yp, t0t),
-  ...fl(GPe, LLo),
+  ...fl(localJsxDialog, t0t),
+  ...fl(it2SetupDialog, LLo),
   ...fl(oPe, OLo),
   ...fl(SF, FLo),
   ...fl(L0, BLo),
@@ -73411,7 +73411,7 @@ var VVe = {
   ...fl(RP, jLo),
   ...fl($_, $Lo),
   ...fl(SM, WLo),
-  ...fl(Z1, ZDt),
+  ...fl(REMOTE_CALLOUT_DIALOG, ZDt),
   ...fl(w8e, GLo),
   ...fl(yre, KLo),
   ...fl(PP, qLo),
@@ -73420,8 +73420,8 @@ var VVe = {
   ...fl(Kbe, HLo),
   ...fl(w2, Lbe),
   ...(GDt && KDt ? fl(GDt.startupModelSwitchDialog, KDt) : {}),
-  ...fl(a2, QLo),
-  ...fl(h9, YLo),
+  ...fl(MCP_ELICITATION_DIALOG, QLo),
+  ...fl(MCP_ELICITATION_WAITING_DIALOG, YLo),
   ...fl(r2, JLo),
   ...fl(iQ, EQt),
   ...fl($qe, SVe),
@@ -73430,7 +73430,7 @@ var VVe = {
   ...fl(Nce, vEt),
   ...fl(Sbe, m$e),
   ...fl(Dqe, L1e),
-  ...fl(g2, qWe),
+  ...fl(GOAL_PROPOSAL_DIALOG, qWe),
   ...fl(Lqe, qIt),
   ...fl(Mqe, iqe),
   ...fl(bbe, iAt),
@@ -73606,13 +73606,13 @@ var ice = ["\u25D0", "\u25D1"],
 function ace(Azr) {
   let Nzr = _(1),
     { titles: aOo, isAnimating: lOo, noPrefix: cOo } = Azr,
-    uOo = Me(aOo, fOo),
-    dOo = Me(aOo, gOo),
+    uOo = useStoreSelector(aOo, fOo),
+    dOo = useStoreSelector(aOo, gOo),
     Izr = Va(),
     mOo = q8e() !== null && H("tengu_static_title_under_mux", !0),
     [Ezr, Dzr] = d(0),
     pOo;
-  if (Nzr[0] === p) ((pOo = () => Dzr(hOo)), (Nzr[0] = pOo));
+  if (Nzr[0] === MEMO_CACHE_SENTINEL) ((pOo = () => Dzr(hOo)), (Nzr[0] = pOo));
   else pOo = Nzr[0];
   ko(pOo, dOo || cOo || mOo || !lOo || !Izr ? null : r0t);
   let Lzr = lOo && !mOo ? (ice[Ezr] ?? sce) : sce;
@@ -73633,7 +73633,7 @@ function YVe(w, I, ne) {
       premountSuppressed: 0,
       cancelSummary: null,
     }),
-    be = vt(),
+    be = useClock(),
     xe = C(() => {});
   xe.current = () => {
     let He = K(),
@@ -73804,12 +73804,12 @@ function TOo() {
   return At(w.subscribe, I, I);
 }
 function s0t(w) {
-  if (w?.kind === a2.kind) {
-    let I = a2.payload().safeParse(w.payload);
+  if (w?.kind === MCP_ELICITATION_DIALOG.kind) {
+    let I = MCP_ELICITATION_DIALOG.payload().safeParse(w.payload);
     return I.success ? I.data.serverName : void 0;
   }
-  if (w?.kind === h9.kind) {
-    let I = h9.payload().safeParse(w.payload);
+  if (w?.kind === MCP_ELICITATION_WAITING_DIALOG.kind) {
+    let I = MCP_ELICITATION_WAITING_DIALOG.payload().safeParse(w.payload);
     return I.success ? I.data.serverName : void 0;
   }
   return;
@@ -73824,7 +73824,7 @@ function lce() {
     I = () => {
       let ne = w.getState(),
         me = tk(ne),
-        pe = ne.open.findLast((be) => be !== me && be.kind === a2.kind);
+        pe = ne.open.findLast((be) => be !== me && be.kind === MCP_ELICITATION_DIALOG.kind);
       return s0t(pe);
     };
   return At(w.subscribe, I, I);
@@ -73870,16 +73870,16 @@ function dce(AQr) {
       transcript: IQr,
       isSessionWorking: EQr,
     } = AQr,
-    Ry = Ye(),
-    { storageV5: ZVe } = _e(),
+    Ry = useSession(),
+    { storageV5: ZVe } = useStorageV5Context(),
     DQr = lce(),
     l0t = U(KOo),
     c0t = U(zOo),
     NQr = U(QOo),
-    E3 = Me(ROo, YOo),
-    m0t = Me(ROo, JOo),
-    LQr = Me(XVe, XOo),
-    p0t = qb(yp.kind),
+    E3 = useStoreSelector(ROo, YOo),
+    m0t = useStoreSelector(ROo, JOo),
+    LQr = useStoreSelector(XVe, XOo),
+    p0t = qb(localJsxDialog.kind),
     D3 = U(ZOo),
     POo;
   if (cx[0] !== D3 || cx[1] !== E3)
@@ -74010,7 +74010,7 @@ function dce(AQr) {
   else (($Oo = cx[36]), (WOo = cx[37]));
   (E($Oo, WOo), YVe(IQr, uce, EQr));
   let qOo;
-  if (cx[38] === p) {
+  if (cx[38] === MEMO_CACHE_SENTINEL) {
     let BQr = H("tengu_terminal_sidebar", !1);
     qOo = BQr && (ee().showStatusInTerminalTab ?? !1);
     cx[38] = qOo;
@@ -74032,9 +74032,9 @@ function nGe({ inputOwnsEscape: w, isTranscriptScreen: I }) {
     me = U((Ke) => Ke.viewSelectionMode),
     pe = U((Ke) => Ke.viewingAgentTaskId),
     be = It(),
-    xe = wf(),
-    Ae = Ye(),
-    { storageV5: Oe } = _e();
+    xe = useTaskRegistry(),
+    Ae = useSession(),
+    { storageV5: Oe } = useStorageV5Context();
   return {
     handleKeyDown: (Ke) => {
       if (I) return;
@@ -74086,9 +74086,9 @@ function mq(PYr) {
       children: R0t,
     } = PYr,
     P0t = Yn(),
-    { rows: A0t } = Se(),
-    mce = qb(yp.kind),
-    I0t = Me(cq, SFo);
+    { rows: A0t } = useTerminalSize(),
+    mce = qb(localJsxDialog.kind),
+    I0t = useStoreSelector(cq, SFo);
   const E0t = IYr === "transcript";
   let nFo;
   if (Jm[0] !== I0t || Jm[1] !== E0t)
@@ -74130,7 +74130,7 @@ function mq(PYr) {
   else iFo = Jm[11];
   let { handleKeyDown: H0t } = Yae(iFo),
     sFo;
-  if (Jm[12] === p) ((sFo = ze()), (Jm[12] = sFo));
+  if (Jm[12] === MEMO_CACHE_SENTINEL) ((sFo = ze()), (Jm[12] = sFo));
   else sFo = Jm[12];
   let { messages: uq } = nS(sFo),
     aFo,
@@ -74186,7 +74186,7 @@ function mq(PYr) {
   if (Jm[29] !== J0t) ((pFo = [J0t]), (Jm[29] = J0t), (Jm[30] = pFo));
   else pFo = Jm[30];
   E(mFo, pFo);
-  let rGe = Me(ux.stream, vFo),
+  let rGe = useStoreSelector(ux.stream, vFo),
     fFo,
     gFo;
   if (Jm[31] !== mce || Jm[32] !== rGe || Jm[33] !== Hh)
@@ -74211,7 +74211,7 @@ function mq(PYr) {
       (Jm[38] = iGe));
   else iGe = Jm[38];
   let hFo;
-  if (Jm[39] === p) ((hFo = e(mse, {})), (Jm[39] = hFo));
+  if (Jm[39] === MEMO_CACHE_SENTINEL) ((hFo = e(mse, {})), (Jm[39] = hFo));
   else hFo = Jm[39];
   let sGe;
   if (
@@ -74299,11 +74299,11 @@ function mq(PYr) {
     return pce;
   }
   let pce;
-  if (Jm[66] === p) ((pce = xH()), (Jm[66] = pce));
+  if (Jm[66] === MEMO_CACHE_SENTINEL) ((pce = xH()), (Jm[66] = pce));
   else pce = Jm[66];
   let bFo;
   if (Jm[67] !== dq)
-    ((bFo = e(Vz, { mouseTracking: pce, children: dq })),
+    ((bFo = e(AltScreenContainer, { mouseTracking: pce, children: dq })),
       (Jm[67] = dq),
       (Jm[68] = bFo));
   else bFo = Jm[68];
@@ -74320,11 +74320,11 @@ function fce() {
   }
   let wFo;
   if (fq[0] !== IP.identity.color)
-    ((wFo = Bb(IP.identity.color)), (fq[0] = IP.identity.color), (fq[1] = wFo));
+    ((wFo = resolveAgentColor(IP.identity.color)), (fq[0] = IP.identity.color), (fq[1] = wFo));
   else wFo = fq[1];
   let tNt = wFo,
     CFo;
-  if (fq[2] === p) ((CFo = e(t, { children: "Viewing " })), (fq[2] = CFo));
+  if (fq[2] === MEMO_CACHE_SENTINEL) ((CFo = e(t, { children: "Viewing " })), (fq[2] = CFo));
   else CFo = fq[2];
   let dGe;
   if (fq[3] !== tNt || fq[4] !== IP.identity.agentName)
@@ -74338,12 +74338,12 @@ function fce() {
       (fq[5] = dGe));
   else dGe = fq[5];
   let _Fo;
-  if (fq[6] === p)
+  if (fq[6] === MEMO_CACHE_SENTINEL)
     ((_Fo = r(t, {
       dimColor: !0,
       children: [
         " \xB7 ",
-        e(D, {
+        e(KeybindingHint, {
           chord: "escape",
           action: "return",
           format: { keyCase: "lower" },
@@ -74364,7 +74364,7 @@ function fce() {
   else pGe = fq[10];
   let TFo;
   if (fq[11] !== mGe || fq[12] !== pGe)
-    ((TFo = e(yy, {
+    ((TFo = e(OffscreenFrozenContent, {
       children: r(o, {
         flexDirection: "column",
         marginBottom: 1,
@@ -74384,7 +74384,7 @@ function RFo(w, I) {
 }
 function fGe(w, I, ne) {
   let me = qA(),
-    { storageV5: pe, credentials: be } = _e(),
+    { storageV5: pe, credentials: be } = useStorageV5Context(),
     [xe, Ae] = d(!1),
     [Oe] = d(() => Date.now());
   (E(() => {
@@ -74602,7 +74602,7 @@ function FGe(kce, wce) {
   let Cce = UFo;
   if (Q8({ open: Sq }) !== null) {
     let _ce;
-    if (SGe[2] === p) ((_ce = []), (SGe[2] = _ce));
+    if (SGe[2] === MEMO_CACHE_SENTINEL) ((_ce = []), (SGe[2] = _ce));
     else _ce = SGe[2];
     return _ce;
   }
@@ -74669,7 +74669,7 @@ function UGe(L5r) {
         return !1;
       }
       let B5r = Math.max(RGe.shownAt ?? 0, RGe.userInvoked ? 0 : uNt);
-      return !ma(B5r);
+      return !isRecent(B5r);
     }),
       (vq[0] = kq),
       (vq[1] = uNt),
@@ -74754,7 +74754,7 @@ function H3($5r) {
   j3(W5r);
   let q5r = pye(),
     VFo;
-  if (V5r[0] === p) ((VFo = { perReveal: !0 }), (V5r[0] = VFo));
+  if (V5r[0] === MEMO_CACHE_SENTINEL) ((VFo = { perReveal: !0 }), (V5r[0] = VFo));
   else VFo = V5r[0];
   return (zy("bell", q5r, VFo), null);
 }
@@ -74786,7 +74786,7 @@ function WGe(DGe) {
       if (!DGe || !LGe || Tce === null) {
         return;
       }
-      i("tengu_dialoghost_suppressed", { reason: fromEnum(Tce) });
+      logEvent("tengu_dialoghost_suppressed", { reason: fromEnum(Tce) });
     }),
       (QFo = [DGe, LGe, Tce]),
       (Y5r[0] = LGe),
@@ -74853,7 +74853,7 @@ function Ace(fJr) {
   let yJr = _(3),
     { agentId: gJr } = fJr,
     Mce = ptn(gJr),
-    { columns: gNt } = Se(),
+    { columns: gNt } = useTerminalSize(),
     [, hJr] = pk(sBo, 0);
   if ((ko(hJr, Mce ? 1000 : null), Mce === null)) {
     return null;
@@ -74904,10 +74904,10 @@ function Ece(NJr) {
     $3 = Yn(),
     qGe = U(SBo),
     vNt = U(kBo),
-    K3 = Me(Ice, vBo),
-    wNt = Me(Ice.stream, wBo),
+    K3 = useStoreSelector(Ice, vBo),
+    wNt = useStoreSelector(Ice.stream, wBo),
     aBo;
-  if (zf[0] === p) ((aBo = ze()), (zf[0] = aBo));
+  if (zf[0] === MEMO_CACHE_SENTINEL) ((aBo = ze()), (zf[0] = aBo));
   else aBo = zf[0];
   let { messages: px } = nS(aBo),
     lBo;
@@ -74965,7 +74965,7 @@ function Ece(NJr) {
       (zf[18] = KGe));
   else KGe = zf[18];
   let mBo;
-  if (zf[19] === p) ((mBo = { current: null }), (zf[19] = mBo));
+  if (zf[19] === MEMO_CACHE_SENTINEL) ((mBo = { current: null }), (zf[19] = mBo));
   else mBo = zf[19];
   let pBo;
   if (zf[20] !== VGe || zf[21] !== GGe || zf[22] !== KGe)
@@ -75032,7 +75032,7 @@ function Ece(NJr) {
       }
       let MNt = RNt.filter((OJr) => OJr.toolUseID === YGe);
       let XGe = MNt.length;
-      let yBo = G(px, (hBo) => {
+      let yBo = countMatching(px, (hBo) => {
         if (hBo.type !== "attachment") {
           return !1;
         }
@@ -75183,12 +75183,12 @@ function Dce(aXr) {
       hideWelcomeChrome: UNt,
     } = aXr,
     sKe = gi(),
-    cXr = Me(xBo, WNt),
-    RBo = Me(lXr),
+    cXr = useStoreSelector(xBo, WNt),
+    RBo = useStoreSelector(lXr),
     HNt =
       RBo?.conversationKey === VF.conversationKey ? RBo.clearedAfter : void 0,
     PBo;
-  if (LP[0] === p) ((PBo = e(fce, {})), (LP[0] = PBo));
+  if (LP[0] === MEMO_CACHE_SENTINEL) ((PBo = e(fce, {})), (LP[0] = PBo));
   else PBo = LP[0];
   let aKe;
   if (LP[1] !== UNt)
@@ -75236,14 +75236,14 @@ function Dce(aXr) {
       (LP[14] = uKe));
   else uKe = LP[14];
   let MBo, ABo;
-  if (LP[15] === p)
-    ((MBo = e(Dye, {})), (ABo = e(z8, {})), (LP[15] = MBo), (LP[16] = ABo));
+  if (LP[15] === MEMO_CACHE_SENTINEL)
+    ((MBo = e(AuthenticationStatusBox, {})), (ABo = e(z8, {})), (LP[15] = MBo), (LP[16] = ABo));
   else ((MBo = LP[15]), (ABo = LP[16]));
   let IBo;
-  if (LP[17] === p) ((IBo = e(NP, {})), (LP[17] = IBo));
+  if (LP[17] === MEMO_CACHE_SENTINEL) ((IBo = e(NP, {})), (LP[17] = IBo));
   else IBo = LP[17];
   let EBo;
-  if (LP[18] === p) ((EBo = e(o, { flexGrow: 1 })), (LP[18] = EBo));
+  if (LP[18] === MEMO_CACHE_SENTINEL) ((EBo = e(o, { flexGrow: 1 })), (LP[18] = EBo));
   else EBo = LP[18];
   let mKe;
   if (LP[19] !== VF || LP[20] !== ONt || LP[21] !== LNt || LP[22] !== e6)
@@ -75488,7 +75488,7 @@ class eLt {
       pe = `${ne}|${me}`;
     if (this.fired.has(pe)) return;
     (this.fired.add(pe),
-      i("tengu_dead_probe_legacy_plugin_tip_counts", {
+      logEvent("tengu_dead_probe_legacy_plugin_tip_counts", {
         changes_max: fromEnum(ne),
         changes_outcome: fromEnum(me),
       }));
@@ -75527,7 +75527,7 @@ function Hce(w, I = "spinner", ne) {
       : w.id.startsWith(Sen) || w.id.startsWith(dOt)
         ? "org-tip"
         : w.id;
-  i("tengu_tip_shown", {
+  logEvent("tengu_tip_shown", {
     tipIdLength: me,
     cooldownSessions: w.cooldownSessions,
     surface: fromEnum(I),
@@ -75555,7 +75555,7 @@ function jBo() {
 function $Bo(w, I) {
   let { mainLoopModel: ne, getAppState: me } = I,
     pe = Xy(ne, Ya(me()));
-  i("tengu_cancel", {
+  logEvent("tengu_cancel", {
     source: w,
     streamMode: fromEnumOpt(I.streamMode),
     ...(pe && { effort_level: fromEnum(pe) }),
@@ -75664,7 +75664,7 @@ async function t6(w) {
     wn = An.length,
     yn = An.reduce((nn, no) => nn + (_o[no.id]?.content.length ?? 0), 0);
   if (
-    (i("tengu_paste_text", { pastedTextCount: wn, pastedTextBytes: yn }),
+    (logEvent("tengu_paste_text", { pastedTextCount: wn, pastedTextBytes: yn }),
     !on && xo.trim().startsWith("/"))
   ) {
     let nn = xo.trim(),
@@ -75699,7 +75699,7 @@ async function t6(w) {
       }
       if ((w.onSubmitProceed?.(), w.historyEntry))
         m4e(w.historyEntry, w.storageV5, go);
-      (i("tengu_immediate_command_executed", { commandName: shippedCommandNameForAnalytics(lr.name) }),
+      (logEvent("tengu_immediate_command_executed", { commandName: shippedCommandNameForAnalytics(lr.name) }),
         be(""),
         jt(0),
         xe({}),
@@ -76800,7 +76800,7 @@ class Wce {
     subscribe: (w) => this._requireHost().store.subscribe(w),
   };
   stream;
-  engineFeed = { input: null, pendingQueryParams: [], readLock: Ike() };
+  engineFeed = { input: null, pendingQueryParams: [], readLock: createMutex() };
   _haikuTitleAttempted;
   _swarmStartTime = null;
   _swarmBudgetInfo = void 0;
@@ -76956,7 +76956,7 @@ class Wce {
         }
       })));
     try {
-      (X0.recordUserActivity(), Ez(!0));
+      (activeTimeTracker.recordUserActivity(), Ez(!0));
     } catch (be) {
       logError(be);
     }
@@ -77059,7 +77059,7 @@ class Wce {
     let w = this._snapshot.submitCount + 1;
     (this._publish({ submitCount: w }), (this._tipPickedThisTurn = !1));
     try {
-      (X0.recordUserActivity(), emt(), Ez(!0));
+      (activeTimeTracker.recordUserActivity(), emt(), Ez(!0));
       let I = this._host;
       if (w === 1 && I !== null) dQt(I.session.host, I.storageV5);
     } catch (I) {
@@ -77121,15 +77121,15 @@ class Wce {
       bashTools: this._bashTools,
       bashHosts: this._bashHosts,
       toolsUsed: this._toolsUsed,
-      storageV5: M() ? be : void 0,
-      credentials: M() ? xe : void 0,
+      storageV5: isHoverRestEnabled() ? be : void 0,
+      credentials: isHoverRestEnabled() ? xe : void 0,
     })
       .then(async (He) => {
         let Ke = He
           ? await XNt(He, {
               session: w,
               theme: I,
-              storageV5: M() ? be : void 0,
+              storageV5: isHoverRestEnabled() ? be : void 0,
             })
           : "";
         if (!Ke) {
@@ -77204,7 +77204,7 @@ class Wce {
     try {
       this._requireHost().transcript.replace((pe) => [
         ...pe,
-        Iyt(ne, me, G(pe, isLoggableMessage)),
+        Iyt(ne, me, countMatching(pe, isLoggableMessage)),
       ]);
     } catch (pe) {
       logError(pe);
@@ -77284,7 +77284,7 @@ class Wce {
     if (!I.isRemoteMode && Ke !== null) {
       if ((this.stream.previewStore.setSalvage(null), Je !== null))
         ((this.stream.continuationReplacesUuids = null),
-          i("tengu_rotunda_pennant_esc", {
+          logEvent("tengu_rotunda_pennant_esc", {
             action: S("kept_originals"),
             retained_count: Je.length,
             streamed_chars: (Qe ?? "").length,
@@ -77365,8 +77365,8 @@ class Wce {
         ideInstallationStatus: it,
         isNonInteractiveSession: !1,
         resolveCommandDialog: at,
-        renderDebugControls: ws().get(process.stdout)?.renderDebug,
-        requiresStructuredOutput: Sr.some((no) => Kt(no, ti)),
+        renderDebugControls: getInkInstanceRegistry().get(process.stdout)?.renderDebug,
+        requiresStructuredOutput: Sr.some((no) => matchesToolName(no, ti)),
         dynamicMcpConfig: xe.dynamicMcpConfig,
         theme: Zt,
         agentDefinitions: Kn
@@ -77403,14 +77403,14 @@ class Wce {
       taskRegistry: ao,
       queuedNotificationsRegistry: fEe(() => be.getState(), Tt, He),
       sessionHooksRegistry: co,
-      agentLifecycle: ESe(() => be.getState(), Tt),
+      agentLifecycle: createAgentLifecycle(() => be.getState(), Tt),
       teammateColors: go,
       rootToolSurface: { tools: Sr, mainLoopModel: pe },
       messages: I,
       getMessages: () => fo.getSnapshot(),
       getIsResponseStreaming: () => this.guard.isRunning,
       reloadPlugins: async () => {
-        await Xx(zt, ro, ho, { applyStagedInstalls: !1 });
+        await refreshActivePlugins(zt, ro, ho, { applyStagedInstalls: !1 });
       },
       retireDepartedAdditionalDirectories: (no) => {
         Tt((jo) => {
@@ -77485,7 +77485,7 @@ class Wce {
         } else if (no.type === "notification") An(no.notification);
         else if (no.type === "response_length")
           this.stream.onResponseLength(no);
-        else if (no.type === "apply_flag_settings") _Se(no.settings, Tt);
+        else if (no.type === "apply_flag_settings") applyFlagSettingsPatch(no.settings, Tt);
       },
       onCompactEvent: this.applyCompactEvent,
       resume: wn,
@@ -77744,7 +77744,7 @@ class Wce {
     }
     let xo = this.guard.tryStart();
     if (xo === null) {
-      i("tengu_concurrent_onquery_detected", {});
+      logEvent("tengu_concurrent_onquery_detected", {});
       let yn = !1;
       for (let vo of w) {
         if (vo.type !== "user") continue;
@@ -77803,7 +77803,7 @@ class Wce {
           }),
           !yn)
         )
-          ((yn = !0), i("tengu_concurrent_onquery_enqueued", {}));
+          ((yn = !0), logEvent("tengu_concurrent_onquery_enqueued", {}));
       }
       return;
     }
@@ -77869,7 +77869,7 @@ class Wce {
         (this.stream.deferredSlashEchoUuid = null),
         this.stream.pendingPreservedInsert !== null)
       )
-        (i("tengu_compact_preserved_unanchored", {
+        (logEvent("tengu_compact_preserved_unanchored", {
           preservedCount: this.stream.pendingPreservedInsert.preserved.length,
         }),
           Ho({
@@ -77909,7 +77909,7 @@ class Wce {
                   Iyt(
                     no.durationMs,
                     Kn,
-                    G(jo, isLoggableMessage),
+                    countMatching(jo, isLoggableMessage),
                     no.pendingBackgroundAgentCount,
                     no.pendingWorkflowCount,
                   ),
@@ -78051,7 +78051,7 @@ class Wce {
     Mfn();
     let lr = xz(),
       [, Io, So, Go] = await Promise.all([
-        FHe(Kn.session.host, Cn, zt, Kn.options.fastMode, go),
+        runAutoModeGateCheck(Kn.session.host, Cn, zt, Kn.options.fastMode, go),
         VS(no, un, Array.from(Cn.additionalWorkingDirectories.keys())),
         hC(Kn.session, Kn.storageV5, Kn.credentials),
         j_(Kn.session, Kn.options.cacheBreakerPhrase),
@@ -78306,7 +78306,7 @@ class Wce {
             let ao = xGe(pe.getSnapshot()),
               co = to?.boundaryUuid === void 0 || to.boundaryUuid === ao;
             if (to?.text && !co)
-              (i("tengu_prefill_boundary_mismatch", {
+              (logEvent("tengu_prefill_boundary_mismatch", {
                 prefill_chars: to.text.length,
               }),
                 n(
@@ -78488,7 +78488,7 @@ ${fo}
               typeof it.value === "string" && it.value.trim().startsWith("/")
             )));
     if (at) ne(void 0);
-    let Zt = Wit(be.getState());
+    let Zt = resolveMainLoopModel(be.getState());
     await t6({
       presentation: this._presentation,
       helpers: {
@@ -78538,7 +78538,7 @@ ${fo}
         .catch(() => {}),
       me.value === "")
     )
-      me.setValueRaw(U7);
+      me.setValueRaw(AUTO_CONTINUE_PREFILL_TEXT);
     return !0;
   };
   openRateLimitOptions = () => {
@@ -78560,31 +78560,31 @@ ${fo}
   cancelRateLimitAutoContinue = () => {
     if (!this._autoContinueLive) return;
     ((this._autoContinueLive = !1),
-      i("tengu_rl_checkpoint_auto_continue_cancelled_by_upsell", {}));
+      logEvent("tengu_rl_checkpoint_auto_continue_cancelled_by_upsell", {}));
     let { draft: w } = this._requireHost();
-    if (w.value === U7) w.replaceValue("");
+    if (w.value === AUTO_CONTINUE_PREFILL_TEXT) w.replaceValue("");
   };
   prefillRateLimitAutoContinue = () => {
     let { draft: w } = this._requireHost();
-    if (this._autoContinueLive && w.value === "") w.setValueRaw(U7);
+    if (this._autoContinueLive && w.value === "") w.setValueRaw(AUTO_CONTINUE_PREFILL_TEXT);
   };
   rewriteInputOverAutoContinuePrefill(w, I) {
-    let ne = P3n(w, I, this._autoContinueLive);
+    let ne = stripAutoContinuePrefill(w, I, this._autoContinueLive);
     if (ne !== w && this._autoContinueLive)
       ((this._autoContinueLive = !1),
-        i("tengu_rl_checkpoint_auto_continue_cancelled_by_slash", {}));
+        logEvent("tengu_rl_checkpoint_auto_continue_cancelled_by_slash", {}));
     return ne;
   }
   retractRateLimitAutoContinue = () => {
     if (!this._autoContinueLive) return;
     this._autoContinueLive = !1;
     let { draft: w } = this._requireHost();
-    if (w.value === U7) w.setValueRaw("");
+    if (w.value === AUTO_CONTINUE_PREFILL_TEXT) w.setValueRaw("");
   };
   consumeRateLimitAutoContinuePrefill = () => {
     if (!this._autoContinueLive) return;
     let { draft: w } = this._requireHost();
-    if (w.value === U7) ((this._autoContinueLive = !1), w.setValueRaw(""));
+    if (w.value === AUTO_CONTINUE_PREFILL_TEXT) ((this._autoContinueLive = !1), w.setValueRaw(""));
   };
   dispose() {
     if (
@@ -78665,7 +78665,7 @@ async function XBo(w, I, ne) {
 }
 F();
 function vKe() {
-  let { host: w } = Ye(),
+  let { host: w } = useSession(),
     I = Cc(),
     ne = sF(Cy),
     me = ne?.kind === Sbe.kind;
@@ -78789,10 +78789,10 @@ class wKe {
   }
 }
 function CKe(w, I = !1, ne = !1) {
-  let me = Ye(),
+  let me = useSession(),
     pe = U((Oe) => Oe.teamContext?.teamName),
     be = U((Oe) => Oe.teamContext?.selfAgentName),
-    { storageV5: xe } = _e(),
+    { storageV5: xe } = useStorageV5Context(),
     [Ae] = d(() => new wKe(me, xe));
   E(() => {
     Ae.record(w, {
@@ -78865,16 +78865,16 @@ function rUo(w, I, ne) {
 var iUo = 3;
 function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
   let Qe = sO(),
-    { storageV5: it, credentials: at } = _e(),
-    Zt = qc(),
-    Ct = Ye(),
-    eo = vt(),
+    { storageV5: it, credentials: at } = useStorageV5Context(),
+    Zt = useCommandQueue(),
+    Ct = useSession(),
+    eo = useClock(),
     jt = vr(ne),
     Tt = C(null),
     to = re(() => Tt.current, []),
     zt = d_();
   E(() => {
-    let wi = new Set([LE.of(Ct), LE.of(zt)]),
+    let wi = new Set([sessionTransportRegistry.of(Ct), sessionTransportRegistry.of(zt)]),
       Ms = new Map([...wi].map((da) => [da, da.remoteBridgeLive]));
     for (let da of wi) da.remoteBridgeLive = () => Tt.current !== null;
     return () => {
@@ -79050,7 +79050,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
       let Ms = rUo(wi, me, Qe);
       if (!Ms) return !1;
       return (
-        i("tengu_immediate_command_executed", {
+        logEvent("tengu_immediate_command_executed", {
           commandName: shippedCommandNameForAnalytics(Ms.displayName),
           fromKeybinding: !1,
           bridgeOrigin: !0,
@@ -79060,8 +79060,8 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
       );
     }),
     qi = Yn(),
-    As = wf(),
-    { addNotification: Ls, removeNotification: va } = Ir(),
+    As = useTaskRegistry(),
+    { addNotification: Ls, removeNotification: va } = useNotificationQueue(),
     Bi = U((wi) => wi.replBridgeEnabled),
     ss = U((wi) => wi.replBridgeConnected),
     oc = U((wi) => wi.mcp.commands),
@@ -79069,7 +79069,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
     Ko = U((wi) => wi.replBridgeError),
     cr = U((wi) => wi.replBridgeErrorKind),
     pr = OHe.of(Ct),
-    Vr = Me(pr, (wi) => wi.credentialsPersisted),
+    Vr = useStoreSelector(pr, (wi) => wi.credentialsPersisted),
     wr = U((wi) => wi.replBridgeOutboundOnly),
     ur = U((wi) => wi.replBridgeInitialName),
     Pi = U((wi) => wi.replBridgeSessionGroupingId),
@@ -79084,7 +79084,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
   (E(() => (b7e(ownBridgePeerAddress), () => b7e(void 0)), []),
     E(() => {
       if (Pt() || ns) return;
-      i("tengu_bridge_repl_evaluated", {
+      logEvent("tengu_bridge_repl_evaluated", {
         would_auto_on: getCcrAutoConnectDefault(),
         repl_bridge_enabled: qi.getState().replBridgeEnabled,
       });
@@ -79406,7 +79406,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
             if (!Wn.replBridgeError) return Wn;
             return (
               (ed = !0),
-              i("tengu_bridge_repl_auto_disabled", {
+              logEvent("tengu_bridge_repl_auto_disabled", {
                 had_session: Ys !== null,
               }),
               {
@@ -79801,7 +79801,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                         Tt.current?.sendControlCancelRequest(la),
                       );
                       for (let la of Bs)
-                        i("tengu_request_user_dialog_implicit_cancel", {
+                        logEvent("tengu_request_user_dialog_implicit_cancel", {
                           dialog_kind: Tn(la),
                           reason: fromEnum("new_user_message"),
                           lane: S("repl_bridge"),
@@ -79878,7 +79878,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                     let li = qi.getState(),
                       zi = Lh(
                         El,
-                        parseUserSpecifiedModel(KPt(li.mainLoopModelForSession, li.mainLoopModel)),
+                        parseUserSpecifiedModel(resolveMainLoopModelSetting(li.mainLoopModelForSession, li.mainLoopModel)),
                       );
                     return (
                       Ls({
@@ -80065,7 +80065,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                       "MCP server blocked by managed policy; auth refused",
                     );
                   _o.current.delete(Ei);
-                  let El = sI(Ei, Xc);
+                  let El = classifyMcpServerAuth(Ei, Xc);
                   if (El.kind === "claudeai-proxy") {
                     let zi = fY(El.config);
                     if (!zi)
@@ -80073,7 +80073,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                         "Unable to build claude.ai connector auth URL (missing org or server id)",
                       );
                     return (
-                      i("tengu_claudeai_mcp_auth_started", {}),
+                      logEvent("tengu_claudeai_mcp_auth_started", {}),
                       {
                         authUrl: zi,
                         requiresUserAction: !0,
@@ -80213,10 +80213,10 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                 },
                 onSetColor(Ei) {
                   let Bs = Ei === "default";
-                  if (!Bs && !ef.includes(Ei))
+                  if (!Bs && !AGENT_COLOR_NAMES.includes(Ei))
                     return {
                       ok: !1,
-                      error: `Unknown color "${Ei}". Available: ${ef.join(", ")}, default`,
+                      error: `Unknown color "${Ei}". Available: ${AGENT_COLOR_NAMES.join(", ")}, default`,
                     };
                   let la = Bs ? void 0 : Ei,
                     Xc = K();
@@ -80232,7 +80232,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                   return (
                     syncJobColor(
                       getOwnJobShortId(),
-                      uoe({
+                      resolveAgentColorName({
                         userOverride: la,
                         agentDefinitionColor: Fu?.color,
                       }),
@@ -80388,7 +80388,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
             )
               va(ik);
             if (Oi({ archiveAbandoned: ac }))
-              i("tengu_bridge_compacted_while_disabled_remint", {});
+              logEvent("tengu_bridge_compacted_while_disabled_remint", {});
             let bu = hs !== void 0 && ys.bridgeSessionId === hs;
             if (
               ((ro.current = Fa ? 0 : bu ? (mf ?? Hl) : Hl),
@@ -80757,7 +80757,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
             }),
             Xu)
           )
-            (i("tengu_bridge_repl_auth_revive", {}),
+            (logEvent("tengu_bridge_repl_auth_revive", {}),
               On.current++,
               (Ln.current = !0),
               (Gi.current = {
@@ -81048,10 +81048,10 @@ function TKe({
   appendSystemPrompt: Oe,
   systemPromptSnapshot: He,
 }) {
-  let Ke = Ye(),
-    Je = Me(I),
-    Qe = Me(ne, (Ct) => Ct.commands),
-    it = qa(),
+  let Ke = useSession(),
+    Je = useStoreSelector(I),
+    Qe = useStoreSelector(ne, (Ct) => Ct.commands),
+    it = useMainLoopModel(),
     at = re(() => w.cancel("remote"), [w]),
     Zt = lLt(w.guard, () => w.isExternalLoading);
   return _Lt(
@@ -81084,7 +81084,7 @@ function Vce(MZr) {
     ((pUo = { hideSessionTitle: TLt }), (mUo[0] = TLt), (mUo[1] = pUo));
   else pUo = mUo[1];
   let xKe = kI(pUo),
-    { columns: xLt } = Se();
+    { columns: xLt } = useTerminalSize();
   if (!xKe) {
     return null;
   }
@@ -81105,7 +81105,7 @@ var Gce = 30000,
 function RKe(w, I) {
   let ne = U((Ae) => Ae.fotwClaim),
     me = It(),
-    { credentials: pe } = _e();
+    { credentials: pe } = useStorageV5Context();
   E(() => {
     npt(pe);
   }, [pe]);
@@ -81376,8 +81376,8 @@ class Qce {
           ),
           lr = un.length,
           Io = un.reduce((So, Go) => So + (ro[Go.id]?.content.length ?? 0), 0);
-        (i("tengu_paste_text", { pastedTextCount: lr, pastedTextBytes: Io }),
-          i("tengu_immediate_command_executed", {
+        (logEvent("tengu_paste_text", { pastedTextCount: lr, pastedTextBytes: Io }),
+          logEvent("tengu_immediate_command_executed", {
             commandName: shippedCommandNameForAnalytics(nn.name),
             fromKeybinding: ne?.fromKeybinding ?? !1,
           }),
@@ -81443,7 +81443,7 @@ class Qce {
     if (An) await An;
     let wn = Vv.of(Ae);
     if (wn.pending > 0) await wn.tail;
-    let yn = Wit(pe.getState());
+    let yn = resolveMainLoopModel(pe.getState());
     if (
       (await t6({
         presentation: this.#e.presentation,
@@ -81651,7 +81651,7 @@ class Qce {
               priority: "low",
             }));
         });
-    else zqe(I.id, Je, pe, { kind: "human" });
+    else queueTeammateUserMessage(I.id, Je, pe, { kind: "human" });
     (Ae.clear(), ne.clearBuffer());
   };
   submitSurveyFollowUp = (w) => {
@@ -81700,7 +81700,7 @@ class Qce {
 F();
 function PKe(w) {
   let I = tn(),
-    { storageV5: ne } = _e();
+    { storageV5: ne } = useStorageV5Context();
   E(() => {
     if (Nn()) return;
     let me = es(),
@@ -81712,7 +81712,7 @@ function PKe(w) {
       );
     let be = !1,
       xe =
-        M() && ne !== void 0
+        isHoverRestEnabled() && ne !== void 0
           ? dv(async () => {
               (await pqn(w?.(), ne), (be = !0));
             })
@@ -81902,8 +81902,8 @@ function Zce(w, I) {
 function FLt() {
   let DLt = _(11),
     { recordDenial: PLt, getDenials: MLt, removeDenial: ALt } = J8(),
-    { storageV5: ILt } = _e(),
-    { addNotification: EKe } = Ir(),
+    { storageV5: ILt } = useStorageV5Context(),
+    { addNotification: EKe } = useNotificationQueue(),
     ELt = It(),
     kUo;
   if (DLt[0] !== ELt) ((kUo = SV(ELt)), (DLt[0] = ELt), (DLt[1] = kUo));
@@ -82082,7 +82082,7 @@ function FLt() {
         let EUo = NLt;
         IUo.then((DUo) => {
           if (DUo.behavior === "allow")
-            (i("tengu_auto_mode_subsequent_approval", {
+            (logEvent("tengu_auto_mode_subsequent_approval", {
               toolName: Hn(YC.name),
               isMcp: YC.isMcp ?? !1,
               msSinceDeny: Date.now() - EUo.timestamp,
@@ -82330,7 +82330,7 @@ var oHo = () => () => {},
 function WKe({ turn: w, hasActiveLocalJsxUI: I }) {
   let ne = w.guard,
     me = At(ne.subscribe, ne.getSnapshot),
-    pe = qc(),
+    pe = useCommandQueue(),
     be = ep(),
     xe = De(Uye),
     Ae = re(
@@ -82343,7 +82343,7 @@ function WKe({ turn: w, hasActiveLocalJsxUI: I }) {
     ),
     Oe = At(xe?.subscribe ?? oHo, Ae, Ae),
     He = At(VBn, glt, glt),
-    Ke = Ye(),
+    Ke = useSession(),
     [Je, Qe] = d(0);
   E(() => {
     if (me || ne.isActive) return;
@@ -82365,7 +82365,7 @@ function WKe({ turn: w, hasActiveLocalJsxUI: I }) {
             it.pending === 0 &&
             !Ae() &&
             !glt() &&
-            !(xe !== null && R0e(xe.getState(), yp.kind)) &&
+            !(xe !== null && R0e(xe.getState(), localJsxDialog.kind)) &&
             pe.getCommandQueue().length > 0
           )
             $Ke({ queue: pe, executeInput: w.executeQueuedInput });
@@ -82382,7 +82382,7 @@ function WKe({ turn: w, hasActiveLocalJsxUI: I }) {
 F();
 function VKe(w) {
   let I = Ien(),
-    ne = Me(w, (xe) => xe.isLoading),
+    ne = useStoreSelector(w, (xe) => xe.isLoading),
     me = V(() => I.subscribe.bind(I), [I]),
     pe = re(() => I.revision, [I]),
     be = At(me, pe);
@@ -82419,7 +82419,7 @@ function aHo($oi) {
 function XKe(Boi) {
   let QF = _(29),
     { input: Uoi, progress: yx, verbose: _q } = Boi,
-    { columns: QLt } = Se(),
+    { columns: QLt } = useTerminalSize(),
     [JC, Hoi] = d(!1),
     [joi, rHo] = d(!1),
     iHo;
@@ -82610,7 +82610,7 @@ function cue(w, I) {
 var cHo = 1000,
   uHo = hHe([]);
 function dHo(w) {
-  let I = typeof w === "string" ? w : qse,
+  let I = typeof w === "string" ? w : INVALID_TOOL_NAME_PLACEHOLDER,
     ne = I.startsWith("mcp__");
   return {
     name: I,
@@ -82742,7 +82742,7 @@ class r2e {
       for (let po of at) {
         let xo = isPlanApprovalResponse(po.text);
         if (!xo) continue;
-        if (po.from !== fs) {
+        if (po.from !== TEAM_LEAD_AGENT_NAME) {
           n(
             `[InboxPoller] Ignoring plan approval response from non-team-lead: ${po.from}`,
           );
@@ -82884,7 +82884,7 @@ class r2e {
           );
           continue;
         }
-        let on = ar(Pk(), Ro.tool_name) ?? dHo(Ro.tool_name),
+        let on = findToolByName(Pk(), Ro.tool_name) ?? dHo(Ro.tool_name),
           An = typeof Ro.tool_name === "string" ? Ro.tool_name : on.name,
           wn = sOt(
             "tool",
@@ -83007,7 +83007,7 @@ class r2e {
       for (let po of zt) {
         let xo = isPermissionResponse(po.text);
         if (!xo) continue;
-        if (po.from !== fs) {
+        if (po.from !== TEAM_LEAD_AGENT_NAME) {
           n(
             `[InboxPoller] Ignoring permission response from non-team-lead: ${b(po.from)}`,
             { level: "warn" },
@@ -83182,7 +83182,7 @@ class r2e {
       for (let po of co) {
         let xo = isSandboxPermissionResponse(po.text);
         if (!xo) continue;
-        if (po.from !== fs) {
+        if (po.from !== TEAM_LEAD_AGENT_NAME) {
           n(
             `[InboxPoller] Ignoring sandbox permission response from non-team-lead: ${b(po.from)}`,
             { level: "warn" },
@@ -83213,7 +83213,7 @@ class r2e {
         let Wo = isPlanApprovalRequest(xo.text);
         if (!Wo) continue;
         let Ro = I.getState(),
-          on = wut({
+          on = getPlanApprovalPermissionMode({
             recipientName: xo.from,
             leaderMode: Ro.toolPermissionContext.mode,
             proactivityLevel: Ro.proactivityLevel,
@@ -83229,7 +83229,7 @@ class r2e {
         if (
           (await w.writeToMailbox(
             xo.from,
-            { from: fs, text: b(An), timestamp: new Date().toISOString() },
+            { from: TEAM_LEAD_AGENT_NAME, text: b(An), timestamp: new Date().toISOString() },
             po,
             ne,
           )) === void 0
@@ -83434,8 +83434,8 @@ function i2e(w) {
     { requestDialog: be } = w,
     xe = Yn(),
     Ae = qA(),
-    Oe = vt(),
-    { storageV5: He, credentials: Ke } = _e(),
+    Oe = useClock(),
+    { storageV5: He, credentials: Ke } = useStorageV5Context(),
     [Je] = d(
       () =>
         new r2e(
@@ -83477,7 +83477,7 @@ function uue(eri) {
       onAutoConnectIde: a2e,
       requestDialog: c2e,
     } = eri,
-    { storageV5: u2e } = _e(),
+    { storageV5: u2e } = useStorageV5Context(),
     [tri, ori] = d(null),
     fOt = C(!1),
     fHo,
@@ -83572,7 +83572,7 @@ function Sue(gri) {
     yHo;
   if (tw[0] !== Tq.length)
     ((yHo = function YF(bHo) {
-      i("tengu_exit_background_work_prompt", {
+      logEvent("tengu_exit_background_work_prompt", {
         item_count: Tq.length,
         chose_exit: bHo === "exit",
         chose_background: bHo === "background",
@@ -83614,7 +83614,7 @@ function Sue(gri) {
       (tw[9] = vHo));
   else vHo = tw[9];
   let bue = vHo,
-    hri = Se(),
+    hri = useTerminalSize(),
     { rows: m2e } = ks(hri),
     bOt = Ma(),
     wHo;
@@ -83688,7 +83688,7 @@ function Sue(gri) {
       (tw[31] = C2e));
   else C2e = tw[31];
   let CHo;
-  if (tw[32] === p)
+  if (tw[32] === MEMO_CACHE_SENTINEL)
     ((CHo = { label: "Exit and stop tasks", value: "exit" }), (tw[32] = CHo));
   else CHo = tw[32];
   let _2e;
@@ -83700,7 +83700,7 @@ function Sue(gri) {
       (tw[34] = _2e));
   else _2e = tw[34];
   let _Ho;
-  if (tw[35] === p) ((_Ho = { label: "Stay", value: "stay" }), (tw[35] = _Ho));
+  if (tw[35] === MEMO_CACHE_SENTINEL) ((_Ho = { label: "Stay", value: "stay" }), (tw[35] = _Ho));
   else _Ho = tw[35];
   let T2e;
   if (tw[36] !== _2e)
@@ -83793,19 +83793,19 @@ async function sw(w, I) {
 function Mue(Kri) {
   let nw = _(35),
     { onDone: wue, onCancel: R2e } = Kri,
-    { storageV5: jh, credentials: Rq } = _e(),
+    { storageV5: jh, credentials: Rq } = useStorageV5Context(),
     [FP, XC] = d("loading"),
     RHo;
-  if (nw[0] === p) ((RHo = []), (nw[0] = RHo));
+  if (nw[0] === MEMO_CACHE_SENTINEL) ((RHo = []), (nw[0] = RHo));
   else RHo = nw[0];
   let [Hb, zri] = d(RHo),
     [lf, Qri] = d(0),
     [P2e, rw] = d(),
     PHo;
-  if (nw[1] === p) ((PHo = Ia()), (nw[1] = PHo));
+  if (nw[1] === MEMO_CACHE_SENTINEL) ((PHo = Ia()), (nw[1] = PHo));
   else PHo = nw[1];
   let Sl = PHo,
-    COt = Ye(HHo),
+    COt = useSession(HHo),
     MHo;
   if (nw[2] !== COt)
     ((MHo = p6().getCurrentSessionTitle(COt)), (nw[2] = COt), (nw[3] = MHo));
@@ -83865,7 +83865,7 @@ function Mue(Kri) {
             (XC("removing-clean"),
               tEe(jh, Rq).then(async (Zri) => {
                 if ((await sw(Sl, jh), Zri))
-                  (i("tengu_worktree_removed", {
+                  (logEvent("tengu_worktree_removed", {
                     source: S("exit_dialog"),
                     commits: 0,
                     changed_files: 0,
@@ -83922,7 +83922,7 @@ function Mue(Kri) {
       if (xue === "keep" || xue === "keep-with-tmux") {
         if (
           (XC("keeping"),
-          i("tengu_worktree_kept", {
+          logEvent("tengu_worktree_kept", {
             commits: lf ?? -1,
             changed_files: Hb.length,
           }),
@@ -83941,7 +83941,7 @@ function Mue(Kri) {
       } else if (xue === "keep-kill-tmux") {
         if (
           (XC("keeping"),
-          i("tengu_worktree_kept", {
+          logEvent("tengu_worktree_kept", {
             commits: lf ?? -1,
             changed_files: Hb.length,
           }),
@@ -83964,7 +83964,7 @@ function Mue(Kri) {
             XC("done"));
           return;
         }
-        i("tengu_worktree_removed", {
+        logEvent("tengu_worktree_removed", {
           source: S("exit_dialog"),
           commits: lf ?? -1,
           changed_files: Hb.length,
@@ -83997,7 +83997,7 @@ function Mue(Kri) {
   let JF = NHo;
   if (FP === "keeping") {
     let XF;
-    if (nw[19] === p)
+    if (nw[19] === MEMO_CACHE_SENTINEL)
       ((XF = r(o, {
         flexDirection: "row",
         marginY: 1,
@@ -84009,7 +84009,7 @@ function Mue(Kri) {
   }
   if (FP === "removing-clean" || FP === "removing") {
     let XF;
-    if (nw[20] === p) ((XF = e(yo, {})), (nw[20] = XF));
+    if (nw[20] === MEMO_CACHE_SENTINEL) ((XF = e(yo, {})), (nw[20] = XF));
     else XF = nw[20];
     const m6 =
       FP === "removing-clean"
@@ -84137,7 +84137,7 @@ function h6e(hii) {
       onCancel: h6,
       onBeforeExit: Iue,
     } = hii,
-    { storageV5: Eue } = _e(),
+    { storageV5: Eue } = useStorageV5Context(),
     [UOt, yii] = d(!1),
     WHo;
   if (DD[0] !== FOt || DD[1] !== OOt)
@@ -84167,7 +84167,7 @@ function h6e(hii) {
     DD[16] !== LOt ||
     DD[17] !== Eue
   ) {
-    Nue = en;
+    Nue = EARLY_RETURN_SENTINEL;
     bb0: {
       let I2e = y6();
       let VHo;
@@ -84220,7 +84220,7 @@ function h6e(hii) {
         let E2e;
         if (I2e !== void 0 && WJt(I2e)) {
           let BP;
-          if (DD[31] === p) ((BP = () => yii(!0)), (DD[31] = BP));
+          if (DD[31] === MEMO_CACHE_SENTINEL) ((BP = () => yii(!0)), (DD[31] = BP));
           else BP = DD[31];
           E2e = BP;
         }
@@ -84260,7 +84260,7 @@ function h6e(hii) {
       (DD[17] = Eue),
       (DD[18] = Nue));
   } else Nue = DD[18];
-  if (Nue !== en) return Nue;
+  if (Nue !== EARLY_RETURN_SENTINEL) return Nue;
   return null;
 }
 function XHo(Pii) {
@@ -84269,7 +84269,7 @@ function XHo(Pii) {
 function Oue(xii) {
   let Rii = _(9),
     { chrome: aw } = xii,
-    cw = Me(aw, XHo);
+    cw = useStoreSelector(aw, XHo);
   if (cw.kind !== "interstitial") {
     return null;
   }
@@ -84319,7 +84319,7 @@ function D2e({ onBackgroundQuery: w }) {
 F();
 F();
 function N2e() {
-  wo().skillIndex.clear();
+  getHostStateStore().skillIndex.clear();
 }
 var ZHo = {
     enterprise: "enterprise",
@@ -84335,8 +84335,8 @@ var ZHo = {
   WOt = [5000, 15000, 45000];
 function O2e(w, I, ne, me) {
   let pe = Nn(),
-    { storageV5: be, credentials: xe } = _e(),
-    Ae = qc(),
+    { storageV5: be, credentials: xe } = useStorageV5Context(),
+    Ae = useCommandQueue(),
     Oe = b9e(),
     He = l4(),
     Ke = Y6e(),
@@ -84347,7 +84347,7 @@ function O2e(w, I, ne, me) {
     Ct = C(!1),
     eo = U((no) => tjo(no.settings)),
     jt = U((no) => no.mcp.pluginReconnectKey),
-    Tt = vt(),
+    Tt = useClock(),
     to = C(new Map()),
     [zt, ao] = d(0),
     co = C(0),
@@ -84370,7 +84370,7 @@ function O2e(w, I, ne, me) {
       }
     );
   }, [ne]);
-  let { addNotification: xo } = Ir(),
+  let { addNotification: xo } = useNotificationQueue(),
     Wo = C(new Set());
   E(
     () =>
@@ -84386,7 +84386,7 @@ function O2e(w, I, ne, me) {
                 (jo.config.type === "sse" || jo.config.type === "http") &&
                 (Qme(
                   jo.config,
-                  !!getClaudeAIOAuthTokens()?.accessToken || (await TF(xe).catch(() => !1)),
+                  !!getClaudeAIOAuthTokens()?.accessToken || (await hasFirstPartyDesignAuth(xe).catch(() => !1)),
                 ) ||
                   (SP() && !!jo.config.oauth?.xaa))
               )
@@ -84460,7 +84460,7 @@ function O2e(w, I, ne, me) {
           ...(Io && { replaceOnly: Io }),
         });
         {
-          let So = Usn();
+          let So = takePendingScopeExpansionNotice();
           if (So)
             xo({
               key: "mcp-first-party-scope-expanded",
@@ -84619,26 +84619,26 @@ function O2e(w, I, ne, me) {
                 } else
                   (Ho.current.delete(no.name), yn({ ...no, type: "failed" }));
               }));
-            let Go = XPe(
+            let Go = gateChannelServer(
                 no.name,
                 no.capabilities,
                 no.config.pluginSource,
                 no.protocolEra,
               ),
-              In = ste(no.name, ym()),
+              In = findChannelEntry(no.name, ym()),
               Fn =
                 In?.kind === "plugin" ? `${In.name}@${In.marketplace}` : void 0,
               Qo = !1,
               Gn = () => {
                 if (
                   (Ho.current.add(no.name),
-                  Qc().onMcpNotification(no, VPe(), async (Or) => {
+                  Qc().onMcpNotification(no, ChannelMessageNotificationSchema(), async (Or) => {
                     let { content: Br, meta: fi } = Or.params;
                     (logMCPDebug(
                       no.name,
                       `notifications/claude/channel: ${Br.slice(0, 80)}`,
                     ),
-                      i("tengu_mcp_channel_message", {
+                      logEvent("tengu_mcp_channel_message", {
                         content_length: Br.length,
                         meta_key_count: Object.keys(fi ?? {}).length,
                         entry_kind: fromEnumOpt(In?.kind),
@@ -84648,7 +84648,7 @@ function O2e(w, I, ne, me) {
                       Ae.enqueue({
                         mode: "prompt",
                         agentId: ze(),
-                        value: KPe(no.name, Br, fi),
+                        value: wrapChannelMessage(no.name, Br, fi),
                         priority: "next",
                         isMeta: !0,
                         origin: { kind: "channel", server: no.name },
@@ -84658,7 +84658,7 @@ function O2e(w, I, ne, me) {
                   }),
                   zPe(no.capabilities, "claude/channel/permission"))
                 )
-                  Qc().onMcpNotification(no, Hin(), async (Or) => {
+                  Qc().onMcpNotification(no, ChannelPermissionNotificationSchema(), async (Or) => {
                     let { request_id: Br, behavior: fi } = Or.params,
                       Xi = po.current?.resolve(Br, fi, no.name) ?? !1;
                     logMCPDebug(
@@ -84674,13 +84674,13 @@ function O2e(w, I, ne, me) {
                   (Qo = !0));
                 break;
               case "skip": {
-                let Or = Pin(Go.kind),
+                let Or = isChannelGateHardRevocation(Go.kind),
                   Br = Ho.current.has(no.name);
                 if (Or) {
                   Ho.current.delete(no.name);
                   let Xi = Yo(no.client);
                   (Xi.removeNotificationHandler("notifications/claude/channel"),
-                    Xi.removeNotificationHandler(P1t));
+                    Xi.removeNotificationHandler(CHANNEL_PERMISSION_METHOD));
                 } else if (Br) {
                   (logMCPDebug(
                     no.name,
@@ -84730,7 +84730,7 @@ function O2e(w, I, ne, me) {
               }
             }
             if (Qo || (Go.action === "skip" && Go.kind !== "capability"))
-              i("tengu_mcp_channel_gate", {
+              logEvent("tengu_mcp_channel_gate", {
                 registered: Qo,
                 skip_kind: Go.action === "skip" ? fromEnum(Go.kind) : void 0,
                 entry_kind: fromEnumOpt(In?.kind),
@@ -84777,7 +84777,7 @@ function O2e(w, I, ne, me) {
                   if (!rs && On)
                     On.then(
                       (Fi) => {
-                        i("tengu_mcp_list_changed", {
+                        logEvent("tengu_mcp_list_changed", {
                           mcpServerKeyHash: wP(no.name),
                           type: S("tools"),
                           cause: Gi,
@@ -84786,7 +84786,7 @@ function O2e(w, I, ne, me) {
                         });
                       },
                       () => {
-                        i("tengu_mcp_list_changed", {
+                        logEvent("tengu_mcp_list_changed", {
                           mcpServerKeyHash: wP(no.name),
                           type: S("tools"),
                           cause: Gi,
@@ -84795,7 +84795,7 @@ function O2e(w, I, ne, me) {
                       },
                     );
                   else if (!rs)
-                    i("tengu_mcp_list_changed", {
+                    logEvent("tengu_mcp_list_changed", {
                       mcpServerKeyHash: wP(no.name),
                       type: S("tools"),
                       cause: Gi,
@@ -84843,7 +84843,7 @@ function O2e(w, I, ne, me) {
                   if (!Mn()) return;
                   (yn({ ...no, commands: Gi ? void 0 : [...Xi, ...Ln] }),
                     N2e(),
-                    i("tengu_mcp_list_changed", {
+                    logEvent("tengu_mcp_list_changed", {
                       mcpServerKeyHash: wP(no.name),
                       type: S("prompts"),
                       cause: GLe(Or),
@@ -84914,7 +84914,7 @@ function O2e(w, I, ne, me) {
                       resourceTemplates: ai ? void 0 : On,
                     });
                   }
-                  i("tengu_mcp_list_changed", {
+                  logEvent("tengu_mcp_list_changed", {
                     mcpServerKeyHash: wP(no.name),
                     type: S("resources"),
                     cause: GLe(Or),
@@ -85525,7 +85525,7 @@ function O2e(w, I, ne, me) {
           let On = gn.scope ? ZHo[gn.scope] : void 0;
           if (On) Xi[On]++;
         }
-        i("tengu_mcp_servers", { ...Xi, ...!1 });
+        logEvent("tengu_mcp_servers", { ...Xi, ...!1 });
       }
       return (
         jo().catch((Cn) => {
@@ -85791,8 +85791,8 @@ function mjo() {
   return nJ() && !Zk() && !a.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY;
 }
 function j2e(w) {
-  let I = vt(),
-    { storageV5: ne, credentials: me } = _e(),
+  let I = useClock(),
+    { storageV5: ne, credentials: me } = useStorageV5Context(),
     [pe, be] = d("closed"),
     xe = C("closed"),
     Ae = re((to) => {
@@ -85815,7 +85815,7 @@ function j2e(w) {
     }, [I, Ae]),
     Ct = re((to, zt) => {
       let ao = Je.current;
-      i(djo, {
+      logEvent(djo, {
         event_type: fromEnum(to),
         appearance_id: Ee(Ke.current),
         trigger: fromEnum(zOt),
@@ -85954,7 +85954,7 @@ function que(Eai) {
     }
     case "submitting": {
       let hk;
-      if (Uue[3] === p) ((hk = e(ub, { state: "submitting" })), (Uue[3] = hk));
+      if (Uue[3] === MEMO_CACHE_SENTINEL) ((hk = e(ub, { state: "submitting" })), (Uue[3] = hk));
       else hk = Uue[3];
       return hk;
     }
@@ -85969,14 +85969,14 @@ function que(Eai) {
     }
     case "share_failed": {
       let hk;
-      if (Uue[6] === p)
+      if (Uue[6] === MEMO_CACHE_SENTINEL)
         ((hk = e(ub, { state: "share_failed" })), (Uue[6] = hk));
       else hk = Uue[6];
       return hk;
     }
     case "thanks": {
       let hk;
-      if (Uue[7] === p) ((hk = e(ub, { state: "thanks" })), (Uue[7] = hk));
+      if (Uue[7] === MEMO_CACHE_SENTINEL) ((hk = e(ub, { state: "thanks" })), (Uue[7] = hk));
       else hk = Uue[7];
       return hk;
     }
@@ -85986,7 +85986,7 @@ function que(Eai) {
   }
 }
 function eze({ enabled: w, onSelect: I }) {
-  let ne = vt(),
+  let ne = useClock(),
     [me, pe] = d($ue),
     be = C($ue),
     xe = C(w ? ne.now() : null),
@@ -86034,9 +86034,9 @@ function J2e(Dai) {
     { highlighted: V2e, onOptionClick: oFt } = Dai,
     hjo,
     yjo;
-  if (nFt[0] === p)
+  if (nFt[0] === MEMO_CACHE_SENTINEL)
     ((hjo = e(t, { bold: !0, children: q5 })),
-      (yjo = e(Gp, { url: V5 })),
+      (yjo = e(LearnMoreLink, { url: V5 })),
       (nFt[0] = hjo),
       (nFt[1] = yjo));
   else ((hjo = nFt[0]), (yjo = nFt[1]));
@@ -86065,7 +86065,7 @@ function J2e(Dai) {
     ((Sjo = e(o, {
       flexShrink: 0,
       flexDirection: "column",
-      children: r(_s, {
+      children: r(TitledBorderBox, {
         color: "suggestion",
         children: [hjo, yjo, e(o, { flexDirection: "column", children: G2e })],
       }),
@@ -86088,7 +86088,7 @@ function X2e(Nai) {
       (K2e[1] = z2e));
   else z2e = K2e[1];
   let wjo, Cjo;
-  if (K2e[2] === p)
+  if (K2e[2] === MEMO_CACHE_SENTINEL)
     ((wjo = () => kjo(!0)),
       (Cjo = () => kjo(!1)),
       (K2e[2] = wjo),
@@ -86185,7 +86185,7 @@ function Hze(fli) {
   else Pjo = e_[1];
   let w6 = Pjo,
     Mjo;
-  if (e_[2] === p) ((Mjo = { mode: "list" }), (e_[2] = Mjo));
+  if (e_[2] === MEMO_CACHE_SENTINEL) ((Mjo = { mode: "list" }), (e_[2] = Mjo));
   else Mjo = e_[2];
   let [fFt, oze] = d(Mjo),
     gFt = C(new Set()),
@@ -86194,7 +86194,7 @@ function Hze(fli) {
     [hFt, yFt] = d(0),
     [bFt, rze] = d("row"),
     Dq = Z8(),
-    ND = is();
+    ND = useGlobalExitKeybinding();
   Rs("session-memory-viewer");
   let uw = j2e(gli);
   const SFt = uw.state === "transcript_prompt";
@@ -86245,7 +86245,7 @@ function Hze(fli) {
       if (Bq === "bad" && !Djo)
         nze.current = new Set([...nze.current, Fq.path]);
       if (!Ejo && !Djo)
-        i("tengu_session_memory_rated", {
+        logEvent("tengu_session_memory_rated", {
           rating: fromEnum(Bq),
           source: fromEnum(Fq.source),
           surface: fromEnum(Sli),
@@ -86269,7 +86269,7 @@ function Hze(fli) {
     },
     aze = (Vue?.length ?? 0) > 0 && w6.length === 0,
     R6 = aze && !Lq,
-    P6 = vt(),
+    P6 = useClock(),
     vFt = vr(x6),
     Njo;
   if (e_[11] !== P6 || e_[12] !== vFt || e_[13] !== R6)
@@ -86293,7 +86293,7 @@ function Hze(fli) {
     fFt.mode === "detail" ? w6.find((wli) => wli.path === fFt.path) : void 0;
   if (Uq !== void 0 && fFt.mode === "detail") {
     let M6;
-    if (e_[18] === p) ((M6 = () => oze({ mode: "list" })), (e_[18] = M6));
+    if (e_[18] === MEMO_CACHE_SENTINEL) ((M6 = () => oze({ mode: "list" })), (e_[18] = M6));
     else M6 = e_[18];
     let $q;
     if (
@@ -86306,18 +86306,18 @@ function Hze(fli) {
         ND.pending
           ? r(t, { children: ["Press ", ND.keyName, " again to exit"] })
           : Lq
-            ? e(ue, {
+            ? e(DotSeparatedList, {
                 children:
                   Dq &&
                   e(t, { color: "permission", children: "dialog waiting" }),
               })
-            : r(ue, {
+            : r(DotSeparatedList, {
                 children: [
                   Dq &&
                     e(t, { color: "permission", children: "dialog waiting" }),
-                  e(D, { chord: "g", action: "mark good" }),
-                  e(D, { chord: "b", action: "mark bad" }),
-                  e(D, { chord: ["escape", "enter"], action: "go back" }),
+                  e(KeybindingHint, { chord: "g", action: "mark good" }),
+                  e(KeybindingHint, { chord: "b", action: "mark bad" }),
+                  e(KeybindingHint, { chord: ["escape", "enter"], action: "go back" }),
                 ],
               })),
         (e_[19] = ND.keyName),
@@ -86327,11 +86327,11 @@ function Hze(fli) {
         (e_[23] = $q));
     else $q = e_[23];
     let Yue;
-    if (e_[24] === p) ((Yue = e(Fze, {})), (e_[24] = Yue));
+    if (e_[24] === MEMO_CACHE_SENTINEL) ((Yue = e(Fze, {})), (e_[24] = Yue));
     else Yue = e_[24];
     const wFt =
       Uq.content.trim() === ""
-        ? e(Rn, {
+        ? e(EmptyStateMessage, {
             hint: "Re-open the file at the path above to read it again",
             children: "This file's content is no longer in the transcript",
           })
@@ -86602,29 +86602,29 @@ function Lze(Pli) {
         HP.pending
           ? r(t, { children: ["Press ", HP.keyName, " again to exit"] })
           : qq
-            ? e(ue, {
+            ? e(DotSeparatedList, {
                 children:
                   Wq &&
                   e(t, { color: "permission", children: "dialog waiting" }),
               })
             : cf.length === 0
-              ? r(ue, {
+              ? r(DotSeparatedList, {
                   children: [
                     Wq &&
                       e(t, { color: "permission", children: "dialog waiting" }),
-                    e(D, { chord: "escape", action: "close" }),
+                    e(KeybindingHint, { chord: "escape", action: "close" }),
                   ],
                 })
-              : r(ue, {
+              : r(DotSeparatedList, {
                   children: [
                     Wq &&
                       e(t, { color: "permission", children: "dialog waiting" }),
-                    e(D, { chord: ["up", "down"], action: "navigate" }),
-                    e(D, { chord: "down", action: "pick good or bad" }),
-                    e(D, { chord: "enter", action: "view" }),
-                    e(D, { chord: "g", action: "good" }),
-                    e(D, { chord: "b", action: "bad" }),
-                    e(D, { chord: "escape", action: "close" }),
+                    e(KeybindingHint, { chord: ["up", "down"], action: "navigate" }),
+                    e(KeybindingHint, { chord: "down", action: "pick good or bad" }),
+                    e(KeybindingHint, { chord: "enter", action: "view" }),
+                    e(KeybindingHint, { chord: "g", action: "good" }),
+                    e(KeybindingHint, { chord: "b", action: "bad" }),
+                    e(KeybindingHint, { chord: "escape", action: "close" }),
                   ],
                 })),
         (jP[45] = HP.keyName),
@@ -86640,11 +86640,11 @@ function Lze(Pli) {
     kze =
       cf.length === 0
         ? lze
-          ? e(Rn, {
+          ? e(EmptyStateMessage, {
               hint: "New recalls will show up here",
               children: "Every recalled memory is rated",
             })
-          : e(Rn, {
+          : e(EmptyStateMessage, {
               hint: "Memories show up here as the session recalls or reads them",
               children: "No memories recalled yet",
             })
@@ -86788,7 +86788,7 @@ function Lze(Pli) {
 function Fze() {
   let Nli = _(1),
     Tze;
-  if (Nli[0] === p)
+  if (Nli[0] === MEMO_CACHE_SENTINEL)
     ((Tze = r(t, {
       children: [
         e(t, { dimColor: !0, children: "Rate this memory: " }),
@@ -86897,10 +86897,10 @@ function jze({
 }) {
   if (w.size > 0) return null;
   let be = I();
-  (i("tengu_session_memory_viewer_opened", {
-    recalled_count: G(be, (Ae) => Ae.source === "recalled"),
-    read_count: G(be, (Ae) => Ae.source === "read"),
-    pinned_count: G(be, (Ae) => Ae.source === "pinned"),
+  (logEvent("tengu_session_memory_viewer_opened", {
+    recalled_count: countMatching(be, (Ae) => Ae.source === "recalled"),
+    read_count: countMatching(be, (Ae) => Ae.source === "read"),
+    pinned_count: countMatching(be, (Ae) => Ae.source === "pinned"),
     unrated_count: U8(be),
     fullscreen: pe === "fullscreen",
     trigger: fromEnum(me),
@@ -86911,7 +86911,7 @@ function jze({
       transcript: ne,
       onDone: (Ae) => {
         let Oe = I();
-        (i("tengu_session_memory_viewer_closed", {
+        (logEvent("tengu_session_memory_viewer_closed", {
           memory_count: Oe.length,
           unrated_count: U8(Oe),
           viewed_count: Ae.viewedCount,
@@ -86957,7 +86957,7 @@ Note: ctrl + z now suspends Claude Code, ctrl + _ undoes input.
 }
 F();
 function Wze() {
-  let w = Ye(),
+  let w = useSession(),
     I = Yn(),
     ne = a4();
   E(() => {
@@ -87078,9 +87078,9 @@ var zFt = null,
     },
   ];
 function Vze(w = JFt) {
-  let { addNotification: I } = Ir(),
-    ne = Ye(),
-    { storageV5: me, credentials: pe } = _e(),
+  let { addNotification: I } = useNotificationQueue(),
+    ne = useSession(),
+    { storageV5: me, credentials: pe } = useStorageV5Context(),
     be = C(!1);
   E(() => {
     if (Nn() || be.current) return;
@@ -87210,7 +87210,7 @@ var s$o = 800,
                     : { ...He, hasSeenAutoModeEntryWarning: !0 },
                 pe,
               ),
-                i("tengu_auto_mode_entry_warning_shown", {}),
+                logEvent("tengu_auto_mode_entry_warning_shown", {}),
                 ne.replace((He) => [...He, Ht(Oe(), "notice")]));
             }
           })();
@@ -87373,7 +87373,7 @@ var a$o = 5,
         if (pe !== null || (I.isInitialMessageInFlight && me === 0)) return;
         if (w === null) {
           if (su() < a$o) return;
-          if ((i("tengu_cost_threshold_reached", {}), (w = LUt()), !w)) return;
+          if ((logEvent("tengu_cost_threshold_reached", {}), (w = LUt()), !w)) return;
         }
         if (
           ee().hasAcknowledgedCostThreshold ||
@@ -87800,7 +87800,7 @@ async function wBt(w) {
           }),
           w,
         ),
-        i("tengu_official_marketplace_auto_install", {
+        logEvent("tengu_official_marketplace_auto_install", {
           installed: !1,
           skipped: !0,
           policy_blocked: !0,
@@ -87836,7 +87836,7 @@ async function wBt(w) {
           }),
           w,
         ),
-        i("tengu_official_marketplace_auto_install", {
+        logEvent("tengu_official_marketplace_auto_install", {
           installed: !1,
           skipped: !0,
           policy_blocked: !0,
@@ -87872,7 +87872,7 @@ async function wBt(w) {
           }),
           w,
         ),
-        i("tengu_official_marketplace_auto_install", {
+        logEvent("tengu_official_marketplace_auto_install", {
           installed: !0,
           skipped: !1,
           via_gcs: !0,
@@ -87900,7 +87900,7 @@ async function wBt(w) {
           }),
           w,
         ),
-        i("tengu_official_marketplace_auto_install", {
+        logEvent("tengu_official_marketplace_auto_install", {
           installed: !1,
           skipped: !0,
           gcs_unavailable: !0,
@@ -87929,7 +87929,7 @@ async function wBt(w) {
           }),
           w,
         ),
-        i("tengu_official_marketplace_auto_install", {
+        logEvent("tengu_official_marketplace_auto_install", {
           installed: !1,
           skipped: !0,
           git_unavailable: !0,
@@ -87956,7 +87956,7 @@ async function wBt(w) {
         w,
       ),
       logFeatureSad("plugin_official_marketplace_fetch", "gcs_failed_git_fallback"),
-      i("tengu_official_marketplace_auto_install", {
+      logEvent("tengu_official_marketplace_auto_install", {
         installed: !0,
         skipped: !1,
         retry_count: Oe,
@@ -87972,7 +87972,7 @@ async function wBt(w) {
         n(
           "Official marketplace auto-install: git is a non-functional macOS xcrun shim, treating as git_unavailable",
         ),
-        i("tengu_official_marketplace_auto_install", {
+        logEvent("tengu_official_marketplace_auto_install", {
           installed: !1,
           skipped: !0,
           git_unavailable: !0,
@@ -88000,7 +88000,7 @@ async function wBt(w) {
         }),
         w,
       ),
-      i("tengu_official_marketplace_auto_install", {
+      logEvent("tengu_official_marketplace_auto_install", {
         installed: !1,
         skipped: !0,
         failed: !0,
@@ -88091,7 +88091,7 @@ var TBt = {
           let { mainLoopModel: Ke, dynamicMcpConfig: Je } = xe();
           if (
             (
-              await mee({
+              await getPluginReloadCacheImpact({
                 model: Ke,
                 dynamicMcpConfig: Je,
                 mcpClients: me.getState().mcp.clients,
@@ -88101,7 +88101,7 @@ var TBt = {
             ).wouldInvalidateCache
           )
             return (logFeatureSad("plugin_command_reresolve_reload", "cache_impact"), !1);
-          if ((await Xx(QB.over(me), pe, be)).error_count > 0)
+          if ((await refreshActivePlugins(PluginStateStore.over(me), pe, be)).error_count > 0)
             return (
               logFeatureSad("plugin_command_reresolve_reload", "load_errors"),
               "with-errors"
@@ -88290,7 +88290,7 @@ var ABt = {
           }),
           xe)
         )
-          i("tengu_rate_limit_lever_hint", { lever: fromEnum(xe.lever) });
+          logEvent("tengu_rate_limit_lever_hint", { lever: fromEnum(xe.lever) });
       };
     },
   };
@@ -88300,7 +88300,7 @@ function LBt(Udi) {
     { url: I6 } = Udi,
     DBt = tn(),
     _$o;
-  if (Kze[0] === p)
+  if (Kze[0] === MEMO_CACHE_SENTINEL)
     ((_$o = r(t, {
       dimColor: !0,
       children: ["Check in from your phone", " \xB7 "],
@@ -88317,7 +88317,7 @@ function LBt(Udi) {
   else T$o = Kze[2];
   let zze = T$o,
     x$o;
-  if (Kze[3] === p)
+  if (Kze[3] === MEMO_CACHE_SENTINEL)
     ((x$o = e(t, { children: "Still working. " })), (Kze[3] = x$o));
   else x$o = Kze[3];
   let R$o;
@@ -88389,7 +88389,7 @@ var OBt = {
             requeueOnPreempt: !0,
             timeoutMs: 2147483647,
           }),
-          i("tengu_rc_long_turn_nudge_shown", {
+          logEvent("tengu_rc_long_turn_nudge_shown", {
             auto_on: Ke.getState().replBridgeAutoOnByDefault,
             threshold_sec: xe.thresholdSec,
           }));
@@ -88455,7 +88455,7 @@ var Qze = "rc-permission-nudge",
             requeueOnPreempt: !0,
             timeoutMs: 2147483647,
           }),
-          i("tengu_rc_permission_nudge_shown", {
+          logEvent("tengu_rc_permission_nudge_shown", {
             permission_mode: fromEnum(Ke),
             prompt_count: Je,
           }));
@@ -88530,7 +88530,7 @@ var BBt = "rc-idle-upsell",
                     priority: "medium",
                     timeoutMs: 2147483647,
                   }),
-                  i("tengu_rc_upsell_notification_shown", { idleMinutes: Qe }));
+                  logEvent("tengu_rc_upsell_notification_shown", { idleMinutes: Qe }));
               } else {
                 if (!wJt()) return;
                 ((w = !0),
@@ -88548,7 +88548,7 @@ var BBt = "rc-idle-upsell",
                     priority: "medium",
                     timeoutMs: 2147483647,
                   }),
-                  i("tengu_push_notif_upsell_notification_shown", {
+                  logEvent("tengu_push_notif_upsell_notification_shown", {
                     idleMinutes: Qe,
                   }));
               }
@@ -88581,7 +88581,7 @@ var qBt = {
     setup() {
       return ({ screen: w, hasOpenDialog: I }) => {
         if (w === "transcript" && I)
-          (i("tengu_dialog_waiting_in_transcript", {}),
+          (logEvent("tengu_dialog_waiting_in_transcript", {}),
             zs.autoDenyPresence.emit());
       };
     },
@@ -88633,7 +88633,7 @@ function E$o(w) {
     return {
       jsx: r(N, {
         children: [
-          e(et, { status: "success", withSpace: !0 }),
+          e(StatusIndicator, { status: "success", withSpace: !0 }),
           e(t, { dimColor: !0, children: "routine " }),
           e(t, { color: "suggestion", children: pe.name }),
           r(t, {
@@ -88649,7 +88649,7 @@ function E$o(w) {
   return {
     jsx: r(N, {
       children: [
-        e(et, { status: "success", withSpace: !0 }),
+        e(StatusIndicator, { status: "success", withSpace: !0 }),
         r(t, {
           dimColor: !0,
           children: [
@@ -88708,7 +88708,7 @@ var KBt = {
           priority: "medium",
           timeoutMs: 30000,
         }),
-          i("tengu_routine_fired_notification_shown", {
+          logEvent("tengu_routine_fired_notification_shown", {
             count: xe.length,
             trigger_ids: rur(xe.map((He) => He.id)),
           }),
@@ -89015,21 +89015,21 @@ function Xze({
   disabled: Je,
   isRemoteSession: Qe,
 }) {
-  let it = Me(pe, H$o),
-    at = Me(pe, j$o),
-    Zt = Me(pe, $$o);
-  Me(be);
+  let it = useStoreSelector(pe, H$o),
+    at = useStoreSelector(pe, j$o),
+    Zt = useStoreSelector(pe, $$o);
+  useStoreSelector(be);
   let Ct = V(
       () => ({ isLoading: it, lastQueryCompletionTime: at, submitCount: Zt }),
       [it, at, Zt],
     ),
-    { addNotification: eo, removeNotification: jt } = Ir(),
+    { addNotification: eo, removeNotification: jt } = useNotificationQueue(),
     Tt = Yn(),
     to = d_(),
-    { storageV5: zt, credentials: ao } = _e(),
-    co = vt(),
-    go = BA(),
-    fo = Ai(),
+    { storageV5: zt, credentials: ao } = useStorageV5Context(),
+    co = useClock(),
+    go = useFeatureFlagVersion(),
+    fo = useSettings(),
     ro = QR(),
     ho = U((zo) => zo.toolPermissionContext.mode),
     _o = U((zo) => zo.toolPermissionContext.isAutoModeAvailable),
@@ -89184,7 +89184,7 @@ function J$o(w) {
 }
 async function X$o(w, I, ne, me) {
   if (I()) return;
-  if (M() && me !== void 0)
+  if (isHoverRestEnabled() && me !== void 0)
     try {
       let pe = await me.backend.delete(me.key);
       if (!pe.ok || !pe.value.existed) return;
@@ -89361,7 +89361,7 @@ class Zze {
     if (!w || !sde(w)) return;
     let I = this.#d;
     if (I === null) return;
-    (i("tengu_return_to_session", {
+    (logEvent("tengu_return_to_session", {
       msSinceFocus: this.#e.now() - I,
       blurDurationMs: this.#g ?? 0,
       hadRecap: this.#k,
@@ -89386,7 +89386,7 @@ class Zze {
         ne = () => this.#o,
         me = (He) => this.#v(He),
         { clock: pe, storageV5: be } = this.#e,
-        xe = M() && be !== void 0 ? jobKeyFor(w, [vWe]) : void 0,
+        xe = isHoverRestEnabled() && be !== void 0 ? jobKeyFor(w, [vWe]) : void 0,
         Ae = be !== void 0 && xe !== void 0 ? { backend: be, key: xe } : void 0,
         Oe = pe.setTimeout(function He() {
           try {
@@ -89401,11 +89401,11 @@ class Zze {
 }
 function eQe(w, I, ne = !0) {
   let me = sO(),
-    pe = vt(),
-    be = Ye(),
+    pe = useClock(),
+    be = useSession(),
     xe = Yn(),
-    Ae = qc(),
-    { storageV5: Oe } = _e(),
+    Ae = useCommandQueue(),
+    { storageV5: Oe } = useStorageV5Context(),
     He = U((Qe) => Qe.awaySummaryEnabled),
     Ke = ne && He,
     [Je] = d(
@@ -89650,7 +89650,7 @@ async function E6(w, I, ne, me, pe, be) {
         jsx: r(t, {
           color: "success",
           children: [
-            e(et, { status: "success", withSpace: !0 }),
+            e(StatusIndicator, { status: "success", withSpace: !0 }),
             xe,
             " installed \xB7 restart to apply",
           ],
@@ -89694,11 +89694,11 @@ function m1o(Ggi) {
 function hde(rQe, iQe) {
   let a1o = _(9),
     sQe = U(m1o),
-    { addNotification: cQe } = Ir(),
-    { storageV5: cde } = _e(),
-    { host: dQe } = Ye(),
+    { addNotification: cQe } = useNotificationQueue(),
+    { storageV5: cde } = useStorageV5Context(),
+    { host: dQe } = useSession(),
     l1o;
-  if (a1o[0] === p) ((l1o = new Set()), (a1o[0] = l1o));
+  if (a1o[0] === MEMO_CACHE_SENTINEL) ((l1o = new Set()), (a1o[0] = l1o));
   else l1o = a1o[0];
   let RUt = C(l1o),
     c1o,
@@ -89880,7 +89880,7 @@ async function fQe(w, I) {
     throw xe;
   }
   if (
-    (i("tengu_plugin_hint_detected", {
+    (logEvent("tengu_plugin_hint_detected", {
       _PROTO_plugin_name: me ?? "",
       _PROTO_marketplace_name: pe ?? "",
       result: S(be ? "passed" : "not_in_cache"),
@@ -89917,10 +89917,10 @@ function hQe(w) {
 }
 function yde(yQe, bQe) {
   let f1o = _(11),
-    { pendingHint: Ay } = Ye(),
+    { pendingHint: Ay } = useSession(),
     L6 = At(Ay.subscribe, Ay.getSnapshot),
-    { addNotification: SQe } = Ir(),
-    { storageV5: rB } = _e(),
+    { addNotification: SQe } = useNotificationQueue(),
+    { storageV5: rB } = useStorageV5Context(),
     g1o,
     h1o;
   if (f1o[0] !== Ay)
@@ -89979,7 +89979,7 @@ function yde(yQe, bQe) {
         bb28: switch (
           (Ay.markShown(),
           gQe(t_.pluginId, rB),
-          i("tengu_plugin_hint_response", {
+          logEvent("tengu_plugin_hint_response", {
             _PROTO_plugin_name: Bn(t_.pluginId).name,
             _PROTO_marketplace_name: t_.marketplaceName,
             response: fromEnum(OUt),
@@ -90031,14 +90031,14 @@ function yde(yQe, bQe) {
   E(b1o, S1o);
 }
 var O6 = {};
-au(O6, { default: () => O6, useUiLog: () => HUt });
+defineExportGetters(O6, { default: () => O6, useUiLog: () => HUt });
 F();
 var BUt = (w) => Ht(qEe(w.plugin, w.text), "notice");
 var HUt = (w) => {
   E(() => Apr((I) => w({ type: "append", messages: [BUt(I)] })), [w]);
 };
 var F6 = {};
-au(F6, { default: () => F6, useTerminalViewport: () => jUt });
+defineExportGetters(F6, { default: () => F6, useTerminalViewport: () => jUt });
 F();
 var jUt = (w, I) => {
   let ne = pgt.get();
@@ -90064,7 +90064,7 @@ var jUt = (w, I) => {
 F();
 var WUt = "startup-notice";
 function kQe() {
-  let { addNotification: w, removeNotification: I } = Ir();
+  let { addNotification: w, removeNotification: I } = useNotificationQueue();
   E(() => {
     let ne = "",
       me = () => {
@@ -90109,7 +90109,7 @@ var VUt = 400,
   qUt = { hunks: new Map(), skippedLarge: new Set() };
 function Sde(w = 0, I = !0, ne = "auto") {
   let pe = De(ok)?.setTimeout ?? cF,
-    { host: be } = Ye(),
+    { host: be } = useSession(),
     [xe, Ae] = d(null),
     [Oe, He] = d(!0),
     Ke = C(!1),
@@ -90357,8 +90357,8 @@ function $ae(Oyi) {
       isRestricted: PQe,
       width: Fyi,
     } = Oyi,
-    { columns: Byi } = Se(),
-    KUt = Ye(),
+    { columns: Byi } = useTerminalSize(),
+    KUt = useSession(),
     ch = Fyi ?? Byi - 4,
     vde;
   if (
@@ -90372,7 +90372,7 @@ function $ae(Oyi) {
     bb0: {
       if (!Ld || TQe || _Qe || RQe || PQe || Pt()) {
         let Nu;
-        if (xu[7] === p)
+        if (xu[7] === MEMO_CACHE_SENTINEL)
           ((Nu = { firstLine: null, fileContent: void 0 }), (xu[7] = Nu));
         else Nu = xu[7];
         vde = Nu;
@@ -90383,7 +90383,7 @@ function $ae(Oyi) {
         zUt = Lge(JUt(KUt.project.cwd, Ld), { maxBytes: XUt });
       } catch {
         let Nu;
-        if (xu[8] === p)
+        if (xu[8] === MEMO_CACHE_SENTINEL)
           ((Nu = { firstLine: null, fileContent: void 0 }), (xu[8] = Nu));
         else Nu = xu[8];
         vde = Nu;
@@ -90409,10 +90409,10 @@ function $ae(Oyi) {
     else Nu = xu[10];
     let bp;
     if (xu[11] !== ch)
-      ((bp = e(za, { width: ch })), (xu[11] = ch), (xu[12] = bp));
+      ((bp = e(Divider, { width: ch })), (xu[11] = ch), (xu[12] = bp));
     else bp = xu[12];
     let uh;
-    if (xu[13] === p)
+    if (xu[13] === MEMO_CACHE_SENTINEL)
       ((uh = e(o, {
         flexDirection: "column",
         children: e(t, {
@@ -90442,7 +90442,7 @@ function $ae(Oyi) {
       ((Nu = e(t, { bold: !0, children: Ld })), (xu[17] = Ld), (xu[18] = Nu));
     else Nu = xu[18];
     let bp;
-    if (xu[19] === p) ((bp = e(jx, { children: "untracked" })), (xu[19] = bp));
+    if (xu[19] === MEMO_CACHE_SENTINEL) ((bp = e(jx, { children: "untracked" })), (xu[19] = bp));
     else bp = xu[19];
     let uh;
     if (xu[20] !== Nu)
@@ -90450,10 +90450,10 @@ function $ae(Oyi) {
     else uh = xu[21];
     let dh;
     if (xu[22] !== ch)
-      ((dh = e(za, { width: ch })), (xu[22] = ch), (xu[23] = dh));
+      ((dh = e(Divider, { width: ch })), (xu[22] = ch), (xu[23] = dh));
     else dh = xu[23];
     let Qq;
-    if (xu[24] === p)
+    if (xu[24] === MEMO_CACHE_SENTINEL)
       ((Qq = e(t, {
         dimColor: !0,
         italic: !0,
@@ -90502,10 +90502,10 @@ function $ae(Oyi) {
     else Nu = xu[34];
     let bp;
     if (xu[35] !== ch)
-      ((bp = e(za, { width: ch })), (xu[35] = ch), (xu[36] = bp));
+      ((bp = e(Divider, { width: ch })), (xu[35] = ch), (xu[36] = bp));
     else bp = xu[36];
     let uh;
-    if (xu[37] === p)
+    if (xu[37] === MEMO_CACHE_SENTINEL)
       ((uh = e(o, {
         flexDirection: "column",
         children: e(t, {
@@ -90538,10 +90538,10 @@ function $ae(Oyi) {
     else Nu = xu[42];
     let bp;
     if (xu[43] !== ch)
-      ((bp = e(za, { width: ch })), (xu[43] = ch), (xu[44] = bp));
+      ((bp = e(Divider, { width: ch })), (xu[43] = ch), (xu[44] = bp));
     else bp = xu[44];
     let uh;
-    if (xu[45] === p)
+    if (xu[45] === MEMO_CACHE_SENTINEL)
       ((uh = e(o, {
         flexDirection: "column",
         children: e(t, {
@@ -90587,7 +90587,7 @@ function $ae(Oyi) {
   else dh = xu[55];
   let Qq;
   if (xu[56] !== ch)
-    ((Qq = e(za, { width: ch })), (xu[56] = ch), (xu[57] = Qq));
+    ((Qq = e(Divider, { width: ch })), (xu[56] = ch), (xu[57] = Qq));
   else Qq = xu[57];
   let UD;
   if (
@@ -90599,7 +90599,7 @@ function $ae(Oyi) {
   )
     ((UD =
       CQe.length === 0
-        ? e(Rn, { children: "No diff content" })
+        ? e(EmptyStateMessage, { children: "No diff content" })
         : CQe.map((Uyi, Hyi) =>
             e(
               QP,
@@ -90680,7 +90680,7 @@ function MQe(w, I, ne) {
       pe = consumeReplDiffPanelAutoOpen(w) ? "auto_open" : "manual";
     if (I === me.lastLoggedSessionId) return;
     ((me.lastLoggedSessionId = I),
-      i("tengu_repl_diff_panel_shown", {
+      logEvent("tengu_repl_diff_panel_shown", {
         trigger: fromEnum(pe),
         terminal_width_bucket: fromEnum(P1o(ne)),
       }));
@@ -90766,9 +90766,9 @@ var Ede = 8,
 function Nde(dw, M1o) {
   let A1o = _(8),
     IQe = It();
-  BA();
-  let B6 = Ye(jWo),
-    DQe = Ye().host,
+  useFeatureFlagVersion();
+  let B6 = useSession(jWo),
+    DQe = useSession().host,
     I1o;
   if (A1o[0] !== dw || A1o[1] !== B6)
     ((I1o = { enabled: dw, sessionId: B6, baseline: null }),
@@ -90811,10 +90811,10 @@ function Lde(LSi) {
     Jq = L1o === void 0 ? null : L1o,
     bx = U($Wo),
     $D = It(),
-    { storageV5: eHt } = _e(),
-    mw = Ye().host,
-    { columns: Sx } = Se(),
-    { addNotification: NQe } = Ir(),
+    { storageV5: eHt } = useStorageV5Context(),
+    mw = useSession().host,
+    { columns: Sx } = useTerminalSize(),
+    { addNotification: NQe } = useNotificationQueue(),
     Xq = U(WWo),
     O1o;
   if (
@@ -90920,8 +90920,8 @@ function Lde(LSi) {
       (Zq[24] = LQe),
       (Zq[25] = U1o));
   else U1o = Zq[25];
-  Ne("app:toggleReplTab", B1o, U1o);
-  let FQe = Ye(VWo),
+  useKeybinding("app:toggleReplTab", B1o, U1o);
+  let FQe = useSession(VWo),
     Cde = bx === "diff" && wde > 0,
     H1o,
     j1o;
@@ -90954,9 +90954,9 @@ function Lde(LSi) {
 function RYe(USi) {
   let ou = _(109),
     { width: BQe, minCol: HSi, onAskAboutSelection: jSi } = USi,
-    UQe = Ye(GWo),
-    nHt = Ye().host,
-    { storageV5: j6 } = _e(),
+    UQe = useSession(GWo),
+    nHt = useSession().host,
+    { storageV5: j6 } = useStorageV5Context(),
     $Si = U(KWo),
     [qD, WSi] = d(getPersistedDiffBaseMode),
     {
@@ -90973,9 +90973,9 @@ function RYe(USi) {
     ((W1o = () => WSi(cycleDiffBaseMode(qD, j6))), (ou[0] = qD), (ou[1] = j6), (ou[2] = W1o));
   else W1o = ou[2];
   let q1o;
-  if (ou[3] === p) ((q1o = { context: "DiffPanel" }), (ou[3] = q1o));
+  if (ou[3] === MEMO_CACHE_SENTINEL) ((q1o = { context: "DiffPanel" }), (ou[3] = q1o));
   else q1o = ou[3];
-  Ne("app:cycleDiffBase", W1o, q1o);
+  useKeybinding("app:cycleDiffBase", W1o, q1o);
   let rHt = U(zWo),
     V1o;
   if (ou[4] !== rHt)
@@ -90984,7 +90984,7 @@ function RYe(USi) {
   let Tde = V1o,
     iHt = U(QWo),
     sB = It(),
-    { processQueue: $Qe } = Ir(),
+    { processQueue: $Qe } = useNotificationQueue(),
     G1o,
     K1o;
   if (ou[6] !== $Qe || ou[7] !== sB)
@@ -91006,7 +91006,7 @@ function RYe(USi) {
     aHt = C(null),
     z1o = C(null),
     Q1o;
-  if (ou[10] === p) ((Q1o = new Map()), (ou[10] = Q1o));
+  if (ou[10] === MEMO_CACHE_SENTINEL) ((Q1o = new Map()), (ou[10] = Q1o));
   else Q1o = ou[10];
   let WQe = C(Q1o),
     G6 = 0,
@@ -91035,7 +91035,7 @@ function RYe(USi) {
   let xde = Y1o,
     J1o;
   if (ou[21] !== Tde)
-    ((J1o = Tde ? G(Tde, ZWo) : 0), (ou[21] = Tde), (ou[22] = J1o));
+    ((J1o = Tde ? countMatching(Tde, ZWo) : 0), (ou[21] = Tde), (ou[22] = J1o));
   else J1o = ou[22];
   let VQe = J1o,
     Rde = Tde?.length ?? 0,
@@ -91045,11 +91045,11 @@ function RYe(USi) {
     X1o = qSi || VSi,
     GSi = aO(),
     Z1o;
-  if (ou[23] === p) ((Z1o = { requireScope: !0 }), (ou[23] = Z1o));
+  if (ou[23] === MEMO_CACHE_SENTINEL) ((Z1o = { requireScope: !0 }), (ou[23] = Z1o));
   else Z1o = ou[23];
   e2(q6, GSi, !X1o, void 0, Z1o);
   let eWo;
-  if (ou[24] === p)
+  if (ou[24] === MEMO_CACHE_SENTINEL)
     ((eWo = () => {
       let tWo = aHt.current?.yogaNode;
       if (!tWo) {
@@ -91063,7 +91063,7 @@ function RYe(USi) {
       (ou[24] = eWo));
   else eWo = ou[24];
   let oWo;
-  if (ou[25] === p)
+  if (ou[25] === MEMO_CACHE_SENTINEL)
     ((oWo = (KSi) => AQe(KSi, z1o.current, WQe.current)), (ou[25] = oWo));
   else oWo = ou[25];
   wQe(HSi, eWo, X1o ? void 0 : jSi, oWo);
@@ -91146,7 +91146,7 @@ function RYe(USi) {
     }
   }
   let dWo;
-  if (ou[33] === p) ((dWo = () => nWo(eqo)), (ou[33] = dWo));
+  if (ou[33] === MEMO_CACHE_SENTINEL) ((dWo = () => nWo(eqo)), (ou[33] = dWo));
   else dWo = ou[33];
   const gHt = z6 > 0;
   let mWo;
@@ -91155,7 +91155,7 @@ function RYe(USi) {
       (ou[34] = gHt),
       (ou[35] = mWo));
   else mWo = ou[35];
-  (Ne("app:toggleDiffNoiseFilter", dWo, mWo), U(tqo));
+  (useKeybinding("app:toggleDiffNoiseFilter", dWo, mWo), U(tqo));
   let pWo;
   if (ou[36] !== oV)
     ((pWo = function rV(YSi) {
@@ -91181,8 +91181,8 @@ function RYe(USi) {
       (ou[40] = hHt),
       (ou[41] = gWo));
   else gWo = ou[41];
-  Ze(fWo, gWo);
-  let hWo = Zr("app:diffFileListDown", "Global", "alt+down"),
+  useKeybindings(fWo, gWo);
+  let hWo = useKeybindingDisplayText("app:diffFileListDown", "Global", "alt+down"),
     [yHt, Q6] = d(!1),
     yWo;
   if (ou[42] !== Q6) ((yWo = () => Q6(oqo)), (ou[42] = Q6), (ou[43] = yWo));
@@ -91194,7 +91194,7 @@ function RYe(USi) {
       (ou[44] = bHt),
       (ou[45] = bWo));
   else bWo = ou[45];
-  Ne("app:toggleDiffPreSession", yWo, bWo);
+  useKeybinding("app:toggleDiffPreSession", yWo, bWo);
   let SHt = function SHt(XSi) {
     let SWo = WQe.current.get(XSi);
     if (SWo) q6.handle?.scrollToElement(SWo);
@@ -91239,7 +91239,7 @@ function RYe(USi) {
       (ou[52] = eYe));
   else eYe = ou[52];
   let kWo;
-  if (ou[53] === p) ((kWo = e(o, { flexGrow: 1 })), (ou[53] = kWo));
+  if (ou[53] === MEMO_CACHE_SENTINEL) ((kWo = e(o, { flexGrow: 1 })), (ou[53] = kWo));
   else kWo = ou[53];
   let tYe;
   if (ou[54] !== nHt || ou[55] !== sB || ou[56] !== j6)
@@ -91292,7 +91292,7 @@ function RYe(USi) {
         flexDirection: "row",
         gap: 1,
         children: [
-          e(I_, {
+          e(ProgressBar, {
             ratio: VQe / Rde,
             width: Math.min(20, bk - 12),
             fillColor: "success",
@@ -91387,16 +91387,16 @@ function RYe(USi) {
     ou[86] !== XQe
   )
     ((sYe = eV
-      ? e($n, { message: "Loading diff\u2026", dimColor: !0 })
+      ? e(SpinnerMessageLine, { message: "Loading diff\u2026", dimColor: !0 })
       : Sw !== null
         ? nV !== null && e(t, { dimColor: !0, children: nV })
         : bw.length === 0
-          ? e(Rn, {
+          ? e(EmptyStateMessage, {
               hint: "Per-file diff is skipped above 500 files",
               children: "Too many changed files to show diff",
             })
           : tV.length === 0
-            ? e(Rn, {
+            ? e(EmptyStateMessage, {
                 hint:
                   KP > 0 && XQe > 0
                     ? "Read-denied, test, and generated files are hidden in this panel"
@@ -91423,7 +91423,7 @@ function RYe(USi) {
                         else WQe.current.delete(KD.path);
                       },
                       children: [
-                        e(za, { width: bk }),
+                        e(Divider, { width: bk }),
                         e($ae, {
                           filePath: KD.path,
                           hunks: $6.get(KD.path) ?? [],
@@ -91495,7 +91495,7 @@ function RYe(USi) {
       flexGrow: 1,
       flexDirection: "column",
       overflow: "hidden",
-      children: e(IS, {
+      children: e(ScrollBox, {
         ref: sHt,
         flexGrow: 1,
         flexDirection: "column",
@@ -91556,7 +91556,7 @@ function PYe(hki) {
     [dYe, CWo] = d(!1),
     _Wo,
     TWo;
-  if (J6[0] === p)
+  if (J6[0] === MEMO_CACHE_SENTINEL)
     ((_Wo = () => CWo(!0)),
       (TWo = () => CWo(!1)),
       (J6[0] = _Wo),
@@ -91641,7 +91641,7 @@ function PYe(hki) {
                   {
                     flexDirection: "column",
                     children: [
-                      e(za, { width: Y6 }),
+                      e(Divider, { width: Y6 }),
                       e($ae, {
                         filePath: sV.path,
                         hunks: RHt.get(sV.path) ?? [],
@@ -91683,7 +91683,7 @@ function MYe(bki) {
     [yYe, RWo] = d(!1),
     PWo,
     MWo;
-  if (EHt[0] === p)
+  if (EHt[0] === MEMO_CACHE_SENTINEL)
     ((PWo = () => RWo(!0)),
       (MWo = () => RWo(!1)),
       (EHt[0] = PWo),
@@ -91717,7 +91717,7 @@ function AYe(Ski) {
     [SYe, IWo] = d(!1),
     EWo,
     DWo;
-  if (vYe[0] === p)
+  if (vYe[0] === MEMO_CACHE_SENTINEL)
     ((EWo = () => IWo(!0)),
       (DWo = () => IWo(!1)),
       (vYe[0] = EWo),
@@ -91775,7 +91775,7 @@ function IYe(vki) {
   let $Ht = OWo,
     FWo,
     BWo;
-  if (Z6[3] === p)
+  if (Z6[3] === MEMO_CACHE_SENTINEL)
     ((FWo = () => LWo(!0)),
       (BWo = () => LWo(!1)),
       (Z6[3] = FWo),
@@ -91791,7 +91791,7 @@ function IYe(vki) {
       (Z6[8] = TYe));
   else TYe = Z6[8];
   let UWo;
-  if (Z6[9] === p) ((UWo = e(o, { flexGrow: 1 })), (Z6[9] = UWo));
+  if (Z6[9] === MEMO_CACHE_SENTINEL) ((UWo = e(o, { flexGrow: 1 })), (Z6[9] = UWo));
   else UWo = Z6[9];
   let xYe;
   if (Z6[10] !== BHt || Z6[11] !== UHt)
@@ -91897,7 +91897,7 @@ var Jjt = import.meta.require("../../02-功能模块/Teammates团队/useSchedule
 var Xjt = () => null;
 function W0t(DYe) {
   let iqo = _(5),
-    bCi = qc();
+    bCi = useCommandQueue();
   const KHt = DYe.messageQueue ?? bCi;
   let NYe;
   if (iqo[0] !== DYe)
@@ -91905,7 +91905,7 @@ function W0t(DYe) {
   else NYe = iqo[1];
   let sqo;
   if (iqo[2] !== KHt || iqo[3] !== NYe)
-    ((sqo = e(qye, { queue: KHt, children: NYe })),
+    ((sqo = e(CommandQueueProvider, { queue: KHt, children: NYe })),
       (iqo[2] = KHt),
       (iqo[3] = NYe),
       (iqo[4] = sqo));
@@ -91957,9 +91957,9 @@ function w5e(SCi) {
     mV = mqo === void 0 ? !1 : mqo,
     ng = sO(),
     gV = ng === "fullscreen",
-    { storageV5: Bc, credentials: jb } = _e(),
+    { storageV5: Bc, credentials: jb } = useStorageV5Context(),
     sjt = useFleetNudgeStore(),
-    kw = qc(),
+    kw = useCommandQueue(),
     Jd = !!YP,
     pqo;
   if (ls[0] !== o4 || ls[1] !== Jd || ls[2] !== n4)
@@ -91970,9 +91970,9 @@ function w5e(SCi) {
       (ls[3] = pqo));
   else pqo = ls[3];
   let o_ = pqo,
-    $b = vt(),
+    $b = useClock(),
     wCi = a.CLAUDE_CODE_DISABLE_VIRTUAL_SCROLL,
-    mc = Ye(),
+    mc = useSession(),
     ajt = U(mGo),
     cjt = EYe(),
     CCi = U(pGo),
@@ -92016,27 +92016,27 @@ function w5e(SCi) {
   d(gqo);
   let yqo;
   if (ls[12] !== Tc || ls[13] !== $a.getState)
-    ((yqo = Dle(zK($a.getState, Tc, "teammateColors"))),
+    ((yqo = Dle(createFieldAccessor($a.getState, Tc, "teammateColors"))),
       (ls[12] = Tc),
       (ls[13] = $a.getState),
       (ls[14] = yqo));
   else yqo = ls[14];
   let djt = yqo,
     g4 = qA(),
-    kk = qa(),
+    kk = useMainLoopModel(),
     jYe = U(gGo),
     hV = U(hGo),
     [bm, bqo] = d("prompt"),
     [$Ye, Sqo] = d(!1),
     kqo;
-  if (ls[15] === p)
+  if (ls[15] === MEMO_CACHE_SENTINEL)
     ((kqo = () => {
       (bqo("prompt"), Sqo(!1));
     }),
       (ls[15] = kqo));
   else kqo = ls[15];
   let xCi = kqo,
-    { addNotification: sg, removeNotification: yV } = Ir(),
+    { addNotification: sg, removeNotification: yV } = useNotificationQueue(),
     b4 = CR(LYe, CCi),
     [mjt, RCi] = d(null);
   (Vze(), RKe(sg, yV));
@@ -92089,7 +92089,7 @@ function w5e(SCi) {
       (ls[29] = vqo));
   else vqo = ls[29];
   let [Al] = d(vqo),
-    { commands: w4, renderingTools: zD, dynamicMcpConfig: QD } = Me(Al),
+    { commands: w4, renderingTools: zD, dynamicMcpConfig: QD } = useStoreSelector(Al),
     wqo;
   if (
     ls[30] !== $b.setTimeout ||
@@ -92205,7 +92205,7 @@ function w5e(SCi) {
       (ls[55] = Mqo));
   else Mqo = ls[55];
   let [Yc] = d(Mqo),
-    pjt = Me(Yc, yGo),
+    pjt = useStoreSelector(Yc, yGo),
     qYe = Qs.apply;
   O6.useUiLog(qYe);
   let Aqo;
@@ -92268,9 +92268,9 @@ function w5e(SCi) {
       (ls[70] = Dqo));
   else Dqo = ls[70];
   let [yjt] = d(Dqo),
-    wx = Me(Ji, SGo),
-    bV = Me(Ji.stream, kGo),
-    OCi = Me(Ji.stream, vGo),
+    wx = useStoreSelector(Ji, SGo),
+    bV = useStoreSelector(Ji.stream, kGo),
+    OCi = useStoreSelector(Ji.stream, vGo),
     ZP = bV.size > 0,
     Nqo;
   if (ls[71] !== bV) ((Nqo = ZKe(bV)), (ls[71] = bV), (ls[72] = Nqo));
@@ -92317,7 +92317,7 @@ function w5e(SCi) {
           rewriteEdit: (FCi, BCi) =>
             Ji.rewriteInputOverAutoContinuePrefill(FCi, BCi),
           onEdit: (UCi, HCi) => {
-            (Ku.onPromptEdit(UCi, HCi), X0.recordUserActivity(), emt(), Ez(!0));
+            (Ku.onPromptEdit(UCi, HCi), activeTimeTracker.recordUserActivity(), emt(), Ez(!0));
           },
         })
       );
@@ -92418,7 +92418,7 @@ function w5e(SCi) {
       (ls[111] = jqo));
   else jqo = ls[111];
   let [Wu] = d(jqo),
-    { conversationId: kjt } = Me(Wu),
+    { conversationId: kjt } = useStoreSelector(Wu),
     jCi = N0();
   (kQe(), wq(Al.dialogTransport));
   let $qo, Wqo;
@@ -92506,7 +92506,7 @@ function w5e(SCi) {
   let Yqo = nQe();
   (hde(Cd, Yqo), yde(Cd, Yqo));
   let JD = Al.localJsx,
-    $h = qb(yp.kind),
+    $h = qb(localJsxDialog.kind),
     GYe = oce(),
     Jqo;
   if (ls[137] !== Al || ls[138] !== mc || ls[139] !== Wu || ls[140] !== $a)
@@ -92543,7 +92543,7 @@ function w5e(SCi) {
     VCi = hat(),
     JYe = _x === yre.kind,
     eVo;
-  if (ls[145] !== _x) ((eVo = Lrn(_x)), (ls[145] = _x), (ls[146] = eVo));
+  if (ls[145] !== _x) ((eVo = isMcpElicitationDialogKind(_x)), (ls[145] = _x), (ls[146] = eVo));
   else eVo = ls[146];
   let Cjt = eVo,
     tVo;
@@ -92551,7 +92551,7 @@ function w5e(SCi) {
   else tVo = ls[148];
   let kV = tVo,
     oVo;
-  if (ls[149] === p) ((oVo = ze()), (ls[149] = oVo));
+  if (ls[149] === MEMO_CACHE_SENTINEL) ((oVo = ze()), (ls[149] = oVo));
   else oVo = ls[149];
   let { messages: Bde } = nS(oVo),
     nVo;
@@ -92823,7 +92823,7 @@ function w5e(SCi) {
       focusFoldHoldsPreview: n_i,
     } = EB(hVo),
     Mjt = pye(),
-    XYe = Me(Yc, RGo),
+    XYe = useStoreSelector(Yc, RGo),
     e5e = qb(yre.kind),
     yVo,
     bVo;
@@ -92951,7 +92951,7 @@ function w5e(SCi) {
       (ls[249] = MVo));
   else ((PVo = ls[248]), (MVo = ls[249]));
   E(PVo, MVo);
-  let a_i = Me(Yc, MGo),
+  let a_i = useStoreSelector(Yc, MGo),
     Djt = nce(),
     r5e = rce(),
     l_i = sF(A3),
@@ -93194,7 +93194,7 @@ function w5e(SCi) {
       (ls[324] = qVo));
   else qVo = ls[324];
   let { sendBridgeResult: Ujt, stampBridgeReply: Hjt } = TKe(qVo),
-    { columns: Hde, rows: c_i } = Se();
+    { columns: Hde, rows: c_i } = useTerminalSize();
   F6.useTerminalViewport(Hde, c_i);
   let VVo;
   if (
@@ -93533,8 +93533,8 @@ function w5e(SCi) {
   else YVo = ls[416];
   let u_i = Xze(YVo);
   nat(Jze, u_i);
-  const jjt = eO(zr) && !Jd,
-    $jt = VCi ?? ($h ? yp.kind : void 0);
+  const jjt = useFeatureFlagValue(zr) && !Jd,
+    $jt = VCi ?? ($h ? localJsxDialog.kind : void 0);
   let JVo;
   if (
     ls[417] !== wx ||
@@ -93587,7 +93587,7 @@ function w5e(SCi) {
   else eGo = ls[431];
   oue(eGo);
   let tGo;
-  if (ls[432] === p) ((tGo = []), (ls[432] = tGo));
+  if (ls[432] === MEMO_CACHE_SENTINEL) ((tGo = []), (ls[432] = tGo));
   else tGo = ls[432];
   E(IGo, tGo);
   let L4 = $ze(),
@@ -93672,7 +93672,7 @@ function w5e(SCi) {
   else iGo = ls[456];
   let uB = iGo;
   AKe();
-  let CV = eO(eN),
+  let CV = useFeatureFlagValue(eN),
     sGo;
   if (ls[457] !== CV)
     ((sGo = (p_i) => (CV ? p_i.fileHistory.trackedFiles.size : 0)),
@@ -93729,7 +93729,7 @@ function w5e(SCi) {
     const dB = !JYe;
     const mB = !Jd;
     let q4;
-    if (ls[471] === p) ((q4 = () => Sqo(!0)), (ls[471] = q4));
+    if (ls[471] === MEMO_CACHE_SENTINEL) ((q4 = () => Sqo(!0)), (ls[471] = q4));
     else q4 = ls[471];
     let e0;
     if (
@@ -93842,7 +93842,7 @@ function w5e(SCi) {
   else $4 = ls[505];
   let K4 = $4,
     _V;
-  if (ls[506] === p) ((_V = () => bqo(EGo)), (ls[506] = _V));
+  if (ls[506] === MEMO_CACHE_SENTINEL) ((_V = () => bqo(EGo)), (ls[506] = _V));
   else _V = ls[506];
   let dB;
   if (ls[507] !== Sm.messages.length || ls[508] !== bm)
@@ -93970,7 +93970,7 @@ function w5e(SCi) {
     ((m5e = $h && e(Xjt, {})), (ls[541] = $h), (ls[542] = m5e));
   else m5e = ls[542];
   let lGo;
-  if (ls[543] === p) ((lGo = e(NP, { variant: "bottom" })), (ls[543] = lGo));
+  if (ls[543] === MEMO_CACHE_SENTINEL) ((lGo = e(NP, { variant: "bottom" })), (ls[543] = lGo));
   else lGo = ls[543];
   const Kjt = n5e || $h || kV;
   let p5e;

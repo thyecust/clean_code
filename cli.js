@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { M } from "./01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "./01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { lit as S } from "./01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { kHt, Wxe, Gxe, sdr, xHt } from "./01-核心基础设施/共享小工具-未细化/chunk-0cy1k3q5.js";
 import { getBuildRefName } from "./01-核心基础设施/共享小工具-未细化/build-ref-name.js";
@@ -256,7 +256,7 @@ async function Lt() {
         import("./01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js"),
       ]),
       s = v(n);
-    if (M() && s !== void 0) {
+    if (isHoverRestEnabled() && s !== void 0) {
       (R({ storageV5: s }), E(s));
       let [
           { credentialsStoreFor: i },
@@ -354,7 +354,7 @@ async function Lt() {
       s = !1,
       i = !1;
     try {
-      (await R(M() ? n?.backend : void 0),
+      (await R(isHoverRestEnabled() ? n?.backend : void 0),
         (i = k().defaultToAgentsView === !0),
         (s = h || i));
     } catch {}
@@ -428,7 +428,7 @@ async function Lt() {
           ]),
           p = pt(n),
           H;
-        if (M() && p !== void 0) {
+        if (isHoverRestEnabled() && p !== void 0) {
           let [
             { credentialsStoreFor: d },
             { setGrowthBookCredentials: T, setGrowthBookStorageBackend: N },
@@ -458,7 +458,7 @@ async function Lt() {
             X = d;
           });
         (setImmediate(async () => {
-          if (M() && p !== void 0)
+          if (isHoverRestEnabled() && p !== void 0)
             try {
               let [
                 { credentialsStoreFor: d },
@@ -512,7 +512,7 @@ async function Lt() {
                   _t().catch(() => {}),
                   T(),
                   N(),
-                  M() && p !== void 0)
+                  isHoverRestEnabled() && p !== void 0)
                 )
                   (At({ storageV5: p }), vt(p));
                 return (
@@ -617,7 +617,7 @@ async function Lt() {
     m("cli_tmux_worktree_fast_path");
     let { enableConfigs: e, seedInstallIDs: r } =
       await import("./01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js");
-    await e(M() ? n?.backend : void 0);
+    await e(isHoverRestEnabled() ? n?.backend : void 0);
     let { isWorktreeModeEnabled: o } = await import("./01-核心基础设施/共享小工具-未细化/isWorktreeModeEnabled.p77rzdj8.js");
     if (o()) {
       let [
@@ -631,7 +631,7 @@ async function Lt() {
         ]),
         E = R(n),
         s;
-      if (M() && E !== void 0) {
+      if (isHoverRestEnabled() && E !== void 0) {
         k({ storageV5: E });
         let [
           { credentialsStoreFor: c },

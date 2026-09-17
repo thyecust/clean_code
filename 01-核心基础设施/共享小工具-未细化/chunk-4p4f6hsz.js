@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { getSubscriptionType, Qh } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { pm } from "./chunk-0ypv8gq2.js";
-import { Zp } from "../../02-功能模块/图片-截图-ComputerUse/chunk-bvxymt09.js";
+import { getComputerUseSession } from "../../02-功能模块/图片-截图-ComputerUse/computer-use-session.js";
 var t = {
   enabled: !1,
   pixelValidation: !1,
@@ -38,7 +38,7 @@ function iNt() {
   return n;
 }
 function GSe() {
-  let e = Zp();
+  let e = getComputerUseSession();
   return (
     (e.frozenCoordinateMode ??= o().coordinateMode),
     e.frozenCoordinateMode

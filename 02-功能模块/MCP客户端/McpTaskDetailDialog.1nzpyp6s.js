@@ -12,15 +12,15 @@
 import { rg } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { HS } from "../../01-核心基础设施/共享小工具-未细化/chunk-nj1exzcd.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useElapsedDuration } from "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { Wx } from "../../01-核心基础设施/共享小工具-未细化/chunk-c172f2at.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { useDetailDialogKeys } from "../../01-核心基础设施/共享小工具-未细化/detail-dialog-keys.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { e1e, y7e } from "./chunk-tznd4407.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function McpTaskDetailDialog(so) {
   let s = _(63),
     { task: n, onDone: K, onKill: d, onBack: m } = so,
@@ -45,8 +45,8 @@ function McpTaskDetailDialog(so) {
       (s[6] = c),
       (s[7] = Q));
   else Q = s[7];
-  let S = Wx(Q),
-    b = HS(n.startTime, n.status === "running", 1000, 0, n.endTime),
+  let S = useDetailDialogKeys(Q),
+    b = useElapsedDuration(n.startTime, n.status === "running", 1000, 0, n.endTime),
     U;
   if (s[8] !== n.pollIntervalMs)
     ((U = n.pollIntervalMs === void 0 ? void 0 : y7e(n.pollIntervalMs)),
@@ -56,19 +56,19 @@ function McpTaskDetailDialog(so) {
   let V = U,
     a = n.mcpTaskId === n.id ? void 0 : n.mcpTaskId,
     W;
-  if (s[10] === p)
-    ((W = e(D, { chord: "escape", action: "go back" })), (s[10] = W));
+  if (s[10] === MEMO_CACHE_SENTINEL)
+    ((W = e(KeybindingHint, { chord: "escape", action: "go back" })), (s[10] = W));
   else W = s[10];
   let f;
   if (s[11] !== d || s[12] !== n.status)
-    ((f = n.status === "running" && d && e(D, { chord: "x", action: "stop" })),
+    ((f = n.status === "running" && d && e(KeybindingHint, { chord: "x", action: "stop" })),
       (s[11] = d),
       (s[12] = n.status),
       (s[13] = f));
   else f = s[13];
   let g;
   if (s[14] !== f)
-    ((g = r(ue, { children: [W, f] })), (s[14] = f), (s[15] = g));
+    ((g = r(DotSeparatedList, { children: [W, f] })), (s[14] = f), (s[15] = g));
   else g = s[15];
   let C;
   if (s[16] !== n.serverName)
@@ -102,7 +102,7 @@ function McpTaskDetailDialog(so) {
       (s[29] = I));
   else I = s[29];
   let X;
-  if (s[30] === p)
+  if (s[30] === MEMO_CACHE_SENTINEL)
     ((X = e(t, { dimColor: !0, children: "status " })), (s[30] = X));
   else X = s[30];
   let x;
@@ -196,7 +196,7 @@ function McpTaskDetailDialog(so) {
   else j = s[59];
   let Y;
   if (s[60] !== S || s[61] !== j)
-    ((Y = e(mr, { onKeyDown: S, children: j })),
+    ((Y = e(FocusableBox, { onKeyDown: S, children: j })),
       (s[60] = S),
       (s[61] = j),
       (s[62] = Y));

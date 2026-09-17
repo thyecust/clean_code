@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
-import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var e = Ae("./cli-f091jpwx.md");
-var t = Ae("./server-6cyhjq09.md");
+import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var e = importMetaRequire("./cli-f091jpwx.md");
+var t = importMetaRequire("./server-6cyhjq09.md");
 var s = "./SKILL-cf37e4b8.md.zst";
 var i = Ke(s, import.meta.dirname);
 var SKILL_MD = i,

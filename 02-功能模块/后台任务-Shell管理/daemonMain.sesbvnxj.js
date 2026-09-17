@@ -10,14 +10,14 @@
 
 // [preload stripped] 原本在此预载 200 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Wi, w5, E_, Mse, df, H, NR, EP, x5, tBe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { lit as S, fromEnum, fromNumber, concatSafe } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, ge, l, A, Jr, Po, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, Yu, qr, zR, XPn, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, oe, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
@@ -26,10 +26,10 @@ import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqs
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { sigtermThenKill, reapDetachedRepl, procIdentityOf, procIdentityFields, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { A$e, C$e, Tve, JK, Sme, AAn, Lc, bme } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
-import { Iv } from "../../01-核心基础设施/共享小工具-未细化/chunk-bfth4n1b.js";
+import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
 import { bfe, Il, Pc, YE, wfe, Gk } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
 import { default as RT } from "../文件监听-Watch/文件监听-Watch.3efypmps.js";
-import { NNe, rd, pD, FNe } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import { isRunningInstalledBinary, resolveWrappedClaudeInvocation, applyProcessWrapper, findInstalledVersionBinary } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import {
   KY,
   g_,
@@ -72,7 +72,7 @@ import {
 } from "./chunk-7wsy8vxb.js";
 import "../自动更新-安装/chunk-brx72pf1.js";
 import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
-import { Tw } from "../认证-OAuth登录/chunk-s51acx6w.js";
+import { credentialsStoreFor } from "../认证-OAuth登录/credentials-store.js";
 import { mut } from "../../01-核心基础设施/设置-配置/chunk-6rz5fqzm.js";
 import { controlRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import {
@@ -131,22 +131,22 @@ import {
 } from "./chunk-jfk5mpe1.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import { YYt, JYt, E8, qW, QYt, ZYt, eJt } from "./chunk-9mmyv6hf.js";
 import { uBn, o9 } from "../认证-OAuth登录/chunk-n76cf9e6.js";
 import "../权限系统/chunk-3kjwvb3e.js";
 import { HIt, Jae, IIt, a$n } from "../../01-核心基础设施/设置-配置/chunk-bmk73cc4.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-6y25h56s.js";
+import "../../01-核心基础设施/共享小工具-未细化/spare-session-claim.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ezjdm9sg.js";
 import { c$n, u$n } from "../../01-核心基础设施/共享小工具-未细化/chunk-me1cqqmp.js";
-import { Vb, s9 } from "../../01-核心基础设施/共享小工具-未细化/chunk-d3d1v4d6.js";
+import { getDaemonJsonPath, getDaemonLogPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { NSt, j8e } from "../../01-核心基础设施/共享小工具-未细化/chunk-h14anec2.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { spawn as Br } from "child_process";
 import { open as Or, rm as Lr } from "fs/promises";
 import { homedir } from "os";
@@ -247,7 +247,7 @@ async function xe(t, e) {
 }
 function Te(t, e) {
   (n(`[bg-dispatch] rejected ${t}: ${e}`, { level: "warn" }),
-    i("tengu_bg_dispatch_rejected", { reason: e }));
+    logEvent("tengu_bg_dispatch_rejected", { reason: e }));
 }
 function ut(t) {
   return concatSafe(S("oversized ("), fromNumber(t), S(" bytes)"));
@@ -289,7 +289,7 @@ async function ft(t, e) {
 }
 var gt = { namespace: "daemon", relPath: ["dispatch"] };
 async function Jt(t) {
-  if (M() && t !== void 0) {
+  if (isHoverRestEnabled() && t !== void 0) {
     await t.ensureScope(gt).catch(() => {
       return;
     });
@@ -399,7 +399,7 @@ async function Xt(t, e, o) {
   await wt(t, e, o);
 }
 async function qt(t, e) {
-  if (M() && e !== void 0) {
+  if (isHoverRestEnabled() && e !== void 0) {
     let r,
       a = [],
       p = [];
@@ -471,22 +471,22 @@ async function Zt(t, e) {
     });
   return (
     a.on("add", (p) => {
-      (M() && e !== void 0 ? Xt(e, Ie(p), t) : ft(p, t)).catch((w) =>
+      (isHoverRestEnabled() && e !== void 0 ? Xt(e, Ie(p), t) : ft(p, t)).catch((w) =>
         n(`[bg-dispatch] ${w}`, { level: "error" }),
       );
     }),
     a.on("error", (p) => {
       (n(`[bg-dispatch] watcher error: ${p}`, { level: "error" }),
-        i("tengu_bg_dispatch_watcher_failed", {
+        logEvent("tengu_bg_dispatch_watcher_failed", {
           errno: Jr(p) ?? S("unknown"),
         }));
     }),
-    await Dt(Ht(a, "ready"), 5000, "chokidar ready").catch((p) =>
+    await withTimeout(Ht(a, "ready"), 5000, "chokidar ready").catch((p) =>
       n(`[bg-dispatch] watcher ready wait: ${p}`),
     ),
     await qt(t, e).catch((p) => {
       (n(`[bg-dispatch] cold-start drain: ${p}`, { level: "error" }),
-        i("tengu_bg_dispatch_watcher_failed", {
+        logEvent("tengu_bg_dispatch_watcher_failed", {
           errno: Jr(p) ?? S("unknown"),
         }));
     }),
@@ -559,7 +559,7 @@ async function St(t, e = {}) {
                 K?.dispose();
                 return;
               }
-              ((v = K), i("tengu_bg_spare_spawn", {}));
+              ((v = K), logEvent("tengu_bg_spare_spawn", {}));
             })
             .catch((K) => {
               if (Po(K)) {
@@ -581,7 +581,7 @@ async function St(t, e = {}) {
           let le = ee;
           if (T === 0 && !K) {
             try {
-              await Dt(Qe(m.cwd), vt, `bg: cwd probe timed out for ${m.short}`);
+              await withTimeout(Qe(m.cwd), vt, `bg: cwd probe timed out for ${m.short}`);
             } catch (c) {
               le = W(c);
             }
@@ -589,7 +589,7 @@ async function St(t, e = {}) {
           }
           if (le && !a.has(m.short) && T > 0) {
             try {
-              (await Dt(
+              (await withTimeout(
                 Qe(m.cwd),
                 vt,
                 `bg: cwd re-probe timed out for ${m.short}`,
@@ -604,7 +604,7 @@ async function St(t, e = {}) {
             let c = YYt(m.cwd);
             if (
               (t(`bg refused ${m.short} (${m.source}): ${c}`),
-              i("tengu_bg_spawn_cwd_gone", {
+              logEvent("tengu_bg_spawn_cwd_gone", {
                 short: bgShort(m.short),
                 attempt: 0,
                 via: fromEnum("dispatch"),
@@ -636,9 +636,9 @@ async function St(t, e = {}) {
               T < 30
             ) {
               if (T === 15 && (de.isKilling || de.isRetiring))
-                (i("tengu_bg_dispatch_sigkill_escalate", {}),
+                (logEvent("tengu_bg_dispatch_sigkill_escalate", {}),
                   de.kill("SIGKILL"));
-              return (await Z(100), Y(m, T + 1, K, le));
+              return (await sleep(100), Y(m, T + 1, K, le));
             }
             let c = de.isKilling || de.isRetiring || de.record.outcome;
             if (ce && !E8(de.dispatch))
@@ -673,7 +673,7 @@ async function St(t, e = {}) {
               (t(
                 `bg: low memory (${Se !== void 0 ? `macOS memorystatus pressure level ${Se}` : `${I}MB free`}) \u2014 retiring settled workers before spawning ${m.short}`,
               ),
-                i("tengu_bg_dispatch_low_mem", {
+                logEvent("tengu_bg_dispatch_low_mem", {
                   free_mb: I,
                   handles: a.size,
                   pressure_level: Se,
@@ -737,7 +737,7 @@ async function St(t, e = {}) {
                   }, e.storageV5).catch((j) => logError(j)),
                 ),
                 k(),
-                i("tengu_bg_spare_claim", { age_ms: Date.now() - c.startedAt }),
+                logEvent("tengu_bg_spare_claim", { age_ms: Date.now() - c.startedAt }),
                 t(`bg claimed-spare ${m.short} (${m.source})`),
                 logFeatureOk("daemon_bg_session_create"),
                 q(),
@@ -753,7 +753,7 @@ async function St(t, e = {}) {
                       : I instanceof Error
                         ? "error"
                         : "unknown";
-              (i("tengu_bg_spare_claim_fail", { reason: fromEnum(ae) }), c.dispose());
+              (logEvent("tengu_bg_spare_claim_fail", { reason: fromEnum(ae) }), c.dispose());
             }
           }
           let $e = qW.spawn(
@@ -888,7 +888,7 @@ async function St(t, e = {}) {
               !ve
             )
               (ye++,
-                i("tengu_bg_adopt_upgrade_respawn", {}),
+                logEvent("tengu_bg_adopt_upgrade_respawn", {}),
                 Y(T.dispatch, 0, !0).catch((ee) => logError(ee)));
             else {
               ie++;
@@ -954,7 +954,7 @@ async function St(t, e = {}) {
                 ? ` upgrade_skipped=${De} (previous roster written ${Math.round((Date.now() - X.updatedAt) / 86400000)}d ago)`
                 : ""),
           ),
-          i("tengu_bg_adopt", {
+          logEvent("tengu_bg_adopt", {
             adopted: ne,
             respawned: ye,
             dead: ie,
@@ -1028,14 +1028,14 @@ async function St(t, e = {}) {
                   .catch((I) => (logError(I), !1)),
               ),
             ),
-            $e = G(Se, (c) => c);
+            $e = countMatching(Se, (c) => c);
           if (le && $e === 0 && W8()) {
             let c = [...m.values()].filter((I) => me.has(I.dispatch.short));
             if (c.length > 0) {
               (t(
                 "bg: low memory persists after shedding non-pinned \u2014 retiring pinned settled workers as a last resort",
               ),
-                i("tengu_bg_retire_pinned_low_mem", {}));
+                logEvent("tengu_bg_retire_pinned_low_mem", {}));
               for (let I of c)
                 I.retireIfSettled(ce, lr, de)
                   .then((j) => Ze(t, I, j, "low memory, pinned"))
@@ -1114,7 +1114,7 @@ async function St(t, e = {}) {
       Be.unref();
       async function _e() {
         let m = H("tengu_bg_prewarm_burst_delay_ms", 15000);
-        if ((await Z(m, void 0, { unref: !0 }), _)) return;
+        if ((await sleep(m, void 0, { unref: !0 }), _)) return;
         let T = H("tengu_bg_prewarm_burst_concurrency", 3);
         if (T <= 0 || !MZt()) return;
         let K = await Xe(e.storageV5),
@@ -1147,7 +1147,7 @@ async function St(t, e = {}) {
             break;
           }
           let j =
-            T - G([...a.values()], (ae) => ae.isBooting && !ae.isUnverified);
+            T - countMatching([...a.values()], (ae) => ae.isBooting && !ae.isUnverified);
           for (let ae of ee) {
             if (j <= 0) break;
             if ((ee.delete(ae), ae.isBooting)) {
@@ -1165,7 +1165,7 @@ async function St(t, e = {}) {
             else me++;
           }
           if (ee.size === 0) break;
-          await Z(ar, void 0, { unref: !0 });
+          await sleep(ar, void 0, { unref: !0 });
         }
         (t(
           `bg: post-takeover prewarm burst \u2014 respawned ${de}/${le} stale workers` +
@@ -1176,7 +1176,7 @@ async function St(t, e = {}) {
               : "") +
             ` in ${Math.round((Date.now() - ce) / 1000)}s`,
         ),
-          i("tengu_bg_prewarm_burst", {
+          logEvent("tengu_bg_prewarm_burst", {
             candidates: le,
             respawned: de,
             refused: me,
@@ -1264,7 +1264,7 @@ function qe(t, e, o, r, a, p) {
           : Fe(d, { recursive: !0, force: !0 }).catch((v) => logError(v)),
       );
     else if (w === "killed" && e.isHandoffKill)
-      i("tengu_bg_handoff_settle", { jobSessionId: Ee(e.record.sessionId) });
+      logEvent("tengu_bg_handoff_settle", { jobSessionId: Ee(e.record.sessionId) });
     else
       ue(
         r,
@@ -1573,18 +1573,18 @@ async function cr(t, e, o = {}) {
   }
   if (k)
     (e(`bg orphan-reap: ${k} roster-less pty host(s)`),
-      i("tengu_bg_orphan_reap", { reaped: k }));
+      logEvent("tengu_bg_orphan_reap", { reaped: k }));
 }
 var ur = { namespace: "daemon", relPath: ["pty-pids"] };
 async function pr(t) {
-  if (M() && t !== void 0) {
+  if (isHoverRestEnabled() && t !== void 0) {
     await Rit(t);
     return;
   }
   await je(k7e(), { recursive: !0, mode: 448 });
 }
 async function fr(t) {
-  if (M() && t !== void 0) {
+  if (isHoverRestEnabled() && t !== void 0) {
     await t.ensureScope(ur).catch(() => {
       return;
     });
@@ -1718,7 +1718,7 @@ class Ge {
     }
     let e = Date.now();
     this.spawnedAt = e;
-    let o = pD(this.invocation),
+    let o = applyProcessWrapper(this.invocation),
       r = hr(o.cmd, [...o.prefixArgs, "--daemon-worker", this.kind], {
         stdio: this.authManager
           ? ["pipe", "pipe", "pipe", "ipc"]
@@ -1806,13 +1806,13 @@ class Ge {
             k(null, null);
             return;
           }
-          FNe().then((E) => {
+          findInstalledVersionBinary().then((E) => {
             if (E && E !== this.invocation.target)
               (this.logger.write(
                 this.id,
                 `execPath gone (version GC?) \u2014 re-resolved to ${E}`,
               ),
-                (this.invocation = pD({ cmd: E, prefixArgs: [], target: E })),
+                (this.invocation = applyProcessWrapper({ cmd: E, prefixArgs: [], target: E })),
                 (this.consecutiveCrashes = 0));
             k(null, null);
           });
@@ -1836,7 +1836,7 @@ class Ge {
         this.id,
         `exited permanently code=${t} uptime=${r}ms \u2014 will not respawn`,
       ),
-        i("tengu_daemon_worker_permanent_exit", {
+        logEvent("tengu_daemon_worker_permanent_exit", {
           exit_code: t ?? void 0,
           uptime_ms: r,
           worker_kind: fromEnum(this.kind),
@@ -1853,7 +1853,7 @@ class Ge {
       )
         ((this.wrapperParkLogged = !0),
           logFeatureBad("agent_launcher", "registry_worker_launcher_forked"));
-      i("tengu_daemon_worker_permanent_exit", {
+      logEvent("tengu_daemon_worker_permanent_exit", {
         exit_code: t ?? void 0,
         uptime_ms: r,
         worker_kind: fromEnum(this.kind),
@@ -1863,14 +1863,14 @@ class Ge {
     if (t !== 0 || r < _r) {
       if ((this.consecutiveCrashes++, Il().length > 0))
         wr(this.invocation.target)
-          .catch(() => FNe())
+          .catch(() => findInstalledVersionBinary())
           .then((w) => {
             if (typeof w === "string" && w && w !== this.invocation.target)
               (this.logger.write(
                 this.id,
                 `target \`${this.invocation.target}\` is gone (version GC?) \u2014 re-resolved to ${w}`,
               ),
-                (this.invocation = pD({ cmd: w, prefixArgs: [], target: w })),
+                (this.invocation = applyProcessWrapper({ cmd: w, prefixArgs: [], target: w })),
                 (this.consecutiveCrashes = 0));
           })
           .catch(() => {});
@@ -1879,7 +1879,7 @@ class Ge {
         this.id,
         `exited code=${t} sig=${e} uptime=${r}ms consecutive=${this.consecutiveCrashes} backoff=${p}ms`,
       ),
-        i("tengu_daemon_worker_crash", {
+        logEvent("tengu_daemon_worker_crash", {
           consecutive: this.consecutiveCrashes,
           exit_code: t ?? void 0,
           uptime_ms: r,
@@ -2003,7 +2003,7 @@ async function Rt(t) {
           "supervisor",
           `reload: stopped=${V.stop.length} started=${V.start.length} restarted=${V.restart.length}`,
         ),
-          i("tengu_daemon_config_reload", {
+          logEvent("tengu_daemon_config_reload", {
             stopped: V.stop.length,
             started: V.start.length,
             restarted: V.restart.length,
@@ -2061,7 +2061,7 @@ async function At(t) {
 }
 function xr(t, e) {
   if (t.target !== e.target) return !0;
-  return !NNe() && t.mtimeMs !== e.mtimeMs;
+  return !isRunningInstalledBinary() && t.mtimeMs !== e.mtimeMs;
 }
 function Mr(t) {
   if (
@@ -2091,7 +2091,7 @@ async function It(t) {
       upgradeBusyDeferCapMs: B = Ir,
       storageV5: E,
     } = t,
-    v = Tw(E),
+    v = credentialsStoreFor(E),
     s = await Le(o);
   (s.write(
     "supervisor",
@@ -2109,8 +2109,8 @@ async function It(t) {
     let c = await controlRequest({ proto: BG_PROTO, op: "yield" });
     if (c.ok && c.op === "yield" && c.yielding) {
       let I = Date.now() + 5000;
-      while (C && Date.now() < I) (await Z(100), (C = await Rh(kye, E)));
-      if ((i("tengu_daemon_yield_takeover", { ok: !C, new_origin: fromEnum(r) }), C))
+      while (C && Date.now() < I) (await sleep(100), (C = await Rh(kye, E)));
+      if ((logEvent("tengu_daemon_yield_takeover", { ok: !C, new_origin: fromEnum(r) }), C))
         s.write(
           "supervisor",
           "yield acked but lock still held after 5s \u2014 refusing to start",
@@ -2144,8 +2144,8 @@ async function It(t) {
     else logFeatureOk("daemon_start");
     return (await s.close(), { upgradeDetected: !1, exitCode: 1 });
   }
-  let O = rd({ pinToCurrentBinary: !0 }),
-    V = NNe() ? OZt() : O.target,
+  let O = resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 }),
+    V = isRunningInstalledBinary() ? OZt() : O.target,
     q = await At(V).catch((c) => {
       if (Po(c))
         n(`binaryIdentity(${V}) failed at startup: ${c.code}`, {
@@ -2157,7 +2157,7 @@ async function It(t) {
     re = await getProcessStartTimeAsync(process.pid);
   if (re === void 0) {
     if (
-      (await Z(DPt),
+      (await sleep(DPt),
       (re = await getProcessStartTimeAsync(process.pid, { skipCache: !0 })),
       re === void 0)
     )
@@ -2219,7 +2219,7 @@ async function It(t) {
           { upgradeDetected: !1, exitCode: 1 }
         );
       if (((J = await OPt(Y, E)), ae !== null))
-        i("tengu_daemon_stale_lock_replaced", {
+        logEvent("tengu_daemon_stale_lock_replaced", {
           proof:
             ae === "predates_boot" ? S("predates_boot") : S("pid_recycled"),
           acquired: J,
@@ -2252,7 +2252,7 @@ async function It(t) {
         await s.close(),
         { upgradeDetected: !1, exitCode: 1 }
       );
-    await Z(Cr);
+    await sleep(Cr);
     let I = await ZP(E).catch(() => Y);
     if (!I || I.pid !== Y.pid || I.startedAt !== Y.startedAt) {
       if (
@@ -2274,7 +2274,7 @@ async function It(t) {
           return I !== null && I.pid !== Y.pid ? I.pid : null;
         } catch (I) {
           if (c === 0) {
-            await Z(DPt);
+            await sleep(DPt);
             continue;
           }
           return (
@@ -2314,7 +2314,7 @@ async function It(t) {
             "supervisor",
             "yielding to a foreground/service daemon \u2014 bg workers will be re-adopted",
           ),
-          i("tengu_daemon_yield", {}),
+          logEvent("tengu_daemon_yield", {}),
           ke?.());
       return !0;
     },
@@ -2331,7 +2331,7 @@ async function It(t) {
         if (Q !== null) {
           if ((X?.busyWorkerCount() ?? 0) === 0) {
             if (!Q.capExpiredEmitted)
-              i("tengu_daemon_upgrade_deferred_busy", {
+              logEvent("tengu_daemon_upgrade_deferred_busy", {
                 busy_workers: 0,
                 deferred_ms: (Q.suspendedAt ?? Date.now()) - Q.start,
                 cap_expired: !1,
@@ -2357,7 +2357,7 @@ async function It(t) {
               "supervisor",
               `binary at ${V} changed to an OLDER build (${q.target} \u2192 ${c.target}) \u2014 refusing self-restart for upgrade; keeping the running build (\`claude daemon stop --any\` to override)`,
             ),
-            i("tengu_daemon_upgrade_refused_stale_binary", {}));
+            logEvent("tengu_daemon_upgrade_refused_stale_binary", {}));
         return !1;
       }
       let I = Pc(),
@@ -2396,7 +2396,7 @@ async function It(t) {
                 "supervisor",
                 `binary at ${V} changed but ${ae} registry worker(s) report a mid-turn session \u2014 deferring the upgrade restart until idle (re-checked every poll, capped at ${Math.round(B / 60000)}m)`,
               ),
-              i("tengu_daemon_upgrade_deferred_busy", {
+              logEvent("tengu_daemon_upgrade_deferred_busy", {
                 busy_workers: ae,
                 cap_expired: !1,
                 phase: S("start"),
@@ -2409,7 +2409,7 @@ async function It(t) {
               "supervisor",
               `busy-worker upgrade defer cap reached \u2014 proceeding with the restart while ${ae} worker(s) are still busy`,
             ),
-            i("tengu_daemon_upgrade_deferred_busy", {
+            logEvent("tengu_daemon_upgrade_deferred_busy", {
               busy_workers: ae,
               deferred_ms: Date.now() - Q.start,
               cap_expired: !0,
@@ -2417,7 +2417,7 @@ async function It(t) {
             }));
       } else {
         if (Q !== null)
-          i("tengu_daemon_upgrade_deferred_busy", {
+          logEvent("tengu_daemon_upgrade_deferred_busy", {
             busy_workers: ae,
             deferred_ms: Date.now() - Q.start,
             cap_expired: !1,
@@ -2474,7 +2474,7 @@ async function It(t) {
           `idle ${Math.round(c / 1000)}s with no clients \u2014 exiting` +
             (I > 0 ? ` (stopping ${I} configured workers)` : ""),
         ),
-          i("tengu_daemon_idle_exit", {
+          logEvent("tengu_daemon_idle_exit", {
             grace_ms: c,
             never_had_client: !T,
             cfg_workers: I,
@@ -2545,7 +2545,7 @@ async function It(t) {
       "supervisor",
       "daemon.json has configured workers but they do not pin the supervisor \u2014 they stop when the last client lease and bg job are gone",
     );
-  (i("tengu_daemon_start", {
+  (logEvent("tengu_daemon_start", {
     worker_kinds: Object.keys(o9).length,
     worker_count: le,
     origin: fromEnum(r),
@@ -2583,7 +2583,7 @@ async function It(t) {
                     "supervisor",
                     `lockfile now held by pid=${I} \u2014 displaced, yielding`,
                   ),
-                  i("tengu_daemon_yield", {
+                  logEvent("tengu_daemon_yield", {
                     displaced: !0,
                     displaced_by_pid: I,
                   }),
@@ -2596,8 +2596,8 @@ async function It(t) {
     if (((ke = null), ce)) (clearInterval(ce), (ce = null));
     if (m) (clearTimeout(m), (m = null));
   }
-  if (ie) i("tengu_daemon_self_restart_on_upgrade", {});
-  if (ve) i("tengu_copper_lantern", {});
+  if (ie) logEvent("tengu_daemon_self_restart_on_upgrade", {});
+  if (ve) logEvent("tengu_copper_lantern", {});
   if ((X.disposeWatcher(), await X.drainReloads(), !fe)) {
     let c = await L();
     if (c !== null)
@@ -2630,7 +2630,7 @@ async function It(t) {
     "supervisor",
     `shutting down (cause=${de}, uptime=${Math.round(me / 1000)}s, leases=${_e.manager?.leaseCount() ?? -1}, live_workers=${_e.manager?.liveHandleCount() ?? -1})`,
   ),
-    i("tengu_daemon_exit", {
+    logEvent("tengu_daemon_exit", {
       cause: fromEnum(de),
       uptime_ms: me,
       lease_count: _e.manager?.leaseCount() ?? -1,
@@ -2705,9 +2705,9 @@ function Mt() {
   return jr + (Sme() ? Fr : Hr) + Gr + Kr;
 }
 function Xr(t) {
-  let e = Vb(),
+  let e = getDaemonJsonPath(),
     o = !1,
-    r = s9(),
+    r = getDaemonLogPath(),
     a,
     p,
     w = new Set();
@@ -2873,7 +2873,7 @@ function Nt(t) {
 async function se(t) {
   (await Promise.race([
     Promise.all([w5(), x5()]),
-    Z(500, void 0, { unref: !0 }),
+    sleep(500, void 0, { unref: !0 }),
   ]).catch(() => {}),
     process.exit(t));
 }
@@ -2902,8 +2902,8 @@ async function daemonMain(t, e) {
       );
   }
   if (Ur.has(k) && !JK()) return bme(`daemon ${k}`);
-  let D = Iv(e);
-  if (M() && D !== void 0) {
+  let D = pinStorageV5(e);
+  if (isHoverRestEnabled() && D !== void 0) {
     (zR({ storageV5: D }), NR(D));
     let [
         { composePolicyLimitsClient: _, primePolicyLimitsCache: B },
@@ -2914,7 +2914,7 @@ async function daemonMain(t, e) {
         import("../../01-核心基础设施/共享小工具-未细化/primeFastPathCredentials.eb5w3wem.js"),
         import("../../01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
       ]),
-      C = Tw(D);
+      C = credentialsStoreFor(D);
     (v(C),
       s(D),
       _({ storageV5: D, credentials: C }),
@@ -3532,7 +3532,7 @@ async function tn(t, e) {
     });
     return;
   }
-  if (M() && e !== void 0 && t === s9()) {
+  if (isHoverRestEnabled() && e !== void 0 && t === getDaemonLogPath()) {
     await rn(t, e);
     return;
   }
@@ -3552,7 +3552,7 @@ async function tn(t, e) {
     if ((await o.stat()).size < r) r = 0;
     let { bytesRead: d } = await o.read(a, 0, a.length, r);
     if (d > 0) (process.stdout.write(a.subarray(0, d)), (r += d));
-    else await Z(500);
+    else await sleep(500);
   }
   await o.close();
 }
@@ -3576,7 +3576,7 @@ async function rn(t, e) {
         (d.error.code === "Failed" && d.error.failureClass === "permission")
       ) {
         if (!w) (U(`cannot read ${t}: ${We(d.error)}; retrying`), (w = !0));
-        await Z(500);
+        await sleep(500);
         continue;
       }
       (U(`cannot read ${t}: ${We(d.error)}`), process.exit(1));
@@ -3585,7 +3585,7 @@ async function rn(t, e) {
     if (!k.found) {
       if (!w)
         (U(`cannot read ${t}: no such file or directory; retrying`), (w = !0));
-      await Z(500);
+      await sleep(500);
       continue;
     }
     if (((w = !1), k.totalBytes < a)) {
@@ -3594,7 +3594,7 @@ async function rn(t, e) {
     }
     if (k.value.length > 0)
       (process.stdout.write(k.value), (a += k.value.length));
-    else await Z(500);
+    else await sleep(500);
   }
 }
 export { daemonMain };

@@ -19,48 +19,48 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js"
 import "../../02-功能模块/后台任务-Shell管理/chunk-gnmy62vg.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
 import "../../02-功能模块/语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { h4 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { D } from "../../02-功能模块/键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-pbd0pf42.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import { HB, h6e } from "./会话UI(REPL).qs63rzfp.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../../02-功能模块/Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../../02-功能模块/状态栏-主题/chunk-jrr487ty.js";
 import { Tv } from "../../02-功能模块/Hooks钩子/chunk-22aft7vr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nvfdjg8e.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../../02-功能模块/语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import { r0e } from "../../02-功能模块/反馈-错误上报/反馈-错误上报.grgh562d.js";
 import { YWe } from "../../02-功能模块/反馈-错误上报/chunk-rmpn4ety.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../02-功能模块/Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import { vBn } from "../../02-功能模块/后台任务-Shell管理/chunk-nhnqmzyt.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function z() {}
 function N(me) {
   let n = _(26),
     { sessionDrafts: i, messages: T, renderExitFlow: f, onExit: k } = me,
-    { storageV5: V } = _e(),
+    { storageV5: V } = useStorageV5Context(),
     [M, de] = d("nudge"),
     [h, j] = d(null),
     q = C(!1),
@@ -141,13 +141,13 @@ function N(me) {
       (n[21] = B));
   else B = n[21];
   let Y;
-  if (n[22] === p)
+  if (n[22] === MEMO_CACHE_SENTINEL)
     ((Y = e(t, {
       dimColor: !0,
-      children: r(ue, {
+      children: r(DotSeparatedList, {
         children: [
-          e(D, { chord: "enter", action: "review & send" }),
-          e(D, { chord: "esc", action: "discard and exit" }),
+          e(KeybindingHint, { chord: "enter", action: "review & send" }),
+          e(KeybindingHint, { chord: "esc", action: "discard and exit" }),
         ],
       }),
     })),
@@ -155,7 +155,7 @@ function N(me) {
   else Y = n[22];
   let Q;
   if (n[23] !== w || n[24] !== B)
-    ((Q = r(mr, { onKeyDown: w, children: [B, Y] })),
+    ((Q = r(FocusableBox, { onKeyDown: w, children: [B, Y] })),
       (n[23] = w),
       (n[24] = B),
       (n[25] = Q));

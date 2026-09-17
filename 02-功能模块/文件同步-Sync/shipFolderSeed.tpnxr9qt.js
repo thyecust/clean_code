@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 204 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -37,8 +37,8 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js"
 import { Cze } from "../Git-Worktree/chunk-v967hawf.js";
 import "./chunk-tqwnv5vj.js";
 import "./chunk-eg4wmaq4.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ca2zxbyk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-vcb9z55e.js";
+import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
+import "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 var E = 3;
 async function D({
@@ -191,7 +191,7 @@ async function shipFolderSeed({
   let g = (a, _, r) => {
     if (s.aborted) return { kind: "aborted" };
     return (
-      i(Wbe.seed, r),
+      logEvent(Wbe.seed, r),
       d?.({ kind: "bundle_failed", fallback: null }),
       { kind: "refused", line: v(a), reason: _ }
     );
@@ -232,7 +232,7 @@ async function shipFolderSeed({
     d?.({ kind: "bundled", sizeBytes: f.content.length, scope: "squashed" });
     let { content: e, ...b } = f;
     return (
-      i(Wbe.seed, {
+      logEvent(Wbe.seed, {
         outcome: S("built"),
         files: f.files,
         bytes: f.bytes,

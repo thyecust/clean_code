@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Gt, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -27,17 +27,17 @@ import {
   II,
   $3,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { qe, Bt, tt, Mn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ea } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { _S } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { vo, kD, DC, IT } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Slt, hIe, yIe, o2n, s2n } from "./chunk-66axrkvh.js";
 import { qst } from "../../01-核心基础设施/共享小工具-未细化/chunk-c6fa1myp.js";
-import { XFn } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
-import { nln, T3n } from "../../01-核心基础设施/共享小工具-未细化/chunk-ydn85r3t.js";
+import { toHostDescription } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
+import { INT32_MAX, hasMutualTakeAgreement } from "../../01-核心基础设施/共享小工具-未细化/chunk-ydn85r3t.js";
 import { s, T, O, c, $e, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function _It({ requested: e, attached: t }) {
   let r = IT(e),
     o = e.trim().replace(/\s+\(offline\)$/i, "");
@@ -730,11 +730,11 @@ function Ne(e) {
     )
   )
     return !1;
-  let f = (g) => G(a, (p) => g.includes(p[0]));
+  let f = (g) => countMatching(a, (p) => g.includes(p[0]));
   return f(" -") === r && f(" +") === d;
 }
 function z6e(e) {
-  let t = XFn(e);
+  let t = toHostDescription(e);
   return { name: t.name, working_dir: H(t.working_dir) };
 }
 function ce(e) {
@@ -781,7 +781,7 @@ function De(e) {
       return { agreed: e.own.taken >= e.peer.gen };
     case "both": {
       let [t, r] = e.own.side === "laptop" ? [e.own, e.peer] : [e.peer, e.own];
-      return { agreed: T3n(t, r) };
+      return { agreed: hasMutualTakeAgreement(t, r) };
     }
   }
 }
@@ -799,7 +799,7 @@ function I(e) {
   try {
     let t = De(e);
     if (
-      (i("tengu_dir_sync_barrier", {
+      (logEvent("tengu_dir_sync_barrier", {
         point: le(e.point),
         guarantee:
           e.guarantee === "up"
@@ -827,14 +827,14 @@ function I(e) {
       }),
       t.agreed === !1 && !("reason" in t))
     )
-      i("tengu_dir_sync_frame_disagree", { point: le(e.point) });
+      logEvent("tengu_dir_sync_frame_disagree", { point: le(e.point) });
   } catch {}
 }
 var j = 1,
   Ie = 64,
   ze = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/,
-  z = m(() => T().int().min(0).max(nln)),
-  je = m(() =>
+  z = createLazyValue(() => T().int().min(0).max(INT32_MAX)),
+  je = createLazyValue(() =>
     c({
       side: X(["laptop", "container"]),
       gen: z(),
@@ -844,7 +844,7 @@ var j = 1,
       shipping: z().nullable(),
       takes: O(),
       instance: s().regex(hIe),
-      seq: T().int().min(0).max(nln),
+      seq: T().int().min(0).max(INT32_MAX),
     }),
   ),
   Be = [
@@ -860,8 +860,8 @@ var j = 1,
     s()
       .max(e)
       .regex(/^[a-z0-9_]+$/),
-  Ge = m(() => We(Ie)),
-  Xe = m(() =>
+  Ge = createLazyValue(() => We(Ie)),
+  Xe = createLazyValue(() =>
     c({
       v: k(j),
       frame: je(),
@@ -998,7 +998,7 @@ function Jmr(e, t = kLe.subscribe) {
 async function Qe(e, t) {
   let r = Date.now(),
     o = await e.runDue(t).catch(() => null);
-  i("tengu_dir_sync_between_tools_publish", {
+  logEvent("tengu_dir_sync_between_tools_publish", {
     outcome: fromEnum(o?.kind ?? "none"),
     duration_ms: Date.now() - r,
   });
@@ -1023,7 +1023,7 @@ async function en(e, t) {
               ? `Directory sync: what the last command run on ${o.name} changed there could not be taken in here just now; it is taken in when it lands \u2014 until then, read those files on ${o.name} (the ${vo} argument).`
               : null;
     if (
-      (i("tengu_dir_sync_mid_turn", {
+      (logEvent("tengu_dir_sync_mid_turn", {
         point: S("after_forward_take_in"),
         duration_ms: Date.now() - a,
         ...(f !== null && { pull: fromEnum(f.kind) }),
@@ -1041,7 +1041,7 @@ async function nn(e, t) {
       e.takeInBetweenToolCalls === void 0
         ? null
         : await e.takeInBetweenToolCalls(t).catch(() => null);
-  i("tengu_dir_sync_between_tools_take_in", {
+  logEvent("tengu_dir_sync_between_tools_take_in", {
     outcome: fromEnum(o?.kind ?? "none"),
     duration_ms: Date.now() - r,
     ...(o?.kind === "applied" && {
@@ -1110,7 +1110,7 @@ var tn = [
         .replace(/:\/\/[^/\s@]*@/g, "://***@"),
       Je,
     ),
-  sn = m(() =>
+  sn = createLazyValue(() =>
     $e([
       c({ kind: k("ready"), generation: T().int().nonnegative() }),
       c({
@@ -1122,7 +1122,7 @@ var tn = [
       c({ kind: k("not_running") }),
     ]),
   ),
-  an = m(() =>
+  an = createLazyValue(() =>
     $e([
       c({ kind: k("sent"), generation: T().int().nonnegative() }),
       c({ kind: k("unchanged"), generation: T().int().nonnegative() }),
@@ -1135,7 +1135,7 @@ var tn = [
       c({ kind: k("not_attempted") }),
     ]),
   ),
-  dn = m(() =>
+  dn = createLazyValue(() =>
     $e([
       c({
         state: k("done"),
@@ -1222,7 +1222,7 @@ async function NQt({ host: e, readOnly: t, signal: r, onStatus: o }) {
       (d.countedTooOld.add(e.name),
         d.engine().then((f) => {
           if (f !== null)
-            (i("tengu_dir_sync_mid_turn", {
+            (logEvent("tengu_dir_sync_mid_turn", {
               point: fromEnum("pre_forward"),
               clearance: fromEnum("machine_too_old"),
             }),
@@ -1249,7 +1249,7 @@ async function NQt({ host: e, readOnly: t, signal: r, onStatus: o }) {
     return (
       logError(f),
       n(`dir-sync: pre-forward sync point failed: ${l(f)}`, { level: "error" }),
-      i("tengu_dir_sync_mid_turn", {
+      logEvent("tengu_dir_sync_mid_turn", {
         point: fromEnum("pre_forward"),
         clearance: fromEnum("threw"),
         read_only: t,
@@ -1613,7 +1613,7 @@ async function FQt({
       n(
         `dir-sync: unreadable dir_sync word on a served result (${w ? "malformed" : "other version"})`,
       ),
-      i("tengu_dir_sync_mid_turn", {
+      logEvent("tengu_dir_sync_mid_turn", {
         point: S("after_forward"),
         duration_ms: 0,
         machine_push: S(w ? "malformed" : "other_version"),
@@ -1626,7 +1626,7 @@ async function FQt({
   }
   let y = bn(p),
     _ = (w, C) => (
-      i("tengu_dir_sync_mid_turn", {
+      logEvent("tengu_dir_sync_mid_turn", {
         point: S("after_forward"),
         duration_ms: Date.now() - a,
         machine_push: fromEnum(y.kind),
@@ -1694,7 +1694,7 @@ async function FQt({
   } catch (w) {
     return (
       n(`dir-sync: after-command sync failed: ${l(w)}`, { level: "error" }),
-      i("tengu_dir_sync_mid_turn", {
+      logEvent("tengu_dir_sync_mid_turn", {
         point: S("after_forward"),
         duration_ms: Date.now() - a,
         machine_push: S("error"),
@@ -1729,7 +1729,7 @@ function kn(e, t, { push: r, reply: o, pull: d, readOnly: a, escalated: f }) {
 }
 function $n(e, t, r) {
   return (
-    i("tengu_dir_sync_mid_turn", {
+    logEvent("tengu_dir_sync_mid_turn", {
       ...kn("pre_forward", e, t),
       clearance: fromEnum(r.kind),
     }),

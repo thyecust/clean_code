@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { he, VR, u_e, ke } from "../../lodash/lodash.2x3q7cfh.js";
-import { i } from "../../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S } from "../../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, z, n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -16,7 +16,7 @@ import { getGlobalClaudeFile } from "../../../01-核心基础设施/设置-配�
 import { ge, l } from "../../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { _z } from "../../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { logMCPError, logMCPDebug } from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { q } from "../../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { jt } from "../../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getAnthropicApiKeyWithSource, hasStoredOAuthToken, getOauthAccountInfo, H, getWorkspacePersistedTrustKey } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../lodash/lodash.0vqzb8ad.js";
@@ -44,10 +44,10 @@ import {
   dIn,
 } from "../../ajv/ajv.2q22bct4.js";
 import { Ku, lz } from "../../lru-cache/lru-cache.8crev50p.js";
-import { me } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { Y } from "../../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { pe, w } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var T = w(function (Z) {
+import { isRecord } from "../../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { dedupe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { toESM, commonJS } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var T = commonJS(function (Z) {
   Object.defineProperty(Z, "__esModule", { value: !0 });
   Z.dynamicAnchor = void 0;
   var x = $c(),
@@ -83,7 +83,7 @@ var T = w(function (Z) {
   }
   Z.default = st;
 });
-var I = w(function (re) {
+var I = commonJS(function (re) {
   Object.defineProperty(re, "__esModule", { value: !0 });
   re.dynamicRef = void 0;
   var X = $c(),
@@ -125,7 +125,7 @@ var I = w(function (re) {
   re.dynamicRef = te;
   re.default = dt;
 });
-var ae = w(function (oe) {
+var ae = commonJS(function (oe) {
   Object.defineProperty(oe, "__esModule", { value: !0 });
   var pt = T(),
     mt = Lp(),
@@ -140,7 +140,7 @@ var ae = w(function (oe) {
     };
   oe.default = ft;
 });
-var ie = w(function (se) {
+var ie = commonJS(function (se) {
   Object.defineProperty(se, "__esModule", { value: !0 });
   var yt = I(),
     gt = {
@@ -150,7 +150,7 @@ var ie = w(function (se) {
     };
   se.default = gt;
 });
-var ue = w(function (ce) {
+var ue = commonJS(function (ce) {
   Object.defineProperty(ce, "__esModule", { value: !0 });
   var bt = T(),
     _t = I(),
@@ -159,7 +159,7 @@ var ue = w(function (ce) {
     Ct = [bt.default, _t.default, $t.default, St.default];
   ce.default = Ct;
 });
-var fe = w(function (le) {
+var fe = commonJS(function (le) {
   Object.defineProperty(le, "__esModule", { value: !0 });
   var de = S7t(),
     Pt = {
@@ -171,7 +171,7 @@ var fe = w(function (le) {
     };
   le.default = Pt;
 });
-var ve = w(function (ye) {
+var ve = commonJS(function (ye) {
   Object.defineProperty(ye, "__esModule", { value: !0 });
   var wt = S7t(),
     At = {
@@ -182,7 +182,7 @@ var ve = w(function (ye) {
     };
   ye.default = At;
 });
-var $e = w(function (_e) {
+var $e = commonJS(function (_e) {
   Object.defineProperty(_e, "__esModule", { value: !0 });
   var Et = Lp(),
     Ot = {
@@ -196,7 +196,7 @@ var $e = w(function (_e) {
     };
   _e.default = Ot;
 });
-var Ce = w(function (Se) {
+var Ce = commonJS(function (Se) {
   Object.defineProperty(Se, "__esModule", { value: !0 });
   var Tt = fe(),
     qt = ve(),
@@ -204,7 +204,7 @@ var Ce = w(function (Se) {
     Nt = [Tt.default, qt.default, It.default];
   Se.default = Nt;
 });
-var Pe = w(function (Re) {
+var Pe = commonJS(function (Re) {
   Object.defineProperty(Re, "__esModule", { value: !0 });
   var C = $c(),
     je = Lp(),
@@ -267,7 +267,7 @@ var Pe = w(function (Re) {
     };
   Re.default = Vt;
 });
-var Ae = w(function (we) {
+var Ae = commonJS(function (we) {
   Object.defineProperty(we, "__esModule", { value: !0 });
   var j = $c(),
     Me = Lp(),
@@ -312,14 +312,14 @@ var Ae = w(function (we) {
     };
   we.default = Bt;
 });
-var Oe = w(function (Ee) {
+var Oe = commonJS(function (Ee) {
   Object.defineProperty(Ee, "__esModule", { value: !0 });
   var Ut = Pe(),
     Wt = Ae(),
     Gt = [Ut.default, Wt.default];
   Ee.default = Gt;
 });
-var qe = w(function (Te) {
+var qe = commonJS(function (Te) {
   Object.defineProperty(Te, "__esModule", { value: !0 });
   var Jt = iIn(),
     Zt = aIn(),
@@ -342,7 +342,7 @@ var qe = w(function (Te) {
     ];
   Te.default = nr;
 });
-var Ie = w(function (kn, ar) {
+var Ie = commonJS(function (kn, ar) {
   ar.exports = {
     $schema: "https://json-schema.org/draft/2020-12/schema",
     $id: "https://json-schema.org/draft/2020-12/schema",
@@ -403,7 +403,7 @@ var Ie = w(function (kn, ar) {
     },
   };
 });
-var Ne = w(function (En, sr) {
+var Ne = commonJS(function (En, sr) {
   sr.exports = {
     $schema: "https://json-schema.org/draft/2020-12/schema",
     $id: "https://json-schema.org/draft/2020-12/meta/applicator",
@@ -452,7 +452,7 @@ var Ne = w(function (En, sr) {
     },
   };
 });
-var Le = w(function (On, ir) {
+var Le = commonJS(function (On, ir) {
   ir.exports = {
     $schema: "https://json-schema.org/draft/2020-12/schema",
     $id: "https://json-schema.org/draft/2020-12/meta/unevaluated",
@@ -468,7 +468,7 @@ var Le = w(function (On, ir) {
     },
   };
 });
-var De = w(function (xn, cr) {
+var De = commonJS(function (xn, cr) {
   cr.exports = {
     $schema: "https://json-schema.org/draft/2020-12/schema",
     $id: "https://json-schema.org/draft/2020-12/meta/content",
@@ -483,7 +483,7 @@ var De = w(function (xn, cr) {
     },
   };
 });
-var He = w(function (Tn, dr) {
+var He = commonJS(function (Tn, dr) {
   dr.exports = {
     $schema: "https://json-schema.org/draft/2020-12/schema",
     $id: "https://json-schema.org/draft/2020-12/meta/core",
@@ -517,7 +517,7 @@ var He = w(function (Tn, dr) {
     },
   };
 });
-var Ve = w(function (qn, lr) {
+var Ve = commonJS(function (qn, lr) {
   lr.exports = {
     $schema: "https://json-schema.org/draft/2020-12/schema",
     $id: "https://json-schema.org/draft/2020-12/meta/format-annotation",
@@ -530,7 +530,7 @@ var Ve = w(function (qn, lr) {
     properties: { format: { type: "string" } },
   };
 });
-var Fe = w(function (In, pr) {
+var Fe = commonJS(function (In, pr) {
   pr.exports = {
     $schema: "https://json-schema.org/draft/2020-12/schema",
     $id: "https://json-schema.org/draft/2020-12/meta/meta-data",
@@ -551,7 +551,7 @@ var Fe = w(function (In, pr) {
     },
   };
 });
-var ze = w(function (Nn, mr) {
+var ze = commonJS(function (Nn, mr) {
   mr.exports = {
     $schema: "https://json-schema.org/draft/2020-12/schema",
     $id: "https://json-schema.org/draft/2020-12/meta/validation",
@@ -622,7 +622,7 @@ var ze = w(function (Nn, mr) {
     },
   };
 });
-var Ke = w(function (Be) {
+var Ke = commonJS(function (Be) {
   Object.defineProperty(Be, "__esModule", { value: !0 });
   var fr = Ie(),
     hr = Ne(),
@@ -646,7 +646,7 @@ var Ke = w(function (Be) {
   }
   Be.default = Cr;
 });
-var Ue = w(function (v, L) {
+var Ue = commonJS(function (v, L) {
   Object.defineProperty(v, "__esModule", { value: !0 });
   v.MissingRefError =
     v.ValidationError =
@@ -772,7 +772,7 @@ var Ze =
   /^create[_-]?(pull[_-]?request|merge[_-]?request)$|^(pull[_-]?request|merge[_-]?request)[_-]?create$/i;
 function act(e) {
   if (!Ze.test(e)) return;
-  (i("tengu_git_operation", { operation: S("pr_create") }), u_e()?.add(1));
+  (logEvent("tengu_git_operation", { operation: S("pr_create") }), u_e()?.add(1));
 }
 var Qe = 0,
   A = 1;
@@ -796,7 +796,7 @@ class ASe {
           d = (c) => {
             (o.removeEventListener("open", u),
               o.removeEventListener("error", d),
-              q("error", "mcp_websocket_connect_fail"),
+              writeDiagnosticsEvent("error", "mcp_websocket_connect_fail"),
               s(ge(c.error ?? c)));
           };
         (o.addEventListener("open", u), o.addEventListener("error", d));
@@ -828,7 +828,7 @@ class ASe {
     this.handleCloseCleanup();
   };
   handleError(e) {
-    (q("error", "mcp_websocket_message_fail"), this.onerror?.(ge(e)));
+    (writeDiagnosticsEvent("error", "mcp_websocket_message_fail"), this.onerror?.(ge(e)));
   }
   handleCloseCleanup() {
     this.onclose?.();
@@ -842,7 +842,7 @@ class ASe {
       throw Error("Start can only be called once per transport.");
     if ((await this.opened, this.ws.readyState !== A))
       throw (
-        q("error", "mcp_websocket_start_not_opened"),
+        writeDiagnosticsEvent("error", "mcp_websocket_start_not_opened"),
         Error("WebSocket is not open. Cannot start transport.")
       );
     this.started = !0;
@@ -854,7 +854,7 @@ class ASe {
   async send(e) {
     if (this.ws.readyState !== A)
       throw (
-        q("error", "mcp_websocket_send_not_opened"),
+        writeDiagnosticsEvent("error", "mcp_websocket_send_not_opened"),
         Error("WebSocket is not open. Cannot send message.")
       );
     let t = b(e);
@@ -944,32 +944,32 @@ function O(e, t) {
   let a = /^#\/(\$defs|definitions)\/([^/]+)$/.exec(r);
   if (a === null) return e;
   let s = t[a[1]];
-  if (!me(s)) return e;
+  if (!isRecord(s)) return e;
   let o = s[a[2]];
-  return me(o) ? o : e;
+  return isRecord(o) ? o : e;
 }
 function rt(e) {
-  if (!me(e)) return null;
+  if (!isRecord(e)) return null;
   let t = e.required;
   if (Array.isArray(t) && t.length > 0 && t.every((a) => typeof a === "string"))
     return t.join(", ");
   let r = e.properties;
-  if (me(r)) {
+  if (isRecord(r)) {
     let a = Object.keys(r);
     if (a.length > 0) return a.join(", ");
   }
   return null;
 }
 function uct(e) {
-  if (!me(e)) return { outcome: "unchanged" };
+  if (!isRecord(e)) return { outcome: "unchanged" };
   let t = et.filter((r) => r in e);
   if (t.length === 0) return { outcome: "unchanged" };
   try {
     let r = Object.create(null),
       a = (m) => {
-        if (!me(m)) return;
+        if (!isRecord(m)) return;
         for (let [p, _] of Object.entries(m))
-          if (E.test(p) && !(p in r) && me(_)) r[p] = _;
+          if (E.test(p) && !(p in r) && isRecord(_)) r[p] = _;
       };
     a(e.properties);
     for (let m of t) {
@@ -979,7 +979,7 @@ function uct(e) {
           outcome: "drop",
           reason: `input schema has top-level ${m} that is not an array`,
         };
-      for (let _ of p) if (me(_)) a(O(_, e).properties);
+      for (let _ of p) if (isRecord(_)) a(O(_, e).properties);
     }
     let s = [],
       o = (m) => {
@@ -990,7 +990,7 @@ function uct(e) {
     o(e.required);
     let u = e.allOf;
     if (Array.isArray(u)) {
-      for (let m of u) if (me(m)) o(O(m, e).required);
+      for (let m of u) if (isRecord(m)) o(O(m, e).required);
     }
     let d = t.includes("anyOf") || t.includes("oneOf"),
       c = { type: "object", properties: r, required: s };
@@ -1010,7 +1010,7 @@ function nt(e, t, r) {
   let a = e.includes("oneOf") ? "oneOf" : "anyOf",
     s = t[a],
     o = Array.isArray(s)
-      ? Y(s.map((c) => rt(me(c) ? O(c, t) : c)).filter((c) => c !== null))
+      ? dedupe(s.map((c) => rt(isRecord(c) ? O(c, t) : c)).filter((c) => c !== null))
       : [],
     u =
       a === "oneOf"
@@ -1021,7 +1021,7 @@ function nt(e, t, r) {
   let d = o.map((c) => `(${c})`).join(" or ");
   return `Input constraint: ${u}: ${d}.`;
 }
-var We = pe(Ue(), 1);
+var We = toESM(Ue(), 1);
 var D = "https://json-schema.org/draft/2020-12/schema",
   M;
 function Tr() {
@@ -1038,7 +1038,7 @@ function Tr() {
         "MCP: draft 2020-12 meta-validator unavailable \u2014 tool schema checks fail open",
         { level: "warn" },
       ),
-        i("tengu_mcp_degraded", { reason: S("schema_validator_unavailable") }));
+        logEvent("tengu_mcp_degraded", { reason: S("schema_validator_unavailable") }));
   }
   return M;
 }
@@ -1046,7 +1046,7 @@ function qr() {
   return !1;
 }
 function Ir(e) {
-  if (!me(e) || !me(e.properties)) return null;
+  if (!isRecord(e) || !isRecord(e.properties)) return null;
   for (let t of Object.keys(e.properties)) if (!E.test(t)) return t;
   return null;
 }
@@ -1063,7 +1063,7 @@ function Nr(e, t, r) {
     };
   if (e === null) return { valid: !0 };
   let s = t;
-  if (me(t)) {
+  if (isRecord(t)) {
     let o = Object.entries(t);
     if (o.some(([, d]) => d === null))
       ((o = o.filter(([, d]) => d !== null)), (s = Object.fromEntries(o)));
@@ -1209,7 +1209,7 @@ async function zr(e, t) {
         _z(`MCP server '${Sn(e)}': headersHelper not run \u2014 this workspace has no persisted trust; ${o}.
 `);
       return (
-        i("tengu_mcp_headersHelper_missing_trust", {}),
+        logEvent("tengu_mcp_headersHelper_missing_trust", {}),
         logFeatureSad("mcp_headers_helper", "missing_trust"),
         null
       );
@@ -1252,7 +1252,7 @@ async function fct(e, t) {
   if (a.length > 0)
     logMCPDebug(
       e,
-      `Header values reference unset environment variables: ${Y(a).join(", ")}`,
+      `Header values reference unset environment variables: ${dedupe(a).join(", ")}`,
     );
   let o = (await zr(e, t)) || {};
   return { ...r, ...o };

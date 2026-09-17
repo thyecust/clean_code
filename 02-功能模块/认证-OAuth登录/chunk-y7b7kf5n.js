@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { fileSuffixForOauthConfig } from "./chunk-9g2q4bjq.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -340,7 +340,7 @@ var V = {
     } catch {
       return { success: !1 };
     } finally {
-      if (M()) IQ();
+      if (isHoverRestEnabled()) IQ();
     }
   },
   async remove() {
@@ -351,7 +351,7 @@ var V = {
       if (A(t) === "ENOENT") return !0;
       return !1;
     } finally {
-      if (M()) IQ();
+      if (isHoverRestEnabled()) IQ();
     }
   },
 };
@@ -457,14 +457,14 @@ function IQ() {
   S(p());
 }
 function C(e) {
-  return M() && e !== void 0 ? q(e) : V;
+  return isHoverRestEnabled() && e !== void 0 ? q(e) : V;
 }
 var _ = {
   name: "plaintext",
   read(e) {
     let { storagePath: t } = c();
     try {
-      let r = M() && e?.fromStoreCopy === !0 ? p().copy : void 0;
+      let r = isHoverRestEnabled() && e?.fromStoreCopy === !0 ? p().copy : void 0;
       if (r !== void 0 && r.storagePath === t) {
         if (r.text === null) return null;
         return JSON.parse(r.text);

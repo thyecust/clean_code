@@ -13,21 +13,21 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { Dw } from "../权限系统/chunk-e4pfvp7x.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { IXn, bre, dSt, U_n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dn, kn, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Se() {}
 function Le(ss) {
@@ -42,7 +42,7 @@ function Be(xe) {
 function ne(Qe) {
   let R = _(19),
     { onDone: C } = Qe,
-    { storageV5: le, credentials: me } = _e(),
+    { storageV5: le, credentials: me } = useStorageV5Context(),
     ye;
   if (R[0] !== me || R[1] !== le)
     ((ye = () => ge(me, le)), (R[0] = me), (R[1] = le), (R[2] = ye));
@@ -54,7 +54,7 @@ function ne(Qe) {
       (R[3] = C),
       (R[4] = Ce));
   else Ce = R[4];
-  let b = is(Ce),
+  let b = useGlobalExitKeybinding(Ce),
     be;
   if (R[5] !== C)
     ((be = () => {
@@ -65,11 +65,11 @@ function ne(Qe) {
   else be = R[6];
   let We = be,
     ve;
-  if (R[7] === p) ((ve = { context: "Confirmation" }), (R[7] = ve));
+  if (R[7] === MEMO_CACHE_SENTINEL) ((ve = { context: "Confirmation" }), (R[7] = ve));
   else ve = R[7];
-  Ne("confirm:no", We, ve);
+  useKeybinding("confirm:no", We, ve);
   let Re;
-  if (R[8] === p)
+  if (R[8] === MEMO_CACHE_SENTINEL)
     ((Re = e(t, {
       dimColor: !0,
       children: "Loading guest pass information\u2026",
@@ -91,7 +91,7 @@ function ne(Qe) {
             italic: !0,
             children: b.pending
               ? r(N, { children: ["Press ", b.keyName, " again to exit"] })
-              : e(D, { chord: "escape", action: "cancel" }),
+              : e(KeybindingHint, { chord: "escape", action: "cancel" }),
           }),
         ],
       }),
@@ -133,7 +133,7 @@ function re(Ye) {
           z_(h)
             .then((Pe) => {
               if (Pe) process.stdout.write(Pe);
-              (i("tengu_guest_passes_link_copied", {}),
+              (logEvent("tengu_guest_passes_link_copied", {}),
                 pe("Referral link copied to clipboard!"));
             })
             .catch(Se));
@@ -145,7 +145,7 @@ function re(Ye) {
   let k = ke;
   if (!T.available) {
     let j;
-    if (l[3] === p)
+    if (l[3] === MEMO_CACHE_SENTINEL)
       ((j = e(t, { children: "Guest passes are not currently available." })),
         (l[3] = j));
     else j = l[3];
@@ -156,7 +156,7 @@ function re(Ye) {
         italic: !0,
         children: u.pending
           ? r(N, { children: ["Press ", u.keyName, " again to exit"] })
-          : e(D, { chord: "escape", action: "cancel" }),
+          : e(KeybindingHint, { chord: "escape", action: "cancel" }),
       })),
         (l[4] = u.keyName),
         (l[5] = u.pending),
@@ -165,7 +165,7 @@ function re(Ye) {
     let w;
     if (l[7] !== k || l[8] !== v)
       ((w = e(Qr, {
-        children: r(mr, { gap: 1, onKeyDown: k, children: [j, v] }),
+        children: r(FocusableBox, { gap: 1, onKeyDown: k, children: [j, v] }),
       })),
         (l[7] = k),
         (l[8] = v),
@@ -175,7 +175,7 @@ function re(Ye) {
   }
   let { passStatuses: L, referrerReward: V } = T,
     j;
-  if (l[10] !== L) ((j = G(L, Le)), (l[10] = L), (l[11] = j));
+  if (l[10] !== L) ((j = countMatching(L, Le)), (l[10] = L), (l[11] = j));
   else j = l[11];
   let A = j,
     K,
@@ -190,7 +190,7 @@ function re(Ye) {
   if (l[12] !== A || l[13] !== k || l[14] !== L) {
     let es = [...L].sort(Fe);
     z = Qr;
-    q = mr;
+    q = FocusableBox;
     M = 1;
     Q = k;
     if (l[24] !== A)
@@ -278,10 +278,10 @@ function re(Ye) {
         italic: !0,
         children: u.pending
           ? r(N, { children: ["Press ", u.keyName, " again to exit"] })
-          : r(ue, {
+          : r(DotSeparatedList, {
               children: [
-                e(D, { chord: "enter", action: "copy link" }),
-                e(D, { chord: "escape", action: "cancel" }),
+                e(KeybindingHint, { chord: "enter", action: "copy link" }),
+                e(KeybindingHint, { chord: "escape", action: "cancel" }),
               ],
             }),
       }),
@@ -323,7 +323,7 @@ function ie(ts) {
     { pass: rs } = ts;
   if (!rs.isAvailable) {
     let J;
-    if (fe[0] === p)
+    if (fe[0] === MEMO_CACHE_SENTINEL)
       ((J = r(o, {
         flexDirection: "column",
         marginRight: 1,
@@ -345,7 +345,7 @@ function ie(ts) {
     return J;
   }
   let J;
-  if (fe[1] === p)
+  if (fe[1] === MEMO_CACHE_SENTINEL)
     ((J = e(t, {
       children:
         "\u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510",
@@ -353,7 +353,7 @@ function ie(ts) {
       (fe[1] = J));
   else J = fe[1];
   let we;
-  if (fe[2] === p)
+  if (fe[2] === MEMO_CACHE_SENTINEL)
     ((we = r(o, {
       flexDirection: "column",
       marginRight: 1,
@@ -429,7 +429,7 @@ async function us(m, g) {
     );
   }
   return (
-    i("tengu_guest_passes_visited", { is_first_visit: f }),
+    logEvent("tengu_guest_passes_visited", { is_first_visit: f }),
     e(ne, { onDone: m })
   );
 }

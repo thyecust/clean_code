@@ -31,9 +31,9 @@ import { vze } from "../../01-核心基础设施/安全文件系统(FS加固)/ch
 import { DFt, O9 } from "./chunk-ht8ydg1v.js";
 import { Vpt, Z9n } from "./chunk-tqwnv5vj.js";
 import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var P = pe(kJ(), 1);
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var P = toESM(kJ(), 1);
 import {
   lstat,
   open as q,
@@ -300,7 +300,7 @@ function ye(e) {
     if (o < e.length && t(e[o] ?? "")) continue;
     let s = e.slice(r, o);
     if (
-      (n.push(...(G(s, (i) => i === "?") >= 2 ? ["?", "*"] : s)), o < e.length)
+      (n.push(...(countMatching(s, (i) => i === "?") >= 2 ? ["?", "*"] : s)), o < e.length)
     )
       n.push(e[o] ?? "");
     r = o + 1;

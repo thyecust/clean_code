@@ -10,7 +10,7 @@
 import { j, mDn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { TCn, Or, gU, clearAwsCredentialsCache, clearGcpCredentialsCache, xZe, ikn } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { verifyAutoModeGateAccess } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-function iit(o) {
+function resetAuthCachesAfterLogin(o) {
   if (
     (mDn(),
     gU(),
@@ -39,7 +39,7 @@ class n {
   }
 }
 var a = new j(() => new n());
-function NHe(o) {
+function buildAutoModeGateNotification(o) {
   return {
     key: "auto-mode-gate-notification",
     kind: "warning",
@@ -48,7 +48,7 @@ function NHe(o) {
     priority: "high",
   };
 }
-async function FHe(o, l, d, c, r) {
+async function runAutoModeGateCheck(o, l, d, c, r) {
   if (!a.of(o).claimAutoModeCheck()) return;
   let { updateContext: m, notification: e } = await verifyAutoModeGateAccess(l, c);
   if (
@@ -63,15 +63,15 @@ async function FHe(o, l, d, c, r) {
         ...i,
         notifications: {
           ...i.notifications,
-          queue: [...i.notifications.queue, NHe(e)],
+          queue: [...i.notifications.queue, buildAutoModeGateNotification(e)],
         },
       };
     }),
     e && r)
   )
-    r(NHe(e));
+    r(buildAutoModeGateNotification(e));
 }
-function ait(o) {
+function rearmAutoModeCheck(o) {
   a.of(o).rearmAutoModeCheck();
 }
-export { iit, NHe, FHe, ait };
+export { resetAuthCachesAfterLogin, buildAutoModeGateNotification, runAutoModeGateCheck, rearmAutoModeCheck };

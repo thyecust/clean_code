@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { K, qP, Tz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { isBgSession, isDaemonBgWorker, hq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Z4t } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { isTeammate } from "./chunk-811z9z0t.js";
@@ -26,7 +26,7 @@ import { getMaterializedSessionFile, isTranscriptPersistenceDisabled, flushSessi
 import { getToolPermissionContext, getSessionEffort } from "../权限系统/chunk-fjrcf22x.js";
 import { BG_WORKER_IDENTITY_ENV_VARS } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { Il } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
-import { rd, pD } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import { resolveWrappedClaudeInvocation, applyProcessWrapper } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { a9, _4, ilt, dF, X9e, cnn } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
 import { bDt, inn, iIe } from "../后台任务-Shell管理/chunk-nhnqmzyt.js";
 import { spawn } from "child_process";
@@ -41,13 +41,13 @@ async function slt() {
       t ? realpath(t).catch(() => t) : null,
     ]);
   if (d && (c === null || o !== c))
-    return pD({ cmd: d, prefixArgs: [], target: d });
-  return rd();
+    return applyProcessWrapper({ cmd: d, prefixArgs: [], target: d });
+  return resolveWrappedClaudeInvocation();
 }
 var Fgr = async (d, t) => {
   let o = isBgSession() ? a.CLAUDE_JOB_DIR : void 0;
   if (isBgSession() && (!isDaemonBgWorker() || !o)) {
-    i("tengu_update_refused", { bg_session: !0 });
+    logEvent("tengu_update_refused", { bg_session: !0 });
     let e = isDaemonBgWorker() ? null : getOwnJobShortId();
     return {
       type: "text",
@@ -63,7 +63,7 @@ var Fgr = async (d, t) => {
     if (e && e !== r) {
       let u = c();
       return (
-        i("tengu_update_refused", {
+        logEvent("tengu_update_refused", {
           transcript_path_drift: !0,
           comment_monitor: u,
         }),
@@ -80,7 +80,7 @@ var Fgr = async (d, t) => {
       });
       if (r === void 0) return;
       return (
-        i("tengu_update_refused", {
+        logEvent("tengu_update_refused", {
           active_tasks: r.activeTasks,
           comment_monitor: r.kind === "comment_monitor",
           ...(e && { deferred: e }),
@@ -94,7 +94,7 @@ var Fgr = async (d, t) => {
       let r = rK(getToolPermissionContext(t), qP());
       if (r.length === 0) return g(e);
       let u = c();
-      i("tengu_update_refused", { uncarriable: !0, comment_monitor: u });
+      logEvent("tengu_update_refused", { uncarriable: !0, comment_monitor: u });
       let p = isTranscriptPersistenceDisabled() ? "" : " (add --continue to return to this conversation)";
       return `Can't switch to the new version from inside this session \u2014 it has restrictions a restart can't carry over (${r.join("; ")}). Nothing was changed; exit and start claude again for the new version${p}.${u ? " Exiting also stops the auto-replies to artifact comments until the next publish." : ""}`;
     },
@@ -104,13 +104,13 @@ var Fgr = async (d, t) => {
     let e = basename(o);
     if (
       (await dF(t.messages, t.storageV5),
-      !(await Dt(flushSessionStorage(), 30000, "session flush").then(
+      !(await withTimeout(flushSessionStorage(), 30000, "session flush").then(
         () => !0,
         () => !1,
       )))
     )
       return (
-        i("tengu_update_refused", { bg_flush_failed: !0 }),
+        logEvent("tengu_update_refused", { bg_flush_failed: !0 }),
         {
           type: "text",
           value:
@@ -124,7 +124,7 @@ var Fgr = async (d, t) => {
     for (let s of BG_WORKER_IDENTITY_ENV_VARS) delete f[s];
     delete f.CLAUDE_JOB_DIR;
     for (let s of Object.keys(f)) if (s.startsWith("CLAUDE_BG_")) delete f[s];
-    i("tengu_update_bg_respawn", {
+    logEvent("tengu_update_bg_respawn", {
       carried_comment_monitor: bDt() && inn(t.taskRegistry.all()),
     });
     try {
@@ -143,7 +143,7 @@ var Fgr = async (d, t) => {
     } catch (s) {
       return (
         logError(s),
-        i("tengu_update_refused", { bg_spawn_failed: !0 }),
+        logEvent("tengu_update_refused", { bg_spawn_failed: !0 }),
         {
           type: "text",
           value: `Couldn't restart automatically \u2014 press \u2190 to detach, then run \`claude respawn ${e}\` to restart it on the latest build.`,
@@ -176,7 +176,7 @@ var Fgr = async (d, t) => {
       n.writeSdkMessages([
         Z4t("Switching to latest Claude Code\u2026 reconnecting", K()),
       ]),
-      await Dt(n.flush(), 2000, "bridge flush").catch(() => {}),
+      await withTimeout(n.flush(), 2000, "bridge flush").catch(() => {}),
       await n.teardown({ skipArchive: !0 }));
   let m = {};
   if (b) m.CLAUDE_INTERNAL_ASSISTANT_TEAM_NAME = b;
@@ -212,7 +212,7 @@ Switching from ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/ant
       logError(e),
       {
         type: "text",
-        value: lo(t.session)
+        value: mayHaveRemoteClient(t.session)
           ? _4(
               "Couldn't restart Claude Code (detail withheld on this connection).",
               l(e),

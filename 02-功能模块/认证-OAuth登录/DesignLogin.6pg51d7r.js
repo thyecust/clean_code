@@ -15,31 +15,31 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { revokeOAuthToken } from "./认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import { e9, YL, JL } from "../../01-核心基础设施/共享小工具-未细化/chunk-r2ab1bp6.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import { useCopyToClipboard, CopyFeedbackHint, CopyFallbackNotice } from "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import { fbe, Sdt, bdt, FPe, l1t } from "../DesignSync/chunk-aycc6z76.js";
 import { ck } from "./chunk-5bg9xwqx.js";
-import { fM } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { isHeadlessEnvironment } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function oe() {
   return new ck();
@@ -55,7 +55,7 @@ function DesignLogin(Re) {
   let g = _(54),
     { onDone: k, hadExistingCredential: pt } = Re,
     Bt;
-  if (g[0] === p) ((Bt = { state: "starting" }), (g[0] = Bt));
+  if (g[0] === MEMO_CACHE_SENTINEL) ((Bt = { state: "starting" }), (g[0] = Bt));
   else Bt = g[0];
   let [s, b] = d(Bt),
     [D] = d(oe),
@@ -66,14 +66,14 @@ function DesignLogin(Re) {
       copiedVia: tt,
       copy: j,
       reset: Ct,
-    } = e9(s.state === "waiting_for_login" ? s.url : null),
-    et = vt(),
+    } = useCopyToClipboard(s.state === "waiting_for_login" ? s.url : null),
+    et = useClock(),
     Lt;
-  if (g[1] === p) ((Lt = new Set()), (g[1] = Lt));
+  if (g[1] === MEMO_CACHE_SENTINEL) ((Lt = new Set()), (g[1] = Lt));
   else Lt = g[1];
   let W = C(Lt),
     rt = C(!1),
-    ke = Se(),
+    ke = useTerminalSize(),
     _t = Math.max(50, ke.columns - G.length - 4),
     Nt;
   if (g[2] !== s.state || g[3] !== s.toRetry || g[4] !== k)
@@ -117,7 +117,7 @@ function DesignLogin(Re) {
           n(`Design login: invalid pasted code for ${jt}`));
         return;
       }
-      (i("tengu_design_oauth_manual_entry", {}),
+      (logEvent("tengu_design_oauth_manual_entry", {}),
         D.handleManualAuthCodeInput({ authorizationCode: Xt, state: Jt }));
     }),
       (g[6] = D),
@@ -140,7 +140,7 @@ function DesignLogin(Re) {
         let wt = bdt();
         let bt = await D.startOAuthFlow(
           async (Ae) => {
-            if ((Ct(), Z(!1), b({ state: "waiting_for_login", url: Ae }), fM()))
+            if ((Ct(), Z(!1), b({ state: "waiting_for_login", url: Ae }), isHeadlessEnvironment()))
               Z(!0);
             else W.current.add(et.setTimeout(() => Z(!0), 3000));
           },
@@ -181,7 +181,7 @@ function DesignLogin(Re) {
             }));
           return;
         }
-        (i("tengu_design_oauth_login_success", {}),
+        (logEvent("tengu_design_oauth_login_success", {}),
           b({ state: "success" }),
           W.current.add(
             et.setTimeout(() => k("Design-system access authorized."), 1500),
@@ -189,7 +189,7 @@ function DesignLogin(Re) {
       } catch (st) {
         let Mt = st;
         (logError(Mt),
-          i("tengu_design_oauth_login_error", {}),
+          logEvent("tengu_design_oauth_login_error", {}),
           b({
             state: "error",
             message: l(Mt),
@@ -321,10 +321,10 @@ function DesignLogin(Re) {
                       " ",
                     ],
                   }),
-                  e(YL, { via: tt }),
+                  e(CopyFeedbackHint, { via: tt }),
                 ],
               }),
-              e(JL, { via: tt }),
+              e(CopyFallbackNotice, { via: tt }),
             ],
           }),
           e(ct, {
@@ -374,7 +374,7 @@ function DesignLogin(Re) {
   else at = g[48];
   let ee;
   if (g[49] !== M || g[50] !== nt || g[51] !== it || g[52] !== at)
-    ((ee = r(mr, { gap: 1, onKeyDown: M, children: [nt, it, at] })),
+    ((ee = r(FocusableBox, { gap: 1, onKeyDown: M, children: [nt, it, at] })),
       (g[49] = M),
       (g[50] = nt),
       (g[51] = it),
@@ -398,15 +398,15 @@ function ut(ze) {
   switch (P.state) {
     case "starting": {
       let u;
-      if (v[0] === p)
-        ((u = e($n, { message: "Starting design login\u2026" })), (v[0] = u));
+      if (v[0] === MEMO_CACHE_SENTINEL)
+        ((u = e(SpinnerMessageLine, { message: "Starting design login\u2026" })), (v[0] = u));
       else u = v[0];
       return u;
     }
     case "waiting_for_login": {
       let u;
-      if (v[1] === p)
-        ((u = e($n, { message: "Waiting for browser authorization\u2026" })),
+      if (v[1] === MEMO_CACHE_SENTINEL)
+        ((u = e(SpinnerMessageLine, { message: "Waiting for browser authorization\u2026" })),
           (v[1] = u));
       else u = v[1];
       let A;
@@ -455,15 +455,15 @@ function ut(ze) {
     }
     case "processing": {
       let u;
-      if (v[13] === p)
-        ((u = e($n, { message: "Saving design credential\u2026" })),
+      if (v[13] === MEMO_CACHE_SENTINEL)
+        ((u = e(SpinnerMessageLine, { message: "Saving design credential\u2026" })),
           (v[13] = u));
       else u = v[13];
       return u;
     }
     case "success": {
       let u;
-      if (v[14] === p)
+      if (v[14] === MEMO_CACHE_SENTINEL)
         ((u = e(t, {
           color: "success",
           children:
@@ -498,7 +498,7 @@ function ut(ze) {
     }
     case "about_to_retry": {
       let u;
-      if (v[22] === p)
+      if (v[22] === MEMO_CACHE_SENTINEL)
         ((u = e(t, { color: "permission", children: "Retrying\u2026" })),
           (v[22] = u));
       else u = v[22];

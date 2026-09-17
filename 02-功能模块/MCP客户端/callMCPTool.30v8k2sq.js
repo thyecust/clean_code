@@ -51,14 +51,14 @@ import { uhe, C1, C2e, Xtt, xkt, Ytt, Hkt, Ikt } from "./chunk-98spw152.js";
 import "../认证-OAuth登录/chunk-3wfaaze4.js";
 import { XA, u2, aPe } from "../认证-OAuth登录/chunk-j990pwax.js";
 import { Qs, K, he, sn, yB, Mrt, Lx, Nrt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { CA, SS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Wre, tG, nG } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { r2, rce, DIe, oce, LIe, ak, x4 } from "./chunk-z2a573sr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromNumber, mcpNameForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
@@ -92,7 +92,7 @@ import { x, oe, ft } from "../../01-核心基础设施/核心工具-字符串与
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { pS, rc } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { _xt, jo, yxt, Qie } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { Yq, _S } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
@@ -105,7 +105,7 @@ import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
 import { wA } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
 import { uBe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
+import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   $v,
   Sue,
@@ -167,14 +167,14 @@ import { agentProxyEnv, subprocessEnv, shouldUseMcpAllowlistEnv } from "../../01
 import { bo } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
 import { e7e, lN, Jn } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { mTt } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
-import { xT } from "../../01-核心基础设施/共享小工具-未细化/chunk-21sqz10e.js";
+import { getMcpSdkGeneration } from "../../01-核心基础设施/共享小工具-未细化/mcp-sdk-generation.js";
 import { jNe, o7e } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import { H4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-s3mpt973.js";
 import { YA, mbe, Xee, Yee, Ice, gbe } from "../Memory-CLAUDE.md/chunk-9b6sc1gb.js";
 import { sce } from "../../01-核心基础设施/共享小工具-未细化/chunk-drgqeenr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-jq60dfkn.js";
-import { oct, sct } from "./chunk-5rah54h4.js";
-import { L4, yut, Sut } from "../插件系统/chunk-nejpd7jw.js";
+import "../../01-核心基础设施/共享小工具-未细化/mcp-elicitation-dialogs.js";
+import { runElicitationHooks, runElicitationResultHooks } from "./mcp-elicitation-handlers.js";
+import { getOfficialPluginPromptOverrides, getOverriddenServerInstructions, applyParamDescriptions } from "../插件系统/plugin-prompt-overrides.js";
 import {
   ict,
   act,
@@ -218,34 +218,34 @@ import { g9, Gn, O_, as, w7, yE } from "../认证-OAuth登录/chunk-7jz937t3.js"
 import { CLt, wct, X3e } from "../认证-OAuth登录/chunk-nsedtefh.js";
 import "../认证-OAuth登录/chunk-spp7dan6.js";
 import { jee } from "../../01-核心基础设施/共享小工具-未细化/chunk-thdf1760.js";
-import { nce, rct } from "../../01-核心基础设施/共享小工具-未细化/chunk-7vth056q.js";
-import { Ece, edt } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ghshta0.js";
+import { isClaudeAiBearerRejectedError, isListAuthError } from "../../01-核心基础设施/共享小工具-未细化/auth-error-predicates.js";
+import { isClaudeBrowserMcpServerName, createHostHandledConsentPermissions } from "../../01-核心基础设施/共享小工具-未细化/claude-browser-mcp-server.js";
 import { mct, gct } from "../../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g2fqhcwj.js";
-import { o2 } from "../工具WebFetch-WebSearch/chunk-62z2xwnm.js";
+import "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
+import { noopTaskRegistry } from "../工具WebFetch-WebSearch/noop-task-registry.js";
 import { B3e } from "../../01-核心基础设施/共享小工具-未细化/chunk-t4xxq70d.js";
-import { P4, ice, G3e, m9 } from "../../01-核心基础设施/共享小工具-未细化/chunk-xvyb4e66.js";
+import { stripTextBlockMeta, estimateContentTokens, shouldTruncateOutput, maybeTruncateOutput } from "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
 import "./chunk-7gw5rbph.js";
 import { hce } from "../../00-第三方库/_未识别/第三方库-Nodepolyfill/chunk-5y6047zm.js";
-import { gut } from "../Hooks钩子/chunk-rwdpktga.js";
-import { T7, Iee } from "../../01-核心基础设施/共享小工具-未细化/chunk-g36jzdvm.js";
+import { logChromeToolsAdded } from "../Hooks钩子/chrome-telemetry-events.js";
+import { collectResourceLinks, stripReservedMetaKeys } from "../../01-核心基础设施/共享小工具-未细化/mcp-tool-result-fields.js";
 import { AGe, iPe, _9, cNt } from "../MCP传输(stdio-SSE-HTTP)/chunk-5xgsb1c1.js";
-import { Cdt, TF, Qee, Pce, vdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
-import { Abe } from "../../01-核心基础设施/共享小工具-未细化/chunk-4bx97hcx.js";
-import { Z4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-95411q5e.js";
+import { getDesignAuthResolver, hasFirstPartyDesignAuth, FirstPartyDesignNeedsConsentError, getDesignConsentProvider, setPendingScopeExpansionNotice } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
+import { hasChannelCapability } from "../../01-核心基础设施/共享小工具-未细化/has-channel-capability.js";
+import { resolveProxyFetchOptions } from "../../01-核心基础设施/共享小工具-未细化/proxy-fetch-options.js";
 import { Bn } from "../插件系统/chunk-33bdfgmx.js";
 import { Mu, ZSt } from "./chunk-0mwqsv0r.js";
 import { n7e, Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
 import { Bg } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { Hl } from "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
 import { isClaudeInChromeMCPServer } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
-import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
-import { Ktt, Z0n, kkt } from "../../01-核心基础设施/共享小工具-未细化/chunk-c0wtcn4y.js";
+import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
+import { ReadBuffer, deserializeMessage, serializeMessage } from "../../01-核心基础设施/共享小工具-未细化/stdio-message-framing.js";
 import { AA, s, v, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Jke } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 class ht {
   constructor(e) {
     this._client = e;
@@ -938,7 +938,7 @@ class nt {
     this._protocolVersion = e;
   }
 }
-var Bt = pe(_xt(), 1);
+var Bt = toESM(_xt(), 1);
 import gt from "process";
 import { PassThrough } from "stream";
 var Nr =
@@ -971,7 +971,7 @@ function _t() {
 class Ct {
   constructor(e) {
     if (
-      ((this._readBuffer = new Ktt()),
+      ((this._readBuffer = new ReadBuffer()),
       (this._stderrStream = null),
       (this._serverParams = e),
       e.stderr === "pipe" || e.stderr === "overlapped")
@@ -1073,7 +1073,7 @@ class Ct {
   send(e) {
     return new Promise((t) => {
       if (!this._process?.stdin) throw Error("Not connected");
-      let r = kkt(e);
+      let r = serializeMessage(e);
       if (this._process.stdin.write(r)) t();
       else this._process.stdin.once("drain", t);
     });
@@ -1182,7 +1182,7 @@ class Wt {
     return (
       (this.chunks = d.length > 0 ? [d] : []),
       (this.byteLength = d.length),
-      Z0n(c)
+      deserializeMessage(c)
     );
   }
   clear() {
@@ -1219,7 +1219,7 @@ function Gt(e) {
   }
   return t.data;
 }
-var Hr = m(() =>
+var Hr = createLazyValue(() =>
   it({
     supportedVersions: v(s()),
     capabilities: it({}),
@@ -1327,8 +1327,8 @@ var Vr = 1e8,
   Qt = 20,
   Gr = [250, 500, 1000];
 function Kr(e) {
-  if (rct(e)) return !1;
-  if (nce(e)) return !1;
+  if (isListAuthError(e)) return !1;
+  if (isClaudeAiBearerRejectedError(e)) return !1;
   if (e instanceof DOMException && e.name === "TimeoutError") return !1;
   if (
     e instanceof Error &&
@@ -1378,12 +1378,12 @@ async function mt(e, t, r, o, c, d) {
       if (A > 0 && !p) ((p = !0), er(o, A, T.length, "error"));
       let I = Gr[_];
       if (I === void 0 || !Kr(W)) throw W;
-      (logMCPDebug(t, `${o} failed (${as(W, r)}); retrying in ${I}ms`), await Z(I));
+      (logMCPDebug(t, `${o} failed (${as(W, r)}); retrying in ${I}ms`), await sleep(I));
     }
   }
 }
 function er(e, t, r, o) {
-  i("tengu_mcp_list_paginated", {
+  logEvent("tengu_mcp_list_paginated", {
     method: fromEnum(e),
     pageCount: t,
     itemCount: r,
@@ -1459,7 +1459,7 @@ function Lt(e, t, r, o) {
           ...(t && { id: t }),
           ...(r !== void 0 && { ttlMs: r }),
         }),
-        M() && o !== void 0)
+        isHoverRestEnabled() && o !== void 0)
       ) {
         if (!(await Cr(o, d))) return;
       } else {
@@ -1477,7 +1477,7 @@ function removeMcpAuthCacheEntry(e, t) {
       .then(async () => {
         let c = await oce(t);
         if (!(e in c)) return;
-        if ((delete c[e], M() && t !== void 0)) {
+        if ((delete c[e], isHoverRestEnabled() && t !== void 0)) {
           if (!(await Cr(t, c))) return;
         } else await qt().write(rce(), b(c));
         LIe();
@@ -1531,7 +1531,7 @@ async function Sr(e, t, r, o, c, d, p) {
     h = T
       ? `Server OAuth metadata invalid: ${T.path.join(".") || "(root)"} \u2014 ${T.message}`
       : void 0;
-  (i("tengu_mcp_server_needs_auth", {
+  (logEvent("tengu_mcp_server_needs_auth", {
     transportType: fromEnum(r),
     ...(_ && { cause: S("discovery_schema") }),
     ...Le(t, e),
@@ -1581,10 +1581,10 @@ function at({
   message: c,
   displayDetail: d,
 }) {
-  i("tengu_mcp_server_connection_failed", {
+  logEvent("tengu_mcp_server_connection_failed", {
     transportType: fromEnum(r),
     errorCode: fromEnum(o),
-    sdkGeneration: fromEnum(xT()),
+    sdkGeneration: fromEnum(getMcpSdkGeneration()),
     ...Le(t, e),
   });
   let { severity: p, featureErrorCode: _ } = ao[o];
@@ -1738,7 +1738,7 @@ function createClaudeAiProxyFetch(e, t) {
   return async (r, o) => {
     let c = async () => {
       await checkAndRefreshOAuthTokenIfNeeded({ credentials: t });
-      let L = M() && t !== void 0 ? await getClaudeAIOAuthTokensAsync(t) : getClaudeAIOAuthTokens();
+      let L = isHoverRestEnabled() && t !== void 0 ? await getClaudeAIOAuthTokensAsync(t) : getClaudeAIOAuthTokens();
       if (!L) throw Error("No claude.ai OAuth token available");
       let W = new Headers(o?.headers);
       return (
@@ -1770,15 +1770,15 @@ function createClaudeAiProxyFetch(e, t) {
     let T = p.headers.get("X-Mcp-Error-Code") ?? void 0;
     if (T)
       return (
-        i("tengu_mcp_claudeai_proxy_401", {
+        logEvent("tengu_mcp_claudeai_proxy_401", {
           tokenChanged: !1,
           proxyErrorCode: T,
         }),
         p
       );
     let h = await handleOAuth401Error(_, t).catch(() => !1);
-    if ((i("tengu_mcp_claudeai_proxy_401", { tokenChanged: h }), !h)) {
-      let L = M() && t !== void 0 ? await readFreshOAuthAccessToken(t) : getClaudeAIOAuthTokens()?.accessToken;
+    if ((logEvent("tengu_mcp_claudeai_proxy_401", { tokenChanged: h }), !h)) {
+      let L = isHoverRestEnabled() && t !== void 0 ? await readFreshOAuthAccessToken(t) : getClaudeAIOAuthTokens()?.accessToken;
       if (!L || L === _) throw new ClaudeAiProxyBearerRejectedError();
     }
     let A = (await c()).response;
@@ -1788,20 +1788,20 @@ function createClaudeAiProxyFetch(e, t) {
 }
 async function mo(e, t) {
   if (new URL(e).pathname.startsWith("/v1/design/")) {
-    let o = await Cdt()?.(t);
+    let o = await getDesignAuthResolver()?.(t);
     if (o?.ok) {
       if (o.expanded)
-        (vdt(
+        (setPendingScopeExpansionNotice(
           "Added user:design:read and user:design:write to your claude.ai login (for the Design MCP connector).",
         ),
-          i("tengu_mcp_first_party_scope_expanded", {
+          logEvent("tengu_mcp_first_party_scope_expanded", {
             pathPrefix: S("/v1/design/"),
           }));
       return { accessToken: o.accessToken, bearer: o.bearer };
     }
   }
   await checkAndRefreshOAuthTokenIfNeeded({ credentials: t });
-  let r = M() && t !== void 0 ? await getClaudeAIOAuthTokensAsync(t) : getClaudeAIOAuthTokens();
+  let r = isHoverRestEnabled() && t !== void 0 ? await getClaudeAIOAuthTokensAsync(t) : getClaudeAIOAuthTokens();
   if (!r?.accessToken) return;
   return {
     accessToken: r.accessToken,
@@ -1811,7 +1811,7 @@ async function mo(e, t) {
   };
 }
 async function parseFirstPartyNeedsConsentBody(e) {
-  let t = Pce();
+  let t = getDesignConsentProvider();
   if (t === null) return null;
   let r;
   try {
@@ -1923,13 +1923,13 @@ function withFirstPartyDesignConsentIntercept(e, t) {
     credentials: d,
   } = t;
   return async (p) => {
-    let _ = Pce();
+    let _ = getDesignConsentProvider();
     try {
       let T = await e(p);
       if (o !== null && !p.aborted) _?.seedDesignConsentBit(r, o, !0);
       return T;
     } catch (T) {
-      if (!(T instanceof Qee) || !_) throw T;
+      if (!(T instanceof FirstPartyDesignNeedsConsentError) || !_) throw T;
       let h = T.consent;
       if (h !== o)
         throw (
@@ -1970,7 +1970,7 @@ function createFirstPartyApiMcpFetch(e, t, r) {
       _ = async (I) => {
         if (I.response.status === 403 && I.sentToken) {
           let D = await parseFirstPartyNeedsConsentBody(I.response);
-          if (D !== null) throw new Qee(D);
+          if (D !== null) throw new FirstPartyDesignNeedsConsentError(D);
         }
       },
       T = await p();
@@ -1978,7 +1978,7 @@ function createFirstPartyApiMcpFetch(e, t, r) {
     let { response: h, sentToken: A } = T;
     if (h.status !== 401 || !A) return h;
     if (!(await handleOAuth401Error(A, t).catch(() => !1))) {
-      let I = M() && t !== void 0 ? await readFreshOAuthAccessToken(t) : getClaudeAIOAuthTokens()?.accessToken;
+      let I = isHoverRestEnabled() && t !== void 0 ? await readFreshOAuthAccessToken(t) : getClaudeAIOAuthTokens()?.accessToken;
       if (!I || I === A) return h;
     }
     let W;
@@ -2154,11 +2154,11 @@ var connectToServer = lct(
       p = ir(),
       _ = sce(),
       T = t.type ?? "stdio";
-    if ((q("info", "mcp_connect_starting", { transport: T }), e7e(t))) {
+    if ((writeDiagnosticsEvent("info", "mcp_connect_starting", { transport: T }), e7e(t))) {
       let D = t.configError ?? "No URL configured for this server";
       return (
         logMCPDebug(e, D),
-        q("info", "mcp_connect_skipped", {
+        writeDiagnosticsEvent("info", "mcp_connect_skipped", {
           transport: T,
           reason: "unconfigured",
         }),
@@ -2182,14 +2182,14 @@ var connectToServer = lct(
         }
       if (D)
         return (
-          i("tengu_mcp_server_config_invalid", {
+          logEvent("tengu_mcp_server_config_invalid", {
             transportType: fromEnum(t.type ?? "stdio"),
             field: S("url"),
             source: S(t.configError ? "loader" : "connect"),
           }),
           logMCPDebug(e, D),
           logMCPError(e, D),
-          q("warn", "mcp_connect_failed", {
+          writeDiagnosticsEvent("warn", "mcp_connect_failed", {
             transport: T,
             duration_ms: Date.now() - d,
             reason: "invalid_config",
@@ -2234,10 +2234,10 @@ var connectToServer = lct(
           !D &&
           pA(t.url) &&
           isFirstPartyProvider() &&
-          (!!(M() && c !== void 0 ? await getClaudeAIOAuthTokensAsync(c) : getClaudeAIOAuthTokens())?.accessToken ||
-            (await TF(c)));
+          (!!(isHoverRestEnabled() && c !== void 0 ? await getClaudeAIOAuthTokensAsync(c) : getClaudeAIOAuthTokens())?.accessToken ||
+            (await hasFirstPartyDesignAuth(c)));
       if (V)
-        i("tengu_mcp_first_party_auto_auth", {
+        logEvent("tengu_mcp_first_party_auto_auth", {
           transportType: fromEnum(t.type),
           ...Le(t, e),
         });
@@ -2246,7 +2246,7 @@ var connectToServer = lct(
         ace(t.headers, X);
         let w = ee || me || V || j ? void 0 : new X3e(e, t);
         A = w;
-        let O = await Z4(t.url),
+        let O = await resolveProxyFetchOptions(t.url),
           N = ze(Pt(iPe(void 0, O)));
         if (w) N = wct(N, w);
         if (((N = wrapFetchWithTimeout(N, t)), V)) N = createFirstPartyApiMcpFetch(N, c, ie);
@@ -2266,7 +2266,7 @@ var connectToServer = lct(
             let Me = {},
               _e = await w?.tokens();
             if (_e) Me.Authorization = `Bearer ${_e.access_token}`;
-            let Re = await Z4(String(we));
+            let Re = await resolveProxyFetchOptions(String(we));
             return fetch(we, { ...xe, ...Re, headers: buildSseStreamHeaders(xe?.headers, Me, X) });
           });
         ((te.eventSourceInit = {
@@ -2332,7 +2332,7 @@ var connectToServer = lct(
           ));
         let w = ee || me || V || j ? void 0 : new X3e(e, t);
         A = w;
-        let O = await Z4(t.url),
+        let O = await resolveProxyFetchOptions(t.url),
           N = ze(Pt(iPe(void 0, O)));
         if (w) N = wct(N, w);
         if (((N = wrapFetchWithTimeout(N, t)), V)) N = createFirstPartyApiMcpFetch(N, c, ie);
@@ -2366,7 +2366,7 @@ var connectToServer = lct(
           );
         if (
           (logMCPDebug(e, `Initializing claude.ai proxy transport for server ${t.id}`),
-          !(M() && c !== void 0 ? await getClaudeAIOAuthTokensAsync(c) : getClaudeAIOAuthTokens()))
+          !(isHoverRestEnabled() && c !== void 0 ? await getClaudeAIOAuthTokensAsync(c) : getClaudeAIOAuthTokens()))
         )
           throw Error("No claude.ai OAuth token found");
         let O = getOauthConfig(),
@@ -2655,15 +2655,15 @@ var connectToServer = lct(
               e,
               `claude.ai proxy connection failed after ${O}ms: ${as(w, t)}`,
             ),
-            !nce(w))
+            !isClaudeAiBearerRejectedError(w))
           )
             logMCPError(e, w7(w, t));
           let N = w.code;
-          if (nce(w)) {
-            (i("tengu_mcp_server_connection_failed", {
+          if (isClaudeAiBearerRejectedError(w)) {
+            (logEvent("tengu_mcp_server_connection_failed", {
               transportType: S("claudeai-proxy"),
               errorCode: S("CLAUDEAI_BEARER_REJECTED"),
-              sdkGeneration: fromEnum(xT()),
+              sdkGeneration: fromEnum(getMcpSdkGeneration()),
               ...Le(t, e),
             }),
               logFeatureSad("mcp_connect", "mcp_connect_claudeai_bearer_rejected"));
@@ -2689,7 +2689,7 @@ var connectToServer = lct(
           if (N === 401 || N === 403)
             return Sr(e, t, "claudeai-proxy", void 0, !1, p, o);
         } else if (t.type === "sse-ide" || t.type === "ws-ide")
-          i("tengu_mcp_ide_server_connection_failed", {
+          logEvent("tengu_mcp_ide_server_connection_failed", {
             connectionDurationMs: O,
           });
         if (h) h.close().catch(() => {});
@@ -2698,8 +2698,8 @@ var connectToServer = lct(
       }
       let ae = U.getServerCapabilities(),
         de = U.getServerVersion(),
-        se = L4(t),
-        ve = yut(se, e) ?? U.getInstructions(),
+        se = getOfficialPluginPromptOverrides(t),
+        ve = getOverriddenServerInstructions(se, e) ?? U.getInstructions(),
         ke = capMcpInstructions(ve, e);
       if (
         (logMCPDebug(
@@ -2719,7 +2719,7 @@ var connectToServer = lct(
         t.type === "sse-ide" || t.type === "ws-ide")
       ) {
         let w = Date.now() - d;
-        (i("tengu_mcp_ide_server_connection_succeeded", {
+        (logEvent("tengu_mcp_ide_server_connection_succeeded", {
           connectionDurationMs: w,
           serverVersion: Ms(de?.version),
         }),
@@ -2753,7 +2753,7 @@ var connectToServer = lct(
             logMCPError(e, `Ignoring non-JSON line on stdout: ${w.message}`);
             return;
           }
-          if (w instanceof Qee) return;
+          if (w instanceof FirstPartyDesignNeedsConsentError) return;
           if (O === "stdio" && w instanceof Ge) {
             if ((logMCPError(e, w.message), (Te = !0), le("stdout overflow"), Q)) Q(w);
             return;
@@ -2940,7 +2940,7 @@ var connectToServer = lct(
                       Se,
                     );
                   try {
-                    if ((await Z(100), !te)) {
+                    if ((await sleep(100), !te)) {
                       if (!Pe(O)) {
                         Se();
                         return;
@@ -2955,7 +2955,7 @@ var connectToServer = lct(
                         (logMCPDebug(e, `Error sending SIGTERM: ${Me}`), Se());
                         return;
                       }
-                      if ((await Z(400), !te))
+                      if ((await sleep(400), !te))
                         if (!Pe(O)) Se();
                         else {
                           logMCPDebug(
@@ -2992,10 +2992,10 @@ var connectToServer = lct(
         U.sendRootsListChanged().catch(() => {});
       let Ae = Date.now() - d;
       (emitMcpServerConnectionEvent(e, t, { status: "connected", durationMs: Ae }),
-        i("tengu_mcp_server_connection_succeeded", {
+        logEvent("tengu_mcp_server_connection_succeeded", {
           connectionDurationMs: Ae,
           transportType: fromEnum(t.type ?? "stdio"),
-          sdkGeneration: fromEnum(xT()),
+          sdkGeneration: fromEnum(getMcpSdkGeneration()),
           scope: fromEnum(t.scope),
           isPlugin: t.pluginSource !== void 0,
           totalServers: r?.totalServers,
@@ -3007,7 +3007,7 @@ var connectToServer = lct(
           ...Le(t, e),
         }),
         logFeatureOk("mcp_connect"),
-        q("info", "mcp_connect_complete", { transport: T, duration_ms: Ae }));
+        writeDiagnosticsEvent("info", "mcp_connect_complete", { transport: T, duration_ms: Ae }));
       let Fe = {
         name: e,
         client: n7e(U),
@@ -3063,7 +3063,7 @@ var connectToServer = lct(
         logFeatureSad("mcp_connect", `${C}_${t.type ?? "stdio"}`);
       }
       if (
-        (i("tengu_mcp_server_connection_failed", {
+        (logEvent("tengu_mcp_server_connection_failed", {
           connectionDurationMs: j,
           errorCode: sanitizeConnectErrorCodeForTelemetry(V),
           errorClassName: pot(D),
@@ -3075,7 +3075,7 @@ var connectToServer = lct(
           sseIdeCount: r?.sseIdeCount || (t.type === "sse-ide" ? 1 : 0),
           wsIdeCount: r?.wsIdeCount || (t.type === "ws-ide" ? 1 : 0),
           transportType: fromEnum(t.type ?? "stdio"),
-          sdkGeneration: fromEnum(xT()),
+          sdkGeneration: fromEnum(getMcpSdkGeneration()),
           scope: fromEnum(t.scope),
           isPlugin: t.pluginSource !== void 0,
           ...Le(t, e),
@@ -3085,7 +3085,7 @@ var connectToServer = lct(
           `Connection failed after ${j}ms${V !== void 0 ? ` (${V})` : ""}: ${ee}`,
         ),
         logMCPError(e, `Connection failed${V !== void 0 ? ` (${V})` : ""}: ${ee}`),
-        q("error", "mcp_connect_failed", {
+        writeDiagnosticsEvent("error", "mcp_connect_failed", {
           transport: T,
           duration_ms: j,
           ...(V === "CONNECT_TIMEOUT" && { reason: "timeout" }),
@@ -3172,7 +3172,7 @@ async function evictStaleFailedConnectMemoForServe(e, t) {
   if (ur().connections.get(r) === o) ur().connections.delete(r);
 }
 async function Be(e) {
-  return kt(
+  return withDeadline(
     e.catch(() => {
       return;
     }),
@@ -3486,7 +3486,7 @@ function applyCapabilityServeTimeMiss(e) {
   if (e.kind !== "fresh" && e.kind !== "stale") return e;
   let t = e.entry.capabilities;
   if (ZSt(t)) return { kind: "miss", reason: "skills-capable" };
-  if (Abe(t)) return { kind: "miss", reason: "channel-capable" };
+  if (hasChannelCapability(t)) return { kind: "miss", reason: "channel-capable" };
   return e;
 }
 async function persistRawDiscoveryIfComplete(e, t) {
@@ -3627,9 +3627,9 @@ function hydrateToolsFromListing(e, t, r, o, c) {
   let d = _S(t),
     p = Fg(e.config),
     _ = Le(e.config, e.name),
-    T = mcpNameForAnalytics_GATE_EVALUATED(rn(e.name), oy(e.name, e.config));
+    T = mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(e.name), oy(e.name, e.config));
   if (d.length === 0 && o === "live")
-    i("tengu_mcp_degraded", {
+    logEvent("tengu_mcp_degraded", {
       reason: S("connected_zero_tools"),
       transportType: fromEnum(e.config.type ?? "stdio"),
       mcpServerName: T,
@@ -3719,7 +3719,7 @@ ${k.description}`
   if (c.seq > c.state.applied)
     ((c.state.applied = c.seq), (e.droppedTools = me));
   if (I > 0)
-    i("tengu_mcp_degraded", {
+    logEvent("tengu_mcp_degraded", {
       reason: S("tool_schema_normalized"),
       transportType: fromEnum(e.config.type ?? "stdio"),
       normalizedCount: I,
@@ -3727,7 +3727,7 @@ ${k.description}`
       ..._,
     });
   if (D > 0)
-    i("tengu_mcp_degraded", {
+    logEvent("tengu_mcp_degraded", {
       reason: S("tool_schema_normalize_gated"),
       transportType: fromEnum(e.config.type ?? "stdio"),
       skippedCount: D,
@@ -3735,7 +3735,7 @@ ${k.description}`
       ..._,
     });
   if (j > 0)
-    i("tengu_mcp_degraded", {
+    logEvent("tengu_mcp_degraded", {
       reason: S("tool_schema_unsupported"),
       transportType: fromEnum(e.config.type ?? "stdio"),
       skippedCount: j,
@@ -3743,7 +3743,7 @@ ${k.description}`
       ..._,
     });
   if (ee > 0)
-    i("tengu_mcp_degraded", {
+    logEvent("tengu_mcp_degraded", {
       reason: S("tool_schema_invalid"),
       transportType: fromEnum(e.config.type ?? "stdio"),
       skippedCount: ee,
@@ -3751,7 +3751,7 @@ ${k.description}`
       ..._,
     });
   if (X > 0)
-    i("tengu_mcp_degraded", {
+    logEvent("tengu_mcp_degraded", {
       reason: S("tool_property_key_invalid"),
       transportType: fromEnum(e.config.type ?? "stdio"),
       skippedCount: X,
@@ -3759,7 +3759,7 @@ ${k.description}`
       ..._,
     });
   if (V > 0)
-    i("tengu_mcp_degraded", {
+    logEvent("tengu_mcp_degraded", {
       reason: S("tool_schema_invalid_gated"),
       transportType: fromEnum(e.config.type ?? "stdio"),
       keptCount: V,
@@ -3767,7 +3767,7 @@ ${k.description}`
       ..._,
     });
   if (ie > 0)
-    i("tengu_mcp_degraded", {
+    logEvent("tengu_mcp_degraded", {
       reason: S("tool_property_key_invalid_gated"),
       transportType: fromEnum(e.config.type ?? "stdio"),
       keptCount: ie,
@@ -3777,7 +3777,7 @@ ${k.description}`
   let E = () => oy(e.name, e.config);
   X_t(C, e.name, E(), p, e.instructions);
   let F = isFirstPartyDesignServerConfig(e.config),
-    U = L4(e.config),
+    U = getOfficialPluginPromptOverrides(e.config),
     ne = e.config.pluginSource ? xy(e.config.pluginSource, Xf()) : void 0,
     Y = rS(e.config),
     fe = C.map((k) => {
@@ -3844,12 +3844,12 @@ ${k.description}`
           suppressesAlwaysAllowRule: () => ve || suppressDesignWriteAddRules(F, k.name),
           maxResultSizeChars: se ? Math.min(de, uBe) : H4.maxResultSizeChars,
           persistenceThresholdCeiling: se ? uBe : void 0,
-          inputJSONSchema: Sut(k.inputSchema, U?.param_descriptions?.[k.name]),
+          inputJSONSchema: applyParamDescriptions(k.inputSchema, U?.param_descriptions?.[k.name]),
           async checkPermissions(z, B) {
             let ye = denyTokenlessFirstPartyDesignWrite(F, k.name, z);
             if (ye) return ye;
             if (F) {
-              let Ee = Pce(),
+              let Ee = getDesignConsentProvider(),
                 le =
                   (await Ee?.wouldNeedDesignConsent(
                     B.toolState.get(YA),
@@ -3960,7 +3960,7 @@ ${k.description}`
                     )
                       act(k.name);
                     if (Me > 0) logFeatureOk("mcp_session_recovery");
-                    let Ue = Iee(Re._meta);
+                    let Ue = stripReservedMetaKeys(Re._meta);
                     return {
                       data: Re.content,
                       ...(Re.urlElicitationDeclined && {
@@ -4032,7 +4032,7 @@ ${k.description}`
                 consentAskReachesUser: (te?.askReachesUser ?? !1) && consentAskCanReachUser(B),
                 credentials: B.credentials,
               });
-            if (Tt && !B.agentId && B.taskRegistry !== o2 && Q.name !== yB()) {
+            if (Tt && !B.agentId && B.taskRegistry !== noopTaskRegistry && Q.name !== yB()) {
               let we = Tt.getMcpAutoBackgroundMs(e.config, {
                 isNonInteractiveSession: B.options.isNonInteractiveSession,
               });
@@ -4075,8 +4075,8 @@ ${k.description}`
               ...to().getComputerUseMCPToolOverrides(k.name),
               builtinRenderFamily: "computer-use",
             }),
-          ...(e.config.type === "sdk" && Ece(e.name)
-            ? edt(e.name, k.name)
+          ...(e.config.type === "sdk" && isClaudeBrowserMcpServerName(e.name)
+            ? createHostHandledConsentPermissions(e.name, k.name)
             : {}),
           ...(mct(k.name) ? gct() : {}),
         };
@@ -4147,19 +4147,19 @@ ${k.description}`
       );
     }).filter(Oo);
   if (
-    (i("tengu_mcp_tools_listed", {
+    (logEvent("tengu_mcp_tools_listed", {
       transportType: fromEnum(e.config.type ?? "stdio"),
       listDurationMs: Date.now() - r,
       toolCount: fe.length,
-      alwaysLoadCount: G(fe, (k) => k.alwaysLoad === !0),
+      alwaysLoadCount: countMatching(fe, (k) => k.alwaysLoad === !0),
       discoverySource: fromEnum(o),
       ..._,
-      mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(rn(e.name), oy(e.name, e.config)),
+      mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(e.name), oy(e.name, e.config)),
     }),
     o === "live")
   )
     logFeatureOk("mcp_list_tools");
-  if (ZN(e.config) && isClaudeInChromeMCPServer(e.name)) gut(fe.length, o);
+  if (ZN(e.config) && isClaudeInChromeMCPServer(e.name)) logChromeToolsAdded(fe.length, o);
   return fe;
 }
 var fetchToolsForClient = h7(
@@ -4186,9 +4186,9 @@ var fetchToolsForClient = h7(
       return (recordRawToolsForResult(p, d), p);
     } catch (c) {
       let d = as(c, e.config);
-      if (e.config.type === "claudeai-proxy" && rct(c)) {
+      if (e.config.type === "claudeai-proxy" && isListAuthError(c)) {
         if (
-          (i("tengu_mcp_server_needs_auth", {
+          (logEvent("tengu_mcp_server_needs_auth", {
             transportType: S("claudeai-proxy"),
             cause: S("discovery_tools_list"),
             ...Le(e.config, e.name),
@@ -4207,7 +4207,7 @@ var fetchToolsForClient = h7(
           []
         );
       }
-      let p = e.config.type === "claudeai-proxy" && nce(c),
+      let p = e.config.type === "claudeai-proxy" && isClaudeAiBearerRejectedError(c),
         _ = p
           ? "mcp_list_tools_claudeai_bearer_rejected"
           : c instanceof McpError
@@ -4225,11 +4225,11 @@ var fetchToolsForClient = h7(
       let h = [];
       if ((jt().toolsListErrorByResult.set(h, d), !p)) {
         let A = Le(e.config, e.name);
-        i("tengu_mcp_degraded", {
+        logEvent("tengu_mcp_degraded", {
           reason: S("tools_list_failed"),
           transportType: fromEnum(e.config.type ?? "stdio"),
           ...A,
-          mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(rn(e.name), oy(e.name, e.config)),
+          mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(e.name), oy(e.name, e.config)),
         });
       }
       return (ur().toolLists.delete(Jn(e.name, e.config)), h);
@@ -4240,8 +4240,8 @@ var fetchToolsForClient = h7(
 );
 function Dr(e, t, r, o, c, d) {
   let p = as(t, e.config),
-    _ = e.config.type === "claudeai-proxy" && rct(t),
-    T = e.config.type === "claudeai-proxy" && nce(t);
+    _ = e.config.type === "claudeai-proxy" && isListAuthError(t),
+    T = e.config.type === "claudeai-proxy" && isClaudeAiBearerRejectedError(t);
   if (T) e.discoveryBearerRejected = !0;
   let h = _
     ? `${r}_needs_auth`
@@ -4253,11 +4253,11 @@ function Dr(e, t, r, o, c, d) {
           ? `${r}_timeout`
           : `${r}_failed`;
   if ((o(h), (_ || T ? logMCPDebug : logMCPError)(e.name, `Failed to fetch ${d}: ${p}`), !_ && !T))
-    i("tengu_mcp_degraded", {
+    logEvent("tengu_mcp_degraded", {
       reason: c,
       transportType: fromEnum(e.config.type ?? "stdio"),
       ...Le(e.config, e.name),
-      mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(rn(e.name), oy(e.name, e.config)),
+      mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(e.name), oy(e.name, e.config)),
     });
 }
 var fetchResourcesForClient = h7(
@@ -4312,7 +4312,7 @@ var fetchResourcesForClient = h7(
           (r) => r.resourceTemplates,
         );
         return (
-          i("tengu_mcp_resource_templates_fetched", {
+          logEvent("tengu_mcp_resource_templates_fetched", {
             template_count: t.length,
           }),
           logFeatureOk("mcp_list_resource_templates"),
@@ -4401,14 +4401,14 @@ function hydrateCommandsFromListing(e, t) {
   let r = _S(t),
     o = e.config,
     c = (o.type === "http" || o.type === "sse") && pA(o.url),
-    d = L4(e.config);
+    d = getOfficialPluginPromptOverrides(e.config);
   return r.map((p) => {
     let _ = Object.values(p.arguments ?? {}),
       T = _.map((A) => A.name),
       h = d?.prompts?.[p.name] ?? p.description;
     return {
       type: "prompt",
-      name: "mcp__" + rn(e.name) + "__" + p.name,
+      name: "mcp__" + normalizeMcpName(e.name) + "__" + p.name,
       description: h ?? "",
       hasUserSpecifiedDescription: !!h,
       contentLength: 0,
@@ -4433,7 +4433,7 @@ function hydrateCommandsFromListing(e, t) {
           );
           if (D.length > 0)
             throw Error(
-              `Missing required ${x(D.length, "argument")}: ${D.join(", ")}. Usage: /mcp__${rn(e.name)}__${p.name} ${T.join(" ")}`,
+              `Missing required ${x(D.length, "argument")}: ${D.join(", ")}. Usage: /mcp__${normalizeMcpName(e.name)}__${p.name} ${T.join(" ")}`,
             );
           let j = await ensureConnectedClient(e, {
               signal: L.abortController.signal,
@@ -4450,7 +4450,7 @@ function hydrateCommandsFromListing(e, t) {
           return (logFeatureOk("mcp_get_prompt"), me.flat());
         } catch (D) {
           if (!yt(D))
-            if (e.config.type === "claudeai-proxy" && nce(D))
+            if (e.config.type === "claudeai-proxy" && isClaudeAiBearerRejectedError(D))
               (logFeatureSad("mcp_get_prompt", "mcp_get_prompt_claudeai_bearer_rejected"),
                 logMCPDebug(
                   e.name,
@@ -4576,7 +4576,7 @@ async function reconnectMcpServerImpl(e, t, r, o) {
     let ee = [...I, ...D],
       X = [];
     if (L) {
-      if (![eC, uC].some((V) => W.some((ie) => Kt(ie, V.name))))
+      if (![eC, uC].some((V) => W.some((ie) => matchesToolName(ie, V.name))))
         X.push(eC, uC, JO);
     }
     if (h.discoveryBearerRejected)
@@ -4624,7 +4624,7 @@ async function awaitEachWithDeadline(e, t) {
         ]),
       ),
     );
-    return G(c, (d) => d === "deadline");
+    return countMatching(c, (d) => d === "deadline");
   } finally {
     clearTimeout(r);
   }
@@ -4648,11 +4648,11 @@ async function getMcpToolsCommandsAndResources(e, t, r, o) {
       });
     else h.push(C);
   let A = h.length,
-    L = G(h, ([C, E]) => E.type === "stdio"),
-    W = G(h, ([C, E]) => E.type === "sse"),
-    I = G(h, ([C, E]) => E.type === "http"),
-    D = G(h, ([C, E]) => E.type === "sse-ide"),
-    j = G(h, ([C, E]) => E.type === "ws-ide"),
+    L = countMatching(h, ([C, E]) => E.type === "stdio"),
+    W = countMatching(h, ([C, E]) => E.type === "sse"),
+    I = countMatching(h, ([C, E]) => E.type === "http"),
+    D = countMatching(h, ([C, E]) => E.type === "sse-ide"),
+    j = countMatching(h, ([C, E]) => E.type === "ws-ide"),
     ee = h.filter(([C, E]) => isLocalMcpServer(E)),
     X = h.filter(([C, E]) => !isLocalMcpServer(E)),
     me = {
@@ -4754,7 +4754,7 @@ async function getMcpToolsCommandsAndResources(e, t, r, o) {
             Q = [];
           if (Te && !_) ((_ = !0), Q.push(eC, uC, JO));
           if (
-            (i("tengu_mcp_discovery_source", {
+            (logEvent("tengu_mcp_discovery_source", {
               source: S(U.kind === "fresh" ? "cache_fresh" : "cache_stale"),
               transportType: fromEnum(E.type ?? "stdio"),
               entryAgeMs: ae,
@@ -4906,7 +4906,7 @@ async function getMcpToolsCommandsAndResources(e, t, r, o) {
           Y = await ne,
           fe = connectToServer.cache?.get?.(Jn(C, E)) === ne;
         if (Ws() && isCacheOutcomeMiss(U))
-          i("tengu_mcp_discovery_source", {
+          logEvent("tengu_mcp_discovery_source", {
             source: S(discoverySourceForMiss(U)),
             transportType: fromEnum(E.type ?? "stdio"),
             ...Le(E, C),
@@ -5059,7 +5059,7 @@ function prefetchAllMcpResources(e, t, r) {
             (I.argumentHint ?? "").length;
           return W + D;
         }, 0);
-        (i("tengu_mcp_tools_commands_loaded", {
+        (logEvent("tengu_mcp_tools_commands_loaded", {
           tools_count: _.length,
           commands_count: T.length,
           commands_metadata_length: L,
@@ -5154,7 +5154,7 @@ async function transformResultContent(e, t, r, o, c = !1) {
   }
 }
 async function Rt(e, t, r, o, c) {
-  let d = `mcp-${rn(r)}-blob-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  let d = `mcp-${normalizeMcpName(r)}-blob-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     p = await Dy(e, t, d, void 0, c);
   if ("error" in p)
     return [
@@ -5196,7 +5196,7 @@ async function transformMCPResult(e, t, r, o, c) {
           let h = (await Promise.all(T.map((A) => transformResultContent(A, r, o, c, !0)))).flat();
           if (h.length > 0) {
             let A = [...h, { type: "text", text: p }];
-            return { content: A, type: "contentArray", schema: inferCompactSchema(P4(A)) };
+            return { content: A, type: "contentArray", schema: inferCompactSchema(stripTextBlockMeta(A)) };
           }
         }
       }
@@ -5206,7 +5206,7 @@ async function transformMCPResult(e, t, r, o, c) {
       let p = (
         await Promise.all(e.content.map((_) => transformResultContent(_, r, o, c, !0)))
       ).flat();
-      return { content: p, type: "contentArray", schema: inferCompactSchema(P4(p)) };
+      return { content: p, type: "contentArray", schema: inferCompactSchema(stripTextBlockMeta(p)) };
     }
   }
   let d = `MCP server "${r}" tool "${t}": unexpected response format`;
@@ -5225,30 +5225,30 @@ async function processMCPResult(e, t, r, o, c, d, p) {
   let { content: _, type: T, schema: h } = await transformMCPResult(e, t, r, o, d);
   if (r === "ide") return _;
   if (c && !mr(_)) return _;
-  if (!(await G3e(_, p))) return _;
-  let A = ice(_);
+  if (!(await shouldTruncateOutput(_, p))) return _;
+  let A = estimateContentTokens(_);
   if (a.ENABLE_MCP_LARGE_OUTPUT_FILES === !1)
     return (
-      i("tengu_mcp_large_result_handled", {
+      logEvent("tengu_mcp_large_result_handled", {
         outcome: S("truncated"),
         reason: S("env_disabled"),
         sizeEstimateTokens: A,
       }),
-      await m9(_, p)
+      await maybeTruncateOutput(_, p)
     );
   if (!_) return _;
   if (mr(_))
     return (
-      i("tengu_mcp_large_result_handled", {
+      logEvent("tengu_mcp_large_result_handled", {
         outcome: S("truncated"),
         reason: S("contains_images"),
         sizeEstimateTokens: A,
       }),
-      await m9(_, p)
+      await maybeTruncateOutput(_, p)
     );
   let L = Date.now(),
-    W = `mcp-${rn(r)}-${rn(t)}-${L}`,
-    I = P4(_),
+    W = `mcp-${normalizeMcpName(r)}-${normalizeMcpName(t)}-${L}`,
+    I = stripTextBlockMeta(_),
     D = cKe() || H("tengu_mcp_singleton_unwrap", !0),
     j = Array.isArray(I) ? I.length : void 0,
     ee =
@@ -5276,7 +5276,7 @@ async function processMCPResult(e, t, r, o, c, d, p) {
   if (nG(C)) {
     let F = X.length;
     return (
-      i("tengu_mcp_large_result_handled", {
+      logEvent("tengu_mcp_large_result_handled", {
         outcome: S("truncated"),
         reason: S("persist_failed"),
         sizeEstimateTokens: A,
@@ -5284,7 +5284,7 @@ async function processMCPResult(e, t, r, o, c, d, p) {
       `Error: result (${F.toLocaleString()} characters) exceeds maximum allowed tokens. Failed to save output to file: ${C.error}. If this MCP server provides pagination or filtering tools, use them to retrieve specific portions of the data.`
     );
   }
-  i("tengu_mcp_large_result_handled", {
+  logEvent("tengu_mcp_large_result_handled", {
     outcome: S("persisted"),
     reason: S("file_saved"),
     sizeEstimateTokens: A,
@@ -5414,7 +5414,7 @@ async function callMCPToolWithUrlElicitationRetry({
           `Tool '${r}' returned -32003 needs_approval (tool_name=${U.tool_name}) \u2014 surfacing retroactive ` +
             "approval card",
         ),
-          i("tengu_mcp_proxy_needs_approval_retry", { attempt: ie }),
+          logEvent("tengu_mcp_proxy_needs_approval_retry", { attempt: ie }),
           D?.(!0));
         let de = {
             behavior: "ask",
@@ -5476,7 +5476,7 @@ async function callMCPToolWithUrlElicitationRetry({
       );
       for (let U of E) {
         let { elicitationId: ne } = U,
-          Y = await oct(F, U, d);
+          Y = await runElicitationHooks(F, U, d);
         if (Y) {
           if (
             (logMCPDebug(F, `URL elicitation ${ne} resolved by hook: ${b(Y)}`),
@@ -5498,7 +5498,7 @@ async function callMCPToolWithUrlElicitationRetry({
         } finally {
           D?.(!1);
         }
-        let k = await sct(F, fe, d, "url", ne);
+        let k = await runElicitationResultHooks(F, fe, d, "url", ne);
         if (k.action !== "accept")
           return (
             logMCPDebug(
@@ -5535,7 +5535,7 @@ function dn(e, t) {
 `);
   } else if ("error" in e) r = String(e.error);
   logMCPError(t, r);
-  let o = Iee(e._meta);
+  let o = stripReservedMetaKeys(e._meta);
   throw new $ne(r, "MCP tool returned error", o ? { _meta: o } : void 0);
 }
 function discoveryWireSchemas() {
@@ -5687,7 +5687,7 @@ async function callMCPTool({
     logMCPDebug(t, `Tool '${c}' completed successfully in ${ke}`);
     let De = Tyt(t);
     if (De)
-      i("tengu_code_indexing_tool_used", {
+      logEvent("tengu_code_indexing_tool_used", {
         tool: fromEnum(De),
         source: S("mcp"),
         success: !0,
@@ -5699,7 +5699,7 @@ async function callMCPTool({
         content: Te,
         _meta: se._meta,
         structuredContent: se.structuredContent,
-        resourceLinks: T7(se.content),
+        resourceLinks: collectResourceLinks(se.content),
       }
     );
   } catch (F) {
@@ -5841,13 +5841,13 @@ async function callMCPTool({
           Q = Le(r, t),
           Ce = oy(t, r);
         throw (
-          i("tengu_mcp_tool_call_auth_error", {
+          logEvent("tengu_mcp_tool_call_auth_error", {
             errorCode: fromNumber(Y ?? 401),
             transportType: fromEnum(r.type ?? "stdio"),
             authErrorKind: fromEnum(Te ? "not_connected" : "token_expired"),
             ...Q,
-            mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(rn(t), Ce),
-            mcpToolName: uQ(rn(t), rn(c), Ce),
+            mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(t), Ce),
+            mcpToolName: uQ(normalizeMcpName(t), normalizeMcpName(c), Ce),
           }),
           new UM(
             t,
@@ -5870,13 +5870,13 @@ async function callMCPTool({
         );
         let Te = Le(r, t),
           Q = oy(t, r),
-          Ce = uQ(rn(t), rn(c), Q);
+          Ce = uQ(normalizeMcpName(t), normalizeMcpName(c), Q);
         throw (
-          i("tengu_mcp_session_expired", {
+          logEvent("tengu_mcp_session_expired", {
             errorCode: Y !== void 0 ? fromNumber(Y) : void 0,
             transportType: fromEnum(r.type ?? "stdio"),
             ...Te,
-            mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(rn(t), Q),
+            mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(t), Q),
             mcpToolName: Ce,
           }),
           await clearServerCache(t, r),
@@ -5984,7 +5984,7 @@ async function setupSdkMcpClients(e, t, r) {
         c.push(...T.value.tools),
         d.push(...T.value.commands));
   if (o.some((T) => T.type === "connected" && !!T.capabilities?.resources)) {
-    if (![eC, uC].some((h) => c.some((A) => Kt(A, h.name)))) c.push(eC, uC, JO);
+    if (![eC, uC].some((h) => c.some((A) => matchesToolName(A, h.name)))) c.push(eC, uC, JO);
   }
   return { clients: o, tools: c, commands: d };
 }

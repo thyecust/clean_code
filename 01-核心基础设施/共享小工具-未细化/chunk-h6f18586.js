@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { rn } from "./chunk-q4e7ggp5.js";
+import { normalizeMcpName } from "./mcp-name-normalization.js";
 var CLAUDE_IN_CHROME_MCP_SERVER_NAME = "claude-in-chrome",
   f5t = "javascript_tool";
 function isClaudeInChromeMCPServer(e) {
-  return rn(e) === CLAUDE_IN_CHROME_MCP_SERVER_NAME;
+  return normalizeMcpName(e) === CLAUDE_IN_CHROME_MCP_SERVER_NAME;
 }
 var t = "--claude-in-chrome-mcp";
 function isClaudeInChromeMcpLaunch(e) {

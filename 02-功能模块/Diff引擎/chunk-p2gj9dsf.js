@@ -16,7 +16,7 @@ import { Vm } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js
 import { iYn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
 import { Mpn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Rye, lle, dUn } from "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
-import { Ai } from "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Yl, V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
@@ -422,7 +422,7 @@ var QP = Yl(function (Je) {
     Ze = Re === void 0 ? !1 : Re,
     [Ie] = cn(),
     et = fe(Iat()),
-    tt = Ai().syntaxHighlightingDisabled ?? !1,
+    tt = useSettings().syntaxHighlightingDisabled ?? !1,
     K = Math.max(1, Math.floor(U)),
     nt = gi(),
     { structuredDiff: ot } = ree(),

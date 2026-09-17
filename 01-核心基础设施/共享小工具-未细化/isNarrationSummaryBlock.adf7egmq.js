@@ -10,8 +10,8 @@
 
 // [preload stripped] 原本在此预载 10 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Ol } from "./chunk-7xabjzfw.js";
-import "./chunk-kk3mqttk.js";
+import { getClaimRegistry } from "./host-claim-registry.js";
+import "./protobuf-decoding.js";
 import { _Gn, yGn } from "./chunk-se27pkgx.js";
 var t = new WeakMap();
 function isNarrationTaggedBlock(n) {
@@ -22,7 +22,7 @@ function isNarrationTaggedBlock(n) {
     else ((r = yGn(n.signature)), t.set(n, r));
     return r === _Gn;
   } catch (r) {
-    if (Ol().claim("narration_classifier_error")) logError(r);
+    if (getClaimRegistry().claim("narration_classifier_error")) logError(r);
     return !1;
   }
 }

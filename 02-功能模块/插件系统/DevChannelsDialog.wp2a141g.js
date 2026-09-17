@@ -12,10 +12,10 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Pr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function E() {
   Pr(0);
 }
@@ -47,7 +47,7 @@ function DevChannelsDialog(I) {
     B = E,
     x,
     y;
-  if (a[2] === p)
+  if (a[2] === MEMO_CACHE_SENTINEL)
     ((x = e(t, {
       children:
         "--dangerously-load-development-channels is for local channel development only. Do not use this option to run channels you have downloaded off the internet.",
@@ -73,7 +73,7 @@ function DevChannelsDialog(I) {
   else c = a[7];
   let s;
   if (a[8] !== l)
-    ((s = e(En, {
+    ((s = e(ConfirmPrompt, {
       confirmLabel: "I am using this for local development",
       cancelLabel: "Exit",
       onConfirm: () => l("accept"),

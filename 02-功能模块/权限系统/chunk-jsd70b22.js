@@ -9,15 +9,15 @@
 // Version: 2.1.263
 import { rE, Gt, ym } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Dr, Oi, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromEnumOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ve, zi, yt, dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { z, Ro, ae, qr, Zhe, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, cd } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
   isAutoClassifierActive,
   Cor,
@@ -98,7 +98,7 @@ import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { ot, kQ, Dge } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 import { OUTSIDE_READS_BLOCKED_DENY_REASON } from "./chunk-e4pfvp7x.js";
-import { Es } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
+import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { turnAbortControllerOf } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
   ps,
@@ -125,16 +125,16 @@ import { isTeammateWakeupPrompt, getLastPeerDmSummary } from "../Teammates团队
 import { KYn } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { zs } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
 import { CFC_TOOL_PREFIX } from "../ClaudeinChrome/chunk-hnp84hf6.js";
-import { Iin, ste } from "../插件系统/chunk-4k4dssd9.js";
+import { CHANNEL_PERMISSION_REQUEST_METHOD, findChannelEntry } from "../插件系统/channel-gate.js";
 import { I1t } from "../../01-核心基础设施/设置-配置/chunk-ekwet1zd.js";
 import { rWn, xin, oWn, sWn } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
-import { Gqe } from "../../01-核心基础设施/共享小工具-未细化/chunk-kdfkgcfn.js";
+import { getBrowserToolVerbPhrase } from "../../01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js";
 import { gWn } from "../../01-核心基础设施/共享小工具-未细化/chunk-er6a87rc.js";
 import { Fin, M1t } from "../../01-核心基础设施/共享小工具-未细化/chunk-3k9e6gxt.js";
 import { LAe } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { Vr } from "../../01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js";
-import { xp, Kr, ukn } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
-import { cp, fs } from "../Teammates团队/chunk-enjekn9t.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
+import { customSchema, defineDialog, isAsyncIterable } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
+import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME } from "../Teammates团队/chunk-enjekn9t.js";
 import { Iie, J6, Ex, gS } from "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 async function Pqe(e) {
@@ -208,7 +208,7 @@ function Uqe(e, r, o, t, s, k, R) {
     permissionMode: _,
     logDecision: d,
     logCancelled() {
-      i("tengu_tool_use_cancelled", { messageID: Ee(c), toolName: Hn(e.name) });
+      logEvent("tengu_tool_use_cancelled", { messageID: Ee(c), toolName: Hn(e.name) });
     },
     persistPermissions(b) {
       if (b.length === 0 || rx(o)) return !1;
@@ -364,7 +364,7 @@ function Uqe(e, r, o, t, s, k, R) {
 }
 function ze(e) {
   let r = e.input;
-  if (e.tool.name === Es) return yht(r);
+  if (e.tool.name === ASK_USER_QUESTION_TOOL_NAME) return yht(r);
   if (e.tool.name === Wh) return { text: "approve plan" };
   let o = e.tool.userFacingName(e.input).trim(),
     t =
@@ -380,10 +380,10 @@ function ze(e) {
     text: t && !s.includes(t) ? Y2(`approve ${s}: ${t}`) : `approve ${s}`,
   };
 }
-var Sbe = Kr({
+var Sbe = defineDialog({
   kind: "permission_ask_user_question",
-  payload: m(() =>
-    xp(
+  payload: createLazyValue(() =>
+    customSchema(
       (e) =>
         typeof e === "object" &&
         e !== null &&
@@ -393,15 +393,15 @@ var Sbe = Kr({
         "questions" in e,
     ),
   ),
-  result: m(() =>
-    xp((e) => typeof e === "object" && e !== null && "behavior" in e),
+  result: createLazyValue(() =>
+    customSchema((e) => typeof e === "object" && e !== null && "behavior" in e),
   ),
   default: { behavior: "cancelled" },
 });
-var bbe = Kr({
+var bbe = defineDialog({
   kind: "permission_bash",
-  payload: m(() =>
-    xp(
+  payload: createLazyValue(() =>
+    customSchema(
       (e) =>
         typeof e === "object" &&
         e !== null &&
@@ -412,15 +412,15 @@ var bbe = Kr({
         "classifierState" in e,
     ),
   ),
-  result: m(() =>
-    xp((e) => typeof e === "object" && e !== null && "behavior" in e),
+  result: createLazyValue(() =>
+    customSchema((e) => typeof e === "object" && e !== null && "behavior" in e),
   ),
   default: { behavior: "cancelled" },
 });
-var Oqe = Kr({
+var Oqe = defineDialog({
   kind: "permission_browser",
-  payload: m(() =>
-    xp(
+  payload: createLazyValue(() =>
+    customSchema(
       (e) =>
         typeof e === "object" &&
         e !== null &&
@@ -430,15 +430,15 @@ var Oqe = Kr({
         "verbPhrase" in e,
     ),
   ),
-  result: m(() =>
-    xp((e) => typeof e === "object" && e !== null && "behavior" in e),
+  result: createLazyValue(() =>
+    customSchema((e) => typeof e === "object" && e !== null && "behavior" in e),
   ),
   default: { behavior: "cancelled" },
 });
-var Dqe = Kr({
+var Dqe = defineDialog({
   kind: "permission_enter_plan_mode",
-  payload: m(() =>
-    xp(
+  payload: createLazyValue(() =>
+    customSchema(
       (e) =>
         typeof e === "object" &&
         e !== null &&
@@ -447,15 +447,15 @@ var Dqe = Kr({
         "permissionResult" in e,
     ),
   ),
-  result: m(() =>
-    xp((e) => typeof e === "object" && e !== null && "behavior" in e),
+  result: createLazyValue(() =>
+    customSchema((e) => typeof e === "object" && e !== null && "behavior" in e),
   ),
   default: { behavior: "cancelled" },
 });
-var Lqe = Kr({
+var Lqe = defineDialog({
   kind: "permission_exit_plan_mode_v2",
-  payload: m(() =>
-    xp(
+  payload: createLazyValue(() =>
+    customSchema(
       (e) =>
         typeof e === "object" &&
         e !== null &&
@@ -465,15 +465,15 @@ var Lqe = Kr({
         "plan" in e,
     ),
   ),
-  result: m(() =>
-    xp((e) => typeof e === "object" && e !== null && "behavior" in e),
+  result: createLazyValue(() =>
+    customSchema((e) => typeof e === "object" && e !== null && "behavior" in e),
   ),
   default: { behavior: "cancelled" },
 });
-var Nce = Kr({
+var Nce = defineDialog({
   kind: "permission_file",
-  payload: m(() =>
-    xp(
+  payload: createLazyValue(() =>
+    customSchema(
       (e) =>
         typeof e === "object" &&
         e !== null &&
@@ -484,8 +484,8 @@ var Nce = Kr({
         "operationType" in e,
     ),
   ),
-  result: m(() =>
-    xp((e) => typeof e === "object" && e !== null && "behavior" in e),
+  result: createLazyValue(() =>
+    customSchema((e) => typeof e === "object" && e !== null && "behavior" in e),
   ),
   default: { behavior: "cancelled" },
 });
@@ -586,7 +586,7 @@ function Ge(e) {
       let t = new URL(e.input.url);
       if (t.host) o = { host: t.host, url: t.href };
     } catch {}
-  return { ...r, chrome: o, verbPhrase: Gqe(e.tool.name, e.input) };
+  return { ...r, chrome: o, verbPhrase: getBrowserToolVerbPhrase(e.tool.name, e.input) };
 }
 function Xe(e) {
   let r = Lv(e),
@@ -1218,10 +1218,10 @@ function ye(e) {
   return cd(an(e), Mo);
 }
 var Mo = 160;
-var Mqe = Kr({
+var Mqe = defineDialog({
   kind: "permission_monitor",
-  payload: m(() =>
-    xp(
+  payload: createLazyValue(() =>
+    customSchema(
       (e) =>
         typeof e === "object" &&
         e !== null &&
@@ -1231,15 +1231,15 @@ var Mqe = Kr({
         "intervalMs" in e,
     ),
   ),
-  result: m(() =>
-    xp((e) => typeof e === "object" && e !== null && "behavior" in e),
+  result: createLazyValue(() =>
+    customSchema((e) => typeof e === "object" && e !== null && "behavior" in e),
   ),
   default: { behavior: "cancelled" },
 });
-var Nqe = Kr({
+var Nqe = defineDialog({
   kind: "permission_powershell",
-  payload: m(() =>
-    xp(
+  payload: createLazyValue(() =>
+    customSchema(
       (e) =>
         typeof e === "object" &&
         e !== null &&
@@ -1249,15 +1249,15 @@ var Nqe = Kr({
         "command" in e,
     ),
   ),
-  result: m(() =>
-    xp((e) => typeof e === "object" && e !== null && "behavior" in e),
+  result: createLazyValue(() =>
+    customSchema((e) => typeof e === "object" && e !== null && "behavior" in e),
   ),
   default: { behavior: "cancelled" },
 });
-var Fqe = Kr({
+var Fqe = defineDialog({
   kind: "permission_skill",
-  payload: m(() =>
-    xp(
+  payload: createLazyValue(() =>
+    customSchema(
       (e) =>
         typeof e === "object" &&
         e !== null &&
@@ -1267,15 +1267,15 @@ var Fqe = Kr({
         "skill" in e,
     ),
   ),
-  result: m(() =>
-    xp((e) => typeof e === "object" && e !== null && "behavior" in e),
+  result: createLazyValue(() =>
+    customSchema((e) => typeof e === "object" && e !== null && "behavior" in e),
   ),
   default: { behavior: "cancelled" },
 });
-var $qe = Kr({
+var $qe = defineDialog({
   kind: "permission_webfetch",
-  payload: m(() =>
-    xp(
+  payload: createLazyValue(() =>
+    customSchema(
       (e) =>
         typeof e === "object" &&
         e !== null &&
@@ -1285,14 +1285,14 @@ var $qe = Kr({
         "hostname" in e,
     ),
   ),
-  result: m(() =>
-    xp((e) => typeof e === "object" && e !== null && "behavior" in e),
+  result: createLazyValue(() =>
+    customSchema((e) => typeof e === "object" && e !== null && "behavior" in e),
   ),
   default: { behavior: "cancelled" },
 });
 var so = rE(() => zs.autoDenyPresence);
 async function Ie(e) {
-  i("tengu_unary_event", {
+  logEvent("tengu_unary_event", {
     event: fromEnum(e.event),
     completion_type: fromEnum(e.completion_type),
     language_name: await e.metadata.language_name,
@@ -1525,7 +1525,7 @@ function po(e) {
   }
   let M = { ideName: mo(F), toolName: Hn(o.name), editCount: p.length };
   return (
-    i("tengu_ext_will_show_diff", {}),
+    logEvent("tengu_ext_will_show_diff", {}),
     ao(b, p, r.toolUseContext, v, () => T)
       .then(({ oldContent: E, newContent: V }) => {
         let j = lo(b, E, V, "single"),
@@ -1533,7 +1533,7 @@ function po(e) {
         if (j.length === 0) {
           if (T || !c()) return;
           (x(),
-            i("tengu_ext_diff_rejected", G),
+            logEvent("tengu_ext_diff_rejected", G),
             logFeatureOk("ide_diff_view"),
             _({ behavior: "deny", message: "User denied via IDE" }),
             d(),
@@ -1552,7 +1552,7 @@ function po(e) {
           (resetDenialStreakAfterUserApproval(r.toolUseContext),
             logFeatureOk("permission_auto_mode_denial_fallback", { autoDenied: !1 }));
         let I = Ho(o, t, j);
-        (i("tengu_ext_diff_accepted", G),
+        (logEvent("tengu_ext_diff_accepted", G),
           logFeatureOk("ide_diff_view"),
           _({ behavior: "allow", updatedInput: I, updatedPermissions: [] }),
           d(),
@@ -1695,7 +1695,7 @@ function uo(e) {
       q = ym(),
       U = sWn(
         r.toolUseContext.getMcp().clients,
-        (B) => ste(B, q) !== void 0,
+        (B) => findChannelEntry(B, q) !== void 0,
         (B) => D.isServerRegistered(B),
       );
     if (U.length > 0) {
@@ -1707,7 +1707,7 @@ function uo(e) {
       };
       for (let K of U) {
         if (K.type !== "connected") continue;
-        KYn(K, { method: Iin, params: B }).catch((Y) => {
+        KYn(K, { method: CHANNEL_PERMISSION_REQUEST_METHOD, params: B }).catch((Y) => {
           (logFeatureBad(
             "permission_channel_relay",
             "permission_channel_relay_send_failed",
@@ -1767,7 +1767,7 @@ function uo(e) {
           B = 3000,
           X = 15000;
         while (!U && !w() && !I.aborted && !q) {
-          if ((await Z(B, I), w() || I.aborted || q)) return;
+          if ((await sleep(B, I), w() || I.aborted || q)) return;
           if (((U = await G.poll()), !U)) {
             B = Math.min(Math.round(B * 1.5), X);
             continue;
@@ -2131,7 +2131,7 @@ function Pe(e, r, o) {
     I = !0;
     let C = t.permissionMode;
     (t.toolUseContext.applyAttributionOp({ kind: "incrementPermissionPrompt" }),
-      i("tengu_tool_use_show_permission_request", {
+      logEvent("tengu_tool_use_show_permission_request", {
         messageID: Ee(t.messageId),
         toolName: Hn(t.tool.name),
         isMcp: t.tool.isMcp ?? !1,
@@ -2267,7 +2267,7 @@ function Pe(e, r, o) {
         } else Be.push(L);
       },
       Le = (L) => {
-        if (ukn(L))
+        if (isAsyncIterable(L))
           (async () => {
             try {
               for await (let fe of L) {
@@ -2452,7 +2452,7 @@ function Pe(e, r, o) {
       if (!b()) return;
       (me(),
         Y({ behavior: "deny", message: te }),
-        i("tengu_auto_mode_denial_dialog_auto_denied", {
+        logEvent("tengu_auto_mode_denial_dialog_auto_denied", {
           toolName: Hn(t.tool.name),
           isMcp: t.tool.isMcp ?? !1,
           timeoutMs: C,
@@ -2527,7 +2527,7 @@ function wo(e, r) {
     let d = o[_];
     if (!d || d.type !== "assistant") continue;
     for (let w of d.message.content)
-      if (w.type === "tool_use" && w.name === Vr) R.add(w.id);
+      if (w.type === "tool_use" && w.name === SEND_MESSAGE_TOOL_NAME) R.add(w.id);
   }
   let c = new Map();
   for (let _ = k + 1; _ < o.length; _++) {
@@ -2547,12 +2547,12 @@ function wo(e, r) {
       d.message.content.some(
         (p) =>
           p.type === "tool_use" &&
-          p.name === Vr &&
+          p.name === SEND_MESSAGE_TOOL_NAME &&
           typeof p.input === "object" &&
           p.input !== null &&
           "to" in p.input &&
           typeof p.input.to === "string" &&
-          (p.input.to === fs || p.input.to === cp) &&
+          (p.input.to === TEAM_LEAD_AGENT_NAME || p.input.to === MAIN_CONVERSATION_NAME) &&
           c.get(p.id) === !0,
       )
     ) {

@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "./chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { On, x0 } from "../安全文件系统(FS加固)/chunk-h64ek850.js";
-import { m } from "./chunk-78nzsrc6.js";
+import { createLazyValue } from "./lazy-value.js";
 import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { b, z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { h3t, _3t, getJobsDir } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
@@ -35,7 +35,7 @@ async function dze(t, r, e) {
   await eFt(t, r, e);
 }
 async function eFt(t, r, e) {
-  if (M() && e)
+  if (isHoverRestEnabled() && e)
     return (
       (
         await e
@@ -66,7 +66,7 @@ async function ban(t, r) {
   }
   await unlink(n(t)).catch(() => {});
 }
-var g = m(() => c({ q: s(), collapsed: v(s()).optional(), ts: T() }));
+var g = createLazyValue(() => c({ q: s(), collapsed: v(s()).optional(), ts: T() }));
 async function H9n(t, r) {
   let e = r ? await P(r, t) : await Wi(n(t), d);
   if (e === null) return;

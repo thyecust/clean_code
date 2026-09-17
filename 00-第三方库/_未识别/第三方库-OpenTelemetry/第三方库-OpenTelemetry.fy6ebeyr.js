@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { Ls, Mc, V$e } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { w } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var H = w(function (Oe) {
+import { commonJS } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var H = commonJS(function (Oe) {
   Object.defineProperty(Oe, "__esModule", { value: !0 });
   Oe.AggregationTemporality = void 0;
   var gs;
@@ -17,7 +17,7 @@ var H = w(function (Oe) {
     ((e[(e.DELTA = 0)] = "DELTA"), (e[(e.CUMULATIVE = 1)] = "CUMULATIVE"));
   })((gs = Oe.AggregationTemporality || (Oe.AggregationTemporality = {})));
 });
-var d = w(function (Re) {
+var d = commonJS(function (Re) {
   Object.defineProperty(Re, "__esModule", { value: !0 });
   Re.DataPointType = Re.InstrumentType = void 0;
   var ds;
@@ -38,7 +38,7 @@ var d = w(function (Re) {
       (e[(e.SUM = 3)] = "SUM"));
   })((ms = Re.DataPointType || (Re.DataPointType = {})));
 });
-var _ = w(function (Ne) {
+var _ = commonJS(function (Ne) {
   Object.defineProperty(Ne, "__esModule", { value: !0 });
   Ne.equalsCaseInsensitive =
     Ne.binarySearchUB =
@@ -103,7 +103,7 @@ var _ = w(function (Ne) {
   }
   Ne.equalsCaseInsensitive = ys;
 });
-var b = w(function (Le) {
+var b = commonJS(function (Le) {
   Object.defineProperty(Le, "__esModule", { value: !0 });
   Le.AggregatorKind = void 0;
   var Is;
@@ -115,7 +115,7 @@ var b = w(function (Le) {
       (e[(e.EXPONENTIAL_HISTOGRAM = 4)] = "EXPONENTIAL_HISTOGRAM"));
   })((Is = Le.AggregatorKind || (Le.AggregatorKind = {})));
 });
-var De = w(function (Ue) {
+var De = commonJS(function (Ue) {
   Object.defineProperty(Ue, "__esModule", { value: !0 });
   Ue.DropAggregator = void 0;
   var Os = b();
@@ -136,7 +136,7 @@ var De = w(function (Ue) {
   }
   Ue.DropAggregator = Ge;
 });
-var Fe = w(function (Ve) {
+var Fe = commonJS(function (Ve) {
   Object.defineProperty(Ve, "__esModule", { value: !0 });
   Ve.HistogramAggregator = Ve.HistogramAccumulation = void 0;
   var Ps = b(),
@@ -268,7 +268,7 @@ var Fe = w(function (Ve) {
   }
   Ve.HistogramAggregator = qe;
 });
-var $e = w(function (He) {
+var $e = commonJS(function (He) {
   Object.defineProperty(He, "__esModule", { value: !0 });
   He.Buckets = void 0;
   class ce {
@@ -404,7 +404,7 @@ var $e = w(function (He) {
     }
   }
 });
-var he = w(function (ze) {
+var he = commonJS(function (ze) {
   Object.defineProperty(ze, "__esModule", { value: !0 });
   ze.getSignificand =
     ze.getNormalBase2 =
@@ -434,7 +434,7 @@ var he = w(function (ze) {
   }
   ze.getSignificand = Ds;
 });
-var z = w(function (Xe) {
+var z = commonJS(function (Xe) {
   Object.defineProperty(Xe, "__esModule", { value: !0 });
   Xe.nextGreaterSquare = Xe.ldexp = void 0;
   function js(e, t) {
@@ -462,13 +462,13 @@ var z = w(function (Xe) {
   }
   Xe.nextGreaterSquare = $s;
 });
-var W = w(function (Je) {
+var W = commonJS(function (Je) {
   Object.defineProperty(Je, "__esModule", { value: !0 });
   Je.MappingError = void 0;
   class Ke extends Error {}
   Je.MappingError = Ke;
 });
-var it = w(function (tt) {
+var it = commonJS(function (tt) {
   Object.defineProperty(tt, "__esModule", { value: !0 });
   tt.ExponentMapping = void 0;
   var T = he(),
@@ -516,7 +516,7 @@ var it = w(function (tt) {
   }
   tt.ExponentMapping = et;
 });
-var ut = w(function (at) {
+var ut = commonJS(function (at) {
   Object.defineProperty(at, "__esModule", { value: !0 });
   at.LogarithmMapping = void 0;
   var E = he(),
@@ -572,7 +572,7 @@ var ut = w(function (at) {
   }
   at.LogarithmMapping = ot;
 });
-var dt = w(function (_t) {
+var dt = commonJS(function (_t) {
   Object.defineProperty(_t, "__esModule", { value: !0 });
   _t.getMapping = void 0;
   var Xs = it(),
@@ -593,7 +593,7 @@ var dt = w(function (_t) {
   }
   _t.getMapping = Zs;
 });
-var St = w(function (Mt) {
+var St = commonJS(function (Mt) {
   Object.defineProperty(Mt, "__esModule", { value: !0 });
   Mt.ExponentialHistogramAggregator = Mt.ExponentialHistogramAccumulation =
     void 0;
@@ -915,7 +915,7 @@ var St = w(function (Mt) {
   }
   Mt.ExponentialHistogramAggregator = ft;
 });
-var Tt = w(function (xt) {
+var Tt = commonJS(function (xt) {
   Object.defineProperty(xt, "__esModule", { value: !0 });
   xt.LastValueAggregator = xt.LastValueAccumulation = void 0;
   var on = b(),
@@ -977,7 +977,7 @@ var Tt = w(function (xt) {
   }
   xt.LastValueAggregator = yt;
 });
-var It = w(function (wt) {
+var It = commonJS(function (wt) {
   Object.defineProperty(wt, "__esModule", { value: !0 });
   wt.SumAggregator = wt.SumAccumulation = void 0;
   var un = b(),
@@ -1044,7 +1044,7 @@ var It = w(function (wt) {
   }
   wt.SumAggregator = Et;
 });
-var Ct = w(function (h) {
+var Ct = commonJS(function (h) {
   Object.defineProperty(h, "__esModule", { value: !0 });
   h.SumAggregator =
     h.SumAccumulation =
@@ -1116,7 +1116,7 @@ var Ct = w(function (h) {
     },
   });
 });
-var Vt = w(function (Lt) {
+var Vt = commonJS(function (Lt) {
   Object.defineProperty(Lt, "__esModule", { value: !0 });
   Lt.DEFAULT_AGGREGATION =
     Lt.EXPONENTIAL_HISTOGRAM_AGGREGATION =
@@ -1241,7 +1241,7 @@ var Vt = w(function (Lt) {
   Lt.EXPONENTIAL_HISTOGRAM_AGGREGATION = new de();
   Lt.DEFAULT_AGGREGATION = new me();
 });
-var q = w(function (Ft) {
+var q = commonJS(function (Ft) {
   Object.defineProperty(Ft, "__esModule", { value: !0 });
   Ft.toAggregation = Ft.AggregationType = void 0;
   var f = Vt(),
@@ -1286,7 +1286,7 @@ var q = w(function (Ft) {
   }
   Ft.toAggregation = bn;
 });
-var pe = w(function (jt) {
+var pe = commonJS(function (jt) {
   Object.defineProperty(jt, "__esModule", { value: !0 });
   jt.DEFAULT_AGGREGATION_TEMPORALITY_SELECTOR =
     jt.DEFAULT_AGGREGATION_SELECTOR = void 0;
@@ -1297,7 +1297,7 @@ var pe = w(function (jt) {
   var vn = (e) => Tn.AggregationTemporality.CUMULATIVE;
   jt.DEFAULT_AGGREGATION_TEMPORALITY_SELECTOR = vn;
 });
-var fe = w(function (Kt) {
+var fe = commonJS(function (Kt) {
   Object.defineProperty(Kt, "__esModule", { value: !0 });
   Kt.MetricReader = void 0;
   var zt = Ls(),
@@ -1374,7 +1374,7 @@ var fe = w(function (Kt) {
   }
   Kt.MetricReader = Yt;
 });
-var rr = w(function (er) {
+var rr = commonJS(function (er) {
   Object.defineProperty(er, "__esModule", { value: !0 });
   er.PeriodicExportingMetricReader = void 0;
   var Z = Ls(),
@@ -1493,7 +1493,7 @@ var rr = w(function (er) {
   }
   er.PeriodicExportingMetricReader = Qt;
 });
-var ar = w(function (nr) {
+var ar = commonJS(function (nr) {
   Object.defineProperty(nr, "__esModule", { value: !0 });
   nr.InMemoryMetricExporter = void 0;
   var ir = Mc();
@@ -1530,7 +1530,7 @@ var ar = w(function (nr) {
   }
   nr.InMemoryMetricExporter = sr;
 });
-var hr = w(function (ur) {
+var hr = commonJS(function (ur) {
   Object.defineProperty(ur, "__esModule", { value: !0 });
   ur.ConsoleMetricExporter = void 0;
   var cr = Mc(),
@@ -1574,7 +1574,7 @@ var hr = w(function (ur) {
   }
   ur.ConsoleMetricExporter = Me;
 });
-var mr = w(function (gr) {
+var mr = commonJS(function (gr) {
   Object.defineProperty(gr, "__esModule", { value: !0 });
   gr.ViewRegistry = void 0;
   class _r {
@@ -1606,7 +1606,7 @@ var mr = w(function (gr) {
   }
   gr.ViewRegistry = _r;
 });
-var V = w(function (Mr) {
+var V = commonJS(function (Mr) {
   Object.defineProperty(Mr, "__esModule", { value: !0 });
   Mr.isValidName =
     Mr.isDescriptorCompatibleWith =
@@ -1656,7 +1656,7 @@ var V = w(function (Mr) {
   }
   Mr.isValidName = fr;
 });
-var ee = w(function (vr) {
+var ee = commonJS(function (vr) {
   Object.defineProperty(vr, "__esModule", { value: !0 });
   vr.isObservableInstrument =
     vr.ObservableUpDownCounterInstrument =
@@ -1770,7 +1770,7 @@ var ee = w(function (vr) {
   }
   vr.isObservableInstrument = Vn;
 });
-var Nr = w(function (Pr) {
+var Nr = commonJS(function (Pr) {
   Object.defineProperty(Pr, "__esModule", { value: !0 });
   Pr.Meter = void 0;
   var S = V(),
@@ -1857,7 +1857,7 @@ var Nr = w(function (Pr) {
   }
   Pr.Meter = Or;
 });
-var Ae = w(function (Lr) {
+var Ae = commonJS(function (Lr) {
   Object.defineProperty(Lr, "__esModule", { value: !0 });
   Lr.MetricStorage = void 0;
   var Kn = V();
@@ -1884,7 +1884,7 @@ var Ae = w(function (Lr) {
   }
   Lr.MetricStorage = Cr;
 });
-var k = w(function (Br) {
+var k = commonJS(function (Br) {
   Object.defineProperty(Br, "__esModule", { value: !0 });
   Br.AttributeHashMap = Br.HashMap = void 0;
   var Jn = _();
@@ -1936,7 +1936,7 @@ var k = w(function (Br) {
   }
   Br.AttributeHashMap = Ur;
 });
-var xe = w(function (Vr) {
+var xe = commonJS(function (Vr) {
   Object.defineProperty(Vr, "__esModule", { value: !0 });
   Vr.DeltaMetricProcessor = void 0;
   var Qn = _(),
@@ -2006,7 +2006,7 @@ var xe = w(function (Vr) {
   }
   Vr.DeltaMetricProcessor = qr;
 });
-var be = w(function (Fr) {
+var be = commonJS(function (Fr) {
   Object.defineProperty(Fr, "__esModule", { value: !0 });
   Fr.TemporalMetricProcessor = void 0;
   var eo = H(),
@@ -2085,7 +2085,7 @@ var be = w(function (Fr) {
     return Array.from(e.entries());
   }
 });
-var Wr = w(function ($r) {
+var Wr = commonJS(function ($r) {
   Object.defineProperty($r, "__esModule", { value: !0 });
   $r.AsyncMetricStorage = void 0;
   var io = Ae(),
@@ -2125,7 +2125,7 @@ var Wr = w(function ($r) {
   }
   $r.AsyncMetricStorage = jr;
 });
-var ei = w(function (Zr) {
+var ei = commonJS(function (Zr) {
   Object.defineProperty(Zr, "__esModule", { value: !0 });
   Zr.getConflictResolutionRecipe =
     Zr.getDescriptionResolutionRecipe =
@@ -2182,7 +2182,7 @@ var ei = w(function (Zr) {
   }
   Zr.getConflictResolutionRecipe = co;
 });
-var si = w(function (ri) {
+var si = commonJS(function (ri) {
   Object.defineProperty(ri, "__esModule", { value: !0 });
   ri.MetricStorageRegistry = void 0;
   var mo = V(),
@@ -2271,7 +2271,7 @@ To resolve the conflict:`,
   }
   ri.MetricStorageRegistry = Te;
 });
-var ci = w(function (oi) {
+var ci = commonJS(function (oi) {
   Object.defineProperty(oi, "__esModule", { value: !0 });
   oi.MultiMetricStorage = void 0;
   class ni {
@@ -2286,7 +2286,7 @@ var ci = w(function (oi) {
   }
   oi.MultiMetricStorage = ni;
 });
-var di = w(function (_i) {
+var di = commonJS(function (_i) {
   Object.defineProperty(_i, "__esModule", { value: !0 });
   _i.BatchObservableResultImpl = _i.ObservableResultImpl = void 0;
   var R = Ls(),
@@ -2347,7 +2347,7 @@ var di = w(function (_i) {
   }
   _i.BatchObservableResultImpl = hi;
 });
-var Si = w(function (Mi) {
+var Si = commonJS(function (Mi) {
   Object.defineProperty(Mi, "__esModule", { value: !0 });
   Mi.ObservableRegistry = void 0;
   var Mo = Ls(),
@@ -2435,7 +2435,7 @@ var Si = w(function (Mi) {
   }
   Mi.ObservableRegistry = fi;
 });
-var Ti = w(function (xi) {
+var Ti = commonJS(function (xi) {
   Object.defineProperty(xi, "__esModule", { value: !0 });
   xi.SyncMetricStorage = void 0;
   var Ao = Ae(),
@@ -2472,7 +2472,7 @@ var Ti = w(function (xi) {
   }
   xi.SyncMetricStorage = yi;
 });
-var re = w(function (Oi) {
+var re = commonJS(function (Oi) {
   Object.defineProperty(Oi, "__esModule", { value: !0 });
   Oi.createDenyListAttributesProcessor =
     Oi.createAllowListAttributesProcessor =
@@ -2545,7 +2545,7 @@ var re = w(function (Oi) {
   Oi.createDenyListAttributesProcessor = Eo;
   var wo = new Ei();
 });
-var Li = w(function (Ni) {
+var Li = commonJS(function (Ni) {
   Object.defineProperty(Ni, "__esModule", { value: !0 });
   Ni.MeterSharedState = void 0;
   var Po = V(),
@@ -2632,7 +2632,7 @@ var Li = w(function (Ni) {
   }
   Ni.MeterSharedState = Ri;
 });
-var Di = w(function (Ui) {
+var Di = commonJS(function (Ui) {
   Object.defineProperty(Ui, "__esModule", { value: !0 });
   Ui.MeterProviderSharedState = void 0;
   var Do = _(),
@@ -2664,7 +2664,7 @@ var Di = w(function (Ui) {
   }
   Ui.MeterProviderSharedState = Gi;
 });
-var Fi = w(function (Vi) {
+var Fi = commonJS(function (Vi) {
   Object.defineProperty(Vi, "__esModule", { value: !0 });
   Vi.MetricCollector = void 0;
   var Fo = Mc();
@@ -2714,7 +2714,7 @@ var Fi = w(function (Vi) {
   }
   Vi.MetricCollector = qi;
 });
-var ie = w(function (ji) {
+var ie = commonJS(function (ji) {
   Object.defineProperty(ji, "__esModule", { value: !0 });
   ji.ExactPredicate = ji.PatternPredicate = void 0;
   var Ho = /[\^$\\.+?()[\]{}|]/g;
@@ -2753,7 +2753,7 @@ var ie = w(function (ji) {
   }
   ji.ExactPredicate = Hi;
 });
-var Ki = w(function (Xi) {
+var Ki = commonJS(function (Xi) {
   Object.defineProperty(Xi, "__esModule", { value: !0 });
   Xi.InstrumentSelector = void 0;
   var zi = ie();
@@ -2778,7 +2778,7 @@ var Ki = w(function (Xi) {
   }
   Xi.InstrumentSelector = Wi;
 });
-var es = w(function (Zi) {
+var es = commonJS(function (Zi) {
   Object.defineProperty(Zi, "__esModule", { value: !0 });
   Zi.MeterSelector = void 0;
   var ve = ie();
@@ -2803,7 +2803,7 @@ var es = w(function (Zi) {
   }
   Zi.MeterSelector = Ji;
 });
-var os = w(function (ss) {
+var os = commonJS(function (ss) {
   Object.defineProperty(ss, "__esModule", { value: !0 });
   ss.View = void 0;
   var $o = ie(),
@@ -2867,7 +2867,7 @@ var os = w(function (ss) {
   }
   ss.View = is;
 });
-var ls = w(function (cs) {
+var ls = commonJS(function (cs) {
   Object.defineProperty(cs, "__esModule", { value: !0 });
   cs.MeterProvider = void 0;
   var se = Ls(),
@@ -2929,7 +2929,7 @@ var ls = w(function (cs) {
   }
   cs.MeterProvider = as;
 });
-var bee = w(function (l) {
+var bee = commonJS(function (l) {
   Object.defineProperty(l, "__esModule", { value: !0 });
   l.TimeoutError =
     l.createDenyListAttributesProcessor =

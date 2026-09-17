@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 70 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -45,7 +45,7 @@ async function checkMantleDefaultAvailability(e = DEFAULT_MANTLE_OPUS_KEY, s) {
     if (c) return [];
     let t = await E(toProviderWireModelId(m));
     if (
-      (i("tengu_mantle_probe_result", {
+      (logEvent("tengu_mantle_probe_result", {
         model_key: S("admin_pin"),
         accessible: S(
           t === "refuted" ? "false" : t === "accessible" ? "true" : "unknown",
@@ -58,10 +58,10 @@ async function checkMantleDefaultAvailability(e = DEFAULT_MANTLE_OPUS_KEY, s) {
   }
   let d = to[e].mantle;
   if (!d) return [];
-  i("tengu_mantle_default_check", {});
+  logEvent("tengu_mantle_default_check", {});
   let l = await h(d);
   if (
-    (i("tengu_mantle_probe_result", {
+    (logEvent("tengu_mantle_probe_result", {
       model_key: fromEnum(e),
       accessible: S(l ? "true" : "false"),
     }),
@@ -90,7 +90,7 @@ async function checkMantleDefaultAvailability(e = DEFAULT_MANTLE_OPUS_KEY, s) {
       p.map(async (t) => {
         let A = to[t].mantle,
           _ = await h(A);
-        i("tengu_mantle_probe_result", {
+        logEvent("tengu_mantle_probe_result", {
           model_key: fromEnum(t),
           accessible: S(_ ? "true" : "false"),
         });

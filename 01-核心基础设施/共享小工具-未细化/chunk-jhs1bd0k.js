@@ -9,22 +9,22 @@
 // Version: 2.1.263
 import { jt } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 var s = null;
-function D6n(e) {
+function registerDesignAuthResolver(e) {
   let n = s;
   return ((s = e), n);
 }
-function Cdt() {
+function getDesignAuthResolver() {
   return s;
 }
 var r = null;
-function L6n(e) {
+function registerFirstPartyDesignAuthChecker(e) {
   let n = r;
   return ((r = e), n);
 }
-async function TF(e) {
+async function hasFirstPartyDesignAuth(e) {
   return (await r?.(e)) ?? !1;
 }
-class Qee extends Error {
+class FirstPartyDesignNeedsConsentError extends Error {
   consent;
   constructor(e) {
     super("first-party design MCP server requires consent");
@@ -33,27 +33,27 @@ class Qee extends Error {
   }
 }
 var t = null;
-function M6n(e) {
+function registerDesignConsentProvider(e) {
   let n = t;
   return ((t = e), n);
 }
-function Pce() {
+function getDesignConsentProvider() {
   return t;
 }
-function vdt(e) {
+function setPendingScopeExpansionNotice(e) {
   let n = jt();
   if (n.scopeExpansionDisclosed) return;
   ((n.scopeExpansionDisclosed = !0), (n.pendingScopeExpansionNotice = e));
 }
-function Usn() {
+function takePendingScopeExpansionNotice() {
   let e = jt(),
     n = e.pendingScopeExpansionNotice;
   return ((e.pendingScopeExpansionNotice = void 0), n);
 }
-function N6n() {
-  let e = Usn();
+function flushPendingScopeExpansionNotice() {
+  let e = takePendingScopeExpansionNotice();
   if (e)
     process.stderr.write(`${e}
 `);
 }
-export { D6n, Cdt, L6n, TF, Qee, M6n, Pce, vdt, Usn, N6n };
+export { registerDesignAuthResolver, getDesignAuthResolver, registerFirstPartyDesignAuthChecker, hasFirstPartyDesignAuth, FirstPartyDesignNeedsConsentError, registerDesignConsentProvider, getDesignConsentProvider, setPendingScopeExpansionNotice, takePendingScopeExpansionNotice, flushPendingScopeExpansionNotice };

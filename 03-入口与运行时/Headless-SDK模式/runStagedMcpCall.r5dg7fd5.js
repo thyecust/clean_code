@@ -14,13 +14,13 @@ import { createAbortController } from "../核心应用-Agent循环/chunk-h3cty6g
 import { Si } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { pve } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { SYNCED_FILE_ROOT, WORKING_FILESTORE_PREFIX, MAX_WORKING_FILE_BYTES, relUnderSyncDir, getSyncedFile, writeLaneRowFromWorker } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Tot } from "../../02-功能模块/Memory-CLAUDE.md/chunk-3ehd7vx0.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { constants } from "fs";
 import {
   mkdir,
@@ -50,7 +50,7 @@ function U(e, t) {
     for (let a of e) U(a, t);
     return;
   }
-  if (me(e)) for (let a of Object.values(e)) U(a, t);
+  if (isRecord(e)) for (let a of Object.values(e)) U(a, t);
 }
 function G(e, t) {
   if (typeof e === "string") {
@@ -58,7 +58,7 @@ function G(e, t) {
     return e;
   }
   if (Array.isArray(e)) return e.map((a) => G(a, t));
-  if (me(e)) return Si(e, (a) => G(a, t));
+  if (isRecord(e)) return Si(e, (a) => G(a, t));
   return e;
 }
 function V(e) {
@@ -201,7 +201,7 @@ async function ft(e, t) {
     if (w !== void 0) await H(w, { recursive: !0, force: !0 }).catch(() => {});
     let s = A(n);
     return (
-      q("warn", "ptc_staging_unavailable", { code: s ?? "temp_dir_refused" }),
+      writeDiagnosticsEvent("warn", "ptc_staging_unavailable", { code: s ?? "temp_dir_refused" }),
       r("tool_error", `staging unavailable: ${s ?? "temp_dir_refused"}`)
     );
   }
@@ -335,7 +335,7 @@ async function ft(e, t) {
       j.push({ lane_path: o.lane_path, etag: C.etag, bytes: M.length });
     }
     return (
-      q("info", "mcp_call_staged_ok", { inputs: s.length, outputs: j.length }),
+      writeDiagnosticsEvent("info", "mcp_call_staged_ok", { inputs: s.length, outputs: j.length }),
       {
         staging: { ok: !0, outputs: j, inputs_used: s },
         tool: {

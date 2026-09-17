@@ -13,7 +13,7 @@ import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.4
 import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { L } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
-var dat = {
+var STATUS_PRESENTATION = {
   success: { icon: L.tick, color: "success", ariaLabel: "done:" },
   error: { icon: L.cross, color: "error", ariaLabel: "failed:" },
   warning: { icon: L.warning, color: "warning", ariaLabel: "warning:" },
@@ -21,11 +21,11 @@ var dat = {
   pending: { icon: L.circle, color: void 0, ariaLabel: "pending:" },
   loading: { icon: "\u2026", color: void 0, ariaLabel: "loading:" },
 };
-function et(m) {
+function StatusIndicator(m) {
   let d = _(8),
     { status: S, withSpace: u } = m,
     w = u === void 0 ? !1 : u,
-    o = dat[S];
+    o = STATUS_PRESENTATION[S];
   const c = !o.color;
   let i;
   if (d[0] !== o.ariaLabel || d[1] !== o.icon)
@@ -46,8 +46,8 @@ function et(m) {
   else f = d[7];
   return f;
 }
-function cu(a) {
+function shouldReduceMotion(a) {
   if (a) return !0;
   return Zd() && H("tengu_cedar_marsh", !1);
 }
-export { dat, et, cu };
+export { STATUS_PRESENTATION, StatusIndicator, shouldReduceMotion };

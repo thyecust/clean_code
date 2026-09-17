@@ -10,10 +10,10 @@
 import { makeOwnPublishesStore } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { nAt } from "../../02-功能模块/图表-Mermaid/chunk-743atbtj.js";
 import { $jn } from "../../02-功能模块/CodeReview/chunk-cwdcyphs.js";
-import { Njn } from "./chunk-wm4s322b.js";
+import { makeWhiteboardTelemetryStore } from "./whiteboard-telemetry.js";
 import { uuidSlugFromUrl } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { Gjn } from "./chunk-f7n720sn.js";
-import { ef } from "./chunk-sda3j0p4.js";
+import { createWorkshopTelemetryStore } from "./workshop-telemetry.js";
+import { AGENT_COLOR_NAMES } from "./agent-color-palette.js";
 import { nbe } from "./chunk-1rpyafm2.js";
 function a(e, r) {
   return Object.entries(e.frameUrls ?? {}).find(
@@ -31,8 +31,8 @@ function l(e, r) {
 function Ole(e, r) {
   return {
     ownPublishes: makeOwnPublishesStore(e, r),
-    workshopTelemetry: Gjn(e, r),
-    whiteboardTelemetry: Njn(e, r),
+    workshopTelemetry: createWorkshopTelemetryStore(e, r),
+    whiteboardTelemetry: makeWhiteboardTelemetryStore(e, r),
     prReviewTargets: $jn(e, r),
     recordedPages: {
       isWorkshopPage: (i) => l(e(), i),
@@ -50,7 +50,7 @@ function elt() {
   );
 }
 var tlt = {
-  assign: () => ef[0],
+  assign: () => AGENT_COLOR_NAMES[0],
   get: () => {
     return;
   },
@@ -61,7 +61,7 @@ function Dle(e) {
       let i = e.get(),
         s = i.assignments.get(r);
       if (s) return s;
-      let t = ef[i.index % ef.length];
+      let t = AGENT_COLOR_NAMES[i.index % AGENT_COLOR_NAMES.length];
       return (
         e.set((o) => {
           if (o.assignments.has(r)) return o;

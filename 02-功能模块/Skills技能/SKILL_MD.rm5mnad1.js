@@ -8,16 +8,16 @@
 
 // Version: 2.1.263
 import { Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
-import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var t = Ae("./anti-patterns-c1rmzbdk.md");
-var a = Ae("./choosing-a-form-0b6fjqkn.md");
-var s = Ae("./color-formula-dc6qvg1m.md");
-var r = Ae("./components-vtwwx2hf.md");
-var o = Ae("./interaction-d4xwjtb3.md");
-var i = Ae("./marks-and-anatomy-j3qtdh2t.md");
+import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var t = importMetaRequire("./anti-patterns-c1rmzbdk.md");
+var a = importMetaRequire("./choosing-a-form-0b6fjqkn.md");
+var s = importMetaRequire("./color-formula-dc6qvg1m.md");
+var r = importMetaRequire("./components-vtwwx2hf.md");
+var o = importMetaRequire("./interaction-d4xwjtb3.md");
+var i = importMetaRequire("./marks-and-anatomy-j3qtdh2t.md");
 var n = "./palette-90f85f6c.md.zst";
 var l = Ke(n, import.meta.dirname);
-var h = Ae("./SKILL-8zd8x5rj.md");
+var h = importMetaRequire("./SKILL-8zd8x5rj.md");
 var d = (e) => (typeof e === "string" ? e : e.default),
   v = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.8z5qg1sz.js"),
   w = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.8tgnzppc.js"),

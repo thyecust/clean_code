@@ -10,15 +10,15 @@
 
 // [preload stripped] 原本在此预载 92 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { mi, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { DA, EW } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { ts, Js, Oa } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Rp } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -28,13 +28,13 @@ import "../远程工具执行/chunk-66axrkvh.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-33vqsej8.js";
 import { gIe } from "../Bridge-RemoteControl/chunk-qp3gv3vk.js";
 import "../Bridge-RemoteControl/chunk-bm9p9vh6.js";
-import "../Bridge-RemoteControl/chunk-h5053szy.js";
+import "../Bridge-RemoteControl/remote-session-host-registry.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-d1t6d4k8.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-txc6d085.js";
+import "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
 import { Rlt, _2n, Gle } from "../../01-核心基础设施/共享小工具-未细化/chunk-ey89qg3e.js";
 import { I4, MIe, s2, j3e, CSe, W3e } from "./chunk-k2gczbnj.js";
 import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function U(t) {
   let c = new Map(),
     g = new Map();
@@ -91,26 +91,26 @@ async function Oe(t, c) {
     S = g.toLowerCase();
   if (!g || EW.includes(S)) {
     let o = ke();
-    if (o && Boolean(a.CLAUDE_CODE_REMOTE) && !lo(c.session)) {
+    if (o && Boolean(a.CLAUDE_CODE_REMOTE) && !mayHaveRemoteClient(c.session)) {
       let v = c.toolState.get(g3);
       if (
         (await Promise.race([
           gIe(c, v, "resolve"),
-          Z(ee, c.abortController.signal),
+          sleep(ee, c.abortController.signal),
         ]),
-        !lo(c.session))
+        !mayHaveRemoteClient(c.session))
       )
         return s(ne(r, c.getMcp().tools, v));
     }
     if (r.length === 0)
       return s(`No MCP servers are configured. Add one with \`claude mcp add\`.
 ${j}`);
-    let R = G(r, (v) => v.type === "connected"),
-      P = G(r, (v) => v.type === "cached"),
-      E = G(r, (v) => v.type === "pending"),
-      k = G(r, ow),
-      h = G(r, I),
-      M = G(r, (v) => v.type === "disabled"),
+    let R = countMatching(r, (v) => v.type === "connected"),
+      P = countMatching(r, (v) => v.type === "cached"),
+      E = countMatching(r, (v) => v.type === "pending"),
+      k = countMatching(r, ow),
+      h = countMatching(r, I),
+      M = countMatching(r, (v) => v.type === "disabled"),
       O = r.length - R - P - E - M - k;
     return s(
       `${r.length} MCP server(s): ${R} connected, ` +
@@ -134,7 +134,7 @@ ${j}`),
     return s(
       `"${m(C)}" isn't a recognized /mcp action. Try reconnect, enable, or disable.`,
     );
-  i("tengu_mcp_command_inline", { action: fromEnum(C) });
+  logEvent("tengu_mcp_command_inline", { action: fromEnum(C) });
   let d = e === "all" ? r : r.filter((o) => o.name === e);
   if (d.length === 0)
     return s(
@@ -176,8 +176,8 @@ ${j}`),
     let R = e === "all" ? d.filter((h) => J(h, b)) : d,
       P = e === "all" ? CSe(d, !0, b) : null;
     if (R.length === 0) {
-      let h = G(d, (v) => v.type === "disabled"),
-        M = G(d, (v) => ow(v) && !b(v.name));
+      let h = countMatching(d, (v) => v.type === "disabled"),
+        M = countMatching(d, (v) => ow(v) && !b(v.name));
       if (h === 0 && P === null && M > 0)
         return s(
           `${M} MCP server(s) aren't configured yet, so there's nothing to reconnect. The rest are already connected or connecting.`,
@@ -199,14 +199,14 @@ ${j}`),
       return s("All enabled MCP servers are already connected or connecting.");
     }
     let E = await Promise.allSettled(R.map((h) => p(h.name))),
-      k = G(
+      k = countMatching(
         E,
         (h) => h.status === "fulfilled" && h.value.client.type === "connected",
       );
     if (e !== "all") {
       let h = E[0];
       if (h?.status !== "fulfilled")
-        return z("reconnect", e, h?.reason, { persistsOffBox: lo(c.session) });
+        return z("reconnect", e, h?.reason, { persistsOffBox: mayHaveRemoteClient(c.session) });
       let M = h.value.client.type,
         O =
           M === "needs-auth"
@@ -243,12 +243,12 @@ ${j}`),
     if (e === "all") {
       let o = CSe(d, f, b);
       if (o !== null) {
-        let y = f ? G(d, (R) => J(R, b)) : 0;
+        let y = f ? countMatching(d, (R) => J(R, b)) : 0;
         return s(y > 0 ? `${o} ${V(y)}` : o);
       }
     }
     if (f) {
-      let o = G(d, I);
+      let o = countMatching(d, I);
       if (o > 0)
         return s(
           e === "all"
@@ -268,9 +268,9 @@ ${j}`),
   }
   let D = e === "all" ? CSe(d, f, b) : null,
     L = await Promise.allSettled(A.map((o) => N(o.name))),
-    T = G(L, (o) => o.status === "fulfilled"),
+    T = countMatching(L, (o) => o.status === "fulfilled"),
     H = f
-      ? G(L, (o) => o.status === "fulfilled" && o.value.type === "connected")
+      ? countMatching(L, (o) => o.status === "fulfilled" && o.value.type === "connected")
       : T,
     q = f ? "Enabled" : "Disabled",
     K = f && H < T ? ` (${T - H} enabled but not yet connected)` : "";
@@ -283,7 +283,7 @@ ${j}`),
       );
     let o = L[0];
     if (o?.status !== "fulfilled")
-      return z("enable", e, o?.reason, { persistsOffBox: lo(c.session) });
+      return z("enable", e, o?.reason, { persistsOffBox: mayHaveRemoteClient(c.session) });
     let y = o.value.type,
       R =
         y === "needs-auth"
@@ -316,7 +316,7 @@ function s(t) {
 }
 function ne(t, c, g) {
   let { servers: r, rejectedCounts: S } = U(g.hosts()),
-    w = Y([...r.map((p) => p.hostName), ...S.keys()]),
+    w = dedupe([...r.map((p) => p.hostName), ...S.keys()]),
     C =
       t.length === 0
         ? ["  (none configured)"]
@@ -324,7 +324,7 @@ function ne(t, c, g) {
             .sort((p, N) => p.name.localeCompare(N.name))
             .map((p) => {
               let N = Oa(p.name),
-                b = G(c, (A) => A.name.startsWith(N)),
+                b = countMatching(c, (A) => A.name.startsWith(N)),
                 f = ow(p) ? "not configured" : B[I4(p)];
               return `  ${_(m(p.name))}  ${_(f)}  ${p.config.type ?? "stdio"}${X(b)}`;
             }),

@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { CS, Le, zn, An, XR, ac, Dr, hZ } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Ant, dy } from "../共享小工具-未细化/chunk-862jyk0r.js";
+import { O_NONBLOCK_FLAG, O_NOFOLLOW_NONBLOCK_FLAGS } from "../共享小工具-未细化/open-flags.js";
 import { R, l, A, Jr, W, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { j, Gt, B, K, he, urt, Mx, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { Q } from "../共享小工具-未细化/chunk-rsr7cnyv.js";
 import { hs, Wnt, Gnt, Dur, CL, Cg, wc, Et, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, ft } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -22,7 +22,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { getProjectsDir, getProjectKey, getProjectDir, BACKUP_FILE_NAME_PATTERN_WITH_LEGACY } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import { qt } from "../共享小工具-未细化/chunk-km6n9zrg.js";
 import { _n, Uw, Pnt, O1, Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
-import { q } from "../共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
 import { fi, Do } from "../共享小工具-未细化/chunk-z5tdbda7.js";
 import { Qo } from "../共享小工具-未细化/chunk-0hk68fj9.js";
 import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
@@ -144,11 +144,11 @@ async function Qt(e, t, r = v7t) {
   let o = await ee(Zt(e));
   if (!o.ok && o.error.kind !== "absent") return Cg(o.error);
   if (o.ok && !o.value.isFile()) return Cg(tn(e, o.value));
-  return ee(ke(e, t | dy, r));
+  return ee(ke(e, t | O_NOFOLLOW_NONBLOCK_FLAGS, r));
 }
 async function v0(e) {
-  if (dy === 0) return Qt(e, Ie.O_RDONLY);
-  return en(e, await ee(ke(e, Ie.O_RDONLY | dy)));
+  if (O_NOFOLLOW_NONBLOCK_FLAGS === 0) return Qt(e, Ie.O_RDONLY);
+  return en(e, await ee(ke(e, Ie.O_RDONLY | O_NOFOLLOW_NONBLOCK_FLAGS)));
 }
 function en(e, t) {
   return !t.ok && t.error.kind === "fs" && C7t(t.error.error, "ELOOP")
@@ -977,7 +977,7 @@ function nr(e) {
   };
 }
 async function _L(e, t) {
-  if (M() && t !== void 0) {
+  if (isHoverRestEnabled() && t !== void 0) {
     let s = nr(e);
     if (s !== void 0)
       try {
@@ -1934,7 +1934,7 @@ function Rt(e, t) {
 }
 function kt(e) {
   let t = Date.now();
-  q("info", "find_git_root_started");
+  writeDiagnosticsEvent("info", "find_git_root_started");
   let r = N(e),
     o = r.substring(0, r.indexOf(k) + 1) || k,
     s = 0;
@@ -1942,7 +1942,7 @@ function kt(e) {
     let i = P(r, ".git");
     if ((s++, Rt(i, r)))
       return (
-        q("info", "find_git_root_completed", {
+        writeDiagnosticsEvent("info", "find_git_root_completed", {
           duration_ms: Date.now() - t,
           stat_count: s,
           found: !0,
@@ -1955,7 +1955,7 @@ function kt(e) {
   }
   if ((s++, Rt(P(o, ".git"), o)))
     return (
-      q("info", "find_git_root_completed", {
+      writeDiagnosticsEvent("info", "find_git_root_completed", {
         duration_ms: Date.now() - t,
         stat_count: s,
         found: !0,
@@ -1963,7 +1963,7 @@ function kt(e) {
       zn(o)
     );
   return (
-    q("info", "find_git_root_completed", {
+    writeDiagnosticsEvent("info", "find_git_root_completed", {
       duration_ms: Date.now() - t,
       stat_count: s,
       found: !1,
@@ -2123,10 +2123,10 @@ function gitExe() {
 var Ct = new Gt(() => new Map());
 async function Or() {
   let e = Date.now();
-  q("info", "is_git_check_started");
+  writeDiagnosticsEvent("info", "is_git_check_started");
   let t = findGitRoot(Q()) !== null;
   return (
-    q("info", "is_git_check_completed", {
+    writeDiagnosticsEvent("info", "is_git_check_completed", {
       duration_ms: Date.now() - e,
       is_git: t,
     }),
@@ -3296,7 +3296,7 @@ function Tt(e) {
 function we(e, t, { keepWholeLines: r = !1 } = {}) {
   let o;
   try {
-    o = openSync(e, eo.O_RDONLY | Ant);
+    o = openSync(e, eo.O_RDONLY | O_NONBLOCK_FLAG);
     let s = fstatSync(o);
     if (!s.isFile() || s.size > t) return;
     let i = Buffer.allocUnsafe(t),

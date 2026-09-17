@@ -9,31 +9,31 @@
 // Version: 2.1.263
 import { mi } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Mr, Tn, hasStoredOAuthToken, hQ } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { readUnattendedServingConsent } from "../AutoMode-自动模式/chunk-15n5gf3t.js";
 import { Eo, XH } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { YEt } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
-import { rf } from "../权限系统/chunk-qdy0h5k2.js";
+import { createDefaultToolPermissionContext } from "../权限系统/chunk-qdy0h5k2.js";
 import { uT, ATe, e$ } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { ensurePolicyLimitsLoadedForDiagnostic } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
-import { hG } from "../Bridge-RemoteControl/chunk-3j7ezsr7.js";
+import { isPushNotificationsEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
 import { isArtifactConfigToggleable } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { sLt, Blt } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { Olt, AIe, w2n, gSe } from "../../01-核心基础设施/设置-配置/chunk-bznmdnc2.js";
 import { dAe } from "../Teammates团队/chunk-mrfx53ye.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function E3e(n) {
   let o = n.trim();
   if (!o || !o.includes("=")) return null;
   let t = o.split(/\s+/);
-  if (G(t, (s) => s.includes("=")) === 1) {
+  if (countMatching(t, (s) => s.includes("=")) === 1) {
     let s = o.indexOf("="),
       f = o.slice(0, s);
     if (!f || /\s/.test(f)) return null;
@@ -84,7 +84,7 @@ async function TIe(n, o, t) {
 async function w(n, o, t) {
   let e = p(n, t);
   if (
-    (i("tengu_config_shorthand", { key_hash: Tn(n), matched: e !== void 0 }),
+    (logEvent("tengu_config_shorthand", { key_hash: Tn(n), matched: e !== void 0 }),
     !e)
   )
     return {
@@ -260,7 +260,7 @@ function b() {
         fastMode: !1,
         promptSuggestionEnabled: !1,
         awaySummaryEnabled: !1,
-        toolPermissionContext: rf(),
+        toolPermissionContext: createDefaultToolPermissionContext(),
       }),
       setAppState: () => {},
       options: { mcpClients: [] },
@@ -315,7 +315,7 @@ function c(n, o) {
     promptSuggestionEnabled: t.promptSuggestionEnabled,
     awaySummaryEnabled: t.awaySummaryEnabled,
     showDefaultViewPicker: C,
-    pushTogglesVisible: hG() && !St() && hasStoredOAuthToken(),
+    pushTogglesVisible: isPushNotificationsEnabled() && !St() && hasStoredOAuthToken(),
     crossSessionInboxRowVisible: !1,
     isConnectedToIde: ATe(n.options.mcpClients),
     inAppSelection: !0,
@@ -338,7 +338,7 @@ function c(n, o) {
     setTheme:
       o?.setTheme ??
       ((g) =>
-        M() && n.storageV5 !== void 0
+        isHoverRestEnabled() && n.storageV5 !== void 0
           ? XH("theme", g, n.storageV5)
           : XH("theme", g)),
     ...w2n,

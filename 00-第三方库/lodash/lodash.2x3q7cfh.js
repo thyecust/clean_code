@@ -24,8 +24,8 @@ import {
   rs,
   zn,
 } from "./lodash.207999qb.js";
-import { OMn, idr, adr, M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { au } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { getNormalizedRealCwd, STARTUP_REAL_CWD, STARTUP_CWD, isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { defineExportGetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { homedir } from "os";
 import { sep as cn } from "path";
 import { randomUUID as i8 } from "crypto";
@@ -350,7 +350,7 @@ var pt = Object.prototype,
       },
   e_e = ko;
 var _ = {};
-au(_, { default: () => cae });
+defineExportGetters(_, { default: () => cae });
 function stubFalse() {
   return !1;
 }
@@ -430,7 +430,7 @@ function baseUnary(e) {
   };
 }
 var W = {};
-au(W, { default: () => uae });
+defineExportGetters(W, { default: () => uae });
 var vt = typeof W == "object" && W && !W.nodeType && W,
   I = vt && typeof U == "object" && U && !U.nodeType && U,
   rr = I && I.exports === vt,
@@ -717,7 +717,7 @@ class Et {
       this.walkedFolders.clear(),
       this.folderListings.clear(),
       (this.policy = {}),
-      e?.userLayer === "retain" && M() && this.primer !== void 0)
+      e?.userLayer === "retain" && isHoverRestEnabled() && this.primer !== void 0)
     ) {
       for (let [t, o] of this.retained)
         (this.parsedFiles.set(t, o.parsed), this.primedFiles.add(t));
@@ -770,10 +770,10 @@ class Et {
       this.policy = {};
   }
   primedFolderListing(e) {
-    return M() ? this.folderListings.get(e) : void 0;
+    return isHoverRestEnabled() ? this.folderListings.get(e) : void 0;
   }
   folderListingForPolicyWalk(e) {
-    if (!M()) return;
+    if (!isHoverRestEnabled()) return;
     this.policyWalks++;
     let t = this.folderListings.get(e);
     if (!this.walkedFolders.has(e) || t !== void 0)
@@ -781,7 +781,7 @@ class Et {
     return t;
   }
   noteWalkListing(e, t) {
-    if (!M()) return;
+    if (!isHoverRestEnabled()) return;
     this.walkedFolders.set(e, t);
   }
   get policyWalkCount() {
@@ -3935,14 +3935,14 @@ function un() {
     proactivity: new Je(),
   });
 }
-function Ei(e = OMn()) {
+function Ei(e = getNormalizedRealCwd()) {
   return OXt({
     host: un(),
     id: qxt() ?? i8(),
     project: { originalCwd: e, projectRoot: e, cwd: e },
   });
 }
-var y = Ei(idr);
+var y = Ei(STARTUP_REAL_CWD);
 function B() {
   return n();
 }
@@ -4074,7 +4074,7 @@ function he() {
 }
 function wz() {
   let e = process.env.CLAUDE_CODE_SESSION_KIND;
-  return e !== void 0 && String(e).trim() === "bg" ? null : adr;
+  return e !== void 0 && String(e).trim() === "bg" ? null : STARTUP_CWD;
 }
 function VR() {
   return he() === homedir();

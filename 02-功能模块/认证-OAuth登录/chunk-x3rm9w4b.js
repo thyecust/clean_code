@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import {
   Kxe,
   Iae,
@@ -27,11 +27,11 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { gge, iBe, nS, Avt } from "./chunk-wk0e3dz4.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
-import { ahe } from "../../01-核心基础设施/共享小工具-未细化/chunk-v2wxtqf7.js";
+import { getFederationCacheDir } from "../../01-核心基础设施/共享小工具-未细化/federation-cache-dir.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { mkdir, readFile, stat as F } from "fs/promises";
 import { join as b } from "path";
@@ -56,9 +56,9 @@ async function q8t(e, t, r = "fail-closed") {
     );
   }
   try {
-    return (i("tengu_wif_user_oauth_lock_acquired", { mode: fromEnum(r) }), await t());
+    return (logEvent("tengu_wif_user_oauth_lock_acquired", { mode: fromEnum(r) }), await t());
   } finally {
-    i("tengu_wif_user_oauth_lock_released", { mode: fromEnum(r) });
+    logEvent("tengu_wif_user_oauth_lock_released", { mode: fromEnum(r) });
     try {
       await c();
     } catch (d) {
@@ -79,7 +79,7 @@ async function O(e, t, r) {
     } catch (o) {
       if (o.code !== "ELOCKED") throw o;
       if (s >= t) {
-        i("tengu_wif_user_oauth_lock_retry_limit", { attempt: s, mode: fromEnum(r) });
+        logEvent("tengu_wif_user_oauth_lock_retry_limit", { attempt: s, mode: fromEnum(r) });
         let c = new Ra(
           `Could not acquire credentials lock at ${e} after ${t} retries`,
         );
@@ -90,8 +90,8 @@ async function O(e, t, r) {
           c
         );
       }
-      (i("tengu_wif_user_oauth_lock_retry", { attempt: s, mode: fromEnum(r) }),
-        await Z(1000 + Math.random() * 1000));
+      (logEvent("tengu_wif_user_oauth_lock_retry", { attempt: s, mode: fromEnum(r) }),
+        await sleep(1000 + Math.random() * 1000));
     }
 }
 class T {
@@ -370,7 +370,7 @@ async function K(e, t) {
   else s = k("ANTHROPIC_IDENTITY_TOKEN");
   if (!s)
     return (n("wif: no identity token; federation token cache disabled"), null);
-  let o = ahe();
+  let o = getFederationCacheDir();
   if (o === null)
     return (
       n("wif: no config directory; federation token cache disabled"),

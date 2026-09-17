@@ -12,7 +12,7 @@
 import { Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { bytesPerTokenForModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { S1, ay } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { jn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -23,57 +23,57 @@ import { oa } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js
 import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { getCommandName, an, J_t, clearCommandMemoizationCaches } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Zr } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js";
-import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
+import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
+import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { NIt, iye } from "../插件系统/chunk-jwm9gdkd.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
+import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import "../插件系统/chunk-akd9b588.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-r2ab1bp6.js";
+import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-3eztvm1y.js";
 import "../认证-OAuth登录/chunk-7jz937t3.js";
 import "../插件系统/chunk-rbjz1q03.js";
-import "../插件系统/chunk-4k4dssd9.js";
+import "../插件系统/channel-gate.js";
 import "../MCP客户端/chunk-4xr0rjb4.js";
 import "../成本-Token统计/chunk-3nwwgatc.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-4bdjksjf.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
+import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import "../MCP客户端/chunk-35zjqw7h.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qck6h2yw.js";
+import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
+import "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import "../MCP客户端/chunk-49ds54j4.js";
+import "../MCP客户端/plugin-reload-cache-impact.js";
 import "../MCP客户端/chunk-d7zajrh1.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ey89qg3e.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g2fqhcwj.js";
+import "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
 import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 import { re, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function et(ss) {
   return ss.workerInventory?.skills;
 }
@@ -104,29 +104,29 @@ function Oe(ts) {
   let be;
   if (K[4] !== h)
     ((be =
-      h && h.length > 0 && e(D, { chord: ["up", "down"], action: "navigate" })),
+      h && h.length > 0 && e(KeybindingHint, { chord: ["up", "down"], action: "navigate" })),
       (K[4] = h),
       (K[5] = be));
   else be = K[5];
   let zo;
-  if (K[6] === p)
-    ((zo = e(D, { chord: "escape", action: "close" })), (K[6] = zo));
+  if (K[6] === MEMO_CACHE_SENTINEL)
+    ((zo = e(KeybindingHint, { chord: "escape", action: "close" })), (K[6] = zo));
   else zo = K[6];
   let we;
   if (K[7] !== be)
-    ((we = r(ue, { children: [be, zo] })), (K[7] = be), (K[8] = we));
+    ((we = r(DotSeparatedList, { children: [be, zo] })), (K[7] = be), (K[8] = we));
   else we = K[8];
   let xe;
   if (K[9] !== ee || K[10] !== h)
     ((xe =
       h === void 0
-        ? e(Rn, {
+        ? e(EmptyStateMessage, {
             hint: "It reports them at the start of each turn; /reload-skills re-scans its skill folders",
             children:
               "The cloud session hasn't reported which skills it loaded",
           })
         : h.length === 0
-          ? e(Rn, {
+          ? e(EmptyStateMessage, {
               hint: "Skills come from the repo's .claude/skills and the plugins the session loaded",
               children: "No skills loaded in the cloud session",
             })
@@ -142,7 +142,7 @@ function Oe(ts) {
       (K[11] = xe));
   else xe = K[11];
   let Ho;
-  if (K[12] === p)
+  if (K[12] === MEMO_CACHE_SENTINEL)
     ((Ho = e(o, {
       children: e(t, {
         dimColor: !0,
@@ -245,7 +245,7 @@ function E(a, c) {
 function Ae(Es) {
   let i = _(89),
     { onExit: R, commands: He, bytesPerToken: Ye } = Es,
-    { storageV5: eo } = _e(),
+    { storageV5: eo } = useStorageV5Context(),
     [X, Ms] = d(!1),
     Pe;
   if (i[0] !== He || i[1] !== X) {
@@ -266,7 +266,7 @@ function Ae(Es) {
   } else Pe = i[2];
   let l = Pe,
     it;
-  if (i[3] === p)
+  if (i[3] === MEMO_CACHE_SENTINEL)
     ((it = getSettingsForSource("localSettings")?.skillOverrides ?? {}), (i[3] = it));
   else it = i[3];
   let to = it,
@@ -315,7 +315,7 @@ function Ae(Es) {
     se = C(v),
     dt,
     ut;
-  if (i[12] === p)
+  if (i[12] === MEMO_CACHE_SENTINEL)
     ((dt = () => {
       ((se.current = !1), Re(!1));
     }),
@@ -336,7 +336,7 @@ function Ae(Es) {
     handleKeyDown: mo,
     handlePaste: uo,
   } = jp(pt);
-  is();
+  useGlobalExitKeybinding();
   let po;
   bb1: {
     if (!u) {
@@ -357,7 +357,7 @@ function Ae(Es) {
     po = ne;
   }
   let g = po,
-    { rows: Ns } = ks(Se());
+    { rows: Ns } = ks(useTerminalSize());
   const ne = Ns - 13;
   let ft;
   if (i[19] !== g.length || i[20] !== ne)
@@ -449,10 +449,10 @@ function Ae(Es) {
       (i[32] = yt));
   else yt = i[32];
   let yo = yt,
-    Ot = Zr("confirm:no", "Settings", "esc"),
-    js = Zr("settings:sortByTokens", "Settings", "t"),
+    Ot = useKeybindingDisplayText("confirm:no", "Settings", "esc"),
+    js = useKeybindingDisplayText("settings:sortByTokens", "Settings", "t"),
     Pt;
-  if (i[33] === p) ((Pt = () => Ms(Gt)), (i[33] = Pt));
+  if (i[33] === MEMO_CACHE_SENTINEL) ((Pt = () => Ms(Gt)), (i[33] = Pt));
   else Pt = i[33];
   let Rt;
   if (i[34] !== ho)
@@ -465,7 +465,7 @@ function Ae(Es) {
   if (i[36] !== So)
     ((Dt = { context: "Settings", isActive: So }), (i[36] = So), (i[37] = Dt));
   else Dt = i[37];
-  Ze(Rt, Dt);
+  useKeybindings(Rt, Dt);
   let Ft;
   if (i[38] !== yo) ((Ft = { "confirm:no": yo }), (i[38] = yo), (i[39] = Ft));
   else Ft = i[39];
@@ -474,7 +474,7 @@ function Ae(Es) {
   if (i[40] !== vo)
     ((Lt = { context: "Settings", isActive: vo }), (i[40] = vo), (i[41] = Lt));
   else Lt = i[41];
-  Ze(Ft, Lt);
+  useKeybindings(Ft, Lt);
   let $t;
   if (i[42] !== mo || i[43] !== u || i[44] !== j)
     (($t = (b) => {
@@ -534,8 +534,8 @@ function Ae(Es) {
         (i[51] = q));
     else q = i[51];
     let ie;
-    if (i[52] === p)
-      ((ie = e(je, {
+    if (i[52] === MEMO_CACHE_SENTINEL)
+      ((ie = e(ActionKeybindingHint, {
         action: "confirm:no",
         context: "Confirmation",
         fallback: "Esc",
@@ -544,8 +544,8 @@ function Ae(Es) {
         (i[52] = ie));
     else ie = i[52];
     let Q;
-    if (i[53] === p)
-      ((Q = e(Rn, {
+    if (i[53] === MEMO_CACHE_SENTINEL)
+      ((Q = e(EmptyStateMessage, {
         hint: Hr()
           ? `Custom skills are disabled in safe mode \u2014 ${yf()} to load them`
           : "Create skills in .claude/skills/ or ~/.claude/skills/",
@@ -619,7 +619,7 @@ function Ae(Es) {
       g.length === 0
         ? e(o, {
             marginTop: 1,
-            children: e(Rn, { children: `No skills match "${u}"` }),
+            children: e(EmptyStateMessage, { children: `No skills match "${u}"` }),
           })
         : e(
             iye,
@@ -671,7 +671,7 @@ function Ae(Es) {
       (i[77] = Te));
   else Te = i[77];
   let It;
-  if (i[78] === p)
+  if (i[78] === MEMO_CACHE_SENTINEL)
     ((It =
       Hr() &&
       e(o, {
@@ -749,7 +749,7 @@ function Ne(Zs) {
       (z[7] = Ee));
   else Ee = z[7];
   let Kt;
-  if (z[8] === p) ((Kt = e(t, { children: "  " })), (z[8] = Kt));
+  if (z[8] === MEMO_CACHE_SENTINEL) ((Kt = e(t, { children: "  " })), (z[8] = Kt));
   else Kt = z[8];
   const Do = en ? "suggestion" : void 0;
   let Me;

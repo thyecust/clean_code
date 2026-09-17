@@ -73,13 +73,13 @@ import { Q3 } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { vJ, HCe, xoe, ICe, PCe } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { runBundledSkillSessionResets } from "../Skills技能/chunk-1zy5c8mf.js";
 import { syncJobResumeSessionId } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { g2 } from "../../01-核心基础设施/共享小工具-未细化/chunk-6k8nm416.js";
-import { Qlt, Zlt } from "../上下文压缩-Compact/chunk-1ntrf0ja.js";
-import { Ern } from "../../01-核心基础设施/共享小工具-未细化/chunk-c9wxfdax.js";
+import { GOAL_PROPOSAL_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
+import { resetTransientSessionState, closeAllWebViews } from "../上下文压缩-Compact/chunk-1ntrf0ja.js";
+import { sessionAnnouncementStateStore } from "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
 import { brn } from "./chunk-1mxgbqzj.js";
-import { ect } from "../Teammates团队/chunk-c8267s4e.js";
+import { pruneAgentNameRegistry } from "../Teammates团队/agent-lifecycle.js";
 import { xs } from "../Teammates团队/chunk-mrfx53ye.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
 async function* yrn({
   session: t,
@@ -145,7 +145,7 @@ async function* yrn({
   }
   if ((L.clear(), v)) for (let e of Object.keys(v)) delete v[e];
   if ((j?.clear(), V2(N), d && c.size === 0)) d.current = null;
-  if (s) Zlt(s);
+  if (s) closeAllWebViews(s);
   let l = getCurrentSessionTitle(K()),
     A = getCurrentSessionAgentName(),
     f = !u && l !== void 0,
@@ -154,7 +154,7 @@ async function* yrn({
     T;
   if ((HCe(), k)) {
     if (
-      (F?.dismissKind(g2.kind),
+      (F?.dismissKind(GOAL_PROPOSAL_DIALOG.kind),
       retainPathLinks(new Set()),
       k((e) => {
         let r = {};
@@ -174,17 +174,17 @@ async function* yrn({
           evictTaskOutput(S);
         }
         return (
-          (p = G(Object.values(r), (S) => !Y.has(S.type))),
+          (p = countMatching(Object.values(r), (S) => !Y.has(S.type))),
           (T = e.activeGoal),
           {
-            ...Qlt(e),
+            ...resetTransientSessionState(e),
             tasks: r,
             runningSubagents: p === 0 ? 0 : e.runningSubagents,
             ...{ endedByModel: !1 },
             attribution: lTe(),
             cacheBreakerPhrase: void 0,
             sendMessagePins: {},
-            agentNameRegistry: ect(e.agentNameRegistry, r),
+            agentNameRegistry: pruneAgentNameRegistry(e.agentNameRegistry, r),
             frameUrls: {},
             standaloneAgentContext:
               f && e.standaloneAgentContext?.name
@@ -229,7 +229,7 @@ async function* yrn({
     J = x || (f && isConversationEgressTainted(P));
   if ((aOn({ setCurrentAsParent: !0 }), f && l !== void 0)) cacheSessionTitle(l);
   let Z = Promise.resolve(!0);
-  if ((runBundledSkillSessionResets(), PCe(), Ern.of(t).reset(), cfe(t), a.CLAUDE_CODE_SESSION_ID))
+  if ((runBundledSkillSessionResets(), PCe(), sessionAnnouncementStateStore.of(t).reset(), cfe(t), a.CLAUDE_CODE_SESSION_ID))
     process.env.CLAUDE_CODE_SESSION_ID = K();
   if ((await resetSessionFilePointer(), dropSessionHistorySuppression(), releasePrecautionarySuppressionFor(P), await syncJobResumeSessionId(K(), yl(), o), u))
     await saveCustomTitle(q, u, W, "user", o);

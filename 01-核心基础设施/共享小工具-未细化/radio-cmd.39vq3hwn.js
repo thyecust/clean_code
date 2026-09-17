@@ -9,9 +9,9 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 24 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Gr } from "../核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { tryOpenUrlInBrowser } from "../核心工具-路径与平台/open-external-url.js";
 async function r() {
-  if (await Gr("https://clau.de/radio"))
+  if (await tryOpenUrlInBrowser("https://clau.de/radio"))
     return { type: "text", value: "Opening Claude FM in your browser\u2026" };
   return {
     type: "text",

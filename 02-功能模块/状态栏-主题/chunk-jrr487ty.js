@@ -13,37 +13,37 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { X_ } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { getMainLoopModel, H, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { te, truncateToWidth, formatDuration, formatDurationCoarse, formatNumber, formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Dw } from "../权限系统/chunk-e4pfvp7x.js";
 import { Ale } from "../工具TodoWrite-Tasks/chunk-5a7p8d2p.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { Ty } from "./chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, tn, bs } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { KE } from "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { AGENT_COLOR_THEME_KEYS } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { zr } from "../Teammates团队/chunk-3k2smxfn.js";
 import { Ya, IJe } from "../权限系统/chunk-t3b7pg2x.js";
 import { LF, mpn, NBt, hd, Vp, Ggt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { iat, _le, by, lat, PS, wy, Wb } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { nF, QL, La, QZ, jA } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { Lye } from "../../01-核心基础设施/设置-配置/chunk-9m8zsynn.js";
-import { X0 } from "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import { activeTimeTracker } from "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { Tv, O0e, utn } from "../Hooks钩子/chunk-22aft7vr.js";
-import { I_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import { Ai } from "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
-import { c_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-xc85bfby.js";
-import { cu } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { ProgressBar } from "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import { useReducedMotion } from "../../01-核心基础设施/共享小工具-未细化/reduced-motion.js";
+import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Vtn, Ktn, eIe } from "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import { E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function xr(gs) {
   return gs.expandedView;
@@ -85,8 +85,8 @@ function We({ tasks: n, isStandalone: s = !1 }) {
   let c = U((m) => m.teamContext),
     l = U((m) => m.tasks),
     [f, g] = d(0),
-    { rows: h, columns: k } = Se(),
-    b = vt(),
+    { rows: h, columns: k } = useTerminalSize(),
+    b = useClock(),
     A = C(null);
   A.current ??= new Map(
     n.filter((m) => m.status === "completed").map((m) => [m.id, null]),
@@ -117,7 +117,7 @@ function We({ tasks: n, isStandalone: s = !1 }) {
   if (zr() && c?.teammates) {
     for (let m of Object.values(c.teammates))
       if (m.color) {
-        let Y = KE[m.color];
+        let Y = AGENT_COLOR_THEME_KEYS[m.color];
         if (Y) I[m.name] = Y;
       }
   }
@@ -132,8 +132,8 @@ function We({ tasks: n, isStandalone: s = !1 }) {
         if (z) ((K[m.identity.agentName] = z), (K[m.identity.agentId] = z));
       }
   }
-  let B = G(n, (m) => m.status === "completed"),
-    R = G(n, (m) => m.status === "pending"),
+  let B = countMatching(n, (m) => m.status === "completed"),
+    R = countMatching(n, (m) => m.status === "pending"),
     P = n.length - B - R,
     X = new Set(n.filter((m) => m.status !== "completed").map((m) => m.id)),
     Z = n.length > S,
@@ -163,9 +163,9 @@ function We({ tasks: n, isStandalone: s = !1 }) {
   let ct = "";
   if (v.length > 0) {
     let m = [],
-      Y = G(v, (tt) => tt.status === "pending"),
-      z = G(v, (tt) => tt.status === "in_progress"),
-      ot = G(v, (tt) => tt.status === "completed");
+      Y = countMatching(v, (tt) => tt.status === "pending"),
+      z = countMatching(v, (tt) => tt.status === "in_progress"),
+      ot = countMatching(v, (tt) => tt.status === "completed");
     if (z > 0) m.push(`${z} in progress`);
     if (Y > 0) m.push(`${Y} pending`);
     if (ot > 0) m.push(`${ot} completed`);
@@ -384,7 +384,7 @@ function o4(As) {
     let Tn = ke[gn];
     let be;
     if (Nt[0] !== Tn || Nt[1] !== hn || Nt[2] !== Bt) {
-      be = en;
+      be = EARLY_RETURN_SENTINEL;
       bb0: {
         let co = Tn ? Wb(Tn) : null;
         if (co) {
@@ -409,7 +409,7 @@ function o4(As) {
       }
       ((Nt[0] = Tn), (Nt[1] = hn), (Nt[2] = Bt), (Nt[3] = be));
     } else be = Nt[3];
-    if (be !== en) return be;
+    if (be !== EARLY_RETURN_SENTINEL) return be;
     const mt = hn < 0.5;
     const st = Bt >= 0.5;
     let Yt;
@@ -429,7 +429,7 @@ function o4(As) {
     return Yt;
   }
   let be;
-  if (Nt[10] === p) ((be = _le()), (Nt[10] = be));
+  if (Nt[10] === MEMO_CACHE_SENTINEL) ((be = _le()), (Nt[10] = be));
   else be = Nt[10];
   let Cr = be,
     ht = Cr[vs % Cr.length];
@@ -437,7 +437,7 @@ function o4(As) {
     let kn = ke[Xt];
     let mt;
     if (Nt[11] !== kn || Nt[12] !== ht || Nt[13] !== $e) {
-      mt = en;
+      mt = EARLY_RETURN_SENTINEL;
       bb1: {
         let Ir = kn ? Wb(kn) : null;
         if (Ir) {
@@ -461,7 +461,7 @@ function o4(As) {
       }
       ((Nt[11] = kn), (Nt[12] = ht), (Nt[13] = $e), (Nt[14] = mt));
     } else mt = Nt[14];
-    if (mt !== en) return mt;
+    if (mt !== EARLY_RETURN_SENTINEL) return mt;
     let ao = $e > 0.5 ? "error" : Xt;
     let st;
     if (Nt[17] !== ao || Nt[18] !== ht)
@@ -487,7 +487,7 @@ function o4(As) {
       Nt[22] !== ke.warning ||
       Nt[23] !== Bt
     ) {
-      mt = en;
+      mt = EARLY_RETURN_SENTINEL;
       bb2: {
         let Er = bn ? Wb(bn) : null;
         let Br = Wb(ke.warning);
@@ -518,7 +518,7 @@ function o4(As) {
         (Nt[24] = je),
         (Nt[25] = mt));
     } else ((je = Nt[24]), (mt = Nt[25]));
-    if (mt !== en) return mt;
+    if (mt !== EARLY_RETURN_SENTINEL) return mt;
     let lo = Bt > 0.5 ? "warning" : Xt;
     let st;
     if (Nt[28] !== je || Nt[29] !== lo || Nt[30] !== ht)
@@ -557,7 +557,7 @@ var He = 150;
 function wn(zs) {
   let Nr = _(8),
     { tone: po, text: ho } = zs,
-    Ys = c_(),
+    Ys = useReducedMotion(),
     Js = tn(),
     xn = Ys || Js,
     [go, Qs] = bs(xn ? null : He);
@@ -629,7 +629,7 @@ function l9e(cc) {
     let yn = ie[W];
     let it;
     if (D[7] !== yn || D[8] !== O || D[9] !== Ke) {
-      it = en;
+      it = EARLY_RETURN_SENTINEL;
       bb0: {
         let Wr = yn ? Wb(yn) : null;
         if (Wr) {
@@ -661,7 +661,7 @@ function l9e(cc) {
       }
       ((D[7] = yn), (D[8] = O), (D[9] = Ke), (D[10] = it));
     } else it = D[10];
-    if (it !== en) return it;
+    if (it !== EARLY_RETURN_SENTINEL) return it;
     let Re = Ke > 0.5 ? "error" : W;
     let M;
     if (D[19] !== Re || D[20] !== O)
@@ -687,7 +687,7 @@ function l9e(cc) {
     let _n = ie[W];
     let it;
     if (D[27] !== _n || D[28] !== O || D[29] !== ie.warning || D[30] !== Fe) {
-      it = en;
+      it = EARLY_RETURN_SENTINEL;
       bb1: {
         let $r = _n ? Wb(_n) : null;
         let jr = Wb(ie.warning);
@@ -724,7 +724,7 @@ function l9e(cc) {
         (D[30] = Fe),
         (D[31] = it));
     } else it = D[31];
-    if (it !== en) return it;
+    if (it !== EARLY_RETURN_SENTINEL) return it;
     let ye = Fe > 0.5 ? "warning" : W;
     let M;
     if (D[40] !== ye || D[41] !== O)
@@ -757,7 +757,7 @@ function l9e(cc) {
       D[51] !== W ||
       D[52] !== In
     ) {
-      it = en;
+      it = EARLY_RETURN_SENTINEL;
       bb2: {
         let Gr = Cn ? Wb(Cn) : null;
         let Hr = In ? Wb(In) : null;
@@ -786,7 +786,7 @@ function l9e(cc) {
         (D[52] = In),
         (D[53] = it));
     } else it = D[53];
-    if (it !== en) return it;
+    if (it !== EARLY_RETURN_SENTINEL) return it;
     let bo = Rn > 0.5 ? Ve : W;
     let M;
     if (D[59] !== bo || D[60] !== O)
@@ -1054,7 +1054,7 @@ function Bo({
     ((at.current = I), (ot.current = new Set()), (tt.current = 0));
   if (z === 0) {
     if (ot.current.size > 0)
-      (i("tengu_spinner_stall_cleared", {
+      (logEvent("tengu_spinner_stall_cleared", {
         max_stall_ms: Math.round(tt.current),
         mode: fromEnum(n),
         override_color: g != null,
@@ -1068,7 +1068,7 @@ function Bo({
     for (let pt of Ur)
       if (z >= pt && !ot.current.has(pt))
         (ot.current.add(pt),
-          i("tengu_spinner_stalled_ui", {
+          logEvent("tengu_spinner_stalled_ui", {
             threshold_ms: pt,
             mode: fromEnum(n),
             override_color: g != null,
@@ -1194,7 +1194,7 @@ function Ao(n) {
   let [s, c] = d(null),
     l = C(null),
     f = C([]),
-    g = vt();
+    g = useClock();
   return (
     E(() => {
       if (n === "thinking") {
@@ -1358,11 +1358,11 @@ function Fo({
     It =
       Ct.length > 0
         ? Ft
-          ? e(ue, { children: Ct })
+          ? e(DotSeparatedList, { children: Ct })
           : r(N, {
               children: [
                 e(t, { dimColor: !0, children: "(" }),
-                e(ue, { children: Ct }),
+                e(DotSeparatedList, { children: Ct }),
                 e(t, { dimColor: !0, children: ")" }),
               ],
             })
@@ -1375,7 +1375,7 @@ function Fo({
             marginLeft: Vo,
             width: "100%",
             children: [
-              e(I_, { ratio: Vt / 100, width: Wt, variant: "pill" }),
+              e(ProgressBar, { ratio: Vt / 100, width: Wt, variant: "pill" }),
               e(t, { dimColor: !0, children: de }),
             ],
           })
@@ -1449,7 +1449,7 @@ function Xit(Yc) {
   else ri = Q[4];
   let qe = ri,
     ii;
-  if (Q[5] === p)
+  if (Q[5] === MEMO_CACHE_SENTINEL)
     ((ii = e(o, {
       "aria-hidden": !0,
       flexWrap: "wrap",
@@ -1462,7 +1462,7 @@ function Xit(Yc) {
   let Oo = ii;
   if (nt.kind === "stalled") {
     let At;
-    if (Q[6] === p)
+    if (Q[6] === MEMO_CACHE_SENTINEL)
       ((At = e(t, { color: "error", children: "Waiting for API response" })),
         (Q[6] = At));
     else At = Q[6];
@@ -1496,7 +1496,7 @@ function Xit(Yc) {
     let An = ` \xB7 next try in ${qe} \xB7 attempt ${nt.attempt} \xB7 esc to interrupt`;
     let Do = Math.max(10, vo - 2 - te(An) - 2);
     let At;
-    if (Q[9] === p)
+    if (Q[9] === MEMO_CACHE_SENTINEL)
       ((At = e(o, {
         "aria-hidden": !0,
         flexWrap: "wrap",
@@ -1571,7 +1571,7 @@ function Xit(Yc) {
         (Q[33] = Pn));
     else Pn = Q[33];
     let ci;
-    if (Q[34] === p)
+    if (Q[34] === MEMO_CACHE_SENTINEL)
       ((ci = e(t, {
         dimColor: !0,
         children:
@@ -1656,7 +1656,7 @@ function Uo(Zc) {
     case "responding":
     case "thinking": {
       let Ye;
-      if (mi[0] === p)
+      if (mi[0] === MEMO_CACHE_SENTINEL)
         ((Ye = e(o, {
           width: 2,
           children: e(t, {
@@ -1671,7 +1671,7 @@ function Uo(Zc) {
     }
     case "requesting": {
       let Ye;
-      if (mi[1] === p)
+      if (mi[1] === MEMO_CACHE_SENTINEL)
         ((Ye = e(o, {
           width: 2,
           children: e(t, {
@@ -1699,13 +1699,13 @@ function Fi(el) {
   return el.remoteConnectionStatus;
 }
 function Ui(Pi) {
-  return G(Object.values(Pi.tasks), Vp) + Pi.remoteBackgroundTasks.length;
+  return countMatching(Object.values(Pi.tasks), Vp) + Pi.remoteBackgroundTasks.length;
 }
 function qi(ol) {
   return ol.remoteConnectionStatus;
 }
 function zi(Li) {
-  return G(Object.values(Li.tasks), Vp) + Li.remoteBackgroundTasks.length;
+  return countMatching(Object.values(Li.tasks), Vp) + Li.remoteBackgroundTasks.length;
 }
 function Xi(cl) {
   return cl.settings.prefersReducedMotion;
@@ -1819,13 +1819,13 @@ function dr({
   defaultVerb: B,
   agentId: R,
 }) {
-  let P = Ai(),
+  let P = useSettings(),
     X = tn(),
-    Z = cu(P.prefersReducedMotion) || X,
+    Z = shouldReduceMotion(P.prefersReducedMotion) || X,
     q = U((J) => J.spinnerTip),
     v = U((J) => J.spinnerTipLabel),
     ct = U((J) => J.expandedView) === "tasks",
-    { columns: Dt } = Se(),
+    { columns: Dt } = useTerminalSize(),
     m = Ale(),
     Y = Ao(n),
     z = R === void 0 || R === ze(),
@@ -1838,9 +1838,9 @@ function dr({
   E(() => {
     let J = "spinner-" + n;
     return (
-      X0.startCLIActivity(J),
+      activeTimeTracker.startCLIActivity(J),
       () => {
-        X0.endCLIActivity(J);
+        activeTimeTracker.endCLIActivity(J);
       }
     );
   }, [n]);
@@ -1923,7 +1923,7 @@ function dr({
             flexDirection: "column",
             children: [
               ut &&
-                e(xe, {
+                e(ToolResultRow, {
                   children: e(t, {
                     dimColor: !0,
                     italic: !0,
@@ -1931,7 +1931,7 @@ function dr({
                     children: ut,
                   }),
                 }),
-              e(xe, { children: e(We, { tasks: m }) }),
+              e(ToolResultRow, { children: e(We, { tasks: m }) }),
             ],
           })
         : b && A
@@ -1940,7 +1940,7 @@ function dr({
               flexDirection: "column",
               children: [
                 ut &&
-                  e(xe, {
+                  e(ToolResultRow, {
                     children: e(t, {
                       dimColor: !0,
                       italic: !0,
@@ -1948,7 +1948,7 @@ function dr({
                       children: ut,
                     }),
                   }),
-                e(xe, { children: e(t, { dimColor: !0, children: A }) }),
+                e(ToolResultRow, { children: e(t, { dimColor: !0, children: A }) }),
               ],
             })
           : T
@@ -1956,7 +1956,7 @@ function dr({
               ? e(o, {
                   width: "100%",
                   flexDirection: "column",
-                  children: e(xe, {
+                  children: e(ToolResultRow, {
                     children: e(t, { dimColor: !0, children: St }),
                   }),
                 })
@@ -1967,9 +1967,9 @@ function dr({
                   flexDirection: "column",
                   children: [
                     _t &&
-                      e(xe, { children: e(t, { dimColor: !0, children: _t }) }),
+                      e(ToolResultRow, { children: e(t, { dimColor: !0, children: _t }) }),
                     ut
-                      ? e(xe, {
+                      ? e(ToolResultRow, {
                           children: e(t, {
                             dimColor: !0,
                             italic: !0,
@@ -1978,7 +1978,7 @@ function dr({
                           }),
                         })
                       : $t &&
-                        e(xe, {
+                        e(ToolResultRow, {
                           children: e(t, { dimColor: !0, children: $t }),
                         }),
                   ],
@@ -1990,11 +1990,11 @@ function dr({
 function Xn(za) {
   let Ut = _(34),
     { mode: Wn, overrideMessage: Xa } = za,
-    sr = Ai(),
+    sr = useSettings(),
     cr = tn(),
     Ri;
   if (Ut[0] !== cr || Ut[1] !== sr.prefersReducedMotion)
-    ((Ri = cu(sr.prefersReducedMotion) || cr),
+    ((Ri = shouldReduceMotion(sr.prefersReducedMotion) || cr),
       (Ut[0] = cr),
       (Ut[1] = sr.prefersReducedMotion),
       (Ut[2] = Ri));
@@ -2009,9 +2009,9 @@ function Xn(za) {
     ((Mi = () => {
       let _i = "spinner-" + Wn;
       return (
-        X0.startCLIActivity(_i),
+        activeTimeTracker.startCLIActivity(_i),
         () => {
-          X0.endCLIActivity(_i);
+          activeTimeTracker.endCLIActivity(_i);
         }
       );
     }),
@@ -2056,7 +2056,7 @@ function Xn(za) {
       (Ut[16] = Bi));
   } else Bi = Ut[16];
   let { before: Gn, shimmer: Hn, after: Vn } = Bi,
-    { columns: Za } = Se(),
+    { columns: Za } = useTerminalSize(),
     Je = Ci > 0 ? `${Ci} in background` : "",
     Ni;
   if (Ut[17] !== Ie || Ut[18] !== qt || Ut[19] !== Ee)
@@ -2128,7 +2128,7 @@ function uOt() {
   let Un = _(9),
     ur = U(qi),
     Oi = U(zi),
-    { columns: nl } = Se(),
+    { columns: nl } = useTerminalSize(),
     Be =
       ur === "reconnecting" || ur === "disconnected"
         ? ur === "reconnecting"
@@ -2138,7 +2138,7 @@ function uOt() {
     Ne = Oi > 0 ? `${Oi} in background` : "";
   if (!Be && !Ne) {
     let me;
-    if (Un[0] === p) ((me = e(o, { height: 2 })), (Un[0] = me));
+    if (Un[0] === MEMO_CACHE_SENTINEL) ((me = e(o, { height: 2 })), (Un[0] = me));
     else me = Un[0];
     return me;
   }
@@ -2179,11 +2179,11 @@ function uOt() {
 function yo() {
   let Qe = _(9),
     rl = tn(),
-    Wi = cu(Os(Xi)) || rl,
+    Wi = shouldReduceMotion(Os(Xi)) || rl,
     [Ae, il] = bs(Wi ? null : 120);
   if (Wi) {
     let Ze;
-    if (Qe[0] === p)
+    if (Qe[0] === MEMO_CACHE_SENTINEL)
       ((Ze = e(t, { color: "text", children: "\u25CF" })), (Qe[0] = Ze));
     else Ze = Qe[0];
     let ve;
@@ -2202,7 +2202,7 @@ function yo() {
     return ve;
   }
   let Ze;
-  if (Qe[3] === p) ((Ze = _le()), (Qe[3] = Ze));
+  if (Qe[3] === MEMO_CACHE_SENTINEL) ((Ze = _le()), (Qe[3] = Ze));
   else Ze = Qe[3];
   let $i = Ze,
     sl = Math.floor(il / 120) % $i.length;

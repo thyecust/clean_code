@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { _ } from "../../react/react.zhnvc798.js";
-import { Qd } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ejtvp07p.js";
+import { useVoiceSelector } from "../../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import { Va } from "../../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
-import { vt } from "../../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { Ir } from "../../../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js";
+import { useClock } from "../../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { useNotificationQueue } from "../../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { yQ, ie } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { cn } from "../../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { pt } from "../../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
@@ -20,12 +20,12 @@ import { lF } from "../../ink/ink + react-reconciler.5rs3h07b.js";
 import { NI, nK, Ape, fNe } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
 import { dd, _p, m9e, T0e, Fye } from "../../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { p_ } from "../../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { E0e, c_ } from "../../../01-核心基础设施/共享小工具-未细化/chunk-xc85bfby.js";
+import { NO_ANIMATION_INDEX, useReducedMotion } from "../../../01-核心基础设施/共享小工具-未细化/reduced-motion.js";
 import { e, r } from "../../react/react.kwtapczy.js";
-import { ut } from "../../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
+import { getThemeColor } from "../../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import { E, V, C, d, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { dJn } from "../../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { p } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function nat(i, a) {
   let [c] = d(() =>
@@ -117,8 +117,8 @@ var st = "clipboard-image-hint",
   };
 var at = [be];
 function rat({ isTerminalFocused: i, canPasteImages: a }) {
-  let { addNotification: c } = Ir(),
-    m = vt();
+  let { addNotification: c } = useNotificationQueue(),
+    m = useClock();
   nat(at, {
     isTerminalFocused: i,
     canPasteImages: a,
@@ -318,10 +318,10 @@ function Q(yo) {
       (D[14] = xt));
   else xt = D[14];
   let { lines: Re, hasShimmer: bo, sweepStart: Po, cycleLength: vo } = xt,
-    Io = c_(),
+    Io = useReducedMotion(),
     Ct = bo && !Io,
     [Ee, ko] = bs(Ct ? 50 : null),
-    Y = Ct ? Po + (Math.floor(ko / 50) % vo) : E0e,
+    Y = Ct ? Po + (Math.floor(ko / 50) % vo) : NO_ANIMATION_INDEX,
     le;
   if (D[15] !== Y || D[16] !== Re) {
     let J;
@@ -450,7 +450,7 @@ function f9e(Uo) {
   let de = g.focus !== !1;
   dd(St, de);
   let Rt;
-  if (W[7] === p) ((Rt = lF()), (W[7] = Rt));
+  if (W[7] === MEMO_CACHE_SENTINEL) ((Rt = lF()), (W[7] = Rt));
   else Rt = W[7];
   let Xo = Rt,
     Yo = tn(),
@@ -583,11 +583,11 @@ function hn(n) {
     [Xe] = cn(),
     R = Va(),
     Dt;
-  if (L[0] === p) ((Dt = lF()), (L[0] = Dt));
+  if (L[0] === MEMO_CACHE_SENTINEL) ((Dt = lF()), (L[0] = Dt));
   else Dt = L[0];
   let pn = Dt,
     ge = tn(),
-    Ye = Qd(_t) === "recording",
+    Ye = useVoiceSelector(_t) === "recording",
     [$e, G] = T0e();
   const Je = !!n.onImagePaste;
   let Bt;
@@ -629,7 +629,7 @@ function hn(n) {
     Qe = n.showCursor && !ge ? " " : "",
     Bn = n.highlightPastedText;
   let xe;
-  if (L[7] !== Xe) ((xe = ut("text", Xe)), (L[7] = Xe), (L[8] = xe));
+  if (L[7] !== Xe) ((xe = getThemeColor("text", Xe)), (L[7] = Xe), (L[8] = xe));
   else xe = L[8];
   let Lt;
   if (

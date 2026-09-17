@@ -29,7 +29,7 @@ import {
   BL,
   yZ,
 } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { A, W, Nz } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { _z } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
@@ -1724,7 +1724,7 @@ class Te {
   }
   drainsSyncAtExit() {
     return !(
-      M() &&
+      isHoverRestEnabled() &&
       this.storageV5 !== void 0 &&
       this.deps.syncExitDrain === !1
     );
@@ -1838,7 +1838,7 @@ class Te {
   }
   async maybeRotate(e, t, r = Tt) {
     let i =
-      M() && this.storageV5 !== void 0 ? this.storageV5.hostFiles : void 0;
+      isHoverRestEnabled() && this.storageV5 !== void 0 ? this.storageV5.hostFiles : void 0;
     if (this.writtenBytes < 0)
       if (i) {
         let o = await i.stat(Y(e));
@@ -1933,7 +1933,7 @@ class Te {
     if (o.pointLatest) this.markLatestSymlink();
   }
   async appendV5AndMark(e, t, r) {
-    let i = M(),
+    let i = isHoverRestEnabled(),
       o = i && !this.latestMarked && !this.latestRefused,
       s = await Pe(e, t.sessionId, r, o);
     if (s === "refused")

@@ -27,8 +27,8 @@ import { env as a, antEnv } from "../设置-配置/chunk-zqr5ctyf.js";
 import { mx } from "../共享小工具-未细化/chunk-0ypv8gq2.js";
 import { BRIEF_ENFORCE_SENTINEL } from "../共享小工具-未细化/chunk-q599wyee.js";
 import { KRe, Cge, Xvt, Yvt, P5t, vq, iar } from "../核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { JQ } from "../共享小工具-未细化/chunk-q35gycf9.js";
-import { G, Y } from "../共享小工具-未细化/chunk-d16fhdtx.js";
+import { isLoopbackHostname } from "../共享小工具-未细化/is-loopback-hostname.js";
+import { countMatching, dedupe } from "../共享小工具-未细化/chunk-d16fhdtx.js";
 var u1 = 50000,
   Pir = 4000,
   hge = 128000,
@@ -56,7 +56,7 @@ function b(t) {
   } catch {
     return;
   }
-  let r = JQ(e.hostname),
+  let r = isLoopbackHostname(e.hostname),
     o;
   switch (e.protocol) {
     case "https:":
@@ -117,7 +117,7 @@ function Lvt(t) {
   return L.has(t);
 }
 function KZe(t) {
-  let e = Y(t),
+  let e = dedupe(t),
     r = e.filter((o) => L.has(o));
   if (r.length === e.length) return r;
   return (
@@ -130,7 +130,7 @@ function KZe(t) {
 }
 var et = new Set(["hipaa"]);
 function MRe(t) {
-  return Y(t).filter((e) => et.has(e));
+  return dedupe(t).filter((e) => et.has(e));
 }
 var NRe = "/api/claude_code/policy_limits";
 function lBe(t, e, r, o) {
@@ -822,7 +822,7 @@ class W {
     return (
       (this.#n ??= [
         Cge(
-          Y([
+          dedupe([
             ...D,
             "system-reminder",
             "system_reminder",
@@ -948,7 +948,7 @@ function deriveDescription(t, e) {
   return l;
 }
 function splitWatchRows(t) {
-  let e = G(t, (r) => "rail" in r && r.rail === "live_stopped");
+  let e = countMatching(t, (r) => "rail" in r && r.rail === "live_stopped");
   return { watching: t.length - e, stopped: e };
 }
 export {

@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { Xn, j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { MTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Y9e, lIe } from "./chunk-a5048zpn.js";
 import { s, T, O, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -93,7 +93,7 @@ function Ugr(e = null) {
   return { ledger: new Map(), firstLaunch: null, restoredRecord: e };
 }
 var z = 2,
-  ne = m(() =>
+  ne = createLazyValue(() =>
     it({
       event_uuid: s().refine((e) => Xn(e) !== null),
       dispatched_epoch: T().int().min(0).max(Number.MAX_SAFE_INTEGER),
@@ -131,7 +131,7 @@ var TDt = new j(() => new H()),
   oe = 5000;
 async function B(e) {
   return (
-    (await kt(
+    (await withDeadline(
       Promise.resolve()
         .then(() => e.flushRecord())
         .catch(() => !1),
@@ -155,8 +155,8 @@ function I(e, t, r) {
 }
 function K(e, t, r, n) {
   (I(e, Y9e(t, r), n),
-    q("warn", "workflow_launch_failed", { layer: t }),
-    i("tengu_workflow_launch_event", { ok: !1, layer: fromEnum(t) }));
+    writeDiagnosticsEvent("warn", "workflow_launch_failed", { layer: t }),
+    logEvent("tengu_workflow_launch_event", { ok: !1, layer: fromEnum(t) }));
 }
 function S(e, t, r, n) {
   (K(e, t, r, n), logFeatureBad("workflow_event_launch", t));
@@ -205,8 +205,8 @@ async function Y(e, t, r, n, o) {
   for (let _ of e.fetchRetryDelaysMs ?? se) {
     if (p.ok || p.gated || Date.now() - b + _ >= L) break;
     (U++,
-      q("warn", "workflow_launch_bundle_fetch_retry", { attempt: U }),
-      await Z(_),
+      writeDiagnosticsEvent("warn", "workflow_launch_bundle_fetch_retry", { attempt: U }),
+      await sleep(_),
       (p = await e.fetchBundle(r.filestorePath)));
   }
   if (!p.ok) {
@@ -215,7 +215,7 @@ async function Y(e, t, r, n, o) {
       return;
     }
     if ((c.delete(l), h(), o)) {
-      (q("warn", "workflow_launch_rescue_fetch_failed", {}),
+      (writeDiagnosticsEvent("warn", "workflow_launch_rescue_fetch_failed", {}),
         logFeatureSad("workflow_event_launch", "rescue_fetch_transient"));
       return;
     }
@@ -259,7 +259,7 @@ async function Y(e, t, r, n, o) {
   if (o && !X) {
     (c.delete(l),
       h(),
-      q("warn", "workflow_launch_rescue_uncounted", {}),
+      writeDiagnosticsEvent("warn", "workflow_launch_rescue_uncounted", {}),
       logFeatureSad("workflow_event_launch", "rescue_record_unconfirmed"));
     return;
   }
@@ -279,9 +279,9 @@ async function Y(e, t, r, n, o) {
   }),
     e.prependUserMessage(`/workflow-launch-exec ${N}`),
     e.ackProcessed(l),
-    i("tengu_workflow_launch_event", { ok: !0, attempt: d }),
+    logEvent("tengu_workflow_launch_event", { ok: !0, attempt: d }),
     logFeatureOk("workflow_event_launch"),
-    q("info", "workflow_launch_dispatched", { attempt: d }));
+    writeDiagnosticsEvent("info", "workflow_launch_dispatched", { attempt: d }));
 }
 function J(e, t) {
   let r = { eventUuid: t.event_uuid, outcome: "failed-final" };
@@ -289,7 +289,7 @@ function J(e, t) {
     (e.state.firstLaunch ??= r),
     e.persistRecord({ ...t, settled: !0 }),
     e.ackProcessed(t.event_uuid),
-    q("warn", "workflow_launch_attempts_spent", { attempts: t.attempts }),
+    writeDiagnosticsEvent("warn", "workflow_launch_attempts_spent", { attempts: t.attempts }),
     logFeatureSad("workflow_event_launch", "attempts_spent"));
 }
 async function jgr(e, t) {
@@ -332,7 +332,7 @@ async function jgr(e, t) {
       (n.set(r, p),
         (t.state.firstLaunch ??= p),
         t.ackProcessed(r),
-        q("info", "workflow_launch_redelivery_settled", {}));
+        writeDiagnosticsEvent("info", "workflow_launch_redelivery_settled", {}));
       return;
     }
     if (h.attempts >= z) {
@@ -373,19 +373,19 @@ async function Wgr(e) {
   )
     return;
   if (t.settled) {
-    q("info", "workflow_launch_resume_skipped", { reason: "settled" });
+    writeDiagnosticsEvent("info", "workflow_launch_resume_skipped", { reason: "settled" });
     return;
   }
   let r = e.getWorkerEpoch();
   if (r === void 0 || t.dispatched_epoch >= r) {
-    q("info", "workflow_launch_resume_skipped", {
+    writeDiagnosticsEvent("info", "workflow_launch_resume_skipped", {
       reason: "not_a_later_epoch",
     });
     return;
   }
   let n = e.getDispatchedDigest();
   if (n === void 0 || !/^[0-9a-f]{64}$/.test(n) || n !== t.artifact_sha256) {
-    q("info", "workflow_launch_resume_skipped", {
+    writeDiagnosticsEvent("info", "workflow_launch_resume_skipped", {
       reason: n === void 0 ? "no_server_digest" : "digest_differs",
     });
     return;
@@ -405,7 +405,7 @@ async function Wgr(e) {
   let d = { eventUuid: t.event_uuid, outcome: "pending" };
   (o.set(t.event_uuid, d),
     (e.state.firstLaunch = d),
-    q("info", "workflow_launch_resuming", { attempt: t.attempts + 1 }),
+    writeDiagnosticsEvent("info", "workflow_launch_resuming", { attempt: t.attempts + 1 }),
     await Y(
       e,
       d,

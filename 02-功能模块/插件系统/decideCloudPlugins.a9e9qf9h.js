@@ -14,21 +14,21 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { an } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { WZ, v$n, WHe, _ye, yWe, rPt } from "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import { z_e } from "../Hooks钩子/chunk-6wg4v2yj.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 var Y = 72;
 function B(uo) {
@@ -78,11 +78,11 @@ function B(uo) {
   if (c[12] !== h) ((N = () => h("not_now")), (c[12] = h), (c[13] = N));
   else N = c[13];
   let X;
-  if (c[14] === p)
-    ((X = r(ue, {
+  if (c[14] === MEMO_CACHE_SENTINEL)
+    ((X = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "confirm" }),
-        e(je, {
+        e(KeybindingHint, { chord: "enter", action: "confirm" }),
+        e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Confirmation",
           fallback: "Esc",
@@ -93,7 +93,7 @@ function B(uo) {
       (c[14] = X));
   else X = c[14];
   let H;
-  if (c[15] === p)
+  if (c[15] === MEMO_CACHE_SENTINEL)
     ((H = e(t, {
       children:
         "A cloud session normally loads only the repository's and your organization's plugins. If you say yes, each cloud session you start or attach to from this machine is also told which plugins you have turned on or off here for its folder \u2014 their names, and the address of any marketplace they come from on GitHub, in a git repository or at a URL \u2014 and installs the enabled ones itself. Saying yes sends nothing else: no plugin files, no other settings, no credentials, no local paths.",
@@ -108,7 +108,7 @@ function B(uo) {
       (c[17] = A));
   else A = c[17];
   let O;
-  if (c[18] === p)
+  if (c[18] === MEMO_CACHE_SENTINEL)
     ((O = e(t, {
       dimColor: !0,
       children:
@@ -133,7 +133,7 @@ function B(uo) {
       (c[23] = L));
   else L = c[23];
   let W;
-  if (c[24] === p)
+  if (c[24] === MEMO_CACHE_SENTINEL)
     ((W = [
       {
         label: "Yes, use my enabled plugins in cloud sessions",
@@ -205,7 +205,7 @@ async function K(s) {
 }
 async function decideCloudPlugins(s, { deps: a, memory: d }) {
   let m = await _ye(d.consentPin, a).catch(() => "unset");
-  i("tengu_cloud_plugins_consent", { choice: fromEnum(s), previous: fromEnum(m) });
+  logEvent("tengu_cloud_plugins_consent", { choice: fromEnum(s), previous: fromEnum(m) });
   let g =
     m === "accepted"
       ? "cloud sessions from this machine use your enabled plugins"

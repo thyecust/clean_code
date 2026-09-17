@@ -15,11 +15,11 @@ import { kje } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Mnt, default as at } from "../axios/axios.t0fczzmz.js";
 import { a_ } from "../which-isexe/ isexe.knmpyrza.js";
-import { ZT } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
-import { JQ } from "../../01-核心基础设施/共享小工具-未细化/chunk-q35gycf9.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { pe, w, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var De = w(function (S) {
+import { serializeAsyncCalls } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
+import { isLoopbackHostname } from "../../01-核心基础设施/共享小工具-未细化/is-loopback-hostname.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var De = commonJS(function (S) {
   var It =
       (S && S.__createBinding) ||
       (Object.create
@@ -65,8 +65,8 @@ var De = w(function (S) {
       };
   Object.defineProperty(S, "__esModule", { value: !0 });
   S.req = S.json = S.toBuffer = void 0;
-  var Ut = Oe(Ae("http")),
-    Nt = Oe(Ae("https"));
+  var Ut = Oe(importMetaRequire("http")),
+    Nt = Oe(importMetaRequire("https"));
   async function He(e) {
     let t = 0,
       r = [];
@@ -95,7 +95,7 @@ var De = w(function (S) {
   }
   S.req = Ft;
 });
-var H0n = w(function (v) {
+var H0n = commonJS(function (v) {
   var Ne =
       (v && v.__createBinding) ||
       (Object.create
@@ -148,9 +148,9 @@ var H0n = w(function (v) {
       };
   Object.defineProperty(v, "__esModule", { value: !0 });
   v.Agent = void 0;
-  var jt = $e(Ae("net")),
-    Ue = $e(Ae("http")),
-    qt = Ae("https");
+  var jt = $e(importMetaRequire("net")),
+    Ue = $e(importMetaRequire("http")),
+    qt = importMetaRequire("https");
   Bt(De(), v);
   var I = Symbol("AgentBaseInternalState");
   class Fe extends Ue.Agent {
@@ -242,7 +242,7 @@ var H0n = w(function (v) {
   }
   v.Agent = Fe;
 });
-var Me = w(function (q) {
+var Me = commonJS(function (q) {
   var Kt =
     (q && q.__importDefault) ||
     function (e) {
@@ -323,7 +323,7 @@ var Me = w(function (q) {
   }
   q.parseProxyResponse = Yt;
 });
-var Hke = w(function (L) {
+var Hke = commonJS(function (L) {
   var Xt =
       (L && L.__createBinding) ||
       (Object.create
@@ -374,12 +374,12 @@ var Hke = w(function (L) {
       };
   Object.defineProperty(L, "__esModule", { value: !0 });
   L.HttpsProxyAgent = void 0;
-  var V = Ke(Ae("net")),
-    Be = Ke(Ae("tls")),
-    Vt = We(Ae("assert")),
+  var V = Ke(importMetaRequire("net")),
+    Be = Ke(importMetaRequire("tls")),
+    Vt = We(importMetaRequire("assert")),
     Gt = We(Mnt()),
     Qt = H0n(),
-    Jt = Ae("url"),
+    Jt = importMetaRequire("url"),
     Zt = Me(),
     W = (0, Gt.default)("https-proxy-agent"),
     je = (e) => {
@@ -475,7 +475,7 @@ var Hke = w(function (L) {
     return r;
   }
 });
-var UQ = w(function (cn) {
+var UQ = commonJS(function (cn) {
   cn.HttpAuthLocation = void 0;
   (function (e) {
     ((e.HEADER = "header"), (e.QUERY = "query"));
@@ -549,7 +549,7 @@ var UQ = w(function (cn) {
   cn.getDefaultClientConfiguration = rn;
   cn.resolveDefaultRuntimeConfig = on;
 });
-var nu = w(function (mn) {
+var nu = commonJS(function (mn) {
   var fn = UQ(),
     dn = (e) => ({
       setHttpHandler(t) {
@@ -702,14 +702,14 @@ var nu = w(function (mn) {
   mn.isValidHostname = gn;
   mn.resolveHttpHandlerRuntimeConfig = pn;
 });
-var E0n = w(function (vn) {
+var E0n = commonJS(function (vn) {
   var Ve = (e) => encodeURIComponent(e).replace(/[!'()*]/g, Sn),
     Sn = (e) => `%${e.charCodeAt(0).toString(16).toUpperCase()}`,
     Pn = (e) => e.split("/").map(Ve).join("/");
   vn.escapeUri = Ve;
   vn.escapeUriPath = Pn;
 });
-var A0n = w(function (Rn) {
+var A0n = commonJS(function (Rn) {
   var he = E0n();
   function Ln(e) {
     let t = [];
@@ -728,13 +728,13 @@ var A0n = w(function (Rn) {
   }
   Rn.buildQueryString = Ln;
 });
-var EA = w(function (qn) {
+var EA = commonJS(function (qn) {
   var Ze = nu(),
     et = A0n(),
-    Q = Ae("http"),
-    J = Ae("https"),
-    tt = Ae("stream"),
-    ge = Ae("http2"),
+    Q = importMetaRequire("http"),
+    J = importMetaRequire("https"),
+    tt = importMetaRequire("stream"),
+    ge = importMetaRequire("http2"),
     Hn = ["ECONNRESET", "EPIPE", "ETIMEDOUT"],
     nt = (e) => {
       let t = {};
@@ -1376,7 +1376,7 @@ var St = new j(() => new Te());
 function re() {
   return St.of(B().host);
 }
-var loadExtraCACerts = ZT(async () => {
+var loadExtraCACerts = serializeAsyncCalls(async () => {
   let e = re(),
     t = a.NODE_EXTRA_CA_CERTS;
   if (!t) {
@@ -1427,7 +1427,7 @@ function Pt() {
   return _e;
 }
 function vt(e) {
-  let { X509Certificate: t } = Ae("crypto"),
+  let { X509Certificate: t } = importMetaRequire("crypto"),
     r = Date.now(),
     o = 0,
     s = e.filter((i) => {
@@ -1458,7 +1458,7 @@ function bt(e) {
     o = t.includes("bundled"),
     s = t.includes("system");
   n(`CA certs: stores=${t.join(",")}, extraCertsPath=${r}`);
-  let i = Ae("tls"),
+  let i = importMetaRequire("tls"),
     c = i.getCACertificates;
   if (!o && s && !c) {
     if (
@@ -1518,7 +1518,7 @@ function bt(e) {
           `CA certs: Appended extra certificates from NODE_EXTRA_CA_CERTS (${r})`,
         ));
   }
-  let l = u.length > 0 ? Y(u) : void 0;
+  let l = u.length > 0 ? dedupe(u) : void 0;
   if (te.size === 0 && N("ok"))
     logFeatureOk("ca_certs_load", {
       cert_count: l?.length ?? 0,
@@ -1622,7 +1622,7 @@ async function ve(e, t) {
     return (n(`mTLS: Failed to load ${t}: ${r}`, { level: "error" }), null);
   }
 }
-var loadMTLSClientMaterial = ZT(async () => {
+var loadMTLSClientMaterial = serializeAsyncCalls(async () => {
   let e = K(),
     t = a.CLAUDE_CODE_CLIENT_CERT,
     r = a.CLAUDE_CODE_CLIENT_KEY,
@@ -1717,7 +1717,7 @@ function configureGlobalMTLS() {
       "NODE_EXTRA_CA_CERTS detected - Node.js will automatically append to built-in CAs",
     );
 }
-var Ee = pe(EA(), 1);
+var Ee = toESM(EA(), 1);
 import { isIP } from "net";
 function id(e, t) {
   return e;
@@ -1904,7 +1904,7 @@ function Zn(e) {
       (u[15] = t[3] ?? 0));
   return u;
 }
-var mt = pe(Hke(), 1);
+var mt = toESM(Hke(), 1);
 class Ce extends Error {
   connectStatus;
   headers;
@@ -2088,7 +2088,7 @@ function rr(e) {
   return D().agents(e);
 }
 function or(e) {
-  let t = Ae("undici"),
+  let t = importMetaRequire("undici"),
     r = getMTLSConfig(),
     o = getCACertificates(),
     s = {
@@ -2109,7 +2109,7 @@ function getWebSocketProxyUrl(e) {
   let t = getUsableProxyUrl();
   if (!t) return;
   try {
-    if (JQ(new URL(e).hostname)) return;
+    if (isLoopbackHostname(new URL(e).hostname)) return;
   } catch {}
   if (shouldBypassProxy(e)) return;
   return t;
@@ -2250,11 +2250,11 @@ function configureGlobalAgents() {
       else ((s.httpsAgent = o), (s.httpAgent = o));
       return s;
     })),
-      Ae("undici").setGlobalDispatcher(rr(t)),
+      importMetaRequire("undici").setGlobalDispatcher(rr(t)),
       (xe = !0));
   } else {
     if (xe) {
-      let o = Ae("undici");
+      let o = importMetaRequire("undici");
       (o.setGlobalDispatcher(new o.Agent()), (xe = !1));
     }
     if (r) at.defaults.httpsAgent = r;

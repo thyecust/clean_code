@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { B, l_e, N0, kW, p8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { CLAUDE_AI_INFERENCE_SCOPE, CLAUDE_AI_PROFILE_SCOPE } from "./chunk-9g2q4bjq.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
@@ -27,7 +27,7 @@ import {
   _q,
   Te,
 } from "./认证-OAuth登录.419zdfz3.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Iae, _dr, lot, R, l, A, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -59,7 +59,7 @@ var uIe = "41077d10-94b8-4194-be48-d251e9eb21b4",
   UBn = [CLAUDE_AI_PROFILE_SCOPE, CLAUDE_AI_INFERENCE_SCOPE],
   x = /^[A-Za-z0-9_.-]+$/,
   P = { created_by: "claude-code" },
-  j = m(() =>
+  j = createLazyValue(() =>
     it({
       created_by: s().optional(),
       base_url: s().optional(),
@@ -70,7 +70,7 @@ var uIe = "41077d10-94b8-4194-be48-d251e9eb21b4",
       }),
     }),
   ),
-  G = m(() => it({ created_by: s().optional() })),
+  G = createLazyValue(() => it({ created_by: s().optional() })),
   b = {
     no_config_dir: !0,
     invalid_profile_name: !0,
@@ -514,7 +514,7 @@ async function clearAuthRelatedCaches(
     credentials: f,
   } = {},
 ) {
-  if ((clearOAuthTokenMemos(), M() && f === void 0)) IQ();
+  if ((clearOAuthTokenMemos(), isHoverRestEnabled() && f === void 0)) IQ();
   (clearTrustedDeviceTokenCache(),
     gU(),
     Or().providerCache.modelConfigs.clear(),

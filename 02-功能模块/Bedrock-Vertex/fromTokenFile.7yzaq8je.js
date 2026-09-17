@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { HA } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js";
-import { kb } from "../../01-核心基础设施/共享小工具-未细化/chunk-pf84p45h.js";
-import { zd } from "./chunk-yjjbkvm4.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var d = pe(kb()),
-  a = pe(zd()),
-  m = pe(HA());
+import { awsSdkCoreClientModule } from "../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
+import { getPropertyProviderModule } from "./smithy-property-provider.js";
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var d = toESM(awsSdkCoreClientModule()),
+  a = toESM(getPropertyProviderModule()),
+  m = toESM(HA());
 import { readFileSync } from "fs";
 var fromWebToken = (e) => async (t) => {
   e.logger?.debug("@aws-sdk/credential-provider-web-identity - fromWebToken");
@@ -29,7 +29,7 @@ var fromWebToken = (e) => async (t) => {
     { roleAssumerWithWebIdentity: i } = e;
   if (!i) {
     let { getDefaultRoleAssumerWithWebIdentity: f } =
-      await import("../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-mkw5nmp8.js").then((m) => pe(m.default));
+      await import("../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-mkw5nmp8.js").then((m) => toESM(m.default));
     i = f(
       {
         ...e.clientConfig,

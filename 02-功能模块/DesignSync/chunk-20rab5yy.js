@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -16,7 +16,7 @@ import { ht, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefres
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { v6n, R6n, Jee, N4, k6n, x6n } from "../Memory-CLAUDE.md/chunk-9b6sc1gb.js";
 import { fbe, Nsn } from "./chunk-aycc6z76.js";
-import { D6n, L6n, M6n } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
+import { registerDesignAuthResolver, registerFirstPartyDesignAuthChecker, registerDesignConsentProvider } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
 var u = ["agent_design_projects"];
 function mqe(e) {
   return typeof e === "string" && u.includes(e);
@@ -35,7 +35,7 @@ function S6n(e) {
 async function c(e) {
   await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });
   let t;
-  if (M() && e !== void 0) t = await getClaudeAIOAuthTokensAsync(e);
+  if (isHoverRestEnabled() && e !== void 0) t = await getClaudeAIOAuthTokensAsync(e);
   else t = getClaudeAIOAuthTokens();
   let s =
     t?.refreshToken && t.scopes?.includes("user:design:read")
@@ -84,7 +84,7 @@ async function h(e) {
   if (St()) return { ok: !1, reason: "essential_traffic_only" };
   await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });
   let t;
-  if (M() && e !== void 0) t = await getClaudeAIOAuthTokensAsync(e);
+  if (isHoverRestEnabled() && e !== void 0) t = await getClaudeAIOAuthTokensAsync(e);
   else t = getClaudeAIOAuthTokens();
   if (
     t?.accessToken &&
@@ -134,7 +134,7 @@ async function gqe(e, t) {
 async function Msn(e) {
   if (!isFirstPartyProvider() || St()) return !1;
   let t;
-  if (M() && e !== void 0) t = (await getClaudeAIOAuthTokensAsync(e))?.accessToken;
+  if (isHoverRestEnabled() && e !== void 0) t = (await getClaudeAIOAuthTokensAsync(e))?.accessToken;
   else t = getClaudeAIOAuthTokens()?.accessToken;
   if (t) return !1;
   return !(await fbe(e))?.accessToken;
@@ -287,9 +287,9 @@ function E6n(e, t, s) {
     },
   };
 }
-D6n(h);
-L6n(async (e) => !!(await fbe(e)));
-M6n({
+registerDesignAuthResolver(h);
+registerFirstPartyDesignAuthChecker(async (e) => !!(await fbe(e)));
+registerDesignConsentProvider({
   wouldNeedDesignConsent: gqe,
   consentPromptFor: Vee,
   postDesignConsent: Kee,

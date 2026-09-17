@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { oo, parseShortId } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -35,8 +35,8 @@ import { nr, rMe, $6t, fWt, cgn } from "../../03-入口与运行时/核心应用
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { readTeamFileAsync } from "./chunk-6b13bhw1.js";
 import { DAe, nbt, rbt, i7e, obt, a7e, GNe, jpe } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
-import { cp, fs } from "./chunk-enjekn9t.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 async function IGe({
   tool: e,
   input: i,
@@ -183,7 +183,7 @@ async function OGe(e, i, o, s, t, r) {
     d = null;
   if (vUe(i)) return { kind: "not-found", closest: [] };
   if (typeof o === "string") {
-    if (i === cp) return { kind: "main" };
+    if (i === MAIN_CONVERSATION_NAME) return { kind: "main" };
     let b = s.teamContext?.teammates ?? {},
       k = Object.entries(b).find(([, h]) => h.name === i),
       _ = parseShortId(i) ?? parseShortId(a),
@@ -199,7 +199,7 @@ async function OGe(e, i, o, s, t, r) {
       };
     let ne = jD(i);
     if (l) {
-      if (i === fs) return { kind: "mailbox", recipientName: i };
+      if (i === TEAM_LEAD_AGENT_NAME) return { kind: "mailbox", recipientName: i };
       if (((d = await readTeamFileAsync(l, t)), ne === null && d !== null)) {
         let h = nge(d, SU(s)).find((p) => p.name === i);
         if (h !== void 0)
@@ -273,14 +273,14 @@ async function OGe(e, i, o, s, t, r) {
   if (typeof o !== "string") {
     if (o.type === "shutdown_response")
       return { kind: "mailbox", recipientName: i };
-    if (i !== fs && l0(i))
+    if (i !== TEAM_LEAD_AGENT_NAME && l0(i))
       return L(
         slugify(i),
         bP(s, { teamFile: null, sessions: [] }),
         (m) => m.kind === "teammate",
       );
     if (!l) return { kind: "mailbox", recipientName: i };
-    if (i === fs) return { kind: "mailbox", recipientName: i };
+    if (i === TEAM_LEAD_AGENT_NAME) return { kind: "mailbox", recipientName: i };
     let b = Object.entries(s.teamContext?.teammates ?? {}).filter(
         ([m, w]) => iRe({ name: w.name, agentId: m }, SU(s)) || !tge(w.name),
       ),
@@ -589,7 +589,7 @@ async function q(e, i, o, s) {
   if (isCrossSessionMessagingEnabled()) {
     let t = !GNe(i.unavailable),
       r = nbt(e, s),
-      a = await kt(r, me);
+      a = await withDeadline(r, me);
     if (a === void 0) {
       if (
         (n(
@@ -689,7 +689,7 @@ function D(e, i) {
 }
 function L(e, i, o) {
   let s = o ? i.candidates.filter(o) : i.candidates,
-    t = Y(s.map((a) => slugify(a.name)));
+    t = dedupe(s.map((a) => slugify(a.name)));
   return {
     kind: "not-found",
     closest: rMe(e, t, be).map((a) => s.find((l) => slugify(l.name) === a)),

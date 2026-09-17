@@ -10,13 +10,13 @@
 import { Si } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ep, yjt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { eJe, DC } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { qe, Bt, Mn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, T, O, se, v, c, $e, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var pE = 1,
   Slt = [1],
   A = 1,
@@ -475,14 +475,14 @@ function Pe(e) {
   return { name: fE(e.name, g), working_dir: fE(e.working_dir, ye) };
 }
 var B = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,255}$/,
-  f = m(() => s().regex(B)),
-  L = m(() =>
+  f = createLazyValue(() => s().regex(B)),
+  L = createLazyValue(() =>
     s()
       .regex(hIe)
       .optional()
       .catch(void 0),
   ),
-  Ne = m(() =>
+  Ne = createLazyValue(() =>
     c({
       v: k(pE),
       op: k("call").optional(),
@@ -510,14 +510,14 @@ var B = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,255}$/,
       }).optional(),
     }),
   ),
-  w = m(() => s().regex(B)),
-  C = m(() => s().regex(B)),
+  w = createLazyValue(() => s().regex(B)),
+  C = createLazyValue(() => s().regex(B)),
   P = 8640000000000000,
   H = () => ({
     replayed: O().optional(),
     served_at: T().int().nonnegative().max(P).optional(),
   }),
-  De = m(() => c({ v: k(pE), op: k("outcome_of"), call_id: f() }));
+  De = createLazyValue(() => c({ v: k(pE), op: k("outcome_of"), call_id: f() }));
 function R(e = 1) {
   return se()
     .transform((o) =>
@@ -527,7 +527,7 @@ function R(e = 1) {
     )
     .optional();
 }
-var Ie = m(() =>
+var Ie = createLazyValue(() =>
   c({
     max_call_ms: T().int().positive(),
     max_command_ms: R(),
@@ -548,13 +548,13 @@ function N(e) {
   for (let t of Object.keys(o)) if (o[t] === void 0) delete o[t];
   return o;
 }
-var Le = m(() =>
+var Le = createLazyValue(() =>
     s()
       .regex(eJe)
       .refine((e) => !DC(e)),
   ),
-  z = m(() => c({ name: s().min(1).max(g), working_dir: s().max(ye) })),
-  ge = m(() =>
+  z = createLazyValue(() => c({ name: s().min(1).max(g), working_dir: s().max(ye) })),
+  ge = createLazyValue(() =>
     c({
       name: Le(),
       kind: X(["personal_machine", "sandbox"]),
@@ -572,14 +572,14 @@ var Le = m(() =>
       capabilities: se()
         .transform((e) =>
           Array.isArray(e)
-            ? Y(e.filter((o) => typeof o === "string" && Z.test(o))).slice(0, J)
+            ? dedupe(e.filter((o) => typeof o === "string" && Z.test(o))).slice(0, J)
             : void 0,
         )
         .optional(),
     }),
   ),
-  be = m(() => ge().transform(N)),
-  He = m(() =>
+  be = createLazyValue(() => ge().transform(N)),
+  He = createLazyValue(() =>
     c({
       v: k(A),
       tool: s().min(1).max(128),
@@ -590,11 +590,11 @@ var Le = m(() =>
         .optional(),
     }),
   ),
-  M = m(() => v(s().min(1).max(WDt)).max(j).optional()),
-  Ue = m(() =>
+  M = createLazyValue(() => v(s().min(1).max(WDt)).max(j).optional()),
+  Ue = createLazyValue(() =>
     c({ allow: M(), soft_deny: M(), hard_deny: M(), environment: M() }),
   ),
-  je = m(() =>
+  je = createLazyValue(() =>
     c({
       mode: k("form").optional(),
       message: s().max(Wle),
@@ -628,14 +628,14 @@ var Le = m(() =>
   Fe = 4,
   s2n = "(a PDF read on ",
   Ke = ["application/pdf"],
-  Be = m(() =>
+  Be = createLazyValue(() =>
     c({
       at: T().int().nonnegative(),
       media_type: X(Ke),
       data: s().regex(/^[A-Za-z0-9+/]+={0,2}$/),
     }),
   ),
-  Xe = m(() =>
+  Xe = createLazyValue(() =>
     se().transform((e) =>
       Array.isArray(e)
         ? e.slice(0, Fe).flatMap((o) => {
@@ -645,7 +645,7 @@ var Le = m(() =>
         : [],
     ),
   ),
-  ie = m(() =>
+  ie = createLazyValue(() =>
     $e([
       s(),
       v(
@@ -668,8 +668,8 @@ function Re(e) {
     )
     .optional();
 }
-var U = m(() => Re(ue)),
-  Ve = m(() => Re(ce));
+var U = createLazyValue(() => Re(ue)),
+  Ve = createLazyValue(() => Re(ce));
 function le(e) {
   return s()
     .max(64)
@@ -688,7 +688,7 @@ function q(e, o = "dropped") {
     )
     .optional();
 }
-var Ge = m(() =>
+var Ge = createLazyValue(() =>
   Ko("outcome", [
     c({
       v: k(pE),
@@ -980,8 +980,8 @@ var rn = 16,
   F = 256,
   an = 65536,
   ln = 16,
-  he = m(() => fe(s(), se()).refine((e) => Alt(e, ln) && e2(e) <= an)),
-  dn = m(() =>
+  he = createLazyValue(() => fe(s(), se()).refine((e) => Alt(e, ln) && e2(e) <= an)),
+  dn = createLazyValue(() =>
     c({
       name: s().min(1).max(K),
       refused_input_fields: v(s().max(64)).max(32),
@@ -990,7 +990,7 @@ var rn = 16,
       input_schema: he().optional(),
     }),
   ),
-  un = m(() =>
+  un = createLazyValue(() =>
     c({
       name: s().min(1).max(F),
       local_name: s().min(1).max(F),
@@ -998,8 +998,8 @@ var rn = 16,
       input_schema: he(),
     }),
   ),
-  cn = m(() => ge().required({ epoch: !0 }).transform(N)),
-  pn = m(() =>
+  cn = createLazyValue(() => ge().required({ epoch: !0 }).transform(N)),
+  pn = createLazyValue(() =>
     c({
       host: cn(),
       tools: v(se()).max(rn),
@@ -1034,7 +1034,7 @@ function d2n(e) {
     host: l(o.data.host),
     tools: d,
     passthrough: _,
-    plumbing: Y(l(o.data.plumbing)).filter((p) => p !== ""),
+    plumbing: dedupe(l(o.data.plumbing)).filter((p) => p !== ""),
     ignored: t,
   };
 }
@@ -1055,7 +1055,7 @@ function _n(e) {
     input_schema: l(e.input_schema),
   };
 }
-var yn = m(() =>
+var yn = createLazyValue(() =>
   c({
     instance_id: s().regex(hIe),
     host: s().max(g),
@@ -1108,7 +1108,7 @@ function f2n({
     deadline_ms: u7(p),
   };
 }
-var fn = m(() =>
+var fn = createLazyValue(() =>
   c({
     instance_id: s().regex(hIe),
     host: s().max(g),
@@ -1253,8 +1253,8 @@ function G(e) {
 function x(e) {
   return G(e) ? e : void 0;
 }
-var En = m(() => c({ type: k("text"), text: s() })),
-  Rn = m(() => c({ type: k("image"), data: s(), mimeType: X(Ee) }));
+var En = createLazyValue(() => c({ type: k("text"), text: s() })),
+  Rn = createLazyValue(() => c({ type: k("image"), data: s(), mimeType: X(Ee) }));
 function kn(e) {
   if (typeof e === "string") return e;
   if (!Array.isArray(e)) return [];

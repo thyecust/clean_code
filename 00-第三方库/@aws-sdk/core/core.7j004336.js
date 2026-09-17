@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { G0n, Lm } from "../../_未识别/第三方库-AWSSDK/chunk-w3axq133.js";
-import { nE } from "../../../01-核心基础设施/共享小工具-未细化/chunk-p71zdaw2.js";
+import { getNodeConfigProviderModule } from "../../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
 import { HA } from "../../_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js";
 import { gL, cy } from "../../_未识别/第三方库-AWSSDK/chunk-dm9sg03f.js";
 import { nu } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
@@ -16,12 +16,12 @@ import { lhe } from "../../_未识别/第三方库-AWSSDK/chunk-zdrvwe5r.js";
 import { ta } from "../../_未识别/第三方库-AWSSDK/chunk-mwf4pmq2.js";
 import { Rb, z0n, w2e, Oke } from "../../_未识别/第三方库-其他/chunk-jtb5q5xr.js";
 import { E2e, s_, hS } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
-import { kb } from "../../../01-核心基础设施/共享小工具-未细化/chunk-pf84p45h.js";
-import { Ib } from "../../../01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js";
-import { H0 } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6rswwsrr.js";
-import { zd } from "../../../02-功能模块/Bedrock-Vertex/chunk-yjjbkvm4.js";
-import { w, Ae } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var Q6 = w(function (Zi) {
+import { awsSdkCoreClientModule } from "../../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
+import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
+import { getUrlParserModule } from "../../../01-核心基础设施/共享小工具-未细化/url-parser.js";
+import { getPropertyProviderModule } from "../../../02-功能模块/Bedrock-Vertex/smithy-property-provider.js";
+import { commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var Q6 = commonJS(function (Zi) {
   var Qi = nu();
   function Yi(e) {
     return e;
@@ -58,7 +58,7 @@ var Q6 = w(function (Zi) {
   Zi.hostHeaderMiddlewareOptions = vr;
   Zi.resolveHostHeaderConfig = Yi;
 });
-var Z6 = w(function (io) {
+var Z6 = commonJS(function (io) {
   var zr = () => (e, t) => async (r) => {
       try {
         let s = await e(r),
@@ -121,7 +121,7 @@ var Z6 = w(function (io) {
   io.loggerMiddleware = zr;
   io.loggerMiddlewareOptions = $r;
 });
-var Lr = w(function (uo) {
+var Lr = commonJS(function (uo) {
   var ze = {
       REQUEST_ID: Symbol.for("_AWS_LAMBDA_REQUEST_ID"),
       X_RAY_TRACE_ID: Symbol.for("_AWS_LAMBDA_X_RAY_TRACE_ID"),
@@ -235,7 +235,7 @@ var Lr = w(function (uo) {
   })(uo.InvokeStore || (uo.InvokeStore = {}));
   uo.InvokeStoreBase = Xe;
 });
-var Fr = w(function (Ur) {
+var Fr = commonJS(function (Ur) {
   Object.defineProperty(Ur, "__esModule", { value: !0 });
   Ur.recursionDetectionMiddleware = void 0;
   var ho = Lr(),
@@ -260,7 +260,7 @@ var Fr = w(function (Ur) {
     };
   Ur.recursionDetectionMiddleware = go;
 });
-var eW = w(function (Tt) {
+var eW = commonJS(function (Tt) {
   var Nt = Fr(),
     yo = {
       step: "build",
@@ -285,9 +285,9 @@ var eW = w(function (Tt) {
       });
   });
 });
-var XU = w(function (We) {
+var XU = commonJS(function (We) {
   var Ce = gL(),
-    wo = H0(),
+    wo = getUrlParserModule(),
     qr = (e, t = !1) => {
       if (t) {
         for (let r of e.split(".")) if (!qr(r)) return !1;
@@ -566,7 +566,7 @@ var XU = w(function (We) {
   We.toEndpointV1 = Yr;
   We.useDefaultPartitionInfo = _o;
 });
-var Zr = w(function (zo) {
+var Zr = commonJS(function (zo) {
   var Jr = typeof TextEncoder == "function" ? new TextEncoder() : null,
     vo = (e) => {
       if (typeof e === "string") {
@@ -585,14 +585,14 @@ var Zr = w(function (zo) {
     };
   zo.calculateBodyLength = vo;
 });
-var Bt = w(function (aa) {
+var Bt = commonJS(function (aa) {
   var Ze = w2e(),
     ss = s_(),
     Be = Oke(),
     Bo = nu(),
     Lo = Zr(),
     Re = Rb(),
-    Uo = Ib(),
+    Uo = smithyContextModule(),
     ns = hS(),
     Ye = 0,
     Je = 1,
@@ -1337,7 +1337,7 @@ var Bt = w(function (aa) {
   aa.tag = Pt;
   aa.tagSymbol = Dt;
 });
-var ps = w(function (xh, fs) {
+var ps = commonJS(function (xh, fs) {
   (() => {
     var e = {
         d: (n, i) => {
@@ -3816,7 +3816,7 @@ var ps = w(function (xh, fs) {
     fs.exports = t;
   })();
 });
-var gs = w(function (ms) {
+var gs = commonJS(function (ms) {
   Object.defineProperty(ms, "__esModule", { value: !0 });
   ms.parseXML = ba;
   var xa = ps(),
@@ -3844,7 +3844,7 @@ var gs = w(function (ms) {
     return Lt.parse(e, !0);
   }
 });
-var Vt = w(function (ys) {
+var Vt = commonJS(function (ys) {
   var Ta = gs();
   function _a(e) {
     return e
@@ -3953,11 +3953,11 @@ var Vt = w(function (ys) {
   ys.XmlNode = Ue;
   ys.XmlText = Ut;
 });
-var R_ = w(function (Ka) {
+var R_ = commonJS(function (Ka) {
   var jt = nu(),
     me = Lm(),
-    Es = zd(),
-    Ia = kb(),
+    Es = getPropertyProviderModule(),
+    Ia = awsSdkCoreClientModule(),
     Ss = lhe(),
     ws = Bt(),
     L = Rb(),
@@ -5691,7 +5691,7 @@ More information can be found at: https://a.co/74kJMmI`));
   Ka.state = Ft;
   Ka.validateSigningProperties = Ht;
 });
-var YU = w(function (Xc) {
+var YU = commonJS(function (Xc) {
   var vc = Lm(),
     zc = XU(),
     $c = nu(),
@@ -5845,7 +5845,7 @@ var YU = w(function (Xc) {
   Xc.resolveUserAgentConfig = Lc;
   Xc.userAgentMiddleware = Gs;
 });
-var tW = w(function (tu) {
+var tW = commonJS(function (tu) {
   var Zc = nu(),
     Ws = "content-length";
   function Ks(e) {
@@ -5882,7 +5882,7 @@ var tW = w(function (tu) {
   tu.contentLengthMiddlewareOptions = Qs;
   tu.getContentLengthPlugin = eu;
 });
-var rn = w(function (en) {
+var rn = commonJS(function (en) {
   Object.defineProperty(en, "__esModule", { value: !0 });
   en.getEndpointUrlConfig = void 0;
   var Ys = HA(),
@@ -5914,20 +5914,20 @@ var rn = w(function (en) {
     });
   en.getEndpointUrlConfig = ou;
 });
-var on = w(function (sn) {
+var on = commonJS(function (sn) {
   Object.defineProperty(sn, "__esModule", { value: !0 });
   sn.getEndpointFromConfig = void 0;
-  var au = nE(),
+  var au = getNodeConfigProviderModule(),
     cu = rn(),
     uu = async (e) =>
       (0, au.loadConfig)((0, cu.getEndpointUrlConfig)(e ?? ""))();
   sn.getEndpointFromConfig = uu;
 });
-var Ax = w(function (bu) {
+var Ax = commonJS(function (bu) {
   var cn = on(),
-    an = H0(),
+    an = getUrlParserModule(),
     lu = Lm(),
-    ot = Ib(),
+    ot = smithyContextModule(),
     du = G0n(),
     hu = async (e) => {
       let t = e?.Bucket || "";
@@ -6137,7 +6137,7 @@ var Ax = w(function (bu) {
   bu.resolveParams = ln;
   bu.toEndpointV1 = tr;
 });
-var sr = w(function (Uu) {
+var sr = commonJS(function (Uu) {
   var Mu = [
       "AuthFailure",
       "InvalidSignatureException",
@@ -6209,7 +6209,7 @@ var sr = w(function (Uu) {
   Uu.isThrottlingError = Bu;
   Uu.isTransientError = rr;
 });
-var JU = w(function (Zu) {
+var JU = commonJS(function (Zu) {
   var Wu = sr();
   Zu.RETRY_MODES = void 0;
   (function (e) {
@@ -6486,21 +6486,21 @@ var JU = w(function (Zu) {
   Zu.THROTTLING_RETRY_DELAY_BASE = yn;
   Zu.TIMEOUT_RETRY_COST = Sn;
 });
-var _n = w(function (Nn) {
+var _n = commonJS(function (Nn) {
   Object.defineProperty(Nn, "__esModule", { value: !0 });
   Nn.isStreamingPayload = void 0;
-  var ml = Ae("stream"),
+  var ml = importMetaRequire("stream"),
     gl = (e) =>
       e?.body instanceof ml.Readable ||
       (typeof ReadableStream < "u" && e?.body instanceof ReadableStream);
   Nn.isStreamingPayload = gl;
 });
-var WR = w(function (Il) {
+var WR = commonJS(function (Il) {
   var j = JU(),
     De = nu(),
     ye = sr(),
     An = z0n(),
-    Cn = Ib(),
+    Cn = smithyContextModule(),
     yl = ta(),
     El = _n(),
     Sl = (e, t) => {
@@ -6808,12 +6808,12 @@ var WR = w(function (Il) {
   Il.retryMiddleware = zn;
   Il.retryMiddlewareOptions = $n;
 });
-var Vn = w(function (Un) {
+var Vn = commonJS(function (Un) {
   Object.defineProperty(Un, "__esModule", { value: !0 });
   Un.warning = void 0;
   Un.stsRegionDefaultResolver = Kl;
   var Ln = cy(),
-    Wl = nE();
+    Wl = getNodeConfigProviderModule();
   function Kl(e = {}) {
     return (0, Wl.loadConfig)(
       {
@@ -6831,7 +6831,7 @@ var Vn = w(function (Un) {
   }
   Un.warning = { silence: !1 };
 });
-var QU = w(function (Ee) {
+var QU = commonJS(function (Ee) {
   var qe = cy(),
     Fn = Vn(),
     Yl = (e) => ({
@@ -6885,9 +6885,9 @@ var QU = w(function (Ee) {
       });
   });
 });
-var nW = w(function (od) {
-  var jn = Ae("os"),
-    dr = Ae("process"),
+var nW = commonJS(function (od) {
+  var jn = importMetaRequire("os"),
+    dr = importMetaRequire("process"),
     td = YU(),
     qn = { isCrtAvailable: !1 },
     rd = () => {
@@ -6928,11 +6928,11 @@ var nW = w(function (od) {
   od.crtAvailability = qn;
   od.defaultUserAgent = sd;
 });
-var rW = w(function (md) {
+var rW = commonJS(function (md) {
   var hr = E2e(),
     fd = s_(),
-    pd = Ae("buffer"),
-    Wn = Ae("crypto");
+    pd = importMetaRequire("buffer"),
+    Wn = importMetaRequire("crypto");
   class Qn {
     algorithmIdentifier;
     secret;
@@ -6961,8 +6961,8 @@ var rW = w(function (md) {
   }
   md.Hash = Qn;
 });
-var oW = w(function (Ed) {
-  var fr = Ae("fs"),
+var oW = commonJS(function (Ed) {
+  var fr = importMetaRequire("fs"),
     yd = (e) => {
       if (!e) return 0;
       if (typeof e === "string") return Buffer.byteLength(e);
@@ -6978,10 +6978,10 @@ var oW = w(function (Ed) {
     };
   Ed.calculateBodyLength = yd;
 });
-var iW = w(function (Dd) {
+var iW = commonJS(function (Dd) {
   var wd = cy(),
-    Yn = nE(),
-    xd = zd(),
+    Yn = getNodeConfigProviderModule(),
+    xd = getPropertyProviderModule(),
     bd = "AWS_EXECUTION_ENV",
     Jn = "AWS_REGION",
     Zn = "AWS_DEFAULT_REGION",
@@ -7041,7 +7041,7 @@ var iW = w(function (Dd) {
     };
   Dd.resolveDefaultsModeConfig = Id;
 });
-var sW = w(function (Fd) {
+var sW = commonJS(function (Fd) {
   var ei = Bt(),
     U = Rb(),
     he = ta(),

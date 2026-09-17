@@ -11,7 +11,7 @@ import { mi } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ts } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { gr, rH, gqn, ow } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { V$ } from "../插件系统/chunk-7s6mt1vg.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function I4(e) {
   return e.type;
 }
@@ -52,9 +52,9 @@ function j3e(e) {
 }
 function CSe(e, n, t) {
   if (!n) {
-    let r = G(e, (s) => s.type === "disabled" && !t(s.name));
+    let r = countMatching(e, (s) => s.type === "disabled" && !t(s.name));
     if (r === 0) return null;
-    let l = G(e, (s) => s.type === "disabled" && t(s.name));
+    let l = countMatching(e, (s) => s.type === "disabled" && t(s.name));
     return (
       `${r} MCP server(s) were re-enabled in another session, so this disable didn't persist for them \u2014 enable then disable each in /mcp to make it stick. Left alone, they connect on the next launch.` +
       (l > 0
@@ -66,8 +66,8 @@ function CSe(e, n, t) {
     (r) => r.type !== "disabled" && I4(r) !== "needs-approval" && t(r.name),
   );
   if (o.length === 0) return null;
-  let i = G(o, ts),
-    c = G(o, (r) => !ts(r) && ow(r)),
+  let i = countMatching(o, ts),
+    c = countMatching(o, (r) => !ts(r) && ow(r)),
     p = o.length - i - c,
     a = [];
   if (p > 0)

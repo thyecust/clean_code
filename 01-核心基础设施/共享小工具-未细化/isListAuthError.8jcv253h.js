@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { nce, rct } from "./chunk-7vth056q.js";
+import { isClaudeAiBearerRejectedError as nce, isListAuthError as rct } from "./auth-error-predicates.js";
 import "../../02-功能模块/认证-OAuth登录/chunk-j990pwax.js";
 import "../../02-功能模块/认证-OAuth登录/chunk-3wfaaze4.js";
 import "../../02-功能模块/MCP客户端/chunk-tv3jbp8f.js";

@@ -9,5 +9,5 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 13 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Tw, wve } from "../../02-功能模块/认证-OAuth登录/chunk-s51acx6w.js";
+import { credentialsStoreFor as Tw, sessionServicesFor as wve } from "../../02-功能模块/认证-OAuth登录/credentials-store.js";
 export { Tw as credentialsStoreFor, wve as sessionServicesFor };

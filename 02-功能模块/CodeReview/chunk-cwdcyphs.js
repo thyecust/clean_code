@@ -13,7 +13,7 @@ import { Y1e, WXe, GXe, qXe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { fi, Dhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { n6 } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+import { defineStoreField } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 var p = /^\d{1,10}$/,
   w = /^\/([A-Za-z0-9-]{1,39})\/([A-Za-z0-9._-]{1,100})\/pull\/(\d{1,10})$/;
 function d(n) {
@@ -39,7 +39,7 @@ function d(n) {
 }
 var f = 8,
   m = [],
-  $jn = n6("prReviewTargets", m);
+  $jn = defineStoreField("prReviewTargets", m);
 function Ujn(n, e) {
   let o = Q(),
     a = String(K()),

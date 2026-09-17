@@ -10,22 +10,22 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, nk } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { YX, JX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { M8 } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { Xot } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import { Ur } from "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, V, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Ue() {}
 var Q = [
@@ -36,7 +36,7 @@ var Q = [
 function C() {
   let po = _(1),
     xe;
-  if (po[0] === p)
+  if (po[0] === MEMO_CACHE_SENTINEL)
     ((xe = e(t, {
       dimColor: !0,
       children:
@@ -56,7 +56,7 @@ function U(fo) {
       (se[1] = B));
   else B = se[1];
   let De;
-  if (se[2] === p) ((De = e(C, {})), (se[2] = De));
+  if (se[2] === MEMO_CACHE_SENTINEL) ((De = e(C, {})), (se[2] = De));
   else De = se[2];
   let we;
   if (se[3] !== B)
@@ -77,7 +77,7 @@ function X(yo) {
       selectedSuggestion: ae,
     } = yo,
     Re;
-  if (w[0] === p)
+  if (w[0] === MEMO_CACHE_SENTINEL)
     ((Re = e(t, { children: "Enter the path to the directory:" })),
       (w[0] = Re));
   else Re = w[0];
@@ -117,7 +117,7 @@ function X(yo) {
       (w[7] = j));
   else j = w[7];
   let G;
-  if (w[8] !== ce) ((G = e(Ur, { error: ce })), (w[8] = ce), (w[9] = G));
+  if (w[8] !== ce) ((G = e(ErrorMessage, { error: ce })), (w[8] = ce), (w[9] = G));
   else G = w[9];
   let Ae;
   if (w[10] !== W || w[11] !== j || w[12] !== G)
@@ -138,11 +138,11 @@ function Hye(bo) {
       permissionContext: ge,
       directoryPath: i,
     } = bo,
-    pe = Ye(),
+    pe = useSession(),
     [b, Te] = d(""),
     [fe, Ie] = d(null),
     Be;
-  if (l[0] === p) ((Be = []), (l[0] = Be));
+  if (l[0] === MEMO_CACHE_SENTINEL) ((Be = []), (l[0] = Be));
   else Be = l[0];
   let [u, Ee] = d(Be),
     [h, Y] = d(0),
@@ -174,7 +174,7 @@ function Hye(bo) {
   else ((Oe = l[5]), (Ve = l[6]));
   E(Oe, Ve);
   let We;
-  if (l[7] === p)
+  if (l[7] === MEMO_CACHE_SENTINEL)
     ((We = (vo) => {
       let So = vo.id + "/";
       (Te(So), Ie(null));
@@ -206,9 +206,9 @@ function Hye(bo) {
   else Ge = l[11];
   let k = Ge,
     Le;
-  if (l[12] === p) ((Le = { context: "Settings" }), (l[12] = Le));
+  if (l[12] === MEMO_CACHE_SENTINEL) ((Le = { context: "Settings" }), (l[12] = Le));
   else Le = l[12];
-  Ne("confirm:no", y, Le);
+  useKeybinding("confirm:no", y, Le);
   let $e;
   if (l[13] !== k || l[14] !== h || l[15] !== u)
     (($e = (c) => {
@@ -271,11 +271,11 @@ function Hye(bo) {
   if (l[21] !== i)
     ((J = i
       ? void 0
-      : r(ue, {
+      : r(DotSeparatedList, {
           children: [
-            e(D, { chord: "tab", action: "complete" }),
-            e(D, { chord: "enter", action: "add" }),
-            e(je, {
+            e(KeybindingHint, { chord: "tab", action: "complete" }),
+            e(KeybindingHint, { chord: "enter", action: "add" }),
+            e(ActionKeybindingHint, {
               action: "confirm:no",
               context: "Settings",
               fallback: "Esc",
@@ -346,7 +346,7 @@ function Hye(bo) {
   else P = l[34];
   let Qe;
   if (l[35] !== ye || l[36] !== P)
-    ((Qe = e(mr, { onKeyDown: ye, children: P })),
+    ((Qe = e(FocusableBox, { onKeyDown: ye, children: P })),
       (l[35] = ye),
       (l[36] = P),
       (l[37] = Qe));

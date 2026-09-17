@@ -9,17 +9,17 @@
 // Version: 2.1.263
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { pt, io, cnt, Xkt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { iy, gc } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { Ol } from "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
+import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { IT } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { sDe, b6t, createAttachmentMessage, Vc, Re, wH } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { xZ, Pst } from "../../02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js";
 import { iQt } from "../../01-核心基础设施/共享小工具-未细化/chunk-cbdr3qdm.js";
 import { mt } from "../../02-功能模块/工具Task-Agent调度/chunk-1px84m19.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
 function eFn(e) {
   return (
@@ -297,7 +297,7 @@ function VJt(e) {
     e.threshold <= 0 ||
     !R.has(e.source)
   ) {
-    if (Ol().claim("remote_autocompact_frame_drop"))
+    if (getClaimRegistry().claim("remote_autocompact_frame_drop"))
       (n("[sdkMessageAdapter] Dropping malformed autocompact_state frame"),
         logFeatureSad("remote_autocompact_sync", "invalid_frame"));
     return;
@@ -333,7 +333,7 @@ function G0t(e, s, r) {
     !l)
   )
     return;
-  i("tengu_remote_autocompact_state_adopted", {
+  logEvent("tengu_remote_autocompact_state_adopted", {
     via: r,
     enabled: t.enabled,
     enforced: t.enforced,
@@ -664,7 +664,7 @@ function ast(e) {
       setMessages: l,
       setInProgressToolUseIDs: a,
     } = e,
-    d = G(r.uuids, (o) => !s.retracted.has(o));
+    d = countMatching(r.uuids, (o) => !s.retracted.has(o));
   for (let o of r.uuids) {
     s.retracted.add(o);
     for (let f of s.nestedUuidAliases.get(o) ?? []) s.retracted.add(f);
@@ -676,7 +676,7 @@ function ast(e) {
   for (let o of c) s.evictedToolUses.add(o);
   if (c.length > 0 && a) a({ action: "remove", ids: c });
   (l((o) => T(o, s.retracted)),
-    i("tengu_refusal_retraction_evicted", {
+    logEvent("tengu_refusal_retraction_evicted", {
       surface: fromEnum(t),
       source: fromEnum(r.source),
       uuid_count: r.uuids.length,
@@ -686,9 +686,9 @@ function ast(e) {
 }
 function X0t(e, s, r, t) {
   if (t !== null && e.retracted.has(t)) return 0;
-  let l = G(s, (a) => e.evictedToolUses.has(a));
+  let l = countMatching(s, (a) => e.evictedToolUses.has(a));
   if (l > 0)
-    i("tengu_refusal_retraction_orphan_tool_result", {
+    logEvent("tengu_refusal_retraction_orphan_tool_result", {
       surface: fromEnum(r),
       count: l,
     });
@@ -724,13 +724,13 @@ function tFn(e) {
         }));
   }
   if (c > 0)
-    i("tengu_refusal_retraction_unauthenticated_signal", {
+    logEvent("tengu_refusal_retraction_unauthenticated_signal", {
       surface: fromEnum(t),
       reason: S("source_mismatch"),
       count: c,
     });
   if (o > 0)
-    i("tengu_refusal_retraction_unauthenticated_signal", {
+    logEvent("tengu_refusal_retraction_unauthenticated_signal", {
       surface: fromEnum(t),
       reason: S("source_missing"),
       count: o,
@@ -739,7 +739,7 @@ function tFn(e) {
 }
 function T6e(e, s, r) {
   if (!e.retracted.has(s)) return !1;
-  return (i("tengu_refusal_retraction_late_drop", { surface: fromEnum(r) }), !0);
+  return (logEvent("tengu_refusal_retraction_late_drop", { surface: fromEnum(r) }), !0);
 }
 export {
   eFn,

@@ -7,36 +7,36 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { yt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { aa, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jn, Pt, getIsGit, getGitState } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { uV, xO, asSystemPrompt, YO, yC } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { r0e } from "../反馈-错误上报/反馈-错误上报.grgh562d.js";
 import { Mae, t0t, N_e, mJt } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { z1n, V1n } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import { Ur } from "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { Dn, kn, re, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
 F();
@@ -86,7 +86,7 @@ function gt({
   surveyFeedbackSource: Z,
   command: ee = "/feedback",
 }) {
-  let { storageV5: B, credentials: le } = _e(),
+  let { storageV5: B, credentials: le } = useStorageV5Context(),
     [y, R] = d("userInput"),
     [te, se] = d(0),
     [x, ce] = d(f ?? ""),
@@ -105,7 +105,7 @@ function gt({
     [Ze, St] = d(null),
     [ie, Ct] = d("session"),
     ye = U((i) => i.transcripts),
-    vt = Se().columns - 4,
+    vt = useTerminalSize().columns - 4,
     fe = H("tengu_amber_lynx", !1),
     Ft = re(async () => {
       if ((R("submitting"), I(null), O(null), g === "bundle")) {
@@ -174,7 +174,7 @@ function gt({
     qt = re((i) => {
       (I(i), R("userInput"));
     }, []);
-  Ne("confirm:no", ke, { context: "Settings", isActive: y === "userInput" });
+  useKeybinding("confirm:no", ke, { context: "Settings", isActive: y === "userInput" });
   let Rt = y === "done" || (A && y !== "userInput");
   function It(i) {
     if (i.ctrl || i.meta) return;
@@ -182,7 +182,7 @@ function gt({
       if ((i.preventDefault(), g === "share")) return;
       if (!fe && i.key === "return" && Ze) {
         let Ce = pt(X ?? "", Ze, x, t0t());
-        Gr(Ce);
+        tryOpenUrlInBrowser(Ce);
       }
       if (A) m("Error submitting feedback / bug report", { display: "system" });
       else if (g === "bundle" && K)
@@ -203,7 +203,7 @@ function gt({
       if (i.key === "return" || i.key === " ") (i.preventDefault(), Ft());
     }
   }
-  return e(mr, {
+  return e(FocusableBox, {
     onKeyDown: It,
     children: r(de, {
       title: "Submit feedback / bug report",
@@ -212,10 +212,10 @@ function gt({
       hideInputGuide: y === "done",
       inputGuide:
         y === "userInput"
-          ? r(ue, {
+          ? r(DotSeparatedList, {
               children: [
-                e(D, { chord: "enter", action: "continue" }),
-                e(je, {
+                e(KeybindingHint, { chord: "enter", action: "continue" }),
+                e(ActionKeybindingHint, {
                   action: "confirm:no",
                   context: "Confirmation",
                   fallback: "Esc",
@@ -224,10 +224,10 @@ function gt({
               ],
             })
           : y === "scope"
-            ? r(ue, {
+            ? r(DotSeparatedList, {
                 children: [
-                  e(D, { chord: "enter", action: "choose" }),
-                  e(je, {
+                  e(KeybindingHint, { chord: "enter", action: "choose" }),
+                  e(ActionKeybindingHint, {
                     action: "confirm:no",
                     context: "Confirmation",
                     fallback: "Esc",
@@ -236,11 +236,11 @@ function gt({
                 ],
               })
             : y === "consent"
-              ? r(ue, {
+              ? r(DotSeparatedList, {
                   children: [
-                    e(D, { chord: "enter", action: V[g].consentAction }),
-                    e(D, { chord: "left", action: "change" }),
-                    e(je, {
+                    e(KeybindingHint, { chord: "enter", action: V[g].consentAction }),
+                    e(KeybindingHint, { chord: "left", action: "change" }),
+                    e(ActionKeybindingHint, {
                       action: "confirm:no",
                       context: "Confirmation",
                       fallback: "Esc",
@@ -281,7 +281,7 @@ function gt({
                   flexDirection: "column",
                   gap: 1,
                   children: [
-                    e(Ur, { error: A }),
+                    e(ErrorMessage, { error: A }),
                     e(t, {
                       dimColor: !0,
                       children:
@@ -409,7 +409,7 @@ function gt({
               r(t, {
                 color: "success",
                 children: [
-                  e(et, { status: "success", withSpace: !0 }),
+                  e(StatusIndicator, { status: "success", withSpace: !0 }),
                   "Feedback bundle saved",
                 ],
               }),
@@ -456,11 +456,11 @@ function gt({
                 flexDirection: "column",
                 children: [
                   A
-                    ? e(Ur, { error: A })
+                    ? e(ErrorMessage, { error: A })
                     : r(t, {
                         color: "success",
                         children: [
-                          e(et, { status: "success", withSpace: !0 }),
+                          e(StatusIndicator, { status: "success", withSpace: !0 }),
                           "Feedback sent",
                         ],
                       }),
@@ -500,7 +500,7 @@ function gt({
                 flexDirection: "column",
                 children: [
                   A
-                    ? e(Ur, { error: A })
+                    ? e(ErrorMessage, { error: A })
                     : e(t, {
                         color: "success",
                         children: "Thank you for your report!",
@@ -511,9 +511,9 @@ function gt({
                     children: e(t, {
                       dimColor: !0,
                       italic: !0,
-                      children: r(ue, {
+                      children: r(DotSeparatedList, {
                         children: [
-                          e(D, { chord: "enter", action: "open GitHub issue" }),
+                          e(KeybindingHint, { chord: "enter", action: "open GitHub issue" }),
                           e(t, { children: "any key to close" }),
                         ],
                       }),

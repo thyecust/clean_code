@@ -28,16 +28,16 @@ import {
   gVe,
   bX,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Se } from "../共享小工具-未细化/chunk-mb654mj6.js";
-import { Me } from "../共享小工具-未细化/chunk-0dh9gct8.js";
+import { useTerminalSize } from "../共享小工具-未细化/use-terminal-size.js";
+import { useStoreSelector } from "../共享小工具-未细化/use-store-selector.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { A0e } from "../共享小工具-未细化/chunk-9jeb00w7.js";
-import { Ten } from "../共享小工具-未细化/chunk-8spdkj0k.js";
+import { StaticFrameContext } from "../共享小工具-未细化/one-shot-render.js";
+import { useForcedExpandedContent } from "../共享小工具-未细化/expanded-content-context.js";
 import { w0e } from "../共享小工具-未细化/chunk-y9z0dpn0.js";
-import { ZL } from "../共享小工具-未细化/chunk-wst7w7tj.js";
+import { LinkifiedText } from "../共享小工具-未细化/linkified-text.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, Ry, De, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { au } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { defineExportGetters } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 var le = 600;
 function Ke(s, p, i) {
@@ -108,7 +108,7 @@ function re(v) {
     { plugin: D, handle: ce, element: K, placeholder: xe } = v,
     Xe = De(JZ),
     O = De(Jit),
-    { columns: Ge } = Se(),
+    { columns: Ge } = useTerminalSize(),
     Er;
   if (Q[0] !== K || Q[1] !== O || Q[2] !== D || Q[3] !== v.value)
     ((Er = O?.textOf(D, K) ?? v.value ?? ""),
@@ -455,10 +455,10 @@ function Ne(s, p, { version: i, staticFrame: f, submittedBy: u }) {
     m
   );
 }
-var S0e = () => Me(WDe(), (s) => s.get(IO) ?? 0);
+var S0e = () => useStoreSelector(WDe(), (s) => s.get(IO) ?? 0);
 function ben(s, p, i) {
   let f = Kue(s.component),
-    u = De(A0e),
+    u = De(StaticFrameContext),
     a = Ne(f, s, { version: S0e(), staticFrame: u, submittedBy: i }),
     m = ve(f) || u;
   return {
@@ -490,7 +490,7 @@ var QL = (s, p, i) => {
   }, [s, u, f]);
 };
 var La = {};
-au(La, {
+defineExportGetters(La, {
   BOLD_WEIGHT: () => le,
   FIELD_MIN_COLUMNS: () => ee,
   FocusedPress: () => JZ,
@@ -530,14 +530,14 @@ function pr() {
   return !1;
 }
 function jA(s) {
-  let p = Ten(),
+  let p = useForcedExpandedContent(),
     i = w0e()?.isQueued === !0;
   return !s && !p && !i && pr();
 }
 function QZ(Fe) {
   let M = _(25),
     { tone: me, text: ir, detail: Le, subLines: fr, linkify: Gs } = Fe,
-    w = Gs ? ZL : t,
+    w = Gs ? LinkifiedText : t,
     mr =
       Fe.state === "live" && !Fe.reducedMotion
         ? ukt[Fe.frame % ukt.length]

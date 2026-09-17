@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -70,10 +70,10 @@ import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工�
 import { TOOL_SEARCH_TOOL_NAME } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { gI, E$t, tV, FS } from "./chunk-qpgskeea.js";
 import { vft } from "./chunk-y8j05azr.js";
-import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
-import { Fu, RJ } from "../../01-核心基础设施/共享小工具-未细化/chunk-px58ry6q.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
+import { isAnthropicHostedEnvironment, isByocEnvironment } from "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
 import { lW, s, T, O, se, v, c, it, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 function swe() {
   if (a.CLAUDE_CODE_REMOTE) return !1;
   return a.CLAUDE_CODE_ARTIFACT_VERIFY ?? H("tengu_osier_pylon_trace", !1);
@@ -302,16 +302,16 @@ function ke() {
 }
 var Ie = "tengu_cobalt_plinth_linden";
 function U() {
-  return (Fu() || RJ()) && H(Ie, !1) && bwn();
+  return (isAnthropicHostedEnvironment() || isByocEnvironment()) && H(Ie, !1) && bwn();
 }
 function U3n() {
   if (!a.CLAUDE_CODE_REMOTE) return !0;
-  return (Fu() && ke()) || U();
+  return (isAnthropicHostedEnvironment() && ke()) || U();
 }
 var fcn =
   "Starting a new Artifact from a type isn't available in this cloud session right now, so nothing was created; do not retry here. If the type fits, tell the user its link so they can start it where creating is available, and offer to make it here another way instead \u2014 a skill or a file is fine for that.";
 function mcn() {
-  return Fu() && !MH(oqt) && !U();
+  return isAnthropicHostedEnvironment() && !MH(oqt) && !U();
 }
 var Oe = {
   ok: !1,
@@ -324,7 +324,7 @@ function Pe(e) {
   return `/api/frame/types/${encodeURIComponent(e)}/create`;
 }
 var $e = 1048576,
-  De = m(() =>
+  De = createLazyValue(() =>
     it({
       slug: s().regex(ARTIFACT_SLUG_RE),
       version: s().min(1).max(64),
@@ -397,7 +397,7 @@ async function B3n(e, r) {
           ? h
           : void 0;
     if (E !== void 0)
-      (await Z(Math.min(parseRetryAfterHeader(E) ?? 1000, 1e4), r.signal, { throwOnAbort: !0 }),
+      (await sleep(Math.min(parseRetryAfterHeader(E) ?? 1000, 1e4), r.signal, { throwOnAbort: !0 }),
         (d = await _()),
         (t = d.route));
   } catch (h) {
@@ -604,7 +604,7 @@ var de = 4194304,
 function d$t(e) {
   return j.some((r) => r === e);
 }
-var qe = m(() =>
+var qe = createLazyValue(() =>
     c({
       types: v(se()).nullable(),
       next_page_token: s()
@@ -612,7 +612,7 @@ var qe = m(() =>
         .catch(void 0),
     }),
   ),
-  pe = m(() =>
+  pe = createLazyValue(() =>
     c({
       scope: s()
         .optional()
@@ -622,7 +622,7 @@ var qe = m(() =>
         .catch(void 0),
     }),
   ),
-  he = m(() =>
+  he = createLazyValue(() =>
     c({
       slug: s().regex(ARTIFACT_SLUG_RE),
       title: s()
@@ -645,7 +645,7 @@ var qe = m(() =>
         .catch(void 0),
     }),
   ),
-  Ke = m(() =>
+  Ke = createLazyValue(() =>
     he().extend({
       files: v(se())
         .optional()
@@ -658,7 +658,7 @@ var qe = m(() =>
         .catch(void 0),
     }),
   ),
-  Je = m(() =>
+  Je = createLazyValue(() =>
     c({
       path: s().min(1).max(512),
       size: T()
@@ -731,7 +731,7 @@ async function q(e, r) {
       if (UXe(p))
         return (logFeatureBad(r.feature, "oversize_body"), { threw: !0, oversize: !0 });
       if (t === 0) {
-        await Z(300 + Math.random() * 500, r.signal, { throwOnAbort: !0 });
+        await sleep(300 + Math.random() * 500, r.signal, { throwOnAbort: !0 });
         continue;
       }
       return (logFeatureBad(r.feature, "request_error"), { threw: !0, oversize: !1 });
@@ -745,7 +745,7 @@ async function q(e, r) {
         typeof i === "string"
           ? Math.min(parseRetryAfterHeader(i) ?? 1000, 5000)
           : 300 + Math.random() * 500;
-      await Z(p, r.signal, { throwOnAbort: !0 });
+      await sleep(p, r.signal, { throwOnAbort: !0 });
       continue;
     }
     return o;
@@ -994,7 +994,7 @@ async function p$t(e, r) {
   );
 }
 var ye = ["org", "user"],
-  nt = m(() =>
+  nt = createLazyValue(() =>
     c({
       slug: s().regex(ARTIFACT_SLUG_RE),
       title: s()
@@ -1019,7 +1019,7 @@ var ye = ["org", "user"],
         .catch(void 0),
     }),
   ),
-  at = m(() =>
+  at = createLazyValue(() =>
     c({
       instances: v(se()).nullable(),
       next_page_token: s()
@@ -1028,7 +1028,7 @@ var ye = ["org", "user"],
       default: se().optional(),
     }),
   ),
-  ot = m(() =>
+  ot = createLazyValue(() =>
     c({
       effective: s()
         .regex(ARTIFACT_SLUG_RE)
@@ -1102,7 +1102,7 @@ async function W3n(e, r) {
       }
     );
   let i = o.data.instances ?? [],
-    l = me(o.data.default),
+    l = isRecord(o.data.default),
     p = l ? ot().safeParse(o.data.default) : void 0,
     A = [],
     C = 0;
@@ -1266,7 +1266,7 @@ ${Cur}`;
 async function G3n(e, r, t) {
   let o = ne().frozenArtifactTypes;
   if (!(o !== void 0 ? o.typeCatalogOn : awe() && isFrameMultiFileEnabled() && _cn())) return "";
-  let l = Fa(r, { timeoutMs: wcn, refTimer: !0 });
+  let l = createLinkedAbortSignal(r, { timeoutMs: wcn, refTimer: !0 });
   try {
     return f$t(await Ecn(e, l.signal, t));
   } catch (p) {

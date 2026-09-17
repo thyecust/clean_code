@@ -16,8 +16,8 @@ import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { $he } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
 import { ZD } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
 import { getTeleportCacheState, revertTeleportCache, logTeleportFallbackOnce, verifyPreAnchorIntact, verifyToolsBaselineIntact } from "../../01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js";
-import { Z4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-95411q5e.js";
-import { nwe } from "../../01-核心基础设施/共享小工具-未细化/chunk-1brq31d3.js";
+import { resolveProxyFetchOptions } from "../../01-核心基础设施/共享小工具-未细化/proxy-fetch-options.js";
+import { getCcrSessionConfig } from "../../01-核心基础设施/共享小工具-未细化/ccr-session-config.js";
 var P = 60000,
   L = 15000;
 function D() {
@@ -58,7 +58,7 @@ async function U(r, d = E) {
   }
 }
 function composeTeleportFetchOverride(r, d) {
-  return B(r, nwe(), d);
+  return B(r, getCcrSessionConfig(), d);
 }
 function x(r) {
   if (typeof r === "string") return r;
@@ -175,7 +175,7 @@ function B(
       w = k.signal;
     try {
       i = await $he(v, {
-        ...(await Z4(v)),
+        ...(await resolveProxyFetchOptions(v)),
         method: "POST",
         headers: m,
         body: b,

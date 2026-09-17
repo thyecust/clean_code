@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -211,7 +211,7 @@ async function qBn(t) {
   if (FDt(e, o, !1)) {
     let u = o.success ? o.data : null;
     if (
-      (i("tengu_grove_print_viewed", {
+      (logEvent("tengu_grove_print_viewed", {
         dismissable: u?.notice_is_grace_period,
       }),
       u === null || u.notice_is_grace_period)
@@ -378,7 +378,7 @@ var b4 = new j(() => new G());
 function b() {
   return H("tengu_cheerful_horizon", !1);
 }
-var P = m(() =>
+var P = createLazyValue(() =>
   c({
     accountUuid: s(),
     orgUuid: s(),

@@ -21,7 +21,7 @@ import {
   g_e,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { ud, YR, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { w_e } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -52,7 +52,7 @@ import {
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { da, primeRemoteManagedSettingsCache } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { SRt } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
-import { q } from "../共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
 import { getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { loadExtraCACerts, loadMTLSClientMaterial, configureGlobalMTLS, getProxyUrlWithSource, parseProxyUrl, describeInvalidProxyUrl, configureGlobalAgents, clearProxyCache } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Jir, getAPIProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -80,14 +80,14 @@ import { seedUserSettings, primeSettings } from "../设置-配置/chunk-b536v45y
 import { primePlanSlugCollisions } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { goe, dR } from "./chunk-x7kby92q.js";
 import { K0n } from "../共享小工具-未细化/chunk-5ss8pwgq.js";
-import { Iv } from "../共享小工具-未细化/chunk-bfth4n1b.js";
+import { pinStorageV5 } from "../共享小工具-未细化/pin-storage-v5.js";
 import { primeWorkspaceRoots } from "../共享小工具-未细化/chunk-bgf8jybv.js";
 import { WAn, qAn, zAn } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { vnn, Rnn, c3e } from "../设置-配置/chunk-1pbaa558.js";
 import { primeFileDescriptorCredentials } from "../共享小工具-未细化/chunk-fpak7ean.js";
-import { Tw } from "../../02-功能模块/认证-OAuth登录/chunk-s51acx6w.js";
-import { wot } from "../共享小工具-未细化/chunk-w7rbejjf.js";
-import { I$ } from "../共享小工具-未细化/chunk-6eskfcpn.js";
+import { credentialsStoreFor } from "../../02-功能模块/认证-OAuth登录/credentials-store.js";
+import { applyNodeExtraCaCertsFromConfig } from "../共享小工具-未细化/apply-node-extra-ca-certs.js";
+import { resetRemoteSettingsSyncCache } from "../共享小工具-未细化/remote-settings-eligibility.js";
 import { fur, P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 function w() {
   let t = Or().providerCache;
@@ -123,7 +123,7 @@ function y() {
 }
 async function T(t = {}) {
   let r = Date.now();
-  (q("info", "init_started"), Br("init_function_start"));
+  (writeDiagnosticsEvent("info", "init_started"), Br("init_function_start"));
   let e = t.storageV5EnvPin;
   if (e?.backend !== void 0 && !w_e(e.configHome))
     (n(
@@ -134,20 +134,20 @@ async function T(t = {}) {
   e ??= K0n();
   try {
     let s = Date.now();
-    if (M() && e?.backend !== void 0)
+    if (isHoverRestEnabled() && e?.backend !== void 0)
       (await primeWorkspaceRoots(e.backend),
         await Promise.all([ARe(e.backend), seedUserSettings(e.backend, da())]));
     else await ARe();
     if (
-      (q("info", "init_configs_enabled", { duration_ms: Date.now() - s }),
+      (writeDiagnosticsEvent("info", "init_configs_enabled", { duration_ms: Date.now() - s }),
       Br("init_configs_enabled"),
-      M() && e?.backend !== void 0)
+      isHoverRestEnabled() && e?.backend !== void 0)
     )
       primeWindowsCredManBackendEnabled(ee().cachedGrowthBookFeatures?.tengu_windows_credman === !0);
-    if (M() && e?.backend !== void 0)
+    if (isHoverRestEnabled() && e?.backend !== void 0)
       (await primeRemoteManagedSettingsCache(e.backend), Br("init_remote_settings_primed"));
-    let c = Tw(e?.backend);
-    if (M() && c !== void 0)
+    let c = credentialsStoreFor(e?.backend);
+    if (isHoverRestEnabled() && c !== void 0)
       (await primeFileDescriptorCredentials(c),
         Br("init_fd_credentials_primed"),
         await primeStoredLoginCopy(c),
@@ -157,24 +157,24 @@ async function T(t = {}) {
     if (
       (goe(),
       await assertScrubSandboxAvailable(),
-      wot(),
+      applyNodeExtraCaCertsFromConfig(),
       await Promise.all([loadExtraCACerts(), loadMTLSClientMaterial(), fur(), pur()]),
       await lVn(),
       await restoreGatewayAuth(e?.backend !== void 0 && w_e(e.configHome) ? c : void 0),
       ns())
     )
-      I$();
-    (q("info", "init_safe_env_vars_applied", { duration_ms: Date.now() - p }),
+      resetRemoteSettingsSyncCache();
+    (writeDiagnosticsEvent("info", "init_safe_env_vars_applied", { duration_ms: Date.now() - p }),
       Br("init_safe_env_vars_applied"));
-    let o = Iv(e),
-      m = Tw(o);
-    if (M() && o !== void 0) await primeWorkspaceRoots(o);
-    if ((await primeSettings(o, da()), M() && o !== void 0)) await hir(o);
+    let o = pinStorageV5(e),
+      m = credentialsStoreFor(o);
+    if (isHoverRestEnabled() && o !== void 0) await primeWorkspaceRoots(o);
+    if ((await primeSettings(o, da()), isHoverRestEnabled() && o !== void 0)) await hir(o);
     if (
       (qAn({ storageV5: o, credentials: m }),
       LRn(m),
       MRn(o),
-      M() && m !== void 0)
+      isHoverRestEnabled() && m !== void 0)
     ) {
       if ((await primeFileDescriptorCredentials(m), startupReadsStoredLogin())) await primeStoredLogin(m);
     }
@@ -205,13 +205,13 @@ async function T(t = {}) {
       (Br("init_after_remote_settings_check"),
       QRn(o),
       CRe(o),
-      M() && o !== void 0)
+      isHoverRestEnabled() && o !== void 0)
     )
       dx(o);
     let g = Date.now();
     (n("[init] configureGlobalMTLS starting"),
       configureGlobalMTLS(),
-      q("info", "init_mtls_configured", { duration_ms: Date.now() - g }),
+      writeDiagnosticsEvent("info", "init_mtls_configured", { duration_ms: Date.now() - g }),
       n("[init] configureGlobalMTLS complete"));
     let f = getProxyUrlWithSource();
     if (f && !parseProxyUrl(f.value)) throw new ud(describeInvalidProxyUrl(f.source, f.value));
@@ -219,7 +219,7 @@ async function T(t = {}) {
     if (
       (n("[init] configureGlobalAgents starting"),
       configureGlobalAgents(),
-      q("info", "init_proxy_configured", { duration_ms: Date.now() - S }),
+      writeDiagnosticsEvent("info", "init_proxy_configured", { duration_ms: Date.now() - S }),
       n("[init] configureGlobalAgents complete"),
       Br("init_network_configured"),
       w(),
@@ -263,7 +263,7 @@ Or set CLAUDE_CODE_GIT_BASH_PATH to your bash.exe location.`),
       let i = Date.now();
       try {
         let d = await ensureScratchpadDir();
-        q(
+        writeDiagnosticsEvent(
           "info",
           d === null
             ? "init_scratchpad_unavailable"
@@ -286,7 +286,7 @@ Or set CLAUDE_CODE_GIT_BASH_PATH to your bash.exe location.`),
       jGn(),
       uqn(),
       NXn(),
-      q("info", "init_completed", { duration_ms: Date.now() - r }),
+      writeDiagnosticsEvent("info", "init_completed", { duration_ms: Date.now() - r }),
       Br("init_function_end"),
       o
     );

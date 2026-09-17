@@ -10,13 +10,13 @@
 
 // [preload stripped] 原本在此预载 201 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { J$e } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { markSessionEndedByModel } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { END_CONVERSATION_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
 import { DESCRIPTION, END_CONVERSATION_TOOL_RESULT, END_CONVERSATION_FORK_REFLECTION_PROMPT, END_CONVERSATION_FINAL_MESSAGE, END_CONVERSATION_REFLECTION_PROMPT, isEndConversationToolEnabled } from "../工具EndConversation/工具EndConversation.409rx3vp.js";
@@ -48,9 +48,9 @@ function p(e) {
   }
   return !1;
 }
-var f = m(() => Qe({})),
-  g = m(() => c({ ended: O(), message: s() })),
-  EndConversationTool = Tt({
+var f = createLazyValue(() => Qe({})),
+  g = createLazyValue(() => c({ ended: O(), message: s() })),
+  EndConversationTool = buildTool({
     name: END_CONVERSATION_TOOL_NAME,
     shouldDefer: !0,
     searchHint:
@@ -97,7 +97,7 @@ var f = m(() => Qe({})),
             o = e.agentId ? "fork" : r ? "print" : "repl";
           if (e.agentId)
             return (
-              i("tengu_end_conversation_tool_call", {
+              logEvent("tengu_end_conversation_tool_call", {
                 surface: S(o),
                 is_non_interactive: r,
                 phase: S("reflect"),
@@ -106,14 +106,14 @@ var f = m(() => Qe({})),
             );
           if (!p(e.messages()))
             return (
-              i("tengu_end_conversation_tool_call", {
+              logEvent("tengu_end_conversation_tool_call", {
                 surface: S(o),
                 is_non_interactive: r,
                 phase: S("reflect"),
               }),
               { data: { ended: !1, message: END_CONVERSATION_REFLECTION_PROMPT } }
             );
-          i("tengu_end_conversation_tool_call", {
+          logEvent("tengu_end_conversation_tool_call", {
             surface: S(o),
             is_non_interactive: r,
             phase: S("end"),

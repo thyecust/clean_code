@@ -10,11 +10,11 @@
 
 // [preload stripped] 原本在此预载 194 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { B, K, jc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { KI } from "../../01-核心基础设施/共享小工具-未细化/chunk-mvw7xg6n.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { getBgJobRuntimeState } from "../../01-核心基础设施/共享小工具-未细化/bg-job-runtime-state.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { rZ, We, b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -87,10 +87,10 @@ import { yl } from "../Teammates团队/chunk-thxapyam.js";
 import { CRON_CREATE_TOOL_NAME } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { k3n } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-0mg59v9m.js";
 import { sendRv, disarmStartupWedgeWatchdog } from "../后台任务-Shell管理/chunk-rh0xpf1w.js";
-import { fI, sft } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
+import { fromJobState, ensureJobDir } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { hu } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
 import { Xi } from "../Teammates团队/chunk-z2t8b9yc.js";
-import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { appendFile, open as xe } from "fs/promises";
 import { join as Ne } from "path";
 function re(e) {
@@ -117,7 +117,7 @@ async function N(e, r, t, s) {
     sendRv({ type: "state", patch: t });
 }
 function stashBgStructuredResult(e) {
-  KI().pendingStructuredResult = e;
+  getBgJobRuntimeState().pendingStructuredResult = e;
 }
 function createClassifierJobState(e = {}) {
   return {
@@ -186,7 +186,7 @@ function je(e, r, t) {
   if (!isBgSession() || e.dispatchEmitted) return;
   if (((e.dispatchEmitted = !0), $e())) return;
   let s = a.CLAUDE_BG_SOURCE;
-  i("tengu_bg_agent_dispatch", {
+  logEvent("tengu_bg_agent_dispatch", {
     agent: r,
     source: s === void 0 ? S("shell") : cYn(s) ? fromEnum(s) : S("other"),
     intentLength: e.capturedIntent.length,
@@ -663,7 +663,7 @@ Skip generic verbs like fix/add/update. Respond with ONLY the label.${f}`,
 async function classifyAndPush(e, r, t, s, o, l, d, c = new Set(), f = !1) {
   je(e, t, c);
   let _ = e.inFlight;
-  if (_) await Promise.race([_.catch(logJobWriteError), Z(60000, void 0, { unref: !0 })]);
+  if (_) await Promise.race([_.catch(logJobWriteError), sleep(60000, void 0, { unref: !0 })]);
   let w = et(e, r, t, s, o, l, d, c, f);
   e.inFlight = w;
   try {
@@ -747,7 +747,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
           ),
           he = summarizeToolCalls(o);
         if (pe || he) {
-          let T = await Dt(
+          let T = await withTimeout(
             classify(pe, {
               prev: "working",
               latestAsk: e.latestAsk,
@@ -803,7 +803,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
   }
   if (!m) return;
   let I =
-    M() && !isActingAsBgJob() && e.storageV5 !== void 0 ? await isBeingWatchedV5(e.storageV5) : void 0;
+    isHoverRestEnabled() && !isActingAsBgJob() && e.storageV5 !== void 0 ? await isBeingWatchedV5(e.storageV5) : void 0;
   if (f && e.midturnLlmEpoch !== _) {
     n("[classifier] dropped stale mid-turn result (turn ended)");
     return;
@@ -834,7 +834,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
   if (E && isSettled(E) && E.updatedAt !== k?.updatedAt) return;
   if (!f) e.lastMsgCount = A;
   if (!isBgSession() && getOwnJobShortId() !== r) return;
-  await sft(r, e.storageV5).catch(logJobWriteError);
+  await ensureJobDir(r, e.storageV5).catch(logJobWriteError);
   let V = getMaterializedSessionFile() ?? yl(),
     te = E?.linkScanPath && E.linkScanPath !== V ? 0 : (E?.linkScanOffset ?? 0),
     {
@@ -856,9 +856,9 @@ async function et(e, r, t, s, o, l, d, c, f) {
     X = p?.tempo === "blocked" && p.updatedAt !== k?.updatedAt && !isOverlayNeeds(p),
     me = isTerminal(m.state) && !p?.firstTerminalAt;
   if (me)
-    i("tengu_bg_agent_terminal", {
+    logEvent("tengu_bg_agent_terminal", {
       agent: t,
-      outcome: fI(m.state),
+      outcome: fromJobState(m.state),
       durationMs: p ? Date.now() - Date.parse(p.createdAt) : 0,
       classifySource: fromEnumOpt(m.source),
       ...le(c),
@@ -893,7 +893,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
         Object.keys(e.accumulatedOutputs).length > 0
           ? e.accumulatedOutputs
           : null,
-      structuredResult: KI().pendingStructuredResult ?? p?.structuredResult,
+      structuredResult: getBgJobRuntimeState().pendingStructuredResult ?? p?.structuredResult,
       children: ne,
       linkScanOffset: j,
       linkScanPath: V,
@@ -982,7 +982,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
     `[classifier] ${m.state} (${Le}) \xB7 ${m.detail}${G ? ` \xB7 needs: ${G}` : ""}`,
   );
 }
-var tt = new Set([Xi, CRON_CREATE_TOOL_NAME, ia]);
+var tt = new Set([Xi, CRON_CREATE_TOOL_NAME, MONITOR_TOOL_NAME]);
 function summarizeToolCalls(e) {
   let r = new Map();
   for (let t of e)
@@ -1089,14 +1089,14 @@ Previous response was not valid JSON. Respond with ONLY the JSON object, nothing
       : { ...DSt({}, t, Tyn(e)), source: "heuristic" };
   }
   return (
-    i("tengu_bg_classify", {
+    logEvent("tengu_bg_classify", {
       path: fromEnum(k),
       engine: fromEnum(d),
       ...le(f),
       branch: fromEnum(w?.branch ?? (k === "heuristic" ? "heuristic" : "none")),
       closingShape: fromEnum(mYn(e)),
-      prevState: fI(t),
-      newState: fI(C?.state) ?? S("null"),
+      prevState: fromJobState(t),
+      newState: fromJobState(C?.state) ?? S("null"),
       stateChanged: C !== null && C.state !== t,
       minsInPrevState: Math.round(l),
       durationMs: Date.now() - _,

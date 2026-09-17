@@ -49,7 +49,7 @@ import { Jp, mw, _d, kAe, RNe, kNe } from "../../../02-功能模块/终端-剪�
 import { e } from "../../react/react.kwtapczy.js";
 import { Qt, re, De, V, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { pg } from "../第三方库-其他/chunk-jm5cswvd.js";
-import { pe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var le = _f(0, "f");
 function getClearTerminalSequence() {
   return i_ + F2e + gm;
@@ -184,7 +184,7 @@ function Z(t, r, o) {
 function j0e() {
   S.of(B().host).invalidate();
 }
-var b = pe(pg(), 1);
+var b = toESM(pg(), 1);
 function tBn(t) {
   sk().synchronizedOutputSupported = t;
 }

@@ -10,20 +10,20 @@
 
 // [preload stripped] 原本在此预载 254 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { POWERUP_DISCOVERY_COPY } from "../../01-核心基础设施/共享小工具-未细化/chunk-aeg1pn1f.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { Vw, LHe } from "./新手引导(Onboarding).pvn70hnm.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tfspgges.js";
-import { I_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import { ProgressBar } from "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { zB } from "../../03-入口与运行时/CLI入口-Commander/chunk-nhpr06js.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function PowerupDiscoveryStep(H) {
   let m = _(9),
@@ -39,7 +39,7 @@ function PowerupDiscoveryStep(H) {
   if (m[2] !== n)
     ((f = function a(x) {
       if (
-        (i("tengu_powerup_discovery_shown", { arm: fromEnum("step"), action: fromEnum(x) }),
+        (logEvent("tengu_powerup_discovery_shown", { arm: fromEnum("step"), action: fromEnum(x) }),
         x === "launch")
       )
         K(!0);
@@ -50,15 +50,15 @@ function PowerupDiscoveryStep(H) {
   else f = m[3];
   let a = f,
     y;
-  if (m[4] === p) ((y = e(zB, {})), (m[4] = y));
+  if (m[4] === MEMO_CACHE_SENTINEL) ((y = e(zB, {})), (m[4] = y));
   else y = m[4];
   let k;
-  if (m[5] === p)
+  if (m[5] === MEMO_CACHE_SENTINEL)
     ((k = r(o, {
       children: [
         e(t, { bold: !0, children: POWERUP_DISCOVERY_COPY.heading }),
         r(t, { dimColor: !0, children: [" 0/", Vw.length, " "] }),
-        e(I_, {
+        e(ProgressBar, {
           ratio: 0,
           width: 16,
           fillColor: "claude",
@@ -69,7 +69,7 @@ function PowerupDiscoveryStep(H) {
       (m[5] = k));
   else k = m[5];
   let w;
-  if (m[6] === p)
+  if (m[6] === MEMO_CACHE_SENTINEL)
     ((w = e(o, { width: 70, children: e(t, { children: POWERUP_DISCOVERY_COPY.body }) })),
       (m[6] = w));
   else w = m[6];
@@ -87,7 +87,7 @@ function PowerupDiscoveryStep(H) {
           children: [
             k,
             w,
-            e(En, {
+            e(ConfirmPrompt, {
               confirmLabel: "Take the tour",
               cancelLabel: "Skip for now",
               onConfirm: () => a("launch"),

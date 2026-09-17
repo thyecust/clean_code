@@ -12,7 +12,7 @@ import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { SEt } from "../../01-核心基础设施/共享小工具-未细化/chunk-1w1x0pyk.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { le, Zt, Io, Xu, cr, nt, hm, Cu, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var R = [
   "manifest_invalid",
   "disabled_by_default",
@@ -32,7 +32,7 @@ function vUn(e) {
 function hen(e) {
   if (e.length === 0) return { score: 0, passRate: 0 };
   let t = e.reduce((s, a) => s + a.score, 0) / e.length,
-    n = G(e, (s) => s.score >= 1) / e.length;
+    n = countMatching(e, (s) => s.score >= 1) / e.length;
   return { score: t, passRate: n };
 }
 function RUn(e) {
@@ -463,7 +463,7 @@ function xUn(e) {
     cases: i,
     aggregates: {
       casesTotal: i.length,
-      casesPassed: G(i, (u) => u.aggregates.score >= p),
+      casesPassed: countMatching(i, (u) => u.aggregates.score >= p),
       overallScore: h0e(i.map((u) => u.aggregates.score)),
       overallPassRate: h0e(i.map((u) => u.aggregates.passRate)),
       meanDelta: b.length > 0 ? h0e(b) : void 0,

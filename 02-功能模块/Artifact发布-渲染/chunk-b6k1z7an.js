@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Xn, Lx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
@@ -96,10 +96,10 @@ import { e9n, t9n, I7, n9n, H9, _pt } from "./chunk-5gz5xvw9.js";
 import { U6n, B6n, j6n, Vsn, endFrameLiveWatchOfDeletedArtifact } from "./chunk-kshc4v5t.js";
 import { Ccn, N9, F9 } from "./chunk-stvynqrz.js";
 import { FE } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
-import { Fu } from "../../01-核心基础设施/共享小工具-未细化/chunk-px58ry6q.js";
+import { isAnthropicHostedEnvironment } from "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
 import { s, T, O, Uf, se, v, Qe, $e, uW, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function te(e) {
   let r = [];
   for (let t of e) {
@@ -154,7 +154,7 @@ function Hjn(e, r) {
 }
 async function bt(e, r, t = mt) {
   for (let i of t) {
-    if ((await Z(i, void 0, { unref: !0 }), ne().durable.registrySink !== null))
+    if ((await sleep(i, void 0, { unref: !0 }), ne().durable.registrySink !== null))
       return !0;
     let o;
     try {
@@ -494,7 +494,7 @@ function pe(e) {
   (e.then(t, t), dv($t));
 }
 async function $t() {
-  await kt(Promise.allSettled([...ne().durable.pendingOps]), 1e4);
+  await withDeadline(Promise.allSettled([...ne().durable.pendingOps]), 1e4);
 }
 async function Wt(e, r, t) {
   return de(e, async () => {
@@ -836,7 +836,7 @@ async function jt(e, r) {
   return { wasWatching: t !== void 0, teardown: o };
 }
 function Xe() {
-  if (a.CLAUDE_CODE_REMOTE && !Fu()) return !1;
+  if (a.CLAUDE_CODE_REMOTE && !isAnthropicHostedEnvironment()) return !1;
   return a.CLAUDE_CODE_ARTIFACT_DELETE ?? H("tengu_cobalt_plinth_alder", !1);
 }
 function INt() {
@@ -845,7 +845,7 @@ function INt() {
     : "Deleting Artifacts isn't available in this cloud session right now, so nothing was deleted; do not retry here. If the Artifact is the user's own, they can delete it themselves on claude.ai from the Artifact's own menu, or with `/artifacts` in Claude Code on their own machine (press d on the selected one).";
 }
 function Von() {
-  return Fu() && !MH();
+  return isAnthropicHostedEnvironment() && !MH();
 }
 var Vt = {
   ok: !1,
@@ -898,7 +898,7 @@ async function Dut(e, r, t) {
     ) {
       let l = o.response.headers?.["retry-after"],
         d = Math.min(parseRetryAfterHeader(typeof l === "string" ? l : void 0) ?? Gt, qt);
-      (await Z(d, t.signal, { abortError: () => new Ve() }),
+      (await sleep(d, t.signal, { abortError: () => new Ve() }),
         (c = !0),
         (o = await i()));
     }
@@ -1043,13 +1043,13 @@ function Kon(e) {
   return `<${ARTIFACT_DELETED_NOTE_TAG} url="${e}"/> The user deleted this Artifact from /artifacts: its link no longer works for anyone, it cannot be restored, and it cannot be published to again \u2014 publishing the same file creates a new Artifact at a new URL. Do not pass this url to the Artifact tool.`;
 }
 function RNt() {
-  if (a.CLAUDE_CODE_REMOTE && !Fu()) return !1;
+  if (a.CLAUDE_CODE_REMOTE && !isAnthropicHostedEnvironment()) return !1;
   return a.CLAUDE_CODE_ARTIFACT_PIN ?? H("tengu_cobalt_plinth_holly", !1);
 }
 var kNt =
   "Pinning artifacts isn't available in this cloud session yet, so nothing changed; do not retry here. The user can pin or unpin it themselves from the artifact's menu on claude.ai.";
 function Gon() {
-  return Fu() && !MH();
+  return isAnthropicHostedEnvironment() && !MH();
 }
 var Kt = {
     ok: !1,
@@ -1177,8 +1177,8 @@ async function Zt(e) {
     },
     i = await ht.get(Je, t);
   if (!i.ok) return;
-  let o = me(i.data) ? i.data : {},
-    c = me(o.artifact_pins_by_org) ? o.artifact_pins_by_org : {};
+  let o = isRecord(i.data) ? i.data : {},
+    c = isRecord(o.artifact_pins_by_org) ? o.artifact_pins_by_org : {};
   if (c[r] === !0) return;
   let u = {};
   for (let [d, b] of Object.entries(c))
@@ -1204,7 +1204,7 @@ function L(e) {
   return typeof e === "string" && T9.test(e);
 }
 function tr(e) {
-  if (!me(e)) return "schema document must be an object";
+  if (!isRecord(e)) return "schema document must be an object";
   let r = Object.keys(e).sort(),
     t = [
       "fields",
@@ -1224,7 +1224,7 @@ function tr(e) {
   let o = e.maxEntries;
   if (typeof o !== "number" || !Number.isInteger(o) || o < 1 || o > DNt)
     return `maxEntries must be an integer in 1..${DNt}`;
-  if (!me(e.fields)) return "fields must be an object";
+  if (!isRecord(e.fields)) return "fields must be an object";
   let c = Object.keys(e.fields);
   if (c.length === 0 || c.length > PNt)
     return `fields must declare 1..${PNt} fields`;
@@ -1232,7 +1232,7 @@ function tr(e) {
   for (let p of c) {
     if (!L(p)) return `field name must be a token: ${p}`;
     let w = u[p];
-    if (!me(w)) return `field ${p} must be an object`;
+    if (!isRecord(w)) return `field ${p} must be an object`;
     let E = w.nullable;
     if (E !== void 0 && typeof E !== "boolean")
       return `field ${p}: nullable must be boolean`;
@@ -1279,7 +1279,7 @@ function tr(e) {
         if (typeof _ !== "string" || _ === p)
           return `field ${p}: ref.into must name another field`;
         let C = u[_];
-        if (!me(C) || C.kind !== "tokenArray")
+        if (!isRecord(C) || C.kind !== "tokenArray")
           return `field ${p}: ref.into must name a declared tokenArray field`;
         break;
       }
@@ -1308,7 +1308,7 @@ function tr(e) {
   return null;
 }
 function rr(e, r, t, i) {
-  if (!me(e)) return "must be an object";
+  if (!isRecord(e)) return "must be an object";
   let o = Object.keys(e).sort(),
     c = (l, d) => {
       if (
@@ -1326,7 +1326,7 @@ function rr(e, r, t, i) {
       return null;
     },
     u = (l) => {
-      if (!me(l)) return "when must be an object";
+      if (!isRecord(l)) return "when must be an object";
       let d = Object.keys(l);
       if (d.length !== 1) return "when must compare exactly one field";
       let b = d[0],
@@ -1359,7 +1359,7 @@ function Ojn(e, r) {
   } catch {
     return null;
   }
-  if (!me(t)) return null;
+  if (!isRecord(t)) return null;
   let i = Object.keys(t);
   if (i.length !== 1 || i[0] !== "items") return null;
   let o = t.items;
@@ -1368,7 +1368,7 @@ function Ojn(e, r) {
     u = [],
     l = new Set();
   for (let d of o) {
-    if (!me(d)) return null;
+    if (!isRecord(d)) return null;
     let b = Object.keys(d).sort();
     if (b.length !== c.length || b.some((E, A) => E !== c[A])) return null;
     let p = Object.create(null);
@@ -1430,7 +1430,7 @@ function nr(e, r, t) {
   let i = Object.keys(e.when)[0];
   if (r[i] !== e.when[i]) return !0;
   if ("null" in e) return e.null.every((o) => r[o] === null);
-  return G(e.exactlyOneOf, (o) => r[o] !== null) === 1;
+  return countMatching(e.exactlyOneOf, (o) => r[o] !== null) === 1;
 }
 function he() {
   let e = ne();
@@ -1478,7 +1478,7 @@ function Ljn(e, r) {
   } catch {
     return { ok: !1 };
   }
-  if (!me(t)) return { ok: !1 };
+  if (!isRecord(t)) return { ok: !1 };
   let i = Object.keys(t);
   if (i.length > Xon) return { ok: !1 };
   let o = {};
@@ -1641,7 +1641,7 @@ var be = ["light", "dark"],
   Nut = 48;
 function Fut(e) {
   let r = Array.isArray(e.widths) ? e.widths : [],
-    t = Y(
+    t = dedupe(
       r
         .filter((i) => typeof i === "number" && Number.isFinite(i))
         .map((i) => Math.round(Math.min(Ae, Math.max(ve, i)))),
@@ -2253,7 +2253,7 @@ function gr() {
   return { schema: mr(U, N), gates: q };
 }
 var isPrReviewInput = (e) => e.pr_review === !0,
-  dt = m(gr),
+  dt = createLazyValue(gr),
   inputSchema = () => dt().schema;
 function artifactSchemaGates() {
   return dt().gates;

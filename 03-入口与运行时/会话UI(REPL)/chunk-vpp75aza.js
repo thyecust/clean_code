@@ -18,11 +18,11 @@ import { Ame } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw9
 import { eN } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { tO } from "../../01-核心基础设施/共享小工具-未细化/chunk-37xdmryq.js";
+import { toLocalFileUrl } from "../../01-核心基础设施/共享小工具-未细化/to-local-file-url.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, De, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 class T {
   lastLoggedSessionId = null;
   autoOpenPending = !1;
@@ -134,7 +134,7 @@ function Pg(Ue) {
     f = je ?? d;
   if (m(d) || (typeof f === "string" && m(f))) {
     let c;
-    if (h[0] === p)
+    if (h[0] === MEMO_CACHE_SENTINEL)
       ((c = e(t, {
         dimColor: !0,
         children: "Path hidden (unsupported characters)",
@@ -152,7 +152,7 @@ function Pg(Ue) {
   else c = h[3];
   let A = c,
     v;
-  if (h[4] !== d) ((v = S(d) ? tO(d) : null), (h[4] = d), (h[5] = v));
+  if (h[4] !== d) ((v = S(d) ? toLocalFileUrl(d) : null), (h[4] = d), (h[5] = v));
   else v = h[5];
   let x = v,
     E;

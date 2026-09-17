@@ -11,22 +11,22 @@
 // [preload stripped] 原本在此预载 240 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-csjxh2sy.js";
-import { qa } from "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
+import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
+import { useMainLoopModel } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import { tp, qS, dLe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { applyAutoCompactWindow } from "./chunk-5ed8c210.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Mo(rt) {
   return rt.autoCompactWindow;
@@ -39,7 +39,7 @@ function uo(No) {
   let n = _(61),
     { onDone: g, context: no } = No,
     ro = U(Mo),
-    co = qa(),
+    co = useMainLoopModel(),
     q,
     h,
     Q,
@@ -51,7 +51,7 @@ function uo(No) {
   if (n[0] !== ro || n[1] !== co) {
     ({ window: P, configured: h, source: a } = qS(co, ro));
     let z;
-    if (n[10] === p) ((z = tp()), (n[10] = z));
+    if (n[10] === MEMO_CACHE_SENTINEL) ((z = tp()), (n[10] = z));
     else z = n[10];
     Q = z;
     q = h > P;
@@ -178,9 +178,9 @@ function uo(No) {
       (n[33] = Lo));
   else Lo = n[33];
   let Ro;
-  if (n[34] === p) ((Ro = { context: "Select" }), (n[34] = Ro));
+  if (n[34] === MEMO_CACHE_SENTINEL) ((Ro = { context: "Select" }), (n[34] = Ro));
   else Ro = n[34];
-  Ze(Lo, Ro);
+  useKeybindings(Lo, Ro);
   let Xo;
   if (n[35] !== u)
     ((Xo = { "tabs:next": () => u(1), "tabs:previous": () => u(-1) }),
@@ -188,9 +188,9 @@ function uo(No) {
       (n[36] = Xo));
   else Xo = n[36];
   let _o;
-  if (n[37] === p) ((_o = { context: "Tabs" }), (n[37] = _o));
+  if (n[37] === MEMO_CACHE_SENTINEL) ((_o = { context: "Tabs" }), (n[37] = _o));
   else _o = n[37];
-  Ze(Xo, _o);
+  useKeybindings(Xo, _o);
   let Ao;
   if (n[38] !== s)
     ((Ao = s === c ? "auto" : `${formatTokens(s)} tokens`), (n[38] = s), (n[39] = Ao));
@@ -210,21 +210,21 @@ function uo(No) {
       (n[42] = W));
   else W = n[42];
   let Bo;
-  if (n[43] === p)
+  if (n[43] === MEMO_CACHE_SENTINEL)
     ((Bo = e(t, {
       dimColor: !0,
-      children: r(ue, {
+      children: r(DotSeparatedList, {
         children: [
-          e(D, { chord: ["up", "down"], action: "change" }),
-          e(D, { chord: "enter", action: "apply" }),
-          e(D, { chord: "escape", action: "cancel" }),
+          e(KeybindingHint, { chord: ["up", "down"], action: "change" }),
+          e(KeybindingHint, { chord: "enter", action: "apply" }),
+          e(KeybindingHint, { chord: "escape", action: "cancel" }),
         ],
       }),
     })),
       (n[43] = Bo));
   else Bo = n[43];
   let Po;
-  if (n[44] === p)
+  if (n[44] === MEMO_CACHE_SENTINEL)
     ((Po = e(t, {
       children:
         "This command configures when auto-compaction happens. The actual threshold is the minimum of this setting and your model's maximum context window.",
@@ -232,7 +232,7 @@ function uo(No) {
       (n[44] = Po));
   else Po = n[44];
   let zo;
-  if (n[45] === p)
+  if (n[45] === MEMO_CACHE_SENTINEL)
     ((zo = r(t, {
       children: [
         "The auto setting picks a window tuned for your model and is",
@@ -319,7 +319,7 @@ var Eo = async (l, L, V) => {
     return (l(X), null);
   }
   return (
-    i("tengu_autocompact_dialog_opened", { source: S("dialog") }),
+    logEvent("tengu_autocompact_dialog_opened", { source: S("dialog") }),
     e(uo, { onDone: l, context: L })
   );
 };

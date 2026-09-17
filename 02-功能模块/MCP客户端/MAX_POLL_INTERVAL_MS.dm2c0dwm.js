@@ -11,8 +11,8 @@
 // [preload stripped] 原本在此预载 198 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { K, ze, Lx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, nt, uv, Cu } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -20,11 +20,11 @@ import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { O_, as } from "../认证-OAuth登录/chunk-7jz937t3.js";
 import { TaskStatusNotificationSchema, CallToolResultSchema } from "./chunk-tv3jbp8f.js";
-import { ite, Zdt, U4, ept } from "./chunk-xcbagjx9.js";
+import { getSessionProjectDir, writeMcpTaskMetadata, deleteMcpTaskMetadata, listMcpTaskMetadata } from "./mcp-task-metadata.js";
 import { ha, _a, hde, Dy, b3, Kde, xI } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { vee, m9 } from "../../01-核心基础设施/共享小工具-未细化/chunk-xvyb4e66.js";
-import { T7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-g36jzdvm.js";
-import { Pee } from "../../01-核心基础设施/共享小工具-未细化/chunk-ka9d46rr.js";
+import { getMaxOutputChars, maybeTruncateOutput } from "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
+import { collectResourceLinks } from "../../01-核心基础设施/共享小工具-未细化/mcp-tool-result-fields.js";
+import { formatMcpServerToolLabel } from "../../01-核心基础设施/共享小工具-未细化/mcp-task-record.js";
 import { Md } from "../Teammates团队/chunk-mrfx53ye.js";
 import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
 import { rG } from "./chunk-tznd4407.js";
@@ -36,14 +36,14 @@ var W = 2000,
   R = 30000;
 async function C(e, t) {
   try {
-    await (t ? U4(e, t) : U4(e));
+    await (t ? deleteMcpTaskMetadata(e, t) : deleteMcpTaskMetadata(e));
   } catch (a) {
     n(`removeMcpTaskMetadata failed: ${String(a)}`);
   }
 }
 async function w(e, t, a, s, r) {
   try {
-    (await a, await U4(e, t, s, r));
+    (await a, await deleteMcpTaskMetadata(e, t, s, r));
   } catch (u) {
     n(`removeWatcherSidecar failed: ${String(u)}`);
   }
@@ -74,7 +74,7 @@ function G(e, t, a) {
     }
   );
 }
-var Y = m(() =>
+var Y = createLazyValue(() =>
     uv([
       nt({ data: le(), mimeType: le().optional() }),
       nt({
@@ -87,8 +87,8 @@ var Y = m(() =>
       nt({ resource: nt({ blob: le(), mimeType: le().optional() }) }),
     ]),
   ),
-  V = m(() => nt({ resource: nt({ uri: le().optional(), text: le() }) })),
-  J = m(() =>
+  V = createLazyValue(() => nt({ resource: nt({ uri: le().optional(), text: le() }) })),
+  J = createLazyValue(() =>
     nt({
       type: Cu("resource_link"),
       name: le(),
@@ -109,9 +109,9 @@ async function mcpContentToNotificationText(e, t, a, s = hde) {
 `);
   }
   try {
-    let u = await m9(r, a),
+    let u = await maybeTruncateOutput(r, a),
       i = typeof u === "string" ? u : r,
-      c = vee();
+      c = getMaxOutputChars();
     if (i === r && (r.length > c || Nt(r).length > c)) i = D(r, c);
     if (i === r) return { text: r };
     if (r.length > s)
@@ -134,7 +134,7 @@ async function mcpContentToNotificationText(e, t, a, s = hde) {
       savedHint: `[The complete ${r.length}-character output was saved to ${l.filepath}; ${T}.]`,
     };
   } catch {
-    return { text: oe(r, vee()) };
+    return { text: oe(r, getMaxOutputChars()) };
   }
 }
 var H = 80000;
@@ -216,7 +216,7 @@ function boundMcpStatusMessage(e) {
   return t.length > B ? `${oe(t, B)}\u2026 [truncated]` : t;
 }
 function buildMcpTaskNotification(e) {
-  let a = `MCP task ${rG(e.mcpTaskId)} (${Pee(e.serverName, e.toolName)}) ${e.status}.`,
+  let a = `MCP task ${rG(e.mcpTaskId)} (${formatMcpServerToolLabel(e.serverName, e.toolName)}) ${e.status}.`,
     s = boundMcpStatusMessage(e.statusMessage) ?? "no detail",
     r =
       e.status === "completed"
@@ -237,7 +237,7 @@ ${Nt(e.resultHint)}`
     summary: Nt(a),
     body: `
 <result>
-${re(r, vee() - u.length)}${u}
+${re(r, getMaxOutputChars() - u.length)}${u}
 </result>`,
   });
 }
@@ -269,8 +269,8 @@ async function ne({
     { mcpStatus: o, statusMessage: g } = a,
     T = t.get(i) !== void 0,
     v = K(),
-    b = ite(),
-    I = Zdt(
+    b = getSessionProjectDir(),
+    I = writeMcpTaskMetadata(
       i,
       {
         taskId: i,
@@ -310,7 +310,7 @@ async function ne({
         } catch (d) {
           n(`mcp task ${c} getTaskResult during input_required: ${O_(d)}`);
         }
-      if ((await Z(O), L({ taskRegistry: t, registryId: i, registered: T }))) {
+      if ((await sleep(O), L({ taskRegistry: t, registryId: i, registered: T }))) {
         (e.experimental.tasks
           .cancelTask(c, { signal: AbortSignal.timeout(Kde) })
           .catch((d) => n(`mcp task ${c} cancel after kill: ${O_(d)}`)),
@@ -333,7 +333,7 @@ async function ne({
     if (o === "completed")
       try {
         let d = await e.experimental.tasks.getTaskResult(c, CallToolResultSchema);
-        if (d.isError !== !0) M = T7(d.content);
+        if (d.isError !== !0) M = collectResourceLinks(d.content);
         k = await mcpContentToNotificationText(d.content ?? [], r, u);
       } catch (d) {
         ((o = "failed"),
@@ -358,7 +358,7 @@ async function ne({
       endTime: Date.now(),
       notified: !0,
       terminal: {
-        summary: g ?? `${Pee(p, l)} ${o}`,
+        summary: g ?? `${formatMcpServerToolLabel(p, l)} ${o}`,
         ...(M && { resource_links: M }),
       },
     })),
@@ -391,7 +391,7 @@ async function restoreMcpTasks(e) {
   if (!xI()) return;
   let t;
   try {
-    t = await ept(e.storageV5);
+    t = await listMcpTaskMetadata(e.storageV5);
   } catch (a) {
     (logFeatureBad("mcp_task_restore", "list_failed"),
       n(`restoreMcpTasks list failed: ${String(a)}`));
@@ -427,7 +427,7 @@ async function ie(
   )
     return;
   let i = {
-    ...Md(e.taskId, "mcp_task", Pee(e.serverName, e.toolName), e.toolUseId),
+    ...Md(e.taskId, "mcp_task", formatMcpServerToolLabel(e.serverName, e.toolName), e.toolUseId),
     type: "mcp_task",
     status: "running",
     serverName: e.serverName,
@@ -481,7 +481,7 @@ async function ie(
       l = `server '${e.serverName}' is ${o.type}`;
       break;
     }
-    await Z(500);
+    await sleep(500);
   }
   if (!p) {
     l ??= `server '${e.serverName}' did not connect within ${R / 1000}s`;

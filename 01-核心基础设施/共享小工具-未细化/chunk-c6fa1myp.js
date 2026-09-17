@@ -10,7 +10,7 @@
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { validateBridgeId } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { q } from "./chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "./diagnostics-log.js";
 import { isViolinWoodEnabled } from "./chunk-97crm80y.js";
 import { CV, ZVn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { dirname, join as t } from "path";
@@ -25,7 +25,7 @@ function qFn(e) {
 }
 function zFn(e) {
   let n = ZVn(e, (r) => {
-    q("error", "dir_sync_lane_verdict_listener_threw", {
+    writeDiagnosticsEvent("error", "dir_sync_lane_verdict_listener_threw", {
       verdict: e,
       rejected: !0,
       first: r,
@@ -34,7 +34,7 @@ function zFn(e) {
   switch (n.kind) {
     case "delivered":
       if (n.threw.length > 0)
-        q("error", "dir_sync_lane_verdict_listener_threw", {
+        writeDiagnosticsEvent("error", "dir_sync_lane_verdict_listener_threw", {
           verdict: e,
           listeners: n.listeners,
           threw: n.threw.length,
@@ -42,7 +42,7 @@ function zFn(e) {
         });
       return;
     case "out_of_order":
-      q("error", "dir_sync_lane_verdict_out_of_order", {
+      writeDiagnosticsEvent("error", "dir_sync_lane_verdict_out_of_order", {
         verdict: e,
         basis: n.basis,
       });

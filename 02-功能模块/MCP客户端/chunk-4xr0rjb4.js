@@ -14,7 +14,7 @@ import { ASt } from "../Hooks钩子/chunk-z3433nr6.js";
 import { vc, Ute, uDe, qte, dgn, Jv } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { zo, q$ } from "./chunk-3kmsshb6.js";
 import { Ul, aN, Bn } from "../插件系统/chunk-33bdfgmx.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import * as p from "fs/promises";
 import * as m from "path";
 async function getPluginInventory(t, e) {
@@ -45,7 +45,7 @@ async function getPluginInventory(t, e) {
     y = t.lspServers
       ? Object.keys(t.lspServers)
       : (await L(t)).concat(P(t.manifest.lspServers)),
-    k = y.length > 0 ? Y(y) : P(r?.lspServers);
+    k = y.length > 0 ? dedupe(y) : P(r?.lspServers);
   return {
     commands: a,
     agents: i,

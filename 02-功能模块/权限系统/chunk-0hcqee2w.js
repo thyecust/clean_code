@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -17,7 +17,7 @@ import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { y5, tt, Hn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Js } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { te, dp, truncateToWidth, uxt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -26,7 +26,7 @@ import { iv } from "./chunk-e4pfvp7x.js";
 import { Tx, akt, Fr, Er } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { o, t, jr, tn, ko, Od } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { oN, oYn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { findSafetyCheckReason, an, jM, setPermissionModeWithGuards, getAutoModeUnavailableText } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   YJe,
@@ -47,32 +47,32 @@ import {
   Oo,
 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { dc } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdk55p8n.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { Ir } from "../../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js";
-import { eee } from "../../01-核心基础设施/共享小工具-未细化/chunk-my8s4daz.js";
+import { useKeybindingChordText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-chord-text.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
+import { KeybindingScope } from "../../01-核心基础设施/共享小工具-未细化/keybinding-scope.js";
 import { tEt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { GHe } from "../../01-核心基础设施/共享小工具-未细化/chunk-7m5aewa3.js";
-import { Ah } from "../../01-核心基础设施/共享小工具-未细化/chunk-hxt46tkz.js";
+import { renderToolUseMessageByToolName } from "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
+import { useAnswerRefusalState } from "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
 import { SPt } from "../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
-import { ule } from "../../01-核心基础设施/共享小工具-未细化/chunk-nvfdjg8e.js";
-import { ZR } from "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import { useHyperlinkSupport } from "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
+import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { zL } from "./chunk-hv6z01db.js";
-import { gs } from "./chunk-n5mgv42x.js";
-import { Ai } from "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import { PermissionDialogFrame } from "./permission-dialog.js";
+import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Qg } from "../../01-核心基础设施/共享小工具-未细化/chunk-awxpn5er.js";
+import { formatHyperlink } from "../../01-核心基础设施/共享小工具-未细化/format-hyperlink.js";
 import { vrn } from "../../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js";
 import { re, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { qse, nir, rir, ckn } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
+import { INVALID_TOOL_NAME_PLACEHOLDER, nir, rir, mintDisplayedUpdates } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { qd } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { oz } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function Fs(zr) {
   let Qr = _(2),
     { multiline: Zr, children: Uu } = zr;
@@ -180,7 +180,7 @@ function vD(u) {
   );
 }
 function Ue(u) {
-  if (u === qse) return !1;
+  if (u === INVALID_TOOL_NAME_PLACEHOLDER) return !1;
   if (vD(u)) return !1;
   let s = Fr(Er({ toolName: u }));
   if (s.toolName !== u || s.ruleContent !== void 0) return !1;
@@ -297,14 +297,14 @@ function fIt(u, s, n, a) {
     )
   )
     return null;
-  let T = Y(c),
-    B = Y(
+  let T = dedupe(c),
+    B = dedupe(
       A.flatMap((g) =>
         g.ruleContent && F6e(g.ruleContent) ? g.ruleContent : [],
       ),
     );
   if (B.some((g) => !n5(g))) return null;
-  let y = Y(
+  let y = dedupe(
     f.flatMap((g) => {
       if (!g.ruleContent) return [];
       return vu(g.ruleContent) ? [g.ruleContent] : [];
@@ -401,7 +401,7 @@ class le {
   }
 }
 var Hg = le.is,
-  xFn = m(() => qd(Hg));
+  xFn = createLazyValue(() => qd(Hg));
 function $e(u) {
   if (u.length > D8) return null;
   let s = [];
@@ -415,7 +415,7 @@ function $e(u) {
     if (!a.success) return null;
     s.push(a.data);
   }
-  return ckn(s);
+  return mintDisplayedUpdates(s);
 }
 function qw(u, s) {
   if (!Array.isArray(u)) return null;
@@ -466,7 +466,7 @@ function qw(u, s) {
   if (c.length === 0) return null;
   let A = Dn(c, s.displayedTypes, s.labelPredicate);
   if (A.length === 0) return null;
-  let f = ckn(A),
+  let f = mintDisplayedUpdates(A),
     T = s.renderLabel(f);
   if (T == null || typeof T === "boolean" || T === "") return null;
   return new le(de, T, f);
@@ -524,7 +524,7 @@ function mIt(u) {
         T = on(f);
       if (T !== null) n.push(T);
     } catch {}
-  let a = Y(n);
+  let a = dedupe(n);
   if (a.length === 0) return null;
   if (a.length > LZ) return null;
   let l = Qk(a, (A) => N4t(A));
@@ -793,12 +793,12 @@ function yu(ts) {
     Vu =
       QD?.behavior === "ask" ? QD.denialLimitFallback?.deadlineEpochMs : void 0,
     JD = tn(),
-    We = vt(),
+    We = useClock(),
     Wu;
   if (xe[0] !== We) ((Wu = We.now()), (xe[0] = We), (xe[1] = Wu));
   else Wu = xe[1];
   let eo;
-  if (xe[2] === p) ((eo = Date.now()), (xe[2] = eo));
+  if (xe[2] === MEMO_CACHE_SENTINEL) ((eo = Date.now()), (xe[2] = eo));
   else eo = xe[2];
   let uo;
   if (xe[3] !== Wu)
@@ -816,7 +816,7 @@ function yu(ts) {
   let no = to,
     [, ns] = d(0),
     Do;
-  if (xe[9] === p) ((Do = () => ns(ao)), (xe[9] = Do));
+  if (xe[9] === MEMO_CACHE_SENTINEL) ((Do = () => ns(ao)), (xe[9] = Do));
   else Do = xe[9];
   if ((ko(Do, Vu !== void 0 && !JD ? 1000 : null), Vu === void 0)) {
     return null;
@@ -964,7 +964,7 @@ function Ig(Rs) {
     ke = ce?.behavior === "ask" ? ce.denialLimitFallback?.disclosure : void 0,
     q = Re(ce?.decisionReason, pn, Xu),
     se = ke !== void 0 && ke !== ce?.decisionReason ? Re(ke, pn, Xu) : null,
-    eu = Se().columns,
+    eu = useTerminalSize().columns,
     lo;
   if (Ne[0] !== ke || Ne[1] !== eu)
     ((lo = (co, Ts) => {
@@ -1184,11 +1184,11 @@ function MZ(Ks) {
       let To = Te(zs);
       let rt = { toolName: uu, isMcp: tu };
       if (To === "accept") {
-        if (fe) (Bn(!1), i("tengu_accept_feedback_mode_collapsed", rt));
-        else (Bn(!0), Ws(!0), i("tengu_accept_feedback_mode_entered", rt));
+        if (fe) (Bn(!1), logEvent("tengu_accept_feedback_mode_collapsed", rt));
+        else (Bn(!0), Ws(!0), logEvent("tengu_accept_feedback_mode_entered", rt));
       } else if (To === "reject") {
-        if (pe) (bn(!1), i("tengu_reject_feedback_mode_collapsed", rt));
-        else (bn(!0), Xs(!0), i("tengu_reject_feedback_mode_entered", rt));
+        if (pe) (bn(!1), logEvent("tengu_reject_feedback_mode_collapsed", rt));
+        else (bn(!0), Xs(!0), logEvent("tengu_reject_feedback_mode_entered", rt));
       }
     }),
       (Ye[4] = fe),
@@ -1224,7 +1224,7 @@ function MZ(Ks) {
     Mo;
   if (Ye[16] !== An || Ye[17] !== tu || Ye[18] !== xn || Ye[19] !== uu)
     ((Mo = (No, Lo) => {
-      i(No === "accept" ? "tengu_accept_submitted" : "tengu_reject_submitted", {
+      logEvent(No === "accept" ? "tengu_accept_submitted" : "tengu_reject_submitted", {
         toolName: uu,
         isMcp: tu,
         has_instructions: !!Lo,
@@ -1242,7 +1242,7 @@ function MZ(Ks) {
     Io;
   if (Ye[21] !== yn)
     ((Io = () => {
-      (i("tengu_permission_request_escape", {}), yn(jo));
+      (logEvent("tengu_permission_request_escape", {}), yn(jo));
     }),
       (Ye[21] = yn),
       (Ye[22] = Io));
@@ -1251,7 +1251,7 @@ function MZ(Ks) {
     wn = (So === "accept" && !fe) || (So === "reject" && !pe),
     Uo;
   if (Ye[23] !== wn)
-    ((Uo = wn && e(D, { chord: "tab", action: "amend" })),
+    ((Uo = wn && e(KeybindingHint, { chord: "tab", action: "amend" })),
       (Ye[23] = wn),
       (Ye[24] = Uo));
   else Uo = Ye[24];
@@ -1373,7 +1373,7 @@ function XW({
         if (I.keybinding) H[I.keybinding] = () => (W ? v(W.value) : z(I.value));
       return H;
     }, [u, M, P, v, z]);
-  Ze(X, { context: "Confirmation" });
+  useKeybindings(X, { context: "Confirmation" });
   let ee = re(() => {
     if (n?.() === !1) return;
     g();
@@ -1397,8 +1397,8 @@ function XW({
         marginTop: 1,
         children: e(t, {
           dimColor: !0,
-          children: r(ue, {
-            children: [e(D, { chord: "escape", action: "cancel" }), j],
+          children: r(DotSeparatedList, {
+            children: [e(KeybindingHint, { chord: "escape", action: "cancel" }), j],
           }),
         }),
       }),
@@ -1415,7 +1415,7 @@ function U6e(Ra) {
   let DD = _(10),
     Ie = U(rr),
     tD = It(),
-    { addNotification: nD } = Ir(),
+    { addNotification: nD } = useNotificationQueue(),
     nr;
   if (DD[0] !== Ie)
     ((nr = (Ie.mode === "default" || Ie.mode === "acceptEdits") && zL(Ie)),
@@ -1843,7 +1843,7 @@ function dD(qa) {
     wt,
     _t;
   if (mt[0] !== pt || mt[1] !== iD) {
-    sD = en;
+    sD = EARLY_RETURN_SENTINEL;
     bb0: {
       let Pt = dp(`${iD}:`, Math.max(10, pt - 2), { hard: !0, trim: !1 });
       let aD = Pt.indexOf(`
@@ -1906,7 +1906,7 @@ function dD(qa) {
       (Tt = mt[15]),
       (wt = mt[16]),
       (_t = mt[17]));
-  if (sD !== en) return sD;
+  if (sD !== EARLY_RETURN_SENTINEL) return sD;
   let Mt;
   if (mt[18] !== Ct || mt[19] !== ht || mt[20] !== At)
     ((Mt = e(Ct, { dimColor: ht, children: At })),
@@ -1964,10 +1964,10 @@ function dD(qa) {
 }
 function $t({ entries: u, contentColumns: s }) {
   let [n] = cn(),
-    l = Ai().syntaxHighlightingDisabled ?? !1,
+    l = useSettings().syntaxHighlightingDisabled ?? !1,
     c = C(new Map()),
     A = V(() => {
-      let y = l ? null : ZR(),
+      let y = l ? null : getSyntaxHighlightAdapter(),
         w = new Map(),
         L = u.map((k) => {
           if (k.kind !== "block") return null;
@@ -1993,7 +1993,7 @@ function $t({ entries: u, contentColumns: s }) {
         ),
       [A, s],
     ),
-    T = ule(),
+    T = useHyperlinkSupport(),
     B =
       u.length === 1 &&
       u[0].kind === "inline" &&
@@ -2018,7 +2018,7 @@ function $t({ entries: u, contentColumns: s }) {
                 r(t, { dimColor: !0, children: [y.key, ": "] }),
                 e(jr, {
                   children:
-                    y.linkUrl !== void 0 && T ? Qg(y.linkUrl, y.text) : y.text,
+                    y.linkUrl !== void 0 && T ? formatHyperlink(y.linkUrl, y.text) : y.text,
                 }),
                 y.annotation !== void 0 &&
                   r(t, { dimColor: !0, children: [" (", y.annotation, ")"] }),
@@ -2152,7 +2152,7 @@ function EQt(Sl) {
   let O = _(120),
     { payload: S, answer: su, wouldTakeAnswer: fD } = Sl,
     pD = C(null),
-    Ee = Se(),
+    Ee = useTerminalSize(),
     yr;
   if (O[0] !== Ee.columns)
     ((yr = () => Math.max(20, Math.min(40, Ee.columns - 6))),
@@ -2161,7 +2161,7 @@ function EQt(Sl) {
   else yr = O[1];
   let [Rl, Tl] = d(yr),
     Br;
-  if (O[2] === p)
+  if (O[2] === MEMO_CACHE_SENTINEL)
     ((Br = () => {
       if (pD.current) {
         let { width: br } = Od(pD.current);
@@ -2210,7 +2210,7 @@ function EQt(Sl) {
     try {
       let ge;
       if (O[13] !== S.input || O[14] !== S.toolName || O[15] !== mD)
-        ((ge = GHe(S.toolName, S.input, { theme: mD, verbose: !0 })),
+        ((ge = renderToolUseMessageByToolName(S.toolName, S.input, { theme: mD, verbose: !0 })),
           (O[13] = S.input),
           (O[14] = S.toolName),
           (O[15] = mD),
@@ -2270,7 +2270,7 @@ function EQt(Sl) {
   let ED = Pu,
     { offered: gD, enableAutoMode: hD } = U6e(S.requestSource),
     kr;
-  if (O[30] === p) ((kr = he()), (O[30] = kr));
+  if (O[30] === MEMO_CACHE_SENTINEL) ((kr = he()), (O[30] = kr));
   else kr = O[30];
   let _l = kr,
     Sr;
@@ -2320,7 +2320,7 @@ function EQt(Sl) {
       (O[46] = fD),
       (O[47] = wr));
   else wr = O[47];
-  let lu = Ah(wr),
+  let lu = useAnswerRefusalState(wr),
     BD = lu.answer,
     Yt;
   if (O[48] !== BD)
@@ -2395,21 +2395,21 @@ function EQt(Sl) {
   let Kt = Nr,
     du = Kt !== Iu,
     [Vt, Ll] = d(!1),
-    SD = dc("app:toggleTranscript", "Global", "ctrl+o"),
+    SD = useKeybindingChordText("app:toggleTranscript", "Global", "ctrl+o"),
     Lr;
-  if (O[62] === p)
+  if (O[62] === MEMO_CACHE_SENTINEL)
     ((Lr = [{ action: "app:toggleTranscript", run: () => Ll(Wr) }]),
       (O[62] = Lr));
   else Lr = O[62];
   let Il = Lr,
     Or;
-  if (O[63] === p)
+  if (O[63] === MEMO_CACHE_SENTINEL)
     ((Or = { label: "Yes", value: "yes", feedbackConfig: { type: "accept" } }),
       (O[63] = Or));
   else Or = O[63];
   let Ur = Or,
     $r;
-  if (O[64] === p)
+  if (O[64] === MEMO_CACHE_SENTINEL)
     (($r = { label: "No", value: "no", feedbackConfig: { type: "reject" } }),
       (O[64] = $r));
   else $r = O[64];
@@ -2549,7 +2549,7 @@ function EQt(Sl) {
           du &&
             e(t, {
               dimColor: !0,
-              children: e(D, {
+              children: e(KeybindingHint, {
                 chord: SD,
                 action: Vt ? "collapse description" : "expand description",
                 parens: !0,
@@ -2637,7 +2637,7 @@ function EQt(Sl) {
   else Jt = O[112];
   let un;
   if (O[113] !== S.requestSource || O[114] !== zt || O[115] !== Jt)
-    ((un = r(gs, {
+    ((un = r(PermissionDialogFrame, {
       title: "Tool use",
       requestSource: S.requestSource,
       children: [zt, Jt],
@@ -2649,7 +2649,7 @@ function EQt(Sl) {
   else un = O[116];
   let Hr;
   if (O[117] !== du || O[118] !== un)
-    ((Hr = e(eee, {
+    ((Hr = e(KeybindingScope, {
       bindings: Il,
       active: du,
       flexDirection: "column",

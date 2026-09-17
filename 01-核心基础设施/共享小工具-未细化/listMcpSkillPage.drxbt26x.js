@@ -9,11 +9,11 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 16 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { m } from "./chunk-78nzsrc6.js";
+import { createLazyValue } from "./lazy-value.js";
 import { Yo } from "./chunk-1ftn6vfs.js";
 import { Hl } from "./chunk-anxypace.js";
 import { s, se, v, c, it, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var i = m(() =>
+var i = createLazyValue(() =>
   c({
     skills: v(
       it({

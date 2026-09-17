@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 102 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { J1t, Q1t, zhr } from "../../02-功能模块/Bridge-RemoteControl/chunk-b9tbevd9.js";
+import { DEVICE_REGISTRY_KID_PREFIX as J1t, localBindIdentity as Q1t, prepareDeviceBinder as zhr } from "../../02-功能模块/Bridge-RemoteControl/device-bind.js";
 import "../../02-功能模块/Cowork远程设备注册/Cowork远程设备注册.9r92qaht.js";
 import "./chunk-d4kaq0ds.js";
 export {

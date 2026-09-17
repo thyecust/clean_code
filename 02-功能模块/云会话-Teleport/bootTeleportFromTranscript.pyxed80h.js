@@ -10,12 +10,12 @@
 
 // [preload stripped] 原本在此预载 205 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { z, Is, k_, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getTranscriptPathForSession, readTranscriptTailV5 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getTeleportCacheState, activateTeleportCache } from "../../01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js";
-import { nwe, L3n, M3n } from "../../01-核心基础设施/共享小工具-未细化/chunk-1brq31d3.js";
+import { getCcrSessionConfig, getCcrSessionConfigFailureReason, getCcrSessionProfile } from "../../01-核心基础设施/共享小工具-未细化/ccr-session-config.js";
 import { hu } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var v = 1,
@@ -24,7 +24,7 @@ function E(e) {
   return e === L;
 }
 var b = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
-  P = m(() =>
+  P = createLazyValue(() =>
     c({
       schema_version: T().int(),
       conversation_uuid: s().regex(b),
@@ -64,7 +64,7 @@ function R(e) {
     };
   return { ok: !0, marker: i.data };
 }
-var O = m(() =>
+var O = createLazyValue(() =>
   c({
     type: s().optional(),
     subtype: s().optional(),
@@ -73,7 +73,7 @@ var O = m(() =>
   }).loose(),
 );
 function d(e) {
-  q(e.outcome === "refused" ? "warn" : "info", "cli_teleport_arm_verdict", e);
+  writeDiagnosticsEvent(e.outcome === "refused" ? "warn" : "info", "cli_teleport_arm_verdict", e);
 }
 var w = 67108864;
 function C(e) {
@@ -154,7 +154,7 @@ function A({
   );
 }
 function noteTeleportBootUnreached(e) {
-  if (!M3n()) {
+  if (!getCcrSessionProfile()) {
     d({ outcome: "absent" });
     return;
   }
@@ -200,9 +200,9 @@ async function B(e, a) {
   return o;
 }
 async function bootTeleportFromTranscript(e, a, t) {
-  let i = nwe();
+  let i = getCcrSessionConfig();
   if (!i) {
-    let o = L3n();
+    let o = getCcrSessionConfigFailureReason();
     if (o !== null)
       (logFeatureSad("upgrade_teleport_cache", "env_config_refused"),
         d({ outcome: "refused", error_code: "env_config_refused", cause: o }),

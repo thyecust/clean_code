@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B, K, fy, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { _n } from "./chunk-qe04h4c5.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
@@ -67,7 +67,7 @@ function Ud(t) {
 async function wEt(t) {
   let e = fy() ?? ll(he()),
     n = lP(e);
-  if (M() && t !== void 0 && n !== void 0) return m(t, n, K());
+  if (isHoverRestEnabled() && t !== void 0 && n !== void 0) return m(t, n, K());
   let r;
   try {
     r = await readdir(bEt(), { withFileTypes: !0 });

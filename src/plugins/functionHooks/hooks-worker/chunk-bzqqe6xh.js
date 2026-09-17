@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { l } from "./chunk-h4f48kbj.js";
-import { me } from "./chunk-6rcgxa93.js";
+import { isRecord } from "./is-record.js";
 class Je extends Error {
   name = "HooksError";
 }
@@ -22,7 +22,7 @@ function NHt(r, o = "aborted") {
   return e instanceof Error ? e.message : e === void 0 ? o : String(e);
 }
 function pdr(r, o) {
-  if (!me(r))
+  if (!isRecord(r))
     throw new Je(
       `${o}: next() takes the event's argument: next(e) passes it on, next({ ...e, x }) rewrites it`,
     );

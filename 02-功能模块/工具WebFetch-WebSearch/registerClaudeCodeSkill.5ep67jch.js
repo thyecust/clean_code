@@ -11,11 +11,11 @@
 // [preload stripped] 原本在此预载 98 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { sQ, isUsing3PServices, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { tWe, Qst, s$n } from "../发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
 import { registerBundledSkill } from "../Skills技能/chunk-1zy5c8mf.js";
-import { SSt } from "../../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js";
+import { getPluginEvalAvailabilityNotice } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 function v() {
   return import("./SKILL_PROMPT.6yeyjf7j.js");
 }
@@ -56,7 +56,7 @@ ${e.join(`
       ).join(`
 `),
   );
-  let p = SSt(),
+  let p = getPluginEvalAvailabilityNotice(),
     k = p.enabled
       ? " For any question about it \u2014 enablement, authoring cases, graders, flags, the results JSON, the report, the sandbox, CI, troubleshooting \u2014 or about `/skill-doctor`, read `references/plugin-eval-quickref.md`, then the matching section of `references/plugin-eval.md`; they are the offline floor and there is no public docs page yet."
       : "";
@@ -165,7 +165,7 @@ function registerClaudeCodeSkill({ disabled: a = !1 } = {}) {
       return !a && H("tengu_birch_kettle", !1);
     },
     async getPromptForCommand(s, n) {
-      i("tengu_claude_code_skill_loaded", { has_args: s.trim().length > 0 });
+      logEvent("tengu_claude_code_skill_loaded", { has_args: s.trim().length > 0 });
       let [l, { SKILL_PROMPT: o }] = await Promise.all([tWe(n.storageV5), v()]);
       return [{ type: "text", text: P(o, s, n, l) }];
     },

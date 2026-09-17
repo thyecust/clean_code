@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Pw } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Ei } from "../Hooks钩子/chunk-9em0d4k5.js";
+import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { getTaskOutputPath } from "../后台任务-Shell管理/chunk-x3txegas.js";
 function xs(e) {
   return e === "completed" || e === "failed" || e === "killed";
@@ -415,7 +415,7 @@ function Tre(e) {
   return t === void 0 ? { size: f, isDefault: !0 } : { size: t, isDefault: !1 };
 }
 function wSt(e) {
-  let t = Ei();
+  let t = getSessionFeatureCache();
   return (
     (t.sessionStartWorkflowSizeGuideline ??= Tre(e)),
     t.sessionStartWorkflowSizeGuideline

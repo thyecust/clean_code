@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { Ls } from "./认证-OAuth登录.419zdfz3.js";
-import { Gtt } from "../../01-核心基础设施/共享小工具-未细化/chunk-9kpsezn2.js";
-import { w } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var o = w(function (i) {
+import { execAsyncModule } from "../../01-核心基础设施/共享小工具-未细化/exec-async-module.js";
+import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var o = commonJS(function (i) {
   Object.defineProperty(i, "__esModule", { value: !0 });
   i.getMachineId = void 0;
-  var s = Gtt(),
+  var s = execAsyncModule(),
     d = Ls();
   async function u() {
     try {

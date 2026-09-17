@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { _n } from "../Teammates团队/chunk-qe04h4c5.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { LITE_READ_BUF_SIZE, validateUuid, readSessionLite } from "./chunk-mkmy4cx2.js";
 import { tE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -19,7 +19,7 @@ import { si } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, O, c, it, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 import { Ohe } from "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 class Fy {
   returned;
   queue = [];
@@ -73,7 +73,7 @@ class Fy {
 }
 import { readFile } from "fs/promises";
 import { dirname as E, join as D } from "path";
-var C = m(() => c({ customTitle: s() }));
+var C = createLazyValue(() => c({ customTitle: s() }));
 function LSt(e, t) {
   return D(E(e), t, "custom-title.json");
 }
@@ -91,7 +91,7 @@ async function Cyn(e, t, i) {
   return si(o.data.customTitle) || void 0;
 }
 async function N(e, t) {
-  if (M() && t !== void 0)
+  if (isHoverRestEnabled() && t !== void 0)
     try {
       let i = tE(e);
       if (i !== void 0) {
@@ -113,8 +113,8 @@ import { constants as y } from "fs";
 import { open as F } from "fs/promises";
 import { dirname as x, join as _ } from "path";
 var P = '"type":"continued-in"',
-  B = m(() => it({ type: k("continued-in"), continuedInSessionId: s() })),
-  L = m(() =>
+  B = createLazyValue(() => it({ type: k("continued-in"), continuedInSessionId: s() })),
+  L = createLazyValue(() =>
     it({
       type: k("assistant"),
       isApiErrorMessage: O().optional(),
@@ -167,7 +167,7 @@ function z(e) {
       t.data.isApiErrorMessage !== !0 &&
       typeof t.data.message?.stop_reason === "string"
     );
-  return me(e) && Ohe(e, { commandFallback: "" }) !== void 0;
+  return isRecord(e) && Ohe(e, { commandFallback: "" }) !== void 0;
 }
 async function Ryn(e, t, i) {
   let n = _(x(e), `${t}.jsonl`),
@@ -210,7 +210,7 @@ function X(e) {
   return t !== void 0 && _n(t) ? t : void 0;
 }
 async function SYn(e, t, i, n, r, o) {
-  let u = M() && n !== void 0 ? X(e) : void 0;
+  let u = isHoverRestEnabled() && n !== void 0 ? X(e) : void 0;
   if (n !== void 0 && u !== void 0) {
     let f = new Map();
     try {
@@ -290,7 +290,7 @@ async function SYn(e, t, i, n, r, o) {
 import { constants as j } from "fs";
 import { open as Z, readdir as ot, rm as st, stat as at } from "fs/promises";
 async function bYn(e, t, i) {
-  if (M() && i !== void 0) return Q(i, t);
+  if (isHoverRestEnabled() && i !== void 0) return Q(i, t);
   let n;
   try {
     n = await Z(e, j.O_WRONLY | j.O_APPEND);

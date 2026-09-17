@@ -17,13 +17,13 @@ import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { fn, Fo, execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { nke, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Pt, findGitRoot, gitExe, getGitDir, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { X_, zE, RC } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { BFt, O3n, Tln } from "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
+import { publishRateLimitCheckpointResult, getInFlightRateLimitCheckpoint, setInFlightRateLimitCheckpoint } from "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
 import {
   appendFile,
   lstat,
@@ -49,9 +49,9 @@ function b(o) {
 }
 var Rt = 1209600;
 async function performRateLimitCheckpoint(o) {
-  let e = O3n();
+  let e = getInFlightRateLimitCheckpoint();
   if (e !== null) return e;
-  BFt(null);
+  publishRateLimitCheckpointResult(null);
   let r = (async () => {
     let a = o.todos;
     if (a.length === 0 && X_())
@@ -64,16 +64,16 @@ async function performRateLimitCheckpoint(o) {
       } catch {}
     return kt({ todos: a, trigger: o.trigger });
   })();
-  Tln(r);
+  setInFlightRateLimitCheckpoint(r);
   let n;
   try {
     n = await r;
   } finally {
-    Tln(null);
+    setInFlightRateLimitCheckpoint(null);
   }
-  if ((BFt(n), n.committed))
+  if ((publishRateLimitCheckpointResult(n), n.committed))
     (logFeatureOk("usage_limit_checkpoint_commit", { trigger: fromEnum(o.trigger) }),
-      i("tengu_rl_checkpoint_a1_shown", {}));
+      logEvent("tengu_rl_checkpoint_a1_shown", {}));
   else
     logFeatureSad("usage_limit_checkpoint_commit", n.skipReason, { trigger: fromEnum(o.trigger) });
   return n;

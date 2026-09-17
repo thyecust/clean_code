@@ -10,18 +10,18 @@
 
 // [preload stripped] 原本在此预载 91 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, Yg, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ht, nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { clearIsGitMemo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { D1, mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
@@ -110,11 +110,11 @@ import {
 } from "../文件同步-Sync/chunk-ht8ydg1v.js";
 import { GFn, qFn, zFn, qst, VFn, $Qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-c6fa1myp.js";
 import { ed, oOe, dI } from "../目录同步(dir-sync)/chunk-1vkmxx3s.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ca2zxbyk.js";
+import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
 import { QS, Ic, ooe } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { s, T, O, v, c, $e, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { dirname as vu, join as Cr } from "path";
 import { randomUUID as Ed } from "crypto";
 import {
@@ -636,7 +636,7 @@ async function zn(e) {
     { answerExitCodes: [1] },
   );
   if (t.exitCode !== 0 && t.exitCode !== 1) return null;
-  let r = Y(t.stdout.split("\x00").flatMap((o) => Da.exec(o)?.[1] ?? []));
+  let r = dedupe(t.stdout.split("\x00").flatMap((o) => Da.exec(o)?.[1] ?? []));
   if (r.some((o) => /[=\n\0]/.test(o))) return null;
   return r.flatMap((o) => [
     "-c",
@@ -742,7 +742,7 @@ async function lo(e, t, r) {
     ]);
   if (h !== "read" || w === "failed") return null;
   if (w === "unsupported")
-    q("warn", "dir_sync_git_snapshot_attr_source_unsupported", {});
+    writeDiagnosticsEvent("warn", "dir_sync_git_snapshot_attr_source_unsupported", {});
   return { transforming: w === "read" ? o : l, digest: d.digest("hex") };
 }
 var po = "ccr-sync-index-",
@@ -874,7 +874,7 @@ async function za({
     );
   let pe = Zi(Te.fields);
   if (pe === null) return wt("diff-files", "diff-files output not understood");
-  let Ke = Y(Ce.fields.filter((N) => N !== "")),
+  let Ke = dedupe(Ce.fields.filter((N) => N !== "")),
     Ve = Ke.filter((N) => N.endsWith("/")),
     xe = (N) => [N, Z2(N)].some(GO) || ILe(N),
     Ye = OV(
@@ -1178,7 +1178,7 @@ async function go({
       K === h.configuration &&
       de !== null &&
       de === h.attributes &&
-      Ua(Y(R.fields.filter((se) => se !== "")), h.untracked)
+      Ua(dedupe(R.fields.filter((se) => se !== "")), h.untracked)
     );
   } catch {
     return !1;
@@ -1187,7 +1187,7 @@ async function go({
 async function yo(e, t = null) {
   let r = await $a(e).catch(() => []);
   await Promise.all(
-    Y(r.filter((o) => o.startsWith(po)).map((o) => o.replace(/\.lock$/, "")))
+    dedupe(r.filter((o) => o.startsWith(po)).map((o) => o.replace(/\.lock$/, "")))
       .map((o) => Nt(e, o))
       .filter((o) => o !== t)
       .map((o) => ut(o)),
@@ -1541,7 +1541,7 @@ var il = /^([0-7]{6}) ([0-9a-f]{40}|[0-9a-f]{64}) ([123])\t(.+)$/s,
 async function al(e) {
   let t = await on(e, ["config", "-z", "--list", "--name-only"]);
   if (t.exitCode !== 0) return { ok: !1, detail: Mv("config", t) };
-  let r = Y(
+  let r = dedupe(
     t.stdout.split("\x00").flatMap((l) => ol.exec(l)?.slice(1, 2) ?? []),
   );
   if (r.length > sl)
@@ -1652,9 +1652,9 @@ function Yr(e) {
 }
 function qn(e) {
   let t = Yr(e),
-    r = Y(e.conflicts.map((l) => t(l.path))),
+    r = dedupe(e.conflicts.map((l) => t(l.path))),
     o = new Set(r);
-  return Y([
+  return dedupe([
     ...r,
     ...e.messages
       .filter((l) => l.type.startsWith("CONFLICT"))
@@ -1872,7 +1872,7 @@ async function $o({ repository: e, parsed: t, favor: r }) {
           ? { ...R, result: null, mode: Xn, evicted: [] }
           : R,
       ),
-      B = Y([
+      B = dedupe([
         ...t.conflicts.map((R) => R.path).filter((R) => o(R) !== R),
         ...P.flatMap((R) => R.evicted.map((K) => K.path)),
       ]),
@@ -2635,7 +2635,7 @@ async function Uo(e, t, r, o) {
   if (E === null) return null;
   return {
     ...r,
-    laptopHeads: Y([...w, ...r.laptopHeads]).slice(0, Pn),
+    laptopHeads: dedupe([...w, ...r.laptopHeads]).slice(0, Pn),
     integrated:
       r.integrated !== null && E ? { ...r.integrated, head: _ } : r.integrated,
   };
@@ -2673,7 +2673,7 @@ async function Yo(e, t, r) {
     Re(e, o, t.indexCommit),
   ]);
   if (l === null || d === null) return null;
-  let h = Y([...l, ...d].map((ke) => ke.path)).filter((ke) => WX(ke));
+  let h = dedupe([...l, ...d].map((ke) => ke.path)).filter((ke) => WX(ke));
   if (h.length === 0) return { laptop: t, withheld: [] };
   let w = await Jr(e, r, h),
     _ = h.filter((ke) => !w.has(ke));
@@ -2686,7 +2686,7 @@ async function Yo(e, t, r) {
   let [x, P] = await Promise.all([Re(e, E, o), Re(e, D, o)]);
   if (x === null || P === null) return null;
   let B = new Set(_),
-    U = Y([...rn(x, B, "widen"), ...rn(P, B, "widen")]),
+    U = dedupe([...rn(x, B, "widen"), ...rn(P, B, "widen")]),
     R = new Set(U),
     [K, de] = await Promise.all([Mt(e, E, o, R), Mt(e, D, o, R)]);
   if (K === null || de === null) return null;
@@ -3346,7 +3346,7 @@ function Qo(e) {
     _ = e.files.notTaken.filter((x) => x.reason !== "credential_named");
   if (_.length > 0)
     t.push(
-      `Left as they were here despite the user's changes (${Y(_.map((x) => x.reason)).join(", ")}): ${sn(_.map((x) => x.path))}.`,
+      `Left as they were here despite the user's changes (${dedupe(_.map((x) => x.reason)).join(", ")}): ${sn(_.map((x) => x.path))}.`,
     );
   if (w.length > 0)
     t.push(
@@ -3441,7 +3441,7 @@ function Zo(e) {
     t.push(
       `Claude had removed or rewritten ${e.restored.commits.length}${e.restored.truncated ? "+" : ""} commit(s) your checkout already has; they are back in the cloud session and Claude was told to use new commits instead.`,
     );
-  let r = G(
+  let r = countMatching(
     e.files.merged,
     (o) =>
       (o.how === "lines" || o.how === "whole") && o.resultBlob !== o.agentBlob,
@@ -3600,7 +3600,7 @@ async function ql(e, t, r, o, l) {
       _ = d - Date.now();
     if (w.kind !== "not_found" || _ <= 0) return w;
     if (Ct(l)) return { kind: "aborted" };
-    if ((await Z(Math.min(h, _), l), Ct(l))) return { kind: "aborted" };
+    if ((await sleep(Math.min(h, _), l), Ct(l))) return { kind: "aborted" };
     h = Math.min(h * 2, es.most);
   }
 }
@@ -3642,7 +3642,7 @@ import {
 } from "path";
 var mr = 1,
   as = 4194304,
-  td = m(() =>
+  td = createLazyValue(() =>
     c({
       version: k(mr),
       memory: c({
@@ -3714,16 +3714,16 @@ async function ei(e) {
   if (e === null) return null;
   try {
     if ((await os(e)).size > as)
-      return (q("warn", "dir_sync_git_store_oversize", {}), null);
+      return (writeDiagnosticsEvent("warn", "dir_sync_git_store_oversize", {}), null);
     let r = xt(await is(e, "utf8"), !1),
       o = td().safeParse(r);
     if (!o.success)
-      return (q("warn", "dir_sync_git_store_unreadable", {}), null);
+      return (writeDiagnosticsEvent("warn", "dir_sync_git_store_unreadable", {}), null);
     let { version: l, ...d } = o.data;
     return d;
   } catch (t) {
     if (A(t) !== "ENOENT")
-      q("warn", "dir_sync_git_store_read_failed", { code: A(t) ?? "unknown" });
+      writeDiagnosticsEvent("warn", "dir_sync_git_store_read_failed", { code: A(t) ?? "unknown" });
     return null;
   }
 }
@@ -3732,10 +3732,10 @@ async function ls(e, t) {
     (await rs(ss(e), { recursive: !0 }),
       await On(e, b({ version: mr, ...t }), 384));
   } catch (r) {
-    q("warn", "dir_sync_git_store_write_failed", { code: A(r) ?? "unknown" });
+    writeDiagnosticsEvent("warn", "dir_sync_git_store_write_failed", { code: A(r) ?? "unknown" });
   }
 }
-var nd = m(() =>
+var nd = createLazyValue(() =>
   c({
     version: k(mr),
     phase: X(["clearing", "cleared", "untouched"]),
@@ -3751,7 +3751,7 @@ async function ds(e, t) {
     if ((await os(e)).size > as) return null;
     let o = nd().safeParse(xt(await is(e, "utf8"), !1));
     if (!o.success)
-      return (q("warn", "dir_sync_git_ended_unreadable", {}), null);
+      return (writeDiagnosticsEvent("warn", "dir_sync_git_ended_unreadable", {}), null);
     let { version: l, ...d } = o.data,
       h = resolve(t),
       w =
@@ -3764,7 +3764,7 @@ async function ds(e, t) {
     };
   } catch (r) {
     if (A(r) !== "ENOENT")
-      q("warn", "dir_sync_git_ended_read_failed", { code: A(r) ?? "unknown" });
+      writeDiagnosticsEvent("warn", "dir_sync_git_ended_read_failed", { code: A(r) ?? "unknown" });
     return null;
   }
 }
@@ -3778,7 +3778,7 @@ async function ti(e, t) {
     );
   } catch (r) {
     return (
-      q("warn", "dir_sync_git_ended_write_failed", { code: A(r) ?? "unknown" }),
+      writeDiagnosticsEvent("warn", "dir_sync_git_ended_write_failed", { code: A(r) ?? "unknown" }),
       !1
     );
   }
@@ -3807,7 +3807,7 @@ async function cs({ repoRoot: e, setAsideRoot: t, attempt: r, markerText: o }) {
   } catch (_) {
     let E = A(_) ?? "unknown";
     return (
-      q("error", "dir_sync_git_clear_unlisted", { code: E }),
+      writeDiagnosticsEvent("error", "dir_sync_git_clear_unlisted", { code: E }),
       { kind: "not_cleared", code: E }
     );
   }
@@ -3817,7 +3817,7 @@ async function cs({ repoRoot: e, setAsideRoot: t, attempt: r, markerText: o }) {
     try {
       (await od(pr(e, _), pr(l, _)), (h += 1));
     } catch (E) {
-      (q("warn", "dir_sync_git_clear_rename_failed", {
+      (writeDiagnosticsEvent("warn", "dir_sync_git_clear_rename_failed", {
         code: A(E) ?? "unknown",
       }),
         w.push(_));
@@ -3837,7 +3837,7 @@ These entries could not be moved and are still here: ${w.map(ad).join(", ")}
       { mode: 420, flag: "wx" },
     );
   } catch (_) {
-    q("warn", "dir_sync_git_clear_marker_failed", { code: A(_) ?? "unknown" });
+    writeDiagnosticsEvent("warn", "dir_sync_git_clear_marker_failed", { code: A(_) ?? "unknown" });
   }
   return { kind: "cleared", setAsideIn: l, moved: h, left: w };
 }
@@ -3932,7 +3932,7 @@ function ws(e) {
   return e.includes("unknown") ? "undecided" : "none";
 }
 async function _s(e, t) {
-  let r = Y(t),
+  let r = dedupe(t),
     o = await Promise.all(r.map((l) => wn(e, l)));
   return r.filter((l, d) => o[d] !== !1).slice(0, $_);
 }
@@ -4210,7 +4210,7 @@ class si {
       this.#e(
         "Directory sync: the user's machine sent two different snapshots under the same number (another sync process there); this checkout kept the first and ignored the second, so the user's newest edits may be missing until their machine sends a fresh number. Say so if something the user mentions is not here.",
       ),
-      q("warn", "dir_sync_git_generation_reused", {
+      writeDiagnosticsEvent("warn", "dir_sync_git_generation_reused", {
         generation: e.generation,
       }));
   }
@@ -4331,7 +4331,7 @@ class si {
           ? "Directory sync: this turn has been waiting over a minute for the user's machine to finish uploading its changes; it starts when they land (the user can interrupt the turn). Mention the wait if it matters."
           : "Directory sync: this turn has been waiting over a minute for the file sync service to answer; it starts when it does (the user can interrupt the turn). Mention the wait if it matters.",
       );
-    q("warn", "dir_sync_git_turn_held_long", { minutes: e, what: t });
+    writeDiagnosticsEvent("warn", "dir_sync_git_turn_held_long", { minutes: e, what: t });
   }
   gaveUpWaiting(e) {
     let t = this.#t();
@@ -4343,7 +4343,7 @@ class si {
       this.#e(
         "Directory sync: the user's latest changes could not be fetched (what their machine described is no longer in the lane); their machine has been asked to resend its current state. The checkout still lacks them \u2014 say so if it matters.",
       ),
-      q("warn", "dir_sync_git_object_gave_up", { generation: e.generation }));
+      writeDiagnosticsEvent("warn", "dir_sync_git_object_gave_up", { generation: e.generation }));
   }
   overCap(e, t) {
     let r = (d) => Math.max(1, Math.round(d / 1048576)),
@@ -4539,7 +4539,7 @@ class si {
       this.#e(
         "Directory sync: this checkout was RECREATED from the session's starting state (the cloud container was replaced). Commits and files from earlier turns of this session are NOT here until the user's machine resends its state \u2014 tell the user this plainly, do not redo earlier work from memory, and wait for their files to arrive (a later turn) before building on them: what you change here before then is merged under the user's files when they arrive and may be overwritten where they overlap.",
       ),
-      q("warn", "dir_sync_git_checkout_recreated", {}));
+      writeDiagnosticsEvent("warn", "dir_sync_git_checkout_recreated", {}));
   }
 }
 function Zn(e) {
@@ -4547,7 +4547,7 @@ function Zn(e) {
 }
 function Cs(e, t, r = {}) {
   if (
-    (i("tengu_dir_sync_git_worker_turn_start", {
+    (logEvent("tengu_dir_sync_git_worker_turn_start", {
       outcome: fromEnum(e),
       generation: t,
       ...r,
@@ -4560,7 +4560,7 @@ function Cs(e, t, r = {}) {
 }
 function Ss(e, t = {}) {
   if (
-    (i("tengu_dir_sync_git_worker_turn_end", { outcome: fromEnum(e), ...t }),
+    (logEvent("tengu_dir_sync_git_worker_turn_end", { outcome: fromEnum(e), ...t }),
     e === "shipped" || e === "nothing_to_send")
   )
     logFeatureOk("ccr_dir_sync_git_worker_turn_end");
@@ -4638,9 +4638,9 @@ function vs(e) {
 }
 function an(e) {
   if (e.kind === "unauthorized" || e.kind === "lane_unavailable")
-    q("warn", "dir_sync_git_lane_refused", { kind: e.kind });
+    writeDiagnosticsEvent("warn", "dir_sync_git_lane_refused", { kind: e.kind });
   else if (e.kind !== "not_found" && e.kind !== "aborted" && e.kind !== "ok")
-    q("info", "dir_sync_git_lane_problem", { kind: e.kind });
+    writeDiagnosticsEvent("info", "dir_sync_git_lane_problem", { kind: e.kind });
 }
 async function ai(e, t, r, o) {
   let { remembered: l } = e,
@@ -5436,7 +5436,7 @@ async function iu(e, t) {
     (await Xs(Od(e), { recursive: !0 }),
       await Ad(e, b({ emptyAtMs: t }), "utf-8"));
   } catch (r) {
-    q("info", "dir_sync_git_empty_start_record_unwritten", {
+    writeDiagnosticsEvent("info", "dir_sync_git_empty_start_record_unwritten", {
       code: A(r) ?? "none",
     });
   }
@@ -5551,7 +5551,7 @@ function Js({
       if (((le += 1), le >= lu && !ke)) {
         if (
           ((ke = !0),
-          q("warn", "dir_sync_git_lane_down", { boundaries: le }),
+          writeDiagnosticsEvent("warn", "dir_sync_git_lane_down", { boundaries: le }),
           ve === null)
         )
           ((Te = !0),
@@ -5565,7 +5565,7 @@ function Js({
     }
     if (L === "published") {
       if (ke) {
-        if ((q("info", "dir_sync_git_lane_back", { boundaries: le }), Te))
+        if ((writeDiagnosticsEvent("info", "dir_sync_git_lane_back", { boundaries: le }), Te))
           r.notify(
             "Directory sync: the sync service is taking this session's updates again; the user's machine receives your changes as before.",
           );
@@ -5714,13 +5714,13 @@ function Js({
         await Rd(xn(e, ".git"), xn(r.trashDir, `agent-git-${r.now()}`)));
     } catch (C) {
       return (
-        q("warn", "dir_sync_git_empty_start_aside_failed", {
+        writeDiagnosticsEvent("warn", "dir_sync_git_empty_start_aside_failed", {
           code: A(C) ?? "none",
         }),
         null
       );
     }
-    (clearIsGitMemo(), q("info", "dir_sync_git_empty_start_agent_git_aside", {}));
+    (clearIsGitMemo(), writeDiagnosticsEvent("info", "dir_sync_git_empty_start_agent_git_aside", {}));
     let p = await er(e);
     return p === null || p.gitEntry !== "none"
       ? null
@@ -5731,14 +5731,14 @@ function Js({
       C = await er(e);
     if (Me && p !== null && C !== null && C.gitEntry === "none") {
       let L = await Nr(e, p);
-      (clearIsGitMemo(), q("info", "dir_sync_git_empty_start_claimed", { claimed: L }));
+      (clearIsGitMemo(), writeDiagnosticsEvent("info", "dir_sync_git_empty_start_claimed", { claimed: L }));
     }
   }
   async function ki() {
     if (qt === null) return;
     let p = await r.transport.publishJournal(qt, { ifMatchEtag: null });
     if (
-      (q("info", "dir_sync_git_empty_start_told_laptop", {
+      (writeDiagnosticsEvent("info", "dir_sync_git_empty_start_told_laptop", {
         outcome: fromEnum(p.kind),
       }),
       p.kind === "ok" ||
@@ -5776,7 +5776,7 @@ function Js({
   async function Ei(p, C, L) {
     if (!Si || L === null) return [];
     let M = new Set($n.values()),
-      F = Y(C.laptopHolds)
+      F = dedupe(C.laptopHolds)
         .filter((V) => V !== L && M.has(V))
         .slice(0, qht),
       J = await Promise.all(F.map((V) => wn(p, V)));
@@ -5799,7 +5799,7 @@ function Js({
   function Bt(p) {
     return (
       (B = B.then(p).catch((C) => {
-        q("error", "dir_sync_git_worker_phase_crashed", {
+        writeDiagnosticsEvent("error", "dir_sync_git_worker_phase_crashed", {
           name: C instanceof Error ? C.name : "unknown",
           code: A(C) ?? "none",
         });
@@ -5869,7 +5869,7 @@ function Js({
           ? "wrong_note"
           : J.reason;
       if (ue !== "wrong_note")
-        q("warn", "dir_sync_git_laptop_journal_unreadable", { reason: ue });
+        writeDiagnosticsEvent("warn", "dir_sync_git_laptop_journal_unreadable", { reason: ue });
       if (!C) Pr(ue);
       return ((ie = null), (pe = null), un("journal", !1), null);
     }
@@ -5935,7 +5935,7 @@ function Js({
   function Pr(p) {
     if (((Ee += 1), Ee >= Gs && P.kind === "listening"))
       ((P = { kind: "off" }),
-        q("info", "dir_sync_git_worker_stood_down", { reason: p }));
+        writeDiagnosticsEvent("info", "dir_sync_git_worker_stood_down", { reason: p }));
   }
   function xi(p) {
     if (p.kind === "own") return null;
@@ -5990,8 +5990,8 @@ function Js({
   }
   async function da(p, C, L, M, F) {
     let J = (ae) => (
-        q("warn", "dir_sync_git_empty_start_failed", { reason: ae.reason }),
-        i("tengu_dir_sync_git_empty_start", {
+        writeDiagnosticsEvent("warn", "dir_sync_git_empty_start_failed", { reason: ae.reason }),
+        logEvent("tengu_dir_sync_git_empty_start", {
           outcome: S("failed"),
           reason: fromEnum(ae.reason),
           ...("found" in ae && { found: ae.count ?? ae.found.length }),
@@ -6005,7 +6005,7 @@ function Js({
     if (I === null) {
       if (p.seedless === !0)
         return (
-          q("warn", "dir_sync_git_empty_start_no_bundle", {}),
+          writeDiagnosticsEvent("warn", "dir_sync_git_empty_start_no_bundle", {}),
           { kind: "waiting" }
         );
       return J({ reason: "container_recreated" });
@@ -6037,7 +6037,7 @@ function Js({
         let Xe = await Ni(I, he, "held", !0);
         if (Xe.kind !== "ok") {
           if (
-            (i("tengu_dir_sync_git_empty_start", {
+            (logEvent("tengu_dir_sync_git_empty_start", {
               outcome: S("waiting"),
               fetch: fromEnum(Xe.kind),
             }),
@@ -6136,8 +6136,8 @@ function Js({
     }
     return (
       clearIsGitMemo(),
-      q("info", "dir_sync_git_empty_start", { generation: p.generation }),
-      i("tengu_dir_sync_git_empty_start", {
+      writeDiagnosticsEvent("info", "dir_sync_git_empty_start", { generation: p.generation }),
+      logEvent("tengu_dir_sync_git_empty_start", {
         outcome: S("started"),
         generation: p.generation,
         resumed: ce,
@@ -6174,10 +6174,10 @@ function Js({
     if (M === null) {
       if (L) return null;
       if (((pt.noCheckout += 1), pt.noCheckout < mi))
-        return (q("warn", "dir_sync_git_worker_checkout_unread", {}), null);
+        return (writeDiagnosticsEvent("warn", "dir_sync_git_worker_checkout_unread", {}), null);
       return (
         (P = { kind: "disarmed", reason: "no_checkout" }),
-        q("warn", "dir_sync_git_worker_no_checkout", {}),
+        writeDiagnosticsEvent("warn", "dir_sync_git_worker_no_checkout", {}),
         r.notify(
           "Directory sync is off for this session: the working directory is not the session's git checkout, so the user's changes are not arriving here and yours are not going up. Tell the user if that matters for the task.",
         ),
@@ -6188,21 +6188,21 @@ function Js({
     await yo(F.gitDir, Nn?.scratchIndexPath ?? null);
     let J = await It(F);
     if (J === null || J.head === null)
-      return (q("warn", "dir_sync_git_worker_head_unread", {}), null);
+      return (writeDiagnosticsEvent("warn", "dir_sync_git_worker_head_unread", {}), null);
     let V = await ei(r.storePath);
     if (V !== null) Oe = !0;
     let I = await ms(F);
     if (I === null)
-      return (q("warn", "dir_sync_git_worker_reflog_unread", {}), null);
+      return (writeDiagnosticsEvent("warn", "dir_sync_git_worker_reflog_unread", {}), null);
     pt.noCheckout = 0;
     let re = await Jn(F, I);
     if (re === null) {
       if (L) return null;
       if (((pt.noHeadTree += 1), pt.noHeadTree < mi))
-        return (q("warn", "dir_sync_git_worker_head_unread", {}), null);
+        return (writeDiagnosticsEvent("warn", "dir_sync_git_worker_head_unread", {}), null);
       return (
         (P = { kind: "disarmed", reason: "no_head_tree" }),
-        q("warn", "dir_sync_git_worker_no_head_tree", {}),
+        writeDiagnosticsEvent("warn", "dir_sync_git_worker_no_head_tree", {}),
         r.notify(
           "Directory sync is off for this session: the checkout's HEAD could not be read, so the user's changes are not arriving here and yours are not going up.",
         ),
@@ -6212,11 +6212,11 @@ function Js({
     pt.noHeadTree = 0;
     let j = await ps(F, t);
     if (j === null)
-      return (q("warn", "dir_sync_git_worker_refs_unread", {}), null);
+      return (writeDiagnosticsEvent("warn", "dir_sync_git_worker_refs_unread", {}), null);
     let ee = V === null ? await ri(F, t) : null,
       he = ee == null ? null : await Jn(F, ee.worktreeCommit);
     if (ee === void 0 || (ee !== null && he === null))
-      return (q("warn", "dir_sync_git_worker_seed_unread", {}), null);
+      return (writeDiagnosticsEvent("warn", "dir_sync_git_worker_seed_unread", {}), null);
     let De =
         r.firstWorkerProcess === !0 && V === null && he === null && j === 0
           ? (Er ?? null)
@@ -6225,7 +6225,7 @@ function Js({
         memory: {
           agreedTree: he ?? De ?? re,
           pinnedHead: I,
-          laptopHeads: Y([...(ee === null ? [] : [ee.head]), I]),
+          laptopHeads: dedupe([...(ee === null ? [] : [ee.head]), I]),
           integrated:
             ee === null || he === null
               ? null
@@ -6234,7 +6234,7 @@ function Js({
         turn: j,
         recreatedAfterTurn: 0,
         pending: null,
-        holds: Y([
+        holds: dedupe([
           ...(await bs(F, t)),
           ...(ee === null ? [] : [ee.worktreeCommit]),
         ]).slice(0, $_),
@@ -6268,7 +6268,7 @@ function Js({
       if (L) return null;
       if (
         ((pt.laneUnread += 1),
-        q("warn", "dir_sync_git_own_journal_unread", {}),
+        writeDiagnosticsEvent("warn", "dir_sync_git_own_journal_unread", {}),
         pt.laneUnread === mi)
       )
         r.notify(
@@ -6278,7 +6278,7 @@ function Js({
     }
     let Se = ce == null ? null : await yr(F, t, ce.worktreeCommit);
     if (ce != null && Se === null)
-      return (q("warn", "dir_sync_git_worker_refs_unread", {}), null);
+      return (writeDiagnosticsEvent("warn", "dir_sync_git_worker_refs_unread", {}), null);
     let Je = Se === !1 ? ce : null;
     if (ce != null)
       ((ue.turn = Math.max(ue.turn, ce.turn)),
@@ -6294,8 +6294,8 @@ function Js({
     };
     return (
       (P = { kind: "armed", armed: rt }),
-      q("info", "dir_sync_git_worker_armed", { restored: V !== null }),
-      i("tengu_dir_sync_git_worker_armed", {
+      writeDiagnosticsEvent("info", "dir_sync_git_worker_armed", { restored: V !== null }),
+      logEvent("tengu_dir_sync_git_worker_armed", {
         restored: V !== null,
         seeded: ee !== null,
         started_from_files: De !== null,
@@ -6332,7 +6332,7 @@ function Js({
     if (!et || Ct(p)) return;
     ((et = !1),
       r.notify(Hd),
-      q("info", "dir_sync_git_announced_upload_refused"));
+      writeDiagnosticsEvent("info", "dir_sync_git_announced_upload_refused"));
   }
   async function Cn(p, C) {
     (C(), (Ue = !0));
@@ -6366,7 +6366,7 @@ function Js({
                 () => "not_published",
               )));
     } catch (j) {
-      q("error", "dir_sync_git_worker_clear_step_failed", {
+      writeDiagnosticsEvent("error", "dir_sync_git_worker_clear_step_failed", {
         name: j instanceof Error ? j.name : "unknown",
       });
     } finally {
@@ -6375,7 +6375,7 @@ function Js({
       let ee = j.kind === "cleared" || j.kind === "repository_left",
         he = ee ? j.moved : 0,
         De = ee ? j.left.length : -1;
-      (q("warn", "dir_sync_git_worker_cleared", {
+      (writeDiagnosticsEvent("warn", "dir_sync_git_worker_cleared", {
         armed: L !== null,
         outcome: j.kind,
         recorded: V,
@@ -6384,7 +6384,7 @@ function Js({
         left: De,
         unsynced: I?.count ?? -1,
       }),
-        i("tengu_dir_sync_git_worker_cleared", {
+        logEvent("tengu_dir_sync_git_worker_cleared", {
           armed: L !== null,
           outcome: fromEnum(j.kind),
           recorded: V,
@@ -6402,7 +6402,7 @@ function Js({
     if (M <= C) return C;
     return (
       fe.heldLong(M, L, C === 0),
-      i("tengu_dir_sync_git_worker_turn_held", { minutes: M, what: fromEnum(L) }),
+      logEvent("tengu_dir_sync_git_worker_turn_held", { minutes: M, what: fromEnum(L) }),
       M
     );
   }
@@ -6418,7 +6418,7 @@ function Js({
     if (C && ve === p && se === null)
       ((ve = null),
         r.notify(Oe ? Yd : qd),
-        i("tengu_dir_sync_git_worker_back_online", {}));
+        logEvent("tengu_dir_sync_git_worker_back_online", {}));
   }
   let Ai = -1;
   function Qt(p) {
@@ -6426,8 +6426,8 @@ function Js({
       Ai = kn;
       let C = Ze[p],
         L = C === null ? 0 : r.now() - C;
-      (q("warn", "dir_sync_git_worker_offline", { waited_ms: L, waiting: p }),
-        i("tengu_dir_sync_git_worker_offline", {
+      (writeDiagnosticsEvent("warn", "dir_sync_git_worker_offline", { waited_ms: L, waiting: p }),
+        logEvent("tengu_dir_sync_git_worker_offline", {
           waited_ms: L,
           waiting: fromEnum(p),
           told_before: ve !== null,
@@ -6440,7 +6440,7 @@ function Js({
     try {
       r.copyCleared(p === "repository_left" ? "not_cleared" : p);
     } catch (C) {
-      q("warn", "dir_sync_git_worker_cleared_hook_failed", {
+      writeDiagnosticsEvent("warn", "dir_sync_git_worker_cleared_hook_failed", {
         name: C instanceof Error ? C.name : "unknown",
       });
     }
@@ -6477,7 +6477,7 @@ function Js({
         () => null,
       );
     if (J === null || J.exitCode !== 0) return null;
-    let V = Y([
+    let V = dedupe([
       ...J.stdout.split("\x00").filter((I) => I !== ""),
       ...C.downApplied.flatMap((I) => I.notInstalled.map((re) => re.path)),
     ]);
@@ -6522,7 +6522,7 @@ function Js({
     )
       ((Tt = !0),
         r.notify(js),
-        q("info", "dir_sync_git_empty_start_row_unread", {}));
+        writeDiagnosticsEvent("info", "dir_sync_git_empty_start_row_unread", {}));
     if (F === null && ye === "live") {
       Ue = !0;
       for (
@@ -6549,13 +6549,13 @@ function Js({
       if (
         ((Tt ||= be),
         r.notify(be ? Qd : ye === "abandoned" ? jd : zd),
-        q("info", "dir_sync_git_first_upload_pending", {
+        writeDiagnosticsEvent("info", "dir_sync_git_first_upload_pending", {
           quiet: ye === "live",
           createdEmpty: be,
         }),
         ye === "live")
       )
-        i("tengu_dir_sync_git_announced_upload_quiet", { first: !0 });
+        logEvent("tengu_dir_sync_git_announced_upload_quiet", { first: !0 });
     }
     if ((Ri(p), se !== null && !Ct(C))) return M ? void 0 : Cn(se, L);
     let J = F === null && !M && !Ct(p) ? Wt() : null;
@@ -6574,7 +6574,7 @@ function Js({
         be.kind === "superseded" && !Ct(p) && !Ct(C);
         Dt = Math.min(Dt * 2, ln)
       ) {
-        if ((await Z(Dt, C), Ct(C))) break;
+        if ((await sleep(Dt, C), Ct(C))) break;
         Ui = Jt(pa, Ui, "upload");
         let ga = await Tn(p, !0, M),
           jn = Wt();
@@ -6603,7 +6603,7 @@ function Js({
           continue;
         }
         if (((Gn += 1), Gn >= 2))
-          (q("warn", "dir_sync_git_empty_start_object_gone", {}),
+          (writeDiagnosticsEvent("warn", "dir_sync_git_empty_start_object_gone", {}),
             (be = { kind: "waiting" }));
       }
       if (be.kind === "failed") {
@@ -6615,7 +6615,7 @@ function Js({
           if ((await sa(), !Tt))
             ((Tt = !0),
               r.notify(Vd),
-              q("info", "dir_sync_git_empty_start_deferred", {}));
+              writeDiagnosticsEvent("info", "dir_sync_git_empty_start_deferred", {}));
         }
         return;
       }
@@ -6657,12 +6657,12 @@ function Js({
             ? `Directory sync: the user's machine could not upload its latest changes${ie.reason === null ? "" : ` (it said: "${gi(ie.reason)}")`}; this turn runs on the files as they were \u2014 say so if it matters.`
             : ci,
         ),
-        q("info", "dir_sync_git_announced_upload_missed", {
+        writeDiagnosticsEvent("info", "dir_sync_git_announced_upload_missed", {
           quiet: !ie.abandoned,
         }),
         !ie.abandoned)
       )
-        i("tengu_dir_sync_git_announced_upload_quiet", { first: !1 });
+        logEvent("tengu_dir_sync_git_announced_upload_quiet", { first: !1 });
     }
     if ((Ri(p), se !== null && !Ct(C))) return M ? void 0 : Cn(se, L);
     let { note: I, armed: re } = F,
@@ -6697,7 +6697,7 @@ function Js({
       ((j.turn = Math.max(j.turn, ge.length > 0 ? Math.max(...ge) + uu : ne)),
         (j.journalGeneration = Math.max(j.journalGeneration, ne)),
         (j.recreatedAfterTurn = j.turn),
-        i("tengu_dir_sync_git_worker_recreated_witnessed", {
+        logEvent("tengu_dir_sync_git_worker_recreated_witnessed", {
           recreated_after_turn: j.recreatedAfterTurn,
           named_turns: ge.length,
         }));
@@ -6706,7 +6706,7 @@ function Js({
     let ue = I.worktreeCommit === j.memory.integrated?.worktreeCommit,
       ce = fu(j, I, ue);
     if (ce.refused > 0)
-      q("warn", "dir_sync_git_install_reports_refused", {
+      writeDiagnosticsEvent("warn", "dir_sync_git_install_reports_refused", {
         refused: ce.refused,
       });
     let Se =
@@ -6741,14 +6741,14 @@ function Js({
     ) {
       let ne = await wn(ee, rt.worktreeCommit);
       if (ne === null) {
-        q("warn", "dir_sync_git_bundle_unverified", { probe: "pending" });
+        writeDiagnosticsEvent("warn", "dir_sync_git_bundle_unverified", { probe: "pending" });
         return;
       }
       if (!ne) {
         let ge = ed(re.sessionId, `in/${rt.generation}`),
           be = ge === null ? null : await yO(ee, [ge]);
         if (ge !== null && be === null) {
-          q("warn", "dir_sync_git_bundle_unverified", { probe: "pending_ref" });
+          writeDiagnosticsEvent("warn", "dir_sync_git_bundle_unverified", { probe: "pending_ref" });
           return;
         }
         if (
@@ -6757,7 +6757,7 @@ function Js({
           !be.has(ge) &&
           (await sr(ee, rt, ge, p, C, "once")) === "landed"
         )
-          q("info", "dir_sync_git_pending_generation_taken", {
+          writeDiagnosticsEvent("info", "dir_sync_git_pending_generation_taken", {
             generation: rt.generation,
           });
       }
@@ -6765,7 +6765,7 @@ function Js({
     j.pending = null;
     let He = await yO(ee, [Je]);
     if (He === null) {
-      q("warn", "dir_sync_git_bundle_unverified", {});
+      writeDiagnosticsEvent("warn", "dir_sync_git_bundle_unverified", {});
       return;
     }
     let yt = He.get(Je);
@@ -6779,7 +6779,7 @@ function Js({
     }
     let cn = await wn(ee, I.worktreeCommit);
     if (cn === null) {
-      q("warn", "dir_sync_git_bundle_unverified", {});
+      writeDiagnosticsEvent("warn", "dir_sync_git_bundle_unverified", {});
       return;
     }
     if (!cn) {
@@ -6818,11 +6818,11 @@ function Js({
             if (Fe !== ie.generation)
               ((Fe = ie.generation),
                 r.notify(ci),
-                q("info", "dir_sync_git_announced_upload_missed", {
+                writeDiagnosticsEvent("info", "dir_sync_git_announced_upload_missed", {
                   quiet: !0,
                   superseded: !0,
                 }),
-                i("tengu_dir_sync_git_announced_upload_quiet", { first: !1 }));
+                logEvent("tengu_dir_sync_git_announced_upload_quiet", { first: !1 }));
             return;
           }
           if (((ne = await sr(ee, I, Je, p, C, "held")), ne === "superseded")) {
@@ -6857,7 +6857,7 @@ function Js({
     j.need = null;
     let We = await Vn(ee, I.worktreeCommit);
     if (We === null) {
-      q("warn", "dir_sync_git_bundle_unverified", {});
+      writeDiagnosticsEvent("warn", "dir_sync_git_bundle_unverified", {});
       return;
     }
     let Xe = await Promise.all(
@@ -6868,7 +6868,7 @@ function Js({
       }),
     );
     if (Xe.some((ne) => ne === null)) {
-      q("warn", "dir_sync_git_bundle_unverified", {});
+      writeDiagnosticsEvent("warn", "dir_sync_git_bundle_unverified", {});
       return;
     }
     if (
@@ -6878,7 +6878,7 @@ function Js({
       We[1] !== I.indexCommit ||
       Xe.some((ne) => ne !== !0)
     ) {
-      (q("warn", "dir_sync_git_bundle_mismatch", { parents: We.length }),
+      (writeDiagnosticsEvent("warn", "dir_sync_git_bundle_mismatch", { parents: We.length }),
         (j.refusedBundle = I.bundle?.sha256 ?? null),
         fe.refused(I, "it does not match what your machine described"),
         jt("mismatch", I.generation),
@@ -6925,7 +6925,7 @@ function Js({
     }
     if (Pe.kind === "skip") {
       if (
-        (q("info", "dir_sync_git_turn_start_skipped", {
+        (writeDiagnosticsEvent("info", "dir_sync_git_turn_start_skipped", {
           reason: Pe.reason,
           ...(Pe.snapshotStep !== void 0 && { step: Pe.snapshotStep }),
         }),
@@ -6963,7 +6963,7 @@ function Js({
     });
     if (me.kind === "not_applied") {
       if (
-        (q("info", "dir_sync_git_turn_start_not_applied", {
+        (writeDiagnosticsEvent("info", "dir_sync_git_turn_start_not_applied", {
           reason: me.reason,
           residue: me.residue.length,
           self_kept: Pe.plan.selfKept,
@@ -7018,7 +7018,7 @@ function Js({
       r.notify(
         `Directory sync: commits of yours set aside at an earlier turn are still kept at ${zi.map(Ic).join(", ")} (not on the work branch); merge or cherry-pick what you still need.`,
       );
-    (q("info", "dir_sync_git_turn_start_applied", {
+    (writeDiagnosticsEvent("info", "dir_sync_git_turn_start_applied", {
       generation: I.generation,
       head: me.report.head.kind,
       agent_commits: me.report.agentCommits.kind,
@@ -7037,8 +7037,8 @@ function Js({
         }),
         files_updated: me.report.files.updated,
         files_merged: me.report.files.merged.length,
-        files_renamed: G(me.report.files.renamed, (ne) => ne.kept),
-        files_trashed: G(
+        files_renamed: countMatching(me.report.files.renamed, (ne) => ne.kept),
+        files_trashed: countMatching(
           me.report.files.trashed,
           (ne) => !me.report.files.renamed.some((ge) => ge.from === ne),
         ),
@@ -7068,14 +7068,14 @@ function Js({
       !Ct(C);
       I = Math.min(I * 2, ln)
     ) {
-      if ((await Z(I, C), Ct(C))) break;
+      if ((await sleep(I, C), Ct(C))) break;
       if (
         ((F = await r.transport.getInbound(p, C)), Ii(F), F.kind !== "ok" && M)
       )
         ee = Jt(re, ee, "lane");
       if (F.kind !== "ok" && Date.now() - re >= (j + 1) * Bs)
         ((j += 1),
-          q("warn", "dir_sync_git_object_wait_held", {
+          writeDiagnosticsEvent("warn", "dir_sync_git_object_wait_held", {
             minutes: j,
             kind: F.kind,
           }));
@@ -7117,20 +7117,20 @@ function Js({
     if (j.ok) {
       if (j.refs[0]?.id === C.worktreeCommit) return "landed";
       return (
-        q("warn", "dir_sync_git_bundle_tip_mismatch", {}),
+        writeDiagnosticsEvent("warn", "dir_sync_git_bundle_tip_mismatch", {}),
         fe.refused(C, "it does not match what your machine described"),
         { need: null, final: !0 }
       );
     }
     if (
-      (q("warn", "dir_sync_git_receive_refused", { reason: j.reason }),
+      (writeDiagnosticsEvent("warn", "dir_sync_git_receive_refused", { reason: j.reason }),
       j.reason === "prerequisites_missing")
     ) {
       let he = j.missing;
       if (V === null && he.length > 0) {
         let ce = await xo(hn(p, M), he, { memory: Rn });
         if (
-          (q("info", "dir_sync_git_prerequisite_fetch", {
+          (writeDiagnosticsEvent("info", "dir_sync_git_prerequisite_fetch", {
             outcome: ce,
             count: he.length,
           }),
@@ -7184,7 +7184,7 @@ function Js({
               ? "unborn"
               : "unmerged";
       if (
-        (q("info", "dir_sync_git_turn_end_skipped", {
+        (writeDiagnosticsEvent("info", "dir_sync_git_turn_end_skipped", {
           reason: V?.midOperation ?? ae,
         }),
         rr("checkout_unready", { reason: fromEnum(ae) }),
@@ -7222,7 +7222,7 @@ function Js({
     if (((nt = !1), j.kind === "refused")) {
       let ae = j.reason === "aborted" ? void 0 : j.step;
       if (
-        (q("warn", "dir_sync_git_turn_end_snapshot_refused", {
+        (writeDiagnosticsEvent("warn", "dir_sync_git_turn_end_snapshot_refused", {
           reason: j.reason,
           ...(ae !== void 0 && { step: ae }),
         }),
@@ -7254,7 +7254,7 @@ function Js({
       he === null ||
       !(await K4(F, [{ name: he, id: j.snapshot.worktreeCommit }]))
     ) {
-      (q("warn", "dir_sync_git_turn_ref_failed", {}),
+      (writeDiagnosticsEvent("warn", "dir_sync_git_turn_ref_failed", {}),
         rr("no_ref"),
         await ut(j.snapshot.scratchIndexPath),
         (M.userEventUuids = J),
@@ -7330,7 +7330,7 @@ function Js({
       if (
         ((Se = "bundle_failed"),
         (Je = fromEnum(ue.reason)),
-        q("warn", "dir_sync_git_turn_end_bundle_failed", { reason: ue.reason }),
+        writeDiagnosticsEvent("warn", "dir_sync_git_turn_end_bundle_failed", { reason: ue.reason }),
         ue.reason !== "aborted")
       )
         fe.notShipped(Es(ue), St === "sync_point");
@@ -7453,7 +7453,7 @@ function Js({
     return { kind: "changed", snapshot: I };
   }
   function Or(p, C, L, M) {
-    i("tengu_dir_sync_git_worker_push_point", {
+    logEvent("tengu_dir_sync_git_worker_push_point", {
       outcome: fromEnum(p),
       generation: C,
       ...(L !== void 0 && { reason: fromEnum(L) }),
@@ -7469,7 +7469,7 @@ function Js({
         : 0;
     if (se !== null || R != null)
       return (
-        i("tengu_dir_sync_git_worker_pull_point", {
+        logEvent("tengu_dir_sync_git_worker_pull_point", {
           outcome: fromEnum("skipped"),
           ...(p === "latest" ? { latest: !0 } : { expected: p }),
         }),
@@ -7514,7 +7514,7 @@ function Js({
             if (Fe !== ie.generation)
               ((Fe = ie.generation),
                 r.notify(ci),
-                q("info", "dir_sync_git_announced_upload_missed", {
+                writeDiagnosticsEvent("info", "dir_sync_git_announced_upload_missed", {
                   quiet: !0,
                   mid_turn: !0,
                 }));
@@ -7540,7 +7540,7 @@ function Js({
       St = "turn";
     }
     return (
-      i("tengu_dir_sync_git_worker_pull_point", {
+      logEvent("tengu_dir_sync_git_worker_pull_point", {
         outcome: fromEnum(J.kind),
         ...(p === "latest" ? { latest: !0 } : { expected: p }),
       }),
@@ -7580,7 +7580,7 @@ function Js({
                   ? "untouched"
                   : "not_cleared",
             ),
-            q("info", "dir_sync_git_worker_ended_earlier", { phase: R.phase }),
+            writeDiagnosticsEvent("info", "dir_sync_git_worker_ended_earlier", { phase: R.phase }),
             R.phase === "clearing")
           ) {
             let he = R,
@@ -7588,7 +7588,7 @@ function Js({
                 let ce = await Oi(he);
                 (ir(ce.kind),
                   r.notify(Fs(e, he.line, ce, null)),
-                  i("tengu_dir_sync_git_worker_cleared", {
+                  logEvent("tengu_dir_sync_git_worker_cleared", {
                     armed: !1,
                     outcome: fromEnum(ce.kind),
                     recorded: !0,
@@ -7603,11 +7603,11 @@ function Js({
                 () => !1,
               ),
               ue = await Promise.race([De, sht(p).then(() => "interrupted")]);
-            q("warn", "dir_sync_git_worker_clear_resumed", { cleared: ue });
+            writeDiagnosticsEvent("warn", "dir_sync_git_worker_clear_resumed", { cleared: ue });
           }
         }
       }
-      if (P.kind === "pending") await kt(Q, C);
+      if (P.kind === "pending") await withDeadline(Q, C);
       let M = () => {
         if (!Ct(p)) {
           if (
@@ -7629,7 +7629,7 @@ function Js({
         if (P.kind === "pending" && Me && !Tt && !Ct(p))
           ((Tt = !0),
             r.notify(js),
-            q("info", "dir_sync_git_empty_start_flag_unread", {}));
+            writeDiagnosticsEvent("info", "dir_sync_git_empty_start_flag_unread", {}));
         M();
         return;
       }
@@ -7645,17 +7645,17 @@ function Js({
       (I.finally(() => {
         re = !0;
       }),
-        await Promise.race([kt(I, F), sht(p)]));
+        await Promise.race([withDeadline(I, F), sht(p)]));
       let j = sht(p);
       while (
         !re &&
         !Ct(p) &&
         (Ue || (!Ne && (Oe || Dn)) || se !== null || Qe())
       )
-        await Promise.race([kt(I, Gd), j]);
+        await Promise.race([withDeadline(I, Gd), j]);
       let ee = Date.now() + au;
       while (!re && !Ct(p) && (V || An || (nt && Date.now() < ee)))
-        await Promise.race([V ? I : kt(I, du), j]);
+        await Promise.race([V ? I : withDeadline(I, du), j]);
       (J.abort(), M());
     },
     afterTurn: ({ userEventUuids: p }) => {
@@ -7685,7 +7685,7 @@ function Js({
         if (p !== void 0) return p;
         let C = P.kind === "armed" ? P.armed.remembered.turn : 0;
         return (
-          i("tengu_dir_sync_git_worker_push_point", {
+          logEvent("tengu_dir_sync_git_worker_push_point", {
             outcome: fromEnum("failed"),
             generation: C,
             reason: fromEnum("crashed"),
@@ -7709,7 +7709,7 @@ function Js({
           return M;
         }
         return (
-          i("tengu_dir_sync_git_worker_pull_point", {
+          logEvent("tengu_dir_sync_git_worker_pull_point", {
             outcome: fromEnum("failed"),
             expected: p,
           }),
@@ -7843,13 +7843,13 @@ async function bu(e, t) {
           };
         if (r >= t.pullAttempts)
           return (
-            q("warn", "dir_sync_manifest_unreachable", {
+            writeDiagnosticsEvent("warn", "dir_sync_manifest_unreachable", {
               kind: o.errorKind,
               status: o.status ?? 0,
             }),
             { kind: "unreachable" }
           );
-        await Z(t.pullRetryDelayMs * 2 ** (r - 1), void 0, { unref: !0 });
+        await sleep(t.pullRetryDelayMs * 2 ** (r - 1), void 0, { unref: !0 });
     }
   }
 }
@@ -7858,7 +7858,7 @@ async function Zs(e, t = ku) {
       try {
         e.announceVerdict(h);
       } catch {
-        q("error", "dir_sync_lane_verdict_publish_threw", {});
+        writeDiagnosticsEvent("error", "dir_sync_lane_verdict_publish_threw", {});
       }
       return h;
     },
@@ -7914,17 +7914,17 @@ async function Qs(e, t, r, o) {
       case "refused":
         if (o && d.errorKind === "auth")
           return (
-            q("warn", "dir_sync_manifest_refused_after_stage", {
+            writeDiagnosticsEvent("warn", "dir_sync_manifest_refused_after_stage", {
               status: d.status,
             }),
             null
           );
         if (e.priorWorkerProcess && l < t.maxRefusedAsks) {
-          await Z(t.refusedAskDelayMs, void 0, { unref: !0 });
+          await sleep(t.refusedAskDelayMs, void 0, { unref: !0 });
           continue;
         }
         return (
-          q("warn", "dir_sync_manifest_refused", {
+          writeDiagnosticsEvent("warn", "dir_sync_manifest_refused", {
             kind: d.errorKind,
             status: d.status,
           }),
@@ -7940,7 +7940,7 @@ async function Qs(e, t, r, o) {
 var ea = 30000,
   Cu = 45000,
   Su = 1000,
-  Eu = m(() =>
+  Eu = createLazyValue(() =>
     c({ error: c({ type: s().optional(), reason: s().optional() }) }),
   ),
   yi = {
@@ -8037,7 +8037,7 @@ function ra() {
 async function _i(e, t, r) {
   let o = await na(e, t, r);
   if (o.kind !== "retry_later") return o;
-  return (await Z(Su, t).catch(() => {}), na(e, t, r));
+  return (await sleep(Su, t).catch(() => {}), na(e, t, r));
 }
 async function na(e, t, r) {
   if (Ct(t)) return { kind: "aborted" };
@@ -8048,7 +8048,7 @@ async function na(e, t, r) {
     if (Ct(t)) return { kind: "aborted" };
     let { kind: D, status: x } = Ps(E);
     return (
-      q("warn", "dir_sync_direct_request_failed", {
+      writeDiagnosticsEvent("warn", "dir_sync_direct_request_failed", {
         call: e,
         kind: D,
         status: x,
@@ -8072,7 +8072,7 @@ async function na(e, t, r) {
     w = h.success ? h.data.error : void 0,
     _ = Qjt(e, l, w, LANE_FULL_REASON);
   if (l !== 404)
-    q(
+    writeDiagnosticsEvent(
       _?.kind === "unsupported" ? "info" : "warn",
       "dir_sync_direct_request_refused",
       {

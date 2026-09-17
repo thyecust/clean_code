@@ -17,13 +17,13 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qr } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { B8e } from "../../02-功能模块/权限系统/chunk-8rrcddth.js";
+import { FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION } from "../../02-功能模块/权限系统/fork-restricted-launch-flags.js";
 import { _X, tY, isTranscriptPersistenceDisabled } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { $i } from "../../02-功能模块/Teammates团队/chunk-t899nada.js";
@@ -33,20 +33,20 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js"
 import "../../02-功能模块/后台任务-Shell管理/chunk-gnmy62vg.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
 import "../../02-功能模块/语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-pbd0pf42.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import { F0t, uHe, Uae } from "./会话UI(REPL).qs63rzfp.js";
 import { git, mWe, fZt, ZIt } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { E, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
-import { Vr } from "../../01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function ee($e) {
   return $e.sessionEffort;
@@ -72,7 +72,7 @@ var Ne = async (r, n, g) => {
   if (Hr() || uo() || qP())
     return (
       r(
-        `Can't fork: this session was started with launch flags (safe or bare mode, ${B8e}) that the copy wouldn't inherit, so it would run with fewer restrictions than this session. Run the task here, or start a session without those flags and fork from there.`,
+        `Can't fork: this session was started with launch flags (safe or bare mode, ${FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION}) that the copy wouldn't inherit, so it would run with fewer restrictions than this session. Run the task here, or start a session without those flags and fork from there.`,
       ),
       null
     );
@@ -91,7 +91,7 @@ function W(Pe) {
     T = U(oe),
     S = U(se),
     L = U(re),
-    { storageV5: M } = _e(),
+    { storageV5: M } = useStorageV5Context(),
     q = C(!1),
     H,
     V;
@@ -125,7 +125,7 @@ function W(Pe) {
             return;
           }
           (logFeatureOk("repl_session_fork"),
-            i("tengu_session_fork", {
+            logEvent("tengu_session_fork", {
               had_prompt: c.length > 0,
               message_count: k.length,
               had_worktree: s.hadWorktree,
@@ -147,7 +147,7 @@ function W(Pe) {
             chips: z ? [z] : [],
           });
           let Q = isCrossSessionMessagingEnabled()
-            ? `The fork runs as its own separate session \u2014 nothing it does arrives in this conversation, and it does not see what happens here after the fork point. If you need to coordinate with it, it appears in the ${$i} listing as '${qr(To(s.rosterName))}' (it may be renamed later) and ${Vr} can message it there; it can message this session the same way.`
+            ? `The fork runs as its own separate session \u2014 nothing it does arrives in this conversation, and it does not see what happens here after the fork point. If you need to coordinate with it, it appears in the ${$i} listing as '${qr(To(s.rosterName))}' (it may be renamed later) and ${SEND_MESSAGE_TOOL_NAME} can message it there; it can message this session the same way.`
             : void 0;
           d(Xe, {
             display: "system",
@@ -178,7 +178,7 @@ function W(Pe) {
   else ((H = G[11]), (V = G[12]));
   E(H, V);
   let Z;
-  if (G[13] === p)
+  if (G[13] === MEMO_CACHE_SENTINEL)
     ((Z = e(t, { dimColor: !0, children: "Forking\u2026" })), (G[13] = Z));
   else Z = G[13];
   return Z;

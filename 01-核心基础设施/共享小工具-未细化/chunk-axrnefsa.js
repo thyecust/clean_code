@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { ws } from "./chunk-0a6nmdka.js";
+import { getInkInstanceRegistry } from "./ink-instance-registry.js";
 import { rO, U, Os } from "./chunk-r3y9qj3r.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { De, E, dn, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
 function b() {
-  return ws().get(process.stdout)?.invalidatePrevFrame();
+  return getInkInstanceRegistry().get(process.stdout)?.invalidatePrevFrame();
 }
 function L(z) {
   return z.activeOverlays.size > 0;

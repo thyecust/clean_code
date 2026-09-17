@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { l, W, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { We, z, Is, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be, T_e } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { uxe, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { kA, Yie } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Sl } from "../插件系统/chunk-7s6mt1vg.js";
@@ -40,7 +40,7 @@ import {
   Tmn,
   Emn,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { readJobStateFreshOrNull, readPinnedJobIds, isSettled } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { wvn, QN, H, getMemoryBaseDir, getAutoMemPath } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
@@ -99,7 +99,7 @@ async function K(e) {
   let r = process.getuid?.();
   return t.isDirectory() && (r === void 0 || t.uid === BigInt(r)) ? t : null;
 }
-var tr = m(() => c({ key: s(), integrity: s().nullable(), time: T() }));
+var tr = createLazyValue(() => c({ key: s(), integrity: s().nullable(), time: T() }));
 var q = 30,
   Ee = 0,
   Oe = [
@@ -173,7 +173,7 @@ var X = ".desktop-released.json",
 function te(e) {
   return e.slice(0, -6) + X;
 }
-var Fe = m(() => c({ reason: s().optional() }));
+var Fe = createLazyValue(() => c({ reason: s().optional() }));
 async function fe(e, t, r) {
   let a = await t.readFileFdGated(e, Ie);
   if (a === null) return "none";
@@ -1020,7 +1020,7 @@ function et() {
   return j("uploads");
 }
 async function tt(e) {
-  if (M() && e !== void 0) {
+  if (isHoverRestEnabled() && e !== void 0) {
     let a = await rt(e);
     if (a !== "unaddressed") return a;
   }
@@ -1594,7 +1594,7 @@ function Tt(e) {
 async function gan(e) {
   let t = await e.statMeta(Ce.state("last-cleanup"));
   if (t.ok || t.error.code === "NotFound" || !Ft(t.error)) return;
-  i("tengu_cleanup_throttle_marker", {
+  logEvent("tengu_cleanup_throttle_marker", {
     marker: S("last-cleanup"),
     verdict: S("not_regular_rerun"),
     code: fromEnum(t.error.code),
@@ -1735,7 +1735,7 @@ async function _an(e) {
   let t = await Ept(e),
     r = getSettings_DEPRECATED()?.cleanupPeriodDays;
   if (t !== null) {
-    (i("tengu_retention_sweep", { skipped: !0, skipReason: fromEnum(t) }),
+    (logEvent("tengu_retention_sweep", { skipped: !0, skipReason: fromEnum(t) }),
       wSn({
         result: "skipped",
         skipReason: t,
@@ -1744,7 +1744,7 @@ async function _an(e) {
       }));
     return;
   }
-  (i("tengu_retention_sweep", { phase: S("start") }), await je());
+  (logEvent("tengu_retention_sweep", { phase: S("start") }), await je());
   let a = await Be(),
     o = [a];
   (o.push(await qe(e)),
@@ -1790,7 +1790,7 @@ async function _an(e) {
   if (w !== null) {
     await RGn(w, e);
     let p = await Tmn(w);
-    if (p > 0) i("tengu_worktree_cleanup", { removed: p });
+    if (p > 0) logEvent("tengu_worktree_cleanup", { removed: p });
     if (
       (await Ke(be(), w),
       pm("hipaa") && H("tengu_hipaa_history_retention_prune", !0))
@@ -1798,7 +1798,7 @@ async function _an(e) {
       ((f = await Xe(w)), o.push({ ...E(), errors: f.errors }));
   }
   let y = o.reduce(F, E());
-  (i("tengu_retention_sweep", {
+  (logEvent("tengu_retention_sweep", {
     phase: S("complete"),
     skipped: !1,
     transcriptsDeleted: a.transcripts,

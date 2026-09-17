@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { x, cd, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { up } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { CS, zrt } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
@@ -57,9 +57,9 @@ import { Ul, Fre, jI, Y3, Lu, $y } from "./chunk-33bdfgmx.js";
 import { eer, YXe, JXe, CCe, yqt, Ywt } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { s, T, se, v, c, fe, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function de(e, t, a) {
   if (QPt(e)) return !1;
   if (e.source === t) return !0;
@@ -104,9 +104,9 @@ var he = 1,
   Z =
     "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/plugin-stats/plugin-details.json",
   et = 86400000,
-  Te = m(() => c({ always_on: T(), on_invoke: T() })),
-  ge = m(() => c({ name: s(), chars: Te().optional() }).loose()),
-  tt = m(() =>
+  Te = createLazyValue(() => c({ always_on: T(), on_invoke: T() })),
+  ge = createLazyValue(() => c({ name: s(), chars: Te().optional() }).loose()),
+  tt = createLazyValue(() =>
     c({
       plugin: s(),
       tokens: fe(s(), Te()),
@@ -123,7 +123,7 @@ var he = 1,
       marketplace_entry: fe(s(), se()),
     }).loose(),
   ),
-  Ae = m(() =>
+  Ae = createLazyValue(() =>
     c({
       generated_at: s(),
       installs_generated_at: s().optional(),
@@ -132,13 +132,13 @@ var he = 1,
       plugins: fe(s(), tt()),
     }).loose(),
   ),
-  nt = m(() => c({ version: T(), fetchedAt: s(), catalog: Ae() }));
+  nt = createLazyValue(() => c({ version: T(), fetchedAt: s(), catalog: Ae() }));
 function Ne() {
   return je(Sl(), Qe);
 }
 async function at(e) {
   let t = Ne(),
-    a = M() && e !== void 0 ? BG("catalog", Sl()) : null;
+    a = isHoverRestEnabled() && e !== void 0 ? BG("catalog", Sl()) : null;
   if (e && a) {
     let r = await e.read([a]);
     if (!r.ok)
@@ -177,7 +177,7 @@ async function st(e) {
 async function rt(e, t) {
   try {
     let a = Ne(),
-      r = M() && t !== void 0 ? BG("catalog", Sl()) : null;
+      r = isHoverRestEnabled() && t !== void 0 ? BG("catalog", Sl()) : null;
     if (t && r) {
       let o = await t.write(r, b(e));
       if (!o.ok) {
@@ -550,7 +550,7 @@ async function He(e, t) {
         if (typeof S === "string") await w(S, `workflows[${p}]`);
     }
   }
-  if (me(o)) {
+  if (isRecord(o)) {
     let u = o,
       k = i.rawCandidate ?? u;
     if (
@@ -572,7 +572,7 @@ async function He(e, t) {
           message: `'${C}' is an experimental component; declare it under 'experimental.${C}' instead of at the top level. Top-level still loads for now but will be removed in a future release.`,
         });
     if ("experimental" in u)
-      if (me(u.experimental)) {
+      if (isRecord(u.experimental)) {
         let C = u.experimental;
         H(C, Ve, "experimental", r);
       } else
@@ -580,13 +580,13 @@ async function He(e, t) {
           path: "experimental",
           message: `'experimental' must be an object containing component declarations; got ${X(u.experimental)}. It will be ignored at load time.`,
         });
-    if ("metadata" in k && !me(k.metadata))
+    if ("metadata" in k && !isRecord(k.metadata))
       r.push({
         path: "metadata",
         message: `'metadata' must be a free-form object; got ${X(k.metadata)}. It will be ignored at load time.`,
       });
     if ("binaries" in u)
-      if (me(u.binaries)) {
+      if (isRecord(u.binaries)) {
         let C = qBe(u.binaries) ?? {},
           w = 0;
         for (let [p, S] of Object.entries(u.binaries)) {
@@ -697,7 +697,7 @@ async function kt(e) {
     };
   }
   let f = [],
-    u = me(i) && me(i.metadata) ? i.metadata.pluginRoot : void 0,
+    u = isRecord(i) && isRecord(i.metadata) ? i.metadata.pluginRoot : void 0,
     k = THn(u);
   if (i && typeof i === "object") {
     let d = i;
@@ -794,7 +794,7 @@ async function kt(e) {
       })
       .optional(),
     w = jRt()
-      .extend({ relevance: ai((d) => (me(d) ? d : void 0), C) })
+      .extend({ relevance: ai((d) => (isRecord(d) ? d : void 0), C) })
       .refine(
         (d) =>
           typeof d.source === "string" || d.source.source !== "unsupported",
@@ -826,7 +826,7 @@ async function kt(e) {
         });
     }
   }
-  if (me(i)) {
+  if (isRecord(i)) {
     let d = i;
     if (
       (H(d, new Set(Object.keys(_ke().shape)), "", a),
@@ -844,7 +844,7 @@ async function kt(e) {
         });
     }
     let g = d.metadata;
-    if (me(g))
+    if (isRecord(g))
       H(
         g,
         new Set(Object.keys(_ke().shape.metadata.unwrap().shape)),
@@ -856,7 +856,7 @@ async function kt(e) {
         N = new Set(Object.keys(y8t().shape)),
         O = new Set(Object.keys(_8t().shape));
       d.plugins.forEach((F, L) => {
-        if (!me(F)) return;
+        if (!isRecord(F)) return;
         let _ = F;
         if (
           (H(_, P, `plugins[${L}]`, a),
@@ -867,24 +867,24 @@ async function kt(e) {
             message: `Plugin name "${_.name}" is not accepted by Claude Desktop (letters, digits, ".", "_", "-"; must start alphanumeric; max 128 chars). Claude Code accepts it, but the Claude Desktop managed marketplace sync (allowedPluginMarketplaces) will drop this entry.`,
           });
         let D = _.experimental;
-        if (me(D)) H(D, Ve, `plugins[${L}].experimental`, a);
+        if (isRecord(D)) H(D, Ve, `plugins[${L}].experimental`, a);
         else if (D !== void 0)
           a.push({
             path: `plugins[${L}].experimental`,
             message: `'experimental' must be an object containing component declarations; got ${X(D)}. It will be ignored at load time.`,
           });
         let V = _.relevance;
-        if (me(V)) {
+        if (isRecord(V)) {
           H(V, N, `plugins[${L}].relevance`, a);
           let J = V.signals;
-          if (me(J)) H(J, O, `plugins[${L}].relevance.signals`, a);
+          if (isRecord(J)) H(J, O, `plugins[${L}].relevance.signals`, a);
         } else if (V !== void 0)
           a.push({
             path: `plugins[${L}].relevance`,
             message: `'relevance' must be an object containing topic and signals; got ${X(V)}. It will be ignored at load time.`,
           });
         let K = _.metadata;
-        if (K !== void 0 && !me(K))
+        if (K !== void 0 && !isRecord(K))
           a.push({
             path: `plugins[${L}].metadata`,
             message: `'metadata' must be a free-form object; got ${X(K)}. It will be ignored at load time.`,
@@ -1076,7 +1076,7 @@ function wt(e, t, a, r) {
     );
   }
   let C = k.value;
-  if (C !== null && !me(C))
+  if (C !== null && !isRecord(C))
     return (
       o.push({
         path: "frontmatter",
@@ -1123,7 +1123,7 @@ function wt(e, t, a, r) {
   if (a === "skill" || a === "command") {
     let p = !1;
     ((R) => {
-      if (R == null || me(R)) return;
+      if (R == null || isRecord(R)) return;
       ((p = !0),
         i.push({
           path: "metadata",
@@ -1382,7 +1382,7 @@ async function Pe(e, t) {
       return { files: [], skippedSymlinks: 0 };
     throw i;
   }
-  let r = G(a, (i) => i.isSymbolicLink());
+  let r = countMatching(a, (i) => i.isSymbolicLink());
   if (t)
     return {
       files: a
@@ -1692,7 +1692,7 @@ async function oe(e) {
   });
 }
 function te(e) {
-  return me(e) ? e : void 0;
+  return isRecord(e) ? e : void 0;
 }
 function ie(e) {
   try {
@@ -1786,7 +1786,7 @@ async function Rt(e) {
   }
   return (C(t, R), k);
 }
-var Ye = pe(pg(), 1);
+var Ye = toESM(pg(), 1);
 import { readFile as Ge, stat as jt } from "fs/promises";
 import {
   dirname,

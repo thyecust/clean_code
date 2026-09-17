@@ -10,9 +10,9 @@
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Ve, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { Z, Xrt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep, fullJitterBackoffMs } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { j, MA, d8, mp } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { iu } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -85,7 +85,7 @@ import {
   evaluateHookIfCondition,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { findGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
@@ -99,15 +99,15 @@ import { primeUnattendedServingConsent } from "../AutoMode-自动模式/chunk-15
 import { p2n, m2n } from "../远程工具执行/chunk-66axrkvh.js";
 import { xC, moe } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { kS } from "../Bridge-RemoteControl/chunk-x379yyxb.js";
-import { qz } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
+import { NOT_HELD_STATE } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
 import { f$n, cye } from "./chunk-y7gz94r8.js";
-import { kv } from "../../01-核心基础设施/共享小工具-未细化/chunk-mnzfncps.js";
-import { Ay } from "../../01-核心基础设施/共享小工具-未细化/chunk-txc6d085.js";
-import { V4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-nbvmqw0g.js";
-import { Kr } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
+import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
+import { logRemoteToolsEvent } from "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
+import { truncateWithEllipsis } from "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
+import { defineDialog } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { s, T, v, c, it, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function Ke() {
   let e = new Map();
   return {
@@ -303,7 +303,7 @@ function Re(e) {
       }
       if (A !== null) (k.add(A), k.add(await M(A)));
       let F = A === null ? void 0 : { rootReal: await M(A), root: A },
-        w = Y([
+        w = dedupe([
           e.projectDir,
           O,
           ...(e.repoRoot !== null ? [e.repoRoot, await M(e.repoRoot)] : []),
@@ -341,7 +341,7 @@ function Re(e) {
         projectDir: e.projectDir,
         projectDirReal: O,
         ...(F !== void 0 && { sync: F }),
-        extraReach: D ? ["/"] : Y([...w, ...R]),
+        extraReach: D ? ["/"] : dedupe([...w, ...R]),
       };
     },
   };
@@ -364,7 +364,7 @@ function en(e) {
           ),
           [S4e]
         );
-      return Y([...$X(o, e, r.settings), ...d]);
+      return dedupe([...$X(o, e, r.settings), ...d]);
     },
     scopeSettingsFile: (o) => getSettingsFilePathForSource(o) ?? null,
     addedDirectories: () => mp(),
@@ -383,7 +383,7 @@ function nn() {
 }
 var Cst = new j(nn);
 import { randomUUID } from "crypto";
-var tn = m(() =>
+var tn = createLazyValue(() =>
     it({
       status: X(["announced", "withdrawn"]),
       passthrough_declined: X(["policy", "pending"])
@@ -442,7 +442,7 @@ async function Ce(e, o, d = {}) {
           if (R === "unverified") t.abort();
         },
       }).response,
-      k = kv("remote_tools_announce", tn(), r);
+      k = parseThinClientReply("remote_tools_announce", tn(), r);
     if (k === null) return { kind: "failed", reason: "unreadable_ack" };
     return {
       kind: "announced",
@@ -497,7 +497,7 @@ function Ie(e) {
       e.backoffMs !== void 0
         ? e.backoffMs[N]
         : N < dn
-          ? Xrt({ baseMs: De, attempt: N, floorMs: (De * 2 ** N) / 2 })
+          ? fullJitterBackoffMs({ baseMs: De, attempt: N, floorMs: (De * 2 ** N) / 2 })
           : void 0,
     d =
       e.setTimer ??
@@ -790,7 +790,7 @@ function Rst(e) {
           if (x.workerEpoch !== void 0 && (_ === void 0 || x.workerEpoch >= _))
             _ = x.workerEpoch;
           else if (x.workerEpoch !== _)
-            Ay(void 0, "epoch ratchet ignored", {
+            logRemoteToolsEvent(void 0, "epoch ratchet ignored", {
               heard: x.workerEpoch,
               kept: _,
             });
@@ -932,7 +932,7 @@ function Rst(e) {
       },
       requestAnnounce: L,
       heldServedCall: (x) =>
-        t || d === null ? qz : (d.heldServedCall?.(x) ?? qz),
+        t || d === null ? NOT_HELD_STATE : (d.heldServedCall?.(x) ?? NOT_HELD_STATE),
       servedHost: () => (t ? void 0 : d?.servedTools?.()?.host),
       close: z,
     };
@@ -1010,7 +1010,7 @@ ${O}
 `,
       ),
     ),
-    D = Y(o)
+    D = dedupe(o)
       .flatMap((M) => yn(M, d))
       .find((M) =>
         new RegExp(
@@ -1465,7 +1465,7 @@ async function nIt(e, o, d) {
       launchDirReal: await ae(d, o.launchDir),
       projectDirReal: await ae(d, o.projectDir),
       configHomeReal: await ae(d, o.configHome),
-      extraReach: Y(
+      extraReach: dedupe(
         (
           await Promise.all(
             [
@@ -1925,7 +1925,7 @@ function Be({
         if (S === "ok") logFeatureOk("device_hooks_serve");
         else if (S === "sad") logFeatureSad("device_hooks_serve", p.outcome);
         else if (S === "bad") logFeatureBad("device_hooks_serve", p.outcome);
-        i("tengu_device_hook_served", {
+        logEvent("tengu_device_hook_served", {
           event: fromEnumOpt(p.event),
           kind: fromEnumOpt(p.kind),
           outcome: fromEnum(p.outcome),
@@ -2065,7 +2065,7 @@ function ze({
       deps: RY(C),
       pin: o.consentPin,
       onNotAsked: (w) => {
-        (i("tengu_device_hooks_consent_notice", {}),
+        (logEvent("tengu_device_hooks_consent_notice", {}),
           _({ line: Wn(w), level: "info" }));
       },
       isStoreInReach: (w) => WMe(vY(), w, te),
@@ -2085,7 +2085,7 @@ function ze({
     telemetry: (w) => {
       if (w.trigger === "renewal" && w.outcome === "registered") return;
       switch (
-        (i("tengu_device_hooks_client_register", {
+        (logEvent("tengu_device_hooks_client_register", {
           outcome: fromEnum(w.outcome),
           trigger: fromEnum(w.trigger),
           forwarded: w.forwarded,
@@ -2117,11 +2117,11 @@ function ze({
           logFeatureBad("device_hooks_client_register", w.outcome);
       }
     },
-    lapseTelemetry: (w) => i("tengu_device_hooks_lapse_line", { kind: fromEnum(w) }),
+    lapseTelemetry: (w) => logEvent("tengu_device_hooks_lapse_line", { kind: fromEnum(w) }),
     reachPinnedTelemetry: (w) =>
-      i("tengu_device_hooks_reach_pinned", { source: fromEnum(w) }),
+      logEvent("tengu_device_hooks_reach_pinned", { source: fromEnum(w) }),
     sourcePinnedTelemetry: (w) =>
-      i("tengu_device_hooks_source_pinned", {
+      logEvent("tengu_device_hooks_source_pinned", {
         source: fromEnum(w.source),
         changed: w.changed,
         appeared: w.appeared,
@@ -2185,8 +2185,8 @@ function Ast(e) {
       (r ??= (async () => {
         let R = (O) => o.realpath(O).catch(() => O),
           _ = await R(d),
-          C = Y([d, _].map((O) => o.repoRootOf(O)).filter((O) => O !== null)),
-          D = Y((await Promise.all(C.map(R))).concat(C)),
+          C = dedupe([d, _].map((O) => o.repoRootOf(O)).filter((O) => O !== null)),
+          D = dedupe((await Promise.all(C.map(R))).concat(C)),
           [M = null] = C;
         return {
           tracker: Re({
@@ -2198,7 +2198,7 @@ function Ast(e) {
             memory: t,
             ...(o.tracker !== void 0 && { deps: o.tracker }),
           }),
-          launchRoots: Y([d, _, ...D]),
+          launchRoots: dedupe([d, _, ...D]),
           repoRoots: D,
         };
       })());
@@ -2322,9 +2322,9 @@ function vst(e) {
     },
   };
 }
-var Wz = Kr({
+var Wz = defineDialog({
   kind: "cloud_sync_offline",
-  payload: m(() =>
+  payload: createLazyValue(() =>
     c({
       folder: s(),
       title: s(),
@@ -2333,12 +2333,12 @@ var Wz = Kr({
       lastError: s().optional(),
     }),
   ),
-  result: m(() => X(["continue", "unanswered"])),
+  result: createLazyValue(() => X(["continue", "unanswered"])),
   default: "unanswered",
   hideWhile: [],
 });
 function kst({ folder: e, attempts: o, lastError: d }) {
-  let t = d === void 0 ? void 0 : V4(d.replace(/\s+/g, " ").trim());
+  let t = d === void 0 ? void 0 : truncateWithEllipsis(d.replace(/\s+/g, " ").trim());
   return {
     folder: e,
     title: pT["sync_offline.title"],
@@ -2375,7 +2375,7 @@ function xst({
   onGaveUp: C,
 }) {
   let D = (A) => {
-      i("tengu_remote_create_permission_mode_push", {
+      logEvent("tengu_remote_create_permission_mode_push", {
         surface: fromEnum(d),
         mode: fromEnum(o),
         kind: fromEnum(A.kind),
@@ -2418,7 +2418,7 @@ function xst({
         );
       let W = Kn[E - 1];
       if (W !== void 0 && Zn(L) && Date.now() - w < Jn) {
-        if ((await Z(W), !M())) return H(A, F, w, E + 1);
+        if ((await sleep(W), !M())) return H(A, F, w, E + 1);
         return (
           D({ kind: F, postedMode: A, outcome: "superseded" }),
           { result: L, response: null }

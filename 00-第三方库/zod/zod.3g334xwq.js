@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Ie, po } from "../lodash/lodash.207999qb.js";
 import { tl } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 var y;
 (function (e) {
   e.assertEqual = (s) => {};
@@ -3120,9 +3120,9 @@ function it(e) {
 function G(e) {
   return e === void 0 ? void 0 : String(e);
 }
-var ot = m(() => H(G, le().optional().transform(it))),
-  ct = m(() => H(G, le().optional())),
-  ut = m(() =>
+var ot = createLazyValue(() => H(G, le().optional().transform(it))),
+  ct = createLazyValue(() => H(G, le().optional())),
+  ut = createLazyValue(() =>
     H(
       G,
       le()
@@ -3130,7 +3130,7 @@ var ot = m(() => H(G, le().optional().transform(it))),
         .transform((e) => Ie(e)),
     ),
   ),
-  dt = m(() =>
+  dt = createLazyValue(() =>
     H(
       G,
       le()
@@ -3142,7 +3142,7 @@ var ot = m(() => H(G, le().optional().transform(it))),
         }),
     ),
   ),
-  lt = m(() => Ne());
+  lt = createLazyValue(() => Ne());
 function hur(e) {
   if (typeof e === "boolean") return e ? "1" : "0";
   return String(e);

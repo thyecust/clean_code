@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 198 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K, he, X1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { ge, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { iu, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -35,7 +35,7 @@ import {
 import { ll, yl } from "../Teammates团队/chunk-thxapyam.js";
 import { hu } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
 import { Ohe } from "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { randomUUID } from "crypto";
 import { once as N } from "events";
 import { createReadStream, createWriteStream } from "fs";
@@ -118,7 +118,7 @@ async function createFork(t, u, d, n) {
       } catch {
         continue;
       }
-      if (!me(f)) continue;
+      if (!isRecord(f)) continue;
       let c = f;
       if (
         c.type === "content-replacement" &&
@@ -291,7 +291,7 @@ async function Q(t) {
       } catch {
         continue;
       }
-      if (!me(P)) continue;
+      if (!isRecord(P)) continue;
       let e = P;
       if (
         e.type === "content-replacement" &&
@@ -435,7 +435,7 @@ async function branchAndResume(t, u, d = {}) {
       U = E ? "user" : "auto";
     (await saveCustomTitle(s, S, l, U, t.storageV5),
       await saveAgentName(s, S, l, U, t.storageV5),
-      i("tengu_conversation_forked", {
+      logEvent("tengu_conversation_forked", {
         message_count: C.length,
         has_custom_title: !!E,
       }));

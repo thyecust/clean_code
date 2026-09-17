@@ -10,12 +10,12 @@
 
 // [preload stripped] 原本在此预载 27 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { lo } from "./chunk-dajvcsw3.js";
+import { mayHaveRemoteClient } from "./chunk-dajvcsw3.js";
 import { performHeapDump } from "../../02-功能模块/诊断-HeapDump/诊断-HeapDump.a3sn2876.js";
 import { basename } from "path";
 async function x(s, e) {
   let t = await performHeapDump(),
-    o = lo(e.session);
+    o = mayHaveRemoteClient(e.session);
   if (!t.success) {
     if (o)
       return (

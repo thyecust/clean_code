@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Ve, dt, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { pp, BP, jP, Pd, Px, Khe, nZ, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   C2,
@@ -26,7 +26,7 @@ import {
   dXn,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { dJ, Ij, aoe } from "../Teammates团队/chunk-g6nvp9mm.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { oKt, CCt, _Ue, prepareApiRequest, getSessionRequestHeaders, sendEventToRemoteSession, sendBashCommandToRemoteSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -37,13 +37,13 @@ import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-
 import { getTrustedDeviceToken, recoverFromUntrustedDevice } from "./chunk-tyce0p0b.js";
 import { classifyElevatedAuthError } from "./chunk-mxsfy35q.js";
 import { GDt } from "../远程工具执行/chunk-66axrkvh.js";
-import { XGe } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb9matb3.js";
-import { bF } from "../../01-核心基础设施/共享小工具-未细化/chunk-vthq2yn2.js";
+import { SSEParser } from "../../01-核心基础设施/共享小工具-未细化/sse-parser.js";
+import { drainResponseBody } from "../../01-核心基础设施/共享小工具-未细化/drain-response-body.js";
 import { s, T, O, se, v, c, it, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID as me } from "crypto";
-var x = m(() => {
+var x = createLazyValue(() => {
   let e = fe(s(), se()),
     t = it({ type: k("text"), text: s() }),
     o = new Map(),
@@ -614,7 +614,7 @@ function ht(e, t) {
   if (t > a) return ((e.serviceMs = t), (e.wallMs = o), (e.monotonicMs = r), t);
   return a;
 }
-var gt = m(() => c({ error: c({ type: k("session_not_active") }) }));
+var gt = createLazyValue(() => c({ error: c({ type: k("session_not_active") }) }));
 function ae(e) {
   return (
     typeof e === "object" &&
@@ -703,7 +703,7 @@ class de {
   }
   async flushSends(e) {
     if (this.sendsInFlight === null || this.sendsInFlight.size === 0) return;
-    await kt(Promise.allSettled([...this.sendsInFlight]), e);
+    await withDeadline(Promise.allSettled([...this.sendsInFlight]), e);
   }
   async connect() {
     if (this.state === "connecting" || this.state === "connected") {
@@ -820,7 +820,7 @@ class de {
       d = !1;
     if (a.status === 403 && isViolinWoodEnabledCached()) p = await Ee(a);
     else if (a.status === 409) d = await vt(a);
-    else await bF(a);
+    else await drainResponseBody(a);
     return {
       ok: !1,
       status: a.status,
@@ -864,7 +864,7 @@ class de {
       });
       let _;
       if (r.status === 403) _ = await Ee(r);
-      else await bF(r);
+      else await drainResponseBody(r);
       if ((clearTimeout(p), this.abortController !== o)) return;
       if (r.status === 401 && this.onAuth401) {
         (n("[SessionsV2Client] 401 on SSE connect \u2014 refreshing"),
@@ -929,7 +929,7 @@ class de {
       logFeatureOk("remote_connect"),
       this.callbacks.onConnected?.());
     let S = r.body.getReader(),
-      R = new XGe();
+      R = new SSEParser();
     try {
       while (!0) {
         let { done: _, value: M } = await S.read();
@@ -1431,7 +1431,7 @@ function St(e) {
 var yt = 1000,
   $e = 200,
   wt = {
-    can_use_tool: m(() =>
+    can_use_tool: createLazyValue(() =>
       c({
         request_id: s(),
         request: it({
@@ -1442,7 +1442,7 @@ var yt = 1000,
         }),
       }),
     ),
-    request_user_dialog: m(() =>
+    request_user_dialog: createLazyValue(() =>
       c({
         request_id: s(),
         request: it({
@@ -2145,7 +2145,7 @@ class D6e {
         )
           return I;
         if (
-          (await Z(o * r, this.lifetime.signal),
+          (await sleep(o * r, this.lifetime.signal),
           this.exitFlushRequested && !this.firstSendReleased)
         )
           return ((r += 1), sendEventToRemoteSession(this.config.sessionId, C, this.signedOpts(U)));
@@ -2169,7 +2169,7 @@ class D6e {
     this.withheldPromptInFlight = null;
     let R = this.lifetime.signal.aborted && !S.ok;
     if (
-      (i("tengu_home_seed_prompt_resequenced", {
+      (logEvent("tengu_home_seed_prompt_resequenced", {
         success: S.ok,
         withheld_for: fromEnum(
           this.config.homeSeed !== void 0
@@ -2339,7 +2339,7 @@ class D6e {
     a.forEach((d) => d.release(t, o));
     let p = a.map(() => ({ kind: "waiting" }));
     return (
-      await kt(
+      await withDeadline(
         Promise.allSettled([
           ...a.map((d, S) =>
             d.posted.then(
@@ -2361,10 +2361,10 @@ class D6e {
         else if (o) (d.withdraw(), (p[S] = { kind: "unsent" }));
       }),
       {
-        unsent: G(p, (d) => d.kind === "unsent"),
+        unsent: countMatching(p, (d) => d.kind === "unsent"),
         refused: p.flatMap((d) => (d.kind === "refused" ? [d.reason] : [])),
-        unconfirmed: G(p, (d) => d.kind === "unconfirmed"),
-        stillHeld: G(p, (d) => d.kind === "waiting"),
+        unconfirmed: countMatching(p, (d) => d.kind === "unconfirmed"),
+        stillHeld: countMatching(p, (d) => d.kind === "waiting"),
       }
     );
   }

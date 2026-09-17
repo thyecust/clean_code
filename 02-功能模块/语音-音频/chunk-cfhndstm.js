@@ -24,7 +24,7 @@ import {
   gHt,
   HL,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -38,7 +38,7 @@ var w = import.meta.require("../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y
   O = 1200,
   D = 1;
 function L(e, o) {
-  (i("tengu_loop_ended", { reason: fromEnum(e), ...o }), gHt(!0), Eje());
+  (logEvent("tengu_loop_ended", { reason: fromEnum(e), ...o }), gHt(!0), Eje());
 }
 function V_n() {
   let e = kg().find((o) => o.kind === "loop");
@@ -111,7 +111,7 @@ function E(e, o, t) {
         lastScheduledFor: r - (b - _) * 1000,
         agedOut: !0,
       }),
-        i("tengu_loop_dynamic_wakeup_aged_out", {
+        logEvent("tengu_loop_dynamic_wakeup_aged_out", {
           loop_age_ms: r - p,
           max_age_ms: f,
         }),
@@ -146,7 +146,7 @@ function E(e, o, t) {
     return (
       Drt(pYt() + 1),
       n(`[loop] keepalive armed (model did not reschedule): ${c}s fallback`),
-      i("tengu_loop_keepalive_fired", {
+      logEvent("tengu_loop_keepalive_fired", {
         clamped_delay_seconds: c,
         prompt_is_sentinel: w.isLoopDefaultSentinel(o),
       }),
@@ -157,7 +157,7 @@ function E(e, o, t) {
     n(
       `[loop] dynamic wakeup scheduled: ${c}s${h ? ` (clamped from ${e}s)` : ""}${s !== void 0 ? ` \u2014 ${s}` : ""}`,
     ),
-    i("tengu_loop_dynamic_wakeup_scheduled", {
+    logEvent("tengu_loop_dynamic_wakeup_scheduled", {
       chosen_delay_seconds: Number.isFinite(e) ? e : 0,
       clamped_delay_seconds: c,
       was_clamped: h,

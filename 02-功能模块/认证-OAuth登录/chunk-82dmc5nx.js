@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { Ls } from "./认证-OAuth登录.419zdfz3.js";
-import { Gtt } from "../../01-核心基础设施/共享小工具-未细化/chunk-9kpsezn2.js";
-import { w, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var d = w(function (n) {
+import { execAsyncModule } from "../../01-核心基础设施/共享小工具-未细化/exec-async-module.js";
+import { commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var d = commonJS(function (n) {
   Object.defineProperty(n, "__esModule", { value: !0 });
   n.getMachineId = void 0;
-  var i = Ae("process"),
-    s = Gtt(),
+  var i = importMetaRequire("process"),
+    s = execAsyncModule(),
     a = Ls();
   async function o() {
     let e = "%windir%\\System32\\REG.exe";

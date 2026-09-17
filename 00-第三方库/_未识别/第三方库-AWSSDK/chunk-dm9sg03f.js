@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { UQ } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { Ib } from "../../../01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js";
-import { w } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var x = w(function (re) {
+import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
+import { commonJS } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var x = commonJS(function (re) {
   var ne = (e, n, t) => {
       if (!(n in e)) return;
       if (e[n] === "true") return !0;
@@ -35,7 +35,7 @@ var x = w(function (re) {
   re.booleanSelector = ne;
   re.numberSelector = te;
 });
-var gL = w(function ($e) {
+var gL = commonJS(function ($e) {
   var O = UQ();
   class U {
     capacity;
@@ -389,9 +389,9 @@ var gL = w(function ($e) {
   $e.isValidHostLabel = m;
   $e.resolveEndpoint = we;
 });
-var cy = w(function (Be) {
+var cy = commonJS(function (Be) {
   var f = x(),
-    _ = Ib(),
+    _ = smithyContextModule(),
     De = gL(),
     W = "AWS_USE_DUALSTACK_ENDPOINT",
     K = "use_dualstack_endpoint",

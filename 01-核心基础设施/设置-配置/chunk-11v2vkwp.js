@@ -7,23 +7,23 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../共享小工具-未细化/storage-v5-context.js";
 import { o, t, ct } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ZB, NDt, pIe, l7, FDt } from "../../02-功能模块/Grove-隐私设置/chunk-a4mdm49v.js";
 import { ve } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { D } from "../../02-功能模块/键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../共享小工具-未细化/chunk-ff1hq6qq.js";
+import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { mr } from "../共享小工具-未细化/chunk-e6f86vzh.js";
+import { FocusableBox } from "../共享小工具-未细化/focusable-box.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Qe() {
-  i("tengu_grove_privacy_settings_viewed", {});
+  logEvent("tengu_grove_privacy_settings_viewed", {});
 }
 var ce = ` _____________
  |          \\  \\
@@ -39,7 +39,7 @@ var ce = ` _____________
 function Q() {
   let y = _(9),
     le;
-  if (y[0] === p)
+  if (y[0] === MEMO_CACHE_SENTINEL)
     ((le = r(t, {
       children: [
         "An update to our Consumer Terms and Privacy Policy will take effect on",
@@ -51,17 +51,17 @@ function Q() {
       (y[0] = le));
   else le = y[0];
   let pe;
-  if (y[1] === p) ((pe = e(t, { children: "What's changing?" })), (y[1] = pe));
+  if (y[1] === MEMO_CACHE_SENTINEL) ((pe = e(t, { children: "What's changing?" })), (y[1] = pe));
   else pe = y[1];
   let me, fe;
-  if (y[2] === p)
+  if (y[2] === MEMO_CACHE_SENTINEL)
     ((me = e(t, { children: "\xB7 " })),
       (fe = e(t, { bold: !0, children: "Help improve our AI models " })),
       (y[2] = me),
       (y[3] = fe));
   else ((me = y[2]), (fe = y[3]));
   let ge;
-  if (y[4] === p)
+  if (y[4] === MEMO_CACHE_SENTINEL)
     ((ge = e(o, {
       paddingLeft: 1,
       children: r(t, {
@@ -83,7 +83,7 @@ function Q() {
       (y[4] = ge));
   else ge = y[4];
   let ye;
-  if (y[5] === p)
+  if (y[5] === MEMO_CACHE_SENTINEL)
     ((ye = r(o, {
       flexDirection: "column",
       children: [
@@ -107,18 +107,18 @@ function Q() {
       (y[5] = ye));
   else ye = y[5];
   let he;
-  if (y[6] === p)
+  if (y[6] === MEMO_CACHE_SENTINEL)
     ((he = e(ct, {
       url: "https://www.anthropic.com/news/updates-to-our-consumer-terms",
     })),
       (y[6] = he));
   else he = y[6];
   let we;
-  if (y[7] === p)
+  if (y[7] === MEMO_CACHE_SENTINEL)
     ((we = e(ct, { url: "https://anthropic.com/legal/terms" })), (y[7] = we));
   else we = y[7];
   let be;
-  if (y[8] === p)
+  if (y[8] === MEMO_CACHE_SENTINEL)
     ((be = r(N, {
       children: [
         le,
@@ -143,17 +143,17 @@ function Q() {
 function X() {
   let A = _(7),
     De;
-  if (A[0] === p)
+  if (A[0] === MEMO_CACHE_SENTINEL)
     ((De = e(t, {
       children: "We've updated our Consumer Terms and Privacy Policy.",
     })),
       (A[0] = De));
   else De = A[0];
   let Ae;
-  if (A[1] === p) ((Ae = e(t, { children: "What's changing?" })), (A[1] = Ae));
+  if (A[1] === MEMO_CACHE_SENTINEL) ((Ae = e(t, { children: "What's changing?" })), (A[1] = Ae));
   else Ae = A[1];
   let ke;
-  if (A[2] === p)
+  if (A[2] === MEMO_CACHE_SENTINEL)
     ((ke = r(o, {
       flexDirection: "column",
       children: [
@@ -168,7 +168,7 @@ function X() {
       (A[2] = ke));
   else ke = A[2];
   let xe;
-  if (A[3] === p)
+  if (A[3] === MEMO_CACHE_SENTINEL)
     ((xe = r(o, {
       flexDirection: "column",
       gap: 1,
@@ -190,18 +190,18 @@ function X() {
       (A[3] = xe));
   else xe = A[3];
   let Ce;
-  if (A[4] === p)
+  if (A[4] === MEMO_CACHE_SENTINEL)
     ((Ce = e(ct, {
       url: "https://www.anthropic.com/news/updates-to-our-consumer-terms",
     })),
       (A[4] = Ce));
   else Ce = A[4];
   let Pe;
-  if (A[5] === p)
+  if (A[5] === MEMO_CACHE_SENTINEL)
     ((Pe = e(ct, { url: "https://anthropic.com/legal/terms" })), (A[5] = Pe));
   else Pe = A[5];
   let Re;
-  if (A[6] === p)
+  if (A[6] === MEMO_CACHE_SENTINEL)
     ((Re = r(N, {
       children: [
         De,
@@ -228,7 +228,7 @@ function OIt(so) {
     { showIfAlreadyViewed: H, location: S, onDone: k } = so,
     [Te, lo] = d(null),
     [a, po] = d(null),
-    { credentials: m } = _e(),
+    { credentials: m } = useStorageV5Context(),
     Ie,
     Ne;
   if (n[0] !== m || n[1] !== S || n[2] !== k || n[3] !== H)
@@ -243,7 +243,7 @@ function OIt(so) {
           return;
         }
         (NDt(m),
-          i("tengu_grove_policy_viewed", {
+          logEvent("tengu_grove_policy_viewed", {
             location: fromEnum(S),
             dismissable: Fe?.notice_is_grace_period,
           }));
@@ -270,7 +270,7 @@ function OIt(so) {
       bb25: switch (Le) {
         case "accept_opt_in": {
           (await pIe(!0, m),
-            i("tengu_grove_policy_submitted", {
+            logEvent("tengu_grove_policy_submitted", {
               state: !0,
               dismissable: a?.notice_is_grace_period,
             }));
@@ -278,18 +278,18 @@ function OIt(so) {
         }
         case "accept_opt_out": {
           (await pIe(!1, m),
-            i("tengu_grove_policy_submitted", {
+            logEvent("tengu_grove_policy_submitted", {
               state: !1,
               dismissable: a?.notice_is_grace_period,
             }));
           break bb25;
         }
         case "defer": {
-          i("tengu_grove_policy_dismissed", { state: !0 });
+          logEvent("tengu_grove_policy_dismissed", { state: !0 });
           break bb25;
         }
         case "escape": {
-          i("tengu_grove_policy_escaped", {});
+          logEvent("tengu_grove_policy_escaped", {});
         }
       }
       k(Le);
@@ -339,11 +339,11 @@ function OIt(so) {
   else We = n[14];
   let h = We,
     He;
-  if (n[15] === p)
-    ((He = r(ue, {
+  if (n[15] === MEMO_CACHE_SENTINEL)
+    ((He = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "confirm" }),
-        e(D, { chord: "escape", action: "cancel" }),
+        e(KeybindingHint, { chord: "enter", action: "confirm" }),
+        e(KeybindingHint, { chord: "escape", action: "cancel" }),
       ],
     })),
       (n[15] = He));
@@ -360,7 +360,7 @@ function OIt(so) {
       (n[17] = Y));
   else Y = n[17];
   let Se;
-  if (n[18] === p)
+  if (n[18] === MEMO_CACHE_SENTINEL)
     ((Se = e(o, {
       flexShrink: 0,
       children: e(t, { color: "professionalBlue", children: ce }),
@@ -374,7 +374,7 @@ function OIt(so) {
       (n[20] = U));
   else U = n[20];
   let Ye;
-  if (n[21] === p)
+  if (n[21] === MEMO_CACHE_SENTINEL)
     ((Ye = r(o, {
       flexDirection: "column",
       children: [
@@ -436,9 +436,9 @@ function DIt(_o) {
   let l = _(21),
     { settings: fo, domainExcluded: x, onDone: ae } = _o,
     [z, go] = d(fo.grove_enabled),
-    { credentials: ne } = _e(),
+    { credentials: ne } = useStorageV5Context(),
     Me;
-  if (l[0] === p) ((Me = []), (l[0] = Me));
+  if (l[0] === MEMO_CACHE_SENTINEL) ((Me = []), (l[0] = Me));
   else Me = l[0];
   E(Qe, Me);
   let Ve;
@@ -460,13 +460,13 @@ function DIt(_o) {
   else Ve = l[4];
   let O = Ve,
     qe;
-  if (l[5] === p)
+  if (l[5] === MEMO_CACHE_SENTINEL)
     ((qe = e(t, { color: "error", children: "false" })), (l[5] = qe));
   else qe = l[5];
   let G = qe;
   if (x) {
     let f;
-    if (l[6] === p)
+    if (l[6] === MEMO_CACHE_SENTINEL)
       ((f = e(t, {
         color: "error",
         children: "false (for emails with your domain)",
@@ -476,7 +476,7 @@ function DIt(_o) {
     G = f;
   } else if (z) {
     let f;
-    if (l[7] === p)
+    if (l[7] === MEMO_CACHE_SENTINEL)
       ((f = e(t, { color: "success", children: "true" })), (l[7] = f));
     else f = l[7];
     G = f;
@@ -484,18 +484,18 @@ function DIt(_o) {
   let f;
   if (l[8] !== x)
     ((f = x
-      ? e(D, { chord: "escape", action: "cancel" })
-      : r(ue, {
+      ? e(KeybindingHint, { chord: "escape", action: "cancel" })
+      : r(DotSeparatedList, {
           children: [
-            e(D, { chord: ["enter", "tab", "space"], action: "toggle" }),
-            e(D, { chord: "escape", action: "cancel" }),
+            e(KeybindingHint, { chord: ["enter", "tab", "space"], action: "toggle" }),
+            e(KeybindingHint, { chord: "escape", action: "cancel" }),
           ],
         })),
       (l[8] = x),
       (l[9] = f));
   else f = l[9];
   let ze;
-  if (l[10] === p)
+  if (l[10] === MEMO_CACHE_SENTINEL)
     ((ze = r(t, {
       children: [
         "Review and manage your privacy settings at",
@@ -506,7 +506,7 @@ function DIt(_o) {
       (l[10] = ze));
   else ze = l[10];
   let Je;
-  if (l[11] === p)
+  if (l[11] === MEMO_CACHE_SENTINEL)
     ((Je = e(o, {
       width: 44,
       children: e(t, { bold: !0, children: "Help improve our AI models" }),
@@ -521,7 +521,7 @@ function DIt(_o) {
   else J = l[13];
   let K;
   if (l[14] !== O || l[15] !== J)
-    ((K = r(mr, { gap: 1, onKeyDown: O, children: [ze, J] })),
+    ((K = r(FocusableBox, { gap: 1, onKeyDown: O, children: [ze, J] })),
       (l[14] = O),
       (l[15] = J),
       (l[16] = K));

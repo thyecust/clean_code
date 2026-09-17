@@ -12,14 +12,14 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { formatOverflowHint } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { dc } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdk55p8n.js";
-import { D } from "../../02-功能模块/键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { UB } from "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
+import { useKeybindingChordText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-chord-text.js";
+import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
+import { VirtualScrollViewportContext } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { IEe, Lr } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, De, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
 var u = Qt(!1);
@@ -35,19 +35,19 @@ function ZHe(no) {
 function Ac() {
   let V = _(3),
     ao = De(u),
-    so = De(UB),
-    S = dc("app:toggleTranscript", "Global", "ctrl+o");
+    so = De(VirtualScrollViewportContext),
+    S = useKeybindingChordText("app:toggleTranscript", "Global", "ctrl+o");
   if (ao || so) {
     return null;
   }
   let W;
-  if (V[0] === p) ((W = { keyCase: "lower" }), (V[0] = W));
+  if (V[0] === MEMO_CACHE_SENTINEL) ((W = { keyCase: "lower" }), (V[0] = W));
   else W = V[0];
   let G;
   if (V[1] !== S)
     ((G = e(t, {
       dimColor: !0,
-      children: e(D, { chord: S, action: "expand", parens: !0, format: W }),
+      children: e(KeybindingHint, { chord: S, action: "expand", parens: !0, format: W }),
     })),
       (V[1] = S),
       (V[2] = G));
@@ -154,7 +154,7 @@ function Yd(Bo) {
       ) +
       1 -
       e0e;
-    T = xe;
+    T = ToolResultRow;
     b = o;
     B = "column";
     y = t;

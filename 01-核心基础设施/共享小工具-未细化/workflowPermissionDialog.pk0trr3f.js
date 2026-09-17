@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m } from "./chunk-78nzsrc6.js";
-import { xp, Kr } from "../../02-功能模块/对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
-var workflowPermissionDialog = Kr({
+import { createLazyValue } from "./lazy-value.js";
+import { customSchema, defineDialog } from "../../02-功能模块/对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
+var workflowPermissionDialog = defineDialog({
   kind: "permission_workflow",
-  payload: m(() =>
-    xp(
+  payload: createLazyValue(() =>
+    customSchema(
       (o) =>
         typeof o === "object" &&
         o !== null &&
@@ -22,8 +22,8 @@ var workflowPermissionDialog = Kr({
         "script" in o,
     ),
   ),
-  result: m(() =>
-    xp((o) => typeof o === "object" && o !== null && "behavior" in o),
+  result: createLazyValue(() =>
+    customSchema((o) => typeof o === "object" && o !== null && "behavior" in o),
   ),
   default: { behavior: "cancelled" },
 });

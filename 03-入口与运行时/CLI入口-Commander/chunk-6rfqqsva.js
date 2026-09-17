@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { j, B, bi, K, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnumOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, Jhe, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Vd } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
-import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import D from "os";
 function sXt() {
   for (let t of [
@@ -38,7 +38,7 @@ function rur(t) {
 }
 var O = null;
 function bW() {
-  if (!O) O = Ae("perf_hooks").performance;
+  if (!O) O = importMetaRequire("perf_hooks").performance;
   return O;
 }
 function QQ(t) {
@@ -135,7 +135,7 @@ function vPn() {
   if (u !== void 0 && h !== void 0) e.query_overhead_ms = Math.round(h - u);
   if (((e.checkpoint_count = s.length), a.CLAUDE_CODE_ENTRYPOINT))
     e.entrypoint = fromEnumOpt(Vd()) ?? S("other");
-  if (v) i("tengu_headless_latency", e);
+  if (v) logEvent("tengu_headless_latency", e);
   if (T) n(`[headlessProfiler] Turn ${f} metrics: ${b(e)}`);
 }
 var P = a.CLAUDE_CODE_PROFILE_STARTUP,
@@ -328,6 +328,6 @@ function G({ late: t } = { late: !1 }) {
   if (!Y) return;
   let o = W(k(), { late: t });
   if (o === null) return;
-  i("tengu_startup_perf", o);
+  logEvent("tengu_startup_perf", o);
 }
 export { sXt, Ee, rur, bW, QQ, iXt, CPn, Db, vPn, M1, RPn, Br, Fnt };

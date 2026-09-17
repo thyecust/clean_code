@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { vt } from "./chunk-tmxdrqem.js";
+import { useClock } from "./use-clock.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { ew, Nl, L_, re, E, vr, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { en } from "./chunk-2c9tjhwd.js";
+import { EARLY_RETURN_SENTINEL } from "./chunk-2c9tjhwd.js";
 F();
 F();
 function y(I) {
@@ -24,13 +24,13 @@ function D(R, v) {
     children: [v > 0 && e(t, { dimColor: !0, children: " \xB7 " }), R],
   });
 }
-function ue(B) {
+function DotSeparatedList(B) {
   let k = _(5),
     { children: m } = B,
     i,
     p;
   if (k[0] !== m) {
-    p = en;
+    p = EARLY_RETURN_SENTINEL;
     bb0: {
       let T = ew.toArray(m).filter(y);
       if (T.length === 0) {
@@ -41,7 +41,7 @@ function ue(B) {
     }
     ((k[0] = m), (k[1] = i), (k[2] = p));
   } else ((i = k[1]), (p = k[2]));
-  if (p !== en) return p;
+  if (p !== EARLY_RETURN_SENTINEL) return p;
   let b;
   if (k[3] !== i) ((b = e(N, { children: i })), (k[3] = i), (k[4] = b));
   else b = k[4];
@@ -49,8 +49,8 @@ function ue(B) {
 }
 F();
 var P = 800;
-function Y0(c, u, o, s = P) {
-  let a = vt(),
+function useDoublePressConfirm(c, u, o, s = P) {
+  let a = useClock(),
     l = C(0),
     n = C(void 0),
     S = vr(() => c(!1)),
@@ -78,4 +78,4 @@ function Y0(c, u, o, s = P) {
     }, [c, u, o, f, a, s])
   );
 }
-export { ue, Y0 };
+export { DotSeparatedList, useDoublePressConfirm };

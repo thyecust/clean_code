@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { OHe } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { qP, Tz, c_e, ns, bje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z1 } from "../../01-核心基础设施/共享小工具-未细化/chunk-0k3bh4m8.js";
+import { REMOTE_CALLOUT_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
 import { lU, isBgSession, _sr, sameOwnerAccount, getOauthAccountInfo, hq, _q } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -17,7 +17,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { OP } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { no } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
+import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { readStoredTrustedDeviceToken, clearTrustedDeviceToken, enrollTrustedDevice } from "./chunk-tyce0p0b.js";
 import { Hre } from "./chunk-ct52ffwb.js";
 import { Oer } from "../Artifact发布-渲染/chunk-rr78st95.js";
@@ -31,22 +31,22 @@ import { zJe } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { Ann, KBn, hlt, mIe, xnn } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
 import { Ma } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
-import { D0e } from "../../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js";
+import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
+import { removeNotificationFromState } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { WA, Vx, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { V8 } from "../认证-OAuth登录/chunk-xvt7fc9t.js";
-import { FIt } from "../../01-核心基础设施/共享小工具-未细化/chunk-85wxphev.js";
-import { qa } from "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
+import { showStandaloneSecurityDialog } from "../../01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js";
+import { useMainLoopModel } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import { hasPolicyDiverged } from "../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js";
-import { iit, FHe, ait } from "../../01-核心基础设施/共享小工具-未细化/chunk-8r3h1dwe.js";
+import { resetAuthCachesAfterLogin, runAutoModeGateCheck, rearmAutoModeCheck } from "../../01-核心基础设施/共享小工具-未细化/chunk-8r3h1dwe.js";
 import { dF, y4 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { ik } from "./chunk-2c3z3wjk.js";
 import { C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Pdr() {
   onOrgMemoryAuthCompletion(jj());
@@ -65,7 +65,7 @@ async function N8(o, s, i) {
     try {
       let A;
       try {
-        A = await xnn(FIt, o.storageV5, o.credentials);
+        A = await xnn(showStandaloneSecurityDialog, o.storageV5, o.credentials);
       } finally {
         Z?.();
       }
@@ -81,12 +81,12 @@ async function N8(o, s, i) {
         let V = A.fetchSucceeded ? void 0 : A.failure;
         return (await fe(o, Ddr(k, V, c), (ee) => Ldr(k, V, ee, c)), D);
       }
-      if (no()) return D;
-      (iit("gateway"), dR(), relatchTenguSandboxGbConfig());
+      if (isExiting()) return D;
+      (resetAuthCachesAfterLogin("gateway"), dR(), relatchTenguSandboxGbConfig());
     } finally {
-      if (!no()) W.release?.();
+      if (!isExiting()) W.release?.();
     }
-  } else mIe(FIt, o.storageV5, o.credentials);
+  } else mIe(showStandaloneSecurityDialog, o.storageV5, o.credentials);
   (c_e(), zJe(), lU(), _q());
   let { setAppState: g } = i,
     y = OHe.of(o.session),
@@ -111,7 +111,7 @@ async function N8(o, s, i) {
           replBridgeOutboundOnly: !1,
           replBridgeError: void 0,
           replBridgeErrorKind: void 0,
-          notifications: D0e(f.notifications, ik),
+          notifications: removeNotificationFromState(f.notifications, ik),
         }
       );
     });
@@ -126,7 +126,7 @@ async function N8(o, s, i) {
       })),
       o.dialogStore)
     )
-      o.dialogStore.dismissKind(Z1.kind);
+      o.dialogStore.dismissKind(REMOTE_CALLOUT_DIALOG.kind);
     else
       logError(
         Error(
@@ -146,8 +146,8 @@ async function N8(o, s, i) {
   let { host: x } = o.session,
     Y = o.getAppState();
   return (
-    ait(x),
-    FHe(x, getToolPermissionContext(o), g, Y.fastMode),
+    rearmAutoModeCheck(x),
+    runAutoModeGateCheck(x, getToolPermissionContext(o), g, Y.fastMode),
     Pdr(),
     y.loginCompleted(),
     { bridgeDisconnected: O, accountSwitched: v, relaunching: !1 }
@@ -171,7 +171,7 @@ async function le(o, s, i) {
   if (
     (await _sr(u && s && u.url === s.url ? u : s, o.credentials),
     await hlt(o.storageV5),
-    no())
+    isExiting())
   )
     return { ...D, gatewayLoginError: i };
   let c = !isTranscriptPersistenceDisabled();
@@ -249,9 +249,9 @@ function Ldr(o, s, i, u, c = !isTranscriptPersistenceDisabled()) {
   return `${Q(o, s, u)}. ${s ? "Claude Code has to restart to retry" : `Claude Code has to restart to apply ${u ? "your organization's managed settings" : "them"}`}, and ${i}, so this session is ending instead. Your sign-in is saved: start claude again the same way${c ? " (add --continue to return to this conversation)" : ""}.`;
 }
 async function fe(o, s, i) {
-  if (no()) return;
+  if (isExiting()) return;
   let u = (m) => xn(0, "other", { finalMessage: i(m) });
-  if ((await dF(IF(o), o.storageV5), no())) return;
+  if ((await dF(IF(o), o.storageV5), isExiting())) return;
   if (isBgSession())
     return u(
       "a background session cannot restart itself (sign in from a session started directly with `claude`)",
@@ -374,12 +374,12 @@ async function ngr(o, s) {
 }
 function Kz(R) {
   let b = _(23),
-    X = qa(),
+    X = useMainLoopModel(),
     z = It(),
     yt = Ma(),
     [G, wt] = d(!1),
     te;
-  if (b[0] === p) ((te = () => wt(!0)), (b[0] = te));
+  if (b[0] === MEMO_CACHE_SENTINEL) ((te = () => wt(!0)), (b[0] = te));
   else te = b[0];
   let St = te,
     ne = C(!1),
@@ -403,16 +403,16 @@ function Kz(R) {
   else re = b[7];
   let P = re,
     ie;
-  if (b[8] === p) ((ie = { context: "Settings" }), (b[8] = ie));
+  if (b[8] === MEMO_CACHE_SENTINEL) ((ie = { context: "Settings" }), (b[8] = ie));
   else ie = b[8];
-  Ne("confirm:no", P, ie);
-  let L = is();
+  useKeybinding("confirm:no", P, ie);
+  let L = useGlobalExitKeybinding();
   const J = G && !L.pending;
   let I;
   if (b[9] !== L.keyName || b[10] !== L.pending)
     ((I = L.pending
       ? r(t, { children: ["Press ", L.keyName, " again to exit"] })
-      : e(je, {
+      : e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Settings",
           fallback: "Esc",

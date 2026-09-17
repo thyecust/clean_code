@@ -13,12 +13,12 @@ import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { H, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { normalizeGitRemoteUrl } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getProjectDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { EGe } from "../Teammates团队/chunk-hcszd97x.js";
+import { SHARE_ONBOARDING_GUIDE_TOOL_NAME } from "../Teammates团队/share-onboarding-guide-tool.js";
 import { zSe } from "../Teammates团队/chunk-w2g8t42p.js";
 import { readFile as L } from "fs/promises";
 import { basename, join as x } from "path";
@@ -324,7 +324,7 @@ Generate the guide immediately, then ask for revisions. Don't wait for answers f
    Apply any edits they come back with to the file.`,
   X = `
 
-**Sharing** \u2014 call the ${EGe} tool twice:
+**Sharing** \u2014 call the ${SHARE_ONBOARDING_GUIDE_TOOL_NAME} tool twice:
 
 1. **Right after rendering the draft code block** (still in step 5, before the Review questions). Call with \`mode='check'\` \u2014 this uploads the draft to an existing guide (or creates a new one). Either way you get a \`share_url\` and \`short_code\`. Instead of the \`---\` / \`**Review**\` header from step 5, bridge directly from the link into the numbered questions (no horizontal rule):
 
@@ -341,7 +341,7 @@ Generate the guide immediately, then ask for revisions. Don't wait for answers f
    Send this to teammates and they'll get a guided walkthrough when they open it in Claude Code.
 
 If the tool returns 'unavailable' at any point, skip that call and use the manual close from step 5 instead.`,
-  J = ["Edit(ONBOARDING.md)", "Bash(ls *)", EGe],
+  J = ["Edit(ONBOARDING.md)", "Bash(ls *)", SHARE_ONBOARDING_GUIDE_TOOL_NAME],
   V = {
     type: "prompt",
     name: "team-onboarding",
@@ -371,7 +371,7 @@ If the tool returns 'unavailable' at any point, skip that call and use the manua
           typeof t?.windowDays === "number"
             ? Math.min(Math.max(Math.floor(t.windowDays), 1), 365)
             : G;
-      (i("tengu_team_onboarding_invoked", { window_days: d }),
+      (logEvent("tengu_team_onboarding_invoked", { window_days: d }),
         await Te(
           (s) => ({ ...s, teamOnboardingLastUsedAt: Date.now() }),
           a.storageV5,
@@ -388,7 +388,7 @@ If the tool returns 'unavailable' at any point, skip that call and use the manua
             .replaceAll("{{GUIDE_TEMPLATE}}", h)
             .replaceAll("{{USAGE_DATA}}", p) + (zSe() ? X : "");
       return (
-        i("tengu_team_onboarding_generated", {
+        logEvent("tengu_team_onboarding_generated", {
           session_count: r,
           slash_command_count: l,
           mcp_server_count: o,

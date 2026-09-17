@@ -10,7 +10,7 @@
 import { yt, R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { tf } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import { ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var N = 8;
 var B = /^v?\d+(?:[._-]\d+)*$/i;
 var S = new RegExp("^[A-Za-z0-9._~+/=%-]+$"),
@@ -118,7 +118,7 @@ function _(t) {
   return n !== -1 && e > n + 1 ? e : -1;
 }
 function d(t, e = !0) {
-  for (let n of Y([t, t.replaceAll(" ", "+")])) {
+  for (let n of dedupe([t, t.replaceAll(" ", "+")])) {
     let o = n;
     for (let r = 0; ; r++) {
       if (h(o) || P(o) || _(o) !== -1 || (e && T(o))) return !0;
@@ -265,7 +265,7 @@ function Gn(t) {
   if (!n) {
     if (((e.pathname = f), tt.test(e.hostname))) e.hostname = "REDACTED";
   }
-  let k = Y(e.searchParams.keys()),
+  let k = dedupe(e.searchParams.keys()),
     z = new Set(
       [...e.searchParams.entries()].filter(([, s]) => s === "").map(([s]) => s),
     ),

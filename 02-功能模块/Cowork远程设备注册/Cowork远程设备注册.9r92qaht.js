@@ -15,7 +15,7 @@ import { us, oe } from "../../01-核心基础设施/核心工具-字符串与文
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSecureStorage } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
-import { O7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
+import { isEgressAllowed } from "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
 import { tZ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import {
   createPrivateKey,
@@ -29,10 +29,10 @@ var P = "/api/organizations/:orgUUID/cowork/remote_devices",
 async function g(e, i) {
   return (await getSecureStorage().readAsync(i))?.coworkRemoteDevice?.[e];
 }
-async function T9n(e) {
+async function readLocalDeviceId(e) {
   return Xn((await g(e, void 0))?.rowPk)?.toLowerCase();
 }
-async function E9n(e, i) {
+async function loadDeviceKey(e, i) {
   let r = await g(e, i),
     t = Xn(r?.rowPk)?.toLowerCase(),
     s = r && v(r);
@@ -106,11 +106,11 @@ function x() {
   return "darwin";
 }
 function E(e) {
-  return us(e.trim(), 255) || us(cze().trim(), 255);
+  return us(e.trim(), 255) || us(buildDefaultDeviceDisplayName().trim(), 255);
 }
-async function A9n(e, i, r) {
+async function registerDevice(e, i, r) {
   try {
-    if (!O7()) throw new lze("client egress policy");
+    if (!isEgressAllowed()) throw new DeviceRegistrationUnavailableError("client egress policy");
     return await H(e, i, r);
   } catch (t) {
     throw (
@@ -158,12 +158,12 @@ async function H(e, i, r) {
     ),
     o.status === 400 && o.data?.error?.details?.error_code === h)
   )
-    throw new Tpt();
+    throw new DeviceLimitReachedError();
   if (
     (o.status === 403 && o.data?.error?.details?.error_code !== C) ||
     o.status === 404
   )
-    throw new lze(`HTTP ${o.status}`);
+    throw new DeviceRegistrationUnavailableError(`HTTP ${o.status}`);
   let a = Xn(o.data?.id);
   if (o.status !== 201 || a === null)
     throw new R(
@@ -195,7 +195,7 @@ async function H(e, i, r) {
     { deviceUUID: u, priv: t }
   );
 }
-class Tpt extends R {
+class DeviceLimitReachedError extends R {
   constructor() {
     super(
       "deviceRegistry: account device limit reached",
@@ -204,7 +204,7 @@ class Tpt extends R {
     );
   }
 }
-class lze extends R {
+class DeviceRegistrationUnavailableError extends R {
   constructor(e) {
     super(
       `deviceRegistry: device registration unavailable for this account or organization (${e})`,
@@ -229,7 +229,7 @@ async function w(e, i, r) {
     return { ...t, coworkRemoteDevice: c };
   }, r);
 }
-async function C9n(e, i) {
+async function clearCachedDeviceRegistration(e, i) {
   await m(
     e,
     (r) => {
@@ -240,7 +240,7 @@ async function C9n(e, i) {
     i,
   );
 }
-function cze() {
+function buildDefaultDeviceDisplayName() {
   return `Claude Code on ${hostname()} \xB7 ${tZ("darwin")}`;
 }
-export { T9n, E9n, A9n, Tpt, lze, C9n, cze };
+export { readLocalDeviceId, loadDeviceKey, registerDevice, DeviceLimitReachedError, DeviceRegistrationUnavailableError, clearCachedDeviceRegistration, buildDefaultDeviceDisplayName };

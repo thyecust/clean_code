@@ -7,18 +7,18 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { M } from "./chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
 import { sessionIdBody } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qt } from "./chunk-km6n9zrg.js";
 import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { b, z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { m } from "./chunk-78nzsrc6.js";
+import { createLazyValue } from "./lazy-value.js";
 import { s, v, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { dirname, join as w } from "path";
 var D = 50,
-  y = m(() =>
+  y = createLazyValue(() =>
     c({ version: k(1), sessions: v(c({ id: s(), reason: s(), at: s() })) }),
   ),
   u = "device-unbound-creates";
@@ -73,7 +73,7 @@ async function unboundCreateReason(r, o, t) {
   }
 }
 function productionUnboundCreatesDeps(r) {
-  let o = M() && r !== void 0 ? r : void 0,
+  let o = isHoverRestEnabled() && r !== void 0 ? r : void 0,
     t = Ce.state(u);
   return {
     readText: async () => {

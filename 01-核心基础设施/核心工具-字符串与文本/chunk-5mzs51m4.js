@@ -24,9 +24,9 @@ import { fi, Dnt } from "../共享小工具-未细化/chunk-z5tdbda7.js";
 import { id } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Rdt, Wsn, c1t, kdt, Gsn } from "../共享小工具-未细化/chunk-kk7p3hsm.js";
 import { rre } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { tO } from "../共享小工具-未细化/chunk-37xdmryq.js";
-import { Qg } from "../共享小工具-未细化/chunk-awxpn5er.js";
-import { ut } from "../共享小工具-未细化/chunk-5ktz3kp7.js";
+import { toLocalFileUrl } from "../共享小工具-未细化/to-local-file-url.js";
+import { formatHyperlink } from "../共享小工具-未细化/format-hyperlink.js";
+import { getThemeColor } from "../共享小工具-未细化/theme-color.js";
 import { av } from "../共享小工具-未细化/chunk-kkf7jbwd.js";
 import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 var z = new Set([
@@ -331,7 +331,7 @@ function aE(e, t, n = {}) {
       return g + s.highlight(e.text, { language: f }) + E;
     }
     case "codespan":
-      return ut("permission", t)(e.text);
+      return getThemeColor("permission", t)(e.text);
     case "em":
       return ie.italic(
         (e.tokens ?? [])
@@ -443,10 +443,10 @@ function aE(e, t, n = {}) {
             })
             .join(""),
           B = S ? R : y0n(R);
-        return Qg(g, B, { themeName: t, supportsHyperlinks: f }) + r;
+        return formatHyperlink(g, B, { themeName: t, supportsHyperlinks: f }) + r;
       }
       let I = b ? T : f ? e.href : g,
-        _ = Qg(g, I, { themeName: t, supportsHyperlinks: f });
+        _ = formatHyperlink(g, I, { themeName: t, supportsHyperlinks: f });
       if (!L && f && b && k) return `${_} (${N(e.href)})${r}`;
       return (L ? y0n(_) : _) + r;
     }
@@ -666,7 +666,7 @@ function J(e) {
   } catch {}
   i = re(i);
   let l = isAbsolute(i) ? i : resolve(Q(), i),
-    s = tO(l);
+    s = toLocalFileUrl(l);
   if (s === null) return null;
   let c = s + o;
   return kdt(c) ? null : c;
@@ -775,7 +775,7 @@ function ce(e, t, n = Tf()) {
     X,
     (c, u, m, h) =>
       u +
-      Qg(`https://${l}/${m}${s}${h}`, `${m}#${h}`, {
+      formatHyperlink(`https://${l}/${m}${s}${h}`, `${m}#${h}`, {
         themeName: t,
         supportsHyperlinks: n,
       }),

@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { HA } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js";
-import { vkt } from "./chunk-agg788pp.js";
-import { kb } from "../../01-核心基础设施/共享小工具-未细化/chunk-pf84p45h.js";
-import { zd } from "./chunk-yjjbkvm4.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var S = pe(zd()),
-  m = pe(HA());
+import { fromSso } from "./sso-token-provider.js";
+import { awsSdkCoreClientModule } from "../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
+import { getPropertyProviderModule } from "./smithy-property-provider.js";
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var S = toESM(getPropertyProviderModule()),
+  m = toESM(HA());
 var D = (e) =>
   e &&
   (typeof e.sso_start_url === "string" ||
@@ -21,9 +21,9 @@ var D = (e) =>
     typeof e.sso_session === "string" ||
     typeof e.sso_region === "string" ||
     typeof e.sso_role_name === "string");
-var y = pe(kb());
-var d = pe(zd()),
-  F = pe(HA()),
+var y = toESM(awsSdkCoreClientModule());
+var d = toESM(getPropertyProviderModule()),
+  F = toESM(HA()),
   h = !1,
   O = async ({
     ssoStartUrl: e,
@@ -45,7 +45,7 @@ var d = pe(zd()),
         "To refresh this SSO session run aws sso login with the corresponding profile.";
     if (f)
       try {
-        let c = await vkt({
+        let c = await fromSso({
           profile: t,
           filepath: k,
           configFilepath: o,
@@ -120,7 +120,7 @@ var d = pe(zd()),
     else y.setCredentialFeature(x, "CREDENTIALS_SSO_LEGACY", "u");
     return x;
   };
-var M = pe(zd()),
+var M = toESM(getPropertyProviderModule()),
   U = (e, f) => {
     let {
       sso_start_url: s,

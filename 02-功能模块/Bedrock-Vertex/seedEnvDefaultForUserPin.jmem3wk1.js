@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 69 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum, fromNumber } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Mxe, mZ } from "./chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -25,7 +25,7 @@ async function findVertexUpgradeCandidates() {
   if (a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST) return [];
   let o = collectStalePins(g);
   if (o.length === 0) return [];
-  i("tengu_vertex_upgrade_check", { stale_tiers: fromNumber(o.length) });
+  logEvent("tengu_vertex_upgrade_check", { stale_tiers: fromNumber(o.length) });
   let c = (
     await Promise.all(
       o.map(async (e) => {
@@ -33,7 +33,7 @@ async function findVertexUpgradeCandidates() {
         if (r === null) return null;
         let t = await d(r);
         if (
-          (i("tengu_vertex_probe_result", {
+          (logEvent("tengu_vertex_probe_result", {
             tier: fromEnum(e.tier),
             model_id: bt(r),
             accessible: t,
@@ -70,13 +70,13 @@ async function checkVertexDefaultAvailability() {
   let o = getInitialSettings().modelOverrides,
     s = collectUnpinnedTiers(g, o);
   if (s.length === 0) return [];
-  i("tengu_vertex_default_check", { unpinned_tiers: fromNumber(s.length) });
+  logEvent("tengu_vertex_default_check", { unpinned_tiers: fromNumber(s.length) });
   let c = await Promise.all(
       s.map(async (r) => {
         let t = to[r.defaultKey],
           l = await d(t.vertex);
         if (
-          (i("tengu_vertex_probe_result", {
+          (logEvent("tengu_vertex_probe_result", {
             tier: fromEnum(r.tier),
             model_id: bt(t.vertex),
             accessible: l,

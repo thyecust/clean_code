@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { hut } from "../ClaudeinChrome/chunk-317fgfn3.js";
+import { classifyChromeToolError } from "../ClaudeinChrome/chrome-tool-error-classifier.js";
 import { Din, Qdt, Lin, Min, pWn, fWn, qqe, D1t } from "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import { ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
 import { A1 } from "../MCP客户端/chunk-j8556pzt.js";
@@ -976,7 +976,7 @@ class b {
       );
       let m = "unclassified_tool_error";
       try {
-        m = hut(s.toolName, u);
+        m = classifyChromeToolError(s.toolName, u);
       } catch {}
       if (
         (o?.("chrome_bridge_tool_call_error", {

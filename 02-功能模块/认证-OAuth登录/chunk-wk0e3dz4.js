@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { Ie, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { ALLOWED_OAUTH_BASE_URLS, getOauthConfig } from "./chunk-9g2q4bjq.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ra, l, Rt, FA } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ou, wc, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ckn } from "../上下文压缩-Compact/chunk-qbdgst52.js";
 import { se, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var rBe = /https?:\/\/[^\s"'<>\\\u2026\x00-\x1f]+/g;
 function T(e) {
   return /^https?:\/\/[^\s"'<>\\\u2026\x00-\x1f]+$/.test(e);
@@ -113,7 +113,7 @@ function Yse(e) {
     ? r.href
     : sBe;
 }
-var ie = m(() =>
+var ie = createLazyValue(() =>
   c({
     error: X(["invalid_grant", "access_denied"]),
     error_description: k(PRe),
@@ -353,7 +353,7 @@ function _e() {
     let s = process.env.ANTHROPIC_PROFILE?.trim() || ORe(e),
       i = I(e, s);
     if (typeof i !== "string" || !i.trim()) return { value: r, complete: !0 };
-    let f = Y(isAbsolute(i) ? [resolve(i)] : [resolve(t, i), resolve(i)]).filter(
+    let f = dedupe(isAbsolute(i) ? [resolve(i)] : [resolve(t, i), resolve(i)]).filter(
       (p) =>
         !r.dirs.some((y) => p === y || p.startsWith(y + H)) &&
         !r.files.includes(p) &&

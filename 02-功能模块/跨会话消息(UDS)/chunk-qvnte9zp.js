@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
@@ -62,7 +62,7 @@ function tFt(t, e) {
 }
 function nFt(t, e, r) {
   if (
-    (i("tengu_send_file_received", {
+    (logEvent("tengu_send_file_received", {
       transport: fromEnum(t),
       file_count: e,
       verified_count: r,
@@ -108,7 +108,7 @@ function G() {
   return bTe();
 }
 var V = /^[0-9a-f]{64}$/,
-  Z = m(() =>
+  Z = createLazyValue(() =>
     c({
       path: s(),
       file_name: s(),
@@ -117,7 +117,7 @@ var V = /^[0-9a-f]{64}$/,
       media_type: s().optional(),
     }),
   ),
-  q = m(() => v(Z()));
+  q = createLazyValue(() => v(Z()));
 async function Ean(t) {
   let e = await xpt(t, hO);
   if (e === null)

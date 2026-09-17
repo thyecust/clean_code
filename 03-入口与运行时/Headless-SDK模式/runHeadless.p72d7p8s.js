@@ -9,9 +9,9 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 158 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Ie, Uxe } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z, Dt, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep, withTimeout, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Nx, be, uo } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
@@ -86,7 +86,7 @@ import {
   ic,
   wae,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { lit as S, fromEnum, fromEnumOpt, fromNumber, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import {
   Lt,
@@ -473,7 +473,7 @@ import {
   q_n,
   A8e,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   xAt,
@@ -571,7 +571,7 @@ import {
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { q, U2e } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent, runTimedDiagnosticStep } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { CA } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Ee, CPn, Db, vPn, M1, Br } from "../CLI入口-Commander/chunk-6rfqqsva.js";
@@ -618,7 +618,7 @@ import {
   MT,
 } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { so, uP, getToolPermissionContext } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
-import { Kt, ar } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
+import { matchesToolName, findToolByName } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import {
   HYe,
   TOOL_SEARCH_TOOL_NAME,
@@ -665,9 +665,9 @@ import {
   sfe,
   CC,
 } from "../../02-功能模块/Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
-import { GE } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
+import { ENTER_PLAN_MODE_TOOL_NAME } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { isArtifactConflictLegacy, artifactReadObservationIn, makeSetArtifactReadVersion, makeSetArtifactContractTarget, makeGetArtifactContractTarget, isResumeFrameSeedEligible } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
-import { no, a5 } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
+import { isExiting, commitExit } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { Vre } from "../../02-功能模块/后台任务-Shell管理/chunk-x3txegas.js";
 import { CK } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { bo } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
@@ -675,7 +675,7 @@ import { isProjectsHumanOriginEnabled } from "../../01-核心基础设施/共享
 import { Nu, b7e } from "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { Fy, MSt } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
 import { Ts, _St, WXn, qXn, zXn, XXn } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
-import { Dl, AAt } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
+import { areBackgroundTasksDisabled, BACKGROUND_TASKS_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { mQn, ZAe, ti, eCe } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import {
   ER,
@@ -700,7 +700,7 @@ import { dCe, readUnreadMessages, MARK_READ_FAILURE_CAP, markMessagesAsRead, for
 import { isRemoteControlDeploymentAvailable, isRunningInRemoteEnvironment, isBridgeStateFramesEnabled, isSdkBridgeStateAnnounceEnabled, isQuotaRejectedReemitEnabled, getCcrAutoConnectDefault, isPersistentRemoteSessionEnabled, isRemoteControlInternalEventsEnabled, getBridgeSubagentFrameGate } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
 import { wK } from "../../02-功能模块/插件系统/chunk-hh8f1qrw.js";
 import { PAe, MNe } from "../../02-功能模块/图片-截图-ComputerUse/chunk-b8jsase9.js";
-import { LE, ME, Nyn, OYn, E3t, UI } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { sessionTransportRegistry, isRemoteTransportPersistent, summarizeMcpServersIfRemote, hidePluginsIfRemote, keepPrimaryIfRemote, withholdDetailIfRemote } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { Jn, CH, Q3, zYn, VYn, XYn } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { Eo } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { ne } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
@@ -795,13 +795,13 @@ import {
   vPe,
   tqe,
 } from "../../02-功能模块/Bridge-RemoteControl/chunk-jpq2fv3g.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-sfq8xeqw.js";
+import "../../01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js";
 import "../../02-功能模块/远程工具执行/chunk-66axrkvh.js";
 import { I0t, j1n, lHe, W1n, P0t, O0t, Uz, FJt } from "../../02-功能模块/远程工具执行/chunk-31b8kd0f.js";
 import { lsn } from "../../02-功能模块/Bridge-RemoteControl/chunk-znhfst8k.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-thdf1760.js";
 import { withoutStaticMcpShadows, mergeAndFilterTools, stripSoleNonDeniableTool } from "../../01-核心基础设施/共享小工具-未细化/chunk-1m91n7yv.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-c9wxfdax.js";
+import "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
 import {
   nFn,
   E6e,
@@ -852,16 +852,16 @@ import {
 } from "../../02-功能模块/后台任务-Shell管理/chunk-n6g2zfwn.js";
 import { Ou, d2, KSe, uM, y9, S9 } from "../../02-功能模块/工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
 import { isChannelsEnabled, isChannelAllowlisted } from "../../02-功能模块/插件系统/chunk-rbjz1q03.js";
-import { VPe, KPe, ste, XPe } from "../../02-功能模块/插件系统/chunk-4k4dssd9.js";
+import { ChannelMessageNotificationSchema, wrapChannelMessage, findChannelEntry, gateChannelServer } from "../../02-功能模块/插件系统/channel-gate.js";
 import { r2, Aee, ak, x4 } from "../../02-功能模块/MCP客户端/chunk-z2a573sr.js";
 import { collectContextData } from "../../02-功能模块/上下文压缩-Compact/chunk-40jcpbzh.js";
 import { Qqe, tze, ran, MWn, UWn } from "../../02-功能模块/Artifact发布-渲染/chunk-p1dkvpxj.js";
 import { killAutoReactSubscriptions } from "../../02-功能模块/Artifact发布-渲染/chunk-kshc4v5t.js";
 import { xBn, mnn, S4 } from "../../02-功能模块/会话-历史-恢复/chunk-ybcvb652.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wm4s322b.js";
+import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 import { makeSetWebBrowserSlice } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import { Ole, Dle, i7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
-import { _Dt, Qtn } from "../../02-功能模块/上下文压缩-Compact/chunk-86azyf7z.js";
+import { fetchSystemPromptParts, buildSideQuestionFallbackParams } from "../../02-功能模块/上下文压缩-Compact/side-question-fallback.js";
 import { NGe, ebe } from "../../02-功能模块/Artifact发布-渲染/chunk-fx5ekm7e.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
 import "../../02-功能模块/跨会话消息(UDS)/chunk-qvnte9zp.js";
@@ -901,8 +901,8 @@ import {
 import { O4, _7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-3eztvm1y.js";
 import "../../02-功能模块/成本-Token统计/chunk-3nwwgatc.js";
 import { o3e } from "../../02-功能模块/MCP客户端/chunk-22bnxvxv.js";
-import { X0 } from "../../02-功能模块/Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import { oF } from "../../01-核心基础设施/共享小工具-未细化/chunk-vz37aa8z.js";
+import { activeTimeTracker } from "../../02-功能模块/Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
+import { worktreeStateStore } from "../../01-核心基础设施/共享小工具-未细化/worktree-state-store.js";
 import {
   Vae,
   EHe,
@@ -942,34 +942,34 @@ import { _on } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kaxe7rw8.js";
 import { bridgeSlashLineBuildsRequest } from "../../02-功能模块/Bridge-RemoteControl/chunk-x2kwwph8.js";
 import { Tot, kNn } from "../../02-功能模块/Memory-CLAUDE.md/chunk-3ehd7vx0.js";
-import { I8, kB, xB } from "./chunk-bgtc75cc.js";
+import { buildControlSuccessResponse, buildControlErrorResponse, buildErrorResultMessage } from "./headless-sdk-messages.js";
 import { q1n } from "../../01-核心基础设施/共享小工具-未细化/chunk-ezjdm9sg.js";
 import { TFn } from "../../01-核心基础设施/共享小工具-未细化/chunk-cbdr3qdm.js";
-import { Qz, M$n, SWe } from "../../02-功能模块/插件系统/chunk-55xj4ev5.js";
-import { ile, t4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-azh5vchz.js";
-import { QWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-m2j3585w.js";
-import { Iye } from "../../01-核心基础设施/共享小工具-未细化/chunk-8w004g4b.js";
+import { CLOUD_PLUGINS_FORWARDED_SETTING_KEY, FORWARDABLE_PLUGIN_SETTING_KEYS, PLUGIN_FORWARDING_DISABLED_MESSAGE } from "../../02-功能模块/插件系统/plugin-forwarding.js";
+import { formatSessionLiveElsewhereMessage, getLiveSessionHolder } from "../../01-核心基础设施/共享小工具-未细化/session-live-elsewhere.js";
+import { SANDBOX_REQUIRED_UNAVAILABLE_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/sandbox-unavailable-message.js";
+import { getBashSpawnFailureDetail } from "../../01-核心基础设施/共享小工具-未细化/bash-spawn-failure-detail.js";
 import { ple } from "../../02-功能模块/认证-OAuth登录/chunk-dtt2nn79.js";
-import { uO } from "../../01-核心基础设施/共享小工具-未细化/chunk-pvrtr3v0.js";
-import { X0e } from "../../01-核心基础设施/共享小工具-未细化/chunk-7rcvat1g.js";
+import { PerClassInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/per-class-instance-registry.js";
+import { parsePositiveInteger } from "../../01-核心基础设施/共享小工具-未细化/parse-positive-integer.js";
 import { Jat } from "../../02-功能模块/Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import { sSe, dee, pee } from "../../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js";
 import { SDt, Ztn } from "../../02-功能模块/权限系统/chunk-2ttypdwq.js";
-import { Xx } from "../../02-功能模块/MCP客户端/chunk-49ds54j4.js";
-import { QB } from "../../02-功能模块/插件系统/chunk-5ztq0v89.js";
+import { refreshActivePlugins } from "../../02-功能模块/MCP客户端/plugin-reload-cache-impact.js";
+import { PluginStateStore } from "../../02-功能模块/插件系统/plugin-state-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-d1t6d4k8.js";
-import { _Se } from "../../02-功能模块/上下文压缩-Compact/chunk-525y6trw.js";
+import { applyFlagSettingsPatch } from "../../02-功能模块/上下文压缩-Compact/apply-flag-settings.js";
 import { P_, Jle, Rl } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
-import { M3e } from "../../01-核心基础设施/共享小工具-未细化/chunk-sr0ezxnp.js";
-import { ESe } from "../../02-功能模块/Teammates团队/chunk-c8267s4e.js";
-import { sI } from "../../01-核心基础设施/共享小工具-未细化/chunk-g2fqhcwj.js";
+import { reloadSkills } from "../../01-核心基础设施/共享小工具-未细化/reload-skills.js";
+import { createAgentLifecycle } from "../../02-功能模块/Teammates团队/agent-lifecycle.js";
+import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
 import { xrn, _Lt, Hv } from "../../02-功能模块/MCP客户端/chunk-k2gczbnj.js";
 import { Hjn } from "../../02-功能模块/Artifact发布-渲染/chunk-b6k1z7an.js";
 import "./chunk-yb7jadvp.js";
 import { A9, adt, wF } from "../../02-功能模块/Bridge-RemoteControl/chunk-z5v9hvat.js";
 import { ck } from "../../02-功能模块/认证-OAuth登录/chunk-5bg9xwqx.js";
 import { Udt, q6n, z6n, V6n } from "../../01-核心基础设施/共享小工具-未细化/chunk-gkztysec.js";
-import { Xdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-mnvjcy8y.js";
+import { buildLocalDisplayOnlyDenialResult } from "../../01-核心基础设施/共享小工具-未细化/local-display-only-denial.js";
 import { zPe } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 import { Fze } from "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
 import { xs, Lh } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
@@ -978,21 +978,21 @@ import { Fre, og } from "../../02-功能模块/插件系统/chunk-33bdfgmx.js";
 import { Mu } from "../../02-功能模块/MCP客户端/chunk-0mwqsv0r.js";
 import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
 import { Hl } from "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
-import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
-import { Vr } from "../../01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js";
-import { Fu } from "../../01-核心基础设施/共享小工具-未细化/chunk-px58ry6q.js";
-import { jy } from "../../01-核心基础设施/共享小工具-未细化/chunk-vp8yvx5r.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
+import { isAnthropicHostedEnvironment } from "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
+import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
 import { Zj, e6, Z_ } from "../../02-功能模块/工具ToolSearch/chunk-1m51pqtd.js";
-import { zK } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+import { createFieldAccessor } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { mt, Vh } from "../../02-功能模块/工具Task-Agent调度/chunk-1px84m19.js";
 import { FR } from "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
-import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
-import { ZT } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
+import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
+import { serializeAsyncCalls } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
 import { s, se, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var bc = "Resume rejected by --resume-drops-turn:",
   Cc = new Set([
     "agent_listing_delta",
@@ -1290,7 +1290,7 @@ var Ic = new Gt(() => new Dc());
 var xc = "tengu_polished_lagoon",
   Uc = !1,
   Fc = "session_notices",
-  Tp = m(() =>
+  Tp = createLazyValue(() =>
     c({
       type: k("session_notice"),
       uuid: s().regex(/^[A-Za-z0-9_-]{1,128}$/),
@@ -1305,7 +1305,7 @@ function Lc() {
   return a.CLAUDE_CODE_REMOTE === !0 && ke() && H(xc, Uc) && Rj();
 }
 function Nc(e, t) {
-  let o = LE.of(e).active?.isRemoteTransport() === !0,
+  let o = sessionTransportRegistry.of(e).active?.isRemoteTransport() === !0,
     d = t === "auto" && Lc() && o,
     { value: _, source: E } = $f(xc, Uc);
   return (
@@ -1317,7 +1317,7 @@ function Nc(e, t) {
 }
 function pl(e, t) {
   if (e === void 0) return;
-  LE.of(t).active?.onCommandLifecycle?.(e, "completed");
+  sessionTransportRegistry.of(t).active?.onCommandLifecycle?.(e, "completed");
 }
 function Bc(
   e,
@@ -1426,7 +1426,7 @@ function Bc(
   };
   I.current = I.current
     .then(async () => {
-      if (G(Fmt(), AC) >= rfe) {
+      if (countMatching(Fmt(), AC) >= rfe) {
         (xe(), logFeatureSad("ccr_session_notices", "queue_cap_will_retry"));
         return;
       }
@@ -1473,7 +1473,7 @@ function Bc(
               if (
                 (await flushSessionStorage(),
                 !(
-                  (await LE.of(d).active?.flushInternalEventsConfirmed()) ?? !0
+                  (await sessionTransportRegistry.of(d).active?.flushInternalEventsConfirmed()) ?? !0
                 ))
               ) {
                 (xe(),
@@ -1605,7 +1605,7 @@ async function Ip(e, t = qc) {
     a.set("CLAUDE_CODE_OAUTH_TOKEN", o.oauthToken);
   return (
     clearOAuthTokenCache(),
-    q("info", "cli_worker_auth_refresh_adopted", {
+    writeDiagnosticsEvent("info", "cli_worker_auth_refresh_adopted", {
       seconds_until_expiry: Math.max(0, Math.floor(d - Date.now() / 1000)),
     }),
     { adopted: !0 }
@@ -1726,7 +1726,7 @@ function Qc(e, t, o) {
       `[resumeStalePromptCancel] cancelling stale parked prompt ${v} from a prior worker`,
     ),
       e.write({ type: "control_cancel_request", request_id: v }),
-      i("tengu_resume_stale_prompt_cancel", {
+      logEvent("tengu_resume_stale_prompt_cancel", {
         kind: fromEnum(
           typeof O.tool_name === "string" && O.tool_name.startsWith("dialog:")
             ? "dialog"
@@ -1907,7 +1907,7 @@ function eu(e) {
         if (B.type !== "tool_use") continue;
         if (B.name === Jc && d.has(B.id) && !o.has(B.id) && !_.has(B.id))
           return "exited";
-        if (B.name === GE && d.has(B.id) && (!o.has(B.id) || _.has(B.id)))
+        if (B.name === ENTER_PLAN_MODE_TOOL_NAME && d.has(B.id) && (!o.has(B.id) || _.has(B.id)))
           return I();
       }
     } else if (v.type === "user" && B3(v)) {
@@ -1969,7 +1969,7 @@ function nu(e, t, o) {
 }
 function oa(e, { lane: t, hadExternal: o, hadInternal: d }) {
   let _ = e.source === "none" ? e.trustedMode : "plan";
-  i("tengu_worker_permission_mode_restore", {
+  logEvent("tengu_worker_permission_mode_restore", {
     source: fromEnum(e.source),
     lane: fromEnum(t),
     trusted_mode: fromEnumOpt(e.trustedMode),
@@ -2286,7 +2286,7 @@ function iu() {
 function bl(e, t) {
   return e.map(({ banner: o, suppressedCount: d, emittedVia: _ }) => {
     if (d > 0)
-      i("tengu_refusal_fallback_notice_collapsed", {
+      logEvent("tengu_refusal_fallback_notice_collapsed", {
         suppressed_count: d,
         emitted_via: fromEnum(_),
       });
@@ -2330,7 +2330,7 @@ function au(e) {
     let I = _;
     return (
       (_ = null),
-      i("tengu_partial_stream_retraction_closed", {
+      logEvent("tengu_partial_stream_retraction_closed", {
         stop_reason:
           I.source === "tombstone" ? fromEnumOpt(I.retracted.stop_reason) : fromEnum("refusal"),
         had_open_block: !1,
@@ -2357,7 +2357,7 @@ function au(e) {
           let C = o !== null;
           if (o !== null) v.push(Cl(o));
           (v.push(..._i(null, null, yi(O))),
-            i("tengu_partial_stream_retraction_closed", {
+            logEvent("tengu_partial_stream_retraction_closed", {
               stop_reason: void 0,
               had_open_block: C,
               source: S("stale_message_start"),
@@ -2383,7 +2383,7 @@ function au(e) {
           return [];
         if (I.displayOnly === !0)
           return (
-            i("tengu_partial_stream_retraction_display_only", {
+            logEvent("tengu_partial_stream_retraction_display_only", {
               had_open_block: o !== null,
             }),
             []
@@ -2397,7 +2397,7 @@ function au(e) {
           );
         let v = [Cl(o), ..._i(O.stop_reason, O.stop_sequence, yi(O.usage))];
         return (
-          i("tengu_partial_stream_retraction_closed", {
+          logEvent("tengu_partial_stream_retraction_closed", {
             stop_reason: fromEnumOpt(O.stop_reason),
             had_open_block: !0,
           }),
@@ -2413,7 +2413,7 @@ function au(e) {
         if (o !== null) {
           let v = [Cl(o), ..._i("refusal", null, yi(O))];
           return (
-            i("tengu_partial_stream_retraction_closed", {
+            logEvent("tengu_partial_stream_retraction_closed", {
               stop_reason: fromEnum("refusal"),
               had_open_block: !0,
               source: S("refusal_banner"),
@@ -2576,7 +2576,7 @@ function hu({ conversation: e, messages: t, persistSession: o, storageV5: d }) {
       let fe = t[ye];
       if ((t.splice(ye, 1), _ > ye)) {
         if ((_--, o))
-          (i("tengu_tombstone_persisted_removal", { message_type: fromEnum(fe.type) }),
+          (logEvent("tengu_tombstone_persisted_removal", { message_type: fromEnum(fe.type) }),
             removeTranscriptMessage(te, d));
       }
       if (I > ye) I--;
@@ -2613,7 +2613,7 @@ function hu({ conversation: e, messages: t, persistSession: o, storageV5: d }) {
   }
   function X() {
     if (O === null) return;
-    (i("tengu_compact_preserved_unanchored", {
+    (logEvent("tengu_compact_preserved_unanchored", {
       preservedCount: O.preserved.length,
     }),
       e.push(...O.preserved),
@@ -2695,7 +2695,7 @@ async function* ku({
         resumes_interrupted_turn: e.resumesInterruptedTurn === !0,
       };
     if (B.reExecuted)
-      i("tengu_orphaned_permission_applied", {
+      logEvent("tengu_orphaned_permission_applied", {
         found_on_reread: B.toolWait !== void 0,
         ...w,
       });
@@ -2707,14 +2707,14 @@ async function* ku({
           n(
             "Orphaned permission could not be applied; it stood in for the interrupted turn it was parked on, so the turn proceeds to the model on the interrupted prompt",
           ),
-          i("tengu_orphaned_permission_unapplied_turn_resumed", X),
+          logEvent("tengu_orphaned_permission_unapplied_turn_resumed", X),
           !1
         );
       return (
         n(
           "Orphaned permission could not be applied and the turn has no prompt: ending the turn without a model call",
         ),
-        i("tengu_orphaned_permission_unapplied_turn_end", X),
+        logEvent("tengu_orphaned_permission_unapplied_turn_end", X),
         yield zW({
           startedAt: v.startedAt,
           common: {
@@ -2770,7 +2770,7 @@ async function* ku({
         },
       },
     });
-  if (!ar(d, t.toolName, E.options.toolAliases))
+  if (!findToolByName(d, t.toolName, E.options.toolAliases))
     return (
       n(
         `Deferred tool resume: tool '${t.toolName}' is no longer available (MCP server disconnected or tool removed)`,
@@ -2796,7 +2796,7 @@ async function wu(e) {
 }
 function bu({ shouldQuery: e, fromUserInput: t, fromOptions: o }) {
   (Db("system_message_yielded"),
-    q("info", "cli_ask_should_query_resolved", {
+    writeDiagnosticsEvent("info", "cli_ask_should_query_resolved", {
       should_query: e,
       from_user_input: t,
       from_options: o,
@@ -2841,7 +2841,7 @@ async function Tl({
       defaultSystemPrompt: w,
       userContext: X,
       systemContext: te,
-    } = await _Dt({
+    } = await fetchSystemPromptParts({
       session: e,
       tools: t,
       mainLoopModel: o,
@@ -2884,7 +2884,7 @@ async function Pu({
 }) {
   if ((await getAutoMemPathState().warmCanonicalWcRoot(), P() === "windows")) await Uv();
   let w = performance.now(),
-    X = ME(e),
+    X = isRemoteTransportPersistent(e),
     te = nHe({
       ...(X ? Iot() : Hot()),
       tools: t,
@@ -3007,8 +3007,8 @@ function la(e, t) {
     artifactRegistries: Ole(o, d),
     setArtifactContractTarget: makeSetArtifactContractTarget(d),
     getArtifactContractTarget: makeGetArtifactContractTarget(o),
-    agentLifecycle: ESe(o, d),
-    teammateColors: Dle(zK(o, d, "teammateColors")),
+    agentLifecycle: createAgentLifecycle(o, d),
+    teammateColors: Dle(createFieldAccessor(o, d, "teammateColors")),
     rootToolSurface: { tools: E, mainLoopModel: t.mainLoopModel },
     abortController: t.abortController,
     readFileState: e.readFileState,
@@ -3041,7 +3041,7 @@ function la(e, t) {
       if (v.type === "sdk_status") _?.(v.status, v.metadata);
     },
     onQueryEvent: (v) => {
-      if (v.type === "apply_flag_settings") _Se(v.settings, d);
+      if (v.type === "apply_flag_settings") applyFlagSettingsPatch(v.settings, d);
       else if (v.type === "conversation_reset")
         e.sessionState?.notifyConversationReset();
     },
@@ -3256,7 +3256,7 @@ function Lu(e) {
     _ = e.readFileCache,
     E = e.sessionEnvVars ?? new Map(),
     I = e.isolationLatch ?? Ude(),
-    O = e.toolState ?? new uO(),
+    O = e.toolState ?? new PerClassInstanceRegistry(),
     v = e.sessionHooks ?? T2(),
     C = {},
     re = e.memorySelector ?? z2(),
@@ -3329,7 +3329,7 @@ function Lu(e) {
   async function nt() {
     try {
       if (
-        (await kt(
+        (await withDeadline(
           en
             .settled()
             .then(() => Ppr())
@@ -3386,7 +3386,7 @@ function Lu(e) {
       qt = wn(e.excludeDynamicSections),
       jn = wn(e.forwardSubagentText) ?? !1,
       { storageV5: an } = e;
-    if (M() && an !== void 0) await G4n(wn(e.cwd), e.session, an);
+    if (isHoverRestEnabled() && an !== void 0) await G4n(wn(e.cwd), e.session, an);
     else pu(wn(e.cwd), e.session);
     $At();
     let nn = !IL(),
@@ -3452,7 +3452,7 @@ function Lu(e) {
         maxBudgetUsd: e.maxBudgetUsd,
         messageClientPlatform: Qe?.clientPlatform,
         forwardSubagentText: jn,
-        requiresStructuredOutput: _r !== void 0 && Xt.some((De) => Kt(De, ti)),
+        requiresStructuredOutput: _r !== void 0 && Xt.some((De) => matchesToolName(De, ti)),
         renderedSystemPrompt: vr,
         onPermissionDenial: Xr,
         requestDialog: e.requestDialog,
@@ -3812,7 +3812,7 @@ function Lu(e) {
                   : ao.size > 0
               )
                 (hn.evict($e.uuid),
-                  i("tengu_structured_output_late_retraction_drop", {}));
+                  logEvent("tengu_structured_output_late_retraction_drop", {}));
               else
                 ct.push({
                   toolUseID: $e.attachment.toolUseID,
@@ -3840,7 +3840,7 @@ function Lu(e) {
                 An = ct.filter($r);
               (An.forEach((Cr) => hn.evict(Cr.attachmentUuid)),
                 (ct = ct.filter((Cr) => !$r(Cr))),
-                i("tengu_structured_output_retracted", {
+                logEvent("tengu_structured_output_retracted", {
                   retracted_results: An.length,
                   surviving_results: ct.length,
                   tombstoned_calls: Ko,
@@ -3936,7 +3936,7 @@ function Lu(e) {
               !De.is_error &&
               De.deferred_tool_use === void 0;
             if (_r !== void 0 && $n && ct.length === 0 && Ko > 0) {
-              (i("tengu_structured_output_retraction_exhausted", {
+              (logEvent("tengu_structured_output_retraction_exhausted", {
                 tombstoned_calls: Ko,
                 num_turns: De.num_turns,
               }),
@@ -3969,7 +3969,7 @@ function Lu(e) {
               return;
             }
             if ($n && Fr)
-              i("tengu_sdk_ttft", { ttft_ms: Ho(dn, Fr), model: bt(Ro) });
+              logEvent("tengu_sdk_ttft", { ttft_ms: Ho(dn, Fr), model: bt(Ro) });
             let $r = $n ? XXn() : void 0,
               An = mr.findLast(
                 (ds) => ds.type === "assistant" || ds.type === "user",
@@ -3981,7 +3981,7 @@ function Lu(e) {
               usage: mn,
               duration_ms: Ho(dn, performance.now()),
               ...(De.subtype === "error_during_execution" && {
-                errors: E3t(e.session, De.errors[0] ?? "", xmn(hs), "first"),
+                errors: keepPrimaryIfRemote(e.session, De.errors[0] ?? "", xmn(hs), "first"),
               }),
               ...(De.subtype !== "success" && vo),
               ...(De.subtype === "success" && {
@@ -4182,7 +4182,7 @@ function Lu(e) {
   function sn(_t, Qe, Wt) {
     if ((d.push(_t), Wt))
       (Qe.push(_t),
-        i("tengu_refusal_fallback_entry_recorded", {
+        logEvent("tengu_refusal_fallback_entry_recorded", {
           request_id: Ee(_t.requestId),
         }));
   }
@@ -4231,7 +4231,7 @@ function Lu(e) {
         (_ = DT(tA)),
         (C = {}),
         (E = new Map()),
-        (O = new uO()),
+        (O = new PerClassInstanceRegistry()),
         (v = T2()),
         (re = z2()));
     },
@@ -4275,7 +4275,7 @@ function Al(e, { abortController: t, userSpecifiedModel: o }) {
       maxBudgetUsd: e.maxBudgetUsd,
       messageClientPlatform: void 0,
       forwardSubagentText: wn(e.forwardSubagentText) ?? !1,
-      requiresStructuredOutput: O !== void 0 && E.some((B) => Kt(B, ti)),
+      requiresStructuredOutput: O !== void 0 && E.some((B) => matchesToolName(B, ti)),
       onPermissionDenial: () => {},
       requestDialog: e.requestDialog,
       sessionState: e.sessionState,
@@ -4286,7 +4286,7 @@ function Al(e, { abortController: t, userSpecifiedModel: o }) {
       pendingNestedMemoryTriggers: e.pendingNestedMemoryTriggers,
       loadedNestedMemoryPaths: {},
       sessionEnvVars: e.sessionEnvVars ?? new Map(),
-      toolState: e.toolState ?? new uO(),
+      toolState: e.toolState ?? new PerClassInstanceRegistry(),
       memorySelector: e.memorySelector ?? z2(),
       isolationLatch: e.isolationLatch ?? Ude(),
       sessionHooks: e.sessionHooks ?? T2(),
@@ -4495,7 +4495,7 @@ function gg(e, t) {
     e,
     t,
     `it finished its earlier run first, so any result you received from ${e} predates the follow-up`,
-    `send the follow-up to ${e} with ${Vr} now and reply only after its new result.`,
+    `send the follow-up to ${e} with ${SEND_MESSAGE_TOOL_NAME} now and reply only after its new result.`,
   );
 }
 function _g(e, t) {
@@ -4511,7 +4511,7 @@ function yg(e, t) {
     e,
     t,
     "it could not be resumed, or another path is resuming it",
-    `handle the follow-up yourself \u2014 dispatch it to a worker with ${Vr} or answer directly \u2014 and reply only after the result.`,
+    `handle the follow-up yourself \u2014 dispatch it to a worker with ${SEND_MESSAGE_TOOL_NAME} or answer directly \u2014 and reply only after the result.`,
   );
 }
 function hg(e, t) {
@@ -4519,7 +4519,7 @@ function hg(e, t) {
     e,
     t,
     "it was withdrawn before the worker read it",
-    `handle the follow-up yourself \u2014 dispatch it with ${Vr} or answer directly \u2014 and reply only after the result.`,
+    `handle the follow-up yourself \u2014 dispatch it with ${SEND_MESSAGE_TOOL_NAME} or answer directly \u2014 and reply only after the result.`,
   );
 }
 function Ll(e, t, o) {
@@ -5221,7 +5221,7 @@ function nm(e) {
   };
 }
 function Ug(e) {
-  return Z(e, void 0, { unref: !0 });
+  return sleep(e, void 0, { unref: !0 });
 }
 function Fg(e) {
   return e.type !== void 0 && e.type !== "stdio" && e.type !== "sdk";
@@ -5405,7 +5405,7 @@ function Kl(e, t) {
     E = Ee(bi(e.appearance_id)),
     I = Ee(bi(e.last_assistant_message_id));
   if (
-    (i("tengu_feedback_survey_event", {
+    (logEvent("tengu_feedback_survey_event", {
       event_type: o,
       appearance_id: E,
       response: d,
@@ -5446,7 +5446,7 @@ function Vg(e, t) {
   Te((d) => ({ ...d, feedbackSurveyState: { lastShownTime: Date.now() } }), t);
 }
 var Kg = new Set(["tengu_message_rated", "tengu_feedback_survey_event"]),
-  Gg = m(() => c({ method: k("log_otel_event"), params: se().optional() }));
+  Gg = createLazyValue(() => c({ method: k("log_otel_event"), params: se().optional() }));
 function pm(e) {
   let t = e.find((o) => o.name === "ccd_session");
   if (!t || t.type !== "connected") return;
@@ -5461,7 +5461,7 @@ function pm(e) {
       let E = _;
       switch (d) {
         case "tengu_message_rated":
-          i(d, {
+          logEvent(d, {
             message_uuid: Ee(bi(E.message_uuid)),
             sentiment: cm(E.sentiment),
             surface: um(E.surface),
@@ -5672,7 +5672,7 @@ async function e_(e, t, o) {
   try {
     if (O === 0) n("installPluginsForHeadless: no marketplaces declared");
     else {
-      let B = await U2e(
+      let B = await runTimedDiagnosticStep(
         "headless_marketplace_reconcile",
         () =>
           lst({
@@ -5723,13 +5723,13 @@ async function e_(e, t, o) {
       (n(`installPluginsForHeadless: failed: ${l(re)}`, { level: "error" }),
       C && !I())
     ) {
-      if (M() && t !== void 0)
+      if (isHoverRestEnabled() && t !== void 0)
         Zf("headlessPluginInstall: pass failed after a change");
       Vde(t, "headlessPluginInstall");
     }
     return (bm(t, o), !1);
   } finally {
-    i("tengu_headless_plugin_install", v);
+    logEvent("tengu_headless_plugin_install", v);
   }
 }
 function bm(e, t) {
@@ -5850,7 +5850,7 @@ function Rm() {
             "turn gate participant broke the answer contract",
           ),
         ),
-          q("error", "turn_gate_participant_broke_contract", {
+          writeDiagnosticsEvent("error", "turn_gate_participant_broke_contract", {
             participant: d.name,
             turn: _.turn,
             reason: I === void 0 ? "malformed_answer" : "unworded_fail",
@@ -5859,7 +5859,7 @@ function Rm() {
     } catch (I) {
       if (_.signal.aborted && yt(I))
         return (
-          q("debug", "turn_gate_participant_aborted", {
+          writeDiagnosticsEvent("debug", "turn_gate_participant_aborted", {
             participant: d.name,
             turn: _.turn,
           }),
@@ -5867,7 +5867,7 @@ function Rm() {
         );
       return (
         logError(I),
-        q("error", "turn_gate_participant_rejected", {
+        writeDiagnosticsEvent("error", "turn_gate_participant_rejected", {
           participant: d.name,
           turn: _.turn,
         }),
@@ -5878,7 +5878,7 @@ function Rm() {
   return {
     register(d) {
       if ((e.push(d), t > 0))
-        q("info", "turn_gate_late_registration", {
+        writeDiagnosticsEvent("info", "turn_gate_late_registration", {
           participant: d.name,
           turn: t,
         });
@@ -5901,7 +5901,7 @@ function Rm() {
           ),
           O = I.filter((re) => re.settledAfterAbort);
         if (O.length > 0)
-          q("info", "turn_gate_refusal_after_abort", {
+          writeDiagnosticsEvent("info", "turn_gate_refusal_after_abort", {
             participants: O.map((re) => re.participant),
             turn: _.turn,
           });
@@ -5909,7 +5909,7 @@ function Rm() {
           C = v[0];
         if (C === void 0) return es;
         return (
-          q("warn", "turn_gate_refused", {
+          writeDiagnosticsEvent("warn", "turn_gate_refused", {
             participants: v.map((re) => re.participant),
             turn: _.turn,
           }),
@@ -6188,7 +6188,7 @@ function $m(e, t) {
     E = X;
   }
   function re(X) {
-    (i("tengu_tool_cpu_by_phase", {
+    (logEvent("tengu_tool_cpu_by_phase", {
       trigger: fromEnum(X),
       sequence: O,
       bg_tasks_report_running: a.CLAUDE_CODE_BG_TASKS_REPORT_RUNNING,
@@ -6287,17 +6287,17 @@ function Km() {
   };
 }
 function Gm(e) {
-  return Object.hasOwn(e, Qz);
+  return Object.hasOwn(e, CLOUD_PLUGINS_FORWARDED_SETTING_KEY);
 }
 async function a_(e) {
   let t = Object.keys(e.settings),
-    o = e.settings[Qz];
-  if (t.length !== 1 || !me(o) || Object.keys(o).some((I) => !M$n.includes(I)))
+    o = e.settings[CLOUD_PLUGINS_FORWARDED_SETTING_KEY];
+  if (t.length !== 1 || !isRecord(o) || Object.keys(o).some((I) => !FORWARDABLE_PLUGIN_SETTING_KEYS.includes(I)))
     return { apply: !1, reason: "malformed" };
   if (e.admission === void 0) return { apply: !1, reason: "not_admitted" };
   if (!e.admission.admitted) return { apply: !1, reason: e.admission.reason };
   let d = e.now(),
-    _ = await kt(
+    _ = await withDeadline(
       Promise.resolve()
         .then(e.readFlag)
         .catch(() => !1),
@@ -6309,8 +6309,8 @@ async function a_(e) {
   return { apply: !0, settings: { ...o }, flagWaitMs: E };
 }
 async function zm(e) {
-  let { [Qz]: t, ...o } = e.settings,
-    d = await a_({ ...e, settings: { [Qz]: t } }),
+  let { [CLOUD_PLUGINS_FORWARDED_SETTING_KEY]: t, ...o } = e.settings,
+    d = await a_({ ...e, settings: { [CLOUD_PLUGINS_FORWARDED_SETTING_KEY]: t } }),
     _ = Object.keys(o).length;
   return {
     verdict: d,
@@ -6320,7 +6320,7 @@ async function zm(e) {
   };
 }
 function Qm(e) {
-  i("tengu_cloud_plugins_mixed_patch", {
+  logEvent("tengu_cloud_plugins_mixed_patch", {
     applied: e.verdict.apply,
     refused_reason: fromEnum(e.verdict.apply ? "none" : e.verdict.reason),
     sibling_key_count: e.siblingKeyCount,
@@ -6330,7 +6330,7 @@ var dd = 5000;
 async function Jm(e) {
   if (e.admission?.admitted !== !0) return { ran: !1, reason: "not_admitted" };
   let t = e.now(),
-    o = await kt(
+    o = await withDeadline(
       Promise.resolve()
         .then(e.readFlag)
         .catch(() => !1),
@@ -6353,7 +6353,7 @@ async function Jm(e) {
         (C) => (C ? "changed" : "unchanged"),
         () => "failed",
       ),
-    v = await kt(O, e.installTimeoutMs);
+    v = await withDeadline(O, e.installTimeoutMs);
   if (v === void 0)
     O.then((C) =>
       e.onLateEnd({
@@ -6376,7 +6376,7 @@ function ef(e) {
   (n(
     `reload_plugins: the install pass the reload stopped waiting for ended ${e.outcome} after ${e.durationMs}ms (installed=${e.installedCount} failed=${e.failedCount})`,
   ),
-    i("tengu_cloud_plugins_late_install", {
+    logEvent("tengu_cloud_plugins_late_install", {
       outcome: fromEnum(e.outcome),
       duration_ms: e.durationMs,
       installed_count: e.installedCount,
@@ -6556,7 +6556,7 @@ function A_(e, t) {
       ) {
         if (t.peek(Mue) !== void 0)
           return (
-            i("tengu_request_user_dialog_implicit_cancel", {
+            logEvent("tengu_request_user_dialog_implicit_cancel", {
               dialog_kind: Tn(d.kind),
               reason: fromEnum("queued_at_park"),
             }),
@@ -6673,7 +6673,7 @@ function L_(e) {
   if (!Array.isArray(t) || Rxe() !== void 0) return;
   let o = p6(t);
   (zXt(o, "restored"),
-    i("tengu_supported_dialog_kinds_restored", { n_kinds: fromNumber(o.length) }),
+    logEvent("tengu_supported_dialog_kinds_restored", { n_kinds: fromNumber(o.length) }),
     n(
       `[print.ts] restored ${o.length} declared dialog kind(s) from prior worker epoch`,
     ));
@@ -6681,7 +6681,7 @@ function L_(e) {
 function N_(e) {
   if (e?.internal?.memory_toggled_off !== !0) return;
   (f_e(!0),
-    i("tengu_memory_toggle_restored", {}),
+    logEvent("tengu_memory_toggle_restored", {}),
     n("[print.ts] restored /pause-memory toggle from prior worker epoch"));
 }
 function q_(e, t) {
@@ -6694,7 +6694,7 @@ async function j_(e, t) {
   )
     return;
   if (
-    (await kt(
+    (await withDeadline(
       df().catch(() => null),
       pd,
     ),
@@ -6926,7 +6926,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
       return Rn.advisorModel === Ur ? Rn : { ...Rn, advisorModel: Ur };
     });
     let Vt = o().advisorModel;
-    if (fn !== Vt) i("tengu_advisor_settings_sync", { applied: Vt !== void 0 });
+    if (fn !== Vt) logEvent("tengu_advisor_settings_sync", { applied: Vt !== void 0 });
   }
   let B = o().advisorModel;
   if (B)
@@ -6939,7 +6939,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
     Aat(() => re("policySettings")),
     CPn(),
     Db("runHeadless_entry"),
-    i("tengu_timer", {
+    logEvent("tengu_timer", {
       event: S("startup"),
       durationMs: Math.round(process.uptime() * 1000),
       mcpNonBlocking: i_e(),
@@ -7003,8 +7003,8 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
   fe("connecting_transport");
   let le = Oy(t, C);
   if ((b7e(ownBridgePeerAddress), C.sdkUrl || C.outputFormat === "stream-json"))
-    LE.of(e).setActive(le);
-  else LE.of(e).markLocalTransport();
+    sessionTransportRegistry.of(e).setActive(le);
+  else sessionTransportRegistry.of(e).markLocalTransport();
   let xe =
     Boolean(C.sdkUrl) &&
     Boolean(a.CLAUDE_CODE_REMOTE_SESSION_ID) &&
@@ -7013,12 +7013,12 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
   if (xe)
     import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js")
       .then((Oe) => Oe.startSyncedFileSyncer(Oe.SYNCED_FILE_ROOT))
-      .catch(() => q("warn", "working_sync_import_failed", {}));
-  if (C.sdkUrl && a.CLAUDE_CODE_REMOTE_SESSION_ID && Fu()) {
+      .catch(() => writeDiagnosticsEvent("warn", "working_sync_import_failed", {}));
+  if (C.sdkUrl && a.CLAUDE_CODE_REMOTE_SESSION_ID && isAnthropicHostedEnvironment()) {
     let Oe = { sessionId: a.CLAUDE_CODE_REMOTE_SESSION_ID, sdkUrl: C.sdkUrl };
     import("./startHostedWorkerVitalsEmitter.9kjcpdzn.js")
       .then((fn) => fn.startHostedWorkerVitalsEmitter(Oe))
-      .catch(() => q("warn", "vitals_emitter_import_failed", {}));
+      .catch(() => writeDiagnosticsEvent("warn", "vitals_emitter_import_failed", {}));
   }
   let U = W1n({
     entrypoint: a.CLAUDE_CODE_ENTRYPOINT,
@@ -7026,14 +7026,14 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
     gitSwitch: a.CLAUDE_CODE_DIR_SYNC_GIT,
   });
   if (xe && !U.start && U.reason === "disabled")
-    q("info", "dir_sync_worker_disabled", {});
+    writeDiagnosticsEvent("info", "dir_sync_worker_disabled", {});
   if (xe && U.start && U.engines.git)
-    q("info", "dir_sync_worker_git_switch_on", {});
+    writeDiagnosticsEvent("info", "dir_sync_worker_git_switch_on", {});
   let ve =
       xe && U.start
         ? import("../../02-功能模块/云目录同步-Git/startWorkerDirSync.45jsr6k0.js")
             .then((Oe) => Oe.startWorkerDirSync(Q()))
-            .catch(() => (q("warn", "dir_sync_worker_import_failed", {}), null))
+            .catch(() => (writeDiagnosticsEvent("warn", "dir_sync_worker_import_failed", {}), null))
         : void 0,
     je = sf({
       managedCloudWorker: xe,
@@ -7044,7 +7044,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
       currentConfigHome: lf,
     });
   if (xe && !je.start && je.reason !== "dir_sync_off")
-    q("info", "home_seed_worker_disabled", { reason: je.reason });
+    writeDiagnosticsEvent("info", "home_seed_worker_disabled", { reason: je.reason });
   let ut = je.start
       ? Ey({
           configHome: je.configHome,
@@ -7060,7 +7060,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
       import("./settleAfterMachineCommand.8azm82c2.js")
         .then((Oe) => Oe.registerWorkerDirSyncForMidTurn(ve))
         .catch(() => {
-          q("warn", "dir_sync_mid_turn_import_failed", {});
+          writeDiagnosticsEvent("warn", "dir_sync_mid_turn_import_failed", {});
         }));
   if (ut !== void 0) Tt.register(Ty(ut.handle));
   let en = O0t({
@@ -7072,7 +7072,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
     hermetic: VW(),
   });
   if (!en.admitted && en.reason === "disabled")
-    q("info", "plugin_forwarding_worker_disabled", {});
+    writeDiagnosticsEvent("info", "plugin_forwarding_worker_disabled", {});
   let Ne = P0t({
       sdkUrl: Boolean(C.sdkUrl),
       remoteSessionId: a.CLAUDE_CODE_REMOTE_SESSION_ID,
@@ -7116,17 +7116,17 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
   if (Bn) {
     if (SandboxManager.isSandboxRequired()) {
       if (C.outputFormat === "stream-json") {
-        let Oe = ME(e) ? QWe : `${QWe}: ${Bn}`;
-        if (ME(e)) n(`sandbox unavailable detail: ${Bn}`, { level: "error" });
+        let Oe = isRemoteTransportPersistent(e) ? SANDBOX_REQUIRED_UNAVAILABLE_MESSAGE : `${SANDBOX_REQUIRED_UNAVAILABLE_MESSAGE}: ${Bn}`;
+        if (isRemoteTransportPersistent(e)) n(`sandbox unavailable detail: ${Bn}`, { level: "error" });
         (Da(le.sessionState, Oe),
           await le.write(
-            xB(K(), [
+            buildErrorResultMessage(K(), [
               `${Oe}. Set sandbox.failIfUnavailable=false to allow unsandboxed execution.`,
             ]),
           ),
           await Promise.race([
             le.flushSessionState(),
-            Z(5000, void 0, { unref: !0 }),
+            sleep(5000, void 0, { unref: !0 }),
           ]));
       }
       (process.stderr.write(
@@ -7369,11 +7369,11 @@ Error: sandbox required but unavailable: ${Bn}
       C.permissionPrompts,
     );
   if (C.permissionPromptToolName)
-    an = an.filter((Oe) => !Kt(Oe, C.permissionPromptToolName));
+    an = an.filter((Oe) => !matchesToolName(Oe, C.permissionPromptToolName));
   let or = _on(sn);
   if (Object.keys(or).length > 0) d((Oe) => ({ ...Oe, sendMessagePins: or }));
   let Ut = (Oe) => {
-      kt(
+      withDeadline(
         df().catch(() => null),
         pd,
       )
@@ -7408,7 +7408,7 @@ Error: sandbox required but unavailable: ${Bn}
         (Xr = gl(Rn)),
         Xr.length > 0)
       )
-        await kt(
+        await withDeadline(
           df().catch(() => null),
           pd,
         );
@@ -7422,7 +7422,7 @@ Error: sandbox required but unavailable: ${Bn}
         for (let hn of jve()) await le.write(hn);
         mr = await Promise.race([
           le.flushClientEvents(),
-          Z(20000, void 0, { unref: !0 }).then(() => !1),
+          sleep(20000, void 0, { unref: !0 }).then(() => !1),
         ]);
       } catch (hn) {
         n(
@@ -7663,7 +7663,7 @@ ${zn.result}`;
           .catch(() => {}),
         ve?.then((Oe) => Oe?.drain()).catch(() => {}),
       ]),
-      Z(5000, void 0, { unref: !0 }),
+      sleep(5000, void 0, { unref: !0 }),
     ]));
   let dr = le instanceof Uz && le.permanentCloseCode !== void 0;
   if (N && zn?.type !== "result") {
@@ -7677,7 +7677,7 @@ ${zn.result}`;
       .write(`SDKStartup: exiting without result: ${Oe} (last_phase=${ye}, drained=${lr}, exit=${dr ? 1 : 0})
 `);
   }
-  (LE.of(e).setActive(void 0),
+  (sessionTransportRegistry.of(e).setActive(void 0),
     Pr((zn?.type === "result" && zn?.is_error) || dr ? 1 : 0));
 }
 var ry = new Set([mt, Vh, so, Ni]);
@@ -7771,7 +7771,7 @@ function dy(e, t, o) {
     let O = GY(I);
     if (!I || !O || typeof I.tool_name !== "string") continue;
     if (t?.has(I.tool_use_id)) continue;
-    let v = ar(o, I.tool_name),
+    let v = findToolByName(o, I.tool_name),
       C = I.request_id === "" && !!I.suppressed_request_id;
     if (v ? v.requiresUserInteraction?.() : C) d.add(O);
   }
@@ -7868,7 +7868,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   let U = w.messageQueue,
     ve = { getState: v, setState: C },
     je = v0e.over(ve),
-    ut = QB.over(ve);
+    ut = PluginStateStore.over(ve);
   if (
     (e.mcpSessionWiring.registerConnections(je),
     MNe.of(e).acquire(PAe.over(ve)),
@@ -7999,7 +7999,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     Ct = t.outbound;
   K_(t, Ct);
   let Zt = null;
-  LE.of(e).remoteBridgeLive = () => Zt !== null;
+  sessionTransportRegistry.of(e).remoteBridgeLive = () => Zt !== null;
   let lr = !1,
     eo = 0,
     Or,
@@ -8015,7 +8015,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   }
   let fn = Promise.resolve(),
     Vt = null,
-    Rn = ZT((p) => p()),
+    Rn = serializeAsyncCalls((p) => p()),
     Ur = Promise.resolve(),
     er = 0,
     mr,
@@ -8135,7 +8135,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       t.write({ type: "transcript_mirror", filePath: p, entries: T });
     });
   let Ti = () => {
-    if ((q("info", "shutdown_signal", { signal: "SIGINT" }), $s())) {
+    if ((writeDiagnosticsEvent("info", "shutdown_signal", { signal: "SIGINT" }), $s())) {
       fB();
       return;
     }
@@ -8146,7 +8146,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   let Ks = !1,
     ys = () => {
       if (Ks || $s()) return;
-      ((Ks = !0), a5(), jft(), zn.abort(), xn(143));
+      ((Ks = !0), commitExit(), jft(), zn.abort(), xn(143));
     };
   (process.on("SIGTERM", ys),
     C4e(),
@@ -8162,7 +8162,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           request_id: N.request_id,
         }).catch(() => {});
       if (((nt = void 0), Tr && !Ut?.signal.aborted && !qr))
-        (i("tengu_sdk_result", {
+        (logEvent("tengu_sdk_result", {
           subtype: S("terminated"),
           is_error: !0,
           duration_ms: Date.now() - Tr,
@@ -8176,20 +8176,20 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           (_r = void 0));
       let p = {};
       for (let T of gne(v())) if (Vp(T)) p[T.type] = (p[T.type] ?? 0) + 1;
-      (q("info", "run_state_at_shutdown", {
+      (writeDiagnosticsEvent("info", "run_state_at_shutdown", {
         run_active: gt,
         run_phase: it,
         worker_status: t.sessionState.getState(),
         internal_events_pending: t.internalEventsPending,
         bg_tasks: p,
       }),
-        i("tengu_shutdown_pending_state", {
+        logEvent("tengu_shutdown_pending_state", {
           had_live_turn: gt,
           worker_status: fromEnum(t.sessionState.getState()),
           pending_human_requests: t.pendingHumanRequestCount,
           replies_left_for_next_process: t.repliesLeftForNextProcess,
           internal_events_pending: t.internalEventsPending,
-          exiting: no(),
+          exiting: isExiting(),
         }));
     }));
   function _o(p) {
@@ -8425,7 +8425,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       bytes: ao.calculatedSize,
     })));
   let vs = new Map(),
-    Fr = new uO(),
+    Fr = new PerClassInstanceRegistry(),
     Do = w.sessionHooks ?? T2(),
     as = z2(),
     lo = Ude(getCurrentSessionIsolationLatch() ?? l5e(E, _), (p) => saveIsolationLatch(p, w.storageV5)),
@@ -8481,7 +8481,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       ),
         U.enqueue(jr(L)),
         ko(),
-        i("tengu_resume_parked_permission", {
+        logEvent("tengu_resume_parked_permission", {
           outcome: S("served_adopted_at_boot"),
           served_adopted: L.length,
           parked_tool_use_sha12: Tn(N.tool_use_id),
@@ -8504,7 +8504,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         removeInterruptedMessage(ct, X.message),
         U.enqueue(p));
     if ((w.journaledServedCalls ?? 0) > 0 || T.length > 0)
-      i("tengu_remote_tool_restart_adoption", {
+      logEvent("tengu_remote_tool_restart_adoption", {
         journaled: w.journaledServedCalls ?? 0,
         adoptable: (w.servedCallsToAdopt ?? []).length,
         adopted: T.length,
@@ -8512,7 +8512,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       });
   }
   function jr(p) {
-    let T = (Se) => ar(_, Se.call.tool) !== void 0,
+    let T = (Se) => findToolByName(_, Se.call.tool) !== void 0,
       [x, ...r] = [...p].sort((Se, Ce) => Number(T(Ce)) - Number(T(Se))),
       L = new Set(p.map((Se) => Se.call.tool_use_id)),
       de = [...(w.supersededToolNames ?? new Map())]
@@ -8564,7 +8564,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       (t.sessionState.notifyInternalMetadataChanged({
         in_flight_served_calls: p.current(),
       }),
-        i("tengu_remote_tool_restart_adoption_dropped", { dropped: T.length }));
+        logEvent("tengu_remote_tool_restart_adoption_dropped", { dropped: T.length }));
   }
   function ko() {
     if (!X || X.kind === "none") return;
@@ -8588,7 +8588,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   )
     (t.sessionState.adoptRestoredPendingAction(),
       t.sessionState.notifyStateChanged("idle"),
-      i("tengu_ccr_init_park_report", {
+      logEvent("tengu_ccr_init_park_report", {
         reported: S("idle"),
         reason: De ? S("park_settled_at_boot") : S("no_park_derived"),
         init_reported: fromEnum(xe.reported),
@@ -8603,7 +8603,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   });
   if (zs) {
     let { command: p, counts: T } = zs;
-    (i("tengu_ccr_orphan_restore_wake", {
+    (logEvent("tengu_ccr_orphan_restore_wake", {
       orphan_count: w.restoredOrphans?.length ?? 0,
       wake_agent_count: T.agent,
       wake_monitor_count: T.monitor,
@@ -8767,7 +8767,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           ),
     )
     .catch(() => {
-      q("warn", "home_seed_line_wiring_failed", {});
+      writeDiagnosticsEvent("warn", "home_seed_line_wiring_failed", {});
     });
   let kn = [],
     Oo = [],
@@ -8785,12 +8785,12 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           try {
             logMCPDebug(x, `Elicitation request received in print mode: ${b(r)}`);
             let de = r.params.mode === "url" ? "url" : "form";
-            i("tengu_mcp_elicitation_shown", { mode: fromEnum(de) });
+            logEvent("tengu_mcp_elicitation_shown", { mode: fromEnum(de) });
             let V = await pf().runElicitationHooks(x, r.params, L.signal);
             if (V)
               return (
                 logMCPDebug(x, `Elicitation resolved by hook: ${b(V)}`),
-                i("tengu_mcp_elicitation_response", {
+                logEvent("tengu_mcp_elicitation_response", {
                   mode: fromEnum(de),
                   action: fromEnum(V.action),
                 }),
@@ -8822,7 +8822,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 Ce,
               );
             return (
-              i("tengu_mcp_elicitation_response", {
+              logEvent("tengu_mcp_elicitation_response", {
                 mode: fromEnum(de),
                 action: fromEnum(at.action),
               }),
@@ -8884,7 +8884,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         }
         let de = L.newTools.length,
           V = (W) =>
-            i("tengu_mcp_list_changed", {
+            logEvent("tengu_mcp_list_changed", {
               mcpServerKeyHash: wP(x),
               type: S("tools"),
               cause: GLe(r),
@@ -8941,7 +8941,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       if (T.type === "failed") {
         Wr("mcp reconnect/toggle failed", T.error ?? "(no detail)");
         let x = T.error ?? "Connection failed";
-        Be(p, Gf.has(x) ? x : (zf(x) ?? UI(e, x, "Connection failed")));
+        Be(p, Gf.has(x) ? x : (zf(x) ?? withholdDetailIfRemote(e, x, "Connection failed")));
         return;
       }
       Be(p, Ra(T));
@@ -9130,7 +9130,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     np = async (p, T) => {
       let x = ir();
       for (let r of PJt) {
-        await Z(r);
+        await sleep(r);
         let L = v().mcp.clients.find((Ye) => Ye.name === p);
         if (ir() !== x || L?.type !== "failed" || isMcpServerDisabled(p)) return;
         if (Cs.has(p)) return;
@@ -9278,7 +9278,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       (Zs(p), La(p), Md(p));
     }));
   let qa,
-    ms = ZT(async (p = "redial") => {
+    ms = serializeAsyncCalls(async (p = "redial") => {
       Qo?.reassertOwnership();
       let T = ka(O, kn);
       if (T === "none" || (T === "retry_failed" && p === "skip")) return;
@@ -9295,7 +9295,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         w.storageV5,
       );
       ((kn = L.clients), (Oo = L.tools), (Xs = L.commands));
-      let de = Y([...r, ...x]),
+      let de = dedupe([...r, ...x]),
         V = de.map((W) => [W, Oa(W)]);
       (C((W) => ({
         ...W,
@@ -9376,7 +9376,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       if (x === null) return;
       (cZ(x),
         kl.notifyChange("flagSettings"),
-        q("info", "plugin_forwarding_retracted", {
+        writeDiagnosticsEvent("info", "plugin_forwarding_retracted", {
           at: p,
           keys: Object.keys(T).length - Object.keys(x).length,
         }));
@@ -9535,7 +9535,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         }
       }
       if (w.permissionPromptToolName)
-        Ce = Ce.filter((Je) => !Kt(Je, w.permissionPromptToolName));
+        Ce = Ce.filter((Je) => !matchesToolName(Je, w.permissionPromptToolName));
       if (x && !w.jsonSchema) {
         let Je = eCe(x);
         if ("tool" in Je) {
@@ -9548,7 +9548,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           Ce = [...Ce, Je.tool];
         } else if (!qi)
           ((qi = !0),
-            i("tengu_structured_output_failure", {
+            logEvent("tengu_structured_output_failure", {
               error: S("Invalid JSON schema"),
             }),
             n(
@@ -9716,7 +9716,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           });
         if (Ce.sdkServersChanged) {
           let at = new Set(kn.map((Wn) => Wn.name)),
-            ht = Y([...Je, ...at]),
+            ht = dedupe([...Je, ...at]),
             Hn = ht.map((Wn) => [Wn, Oa(Wn)]);
           C((Wn) => ({
             ...Wn,
@@ -9884,7 +9884,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   }
   async function qd(p) {
     try {
-      await U2e("headless_managed_settings_wait", () => _ee());
+      await runTimedDiagnosticStep("headless_managed_settings_wait", () => _ee());
     } catch (x) {
       logError(x);
     }
@@ -9953,7 +9953,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         try {
           if ((await Promise.race([p.catch(() => {}), x]), T)) {
             let de = U4e() - (performance.now() - Wd);
-            await Promise.race([T.catch(() => {}), Z(Math.max(0, de))]);
+            await Promise.race([T.catch(() => {}), sleep(Math.max(0, de))]);
           }
           let r = sBt(e)
               ? new Set(
@@ -10005,7 +10005,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         }),
     );
   async function zi(p = {}) {
-    let { agentDefinitions: T } = await Xx(ut, w.storageV5, w.credentials, p);
+    let { agentDefinitions: T } = await refreshActivePlugins(ut, w.storageV5, w.credentials, p);
     ((Rs = filterCommandsForHeadless(await getCommands(Ca(), w.storageV5))), (ja = !0));
     let x = cr.filter((r) => r.source === "flagSettings");
     ((cr = [...T.allAgents, ...x]),
@@ -10075,13 +10075,13 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     if (x === 0) {
       (r.catch((de) => logError(de)),
         Ts("plugins_sync_mcp_ms", 0),
-        i("tengu_plugins_sync_mcp_skipped", {}));
+        logEvent("tengu_plugins_sync_mcp_skipped", {}));
       return;
     }
-    let L = Z(x).then(() => "timeout");
+    let L = sleep(x).then(() => "timeout");
     try {
       if ((await Promise.race([r, L])) === "timeout")
-        (i("tengu_plugins_sync_mcp_timeout", { timeout_ms: x }),
+        (logEvent("tengu_plugins_sync_mcp_timeout", { timeout_ms: x }),
           r.catch((de) => logError(de)));
     } catch (de) {
       logError(de);
@@ -10107,10 +10107,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       if (Os) {
         let p = performance.now(),
           T = U4e() - (p - Wd),
-          x = Z(Math.max(0, T)).then(() => "timeout"),
+          x = sleep(Math.max(0, T)).then(() => "timeout"),
           r = (await Promise.race([Os, x])) === "timeout";
-        if ((q("info", "plugins_sync_wait", { timed_out: r }), r))
-          (i("tengu_plugins_sync_wait_timeout", {}),
+        if ((writeDiagnosticsEvent("info", "plugins_sync_wait", { timed_out: r }), r))
+          (logEvent("tengu_plugins_sync_wait_timeout", {}),
             Os.then(() => {
               Xa = !0;
             }).catch(logError));
@@ -10142,13 +10142,13 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       if (Xo) {
         let p = performance.now();
         if ($i > 0) {
-          let T = Z($i).then(() => "timeout");
+          let T = sleep($i).then(() => "timeout");
           if ((await Promise.race([Xo, T])) === "timeout")
             (n(
               `CLAUDE_CODE_SYNC_PLUGIN_INSTALL: plugin installation timed out after ${$i}ms`,
               { level: "error" },
             ),
-              i("tengu_sync_plugin_install_timeout", { timeout_ms: $i }));
+              logEvent("tengu_sync_plugin_install_timeout", { timeout_ms: $i }));
         } else await Xo;
         if ((Ts("plugin_install_ms", performance.now() - p, p), wo))
           Ts(
@@ -10166,10 +10166,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     if (Is) await Is;
   }
   function el(p, T, x) {
-    return p === T || rn(p) === x;
+    return p === T || normalizeMcpName(p) === x;
   }
   function Yi(p) {
-    let T = rn(p);
+    let T = normalizeMcpName(p);
     return [...v().mcp.clients, ...kn, ...At.clients].filter((x) =>
       el(x.name, p, T),
     );
@@ -10211,10 +10211,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     if (
       (await Promise.race([
         Qi().then(() => "resolved"),
-        Z(Math.max(0, de - Date.now()), x),
+        sleep(Math.max(0, de - Date.now()), x),
       ])) === "resolved"
     ) {
-      let Ye = rn(p);
+      let Ye = normalizeMcpName(p);
       if (!(
         Yi(p).length > 0 ||
         Object.keys(At.configs).some((ht) => el(ht, p, Ye)) ||
@@ -10222,7 +10222,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           getAllMcpConfigs({ storageV5: w.storageV5, credentials: w.credentials }).then(
             ({ servers: ht }) => Object.keys(ht).some((Hn) => el(Hn, p, Ye)),
           ),
-          Z(Math.max(0, de - Date.now()), x).then(() => !0),
+          sleep(Math.max(0, de - Date.now()), x).then(() => !0),
         ]))
       ))
         return;
@@ -10238,7 +10238,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       )
         return;
       if (Date.now() >= (Ye.length === 0 ? Je : de)) break;
-      await Z(50, x);
+      await sleep(50, x);
     }
     if (x.aborted) return;
     return r(Yi(p));
@@ -10269,7 +10269,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       let p = getInitialSettings();
       return {
         skillOverrides: b(p.skillOverrides ?? {}),
-        bundledSkillsDisabled: jy(p),
+        bundledSkillsDisabled: areBundledSkillsDisabled(p),
       };
     },
     tl = Zd(),
@@ -10285,7 +10285,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       (oi ?? Promise.resolve()).then(Ji).catch(logError);
     });
   U.subscribe(() => {
-    if (Ut && !no() && U.getCommandsByMaxPriority("now").length > 0)
+    if (Ut && !isExiting() && U.getCommandsByMaxPriority("now").length > 0)
       Ut.abort(userAbortReason("interrupt"));
   });
   let tc = !1,
@@ -10323,7 +10323,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           hasPendingNotification: L,
         });
       if (de && a.CLAUDE_CODE_BG_TASKS_REPORT_RUNNING)
-        q("info", "cli_idle_gate_report_idle", () => ({
+        writeDiagnosticsEvent("info", "cli_idle_gate_report_idle", () => ({
           task_count: T.length,
           tasks: Om(T.slice(0, 64)),
           tasks_truncated: T.length > 64,
@@ -10381,7 +10381,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         if (x <= 0) r = "deadline";
         else
           try {
-            r = await Dt(oc(), x, "team teardown park deadline");
+            r = await withTimeout(oc(), x, "team teardown park deadline");
           } catch {
             r = "deadline";
           }
@@ -10390,15 +10390,15 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           let L = v();
           return (
             n(
-              `[print.ts] Team teardown park gave up after ${_f()}ms (shutdown prompt injected: ${tn}) with ${Object.keys(L.teamContext?.teammates ?? {}).length} roster teammate(s) and ${G(Object.values(L.tasks), (de) => de.type === "in_process_teammate" && de.status === "running")} in-process teammate task(s) still active; tearing down anyway`,
+              `[print.ts] Team teardown park gave up after ${_f()}ms (shutdown prompt injected: ${tn}) with ${Object.keys(L.teamContext?.teammates ?? {}).length} roster teammate(s) and ${countMatching(Object.values(L.tasks), (de) => de.type === "in_process_teammate" && de.status === "running")} in-process teammate task(s) still active; tearing down anyway`,
             ),
-            i("tengu_headless_team_teardown_park_timeout", {
+            logEvent("tengu_headless_team_teardown_park_timeout", {
               prompt_injected: tn,
             }),
             "teardown-now"
           );
         }
-        (p(), await Z(500));
+        (p(), await sleep(500));
       }
       return "teardown-now";
     },
@@ -10430,11 +10430,11 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       for (let p of [...Ne]) dc(p);
     },
     Ar = async () => {
-      if (gt || $s() || no() || (dn && U.peek(ud) === void 0)) return;
+      if (gt || $s() || isExiting() || (dn && U.peek(ud) === void 0)) return;
       ((gt = !0), (it = void 0), (Gn = !1));
       let p = !1,
         T = () => {
-          if (Gn || $s() || no()) return;
+          if (Gn || $s() || isExiting()) return;
           if (Fs()) {
             if (!p) ((p = !0), t.sessionState.wipeTurnScopedMetadata());
             return;
@@ -10451,7 +10451,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         if (w.sdkUrl) {
           if (ka(O, kn) !== "retry_failed") await ms("skip");
           if (!qa && ka(O, kn) === "retry_failed")
-            (q("info", "sdk_mcp_retry_not_awaited"),
+            (writeDiagnosticsEvent("info", "sdk_mcp_retry_not_awaited"),
               (qa = ms()
                 .catch(logError)
                 .finally(() => {
@@ -10465,9 +10465,9 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         ) {
           let W = performance.now(),
             Se = HNn() - (W - ap),
-            Ce = Z(Math.max(0, Se)).then(() => "timeout");
+            Ce = sleep(Math.max(0, Se)).then(() => "timeout");
           if ((await Promise.race([Qa, Ce])) === "timeout")
-            i("tengu_skills_sync_wait_timeout", {});
+            logEvent("tengu_skills_sync_wait_timeout", {});
           (Ts("skills_sync_wait_ms", performance.now() - W, W),
             await Zi(),
             (Qa = null));
@@ -10693,7 +10693,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               if (V.mode === "poll-event") (oCe(cn), logFeatureOk("poll_event_delivery"));
               let St = V.mode === "poll-event" ? Na(ofe([rCe(V)], 0)) : V.value;
               if (t instanceof Uz && V.mode === "prompt" && V.uuid !== void 0)
-                i("tengu_bridge_message_received", { is_repl: !1 });
+                logEvent("tengu_bridge_message_received", { is_repl: !1 });
               if (V.shouldQuery !== !1) {
                 if (
                   (zt.abortController?.abort(),
@@ -10766,7 +10766,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       e.requestJournal.recordMainThreadTurnStart();
                     ((Tr = Date.now()),
                       (_r = Kr),
-                      X0.startCLIActivity("print-ask"),
+                      activeTimeTracker.startCLIActivity("print-ask"),
                       tze(!0),
                       U.setInFlightDrainBatch(cn));
                     try {
@@ -10842,14 +10842,14 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         if (qe.type === "result") {
                           if (
                             ((qe.queued_turn_count =
-                              dn || $s() || no() ? 0 : ezn(U)),
+                              dn || $s() || isExiting() ? 0 : ezn(U)),
                             (F = Ut?.signal.aborted ?? !1),
                             (wr = F),
                             (ue = qe.terminal_reason),
                             (ie = qe),
                             Tr !== void 0)
                           )
-                            (i("tengu_sdk_result", {
+                            (logEvent("tengu_sdk_result", {
                               subtype:
                                 qe.subtype === "error_during_execution" &&
                                 (OR(qe.terminal_reason) || F)
@@ -10940,7 +10940,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         overrideAtTurnEnd: Ec(),
                       });
                       if (Qt.kind !== "keep" && An !== void 0)
-                        (i("tengu_print_model_override_adopted", {
+                        (logEvent("tengu_print_model_override_adopted", {
                           from_model_scope: fromEnum(FF(An)),
                           ...(Qt.kind === "adopt"
                             ? { to_model_scope: fromEnum(FF(Qt.model)) }
@@ -10961,7 +10961,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         wF(qe, v()),
                         Lo("turn_end"),
                         iV(),
-                        X0.endCLIActivity("print-ask"));
+                        activeTimeTracker.endCLIActivity("print-ask"));
                     }
                   }),
                 ),
@@ -10990,7 +10990,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       t.onCommandLifecycle?.(_e, "completed"));
               }
               if (
-                (q("info", "cli_ask_turn_complete", {
+                (writeDiagnosticsEvent("info", "cli_ask_turn_complete", {
                   should_query: D.shouldQuery,
                   batch_size: cn.length,
                   mode: D.mode,
@@ -11069,7 +11069,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           if ((await r(), U.peek(RO) !== void 0)) {
             if (
               (Ztn(e.ccrRecap),
-              t.sessionState.getState() === "idle" && !no() && (Gn || !Cn))
+              t.sessionState.getState() === "idle" && !isExiting() && (Gn || !Cn))
             )
               t.sessionState.notifyStateChanged("running");
           }
@@ -11162,12 +11162,12 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 )
                   (t.sessionState.notifyStateChanged("idle"),
                     SDt(e.ccrRecap, t.sessionState));
-                (L(), await Z(100));
+                (L(), await sleep(100));
               }
             }
           }
         } while (W);
-        q("info", "cli_drain_queue_complete", {
+        writeDiagnosticsEvent("info", "cli_drain_queue_complete", {
           commands_processed: ht,
           queue_depth_at_exit: U.getCommandQueueLength(),
         });
@@ -11189,7 +11189,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               storageV5: w.storageV5,
             });
           if (w.sessionMirror) await flushSessionStorage();
-          let In = dn || $s() || no();
+          let In = dn || $s() || isExiting();
           if (
             (id(rr, (Sn) =>
               Ct.enqueue(
@@ -11217,8 +11217,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           }
         }
       } catch (V) {
-        if ((i("tengu_sdk_session_crash", If(V)), !qr))
-          (i("tengu_sdk_result", {
+        if ((logEvent("tengu_sdk_session_crash", If(V)), !qr))
+          (logEvent("tengu_sdk_result", {
             subtype: S("error_during_execution"),
             is_error: !0,
             num_turns: 0,
@@ -11234,12 +11234,12 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           let W = If(V);
           (Da(
             t.sessionState,
-            ME(e) ? `Session crashed (${W.error_name})` : l(V),
+            isRemoteTransportPersistent(e) ? `Session crashed (${W.error_name})` : l(V),
           ),
             await t.write(
-              xB(
+              buildErrorResultMessage(
                 K(),
-                E3t(
+                keepPrimaryIfRemote(
                   e,
                   `[session_crash] error_name=${W.error_name} api_error_status=${W.api_error_status ?? "none"} cause_name=${W.cause_name ?? "none"}`,
                   [l(V), ...getInMemoryErrors().map((Se) => Se.error)],
@@ -11249,7 +11249,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         } catch {}
         (await Promise.race([
           t.flushSessionState(),
-          Z(5000, void 0, { unref: !0 }),
+          sleep(5000, void 0, { unref: !0 }),
         ]),
           zt.abortController?.abort(),
           Pr(1));
@@ -11263,7 +11263,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         )
           await Promise.race([
             t.flushDeliveryAcks(),
-            Z(5000, void 0, { unref: !0 }),
+            sleep(5000, void 0, { unref: !0 }),
           ]);
         if (!$s()) {
           vo();
@@ -11275,10 +11275,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             Ft() &&
             N?.details &&
             t.sessionState.getState() !== "requires_action" &&
-            !no()
+            !isExiting()
           )
             t.sessionState.notifyStateChanged("requires_action", N.details);
-          else if (!V && !Gn && Cn && !Qe() && !no() && !Fs()) nl();
+          else if (!V && !Gn && Cn && !Qe() && !isExiting() && !Fs()) nl();
           rc();
           for (let Se of go()) Ct.enqueue(Se);
           if (W) SDt(e.ccrRecap, t.sessionState);
@@ -11347,7 +11347,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       { level: "warn" },
                     ),
                       L(),
-                      await Z(500));
+                      await sleep(500));
                     continue;
                   }
                   if (
@@ -11388,7 +11388,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 }
                 let Wn = at.filter((Lr) => isHeadlessLeadDisplayableMessage(Lr.text));
                 if (Wn.length === 0 || dn) {
-                  if ((de(), !ht)) (L(), await Z(500));
+                  if ((de(), !ht)) (L(), await sleep(500));
                   continue;
                 }
                 let gr = formatTeammateMessages(Wn, { recipientIsLead: !0 });
@@ -11408,7 +11408,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 );
                 return;
               }
-              (L(), await Z(500));
+              (L(), await sleep(500));
             }
           } finally {
             qt = !1;
@@ -11432,7 +11432,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             Ao.size > 0)
           )
             await Promise.allSettled(Ao);
-          (await Dt(
+          (await withTimeout(
             Ur,
             30000,
             "remote_control operation still pending at teardown",
@@ -11466,7 +11466,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     rl = new Set(),
     sl,
     cc = () => {
-      if (dn || $s() || no() || Y9(w.maxBudgetUsd)) return;
+      if (dn || $s() || isExiting() || Y9(w.maxBudgetUsd)) return;
       let p = U.getCommandQueueSnapshot();
       if (
         (clearTimeout(sl),
@@ -11529,7 +11529,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   function ea(p) {
     let T = t.cancelPendingUserDialogs(SI.kind, p);
     if (T > 0)
-      q("info", "cli_user_dialog_implicit_cancel", {
+      writeDiagnosticsEvent("info", "cli_user_dialog_implicit_cancel", {
         cancelled_count: T,
         reason: p,
       });
@@ -11659,17 +11659,17 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       al.start());
   }
   let Xe = function (p, T) {
-      Ct.enqueue(I8(p.request_id, T));
+      Ct.enqueue(buildControlSuccessResponse(p.request_id, T));
     },
     Wr = function (p, T) {
-      if (ME(e)) n(`${p}: ${T}`, { level: "error" });
+      if (isRemoteTransportPersistent(e)) n(`${p}: ${T}`, { level: "error" });
     },
     Be = function (p, T) {
-      Ct.enqueue(kB(p.request_id, T));
+      Ct.enqueue(buildControlErrorResponse(p.request_id, T));
     },
     Yn = function (p, T, x) {
       (logError(dt(ge(x), `${T}: handler failed`)),
-        Be(p, x instanceof mi ? Qn(l(x)) : UI(e, l(x), `${T} failed`)));
+        Be(p, x instanceof mi ? Qn(l(x)) : withholdDetailIfRemote(e, l(x), `${T} failed`)));
     },
     No = new Map(),
     ll,
@@ -11718,7 +11718,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       return () => clearInterval(p);
     },
     yc = function (p, T) {
-      (i("tengu_sdk_control_request_progress", { status: fromEnum(T.status) }),
+      (logEvent("tengu_sdk_control_request_progress", { status: fromEnum(T.status) }),
         Ct.enqueue({
           type: "system",
           subtype: "control_request_progress",
@@ -11840,13 +11840,13 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         let Ye = p_(L, "CLAUDE.md");
         if (!ws.includes(Ye)) ws.push(Ye);
       }
-      if (T.reload_skills) await M3e();
+      if (T.reload_skills) await reloadSkills();
       if (T.reload_plugins) {
         (await Promise.race([
           Promise.allSettled([Sa(void 0, w.storageV5, w.credentials)]),
-          Z(U4e()),
+          sleep(U4e()),
         ]),
-          await Xx(ut, w.storageV5, w.credentials));
+          await refreshActivePlugins(ut, w.storageV5, w.credentials));
         let Ye = new Set(Object.keys(At.configs)),
           at = new Set(
             v()
@@ -11855,7 +11855,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           );
         await Promise.allSettled([Us(at, "reload_plugins")]);
       }
-      Xe(p, { directory: ME(e) ? T.directory : L });
+      Xe(p, { directory: isRemoteTransportPersistent(e) ? T.directory : L });
     } catch (x) {
       Yn(p, "register_repo_root", x);
     }
@@ -11869,7 +11869,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         L = r(T.mount_path);
       } catch (Se) {
         (Wr("add_directory dest", l(Se)),
-          Be(p, UI(e, l(Se), "add_directory failed")));
+          Be(p, withholdDetailIfRemote(e, l(Se), "add_directory failed")));
         return;
       }
       if (!Ie(a.CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD)) {
@@ -11882,13 +11882,13 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       let de = await x({ mount_path: T.mount_path, force: !0 });
       if (!de.ok) {
         (Wr("add_directory stage", de.error),
-          Be(p, UI(e, de.error, "add_directory failed")));
+          Be(p, withholdDetailIfRemote(e, de.error, "add_directory failed")));
         return;
       }
       let V = dirname(L),
         W = mp();
       if (!W.includes(V)) Hz([...W, V]);
-      if ((nR(e), ET(e, "directory_added"), await M3e(), ME(e)))
+      if ((nR(e), ET(e, "directory_added"), await reloadSkills(), isRemoteTransportPersistent(e)))
         (Wr("add_directory staged", `${L} (${V})`), Xe(p, {}));
       else Xe(p, { staged_path: L, directory: V });
     } catch (x) {
@@ -11993,7 +11993,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       });
       if (V === "retired_unanswered") await fp();
       if (
-        (i("tengu_resume_parked_permission", {
+        (logEvent("tengu_resume_parked_permission", {
           outcome: fromEnum(V),
           reason: fromEnum(T),
           wait_ms: x,
@@ -12005,7 +12005,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           !r() &&
           !gt &&
           !$s() &&
-          !no() &&
+          !isExiting() &&
           !gt &&
           !Fs())
       )
@@ -12015,7 +12015,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       if (un) (clearTimeout(un), (un = void 0));
       let T = nt;
       if (!T || !N) return;
-      if (no()) return;
+      if (isExiting()) return;
       if (
         N.kind === "adopted" &&
         (p === "denied" || p === "orphan_dropped") &&
@@ -12035,14 +12035,14 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         vc();
         return;
       }
-      if (x && N.details && !Xt && !mn() && !dn && !$s() && !no()) {
+      if (x && N.details && !Xt && !mn() && !dn && !$s() && !isExiting()) {
         ((Bn = !0),
           t.sessionState.notifyStateChanged("requires_action", N.details),
           (Gn = !1),
           n(
             `[print.ts] No persisted control_response for parked permission toolUseID=${N.tool_use_id} \u2014 holding it answerable (CLAUDE_CODE_HOLD_UNANSWERED_PARKED_PERMISSION); not re-running, not retiring`,
           ),
-          i("tengu_resume_parked_permission", {
+          logEvent("tengu_resume_parked_permission", {
             outcome: S("held"),
             reason: fromEnum(p),
             wait_ms: Date.now() - Vn,
@@ -12057,7 +12057,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         ((nt = void 0),
         ui.add(N.tool_use_id),
         t.write({ type: "control_cancel_request", request_id: N.request_id }),
-        i("tengu_resume_stale_prompt_cancel", { kind: S("permission") }),
+        logEvent("tengu_resume_stale_prompt_cancel", { kind: S("permission") }),
         p === "interrupt" ||
           p === "new_input" ||
           p === "rewind" ||
@@ -12068,7 +12068,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           (n(
             `[print.ts] Parked permission toolUseID=${N.tool_use_id} superseded by new input during ${r ? "hold" : "wait"} (${p}) \u2014 dropping deferred rescue`,
           ),
-          i("tengu_resume_parked_permission", {
+          logEvent("tengu_resume_parked_permission", {
             outcome: fromEnum(r ? "held_superseded" : "superseded"),
             reason: fromEnum(p),
             wait_ms: Date.now() - Vn,
@@ -12079,7 +12079,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         )
           pp();
         let V = p === "interrupt" && a.CLAUDE_CODE_PARKED_STOP_RETIRES;
-        if (!gt && !$s() && !no()) {
+        if (!gt && !$s() && !isExiting()) {
           if ((r || V) && p === "interrupt") Sc(hc(N), p, Date.now() - Vn);
           else if ((r || Cn) && !Fs()) nl();
         }
@@ -12110,7 +12110,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         if (X && X.kind !== "none") removeInterruptedMessage(ct, X.message);
         U.enqueue(T);
       }
-      (i("tengu_resume_parked_permission", {
+      (logEvent("tengu_resume_parked_permission", {
         outcome:
           L.length > 0 ? S("fallback_served_adopted") : S("fallback_reask"),
         reason: fromEnum(p),
@@ -12196,14 +12196,14 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           n(
             `[print.ts] Parked permission toolUseID=${T} resolved by persisted control_response \u2014 dropping deferred rescue`,
           ),
-          i("tengu_resume_parked_permission", {
+          logEvent("tengu_resume_parked_permission", {
             outcome: S("consumed_persisted"),
             wait_ms: Date.now() - Vn,
             ...Ls,
           }));
       else if (!L)
         if (Sr !== void 0)
-          (i("tengu_resume_parked_permission", {
+          (logEvent("tengu_resume_parked_permission", {
             outcome: S("late_answer_discarded"),
             wait_ms: Date.now() - Vn,
             late_ms: Date.now() - Sr,
@@ -12232,7 +12232,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       if (
         (Ts("input_ready_ms", performance.now(), 0),
         zXn(),
-        q("info", "cli_message_loop_started"),
+        writeDiagnosticsEvent("info", "cli_message_loop_started"),
         Db("stdin_listen_started"),
         a.CLAUDE_CODE_RESUME_INTERRUPTED_TURN &&
           t.isRemoteTransport() &&
@@ -12251,7 +12251,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               if ((pn--, !gt)) Ki.start();
             }));
       for await (let r of t.structuredInput) {
-        if (no() && r.type !== "control_response") continue;
+        if (isExiting() && r.type !== "control_response") continue;
         let L = "uuid" in r ? r.uuid : void 0;
         if (
           L &&
@@ -12370,7 +12370,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 continue;
               }
               let ue = r.request.sdkMcpServerConfigs,
-                ie = me(ue) ? ue : void 0;
+                ie = isRecord(ue) ? ue : void 0;
               if (ue != null && ie === void 0)
                 n(
                   "initialize: ignoring sdkMcpServerConfigs (not an object keyed by server name)",
@@ -12425,8 +12425,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 for (let He of r.request.sdkMcpServers) {
                   let et = Ad(O, He),
                     Ze = ie ? Ad(ie, He) : void 0,
-                    We = me(Ze) ? Ze.timeout : void 0,
-                    ft = X0e(We);
+                    We = isRecord(Ze) ? Ze.timeout : void 0,
+                    ft = parsePositiveInteger(We);
                   if (We !== void 0 && ft === void 0)
                     n(
                       `initialize: ignoring invalid timeout for SDK MCP server '${He}'`,
@@ -12611,7 +12611,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         { level: "error" },
                       );
                     }
-                  let ie = ME(e),
+                  let ie = isRemoteTransportPersistent(e),
                     Me =
                       ue.response.status === "rejected" && ie
                         ? {
@@ -12643,11 +12643,11 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 (Wr("set_cwd", l(F)),
                   Be(
                     r,
-                    `set_cwd: relocation failed \u2014 ${UI(e, ie, "(error detail withheld)")}. ${UI(e, Me, "The session stayed in its previous working directory.")}`,
+                    `set_cwd: relocation failed \u2014 ${withholdDetailIfRemote(e, ie, "(error detail withheld)")}. ${withholdDetailIfRemote(e, Me, "The session stayed in its previous working directory.")}`,
                   ));
               }
             } else if (r.request.subtype === "mcp_status")
-              Xe(r, { mcpServers: Nyn(e, Bd()) });
+              Xe(r, { mcpServers: summarizeMcpServersIfRemote(e, Bd()) });
             else if (r.request.subtype === "get_binary_version")
               Xe(r, {
                 version: `${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}${getBuildRefName()}`,
@@ -12687,7 +12687,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     },
                     detail: r.request.detail,
                   });
-                Xe(r, { ...F, memoryFiles: ME(e) ? [] : F.memoryFiles });
+                Xe(r, { ...F, memoryFiles: isRemoteTransportPersistent(e) ? [] : F.memoryFiles });
               } catch (D) {
                 Yn(r, "get_context_usage", D);
               }
@@ -12704,7 +12704,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 let D = await o3e({
                   storageV5: w.storageV5,
                   credentials: w.credentials,
-                  includeBehaviors: !ME(e) && r.request.skip_behaviors !== !0,
+                  includeBehaviors: !isRemoteTransportPersistent(e) && r.request.skip_behaviors !== !0,
                 });
                 Xe(r, { ...D });
               } catch (D) {
@@ -12727,17 +12727,17 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 Xe(
                   r,
                   ((ie) => {
-                    if (!ME(e)) return ie;
+                    if (!isRemoteTransportPersistent(e)) return ie;
                     let { filesChanged: Me, ...Ae } = ie;
                     return Ae;
                   })(
                     F.error !== void 0
-                      ? { ...F, error: UI(e, F.error, "Failed to rewind") }
+                      ? { ...F, error: withholdDetailIfRemote(e, F.error, "Failed to rewind") }
                       : F,
                   ),
                 );
               else
-                Be(r, UI(e, F.error ?? "Unexpected error", "Failed to rewind"));
+                Be(r, withholdDetailIfRemote(e, F.error ?? "Unexpected error", "Failed to rewind"));
             } else if (r.request.subtype === "cancel_async_message") {
               let D = r.request.message_uuid,
                 F = U.isFoldInFlight(D)
@@ -12800,7 +12800,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       r,
                       `poll event rejected: poll events require permission mode "auto" (got "${Ae}") \u2014 the event channel's protections route event-driven commands through the auto-mode classifier. Run with --permission-mode auto.`,
                     ));
-                else if (G(U.getCommandQueueSnapshot(), AC) + cl >= rfe)
+                else if (countMatching(U.getCommandQueueSnapshot(), AC) + cl >= rfe)
                   (logFeatureBad("poll_event_delivery", "queue_cap_peek"),
                     Be(r, `poll event rejected: ${rfe} events already queued`));
                 else {
@@ -12857,7 +12857,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                             (logFeatureBad("poll_event_delivery", "hook_blocked"),
                               Be(
                                 r,
-                                UI(
+                                withholdDetailIfRemote(
                                   e,
                                   `poll event rejected: ${pe}`,
                                   "poll event rejected by hook",
@@ -12877,7 +12877,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                               },
                               (_e) => {
                                 (Wr("poll_event enqueue", l(_e)),
-                                  Be(r, UI(e, l(_e), "poll_event failed")));
+                                  Be(r, withholdDetailIfRemote(e, l(_e), "poll_event failed")));
                               },
                             )
                             .catch(logError);
@@ -12931,7 +12931,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   Ir === pe &&
                   Date.now() < _e
                 )
-                  (Ut?.abort(userAbortReason("remote-cancel")), await Z(20));
+                  (Ut?.abort(userAbortReason("remote-cancel")), await sleep(20));
                 Le = Ir > pe || Me();
               }
               if (Le || U.getDrainableMainThreadQueueLength() > 0)
@@ -13208,7 +13208,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     r.request.encoding,
                     "headless_stream",
                   );
-                Xe(r, ME(e) ? { ...F, absPath: r.request.path } : F);
+                Xe(r, isRemoteTransportPersistent(e) ? { ...F, absPath: r.request.path } : F);
               } catch (D) {
                 Yn(r, "read_file", D);
               }
@@ -13240,7 +13240,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     ? {
                         exists: !0,
                         content: Ae,
-                        ...(ME(e) ? {} : { path: ue() }),
+                        ...(isRemoteTransportPersistent(e) ? {} : { path: ue() }),
                       }
                     : { exists: !1 },
                 );
@@ -13265,7 +13265,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       (Wr("stage_file", ie.error),
                         Be(
                           r,
-                          Ny(ie.error) ?? UI(e, ie.error, "stage_file failed"),
+                          Ny(ie.error) ?? withholdDetailIfRemote(e, ie.error, "stage_file failed"),
                         ));
                   } catch (F) {
                     Yn(r, "stage_file", F);
@@ -13417,10 +13417,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       Ed("reload");
                   }),
                   sBt(e)
-                    ? kt(Promise.allSettled([kqn(e, w.credentials)]), U4e())
+                    ? withDeadline(Promise.allSettled([kqn(e, w.credentials)]), U4e())
                     : void 0,
                 ]);
-                let D = await Xx(ut, w.storageV5, w.credentials),
+                let D = await refreshActivePlugins(ut, w.storageV5, w.credentials),
                   F = cr.filter((Le) => Le.source === "flagSettings");
                 cr = [...D.agentDefinitions.allAgents, ...F];
                 let ue = [],
@@ -13437,7 +13437,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     { level: "error" },
                   );
                 if (Ae.status === "fulfilled")
-                  ue = OYn(e, Ae.value.enabled.map(hJt));
+                  ue = hidePluginsIfRemote(e, Ae.value.enabled.map(hJt));
                 else
                   logError(dt(ge(Ae.reason), "reload_plugins: loadAllPlugins failed"));
                 (Ji(),
@@ -13449,7 +13449,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       model: Le.model,
                     })),
                     plugins: ue,
-                    mcpServers: Nyn(e, Bd()),
+                    mcpServers: summarizeMcpServersIfRemote(e, Bd()),
                     error_count: D.error_count,
                   }));
               } catch (D) {
@@ -13460,7 +13460,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 if (Nde(e))
                   await Promise.race([
                     Promise.allSettled([ONn(e, w.storageV5, w.credentials)]),
-                    Z(INn()),
+                    sleep(INn()),
                   ]);
                 (d3(), resetSentSkillNames(), await Zi());
                 let D = IM(await getSkillToolCommands(he(), w.storageV5), v().mcp.commands).map(
@@ -13570,7 +13570,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       return;
                     }
                     let We =
-                      [...v().mcp.tools, ...At.tools].find((Pn) => Kt(Pn, D))
+                      [...v().mcp.tools, ...At.tools].find((Pn) => matchesToolName(Pn, D))
                         ?.mcpInfo?.toolName ?? Le;
                     if (Me) {
                       let { runStagedMcpCall: Pn } =
@@ -13659,7 +13659,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         r,
                         `URL elicitation required (open URL, then retry mcp_call): ${Y4t(ft.urlElicitationDeclined.url) ?? "[elicitation URL too long to relay \u2014 re-run this call in the terminal]"}` +
                           (typeof ft.content === "string"
-                            ? ` \u2014 ${UI(e, ft.content, "(detail withheld)")}`
+                            ? ` \u2014 ${withholdDetailIfRemote(e, ft.content, "(detail withheld)")}`
                             : ""),
                       );
                     else if (ft.interrupted)
@@ -13681,7 +13681,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       "mcp_call",
                       Ze instanceof Error ? Ze.message : String(Ze),
                     );
-                    let We = UI(
+                    let We = withholdDetailIfRemote(
                       e,
                       Ze instanceof Error ? Ze.message : String(Ze),
                       "(detail withheld)",
@@ -13847,7 +13847,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             } else if (r.request.subtype === "mcp_authenticate") {
               let { serverName: D, redirectUri: F } = r.request,
                 ue = Ps(D) ?? kn.find((Ae) => Ae.name === D)?.config ?? null,
-                ie = ue ? sI(D, ue) : null,
+                ie = ue ? classifyMcpServerAuth(D, ue) : null,
                 Me = ue ? mcpDialBlockCause(D, ue) : null;
               if (!ue || !ie) Be(r, `Server not found: ${Qn(D)}`);
               else if (Me === "managed-policy")
@@ -13865,7 +13865,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     "Unable to build claude.ai connector auth URL (missing org or server id)",
                   );
                 else
-                  (i("tengu_claudeai_mcp_auth_started", {}),
+                  (logEvent("tengu_claudeai_mcp_auth_started", {}),
                     Xe(r, {
                       authUrl: Ae,
                       requiresUserAction: !0,
@@ -14004,7 +14004,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       (Wr("mcp_oauth_callback_url", l(Ae)),
                         Be(
                           r,
-                          UI(
+                          withholdDetailIfRemote(
                             e,
                             Ae instanceof Error
                               ? Ae.message
@@ -14025,7 +14025,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 continue;
               }
               (_s?.service.cleanup(),
-                i("tengu_oauth_flow_start", { loginWithClaudeAi: D ?? !0 }));
+                logEvent("tengu_oauth_flow_start", { loginWithClaudeAi: D ?? !0 }));
               let ue = !1,
                 ie = new ck(),
                 Me = getSettings_DEPRECATED(),
@@ -14053,7 +14053,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   )
                   .catch((et) => {
                     if (!(et instanceof c1))
-                      i("tengu_oauth_token_exchange_error", {
+                      logEvent("tengu_oauth_token_exchange_error", {
                         ...lm(et),
                         ssl_error: kG(et) !== null,
                       });
@@ -14121,10 +14121,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     });
                     if (
                       (logFeatureOk("sdk_claude_authenticate"),
-                      i("tengu_oauth_success", { loginWithClaudeAi: D ?? !0 }),
+                      logEvent("tengu_oauth_success", { loginWithClaudeAi: D ?? !0 }),
                       ft)
                     )
-                      await kt(ft, C0t);
+                      await withDeadline(ft, C0t);
                   })
                   .finally(() => {
                     if ((ie.cleanup(), _s?.service === ie)) _s = null;
@@ -14186,7 +14186,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                           r,
                           F instanceof mi
                             ? Qn(l(F))
-                            : UI(e, l(F), "claude_oauth_callback failed"),
+                            : withholdDetailIfRemote(e, l(F), "claude_oauth_callback failed"),
                         ));
                     },
                   ),
@@ -14336,14 +14336,14 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     let { verdict: lt, alone: Pt, merge: yn } = ft;
                     if (!lt.apply) {
                       if (
-                        (q("info", "plugin_forwarding_patch_refused", {
+                        (writeDiagnosticsEvent("info", "plugin_forwarding_patch_refused", {
                           reason: lt.reason,
                           alone: Pt,
                         }),
                         lt.reason === "flag_off")
                       )
                         Ed("patch");
-                      if (Pt) return (Be(r, `${SWe}: ${lt.reason}`), !1);
+                      if (Pt) return (Be(r, `${PLUGIN_FORWARDING_DISABLED_MESSAGE}: ${lt.reason}`), !1);
                     }
                     We = yn;
                   }
@@ -14563,7 +14563,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 );
               }
             } else if (r.request.subtype === "get_settings") {
-              if (ME(e)) {
+              if (isRemoteTransportPersistent(e)) {
                 Be(r, "get_settings is not available on this connection");
                 continue;
               }
@@ -14630,8 +14630,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   Be(r, X4t));
                 continue;
               }
-              if (Dl()) {
-                (logFeatureBad("task_local_shell_background_all", "disabled"), Be(r, AAt));
+              if (areBackgroundTasksDisabled()) {
+                (logFeatureBad("task_local_shell_background_all", "disabled"), Be(r, BACKGROUND_TASKS_DISABLED_MESSAGE));
                 continue;
               }
               try {
@@ -14753,7 +14753,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                               abortController: createAbortController(),
                             },
                           }
-                        : await Qtn({
+                        : await buildSideQuestionFallbackParams({
                             session: e,
                             messageQueue: U,
                             tools: li(v()),
@@ -14802,7 +14802,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       }),
                     });
                     if (Ae.aborted || ue.signal.aborted)
-                      (i("tengu_sdk_side_question_cancelled", {}),
+                      (logEvent("tengu_sdk_side_question_cancelled", {}),
                         Be(r, "Side question cancelled"));
                     else
                       Xe(r, {
@@ -14871,7 +14871,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   surface: ie = "tool_use",
                   cleared: Me = !1,
                 } = D.data;
-                i("tengu_message_rated", {
+                logEvent("tengu_message_rated", {
                   message_uuid: Ee(F),
                   sentiment: fromEnum(ue),
                   surface: fromEnum(ie),
@@ -15091,7 +15091,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                 return t.injectControlResponse(Ke);
                               },
                               onInterrupt() {
-                                if (!no())
+                                if (!isExiting())
                                   try {
                                     (Ut?.abort(userAbortReason("remote-cancel")),
                                       Wm({
@@ -15295,7 +15295,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                             Wr("remote_control", ie);
                           Be(
                             r,
-                            UI(
+                            withholdDetailIfRemote(
                               e,
                               ie ?? "Remote Control initialization failed",
                               "Remote Control initialization failed",
@@ -15413,7 +15413,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   if (F.kind === "success") Xe(r, F.response);
                   else Be(r, F.error);
                 } catch (F) {
-                  (q("warn", "device_hooks_handler_failed", {}),
+                  (writeDiagnosticsEvent("warn", "device_hooks_handler_failed", {}),
                     logError(F),
                     logFeatureBad("device_hooks_register", "internal_error"),
                     Be(r, "hook_forwarding_not_ready: internal_error; retry"));
@@ -15446,7 +15446,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   if (F.kind === "success") Xe(r, F.response);
                   else Be(r, F.error);
                 } catch (F) {
-                  (q("warn", "remote_tools_announce_handler_failed", {}),
+                  (writeDiagnosticsEvent("warn", "remote_tools_announce_handler_failed", {}),
                     logError(F),
                     logFeatureBad("remote_tools_announce", "internal_error"),
                     Be(r, "remote_tools_not_ready: internal_error; retry"));
@@ -15466,7 +15466,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           continue;
         } else if (r.type === "control_cancel_request") {
           let St = No.get(r.request_id);
-          (i("tengu_sdk_control_cancel_request", { in_flight: Boolean(St) }),
+          (logEvent("tengu_sdk_control_cancel_request", { in_flight: Boolean(St) }),
             St?.abort(userAbortReason("remote-cancel")));
           continue;
         } else if (r.type === "keep_alive") continue;
@@ -15588,7 +15588,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   type: "user",
                   message: {
                     role: "user",
-                    content: `<${I0}>Command failed: ${Nt(Iye(gn, e))}</${I0}>`,
+                    content: `<${I0}>Command failed: ${Nt(getBashSpawnFailureDetail(gn, e))}</${I0}>`,
                   },
                   session_id: St,
                   parent_tool_use_id: null,
@@ -15641,10 +15641,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           if (F && Mn && !nt && !Ot) F = await isMessageTurnUnanswered(St, r.uuid, w.storageV5);
           if (F && !gt && !U.hasUserIntentCommandsInQueue() && !nt && !Ot)
             (Ne.delete(r.uuid),
-              q("info", "cli_user_message_dedup_reexecuted", {}));
+              writeDiagnosticsEvent("info", "cli_user_message_dedup_reexecuted", {}));
           else if (gn || D) {
             if (
-              (q("info", "cli_user_message_dedup_skipped", {
+              (writeDiagnosticsEvent("info", "cli_user_message_dedup_skipped", {
                 exists_in_session: gn,
                 runtime_dup: D,
               }),
@@ -15682,7 +15682,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           Se = G_(r, V, W),
           Ce = r.client_platform;
         if (V && r.inbound_origin === QOe)
-          await kt(
+          await withDeadline(
             df().catch(() => null),
             T_,
           );
@@ -15840,7 +15840,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 stamp: Mn,
                 content: Bo,
                 hasAttachments: Sn.length > 0 || ro.length > 0,
-                exiting: dn || $s() || no() || Y9(w.maxBudgetUsd),
+                exiting: dn || $s() || isExiting() || Y9(w.maxBudgetUsd),
                 toolUseContext: getLastCacheSafeParams()?.toolUseContext ?? null,
                 canUseTool: I,
                 agentNames: v().agentNameRegistry,
@@ -15851,7 +15851,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               });
             if ((MWn(Kr), r.uuid !== void 0))
               t.onCommandLifecycle?.(r.uuid, "queued");
-            (q("info", "cli_user_message_enqueued", {
+            (writeDiagnosticsEvent("info", "cli_user_message_enqueued", {
               has_uuid: r.uuid !== void 0,
               should_query: r.shouldQuery,
               has_priority: r.priority !== void 0,
@@ -15875,7 +15875,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       }
       if ((await Vv.of(e).tail, Vt !== null)) await Vt;
       if (
-        (q("info", "cli_message_loop_ended"),
+        (writeDiagnosticsEvent("info", "cli_message_loop_ended"),
         (Ve = !0),
         $Dn(),
         zn.abort(),
@@ -15897,7 +15897,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           Ao.size > 0)
         )
           await Promise.allSettled(Ao);
-        (await Dt(
+        (await withTimeout(
           Ur,
           30000,
           "remote_control operation still pending at teardown",
@@ -15959,12 +15959,12 @@ async function bf(e, t, o = 2000, d = {}) {
     C = (ut) =>
       (!I || Yt().isLocalMcpServer(ut.config)) &&
       (!v || ut.config.alwaysLoad === !0),
-    re = (ut) => O !== void 0 && rn(ut.name) === O,
+    re = (ut) => O !== void 0 && normalizeMcpName(ut.name) === O,
     B = (ut) => ut.type === "pending" && re(ut),
     w = (ut) => ut.type === "pending" && (re(ut) || C(ut)),
     X = e().mcp,
-    te = G(X.clients, (ut) => ut.type === "pending"),
-    ye = G(X.clients, w),
+    te = countMatching(X.clients, (ut) => ut.type === "pending"),
+    ye = countMatching(X.clients, w),
     N = X.clients.some(B),
     fe = X.tools.length,
     le = { getState: e, subscribe: t },
@@ -15981,7 +15981,7 @@ async function bf(e, t, o = 2000, d = {}) {
       (ve = Date.now() - U - xe));
   if (_) return;
   let je = e().mcp;
-  i("tengu_headless_mcp_prewait", {
+  logEvent("tengu_headless_mcp_prewait", {
     localOnly: I,
     willDeferMcp: v,
     waitForDeferrable: E,
@@ -15992,8 +15992,8 @@ async function bf(e, t, o = 2000, d = {}) {
     waitedMs: xe,
     permissionPromptServerPendingBefore: N,
     permissionPromptWaitedMs: ve,
-    pendingAfter: G(je.clients, (ut) => ut.type === "pending"),
-    pendingWaitedAfter: G(je.clients, w),
+    pendingAfter: countMatching(je.clients, (ut) => ut.type === "pending"),
+    pendingWaitedAfter: countMatching(je.clients, w),
     permissionPromptServerPendingAfter: je.clients.some(B),
     toolsAfter: je.tools.length,
     mcpNonBlocking: i_e(),
@@ -16011,12 +16011,12 @@ function Cf(e, t = () => !1) {
         decisionReason: CAN_USE_TOOL_PROMPT_TOOL_GONE_DENY_REASON,
       };
     if (C.localDisplayOnly)
-      return Xdt(
+      return buildLocalDisplayOnlyDenialResult(
         d.name,
         "the configured --permission-prompt-tool (a tool_name+input wire)",
       );
     let re = C.updatedInput ?? _,
-      { signal: B, cleanup: w } = Fa(E.abortController.signal);
+      { signal: B, cleanup: w } = createLinkedAbortSignal(E.abortController.signal);
     if (B.aborted)
       return (
         w(),
@@ -16108,7 +16108,7 @@ function wy(e, t, o, d, _, E) {
     if (!O && te) O = Cf(null);
     if (!O) {
       let ye = o(),
-        N = ye.find((fe) => Kt(fe, e));
+        N = ye.find((fe) => matchesToolName(fe, e));
       if (!N) {
         let fe = ye.map((xe) => xe.name).join(", "),
           le = `Error: MCP tool ${e} (passed via --permission-prompt-tool) not found. Available MCP tools: ${fe || "none"}`;
@@ -16147,7 +16147,7 @@ async function Cy(e, t, o, d, _, E, I, O, v, C, re, B, w, X) {
     let U = O.getPendingPermissionRequests(),
       ve = O.getPendingUserDialogRequests();
     return (
-      i("tengu_reinit_pending_redelivery", {
+      logEvent("tengu_reinit_pending_redelivery", {
         n_pending_permissions: fromNumber(U.length),
         n_pending_dialogs: fromNumber(ve.length),
         host_hooks_resent: e.hooks !== void 0,
@@ -16255,10 +16255,10 @@ async function Cy(e, t, o, d, _, E, I, O, v, C, re, B, w, X) {
   });
   let fe = B().mcp;
   if (
-    (i("tengu_sdk_init_handshake", {
+    (logEvent("tengu_sdk_init_handshake", {
       uptime_ms: Math.round(process.uptime() * 1000),
       mcp_client_count: fe.clients.length,
-      mcp_pending_count: G(fe.clients, (le) => le.type === "pending"),
+      mcp_pending_count: countMatching(fe.clients, (le) => le.type === "pending"),
       mcpNonBlocking: i_e(),
       session_mirror: !!C.sessionMirror,
     }),
@@ -16357,7 +16357,7 @@ async function Nf(e, t, o) {
   return { canRewind: !0, skippedLinks: d?.skippedLinks };
 }
 function My(e, t, o, d, _) {
-  let E = (te) => d.enqueue(kB(e, te)),
+  let E = (te) => d.enqueue(buildControlErrorResponse(e, te)),
     I = o.find((te) => te.name === t && te.type === "connected");
   if (!I || I.type !== "connected")
     return E(`server ${Qn(t)} is not connected`);
@@ -16376,18 +16376,18 @@ function My(e, t, o, d, _) {
         te.marketplace === C.marketplace,
     );
   if (!B) Sae([...re, C]);
-  let w = XPe(t, I.capabilities, O, I.protocolEra);
+  let w = gateChannelServer(t, I.capabilities, O, I.protocolEra);
   if (w.action === "skip") {
     if (!B) Sae(re);
     return E(w.reason);
   }
   let X = `${C.name}@${C.marketplace}`;
   (logMCPDebug(t, "Channel notifications registered"),
-    i("tengu_mcp_channel_enable", { plugin: X }),
-    CH(I, VPe(), async (te) => {
+    logEvent("tengu_mcp_channel_enable", { plugin: X }),
+    CH(I, ChannelMessageNotificationSchema(), async (te) => {
       let { content: ye, meta: N } = te.params;
       (logMCPDebug(t, `notifications/claude/channel: ${ye.slice(0, 80)}`),
-        i("tengu_mcp_channel_message", {
+        logEvent("tengu_mcp_channel_message", {
           content_length: ye.length,
           meta_key_count: Object.keys(N ?? {}).length,
           entry_kind: S("plugin"),
@@ -16397,7 +16397,7 @@ function My(e, t, o, d, _) {
         _.enqueue({
           mode: "prompt",
           agentId: ze(),
-          value: KPe(t, ye, N),
+          value: wrapChannelMessage(t, ye, N),
           priority: "next",
           isMeta: !0,
           origin: { kind: "channel", server: t },
@@ -16405,22 +16405,22 @@ function My(e, t, o, d, _) {
           skipAttachments: !0,
         }));
     }),
-    d.enqueue(I8(e)));
+    d.enqueue(buildControlSuccessResponse(e)));
 }
 function fd(e, t) {
   if (e.type !== "connected") return;
   if (
-    XPe(e.name, e.capabilities, e.config.pluginSource, e.protocolEra).action !==
+    gateChannelServer(e.name, e.capabilities, e.config.pluginSource, e.protocolEra).action !==
     "register"
   )
     return;
-  let d = ste(e.name, ym()),
+  let d = findChannelEntry(e.name, ym()),
     _ = d?.kind === "plugin" ? `${d.name}@${d.marketplace}` : void 0;
   (logMCPDebug(e.name, "Channel notifications re-registered after reconnect"),
-    CH(e, VPe(), async (E) => {
+    CH(e, ChannelMessageNotificationSchema(), async (E) => {
       let { content: I, meta: O } = E.params;
       (logMCPDebug(e.name, `notifications/claude/channel: ${I.slice(0, 80)}`),
-        i("tengu_mcp_channel_message", {
+        logEvent("tengu_mcp_channel_message", {
           content_length: I.length,
           meta_key_count: Object.keys(O ?? {}).length,
           entry_kind: fromEnumOpt(d?.kind),
@@ -16430,7 +16430,7 @@ function fd(e, t) {
         t.enqueue({
           mode: "prompt",
           agentId: ze(),
-          value: KPe(e.name, I, O),
+          value: wrapChannelMessage(e.name, I, O),
           priority: "next",
           isMeta: !0,
           origin: { kind: "channel", server: e.name },
@@ -16486,7 +16486,7 @@ function Ey({
       })
       .catch(
         (O) => (
-          q("warn", "home_seed_worker_start_failed", { name: wde(O) }),
+          writeDiagnosticsEvent("warn", "home_seed_worker_start_failed", { name: wde(O) }),
           null
         ),
       ),
@@ -16504,7 +16504,7 @@ function Ea(e) {
 }
 function Bf(e, t) {
   (logError(e),
-    i("tengu_headless_fatal_error", {
+    logEvent("tengu_headless_fatal_error", {
       site: fromEnum(t.site),
       message_type: fromEnumOpt(t.message?.type),
       control_subtype: fromEnumOpt(
@@ -16519,12 +16519,12 @@ function Bf(e, t) {
     }));
 }
 async function Ry(e, t, o, d, _) {
-  if (no()) {
+  if (isExiting()) {
     n(`Headless output write failed during shutdown (${o.type})`);
     return;
   }
-  let E = ME(e);
-  LE.of(e).setActive(void 0);
+  let E = isRemoteTransportPersistent(e);
+  sessionTransportRegistry.of(e).setActive(void 0);
   try {
     Bf(d, { site: "output_drain", message: o, drainedMessageCount: _ });
   } catch {}
@@ -16541,18 +16541,18 @@ async function Ry(e, t, o, d, _) {
       n(`output write failure detail: ${Ea(d)}`, { level: "error" });
     let v = O(I);
     try {
-      (Da(t.sessionState, v), await t.write(xB(K(), [v])));
+      (Da(t.sessionState, v), await t.write(buildErrorResultMessage(K(), [v])));
     } catch {}
-    await Promise.race([t.flushSessionState(), Z(5000, void 0, { unref: !0 })]);
+    await Promise.race([t.flushSessionState(), sleep(5000, void 0, { unref: !0 })]);
   } catch {}
   Pr(1);
 }
 function endHeadlessSessionOnEscapedError(e, t, o) {
-  if (no()) {
+  if (isExiting()) {
     n("runHeadless rejected during shutdown");
     return;
   }
-  LE.of(e).setActive(void 0);
+  sessionTransportRegistry.of(e).setActive(void 0);
   try {
     Bf(t, { site: "run_headless" });
   } catch {}
@@ -16572,7 +16572,7 @@ function io(e, t) {
     t === "stream-json")
   )
     Kn(
-      b(xB(K(), [e])) +
+      b(buildErrorResultMessage(K(), [e])) +
         `
 `,
     );
@@ -16592,7 +16592,7 @@ function Tf(e, t) {
 async function Ef(e, t, o, d) {
   let _ = null;
   try {
-    _ = DZ(oF.of(e.host), t, void 0, { storageV5: o.storageV5 });
+    _ = DZ(worktreeStateStore.of(e.host), t, void 0, { storageV5: o.storageV5 });
   } catch (I) {
     logError(I);
   }
@@ -16601,7 +16601,7 @@ async function Ef(e, t, o, d) {
   if (_ && _.reason !== "worktree-gone" && !E)
     return (io(Fst(_, { bindingCleared: !1 }).trimEnd(), d), Pr(1), !0);
   if (o.persist)
-    if (M() && o.storageV5 !== void 0) await adoptResumedSessionFileAsync(o.storageV5);
+    if (isHoverRestEnabled() && o.storageV5 !== void 0) await adoptResumedSessionFileAsync(o.storageV5);
     else adoptResumedSessionFile();
   if (!_) return !1;
   if (_.reason === "worktree-gone")
@@ -16612,7 +16612,7 @@ async function Ay(e, t, o, d) {
   let _ = !IL();
   if (d.continue)
     try {
-      i("tengu_continue_print", {});
+      logEvent("tengu_continue_print", {});
       let { clearSessionCaches: E } = await import("./clearSessionCaches.avjeddw7.js");
       E(e, void 0, void 0, void 0, d.storageV5);
       let I,
@@ -16629,7 +16629,7 @@ async function Ay(e, t, o, d) {
       if (Tf(O, d.outputFormat)) return { messages: [] };
       if (!O && I !== void 0)
         return (
-          await qs("tengu_continue", { success: !1, entrypoint: S("print") }),
+          await logEventAsync("tengu_continue", { success: !1, entrypoint: S("print") }),
           io(MSt(I), d.outputFormat),
           Pr(1),
           { messages: [], aborted: !0 }
@@ -16695,7 +16695,7 @@ async function Ay(e, t, o, d) {
           resumedAsFork: C,
         };
       }
-      i("tengu_continue", { success: !1, entrypoint: S("print") });
+      logEvent("tengu_continue", { success: !1, entrypoint: S("print") });
     } catch (E) {
       return (logError(E), Pr(1), { messages: [] });
     }
@@ -16704,7 +16704,7 @@ async function Ay(e, t, o, d) {
       await b_();
       let E = A8();
       if (E) throw Error(E);
-      if ((i("tengu_teleport_print", {}), typeof d.teleport !== "string"))
+      if ((logEvent("tengu_teleport_print", {}), typeof d.teleport !== "string"))
         throw Error("No session ID provided for teleport");
       let { clearSessionCaches: I } = await import("./clearSessionCaches.avjeddw7.js");
       I(e, void 0, void 0, void 0, d.storageV5);
@@ -16729,7 +16729,7 @@ async function Ay(e, t, o, d) {
     let E = "load_error",
       I = performance.now();
     try {
-      i("tengu_resume_print", {});
+      logEvent("tengu_resume_print", {});
       let O = typeof d.resume === "string" ? d.resume.trim() : "",
         v = sOn(O);
       if (!v && O) {
@@ -16744,7 +16744,7 @@ async function Ay(e, t, o, d) {
           ).join(`
 `);
           return (
-            i("tengu_session_resumed", {
+            logEvent("tengu_session_resumed", {
               entrypoint: S("print"),
               success: !1,
               failure_reason: S("not_found_explicit_id"),
@@ -16765,7 +16765,7 @@ ${le}`,
         if (O)
           fe += `. Provided value "${O}" is not a UUID and does not match any session title.`;
         return (
-          i("tengu_session_resumed", {
+          logEvent("tengu_session_resumed", {
             entrypoint: S("print"),
             success: !1,
             failure_reason: S("not_found_explicit_id"),
@@ -16813,11 +16813,11 @@ ${le}`,
         await hydrateRemoteSession(v.sessionId, v.ingressUrl, d.storageV5);
       if (!d.forkSession) {
         let fe = performance.now(),
-          le = await t4(v.sessionId);
+          le = await getLiveSessionHolder(v.sessionId);
         if ((Ts("resume_live_check_ms", performance.now() - fe, fe), le))
           return (
             process.stderr
-              .write(`Error: ${ile({ sessionId: v.sessionId, holder: le, canFork: !0 })}
+              .write(`Error: ${formatSessionLiveElsewhereMessage({ sessionId: v.sessionId, holder: le, canFork: !0 })}
 `),
             Pr(1),
             { messages: [] }
@@ -16903,7 +16903,7 @@ ${le}`,
           };
         } else
           return (
-            i("tengu_session_resumed", {
+            logEvent("tengu_session_resumed", {
               entrypoint: S("print"),
               success: !1,
               failure_reason: S("not_found_explicit_id"),
@@ -16919,7 +16919,7 @@ ${le}`,
         let fe = te.messages.findIndex((le) => le.uuid === d.resumeSessionAt);
         if (fe < 0)
           return (
-            i("tengu_session_resumed", {
+            logEvent("tengu_session_resumed", {
               entrypoint: S("print"),
               success: !1,
               failure_reason: S("processing_error"),
@@ -16935,7 +16935,7 @@ ${le}`,
           let le = Pc(te.messages.slice(fe + 1), d.resumeDropsTurn);
           if (!le.ok)
             return (
-              i("tengu_session_resumed", {
+              logEvent("tengu_session_resumed", {
                 entrypoint: S("print"),
                 success: !1,
                 failure_reason: S("drop_guard_refused"),
@@ -17011,7 +17011,7 @@ ${le}`,
       }
       if (jo) saveMode(jo.isCoordinatorMode() ? "coordinator" : "normal");
       if (
-        (i("tengu_session_resumed", {
+        (logEvent("tengu_session_resumed", {
           entrypoint: S("print"),
           success: !0,
           interruption_kind: fromEnum(te.turnInterruptionState?.kind ?? "none"),
@@ -17040,7 +17040,7 @@ ${le}`,
     } catch (O) {
       let v = E;
       if (
-        (i("tengu_session_resumed", {
+        (logEvent("tengu_session_resumed", {
           entrypoint: S("print"),
           success: !1,
           failure_reason: fromEnum(v),
@@ -17307,7 +17307,7 @@ function zf(e) {
   return;
 }
 function By(e, t) {
-  let o = ME(e),
+  let o = isRemoteTransportPersistent(e),
     d = Object.create(null);
   for (let [_, E] of Object.entries(t)) {
     let I = o ? Qn(_) : _;
@@ -17316,7 +17316,7 @@ function By(e, t) {
       while (Object.hasOwn(d, `${I}#${O}`)) O++;
       I = `${I}#${O}`;
     }
-    d[I] = Gf.has(E) ? E : (zf(E) ?? UI(e, E, "connection failed"));
+    d[I] = Gf.has(E) ? E : (zf(E) ?? withholdDetailIfRemote(e, E, "connection failed"));
   }
   return d;
 }
@@ -17473,7 +17473,7 @@ async function Yf(e, t, o, d, _ = "unknown", E = !1, I = !1, O, v, C, re) {
           );
         return !1;
       });
-  i("tengu_mcp_reconcile", {
+  logEvent("tengu_mcp_reconcile", {
     caller: fromEnum(_),
     desiredCount: w.size,
     currentCount: B.size,
@@ -17515,8 +17515,8 @@ async function Yf(e, t, o, d, _ = "unknown", E = !1, I = !1, O, v, C, re) {
     en = new Set(Tt),
     Ne = [eC, uC].some(
       (Fe) =>
-        ut.some((it) => Kt(it, Fe.name)) ||
-        (d?.().mcp.tools ?? []).some((it) => Kt(it, Fe.name)),
+        ut.some((it) => matchesToolName(it, Fe.name)) ||
+        (d?.().mcp.tools ?? []).some((it) => matchesToolName(it, Fe.name)),
     ),
     gt = (Fe, it, Ve, tn) => {
       if (tn.type === "connected")

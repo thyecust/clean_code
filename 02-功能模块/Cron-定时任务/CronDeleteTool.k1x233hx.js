@@ -9,15 +9,15 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 87 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { getTeammateContext } from "../Teammates团队/chunk-811z9z0t.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { rJ, SK, vj } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { CRON_DELETE_TOOL_NAME, isKairosCronEnabled, isDurableCronEnabled, CRON_DELETE_DESCRIPTION, buildCronDeletePrompt } from "./chunk-mk3zm4ew.js";
 import { s, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var n = m(() => Qe({ id: s().describe("Job ID returned by CronCreate.") })),
-  u = m(() => c({ id: s() })),
-  CronDeleteTool = Tt({
+var n = createLazyValue(() => Qe({ id: s().describe("Job ID returned by CronCreate.") })),
+  u = createLazyValue(() => c({ id: s() })),
+  CronDeleteTool = buildTool({
     name: CRON_DELETE_TOOL_NAME,
     searchHint: "cancel a scheduled cron job",
     maxResultSizeChars: 1e5,

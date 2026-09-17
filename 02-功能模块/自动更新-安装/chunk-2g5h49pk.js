@@ -10,14 +10,14 @@
 import { ry, cf, ph, r0, Ms, u0, df, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, po } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, q0, ge, l, A, Jg, Po, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { x0 } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
@@ -40,11 +40,11 @@ import {
   zce,
 } from "./chunk-548xet6h.js";
 import { dte } from "./chunk-brx72pf1.js";
-import { NZn, FZn, LXe, bD } from "../../01-核心基础设施/共享小工具-未细化/chunk-cyyrj58q.js";
+import { getXdgStateHome, getXdgCacheHome, getClaudeVersionsDir, getLocalBinDir } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { s, T, c, it, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var ht = pe(pg(), 1);
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var ht = toESM(pg(), 1);
 import { constants } from "fs";
 import {
   access,
@@ -102,7 +102,7 @@ var Ve = Buffer.from("claude-code-manifest-v1\x00"),
   ze = "flag";
 var Tt = 1,
   xt = "RSASSA-PKCS1-v1_5-SHA512",
-  Ct = m(() =>
+  Ct = createLazyValue(() =>
     c({
       schema: k(Tt),
       algorithm: k(xt),
@@ -110,7 +110,7 @@ var Tt = 1,
       publicKeySha256: s().regex(/^[0-9a-f]{64}$/),
     }),
   ),
-  Se = m(() =>
+  Se = createLazyValue(() =>
     it({
       version: s(),
       manifestSignatureEnforcement: s().optional(),
@@ -201,7 +201,7 @@ async function Lt(e = "latest", t, r) {
       ),
       _ = Date.now() - d;
     if (
-      (i("tengu_version_check_success", { latency_ms: _, attempt: p }), p > 1)
+      (logEvent("tengu_version_check_success", { latency_ms: _, attempt: p }), p > 1)
     )
       logFeatureSad("update_check", "update_check_binary_repo_retry");
     else logFeatureOk("update_check");
@@ -211,7 +211,7 @@ async function Lt(e = "latest", t, r) {
       w = o instanceof Error ? o.message : String(o),
       v = _e(o);
     (logFeatureBad("update_check", "update_check_binary_repo_failed"),
-      i("tengu_version_check_failure", {
+      logEvent("tengu_version_check_failure", {
         latency_ms: _,
         http_status: v,
         is_timeout: Me(o),
@@ -254,7 +254,7 @@ async function Hpt(e) {
     );
   return Lt(t, Ae);
 }
-var _r = m(() =>
+var _r = createLazyValue(() =>
   c({ dist: c({ integrity: s().min(1), tarball: s().min(1).optional() }) }),
 );
 var Ot = 120000,
@@ -393,7 +393,7 @@ async function We(e, t, r, d = {}, p) {
         (n(
           `Download ${Y ? "checksum mismatch" : ne ? "stalled" : "connection dropped"} on attempt ${v}/${le}, retrying...`,
         ),
-          await Z(1000));
+          await sleep(1000));
         continue;
       }
       if (U) {
@@ -460,7 +460,7 @@ async function Qe(
       C = x instanceof Error ? x.message : String(x);
     if (w) logFeatureBad("update_download", "update_download_manifest_failed");
     throw (
-      i("tengu_binary_manifest_fetch_failure", {
+      logEvent("tengu_binary_manifest_fetch_failure", {
         latency_ms: M,
         http_status: _e(x),
         is_timeout: Me(x),
@@ -524,7 +524,7 @@ async function Qe(
       await df().catch(() => null);
       let N = Bt();
       if (
-        (i("tengu_binary_manifest_signature_failed", {
+        (logEvent("tengu_binary_manifest_signature_failed", {
           reason: fromEnum(D.reason),
           http_status: C,
           enforced: N,
@@ -568,7 +568,7 @@ async function Gt(e, t, r, { authConfig: d, signaturePolicy: p }) {
   let _ = G4(),
     w = Ipt(_),
     v = Date.now();
-  i("tengu_binary_download_attempt", {});
+  logEvent("tengu_binary_download_attempt", {});
   let [S, F] = await Promise.all([
       Qe(r, e, {
         authConfig: d,
@@ -593,7 +593,7 @@ async function Gt(e, t, r, { authConfig: d, signaturePolicy: p }) {
   if (!M)
     throw (
       logFeatureBad("update_download", "update_download_platform_not_found"),
-      i("tengu_binary_platform_not_found", {}),
+      logEvent("tengu_binary_platform_not_found", {}),
       new R(
         `Native binaries for ${_} are not available on this release channel (version ${e} ships: ${Object.keys(I.platforms).sort().join(", ")}).`,
         "Native binaries not available for platform on this channel",
@@ -636,7 +636,7 @@ async function Gt(e, t, r, { authConfig: d, signaturePolicy: p }) {
     else if (J || x) logFeatureSad("update_download", "update_download_drop_retry");
     else logFeatureOk("update_download");
     return (
-      i("tengu_binary_download_success", { latency_ms: ie, compressed: Y }),
+      logEvent("tengu_binary_download_success", { latency_ms: ie, compressed: Y }),
       { signatureVerified: P, expectedChecksum: C }
     );
   } catch (O) {
@@ -649,7 +649,7 @@ async function Gt(e, t, r, { authConfig: d, signaturePolicy: p }) {
     else if (Kt(O)) logFeatureBad("update_download", "update_download_connection_drop");
     else logFeatureBad("update_download", "update_download_binary_failed");
     throw (
-      i("tengu_binary_download_failure", {
+      logEvent("tengu_binary_download_failure", {
         latency_ms: q,
         http_status: _e(O),
         is_timeout: Me(O),
@@ -801,7 +801,7 @@ async function Ce(e, t) {
         n(
           `Fetch of ${e} connection dropped on attempt ${d}/${le}, retrying...`,
         ),
-        await Z(1000));
+        await sleep(1000));
     }
 }
 import { lstat, readdir as Zt } from "fs/promises";
@@ -978,10 +978,10 @@ function Q() {
   let e = G4(),
     t = Ipt(e);
   return {
-    versions: LXe(),
-    staging: V(FZn(), "claude", "staging"),
-    locks: V(NZn(), "claude", "locks"),
-    executable: V(bD(), t),
+    versions: getClaudeVersionsDir(),
+    staging: V(getXdgCacheHome(), "claude", "staging"),
+    locks: V(getXdgStateHome(), "claude", "locks"),
+    executable: V(getLocalBinDir(), t),
   };
 }
 async function re(e) {
@@ -1043,7 +1043,7 @@ async function wt(e, t, r = 0) {
         })
       )
         return (
-          i("tengu_version_lock_acquired", {
+          logEvent("tengu_version_lock_acquired", {
             is_pid_based: !0,
             is_lifetime_lock: !1,
             attempts: _ + 1,
@@ -1052,11 +1052,11 @@ async function wt(e, t, r = 0) {
         );
       if ((_++, _ < w)) {
         let I = Math.min(v * Math.pow(2, _ - 1), S);
-        await Z(I);
+        await sleep(I);
       }
     }
     return (
-      i("tengu_version_lock_failed", {
+      logEvent("tengu_version_lock_failed", {
         is_pid_based: !0,
         is_lifetime_lock: !1,
         attempts: w,
@@ -1085,7 +1085,7 @@ async function wt(e, t, r = 0) {
       });
     } catch (_) {
       return (
-        i("tengu_version_lock_failed", {
+        logEvent("tengu_version_lock_failed", {
           is_pid_based: !1,
           is_lifetime_lock: !1,
         }),
@@ -1096,7 +1096,7 @@ async function wt(e, t, r = 0) {
     try {
       return (
         await t(),
-        i("tengu_version_lock_acquired", {
+        logEvent("tengu_version_lock_acquired", {
           is_pid_based: !1,
           is_lifetime_lock: !1,
         }),
@@ -1153,7 +1153,7 @@ async function yt(e, t, r) {
       (n(
         `atomicMoveToInstallPath attempt ${p} failed with ${w}; retrying in ${S}ms`,
       ),
-        await Z(S));
+        await sleep(S));
     }
   }
   throw d;
@@ -1164,7 +1164,7 @@ async function pn(e, t, r) {
       o = (await be(d)).find((v) => v.startsWith("claude-cli-native-"));
     if (!o)
       throw (
-        i("tengu_native_install_package_failure", {
+        logEvent("tengu_native_install_package_failure", {
           stage_find_package: !0,
           error_package_not_found: !0,
         }),
@@ -1175,7 +1175,7 @@ async function pn(e, t, r) {
       await K(_);
     } catch {
       throw (
-        i("tengu_native_install_package_failure", {
+        logEvent("tengu_native_install_package_failure", {
           stage_binary_exists: !0,
           error_binary_not_found: !0,
         }),
@@ -1185,7 +1185,7 @@ async function pn(e, t, r) {
     let { attempts: w } = await yt(_, t, r);
     return (
       await ke(e, { recursive: !0, force: !0 }),
-      i("tengu_native_install_package_success", { install_attempts: w }),
+      logEvent("tengu_native_install_package_success", { install_attempts: w }),
       { moveRetried: w > 1 }
     );
   } catch (d) {
@@ -1195,7 +1195,7 @@ async function pn(e, t, r) {
       p.includes("Native binary not found")
     ))
       if (
-        (i("tengu_native_install_package_failure", {
+        (logEvent("tengu_native_install_package_failure", {
           stage_atomic_move: !0,
           error_move_failed: !0,
         }),
@@ -1221,7 +1221,7 @@ async function gn(e, t, r) {
       await K(o);
     } catch (w) {
       throw (
-        i("tengu_native_install_binary_failure", {
+        logEvent("tengu_native_install_binary_failure", {
           stage_binary_exists: !0,
           error_binary_not_found: !0,
           error_code: Jg(w),
@@ -1232,18 +1232,18 @@ async function gn(e, t, r) {
     let { attempts: _ } = await yt(o, t, r);
     return (
       await ke(e, { recursive: !0, force: !0 }),
-      i("tengu_native_install_binary_success", { install_attempts: _ }),
+      logEvent("tengu_native_install_binary_success", { install_attempts: _ }),
       { moveRetried: _ > 1 }
     );
   } catch (d) {
     if (d instanceof gze)
-      (i("tengu_native_install_binary_failure", {
+      (logEvent("tengu_native_install_binary_failure", {
         stage_atomic_move: !0,
         error_checksum_mismatch: !0,
       }),
         logFeatureBad("update_apply", "update_apply_staged_checksum_mismatch"));
     else if (!l(d).includes("Staged binary not found"))
-      (i("tengu_native_install_binary_failure", {
+      (logEvent("tengu_native_install_binary_failure", {
         stage_atomic_move: !0,
         error_move_failed: !0,
         error_code: Jg(d),
@@ -1464,7 +1464,7 @@ async function En(e, t = !1) {
         n(
           `Native installer: current version ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION} is already at or above maxVersion ${o}, skipping update`,
         ),
-        i("tengu_native_update_skipped_max_version", {
+        logEvent("tengu_native_update_skipped_max_version", {
           latency_ms: Date.now() - r,
           max_version: Ms(o),
           available_version: Ms(v),
@@ -1494,7 +1494,7 @@ async function En(e, t = !1) {
   )
     return (
       n(`Found ${v} at ${d}, skipping install`),
-      i("tengu_native_update_complete", {
+      logEvent("tengu_native_update_complete", {
         latency_ms: Date.now() - r,
         was_new_install: !1,
         was_force_reinstall: !1,
@@ -1504,14 +1504,14 @@ async function En(e, t = !1) {
     );
   if (!t && zce(v))
     return (
-      i("tengu_native_update_skipped_minimum_version", {
+      logEvent("tengu_native_update_skipped_minimum_version", {
         latency_ms: Date.now() - r,
         target_version: Ms(v),
       }),
       { success: !0, wasSkipped: !0, latestVersion: v }
     );
   if (w)
-    i("tengu_native_update_forced_downgrade", {
+    logEvent("tengu_native_update_forced_downgrade", {
       from_version: {
         ISSUES_EXPLAINER:
           "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -1575,7 +1575,7 @@ async function En(e, t = !1) {
       }
       return (
         logFeatureSad("update_apply", "update_apply_native_lock_failed"),
-        i("tengu_native_update_lock_failed", {
+        logEvent("tengu_native_update_lock_failed", {
           latency_ms: M,
           lock_holder_pid: L,
         }),
@@ -1585,7 +1585,7 @@ async function En(e, t = !1) {
   }
   if (x)
     return (
-      i("tengu_native_update_skipped_unverified_release", {
+      logEvent("tengu_native_update_skipped_unverified_release", {
         latency_ms: M,
         target_version: Ms(v),
       }),
@@ -1610,7 +1610,7 @@ async function En(e, t = !1) {
   else if (I) logFeatureSad("update_apply", "update_apply_native_move_retry");
   else logFeatureOk("update_apply");
   return (
-    i("tengu_native_update_complete", {
+    logEvent("tengu_native_update_complete", {
       latency_ms: M,
       was_new_install: F,
       was_force_reinstall: t,
@@ -1924,14 +1924,14 @@ async function q4() {
     let r = we(e, t);
     if ((await mkdir(e.locks, { recursive: !0 }), de())) {
       if (!(await rt(t, r))) {
-        (i("tengu_version_lock_failed", {
+        (logEvent("tengu_version_lock_failed", {
           is_pid_based: !0,
           is_lifetime_lock: !0,
         }),
           Ee(t, Error("Lock already held by another process")));
         return;
       }
-      (i("tengu_version_lock_acquired", {
+      (logEvent("tengu_version_lock_acquired", {
         is_pid_based: !0,
         is_lifetime_lock: !0,
       }),
@@ -1950,7 +1950,7 @@ async function q4() {
             );
           },
         })),
-          i("tengu_version_lock_acquired", {
+          logEvent("tengu_version_lock_acquired", {
             is_pid_based: !1,
             is_lifetime_lock: !0,
           }),
@@ -1967,7 +1967,7 @@ async function q4() {
           });
           return;
         }
-        (i("tengu_version_lock_failed", {
+        (logEvent("tengu_version_lock_failed", {
           is_pid_based: !1,
           is_lifetime_lock: !0,
         }),
@@ -2042,7 +2042,7 @@ async function oFt() {
     }
     if (_ > 0)
       (n(`Cleaned up ${_} orphaned staging directories`),
-        i("tengu_native_staging_cleanup", { cleaned_count: _ }));
+        logEvent("tengu_native_staging_cleanup", { cleaned_count: _ }));
   } catch (o) {
     if (!W(o)) n(`Failed to clean up staging directories: ${o}`);
   }
@@ -2050,7 +2050,7 @@ async function oFt() {
     let o = await ot(e.locks);
     if (o > 0)
       (n(`Cleaned up ${o} stale version locks`),
-        i("tengu_native_stale_locks_cleanup", { cleaned_count: o }));
+        logEvent("tengu_native_stale_locks_cleanup", { cleaned_count: o }));
   }
   let r;
   try {
@@ -2088,7 +2088,7 @@ async function oFt() {
   }
   if (p > 0)
     (n(`Cleaned up ${p} orphaned temp install files`),
-      i("tengu_native_temp_files_cleanup", { cleaned_count: p }));
+      logEvent("tengu_native_temp_files_cleanup", { cleaned_count: p }));
   if (d.length === 0) {
     logFeatureOk("native_cleanup_versions");
     return;
@@ -2138,7 +2138,7 @@ async function oFt() {
         ...v.filter((E) => E.size === 0 && E.mtime.getTime() < t),
       ];
     if (S.length === 0) {
-      (i("tengu_native_version_cleanup", {
+      (logEvent("tengu_native_version_cleanup", {
         total_count: d.length,
         deleted_count: 0,
         protected_count: _.size,
@@ -2181,7 +2181,7 @@ async function oFt() {
           }
         }),
       ),
-      i("tengu_native_version_cleanup", {
+      logEvent("tengu_native_version_cleanup", {
         total_count: d.length,
         deleted_count: F,
         protected_count: _.size,

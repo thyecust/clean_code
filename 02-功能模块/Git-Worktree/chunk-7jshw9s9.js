@@ -28,7 +28,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { pI, SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import { JA } from "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
-import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
 import { readlink } from "fs/promises";
 import { join as U } from "path";
 import { finished } from "stream/promises";
@@ -52,7 +52,7 @@ async function Dan({
   let a = Date.now();
   if (Ct(o)) return { probedAtMs: a, durationMs: 0, verdict: _("aborted") };
   let d = Number.isFinite(t) ? Math.max(1, Math.floor(t)) : 1,
-    u = Fa(o, { timeoutMs: d, refTimer: !0 });
+    u = createLinkedAbortSignal(o, { timeoutMs: d, refTimer: !0 });
   try {
     let c = await Kce(jTe(e), u.signal);
     if (c === null)

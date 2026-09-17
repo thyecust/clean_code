@@ -12,36 +12,36 @@
 import { he, Mx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-csjxh2sy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
+import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
+import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-c9wxfdax.js";
+import "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
 import { est } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-aeg1pn1f.js";
 import "../插件系统/chunk-rbjz1q03.js";
-import "../插件系统/chunk-4k4dssd9.js";
+import "../插件系统/channel-gate.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nvfdjg8e.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import "../Diff引擎/chunk-p2gj9dsf.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
@@ -50,40 +50,40 @@ import "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nj1exzcd.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-s3mpt973.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7m5aewa3.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-0mg59v9m.js";
 import "../GitHub集成/chunk-bfz9rjjm.js";
 import "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wqaxtswb.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-mmzy53cr.js";
-import "../工具Bash-Shell/chunk-qnax4jt7.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-bhcz98rd.js";
+import "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
+import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
+import "../../03-入口与运行时/会话UI(REPL)/clawd-mascot.js";
+import "../工具Bash-Shell/bash-output-view.js";
+import "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
 import "../工具UI渲染/chunk-g4k5jjwt.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-86zcr8cb.js";
+import "../../01-核心基础设施/共享小工具-未细化/webfetch-tool-messages.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-vwjqzjhr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
+import "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-1371sqbk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ga0qgvpz.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nkg0z9p5.js";
+import "../../01-核心基础设施/共享小工具-未细化/model-1m-context-suggestion.js";
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-xvyb4e66.js";
+import "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
 import { re, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 import { mkdir, writeFile } from "fs/promises";
 import { dirname, extname } from "path";
@@ -113,11 +113,11 @@ function T(Nt) {
     [E, Vt] = d(nt),
     [L, Xt] = d(nt.length),
     [m, st] = d(!1),
-    { columns: U } = Se(),
-    Yt = Ye(wt),
-    qt = Ye(yt),
+    { columns: U } = useTerminalSize(),
+    Yt = useSession(wt),
+    qt = useSession(yt),
     at;
-  if (x[0] === p)
+  if (x[0] === MEMO_CACHE_SENTINEL)
     ((at = () => {
       (st(!1), it(null));
     }),
@@ -174,7 +174,7 @@ function T(Nt) {
   let C = k,
     Qt = Mx().workspace === "remote" && Yt !== qt,
     gt;
-  if (x[11] === p)
+  if (x[11] === MEMO_CACHE_SENTINEL)
     ((gt = {
       label: "Copy to clipboard",
       value: "clipboard",
@@ -195,10 +195,10 @@ function T(Nt) {
     dt;
   if (x[14] !== m)
     ((dt = m
-      ? r(ue, {
+      ? r(DotSeparatedList, {
           children: [
-            e(D, { chord: "enter", action: "save" }),
-            e(je, {
+            e(KeybindingHint, { chord: "enter", action: "save" }),
+            e(ActionKeybindingHint, {
               action: "confirm:no",
               context: "Confirmation",
               fallback: "Esc",
@@ -206,7 +206,7 @@ function T(Nt) {
             }),
           ],
         })
-      : e(je, {
+      : e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Confirmation",
           fallback: "Esc",
@@ -220,7 +220,7 @@ function T(Nt) {
   if (x[16] !== m)
     ((xt = { context: "Settings", isActive: m }), (x[16] = m), (x[17] = xt));
   else xt = x[17];
-  Ne("confirm:no", C, xt);
+  useKeybinding("confirm:no", C, xt);
   const J = !m;
   let P;
   if (

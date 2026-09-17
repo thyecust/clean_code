@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { NR, EP } from "./认证-OAuth登录.419zdfz3.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, zR, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -20,8 +20,8 @@ import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { ea } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { EXTERNAL_PERMISSION_MODES, normalizePermissionModeAlias } from "../权限系统/chunk-e4pfvp7x.js";
 import { JK } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
-import { Iv } from "../../01-核心基础设施/共享小工具-未细化/chunk-bfth4n1b.js";
-import { Tw } from "./chunk-s51acx6w.js";
+import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
+import { credentialsStoreFor } from "./credentials-store.js";
 import { getBridgeTokenOverride } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { ANe } from "../Bridge-RemoteControl/chunk-ct52ffwb.js";
 import { M9e, $tn, Utn, pBn } from "../权限系统/chunk-3kjwvb3e.js";
@@ -211,7 +211,7 @@ function uBn(e, t, y = () => !0, d, p) {
       a = ee(i, "daemon-auth-status.json");
     try {
       let o;
-      if (M() && d !== void 0) {
+      if (isHoverRestEnabled() && d !== void 0) {
         let E = await d.read([te()]);
         if (!E.ok)
           throw new R(
@@ -230,7 +230,7 @@ function uBn(e, t, y = () => !0, d, p) {
       if (!W(o)) t(`auth: cooldown read error: ${o}`);
     }
     try {
-      if ((await qt().mkdir(i), M() && d !== void 0)) {
+      if ((await qt().mkdir(i), isHoverRestEnabled() && d !== void 0)) {
         let o = await d.write(te(), String(Date.now()), {
           publishDiscipline: "inPlace",
         });
@@ -251,7 +251,7 @@ function uBn(e, t, y = () => !0, d, p) {
       ]);
     } catch {}
     try {
-      if (M() && d !== void 0) {
+      if (isHoverRestEnabled() && d !== void 0) {
         let o = await d.write(
           fe(),
           b({ status: "auth_required", since: Date.now() }),
@@ -444,7 +444,7 @@ function oe(e) {
     ? e.cause
     : void 0;
 }
-var V = m(() =>
+var V = createLazyValue(() =>
     c({
       dir: s(),
       name: s().optional(),
@@ -526,7 +526,7 @@ var V = m(() =>
         if (H(a)) ((G = oe(a) ?? null), F());
       };
     process.on("message", r);
-    let i = async () => (await Promise.race([q, Z(ke)]), G),
+    let i = async () => (await Promise.race([q, sleep(ke)]), G),
       A = !1;
     try {
       await x(
@@ -593,7 +593,7 @@ async function L9e(e, t, y) {
     );
   });
 }
-var se = m(() => c({ intervalSeconds: T().positive().default(30) }).strict()),
+var se = createLazyValue(() => c({ intervalSeconds: T().positive().default(30) }).strict()),
   o9 = {
     heartbeat: { schema: se, run: ye, needsOAuth: !1 },
     scheduled: { schema: Utn, run: pBn, needsOAuth: !0 },
@@ -602,7 +602,7 @@ var se = m(() => c({ intervalSeconds: T().positive().default(30) }).strict()),
 async function ye(e, t, y, d) {
   let { intervalSeconds: p } = se().parse(e);
   y(`heartbeat worker started (interval=${p}s)`);
-  while (!t.aborted) if ((await Z(p * 1000, t), !t.aborted)) y("heartbeat");
+  while (!t.aborted) if ((await sleep(p * 1000, t), !t.aborted)) y("heartbeat");
 }
 function we(e, t) {
   let y = () => t.abort();
@@ -639,10 +639,10 @@ async function Lgr(e, t) {
       process.exit(2));
   let h = new AbortController();
   (we(process, h), ge(h));
-  let f = Iv(t),
-    k = Tw(f),
+  let f = pinStorageV5(t),
+    k = credentialsStoreFor(f),
     w = re(p.initialAccessToken, k, f);
-  if (M() && f !== void 0) {
+  if (isHoverRestEnabled() && f !== void 0) {
     (zR({ storageV5: f }), NR(f));
     let [
       { composePolicyLimitsClient: v, primePolicyLimitsCache: g },

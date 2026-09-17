@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import {
   Hme,
   hse,
@@ -35,24 +35,24 @@ import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chu
 import { getSettingsFilePathForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Xt, to } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { resolveStsEndpointForProxyUrl, getAWSClientProxyConfig, getAWSProxyRequestHandler } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { fle, vl, wi } from "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { WizardProvider, useWizard, WizardStepFrame } from "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { XL } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
-import { Ur } from "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { q5 } from "./chunk-p991cddr.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { pe, p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { toESM, MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 var Hr = [
   {
@@ -86,7 +86,7 @@ function Bo() {
       updateWizardData: xr,
       wizardData: Nr,
       title: fs,
-    } = vl();
+    } = useWizard();
   const Mr = Nr.accessKeyId ?? "",
     Kr = Nr.secretAccessKey ?? "",
     zr = Nr.sessionToken ?? "";
@@ -125,7 +125,7 @@ function Bo() {
   let Lr = on;
   const Fr = fs ?? "Set up AWS Bedrock";
   let rn;
-  if (vo[10] === p)
+  if (vo[10] === MEMO_CACHE_SENTINEL)
     ((rn = (ms, gs) => ps((hs) => ({ ...hs, [ms]: gs }))), (vo[10] = rn));
   else rn = vo[10];
   let tn;
@@ -160,9 +160,9 @@ var L = {
 };
 function Ro() {
   let go = _(9),
-    { goBack: $r, goToStep: Vr, updateWizardData: qr } = vl(),
+    { goBack: $r, goToStep: Vr, updateWizardData: qr } = useWizard(),
     nn;
-  if (go[0] === p)
+  if (go[0] === MEMO_CACHE_SENTINEL)
     ((nn = [
       { label: "AWS profile (SSO or named profile)", value: "profile" },
       { label: "Bedrock API key (bearer token)", value: "bearer" },
@@ -176,7 +176,7 @@ function Ro() {
   else nn = go[0];
   let ws = nn,
     sn;
-  if (go[1] === p)
+  if (go[1] === MEMO_CACHE_SENTINEL)
     ((sn = {
       profile: L.PROFILE,
       bearer: L.BEARER,
@@ -198,7 +198,7 @@ function Ro() {
   else an = go[4];
   let Yr = an,
     dn;
-  if (go[5] === p)
+  if (go[5] === MEMO_CACHE_SENTINEL)
     ((dn = e(t, {
       dimColor: !0,
       children:
@@ -208,7 +208,7 @@ function Ro() {
   else dn = go[5];
   let ln;
   if (go[6] !== $r || go[7] !== Yr)
-    ((ln = e(wi, {
+    ((ln = e(WizardStepFrame, {
       subtitle: "How do you authenticate to AWS?",
       children: r(o, {
         flexDirection: "column",
@@ -225,14 +225,14 @@ function Ro() {
 F();
 function No() {
   let ze = _(17),
-    { goBack: Vs, goToStep: Gr, updateWizardData: jr, wizardData: qs } = vl(),
+    { goBack: Vs, goToStep: Gr, updateWizardData: jr, wizardData: qs } = useWizard(),
     [Ke, Ys] = d(qs.bearerToken ?? ""),
     [Xr, Gs] = d(Ke.length),
     [Io, un] = d(null),
     fn;
-  if (ze[0] === p) ((fn = { context: "Settings" }), (ze[0] = fn));
+  if (ze[0] === MEMO_CACHE_SENTINEL) ((fn = { context: "Settings" }), (ze[0] = fn));
   else fn = ze[0];
-  Ne("confirm:no", Vs, fn);
+  useKeybinding("confirm:no", Vs, fn);
   let pn;
   if (ze[1] !== Gr || ze[2] !== jr || ze[3] !== Ke)
     ((pn = () => {
@@ -250,11 +250,11 @@ function No() {
   else pn = ze[4];
   let Qr = pn,
     gn;
-  if (ze[5] === p)
-    ((gn = r(ue, {
+  if (ze[5] === MEMO_CACHE_SENTINEL)
+    ((gn = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "continue" }),
-        e(je, {
+        e(KeybindingHint, { chord: "enter", action: "continue" }),
+        e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Settings",
           fallback: "Esc",
@@ -265,7 +265,7 @@ function No() {
       (ze[5] = gn));
   else gn = ze[5];
   let yn, Cn;
-  if (ze[6] === p)
+  if (ze[6] === MEMO_CACHE_SENTINEL)
     ((yn = e(t, { children: "Paste your Bedrock API key." })),
       (Cn = e(t, {
         dimColor: !0,
@@ -299,13 +299,13 @@ function No() {
   else Wo = ze[11];
   let xo;
   if (ze[12] !== Io)
-    ((xo = Io && e(o, { marginTop: 1, children: e(Ur, { error: Io }) })),
+    ((xo = Io && e(o, { marginTop: 1, children: e(ErrorMessage, { error: Io }) })),
       (ze[12] = Io),
       (ze[13] = xo));
   else xo = ze[13];
   let Sn;
   if (ze[14] !== Wo || ze[15] !== xo)
-    ((Sn = e(wi, {
+    ((Sn = e(WizardStepFrame, {
       subtitle: "Bedrock API key",
       footerText: gn,
       children: r(o, { flexDirection: "column", children: [yn, Cn, Wo, xo] }),
@@ -388,11 +388,11 @@ var dt = new Set([
 function Fo(Jr) {
   let ce = _(31),
     { onComplete: Zr } = Jr,
-    { storageV5: ot } = _e(),
-    { goBack: rt, wizardData: T } = vl(),
+    { storageV5: ot } = useStorageV5Context(),
+    { goBack: rt, wizardData: T } = useWizard(),
     [tt, ua] = d(null),
     An;
-  if (ce[0] === p)
+  if (ce[0] === MEMO_CACHE_SENTINEL)
     ((An = Gu(getSettingsFilePathForSource("userSettings") ?? "~/.claude/settings.json")), (ce[0] = An));
   else An = ce[0];
   let _n = An,
@@ -429,7 +429,7 @@ function Fo(Jr) {
         ((it.current = !1), ua(On.message));
         return;
       }
-      (i("tengu_bedrock_setup_complete", {
+      (logEvent("tengu_bedrock_setup_complete", {
         auth_method: fromEnumOpt(T.authMethod),
         pinned_models: Boolean(
           T.pinSonnet || T.pinOpus || T.pinFable || T.pinHaiku,
@@ -454,7 +454,7 @@ function Fo(Jr) {
   else wn = ce[15];
   let st = wn,
     Pn;
-  if (ce[16] === p)
+  if (ce[16] === MEMO_CACHE_SENTINEL)
     ((Pn = r(t, {
       children: ["These will be written to ", _n, " under env:"],
     })),
@@ -473,7 +473,7 @@ function Fo(Jr) {
       r(t, {
         dimColor: !0,
         children: [
-          e(et, { status: "success", withSpace: !0 }),
+          e(StatusIndicator, { status: "success", withSpace: !0 }),
           "Verified as ",
           T.verifiedIdentity,
         ],
@@ -483,11 +483,11 @@ function Fo(Jr) {
   else Ko = ce[20];
   let zo;
   if (ce[21] !== tt)
-    ((zo = e(Ur, { error: tt })), (ce[21] = tt), (ce[22] = zo));
+    ((zo = e(ErrorMessage, { error: tt })), (ce[21] = tt), (ce[22] = zo));
   else zo = ce[22];
   let Lo;
   if (ce[23] !== rt || ce[24] !== st)
-    ((Lo = e(En, {
+    ((Lo = e(ConfirmPrompt, {
       confirmLabel: "Save",
       cancelLabel: "Cancel",
       onConfirm: st,
@@ -499,7 +499,7 @@ function Fo(Jr) {
   else Lo = ce[25];
   let vn;
   if (ce[26] !== Mo || ce[27] !== Ko || ce[28] !== zo || ce[29] !== Lo)
-    ((vn = e(wi, {
+    ((vn = e(WizardStepFrame, {
       subtitle: "Confirm and save",
       children: r(o, {
         flexDirection: "column",
@@ -516,7 +516,7 @@ function Fo(Jr) {
   return vn;
 }
 F();
-var lt = pe(q5(), 1);
+var lt = toESM(q5(), 1);
 var oo = "Bedrock setup verification timed out";
 function ko(n) {
   let s = Mve(n),
@@ -546,7 +546,7 @@ async function Uo(n) {
       },
       { STSClient: m, GetCallerIdentityCommand: g } =
         await import("../../00-第三方库/_未识别/第三方库-AWSSDK/GetCallerIdentityCommand.z4m8wtvr.js"),
-      O = await Dt(new m(f).send(new g({})), s, oo),
+      O = await withTimeout(new m(f).send(new g({})), s, oo),
       b = O.Arn ?? O.UserId ?? "(unknown)",
       { BedrockClient: h, ListInferenceProfilesCommand: M } =
         await import("../../00-第三方库/_未识别/第三方库-AWSSDK/BedrockClient.8qdd522x.js"),
@@ -554,7 +554,7 @@ async function Uo(n) {
       B = [],
       q;
     do {
-      let ie = await Dt(
+      let ie = await withTimeout(
         y.send(
           new M({ ...(q && { nextToken: q }), typeEquals: "SYSTEM_DEFINED" }),
         ),
@@ -746,7 +746,7 @@ async function ft(n, s) {
       parentClientConfig: { region: n.region, requestHandler: f },
       clientConfig: { requestHandler: f },
     });
-  return (g) => Dt(m(g), HCt(), oo);
+  return (g) => withTimeout(m(g), HCt(), oo);
 }
 function pt(n) {
   return (
@@ -842,7 +842,7 @@ var To = {
 };
 function gr() {
   let S = _(80),
-    { goBack: mt, goNext: gt, updateWizardData: Ho, wizardData: P } = vl(),
+    { goBack: mt, goNext: gt, updateWizardData: Ho, wizardData: P } = useWizard(),
     Mn;
   if (S[0] !== P.discoveredProfiles)
     ((Mn = P.discoveredProfiles ?? []),
@@ -855,7 +855,7 @@ function gr() {
   else Kn = S[3];
   let Co = Kn,
     zn;
-  if (S[4] === p) ((zn = Object.fromEntries(z.map(Ei))), (S[4] = zn));
+  if (S[4] === MEMO_CACHE_SENTINEL) ((zn = Object.fromEntries(z.map(Ei))), (S[4] = zn));
   else zn = S[4];
   let Ln = zn,
     Fn;
@@ -879,7 +879,7 @@ function gr() {
   let La = Un,
     [k, Fa] = d(La),
     Hn;
-  if (S[11] === p)
+  if (S[11] === MEMO_CACHE_SENTINEL)
     ((Hn = {
       sonnet: "pending",
       opus: "pending",
@@ -994,7 +994,7 @@ function gr() {
         (S[33] = Le));
     else Le = S[33];
     let So;
-    if (S[34] === p) ((So = () => kt("summary")), (S[34] = So));
+    if (S[34] === MEMO_CACHE_SENTINEL) ((So = () => kt("summary")), (S[34] = So));
     else So = S[34];
     let Ao;
     if (
@@ -1097,7 +1097,7 @@ function gr() {
   else Le = S[56];
   let At = Le,
     So;
-  if (S[57] === p)
+  if (S[57] === MEMO_CACHE_SENTINEL)
     ((So = e(t, {
       children:
         "Without pinning, Claude Code uses its built-in defaults. When a new model ships, your install will try to call it even if your account has not yet enabled it \u2014 Claude Code will fail to connect to Bedrock until you enable the model or pin to one you have.",
@@ -1105,7 +1105,7 @@ function gr() {
       (S[57] = So));
   else So = S[57];
   let Ao;
-  if (S[58] === p)
+  if (S[58] === MEMO_CACHE_SENTINEL)
     ((Ao = e(t, {
       dimColor: !0,
       children: "Each candidate is tested with a one-token request:",
@@ -1142,7 +1142,7 @@ function gr() {
       (S[67] = Qo));
   else Qo = S[67];
   let li, ui;
-  if (S[68] === p)
+  if (S[68] === MEMO_CACHE_SENTINEL)
     ((li = { label: "Choose different models\u2026", value: "manual" }),
       (ui = {
         label: "Skip \u2014 use Claude Code defaults (auto-updates)",
@@ -1165,7 +1165,7 @@ function gr() {
   else Zo = S[76];
   let fi;
   if (S[77] !== jo || S[78] !== Zo)
-    ((fi = e(wi, {
+    ((fi = e(WizardStepFrame, {
       subtitle: "Pin model versions",
       children: r(o, {
         flexDirection: "column",
@@ -1232,8 +1232,8 @@ function Nt({
                 : void 0,
       }),
     })),
-    ee = G(l, (A) => A.toLowerCase().includes(n));
-  return e(wi, {
+    ee = countMatching(l, (A) => A.toLowerCase().includes(n));
+  return e(WizardStepFrame, {
     subtitle: `Pin ${Ee[n]} model`,
     children: r(o, {
       flexDirection: "column",
@@ -1265,8 +1265,8 @@ function pr(hc) {
     { id: he, state: Rt, suffix: le } = hc;
   if (Rt === "pending") {
     let xe;
-    if (ke[0] === p)
-      ((xe = e(et, { status: "pending", withSpace: !0 })), (ke[0] = xe));
+    if (ke[0] === MEMO_CACHE_SENTINEL)
+      ((xe = e(StatusIndicator, { status: "pending", withSpace: !0 })), (ke[0] = xe));
     else xe = ke[0];
     let Z;
     if (ke[1] !== le)
@@ -1285,8 +1285,8 @@ function pr(hc) {
   }
   if (Rt.ok) {
     let xe;
-    if (ke[6] === p)
-      ((xe = e(et, { status: "success", withSpace: !0 })), (ke[6] = xe));
+    if (ke[6] === MEMO_CACHE_SENTINEL)
+      ((xe = e(StatusIndicator, { status: "success", withSpace: !0 })), (ke[6] = xe));
     else xe = ke[6];
     let Z;
     if (ke[7] !== le)
@@ -1304,8 +1304,8 @@ function pr(hc) {
     return ye;
   }
   let xe;
-  if (ke[12] === p)
-    ((xe = e(et, { status: "error", withSpace: !0 })), (ke[12] = xe));
+  if (ke[12] === MEMO_CACHE_SENTINEL)
+    ((xe = e(StatusIndicator, { status: "error", withSpace: !0 })), (ke[12] = xe));
   else xe = ke[12];
   const Z = le && ` ${le}`,
     ye = To[Rt.reason];
@@ -1330,7 +1330,7 @@ function mr(kc) {
     { label: Ce, modelId: Se, state: It } = kc;
   if (It === "pending") {
     let Me, te;
-    if (re[0] === p)
+    if (re[0] === MEMO_CACHE_SENTINEL)
       ((Me = e(t, { children: "  " })),
         (te = e(yo, {})),
         (re[0] = Me),
@@ -1352,8 +1352,8 @@ function mr(kc) {
   }
   if (It.ok) {
     let Me;
-    if (re[7] === p)
-      ((Me = e(et, { status: "success", withSpace: !0 })), (re[7] = Me));
+    if (re[7] === MEMO_CACHE_SENTINEL)
+      ((Me = e(StatusIndicator, { status: "success", withSpace: !0 })), (re[7] = Me));
     else Me = re[7];
     let te;
     if (re[8] !== Ce) ((te = Ce.padEnd(7)), (re[8] = Ce), (re[9] = te));
@@ -1374,8 +1374,8 @@ function mr(kc) {
     return Ae;
   }
   let Me;
-  if (re[15] === p)
-    ((Me = e(et, { status: "error", withSpace: !0 })), (re[15] = Me));
+  if (re[15] === MEMO_CACHE_SENTINEL)
+    ((Me = e(StatusIndicator, { status: "error", withSpace: !0 })), (re[15] = Me));
   else Me = re[15];
   let te;
   if (re[16] !== Ce) ((te = Ce.padEnd(7)), (re[16] = Ce), (re[17] = te));
@@ -1438,10 +1438,10 @@ function Er() {
   let vi = _(3),
     [Kt] = d(Fi),
     Bi;
-  if (vi[0] === p)
-    ((Bi = e(wi, {
+  if (vi[0] === MEMO_CACHE_SENTINEL)
+    ((Bi = e(WizardStepFrame, {
       subtitle: "AWS profile",
-      children: e($n, { message: "Reading ~/.aws/config\u2026" }),
+      children: e(SpinnerMessageLine, { message: "Reading ~/.aws/config\u2026" }),
     })),
       (vi[0] = Bi));
   else Bi = vi[0];
@@ -1457,7 +1457,7 @@ function Ar(Fc) {
   let I = _(52),
     { profilesPromise: Uc } = Fc,
     v = kn(Uc),
-    { goBack: kr, goToStep: zt, updateWizardData: Lt, wizardData: fe } = vl(),
+    { goBack: kr, goToStep: zt, updateWizardData: Lt, wizardData: fe } = useWizard(),
     Ue = v.length > Ht,
     Ii;
   if (I[0] !== v || I[1] !== fe.awsProfile)
@@ -1480,7 +1480,7 @@ function Ar(Fc) {
   if (I[6] !== yr)
     ((Ni = { context: "Settings", isActive: yr }), (I[6] = yr), (I[7] = Ni));
   else Ni = I[7];
-  Ne("confirm:no", kr, Ni);
+  useKeybinding("confirm:no", kr, Ni);
   let Mi;
   if (I[8] !== zt || I[9] !== Lt)
     ((Mi = (Yc) => {
@@ -1516,7 +1516,7 @@ function Ar(Fc) {
     let be;
     if (I[16] !== v) {
       let me;
-      if (I[18] === p)
+      if (I[18] === MEMO_CACHE_SENTINEL)
         ((me = { label: "Type a different name\u2026", value: Po }),
           (I[18] = me));
       else me = I[18];
@@ -1556,7 +1556,7 @@ function Ar(Fc) {
     else Te = I[28];
     let Oo;
     if (I[29] !== Te || I[30] !== Ve)
-      ((Oo = e(wi, {
+      ((Oo = e(WizardStepFrame, {
         subtitle: "AWS profile",
         children: r(o, { flexDirection: "column", gap: 1, children: [Ve, Te] }),
       })),
@@ -1582,11 +1582,11 @@ function Ar(Fc) {
   else Sr = I[34];
   let Ut = Sr,
     $e;
-  if (I[35] === p)
-    (($e = r(ue, {
+  if (I[35] === MEMO_CACHE_SENTINEL)
+    (($e = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "continue" }),
-        e(je, {
+        e(KeybindingHint, { chord: "enter", action: "continue" }),
+        e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Settings",
           fallback: "Esc",
@@ -1597,7 +1597,7 @@ function Ar(Fc) {
       (I[35] = $e));
   else $e = I[35];
   let Ve;
-  if (I[36] === p)
+  if (I[36] === MEMO_CACHE_SENTINEL)
     ((Ve = e(t, {
       children: "The name from ~/.aws/config (after [profile \u2026]).",
     })),
@@ -1622,7 +1622,7 @@ function Ar(Fc) {
       (I[40] = be));
   else be = I[40];
   let me;
-  if (I[41] === p)
+  if (I[41] === MEMO_CACHE_SENTINEL)
     ((me = e(t, {
       dimColor: !0,
       children:
@@ -1653,13 +1653,13 @@ function Ar(Fc) {
   else De = I[45];
   let Te;
   if (I[46] !== Cr)
-    ((Te = Cr && e(o, { marginTop: 1, children: e(Ur, { error: Cr }) })),
+    ((Te = Cr && e(o, { marginTop: 1, children: e(ErrorMessage, { error: Cr }) })),
       (I[46] = Cr),
       (I[47] = Te));
   else Te = I[47];
   let Oo;
   if (I[48] !== De || I[49] !== Te || I[50] !== be)
-    ((Oo = e(wi, {
+    ((Oo = e(WizardStepFrame, {
       subtitle: "AWS profile name",
       footerText: $e,
       children: r(o, {
@@ -1677,14 +1677,14 @@ function Ar(Fc) {
 F();
 function Tr() {
   let Ye = _(17),
-    { goBack: dd, goNext: $t, updateWizardData: Vt, wizardData: ld } = vl(),
+    { goBack: dd, goNext: $t, updateWizardData: Vt, wizardData: ld } = useWizard(),
     [qe, ud] = d(ld.region ?? "us-east-1"),
     [qt, fd] = d(qe.length),
     [_r, Vi] = d(null),
     qi;
-  if (Ye[0] === p) ((qi = { context: "Settings" }), (Ye[0] = qi));
+  if (Ye[0] === MEMO_CACHE_SENTINEL) ((qi = { context: "Settings" }), (Ye[0] = qi));
   else qi = Ye[0];
-  Ne("confirm:no", dd, qi);
+  useKeybinding("confirm:no", dd, qi);
   let Yi;
   if (Ye[1] !== $t || Ye[2] !== Vt || Ye[3] !== qe)
     ((Yi = () => {
@@ -1702,11 +1702,11 @@ function Tr() {
   else Yi = Ye[4];
   let Yt = Yi,
     ji;
-  if (Ye[5] === p)
-    ((ji = r(ue, {
+  if (Ye[5] === MEMO_CACHE_SENTINEL)
+    ((ji = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "continue" }),
-        e(je, {
+        e(KeybindingHint, { chord: "enter", action: "continue" }),
+        e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Settings",
           fallback: "Esc",
@@ -1717,7 +1717,7 @@ function Tr() {
       (Ye[5] = ji));
   else ji = Ye[5];
   let Xi, Qi;
-  if (Ye[6] === p)
+  if (Ye[6] === MEMO_CACHE_SENTINEL)
     ((Xi = e(t, { children: "Where your Bedrock models are enabled." })),
       (Qi = e(t, {
         dimColor: !0,
@@ -1750,13 +1750,13 @@ function Tr() {
   else br = Ye[11];
   let Dr;
   if (Ye[12] !== _r)
-    ((Dr = _r && e(o, { marginTop: 1, children: e(Ur, { error: _r }) })),
+    ((Dr = _r && e(o, { marginTop: 1, children: e(ErrorMessage, { error: _r }) })),
       (Ye[12] = _r),
       (Ye[13] = Dr));
   else Dr = Ye[13];
   let Ji;
   if (Ye[14] !== br || Ye[15] !== Dr)
-    ((Ji = e(wi, {
+    ((Ji = e(WizardStepFrame, {
       subtitle: "AWS region",
       footerText: ji,
       children: r(o, { flexDirection: "column", children: [Xi, Qi, br, Dr] }),
@@ -1770,9 +1770,9 @@ function Tr() {
 F();
 function Br() {
   let K = _(39),
-    { goBack: po, goNext: mo, updateWizardData: wr, wizardData: Or } = vl(),
+    { goBack: po, goNext: mo, updateWizardData: wr, wizardData: Or } = useWizard(),
     Zi;
-  if (K[0] === p) ((Zi = { phase: "checking" }), (K[0] = Zi));
+  if (K[0] === MEMO_CACHE_SENTINEL) ((Zi = { phase: "checking" }), (K[0] = Zi));
   else Zi = K[0];
   let [es, wd] = d(Zi),
     os;
@@ -1802,7 +1802,7 @@ function Br() {
       (K[3] = os));
   else os = K[3];
   let ts;
-  if (K[4] === p) ((ts = []), (K[4] = ts));
+  if (K[4] === MEMO_CACHE_SENTINEL) ((ts = []), (K[4] = ts));
   else ts = K[4];
   if ((E(os, ts), es.phase === "checking")) {
     const Oe =
@@ -1811,9 +1811,9 @@ function Br() {
         : "Calling AWS STS and Bedrock\u2026";
     let ne;
     if (K[5] !== Oe)
-      ((ne = e(wi, {
+      ((ne = e(WizardStepFrame, {
         subtitle: "Verifying credentials",
-        children: e($n, {
+        children: e(SpinnerMessageLine, {
           message: Oe,
           subtitle: "This may take a few seconds.",
         }),
@@ -1827,8 +1827,8 @@ function Br() {
   switch (N.status) {
     case "ok": {
       let Oe;
-      if (K[7] === p)
-        ((Oe = e(et, { status: "success", withSpace: !0 })), (K[7] = Oe));
+      if (K[7] === MEMO_CACHE_SENTINEL)
+        ((Oe = e(StatusIndicator, { status: "success", withSpace: !0 })), (K[7] = Oe));
       else Oe = K[7];
       let ne;
       if (K[8] !== N.identity)
@@ -1860,7 +1860,7 @@ function Br() {
           (K[14] = Be));
       else Be = K[14];
       let Ge;
-      if (K[15] === p)
+      if (K[15] === MEMO_CACHE_SENTINEL)
         ((Ge = [{ label: "Continue", value: "continue" }]), (K[15] = Ge));
       else Ge = K[15];
       let Xe;
@@ -1875,7 +1875,7 @@ function Br() {
       else vr = K[20];
       let ns;
       if (K[21] !== ne || K[22] !== Be || K[23] !== vr)
-        ((ns = e(wi, {
+        ((ns = e(WizardStepFrame, {
           subtitle: "Verification",
           children: r(o, {
             flexDirection: "column",
@@ -1892,8 +1892,8 @@ function Br() {
     }
     case "error": {
       let Oe;
-      if (K[25] === p)
-        ((Oe = e(et, { status: "error", withSpace: !0 })), (K[25] = Oe));
+      if (K[25] === MEMO_CACHE_SENTINEL)
+        ((Oe = e(StatusIndicator, { status: "error", withSpace: !0 })), (K[25] = Oe));
       else Oe = K[25];
       let ne;
       if (K[26] !== N.error)
@@ -1922,7 +1922,7 @@ function Br() {
       else Be = K[32];
       let Ge;
       if (K[33] !== po || K[34] !== mo)
-        ((Ge = e(En, {
+        ((Ge = e(ConfirmPrompt, {
           hideIndexes: !0,
           cancelFirst: !0,
           focus: "cancel",
@@ -1937,7 +1937,7 @@ function Br() {
       else Ge = K[35];
       let Xe;
       if (K[36] !== Be || K[37] !== Ge)
-        ((Xe = e(wi, {
+        ((Xe = e(WizardStepFrame, {
           subtitle: "Verification failed",
           color: "error",
           children: r(o, {
@@ -1963,11 +1963,11 @@ function _0e(Fd) {
   if (Qt[0] !== Gt) ((Rr = { onComplete: Gt }), (Qt[0] = Gt), (Qt[1] = Rr));
   else Rr = Qt[1];
   let is;
-  if (Qt[2] === p) ((is = {}), (Qt[2] = is));
+  if (Qt[2] === MEMO_CACHE_SENTINEL) ((is = {}), (Qt[2] = is));
   else is = Qt[2];
   let ss;
   if (Qt[3] !== jt || Qt[4] !== Rr)
-    ((ss = e(fle, {
+    ((ss = e(WizardProvider, {
       steps: Zt,
       stepProps: Rr,
       initialData: is,

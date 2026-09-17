@@ -10,12 +10,12 @@
 
 // [preload stripped] 原本在此预载 79 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { bc } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   GET_POOL_TOOL_NAME,
   LIST_RUNNERS_TOOL_NAME,
@@ -36,14 +36,14 @@ import {
   TAIL_LOG_DESCRIPTION,
   REQUEUE_SESSION_DESCRIPTION,
 } from "./chunk-01gj9cjk.js";
-import { Oce, Dce, Zee, ete, mM, cI } from "../../01-核心基础设施/共享小工具-未细化/chunk-kax7bdqv.js";
-import { ml } from "../../01-核心基础设施/共享小工具-未细化/chunk-vdg9aytt.js";
+import { DEFAULT_HEALTH_PORT, resolveApiBaseUrl, buildUiEquivalentPath, requestSelfHostedRunnerApi, makeToolResultBlock, formatToolUseInput } from "../../01-核心基础设施/共享小工具-未细化/self-hosted-runner-api.js";
+import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
 import { s, T, O, se, v, c, Qe, $e, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var B = m(() =>
+var B = createLazyValue(() =>
     Qe({ pool_id: s().describe("Tagged environment id (ccpool_\u2026).") }),
   ),
-  G = m(() => c({ pool: fe(s(), se()), equivalent: c({ ui: s() }) })),
-  E = Tt({
+  G = createLazyValue(() => c({ pool: fe(s(), se()), equivalent: c({ ui: s() }) })),
+  E = buildTool({
     name: GET_POOL_TOOL_NAME,
     searchHint: "read self-hosted environment aggregates and queue counts",
     maxResultSizeChars: 1e5,
@@ -68,7 +68,7 @@ var B = m(() =>
     },
     async call({ pool_id: e }, t) {
       let r = `/v1/code/runners/self-hosted/pools/${encodeURIComponent(e)}`,
-        o = await ete(
+        o = await requestSelfHostedRunnerApi(
           "GET",
           r,
           void 0,
@@ -78,20 +78,20 @@ var B = m(() =>
       return {
         data: {
           pool: o.pool ?? o,
-          equivalent: Zee(
+          equivalent: buildUiEquivalentPath(
             "Admin settings \u2192 Cloud environments \u2192 Self-hosted environments \u2192 (environment) \u2014 header stat tiles",
           ),
         },
       };
     },
     mapToolResultToToolResultBlockParam(e, t) {
-      return mM(t, e);
+      return makeToolResultBlock(t, e);
     },
     renderToolUseMessage(e) {
-      return cI(e);
+      return formatToolUseInput(e);
     },
   });
-var F = m(() =>
+var F = createLazyValue(() =>
     Qe({
       pool_id: s().describe("Tagged environment id (ccpool_\u2026)."),
       status_filter: s()
@@ -99,8 +99,8 @@ var F = m(() =>
         .describe('Optional server-side status filter (e.g. "queued").'),
     }),
   ),
-  W = m(() => c({ sessions: v(fe(s(), se())), equivalent: c({ ui: s() }) })),
-  w = Tt({
+  W = createLazyValue(() => c({ sessions: v(fe(s(), se())), equivalent: c({ ui: s() }) })),
+  w = buildTool({
     name: LIST_POOL_SESSIONS_TOOL_NAME,
     searchHint: "list queued/assigned sessions in a self-hosted environment",
     maxResultSizeChars: 1e5,
@@ -130,7 +130,7 @@ var F = m(() =>
         data: {
           sessions:
             (
-              await ete(
+              await requestSelfHostedRunnerApi(
                 "GET",
                 n,
                 void 0,
@@ -138,24 +138,24 @@ var F = m(() =>
                 r.credentials,
               )
             ).sessions ?? [],
-          equivalent: Zee(
+          equivalent: buildUiEquivalentPath(
             "Admin settings \u2192 Cloud environments \u2192 Self-hosted environments \u2192 (environment) \u2192 Activity tab \u2192 Sessions",
           ),
         },
       };
     },
     mapToolResultToToolResultBlockParam(e, t) {
-      return mM(t, e);
+      return makeToolResultBlock(t, e);
     },
     renderToolUseMessage(e) {
-      return cI(e);
+      return formatToolUseInput(e);
     },
   });
-var Q = m(() =>
+var Q = createLazyValue(() =>
     Qe({ pool_id: s().describe("Tagged environment id (ccpool_\u2026).") }),
   ),
-  K = m(() => c({ runners: v(fe(s(), se())), equivalent: c({ ui: s() }) })),
-  P = Tt({
+  K = createLazyValue(() => c({ runners: v(fe(s(), se())), equivalent: c({ ui: s() }) })),
+  P = buildTool({
     name: LIST_RUNNERS_TOOL_NAME,
     searchHint: "list registered self-hosted runners for an environment",
     maxResultSizeChars: 1e5,
@@ -184,7 +184,7 @@ var Q = m(() =>
         data: {
           runners:
             (
-              await ete(
+              await requestSelfHostedRunnerApi(
                 "GET",
                 r,
                 void 0,
@@ -192,24 +192,24 @@ var Q = m(() =>
                 t.credentials,
               )
             ).runners ?? [],
-          equivalent: Zee(
+          equivalent: buildUiEquivalentPath(
             "Admin settings \u2192 Cloud environments \u2192 Self-hosted environments \u2192 (environment) \u2192 Activity tab \u2192 Runners",
           ),
         },
       };
     },
     mapToolResultToToolResultBlockParam(e, t) {
-      return mM(t, e);
+      return makeToolResultBlock(t, e);
     },
     renderToolUseMessage(e) {
-      return cI(e);
+      return formatToolUseInput(e);
     },
   });
-var X = m(() =>
+var X = createLazyValue(() =>
     Qe({ pool_id: s().describe("Tagged environment id (ccpool_\u2026).") }),
   ),
-  Y = m(() => c({ secrets: v(fe(s(), se())), equivalent: c({ ui: s() }) })),
-  D = Tt({
+  Y = createLazyValue(() => c({ secrets: v(fe(s(), se())), equivalent: c({ ui: s() }) })),
+  D = buildTool({
     name: LIST_SECRETS_TOOL_NAME,
     searchHint: "list self-hosted environment secrets (metadata only)",
     maxResultSizeChars: 1e5,
@@ -238,7 +238,7 @@ var X = m(() =>
         data: {
           secrets:
             (
-              await ete(
+              await requestSelfHostedRunnerApi(
                 "GET",
                 r,
                 void 0,
@@ -246,28 +246,28 @@ var X = m(() =>
                 t.credentials,
               )
             ).secrets ?? [],
-          equivalent: Zee(
+          equivalent: buildUiEquivalentPath(
             "Admin settings \u2192 Cloud environments \u2192 Self-hosted environments \u2192 (environment) \u2192 Configuration tab \u2192 Environment keys",
           ),
         },
       };
     },
     mapToolResultToToolResultBlockParam(e, t) {
-      return mM(t, e);
+      return makeToolResultBlock(t, e);
     },
     renderToolUseMessage(e) {
-      return cI(e);
+      return formatToolUseInput(e);
     },
   });
-var J = m(() =>
+var J = createLazyValue(() =>
     Qe({
       health_port: T()
         .int()
         .optional()
-        .describe(`Default ${Oce}. 0 means disabled.`),
+        .describe(`Default ${DEFAULT_HEALTH_PORT}. 0 means disabled.`),
     }),
   ),
-  V = m(() =>
+  V = createLazyValue(() =>
     c({
       health: fe(s(), se()).optional(),
       disabled: O().optional(),
@@ -275,7 +275,7 @@ var J = m(() =>
       error: s().optional(),
     }),
   ),
-  A = Tt({
+  A = buildTool({
     name: READ_HEALTH_TOOL_NAME,
     searchHint: "probe local self-hosted runner /healthz endpoint",
     maxResultSizeChars: 1e5,
@@ -298,7 +298,7 @@ var J = m(() =>
     async prompt() {
       return READ_HEALTH_DESCRIPTION;
     },
-    async call({ health_port: e = Oce }) {
+    async call({ health_port: e = DEFAULT_HEALTH_PORT }) {
       if (e === 0) return { data: { disabled: !0 } };
       try {
         return {
@@ -316,22 +316,22 @@ var J = m(() =>
       }
     },
     mapToolResultToToolResultBlockParam(e, t) {
-      return mM(t, e);
+      return makeToolResultBlock(t, e);
     },
     renderToolUseMessage(e) {
-      return cI(e);
+      return formatToolUseInput(e);
     },
   });
 var C = "claude_code_self_hosted_runner_",
-  Z = m(() =>
+  Z = createLazyValue(() =>
     Qe({
       health_port: T()
         .int()
         .optional()
-        .describe(`Default ${Oce}. 0 means disabled.`),
+        .describe(`Default ${DEFAULT_HEALTH_PORT}. 0 means disabled.`),
     }),
   ),
-  ee = m(() =>
+  ee = createLazyValue(() =>
     c({
       gauges: fe(s(), $e([T(), s()])).optional(),
       raw: s().optional(),
@@ -367,7 +367,7 @@ function te(e) {
   }
   return t;
 }
-var k = Tt({
+var k = buildTool({
   name: READ_METRICS_TOOL_NAME,
   searchHint: "read self-hosted runner Prometheus gauges from /metrics",
   maxResultSizeChars: 1e5,
@@ -390,7 +390,7 @@ var k = Tt({
   async prompt() {
     return READ_METRICS_DESCRIPTION;
   },
-  async call({ health_port: e = Oce }) {
+  async call({ health_port: e = DEFAULT_HEALTH_PORT }) {
     if (e === 0) return { data: { disabled: !0 } };
     try {
       let t = await externalHttp.get(`http://127.0.0.1:${e}/metrics`, {
@@ -398,20 +398,20 @@ var k = Tt({
           responseType: "text",
           validateStatus: () => !0,
         }),
-        r = ml(String(t.data));
+        r = redactSecrets(String(t.data));
       return { data: { gauges: te(r), raw: r } };
     } catch (t) {
       return { data: { unreachable: !0, error: l(t) } };
     }
   },
   mapToolResultToToolResultBlockParam(e, t) {
-    return mM(t, e);
+    return makeToolResultBlock(t, e);
   },
   renderToolUseMessage(e) {
-    return cI(e);
+    return formatToolUseInput(e);
   },
 });
-var re = m(() =>
+var re = createLazyValue(() =>
     Qe({
       session_id: s().describe("Tagged session id (ccsess_\u2026)."),
       runner_id: s().describe(
@@ -419,10 +419,10 @@ var re = m(() =>
       ),
     }),
   ),
-  oe = m(() =>
+  oe = createLazyValue(() =>
     c({ excluded_count: T().optional(), equivalent: c({ ui: s() }) }),
   ),
-  x = Tt({
+  x = buildTool({
     name: REQUEUE_SESSION_TOOL_NAME,
     searchHint:
       "requeue a stuck self-hosted runner session onto another runner",
@@ -469,7 +469,7 @@ var re = m(() =>
       return {
         data: {
           excluded_count: (
-            await ete(
+            await requestSelfHostedRunnerApi(
               "POST",
               o,
               { runner_id: t },
@@ -477,17 +477,17 @@ var re = m(() =>
               r.credentials,
             )
           ).excluded_count,
-          equivalent: Zee(
+          equivalent: buildUiEquivalentPath(
             "Admin settings \u2192 Cloud environments \u2192 Self-hosted environments \u2192 (environment) \u2192 Activity tab \u2192 Sessions \u2192 (session) \u2192 Retry",
           ),
         },
       };
     },
     mapToolResultToToolResultBlockParam(e, t) {
-      return mM(t, e);
+      return makeToolResultBlock(t, e);
     },
     renderToolUseMessage(e) {
-      return cI(e);
+      return formatToolUseInput(e);
     },
   });
 import { spawn } from "child_process";
@@ -496,7 +496,7 @@ import { dirname, resolve } from "path";
 var S = "./runner-setup/workspace",
   N = "./runner-setup/runner.log",
   ue = "./runner-setup/runner.pid",
-  ie = m(() =>
+  ie = createLazyValue(() =>
     Qe({
       secret_file_path: s().describe(
         "Path to the environment secret the operator saved from the Admin UI.",
@@ -510,11 +510,11 @@ var S = "./runner-setup/workspace",
       health_port: T()
         .int()
         .optional()
-        .describe(`Default ${Oce}. 0 disables /healthz.`),
+        .describe(`Default ${DEFAULT_HEALTH_PORT}. 0 disables /healthz.`),
       log_path: s().optional().describe(`Default: ${N}`),
     }),
   ),
-  le = m(() =>
+  le = createLazyValue(() =>
     c({
       pid: T(),
       pid_file: s(),
@@ -533,7 +533,7 @@ function pe(e) {
     "--base-dir",
     e.base_dir,
     "--api-url",
-    Dce(),
+    resolveApiBaseUrl(),
     "--health-port",
     String(e.health_port),
     "--log-file",
@@ -543,7 +543,7 @@ function pe(e) {
 function d(e) {
   return /^[\w@%+=:,./-]+$/.test(e) ? e : `'${e.replace(/'/g, "'\\''")}'`;
 }
-var H = Tt({
+var H = buildTool({
   name: SPAWN_LOCAL_TOOL_NAME,
   searchHint: "start a local self-hosted runner process for try-it-out",
   enablesCodeExecution: !0,
@@ -588,7 +588,7 @@ var H = Tt({
     secret_file_path: e,
     capacity: t = 1,
     base_dir: r = S,
-    health_port: o = Oce,
+    health_port: o = DEFAULT_HEALTH_PORT,
     log_path: n = N,
   }) {
     let u = resolve(r),
@@ -627,15 +627,15 @@ var H = Tt({
     };
   },
   mapToolResultToToolResultBlockParam(e, t) {
-    return mM(t, e);
+    return makeToolResultBlock(t, e);
   },
   renderToolUseMessage(e) {
-    return cI(e);
+    return formatToolUseInput(e);
   },
 });
 import { open as me } from "fs/promises";
 var M = 65536,
-  de = m(() =>
+  de = createLazyValue(() =>
     Qe({
       log_path: s().describe("Path to the runner's --log-file."),
       bytes: T()
@@ -645,8 +645,8 @@ var M = 65536,
         .describe(`How many trailing bytes to read. Default ${M}.`),
     }),
   ),
-  he = m(() => c({ lines: s(), bytes_read: T(), error: s().optional() })),
-  U = Tt({
+  he = createLazyValue(() => c({ lines: s(), bytes_read: T(), error: s().optional() })),
+  U = buildTool({
     name: TAIL_LOG_TOOL_NAME,
     searchHint: "tail self-hosted runner log file with secret redaction",
     maxResultSizeChars: 200000,
@@ -682,7 +682,7 @@ var M = 65536,
             a = Buffer.alloc(u);
           return (
             await r.read(a, 0, u, n),
-            { data: { lines: ml(a.toString("utf8")), bytes_read: u } }
+            { data: { lines: redactSecrets(a.toString("utf8")), bytes_read: u } }
           );
         } finally {
           await r.close();
@@ -702,7 +702,7 @@ ${e.lines}`,
       };
     },
     renderToolUseMessage(e) {
-      return cI(e);
+      return formatToolUseInput(e);
     },
   });
 var SELF_HOSTED_RUNNER_TOOLS = [E, P, w, D, H, A, k, U, x];

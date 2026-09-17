@@ -13,7 +13,7 @@ import { logFeatureOk, logFeatureSad } from "../../lodash/lodash.0vqzb8ad.js";
 import { Hn } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ar, oA } from "../../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
+import { findToolByName, isBatchToolDefinition } from "../../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 var x = new j(() => new Set());
 function T(e, r) {
   return `${e}_${r}`;
@@ -24,8 +24,8 @@ function NAe(e) {
   return r ? e.slice(0, -r[0].length) : void 0;
 }
 function b(e, r, a) {
-  let i = ar(r, e.name);
-  if (i === void 0 || !oA(i)) return null;
+  let i = findToolByName(r, e.name);
+  if (i === void 0 || !isBatchToolDefinition(i)) return null;
   let l = (u) => (
     logFeatureSad("batch_tools", u, { tool_name: Hn(i.name), isMcp: !1 }),
     [
@@ -71,7 +71,7 @@ function b(e, r, a) {
 function U3t(e) {
   let r;
   for (let a of e)
-    if (oA(a)) ((r ??= new Set()), r.add(a.underlyingV1ToolName));
+    if (isBatchToolDefinition(a)) ((r ??= new Set()), r.add(a.underlyingV1ToolName));
   if (r === void 0) return e;
   return e.filter((a) => !r.has(a.name));
 }
@@ -101,8 +101,8 @@ function _Jn(e, r, a) {
   for (let t of r) if (!i.has(t.id)) i.set(t.id, t);
   let l = new Map();
   for (let t of i.values()) {
-    let s = ar(a, t.name);
-    if (s === void 0 || !oA(s)) continue;
+    let s = findToolByName(a, t.name);
+    if (s === void 0 || !isBatchToolDefinition(s)) continue;
     let c = [],
       f;
     for (let d of e)
@@ -146,8 +146,8 @@ function yJn(e, r) {
     if (o.type === "assistant") {
       for (let t of o.message.content)
         if (t.type === "tool_use") {
-          let s = ar(r, t.name);
-          if (s !== void 0 && oA(s)) a = !0;
+          let s = findToolByName(r, t.name);
+          if (s !== void 0 && isBatchToolDefinition(s)) a = !0;
         }
     }
     if (o.type === "user" && !a) {
@@ -198,8 +198,8 @@ function yJn(e, r) {
       if (((t = !0), u.has(f))) continue;
       u.add(f);
       let p = i.get(f),
-        m = ar(r, p.name),
-        k = m !== void 0 && oA(m) ? m : void 0;
+        m = findToolByName(r, p.name),
+        k = m !== void 0 && isBatchToolDefinition(m) ? m : void 0;
       s.push(R(k, f, E(k, p.input, f, d)));
     }
     if (!t) return [o];

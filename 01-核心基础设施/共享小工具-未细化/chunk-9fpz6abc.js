@@ -13,7 +13,7 @@ import { Q } from "./chunk-rsr7cnyv.js";
 import { Lc, zJ } from "./chunk-6smvq03f.js";
 import { g_, VI } from "../../02-功能模块/后台任务-Shell管理/chunk-djserjj5.js";
 import { BG_PROTO } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { Pit } from "./chunk-k76a6y9v.js";
+import { readStreamLines } from "./read-stream-lines.js";
 import { connect } from "net";
 import { StringDecoder } from "string_decoder";
 async function controlRequest(f, a) {
@@ -150,7 +150,7 @@ function subscribeControl(f, a, r, o) {
 `,
       ),
     ));
-  let d = Pit(e, (c) => {
+  let d = readStreamLines(e, (c) => {
     if (!u) ((u = !0), e.setTimeout(0));
     try {
       let i = z(c);

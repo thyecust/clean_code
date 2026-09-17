@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Me } from "../../01-核心基础设施/共享小工具-未细化/chunk-0dh9gct8.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { l, A, Bp, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -46,7 +46,7 @@ class UOt {
   #m = 0;
   #E;
   constructor(e, s = globalThis, t = () => {}) {
-    ((this.#r = M() && e !== void 0 ? e : void 0),
+    ((this.#r = isHoverRestEnabled() && e !== void 0 ? e : void 0),
       (this.#s = s),
       (this.#E = t));
   }
@@ -294,7 +294,7 @@ function c() {
   return e;
 }
 function Ale() {
-  return Me(c());
+  return useStoreSelector(c());
 }
 function atn() {
   let e = c();
@@ -308,7 +308,7 @@ function ltn() {
   }, [e]);
 }
 function qUn() {
-  return Me(c(), y) ?? !1;
+  return useStoreSelector(c(), y) ?? !1;
 }
 function v(e, s) {
   if (e === void 0 || e.length !== s.length) return !1;

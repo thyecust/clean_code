@@ -11,26 +11,26 @@
 // [preload stripped] 原本在此预载 246 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import { PB } from "../../03-入口与运行时/会话UI(REPL)/chunk-7gt0xchv.js";
 import { k8, CZ, $_e, HJt, IJt } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import { V, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Y() {
   return Date.now();
@@ -44,10 +44,10 @@ function j(K) {
 function CloudCreateChecklist(st) {
   let n = _(26),
     { state: a, cancelling: y, onCancel: x } = st,
-    { columns: D } = Se(),
+    { columns: D } = useTerminalSize(),
     [N, mt] = d(Y),
     M;
-  if (n[0] === p) ((M = () => mt(Date.now())), (n[0] = M));
+  if (n[0] === MEMO_CACHE_SENTINEL) ((M = () => mt(Date.now())), (n[0] = M));
   else M = n[0];
   ko(M, 1000);
   let O;
@@ -64,9 +64,9 @@ function CloudCreateChecklist(st) {
   if (n[5] !== R)
     ((E = { context: "Global", isActive: R }), (n[5] = R), (n[6] = E));
   else E = n[6];
-  Ze(ut, E);
+  useKeybindings(ut, E);
   let H;
-  if (n[7] === p) ((H = k8(0).steps.map(Z)), (n[7] = H));
+  if (n[7] === MEMO_CACHE_SENTINEL) ((H = k8(0).steps.map(Z)), (n[7] = H));
   else H = n[7];
   let dt = H,
     g;
@@ -97,14 +97,14 @@ function CloudCreateChecklist(st) {
         marginTop: 1,
         children: e(t, {
           dimColor: !0,
-          children: r(ue, {
+          children: r(DotSeparatedList, {
             children: [
               e(t, {
                 children: y
                   ? "Cancelling\u2026"
                   : "Typing is paused until the prompt opens",
               }),
-              e(je, {
+              e(ActionKeybindingHint, {
                 action: "app:interrupt",
                 context: "Global",
                 fallback: "ctrl+c",

@@ -12,9 +12,9 @@
 import { s3t, aYn } from "../Hooks钩子/chunk-z3433nr6.js";
 import { zo } from "../MCP客户端/chunk-3kmsshb6.js";
 import { SKILL_MD } from "../../01-核心基础设施/共享小工具-未细化/chunk-ngp4wa3z.js";
-import { au } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { defineExportGetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var s = {};
-au(s, {
+defineExportGetters(s, {
   SKILL: () => SKILL,
   SKILL_MD: () => SKILL_MD,
   SKILL_NAME: () => SKILL_NAME,

@@ -8,35 +8,35 @@
 
 // Version: 2.1.263
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Mxe } from "./chunk-5ndhfaq9.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { DEFAULT_3P_SONNET_KEY, DEFAULT_3P_HAIKU_KEY, DEFAULT_VERTEX_OPUS_KEY, DEFAULT_3P_FABLE_KEY, GC, Rw } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsFilePathForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Xt, to } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { fle, vl, wi } from "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { WizardProvider, useWizard, WizardStepFrame } from "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { buildVertexGoogleAuth, suppressVertexAuthRejection, vertexResidualCredentialPins } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
-import { Ur } from "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var H = {
   AUTH_METHOD: 0,
   SERVICE_ACCOUNT: 1,
@@ -48,9 +48,9 @@ var H = {
 };
 function ht() {
   let rt = _(10),
-    { goBack: go, goToStep: Co, updateWizardData: xo, wizardData: Do } = vl(),
+    { goBack: go, goToStep: Co, updateWizardData: xo, wizardData: Do } = useWizard(),
     vr;
-  if (rt[0] === p)
+  if (rt[0] === MEMO_CACHE_SENTINEL)
     ((vr = [
       { label: "Application Default Credentials (gcloud auth)", value: "adc" },
       { label: "Service account key file", value: "serviceAccount" },
@@ -63,7 +63,7 @@ function ht() {
   else vr = rt[0];
   let Si = vr,
     _r;
-  if (rt[1] === p)
+  if (rt[1] === MEMO_CACHE_SENTINEL)
     ((_r = {
       adc: H.PROJECT,
       serviceAccount: H.SERVICE_ACCOUNT,
@@ -84,7 +84,7 @@ function ht() {
   else Or = rt[4];
   let ko = Or,
     Tr;
-  if (rt[5] === p)
+  if (rt[5] === MEMO_CACHE_SENTINEL)
     ((Tr = e(t, {
       dimColor: !0,
       children:
@@ -94,7 +94,7 @@ function ht() {
   else Tr = rt[5];
   let br;
   if (rt[6] !== go || rt[7] !== ko || rt[8] !== Do.authMethod)
-    ((br = e(wi, {
+    ((br = e(WizardStepFrame, {
       subtitle: "How do you authenticate to Google Cloud?",
       children: r(o, {
         flexDirection: "column",
@@ -159,11 +159,11 @@ function Io(n) {
 function At(Ao) {
   let ne = _(30),
     { onComplete: vo } = Ao,
-    { storageV5: _o } = _e(),
-    { goBack: Oo, wizardData: T } = vl(),
+    { storageV5: _o } = useStorageV5Context(),
+    { goBack: Oo, wizardData: T } = useWizard(),
     [Eo, Qi] = d(null),
     Pr;
-  if (ne[0] === p)
+  if (ne[0] === MEMO_CACHE_SENTINEL)
     ((Pr = Gu(getSettingsFilePathForSource("userSettings") ?? "~/.claude/settings.json")), (ne[0] = Pr));
   else Pr = ne[0];
   let Ir = Pr,
@@ -199,7 +199,7 @@ function At(Ao) {
         ((bo.current = !1), Qi(Nr.message));
         return;
       }
-      (i("tengu_vertex_setup_complete", {
+      (logEvent("tengu_vertex_setup_complete", {
         auth_method: fromEnumOpt(T.authMethod),
         pinned_models: Boolean(
           T.pinSonnet || T.pinOpus || T.pinFable || T.pinHaiku,
@@ -223,7 +223,7 @@ function At(Ao) {
   else Vr = ne[14];
   let Po = Vr,
     wr;
-  if (ne[15] === p)
+  if (ne[15] === MEMO_CACHE_SENTINEL)
     ((wr = r(t, {
       children: ["These will be written to ", Ir, " under env:"],
     })),
@@ -242,7 +242,7 @@ function At(Ao) {
       r(t, {
         dimColor: !0,
         children: [
-          e(et, { status: "success", withSpace: !0 }),
+          e(StatusIndicator, { status: "success", withSpace: !0 }),
           "Verified as ",
           T.verifiedIdentity,
         ],
@@ -252,11 +252,11 @@ function At(Ao) {
   else yt = ne[19];
   let xt;
   if (ne[20] !== Eo)
-    ((xt = e(Ur, { error: Eo })), (ne[20] = Eo), (ne[21] = xt));
+    ((xt = e(ErrorMessage, { error: Eo })), (ne[20] = Eo), (ne[21] = xt));
   else xt = ne[21];
   let kt;
   if (ne[22] !== Oo || ne[23] !== Po)
-    ((kt = e(En, {
+    ((kt = e(ConfirmPrompt, {
       confirmLabel: "Save",
       cancelLabel: "Cancel",
       onConfirm: Po,
@@ -268,7 +268,7 @@ function At(Ao) {
   else kt = ne[24];
   let Lr;
   if (ne[25] !== Ct || ne[26] !== yt || ne[27] !== xt || ne[28] !== kt)
-    ((Lr = e(wi, {
+    ((Lr = e(WizardStepFrame, {
       subtitle: "Confirm and save",
       children: r(o, {
         flexDirection: "column",
@@ -313,7 +313,7 @@ async function Ot(n) {
       O = (async () => {
         await (await f.getClient()).getAccessToken();
       })();
-    await Dt(O, Fr, "Timed out waiting for GCP credentials");
+    await withTimeout(O, Fr, "Timed out waiting for GCP credentials");
     let m;
     try {
       m = (await f.getCredentials()).client_email;
@@ -484,23 +484,23 @@ var ut = {
 };
 function Bt() {
   let A = _(71),
-    { goBack: So, goNext: Vo, updateWizardData: Et, wizardData: W } = vl(),
+    { goBack: So, goNext: Vo, updateWizardData: Et, wizardData: W } = useWizard(),
     Hr;
-  if (A[0] === p) ((Hr = nt()), (A[0] = Hr));
+  if (A[0] === MEMO_CACHE_SENTINEL) ((Hr = nt()), (A[0] = Hr));
   else Hr = A[0];
   let Br = Hr,
     $r;
-  if (A[1] === p) (($r = Object.fromEntries(L.map(Vn))), (A[1] = $r));
+  if (A[1] === MEMO_CACHE_SENTINEL) (($r = Object.fromEntries(L.map(Vn))), (A[1] = $r));
   else $r = A[1];
   let Kr = $r,
     qr;
-  if (A[2] === p)
+  if (A[2] === MEMO_CACHE_SENTINEL)
     ((qr = () => Object.fromEntries(L.map((No) => [No, Kr[No] ?? Br[No]]))),
       (A[2] = qr));
   else qr = A[2];
   let [g, va] = d(qr),
     Yr;
-  if (A[3] === p)
+  if (A[3] === MEMO_CACHE_SENTINEL)
     ((Yr = {
       sonnet: "pending",
       opus: "pending",
@@ -615,7 +615,7 @@ function Bt() {
         (A[25] = Ie));
     else Ie = A[25];
     let it;
-    if (A[26] === p) ((it = () => wo("summary")), (A[26] = it));
+    if (A[26] === MEMO_CACHE_SENTINEL) ((it = () => wo("summary")), (A[26] = it));
     else it = A[26];
     let at;
     if (
@@ -715,7 +715,7 @@ function Bt() {
   else Ie = A[47];
   let zo = Ie,
     it;
-  if (A[48] === p)
+  if (A[48] === MEMO_CACHE_SENTINEL)
     ((it = e(t, {
       children:
         "Without pinning, Claude Code uses its built-in defaults. When a new model ships, your install will try to call it even if it is not yet available in your project \u2014 Claude Code will fail to connect to Vertex AI until you enable the model or pin to one you have.",
@@ -723,7 +723,7 @@ function Bt() {
       (A[48] = it));
   else it = A[48];
   let at;
-  if (A[49] === p)
+  if (A[49] === MEMO_CACHE_SENTINEL)
     ((at = e(t, {
       dimColor: !0,
       children: "Each candidate is tested with a one-token request:",
@@ -760,7 +760,7 @@ function Bt() {
       (A[58] = Vt));
   else Vt = A[58];
   let Cn, yn;
-  if (A[59] === p)
+  if (A[59] === MEMO_CACHE_SENTINEL)
     ((Cn = { label: "Choose different models\u2026", value: "manual" }),
       (yn = {
         label: "Skip \u2014 use Claude Code defaults (auto-updates)",
@@ -783,7 +783,7 @@ function Bt() {
   else wt = A[67];
   let xn;
   if (A[68] !== Rt || A[69] !== wt)
-    ((xn = e(wi, {
+    ((xn = e(WizardStepFrame, {
       subtitle: "Pin model versions",
       children: r(o, {
         flexDirection: "column",
@@ -846,7 +846,7 @@ function Zo({
                 : void 0,
       }),
     }));
-  return e(wi, {
+  return e(WizardStepFrame, {
     subtitle: `Pin ${Re[n]} model`,
     children: r(o, {
       flexDirection: "column",
@@ -879,8 +879,8 @@ function Gt(Ja) {
     { id: de, state: Yo, suffix: ie } = Ja;
   if (Yo === "pending") {
     let Ee;
-    if (le[0] === p)
-      ((Ee = e(et, { status: "pending", withSpace: !0 })), (le[0] = Ee));
+    if (le[0] === MEMO_CACHE_SENTINEL)
+      ((Ee = e(StatusIndicator, { status: "pending", withSpace: !0 })), (le[0] = Ee));
     else Ee = le[0];
     let X;
     if (le[1] !== ie)
@@ -899,8 +899,8 @@ function Gt(Ja) {
   }
   if (Yo.ok) {
     let Ee;
-    if (le[6] === p)
-      ((Ee = e(et, { status: "success", withSpace: !0 })), (le[6] = Ee));
+    if (le[6] === MEMO_CACHE_SENTINEL)
+      ((Ee = e(StatusIndicator, { status: "success", withSpace: !0 })), (le[6] = Ee));
     else Ee = le[6];
     let X;
     if (le[7] !== ie)
@@ -918,8 +918,8 @@ function Gt(Ja) {
     return pe;
   }
   let Ee;
-  if (le[12] === p)
-    ((Ee = e(et, { status: "error", withSpace: !0 })), (le[12] = Ee));
+  if (le[12] === MEMO_CACHE_SENTINEL)
+    ((Ee = e(StatusIndicator, { status: "error", withSpace: !0 })), (le[12] = Ee));
   else Ee = le[12];
   const X = ie && ` ${ie}`,
     pe = ut[Yo.reason];
@@ -944,7 +944,7 @@ function Ht(Xa) {
     { label: me, modelId: fe, state: Jo } = Xa;
   if (Jo === "pending") {
     let Te, ee;
-    if (Z[0] === p)
+    if (Z[0] === MEMO_CACHE_SENTINEL)
       ((Te = e(t, { children: "  " })),
         (ee = e(yo, {})),
         (Z[0] = Te),
@@ -966,8 +966,8 @@ function Ht(Xa) {
   }
   if (Jo.ok) {
     let Te;
-    if (Z[7] === p)
-      ((Te = e(et, { status: "success", withSpace: !0 })), (Z[7] = Te));
+    if (Z[7] === MEMO_CACHE_SENTINEL)
+      ((Te = e(StatusIndicator, { status: "success", withSpace: !0 })), (Z[7] = Te));
     else Te = Z[7];
     let ee;
     if (Z[8] !== me) ((ee = me.padEnd(7)), (Z[8] = me), (Z[9] = ee));
@@ -988,8 +988,8 @@ function Ht(Xa) {
     return ge;
   }
   let Te;
-  if (Z[15] === p)
-    ((Te = e(et, { status: "error", withSpace: !0 })), (Z[15] = Te));
+  if (Z[15] === MEMO_CACHE_SENTINEL)
+    ((Te = e(StatusIndicator, { status: "error", withSpace: !0 })), (Z[15] = Te));
   else Te = Z[15];
   let ee;
   if (Z[16] !== me) ((ee = me.padEnd(7)), (Z[16] = me), (Z[17] = ee));
@@ -1059,10 +1059,10 @@ function oo() {
   let Fn = _(3),
     [tr] = d(Qn),
     Wn;
-  if (Fn[0] === p)
-    ((Wn = e(wi, {
+  if (Fn[0] === MEMO_CACHE_SENTINEL)
+    ((Wn = e(WizardStepFrame, {
       subtitle: "GCP project",
-      children: e($n, { message: "Reading ~/.config/gcloud\u2026" }),
+      children: e(SpinnerMessageLine, { message: "Reading ~/.config/gcloud\u2026" }),
     })),
       (Fn[0] = Wn));
   else Wn = Fn[0];
@@ -1078,7 +1078,7 @@ function eo(vs) {
   let S = _(48),
     { projectsPromise: _s } = vs,
     R = kn(_s),
-    { goBack: Kt, goToStep: or, updateWizardData: rr, wizardData: ae } = vl(),
+    { goBack: Kt, goToStep: or, updateWizardData: rr, wizardData: ae } = useWizard(),
     qt = R.length > ar,
     Hn;
   if (S[0] !== R || S[1] !== ae.projectId)
@@ -1096,7 +1096,7 @@ function eo(vs) {
   if (S[3] !== Yt)
     ((Kn = { context: "Settings", isActive: Yt }), (S[3] = Yt), (S[4] = Kn));
   else Kn = S[4];
-  Ne("confirm:no", Kt, Kn);
+  useKeybinding("confirm:no", Kt, Kn);
   let qn;
   if (S[5] !== or || S[6] !== rr)
     ((qn = (Ps) => {
@@ -1126,7 +1126,7 @@ function eo(vs) {
     let he;
     if (S[13] !== R) {
       let se;
-      if (S[15] === p)
+      if (S[15] === MEMO_CACHE_SENTINEL)
         ((se = { label: "Type a different project\u2026", value: ft }),
           (S[15] = se));
       else se = S[15];
@@ -1165,7 +1165,7 @@ function eo(vs) {
     else ye = S[25];
     let mt;
     if (S[26] !== ye || S[27] !== Le)
-      ((mt = e(wi, {
+      ((mt = e(WizardStepFrame, {
         subtitle: "GCP project",
         children: r(o, { flexDirection: "column", gap: 1, children: [Le, ye] }),
       })),
@@ -1191,11 +1191,11 @@ function eo(vs) {
   else Zt = S[31];
   let ir = Zt,
     Ve;
-  if (S[32] === p)
-    ((Ve = r(ue, {
+  if (S[32] === MEMO_CACHE_SENTINEL)
+    ((Ve = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "continue" }),
-        e(je, {
+        e(KeybindingHint, { chord: "enter", action: "continue" }),
+        e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Settings",
           fallback: "Esc",
@@ -1206,7 +1206,7 @@ function eo(vs) {
       (S[32] = Ve));
   else Ve = S[32];
   let Le;
-  if (S[33] === p)
+  if (S[33] === MEMO_CACHE_SENTINEL)
     ((Le = e(t, { children: "The project where Vertex AI is enabled." })),
       (S[33] = Le));
   else Le = S[33];
@@ -1223,7 +1223,7 @@ function eo(vs) {
       (S[36] = he));
   else he = S[36];
   let se;
-  if (S[37] === p)
+  if (S[37] === MEMO_CACHE_SENTINEL)
     ((se = e(t, {
       dimColor: !0,
       children:
@@ -1254,13 +1254,13 @@ function eo(vs) {
   else Ce = S[41];
   let ye;
   if (S[42] !== Qt)
-    ((ye = Qt && e(o, { marginTop: 1, children: e(Ur, { error: Qt }) })),
+    ((ye = Qt && e(o, { marginTop: 1, children: e(ErrorMessage, { error: Qt }) })),
       (S[42] = Qt),
       (S[43] = ye));
   else ye = S[43];
   let mt;
   if (S[44] !== ye || S[45] !== he || S[46] !== Ce)
-    ((mt = e(wi, {
+    ((mt = e(WizardStepFrame, {
       subtitle: "GCP project ID",
       footerText: Ve,
       children: r(o, {
@@ -1278,14 +1278,14 @@ function eo(vs) {
 F();
 function ao() {
   let ze = _(17),
-    { goBack: Hs, goNext: sr, updateWizardData: cr, wizardData: Bs } = vl(),
+    { goBack: Hs, goNext: sr, updateWizardData: cr, wizardData: Bs } = useWizard(),
     [Me, $s] = d(Bs.region ?? "global"),
     [dr, Ks] = d(Me.length),
     [ro, ti] = d(null),
     oi;
-  if (ze[0] === p) ((oi = { context: "Settings" }), (ze[0] = oi));
+  if (ze[0] === MEMO_CACHE_SENTINEL) ((oi = { context: "Settings" }), (ze[0] = oi));
   else oi = ze[0];
-  Ne("confirm:no", Hs, oi);
+  useKeybinding("confirm:no", Hs, oi);
   let ri;
   if (ze[1] !== sr || ze[2] !== cr || ze[3] !== Me)
     ((ri = () => {
@@ -1303,11 +1303,11 @@ function ao() {
   else ri = ze[4];
   let lr = ri,
     ii;
-  if (ze[5] === p)
-    ((ii = r(ue, {
+  if (ze[5] === MEMO_CACHE_SENTINEL)
+    ((ii = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "continue" }),
-        e(je, {
+        e(KeybindingHint, { chord: "enter", action: "continue" }),
+        e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Settings",
           fallback: "Esc",
@@ -1318,7 +1318,7 @@ function ao() {
       (ze[5] = ii));
   else ii = ze[5];
   let ai, si;
-  if (ze[6] === p)
+  if (ze[6] === MEMO_CACHE_SENTINEL)
     ((ai = e(t, { children: "Where Claude models are served from." })),
       (si = e(t, {
         dimColor: !0,
@@ -1351,13 +1351,13 @@ function ao() {
   else no = ze[11];
   let io;
   if (ze[12] !== ro)
-    ((io = ro && e(o, { marginTop: 1, children: e(Ur, { error: ro }) })),
+    ((io = ro && e(o, { marginTop: 1, children: e(ErrorMessage, { error: ro }) })),
       (ze[12] = ro),
       (ze[13] = io));
   else io = ze[13];
   let ci;
   if (ze[14] !== no || ze[15] !== io)
-    ((ci = e(wi, {
+    ((ci = e(WizardStepFrame, {
       subtitle: "Vertex AI region",
       footerText: ii,
       children: r(o, { flexDirection: "column", children: [ai, si, no, io] }),
@@ -1373,14 +1373,14 @@ import { homedir as gr } from "os";
 import { join as hr } from "path";
 function uo() {
   let Fe = _(17),
-    { goBack: uc, goToStep: ur, updateWizardData: pr, wizardData: pc } = vl(),
+    { goBack: uc, goToStep: ur, updateWizardData: pr, wizardData: pc } = useWizard(),
     [Ue, mc] = d(pc.keyFile ?? ""),
     [mr, fc] = d(Ue.length),
     [so, di] = d(null),
     li;
-  if (Fe[0] === p) ((li = { context: "Settings" }), (Fe[0] = li));
+  if (Fe[0] === MEMO_CACHE_SENTINEL) ((li = { context: "Settings" }), (Fe[0] = li));
   else li = Fe[0];
-  Ne("confirm:no", uc, li);
+  useKeybinding("confirm:no", uc, li);
   let ui;
   if (Fe[1] !== ur || Fe[2] !== pr || Fe[3] !== Ue)
     ((ui = () => {
@@ -1400,11 +1400,11 @@ function uo() {
   else ui = Fe[4];
   let fr = ui,
     pi;
-  if (Fe[5] === p)
-    ((pi = r(ue, {
+  if (Fe[5] === MEMO_CACHE_SENTINEL)
+    ((pi = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "continue" }),
-        e(je, {
+        e(KeybindingHint, { chord: "enter", action: "continue" }),
+        e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Settings",
           fallback: "Esc",
@@ -1415,7 +1415,7 @@ function uo() {
       (Fe[5] = pi));
   else pi = Fe[5];
   let mi, fi;
-  if (Fe[6] === p)
+  if (Fe[6] === MEMO_CACHE_SENTINEL)
     ((mi = e(t, { children: "Path to the service account JSON key file." })),
       (fi = e(t, {
         dimColor: !0,
@@ -1448,13 +1448,13 @@ function uo() {
   else co = Fe[11];
   let lo;
   if (Fe[12] !== so)
-    ((lo = so && e(o, { marginTop: 1, children: e(Ur, { error: so }) })),
+    ((lo = so && e(o, { marginTop: 1, children: e(ErrorMessage, { error: so }) })),
       (Fe[12] = so),
       (Fe[13] = lo));
   else lo = Fe[13];
   let gi;
   if (Fe[14] !== co || Fe[15] !== lo)
-    ((gi = e(wi, {
+    ((gi = e(WizardStepFrame, {
       subtitle: "Service account key",
       footerText: pi,
       children: r(o, { flexDirection: "column", children: [mi, fi, co, lo] }),
@@ -1468,9 +1468,9 @@ function uo() {
 F();
 function mo() {
   let M = _(35),
-    { goBack: tt, goNext: ot, updateWizardData: po, wizardData: Cr } = vl(),
+    { goBack: tt, goNext: ot, updateWizardData: po, wizardData: Cr } = useWizard(),
     hi;
-  if (M[0] === p) ((hi = { phase: "checking" }), (M[0] = hi));
+  if (M[0] === MEMO_CACHE_SENTINEL) ((hi = { phase: "checking" }), (M[0] = hi));
   else hi = M[0];
   let [Ci, Pc] = d(hi),
     yi;
@@ -1496,14 +1496,14 @@ function mo() {
       (M[3] = yi));
   else yi = M[3];
   let Di;
-  if (M[4] === p) ((Di = []), (M[4] = Di));
+  if (M[4] === MEMO_CACHE_SENTINEL) ((Di = []), (M[4] = Di));
   else Di = M[4];
   if ((E(yi, Di), Ci.phase === "checking")) {
     let be;
-    if (M[5] === p)
-      ((be = e(wi, {
+    if (M[5] === MEMO_CACHE_SENTINEL)
+      ((be = e(WizardStepFrame, {
         subtitle: "Verifying credentials",
-        children: e($n, {
+        children: e(SpinnerMessageLine, {
           message: "Calling Google Cloud\u2026",
           subtitle: "This may take a few seconds.",
         }),
@@ -1516,8 +1516,8 @@ function mo() {
   switch (G.status) {
     case "ok": {
       let be;
-      if (M[6] === p)
-        ((be = e(et, { status: "success", withSpace: !0 })), (M[6] = be));
+      if (M[6] === MEMO_CACHE_SENTINEL)
+        ((be = e(StatusIndicator, { status: "success", withSpace: !0 })), (M[6] = be));
       else be = M[6];
       let xe;
       if (M[7] !== G.identity)
@@ -1538,7 +1538,7 @@ function mo() {
           (M[10] = De));
       else De = M[10];
       let We;
-      if (M[11] === p)
+      if (M[11] === MEMO_CACHE_SENTINEL)
         ((We = [{ label: "Continue", value: "continue" }]), (M[11] = We));
       else We = M[11];
       let ke;
@@ -1553,7 +1553,7 @@ function mo() {
       else Ge = M[16];
       let ki;
       if (M[17] !== xe || M[18] !== De || M[19] !== Ge)
-        ((ki = e(wi, {
+        ((ki = e(WizardStepFrame, {
           subtitle: "Verification",
           children: r(o, {
             flexDirection: "column",
@@ -1570,8 +1570,8 @@ function mo() {
     }
     case "error": {
       let be;
-      if (M[21] === p)
-        ((be = e(et, { status: "error", withSpace: !0 })), (M[21] = be));
+      if (M[21] === MEMO_CACHE_SENTINEL)
+        ((be = e(StatusIndicator, { status: "error", withSpace: !0 })), (M[21] = be));
       else be = M[21];
       let xe;
       if (M[22] !== G.error)
@@ -1600,7 +1600,7 @@ function mo() {
       else We = M[28];
       let ke;
       if (M[29] !== tt || M[30] !== ot)
-        ((ke = e(En, {
+        ((ke = e(ConfirmPrompt, {
           hideIndexes: !0,
           cancelFirst: !0,
           focus: "cancel",
@@ -1615,7 +1615,7 @@ function mo() {
       else ke = M[31];
       let Ge;
       if (M[32] !== We || M[33] !== ke)
-        ((Ge = e(wi, {
+        ((Ge = e(WizardStepFrame, {
           subtitle: "Verification failed",
           color: "error",
           children: r(o, {
@@ -1641,11 +1641,11 @@ function y0e(Wc) {
   if (kr[0] !== xr) ((fo = { onComplete: xr }), (kr[0] = xr), (kr[1] = fo));
   else fo = kr[1];
   let Ai;
-  if (kr[2] === p) ((Ai = {}), (kr[2] = Ai));
+  if (kr[2] === MEMO_CACHE_SENTINEL) ((Ai = {}), (kr[2] = Ai));
   else Ai = kr[2];
   let vi;
   if (kr[3] !== Dr || kr[4] !== fo)
-    ((vi = e(fle, {
+    ((vi = e(WizardProvider, {
       steps: Ar,
       stepProps: fo,
       initialData: Ai,

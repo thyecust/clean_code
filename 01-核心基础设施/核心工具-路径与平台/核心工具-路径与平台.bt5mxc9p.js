@@ -21,12 +21,12 @@ import {
   Irt,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le, yZ } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
-import { kt } from "../共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { withDeadline } from "../共享小工具-未细化/async-timeout-utils.js";
 import { oe } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../共享小工具-未细化/analytics-fields.js";
-import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import {
   b0,
   C_,
@@ -111,7 +111,7 @@ import {
   Plr,
   E0,
 } from "../设置-配置/设置-配置.aqbb35ee.js";
-import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { SXt, fxe, wc, b, Ru, Ro, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { y8 } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -119,7 +119,7 @@ import { Q } from "../共享小工具-未细化/chunk-rsr7cnyv.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { rL, wb } from "./chunk-fx8qr1md.js";
-import { q } from "../共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
 import { execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import { findCanonicalGitRoot, dirIsInGitRepo } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
@@ -129,12 +129,12 @@ import { Br } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqs
 import { _Rt, yRt, Met, _x, xBe } from "../共享小工具-未细化/chunk-24x3spwe.js";
 import { hRt, qxn } from "./chunk-svk2cp17.js";
 import { ohe, Ex, gS } from "../共享小工具-未细化/chunk-a7cfts2d.js";
-import { Dm } from "../共享小工具-未细化/chunk-17typpec.js";
+import { createKeyedSerialQueue } from "../共享小工具-未细化/async-serialization.js";
 import { s, se, v, c, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { lz } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { mXt, gXt, P } from "./chunk-13kdp2ag.js";
-import { me } from "../共享小工具-未细化/chunk-6rcgxa93.js";
-import { G, Y } from "../共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../共享小工具-未细化/is-record.js";
+import { countMatching, dedupe } from "../共享小工具-未细化/chunk-d16fhdtx.js";
 class at {
   drains = new Set();
   register(e) {
@@ -282,12 +282,12 @@ class mt {
       let E = Date.now() - t;
       n(`MDM settings load completed in ${E}ms`);
       try {
-        i("tengu_managed_settings_os_read", ir(o, E));
+        logEvent("tengu_managed_settings_os_read", ir(o, E));
       } catch {}
       if (Object.keys(d.settings).length > 0) {
         n(`MDM settings found: ${Object.keys(d.settings).join(", ")}`);
         try {
-          q("info", "mdm_settings_loaded", {
+          writeDiagnosticsEvent("info", "mdm_settings_loaded", {
             duration_ms: E,
             key_count: Object.keys(d.settings).length,
             error_count: d.errors.length,
@@ -336,7 +336,7 @@ async function oRt(e) {
 }
 function $e(e, t, { userWritable: r = !1 } = {}) {
   let o = xt(e, !1);
-  if (!me(o)) return { settings: {}, errors: [I8t(t, { userWritable: r })] };
+  if (!isRecord(o)) return { settings: {}, errors: [I8t(t, { userWritable: r })] };
   let d = [],
     _ = o;
   if (r && "managedMcpServers" in o) {
@@ -494,11 +494,11 @@ async function ht(e, t) {
   return { mdm: E, hkcu: Z, wslInherits: p };
 }
 async function Se(e, t) {
-  if (M() && t !== void 0) return (await gS(e, n_)).content;
+  if (isHoverRestEnabled() && t !== void 0) return (await gS(e, n_)).content;
   return Ex(e, n_);
 }
 async function ke(e, t) {
-  if (M() && t !== void 0) return await ae().readdir(e);
+  if (isHoverRestEnabled() && t !== void 0) return await ae().readdir(e);
   return ae().readdirSync(e);
 }
 async function or(e, t) {
@@ -560,7 +560,7 @@ async function sr(e) {
     }
     if (p.trim() === "") return !1;
     let E = xt(p, !1);
-    if (!me(E)) return (t.push(I8t(_)), !1);
+    if (!isRecord(E)) return (t.push(I8t(_)), !1);
     return E.wslInheritsWindowsSettings === !0;
   }
   if (await r(J(_x, "managed-settings.json"))) return { flag: !0, records: t };
@@ -641,7 +641,7 @@ function Tt(e) {
 var _r = Tt(`& ($env:${je})`),
   pr = Tt("Invoke-Expression (@($input) -join [char]10)");
 function fr(e) {
-  return Y([
+  return dedupe([
     `${e}\\Modules`,
     `${Ee}\\PowerShell\\Modules`,
     `${Ee}\\WindowsPowerShell\\Modules`,
@@ -649,7 +649,7 @@ function fr(e) {
   ]).join(";");
 }
 function Sr(e) {
-  return Y([e, Pe, Ot, `${Pe}\\Wbem`, We]).join(";");
+  return dedupe([e, Pe, Ot, `${Pe}\\Wbem`, We]).join(";");
 }
 var Er = ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC",
   mr = ["DOTNET_", "COMPLUS_", "COR_", "CORECLR_", "APPDOMAIN_MANAGER_"],
@@ -754,7 +754,7 @@ async function bt(e, t, r) {
   if (e.routedInterpreter !== void 0) return null;
   let o;
   try {
-    o = await kt(yr(e.file, r), t);
+    o = await withDeadline(yr(e.file, r), t);
   } catch (d) {
     return `cannot stat path (${A(d) ?? "unknown error"}): ${e.file}`;
   }
@@ -1978,7 +1978,7 @@ function an(e, t) {
 }
 var Li = 1e4,
   Te = 1048576,
-  Di = m(() =>
+  Di = createLazyValue(() =>
     it({
       managedSettings: se().optional(),
       claudeMd: s().optional(),
@@ -1988,7 +1988,7 @@ var Li = 1e4,
   bxn = "<policyHelper>";
 function ne() {
   let e = da();
-  if (M() && e.primer !== void 0) e.invalidatePolicyLayer();
+  if (isHoverRestEnabled() && e.primer !== void 0) e.invalidatePolicyLayer();
   else Za();
 }
 class _n {
@@ -2939,7 +2939,7 @@ async function Wi(e, t) {
   return fxe(r.error) ? { kind: "absent" } : He(r.error);
 }
 async function wxn(e, t) {
-  if (!M()) return;
+  if (!isHoverRestEnabled()) return;
   let r = e.epoch;
   try {
     let o = await t.read(),
@@ -3078,7 +3078,7 @@ class $n {
   fire(e) {
     if (this.firedSites.has(e)) return;
     (this.firedSites.add(e),
-      i("tengu_dead_probe_legacy_local_settings", { site: fromEnum(e) }));
+      logEvent("tengu_dead_probe_legacy_local_settings", { site: fromEnum(e) }));
   }
   reset() {
     this.firedSites.clear();
@@ -3185,13 +3185,13 @@ function readRepoDirSettingsFresh(e) {
 }
 function flagInlineConsentDropped() {
   let e = D();
-  if (!me(e.flagInline)) return !1;
+  if (!isRecord(e.flagInline)) return !1;
   if (!we(e.flagInline)) return !1;
   return wtt(e).settings === null;
 }
 function flagInlineSettingDropped(e) {
   let t = D();
-  if (!me(t.flagInline) || !(e in t.flagInline)) return !1;
+  if (!isRecord(t.flagInline) || !(e in t.flagInline)) return !1;
   return wtt(t).settings === null;
 }
 function parentManagedTierParticipates() {
@@ -3204,11 +3204,11 @@ function getMergedPolicySources() {
   return e0n(D());
 }
 function we(e) {
-  if (!me(e)) return !1;
+  if (!isRecord(e)) return !1;
   let t = e.attribution;
   return (
     "includeCoAuthoredBy" in e ||
-    (me(t) && ("commitTrailers" in t || "commit" in t || "pr" in t))
+    (isRecord(t) && ("commitTrailers" in t || "commit" in t || "pr" in t))
   );
 }
 function flagFileConsentDropped() {
@@ -3218,7 +3218,7 @@ function flagFileConsentDropped() {
   if (WU(t, e.store, e.flagExpectedContent).settings !== null) return !1;
   if (e.flagExpectedContent !== void 0) {
     let r = xt(e.flagExpectedContent, !1);
-    if (!me(r)) return !0;
+    if (!isRecord(r)) return !0;
     return we(r);
   }
   return ot(t);
@@ -3232,7 +3232,7 @@ function ot(e) {
     if (W(r)) return !1;
     return !0;
   }
-  if (!me(t)) return !0;
+  if (!isRecord(t)) return !0;
   return we(t);
 }
 async function sourceFileConsentDropped(e, t) {
@@ -3242,7 +3242,7 @@ async function sourceFileConsentDropped(e, t) {
   let d = WU(o, r.store);
   if (d.settings !== null) return !1;
   if (d.errors.length === 0) return !1;
-  if (M() && t !== void 0 && ve(e, o)) {
+  if (isHoverRestEnabled() && t !== void 0 && ve(e, o)) {
     let _;
     try {
       _ = await Un(t);
@@ -3272,7 +3272,7 @@ async function Un(e) {
   let o = ohe(r.value);
   if (!o.trim()) return { kind: "empty" };
   let d = xt(o, !1);
-  if (!me(d)) return { kind: "non-object" };
+  if (!isRecord(d)) return { kind: "non-object" };
   return { kind: "object", raw: d };
 }
 function legacyLocalConsentDropped() {
@@ -3482,9 +3482,9 @@ function surfaceManagedSettingsErrorsHeadless() {
 ${o.join(`
 `)}
 `),
-    i("tengu_managed_settings_validation_errors", {
+    logEvent("tengu_managed_settings_validation_errors", {
       error_count: e.length,
-      remote_error_count: G(e, (d) => d.file === "remote managed settings"),
+      remote_error_count: countMatching(e, (d) => d.file === "remote managed settings"),
       fatal: t,
     }));
 }
@@ -3498,13 +3498,13 @@ function updateSettingsForSourceWithTransform(e, t, r, o) {
   if (!d) return Promise.resolve({ error: null });
   return xn.run(d, () => Xi(e, t, d, r, o));
 }
-var xn = Dm();
+var xn = createKeyedSerialQueue();
 function drainSettingsWrites() {
   return xn.drain();
 }
 registerWriteQueueDrain(drainSettingsWrites);
 async function Xi(e, t, r, o, d) {
-  let _ = M() && d !== void 0 && ve(e, r),
+  let _ = isHoverRestEnabled() && d !== void 0 && ve(e, r),
     p = o?.legacyRevocation === "skip",
     E = null,
     O;
@@ -3548,7 +3548,7 @@ async function Xi(e, t, r, o, d) {
         let C = await Mn(t);
         if (C.error) return { error: C.error };
         if (C.changed) {
-          if (M() && d !== void 0) O = await vn(d, r);
+          if (isHoverRestEnabled() && d !== void 0) O = await vn(d, r);
           try {
             getSettingsWithErrors();
           } catch (F) {
@@ -3566,7 +3566,7 @@ async function Xi(e, t, r, o, d) {
         return;
       }
       if (Array.isArray(F)) return F;
-      if (K === "extraKnownMarketplaces" && me(C) && me(F)) return Ttt(C, F);
+      if (K === "extraKnownMarketplaces" && isRecord(C) && isRecord(F)) return Ttt(C, F);
       return;
     });
     tRt(r);
@@ -3615,7 +3615,7 @@ async function Xi(e, t, r, o, d) {
     let L = Error(`Failed to read raw settings from ${r}: ${N}`);
     return (n(L.message, { level: "error" }), { error: L });
   }
-  if (M() && d !== void 0 && !_) O = await vn(d, r);
+  if (isHoverRestEnabled() && d !== void 0 && !_) O = await vn(d, r);
   try {
     getSettingsWithErrors();
   } catch (N) {
@@ -3731,7 +3731,7 @@ function projectRemovalsOnly(e, t) {
     let r = new Set(t.map((o) => b(o)));
     return e.filter((o) => r.has(b(o)));
   }
-  if (me(e) && me(t)) {
+  if (isRecord(e) && isRecord(t)) {
     let r = {};
     for (let o of Object.keys(e)) {
       if (!(o in t) || t[o] === void 0) continue;
@@ -3762,7 +3762,7 @@ function getManagedSettingsKeysForLogging(e) {
 }
 function getSettingsAfterPluginLoad(e) {
   if (!da().pluginBaseLoaded)
-    i("tengu_plugin_settings_premature_read", { key: fromEnum(e) });
+    logEvent("tengu_plugin_settings_premature_read", { key: fromEnum(e) });
   let { settings: t } = getSettingsWithErrors();
   return (t || {})[e];
 }
@@ -3838,7 +3838,7 @@ async function getModelProposedGoalsSetting(e) {
   if ((await rawSettingsKeyPresence("modelProposedGoals", e)) !== "absent") return "alwaysAsk";
   return "auto";
 }
-var autoModeConfigSchema = m(() =>
+var autoModeConfigSchema = createLazyValue(() =>
     c({
       allow: v(s()).optional(),
       soft_deny: v(s()).optional(),
@@ -3861,7 +3861,7 @@ function getAutoModeConfig() {
             `settings autoMode in ${E} ignored \u2014 only user/flag/managed settings may set classifier rules (projectSettings and localSettings are repo-controllable)`,
             { level: "warn" },
           ),
-          i("tengu_settings_auto_mode_rules_untrusted_source_ignored", {
+          logEvent("tengu_settings_auto_mode_rules_untrusted_source_ignored", {
             source: fromEnum(E),
           }));
     }
@@ -3907,7 +3907,7 @@ async function rawSettingsKeyPresence(e, t, r) {
     if (
       O &&
       E === "flagSettings" &&
-      me(o.flagInline) &&
+      isRecord(o.flagInline) &&
       e in o.flagInline &&
       e !== "attribution" &&
       e !== "includeCoAuthoredBy"
@@ -3929,7 +3929,7 @@ async function rawSettingsKeyPresence(e, t, r) {
     let I = ehe(E, o);
     if (!I) continue;
     if (
-      M() &&
+      isHoverRestEnabled() &&
       t !== void 0 &&
       E === "projectSettings" &&
       d.includes("userSettings") &&
@@ -3938,7 +3938,7 @@ async function rawSettingsKeyPresence(e, t, r) {
       continue;
     let N = E === "localSettings" ? Aie(o) : void 0,
       L = N ? [I, N] : [I],
-      U = M() && t !== void 0 && ve(E, I);
+      U = isHoverRestEnabled() && t !== void 0 && ve(E, I);
     for (let x of L) {
       if (U) {
         let w = await Un(t);

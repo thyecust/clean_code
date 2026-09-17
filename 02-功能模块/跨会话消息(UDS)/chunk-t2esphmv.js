@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B, K, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { ud, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
@@ -622,7 +622,7 @@ function Ze(e, t, i, r, d) {
 }
 var en = 3000;
 function nn(e = 3000) {
-  return Promise.race([c().processingChain, Z(e, void 0, { unref: !0 })]);
+  return Promise.race([c().processingChain, sleep(e, void 0, { unref: !0 })]);
 }
 function tn(e) {
   e.setEncoding("utf8");
@@ -805,7 +805,7 @@ async function H(e, t, i, { settleHeld: r = !0 } = {}) {
   if ((c().connectedClients.clear(), e.close(), r)) Esn();
   let d = r ? iqe() : void 0;
   await nn();
-  let s = r ? kt(QNt("exited"), en) : void 0;
+  let s = r ? withDeadline(QNt("exited"), en) : void 0;
   if ((await d, await s, r)) await rzn();
   try {
     await unlink(t);

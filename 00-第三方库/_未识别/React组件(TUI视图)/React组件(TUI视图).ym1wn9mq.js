@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Ie, ku } from "../../lodash/lodash.207999qb.js";
 import { j, ze, ke, Ox } from "../../lodash/lodash.2x3q7cfh.js";
-import { M } from "../../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { dt } from "../../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum, fromNumber } from "../../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, z, n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -29,11 +29,11 @@ import {
   St,
   logError,
 } from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { m } from "../../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, nt, uv } from "../../zod/zod.3g334xwq.js";
 import { env as a } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../react/react.zhnvc798.js";
-import { i } from "../../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import {
   Nve,
   sr,
@@ -96,20 +96,20 @@ import { iy, gc, _b, hA, JZe } from "../../../01-核心基础设施/核心工具
 import { SEND_USER_FILE_TOOL_NAME } from "../../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
 import { rg } from "../../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { Vm } from "../../ink/ink + react-reconciler.5rs3h07b.js";
-import { D } from "../../../02-功能模块/键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
 import { qA } from "../Ink终端渲染器/chunk-hm8z9h7j.js";
 import { cn } from "../../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
-import { _e } from "../../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Eo } from "../../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { gi, o, t, ct, jr, tn, pd, bs, ko } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Va, cF, Rle, ok } from "../../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
-import { l6 } from "../../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
+import { claimRegistriesByHost } from "../../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { Tf } from "../第三方库-其他/chunk-gdyh44zt.js";
-import { vt } from "../../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
+import { useClock } from "../../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { ZHe, Ac, vh, Yd } from "../../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
-import { ue } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { Oye } from "./chunk-jjqazdgg.js";
-import { GE, Es } from "../../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
+import { ENTER_PLAN_MODE_TOOL_NAME, ASK_USER_QUESTION_TOOL_NAME } from "../../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import {
   _I,
   bO,
@@ -215,7 +215,7 @@ import { ps } from "../../../02-功能模块/策略限制(PolicyLimits)/chunk-8s
 import { aP, eve, zo } from "../../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import { eU } from "../../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { so } from "../../../02-功能模块/权限系统/chunk-fjrcf22x.js";
-import { NN, J$, ar, LT } from "../../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
+import { filterOutHookProgressMessages, getRegisteredTools, findToolByName, parseToolInput } from "../../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import { Jc, getPlan } from "../../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { Cr } from "../../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { isViolinWoodEnabledCached } from "../../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
@@ -250,23 +250,23 @@ import {
   parseFrameForDisplay,
   withShutdownReplyInstructions,
 } from "../../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
-import { doe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
+import { getAgentTypeColorThemeKey } from "../../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { Bl } from "../第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
-import { cR } from "../../../02-功能模块/Bridge-RemoteControl/chunk-3j7ezsr7.js";
+import { PUSH_NOTIFICATION_TOOL_NAME } from "../../../02-功能模块/Bridge-RemoteControl/push-notification-tool.js";
 import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, CRON_LIST_TOOL_NAME } from "../../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js";
 import { E$ } from "../../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { zr } from "../../../02-功能模块/Teammates团队/chunk-3k2smxfn.js";
 import { CFC_TOOL_PREFIX } from "../../../02-功能模块/ClaudeinChrome/chunk-hnp84hf6.js";
 import { tm } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
-import { Se } from "../../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { xe, Mye } from "../../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import { useTerminalSize } from "../../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { ToolResultRow, Mye } from "../../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { rO, U, Yn, Os } from "../../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { ule } from "../../../01-核心基础设施/共享小工具-未细化/chunk-nvfdjg8e.js";
+import { useHyperlinkSupport } from "../../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import { js } from "../../../02-功能模块/语法高亮-Markdown渲染/chunk-wj93jy9j.js";
-import { Ye } from "../../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
-import { qa } from "../../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
-import { Eln } from "../../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
-import { et } from "../../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { useSession } from "../../../01-核心基础设施/共享小工具-未细化/session-context.js";
+import { useMainLoopModel } from "../../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
+import { useRateLimitCheckpointResult } from "../../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
+import { StatusIndicator } from "../../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import {
   $lt,
   Zle,
@@ -278,46 +278,46 @@ import {
   srn,
   lrn,
 } from "../../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { Ir } from "../../../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js";
-import { Zr } from "../../../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js";
-import { GB } from "../../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import { useNotificationQueue } from "../../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
+import { useKeybindingDisplayText } from "../../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
+import { shouldExpandContent } from "../../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import { nF, QL, La, QZ, jA } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import { A0e } from "../../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
-import { HS } from "../../../01-核心基础设施/共享小工具-未细化/chunk-nj1exzcd.js";
+import { StaticFrameContext } from "../../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
+import { useElapsedDuration } from "../../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
 import { bit, Pg } from "../../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import { fLt, Crn, H4 } from "../../../01-核心基础设施/共享小工具-未细化/chunk-s3mpt973.js";
 import { yPt, l_ } from "../../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
-import { Son, bon } from "../../../01-核心基础设施/共享小工具-未细化/chunk-wqaxtswb.js";
-import { Sye } from "../../../01-核心基础设施/共享小工具-未细化/chunk-7m5aewa3.js";
-import { Bb, NB } from "../../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
+import { getHandbackPayloadSchema, getHandbackDisplayText } from "../../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
+import { renderToolUseMessageForTool } from "../../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
+import { resolveAgentColor, CollapsedMessagesHint } from "../../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
 import { LFt } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-0mg59v9m.js";
 import { Wm, MB } from "../../../02-功能模块/GitHub集成/chunk-bfz9rjjm.js";
 import { Tv, dtn } from "../../../02-功能模块/Hooks钩子/chunk-22aft7vr.js";
 import { sPt, yye, iPt, aPt } from "../../../02-功能模块/Bridge-RemoteControl/chunk-sc8n0cp3.js";
-import { yy, EWe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
-import { qc } from "../../../01-核心基础设施/共享小工具-未细化/chunk-vke340te.js";
+import { OffscreenFrozenContent, useOffscreenFrozenValue } from "../../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
+import { useCommandQueue } from "../../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
 import { tPt, nPt } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ctr3zhmb.js";
-import { Zz } from "../../../02-功能模块/工具Bash-Shell/chunk-qnax4jt7.js";
+import { BashToolOutputView } from "../../../02-功能模块/工具Bash-Shell/bash-output-view.js";
 import { wye, AWe, CWe, UA } from "../../../02-功能模块/工具UI渲染/chunk-g4k5jjwt.js";
-import { IPt, QHe, Q$n } from "../../../01-核心基础设施/共享小工具-未细化/chunk-86zcr8cb.js";
-import { Sy } from "../../../01-核心基础设施/共享小工具-未细化/chunk-vwjqzjhr.js";
-import { Gc } from "../../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
-import { Rn } from "../../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
+import { renderWebFetchProgressMessage, ReceivedBytesStatus, renderWebFetchResultMessage } from "../../../01-核心基础设施/共享小工具-未细化/webfetch-tool-messages.js";
+import { DashedBorderBox } from "../../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
+import { BackgroundText } from "../../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import { EmptyStateMessage } from "../../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { yv } from "../../../02-功能模块/通知(Notifications)/通知(Notifications).g4xng0pg.js";
-import { _s } from "../../../01-核心基础设施/共享小工具-未细化/chunk-1371sqbk.js";
-import { I_ } from "../../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import { ZL } from "../../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import { tO } from "../../../01-核心基础设施/共享小工具-未细化/chunk-37xdmryq.js";
-import { je } from "../../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
-import { za } from "../../../01-核心基础设施/共享小工具-未细化/chunk-951vj555.js";
-import { c_ } from "../../../01-核心基础设施/共享小工具-未细化/chunk-xc85bfby.js";
+import { TitledBorderBox } from "../../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
+import { ProgressBar } from "../../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import { LinkifiedText } from "../../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import { toLocalFileUrl } from "../../../01-核心基础设施/共享小工具-未细化/to-local-file-url.js";
+import { ActionKeybindingHint } from "../../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
+import { Divider } from "../../../01-核心基础设施/共享小工具-未细化/divider.js";
+import { useReducedMotion } from "../../../01-核心基础设施/共享小工具-未细化/reduced-motion.js";
 import { N, e, r } from "../../react/react.kwtapczy.js";
-import { Qg } from "../../../01-核心基础设施/共享小工具-未细化/chunk-awxpn5er.js";
-import { fee } from "../../../02-功能模块/Teammates团队/chunk-2j84y871.js";
-import { T4 } from "../../../01-核心基础设施/共享小工具-未细化/chunk-nkg0z9p5.js";
+import { formatHyperlink } from "../../../01-核心基础设施/共享小工具-未细化/format-hyperlink.js";
+import { formatBackgroundTaskSummary } from "../../../02-功能模块/Teammates团队/background-task-summary.js";
+import { get1MContextSuggestion } from "../../../01-核心基础设施/共享小工具-未细化/model-1m-context-suggestion.js";
 import { mLt, Rrn, N2n } from "../../../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js";
-import { ice } from "../../../01-核心基础设施/共享小工具-未细化/chunk-xvyb4e66.js";
-import { yqe } from "../../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { estimateContentTokens } from "../../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
+import { openPathInDefaultApp } from "../../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import {
   Aln,
   Nl,
@@ -336,18 +336,18 @@ import {
 } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { xs, L, fw } from "../../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 import { sg } from "../../../02-功能模块/Teammates团队/chunk-z2t8b9yc.js";
-import { Vr } from "../../../01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 import { yCe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-xm1bhjkr.js";
-import { ia } from "../../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
+import { MONITOR_TOOL_NAME } from "../../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { mt, Vh } from "../../../02-功能模块/工具Task-Agent调度/chunk-1px84m19.js";
 import { Mtt } from "../../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
 import { s, v, c, $e } from "../../zod/zod.5ef0bk11.js";
 import { Qo } from "../../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 import { xA } from "../../lru-cache/lru-cache.8crev50p.js";
 import { formatFileSize } from "../../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
-import { me } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { G, Y, lc } from "../../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p, en } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { isRecord } from "../../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { countMatching, dedupe, asStringArray } from "../../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function Zg(dq) {
   let Zs = _(32),
     {
@@ -409,10 +409,10 @@ function Zg(dq) {
         })
       : r(N, {
           children: [
-            e(Gc, { color: q_, bold: !0, children: $g }),
+            e(BackgroundText, { color: q_, bold: !0, children: $g }),
             Zi &&
               r(N, {
-                children: [" (", e(Gc, { color: $_, children: Zi }), ")"],
+                children: [" (", e(BackgroundText, { color: $_, children: Zi }), ")"],
               }),
           ],
         })),
@@ -489,11 +489,11 @@ function vd() {
 function Id() {
   let aL = _(2),
     lL;
-  if (aL[0] === p)
+  if (aL[0] === MEMO_CACHE_SENTINEL)
     ((lL = e(t, { dimColor: !0, children: "Interrupted " })), (aL[0] = lL));
   else lL = aL[0];
   let uL;
-  if (aL[1] === p)
+  if (aL[1] === MEMO_CACHE_SENTINEL)
     ((uL = r(N, {
       children: [lL, r(t, { dimColor: !0, children: ["\xB7 ", vd()] })],
     })),
@@ -504,8 +504,8 @@ function Id() {
 function bf() {
   let _q = _(1),
     mL;
-  if (_q[0] === p)
-    ((mL = e(xe, { height: 1, children: e(Id, {}) })), (_q[0] = mL));
+  if (_q[0] === MEMO_CACHE_SENTINEL)
+    ((mL = e(ToolResultRow, { height: 1, children: e(Id, {}) })), (_q[0] = mL));
   else mL = _q[0];
   return mL;
 }
@@ -521,7 +521,7 @@ function jd(Oq) {
     ea = eh.summarizeMetadata;
   if (ea) {
     let Dd;
-    if (Pr[2] === p)
+    if (Pr[2] === MEMO_CACHE_SENTINEL)
       ((Dd = e(o, {
         minWidth: 2,
         children: e(t, { "aria-hidden": !0, color: "text", children: Ar }),
@@ -529,7 +529,7 @@ function jd(Oq) {
         (Pr[2] = Dd));
     else Dd = Pr[2];
     let oa;
-    if (Pr[3] === p)
+    if (Pr[3] === MEMO_CACHE_SENTINEL)
       ((oa = e(t, { bold: !0, children: "Summarized conversation" })),
         (Pr[3] = oa));
     else oa = Pr[3];
@@ -537,7 +537,7 @@ function jd(Oq) {
     if (Pr[4] !== ur || Pr[5] !== ea)
       ((In =
         !ur &&
-        e(xe, {
+        e(ToolResultRow, {
           children: r(o, {
             flexDirection: "column",
             children: [
@@ -560,7 +560,7 @@ function jd(Oq) {
                 }),
               e(t, {
                 dimColor: !0,
-                children: e(je, {
+                children: e(ActionKeybindingHint, {
                   action: "app:toggleTranscript",
                   context: "Global",
                   fallback: "ctrl+o",
@@ -577,7 +577,7 @@ function jd(Oq) {
     else In = Pr[6];
     let Bn;
     if (Pr[7] !== ur || Pr[8] !== ru)
-      ((Bn = ur && e(xe, { children: e(t, { children: ru }) })),
+      ((Bn = ur && e(ToolResultRow, { children: e(t, { children: ru }) })),
         (Pr[7] = ur),
         (Pr[8] = ru),
         (Pr[9] = Bn));
@@ -602,7 +602,7 @@ function jd(Oq) {
     return Bd;
   }
   let Dd;
-  if (Pr[13] === p)
+  if (Pr[13] === MEMO_CACHE_SENTINEL)
     ((Dd = e(o, {
       minWidth: 2,
       children: e(t, { "aria-hidden": !0, color: "text", children: Ar }),
@@ -617,7 +617,7 @@ function jd(Oq) {
         dimColor: !0,
         children: [
           " ",
-          e(je, {
+          e(ActionKeybindingHint, {
             action: "app:toggleTranscript",
             context: "Global",
             fallback: "ctrl+o",
@@ -646,7 +646,7 @@ function jd(Oq) {
   else In = Pr[17];
   let Bn;
   if (Pr[18] !== ur || Pr[19] !== ru)
-    ((Bn = ur && e(xe, { children: e(t, { children: ru }) })),
+    ((Bn = ur && e(ToolResultRow, { children: e(t, { children: ru }) })),
       (Pr[18] = ur),
       (Pr[19] = ru),
       (Pr[20] = Bn));
@@ -667,10 +667,10 @@ var dL = 500,
 function pye() {
   let l = tn(),
     f = qA(),
-    g = Ye().host;
+    g = useSession().host;
   return re(() => {
     if (!l) return;
-    let T = l6.of(g),
+    let T = claimRegistriesByHost.of(g),
       y = Date.now();
     if (y - T.lastBellAt < dL) return;
     ((T.lastBellAt = y), f.notifyBell());
@@ -720,7 +720,7 @@ function Fd(dH) {
       verbose: jn,
       advisorModel: oh,
     } = dH,
-    fH = Ye().host;
+    fH = useSession().host;
   if (po.type === "server_tool_use") {
     let Ko;
     if (Go[0] !== po.input)
@@ -748,7 +748,7 @@ function Fd(dH) {
         (Go[11] = rh));
     else rh = Go[11];
     let fL;
-    if (Go[12] === p)
+    if (Go[12] === MEMO_CACHE_SENTINEL)
       ((fL = e(t, { bold: !0, children: "Advising" })), (Go[12] = fL));
     else fL = Go[12];
     let nh;
@@ -786,7 +786,7 @@ function Fd(dH) {
     else Ko = Go[23];
     let sa = Ko;
     let nu;
-    if (Go[24] === p)
+    if (Go[24] === MEMO_CACHE_SENTINEL)
       ((nu = e(t, {
         color: "warning",
         children: "Advisor declined to advise on this request",
@@ -858,7 +858,7 @@ function Fd(dH) {
       }
       case "advisor_redacted_result": {
         let Ko;
-        if (Go[39] === p)
+        if (Go[39] === MEMO_CACHE_SENTINEL)
           ((Ko = r(t, {
             dimColor: !0,
             children: [
@@ -874,16 +874,16 @@ function Fd(dH) {
       default: {
         if (
           po.content != null &&
-          l6.of(fH).claim(`advisor-unknown:${po.tool_use_id}`)
+          claimRegistriesByHost.of(fH).claim(`advisor-unknown:${po.tool_use_id}`)
         )
-          i("tengu_advisor_unknown_content", {});
+          logEvent("tengu_advisor_unknown_content", {});
         return null;
       }
     }
   }
   let Ko;
   if (Go[40] !== na)
-    ((Ko = e(o, { paddingRight: 2, children: e(xe, { children: na }) })),
+    ((Ko = e(o, { paddingRight: 2, children: e(ToolResultRow, { children: na }) })),
       (Go[40] = na),
       (Go[41] = Ko));
   else Ko = Go[41];
@@ -894,7 +894,7 @@ function $d(MH) {
     { addMargin: hL } = MH;
   const eS = (hL === void 0 ? !1 : hL) ? 1 : 0;
   let yL;
-  if (TL[0] === p)
+  if (TL[0] === MEMO_CACHE_SENTINEL)
     ((yL = r(t, {
       dimColor: !0,
       italic: !0,
@@ -931,7 +931,7 @@ function QR() {
 F();
 F();
 function qx(l, f, g, T, y) {
-  let { addNotification: R, removeNotification: k } = Ir();
+  let { addNotification: R, removeNotification: k } = useNotificationQueue();
   E(() => {
     if (g === null) {
       k(l);
@@ -1065,8 +1065,8 @@ function RS() {
 function QIt(o2) {
   let au = _(23),
     { isLoading: rS, transcript: nS } = o2,
-    { addNotification: ch, removeNotification: Wd } = Ir(),
-    { storageV5: aa, credentials: sS } = _e(),
+    { addNotification: ch, removeNotification: Wd } = useNotificationQueue(),
+    { storageV5: aa, credentials: sS } = useStorageV5Context(),
     iS = qA(),
     la = LB(),
     aS = At(yX, gS),
@@ -1273,17 +1273,17 @@ function tp(v2) {
       onRateLimitAutoQueueContinue: Kd,
     } = v2,
     LL;
-  if (ho[0] === p) ((LL = getSubscriptionType()), (ho[0] = LL));
+  if (ho[0] === MEMO_CACHE_SENTINEL) ((LL = getSubscriptionType()), (ho[0] = LL));
   else LL = ho[0];
   let MS = LL,
     OL;
-  if (ho[1] === p) ((OL = getRateLimitTier()), (ho[1] = OL));
+  if (ho[1] === MEMO_CACHE_SENTINEL) ((OL = getRateLimitTier()), (ho[1] = OL));
   else OL = ho[1];
   let D2 = OL,
     vL = MS === "team" || MS === "enterprise",
     IL = MS === "max" && D2 === "default_claude_max_20x",
     DL;
-  if (ho[2] === p) ((DL = Nve() || isClaudeAISubscriber()), (ho[2] = DL));
+  if (ho[2] === MEMO_CACHE_SENTINEL) ((DL = Nve() || isClaudeAISubscriber()), (ho[2] = DL));
   else DL = ho[2];
   let BL = DL,
     Ke = QR(),
@@ -1303,15 +1303,15 @@ function tp(v2) {
   else FL = ho[6];
   let kS = FL,
     $L;
-  if (ho[7] === p) (($L = z9()), (ho[7] = $L));
+  if (ho[7] === MEMO_CACHE_SENTINEL) (($L = z9()), (ho[7] = $L));
   else $L = ho[7];
   let WL = $L,
     qL;
-  if (ho[8] === p) ((qL = tN.isEnabled()), (ho[8] = qL));
+  if (ho[8] === MEMO_CACHE_SENTINEL) ((qL = tN.isEnabled()), (ho[8] = qL));
   else qL = ho[8];
   let bS = qL,
     HL;
-  if (ho[9] === p) ((HL = Km()), (ho[9] = HL));
+  if (ho[9] === MEMO_CACHE_SENTINEL) ((HL = Km()), (ho[9] = HL));
   else HL = ho[9];
   let GL = HL,
     zL;
@@ -1401,7 +1401,7 @@ function tp(v2) {
   if (ho[29] !== SS) ((nO = SS && H(Jmt, !1)), (ho[29] = SS), (ho[30] = nO));
   else nO = ho[30];
   let Xd = nO,
-    Qd = Eln(),
+    Qd = useRateLimitCheckpointResult(),
     PS = Xd && Qd?.committed === !0,
     Jd = (W2 || q2) && !dh && !ph && xS === "pending" && Vd && !mu && zd,
     Zd = Xd && xS === "pending" && mn !== void 0 && Kd,
@@ -1419,8 +1419,8 @@ function tp(v2) {
       else if (Zd) JL("blocked");
       if (Zd && mn !== void 0) {
         if (Kd(mn))
-          (i("tengu_rl_checkpoint_copy_shown", {}),
-            i("tengu_rl_checkpoint_auto_continue_queued", {}));
+          (logEvent("tengu_rl_checkpoint_copy_shown", {}),
+            logEvent("tengu_rl_checkpoint_auto_continue_queued", {}));
       }
     }),
       (iO = [Jd, zd, Zd, Kd, mn]),
@@ -1518,7 +1518,7 @@ function tp(v2) {
               r(t, {
                 dimColor: !0,
                 children: [
-                  e(et, { status: "success", withSpace: !0 }),
+                  e(StatusIndicator, { status: "success", withSpace: !0 }),
                   "checkpointed \u2014 see ",
                   Qd.resumePath,
                 ],
@@ -1555,7 +1555,7 @@ function tp(v2) {
     ho[63] !== Th ||
     ho[64] !== NS
   )
-    ((aO = e(xe, {
+    ((aO = e(ToolResultRow, {
       children: r(o, {
         flexDirection: "column",
         children: [ca, da, hh, Th, NS],
@@ -1932,7 +1932,7 @@ function ao(MG) {
 function np(xG) {
   let gO = _(5),
     { compactMetadata: WS } = xG,
-    qS = Zr("app:toggleTranscript", "Global", "ctrl+o"),
+    qS = useKeybindingDisplayText("app:toggleTranscript", "Global", "ctrl+o"),
     Uh;
   if (gO[0] !== WS || gO[1] !== qS)
     ((Uh = Sh(WS, qS)), (gO[0] = WS), (gO[1] = qS), (gO[2] = Uh));
@@ -1961,7 +1961,7 @@ function Hh() {
     return null;
   }
   let yO;
-  if (oz[0] === p)
+  if (oz[0] === MEMO_CACHE_SENTINEL)
     ((yO = e(t, {
       dimColor: !0,
       children: "\xB7 Run in another terminal: security unlock-keychain",
@@ -1973,7 +1973,7 @@ function Hh() {
 function Gh() {
   let GS = _(6),
     RO;
-  if (GS[0] === p) ((RO = T4("warning")), (GS[0] = RO));
+  if (GS[0] === MEMO_CACHE_SENTINEL) ((RO = get1MContextSuggestion("warning")), (GS[0] = RO));
   else RO = GS[0];
   let zS = RO,
     tz = Ie(process.env.DISABLE_COMPACT)
@@ -2002,7 +2002,7 @@ function Gh() {
   else Ah = GS[2];
   let MO;
   if (GS[3] !== KS || GS[4] !== Ah)
-    ((MO = e(xe, { height: KS, children: Ah })),
+    ((MO = e(ToolResultRow, { height: KS, children: Ah })),
       (GS[3] = KS),
       (GS[4] = Ah),
       (GS[5] = MO));
@@ -2012,12 +2012,12 @@ function Gh() {
 function zh() {
   let kO = _(2),
     _O;
-  if (kO[0] === p)
+  if (kO[0] === MEMO_CACHE_SENTINEL)
     ((_O = e(t, { color: "error", children: NDe })), (kO[0] = _O));
   else _O = kO[0];
   let SO;
-  if (kO[1] === p)
-    ((SO = e(xe, {
+  if (kO[1] === MEMO_CACHE_SENTINEL)
+    ((SO = e(ToolResultRow, {
       children: r(o, {
         flexDirection: "column",
         children: [_O, e(Dn, { fallback: null, children: e(Hh, {}) })],
@@ -2079,7 +2079,7 @@ function Kh(az) {
   }
   if (Ih && Be === hA) {
     let pe;
-    if (lo[0] === p) ((pe = fa()), (lo[0] = pe));
+    if (lo[0] === MEMO_CACHE_SENTINEL) ((pe = fa()), (lo[0] = pe));
     else pe = lo[0];
     let Po;
     if (lo[1] !== Jo)
@@ -2121,14 +2121,14 @@ function Kh(az) {
     }
     case wk: {
       let pe;
-      if (lo[12] === p) ((pe = e(Gh, {})), (lo[12] = pe));
+      if (lo[12] === MEMO_CACHE_SENTINEL) ((pe = e(Gh, {})), (lo[12] = pe));
       else pe = lo[12];
       return pe;
     }
     case tgt: {
       let pe;
-      if (lo[13] === p)
-        ((pe = e(xe, {
+      if (lo[13] === MEMO_CACHE_SENTINEL)
+        ((pe = e(ToolResultRow, {
           height: 1,
           children: e(t, {
             color: "error",
@@ -2142,14 +2142,14 @@ function Kh(az) {
     }
     case NDe: {
       let pe;
-      if (lo[14] === p) ((pe = e(zh, {})), (lo[14] = pe));
+      if (lo[14] === MEMO_CACHE_SENTINEL) ((pe = e(zh, {})), (lo[14] = pe));
       else pe = lo[14];
       return pe;
     }
     case Bue: {
       let pe;
-      if (lo[15] === p)
-        ((pe = e(xe, {
+      if (lo[15] === MEMO_CACHE_SENTINEL)
+        ((pe = e(ToolResultRow, {
           height: 1,
           children: e(t, { color: "error", children: Bue }),
         })),
@@ -2162,7 +2162,7 @@ function Kh(az) {
     case ogt: {
       let pe;
       if (lo[16] !== Be)
-        ((pe = e(xe, { children: e(t, { color: "error", children: Be }) })),
+        ((pe = e(ToolResultRow, { children: e(t, { color: "error", children: Be }) })),
           (lo[16] = Be),
           (lo[17] = pe));
       else pe = lo[17];
@@ -2170,8 +2170,8 @@ function Kh(az) {
     }
     case FDe: {
       let pe;
-      if (lo[18] === p)
-        ((pe = e(xe, {
+      if (lo[18] === MEMO_CACHE_SENTINEL)
+        ((pe = e(ToolResultRow, {
           height: 1,
           children: e(t, { color: "error", children: FDe }),
         })),
@@ -2181,8 +2181,8 @@ function Kh(az) {
     }
     case aTe: {
       let pe;
-      if (lo[19] === p)
-        ((pe = e(xe, {
+      if (lo[19] === MEMO_CACHE_SENTINEL)
+        ((pe = e(ToolResultRow, {
           height: 1,
           children: r(t, {
             color: "error",
@@ -2206,7 +2206,7 @@ function Kh(az) {
     }
     case sTe: {
       let pe;
-      if (lo[20] === p)
+      if (lo[20] === MEMO_CACHE_SENTINEL)
         ((pe = e(t, {
           color: "error",
           children: "We are experiencing high demand for Opus 4.",
@@ -2214,8 +2214,8 @@ function Kh(az) {
           (lo[20] = pe));
       else pe = lo[20];
       let Po;
-      if (lo[21] === p)
-        ((Po = e(xe, {
+      if (lo[21] === MEMO_CACHE_SENTINEL)
+        ((Po = e(ToolResultRow, {
           children: r(o, {
             flexDirection: "column",
             gap: 1,
@@ -2238,25 +2238,25 @@ function Kh(az) {
     }
     case iTe: {
       let pe;
-      if (lo[22] === p) ((pe = e(Yh, {})), (lo[22] = pe));
+      if (lo[22] === MEMO_CACHE_SENTINEL) ((pe = e(Yh, {})), (lo[22] = pe));
       else pe = lo[22];
       return pe;
     }
     case hA: {
       let pe;
-      if (lo[23] === p) ((pe = e(bf, {})), (lo[23] = pe));
+      if (lo[23] === MEMO_CACHE_SENTINEL) ((pe = e(bf, {})), (lo[23] = pe));
       else pe = lo[23];
       return pe;
     }
     default: {
       if (Be.startsWith(`${wk} \xB7 `)) {
         let pe;
-        if (lo[24] === p) ((pe = T4("warning")), (lo[24] = pe));
+        if (lo[24] === MEMO_CACHE_SENTINEL) ((pe = get1MContextSuggestion("warning")), (lo[24] = pe));
         else pe = lo[24];
         let NO = pe;
         let Po;
         if (lo[25] !== Be)
-          ((Po = e(xe, {
+          ((Po = e(ToolResultRow, {
             children: r(t, {
               color: "error",
               children: [
@@ -2287,7 +2287,7 @@ function Kh(az) {
         }
         let pe;
         if (lo[32] !== Be)
-          ((pe = e(xe, { children: e(t, { color: "error", children: Be }) })),
+          ((pe = e(ToolResultRow, { children: e(t, { color: "error", children: Be }) })),
             (lo[32] = Be),
             (lo[33] = pe));
         else pe = lo[33];
@@ -2363,7 +2363,7 @@ function Kh(az) {
 }
 function Yh() {
   let Bh = _(7),
-    ZS = qa(),
+    ZS = useMainLoopModel(),
     jh;
   if (Bh[0] !== ZS) ((jh = renderFableModelName(ZS)), (Bh[0] = ZS), (Bh[1] = jh));
   else jh = Bh[1];
@@ -2377,7 +2377,7 @@ function Yh() {
       (Bh[3] = Fh));
   else Fh = Bh[3];
   let EO;
-  if (Bh[4] === p)
+  if (Bh[4] === MEMO_CACHE_SENTINEL)
     ((EO = r(t, {
       children: [
         "To continue immediately, use /model to switch to",
@@ -2390,7 +2390,7 @@ function Yh() {
   else EO = Bh[4];
   let LO;
   if (Bh[5] !== Fh)
-    ((LO = e(xe, {
+    ((LO = e(ToolResultRow, {
       children: r(o, { flexDirection: "column", gap: 1, children: [Fh, EO] }),
     })),
       (Bh[5] = Fh),
@@ -2401,7 +2401,7 @@ function Yh() {
 function Xh(cz) {
   let $n = _(23),
     { text: OO, verbose: oP, addMargin: dz } = cz,
-    { columns: pz } = Se(),
+    { columns: pz } = useTerminalSize(),
     hz = Mye();
   const tP = OO === Bl ? `${Bl}: Please wait a moment and try again.` : OO;
   let vO, si;
@@ -2415,7 +2415,7 @@ function Xh(cz) {
   if (hz) {
     let ii;
     if ($n[4] !== Tu)
-      ((ii = e(ZL, { color: "warning", children: Tu })),
+      ((ii = e(LinkifiedText, { color: "warning", children: Tu })),
         ($n[4] = Tu),
         ($n[5] = ii));
     else ii = $n[5];
@@ -2433,7 +2433,7 @@ function Xh(cz) {
   }
   const ii = dz ? 1 : 0;
   let Ta;
-  if ($n[11] === p)
+  if ($n[11] === MEMO_CACHE_SENTINEL)
     ((Ta = e(o, {
       minWidth: 2,
       children: e(t, {
@@ -2447,7 +2447,7 @@ function Xh(cz) {
   const yu = pz - 10;
   let $h;
   if ($n[12] !== Tu)
-    (($h = e(ZL, { color: "warning", children: Tu })),
+    (($h = e(LinkifiedText, { color: "warning", children: Tu })),
       ($n[12] = Tu),
       ($n[13] = $h));
   else $h = $n[13];
@@ -2492,7 +2492,7 @@ function ai(Sz) {
     sT,
     ap;
   if (Qh[0] !== uP || Qh[1] !== sP || Qh[2] !== lP || Qh[3] !== iP) {
-    mP = en;
+    mP = EARLY_RETURN_SENTINEL;
     bb0: {
       let cP = Td(lP);
       if (!cP) {
@@ -2504,7 +2504,7 @@ function ai(Sz) {
       rT = "row";
       nT = uP ? 1 : 0;
       sT = "100%";
-      if (Qh[14] === p)
+      if (Qh[14] === MEMO_CACHE_SENTINEL)
         ((ap = e(o, {
           minWidth: 2,
           children: e(t, {
@@ -2552,7 +2552,7 @@ function ai(Sz) {
       (nT = Qh[11]),
       (sT = Qh[12]),
       (ap = Qh[13]));
-  if (mP !== en) return mP;
+  if (mP !== EARLY_RETURN_SENTINEL) return mP;
   let iT;
   if (Qh[15] !== Jh || Qh[16] !== eT || Qh[17] !== oT || Qh[18] !== tT)
     ((iT = e(Jh, { flexDirection: eT, flexGrow: oT, children: tT })),
@@ -2701,7 +2701,7 @@ function DT(Qz) {
   let hP = HO;
   HT(Zo, lp);
   let [oK] = d(fv),
-    TP = HS(oK, Zo === "running", 200),
+    TP = useElapsedDuration(oK, Zo === "running", 200),
     yP = typeof WO.input.code === "string" ? WO.input.code : "",
     Gn = qO?.type === "user" ? qO.toolUseResult : void 0;
   const RP = eK ? 1 : 0;
@@ -2726,7 +2726,7 @@ function DT(Qz) {
       (Wn[7] = pT));
   else pT = Wn[7];
   let GO;
-  if (Wn[8] === p) ((GO = e(t, { bold: !0, children: "REPL" })), (Wn[8] = GO));
+  if (Wn[8] === MEMO_CACHE_SENTINEL) ((GO = e(t, { bold: !0, children: "REPL" })), (Wn[8] = GO));
   else GO = Wn[8];
   const MP = Gn?.error;
   let fT;
@@ -2802,7 +2802,7 @@ function jT(rK) {
   switch (nK) {
     case "writing": {
       let Yt;
-      if (dn[2] === p)
+      if (dn[2] === MEMO_CACHE_SENTINEL)
         ((Yt = e(t, { dimColor: !0, children: "(Writing\u2026)" })),
           (dn[2] = Yt));
       else Yt = dn[2];
@@ -3006,7 +3006,7 @@ function HT(_u, kK) {
   let iv = _(5),
     [IT] = d(kK),
     av;
-  if (iv[0] === p) ((av = new Set()), (iv[0] = av));
+  if (iv[0] === MEMO_CACHE_SENTINEL) ((av = new Set()), (iv[0] = av));
   else av = iv[0];
   let lv = C(av),
     mv,
@@ -3016,7 +3016,7 @@ function HT(_u, kK) {
       if (IT || lv.current.has(_u)) {
         return;
       }
-      (lv.current.add(_u), i("tengu_repl_verbose_render", { state: fromEnum(_u) }));
+      (lv.current.add(_u), logEvent("tengu_repl_verbose_render", { state: fromEnum(_u) }));
     }),
       (cv = [IT, _u]),
       (iv[1] = _u),
@@ -3088,7 +3088,7 @@ function xa(uY) {
       else Qn = Vn[9];
       let cp;
       if (Vn[10] !== ka || Vn[11] !== Xn || Vn[12] !== Qn)
-        ((cp = e(xe, {
+        ((cp = e(ToolResultRow, {
           children: r(o, { flexDirection: "row", children: [ka, Xn, Qn] }),
         })),
           (Vn[10] = ka),
@@ -3104,7 +3104,7 @@ function xa(uY) {
     return null;
   }
   let ka;
-  if (Vn[14] === p)
+  if (Vn[14] === MEMO_CACHE_SENTINEL)
     ((ka = e(t, { dimColor: !0, children: "Running " })), (Vn[14] = ka));
   else ka = Vn[14];
   let Xn;
@@ -3120,7 +3120,7 @@ function xa(uY) {
   else Qn = Vn[18];
   let cp;
   if (Vn[19] !== Xn || Vn[20] !== Qn)
-    ((cp = e(xe, {
+    ((cp = e(ToolResultRow, {
       children: r(o, { flexDirection: "row", children: [ka, Xn, Qn] }),
     })),
       (Vn[19] = Xn),
@@ -3134,7 +3134,7 @@ function ui(yY) {
     { content: NP, addMargin: RY } = yY;
   const AP = RY ? 1 : 0;
   let bv;
-  if (YT[0] === p)
+  if (YT[0] === MEMO_CACHE_SENTINEL)
     ((bv = e(o, {
       minWidth: 2,
       children: e(t, { "aria-hidden": !0, dimColor: !0, children: _0n }),
@@ -3142,7 +3142,7 @@ function ui(yY) {
       (YT[0] = bv));
   else bv = YT[0];
   let xv;
-  if (YT[1] === p)
+  if (YT[1] === MEMO_CACHE_SENTINEL)
     ((xv = r(t, { dimColor: !0, bold: !0, children: ["recap:", " "] })),
       (YT[1] = xv));
   else xv = YT[1];
@@ -3181,21 +3181,21 @@ var Pv = 1e4;
 function XT(l) {
   let f = l.at(-1);
   if (!f?.data)
-    return e(xe, {
+    return e(ToolResultRow, {
       height: 1,
       children: e(t, { dimColor: !0, children: "Running\u2026" }),
     });
   let { progress: g, total: T } = f.data,
     y = rg(f.data.progressMessage);
   if (g === void 0)
-    return e(xe, {
+    return e(ToolResultRow, {
       height: 1,
       children: e(t, { dimColor: !0, children: "Running\u2026" }),
     });
   if (T !== void 0 && T > 0) {
     let R = Math.min(1, Math.max(0, g / T)),
       k = Math.round(R * 100);
-    return e(xe, {
+    return e(ToolResultRow, {
       children: r(o, {
         flexDirection: "column",
         children: [
@@ -3204,7 +3204,7 @@ function XT(l) {
             flexDirection: "row",
             gap: 1,
             children: [
-              e(I_, { ratio: R, width: 20 }),
+              e(ProgressBar, { ratio: R, width: 20 }),
               r(t, { dimColor: !0, children: [k, "%"] }),
             ],
           }),
@@ -3212,7 +3212,7 @@ function XT(l) {
       }),
     });
   }
-  return e(xe, {
+  return e(ToolResultRow, {
     height: 1,
     children: e(t, { dimColor: !0, children: y ?? `Processing\u2026 ${g}` }),
   });
@@ -3222,13 +3222,13 @@ function Pu(l, f, { verbose: g, input: T }) {
   if (!g) {
     let R = Uv(y, T);
     if (R !== null)
-      return e(xe, {
+      return e(ToolResultRow, {
         height: 1,
         children: r(t, {
           children: [
             "Sent a message to",
             " ",
-            e(jr, { children: Qg(R.url, R.channel) }),
+            e(jr, { children: formatHyperlink(R.url, R.channel) }),
           ],
         }),
       });
@@ -3236,7 +3236,7 @@ function Pu(l, f, { verbose: g, input: T }) {
   return QT(y, g);
 }
 function QT(l, f) {
-  let g = ice(l),
+  let g = estimateContentTokens(l),
     y =
       g > Pv
         ? `${L.warning} Large MCP response (~${formatNumber(g)} tokens), this can fill up context quickly`
@@ -3251,7 +3251,7 @@ function QT(l, f) {
             justifyContent: "space-between",
             overflowX: "hidden",
             width: "100%",
-            children: e(xe, {
+            children: e(ToolResultRow, {
               height: 1,
               children: e(t, { children: "[Image]" }),
             }),
@@ -3266,7 +3266,7 @@ function QT(l, f) {
       justifyContent: "space-between",
       overflowX: "hidden",
       width: "100%",
-      children: e(xe, {
+      children: e(ToolResultRow, {
         height: 1,
         children: e(t, { dimColor: !0, children: "(No content)" }),
       }),
@@ -3276,7 +3276,7 @@ function QT(l, f) {
     return r(o, {
       flexDirection: "column",
       children: [
-        e(xe, { height: 1, children: e(t, { color: "warning", children: y }) }),
+        e(ToolResultRow, { height: 1, children: e(t, { color: "warning", children: y }) }),
         R,
       ],
     });
@@ -3342,7 +3342,7 @@ function Zae(l, f) {
   if (!g?.toolName || !IP.test(g.serverName) || !IP.test(g.toolName)) return;
   return Ov.of(f)(l, g.serverName, g.toolName);
 }
-var Lv = m(() =>
+var Lv = createLazyValue(() =>
     $e([
       Crn(),
       c({ content: $e([s(), v(c({ type: s() }).passthrough())]) }).transform(
@@ -3491,7 +3491,7 @@ function Wv(l, f, g) {
       break;
   }
   if (T)
-    return e(xe, { height: 1, children: e(t, { dimColor: !0, children: T }) });
+    return e(ToolResultRow, { height: 1, children: e(t, { dimColor: !0, children: T }) });
   return null;
 }
 function WP(l) {
@@ -3521,7 +3521,7 @@ function qP(l) {
     if (T || typeof f !== "object" || f === null) return null;
     let y = qv[l];
     if (!y) return null;
-    return e(xe, { height: 1, children: e(t, { dimColor: !0, children: y }) });
+    return e(ToolResultRow, { height: 1, children: e(t, { dimColor: !0, children: y }) });
   };
 }
 function HP(l) {
@@ -3530,20 +3530,20 @@ function HP(l) {
   return e(o, {
     flexWrap: "nowrap",
     marginLeft: 1,
-    children: e(jr, { children: f.url && Tf() ? Qg(f.url, f.label) : f.label }),
+    children: e(jr, { children: f.url && Tf() ? formatHyperlink(f.url, f.label) : f.label }),
   });
 }
 function _a(OV) {
   let Hv = _(3),
     { plan: GP } = OV,
     Gv;
-  if (Hv[0] === p)
+  if (Hv[0] === MEMO_CACHE_SENTINEL)
     ((Gv = e(t, { color: "subtle", children: "User rejected Claude's plan:" })),
       (Hv[0] = Gv));
   else Gv = Hv[0];
   let zv;
   if (Hv[1] !== GP)
-    ((zv = e(xe, {
+    ((zv = e(ToolResultRow, {
       children: r(o, {
         flexDirection: "column",
         children: [
@@ -3592,7 +3592,7 @@ function zP(l, f, { theme: g }) {
             e(t, { children: " Plan submitted for team lead approval" }),
           ],
         }),
-        e(xe, {
+        e(ToolResultRow, {
           children: r(o, {
             flexDirection: "column",
             children: [
@@ -3617,7 +3617,7 @@ function zP(l, f, { theme: g }) {
           e(t, { children: " User approved Claude's plan" }),
         ],
       }),
-      e(xe, {
+      e(ToolResultRow, {
         children: r(o, {
           flexDirection: "column",
           children: [
@@ -3688,7 +3688,7 @@ function gp(ZV) {
   let Uu = Vv;
   if (eX) {
     let Sa;
-    if (fn[11] === p)
+    if (fn[11] === MEMO_CACHE_SENTINEL)
       ((Sa = e(t, { dimColor: !0, children: "\xA0\xA0\u23BF \xA0" })),
         (fn[11] = Sa));
     else Sa = fn[11];
@@ -3722,7 +3722,7 @@ function gp(ZV) {
   else Sa = fn[21];
   let Pa;
   if (fn[22] !== wu || fn[23] !== Uu || fn[24] !== Sa)
-    ((Pa = e(xe, {
+    ((Pa = e(ToolResultRow, {
       height: 1,
       children: r(t, { children: [wu, Uu, " ", Sa] }),
     })),
@@ -3736,10 +3736,10 @@ function gp(ZV) {
 function ty(l, { verbose: f }) {
   if (!f && typeof l === "string" && Lr(l, "tool_use_error")) {
     if (Lr(l, "tool_use_error")?.includes(yx))
-      return e(xe, {
+      return e(ToolResultRow, {
         children: e(t, { color: "error", children: "File not found" }),
       });
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, { color: "error", children: "Error searching files" }),
     });
   }
@@ -3839,7 +3839,7 @@ function ZP(uX) {
   let Ou = eI;
   if (mX) {
     let Ca;
-    if (Jn[9] === p)
+    if (Jn[9] === MEMO_CACHE_SENTINEL)
       ((Ca = e(t, { dimColor: !0, children: "\xA0\xA0\u23BF \xA0" })),
         (Jn[9] = Ca));
     else Ca = Jn[9];
@@ -3873,7 +3873,7 @@ function ZP(uX) {
   else Ca = Jn[19];
   let wa;
   if (Jn[20] !== Lu || Jn[21] !== Ou || Jn[22] !== Ca)
-    ((wa = e(xe, {
+    ((wa = e(ToolResultRow, {
       height: 1,
       children: r(t, { children: [Lu, Ou, " ", Ca] }),
     })),
@@ -3886,7 +3886,7 @@ function ZP(uX) {
 }
 function eC(l, { verbose: f }) {
   if (!f && typeof l === "string" && Lr(l, "tool_use_error"))
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, { color: "error", children: "LSP operation failed" }),
     });
   return e(Yd, { result: l, verbose: f });
@@ -3900,7 +3900,7 @@ function oC(l, f, { verbose: g }) {
       content: l.result,
       verbose: g,
     });
-  return e(xe, { children: e(t, { children: l.result }) });
+  return e(ToolResultRow, { children: e(t, { children: l.result }) });
 }
 function dI(tC) {
   let [iI, RX] = tC;
@@ -3946,7 +3946,7 @@ function cC(tC) {
   let ay = rI,
     ly = ay.length > 0,
     nI;
-  if (Iu[2] === p)
+  if (Iu[2] === MEMO_CACHE_SENTINEL)
     ((nI = r(o, {
       flexDirection: "row",
       children: [
@@ -3987,7 +3987,7 @@ function cC(tC) {
       marginTop: 1,
       children: [
         nI,
-        e(xe, {
+        e(ToolResultRow, {
           children: r(o, { flexDirection: "column", children: [uy, cy] }),
         }),
       ],
@@ -4015,7 +4015,7 @@ function dC(lC) {
         : "User asked Claude for more questions"
       : "User answered Claude's questions:",
     lI;
-  if (yp[2] === p)
+  if (yp[2] === MEMO_CACHE_SENTINEL)
     ((lI = r(t, { color: TA("default"), children: [Ar, "\xA0"] })),
       (yp[2] = lI));
   else lI = yp[2];
@@ -4032,7 +4032,7 @@ function dC(lC) {
   if (yp[5] !== dy || yp[6] !== Tp || yp[7] !== Rp || yp[8] !== Du)
     ((fy =
       Rp &&
-      e(xe, {
+      e(ToolResultRow, {
         children: r(o, {
           flexDirection: "column",
           children: [
@@ -4084,7 +4084,7 @@ function hC({ questions: l }) {
           e(t, { children: "User declined to answer questions" }),
         ],
       }),
-      e(xe, {
+      e(ToolResultRow, {
         children: e(o, {
           flexDirection: "column",
           children: l.map((f) =>
@@ -4215,7 +4215,7 @@ function Ua(IX) {
 F();
 function RC(l, f) {
   let g = l.at(-1)?.data;
-  return e(xe, {
+  return e(ToolResultRow, {
     children: e(t, {
       dimColor: !0,
       children: g ? `Running ${g.toolName}\u2026` : "Working\u2026",
@@ -4223,11 +4223,11 @@ function RC(l, f) {
   });
 }
 function MC() {
-  return e(xe, { children: e(t, { color: "warning", children: "Rejected" }) });
+  return e(ToolResultRow, { children: e(t, { color: "warning", children: "Rejected" }) });
 }
 function bC(l, f) {
   if (xX()) return e(Nl, {});
-  return e(xe, {
+  return e(ToolResultRow, {
     children: e(t, {
       color: "error",
       children: typeof l === "string" ? l : "Error",
@@ -4242,15 +4242,15 @@ var Bu = {
     } catch {
       f = String(l);
     }
-    return e(xe, { children: e(t, { children: f }) });
+    return e(ToolResultRow, { children: e(t, { children: f }) });
   },
   renderToolUseRejectedMessage() {
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, { color: "warning", children: "Rejected" }),
     });
   },
   renderToolUseErrorMessage(l, f) {
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         color: "error",
         children: typeof l === "string" ? l : "Error",
@@ -4277,7 +4277,7 @@ function EC(l, f, { verbose: g }) {
 function LC(VX) {
   let ju = _(23),
     { findings: Zn, verbose: kp } = VX,
-    { columns: xC } = Se(),
+    { columns: xC } = useTerminalSize(),
     hy,
     Ty,
     Ry,
@@ -4300,7 +4300,7 @@ function LC(VX) {
     let $u = Math.min(24, bp);
     let XX = xC - 14 - (Fu > 0 ? Fu + 1 : 0) - ($u > 0 ? $u + 1 : 0);
     let CC = XX >= AC;
-    Ty = xe;
+    Ty = ToolResultRow;
     hy = o;
     Ry = "column";
     let xI;
@@ -4489,7 +4489,7 @@ function vI(l) {
 function IC(l, f, { verbose: g }) {
   let T = l.command ?? "",
     y = g ? T : vI(T);
-  return e(xe, {
+  return e(ToolResultRow, {
     children: r(t, {
       children: [y, y !== T ? "\u2026 \xB7 stopped" : " \xB7 stopped"],
     }),
@@ -4507,11 +4507,11 @@ function DC(l) {
   let g = f.data;
   switch (g.type) {
     case "query_update":
-      return e(xe, {
+      return e(ToolResultRow, {
         children: r(t, { dimColor: !0, children: ["Searching: ", g.query] }),
       });
     case "search_results_received":
-      return e(xe, {
+      return e(ToolResultRow, {
         children: r(t, {
           dimColor: !0,
           children: ["Found ", g.resultCount, ' results for "', g.query, '"'],
@@ -4530,7 +4530,7 @@ function BC(l) {
   return e(o, {
     justifyContent: "space-between",
     width: "100%",
-    children: e(xe, {
+    children: e(ToolResultRow, {
       height: 1,
       children: r(t, {
         children: ["Did ", f, " search", f !== 1 ? "es" : "", " in ", g],
@@ -4572,7 +4572,7 @@ function FC() {
   });
 }
 function $C(l, f, g) {
-  return e(xe, {
+  return e(ToolResultRow, {
     children: r(o, {
       flexDirection: "column",
       children: [
@@ -4597,7 +4597,7 @@ function $C(l, f, g) {
 }
 function WC(l, f, g) {
   let T = l.action === "keep" ? "Kept worktree" : "Removed worktree";
-  return e(xe, {
+  return e(ToolResultRow, {
     children: r(o, {
       flexDirection: "column",
       children: [
@@ -4623,15 +4623,15 @@ function WC(l, f, g) {
 }
 function qC(l, f, { verbose: g }) {
   if (!l || l.length === 0)
-    return e(xe, {
+    return e(ToolResultRow, {
       height: 1,
-      children: e(Rn, { children: "(No resources found)" }),
+      children: e(EmptyStateMessage, { children: "(No resources found)" }),
     });
   let T = b(l, null, 2);
   return e(l_, { content: T, verbose: g });
 }
 function HC(l) {
-  return e(xe, {
+  return e(ToolResultRow, {
     children: r(t, {
       children: [
         "Monitor started",
@@ -4655,7 +4655,7 @@ function xp(D7) {
   let Hu = _(13),
     { command: hn } = D7,
     GI;
-  if (Hu[0] === p) ((GI = qdn()), (Hu[0] = GI));
+  if (Hu[0] === MEMO_CACHE_SENTINEL) ((GI = qdn()), (Hu[0] = GI));
   else GI = Hu[0];
   let zI = GI,
     [GC, KI] = d(!1);
@@ -4671,14 +4671,14 @@ function xp(D7) {
   let Aa;
   if (Hu[3] !== hn)
     ((Aa = () => {
-      (i("tengu_slash_link_clicked", { command: fromEnum(hn) }),
+      (logEvent("tengu_slash_link_clicked", { command: fromEnum(hn) }),
         zI(hn, { kind: "human" }));
     }),
       (Hu[3] = hn),
       (Hu[4] = Aa));
   else Aa = Hu[4];
   let VI, XI;
-  if (Hu[5] === p)
+  if (Hu[5] === MEMO_CACHE_SENTINEL)
     ((VI = () => KI(!0)), (XI = () => KI(!1)), (Hu[5] = VI), (Hu[6] = XI));
   else ((VI = Hu[5]), (XI = Hu[6]));
   let xy;
@@ -4741,14 +4741,14 @@ function zC(l) {
         : "Mobile notification sent.",
     });
   }
-  return e(xe, { height: 1, children: f });
+  return e(ToolResultRow, { height: 1, children: f });
 }
 function KC(l, f, { verbose: g }) {
   if (l?.error) return e(l_, { content: l.error, verbose: g });
   if (!l || l.resources.length === 0)
-    return e(xe, {
+    return e(ToolResultRow, {
       height: 1,
-      children: e(Rn, { children: "(Empty directory)" }),
+      children: e(EmptyStateMessage, { children: "(Empty directory)" }),
     });
   let T = b(l, null, 2);
   return e(l_, { content: T, verbose: g });
@@ -4760,7 +4760,7 @@ function YC(l, f, { verbose: g }) {
       justifyContent: "space-between",
       overflowX: "hidden",
       width: "100%",
-      children: e(xe, {
+      children: e(ToolResultRow, {
         height: 1,
         children: e(t, { dimColor: !0, children: "(No content)" }),
       }),
@@ -4775,7 +4775,7 @@ function VC(l) {
       `
 `,
     ) + 1;
-  return e(xe, {
+  return e(ToolResultRow, {
     children: r(t, {
       children: [
         "HTTP ",
@@ -4787,7 +4787,7 @@ function VC(l) {
   });
 }
 function XC(l) {
-  return e(xe, {
+  return e(ToolResultRow, {
     children: r(t, {
       children: [
         "Scheduled ",
@@ -4799,7 +4799,7 @@ function XC(l) {
   });
 }
 function QC(l) {
-  return e(xe, {
+  return e(ToolResultRow, {
     children: r(t, {
       children: ["Cancelled ", e(t, { bold: !0, children: l.id })],
     }),
@@ -4807,8 +4807,8 @@ function QC(l) {
 }
 function JC(l) {
   if (l.jobs.length === 0)
-    return e(xe, { children: e(Rn, { children: "No scheduled jobs" }) });
-  return e(xe, {
+    return e(ToolResultRow, { children: e(EmptyStateMessage, { children: "No scheduled jobs" }) });
+  return e(ToolResultRow, {
     children: e(o, {
       flexDirection: "column",
       children: l.jobs.map((f) =>
@@ -4836,19 +4836,19 @@ function JC(l) {
   });
 }
 function ZC(l, f, { verbose: g }) {
-  let T = Son().safeParse(typeof l === "string" ? xt(l, !1) : l);
+  let T = getHandbackPayloadSchema().safeParse(typeof l === "string" ? xt(l, !1) : l);
   if (!T.success)
     return typeof l === "string" ? e(l_, { content: pt(l), verbose: g }) : null;
-  let y = bon(T.data);
+  let y = getHandbackDisplayText(T.data);
   return y === void 0
     ? null
-    : e(xe, { children: e(t, { dimColor: !0, children: ps(y) }) });
+    : e(ToolResultRow, { children: e(t, { dimColor: !0, children: ps(y) }) });
 }
 function ew(l) {
   if (typeof l === "string")
-    return e(xe, { children: e(t, { dimColor: !0, children: ps(l) }) });
+    return e(ToolResultRow, { children: e(t, { dimColor: !0, children: ps(l) }) });
   let f = l.files.filter((g) => g.error !== void 0);
-  return r(xe, {
+  return r(ToolResultRow, {
     children: [
       e(t, { dimColor: !0, children: ps(l.message) }),
       f.map((g) =>
@@ -4878,7 +4878,7 @@ function ow(l) {
   });
 }
 function tw(l) {
-  return e(xe, {
+  return e(ToolResultRow, {
     children: e(t, {
       children: l.role !== void 0 ? `Role: ${l.role}` : "Role picker dismissed",
     }),
@@ -4947,7 +4947,7 @@ var _y = {
       };
     },
     [sg]: { renderToolResultMessage: IC },
-    [Es]: {
+    [ASK_USER_QUESTION_TOOL_NAME]: {
       renderToolResultMessage: gC,
       renderToolUseRejectedMessage: hC,
       renderToolUseProgressMessage: pC,
@@ -5015,7 +5015,7 @@ var _y = {
     },
     [ro]: { renderToolResultMessage: ry, renderToolUseErrorMessage: ty },
     [co]: { renderToolResultMessage: ry, renderToolUseErrorMessage: ty },
-    [Cr]: { renderToolResultMessage: Q$n, renderToolUseProgressMessage: IPt },
+    [Cr]: { renderToolResultMessage: renderWebFetchResultMessage, renderToolUseProgressMessage: renderWebFetchProgressMessage },
     [_D]: { renderToolResultMessage: BC, renderToolUseProgressMessage: DC },
     [bk]: { renderToolResultMessage: EC },
     get [so]() {
@@ -5042,7 +5042,7 @@ var _y = {
     [cV]: { renderToolResultMessage: qC },
     [F2]: { renderToolResultMessage: KC },
     [$2]: { renderToolResultMessage: YC },
-    [GE]: { renderToolResultMessage: jC, renderToolUseRejectedMessage: FC },
+    [ENTER_PLAN_MODE_TOOL_NAME]: { renderToolResultMessage: jC, renderToolUseRejectedMessage: FC },
     [lR]: { renderToolResultMessage: $C },
     [Xre]: { renderToolResultMessage: WC },
     [CRON_CREATE_TOOL_NAME]: { renderToolResultMessage: XC },
@@ -5055,12 +5055,12 @@ var _y = {
       renderToolUseProgressMessage: XT,
       renderToolUseTag: HP,
     },
-    [ia]: { renderToolResultMessage: HC },
+    [MONITOR_TOOL_NAME]: { renderToolResultMessage: HC },
     [SEND_USER_FILE_TOOL_NAME]: { renderToolResultMessage: ow },
     [i3]: { renderToolResultMessage: ew },
     [eJ]: { renderToolResultMessage: rw },
-    [cR]: { renderToolResultMessage: zC },
-    [Vr]: { renderToolResultMessage: ZC },
+    [PUSH_NOTIFICATION_TOOL_NAME]: { renderToolResultMessage: zC },
+    [SEND_MESSAGE_TOOL_NAME]: { renderToolResultMessage: ZC },
     [rVe]: { renderToolResultMessage: tw },
     ...(_y && {
       [_y.name]: { renderToolResultMessage: _y.ui.renderToolResultMessage },
@@ -5299,10 +5299,10 @@ function qy(S4) {
       isTranscriptMode: Xt,
       toolLabel: sw,
     } = S4,
-    Jt = Se(),
+    Jt = useTerminalSize(),
     [va] = cn(),
-    yn = Ye(),
-    Ia = De(A0e),
+    yn = useSession(),
+    Ia = De(StaticFrameContext),
     Da = Os(xD);
   (GT(Ue.id), De(rO), Os(SD));
   let Yo = Os(PD),
@@ -5326,12 +5326,12 @@ function qy(S4) {
     bb0: {
       if (!st) {
         let ts;
-        if (ht[10] === p) ((ts = { notFound: "no-tools" }), (ht[10] = ts));
+        if (ht[10] === MEMO_CACHE_SENTINEL) ((ts = { notFound: "no-tools" }), (ht[10] = ts));
         else ts = ht[10];
         wp = ts;
         break bb0;
       }
-      let Ba = ar(st, Ue.name) ?? iw;
+      let Ba = findToolByName(st, Ue.name) ?? iw;
       if (!Ba) {
         const ts =
           Ue.name.startsWith("mcp__") ||
@@ -5341,7 +5341,7 @@ function qy(S4) {
           Ue.name === "WebBrowser" ||
           tht.has(Ue.name) ||
           Nte().has(Ue.name) ||
-          ar(J$() ?? [], Ue.name) !== void 0
+          findToolByName(getRegisteredTools() ?? [], Ue.name) !== void 0
             ? "expected-absent"
             : "unknown";
         let Up;
@@ -5351,7 +5351,7 @@ function qy(S4) {
         wp = Up;
         break bb0;
       }
-      let aw = LT(Ba, Ue.input);
+      let aw = parseToolInput(Ba, Ue.input);
       let lw = aw.success ? aw.data : void 0;
       wp = {
         tool: Ba,
@@ -5450,7 +5450,7 @@ function qy(S4) {
     ht[39] !== st ||
     ht[40] !== Lt
   ) {
-    ns = en;
+    ns = EARLY_RETURN_SENTINEL;
     bb1: {
       if (uw) {
         ns = e(ui, { content: $y, addMargin: os });
@@ -5635,7 +5635,7 @@ function qy(S4) {
           if (ht[153] !== Ti || ht[154] !== Np)
             ((ja = e(o, {
               flexShrink: 0,
-              children: e(Gc, {
+              children: e(BackgroundText, {
                 color: Np,
                 bold: !0,
                 wrap: "truncate-end",
@@ -5853,7 +5853,7 @@ function qy(S4) {
       (fm = ht[58]),
       (gm = ht[59]),
       (Zt = ht[60]));
-  if (ns !== en) return ns;
+  if (ns !== EARLY_RETURN_SENTINEL) return ns;
   let hi;
   if (
     ht[156] !== Zu ||
@@ -5900,7 +5900,7 @@ function qy(S4) {
     ((hm =
       !bn &&
       (rm
-        ? e(xe, {
+        ? e(ToolResultRow, {
             height: 1,
             children: e(t, {
               dimColor: !0,
@@ -5977,7 +5977,7 @@ function pw(l, f, g) {
   let T = oL(f);
   if (T !== null) return T;
   try {
-    return Sye(l, f, g);
+    return renderToolUseMessageForTool(l, f, g);
   } catch (y) {
     return (
       logError(
@@ -6057,7 +6057,7 @@ function gw(l) {
     );
   }
 }
-var b4 = m(() =>
+var b4 = createLazyValue(() =>
   uv([nt({ file_path: le().min(1) }), nt({ notebook_path: le().min(1) })]),
 );
 F();
@@ -6073,7 +6073,7 @@ function wD(Y4, V4) {
 }
 function ND(yi, X4) {
   return e(
-    xe,
+    ToolResultRow,
     {
       children: r(t, {
         dimColor: !0,
@@ -6098,7 +6098,7 @@ function ND(yi, X4) {
 function UD(Op, fileIndex) {
   return r(N, {
     children: [
-      e(xe, {
+      e(ToolResultRow, {
         children: r(t, {
           dimColor: !0,
           wrap: "wrap",
@@ -6132,7 +6132,7 @@ function vp(K4) {
     { attachment: hw, verbose: Tw, isTranscriptMode: yw } = K4,
     Lp;
   if (Rw[0] !== hw.files || Rw[1] !== yw || Rw[2] !== Tw) {
-    Lp = en;
+    Lp = EARLY_RETURN_SENTINEL;
     bb0: {
       let Hy = eyt(hw.files);
       if (Hy.length === 0) {
@@ -6153,7 +6153,7 @@ function vp(K4) {
         const kw = zy === 1 ? "file" : "files";
         let CD;
         if (Rw[6] !== zy || Rw[7] !== Ky || Rw[8] !== Mw || Rw[9] !== kw)
-          ((CD = e(xe, {
+          ((CD = e(ToolResultRow, {
             children: r(t, {
               dimColor: !0,
               wrap: "wrap",
@@ -6183,7 +6183,7 @@ function vp(K4) {
     }
     ((Rw[0] = hw.files), (Rw[1] = yw), (Rw[2] = Tw), (Rw[3] = Lp));
   } else Lp = Rw[3];
-  if (Lp !== en) return Lp;
+  if (Lp !== EARLY_RETURN_SENTINEL) return Lp;
 }
 import { resolve } from "path";
 import {
@@ -6491,7 +6491,7 @@ async function mZt(l, f, g, T) {
     let y = getAutoMemPath(),
       R = T === void 0 ? void 0 : U$(y),
       k =
-        M() && T !== void 0 && R !== void 0 && (await UCe(y))
+        isHoverRestEnabled() && T !== void 0 && R !== void 0 && (await UCe(y))
           ? { storageV5: T, projectKey: R }
           : void 0,
       S = null,
@@ -6509,9 +6509,9 @@ async function mZt(l, f, g, T) {
           return !1;
         }),
       ),
-      I = G(O, (B) => B.status === "fulfilled" && B.value === !0);
+      I = countMatching(O, (B) => B.status === "fulfilled" && B.value === !0);
     return (
-      i("tengu_memory_rating_writeback", {
+      logEvent("tengu_memory_rating_writeback", {
         cited_count: fromNumber(f.length),
         resolved_count: fromNumber(A.size),
         written_count: fromNumber(I),
@@ -6575,7 +6575,7 @@ function VD(l) {
 function Jy(l, f) {
   if (l !== "" || !Array.isArray(f)) return l;
   let g = f.flatMap((T) =>
-    me(T) && T.type === "tool_result" && typeof T.content === "string"
+    isRecord(T) && T.type === "tool_result" && typeof T.content === "string"
       ? [T.content]
       : [],
   );
@@ -6624,7 +6624,7 @@ var Rm = 5,
 function Ri(v3) {
   let oR = _(18),
     { ops: Zy, relevantMemories: ww, isActiveGroup: eR, lookups: Nw } = v3,
-    { columns: Aw } = Se(),
+    { columns: Aw } = useTerminalSize(),
     rR;
   if (oR[0] !== ww) ((rR = ww ?? []), (oR[0] = ww), (oR[1] = rR));
   else rR = oR[1];
@@ -6740,7 +6740,7 @@ function TR(G3) {
   else dR = Wp[3];
   let pR;
   if (Wp[4] !== vw || Wp[5] !== dR)
-    ((pR = e(_s, { color: "warning", title: vw, children: dR })),
+    ((pR = e(TitledBorderBox, { color: "warning", title: vw, children: dR })),
       (Wp[4] = vw),
       (Wp[5] = dR),
       (Wp[6] = pR));
@@ -6772,12 +6772,12 @@ function Fw(Y3) {
   const jw = `Shutdown rejected by ${X3}`;
   let hR;
   if (gR[2] !== Bw)
-    ((hR = e(Sy, { children: r(t, { children: ["Reason: ", Bw] }) })),
+    ((hR = e(DashedBorderBox, { children: r(t, { children: ["Reason: ", Bw] }) })),
       (gR[2] = Bw),
       (gR[3] = hR));
   else hR = gR[3];
   let nB;
-  if (gR[4] === p)
+  if (gR[4] === MEMO_CACHE_SENTINEL)
     ((nB = e(t, {
       dimColor: !0,
       children:
@@ -6790,7 +6790,7 @@ function Fw(Y3) {
     ((sB = e(o, {
       flexDirection: "column",
       marginY: 1,
-      children: r(_s, { color: "subtle", title: jw, children: [hR, nB] }),
+      children: r(TitledBorderBox, { color: "subtle", title: jw, children: [hR, nB] }),
     })),
       (gR[5] = jw),
       (gR[6] = hR),
@@ -6855,7 +6855,7 @@ function Hw(n6) {
     ((mB = e(o, {
       flexDirection: "column",
       marginY: 1,
-      children: r(_s, {
+      children: r(TitledBorderBox, {
         color: "cyan_FOR_SUBAGENTS_ONLY",
         title: qw,
         children: [MR, kR],
@@ -6890,7 +6890,7 @@ function Vw(k6) {
   const Yw = `Plan Approval Request from ${x6}`;
   let bR;
   if (qp[4] !== Kw)
-    ((bR = e(Sy, { children: e(js, { stripPromptTags: !1, children: Kw }) })),
+    ((bR = e(DashedBorderBox, { children: e(js, { stripPromptTags: !1, children: Kw }) })),
       (qp[4] = Kw),
       (qp[5] = bR));
   else bR = qp[5];
@@ -6905,7 +6905,7 @@ function Vw(k6) {
     ((pB = e(o, {
       flexDirection: "column",
       marginY: 1,
-      children: r(_s, { color: "planMode", title: Yw, children: [bR, xR] }),
+      children: r(TitledBorderBox, { color: "planMode", title: Yw, children: [bR, xR] }),
     })),
       (qp[8] = Yw),
       (qp[9] = bR),
@@ -6925,7 +6925,7 @@ function Xw(_6) {
     bm = S6 || UNKNOWN_SENDER;
   if (_R.approved) {
     let Hp;
-    if (wr[2] === p)
+    if (wr[2] === MEMO_CACHE_SENTINEL)
       ((Hp = e(t, { "aria-hidden": !0, children: "\u2713 " })), (wr[2] = Hp));
     else Hp = wr[2];
     let is;
@@ -6936,12 +6936,12 @@ function Xw(_6) {
     else is = wr[4];
     let as;
     if (wr[5] !== Mi)
-      ((as = Mi && e(Sy, { children: r(t, { children: ["Feedback: ", Mi] }) })),
+      ((as = Mi && e(DashedBorderBox, { children: r(t, { children: ["Feedback: ", Mi] }) })),
         (wr[5] = Mi),
         (wr[6] = as));
     else as = wr[6];
     let Gp;
-    if (wr[7] === p)
+    if (wr[7] === MEMO_CACHE_SENTINEL)
       ((Gp = e(t, {
         children:
           "You can now proceed with implementation. Your plan mode restrictions have been lifted.",
@@ -6953,7 +6953,7 @@ function Xw(_6) {
       ((zp = e(o, {
         flexDirection: "column",
         marginY: 1,
-        children: r(_s, { color: "success", title: is, children: [as, Gp] }),
+        children: r(TitledBorderBox, { color: "success", title: is, children: [as, Gp] }),
       })),
         (wr[8] = is),
         (wr[9] = as),
@@ -6962,7 +6962,7 @@ function Xw(_6) {
     return zp;
   }
   let Hp;
-  if (wr[11] === p)
+  if (wr[11] === MEMO_CACHE_SENTINEL)
     ((Hp = e(t, { "aria-hidden": !0, children: "\u2717 " })), (wr[11] = Hp));
   else Hp = wr[11];
   let is;
@@ -6973,12 +6973,12 @@ function Xw(_6) {
   else is = wr[13];
   let as;
   if (wr[14] !== Mi)
-    ((as = Mi && e(Sy, { children: r(t, { children: ["Feedback: ", Mi] }) })),
+    ((as = Mi && e(DashedBorderBox, { children: r(t, { children: ["Feedback: ", Mi] }) })),
       (wr[14] = Mi),
       (wr[15] = as));
   else as = wr[15];
   let Gp;
-  if (wr[16] === p)
+  if (wr[16] === MEMO_CACHE_SENTINEL)
     ((Gp = e(t, {
       dimColor: !0,
       children:
@@ -6991,7 +6991,7 @@ function Xw(_6) {
     ((zp = e(o, {
       flexDirection: "column",
       marginY: 1,
-      children: r(_s, { color: "error", title: is, children: [as, Gp] }),
+      children: r(TitledBorderBox, { color: "error", title: is, children: [as, Gp] }),
     })),
       (wr[17] = is),
       (wr[18] = as),
@@ -7014,7 +7014,7 @@ function Jw(l, f) {
   return e(o, {
     flexDirection: "column",
     marginY: 1,
-    children: e(_s, {
+    children: e(TitledBorderBox, {
       color: "subtle",
       title: `Teammate terminated (from ${f || UNKNOWN_SENDER})`,
       children: e(t, { wrap: "wrap", children: T }),
@@ -7034,7 +7034,7 @@ function bi(H6) {
       taskSubject: PR,
     } = H6,
     gB;
-  if (ki[0] === p)
+  if (ki[0] === MEMO_CACHE_SENTINEL)
     ((gB = e(t, { "aria-hidden": !0, children: L.pointer })), (ki[0] = gB));
   else gB = ki[0];
   let CR;
@@ -7058,7 +7058,7 @@ function bi(H6) {
       (ki[8] = UR));
   else UR = ki[8];
   let hB;
-  if (ki[9] === p) ((hB = e(et, { status: "success" })), (ki[9] = hB));
+  if (ki[9] === MEMO_CACHE_SENTINEL) ((hB = e(StatusIndicator, { status: "success" })), (ki[9] = hB));
   else hB = ki[9];
   let NR;
   if (ki[10] !== PR)
@@ -7068,7 +7068,7 @@ function bi(H6) {
   else NR = ki[11];
   let AR;
   if (ki[12] !== NR || ki[13] !== o0)
-    ((AR = r(xe, {
+    ((AR = r(ToolResultRow, {
       children: [hB, r(t, { children: [" ", "Completed task #", o0, NR] })],
     })),
       (ki[12] = NR),
@@ -7098,7 +7098,7 @@ function xi(o9) {
     vR = xm ? `[Image #${xm}]` : "[Image]",
     RB;
   if (_m[0] !== LR)
-    ((RB = LR && Tf() ? tO(LR) : null), (_m[0] = LR), (_m[1] = RB));
+    ((RB = LR && Tf() ? toLocalFileUrl(LR) : null), (_m[0] = LR), (_m[1] = RB));
   else RB = _m[1];
   let IR = RB,
     kB;
@@ -7138,7 +7138,7 @@ function xi(o9) {
   }
   let Pm;
   if (_m[13] !== Sm)
-    ((Pm = e(xe, { children: Sm })), (_m[13] = Sm), (_m[14] = Pm));
+    ((Pm = e(ToolResultRow, { children: Sm })), (_m[13] = Sm), (_m[14] = Pm));
   else Pm = _m[14];
   return Pm;
 }
@@ -7151,7 +7151,7 @@ function zB(KR, v9) {
   return KR.kind === "panel"
     ? KR.node
     : e(
-        NB,
+        CollapsedMessagesHint,
         {
           displayName: KR.displayName,
           count: KR.count,
@@ -7286,7 +7286,7 @@ function Zp(P9) {
     { text: u0 } = C9,
     fr = _B === void 0 ? !1 : _B,
     Qp = fM(),
-    Ka = GB(w9, U9),
+    Ka = shouldExpandContent(w9, U9),
     m0 = Ka || fr,
     jR,
     FR,
@@ -7303,7 +7303,7 @@ function Zp(P9) {
     BR[4] !== Ka ||
     BR[5] !== u0
   ) {
-    c0 = en;
+    c0 = EARLY_RETURN_SENTINEL;
     bb0: {
       let { messages: N9, unparsed: A9 } = pM(u0);
       let SB = gM(N9);
@@ -7315,7 +7315,7 @@ function Zp(P9) {
       let Xa;
       if (BR[13] !== Qp || BR[14] !== fr || BR[15] !== Ka)
         ((Xa = (Ur, PB) => {
-          let HR = Bb(Ur.color);
+          let HR = resolveAgentColor(Ur.color);
           let Jp = capIdFrameField(Qp(Ur.teammateId), IDLE_ID_FIELD_RECEIVE_BOUND) || UNKNOWN_SENDER;
           let GR = Ur.summary ? M0(Ur.summary, Ka) : "";
           let E9 = GR.trim()
@@ -7434,7 +7434,7 @@ function Zp(P9) {
       (qR = BR[10]),
       (c0 = BR[11]),
       (Ya = BR[12]));
-  if (c0 !== en) return c0;
+  if (c0 !== EARLY_RETURN_SENTINEL) return c0;
   let Xa;
   if (BR[17] !== fr || BR[18] !== Ya)
     ((Xa =
@@ -7511,7 +7511,7 @@ function el(I9) {
     return Ja;
   }
   let Qa;
-  if (ls[8] === p)
+  if (ls[8] === MEMO_CACHE_SENTINEL)
     ((Qa = e(t, { "aria-hidden": !0, children: L.pointer })), (ls[8] = Qa));
   else Qa = ls[8];
   let Pi;
@@ -7743,7 +7743,7 @@ function Ai(s8) {
     Nr[3] !== tl ||
     Nr[4] !== x0
   ) {
-    RM = en;
+    RM = EARLY_RETURN_SENTINEL;
     bb0: {
       let VB = Lr(tl, "summary");
       Lm = VB === null ? null : SA(VB);
@@ -7821,7 +7821,7 @@ function Ai(s8) {
       (tf = Nr[8]),
       (Lm = Nr[9]),
       (RM = Nr[10]));
-  if (RM !== en) return RM;
+  if (RM !== EARLY_RETURN_SENTINEL) return RM;
   const Om = hM ? 1 : 0;
   let rl;
   if (Nr[22] !== yM)
@@ -7890,7 +7890,7 @@ function UHe(p8) {
   }
   const w0 = g8 ? 1 : 0;
   let ZB;
-  if (xM[2] === p)
+  if (xM[2] === MEMO_CACHE_SENTINEL)
     ((ZB = e(t, { color: "bashBorder", children: "! " })), (xM[2] = ZB));
   else ZB = xM[2];
   let SM;
@@ -7936,7 +7936,7 @@ function rf(x8) {
   const N0 = !!_8;
   let t1;
   if (o1[2] !== PM || o1[3] !== N0)
-    ((t1 = e(Zz, { content: PM, verbose: N0 })),
+    ((t1 = e(BashToolOutputView, { content: PM, verbose: N0 })),
       (o1[2] = PM),
       (o1[3] = N0),
       (o1[4] = t1));
@@ -7962,7 +7962,7 @@ function nf(L8) {
   if (v8) {
     const Im = r1 ? 1 : 0;
     let Dm;
-    if (us[4] === p)
+    if (us[4] === MEMO_CACHE_SENTINEL)
       ((Dm = e(t, {
         "aria-label": "you:",
         color: "subtle",
@@ -8007,7 +8007,7 @@ function nf(L8) {
   let E0 = `/${Im.join(" ")}`;
   const Dm = r1 ? 1 : 0;
   let ll;
-  if (us[13] === p)
+  if (us[13] === MEMO_CACHE_SENTINEL)
     ((ll = e(t, {
       "aria-label": "you:",
       color: "subtle",
@@ -8088,7 +8088,7 @@ function jm(sJ) {
     return Ei;
   }
   let Ei;
-  if (af[6] === p)
+  if (af[6] === MEMO_CACHE_SENTINEL)
     ((Ei = e(t, { "aria-hidden": !0, dimColor: !0, children: "  \u23BF  " })),
       (af[6] = Ei));
   else Ei = af[6];
@@ -8120,7 +8120,7 @@ function QM(iJ) {
     EM,
     v0;
   if (AM[0] !== Li) {
-    v0 = en;
+    v0 = EARLY_RETURN_SENTINEL;
     bb0: {
       Bm = Li.indexOf(mS);
       if (Bm === -1) {
@@ -8131,9 +8131,9 @@ function QM(iJ) {
     }
     ((AM[0] = Li), (AM[1] = Bm), (AM[2] = EM), (AM[3] = v0));
   } else ((Bm = AM[1]), (EM = AM[2]), (v0 = AM[3]));
-  if (v0 !== en) return v0;
+  if (v0 !== EARLY_RETURN_SENTINEL) return v0;
   let f1;
-  if (AM[4] === p)
+  if (AM[4] === MEMO_CACHE_SENTINEL)
     ((f1 = e(t, { "aria-label": "of", children: mS })), (AM[4] = f1));
   else f1 = AM[4];
   let LM;
@@ -8156,7 +8156,7 @@ function ZM(aJ) {
     { fields: lf } = aJ,
     uf = wM(),
     [D0, h1] = d(!1),
-    { columns: B0 } = Se(),
+    { columns: B0 } = useTerminalSize(),
     Er = lf.id !== void 0 && !isBgSession() ? lf.id : void 0,
     OM,
     vM,
@@ -8239,7 +8239,7 @@ function ZM(aJ) {
   else cf = mf[19];
   let FM = cf,
     y1;
-  if (mf[20] === p)
+  if (mf[20] === MEMO_CACHE_SENTINEL)
     ((y1 = e(t, { "aria-label": "fork:", dimColor: !0, children: JM })),
       (mf[20] = y1));
   else y1 = mf[20];
@@ -8345,7 +8345,7 @@ function ff(RJ) {
   else b1 = Fm[1];
   let tk = b1,
     x1;
-  if (Fm[2] === p)
+  if (Fm[2] === MEMO_CACHE_SENTINEL)
     ((x1 = Tv(["Got it.", "Good to know.", "Noted."])), (Fm[2] = x1));
   else x1 = Fm[2];
   let kJ = x1;
@@ -8354,7 +8354,7 @@ function ff(RJ) {
   }
   const q0 = MJ ? 1 : 0;
   let _1;
-  if (Fm[3] === p)
+  if (Fm[3] === MEMO_CACHE_SENTINEL)
     ((_1 = e(t, {
       color: "remember",
       backgroundColor: "memoryBackgroundColor",
@@ -8378,8 +8378,8 @@ function ff(RJ) {
       (Fm[5] = rk));
   else rk = Fm[5];
   let S1;
-  if (Fm[6] === p)
-    ((S1 = e(xe, {
+  if (Fm[6] === MEMO_CACHE_SENTINEL)
+    ((S1 = e(ToolResultRow, {
       height: 1,
       children: e(t, { dimColor: !0, children: kJ }),
     })),
@@ -8405,7 +8405,7 @@ function BHe(UJ) {
   const G0 = NJ ? 1 : 0;
   let nk;
   if (C1[0] !== H0)
-    ((nk = e(_s, {
+    ((nk = e(TitledBorderBox, {
       color: "planMode",
       title: "Plan to implement",
       children: e(js, { children: H0 }),
@@ -8473,7 +8473,7 @@ function fl(Or) {
   const z0 =
     Or.addMargin && !Or.followsSpeakerLabel && !Or.followsInboundLabel ? 1 : 0;
   let v1;
-  if ($m[9] === p)
+  if ($m[9] === MEMO_CACHE_SENTINEL)
     ((v1 = r(t, { "aria-hidden": !0, children: [L.pointerSmall, " "] })),
       ($m[9] = v1));
   else v1 = $m[9];
@@ -8645,7 +8645,7 @@ function hf(lZ) {
     gk,
     tU;
   if (H1[0] !== Z0 || H1[1] !== oU) {
-    tU = en;
+    tU = EARLY_RETURN_SENTINEL;
     bb0: {
       let G1 = gf(oU);
       if (G1.length === 0) {
@@ -8665,7 +8665,7 @@ function hf(lZ) {
       (H1[5] = gk),
       (H1[6] = tU));
   } else ((dk = H1[2]), (pk = H1[3]), (fk = H1[4]), (gk = H1[5]), (tU = H1[6]));
-  if (tU !== en) return tU;
+  if (tU !== EARLY_RETURN_SENTINEL) return tU;
   let z1;
   if (H1[7] !== dk || H1[8] !== pk || H1[9] !== fk || H1[10] !== gk)
     ((z1 = e(dk, { flexDirection: pk, marginTop: fk, children: gk })),
@@ -8881,7 +8881,7 @@ function Jz(jZ) {
   if (fe.text === iy || fe.text === gc) {
     if (V1) {
       let Re;
-      if (jo[38] === p) ((Re = fa()), (jo[38] = Re));
+      if (jo[38] === MEMO_CACHE_SENTINEL) ((Re = fa()), (jo[38] = Re));
       else Re = jo[38];
       let Dr;
       if (jo[39] !== Ae)
@@ -8892,7 +8892,7 @@ function Jz(jZ) {
       return Dr;
     }
     let Re;
-    if (jo[41] === p) ((Re = e(bf, {})), (jo[41] = Re));
+    if (jo[41] === MEMO_CACHE_SENTINEL) ((Re = e(bf, {})), (jo[41] = Re));
     else Re = jo[41];
     return Re;
   }
@@ -9035,7 +9035,7 @@ function Rj(Pk, vee) {
   return Pk.kind === "panel"
     ? Pk.node
     : e(
-        NB,
+        CollapsedMessagesHint,
         {
           displayName: Pk.displayName,
           count: Pk.count,
@@ -9092,13 +9092,13 @@ function Cf(Pee) {
     } = Pee,
     iU = X1 === void 0 ? !1 : X1,
     aU = Q1 === void 0 ? !1 : Q1,
-    hl = GB(fo, Fo),
+    hl = shouldExpandContent(fo, Fo),
     Jm = jA(fo);
   if (zr() && w.type === "teammate_mailbox") {
     const q = w.messages;
     let gs, Z, ae, Te;
     if (X[0] !== w.messages || X[1] !== hl) {
-      Te = en;
+      Te = EARLY_RETURN_SENTINEL;
       bb0: {
         let J1 = q.filter(Tj);
         if (J1.length === 0) {
@@ -9108,7 +9108,7 @@ function Cf(Pee) {
         let uo;
         if (X[6] !== hl)
           ((uo = (hs, Z1) => {
-            let yk = Bb(hs.color);
+            let yk = resolveAgentColor(hs.color);
             let yf = capIdFrameField(hs.from, IDLE_ID_FIELD_RECEIVE_BOUND) || UNKNOWN_SENDER;
             let Rk = capFrameFieldForDisplay(hs.summary);
             let Cee = Rk
@@ -9193,7 +9193,7 @@ function Cf(Pee) {
         (X[4] = ae),
         (X[5] = Te));
     } else ((gs = X[2]), (Z = X[3]), (ae = X[4]), (Te = X[5]));
-    if (Te !== en) return Te;
+    if (Te !== EARLY_RETURN_SENTINEL) return Te;
     let uo;
     if (X[8] !== gs || X[9] !== Z || X[10] !== ae)
       ((uo = e(gs, { flexDirection: Z, children: ae })),
@@ -9325,7 +9325,7 @@ function Cf(Pee) {
     case "audio_transcript": {
       if (w.error !== void 0) {
         let q;
-        if (X[38] === p)
+        if (X[38] === MEMO_CACHE_SENTINEL)
           ((q = r(t, {
             "aria-hidden": !0,
             color: "warning",
@@ -9365,7 +9365,7 @@ function Cf(Pee) {
       else q = X[48];
       let kk = q;
       let Z, ae;
-      if (X[49] === p)
+      if (X[49] === MEMO_CACHE_SENTINEL)
         ((Z = r(t, {
           "aria-hidden": !0,
           color: "claude",
@@ -9445,7 +9445,7 @@ function Cf(Pee) {
     }
     case "selected_lines_in_ide": {
       let q;
-      if (X[70] === p)
+      if (X[70] === MEMO_CACHE_SENTINEL)
         ((q = e(t, { "aria-hidden": !0, children: "\u29C9 " })), (X[70] = q));
       else q = X[70];
       const Z = w.lineEnd - w.lineStart + 1;
@@ -9484,7 +9484,7 @@ function Cf(Pee) {
     }
     case "selected_lines_in_diff": {
       let q;
-      if (X[79] === p)
+      if (X[79] === MEMO_CACHE_SENTINEL)
         ((q = e(t, { "aria-hidden": !0, children: "\u29C9 " })), (X[79] = q));
       else q = X[79];
       let Z;
@@ -9522,7 +9522,7 @@ function Cf(Pee) {
     case "relevant_memories": {
       const q = _n ? 1 : 0;
       let Z;
-      if (X[89] === p) ((Z = e(o, { minWidth: 2 })), (X[89] = Z));
+      if (X[89] === MEMO_CACHE_SENTINEL) ((Z = e(o, { minWidth: 2 })), (X[89] = Z));
       else Z = X[89];
       let ae;
       if (X[90] !== w.memories.length)
@@ -9561,7 +9561,7 @@ function Cf(Pee) {
                   {
                     flexDirection: "column",
                     children: [
-                      e(xe, {
+                      e(ToolResultRow, {
                         children: e(t, {
                           dimColor: !0,
                           children: e(Pg, {
@@ -9660,7 +9660,7 @@ function Cf(Pee) {
     case "agent_listing_delta": {
       let q;
       if (X[123] !== w.addedTypes)
-        ((q = lc(w.addedTypes)), (X[123] = w.addedTypes), (X[124] = q));
+        ((q = asStringArray(w.addedTypes)), (X[123] = w.addedTypes), (X[124] = q));
       else q = X[124];
       let tj = q;
       if (w.isInitial || tj.length === 0) {
@@ -9834,7 +9834,7 @@ function Cf(Pee) {
       else q = X[176];
       let gs, Z, ae;
       if (X[177] !== Fo || X[178] !== q || X[179] !== fo) {
-        ae = en;
+        ae = EARLY_RETURN_SENTINEL;
         bb1: {
           let Te;
           if (X[183] !== Fo || X[184] !== fo)
@@ -9858,7 +9858,7 @@ function Cf(Pee) {
           (X[181] = Z),
           (X[182] = ae));
       } else ((gs = X[180]), (Z = X[181]), (ae = X[182]));
-      if (ae !== en) return ae;
+      if (ae !== EARLY_RETURN_SENTINEL) return ae;
       let Te;
       if (X[186] !== gs || X[187] !== Z)
         ((Te = e(gs, { children: Z })),
@@ -9880,7 +9880,7 @@ function Cf(Pee) {
         X[191] !== w.hookName ||
         X[192] !== Jm
       ) {
-        Z = en;
+        Z = EARLY_RETURN_SENTINEL;
         bb2: {
           rc = q.trim();
           if (Jm) {
@@ -9898,7 +9898,7 @@ function Cf(Pee) {
           (X[193] = rc),
           (X[194] = Z));
       } else ((rc = X[193]), (Z = X[194]));
-      if (Z !== en) return Z;
+      if (Z !== EARLY_RETURN_SENTINEL) return Z;
       let ae;
       if (X[195] !== w.hookName)
         ((ae = r(ge, {
@@ -9935,7 +9935,7 @@ function Cf(Pee) {
         X[205] !== w.stdout ||
         X[206] !== Jm
       ) {
-        q = en;
+        q = EARLY_RETURN_SENTINEL;
         bb3: {
           nc = MU(w.stderr, w.stdout);
           if (Jm) {
@@ -9954,7 +9954,7 @@ function Cf(Pee) {
           (X[207] = nc),
           (X[208] = q));
       } else ((nc = X[207]), (q = X[208]));
-      if (q !== en) return q;
+      if (q !== EARLY_RETURN_SENTINEL) return q;
       let Z;
       if (X[209] !== w.hookName)
         ((Z = r(ge, { color: "error", children: [w.hookName, " hook error"] })),
@@ -10112,7 +10112,7 @@ function Cf(Pee) {
       const q = nr ? "error" : w.met ? "success" : "pending";
       let Z;
       if (X[241] !== q)
-        ((Z = e(et, { status: q, withSpace: !0 })), (X[241] = q), (X[242] = Z));
+        ((Z = e(StatusIndicator, { status: q, withSpace: !0 })), (X[241] = q), (X[242] = Z));
       else Z = X[242];
       const ae = nr ? "error" : void 0;
       const Te = !w.met && !nr;
@@ -10229,7 +10229,7 @@ function Cf(Pee) {
     case "tool_hosts_notice": {
       let q;
       if (X[274] !== w.lines) {
-        let ij = lc(w.lines).filter(xj);
+        let ij = asStringArray(w.lines).filter(xj);
         q =
           ij.length === 0
             ? null
@@ -10248,7 +10248,7 @@ function Cf(Pee) {
           ...(w.unverified === !0 && typeof w.label === "string"
             ? [w.label]
             : []),
-          ...lc(w.lines),
+          ...asStringArray(w.lines),
         ].filter(_j);
         q =
           aj.length === 0
@@ -10293,7 +10293,7 @@ function Cf(Pee) {
     }
     case "teammate_shutdown_batch": {
       let q;
-      if (X[287] === p)
+      if (X[287] === MEMO_CACHE_SENTINEL)
         ((q = r(t, { "aria-hidden": !0, dimColor: !0, children: [Ar, " "] })),
           (X[287] = q));
       else q = X[287];
@@ -10358,7 +10358,7 @@ function uc(Wee) {
             ? "still running in background"
             : Tl.status,
     mj;
-  if (dU[0] === p)
+  if (dU[0] === MEMO_CACHE_SENTINEL)
     ((mj = r(t, { "aria-hidden": !0, dimColor: !0, children: [Ar, " "] })),
       (dU[0] = mj));
   else mj = dU[0];
@@ -10402,12 +10402,12 @@ function Ek(qee) {
   }
   let Pf;
   if (ac[4] !== yl.identity.color)
-    ((Pf = Bb(yl.identity.color)), (ac[4] = yl.identity.color), (ac[5] = Pf));
+    ((Pf = resolveAgentColor(yl.identity.color)), (ac[4] = yl.identity.color), (ac[5] = Pf));
   else Pf = ac[5];
   let pU = Pf,
     fU = Di.status === "completed" ? "shut down gracefully" : Di.status,
     pj;
-  if (ac[6] === p)
+  if (ac[6] === MEMO_CACHE_SENTINEL)
     ((pj = r(t, { "aria-hidden": !0, dimColor: !0, children: [Ar, " "] })),
       (ac[6] = pj));
   else pj = ac[6];
@@ -10472,7 +10472,7 @@ function ge(Gee) {
     hj;
   if (zee[0] !== gU || zee[1] !== hU || zee[2] !== TU)
     ((hj = e(o, {
-      children: e(xe, {
+      children: e(ToolResultRow, {
         children: e(t, { color: hU, dimColor: TU, wrap: "wrap", children: gU }),
       }),
     })),
@@ -10487,7 +10487,7 @@ F();
 import { basename as CN } from "path";
 F();
 function Lk(l, f) {
-  let g = vt(),
+  let g = useClock(),
     [T, y] = d(l),
     R = C(l !== void 0 ? Date.now() : 0);
   return (
@@ -10508,7 +10508,7 @@ function Lk(l, f) {
 }
 F();
 function vk(l, f) {
-  let g = vt(),
+  let g = useClock(),
     [T, y] = d(l),
     R = C(0);
   return (
@@ -10561,7 +10561,7 @@ function Uf(roe) {
           : "recalled";
       if (Fr > 0) {
         let ir;
-        if (cc[6] === p)
+        if (cc[6] === MEMO_CACHE_SENTINEL)
           ((ir = e(t, { children: ", " }, "comma-tmr")), (cc[6] = ir));
         else ir = cc[6];
         Rl.push(ir);
@@ -10594,7 +10594,7 @@ function Uf(roe) {
           : "searched";
       if (Fr > 0) {
         let ir;
-        if (cc[7] === p)
+        if (cc[7] === MEMO_CACHE_SENTINEL)
           ((ir = e(t, { children: ", " }, "comma-tms")), (cc[7] = ir));
         else ir = cc[7];
         Rl.push(ir);
@@ -10612,7 +10612,7 @@ function Uf(roe) {
           : "wrote";
       if (Fr > 0) {
         let ir;
-        if (cc[8] === p)
+        if (cc[8] === MEMO_CACHE_SENTINEL)
           ((ir = e(t, { children: ", " }, "comma-tmw")), (cc[8] = ir));
         else ir = cc[8];
         Rl.push(ir);
@@ -10649,8 +10649,8 @@ function Uf(roe) {
 function Af() {
   let foe = _(1),
     wj;
-  if (foe[0] === p)
-    ((wj = e(xe, {
+  if (foe[0] === MEMO_CACHE_SENTINEL)
+    ((wj = e(ToolResultRow, {
       height: 1,
       children: e(t, { dimColor: !0, children: "Tool use rejected" }),
     })),
@@ -10678,7 +10678,7 @@ function ji(Eoe) {
     ($o.content.includes(gc) || $o.content.includes(_b))
   ) {
     let Dt;
-    if (Sn[0] === p) ((Dt = e(bf, {})), (Sn[0] = Dt));
+    if (Sn[0] === MEMO_CACHE_SENTINEL) ((Dt = e(bf, {})), (Sn[0] = Dt));
     else Dt = Sn[0];
     return Dt;
   }
@@ -10697,13 +10697,13 @@ function ji(Eoe) {
   }
   if (typeof $o.content === "string" && $o.content.startsWith(Ok)) {
     let Dt;
-    if (Sn[5] === p) ((Dt = e(Af, {})), (Sn[5] = Dt));
+    if (Sn[5] === MEMO_CACHE_SENTINEL) ((Dt = e(Af, {})), (Sn[5] = Dt));
     else Dt = Sn[5];
     return Dt;
   }
   if (typeof $o.content === "string" && ehn($o.content)) {
     let Dt;
-    if (Sn[6] === p)
+    if (Sn[6] === MEMO_CACHE_SENTINEL)
       ((Dt = e(ct, {
         url: "https://code.claude.com/docs/s/claude-code-auto-mode",
       })),
@@ -10716,7 +10716,7 @@ function ji(Eoe) {
     else Ef = Sn[8];
     let Fk = Ef;
     let Uj;
-    if (Sn[9] === p)
+    if (Sn[9] === MEMO_CACHE_SENTINEL)
       ((Uj = r(t, { "aria-hidden": !0, children: [$Q, " "] })), (Sn[9] = Uj));
     else Uj = Sn[9];
     let $k;
@@ -10731,7 +10731,7 @@ function ji(Eoe) {
     else $k = Sn[11];
     let Nj;
     if (Sn[12] !== $k)
-      ((Nj = e(xe, {
+      ((Nj = e(ToolResultRow, {
         children: r(t, {
           dimColor: !0,
           children: [
@@ -10762,7 +10762,7 @@ function ji(Eoe) {
   )
     ((Dt =
       (Bk ? hp(Bk, "renderToolUseErrorMessage") : void 0)?.($o.content, {
-        progressMessagesForMessage: NN(SU),
+        progressMessagesForMessage: filterOutHookProgressMessages(SU),
         tools: PU,
         verbose: jk,
         isTranscriptMode: wU,
@@ -10792,7 +10792,7 @@ function Ej(l) {
 function Ml(l, f, g) {
   if (typeof f !== "string" && typeof f !== "number" && typeof f !== "bigint")
     return f;
-  if (l6.of(l).claim(`primitive_tool_result_reported:${g.name}`)) {
+  if (claimRegistriesByHost.of(l).claim(`primitive_tool_result_reported:${g.name}`)) {
     let T = typeof f;
     queueMicrotask(() => {
       logError(
@@ -10979,7 +10979,7 @@ function vb(Hte) {
       outputOverride: Gk,
       toolLabel: LU,
     } = Hte,
-    OU = Ye(HF),
+    OU = useSession(HF),
     Of = Os(GF),
     zk,
     xl,
@@ -11007,7 +11007,7 @@ function vb(Hte) {
     bl[10] !== LU ||
     bl[11] !== kl
   ) {
-    Jk = en;
+    Jk = EARLY_RETURN_SENTINEL;
     bb0: {
       jt = rLe(kl, He.name);
       if (!jt || jt.isTransparentWrapper?.()) {
@@ -11044,7 +11044,7 @@ function vb(Hte) {
             : void 0;
       let Wj = jt.outputSchema?.safeParse($j);
       let Hj = Wj?.success ? Wj.data : void 0;
-      let Gj = LT(jt, He.input);
+      let Gj = parseToolInput(jt, He.input);
       let Mc = Gj.success ? Gj.data : void 0;
       let zj = ETe(jt, Mc);
       let Kj = LU ?? jt.userFacingName(Mc, { activeAgents: Of });
@@ -11057,7 +11057,7 @@ function vb(Hte) {
         Vj !== null
           ? Vj
           : Mc
-            ? Sye(jt, Mc, {
+            ? renderToolUseMessageForTool(jt, Mc, {
                 theme: Hk,
                 verbose: !0,
                 isTranscriptMode: !0,
@@ -11067,7 +11067,7 @@ function vb(Hte) {
       vf = $r.progressMessagesByToolUseID.get(He.id) ?? [];
       let vU =
         _l && !xl && Hj !== void 0
-          ? hp(jt, "renderToolResultMessage")?.(Hj, NN(vf), {
+          ? hp(jt, "renderToolResultMessage")?.(Hj, filterOutHookProgressMessages(vf), {
               verbose: !0,
               tools: kl,
               theme: Hk,
@@ -11146,7 +11146,7 @@ function vb(Hte) {
       (Qk = bl[21]),
       (Jk = bl[22]),
       (jt = bl[23]));
-  if (Jk !== en) return Jk;
+  if (Jk !== EARLY_RETURN_SENTINEL) return Jk;
   let Sl;
   if (
     bl[35] !== He.id ||
@@ -11215,7 +11215,7 @@ function Ib(Yte) {
       tools: bc,
       progressMessagesForMessage: xc,
     } = Yte,
-    { columns: IU } = Se(),
+    { columns: IU } = useTerminalSize(),
     [DU] = cn();
   if (Zk?.type !== "user") {
     return null;
@@ -11223,7 +11223,7 @@ function Ib(Yte) {
   const Vte = Zk.message.content;
   let Tr, Jj, eb;
   if (Pl[0] !== Zk.message.content || Pl[1] !== Cn || Pl[2] !== Df) {
-    eb = en;
+    eb = EARLY_RETURN_SENTINEL;
     bb0: {
       let Fi;
       if (Pl[6] !== Df)
@@ -11238,7 +11238,7 @@ function Ib(Yte) {
       }
       if (typeof Tr.content === "string" && JZe(Tr.content)) {
         let Cl;
-        if (Pl[8] === p) ((Cl = e(bf, {})), (Pl[8] = Cl));
+        if (Pl[8] === MEMO_CACHE_SENTINEL) ((Cl = e(bf, {})), (Pl[8] = Cl));
         else Cl = Pl[8];
         eb = Cl;
         break bb0;
@@ -11258,7 +11258,7 @@ function Ib(Yte) {
       (Pl[4] = Jj),
       (Pl[5] = eb));
   } else ((Tr = Pl[3]), (Jj = Pl[4]), (eb = Pl[5]));
-  if (eb !== en) return eb;
+  if (eb !== EARLY_RETURN_SENTINEL) return eb;
   if (Jj) {
     let Fi, Cl;
     if (
@@ -11269,20 +11269,20 @@ function Ib(Yte) {
       Pl[13] !== Cn ||
       Pl[14] !== bc
     ) {
-      Cl = en;
+      Cl = EARLY_RETURN_SENTINEL;
       bb1: {
         let eF = hp(Cn, "renderToolUseRejectedMessage");
         if (!eF) {
           let Bf;
-          if (Pl[17] === p) ((Bf = e(bf, {})), (Pl[17] = Bf));
+          if (Pl[17] === MEMO_CACHE_SENTINEL) ((Bf = e(bf, {})), (Pl[17] = Bf));
           else Bf = Pl[17];
           Cl = Bf;
           break bb1;
         }
-        let oF = LT(Cn, kc);
+        let oF = parseToolInput(Cn, kc);
         if (!oF.success) {
           let Bf;
-          if (Pl[18] === p) ((Bf = e(bf, {})), (Pl[18] = Bf));
+          if (Pl[18] === MEMO_CACHE_SENTINEL) ((Bf = e(bf, {})), (Pl[18] = Bf));
           else Bf = Pl[18];
           Cl = Bf;
           break bb1;
@@ -11293,7 +11293,7 @@ function Ib(Yte) {
             messages: [],
             tools: bc,
             verbose: !0,
-            progressMessagesForMessage: NN(xc),
+            progressMessagesForMessage: filterOutHookProgressMessages(xc),
             theme: DU,
             isTranscriptMode: !0,
           }) ?? e(bf, {});
@@ -11307,7 +11307,7 @@ function Ib(Yte) {
         (Pl[15] = Fi),
         (Pl[16] = Cl));
     } else ((Fi = Pl[15]), (Cl = Pl[16]));
-    if (Cl !== en) return Cl;
+    if (Cl !== EARLY_RETURN_SENTINEL) return Cl;
     return Fi;
   }
   let Fi;
@@ -11466,7 +11466,7 @@ function Db(ere) {
       messages: Wt,
     } = se,
     [FU] = cn(),
-    { columns: $U } = Se(),
+    { columns: $U } = useTerminalSize(),
     lb = mne(se),
     mF;
   if (Fe[0] !== $t)
@@ -11976,7 +11976,7 @@ function Db(ere) {
       }
     }
     if (Wr && se.pushes?.length) {
-      let hre = Y(se.pushes.map(VF));
+      let hre = dedupe(se.pushes.map(VF));
       bo("push", "pushed to", e(t, { bold: !0, children: hre.join(", ") }));
     }
     if (Wr && se.branches?.length) {
@@ -12092,7 +12092,7 @@ function Db(ere) {
         let LF = Tt.length === 0;
         if (!LF) {
           let Ge;
-          if (Fe[93] === p)
+          if (Fe[93] === MEMO_CACHE_SENTINEL)
             ((Ge = e(t, { children: ", " }, "comma-agent")), (Fe[93] = Ge));
           else Ge = Fe[93];
           Tt.push(Ge);
@@ -12273,7 +12273,7 @@ function Db(ere) {
       (Fe[113] = xb));
   else xb = Fe[113];
   let OF;
-  if (Fe[114] === p) ((OF = e(Ac, {})), (Fe[114] = OF));
+  if (Fe[114] === MEMO_CACHE_SENTINEL) ((OF = e(Ac, {})), (Fe[114] = OF));
   else OF = Fe[114];
   let Sb;
   if (
@@ -12528,9 +12528,9 @@ function IN(l) {
 }
 function Vf() {
   let JF = _(3),
-    DN = Zr("app:toggleTranscript", "Global", "ctrl+o"),
+    DN = useKeybindingDisplayText("app:toggleTranscript", "Global", "ctrl+o"),
     ZF;
-  if (JF[0] === p)
+  if (JF[0] === MEMO_CACHE_SENTINEL)
     ((ZF = e(t, { "aria-hidden": !0, children: "\u273B " })), (JF[0] = ZF));
   else ZF = JF[0];
   let e$;
@@ -12555,7 +12555,7 @@ function $b({
   shouldAnimate: y,
   addMargin: R,
 }) {
-  let k = ar(f, l.toolName),
+  let k = findToolByName(f, l.toolName),
     S = k && hp(k, "renderGroupedToolUse");
   if (!S) return null;
   let P = new Map();
@@ -12571,7 +12571,7 @@ function $b({
         isResolved: g.resolvedToolUseIDs.has(B.id),
         isError: g.erroredToolUseIDs.has(B.id),
         isInProgress: T.has(B.id),
-        progressMessages: NN(g.progressMessagesByToolUseID.get(B.id) ?? []),
+        progressMessages: filterOutHookProgressMessages(g.progressMessagesByToolUseID.get(B.id) ?? []),
         result: K,
       };
     }),
@@ -12586,7 +12586,7 @@ function l$(une) {
 function Qf(rne) {
   let Dl = _(18),
     { message: Wi, addMargin: nne } = rne,
-    { columns: sne } = Se(),
+    { columns: sne } = useTerminalSize(),
     o$;
   if (Dl[0] !== Wi.url)
     ((o$ = (ine) => ine.remoteSessionUrl === Wi.url),
@@ -12595,13 +12595,13 @@ function Qf(rne) {
   else o$ = Dl[1];
   let ane = U(o$),
     lne = U(l$),
-    [BN, Wb] = EWe(lne);
+    [BN, Wb] = useOffscreenFrozenValue(lne);
   if (!ane) {
     return null;
   }
   const jN = nne ? 1 : 0;
   let r$;
-  if (Dl[2] === p)
+  if (Dl[2] === MEMO_CACHE_SENTINEL)
     ((r$ = e(o, {
       minWidth: 2,
       children: e(t, { "aria-hidden": !0, color: "inactive", children: Ar }),
@@ -12659,7 +12659,7 @@ function Jb(cne) {
   else s$ = jl[1];
   let Kb = s$,
     i$;
-  if (jl[2] === p)
+  if (jl[2] === MEMO_CACHE_SENTINEL)
     ((i$ = e(t, { color: "inactive", children: sPt })), (jl[2] = i$));
   else i$ = jl[2];
   let Yb;
@@ -12703,8 +12703,8 @@ function zi(dne) {
   switch (qi.mark) {
     case "synced": {
       let Gi;
-      if (Hi[0] === p)
-        ((Gi = e(et, { status: "success", withSpace: !0 })), (Hi[0] = Gi));
+      if (Hi[0] === MEMO_CACHE_SENTINEL)
+        ((Gi = e(StatusIndicator, { status: "success", withSpace: !0 })), (Hi[0] = Gi));
       else Gi = Hi[0];
       let Rr;
       if (Hi[1] !== qi.note)
@@ -12725,8 +12725,8 @@ function zi(dne) {
     }
     case "pending": {
       let Gi;
-      if (Hi[6] === p)
-        ((Gi = e(et, { status: "loading", withSpace: !0 })), (Hi[6] = Gi));
+      if (Hi[6] === MEMO_CACHE_SENTINEL)
+        ((Gi = e(StatusIndicator, { status: "loading", withSpace: !0 })), (Hi[6] = Gi));
       else Gi = Hi[6];
       let Rr;
       if (Hi[7] !== Ps)
@@ -12738,7 +12738,7 @@ function zi(dne) {
     }
     case "not_synced": {
       let Gi;
-      if (Hi[9] === p)
+      if (Hi[9] === MEMO_CACHE_SENTINEL)
         ((Gi = e(t, { "aria-label": "not synced:", children: iPt })),
           (Hi[9] = Gi));
       else Gi = Hi[9];
@@ -12771,7 +12771,7 @@ var GN = [ydn, MUt, _dn].map((l) => ({ url: l, marker: `learn more: ${l}` }));
 function $8(WN) {
   let Fl = _(33),
     { children: Mr, color: Cs, bold: ws } = WN,
-    qN = ule(),
+    qN = useHyperlinkSupport(),
     Zb,
     kr,
     ex,
@@ -12779,7 +12779,7 @@ function $8(WN) {
     tx,
     HN;
   if (Fl[0] !== ws || Fl[1] !== Mr || Fl[2] !== Cs || Fl[3] !== qN) {
-    HN = en;
+    HN = EARLY_RETURN_SENTINEL;
     bb0: {
       let $l;
       if (Fl[10] !== Mr)
@@ -12794,7 +12794,7 @@ function $8(WN) {
       if (!qN || kr === void 0) {
         let Us;
         if (Fl[12] !== ws || Fl[13] !== Mr || Fl[14] !== Cs)
-          ((Us = e(ZL, { color: Cs, bold: ws, children: Mr })),
+          ((Us = e(LinkifiedText, { color: Cs, bold: ws, children: Mr })),
             (Fl[12] = ws),
             (Fl[13] = Mr),
             (Fl[14] = Cs),
@@ -12825,7 +12825,7 @@ function $8(WN) {
       (ox = Fl[7]),
       (tx = Fl[8]),
       (HN = Fl[9]));
-  if (HN !== en) return HN;
+  if (HN !== EARLY_RETURN_SENTINEL) return HN;
   let $l;
   if (Fl[16] !== ws || Fl[17] !== Cs)
     (($l = e(t, {
@@ -13017,7 +13017,7 @@ function K$(Use, Nse) {
 }
 function Y$($se) {
   let w$ = Object.values($se.tasks).filter(B8);
-  return w$.length > 0 ? fee(w$) : null;
+  return w$.length > 0 ? formatBackgroundTaskSummary(w$) : null;
 }
 function V$(I$) {
   return e(Kx, { path: I$ }, I$);
@@ -13060,7 +13060,7 @@ function ig(Rse) {
   if (he.subtype === "agents_killed") {
     const Ee = mo ? 1 : 0;
     let Oo, yo;
-    if (xo[10] === p)
+    if (xo[10] === MEMO_CACHE_SENTINEL)
       ((Oo = e(o, {
         minWidth: 2,
         children: e(t, { "aria-hidden": !0, color: "error", children: Ar }),
@@ -13094,7 +13094,7 @@ function ig(Rse) {
   if (bI() && he.subtype === "model_refusal_fallback") {
     const Ee = mo ? 1 : 0;
     let Oo;
-    if (xo[14] === p)
+    if (xo[14] === MEMO_CACHE_SENTINEL)
       ((Oo = e(o, {
         minWidth: 2,
         children: e(t, {
@@ -13152,7 +13152,7 @@ function ig(Rse) {
       he.trigger === "model_not_found" || he.trigger === "permission_denied";
     const Ee = mo ? 1 : 0;
     let Oo;
-    if (xo[23] === p)
+    if (xo[23] === MEMO_CACHE_SENTINEL)
       ((Oo = e(o, {
         minWidth: 2,
         children: e(t, {
@@ -13212,7 +13212,7 @@ function ig(Rse) {
   if (he.subtype === "scheduled_task_fire") {
     const Ee = mo ? 1 : 0;
     let Oo;
-    if (xo[36] === p)
+    if (xo[36] === MEMO_CACHE_SENTINEL)
       ((Oo = r(t, { "aria-hidden": !0, children: [Dw, " "] })), (xo[36] = Oo));
     else Oo = xo[36];
     let yo;
@@ -13233,7 +13233,7 @@ function ig(Rse) {
   if (he.subtype === "permission_retry") {
     const Ee = mo ? 1 : 0;
     let Oo, yo;
-    if (xo[42] === p)
+    if (xo[42] === MEMO_CACHE_SENTINEL)
       ((Oo = r(t, { "aria-hidden": !0, dimColor: !0, children: [Dw, " "] })),
         (yo = e(t, { children: "Allowed " })),
         (xo[42] = Oo),
@@ -13335,7 +13335,7 @@ function $x(Mse) {
     ((f$ = lx === void 0 ? [] : lx), (yt[0] = lx), (yt[1] = f$));
   else f$ = yt[1];
   let eg = f$,
-    { columns: bse } = Se();
+    { columns: bse } = useTerminalSize();
   if (
     (Kr.totalDurationMs ?? Xr.reduce(H$, 0),
     Zf.length === 0 && eg.length === 0 && !ux && !Kr.hookLabel)
@@ -13344,7 +13344,7 @@ function $x(Mse) {
   }
   if (Kr.hookLabel) {
     let Qc;
-    if (yt[2] === p)
+    if (yt[2] === MEMO_CACHE_SENTINEL)
       ((Qc = e(t, { "aria-hidden": !0, children: "  \u23BF  " })),
         (yt[2] = Qc));
     else Qc = yt[2];
@@ -13379,7 +13379,7 @@ function $x(Mse) {
   }
   const Qc = kse ? 1 : 0;
   let Zc;
-  if (yt[13] === p)
+  if (yt[13] === MEMO_CACHE_SENTINEL)
     ((Zc = e(o, {
       minWidth: 2,
       children: e(t, { "aria-hidden": !0, children: Ar }),
@@ -13500,7 +13500,7 @@ function $x(Mse) {
 function Wx(Ase) {
   let og = _(17),
     { content: QN, addMargin: Ese, dot: JN, color: od, dimColor: td } = Ase,
-    { columns: Lse } = Se();
+    { columns: Lse } = useTerminalSize();
   const ZN = Ese ? 1 : 0;
   let Rx;
   if (og[0] !== od || og[1] !== td || og[2] !== JN)
@@ -13597,7 +13597,7 @@ function Gx(Ise) {
   let Ls = _(37),
     { message: Rt, addMargin: nA, verb: sA } = Ise,
     iA = Yn(),
-    aA = qc(),
+    aA = useCommandQueue(),
     k$;
   if (Ls[0] !== Rt.timestamp || Ls[1] !== aA || Ls[2] !== iA)
     ((k$ = () => {
@@ -13785,7 +13785,7 @@ function Gx(Ise) {
       (Ls[33] = P$));
   else P$ = Ls[33];
   let Fse = P$,
-    [RA, MA] = EWe(Fse),
+    [RA, MA] = useOffscreenFrozenValue(Fse),
     C$;
   if (Ls[34] !== MA || Ls[35] !== RA)
     ((C$ = e(o, {
@@ -13818,7 +13818,7 @@ function zx(Wse) {
   let Hse = L$;
   const CA = qse ? 1 : 0;
   let O$;
-  if (sd[5] === p)
+  if (sd[5] === MEMO_CACHE_SENTINEL)
     ((O$ = e(o, {
       minWidth: 2,
       children: e(t, { "aria-hidden": !0, dimColor: !0, children: Ar }),
@@ -13860,10 +13860,10 @@ function Kx(Gse) {
     { path: vs } = Gse,
     [Ex, D$] = d(!1),
     Lx;
-  if (id[0] !== vs) ((Lx = () => void yqe(vs)), (id[0] = vs), (id[1] = Lx));
+  if (id[0] !== vs) ((Lx = () => void openPathInDefaultApp(vs)), (id[0] = vs), (id[1] = Lx));
   else Lx = id[1];
   let B$, j$;
-  if (id[2] === p)
+  if (id[2] === MEMO_CACHE_SENTINEL)
     ((B$ = () => D$(!0)), (j$ = () => D$(!1)), (id[2] = B$), (id[3] = j$));
   else ((B$ = id[2]), (j$ = id[3]));
   const AA = !Ex;
@@ -13887,7 +13887,7 @@ function Kx(Gse) {
   else Dx = id[12];
   let F$;
   if (id[13] !== Lx || id[14] !== Dx)
-    ((F$ = e(xe, {
+    ((F$ = e(ToolResultRow, {
       children: e(o, {
         onClick: Lx,
         onMouseEnter: B$,
@@ -13918,7 +13918,7 @@ function Yx(zse) {
   }
   const LA = Kse ? 1 : 0;
   let W$;
-  if (ad[2] === p) ((W$ = e(o, { minWidth: 2 })), (ad[2] = W$));
+  if (ad[2] === MEMO_CACHE_SENTINEL) ((W$ = e(o, { minWidth: 2 })), (ad[2] = W$));
   else W$ = ad[2];
   let Bx;
   if (ad[3] !== Qr.url)
@@ -14000,7 +14000,7 @@ function Ql(sie) {
       followsSpeakerLabel: X$,
     } = sie,
     lie = X$ === void 0 ? !1 : X$,
-    uie = GB(iie, aie);
+    uie = shouldExpandContent(iie, aie);
   if (lie) {
     const Is = typeof Xx.text === "string" ? Xx.text : "";
     let Vi;
@@ -14014,7 +14014,7 @@ function Ql(sie) {
   if (!uie) {
     let Is;
     if (Ds[4] !== Vx || Ds[5] !== ld)
-      ((Is = e(NB, { displayName: ld, addMargin: Vx, fallbackLabel: "agent" })),
+      ((Is = e(CollapsedMessagesHint, { displayName: ld, addMargin: Vx, fallbackLabel: "agent" })),
         (Ds[4] = Vx),
         (Ds[5] = ld),
         (Ds[6] = Is));
@@ -14028,7 +14028,7 @@ function Ql(sie) {
     IA = typeof Xx.text === "string" ? Xx.text : "";
   const Vi = Vx ? 1 : 0;
   let ag;
-  if (Ds[9] === p)
+  if (Ds[9] === MEMO_CACHE_SENTINEL)
     ((ag = r(t, { "aria-hidden": !0, children: [L.pointerSmall, " "] })),
       (Ds[9] = ag));
   else ag = Ds[9];
@@ -14079,7 +14079,7 @@ function mg(Mie) {
       verbose: HA,
       isTranscriptMode: GA,
     } = Mie,
-    { columns: zA } = Se(),
+    { columns: zA } = useTerminalSize(),
     [KA] = cn(),
     YA = Os(tW),
     Z$,
@@ -14096,20 +14096,20 @@ function mg(Mie) {
     VA[8] !== WA ||
     VA[9] !== HA
   ) {
-    o_ = en;
+    o_ = EARLY_RETURN_SENTINEL;
     bb0: {
       let eW = ud ? hp(ud, "renderToolUseRejectedMessage") : void 0;
       if (!ud || !eW) {
         let ug;
-        if (VA[12] === p) ((ug = e(bf, {})), (VA[12] = ug));
+        if (VA[12] === MEMO_CACHE_SENTINEL) ((ug = e(bf, {})), (VA[12] = ug));
         else ug = VA[12];
         o_ = ug;
         break bb0;
       }
-      let oW = LT(ud, BA);
+      let oW = parseToolInput(ud, BA);
       if (!oW.success) {
         let ug;
-        if (VA[13] === p) ((ug = e(bf, {})), (VA[13] = ug));
+        if (VA[13] === MEMO_CACHE_SENTINEL) ((ug = e(bf, {})), (VA[13] = ug));
         else ug = VA[13];
         o_ = ug;
         break bb0;
@@ -14120,7 +14120,7 @@ function mg(Mie) {
           messages: [],
           tools: WA,
           verbose: HA,
-          progressMessagesForMessage: NN(FA),
+          progressMessagesForMessage: filterOutHookProgressMessages(FA),
           style: $A,
           theme: KA,
           isTranscriptMode: GA,
@@ -14140,7 +14140,7 @@ function mg(Mie) {
       (VA[10] = Z$),
       (VA[11] = o_));
   } else ((Z$ = VA[10]), (o_ = VA[11]));
-  if (o_ !== en) return o_;
+  if (o_ !== EARLY_RETURN_SENTINEL) return o_;
   return Z$;
 }
 F();
@@ -14167,7 +14167,7 @@ function dg(Bie) {
       width: jie,
       isTranscriptMode: dd,
     } = Bie,
-    eE = Ye(mW),
+    eE = useSession(mW),
     [oE] = cn(),
     tE = U(cW),
     rE = U(pW),
@@ -14215,7 +14215,7 @@ function dg(Bie) {
     Xi[20] !== JA ||
     Xi[21] !== ZA
   ) {
-    n_ = en;
+    n_ = EARLY_RETURN_SENTINEL;
     bb0: {
       let s_ = Jr.outputSchema?.safeParse(cg.toolUseResult);
       if (s_ && !s_.success) {
@@ -14224,7 +14224,7 @@ function dg(Bie) {
       }
       let Fie = s_ ? s_.data : cg.toolUseResult;
       let lW =
-        hp(Jr, "renderToolResultMessage")?.(Fie, NN(XA), {
+        hp(Jr, "renderToolResultMessage")?.(Fie, filterOutHookProgressMessages(XA), {
           style: QA,
           theme: oE,
           tools: JA,
@@ -14258,7 +14258,7 @@ function dg(Bie) {
       (Xi[23] = aW),
       (Xi[24] = n_));
   } else ((iW = Xi[22]), (aW = Xi[23]), (n_ = Xi[24]));
-  if (n_ !== en) return n_;
+  if (n_ !== EARLY_RETURN_SENTINEL) return n_;
   let sE = aW;
   const iE = iW ? void 0 : jie;
   let i_;
@@ -14266,7 +14266,7 @@ function dg(Bie) {
     ((i_ =
       nE &&
       Jr.name !== mt &&
-      e(xe, {
+      e(ToolResultRow, {
         height: 1,
         children: e(t, {
           dimColor: !0,
@@ -14314,7 +14314,7 @@ var mE = new Set([BRIEF_TOOL_NAME]);
 function fg(m_, aE, d_) {
   let hW = _(8),
     fW = d_.toolUseByToolUseID.get(m_)?.name,
-    Zie = Ye().host,
+    Zie = useSession().host,
     lE = fW === void 0 ? void 0 : Zae(fW, Zie),
     pg;
   if (
@@ -14329,12 +14329,12 @@ function fg(m_, aE, d_) {
         pg = null;
         break bb0;
       }
-      let TW = ar(aE, Qi.name) ?? lE;
+      let TW = findToolByName(aE, Qi.name) ?? lE;
       if (TW) {
         pg = { tool: TW, toolUse: Qi };
         break bb0;
       }
-      const uE = (mE.has(Qi.name) ? ar(J$() ?? [], Qi.name) : void 0) ?? void 0;
+      const uE = (mE.has(Qi.name) ? findToolByName(getRegisteredTools() ?? [], Qi.name) : void 0) ?? void 0;
       let yW;
       if (hW[5] !== uE || hW[6] !== Qi)
         ((yW = { tool: uE, toolUse: Qi }),
@@ -14428,7 +14428,7 @@ function y_(gae) {
     Zl;
   if (typeof on.content === "string" && JZe(on.content)) {
     let qt;
-    if (hg[0] === p) ((qt = e(bf, {})), (hg[0] = qt));
+    if (hg[0] === MEMO_CACHE_SENTINEL) ((qt = e(bf, {})), (hg[0] = qt));
     else qt = hg[0];
     Zl = qt;
   } else if (
@@ -14933,7 +14933,7 @@ function FE(nle) {
           return be;
         }
         let be;
-        if (to[102] === p) ((be = e(Vf, {})), (to[102] = be));
+        if (to[102] === MEMO_CACHE_SENTINEL) ((be = e(Vf, {})), (to[102] = be));
         else be = to[102];
         return be;
       }
@@ -14965,7 +14965,7 @@ function FE(nle) {
           ((be = e(o, {
             marginTop: 1,
             width: "100%",
-            children: e(za, { title: J.content, color: "inactive" }),
+            children: e(Divider, { title: J.content, color: "inactive" }),
           })),
             (to[108] = J.content),
             (to[109] = be));
@@ -15060,7 +15060,7 @@ function FE(nle) {
         to[136] !== be ||
         to[137] !== Gt
       )
-        ((Qe = e(yy, {
+        ((Qe = e(OffscreenFrozenContent, {
           children: e(Yf, {
             message: J,
             inProgressToolUseIDs: br,
@@ -15118,7 +15118,7 @@ function FE(nle) {
 function w_(ple) {
   let Tle = _(3),
     { message: kE, shouldAnimate: fle } = ple,
-    gle = c_(),
+    gle = useReducedMotion(),
     hle = tn();
   if (Vs === null) {
     return null;
@@ -15152,7 +15152,7 @@ function U_(yle) {
       lookups: CE,
       isTranscriptMode: Gs,
     } = yle,
-    { columns: xle } = Se();
+    { columns: xle } = useTerminalSize();
   switch (En.type) {
     case "text": {
       if (pse(Uo.origin)) {
@@ -15306,7 +15306,7 @@ function IW(l) {
   }
 }
 function Ng(l, f, g) {
-  if (!l6.of(l).claim(`unrenderable_block:${IW(f)}`)) return;
+  if (!claimRegistriesByHost.of(l).claim(`unrenderable_block:${IW(f)}`)) return;
   logError(g);
 }
 function N_(_le) {
@@ -15333,7 +15333,7 @@ function N_(_le) {
       messageUuid: Cd,
       isFirstTextBlock: Sle,
     } = _le,
-    OW = Ye(BW),
+    OW = useSession(BW),
     vW;
   if (Ys[0] !== P_ || Ys[1] !== Je.type)
     ((vW = (Ple) =>
@@ -15679,7 +15679,7 @@ function hye(lue) {
     { prompt: $E, dim: jW } = lue;
   jW === void 0 ? !1 : jW;
   let $W;
-  if (FW[0] === p)
+  if (FW[0] === MEMO_CACHE_SENTINEL)
     (($W = e(t, { color: "success", bold: !0, children: "Prompt:" })),
       (FW[0] = $W));
   else $W = FW[0];
@@ -15701,7 +15701,7 @@ function _We(uue) {
   let qE = _(5),
     { content: WE } = uue,
     qW;
-  if (qE[0] === p)
+  if (qE[0] === MEMO_CACHE_SENTINEL)
     ((qW = e(t, { color: "success", bold: !0, children: "Response:" })),
       (qE[0] = qW));
   else qW = qE[0];
@@ -15737,7 +15737,7 @@ function XE(cue) {
     if (E_[8] !== Og || E_[9] !== vg || E_[10] !== Eg || E_[11] !== Lg)
       ((Ig = (KW) =>
         e(
-          xe,
+          ToolResultRow,
           {
             height: 1,
             children: e(VL, {
@@ -15793,7 +15793,7 @@ function b$n(
   if (P.status === "remote_launched")
     return e(o, {
       flexDirection: "column",
-      children: e(xe, {
+      children: e(ToolResultRow, {
         height: 1,
         children: r(t, {
           children: [
@@ -15812,7 +15812,7 @@ function b$n(
     return r(o, {
       flexDirection: "column",
       children: [
-        e(xe, {
+        e(ToolResultRow, {
           height: 1,
           children: r(t, {
             children: [
@@ -15824,11 +15824,11 @@ function b$n(
                   dimColor: !0,
                   children: [
                     " (",
-                    r(ue, {
+                    r(DotSeparatedList, {
                       children: [
-                        e(D, { chord: "down", action: "manage" }),
+                        e(KeybindingHint, { chord: "down", action: "manage" }),
                         ce &&
-                          e(je, {
+                          e(ActionKeybindingHint, {
                             action: "app:toggleTranscript",
                             context: "Global",
                             fallback: "ctrl+o",
@@ -15842,7 +15842,7 @@ function b$n(
             ],
           }),
         }),
-        R && ce && e(xe, { children: e(hye, { prompt: ce, theme: y }) }),
+        R && ce && e(ToolResultRow, { children: e(hye, { prompt: ce, theme: y }) }),
       ],
     });
   }
@@ -15850,7 +15850,7 @@ function b$n(
   if (!R && uht(f, S, t$(l.agentType, S))) {
     let { report: ce } = gBt(l.content),
       ie = ce.reduce((ye, Ze) => ye + Buffer.byteLength(Ze.text), 0),
-      Oe = e(QHe, { bytes: ie });
+      Oe = e(ReceivedBytesStatus, { bytes: ie });
     return T
       ? r(o, {
           flexDirection: "column",
@@ -15898,7 +15898,7 @@ function b$n(
   return r(o, {
     flexDirection: "column",
     children: [
-      R && W && e(xe, { children: e(hye, { prompt: W, theme: y }) }),
+      R && W && e(ToolResultRow, { children: e(hye, { prompt: W, theme: y }) }),
       R
         ? e(ZHe, {
             children: e(XE, { progressMessages: f, tools: g, verbose: T }),
@@ -15907,8 +15907,8 @@ function b$n(
       R &&
         K &&
         K.length > 0 &&
-        e(xe, { children: e(_We, { content: K, theme: y }) }),
-      e(xe, {
+        e(ToolResultRow, { children: e(_We, { content: K, theme: y }) }),
+      e(ToolResultRow, {
         height: 1,
         children: e(VL, {
           message: Le,
@@ -15938,7 +15938,7 @@ function rgr(l, f) {
   }
   return g.replace(/\s+/g, " ").trim();
 }
-var ZW = m(() =>
+var ZW = createLazyValue(() =>
   c({
     modelsUsed: v(s()).optional(),
     resolvedModel: s().optional(),
@@ -16017,12 +16017,12 @@ function jHe(
   },
 ) {
   if (!l.length)
-    return e(xe, { height: 1, children: e(t, { dimColor: !0, children: zE }) });
-  if (!R && uht(l, k)) return IPt();
+    return e(ToolResultRow, { height: 1, children: e(t, { dimColor: !0, children: zE }) });
+  if (!R && uht(l, k)) return renderWebFetchProgressMessage();
   let S = (y ?? 1) * QW + JW,
     P = !R && T && T.rows && T.rows < S,
     A = () => {
-      let ce = G(l, (ye) => {
+      let ce = countMatching(l, (ye) => {
           if (!Wo(ye.data)) return !1;
           return ye.data.message.message.content.some(
             (Ro) => Ro.type === "tool_use",
@@ -16044,7 +16044,7 @@ function jHe(
     };
   if (P) {
     let { toolUseCount: ce, tokens: ie } = A();
-    return e(xe, {
+    return e(ToolResultRow, {
       height: 1,
       children: r(t, {
         dimColor: !0,
@@ -16057,7 +16057,7 @@ function jHe(
           ie && ` \xB7 ${formatNumber(ie)} tokens`,
           " \xB7",
           " ",
-          e(je, {
+          e(ActionKeybindingHint, {
             action: "app:toggleTranscript",
             context: "Global",
             fallback: "ctrl+o",
@@ -16071,7 +16071,7 @@ function jHe(
   let O = XW(l, f, !0),
     I = R ? O : O.slice(-HE),
     B = R ? [] : O.slice(0, Math.max(0, O.length - HE)),
-    K = G(B, (ce) => {
+    K = countMatching(B, (ce) => {
       if (ce.type === "summary")
         return ce.searchCount + ce.readCount + ce.replCount > 0;
       let ie = ce.message.data;
@@ -16081,11 +16081,11 @@ function jHe(
     W = l[0]?.data,
     ne = W && Wo(W) ? W.prompt : void 0;
   if (I.length === 0 && !(R && ne))
-    return e(xe, { height: 1, children: e(t, { dimColor: !0, children: zE }) });
+    return e(ToolResultRow, { height: 1, children: e(t, { dimColor: !0, children: zE }) });
   let { lookups: de, inProgressToolUseIDs: Le } = PMe(
     l.filter((ce) => Wo(ce.data)).map((ce) => ce.data),
   );
-  return e(xe, {
+  return e(ToolResultRow, {
     children: r(o, {
       flexDirection: "column",
       children: [
@@ -16177,7 +16177,7 @@ function E$n(
   });
 }
 function tq(l) {
-  let f = G(l, (y) => {
+  let f = countMatching(l, (y) => {
       if (!Wo(y.data)) return !1;
       let R = y.data.message;
       return (
@@ -16221,7 +16221,7 @@ function A$n(l, f) {
           let Ct = ie.data.subagent_type;
           ((Ze = KE(Ct) ? Ct : void 0),
             (Me = ie.data.description?.replace(/\s+/g, " ").trim() || void 0),
-            (We = KE(Ct) ? doe(Ct) : void 0));
+            (We = KE(Ct) ? getAgentTypeColorThemeKey(Ct) : void 0));
         } else
           ((ye = ie.success ? V6t(ie.data) : "Agent"),
             (Ze = ie.success
@@ -16278,7 +16278,7 @@ function A$n(l, f) {
                         " ",
                         e(t, {
                           dimColor: !0,
-                          children: e(D, {
+                          children: e(KeybindingHint, {
                             chord: "down",
                             action: "manage",
                             parens: !0,
@@ -16374,10 +16374,10 @@ function Bdr(l, f) {
     if (k?.type === "tool_result") {
       let S = g.get(k.tool_use_id);
       if (S) {
-        let P = ar(f, S.name);
+        let P = findToolByName(f, S.name);
         if (!P) return S.name;
         let A = S.input,
-          O = LT(P, A),
+          O = parseToolInput(P, A),
           I = O.success ? O.data : void 0;
         try {
           let B = P.userFacingName(I),

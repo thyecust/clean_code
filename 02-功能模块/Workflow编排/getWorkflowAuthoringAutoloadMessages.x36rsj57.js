@@ -10,13 +10,13 @@
 
 // [preload stripped] 原本在此预载 206 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { TB, EB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import "./chunk-w0pgmfvw.js";
-import { XPt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jkmndwnz.js";
+import { renderWorkflowAuthoringSkillBody } from "../../01-核心基础设施/共享小工具-未细化/workflow-authoring-skill.js";
 import { ZVe, Re, ya } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { nte } from "../../01-核心基础设施/共享小工具-未细化/chunk-pcsvt5cv.js";
+import { isWorkflowAuthoringSkillAvailable } from "../../01-核心基础设施/共享小工具-未细化/is-workflow-authoring-skill-available.js";
 import { $E } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
 async function getWorkflowAuthoringAutoloadMessages(t, o, l) {
   let r = t.some((e) => m(e, o, (a) => a.type === "workflow_keyword_request"))
@@ -30,8 +30,8 @@ async function getWorkflowAuthoringAutoloadMessages(t, o, l) {
         )
       ? "ultracode"
       : void 0;
-  if (r === void 0 || !nte(l)) return [];
-  let s = XPt(),
+  if (r === void 0 || !isWorkflowAuthoringSkillAvailable(l)) return [];
+  let s = renderWorkflowAuthoringSkillBody(),
     n = s.filter((e) => e.type === "text").map((e) => e.text).join(`
 
 `),
@@ -41,7 +41,7 @@ async function getWorkflowAuthoringAutoloadMessages(t, o, l) {
     return [];
   }
   (TB($E, `bundled:${$E}`, n, null),
-    i("tengu_workflow_authoring_skill_autoload", { trigger: fromEnum(r) }),
+    logEvent("tengu_workflow_authoring_skill_autoload", { trigger: fromEnum(r) }),
     logFeatureOk("workflow_authoring_autoload"));
   let { formatSkillLoadingMetadata: f } = await import("../斜杠命令-框架/chunk-s195n5de.js");
   return [

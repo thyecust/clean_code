@@ -11,7 +11,7 @@ import { j, B, ze, sc, ld } from "../../00-第三方库/lodash/lodash.2x3q7cfh.j
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   g6,
@@ -284,7 +284,7 @@ function G(e, t, n, o, s) {
   return (
     (e.armedAtMs = n),
     logFeatureOk("quota_auto_resume"),
-    i("tengu_quota_auto_resume_offer_armed", { origin: fromEnum(o) }),
+    logEvent("tengu_quota_auto_resume_offer_armed", { origin: fromEnum(o) }),
     z(e, t.resetsAt ?? 0, null, n, o),
     e.events.emit("armed"),
     !0
@@ -314,7 +314,7 @@ function z(e, t, n, o, s = "dialog") {
     (e.sleptThroughReset = !1),
     (e.lastObservedMs = o));
   let r = pe(t, n, o);
-  (i("tengu_quota_auto_resume_armed", {
+  (logEvent("tengu_quota_auto_resume_armed", {
     resets_in_sec: Math.max(0, Math.round(t - o / 1000)),
     rearm: n === null ? 0 : n + 1,
   }),
@@ -364,7 +364,7 @@ async function Re(e) {
 }
 function ge(e) {
   (V(e, Z),
-    i("tengu_quota_auto_resume_fired", {
+    logEvent("tengu_quota_auto_resume_fired", {
       rearm: e.consecutiveRearms,
       waited_ms: Math.max(0, Math.round(Date.now() - e.armedAtMs)),
       early: 1,
@@ -419,7 +419,7 @@ function Q(e, t) {
   if (Ae(t)) e.autoArmDedupeResetKeys.clear();
   let n = k(e, e.state.phase);
   if (C(e) && e.state.phase === "idle")
-    i("tengu_quota_auto_resume_cancelled", { reason: fromEnum(t) });
+    logEvent("tengu_quota_auto_resume_cancelled", { reason: fromEnum(t) });
   if ((b(e, t), n && he(t))) e.events.emit("cancelled");
 }
 var jlt = {
@@ -485,7 +485,7 @@ function _e(e) {
 }
 function b(e, t) {
   if (e.state.phase === "idle") return;
-  if (_e(t)) i("tengu_quota_auto_resume_cancelled", { reason: fromEnum(t) });
+  if (_e(t)) logEvent("tengu_quota_auto_resume_cancelled", { reason: fromEnum(t) });
   m(e, { phase: "idle" });
 }
 function srn(e, t) {
@@ -501,7 +501,7 @@ function srn(e, t) {
     return (
       (n.sleptThroughReset = !1),
       logFeatureSad("quota_auto_resume", "stale"),
-      i("tengu_quota_auto_resume_stale", {
+      logEvent("tengu_quota_auto_resume_stale", {
         late_by_ms: Math.round(e - n.state.fireAtMs),
       }),
       m(n, { phase: "stale" }),
@@ -510,7 +510,7 @@ function srn(e, t) {
     );
   return (
     V(n),
-    i("tengu_quota_auto_resume_fired", {
+    logEvent("tengu_quota_auto_resume_fired", {
       rearm: n.state.consecutiveRearms,
       waited_ms: Math.max(0, Math.round(e - n.armedAtMs)),
     }),
@@ -579,14 +579,14 @@ function p(e) {
 }
 function Y(e) {
   if ((w(e, { keepIfDrained: !0 }), e.state.phase === "stale"))
-    (i("tengu_quota_auto_resume_stale_resumed", {}),
+    (logEvent("tengu_quota_auto_resume_stale_resumed", {}),
       (e.lastObservedMs = null),
       b(e, "stale"));
   else if (e.state.phase === "armed")
     ((e.lastObservedMs = null), b(e, "manual_submit"));
 }
 function v(e, t) {
-  (i("tengu_quota_auto_resume_cancelled", { reason: fromEnum(t) }),
+  (logEvent("tengu_quota_auto_resume_cancelled", { reason: fromEnum(t) }),
     C(e),
     m(e, { phase: "idle" }),
     e.events.emit(
@@ -656,7 +656,7 @@ function I2n(e, t) {
 }
 function D(e) {
   (logFeatureBad("quota_auto_resume", "continuation_dropped"),
-    i("tengu_quota_auto_resume_cancelled", {
+    logEvent("tengu_quota_auto_resume_cancelled", {
       reason: fromEnum("continuation_dropped"),
     }),
     e.events.emit("continuation-dropped"));

@@ -10,10 +10,10 @@
 
 // [preload stripped] 原本在此预载 212 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { KHt, lJt } from "./chunk-54bf3exn.js";
-import "../云会话-Teleport/chunk-8scrd4ba.js";
+import "../云会话-Teleport/overlay-bundle.js";
 import "../Git-Worktree/chunk-7jshw9s9.js";
 import "../Git-Worktree/chunk-v967hawf.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ca2zxbyk.js";
+import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
 import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
 import "./chunk-ht8ydg1v.js";

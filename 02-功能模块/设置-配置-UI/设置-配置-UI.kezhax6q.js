@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { AS, ML, mv, ym } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { We, b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -17,10 +17,10 @@ import { x, ln, Ux } from "../../01-核心基础设施/核心工具-字符串与
 import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Ne, Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { Vm } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { gi, o, t, ct, jr, tn, Od } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   Mr,
@@ -62,23 +62,23 @@ import { D6, Lvt, KZe } from "../../01-核心基础设施/核心工具-常量与
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { jY, T3t } from "../状态栏-主题/chunk-jz6b76hr.js";
 import { cn, c4 } from "../状态栏-主题/chunk-w5jaj6kg.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Zb } from "../状态栏-主题/chunk-q7ekqy5h.js";
 import { Eo } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { Ma, ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
+import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { dd } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import { isChannelsEnabled } from "../插件系统/chunk-rbjz1q03.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { Ebe } from "../插件系统/chunk-4k4dssd9.js";
+import { isChannelsPolicyBlocked } from "../插件系统/channel-gate.js";
 import { d_, U, It, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { q8 } from "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
+import { useMainLoopModelOverride } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import { fc } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import {
   fV,
@@ -108,25 +108,25 @@ import { Pl } from "../Teammates团队/chunk-thxapyam.js";
 import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
 import { isArtifactConfigToggleable } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { ensurePolicyLimitsLoadedForDiagnostic } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
-import { hG, Qbt } from "../Bridge-RemoteControl/chunk-3j7ezsr7.js";
+import { isPushNotificationsEnabled, isInputNeededPushEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
 import { K_ } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { ny } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
 import { fDt } from "../跨会话消息(UDS)/chunk-t2esphmv.js";
 import { b4 } from "../Grove-隐私设置/chunk-a4mdm49v.js";
 import { isWebSetupEnabled } from "../斜杠命令-框架/chunk-a4vej95c.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { cE, qm, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { Vi, RZ, jm } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { Ir } from "../../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js";
+import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { KZ } from "../状态栏-主题/chunk-rhjpq9s2.js";
 import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { WA, Vx, Sv, Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { RemoteHomeSettingsDialog } from "../Memory-CLAUDE.md/chunk-54xx04er.js";
-import { Lit, PPt } from "../Memory-CLAUDE.md/chunk-hg0ww0g3.js";
+import { recordExternalIncludesDecision, ClaudeMdExternalIncludesDialog } from "../Memory-CLAUDE.md/claude-md-external-includes-dialog.js";
 import { Ult, Blt } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { Dlt, Llt, T2n } from "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
+import { getPushReachability, subscribePushReachability, subscribePushPreferencesHydrated } from "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
 import { YDt, Olt, AIe, gSe } from "../../01-核心基础设施/设置-配置/chunk-bznmdnc2.js";
 import { Ble, a3e } from "../成本-Token统计/chunk-3nwwgatc.js";
 import { r3e, plt } from "../MCP客户端/chunk-22bnxvxv.js";
@@ -148,10 +148,10 @@ import {
   uUn,
 } from "../斜杠命令-UI组件/chunk-y5mtnxtg.js";
 import { t0e } from "../../01-核心基础设施/共享小工具-未细化/chunk-4bdjksjf.js";
-import { uc } from "../../01-核心基础设施/共享小工具-未细化/chunk-2gabx7f1.js";
-import { I_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
-import { lu } from "../../01-核心基础设施/共享小工具-未细化/chunk-qck6h2yw.js";
+import { TitleWithSubtitle } from "../../01-核心基础设施/共享小工具-未细化/title-with-subtitle.js";
+import { ProgressBar } from "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
+import { BulletItem } from "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Rl } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
 import { Lee } from "../后台任务-Shell管理/chunk-531ast3t.js";
@@ -170,14 +170,14 @@ import {
   WFt,
   F,
 } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { SC } from "../../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js";
+import { isSkillDoctorEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 import { L, J_n, dAe } from "../Teammates团队/chunk-mrfx53ye.js";
 import { zNe } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
-import { pe, w, p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var Pm = w(function (Oi) {
+import { toESM, commonJS, MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var Pm = commonJS(function (Oi) {
   (function (s) {
     ((s.black = "\x1B[30m"),
       (s.red = "\x1B[31m"),
@@ -344,7 +344,7 @@ function Gf(td, Wb) {
       gap: 1,
       paddingX: 1,
       children: [
-        e(et, { status: "warning" }),
+        e(StatusIndicator, { status: "warning" }),
         typeof td === "string" ? e(t, { wrap: "wrap", children: td }) : td,
       ],
     },
@@ -368,7 +368,7 @@ function od({ sessionId: s, cwd: c, accountStatus: m, webSetupStatus: T }) {
           ? "not available on third-party providers"
           : !isChannelsEnabled()
             ? "not currently available"
-            : Ebe(getSettingsForSource("policySettings"))
+            : isChannelsPolicyBlocked(getSettingsForSource("policySettings"))
               ? "blocked by org policy"
               : void 0;
     Y = j
@@ -562,10 +562,10 @@ function Zs(Mb) {
       (ao[18] = br));
   else br = ao[18];
   let Ef;
-  if (ao[19] === p)
+  if (ao[19] === MEMO_CACHE_SENTINEL)
     ((Ef = e(t, {
       dimColor: !0,
-      children: e(je, {
+      children: e(ActionKeybindingHint, {
         action: "confirm:no",
         context: "Settings",
         fallback: "Esc",
@@ -593,11 +593,11 @@ function Tr(Hu) {
     { context: Vu, accountStatusRead: Rf, webSetupStatus: Gu } = Hu,
     Ku = Rf === void 0 ? void 0 : kn(Rf),
     Ab = U(Ff),
-    zu = q8() ?? Ab,
+    zu = useMainLoopModelOverride() ?? Ab,
     Yu = U(Uf),
     [qu] = cn(),
-    Xu = Ye(Wf),
-    Ju = Ye(jf),
+    Xu = useSession(Wf),
+    Ju = useSession(jf),
     If;
   if (
     Qs[0] !== Ku ||
@@ -625,7 +625,7 @@ function Tr(Hu) {
   else If = Qs[8];
   let Qu = If,
     _f;
-  if (Qs[9] === p)
+  if (Qs[9] === MEMO_CACHE_SENTINEL)
     ((_f =
       Pt() &&
       r(t, {
@@ -640,7 +640,7 @@ function Tr(Hu) {
       (Qs[9] = _f));
   else _f = Qs[9];
   let Pf;
-  if (Qs[10] === p) ((Pf = [{ bold: !0 }, { width: "fill" }]), (Qs[10] = Pf));
+  if (Qs[10] === MEMO_CACHE_SENTINEL) ((Pf = [{ bold: !0 }, { width: "fill" }]), (Qs[10] = Pf));
   else Pf = Qs[10];
   let Cr;
   if (Qs[11] !== Qu)
@@ -666,7 +666,7 @@ function vr(Fb) {
     return null;
   }
   let Nf;
-  if (ed[0] === p)
+  if (ed[0] === MEMO_CACHE_SENTINEL)
     ((Nf = e(t, { bold: !0, children: "System diagnostics" })), (ed[0] = Nf));
   else Nf = ed[0];
   let kr;
@@ -720,7 +720,7 @@ function Pr(qb) {
       (Lo[5] = Ar));
   else Ar = Lo[5];
   let Yf;
-  if (Lo[6] === p)
+  if (Lo[6] === MEMO_CACHE_SENTINEL)
     ((Yf = e(t, {
       dimColor: !0,
       children: "How would you like to handle this?",
@@ -728,7 +728,7 @@ function Pr(qb) {
       (Lo[6] = Yf));
   else Yf = Lo[6];
   let qf;
-  if (Lo[7] === p)
+  if (Lo[7] === MEMO_CACHE_SENTINEL)
     ((qf = {
       label: "Allow possible downgrade to stable version",
       value: "downgrade",
@@ -786,8 +786,8 @@ function Fr(dC) {
       onCancel: ad,
       isStandaloneCommand: Jf,
     } = dC,
-    ld = Ye(),
-    { storageV5: cd } = _e(),
+    ld = useSession(),
+    { storageV5: cd } = useStorageV5Context(),
     Qf;
   if (ni[0] !== ld.project.cwd || ni[1] !== cd)
     ((Qf = () => dX(ld.project.cwd, cd).then(ii).catch(rg)),
@@ -799,7 +799,7 @@ function Fr(dC) {
   const md = !Jf,
     pd = !Jf;
   let Zf;
-  if (ni[3] === p)
+  if (ni[3] === MEMO_CACHE_SENTINEL)
     ((Zf = e(o, {
       marginTop: 1,
       children: e(t, {
@@ -810,7 +810,7 @@ function Fr(dC) {
       (ni[3] = Zf));
   else Zf = ni[3];
   let eg;
-  if (ni[4] === p)
+  if (ni[4] === MEMO_CACHE_SENTINEL)
     ((eg = e(t, { dimColor: !0, children: "Loading output styles\u2026" })),
       (ni[4] = eg));
   else eg = ni[4];
@@ -909,9 +909,9 @@ function Hr(xC) {
     [Ur, EC] = d(ag),
     [yd, AC] = d((ag ?? "").length),
     lg;
-  if (sn[0] === p) ((lg = { context: "Settings" }), (sn[0] = lg));
+  if (sn[0] === MEMO_CACHE_SENTINEL) ((lg = { context: "Settings" }), (sn[0] = lg));
   else lg = sn[0];
-  Ne("confirm:no", MC, lg);
+  useKeybinding("confirm:no", MC, lg);
   let cg;
   if (sn[1] !== Ur || sn[2] !== hd)
     ((cg = function ri() {
@@ -924,14 +924,14 @@ function Hr(xC) {
   else cg = sn[3];
   let ri = cg,
     ug;
-  if (sn[4] === p)
+  if (sn[4] === MEMO_CACHE_SENTINEL)
     ((ug = e(t, {
       children: "Enter your preferred response and voice language:",
     })),
       (sn[4] = ug));
   else ug = sn[4];
   let dg;
-  if (sn[5] === p) ((dg = e(t, { children: L.pointer })), (sn[5] = dg));
+  if (sn[5] === MEMO_CACHE_SENTINEL) ((dg = e(t, { children: L.pointer })), (sn[5] = dg));
   else dg = sn[5];
   const Sd = Ur ?? "";
   let Wr;
@@ -960,7 +960,7 @@ function Hr(xC) {
       (sn[9] = Wr));
   else Wr = sn[9];
   let mg;
-  if (sn[10] === p)
+  if (sn[10] === MEMO_CACHE_SENTINEL)
     ((mg = e(t, {
       dimColor: !0,
       children: "Leave empty for default (English)",
@@ -1061,7 +1061,7 @@ function ea(qC) {
   else Sg = Qe[19];
   let Bo = Sg,
     bg;
-  if (Qe[20] === p) ((bg = () => fg(Eg)), (Qe[20] = bg));
+  if (Qe[20] === MEMO_CACHE_SENTINEL) ((bg = () => fg(Eg)), (Qe[20] = bg));
   else bg = Qe[20];
   let zr;
   if (Qe[21] !== co.length)
@@ -1077,9 +1077,9 @@ function ea(qC) {
       (Qe[25] = Cg));
   else Cg = Qe[25];
   let wg;
-  if (Qe[26] === p) ((wg = { context: "Select", isActive: !0 }), (Qe[26] = wg));
+  if (Qe[26] === MEMO_CACHE_SENTINEL) ((wg = { context: "Select", isActive: !0 }), (Qe[26] = wg));
   else wg = Qe[26];
-  Ze(Cg, wg);
+  useKeybindings(Cg, wg);
   let kg;
   if (Qe[27] !== Bo)
     ((kg = function ai(Dg) {
@@ -1090,12 +1090,12 @@ function ea(qC) {
   else kg = Qe[28];
   let ai = kg,
     Tg;
-  if (Qe[29] === p)
-    ((Tg = r(ue, {
+  if (Qe[29] === MEMO_CACHE_SENTINEL)
+    ((Tg = r(DotSeparatedList, {
       children: [
-        e(D, { chord: ["up", "down"], action: "navigate" }),
-        e(D, { chord: "enter", action: "change" }),
-        e(je, {
+        e(KeybindingHint, { chord: ["up", "down"], action: "navigate" }),
+        e(KeybindingHint, { chord: "enter", action: "change" }),
+        e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Confirmation",
           fallback: "Esc",
@@ -1183,11 +1183,11 @@ function ea(qC) {
 }
 function rn() {
   let ZC = _(1);
-  if (At(Llt, Dlt, Ag)?.has_active_channel !== !1) {
+  if (At(subscribePushReachability, getPushReachability, Ag)?.has_active_channel !== !1) {
     return null;
   }
   let Mg;
-  if (ZC[0] === p)
+  if (ZC[0] === MEMO_CACHE_SENTINEL)
     ((Mg = r(t, {
       color: "warning",
       wrap: "truncate-end",
@@ -1382,11 +1382,11 @@ function ga({
   contentHeight: R,
 }) {
   let v = gi(),
-    { storageV5: A, credentials: H } = _e(),
-    B = Ye(),
+    { storageV5: A, credentials: H } = useStorageV5Context(),
+    B = useSession(),
     Y = Yn(),
     G = d_(),
-    { addNotification: j } = Ir(),
+    { addNotification: j } = useNotificationQueue(),
     O = C(0),
     q = C(0),
     { headerFocused: Z, focusHeader: Q } = Jd(),
@@ -1415,7 +1415,7 @@ function ga({
     at = tn(),
     [tt, zt] = d(!at),
     qo = Va(),
-    { rows: Fn, columns: ro } = Se(),
+    { rows: Fn, columns: ro } = useTerminalSize(),
     or = C(null),
     [nr, Lp] = d(1),
     Tu = Math.min(44, Math.max(14, ro - 16)),
@@ -1429,7 +1429,7 @@ function ga({
     Xo = Math.max(5, Np - 8 - nr - Bp),
     Ws = U((k) => k.mainLoopModel),
     $p = U((k) => k.mainLoopModelForSession),
-    vu = q8() ?? Ws,
+    vu = useMainLoopModelOverride() ?? Ws,
     Fp = U((k) => k.verbose),
     xu = U((k) => k.thinkingEnabled),
     Mu = U((k) => (Mr() ? k.fastMode : !1)),
@@ -1439,7 +1439,7 @@ function ga({
     Vp = It(),
     [Eu, Gp] = d({}),
     Kp = C(xu);
-  E(() => T2n(() => X(AIe())), []);
+  E(() => subscribePushPreferencesHydrated(() => X(AIe())), []);
   let [Un, js] = d(!1),
     [Jo, Hs] = d(null),
     [Fe, De] = d(null),
@@ -1480,7 +1480,7 @@ function ga({
     Lu = kn(Ny(B, !0, A, H)),
     of = M_n(Lu),
     bt = hQ(),
-    rr = hG() && !St() && hasStoredOAuthToken(),
+    rr = isPushNotificationsEnabled() && !St() && hasStoredOAuthToken(),
     {
       settings: Po,
       helpers: {
@@ -1563,7 +1563,7 @@ function ga({
     if (we[fe]?.id !== k) rt.current = null;
   }, [at, fe, tt, we]);
   let Ks =
-      At(Llt, Dlt, () => {
+      At(subscribePushReachability, getPushReachability, () => {
         return;
       })?.has_active_channel === !1
         ? 1
@@ -1642,7 +1642,7 @@ function ga({
     if (Fe !== null) return;
     let k = Object.entries(Eu).map(
         ([Ae, Xs]) => (
-          i("tengu_config_changed", {
+          logEvent("tengu_config_changed", {
             key: Ae,
             setting: Ae,
             value: Tn(String(Xs)),
@@ -1657,7 +1657,7 @@ function ga({
       le = Boolean(oe && I.customApiKeyResponses?.approved?.includes(fq(oe)));
     if (ne !== le)
       (k.push(`${le ? "Enabled" : "Disabled"} custom API key`),
-        i("tengu_config_changed", {
+        logEvent("tengu_config_changed", {
           key: S("env.ANTHROPIC_API_KEY"),
           setting: S("env.ANTHROPIC_API_KEY"),
           value: le,
@@ -1744,7 +1744,7 @@ function ga({
     Mr() ? me?.fastMode : void 0,
     s,
   ]);
-  Ne("confirm:no", Nu, {
+  useKeybinding("confirm:no", Nu, {
     context: "Settings",
     isActive: Fe === null && !tt && !Z && !at,
   });
@@ -1777,7 +1777,7 @@ function ga({
               });
               return;
             }
-            i("tengu_config_changed", { setting: na(k.id), value: Ld(oe) });
+            logEvent("tengu_config_changed", { setting: na(k.id), value: Ld(oe) });
           };
         if (ne instanceof Promise) {
           ne.then(le);
@@ -1863,7 +1863,7 @@ function ga({
                   priority: "immediate",
                 }));
             }),
-          i("tengu_config_changed", { setting: na(k.id), value: oe }),
+          logEvent("tengu_config_changed", { setting: na(k.id), value: oe }),
           k.id === "thinking")
         ) {
           if (oe === Kp.current) js(!1);
@@ -1872,7 +1872,7 @@ function ga({
         return;
       }
       if (mr(k)) {
-        (Lit(!1, "config_toggle", A), Et(!1));
+        (recordExternalIncludesDecision(!1, "config_toggle", A), Et(!1));
         return;
       }
       if (k.id === "agentsView") {
@@ -1926,7 +1926,7 @@ function ga({
               autoUpdatesChannel: void 0,
               minimumVersion: void 0,
             })),
-            i("tengu_autoupdate_channel_changed", { channel: S("latest") }));
+            logEvent("tengu_autoupdate_channel_changed", { channel: S("latest") }));
         return;
       }
       if (k.type === "enum" && k.pickToCommit) {
@@ -1951,7 +1951,7 @@ function ga({
         return le;
       });
     };
-  Ze(
+  useKeybindings(
     {
       "select:previous": () => {
         if (Je() === 0) (js(!1), zt(!0), Lt(0));
@@ -2001,11 +2001,11 @@ function ga({
         else
           (Te((le) => ({ ...le, defaultToAgentsView: ne }), A),
             X((le) => ({ ...le, defaultToAgentsView: ne })));
-        i("tengu_config_changed", { setting: fromEnum(oe.id), value: ne });
+        logEvent("tengu_config_changed", { setting: fromEnum(oe.id), value: ne });
       },
       [Vn, sr, A],
     );
-  Ze(
+  useKeybindings(
     {
       "select:previous": () => ir((k) => Math.max(0, k - 1)),
       "select:next": () => ir((k) => Math.min(Vn.length - 1, k + 1)),
@@ -2062,10 +2062,10 @@ function ga({
                 children: e(t, {
                   dimColor: !0,
                   italic: !0,
-                  children: r(ue, {
+                  children: r(DotSeparatedList, {
                     children: [
-                      e(D, { chord: "enter", action: "select" }),
-                      e(je, {
+                      e(KeybindingHint, { chord: "enter", action: "select" }),
+                      e(ActionKeybindingHint, {
                         action: "confirm:no",
                         context: "Confirmation",
                         fallback: "Esc",
@@ -2116,10 +2116,10 @@ function ga({
                 }),
                 e(t, {
                   dimColor: !0,
-                  children: r(ue, {
+                  children: r(DotSeparatedList, {
                     children: [
-                      e(D, { chord: "enter", action: "confirm" }),
-                      e(je, {
+                      e(KeybindingHint, { chord: "enter", action: "confirm" }),
+                      e(ActionKeybindingHint, {
                         action: "confirm:no",
                         context: "Confirmation",
                         fallback: "Esc",
@@ -2144,7 +2144,7 @@ function ga({
                     ),
                     k === "forward")
                   )
-                    i("tengu_config_changed", {
+                    logEvent("tengu_config_changed", {
                       setting: S("remoteHomeSettings"),
                       value: !0,
                     });
@@ -2159,7 +2159,7 @@ function ga({
             : Fe === "ExternalIncludes"
               ? r(N, {
                   children: [
-                    e(PPt, {
+                    e(ClaudeMdExternalIncludesDialog, {
                       onDone: () => {
                         (Et(es().hasClaudeMdExternalIncludesApproved === !0),
                           De(null),
@@ -2169,10 +2169,10 @@ function ga({
                     }),
                     e(t, {
                       dimColor: !0,
-                      children: r(ue, {
+                      children: r(DotSeparatedList, {
                         children: [
-                          e(D, { chord: "enter", action: "confirm" }),
-                          e(je, {
+                          e(KeybindingHint, { chord: "enter", action: "confirm" }),
+                          e(ActionKeybindingHint, {
                             action: "confirm:no",
                             context: "Confirmation",
                             fallback: "Esc",
@@ -2195,7 +2195,7 @@ function ga({
                             ML().delete(Tpe),
                             mv("output_style"),
                             updateSettingsForSource("localSettings", { outputStyle: k }, void 0, A),
-                            i("tengu_output_style_changed", {
+                            logEvent("tengu_output_style_changed", {
                               style: k ?? uT,
                               source: S("config_panel"),
                               settings_source: S("localSettings"),
@@ -2207,10 +2207,10 @@ function ga({
                       }),
                       e(t, {
                         dimColor: !0,
-                        children: r(ue, {
+                        children: r(DotSeparatedList, {
                           children: [
-                            e(D, { chord: "enter", action: "confirm" }),
-                            e(je, {
+                            e(KeybindingHint, { chord: "enter", action: "confirm" }),
+                            e(ActionKeybindingHint, {
                               action: "confirm:no",
                               context: "Confirmation",
                               fallback: "Esc",
@@ -2231,7 +2231,7 @@ function ga({
                               De(null),
                               m(!1),
                               updateSettingsForSource("userSettings", { language: k }, void 0, A),
-                              i("tengu_language_changed", {
+                              logEvent("tengu_language_changed", {
                                 language: k ?? "default",
                                 source: S("config_panel"),
                               }));
@@ -2242,10 +2242,10 @@ function ga({
                         }),
                         e(t, {
                           dimColor: !0,
-                          children: r(ue, {
+                          children: r(DotSeparatedList, {
                             children: [
-                              e(D, { chord: "enter", action: "confirm" }),
-                              e(je, {
+                              e(KeybindingHint, { chord: "enter", action: "confirm" }),
+                              e(ActionKeybindingHint, {
                                 action: "confirm:no",
                                 context: "Settings",
                                 fallback: "Esc",
@@ -2319,13 +2319,13 @@ function ga({
                           !at &&
                             e(t, {
                               dimColor: !0,
-                              children: r(ue, {
+                              children: r(DotSeparatedList, {
                                 children: [
-                                  e(D, {
+                                  e(KeybindingHint, {
                                     chord: ["enter", "space"],
                                     action: "toggle",
                                   }),
-                                  e(je, {
+                                  e(ActionKeybindingHint, {
                                     action: "confirm:no",
                                     context: "Confirmation",
                                     fallback: "Esc",
@@ -2359,10 +2359,10 @@ function ga({
                             }),
                             e(t, {
                               dimColor: !0,
-                              children: r(ue, {
+                              children: r(DotSeparatedList, {
                                 children: [
-                                  e(D, { chord: "enter", action: "confirm" }),
-                                  e(je, {
+                                  e(KeybindingHint, { chord: "enter", action: "confirm" }),
+                                  e(ActionKeybindingHint, {
                                     action: "confirm:no",
                                     context: "Settings",
                                     fallback: "Esc",
@@ -2436,7 +2436,7 @@ function ga({
                                           autoUpdatesChannel: oe,
                                           minimumVersion: void 0,
                                         })),
-                                        i("tengu_autoupdate_enabled", {
+                                        logEvent("tengu_autoupdate_enabled", {
                                           channel: fromEnum(oe),
                                         }));
                                     },
@@ -2482,7 +2482,7 @@ function ga({
                                   }.VERSION;
                                 (updateSettingsForSource("userSettings", oe, void 0, A),
                                   he((ne) => ({ ...ne, ...oe })),
-                                  i("tengu_autoupdate_channel_changed", {
+                                  logEvent("tengu_autoupdate_channel_changed", {
                                     channel: S("stable"),
                                     minimum_version_set: k === "stay",
                                   }));
@@ -2491,7 +2491,7 @@ function ga({
                           : Fe === "Notifications"
                             ? e(ea, {
                                 channel: I.preferredNotifChannel,
-                                showInputNeededRow: rr && Qbt(),
+                                showInputNeededRow: rr && isInputNeededPushEnabled(),
                                 showDoneRow: rr,
                                 inputNeededEnabled:
                                   I.inputNeededNotifEnabled ?? !1,
@@ -2500,7 +2500,7 @@ function ga({
                                   let k = NU.indexOf(I.preferredNotifChannel),
                                     oe = NU[(k + 1) % NU.length];
                                   (sf(oe),
-                                    i("tengu_config_changed", {
+                                    logEvent("tengu_config_changed", {
                                       setting: S("notifChannel"),
                                       value: fromEnum(oe),
                                     }));
@@ -2508,7 +2508,7 @@ function ga({
                                 onToggleInputNeeded: () => {
                                   let k = !(I.inputNeededNotifEnabled ?? !1);
                                   (rf(k),
-                                    i("tengu_config_changed", {
+                                    logEvent("tengu_config_changed", {
                                       setting: S("inputNeededNotifEnabled"),
                                       value: k,
                                     }));
@@ -2516,7 +2516,7 @@ function ga({
                                 onToggleDone: () => {
                                   let k = !(I.agentPushNotifEnabled ?? !1);
                                   (cf(k),
-                                    i("tengu_config_changed", {
+                                    logEvent("tengu_config_changed", {
                                       setting: S("agentPushNotifEnabled"),
                                       value: k,
                                     }));
@@ -2943,9 +2943,9 @@ function ga({
                                       children: Z
                                         ? e(t, {
                                             dimColor: !0,
-                                            children: r(ue, {
+                                            children: r(DotSeparatedList, {
                                               children: [
-                                                e(D, {
+                                                e(KeybindingHint, {
                                                   chord: [
                                                     "left",
                                                     "right",
@@ -2954,11 +2954,11 @@ function ga({
                                                   action: "switch",
                                                   format: { keyCase: "lower" },
                                                 }),
-                                                e(D, {
+                                                e(KeybindingHint, {
                                                   chord: "down",
                                                   action: "return",
                                                 }),
-                                                e(je, {
+                                                e(ActionKeybindingHint, {
                                                   action: "confirm:no",
                                                   context: "Settings",
                                                   fallback: "Esc",
@@ -2970,20 +2970,20 @@ function ga({
                                         : tt
                                           ? e(t, {
                                               dimColor: !0,
-                                              children: r(ue, {
+                                              children: r(DotSeparatedList, {
                                                 children: [
                                                   e(t, {
                                                     children: "Type to filter",
                                                   }),
-                                                  e(D, {
+                                                  e(KeybindingHint, {
                                                     chord: ["enter", "down"],
                                                     action: "select",
                                                   }),
-                                                  e(D, {
+                                                  e(KeybindingHint, {
                                                     chord: "up",
                                                     action: "tabs",
                                                   }),
-                                                  e(je, {
+                                                  e(ActionKeybindingHint, {
                                                     action: "confirm:no",
                                                     context: "Settings",
                                                     fallback: "Esc",
@@ -2994,10 +2994,10 @@ function ga({
                                             })
                                           : e(t, {
                                               dimColor: !0,
-                                              children: r(ue, {
+                                              children: r(DotSeparatedList, {
                                                 children: [
                                                   we[fe]?.lock === void 0
-                                                    ? e(D, {
+                                                    ? e(KeybindingHint, {
                                                         chord: [
                                                           "enter",
                                                           "space",
@@ -3006,20 +3006,20 @@ function ga({
                                                       })
                                                     : we[fe]?.lock?.source ===
                                                         "policy" &&
-                                                      e(D, {
+                                                      e(KeybindingHint, {
                                                         chord: [
                                                           "enter",
                                                           "space",
                                                         ],
                                                         action: "retry",
                                                       }),
-                                                  e(je, {
+                                                  e(ActionKeybindingHint, {
                                                     action: "settings:search",
                                                     context: "Settings",
                                                     fallback: "/",
                                                     description: "search",
                                                   }),
-                                                  e(je, {
+                                                  e(ActionKeybindingHint, {
                                                     action: "confirm:no",
                                                     context: "Settings",
                                                     fallback: "Esc",
@@ -3081,7 +3081,7 @@ function ha(Lk) {
     }
     case "iterm2": {
       let Bt;
-      if (sa[0] === p)
+      if (sa[0] === MEMO_CACHE_SENTINEL)
         ((Bt = r(t, {
           children: ["iTerm2 ", e(t, { dimColor: !0, children: "(OSC 9)" })],
         })),
@@ -3091,7 +3091,7 @@ function ha(Lk) {
     }
     case "terminal_bell": {
       let Bt;
-      if (sa[1] === p)
+      if (sa[1] === MEMO_CACHE_SENTINEL)
         ((Bt = r(t, {
           children: [
             "Terminal Bell ",
@@ -3104,7 +3104,7 @@ function ha(Lk) {
     }
     case "kitty": {
       let Bt;
-      if (sa[2] === p)
+      if (sa[2] === MEMO_CACHE_SENTINEL)
         ((Bt = r(t, {
           children: ["Kitty ", e(t, { dimColor: !0, children: "(OSC 99)" })],
         })),
@@ -3114,7 +3114,7 @@ function ha(Lk) {
     }
     case "ghostty": {
       let Bt;
-      if (sa[3] === p)
+      if (sa[3] === MEMO_CACHE_SENTINEL)
         ((Bt = r(t, {
           children: ["Ghostty ", e(t, { dimColor: !0, children: "(OSC 777)" })],
         })),
@@ -3153,7 +3153,7 @@ function fa(Nk) {
     Ng = C(null);
   dd(Ng, !0);
   let Bg;
-  if (an[0] === p)
+  if (an[0] === MEMO_CACHE_SENTINEL)
     ((Bg = ($k) => {
       ((ui.current = $k(ui.current)), Bk(ui.current));
     }),
@@ -3287,7 +3287,7 @@ function mi() {
     Kd = U(eh),
     zd = U(th),
     Zk = U(oh),
-    Yd = q8() ?? Zk,
+    Yd = useMainLoopModelOverride() ?? Zk,
     qg;
   if (os[0] !== zd || os[1] !== Yd || os[2] !== Kd)
     ((qg = t0e([...Kd, ...zd], bytesPerTokenForModel(Yd ?? void 0))),
@@ -3301,7 +3301,7 @@ function mi() {
     return null;
   }
   let Xg, Jg;
-  if (os[4] === p)
+  if (os[4] === MEMO_CACHE_SENTINEL)
     ((Xg = e(t, { bold: !0, children: "Plugin skill-listing footprint" })),
       (Jg = e(t, {
         dimColor: !0,
@@ -3317,7 +3317,7 @@ function mi() {
     ((ya = $o.byPlugin.map(nh)), (os[6] = $o.byPlugin), (os[7] = ya));
   else ya = os[7];
   let Qg;
-  if (os[8] === p)
+  if (os[8] === MEMO_CACHE_SENTINEL)
     ((Qg = e(o, { width: 28, children: e(t, { children: "Total" }) })),
       (os[8] = Qg));
   else Qg = os[8];
@@ -3425,7 +3425,7 @@ function Ei(SD) {
 function el(CD) {
   let un = _(14),
     { maxWidth: ns } = CD,
-    { storageV5: Zd } = _e(),
+    { storageV5: Zd } = useStorageV5Context(),
     [rs] = d(Ble),
     ih;
   if (un[0] !== Zd || un[1] !== rs.allowed)
@@ -3437,7 +3437,7 @@ function el(CD) {
   let [ba] = d(ih);
   if (ba === null || !rs.allowed) {
     let pi;
-    if (un[3] === p) ((pi = e(Ho, { withSubtitle: !1 })), (un[3] = pi));
+    if (un[3] === MEMO_CACHE_SENTINEL) ((pi = e(Ho, { withSubtitle: !1 })), (un[3] = pi));
     else pi = un[3];
     const as = rs.allowed ? null : rs.reason;
     let mn;
@@ -3459,10 +3459,10 @@ function el(CD) {
     return rh;
   }
   let pi;
-  if (un[9] === p) ((pi = e(Ho, {})), (un[9] = pi));
+  if (un[9] === MEMO_CACHE_SENTINEL) ((pi = e(Ho, {})), (un[9] = pi));
   else pi = un[9];
   let as;
-  if (un[10] === p)
+  if (un[10] === MEMO_CACHE_SENTINEL)
     ((as = r(o, {
       flexDirection: "column",
       children: [
@@ -3525,7 +3525,7 @@ function tl(DD) {
   let dh = uh,
     em = ch || dh,
     mh;
-  if (Zt[4] === p)
+  if (Zt[4] === MEMO_CACHE_SENTINEL)
     ((mh = {
       "settings:periodDay": () => ah("day"),
       "settings:periodWeek": () => ah("week"),
@@ -3536,7 +3536,7 @@ function tl(DD) {
   if (Zt[5] !== em)
     ((ph = { context: "Settings", isActive: em }), (Zt[5] = em), (Zt[6] = ph));
   else ph = Zt[6];
-  if ((Ze(mh, ph), !ch && !dh)) {
+  if ((useKeybindings(mh, ph), !ch && !dh)) {
     return null;
   }
   let nt = Ca === "day" ? Qt.day : Qt.week,
@@ -3553,7 +3553,7 @@ function tl(DD) {
     let fh = Sn(nt);
     ka = o;
     Ea = "column";
-    if (Zt[19] === p) ((fi = e(Ho, {})), (Zt[19] = fi));
+    if (Zt[19] === MEMO_CACHE_SENTINEL) ((fi = e(Ho, {})), (Zt[19] = fi));
     else fi = Zt[19];
     const Uo = Ca === "day" ? "24h" : "7d";
     if (Zt[20] !== Uo)
@@ -3685,20 +3685,20 @@ function tl(DD) {
       (Zt[27] = Uo));
   else Uo = Zt[27];
   let hh;
-  if (Zt[28] === p)
+  if (Zt[28] === MEMO_CACHE_SENTINEL)
     ((hh = e(o, {
       marginTop: 1,
       children: e(t, {
         dimColor: !0,
-        children: r(ue, {
+        children: r(DotSeparatedList, {
           children: [
-            e(je, {
+            e(ActionKeybindingHint, {
               action: "settings:periodDay",
               context: "Settings",
               fallback: "d",
               description: "day",
             }),
-            e(je, {
+            e(ActionKeybindingHint, {
               action: "settings:periodWeek",
               context: "Settings",
               fallback: "w",
@@ -3733,7 +3733,7 @@ function Ho(OD) {
     { withSubtitle: Sh } = OD,
     tm = Sh === void 0 ? !0 : Sh,
     bh;
-  if (om[0] === p)
+  if (om[0] === MEMO_CACHE_SENTINEL)
     ((bh = e(t, {
       bold: !0,
       wrap: "wrap",
@@ -3779,7 +3779,7 @@ function eo(LD) {
       ((uo = e(t, { children: yi })), (pn[8] = yi), (pn[9] = uo));
     else uo = pn[9];
     let wi;
-    if (pn[10] === p)
+    if (pn[10] === MEMO_CACHE_SENTINEL)
       ((wi = e(t, { dimColor: !0, children: "% of usage" })), (pn[10] = wi));
     else wi = pn[10];
     if (pn[11] !== uo)
@@ -3895,14 +3895,14 @@ function ol(BD) {
     Oa = o;
     La = "column";
     let gn;
-    if (mo[8] === p) ((gn = e(t, { children: "Loops" })), (mo[8] = gn));
+    if (mo[8] === MEMO_CACHE_SENTINEL) ((gn = e(t, { children: "Loops" })), (mo[8] = gn));
     else gn = mo[8];
     let yn;
     if (mo[9] !== cs)
       ((yn = e(o, { width: cs, children: gn })), (mo[9] = cs), (mo[10] = yn));
     else yn = mo[10];
     let Dh, Th, vh;
-    if (mo[11] === p)
+    if (mo[11] === MEMO_CACHE_SENTINEL)
       ((Dh = e(Le, { width: ds, text: "every" })),
         (Th = e(Le, { width: ms, text: "runs" })),
         (vh = e(Le, { width: ps, text: "tokens" })),
@@ -3917,7 +3917,7 @@ function ol(BD) {
         (mo[15] = Ba));
     else Ba = mo[15];
     let xh;
-    if (mo[16] === p)
+    if (mo[16] === MEMO_CACHE_SENTINEL)
       ((xh = e(Le, { width: fs, text: "last run" })), (mo[16] = xh));
     else xh = mo[16];
     if (mo[17] !== yn || mo[18] !== Ba)
@@ -4175,7 +4175,7 @@ function so(w0) {
     const Vo = il / 100;
     let go;
     if (st[6] !== Vo)
-      ((go = e(I_, {
+      ((go = e(ProgressBar, {
         ratio: Vo,
         width: 50,
         fillColor: "rate_limit_fill",
@@ -4251,7 +4251,7 @@ function so(w0) {
     const Go = il / 100;
     let So;
     if (st[31] !== sl || st[32] !== Go)
-      ((So = e(I_, {
+      ((So = e(ProgressBar, {
         ratio: Go,
         width: sl,
         fillColor: "rate_limit_fill",
@@ -4288,22 +4288,22 @@ function _i({ lines: s }) {
 }
 function Pi() {
   let ll = _(6),
-    { columns: D0 } = Se(),
+    { columns: D0 } = useTerminalSize(),
     T0 = D0 - 2,
     al = Math.min(T0, 80),
     Uh;
-  if (ll[0] === p) ((Uh = isClaudeAISubscriber()), (ll[0] = Uh));
+  if (ll[0] === MEMO_CACHE_SENTINEL) ((Uh = isClaudeAISubscriber()), (ll[0] = Uh));
   else Uh = ll[0];
   let v0 = Uh,
     Wh;
-  if (ll[1] === p) ((Wh = jn()), (ll[1] = Wh));
+  if (ll[1] === MEMO_CACHE_SENTINEL) ((Wh = jn()), (ll[1] = Wh));
   else Wh = ll[1];
   let x0 = Wh !== null,
     jh,
     Hh;
-  if (ll[2] === p)
+  if (ll[2] === MEMO_CACHE_SENTINEL)
     ((jh = e(Ll, { isThinClient: x0 })),
-      (Hh = SC() ? e(mi, {}) : null),
+      (Hh = isSkillDoctorEnabled() ? e(mi, {}) : null),
       (ll[2] = jh),
       (ll[3] = Hh));
   else ((jh = ll[2]), (Hh = ll[3]));
@@ -4325,7 +4325,7 @@ function Pi() {
               ? e($l, { maxWidth: al })
               : e(t, {
                   dimColor: !0,
-                  children: e(je, {
+                  children: e(ActionKeybindingHint, {
                     action: "confirm:no",
                     context: "Settings",
                     fallback: "Esc",
@@ -4344,7 +4344,7 @@ function Ol(M0) {
   let cl = _(6),
     { maxWidth: hm } = M0,
     Gh;
-  if (cl[0] === p) ((Gh = RM()), (cl[0] = Gh));
+  if (cl[0] === MEMO_CACHE_SENTINEL) ((Gh = RM()), (cl[0] = Gh));
   else Gh = cl[0];
   let Sm = Gh.overage,
     ul;
@@ -4369,10 +4369,10 @@ function Ol(M0) {
       (cl[2] = ul));
   else ul = cl[2];
   let Kh;
-  if (cl[3] === p)
+  if (cl[3] === MEMO_CACHE_SENTINEL)
     ((Kh = e(t, {
       dimColor: !0,
-      children: e(je, {
+      children: e(ActionKeybindingHint, {
         action: "confirm:no",
         context: "Settings",
         fallback: "Esc",
@@ -4393,7 +4393,7 @@ function Ll(E0) {
   let Ri = _(10),
     { isThinClient: dl } = E0,
     Yh;
-  if (Ri[0] === p) ((Yh = pt(fV())), (Ri[0] = Yh));
+  if (Ri[0] === MEMO_CACHE_SENTINEL) ((Yh = pt(fV())), (Ri[0] = Yh));
   else Yh = Ri[0];
   let A0 = Yh,
     qh;
@@ -4404,7 +4404,7 @@ function Ll(E0) {
   const bm = dl ? " (remote)" : "";
   let pl;
   if (Ri[3] !== bm)
-    ((pl = r(uc, { children: ["Session", bm] })), (Ri[3] = bm), (Ri[4] = pl));
+    ((pl = r(TitleWithSubtitle, { children: ["Session", bm] })), (Ri[3] = bm), (Ri[4] = pl));
   else pl = Ri[4];
   let fl;
   if (Ri[5] !== ml)
@@ -4456,7 +4456,7 @@ function _m(s, c) {
 function $l(wm) {
   let $e = _(62),
     { maxWidth: kt } = wm,
-    { storageV5: Cs, credentials: km } = _e(),
+    { storageV5: Cs, credentials: km } = useStorageV5Context(),
     Qh;
   if ($e[0] !== Cs) ((Qh = () => r3e(Cs)), ($e[0] = Cs), ($e[1] = Qh));
   else Qh = $e[1];
@@ -4595,7 +4595,7 @@ function $l(wm) {
       ($e[14] = Tm),
       ($e[15] = cy));
   else cy = $e[15];
-  if ((Ne("settings:retry", ly, cy), Ii)) {
+  if ((useKeybinding("settings:retry", ly, cy), Ii)) {
     let oo;
     if ($e[16] !== Ii)
       ((oo = r(t, { color: "error", children: ["Error: ", Ii] })),
@@ -4603,18 +4603,18 @@ function $l(wm) {
         ($e[17] = oo));
     else oo = $e[17];
     let no;
-    if ($e[18] === p)
+    if ($e[18] === MEMO_CACHE_SENTINEL)
       ((no = e(t, {
         dimColor: !0,
-        children: r(ue, {
+        children: r(DotSeparatedList, {
           children: [
-            e(je, {
+            e(ActionKeybindingHint, {
               action: "settings:retry",
               context: "Settings",
               fallback: "r",
               description: "retry",
             }),
-            e(je, {
+            e(ActionKeybindingHint, {
               action: "confirm:no",
               context: "Settings",
               fallback: "Esc",
@@ -4635,12 +4635,12 @@ function $l(wm) {
   }
   if (!Oe) {
     let oo;
-    if ($e[21] === p)
+    if ($e[21] === MEMO_CACHE_SENTINEL)
       ((oo = e(t, { dimColor: !0, children: "Loading usage data\u2026" })),
         ($e[21] = oo));
     else oo = $e[21];
     let no;
-    if ($e[22] === p)
+    if ($e[22] === MEMO_CACHE_SENTINEL)
       ((no = r(o, {
         flexDirection: "column",
         gap: 1,
@@ -4648,7 +4648,7 @@ function $l(wm) {
           oo,
           e(t, {
             dimColor: !0,
-            children: e(je, {
+            children: e(ActionKeybindingHint, {
               action: "confirm:no",
               context: "Settings",
               fallback: "Esc",
@@ -4662,7 +4662,7 @@ function $l(wm) {
     return no;
   }
   let oo;
-  if ($e[23] === p) ((oo = getSubscriptionType()), ($e[23] = oo));
+  if ($e[23] === MEMO_CACHE_SENTINEL) ((oo = getSubscriptionType()), ($e[23] = oo));
   else oo = $e[23];
   let vm = oo,
     L0 = vm === "max" || vm === "team" || vm === null,
@@ -4780,7 +4780,7 @@ function $l(wm) {
   if ($e[46] !== Ut)
     ((vl =
       Ut &&
-      e(je, {
+      e(ActionKeybindingHint, {
         action: "settings:retry",
         context: "Settings",
         fallback: "r",
@@ -4790,8 +4790,8 @@ function $l(wm) {
       ($e[47] = vl));
   else vl = $e[47];
   let py;
-  if ($e[48] === p)
-    ((py = e(je, {
+  if ($e[48] === MEMO_CACHE_SENTINEL)
+    ((py = e(ActionKeybindingHint, {
       action: "confirm:no",
       context: "Settings",
       fallback: "Esc",
@@ -4801,7 +4801,7 @@ function $l(wm) {
   else py = $e[48];
   let xl;
   if ($e[49] !== vl)
-    ((xl = e(t, { dimColor: !0, children: r(ue, { children: [vl, py] }) })),
+    ((xl = e(t, { dimColor: !0, children: r(DotSeparatedList, { children: [vl, py] }) })),
       ($e[49] = vl),
       ($e[50] = xl));
   else xl = $e[50];
@@ -4849,8 +4849,8 @@ function Fl(K0) {
   if (!Ke.is_enabled) {
     if (Em && tN.isEnabled()) {
       let Wt;
-      if (wo[0] === p)
-        ((Wt = e(uc, {
+      if (wo[0] === MEMO_CACHE_SENTINEL)
+        ((Wt = e(TitleWithSubtitle, {
           subtitle: "Usage credits are off \xB7 /usage-credits to turn them on",
           children: Do,
         })),
@@ -4864,8 +4864,8 @@ function Fl(K0) {
   if (Ke.monthly_limit === null) {
     if (Em) {
       let Wt;
-      if (wo[1] === p)
-        ((Wt = e(uc, { subtitle: "Unlimited", children: Do })), (wo[1] = Wt));
+      if (wo[1] === MEMO_CACHE_SENTINEL)
+        ((Wt = e(TitleWithSubtitle, { subtitle: "Unlimited", children: Do })), (wo[1] = Wt));
       else Wt = wo[1];
       return Wt;
     }
@@ -4882,7 +4882,7 @@ function Fl(K0) {
     const Ds = `${Wt} spent`;
     let wn;
     if (wo[5] !== Ds)
-      ((wn = e(uc, { subtitle: Ds, children: Do })),
+      ((wn = e(TitleWithSubtitle, { subtitle: Ds, children: Do })),
         (wo[5] = Ds),
         (wo[6] = wn));
     else wn = wo[6];
@@ -4958,7 +4958,7 @@ function Fl(K0) {
   else yy = wo[26];
   return yy;
 }
-var xp = pe(Pm(), 1);
+var xp = toESM(Pm(), 1);
 F();
 function wy(s) {
   let c = s
@@ -5540,7 +5540,7 @@ async function Ts(s, c = {}, m, T) {
           try {
             if (R)
               try {
-                let J = M() && m !== void 0 ? T?.get(I) : void 0,
+                let J = isHoverRestEnabled() && m !== void 0 ? T?.get(I) : void 0,
                   me = vo(J !== void 0 ? new Date(J) : (await A.stat(I)).mtime);
                 if (xo(me, R))
                   return {
@@ -5676,7 +5676,7 @@ async function Ts(s, c = {}, m, T) {
 }
 async function zm(s) {
   let c = Pl();
-  if (M() && s !== void 0) return Fy(s, c);
+  if (isHoverRestEnabled() && s !== void 0) return Fy(s, c);
   let m = ae(),
     T;
   try {
@@ -6169,7 +6169,7 @@ function Tp(s) {
 function er(Cv) {
   let An = _(14),
     { onClose: Jm } = Cv,
-    { storageV5: xs } = _e(),
+    { storageV5: xs } = useStorageV5Context(),
     Gy;
   if (An[0] !== xs) ((Gy = Dp(xs)), (An[0] = xs), (An[1] = Gy));
   else Gy = An[1];
@@ -6178,7 +6178,7 @@ function er(Cv) {
   if (An[2] !== xs) ((Ky = Tp(xs)), (An[2] = xs), (An[3] = Ky));
   else Ky = An[3];
   let Zm = Ky,
-    { rows: wv } = ks(Se()),
+    { rows: wv } = ks(useTerminalSize()),
     ep = Math.max(8, Math.min(wv - 4, 31)),
     zy;
   if (An[4] !== Jm)
@@ -6187,11 +6187,11 @@ function er(Cv) {
       (An[5] = zy));
   else zy = An[5];
   let Yy;
-  if (An[6] === p) ((Yy = { context: "Settings" }), (An[6] = Yy));
+  if (An[6] === MEMO_CACHE_SENTINEL) ((Yy = { context: "Settings" }), (An[6] = Yy));
   else Yy = An[6];
-  Ne("confirm:no", zy, Yy);
+  useKeybinding("confirm:no", zy, Yy);
   let qy;
-  if (An[7] === p)
+  if (An[7] === MEMO_CACHE_SENTINEL)
     ((qy = r(o, {
       marginTop: 1,
       children: [
@@ -6223,7 +6223,7 @@ function er(Cv) {
 function mu(kv) {
   let it = _(50),
     { allTimePromise: Dv, activeTimePromise: Tv } = kv,
-    { storageV5: tp } = _e(),
+    { storageV5: tp } = useStorageV5Context(),
     jt = kn(Dv),
     Ms = kn(Tv),
     [Dt, vv] = d("all"),
@@ -6253,7 +6253,7 @@ function mu(kv) {
     As = Mv ?? Dt,
     [Rs, Av] = d("Overview"),
     [tS, Rv] = d(null),
-    op = vt(),
+    op = useClock(),
     oS;
   if (it[4] !== Dt || it[5] !== zo)
     ((oS = Dt === "all" ? null : (zo.get(Dt) ?? null)),
@@ -6328,7 +6328,7 @@ function mu(kv) {
   }
   if (jt.type === "empty") {
     let ht;
-    if (it[19] === p)
+    if (it[19] === MEMO_CACHE_SENTINEL)
       ((ht = e(t, {
         color: "warning",
         children: "No stats available yet. Start using Claude Code!",
@@ -6351,7 +6351,7 @@ function mu(kv) {
   }
   if (!Ht || !Vl) {
     let ht, yt;
-    if (it[22] === p)
+    if (it[22] === MEMO_CACHE_SENTINEL)
       ((ht = e(yo, {})),
         (yt = e(t, { children: " Loading stats\u2026" })),
         (it[22] = ht),
@@ -6372,7 +6372,7 @@ function mu(kv) {
     return Rn;
   }
   let ht;
-  if (it[26] === p) ((ht = (_v) => Av(_v)), (it[26] = ht));
+  if (it[26] === MEMO_CACHE_SENTINEL) ((ht = (_v) => Av(_v)), (it[26] = ht));
   else ht = it[26];
   let yt;
   if (
@@ -6541,7 +6541,7 @@ function hu(Lv) {
       selectorRange: Hi,
       isLoading: Gi,
     } = Lv,
-    { columns: Ki } = Se(),
+    { columns: Ki } = useTerminalSize(),
     ec,
     tc,
     oc,
@@ -6868,7 +6868,7 @@ function hu(Lv) {
       (Me[86] = _c));
   else _c = Me[86];
   let lS;
-  if (Me[87] === p)
+  if (Me[87] === MEMO_CACHE_SENTINEL)
     ((lS =
       null &&
       r(N, {
@@ -7096,7 +7096,7 @@ function Su(dp) {
     { stats: _s, selectorRange: Xi, isLoading: Ji } = dp,
     { headerFocused: mp, focusHeader: pp } = Jd(),
     [Tt, uS] = d(0),
-    { columns: fp } = Se(),
+    { columns: fp } = useTerminalSize(),
     Oc,
     Lc,
     Nc,
@@ -7128,7 +7128,7 @@ function Su(dp) {
     Nn[6] !== _s.modelUsage ||
     Nn[7] !== fp
   ) {
-    gp = en;
+    gp = EARLY_RETURN_SENTINEL;
     bb0: {
       let { modelEntries: Ps, totalTokens: dS } = Bn(_s.modelUsage);
       xt = Ps;
@@ -7147,7 +7147,7 @@ function Su(dp) {
       };
       if (xt.length === 0) {
         let Io;
-        if (Nn[29] === p)
+        if (Nn[29] === MEMO_CACHE_SENTINEL)
           ((Io = e(o, {
             children: e(t, {
               color: "subtle",
@@ -7261,7 +7261,7 @@ function Su(dp) {
       (Xc = Nn[26]),
       (Jc = Nn[27]),
       (Qc = Nn[28]));
-  if (gp !== en) return gp;
+  if (gp !== EARLY_RETURN_SENTINEL) return gp;
   let Ps;
   if (Nn[33] !== Oc || Nn[34] !== Wc || Nn[35] !== Gc || Nn[36] !== Kc)
     ((Ps = e(Oc, { flexDirection: Wc, width: Gc, children: Kc })),
@@ -7314,7 +7314,7 @@ function Su(dp) {
             xt.length,
             " models",
             " ",
-            e(D, { chord: ["up", "down"], action: "scroll", parens: !0 }),
+            e(KeybindingHint, { chord: ["up", "down"], action: "scroll", parens: !0 }),
           ],
         }),
       })),
@@ -7383,7 +7383,7 @@ function Ls(Gv) {
   else nu = Vt[8];
   let su;
   if (Vt[9] !== ou || Vt[10] !== nu)
-    ((su = r(lu, { children: [ou, " ", nu] })),
+    ((su = r(BulletItem, { children: [ou, " ", nu] })),
       (Vt[9] = ou),
       (Vt[10] = nu),
       (Vt[11] = su));
@@ -7600,9 +7600,9 @@ function n4(cx) {
     [px, fx] = d(!1),
     [gx] = d(!1),
     hx = Ma(),
-    { rows: IS } = ks(Se()),
+    { rows: IS } = ks(useTerminalSize()),
     Ep = hx ? IS + 1 : Math.max(15, Math.min(Math.floor(IS * 0.8), 30)),
-    Fs = Ye(),
+    Fs = useSession(),
     _S;
   if (Gt[0] !== ze.credentials || Gt[1] !== ze.storageV5 || Gt[2] !== Fs)
     ((_S = () => xr(Fs, ze.storageV5, ze.credentials).catch(US)),
@@ -7626,7 +7626,7 @@ function n4(cx) {
       (Gt[7] = PS));
   else PS = Gt[7];
   let Ip = PS;
-  is();
+  useGlobalExitKeybinding();
   let OS;
   if (Gt[8] !== _o || Gt[9] !== $n)
     ((OS = () => {
@@ -7651,7 +7651,7 @@ function n4(cx) {
       (Gt[11] = _p),
       (Gt[12] = LS));
   else LS = Gt[12];
-  Ne("confirm:no", yx, LS);
+  useKeybinding("confirm:no", yx, LS);
   let Cu;
   if (Gt[13] !== ze || Gt[14] !== Ap || Gt[15] !== Ip)
     ((Cu = e(
@@ -7696,7 +7696,7 @@ function n4(cx) {
       (Gt[20] = ku));
   else ku = Gt[20];
   let NS;
-  if (Gt[21] === p)
+  if (Gt[21] === MEMO_CACHE_SENTINEL)
     ((NS = e(ss, { title: "Usage", children: e(Pi, {}) }, "usage")),
       (Gt[21] = NS));
   else NS = Gt[21];
@@ -7711,7 +7711,7 @@ function n4(cx) {
       (Gt[23] = Du));
   else Du = Gt[23];
   let BS;
-  if (Gt[24] === p) ((BS = []), (Gt[24] = BS));
+  if (Gt[24] === MEMO_CACHE_SENTINEL) ((BS = []), (Gt[24] = BS));
   else BS = Gt[24];
   let $S;
   if (Gt[25] !== Cu || Gt[26] !== ku || Gt[27] !== Du)

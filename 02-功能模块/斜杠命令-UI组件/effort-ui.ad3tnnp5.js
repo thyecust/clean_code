@@ -36,27 +36,27 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, tn, bs } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { Ma } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { K1n, g6e, Jot } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { X8 } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { t9, D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { formatKeybindingChord, KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { WA, Vx, Sv, Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-csjxh2sy.js";
-import { qa } from "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
+import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
+import { useMainLoopModel } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import { olt, onn, K9e, lSe } from "./chunk-d9snm4c7.js";
-import { QW } from "../../01-核心基础设施/共享小工具-未细化/chunk-dvytaktr.js";
-import { uc } from "../../01-核心基础设施/共享小工具-未细化/chunk-2gabx7f1.js";
-import { ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
+import { ModelOrEffortSwitchDialog } from "../../01-核心基础设施/共享小工具-未细化/switch-confirm-dialog.js";
+import { TitleWithSubtitle } from "../../01-核心基础设施/共享小工具-未细化/title-with-subtitle.js";
+import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
 import { qf } from "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
-import { E0e, c_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-xc85bfby.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import { NO_ANIMATION_INDEX, useReducedMotion } from "../../01-核心基础设施/共享小工具-未细化/reduced-motion.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
 import { Nl, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
 function Cr(hl) {
@@ -84,7 +84,7 @@ function fn(ul) {
   let { onDone: dl } = ul,
     fl = qf(),
     ml = U(Cr),
-    gl = qa(),
+    gl = useMainLoopModel(),
     { message: pl } = K9e(fl, gl, ml);
   return (dl(pl), null);
 }
@@ -97,7 +97,7 @@ function mn(bl) {
     { args: be, getMessages: Eo, onDone: ve, storageV5: vt } = bl,
     xe = qf(),
     Po = U(Nr),
-    $e = qa(),
+    $e = useMainLoopModel(),
     xt = It(),
     Mn;
   if (Ee[0] !== be || Ee[1] !== $e)
@@ -149,7 +149,7 @@ function mn(bl) {
   else ((Sn = Ee[15]), (kn = Ee[16]));
   if ((E(Sn, kn), et && B !== null)) {
     let Cn;
-    if (Ee[17] === p) ((Cn = () => vl(!1)), (Ee[17] = Cn));
+    if (Ee[17] === MEMO_CACHE_SENTINEL) ((Cn = () => vl(!1)), (Ee[17] = Cn));
     else Cn = Ee[17];
     let yt;
     if (Ee[18] !== xe || Ee[19] !== ve)
@@ -161,7 +161,7 @@ function mn(bl) {
     else yt = Ee[20];
     let Nn;
     if (Ee[21] !== yt || Ee[22] !== B.value)
-      ((Nn = e(QW, {
+      ((Nn = e(ModelOrEffortSwitchDialog, {
         kind: "effort",
         model: null,
         effort: B.value,
@@ -316,7 +316,7 @@ function uo(yl) {
 function fo(wl) {
   let $n = _(5),
     { text: Ao } = wl,
-    Sl = c_(),
+    Sl = useReducedMotion(),
     [, kl] = bs(Sl ? null : 100),
     Io = Math.floor(kl / 100),
     Mt;
@@ -423,10 +423,10 @@ function UltraRippleText($l) {
 function mo(El) {
   let Vn = _(5),
     { text: Ct } = El,
-    Gn = c_(),
+    Gn = useReducedMotion(),
     [, Pl] = bs(Gn ? null : 100),
     Al = Ct.length + 4,
-    tt = Gn ? E0e : Math.floor(Pl / 100) % Al,
+    tt = Gn ? NO_ANIMATION_INDEX : Math.floor(Pl / 100) % Al,
     Nt;
   if (Vn[0] !== Ct) ((Nt = [...Ct]), (Vn[0] = Ct), (Vn[1] = Nt));
   else Nt = Vn[1];
@@ -485,7 +485,7 @@ function go(Ll) {
     Le = qf(),
     To = U($r),
     Xo = U(Er),
-    H = qa(),
+    H = useMainLoopModel(),
     Re = It(),
     _n;
   if (g[0] !== H) ((_n = getSliderGeometry(H)), (g[0] = H), (g[1] = _n));
@@ -504,10 +504,10 @@ function go(Ll) {
     [Dl, Bn] = d(Rl),
     I = Math.min(Dl, s.levels.length - 1),
     [Y, Jn] = d(null),
-    { columns: Gl } = Se(),
+    { columns: Gl } = useTerminalSize(),
     Vl = Ma(),
     De = s.levels[I].value === "ultracode",
-    nt = c_(),
+    nt = useReducedMotion(),
     [, _o] = bs(De && !nt && Y === null ? Zo : null),
     [Ho, zn] = d(null);
   if (!De || nt) {
@@ -537,10 +537,10 @@ function go(Ll) {
     Kn,
     Yn,
     Qn;
-  if (g[13] === p)
-    ((Kn = t9([gw("left"), gw("right")])),
-      (Yn = t9([gw("enter")])),
-      (Qn = t9([gw("escape")])),
+  if (g[13] === MEMO_CACHE_SENTINEL)
+    ((Kn = formatKeybindingChord([gw("left"), gw("right")])),
+      (Yn = formatKeybindingChord([gw("enter")])),
+      (Qn = formatKeybindingChord([gw("escape")])),
       (g[13] = Kn),
       (g[14] = Yn),
       (g[15] = Qn));
@@ -617,7 +617,7 @@ function go(Ll) {
       (g[32] = Jo),
       (g[33] = or));
   else or = g[33];
-  if ((Ze(tr, or), Y !== null)) {
+  if ((useKeybindings(tr, or), Y !== null)) {
     const Ve = Y.level === "ultracode" ? "xhigh" : Y.level;
     let fe;
     if (
@@ -641,11 +641,11 @@ function go(Ll) {
         (g[39] = fe));
     else fe = g[39];
     let lt;
-    if (g[40] === p) ((lt = () => Jn(null)), (g[40] = lt));
+    if (g[40] === MEMO_CACHE_SENTINEL) ((lt = () => Jn(null)), (g[40] = lt));
     else lt = g[40];
     let Pt;
     if (g[41] !== Ve || g[42] !== fe)
-      ((Pt = e(QW, {
+      ((Pt = e(ModelOrEffortSwitchDialog, {
         kind: "effort",
         model: null,
         effort: Ve,
@@ -769,7 +769,7 @@ function go(Ll) {
   else Xt = g[79];
   let _t;
   if (g[80] !== Xt)
-    ((_t = e(uc, { children: Xt })), (g[80] = Xt), (g[81] = _t));
+    ((_t = e(TitleWithSubtitle, { children: Xt })), (g[80] = Xt), (g[81] = _t));
   else _t = g[81];
   let Ht;
   if (g[82] !== G || g[83] !== a || g[84] !== h)
@@ -1055,7 +1055,7 @@ function go(Ll) {
     g[158] !== a ||
     g[159] !== h
   )
-    ((Ut = e(ci, {
+    ((Ut = e(InputGuide, {
       children: a
         ? e(UltraRippleText, {
             text: `${Xe}${Wn}${" ".repeat(Math.max(0, G - W - te(Wn)))}`,
@@ -1064,12 +1064,12 @@ function go(Ll) {
             ripple: a,
             dimColor: !0,
           })
-        : r(ue, {
+        : r(DotSeparatedList, {
             children: [
-              e(D, { chord: ["left", "right"], action: "adjust" }),
-              e(D, { chord: "enter", action: "confirm" }),
+              e(KeybindingHint, { chord: ["left", "right"], action: "adjust" }),
+              e(KeybindingHint, { chord: "enter", action: "confirm" }),
               e(t, { children: "s for this session only" }),
-              e(D, { chord: "escape", action: "cancel" }),
+              e(KeybindingHint, { chord: "escape", action: "cancel" }),
             ],
           }),
     })),
@@ -1125,7 +1125,7 @@ function po(Jl) {
     eo = qf(),
     Yo = U(Ar),
     zl = U(Ir),
-    j = qa(),
+    j = useMainLoopModel(),
     He = It(),
     mr;
   if (q[0] !== j) ((mr = getSliderGeometry(j)), (q[0] = j), (q[1] = mr));
@@ -1151,11 +1151,11 @@ function po(Jl) {
         (q[6] = Z));
     else Z = q[6];
     let Me;
-    if (q[7] === p) ((Me = () => gr(null)), (q[7] = Me));
+    if (q[7] === MEMO_CACHE_SENTINEL) ((Me = () => gr(null)), (q[7] = Me));
     else Me = q[7];
     let we;
     if (q[8] !== ze || q[9] !== Z)
-      ((we = e(QW, {
+      ((we = e(ModelOrEffortSwitchDialog, {
         kind: "effort",
         model: null,
         effort: ze,
@@ -1189,7 +1189,7 @@ function po(Jl) {
   let Qo = ze,
     Wo = T.levels[Math.min(jl, T.levels.length - 1)].value,
     Z;
-  if (q[18] === p) ((Z = e(uc, { children: "Effort" })), (q[18] = Z));
+  if (q[18] === MEMO_CACHE_SENTINEL) ((Z = e(TitleWithSubtitle, { children: "Effort" })), (q[18] = Z));
   else Z = q[18];
   let Me;
   if (q[19] !== T.orgNote)

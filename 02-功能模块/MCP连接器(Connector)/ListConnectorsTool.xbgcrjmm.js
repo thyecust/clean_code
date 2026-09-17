@@ -11,13 +11,13 @@
 // [preload stripped] 原本在此预载 82 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Ve } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { xce, C7, Hce, hdt, y6n, pbe } from "../../01-核心基础设施/共享小工具-未细化/chunk-yjnahe9e.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { LIST_CONNECTORS_TOOL_NAME, DESCRIPTION, PROMPT } from "../../01-核心基础设施/共享小工具-未细化/chunk-9g3yj4km.js";
-import { G7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-t0m264jc.js";
+import { isFirstPartyRemoteSession } from "../../01-核心基础设施/共享小工具-未细化/first-party-remote-session.js";
 import { s, v, c, Qe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var l = m(() =>
+var l = createLazyValue(() =>
     Qe({
       keywords: v(s().min(1).max(64))
         .max(8)
@@ -25,7 +25,7 @@ var l = m(() =>
         .describe("Optional filter; omit to list everything."),
     }),
   ),
-  p = m(() =>
+  p = createLazyValue(() =>
     c({
       connectors: v(xce()),
       opt_in_required: k(!0).optional(),
@@ -44,7 +44,7 @@ function y(e, t) {
     return typeof n === "string" && i(n, t);
   });
 }
-var ListConnectorsTool = Tt({
+var ListConnectorsTool = buildTool({
   name: LIST_CONNECTORS_TOOL_NAME,
   searchHint: "list the user's installed MCP connectors",
   maxResultSizeChars: 300000,
@@ -56,7 +56,7 @@ var ListConnectorsTool = Tt({
   get outputSchema() {
     return p();
   },
-  isEnabled: G7,
+  isEnabled: isFirstPartyRemoteSession,
   isConcurrencySafe() {
     return !0;
   },

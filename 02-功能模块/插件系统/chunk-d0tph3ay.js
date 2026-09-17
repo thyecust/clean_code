@@ -8,15 +8,15 @@
 
 // Version: 2.1.263
 import { Nm, ld } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Vn, mke, MQ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { H, bq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -47,7 +47,7 @@ import { checkEnabledPlugins } from "../../01-核心基础设施/设置-配置/c
 import { Pye } from "./chunk-q8w2zntw.js";
 import { JB } from "./chunk-bh1q9esj.js";
 import { Bn } from "./chunk-33bdfgmx.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { stat as z, writeFile } from "fs/promises";
 import { join as B } from "path";
 var D = 600000;
@@ -160,7 +160,7 @@ async function L(t, e, c, s, p) {
   };
 }
 async function cQt(t, e = new Set(), { skipCommandSources: c = !1 } = {}, s) {
-  let p = M() && s !== void 0 ? await Zv(s) : hT(),
+  let p = isHoverRestEnabled() && s !== void 0 ? await Zv(s) : hT(),
     o = Object.keys(p.plugins);
   if (o.length === 0)
     return {
@@ -219,7 +219,7 @@ async function I(t) {
         : "Plugin autoupdate: command-source refresh disabled by tengu_plugin_command_source_refresh (still excluding command-sourced plugins from the regular pass)",
     );
   try {
-    let p = M() && t !== void 0 ? await Zv(t) : hT(),
+    let p = isHoverRestEnabled() && t !== void 0 ? await Zv(t) : hT(),
       o = new Map();
     for (let [m, a] of Object.entries(p.plugins)) {
       let y = (a ?? []).filter(nD),
@@ -259,7 +259,7 @@ async function I(t) {
           E = f.filter((C) => C.sourceCommand !== R);
         if (E.length > 0) {
           let C = E.every((w) => w.sourceCommand === void 0),
-            T = Y(E.map((w) => w.scope))
+            T = dedupe(E.map((w) => w.scope))
               .map((w) => Aa("plugin update", r, `--scope ${w}`))
               .filter((w) => w !== null)
               .map((w) => `\`${w}\``);
@@ -302,9 +302,9 @@ function lIt(t, e, c = [], { announce: s = !0 } = {}) {
   else {
     let o = p.pendingAutoUpdateNotification;
     p.pendingAutoUpdateNotification = {
-      updated: Y([...(o?.updated ?? []), ...t]),
+      updated: dedupe([...(o?.updated ?? []), ...t]),
       blocked: [...(o?.blocked ?? []), ...e],
-      reresolved: Y([...(o?.reresolved ?? []), ...c]),
+      reresolved: dedupe([...(o?.reresolved ?? []), ...c]),
       announce: (o?.announce ?? !1) || s,
     };
   }
@@ -353,7 +353,7 @@ function N(t) {
       },
       p = () => {
         if (e.attemptedCount > 0 || e.failedCount > 0)
-          i("tengu_plugin_autoupdate_pass", {
+          logEvent("tengu_plugin_autoupdate_pass", {
             outcome: S("skipped"),
             ...s,
             duration_ms: Date.now() - c,
@@ -370,7 +370,7 @@ function N(t) {
         return;
       }
       let g = Math.floor(Math.random() * D);
-      (await Z(g, void 0, { unref: !0 }), (c = Date.now()));
+      (await sleep(g, void 0, { unref: !0 }), (c = Date.now()));
       let b = H("tengu_plugin_autoupdate_allow_credential_helper", !1),
         k = await Promise.allSettled(
           Array.from(o).map(async (d) => {
@@ -400,11 +400,11 @@ function N(t) {
             }
           }),
         );
-      ((s.marketplace_refresh_failed = G(
+      ((s.marketplace_refresh_failed = countMatching(
         k,
         (d) => d.status === "fulfilled" && d.value === "failed",
       )),
-        (s.marketplace_refresh_policy_skipped = G(
+        (s.marketplace_refresh_policy_skipped = countMatching(
           k,
           (d) => d.status === "fulfilled" && d.value === "policy",
         )),
@@ -421,15 +421,15 @@ function N(t) {
       if (
         ((s.plugins_updated = m.length),
         (s.plugin_update_failed = y),
-        (s.plugins_blocked_by_pin = G(
+        (s.plugins_blocked_by_pin = countMatching(
           a,
           (d) => d.type === "autoupdate-blocked-by-pinner",
         )),
-        (s.plugins_helper_deferred = G(
+        (s.plugins_helper_deferred = countMatching(
           a,
           (d) => d.type === "autoupdate-deferred-entry-helper",
         )),
-        (s.plugins_policy_blocked = G(
+        (s.plugins_policy_blocked = countMatching(
           a,
           (d) => d.type === "autoupdate-disabled-by-policy",
         )),
@@ -451,7 +451,7 @@ function N(t) {
         ),
           m.push(...r.installed));
       (lIt(m, a),
-        i("tengu_plugin_autoupdate_pass", {
+        logEvent("tengu_plugin_autoupdate_pass", {
           outcome:
             s.marketplace_refresh_failed > 0 || s.plugin_update_failed > 0
               ? S("partial")
@@ -461,7 +461,7 @@ function N(t) {
         }));
     } catch (o) {
       (n(`Plugin autoupdate: failed: ${l(o)}`, { level: "error" }),
-        i("tengu_plugin_autoupdate_pass", {
+        logEvent("tengu_plugin_autoupdate_pass", {
           outcome: S("failed"),
           error_kind: fromEnum(GF(o)),
           ...s,
@@ -475,7 +475,7 @@ var O = 86400000,
   W = 5000,
   X = 3600000;
 async function q(t) {
-  if (M() && t !== void 0) {
+  if (isHoverRestEnabled() && t !== void 0) {
     let e = await t.statMeta(Ce.state("last-cleanup"));
     return e.ok && Date.now() - e.value.mtimeMs < O;
   }
@@ -503,7 +503,7 @@ async function dQt(t, e) {
           return;
         }
       }
-      if (((c = "done"), await _an(e), M() && e !== void 0)) {
+      if (((c = "done"), await _an(e), isHoverRestEnabled() && e !== void 0)) {
         (await han(be(), t.backgroundHousekeeping), await gan(e));
         let o = await e.write(
           Ce.state("last-cleanup"),

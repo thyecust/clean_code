@@ -9,13 +9,13 @@
 // Version: 2.1.263
 import { ySt } from "../../01-核心基础设施/共享小工具-未细化/chunk-5jqttbex.js";
 import { Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
-import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var e = Ae("./claude-tag-dht2qzjm.md");
-var t = Ae("./live-sources-pvws3ftv.md");
+import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var e = importMetaRequire("./claude-tag-dht2qzjm.md");
+var t = importMetaRequire("./live-sources-pvws3ftv.md");
 var a = "./plugin-eval-b6bc95df.md.zst";
 var n = Ke(a, import.meta.dirname);
-var o = Ae("./recent-changes-ycb7sy2c.md");
-var s = Ae("./SKILL-rsyv1bsc.md");
+var o = importMetaRequire("./recent-changes-ycb7sy2c.md");
+var s = importMetaRequire("./SKILL-rsyv1bsc.md");
 var SKILL_PROMPT = s,
   SKILL_FILES = {
     "references/claude-tag.md": e,

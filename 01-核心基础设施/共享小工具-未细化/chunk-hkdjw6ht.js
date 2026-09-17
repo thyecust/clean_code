@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-function XFn(o) {
+function toHostDescription(o) {
   return { name: o.name, working_dir: o.description?.working_dir ?? "" };
 }
-var qz = { held: !1, reason: "not_held" };
-export { XFn, qz };
+var NOT_HELD_STATE = { held: !1, reason: "not_held" };
+export { toHostDescription, NOT_HELD_STATE };

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import "../../../01-核心基础设施/共享小工具-未细化/chunk-8549txjj.js";
-import "../../../01-核心基础设施/共享小工具-未细化/chunk-29sq3mjv.js";
+import "../../../01-核心基础设施/共享小工具-未细化/byte-array-conversion.js";
 import {
   wkt,
   jtt,
@@ -28,11 +28,11 @@ import {
 } from "./chunk-mjf8wc6r.js";
 import { gL, cy } from "./chunk-dm9sg03f.js";
 import { Lm } from "./chunk-w3axq133.js";
-import { Kq } from "../../../02-功能模块/Bedrock-Vertex/chunk-q61rm009.js";
+import { defaultProvider } from "../../../02-功能模块/Bedrock-Vertex/aws-credential-provider-node.js";
 import "./chunk-z7ktsccq.js";
-import { Akt, Ckt } from "../../../02-功能模块/Bedrock-Vertex/chunk-zsm689zk.js";
-import "../../../02-功能模块/Bedrock-Vertex/chunk-agg788pp.js";
-import { nE } from "../../../01-核心基础设施/共享小工具-未细化/chunk-p71zdaw2.js";
+import { createEnvSigningNameTokenProvider, createMemoizedTokenProvider } from "../../../02-功能模块/Bedrock-Vertex/token-providers.js";
+import "../../../02-功能模块/Bedrock-Vertex/sso-token-provider.js";
+import { getNodeConfigProviderModule } from "../../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
 import { nu, EA } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import {
   Q6,
@@ -56,20 +56,20 @@ import "./chunk-zdrvwe5r.js";
 import { ta } from "./chunk-mwf4pmq2.js";
 import { Rb } from "../第三方库-其他/chunk-jtb5q5xr.js";
 import { s_, hS } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
-import { Ib } from "../../../01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js";
-import { H0 } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6rswwsrr.js";
-import { pe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
+import { getUrlParserModule } from "../../../01-核心基础设施/共享小工具-未细化/url-parser.js";
+import { toESM } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function U(e) {
   let { signer: t, signer: n } = e,
     o = Object.assign(e, { eventSigner: t, messageSigner: n }),
     s = o.eventStreamPayloadHandlerProvider(o);
   return Object.assign(o, { eventStreamPayloadHandler: s });
 }
-var y = pe(Q6()),
-  Ee = pe(Z6()),
-  Be = pe(eW()),
-  P = pe(YU());
-var H = pe(nu());
+var y = toESM(Q6()),
+  Ee = toESM(Z6()),
+  Be = toESM(eW()),
+  P = toESM(YU());
+var H = toESM(nu());
 var W = (e) => e.protocol === "ws:" || e.protocol === "wss:";
 class M {
   signer;
@@ -110,18 +110,18 @@ var N = (e) => {
     });
   },
   ze = (e) => !!e;
-var Me = pe(cy()),
-  v = pe(Lm()),
-  Le = pe(Rb());
+var Me = toESM(cy()),
+  v = toESM(Lm()),
+  Le = toESM(Rb());
 var V = (e) =>
   Object.assign(e, { eventStreamMarshaller: e.eventStreamSerdeProvider(e) });
-var be = pe(tW()),
-  De = pe(Ax()),
-  k = pe(WR()),
-  we = pe(ta());
-var q = pe(R_()),
-  u = pe(Lm()),
-  g = pe(Ib()),
+var be = toESM(tW()),
+  De = toESM(Ax()),
+  k = toESM(WR()),
+  we = toESM(ta());
+var q = toESM(R_()),
+  u = toESM(Lm()),
+  g = toESM(smithyContextModule()),
   X = async (e, t, n) => ({
     operation: g.getSmithyContext(t).operation,
     region:
@@ -286,7 +286,7 @@ var J = {
     directory: "clients/client-bedrock-runtime",
   },
 };
-var m = pe(R_());
+var m = toESM(R_());
 import { PassThrough, pipeline, Readable as tt } from "stream";
 import { Transform as Ye } from "stream";
 class L extends Ye {
@@ -378,25 +378,25 @@ class b {
   }
 }
 var D = (e) => new b(e);
-var x = pe(nW()),
-  d = pe(cy()),
-  Re = pe(Lm());
+var x = toESM(nW()),
+  d = toESM(cy()),
+  Re = toESM(Lm());
 var Y = (e) => new jtt(e);
-var he = pe(rW()),
-  A = pe(WR()),
-  _ = pe(nE()),
-  f = pe(EA()),
-  xe = pe(oW()),
-  Ae = pe(JU());
-var ue = pe(R_()),
-  me = pe(sW()),
-  ve = pe(Lm()),
-  Ce = pe(ta()),
-  ge = pe(H0()),
-  R = pe(hS()),
-  h = pe(s_());
-var de = pe(XU()),
-  p = pe(gL());
+var he = toESM(rW()),
+  A = toESM(WR()),
+  _ = toESM(getNodeConfigProviderModule()),
+  f = toESM(EA()),
+  xe = toESM(oW()),
+  Ae = toESM(JU());
+var ue = toESM(R_()),
+  me = toESM(sW()),
+  ve = toESM(Lm()),
+  Ce = toESM(ta()),
+  ge = toESM(getUrlParserModule()),
+  R = toESM(hS()),
+  h = toESM(s_());
+var de = toESM(XU()),
+  p = toESM(gL());
 var Z = { ["required"]: !1, type: "string" },
   ee = { ["required"]: !0, default: !1, type: "boolean" },
   te = { ["ref"]: "Endpoint" },
@@ -627,9 +627,9 @@ var Se = (e) => ({
   utf8Decoder: e?.utf8Decoder ?? h.fromUtf8,
   utf8Encoder: e?.utf8Encoder ?? h.toUtf8,
 });
-var fe = pe(ta()),
-  Te = pe(iW()),
-  Ge = pe(ta()),
+var fe = toESM(ta()),
+  Te = toESM(iW()),
+  Ge = toESM(ta()),
   Ie = (e) => {
     Ge.emitWarningIfUnsupportedVersion(process.version);
     let t = Te.resolveDefaultsModeConfig(e),
@@ -646,7 +646,7 @@ var fe = pe(ta()),
         e?.authSchemePreference ??
         _.loadConfig(m.NODE_AUTH_SCHEME_PREFERENCE_OPTIONS, s),
       bodyLengthChecker: e?.bodyLengthChecker ?? xe.calculateBodyLength,
-      credentialDefaultProvider: e?.credentialDefaultProvider ?? Kq,
+      credentialDefaultProvider: e?.credentialDefaultProvider ?? defaultProvider,
       defaultUserAgentProvider:
         e?.defaultUserAgentProvider ??
         x.createDefaultUserAgentProvider({
@@ -668,9 +668,9 @@ var fe = pe(ta()),
             r.getIdentityProvider("smithy.api#httpBearerAuth") ||
             (async (i) => {
               try {
-                return await Akt({ signingName: "bedrock" })();
+                return await createEnvSigningNameTokenProvider({ signingName: "bedrock" })();
               } catch (C) {
-                return await Ckt(i)(i);
+                return await createMemoizedTokenProvider(i)(i);
               }
             }),
           signer: new Re.HttpBearerAuthSigner(),
@@ -709,9 +709,9 @@ var fe = pe(ta()),
         e?.userAgentAppId ?? _.loadConfig(x.NODE_APP_ID_CONFIG_OPTIONS, s),
     };
   };
-var T = pe(QU()),
-  G = pe(nu()),
-  I = pe(ta());
+var T = toESM(QU()),
+  G = toESM(nu()),
+  I = toESM(ta());
 var ye = (e) => {
     let {
       httpAuthSchemes: t,
@@ -813,7 +813,7 @@ class BedrockRuntimeClient extends we.Client {
     super.destroy();
   }
 }
-var a = pe(Rb());
+var a = toESM(Rb());
 var st = [0, "com.amazonaws.bedrockruntime", "Body", 8, 21];
 var at = [
   -3,
@@ -1387,8 +1387,8 @@ var Ve = [
   () => pt,
   () => mt,
 ];
-var qe = pe(Ax()),
-  Xe = pe(ta());
+var qe = toESM(Ax()),
+  Xe = toESM(ta());
 class CountTokensCommand extends Xe.Command.classBuilder()
   .ep(K)
   .m(function (e, t, n, o) {

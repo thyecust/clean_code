@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { te, $w, rB, sB } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Xs } from "../共享小工具-未细化/chunk-xcc43dkx.js";
-import { w } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
-var G = w(function (Xe, ue) {
+import { commonJS } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+var G = commonJS(function (Xe, ue) {
   ue.exports = {
     single: {
       topLeft: "\u250C",
@@ -94,7 +94,7 @@ var G = w(function (Xe, ue) {
     },
   };
 });
-var o3t = w(function (Ze, v) {
+var o3t = commonJS(function (Ze, v) {
   var j = G();
   v.exports = j;
   v.exports.default = j;

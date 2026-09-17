@@ -9,9 +9,9 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 24 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Gr } from "../核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { tryOpenUrlInBrowser } from "../核心工具-路径与平台/open-external-url.js";
 async function s() {
-  if (await Gr("https://www.stickermule.com/claudecode"))
+  if (await tryOpenUrlInBrowser("https://www.stickermule.com/claudecode"))
     return { type: "text", value: "Opening sticker page in browser\u2026" };
   else
     return {

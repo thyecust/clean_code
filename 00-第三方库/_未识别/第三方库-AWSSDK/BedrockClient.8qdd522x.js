@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { gL, cy } from "./chunk-dm9sg03f.js";
 import { Lm } from "./chunk-w3axq133.js";
-import { Kq } from "../../../02-功能模块/Bedrock-Vertex/chunk-q61rm009.js";
+import { defaultProvider } from "../../../02-功能模块/Bedrock-Vertex/aws-credential-provider-node.js";
 import "./chunk-z7ktsccq.js";
-import { Akt, Ckt } from "../../../02-功能模块/Bedrock-Vertex/chunk-zsm689zk.js";
-import "../../../02-功能模块/Bedrock-Vertex/chunk-agg788pp.js";
-import { nE } from "../../../01-核心基础设施/共享小工具-未细化/chunk-p71zdaw2.js";
+import { createEnvSigningNameTokenProvider, createMemoizedTokenProvider } from "../../../02-功能模块/Bedrock-Vertex/token-providers.js";
+import "../../../02-功能模块/Bedrock-Vertex/sso-token-provider.js";
+import { getNodeConfigProviderModule } from "../../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
 import { nu, EA } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import {
   Q6,
@@ -37,23 +37,23 @@ import "./chunk-zdrvwe5r.js";
 import { ta } from "./chunk-mwf4pmq2.js";
 import { Rb } from "../第三方库-其他/chunk-jtb5q5xr.js";
 import { s_, hS } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
-import { Ib } from "../../../01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js";
-import { H0 } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6rswwsrr.js";
-import { pe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var D = pe(Q6()),
-  Ee = pe(Z6()),
-  ye = pe(eW()),
-  S = pe(YU()),
-  De = pe(cy()),
-  m = pe(Lm()),
-  Se = pe(Rb()),
-  Ie = pe(tW()),
-  Ge = pe(Ax()),
-  I = pe(WR()),
-  he = pe(ta());
-var W = pe(R_()),
-  d = pe(Lm()),
-  C = pe(Ib()),
+import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
+import { getUrlParserModule } from "../../../01-核心基础设施/共享小工具-未细化/url-parser.js";
+import { toESM } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var D = toESM(Q6()),
+  Ee = toESM(Z6()),
+  ye = toESM(eW()),
+  S = toESM(YU()),
+  De = toESM(cy()),
+  m = toESM(Lm()),
+  Se = toESM(Rb()),
+  Ie = toESM(tW()),
+  Ge = toESM(Ax()),
+  I = toESM(WR()),
+  he = toESM(ta());
+var W = toESM(R_()),
+  d = toESM(Lm()),
+  C = toESM(smithyContextModule()),
   U = async (e, o, t) => ({
     operation: C.getSmithyContext(o).operation,
     region:
@@ -211,25 +211,25 @@ var Q = {
     directory: "clients/client-bedrock",
   },
 };
-var R = pe(R_());
-var v = pe(nW()),
-  l = pe(cy()),
-  Re = pe(Lm()),
-  me = pe(rW()),
-  T = pe(WR()),
-  c = pe(nE()),
-  f = pe(EA()),
-  Ce = pe(oW()),
-  Ae = pe(JU());
-var ie = pe(R_()),
-  _e = pe(sW()),
-  ce = pe(Lm()),
-  le = pe(ta()),
-  ue = pe(H0()),
-  g = pe(hS()),
-  P = pe(s_());
-var re = pe(XU()),
-  p = pe(gL());
+var R = toESM(R_());
+var v = toESM(nW()),
+  l = toESM(cy()),
+  Re = toESM(Lm()),
+  me = toESM(rW()),
+  T = toESM(WR()),
+  c = toESM(getNodeConfigProviderModule()),
+  f = toESM(EA()),
+  Ce = toESM(oW()),
+  Ae = toESM(JU());
+var ie = toESM(R_()),
+  _e = toESM(sW()),
+  ce = toESM(Lm()),
+  le = toESM(ta()),
+  ue = toESM(getUrlParserModule()),
+  g = toESM(hS()),
+  P = toESM(s_());
+var re = toESM(XU()),
+  p = toESM(gL());
 var K = { ["required"]: !1, type: "string" },
   H = { ["required"]: !0, default: !1, type: "boolean" },
   z = { ["ref"]: "Endpoint" },
@@ -458,9 +458,9 @@ var de = (e) => ({
   utf8Decoder: e?.utf8Decoder ?? P.fromUtf8,
   utf8Encoder: e?.utf8Encoder ?? P.toUtf8,
 });
-var Me = pe(ta()),
-  ge = pe(iW()),
-  Pe = pe(ta()),
+var Me = toESM(ta()),
+  ge = toESM(iW()),
+  Pe = toESM(ta()),
   ve = (e) => {
     Pe.emitWarningIfUnsupportedVersion(process.version);
     let o = ge.resolveDefaultsModeConfig(e),
@@ -477,7 +477,7 @@ var Me = pe(ta()),
         e?.authSchemePreference ??
         c.loadConfig(R.NODE_AUTH_SCHEME_PREFERENCE_OPTIONS, a),
       bodyLengthChecker: e?.bodyLengthChecker ?? Ce.calculateBodyLength,
-      credentialDefaultProvider: e?.credentialDefaultProvider ?? Kq,
+      credentialDefaultProvider: e?.credentialDefaultProvider ?? defaultProvider,
       defaultUserAgentProvider:
         e?.defaultUserAgentProvider ??
         v.createDefaultUserAgentProvider({
@@ -496,9 +496,9 @@ var Me = pe(ta()),
             n.getIdentityProvider("smithy.api#httpBearerAuth") ||
             (async (u) => {
               try {
-                return await Akt({ signingName: "bedrock" })();
+                return await createEnvSigningNameTokenProvider({ signingName: "bedrock" })();
               } catch (A) {
-                return await Ckt(u)(u);
+                return await createMemoizedTokenProvider(u)(u);
               }
             }),
           signer: new Re.HttpBearerAuthSigner(),
@@ -534,9 +534,9 @@ var Me = pe(ta()),
         e?.userAgentAppId ?? c.loadConfig(v.NODE_APP_ID_CONFIG_OPTIONS, a),
     };
   };
-var x = pe(QU()),
-  E = pe(nu()),
-  y = pe(ta());
+var x = toESM(QU()),
+  E = toESM(nu()),
+  y = toESM(ta());
 var Te = (e) => {
     let {
       httpAuthSchemes: o,
@@ -635,8 +635,8 @@ class BedrockClient extends he.Client {
     super.destroy();
   }
 }
-var i = pe(Rb());
-var Le = pe(ta());
+var i = toESM(Rb());
+var Le = toESM(ta());
 class s extends Le.ServiceException {
   constructor(e) {
     super(e);
@@ -925,8 +925,8 @@ var Be = [
   () => to,
   () => no,
 ];
-var Je = pe(Ax()),
-  Ne = pe(ta());
+var Je = toESM(Ax()),
+  Ne = toESM(ta());
 class GetInferenceProfileCommand extends Ne.Command.classBuilder()
   .ep(M)
   .m(function (e, o, t, r) {
@@ -936,8 +936,8 @@ class GetInferenceProfileCommand extends Ne.Command.classBuilder()
   .n("BedrockClient", "GetInferenceProfileCommand")
   .sc(Fe)
   .build() {}
-var Ve = pe(Ax()),
-  qe = pe(ta());
+var Ve = toESM(Ax()),
+  qe = toESM(ta());
 class ListInferenceProfilesCommand extends qe.Command.classBuilder()
   .ep(M)
   .m(function (e, o, t, r) {

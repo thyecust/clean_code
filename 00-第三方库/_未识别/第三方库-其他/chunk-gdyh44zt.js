@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { dl } from "../../lodash/lodash.2x3q7cfh.js";
 import { oXt } from "../../axios/axios.t0fczzmz.js";
-import { pe, w, Ae } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var y = w(function (k, I) {
-  var N = Ae("os"),
-    d = Ae("tty"),
+import { toESM, commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var y = commonJS(function (k, I) {
+  var N = importMetaRequire("os"),
+    d = importMetaRequire("tty"),
     o = oXt(),
     { env: t } = process,
     i;
@@ -84,7 +84,7 @@ var y = w(function (k, I) {
     stderr: R(E(!0, d.isatty(2))),
   };
 });
-var _ = w(function (v, M) {
+var _ = commonJS(function (v, M) {
   var S = y(),
     c = oXt();
   function C(r) {
@@ -152,7 +152,7 @@ var _ = w(function (v, M) {
     stderr: T(process.stderr),
   };
 });
-var m = pe(_(), 1);
+var m = toESM(_(), 1);
 var h = ["ghostty", "Hyper", "kitty", "alacritty", "iTerm.app", "iTerm2"];
 function uee(r) {
   let n = dl()?.hyperlinks;

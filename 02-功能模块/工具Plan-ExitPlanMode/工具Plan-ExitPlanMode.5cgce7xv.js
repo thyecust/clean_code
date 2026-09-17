@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { Wh } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-var GE = "EnterPlanMode";
-var Es = "AskUserQuestion",
-  MQn = 12,
-  J7e = "The user asked for more questions",
-  NQn = `${J7e} before answering; this is a request for another round, not an answer.`;
-function abn(e) {
+var ENTER_PLAN_MODE_TOOL_NAME = "EnterPlanMode";
+var ASK_USER_QUESTION_TOOL_NAME = "AskUserQuestion",
+  MAX_QUESTION_HEADER_CHARS = 12,
+  MORE_QUESTIONS_REQUESTED_PREFIX = "The user asked for more questions",
+  MORE_QUESTIONS_REQUESTED_MESSAGE = `${MORE_QUESTIONS_REQUESTED_PREFIX} before answering; this is a request for another round, not an answer.`;
+function escapeQuotedText(e) {
   if (typeof e !== "string") return "";
   return e
     .replace(/[\s\u0085]+/g, " ")
@@ -21,13 +21,13 @@ function abn(e) {
     .replace(/\\/g, "\\\\")
     .replace(/"/g, '\\"');
 }
-function zbt(e) {
+function formatScalarValue(e) {
   if (typeof e === "number" || typeof e === "boolean") return String(e);
-  return abn(e);
+  return escapeQuotedText(e);
 }
-var FQn =
+var ASK_USER_QUESTION_TOOL_DESCRIPTION =
     "Asks the user multiple choice questions to gather information, clarify ambiguity, understand preferences, make decisions or offer them choices.",
-  $Qn = {
+  PREVIEW_NOTES_BY_RENDERER = {
     markdown: `
 Preview feature:
 Use the optional \`preview\` field on options when presenting concrete artifacts that users need to visually compare:
@@ -48,16 +48,16 @@ Use the optional \`preview\` field on options when presenting concrete artifacts
 Preview content must be a self-contained HTML fragment (no <html>/<body> wrapper, no <script> or <style> tags \u2014 use inline style attributes instead). Do not use previews for simple preference questions where labels and descriptions suffice. Note: previews are only supported for single-select questions (not multiSelect).
 `,
   },
-  lbn = `Use this tool only when you are blocked on a decision that is genuinely the user's to make: one you cannot resolve from the request, the code, or sensible defaults.
+  ASK_USER_QUESTION_USAGE_NOTES = `Use this tool only when you are blocked on a decision that is genuinely the user's to make: one you cannot resolve from the request, the code, or sensible defaults.
 
 Usage notes:
 - Users will always be able to select "Other" to provide custom text input
 - Use multiSelect: true to allow multiple answers to be selected for a question
 - If you recommend a specific option, make that the first option in the list and add "(Recommended)" at the end of the label
 
-Plan mode note: To switch into plan mode, use ${GE} (not this tool). Once in plan mode, use this tool to clarify requirements or choose between approaches BEFORE finalizing your plan. Do NOT use this tool to ask "Is my plan ready?", "Should I proceed?", or otherwise reference "the plan" in questions \u2014 the user cannot see the plan until you call ${Wh} for approval.
+Plan mode note: To switch into plan mode, use ${ENTER_PLAN_MODE_TOOL_NAME} (not this tool). Once in plan mode, use this tool to clarify requirements or choose between approaches BEFORE finalizing your plan. Do NOT use this tool to ask "Is my plan ready?", "Should I proceed?", or otherwise reference "the plan" in questions \u2014 the user cannot see the plan until you call ${Wh} for approval.
 `,
-  UQn = `
+  EXTENDED_QUESTIONS_NOTES = `
 Extended questions (this host renders them):
 - Put the most important question first.
 - Omit "kind" for an ordinary choice question. Use "kind": "text" for an open-ended question (a text box, no options) and "kind": "number" with "min"/"max" (optionally "step", "defaultValue", "unit") for a quantity. Prefer choices whenever the likely answers can be listed.
@@ -65,7 +65,7 @@ Extended questions (this host renders them):
 - Optional "title" is one short line above the questions; optional per-question "description" is one helper line. Option descriptions are optional here too: add one only when the label alone would be ambiguous.
 - Do not add "Other" or "Skip" options: the user can always type their own answer or leave a question unanswered. The user can also ask you for more questions; when the result says so, call this tool again with follow-up questions before doing the task.
 `,
-  BQn = `
+  ASK_USER_QUESTION_DECISION_GUIDANCE = `
 Reserve this for decisions where the user's answer changes what you do next \u2014 not for choices with a conventional default or facts you can verify in the codebase yourself. In those cases pick the obvious option, mention it in your response, and proceed.
 `;
-export { GE, Es, MQn, J7e, NQn, abn, zbt, FQn, $Qn, lbn, UQn, BQn };
+export { ENTER_PLAN_MODE_TOOL_NAME, ASK_USER_QUESTION_TOOL_NAME, MAX_QUESTION_HEADER_CHARS, MORE_QUESTIONS_REQUESTED_PREFIX, MORE_QUESTIONS_REQUESTED_MESSAGE, escapeQuotedText, formatScalarValue, ASK_USER_QUESTION_TOOL_DESCRIPTION, PREVIEW_NOTES_BY_RENDERER, ASK_USER_QUESTION_USAGE_NOTES, EXTENDED_QUESTIONS_NOTES, ASK_USER_QUESTION_DECISION_GUIDANCE };

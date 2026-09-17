@@ -9,12 +9,12 @@
 // Version: 2.1.263
 import { oo, CW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { gbt } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { pi, bytesPerTokenForModel, kw, mc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { FU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -90,14 +90,14 @@ import { removeMemberByAgentId } from "./chunk-6b13bhw1.js";
 import { hbt } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { Pqe, Uqe, Bqe, eWn, Tbe, Kdt } from "../权限系统/chunk-jsd70b22.js";
 import { TEAMMATE_SYSTEM_PROMPT_ADDENDUM } from "./chunk-5nnwwahg.js";
-import { Xdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-mnvjcy8y.js";
+import { buildLocalDisplayOnlyDenialResult } from "../../01-核心基础设施/共享小工具-未细化/local-display-only-denial.js";
 import { Jdt, jqe, Wqe } from "../权限系统/chunk-n4x6jsp3.js";
-import { L1t } from "./chunk-4ma81w0c.js";
+import { appendMessageToTaskTranscript } from "./teammate-task-messages.js";
 import { kT } from "./chunk-z2t8b9yc.js";
 import { v1e, Awt, Cwt } from "./chunk-eey53z5b.js";
-import { Vr } from "../../01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js";
-import { fs } from "./chunk-enjekn9t.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
+import { TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var je = 500,
   be = 500;
 function Ge(s, e, t, _) {
@@ -146,7 +146,7 @@ function Ge(s, e, t, _) {
       }
     }
     if (w.localDisplayOnly || w.forcedByCaller === !0)
-      return Xdt(o.name, "the teammate mailbox (a static-description wire)");
+      return buildLocalDisplayOnlyDenialResult(o.name, "the teammate mailbox (a static-description wire)");
     let E = await I();
     if (e.signal.aborted) return { behavior: "ask", message: II };
     return new Promise((l) => {
@@ -215,7 +215,7 @@ function Ge(s, e, t, _) {
                 let O = isPermissionResponse(K.text);
                 if (O && O.request_id === z.id) {
                   if (
-                    (await markSingleMessageAsRead(B.agentName, B.teamName, K, X), K.from !== fs)
+                    (await markSingleMessageAsRead(B.agentName, B.teamName, K, X), K.from !== TEAM_LEAD_AGENT_NAME)
                   ) {
                     n(
                       `[InProcessRunner] Ignoring permission response from non-team-lead: ${K.from}`,
@@ -269,7 +269,7 @@ function L(s, e, t) {
 }
 async function Ke(s, e, t, _, o) {
   return writeToMailbox(
-    fs,
+    TEAM_LEAD_AGENT_NAME,
     { from: s, text: e, timestamp: new Date().toISOString(), color: t },
     _,
     o,
@@ -376,7 +376,7 @@ async function Se(s, e, t, _, o) {
       }
     }
     let p = m[T],
-      A = G(m.slice(0, T), (I) => !I.read);
+      A = countMatching(m.slice(0, T), (I) => !I.read);
     return (
       n(
         `[inProcessRunner] ${s.agentName} received shutdown request from ${d?.from} (prioritized over ${A} unread messages)`,
@@ -401,7 +401,7 @@ async function Se(s, e, t, _, o) {
   if (M.length > 0) {
     for (let A of M) {
       let I = isPlanApprovalResponse(A.text);
-      if (I && A.from === fs) {
+      if (I && A.from === TEAM_LEAD_AGENT_NAME) {
         let E = r8n(e, I, t, _);
         if (E)
           (n(
@@ -432,7 +432,7 @@ async function Se(s, e, t, _, o) {
         { level: "warn" },
       );
   }
-  if (w) return { type: "new_message", message: w, from: fs };
+  if (w) return { type: "new_message", message: w, from: TEAM_LEAD_AGENT_NAME };
   if (C.length > 0) {
     if (await markMessagesAsRead(s.agentName, s.teamName, C, _))
       ((o.count = 0), (o.reported = !1), o.deliveredUnmarked.clear());
@@ -459,7 +459,7 @@ async function Se(s, e, t, _, o) {
     }
     return (
       n(
-        `[inProcessRunner] ${s.agentName} draining ${C.length} message(s) from ${Y(C.map((A) => A.from)).join(", ")}`,
+        `[inProcessRunner] ${s.agentName} draining ${C.length} message(s) from ${dedupe(C.map((A) => A.from)).join(", ")}`,
       ),
       { type: "new_messages", messages: C }
     );
@@ -476,7 +476,7 @@ async function Ye(s, e, t, _, o, m, T, d, M, C = !1, w) {
     A = !1,
     I = 0;
   while (!e.signal.aborted) {
-    if (I > 0) await Z(be);
+    if (I > 0) await sleep(be);
     I++;
     let E = _(),
       l = E.tasks[t];
@@ -614,7 +614,7 @@ async function Je(s) {
 # Custom Agent Instructions
 ${W}`);
       if (m.memory)
-        i("tengu_agent_memory_loaded", {
+        logEvent("tengu_agent_memory_loaded", {
           ...!1,
           scope: fromEnum(m.memory),
           source: S("in-process-teammate"),
@@ -630,7 +630,7 @@ ${W}`);
       whenToUse: `In-process teammate: ${e.agentName}`,
       getSystemPrompt: () => ie,
       tools: m?.tools
-        ? Y([...m.tools, Vr, ...(K ? [UE, mG, kT, WE] : [])])
+        ? dedupe([...m.tools, SEND_MESSAGE_TOOL_NAME, ...(K ? [UE, mG, kT, WE] : [])])
         : ["*"],
       source: "projectSettings",
       permissionMode: "default",
@@ -646,7 +646,7 @@ ${W}`);
       ...(m && { customAgentType: m.agentType }),
       ...(C && { model: C }),
     },
-    ve = formatTeammateMessage({ from: j ?? fs, text: _, summary: o }),
+    ve = formatTeammateMessage({ from: j ?? TEAM_LEAD_AGENT_NAME, text: _, summary: o }),
     V = ve,
     me = void 0,
     pe = !1,
@@ -672,7 +672,7 @@ ${W}`);
               ),
             })),
             (me = void 0),
-            L1t(t, Re({ content: V }), a));
+            appendMessageToTaskTranscript(t, Re({ content: V }), a));
           break;
         case "new_message":
           if (
@@ -690,7 +690,7 @@ ${W}`);
               summary: P.summary,
             })),
               (me = void 0),
-              L1t(t, Re({ content: V }), a));
+              appendMessageToTaskTranscript(t, Re({ content: V }), a));
           break;
         case "new_messages":
           (n(
@@ -698,7 +698,7 @@ ${W}`);
           ),
             (V = formatTeammateMessages(P.messages, { recipientIsLead: !1 })),
             (me = void 0),
-            L1t(t, Re({ content: V }), a));
+            appendMessageToTaskTranscript(t, Re({ content: V }), a));
           break;
         case "aborted":
           (n(`[inProcessRunner] ${e.agentId} aborted while waiting`),
@@ -987,7 +987,7 @@ ${W}`);
             F.readFailures < MARK_READ_FAILURE_CAP &&
             !M.signal.aborted
           )
-            (await Z(be), (r = await Se(e, t, a, d.storageV5, F)));
+            (await sleep(be), (r = await Se(e, t, a, d.storageV5, F)));
         } catch (c) {
           n(
             `[inProcessRunner] ${e.agentName} turn-end mailbox check failed: ${c}`,
@@ -1025,7 +1025,7 @@ ${W}`);
         }
       }
       if (se?.isTransient)
-        i("tengu_teammate_transient_turn_failure", {
+        logEvent("tengu_teammate_transient_turn_failure", {
           error_kind: fromEnum(se.errorKind ?? "unknown"),
           hold_evict: re,
         });

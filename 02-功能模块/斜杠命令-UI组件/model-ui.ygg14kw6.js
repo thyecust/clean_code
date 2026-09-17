@@ -15,7 +15,7 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { DA, Hur, St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   CAt,
@@ -63,30 +63,30 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { U, It, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { RZ, Q1, fHe } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { Ir } from "../../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
+import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import "../成本-Token统计/chunk-adrc9xt1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-hxt46tkz.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-csjxh2sy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
-import { q8 } from "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-mmzy53cr.js";
-import { QW } from "../../01-核心基础设施/共享小工具-未细化/chunk-dvytaktr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-c8g7bday.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
+import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
+import { useMainLoopModelOverride } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
+import "../../03-入口与运行时/会话UI(REPL)/clawd-mascot.js";
+import { ModelOrEffortSwitchDialog } from "../../01-核心基础设施/共享小工具-未细化/switch-confirm-dialog.js";
+import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
+import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
+import "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import "../成本-Token统计/chunk-f1ehes3v.js";
@@ -110,7 +110,7 @@ import {
 } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { Lh } from "../Teammates团队/chunk-mrfx53ye.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 var Ot = "tengu_swift_garden",
   et = 2,
@@ -257,10 +257,10 @@ function io({
   let c = Yn(),
     M = U((s) => s.mainLoopModel),
     q = U((s) => s.mainLoopModelForSession),
-    x = q8() ?? M,
+    x = useMainLoopModelOverride() ?? M,
     X = U((s) => s.fastMode),
     ee = It(),
-    { addNotification: de } = Ir(),
+    { addNotification: de } = useNotificationQueue(),
     [D, k] = d(null),
     Q = C([]),
     [te, fe] = d(null),
@@ -289,7 +289,7 @@ function io({
       );
     }, [Me, O]));
   function A() {
-    i("tengu_model_command_menu", { action: S("cancel") });
+    logEvent("tengu_model_command_menu", { action: S("cancel") });
     let s = Zg(x);
     t(`${nre}${eg(s)}`, { display: "system" });
   }
@@ -369,7 +369,7 @@ function io({
   }
   function B(s, w, ne) {
     if (
-      (i("tengu_model_command_menu", {
+      (logEvent("tengu_model_command_menu", {
         action: bt(s),
         from_model: bt(M),
         to_model: bt(s),
@@ -455,7 +455,7 @@ ${Q.current.map(Rl).join(`
       },
     });
   if (D)
-    return e(QW, {
+    return e(ModelOrEffortSwitchDialog, {
       kind: D.kind,
       model: D.model,
       effort: D.pick?.level,
@@ -521,7 +521,7 @@ function Rt(yn) {
               return;
             }
             let Dt = kn.models.map(gdn).filter(co);
-            (i("tengu_remote_model_picker", {
+            (logEvent("tengu_remote_model_picker", {
               outcome: S("opened"),
               model_count: Dt.length,
             }),
@@ -531,7 +531,7 @@ function Rt(yn) {
             if (at || ue.signal.aborted) {
               return;
             }
-            (i("tengu_remote_model_picker", {
+            (logEvent("tengu_remote_model_picker", {
               outcome: S(An instanceof wT ? "timeout" : "fallback"),
             }),
               V(Ft, { display: "system" }));
@@ -582,7 +582,7 @@ function Rt(yn) {
         message: "Loading models from the cloud session\u2026",
         onCancel: () => {
           (ue.abort(),
-            i("tengu_remote_model_picker", { outcome: S("cancelled") }),
+            logEvent("tengu_remote_model_picker", { outcome: S("cancelled") }),
             V(Ct, { display: "system" }));
         },
       })),
@@ -623,12 +623,12 @@ function Rt(yn) {
   else Ie = pe[22];
   let ft = Ie,
     Yt;
-  if (pe[23] === p) ((Yt = (Cn) => Mn(Cn ?? "default")), (pe[23] = Yt));
+  if (pe[23] === MEMO_CACHE_SENTINEL) ((Yt = (Cn) => Mn(Cn ?? "default")), (pe[23] = Yt));
   else Yt = pe[23];
   let Ve;
   if (pe[24] !== G || pe[25] !== V)
     ((Ve = () => {
-      (i("tengu_model_command_menu", { action: S("cancel") }),
+      (logEvent("tengu_model_command_menu", { action: S("cancel") }),
         V(
           G === null
             ? "Kept the workspace\u2019s current model"
@@ -671,10 +671,10 @@ function De(wn) {
     } = wn,
     R = Yn(),
     be = It(),
-    { addNotification: Fe } = Ir(),
+    { addNotification: Fe } = useNotificationQueue(),
     [I, Wt] = d(null),
     Ht;
-  if (W[0] === p) ((Ht = []), (W[0] = Ht));
+  if (W[0] === MEMO_CACHE_SENTINEL) ((Ht = []), (W[0] = Ht));
   else Ht = W[0];
   let mt = C(Ht),
     [Pn, Ge] = d(!1),
@@ -1045,7 +1045,7 @@ ${qt.map(Rl).join(`
       W[62] !== j ||
       W[63] !== K
     )
-      ((Ce = e(QW, {
+      ((Ce = e(ModelOrEffortSwitchDialog, {
         kind: "model",
         model: I.model,
         effort: void 0,
@@ -1112,7 +1112,7 @@ function $t(In) {
 var bn = async (r, t, o) => {
   if (((o = o?.trim() || ""), Hur(o)))
     return (
-      i("tengu_model_command_inline_help", { args: fromEnum(o) }),
+      logEvent("tengu_model_command_inline_help", { args: fromEnum(o) }),
       e($t, { onDone: r })
     );
   if (DA.includes(o)) {
@@ -1124,7 +1124,7 @@ var bn = async (r, t, o) => {
   }
   if (o)
     return (
-      i("tengu_model_command_inline", {
+      logEvent("tengu_model_command_inline", {
         args_hash: Tn(o),
         args_length: o.length,
       }),

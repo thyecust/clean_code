@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "./chunk-gd42wcxf.js";
+import { useStorageV5Context } from "./storage-v5-context.js";
 import { Te } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { En } from "./chunk-979tv7jj.js";
+import { ConfirmPrompt } from "./confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { p } from "./chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "./chunk-2c9tjhwd.js";
 function k0t(T) {
   let n = _(17),
     { customApiKeyTruncated: a, onDone: d } = T,
-    { storageV5: m } = _e(),
+    { storageV5: m } = useStorageV5Context(),
     v;
   if (n[0] !== a || n[1] !== d || n[2] !== m)
     ((v = function o(E) {
@@ -62,7 +62,7 @@ function k0t(T) {
   if (n[4] !== o) ((f = () => o("no")), (n[4] = o), (n[5] = f));
   else f = n[5];
   let b;
-  if (n[6] === p)
+  if (n[6] === MEMO_CACHE_SENTINEL)
     ((b = e(t, { bold: !0, children: "ANTHROPIC_API_KEY" })), (n[6] = b));
   else b = n[6];
   let l;
@@ -72,11 +72,11 @@ function k0t(T) {
       (n[8] = l));
   else l = n[8];
   let P;
-  if (n[9] === p)
+  if (n[9] === MEMO_CACHE_SENTINEL)
     ((P = e(t, { children: "Do you want to use this API key?" })), (n[9] = P));
   else P = n[9];
   let I;
-  if (n[10] === p)
+  if (n[10] === MEMO_CACHE_SENTINEL)
     ((I = r(t, {
       children: ["No (", e(t, { bold: !0, children: "recommended" }), ")"],
     })),
@@ -84,7 +84,7 @@ function k0t(T) {
   else I = n[10];
   let y;
   if (n[11] !== o)
-    ((y = e(En, {
+    ((y = e(ConfirmPrompt, {
       hideIndexes: !0,
       focus: "cancel",
       cancelLabel: I,

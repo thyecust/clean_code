@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { qd } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var qse = "(invalid tool name)";
-function xp(e) {
+var INVALID_TOOL_NAME_PLACEHOLDER = "(invalid tool name)";
+function customSchema(e) {
   return qd(e);
 }
 function l1(e) {
@@ -24,7 +24,7 @@ function nir(e) {
 function rir(e) {
   return e;
 }
-function ckn(e) {
+function mintDisplayedUpdates(e) {
   if (Object.getPrototypeOf(e) !== Array.prototype)
     throw TypeError(
       "mintDisplayedUpdates: non-plain array in mint input \u2014 plain data only",
@@ -100,16 +100,16 @@ function f(e, t = new WeakMap()) {
   return e;
 }
 var h = ["panel"];
-function Kr({ hideWhile: e = h, ...t }) {
+function defineDialog({ hideWhile: e = h, ...t }) {
   return { ...t, hideWhile: e };
 }
-function oir(e) {
+function createDialogRequester(e) {
   return async function (o, r, i) {
-    if (ukn(r)) return b(e, o, r, i);
+    if (isAsyncIterable(r)) return b(e, o, r, i);
     return T(e, o, r, i);
   };
 }
-function ukn(e) {
+function isAsyncIterable(e) {
   return typeof e === "object" && e !== null && Symbol.asyncIterator in e;
 }
 async function T(e, t, o, r) {
@@ -188,4 +188,4 @@ async function b(e, t, o, r) {
   let y = t.result().safeParse(u.result);
   return y.success ? y.data : t.default;
 }
-export { qse, xp, l1, lkn, nir, rir, ckn, Kr, oir, ukn };
+export { INVALID_TOOL_NAME_PLACEHOLDER, customSchema, l1, lkn, nir, rir, mintDisplayedUpdates, defineDialog, createDialogRequester, isAsyncIterable };

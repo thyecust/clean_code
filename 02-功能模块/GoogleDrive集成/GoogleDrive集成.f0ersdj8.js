@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -29,7 +29,7 @@ import {
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var w = 30000,
   R = "/v2/ccr-sessions/-/chat-project";
 function kce() {
@@ -207,7 +207,7 @@ async function s1t(e) {
           ((i = !0),
             (c = await refreshOAuthToken(o.refreshToken, {
               clientId: o.clientId,
-              scopes: Y([...CLAUDE_AI_OAUTH_SCOPES, ...preservableScopesFrom(o.scopes), P, x]),
+              scopes: dedupe([...CLAUDE_AI_OAUTH_SCOPES, ...preservableScopesFrom(o.scopes), P, x]),
               signal: m,
               telemetryContext: "projects_scope_expansion",
             })));
@@ -269,7 +269,7 @@ async function getProjectContextBlock(e) {
   let t = a.CLAUDE_PROJECT_UUID;
   if (!t) return null;
   try {
-    return await Dt(I(t, e), O, "project context fetch timed out");
+    return await withTimeout(I(t, e), O, "project context fetch timed out");
   } catch (r) {
     return (
       n(`project context fetch failed: ${l(r)}`, { level: "warn" }),

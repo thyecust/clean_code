@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function c() {
   return "prod";
 }
@@ -37,7 +37,7 @@ var SETUP_TOKEN_DEFAULT_EXPIRY_DAYS = Math.round(LONG_LIVED_OAUTH_TOKEN_TTL_SECO
     "user:mcp_servers",
     "user:file_upload",
   ],
-  ALL_OAUTH_SCOPES = Y([...r, ...CLAUDE_AI_OAUTH_SCOPES]),
+  ALL_OAUTH_SCOPES = dedupe([...r, ...CLAUDE_AI_OAUTH_SCOPES]),
   DESIGN_OAUTH_SCOPES = ["user:design:read", "user:design:write"],
   n = ["user:projects:read", "user:projects:write", "user:plugins"];
 function preservableScopesFrom(t) {

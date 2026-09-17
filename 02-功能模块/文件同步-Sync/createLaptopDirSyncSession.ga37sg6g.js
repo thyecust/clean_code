@@ -10,8 +10,8 @@
 
 // [preload stripped] 原本在此预载 98 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
@@ -46,9 +46,9 @@ import {
 import "./chunk-ht8ydg1v.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
 import { p3n, mte } from "../目录同步(dir-sync)/chunk-zbxyj64j.js";
-import { N7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-rs9aqm75.js";
-import { vy } from "../../01-核心基础设施/共享小工具-未细化/chunk-mbq1q667.js";
-import { nft, Qce, oln, IFt } from "../../01-核心基础设施/共享小工具-未细化/chunk-vcb9z55e.js";
+import { createStatusFeed } from "../../01-核心基础设施/共享小工具-未细化/status-feed.js";
+import { getFileEntryKind } from "../../01-核心基础设施/共享小工具-未细化/file-entry-kind.js";
+import { getDirSyncRecordPath, resolveDirSyncRecordLocation, getDirSyncRecordKey, getDirSyncRecordFileName } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
 import { lstat, readdir } from "fs/promises";
 import { dirname, join as C, resolve } from "path";
 var G = 250,
@@ -65,7 +65,7 @@ function createLaptopDirSyncSession({
   engine: r,
 }) {
   let i = toInfraSessionId(a),
-    o = N7(),
+    o = createStatusFeed(),
     m = {
       sessionId: i,
       gitRoot: w,
@@ -135,7 +135,7 @@ function N(a, w, d, p) {
     k = !1,
     D = new Set(),
     r = null,
-    i = kt(w, L).then(
+    i = withDeadline(w, L).then(
       (e) => {
         if (e === void 0 && k)
           return (
@@ -180,7 +180,7 @@ function N(a, w, d, p) {
         if (t !== null && !k) e(t);
       });
     },
-    m = (e) => kt(i, e).then((t) => t ?? null),
+    m = (e) => withDeadline(i, e).then((t) => t ?? null),
     _ = p3n(
       i.then((e) => (k ? null : (e?.streaming ?? null))),
       Yjt,
@@ -278,10 +278,10 @@ async function attachLaptopDirSyncSession(
   let k = resolve(he()),
     D = findGitRoot(he()),
     r = async (E) => {
-      let b = await Qce(E, S, s),
+      let b = await resolveDirSyncRecordLocation(E, S, s),
         P = await mte(b.path, S, b.v5);
       return P.kind === "unreadable"
-        ? await Z(G).then(() => mte(b.path, S, b.v5))
+        ? await sleep(G).then(() => mte(b.path, S, b.v5))
         : P;
     },
     i = async (E) => VTe(E) && !(await LLe(E)),
@@ -429,15 +429,15 @@ async function dirSyncElsewhereLookup(a, w, d = q) {
   let p = toInfraSessionId(a),
     s = he(),
     S = findGitRoot(s) ?? resolve(s);
-  if (M() && w !== void 0) return X(w, S, p, d);
-  let k = await nft(S, p, w),
+  if (isHoverRestEnabled() && w !== void 0) return X(w, S, p, d);
+  let k = await getDirSyncRecordPath(S, p, w),
     D = getProjectsDir(),
-    r = IFt(p);
+    r = getDirSyncRecordFileName(p);
   try {
     let i = await B(k);
     if (i !== !1) return i ? F : { kind: "unknown", why: "here_unreadable" };
     let o = await readdir(D, { withFileTypes: !0 }),
-      m = await Promise.all(o.map((t) => vy(t, C(D, t.name), "unknown"))),
+      m = await Promise.all(o.map((t) => getFileEntryKind(t, C(D, t.name), "unknown"))),
       _ = o.filter((t, E) => m[E] === "dir"),
       c = _.slice(0, d),
       e = m.some((t) => t === "symlink" || t === "unknown");
@@ -479,7 +479,7 @@ async function X(a, w, d, p) {
   }
 }
 async function z(a, w, d, p) {
-  let s = await Qce(w, d, a);
+  let s = await resolveDirSyncRecordLocation(w, d, a);
   if (s.v5 === void 0) {
     let i = await B(s.path);
     if (i !== !1) return i ? F : { kind: "unknown", why: "here_unreadable" };
@@ -524,7 +524,7 @@ async function z(a, w, d, p) {
   for (let i = 0; i < D.length; i += v) {
     let o = await Promise.all(
       D.slice(i, i + v).map(async (m) => {
-        let _ = oln(m, d);
+        let _ = getDirSyncRecordKey(m, d);
         if (_ === void 0) return;
         let c = await a.statMeta(_);
         return c.ok ? !0 : c.error.code === "NotFound" ? !1 : void 0;

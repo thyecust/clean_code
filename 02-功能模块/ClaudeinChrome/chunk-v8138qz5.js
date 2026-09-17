@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { YPe } from "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
-import { hut } from "./chunk-317fgfn3.js";
+import { classifyChromeToolError } from "./chrome-tool-error-classifier.js";
 import { _ut } from "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isAutoClassifierActive, sx, si } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -19,13 +19,13 @@ import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { c2e, u2e } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
+import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { yd, CFC_TOOL_PREFIX, CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL } from "./chunk-hnp84hf6.js";
 import { JGn, nTe, Ka, OVn, getCurrentSessionDisplayTitle } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Iee } from "../../01-核心基础设施/共享小工具-未细化/chunk-g36jzdvm.js";
-import { Gqe } from "../../01-核心基础设施/共享小工具-未细化/chunk-kdfkgcfn.js";
+import { stripReservedMetaKeys } from "../../01-核心基础设施/共享小工具-未细化/mcp-tool-result-fields.js";
+import { getBrowserToolVerbPhrase } from "../../01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js";
 import { Bg } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 function G(e) {
   return e.replace(/^www\./i, "");
 }
@@ -169,9 +169,9 @@ function J(e, t) {
     if (!Array.isArray(t.actions))
       return { kind: "deny", code: "batch_malformed_item" };
     for (let s of t.actions) {
-      if (!me(s) || typeof s.name !== "string" || s.name === "browser_batch")
+      if (!isRecord(s) || typeof s.name !== "string" || s.name === "browser_batch")
         return { kind: "deny", code: "batch_malformed_item" };
-      n.push({ name: s.name, input: me(s.input) ? s.input : {} });
+      n.push({ name: s.name, input: isRecord(s.input) ? s.input : {} });
     }
   } else n.push({ name: e, input: t });
   let r = new Set(),
@@ -207,7 +207,7 @@ async function H() {
   let e = yd().bridgeBinding;
   if (!e) return;
   try {
-    return await Dt(
+    return await withTimeout(
       (async () => {
         if (!(await e.socketClient.ensureConnected())) return;
         let t = await e.socketClient.callTool(
@@ -271,8 +271,8 @@ async function ne(e, t) {
 function oe(e) {
   if (!Array.isArray(e.actions)) return;
   for (let t of e.actions) {
-    if (!me(t) || typeof t.name !== "string") continue;
-    let n = me(t.input) ? t.input : {};
+    if (!isRecord(t) || typeof t.name !== "string") continue;
+    let n = isRecord(t.input) ? t.input : {};
     if (YPe.has(t.name) && nTe(t.name, n)) continue;
     if (
       t.name === "navigate" &&
@@ -292,15 +292,15 @@ function oe(e) {
 function re(e) {
   if (!Array.isArray(e.actions)) return !1;
   return e.actions.some((t) => {
-    if (!me(t) || typeof t.name !== "string") return !0;
+    if (!isRecord(t) || typeof t.name !== "string") return !0;
     return (
       t.name === "browser_batch" ||
-      (YPe.has(t.name) && !nTe(t.name, me(t.input) ? t.input : {}))
+      (YPe.has(t.name) && !nTe(t.name, isRecord(t.input) ? t.input : {}))
     );
   });
 }
 function se(e, t, n) {
-  let r = Gqe(e, t);
+  let r = getBrowserToolVerbPhrase(e, t);
   return n
     ? `Allow Claude in Chrome to ${r} on ${n}?`
     : `Allow Claude in Chrome to ${r}?`;
@@ -351,11 +351,11 @@ async function ae(e, t, n, r) {
     throw new R(
       u,
       "Claude in Chrome tool returned error",
-      `chrome_${_ ?? hut(e, u)}`,
+      `chrome_${_ ?? classifyChromeToolError(e, u)}`,
     );
   }
   let l = await ne(d, n.options.mainLoopModel),
-    a = Iee(d._meta);
+    a = stripReservedMetaKeys(d._meta);
   return { data: l, ...(a && { mcpMeta: { _meta: a } }) };
 }
 function uon(e) {
@@ -423,7 +423,7 @@ function uon(e) {
       }
       let u = getToolPermissionContext(s),
         p = sx(
-          s.options?.tools?.find((c) => Kt(c, t)),
+          s.options?.tools?.find((c) => matchesToolName(c, t)),
           u,
         ),
         _ =
@@ -580,7 +580,7 @@ function uon(e) {
         (yd().resolvedHostByToolUseId.delete(i),
           yd().resolvedUrlByToolUseId.delete(i));
       let l = getToolPermissionContext(s),
-        a = s.options?.tools?.find((w) => Kt(w, t)),
+        a = s.options?.tools?.find((w) => matchesToolName(w, t)),
         u = sx(a, l) === "bypassPermissions",
         p = x(l),
         _ = p.allowed,

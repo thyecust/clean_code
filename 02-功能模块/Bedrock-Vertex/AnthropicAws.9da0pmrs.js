@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { gn, xu, Bx } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { nE } from "../../01-核心基础设施/共享小工具-未细化/chunk-p71zdaw2.js";
+import { getNodeConfigProviderModule } from "../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
 import { cy } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-dm9sg03f.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-8549txjj.js";
 import { FOe } from "../../00-第三方库/_未识别/第三方库-加密库/chunk-e0ewk5yt.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-29sq3mjv.js";
+import "../../01-核心基础设施/共享小工具-未细化/byte-array-conversion.js";
 import { nu } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { lhe } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-zdrvwe5r.js";
 import { q5 } from "./chunk-p991cddr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js";
+import "../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
 import "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var u = (e) => ((u = Array.isArray), u(e)),
   A = u;
 var O = Symbol.for("brand.privateNullableHeaders");
@@ -115,11 +115,11 @@ function v(e) {
   if (!t) return q;
   return M(t, r);
 }
-var H = pe(nE(), 1),
-  b = pe(cy(), 1);
-var k = pe(q5(), 1),
-  j = pe(nu(), 1),
-  N = pe(lhe(), 1);
+var H = toESM(getNodeConfigProviderModule(), 1),
+  b = toESM(cy(), 1);
+var k = toESM(q5(), 1),
+  j = toESM(nu(), 1),
+  N = toESM(lhe(), 1);
 import J from "assert";
 var I = (e) => {
   if (e instanceof Error) return e;

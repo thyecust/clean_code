@@ -13,7 +13,7 @@ import { St } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getClaudeAIOAuthTokenOriginAsync, getStoredOauthAccountInfo } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getAPIProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { isPolicyAllowed } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-function fan({ storedAccountUuid: t, hostAccountUuid: e }) {
+function compareAccountUuids({ storedAccountUuid: t, hostAccountUuid: e }) {
   if (!e)
     return t
       ? { status: "resolved", accountUuid: t, source: "stored" }
@@ -23,7 +23,7 @@ function fan({ storedAccountUuid: t, hostAccountUuid: e }) {
     ? { status: "resolved", accountUuid: t, source: "env" }
     : { status: "mismatch" };
 }
-async function man(t) {
+async function getHostAccountUuidFromEnv(t) {
   let e = Xn(a.CLAUDE_CODE_ACCOUNT_UUID)?.toLowerCase();
   if (e === void 0) return;
   try {
@@ -33,20 +33,20 @@ async function man(t) {
     return;
   }
 }
-async function cte(t) {
+async function resolveAccountIdentity(t) {
   let e;
   try {
     e = getStoredOauthAccountInfo()?.accountUuid;
   } catch {
     e = void 0;
   }
-  return fan({ storedAccountUuid: e, hostAccountUuid: await man(t) });
+  return compareAccountUuids({ storedAccountUuid: e, hostAccountUuid: await getHostAccountUuidFromEnv(t) });
 }
-function O7() {
+function isEgressAllowed() {
   return r() === void 0;
 }
 function r() {
   if (St() || getAPIProvider() !== "firstParty") return "egress";
   return isPolicyAllowed("allow_remote_sessions") ? void 0 : "policy_org";
 }
-export { fan, man, cte, O7 };
+export { compareAccountUuids, getHostAccountUuidFromEnv, resolveAccountIdentity, isEgressAllowed };

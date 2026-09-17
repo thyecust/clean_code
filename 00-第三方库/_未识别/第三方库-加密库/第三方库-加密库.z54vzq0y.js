@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { w, Ae } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var d = w(function (V, W) {
+import { commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var d = commonJS(function (V, W) {
   /*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */ var B =
-      Ae("buffer"),
+      importMetaRequire("buffer"),
     p = B.Buffer;
   function U(e, r) {
     for (var t in e) r[t] = e[t];
@@ -44,7 +44,7 @@ var d = w(function (V, W) {
     return B.SlowBuffer(e);
   };
 });
-var Q = w(function (_r, Z) {
+var Q = commonJS(function (_r, Z) {
   function K(e) {
     var r = ((e / 8) | 0) + (e % 8 === 0 ? 0 : 1);
     return r;
@@ -57,7 +57,7 @@ var Q = w(function (_r, Z) {
   }
   Z.exports = Ve;
 });
-var EAn = w(function (Tr, re) {
+var EAn = commonJS(function (Tr, re) {
   var _ = d().Buffer,
     Y = Q(),
     T = 128,
@@ -170,10 +170,10 @@ var EAn = w(function (Tr, re) {
   }
   re.exports = { derToJose: Je, joseToDer: Me };
 });
-var N = w(function (Ir, te) {
+var N = commonJS(function (Ir, te) {
   var x = d().Buffer,
-    je = Ae("stream"),
-    Ce = Ae("util");
+    je = importMetaRequire("stream"),
+    Ce = importMetaRequire("util");
   function P(e) {
     if (((this.buffer = null), (this.writable = !0), (this.readable = !0), !e))
       return ((this.buffer = x.alloc(0)), this);
@@ -205,9 +205,9 @@ var N = w(function (Ir, te) {
   };
   te.exports = P;
 });
-var ie = w(function (xr, ne) {
-  var E = Ae("buffer").Buffer,
-    H = Ae("buffer").SlowBuffer;
+var ie = commonJS(function (xr, ne) {
+  var E = importMetaRequire("buffer").Buffer,
+    H = importMetaRequire("buffer").SlowBuffer;
   ne.exports = L;
   function L(e, r) {
     if (!E.isBuffer(e) || !E.isBuffer(r)) return !1;
@@ -227,11 +227,11 @@ var ie = w(function (xr, ne) {
     ((E.prototype.equal = Fe), (H.prototype.equal = Ue));
   };
 });
-var j = w(function (Pr, pe) {
+var j = commonJS(function (Pr, pe) {
   var g = d().Buffer,
-    c = Ae("crypto"),
+    c = importMetaRequire("crypto"),
     fe = EAn(),
-    ae = Ae("util"),
+    ae = importMetaRequire("util"),
     We = `"%s" is not a valid algorithm.
   Supported algorithms are:
   "HS256", "HS384", "HS512", "RS256", "RS384", "RS512", "PS256", "PS384", "PS512", "ES256", "ES384", "ES512" and "none".`,
@@ -394,21 +394,21 @@ var j = w(function (Pr, pe) {
     return { sign: t[i](u), verify: n[i](u) };
   };
 });
-var C = w(function (Lr, ve) {
-  var ir = Ae("buffer").Buffer;
+var C = commonJS(function (Lr, ve) {
+  var ir = importMetaRequire("buffer").Buffer;
   ve.exports = function (r) {
     if (typeof r === "string") return r;
     if (typeof r === "number" || ir.isBuffer(r)) return r.toString();
     return JSON.stringify(r);
   };
 });
-var be = w(function (Rr, ge) {
+var be = commonJS(function (Rr, ge) {
   var ar = d().Buffer,
     Se = N(),
     fr = j(),
-    or = Ae("stream"),
+    or = importMetaRequire("stream"),
     ye = C(),
-    F = Ae("util");
+    F = importMetaRequire("util");
   function de(e, r) {
     return ar
       .from(e, r)
@@ -482,13 +482,13 @@ var be = w(function (Rr, ge) {
   R.sign = me;
   ge.exports = R;
 });
-var Le = w(function (Or, Pe) {
+var Le = commonJS(function (Or, Pe) {
   var Ee = d().Buffer,
     we = N(),
     sr = j(),
-    cr = Ae("stream"),
+    cr = importMetaRequire("stream"),
     qe = C(),
-    lr = Ae("util"),
+    lr = importMetaRequire("util"),
     hr = /^[a-zA-Z0-9\-_]+?\.[a-zA-Z0-9\-_]+?\.([a-zA-Z0-9\-_]+)?$/;
   function pr(e) {
     return Object.prototype.toString.call(e) === "[object Object]";
@@ -587,7 +587,7 @@ var Le = w(function (Or, Pe) {
   b.verify = Ie;
   Pe.exports = b;
 });
-var E$e = w(function (mr) {
+var E$e = commonJS(function (mr) {
   var Re = be(),
     O = Le(),
     dr = [

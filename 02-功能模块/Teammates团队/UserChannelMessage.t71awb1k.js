@@ -16,17 +16,17 @@ import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符
 import { M5 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nvfdjg8e.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import { C2, JOe, omt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import { UA } from "../工具UI渲染/chunk-g4k5jjwt.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
-import { p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var nt = new RegExp(`^<${Vhe}\\s+source="([^"]*)"([^>]*)>\\n?`),
   f = `</${Vhe}>`,
   w = `
@@ -82,7 +82,7 @@ function UserChannelMessage(gt) {
     I,
     K;
   if (u[0] !== W || u[1] !== b || u[2] !== T) {
-    I = en;
+    I = EARLY_RETURN_SENTINEL;
     bb0: {
       let z = V(T);
       if (!z) {
@@ -128,7 +128,7 @@ function UserChannelMessage(gt) {
       B = o;
       F = W ? 1 : 0;
       U = t;
-      if (u[18] === p)
+      if (u[18] === MEMO_CACHE_SENTINEL)
         ((E = e(t, {
           "aria-label": "inbound:",
           color: "suggestion",
@@ -168,7 +168,7 @@ function UserChannelMessage(gt) {
       (F = u[11]),
       (I = u[12]),
       (K = u[13]));
-  if (I !== en) return I;
+  if (I !== EARLY_RETURN_SENTINEL) return I;
   let a;
   if (u[19] !== O || u[20] !== G || u[21] !== M || u[22] !== A)
     ((a = r(O, { dimColor: G, children: [M, A, ":"] })),

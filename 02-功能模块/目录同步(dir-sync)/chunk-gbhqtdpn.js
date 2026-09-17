@@ -11,7 +11,7 @@ import { Wc, ft } from "../../01-核心基础设施/核心工具-字符串与文
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
@@ -21,12 +21,12 @@ import { Ds, Ct, Dne, o$, nn, Mne } from "../../03-入口与运行时/核心应�
 import { O9 } from "../文件同步-Sync/chunk-ht8ydg1v.js";
 import { JA, iln } from "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
 import { iOe, wze, $an, Tze, Uan } from "../文件同步-Sync/chunk-eg4wmaq4.js";
-import { Y4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-vcb9z55e.js";
+import { sanitizePathSegment } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
 import { If } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
 import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { s, T, se, v, c, uW, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { createHash as _t } from "crypto";
 var Ie = {
     file: "100644",
@@ -1636,7 +1636,7 @@ var xe = 1,
   pt = 67108864,
   Gn = 384,
   Hn = 448,
-  Yn = m(() =>
+  Yn = createLazyValue(() =>
     uW([
       s().min(1),
       T().int().nonnegative(),
@@ -1648,7 +1648,7 @@ var xe = 1,
       s().regex(nn),
     ]),
   ),
-  $n = m(() => c({ version: k(xe), entries: v(se()).max(mt) }));
+  $n = createLazyValue(() => c({ version: k(xe), entries: v(se()).max(mt) }));
 async function Bpt(e, { maxEntries: t = mt } = {}) {
   let r = new Map();
   for (let [a, o, d, i, l, h, y, g] of await Wn(e))
@@ -1771,7 +1771,7 @@ function ht({
     };
   for (let [p, f] of [...e].toSorted(Kn)) h(p, f, f.bytes);
   let y = [],
-    g = Y([...t.keys(), ...r.keys()])
+    g = dedupe([...t.keys(), ...r.keys()])
       .filter((p) => !e.has(p) && d(p) !== !1)
       .toSorted();
   for (let p of g) {
@@ -2165,7 +2165,7 @@ async function dr(e, t, r, a, o) {
   if (!i.ok) return null;
   let l = await e.writeCommit({
     tree: t,
-    parents: Y([r, i.id, ...a]),
+    parents: dedupe([r, i.id, ...a]),
     message: bt,
     whenUnix: d,
   });
@@ -2220,7 +2220,7 @@ async function cr({
     skipped: h.flatMap((y) =>
       y.kind === "skip" ? [{ path: y.path, reason: y.reason }] : [],
     ),
-    hashed: G(h, (y) => y.kind === "file" && y.hashed),
+    hashed: countMatching(h, (y) => y.kind === "file" && y.hashed),
   };
 }
 function ur(e, t, r) {
@@ -2351,7 +2351,7 @@ function br(e) {
   return Pe(e, The, txt);
 }
 function V9n(e, t) {
-  return Pe(e, Y4(toInfraSessionId(t)));
+  return Pe(e, sanitizePathSegment(toInfraSessionId(t)));
 }
 function qpt(e) {
   return Pe(e, hr);

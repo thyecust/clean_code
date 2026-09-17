@@ -11,11 +11,11 @@
 // [preload stripped] 原本在此预载 270 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { eI } from "../../00-第三方库/_未识别/第三方库-其他/chunk-x46ksw6d.js";
 import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { getOauthAccountInfo, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getBridgeAccessToken, getBridgeAccessTokenAsync } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { getBridgeDisabledReason } from "./chunk-9estzwf5.js";
@@ -24,56 +24,56 @@ import { PROACTIVE_ENROLLMENT_DISABLED_MESSAGE, isProactiveEnrollmentDisabled, i
 import { vAe, Hre } from "./chunk-ct52ffwb.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { nl } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
-import { D0e } from "../../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js";
+import { removeNotificationFromState } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { R0e } from "../后台任务-Shell管理/chunk-c7mzes79.js";
-import { Z1 } from "../../01-核心基础设施/共享小工具-未细化/chunk-0k3bh4m8.js";
+import { REMOTE_CALLOUT_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
 import "../认证-OAuth登录/chunk-9g86t9bp.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-r2ab1bp6.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-1phhhgcj.js";
+import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
+import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import "../Bedrock-Vertex/chunk-g6sqdw6w.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
 import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-hxt46tkz.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
 import "../../01-核心基础设施/设置-配置/chunk-tswdb9jt.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-85wxphev.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-csjxh2sy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
+import "../../01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js";
+import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
+import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
 import { N8, Kz } from "./chunk-3b6ct3yp.js";
 import { o6e } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { zJt } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import "../权限系统/chunk-n5mgv42x.js";
+import "../权限系统/permission-dialog.js";
 import "../认证-OAuth登录/chunk-dtt2nn79.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-1371sqbk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
+import "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { ik } from "./chunk-2c3z3wjk.js";
 import "../认证-OAuth登录/chunk-5bg9xwqx.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function br(Eo) {
   return Eo.replBridgeConnected;
@@ -117,7 +117,7 @@ function Or(te) {
     replBridgeError: void 0,
     replBridgeErrorKind: void 0,
     replBridgeSessionGroupingId: void 0,
-    notifications: D0e(te.notifications, ik),
+    notifications: removeNotificationFromState(te.notifications, ik),
   };
 }
 function Tr(Lo) {
@@ -169,7 +169,7 @@ function ze(_o) {
           return;
         }
         let We = g?.dialogStore;
-        if (We && R0e(We.getState(), Z1.kind)) {
+        if (We && R0e(We.getState(), REMOTE_CALLOUT_DIALOG.kind)) {
           u("", { display: "system" });
           return;
         }
@@ -184,7 +184,7 @@ function ze(_o) {
         ),
           u("", { display: "system" }));
         let Co = se(getOauthAccountInfo());
-        $e(Z1, {}, { place: "under" })
+        $e(REMOTE_CALLOUT_DIALOG, {}, { place: "under" })
           .then((Ke) => {
             let Ae = Ke === "enable" && se(getOauthAccountInfo()) === Co;
             if (Ke === "enable" && !Ae)
@@ -193,7 +193,7 @@ function ze(_o) {
               );
             if (Ae)
               (Te(kr, g?.storageV5),
-                i("tengu_bridge_command", { action: S("connect") }));
+                logEvent("tengu_bridge_command", { action: S("connect") }));
             W((O) => {
               if (Ae) {
                 return O.replBridgeEnabled &&
@@ -220,7 +220,7 @@ function ze(_o) {
           .catch(logError);
         return;
       }
-      i("tengu_bridge_command", { action: S("connect") });
+      logEvent("tengu_bridge_command", { action: S("connect") });
       let er = !1;
       if (
         (W((ce) => {
@@ -276,12 +276,12 @@ function ze(_o) {
             return;
           }
           if (Ne?.kind === "error") {
-            (i("tengu_bridge_command", { action: S("preflight_failed") }),
+            (logEvent("tengu_bridge_command", { action: S("preflight_failed") }),
               u(Ne.message, { display: "system" }));
             return;
           }
           if (Ne?.kind === "unenrolled-trusted-device") {
-            (i("tengu_bridge_command", {
+            (logEvent("tengu_bridge_command", {
               action: S("preflight_login_for_enrollment"),
             }),
               bo(!0));
@@ -303,7 +303,7 @@ function ze(_o) {
       (K[14] = rr));
   else rr = K[14];
   let nr;
-  if (K[15] === p) ((nr = []), (K[15] = nr));
+  if (K[15] === MEMO_CACHE_SENTINEL) ((nr = []), (K[15] = nr));
   else nr = K[15];
   if ((E(rr, nr), yo)) {
     let Z;
@@ -350,7 +350,7 @@ function ze(_o) {
             return;
           }
           if (!tr) {
-            (i("tengu_bridge_command", {
+            (logEvent("tengu_bridge_command", {
               action: S("preflight_login_canceled"),
             }),
               u(
@@ -365,7 +365,7 @@ function ze(_o) {
             return;
           }
           if (Ge?.kind === "unenrolled-trusted-device") {
-            (i("tengu_bridge_command", {
+            (logEvent("tengu_bridge_command", {
               action: S("preflight_enrollment_did_not_complete"),
             }),
               u(
@@ -423,7 +423,7 @@ function Oe(wo) {
   if (c[4] !== Q || c[5] !== Ve)
     ((dr = function re() {
       (Ve(Or),
-        i("tengu_bridge_command", { action: S("disconnect") }),
+        logEvent("tengu_bridge_command", { action: S("disconnect") }),
         Q(Hre, { display: "system" }));
     }),
       (c[4] = Q),
@@ -432,7 +432,7 @@ function Oe(wo) {
   else dr = c[6];
   let re = dr,
     ar;
-  if (c[7] === p)
+  if (c[7] === MEMO_CACHE_SENTINEL)
     ((ar = function Me() {
       To(Tr);
     }),
@@ -450,7 +450,7 @@ function Oe(wo) {
   let L = cr,
     ur,
     mr;
-  if (c[10] === p)
+  if (c[10] === MEMO_CACHE_SENTINEL)
     ((ur = () => ir(Sr)), (mr = () => ir(Fr)), (c[10] = ur), (c[11] = mr));
   else ((ur = c[10]), (mr = c[11]));
   let pr;
@@ -470,9 +470,9 @@ function Oe(wo) {
       (c[15] = pr));
   else pr = c[15];
   let gr;
-  if (c[16] === p) ((gr = { context: "Select" }), (c[16] = gr));
+  if (c[16] === MEMO_CACHE_SENTINEL) ((gr = { context: "Select" }), (c[16] = gr));
   else gr = c[16];
-  Ze(pr, gr);
+  useKeybindings(pr, gr);
   let ge, fe, _e, ye, oe, ne, he, Be, be, Ce;
   if (
     c[17] !== T ||
@@ -550,7 +550,7 @@ function Oe(wo) {
       (Ce = c[31]));
   const v = G === 0;
   let _r;
-  if (c[36] === p)
+  if (c[36] === MEMO_CACHE_SENTINEL)
     ((_r = e(t, { children: "Disconnect this session" })), (c[36] = _r));
   else _r = c[36];
   let Re;
@@ -586,7 +586,7 @@ function Oe(wo) {
   else ke = c[46];
   const Qe = G === 2;
   let yr;
-  if (c[47] === p) ((yr = e(t, { children: "Continue" })), (c[47] = yr));
+  if (c[47] === MEMO_CACHE_SENTINEL) ((yr = e(t, { children: "Continue" })), (c[47] = yr));
   else yr = c[47];
   let we;
   if (c[48] !== Qe)
@@ -601,13 +601,13 @@ function Oe(wo) {
       (c[53] = Ie));
   else Ie = c[53];
   let hr;
-  if (c[54] === p)
+  if (c[54] === MEMO_CACHE_SENTINEL)
     ((hr = e(t, {
       dimColor: !0,
-      children: r(ue, {
+      children: r(DotSeparatedList, {
         children: [
-          e(D, { chord: "enter", action: "select" }),
-          e(D, { chord: "escape", action: "continue" }),
+          e(KeybindingHint, { chord: "enter", action: "select" }),
+          e(KeybindingHint, { chord: "escape", action: "continue" }),
         ],
       }),
     })),
@@ -665,7 +665,7 @@ async function ie(l) {
   if (C) return { kind: "error", message: C };
   let b = await ndt();
   if (b) return { kind: "error", message: b };
-  if (!(M() && l !== void 0 ? await getBridgeAccessTokenAsync(l) : getBridgeAccessToken()))
+  if (!(isHoverRestEnabled() && l !== void 0 ? await getBridgeAccessTokenAsync(l) : getBridgeAccessToken()))
     return { kind: "error", message: vAe };
   if ((await enrollTrustedDeviceIfNeeded(l), await isTrustedDeviceUnenrolled())) {
     if (isProactiveEnrollmentDisabled()) return { kind: "error", message: PROACTIVE_ENROLLMENT_DISABLED_MESSAGE };

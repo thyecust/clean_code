@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -107,7 +107,7 @@ async function x(t, o, n, r) {
   let m = g(f),
     d = await c;
   if (d) return { message: `Failed to set effort level: ${d.message}` };
-  i("tengu_effort_command", {
+  logEvent("tengu_effort_command", {
     effort: typeof e === "number" ? e : fromEnum(e),
     is_remote: jn() !== null,
   });
@@ -169,7 +169,7 @@ async function C(t, o, n) {
   let r = g(void 0),
     s = await zG(void 0, getMainLoopModel(), t, n);
   if (s) return { message: `Failed to set effort level: ${s.message}` };
-  i("tengu_effort_command", { effort: S("auto"), is_remote: jn() !== null });
+  logEvent("tengu_effort_command", { effort: S("auto"), is_remote: jn() !== null });
   let e = t ? "" : " (this session only)",
     l = jn() ? void 0 : VH();
   if (l !== void 0 && l !== null) {
@@ -204,7 +204,7 @@ function U(t, o, n) {
     };
   (ese(t, n), o?.({ value: "xhigh", ultracode: !0 }));
   let s = g("xhigh", !0);
-  i("tengu_effort_command", {
+  logEvent("tengu_effort_command", {
     effort: S("ultracode"),
     is_remote: jn() !== null,
   });

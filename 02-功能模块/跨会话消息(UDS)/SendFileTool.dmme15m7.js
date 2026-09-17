@@ -10,9 +10,9 @@
 
 // [preload stripped] 原本在此预载 187 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Dr } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Ve, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -25,7 +25,7 @@ import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { ps, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { Kt, Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { matchesToolName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { qNe, $re, abt } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
 import {
   tdt,
@@ -60,12 +60,12 @@ import {
   OGe,
 } from "../Teammates团队/chunk-wsyjx2r0.js";
 import { d7e, YNe, _Sn } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { Vr } from "../../01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js";
-import { cp } from "../Teammates团队/chunk-enjekn9t.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
+import { MAIN_CONVERSATION_NAME } from "../Teammates团队/chunk-enjekn9t.js";
 import { s, T, O, v, c, Qe, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { realpath, unlink } from "fs/promises";
 import { basename } from "path";
-var Q = m(() =>
+var Q = createLazyValue(() =>
     Qe({
       to: s().describe(
         `Recipient: a peer session name from ${$i}, or an explicit uds:<socket> / bridge:<session id> address`,
@@ -81,7 +81,7 @@ var Q = m(() =>
         .describe("Optional short message delivered alongside the files"),
     }),
   ),
-  he = m(() =>
+  he = createLazyValue(() =>
     c({
       success: O(),
       message: s(),
@@ -105,7 +105,7 @@ function ee(e) {
   if (e === void 0 || e === 0) return;
   return ` (note: ${e} other live ${x(e, "agent now shares", "agents now share")} this name)`;
 }
-var G = `use ${Vr} to "${cp}" and reference the file as @<path>`,
+var G = `use ${SEND_MESSAGE_TOOL_NAME} to "${MAIN_CONVERSATION_NAME}" and reference the file as @<path>`,
   ye = {
     unreachable_elevated:
       "target is an elevated-security session unreachable from a cloud session",
@@ -141,7 +141,7 @@ async function se(e, o, a) {
   if (f.scheme === "did")
     return {
       kind: "refused",
-      message: `DID peers accept text only \u2014 use ${Vr} to send to '${e}'.`,
+      message: `DID peers accept text only \u2014 use ${SEND_MESSAGE_TOOL_NAME} to send to '${e}'.`,
     };
   let t = await OGe(
     a.session,
@@ -233,7 +233,7 @@ Note: '${t.pinnedIdentityClaimedLocally}' was confirmed earlier as a session tha
           k.length > 0
             ? `'${e}' matches ${k.length} peer session(s). Re-send with the ref:
 ${_}${h}${p !== "no" ? wPe(e, Yb(a), G) : ""}`
-            : `'${e}' matches only agents in this session \u2014 use ${Vr} and reference the file as @<path> instead.${h}`,
+            : `'${e}' matches only agents in this session \u2014 use ${SEND_MESSAGE_TOOL_NAME} and reference the file as @<path> instead.${h}`,
       };
     }
     case "not-found": {
@@ -241,7 +241,7 @@ ${_}${h}${p !== "no" ? wPe(e, Yb(a), G) : ""}`
         b = t.closest.some((w) => slugify(w.name) === slugify(jD(e)?.name ?? e));
       if (p === "categorical" && !b && TPe(t))
         return { kind: "refused", reason: "self", message: SF(e, Yb(a), G) };
-      let k = a.options.tools.some((w) => Kt(w, $i)),
+      let k = a.options.tools.some((w) => matchesToolName(w, $i)),
         _ = t.closest.filter((w) => w.where !== "in-process"),
         h =
           _.length > 0
@@ -275,7 +275,7 @@ ${C}`,
     default:
       return {
         kind: "refused",
-        message: `'${e}' is an agent in this session \u2014 it already shares your filesystem, so there is nothing to transfer. Use ${Vr} and reference the file as @<path> instead. ${i3} is for OTHER Claude Code sessions (a peer session on this machine, or a Remote Control / cloud session).`,
+        message: `'${e}' is an agent in this session \u2014 it already shares your filesystem, so there is nothing to transfer. Use ${SEND_MESSAGE_TOOL_NAME} and reference the file as @<path> instead. ${i3} is for OTHER Claude Code sessions (a peer session on this machine, or a Remote Control / cloud session).`,
       };
   }
 }
@@ -321,7 +321,7 @@ function Se({ toolUseId: e, toolState: o }, a) {
 function Ne(e) {
   return e?.type === "rule" && e.rule?.ruleBehavior === "ask";
 }
-var SendFileTool = Tt({
+var SendFileTool = buildTool({
   name: i3,
   searchHint: "send files to another Claude Code session",
   ruleContentField: "files",
@@ -405,7 +405,7 @@ var SendFileTool = Tt({
       }
       if (h?.kind === "refused" && h.reason !== void 0)
         return (
-          i("tengu_send_file", {
+          logEvent("tengu_send_file", {
             transport: S("refused"),
             file_count: e.files.length,
             delivered_count: 0,
@@ -451,7 +451,7 @@ var SendFileTool = Tt({
   async validateInput({ to: e, files: o }, a) {
     if (!rOe())
       return (
-        i("tengu_send_file", {
+        logEvent("tengu_send_file", {
           transport: S("gated_off"),
           file_count: o.length,
           delivered_count: 0,
@@ -516,7 +516,7 @@ var SendFileTool = Tt({
       C = getToolPermissionContext(o);
     if (!rOe())
       return (
-        i("tengu_send_file", {
+        logEvent("tengu_send_file", {
           transport: S("gated_off"),
           file_count: b.length,
           delivered_count: 0,
@@ -552,7 +552,7 @@ var SendFileTool = Tt({
       d = { kind: "refused", reason: "self", message: Ace(t) };
     if (d.kind === "refused")
       return (
-        i("tengu_send_file", {
+        logEvent("tengu_send_file", {
           transport: S("refused"),
           file_count: b.length,
           delivered_count: 0,
@@ -566,7 +566,7 @@ var SendFileTool = Tt({
           ? p
           : `Sent you ${r.length} ${x(r.length, "file")}: ${r.join(", ")}`,
       B = (r, y) => {
-        i("tengu_send_file", {
+        logEvent("tengu_send_file", {
           transport: fromEnum(d.kind),
           file_count: b.length,
           delivered_count: y,
@@ -741,7 +741,7 @@ var SendFileTool = Tt({
         o.credentials,
       );
     if (!H.ok) {
-      let y = o.options.tools.some((E) => Kt(E, $i))
+      let y = o.options.tools.some((E) => matchesToolName(E, $i))
           ? ` Call ${$i} to see who is reachable now.`
           : "",
         N = de(H.error)

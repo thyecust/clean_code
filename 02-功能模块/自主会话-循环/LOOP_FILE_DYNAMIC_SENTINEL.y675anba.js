@@ -15,15 +15,15 @@ import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { cR, oJ } from "../Bridge-RemoteControl/chunk-3j7ezsr7.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { PUSH_NOTIFICATION_TOOL_NAME, isAgentPushNotificationEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
 import { Xi, sCe, eoe, kT, sg } from "../Teammates团队/chunk-z2t8b9yc.js";
-import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
-import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
+import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { readFileSync } from "fs";
 import { join as u } from "path";
-var p = Ae("./loopAutonomousPreamble-07qcyhv4.md");
-var y = Ae("./loopAutonomousPreamblePersistent-3zqtkrvg.md");
+var p = importMetaRequire("./loopAutonomousPreamble-07qcyhv4.md");
+var y = importMetaRequire("./loopAutonomousPreamblePersistent-3zqtkrvg.md");
 function g() {
   if (a.CLAUDE_CODE_LOOP_PERSISTENT) return !0;
   return H("tengu_kairos_loop_persistent", !1);
@@ -32,17 +32,17 @@ function getAutonomousLoopPreamble() {
   return g() ? y : p;
 }
 function logAutonomousLoopActivation() {
-  i("tengu_kairos_loop_persistent_activated", { variant: g() });
+  logEvent("tengu_kairos_loop_persistent_activated", { variant: g() });
 }
 function h(e = !1) {
-  if (!oJ()) return "";
+  if (!isAgentPushNotificationEnabled()) return "";
   let o =
     !e && g()
       ? "newly blocked on a decision you won't make alone, you're ending the loop"
       : "newly blocked on a decision you won't make alone, third straight tick with nothing to do, you're ending the loop";
   return `
 
-Use ${cR} when the loop can't move further without the user, or when something landed that they'd want to act on now: ${o}, or a major update arrived (CI went red, a review changes the plan). Progress you made yourself isn't a trigger \u2014 the transcript covers that. One ping per state, not per tick.`;
+Use ${PUSH_NOTIFICATION_TOOL_NAME} when the loop can't move further without the user, or when something landed that they'd want to act on now: ${o}, or a major update arrived (CI went red, a review changes the plan). Progress you made yourself isn't a trigger \u2014 the transcript covers that. One ping per state, not per tick.`;
 }
 function b() {
   return `# Autonomous loop tick
@@ -51,7 +51,7 @@ Run the autonomous check using the loop instructions established earlier in this
 }
 var m = `
 
-If a ${ia} is armed (check ${kT}), keep \`delaySeconds\` at 1200\u20131800s \u2014 the ${ia} is the wake signal and this is only the fallback heartbeat. If you were woken by a \`<task-notification>\`, handle the event before deciding whether to re-arm. To stop the loop, call ${Xi} with \`stop: true\` and ${sg} the monitor (use ${kT} to find its task ID if no longer in context).`;
+If a ${MONITOR_TOOL_NAME} is armed (check ${kT}), keep \`delaySeconds\` at 1200\u20131800s \u2014 the ${MONITOR_TOOL_NAME} is the wake signal and this is only the fallback heartbeat. If you were woken by a \`<task-notification>\`, handle the event before deciding whether to re-arm. To stop the loop, call ${Xi} with \`stop: true\` and ${sg} the monitor (use ${kT} to find its task ID if no longer in context).`;
 function E() {
   return `# Autonomous loop tick (dynamic pacing)
 

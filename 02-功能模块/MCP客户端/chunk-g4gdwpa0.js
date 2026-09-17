@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { dy } from "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { jt, rS, Jse, UR } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
@@ -331,7 +331,7 @@ function $e() {
 }
 var gt = 384,
   He = 448,
-  ne = m(() => {
+  ne = createLazyValue(() => {
     let e = import.meta
       .require("./mcpClientModule.4cyej0np.js")
       .mcpClientModule()
@@ -582,7 +582,7 @@ async function ce(e, t) {
   if (r) await r;
   if (t) return _t(t, e);
   try {
-    if (dy === 0) {
+    if (O_NOFOLLOW_NONBLOCK_FLAGS === 0) {
       let o = await L().lstat(e);
       if (o === void 0) return;
       if (o.isSymbolicLink) throw new te(e);
@@ -1021,7 +1021,7 @@ async function Lt(e, t) {
       () => {},
       () => {},
     ),
-    Z(t, void 0, { unref: !0 }),
+    sleep(t, void 0, { unref: !0 }),
   ]);
 }
 async function i2(e, t = 1500) {

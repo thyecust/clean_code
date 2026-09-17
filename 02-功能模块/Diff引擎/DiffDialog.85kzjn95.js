@@ -17,36 +17,36 @@ import { x } from "../../01-核心基础设施/核心工具-字符串与文本/c
 import { truncateStartToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { jJt, IB, $ae } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
+import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import "./chunk-p2gj9dsf.js";
 import { Wm } from "../GitHub集成/chunk-bfz9rjjm.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import { E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
 function gt(n) {
@@ -164,7 +164,7 @@ var G = 5;
 function fe(wn) {
   let Z = _(36),
     { files: k, selectedIndex: ne } = wn,
-    { columns: Be } = Se(),
+    { columns: Be } = useTerminalSize(),
     Oe;
   bb0: {
     if (k.length === 0 || k.length <= G) {
@@ -192,7 +192,7 @@ function fe(wn) {
   let { startIndex: j, endIndex: K } = Oe;
   if (k.length === 0) {
     let U;
-    if (Z[5] === p) ((U = e(Rn, { children: "No changed files" })), (Z[5] = U));
+    if (Z[5] === MEMO_CACHE_SENTINEL) ((U = e(EmptyStateMessage, { children: "No changed files" })), (Z[5] = U));
     else U = Z[5];
     return U;
   }
@@ -302,7 +302,7 @@ function xe(Fn) {
       (ce[6] = Te));
   else Te = ce[6];
   let wt;
-  if (ce[7] === p) ((wt = e(o, { flexGrow: 1 })), (ce[7] = wt));
+  if (ce[7] === MEMO_CACHE_SENTINEL) ((wt = e(o, { flexGrow: 1 })), (ce[7] = wt));
   else wt = ce[7];
   let De;
   if (ce[8] !== ie || ce[9] !== Q)
@@ -414,7 +414,7 @@ function DiffDialog(tr) {
   let h = _(84),
     { messages: nr, onDone: rr } = tr,
     Ct;
-  if (h[0] === p) ((Ct = Pt()), (h[0] = Ct));
+  if (h[0] === MEMO_CACHE_SENTINEL) ((Ct = Pt()), (h[0] = Ct));
   else Ct = h[0];
   let { data: qe, notice: Ft } = jJt(Ct),
     Je = pe(nr),
@@ -422,7 +422,7 @@ function DiffDialog(tr) {
     [be, Ye] = d(0),
     [B, ke] = d(0),
     Mt;
-  if (h[1] === p) ((Mt = { type: "current" }), (h[1] = Mt));
+  if (h[1] === MEMO_CACHE_SENTINEL) ((Mt = { type: "current" }), (h[1] = Mt));
   else Mt = h[1];
   let At;
   if (h[2] !== Je) ((At = [Mt, ...Je.map(cn)]), (h[2] = Je), (h[3] = At));
@@ -599,9 +599,9 @@ function DiffDialog(tr) {
       (Xt = h[41]),
       (_t = h[42]));
   let en;
-  if (h[43] === p) ((en = { context: "DiffDialog" }), (h[43] = en));
+  if (h[43] === MEMO_CACHE_SENTINEL) ((en = { context: "DiffDialog" }), (h[43] = en));
   else en = h[43];
-  Ze(
+  useKeybindings(
     {
       "diff:dismiss": se,
       "diff:previousSource": jt,
@@ -710,7 +710,7 @@ function DiffDialog(tr) {
     ((Re =
       a.files.length === 0
         ? a.loading
-          ? e($n, { message: "Loading diff\u2026", dimColor: !0 })
+          ? e(SpinnerMessageLine, { message: "Loading diff\u2026", dimColor: !0 })
           : e(t, { dimColor: !0, children: tt })
         : c === "list"
           ? e(o, {
@@ -756,13 +756,13 @@ function DiffDialog(tr) {
   if (h[67] !== P.length || h[68] !== c)
     ((Ce =
       c === "list"
-        ? r(ue, {
+        ? r(DotSeparatedList, {
             children: [
               P.length > 1 &&
-                e(D, { chord: ["left", "right"], action: "switch source" }),
-              e(D, { chord: ["up", "down"], action: "select" }),
-              e(D, { chord: "enter", action: "view" }),
-              e(je, {
+                e(KeybindingHint, { chord: ["left", "right"], action: "switch source" }),
+              e(KeybindingHint, { chord: ["up", "down"], action: "select" }),
+              e(KeybindingHint, { chord: "enter", action: "view" }),
+              e(ActionKeybindingHint, {
                 action: "diff:dismiss",
                 context: "DiffDialog",
                 fallback: "Esc",
@@ -770,10 +770,10 @@ function DiffDialog(tr) {
               }),
             ],
           })
-        : r(ue, {
+        : r(DotSeparatedList, {
             children: [
-              e(D, { chord: ["up", "down"], action: "scroll" }),
-              e(je, {
+              e(KeybindingHint, { chord: ["up", "down"], action: "scroll" }),
+              e(ActionKeybindingHint, {
                 action: "diff:dismiss",
                 context: "DiffDialog",
                 fallback: "Esc",
@@ -788,7 +788,7 @@ function DiffDialog(tr) {
   const it = P.length <= 1,
     ot = String(B);
   let sn;
-  if (h[70] === p) ((sn = (ur) => ke(Number(ur))), (h[70] = sn));
+  if (h[70] === MEMO_CACHE_SENTINEL) ((sn = (ur) => ke(Number(ur))), (h[70] = sn));
   else sn = h[70];
   const st = c === "detail";
   let Fe;

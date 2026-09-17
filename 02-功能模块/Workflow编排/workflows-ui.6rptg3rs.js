@@ -13,47 +13,47 @@ import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { zj } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { wf } from "../../01-核心基础设施/共享小工具-未细化/chunk-pbd0pf42.js";
+import { useTaskRegistry } from "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Ma, ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
 import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { h_ } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { oa } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { pauseWorkflowTask, killWorkflowTask, skipWorkflowAgent, retryWorkflowAgent } from "./chunk-va9cgbfs.js";
-import { Vf } from "./chunk-cd542wve.js";
+import { parseWorkflowScript } from "./workflow-script.js";
 import { mit } from "./chunk-dyq13fbm.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import { KW } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { DHe, eye } from "./chunk-6gjsfh7a.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-56wrzxpk.js";
-import { Tin } from "./chunk-hdhsmge4.js";
+import "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
+import { loadWorkflowSnapshots } from "./workflow-snapshots.js";
 import "./chunk-pqyn1fh3.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g00x7t7w.js";
+import "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
 import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Qo() {
   return [];
@@ -124,7 +124,7 @@ function Vt(Oe) {
   Rs("workflow-history-dialog");
   let yo;
   if (nt[0] !== ut.storageV5)
-    ((yo = () => Tin(ut.storageV5).catch(Qo)),
+    ((yo = () => loadWorkflowSnapshots(ut.storageV5).catch(Qo)),
       (nt[0] = ut.storageV5),
       (nt[1] = yo));
   else yo = nt[1];
@@ -133,9 +133,9 @@ function Vt(Oe) {
   if (nt[2] !== st) ((kt = () => ot(st)), (nt[2] = st), (nt[3] = kt));
   else kt = nt[3];
   let go, ho;
-  if (nt[4] === p)
-    ((go = e(ue, { children: e(D, { chord: "escape", action: "close" }) })),
-      (ho = e($n, {
+  if (nt[4] === MEMO_CACHE_SENTINEL)
+    ((go = e(DotSeparatedList, { children: e(KeybindingHint, { chord: "escape", action: "close" }) })),
+      (ho = e(SpinnerMessageLine, {
         message: "Loading dynamic workflow history\u2026",
         dimColor: !0,
       })),
@@ -176,10 +176,10 @@ function Xt(We) {
   let a = _(128),
     { snapshotsPromise: Ve, onDone: c, promptVisibleBelow: gt } = We,
     Qt = kn(Ve),
-    { rows: qt } = ks(Se()),
+    { rows: qt } = ks(useTerminalSize()),
     je = Ma(),
     zt = U(qo),
-    T = wf(),
+    T = useTaskRegistry(),
     So;
   if (a[0] !== Qt || a[1] !== zt) {
     let To = Object.values(zt ?? {}).filter(zo);
@@ -190,7 +190,7 @@ function Xt(We) {
   } else So = a[2];
   let s = So,
     vo;
-  if (a[3] === p) ((vo = { mode: "list" }), (a[3] = vo));
+  if (a[3] === MEMO_CACHE_SENTINEL) ((vo = { mode: "list" }), (a[3] = vo));
   else vo = a[3];
   let [m, Z] = d(vo),
     [ct, Io] = d(0),
@@ -213,7 +213,7 @@ function Xt(We) {
   E(Do, bo);
   let k = s[ct],
     Lo;
-  if (a[11] === p) ((Lo = () => Io(oe)), (a[11] = Lo));
+  if (a[11] === MEMO_CACHE_SENTINEL) ((Lo = () => Io(oe)), (a[11] = Lo));
   else Lo = a[11];
   let Ct;
   if (a[12] !== s.length)
@@ -243,7 +243,7 @@ function Xt(We) {
       (a[19] = Kt),
       (a[20] = Mo));
   else Mo = a[20];
-  Ze(xo, Mo);
+  useKeybindings(xo, Mo);
   let q = k !== void 0 && k.task.script.length > 0,
     Ro;
   if (a[21] !== k || a[22] !== q || a[23] !== T || a[24] !== m.mode)
@@ -382,7 +382,7 @@ function Xt(We) {
   if (m.mode === "save") {
     let A, J, w;
     if (a[64] !== s || a[65] !== m.itemId) {
-      w = en;
+      w = EARLY_RETURN_SENTINEL;
       bb0: {
         let y;
         if (a[69] !== m.itemId)
@@ -395,14 +395,14 @@ function Xt(We) {
           w = (Z({ mode: "list" }), null);
           break bb0;
         }
-        let No = Vf(A.task.script);
+        let No = parseWorkflowScript(A.task.script);
         J = !("error" in No)
           ? No.meta.name
           : zj(A.task.summary ?? A.task.description);
       }
       ((a[64] = s), (a[65] = m.itemId), (a[66] = A), (a[67] = J), (a[68] = w));
     } else ((A = a[66]), (J = a[67]), (w = a[68]));
-    if (w !== en) return w;
+    if (w !== EARLY_RETURN_SENTINEL) return w;
     let Ht = J;
     let y;
     if (a[71] !== c)
@@ -423,7 +423,7 @@ function Xt(We) {
     else R = a[76];
     return R;
   }
-  let H = G(s, ee),
+  let H = countMatching(s, ee),
     at = s.length - H,
     to = gt && !je && !h_() ? mit : 0,
     Tt,
@@ -459,7 +459,7 @@ function Xt(We) {
     if (a[96] !== c) ((X = () => ot(c)), (a[96] = c), (a[97] = X));
     else X = a[97];
     let Ye = X;
-    vt = mr;
+    vt = FocusableBox;
     j = Yt;
     Tt = de;
     J = "Dynamic workflows";
@@ -469,7 +469,7 @@ function Xt(We) {
           ? void 0
           : e(t, {
               dimColor: !0,
-              children: r(ue, {
+              children: r(DotSeparatedList, {
                 children: [
                   H > 0 && `${H} running`,
                   at > 0 && `${at} completed`,
@@ -485,35 +485,35 @@ function Xt(We) {
     R = "background";
     let tt;
     if (a[102] !== s.length)
-      ((tt = s.length > 0 && e(D, { chord: ["up", "down"], action: "select" })),
+      ((tt = s.length > 0 && e(KeybindingHint, { chord: ["up", "down"], action: "select" })),
         (a[102] = s.length),
         (a[103] = tt));
     else tt = a[103];
     let It;
     if (a[104] !== s.length)
-      ((It = s.length > 0 && e(D, { chord: "enter", action: "view" })),
+      ((It = s.length > 0 && e(KeybindingHint, { chord: "enter", action: "view" })),
         (a[104] = s.length),
         (a[105] = It));
     else It = a[105];
     let Dt;
     if (a[106] !== k?.task.status)
       ((Dt =
-        k?.task.status === "running" && e(D, { chord: "x", action: "stop" })),
+        k?.task.status === "running" && e(KeybindingHint, { chord: "x", action: "stop" })),
         (a[106] = k?.task.status),
         (a[107] = Dt));
     else Dt = a[107];
     let bt;
     if (a[108] !== q)
-      ((bt = q && e(D, { chord: "s", action: "save" })),
+      ((bt = q && e(KeybindingHint, { chord: "s", action: "save" })),
         (a[108] = q),
         (a[109] = bt));
     else bt = a[109];
     let jo;
-    if (a[110] === p)
-      ((jo = e(D, { chord: "escape", action: "close" })), (a[110] = jo));
+    if (a[110] === MEMO_CACHE_SENTINEL)
+      ((jo = e(KeybindingHint, { chord: "escape", action: "close" })), (a[110] = jo));
     else jo = a[110];
     if (a[111] !== tt || a[112] !== It || a[113] !== Dt || a[114] !== bt)
-      ((N = r(ue, { children: [tt, It, Dt, bt, jo] })),
+      ((N = r(DotSeparatedList, { children: [tt, It, Dt, bt, jo] })),
         (a[111] = tt),
         (a[112] = It),
         (a[113] = Dt),
@@ -522,7 +522,7 @@ function Xt(We) {
     else N = a[115];
     W =
       s.length === 0
-        ? e(Rn, { children: "No dynamic workflows in this session." })
+        ? e(EmptyStateMessage, { children: "No dynamic workflows in this session." })
         : r(o, {
             flexDirection: "column",
             children: [

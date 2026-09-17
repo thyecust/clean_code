@@ -11,9 +11,9 @@
 // [preload stripped] 原本在此预载 197 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { vTe, asSystemPrompt, U3, LEe, xr, getSessionIdFromLog, getSessionFilesWithMtime, loadAllLogsFromSessionFile, UY } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Xn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { R, dt, ge, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, ft, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -22,7 +22,7 @@ import { getDefaultOpusModel, aa } from "../认证-OAuth登录/认证-OAuth登�
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { go } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { Pl } from "../Teammates团队/chunk-thxapyam.js";
-import { T$ } from "../../01-核心基础设施/共享小工具-未细化/chunk-1avr3bqa.js";
+import { createJsonFileStore } from "../../01-核心基础设施/共享小工具-未细化/json-file-store.js";
 import { mt, Vh } from "../工具Task-Agent调度/chunk-1px84m19.js";
 import { s, T, O, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
@@ -99,7 +99,7 @@ function $e() {
 function Le() {
   return getDefaultOpusModel();
 }
-var Ae = m(() =>
+var Ae = createLazyValue(() =>
     c({
       session_id: s(),
       transcript_mtime: T().optional(),
@@ -235,7 +235,7 @@ function Ve(e) {
 }
 async function Je(e, t, o) {
   let i = q(se(), `report-${t}.html`);
-  if (M() && o) {
+  if (isHoverRestEnabled() && o) {
     for (let a of [`report-${t}.html`, "report.html"]) {
       let l = await o.write(Ve(a), e, { mode: 384, keepExistingMode: !0 });
       if (!l.ok)
@@ -271,7 +271,7 @@ function we(e, t) {
   return o;
 }
 function Ee(e) {
-  return T$(q(Ye(), `${e}.json`), () => Ae().nullable(), {
+  return createJsonFileStore(q(Ye(), `${e}.json`), () => Ae().nullable(), {
     defaultValue: null,
     ensureDir: !0,
     indent: 2,
@@ -629,7 +629,7 @@ async function nt(e, t) {
   try {
     await mkdir(ae(), { recursive: !0 });
   } catch {}
-  if (M() && t) {
+  if (isHoverRestEnabled() && t) {
     let i = await t.write(ue(e.session_id), b(e, null, 2), {
       publishDiscipline: "inPlace",
       mode: 384,

@@ -10,23 +10,23 @@
 
 // [preload stripped] 原本在此预载 241 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { VR, Dx, Aje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { qe, Bo, eu } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { Pr, $s, an, getMcpConfigsByScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Nae, x0t, H0t } from "../../01-核心基础设施/设置-配置/chunk-avjbj8nf.js";
 import { ui, Gm, fa, $o } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import {
   een,
   s0e,
@@ -41,11 +41,11 @@ import {
   aen,
   len,
 } from "../状态栏-主题/chunk-67rzccvb.js";
-import { gs } from "./chunk-n5mgv42x.js";
-import { kh } from "../../01-核心基础设施/共享小工具-未细化/chunk-tw8akhx1.js";
+import { PermissionDialogFrame } from "./permission-dialog.js";
+import { isKbCohesionFixesEnabled } from "../../01-核心基础设施/共享小工具-未细化/kb-cohesion-fixes.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, V, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Qt(Mt) {
   return Mt === qe || Mt.startsWith(qe + "(");
@@ -77,21 +77,21 @@ function qt(Eo) {
 function TrustDialog(wo) {
   let s = _(67),
     { onDone: I, commands: T } = wo,
-    { storageV5: Ce } = _e(),
+    { storageV5: Ce } = useStorageV5Context(),
     it;
-  if (s[0] === p) ((it = getMcpConfigsByScope("project")), (s[0] = it));
+  if (s[0] === MEMO_CACHE_SENTINEL) ((it = getMcpConfigsByScope("project")), (s[0] = it));
   else it = s[0];
   let { servers: bo } = it,
     lt;
-  if (s[1] === p) ((lt = Object.keys(bo)), (s[1] = lt));
+  if (s[1] === MEMO_CACHE_SENTINEL) ((lt = Object.keys(bo)), (s[1] = lt));
   else lt = s[1];
   let xe = lt.length > 0,
     ut;
-  if (s[2] === p) ((ut = een()), (s[2] = ut));
+  if (s[2] === MEMO_CACHE_SENTINEL) ((ut = een()), (s[2] = ut));
   else ut = s[2];
   let Se = ut.length > 0,
     pt;
-  if (s[3] === p) ((pt = ten()), (s[3] = pt));
+  if (s[3] === MEMO_CACHE_SENTINEL) ((pt = ten()), (s[3] = pt));
   else pt = s[3];
   let yo = pt,
     j = s0e(),
@@ -99,27 +99,27 @@ function TrustDialog(wo) {
     A = i0e(),
     M = A.sources.length > 0,
     dt;
-  if (s[4] === p) ((dt = oen()), (s[4] = dt));
+  if (s[4] === MEMO_CACHE_SENTINEL) ((dt = oen()), (s[4] = dt));
   else dt = s[4];
   let De = dt.length > 0,
     ht;
-  if (s[5] === p) ((ht = sen()), (s[5] = ht));
+  if (s[5] === MEMO_CACHE_SENTINEL) ((ht = sen()), (s[5] = ht));
   else ht = s[5];
   let He = ht.length > 0,
     ft;
-  if (s[6] === p) ((ft = ien()), (s[6] = ft));
+  if (s[6] === MEMO_CACHE_SENTINEL) ((ft = ien()), (s[6] = ft));
   else ft = s[6];
   let ve = ft.length > 0,
     mt;
-  if (s[7] === p) ((mt = nen()), (s[7] = mt));
+  if (s[7] === MEMO_CACHE_SENTINEL) ((mt = nen()), (s[7] = mt));
   else mt = s[7];
   let Te = mt.length > 0,
     gt;
-  if (s[8] === p) ((gt = aen()), (s[8] = gt));
+  if (s[8] === MEMO_CACHE_SENTINEL) ((gt = aen()), (s[8] = gt));
   else gt = s[8];
   let je = gt.length > 0,
     wt;
-  if (s[9] === p) {
+  if (s[9] === MEMO_CACHE_SENTINEL) {
     let bt = H0t();
     let yt = x0t(bt);
     wt = {
@@ -137,11 +137,11 @@ function TrustDialog(wo) {
     Ae = ko.length > 0,
     G = kt.length > 0,
     Ct;
-  if (s[10] === p) ((Ct = len()), (s[10] = Ct));
+  if (s[10] === MEMO_CACHE_SENTINEL) ((Ct = len()), (s[10] = Ct));
   else Ct = s[10];
   let Pe = Ct.length > 0,
     xt;
-  if (s[11] === p) ((xt = ren()), (s[11] = xt));
+  if (s[11] === MEMO_CACHE_SENTINEL) ((xt = ren()), (s[11] = xt));
   else xt = s[11];
   let Re = xt.length > 0,
     St;
@@ -154,7 +154,7 @@ function TrustDialog(wo) {
   let So = Dt,
     g = yo.length > 0 || xo || So,
     Ht;
-  if (s[16] === p) ((Ht = Bo()), (s[16] = Ht));
+  if (s[16] === MEMO_CACHE_SENTINEL) ((Ht = Bo()), (s[16] = Ht));
   else Ht = s[16];
   let vt = Ht,
     w = vt,
@@ -163,7 +163,7 @@ function TrustDialog(wo) {
   if (s[17] !== g)
     ((_t = () => {
       let Do = VR();
-      i("tengu_trust_dialog_shown", {
+      logEvent("tengu_trust_dialog_shown", {
         isHomeDir: Do,
         hasMcpServers: xe,
         hasHooks: Se,
@@ -235,7 +235,7 @@ function TrustDialog(wo) {
       let Pt = VR();
       if (
         (logFeatureOk("onboarding_trust_dialog"),
-        i("tengu_trust_dialog_accept", {
+        logEvent("tengu_trust_dialog_accept", {
           isHomeDir: Pt,
           hasMcpServers: xe,
           hasHooks: Se,
@@ -269,17 +269,17 @@ function TrustDialog(wo) {
   else At = s[31];
   let c = At,
     Rt;
-  if (s[32] === p)
+  if (s[32] === MEMO_CACHE_SENTINEL)
     ((Rt = () => {
       ((K.current = !0), Pr(1));
     }),
       (s[32] = Rt));
   else Rt = s[32];
-  let P = is(Rt),
+  let P = useGlobalExitKeybinding(Rt),
     Et;
   if (s[33] !== w || s[34] !== l || s[35] !== d || s[36] !== c || s[37] !== u)
     ((Et = () => {
-      if (kh()) {
+      if (isKbCohesionFixesEnabled()) {
         c("exit");
         return;
       }
@@ -304,12 +304,12 @@ function TrustDialog(wo) {
       (s[38] = Et));
   else Et = s[38];
   let It;
-  if (s[39] === p) ((It = { context: "Confirmation" }), (s[39] = It));
+  if (s[39] === MEMO_CACHE_SENTINEL) ((It = { context: "Confirmation" }), (s[39] = It));
   else It = s[39];
-  if ((Ne("confirm:no", Et, It), vt && !Co)) {
+  if ((useKeybinding("confirm:no", Et, It), vt && !Co)) {
     return (queueMicrotask(I), null);
   }
-  const Be = gs,
+  const Be = PermissionDialogFrame,
     _o = "warning",
     To = "warning",
     jo = "Accessing workspace:",
@@ -318,7 +318,7 @@ function TrustDialog(wo) {
     Po = 1,
     Ro = 1;
   let ce, le, pe;
-  if (s[40] === p)
+  if (s[40] === MEMO_CACHE_SENTINEL)
     ((ce = e(t, { bold: !0, children: an(ae().cwd()) })),
       (le = r(t, {
         children: [
@@ -350,7 +350,7 @@ function TrustDialog(wo) {
                 bold: !0,
                 color: "warning",
                 children: [
-                  e(et, { status: "warning", withSpace: !0 }),
+                  e(StatusIndicator, { status: "warning", withSpace: !0 }),
                   "This folder pre-approves ",
                   j.rawCount,
                   " ",
@@ -378,7 +378,7 @@ function TrustDialog(wo) {
                 bold: !0,
                 color: "warning",
                 children: [
-                  e(et, { status: "warning", withSpace: !0 }),
+                  e(StatusIndicator, { status: "warning", withSpace: !0 }),
                   "This folder adds ",
                   A.rawCount,
                   " ",
@@ -405,7 +405,7 @@ function TrustDialog(wo) {
             bold: !0,
             color: "warning",
             children: [
-              e(et, { status: "warning", withSpace: !0 }),
+              e(StatusIndicator, { status: "warning", withSpace: !0 }),
               "This folder runs commands to mint HTTP headers (headersHelper), declared in ",
               jb(kt),
             ],
@@ -418,7 +418,7 @@ function TrustDialog(wo) {
       ],
     });
   let Bt;
-  if (s[43] === p)
+  if (s[43] === MEMO_CACHE_SENTINEL)
     ((Bt = e(t, {
       dimColor: !0,
       children: e(ct, {
@@ -445,7 +445,7 @@ function TrustDialog(wo) {
     s[51] !== he
   )
     ((fe = e(
-      En,
+      ConfirmPrompt,
       {
         refuseInput: q,
         openedAt: Ee,
@@ -472,10 +472,10 @@ function TrustDialog(wo) {
       dimColor: !0,
       children: P.pending
         ? r(N, { children: ["Press ", P.keyName, " again to exit"] })
-        : r(ue, {
+        : r(DotSeparatedList, {
             children: [
-              e(D, { chord: "enter", action: "confirm" }),
-              e(D, { chord: "escape", action: "cancel" }),
+              e(KeybindingHint, { chord: "enter", action: "confirm" }),
+              e(KeybindingHint, { chord: "escape", action: "cancel" }),
             ],
           }),
     })),

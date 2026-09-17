@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { gL, cy } from "./chunk-dm9sg03f.js";
 import { Lm } from "./chunk-w3axq133.js";
-import { nE } from "../../../01-核心基础设施/共享小工具-未细化/chunk-p71zdaw2.js";
+import { getNodeConfigProviderModule } from "../../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
 import { nu, EA } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { qtt } from "../../@aws-sdk/nested-clients/nested-clients.5meg3znc.js";
 import {
@@ -35,12 +35,12 @@ import { ta } from "./chunk-mwf4pmq2.js";
 import { Rb } from "../第三方库-其他/chunk-jtb5q5xr.js";
 import { Mie } from "../第三方库-其他/chunk-cpfawwsx.js";
 import { s_, hS } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
-import { kb } from "../../../01-核心基础设施/共享小工具-未细化/chunk-pf84p45h.js";
-import { Ib } from "../../../01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js";
-import { H0 } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6rswwsrr.js";
+import { awsSdkCoreClientModule } from "../../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
+import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
+import { getUrlParserModule } from "../../../01-核心基础设施/共享小工具-未细化/url-parser.js";
 import "./chunk-z7ktsccq.js";
-import { w } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var z = w(function (ce) {
+import { commonJS } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var z = commonJS(function (ce) {
   Object.defineProperty(ce, "__esModule", { value: !0 });
   ce.resolveHttpAuthSchemeConfig =
     ce.resolveStsAuthConfig =
@@ -48,7 +48,7 @@ var z = w(function (ce) {
     ce.defaultSTSHttpAuthSchemeParametersProvider =
       void 0;
   var Ut = R_(),
-    G = Ib(),
+    G = smithyContextModule(),
     Lt = V(),
     Mt = async (e, t, n) => ({
       operation: (0, G.getSmithyContext)(t).operation,
@@ -99,7 +99,7 @@ var z = w(function (ce) {
   };
   ce.resolveHttpAuthSchemeConfig = Vt;
 });
-var B = w(function (le) {
+var B = commonJS(function (le) {
   Object.defineProperty(le, "__esModule", { value: !0 });
   le.commonParams = le.resolveClientEndpointParameters = void 0;
   var Yt = (e) =>
@@ -118,7 +118,7 @@ var B = w(function (le) {
     UseDualStack: { type: "builtInParams", name: "useDualstackEndpoint" },
   };
 });
-var He = w(function (ke) {
+var He = commonJS(function (ke) {
   Object.defineProperty(ke, "__esModule", { value: !0 });
   ke.ruleSet = void 0;
   var Ce = "required",
@@ -400,7 +400,7 @@ var He = w(function (ke) {
     };
   ke.ruleSet = Xt;
 });
-var je = w(function (Ne) {
+var je = commonJS(function (Ne) {
   Object.defineProperty(Ne, "__esModule", { value: !0 });
   Ne.defaultEndpointResolver = void 0;
   var Zt = XU(),
@@ -426,14 +426,14 @@ var je = w(function (Ne) {
   Ne.defaultEndpointResolver = oo;
   X.customEndpointFunctions.aws = Zt.awsEndpointFunctions;
 });
-var $e = w(function (Le) {
+var $e = commonJS(function (Le) {
   Object.defineProperty(Le, "__esModule", { value: !0 });
   Le.getRuntimeConfig = void 0;
   var no = R_(),
     ro = sW(),
     io = Lm(),
     so = ta(),
-    co = H0(),
+    co = getUrlParserModule(),
     Fe = hS(),
     Ue = s_(),
     ao = z(),
@@ -475,7 +475,7 @@ var $e = w(function (Le) {
     });
   Le.getRuntimeConfig = lo;
 });
-var Qe = w(function (Ve) {
+var Qe = commonJS(function (Ve) {
   Object.defineProperty(Ve, "__esModule", { value: !0 });
   Ve.getRuntimeConfig = void 0;
   var po = Mie(),
@@ -486,7 +486,7 @@ var Qe = w(function (Ve) {
     mo = Lm(),
     ho = rW(),
     Ge = WR(),
-    A = nE(),
+    A = getNodeConfigProviderModule(),
     ze = EA(),
     _o = oW(),
     fo = JU(),
@@ -567,7 +567,7 @@ var Qe = w(function (Ve) {
     };
   Ve.getRuntimeConfig = yo;
 });
-var Xe = w(function (Ye) {
+var Xe = commonJS(function (Ye) {
   Object.defineProperty(Ye, "__esModule", { value: !0 });
   Ye.resolveHttpAuthRuntimeConfig = Ye.getHttpAuthExtensionConfiguration =
     void 0;
@@ -604,7 +604,7 @@ var Xe = w(function (Ye) {
   });
   Ye.resolveHttpAuthRuntimeConfig = Ao;
 });
-var it = w(function (nt) {
+var it = commonJS(function (nt) {
   Object.defineProperty(nt, "__esModule", { value: !0 });
   nt.resolveRuntimeExtensions = void 0;
   var Ze = QU(),
@@ -631,7 +631,7 @@ var it = w(function (nt) {
     };
   nt.resolveRuntimeExtensions = Ro;
 });
-var V = w(function (te) {
+var V = commonJS(function (te) {
   Object.defineProperty(te, "__esModule", { value: !0 });
   te.STSClient = te.__Client = void 0;
   var st = Q6(),
@@ -697,13 +697,13 @@ var V = w(function (te) {
   }
   te.STSClient = dt;
 });
-var pr = w(function (j) {
+var pr = commonJS(function (j) {
   var O = V(),
     H = ta(),
     gt = Ax(),
     mt = B(),
     E = Rb(),
-    oe = kb(),
+    oe = awsSdkCoreClientModule(),
     No = QU(),
     f = class e extends H.ServiceException {
       constructor(t) {

@@ -10,7 +10,7 @@
 import { ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
 import { A1 } from "../MCP客户端/chunk-j8556pzt.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Zp, HH } from "./chunk-bvxymt09.js";
+import { getComputerUseSession, getComputerUseNativeModule } from "./computer-use-session.js";
 import { zcn } from "./chunk-w5bhde2m.js";
 import { s0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { WSe } from "./chunk-6842b6x1.js";
@@ -5474,7 +5474,7 @@ class An {
   }
 }
 function put() {
-  let e = Zp();
+  let e = getComputerUseSession();
   if (e.hostAdapter) return e.hostAdapter;
   return (
     (e.hostAdapter = {
@@ -5485,7 +5485,7 @@ function put() {
         getHideBeforeActionEnabled: () => iNt().hideBeforeAction,
       }),
       ensureOsPermissions: async () => {
-        let o = HH(),
+        let o = getComputerUseNativeModule(),
           t = o.tcc.checkAccessibility(),
           r = o.tcc.checkScreenRecording();
         return t && r

@@ -8,25 +8,25 @@
 
 // Version: 2.1.263
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Dl } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
+import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { y2t, zM, Yne } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Ta } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { gw, Ej } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { sl } from "../键位绑定(Keybindings)/chunk-qy43nqgh.js";
+import { useKeybindingContext } from "../键位绑定(Keybindings)/keybinding-context.js";
 import { Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
-import { Zr } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js";
-import { wf } from "../../01-核心基础设施/共享小工具-未细化/chunk-pbd0pf42.js";
-import { Zz } from "../工具Bash-Shell/chunk-qnax4jt7.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
+import { useTaskRegistry } from "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
+import { BashToolOutputView } from "../工具Bash-Shell/bash-output-view.js";
 import { zZ } from "../工具Bash-Shell/chunk-ktp8xtmy.js";
-import { kh } from "../../01-核心基础设施/共享小工具-未细化/chunk-tw8akhx1.js";
+import { isKbCohesionFixesEnabled } from "../../01-核心基础设施/共享小工具-未细化/kb-cohesion-fixes.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, vr, V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 var f = "ctrl+b",
   S = "ctrl+x ctrl+b",
@@ -42,9 +42,9 @@ function v(l) {
   return !1;
 }
 function bWe({ handler: l, isActive: s }) {
-  let u = kh(),
-    n = Zr("task:background", "Task", f),
-    g = sl(),
+  let u = isKbCohesionFixesEnabled(),
+    n = useKeybindingDisplayText("task:background", "Task", f),
+    g = useKeybindingContext(),
     c = g?.bindings,
     i = V(() => (c ? v(c) : !1), [c]),
     d = vr(l),
@@ -78,7 +78,7 @@ function cPt(b) {
   if (T[0] !== b) ((N = b === void 0 ? {} : b), (T[0] = b), (T[1] = N));
   else N = T[1];
   let { onBackground: x } = N,
-    C = wf(),
+    C = useTaskRegistry(),
     A;
   if (T[2] !== x || T[3] !== C)
     ((A = () => {
@@ -93,17 +93,17 @@ function cPt(b) {
   if (T[5] !== y) ((I = { handler: y, isActive: !0 }), (T[5] = y), (T[6] = I));
   else I = T[6];
   let { cohesionFixes: L, gateOnShortcut: de } = bWe(I),
-    j = Zr("task:background", "Task", "ctrl+b"),
+    j = useKeybindingDisplayText("task:background", "Task", "ctrl+b"),
     M = L
       ? de
       : a.terminal === "tmux" && j === "ctrl+b"
         ? "ctrl+b ctrl+b (twice)"
         : j;
-  if (Dl() || (L && M === "")) {
+  if (areBackgroundTasksDisabled() || (L && M === "")) {
     return null;
   }
   let U;
-  if (T[7] === p) ((U = { keyCase: "lower" }), (T[7] = U));
+  if (T[7] === MEMO_CACHE_SENTINEL) ((U = { keyCase: "lower" }), (T[7] = U));
   else U = T[7];
   let z;
   if (T[8] !== M)
@@ -111,7 +111,7 @@ function cPt(b) {
       paddingLeft: 5,
       children: e(t, {
         dimColor: !0,
-        children: e(D, {
+        children: e(KeybindingHint, {
           chord: M,
           action: "run in background",
           parens: !0,
@@ -155,7 +155,7 @@ function sgr(
 ) {
   let c = l.at(-1);
   if (!c || !c.data)
-    return e(xe, {
+    return e(ToolResultRow, {
       height: 1,
       children: e(t, { dimColor: !0, children: "Running\u2026" }),
     });
@@ -172,14 +172,14 @@ function sgr(
   });
 }
 function igr() {
-  return e(xe, {
+  return e(ToolResultRow, {
     height: 1,
     children: e(t, { dimColor: !0, children: "Waiting\u2026" }),
   });
 }
 function agr(l, s, { verbose: u, theme: n, tools: g, style: c }) {
   let d = s.at(-1)?.data?.timeoutMs;
-  return e(Zz, { content: l, verbose: u, timeoutMs: d });
+  return e(BashToolOutputView, { content: l, verbose: u, timeoutMs: d });
 }
 function lgr(l, { verbose: s, progressMessagesForMessage: u, tools: n }) {
   return e(Yd, { result: l, verbose: s });

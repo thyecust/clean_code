@@ -15,15 +15,15 @@ import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chu
 import { _i, jd, Oo } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { Pg } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { Ch } from "../语法高亮-Markdown渲染/chunk-mnn6q099.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 function M(q) {
   let a = _(23),
@@ -96,7 +96,7 @@ function M(q) {
   else x = a[19];
   let L;
   if (a[20] !== h || a[21] !== x)
-    ((L = e(xe, {
+    ((L = e(ToolResultRow, {
       children: r(o, { flexDirection: "column", children: [h, x] }),
     })),
       (a[20] = h),
@@ -135,14 +135,14 @@ function renderToolUseRejectedMessage(s, { verbose: i }) {
 }
 function renderToolUseErrorMessage(s, { verbose: i }) {
   if (!i && typeof s === "string" && Lr(s, "tool_use_error"))
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, { color: "error", children: "Error editing notebook" }),
     });
   return e(Yd, { result: s, verbose: i });
 }
 function renderToolResultMessage({ cell_id: s, new_source: i, error: l }) {
-  if (l) return e(xe, { children: e(t, { color: "error", children: _i(l) }) });
-  return e(xe, {
+  if (l) return e(ToolResultRow, { children: e(t, { color: "error", children: _i(l) }) });
+  return e(ToolResultRow, {
     children: r(o, {
       flexDirection: "column",
       children: [

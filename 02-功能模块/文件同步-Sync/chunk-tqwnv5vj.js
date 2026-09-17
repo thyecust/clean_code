@@ -35,7 +35,7 @@ import { o3n } from "../Git-Worktree/chunk-v967hawf.js";
 import { oT } from "./chunk-ht8ydg1v.js";
 import { sln, JA, Jbe, pOe } from "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { lstat, realpath } from "fs/promises";
 import {
   basename,
@@ -270,7 +270,7 @@ function Z9n(e) {
 }
 function lOe(e, t, r, a = !1) {
   let i = t === "/" ? e : e.split(t).join("/"),
-    o = Y([i.replace(Ce, ""), E3(i)]);
+    o = dedupe([i.replace(Ce, ""), E3(i)]);
   return (
     De.test(e) ||
     shouldIgnore(i) ||
@@ -316,7 +316,7 @@ async function Kpt(e, t, r, a = !1) {
   return (await he(i, e, t, a ? r : null)) ? "place" : null;
 }
 function Xce(e) {
-  return Y([e, E3(e)]).some((t) => {
+  return dedupe([e, E3(e)]).some((t) => {
     let r = nc(t.split("/").at(-1) ?? "");
     return DANGEROUS_FILES_LC.has(r) || Fe.has(xe(r) ?? "");
   });

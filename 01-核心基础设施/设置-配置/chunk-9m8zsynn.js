@@ -12,7 +12,7 @@ import { $W } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { ge, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { ot } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Nr, Ow, CHn, getRemoteManagedSettingsSyncFromCache } from "./设置-配置.aqbb35ee.js";
 import { pt } from "../共享小工具-未细化/chunk-jjr7hzzf.js";
@@ -49,7 +49,7 @@ function q(e) {
   let t = oe(N(e), X);
   return t === "" ? w : t;
 }
-var Q = m(() => $e([v(se()), c({ tips: v(se()) }).transform((e) => e.tips)]));
+var Q = createLazyValue(() => $e([v(se()), c({ tips: v(se()) }).transform((e) => e.tips)]));
 async function V(e) {
   try {
     let t = P() === "windows" ? 0 : constants.O_NOFOLLOW | constants.O_NONBLOCK,

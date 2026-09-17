@@ -37,20 +37,20 @@ import {
   Oz,
   wh,
 } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { yt, R, l, A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, z, fp, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { fi } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { eae, jhe, Kl, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { CLAUDE_AI_OAUTH_SCOPES, preservableScopesFrom } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -112,10 +112,10 @@ import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程�
 import { JS, lCe, Swt, uJ, yN, yG } from "./chunk-hh8f1qrw.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { $bn } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
-import { Uy } from "../../01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js";
+import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var toe = { source: "github", repo: "anthropics/claude-plugins-official" },
   ig = "claude-plugins-official";
 var Xe = [
@@ -147,7 +147,7 @@ function Ze(e) {
   return e.includes(`anthropics/${ig}`);
 }
 function qE(e, t, r, o, s) {
-  i("tengu_plugin_remote_fetch", {
+  logEvent("tengu_plugin_remote_fetch", {
     source: fromEnum(e),
     host: fromEnum(t ? Je(t) : "unknown"),
     is_official: e === "plugin_catalog" || (t ? Ze(t) : !1),
@@ -244,7 +244,7 @@ function afe() {
   );
 }
 function it() {
-  return Y(
+  return dedupe(
     [he(), ...mp()].flatMap((e) => {
       let t = findGitRoot(e);
       return t !== null ? [e, t] : [e];
@@ -328,7 +328,7 @@ function Ee(
         ...Bs("plugin"),
       }),
       ie = Et(async () => {
-        if (!S && k.pid !== void 0) await Uy(k.pid, "SIGKILL");
+        if (!S && k.pid !== void 0) await killProcessTree(k.pid, "SIGKILL");
       });
     function x(E) {
       if (S) return;
@@ -365,7 +365,7 @@ function Ee(
         x(N);
         return;
       }
-      Uy(k.pid, "SIGKILL").then(M, M);
+      killProcessTree(k.pid, "SIGKILL").then(M, M);
     }
     let ae = setTimeout((E) => E("timed-out"), o, se);
     (k.stdout?.setEncoding("utf8"),
@@ -885,7 +885,7 @@ async function swt(e) {
   } catch {
     return { ok: !1, reason: "parse_failed" };
   }
-  if (!me(r)) return { ok: !1, reason: "non_object" };
+  if (!isRecord(r)) return { ok: !1, reason: "non_object" };
   let o = {};
   for (let [s, c] of Object.entries(r)) {
     if (typeof c !== "string") return { ok: !1, reason: "non_string_value" };
@@ -1577,7 +1577,7 @@ async function sn(e) {
             recordScopeExpansionAttempt(o.refreshToken),
             (p = await refreshOAuthToken(o.refreshToken, {
               clientId: o.clientId,
-              scopes: Y([...CLAUDE_AI_OAUTH_SCOPES, ...preservableScopesFrom(o.scopes), B]),
+              scopes: dedupe([...CLAUDE_AI_OAUTH_SCOPES, ...preservableScopesFrom(o.scopes), B]),
               signal: c,
               telemetryContext: "plugins_scope_expansion",
             })));
@@ -1653,7 +1653,7 @@ function cn(e, t) {
         );
       })
       .then((p) => (r.settle(s), c(), p)),
-    c = Et(() => kt(s, ln));
+    c = Et(() => withDeadline(s, ln));
   return (r.begin(s), s);
 }
 var un = 1e4;
@@ -1661,7 +1661,7 @@ async function sJ(e, t, r, o = un) {
   if (t?.aborted) return;
   let s = cn(e, r);
   if (!t) {
-    await kt(s, o);
+    await withDeadline(s, o);
     return;
   }
   let c,
@@ -1669,7 +1669,7 @@ async function sJ(e, t, r, o = un) {
       ((c = () => d()), t.addEventListener("abort", c, { once: !0 }));
     });
   try {
-    await kt(Promise.race([s, p]), o);
+    await withDeadline(Promise.race([s, p]), o);
   } finally {
     t.removeEventListener("abort", c);
   }
@@ -1683,7 +1683,7 @@ function bGt(e, t) {
   if (r.success) {
     let o = r.data.error.type ?? "error_envelope_no_type";
     return (
-      q(
+      writeDiagnosticsEvent(
         "warn",
         e === "skills" ? "skills_sync_list_error" : "plugins_sync_list_error",
         { serverError: o, status: t.status },
@@ -1692,7 +1692,7 @@ function bGt(e, t) {
     );
   }
   return (
-    q(
+    writeDiagnosticsEvent(
       "warn",
       e === "skills"
         ? "skills_sync_list_malformed"
@@ -1708,7 +1708,7 @@ function wGt(e) {
 function mwt(e) {
   return { kind: fromEnum(e.kind), ...(e.status !== void 0 && { status: e.status }) };
 }
-var TGt = m(() =>
+var TGt = createLazyValue(() =>
   nt({
     error: nt({
       type: le().optional(),
@@ -1759,13 +1759,13 @@ var wn =
 async function Sn(e) {
   let t = await e();
   if (t.ok) return t;
-  return (await Z(ze), e());
+  return (await sleep(ze), e());
 }
 async function pXe(e, t = {}) {
   await sJ(e, t.signal, t.credentials);
   let r = await We(t);
   if (r.success || r.status === 403) return r;
-  return (await Z(ze), We(t));
+  return (await sleep(ze), We(t));
 }
 async function We(e) {
   let t = [];
@@ -1783,7 +1783,7 @@ async function We(e) {
       if (s.data.has_more !== !0) return { success: !0, plugins: t };
     }
     return (
-      q("warn", "plugins_sync_list_page_cap", {
+      writeDiagnosticsEvent("warn", "plugins_sync_list_page_cap", {
         pages: ne,
         collected: t.length,
       }),
@@ -1827,7 +1827,7 @@ async function kn(e, t, r, o) {
     if (!d.ok || !d.data) {
       let k = d.ok ? "empty_body" : d.reason;
       return (
-        q("warn", "plugins_sync_download_not_ok", { reason: k }),
+        writeDiagnosticsEvent("warn", "plugins_sync_download_not_ok", { reason: k }),
         { ok: !1, reason: k }
       );
     }
@@ -1863,7 +1863,7 @@ async function kn(e, t, r, o) {
       await je(t, { force: !0 });
       let k = T === 0 ? "empty_body" : gwt(b.subarray(0, T));
       return (
-        q("warn", "plugins_sync_download_not_zip", {
+        writeDiagnosticsEvent("warn", "plugins_sync_download_not_zip", {
           serverError: k,
           bodyLen: c,
         }),
@@ -1891,7 +1891,7 @@ async function kn(e, t, r, o) {
             ? "network"
             : Ps(d).kind;
     return (
-      q("warn", "plugins_sync_download_exception", { kind: w }),
+      writeDiagnosticsEvent("warn", "plugins_sync_download_exception", { kind: w }),
       { ok: !1, reason: w }
     );
   }
@@ -1909,7 +1909,7 @@ async function En(e, t, r) {
     if (!o.ok || !o.data) {
       let c = o.ok ? "empty_body" : o.reason;
       return (
-        q("warn", "plugins_sync_download_not_ok", { reason: c }),
+        writeDiagnosticsEvent("warn", "plugins_sync_download_not_ok", { reason: c }),
         { ok: !1, reason: c }
       );
     }
@@ -1917,7 +1917,7 @@ async function En(e, t, r) {
     if (s.length < 2 || s[0] !== 80 || s[1] !== 75) {
       let c = s.length === 0 ? "empty_body" : gwt(s);
       return (
-        q("warn", "plugins_sync_download_not_zip", {
+        writeDiagnosticsEvent("warn", "plugins_sync_download_not_zip", {
           serverError: c,
           bodyLen: s.length,
         }),
@@ -1928,12 +1928,12 @@ async function En(e, t, r) {
   } catch (o) {
     let { kind: s } = Ps(o);
     return (
-      q("warn", "plugins_sync_download_exception", { kind: s }),
+      writeDiagnosticsEvent("warn", "plugins_sync_download_exception", { kind: s }),
       { ok: !1, reason: s }
     );
   }
 }
-var bn = m(() => {
+var bn = createLazyValue(() => {
     let e = le()
         .nullish()
         .transform((o) => o ?? ""),
@@ -1970,7 +1970,7 @@ class Ve {
     let o = await this.fetch();
     if (!o.ok) {
       if (
-        (i(
+        (logEvent(
           e === "skills"
             ? "tengu_skills_sync_manifest_failed"
             : "tengu_plugins_sync_manifest_failed",
@@ -1989,7 +1989,7 @@ var roe = new Gt(() => new Ve());
 async function Rn() {
   let e = await qe();
   if (e.ok || e.reason === "no_auth" || e.reason === "gated") return e;
-  return (await Z(Pn), qe());
+  return (await sleep(Pn), qe());
 }
 async function qe() {
   try {
@@ -2003,28 +2003,28 @@ async function qe() {
     if (!e.ok) {
       if (e.reason === "no-auth")
         return (
-          q("warn", "session_refs_manifest_no_auth"),
+          writeDiagnosticsEvent("warn", "session_refs_manifest_no_auth"),
           { ok: !1, reason: "no_auth" }
         );
       return (
-        q("warn", "session_refs_manifest_gated", { reason: e.reason }),
+        writeDiagnosticsEvent("warn", "session_refs_manifest_gated", { reason: e.reason }),
         { ok: !1, reason: "gated" }
       );
     }
     if (e.status === 503)
       return (
-        q("warn", "session_refs_manifest_unavailable"),
+        writeDiagnosticsEvent("warn", "session_refs_manifest_unavailable"),
         { ok: !1, reason: "unavailable" }
       );
     if (e.status >= 300)
       return (
-        q("warn", "session_refs_manifest_http_error", { status: e.status }),
+        writeDiagnosticsEvent("warn", "session_refs_manifest_http_error", { status: e.status }),
         { ok: !1, reason: "http_error" }
       );
     let t = bn().safeParse(e.data);
     if (!t.success)
       return (
-        q("warn", "session_refs_manifest_malformed"),
+        writeDiagnosticsEvent("warn", "session_refs_manifest_malformed"),
         { ok: !1, reason: "malformed" }
       );
     return {
@@ -2035,7 +2035,7 @@ async function qe() {
   } catch (e) {
     let { kind: t } = Ps(e);
     return (
-      q("warn", "session_refs_manifest_exception", { kind: t }),
+      writeDiagnosticsEvent("warn", "session_refs_manifest_exception", { kind: t }),
       { ok: !1, reason: "transport" }
     );
   }

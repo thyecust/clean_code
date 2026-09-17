@@ -10,7 +10,7 @@
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getAuthHeaders, TUe, FCt, checkAndRefreshOAuthTokenIfNeeded, H, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, Io, MPn, Xu, cr, nt, hm, Cu } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -133,7 +133,7 @@ function be(e) {
 function he(e) {
   return be(e) ? Q[e] : e;
 }
-var pe = m(() =>
+var pe = createLazyValue(() =>
     nt({
       exists: Io(),
       data: hm(le(), Xu()).optional(),
@@ -141,7 +141,7 @@ var pe = m(() =>
       updatedAt: le().optional(),
     }),
   ),
-  ye = m(() =>
+  ye = createLazyValue(() =>
     nt({
       docs: cr(
         nt({
@@ -154,7 +154,7 @@ var pe = m(() =>
       nextCursor: le().optional(),
     }),
   ),
-  V = m(() =>
+  V = createLazyValue(() =>
     nt({
       documents: Zt().int().safe().nonnegative(),
       maxDocuments: Zt().int().safe().positive(),
@@ -166,11 +166,11 @@ function J(e, r) {
   if (r === void 0 && typeof e === "object" && e !== null && e.usage !== void 0)
     logFeatureSad("artifact_db_write", "malformed_usage");
 }
-var we = m(() => nt({ version: Zt().int().optional(), usage: V() })),
-  ke = m(() =>
+var we = createLazyValue(() => nt({ version: Zt().int().optional(), usage: V() })),
+  ke = createLazyValue(() =>
     nt({ results: cr(nt({ version: Zt().int().optional() })), usage: V() }),
   ),
-  ve = m(() =>
+  ve = createLazyValue(() =>
     nt({
       error: nt({
         code: Cu("invalid_argument"),
@@ -190,7 +190,7 @@ class Z {
 }
 var De = 3600000,
   Bcn = new j(() => new Z()),
-  Ee = m(() =>
+  Ee = createLazyValue(() =>
     nt({
       error: nt({
         code: le().optional(),
@@ -291,7 +291,7 @@ function G(e, r) {
 }
 var q = "data/users/me",
   x = "whoami",
-  $e = m(() => nt({ id: le().min(1) }));
+  $e = createLazyValue(() => nt({ id: le().min(1) }));
 function ee(e, r) {
   return `${e}:${r}`;
 }

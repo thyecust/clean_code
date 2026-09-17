@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z } from "../共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../共享小工具-未细化/async-timeout-utils.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ae } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Rxt } from "../设置-配置/chunk-zqr5ctyf.js";
@@ -263,7 +263,7 @@ var d = 250;
 async function captureProcessStartTimeAsync(e) {
   let t = await getProcessStartTimeAsync(e, { skipCache: !0 });
   if (t !== void 0) return t;
-  return (await Z(d + Math.floor(Math.random() * d)), getProcessStartTimeAsync(e, { skipCache: !0 }));
+  return (await sleep(d + Math.floor(Math.random() * d)), getProcessStartTimeAsync(e, { skipCache: !0 }));
 }
 async function m(e, t) {
   let n = t === void 0 ? {} : { env: t, extendEnv: !1 };

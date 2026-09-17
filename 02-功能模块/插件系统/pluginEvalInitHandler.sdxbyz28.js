@@ -11,8 +11,8 @@
 // [preload stripped] 原本在此预载 168 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Si, he, su, ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Dr, Vrt, jf, wh, $W } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Dt, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { withTimeout, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Ra, R, l, A, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -21,7 +21,7 @@ import { x, oe, Qu, zxe, ft, cd } from "../../01-核心基础设施/核心工具
 import { v0 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { na, ghe, Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
   qN,
   getSmallFastModel,
@@ -157,11 +157,11 @@ import { gJ, Cr, XXe, rFe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { lR, Xre } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { Rbn, aCe } from "./chunk-ajtn749s.js";
 import { getWIFTokenCache } from "../认证-OAuth登录/chunk-x3rm9w4b.js";
-import { Ile } from "../Workflow编排/chunk-qjm604e8.js";
+import { NON_INHERITED_SESSION_ENV_VARS } from "../Workflow编排/session-env-vars.js";
 import { i9, nSe } from "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
 import { _ee } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
-import { ote, R7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-v599v9yt.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-kk3mqttk.js";
+import { CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../../01-核心基础设施/共享小工具-未细化/ca-trust-env-vars.js";
+import "../../01-核心基础设施/共享小工具-未细化/protobuf-decoding.js";
 import { qit } from "../../01-核心基础设施/HTTP-网络层/HTTP-网络层.pfw3b51q.js";
 import "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/chunk-98spw152.js";
@@ -182,23 +182,23 @@ import {
 import { vUn, hen, RUn, Vit, kUn, xUn } from "../成本-Token统计/chunk-rnndxh1m.js";
 import { CF } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
 import { writeStdoutAndDrain, exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
-import { QWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-m2j3585w.js";
-import { jdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wprkdaj.js";
-import { vy } from "../../01-核心基础设施/共享小工具-未细化/chunk-mbq1q667.js";
+import { SANDBOX_REQUIRED_UNAVAILABLE_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/sandbox-unavailable-message.js";
+import { getFdRealPath } from "../../01-核心基础设施/共享小工具-未细化/fd-real-path.js";
+import { getFileEntryKind } from "../../01-核心基础设施/共享小工具-未细化/file-entry-kind.js";
 import { np, Xc } from "./chunk-33bdfgmx.js";
 import { iR, mSn, u7e, Ure, Bg } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { XE } from "../../01-核心基础设施/共享小工具-未细化/chunk-6eskfcpn.js";
-import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
-import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
-import { ahe } from "../../01-核心基础设施/共享小工具-未细化/chunk-v2wxtqf7.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-fpr1vv1t.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-36nx9gcx.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-c0wtcn4y.js";
+import { isRemoteSettingsEligible } from "../../01-核心基础设施/共享小工具-未细化/remote-settings-eligibility.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
+import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
+import { getFederationCacheDir } from "../../01-核心基础设施/共享小工具-未细化/federation-cache-dir.js";
+import "../../01-核心基础设施/共享小工具-未细化/buffer-coercing-stdio-transport.js";
+import "../../01-核心基础设施/共享小工具-未细化/stdio-server-transport.js";
+import "../../01-核心基础设施/共享小工具-未细化/stdio-message-framing.js";
 import { s, T, O, se, v, c, $e, fe, X, Hb } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { spawnSync } from "child_process";
 import {
   readdir as Ai,
@@ -354,7 +354,7 @@ function xi(e) {
   return e !== null && e.trim() !== "";
 }
 var ho = 262144,
-  wc = m(() =>
+  wc = createLazyValue(() =>
     c({
       input: se(),
       output: s(),
@@ -499,7 +499,7 @@ function Ki() {
 function yn() {
   return ru(["with-only", "both"]).optional();
 }
-var _c = m(() =>
+var _c = createLazyValue(() =>
   Ixt("type", [
     nt({
       type: Cu("regex"),
@@ -566,7 +566,7 @@ function Vi() {
     nt({ tool: le(), input_match: le().optional() }).strict(),
   ]);
 }
-var vc = m(() =>
+var vc = createLazyValue(() =>
   nt({
     schema_version: le(),
     name: le().min(1),
@@ -887,7 +887,7 @@ async function Ac(e) {
   let i = [];
   for (let o of r) {
     let u = Ve.join(e, o.name);
-    if ((await vy(o, u, "other")) !== "dir") i.push(u);
+    if ((await getFileEntryKind(o, u, "other")) !== "dir") i.push(u);
   }
   return (i.sort(), i);
 }
@@ -904,12 +904,12 @@ var ls = 1048576,
   us = "_tools.json",
   Ir = 256,
   vo = /^[A-Za-z0-9_-]+$/,
-  Nc = m(() => {
+  Nc = createLazyValue(() => {
     let e = $e([s(), T(), O()]).transform(String),
       t = Hb(() => $e([e, v(e), fe(s(), t)]));
     return t;
   }),
-  $c = m(() =>
+  $c = createLazyValue(() =>
     c({
       type: X(["fixed", "agent"]).default("fixed"),
       expect: fe(s(), Nc()).optional(),
@@ -923,7 +923,7 @@ var ls = 1048576,
       abort_when: s().optional(),
     }).strict(),
   ),
-  Lc = m(() =>
+  Lc = createLazyValue(() =>
     c({
       tools: v(
         c({
@@ -1022,7 +1022,7 @@ async function xc(e, t) {
     );
   for (let o of i) {
     if (o.name.startsWith(".")) continue;
-    let u = await vy(o, Je.join(e, o.name), "unknown");
+    let u = await getFileEntryKind(o, Je.join(e, o.name), "unknown");
     if (u !== "dir" && u !== "symlink" && u !== "unknown") continue;
     let d = await Mc(Je.join(e, o.name), o.name, t);
     if (d !== null) r.set(o.name, d);
@@ -1610,7 +1610,7 @@ function zc(e, t) {
   }
   return [void 0, e.manifestPath];
 }
-var vs = (e) => (me(e.experimental) ? e.experimental.evals : void 0),
+var vs = (e) => (isRecord(e.experimental) ? e.experimental.evals : void 0),
   Es = (e) => e.evals;
 function Yc(e) {
   let t = (h) => zc(e, h),
@@ -1676,7 +1676,7 @@ async function $r(e) {
       return { kind: "broken", manifestPath: o, reason: l(h) };
     }
     let p = Jc(d, "plugin-json", o);
-    if (p === null || !me(d))
+    if (p === null || !isRecord(d))
       return {
         kind: "broken",
         manifestPath: o,
@@ -1708,7 +1708,7 @@ function gs(e, t) {
   let r = [];
   if (e[t] !== void 0) r.push(e[t]);
   let i = e.experimental;
-  if (me(i) && i[t] !== void 0) r.push(i[t]);
+  if (isRecord(i) && i[t] !== void 0) r.push(i[t]);
   return r;
 }
 function eu(e, t) {
@@ -1740,12 +1740,12 @@ function eu(e, t) {
     for (let d of qc) u(d, "dir");
     for (let d of Qc) u(d, "file");
     for (let d of gs(o, "commands")) {
-      if (!me(d)) continue;
+      if (!isRecord(d)) continue;
       for (let p of Object.values(d)) {
         let h =
           typeof p === "string"
             ? p
-            : me(p) && typeof p.source === "string"
+            : isRecord(p) && typeof p.source === "string"
               ? p.source
               : void 0;
         if (h === void 0) continue;
@@ -2223,12 +2223,12 @@ function yu(e) {
         h = [...p("group"), ...p("initgroups")];
       if (h.length > 0) {
         ((e.groups = new Map()),
-          (e.groupsUnverifiableWhy = `nsswitch group sources: ${Y(h).join(" ")}`));
+          (e.groupsUnverifiableWhy = `nsswitch group sources: ${dedupe(h).join(" ")}`));
         return;
       }
       let w = p("passwd");
       if (w.length > 0)
-        e.groupsUnverifiableWhy = `nsswitch passwd sources: ${Y(w).join(" ")}`;
+        e.groupsUnverifiableWhy = `nsswitch passwd sources: ${dedupe(w).join(" ")}`;
       let E = w.length > 0 ? null : i;
       if (i === null && e.groupsUnverifiableWhy === void 0)
         e.groupsUnverifiableWhy = "/etc/passwd could not be read";
@@ -2398,7 +2398,7 @@ async function Su(e, t) {
     for (let S of _) {
       let C = at.join(w, S.name);
       if (Qn(S.name)) {
-        let L = await vy(S, C, "unknown");
+        let L = await getFileEntryKind(S, C, "unknown");
         if (L === "unknown")
           return {
             kind: "problem",
@@ -2473,7 +2473,7 @@ function Tu(e, t) {
   return r;
 }
 async function Do(e, t) {
-  return (await vy(e, t, "dir")) === "dir";
+  return (await getFileEntryKind(e, t, "dir")) === "dir";
 }
 async function No(e, t, r, i) {
   for (let u = 0; u < t.length; u += 64) {
@@ -3302,7 +3302,7 @@ async function ta(e, t, r, i, o, u) {
         if (
           S.name === "mocks" &&
           o &&
-          (await vy(S, C, "unknown")) === "dir" &&
+          (await getFileEntryKind(S, C, "unknown")) === "dir" &&
           (await ed(e, S.name))
         )
           d(
@@ -3312,7 +3312,7 @@ async function ta(e, t, r, i, o, u) {
           );
         continue;
       }
-      let L = await vy(S, C, "unknown");
+      let L = await getFileEntryKind(S, C, "unknown");
       if (L === "unknown") {
         let N = `${S.name} could not be examined (its type is unknown and it cannot be stat'ed) \u2014 not scanned`;
         if (
@@ -3577,7 +3577,7 @@ function ua(e, t) {
   let r = new Map(),
     i = new Map();
   for (let [S, { serverName: C }] of t) {
-    let L = rn(S),
+    let L = normalizeMcpName(S),
       D = r.get(L);
     if (D !== void 0)
       throw new R(
@@ -3585,14 +3585,14 @@ function ua(e, t) {
         "mocks: declared servers collide after normalization",
       );
     r.set(L, S);
-    let U = rn(C);
+    let U = normalizeMcpName(C);
     i.set(U, [...(i.get(U) ?? []), S]);
   }
   let o = [];
   for (let [S, C] of e.servers) {
-    if (rn(S) !== S)
+    if (normalizeMcpName(S) !== S)
       throw new R(
-        `mocks/${S}/: name the directory after the server segment of the tool name (letters, digits, "_" and "-" only), e.g. mocks/${rn(S)}/`,
+        `mocks/${S}/: name the directory after the server segment of the tool name (letters, digits, "_" and "-" only), e.g. mocks/${normalizeMcpName(S)}/`,
         "mocks: directory name not a tool-name segment",
       );
     let L = r.get(S);
@@ -3604,19 +3604,19 @@ function ua(e, t) {
     if (D.length > 1) {
       let U = D.map((N) => t.get(N)?.pluginName ?? N);
       throw new R(
-        `ambiguous mock server "${S}": declared by plugins ${U.join(" and ")} \u2014 rename mocks/${S}/ to ${D.map((N) => `mocks/${rn(N)}/`).join(" or ")}`,
+        `ambiguous mock server "${S}": declared by plugins ${U.join(" and ")} \u2014 rename mocks/${S}/ to ${D.map((N) => `mocks/${normalizeMcpName(N)}/`).join(" or ")}`,
         "mocks: ambiguous server name",
       );
     }
     if (D.length === 1) {
       let U = D[0];
-      o.push({ kind: "shadow", registeredName: U, segment: rn(U), loaded: C });
+      o.push({ kind: "shadow", registeredName: U, segment: normalizeMcpName(U), loaded: C });
       continue;
     }
     o.push({
       kind: "standalone",
       registeredName: S,
-      segment: rn(S),
+      segment: normalizeMcpName(S),
       loaded: C,
     });
   }
@@ -3646,7 +3646,7 @@ function ua(e, t) {
   let w = new Set(
       o.filter((S) => S.kind === "shadow").map((S) => S.registeredName),
     ),
-    E = [...t.keys()].filter((S) => !w.has(S)).map((S) => `mcp__${rn(S)}__`);
+    E = [...t.keys()].filter((S) => !w.has(S)).map((S) => `mcp__${normalizeMcpName(S)}__`);
   for (let S of o)
     for (let C of S.loaded.tools.keys()) {
       let L = rc(S.registeredName, C);
@@ -3961,7 +3961,7 @@ async function gd() {
   if (e === null) return { ok: !0 };
   try {
     return (
-      await Dt(
+      await withTimeout(
         e.getToken(),
         ha,
         `no answer from the token exchange within ${ha / 1000}s`,
@@ -4177,7 +4177,7 @@ import { constants as Oa } from "fs";
 import Ot from "os";
 import k from "path";
 import { fileURLToPath } from "url";
-var vd = m(() =>
+var vd = createLazyValue(() =>
     c({
       nonce: s(),
       seq: T(),
@@ -4218,7 +4218,7 @@ async function Ta(e, t) {
   }
   return r;
 }
-var Ed = m(() => c({ ready: s(), server: s() }));
+var Ed = createLazyValue(() => c({ ready: s(), server: s() }));
 async function Ca(e) {
   let t = { text: "", truncated: !1 },
     r = await v0(e);
@@ -4294,7 +4294,7 @@ function jn(e, t, r = {}) {
     else if (Ad.has(p.toolName)) i.push(d);
     else if (!u.some((h) => Id(h, p))) o.push(d);
   }
-  return { allowed: Y(i), denied: Y(o) };
+  return { allowed: dedupe(i), denied: dedupe(o) };
 }
 function Aa(e) {
   let { toolName: t, ruleContent: r } = Fr(e);
@@ -4644,10 +4644,10 @@ async function Nd(e, t, r, i, o, u, d) {
   let h = i ?? e.execution.model;
   if (h) p.push(`--model=${h}`);
   for (let S of e.pluginDirs) p.push("--plugin-dir", S);
-  let w = await Vt(Y([...e.pluginDirsUnderTest, e.caseDir]));
+  let w = await Vt(dedupe([...e.pluginDirsUnderTest, e.caseDir]));
   for (let S of [t.root, ...w, ...u])
     fn(S, S === t.root ? "sandbox" : "plugin/case/add_dirs");
-  let E = Y([
+  let E = dedupe([
     ...Md(
       Ud(Fd(r, t.cwd), [t.home, t.tmpDir, ...d.readRoots, ...u], d.readFiles),
       [t.cwd, t.tmpDir],
@@ -4683,7 +4683,7 @@ async function Nd(e, t, r, i, o, u, d) {
 }
 async function $d(e, t, r, i, o, u, d) {
   if (!oi.some((I) => ii(t, I))) return;
-  let p = Y(
+  let p = dedupe(
       r.flatMap((I) => {
         let q = Fr(I);
         return q.toolName === Cr && q.ruleContent?.startsWith("domain:")
@@ -4750,12 +4750,12 @@ async function $d(e, t, r, i, o, u, d) {
       "eval shell grant refused: home is the filesystem root",
     );
   let D = P() === "wsl" ? await Yd(u) : [],
-    U = Y([
+    U = dedupe([
       L,
       Fa(L),
       ...D,
       e.operatorConfigDir,
-      ...(await Vt(Y([...i.pluginDirsUnderTest, i.caseDir]))).map(Fa),
+      ...(await Vt(dedupe([...i.pluginDirsUnderTest, i.caseDir]))).map(Fa),
       k.dirname(e.root),
       ...zo(),
       Ot.tmpdir(),
@@ -4780,7 +4780,7 @@ async function $d(e, t, r, i, o, u, d) {
     );
   let F = d?.addDirs ?? (await Qa(i)),
     J = d?.readScope ?? (await nl(i, F)),
-    K = Y(J.denyPaths);
+    K = dedupe(J.denyPaths);
   for (let I of K) fn(I, "eval deny path");
   let de = await Vt([L, e.operatorConfigDir]),
     re = (I) => de.some((q) => we(q, I)),
@@ -4814,11 +4814,11 @@ async function $d(e, t, r, i, o, u, d) {
         } catch {}
     })(),
   );
-  let He = Y(
+  let He = dedupe(
       (
         await zt(
           Promise.all(
-            [...ote, "NODE_EXTRA_CA_CERTS"]
+            [...CA_BUNDLE_ENV_VARS, "NODE_EXTRA_CA_CERTS"]
               .map((I) => _(I)?.trim())
               .filter((I) => !!I && k.isAbsolute(I) && (!V(I) || re(I)))
               .map(async (I) =>
@@ -4859,7 +4859,7 @@ async function $d(e, t, r, i, o, u, d) {
       KD() ||
       "",
     ue = k.join(ja(), "anthropic"),
-    Ie = Y([ue, Te].filter((I) => I && k.isAbsolute(I))),
+    Ie = dedupe([ue, Te].filter((I) => I && k.isAbsolute(I))),
     Ne = (
       await Promise.all(
         Ie.map((I) =>
@@ -4870,7 +4870,7 @@ async function $d(e, t, r, i, o, u, d) {
     De = (I) => process.env[I],
     We = (I) => o[I] ?? De(I),
     lt = (I) =>
-      Y(
+      dedupe(
         [...Object.entries(o), ...Object.entries(process.env)]
           .filter(([q]) => q.toUpperCase() === I)
           .map(([, q]) => q)
@@ -4891,7 +4891,7 @@ async function $d(e, t, r, i, o, u, d) {
       if (!k.isAbsolute(ke)) throw ce(`${I} holds a relative path`);
       return ke;
     },
-    ve = (I, q) => Y([q, Ce(I, q)].filter(Ze)),
+    ve = (I, q) => dedupe([q, Ce(I, q)].filter(Ze)),
     Ke = [
       ...ve("AWS_CONFIG_FILE", k.join(ee, ".aws", "config")),
       ...ve("AWS_SHARED_CREDENTIALS_FILE", k.join(ee, ".aws", "credentials")),
@@ -4914,7 +4914,7 @@ async function $d(e, t, r, i, o, u, d) {
     Qe = Ce("AZURE_CONFIG_DIR", k.join(ee, ".azure")),
     gt = Re("CLOUDSDK_ROOT_DIR")[0],
     et = ja(),
-    Mt = Y(
+    Mt = dedupe(
       [...lt("NPM_CONFIG_PREFIX"), We("PREFIX")]
         .map((I) => I?.trim())
         .filter((I) => !!I)
@@ -4956,7 +4956,7 @@ async function $d(e, t, r, i, o, u, d) {
       ...ve("DOCKER_CERT_PATH", k.join(ee, ".docker")).map((I) =>
         k.join(I, "key.pem"),
       ),
-      ...Y([
+      ...dedupe([
         k.join(ee, ".config", "gh"),
         ...ve("GH_CONFIG_DIR", k.join(et, "gh")),
       ]).map((I) => k.join(I, "hosts.yml")),
@@ -5000,7 +5000,7 @@ async function $d(e, t, r, i, o, u, d) {
         k.join(I, "credentials.toml"),
         k.join(I, "credentials"),
       ]),
-      ...Y([
+      ...dedupe([
         k.join(et, "composer"),
         k.join(ee, ".composer"),
         ...ve("COMPOSER_HOME", k.join(ee, ".config", "composer")),
@@ -5113,7 +5113,7 @@ async function $d(e, t, r, i, o, u, d) {
     ].filter(Ze),
     jt = (_("PATH") ?? "").split(k.delimiter).filter((I) => k.isAbsolute(I)),
     mn = await zt(yp(jt)),
-    kr = Y(
+    kr = dedupe(
       [
         k.join(ee, ".kube", "config"),
         ...(We("KUBECONFIG") ?? "").split(k.delimiter),
@@ -5178,7 +5178,7 @@ async function $d(e, t, r, i, o, u, d) {
       ...(await pr("/etc/ssh/ssh_config", L, 0, "/etc/ssh")),
       ...(
         await Promise.all(
-          Y([
+          dedupe([
             k.join(L, ".gitconfig"),
             k.join(et, "git", "config"),
             ...Gn(),
@@ -5213,7 +5213,7 @@ async function $d(e, t, r, i, o, u, d) {
         await Promise.all(ve("AZURE_CONFIG_DIR", k.join(ee, ".azure")).map(Ep))
       ).flat(),
     ],
-    Qt = Y(
+    Qt = dedupe(
       [
         ...Le,
         ...Le.map((I) => I?.trim()),
@@ -5340,11 +5340,11 @@ async function $d(e, t, r, i, o, u, d) {
           ...zo(),
           e.configDir,
           e.outDir,
-          ...(await Vt(Y([...i.pluginDirsUnderTest, i.caseDir]))),
+          ...(await Vt(dedupe([...i.pluginDirsUnderTest, i.caseDir]))),
           ...J.denyPaths,
           k.join(e.home, ".config", "git"),
           k.join(e.home, ".local", "lib"),
-          ...Y(
+          ...dedupe(
             qr.flatMap((I) => [
               k.join(e.home, I),
               k.join(e.home, k.dirname(I)),
@@ -5367,7 +5367,7 @@ async function $d(e, t, r, i, o, u, d) {
           ...qr.map((I) => k.join(e.home, I)),
           ...K,
         ].map(sr),
-        allowRead: Y(
+        allowRead: dedupe(
           [
             e.home,
             e.tmpDir,
@@ -5382,7 +5382,7 @@ async function $d(e, t, r, i, o, u, d) {
       },
       network: { allowedDomains: p },
       credentials: {
-        envVars: Y([...yxn(o), ...Vd, ...Cp(o)])
+        envVars: dedupe([...yxn(o), ...Vd, ...Cp(o)])
           .filter((I) => !(Object.hasOwn(S, I) && o[I] === S[I]))
           .filter((I) => !(qit.includes(I) && o[I] === o6))
           .map((I) => ({ name: I, mode: "deny" })),
@@ -5450,7 +5450,7 @@ async function Qa(e) {
   return t;
 }
 var oi = [qe, Ut],
-  el = [ia, lR, Xre];
+  el = [MONITOR_TOOL_NAME, lR, Xre];
 function ii(e, t) {
   return e.some((r) => Fr(r).toolName === t);
 }
@@ -5467,8 +5467,8 @@ function Md(e, t) {
     i.push(u);
   }
   if (r.size === 0) return i;
-  let o = t.flatMap((u) => Y([Bt, ...r]).map((d) => `${d}(${it(u)}/**)`));
-  return Y([...i, ...o]);
+  let o = t.flatMap((u) => dedupe([Bt, ...r]).map((d) => `${d}(${it(u)}/**)`));
+  return dedupe([...i, ...o]);
 }
 var ai = new Set([tt, co, ro, M2]),
   jd = `${tt}(//proc/**)`;
@@ -5510,7 +5510,7 @@ function Ud(e, t, r = []) {
   if (!i) return o;
   let u = t.flatMap((p) => [tt, co, ro].map((h) => `${h}(${it(p)}/**)`)),
     d = r.map((p) => `${tt}(${it(p)})`);
-  return Y([...o, ...u, ...d]);
+  return dedupe([...o, ...u, ...d]);
 }
 var Pa = /[()\[\]{}*?!#\\]/;
 function ht(e, t) {
@@ -5589,7 +5589,7 @@ async function nl(e, t) {
         let ut = (await L(te.dir, te.dir === j)) ?? D(te.dir, j);
         for (let je of ut) {
           let pe = k.join(te.dir, je.name),
-            Se = await vy(je, pe, "unknown");
+            Se = await getFileEntryKind(je, pe, "unknown");
           if (Se !== "dir" && Se !== "symlink" && Se !== "unknown") continue;
           if (++Z > dn || te.depth >= 12) return [j];
           if (_(pe) || Se !== "dir") B.push(pe);
@@ -5616,7 +5616,7 @@ async function nl(e, t) {
     de = K(N, F),
     re = K(e.caseDir, J),
     V = re === void 0 ? void 0 : await d(re),
-    ie = Y([de, V].filter((j) => j !== void 0)).filter((j) => u(j, N)),
+    ie = dedupe([de, V].filter((j) => j !== void 0)).filter((j) => u(j, N)),
     _e = k.dirname(N),
     He = () => {
       for (let j = k.dirname(N); j !== k.dirname(j); j = k.dirname(j))
@@ -5797,7 +5797,7 @@ async function nl(e, t) {
             );
           let pe = k.join(te, je.name);
           if (!Z && Ze.some((q) => u(q, pe))) continue;
-          let Se = await vy(je, pe, "unknown");
+          let Se = await getFileEntryKind(je, pe, "unknown");
           if (Se === "unknown")
             throw new R(
               `${r}: cannot tell what "${oc(je.name)}" under the eval directory is \u2014 make it readable or remove it`,
@@ -5882,7 +5882,7 @@ async function nl(e, t) {
                 "eval nested suite link escapes plugin",
               );
             let I = (q) => !u(ge, q) || Ze.some((ke) => u(ke, q));
-            for (let q of Y([pe, Se])) if (I(q)) Me(q);
+            for (let q of dedupe([pe, Se])) if (I(q)) Me(q);
             if (Se !== pe && !F.some((q) => u(q, Se)));
             else if (I(Se))
               await mn(Se).catch((q) => {
@@ -5904,7 +5904,7 @@ async function nl(e, t) {
             for (let I of await Da(te, r, Ye, (q) => Le.add(q))) Gn(I);
             continue;
           }
-          let Se = await vy(je, pe, "unknown");
+          let Se = await getFileEntryKind(je, pe, "unknown");
           if (Se === "unknown") {
             Me(pe);
             continue;
@@ -5982,7 +5982,7 @@ async function nl(e, t) {
         }
       }
     };
-  for (let j of Y([...F, ge, N]))
+  for (let j of dedupe([...F, ge, N]))
     for (let B of await Da(j, r, Ye, (Z) => Le.add(Z))) Gn(B);
   let Jt = new Set(),
     Rr = new Set();
@@ -6028,7 +6028,7 @@ async function nl(e, t) {
           je = Se;
           continue;
         }
-        let I = await vy(pe, Se, "other");
+        let I = await getFileEntryKind(pe, Se, "other");
         if ((fn(Se, "plugin entry"), C(pe.name) || _(Se) || gn.has(Se)))
           continue;
         if (I === "dir") {
@@ -6072,7 +6072,7 @@ async function nl(e, t) {
     for (let Z of B) {
       let ae = k.join(j, Z.name);
       if (ve(ae)) continue;
-      let te = await vy(Z, ae, "unknown");
+      let te = await getFileEntryKind(Z, ae, "unknown");
       if (te === "dir" && Ke(ae)) en.push(ae);
       else if (te === "dir" || te === "unknown") Me(ae);
       else jt(ae);
@@ -6108,10 +6108,10 @@ async function nl(e, t) {
     }
   }
   return {
-    readRoots: Y(ot.map((j) => k.normalize(j))),
-    readFiles: Y(Re.map((j) => k.normalize(j))),
+    readRoots: dedupe(ot.map((j) => k.normalize(j))),
+    readFiles: dedupe(Re.map((j) => k.normalize(j))),
     denies: Ae,
-    denyPaths: Y(Qe.map((j) => k.normalize(j))),
+    denyPaths: dedupe(Qe.map((j) => k.normalize(j))),
   };
 }
 var dn = 20000,
@@ -6198,7 +6198,7 @@ async function Da(e, t = "plugin eval", r = [], i) {
               `${t}: a version-control store holds too many top-level entries to examine \u2014 refusing to run`,
               "eval fence: vcs store too large to screen",
             );
-          let V = await vy(re, k.join(J, re.name), "unknown");
+          let V = await getFileEntryKind(re, k.join(J, re.name), "unknown");
           if (V === "unknown")
             throw ht(t, Error("unclassifiable version-control store entry"));
           if (V !== "symlink") continue;
@@ -6281,7 +6281,7 @@ async function Da(e, t = "plugin eval", r = [], i) {
     if (N === D) break;
     D = N;
   }
-  return Y(p);
+  return dedupe(p);
 }
 async function ir(e, t) {
   let r = await v0(e);
@@ -6326,7 +6326,7 @@ async function Na(e) {
   let r = 0;
   for (let i of t) {
     let o = k.join(e, i.name);
-    if ((await vy(i, o, "other")) !== "dir" || ++r > 200) continue;
+    if ((await getFileEntryKind(i, o, "other")) !== "dir" || ++r > 200) continue;
     for (let u of ol)
       try {
         return (await ze(k.join(o, u)), !0);
@@ -6437,7 +6437,7 @@ var Wd = ["hooks", "config", "commondir"],
     "CLOUDSDK_AUTH_ACCESS_TOKEN_FILE",
     "CLOUDSDK_AUTH_AUTHORIZATION_TOKEN_FILE",
   ],
-  Vd = Y([
+  Vd = dedupe([
     "HTTPS_PROXY",
     "HTTP_PROXY",
     "ALL_PROXY",
@@ -6490,7 +6490,7 @@ function zd(e) {
         ),
       );
   }
-  return Y(t);
+  return dedupe(t);
 }
 async function Yd(e) {
   let t = (o) => {
@@ -6551,7 +6551,7 @@ async function Vt(e) {
     Promise.all(e.map((r) => mt(r).catch(() => r))),
     "a directory",
   );
-  return Y([...e, ...t]);
+  return dedupe([...e, ...t]);
 }
 function sr(e) {
   return P() === "windows" ? e : it(e);
@@ -6738,7 +6738,7 @@ function rf(e, t, r, i) {
     for (let E of r.servers)
       for (let _ of E.tools) {
         if (E.responderKinds[_] !== "agent") continue;
-        let S = G(
+        let S = countMatching(
           e,
           (C) => C.name === E.toolFullNames[_] && C.isError !== void 0,
         );
@@ -6923,8 +6923,8 @@ var cf = [
     "_CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL",
     ...Object.keys(aB),
     ...rAn.map((e) => e.toUpperCase()),
-    ...ote,
-    ...Object.keys(R7),
+    ...CA_BUNDLE_ENV_VARS,
+    ...Object.keys(SYSTEM_CA_TRUST_ENV_DEFAULTS),
     "GOOGLE_APPLICATION_CREDENTIALS",
     "GOOGLE_CLOUD_PROJECT",
     "GOOGLE_CLOUD_QUOTA_PROJECT",
@@ -7008,7 +7008,7 @@ var cf = [
   mf = /_(DIRS?|PATHS?|FILES?|ROOTS?|HOME|LOG|TRACE)$/,
   gf = new Set(["CLAUDE_CODE_GIT_BASH_PATH"]),
   hf = new Set([
-    ...Ile,
+    ...NON_INHERITED_SESSION_ENV_VARS,
     "CLAUDE_CODE_TMPDIR",
     "CLAUDE_CODE_SUBSCRIPTION_TYPE",
     "CLAUDE_CODE_RATE_LIMIT_TIER",
@@ -7162,7 +7162,7 @@ async function Af(e, t, r) {
       if (++d > kf) throw i("is too large to check for symbolic links");
       if (r.has(w.name)) continue;
       let E = k.join(p, w.name),
-        _ = await vy(w, E, "unknown");
+        _ = await getFileEntryKind(w, E, "unknown");
       if (_ === "symlink") throw i("holds a symbolic link inside it");
       if (_ === "unknown") {
         let S = await ze(E).then(
@@ -7217,7 +7217,7 @@ var Pf = 3,
 async function Nf(e) {
   await _ee();
   let t = getRemoteManagedSettingsSyncFromCache();
-  if (!t && XE())
+  if (!t && isRemoteSettingsEligible())
     n(
       "[eval] no cached organization policy to hand the child (the managed-settings fetch has not produced one); a child that cannot fetch runs without the remote-managed tier",
       { level: "warn" },
@@ -7380,7 +7380,7 @@ function Mf(e, t, r, i, o = !1) {
     };
   for (let [D, U] of Object.entries(C)) if (!S.has(D)) E[D] = U;
   if (nS() === "env-quad") {
-    let D = ahe();
+    let D = getFederationCacheDir();
     if (D !== null) E.CLAUDE_CODE_FEDERATION_CACHE_DIR = D;
   }
   for (let D of Object.keys(E)) {
@@ -7408,7 +7408,7 @@ function Mf(e, t, r, i, o = !1) {
   }
   return E;
 }
-var Ff = m(() =>
+var Ff = createLazyValue(() =>
     nt({
       type: Cu("tool_use"),
       id: le(),
@@ -7416,7 +7416,7 @@ var Ff = m(() =>
       input: nt({ action: le().optional() }).passthrough().optional(),
     }),
   ),
-  pi = m(() =>
+  pi = createLazyValue(() =>
     nt({
       type: Cu("tool_result"),
       tool_use_id: le(),
@@ -7424,7 +7424,7 @@ var Ff = m(() =>
       content: Xu().optional(),
     }),
   ),
-  Uf = m(() =>
+  Uf = createLazyValue(() =>
     nt({ message: nt({ content: cr(Xu()) }).passthrough() }).passthrough(),
   );
 function Gf(e) {
@@ -7475,10 +7475,10 @@ function Bf(e) {
   }
   return t;
 }
-var ll = m(() =>
+var ll = createLazyValue(() =>
     nt({ tool_use_result: nt({ url: le() }).passthrough() }).passthrough(),
   ),
-  Wf = m(() =>
+  Wf = createLazyValue(() =>
     nt({ slug: le(), url: le(), publishedAtMs: Zt().optional() }).passthrough(),
   );
 async function Kf(e, t) {
@@ -7671,7 +7671,7 @@ function Xf(e, t, r, i, { shellGranted: o }) {
         else if (Array.isArray(F.errors) && F.errors.length > 0) {
           let J = F.errors.map(String);
           C =
-            o && J.some((K) => K.startsWith(QWe))
+            o && J.some((K) => K.startsWith(SANDBOX_REQUIRED_UNAVAILABLE_MESSAGE))
               ? `${dl} ${J.map((K) => K.replace(/\s*Set sandbox\.failIfUnavailable=false[^.]*\.?/, "")).join(" ")}`
               : J.join(" ");
         }
@@ -7761,7 +7761,7 @@ async function Zf(e, t) {
   let i = [];
   for (let o of r) {
     let u = k.join(e, o.name),
-      d = await vy(o, u, "unknown");
+      d = await getFileEntryKind(o, u, "unknown");
     if (d === "unknown") throw ht(t, Error("unclassifiable directory entry"));
     if (d === "dir") i.push(u);
   }
@@ -7798,7 +7798,7 @@ async function ep(e, t) {
     }
     for (let w of h) {
       let E = k.join(p, w.name),
-        _ = await vy(w, k.join(r, E), "unknown");
+        _ = await getFileEntryKind(w, k.join(r, E), "unknown");
       if (_ === "symlink") {
         if (
           ((_ = await mr(k.join(r, E)).then(
@@ -7849,7 +7849,7 @@ async function ep(e, t) {
   return d;
 }
 var tp = 4,
-  rp = m(() =>
+  rp = createLazyValue(() =>
     nt({
       authentication: Wa({
         type: le().optional(),
@@ -7915,7 +7915,7 @@ function ce(e) {
     "eval shell grant refused: credentials pointer file unreadable",
   );
 }
-var ip = m(() => {
+var ip = createLazyValue(() => {
   let e = nt({
     "client-key": le().nullish(),
     "client-certificate": le().nullish(),
@@ -8609,7 +8609,7 @@ ${C.trim()}`;
 var ar = 5000;
 async function zt(e, t = "a PATH entry") {
   try {
-    return await Dt(e, ar, "PATH probe timed out");
+    return await withTimeout(e, ar, "PATH probe timed out");
   } catch (r) {
     if (r instanceof Error && r.message === "PATH probe timed out")
       throw new R(
@@ -8633,7 +8633,7 @@ async function zt(e, t = "a PATH entry") {
 }
 async function yp(e) {
   let t = ["/usr/bin/security"];
-  for (let r of Y([...e, ..._p])) {
+  for (let r of dedupe([...e, ..._p])) {
     let i;
     try {
       i = await yt(r);
@@ -8748,7 +8748,7 @@ async function Ep(e) {
     .filter((o) => typeof o === "string" && o !== "")
     .map(Ln);
 }
-var kp = m(() =>
+var kp = createLazyValue(() =>
   cr(
     Wa({
       client_id: le().nullish(),
@@ -8867,7 +8867,7 @@ function Ln(e) {
   return e;
 }
 var Ap = 8,
-  Ip = m(() =>
+  Ip = createLazyValue(() =>
     nt({
       credential_source: Wa({
         file: le().nullish(),
@@ -9055,7 +9055,7 @@ function Up(e, { run: t }) {
 }
 function Gp(e, { run: t }) {
   let r = { tool: e.tool, input_match: e.input_match },
-    i = G(t.toolCalls, (p) => vl(p, r)),
+    i = countMatching(t.toolCalls, (p) => vl(p, r)),
     o = e.min ?? 1,
     u = e.max ?? Number.POSITIVE_INFINITY,
     d = i >= o && i <= u;
@@ -9268,7 +9268,7 @@ ${o}`),
       );
     throw E;
   }
-  let w = G(h, Boolean) > h.length / 2;
+  let w = countMatching(h, Boolean) > h.length / 2;
   return {
     name: e.name,
     passed: w,
@@ -9316,7 +9316,7 @@ Does the NEW trajectory satisfy the criterion at least as well as the BASELINE?`
 
 `),
     d = await kl(u, t),
-    p = G(d, Boolean) > d.length / 2;
+    p = countMatching(d, Boolean) > d.length / 2;
   return {
     name: e.name,
     passed: p,
@@ -9433,7 +9433,7 @@ async function Zp(e, t, r) {
         "grader focus file has multiple hard links",
       );
     if (h.ino === 0n) throw i();
-    let w = await jdt(p.fd),
+    let w = await getFdRealPath(p.fd),
       E = w ?? (await hl(t).catch(() => null));
     if (E === null || !we(u, E)) throw i();
     if (w === null) {
@@ -9630,7 +9630,7 @@ import { mkdtemp as om, rm as Nl } from "fs/promises";
 import { createServer } from "net";
 import { tmpdir as sm } from "os";
 import $l from "path";
-var am = m(() =>
+var am = createLazyValue(() =>
     c({ token: s(), registeredName: s(), tool: s(), input: fe(s(), se()) }),
   ),
   lm = 1048576,
@@ -10575,7 +10575,7 @@ async function Tm(e, t, r, i, o, u, d, p, h) {
       let ue = F.state.inFlight;
       if (
         (F.dispose(),
-        await kt(F.settled(), $m),
+        await withDeadline(F.settled(), $m),
         N.aborted === null && F.state.aborted !== null)
       )
         N.aborted = F.state.aborted;
@@ -11002,7 +11002,7 @@ async function ic(e, t) {
   let r = Hgn(e);
   if (!r && e.includes("@")) return { kind: "path", root: e };
   if (r && r.marketplace !== Xc) {
-    let p = (M() && t !== void 0 ? await tD(t) : Cf()).plugins[e];
+    let p = (isHoverRestEnabled() && t !== void 0 ? await tD(t) : Cf()).plugins[e];
     if (!p || p.length === 0) return { kind: "path", root: e };
     let h = p.filter(nD),
       w = h.length > 0 ? h : p,
@@ -11013,7 +11013,7 @@ async function ic(e, t) {
     }
     return { kind: "refused", pluginId: e };
   }
-  let o = (await PWt(M() ? t : void 0)).plugins.find(
+  let o = (await PWt(isHoverRestEnabled() ? t : void 0)).plugins.find(
     (p) => p.name === (r ? r.name : e),
   );
   if (r)
@@ -11021,7 +11021,7 @@ async function ic(e, t) {
       ? { kind: "plugin", root: o.path, pluginId: o.source }
       : { kind: "path", root: e };
   let d = [
-    ...Object.keys((M() && t !== void 0 ? await tD(t) : Cf()).plugins).filter(
+    ...Object.keys((isHoverRestEnabled() && t !== void 0 ? await tD(t) : Cf()).plugins).filter(
       (p) => Hgn(p)?.name === e,
     ),
     ...(o ? [o.source] : []),
@@ -11446,12 +11446,12 @@ async function Gm(e, t, r, i, o = !1) {
     await logFeatureSadAsync("cli_plugin_eval", "case_load_errors");
     return;
   }
-  let u = G(e.cases, (d) => d.score < i);
+  let u = countMatching(e.cases, (d) => d.score < i);
   await logFeatureOkAsync("cli_plugin_eval", {
     all_passed: u === 0,
     num_cases: e.cases.length,
     num_failing_cases: u,
-    num_cases_with_run_errors: G(
+    num_cases_with_run_errors: countMatching(
       e.cases,
       (d) =>
         d.runs.some((p) => p.error) ||
@@ -11499,7 +11499,7 @@ async function Xl(e) {
       } else {
         let { waitForPolicyLimitsToLoad: J } =
           await import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
-        await Dt(J(), 3000, "policy limits load timed out").catch(() => {});
+        await withTimeout(J(), 3000, "policy limits load timed out").catch(() => {});
         let { isArtifactToolEnabled: K } = await import("../Artifact发布-渲染/chunk-01ymf0ar.js");
         if (((U = K()), !U && E))
           (process.stderr.write(
@@ -12165,13 +12165,13 @@ async function eg(e) {
   let t = await Ai(e, { withFileTypes: !0 });
   for (let r of t) {
     let i = Ee.join(e, r.name),
-      o = await vy(r, i, "other");
+      o = await getFileEntryKind(r, i, "other");
     if (r.name === "ADOPT.txt" && o === "file") continue;
     if (o !== "dir") return !1;
     for (let u of await Ai(i, { withFileTypes: !0 }))
       if (
         !yo.test(u.name) ||
-        (await vy(u, Ee.join(i, u.name), "other")) !== "file"
+        (await getFileEntryKind(u, Ee.join(i, u.name), "other")) !== "file"
       )
         return !1;
   }

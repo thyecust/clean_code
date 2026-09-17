@@ -16,16 +16,16 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ott } from "../权限系统/chunk-e4pfvp7x.js";
 import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { m$e, cve, nAn, BEt, uve, dve } from "../Skills技能/chunk-sapykxw7.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function W(ht) {
   return ht.activeGoal;
@@ -39,7 +39,7 @@ function L(ut) {
     i = U(W),
     [, ft] = d(0),
     Q;
-  if (s[0] === p) ((Q = () => ft(Y)), (s[0] = Q));
+  if (s[0] === MEMO_CACHE_SENTINEL) ((Q = () => ft(Y)), (s[0] = Q));
   else Q = s[0];
   if ((ko(Q, i ? 1000 : null), i)) {
     const N = Date.now() - i.setAt;
@@ -72,11 +72,11 @@ function L(ut) {
     let Gt = q;
     const B = Gt.join(" \xB7 ");
     let z;
-    if (s[11] === p)
-      ((z = r(ue, {
+    if (s[11] === MEMO_CACHE_SENTINEL)
+      ((z = r(DotSeparatedList, {
         children: [
           e(t, { children: "/goal clear to stop early" }),
-          e(D, { chord: "escape", action: "dismiss" }),
+          e(KeybindingHint, { chord: "escape", action: "dismiss" }),
         ],
       })),
         (s[11] = z));
@@ -120,7 +120,7 @@ function L(ut) {
   }
   let N;
   if (s[23] !== T || s[24] !== m) {
-    N = en;
+    N = EARLY_RETURN_SENTINEL;
     bb0: {
       let c = nAn(T);
       if (c) {
@@ -131,10 +131,10 @@ function L(ut) {
           b.push(`${c.iterations} ${x(c.iterations, "turn")}`);
         if (c.tokens !== void 0) b.push(`${formatTokens(c.tokens)} tokens`);
         let h;
-        if (s[26] === p)
+        if (s[26] === MEMO_CACHE_SENTINEL)
           ((h = r(t, {
             children: [
-              e(et, { status: "success", withSpace: !0 }),
+              e(StatusIndicator, { status: "success", withSpace: !0 }),
               "Goal achieved",
             ],
           })),
@@ -142,11 +142,11 @@ function L(ut) {
         else h = s[26];
         const G = b.join(" \xB7 ");
         let C;
-        if (s[27] === p)
-          ((C = r(ue, {
+        if (s[27] === MEMO_CACHE_SENTINEL)
+          ((C = r(DotSeparatedList, {
             children: [
               e(t, { children: "/goal <condition> to set another" }),
-              e(D, { chord: "escape", action: "dismiss" }),
+              e(KeybindingHint, { chord: "escape", action: "dismiss" }),
             ],
           })),
             (s[27] = C));
@@ -178,11 +178,11 @@ function L(ut) {
     }
     ((s[23] = T), (s[24] = m), (s[25] = N));
   } else N = s[25];
-  if (N !== en) return N;
+  if (N !== EARLY_RETURN_SENTINEL) return N;
   let h, G;
-  if (s[34] === p)
-    ((h = e(D, { chord: "escape", action: "dismiss" })),
-      (G = e(Rn, {
+  if (s[34] === MEMO_CACHE_SENTINEL)
+    ((h = e(KeybindingHint, { chord: "escape", action: "dismiss" })),
+      (G = e(EmptyStateMessage, {
         hint: "/goal <condition> to set one",
         children: "No goal set",
       })),

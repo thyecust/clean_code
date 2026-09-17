@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { nu, EA } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { T2e } from "../../../01-核心基础设施/共享小工具-未细化/chunk-kzf7s1er.js";
+import { hexEncodingModule } from "../../../01-核心基础设施/共享小工具-未细化/hex-encoding-module.js";
 import { Mie } from "./chunk-cpfawwsx.js";
 import { E2e, s_, hS, q5 } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
-import { Ib } from "../../../01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js";
-import { w, Ae } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var Rb = w(function (wr) {
+import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
+import { commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var Rb = commonJS(function (wr) {
   var cr = nu(),
-    Ie = Ib(),
+    Ie = smithyContextModule(),
     Y = (e) => {
       if (typeof e === "function") return e();
       return e;
@@ -545,11 +545,11 @@ var Rb = w(function (wr) {
   wr.struct = pr;
   wr.translateTraits = U;
 });
-var fe = w(function (qe) {
+var fe = commonJS(function (qe) {
   Object.defineProperty(qe, "__esModule", { value: !0 });
   qe.ChecksumStream = void 0;
   var Jr = hS(),
-    Wr = Ae("stream");
+    Wr = importMetaRequire("stream");
   class De extends Wr.Duplex {
     expectedChecksum;
     checksumSourceLocation;
@@ -602,7 +602,7 @@ var fe = w(function (qe) {
   }
   qe.ChecksumStream = De;
 });
-var B = w(function (Ue) {
+var B = commonJS(function (Ue) {
   Object.defineProperty(Ue, "__esModule", { value: !0 });
   Ue.isBlob = Ue.isReadableStream = void 0;
   var Vr = (e) =>
@@ -615,7 +615,7 @@ var B = w(function (Ue) {
     (e?.constructor?.name === Blob.name || e instanceof Blob);
   Ue.isBlob = Qr;
 });
-var ve = w(function (Fe) {
+var ve = commonJS(function (Fe) {
   Object.defineProperty(Fe, "__esModule", { value: !0 });
   Fe.ChecksumStream = void 0;
   var Yr =
@@ -623,7 +623,7 @@ var ve = w(function (Fe) {
   class ke extends Yr {}
   Fe.ChecksumStream = ke;
 });
-var Ve = w(function (Je) {
+var Ve = commonJS(function (Je) {
   Object.defineProperty(Je, "__esModule", { value: !0 });
   Je.createChecksumStream = void 0;
   var Zr = hS(),
@@ -667,7 +667,7 @@ var Ve = w(function (Je) {
     };
   Je.createChecksumStream = es;
 });
-var Ge = w(function (Qe) {
+var Ge = commonJS(function (Qe) {
   Object.defineProperty(Qe, "__esModule", { value: !0 });
   Qe.createChecksumStream = ns;
   var ts = B(),
@@ -682,7 +682,7 @@ var Ge = w(function (Qe) {
     return new rs.ChecksumStream(e);
   }
 });
-var de = w(function (Ze) {
+var de = commonJS(function (Ze) {
   Object.defineProperty(Ze, "__esModule", { value: !0 });
   Ze.ByteArrayCollector = void 0;
   class Ye {
@@ -714,7 +714,7 @@ var de = w(function (Ze) {
   }
   Ze.ByteArrayCollector = Ye;
 });
-var nt = w(function (rt) {
+var nt = commonJS(function (rt) {
   Object.defineProperty(rt, "__esModule", { value: !0 });
   rt.createBufferedReadable = void 0;
   rt.createBufferedReadableStream = Xe;
@@ -797,10 +797,10 @@ var nt = w(function (rt) {
     return -1;
   }
 });
-var at = w(function (ot) {
+var at = commonJS(function (ot) {
   Object.defineProperty(ot, "__esModule", { value: !0 });
   ot.createBufferedReadable = ls;
-  var ds = Ae("stream"),
+  var ds = importMetaRequire("stream"),
     it = de(),
     C = nt(),
     ms = B();
@@ -852,10 +852,10 @@ var at = w(function (ot) {
     );
   }
 });
-var ht = w(function (ct) {
+var ht = commonJS(function (ct) {
   Object.defineProperty(ct, "__esModule", { value: !0 });
   ct.getAwsChunkedEncodingStream = void 0;
-  var ys = Ae("stream"),
+  var ys = importMetaRequire("stream"),
     bs = (e, t) => {
       let {
           base64Encoder: r,
@@ -895,7 +895,7 @@ var ht = w(function (ct) {
     };
   ct.getAwsChunkedEncodingStream = bs;
 });
-var dt = w(function (ft) {
+var dt = commonJS(function (ft) {
   Object.defineProperty(ft, "__esModule", { value: !0 });
   ft.headStream = gs;
   async function gs(e, t) {
@@ -922,10 +922,10 @@ var dt = w(function (ft) {
     return a;
   }
 });
-var yt = w(function (lt) {
+var yt = commonJS(function (lt) {
   Object.defineProperty(lt, "__esModule", { value: !0 });
   lt.headStream = void 0;
-  var ws = Ae("stream"),
+  var ws = importMetaRequire("stream"),
     xs = dt(),
     Ts = B(),
     Es = (e, t) => {
@@ -967,12 +967,12 @@ var yt = w(function (lt) {
     }
   }
 });
-var Tt = w(function (wt) {
+var Tt = commonJS(function (wt) {
   Object.defineProperty(wt, "__esModule", { value: !0 });
   wt.sdkStreamMixin = void 0;
   var _s = q5(),
     Ms = hS(),
-    Cs = T2e(),
+    Cs = hexEncodingModule(),
     Os = s_(),
     bt = B(),
     gt = "The stream has already been transformed.",
@@ -1020,12 +1020,12 @@ If you are using React Native, this API is not yet supported, see: https://react
   wt.sdkStreamMixin = $s;
   var St = (e) => typeof Blob === "function" && e instanceof Blob;
 });
-var Ct = w(function (_t) {
+var Ct = commonJS(function (_t) {
   Object.defineProperty(_t, "__esModule", { value: !0 });
   _t.sdkStreamMixin = void 0;
   var Rs = EA(),
     Bs = E2e(),
-    me = Ae("stream"),
+    me = importMetaRequire("stream"),
     Is = Tt(),
     Et = "The stream has already been transformed.",
     Ps = (e) => {
@@ -1069,7 +1069,7 @@ var Ct = w(function (_t) {
     };
   _t.sdkStreamMixin = Ps;
 });
-var $t = w(function (Ot) {
+var $t = commonJS(function (Ot) {
   Object.defineProperty(Ot, "__esModule", { value: !0 });
   Ot.splitStream = Ns;
   async function Ns(e) {
@@ -1077,10 +1077,10 @@ var $t = w(function (Ot) {
     return e.tee();
   }
 });
-var Pt = w(function (It) {
+var Pt = commonJS(function (It) {
   Object.defineProperty(It, "__esModule", { value: !0 });
   It.splitStream = Ds;
-  var Rt = Ae("stream"),
+  var Rt = importMetaRequire("stream"),
     As = $t(),
     Bt = B();
   async function Ds(e) {
@@ -1091,7 +1091,7 @@ var Pt = w(function (It) {
     return (e.pipe(t), e.pipe(r), [t, r]);
   }
 });
-var q0n = w(function (y) {
+var q0n = commonJS(function (y) {
   var Nt = hS(),
     zt = s_(),
     At = fe(),
@@ -1194,14 +1194,14 @@ var q0n = w(function (y) {
       });
   });
 });
-var Wt = w(function (vt) {
+var Wt = commonJS(function (vt) {
   Object.defineProperty(vt, "__esModule", { value: !0 });
   vt.randomUUID = void 0;
   var Us = Mie(),
-    Ht = Us.__importDefault(Ae("crypto"));
+    Ht = Us.__importDefault(importMetaRequire("crypto"));
   vt.randomUUID = Ht.default.randomUUID.bind(Ht.default);
 });
-var z0n = w(function (ks) {
+var z0n = commonJS(function (ks) {
   var Vt = Wt(),
     b = Array.from({ length: 256 }, (e, t) => t.toString(16).padStart(2, "0")),
     Ls = () => {
@@ -1235,7 +1235,7 @@ var z0n = w(function (ks) {
     };
   ks.v4 = Ls;
 });
-var w2e = w(function (rr) {
+var w2e = commonJS(function (rr) {
   var Hs = z0n(),
     vs = (e, t, r = (s) => s) => e,
     Js = (e) => {
@@ -1871,7 +1871,7 @@ var w2e = w(function (rr) {
   rr.strictParseLong = Kt;
   rr.strictParseShort = z;
 });
-var Oke = w(function (Ci) {
+var Oke = commonJS(function (Ci) {
   var ie = q0n(),
     T = Rb(),
     x = w2e(),

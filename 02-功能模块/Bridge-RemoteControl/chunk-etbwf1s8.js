@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { Ay } from "../../01-核心基础设施/共享小工具-未细化/chunk-txc6d085.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { logRemoteToolsEvent } from "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
 import { PGt } from "../Teammates团队/chunk-eey53z5b.js";
 var a = 256;
 class o {
@@ -118,9 +118,9 @@ class o {
         d?.abort();
         let r = new AbortController();
         ((d = r),
-          Z(t.afterMs, r.signal).then(() => {
+          sleep(t.afterMs, r.signal).then(() => {
             if (!r.signal.aborted && !i.signal.aborted)
-              (Ay(this.callId, "ask lapsed unanswered", {
+              (logRemoteToolsEvent(this.callId, "ask lapsed unanswered", {
                 ask_id: e.askId,
                 after_ms: t.afterMs,
               }),
@@ -140,7 +140,7 @@ class o {
   endAsk(e) {
     if (this.#d !== void 0) return;
     ((this.#d = e),
-      Ay(this.callId, "ask ended without an answer", {
+      logRemoteToolsEvent(this.callId, "ask ended without an answer", {
         reason: e,
         ask_id: this.#n?.askId,
         host_inst: this.#e,

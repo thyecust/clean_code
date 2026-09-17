@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { ad, gDn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -140,7 +140,7 @@ async function m(t) {
     if (e.crossTier)
       ((process.env.ANTHROPIC_DEFAULT_OPUS_MODEL_NAME = e.fallbackName),
         (process.env.ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION = `Opus unavailable \u2014 using ${e.fallbackName}`));
-    (i("tengu_bedrock_default_fallback", {
+    (logEvent("tengu_bedrock_default_fallback", {
       tier: fromEnum(e.tier),
       default_key: fromEnum(e.defaultKey),
       fallback_key: fromEnum(e.fallbackKey),
@@ -174,7 +174,7 @@ async function k(t) {
     if (e.crossTier)
       ((process.env.ANTHROPIC_DEFAULT_OPUS_MODEL_NAME = e.fallbackName),
         (process.env.ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION = `Opus unavailable \u2014 using ${e.fallbackName}`));
-    (i("tengu_vertex_default_fallback", {
+    (logEvent("tengu_vertex_default_fallback", {
       tier: fromEnum(e.tier),
       default_key: fromEnum(e.defaultKey),
       fallback_key: fromEnum(e.fallbackKey),
@@ -202,7 +202,7 @@ async function D(t) {
       if (!t)
         (ad(e.workingMantleId),
           (s = e.workingMantleId),
-          i("tengu_mantle_default_fallback", {
+          logEvent("tengu_mantle_default_fallback", {
             default_key: fromEnum(e.defaultKey),
             fallback_key: fromEnum(e.workingKey),
             admin_pin_refuted: S("true"),
@@ -218,7 +218,7 @@ async function D(t) {
           (c = !0));
       if (!t) (ad(e.fallbackMantleId), (s = e.fallbackMantleId), (c = !0));
       if (c)
-        (i("tengu_mantle_default_fallback", {
+        (logEvent("tengu_mantle_default_fallback", {
           default_key: fromEnum(e.defaultKey),
           fallback_key: fromEnum(e.fallbackKey),
         }),
@@ -227,7 +227,7 @@ async function D(t) {
           ));
     } else
       ((o = !0),
-        i("tengu_mantle_default_fallback", { default_key: S("exhausted") }),
+        logEvent("tengu_mantle_default_fallback", { default_key: S("exhausted") }),
         l.push(
           `${TIER_LABELS[e.tier]}: no accessible model (tried ${e.triedNames.join(", ")}). Enable ${e.defaultName} in Amazon Bedrock (Mantle).`,
         ));

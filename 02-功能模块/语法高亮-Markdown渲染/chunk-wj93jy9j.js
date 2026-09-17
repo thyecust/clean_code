@@ -13,14 +13,14 @@ import { Fxt, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { _u } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { ree, o, t, jr, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ule } from "../../01-核心基础设施/共享小工具-未细化/chunk-nvfdjg8e.js";
+import { useHyperlinkSupport } from "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { te, dp } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { $7e, U7e } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { rre } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ZR } from "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import {
   VWe,
   o0e,
@@ -34,8 +34,8 @@ import {
   ZZt,
 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { Ai } from "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Yl, V, C, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
@@ -67,7 +67,7 @@ var we = Yl(function (Kt) {
   let Oe = _(14),
     { token: Be, highlight: _e, forceWidth: Jt, linkCap: De } = Kt,
     [ve] = cn(),
-    { columns: Qt } = ks(Se()),
+    { columns: Qt } = ks(useTerminalSize()),
     Fe = tn(),
     ee = Jt ?? Qt,
     xt;
@@ -386,7 +386,7 @@ function We(Ve) {
   if (Ct[0] !== Ve)
     (({ token: Me, ...Ce } = Ve), (Ct[0] = Ve), (Ct[1] = Ce), (Ct[2] = Me));
   else ((Ce = Ct[1]), (Me = Ct[2]));
-  let { columns: Ln } = ks(Se()),
+  let { columns: Ln } = ks(useTerminalSize()),
     Ue = Math.max(1, Math.min(Ke, Ln - Ie - ae)),
     Mt;
   if (Ct[3] !== Ue || Ct[4] !== Ce || Ct[5] !== Me)
@@ -608,10 +608,10 @@ function vt(s, i, l) {
 }
 function js(et) {
   let Wt = _(5),
-    tt = Ai(),
+    tt = useSettings(),
     Nt;
   if (Wt[0] !== tt.syntaxHighlightingDisabled)
-    ((Nt = tt.syntaxHighlightingDisabled ? null : ZR()),
+    ((Nt = tt.syntaxHighlightingDisabled ? null : getSyntaxHighlightAdapter()),
       (Wt[0] = tt.syntaxHighlightingDisabled),
       (Wt[1] = Nt));
   else Nt = Wt[1];
@@ -639,7 +639,7 @@ function lt({
 }) {
   let [W] = cn();
   o0e();
-  let A = ule(),
+  let A = useHyperlinkSupport(),
     L = tn(),
     P = At(U7e, $7e),
     { markdownTokens: B } = ree(),

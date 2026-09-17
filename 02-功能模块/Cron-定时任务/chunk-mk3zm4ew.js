@@ -10,8 +10,8 @@
 import { m0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { mN } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
-import { QI } from "../工具Monitor/chunk-kxk3njnj.js";
-import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
+import { isMonitorToolEnabled } from "../工具Monitor/monitor-tool-description.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 var CRON_CREATE_TOOL_NAME = "CronCreate",
   CRON_DELETE_TOOL_NAME = "CronDelete",
   CRON_LIST_TOOL_NAME = "CronList";
@@ -71,11 +71,11 @@ Only use minute 0 or 30 when the user names that exact time and clearly means it
 
 ${o}
 ${
-  QI()
+  isMonitorToolEnabled()
     ? `
 ## Not for live watching
 
-${CRON_CREATE_TOOL_NAME} re-runs a prompt at fixed wall-clock intervals. To watch a log file, process, or command output and be notified the moment something changes, use the ${ia} tool instead \u2014 ${ia} streams events as they happen; cron polls on a schedule.
+${CRON_CREATE_TOOL_NAME} re-runs a prompt at fixed wall-clock intervals. To watch a log file, process, or command output and be notified the moment something changes, use the ${MONITOR_TOOL_NAME} tool instead \u2014 ${MONITOR_TOOL_NAME} streams events as they happen; cron polls on a schedule.
 `
     : ""
 }

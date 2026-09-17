@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 function B(r) {
   if (r < 60000) return `${Math.round(r / 1000)}s`;
   let t = Math.floor(r / 60000),
@@ -151,7 +151,7 @@ function vRe({
           `[${u}:token] No OAuth token available for refresh, sessionId=${e} (failure ${g}${Number.isFinite(p) ? `/${p}` : ""})`,
           { level: "error" },
         ),
-        q("error", "bridge_token_refresh_no_oauth"),
+        writeDiagnosticsEvent("error", "bridge_token_refresh_no_oauth"),
         g < p)
       ) {
         let _ = setTimeout(x, G, e, o);
@@ -162,7 +162,7 @@ function vRe({
         `[${u}:token] Refresh chain exhausted for sessionId=${e} after ${g} consecutive failures`,
         { level: "error" },
       ),
-        q("error", "bridge_token_refresh_exhausted"),
+        writeDiagnosticsEvent("error", "bridge_token_refresh_exhausted"),
         s?.(e, "no_oauth_token"));
       return;
     }
@@ -171,7 +171,7 @@ function vRe({
       n(
         `[${u}:token] Refreshing token for sessionId=${e}: new token prefix=${f.slice(0, 15)}\u2026`,
       ),
-      i("tengu_bridge_token_refreshed", {}),
+      logEvent("tengu_bridge_token_refreshed", {}),
       t(e, f),
       T && v(f))
     ) {

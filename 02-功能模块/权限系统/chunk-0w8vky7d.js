@@ -15,15 +15,15 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { VU } from "./chunk-e4pfvp7x.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { XL } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import { K_, Qre } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { Zye, eSe, tSe, J0e } from "./chunk-3kjwvb3e.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 import { basename, resolve } from "path";
 function qo() {
@@ -114,17 +114,17 @@ function eZt(st) {
   if (at) {
     const R = `Delete '${i.id}' from daemon.json. The daemon will stop firing it on its next reconcile.`;
     let V;
-    if (m[12] === p) ((V = () => Ne(!1)), (m[12] = V));
+    if (m[12] === MEMO_CACHE_SENTINEL) ((V = () => Ne(!1)), (m[12] = V));
     else V = m[12];
     let A;
     if (m[13] !== G) ((A = () => void G()), (m[13] = G), (m[14] = A));
     else A = m[14];
     let H;
-    if (m[15] === p) ((H = () => Ne(!1)), (m[15] = H));
+    if (m[15] === MEMO_CACHE_SENTINEL) ((H = () => Ne(!1)), (m[15] = H));
     else H = m[15];
     let j;
     if (m[16] !== A)
-      ((j = e(En, {
+      ((j = e(ConfirmPrompt, {
         cancelFirst: !0,
         focus: "cancel",
         confirmLabel: "Yes, remove",
@@ -156,7 +156,7 @@ function eZt(st) {
     ((V = { label: R, value: "toggle" }), (m[21] = R), (m[22] = V));
   else V = m[22];
   let A, H, j;
-  if (m[23] === p)
+  if (m[23] === MEMO_CACHE_SENTINEL)
     ((A = { label: "Edit", value: "edit" }),
       (H = { label: "Remove", value: "remove" }),
       (j = { label: "Back", value: "back" }),
@@ -194,7 +194,7 @@ function eZt(st) {
   const Je = i.enabled ? "success" : "pending";
   let ce;
   if (m[37] !== Je)
-    ((ce = e(et, { status: Je, withSpace: !0 })), (m[37] = Je), (m[38] = ce));
+    ((ce = e(StatusIndicator, { status: Je, withSpace: !0 })), (m[37] = Je), (m[38] = ce));
   else ce = m[38];
   const Oe = i.enabled ? "enabled" : "disabled";
   let ue;
@@ -398,7 +398,7 @@ function tZt(ct) {
   let I = Mo,
     $o,
     ko;
-  if (f[19] === p)
+  if (f[19] === MEMO_CACHE_SENTINEL)
     (($o = {
       type: "text",
       key: "prompt",
@@ -451,7 +451,7 @@ function tZt(ct) {
       (f[29] = Be));
   else Be = f[29];
   let Po;
-  if (f[30] === p)
+  if (f[30] === MEMO_CACHE_SENTINEL)
     ((Po = {
       type: "select",
       key: "permissionMode",

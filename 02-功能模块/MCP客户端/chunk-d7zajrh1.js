@@ -14,9 +14,9 @@ import { gVn, Sjt, bjt, attributionSkillName, dropShadowedFallbackSkills, isFall
 import { te, formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { i3e, $Bn } from "../成本-Token统计/chunk-3nwwgatc.js";
-import { Ule } from "../插件系统/chunk-gzfe39h3.js";
-import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { getDisusedPlugins } from "../插件系统/plugin-disuse.js";
+import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function fF(n, t) {
   return n + " ".repeat(Math.max(0, t - te(n)));
 }
@@ -64,7 +64,7 @@ function uSe(n) {
   };
 }
 async function flt(n) {
-  let t = Ule();
+  let t = getDisusedPlugins();
   t.catch(() => {});
   let o = i3e(),
     c = o.allowed
@@ -161,8 +161,8 @@ async function flt(n) {
       let s = u(e);
       return s === void 0 || !I.has(s);
     }),
-    L = Y(g.map(u).filter((e) => e !== void 0)).map((e) =>
-      Pp(n.mcpClients.find((s) => rn(s.name) === e)?.name ?? e),
+    L = dedupe(g.map(u).filter((e) => e !== void 0)).map((e) =>
+      Pp(n.mcpClients.find((s) => normalizeMcpName(s.name) === e)?.name ?? e),
     );
   return {
     rows: r,

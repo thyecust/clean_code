@@ -9,13 +9,13 @@
 // Version: 2.1.263
 import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Io, cr, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ht, isClaudeAISubscriber, getOauthAccountInfo, getSubscriptionType, isConsumerSubscriber, Qh, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { mue, Km } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function Yqe(e) {
   if (
     typeof e === "object" &&
@@ -197,7 +197,7 @@ function bWn(e, t, r) {
 function tpt(e, t, r = "replace") {
   e((a) => {
     let i = a.alwaysDenyRules.command,
-      l = r === "union" ? Y([...(i ?? []), ...t]) : [...t];
+      l = r === "union" ? dedupe([...(i ?? []), ...t]) : [...t];
     if ((i?.length ?? 0) === l.length && (i ?? []).every((s, c) => s === l[c]))
       return a;
     return {
@@ -247,7 +247,7 @@ var I = "tengu_lilac_loom",
     le()
       .optional()
       .transform((e) => (e === "" ? void 0 : e)),
-  P = m(() =>
+  P = createLazyValue(() =>
     nt({
       feature: le().min(1),
       command: le()
@@ -492,7 +492,7 @@ async function wWn(e, t) {
     }
   );
 }
-var k = m(() => nt({ error: nt({ message: le() }) }));
+var k = createLazyValue(() => nt({ error: nt({ message: le() }) }));
 function U(e) {
   let t = k().safeParse(e);
   return t.success ? t.data.error.message : void 0;

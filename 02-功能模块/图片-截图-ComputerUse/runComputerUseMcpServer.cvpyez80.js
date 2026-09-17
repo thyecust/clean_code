@@ -12,20 +12,20 @@
 import { ListToolsRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/chunk-98spw152.js";
 import "../MCP客户端/chunk-j8556pzt.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { w5, NR, EP, x5 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { zR, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { _F } from "../../01-核心基础设施/共享小工具-未细化/chunk-hxq0hkxe.js";
-import { Iv } from "../../01-核心基础设施/共享小工具-未细化/chunk-bfth4n1b.js";
+import { initializeAnalyticsSink } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
+import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
 import { SGe } from "../../01-核心基础设施/设置-配置/chunk-6rz5fqzm.js";
-import { HH, mK } from "./chunk-bvxymt09.js";
+import { getComputerUseNativeModule, runComputerUseNativeCall } from "./computer-use-session.js";
 import "./chunk-w5bhde2m.js";
 import { X2n, put } from "./chunk-v76f8dbx.js";
 import { WSe } from "./chunk-6842b6x1.js";
 import { GSe } from "../../01-核心基础设施/共享小工具-未细化/chunk-4p4f6hsz.js";
-import { che } from "../../01-核心基础设施/共享小工具-未细化/chunk-36nx9gcx.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-c0wtcn4y.js";
-import "./chunk-jeefwg1w.js";
+import { StdioServerTransport } from "../../01-核心基础设施/共享小工具-未细化/stdio-server-transport.js";
+import "../../01-核心基础设施/共享小工具-未细化/stdio-message-framing.js";
+import "./computer-use-input-native.js";
 import { homedir } from "os";
 var u = ["/Applications/", "/System/Applications/"],
   f = [
@@ -118,8 +118,8 @@ function l(t, e) {
 var m = 1000;
 async function _() {
   try {
-    let t = HH(),
-      { apps: e } = await mK(() => t.apps.listInstalled(), m),
+    let t = getComputerUseNativeModule(),
+      { apps: e } = await runComputerUseNativeCall(() => t.apps.listInstalled(), m),
       o = l(e, homedir());
     if (!o.includes("Finder")) o.unshift("Finder");
     return o;
@@ -148,9 +148,9 @@ async function runComputerUseMcpServer(t) {
   if (e)
     process.stderr.write(`${e}
 `);
-  _F();
-  let o = Iv(t);
-  if (M() && o !== void 0) {
+  initializeAnalyticsSink();
+  let o = pinStorageV5(t);
+  if (isHoverRestEnabled() && o !== void 0) {
     (zR({ storageV5: o }), NR(o));
     let [{ credentialsStoreFor: a }, { primeFastPathCredentials: d }] =
       await Promise.all([
@@ -160,7 +160,7 @@ async function runComputerUseMcpServer(t) {
     (await d(a(o)), await EP(o));
   }
   let r = await createComputerUseMcpServerForCli(),
-    s = new che(),
+    s = new StdioServerTransport(),
     p = !1,
     i = async () => {
       if (p) return;

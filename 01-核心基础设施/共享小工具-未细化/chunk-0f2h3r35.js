@@ -11,7 +11,7 @@ import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.
 import { ft } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
-import { N6 } from "../../02-功能模块/Teammates团队/chunk-enjekn9t.js";
+import { TMUX_BINARY } from "../../02-功能模块/Teammates团队/chunk-enjekn9t.js";
 var c = "it2";
 class u {
   inITerm2 = null;
@@ -52,7 +52,7 @@ function getUserTmuxSocket() {
   return ft(d, ",") || null;
 }
 async function isTmuxAvailable() {
-  return (await execFileNoThrow(N6, ["-V"])).code === 0;
+  return (await execFileNoThrow(TMUX_BINARY, ["-V"])).code === 0;
 }
 function isInITerm2(e = AK) {
   let { terminalProbes: o } = e;

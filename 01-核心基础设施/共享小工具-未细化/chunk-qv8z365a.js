@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Gt, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { q } from "./chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "./diagnostics-log.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 class TeleportLatch {
   state = { status: "inactive" };
@@ -39,7 +39,7 @@ function logTeleportFallbackOnce(e) {
   (t.fallbackSadEmitted.add(e), logFeatureSad("upgrade_teleport_cache", e), l(e));
 }
 function l(e) {
-  q("warn", "cli_teleport_relay_fallback", { reason: e });
+  writeDiagnosticsEvent("warn", "cli_teleport_relay_fallback", { reason: e });
 }
 function verifyPreAnchorIntact(e) {
   let t = getTeleportCacheState();

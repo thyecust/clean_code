@@ -10,23 +10,23 @@
 
 // [preload stripped] 原本在此预载 132 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { nl } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { JI, K_, nCe, SK, vj } from "./chunk-9d5wk5b9.js";
 import { Joe, uve, dve } from "../Skills技能/chunk-sapykxw7.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Dt(no) {
   return no === "interval" ? "text" : "interval";
@@ -46,7 +46,7 @@ function ge(_t) {
     [M, qt] = d(""),
     [q, zt] = d(0),
     [C, ee] = d(a === "every" ? "interval" : "text"),
-    { columns: Kt } = Se(),
+    { columns: Kt } = useTerminalSize(),
     nt;
   if (l[0] !== f.length)
     ((nt = {
@@ -62,7 +62,7 @@ function ge(_t) {
   if (l[2] !== Re)
     ((it = { context: "Select", isActive: Re }), (l[2] = Re), (l[3] = it));
   else it = l[3];
-  Ze(nt, it);
+  useKeybindings(nt, it);
   let st;
   if (
     l[4] !== f ||
@@ -178,52 +178,52 @@ function ge(_t) {
   let Y = mt,
     re;
   if (l[27] !== f.length)
-    ((re = f.length > 0 && e(D, { chord: ["up", "down"], action: "select" })),
+    ((re = f.length > 0 && e(KeybindingHint, { chord: ["up", "down"], action: "select" })),
       (l[27] = f.length),
       (l[28] = re));
   else re = l[28];
   let ne;
   if (l[29] !== f.length)
-    ((ne = f.length > 0 && e(D, { chord: "d", action: "delete" })),
+    ((ne = f.length > 0 && e(KeybindingHint, { chord: "d", action: "delete" })),
       (l[29] = f.length),
       (l[30] = ne));
   else ne = l[30];
   let pt, ft;
-  if (l[31] === p)
-    ((pt = e(D, { chord: "n", action: "add" })),
-      (ft = e(D, { chord: "escape", action: "close" })),
+  if (l[31] === MEMO_CACHE_SENTINEL)
+    ((pt = e(KeybindingHint, { chord: "n", action: "add" })),
+      (ft = e(KeybindingHint, { chord: "escape", action: "close" })),
       (l[31] = pt),
       (l[32] = ft));
   else ((pt = l[31]), (ft = l[32]));
   let ut;
   if (l[33] !== re || l[34] !== ne)
-    ((ut = r(ue, { children: [re, ne, pt, ft] })),
+    ((ut = r(DotSeparatedList, { children: [re, ne, pt, ft] })),
       (l[33] = re),
       (l[34] = ne),
       (l[35] = ut));
   else ut = l[35];
   let Ht = ut,
     vt;
-  if (l[36] === p)
-    ((vt = e(D, { chord: "tab", action: "switch mode" })), (l[36] = vt));
+  if (l[36] === MEMO_CACHE_SENTINEL)
+    ((vt = e(KeybindingHint, { chord: "tab", action: "switch mode" })), (l[36] = vt));
   else vt = l[36];
   let ie;
   if (l[37] !== a)
     ((ie =
-      a === "every" && e(D, { chord: ["up", "down"], action: "next field" })),
+      a === "every" && e(KeybindingHint, { chord: ["up", "down"], action: "next field" })),
       (l[37] = a),
       (l[38] = ie));
   else ie = l[38];
   let yt, ht;
-  if (l[39] === p)
-    ((yt = e(D, { chord: "enter", action: "create" })),
-      (ht = e(D, { chord: "escape", action: "back" })),
+  if (l[39] === MEMO_CACHE_SENTINEL)
+    ((yt = e(KeybindingHint, { chord: "enter", action: "create" })),
+      (ht = e(KeybindingHint, { chord: "escape", action: "back" })),
       (l[39] = yt),
       (l[40] = ht));
   else ((yt = l[39]), (ht = l[40]));
   let kt;
   if (l[41] !== ie)
-    ((kt = r(ue, { children: [vt, ie, yt, ht] })), (l[41] = ie), (l[42] = kt));
+    ((kt = r(DotSeparatedList, { children: [vt, ie, yt, ht] })), (l[41] = ie), (l[42] = kt));
   else kt = l[42];
   let eo = kt;
   const $e = a !== "every",
@@ -236,7 +236,7 @@ function ge(_t) {
       (l[45] = se));
   else se = l[45];
   let gt;
-  if (l[46] === p)
+  if (l[46] === MEMO_CACHE_SENTINEL)
     ((gt = e(t, { dimColor: !0, children: "  " })), (l[46] = gt));
   else gt = l[46];
   const Ee = a !== "until",
@@ -357,7 +357,7 @@ function ge(_t) {
   if (l[76] !== f || l[77] !== G)
     ((ve =
       f.length === 0
-        ? e(Rn, { children: "No active loops" })
+        ? e(EmptyStateMessage, { children: "No active loops" })
         : f.map((xt, oo) => e(ke, { loop: xt, focused: oo === G }, xt.id))),
       (l[76] = f),
       (l[77] = G),
@@ -435,7 +435,7 @@ function ke(io) {
         (x[1] = E));
     else E = x[1];
     let N;
-    if (x[2] === p)
+    if (x[2] === MEMO_CACHE_SENTINEL)
       ((N = e(t, { dimColor: !0, children: " \xB7 " })), (x[2] = N));
     else N = x[2];
     let A;
@@ -474,7 +474,7 @@ function ke(io) {
     ((N = e(t, { bold: !0, children: E })), (x[16] = E), (x[17] = N));
   else N = x[17];
   let A;
-  if (x[18] === p)
+  if (x[18] === MEMO_CACHE_SENTINEL)
     ((A = e(t, { dimColor: !0, children: " \xB7 stop-hook" })), (x[18] = A));
   else A = x[18];
   let T;
@@ -518,7 +518,7 @@ function $t(s) {
   return JI(k) ? k : null;
 }
 var yo = async (s, u) => {
-  i("tengu_loops_command", {});
+  logEvent("tengu_loops_command", {});
   let v = await vj(),
     k = Joe(u.sessionHooksRegistry, K()),
     g = [

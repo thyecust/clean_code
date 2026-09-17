@@ -9,11 +9,11 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 182 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { uo, Hr } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { identity as _m, j, B, K, $p, sn, ES, o_e, ke, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { ud, l, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -21,16 +21,16 @@ import { setBgExitCause } from "../../02-功能模块/后台任务-Shell管理/c
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { Ia, isBgSession, getBgJobDir, prefetchApiKeyFromApiKeyHelperIfSafe, Ff, H, Bo, Te, ee, es } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { findCanonicalGitRoot, isLinkedWorktree, getIsGit } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ee, Br } from "./chunk-6rfqqsva.js";
 import { getSettingsForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { _setProxyAuthHelperConfig, prefetchProxyAuthFromHelperIfSafe } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { no } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
+import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import {
   bUt,
   $s,
@@ -65,9 +65,9 @@ import { zr, z_n } from "../../02-功能模块/Teammates团队/chunk-3k2smxfn.js
 import { hw, NYn } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { xPe } from "../../02-功能模块/权限系统/chunk-4tar9p3n.js";
 import { o$n } from "../../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-hxq0hkxe.js";
-import "../../02-功能模块/MCP客户端/chunk-855hfv8z.js";
-import { jtn } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dxnhjfw.js";
+import "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
+import "../../02-功能模块/MCP客户端/error-log-sink.js";
+import { initSinks } from "../../01-核心基础设施/共享小工具-未细化/init-sinks.js";
 import { _Oe } from "../../02-功能模块/状态栏-主题/chunk-q7ekqy5h.js";
 import "../../02-功能模块/自动更新-安装/chunk-brx72pf1.js";
 import { q4 } from "../../02-功能模块/自动更新-安装/chunk-2g5h49pk.js";
@@ -75,7 +75,7 @@ import { flushAnalyticsSinks } from "../../01-核心基础设施/共享小工具
 import { yOt } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function X(e, o) {
   let r = !1,
     c = Ff(() => {
@@ -106,7 +106,7 @@ async function se(e, o) {
     );
     return;
   }
-  if (no()) {
+  if (isExiting()) {
     (await c(),
       n(
         "[uds-messaging] Late bind landed during shutdown \u2014 torn down, not published",
@@ -154,7 +154,7 @@ function ae() {
 function le() {
   let e;
   try {
-    e = Ae("bun:ffi");
+    e = importMetaRequire("bun:ffi");
   } catch (o) {
     return (
       n(
@@ -190,7 +190,7 @@ async function V(e) {
   let { inProgress: o, backupPath: r } = ue();
   if (!o) return { status: "no_backup" };
   if (
-    (i("tengu_dead_probe_iterm2_crash_restore", {
+    (logEvent("tengu_dead_probe_iterm2_crash_restore", {
       has_backup_path: fromEnum(r ? "true" : "false"),
     }),
     !r)
@@ -241,7 +241,7 @@ async function oe(e, o) {
   let k = await NKe(e, m, _, "session");
   if (!k || !(await te(e, m))) {
     if (
-      (await Z(250),
+      (await sleep(250),
       (k = await NKe(e, m, _, "session")),
       k && !(await te(e, m)))
     )
@@ -271,7 +271,7 @@ async function te(e, o) {
   }
 }
 async function setup(e, o, r, c, m, _, S, k, w, s, T) {
-  q("info", "setup_started");
+  writeDiagnosticsEvent("info", "setup_started");
   let U = process.version.match(/^v(\d+)\./)?.[1];
   if (!U || parseInt(U) < 22)
     (console.error(
@@ -284,7 +284,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
       : (await W())
         ? "already"
         : "switched_off";
-    switch ((q("info", "bg_worker_ctty", { outcome: t }), t)) {
+    switch ((writeDiagnosticsEvent("info", "bg_worker_ctty", { outcome: t }), t)) {
       case "acquired":
         (bUt(), logFeatureOk("bg_worker_ctty"));
         break;
@@ -336,7 +336,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
         );
       let b = performance.now() - t;
       (Ts("setup_uds_messaging_ms", b, t),
-        i("tengu_uds_startup_bind", { durationMs: Math.round(b), bound: !!v }));
+        logEvent("tengu_uds_startup_bind", { durationMs: Math.round(b), bound: !!v }));
     }
   if (process.env.CLAUDE_BG_BACKEND === "daemon") {
     let { startRendezvousServer: t } = await import("../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js");
@@ -392,11 +392,11 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
       process.exit(1));
   }
   let O = performance.now();
-  if (M() && s !== void 0) await updateHooksConfigSnapshotThroughBackend(s);
+  if (isHoverRestEnabled() && s !== void 0) await updateHooksConfigSnapshotThroughBackend(s);
   else captureHooksConfigSnapshot();
   if (
     (Ts("setup_hooks_snapshot_ms", performance.now() - O, O),
-    q("info", "setup_hooks_captured", {
+    writeDiagnosticsEvent("info", "setup_hooks_captured", {
       duration_ms: Math.round(performance.now() - O),
     }),
     !Nn())
@@ -424,7 +424,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
 `),
         ),
           process.exit(1));
-      if (isLinkedWorktree(Q())) (q("info", "worktree_resolved_to_main_repo"), Yu(C), pu(C));
+      if (isLinkedWorktree(Q())) (writeDiagnosticsEvent("info", "worktree_resolved_to_main_repo"), Yu(C), pu(C));
       b = _ ? p6t(C, xde(v)) : void 0;
     } else b = _ ? p6t(Q(), xde(v)) : void 0;
     let I;
@@ -444,7 +444,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
         setBgExitCause("worktree_create"),
         process.exit(1));
     }
-    i("tengu_worktree_created", { tmux_enabled: _ });
+    logEvent("tengu_worktree_created", { tmux_enabled: _ });
     let N = !1;
     if (_ && b) {
       let E = await Smn(b, I.worktreePath);
@@ -486,7 +486,7 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
       (setBgExitCause(`worktree_chdir:${x}`), await flushAnalyticsSinks(), process.exit(1));
     }
     if (
-      (pu(I.worktreePath), ES(Q()), o_e(Q()), saveWorktreeState(I), PY(), M() && s !== void 0)
+      (pu(I.worktreePath), ES(Q()), o_e(Q()), saveWorktreeState(I), PY(), isHoverRestEnabled() && s !== void 0)
     )
       await updateHooksConfigSnapshotThroughBackend(s);
     else updateHooksConfigSnapshot();
@@ -506,11 +506,11 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
     }
     Ts("setup_bg_worktree_adopt_ms", performance.now() - t, t);
   }
-  if ((q("info", "setup_background_jobs_starting"), !uo()));
+  if ((writeDiagnosticsEvent("info", "setup_background_jobs_starting"), !uo()));
   (q4(),
-    q("info", "setup_background_jobs_launched"),
+    writeDiagnosticsEvent("info", "setup_background_jobs_launched"),
     Br("setup_before_prefetch"),
-    q("info", "setup_prefetch_starting"));
+    writeDiagnosticsEvent("info", "setup_prefetch_starting"));
   let Y = (ke() && a.CLAUDE_CODE_SYNC_PLUGIN_INSTALL) || uo() || Hr();
   if (!Y) {
     if (M3(T)) ei(s, T).catch(() => {});
@@ -537,8 +537,8 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
     )
       import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then((t) => t.startMemoryWatcher(s, T));
   }
-  (jtn(),
-    i("tengu_started", {
+  (initSinks(),
+    logEvent("tengu_started", {
       trigger_id: Ee(a.CLAUDE_CODE_TRIGGER_ID),
       worktree_flag: c,
       tmux_flag: _,
@@ -567,7 +567,7 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
   Br("setup_after_prefetch");
   {
     let t = performance.now(),
-      d = [_Oe(s), ...(M() && s !== void 0 ? [NYn(hw, s)] : [])];
+      d = [_Oe(s), ...(isHoverRestEnabled() && s !== void 0 ? [NYn(hw, s)] : [])];
     if (!uo()) d.push(o$n(void 0, s));
     (await Promise.all(d),
       Ts("setup_release_notes_ms", performance.now() - t, t));
@@ -586,7 +586,7 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
   }
   let p = es();
   if (p.lastCost !== void 0 && p.lastDuration !== void 0)
-    i("tengu_exit", {
+    logEvent("tengu_exit", {
       last_session_cost: p.lastCost,
       last_session_api_duration: p.lastAPIDuration,
       last_session_tool_duration: p.lastToolDuration,

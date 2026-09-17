@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { l, A } from "../../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { w, Ae } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var Ce = w(function (Xt, Me) {
-  var U = Ae("constants"),
+import { commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var Ce = commonJS(function (Xt, Me) {
+  var U = importMetaRequire("constants"),
     ft = process.cwd,
     oe = null,
     lt = process.env.GRACEFUL_FS_PLATFORM || "darwin";
@@ -282,8 +282,8 @@ var Ce = w(function (Xt, Me) {
     }
   }
 });
-var qe = w(function (Jt, je) {
-  var Ge = Ae("stream").Stream;
+var qe = commonJS(function (Jt, je) {
+  var Ge = importMetaRequire("stream").Stream;
   je.exports = ht;
   function ht(e) {
     return { ReadStream: t, WriteStream: r };
@@ -363,7 +363,7 @@ var qe = w(function (Jt, je) {
     }
   }
 });
-var $e = w(function (Zt, Ue) {
+var $e = commonJS(function (Zt, Ue) {
   Ue.exports = mt;
   var pt =
     Object.getPrototypeOf ||
@@ -382,12 +382,12 @@ var $e = w(function (Zt, Ue) {
     );
   }
 });
-var we = w(function (er, _e) {
-  var I = Ae("fs"),
+var we = commonJS(function (er, _e) {
+  var I = importMetaRequire("fs"),
     yt = Ce(),
     dt = qe(),
     vt = $e(),
-    ce = Ae("util"),
+    ce = importMetaRequire("util"),
     M,
     fe;
   if (typeof Symbol === "function" && typeof Symbol.for === "function")
@@ -435,7 +435,7 @@ GFS4: `)),
       /\bgfs4\b/i.test(process.env.NODE_DEBUG || ""))
     )
       process.on("exit", function () {
-        (K(I[M]), Ae("assert").equal(I[M].length, 0));
+        (K(I[M]), importMetaRequire("assert").equal(I[M].length, 0));
       });
   }
   var de;
@@ -652,7 +652,7 @@ GFS4: `)),
     if (ae === void 0) ae = setTimeout(Se, 0);
   }
 });
-var Qe = w(function (tr, Ke) {
+var Qe = commonJS(function (tr, Ke) {
   function j(e, t) {
     if (typeof t === "boolean") t = { forever: t };
     if (
@@ -752,7 +752,7 @@ var Qe = w(function (tr, Ke) {
     return t;
   };
 });
-var ze = w(function (wt) {
+var ze = commonJS(function (wt) {
   var _t = Qe();
   wt.operation = function (e) {
     var t = wt.timeouts(e);
@@ -815,7 +815,7 @@ var ze = w(function (wt) {
     }
   };
 });
-var He = w(function (nr, ge) {
+var He = commonJS(function (nr, ge) {
   ge.exports = ["SIGABRT", "SIGALRM", "SIGHUP", "SIGINT", "SIGTERM"];
   ge.exports.push(
     "SIGVTALRM",
@@ -828,7 +828,7 @@ var He = w(function (nr, ge) {
     "SIGIOT",
   );
 });
-var Ve = w(function (ir, X) {
+var Ve = commonJS(function (ir, X) {
   var E = global.process,
     Q = function (e) {
       return (
@@ -849,10 +849,10 @@ var Ve = w(function (ir, X) {
     };
   else {
     if (
-      ((Oe = Ae("assert")),
+      ((Oe = importMetaRequire("assert")),
       (B = He()),
       (Ee = /^win/i.test(E.platform)),
-      (V = Ae("events")),
+      (V = importMetaRequire("events")),
       typeof V !== "function")
     )
       V = V.EventEmitter;
@@ -961,7 +961,7 @@ var Ve = w(function (ir, X) {
   }
   var Oe, B, Ee, V, F, ee, W, te, z, le, se, Te, re, xe;
 });
-var Xe = w(function (kt, Ie) {
+var Xe = commonJS(function (kt, Ie) {
   var ke = Symbol();
   function Tt(e, t, r) {
     let i = t[ke];
@@ -992,8 +992,8 @@ var Xe = w(function (kt, Ie) {
   kt.probe = Tt;
   kt.getMtime = xt;
 });
-var rt = w(function (Mt, ie) {
-  var bt = Ae("path"),
+var rt = commonJS(function (Mt, ie) {
+  var bt = importMetaRequire("path"),
     Fe = we(),
     Ft = ze(),
     Dt = Ve(),
@@ -1191,7 +1191,7 @@ var rt = w(function (Mt, ie) {
   Mt.check = Pt;
   Mt.getLocks = Rt;
 });
-var it = w(function (or, nt) {
+var it = commonJS(function (or, nt) {
   var Ut = we();
   function At(e) {
     let t = ["mkdir", "realpath", "stat", "rmdir", "utimes"],
@@ -1252,7 +1252,7 @@ var it = w(function (or, nt) {
   }
   nt.exports = { toPromise: $t, toSync: Wt, toSyncOptions: Yt };
 });
-var ut = w(function (ur, Y) {
+var ut = commonJS(function (ur, Y) {
   var J = rt(),
     { toPromise: pe, toSync: me, toSyncOptions: Ne } = it();
   async function ot(e, t) {

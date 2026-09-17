@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 3 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Eyn, Dpe, Ayn, B8e } from "../../02-功能模块/权限系统/chunk-8rrcddth.js";
+import { foldRestricted as Eyn, cliCarriesSessionConfig as Dpe, cliCarriesForkRestrictedConfig as Ayn, FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION as B8e } from "../../02-功能模块/权限系统/fork-restricted-launch-flags.js";
 export {
   B8e as FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION,
   Ayn as cliCarriesForkRestrictedConfig,

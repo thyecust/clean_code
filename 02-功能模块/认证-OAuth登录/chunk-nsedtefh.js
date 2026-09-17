@@ -23,15 +23,15 @@ import {
   hon,
 } from "./chunk-j990pwax.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { MCP_CLIENT_METADATA_URL } from "./chunk-9g2q4bjq.js";
 import { yt, R, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromNumberOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, z, ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
@@ -47,7 +47,7 @@ import { Rde, QTe, Fg } from "../../03-入口与运行时/核心应用-Agent循�
 import { hE, BIe, b7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-nw3qvjhe.js";
 import { g9, Lct, Zw, Gn, _E, yE } from "./chunk-7jz937t3.js";
 import { Tct, vLt, RLt, Ect, Orn } from "./chunk-spp7dan6.js";
-import { fM, Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { isHeadlessEnvironment, tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { PQ } from "../../01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
@@ -92,7 +92,7 @@ function ne(e) {
     (r, n) => `"${n}":"[REDACTED]"`,
   );
 }
-var Le = m(() =>
+var Le = createLazyValue(() =>
     c({
       access_token: s().optional(),
       issued_token_type: s().optional(),
@@ -100,7 +100,7 @@ var Le = m(() =>
       scope: s().optional(),
     }),
   ),
-  ze = m(() =>
+  ze = createLazyValue(() =>
     c({
       access_token: s().min(1),
       token_type: s().default("Bearer"),
@@ -404,7 +404,7 @@ function ALt() {
       return await Te(e, t);
     } catch (r) {
       if (t?.signal?.aborted || !Ze(r)) throw r;
-      return (await Z(Ve, t?.signal ?? void 0), await Te(e, t));
+      return (await sleep(Ve, t?.signal ?? void 0), await Te(e, t));
     }
   };
 }
@@ -794,7 +794,7 @@ function be(e, t, r, n) {
     p = n ? l(n) : (r?.warning ?? "storage write failed");
   logMCPDebug(e, `Token persist failed: ${p}`);
   let o = Fg(t);
-  i("tengu_mcp_oauth_token_persist_failed", {
+  logEvent("tengu_mcp_oauth_token_persist_failed", {
     transportType: fromEnum(t.type),
     ...(o && { mcpServerBaseUrl: o }),
     reason: fromEnum(d),
@@ -917,7 +917,7 @@ async function tt(e, t, r, n, d) {
     }
     if (I?.success) logMCPDebug(e, "XAA: tokens saved");
     else be(e, t, I, j);
-    (i("tengu_mcp_oauth_flow_success", {
+    (logEvent("tengu_mcp_oauth_flow_success", {
       authMethod: S("xaa"),
       idTokenCacheHit: v,
     }),
@@ -926,7 +926,7 @@ async function tt(e, t, r, n, d) {
     if (w instanceof K3e) throw w;
     throw (
       logFeatureBad("mcp_oauth_flow", "mcp_oauth_xaa_failed"),
-      i("tengu_mcp_oauth_flow_failure", {
+      logEvent("tengu_mcp_oauth_flow_failure", {
         authMethod: S("xaa"),
         xaaFailureStage: fromEnum(C),
         idTokenCacheHit: v,
@@ -941,7 +941,7 @@ async function whr(e, t, r, n, d) {
       throw Error(
         `XAA is not enabled (set CLAUDE_CODE_ENABLE_XAA=1). Remove 'oauth.xaa' from server '${e}' to use the standard consent flow.`,
       );
-    (i("tengu_mcp_oauth_flow_start", {
+    (logEvent("tengu_mcp_oauth_flow_start", {
       isOAuthFlow: !0,
       authMethod: S("xaa"),
       transportType: fromEnum(t.type),
@@ -968,7 +968,7 @@ async function whr(e, t, r, n, d) {
     }
   let w = { scope: h, resourceMetadataUrl: C },
     E = randomUUID();
-  i("tengu_mcp_oauth_flow_start", {
+  logEvent("tengu_mcp_oauth_flow_start", {
     flowAttemptId: Ee(E),
     isOAuthFlow: !0,
     transportType: fromEnum(t.type),
@@ -1221,7 +1221,7 @@ async function whr(e, t, r, n, d) {
       });
       if ((logMCPDebug(e, `Tokens after auth: ${X ? "Present" : "Missing"}`), X))
         logMCPDebug(e, `Token expires_in: ${X.expires_in}`);
-      (i("tengu_mcp_oauth_flow_success", {
+      (logEvent("tengu_mcp_oauth_flow_success", {
         flowAttemptId: Ee(E),
         transportType: fromEnum(t.type),
         ...(Fg(t) && { mcpServerBaseUrl: Fg(t) }),
@@ -1304,7 +1304,7 @@ async function whr(e, t, r, n, d) {
         .catch((L) => logMCPDebug(e, `drop clientId failed: ${l(L)}`));
     }
     if (T !== "cancelled") logFeatureBad("mcp_oauth_flow", "mcp_oauth_flow_failed");
-    i("tengu_mcp_oauth_flow_error", {
+    logEvent("tengu_mcp_oauth_flow_error", {
       flowAttemptId: Ee(E),
       reason: fromEnum(T),
       error_code: I,
@@ -1903,16 +1903,16 @@ class X3e {
       );
       return;
     }
-    let C = fM();
+    let C = isHeadlessEnvironment();
     if (C)
       logMCPDebug(
         this.serverName,
         `Skipping browser open (headless environment). URL: ${v}`,
       );
     else logMCPDebug(this.serverName, `Opening authorization URL: ${v}`);
-    let w = C ? !1 : await Gr(k);
+    let w = C ? !1 : await tryOpenUrlInBrowser(k);
     if (
-      (i("tengu_mcp_oauth_browser_open", {
+      (logEvent("tengu_mcp_oauth_browser_open", {
         success: w,
         headless: C,
         platform: fromEnum(P()),
@@ -2108,7 +2108,7 @@ class X3e {
             this.serverName,
             `Refresh lock held by another process, waiting (attempt ${o + 1}/${fe})`,
           ),
-            await Z(1000 + Math.random() * 1000));
+            await sleep(1000 + Math.random() * 1000));
           continue;
         }
         logMCPDebug(
@@ -2185,7 +2185,7 @@ class X3e {
     let t = 3,
       r = Fg(this.serverConfig),
       n = (d, p) => {
-        i(
+        logEvent(
           d === "success"
             ? "tengu_mcp_oauth_refresh_success"
             : "tengu_mcp_oauth_refresh_failure",
@@ -2347,7 +2347,7 @@ class X3e {
           this.serverName,
           `Token refresh failed, retrying in ${C}ms (attempt ${d}/${t})`,
         ),
-          await Z(C));
+          await sleep(C));
       }
     }
     return;

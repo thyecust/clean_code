@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B, sc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import {
@@ -27,7 +27,7 @@ import {
   md,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { C4, v4, Jx, D3e } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { rnn, Mle, rlt, V9e } from "../../01-核心基础设施/共享小工具-未细化/chunk-hyrh6kmc.js";
+import { isLowPriorityEligibleClient, isContinuableUsageLimitWall, getSubscriptionTier, sendAutoContinuationPrompt } from "../../01-核心基础设施/共享小工具-未细化/usage-limit-continuation.js";
 var l = new j(() => ({
   notedWallResetsAt: null,
   shownWallResetsAt: null,
@@ -39,7 +39,7 @@ function n() {
 }
 function Lle(t, e = Date.now()) {
   return (
-    Mle(t) &&
+    isContinuableUsageLimitWall(t) &&
     t.lowPriorityOffer === "treatment" &&
     t.resetsAt !== void 0 &&
     t.resetsAt * 1000 > e &&
@@ -52,7 +52,7 @@ function Lle(t, e = Date.now()) {
 function a(t, e = Date.now()) {
   let o = rqn(e);
   return (
-    rnn() &&
+    isLowPriorityEligibleClient() &&
     t.status !== "rejected" &&
     o !== void 0 &&
     !f(o) &&
@@ -73,15 +73,15 @@ function f(t) {
   }
 }
 function TBn(t) {
-  if (t.lowPriorityOffer === void 0 || !Mle(t)) return;
+  if (t.lowPriorityOffer === void 0 || !isContinuableUsageLimitWall(t)) return;
   let e = t.resetsAt ?? null;
   if (e === null) return;
   let o = n();
   if (o.notedWallResetsAt !== e)
     ((o.notedWallResetsAt = e),
-      i("tengu_lowpri_offer_capable", {
+      logEvent("tengu_lowpri_offer_capable", {
         arm: fromEnum(t.lowPriorityOffer),
-        tier: fromEnum(rlt()),
+        tier: fromEnum(getSubscriptionTier()),
         limit_type: fromEnumOpt(t.rateLimitType) ?? void 0,
         auto_armed: v4(),
         client_enabled: oDe(),
@@ -93,7 +93,7 @@ function TBn(t) {
     o.withheldWallResetsAt !== e
   )
     ((o.withheldWallResetsAt = e),
-      i("tengu_lowpri_offer_withheld", {
+      logEvent("tengu_lowpri_offer_withheld", {
         arm: fromEnum(t.lowPriorityOffer),
         reason: fromEnum("cooloff"),
         client_enabled: oDe(),
@@ -105,7 +105,7 @@ function rIe(t, e) {
     r = n();
   if (o === null || r.shownWallResetsAt === o) return;
   ((r.shownWallResetsAt = o),
-    i("tengu_lowpri_offer_shown", {
+    logEvent("tengu_lowpri_offer_shown", {
       arm: fromEnumOpt(t.lowPriorityOffer) ?? void 0,
       surface: fromEnum(e),
       config_version: I4e(),
@@ -126,13 +126,13 @@ function B9e(t) {
       }))
     )
       return "unavailable";
-    return (V9e(), "accepted");
+    return (sendAutoContinuationPrompt(), "accepted");
   }
   if (a(e)) {
     let o = v4();
     if (o) Jx("low_priority");
     if ((s(), !oqn(t))) return "unavailable";
-    if (o) V9e();
+    if (o) sendAutoContinuationPrompt();
     return "resumed";
   }
   return "unavailable";

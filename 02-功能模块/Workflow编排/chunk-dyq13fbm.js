@@ -14,16 +14,16 @@ import { te, truncateToWidth, formatDuration, formatBarElapsed, formatTokens } f
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { h_ } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { Ma, ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { Vf } from "./chunk-cd542wve.js";
-import { c_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-xc85bfby.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { parseWorkflowScript } from "./workflow-script.js";
+import { useReducedMotion } from "../../01-核心基础设施/共享小工具-未细化/reduced-motion.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Nl, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { xs, L, fw } from "../Teammates团队/chunk-mrfx53ye.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function uye(n, i) {
   let a = (s) => getMarketingNameForModel(s) ?? fw(s);
   if (i != null) return `${n == null ? "" : `${a(n)} `}${Llr} ${a(i)}`;
@@ -304,7 +304,7 @@ function Fe(Go) {
         paddingLeft: 1,
         children: r(t, {
           dimColor: !0,
-          children: [e(et, { status: "success" }), " ", M, " done"],
+          children: [e(StatusIndicator, { status: "success" }), " ", M, " done"],
         }),
       })),
       (A[29] = M),
@@ -359,10 +359,10 @@ function Ue(Uo) {
   let U = $n,
     D = C.length - U.length,
     Dn;
-  if (W[3] !== C) ((Dn = G(C, _n)), (W[3] = C), (W[4] = Dn));
+  if (W[3] !== C) ((Dn = countMatching(C, _n)), (W[3] = C), (W[4] = Dn));
   else Dn = W[4];
   let Et = Dn,
-    $e = G(C, jn);
+    $e = countMatching(C, jn);
   const Xo = C.length;
   let De;
   if (W[5] !== C.length)
@@ -518,13 +518,13 @@ var R = 4,
 function Pt(fr) {
   let Fn = _(2),
     Un;
-  if (Fn[0] === p) ((Un = w0n()), (Fn[0] = Un));
+  if (Fn[0] === MEMO_CACHE_SENTINEL) ((Un = w0n()), (Fn[0] = Un));
   else Un = Fn[0];
   let zt = Un,
     [gr, hr] = d(0),
-    br = c_(),
+    br = useReducedMotion(),
     Xn;
-  if (Fn[1] === p)
+  if (Fn[1] === MEMO_CACHE_SENTINEL)
     ((Xn = () => hr((xr) => (xr + 1) % zt.length)), (Fn[1] = Xn));
   else Xn = Fn[1];
   return (ko(Xn, fr && !br ? gn : null), zt[gr % zt.length]);
@@ -579,7 +579,7 @@ var mit = 9,
   hn = 12;
 function qIt(Xt) {
   let Hn = _(9),
-    Vn = Se(),
+    Vn = useTerminalSize(),
     { rows: I } = ks(Vn),
     Zt = Ma(),
     Jn;
@@ -609,7 +609,7 @@ function zIt(Qe) {
     Pr = Qe.status === "running",
     [Cr, Tr] = d(fo),
     Yn;
-  if (wr[0] === p) ((Yn = () => Tr(Date.now())), (wr[0] = Yn));
+  if (wr[0] === MEMO_CACHE_SENTINEL) ((Yn = () => Tr(Date.now())), (wr[0] = Yn));
   else Yn = wr[0];
   return (
     ko(Yn, Pr ? 1000 : null),
@@ -856,8 +856,8 @@ function dye(Lr) {
   return po;
 }
 function At(n) {
-  let i = G(n.agents, (f) => f.state === "done"),
-    a = G(n.agents, (f) => f.state === "error"),
+  let i = countMatching(n.agents, (f) => f.state === "done"),
+    a = countMatching(n.agents, (f) => f.state === "error"),
     s = n.agents.length,
     l = i + a === s && s > 0,
     u = 0,
@@ -985,7 +985,7 @@ function cZt(n, i) {
 }
 function uZt(n) {
   if (n.script.length > 0) {
-    let i = Vf(n.script);
+    let i = parseWorkflowScript(n.script);
     if (!("error" in i) && i.meta.description) return i.meta.description;
   }
   return n.description || n.summary || "";

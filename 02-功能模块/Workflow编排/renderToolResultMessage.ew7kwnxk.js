@@ -14,14 +14,14 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { Os } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { GIt, iZt, KIt, lZt, pWe, $He } from "./chunk-dyq13fbm.js";
-import "./chunk-cd542wve.js";
+import "./workflow-script.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { wSt } from "../Teammates团队/chunk-mrfx53ye.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function renderToolUseProgressMessage(a, s) {
   let i = GIt(a.map((l) => l.data));
   if (i.agents.length === 0 && i.logs.length === 0) return null;
@@ -29,9 +29,9 @@ function renderToolUseProgressMessage(a, s) {
   if (u) {
     let l = s?.terminalSize?.columns ?? 80,
       f = Math.min(80, Math.max(40, l - 10));
-    return e(xe, { children: e(iZt, { collected: i, verbose: u, width: f }) });
+    return e(ToolResultRow, { children: e(iZt, { collected: i, verbose: u, width: f }) });
   }
-  return e(xe, { children: e(E, { collected: i }) });
+  return e(ToolResultRow, { children: e(E, { collected: i }) });
 }
 function E(Me) {
   let L = _(23),
@@ -116,14 +116,14 @@ function E(Me) {
 }
 function renderToolResultMessage(a) {
   if (a.error)
-    return e(xe, {
+    return e(ToolResultRow, {
       children: r(t, {
         color: "error",
-        children: [e(et, { status: "error", withSpace: !0 }), kr(a.error)],
+        children: [e(StatusIndicator, { status: "error", withSpace: !0 }), kr(a.error)],
       }),
     });
   if (a.status === "remote_launched")
-    return e(xe, {
+    return e(ToolResultRow, {
       children: r(o, {
         flexDirection: "column",
         children: [
@@ -140,7 +140,7 @@ function renderToolResultMessage(a) {
             ? r(t, {
                 color: "warning",
                 children: [
-                  e(et, { status: "warning", withSpace: !0 }),
+                  e(StatusIndicator, { status: "warning", withSpace: !0 }),
                   a.warning,
                 ],
               })
@@ -174,7 +174,7 @@ function K(he) {
     const B = X || Y ? "error" : "success";
     let y;
     if (c[5] !== B)
-      ((y = e(et, { status: B, withSpace: !0 })), (c[5] = B), (c[6] = y));
+      ((y = e(StatusIndicator, { status: B, withSpace: !0 })), (c[5] = B), (c[6] = y));
     else y = c[6];
     const U = X ? "Failed" : Y ? "Stopped" : "Completed";
     const D = Q && ` in ${Q}`;
@@ -203,7 +203,7 @@ function K(he) {
     else O = c[15];
     let Z;
     if (c[16] !== y || c[17] !== O)
-      ((Z = e(xe, { children: r(t, { children: [y, O] }) })),
+      ((Z = e(ToolResultRow, { children: r(t, { children: [y, O] }) })),
         (c[16] = y),
         (c[17] = O),
         (c[18] = Z));
@@ -212,8 +212,8 @@ function K(he) {
   }
   if (n?.type === "local_workflow") {
     let d;
-    if (c[19] === p)
-      ((d = e(xe, {
+    if (c[19] === MEMO_CACHE_SENTINEL)
+      ((d = e(ToolResultRow, {
         children: r(t, {
           children: [
             e(t, { dimColor: !0, children: "Running in background \xB7 " }),
@@ -228,8 +228,8 @@ function K(he) {
     return d;
   }
   let d;
-  if (c[20] === p)
-    ((d = e(xe, {
+  if (c[20] === MEMO_CACHE_SENTINEL)
+    ((d = e(ToolResultRow, {
       children: r(t, {
         children: [
           e(t, { color: "suggestion", children: "/workflows" }),
@@ -244,14 +244,14 @@ function K(he) {
 function W() {
   let H = _(2),
     oe;
-  if (H[0] === p) ((oe = wSt(ee().workflowSizeGuideline)), (H[0] = oe));
+  if (H[0] === MEMO_CACHE_SENTINEL) ((oe = wSt(ee().workflowSizeGuideline)), (H[0] = oe));
   else oe = H[0];
   let { size: te, isDefault: Se } = oe;
   if (!Se || te === "unrestricted") {
     return null;
   }
   let re;
-  if (H[1] === p)
+  if (H[1] === MEMO_CACHE_SENTINEL)
     ((re = r(N, {
       children: [
         r(t, { dimColor: !0, children: [" \xB7 ", te, " size ("] }),
@@ -264,7 +264,7 @@ function W() {
   return re;
 }
 function renderToolUseRejectedMessage() {
-  return e(xe, {
+  return e(ToolResultRow, {
     children: e(t, { dimColor: !0, children: "Dynamic workflow cancelled" }),
   });
 }

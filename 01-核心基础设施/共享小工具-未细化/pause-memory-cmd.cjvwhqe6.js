@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 3 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { AS, f_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "./chunk-an83zrbx.js";
+import { logEvent } from "./analytics-event-queue.js";
 var m = async (t, o) => {
   let e = !AS();
   return (
@@ -18,7 +18,7 @@ var m = async (t, o) => {
     o.sessionState?.notifyInternalMetadataChanged({
       memory_toggled_off: e ? !0 : null,
     }),
-    i("tengu_memory_toggled", { toggled_off: e }),
+    logEvent("tengu_memory_toggled", { toggled_off: e }),
     {
       type: "text",
       value: e

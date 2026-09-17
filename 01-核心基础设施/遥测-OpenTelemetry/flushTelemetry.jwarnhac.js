@@ -74,17 +74,17 @@ import { getAPIProvider } from "../模型目录-ModelCatalog/模型目录-ModelC
 import { F3t, qY } from "./chunk-5qbcynds.js";
 import { rw, FGn, Wun, iV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getResolvedWIFBaseUrlSnapshot } from "../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js";
-import { Snn } from "../共享小工具-未细化/chunk-274ae0qv.js";
+import { OtelDiagLogger } from "../共享小工具-未细化/otel-diag-logger.js";
 import { bee } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
 import { AP } from "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { cB } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { P, rxe } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 import { getClientUserAgent } from "../共享小工具-未细化/user-agent.js";
-import { pe } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
-var C = pe(Ls(), 1);
-var le = pe(Mc(), 1),
-  w = pe(V$e(), 1);
-var re = pe(Mc());
+import { toESM } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+var C = toESM(Ls(), 1);
+var le = toESM(Mc(), 1),
+  w = toESM(V$e(), 1);
+var re = toESM(Mc());
 class de {
   export(e, t) {
     this._sendLogRecords(e, t);
@@ -111,14 +111,14 @@ class de {
     t?.({ code: re.ExportResultCode.SUCCESS });
   }
 }
-var k = pe(bee(), 1);
-var Ge = pe(Mc()),
-  ze = pe(V$e());
-var g = pe(Ls()),
-  q = pe(Mc());
-var S = pe(Ls()),
-  T = pe(Mc()),
-  x = pe(Ime());
+var k = toESM(bee(), 1);
+var Ge = toESM(Mc()),
+  ze = toESM(V$e());
+var g = toESM(Ls()),
+  q = toESM(Mc());
+var S = toESM(Ls()),
+  T = toESM(Mc()),
+  x = toESM(Ime());
 var Ne = "exception";
 class me {
   _spanContext;
@@ -339,8 +339,8 @@ class me {
     return e;
   }
 }
-var ne = pe(Ls()),
-  A = pe(Mc());
+var ne = toESM(Ls()),
+  A = toESM(Mc());
 var M;
 (function (e) {
   ((e[(e.NOT_RECORD = 0)] = "NOT_RECORD"),
@@ -363,8 +363,8 @@ class N {
     return "AlwaysOnSampler";
   }
 }
-var G = pe(Ls()),
-  De = pe(Mc());
+var G = toESM(Ls()),
+  De = toESM(Mc());
 class Y {
   _root;
   _remoteParentSampled;
@@ -399,7 +399,7 @@ class Y {
     return `ParentBased{root=${this._root.toString()}, remoteParentSampled=${this._remoteParentSampled.toString()}, remoteParentNotSampled=${this._remoteParentNotSampled.toString()}, localParentSampled=${this._localParentSampled.toString()}, localParentNotSampled=${this._localParentNotSampled.toString()}}`;
   }
 }
-var Be = pe(Ls());
+var Be = toESM(Ls());
 class oe {
   _ratio;
   _upperBound;
@@ -507,7 +507,7 @@ function Ue() {
     );
   return e;
 }
-var J = pe(Mc()),
+var J = toESM(Mc()),
   ct = 128,
   pt = 1 / 0;
 function Fe(e) {
@@ -542,8 +542,8 @@ function $e(e) {
     Object.assign({}, e, { spanLimits: t })
   );
 }
-var D = pe(Ls()),
-  L = pe(Mc());
+var D = toESM(Ls()),
+  L = toESM(Mc());
 class fe {
   _exporter;
   _maxExportBatchSize;
@@ -794,7 +794,7 @@ class Ee {
     return this._spanLimits;
   }
 }
-var He = pe(Mc());
+var He = toESM(Mc());
 class _e {
   _spanProcessors;
   constructor(e) {
@@ -904,7 +904,7 @@ class Z {
     return this._activeSpanProcessor.shutdown();
   }
 }
-var te = pe(Mc());
+var te = toESM(Mc());
 class ce {
   export(e, t) {
     return this._sendSpans(e, t);
@@ -938,12 +938,12 @@ class ce {
     if (t) return t({ code: te.ExportResultCode.SUCCESS });
   }
 }
-var U = pe(Ime(), 1),
-  tt = pe(Hke(), 1);
+var U = toESM(Ime(), 1),
+  tt = toESM(Hke(), 1);
 import Pt from "http";
 import Lt from "https";
-var I = pe(Mc(), 1),
-  ge = pe(bee(), 1);
+var I = toESM(Mc(), 1),
+  ge = toESM(bee(), 1);
 var ut = 3600000,
   je = 86400000,
   Ve = "/api/claude_code/organizations/metrics_enabled";
@@ -1314,7 +1314,7 @@ class Oe {
     return ge.AggregationTemporality.DELTA;
   }
 }
-var Re = pe(Mc(), 1),
+var Re = toESM(Mc(), 1),
   Ke = 64,
   qe = { code: Re.ExportResultCode.SUCCESS };
 function Je(e) {
@@ -1552,13 +1552,13 @@ async function vt(e) {
       switch (i) {
         case "grpc": {
           let { OTLPMetricExporter: p } =
-            await import("./chunk-tmz6n6ex.js").then((m) => pe(m.default, 1));
+            await import("./chunk-tmz6n6ex.js").then((m) => toESM(m.default, 1));
           r.push(new p());
           break;
         }
         case "http/json": {
           let { OTLPMetricExporter: p } =
-            await import("./chunk-ht8sg4yh.js").then((m) => pe(m.default, 1));
+            await import("./chunk-ht8sg4yh.js").then((m) => toESM(m.default, 1));
           r.push(new p(c));
           break;
         }
@@ -1574,7 +1574,7 @@ async function vt(e) {
       }
     } else if (o === "prometheus") {
       let { PrometheusExporter: i } = await import("./chunk-ng140cw6.js").then(
-        (m) => pe(m.default, 1),
+        (m) => toESM(m.default, 1),
       );
       r.push(new i());
     } else
@@ -1606,7 +1606,7 @@ async function bt() {
       switch (t) {
         case "grpc": {
           let { OTLPLogExporter: c } = await import("./chunk-s36v703y.js").then(
-            (m) => pe(m.default, 1),
+            (m) => toESM(m.default, 1),
           );
           s.push(new c());
           break;
@@ -1644,7 +1644,7 @@ async function It() {
       switch (s) {
         case "grpc": {
           let { OTLPTraceExporter: i } =
-            await import("./chunk-dek1vcp3.js").then((m) => pe(m.default, 1));
+            await import("./chunk-dek1vcp3.js").then((m) => toESM(m.default, 1));
           t.push(new i());
           break;
         }
@@ -1716,7 +1716,7 @@ async function initializeTelemetry(e) {
           .join(",");
     }
   (C.diag.setLogger(
-    new Snn(),
+    new OtelDiagLogger(),
     a.CLAUDE_CODE_IS_COWORK ? C.DiagLogLevel.WARN : C.DiagLogLevel.ERROR,
   ),
     FGn());

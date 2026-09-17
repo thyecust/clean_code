@@ -9,5 +9,5 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 83 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Jtn } from "../../02-功能模块/MCP客户端/chunk-855hfv8z.js";
+import { initErrorLogSink as Jtn } from "../../02-功能模块/MCP客户端/error-log-sink.js";
 export { Jtn as initializeErrorLogSink };

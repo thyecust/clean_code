@@ -10,7 +10,7 @@
 import { Wc } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { RLe, T3, TE } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 var _ =
   /^\d{4}-\d{2}-\d{2}[Tt ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:[zZ]|[+-]\d{2}:?\d{2})$/;
 function Tot(n) {
@@ -92,7 +92,7 @@ function kNn() {
         s = typeof u === "string" && u.length > 0 && u.length <= aJt ? u : null;
       if (s === null) {
         if (!o)
-          ((o = !0), q("warn", "home_seed_stage_without_usable_etag", {}));
+          ((o = !0), writeDiagnosticsEvent("warn", "home_seed_stage_without_usable_etag", {}));
         return !1;
       }
       e++;
@@ -101,7 +101,7 @@ function kNn() {
       try {
         i.emit(a);
       } catch {
-        q("error", "home_seed_announcement_listener_threw", {});
+        writeDiagnosticsEvent("error", "home_seed_announcement_listener_threw", {});
       }
       return !0;
     },

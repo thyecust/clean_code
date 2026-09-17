@@ -11,6 +11,6 @@
 // [preload stripped] 原本在此预载 87 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { jDt, zgr } from "./chunk-bm9p9vh6.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-d1t6d4k8.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-txc6d085.js";
+import "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
 import "../远程工具执行/chunk-66axrkvh.js";
 export { jDt as SESSION_TRANSPORT_LIMITS, zgr as createSessionEventTransport };

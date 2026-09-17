@@ -10,14 +10,14 @@
 
 // [preload stripped] 原本在此预载 244 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { cPt, ogr, sgr, igr, agr, lgr } from "../后台任务-Shell管理/chunk-yndsh193.js";
-import "../工具Bash-Shell/chunk-qnax4jt7.js";
+import "../工具Bash-Shell/bash-output-view.js";
 import "../工具Bash-Shell/chunk-ktp8xtmy.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-pbd0pf42.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 export {
   cPt as BackgroundHint,
   agr as renderToolResultMessage,

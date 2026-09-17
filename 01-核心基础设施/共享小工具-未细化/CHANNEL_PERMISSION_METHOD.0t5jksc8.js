@@ -10,17 +10,17 @@
 
 // [preload stripped] 原本在此预载 78 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
-  VPe,
-  P1t,
-  Hin,
-  Iin,
-  KPe,
-  Ydt,
-  Pin,
-  Ebe,
-  ste,
-  XPe,
-} from "../../02-功能模块/插件系统/chunk-4k4dssd9.js";
+  ChannelMessageNotificationSchema as VPe,
+  CHANNEL_PERMISSION_METHOD as P1t,
+  ChannelPermissionNotificationSchema as Hin,
+  CHANNEL_PERMISSION_REQUEST_METHOD as Iin,
+  wrapChannelMessage as KPe,
+  getEffectiveChannelAllowlist as Ydt,
+  isChannelGateHardRevocation as Pin,
+  isChannelsPolicyBlocked as Ebe,
+  findChannelEntry as ste,
+  gateChannelServer as XPe,
+} from "../../02-功能模块/插件系统/channel-gate.js";
 import "../../02-功能模块/插件系统/chunk-rbjz1q03.js";
 export {
   P1t as CHANNEL_PERMISSION_METHOD,

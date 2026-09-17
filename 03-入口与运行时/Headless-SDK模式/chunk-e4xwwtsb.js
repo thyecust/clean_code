@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
   Tn,
   hor,
@@ -26,16 +26,16 @@ import {
   H,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Xn, K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Ve, zi, yt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Kn, sje } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { q, Gke } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent, flushDiagnostics } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { drainRegisteredWriteQueues } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -74,31 +74,31 @@ import {
   gre,
   executeNotificationHooks,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { no, sf } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
-import { Es } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
+import { isExiting, getNeverResolvingPromise } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
+import { ASK_USER_QUESTION_TOOL_NAME } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { Cr } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { u1e } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { N$e, wAt, TAt } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { s7e } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
 import { Fy } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
 import { d3e, p3e, Inn, f3e } from "../../01-核心基础设施/共享小工具-未细化/chunk-d1t6d4k8.js";
-import { hct } from "../../01-核心基础设施/共享小工具-未细化/chunk-t4xxq70d.js";
-import { odt, Zjn, usn, ibe } from "./chunk-yb7jadvp.js";
-import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
+import { isJsonRpcRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-t4xxq70d.js";
+import { buildPendingActionDetail, markUserInteraction, isUserDrivenInbound, isHumanInputRequest } from "./chunk-yb7jadvp.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
 import { AA, s, O, tB, se, v, c, $e, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var Je = m(() =>
+var Je = createLazyValue(() =>
     c({
       tool_name: s().describe("The name of the tool requesting permission"),
       input: fe(s(), se()).describe("The input for the tool"),
       tool_use_id: s().optional().describe("The unique tool use request ID"),
     }),
   ),
-  te = m(() =>
+  te = createLazyValue(() =>
     X(["user_temporary", "user_permanent", "user_reject"])
       .optional()
       .catch(void 0),
   ),
-  me = m(() =>
+  me = createLazyValue(() =>
     c({
       behavior: k("allow"),
       updatedInput: fe(s(), se()).optional(),
@@ -115,7 +115,7 @@ var Je = m(() =>
       decisionClassification: te(),
     }),
   ),
-  ge = m(() =>
+  ge = createLazyValue(() =>
     c({
       behavior: k("deny"),
       message: s(),
@@ -124,7 +124,7 @@ var Je = m(() =>
       decisionClassification: te(),
     }),
   ),
-  B_e = m(() => $e([me(), ge()])),
+  B_e = createLazyValue(() => $e([me(), ge()])),
   D0t =
     "Expected {behavior: 'allow', updatedInput?: object} or {behavior: 'deny', message: string}.";
 function F(t, e, r, o, l) {
@@ -196,7 +196,7 @@ function B(t, e) {
 function ye(t, e) {
   if (!t.requiresUserInteraction?.()) return;
   switch (t.name) {
-    case Es: {
+    case ASK_USER_QUESTION_TOOL_NAME: {
       let r = Array.isArray(e?.questions) ? e.questions : [],
         o = r[0],
         l = o?.header || o?.question,
@@ -250,10 +250,10 @@ function re(t) {
     let f = p ?? (await hasPermissionsToUseTool(e, r, o, l, d));
     if (f.behavior === "allow") return f;
     if (f.behavior === "deny") {
-      if (no() && !o.abortController.signal.aborted) return sf();
+      if (isExiting() && !o.abortController.signal.aborted) return getNeverResolvingPromise();
       return (t.emitPermissionDenied(e.name, d, o.agentId, f), f);
     }
-    if (no()) {
+    if (isExiting()) {
       if (o.abortController.signal.aborted)
         return {
           behavior: "deny",
@@ -262,7 +262,7 @@ function re(t) {
           decisionReason: CAN_USE_TOOL_ABORTED_DENY_REASON,
           decideLocation: "ask-path",
         };
-      return sf();
+      return getNeverResolvingPromise();
     }
     let g = f.updatedInput ?? r,
       _ = f.suggestions;
@@ -275,9 +275,9 @@ function re(t) {
       _ = [...nVe(g.command), ..._];
     let y = new AbortController(),
       R = o.abortController.signal,
-      E = R.aborted && !no(),
+      E = R.aborted && !isExiting(),
       I = () => {
-        if (!no()) E = !0;
+        if (!isExiting()) E = !0;
         y.abort();
       };
     R.addEventListener("abort", I, { once: !0 });
@@ -371,7 +371,7 @@ function re(t) {
       let C = await Promise.race([w, N]);
       if (C.source === "hook") {
         if (C.outcome) {
-          if (no() && !E) await sf();
+          if (isExiting() && !E) await getNeverResolvingPromise();
           if ((y.abort(), D))
             c2t(
               D.logContext,
@@ -395,10 +395,10 @@ function re(t) {
       if (D) c2t(D.logContext, { kind: "host_answer", answer: Z }, D.shownAtMs);
       return L0t(Z, e, g, o, e, f.suppressAlwaysAllowRule === !0);
     } catch (w) {
-      if (no() && t.isPending(U)) await sf();
+      if (isExiting() && t.isPending(U)) await getNeverResolvingPromise();
       if (t.interruptedAtStreamClose(U) && j()) {
         try {
-          (i("tengu_auq_park_interrupted_at_stream_close", {
+          (logEvent("tengu_auq_park_interrupted_at_stream_close", {
             stream_closed: w instanceof zi,
           }),
             n(
@@ -609,7 +609,7 @@ class Fae {
   trackResolvedToolUseId(t) {
     if (t.request.subtype === "can_use_tool")
       this.resolvedToolUseIds.add(t.request.tool_use_id);
-    if (ibe(t)) TAt(t.request_id);
+    if (isHumanInputRequest(t)) TAt(t.request_id);
   }
   flushInternalEvents() {
     return Promise.resolve();
@@ -659,7 +659,7 @@ class Fae {
               I = await this.processLine(E);
             if (I)
               (this.locallyPrependedMessages.add(I),
-                q("info", "cli_stdin_message_parsed", { type: I.type }),
+                writeDiagnosticsEvent("info", "cli_stdin_message_parsed", { type: I.type }),
                 yield I);
           }
           let _ = t.indexOf(`
@@ -669,7 +669,7 @@ class Fae {
           t = t.slice(_ + 1);
           let R = await this.processLine(y);
           if (R)
-            (q("info", "cli_stdin_message_parsed", { type: R.type }), yield R);
+            (writeDiagnosticsEvent("info", "cli_stdin_message_parsed", { type: R.type }), yield R);
         }
       }.bind(this),
       d = this.input[Symbol.asyncIterator](),
@@ -680,7 +680,7 @@ class Fae {
         if (o || this.prependedLines.length > 0) {
           if (e.length > 0) ((t += e.join("")), (e = []));
           if ((yield* l(), (r = t.length), r > this.maxLineChars))
-            (q("warn", "cli_stream_json_line_budget", { at: "tail" }),
+            (writeDiagnosticsEvent("warn", "cli_stream_json_line_budget", { at: "tail" }),
               await L(ie(this.maxLineChars)));
           o = !1;
         }
@@ -701,7 +701,7 @@ class Fae {
         let R = y.value.includes(`
 `);
         if (!R && r > this.maxLineChars)
-          (q("warn", "cli_stream_json_line_budget", { at: "block" }),
+          (writeDiagnosticsEvent("warn", "cli_stream_json_line_budget", { at: "block" }),
             await L(ie(this.maxLineChars)));
         if ((e.push(y.value), R)) o = !0;
       }
@@ -714,13 +714,13 @@ class Fae {
       if (_) yield _;
     }
     this.inputClosed = !0;
-    let g = no();
+    let g = isExiting();
     if (!g && j()) {
       for (let [_, y] of this.pendingRequests.entries())
         if (
           !y.forwarded &&
           y.request.request.subtype === "can_use_tool" &&
-          y.request.request.tool_name === Es
+          y.request.request.tool_name === ASK_USER_QUESTION_TOOL_NAME
         )
           this.streamCloseInterruptRequestIds.add(_);
       if (this.streamCloseInterruptRequestIds.size > 0)
@@ -767,7 +767,7 @@ class Fae {
       if (this.pendingRequests.has(e)) t = r;
     if (!t) return;
     (this.sessionState.republishPendingAction(t),
-      i("tengu_pending_action_republished", {
+      logEvent("tengu_pending_action_republished", {
         survivor_kind: fromEnum(
           t.tool_name.startsWith("dialog:") ? "dialog" : "permission",
         ),
@@ -784,7 +784,7 @@ class Fae {
       )
         continue;
       if (!this.cancelDialogByMachine(o.request_id)) continue;
-      (i("tengu_request_user_dialog_implicit_cancel", {
+      (logEvent("tengu_request_user_dialog_implicit_cancel", {
         dialog_kind: Tn(t),
         reason: fromEnum(e),
       }),
@@ -793,7 +793,7 @@ class Fae {
     return r;
   }
   cancelDialogByMachine(t) {
-    if (!this.pendingRequests.has(t) || no()) return !1;
+    if (!this.pendingRequests.has(t) || isExiting()) return !1;
     return this.injectControlResponse({
       type: "control_response",
       response: {
@@ -818,7 +818,7 @@ class Fae {
     )
       return !1;
     return (
-      i("tengu_request_user_dialog_response_ignored", {
+      logEvent("tengu_request_user_dialog_response_ignored", {
         shape: fromEnum("error"),
         dialog_kind: Tn(t.request.request.dialog_kind),
       }),
@@ -829,7 +829,7 @@ class Fae {
     );
   }
   asksOurHuman(t) {
-    return !t.forwarded && ibe(t.request);
+    return !t.forwarded && isHumanInputRequest(t.request);
   }
   get pendingHumanRequestCount() {
     let t = 0;
@@ -837,7 +837,7 @@ class Fae {
     return t;
   }
   ignoresResponseAtShutdown(t, e) {
-    if (!this.asksOurHuman(t) || !no()) return !1;
+    if (!this.asksOurHuman(t) || !isExiting()) return !1;
     return (
       n(
         `Leaving control_response for request_id=${e.request_id} to the next process \u2014 this one is shutting down and settles no question`,
@@ -879,7 +879,7 @@ class Fae {
     let r = this.pendingRequests.get(e);
     if (!r)
       return (
-        i("tengu_inject_control_response_unknown_id", {
+        logEvent("tengu_inject_control_response_unknown_id", {
           pending_control_requests: this.pendingRequests.size,
         }),
         !1
@@ -992,7 +992,7 @@ class Fae {
           return;
         }
         let l = this.pendingRequests.get(e.response.request_id);
-        if (no() && (!l || this.asksOurHuman(l))) {
+        if (isExiting() && (!l || this.asksOurHuman(l))) {
           if (
             (n(
               `Leaving control_response for request_id=${e.response.request_id} to the next process \u2014 this one is shutting down and settles no question`,
@@ -1012,7 +1012,7 @@ class Fae {
                   ? e.response.response?.behavior
                   : void 0,
               y = e.response.subtype;
-            (i("tengu_request_user_dialog_late_answer", {
+            (logEvent("tengu_request_user_dialog_late_answer", {
               dialog_kind: Tn(p.dialogKind),
               lateness_ms: Date.now() - p.timedOutAt,
               response_subtype: fromEnum(
@@ -1054,7 +1054,7 @@ class Fae {
             this.onControlRequestResolved)
         )
           this.onControlRequestResolved(e.response.request_id);
-        if (ibe(l.request) && !(l.forwarded && e.response.subtype === "error"))
+        if (isHumanInputRequest(l.request) && !(l.forwarded && e.response.subtype === "error"))
           this.recordUserDrivenInbound(e);
         if (e.response.subtype === "error") {
           l.reject(Error(e.response.error));
@@ -1074,7 +1074,7 @@ class Fae {
       if (
         e.type !== "workflow_launch" &&
         e.type !== "user" &&
-        usn(e, { hostOwnsOrigin: this.hostOwnsStdinOrigin })
+        isUserDrivenInbound(e, { hostOwnsOrigin: this.hostOwnsStdinOrigin })
       )
         this.recordUserDrivenInbound(e);
       if (
@@ -1106,7 +1106,7 @@ class Fae {
           let r = e.request,
             o = typeof r !== "object" || r === null || Array.isArray(r);
           if (o || !("subtype" in r) || typeof r.subtype !== "string") {
-            (i("tengu_sdk_malformed_input", {
+            (logEvent("tengu_sdk_malformed_input", {
               message_type: S("control_request"),
               reason: fromEnum(o ? "missing_request" : "subtype_not_string"),
               transport: S("remote"),
@@ -1147,7 +1147,7 @@ class Fae {
           l = Ue(e.message),
           d = Xn(e.uuid) !== null;
         if (
-          (i("tengu_sdk_malformed_input", {
+          (logEvent("tengu_sdk_malformed_input", {
             message_type: S("user"),
             reason: S("invalid_message_role"),
             transport: S("remote"),
@@ -1155,7 +1155,7 @@ class Fae {
             wire_shape: fromEnum(l),
             has_event_uuid: d,
           }),
-          q("warn", "cli_malformed_user_message", {
+          writeDiagnosticsEvent("warn", "cli_malformed_user_message", {
             outcome: o,
             wire_shape: l,
             has_event_uuid: d,
@@ -1173,7 +1173,7 @@ class Fae {
         ((p.message = r.inner),
           n("Repaired a nested user message (one level)"));
       }
-      if (usn(e, { hostOwnsOrigin: this.hostOwnsStdinOrigin }))
+      if (isUserDrivenInbound(e, { hostOwnsOrigin: this.hostOwnsStdinOrigin }))
         this.recordUserDrivenInbound(e);
       return e;
     } catch (e) {
@@ -1187,7 +1187,7 @@ class Fae {
     this.stallFired = !1;
   }
   recordUserDrivenInbound(t) {
-    Zjn();
+    markUserInteraction();
   }
   retireDroppedFrame(t) {
     let e = Xn(t);
@@ -1200,7 +1200,7 @@ class Fae {
         (e) => {
           if (this.sessionState.getState() !== "running") return;
           ((this.stallFired = !0),
-            i("tengu_sdk_stall", {
+            logEvent("tengu_sdk_stall", {
               session_age_ms: Date.now() - this.createdAt,
               session_state: fromEnum(this.sessionState.getState()),
               last_message_type: fromEnum(e),
@@ -1214,7 +1214,7 @@ class Fae {
     if (t.type !== "system" && Math.random() < Ae) {
       let e = Sor().safeParse(t);
       if (!e.success)
-        i("tengu_sdk_schema_violation", {
+        logEvent("tengu_sdk_schema_violation", {
           message_type: fromEnum(t.type),
           error_path: e.error.issues[0]?.path.join(".") ?? "",
         });
@@ -1245,8 +1245,8 @@ class Fae {
     { requestId: o = M(), forwarded: l = !1, deviceHook: d = !1 } = {},
   ) {
     let p = { type: "control_request", request_id: o, request: t },
-      f = !l && ibe(p);
-    if (f && no() && !r?.aborted) return sf();
+      f = !l && isHumanInputRequest(p);
+    if (f && isExiting() && !r?.aborted) return getNeverResolvingPromise();
     if (!l && !d) wAt(o, { automated: !f });
     if (this.inputClosed) throw new zi("Stream closed");
     if (r?.aborted) throw new Ve("Request aborted");
@@ -1257,7 +1257,7 @@ class Fae {
       this.onControlRequestSent(p);
     if (f) this.sessionState.beginUserDecision();
     let g = () => {
-      if (f && no()) return;
+      if (f && isExiting()) return;
       this.outbound.enqueue({ type: "control_cancel_request", request_id: o });
       let y = this.pendingRequests.get(o);
       if (y) {
@@ -1334,7 +1334,7 @@ class Fae {
       this.getPendingPermissionRequests().length === 0 &&
         this.getPendingUserDialogRequests().length === 0)
     ) {
-      if (!no())
+      if (!isExiting())
         this.sessionState.notifyStateChanged(
           this.mainLoopLiveness?.() === !1 ? "idle" : "running",
         );
@@ -1560,16 +1560,16 @@ class Fae {
     }
   }
   async requestUserDialog(t, e, r) {
-    if (no()) {
+    if (isExiting()) {
       if (r?.signal?.aborted) return { behavior: "cancelled" };
-      return sf();
+      return getNeverResolvingPromise();
     }
     let o = M(),
-      l = odt(t, e, o, r?.toolUseId);
+      l = buildPendingActionDetail(t, e, o, r?.toolUseId);
     (this.publishedPendingActionDetails.set(o, l),
       this.sessionState.notifyStateChanged("requires_action", l),
       this.onUserDialogParked?.(l),
-      i("tengu_request_user_dialog_requires_action", { dialog_kind: Tn(t) }));
+      logEvent("tengu_request_user_dialog_requires_action", { dialog_kind: Tn(t) }));
     let d = dV(),
       p;
     if (d > 0)
@@ -1585,7 +1585,7 @@ class Fae {
             this.timedOutUserDialogs.delete(f);
             return;
           }
-          i("tengu_request_user_dialog_timeout", {
+          logEvent("tengu_request_user_dialog_timeout", {
             dialog_kind: Tn(g),
             timeout_ms: _,
           });
@@ -1617,7 +1617,7 @@ class Fae {
         this.getPendingUserDialogRequests().length === 0 &&
           this.getPendingPermissionRequests().length === 0)
       ) {
-        if (!no())
+        if (!isExiting())
           this.sessionState.notifyStateChanged(
             this.mainLoopLiveness?.() === !1 ? "idle" : "running",
           );
@@ -1683,7 +1683,7 @@ class Fae {
     };
   }
   async sendMcpMessage(t, e, r = De) {
-    let l = hct(e) ? void 0 : Fa(void 0, { timeoutMs: r, refTimer: !0 });
+    let l = isJsonRpcRequest(e) ? void 0 : createLinkedAbortSignal(void 0, { timeoutMs: r, refTimer: !0 });
     try {
       return (
         await this.sendRequest(
@@ -1707,7 +1707,7 @@ class Fae {
       );
     } catch (o) {
       throw (
-        i("tengu_sdk_oauth_refresh_unfulfilled", {
+        logEvent("tengu_sdk_oauth_refresh_unfulfilled", {
           outcome: fromEnum(
             o instanceof zi
               ? "stream_closed"
@@ -1728,7 +1728,7 @@ class Fae {
     let r = e.reason;
     if (r !== void 0) hor(r);
     return (
-      i("tengu_sdk_oauth_refresh_unfulfilled", {
+      logEvent("tengu_sdk_oauth_refresh_unfulfilled", {
         outcome: fromEnum(r !== void 0 ? "declined" : "null"),
         reason: fromEnum(r ?? "none"),
         duration_ms: Date.now() - t,
@@ -1768,9 +1768,9 @@ class Fae {
 async function L(t) {
   console.error(t);
   let e = Date.now() + 2000;
-  (await Dt(drainRegisteredWriteQueues(), 2000, "write queue drain timeout (exit)").catch(() => {}),
-    await Dt(
-      Gke(),
+  (await withTimeout(drainRegisteredWriteQueues(), 2000, "write queue drain timeout (exit)").catch(() => {}),
+    await withTimeout(
+      flushDiagnostics(),
       Math.max(0, e - Date.now()),
       "diagnostic log flush timeout (exit)",
     ).catch(() => {}),

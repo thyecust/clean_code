@@ -10,7 +10,7 @@
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { qxt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, z, pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -31,12 +31,12 @@ import {
   B$e,
   EAt,
 } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { M1 } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 import { bQ } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { ZD } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
-import { Hle } from "../../01-核心基础设施/共享小工具-未细化/chunk-sfq8xeqw.js";
+import { getBridgePollIntervalConfig } from "../../01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js";
 import {
   BGn,
   xn,
@@ -60,8 +60,8 @@ import { pE, fSe, d9, h2n } from "./chunk-66axrkvh.js";
 import { asn, VGe, KGe, sbe, Jjn, csn, pM, rdt } from "../Bridge-RemoteControl/chunk-znhfst8k.js";
 import { VW } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { $Jt } from "../../01-核心基础设施/共享小工具-未细化/chunk-ezjdm9sg.js";
-import { Qz } from "../插件系统/chunk-55xj4ev5.js";
-import { sdt } from "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
+import { CLOUD_PLUGINS_FORWARDED_SETTING_KEY } from "../插件系统/plugin-forwarding.js";
+import { isUserActivityRequest } from "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
 import { Xi } from "../Teammates团队/chunk-z2t8b9yc.js";
 import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import { createWriteStream, fstatSync } from "fs";
@@ -106,7 +106,7 @@ function j(e) {
     return typeof s === "object" &&
       s !== null &&
       !Array.isArray(s) &&
-      Object.hasOwn(s, Qz)
+      Object.hasOwn(s, CLOUD_PLUGINS_FORWARDED_SETTING_KEY)
       ? "apply_flag_settings"
       : void 0;
   }
@@ -172,7 +172,7 @@ function X(e, t, i = K) {
 function pe(e) {
   let t = b(b(e.request)?.settings);
   if (t === void 0) return;
-  let { [Qz]: i, ...s } = t;
+  let { [CLOUD_PLUGINS_FORWARDED_SETTING_KEY]: i, ...s } = t;
   return Object.keys(s).length > 0 ? s : void 0;
 }
 function J(e, t) {
@@ -300,13 +300,13 @@ async function te({
         `[remote-io] no auth headers, re-reading in ${m}ms (attempt ${_}/${s.length})`,
         { level: "warn" },
       ),
-      await Z(m),
+      await sleep(m),
       (d = t().diag),
       Object.keys(e()).length > 0)
     )
       return (
         i?.(`session auth headers present after ${_} re-read(s)`),
-        q("info", "cli_worker_lifecycle_init_auth_retried", {
+        writeDiagnosticsEvent("info", "cli_worker_lifecycle_init_auth_retried", {
           attempts: _,
           ...d,
         }),
@@ -318,7 +318,7 @@ async function te({
       level: "error",
     }),
     i?.(`session auth headers still missing after ${s.length} re-reads`),
-    q("error", "cli_worker_lifecycle_init_auth_retry_exhausted", {
+    writeDiagnosticsEvent("error", "cli_worker_lifecycle_init_auth_retry_exhausted", {
       attempts: s.length,
       ...d,
     }),
@@ -349,7 +349,7 @@ function be(e) {
       let o = typeof d === "object" && d !== null ? d.type : void 0;
       if (typeof o === "string" && asn.has(o))
         return (
-          q("warn", "cli_stdin_server_only_type_dropped", { payload_type: o }),
+          writeDiagnosticsEvent("warn", "cli_stdin_server_only_type_dropped", { payload_type: o }),
           n(
             `[remote-io] dropped a ${o} frame from the stdin lane (server-authored-only type; SSE is its only ingress)`,
             { level: "warn" },
@@ -530,7 +530,7 @@ class Uz extends Fae {
         () => R?.("worker registered"),
         (r) => {
           let u = r instanceof sbe ? r.reason : l(r);
-          q("error", "cli_worker_lifecycle_init_failed", {
+          writeDiagnosticsEvent("error", "cli_worker_lifecycle_init_failed", {
             reason: r instanceof sbe ? r.reason : "unknown",
           });
           let c = `CCRClient initialization failed: ${l(r)}`;
@@ -674,7 +674,7 @@ class Uz extends Fae {
         () => {},
       );
     else this.transport.connect();
-    let M = Hle().session_keepalive_interval_v2_ms;
+    let M = getBridgePollIntervalConfig().session_keepalive_interval_v2_ms;
     if (this.isBridge && M > 0)
       ((this.keepAliveTimer = setInterval(() => {
         (n("[remote-io] keep_alive sent"),
@@ -827,7 +827,7 @@ class Uz extends Fae {
     if (this.inputStream.destroyed || this.inputStream.writableEnded) {
       if (!this.inboundLanesDroppedAfterClose.has(t))
         (this.inboundLanesDroppedAfterClose.add(t),
-          q("info", "cli_remote_io_inbound_dropped_after_close", { lane: t }));
+          writeDiagnosticsEvent("info", "cli_remote_io_inbound_dropped_after_close", { lane: t }));
       return;
     }
     this.inputStream.write(e);
@@ -844,7 +844,7 @@ class Uz extends Fae {
         if (e.response.subtype === "success") this.idleTracker.noteActivity();
         return;
       case "control_request":
-        if (sdt(e)) this.idleTracker.noteActivity();
+        if (isUserActivityRequest(e)) this.idleTracker.noteActivity();
         return;
       case "bash_command":
         this.idleTracker.noteActivity();

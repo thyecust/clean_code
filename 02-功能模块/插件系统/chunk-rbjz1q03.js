@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { og } from "./chunk-33bdfgmx.js";
 import { s, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var l = m(() => v(c({ marketplace: s(), plugin: s() })));
+var l = createLazyValue(() => v(c({ marketplace: s(), plugin: s() })));
 function getChannelAllowlist() {
   let e = H("tengu_harbor_ledger", []),
     n = l().safeParse(e);

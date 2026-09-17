@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
@@ -18,10 +18,10 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { C8e } from "../../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js";
+import { isPluginEvalEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var c = pe(pg(), 1);
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var c = toESM(pg(), 1);
 import { dirname, join as b } from "path";
 var t$n = "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md",
   xIt = "https://code.claude.com/docs/en/changelog",
@@ -44,7 +44,7 @@ var E = new j(() => new v());
 async function n$n(a) {
   let t = ee();
   if (!t.cachedChangelog) return;
-  if (M() && a) {
+  if (isHoverRestEnabled() && a) {
     let r = await a.write(p(), t.cachedChangelog, {
       precondition: { type: "ifAbsent" },
       mode: 438 & ~process.umask(),
@@ -69,7 +69,7 @@ async function YQt(a) {
       i = m();
     if (e === i.content) return;
     let o = u();
-    if ((await qt().mkdir(dirname(o)), M() && a)) {
+    if ((await qt().mkdir(dirname(o)), isHoverRestEnabled() && a)) {
       let s = await a.write(p(), e, { publishDiscipline: "inPlace" });
       if (!s.ok)
         throw (
@@ -85,7 +85,7 @@ async function YQt(a) {
 async function tWe(a) {
   let t = m();
   if (t.content !== null) return t.content;
-  if (M() && a) {
+  if (isHoverRestEnabled() && a) {
     let e = await a.readText([p()]),
       i = e.ok && e.value.items[0].found ? e.value.items[0].value : "";
     return (t.remember(i), i);
@@ -310,7 +310,7 @@ var zw = {
   },
 };
 function s$n() {
-  let a = C8e();
+  let a = isPluginEvalEnabled();
   return Object.values(zw).filter((r) => r.earlyAccess !== "pluginEval" || a);
 }
 export { t$n, xIt, XQt, n$n, YQt, tWe, JQt, QQt, r$n, Qst, o$n, zw, s$n };

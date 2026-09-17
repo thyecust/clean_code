@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { w, Ae } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var _e = w(function (_l, at) {
+import { commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var _e = commonJS(function (_l, at) {
   at.exports = function () {
     return (
       typeof Promise === "function" &&
@@ -17,7 +17,7 @@ var _e = w(function (_l, at) {
     );
   };
 });
-var P = w(function (En) {
+var P = commonJS(function (En) {
   var me,
     wn = [
       0, 26, 44, 70, 100, 134, 172, 196, 242, 292, 346, 404, 466, 532, 581, 655,
@@ -50,7 +50,7 @@ var P = w(function (En) {
     return me(e);
   };
 });
-var oe = w(function (Ln) {
+var oe = commonJS(function (Ln) {
   Ln.L = { bit: 1 };
   Ln.M = { bit: 0 };
   Ln.Q = { bit: 3 };
@@ -86,7 +86,7 @@ var oe = w(function (Ln) {
     }
   };
 });
-var yt = w(function (wl, mt) {
+var yt = commonJS(function (wl, mt) {
   function _t() {
     ((this.buffer = []), (this.length = 0));
   }
@@ -110,7 +110,7 @@ var yt = w(function (wl, mt) {
   };
   mt.exports = _t;
 });
-var Et = w(function (El, wt) {
+var Et = commonJS(function (El, wt) {
   function j(t) {
     if (!t || t < 1)
       throw Error("BitMatrix size must be defined and greater than 0");
@@ -133,7 +133,7 @@ var Et = w(function (El, wt) {
   };
   wt.exports = j;
 });
-var Ct = w(function (Pn) {
+var Ct = commonJS(function (Pn) {
   var Sn = P().getSymbolSize;
   Pn.getRowColCoords = function (e) {
     if (e === 1) return [];
@@ -161,7 +161,7 @@ var Ct = w(function (Pn) {
     return r;
   };
 });
-var bt = w(function (On) {
+var bt = commonJS(function (On) {
   var Mn = P().getSymbolSize;
   On.getPositions = function (e) {
     let r = Mn(e);
@@ -172,7 +172,7 @@ var bt = w(function (On) {
     ];
   };
 });
-var Rt = w(function (Un) {
+var Rt = commonJS(function (Un) {
   Un.Patterns = {
     PATTERN000: 0,
     PATTERN001: 1,
@@ -302,7 +302,7 @@ var Rt = w(function (Un) {
     return i;
   };
 });
-var we = w(function (Yn) {
+var we = commonJS(function (Yn) {
   var k = oe(),
     se = [
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 2, 2, 4, 1, 2, 4, 4, 2, 4, 4, 4, 2,
@@ -356,7 +356,7 @@ var we = w(function (Yn) {
     }
   };
 });
-var St = w(function (Gn) {
+var St = commonJS(function (Gn) {
   var J = new Uint8Array(512),
     ue = new Uint8Array(256);
   (function () {
@@ -377,7 +377,7 @@ var St = w(function (Gn) {
     return J[ue[e] + ue[r]];
   };
 });
-var kt = w(function (Wn) {
+var kt = commonJS(function (Wn) {
   var Ee = St();
   Wn.mul = function (e, r) {
     let n = new Uint8Array(e.length + r.length - 1);
@@ -402,7 +402,7 @@ var kt = w(function (Wn) {
     return r;
   };
 });
-var Nt = w(function (Al, Ot) {
+var Nt = commonJS(function (Al, Ot) {
   var Mt = kt();
   function Te(t) {
     if (((this.genPoly = void 0), (this.degree = t), this.degree))
@@ -425,12 +425,12 @@ var Nt = w(function (Al, Ot) {
   };
   Ot.exports = Te;
 });
-var Ce = w(function (Qn) {
+var Ce = commonJS(function (Qn) {
   Qn.isValid = function (e) {
     return !isNaN(e) && e >= 1 && e <= 40;
   };
 });
-var be = w(function (ri) {
+var be = commonJS(function (ri) {
   var Q =
     "(?:[u3000-u303F]|[u3040-u309F]|[u30A0-u30FF]|[uFF00-uFFEF]|[u4E00-u9FAF]|[u2605-u2606]|[u2190-u2195]|u203B|[u2010u2015u2018u2019u2025u2026u201Cu201Du2225u2260]|[u0391-u0451]|[u00A7u00A8u00B1u00B4u00D7u00F7])+";
   Q = Q.replace(/u/g, "\\u");
@@ -457,7 +457,7 @@ var be = w(function (ri) {
     return ti.test(e);
   };
 });
-var M = w(function (di) {
+var M = commonJS(function (di) {
   var hi = Ce(),
     xe = be();
   di.NUMERIC = { id: "Numeric", bit: 1, ccBits: [10, 12, 14] };
@@ -509,7 +509,7 @@ var M = w(function (di) {
     }
   };
 });
-var Ht = w(function (bi) {
+var Ht = commonJS(function (bi) {
   var fe = P(),
     wi = we(),
     Ut = oe(),
@@ -579,7 +579,7 @@ var Ht = w(function (bi) {
     return (e << 12) | r;
   };
 });
-var Gt = w(function (Ai) {
+var Gt = commonJS(function (Ai) {
   var Pe = P(),
     zt = Pe.getBCHDigit(1335);
   Ai.getEncodedBits = function (e, r) {
@@ -589,7 +589,7 @@ var Gt = w(function (Ai) {
     return ((n << 10) | i) ^ 21522;
   };
 });
-var Vt = w(function (Ml, vt) {
+var Vt = commonJS(function (Ml, vt) {
   var Ri = M();
   function Y(t) {
     ((this.mode = Ri.NUMERIC), (this.data = t.toString()));
@@ -613,7 +613,7 @@ var Vt = w(function (Ml, vt) {
   };
   vt.exports = Y;
 });
-var Wt = w(function (Ol, Kt) {
+var Wt = commonJS(function (Ol, Kt) {
   var Si = M(),
     ke = [
       "0",
@@ -684,7 +684,7 @@ var Wt = w(function (Ol, Kt) {
   };
   Kt.exports = H;
 });
-var Jt = w(function (Nl, jt) {
+var Jt = commonJS(function (Nl, jt) {
   var Pi = M();
   function z(t) {
     if (((this.mode = Pi.BYTE), typeof t === "string"))
@@ -705,7 +705,7 @@ var Jt = w(function (Nl, jt) {
   };
   jt.exports = z;
 });
-var Zt = w(function (ql, Qt) {
+var Zt = commonJS(function (ql, Qt) {
   var ki = M(),
     Mi = P();
   function G(t) {
@@ -738,7 +738,7 @@ Make sure your charset is UTF-8`,
   };
   Qt.exports = G;
 });
-var $t = w(function (Ul, Me) {
+var $t = commonJS(function (Ul, Me) {
   var Z = {
     single_source_shortest_paths: function (t, e, r) {
       var n = {},
@@ -804,7 +804,7 @@ var $t = w(function (Ul, Me) {
   };
   if (typeof Me < "u") Me.exports = Z;
 });
-var sr = w(function (Fi) {
+var sr = commonJS(function (Fi) {
   var m = M(),
     tr = Vt(),
     rr = Wt(),
@@ -958,7 +958,7 @@ var sr = w(function (Fi) {
     return Fi.fromArray(or(e, ae.isKanjiModeEnabled()));
   };
 });
-var He = w(function (ro) {
+var He = commonJS(function (ro) {
   var ce = P(),
     qe = oe(),
     Hi = yt(),
@@ -1175,9 +1175,9 @@ Minimum version required to store current data is: ` +
     return to(e, i, n, o);
   };
 });
-var ze = w(function (Yl, ur) {
-  var io = Ae("util"),
-    lr = Ae("stream"),
+var ze = commonJS(function (Yl, ur) {
+  var io = importMetaRequire("util"),
+    lr = importMetaRequire("stream"),
     A = (ur.exports = function () {
       (lr.call(this),
         (this._buffers = []),
@@ -1274,7 +1274,7 @@ var ze = w(function (Yl, ur) {
     }
   };
 });
-var Ge = w(function (oo) {
+var Ge = commonJS(function (oo) {
   var N = [
     { x: [0], y: [0] },
     { x: [4], y: [0] },
@@ -1314,7 +1314,7 @@ var Ge = w(function (oo) {
     };
   };
 });
-var ve = w(function (zl, fr) {
+var ve = commonJS(function (zl, fr) {
   fr.exports = function (e, r, n) {
     let i = e + r - n,
       o = Math.abs(i - e),
@@ -1325,7 +1325,7 @@ var ve = w(function (zl, fr) {
     return n;
   };
 });
-var Ve = w(function (Gl, hr) {
+var Ve = commonJS(function (Gl, hr) {
   var uo = Ge(),
     fo = ve();
   function ar(t, e, r) {
@@ -1436,8 +1436,8 @@ var Ve = w(function (Gl, hr) {
     else ((this._lastLine = null), this.complete());
   };
 });
-var pr = w(function (vl, dr) {
-  var ao = Ae("util"),
+var pr = commonJS(function (vl, dr) {
+  var ao = importMetaRequire("util"),
     cr = ze(),
     ho = Ve(),
     co = (dr.exports = function (t) {
@@ -1457,7 +1457,7 @@ var pr = w(function (vl, dr) {
     });
   ao.inherits(co, cr);
 });
-var V = w(function (Vl, gr) {
+var V = commonJS(function (Vl, gr) {
   gr.exports = {
     PNG_SIGNATURE: [137, 80, 78, 71, 13, 10, 26, 10],
     TYPE_IHDR: 1229472850,
@@ -1476,7 +1476,7 @@ var V = w(function (Vl, gr) {
     GAMMA_DIVISION: 1e5,
   };
 });
-var je = w(function (Kl, _r) {
+var je = commonJS(function (Kl, _r) {
   var Ke = [];
   (function () {
     for (let t = 0; t < 256; t++) {
@@ -1504,7 +1504,7 @@ var je = w(function (Kl, _r) {
     return e ^ -1;
   };
 });
-var Je = w(function (Wl, mr) {
+var Je = commonJS(function (Wl, mr) {
   var E = V(),
     po = je(),
     T = (mr.exports = function (t, e) {
@@ -1703,7 +1703,7 @@ var Je = w(function (Wl, mr) {
       this.finished();
   };
 });
-var Qe = w(function (Eo) {
+var Qe = commonJS(function (Eo) {
   var yr = Ge(),
     go = [
       function () {},
@@ -1852,7 +1852,7 @@ var Qe = w(function (Eo) {
     return u;
   };
 });
-var Ze = w(function (Jl, wr) {
+var Ze = commonJS(function (Jl, wr) {
   function Co(t, e, r, n, i) {
     let o = 0;
     for (let s = 0; s < n; s++)
@@ -1908,9 +1908,9 @@ var Ze = w(function (Jl, wr) {
     return u;
   };
 });
-var Cr = w(function (Ql, Tr) {
-  var Bo = Ae("util"),
-    $e = Ae("zlib"),
+var Cr = commonJS(function (Ql, Tr) {
+  var Bo = importMetaRequire("util"),
+    $e = importMetaRequire("zlib"),
     Er = ze(),
     Io = pr(),
     Ao = Je(),
@@ -2017,7 +2017,7 @@ var Cr = w(function (Ql, Tr) {
     this.emit("parsed", e);
   };
 });
-var xr = w(function (Zl, br) {
+var xr = commonJS(function (Zl, br) {
   var I = V();
   br.exports = function (t, e, r, n) {
     let i =
@@ -2121,7 +2121,7 @@ var xr = w(function (Zl, br) {
     return f;
   };
 });
-var Ar = w(function ($l, Ir) {
+var Ar = commonJS(function ($l, Ir) {
   var Br = ve();
   function So(t, e, r, n, i) {
     for (let o = 0; o < r; o++) n[i + o] = t[e + o];
@@ -2229,12 +2229,12 @@ var Ar = w(function ($l, Ir) {
     return f;
   };
 });
-var Xe = w(function (Xl, Lr) {
+var Xe = commonJS(function (Xl, Lr) {
   var C = V(),
     zo = je(),
     Go = xr(),
     vo = Ar(),
-    Vo = Ae("zlib"),
+    Vo = importMetaRequire("zlib"),
     q = (Lr.exports = function (t) {
       if (
         ((this._options = t),
@@ -2331,9 +2331,9 @@ var Xe = w(function (Xl, Lr) {
     return this._packChunk(C.TYPE_IEND, null);
   };
 });
-var kr = w(function (eu, Pr) {
-  var Ko = Ae("util"),
-    Rr = Ae("stream"),
+var kr = commonJS(function (eu, Pr) {
+  var Ko = importMetaRequire("util"),
+    Rr = importMetaRequire("stream"),
     Wo = V(),
     jo = Xe(),
     Sr = (Pr.exports = function (t) {
@@ -2368,11 +2368,11 @@ var kr = w(function (eu, Pr) {
       this._deflate.end(i));
   };
 });
-var Fr = w(function (te, Ur) {
-  var Mr = Ae("assert").ok,
-    K = Ae("zlib"),
-    Jo = Ae("util"),
-    Or = Ae("buffer").kMaxLength;
+var Fr = commonJS(function (te, Ur) {
+  var Mr = importMetaRequire("assert").ok,
+    K = importMetaRequire("zlib"),
+    Jo = importMetaRequire("util"),
+    Or = importMetaRequire("buffer").kMaxLength;
   function F(t) {
     if (!(this instanceof F)) return new F(t);
     if (t && t.chunkSize < K.Z_MIN_CHUNK) t.chunkSize = K.Z_MIN_CHUNK;
@@ -2456,7 +2456,7 @@ var Fr = w(function (te, Ur) {
   te.createInflate = Qo;
   te.inflateSync = qr;
 });
-var et = w(function (tu, Yr) {
+var et = commonJS(function (tu, Yr) {
   var Dr = (Yr.exports = function (t) {
     ((this._buffer = t), (this._reads = []));
   });
@@ -2482,7 +2482,7 @@ var et = w(function (tu, Yr) {
       return Error("unrecognised content at end of stream");
   };
 });
-var Hr = w(function (es) {
+var Hr = commonJS(function (es) {
   var $o = et(),
     Xo = Ve();
   es.process = function (t, e) {
@@ -2501,9 +2501,9 @@ var Hr = w(function (es) {
     );
   };
 });
-var Vr = w(function (nu, vr) {
+var Vr = commonJS(function (nu, vr) {
   var zr = !0,
-    Gr = Ae("zlib"),
+    Gr = importMetaRequire("zlib"),
     rs = Fr();
   if (!Gr.deflateSync) zr = !1;
   var ns = et(),
@@ -2575,9 +2575,9 @@ var Vr = w(function (nu, vr) {
     return ((i.data = W), (i.gamma = f || 0), i);
   };
 });
-var Jr = w(function (iu, jr) {
+var Jr = commonJS(function (iu, jr) {
   var Kr = !0,
-    Wr = Ae("zlib");
+    Wr = importMetaRequire("zlib");
   if (!Wr.deflateSync) Kr = !1;
   var us = V(),
     fs = Xe();
@@ -2601,7 +2601,7 @@ var Jr = w(function (iu, jr) {
     return (i.push(n.packIDAT(s)), i.push(n.packIEND()), Buffer.concat(i));
   };
 });
-var Qr = w(function (cs) {
+var Qr = commonJS(function (cs) {
   var as = Vr(),
     hs = Jr();
   cs.read = function (t, e) {
@@ -2611,9 +2611,9 @@ var Qr = w(function (cs) {
     return hs(t, e);
   };
 });
-var $r = w(function (ws) {
-  var gs = Ae("util"),
-    Zr = Ae("stream"),
+var $r = commonJS(function (ws) {
+  var gs = importMetaRequire("util"),
+    Zr = importMetaRequire("stream"),
     _s = Cr(),
     ms = kr(),
     ys = Qr(),
@@ -2736,7 +2736,7 @@ var $r = w(function (ws) {
     x.adjustGamma(this);
   };
 });
-var re = w(function (Es) {
+var re = commonJS(function (Es) {
   function Xr(t) {
     if (typeof t === "number") t = t.toString();
     if (typeof t !== "string")
@@ -2811,8 +2811,8 @@ var re = w(function (Es) {
       }
   };
 });
-var en = w(function (Is) {
-  var xs = Ae("fs"),
+var en = commonJS(function (Is) {
+  var xs = importMetaRequire("fs"),
     Bs = $r().PNG,
     rt = re();
   Is.render = function (e, r) {
@@ -2858,7 +2858,7 @@ var en = w(function (Is) {
     Is.render(r, n).pack().pipe(e);
   };
 });
-var rn = w(function (Ns) {
+var rn = commonJS(function (Ns) {
   var Ps = re(),
     ks = { WW: " ", WB: "\u2584", BB: "\u2588", BW: "\u2580" },
     Ms = { BB: " ", BW: "\u2584", WW: "\u2588", WB: "\u2580" };
@@ -2901,12 +2901,12 @@ var rn = w(function (Ns) {
   };
   Ns.renderToFile = function (e, r, n, i) {
     if (typeof i > "u") ((i = n), (n = void 0));
-    let o = Ae("fs"),
+    let o = importMetaRequire("fs"),
       s = Ns.render(r, n);
     o.writeFile(e, s, i);
   };
 });
-var nn = w(function (Us) {
+var nn = commonJS(function (Us) {
   Us.render = function (t, e, r) {
     let n = t.modules.size,
       i = t.modules.data,
@@ -2939,7 +2939,7 @@ var nn = w(function (Us) {
     return l;
   };
 });
-var ln = w(function (zs) {
+var ln = commonJS(function (zs) {
   var Ds = "\x1B[47m\x1B[30m",
     Ys = "\x1B[40m\x1B[37m",
     Hs = function (t, e, r) {
@@ -2983,7 +2983,7 @@ var ln = w(function (zs) {
     return h;
   };
 });
-var un = w(function (Ks) {
+var un = commonJS(function (Ks) {
   var vs = nn(),
     Vs = ln();
   Ks.render = function (t, e, r) {
@@ -2991,7 +2991,7 @@ var un = w(function (Ks) {
     return vs.render(t, e, r);
   };
 });
-var ot = w(function (Qs) {
+var ot = commonJS(function (Qs) {
   var js = re();
   function fn(t, e) {
     let r = t.a / 255,
@@ -3056,19 +3056,19 @@ var ot = w(function (Qs) {
     return c;
   };
 });
-var hn = w(function (Xs) {
+var hn = commonJS(function (Xs) {
   var $s = ot();
   Xs.render = $s.render;
   Xs.renderToFile = function (e, r, n, i) {
     if (typeof i > "u") ((i = n), (n = void 0));
-    let o = Ae("fs"),
+    let o = importMetaRequire("fs"),
       l =
         '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">' +
         Xs.render(r, n);
     o.writeFile(e, l, i);
   };
 });
-var dn = w(function (nl) {
+var dn = commonJS(function (nl) {
   var st = re();
   function tl(t, e, r) {
     if ((t.clearRect(0, 0, e.width, e.height), !e.style)) e.style = {};
@@ -3110,7 +3110,7 @@ var dn = w(function (nl) {
     return o.toDataURL(s, l.quality);
   };
 });
-var gn = w(function (ll) {
+var gn = commonJS(function (ll) {
   var ol = _e(),
     lt = He(),
     pn = dn(),

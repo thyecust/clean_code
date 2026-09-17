@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 203 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Jo } from "../权限系统/chunk-ynkf3yy4.js";
 import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -188,7 +188,7 @@ async function consumePrefetchedHistory(e, t) {
     let _ = o - Date.now(),
       h = await Promise.race([
         Mst(d, c, r.pageSize, C),
-        Z(_).then(() => "budget"),
+        sleep(_).then(() => "budget"),
       ]);
     if (h === "budget" || h === null) break;
     (f++, S.unshift(...h.events), (c = h.hasMore ? h.firstId : null), (p = h));

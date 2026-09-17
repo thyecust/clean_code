@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { BHt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { K, sn, bB, Prt, kg, HL } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { getProcessStartTime, isSameProcessAsync, ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
@@ -31,7 +31,7 @@ import {
   zQn,
 } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { resolveGitDir, getCommonDir } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Ol } from "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
+import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import {
@@ -57,7 +57,7 @@ var Te = [
   ],
   se = "# claude-code-runtime";
 async function ie(r) {
-  if (!Ol().claim(`claude_runtime_exclude_ensured:${r}`)) return;
+  if (!getClaimRegistry().claim(`claude_runtime_exclude_ensured:${r}`)) return;
   try {
     let t = await resolveGitDir(r);
     if (!t) return;
@@ -85,7 +85,7 @@ async function ie(r) {
   }
 }
 var Ce = de(".claude", "scheduled_tasks.lock"),
-  we = m(() =>
+  we = createLazyValue(() =>
     c({ sessionId: s(), pid: T(), procStart: s().optional(), acquiredAt: T() }),
   );
 function N(r) {
@@ -239,7 +239,7 @@ function createCronScheduler(r) {
     let h = _bn(k) ? [] : await Q7e(k),
       p = z
         ? await z().catch((d) => {
-            if (Ol().claim("cron_extra_tasks_load_bad"))
+            if (getClaimRegistry().claim("cron_extra_tasks_load_bad"))
               logFeatureBad("routine_register_trigger", "extra_tasks_load_failed");
             return (n(`[ScheduledTasks] getExtraTasks failed: ${d}`), []);
           })
@@ -267,7 +267,7 @@ function createCronScheduler(r) {
     if (e.length > 0) {
       for (let d of e) (re.add(d.id), I.set(d.id, 1 / 0));
       if (
-        (i("tengu_scheduled_task_missed", {
+        (logEvent("tengu_scheduled_task_missed", {
           count: e.length,
           taskIds: e.map((d) => d.id).join(","),
         }),
@@ -312,7 +312,7 @@ function createCronScheduler(r) {
         (n(
           `[ScheduledTasks] firing ${e.id}${e.recurring ? " (recurring)" : ""}`,
         ),
-        i("tengu_scheduled_task_fire", {
+        logEvent("tengu_scheduled_task_fire", {
           recurring: e.recurring ?? !1,
           taskId: e.id,
           autonomousLoopDefault: Ee.isLoopDefaultSentinel(e.prompt),
@@ -331,7 +331,7 @@ function createCronScheduler(r) {
         (n(
           `[ScheduledTasks] recurring task ${e.id} aged out (${C}h since creation), deleting after final fire`,
         ),
-          i("tengu_scheduled_task_expired", { taskId: e.id, ageHours: C }));
+          logEvent("tengu_scheduled_task_expired", { taskId: e.id, ageHours: C }));
       }
       if (e.recurring && !ne) {
         let C = eXe(e.cron, o, e.id, _);

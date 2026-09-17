@@ -11,10 +11,10 @@
 // [preload stripped] 原本在此预载 113 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 function renderToolResultMessage(r) {
-  return e(xe, {
+  return e(ToolResultRow, {
     children: e(t, {
       children: r.opt_in_required
         ? r.message

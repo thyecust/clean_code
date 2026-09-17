@@ -12,8 +12,8 @@
 import { Ion, Pon, kut, lk, MS, MGe } from "./chunk-pvztfdrb.js";
 import "./chunk-fx5ekm7e.js";
 import "../Teammates团队/chunk-y89mhs4a.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wm4s322b.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-0ghshta0.js";
+import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
+import "../../01-核心基础设施/共享小工具-未细化/claude-browser-mcp-server.js";
 import "../Bridge-RemoteControl/chunk-jpq2fv3g.js";
 import "../Teammates团队/chunk-weg7y2ya.js";
 import "./chunk-5gvg7p5p.js";

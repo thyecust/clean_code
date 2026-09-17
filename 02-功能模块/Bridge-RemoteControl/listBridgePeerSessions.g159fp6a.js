@@ -29,9 +29,9 @@ import { A7 } from "./chunk-ga43tr2w.js";
 import "./chunk-znhfst8k.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-thdf1760.js";
 import "./chunk-jpq2fv3g.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-2skajgkt.js";
+import "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
 import "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
-import { pK } from "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
+import { getRemoteSessionCompatId } from "../../01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js";
 import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import { randomUUID } from "crypto";
 var A = 5;
@@ -206,7 +206,7 @@ async function postInterClaudeMessage(t, i, u, w, P, k, x) {
   let o = toCompatSessionId(t);
   if (!/^session_[A-Za-z0-9_-]+$/.test(o))
     return { ok: !1, error: `invalid session ID format: ${t}` };
-  let g = getSelfBridgeCompatId() ?? pK(),
+  let g = getSelfBridgeCompatId() ?? getRemoteSessionCompatId(),
     m = g ? tRe(g) : "unknown",
     _ = yUe(m, getSelfBridgeTitle() ?? u, i, void 0, kCt(P, g ? FAe(m) : void 0), k),
     y = SD(),

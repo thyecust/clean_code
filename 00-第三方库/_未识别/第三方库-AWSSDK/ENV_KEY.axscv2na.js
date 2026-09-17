@@ -10,7 +10,7 @@
 
 // [barrel thinned] 原本在此预载若干依赖 chunk；经查均已由主入口初始化，已移除。共 3 个导出。
 export {
-  U0n as ENV_KEY,
-  B0n as ENV_SECRET,
-  Ylr as fromEnv,
-} from "../../../02-功能模块/Bedrock-Vertex/chunk-q61rm009.js";
+  AWS_ACCESS_KEY_ID_ENV_VAR as ENV_KEY,
+  AWS_SECRET_ACCESS_KEY_ENV_VAR as ENV_SECRET,
+  fromEnv as fromEnv,
+} from "../../../02-功能模块/Bedrock-Vertex/aws-credential-provider-node.js";

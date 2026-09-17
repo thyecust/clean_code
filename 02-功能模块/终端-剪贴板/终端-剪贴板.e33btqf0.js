@@ -16,7 +16,7 @@ import { FP, $w, khe, rB } from "../../01-核心基础设施/核心工具-字符
 import { a0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { CT } from "../状态栏-主题/chunk-jz6b76hr.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 class C {
   hooks = null;
   uiMounted = !1;
@@ -47,7 +47,7 @@ function m() {
   return ((E = !0), null);
   if (process.env.CLIPBOARD_NAPI_NODE_PATH)
     try {
-      return ((c = Ae(process.env.CLIPBOARD_NAPI_NODE_PATH)), c);
+      return ((c = importMetaRequire(process.env.CLIPBOARD_NAPI_NODE_PATH)), c);
     } catch {}
   let o = ["arm64-darwin"].flatMap((r) => [
     `./vendor/clipboard-napi/${r}/clipboard-napi.node`,
@@ -55,7 +55,7 @@ function m() {
   ]);
   for (let r of o)
     try {
-      return ((c = Ae(r)), c);
+      return ((c = importMetaRequire(r)), c);
     } catch {}
   return null;
 }

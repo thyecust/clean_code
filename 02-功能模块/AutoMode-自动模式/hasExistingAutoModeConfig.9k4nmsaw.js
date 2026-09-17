@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 244 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { fOn, NXt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -22,40 +22,40 @@ import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { OIe, wSe } from "../权限系统/chunk-4wrkmv3h.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { Ne, Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { X8, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js";
+import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { Yot, d6e, p6e, f6e } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { PIe } from "./chunk-z0qj8awf.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import "../Git-Worktree/chunk-33y3h2sy.js";
-import { Ypt } from "../../01-核心基础设施/共享小工具-未细化/chunk-ca2zxbyk.js";
+import { toInteger } from "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { Dh, Md, L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var Me = "Expected a function";
 function be(n, a) {
   var s;
   if (typeof a != "function") throw TypeError(Me);
   return (
-    (n = Ypt(n)),
+    (n = toInteger(n)),
     function () {
       if (--n > 0) s = a.apply(this, arguments);
       if (n <= 1) a = void 0;
@@ -205,7 +205,7 @@ function fe({
 }) {
   let [, m] = d(n.step),
     b = n.step,
-    I = vt();
+    I = useClock();
   (d(() => ((n.lastAcceptAt = Math.max(I.now(), n.lastAcceptAt ?? 0)), null)),
     E(
       () => (
@@ -220,7 +220,7 @@ function fe({
     E(() => {
       if (!n.shownLogged)
         ((n.shownLogged = !0),
-          i("tengu_auto_mode_setup_wizard_shown", {
+          logEvent("tengu_auto_mode_setup_wizard_shown", {
             has_existing: n.hasExisting ? 1 : 0,
           }));
     }, [n]));
@@ -229,7 +229,7 @@ function fe({
       A = n.lastAcceptAt;
     return (
       (n.lastAcceptAt = Math.max(S, A ?? S)),
-      A !== void 0 && S - A >= mo
+      A !== void 0 && S - A >= REFUSE_INPUT_WINDOW_MS
     );
   }
   function C(S) {
@@ -244,7 +244,7 @@ function fe({
   function P(S) {
     if (n.resolution !== "none") return;
     ((n.resolution = "cancel"),
-      i("tengu_auto_mode_setup_wizard_resolved", {
+      logEvent("tengu_auto_mode_setup_wizard_resolved", {
         choice: fromEnum(S),
         step: fromEnum(n.step),
       }),
@@ -256,7 +256,7 @@ function fe({
   function O(S, A) {
     if (n.resolution !== "none") return;
     ((n.resolution = "done"),
-      i("tengu_auto_mode_setup_wizard_resolved", {
+      logEvent("tengu_auto_mode_setup_wizard_resolved", {
         choice: fromEnum("saved"),
         mode: fromEnum(n.mode),
       }),
@@ -270,13 +270,13 @@ function fe({
     }
     P("error");
   }
-  let G = r(ue, {
+  let G = r(DotSeparatedList, {
     children: [
       b === "confirm"
-        ? e(D, { chord: ["left", "right"], action: "change usage" })
+        ? e(KeybindingHint, { chord: ["left", "right"], action: "change usage" })
         : null,
-      e(D, { chord: "enter", action: "continue" }),
-      e(D, { chord: "escape", action: "cancel" }),
+      e(KeybindingHint, { chord: "enter", action: "continue" }),
+      e(KeybindingHint, { chord: "escape", action: "cancel" }),
     ],
   });
   if (b === "existing")
@@ -324,7 +324,7 @@ function fe({
             depth: A && B ? "both" : A ? "shell" : B ? "repos" : "here",
           };
         if (
-          (i("tengu_auto_mode_setup_wizard_answers", {
+          (logEvent("tengu_auto_mode_setup_wizard_answers", {
             posture: fromEnum(V.posture),
             scope: fromEnum(V.scope),
             depth: fromEnum(V.depth),
@@ -371,7 +371,7 @@ function fe({
       onDecline: () => {
         if (!C("review")) return;
         ((n.resolution = "done"),
-          i("tengu_auto_mode_setup_wizard_resolved", { choice: fromEnum("decline") }),
+          logEvent("tengu_auto_mode_setup_wizard_resolved", { choice: fromEnum("decline") }),
           k(
             "Discarded \u2014 nothing was saved. Re-run /auto-mode-setup anytime.",
           ));
@@ -393,7 +393,7 @@ function fe({
       },
     });
   }
-  if (b === "write") return e($n, { message: "Saving\u2026" });
+  if (b === "write") return e(SpinnerMessageLine, { message: "Saving\u2026" });
   if (b === "flagged" && n.proposal && n.saved) {
     let S = n.saved;
     return e(Yot, {
@@ -443,7 +443,7 @@ function fe({
       children: [
         r(o, {
           children: [
-            e(et, { status: "error" }),
+            e(StatusIndicator, { status: "error" }),
             r(t, { children: [" ", n.error ?? "Something went wrong."] }),
           ],
         }),
@@ -505,11 +505,11 @@ function ie({
       let O = Q[c - 1];
       if (O) z(O.value);
     };
-  (Ze(
+  (useKeybindings(
     { "tabs:previous": () => b(-1), "tabs:next": () => b(1) },
     { context: "Tabs", isActive: n.confirmFocus === 0 },
   ),
-    Ze(
+    useKeybindings(
       {
         "confirm:previous": () => I(-1),
         "confirm:next": () => I(1),
@@ -583,7 +583,7 @@ function ie({
   });
 }
 function le({ persisted: n, cancel: a, onContinue: s }) {
-  let w = vt(),
+  let w = useClock(),
     [, M] = d(0),
     T = () => {
       n.lastAcceptAt = Math.max(w.now(), n.lastAcceptAt ?? 0);
@@ -633,12 +633,12 @@ function Se(go) {
   let Ce = _(4),
     { message: ne, subtitle: ae, onEscape: fo } = go,
     xe;
-  if (Ce[0] === p) ((xe = { context: "Settings" }), (Ce[0] = xe));
+  if (Ce[0] === MEMO_CACHE_SENTINEL) ((xe = { context: "Settings" }), (Ce[0] = xe));
   else xe = Ce[0];
-  Ne("confirm:no", fo, xe);
+  useKeybinding("confirm:no", fo, xe);
   let Te;
   if (Ce[1] !== ne || Ce[2] !== ae)
-    ((Te = e($n, { message: ne, subtitle: ae })),
+    ((Te = e(SpinnerMessageLine, { message: ne, subtitle: ae })),
       (Ce[1] = ne),
       (Ce[2] = ae),
       (Ce[3] = Te));
@@ -647,7 +647,7 @@ function Se(go) {
 }
 function H(n, a, s) {
   if (
-    (i("tengu_auto_mode_setup_wizard_resolved", {
+    (logEvent("tengu_auto_mode_setup_wizard_resolved", {
       choice: fromEnum(n),
       step: fromEnum(a),
       ...(s !== void 0 && { mode: fromEnum(s) }),

@@ -9,13 +9,13 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 238 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { l_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
-import { JW } from "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
+import { ElapsedTimeoutText } from "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
 import { zZ } from "./chunk-ktp8xtmy.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 var h = 2,
@@ -46,7 +46,7 @@ function renderToolUseProgressMessage(
 ) {
   let i = l.at(-1);
   if (!i || !i.data)
-    return e(xe, {
+    return e(ToolResultRow, {
       height: 1,
       children: e(t, { dimColor: !0, children: "Running\u2026" }),
     });
@@ -63,7 +63,7 @@ function renderToolUseProgressMessage(
   });
 }
 function renderToolUseQueuedMessage() {
-  return e(xe, {
+  return e(ToolResultRow, {
     height: 1,
     children: e(t, { dimColor: !0, children: "Waiting\u2026" }),
   });
@@ -79,7 +79,7 @@ function renderToolResultMessage(l, a, { verbose: u, theme: g, tools: m, style: 
       backgroundTaskId: P,
     } = l;
   if (f)
-    return e(xe, {
+    return e(ToolResultRow, {
       height: 1,
       children: e(t, {
         dimColor: !0,
@@ -92,7 +92,7 @@ function renderToolResultMessage(l, a, { verbose: u, theme: g, tools: m, style: 
       n !== "" ? e(l_, { content: n, verbose: u }) : null,
       c.trim() !== "" ? e(l_, { content: c, verbose: u, isError: !0 }) : null,
       n === "" && c.trim() === ""
-        ? e(xe, {
+        ? e(ToolResultRow, {
             height: 1,
             children: e(t, {
               dimColor: !0,
@@ -101,7 +101,7 @@ function renderToolResultMessage(l, a, { verbose: u, theme: g, tools: m, style: 
                     children: [
                       "Running in the background",
                       " ",
-                      e(D, { chord: "down", action: "manage", parens: !0 }),
+                      e(KeybindingHint, { chord: "down", action: "manage", parens: !0 }),
                     ],
                   })
                 : M
@@ -110,7 +110,7 @@ function renderToolResultMessage(l, a, { verbose: u, theme: g, tools: m, style: 
             }),
           })
         : null,
-      p ? e(xe, { children: e(JW, { timeoutMs: p }) }) : null,
+      p ? e(ToolResultRow, { children: e(ElapsedTimeoutText, { timeoutMs: p }) }) : null,
     ],
   });
 }

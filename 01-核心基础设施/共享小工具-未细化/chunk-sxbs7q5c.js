@@ -12,13 +12,13 @@ import { b4t } from "./chunk-6smvq03f.js";
 import { GSt } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import { kat, $0e } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Vz } from "./chunk-4w3ae8h6.js";
+import { AltScreenContainer } from "./alt-screen-container.js";
 import { XAe, xH } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { lft, hOe, Fze } from "./chunk-28p6k62j.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
-import { p } from "./chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "./chunk-2c9tjhwd.js";
 F();
 var T = { light: "#f9f9f7", dark: "#1f1f1e" };
 function e$n(t, o, n) {
@@ -35,7 +35,7 @@ function f() {
     [l, x] = d(lft),
     S,
     k;
-  if (y[0] === p)
+  if (y[0] === MEMO_CACHE_SENTINEL)
     ((S = () => hOe(() => x(lft()))), (k = []), (y[0] = S), (y[1] = k));
   else ((S = y[0]), (k = y[1]));
   E(S, k);
@@ -62,7 +62,7 @@ function kIt(I) {
     else m = R[4];
     let v;
     if (R[5] !== h || R[6] !== m || R[7] !== r)
-      ((v = e(Vz, { mouseTracking: m, background: h, children: r })),
+      ((v = e(AltScreenContainer, { mouseTracking: m, background: h, children: r })),
         (R[5] = h),
         (R[6] = m),
         (R[7] = r),

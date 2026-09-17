@@ -7,37 +7,37 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Xn, j, Si, B, K, Ec, vz, _B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, Xo, Fb } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, dt, ge, l, A, Jr, Jg, WW, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt, fromEnumArr, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { ou, We, b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { $U, PRt, ORt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Yq } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { QJ, parseUserSpecifiedModel, Xvn, SKt, a0, si, Jh } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Ri, hW, Xke, On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { le, Xu, nt, hm } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { zI, YY } from "./chunk-djserjj5.js";
-import { KI } from "../../01-核心基础设施/共享小工具-未细化/chunk-mvw7xg6n.js";
+import { getBgJobRuntimeState } from "../../01-核心基础设施/共享小工具-未细化/bg-job-runtime-state.js";
 import { isExitedProcessAsync, isSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { uoe } from "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
+import { resolveAgentColorName } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { isUuidShaped } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { B8e } from "../权限系统/chunk-8rrcddth.js";
+import { FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION } from "../权限系统/fork-restricted-launch-flags.js";
 import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { _ve } from "../权限系统/chunk-t3b7pg2x.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
-import { Dm } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
+import { createKeyedSerialQueue } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
 import { s, T, O, se, v, c, it, $e, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { isAbsolute as bt } from "path";
 var Are = new Set([
     "--exec",
@@ -379,7 +379,7 @@ function boundedMarkCountOrUndefined(e) {
 }
 var Me = 1e9,
   ae = () => T().int().nonnegative().max(Me).optional(),
-  yt = m(() =>
+  yt = createLazyValue(() =>
     c({
       kind: X(["content_paint", "prompt_idle"]),
       msgsLoaded: ae(),
@@ -387,7 +387,7 @@ var Me = 1e9,
       msgsRenderedAtFirstPaint: ae(),
     }),
   ),
-  St = m(() =>
+  St = createLazyValue(() =>
     it({
       kind: X(["content_paint", "prompt_idle"]),
       msgsLoaded: ae(),
@@ -417,7 +417,7 @@ function parseDetachMsg(e) {
   if (o < 0) return;
   return e.subarray(r, o).toString("utf8");
 }
-var BgDispatchSchema = m(() =>
+var BgDispatchSchema = createLazyValue(() =>
     c({
       proto: T().int().min(BG_PROTO_MIN).max(BG_PROTO),
       short: s().regex(SHORT_RE),
@@ -478,7 +478,7 @@ var BgDispatchSchema = m(() =>
 function Re() {
   return s().refine(a0, "remote IPC path");
 }
-var je = m(() =>
+var je = createLazyValue(() =>
   it({
     pid: T(),
     procStart: s().optional(),
@@ -517,7 +517,7 @@ function rosterEntryExtras(e) {
   for (let [o, d] of Object.entries(e)) if (!(o in t)) r[o] = d;
   return r;
 }
-var RosterSchema = m(() =>
+var RosterSchema = createLazyValue(() =>
     it({
       proto: T().int().min(BG_PROTO_MIN).max(BG_PROTO),
       supervisorPid: T().catch(0),
@@ -525,7 +525,7 @@ var RosterSchema = m(() =>
       workers: fe(s().regex(SHORT_RE), je()),
     }),
   ),
-  ControlRequestSchema = m(() => {
+  ControlRequestSchema = createLazyValue(() => {
     let e = s().regex(SHORT_RE),
       t = T().int().min(BG_PROTO_MIN).max(BG_PROTO);
     return Ko("op", [
@@ -733,7 +733,7 @@ async function readRoster(e, t) {
               `roster.json ${o.isFile() ? `too large (${o.size} bytes) \u2014 quarantining` : "is not a regular file \u2014 removing"}`,
             ),
           ),
-          i("tengu_bg_roster_parse_failed", {
+          logEvent("tengu_bg_roster_parse_failed", {
             orphaned: -1,
             quarantined: 1,
             errCode: o.isFile() ? S("E2BIG") : S("EFTYPE"),
@@ -749,7 +749,7 @@ async function readRoster(e, t) {
     if (W(o)) return Y();
     if (!e?.silent)
       (logError(dt(ge(o), "bg roster.json read/parse failed")),
-        i("tengu_bg_roster_parse_failed", {
+        logEvent("tengu_bg_roster_parse_failed", {
           orphaned: -1,
           quarantined: 1,
           errCode: Jg(o),
@@ -766,7 +766,7 @@ async function qe(e, t, r) {
   } catch (d) {
     if (!t?.silent)
       (logError(d),
-        i("tengu_bg_roster_parse_failed", {
+        logEvent("tengu_bg_roster_parse_failed", {
           orphaned: Je(e),
           quarantined: 1,
           errCode: Jg(d),
@@ -783,7 +783,7 @@ async function qe(e, t, r) {
         `[daemon] roster.json stamp field(s) healed on read: ${g.join(", ")}`,
         { level: "warn" },
       ),
-        i("tengu_bg_roster_parse_failed", {
+        logEvent("tengu_bg_roster_parse_failed", {
           orphaned: 0,
           quarantined: 0,
           issuePath: fromEnumArr(g),
@@ -799,7 +799,7 @@ async function qe(e, t, r) {
         `roster.json parse failed at ${Ge(g?.path) || "<root>"} (orphaning ${d} worker(s)): ${g?.message}`,
       ),
     ),
-      i("tengu_bg_roster_parse_failed", {
+      logEvent("tengu_bg_roster_parse_failed", {
         orphaned: d,
         quarantined: 1,
         issuePath: Ge(g?.path),
@@ -833,7 +833,7 @@ async function Ot(e) {
 async function Ue(e, t, r, o) {
   if (!t?.silent)
     (logError(r),
-      i("tengu_bg_roster_parse_failed", {
+      logEvent("tengu_bg_roster_parse_failed", {
         orphaned: -1,
         quarantined: 1,
         errCode: S(o),
@@ -846,7 +846,7 @@ async function Ke(e, t) {
   if (r.kind === "refused") {
     if (!t?.silent)
       (logError(Error("roster.json is not a regular file \u2014 removing")),
-        i("tengu_bg_roster_parse_failed", {
+        logEvent("tengu_bg_roster_parse_failed", {
           orphaned: -1,
           quarantined: 1,
           errCode: S("EFTYPE"),
@@ -865,7 +865,7 @@ async function Ke(e, t) {
 function Ve(e, t, r) {
   if (!e?.silent)
     (logError(t),
-      i("tengu_bg_roster_parse_failed", {
+      logEvent("tengu_bg_roster_parse_failed", {
         orphaned: -1,
         quarantined: 0,
         errCode: r,
@@ -922,7 +922,7 @@ async function Pt(e, t) {
   } catch (g) {
     if (!t?.silent)
       (logError(dt(ge(g), "bg roster.json read/parse failed")),
-        i("tengu_bg_roster_parse_failed", {
+        logEvent("tengu_bg_roster_parse_failed", {
           orphaned: -1,
           quarantined: 1,
           errCode: Jg(g),
@@ -989,7 +989,7 @@ async function Tt(e, t) {
       throw p;
     }));
 }
-var Ct = Dm();
+var Ct = createKeyedSerialQueue();
 function updateRoster(e, t) {
   return Ct.run("roster", async () => {
     let r = await Ft(t),
@@ -1050,7 +1050,7 @@ function mNe() {
     kinds: r,
     drainableMonitors: o,
     wake: d,
-  } = KI().inFlightSnapshot;
+  } = getBgJobRuntimeState().inFlightSnapshot;
   return {
     tasks: e,
     queued: t,
@@ -1060,13 +1060,13 @@ function mNe() {
   };
 }
 function tyn(e) {
-  KI().publishInFlightSnapshot(e);
+  getBgJobRuntimeState().publishInFlightSnapshot(e);
 }
 function gNe() {
-  return { ...KI().inFlightSnapshot };
+  return { ...getBgJobRuntimeState().inFlightSnapshot };
 }
 function lYn(e) {
-  return KI().inFlightSnapshotChanged.subscribe(e);
+  return getBgJobRuntimeState().inFlightSnapshotChanged.subscribe(e);
 }
 async function kSt(e, t) {
   if (!isProcessRunning(e)) return "dead_pid";
@@ -1123,7 +1123,7 @@ function dyn(e) {
 }
 function rK(e, t) {
   return [
-    ...(t ? [`launch flags: ${B8e}`] : []),
+    ...(t ? [`launch flags: ${FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION}`] : []),
     ...((e.alwaysDenyRules.session ?? []).length > 0 ||
     (e.alwaysAskRules.session ?? []).length > 0
       ? ["permission rules set for this session only"]
@@ -1266,7 +1266,7 @@ function de(e, t) {
     return;
   };
 }
-var Ae = m(() =>
+var Ae = createLazyValue(() =>
     c({
       state: s(),
       detail: s(),
@@ -1503,7 +1503,7 @@ function watchJobDirOnce(e, t) {
   return f;
 }
 function isOwnStateWriteInFlight() {
-  return KI().ownStateWriteDepth > 0;
+  return getBgJobRuntimeState().ownStateWriteDepth > 0;
 }
 async function writeStateAtomic(e, t, r) {
   let o = t.inFlight?.kinds.includes("session_cron") === !0,
@@ -1522,7 +1522,7 @@ async function writeStateAtomic(e, t, r) {
         : d,
     { pinned: y, sortOrder: w, stateSortOrder: f, group: _, ...C } = p,
     F = r ? jobKeyFor(e, [ee]) : void 0,
-    E = KI();
+    E = getBgJobRuntimeState();
   E.ownStateWriteDepth++;
   try {
     if (r && F) {
@@ -1608,12 +1608,12 @@ async function Wt(e, t) {
     o = 1;
   for (let d of Gt) {
     if (r.ok || !Ht(r.error)) break;
-    (await Z(d), (r = await t()), o++);
+    (await sleep(d), (r = await t()), o++);
   }
   if (r.ok) {
     if (o === 1) N().noteCleanRead(e);
     else if (N().shouldReportRecovered(e))
-      i("tengu_bg_state_read_recovered", { attempts: o });
+      logEvent("tengu_bg_state_read_recovered", { attempts: o });
   }
   return r;
 }
@@ -1687,7 +1687,7 @@ async function qt(e, t, r) {
       }),
       N().shouldReportTransient(t))
     )
-      i("tengu_bg_state_read_transient", {
+      logEvent("tengu_bg_state_read_transient", {
         errno: fromEnum(y.error.code),
         had_cache: w !== void 0,
       });
@@ -1753,7 +1753,7 @@ function Kt(e, t, r, o, d, g, p, y) {
       ),
       N().shouldReportTransient(e))
     )
-      i("tengu_bg_state_read_transient", {
+      logEvent("tengu_bg_state_read_transient", {
         errno: Jr(w) ?? S("unknown"),
         had_cache: p !== void 0,
       });
@@ -1804,7 +1804,7 @@ async function lt(e, t, r) {
     );
     let C = N().peek(e);
     if (N().shouldReportTransient(e))
-      i("tengu_bg_state_read_transient", {
+      logEvent("tengu_bg_state_read_transient", {
         errno: Jr(_) ?? S("unknown"),
         had_cache: C !== void 0,
       });
@@ -1852,7 +1852,7 @@ async function lt(e, t, r) {
       ),
       N().shouldReportTransient(e))
     )
-      i("tengu_bg_state_read_transient", {
+      logEvent("tengu_bg_state_read_transient", {
         errno: Jr(_) ?? S("unknown"),
         had_cache: f !== void 0,
       });
@@ -1869,7 +1869,7 @@ async function readJobStateAfterSettle(e, t) {
     r.state !== "blocked" &&
     r.state !== "failed"
   )
-    (await Z(50), invalidateJobStateCache(e), (r = (await readJobState(e, t).catch(() => null)) ?? r));
+    (await sleep(50), invalidateJobStateCache(e), (r = (await readJobState(e, t).catch(() => null)) ?? r));
   return r;
 }
 function Q() {
@@ -1965,12 +1965,12 @@ async function syncJobColor(e, t, r) {
   );
 }
 function getBgRelocatedCwd() {
-  return KI().relocatedCwd;
+  return getBgJobRuntimeState().relocatedCwd;
 }
 async function relocateBgSessionCwd(e, t) {
   let r = a.CLAUDE_JOB_DIR;
   if (!r || a.CLAUDE_CODE_SESSION_KIND !== "bg") return;
-  ((KI().relocatedCwd = e), invalidateJobStateCache(r));
+  ((getBgJobRuntimeState().relocatedCwd = e), invalidateJobStateCache(r));
   let o = await readJobState(r, t),
     d = o?.worktreePath ? o.originCwd : e;
   if (!o || (o.cwd === e && o.originCwd === d)) return;
@@ -2151,13 +2151,13 @@ async function De(e, t, r) {
   }
 }
 async function writeSortOrder(e, t, r) {
-  let o = M() && r ? jobKeyFor(e, ["order"]) : void 0;
+  let o = isHoverRestEnabled() && r ? jobKeyFor(e, ["order"]) : void 0;
   if (r && o) await De(r, o, String(t));
   else await Ne(J(e, "order"), String(t));
   invalidateJobStateCache(e);
 }
 async function writeStateSortOrder(e, t, r) {
-  let o = M() && r ? jobKeyFor(e, ["stateOrder"]) : void 0;
+  let o = isHoverRestEnabled() && r ? jobKeyFor(e, ["stateOrder"]) : void 0;
   if (r && o) await De(r, o, String(t));
   else await Ne(J(e, "stateOrder"), String(t));
   invalidateJobStateCache(e);
@@ -2165,7 +2165,7 @@ async function writeStateSortOrder(e, t, r) {
 async function writeJobGroup(e, t, r) {
   let o = J(e, "group"),
     d = Ee(t),
-    g = M() && r ? jobKeyFor(e, ["group"]) : void 0;
+    g = isHoverRestEnabled() && r ? jobKeyFor(e, ["group"]) : void 0;
   if (r && g)
     if (d) await De(r, g, d);
     else {
@@ -2195,13 +2195,13 @@ async function withSortOrderLock(e) {
   });
   return await e();
 }
-var pt = Dm();
+var pt = createKeyedSerialQueue();
 function withOwnJobStateWrite(e) {
   return pt.run("own-state.json", e);
 }
 function writeJobPinned(e, t, r) {
   return pt.run("pins.json", async () => {
-    if (M() && r) return Yt(e, t, r);
+    if (isHoverRestEnabled() && r) return Yt(e, t, r);
     let o = Q();
     await Fe(Mt(o), { recursive: !0 });
     await using d = await Cs(o, {
@@ -2392,7 +2392,7 @@ function makeInitialState(e) {
     displayIntent: e.displayIntent,
     name: e.name,
     nameSource: e.nameSource,
-    color: uoe({
+    color: resolveAgentColorName({
       userOverride: e.color,
       agentDefinitionColor: e.template.color,
     }),
@@ -2432,7 +2432,7 @@ async function adoptRosterOrphans(e, t, r) {
         (n(`[adoptRosterOrphans] pruned dead record ${_.short} (${p[f]})`),
         N().shouldReportPruned(_.short))
       )
-        i("tengu_bg_roster_orphan_pruned", { reason: fromEnum(p[f] ?? "dead_pid") });
+        logEvent("tengu_bg_roster_orphan_pruned", { reason: fromEnum(p[f] ?? "dead_pid") });
     } else N().notePruneCandidateLive(_.short);
   let y = d.filter((f, _) => p[_] === "live");
   if (y.length === 0) return e;
@@ -2464,7 +2464,7 @@ async function adoptRosterOrphans(e, t, r) {
     if (r && F)
       r.write(F, b(_), { precondition: { type: "ifAbsent" }, mode: 384 }).then(
         (E) => {
-          if (E.ok) i("tengu_bg_roster_orphan_adopted", {});
+          if (E.ok) logEvent("tengu_bg_roster_orphan_adopted", {});
           else if (E.error.code !== "AlreadyExists")
             logJobWriteError(
               new R(
@@ -2477,7 +2477,7 @@ async function adoptRosterOrphans(e, t, r) {
     else
       Fe(C, { recursive: !0 })
         .then(() => Xke(J(C, "state.json"), b(_), 384))
-        .then(() => i("tengu_bg_roster_orphan_adopted", {}))
+        .then(() => logEvent("tengu_bg_roster_orphan_adopted", {}))
         .catch((E) => {
           if (A(E) !== "EEXIST") logJobWriteError(E);
         });
@@ -2575,7 +2575,7 @@ function writeReapedTerminalState(e, t, r, o, d) {
     })
     .catch((p) => (logJobWriteError(p), "none"));
 }
-var rn = m(() =>
+var rn = createLazyValue(() =>
     nt({
       state: le().nullish(),
       detail: le().nullish(),
@@ -2764,7 +2764,7 @@ function OSt(e) {
     };
   if (p?.state === "blocked") {
     let E = d.slice(p.end);
-    if (G(E.split(/\n\s*\n/), (I) => I.trim().length > 0) >= 3) return null;
+    if (countMatching(E.split(/\n\s*\n/), (I) => I.trim().length > 0) >= 3) return null;
     if (
       !/\bnothing (?:needed|required) from you\b|\bno(?: user)? action (?:needed|required)\b/i.test(
         d,

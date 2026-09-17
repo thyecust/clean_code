@@ -14,7 +14,7 @@ import { tl } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { yEt, SEt } from "../../01-核心基础设施/共享小工具-未细化/chunk-1w1x0pyk.js";
 import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { Ghe } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { normalize } from "path";
 var tA = 5000,
   _ = 26214400,
@@ -493,7 +493,7 @@ function Nzt(e) {
     r != null && typeof r === "object" && !Array.isArray(r)
       ? Object.keys(r)
       : [];
-  return Y([...Object.keys(e), ...t(e.experimental)]);
+  return dedupe([...Object.keys(e), ...t(e.experimental)]);
 }
 function dJe(e) {
   return $G(e) ?? !1;

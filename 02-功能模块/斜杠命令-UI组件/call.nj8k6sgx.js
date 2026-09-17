@@ -13,32 +13,32 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { j0 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Bf } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { MM, hne, jV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import { bnn, wnn, zBn, Tnn, c7, b4 } from "../Grove-隐私设置/chunk-a4mdm49v.js";
 import { sHe } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 async function J() {
   let s;
@@ -108,7 +108,7 @@ function et(s, a) {
 function V() {
   let Nt = _(1),
     it;
-  if (Nt[0] === p)
+  if (Nt[0] === MEMO_CACHE_SENTINEL)
     ((it = e(o, {
       marginTop: 1,
       children: r(t, {
@@ -128,31 +128,31 @@ function ot(Vt) {
   let l = _(38),
     { onDone: f, host: K, storageV5: P, credentials: x } = Vt,
     ut;
-  if (l[0] === p) ((ut = { name: "checking" }), (l[0] = ut));
+  if (l[0] === MEMO_CACHE_SENTINEL) ((ut = { name: "checking" }), (l[0] = ut));
   else ut = l[0];
   let [h, ct] = d(ut),
     H = C(!1),
     lt;
   if (l[1] !== x || l[2] !== f)
     ((lt = () => {
-      (i("tengu_remote_setup_started", {}),
+      (logEvent("tengu_remote_setup_started", {}),
         tt(x).then(async (O) => {
           if (H.current) {
             return;
           }
           switch (O.status) {
             case "not_signed_in": {
-              (i("tengu_remote_setup_result", { result: S("not_signed_in") }),
+              (logEvent("tengu_remote_setup_result", { result: S("not_signed_in") }),
                 f("Not signed in to Claude. Run /login first."));
               return;
             }
             case "gh_not_installed":
             case "gh_not_authenticated": {
               let M = `${c7()}/onboarding?step=alt-auth`;
-              if ((await Gr(M), H.current)) {
+              if ((await tryOpenUrlInBrowser(M), H.current)) {
                 return;
               }
-              (i("tengu_remote_setup_result", { result: fromEnum(O.status) }),
+              (logEvent("tengu_remote_setup_result", { result: fromEnum(O.status) }),
                 f(
                   O.status === "gh_not_installed"
                     ? `GitHub CLI not found. Install it via https://cli.github.com/, then run \`gh auth login\`, or connect GitHub on the web: ${M}`
@@ -162,10 +162,10 @@ function ot(Vt) {
             }
             case "gh_too_old": {
               let ht = `${c7()}/onboarding?step=alt-auth`;
-              if ((await Gr(ht), H.current)) {
+              if ((await tryOpenUrlInBrowser(ht), H.current)) {
                 return;
               }
-              (i("tengu_remote_setup_result", { result: S("gh_too_old") }),
+              (logEvent("tengu_remote_setup_result", { result: S("gh_too_old") }),
                 f(
                   `GitHub CLI is logged in, but this version is too old to share its login (\`gh auth token\` needs GitHub CLI 2.17.0 or newer). Update it via https://cli.github.com/, or connect GitHub on the web: ${ht}`,
                 ));
@@ -175,7 +175,7 @@ function ot(Vt) {
               (n(`/web-setup: couldn't check gh auth status: ${O.error}`, {
                 level: "error",
               }),
-                i("tengu_remote_setup_result", {
+                logEvent("tengu_remote_setup_result", {
                   result: S("gh_check_failed"),
                 }));
               let dt = j0(O.error).replace(/[.\s]+$/, "");
@@ -205,14 +205,14 @@ function ot(Vt) {
       (l[3] = lt));
   else lt = l[3];
   let mt;
-  if (l[4] === p) ((mt = []), (l[4] = mt));
+  if (l[4] === MEMO_CACHE_SENTINEL) ((mt = []), (l[4] = mt));
   else mt = l[4];
   E(lt, mt);
   let _t;
   if (l[5] !== f)
     ((_t = () => {
       ((H.current = !0),
-        i("tengu_remote_setup_result", { result: S("cancelled") }),
+        logEvent("tengu_remote_setup_result", { result: S("cancelled") }),
         f());
     }),
       (l[5] = f),
@@ -229,7 +229,7 @@ function ot(Vt) {
         return;
       }
       if (!v.ok) {
-        (i("tengu_remote_setup_result", {
+        (logEvent("tengu_remote_setup_result", {
           result: S("import_failed"),
           error_kind: fromEnum(v.error.kind),
           gh_token_workflow_scope: fromEnum(ft),
@@ -260,10 +260,10 @@ function ot(Vt) {
         }
       }
       let kt = c7();
-      if ((await Gr(kt), H.current)) {
+      if ((await tryOpenUrlInBrowser(kt), H.current)) {
         return;
       }
-      (i("tengu_remote_setup_result", {
+      (logEvent("tengu_remote_setup_result", {
         result: S("success"),
         gh_token_workflow_scope: fromEnum(ft),
       }),
@@ -282,7 +282,7 @@ function ot(Vt) {
         ? "Connecting GitHub to Claude\u2026"
         : "Checking login status\u2026";
     let A;
-    if (l[12] !== L) ((A = e($n, { message: L })), (l[12] = L), (l[13] = A));
+    if (l[12] !== L) ((A = e(SpinnerMessageLine, { message: L })), (l[12] = L), (l[13] = A));
     else A = l[13];
     let I;
     if (l[14] !== T || l[15] !== A)
@@ -301,7 +301,7 @@ function ot(Vt) {
   let D = h.token,
     L,
     A;
-  if (l[17] === p)
+  if (l[17] === MEMO_CACHE_SENTINEL)
     ((L = e(t, {
       children:
         "Claude on the web requires connecting to your GitHub account to clone and push code on your behalf.",
@@ -356,7 +356,7 @@ function ot(Vt) {
   else B = l[29];
   let N;
   if (l[30] !== T || l[31] !== U || l[32] !== B)
-    ((N = e(En, {
+    ((N = e(ConfirmPrompt, {
       confirmLabel: U,
       cancelLabel: "Cancel",
       onConfirm: B,

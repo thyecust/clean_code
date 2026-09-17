@@ -10,13 +10,13 @@
 import { Nk, V8e } from "./chunk-jz6b76hr.js";
 import { m4 } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { dk, NFt, Zb, _Oe, $Ft } from "./chunk-q7ekqy5h.js";
 import { Eo, XH } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Q4, hOe } from "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
 import { Qt, re, De, E, V, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 var be = () => De(m4),
   rk = be;
@@ -42,7 +42,7 @@ function kat() {
 function xat(Pt) {
   let r = _(52),
     { children: ie, initialState: U, onThemeSave: G } = Pt,
-    { storageV5: y } = _e(),
+    { storageV5: y } = useStorageV5Context(),
     Ce;
   if (r[0] !== G || r[1] !== y)
     ((Ce = (Ie) => (G ? G(Ie) : XH("theme", Ie, y))),
@@ -56,7 +56,7 @@ function xat(Pt) {
     [Rt, St] = d(null),
     [oe, xt] = d(NFt),
     Oe;
-  if (r[3] === p) ((Oe = dk()), (r[3] = Oe));
+  if (r[3] === MEMO_CACHE_SENTINEL) ((Oe = dk()), (r[3] = Oe));
   else Oe = r[3];
   let Ne = Oe.pluginThemes,
     le = At(Ne.subscribe, Ne.getState),
@@ -161,7 +161,7 @@ function xat(Pt) {
       (r[31] = X));
   else X = r[31];
   let Be;
-  if (r[32] === p)
+  if (r[32] === MEMO_CACHE_SENTINEL)
     ((Be = (Je) => {
       if ((q(Je), Je === "auto")) I(Q4());
     }),

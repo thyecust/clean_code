@@ -9,15 +9,15 @@
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Et, dv, b, Tc, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Gi, ZD } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
@@ -25,16 +25,16 @@ import { Ts } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f2
 import { GGn, Dzn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { t6n } from "../../01-核心基础设施/共享小工具-未细化/chunk-thdf1760.js";
 import { $nr, Unr, ase } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
-import { XGe } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb9matb3.js";
-import { idt, bF } from "../../01-核心基础设施/共享小工具-未细化/chunk-vthq2yn2.js";
+import { SSEParser } from "../../01-核心基础设施/共享小工具-未细化/sse-parser.js";
+import { DRAIN_RESPONSE_TIMEOUT_MS, drainResponseBody } from "../../01-核心基础设施/共享小工具-未细化/drain-response-body.js";
 import { GY } from "./chunk-1yq098a7.js";
-import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
 import { dQe, fse } from "./chunk-mxsfy35q.js";
 import { FR } from "./chunk-4zd60pbm.js";
 import { pS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { s, O, se, v, c, it, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 var Ee = 1000,
   ke = 30000,
   ee = 45000,
@@ -48,7 +48,7 @@ function Ae() {
   return !0;
 }
 var asn = new Set(["workflow_launch", "queued_notification", "session_notice"]),
-  Ce = m(() => c({ event_type: s() })),
+  Ce = createLazyValue(() => c({ event_type: s() })),
   Ie = "heartbeat_probe";
 class VGe {
   url;
@@ -100,7 +100,7 @@ class VGe {
       this.lastSequenceNum = d;
     (n(`SSETransport: SSE URL = ${e.href}`),
       n(`SSETransport: POST URL = ${this.postUrl}`),
-      q("info", "cli_sse_transport_initialized"));
+      writeDiagnosticsEvent("info", "cli_sse_transport_initialized"));
   }
   getLastSequenceNum() {
     return this.lastSequenceNum;
@@ -110,7 +110,7 @@ class VGe {
       (n(`SSETransport: Cannot connect, current state is ${this.state}`, {
         level: "error",
       }),
-        q("error", "cli_sse_connect_failed"));
+        writeDiagnosticsEvent("error", "cli_sse_connect_failed"));
       return;
     }
     this.state = "reconnecting";
@@ -130,7 +130,7 @@ class VGe {
     if ((te(o, r), this.lastSequenceNum > 0))
       o["Last-Event-ID"] = String(this.lastSequenceNum);
     (n(`SSETransport: Opening ${t.href}`),
-      q("info", "cli_sse_connect_opening"));
+      writeDiagnosticsEvent("info", "cli_sse_connect_opening"));
     let d = new AbortController();
     this.abortController = d;
     try {
@@ -141,7 +141,7 @@ class VGe {
       });
       if (!p.ok) {
         let k = p.status === 403 ? dQe((B) => p.headers.get(B)) : void 0;
-        if ((await bF(p, { timeoutMs: idt }), d.signal.aborted)) return;
+        if ((await drainResponseBody(p, { timeoutMs: DRAIN_RESPONSE_TIMEOUT_MS }), d.signal.aborted)) return;
         let M = Date.now(),
           w = this.advanceNonOriginStreak(k, M),
           T =
@@ -154,7 +154,7 @@ class VGe {
             `SSETransport: HTTP ${p.status}${C ? " (permanent)" : ""}${k ? ` source=${k}` : ""}${T ? ` (not origin \u2014 retrying; attempt ${w?.attempts})` : ""}`,
             { level: "error" },
           ),
-          q("error", "cli_sse_connect_http_error", {
+          writeDiagnosticsEvent("error", "cli_sse_connect_http_error", {
             status: p.status,
             ...(k !== void 0 && { source: k }),
             ...(w !== null && { retried: T }),
@@ -198,7 +198,7 @@ class VGe {
       let E = Date.now() - e;
       if (
         (n("SSETransport: Connected"),
-        q("info", "cli_sse_connect_connected", { duration_ms: E }),
+        writeDiagnosticsEvent("info", "cli_sse_connect_connected", { duration_ms: E }),
         this.reconnectAttempts === 0)
       )
         Ts("sse_connect_ms", E, e - performance.timeOrigin);
@@ -228,13 +228,13 @@ class VGe {
           (n(`SSETransport: onReconnected handler threw: ${l(k)}`, {
             level: "error",
           }),
-            q("error", "cli_sse_reconnected_handler_threw"));
+            writeDiagnosticsEvent("error", "cli_sse_reconnected_handler_threw"));
         }
       await this.readStream(p.body, R);
     } catch (p) {
       if (this.abortController?.signal.aborted) return;
       (n(`SSETransport: Connection error: ${l(p)}`, { level: "error" }),
-        q("error", "cli_sse_connect_error"),
+        writeDiagnosticsEvent("error", "cli_sse_connect_error"),
         this.connectErrorsSeen.add("fetch_failed"),
         this.diagConnectFailure(l(p), e),
         this.handleConnectionError());
@@ -259,7 +259,7 @@ class VGe {
       attempts: e.attempts,
       streakMs: Date.now() - e.startedAtMs,
     };
-    q("info", "cli_sse_nonorigin_403_recovered", {
+    writeDiagnosticsEvent("info", "cli_sse_nonorigin_403_recovered", {
       source: t.source,
       attempts: t.attempts,
       streak_ms: t.streakMs,
@@ -288,7 +288,7 @@ class VGe {
   }
   async readStream(e, t) {
     let r = e.getReader(),
-      o = new XGe();
+      o = new SSEParser();
     try {
       while (!0) {
         let { done: d, value: p } = await r.read();
@@ -304,7 +304,7 @@ class VGe {
                   `SSETransport: DUPLICATE frame seq=${_} (lastSequenceNum=${this.lastSequenceNum}, seenCount=${this.seenSequenceNums.size})`,
                   { level: "warn" },
                 ),
-                  q("warn", "cli_sse_duplicate_sequence"));
+                  writeDiagnosticsEvent("warn", "cli_sse_duplicate_sequence"));
               else if (
                 (this.seenSequenceNums.add(_),
                 this.seenSequenceNums.size > 1000)
@@ -322,13 +322,13 @@ class VGe {
               "SSETransport: Frame has data: but no event: field \u2014 dropped",
               { level: "warn" },
             ),
-              q("warn", "cli_sse_frame_missing_event_field"));
+              writeDiagnosticsEvent("warn", "cli_sse_frame_missing_event_field"));
         }
       }
     } catch (d) {
       if (this.abortController?.signal.aborted) return;
       (n(`SSETransport: Stream read error: ${l(d)}`, { level: "error" }),
-        q("error", "cli_sse_stream_read_error"));
+        writeDiagnosticsEvent("error", "cli_sse_stream_read_error"));
     } finally {
       r.releaseLock();
     }
@@ -351,7 +351,7 @@ class VGe {
       (n(`SSETransport: Unexpected SSE event type '${e}' on worker stream`, {
         level: "warn",
       }),
-        q("warn", "cli_sse_unexpected_event_type", { event_type: e }));
+        writeDiagnosticsEvent("warn", "cli_sse_unexpected_event_type", { event_type: e }));
       return;
     }
     let r;
@@ -373,22 +373,22 @@ class VGe {
         (n(
           `SSETransport: Event seq=${r.sequence_num} event_id=${r.event_id} event_type=${r.event_type} payload_type=${String(o.type)}${p}${d}`,
         ),
-        q("info", "cli_sse_message_received"),
+        writeDiagnosticsEvent("info", "cli_sse_message_received"),
         this.eventFilter?.(r))
       )
-        q("warn", "cli_sse_event_filtered");
+        writeDiagnosticsEvent("warn", "cli_sse_event_filtered");
       else if (
         typeof o.type === "string" &&
         asn.has(o.type) &&
         r.event_type !== o.type
       )
-        (q("warn", "cli_sse_server_only_event_type_mismatch", {
+        (writeDiagnosticsEvent("warn", "cli_sse_server_only_event_type_mismatch", {
           event_type: r.event_type,
           payload_type: o.type,
         }),
           this.onEventVetoed?.(r));
       else if (o.type === "control_request" && r.source === "worker")
-        q("warn", "cli_sse_worker_control_request_dropped");
+        writeDiagnosticsEvent("warn", "cli_sse_worker_control_request_dropped");
       else
         this.onData?.(
           b(o) +
@@ -413,19 +413,19 @@ class VGe {
     }
     let r = Ce().safeParse(t);
     if (!r.success || r.data.event_type !== Ie) {
-      q("warn", "cli_sse_unexpected_ephemeral_type", {
+      writeDiagnosticsEvent("warn", "cli_sse_unexpected_ephemeral_type", {
         event_type: r.success ? r.data.event_type : "unparseable",
       });
       return;
     }
-    q("info", "cli_sse_heartbeat_probe_received");
+    writeDiagnosticsEvent("info", "cli_sse_heartbeat_probe_received");
     try {
       this.onHeartbeatProbe?.();
     } catch (o) {
       (n(`SSETransport: onHeartbeatProbe handler threw: ${l(o)}`, {
         level: "error",
       }),
-        q("error", "cli_sse_heartbeat_probe_handler_threw"));
+        writeDiagnosticsEvent("error", "cli_sse_heartbeat_probe_handler_threw"));
     }
   }
   handleConnectionError() {
@@ -452,7 +452,7 @@ class VGe {
     (n(
       `SSETransport: Reconnecting in ${Math.round(o)}ms (attempt ${this.reconnectAttempts}, ${Math.round(t / 1000)}s elapsed)`,
     ),
-      q("error", "cli_sse_reconnect_attempt", {
+      writeDiagnosticsEvent("error", "cli_sse_reconnect_attempt", {
         reconnectAttempts: this.reconnectAttempts,
       }),
       (this.reconnectTimer = setTimeout(() => {
@@ -462,7 +462,7 @@ class VGe {
   onLivenessTimeout = () => {
     ((this.livenessTimer = null),
       n("SSETransport: Liveness timeout, reconnecting", { level: "error" }),
-      q("error", "cli_sse_liveness_timeout"),
+      writeDiagnosticsEvent("error", "cli_sse_liveness_timeout"),
       this.connectErrorsSeen.add("liveness_timeout"),
       this.onDiagnostic?.(
         `SSE liveness timeout \u2014 no frame in ${ee / 1000}s, reconnecting`,
@@ -483,7 +483,7 @@ class VGe {
     let t = this.getAuthHeaders();
     if (Object.keys(t).length === 0) {
       (n("SSETransport: No session token available for POST"),
-        q("warn", "cli_sse_post_no_token"));
+        writeDiagnosticsEvent("warn", "cli_sse_post_no_token"));
       return;
     }
     let r = {
@@ -511,25 +511,25 @@ class VGe {
           (n(
             `SSETransport: POST returned ${p.status} (client error), not retrying`,
           ),
-            q("warn", "cli_sse_post_client_error", { status: p.status }));
+            writeDiagnosticsEvent("warn", "cli_sse_post_client_error", { status: p.status }));
           return;
         }
         (n(`SSETransport: POST returned ${p.status}, attempt ${o}/${H}`),
-          q("warn", "cli_sse_post_retryable_error", {
+          writeDiagnosticsEvent("warn", "cli_sse_post_retryable_error", {
             status: p.status,
             attempt: o,
           }));
       } catch (p) {
         (n(`SSETransport: POST error: ${l(p)}, attempt ${o}/${H}`),
-          q("warn", "cli_sse_post_network_error", { attempt: o }));
+          writeDiagnosticsEvent("warn", "cli_sse_post_network_error", { attempt: o }));
       }
       if (o === H) {
         (n(`SSETransport: POST failed after ${H} attempts, continuing`),
-          q("warn", "cli_sse_post_retries_exhausted"));
+          writeDiagnosticsEvent("warn", "cli_sse_post_retries_exhausted"));
         return;
       }
       let d = Math.min(Re * Math.pow(2, o - 1), Me);
-      await Z(d);
+      await sleep(d);
     }
   }
   isConnectedStatus() {
@@ -700,9 +700,9 @@ function V(e) {
 }
 function ne(e, t = N) {
   let r = e.compactMetadata;
-  if (!me(r)) return null;
+  if (!isRecord(r)) return null;
   let o = r.preservedMessages;
-  if (!me(o)) return null;
+  if (!isRecord(o)) return null;
   let d = o.uuids;
   if (!V(d) || d.length <= t) return null;
   let p = d.slice(-t),
@@ -719,16 +719,16 @@ function ne(e, t = N) {
         uuids: p,
         ...(V(_) && { allUuids: R >= 0 ? _.slice(R) : _.slice(-t) }),
       },
-      ...(me(k) && { preservedSegment: { ...k, headUuid: E } }),
+      ...(isRecord(k) && { preservedSegment: { ...k, headUuid: E } }),
     },
   };
 }
 function ie(e, t, r) {
-  if (!me(e)) return e;
+  if (!isRecord(e)) return e;
   if (t.edit === !0 && Ue(e)) return { ...e, originalFile: null };
   if (t.write === !0 && xe(e)) return { ...e, content: "", originalFile: null };
   let o = e.file;
-  if (!me(o)) return e;
+  if (!isRecord(o)) return e;
   if (
     t.media === !0 &&
     (e.type === "image" || e.type === "pdf") &&
@@ -768,10 +768,10 @@ function xe(e) {
   return !(e.structuredPatch.length === 0 && e.originalFile === null);
 }
 function He(e) {
-  if (!me(e) || !Array.isArray(e.content)) return;
+  if (!isRecord(e) || !Array.isArray(e.content)) return;
   let t;
   for (let r of e.content)
-    if (me(r) && r.type === "tool_result") {
+    if (isRecord(r) && r.type === "tool_result") {
       if (t !== void 0 || typeof r.content !== "string") return;
       t = r.content;
     }
@@ -1079,7 +1079,7 @@ class K {
       r = 0;
     while (!this.closed) {
       if (await this.config.send(t)) return;
-      if ((r++, await Z(this.retryDelay(r)), this.pending && !this.closed))
+      if ((r++, await sleep(this.retryDelay(r)), this.pending && !this.closed))
         ((t = ae(t, this.pending)), (this.pending = null));
     }
   }
@@ -1217,7 +1217,7 @@ function Se(e) {
     tool_use_id: e.tool_use_id,
   };
 }
-var nt = m(() =>
+var nt = createLazyValue(() =>
     c({
       tool_name: s().refine((e) => !e.startsWith("dialog:")),
       display_tool_name: s().nullish(),
@@ -1228,7 +1228,7 @@ var nt = m(() =>
       suppressed_request_id: s().nullish(),
     }),
   ),
-  st = m(() =>
+  st = createLazyValue(() =>
     c({
       data: v(
         it({
@@ -1244,7 +1244,7 @@ var nt = m(() =>
       next_cursor: s().optional(),
     }),
   ),
-  ot = m(() => c({ results: v(c({ event_id: s(), duplicate: O() })) }));
+  ot = createLazyValue(() => c({ results: v(c({ event_id: s(), duplicate: O() })) }));
 function lt(e) {
   let t = nt().safeParse(e);
   if (!t.success) return;
@@ -1429,7 +1429,7 @@ class pM {
           }
           if (U(p.status)) {
             if (
-              (q("warn", "cli_worker_state_4xx_dropped", { status: p.status }),
+              (writeDiagnosticsEvent("warn", "cli_worker_state_4xx_dropped", { status: p.status }),
               this.droppedWorkerStatePatchCount++,
               d.worker_status !== void 0)
             )
@@ -1527,7 +1527,7 @@ class pM {
                 );
               }
             }
-            q("warn", "cli_worker_events_4xx_dropped", {
+            writeDiagnosticsEvent("warn", "cli_worker_events_4xx_dropped", {
               status: B,
               count: T.length,
             });
@@ -1550,11 +1550,11 @@ class pM {
       maxConsecutiveFailures: o?.maxConsecutiveFailures,
       onBatchDropped: (d, p) => {
         (this.droppedInternalEventBatches++,
-          q("warn", "cli_worker_internal_events_give_up_dropped", {
+          writeDiagnosticsEvent("warn", "cli_worker_internal_events_give_up_dropped", {
             count: d,
             consecutive_failures: p,
           }),
-          i("tengu_ccr_internal_events_dropped", {
+          logEvent("tengu_ccr_internal_events_dropped", {
             reason: S("give_up"),
             count: d,
             consecutive_failures: p,
@@ -1576,11 +1576,11 @@ class pM {
         }
         if (U(p.status)) {
           (this.droppedInternalEventBatches++,
-            q("warn", "cli_worker_internal_events_4xx_dropped", {
+            writeDiagnosticsEvent("warn", "cli_worker_internal_events_4xx_dropped", {
               status: p.status,
               count: d.length,
             }),
-            i("tengu_ccr_internal_events_dropped", {
+            logEvent("tengu_ccr_internal_events_dropped", {
               reason: S("4xx"),
               count: d.length,
               status: p.status,
@@ -1616,7 +1616,7 @@ class pM {
           );
           if (p.ok) return;
           if (U(p.status)) {
-            q("warn", "cli_worker_delivery_4xx_dropped", {
+            writeDiagnosticsEvent("warn", "cli_worker_delivery_4xx_dropped", {
               status: p.status,
               count: d.length,
             });
@@ -1656,7 +1656,7 @@ class pM {
           (C) => C.metadata,
           () => ({ external: null, internal: null, readFailed: !0 }),
         ),
-        Z(this.initStateGetOrderingBoundMs).then(() => "pending"),
+        sleep(this.initStateGetOrderingBoundMs).then(() => "pending"),
       ]),
       d = this.reportParkAtInit ? dt(o) : void 0,
       p = {
@@ -1708,12 +1708,12 @@ class pM {
       }
       if (C < k) {
         let B = Math.min(500 * 2 ** (C - 1), 30000) + Math.random() * 500;
-        await Z(B);
+        await sleep(B);
       }
     }
     if (!_.ok) {
       if (!this.closed)
-        (q("error", "cli_worker_init_put_retries_exhausted"),
+        (writeDiagnosticsEvent("error", "cli_worker_init_put_retries_exhausted"),
           this.onDiagnostic?.(
             `PUT /worker retries exhausted: ${M} attempts over ${Math.round((Date.now() - t) / 1000)}s, errors=[${[...R].join(",") || "unknown"}]`,
           ));
@@ -1732,20 +1732,20 @@ class pM {
       });
     if (
       (n(`CCRClient: initialized, epoch=${this.workerEpoch}`),
-      q("info", "cli_worker_lifecycle_initialized", {
+      writeDiagnosticsEvent("info", "cli_worker_lifecycle_initialized", {
         epoch: this.workerEpoch,
         duration_ms: Date.now() - t,
         reported_status: this.currentState,
       }),
       d)
     )
-      i("tengu_ccr_init_park_report", {
+      logEvent("tengu_ccr_init_park_report", {
         reported: fromEnum(d.status),
         reason: fromEnum(d.reason),
       });
     let { metadata: w, durationMs: T } = await r;
     if (!this.closed)
-      q("info", "cli_worker_state_restored", {
+      writeDiagnosticsEvent("info", "cli_worker_state_restored", {
         duration_ms: T,
         had_state: w.external !== null || w.internal !== null,
         read_failed: w.readFailed === !0,
@@ -1803,7 +1803,7 @@ class pM {
     if (Object.keys(R).length === 0)
       return { ok: !1, reason: "no_auth_headers" };
     let k = `${this.sessionBaseUrl}${t}`,
-      M = _ ? Fa(_, { timeoutMs: d, refTimer: !0 }) : void 0;
+      M = _ ? createLinkedAbortSignal(_, { timeoutMs: d, refTimer: !0 }) : void 0;
     try {
       let w = {
           method: e.toUpperCase(),
@@ -1832,11 +1832,11 @@ class pM {
           } catch {
             return { ok: !0 };
           }
-        return (await bF(T), { ok: !0 });
+        return (await drainResponseBody(T), { ok: !0 });
       }
       let C;
       if (T.status === 409 && !this.closed) C = await J(T);
-      else await bF(T);
+      else await drainResponseBody(T);
       if (this.closed)
         return { ok: !1, status: T.status, reason: `http_${T.status}` };
       if (T.status === 409) this.handleEpochMismatch(C);
@@ -1846,7 +1846,7 @@ class pM {
             `CCRClient: ${this.consecutiveNotFound} consecutive 404s \u2014 session gone, exiting`,
             { level: "error" },
           ),
-            q("error", "cli_worker_session_not_found"),
+            writeDiagnosticsEvent("error", "cli_worker_session_not_found"),
             this.onDiagnostic?.(
               `${this.consecutiveNotFound} consecutive 404s on ${t} \u2014 session gone, exiting`,
             ),
@@ -1862,7 +1862,7 @@ class pM {
             `CCRClient: session_token expired (exp=${new Date(D * 1000).toISOString()}) \u2014 no refresh was delivered, exiting`,
             { level: "error" },
           ),
-            q("error", "cli_worker_token_expired_no_refresh"),
+            writeDiagnosticsEvent("error", "cli_worker_token_expired_no_refresh"),
             this.onDiagnostic?.(
               `session_token expired (exp=${new Date(D * 1000).toISOString()}) \u2014 no refresh delivered, exiting`,
             ),
@@ -1875,7 +1875,7 @@ class pM {
               `CCRClient: ${this.consecutiveAuthFailures} consecutive auth failures with a valid-looking token \u2014 server-side auth unrecoverable, exiting`,
               { level: "error" },
             ),
-              q("error", "cli_worker_auth_failures_exhausted"),
+              writeDiagnosticsEvent("error", "cli_worker_auth_failures_exhausted"),
               this.onDiagnostic?.(
                 `${this.consecutiveAuthFailures} consecutive auth failures (HTTP ${T.status}) with valid-looking token \u2014 exiting`,
               ),
@@ -1884,7 +1884,7 @@ class pM {
       }
       if (
         (n(`CCRClient: ${o} returned ${T.status}`, { level: "warn" }),
-        q("warn", "cli_worker_request_failed", {
+        writeDiagnosticsEvent("warn", "cli_worker_request_failed", {
           method: e,
           path: t,
           status: T.status,
@@ -1911,7 +1911,7 @@ class pM {
     } catch (w) {
       return (
         n(`CCRClient: ${o} failed: ${l(w)}`, { level: "warn" }),
-        q("warn", "cli_worker_request_error", {
+        writeDiagnosticsEvent("warn", "cli_worker_request_error", {
           method: e,
           path: t,
           error_code: j(w),
@@ -1953,7 +1953,7 @@ class pM {
     (n(`CCRClient: Epoch mismatch (409, reason=${r}), shutting down`, {
       level: "error",
     }),
-      q(
+      writeDiagnosticsEvent(
         "error",
         t === "epoch_stale"
           ? "cli_worker_epoch_stale"
@@ -2038,7 +2038,7 @@ class pM {
   sendGoodbye() {
     if (this.workerEpoch <= 0 || this.epochSuperseded) return;
     if (this.currentState === "running") {
-      q("info", "cli_worker_goodbye_skipped_mid_turn");
+      writeDiagnosticsEvent("info", "cli_worker_goodbye_skipped_mid_turn");
       return;
     }
     this.goodbyeFlushed = this.request(
@@ -2146,7 +2146,7 @@ class pM {
   reclampCurrentIntervalToTokenLifetime() {
     let e = this.clampToTokenLifetime(this.heartbeatIntervalMs);
     if (e < this.heartbeatIntervalMs)
-      (q("info", "cli_heartbeat_interval_updated", {
+      (writeDiagnosticsEvent("info", "cli_heartbeat_interval_updated", {
         from_ms: this.heartbeatIntervalMs,
         to_ms: e,
       }),
@@ -2186,13 +2186,13 @@ class pM {
       (this.skippedPreviousCadenceBeat = !1),
       e === "resync_stale")
     )
-      q("info", "cli_heartbeat_reconnect_stale_beat", {
+      writeDiagnosticsEvent("info", "cli_heartbeat_reconnect_stale_beat", {
         gap_ms: this.lastHeartbeatSentAtMs - this.lastHeartbeatSuccessAtMs,
         interval_ms: this.heartbeatIntervalMs,
       });
     try {
       if (e === "reactivate")
-        q("info", "cli_heartbeat_reactivation_beat", {
+        writeDiagnosticsEvent("info", "cli_heartbeat_reactivation_beat", {
           interval_ms: this.heartbeatIntervalMs,
         });
       let t = this.idleTracker?.sampleIdleSeconds(),
@@ -2234,7 +2234,7 @@ class pM {
             this.restoreReactivationArm();
         }
         if (this.isIdleAdvised() && o.status !== 429)
-          (q("warn", "cli_heartbeat_idle_reverted_on_failure", {
+          (writeDiagnosticsEvent("warn", "cli_heartbeat_idle_reverted_on_failure", {
             status: o.status,
           }),
             (this.idleGrantLatched = !1),
@@ -2291,17 +2291,17 @@ class pM {
               if (E && M.adopted)
                 ((this.lastAuthRefreshBadReason = null),
                   logFeatureOk("ccr_worker_auth_refresh"),
-                  q("info", "cli_heartbeat_refreshed_auth_late_adopted"));
+                  writeDiagnosticsEvent("info", "cli_heartbeat_refreshed_auth_late_adopted"));
             },
             () => {},
           );
-          let R = await kt(_, Math.min(be, this.heartbeatIntervalMs)),
+          let R = await withDeadline(_, Math.min(be, this.heartbeatIntervalMs)),
             k;
           if (R === void 0)
             ((E = !0), (k = { adopted: !1, reason: "adopt_timeout" }));
           else k = R;
           if (
-            (q("info", "cli_heartbeat_refreshed_auth_signal", {
+            (writeDiagnosticsEvent("info", "cli_heartbeat_refreshed_auth_signal", {
               adopted: k.adopted,
               reason: k.reason,
               expires_in_seconds: o.data.refreshed_auth.expires_in_seconds,
@@ -2321,7 +2321,7 @@ class pM {
           if (this.lastAuthRefreshBadReason !== "adopt_threw")
             ((this.lastAuthRefreshBadReason = "adopt_threw"),
               logFeatureBad("ccr_worker_auth_refresh", "adopt_threw"));
-          q("error", "cli_heartbeat_refreshed_auth_adopt_threw");
+          writeDiagnosticsEvent("error", "cli_heartbeat_refreshed_auth_adopt_threw");
         }
       let d = o.data?.heartbeat_interval_seconds;
       if (typeof d !== "number" || !Number.isFinite(d) || d <= 0) {
@@ -2341,7 +2341,7 @@ class pM {
       );
       if (p === this.heartbeatIntervalMs) return;
       if (
-        (q("info", "cli_heartbeat_interval_updated", {
+        (writeDiagnosticsEvent("info", "cli_heartbeat_interval_updated", {
           from_ms: this.heartbeatIntervalMs,
           to_ms: p,
         }),
@@ -2557,7 +2557,7 @@ class pM {
   }
   currentUploadTrim() {
     let e = this.uploadTrim();
-    return me(e) ? e : le;
+    return isRecord(e) ? e : le;
   }
   async writeInternalEvent(
     e,
@@ -2567,7 +2567,7 @@ class pM {
     let p = d,
       E = ne(t);
     if (p && p.length > N)
-      (i("tengu_ccr_preserved_event_ids_clamped", {
+      (logEvent("tengu_ccr_preserved_event_ids_clamped", {
         originalCount: p.length,
         cap: N,
         payloadClamped: E !== null,
@@ -2642,7 +2642,7 @@ class pM {
       let E = this.getAuthHeaders();
       if (Object.keys(E).length === 0)
         return { ok: !1, reason: "no_auth_headers" };
-      p = t.signal ? Fa(t.signal, { timeoutMs: 30000, refTimer: !0 }) : void 0;
+      p = t.signal ? createLinkedAbortSignal(t.signal, { timeoutMs: 30000, refTimer: !0 }) : void 0;
       let _ = await fetch(o, {
         headers: {
           ...E,
@@ -2663,7 +2663,7 @@ class pM {
         let C = st().safeParse(T);
         if (!C.success)
           return (
-            q("warn", "cli_worker_internal_events_page_foreign"),
+            writeDiagnosticsEvent("warn", "cli_worker_internal_events_page_foreign"),
             { ok: !1, status: _.status, reason: "foreign_body" }
           );
         let B = Number(_.headers.get("content-length") ?? Number.NaN);
@@ -2703,7 +2703,7 @@ class pM {
         n(`CCRClient: internal events page returned ${_.status}`, {
           level: "warn",
         }),
-        q("warn", "cli_worker_request_failed", {
+        writeDiagnosticsEvent("warn", "cli_worker_request_failed", {
           method: "get",
           path: "/worker/internal-events",
           status: _.status,
@@ -2870,7 +2870,7 @@ class pM {
             `CCRClient: after_event_id ${C === "rejected" ? "rejected by server (gate off)" : "not found (stale anchor)"} \u2014 refetching without anchor`,
             { level: "warn" },
           ),
-            q(
+            writeDiagnosticsEvent(
               "warn",
               C === "rejected"
                 ? "cli_worker_after_event_id_rejected"
@@ -2937,7 +2937,7 @@ class pM {
           R < E)
         ) {
           let T = Math.min(500 * 2 ** (R - 1), 30000) + Math.random() * 500;
-          await Z(T, _);
+          await sleep(T, _);
         }
         continue;
       }
@@ -2948,11 +2948,11 @@ class pM {
           if (typeof w?.error?.type === "string") M = w.error.type;
         } catch {}
       else if (k.status === 409) {
-        if (e.isClosed?.()) return (await bF(k), null);
+        if (e.isClosed?.()) return (await drainResponseBody(k), null);
         let w = await J(k);
         if (!e.isClosed?.()) e.onConflict?.(w);
         return null;
-      } else await bF(k);
+      } else await drainResponseBody(k);
       if (U(k.status) || M === "after_event_id_not_found")
         return (
           n(
@@ -2969,12 +2969,12 @@ class pM {
         R < E)
       ) {
         let w = Math.min(500 * 2 ** (R - 1), 30000) + Math.random() * 500;
-        await Z(w, _);
+        await sleep(w, _);
       }
     }
     return (
       n("CCRClient: GET retries exhausted", { level: "error" }),
-      q("error", "cli_worker_get_retries_exhausted", { context: o }),
+      writeDiagnosticsEvent("error", "cli_worker_get_retries_exhausted", { context: o }),
       null
     );
   }
@@ -3053,7 +3053,7 @@ class pM {
       e.registerPreExitFlush(async () => {
         await this.flushGoodbye();
         try {
-          await kt(this.flushInternalEvents(), ut);
+          await withDeadline(this.flushInternalEvents(), ut);
         } finally {
           (this.close(), this.onInternalEventLaneClosed?.());
         }
@@ -3076,7 +3076,7 @@ function pt(e) {
 }
 async function J(e) {
   let t = Q(e.headers.get("x-ccr-conflict-reason"));
-  if (t !== void 0) return (await bF(e), t);
+  if (t !== void 0) return (await drainResponseBody(e), t);
   try {
     let r = await e.json();
     return Q(r?.error?.reason ?? r?.reason) ?? Q(r?.error?.type);

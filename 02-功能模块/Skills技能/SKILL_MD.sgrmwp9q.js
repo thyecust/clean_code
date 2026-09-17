@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
-import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var e = "./component-schemas-7fabf82f.md.zst";
 var t = Ke(e, import.meta.dirname);
-var n = Ae("./example-plugins-9n8v6pe1.md");
-var o = Ae("./mcp-servers-chmkz450.md");
-var i = Ae("./search-strategies-4qam2bp6.md");
+var n = importMetaRequire("./example-plugins-9n8v6pe1.md");
+var o = importMetaRequire("./mcp-servers-chmkz450.md");
+var i = importMetaRequire("./search-strategies-4qam2bp6.md");
 var s = "./SKILL-0e9ec89e.md.zst";
 var r = Ke(s, import.meta.dirname);
 var SKILL_MD = r,

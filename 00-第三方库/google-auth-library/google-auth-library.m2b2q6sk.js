@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { EAn, E$e } from "../_未识别/第三方库-加密库/第三方库-加密库.z54vzq0y.js";
-import { pe, w, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var Lt = w(function (xd, us) {
+import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var Lt = commonJS(function (xd, us) {
   var ht = Object.prototype.hasOwnProperty,
     cs = Object.prototype.toString,
     { defineProperty: rs, getOwnPropertyDescriptor: ss } = Object,
@@ -73,7 +73,7 @@ var Lt = w(function (xd, us) {
     return g;
   };
 });
-var ls = w(function (bd, sa) {
+var ls = commonJS(function (bd, sa) {
   sa.exports = {
     name: "gaxios",
     version: "7.1.4",
@@ -179,11 +179,11 @@ var ls = w(function (bd, sa) {
       "https://github.com/googleapis/google-cloud-node-core/tree/main/packages/gaxios",
   };
 });
-var hs = w(function (Nd, ds) {
+var hs = commonJS(function (Nd, ds) {
   var na = ls();
   ds.exports = { pkg: na };
 });
-var Ht = w(function (ge) {
+var Ht = commonJS(function (ge) {
   var ps =
     (ge && ge.__importDefault) ||
     function (e) {
@@ -399,7 +399,7 @@ var Ht = w(function (ge) {
     return e;
   }
 });
-var ms = w(function (_s) {
+var ms = commonJS(function (_s) {
   Object.defineProperty(_s, "__esModule", { value: !0 });
   _s.getRetryConfig = aa;
   async function aa(e) {
@@ -499,13 +499,13 @@ var ms = w(function (_s) {
     return Math.min(r, s, e.maxRetryDelay);
   }
 });
-var $t = w(function (ws) {
+var $t = commonJS(function (ws) {
   Object.defineProperty(ws, "__esModule", { value: !0 });
   ws.GaxiosInterceptorManager = void 0;
   class Es extends Set {}
   ws.GaxiosInterceptorManager = Es;
 });
-var vs = w(function (He) {
+var vs = commonJS(function (He) {
   var da =
       (He && He.__importDefault) ||
       function (e) {
@@ -515,10 +515,10 @@ var vs = w(function (He) {
   Object.defineProperty(He, "__esModule", { value: !0 });
   He.Gaxios = void 0;
   var ha = da(Lt()),
-    fa = Ae("https"),
+    fa = importMetaRequire("https"),
     Fe = Ht(),
     pa = ms(),
-    Ts = Ae("stream"),
+    Ts = importMetaRequire("stream"),
     Cs = $t(),
     ga = async () =>
       globalThis.crypto?.randomUUID() || (await import("crypto")).randomUUID(),
@@ -798,7 +798,7 @@ Content-Type: ${n}\r
     static async #a() {
       return (
         (this.#i ||= (
-          await import("../_未识别/第三方库-Google认证/chunk-jd89krpb.js").then((m) => pe(m.default))
+          await import("../_未识别/第三方库-Google认证/chunk-jd89krpb.js").then((m) => toESM(m.default))
         ).HttpsProxyAgent),
         this.#i
       );
@@ -822,7 +822,7 @@ Content-Type: ${n}\r
   He.Gaxios = Jt;
   Be = Jt;
 });
-var te = w(function (oe) {
+var te = commonJS(function (oe) {
   var _a =
       (oe && oe.__createBinding) ||
       (Object.create
@@ -875,7 +875,7 @@ var te = w(function (oe) {
     return oe.instance.request(e);
   }
 });
-var Kt = w(function (Ss, ft) {
+var Kt = commonJS(function (Ss, ft) {
   (function (e) {
     var t,
       r = /^-?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i,
@@ -2207,7 +2207,7 @@ var Kt = w(function (Ss, ft) {
     }
   })(Ss);
 });
-var bs = w(function (qd, xs) {
+var bs = commonJS(function (qd, xs) {
   var Os = Kt(),
     Rs = qd;
   (function () {
@@ -2348,7 +2348,7 @@ var bs = w(function (qd, xs) {
       };
   })();
 });
-var Ps = w(function (Fd, Ns) {
+var Ps = commonJS(function (Fd, Ns) {
   var pt = null,
     Aa =
       /(?:_|\\u005[Ff])(?:_|\\u005[Ff])(?:p|\\u0070)(?:r|\\u0072)(?:o|\\u006[Ff])(?:t|\\u0074)(?:o|\\u006[Ff])(?:_|\\u005[Ff])(?:_|\\u005[Ff])/,
@@ -2568,7 +2568,7 @@ var Ps = w(function (Fd, Ns) {
     };
   Ns.exports = Ca;
 });
-var js = w(function (Md, gt) {
+var js = commonJS(function (Md, gt) {
   var Is = bs().stringify,
     Us = Ps();
   gt.exports = function (e) {
@@ -2577,7 +2577,7 @@ var js = w(function (Md, gt) {
   gt.exports.parse = Us();
   gt.exports.stringify = Is;
 });
-var Wt = w(function (Bs) {
+var Wt = commonJS(function (Bs) {
   Object.defineProperty(Bs, "__esModule", { value: !0 });
   Bs.GCE_LINUX_BIOS_PATHS = void 0;
   Bs.isGoogleCloudServerless = Fs;
@@ -2585,8 +2585,8 @@ var Wt = w(function (Bs) {
   Bs.isGoogleComputeEngineMACAddress = Ls;
   Bs.isGoogleComputeEngine = Gs;
   Bs.detectGCPResidency = ka;
-  var Ds = Ae("fs"),
-    qs = Ae("os");
+  var Ds = importMetaRequire("fs"),
+    qs = importMetaRequire("os");
   Bs.GCE_LINUX_BIOS_PATHS = {
     BIOS_DATE: "/sys/class/dmi/id/bios_date",
     BIOS_VENDOR: "/sys/class/dmi/id/bios_vendor",
@@ -2624,7 +2624,7 @@ var Wt = w(function (Bs) {
     return Fs() || Gs();
   }
 });
-var Js = w(function (Hs) {
+var Js = commonJS(function (Hs) {
   Object.defineProperty(Hs, "__esModule", { value: !0 });
   Hs.Colours = void 0;
   class q {
@@ -2682,7 +2682,7 @@ var Js = w(function (Hs) {
   q.grey = "";
   q.refresh();
 });
-var Qs = w(function (H) {
+var Qs = commonJS(function (H) {
   var Na =
       (H && H.__createBinding) ||
       (Object.create
@@ -2753,9 +2753,9 @@ var Qs = w(function (H) {
   H.getStructuredBackend = ja;
   H.setBackend = Da;
   H.log = zs;
-  var Ia = Ae("events"),
-    Ze = Ks(Ae("process")),
-    Ws = Ks(Ae("util")),
+  var Ia = importMetaRequire("events"),
+    Ze = Ks(importMetaRequire("process")),
+    Ws = Ks(importMetaRequire("util")),
     ue = Js(),
     Ee;
   (function (e) {
@@ -2942,7 +2942,7 @@ var Qs = w(function (H) {
     return (Yt.set(e, s), s.func);
   }
 });
-var Xt = w(function (Me) {
+var Xt = commonJS(function (Me) {
   var qa =
       (Me && Me.__createBinding) ||
       (Object.create
@@ -2975,7 +2975,7 @@ var Xt = w(function (Me) {
   Object.defineProperty(Me, "__esModule", { value: !0 });
   Fa(Qs(), Me);
 });
-var rt = w(function (N) {
+var rt = commonJS(function (N) {
   var en =
       (N && N.__createBinding) ||
       (Object.create
@@ -3255,7 +3255,7 @@ var rt = w(function (N) {
   }
   Ga(Wt(), N);
 });
-var nn = w(function (ac) {
+var nn = commonJS(function (ac) {
   ac.byteLength = tc;
   ac.toByteArray = sc;
   ac.fromByteArray = oc;
@@ -3348,7 +3348,7 @@ var nn = w(function (ac) {
     return n.join("");
   }
 });
-var rr = w(function (on) {
+var rr = commonJS(function (on) {
   Object.defineProperty(on, "__esModule", { value: !0 });
   on.fromArrayBufferToHex = dc;
   function dc(e) {
@@ -3357,7 +3357,7 @@ var rr = w(function (on) {
       .join("");
   }
 });
-var un = w(function (an) {
+var un = commonJS(function (an) {
   Object.defineProperty(an, "__esModule", { value: !0 });
   an.BrowserCrypto = void 0;
   var $e = nn(),
@@ -3431,10 +3431,10 @@ var un = w(function (an) {
   }
   an.BrowserCrypto = Et;
 });
-var fn = w(function (dn) {
+var fn = commonJS(function (dn) {
   Object.defineProperty(dn, "__esModule", { value: !0 });
   dn.NodeCrypto = void 0;
-  var Je = Ae("crypto");
+  var Je = importMetaRequire("crypto");
   class ln {
     async sha256DigestBase64(e) {
       return Je.createHash("sha256").update(e).digest("base64");
@@ -3475,7 +3475,7 @@ var fn = w(function (dn) {
     return Buffer.from(e);
   }
 });
-var st = w(function (Oe) {
+var st = commonJS(function (Oe) {
   var yc =
       (Oe && Oe.__createBinding) ||
       (Object.create
@@ -3523,7 +3523,7 @@ var st = w(function (Oe) {
     );
   }
 });
-var we = w(function (mn) {
+var we = commonJS(function (mn) {
   Object.defineProperty(mn, "__esModule", { value: !0 });
   mn.LRUCache = void 0;
   mn.snakeToCamel = yn;
@@ -3531,9 +3531,9 @@ var we = w(function (mn) {
   mn.removeUndefinedValuesInObject = kc;
   mn.isValidFile = Sc;
   mn.getWellKnownCertificateConfigFileLocation = Oc;
-  var Ac = Ae("fs"),
-    Tc = Ae("os"),
-    sr = Ae("path"),
+  var Ac = importMetaRequire("fs"),
+    Tc = importMetaRequire("os"),
+    sr = importMetaRequire("path"),
     Cc = "certificate_config.json",
     gn = "gcloud";
   function yn(e) {
@@ -3603,7 +3603,7 @@ var we = w(function (mn) {
     return Tc.platform().startsWith("win");
   }
 });
-var wn = w(function (zd, Uc) {
+var wn = commonJS(function (zd, Uc) {
   Uc.exports = {
     name: "google-auth-library",
     version: "10.6.2",
@@ -3687,7 +3687,7 @@ var wn = w(function (zd, Uc) {
       "https://github.com/googleapis/google-cloud-node-core/tree/main/packages/google-auth-library-nodejs",
   };
 });
-var nr = w(function (Cn) {
+var nr = commonJS(function (Cn) {
   Object.defineProperty(Cn, "__esModule", { value: !0 });
   Cn.USER_AGENT = Cn.PRODUCT_NAME = Cn.pkg = void 0;
   var An = wn();
@@ -3697,13 +3697,13 @@ var nr = w(function (Cn) {
   var jc = `${Tn}/${An.version}`;
   Cn.USER_AGENT = jc;
 });
-var de = w(function (kn) {
+var de = commonJS(function (kn) {
   Object.defineProperty(kn, "__esModule", { value: !0 });
   kn.AuthClient =
     kn.DEFAULT_EAGER_REFRESH_THRESHOLD_MILLIS =
     kn.DEFAULT_UNIVERSE =
       void 0;
-  var Fc = Ae("events"),
+  var Fc = importMetaRequire("events"),
     ir = te(),
     Mc = we(),
     Lc = Xt(),
@@ -3843,7 +3843,7 @@ var de = w(function (kn) {
   }
   kn.AuthClient = re;
 });
-var cr = w(function (xn) {
+var cr = commonJS(function (xn) {
   Object.defineProperty(xn, "__esModule", { value: !0 });
   xn.LoginTicket = void 0;
   class Rn {
@@ -3869,7 +3869,7 @@ var cr = w(function (xn) {
   }
   xn.LoginTicket = Rn;
 });
-var Le = w(function (Un) {
+var Le = commonJS(function (Un) {
   Object.defineProperty(Un, "__esModule", { value: !0 });
   Un.OAuth2Client =
     Un.ClientAuthentication =
@@ -3877,8 +3877,8 @@ var Le = w(function (Un) {
     Un.CodeChallengeMethod =
       void 0;
   var Nn = te(),
-    Gc = Ae("querystring"),
-    Bc = Ae("stream"),
+    Gc = importMetaRequire("querystring"),
+    Bc = importMetaRequire("stream"),
     Hc = EAn(),
     Pn = we(),
     ur = st(),
@@ -4442,7 +4442,7 @@ var Le = w(function (Un) {
   }
   Un.OAuth2Client = _e;
 });
-var lr = w(function (Fn) {
+var lr = commonJS(function (Fn) {
   Object.defineProperty(Fn, "__esModule", { value: !0 });
   Fn.Compute = void 0;
   var Vc = te(),
@@ -4513,7 +4513,7 @@ var lr = w(function (Fn) {
   }
   Fn.Compute = qn;
 });
-var dr = w(function (Gn) {
+var dr = commonJS(function (Gn) {
   Object.defineProperty(Gn, "__esModule", { value: !0 });
   Gn.IdTokenClient = void 0;
   var Xc = Le();
@@ -4553,7 +4553,7 @@ var dr = w(function (Gn) {
   }
   Gn.IdTokenClient = Ln;
 });
-var hr = w(function ($n) {
+var hr = commonJS(function ($n) {
   Object.defineProperty($n, "__esModule", { value: !0 });
   $n.GCPEnv = void 0;
   $n.clear = zc;
@@ -4612,7 +4612,7 @@ var hr = w(function ($n) {
     return Hn.isAvailable();
   }
 });
-var Vn = w(function (Wn) {
+var Vn = commonJS(function (Wn) {
   Object.defineProperty(Wn, "__esModule", { value: !0 });
   Wn.buildPayloadForJwsSign = Kn;
   Wn.getJwsSign = du;
@@ -4636,7 +4636,7 @@ var Vn = w(function (Wn) {
     return (0, cu.sign)({ header: { alg: uu }, payload: t, secret: e.key });
   }
 });
-var Xn = w(function (Yn) {
+var Xn = commonJS(function (Yn) {
   Object.defineProperty(Yn, "__esModule", { value: !0 });
   Yn.getToken = mu;
   var pu = Vn(),
@@ -4665,7 +4665,7 @@ var Xn = w(function (Yn) {
     }
   }
 });
-var ei = w(function (Qn) {
+var ei = commonJS(function (Qn) {
   Object.defineProperty(Qn, "__esModule", { value: !0 });
   Qn.ErrorWithCode = void 0;
   class zn extends Error {
@@ -4677,12 +4677,12 @@ var ei = w(function (Qn) {
   }
   Qn.ErrorWithCode = zn;
 });
-var fr = w(function (ai) {
+var fr = commonJS(function (ai) {
   Object.defineProperty(ai, "__esModule", { value: !0 });
   ai.getCredentials = Tu;
-  var wu = Ae("path"),
-    ti = Ae("fs"),
-    Au = Ae("util"),
+  var wu = importMetaRequire("path"),
+    ti = importMetaRequire("fs"),
+    Au = importMetaRequire("util"),
     wt = ei(),
     ri = ti.readFile
       ? (0, Au.promisify)(ti.readFile)
@@ -4765,7 +4765,7 @@ var fr = w(function (ai) {
     return oi.create(e).getCredentials();
   }
 });
-var di = w(function (ui) {
+var di = commonJS(function (ui) {
   Object.defineProperty(ui, "__esModule", { value: !0 });
   ui.TokenHandler = void 0;
   var vu = Xn(),
@@ -4819,7 +4819,7 @@ var di = w(function (ui) {
   }
   ui.TokenHandler = ci;
 });
-var fi = w(function (hi) {
+var fi = commonJS(function (hi) {
   Object.defineProperty(hi, "__esModule", { value: !0 });
   hi.revokeToken = Ru;
   var Su = "https://oauth2.googleapis.com/revoke?token=",
@@ -4829,7 +4829,7 @@ var fi = w(function (hi) {
     return await t.request({ url: r, retry: Ou });
   }
 });
-var pr = w(function (yi) {
+var pr = commonJS(function (yi) {
   Object.defineProperty(yi, "__esModule", { value: !0 });
   yi.GoogleToken = void 0;
   var bu = te(),
@@ -4896,7 +4896,7 @@ var pr = w(function (yi) {
   }
   yi.GoogleToken = gi;
 });
-var yr = w(function (Ei) {
+var yr = commonJS(function (Ei) {
   Object.defineProperty(Ei, "__esModule", { value: !0 });
   Ei.JWTAccess = void 0;
   var Pu = E$e(),
@@ -4998,7 +4998,7 @@ var yr = w(function (Ei) {
   }
   Ei.JWTAccess = gr;
 });
-var mr = w(function (Ti) {
+var mr = commonJS(function (Ti) {
   Object.defineProperty(Ti, "__esModule", { value: !0 });
   Ti.JWT = void 0;
   var Ai = pr(),
@@ -5204,7 +5204,7 @@ var mr = w(function (Ti) {
   }
   Ti.JWT = _r;
 });
-var Er = w(function (vi) {
+var Er = commonJS(function (vi) {
   Object.defineProperty(vi, "__esModule", { value: !0 });
   vi.UserRefreshClient = vi.USER_REFRESH_ACCOUNT_TYPE = void 0;
   var qu = Le(),
@@ -5308,7 +5308,7 @@ var Er = w(function (vi) {
   }
   vi.UserRefreshClient = Tt;
 });
-var wr = w(function (Oi) {
+var wr = commonJS(function (Oi) {
   Object.defineProperty(Oi, "__esModule", { value: !0 });
   Oi.Impersonated = Oi.IMPERSONATED_ACCOUNT_TYPE = void 0;
   var Si = Le(),
@@ -5420,7 +5420,7 @@ var wr = w(function (Oi) {
   }
   Oi.Impersonated = ot;
 });
-var Ar = w(function (bi) {
+var Ar = commonJS(function (bi) {
   Object.defineProperty(bi, "__esModule", { value: !0 });
   bi.OAuthClientAuthHandler = void 0;
   bi.getErrorFromOAuthErrorResponse = Ju;
@@ -5525,7 +5525,7 @@ var Ar = w(function (bi) {
     return h;
   }
 });
-var Ct = w(function (Ii) {
+var Ct = commonJS(function (Ii) {
   Object.defineProperty(Ii, "__esModule", { value: !0 });
   Ii.StsCredentials = void 0;
   var Wu = te(),
@@ -5576,7 +5576,7 @@ var Ct = w(function (Ii) {
   }
   Ii.StsCredentials = Tr;
 });
-var Ue = w(function (Di) {
+var Ue = commonJS(function (Di) {
   Object.defineProperty(Di, "__esModule", { value: !0 });
   Di.BaseExternalAccountClient =
     Di.CLOUD_RESOURCE_MANAGER =
@@ -5584,7 +5584,7 @@ var Ue = w(function (Di) {
     Di.EXPIRATION_TIME_OFFSET =
       void 0;
   var Xu = te(),
-    zu = Ae("stream"),
+    zu = importMetaRequire("stream"),
     Cr = de(),
     Qu = Ct(),
     ji = we(),
@@ -5862,11 +5862,11 @@ var Ue = w(function (Di) {
   }
   Di.BaseExternalAccountClient = vt;
 });
-var Gi = w(function (Mi) {
+var Gi = commonJS(function (Mi) {
   Object.defineProperty(Mi, "__esModule", { value: !0 });
   Mi.FileSubjectTokenSupplier = void 0;
-  var Sr = Ae("util"),
-    Or = Ae("fs"),
+  var Sr = importMetaRequire("util"),
+    Or = importMetaRequire("fs"),
     al = (0, Sr.promisify)(Or.readFile ?? (() => {})),
     cl = (0, Sr.promisify)(Or.realpath ?? (() => {})),
     ul = (0, Sr.promisify)(Or.lstat ?? (() => {}));
@@ -5902,7 +5902,7 @@ var Gi = w(function (Mi) {
   }
   Mi.FileSubjectTokenSupplier = Fi;
 });
-var Ji = w(function (Hi) {
+var Ji = commonJS(function (Hi) {
   Object.defineProperty(Hi, "__esModule", { value: !0 });
   Hi.UrlSubjectTokenSupplier = void 0;
   var ll = de();
@@ -5941,7 +5941,7 @@ var Ji = w(function (Hi) {
   }
   Hi.UrlSubjectTokenSupplier = Bi;
 });
-var Yi = w(function (Wi) {
+var Yi = commonJS(function (Wi) {
   Object.defineProperty(Wi, "__esModule", { value: !0 });
   Wi.CertificateSubjectTokenSupplier =
     Wi.InvalidConfigurationError =
@@ -5949,9 +5949,9 @@ var Yi = w(function (Wi) {
     Wi.CERTIFICATE_CONFIGURATION_ENV_VARIABLE =
       void 0;
   var kt = we(),
-    St = Ae("fs"),
-    Ot = Ae("crypto"),
-    dl = Ae("https");
+    St = importMetaRequire("fs"),
+    Ot = importMetaRequire("crypto"),
+    dl = importMetaRequire("https");
   Wi.CERTIFICATE_CONFIGURATION_ENV_VARIABLE = "GOOGLE_API_CERTIFICATE_CONFIG";
   class xe extends Error {
     constructor(e) {
@@ -6097,7 +6097,7 @@ var Yi = w(function (Wi) {
   }
   Wi.CertificateSubjectTokenSupplier = Ki;
 });
-var br = w(function (Qi) {
+var br = commonJS(function (Qi) {
   Object.defineProperty(Qi, "__esModule", { value: !0 });
   Qi.IdentityPoolClient = void 0;
   var pl = Ue(),
@@ -6200,7 +6200,7 @@ var br = w(function (Qi) {
   }
   Qi.IdentityPoolClient = xr;
 });
-var Nr = w(function (so) {
+var Nr = commonJS(function (so) {
   Object.defineProperty(so, "__esModule", { value: !0 });
   so.AwsRequestSigner = void 0;
   var xt = te(),
@@ -6315,7 +6315,7 @@ ${V}
     };
   }
 });
-var co = w(function (oo) {
+var co = commonJS(function (oo) {
   Object.defineProperty(oo, "__esModule", { value: !0 });
   oo.DefaultAwsSecurityCredentialsSupplier = void 0;
   var bt = de();
@@ -6420,7 +6420,7 @@ var co = w(function (oo) {
   }
   oo.DefaultAwsSecurityCredentialsSupplier = io;
 });
-var Pr = w(function (lo) {
+var Pr = commonJS(function (lo) {
   Object.defineProperty(lo, "__esModule", { value: !0 });
   lo.AwsClient = void 0;
   var Al = Nr(),
@@ -6518,7 +6518,7 @@ var Pr = w(function (lo) {
   }
   lo.AwsClient = Nt;
 });
-var Lr = w(function (go) {
+var Lr = commonJS(function (go) {
   Object.defineProperty(go, "__esModule", { value: !0 });
   go.InvalidSubjectTokenError =
     go.InvalidMessageFieldError =
@@ -6617,12 +6617,12 @@ var Lr = w(function (go) {
   class It extends be {}
   go.InvalidSubjectTokenError = It;
 });
-var $r = w(function (_o) {
+var $r = commonJS(function (_o) {
   Object.defineProperty(_o, "__esModule", { value: !0 });
   _o.PluggableAuthHandler = _o.ExecutableError = void 0;
   var Ge = Lr(),
-    Il = Ae("child_process"),
-    Gr = Ae("fs");
+    Il = importMetaRequire("child_process"),
+    Gr = importMetaRequire("fs");
   class Br extends Error {
     code;
     constructor(e, t) {
@@ -6724,7 +6724,7 @@ var $r = w(function (_o) {
   }
   _o.PluggableAuthHandler = Hr;
 });
-var Kr = w(function (Jr) {
+var Kr = commonJS(function (Jr) {
   Object.defineProperty(Jr, "__esModule", { value: !0 });
   Jr.PluggableAuthClient = Jr.ExecutableError = void 0;
   var jl = Ue(),
@@ -6807,7 +6807,7 @@ var Kr = w(function (Jr) {
   }
   Jr.PluggableAuthClient = Co;
 });
-var Wr = w(function (So) {
+var Wr = commonJS(function (So) {
   Object.defineProperty(So, "__esModule", { value: !0 });
   So.ExternalAccountClient = void 0;
   var Ll = Ue(),
@@ -6831,14 +6831,14 @@ var Wr = w(function (So) {
   }
   So.ExternalAccountClient = ko;
 });
-var Yr = w(function (Po) {
+var Yr = commonJS(function (Po) {
   Object.defineProperty(Po, "__esModule", { value: !0 });
   Po.ExternalAccountAuthorizedUserClient =
     Po.EXTERNAL_ACCOUNT_AUTHORIZED_USER_TYPE = void 0;
   var xo = de(),
     Ro = Ar(),
     bo = te(),
-    $l = Ae("stream"),
+    $l = importMetaRequire("stream"),
     Jl = Ue();
   Po.EXTERNAL_ACCOUNT_AUTHORIZED_USER_TYPE = "external_account_authorized_user";
   var Kl = "https://sts.{universeDomain}/v1/oauthtoken";
@@ -6973,15 +6973,15 @@ var Yr = w(function (Po) {
   }
   Po.ExternalAccountAuthorizedUserClient = No;
 });
-var Lo = w(function (Fo) {
+var Lo = commonJS(function (Fo) {
   Object.defineProperty(Fo, "__esModule", { value: !0 });
   Fo.GoogleAuth = Fo.GoogleAuthExceptionMessages = void 0;
-  var Vl = Ae("child_process"),
-    ct = Ae("fs"),
+  var Vl = importMetaRequire("child_process"),
+    ct = importMetaRequire("fs"),
     Yl = te(),
     ut = rt(),
-    Xl = Ae("os"),
-    Xr = Ae("path"),
+    Xl = importMetaRequire("os"),
+    Xr = importMetaRequire("path"),
     zl = st(),
     Ql = lr(),
     Zl = dr(),
@@ -7473,7 +7473,7 @@ https://cloud.google.com/compute/docs/metadata/predefined-metadata-keys`,
   }
   Fo.GoogleAuth = qo;
 });
-var $o = w(function (Bo) {
+var $o = commonJS(function (Bo) {
   Object.defineProperty(Bo, "__esModule", { value: !0 });
   Bo.IAMAuth = void 0;
   class Go {
@@ -7494,14 +7494,14 @@ var $o = w(function (Bo) {
   }
   Bo.IAMAuth = Go;
 });
-var Vo = w(function (Ko) {
+var Vo = commonJS(function (Ko) {
   Object.defineProperty(Ko, "__esModule", { value: !0 });
   Ko.DownscopedClient =
     Ko.EXPIRATION_TIME_OFFSET =
     Ko.MAX_ACCESS_BOUNDARY_RULES_COUNT =
       void 0;
   var rd = te(),
-    sd = Ae("stream"),
+    sd = importMetaRequire("stream"),
     Qr = de(),
     nd = Ct(),
     id = "urn:ietf:params:oauth:grant-type:token-exchange",
@@ -7646,7 +7646,7 @@ var Vo = w(function (Ko) {
   }
   Ko.DownscopedClient = Jo;
 });
-var Qo = w(function (Xo) {
+var Qo = commonJS(function (Xo) {
   Object.defineProperty(Xo, "__esModule", { value: !0 });
   Xo.PassThroughClient = void 0;
   var ud = de();
@@ -7663,7 +7663,7 @@ var Qo = w(function (Xo) {
   }
   Xo.PassThroughClient = Yo;
 });
-var oAt = w(function (k) {
+var oAt = commonJS(function (k) {
   var ld =
       (k && k.__createBinding) ||
       (Object.create

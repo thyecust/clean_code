@@ -7,24 +7,24 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { Zp, HH, mK, XSn } from "./chunk-bvxymt09.js";
-import { FMn } from "./chunk-jeefwg1w.js";
+import { getComputerUseSession, getComputerUseNativeModule, runComputerUseNativeCall, notifyExpectedEscape } from "./computer-use-session.js";
+import { getComputerUseInputNativeModule } from "./computer-use-input-native.js";
 import { s4e, IOe } from "../../01-核心基础设施/共享小工具-未细化/chunk-bvvxxmrb.js";
 import { qvn, Mor, UCt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { w, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var M = w(function (k, E) {
-  var H = Ae("path");
+import { commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var M = commonJS(function (k, E) {
+  var H = importMetaRequire("path");
   {
-    let o = FMn();
+    let o = getComputerUseInputNativeModule();
     E.exports = { isSupported: !0, ...o };
   }
 });
 function c() {
-  let o = Zp();
+  let o = getComputerUseSession();
   if (o.inputModule) return o.inputModule;
   let t = M();
   if (!t.isSupported)
@@ -55,7 +55,7 @@ function U(o) {
 var S = 50,
   D = 50;
 async function g(o, t, a) {
-  (await o.moveMouse(t, a, !1), await Z(S));
+  (await o.moveMouse(t, a, !1), await sleep(S));
 }
 async function _(o, t) {
   let a;
@@ -83,7 +83,7 @@ async function T(o, t) {
   try {
     if ((await A(t), (await C()) !== t))
       throw Error("Clipboard write did not round-trip.");
-    (await o.keys(["command", "v"]), await Z(100));
+    (await o.keys(["command", "v"]), await sleep(100));
   } finally {
     if (typeof a === "string")
       try {
@@ -118,12 +118,12 @@ async function B(o, t, a, f) {
       (await o.moveMouse(Math.round(d.x + y * m), Math.round(d.y + b * m), !1),
       u < i)
     )
-      await Z(s);
+      await sleep(s);
   }
-  await Z(S);
+  await sleep(S);
 }
 function zcn(o) {
-  let t = HH(),
+  let t = getComputerUseNativeModule(),
     a = !1,
     { getMouseAnimationEnabled: f, getHideBeforeActionEnabled: d } = o,
     y = Mor(),
@@ -139,7 +139,7 @@ function zcn(o) {
       capabilities: { ...UCt, hostBundleId: qvn },
       async prepareForAction(e, r) {
         if (!d()) return [];
-        return mK(async () => {
+        return runComputerUseNativeCall(async () => {
           try {
             let s = await t.apps.prepareDisplay(e, b, r);
             if (s.activated)
@@ -171,7 +171,7 @@ function zcn(o) {
       async resolvePrepareCapture(e) {
         let r = t.display.getSize(e.preferredDisplayId),
           [s, i] = v(r.width, r.height, r.scaleFactor);
-        return mK(() =>
+        return runComputerUseNativeCall(() =>
           t.resolvePrepareCapture(
             h(e.allowedBundleIds),
             b,
@@ -187,7 +187,7 @@ function zcn(o) {
       async screenshot(e) {
         let r = t.display.getSize(e.displayId),
           [s, i] = v(r.width, r.height, r.scaleFactor);
-        return Dt(
+        return withTimeout(
           t.screenshot.captureExcluding(
             h(e.allowedBundleIds),
             P,
@@ -202,7 +202,7 @@ function zcn(o) {
       async zoom(e, r, s) {
         let i = t.display.getSize(s),
           [u, p] = v(e.w, e.h, i.scaleFactor);
-        return Dt(
+        return withTimeout(
           t.screenshot.captureRegion(h(r), e.x, e.y, e.w, e.h, u, p, P, s),
           x,
           "CU zoom backstop",
@@ -213,10 +213,10 @@ function zcn(o) {
           i = e.split("+").filter((m) => m.length > 0),
           u = U(i),
           p = r ?? 1;
-        await mK(async () => {
+        await runComputerUseNativeCall(async () => {
           for (let m = 0; m < p; m++) {
-            if (m > 0) await Z(8);
-            if (u) XSn();
+            if (m > 0) await sleep(8);
+            if (u) notifyExpectedEscape();
             await s.keys(i);
           }
         });
@@ -226,26 +226,26 @@ function zcn(o) {
           u = [],
           p = !1;
         try {
-          await mK(async () => {
+          await runComputerUseNativeCall(async () => {
             for (let I of e) {
               if (p) return;
-              if (U([I])) XSn();
+              if (U([I])) notifyExpectedEscape();
               (await i.key(I, "press"), u.push(I));
             }
           });
           let m = Date.now() + r;
           while (Date.now() < m) {
             if (s?.()) return;
-            await Z(Math.min(D, m - Date.now()));
+            await sleep(Math.min(D, m - Date.now()));
           }
         } finally {
-          ((p = !0), await mK(() => _(i, u)));
+          ((p = !0), await runComputerUseNativeCall(() => _(i, u)));
         }
       },
       async type(e, r) {
         let s = c();
         if (r.viaClipboard) {
-          await mK(() => T(s, e));
+          await runComputerUseNativeCall(() => T(s, e));
           return;
         }
         await s.typeText(e);
@@ -258,7 +258,7 @@ function zcn(o) {
       async click(e, r, s, i, u) {
         let p = c();
         if ((await g(p, e, r), u && u.length > 0))
-          await mK(() => R(p, u, () => p.mouseButton(s, "click", i)));
+          await runComputerUseNativeCall(() => R(p, u, () => p.mouseButton(s, "click", i)));
         else await p.mouseButton(s, "click", i);
       },
       async mouseDown() {
@@ -273,7 +273,7 @@ function zcn(o) {
       async drag(e, r) {
         let s = c();
         if (e !== void 0) await g(s, e.x, e.y);
-        (await s.mouseButton("left", "press"), await Z(S));
+        (await s.mouseButton("left", "press"), await sleep(S));
         try {
           await B(s, r.x, r.y, f());
         } finally {
@@ -294,7 +294,7 @@ function zcn(o) {
         return t.apps.appUnderPoint(e, r);
       },
       async listInstalledApps() {
-        let { apps: e, spotlightIncomplete: r } = await mK(() =>
+        let { apps: e, spotlightIncomplete: r } = await runComputerUseNativeCall(() =>
           t.apps.listInstalled(),
         );
         return ((a = r), e);
@@ -316,6 +316,6 @@ function zcn(o) {
 }
 async function l_r(o) {
   if (o.length === 0) return;
-  await HH().apps.unhide([...o]);
+  await getComputerUseNativeModule().apps.unhide([...o]);
 }
 export { zcn, l_r };

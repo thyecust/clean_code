@@ -13,9 +13,9 @@ import { gMe, Lr } from "../../03-入口与运行时/核心应用-Agent循环/�
 import { Ao, yx } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { _i, Oo } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { Pg } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
@@ -50,7 +50,7 @@ function renderToolResultMessage(o) {
     case "image": {
       let { originalSize: n } = o.file,
         s = formatFileSize(n);
-      return e(xe, {
+      return e(ToolResultRow, {
         height: 1,
         children: r(t, { children: ["Read image (", s, ")"] }),
       });
@@ -59,7 +59,7 @@ function renderToolResultMessage(o) {
       let { cells: n } = o.file;
       if (!n || n.length < 1)
         return e(t, { color: "error", children: "No cells found in notebook" });
-      return e(xe, {
+      return e(ToolResultRow, {
         height: 1,
         children: r(t, {
           children: ["Read ", e(t, { bold: !0, children: n.length }), " cells"],
@@ -69,13 +69,13 @@ function renderToolResultMessage(o) {
     case "pdf": {
       let { originalSize: n } = o.file,
         s = formatFileSize(n);
-      return e(xe, {
+      return e(ToolResultRow, {
         height: 1,
         children: r(t, { children: ["Read PDF (", s, ")"] }),
       });
     }
     case "parts":
-      return e(xe, {
+      return e(ToolResultRow, {
         height: 1,
         children: r(t, {
           children: [
@@ -91,7 +91,7 @@ function renderToolResultMessage(o) {
       });
     case "text": {
       let { numLines: n } = o.file;
-      return e(xe, {
+      return e(ToolResultRow, {
         height: 1,
         children: r(t, {
           children: [
@@ -104,7 +104,7 @@ function renderToolResultMessage(o) {
       });
     }
     case "file_unchanged":
-      return e(xe, {
+      return e(ToolResultRow, {
         height: 1,
         children: e(t, {
           dimColor: !0,
@@ -119,11 +119,11 @@ function renderToolResultMessage(o) {
 function renderToolUseErrorMessage(o, { verbose: n }) {
   if (!n && typeof o === "string") {
     if (o.includes(yx))
-      return e(xe, {
+      return e(ToolResultRow, {
         children: e(t, { color: "error", children: "File not found" }),
       });
     if (Lr(o, "tool_use_error"))
-      return e(xe, {
+      return e(ToolResultRow, {
         children: e(t, { color: "error", children: "Error reading file" }),
       });
   }

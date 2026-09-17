@@ -10,13 +10,13 @@
 
 // [preload stripped] 原本在此预载 83 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ECt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { _Ie, Alt, Clt, d2n } from "../远程工具执行/chunk-66axrkvh.js";
 import { j6e } from "./chunk-etbwf1s8.js";
-import { u9 } from "./chunk-h5053szy.js";
-import { Ay } from "../../01-核心基础设施/共享小工具-未细化/chunk-txc6d085.js";
+import { RemoteSessionHostRegistry } from "./remote-session-host-registry.js";
+import { logRemoteToolsEvent } from "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
 var _ = 1048576,
   w = 32,
   k = 200;
@@ -34,7 +34,7 @@ function createRemoteToolsAnnounceWorker(e) {
         if (!c.askOutstanding) continue;
         (c.endAsk(_Ie(o)), (t += 1));
       }
-      Ay(void 0, "serving instance gone", {
+      logRemoteToolsEvent(void 0, "serving instance gone", {
         host_inst: i,
         why: o,
         legs_abandoned: s,
@@ -90,7 +90,7 @@ function createRemoteToolsAnnounceWorker(e) {
           break;
       }
       switch (
-        (await kt(
+        (await withDeadline(
           e.readAccountFlag().catch(() => "pending"),
           e.flagWaitCapMs,
         )) ??
@@ -179,7 +179,7 @@ function createRemoteToolsAnnounceWorker(e) {
   };
 }
 async function productionRemoteToolsAnnounceDeps(e) {
-  let u = e.toolState.get(u9),
+  let u = e.toolState.get(RemoteSessionHostRegistry),
     [
       { isAccountGateServed: a, isViolinWoodEnabled: m },
       { refreshGrowthBookFeatures: i },

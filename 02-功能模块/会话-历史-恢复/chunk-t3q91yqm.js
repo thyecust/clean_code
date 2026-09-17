@@ -13,12 +13,12 @@ import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getLogDisplayTitle } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Vl } from "../权限系统/chunk-e4pfvp7x.js";
 import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te, truncateToWidth, formatRelativeTimeAgo, formatLogMetadata } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -27,10 +27,10 @@ import { Oq } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb
 import { jY } from "../状态栏-主题/chunk-jz6b76hr.js";
 import { Ty } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
 import {
   Tgt,
@@ -44,19 +44,19 @@ import {
   isLiteLog,
   loadFullLog,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { Bz, jz } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
 import { WA, Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { re, L9, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { basename, sep as fn } from "path";
 F();
 F();
@@ -64,7 +64,7 @@ function pt(mo) {
   let R = _(36),
     { log: z, onExit: ho, onSelect: Ht } = mo,
     [Ue, Qn] = d(null),
-    { storageV5: at } = _e(),
+    { storageV5: at } = useStorageV5Context(),
     Gn,
     Kn;
   if (R[0] !== z || R[1] !== at)
@@ -92,13 +92,13 @@ function pt(mo) {
   else zn = R[7];
   let At = zn,
     Vn;
-  if (R[8] === p) ((Vn = Pk()), (R[8] = Vn));
+  if (R[8] === MEMO_CACHE_SENTINEL) ((Vn = Pk()), (R[8] = Vn));
   else Vn = R[8];
   let bo = Vn,
     Xn;
-  if (R[9] === p) ((Xn = { context: "Confirmation" }), (R[9] = Xn));
+  if (R[9] === MEMO_CACHE_SENTINEL) ((Xn = { context: "Confirmation" }), (R[9] = Xn));
   else Xn = R[9];
-  Ne("confirm:no", ho, Xn);
+  useKeybinding("confirm:no", ho, Xn);
   let Yn;
   if (R[10] !== Ue || R[11] !== z || R[12] !== Ht)
     ((Yn = () => {
@@ -111,15 +111,15 @@ function pt(mo) {
   else Yn = R[13];
   let yo = Yn,
     Zn;
-  if (R[14] === p) ((Zn = { context: "Confirmation" }), (R[14] = Zn));
+  if (R[14] === MEMO_CACHE_SENTINEL) ((Zn = { context: "Confirmation" }), (R[14] = Zn));
   else Zn = R[14];
-  if ((Ne("confirm:yes", yo, Zn), go)) {
+  if ((useKeybinding("confirm:yes", yo, Zn), go)) {
     let Ae;
-    if (R[15] === p)
-      ((Ae = e($n, { message: "Loading session\u2026" })), (R[15] = Ae));
+    if (R[15] === MEMO_CACHE_SENTINEL)
+      ((Ae = e(SpinnerMessageLine, { message: "Loading session\u2026" })), (R[15] = Ae));
     else Ae = R[15];
     let fe;
-    if (R[16] === p)
+    if (R[16] === MEMO_CACHE_SENTINEL)
       ((fe = r(o, {
         flexDirection: "column",
         padding: 1,
@@ -127,8 +127,8 @@ function pt(mo) {
           Ae,
           e(t, {
             dimColor: !0,
-            children: e(ue, {
-              children: e(je, {
+            children: e(DotSeparatedList, {
+              children: e(ActionKeybindingHint, {
                 action: "confirm:no",
                 context: "Confirmation",
                 fallback: "Esc",
@@ -143,7 +143,7 @@ function pt(mo) {
     return fe;
   }
   let Ae;
-  if (R[17] === p) ((Ae = e(Bz, { latchAnnouncementSlot: !1 })), (R[17] = Ae));
+  if (R[17] === MEMO_CACHE_SENTINEL) ((Ae = e(Bz, { latchAnnouncementSlot: !1 })), (R[17] = Ae));
   else Ae = R[17];
   let fe;
   if (R[18] !== At || R[19] !== Ut)
@@ -153,7 +153,7 @@ function pt(mo) {
       (R[20] = fe));
   else fe = R[20];
   let Jn;
-  if (R[21] === p) ((Jn = []), (R[21] = Jn));
+  if (R[21] === MEMO_CACHE_SENTINEL) ((Jn = []), (R[21] = Jn));
   else Jn = R[21];
   let ct;
   if (R[22] !== fe)
@@ -183,13 +183,13 @@ function pt(mo) {
       (R[29] = ut));
   else ut = R[29];
   let er;
-  if (R[30] === p)
+  if (R[30] === MEMO_CACHE_SENTINEL)
     ((er = e(t, {
       dimColor: !0,
-      children: r(ue, {
+      children: r(DotSeparatedList, {
         children: [
-          e(D, { chord: "enter", action: "resume" }),
-          e(je, {
+          e(KeybindingHint, { chord: "enter", action: "resume" }),
+          e(ActionKeybindingHint, {
             action: "confirm:no",
             context: "Confirmation",
             fallback: "Esc",
@@ -255,7 +255,7 @@ function xt(Eo) {
     Ie = rr === void 0 ? !1 : rr,
     Yt = or === void 0 ? !1 : or,
     sr;
-  if (H[0] === p) ((sr = new Set()), (H[0] = sr));
+  if (H[0] === MEMO_CACHE_SENTINEL) ((sr = new Set()), (H[0] = sr));
   else sr = H[0];
   let [Zt, ir] = d(sr),
     Jt = C(!1),
@@ -553,12 +553,12 @@ function rit({
   showAllProjects: w = !1,
   onToggleAllProjects: N,
 }) {
-  let { storageV5: ze } = _e(),
-    Ve = ks(Se()),
+  let { storageV5: ze } = useStorageV5Context(),
+    Ve = ks(useTerminalSize()),
     Ze = l === void 0 ? Ve.columns : l,
-    be = is(f),
+    be = useGlobalExitKeybinding(f),
     Oe = Va(),
-    X = vt(),
+    X = useClock(),
     Je = !1,
     ye = Ty(),
     Q = V(() => (n) => jY(n, ye.warning), [ye.warning]),
@@ -570,9 +570,9 @@ function rit({
     [Te, rt] = d(null),
     [c, g] = d([]),
     [L, q] = d(!1),
-    le = Ye(),
+    le = useSession(),
     [U] = d(() => le.project.originalCwd),
-    de = Ye((n) => n.id),
+    de = useSession((n) => n.id),
     [Ce, we] = d(""),
     [yn, xn] = d(0),
     [Ct, wt] = d(new Set()),
@@ -589,10 +589,10 @@ function rit({
     } = jp({
       isActive: v === "search",
       onExit: () => {
-        (B("list"), i("tengu_session_search_toggled", { enabled: !1 }));
+        (B("list"), logEvent("tengu_session_search_toggled", { enabled: !1 }));
       },
       onExitUp: () => {
-        (B("list"), i("tengu_session_search_toggled", { enabled: !1 }));
+        (B("list"), logEvent("tengu_session_search_toggled", { enabled: !1 }));
       },
       passthroughCtrlKeys: s.length === 0 ? ["n", "a"] : ["n"],
       initialQuery: x || "",
@@ -614,7 +614,7 @@ function rit({
     let n = Date.now();
     B2e(U)
       .then((a) => {
-        (i("tengu_worktree_detection", {
+        (logEvent("tengu_worktree_detection", {
           duration_ms: Date.now() - n,
           worktree_count: a.length,
           success: !0,
@@ -626,7 +626,7 @@ function rit({
         (b.sort((m, k) => k.length - m.length), rt(b[0] ?? null), q(!0));
       })
       .catch(() => {
-        (i("tengu_worktree_detection", {
+        (logEvent("tengu_worktree_detection", {
           duration_ms: Date.now() - n,
           worktree_count: 0,
           success: !1,
@@ -760,8 +760,8 @@ function rit({
       if (!(a.length > 1)) return "";
       let m = Ct.has(n);
       if (a.indexOf(M) > 0 || m)
-        return e(D, { chord: "left", action: "collapse" });
-      return e(D, { chord: "right", action: "expand" });
+        return e(KeybindingHint, { chord: "left", action: "collapse" });
+      return e(KeybindingHint, { chord: "right", action: "expand" });
     },
     Ln = async () => {
       let n = M ? getSessionIdFromLog(M) : void 0;
@@ -775,10 +775,10 @@ function rit({
       (B("list"), we(""));
     },
     Dn = () => {
-      (B("list"), ot(""), i("tengu_session_search_toggled", { enabled: !1 }));
+      (B("list"), ot(""), logEvent("tengu_session_search_toggled", { enabled: !1 }));
     },
     Pn = () => {
-      (B("search"), i("tengu_session_search_toggled", { enabled: !0 }));
+      (B("search"), logEvent("tengu_session_search_toggled", { enabled: !0 }));
     };
   E(() => {
     if (I === 0) return;
@@ -789,7 +789,7 @@ function rit({
     let a = W.findIndex((b) => getSessionIdFromLog(b) === getSessionIdFromLog(n.value.log));
     if (a >= 0) Tn(a + 1);
   };
-  Ne(
+  useKeybinding(
     "confirm:no",
     () => {
       (B("list"), we(""));
@@ -804,7 +804,7 @@ function rit({
       else if (n.ctrl && n.key === "a" && N && s.length === 0)
         (n.preventDefault(),
           N(),
-          i("tengu_session_all_projects_toggled", { enabled: w }));
+          logEvent("tengu_session_all_projects_toggled", { enabled: w }));
     } else {
       if (
         W.length === 0 &&
@@ -818,34 +818,34 @@ function rit({
       if (n.ctrl && n.key === "a" && N)
         (n.preventDefault(),
           N(),
-          i("tengu_session_all_projects_toggled", { enabled: w }));
+          logEvent("tengu_session_all_projects_toggled", { enabled: w }));
       else if (n.ctrl && n.key === "b") {
         n.preventDefault();
         let m = !G;
-        (Fe(m), i("tengu_session_branch_filter_toggled", { enabled: !m }));
+        (Fe(m), logEvent("tengu_session_branch_filter_toggled", { enabled: !m }));
       } else if (n.ctrl && n.key === "w" && K) {
         n.preventDefault();
         let m = !Z;
-        (tt(m), i("tengu_session_worktree_filter_toggled", { enabled: !m }));
+        (tt(m), logEvent("tengu_session_worktree_filter_toggled", { enabled: !m }));
       } else if (b === "/" && a)
         (n.preventDefault(),
           B("search"),
-          i("tengu_session_search_toggled", { enabled: !0 }));
+          logEvent("tengu_session_search_toggled", { enabled: !0 }));
       else if (n.ctrl && n.key === "r" && M)
         (n.preventDefault(),
           B("rename"),
           we(""),
-          i("tengu_session_rename_started", {}));
+          logEvent("tengu_session_rename_started", {}));
       else if (((n.key === " " && a) || (n.ctrl && n.key === "v")) && M)
         (n.preventDefault(),
           Lt(M),
           B("preview"),
-          i("tengu_session_preview_opened", { messageCount: M.messageCount }));
+          logEvent("tengu_session_preview_opened", { messageCount: M.messageCount }));
       else if (!n.defaultPrevented && a && n.key.length === 1 && n.key !== " ")
         (n.preventDefault(),
           B("search"),
           ot(n.key),
-          i("tengu_session_search_toggled", { enabled: !0 }));
+          logEvent("tengu_session_search_toggled", { enabled: !0 }));
     }
   }
   function Mn(n) {
@@ -858,7 +858,7 @@ function rit({
     (n.preventDefault(),
       B("search"),
       ot(a),
-      i("tengu_session_search_toggled", { enabled: !0 }));
+      logEvent("tengu_session_search_toggled", { enabled: !0 }));
   }
   let pe = [],
     Ot = !!N && !w && L,
@@ -935,7 +935,7 @@ function rit({
                 paddingLeft: 2,
                 children: e(t, {
                   dimColor: !0,
-                  children: e(ue, { children: pe }),
+                  children: e(DotSeparatedList, { children: pe }),
                 }),
               })
             : e(o, { flexShrink: 0, height: 1 })),
@@ -949,7 +949,7 @@ function rit({
             paddingLeft: 1,
             marginBottom: 1,
             flexShrink: 0,
-            children: r(Rn, { children: ['No sessions match "', Le, '".'] }),
+            children: r(EmptyStateMessage, { children: ['No sessions match "', Le, '".'] }),
           }),
         s.length === 0 &&
           v === "list" &&
@@ -959,10 +959,10 @@ function rit({
             paddingLeft: 1,
             marginBottom: 1,
             flexShrink: 0,
-            children: e(Rn, {
+            children: e(EmptyStateMessage, {
               hint: w
                 ? void 0
-                : e(D, {
+                : e(KeybindingHint, {
                     chord: "ctrl+a",
                     action: "show all projects",
                     format: { modCase: "title", charCase: "upper" },
@@ -1020,7 +1020,7 @@ function rit({
                     : null;
                 if (a)
                   (wt((b) => new Set(b).add(a)),
-                    i("tengu_session_group_expanded", {}));
+                    logEvent("tengu_session_group_expanded", {}));
               },
               onCollapse: (n) => {
                 let a =
@@ -1045,10 +1045,10 @@ function rit({
             : v === "rename"
               ? e(t, {
                   dimColor: !0,
-                  children: r(ue, {
+                  children: r(DotSeparatedList, {
                     children: [
-                      e(D, { chord: "enter", action: "save" }),
-                      e(je, {
+                      e(KeybindingHint, { chord: "enter", action: "save" }),
+                      e(ActionKeybindingHint, {
                         action: "confirm:no",
                         context: "Confirmation",
                         fallback: "Esc",
@@ -1060,20 +1060,20 @@ function rit({
               : v === "search"
                 ? e(t, {
                     dimColor: !0,
-                    children: r(ue, {
+                    children: r(DotSeparatedList, {
                       children: [
                         e(t, { children: "Type to Search" }),
                         s.length === 0 &&
                           N &&
-                          e(D, {
+                          e(KeybindingHint, {
                             chord: "ctrl+a",
                             action: w
                               ? "only show current repo"
                               : "show all projects",
                             format: { modCase: "title", charCase: "upper" },
                           }),
-                        e(D, { chord: "enter", action: "select" }),
-                        e(je, {
+                        e(KeybindingHint, { chord: "enter", action: "select" }),
+                        e(ActionKeybindingHint, {
                           action: "confirm:no",
                           context: "Confirmation",
                           fallback: "Esc",
@@ -1084,10 +1084,10 @@ function rit({
                   })
                 : e(t, {
                     dimColor: !0,
-                    children: r(ue, {
+                    children: r(DotSeparatedList, {
                       children: [
                         N &&
-                          e(D, {
+                          e(KeybindingHint, {
                             chord: "ctrl+a",
                             action: w
                               ? "only show current repo"
@@ -1095,7 +1095,7 @@ function rit({
                             format: { modCase: "title", charCase: "upper" },
                           }),
                         Y &&
-                          e(D, {
+                          e(KeybindingHint, {
                             chord: "ctrl+b",
                             action: G
                               ? "only show current branch"
@@ -1103,22 +1103,22 @@ function rit({
                             format: { modCase: "title", charCase: "upper" },
                           }),
                         K &&
-                          e(D, {
+                          e(KeybindingHint, {
                             chord: "ctrl+w",
                             action: Z
                               ? "only show current worktree"
                               : "show all worktrees",
                             format: { modCase: "title", charCase: "upper" },
                           }),
-                        M && e(D, { chord: "space", action: "preview" }),
+                        M && e(KeybindingHint, { chord: "space", action: "preview" }),
                         M &&
-                          e(D, {
+                          e(KeybindingHint, {
                             chord: "ctrl+r",
                             action: "rename",
                             format: { modCase: "title", charCase: "upper" },
                           }),
                         e(t, { children: "Type to search" }),
-                        e(je, {
+                        e(ActionKeybindingHint, {
                           action: "confirm:no",
                           context: "Confirmation",
                           fallback: "Esc",

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { b, z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { bD } from "../共享小工具-未细化/chunk-cyyrj58q.js";
+import { getLocalBinDir } from "../共享小工具-未细化/user-directories.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 import { constants, statSync } from "fs";
 import { access, stat as g } from "fs/promises";
@@ -94,7 +94,7 @@ function v(r) {
       "the value is set but contains no launcher \u2014 unset the variable to run without one, or set it to the absolute path of your launcher",
     );
   let s = e[0];
-  if (s === process.execPath || s === w(bD(), "claude"))
+  if (s === process.execPath || s === w(getLocalBinDir(), "claude"))
     return i(
       `launcher \`${s}\` is Claude Code's own launch path \u2014 point ${eb} at your launcher, not at claude`,
     );

@@ -20,7 +20,7 @@ import { $d, bR, normalizeCaseForComparison } from "../Memory-CLAUDE.md/Memory-C
 import { H5 } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { Glr } from "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function ft(t) {
   if (!j1(t)) return !1;
   if (Xn(t)) return !0;
@@ -839,7 +839,7 @@ async function getTaskOutputSize(t) {
 }
 async function repointTaskOutputSymlinks(t, e) {
   let i = sr(),
-    o = Y([
+    o = dedupe([
       ...(i.outputDir !== void 0 ? [i.outputDir] : []),
       ...[...i.outputPathBindings.values()].map((s) => x(s)),
     ]);
@@ -1142,7 +1142,7 @@ function Yt(t) {
 function taskOutputDirExclusions(t) {
   let e = _t(),
     i = ae(),
-    o = Y([e, Ro(i, e).resolvedPath]),
+    o = dedupe([e, Ro(i, e).resolvedPath]),
     r = new Set(),
     s = (a, u) => {
       let f = a.endsWith(Z) ? a : a + Z;

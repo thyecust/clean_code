@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 232 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -18,7 +18,7 @@ import { x } from "../../01-核心基础设施/核心工具-字符串与文本/c
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { isUnattendedBgSession, lm, isAnthropicAuthEnabled, getAnthropicApiKeySafe, validateForceLoginMethod, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
@@ -27,45 +27,45 @@ import { getGithubRepo } from "../../01-核心基础设施/安全文件系统(FS
 import { fi, Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { bhe } from "../Git-Worktree/chunk-bk9696gx.js";
 import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { Ne, Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
-import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
+import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import { e9, YL, JL } from "../../01-核心基础设施/共享小工具-未细化/chunk-r2ab1bp6.js";
+import { useCopyToClipboard, CopyFeedbackHint, CopyFallbackNotice } from "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
-import { aye } from "../../01-核心基础设施/共享小工具-未细化/chunk-ttwbb0b4.js";
-import { uc } from "../../01-核心基础设施/共享小工具-未细化/chunk-2gabx7f1.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import { _s } from "../../01-核心基础设施/共享小工具-未细化/chunk-1371sqbk.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
-import { lu } from "../../01-核心基础设施/共享小工具-未细化/chunk-qck6h2yw.js";
+import { parkCommandUntilAttended } from "../../01-核心基础设施/共享小工具-未细化/command-park.js";
+import { TitleWithSubtitle } from "../../01-核心基础设施/共享小工具-未细化/title-with-subtitle.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import { TitledBorderBox } from "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
+import { BulletItem } from "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import { ut } from "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
+import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import { ck } from "../认证-OAuth登录/chunk-5bg9xwqx.js";
-import { fM, Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { isHeadlessEnvironment, tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import { av, $ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
 function Ur(Dr) {
@@ -81,12 +81,12 @@ var fs = [
       label: "Claude Code Review - Automated code review on new PRs",
     },
   ],
-  hs = r(ue, {
+  hs = r(DotSeparatedList, {
     children: [
-      e(D, { chord: ["up", "down"], action: "navigate" }),
-      e(D, { chord: "space", action: "toggle" }),
-      e(D, { chord: "enter", action: "confirm" }),
-      e(je, {
+      e(KeybindingHint, { chord: ["up", "down"], action: "navigate" }),
+      e(KeybindingHint, { chord: "space", action: "toggle" }),
+      e(KeybindingHint, { chord: "enter", action: "confirm" }),
+      e(ActionKeybindingHint, {
         action: "confirm:no",
         context: "Confirmation",
         fallback: "Esc",
@@ -112,7 +112,7 @@ function St(ul) {
   else Tr = Ge[1];
   let ds = Tr,
     Hr;
-  if (Ge[2] === p)
+  if (Ge[2] === MEMO_CACHE_SENTINEL)
     ((Hr = () => {
       Jt(!1);
     }),
@@ -120,7 +120,7 @@ function St(ul) {
   else Hr = Ge[2];
   let pl = Hr,
     Br;
-  if (Ge[3] === p)
+  if (Ge[3] === MEMO_CACHE_SENTINEL)
     ((Br = () => {
       Jt(!0);
     }),
@@ -128,7 +128,7 @@ function St(ul) {
   else Br = Ge[3];
   let Nr = Br,
     $r;
-  if (Ge[4] === p)
+  if (Ge[4] === MEMO_CACHE_SENTINEL)
     (($r = e(o, {
       children: r(t, {
         dimColor: !0,
@@ -146,7 +146,7 @@ function St(ul) {
       (Ge[4] = $r));
   else $r = Ge[4];
   let Kr;
-  if (Ge[5] === p) ((Kr = fs.map(Ur)), (Ge[5] = Kr));
+  if (Ge[5] === MEMO_CACHE_SENTINEL) ((Kr = fs.map(Ur)), (Ge[5] = Kr));
   else Kr = Ge[5];
   let Zt;
   if (Ge[6] !== ps || Ge[7] !== ds)
@@ -348,7 +348,7 @@ function Pt(Rl) {
     } = Rl,
     K = Lr === void 0 ? (Le ? "existing" : me ? "oauth" : "new") : Lr,
     [xs, vl] = d(0),
-    As = Se(),
+    As = useTerminalSize(),
     [Ie] = cn(),
     Fr;
   if (
@@ -411,7 +411,7 @@ function Pt(Rl) {
       (oe[19] = vs),
       (oe[20] = zr));
   else zr = oe[20];
-  Ze(Vr, zr);
+  useKeybindings(Vr, zr);
   let Xr;
   if (oe[21] !== tt || oe[22] !== Qe)
     ((Xr = { "confirm:previous": Qe, "confirm:next": tt }),
@@ -425,12 +425,12 @@ function Pt(Rl) {
       (oe[24] = to),
       (oe[25] = jr));
   else jr = oe[25];
-  Ze(Xr, jr);
+  useKeybindings(Xr, jr);
   let Mr;
-  if (oe[26] === p)
+  if (oe[26] === MEMO_CACHE_SENTINEL)
     ((Mr = e(o, {
       marginBottom: 1,
-      children: e(uc, {
+      children: e(TitleWithSubtitle, {
         subtitle: "Choose API key",
         children: "Install GitHub App",
       }),
@@ -445,7 +445,7 @@ function Pt(Rl) {
         marginBottom: 1,
         children: r(t, {
           children: [
-            K === "existing" ? ut("success", Ie)("> ") : "  ",
+            K === "existing" ? getThemeColor("success", Ie)("> ") : "  ",
             "Use your existing Claude Code API key",
           ],
         }),
@@ -463,7 +463,7 @@ function Pt(Rl) {
         marginBottom: 1,
         children: r(t, {
           children: [
-            K === "oauth" ? ut("success", Ie)("> ") : "  ",
+            K === "oauth" ? getThemeColor("success", Ie)("> ") : "  ",
             "Create a long-lived token with your Claude subscription",
           ],
         }),
@@ -475,7 +475,7 @@ function Pt(Rl) {
   else so = oe[34];
   let ro;
   if (oe[35] !== K || oe[36] !== Ie)
-    ((ro = K === "new" ? ut("success", Ie)("> ") : "  "),
+    ((ro = K === "new" ? getThemeColor("success", Ie)("> ") : "  "),
       (oe[35] = K),
       (oe[36] = Ie),
       (oe[37] = ro));
@@ -537,15 +537,15 @@ function Pt(Rl) {
       (oe[51] = ao));
   else ao = oe[51];
   let Jr;
-  if (oe[52] === p)
+  if (oe[52] === MEMO_CACHE_SENTINEL)
     ((Jr = e(o, {
       marginLeft: 3,
       children: e(t, {
         dimColor: !0,
-        children: r(ue, {
+        children: r(DotSeparatedList, {
           children: [
-            e(D, { chord: ["up", "down"], action: "select" }),
-            e(D, { chord: "enter", action: "continue" }),
+            e(KeybindingHint, { chord: ["up", "down"], action: "select" }),
+            e(KeybindingHint, { chord: "enter", action: "continue" }),
           ],
         }),
       }),
@@ -569,7 +569,7 @@ function It(Wl) {
       onSubmit: st,
     } = Wl,
     [Is, Dl] = d(0),
-    Os = Se(),
+    Os = useTerminalSize(),
     [rt] = cn(),
     Qr;
   if (ee[0] !== ot) ((Qr = () => ot(!0)), (ee[0] = ot), (ee[1] = Qr));
@@ -593,7 +593,7 @@ function It(Wl) {
       (ee[8] = ge),
       (ee[9] = oi));
   else oi = ee[9];
-  Ze(ti, oi);
+  useKeybindings(ti, oi);
   let si;
   if (ee[10] !== nt || ee[11] !== it)
     ((si = { "confirm:previous": it, "confirm:next": nt }),
@@ -608,12 +608,12 @@ function It(Wl) {
       (ee[13] = Ts),
       (ee[14] = ri));
   else ri = ee[14];
-  Ze(si, ri);
+  useKeybindings(si, ri);
   let ii;
-  if (ee[15] === p)
+  if (ee[15] === MEMO_CACHE_SENTINEL)
     ((ii = e(o, {
       marginBottom: 1,
-      children: e(uc, {
+      children: e(TitleWithSubtitle, {
         subtitle: "Setup API key secret",
         children: "Install GitHub App",
       }),
@@ -621,7 +621,7 @@ function It(Wl) {
       (ee[15] = ii));
   else ii = ee[15];
   let ni;
-  if (ee[16] === p)
+  if (ee[16] === MEMO_CACHE_SENTINEL)
     ((ni = e(o, {
       marginBottom: 1,
       children: e(t, {
@@ -632,7 +632,7 @@ function It(Wl) {
       (ee[16] = ni));
   else ni = ee[16];
   let ai;
-  if (ee[17] === p)
+  if (ee[17] === MEMO_CACHE_SENTINEL)
     ((ai = e(o, {
       marginBottom: 1,
       children: e(t, { children: "Would you like to:" }),
@@ -641,7 +641,7 @@ function It(Wl) {
   else ai = ee[17];
   let lo;
   if (ee[18] !== rt || ee[19] !== ge)
-    ((lo = ge ? ut("success", rt)("> ") : "  "),
+    ((lo = ge ? getThemeColor("success", rt)("> ") : "  "),
       (ee[18] = rt),
       (ee[19] = ge),
       (ee[20] = lo));
@@ -657,7 +657,7 @@ function It(Wl) {
   else co = ee[22];
   let uo;
   if (ee[23] !== rt || ee[24] !== ge)
-    ((uo = !ge ? ut("success", rt)("> ") : "  "),
+    ((uo = !ge ? getThemeColor("success", rt)("> ") : "  "),
       (ee[23] = rt),
       (ee[24] = ge),
       (ee[25] = uo));
@@ -728,15 +728,15 @@ function It(Wl) {
       (ee[38] = fo));
   else fo = ee[38];
   let li;
-  if (ee[39] === p)
+  if (ee[39] === MEMO_CACHE_SENTINEL)
     ((li = e(o, {
       marginLeft: 3,
       children: e(t, {
         dimColor: !0,
-        children: r(ue, {
+        children: r(DotSeparatedList, {
           children: [
-            e(D, { chord: ["up", "down"], action: "select" }),
-            e(D, { chord: "enter", action: "continue" }),
+            e(KeybindingHint, { chord: ["up", "down"], action: "select" }),
+            e(KeybindingHint, { chord: "enter", action: "continue" }),
           ],
         }),
       }),
@@ -752,10 +752,10 @@ function It(Wl) {
 function Ot() {
   let zl = _(1),
     ui;
-  if (zl[0] === p)
+  if (zl[0] === MEMO_CACHE_SENTINEL)
     ((ui = e(o, {
       paddingX: 2,
-      children: e($n, { message: "Checking GitHub CLI installation\u2026" }),
+      children: e(SpinnerMessageLine, { message: "Checking GitHub CLI installation\u2026" }),
     })),
       (zl[0] = ui));
   else ui = zl[0];
@@ -774,7 +774,7 @@ function Tt(nc) {
     } = nc,
     [Bs, ac] = d(0),
     [Gs, ho] = d(!1),
-    Ns = Se().columns,
+    Ns = useTerminalSize().columns,
     pi;
   if (te[0] !== M || te[1] !== Hs || te[2] !== at || te[3] !== ae)
     ((pi = () => {
@@ -825,7 +825,7 @@ function Tt(nc) {
       (te[13] = $s),
       (te[14] = gi));
   else gi = te[14];
-  Ze(hi, gi);
+  useKeybindings(hi, gi);
   let wi;
   if (te[15] !== dt || te[16] !== mt)
     ((wi = { "confirm:previous": mt, "confirm:next": dt }),
@@ -839,12 +839,12 @@ function Tt(nc) {
       (te[18] = go),
       (te[19] = _i));
   else _i = te[19];
-  Ze(wi, _i);
+  useKeybindings(wi, _i);
   let bi;
-  if (te[20] === p)
+  if (te[20] === MEMO_CACHE_SENTINEL)
     ((bi = e(o, {
       marginBottom: 1,
-      children: e(uc, {
+      children: e(TitleWithSubtitle, {
         subtitle: "Select GitHub repository",
         children: "Install GitHub App",
       }),
@@ -952,19 +952,19 @@ function Tt(nc) {
   else ko = te[42];
   let Co;
   if (te[43] !== M)
-    ((Co = M ? e(D, { chord: ["up", "down"], action: "select" }) : null),
+    ((Co = M ? e(KeybindingHint, { chord: ["up", "down"], action: "select" }) : null),
       (te[43] = M),
       (te[44] = Co));
   else Co = te[44];
   let yi;
-  if (te[45] === p)
-    ((yi = e(D, { chord: "enter", action: "continue" })), (te[45] = yi));
+  if (te[45] === MEMO_CACHE_SENTINEL)
+    ((yi = e(KeybindingHint, { chord: "enter", action: "continue" })), (te[45] = yi));
   else yi = te[45];
   let xo;
   if (te[46] !== Co)
     ((xo = e(o, {
       marginLeft: 3,
-      children: e(t, { dimColor: !0, children: r(ue, { children: [Co, yi] }) }),
+      children: e(t, { dimColor: !0, children: r(DotSeparatedList, { children: [Co, yi] }) }),
     })),
       (te[46] = Co),
       (te[47] = xo));
@@ -1023,10 +1023,10 @@ function Et(wc) {
   else xi = qs[5];
   let Ys = xi,
     Ai;
-  if (qs[6] === p)
+  if (qs[6] === MEMO_CACHE_SENTINEL)
     ((Ai = e(o, {
       marginBottom: 1,
-      children: e(uc, {
+      children: e(TitleWithSubtitle, {
         subtitle: "Create GitHub Actions workflow",
         children: "Install GitHub App",
       }),
@@ -1036,7 +1036,7 @@ function Et(wc) {
   let Ri;
   if (qs[7] !== Ao || qs[8] !== Ys)
     ((Ri = e(N, {
-      children: r(_s, {
+      children: r(TitledBorderBox, {
         children: [
           Ai,
           Ys.map((_c, Vs) => {
@@ -1073,16 +1073,16 @@ function Et(wc) {
   return Ri;
 }
 function Oi(Ic, Oc) {
-  return e(lu, { children: Ic }, Oc);
+  return e(BulletItem, { children: Ic }, Oc);
 }
 function Ht(Pc) {
   let Ke = _(15),
     { error: zs, errorReason: Po, errorInstructions: Io } = Pc,
     vi;
-  if (Ke[0] === p)
+  if (Ke[0] === MEMO_CACHE_SENTINEL)
     ((vi = e(o, {
       marginBottom: 1,
-      children: e(uc, { children: "Install GitHub App" }),
+      children: e(TitleWithSubtitle, { children: "Install GitHub App" }),
     })),
       (Ke[0] = vi));
   else vi = Ke[0];
@@ -1123,7 +1123,7 @@ function Ht(Pc) {
       (Ke[6] = Eo));
   else Eo = Ke[6];
   let Si;
-  if (Ke[7] === p)
+  if (Ke[7] === MEMO_CACHE_SENTINEL)
     ((Si = e(o, {
       marginTop: 1,
       children: r(t, {
@@ -1139,14 +1139,14 @@ function Ht(Pc) {
   else Si = Ke[7];
   let Ho;
   if (Ke[8] !== Oo || Ke[9] !== To || Ke[10] !== Eo)
-    ((Ho = r(_s, { children: [vi, Oo, To, Eo, Si] })),
+    ((Ho = r(TitledBorderBox, { children: [vi, Oo, To, Eo, Si] })),
       (Ke[8] = Oo),
       (Ke[9] = To),
       (Ke[10] = Eo),
       (Ke[11] = Ho));
   else Ho = Ke[11];
   let Pi;
-  if (Ke[12] === p)
+  if (Ke[12] === MEMO_CACHE_SENTINEL)
     ((Pi = e(o, {
       marginLeft: 3,
       children: e(t, { dimColor: !0, children: "Press any key to exit" }),
@@ -1163,7 +1163,7 @@ function Bt(Kc) {
   let We = _(15),
     { repoName: Wc, onSelectAction: ht } = Kc,
     Ti;
-  if (We[0] === p)
+  if (We[0] === MEMO_CACHE_SENTINEL)
     ((Ti = [
       { label: "Update workflow file with latest version", value: "update" },
       { label: "Skip workflow update (configure secrets only)", value: "skip" },
@@ -1195,13 +1195,13 @@ function Bt(Kc) {
   if (We[5] !== Ms)
     ((Bo = e(o, {
       marginBottom: 1,
-      children: e(uc, { subtitle: Ms, children: "Existing Workflow Found" }),
+      children: e(TitleWithSubtitle, { subtitle: Ms, children: "Existing Workflow Found" }),
     })),
       (We[5] = Ms),
       (We[6] = Bo));
   else Bo = We[6];
   let Bi;
-  if (We[7] === p)
+  if (We[7] === MEMO_CACHE_SENTINEL)
     ((Bi = r(o, {
       flexDirection: "column",
       marginBottom: 1,
@@ -1229,7 +1229,7 @@ function Bt(Kc) {
       (We[10] = Go));
   else Go = We[10];
   let Gi;
-  if (We[11] === p)
+  if (We[11] === MEMO_CACHE_SENTINEL)
     ((Gi = e(o, {
       marginTop: 1,
       children: r(t, {
@@ -1266,11 +1266,11 @@ function Gt(Mc) {
   let xe = _(12),
     { repoUrl: Js, onSubmit: Jc } = Mc,
     $i;
-  if (xe[0] === p) (($i = { context: "Confirmation" }), (xe[0] = $i));
+  if (xe[0] === MEMO_CACHE_SENTINEL) (($i = { context: "Confirmation" }), (xe[0] = $i));
   else $i = xe[0];
-  Ne("confirm:yes", Jc, $i);
+  useKeybinding("confirm:yes", Jc, $i);
   let Ki;
-  if (xe[1] === p)
+  if (xe[1] === MEMO_CACHE_SENTINEL)
     ((Ki = e(o, {
       flexDirection: "column",
       marginBottom: 1,
@@ -1279,7 +1279,7 @@ function Gt(Mc) {
       (xe[1] = Ki));
   else Ki = xe[1];
   let Wi;
-  if (xe[2] === p)
+  if (xe[2] === MEMO_CACHE_SENTINEL)
     ((Wi = e(o, {
       marginBottom: 1,
       children: e(t, {
@@ -1289,7 +1289,7 @@ function Gt(Mc) {
       (xe[2] = Wi));
   else Wi = xe[2];
   let Di;
-  if (xe[3] === p)
+  if (xe[3] === MEMO_CACHE_SENTINEL)
     ((Di = e(o, {
       marginBottom: 1,
       children: e(t, {
@@ -1299,7 +1299,7 @@ function Gt(Mc) {
       (xe[3] = Di));
   else Di = xe[3];
   let Ui;
-  if (xe[4] === p)
+  if (xe[4] === MEMO_CACHE_SENTINEL)
     ((Ui = e(o, {
       marginBottom: 1,
       children: e(t, {
@@ -1324,7 +1324,7 @@ function Gt(Mc) {
       (xe[6] = No));
   else No = xe[6];
   let Li;
-  if (xe[7] === p)
+  if (xe[7] === MEMO_CACHE_SENTINEL)
     ((Li = e(o, {
       marginBottom: 1,
       children: e(t, {
@@ -1336,7 +1336,7 @@ function Gt(Mc) {
       (xe[7] = Li));
   else Li = xe[7];
   let Fi;
-  if (xe[8] === p)
+  if (xe[8] === MEMO_CACHE_SENTINEL)
     ((Fi = e(o, {
       children: r(t, {
         bold: !0,
@@ -1347,7 +1347,7 @@ function Gt(Mc) {
       (xe[8] = Fi));
   else Fi = xe[8];
   let qi;
-  if (xe[9] === p)
+  if (xe[9] === MEMO_CACHE_SENTINEL)
     ((qi = e(o, {
       marginTop: 1,
       children: r(t, {
@@ -1390,7 +1390,7 @@ function Ut(yu) {
   let le = _(56),
     { onSuccess: Zs, onCancel: Qs } = yu,
     Vi;
-  if (le[0] === p) ((Vi = { state: "starting" }), (le[0] = Vi));
+  if (le[0] === MEMO_CACHE_SENTINEL) ((Vi = { state: "starting" }), (le[0] = Vi));
   else Vi = le[0];
   let [y, Oe] = d(Vi),
     [Ae] = d(wn),
@@ -1401,13 +1401,13 @@ function Ut(yu) {
       copiedVia: Wo,
       copy: gt,
       reset: or,
-    } = e9(y.state === "waiting_for_login" ? y.url : null),
-    Nt = vt(),
+    } = useCopyToClipboard(y.state === "waiting_for_login" ? y.url : null),
+    Nt = useClock(),
     zi;
-  if (le[1] === p) ((zi = new Set()), (le[1] = zi));
+  if (le[1] === MEMO_CACHE_SENTINEL) ((zi = new Set()), (le[1] = zi));
   else zi = le[1];
   let wt = C(zi),
-    ku = Se(),
+    ku = useTerminalSize(),
     sr = Math.max(50, ku.columns - Dt.length - 4),
     Xi;
   if (le[2] !== y.state || le[3] !== y.toRetry || le[4] !== Qs)
@@ -1442,7 +1442,7 @@ function Ut(yu) {
           });
           return;
         }
-        (i("tengu_oauth_manual_entry", {}),
+        (logEvent("tengu_oauth_manual_entry", {}),
           Ae.handleManualAuthCodeInput({ authorizationCode: Qi, state: en }));
       } catch (Uo) {
         let tn = Uo;
@@ -1474,7 +1474,7 @@ function Ut(yu) {
         let sn = await Ae.startOAuthFlow(
           async (Cu) => {
             if (
-              (or(), Ko(!1), Oe({ state: "waiting_for_login", url: Cu }), fM())
+              (or(), Ko(!1), Oe({ state: "waiting_for_login", url: Cu }), isHeadlessEnvironment())
             )
               Ko(!0);
             else wt.current.add(Nt.setTimeout(() => Ko(!0), 3000));
@@ -1495,7 +1495,7 @@ function Ut(yu) {
           n(`OAuth flow failed in install-github-app: ${nn}`, {
             level: "error",
           }),
-          i("tengu_oauth_error", { ...lm(rn) }));
+          logEvent("tengu_oauth_error", { ...lm(rn) }));
       }
     }),
       (le[8] = Nt),
@@ -1641,10 +1641,10 @@ function Ut(yu) {
                         " ",
                       ],
                     }),
-                    e(YL, { via: Wo }),
+                    e(CopyFeedbackHint, { via: Wo }),
                   ],
                 }),
-                e(JL, { via: Wo }),
+                e(CopyFallbackNotice, { via: Wo }),
               ],
             }),
             e(ct, {
@@ -1702,7 +1702,7 @@ function Ut(yu) {
     le[53] !== Vo ||
     le[54] !== zo
   )
-    ((gn = r(mr, { gap: 1, onKeyDown: $t, children: [qo, Yo, Vo, zo] })),
+    ((gn = r(FocusableBox, { gap: 1, onKeyDown: $t, children: [qo, Yo, Vo, zo] })),
       (le[50] = $t),
       (le[51] = qo),
       (le[52] = Yo),
@@ -1727,8 +1727,8 @@ function Xo(Ru) {
   switch (Re.state) {
     case "starting": {
       let Y;
-      if (Pe[0] === p)
-        ((Y = e($n, { message: "Starting authentication\u2026" })),
+      if (Pe[0] === MEMO_CACHE_SENTINEL)
+        ((Y = e(SpinnerMessageLine, { message: "Starting authentication\u2026" })),
           (Pe[0] = Y));
       else Y = Pe[0];
       return Y;
@@ -1738,7 +1738,7 @@ function Xo(Ru) {
       if (Pe[1] !== _t)
         ((Y =
           !_t &&
-          e($n, {
+          e(SpinnerMessageLine, {
             message:
               "Opening browser to sign in with your Claude account\u2026",
           })),
@@ -1792,15 +1792,15 @@ function Xo(Ru) {
     }
     case "processing": {
       let Y;
-      if (Pe[15] === p)
-        ((Y = e($n, { message: "Processing authentication\u2026" })),
+      if (Pe[15] === MEMO_CACHE_SENTINEL)
+        ((Y = e(SpinnerMessageLine, { message: "Processing authentication\u2026" })),
           (Pe[15] = Y));
       else Y = Pe[15];
       return Y;
     }
     case "success": {
       let Y;
-      if (Pe[16] === p)
+      if (Pe[16] === MEMO_CACHE_SENTINEL)
         ((Y = r(o, {
           flexDirection: "column",
           gap: 1,
@@ -1854,7 +1854,7 @@ function Xo(Ru) {
     }
     case "about_to_retry": {
       let Y;
-      if (Pe[24] === p)
+      if (Pe[24] === MEMO_CACHE_SENTINEL)
         ((Y = e(o, {
           flexDirection: "column",
           gap: 1,
@@ -1873,7 +1873,7 @@ function Ft(Bu) {
   let Lt = _(8),
     { onSelect: ur, onCancel: pr } = Bu,
     yn;
-  if (Lt[0] === p)
+  if (Lt[0] === MEMO_CACHE_SENTINEL)
     ((yn = [
       { label: "Set up GitHub Actions workflows", value: "setup" },
       {
@@ -1894,10 +1894,10 @@ function Ft(Bu) {
   else kn = Lt[2];
   let dr = kn,
     Cn;
-  if (Lt[3] === p)
+  if (Lt[3] === MEMO_CACHE_SENTINEL)
     ((Cn = e(o, {
       marginBottom: 1,
-      children: e(uc, {
+      children: e(TitleWithSubtitle, {
         subtitle: "Set up GitHub Actions",
         children: "GitHub App installed!",
       }),
@@ -1905,7 +1905,7 @@ function Ft(Bu) {
       (Lt[3] = Cn));
   else Cn = Lt[3];
   let xn;
-  if (Lt[4] === p)
+  if (Lt[4] === MEMO_CACHE_SENTINEL)
     ((xn = e(o, {
       flexDirection: "column",
       marginBottom: 1,
@@ -1950,10 +1950,10 @@ function Yt(Yu) {
     kt = Rn === void 0 ? !1 : Rn;
   if (vn === void 0 ? !1 : vn) {
     let qt;
-    if (we[0] === p)
+    if (we[0] === MEMO_CACHE_SENTINEL)
       ((qt = e(o, {
         marginBottom: 1,
-        children: e(uc, {
+        children: e(TitleWithSubtitle, {
           subtitle: "Success",
           children: "Install GitHub App",
         }),
@@ -1961,19 +1961,19 @@ function Yt(Yu) {
         (we[0] = qt));
     else qt = we[0];
     let qe;
-    if (we[1] === p)
+    if (we[1] === MEMO_CACHE_SENTINEL)
       ((qe = r(t, {
         color: "success",
         children: [
-          e(et, { status: "success", withSpace: !0 }),
+          e(StatusIndicator, { status: "success", withSpace: !0 }),
           "GitHub App installed",
         ],
       })),
         (we[1] = qe));
     else qe = we[1];
     let Ye;
-    if (we[2] === p)
-      ((Ye = r(_s, {
+    if (we[2] === MEMO_CACHE_SENTINEL)
+      ((Ye = r(TitledBorderBox, {
         children: [
           qt,
           qe,
@@ -1989,7 +1989,7 @@ function Yt(Yu) {
         (we[2] = Ye));
     else Ye = we[2];
     let Ve;
-    if (we[3] === p)
+    if (we[3] === MEMO_CACHE_SENTINEL)
       ((Ve = r(N, {
         children: [
           Ye,
@@ -2004,10 +2004,10 @@ function Yt(Yu) {
     return Ve;
   }
   let qt;
-  if (we[4] === p)
+  if (we[4] === MEMO_CACHE_SENTINEL)
     ((qt = e(o, {
       marginBottom: 1,
-      children: e(uc, { subtitle: "Success", children: "Install GitHub App" }),
+      children: e(TitleWithSubtitle, { subtitle: "Success", children: "Install GitHub App" }),
     })),
       (we[4] = qt));
   else qt = we[4];
@@ -2018,7 +2018,7 @@ function Yt(Yu) {
       r(t, {
         color: "success",
         children: [
-          e(et, { status: "success", withSpace: !0 }),
+          e(StatusIndicator, { status: "success", withSpace: !0 }),
           "GitHub Actions workflow created!",
         ],
       })),
@@ -2035,7 +2035,7 @@ function Yt(Yu) {
         children: r(t, {
           color: "success",
           children: [
-            e(et, { status: "success", withSpace: !0 }),
+            e(StatusIndicator, { status: "success", withSpace: !0 }),
             "Using existing ANTHROPIC_API_KEY secret",
           ],
         }),
@@ -2053,7 +2053,7 @@ function Yt(Yu) {
         children: r(t, {
           color: "success",
           children: [
-            e(et, { status: "success", withSpace: !0 }),
+            e(StatusIndicator, { status: "success", withSpace: !0 }),
             "API key saved as ",
             fr,
             " secret",
@@ -2066,7 +2066,7 @@ function Yt(Yu) {
       (we[13] = Ve));
   else Ve = we[13];
   let Sn;
-  if (we[14] === p)
+  if (we[14] === MEMO_CACHE_SENTINEL)
     ((Sn = e(o, { marginTop: 1, children: e(t, { children: "Next steps:" }) })),
       (we[14] = Sn));
   else Sn = we[14];
@@ -2100,7 +2100,7 @@ function Yt(Yu) {
   else jo = we[16];
   let Mo;
   if (we[17] !== qe || we[18] !== Ye || we[19] !== Ve || we[20] !== jo)
-    ((Mo = r(_s, { children: [qt, qe, Ye, Ve, Sn, jo] })),
+    ((Mo = r(TitledBorderBox, { children: [qt, qe, Ye, Ve, Sn, jo] })),
       (we[17] = qe),
       (we[18] = Ye),
       (we[19] = Ve),
@@ -2108,7 +2108,7 @@ function Yt(Yu) {
       (we[21] = Mo));
   else Mo = we[21];
   let Pn;
-  if (we[22] === p)
+  if (we[22] === MEMO_CACHE_SENTINEL)
     ((Pn = e(o, {
       marginLeft: 3,
       children: e(t, { dimColor: !0, children: "Press any key to exit" }),
@@ -2162,7 +2162,7 @@ async function On({
   if (B.code !== 0) {
     if (B.stderr.includes("422") && B.stderr.includes("sha"))
       throw (
-        i("tengu_setup_github_actions_failed", {
+        logEvent("tengu_setup_github_actions_failed", {
           reason: S("failed_to_create_workflow_file"),
           exit_code: B.code,
           ...O,
@@ -2171,7 +2171,7 @@ async function On({
           `Failed to create workflow file ${f}: A Claude workflow file already exists in this repository. Please remove it first or update it manually.`,
         )
       );
-    i("tengu_setup_github_actions_failed", {
+    logEvent("tengu_setup_github_actions_failed", {
       reason: S("failed_to_create_workflow_file"),
       exit_code: B.code,
       ...O,
@@ -2191,7 +2191,7 @@ Need help? Common issues:
 }
 async function Jo(g, b, f, a, c = !1, v, O, A, H) {
   try {
-    i("tengu_setup_github_actions_started", {
+    logEvent("tengu_setup_github_actions_started", {
       skip_workflow: c,
       has_api_key: !!b,
       using_default_secret_name: f === "ANTHROPIC_API_KEY",
@@ -2202,7 +2202,7 @@ async function Jo(g, b, f, a, c = !1, v, O, A, H) {
     let P = await execFileNoThrow("gh", ["api", `repos/${g}`, "--jq", ".id"]);
     if (P.code !== 0)
       throw (
-        i("tengu_setup_github_actions_failed", {
+        logEvent("tengu_setup_github_actions_failed", {
           reason: S("repo_not_found"),
           exit_code: P.code,
           ...A,
@@ -2212,7 +2212,7 @@ async function Jo(g, b, f, a, c = !1, v, O, A, H) {
     let U = await execFileNoThrow("gh", ["api", `repos/${g}`, "--jq", ".default_branch"]);
     if (U.code !== 0)
       throw (
-        i("tengu_setup_github_actions_failed", {
+        logEvent("tengu_setup_github_actions_failed", {
           reason: S("failed_to_get_default_branch"),
           exit_code: U.code,
           ...A,
@@ -2228,7 +2228,7 @@ async function Jo(g, b, f, a, c = !1, v, O, A, H) {
       ]);
     if (B.code !== 0)
       throw (
-        i("tengu_setup_github_actions_failed", {
+        logEvent("tengu_setup_github_actions_failed", {
           reason: S("failed_to_get_branch_sha"),
           exit_code: B.code,
           ...A,
@@ -2251,7 +2251,7 @@ async function Jo(g, b, f, a, c = !1, v, O, A, H) {
       ]);
       if (T.code !== 0)
         throw (
-          i("tengu_setup_github_actions_failed", {
+          logEvent("tengu_setup_github_actions_failed", {
             reason: S("failed_to_create_branch"),
             exit_code: T.code,
             ...A,
@@ -2286,7 +2286,7 @@ async function Jo(g, b, f, a, c = !1, v, O, A, H) {
     if ((a(), b)) {
       let T = await execFileNoThrow("gh", ["secret", "set", f, "--body", b, "--repo", g]);
       if (T.code !== 0) {
-        i("tengu_setup_github_actions_failed", {
+        logEvent("tengu_setup_github_actions_failed", {
           reason: S("failed_to_set_api_key_secret"),
           exit_code: T.code,
           ...A,
@@ -2309,9 +2309,9 @@ Need help? Common issues:
     if (!c && j) {
       a();
       let T = `https://github.com/${g}/compare/${X}...${j}?quick_pull=1&title=${encodeURIComponent(gs)}&body=${encodeURIComponent(ys)}`;
-      await Gr(T);
+      await tryOpenUrlInBrowser(T);
     }
-    (i("tengu_setup_github_actions_completed", {
+    (logEvent("tengu_setup_github_actions_completed", {
       skip_workflow: c,
       has_api_key: !!b,
       auth_type: fromEnum(O),
@@ -2331,7 +2331,7 @@ Need help? Common issues:
     if (P instanceof Error && P.message.includes("Failed to"))
       n(`GitHub Actions setup failed: ${P.message}`, { level: "error" });
     else if (
-      (i("tengu_setup_github_actions_failed", {
+      (logEvent("tengu_setup_github_actions_failed", {
         reason: S("unexpected_error"),
         ...A,
       }),
@@ -2342,7 +2342,7 @@ Need help? Common issues:
   }
 }
 function Wn(hp, gp) {
-  return e(lu, { children: e(t, { dimColor: !0, children: hp }) }, gp);
+  return e(BulletItem, { children: e(t, { dimColor: !0, children: hp }) }, gp);
 }
 function Kn(Qo, wp) {
   return r(
@@ -2369,11 +2369,11 @@ function Vt(dp) {
   let ze = _(9),
     { warnings: hr, onContinue: fp } = dp,
     Tn;
-  if (ze[0] === p) ((Tn = { context: "Confirmation" }), (ze[0] = Tn));
+  if (ze[0] === MEMO_CACHE_SENTINEL) ((Tn = { context: "Confirmation" }), (ze[0] = Tn));
   else Tn = ze[0];
-  Ne("confirm:yes", fp, Tn);
+  useKeybinding("confirm:yes", fp, Tn);
   let En;
-  if (ze[1] === p)
+  if (ze[1] === MEMO_CACHE_SENTINEL)
     ((En = r(o, {
       flexDirection: "column",
       marginBottom: 1,
@@ -2392,11 +2392,11 @@ function Vt(dp) {
   if (ze[2] !== hr) ((Zo = hr.map(Kn)), (ze[2] = hr), (ze[3] = Zo));
   else Zo = ze[3];
   let Hn;
-  if (ze[4] === p)
-    ((Hn = e(D, { chord: "enter", action: "continue anyway" })), (ze[4] = Hn));
+  if (ze[4] === MEMO_CACHE_SENTINEL)
+    ((Hn = e(KeybindingHint, { chord: "enter", action: "continue anyway" })), (ze[4] = Hn));
   else Hn = ze[4];
   let Bn;
-  if (ze[5] === p)
+  if (ze[5] === MEMO_CACHE_SENTINEL)
     ((Bn = e(o, {
       marginTop: 1,
       children: r(t, {
@@ -2408,7 +2408,7 @@ function Vt(dp) {
           Hn,
           ", or",
           " ",
-          e(D, {
+          e(KeybindingHint, {
             chord: "ctrl+c",
             action: "exit and fix issues",
             format: { modCase: "title", charCase: "upper" },
@@ -2419,7 +2419,7 @@ function Vt(dp) {
       (ze[5] = Bn));
   else Bn = ze[5];
   let Gn;
-  if (ze[6] === p)
+  if (ze[6] === MEMO_CACHE_SENTINEL)
     ((Gn = e(o, {
       marginTop: 1,
       children: r(t, {
@@ -2435,7 +2435,7 @@ function Vt(dp) {
   else Gn = ze[6];
   let Nn;
   if (ze[7] !== Zo)
-    ((Nn = e(N, { children: r(_s, { children: [En, Zo, Bn, Gn] }) })),
+    ((Nn = e(N, { children: r(TitledBorderBox, { children: [En, Zo, Bn, Gn] }) })),
       (ze[7] = Zo),
       (ze[8] = Nn));
   else Nn = ze[8];
@@ -2445,7 +2445,7 @@ function Ta() {
   return getAnthropicApiKeySafe();
 }
 function Ea() {
-  i("tengu_install_github_app_started", {});
+  logEvent("tengu_install_github_app_started", {});
 }
 function Ha(Um) {
   return { ...Um, ...UNATTENDED_BG_DECLINE };
@@ -2555,7 +2555,7 @@ var Ir = {
   };
 function Or(ke) {
   let R = _(126),
-    { storageV5: gr } = _e(),
+    { storageV5: gr } = useStorageV5Context(),
     [q] = d(Ta);
   const wr = !!q,
     _r = q ? "existing" : isAnthropicAuthEnabled() ? "oauth" : "new";
@@ -2567,8 +2567,8 @@ function Or(ke) {
       (R[2] = Dn));
   else Dn = R[2];
   let [s, I] = d(Dn),
-    es = vt();
-  is();
+    es = useClock();
+  useGlobalExitKeybinding();
   let Ln;
   if (R[3] !== ke)
     ((Ln = { "confirm:no": () => ke.onDone("Installation cancelled by user") }),
@@ -2581,13 +2581,13 @@ function Or(ke) {
   if (R[5] !== br)
     ((Fn = { context: "Settings", isActive: br }), (R[5] = br), (R[6] = Fn));
   else Fn = R[6];
-  Ze(Ln, Fn);
+  useKeybindings(Ln, Fn);
   let qn;
-  if (R[7] === p) ((qn = []), (R[7] = qn));
+  if (R[7] === MEMO_CACHE_SENTINEL) ((qn = []), (R[7] = qn));
   else qn = R[7];
   E(Ea, qn);
   let Yn;
-  if (R[8] === p)
+  if (R[8] === MEMO_CACHE_SENTINEL)
     ((Yn = async () => {
       let ts = [];
       if ((await a_("gh --version", { reject: !1 })).exitCode !== 0)
@@ -2640,7 +2640,7 @@ function Or(ke) {
         }
       }
       let yr = (await getGithubRepo()) ?? "";
-      (i("tengu_install_github_app_step_completed", { step: S("check-gh") }),
+      (logEvent("tengu_install_github_app_step_completed", { step: S("check-gh") }),
         I((rm) => ({
           ...rm,
           warnings: ts,
@@ -2678,7 +2678,7 @@ function Or(ke) {
   )
     ((Zn = async (im, nm) => {
       if (isUnattendedBgSession()) {
-        (i("tengu_install_github_app_error", {
+        (logEvent("tengu_install_github_app_error", {
           reason: S("unattended_bg_session"),
         }),
           I(Ha));
@@ -2703,19 +2703,19 @@ function Or(ke) {
           },
           gr,
         ),
-          i("tengu_install_github_app_step_completed", { step: S("creating") }),
+          logEvent("tengu_install_github_app_step_completed", { step: S("creating") }),
           I(Na));
       } catch (os) {
         let Qn = os;
         let ea =
           Qn instanceof Error ? Qn.message : "Failed to set up GitHub Actions";
         if (ea.includes("workflow file already exists"))
-          (i("tengu_install_github_app_error", {
+          (logEvent("tengu_install_github_app_error", {
             reason: S("workflow_file_exists"),
           }),
             I($a));
         else
-          (i("tengu_install_github_app_error", {
+          (logEvent("tengu_install_github_app_error", {
             reason: S("setup_github_actions_failed"),
           }),
             I((am) => ({
@@ -2739,15 +2739,15 @@ function Or(ke) {
   else Zn = R[20];
   let be = Zn,
     os;
-  if (R[21] === p)
+  if (R[21] === MEMO_CACHE_SENTINEL)
     ((os = async function ss() {
-      await Gr("https://github.com/apps/claude");
+      await tryOpenUrlInBrowser("https://github.com/apps/claude");
     }),
       (R[21] = os));
   else os = R[21];
   let ss = os,
     ta;
-  if (R[22] === p)
+  if (R[22] === MEMO_CACHE_SENTINEL)
     ((ta = async function kr(cm) {
       try {
         let rs = await execFileNoThrow("gh", [
@@ -2771,7 +2771,7 @@ function Or(ke) {
   else ta = R[22];
   let kr = ta,
     oa;
-  if (R[23] === p)
+  if (R[23] === MEMO_CACHE_SENTINEL)
     ((oa = async function Cr(um) {
       return (
         (
@@ -2846,7 +2846,7 @@ function Or(ke) {
   )
     ((ia = async () => {
       if (s.step === "warnings")
-        (i("tengu_install_github_app_step_completed", { step: S("warnings") }),
+        (logEvent("tengu_install_github_app_step_completed", { step: S("warnings") }),
           I(La),
           es.setTimeout(ss, 0));
       else if (s.step === "choose-repo") {
@@ -2925,7 +2925,7 @@ function Or(ke) {
             step: "warnings",
           }));
         } else
-          (i("tengu_install_github_app_step_completed", {
+          (logEvent("tengu_install_github_app_step_completed", {
             step: S("choose-repo"),
           }),
             I((hm) => ({
@@ -2936,7 +2936,7 @@ function Or(ke) {
             })),
             es.setTimeout(ss, 0));
       } else if (s.step === "install-app")
-        (i("tengu_install_github_app_step_completed", {
+        (logEvent("tengu_install_github_app_step_completed", {
           step: S("install-app"),
         }),
           I(Fa));
@@ -2946,7 +2946,7 @@ function Or(ke) {
         return;
       } else if (s.step === "check-existing-secret") {
         if (
-          (i("tengu_install_github_app_step_completed", {
+          (logEvent("tengu_install_github_app_step_completed", {
             step: S("check-existing-secret"),
           }),
           s.useExistingSecret)
@@ -2960,7 +2960,7 @@ function Or(ke) {
         let as =
           s.selectedApiKeyOption === "existing" ? q : s.apiKeyOrOAuthToken;
         if (!as) {
-          (i("tengu_install_github_app_error", {
+          (logEvent("tengu_install_github_app_error", {
             reason: S("api_key_missing"),
           }),
             I(qa));
@@ -2988,17 +2988,17 @@ function Or(ke) {
               )
               .some(Ya)
           )
-            (i("tengu_install_github_app_step_completed", {
+            (logEvent("tengu_install_github_app_step_completed", {
               step: S("api-key"),
             }),
               I(Va));
           else
-            (i("tengu_install_github_app_step_completed", {
+            (logEvent("tengu_install_github_app_step_completed", {
               step: S("api-key"),
             }),
               await be(as, s.secretName));
         } else
-          (i("tengu_install_github_app_step_completed", { step: S("api-key") }),
+          (logEvent("tengu_install_github_app_step_completed", { step: S("api-key") }),
             await be(as, s.secretName));
       }
     }),
@@ -3018,7 +3018,7 @@ function Or(ke) {
   else ia = R[41];
   let ce = ia,
     pa;
-  if (R[42] === p)
+  if (R[42] === MEMO_CACHE_SENTINEL)
     ((pa = (wm) => {
       I((_m) => ({ ..._m, selectedRepoName: wm }));
     }),
@@ -3026,7 +3026,7 @@ function Or(ke) {
   else pa = R[42];
   let bm = pa,
     ma;
-  if (R[43] === p)
+  if (R[43] === MEMO_CACHE_SENTINEL)
     ((ma = (ym) => {
       I((km) => ({ ...km, apiKeyOrOAuthToken: ym }));
     }),
@@ -3034,7 +3034,7 @@ function Or(ke) {
   else ma = R[43];
   let Cm = ma,
     da;
-  if (R[44] === p)
+  if (R[44] === MEMO_CACHE_SENTINEL)
     ((da = (xm) => {
       I((Am) => ({ ...Am, selectedApiKeyOption: xm }));
     }),
@@ -3042,16 +3042,16 @@ function Or(ke) {
   else da = R[44];
   let Rm = da,
     fa;
-  if (R[45] === p)
+  if (R[45] === MEMO_CACHE_SENTINEL)
     ((fa = () => {
       if (isUnattendedBgSession()) {
-        (i("tengu_install_github_app_error", {
+        (logEvent("tengu_install_github_app_error", {
           reason: S("unattended_bg_session"),
         }),
           I(za));
         return;
       }
-      (i("tengu_install_github_app_step_completed", { step: S("api-key") }),
+      (logEvent("tengu_install_github_app_step_completed", { step: S("api-key") }),
         I(Xa));
     }),
       (R[45] = fa));
@@ -3060,7 +3060,7 @@ function Or(ke) {
     ha;
   if (R[46] !== be)
     ((ha = (ga) => {
-      (i("tengu_install_github_app_step_completed", { step: S("oauth-flow") }),
+      (logEvent("tengu_install_github_app_step_completed", { step: S("oauth-flow") }),
         I((Sm) => ({
           ...Sm,
           apiKeyOrOAuthToken: ga,
@@ -3075,7 +3075,7 @@ function Or(ke) {
   else ha = R[47];
   let Rr = ha,
     wa;
-  if (R[48] === p)
+  if (R[48] === MEMO_CACHE_SENTINEL)
     ((wa = () => {
       I(ja);
     }),
@@ -3083,7 +3083,7 @@ function Or(ke) {
   else wa = R[48];
   let Pm = wa,
     _a;
-  if (R[49] === p)
+  if (R[49] === MEMO_CACHE_SENTINEL)
     ((_a = (vr) => {
       if (vr && !/^[a-zA-Z0-9_]+$/.test(vr)) {
         return;
@@ -3094,7 +3094,7 @@ function Or(ke) {
   else _a = R[49];
   let Om = _a,
     ba;
-  if (R[50] === p)
+  if (R[50] === MEMO_CACHE_SENTINEL)
     ((ba = (ya) => {
       I((ka) => ({
         ...ka,
@@ -3106,7 +3106,7 @@ function Or(ke) {
   else ba = R[50];
   let Tm = ba,
     Ca;
-  if (R[51] === p)
+  if (R[51] === MEMO_CACHE_SENTINEL)
     ((Ca = (Em) => {
       I((Hm) => ({ ...Hm, useExistingKey: Em }));
     }),
@@ -3114,7 +3114,7 @@ function Or(ke) {
   else Ca = R[51];
   let Bm = Ca,
     xa;
-  if (R[52] === p)
+  if (R[52] === MEMO_CACHE_SENTINEL)
     ((xa = (Aa) => {
       I((Gm) => ({
         ...Gm,
@@ -3129,7 +3129,7 @@ function Or(ke) {
   if (R[53] !== s.workflowExists)
     ((Ra = (va) => {
       if (
-        (i("tengu_install_github_app_step_completed", {
+        (logEvent("tengu_install_github_app_step_completed", {
           step: S("setup-actions-prompt"),
           action: fromEnum(va),
         }),
@@ -3151,7 +3151,7 @@ function Or(ke) {
         return;
       }
       if (
-        (i("tengu_install_github_app_step_completed", {
+        (logEvent("tengu_install_github_app_step_completed", {
           step: S("check-existing-workflow"),
         }),
         I(($m) => ({ ...$m, workflowAction: ls })),
@@ -3176,7 +3176,7 @@ function Or(ke) {
   )
     ((Pa = function Ue(Km) {
       if ((Km.preventDefault(), s.step === "success"))
-        i("tengu_install_github_app_completed", {});
+        logEvent("tengu_install_github_app_completed", {});
       ke.onDone(
         s.step === "success"
           ? s.appOnlyInstall
@@ -3199,7 +3199,7 @@ For manual setup instructions, see: ${Z}`,
   switch (s.step) {
     case "check-gh": {
       let k;
-      if (R[64] === p) ((k = e(Ot, {})), (R[64] = k));
+      if (R[64] === MEMO_CACHE_SENTINEL) ((k = e(Ot, {})), (R[64] = k));
       else k = R[64];
       return k;
     }
@@ -3296,7 +3296,7 @@ For manual setup instructions, see: ${Z}`,
     }
     case "api-key": {
       let k;
-      if (R[88] === p) ((k = isAnthropicAuthEnabled() ? vm : void 0), (R[88] = k));
+      if (R[88] === MEMO_CACHE_SENTINEL) ((k = isAnthropicAuthEnabled() ? vm : void 0), (R[88] = k));
       else k = R[88];
       let z;
       if (
@@ -3424,7 +3424,7 @@ For manual setup instructions, see: ${Z}`,
       if (R[118] !== De || R[119] !== q)
         ((k = (Wm) => {
           if (
-            (i("tengu_install_github_app_step_completed", {
+            (logEvent("tengu_install_github_app_step_completed", {
               step: S("select-workflows"),
             }),
             I((Dm) => ({ ...Dm, selectedWorkflows: Wm })),
@@ -3459,7 +3459,7 @@ For manual setup instructions, see: ${Z}`,
 }
 async function tm(g, b) {
   if (isUnattendedBgSession()) {
-    let v = await aye(
+    let v = await parkCommandUntilAttended(
       b.session.host,
       "open this session to finish /install-github-app",
       "/install-github-app requested",

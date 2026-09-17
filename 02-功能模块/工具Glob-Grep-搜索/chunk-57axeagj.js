@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
@@ -22,9 +22,9 @@ import { OP, Vet, Ket } from "../../01-核心基础设施/设置-配置/设置-�
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { kJ, MK, UTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { dUt, t3, Qqn, uX, createBaseHookInput, executeFileSuggestionCommand } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var w = pe(kJ(), 1);
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var w = toESM(kJ(), 1);
 import { statSync } from "fs";
 import * as m from "path";
 function M() {
@@ -132,7 +132,7 @@ async function P(e, r, s) {
   if (e.ignorePatternsCacheKey === t) return e.ignorePatternsCache;
   let a = ae(),
     o = [".ignore", ".rgignore"],
-    g = Y([r, s]),
+    g = dedupe([r, s]),
     c = w.default(),
     u = !1,
     f = g.flatMap((x) => o.map((F) => m.join(x, F))),
@@ -226,7 +226,7 @@ async function j(e, r, s) {
     let x = Date.now() - t;
     return (
       n(`[FileIndex] git ls-files: ${d.length} tracked files in ${x}ms`),
-      i("tengu_file_suggestions_git_ls_files", {
+      logEvent("tengu_file_suggestions_git_ls_files", {
         file_count: d.length,
         tracked_count: d.length,
         untracked_count: 0,
@@ -297,7 +297,7 @@ async function E(e, r, s) {
     f = Date.now() - a;
   return (
     n(`[FileIndex] ripgrep: ${u.length} files in ${f}ms`),
-    i("tengu_file_suggestions_ripgrep", {
+    logEvent("tengu_file_suggestions_ripgrep", {
       file_count: u.length,
       duration_ms: f,
     }),
@@ -448,7 +448,7 @@ async function generateFileSuggestions(e, r, s = !1, t) {
       n(
         `[FileIndex] generateFileSuggestions: ${f.length} results in ${d}ms (${g ? "partial" : "full"} index)`,
       ),
-      i("tengu_file_suggestions_query", {
+      logEvent("tengu_file_suggestions_query", {
         duration_ms: d,
         cache_hit: !g,
         result_count: f.length,

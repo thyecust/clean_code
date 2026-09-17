@@ -11,16 +11,16 @@ import { default as RT } from "../文件监听-Watch/文件监听-Watch.3efypmps
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { l, A, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isCustomizationDisabled } from "./chunk-dqyc6kge.js";
 import { qSt, Nk, Tj } from "./chunk-jz6b76hr.js";
-import { T$ } from "../../01-核心基础设施/共享小工具-未细化/chunk-1avr3bqa.js";
-import { Xa } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
-import { ZT } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
+import { createJsonFileStore } from "../../01-核心基础设施/共享小工具-未细化/json-file-store.js";
+import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
+import { serializeAsyncCalls } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
 import { s, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 import { readdir, readFile, stat as _ } from "fs/promises";
@@ -29,7 +29,7 @@ import { isDeepStrictEqual } from "util";
 class N {
   customThemeBases = void 0;
   userThemes = void 0;
-  pluginThemes = Xa([]);
+  pluginThemes = createStore([]);
   systemTheme = void 0;
   systemThemeChanged = Le();
   onSystemThemeChange = this.systemThemeChanged.subscribe;
@@ -246,7 +246,7 @@ async function R(e, t, r, i) {
   }
   return h;
 }
-var _Oe = ZT(async (e) => {
+var _Oe = serializeAsyncCalls(async (e) => {
     let t = dk(),
       r = isCustomizationDisabled("themes")
         ? []
@@ -256,11 +256,11 @@ var _Oe = ZT(async (e) => {
       t.commitUserThemes(r)
     );
   }),
-  H = m(() => c({ name: s(), base: s(), overrides: fe(s(), s()) }));
+  H = createLazyValue(() => c({ name: s(), base: s(), overrides: fe(s(), s()) }));
 async function $ze(e, t) {
   let r = { name: e.name, base: e.base, overrides: e.overrides },
     i = `${e.slug}.json`;
-  if (M() && t !== void 0 && _n(i)) {
+  if (isHoverRestEnabled() && t !== void 0 && _n(i)) {
     let a =
         b(r, null, 2) +
         `
@@ -278,7 +278,7 @@ async function $ze(e, t) {
       );
     return;
   }
-  await T$(C(twe(), `${e.slug}.json`), H, {
+  await createJsonFileStore(C(twe(), `${e.slug}.json`), H, {
     defaultValue: () => ({ name: e.slug, base: "dark", overrides: {} }),
     ensureDir: !0,
     indent: 2,

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { Fr } from "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
 import { isDangerousBashPermission, isDangerousPowerShellPermission } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
@@ -47,7 +47,7 @@ function y(l) {
   return ((e.total_shell_allow_rules = o), e);
 }
 function tWn(l) {
-  i("tengu_shell_allow_rules_at_init", y(l));
+  logEvent("tengu_shell_allow_rules_at_init", y(l));
 }
 function I1t(l) {
   for (let e of l) {
@@ -57,7 +57,7 @@ function I1t(l) {
       if (r === null) continue;
       let t = c(o.toolName, o.ruleContent);
       if (t === null) continue;
-      i("tengu_shell_allow_rule_added", {
+      logEvent("tengu_shell_allow_rule_added", {
         toolName: fromEnum(r),
         category: fromEnum(t),
         destination: fromEnum(e.destination),

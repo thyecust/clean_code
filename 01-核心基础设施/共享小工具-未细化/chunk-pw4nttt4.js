@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z } from "./chunk-510m1t2d.js";
+import { sleep } from "./async-timeout-utils.js";
 import { isDaemonBgWorker } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 class r {
   stampMs = 0;
@@ -48,7 +48,7 @@ async function aft() {
     if (!Nze(e)) return;
     let { detachedSinceLastAttach: t, stampMs: o } = a(),
       c = t || o === 0 ? 500 : o + 500 - e;
-    await Z(Math.max(25, c) + 25);
+    await sleep(Math.max(25, c) + 25);
   }
 }
 export { _ln, Mze, yln, rue, Nze, aft };

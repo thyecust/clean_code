@@ -14,7 +14,7 @@ import { mS } from "../权限系统/chunk-e4pfvp7x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var g = new RegExp(`<${nZ}>[\\s\\S]*?</${nZ}>\\n*`);
 function UserForkBoilerplateMessage(L) {
   let i = _(8),
@@ -29,7 +29,7 @@ function UserForkBoilerplateMessage(L) {
   let m = x;
   const d = b ? 1 : 0;
   let T;
-  if (i[2] === p)
+  if (i[2] === MEMO_CACHE_SENTINEL)
     ((T = e(t, { "aria-label": "fork:", dimColor: !0, children: mS })),
       (i[2] = T));
   else T = i[2];

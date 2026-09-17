@@ -17,7 +17,7 @@ import { be, Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { Wf, x, Fje, hy } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { zar, yi } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { War } from "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
 import { getSettingsFilePathForSource, getSettingsForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -61,24 +61,24 @@ import { hD } from "../../01-核心基础设施/提示词-SystemPrompt/提示词
 import { xC } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { nIt, rIt, P6e, oIt } from "./chunk-6wg4v2yj.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
+import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { Vi, Qot, J1n } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dn, kn, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 import { realpath } from "fs/promises";
 import { basename } from "path";
@@ -322,7 +322,7 @@ async function Fo({
         He.add(b);
         continue;
       }
-      let No = Y([
+      let No = dedupe([
         K,
         await realpath(K).catch(() => K),
         ...(k.knownSpellings.get(b) ?? []),
@@ -439,11 +439,11 @@ function So(Mr) {
   if (J[10] !== ne) ((Lo = () => ne("not_now")), (J[10] = ne), (J[11] = Lo));
   else Lo = J[11];
   let Es;
-  if (J[12] === p)
-    ((Es = r(ue, {
+  if (J[12] === MEMO_CACHE_SENTINEL)
+    ((Es = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "confirm" }),
-        e(je, {
+        e(KeybindingHint, { chord: "enter", action: "confirm" }),
+        e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Confirmation",
           fallback: "Esc",
@@ -454,7 +454,7 @@ function So(Mr) {
       (J[12] = Es));
   else Es = J[12];
   let Hs;
-  if (J[13] === p)
+  if (J[13] === MEMO_CACHE_SENTINEL)
     ((Hs = e(t, {
       children:
         "Hooks from your own settings (your user settings.json, this checkout's .claude/settings.local.json, or a --settings file) normally do nothing in a cloud session. If you say yes, a cloud session started from this machine asks this terminal to run the matching hooks on this machine, waits briefly for each answer, and carries on without it if none comes. What a hook returns \u2014 a block reason, added context \u2014 becomes part of the cloud session's transcript.",
@@ -498,7 +498,7 @@ function So(Mr) {
       (J[21] = qo));
   else qo = J[21];
   let Rs, Ms;
-  if (J[22] === p)
+  if (J[22] === MEMO_CACHE_SENTINEL)
     ((Rs = {
       label: "Yes, run this machine's hooks for cloud sessions",
       value: "accepted",
@@ -942,7 +942,7 @@ function Je(Vr) {
   let Co = _(9),
     { summaryPromise: Cn, savedLine: Qo } = Vr,
     Is;
-  if (Co[0] === p)
+  if (Co[0] === MEMO_CACHE_SENTINEL)
     ((Is = r(t, { color: "suggestion", children: [L.info, " Cloud session"] })),
       (Co[0] = Is));
   else Is = Co[0];
@@ -953,7 +953,7 @@ function Je(Vr) {
       (Co[2] = Zo));
   else Zo = Co[2];
   let Ps;
-  if (Co[3] === p)
+  if (Co[3] === MEMO_CACHE_SENTINEL)
     ((Ps = e(t, {
       dimColor: !0,
       children: "Checking this machine's hooks\u2026",
@@ -979,11 +979,11 @@ function yt(zr) {
   let se = _(26),
     { summaryPromise: Kr } = zr,
     H = kn(Kr),
-    xo = Math.min(Mn, Math.max(On, Se().rows - In)),
+    xo = Math.min(Mn, Math.max(On, useTerminalSize().rows - In)),
     Eo = H.consent;
   if (Eo === "off") {
     let Me;
-    if (se[0] === p)
+    if (se[0] === MEMO_CACHE_SENTINEL)
       ((Me = e(t, {
         dimColor: !0,
         children:
@@ -995,7 +995,7 @@ function yt(zr) {
   }
   if (Eo === "remote_host") {
     let Me;
-    if (se[1] === p)
+    if (se[1] === MEMO_CACHE_SENTINEL)
       ((Me = e(t, {
         dimColor: !0,
         children:
@@ -1006,7 +1006,7 @@ function yt(zr) {
     return Me;
   }
   let Me;
-  if (se[2] === p)
+  if (se[2] === MEMO_CACHE_SENTINEL)
     ((Me = e(t, {
       dimColor: !0,
       children:
@@ -1120,7 +1120,7 @@ function wt(na) {
   switch (Q.consent) {
     case "accepted": {
       let Oe;
-      if (fe[2] === p)
+      if (fe[2] === MEMO_CACHE_SENTINEL)
         ((Oe = e(t, { bold: !0, children: "on" })), (fe[2] = Oe));
       else Oe = fe[2];
       let le;
@@ -1162,7 +1162,7 @@ function wt(na) {
     }
     case "declined": {
       let Oe;
-      if (fe[11] === p)
+      if (fe[11] === MEMO_CACHE_SENTINEL)
         ((Oe = e(t, { bold: !0, children: "off" })), (fe[11] = Oe));
       else Oe = fe[11];
       let le;
@@ -1185,11 +1185,11 @@ function wt(na) {
     }
     case "unset": {
       let Oe;
-      if (fe[14] === p)
+      if (fe[14] === MEMO_CACHE_SENTINEL)
         ((Oe = e(t, { bold: !0, children: "not decided" })), (fe[14] = Oe));
       else Oe = fe[14];
       let le;
-      if (fe[15] === p)
+      if (fe[15] === MEMO_CACHE_SENTINEL)
         ((le = r(t, {
           children: [
             "Hooks from this machine: ",
@@ -1240,7 +1240,7 @@ function vt(sa) {
   const En = P.where === "local" || mt !== "accepted" ? "pending" : "success";
   let ut;
   if (We[0] !== En)
-    ((ut = e(et, { status: En, withSpace: !0 })), (We[0] = En), (We[1] = ut));
+    ((ut = e(StatusIndicator, { status: En, withSpace: !0 })), (We[0] = En), (We[1] = ut));
   else ut = We[1];
   let ht;
   if (We[2] !== P.label)
@@ -1371,7 +1371,7 @@ function Mo(pa) {
       (Z[5] = bt));
   else bt = Z[5];
   let Bs;
-  if (Z[6] === p)
+  if (Z[6] === MEMO_CACHE_SENTINEL)
     ((Bs = e(o, {
       flexDirection: "column",
       children: r(t, {
@@ -1520,9 +1520,9 @@ function Oo(Ha) {
   let lo = qs;
   if (Be.length === 0) {
     let Tt, $e;
-    if (Le[4] === p)
-      ((Tt = e(D, { chord: "escape", action: "go back" })),
-        ($e = e(Rn, {
+    if (Le[4] === MEMO_CACHE_SENTINEL)
+      ((Tt = e(KeybindingHint, { chord: "escape", action: "go back" })),
+        ($e = e(EmptyStateMessage, {
           hint: "To add hooks, edit settings.json directly or ask Claude",
           children: "No hooks configured for this event",
         })),
@@ -1616,7 +1616,7 @@ function Po(Ua) {
     if (Ie[4] !== Io || Ie[5] !== Ge)
       ((me = (Ks) => {
         let Xs = Io[Ge]?.[Ks] || [];
-        let qa = Y(Xs.map(Zs));
+        let qa = dedupe(Xs.map(Zs));
         return { matcher: Ks, sources: qa, hookCount: Xs.length };
       }),
         (Ie[4] = Io),
@@ -1630,9 +1630,9 @@ function Po(Ua) {
   if (Dt.length === 0) {
     const me = `${Ge} - Matchers`;
     let Ve, ze;
-    if (Ie[7] === p)
-      ((Ve = e(D, { chord: "escape", action: "go back" })),
-        (ze = e(Rn, {
+    if (Ie[7] === MEMO_CACHE_SENTINEL)
+      ((Ve = e(KeybindingHint, { chord: "escape", action: "go back" })),
+        (ze = e(EmptyStateMessage, {
           hint: "To add hooks, edit settings.json directly or ask Claude",
           children: "No hooks configured for this event",
         })),
@@ -1693,14 +1693,14 @@ function To(rc) {
   let M = _(47),
     { selectedHook: v, eventSupportsMatcher: $n, onCancel: qn } = rc,
     oi;
-  if (M[0] === p)
-    ((oi = e(D, { chord: "escape", action: "go back" })), (M[0] = oi));
+  if (M[0] === MEMO_CACHE_SENTINEL)
+    ((oi = e(KeybindingHint, { chord: "escape", action: "go back" })), (M[0] = oi));
   else oi = M[0];
   let ti;
-  if (M[1] === p) ((ti = [{ bold: !0 }, {}]), (M[1] = ti));
+  if (M[1] === MEMO_CACHE_SENTINEL) ((ti = [{ bold: !0 }, {}]), (M[1] = ti));
   else ti = M[1];
   let ni;
-  if (M[2] === p) ((ni = e(N, { children: "Event:" })), (M[2] = ni));
+  if (M[2] === MEMO_CACHE_SENTINEL) ((ni = e(N, { children: "Event:" })), (M[2] = ni));
   else ni = M[2];
   let At;
   if (M[3] !== v.event)
@@ -1723,7 +1723,7 @@ function To(rc) {
       (M[7] = Ft));
   else Ft = M[7];
   let si;
-  if (M[8] === p) ((si = e(N, { children: "Type:" })), (M[8] = si));
+  if (M[8] === MEMO_CACHE_SENTINEL) ((si = e(N, { children: "Type:" })), (M[8] = si));
   else si = M[8];
   let Wt;
   if (M[9] !== v.config.type)
@@ -1732,7 +1732,7 @@ function To(rc) {
       (M[10] = Wt));
   else Wt = M[10];
   let ii;
-  if (M[11] === p) ((ii = e(N, { children: "Source:" })), (M[11] = ii));
+  if (M[11] === MEMO_CACHE_SENTINEL) ((ii = e(N, { children: "Source:" })), (M[11] = ii));
   else ii = M[11];
   let Jt;
   if (M[12] !== v.source)
@@ -1831,7 +1831,7 @@ function To(rc) {
       (M[39] = zt));
   else zt = M[39];
   let ri;
-  if (M[40] === p)
+  if (M[40] === MEMO_CACHE_SENTINEL)
     ((ri = e(t, {
       dimColor: !0,
       children:
@@ -1909,11 +1909,11 @@ function dn(Bc) {
   let m = _(133),
     { toolNames: Yn, onExit: Vn } = Bc,
     ci;
-  if (m[0] === p) ((ci = { mode: "select-event" }), (m[0] = ci));
+  if (m[0] === MEMO_CACHE_SENTINEL) ((ci = { mode: "select-event" }), (m[0] = ci));
   else ci = m[0];
   let [l, B] = d(ci),
-    { storageV5: po } = _e(),
-    Ce = Ye(ji),
+    { storageV5: po } = useStorageV5Context(),
+    Ce = useSession(ji),
     di;
   if (m[1] !== Ce)
     ((di = () => {
@@ -1958,7 +1958,7 @@ function dn(Bc) {
     [Qt, Uc] = d(Bi),
     [Kn, qc] = d(Li),
     ui;
-  if (m[7] === p)
+  if (m[7] === MEMO_CACHE_SENTINEL)
     ((ui = (Gc) => {
       if (Gc === "policySettings") {
         let Yc = getSettings_DEPRECATED()?.disableAllHooks === !0;
@@ -2021,9 +2021,9 @@ function dn(Bc) {
       (m[25] = ts),
       (m[26] = vi));
   else vi = m[26];
-  Ne("confirm:no", pe, vi);
+  useKeybinding("confirm:no", pe, vi);
   let _i;
-  if (m[27] === p)
+  if (m[27] === MEMO_CACHE_SENTINEL)
     ((_i = () => {
       B({ mode: "select-event" });
     }),
@@ -2036,7 +2036,7 @@ function dn(Bc) {
       (m[28] = ns),
       (m[29] = Si));
   else Si = m[29];
-  Ne("confirm:no", _i, Si);
+  useKeybinding("confirm:no", _i, Si);
   let bi;
   if (m[30] !== j || m[31] !== l)
     ((bi = () => {
@@ -2057,7 +2057,7 @@ function dn(Bc) {
       (m[33] = ss),
       (m[34] = Ci));
   else Ci = m[34];
-  Ne("confirm:no", bi, Ci);
+  useKeybinding("confirm:no", bi, Ci);
   let xi;
   if (m[35] !== l)
     ((xi = () => {
@@ -2076,9 +2076,9 @@ function dn(Bc) {
       (m[37] = is),
       (m[38] = Ei));
   else Ei = m[38];
-  Ne("confirm:no", xi, Ei);
+  useKeybinding("confirm:no", xi, Ei);
   let Ri;
-  if (m[39] === p) ((Ri = getSettings_DEPRECATED()), (m[39] = Ri));
+  if (m[39] === MEMO_CACHE_SENTINEL) ((Ri = getSettings_DEPRECATED()), (m[39] = Ri));
   else Ri = m[39];
   let Mi = Ri?.disableAllHooks === !0,
     Oi;
@@ -2110,7 +2110,7 @@ function dn(Bc) {
                   : {
                       mode: "cloud-consent",
                       offer: {
-                        forwarded: G(Qe.rows, Gi),
+                        forwarded: countMatching(Qe.rows, Gi),
                         templateNames: Qe.rows.filter(Yi).map(zi),
                       },
                       ...((Qe.consent === "accepted" ||
@@ -2126,8 +2126,8 @@ function dn(Bc) {
   let Ze = Ti;
   if (Mi && l.mode !== "cloud-consent") {
     let T;
-    if (m[45] === p)
-      ((T = e(D, { chord: "escape", action: "close" })), (m[45] = T));
+    if (m[45] === MEMO_CACHE_SENTINEL)
+      ((T = e(KeybindingHint, { chord: "escape", action: "close" })), (m[45] = T));
     else T = m[45];
     let E;
     if (m[46] !== fo || m[47] !== ee)
@@ -2163,7 +2163,7 @@ function dn(Bc) {
         (m[51] = O));
     else O = m[51];
     let W;
-    if (m[52] === p)
+    if (m[52] === MEMO_CACHE_SENTINEL)
       ((W = e(t, { bold: !0, children: "disabled" })), (m[52] = W));
     else W = m[52];
     const Pe = Qt && " by a managed settings file";
@@ -2203,7 +2203,7 @@ function dn(Bc) {
         (m[63] = nn));
     else nn = m[63];
     let Ni, Di, Ai, Fi;
-    if (m[64] === p)
+    if (m[64] === MEMO_CACHE_SENTINEL)
       ((Ni = e(o, {
         marginTop: 1,
         children: e(t, { dimColor: !0, children: "When hooks are disabled:" }),
@@ -2273,7 +2273,7 @@ function dn(Bc) {
   switch (l.mode) {
     case "select-event": {
       let T;
-      if (m[80] === p)
+      if (m[80] === MEMO_CACHE_SENTINEL)
         ((T = Hr()
           ? { exitHint: yf(), managedHooksStillApply: Qot() }
           : void 0),
@@ -2338,14 +2338,14 @@ function dn(Bc) {
       const E = l.offer.templateNames;
       const O = l.current;
       let W;
-      if (m[95] === p) ((W = an(vY())), (m[95] = W));
+      if (m[95] === MEMO_CACHE_SENTINEL) ((W = an(vY())), (m[95] = W));
       else W = m[95];
       let Pe;
       if (m[96] !== Ce || m[97] !== Xt || m[98] !== po)
         ((Pe = (yo) => {
           if (
             (B({ mode: "select-event" }),
-            i("tengu_device_hooks_consent", { choice: fromEnum(yo) }),
+            logEvent("tengu_device_hooks_consent", { choice: fromEnum(yo) }),
             yo === "not_now")
           ) {
             return;
@@ -2400,7 +2400,7 @@ function dn(Bc) {
           (m[107] = E));
       else E = m[107];
       let O;
-      if (m[108] === p)
+      if (m[108] === MEMO_CACHE_SENTINEL)
         ((O = () => {
           B({ mode: "select-event" });
         }),
@@ -2507,7 +2507,7 @@ function dn(Bc) {
   }
 }
 var wd = async (n, a) => {
-  i("tengu_hooks_command", {});
+  logEvent("tengu_hooks_command", {});
   let s = getToolPermissionContext(a),
     g = J1n(dC(s), s).map((k) => k.name);
   return e(dn, { toolNames: g, onExit: n });

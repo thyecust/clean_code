@@ -10,9 +10,9 @@
 
 // [preload stripped] 原本在此预载 4 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { I } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { au } from "./chunk-2c9tjhwd.js";
+import { defineExportGetters } from "./chunk-2c9tjhwd.js";
 var o = {};
-au(o, {
+defineExportGetters(o, {
   CLAUDE_CODE_MESSAGING_SOCKET: () => e,
   CLAUDE_CODE_MESSAGING_TOKEN: () => t,
 });

@@ -10,10 +10,10 @@
 import { klt } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry/chunk-3zapb67e.js";
 import { tI, mF } from "../../01-核心基础设施/遥测-OpenTelemetry/遥测-OpenTelemetry.0xhcvej6.js";
 import "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var o = pe(klt()),
-  p = pe(tI()),
-  r = pe(mF());
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var o = toESM(klt()),
+  p = toESM(tI()),
+  r = toESM(mF());
 class t extends o.OTLPMetricExporterBase {
   constructor(e) {
     super(

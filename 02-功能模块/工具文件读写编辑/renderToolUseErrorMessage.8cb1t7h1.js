@@ -16,21 +16,21 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Ao, yx } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import { JDe, Igt, ide, tLe, Mgt, $4n, Lr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../语法高亮-Markdown渲染/chunk-mnn6q099.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../Diff引擎/chunk-p2gj9dsf.js";
 import { isScratchpadDisplayPath, isWorkshopDisplayPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { Pg } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import { FB, wWe } from "../Diff引擎/chunk-arr1hvsk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-bhcz98rd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dn, kn, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
@@ -92,14 +92,14 @@ function renderToolUseErrorMessage(r, s) {
   if (!i && typeof r === "string" && Lr(r, "tool_use_error")) {
     let a = Lr(r, "tool_use_error");
     if (a?.includes("File has not been read yet"))
-      return e(xe, {
+      return e(ToolResultRow, {
         children: e(t, { dimColor: !0, children: "File must be read first" }),
       });
     if (a?.includes(yx))
-      return e(xe, {
+      return e(ToolResultRow, {
         children: e(t, { color: "error", children: "File not found" }),
       });
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, { color: "error", children: "Error editing file" }),
     });
   }

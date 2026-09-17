@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 102 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Ghr, Y1t, qhr } from "../认证-OAuth登录/chunk-a0axhdkv.js";
-import "../Bridge-RemoteControl/chunk-b9tbevd9.js";
+import { deviceEventSignerOnceBoundHere as Ghr, deviceEventSignerFor as Y1t, deviceEventSignerIfBoundHere as qhr } from "../认证-OAuth登录/device-event-signer.js";
+import "../Bridge-RemoteControl/device-bind.js";
 import "../Cowork远程设备注册/Cowork远程设备注册.9r92qaht.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
 export {

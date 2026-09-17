@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { j, Si, K, EB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { po, FL, zn, gp, UL, Dr, ku, tdr, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromNumber } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ve, yt, R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -20,7 +20,7 @@ import { x, us, oe, Wc, ft, kr, ln } from "../../01-核心基础设施/核心工
 import { G5, KU } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { e8, Pxt, Oxt, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
   SCe,
   M1e,
@@ -263,7 +263,7 @@ import {
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { SW } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { Ant, dy } from "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
+import { O_NONBLOCK_FLAG, O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
 import { C7t, v0, yS, SS, hL, _L, Ahe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
@@ -386,7 +386,7 @@ import {
 } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { NJ, qH, qy } from "../MCP客户端/chunk-3kmsshb6.js";
 import { so, mme, consentAskCanReachUser, planConsentMustDeny, consentMustDeny, getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { ar, Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { findToolByName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { gAt, dse, kme, s5 } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import {
   vF,
@@ -612,7 +612,7 @@ import {
   FS,
 } from "./chunk-qpgskeea.js";
 import { artifactUrlRule } from "../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js";
-import { rbe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cj5z5g82.js";
+import { EMPTY_ARTIFACT_ROOM_JOIN_CONSENT_SLUGS } from "../../01-核心基础设施/共享小工具-未细化/empty-artifact-consent-slugs.js";
 import {
   versionHeldBy,
   registerHandoverRead,
@@ -688,7 +688,7 @@ import {
   Acn,
   f$t,
 } from "./chunk-01jnk0v2.js";
-import { Ece } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ghshta0.js";
+import { isClaudeBrowserMcpServerName } from "../../01-核心基础设施/共享小工具-未细化/claude-browser-mcp-server.js";
 import {
   RNt,
   kNt,
@@ -759,8 +759,8 @@ import {
 } from "./chunk-b6k1z7an.js";
 import { Oon, bjn, wjn } from "./chunk-fx5ekm7e.js";
 import { subagentPublishAdopter, stageSubagentPublishArm } from "../Teammates团队/chunk-weg7y2ya.js";
-import { Vjn, rsn } from "../../01-核心基础设施/共享小工具-未细化/chunk-f7n720sn.js";
-import { Fjn } from "../../01-核心基础设施/共享小工具-未细化/chunk-wm4s322b.js";
+import { logWorkshopTurn, logWorkshopPublish } from "../../01-核心基础设施/共享小工具-未细化/workshop-telemetry.js";
+import { recordWhiteboardPublish } from "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 import { warmShareEntry } from "../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js";
 import { YGe } from "../Bridge-RemoteControl/chunk-jpq2fv3g.js";
 import {
@@ -779,12 +779,12 @@ import { M9, sue, ccn, ucn } from "./chunk-5gvg7p5p.js";
 import { corePrompt } from "../Teammates团队/chunk-y89mhs4a.js";
 import { Bjn, jjn } from "../CodeReview/chunk-cwdcyphs.js";
 import { Tce, SPe, $ee, nbe, Dv } from "../../01-核心基础设施/共享小工具-未细化/chunk-1rpyafm2.js";
-import { jsn } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { openUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { aK } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { pN, QY } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
-import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
 import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
-import { Fu } from "../../01-核心基础设施/共享小工具-未细化/chunk-px58ry6q.js";
+import { isAnthropicHostedEnvironment } from "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
 import {
   s,
   T,
@@ -803,8 +803,8 @@ import {
 } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { createHash as K_, randomUUID as X_ } from "crypto";
 import {
   lstat as qh,
@@ -833,7 +833,7 @@ var cm = "_files.json",
   wc = 90000,
   fm = "x-frame-doc-sha256",
   pm = "x-frame-doc-seq",
-  mm = m(() =>
+  mm = createLazyValue(() =>
     nt({
       ver: le(),
       files: hm(
@@ -865,7 +865,7 @@ async function Ac(e, t, o, r) {
   let d = UZn(),
     w = !d && (_oe() || ($Xe() && !TN(_w)));
   if (!w && !d && a.CLAUDE_CODE_REMOTE) return gr(t, "relay_unavailable", vc);
-  let p = d || (Fu() && FXe());
+  let p = d || (isAnthropicHostedEnvironment() && FXe());
   if (w && !MH(nqt) && !p) return gr(t, "relay_not_served", gm);
   let _ = await IC(e, bc(t), o, {
     gatePublicRead: !1,
@@ -1238,14 +1238,14 @@ var Cc = `(?:${tU})?`,
   ym = new RegExp(
     `(?:^\\s*|<body${Cc}>\\s*|-->\\s*|<\\/title>\\s*)<script type="application\\/json" id="wb-state"${Cc}>(\\{[\\s\\S]*?\\})<\\/script>`,
   ),
-  _m = m(() =>
+  _m = createLazyValue(() =>
     c({
       els: v(se()),
       pingCount: T().finite().optional(),
       ping: c({ n: T().finite().optional() }).nullish(),
     }),
   ),
-  vm = m(() =>
+  vm = createLazyValue(() =>
     c({
       userSeq: T().finite().optional(),
       elementCount: T().finite().optional(),
@@ -1641,7 +1641,7 @@ var Qi = "[\\t\\n\\f\\r ]",
       .transform((t) => Math.min(t, e))
       .optional()
       .catch(void 0),
-  jA = m(() =>
+  jA = createLazyValue(() =>
     c({
       v: as(99),
       rev: as(9999),
@@ -2016,7 +2016,7 @@ var Rt = "__artifactConsentAskCanReachUser",
   ia = "__artifactVerifyTargetPinned",
   wr = "__artifactPublishTarget",
   aa = "__artifactPublishSourcePin",
-  Ym = m(() =>
+  Ym = createLazyValue(() =>
     c({
       path: s(),
       kind: X(["file", "absent", "network"]),
@@ -2256,7 +2256,7 @@ var mg = 500,
   Qc = 4000;
 function Yn(e, t = mg) {
   let o = Array.isArray(e) ? e.slice(0, t) : [],
-    r = o.filter(me);
+    r = o.filter(isRecord);
   return {
     rows: r,
     unreadable: o.length - r.length,
@@ -2498,7 +2498,7 @@ function Ag(e) {
   return b([e.path, e.from.slug, e.from.path, e.from.ver ?? ""]);
 }
 function Al(e) {
-  return Y(e.map(Ag)).sort().join(`
+  return dedupe(e.map(Ag)).sort().join(`
 `);
 }
 function Rl(e, t) {
@@ -2916,7 +2916,7 @@ function mi(e) {
   if (!artifactRoomSurfaceOpen() || e === null || e === void 0) return !1;
   if (e.action !== void 0 && e.action !== "publish") return !1;
   let t = KXe(e);
-  if (t !== void 0) return me(t) && t.room !== void 0;
+  if (t !== void 0) return isRecord(t) && t.room !== void 0;
   let o = Xb(e);
   if (o !== void 0) {
     let w = parseArtifactUrl(o);
@@ -3096,10 +3096,10 @@ function yu(e, t, o) {
     d = e.threads.length - r.length,
     w = r.filter(
       (ge) =>
-        me(ge) &&
+        isRecord(ge) &&
         typeof ge.id === "string" &&
         Array.isArray(ge.comments) &&
-        ge.comments.every((Ze) => me(Ze) && typeof Ze.text === "string"),
+        ge.comments.every((Ze) => isRecord(Ze) && typeof Ze.text === "string"),
     ),
     p = {
       ...e,
@@ -3129,9 +3129,9 @@ function yu(e, t, o) {
     !p.threads.some((ge) => ge.id === p.thread_filter)
   )
     return { shown: ka, content: E };
-  let C = G(p.threads, (ge) => !ge.resolved),
-    D = G(p.threads, (ge) => ge.claude_activated),
-    I = G(
+  let C = countMatching(p.threads, (ge) => !ge.resolved),
+    D = countMatching(p.threads, (ge) => ge.claude_activated),
+    I = countMatching(
       p.threads,
       (ge) => ge.resolved_degraded === !0 || ge.activated_degraded === !0,
     ),
@@ -3147,15 +3147,15 @@ function yu(e, t, o) {
           : "unaddressed";
     },
     V = (ge) => ge.comments.some((Ze) => N(Ze) !== "unaddressed"),
-    F = G(p.threads, V),
+    F = countMatching(p.threads, V),
     B = (ge) => N(ge) === "addressed" && ge.sent_by_viewer === !1,
     ue = (ge) => ge.comments.some((Ze) => N(Ze) !== "unaddressed" && !B(Ze)),
     J = (ge) => ge.comments.some(B),
-    re = G(p.threads, J),
+    re = countMatching(p.threads, J),
     q = (ge) => {
-      let Ze = G(ge, ue),
-        It = G(ge, J),
-        Ut = Ze + It - G(ge, V);
+      let Ze = countMatching(ge, ue),
+        It = countMatching(ge, J),
+        Ut = Ze + It - countMatching(ge, V);
       return It === 0
         ? Sa
         : `sent to Claude (${Ze} to you, ${It} by someone else${Ut > 0 ? `, ${Ut} ${x(Ut, "thread")} in both` : ""})`;
@@ -3214,7 +3214,7 @@ function yu(e, t, o) {
         : void 0;
     },
     Le = (ge) => (Fe(ge) !== void 0 ? ge.anchor_snippet : void 0),
-    Me = Y(
+    Me = dedupe(
       Ie.flatMap((ge) => {
         let Ze = Fe(ge);
         return Ze !== void 0 ? [Ze] : [];
@@ -3402,8 +3402,8 @@ function yu(e, t, o) {
         continue;
       }
     }
-    let fn = G(ge.comments, (lt) => N(lt) === "addressed"),
-      Tn = G(ge.comments, (lt) => N(lt) === "unknown"),
+    let fn = countMatching(ge.comments, (lt) => N(lt) === "addressed"),
+      Tn = countMatching(ge.comments, (lt) => N(lt) === "unknown"),
       Pe =
         fn > 0 || Tn > 0
           ? ` (${fn} sent to Claude${Tn > 0 ? `, ${Tn} addressed-status-unreadable` : ""})`
@@ -3422,12 +3422,12 @@ function yu(e, t, o) {
     }
   }
   let ir = () => {
-      let ge = G(te, (Vt) => Vt.kind !== "full"),
+      let ge = countMatching(te, (Vt) => Vt.kind !== "full"),
         Ze = new Set(te.map((Vt) => Vt.threadId)),
         It = new Set(ae.slice(0, Ee).map((Vt) => Vt.id)),
         Ut = ae.filter((Vt) => !Ze.has(Vt.id) && !It.has(Vt.id)),
         on = Ut.length,
-        $n = G(Ut, V),
+        $n = countMatching(Ut, V),
         lr = te.map((Vt) => Vt.text),
         Sr;
       for (let Vt of ae.slice(Ee)) {
@@ -3457,7 +3457,7 @@ function yu(e, t, o) {
           p.thread_filter !== void 0
             ? p.threads.filter((Vt) => Vt.id !== p.thread_filter)
             : [],
-        Mt = G(Un, V),
+        Mt = countMatching(Un, V),
         fn =
           p.scoped_dispatch === !0
             ? ""
@@ -4510,7 +4510,7 @@ var Au =
     },
   },
   Su = (e, t) => {
-    let o = "asset_copy" in e && me(e.asset_copy) ? e.asset_copy : {},
+    let o = "asset_copy" in e && isRecord(e.asset_copy) ? e.asset_copy : {},
       r = Yn(o.assets),
       d = r.rows.map(
         (_) =>
@@ -4611,7 +4611,7 @@ function Lo(e, t, o, r, d) {
     (N.searchParams.set("via", "auto_preview"), (I = N.toString()));
   } catch {}
   return (
-    jsn(I).then((N) => {
+    openUrlInBrowser(I).then((N) => {
       if (!N.ok)
         n(`[artifact] auto-open failed (${N.reason}): ${N.detail ?? ""}`);
       (d?.(N.ok),
@@ -4625,7 +4625,7 @@ function Lo(e, t, o, r, d) {
     null
   );
 }
-var Fl = m(() =>
+var Fl = createLazyValue(() =>
     c({
       pins: v(
         c({
@@ -4713,7 +4713,7 @@ var hs = null,
 var Lg = !1,
   zg = !1,
   Fg = !1,
-  xg = m(() =>
+  xg = createLazyValue(() =>
     c({
       url: s(),
       path: s(),
@@ -4786,7 +4786,7 @@ function Ug() {
 function Mg() {
   return ne().frozenArtifactTypes?.typesOn ?? (awe() && isFrameMultiFileEnabled());
 }
-var xl = m(() =>
+var xl = createLazyValue(() =>
   c({
     url: s(),
     release: s(),
@@ -4813,7 +4813,7 @@ function Bg() {
     type_files: v(s()).optional(),
   };
 }
-var Hg = m(() =>
+var Hg = createLazyValue(() =>
   c({
     created_from_type: k(!0),
     url: s(),
@@ -4844,7 +4844,7 @@ function Wg() {
     instructions_unavailable: s().optional(),
   };
 }
-var Vg = m(() =>
+var Vg = createLazyValue(() =>
     c({
       artifact_types: v(
         c({
@@ -4860,7 +4860,7 @@ var Vg = m(() =>
       unavailable: O().optional(),
     }),
   ),
-  Gg = m(() =>
+  Gg = createLazyValue(() =>
     c({
       type_instances: c({
         type: s().optional(),
@@ -4886,7 +4886,7 @@ var Vg = m(() =>
       }),
     }),
   ),
-  qg = m(() =>
+  qg = createLazyValue(() =>
     c({
       artifact_type: c({
         title: s(),
@@ -4912,7 +4912,7 @@ function Yg() {
   };
   return Ea() ? c({ ...e, pinned: O().optional() }) : c(e);
 }
-var Kg = m(() =>
+var Kg = createLazyValue(() =>
     c({
       artifacts: v(Yg()),
       truncated: O().optional(),
@@ -4920,7 +4920,7 @@ var Kg = m(() =>
       scope: X(["shared", "all"]).optional(),
     }),
   ),
-  Xg = m(() =>
+  Xg = createLazyValue(() =>
     c({
       read: c({
         url: s(),
@@ -4937,7 +4937,7 @@ var Kg = m(() =>
       }).optional(),
     }),
   ),
-  Jg = m(() =>
+  Jg = createLazyValue(() =>
     c({
       threads_dropped: O().optional(),
       thread_filter: s().optional(),
@@ -4982,7 +4982,7 @@ var Kg = m(() =>
       ),
     }),
   ),
-  Zg = m(() =>
+  Zg = createLazyValue(() =>
     c({
       replied: O(),
       thread_id: s(),
@@ -4994,7 +4994,7 @@ var Kg = m(() =>
       standing_reply_id: s().optional(),
     }),
   ),
-  Qg = m(() =>
+  Qg = createLazyValue(() =>
     c({
       thread_resolved: O(),
       thread_id: s(),
@@ -5050,7 +5050,7 @@ var Kg = m(() =>
         warnings: v(s().max(4096)).max(64).optional(),
       }),
     }),
-  ey = m(() =>
+  ey = createLazyValue(() =>
     c({
       watch: c({
         url: s(),
@@ -5082,8 +5082,8 @@ var Kg = m(() =>
       }),
     }),
   ),
-  ty = m(() => c({ unwatch: c({ url: s(), was_watching: O() }) })),
-  ny = m(() =>
+  ty = createLazyValue(() => c({ unwatch: c({ url: s(), was_watching: O() }) })),
+  ny = createLazyValue(() =>
     c({
       resume_replies: c({
         url: s(),
@@ -5097,7 +5097,7 @@ var Kg = m(() =>
       }),
     }),
   ),
-  ry = m(() =>
+  ry = createLazyValue(() =>
     c({
       url: s(),
       connected: O(),
@@ -5107,7 +5107,7 @@ var Kg = m(() =>
       ).optional(),
     }),
   ),
-  sy = m(() =>
+  sy = createLazyValue(() =>
     c({
       watches: v(
         $e([
@@ -5167,7 +5167,7 @@ var Kg = m(() =>
       ...(dM() && { rooms: v(ry()).optional() }),
     }),
   ),
-  oy = m(() =>
+  oy = createLazyValue(() =>
     c({
       room_send: c({
         url: s(),
@@ -5178,7 +5178,7 @@ var Kg = m(() =>
       }),
     }),
   ),
-  Hl = m(() =>
+  Hl = createLazyValue(() =>
     c({
       db_read: c({
         op: s(),
@@ -5211,10 +5211,10 @@ var Kg = m(() =>
       }),
     }),
   ),
-  Eu = m(() =>
+  Eu = createLazyValue(() =>
     c({ op: s(), collection: s(), doc_id: s(), version: T().int().optional() }),
   ),
-  Pu = m(() =>
+  Pu = createLazyValue(() =>
     c({
       documents: T().int().nonnegative(),
       max_documents: T().int().positive(),
@@ -5222,7 +5222,7 @@ var Kg = m(() =>
       .optional()
       .catch(void 0),
   ),
-  Wl = m(() =>
+  Wl = createLazyValue(() =>
     c({
       db_write: $e([
         Eu().extend({ committed: O(), usage: Pu() }),
@@ -5236,7 +5236,7 @@ var Kg = m(() =>
       ]),
     }),
   ),
-  iy = m(() =>
+  iy = createLazyValue(() =>
     c({
       asset_upload: c({
         id: s().regex(ASSET_ID_RE),
@@ -5248,7 +5248,7 @@ var Kg = m(() =>
       }),
     }),
   ),
-  ay = m(() =>
+  ay = createLazyValue(() =>
     c({
       asset_list: c({
         url: s(),
@@ -5273,7 +5273,7 @@ var Kg = m(() =>
       }),
     }),
   ),
-  ly = m(() =>
+  ly = createLazyValue(() =>
     c({
       asset_read: c({
         id: s().regex(ASSET_ID_RE),
@@ -5285,7 +5285,7 @@ var Kg = m(() =>
       }),
     }),
   ),
-  cy = m(() =>
+  cy = createLazyValue(() =>
     c({
       asset_copy: c({
         url: s(),
@@ -5303,8 +5303,8 @@ var Kg = m(() =>
       }),
     }),
   ),
-  uy = m(() => c({ asset_delete: c({ id: s().regex(ASSET_ID_RE), deleted: O() }) })),
-  Vl = m(() =>
+  uy = createLazyValue(() => c({ asset_delete: c({ id: s().regex(ASSET_ID_RE), deleted: O() }) })),
+  Vl = createLazyValue(() =>
     c({
       file_list: c({
         url: s(),
@@ -5323,7 +5323,7 @@ var Kg = m(() =>
       }),
     }),
   ),
-  ql = m(() =>
+  ql = createLazyValue(() =>
     c({
       file_read: c({
         path: s().max(TD),
@@ -5346,7 +5346,7 @@ var Kg = m(() =>
       }),
     }),
   ),
-  fy = m(() =>
+  fy = createLazyValue(() =>
     c({
       artifact_delete: c({
         url: s(),
@@ -5355,7 +5355,7 @@ var Kg = m(() =>
       }),
     }),
   ),
-  Yl = m(() =>
+  Yl = createLazyValue(() =>
     c({
       pin: c({
         action: X(["pin", "unpin"]),
@@ -5365,7 +5365,7 @@ var Kg = m(() =>
       }),
     }),
   ),
-  py = m(() =>
+  py = createLazyValue(() =>
     c({
       page_data: c({
         url: s(),
@@ -5383,7 +5383,7 @@ var Kg = m(() =>
       }),
     }),
   ),
-  Kl = m(() =>
+  Kl = createLazyValue(() =>
     c({
       verify: c({
         url: s(),
@@ -5396,7 +5396,7 @@ var Kg = m(() =>
       }),
     }),
   ),
-  Xl = m(() =>
+  Xl = createLazyValue(() =>
     c({
       preview: c({
         file: s().max(4096),
@@ -5420,7 +5420,7 @@ var Kg = m(() =>
       }),
     }),
   ),
-  hy = m(() =>
+  hy = createLazyValue(() =>
     c({
       opened: k(!0),
       url: s(),
@@ -5428,7 +5428,7 @@ var Kg = m(() =>
       title: s().optional(),
     }),
   ),
-  Ou = m(() => {
+  Ou = createLazyValue(() => {
     let e = [Hg(), hy(), xg(), Kg(), Xg(), Vg(), qg(), Gg(), Jg(), Zg(), Qg()];
     if (hs) e.push(Ul(), jl(), Bl());
     if ((e.push(ey(), ty(), ny(), sy()), Lg)) e.push(py());
@@ -5642,7 +5642,7 @@ async function rd(e, t) {
                 N = D.split(I).filter(Boolean),
                 V = e.split(I).filter(Boolean),
                 F = Du(e).root,
-                B = G(Du(e).root.split(I), Boolean),
+                B = countMatching(Du(e).root.split(I), Boolean),
                 ue = !0;
               for (let J = B; J < V.length - 1; J++) {
                 if (
@@ -5681,7 +5681,7 @@ async function sd(e, t, o) {
     } catch {}
   let p;
   try {
-    p = await yy(e, my.O_RDONLY | (w ? dy : Ant));
+    p = await yy(e, my.O_RDONLY | (w ? O_NOFOLLOW_NONBLOCK_FLAGS : O_NONBLOCK_FLAG));
   } catch (_) {
     if (W(_)) return { kind: "missing" };
     if (C7t(_, "ELOOP") && w) return { kind: "changed" };
@@ -5986,10 +5986,10 @@ function gjn(e) {
 }
 function cd(e) {
   let t = W7.flatMap((w) => {
-      let p = G(e, (_) => _.op === w);
+      let p = countMatching(e, (_) => _.op === w);
       return p > 0 ? [`${p} ${w}`] : [];
     }),
-    o = G(e, (w) => w.op === void 0 || !Zr(w.op));
+    o = countMatching(e, (w) => w.op === void 0 || !Zr(w.op));
   if (o > 0) t.push(`${o} unrecognized`);
   let r = (w) =>
       w !== void 0 ? jg(w, { max: QA }).replace(DECISION_SURFACE_BRACKETS_RE, " ") : "(missing)",
@@ -6052,7 +6052,7 @@ async function qu(e, t, o) {
       )
     );
   }
-  if (!me(_))
+  if (!isRecord(_))
     throw (
       logFeatureBad("artifact_db_write_file", "not_object"),
       new ArtifactInputError(
@@ -7125,7 +7125,7 @@ var Qu = {
           d = shareAudienceMark(r);
         if (t === DB_BATCH_OP) {
           let p = w9(e),
-            _ = G(p, (C) => C.filePath !== void 0),
+            _ = countMatching(p, (C) => C.filePath !== void 0),
             E = _ > 0 ? `, ${_} from local ${x(_, "file")}` : "";
           return `write to an artifact's database (batch of ${cd(p)}${E})${d}${ownershipTag(r)}`;
         }
@@ -7213,7 +7213,7 @@ var Qu = {
             pe = t[la],
             te;
           if (re.kind === "inline") {
-            if (me(pe) && typeof pe.dir === "string")
+            if (isRecord(pe) && typeof pe.dir === "string")
               throw new ArtifactInputError(
                 "this read was approved to save documents under out_dir, and out_dir was removed afterwards \u2014 nothing was fetched, so no document entered the conversation; retry so the read is checked as an inline read",
                 "db_read_target_changed",
@@ -7302,7 +7302,7 @@ var Qu = {
             Ee = [],
             Ie = 0,
             ke =
-              me(pe) && Array.isArray(pe.asks)
+              isRecord(pe) && Array.isArray(pe.asks)
                 ? pe.asks.filter((Le) => typeof Le === "string")
                 : [],
             be = Gu(U, new Set(ke)),
@@ -7371,7 +7371,7 @@ var Qu = {
                 throw Xe;
               }
               let ct = Fe === void 0 ? void 0 : La(Fe.ioPath),
-                rt = Y([
+                rt = dedupe([
                   Me,
                   ...(Fe === void 0 || ct === void 0
                     ? Tr(Me)
@@ -7693,16 +7693,16 @@ next_cursor: ${b(w)} \u2014 this cursor continues past the elided documents; re-
         if (o.saved !== void 0) {
           let te = o.saved,
             Re =
-              me(te) && Array.isArray(te.files)
+              isRecord(te) && Array.isArray(te.files)
                 ? te.files.filter(
                     (xe) =>
-                      me(xe) &&
+                      isRecord(xe) &&
                       typeof xe.id === "string" &&
                       typeof xe.path === "string" &&
                       typeof xe.bytes === "number",
                   )
                 : void 0,
-            U = me(te) && typeof te.dir === "string" ? te.dir : void 0;
+            U = isRecord(te) && typeof te.dir === "string" ? te.dir : void 0;
           if (Re === void 0 || U === void 0)
             return {
               tool_use_id: t,
@@ -7710,10 +7710,10 @@ next_cursor: ${b(w)} \u2014 this cursor continues past the elided documents; re-
               content: `Documents from collection ${r} were saved to local files, but the save record is unreadable \u2014 list the out_dir to see them.${E}`,
             };
           let Ae =
-              me(te) && Array.isArray(te.skipped)
+              isRecord(te) && Array.isArray(te.skipped)
                 ? te.skipped.filter(
                     (xe) =>
-                      me(xe) &&
+                      isRecord(xe) &&
                       typeof xe.id === "string" &&
                       typeof xe.reason === "string",
                   )
@@ -7742,11 +7742,11 @@ next_cursor: ${b(w)} \u2014 this cursor continues past the elided documents; re-
 [${je.length} returned ${x(je.length, "document")} not saved \u2014 ${ae[xe]}${Ye}; read ${je.length === 1 ? "it" : "them"} without out_dir if needed]`,
               ];
             }),
-            he = G(Ae, (xe) => !Hu.some((je) => je === xe.reason));
+            he = countMatching(Ae, (xe) => !Hu.some((je) => je === xe.reason));
           if (he > 0)
             Te.push(`
 [${he} returned ${x(he, "document")} not saved]`);
-          let Ee = G(Re, (xe) => xe.compact === !0),
+          let Ee = countMatching(Re, (xe) => xe.compact === !0),
             ke = `${
               Ee === 0
                 ? ""
@@ -10417,7 +10417,7 @@ async function Vf(e) {
   if (w !== void 0 && w.nlink > 1 && (await xb(d)))
     return { chrome: t, path: d, refused: !0 };
   let p = [...allWorkingDirectories(e), $d(), Rb()].flatMap((C) => Tr(C)),
-    E = Y([...r, d]).some((C) => Fb(C, p) || Nb(C, e) || Lb(C));
+    E = dedupe([...r, d]).some((C) => Fb(C, p) || Nb(C, e) || Lb(C));
   return { chrome: t, path: d, refused: E };
 }
 function Nb(e, t) {
@@ -10630,9 +10630,9 @@ var Ub = {
           shotName: (ue) => `${I}-preview-${ue}`,
           signal: o.abortController.signal,
         }),
-        B = G(F.shots, (ue) => ue.path !== void 0);
+        B = countMatching(F.shots, (ue) => ue.path !== void 0);
       return (
-        i("tengu_artifact_preview", {
+        logEvent("tengu_artifact_preview", {
           outcome: fromEnum(
             F.renderError !== void 0
               ? "no_browser"
@@ -11040,7 +11040,7 @@ var Qf = {
   ep = {
     room_send(e, t) {
       if ("room_send" in e) {
-        if (!me(e.room_send) || typeof e.room_send.delivered !== "boolean")
+        if (!isRecord(e.room_send) || typeof e.room_send.delivered !== "boolean")
           return {
             tool_use_id: t,
             type: "tool_result",
@@ -11130,11 +11130,11 @@ var xa = {
       e === null ||
       typeof e !== "object" ||
       !("script_result" in e) ||
-      !me(e.script_result)
+      !isRecord(e.script_result)
     )
       return e;
     let t = e.script_result,
-      o = me(t.error) ? t.error : void 0;
+      o = isRecord(t.error) ? t.error : void 0;
     if (
       !("value" in t) &&
       Array.isArray(t.logs) &&
@@ -11156,11 +11156,11 @@ var xa = {
       e === null ||
       typeof e !== "object" ||
       !("handler_result" in e) ||
-      !me(e.handler_result)
+      !isRecord(e.handler_result)
     )
       return e;
     let t = e.handler_result,
-      o = me(t.error) ? t.error : void 0;
+      o = isRecord(t.error) ? t.error : void 0;
     if (
       !("body" in t) &&
       !("headers" in t) &&
@@ -11377,7 +11377,7 @@ async function qb(e, t, o) {
         } catch {}
       }),
     );
-  await kt(w, $l);
+  await withDeadline(w, $l);
 }
 function Yb(e) {
   if (e.comments_uncounted === !0)
@@ -12612,9 +12612,9 @@ ${STALE_GUARD_CONTENT_HEADER(e)}
       Le = `${Se}.${Pjt("text/html")}`,
       Me = r_(SS(), Le),
       Be = r.storageV5,
-      xe = M() && Be !== void 0 ? hL(SS(), Le) : void 0,
+      xe = isHoverRestEnabled() && Be !== void 0 ? hL(SS(), Le) : void 0,
       je =
-        M() && Be !== void 0 && xe !== void 0
+        isHoverRestEnabled() && Be !== void 0 && xe !== void 0
           ? (
               await Be.statMeta(xe).catch(() => {
                 return;
@@ -12886,7 +12886,7 @@ function Pp(e, t) {
   ne().refusedPublishBodies.delete(xN(e, t));
 }
 function Op(e) {
-  if (!me(e) || !("note" in e)) return null;
+  if (!isRecord(e) || !("note" in e)) return null;
   let { note: t, ...o } = e;
   return { input: o, shapeClass: "legacy_note" };
 }
@@ -13088,7 +13088,7 @@ function f_(e, t) {
     }),
   });
 }
-var zp = m(() => f_(artifactSchemaGates(), inputSchema()));
+var zp = createLazyValue(() => f_(artifactSchemaGates(), inputSchema()));
 function p_(e, t) {
   let o = t.shape,
     r = commentFieldSchemas();
@@ -13193,9 +13193,9 @@ function m_(e) {
     }),
   });
 }
-var hjn = m(() => p_(artifactSchemaGates(), inputSchema())),
-  _jn = m(() => h_(inputSchema())),
-  yjn = m(() => m_(artifactSchemaGates()));
+var hjn = createLazyValue(() => p_(artifactSchemaGates(), inputSchema())),
+  _jn = createLazyValue(() => h_(inputSchema())),
+  yjn = createLazyValue(() => m_(artifactSchemaGates()));
 function xon(e, t, o) {
   let r = o !== void 0 && typeof t === "object" && t !== null ? o(t, e) : t;
   return Jqe(getToolPermissionContext(e), r, "ask");
@@ -13479,7 +13479,7 @@ function Up(e, t = {}) {
             D = C !== void 0 && Object.hasOwn(gI, C) ? gI[C] : void 0;
           if (C !== void 0 && D !== void 0 && w_(D))
             return (
-              i("tengu_artifact_legacy_verb", {
+              logEvent("tengu_artifact_legacy_verb", {
                 verb: fromEnum(C),
                 disposition: S("steered"),
               }),
@@ -13641,7 +13641,7 @@ var Mo = Vwt,
       }).nullable(),
     });
   },
-  v_ = m(__),
+  v_ = createLazyValue(__),
   qd = /owner|org|login|user/i,
   Yd = /repo|project/i;
 function Wp(e, t) {
@@ -14308,7 +14308,7 @@ function uh(e, t) {
   } catch {
     return "the published page staleness anchor is not valid JSON";
   }
-  if (!me(w)) return "the published page staleness anchor is not a JSON object";
+  if (!isRecord(w)) return "the published page staleness anchor is not a JSON object";
   let p = ih().validate(w);
   if (p) return `the published page staleness anchor failed validation: ${p}`;
   let _ = w.anchor;
@@ -14350,7 +14350,7 @@ function fh(e, t) {
   } catch {
     return "the published page approve-binding island is not valid JSON";
   }
-  if (!me(w))
+  if (!isRecord(w))
     return "the published page approve-binding island is not a JSON object";
   let p = dh().validate(w);
   if (p)
@@ -14422,7 +14422,7 @@ function mh(e, t, o) {
   } catch {
     return "the published page decisions island is not valid JSON";
   }
-  if (!me(p)) return "the published page decisions island is not a JSON object";
+  if (!isRecord(p)) return "the published page decisions island is not a JSON object";
   let _ = lh().validate(p);
   if (_) return `the published page decisions island failed validation: ${_}`;
   let E = p.items;
@@ -14719,7 +14719,7 @@ function bh(e, t) {
     return null;
   if (t.agentId !== void 0 && Ci()) return null;
   let w = t.options.tools ?? [];
-  if (ar(w, so) === void 0 && ar(w, mme(pN)) === void 0) return null;
+  if (findToolByName(w, so) === void 0 && findToolByName(w, mme(pN)) === void 0) return null;
   for (let p of EB().values())
     if (p.skillName === pN || p.skillName === QY) return null;
   return (
@@ -14936,7 +14936,7 @@ function Qh(e) {
         ((o = t === void 0 ? Object.keys(d) : d[t] ? [t] : []), o.length === 0)
       )
         return r;
-      if (t === void 0) return { ...r, artifactRoomJoinConsentSlugs: rbe };
+      if (t === void 0) return { ...r, artifactRoomJoinConsentSlugs: EMPTY_ARTIFACT_ROOM_JOIN_CONSENT_SLUGS };
       let { [t]: w, ...p } = d;
       return { ...r, artifactRoomJoinConsentSlugs: p };
     });
@@ -15006,17 +15006,17 @@ function sc(e) {
 function wo(e) {
   if (Array.isArray(e)) return e.length;
   if (e !== null && typeof e === "object")
-    return G(Object.values(e), (t) => t !== null && !Li(t) && !zi(t));
+    return countMatching(Object.values(e), (t) => t !== null && !Li(t) && !zi(t));
   return 0;
 }
 function av(e) {
   if (e !== null && typeof e === "object" && !Array.isArray(e))
-    return G(Object.values(e), zi);
+    return countMatching(Object.values(e), zi);
   return 0;
 }
 function em(e) {
   if (e !== null && typeof e === "object" && !Array.isArray(e))
-    return G(Object.values(e), (t) => t === null);
+    return countMatching(Object.values(e), (t) => t === null);
   return 0;
 }
 function zi(e) {
@@ -15032,7 +15032,7 @@ function jo(e, t) {
   if (e === null || typeof e !== "object" || Array.isArray(e)) return "";
   let o = Object.values(e).filter(zi);
   if (o.length === 0) return "";
-  let r = Y(
+  let r = dedupe(
     o.map((d) => {
       let w = parseArtifactUrl(d.artifact),
         p =
@@ -15275,7 +15275,7 @@ function Wa(e, t) {
             : `In \`files\`, the value for ${b(D)} needs to be a source path string, \`{ from, contentType? }\`, or \`null\` (to remove that file).`,
         );
     }
-    let C = Y(w.map((D) => `${D.from.slug}@${D.from.ver ?? ""}`));
+    let C = dedupe(w.map((D) => `${D.from.slug}@${D.from.ver ?? ""}`));
     if (C.length > MAX_COPY_SOURCES)
       r(
         `files: copies from ${C.length} source Artifact versions; at most ${MAX_COPY_SOURCES} per publish \u2014 split the publish`,
@@ -17026,7 +17026,7 @@ var hv = {
     }
     let Ee = Vo(),
       Ie = (_e, De = D) => {
-        for (let qe of Y(ue.map((Je) => Je.from.slug))) {
+        for (let qe of dedupe(ue.map((Je) => Je.from.slug))) {
           let Je = Hh(De, { slug: qe, env: Ee }, void 0, _e, {
             copySource: !0,
           });
@@ -17358,7 +17358,7 @@ var hv = {
       xi =
         J === void 0
           ? 0
-          : G(B ?? [], (_e) => {
+          : countMatching(B ?? [], (_e) => {
               if (!Ni(_e.from)) return !0;
               let De = lYe(_e.from, q);
               return De !== null && pFe(De, q, re);
@@ -17366,11 +17366,11 @@ var hv = {
       Vs = Pn - xi,
       vo = await (async () => {
         if (ue.length === 0) return "";
-        let _e = Y(ue.map((Je) => Je.from.slug));
+        let _e = dedupe(ue.map((Je) => Je.from.slug));
         await Promise.all(
           _e.map((Je) => warmShareEntry({ slug: Je, env: Vo() }, t, "publish_copy")),
         );
-        let qe = Y(
+        let qe = dedupe(
           ue.map((Je) => `${Je.from.slug}\x00${Je.from.ver ?? ""}`),
         ).map((Je) => {
           let [We, tt] = Je.split("\x00"),
@@ -18886,7 +18886,7 @@ ${VERIFY_PROMPT_PARAGRAPH}`;
       return { tool_use_id: t, type: "tool_result", content: Be };
     }
     if ("asset_upload" in e) {
-      let U = me(e.asset_upload) ? e.asset_upload : {},
+      let U = isRecord(e.asset_upload) ? e.asset_upload : {},
         Ae = un(U.url, bte, ""),
         ae =
           typeof U.sha256 === "string"
@@ -18903,14 +18903,14 @@ ${VERIFY_PROMPT_PARAGRAPH}`;
       };
     }
     if ("asset_list" in e) {
-      let U = me(e.asset_list) ? e.asset_list : {},
+      let U = isRecord(e.asset_list) ? e.asset_list : {},
         Ae = 'run action "list_assets" again for the live listing',
         ae = Yn(U.assets),
         Te = ae.rows.map(
           (Fe) =>
             `- ${un(Fe.url, bte, "(unrecognized url)")}  ${un(Fe.content_type, Nv, "(unrecognized type)")}  ${tr(Fe.size_bytes)} bytes  ${un(Fe.created_at, Icn, "(unrecognized date)")}${typeof Fe.sha256 === "string" ? `  sha256 ${un(Fe.sha256, mI, "unreadable")}` : ""}`,
         ),
-        he = me(U.usage) ? U.usage : {},
+        he = isRecord(U.usage) ? U.usage : {},
         Ee =
           typeof he.files === "number"
             ? he.files
@@ -18953,7 +18953,7 @@ ${be}${Se}`,
       };
     }
     if ("asset_read" in e) {
-      let U = me(e.asset_read) ? e.asset_read : {};
+      let U = isRecord(e.asset_read) ? e.asset_read : {};
       return {
         tool_use_id: t,
         type: "tool_result",
@@ -19006,7 +19006,7 @@ ${Te.join(`
       };
     }
     if ("artifact_delete" in e) {
-      let U = me(e.artifact_delete) ? e.artifact_delete : {},
+      let U = isRecord(e.artifact_delete) ? e.artifact_delete : {},
         Ae = canonicalArtifactTargetFor(U.url, "(unrecognized address)");
       return {
         tool_use_id: t,
@@ -19018,7 +19018,7 @@ ${Te.join(`
       };
     }
     if ("asset_delete" in e) {
-      let U = me(e.asset_delete) ? e.asset_delete : {},
+      let U = isRecord(e.asset_delete) ? e.asset_delete : {},
         Ae = un(U.id, ASSET_ID_RE, "");
       return {
         tool_use_id: t,
@@ -19032,14 +19032,14 @@ ${Te.join(`
       };
     }
     if ("page_data" in e) {
-      if (!me(e.page_data) || typeof e.page_data.islandPresent !== "boolean")
+      if (!isRecord(e.page_data) || typeof e.page_data.islandPresent !== "boolean")
         return {
           tool_use_id: t,
           type: "tool_result",
           content: `This record of a page-data read is unreadable \u2014 ${'run action "read_page_data" again for a current read'}. It says nothing about what the page carries.`,
         };
       let Ae = e.page_data,
-        ae = me(Ae.provenance) ? Ae.provenance.authorship : void 0,
+        ae = isRecord(Ae.provenance) ? Ae.provenance.authorship : void 0,
         Te = typeof Ae.schema === "string" ? Ae.schema : "",
         he = un(Ae.ver, VER_SHAPE, "unreadable"),
         Ee =
@@ -19083,7 +19083,7 @@ ${Ee}`,
               })
               .join(" | ")}`,
         ),
-        Se = !me(Ae.derived)
+        Se = !isRecord(Ae.derived)
           ? ""
           : `, ${Object.entries(Ae.derived)
               .slice(0, Xon)
@@ -19314,7 +19314,7 @@ ${Q_(e.seededThread)}`
           : "",
       te = e;
     if (te.type !== void 0) {
-      let U = me(te.type) ? te.type : {},
+      let U = isRecord(te.type) ? te.type : {},
         Ae =
           te.own_files !== void 0 && te.type_files !== void 0
             ? ` File names in this result are ${Zze}. Its own files now: ${e4e(te.own_files)}. The type's files (fixed): ${e4e(te.type_files)}.`
@@ -19536,13 +19536,13 @@ ${B}`,
       if (ve && mt) {
         let Pt = zt.derived?.state;
         if (Pt === "in-progress" || Pt === "ready" || Pt === "started")
-          Vjn(
+          logWorkshopTurn(
             t.artifactRegistries.workshopTelemetry,
             Ue.slug,
             Ge.ver,
             Pt,
             Nt.length,
-            G(Nt, (Gr) => Gr.state === "resolved"),
+            countMatching(Nt, (Gr) => Gr.state === "resolved"),
           );
       }
       if (
@@ -19616,7 +19616,7 @@ ${B}`,
         ze = await dcn(de.slug, t.abortController.signal, t.credentials);
       if (ze.err === null && ze.state === "no_row") {
         if (
-          (await Z(3000, t.abortController.signal),
+          (await sleep(3000, t.abortController.signal),
           !t.abortController.signal.aborted)
         )
           ((Ne = !0),
@@ -19624,7 +19624,7 @@ ${B}`,
       }
       if (ze.err !== null)
         throw (
-          i("tengu_artifact_verify", {
+          logEvent("tengu_artifact_verify", {
             outcome: fromEnum("error"),
             waited: Ne,
             explicit_url: ie,
@@ -19636,7 +19636,7 @@ ${B}`,
         );
       let Ge = ze.state === "loaded" ? ze.entries : [];
       if (
-        (i("tengu_artifact_verify", {
+        (logEvent("tengu_artifact_verify", {
           outcome: fromEnum(
             ze.state === "no_row"
               ? "no_row"
@@ -19652,7 +19652,7 @@ ${B}`,
       )
         L.reads.set(de.slug, {
           agentId: t.agentContext?.agentId ?? null,
-          humanTurns: G(t.messages, yl),
+          humanTurns: countMatching(t.messages, yl),
           at: Date.now(),
         });
       return {
@@ -19848,7 +19848,7 @@ ${B}`,
         zt = await ee?.workingCopyLocationRefusal(de, Ge);
       if (zt !== void 0) throw new ArtifactInputError(zt, "file_read_onto_working_copy");
       let mr = () =>
-        checkWritePermissionForTool(lk, p, getToolPermissionContext(t), Y([...mt, ...Tr(Ge)])).behavior === "deny";
+        checkWritePermissionForTool(lk, p, getToolPermissionContext(t), dedupe([...mt, ...Tr(Ge)])).behavior === "deny";
       if (mr())
         throw (
           logFeatureBad("artifact_file_read", "write_denied"),
@@ -20094,7 +20094,7 @@ ${B}`,
         );
       let L = wn(p.url),
         ie = p[$o],
-        de = me(ie) ? ie.slug : void 0;
+        de = isRecord(ie) ? ie.slug : void 0;
       if (vr(p, $o) || de !== L.slug)
         throw (
           logFeatureSad(
@@ -20252,7 +20252,7 @@ ${B}`,
         at = await ee?.workingCopyLocationRefusal(void 0, Ne);
       if (at !== void 0) throw new ArtifactInputError(at, "asset_read_onto_working_copy");
       let Nt = (gt) =>
-        checkWritePermissionForTool(lk, p, getToolPermissionContext(t), Y([...(gt === Ne ? Ge : []), ...Tr(gt)])).behavior ===
+        checkWritePermissionForTool(lk, p, getToolPermissionContext(t), dedupe([...(gt === Ne ? Ge : []), ...Tr(gt)])).behavior ===
         "deny";
       if (Nt(Ne))
         throw (
@@ -21032,7 +21032,7 @@ ${B}`,
         "copy_source_changed",
       );
     if (Qt.length > 0) {
-      for (let L of Y(Qt.map((ie) => ie.from.slug))) {
+      for (let L of dedupe(Qt.map((ie) => ie.from.slug))) {
         let ie = ps(
           t,
           { slug: L, env: Vo() },
@@ -21043,7 +21043,7 @@ ${B}`,
         if (ie !== void 0) throw ie;
       }
       if (Xt === void 0 || rn) {
-        let L = Y(Qt.map((ie) => ie.from.slug));
+        let L = dedupe(Qt.map((ie) => ie.from.slug));
         if (
           (await Promise.all(
             L.map((ie) => warmShareEntry({ slug: ie, env: Vo() }, t, "publish_copy")),
@@ -21728,9 +21728,9 @@ ${B}`,
                   serverNames: [
                     ...(t.options.mcpClients ?? [])
                       .map((L) => L.name)
-                      .filter((L) => !(Eg() && !AL() && Ece(L))),
+                      .filter((L) => !(Eg() && !AL() && isClaudeBrowserMcpServerName(L))),
                     ...Qon(t.options.tools.filter((L) => Rh(L))).filter(
-                      (L) => !Ece(L),
+                      (L) => !isClaudeBrowserMcpServerName(L),
                     ),
                     ...Qon(t.options.tools.filter((L) => !Rh(L))),
                   ],
@@ -21946,9 +21946,9 @@ ${B}`,
     } else if (In)
       logFeatureOk("pr_review_publish", { structured: !1, is_first_publish: Lr });
     if (an !== null)
-      Fjn(t.artifactRegistries.whiteboardTelemetry, we.slug, an, Lr);
+      recordWhiteboardPublish(t.artifactRegistries.whiteboardTelemetry, we.slug, an, Lr);
     if (we.workshop !== void 0)
-      rsn(
+      logWorkshopPublish(
         t.artifactRegistries.workshopTelemetry,
         we.slug,
         we.version,
@@ -21957,7 +21957,7 @@ ${B}`,
         Lr,
       );
     else if (ge)
-      rsn(
+      logWorkshopPublish(
         t.artifactRegistries.workshopTelemetry,
         we.slug,
         we.version,
@@ -21999,7 +21999,7 @@ ${B}`,
         we.stored?.capabilities === void 0,
       ti = zs !== void 0 ? KZn(zs, On, wjn(t.messages)) : [];
     if (ti.length > 0)
-      i("tengu_artifact_unobserved_connector_warning", {
+      logEvent("tengu_artifact_unobserved_connector_warning", {
         warning_count: fromNumber(ti.length),
       });
     let Qs = [
@@ -22080,8 +22080,8 @@ ${B}`,
           (ie.reads.delete(we.slug),
           ve !== void 0 && ve.agentId === (t.agentContext?.agentId ?? null))
         )
-          i("tengu_artifact_verify_republish", {
-            same_turn: ve.humanTurns === G(t.messages, yl),
+          logEvent("tengu_artifact_verify_republish", {
+            same_turn: ve.humanTurns === countMatching(t.messages, yl),
             ms_since_read: Date.now() - ve.at,
           });
       } else if (de) Fd(we.slug);
@@ -22485,7 +22485,7 @@ function om(e, t, o, r) {
   });
 }
 var im = bjn(hv),
-  lk = Tt(Up(im, { ruleTargetInput: MGe })),
+  lk = buildTool(Up(im, { ruleTargetInput: MGe })),
   MS = im;
 function MGe(e, t) {
   let o = ee?.fillShimUrl(e) ?? e,
@@ -22891,7 +22891,7 @@ function Rv(e) {
 async function Vh(e, t) {
   if (ne().frozenArtifactTypes?.typeCatalogOn !== !0) return {};
   let o = e.typeFiles.includes(y2),
-    { signal: r, cleanup: d } = Fa(t.abortController.signal, {
+    { signal: r, cleanup: d } = createLinkedAbortSignal(t.abortController.signal, {
       timeoutMs: wcn,
       refTimer: !0,
     }),

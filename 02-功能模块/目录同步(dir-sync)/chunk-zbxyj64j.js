@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { Ve, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
@@ -34,11 +34,11 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Zce, Hze, oft, Zbe, cln } from "../文件同步-Sync/chunk-ht8ydg1v.js";
 import { A3n, C3n } from "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
-import { rln } from "../../01-核心基础设施/共享小工具-未细化/chunk-ydn85r3t.js";
+import { STREAMING_TIMING_DEFAULTS } from "../../01-核心基础设施/共享小工具-未细化/chunk-ydn85r3t.js";
 import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { s, T, O, v, c, it, $e, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { watch } from "fs";
 var ce = 50;
 function Ke(e, t, r) {
@@ -161,7 +161,7 @@ function Jpt({
       );
     },
     async flush() {
-      if (d) await Z(a);
+      if (d) await sleep(a);
     },
     stats: () => ({ events: g, dropped: _, lost: w }),
   };
@@ -232,7 +232,7 @@ var fe = "\x00",
 function d3n(e, { timers: t = pe } = {}) {
   let r = null,
     a = null,
-    p = rln,
+    p = STREAMING_TIMING_DEFAULTS,
     f = null,
     d = !1,
     g = !0,
@@ -268,7 +268,7 @@ function d3n(e, { timers: t = pe } = {}) {
       feedDropped: 0,
     };
   function ie(o, y) {
-    i("tengu_dir_sync_watch", {
+    logEvent("tengu_dir_sync_watch", {
       event: fromEnum(o),
       start_error: fromEnumOpt(
         y === void 0
@@ -551,7 +551,7 @@ function d3n(e, { timers: t = pe } = {}) {
   }
   return {
     streaming: {
-      start(o, y = rln) {
+      start(o, y = STREAMING_TIMING_DEFAULTS) {
         if ((se(), d || e.notRunning() !== null)) return;
         if (
           ((p = y),
@@ -614,7 +614,7 @@ function d3n(e, { timers: t = pe } = {}) {
                 );
         return (
           (x = e.nowMs()),
-          i("tengu_dir_sync_settle", {
+          logEvent("tengu_dir_sync_settle", {
             point: fromEnum(o),
             outcome: fromEnum(G.kind),
             files: G.kind === "shipped" ? G.files : 0,
@@ -708,7 +708,7 @@ function p3n(e, t) {
             }
             let S = () => w(null);
             (g?.addEventListener("abort", S, { once: !0 }),
-              kt(f, t).then((x) => {
+              withDeadline(f, t).then((x) => {
                 (g?.removeEventListener("abort", S), w(x));
               }));
           }))
@@ -754,7 +754,7 @@ var j = 67108864,
   me = 384,
   cn = 448;
 async function Oe(e, t) {
-  if (M() && t !== void 0)
+  if (isHoverRestEnabled() && t !== void 0)
     try {
       let r = await t.backend.read([{ key: t.key, offset: 0, length: j + 1 }]);
       if (!r.ok) return { kind: "unreadable" };
@@ -791,7 +791,7 @@ async function Oe(e, t) {
 }
 async function Fe(e, t, r) {
   if (t.length > j) throw Error("session record too large to store");
-  if (M() && r !== void 0) {
+  if (isHoverRestEnabled() && r !== void 0) {
     let a = await r.backend.write(r.key, t, { mode: me });
     if (!a.ok)
       throw Error("dir-sync: session record write failed", { cause: a.error });
@@ -849,15 +849,15 @@ function f3n(e) {
       return [];
   }
 }
-var F = m(() => s().regex(nn).refine(Mne)),
-  V = m(() => s().refine(Zbe)),
-  De = m(() =>
+var F = createLazyValue(() => s().regex(nn).refine(Mne)),
+  V = createLazyValue(() => s().refine(Zbe)),
+  De = createLazyValue(() =>
     $e([
       c({ head: F(), branch: s().max(Ade).nullable().catch(null) }),
       F().transform((e) => ({ head: e, branch: null })),
     ]),
   ),
-  Ge = m(() =>
+  Ge = createLazyValue(() =>
     c({
       turn: T().int().positive(),
       notInstalled: v(
@@ -874,7 +874,7 @@ var F = m(() => s().regex(nn).refine(Mne)),
       truncated: O(),
     }),
   ),
-  pn = m(() =>
+  pn = createLazyValue(() =>
     c({
       generation: T().int().positive(),
       head: F(),
@@ -898,7 +898,7 @@ var F = m(() => s().regex(nn).refine(Mne)),
       sentAtMs: T().int().nonnegative(),
     }),
   ),
-  he = m(() =>
+  he = createLazyValue(() =>
     c({
       version: $e([k(ze), k(Ce)]),
       engine: k("git"),
@@ -979,7 +979,7 @@ var F = m(() => s().regex(nn).refine(Mne)),
         .catch(void 0),
     }),
   ),
-  fn = m(() => it({ engine: s().optional() }));
+  fn = createLazyValue(() => it({ engine: s().optional() }));
 function mn(e) {
   return e.kind === "folder" && e.seeded === !1 ? Ce : ze;
 }
@@ -1100,7 +1100,7 @@ function HFt(e) {
 }
 function h3n(e) {
   let t = gn(e).map((r) => r.head);
-  return Y(t.reverse()).reverse().slice(-GX);
+  return dedupe(t.reverse()).reverse().slice(-GX);
 }
 function gn(e) {
   return [
@@ -1136,7 +1136,7 @@ function wn(e, t) {
   return d.length <= t ? d : d.slice(-t);
 }
 function S3n(e, t) {
-  let r = Y(t.holds.filter((w) => nn.test(w))).slice(0, $_),
+  let r = dedupe(t.holds.filter((w) => nn.test(w))).slice(0, $_),
     a = t.need !== null && nn.test(t.need) ? t.need : null,
     p = t.basedOn != null && nn.test(t.basedOn) ? t.basedOn : null,
     f = t.installsBankedThrough ?? 0,

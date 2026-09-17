@@ -14,7 +14,7 @@ import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { u5t, d5t } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { externalHttp } from "./chunk-yz7dtpc3.js";
-import { ZAn } from "./chunk-1945b2ak.js";
+import { isErrorReportingAllowed } from "./error-reporting-eligibility.js";
 import { randomUUID } from "crypto";
 var c = "https://browser-intake-us5-datadoghq.com/api/v2/logs",
   p = 30000,
@@ -25,7 +25,7 @@ function m() {
   return a.CLAUDE_CODE_DD_ERROR_TRACKING_FLUSH_INTERVAL_MS || p;
 }
 async function f(e) {
-  if (!ZAn()) {
+  if (!isErrorReportingAllowed()) {
     n(
       `dd-error-tracking: compliance verdict now blocks reporting; dropping batch=${e.length}`,
       { level: "warn" },

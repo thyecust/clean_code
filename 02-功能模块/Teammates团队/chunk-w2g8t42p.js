@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { OAUTH_BETA_HEADER } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { ht, hasStoredOAuthToken, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 var u = 1e4,
@@ -41,7 +41,7 @@ async function rjn(e, n, r) {
       { ...a, credentials: r },
     ),
     s = o(d);
-  return (i("tengu_team_onboarding_share_created", {}), s);
+  return (logEvent("tengu_team_onboarding_share_created", {}), s);
 }
 async function pon(e, n, r) {
   t();
@@ -51,7 +51,7 @@ async function pon(e, n, r) {
       { ...a, credentials: r },
     ),
     s = o(d);
-  return (i("tengu_team_onboarding_share_updated", {}), s);
+  return (logEvent("tengu_team_onboarding_share_updated", {}), s);
 }
 async function ojn(e, n) {
   t();
@@ -60,7 +60,7 @@ async function ojn(e, n) {
     void 0,
     { ...a, credentials: n },
   );
-  (o(r), i("tengu_team_onboarding_share_deleted", {}));
+  (o(r), logEvent("tengu_team_onboarding_share_deleted", {}));
 }
 async function fon(e) {
   t();

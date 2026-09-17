@@ -10,11 +10,11 @@
 import { YP, Ve, zi, yt, dt, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { bh, K, sn, Nb, Rg, TB, Oxe, Rje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { gv } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { raceWithAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Id, pp, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { cmdFeature, logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { nq, inlineSkillModelOverride, mc, o0, isBgSession, wl, Ms } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { C_ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -23,7 +23,7 @@ import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { Rir, kir, TQ } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { validateBridgeId, toCompatSessionId } from "../权限系统/chunk-ynkf3yy4.js";
-import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { isRestrictedToPluginOnly, isSourceAdminTrusted } from "../Skills技能/chunk-sapykxw7.js";
 import { isPolicyAllowed, policyDeniedReason, policyDenyKind } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { CSt } from "../Hooks钩子/chunk-z3433nr6.js";
@@ -322,7 +322,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
       isBundled: e.source === "bundled",
       isOfficial: I2(e),
     });
-  i("tengu_slash_command_forked", {
+  logEvent("tengu_slash_command_forked", {
     command_name: V,
     ...q,
     _PROTO_skill_name: e.name,
@@ -615,11 +615,11 @@ function commandThrowTextForTranscript(e, o, t) {
   let m = gr(o, 200),
     l = Qn(o);
   if (yt(e)) {
-    if (lo(t)) return (n(`${l} aborted: ${String(e)}`), "Interrupted");
+    if (mayHaveRemoteClient(t)) return (n(`${l} aborted: ${String(e)}`), "Interrupted");
     return $S(e instanceof Error ? e.message || "Interrupted" : "Interrupted");
   }
   if (e instanceof YP) return $S(e.message);
-  if (lo(t))
+  if (mayHaveRemoteClient(t))
     return (
       n(`${l} threw: ${String(e)}`, { level: "error" }),
       `${m} failed (detail withheld on this connection)`
@@ -632,7 +632,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
       L = MEe(o) ? void 0 : w;
     if (L !== void 0) Rje(L);
     let z = Xy(l.options.mainLoopModel, getEffortValue(l));
-    i("tengu_input_prompt", {
+    logEvent("tengu_input_prompt", {
       ...(T && { prompt_source: fromEnum(T) }),
       ...(z && { effort_level: fromEnum(z) }),
     });
@@ -661,7 +661,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
   }
   let s = tH(e);
   if (!s) {
-    if ((i("tengu_input_slash_missing", {}), l.options.isNonInteractiveSession))
+    if ((logEvent("tengu_input_slash_missing", {}), l.options.isNonInteractiveSession))
       return te();
     logFeatureBad("cmd_dispatch", "cmd_parse_failed");
     let w = "Commands are in the form `/command [args]`";
@@ -737,7 +737,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
       });
       if (L) {
         let { command: X, reason: ne, kind: re } = L;
-        (i("tengu_input_slash_invalid", {
+        (logEvent("tengu_input_slash_invalid", {
           input_length: d.length,
           had_suggestion: !1,
           policy_denied: re !== "stale_list",
@@ -773,7 +773,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
       if (l.options.isNonInteractiveSession && builtInCommandNames().has(d)) {
         let X = getBuiltinCommands(),
           ne = Ae(d, X) ?? `/${$S(Qn(d))} isn't available in this environment.`;
-        (i("tengu_input_slash_invalid", {
+        (logEvent("tengu_input_slash_invalid", {
           input_length: d.length,
           had_suggestion: !1,
         }),
@@ -803,7 +803,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
           .map((X) => ({ name: getCommandName(X), aliases: X.aliases })),
         { maxEditDistance: 2 },
       );
-      (i("tengu_input_slash_invalid", {
+      (logEvent("tengu_input_slash_invalid", {
         input_length: d.length,
         is_mcp_template_unmatched: I,
         had_suggestion: Boolean(z),
@@ -894,7 +894,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
       if (L && I2(F)) w.plugin_version = Ms(L);
     }
     if (F.type === "prompt") Object.assign(w, cX(F));
-    i("tengu_input_command", {
+    logEvent("tengu_input_command", {
       ...w,
       invocation_trigger: S("user-slash"),
       ...lX(
@@ -934,7 +934,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
       e.startsWith("/tmp") ||
       e.startsWith("/private")
     ))
-      (i("tengu_input_slash_invalid", {
+      (logEvent("tengu_input_slash_invalid", {
         input_length: d.length,
         had_suggestion: !1,
       }),
@@ -1221,7 +1221,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
           let M = GV(),
             b = (await s.load()).call(o, { ...t, submissionOrigin: q }, W ?? e),
             r = A
-              ? await gv(b, t.abortController.signal, () => new Ve())
+              ? await raceWithAbortSignal(b, t.abortController.signal, () => new Ve())
               : await b;
           if (r.type === "text" && r.level === "error")
             logFeatureBad(d, "cmd_returned_error");
@@ -1301,7 +1301,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
           let b = I ? "local-command-stdout" : "local-command-stderr",
             r = A ? nxt : "Interrupted",
             k = I
-              ? lo(t.session)
+              ? mayHaveRemoteClient(t.session)
                 ? r
                 : M instanceof Error
                   ? M.message || r
@@ -1327,7 +1327,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
           I = A,
           b;
         if (p.length > 0)
-          i("tengu_stacked_slash_commands", { stacked_count: p.length });
+          logEvent("tengu_stacked_slash_commands", { stacked_count: p.length });
         try {
           let r = await De(s, I, t);
           if ("blocked" in r) return (logFeatureBad(d, "cmd_hook_blocked"), r.blocked);

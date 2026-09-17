@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { po, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { be, uo } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { CLAUDE_AI_INFERENCE_SCOPE } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -39,11 +39,11 @@ import { ZU, up } from "../../01-核心基础设施/共享小工具-未细化/ch
 import { getAPIProvider, isFirstPartyAnthropicBaseUrl, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { nar, mx, rar } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
 import { MRe, lBe, Qse, cBe, xir, Hir, Iir } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { Hve } from "../../01-核心基础设施/共享小工具-未细化/chunk-w4swsde7.js";
-import { qse, l1, lkn } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
+import { expandTabs } from "../../01-核心基础设施/共享小工具-未细化/expand-tabs.js";
+import { INVALID_TOOL_NAME_PLACEHOLDER, l1, lkn } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { s, O, se, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { readFileSync } from "fs";
 import { join as We } from "path";
 function D4t(e, t, r, o, i) {
@@ -264,7 +264,7 @@ function ee(e, t) {
     if (he(l)) continue;
     r += X(l) || q(l) || _e(l) ? "\uFFFD" : i;
   }
-  let o = Hve(r);
+  let o = expandTabs(r);
   return t ? Re(o) : o;
 }
 var ke = /\p{DI}/gu;
@@ -550,7 +550,7 @@ function Gg(e) {
   return typeof e === "string" && Rve(e) ? "" : String(JG(e));
 }
 function JG(e) {
-  let t = typeof e === "string" && !Rve(e) ? e : qse;
+  let t = typeof e === "string" && !Rve(e) ? e : INVALID_TOOL_NAME_PLACEHOLDER;
   return l1(M4t(t));
 }
 function Rve(e) {
@@ -765,8 +765,8 @@ function nCn(e) {
       ? e.compliance_taints
       : void 0;
   if (!Array.isArray(t)) return 0;
-  let r = G(t, (i) => typeof i !== "string" || z(i) === ""),
-    o = Y(
+  let r = countMatching(t, (i) => typeof i !== "string" || z(i) === ""),
+    o = dedupe(
       t
         .filter((i) => typeof i === "string")
         .map(z)
@@ -774,13 +774,13 @@ function nCn(e) {
     );
   return r + Math.max(0, o.length - eQe);
 }
-var ue = m(() =>
+var ue = createLazyValue(() =>
     c({
       restrictions: fe(s(), c({ allowed: O() })),
       compliance_taints: v(se())
         .default([])
         .transform((e, t) => {
-          let r = Y(
+          let r = dedupe(
             e
               .filter((o) => typeof o === "string")
               .map(z)
@@ -913,7 +913,7 @@ function getPolicyLimitsIneligibleReason(e = {}) {
 }
 function loadCachedResponse() {
   let e = g();
-  if (M() && e.storageV5 !== void 0 && e.sessionCache) return e.sessionCache;
+  if (isHoverRestEnabled() && e.storageV5 !== void 0 && e.sessionCache) return e.sessionCache;
   try {
     let t = readFileSync(getCachePath(), "utf-8");
     return parseCachedResponse(t);

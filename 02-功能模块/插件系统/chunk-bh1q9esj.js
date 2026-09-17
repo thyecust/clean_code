@@ -14,7 +14,7 @@ import { aJ, noe, lJ, yD } from "./chunk-ajtn749s.js";
 import { Hc } from "./chunk-hh8f1qrw.js";
 import { Kwe, P2, Vqn, Zne, Ql, CE, Qv, C5e, ei } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Bn, bC } from "./chunk-33bdfgmx.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var k = ["user", "project", "local"];
 async function JB(a, r) {
   let t = new Map();
@@ -128,7 +128,7 @@ async function cIe(a, r) {
   if (t.length === 0) return null;
   let { installed: s, marketplaceMissing: f } = await JB(t, r),
     g = new Set(s),
-    i = Y(t.map((d) => d.dependency)).filter((d) => !g.has(d));
+    i = dedupe(t.map((d) => d.dependency)).filter((d) => !g.has(d));
   return { suffix: `${P2(s)}${Vqn(i, f)}`, changed: s.length > 0 };
 }
 function v(a, r) {

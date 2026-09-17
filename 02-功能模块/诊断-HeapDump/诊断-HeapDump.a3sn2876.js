@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { ge, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -146,7 +146,7 @@ async function performHeapDump(u = "manual", a = 0) {
       n(`[HeapDump] Diagnostics written to ${c}`),
       await j(s),
       n(`[HeapDump] Heap dump written to ${s}`),
-      i("tengu_heap_dump", {
+      logEvent("tengu_heap_dump", {
         triggerManual: !0,
         triggerAuto15GB: !1,
         dumpNumber: a,
@@ -160,7 +160,7 @@ async function performHeapDump(u = "manual", a = 0) {
       n(`[HeapDump] Failed to write dump: ${e.message}`, { level: "error" });
     else logError(e);
     return (
-      i("tengu_heap_dump", {
+      logEvent("tengu_heap_dump", {
         triggerManual: !0,
         triggerAuto15GB: !1,
         dumpNumber: a,

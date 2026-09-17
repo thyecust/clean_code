@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -18,7 +18,7 @@ import { CZ, Fot, aHe } from "../../02-功能模块/输入分发-查询构造/�
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function re(ye) {
   return ye.remoteBootstrap;
@@ -29,10 +29,10 @@ function se() {
 function cIt() {
   let D = _(22),
     u = U(re),
-    { columns: O } = Se(),
+    { columns: O } = useTerminalSize(),
     [Y, xe] = d(se),
     W;
-  if (D[0] === p) ((W = () => xe(Date.now())), (D[0] = W));
+  if (D[0] === MEMO_CACHE_SENTINEL) ((W = () => xe(Date.now())), (D[0] = W));
   else W = D[0];
   if ((ko(W, 1000), u === null)) {
     return null;
@@ -198,7 +198,7 @@ function PB(be) {
   switch (Be) {
     case "completed": {
       let l;
-      if (c[4] === p)
+      if (c[4] === MEMO_CACHE_SENTINEL)
         ((l = e(t, { color: "success", children: `  ${L.tick} ` })),
           (c[4] = l));
       else l = c[4];
@@ -217,7 +217,7 @@ function PB(be) {
     }
     case "running": {
       let l;
-      if (c[10] === p)
+      if (c[10] === MEMO_CACHE_SENTINEL)
         ((l = e(o, { width: 4, paddingLeft: 2, children: e(yo, {}) })),
           (c[10] = l));
       else l = c[10];
@@ -255,7 +255,7 @@ function PB(be) {
     }
     case "failed": {
       let l;
-      if (c[21] === p)
+      if (c[21] === MEMO_CACHE_SENTINEL)
         ((l = e(t, { color: "error", children: `  ${L.cross} ` })),
           (c[21] = l));
       else l = c[21];

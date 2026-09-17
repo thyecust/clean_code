@@ -9,17 +9,17 @@
 // Version: 2.1.263
 import { ht, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Zt, Io, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { ZA } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { gD } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
-var f = m(() =>
+var f = createLazyValue(() =>
   nt({
     reviews_used: Zt(),
     reviews_limit: Zt(),
@@ -130,7 +130,7 @@ function DBn(e) {
   Te((r) => (r.hasRunUltrareview ? r : { ...r, hasRunUltrareview: !0 }), e);
 }
 function C(e) {
-  i("tengu_ultrareview_awareness_shown", { surface: fromEnum(e) });
+  logEvent("tengu_ultrareview_awareness_shown", { surface: fromEnum(e) });
 }
 function _nn(e) {
   return `${e} free ${e === 1 ? "review" : "reviews"} left`;

@@ -12,7 +12,7 @@ import { fn, execFileNoThrowWithCwd } from "./chunk-9ys1bnqr.js";
 import { gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { matchingRuleForInput } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { R8, $z, REMOTE_READ_OPEN_FLAGS, bindCanonicalPathToHandle, isCanonicalPathContained, readHandleBounded } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { constants } from "fs";
 import { open as U, realpath } from "fs/promises";
 import { basename, dirname, isAbsolute, join as z } from "path";
@@ -97,7 +97,7 @@ async function nt(t, n) {
   }
   for (let o of s) e.delete(o);
   if (e.size === 0) return e;
-  let a = Y(Array.from(e.values(), (o) => o.oid)),
+  let a = dedupe(Array.from(e.values(), (o) => o.oid)),
     l = await execFileNoThrowWithCwd(
       gitExe(),
       w(["cat-file", "--batch-check=%(objectname) %(objectsize)"]),

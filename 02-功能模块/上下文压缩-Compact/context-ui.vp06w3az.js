@@ -13,8 +13,8 @@ import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getPublicModelDisplayName, qe, tt, ro, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { S1, xRt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -22,17 +22,17 @@ import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chu
 import { jn, nxt, eE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { fl } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import { rht, ya } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Cr } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { yle } from "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import { renderToAnsiText } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { kv } from "../../01-核心基础设施/共享小工具-未细化/chunk-mnzfncps.js";
+import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
 import { xlt, Hlt } from "./chunk-40jcpbzh.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import { s, T, O, v, c, qd } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var To = 15,
   Ae = 1e4,
   Mo = 5,
@@ -183,7 +183,7 @@ function Vo(fe, Yo) {
       children: [
         r(o, {
           children: [
-            e(et, { status: fe.severity, withSpace: !0 }),
+            e(StatusIndicator, { status: fe.severity, withSpace: !0 }),
             e(t, { bold: !0, children: fe.title }),
             fe.savingsTokens
               ? r(t, {
@@ -214,7 +214,7 @@ function Te(Zt) {
     return null;
   }
   let Wo;
-  if (ko[0] === p)
+  if (ko[0] === MEMO_CACHE_SENTINEL)
     ((Wo = e(t, { bold: !0, children: "Suggestions" })), (ko[0] = Wo));
   else Wo = ko[0];
   let Fe;
@@ -551,7 +551,7 @@ function ne(xe) {
     Ve = o;
     Ze = "column";
     Qe = 1;
-    if (y[45] === p)
+    if (y[45] === MEMO_CACHE_SENTINEL)
       ((Le = e(t, { bold: !0, children: "Context Usage" })), (y[45] = Le));
     else Le = y[45];
     if (y[46] !== no)
@@ -602,7 +602,7 @@ function ne(xe) {
         (y[65] = ye),
         (y[66] = Be));
     else Be = y[66];
-    if (y[67] === p)
+    if (y[67] === MEMO_CACHE_SENTINEL)
       ((we = e(t, { children: " " })),
         (ve = e(t, {
           dimColor: !0,
@@ -1033,7 +1033,7 @@ function ne(xe) {
   else ot = y[135];
   return ot;
 }
-var wo = m(() => {
+var wo = createLazyValue(() => {
   let d = c({ name: s(), tokens: T() });
   return c({
     categories: v(
@@ -1152,7 +1152,7 @@ async function xs(d, i, g) {
         null
       );
     try {
-      let S = kv(
+      let S = parseThinClientReply(
         "get_context_usage",
         wo(),
         await f.sendControlRequest(
@@ -1167,16 +1167,16 @@ async function xs(d, i, g) {
           ),
           null
         );
-      let w = lo(i.session),
+      let w = mayHaveRemoteClient(i.session),
         q = w ? { ...S, memoryFiles: [] } : S,
-        pe = await yle(
+        pe = await renderToAnsiText(
           e(ne, { data: q, isRemote: !0, collapseDetailSections: u }),
           { storageV5: i.storageV5 },
         );
-      if (!w && lo(i.session))
+      if (!w && mayHaveRemoteClient(i.session))
         ((w = !0),
           (q = { ...S, memoryFiles: [] }),
-          (pe = await yle(
+          (pe = await renderToAnsiText(
             e(ne, { data: q, isRemote: !0, collapseDetailSections: u }),
             { storageV5: i.storageV5 },
           )));
@@ -1186,7 +1186,7 @@ async function xs(d, i, g) {
       });
     } catch (S) {
       if (yt(S)) return (d(nxt), null);
-      let w = lo(i.session);
+      let w = mayHaveRemoteClient(i.session);
       if (w) n(`/context remote fetch failed: ${l(S)}`, { level: "error" });
       d(
         w
@@ -1218,16 +1218,16 @@ async function xs(d, i, g) {
         configuredWindow: E.autoCompactWindow,
       },
     ),
-    U = lo(i.session),
+    U = mayHaveRemoteClient(i.session),
     J = U ? { ...B, memoryFiles: [] } : B,
-    re = await yle(
+    re = await renderToAnsiText(
       e(ne, { data: J, collapseDetailSections: u, skipCollapseStatus: U }),
       { storageV5: i.storageV5 },
     );
-  if (!U && lo(i.session))
+  if (!U && mayHaveRemoteClient(i.session))
     ((U = !0),
       (J = { ...B, memoryFiles: [] }),
-      (re = await yle(
+      (re = await renderToAnsiText(
         e(ne, { data: J, collapseDetailSections: u, skipCollapseStatus: U }),
         { storageV5: i.storageV5 },
       )));

@@ -10,7 +10,7 @@
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qt } from "./chunk-km6n9zrg.js";
 import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
-import { M } from "./chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
 import { b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { isSameProcessAsync, ownProcStart } from "../核心工具-进程与信号/chunk-qjqntsq2.js";
@@ -29,7 +29,7 @@ async function c$n(e, r) {
     writtenAt: Date.now(),
     workers: e,
   };
-  if (M() && r !== void 0) {
+  if (isHoverRestEnabled() && r !== void 0) {
     try {
       let t = await r.write(eit(), b(o, null, 2), {
         mode: 438 & ~process.umask(),
@@ -45,7 +45,7 @@ async function c$n(e, r) {
   } catch {}
 }
 async function u$n(e) {
-  if (M() && e !== void 0) {
+  if (isHoverRestEnabled() && e !== void 0) {
     try {
       let r = await e.delete(eit());
       if (!r.ok) n(`removeDaemonStatus: ${r.error.code}`);
@@ -60,7 +60,7 @@ async function u$n(e) {
 }
 async function d$n(e) {
   let r;
-  if (M() && e !== void 0) {
+  if (isHoverRestEnabled() && e !== void 0) {
     let a;
     try {
       a = await e.readText([eit()]);

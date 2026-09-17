@@ -15,7 +15,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { isInITerm2, getIt2Command, isIt2CliAvailable } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
 import { jk, cCe } from "./chunk-6b13bhw1.js";
-import { Ike } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
+import { createMutex } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
 function d(e) {
   return execFileNoThrow(getIt2Command(), e);
 }
@@ -36,7 +36,7 @@ class g {
   displayName = "iTerm2";
   teammateSessionIds = [];
   firstPaneUsed = !1;
-  paneCreationLock = Ike();
+  paneCreationLock = createMutex();
   async isAvailable() {
     let e = isInITerm2();
     if ((n(`[ITermBackend] isAvailable check: inITerm2=${e}`), !e))

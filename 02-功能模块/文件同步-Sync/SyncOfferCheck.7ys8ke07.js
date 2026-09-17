@@ -12,15 +12,15 @@
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { Pr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function oe(_e) {
   return (
@@ -46,7 +46,7 @@ function SyncOfferCheck(ge) {
   let i = _(22),
     { decide: b, onDecided: A, onDone: B } = ge,
     I;
-  if (i[0] === p) ((I = { kind: "deciding" }), (i[0] = I));
+  if (i[0] === MEMO_CACHE_SENTINEL) ((I = { kind: "deciding" }), (i[0] = I));
   else I = i[0];
   let [G, J] = d(I),
     K = C(!1),
@@ -88,11 +88,11 @@ function SyncOfferCheck(ge) {
       (i[6] = M));
   else M = i[6];
   let U;
-  if (i[7] === p) ((U = []), (i[7] = U));
+  if (i[7] === MEMO_CACHE_SENTINEL) ((U = []), (i[7] = U));
   else U = i[7];
   if ((E(M, U), G.kind === "deciding")) {
     let l;
-    if (i[8] === p) ((l = e(O, {})), (i[8] = l));
+    if (i[8] === MEMO_CACHE_SENTINEL) ((l = e(O, {})), (i[8] = l));
     else l = i[8];
     return l;
   }
@@ -105,8 +105,8 @@ function SyncOfferCheck(ge) {
     ((l = () => n(s)), (i[9] = n), (i[10] = s), (i[11] = l));
   else l = i[11];
   let V;
-  if (i[12] === p)
-    ((V = e(ue, { children: e(D, { chord: "enter", action: "continue" }) })),
+  if (i[12] === MEMO_CACHE_SENTINEL)
+    ((V = e(DotSeparatedList, { children: e(KeybindingHint, { chord: "enter", action: "continue" }) })),
       (i[12] = V));
   else V = i[12];
   let R;
@@ -137,7 +137,7 @@ function SyncOfferCheck(ge) {
 }
 function O() {
   let Re = _(3),
-    a = is(ie),
+    a = useGlobalExitKeybinding(ie),
     X;
   if (Re[0] !== a.keyName || Re[1] !== a.pending)
     ((X = a.pending
@@ -160,10 +160,10 @@ function P(Se) {
     ((Y = { "confirm:yes": v, "confirm:no": v }), (j[0] = v), (j[1] = Y));
   else Y = j[1];
   let Z;
-  if (j[2] === p) ((Z = { context: "Confirmation" }), (j[2] = Z));
+  if (j[2] === MEMO_CACHE_SENTINEL) ((Z = { context: "Confirmation" }), (j[2] = Z));
   else Z = j[2];
-  Ze(Y, Z);
-  let m = is(re),
+  useKeybindings(Y, Z);
+  let m = useGlobalExitKeybinding(re),
     ee;
   if (j[3] !== m.keyName || j[4] !== m.pending)
     ((ee = m.pending

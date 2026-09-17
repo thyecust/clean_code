@@ -12,12 +12,12 @@
 import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import { TGe } from "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import { B, sc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Et, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { no } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { yd } from "../ClaudeinChrome/chunk-hnp84hf6.js";
@@ -26,7 +26,7 @@ var I = 50,
   x = 1500,
   P = 5000,
   w = new Set(["chrome://newtab/", "about:blank"]),
-  M = m(() =>
+  M = createLazyValue(() =>
     c({
       error: Jq().or(Uf()).or(k(!1)).or(k("")).optional(),
       result: c({ isError: k(!0).optional() }),
@@ -36,7 +36,7 @@ function A(e) {
   let o = M().safeParse(e);
   return o.success && o.data.result.isError !== !0;
 }
-var F = m(() => c({ availableTabs: v(c({ tabId: T(), url: s() })) }));
+var F = createLazyValue(() => c({ availableTabs: v(c({ tabId: T(), url: s() })) }));
 function closeSessionTabGroup({
   sessionId: e,
   onlyIfEmpty: o,
@@ -73,7 +73,7 @@ async function R({
     t,
     b;
   try {
-    let i = await Dt(
+    let i = await withTimeout(
         r.callTool("tabs_context_mcp", { createIfEmpty: !1 }, p),
         u,
         "tabs_context_mcp timed out",
@@ -124,7 +124,7 @@ async function R({
   for (let i = t.length - 1; i >= 0; i--) {
     let { tabId: _ } = t[i];
     try {
-      let S = await Dt(
+      let S = await withTimeout(
         r.callTool("tabs_close_mcp", { tabId: _ }, G),
         u,
         "tabs_close_mcp timed out",
@@ -161,9 +161,9 @@ function registerChromeTabGroupCleanup() {
     ((o = l), closeSessionTabGroup({ sessionId: r, onlyIfEmpty: !0 }).catch(logError));
   })),
     (e.unregisterExitCleanup = Et(() => {
-      if (!no()) return;
+      if (!isExiting()) return;
       let l = Array.from(e.closesInFlight.values(), (u) => u.promise);
-      return Dt(
+      return withTimeout(
         Promise.allSettled([...l, closeSessionTabGroup({ sessionId: B().id, onlyIfEmpty: !0 })]),
         x,
         "chrome tab group close timed out at exit",

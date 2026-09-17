@@ -12,12 +12,12 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { dp } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
-import { yy, JW } from "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import { OffscreenFrozenContent, ElapsedTimeoutText } from "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var M = 5,
   U = 5;
 function zZ(ee) {
@@ -31,7 +31,7 @@ function zZ(ee) {
       timeoutMs: R,
       verbose: z,
     } = ee,
-    { columns: A } = Se(),
+    { columns: A } = useTerminalSize(),
     F;
   if (i[0] !== A || i[1] !== y || i[2] !== z)
     ((F = z ? null : O(y, A)), (i[0] = A), (i[1] = y), (i[2] = z), (i[3] = F));
@@ -44,14 +44,14 @@ function zZ(ee) {
   let k = G;
   if (!k) {
     let a;
-    if (i[7] === p)
+    if (i[7] === MEMO_CACHE_SENTINEL)
       ((a = e(t, { dimColor: !0, children: "Running\u2026 " })), (i[7] = a));
     else a = i[7];
     let g;
     if (i[8] !== h || i[9] !== R)
-      ((g = e(xe, {
-        children: r(yy, {
-          children: [a, e(JW, { elapsedTimeSeconds: h, timeoutMs: R })],
+      ((g = e(ToolResultRow, {
+        children: r(OffscreenFrozenContent, {
+          children: [a, e(ElapsedTimeoutText, { elapsedTimeSeconds: h, timeoutMs: R })],
         }),
       })),
         (i[8] = h),
@@ -83,7 +83,7 @@ function zZ(ee) {
   else g = i[14];
   let D;
   if (i[15] !== h || i[16] !== R)
-    ((D = e(JW, { elapsedTimeSeconds: h, timeoutMs: R })),
+    ((D = e(ElapsedTimeoutText, { elapsedTimeSeconds: h, timeoutMs: R })),
       (i[15] = h),
       (i[16] = R),
       (i[17] = D));
@@ -104,8 +104,8 @@ function zZ(ee) {
   else L = i[23];
   let N;
   if (i[24] !== a || i[25] !== L)
-    ((N = e(xe, {
-      children: e(yy, {
+    ((N = e(ToolResultRow, {
+      children: e(OffscreenFrozenContent, {
         children: r(o, { flexDirection: "column", children: [a, L] }),
       }),
     })),

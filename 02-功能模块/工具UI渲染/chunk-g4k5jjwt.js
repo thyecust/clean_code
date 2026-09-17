@@ -13,12 +13,12 @@ import { S6, LQe, mUe, zC } from "../认证-OAuth登录/认证-OAuth登录.419zd
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { w0e } from "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import { js } from "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
-import { za } from "../../01-核心基础设施/共享小工具-未细化/chunk-951vj555.js";
+import { Divider } from "../../01-核心基础设施/共享小工具-未细化/divider.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { eLt, vIe, Flt, RIe } from "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import { VQ, sz } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
-import { en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var se = /(?![\u200C\u200D])[\p{Cf}\u2028\u2029]/gu,
   he = /[\u001b\u0080-\u009f]/g,
   ye = 8;
@@ -251,7 +251,7 @@ function g(je) {
   let de = _e,
     be;
   if (Ce[4] !== le || Ce[5] !== de)
-    ((be = e(za, {
+    ((be = e(Divider, {
       title: de,
       titleAlign: "start",
       color: "subtle",
@@ -272,7 +272,7 @@ function P(ve) {
     Ne,
     ue;
   if (ze[0] !== X || ze[1] !== D) {
-    ue = en;
+    ue = EARLY_RETURN_SENTINEL;
     bb0: {
       let Le = S6() ? mUe(D) : [];
       if (Le.length === 0) {
@@ -296,7 +296,7 @@ function P(ve) {
     }
     ((ze[0] = X), (ze[1] = D), (ze[2] = Ne), (ze[3] = ue));
   } else ((Ne = ze[2]), (ue = ze[3]));
-  if (ue !== en) return ue;
+  if (ue !== EARLY_RETURN_SENTINEL) return ue;
   return Ne;
 }
 function UA(st) {
@@ -311,7 +311,7 @@ function UA(st) {
     ne,
     ge;
   if (fe[0] !== pe) {
-    ge = en;
+    ge = EARLY_RETURN_SENTINEL;
     bb0: {
       let H = AWe(pe);
       if (typeof H === "string") {
@@ -348,7 +348,7 @@ function UA(st) {
       (te = fe[6]),
       (ne = fe[7]),
       (ge = fe[8]));
-  if (ge !== en) return ge;
+  if (ge !== EARLY_RETURN_SENTINEL) return ge;
   let re;
   if (fe[9] !== j || fe[10] !== z || fe[11] !== W)
     ((re = e(j, { wrap: z, children: W })),

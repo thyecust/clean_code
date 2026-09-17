@@ -14,32 +14,32 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { ay } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { y3, LO, LM } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import { oWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0dk7tzf3.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Ye(Un) {
   return !y3(Un);
@@ -49,10 +49,10 @@ var v = "Select remote environment",
 function fe(fn) {
   let s = _(35),
     { onDone: i } = fn,
-    { storageV5: S, credentials: M } = _e(),
+    { storageV5: S, credentials: M } = useStorageV5Context(),
     [A, he] = d("loading"),
     we;
-  if (s[0] === p) ((we = []), (s[0] = we));
+  if (s[0] === MEMO_CACHE_SENTINEL) ((we = []), (s[0] = we));
   else we = s[0];
   let [k, gn] = d(we),
     [I, pn] = d(null),
@@ -150,8 +150,8 @@ function fe(fn) {
   let q = ne;
   if (A === "loading") {
     let l;
-    if (s[9] === p)
-      ((l = e($n, { message: "Loading environments\u2026" })), (s[9] = l));
+    if (s[9] === MEMO_CACHE_SENTINEL)
+      ((l = e(SpinnerMessageLine, { message: "Loading environments\u2026" })), (s[9] = l));
     else l = s[9];
     let u;
     if (s[10] !== i)
@@ -179,7 +179,7 @@ function fe(fn) {
   }
   if (!I) {
     let l;
-    if (s[17] === p)
+    if (s[17] === MEMO_CACHE_SENTINEL)
       ((l = e(t, { children: "No remote environments available." })),
         (s[17] = l));
     else l = s[17];
@@ -337,7 +337,7 @@ function me(Pn) {
   } else ((H = g[7]), (ze = g[8]));
   let Te = ze,
     He;
-  if (g[9] === p) ((He = e(t, { dimColor: !0, children: Q })), (g[9] = He));
+  if (g[9] === MEMO_CACHE_SENTINEL) ((He = e(t, { dimColor: !0, children: Q })), (g[9] = He));
   else He = g[9];
   let se;
   if (g[10] !== re || g[11] !== H)
@@ -374,7 +374,7 @@ function me(Pn) {
   if (g[15] !== Ee || g[16] !== le || g[17] !== Te || g[18] !== w)
     ((ce =
       Ee === "updating"
-        ? e($n, { message: "Updating\u2026" })
+        ? e(SpinnerMessageLine, { message: "Updating\u2026" })
         : e(ve, {
             options: Te,
             defaultValue: LO(w),
@@ -389,13 +389,13 @@ function me(Pn) {
       (g[19] = ce));
   else ce = g[19];
   let Ke;
-  if (g[20] === p)
+  if (g[20] === MEMO_CACHE_SENTINEL)
     ((Ke = e(t, {
       dimColor: !0,
-      children: r(ue, {
+      children: r(DotSeparatedList, {
         children: [
-          e(D, { chord: "enter", action: "select" }),
-          e(je, {
+          e(KeybindingHint, { chord: "enter", action: "select" }),
+          e(ActionKeybindingHint, {
             action: "confirm:no",
             context: "Confirmation",
             fallback: "Esc",

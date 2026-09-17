@@ -12,17 +12,17 @@
 import { eI } from "../../00-第三方库/_未识别/第三方库-其他/chunk-x46ksw6d.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
-import { ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
+import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function W() {}
 function Y(yo) {
@@ -41,12 +41,12 @@ function B(co) {
   let i = _(19),
     { onDone: m } = co,
     j;
-  if (i[0] === p) ((j = { ios: "", android: "" }), (i[0] = j));
+  if (i[0] === MEMO_CACHE_SENTINEL) ((j = { ios: "", android: "" }), (i[0] = j));
   else j = i[0];
   let [s, lo] = d(j),
     G,
     I;
-  if (i[1] === p)
+  if (i[1] === MEMO_CACHE_SENTINEL)
     ((G = () => {
       let w = async function w() {
         let [mo, so] = await Promise.all([
@@ -76,9 +76,9 @@ function B(co) {
   else z = i[4];
   let po = z,
     O;
-  if (i[5] === p) ((O = { context: "Confirmation" }), (i[5] = O));
+  if (i[5] === MEMO_CACHE_SENTINEL) ((O = { context: "Confirmation" }), (i[5] = O));
   else O = i[5];
-  Ne("confirm:no", po, O);
+  useKeybinding("confirm:no", po, O);
   let Q;
   if (i[6] !== m)
     ((Q = function y(h) {
@@ -116,14 +116,14 @@ function B(co) {
       (i[14] = x));
   else x = i[14];
   let T;
-  if (i[15] === p)
+  if (i[15] === MEMO_CACHE_SENTINEL)
     ((T = e(o, {
       marginTop: 1,
-      children: e(ci, {
-        children: r(ue, {
+      children: e(InputGuide, {
+        children: r(DotSeparatedList, {
           children: [
-            e(D, { chord: ["left", "right"], action: "switch" }),
-            e(D, { chord: "escape", action: "close" }),
+            e(KeybindingHint, { chord: ["left", "right"], action: "switch" }),
+            e(KeybindingHint, { chord: "escape", action: "close" }),
           ],
         }),
       }),

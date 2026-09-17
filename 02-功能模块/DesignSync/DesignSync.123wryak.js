@@ -13,17 +13,17 @@ import { getOAuthHeaders, ht } from "../认证-OAuth登录/认证-OAuth登录.41
 import { Ve, dt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { YA, tT, wdt, $Pe, UPe, Tdt, C6n, Edt } from "../Memory-CLAUDE.md/chunk-9b6sc1gb.js";
 import { mqe, Vee, C9, NPe, gqe, Msn, Kee } from "./chunk-20rab5yy.js";
 import { FPe, Fsn, A6n } from "./chunk-aycc6z76.js";
 import "../认证-OAuth登录/chunk-5bg9xwqx.js";
 import { p7e, ySn, uK } from "./chunk-5kyac4wk.js";
 import { s, T, O, v, c, Qe, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { constants } from "fs";
 import { open as pe, realpath, stat as he } from "fs/promises";
 import { extname, sep as Z, resolve } from "path";
@@ -173,7 +173,7 @@ function de(e) {
     return String(e).slice(0, 200);
   }
 }
-var ge = m(() =>
+var ge = createLazyValue(() =>
     Qe({
       path: s()
         .min(1)
@@ -198,7 +198,7 @@ var ge = m(() =>
       mimeType: s().optional(),
     }),
   ),
-  ue = m(() =>
+  ue = createLazyValue(() =>
     Qe({
       name: s()
         .min(1)
@@ -230,7 +230,7 @@ var ge = m(() =>
         ),
     }),
   ),
-  fe = m(() =>
+  fe = createLazyValue(() =>
     Qe({
       method: X([
         "list_projects",
@@ -347,7 +347,7 @@ function ye(e) {
   return [...r, ...o];
 }
 var j = { notice: s().optional() },
-  _e = m(() =>
+  _e = createLazyValue(() =>
     Ko("method", [
       c({
         method: k("list_projects"),
@@ -427,7 +427,7 @@ function F(e) {
     }
     case "write_files": {
       let t = e.files?.length ?? 0,
-        r = G(e.files ?? [], (i) => i.localPath !== void 0),
+        r = countMatching(e.files ?? [], (i) => i.localPath !== void 0),
         o =
           r > 0 && r < t
             ? ` (${r} from disk, ${t - r} inline)`
@@ -519,7 +519,7 @@ function te(e) {
     !(t.mode === "plan" && t.isBypassPermissionsModeAvailable)
   );
 }
-var DesignSyncTool = Tt({
+var DesignSyncTool = buildTool({
   name: p7e,
   searchHint:
     "sync local design system components to a claude.ai/design project",

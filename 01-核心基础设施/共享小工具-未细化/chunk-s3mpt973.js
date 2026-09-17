@@ -7,22 +7,22 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m } from "./chunk-78nzsrc6.js";
-import { Tt } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
+import { createLazyValue } from "./lazy-value.js";
+import { buildTool } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import { _k } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { gLt } from "./chunk-pvfkaage.js";
-import { P4 } from "./chunk-xvyb4e66.js";
+import { stripTextBlockMeta } from "./mcp-output-truncation.js";
 import { s, Jq, v, c, $e } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var n = "",
   u = "",
   fLt = "mcp";
-var p = m(() => c({}).passthrough()),
-  Crn = m(() =>
+var p = createLazyValue(() => c({}).passthrough()),
+  Crn = createLazyValue(() =>
     $e([s(), v(c({ type: s() }).passthrough()), Jq()]).describe(
       "MCP tool execution result",
     ),
   ),
-  H4 = Tt({
+  H4 = buildTool({
     isMcp: !0,
     isOpenWorld() {
       return !1;
@@ -63,7 +63,7 @@ var p = m(() => c({}).passthrough()),
       return !1;
     },
     mapToolResultToToolResultBlockParam(e, t) {
-      return { tool_use_id: t, type: "tool_result", content: P4(e) };
+      return { tool_use_id: t, type: "tool_result", content: stripTextBlockMeta(e) };
     },
   });
 export { fLt, Crn, H4 };

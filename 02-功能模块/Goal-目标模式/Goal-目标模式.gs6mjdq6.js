@@ -10,31 +10,31 @@
 
 // [preload stripped] 原本在此预载 74 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ze, ke, YLn, JLn, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getModelProposedGoalsSettingParsed, getModelProposedGoalsSetting } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { cve, AJe } from "../Skills技能/chunk-sapykxw7.js";
-import { g2 } from "../../01-核心基础设施/共享小工具-未细化/chunk-6k8nm416.js";
+import { GOAL_PROPOSAL_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
 import { t5 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { _dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-ch1x7wx1.js";
-import { LPe } from "../../01-核心基础设施/共享小工具-未细化/chunk-16992wzt.js";
-import { MPe, zee } from "../../01-核心基础设施/共享小工具-未细化/chunk-s5e85mz9.js";
-import { Vbt, Kbt, WQn, GQn } from "../../01-核心基础设施/共享小工具-未细化/chunk-wew8t48z.js";
+import { GoalProposalState } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-state.js";
+import { collapseNewlines, truncateForDisplay } from "../../01-核心基础设施/共享小工具-未细化/text-truncation.js";
+import { PROPOSE_GOAL_TOOL_NAME, PROPOSE_GOAL_MAX_CONDITION_CHARS, PROPOSE_GOAL_TOOL_DESCRIPTION, PROPOSE_GOAL_TOOL_PROMPT } from "../../01-核心基础设施/共享小工具-未细化/propose-goal-tool.js";
 import { s, O, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { randomUUID } from "crypto";
-var T = m(() =>
+var T = createLazyValue(() =>
     Qe({
       condition: s()
         .min(1)
-        .max(Kbt)
+        .max(PROPOSE_GOAL_MAX_CONDITION_CHARS)
         .describe(
-          `The completion condition to propose, written so a separate evaluator can verify it from the conversation (e.g. "all tests in test/auth pass (bun test exits 0)"). At most ${Kbt} characters \u2014 the user must be able to read the whole condition in the approval dialog.`,
+          `The completion condition to propose, written so a separate evaluator can verify it from the conversation (e.g. "all tests in test/auth pass (bun test exits 0)"). At most ${PROPOSE_GOAL_MAX_CONDITION_CHARS} characters \u2014 the user must be able to read the whole condition in the approval dialog.`,
         ),
       ask_user: O()
         .optional()
@@ -43,7 +43,7 @@ var T = m(() =>
         ),
     }),
   ),
-  P = m(() =>
+  P = createLazyValue(() =>
     c({
       condition: s().describe(
         "The condition shown to the user for approval, or set directly when ask_user was false",
@@ -55,10 +55,10 @@ var T = m(() =>
   );
 function E(e) {
   if (YLn()) return;
-  (JLn(), i("tengu_goal_proposal_available", { setting: fromEnum(e) }));
+  (JLn(), logEvent("tengu_goal_proposal_available", { setting: fromEnum(e) }));
 }
-var ProposeGoalTool = Tt({
-  name: Vbt,
+var ProposeGoalTool = buildTool({
+  name: PROPOSE_GOAL_TOOL_NAME,
   maxResultSizeChars: 1000,
   searchHint:
     "propose a session goal condition for the user to approve with one keypress",
@@ -87,14 +87,14 @@ var ProposeGoalTool = Tt({
     return `ask_user=${e.ask_user !== !1}: ${e.condition ?? ""}`;
   },
   async description() {
-    return WQn;
+    return PROPOSE_GOAL_TOOL_DESCRIPTION;
   },
   async prompt() {
-    return GQn;
+    return PROPOSE_GOAL_TOOL_PROMPT;
   },
   renderToolUseMessage(e) {
     if (!e.condition) return "";
-    return `Propose goal: ${zee(MPe(e.condition), 200)}`;
+    return `Propose goal: ${truncateForDisplay(collapseNewlines(e.condition), 200)}`;
   },
   create(e) {
     return {
@@ -108,14 +108,14 @@ var ProposeGoalTool = Tt({
               "Goal proposals are only available in interactive local sessions.",
             )
           );
-        let o = t5(MPe(r)).trim();
+        let o = t5(collapseNewlines(r)).trim();
         if (o === "")
           throw Error(
             "The goal condition is empty once whitespace and invisible characters are removed. Provide a visible condition.",
           );
-        if (o.length > Kbt)
+        if (o.length > PROPOSE_GOAL_MAX_CONDITION_CHARS)
           throw new R(
-            `The goal condition exceeds ${Kbt} characters once canonicalized for display (tabs expand to spaces). Shorten the condition \u2014 the user must be able to read all of it in the approval dialog.`,
+            `The goal condition exceeds ${PROPOSE_GOAL_MAX_CONDITION_CHARS} characters once canonicalized for display (tabs expand to spaces). Shorten the condition \u2014 the user must be able to read all of it in the approval dialog.`,
             "goal condition exceeds the canonicalized-length cap",
           );
         if (cve(o))
@@ -149,12 +149,12 @@ var ProposeGoalTool = Tt({
           throw Error(
             "Goal proposals need an interactive session to render the approval prompt; none is available here.",
           );
-        if (e.toolState.get(LPe).id)
+        if (e.toolState.get(GoalProposalState).id)
           throw Error(
             "A goal proposal is already awaiting the user's decision. Keep working; if it is approved you will receive a kickoff message.",
           );
         if (
-          (i("tengu_goal_proposed", {
+          (logEvent("tengu_goal_proposed", {
             promptLength: o.length,
             askUser: l,
             forcedAsk: l && w === !1,
@@ -172,17 +172,17 @@ var ProposeGoalTool = Tt({
             }),
             { data: { condition: o, askUser: !1 } }
           );
-        let a = e.toolState.get(LPe),
+        let a = e.toolState.get(GoalProposalState),
           p = randomUUID();
         return (
           (a.id = p),
-          k(g2, { condition: o }, { place: "under" })
+          k(GOAL_PROPOSAL_DIALOG, { condition: o }, { place: "under" })
             .then((t) => {
               let d = a.id !== p,
                 f = getModelProposedGoalsSettingParsed() === "disabled",
                 v = e.permissions().mode === "plan";
               if (
-                (i("tengu_goal_proposal_decided", {
+                (logEvent("tengu_goal_proposal_decided", {
                   decision: t.approved
                     ? d
                       ? S("approved_stale")

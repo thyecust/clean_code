@@ -47,15 +47,15 @@ import {
   $W,
   UW,
 } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Ve, R, l, A, W, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { We, b, z, iae, Xg, Ro, Tr, Sh, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be, Hr } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { oe, ft, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { CLAUDE_AI_INFERENCE_SCOPE, CLAUDE_AI_PROFILE_SCOPE } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Rvt } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
@@ -167,30 +167,30 @@ import {
 } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { _x } from "../../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js";
 import { Xt, _0, dm, usesFirstPartyModelIds, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { Ei } from "../Hooks钩子/chunk-9em0d4k5.js";
+import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
 import { JJe, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { o$e, FG, jK, zo } from "../MCP客户端/chunk-3kmsshb6.js";
 import { HEt, ave, lnr } from "../插件系统/chunk-7s6mt1vg.js";
 import { nAt } from "../图表-Mermaid/chunk-743atbtj.js";
 import { WG } from "../权限系统/chunk-t3b7pg2x.js";
-import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
+import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { peekPlanSlug, getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { ll } from "../Teammates团队/chunk-thxapyam.js";
 import { bl, Qoe } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
 import { isScrubEnabled } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
-import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { Z_ } from "../工具ToolSearch/chunk-1m51pqtd.js";
-import { dg } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
+import { normalizePathForComparison } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
 import { mt } from "../工具Task-Agent调度/chunk-1px84m19.js";
 import { s, T, O, se, v, c, it, $e, fe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { cB } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { pe, w } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var kJ = w(function (fy, pr) {
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { toESM, commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var kJ = commonJS(function (fy, pr) {
   function Gs(e) {
     return Array.isArray(e) ? e : [e];
   }
@@ -444,7 +444,7 @@ var kJ = w(function (fy, pr) {
   pr.exports.isPathValid = fd;
   en(pr.exports, Symbol.for("setupWindows"), md);
 });
-var PYe = m(() => s().regex(/^mem_[A-Za-z0-9]+$/)),
+var PYe = createLazyValue(() => s().regex(/^mem_[A-Za-z0-9]+$/)),
   AFe = 102400;
 class QE extends Error {
   path;
@@ -692,7 +692,7 @@ function wt() {
   if (!isPolicyAllowed("allow_memory_sync")) return !1;
   return Ui() && (isClaudeAISubscriber() || aQ());
 }
-var bc = m(() =>
+var bc = createLazyValue(() =>
   c({
     path: s().min(1),
     mode: X(["rw", "ro"]),
@@ -734,7 +734,7 @@ class zi {
   logMonorepoWriteBlockOnce() {
     if (this.monorepoBlockLogged) return;
     ((this.monorepoBlockLogged = !0),
-      i("tengu_org_memory_writes_monorepo_blocked", {
+      logEvent("tengu_org_memory_writes_monorepo_blocked", {
         stored_opt_in: es().orgMemoryWrites === !0,
       }));
   }
@@ -759,7 +759,7 @@ class zi {
       );
     ((this.grantedStores = k),
       (this.grantedModes = new Map(k.map((C) => [om(C.path), C.mode]))));
-    let E = G([...this.grantedModes.values()], (C) => C === "rw");
+    let E = countMatching([...this.grantedModes.values()], (C) => C === "rw");
     if (
       ((this.lastAskDowngraded =
         t &&
@@ -971,7 +971,7 @@ function vTt(e, t) {
   )
     Promise.resolve({ clearOrgMemoryCredential }).then((o) => o.clearOrgMemoryCredential());
   return (
-    i("tengu_org_memory_writes_setting_changed", { enabled: e }),
+    logEvent("tengu_org_memory_writes_setting_changed", { enabled: e }),
     e ? "granted" : "withdrawn"
   );
 }
@@ -1002,9 +1002,9 @@ function Yer(e, t) {
       (Promise.resolve({ clearOrgMemoryCredential }).then((o) => o.clearOrgMemoryCredential()),
       r)
     )
-      i("tengu_org_memory_writes_setting_changed", { enabled: !1 });
+      logEvent("tengu_org_memory_writes_setting_changed", { enabled: !1 });
   }
-  return (i("tengu_org_memory_read_setting_changed", { enabled: e }), !0);
+  return (logEvent("tengu_org_memory_read_setting_changed", { enabled: e }), !0);
 }
 function Qi() {
   Fe().clearGrant();
@@ -1035,7 +1035,7 @@ class Ji {
       });
     try {
       if (this.decision.state !== "undecided") return;
-      await Promise.race([d, Z(e, t, r)]);
+      await Promise.race([d, sleep(e, t, r)]);
     } finally {
       o();
     }
@@ -1067,7 +1067,7 @@ class Ji {
         degraded: e.degraded,
       }),
       yn(this.settled, "settle"),
-      i("tengu_org_memory_decision", {
+      logEvent("tengu_org_memory_decision", {
         outcome: S("on"),
         store_count: e.stores.length,
         asked_write: e.request.writeAccess,
@@ -1084,7 +1084,7 @@ class Ji {
     return (
       (this.decision = { state: "off", cause: e }),
       yn(this.settled, "settle"),
-      i("tengu_org_memory_decision", { outcome: S("off"), cause: fromEnum(e) }),
+      logEvent("tengu_org_memory_decision", { outcome: S("off"), cause: fromEnum(e) }),
       !0
     );
   }
@@ -1096,7 +1096,7 @@ class Ji {
       cause: e,
     }),
       yn(this.shrunk, "shrink"),
-      i("tengu_org_memory_decision_parked", { cause: fromEnum(e) }));
+      logEvent("tengu_org_memory_decision_parked", { cause: fromEnum(e) }));
   }
   shrinkWriteAsk() {
     if (this.decision.state !== "on" || !this.decision.request.writeAccess)
@@ -1112,7 +1112,7 @@ class Ji {
         ),
       }),
       yn(this.shrunk, "shrink"),
-      i("tengu_org_memory_decision_write_shrunk", {}),
+      logEvent("tengu_org_memory_decision_write_shrunk", {}),
       !0
     );
   }
@@ -1123,7 +1123,7 @@ class Ji {
     let t = e === null ? "logout" : "account_switch";
     ((this.decision = { state: "ended", cause: t }),
       yn(this.shrunk, "shrink"),
-      i("tengu_org_memory_decision_ended", { cause: fromEnum(t) }));
+      logEvent("tengu_org_memory_decision_ended", { cause: fromEnum(t) }));
   }
   reopen() {
     let e = this.decision;
@@ -1136,7 +1136,7 @@ class Ji {
     return (
       (this.decision = { state: "undecided" }),
       (this.settleDeadlineConsumed = !1),
-      i("tengu_org_memory_decision_reopened", {
+      logEvent("tengu_org_memory_decision_reopened", {
         from_state: fromEnum(e.state),
         ...(e.state !== "on" && { from_cause: fromEnum(e.cause) }),
       }),
@@ -1280,7 +1280,7 @@ function ns(e, t) {
 var Rc = "/v1/code/local/memory/credential",
   Tc = 1e4,
   os = 120000,
-  Ac = m(() =>
+  Ac = createLazyValue(() =>
     c({
       access_token: s().min(1),
       expires_in_seconds: T().positive(),
@@ -1377,7 +1377,7 @@ class ss {
       r = "org memory credential",
       o = e?.skipSelection ? null : CFe(),
       d = !e?.skipAsk && o !== null && N$();
-    if (d) i("tengu_org_memory_write_opt_in_requested", {});
+    if (d) logEvent("tengu_org_memory_write_opt_in_requested", {});
     let p = !1,
       _ = o,
       L = !1,
@@ -1570,7 +1570,7 @@ class ss {
     return (await this.mintSingleFlight()).authorization;
   }
   discard() {
-    if (this.cached !== null && Yi()) i("tengu_org_memory_token_discarded", {});
+    if (this.cached !== null && Yi()) logEvent("tengu_org_memory_token_discarded", {});
     (this.generation++,
       (this.cached = null),
       (this.inflightMint = null),
@@ -1626,12 +1626,12 @@ class as {
     if (!this.racePromise)
       ((this.racePromise = Promise.race([
         new Promise((t) => this.waiters.push(t)),
-        Z(FIRST_STORE_PULL_WAIT_DEADLINE_MS),
+        sleep(FIRST_STORE_PULL_WAIT_DEADLINE_MS),
       ])),
         this.racePromise.then(() => {
           this.raceSettled = !0;
         }));
-    await Promise.race([this.racePromise, Z(FIRST_STORE_PULL_WAIT_DEADLINE_MS, e)]);
+    await Promise.race([this.racePromise, sleep(FIRST_STORE_PULL_WAIT_DEADLINE_MS, e)]);
   }
 }
 var Mc = new j(() => new as());
@@ -1685,7 +1685,7 @@ function Dc(e) {
   return o;
 }
 var Nc = "mount must match /^[A-Za-z0-9_-]+$/",
-  cs = m(() =>
+  cs = createLazyValue(() =>
     s()
       .min(1)
       .refine(Ic, {
@@ -1693,14 +1693,14 @@ var Nc = "mount must match /^[A-Za-z0-9_-]+$/",
       }),
   ),
   $c = 10,
-  us = m(() =>
+  us = createLazyValue(() =>
     s()
       .min(1)
       .refine(EFe, {
         message: "segments must match [A-Za-z0-9._-]+ and must not be . or ..",
       }),
   ),
-  Fc = m(() =>
+  Fc = createLazyValue(() =>
     $e([
       cs(),
       c({
@@ -1789,7 +1789,7 @@ function IYe() {
 var Wc = "/v1/code/local/memory/mounts",
   ys = "org-memory-discovery.json",
   Bc = 86400000,
-  Uc = m(() =>
+  Uc = createLazyValue(() =>
     c({
       enabled: O(),
       stores: v(se()).default([]),
@@ -1797,7 +1797,7 @@ var Wc = "/v1/code/local/memory/mounts",
       candidates: se().optional(),
     }),
   ),
-  jc = m(() =>
+  jc = createLazyValue(() =>
     c({
       kind: s().min(1).max(64),
       id: s()
@@ -1835,7 +1835,7 @@ function ro(e) {
   }
   return t;
 }
-var zc = m(() =>
+var zc = createLazyValue(() =>
     c({
       fetchedAt: T(),
       account: s(),
@@ -1844,7 +1844,7 @@ var zc = m(() =>
       writeOptInAvailable: se().optional(),
     }),
   ),
-  Gc = m(() => c({ entries: fe(s(), se()) }));
+  Gc = createLazyValue(() => c({ entries: fe(s(), se()) }));
 function bs() {
   return gs(be(), "cache", ys);
 }
@@ -1852,7 +1852,7 @@ var _s = Ce.cache("org-memory-discovery", ys);
 async function ws(e) {
   try {
     let t;
-    if (!M() || e === void 0) t = await qt().read(bs());
+    if (!isHoverRestEnabled() || e === void 0) t = await qt().read(bs());
     else {
       let o = await e.read([_s]);
       if (!o.ok)
@@ -1894,7 +1894,7 @@ async function Ss(e, t, r) {
       let L = _?.fetchedAt;
       if (typeof L === "number" && !Ls(L)) delete o[p];
     }
-    if (((o[e] = t), M() && r !== void 0)) {
+    if (((o[e] = t), isHoverRestEnabled() && r !== void 0)) {
       let p = await r.write(_s, b({ entries: o }), {
         mode: 438 & ~process.umask(),
       });
@@ -2012,7 +2012,7 @@ function fs(e, t, r) {
 var qc = 3,
   Kc = 1500;
 function ps() {
-  return Z(Kc);
+  return sleep(Kc);
 }
 async function hs(e, t, r, o) {
   await Ss(
@@ -2030,11 +2030,11 @@ async function hs(e, t, r, o) {
 function er(e) {
   return {
     candidates: e.length,
-    candidate_count_public: G(
+    candidate_count_public: countMatching(
       e,
       (t) => t.kind === "project" && t.visibility === "public",
     ),
-    candidate_count_private: G(
+    candidate_count_private: countMatching(
       e,
       (t) => t.kind === "project" && t.visibility === "private",
     ),
@@ -2212,7 +2212,7 @@ class vs {
       L = r && !_ && Xr() ? "rw" : "ro";
     if (r) {
       let D = Ki();
-      i("tengu_org_memory_root_write_outcome", {
+      logEvent("tengu_org_memory_root_write_outcome", {
         outcome: fromEnum(
           L === "rw"
             ? "rw_granted"
@@ -2250,7 +2250,7 @@ class vs {
           ],
       C = E.find((D) => om(D.path) === om(d.path));
     return (
-      i("tengu_org_memory_root_mount_derived", {
+      logEvent("tengu_org_memory_root_mount_derived", {
         mount_name: C?.mount === Yt ? S(Yt) : S("discovered"),
         mode: fromEnum(C?.mode ?? "ro"),
         prompt_index_source: fromEnum(p?.source ?? "none"),
@@ -6652,20 +6652,20 @@ async function parseCommandRaw(e) {
   if (!e) return null;
   if (e.length > Us)
     return (
-      i("tengu_tree_sitter_parse_abort", { cmdLength: e.length, panic: !1 }),
+      logEvent("tengu_tree_sitter_parse_abort", { cmdLength: e.length, panic: !1 }),
       PARSE_ABORTED
     );
   try {
     let t = nb().parse(e);
     if (t === null)
       return (
-        i("tengu_tree_sitter_parse_abort", { cmdLength: e.length, panic: !1 }),
+        logEvent("tengu_tree_sitter_parse_abort", { cmdLength: e.length, panic: !1 }),
         PARSE_ABORTED
       );
     return t;
   } catch {
     return (
-      i("tengu_tree_sitter_parse_abort", { cmdLength: e.length, panic: !0 }),
+      logEvent("tengu_tree_sitter_parse_abort", { cmdLength: e.length, panic: !0 }),
       PARSE_ABORTED
     );
   }
@@ -6740,7 +6740,7 @@ function Vu(e) {
     ? e.slice(1, -1)
     : e;
 }
-var dn = pe(kJ(), 1);
+var dn = toESM(kJ(), 1);
 import { randomBytes } from "crypto";
 import { homedir as Yn } from "os";
 import {
@@ -6820,7 +6820,7 @@ var pd = 30000,
   LYe = 200000,
   gd = "/memories",
   yd = "/memories/export",
-  ko = m(() =>
+  ko = createLazyValue(() =>
     it({
       id: PYe(),
       path: s(),
@@ -6832,10 +6832,10 @@ var pd = 30000,
         .catch(void 0),
     }),
   ),
-  bd = m(() => it({ data: v(it({ type: s() })), next_page: s().nullish() })),
-  _d = m(() => ko().extend({ content: s(), updated_at: s() })),
+  bd = createLazyValue(() => it({ data: v(it({ type: s() })), next_page: s().nullish() })),
+  _d = createLazyValue(() => ko().extend({ content: s(), updated_at: s() })),
   Ps = ko,
-  Ld = m(() =>
+  Ld = createLazyValue(() =>
     it({
       error: it({
         type: s().optional(),
@@ -6865,7 +6865,7 @@ function xo(e) {
   )
     e.destroy();
 }
-var Sd = m(() =>
+var Sd = createLazyValue(() =>
     it({
       message: s().optional(),
       error: it({ type: s().optional(), message: s().optional() }).optional(),
@@ -7170,7 +7170,7 @@ function xJ(e) {
     r = t.findIndex((_) => _.path === e.path),
     o = r < 0 ? [] : t.slice(0, r),
     d = na(e),
-    p = G(o, (_) => na(_) === d);
+    p = countMatching(o, (_) => na(_) === d);
   return p === 0 ? d : `${d}#${p + 1}`;
 }
 function kFe(e) {
@@ -7238,7 +7238,7 @@ function rtr(e) {
     memoryFileCount: d.reduce(
       (_, L) =>
         _ +
-        (L === null ? 0 : G((L[1] ?? "").split(","), (x) => x.trim() !== "")),
+        (L === null ? 0 : countMatching((L[1] ?? "").split(","), (x) => x.trim() !== "")),
       0,
     ),
     missingFilenamesAttr: d.some((_) => _ === null),
@@ -7270,15 +7270,15 @@ function otr(e, t) {
       .flatMap((d) => sa(d[0]))
       .slice(0, Id)
       .map(t),
-    o = G(r, (d) => d.resolved);
+    o = countMatching(r, (d) => d.resolved);
   return {
     resolved: o,
     unknown: r.length - o,
-    read: G(r, (d) => d.read),
-    written: G(r, (d) => d.written),
-    injectedBody: G(r, (d) => d.injection === "body"),
-    surfaced: G(r, (d) => d.injection === "surfaced"),
-    listed: G(r, (d) => d.injection === "listed"),
+    read: countMatching(r, (d) => d.read),
+    written: countMatching(r, (d) => d.written),
+    injectedBody: countMatching(r, (d) => d.injection === "body"),
+    surfaced: countMatching(r, (d) => d.injection === "surfaced"),
+    listed: countMatching(r, (d) => d.injection === "listed"),
   };
 }
 function sa(e) {
@@ -7381,7 +7381,7 @@ var Od = ["name", "description", "metadata"],
   Nd = "memory",
   To = (e) => (typeof e === "string" && e.length > 0 ? e : null),
   Fd = (e) => {
-    let t = me(e.metadata) ? e.metadata : {},
+    let t = isRecord(e.metadata) ? e.metadata : {},
       r = Object.entries(e).reduce((o, [d, p]) => {
         if (Od.includes(d) || p == null) return o;
         return ((o[d] = p), o);
@@ -7875,10 +7875,10 @@ function la(e, t) {
 `);
 }
 function HG(e) {
-  Ei().sharedMemoryServedViaTools = e;
+  getSessionFeatureCache().sharedMemoryServedViaTools = e;
 }
 function tzt() {
-  return Ei().sharedMemoryServedViaTools ?? !1;
+  return getSessionFeatureCache().sharedMemoryServedViaTools ?? !1;
 }
 var ca = 5000,
   zd = 60000;
@@ -7934,7 +7934,7 @@ async function ma(e, t, r) {
   if (!EFe(o)) return (logFeatureSad("memory_prompt_index", "unsafe_path"), null);
   let d = r ? Xqt(e, !1, xJ(e)) : new rn(e);
   try {
-    let p = await Dt(
+    let p = await withTimeout(
       d.readByPath(y_(o)),
       t,
       `promptIndex fetch for ${e.mount}`,
@@ -8058,7 +8058,7 @@ function Doe(e) {
 }
 var ha = "tengu_loggia_roster",
   ga = [],
-  Vd = m(() => v(s().trim())),
+  Vd = createLazyValue(() => v(s().trim())),
   ya;
 function qd() {
   let e = H(ha, ga),
@@ -8142,7 +8142,7 @@ function _tr(e) {
   return on(a.CLAUDE_CODE_GAULT_KESTREL, Xd, e);
 }
 function ytr() {
-  let e = Ei();
+  let e = getSessionFeatureCache();
   return (
     (e.bashActFirstEnabled ??= on(a.CLAUDE_CODE_GORSE_PLOVER, Qd, void 0)),
     e.bashActFirstEnabled
@@ -8258,7 +8258,7 @@ function xa(e) {
   let L = an().promptModelSwapsLogged;
   if (!L.has(e))
     (L.add(e),
-      i("tengu_breezy_horizon", {
+      logEvent("tengu_breezy_horizon", {
         from_model: bt(r),
         to_model: bt(_),
         source: fromEnum(p),
@@ -8573,10 +8573,10 @@ function Vfe() {
   );
 }
 function Rt(e) {
-  Ei().stoneShellServed = e;
+  getSessionFeatureCache().stoneShellServed = e;
 }
 function DK() {
-  return Ei().stoneShellServed ?? Vfe();
+  return getSessionFeatureCache().stoneShellServed ?? Vfe();
 }
 function Na(e, t) {
   let r = mf.replace("{memory_dir}", () => e),
@@ -8875,8 +8875,8 @@ function Qe(e, t, r) {
     let p = U$(e);
     if (p !== void 0) {
       yf(r, p).then(
-        (_) => i("tengu_memdir_loaded", _ ? { ...o, ..._ } : o),
-        () => i("tengu_memdir_loaded", o),
+        (_) => logEvent("tengu_memdir_loaded", _ ? { ...o, ..._ } : o),
+        () => logEvent("tengu_memdir_loaded", o),
       );
       return;
     }
@@ -8890,14 +8890,14 @@ function Qe(e, t, r) {
         for (let x of p)
           if (x.isFile()) _++;
           else if (x.isDirectory()) L++;
-        i("tengu_memdir_loaded", {
+        logEvent("tengu_memdir_loaded", {
           ...o,
           total_file_count: _,
           total_subdir_count: L,
         });
       },
       () => {
-        i("tengu_memdir_loaded", o);
+        logEvent("tengu_memdir_loaded", o);
       },
     );
 }
@@ -9215,13 +9215,13 @@ ${_}`;
   }
   let ue = a.CLAUDE_CODE_DISABLE_AUTO_MEMORY;
   if (
-    (i("tengu_memdir_disabled", {
+    (logEvent("tengu_memdir_disabled", {
       disabled_by_env_var: ue,
       disabled_by_setting: !ue && getInitialSettings().autoMemoryEnabled === !1,
     }),
     process.env.CLAUDE_MEMORY_STORES?.trim())
   )
-    i("tengu_team_memdir_disabled", {});
+    logEvent("tengu_team_memdir_disabled", {});
   return null;
 }
 function Ua(e) {
@@ -9385,12 +9385,12 @@ function NTt(e, t, r, o) {
     _ = `${zj(e)}-${t}.js`;
   return (
     (async () => {
-      let L = M() && o ? Cf() : void 0,
+      let L = isHoverRestEnabled() && o ? Cf() : void 0,
         x = K();
       try {
         if (
           (await mkdir(d, { recursive: !0, mode: 448 }),
-          M() && o && L !== void 0 && _n(_))
+          isHoverRestEnabled() && o && L !== void 0 && _n(_))
         ) {
           let k = await o.write(
             Ce.sidecar(L, x, ["workflows", "scripts", _]),
@@ -9635,7 +9635,7 @@ var qa = `- Fast file pattern matching tool that works with any codebase size
 - Use this tool when you need to find files by name patterns`,
   Uf = `${qa}
 - When you are doing an open ended search that may require multiple rounds of globbing and grepping, use the ${mt} tool instead (if available)`;
-var Ka = pe(kJ(), 1);
+var Ka = toESM(kJ(), 1);
 function $Tt(e) {
   return Qa.compileErrorMessage(e);
 }
@@ -9684,7 +9684,7 @@ function Go(e, t, r, o = "treating it as matching nothing") {
   (n(`[${e}] gitignore-style pattern is unusable (${r}); ${o}: ${t}`, {
     level: "warn",
   }),
-    i("tengu_uncompilable_ignore_pattern", { site: Gf[e] }));
+    logEvent("tengu_uncompilable_ignore_pattern", { site: Gf[e] }));
 }
 function MK(e, t) {
   return e.filter((r) => {
@@ -9749,8 +9749,8 @@ function tl() {
 }
 function Bn(e, t) {
   let r = tl(),
-    o = r ? dg(e) : e,
-    d = r ? dg(t) : t;
+    o = r ? normalizePathForComparison(e) : e,
+    d = r ? normalizePathForComparison(t) : t;
   if (o === d) return !0;
   let p = Ja(o, d);
   return p !== "" && p !== ".." && !p.startsWith(`..${Pa}`) && !Kf(p);
@@ -9766,11 +9766,11 @@ var Jf = [
 ];
 function czt(e, t) {
   let r = tl(),
-    o = (p) => (r ? dg(p) : p),
-    d = r ? dg(e) : e;
+    o = (p) => (r ? normalizePathForComparison(p) : p),
+    d = r ? normalizePathForComparison(e) : e;
   return t.some((p) => {
     if (!Bn(p, e)) return !1;
-    let _ = Ja(r ? dg(p) : p, d);
+    let _ = Ja(r ? normalizePathForComparison(p) : p, d);
     if (_ === "") return !0;
     let L = _.split(Pa);
     if (L[0].startsWith(".")) return !0;
@@ -15989,7 +15989,7 @@ function isDangerousTaskPermission(e, t) {
   return Tu(e) === mt;
 }
 function rp(e) {
-  return e === ia;
+  return e === MONITOR_TOOL_NAME;
 }
 class zl {
   verdicts = new Map();
@@ -16525,7 +16525,7 @@ function xp(e) {
     let r = ae().realpathSync(e);
     t.push(xi(Ne(r, "seed-admin")));
   } catch {}
-  return Y(t);
+  return dedupe(t);
 }
 function xi(e) {
   return ze(e).split(Re).map(nc).join(Re);
@@ -17430,9 +17430,9 @@ function Dp(e, t) {
 function Np(e, t) {
   let r = t.options.tools ?? [];
   return (
-    r.some((o) => Kt(o, e)) &&
-    !r.some((o) => Kt(o, tt)) &&
-    !r.some((o) => Kt(o, Ni))
+    r.some((o) => matchesToolName(o, e)) &&
+    !r.some((o) => matchesToolName(o, tt)) &&
+    !r.some((o) => matchesToolName(o, Ni))
   );
 }
 function readAutoAllowedForMutation(e, t, r, o) {
@@ -17457,7 +17457,7 @@ function Kl(e, t, r) {
   let o = `${r}:${e}`;
   if (!uc(o)) return;
   (cc().add(o),
-    i("tengu_playful_lobster_fired", {
+    logEvent("tengu_playful_lobster_fired", {
       step: fromEnum(t),
       mode: S("shadow"),
       permissionMode: fromEnum(r),

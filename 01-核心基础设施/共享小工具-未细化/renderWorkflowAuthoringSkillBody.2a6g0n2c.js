@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 104 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { XPt, Sgr } from "./chunk-jkmndwnz.js";
+import { renderWorkflowAuthoringSkillBody as XPt, registerWorkflowAuthoringSkill as Sgr } from "./workflow-authoring-skill.js";
 import "../../02-功能模块/Workflow编排/chunk-w0pgmfvw.js";
 export {
   Sgr as registerWorkflowAuthoringSkill,

@@ -21,13 +21,13 @@ var o = new Set([
   ]),
   r = new Set(["can_use_tool", "request_user_dialog", "elicitation"]),
   i = new Set(["set_model", "set_permission_mode", "set_max_thinking_tokens"]);
-function sdt(e) {
+function isUserActivityRequest(e) {
   return o.has(e.request.subtype) && !i.has(e.request.subtype);
 }
-function Zjn() {
+function markUserInteraction() {
   Ez(!0);
 }
-function usn(e, t) {
+function isUserDrivenInbound(e, t) {
   switch (e.type) {
     case "user":
       return !(t?.hostOwnsOrigin === !0 && iQe(e.origin, e.isSynthetic));
@@ -39,13 +39,13 @@ function usn(e, t) {
       return !1;
   }
 }
-function ibe(e) {
+function isHumanInputRequest(e) {
   return r.has(e.request.subtype);
 }
 var a = {
   refusal_fallback_prompt: "choose: retry on fallback model or edit prompt",
 };
-function odt(e, t, n, s) {
+function buildPendingActionDetail(e, t, n, s) {
   return {
     tool_name: `dialog:${e}`,
     display_tool_name: "Claude needs your input",
@@ -56,4 +56,4 @@ function odt(e, t, n, s) {
     input: { dialog_kind: e, payload: t },
   };
 }
-export { odt, sdt, Zjn, usn, ibe };
+export { buildPendingActionDetail, isUserActivityRequest, markUserInteraction, isUserDrivenInbound, isHumanInputRequest };

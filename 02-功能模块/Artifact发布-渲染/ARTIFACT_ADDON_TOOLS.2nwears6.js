@@ -10,12 +10,12 @@
 
 // [preload stripped] 原本在此预载 224 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ARTIFACT_TOOL_NAME, ARTIFACT_COMMENTS_TOOL_NAME, ARTIFACT_DATA_TOOL_NAME, ARTIFACT_CHECK_TOOL_NAME, ArtifactInputError } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { PREVIEW_PROMPT_PARAGRAPH, commentsPromptParagraphs, DB_PROMPT_PARAGRAPH, VERIFY_PROMPT_PARAGRAPH } from "./chunk-pdd7kz7p.js";
 import { gI, lwe, Tte } from "./chunk-qpgskeea.js";
 import "./chunk-x29r16ke.js";
 import { swe, iwe, Qze } from "./chunk-01jnk0v2.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-0ghshta0.js";
+import "../../01-核心基础设施/共享小工具-未细化/claude-browser-mcp-server.js";
 import { artifactSchemaGates } from "./chunk-b6k1z7an.js";
 import "./chunk-fx5ekm7e.js";
 import {
@@ -30,7 +30,7 @@ import {
   MGe,
 } from "./chunk-pvztfdrb.js";
 import "../Teammates团队/chunk-weg7y2ya.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wm4s322b.js";
+import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js";
 import "../Bridge-RemoteControl/chunk-jpq2fv3g.js";
 import { Out, Fon } from "./chunk-yrjr7v83.js";
@@ -147,7 +147,7 @@ function g(e) {
 function i(e) {
   let a = (t) => lwe(e.addon, t),
     r = (t) => Tte(e.addon, t);
-  return Tt({
+  return buildTool({
     name: e.name,
     get searchHint() {
       return g(e);

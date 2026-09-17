@@ -11,19 +11,19 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { cn } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var b = 58,
   W = 30;
 function zB() {
   let d = _(39),
     [L] = cn(),
     io = tn(),
-    { rows: to } = Se();
+    { rows: to } = useTerminalSize();
   if (io || to < W) {
     let c;
-    if (d[0] === p)
+    if (d[0] === MEMO_CACHE_SENTINEL)
       ((c = r(t, {
         color: "claude",
         children: ["Welcome to Claude Code", " "],
@@ -31,7 +31,7 @@ function zB() {
         (d[0] = c));
     else c = d[0];
     let m;
-    if (d[1] === p)
+    if (d[1] === MEMO_CACHE_SENTINEL)
       ((m = r(t, {
         children: [
           c,
@@ -72,7 +72,7 @@ function zB() {
   }
   if (["light", "light-daltonized", "light-ansi"].includes(L)) {
     let c;
-    if (d[4] === p)
+    if (d[4] === MEMO_CACHE_SENTINEL)
       ((c = r(t, {
         color: "claude",
         children: ["Welcome to Claude Code", " "],
@@ -80,7 +80,7 @@ function zB() {
         (d[4] = c));
     else c = d[4];
     let m, g, s, y, k, R, h, f, M;
-    if (d[5] === p)
+    if (d[5] === MEMO_CACHE_SENTINEL)
       ((m = r(t, {
         children: [
           c,
@@ -159,7 +159,7 @@ function zB() {
         (f = d[12]),
         (M = d[13]));
     let A;
-    if (d[14] === p)
+    if (d[14] === MEMO_CACHE_SENTINEL)
       ((A = r(t, {
         children: [
           e(t, {
@@ -172,7 +172,7 @@ function zB() {
         (d[14] = A));
     else A = d[14];
     let N, O;
-    if (d[15] === p)
+    if (d[15] === MEMO_CACHE_SENTINEL)
       ((N = r(t, {
         children: [
           e(t, {
@@ -193,7 +193,7 @@ function zB() {
         (d[16] = O));
     else ((N = d[15]), (O = d[16]));
     let x;
-    if (d[17] === p)
+    if (d[17] === MEMO_CACHE_SENTINEL)
       ((x = r(t, {
         children: [
           "      ",
@@ -208,7 +208,7 @@ function zB() {
         (d[17] = x));
     else x = d[17];
     let S;
-    if (d[18] === p)
+    if (d[18] === MEMO_CACHE_SENTINEL)
       ((S = r(t, {
         children: [
           "      ",
@@ -224,7 +224,7 @@ function zB() {
         (d[18] = S));
     else S = d[18];
     let v;
-    if (d[19] === p)
+    if (d[19] === MEMO_CACHE_SENTINEL)
       ((v = r(t, {
         children: [
           "      ",
@@ -239,7 +239,7 @@ function zB() {
         (d[19] = v));
     else v = d[19];
     let V;
-    if (d[20] === p)
+    if (d[20] === MEMO_CACHE_SENTINEL)
       ((V = e(o, {
         width: b,
         children: r(o, {
@@ -278,12 +278,12 @@ function zB() {
     return V;
   }
   let c;
-  if (d[21] === p)
+  if (d[21] === MEMO_CACHE_SENTINEL)
     ((c = r(t, { color: "claude", children: ["Welcome to Claude Code", " "] })),
       (d[21] = c));
   else c = d[21];
   let m, g, s, y, k, R, h;
-  if (d[22] === p)
+  if (d[22] === MEMO_CACHE_SENTINEL)
     ((m = r(t, {
       children: [
         c,
@@ -348,7 +348,7 @@ function zB() {
       (R = d[27]),
       (h = d[28]));
   let A, N, O, f, M;
-  if (d[29] === p)
+  if (d[29] === MEMO_CACHE_SENTINEL)
     ((f = r(t, {
       children: [
         e(t, {
@@ -388,7 +388,7 @@ function zB() {
       (d[33] = M));
   else ((A = d[29]), (N = d[30]), (O = d[31]), (f = d[32]), (M = d[33]));
   let x;
-  if (d[34] === p)
+  if (d[34] === MEMO_CACHE_SENTINEL)
     ((x = e(t, {
       color: "clawd_body",
       children: " \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 ",
@@ -396,7 +396,7 @@ function zB() {
       (d[34] = x));
   else x = d[34];
   let S;
-  if (d[35] === p)
+  if (d[35] === MEMO_CACHE_SENTINEL)
     ((S = r(t, {
       children: [
         "      ",
@@ -409,7 +409,7 @@ function zB() {
       (d[35] = S));
   else S = d[35];
   let v;
-  if (d[36] === p)
+  if (d[36] === MEMO_CACHE_SENTINEL)
     ((v = r(t, {
       children: [
         "      ",
@@ -426,7 +426,7 @@ function zB() {
       (d[36] = v));
   else v = d[36];
   let V;
-  if (d[37] === p)
+  if (d[37] === MEMO_CACHE_SENTINEL)
     ((V = r(t, {
       children: [
         "      ",
@@ -440,7 +440,7 @@ function zB() {
       (d[37] = V));
   else V = d[37];
   let oo;
-  if (d[38] === p)
+  if (d[38] === MEMO_CACHE_SENTINEL)
     ((oo = e(o, {
       width: b,
       children: r(o, {
@@ -489,7 +489,7 @@ function H(no) {
         (l[1] = i));
     else i = l[1];
     let z;
-    if (l[2] === p)
+    if (l[2] === MEMO_CACHE_SENTINEL)
       ((z = r(t, {
         dimColor: !0,
         children: [
@@ -517,7 +517,7 @@ function H(no) {
     if (l[3] !== i) ((n = r(t, { children: [i, z] })), (l[3] = i), (l[4] = n));
     else n = l[4];
     let I, P, B, D, T, q, F, G;
-    if (l[5] === p)
+    if (l[5] === MEMO_CACHE_SENTINEL)
       ((B = e(t, {
         children: "..........................................................",
       })),
@@ -567,7 +567,7 @@ function H(no) {
         (F = l[11]),
         (G = l[12]));
     let J;
-    if (l[13] === p)
+    if (l[13] === MEMO_CACHE_SENTINEL)
       ((J = r(t, {
         children: [
           e(t, {
@@ -580,7 +580,7 @@ function H(no) {
         (l[13] = J));
     else J = l[13];
     let K, Q, U;
-    if (l[14] === p)
+    if (l[14] === MEMO_CACHE_SENTINEL)
       ((K = r(t, {
         children: [
           e(t, {
@@ -606,7 +606,7 @@ function H(no) {
         (l[16] = U));
     else ((K = l[14]), (Q = l[15]), (U = l[16]));
     let X;
-    if (l[17] === p)
+    if (l[17] === MEMO_CACHE_SENTINEL)
       ((X = r(t, {
         children: [
           "      ",
@@ -623,7 +623,7 @@ function H(no) {
         (l[17] = X));
     else X = l[17];
     let Y;
-    if (l[18] === p)
+    if (l[18] === MEMO_CACHE_SENTINEL)
       ((Y = r(t, {
         children: [
           "       ",
@@ -634,7 +634,7 @@ function H(no) {
         (l[18] = Y));
     else Y = l[18];
     let Z;
-    if (l[19] === p)
+    if (l[19] === MEMO_CACHE_SENTINEL)
       ((Z = r(t, {
         children: [
           ".......",
@@ -671,7 +671,7 @@ function H(no) {
       (l[23] = i));
   else i = l[23];
   let z;
-  if (l[24] === p)
+  if (l[24] === MEMO_CACHE_SENTINEL)
     ((z = r(t, {
       dimColor: !0,
       children: [
@@ -698,7 +698,7 @@ function H(no) {
   if (l[25] !== i) ((n = r(t, { children: [i, z] })), (l[25] = i), (l[26] = n));
   else n = l[26];
   let B, D, T, q, F, G;
-  if (l[27] === p)
+  if (l[27] === MEMO_CACHE_SENTINEL)
     ((B = e(t, {
       children: "..........................................................",
     })),
@@ -735,7 +735,7 @@ function H(no) {
       (F = l[31]),
       (G = l[32]));
   let I, P, J, K, Q;
-  if (l[33] === p)
+  if (l[33] === MEMO_CACHE_SENTINEL)
     ((I = r(t, {
       children: [
         e(t, {
@@ -775,7 +775,7 @@ function H(no) {
       (l[37] = Q));
   else ((I = l[33]), (P = l[34]), (J = l[35]), (K = l[36]), (Q = l[37]));
   let U;
-  if (l[38] === p)
+  if (l[38] === MEMO_CACHE_SENTINEL)
     ((U = r(t, {
       children: [
         "                                                      ",
@@ -786,7 +786,7 @@ function H(no) {
       (l[38] = U));
   else U = l[38];
   let X;
-  if (l[39] === p)
+  if (l[39] === MEMO_CACHE_SENTINEL)
     ((X = r(t, {
       children: [
         "      ",
@@ -805,7 +805,7 @@ function H(no) {
       (l[39] = X));
   else X = l[39];
   let Y;
-  if (l[40] === p)
+  if (l[40] === MEMO_CACHE_SENTINEL)
     ((Y = r(t, {
       children: [
         "       ",
@@ -816,7 +816,7 @@ function H(no) {
       (l[40] = Y));
   else Y = l[40];
   let Z;
-  if (l[41] === p)
+  if (l[41] === MEMO_CACHE_SENTINEL)
     ((Z = r(t, {
       children: [
         ".......",

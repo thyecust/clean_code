@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { njn, aNt } from "../../02-功能模块/Bridge-RemoteControl/chunk-hbndb8am.js";
-import "../../02-功能模块/ClaudeinChrome/chunk-317fgfn3.js";
+import "../../02-功能模块/ClaudeinChrome/chrome-tool-error-classifier.js";
 import "../../02-功能模块/图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import "../../02-功能模块/图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import "../../02-功能模块/MCP客户端/chunk-j8556pzt.js";

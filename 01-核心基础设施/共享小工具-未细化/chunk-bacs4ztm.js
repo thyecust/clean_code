@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Z } from "./chunk-510m1t2d.js";
+import { sleep } from "./async-timeout-utils.js";
 function gCe(e) {
   return function (r) {
     let t = e * 2 ** (r - 1),
       i = Math.round(t * (0.5 + Math.random() / 2));
-    return Z(i);
+    return sleep(i);
   };
 }
 export { gCe };

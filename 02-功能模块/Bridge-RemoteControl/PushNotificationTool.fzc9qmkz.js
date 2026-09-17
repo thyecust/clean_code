@@ -11,15 +11,15 @@
 // [preload stripped] 原本在此预载 79 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { BOn, Nn, ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { m0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { Eo } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
-import { cR, VQn, KQn } from "./chunk-3j7ezsr7.js";
+import { PUSH_NOTIFICATION_TOOL_NAME, PUSH_NOTIFICATION_TOOL_DESCRIPTION, getPushNotificationToolPrompt } from "./push-notification-tool.js";
 import { s, O, c, Qe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var S = m(() =>
+var S = createLazyValue(() =>
     Qe({
       message: s()
         .min(1)
@@ -29,7 +29,7 @@ var S = m(() =>
       status: k("proactive"),
     }),
   ),
-  _ = m(() =>
+  _ = createLazyValue(() =>
     c({
       message: s(),
       pushSent: O().optional(),
@@ -47,8 +47,8 @@ var S = m(() =>
     }),
   ),
   b = 300000,
-  PushNotificationTool = Tt({
-    name: cR,
+  PushNotificationTool = buildTool({
+    name: PUSH_NOTIFICATION_TOOL_NAME,
     searchHint:
       "send a notification to the user via terminal and optionally mobile",
     maxResultSizeChars: 1000,
@@ -73,10 +73,10 @@ var S = m(() =>
       return e.message;
     },
     async description() {
-      return VQn;
+      return PUSH_NOTIFICATION_TOOL_DESCRIPTION;
     },
     async prompt() {
-      return KQn();
+      return getPushNotificationToolPrompt();
     },
     mapToolResultToToolResultBlockParam(e, t) {
       let o;
@@ -106,7 +106,7 @@ var S = m(() =>
             r = a.CLAUDE_CODE_REMOTE || Nn(),
             p = r || ic(),
             l = ({ pushSent: f, localSent: d, disabledReason: h }) => {
-              i("tengu_push_notification_send", {
+              logEvent("tengu_push_notification_send", {
                 message_length: t.length,
                 push_sent: f,
                 local_sent: d,

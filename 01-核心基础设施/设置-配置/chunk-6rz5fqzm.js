@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { j, B, g_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { Nse, ee, ARe } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { da } from "./设置-配置.aqbb35ee.js";
 import { rRt, ABe, uRt, getBasePolicySettings, getBasePolicySettingsOrigin, getPolicyHelperSourceLoadErrors } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { Qxn, Bet } from "../共享小工具-未细化/chunk-1bqqnyc1.js";
+import { KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS, ensureKeychainPrefetchCompleted } from "../共享小工具-未细化/keychain-prefetch.js";
 import { goe } from "../遥测-OpenTelemetry/chunk-x7kby92q.js";
-import { Q2n } from "../共享小工具-未细化/chunk-01r8gcpb.js";
+import { checkVersionPolicy } from "../共享小工具-未细化/version-policy.js";
 class s {
   settingsLoaded = !1;
   helperResult = null;
@@ -32,8 +32,8 @@ function l() {
 }
 async function sPe(t) {
   if (!l().claimSettingsLoad()) return;
-  let e = M() ? t?.backend : void 0;
-  if (M() && e !== void 0) {
+  let e = isHoverRestEnabled() ? t?.backend : void 0;
+  if (isHoverRestEnabled() && e !== void 0) {
     let [
       { seedUserSettings: o },
       { primeWindowsCredManBackendEnabled: i },
@@ -50,7 +50,7 @@ async function sPe(t) {
       i(ee().cachedGrowthBookFeatures?.tengu_windows_credman === !0),
       await a(e));
   } else await ARe();
-  if ((await rRt(), await Bet(Qxn), M() && e !== void 0)) {
+  if ((await rRt(), await ensureKeychainPrefetchCompleted(KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS), isHoverRestEnabled() && e !== void 0)) {
     let [
         { credentialsStoreFor: o },
         { primeFileDescriptorCredentials: i },
@@ -64,7 +64,7 @@ async function sPe(t) {
     if (r !== void 0) (await i(r, { bgAuthSnapshot: "leave" }), await a(r));
   }
   (g_e(Nse), goe());
-  let n = Q2n();
+  let n = checkVersionPolicy();
   if (n)
     (process.stderr.write(`${n}
 `),

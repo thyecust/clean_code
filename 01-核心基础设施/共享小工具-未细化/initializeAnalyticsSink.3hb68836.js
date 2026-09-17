@@ -9,5 +9,5 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 77 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { _F } from "./chunk-hxq0hkxe.js";
+import { initializeAnalyticsSink as _F } from "./analytics-event-sink.js";
 export { _F as initializeAnalyticsSink };

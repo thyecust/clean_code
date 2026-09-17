@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 212 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { npr, fnn, ADt, Ggr } from "../Teammates团队/chunk-r8fvp46d.js";
+import { buildRenameSystemReminder as npr, buildSessionNameYieldedNotice as fnn, performRename as ADt, runRenameCommand as Ggr } from "../Teammates团队/rename-session.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tc59qdh4.js";
 export {
   Ggr as call,

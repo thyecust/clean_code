@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { LMn } from "./chunk-4q4fh1a5.js";
-import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { getAudioCaptureNativeModule } from "./audio-capture-native.js";
+import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var a = null,
   i = !1;
 function r() {
@@ -17,7 +17,7 @@ function r() {
   let t = "darwin";
   if (t !== "darwin" && t !== "linux" && t !== "win32") return null;
   try {
-    return ((a = LMn()), a);
+    return ((a = getAudioCaptureNativeModule()), a);
   } catch {}
   let o = `arm64-${t}`,
     u = (t === "linux" ? [o, `${o}-musl`] : [o]).flatMap((n) => [
@@ -26,7 +26,7 @@ function r() {
     ]);
   for (let n of u)
     try {
-      return ((a = Ae(n)), a);
+      return ((a = importMetaRequire(n)), a);
     } catch {}
   return null;
 }

@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { Ls } from "./认证-OAuth登录.419zdfz3.js";
-import { w, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var d = w(function (t) {
+import { commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var d = commonJS(function (t) {
   Object.defineProperty(t, "__esModule", { value: !0 });
   t.getMachineId = void 0;
-  var c = Ae("fs"),
+  var c = importMetaRequire("fs"),
     a = Ls();
   async function s() {
     let i = ["/etc/machine-id", "/var/lib/dbus/machine-id"];

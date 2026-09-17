@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { Tkt, Ekt, Klr } from "../../../01-核心基础设施/共享小工具-未细化/chunk-8549txjj.js";
-import { S2e, Wtt, N0n, F0n } from "../../../01-核心基础设施/共享小工具-未细化/chunk-29sq3mjv.js";
+import { toUint8Array, isEmptyData, uint32ToBytes, toUint32Array } from "../../../01-核心基础设施/共享小工具-未细化/byte-array-conversion.js";
 import { ta } from "./chunk-mwf4pmq2.js";
-import { T2e } from "../../../01-核心基础设施/共享小工具-未细化/chunk-kzf7s1er.js";
-import { pe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var F = pe(ta());
+import { hexEncodingModule } from "../../../01-核心基础设施/共享小工具-未细化/hex-encoding-module.js";
+import { toESM } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var F = toESM(ta());
 class pL extends F.ServiceException {
   constructor(e) {
     super(e);
@@ -130,13 +130,13 @@ var G = (function () {
   }
   return (
     (e.prototype.update = function (t) {
-      if (Wtt(t)) return;
-      this.crc32.update(S2e(t));
+      if (isEmptyData(t)) return;
+      this.crc32.update(toUint8Array(t));
     }),
     (e.prototype.digest = function () {
       return Tkt(this, void 0, void 0, function () {
         return Ekt(this, function (t) {
-          return [2, N0n(this.crc32.digest())];
+          return [2, uint32ToBytes(this.crc32.digest())];
         });
       });
     }),
@@ -220,9 +220,9 @@ var j = [
     601450431, 3009837614, 3294710456, 1567103746, 711928724, 3020668471,
     3272380065, 1510334235, 755167117,
   ],
-  z = F0n(j);
-var l = pe(T2e());
-var v = pe(T2e());
+  z = toUint32Array(j);
+var l = toESM(hexEncodingModule());
+var v = toESM(hexEncodingModule());
 class B {
   bytes;
   constructor(e) {

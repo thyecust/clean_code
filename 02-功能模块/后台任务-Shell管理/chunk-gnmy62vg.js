@@ -19,7 +19,7 @@ import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8
 import { sigtermThenKill, reapDetachedRepl, captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { lstat, readdir, unlink } from "fs/promises";
 import { connect } from "net";
 import { basename, join as x } from "path";
@@ -275,7 +275,7 @@ async function UZt(e, t) {
   if (i !== t) return "foreign";
   return sigtermThenKill([-e, e], t) ? "killed" : "gone";
 }
-var y = pe(pg(), 1),
+var y = toESM(pg(), 1),
   R = ["dev", "engine"];
 function Eye(e) {
   return R.find((t) => e.includes(`-${t}.`)) ?? null;

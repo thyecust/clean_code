@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { UQ } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { w, Ae } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var m = w(function (T) {
+import { commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var m = commonJS(function (T) {
   Object.defineProperty(T, "__esModule", { value: !0 });
   T.getHomeDir = void 0;
-  var W = Ae("os"),
-    V = Ae("path"),
+  var W = importMetaRequire("os"),
+    V = importMetaRequire("path"),
     h = {},
     G = () => {
       if (process && process.geteuid) return `${process.geteuid()}`;
@@ -35,11 +35,11 @@ var m = w(function (T) {
     };
   T.getHomeDir = U;
 });
-var _ = w(function (v) {
+var _ = commonJS(function (v) {
   Object.defineProperty(v, "__esModule", { value: !0 });
   v.getSSOTokenFilepath = void 0;
-  var X = Ae("crypto"),
-    B = Ae("path"),
+  var X = importMetaRequire("crypto"),
+    B = importMetaRequire("path"),
     J = m(),
     z = (e) => {
       let r = (0, X.createHash)("sha1").update(e).digest("hex");
@@ -53,10 +53,10 @@ var _ = w(function (v) {
     };
   v.getSSOTokenFilepath = z;
 });
-var C = w(function (j) {
+var C = commonJS(function (j) {
   Object.defineProperty(j, "__esModule", { value: !0 });
   j.getSSOTokenFromFile = j.tokenIntercept = void 0;
-  var Q = Ae("fs/promises"),
+  var Q = importMetaRequire("fs/promises"),
     Y = _();
   j.tokenIntercept = {};
   var Z = async (e) => {
@@ -67,10 +67,10 @@ var C = w(function (j) {
   };
   j.getSSOTokenFromFile = Z;
 });
-var L = w(function (H) {
+var L = commonJS(function (H) {
   Object.defineProperty(H, "__esModule", { value: !0 });
   H.readFile = H.fileIntercept = H.filePromises = void 0;
-  var ee = Ae("fs/promises");
+  var ee = importMetaRequire("fs/promises");
   H.filePromises = {};
   H.fileIntercept = {};
   var te = (e, t) => {
@@ -81,11 +81,11 @@ var L = w(function (H) {
   };
   H.readFile = te;
 });
-var HA = w(function (a) {
+var HA = commonJS(function (a) {
   var f = m(),
     N = _(),
     E = C(),
-    F = Ae("path"),
+    F = importMetaRequire("path"),
     g = UQ(),
     u = L(),
     A = "AWS_PROFILE",

@@ -10,9 +10,9 @@
 
 // [preload stripped] 原本在此预载 172 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z, kt, gv } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep, withDeadline, raceWithAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { tl, NL } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -21,11 +21,11 @@ import { Ve, R, dt, l, A, dot, Ps } from "../../00-第三方库/@anthropic-ai/sd
 import { b, z, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { St, dxe, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { pXt, IPn, $nt, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Pc } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
-import { rd } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { te, truncateToWidth, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { HCn, Wi, si, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -72,23 +72,23 @@ import { vAe, ANe, Iyn } from "./chunk-ct52ffwb.js";
 import "../自动更新-安装/chunk-brx72pf1.js";
 import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
 import { i9, g4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
-import { qtn, Ile } from "../Workflow编排/chunk-qjm604e8.js";
+import { NESTED_SESSION_MARKER_ENV_VARS, NON_INHERITED_SESSION_ENV_VARS } from "../Workflow编排/session-env-vars.js";
 import { eI } from "../../00-第三方库/_未识别/第三方库-其他/chunk-x46ksw6d.js";
-import { Hle } from "../../01-核心基础设施/共享小工具-未细化/chunk-sfq8xeqw.js";
-import { ldt, CPe, Bee, abe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2skajgkt.js";
+import { getBridgePollIntervalConfig } from "../../01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js";
+import { parseWorkSecret, sessionIdsMatch, buildSessionApiUrl, registerWorker } from "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
 import { Wtn, Xat } from "./chunk-1g5kqtqx.js";
-import { Z0e, Yat } from "../../01-核心基础设施/共享小工具-未细化/chunk-6t3vmc74.js";
+import { isPlainObject, parsePlist } from "../../01-核心基础设施/共享小工具-未细化/plist-parser.js";
 import { yBn, Ple, Jat, N9e, F9e, bBn, wBn } from "./chunk-2c3z3wjk.js";
-import { Jw } from "../../01-核心基础设施/共享小工具-未细化/chunk-j4vveza5.js";
-import { Qat } from "../../01-核心基础设施/共享小工具-未细化/chunk-wmwgjjnt.js";
-import { lbe } from "../../01-核心基础设施/共享小工具-未细化/chunk-42rkrq9r.js";
+import { trySetRawMode } from "../../01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js";
+import { appendClaudeCodeArgs } from "../../01-核心基础设施/共享小工具-未细化/claude-code-args.js";
+import { getCooContextProperties } from "../../01-核心基础设施/共享小工具-未细化/coo-context-properties.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
-import { e5 } from "./chunk-eg5a0eq0.js";
+import { REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE } from "./remote-control-policy-messages.js";
 import { vRe } from "./chunk-4zd60pbm.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P, Hxt } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
 import { homedir, hostname } from "os";
 import { basename, join as zn, resolve } from "path";
@@ -668,11 +668,11 @@ function Jt(e) {
         },
         ae = {
           ...e.env,
-          ...Object.fromEntries(Ile.map((j) => [j, void 0])),
-          ...Object.fromEntries(qtn.map((j) => [j, e.env[j]])),
+          ...Object.fromEntries(NON_INHERITED_SESSION_ENV_VARS.map((j) => [j, void 0])),
+          ...Object.fromEntries(NESTED_SESSION_MARKER_ENV_VARS.map((j) => [j, e.env[j]])),
           ...Pe,
         },
-        ce = new Set([...Ile, ...Object.keys(Pe)]);
+        ce = new Set([...NON_INHERITED_SESSION_ENV_VARS, ...Object.keys(Pe)]);
       for (let j of Object.keys(ae))
         if (!ce.has(j) && ce.has(j.toUpperCase())) delete ae[j];
       if (
@@ -910,7 +910,7 @@ function wr(e) {
     } else if (w === sn) o = typeof _ === "string" && _ ? _ : null;
     else p++;
   let r = [],
-    C = Qat(r, t, on, (w) =>
+    C = appendClaudeCodeArgs(r, t, on, (w) =>
       n(`[bridge:server-config] skipped ${w} claude_code_arg`),
     );
   return (
@@ -929,7 +929,7 @@ function cn(e, t) {
   if (!e) return { meta: null, ignored: 0, dropped: null };
   let o = un(e.content);
   if (!o) return { meta: null, ignored: 0, dropped: "undecodable" };
-  let d = G(Object.keys(o), (T) => T !== Eq);
+  let d = countMatching(Object.keys(o), (T) => T !== Eq);
   if (d > 0)
     n(
       `[bridge:server-config] ignoring ${d} other server(s) in mcp_config (only ${Eq} is honored)`,
@@ -1073,7 +1073,7 @@ function fn(e, t) {
     `[bridge:server-config] not applied sessionId=${e}: gate_off (tengu_bridge_apply_server_session_config=false)`,
     { level: "warn" },
   ),
-    i("tengu_bridge_server_config_rejected", { ...t, reason: S("gate_off") }),
+    logEvent("tengu_bridge_server_config_rejected", { ...t, reason: S("gate_off") }),
     logFeatureSad("bridge_server_session_config", "gate_off", t));
 }
 async function br(e, t) {
@@ -1106,7 +1106,7 @@ async function br(e, t) {
     (n(`[bridge:server-config] not applied sessionId=${t.sessionId}: ${r}`, {
       level: "warn",
     }),
-      i("tengu_bridge_server_config_rejected", {
+      logEvent("tengu_bridge_server_config_rejected", {
         ...C,
         reason: S("prepare_failed"),
       }),
@@ -1118,7 +1118,7 @@ async function br(e, t) {
       `[bridge:server-config] nothing applied sessionId=${t.sessionId}: every carried value was rejected`,
       { level: "warn" },
     ),
-      i("tengu_bridge_server_config_rejected", {
+      logEvent("tengu_bridge_server_config_rejected", {
         ...C,
         reason: S("nothing_applied"),
       }),
@@ -1135,7 +1135,7 @@ async function br(e, t) {
       `[bridge:server-config] applied sessionId=${t.sessionId} args=${d.extraArgs.length} appendPrompt=${d.appendSystemPrompt ? "present" : "unset"} metaMcp=${w} autoAllow=${d.autoAllowTools.length}`,
       { level: d.metaDropReason ? "warn" : "debug" },
     ),
-    i("tengu_bridge_server_config_applied", C),
+    logEvent("tengu_bridge_server_config_applied", C),
     d.metaDropReason !== null)
   )
     logFeatureSad("bridge_server_session_config", "meta_mcp_not_verified", C);
@@ -1593,7 +1593,7 @@ var yn = 1500,
   In = "/Library/Developer/CommandLineTools/usr/bin",
   Mn = "/usr/local/cuda/version.json",
   Dn = "/proc/driver/nvidia/version",
-  On = m(() => c({ cuda: c({ version: s() }) }));
+  On = createLazyValue(() => c({ cuda: c({ version: s() }) }));
 function Pr() {
   let e = H("tengu_bridge_host_profile", "off");
   return Vge.find((t) => t === e) ?? "off";
@@ -1662,7 +1662,7 @@ async function tr(e) {
     if (t === "off") return;
     let o = er(t);
     if (o === "off") {
-      i("tengu_bridge_host_profile_collect", { outcome: S("disabled") });
+      logEvent("tengu_bridge_host_profile_collect", { outcome: S("disabled") });
       return;
     }
     return await Bn({ includeMcpServers: o === "full", signal: e });
@@ -1681,7 +1681,7 @@ async function Bn({ includeMcpServers: e, signal: t }) {
     if (d === "darwin") r.push(Ln(p), Wn(p));
     if (d === "linux") r.push(jn(p));
     if (e) r.push(Hn(p));
-    let C = kt(
+    let C = withDeadline(
         Promise.all(
           r.map((W) =>
             W.catch((N) => {
@@ -1695,7 +1695,7 @@ async function Bn({ includeMcpServers: e, signal: t }) {
       _ =
         t === void 0
           ? await C
-          : await gv(C, t, () => new Ve()).catch(() => ((w = !0), !1)),
+          : await raceWithAbortSignal(C, t, () => new Ve()).catch(() => ((w = !0), !1)),
       T = qn(d, p),
       E = {
         platform: d,
@@ -1708,7 +1708,7 @@ async function Bn({ includeMcpServers: e, signal: t }) {
         collected_at: new Date().toISOString(),
       };
     if (
-      (i("tengu_bridge_host_profile_collect", {
+      (logEvent("tengu_bridge_host_profile_collect", {
         outcome: _ ? S("ok") : w ? S("aborted") : S("partial"),
         duration_ms: Date.now() - o,
         tools_count: E.tools.length,
@@ -1724,7 +1724,7 @@ async function Bn({ includeMcpServers: e, signal: t }) {
     return E;
   } catch (p) {
     (logError(p),
-      i("tengu_bridge_host_profile_collect", {
+      logEvent("tengu_bridge_host_profile_collect", {
         outcome: S("error"),
         duration_ms: Date.now() - o,
         platform: fromEnumOpt(d),
@@ -1767,8 +1767,8 @@ async function Nn(e, t) {
 async function Rr(e, t) {
   let o = await Wi(e, $r);
   if (o === null) return;
-  let d = Yat(o),
-    p = Z0e(d) ? d[t] : void 0;
+  let d = parsePlist(o),
+    p = isPlainObject(d) ? d[t] : void 0;
   return typeof p === "string" && jt.test(p) ? p : void 0;
 }
 async function Ln(e) {
@@ -1849,7 +1849,7 @@ function qn(e, t) {
       t.cuda,
       ...d.filter((r) => r !== "swift"),
     ].filter((r) => r !== void 0 && kn.test(r));
-  return Y(p).slice(0, En);
+  return dedupe(p).slice(0, En);
 }
 var Ht = 3,
   Ut = 5;
@@ -1885,7 +1885,7 @@ async function Cr({
     )
       return { outcome: "transient" };
     if (
-      (i("tengu_bridge_env_reregister", {
+      (logEvent("tengu_bridge_env_reregister", {
         attempt: p,
         outcome: E ? S("register_rejected") : S("register_transient"),
       }),
@@ -1903,7 +1903,7 @@ async function Cr({
         `[bridge:poll] Re-registration returned ${C.environment_id}, not ${o}; sessions attached to ${o} cannot be reconnected`,
         { level: "warn" },
       ),
-      i("tengu_bridge_env_reregister", { attempt: p, outcome: S("replaced") }),
+      logEvent("tengu_bridge_env_reregister", { attempt: p, outcome: S("replaced") }),
       logFeatureBad("bridge_env_reregister", "replaced"),
       await e
         .deregisterEnvironment(C.environment_id)
@@ -1916,12 +1916,12 @@ async function Cr({
       { outcome: "fatal" }
     );
   let w = [...d.keys()];
-  (i("tengu_bridge_env_reregister", {
+  (logEvent("tengu_bridge_env_reregister", {
     attempt: p,
     outcome: S("reregistered"),
     active_sessions: w.length,
   }),
-    q("info", "bridge_env_reregistered", {
+    writeDiagnosticsEvent("info", "bridge_env_reregistered", {
       attempt: p,
       active_sessions: w.length,
     }),
@@ -2078,7 +2078,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           me instanceof Le)
         )
           if (
-            (i("tengu_bridge_heartbeat_error", {
+            (logEvent("tengu_bridge_heartbeat_error", {
               status: me.status,
               error_type: S(
                 me.status === 401 || me.status === 403
@@ -2151,7 +2151,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             `[bridge:poll] Giving up re-queuing sessionId=${v} after ${Ut} attempts; left to token refresh`,
             { level: "warn" },
           ),
-          i("tengu_bridge_env_reregister", {
+          logEvent("tengu_bridge_env_reregister", {
             requeue_attempts: V + 1,
             outcome: S("requeue_dropped"),
           }),
@@ -2193,7 +2193,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
     (n(
       `[bridge:work] Starting poll loop spawnMode=${e.spawnMode} maxSessions=${e.maxSessions} environmentId=${t}`,
     ),
-    q("info", "bridge_loop_started", {
+    writeDiagnosticsEvent("info", "bridge_loop_started", {
       max_sessions: e.maxSessions,
       spawn_mode: e.spawnMode,
     }),
@@ -2258,8 +2258,8 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       (n(
         `[bridge:session] sessionId=${v} workId=${F ?? "unknown"} exited status=${O} duration=${formatDuration(ee)}`,
       ),
-        i("tengu_bridge_session_done", { status: fromEnum(O), duration_ms: ee }),
-        q("info", "bridge_session_done", { status: O, duration_ms: ee }),
+        logEvent("tengu_bridge_session_done", { status: fromEnum(O), duration_ms: ee }),
+        writeDiagnosticsEvent("info", "bridge_session_done", { status: O, duration_ms: ee }),
         r.clearStatus(),
         _t());
       let me =
@@ -2347,7 +2347,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
     r.logStatus("Run `claude remote-control` to start a fresh environment.");
   }
   while (!N.aborted) {
-    let v = Hle();
+    let v = getBridgePollIntervalConfig();
     try {
       let V =
           D.size >= e.maxSessions
@@ -2360,7 +2360,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
         let U = Date.now() - (Ee ?? Be ?? Date.now());
         (r.logReconnected(U),
           n(`[bridge:poll] Reconnected after ${formatDuration(U)}`),
-          i("tengu_bridge_reconnected", { disconnected_ms: U }),
+          logEvent("tengu_bridge_reconnected", { disconnected_ms: U }),
           (ut = !1));
       }
       if (
@@ -2373,7 +2373,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
         Pe)
       )
         ((Pe = !1),
-          i("tengu_bridge_env_reregister", {
+          logEvent("tengu_bridge_env_reregister", {
             attempt: ne,
             outcome: S("recovered"),
           }),
@@ -2383,7 +2383,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
         if (D.size >= e.maxSessions) {
           let Re = v.multisession_poll_interval_ms_at_capacity;
           if (v.non_exclusive_heartbeat_interval_ms > 0) {
-            i("tengu_bridge_heartbeat_mode_entered", {
+            logEvent("tengu_bridge_heartbeat_mode_entered", {
               active_sessions: D.size,
               heartbeat_interval_ms: v.non_exclusive_heartbeat_interval_ms,
             });
@@ -2395,7 +2395,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
               D.size >= e.maxSessions &&
               (he === null || Date.now() < he)
             ) {
-              let qe = Hle();
+              let qe = getBridgePollIntervalConfig();
               if (qe.non_exclusive_heartbeat_interval_ms <= 0) break;
               let pt = Te.signal();
               if (((Ue = await Fe()), Ue === "auth_failed" || Ue === "fatal")) {
@@ -2403,7 +2403,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                 break;
               }
               (st++,
-                await Z(qe.non_exclusive_heartbeat_interval_ms, pt.signal),
+                await sleep(qe.non_exclusive_heartbeat_interval_ms, pt.signal),
                 pt.cleanup());
             }
             let lt =
@@ -2417,7 +2417,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                       ? "poll_due"
                       : "config_disabled";
             if (
-              (i("tengu_bridge_heartbeat_mode_exited", {
+              (logEvent("tengu_bridge_heartbeat_mode_exited", {
                 reason: fromEnum(lt),
                 heartbeat_cycles: st,
                 active_sessions: D.size,
@@ -2429,7 +2429,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
               );
             if (Ue === "auth_failed" || Ue === "fatal") {
               let qe = Te.signal();
-              (await Z(
+              (await sleep(
                 Re > 0 ? Re : v.non_exclusive_heartbeat_interval_ms,
                 qe.signal,
               ),
@@ -2437,7 +2437,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             }
           } else if (Re > 0) {
             let he = Te.signal();
-            (await Z(Re, he.signal), he.cleanup());
+            (await sleep(Re, he.signal), he.cleanup());
           }
         } else {
           let Re = v.non_exclusive_heartbeat_interval_ms,
@@ -2449,7 +2449,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             D.size > 0
               ? v.multisession_poll_interval_ms_partial_capacity
               : v.multisession_poll_interval_ms_not_at_capacity;
-          await Z(Ue, N);
+          await sleep(Ue, N);
         }
         continue;
       }
@@ -2469,21 +2469,21 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           let U = Te.signal();
           if (v.non_exclusive_heartbeat_interval_ms > 0)
             (await Fe(),
-              await Z(v.non_exclusive_heartbeat_interval_ms, U.signal));
+              await sleep(v.non_exclusive_heartbeat_interval_ms, U.signal));
           else if (v.multisession_poll_interval_ms_at_capacity > 0)
-            await Z(v.multisession_poll_interval_ms_at_capacity, U.signal);
+            await sleep(v.multisession_poll_interval_ms_at_capacity, U.signal);
           U.cleanup();
-        } else await Z(1000, N);
+        } else await sleep(1000, N);
         continue;
       }
       let re;
       try {
-        re = ldt(L.secret);
+        re = parseWorkSecret(L.secret);
       } catch (U) {
         let Re = l(U);
         if (
           (r.logError(`Failed to decode work secret for workId=${L.id}: ${Re}`),
-          i("tengu_bridge_work_secret_failed", {}),
+          logEvent("tengu_bridge_work_secret_failed", {}),
           fe.add(L.id),
           Ce(Lt(d, t, L.id, ue, r, w.stopWorkBaseDelayMs)),
           F)
@@ -2491,9 +2491,9 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           let he = Te.signal();
           if (v.non_exclusive_heartbeat_interval_ms > 0)
             (await Fe(),
-              await Z(v.non_exclusive_heartbeat_interval_ms, he.signal));
+              await sleep(v.non_exclusive_heartbeat_interval_ms, he.signal));
           else if (v.multisession_poll_interval_ms_at_capacity > 0)
-            await Z(v.multisession_poll_interval_ms_at_capacity, he.signal);
+            await sleep(v.multisession_poll_interval_ms_at_capacity, he.signal);
           he.cleanup();
         }
         continue;
@@ -2559,11 +2559,11 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           }
           (await ee(), me());
           let he = Date.now(),
-            Ue = Bee(e.apiBaseUrl, U),
+            Ue = buildSessionApiUrl(e.apiBaseUrl, U),
             st;
           for (let ve = 1; ve <= 2; ve++)
             try {
-              ((st = await abe(Ue, re.session_ingress_token)),
+              ((st = await registerWorker(Ue, re.session_ingress_token)),
                 n(
                   `[bridge:session] CCR v2: registered worker sessionId=${U} epoch=${st} attempt=${ve}`,
                 ),
@@ -2576,7 +2576,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                   (n(
                     `[bridge:session] CCR v2: registerWorker attempt ${ve} failed, retrying: ${Ge}`,
                   ),
-                  await Z(2000, N),
+                  await sleep(2000, N),
                   N.aborted)
                 )
                   break;
@@ -2601,7 +2601,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           if (st === void 0) break;
           let { spawnMode: lt, dir: qe } = e,
             pt = 0;
-          if (lt === "worktree" && (_ === void 0 || !CPe(U, _))) {
+          if (lt === "worktree" && (_ === void 0 || !sessionIdsMatch(U, _))) {
             let ve = Date.now();
             try {
               let Ne = await nEe(`bridge-${Rt(U)}`, { storageV5: e.storageV5 });
@@ -2714,16 +2714,16 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           }
           let At = gt,
             It = Date.now() - he;
-          (i("tengu_bridge_session_started", {
+          (logEvent("tengu_bridge_session_started", {
             active_sessions: D.size,
             spawn_mode: fromEnum(lt),
             in_worktree: Ae.has(U),
             spawn_duration_ms: It,
             worktree_create_ms: pt,
             inProtectedNamespace: NL(),
-            ...lbe(),
+            ...getCooContextProperties(),
           }),
-            q("info", "bridge_session_started", {
+            writeDiagnosticsEvent("info", "bridge_session_started", {
               spawn_mode: lt,
               in_worktree: Ae.has(U),
               spawn_duration_ms: It,
@@ -2778,9 +2778,9 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
         let U = Te.signal();
         if (v.non_exclusive_heartbeat_interval_ms > 0)
           (await Fe(),
-            await Z(v.non_exclusive_heartbeat_interval_ms, U.signal));
+            await sleep(v.non_exclusive_heartbeat_interval_ms, U.signal));
         else if (v.multisession_poll_interval_ms_at_capacity > 0)
-          await Z(v.multisession_poll_interval_ms_at_capacity, U.signal);
+          await sleep(v.multisession_poll_interval_ms_at_capacity, U.signal);
         U.cleanup();
       }
     } catch (V) {
@@ -2819,7 +2819,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                   ? "Environment re-registered; resuming poll."
                   : "Re-registration failed; retrying after backoff.",
               ),
-                await Z(
+                await sleep(
                   Math.max(
                     Vt(w.connInitialMs * ne),
                     Math.min(
@@ -2832,7 +2832,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
               continue;
             }
           } else
-            (i("tengu_bridge_env_reregister", {
+            (logEvent("tengu_bridge_env_reregister", {
               attempt: ne,
               outcome: S("gave_up"),
             }),
@@ -2846,11 +2846,11 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             n(`[bridge:work] Fatal bridge error: ${V.message}`, {
               level: "error",
             }));
-        (i("tengu_bridge_fatal_error", {
+        (logEvent("tengu_bridge_fatal_error", {
           status: V.status,
           error_type: V.errorType === void 0 ? void 0 : dot(V.errorType),
         }),
-          q(yt(V.errorType) ? "info" : "error", "bridge_fatal_error", {
+          writeDiagnosticsEvent(yt(V.errorType) ? "info" : "error", "bridge_fatal_error", {
             status: V.status,
             error_type: V.errorType,
           }));
@@ -2863,7 +2863,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           (n(
             `[bridge:work] Detected system sleep (${Math.round((O - le) / 1000)}s gap), resetting error budget`,
           ),
-            q("info", "bridge_poll_sleep_detected", { gapMs: O - le }),
+            writeDiagnosticsEvent("info", "bridge_poll_sleep_detected", { gapMs: O - le }),
             (Ee = null),
             (Ie = 0),
             (Be = null),
@@ -2874,11 +2874,11 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           (r.logError(
             `Server unreachable for ${Math.round(F / 60000)} minutes, giving up.`,
           ),
-            i("tengu_bridge_poll_give_up", {
+            logEvent("tengu_bridge_poll_give_up", {
               error_type: S("connection"),
               elapsed_ms: F,
             }),
-            q("error", "bridge_poll_give_up", {
+            writeDiagnosticsEvent("error", "bridge_poll_give_up", {
               error_type: "connection",
               elapsed_ms: F,
             }),
@@ -2894,17 +2894,17 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             `Connection error, retrying in ${Wt(re)} (${Math.round(F / 1000)}s elapsed): ${L}`,
           ),
           r.updateReconnectingStatus(Wt(re), formatDuration(F)),
-          Hle().non_exclusive_heartbeat_interval_ms > 0)
+          getBridgePollIntervalConfig().non_exclusive_heartbeat_interval_ms > 0)
         )
           await Fe();
-        await Z(re, N);
+        await sleep(re, N);
       } else {
         let O = Date.now();
         if (le !== null && O - le > Mr(w))
           (n(
             `[bridge:work] Detected system sleep (${Math.round((O - le) / 1000)}s gap), resetting error budget`,
           ),
-            q("info", "bridge_poll_sleep_detected", { gapMs: O - le }),
+            writeDiagnosticsEvent("info", "bridge_poll_sleep_detected", { gapMs: O - le }),
             (Ee = null),
             (Ie = 0),
             (Be = null),
@@ -2915,11 +2915,11 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           (r.logError(
             `Persistent errors for ${Math.round(F / 60000)} minutes, giving up.`,
           ),
-            i("tengu_bridge_poll_give_up", {
+            logEvent("tengu_bridge_poll_give_up", {
               error_type: S("general"),
               elapsed_ms: F,
             }),
-            q("error", "bridge_poll_give_up", {
+            writeDiagnosticsEvent("error", "bridge_poll_give_up", {
               error_type: "general",
               elapsed_ms: F,
             }),
@@ -2935,25 +2935,25 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             `Poll failed, retrying in ${Wt(re)} (${Math.round(F / 1000)}s elapsed): ${L}`,
           ),
           r.updateReconnectingStatus(Wt(re), formatDuration(F)),
-          Hle().non_exclusive_heartbeat_interval_ms > 0)
+          getBridgePollIntervalConfig().non_exclusive_heartbeat_interval_ms > 0)
         )
           await Fe();
-        await Z(re, N);
+        await sleep(re, N);
       }
     }
   }
   (_t(), r.clearStatus({ final: !0 }));
   let ht = Date.now() - rt;
-  (i("tengu_bridge_shutdown", {
+  (logEvent("tengu_bridge_shutdown", {
     active_sessions: D.size,
     loop_duration_ms: ht,
   }),
-    q("info", "bridge_shutdown", {
+    writeDiagnosticsEvent("info", "bridge_shutdown", {
       active_sessions: D.size,
       loop_duration_ms: ht,
     }));
   let $t = new Set(D.keys());
-  if (_ && ![...Oe].some((v) => CPe(v, _))) $t.add(_);
+  if (_ && ![...Oe].some((v) => sessionIdsMatch(v, _))) $t.add(_);
   let Ft = new Map(Se);
   if (
     (await (async () => {
@@ -3030,7 +3030,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       L = new AbortController();
     (await Promise.race([
       Promise.allSettled([...D.values()].map((O) => O.done)),
-      Z(w.shutdownGraceMs ?? 30000, L.signal),
+      sleep(w.shutdownGraceMs ?? 30000, L.signal),
     ]),
       L.abort());
     for (let [O, F] of D.entries())
@@ -3147,7 +3147,7 @@ async function Lt(e, t, o, d, p, r = 1000) {
                   ? "fatal_403"
                   : "fatal_other",
             ));
-        q("error", "bridge_stop_work_failed", { attempts: w, fatal: !0 });
+        writeDiagnosticsEvent("error", "bridge_stop_work_failed", { attempts: w, fatal: !0 });
         return;
       }
       let T = l(_);
@@ -3156,10 +3156,10 @@ async function Lt(e, t, o, d, p, r = 1000) {
         (p.logVerbose(
           `Failed to stop work ${o} (attempt ${w}/3), retrying in ${Wt(E)}: ${T}`,
         ),
-          await Z(E));
+          await sleep(E));
       } else
         (p.logError(`Failed to stop work ${o} after 3 attempts: ${T}`),
-          q("error", "bridge_stop_work_failed", { attempts: 3 }),
+          writeDiagnosticsEvent("error", "bridge_stop_work_failed", { attempts: 3 }),
           logFeatureBad("bridge_work_stop", "retries_exhausted"));
     }
 }
@@ -3416,7 +3416,7 @@ NOTES
 }
 var os = 80;
 async function as(e) {
-  let t = M() && e !== void 0 ? await getBridgeAccessTokenAsync(e) : getBridgeAccessToken();
+  let t = isHoverRestEnabled() && e !== void 0 ? await getBridgeAccessTokenAsync(e) : getBridgeAccessToken();
   if (!t) return null;
   let o = isCcrV2SessionCrudEnabled(),
     d;
@@ -3587,7 +3587,7 @@ async function bridgeMain(e, t, o) {
       getBridgeAccessTokenAsync: Ae,
       getBridgeBaseUrl: Oe,
     } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js"),
-    xe = M() && o !== void 0;
+    xe = isHoverRestEnabled() && o !== void 0;
   if (!(xe ? await Ae(o) : fe())) (console.error(ANe), process.exit(1));
   let {
     getGlobalConfig: De,
@@ -3687,7 +3687,7 @@ Spawn mode for this project:
     oe.close();
     let K = _e.trim() === "2" ? "worktree" : "same-dir";
     ((Ce = K),
-      i("tengu_bridge_spawn_mode_chosen", { spawn_mode: fromEnum(K) }),
+      logEvent("tengu_bridge_spawn_mode_chosen", { spawn_mode: fromEnum(K) }),
       await de((se) => {
         if (se.remoteControlSpawnMode === K) return se;
         return { ...se, remoteControlSpawnMode: K };
@@ -3795,7 +3795,7 @@ Spawn mode for this project:
       { isSameProcessAsync: Lr } =
         await import("../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js");
       if (Bt(se.pid) && (await Lr(se.pid, se.procStart))) {
-        if (CPe(se.sessionId, X))
+        if (sessionIdsMatch(se.sessionId, X))
           (console.error(
             `Error: Session ${X} is already being served by another \`claude remote-control\` instance (pid ${se.pid}) in ${K}. Use that terminal, or stop it first.`,
           ),
@@ -3891,7 +3891,7 @@ Spawn mode for this project:
     let B = await O.registerBridgeEnvironment(ee);
     ((me = B.environment_id), (Ze = B.environment_secret));
   } catch (B) {
-    (i("tengu_bridge_registration_failed", {
+    (logEvent("tengu_bridge_registration_failed", {
       status: B instanceof Le ? B.status : void 0,
     }),
       console.error(
@@ -4029,8 +4029,8 @@ The session may still be resumable \u2014 try running the same command again.`,
       }
     }
   n(`[bridge:init] Registered, server environmentId=${me}`);
-  let Re = Hle();
-  (i("tengu_bridge_started", {
+  let Re = getBridgePollIntervalConfig();
+  (logEvent("tengu_bridge_started", {
     max_sessions: ee.maxSessions,
     has_debug_file: !!ee.debugFile,
     sandbox: ee.sandbox,
@@ -4041,14 +4041,14 @@ The session may still be resumable \u2014 try running the same command again.`,
     pre_create_session: Be,
     worktree_available: Ye,
   }),
-    q("info", "bridge_started", {
+    writeDiagnosticsEvent("info", "bridge_started", {
       max_sessions: ee.maxSessions,
       sandbox: ee.sandbox,
       spawn_mode: ee.spawnMode,
     }));
   let he = vr({ verbose: r }),
     Ue = await Wtn(fe),
-    st = rd({ pinToCurrentBinary: !0 }),
+    st = resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 }),
     lt = Jt({
       execPath: st.cmd,
       scriptArgs: st.prefixArgs,
@@ -4088,7 +4088,7 @@ The session may still be resumable \u2014 try running the same command again.`,
         if (!Pt) return;
         let oe = ee.spawnMode === "same-dir" ? "worktree" : "same-dir";
         ((ee.spawnMode = oe),
-          i("tengu_bridge_spawn_mode_toggled", { spawn_mode: fromEnum(oe) }),
+          logEvent("tengu_bridge_spawn_mode_toggled", { spawn_mode: fromEnum(oe) }),
           he.logStatus(
             oe === "worktree"
               ? "Spawn mode: worktree (new sessions get isolated git worktrees)"
@@ -4106,7 +4106,7 @@ The session may still be resumable \u2014 try running the same command again.`,
     { markPrintModeSignalHandlersRegistered: Yt } =
       await import("../../01-核心基础设施/核心工具-进程与信号/flushAnalyticsSinks.tbwzvw9n.js");
   if (process.stdin.isTTY)
-    (Jw(process.stdin, !0),
+    (trySetRawMode(process.stdin, !0),
       process.stdin.resume(),
       process.stdin.on("data", vt));
   let gt = new AbortController(),
@@ -4247,7 +4247,7 @@ The session may still be resumable \u2014 try running the same command again.`,
       process.stdin.off("data", vt),
       process.stdin.isTTY)
     )
-      Jw(process.stdin, !1);
+      trySetRawMode(process.stdin, !1);
     process.stdin.pause();
   }
   await drainRegisteredWriteQueues();
@@ -4289,7 +4289,7 @@ async function runBridgeHeadless(e, t) {
   let { initSinks: T } = await import("./initSinks.6cfazjmq.js");
   T();
   let { getSettingsWithErrors: E } = await import("../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js");
-  if (E().settings.disableRemoteControl === !0) throw new BridgeHeadlessPermanentError(e5);
+  if (E().settings.disableRemoteControl === !0) throw new BridgeHeadlessPermanentError(REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE);
   let { composePolicyLimitsClient: W, primePolicyLimitsCache: N } =
     await import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
   (W({ storageV5: e.storageV5 }), await N(e.storageV5));
@@ -4455,7 +4455,7 @@ async function runBridgeHeadless(e, t) {
       (k.initialSessionRequeuesPersistedAt = De));
   let ot = us(d),
     ze = await Wtn(e.getAccessToken),
-    rt = rd({ pinToCurrentBinary: !0 }),
+    rt = resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 }),
     Ye = Jt({
       execPath: rt.cmd,
       scriptArgs: rt.prefixArgs,

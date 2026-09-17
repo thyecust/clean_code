@@ -10,17 +10,17 @@
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Id, vu, Ag, BP, eje } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Dt, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { withTimeout, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { OR } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { parsePermissionMode, UNRECOGNIZED_PERMISSION_MODE_ERROR } from "../权限系统/chunk-e4pfvp7x.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { yt, mi, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Dl, AAt } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
-import { no } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
+import { areBackgroundTasksDisabled, BACKGROUND_TASKS_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
+import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { Jo } from "../权限系统/chunk-ynkf3yy4.js";
 import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -148,7 +148,7 @@ function kme(e) {
 }
 function q() {
   try {
-    i("tengu_turn_tail_analysis_degraded", {});
+    logEvent("tengu_turn_tail_analysis_degraded", {});
   } catch {}
 }
 function te(e) {
@@ -429,7 +429,7 @@ function F$e(e) {
 }
 function arr(e, t) {
   if (t === 0) return;
-  i("tengu_human_origin_presumed", {
+  logEvent("tengu_human_origin_presumed", {
     consumer: fromEnum(e),
     count_bucket: fromEnum(t === 1 ? "1" : t <= 5 ? "2-5" : "6+"),
   });
@@ -593,7 +593,7 @@ function urr(e, t, r, s, d, S) {
         return;
       }
       if (a) r.add(a);
-      (i("tengu_bridge_message_received", { is_repl: !0 }),
+      (logEvent("tengu_bridge_message_received", { is_repl: !0 }),
         logFeatureOk("bridge_message_receive"),
         s?.(p));
     } else n(`[bridge:repl] Ignoring non-user inbound message: type=${p.type}`);
@@ -678,7 +678,7 @@ function je(e, t, r, s, d = Ve) {
         "This model switch is still pending (an earlier model request or a PreModelSwitch hook has not finished); it will apply when that completes unless it is refused",
     },
     b = s.then((k) => k ?? { ok: !0 });
-  (kt(b, d)
+  (withDeadline(b, d)
     .then((k) => {
       p = k === void 0;
       let E = k ?? a;
@@ -777,7 +777,7 @@ function prr(e, t) {
     return;
   }
   let h;
-  if (no() && !Be.has(e.request.subtype)) {
+  if (isExiting() && !Be.has(e.request.subtype)) {
     (n(`[bridge] refusing ${e.request.subtype}: this process is exiting`),
       (h = {
         type: "control_response",
@@ -1053,7 +1053,7 @@ function prr(e, t) {
         e,
         r,
         s,
-        Dt(G(o.signal), Le, O).catch((_) => {
+        withTimeout(G(o.signal), Le, O).catch((_) => {
           if ((o.abort(), l(_) === O)) throw new mi(O);
           throw _;
         }),
@@ -1295,14 +1295,14 @@ function prr(e, t) {
           }));
         break;
       }
-      if (Dl()) {
+      if (areBackgroundTasksDisabled()) {
         (logFeatureBad("task_local_shell_background_all", "disabled"),
           (h = {
             type: "control_response",
             response: {
               subtype: "error",
               request_id: e.request_id,
-              error: AAt,
+              error: BACKGROUND_TASKS_DISABLED_MESSAGE,
             },
           }));
         break;
@@ -1555,7 +1555,7 @@ function yCn(e, t) {
 }
 var eVt = { enforce: !1, acceptLevel: "VERIFIED", acceptStatuses: new Set() },
   Ze = ["UNSPECIFIED", "ABSENT", "INVALID", "UNCHECKED"],
-  Je = m(() =>
+  Je = createLazyValue(() =>
     c({
       accept_level: X(U).default("VERIFIED"),
       accept_statuses: v(X(Ze)).default([]),

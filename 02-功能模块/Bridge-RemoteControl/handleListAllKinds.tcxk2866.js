@@ -18,7 +18,7 @@ import { Qre } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { Zye, eSe, tSe, J0e } from "../权限系统/chunk-3kjwvb3e.js";
 import { Jae } from "../../01-核心基础设施/设置-配置/chunk-bmk73cc4.js";
 import { tF } from "../后台任务-Shell管理/chunk-jfk5mpe1.js";
-import { Vb } from "../../01-核心基础设施/共享小工具-未细化/chunk-d3d1v4d6.js";
+import { getDaemonJsonPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
 import { If } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
 import { basename, resolve } from "path";
 function u(e) {
@@ -273,7 +273,7 @@ async function q(e, i, o) {
   if (f.length >= 1) return f[0].dir;
   c(`no remote-control server matched '${e}'`);
 }
-async function handleListAllKinds(e, i = Vb(), o) {
+async function handleListAllKinds(e, i = getDaemonJsonPath(), o) {
   let r = await B(i, o);
   if (e) {
     u(b(r, null, 2));
@@ -281,7 +281,7 @@ async function handleListAllKinds(e, i = Vb(), o) {
   }
   D(r);
 }
-async function handleCliKind(e, i, o = Vb(), r) {
+async function handleCliKind(e, i, o = getDaemonJsonPath(), r) {
   let a = I(e, i);
   if (e === "scheduled") return K(a, o, r);
   return j(a, o, r);

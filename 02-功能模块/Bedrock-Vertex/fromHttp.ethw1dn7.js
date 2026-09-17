@@ -12,15 +12,15 @@
 import { nu, EA } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { ta } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-mwf4pmq2.js";
 import { q0n } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jtb5q5xr.js";
-import { kb } from "../../01-核心基础设施/共享小工具-未细化/chunk-pf84p45h.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js";
-import { zd } from "./chunk-yjjbkvm4.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var E = pe(kb()),
-  N = pe(EA()),
-  m = pe(zd());
+import { awsSdkCoreClientModule } from "../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
+import "../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
+import { getPropertyProviderModule } from "./smithy-property-provider.js";
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var E = toESM(awsSdkCoreClientModule()),
+  N = toESM(EA()),
+  m = toESM(getPropertyProviderModule());
 import O from "fs/promises";
-var A = pe(zd());
+var A = toESM(getPropertyProviderModule());
 var w = "169.254.170.2",
   g = "169.254.170.23",
   S = "[fd00:ec2::23]",
@@ -51,10 +51,10 @@ var w = "169.254.170.2",
       { logger: o },
     );
   };
-var i = pe(zd()),
-  C = pe(nu()),
-  l = pe(ta()),
-  p = pe(q0n());
+var i = toESM(getPropertyProviderModule()),
+  C = toESM(nu()),
+  l = toESM(ta()),
+  p = toESM(q0n());
 function _(e) {
   return new C.HttpRequest({
     protocol: e.protocol,

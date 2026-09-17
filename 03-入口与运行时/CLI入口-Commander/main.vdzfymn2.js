@@ -46,16 +46,16 @@ import {
   cMn,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, po } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromEnumOpt, fromEnumArr } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Iu, dt, ge, l, A, Gw, EZ, hv, Bp, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, Yu, zur, fp, zR, rje, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { tl, Nx, be, kje, uo, Hr, Grt, Yur } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { os } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import "../../00-第三方库/zod/zod.3g334xwq.js";
 import { Hx, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
@@ -67,7 +67,7 @@ import { Ts, $Xn, BXn } from "../../01-核心基础设施/遥测-OpenTelemetry/c
 import "../../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js";
 import { Gxn } from "../../01-核心基础设施/核心工具-路径与平台/chunk-svk2cp17.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
-import { Zxn, Bet } from "../../01-核心基础设施/共享小工具-未细化/chunk-1bqqnyc1.js";
+import { startKeychainPrefetch, ensureKeychainPrefetchCompleted } from "../../01-核心基础设施/共享小工具-未细化/keychain-prefetch.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import {
   q$e,
@@ -123,11 +123,11 @@ import {
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
+import "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
 import { Pt, getIsGit, getBranch, getWorktreeCount } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { isTranscriptFileResumeArg } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
@@ -186,7 +186,7 @@ import "../../01-核心基础设施/核心工具-常量与消息/核心工具-�
 import "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
 import "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import "../../02-功能模块/Hooks钩子/chunk-9em0d4k5.js";
+import "../../02-功能模块/Hooks钩子/session-feature-cache.js";
 import { v$e, Eo } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { ny, FJe } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
 import { printCliError, cliError, cliOk, cliWarn, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
@@ -273,7 +273,7 @@ import {
   getCommands,
   filterCommandsForHeadless,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
+import "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import "../../02-功能模块/Hooks钩子/chunk-z3433nr6.js";
 import "../../02-功能模块/Hooks钩子/chunk-bzqqe6xh.js";
 import "../../02-功能模块/插件系统/chunk-ajtn749s.js";
@@ -305,18 +305,18 @@ import {
 } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
+import "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import "../../02-功能模块/图表-Mermaid/chunk-743atbtj.js";
 import "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { primePlanSlugCollisions, getPlansDirectory } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import "../../02-功能模块/Teammates团队/chunk-thxapyam.js";
 import { resolveCcrAutoConnectDefault } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
 import "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
-import { no, a5 } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
+import { isExiting, commitExit } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
+import "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
 import "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
-import "../../02-功能模块/Bridge-RemoteControl/chunk-3j7ezsr7.js";
+import "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
+import "../../02-功能模块/Bridge-RemoteControl/push-notification-tool.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import "../../02-功能模块/Teammates团队/chunk-t899nada.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-9d5wk5b9.js";
@@ -333,7 +333,7 @@ import "../../02-功能模块/Workflow编排/chunk-0t0sve49.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
 import "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import "../../02-功能模块/跨会话消息(UDS)/chunk-9kzxq41e.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-1945b2ak.js";
+import "../../01-核心基础设施/共享小工具-未细化/error-reporting-eligibility.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-6kad94y1.js";
 import { Ore } from "../../01-核心基础设施/HTTP-网络层/chunk-tzqq81r7.js";
 import { BJn } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
@@ -341,9 +341,9 @@ import "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { MSt } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
 import "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import "../../02-功能模块/文件监听-Watch/文件监听-Watch.3efypmps.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
+import "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import "../../02-功能模块/Teammates团队/chunk-6b13bhw1.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-djserjj5.js";
@@ -363,19 +363,19 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-0qtt3z52.js"
 import "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ve2h3qad.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-mvw7xg6n.js";
+import "../../01-核心基础设施/共享小工具-未细化/bg-job-runtime-state.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { Eyn, Dpe } from "../../02-功能模块/权限系统/chunk-8rrcddth.js";
+import { foldRestricted, cliCarriesSessionConfig } from "../../02-功能模块/权限系统/fork-restricted-launch-flags.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
 import "../../02-功能模块/语音-音频/chunk-cfhndstm.js";
 import "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
-import "../../02-功能模块/图片-截图-ComputerUse/chunk-bvxymt09.js";
+import "../../02-功能模块/图片-截图-ComputerUse/computer-use-session.js";
 import { s7e } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
 import "../../02-功能模块/Bridge-RemoteControl/chunk-ct52ffwb.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-0kqw1wf5.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-21sqz10e.js";
+import "../../01-核心基础设施/共享小工具-未细化/c4e-upsell-command-gate.js";
+import "../../01-核心基础设施/共享小工具-未细化/mcp-sdk-generation.js";
 import "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
@@ -441,7 +441,7 @@ import {
 import { lO } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import "../../02-功能模块/会话-历史-恢复/chunk-ybcvb652.js";
 import { HOt, wat, Tat, otn, stn, aF, EMPTY_PROJECTS_SELF_IDENTITY, AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-0dh9gct8.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { TIER_LABELS, withProbeDeadline, apply3PDefaultFallbacks as Bnn } from "../../02-功能模块/Bedrock-Vertex/chunk-bnft4099.js";
@@ -449,46 +449,46 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-drgqeenr.js"
 import { registerToolHosts } from "../../01-核心基础设施/共享小工具-未细化/chunk-dypysnt9.js";
 import { qJe, b_, KAn, zJe } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { XBn, fIe, _lt, mIe, YBn, $Dt, UDt } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-0a6nmdka.js";
+import "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
 import { capturePolicySnapshot, hasPolicyDiverged } from "../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js";
 import { CHe, $st } from "../../02-功能模块/Git-Worktree/chunk-xercceag.js";
 import { CF, gOe, Dze } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
-import { wv } from "../../01-核心基础设施/共享小工具-未细化/chunk-ajpjkvdj.js";
+import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工具-未细化/base-render-options.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import "../会话UI(REPL)/chunk-fgcep5na.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import "../会话UI(REPL)/notification-queue.js";
+import "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import "../../02-功能模块/状态栏-主题/chunk-q7ekqy5h.js";
 import { o, t, uE } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Tw } from "../../02-功能模块/认证-OAuth登录/chunk-s51acx6w.js";
+import { credentialsStoreFor } from "../../02-功能模块/认证-OAuth登录/credentials-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kk7p3hsm.js";
 import { Cv } from "../../01-核心基础设施/共享小工具-未细化/chunk-z3y2y7w9.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ewa397cg.js";
-import "../../02-功能模块/键位绑定(Keybindings)/chunk-qy43nqgh.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-vke340te.js";
+import "../../02-功能模块/键位绑定(Keybindings)/keybinding-context.js";
+import "../../01-核心基础设施/共享小工具-未细化/session-context.js";
+import "../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
 import "../../02-功能模块/MCP客户端/chunk-g4gdwpa0.js";
 import "../../02-功能模块/Hooks钩子/chunk-22aft7vr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js";
+import "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import "../../02-功能模块/工具TodoWrite-Tasks/chunk-5a7p8d2p.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-vz37aa8z.js";
+import "../../01-核心基础设施/共享小工具-未细化/worktree-state-store.js";
 import "../../02-功能模块/Workflow编排/chunk-va9cgbfs.js";
-import "../../02-功能模块/MCP客户端/chunk-xcbagjx9.js";
+import "../../02-功能模块/MCP客户端/mcp-task-metadata.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-s1hpfa12.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ejtvp07p.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cj5z5g82.js";
+import "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
+import "../../01-核心基础设施/共享小工具-未细化/empty-artifact-consent-slugs.js";
 import { runSteps, showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-5ss8pwgq.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-bfth4n1b.js";
+import "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-bgf8jybv.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-fpak7ean.js";
 import { nJt, Qxe } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-aqq8azxz.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-th8d86j4.js";
+import "../../01-核心基础设施/共享小工具-未细化/publish-permission-snapshot.js";
 import "../../02-功能模块/权限系统/chunk-8zbmhy8a.js";
 import "../../02-功能模块/Skills技能/Skills技能.dpy2ket5.js";
 import { registerClientDataGetters } from "../../02-功能模块/上下文压缩-Compact/chunk-npckj9cm.js";
@@ -497,7 +497,7 @@ import "../../02-功能模块/Artifact发布-渲染/chunk-01jnk0v2.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-pdd7kz7p.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-stvynqrz.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-b6k1z7an.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-f7n720sn.js";
+import "../../01-核心基础设施/共享小工具-未细化/workshop-telemetry.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-yrjr7v83.js";
 import "../../02-功能模块/CodeReview/chunk-rp57gfa9.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-5jv5fvbn.js";
@@ -516,100 +516,100 @@ import "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js"
 import "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-sdk55p8n.js";
-import "../../02-功能模块/键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-keybinding-chord-text.js";
+import "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-my8s4daz.js";
+import "../../01-核心基础设施/共享小工具-未细化/keybinding-scope.js";
 import { Nae } from "../../01-核心基础设施/设置-配置/chunk-avjbj8nf.js";
 import { tJt } from "../../01-核心基础设施/共享小工具-未细化/chunk-sn7k2dvd.js";
-import { J2n } from "../../01-核心基础设施/共享小工具-未细化/chunk-01r8gcpb.js";
+import { checkVersionPolicyForCommand } from "../../01-核心基础设施/共享小工具-未细化/version-policy.js";
 import "../../02-功能模块/权限系统/chunk-z0pt04s8.js";
-import { iit, NHe } from "../../01-核心基础设施/共享小工具-未细化/chunk-8r3h1dwe.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-w7rbejjf.js";
+import { resetAuthCachesAfterLogin, buildAutoModeGateNotification } from "../../01-核心基础设施/共享小工具-未细化/chunk-8r3h1dwe.js";
+import "../../01-核心基础设施/共享小工具-未细化/apply-node-extra-ca-certs.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-me1cqqmp.js";
 import "../../02-功能模块/权限系统/chunk-hv6z01db.js";
 import { hit } from "../../01-核心基础设施/共享小工具-未细化/chunk-ctr3zhmb.js";
 import "../Headless-SDK模式/chunk-9r4nh249.js";
-import { ile, t4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-azh5vchz.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-37xdmryq.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-tw8akhx1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-951vj555.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-xc85bfby.js";
+import { formatSessionLiveElsewhereMessage, getLiveSessionHolder } from "../../01-核心基础设施/共享小工具-未细化/session-live-elsewhere.js";
+import "../../01-核心基础设施/共享小工具-未细化/to-local-file-url.js";
+import "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
+import "../../01-核心基础设施/共享小工具-未细化/kb-cohesion-fixes.js";
+import "../../01-核心基础设施/共享小工具-未细化/divider.js";
+import "../../01-核心基础设施/共享小工具-未细化/reduced-motion.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-7jfz2w01.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Qg } from "../../01-核心基础设施/共享小工具-未细化/chunk-awxpn5er.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-d3d1v4d6.js";
+import { formatHyperlink } from "../../01-核心基础设施/共享小工具-未细化/format-hyperlink.js";
+import "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-fgegxt0m.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-j4vveza5.js";
+import "../../01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js";
 import { tIe } from "../../02-功能模块/权限系统/chunk-2ttypdwq.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-nhnqmzyt.js";
-import "../../02-功能模块/Teammates团队/chunk-2j84y871.js";
+import "../../02-功能模块/Teammates团队/background-task-summary.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tkfrb8jm.js";
 import "../../02-功能模块/插件系统/chunk-bh1q9esj.js";
-import "../../02-功能模块/插件系统/chunk-5ztq0v89.js";
-import "../../02-功能模块/插件系统/chunk-gzfe39h3.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
+import "../../02-功能模块/插件系统/plugin-state-store.js";
+import "../../02-功能模块/插件系统/plugin-disuse.js";
+import "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import "../../02-功能模块/MCP客户端/chunk-k2gczbnj.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-4p4f6hsz.js";
 import "../../02-功能模块/Teammates团队/chunk-w2g8t42p.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-531ast3t.js";
 import "../../02-功能模块/Bridge-RemoteControl/chunk-z5v9hvat.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-42rkrq9r.js";
+import "../../01-核心基础设施/共享小工具-未细化/coo-context-properties.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kv5vaqew.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
-import "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
-import "../../02-功能模块/Workflow编排/chunk-hdhsmge4.js";
+import "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
+import "../../02-功能模块/Workflow编排/workflow-snapshots.js";
 import "../../01-核心基础设施/设置-配置/chunk-ekwet1zd.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-3k9e6gxt.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-j3qyvdwg.js";
+import "../../01-核心基础设施/共享小工具-未细化/lodash-to-number.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ck2sjz96.js";
-import { C8e } from "../../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js";
+import { isPluginEvalEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 import "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-rrrsz7e6.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-1avr3bqa.js";
+import "../../01-核心基础设施/共享小工具-未细化/json-file-store.js";
 import "../../02-功能模块/插件系统/chunk-33bdfgmx.js";
 import "../../02-功能模块/MCP客户端/chunk-0mwqsv0r.js";
 import "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import "../../02-功能模块/DesignSync/chunk-5kyac4wk.js";
 import "../../02-功能模块/MCP客户端/chunk-tznd4407.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-k1vb7vky.js";
-import "../../02-功能模块/工具Monitor/chunk-kxk3njnj.js";
+import "../../01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js";
+import "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
+import "../../01-核心基础设施/共享小工具-未细化/log-error-with-telemetry-message.js";
+import "../../02-功能模块/工具Monitor/monitor-tool-description.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js";
+import "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
 import "../../02-功能模块/Teammates团队/chunk-eey53z5b.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
-import { I$ } from "../../01-核心基础设施/共享小工具-未细化/chunk-6eskfcpn.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cyyrj58q.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-px58ry6q.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-vp8yvx5r.js";
+import { resetRemoteSettingsSyncCache } from "../../01-核心基础设施/共享小工具-未细化/remote-settings-eligibility.js";
+import "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
+import "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
+import "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
 import "../../02-功能模块/工具ToolSearch/chunk-1m51pqtd.js";
-import { Xa } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
 import "../../02-功能模块/权限系统/chunk-pcxn6gwz.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-w4swsde7.js";
+import "../../01-核心基础设施/共享小工具-未细化/expand-tabs.js";
 import "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { px, Air, y5t, Cir, vir } from "../../02-功能模块/上下文压缩-Compact/chunk-qbdgst52.js";
 import "../../02-功能模块/Teammates团队/chunk-enjekn9t.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
-import { ZT } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-v2wxtqf7.js";
+import { serializeAsyncCalls } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
+import "../../01-核心基础设施/共享小工具-未细化/federation-cache-dir.js";
 import "../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
 import { mL, s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
@@ -619,10 +619,10 @@ import { P } from "../../01-核心基础设施/核心工具-路径与平台/chun
 import { xHt } from "../../01-核心基础设施/共享小工具-未细化/chunk-0cy1k3q5.js";
 import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
 import { ensureClientAgentEnv } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
-import "../../02-功能模块/图片-截图-ComputerUse/chunk-6kdvf977.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { pe, w, p, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var To = w(function (Vi) {
+import "../../02-功能模块/图片-截图-ComputerUse/computer-use-swift-native.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { toESM, commonJS, MEMO_CACHE_SENTINEL, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var To = commonJS(function (Vi) {
   class pr extends Error {
     constructor(v, k, O) {
       super(O);
@@ -643,7 +643,7 @@ var To = w(function (Vi) {
   Vi.CommanderError = pr;
   Vi.InvalidArgumentError = Zr;
 });
-var Qo = w(function (Ki) {
+var Qo = commonJS(function (Ki) {
   var { InvalidArgumentError: Yi } = To();
   class en {
     constructor(v, k) {
@@ -712,7 +712,7 @@ var Qo = w(function (Ki) {
   Ki.Argument = en;
   Ki.humanReadableArgName = zi;
 });
-var ur = w(function (Zi) {
+var ur = commonJS(function (Zi) {
   var { humanReadableArgName: Qi } = Qo();
   class tn {
     constructor() {
@@ -944,7 +944,7 @@ var ur = w(function (Zi) {
   }
   Zi.Help = tn;
 });
-var mr = w(function (as) {
+var mr = commonJS(function (as) {
   var { InvalidArgumentError: rs } = To();
   class on {
     constructor(v, k) {
@@ -1067,7 +1067,7 @@ var mr = w(function (as) {
   as.Option = on;
   as.DualOptions = rn;
 });
-var nn = w(function (us) {
+var nn = commonJS(function (us) {
   function cs(v, k) {
     if (Math.abs(v.length - k.length) > 3) return Math.max(v.length, k.length);
     let O = [];
@@ -1122,12 +1122,12 @@ var nn = w(function (us) {
   }
   us.suggestSimilar = ps;
 });
-var dn = w(function (ws) {
-  var fs = Ae("events").EventEmitter,
-    fr = Ae("child_process"),
-    It = Ae("path"),
-    gr = Ae("fs"),
-    xe = Ae("process"),
+var dn = commonJS(function (ws) {
+  var fs = importMetaRequire("events").EventEmitter,
+    fr = importMetaRequire("child_process"),
+    It = importMetaRequire("path"),
+    gr = importMetaRequire("fs"),
+    xe = importMetaRequire("process"),
     { Argument: gs, humanReadableArgName: hs } = Qo(),
     { CommanderError: hr } = To(),
     { Help: _s } = ur(),
@@ -2238,7 +2238,7 @@ Expecting one of '${O.join("', '")}'`);
   }
   ws.Command = _r;
 });
-var fn = w(function (bs) {
+var fn = commonJS(function (bs) {
   var { Argument: cn } = Qo(),
     { Command: Sr } = dn(),
     { CommanderError: Cs, InvalidArgumentError: pn } = To(),
@@ -2256,7 +2256,7 @@ var fn = w(function (bs) {
   bs.InvalidArgumentError = pn;
   bs.InvalidOptionArgumentError = pn;
 });
-var hn = w(function (pt, gn) {
+var hn = commonJS(function (pt, gn) {
   var wt = fn();
   pt = gn.exports = {};
   pt.program = new wt.Command();
@@ -2274,7 +2274,7 @@ var hn = w(function (pt, gn) {
 function Qr() {
   mL({ jitless: !0 });
 }
-var _n = pe(hn(), 1),
+var _n = toESM(hn(), 1),
   {
     program: nl,
     createCommand: il,
@@ -2549,7 +2549,7 @@ Usage: claude mcp add <name> <command> [args...]`);
               N.endsWith("/sse") ||
               N.endsWith("/mcp");
           if (
-            (await qs("tengu_mcp_add", {
+            (await logEventAsync("tengu_mcp_add", {
               type: fromEnum(W),
               scope: fromEnum(L),
               source: S("command"),
@@ -2760,7 +2760,7 @@ function vn(v, k) {
             callbackPort: T.callbackPort,
             onAuthorizationUrl: (U) => {
               process.stdout.write(`If the browser did not open, visit:
-  ${Qg(U, void 0, { assumeSupport: !0 })}
+  ${formatHyperlink(U, void 0, { assumeSupport: !0 })}
 `);
             },
           }),
@@ -3064,7 +3064,7 @@ function An(v, k, O) {
       ));
   {
     let D = () => {
-        if (!C8e()) cliError("`plugin eval` is currently in early access");
+        if (!isPluginEvalEnabled()) cliError("`plugin eval` is currently in early access");
       },
       N = T.command("eval [target]")
         .description(zw.eval.description)
@@ -3509,7 +3509,7 @@ function In(v, k) {
       T = Dbe();
     if (R.pendingServers.length === 0) return null;
     if (T.length > 0) {
-      let x = Y(T.map((U) => U.file).filter(Boolean)).join(", ");
+      let x = dedupe(T.map((U) => U.file).filter(Boolean)).join(", ");
       return (
         logFeatureSad(
           "mcp_project_approval_dialog",
@@ -3800,7 +3800,7 @@ function ia(
             j();
             return;
           }
-          (i("tengu_grove_policy_exited", {}),
+          (logEvent("tengu_grove_policy_exited", {}),
             Pr(0),
             (I.onboardingShown = !1),
             (I.claudeInChromeAccepted = !1),
@@ -3813,7 +3813,7 @@ function ia(
       if (V().status !== "not_started") return null;
       let { ProTrialStartScreen: q } = await import("../../02-功能模块/账号-订阅/ProTrialStartScreen.2mt8fcr2.js");
       return (
-        i("tengu_pro_trial_start_screen_shown", {}),
+        logEvent("tengu_pro_trial_start_screen_shown", {}),
         e(q, { onDone: () => j(), storageV5: D, credentials: N })
       );
     },
@@ -3895,7 +3895,7 @@ function ia(
       if (!U) return null;
       let { isChromeExtensionInstalled: V } =
           await import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
-        q = await Dt(
+        q = await withTimeout(
           V(),
           1500,
           "chrome extension scan timed out before offer",
@@ -3908,7 +3908,7 @@ function ia(
           ),
           null
         );
-      await Dt(
+      await withTimeout(
         df().catch(() => {}),
         1500,
         "GrowthBook init timed out before chrome offer",
@@ -3957,7 +3957,7 @@ function ia(
 async function sa() {
   let v = Date.now();
   try {
-    (await Dt(df(), na, Mn),
+    (await withTimeout(df(), na, Mn),
       n(`[STARTUP] post-onboarding GB await ${Date.now() - v}ms`));
   } catch (k) {
     if (
@@ -4044,7 +4044,7 @@ function Dn(v, k) {
                   : "vertexDeclinedUpgrades";
               return { ...J, [X]: { ...J[X], [W.tier]: x(W) } };
             }, k),
-            i(O.declined, {
+            logEvent(O.declined, {
               tier: j,
               from_key: fromEnum(W.fromKey),
               to_key: fromEnum(W.toKey),
@@ -4061,10 +4061,10 @@ function Dn(v, k) {
                 }
               : { [W.envVar]: W.toId },
           { error: q } = await N("userSettings", { env: V }, void 0, k);
-        if (q) return (i(O.saveFailed, { tier: j }), !1);
+        if (q) return (logEvent(O.saveFailed, { tier: j }), !1);
         for (let J of Object.keys(V)) process.env[J] = W.toId;
         return (
-          i(O.accepted, {
+          logEvent(O.accepted, {
             tier: j,
             from_key: fromEnum(W.fromKey),
             to_key: fromEnum(W.toKey),
@@ -4088,7 +4088,7 @@ function Un(fc) {
   let wo = _(27),
     { provider: br, pending: Er, answer: On, onDone: So, Dialog: Pn } = fc,
     Vs;
-  if (wo[0] === p)
+  if (wo[0] === MEMO_CACHE_SENTINEL)
     ((Vs = { at: 0, acceptedAny: !1, phase: "asking" }), (wo[0] = Vs));
   else Vs = wo[0];
   let [gc, Ws] = d(Vs),
@@ -4129,7 +4129,7 @@ function Un(fc) {
         return () => clearTimeout(Sc);
       }
       if (Gt === "relaunching") {
-        i(Or[br].relaunch, {});
+        logEvent(Or[br].relaunch, {});
         let wc = setTimeout(la, 250, Ar);
         return () => clearTimeout(wc);
       }
@@ -4145,7 +4145,7 @@ function Un(fc) {
   else ((zs = wo[8]), (Ks = wo[9]));
   if ((E(zs, Ks), Gt === "relaunching" && hc)) {
     let Ut;
-    if (wo[10] === p)
+    if (wo[10] === MEMO_CACHE_SENTINEL)
       ((Ut = e(t, {
         dimColor: !0,
         children: "Restarting Claude Code to apply the new model\u2026",
@@ -4238,8 +4238,8 @@ function Un(fc) {
 }
 function Bn(v) {
   let k = 0,
-    O = wv(v);
-  if (O.stdin) i("tengu_stdin_interactive", {});
+    O = getBaseRenderOptions(v);
+  if (O.stdin) logEvent("tengu_stdin_interactive", {});
   let R = new yr(),
     T = HOt();
   xOn(T);
@@ -4281,7 +4281,7 @@ function Bn(v) {
           if (L.reason === "resize") continue;
           let W = Date.now();
           if (W - k < 1000)
-            i("tengu_flicker", {
+            logEvent("tengu_flicker", {
               desiredHeight: L.desiredHeight,
               actualHeight: L.availableHeight,
               reason: L.reason,
@@ -4389,13 +4389,13 @@ function zn(v, k) {
     if (V === null || U || $_e(V) === "created") return;
     if (x !== null) {
       ((U = !0),
-        i("tengu_cloud_create_cancel_forced", { waited_ms: Date.now() - x }),
+        logEvent("tengu_cloud_create_cancel_forced", { waited_ms: Date.now() - x }),
         W(V));
       return;
     }
     ((x = Date.now()),
       k.onCancel(),
-      i("tengu_cloud_create_cancelled", {
+      logEvent("tengu_cloud_create_cancelled", {
         phase: fromEnum($_e(V)),
         request_sent: V.requestSent,
       }));
@@ -4413,7 +4413,7 @@ function zn(v, k) {
           let q = Date.now(),
             J = R === null;
           if (((R = P1n(R ?? I1n(q), j, q)), L(V, R), J))
-            i("tengu_cloud_create_checklist_shown", {});
+            logEvent("tengu_cloud_create_checklist_shown", {});
           if (j.kind === "created") N(() => logFeatureOk("ccr_create_checklist"));
         } catch (q) {
           (N(() => logFeatureBad("ccr_create_checklist", "render_failed")), logError(q));
@@ -4487,7 +4487,7 @@ function ti() {
       let L = `${D}: ${x}`,
         W = ma.some((K) => K.test(L));
       if (
-        (i("tengu_node_warning", {
+        (logEvent("tengu_node_warning", {
           is_internal: W ? 1 : 0,
           occurrence_count: I + 1,
           classname: hv(D) ?? S("Error"),
@@ -4608,13 +4608,13 @@ async function ii() {
           let L = N.enabledMcpjsonServers || [],
             W = new Set(L);
           if (v.enabledMcpjsonServers.some((K) => !W.has(K)))
-            I.enabledMcpjsonServers = Y([...L, ...v.enabledMcpjsonServers]);
+            I.enabledMcpjsonServers = dedupe([...L, ...v.enabledMcpjsonServers]);
         }
         if (T && Array.isArray(v.disabledMcpjsonServers)) {
           let L = N.disabledMcpjsonServers || [],
             W = new Set(L);
           if (v.disabledMcpjsonServers.some((K) => !W.has(K)))
-            I.disabledMcpjsonServers = Y([...L, ...v.disabledMcpjsonServers]);
+            I.disabledMcpjsonServers = dedupe([...L, ...v.disabledMcpjsonServers]);
         }
         return Object.keys(I).length > 0 ? I : null;
       },
@@ -4636,13 +4636,13 @@ async function ii() {
         return;
       }
     }
-    (i("tengu_migrate_mcp_approval_fields_success", {
+    (logEvent("tengu_migrate_mcp_approval_fields_success", {
       migratedCount: x.length,
     }),
       logFeatureOk("migration_mcp_servers_to_settings"));
   } catch (x) {
     (logError(x),
-      i("tengu_migrate_mcp_approval_fields_error", {}),
+      logEvent("tengu_migrate_mcp_approval_fields_error", {}),
       logFeatureBad(
         "migration_mcp_servers_to_settings",
         "migration_mcp_servers_unexpected_error",
@@ -4671,7 +4671,7 @@ async function si(v = ha, k) {
       !1
     );
   return (
-    i("tengu_alias_migration", {
+    logEvent("tengu_alias_migration", {
       from_model: bt(R),
       to_model: bt(T),
       has_1m: x,
@@ -4692,7 +4692,7 @@ async function ai(v) {
       );
     if (R) throw R;
     return (
-      i("tengu_migrate_autoupdates_to_settings", {
+      logEvent("tengu_migrate_autoupdates_to_settings", {
         was_user_preference: !0,
         already_had_env_var: !!O.env?.DISABLE_AUTOUPDATER,
       }),
@@ -4707,7 +4707,7 @@ async function ai(v) {
   } catch (O) {
     return (
       n(`Failed to migrate auto-updates: ${O}`, { level: "error" }),
-      i("tengu_migrate_autoupdates_error", { has_error: !0 }),
+      logEvent("tengu_migrate_autoupdates_error", { has_error: !0 }),
       logFeatureBad(
         "migration_auto_updates_to_settings",
         "migration_auto_updates_write_failed",
@@ -4729,7 +4729,7 @@ async function li(v) {
       if (O) throw O;
     }
     return (
-      i("tengu_migrate_bypass_permissions_accepted", {}),
+      logEvent("tengu_migrate_bypass_permissions_accepted", {}),
       await Te((O) => {
         if (!("bypassPermissionsModeAccepted" in O)) return O;
         let { bypassPermissionsModeAccepted: R, ...T } = O;
@@ -4771,7 +4771,7 @@ async function ci(v) {
   if (ee().numStartups > 1)
     Te((x) => ({ ...x, fable5ToFableAliasMigrationTimestamp: Date.now() }), v);
   return (
-    i("tengu_fable5_to_fable_alias_migration", { from_model: fromEnum(k), has_1m: O }),
+    logEvent("tengu_fable5_to_fable_alias_migration", { from_model: fromEnum(k), has_1m: O }),
     logFeatureOk("migration_fable5_to_fable_alias"),
     !0
   );
@@ -4801,7 +4801,7 @@ async function pi(v) {
     );
   return (
     Te((R) => ({ ...R, legacyOpusMigrationTimestamp: Date.now() }), v),
-    i("tengu_legacy_opus_migration", { from_model: fromEnum(k) }),
+    logEvent("tengu_legacy_opus_migration", { from_model: fromEnum(k) }),
     logFeatureOk("migration_legacy_opus_to_current"),
     !0
   );
@@ -4834,7 +4834,7 @@ async function mi(v) {
       !1
     );
   return (
-    i("tengu_opus_to_opus1m_migration", {}),
+    logEvent("tengu_opus_to_opus1m_migration", {}),
     logFeatureOk("migration_opus_to_opus1m"),
     !0
   );
@@ -4905,7 +4905,7 @@ async function hi(v) {
   if (ee().numStartups > 1)
     Te((x) => ({ ...x, sonnet45To46MigrationTimestamp: Date.now() }), v);
   return (
-    i("tengu_sonnet45_to_46_migration", { from_model: fromEnum(k), has_1m: O }),
+    logEvent("tengu_sonnet45_to_46_migration", { from_model: fromEnum(k), has_1m: O }),
     logFeatureOk("migration_sonnet45_to_sonnet46"),
     !0
   );
@@ -4926,7 +4926,7 @@ async function _i(v) {
     let { error: T } = await updateSettingsForSource("userSettings", R, void 0, v);
     if (T) throw T;
     return (
-      i("tengu_migrate_user_intent_to_settings", {
+      logEvent("tengu_migrate_user_intent_to_settings", {
         migrated_count: Object.keys(R).length,
       }),
       logFeatureOk("migration_user_intent_to_settings"),
@@ -4956,7 +4956,7 @@ async function Si(v) {
         v,
       );
       if (R) throw R;
-      (i("tengu_migrate_reset_auto_opt_in_for_default_offer", {}),
+      (logEvent("tengu_migrate_reset_auto_opt_in_for_default_offer", {}),
         logFeatureOk("migration_reset_auto_mode_opt_in"));
     }
     Te((R) => {
@@ -4979,7 +4979,7 @@ function wi(v) {
   if (ee().opusProMigrationComplete) return;
   if (getAPIProvider() !== "firstParty" || !isProSubscriber()) {
     (Te((T) => ({ ...T, opusProMigrationComplete: !0 }), v),
-      i("tengu_reset_pro_to_opus_default", { skipped: !0 }));
+      logEvent("tengu_reset_pro_to_opus_default", { skipped: !0 }));
     return;
   }
   if (getSettings_DEPRECATED()?.model === void 0) {
@@ -4992,13 +4992,13 @@ function wi(v) {
       }),
       v,
     ),
-      i("tengu_reset_pro_to_opus_default", {
+      logEvent("tengu_reset_pro_to_opus_default", {
         skipped: !1,
         had_custom_model: !1,
       }));
   } else
     (Te((T) => ({ ...T, opusProMigrationComplete: !0 }), v),
-      i("tengu_reset_pro_to_opus_default", {
+      logEvent("tengu_reset_pro_to_opus_default", {
         skipped: !1,
         had_custom_model: !0,
       }));
@@ -5064,7 +5064,7 @@ async function Sa() {
 function vi(v) {
   let k = "",
     O = Ci(),
-    R = ZT(async (T) => {
+    R = serializeAsyncCalls(async (T) => {
       try {
         let x = T ? await O : await Ci();
         if (x === k) return;
@@ -5156,7 +5156,7 @@ async function bi(v, k) {
       return cliError(
         "Error: non-interactive --cloud <session_id> requires a prompt (positional or stdin).",
       );
-    i("tengu_remote_send_headless", {
+    logEvent("tengu_remote_send_headless", {
       entry_point: fromEnum("cloud_attach_headless"),
     });
     let St = null,
@@ -5184,7 +5184,7 @@ async function bi(v, k) {
             : await sendEventToRemoteSession(X, tt, { eventSigner: jt });
     if (!ft.ok) {
       if (
-        (await qs("tengu_remote_send_headless_error", {
+        (await logEventAsync("tengu_remote_send_headless_error", {
           entry_point: fromEnum("cloud_attach_headless"),
         }),
         Ve === "json")
@@ -5198,7 +5198,7 @@ async function bi(v, k) {
         `Error: failed to send message to cloud session ${X}: ${ft.reason}`,
       );
     }
-    await qs("tengu_remote_send_headless_success", {
+    await logEventAsync("tengu_remote_send_headless_success", {
       entry_point: fromEnum("cloud_attach_headless"),
     });
     let gt = wa(X, void 0, { from: "cli", m: "0" });
@@ -5229,7 +5229,7 @@ async function bi(v, k) {
       return cliError(
         "Error: non-interactive --environment requires a prompt (positional or stdin). Run from a TTY for an interactive cloud session.",
       );
-    i("tengu_remote_create_session", {
+    logEvent("tengu_remote_create_session", {
       has_initial_prompt: S("true"),
       entry_point: fromEnum("pool_headless"),
       branch_mode: H8(Je, De),
@@ -5259,11 +5259,11 @@ async function bi(v, k) {
 `));
         },
         storageV5: v.storageV5,
-        credentials: Tw(v.storageV5),
+        credentials: credentialsStoreFor(v.storageV5),
       });
     if (!me) {
       if (
-        (await qs("tengu_remote_create_session_error", {
+        (await logEventAsync("tengu_remote_create_session_error", {
           error: fromEnumOpt(ft),
           entry_point: fromEnum("pool_headless"),
           branch_mode: H8(Je, De),
@@ -5282,7 +5282,7 @@ async function bi(v, k) {
         );
       return cliErrorAfterAnalyticsFlush(jt ? void 0 : "Error: Unable to create cloud session");
     }
-    await qs("tengu_remote_create_session_success", {
+    await logEventAsync("tengu_remote_create_session_success", {
       session_id: Tn(me.id),
       entry_point: fromEnum("pool_headless"),
       branch_mode: H8(Je, De),
@@ -5354,7 +5354,7 @@ async function bi(v, k) {
       }),
     },
     bo = new s7e(),
-    at = Xa(Xe, (Ce) => QHt(Ce, yt, bo, v.storageV5, v.credentials));
+    at = createStore(Xe, (Ce) => QHt(Ce, yt, bo, v.storageV5, v.credentials));
   if (
     (Et(() => wat(at.getState().tasks, v.storageV5)),
     Tat(at.setState),
@@ -5424,7 +5424,7 @@ async function bi(v, k) {
         earlyHydrateReads: v.earlyHydrateReads,
         cliAgents: J,
         messageQueue: O,
-        credentials: Tw(v.storageV5),
+        credentials: credentialsStoreFor(v.storageV5),
         allowedTools: U,
         thinkingConfig: D,
         thinkingConfigExplicit: N,
@@ -5489,8 +5489,8 @@ var ka = {
     readBase: () => ({ settings: getBasePolicySettings(), origin: getBasePolicySettingsOrigin(), loadErrors: getPolicyHelperSourceLoadErrors() }),
     baseSettled: () => !fIe(),
     refuse: (v) => {
-      let k = no();
-      if ((a5(), Dte(v), k)) {
+      let k = isExiting();
+      if ((commitExit(), Dte(v), k)) {
         setTimeout(Ir, ba()).unref();
         return;
       }
@@ -5527,14 +5527,14 @@ function ki(v) {
     )
       C1n(RJt);
     if (
-      (await Promise.all([rRt(), Bet()]),
+      (await Promise.all([rRt(), ensureKeychainPrefetchCompleted()]),
       Br("preAction_after_mdm"),
       (R = await nJt({
         showInvalidConfigDialog: v.showInvalidConfigDialog,
         storageV5EnvPin: v.storageV5EnvPin,
       })),
-      (T = Tw(R)),
-      M() && R !== void 0)
+      (T = credentialsStoreFor(R)),
+      isHoverRestEnabled() && R !== void 0)
     )
       zR({ storageV5: R });
     if ((Br("preAction_after_init"), !a.CLAUDE_CODE_DISABLE_TERMINAL_TITLE))
@@ -5611,7 +5611,7 @@ function ki(v) {
         oe.push("plugins (initialize request)");
       if (oe.length > 0) return cliError(ufe(oe));
     }
-    let fe = J2n(L);
+    let fe = checkVersionPolicyForCommand(L);
     if (fe) return cliError(fe);
     if (
       (kl.subscribe((oe) => {
@@ -6160,7 +6160,7 @@ function ki(v) {
       ),
     N = () => O;
   (D.action(async (I, L) => {
-    let W = Eyn(L, pv()),
+    let W = foldRestricted(L, pv()),
       K = await x1n(I, W, k, N, v.pendingConnect, v.pendingSSH, v, R, T);
     if (K.kind === "exited") return;
     if (K.kind === "prepared-headless") return bi(K, W);
@@ -6362,7 +6362,7 @@ function Ai(v) {
 function Ta() {
   (kW(null),
     UDt(),
-    I$(),
+    resetRemoteSettingsSyncCache(),
     Za(),
     process.stderr.write(
       q$e +
@@ -6424,7 +6424,7 @@ function Oi({ remoteControlFlag: v, isRemoteThinClient: k }) {
   };
 }
 function Pi(v) {
-  i("tengu_rc_autostart_resolved", {
+  logEvent("tengu_rc_autostart_resolved", {
     explicit_setting: fromEnum(
       v.explicit.value === void 0
         ? "unset"
@@ -6443,13 +6443,13 @@ function Pi(v) {
     result: fromEnum(v.result),
   });
 }
-var xa = m(() => c({ session_id: s(), ws_url: s(), work_dir: s().optional() }));
+var xa = createLazyValue(() => c({ session_id: s(), ws_url: s(), work_dir: s().optional() }));
 process.env.NoDefaultCurrentDirectoryInExePath = "1";
 Br("main_tsx_entry");
 Ts("node_boot_ms", process.uptime() * 1000, 0);
 $Xn();
 Gxn();
-Zxn();
+startKeychainPrefetch();
 Br("main_tsx_imports_loaded");
 var tr = () =>
   import("../../01-核心基础设施/设置-配置/showStandaloneSecurityDialog.nm3g924k.js").then(
@@ -6481,12 +6481,12 @@ function Fa() {
   for (let R of ["allow", "soft_deny", "hard_deny", "environment"])
     for (let T of v?.[R] ?? []) {
       if (T === ep) continue;
-      ((k[R] += G(
+      ((k[R] += countMatching(
         T.split(`
 `),
         (x) => x.trim().length > 0,
       )),
-        (O += G(T.split(/\s+/), Boolean)));
+        (O += countMatching(T.split(/\s+/), Boolean)));
     }
   return {
     auto_mode_allow_rule_count: k.allow,
@@ -6516,7 +6516,7 @@ async function Na(v, k) {
     U = T1n(),
     D = E1n(v),
     N = A1n(getInitialSettings());
-  i("tengu_startup_telemetry", {
+  logEvent("tengu_startup_telemetry", {
     is_git: O,
     worktree_count: R,
     ...k,
@@ -6560,7 +6560,7 @@ async function Hw(v) {
     if (T) (console.error(T), process.exit(1));
     let x = process.argv[k + 1],
       { enableConfigs: U } = await import("../../01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js");
-    await U(M() ? v?.backend : void 0);
+    await U(isHoverRestEnabled() ? v?.backend : void 0);
     let { handleDeepLinkUri: D } = await import("./handleDeepLinkUri.v94fyanc.js"),
       N = await D(x);
     process.exit(N);
@@ -6571,7 +6571,7 @@ async function Hw(v) {
     process.env.__CFBundleIdentifier === "com.anthropic.claude-code-url-handler"
   ) {
     let { enableConfigs: T } = await import("../../01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js");
-    await T(M() ? v?.backend : void 0);
+    await T(isHoverRestEnabled() ? v?.backend : void 0);
     let { handleUrlSchemeLaunch: x } = await import("./handleDeepLinkUri.v94fyanc.js"),
       U = await x();
     process.exit(U ?? 1);
@@ -6582,7 +6582,7 @@ async function Hw(v) {
       let { enableConfigs: x } = await import("../../01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js"),
         U;
       try {
-        (await x(M() ? v?.backend : void 0), (U = DY()));
+        (await x(isHoverRestEnabled() ? v?.backend : void 0), (U = DY()));
       } catch {
         U = void 0;
       }
@@ -6693,7 +6693,7 @@ async function ja(v) {
   YNn({ storageV5: fe });
   let { createRoot: Je } = await import("../../02-功能模块/Daemon-守护服务/createRoot.pw1402cq.js"),
     De = await Je(Ve.renderOptions, { storageV5: fe });
-  (i("tengu_timer", {
+  (logEvent("tengu_timer", {
     event: S("startup"),
     durationMs: Math.round(process.uptime() * 1000),
     resumed: !!(O.resume || O.continue),
@@ -6742,7 +6742,7 @@ async function ja(v) {
     );
   else if (et) {
     try {
-      i("tengu_claude_in_chrome_setup", { platform: u0(P()) });
+      logEvent("tengu_claude_in_chrome_setup", { platform: u0(P()) });
       let { mcpConfig: le, systemPrompt: mt } = setupClaudeInChrome();
       if (((ut = { ...ut, ...le }), mt))
         Rt = Rt
@@ -6751,7 +6751,7 @@ async function ja(v) {
 ${Rt}`
           : mt;
     } catch (le) {
-      (i("tengu_claude_in_chrome_setup_failed", { platform: u0(P()) }),
+      (logEvent("tengu_claude_in_chrome_setup_failed", { platform: u0(P()) }),
         logError(le),
         n(`[Claude in Chrome] Error (startup offer): ${le}`));
     }
@@ -6840,7 +6840,7 @@ ${Le ? "--rc and --project ignored." : "--rc flag ignored."}`);
           De.unmount(),
           await import("../../02-功能模块/认证-OAuth登录/execRelaunch.ewkdrr0a.js").then((le) => le.execRelaunch())
         );
-      (iit("gateway"), dR());
+      (resetAuthCachesAfterLogin("gateway"), dR());
     }
     (zJe(),
       lU(),
@@ -6871,7 +6871,7 @@ ${Le ? "--rc and --project ignored." : "--rc flag ignored."}`);
 function Nr(v, k) {
   if (k.deepLinkOrigin) {
     if (
-      (i("tengu_deep_link_opened", {
+      (logEvent("tengu_deep_link_opened", {
         has_prefill: Boolean(k.prefill),
         has_repo: Boolean(k.deepLinkRepo),
       }),
@@ -6961,7 +6961,7 @@ async function $a(v, k, O, R) {
       wasPersistedTrustedBeforeSetup: ir,
       wasTrustedBeforeSetup: Ce,
     } = v;
-  i("tengu_startup_manual_model_config", {
+  logEvent("tengu_startup_manual_model_config", {
     cli_flag: bt(k.model),
     env_var: bt(process.env.ANTHROPIC_MODEL),
     default_env_var: bt(a.ANTHROPIC_DEFAULT_MODEL),
@@ -6988,7 +6988,7 @@ async function $a(v, k, O, R) {
       });
     let _e = OG(),
       ve = otn(stn(syncPermissionRulesFromDisk(Ao, _e), [], tme(), void 0, !1, void 0, ae), _e);
-    if (((St = ve.context), ve.exitedAutoMode)) tt.push(NHe(getAutoModeUnavailableNotification("settings")));
+    if (((St = ve.context), ve.exitedAutoMode)) tt.push(buildAutoModeGateNotification(getAutoModeUnavailableNotification("settings")));
   }
   let Qt = {
       ...St,
@@ -7212,7 +7212,7 @@ async function $a(v, k, O, R) {
         });
       if (!Zt)
         return (
-          await qs("tengu_continue", { success: !1 }),
+          await logEventAsync("tengu_continue", { success: !1 }),
           await Ne(
             se,
             Ct === void 0 ? "No conversation found to continue" : MSt(Ct),
@@ -7230,7 +7230,7 @@ async function $a(v, k, O, R) {
       if (We.restoredAgentDef) T = We.restoredAgentDef;
       (jot(k),
         await Ur(k),
-        i("tengu_continue", {
+        logEvent("tengu_continue", {
           success: !0,
           resume_duration_ms: Math.round(performance.now() - ve),
         }),
@@ -7261,7 +7261,7 @@ async function $a(v, k, O, R) {
         io,
       );
     } catch (ve) {
-      if (!_e) await qs("tengu_continue", { success: !1 });
+      if (!_e) await logEventAsync("tengu_continue", { success: !1 });
       logError(dt(ge(ve), "continue/resume launchRepl failed"));
       let Oe = ge(ve).message;
       (Dte(
@@ -7342,7 +7342,7 @@ Usage: claude --cloud "your task description"`,
         qo,
         Yo = null;
       if (Z) {
-        (i("tengu_remote_attach_session", { session_id: Ee(Z) }), Nr(Se, k));
+        (logEvent("tengu_remote_attach_session", { session_id: Ee(Z) }), Nr(Se, k));
         let [
             { attachRemote: nt },
             { createFleetViewHost: Po },
@@ -7379,7 +7379,7 @@ Usage: claude --cloud "your task description"`,
           import("../../02-功能模块/Daemon-守护服务/createRoot.pw1402cq.js"),
         ]);
         (zo(), (process.env.CLAUDE_AGENTS_SELECT = remoteRowId(Z)));
-        let Mt = await At(wv(!1));
+        let Mt = await At(getBaseRenderOptions(!1));
         return (
           await oo(Mt, {
             entryChannel: "remote_detach",
@@ -7390,7 +7390,7 @@ Usage: claude --cloud "your task description"`,
           await xn(0)
         );
       } else {
-        i("tengu_remote_create_session", {
+        logEvent("tengu_remote_create_session", {
           has_initial_prompt: String(de),
           branch_mode: H8(De, et),
         });
@@ -7433,7 +7433,7 @@ Usage: claude --cloud "your task description"`,
                   }),
                 onDecided: (Xo) => {
                   if (!Xo.offer)
-                    i("tengu_dir_sync_mode_prompt_skipped", {
+                    logEvent("tengu_dir_sync_mode_prompt_skipped", {
                       reason: fromEnum(Xo.reason),
                     });
                 },
@@ -7507,7 +7507,7 @@ Usage: claude --cloud "your task description"`,
             })));
         let Ko = nt,
           Jo = !Ko ? void 0 : !ze ? "not_attached" : void 0;
-        if (Jo) (i("tengu_device_bind_skipped", { reason: fromEnum(Jo) }), (Go = Jo));
+        if (Jo) (logEvent("tengu_device_bind_skipped", { reason: fromEnum(Jo) }), (Go = Jo));
         let Ni =
             Ko && !Jo
               ? {
@@ -7552,7 +7552,7 @@ Usage: claude --cloud "your task description"`,
           if (to !== null && Po.signal.aborted) return await to.exitCancelled();
           return (
             to?.failed(),
-            i("tengu_remote_create_session_error", {
+            logEvent("tengu_remote_create_session_error", {
               error: fromEnum(ct.failReason),
               branch_mode: H8(De, et),
               settings_gate: S(oo ? "on" : "off"),
@@ -7580,7 +7580,7 @@ Usage: claude --cloud "your task description"`,
         let kt = ct.session;
         if (
           ((ht = ct.notices),
-          i("tengu_remote_create_session_success", {
+          logEvent("tengu_remote_create_session_success", {
             session_id: Ee(kt.id),
             initial_prompt_withheld: kt.withheldInitialMessage !== void 0,
             branch_mode: H8(De, et),
@@ -7604,7 +7604,7 @@ Usage: claude --cloud "your task description"`,
           }),
           ot && ot.action !== "none")
         )
-          i("tengu_remote_model_gate_hint", {
+          logEvent("tengu_remote_model_gate_hint", {
             entry_point: S("interactive"),
             session_id: Ee(kt.id),
             permission_mode: fromEnumOpt(Mt) ?? S("unset"),
@@ -7806,14 +7806,14 @@ Usage: claude --cloud "your task description"`,
       return;
     } else if (Xe) {
       if (Xe === !0 || Xe === "") {
-        (i("tengu_teleport_interactive_mode", {}),
+        (logEvent("tengu_teleport_interactive_mode", {}),
           n("selectAndResumeTeleportTask: Starting teleport flow..."));
         let ne = await jn(se);
         if (!ne) (await xn(0), process.exit(0));
         let { branchError: Z } = await checkOutTeleportedSessionBranch(ne.branch);
         ve = processMessagesForTeleportResume(ne.log, Z, ne.environmentKind);
       } else if (typeof Xe === "string") {
-        i("tengu_teleport_resume_session", { mode: S("direct") });
+        logEvent("tengu_teleport_resume_session", { mode: S("direct") });
         try {
           let ne = await fetchSession(Xe, void 0, He),
             Z = await validateSessionRepository(ne);
@@ -7831,7 +7831,7 @@ Usage: claude --cloud "your task description"`,
               await xn(0);
           }
           if (Z.status === "mismatch" || Z.status === "not_in_repo") {
-            i(
+            logEvent(
               Z.status === "mismatch"
                 ? "tengu_teleport_error_repo_mismatch_sessions_api"
                 : "tengu_teleport_error_repo_not_in_git_dir_sessions_api",
@@ -7899,11 +7899,11 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
         if (isTranscriptFileResumeArg(k.resume)) {
           let de = Xn(basename(k.resume, ".jsonl"));
           if (de && !k.forkSession) {
-            let ue = await t4(de);
+            let ue = await getLiveSessionHolder(de);
             if (ue)
               return await Ne(
                 se,
-                ile({ sessionId: de, holder: ue, canFork: !0 }),
+                formatSessionLiveElsewhereMessage({ sessionId: de, holder: ue, canFork: !0 }),
               );
           }
           let Qe = "load_error";
@@ -7935,20 +7935,20 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
                 Oe.restoredAgentDef)
               )
                 T = Oe.restoredAgentDef;
-              i("tengu_session_resumed", {
+              logEvent("tengu_session_resumed", {
                 entrypoint: S("file"),
                 success: !0,
                 resume_duration_ms: Math.round(performance.now() - ue),
               });
             } else
-              i("tengu_session_resumed", {
+              logEvent("tengu_session_resumed", {
                 entrypoint: S("file"),
                 success: !1,
                 failure_reason: S("not_found_explicit_id"),
               });
           } catch (ue) {
             if (
-              (i("tengu_session_resumed", {
+              (logEvent("tengu_session_resumed", {
                 entrypoint: S("file"),
                 success: !1,
                 failure_reason:
@@ -7976,9 +7976,9 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
     if (Ct) {
       let ne = Ct;
       if (!k.forkSession) {
-        let de = await t4(ne);
+        let de = await getLiveSessionHolder(ne);
         if (de)
-          return await Ne(se, ile({ sessionId: ne, holder: de, canFork: !0 }));
+          return await Ne(se, formatSessionLiveElsewhereMessage({ sessionId: ne, holder: de, canFork: !0 }));
       }
       let Z = "load_error";
       try {
@@ -7991,7 +7991,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
             ...LX(Se.precompute, ae, { forkSession: !!k.forkSession }),
           });
         if (!Qe) {
-          i("tengu_session_resumed", {
+          logEvent("tengu_session_resumed", {
             entrypoint: S("cli_flag"),
             success: !1,
             failure_reason: S("not_found_explicit_id"),
@@ -8014,14 +8014,14 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
           Oe.restoredAgentDef)
         )
           T = Oe.restoredAgentDef;
-        i("tengu_session_resumed", {
+        logEvent("tengu_session_resumed", {
           entrypoint: S("cli_flag"),
           success: !0,
           resume_duration_ms: Math.round(performance.now() - de),
         });
       } catch (de) {
         if (
-          (i("tengu_session_resumed", {
+          (logEvent("tengu_session_resumed", {
             entrypoint: S("cli_flag"),
             success: !1,
             failure_reason:
@@ -8043,7 +8043,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
     if (Me)
       try {
         let ne = await Me,
-          Z = G(ne, (de) => !de.success);
+          Z = countMatching(ne, (de) => !de.success);
         if (Z > 0) cliWarn(`Warning: ${Z}/${ne.length} file(s) failed to download.`);
       } catch (ne) {
         return await Ne(se, `Error downloading files: ${l(ne)}`);
@@ -8098,11 +8098,11 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
       k.name === void 0 &&
       k.watchArtifact === void 0 &&
       k.watchArtifactNoAutoreact === void 0 &&
-      !Dpe(k) &&
+      !cliCarriesSessionConfig(k) &&
       ny() &&
       FJe()
     ) {
-      (i("tengu_fleetview", { viaResume: !0 }),
+      (logEvent("tengu_fleetview", { viaResume: !0 }),
         gOe(),
         import("../../02-功能模块/会话-历史-恢复/startBackgroundHousekeeping.t1hjzkg6.js").then((de) =>
           de.startBackgroundHousekeeping(B().host, ae),

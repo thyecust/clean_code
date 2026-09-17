@@ -10,13 +10,13 @@
 import { default as RT } from "../文件监听-Watch/文件监听-Watch.3efypmps.js";
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Tvn, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Hx, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, Et, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -27,7 +27,7 @@ import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { s, Uf, v, c, $e, fe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function INe(e) {
   let r = e.split("+"),
     t = { key: "", ctrl: !1, alt: !1, shift: !1, meta: !1, super: !1 };
@@ -708,7 +708,7 @@ var LYn = {
 function D(e) {
   return me.has(e) || e.startsWith("command:");
 }
-var ye = m(() =>
+var ye = createLazyValue(() =>
     c({
       context: X(K8e).describe(
         "UI context where these bindings apply. Global bindings work everywhere.",
@@ -727,7 +727,7 @@ var ye = m(() =>
       ).describe("Map of keystroke patterns to actions"),
     }).describe("A block of keybindings for a specific context"),
   ),
-  sn = m(() =>
+  sn = createLazyValue(() =>
     c({
       $schema: s().optional().describe("JSON Schema URL for editor validation"),
       $docs: s().optional().describe("Documentation URL"),
@@ -847,7 +847,7 @@ function we(e) {
   }
   return (t.sort(), [...t, o].join("+"));
 }
-var ve = m(() => c({ context: s(), bindings: fe(s(), s().nullable()) }));
+var ve = createLazyValue(() => c({ context: s(), bindings: fe(s(), s().nullable()) }));
 function xe(e) {
   return ve().safeParse(e).success;
 }
@@ -985,7 +985,7 @@ function Ke(e) {
   let o = ft(e, ":"),
     p = Lre.filter((b) => b.startsWith(`${o}:`));
   if (p.length > 0) return `Valid "${o}:" actions: ${p.join(", ")}`;
-  return `Valid action namespaces: ${Y(Lre.map((b) => ft(b, ":")))
+  return `Valid action namespaces: ${dedupe(Lre.map((b) => ft(b, ":")))
     .map((b) => `${b}:`)
     .join(", ")}`;
 }
@@ -1148,7 +1148,7 @@ function R(e, r) {
   let t = new Date().toISOString().slice(0, 10);
   if (e.lastCustomBindingsLogDate === t) return;
   ((e.lastCustomBindingsLogDate = t),
-    i("tengu_custom_keybindings_loaded", { user_binding_count: r }));
+    logEvent("tengu_custom_keybindings_loaded", { user_binding_count: r }));
 }
 function Y8e() {
   return Oe(be(), "keybindings.json");
@@ -1178,7 +1178,7 @@ function U() {
 function MYn(e) {
   let r = L();
   if (U()) return r;
-  if (M() && e !== void 0) return r;
+  if (isHoverRestEnabled() && e !== void 0) return r;
   try {
     let t = readFileSync(Y8e(), "utf-8"),
       o = z(t),
@@ -1770,10 +1770,10 @@ function X3(e) {
     t = hw.actionFiredLoggedAt,
     o = t.get(e);
   if (o !== void 0 && r - o < Je) return;
-  (t.set(e, r), i("tengu_keybinding_fired", { action_id: ae(e) }));
+  (t.set(e, r), logEvent("tengu_keybinding_fired", { action_id: ae(e) }));
 }
 function IAe(e, r, t, o) {
-  i("tengu_keybinding_fallback_used", {
+  logEvent("tengu_keybinding_fallback_used", {
     action: ae(e),
     context: fromEnum(r),
     fallback: Ze(t),

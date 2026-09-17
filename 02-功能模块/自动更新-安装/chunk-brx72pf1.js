@@ -12,10 +12,10 @@ import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Bf, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { le, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { bc, ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -28,11 +28,11 @@ import { _x } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { tv } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
 import { Jqn, isScrubOnlySandboxMode, SandboxManager, ULe, vde } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { L9n, pte, Fbe, Gce, kan, M9n, $9n } from "./chunk-548xet6h.js";
-import { bD } from "../../01-核心基础设施/共享小工具-未细化/chunk-cyyrj58q.js";
+import { getLocalBinDir } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
 import { join as J } from "path";
-var Q = m(() =>
+var Q = createLazyValue(() =>
   nt({
     timestamp: le(),
     path: ru(["npm-global", "npm-local", "native"]),
@@ -50,7 +50,7 @@ function O() {
   return Ce.state("last-update-result");
 }
 async function Wce(e, t) {
-  if (M() && t) {
+  if (isHoverRestEnabled() && t) {
     let i = await t.write(O(), b(e), { mode: 438 & ~process.umask() });
     if (!i.ok)
       n(`Failed to record update result: ${i.error.code}`, { level: "error" });
@@ -64,7 +64,7 @@ async function Wce(e, t) {
 }
 async function sFt(e) {
   let t;
-  if (M() && e) {
+  if (isHoverRestEnabled() && e) {
     let i = await e.read([O()]);
     if (!i.ok)
       return (
@@ -470,7 +470,7 @@ async function fe(e) {
     let o = (a.PATH || "").split(delimiter),
       y = homedir(),
       d = g(y, ".local", "bin"),
-      u = g(bD(), "claude");
+      u = g(getLocalBinDir(), "claude");
     if (!(await ULe(u)) && !(await vde(u).catch(() => !1)))
       t.push({
         issue: `${u} was not created by the native installer (it is not a symlink into the versions/ directory), so auto-update leaves it untouched.`,

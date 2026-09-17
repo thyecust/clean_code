@@ -10,9 +10,9 @@
 
 // [preload stripped] 原本在此预载 247 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Ia, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
@@ -20,18 +20,18 @@ import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { ui, fa, $o, vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js";
+import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { TV, b2t, lH, A2t, S4n, C2t, Ipn, Ng } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { vh } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { Q3 } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
-import { lu } from "../../01-核心基础设施/共享小工具-未细化/chunk-qck6h2yw.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import { BulletItem } from "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 import * as fe from "path";
 F();
@@ -41,15 +41,15 @@ function St(Wo) {
 function ne(_o) {
   let O = _(20),
     { onComplete: X } = _o,
-    { storageV5: $e } = _e(),
-    Ae = ui(mo),
+    { storageV5: $e } = useStorageV5Context(),
+    Ae = ui(REFUSE_INPUT_WINDOW_MS),
     { refusedWithin: je, noteRefused: Me, epoch: ko } = $o(),
-    We = fa(ko, mo),
+    We = fa(ko, REFUSE_INPUT_WINDOW_MS),
     Le = C(!1),
     ht;
   if (O[0] !== Ae || O[1] !== Me || O[2] !== je)
     ((ht = () => {
-      if (Ae() || je(mo)) {
+      if (Ae() || je(REFUSE_INPUT_WINDOW_MS)) {
         return (Me(), !0);
       }
       return !1;
@@ -104,7 +104,7 @@ function ne(_o) {
   else Dt = O[10];
   let Be = Dt,
     Ct;
-  if (O[11] === p)
+  if (O[11] === MEMO_CACHE_SENTINEL)
     ((Ct = [
       { label: "Yes", value: "yes" },
       { label: "No", value: "no" },
@@ -132,7 +132,7 @@ function ne(_o) {
       (O[15] = he));
   else he = O[15];
   let yt;
-  if (O[16] === p)
+  if (O[16] === MEMO_CACHE_SENTINEL)
     ((yt = e(t, {
       dimColor: !0,
       children: "You can also configure this in /config or with the --ide flag",
@@ -164,7 +164,7 @@ function De() {
 function re(Mo) {
   let ge = _(11),
     { onComplete: H } = Mo,
-    { storageV5: Ye } = _e(),
+    { storageV5: Ye } = useStorageV5Context(),
     Et;
   if (ge[0] !== H || ge[1] !== Ye)
     ((Et = () => {
@@ -186,7 +186,7 @@ function re(Mo) {
   let K = bt,
     Ie;
   if (ge[5] !== K || ge[6] !== qe)
-    ((Ie = e(En, {
+    ((Ie = e(ConfirmPrompt, {
       hideIndexes: !0,
       cancelFirst: !0,
       focus: "cancel",
@@ -224,7 +224,7 @@ function so(Pt) {
 }
 function ao(Ft, Dn) {
   return e(
-    lu,
+    BulletItem,
     {
       children: r(t, {
         dimColor: !0,
@@ -351,7 +351,7 @@ function Pe(dn) {
   if (A[17] !== V || A[18] !== G || A[19] !== He || A[20] !== Y)
     ((k =
       V.length === 0
-        ? e(Rn, {
+        ? e(EmptyStateMessage, {
             children: b2t()
               ? `No available IDEs detected. Please install the plugin and restart your IDE:
 https://code.claude.com/docs/en/jetbrains`
@@ -617,7 +617,7 @@ async function openProjectInSelectedIDE(n, s, m, l) {
     l(`Failed to open in ${n.name}. Try opening manually: ${s}`));
 }
 async function cn(n, s, m) {
-  i("tengu_ext_ide_command", {});
+  logEvent("tengu_ext_ide_command", {});
   let {
     options: { dynamicMcpConfig: l },
     onChangeDynamicMcpConfig: h,

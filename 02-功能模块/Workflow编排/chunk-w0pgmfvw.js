@@ -11,7 +11,7 @@ import { A0 } from "../权限系统/chunk-e4pfvp7x.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { $E } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
 import { mt } from "../工具Task-Agent调度/chunk-1px84m19.js";
-import { gy } from "../../01-核心基础设施/共享小工具-未细化/chunk-1adkzsnc.js";
+import { MAX_SERIALIZED_ARRAY_ELEMENTS } from "../../01-核心基础设施/共享小工具-未细化/max-serialized-array-elements.js";
 var s = "",
   r = "'worktree'",
   n = "",
@@ -119,7 +119,7 @@ Smell test: if you wrote
   const c = await parallel(b.map(...))
 that middle transform doesn't need the barrier. Rewrite as a pipeline with the transform inside a stage. When in doubt: pipeline.
 
-Concurrent agent() calls are capped at min(16, available CPUs - 2) per workflow \u2014 excess calls queue and run as slots free up. You can still pass 100 items to parallel()/pipeline() and they all complete; only ~10 run at any moment. Total agent count across a workflow's lifetime is capped at 1000 \u2014 a runaway-loop backstop set far above any real workflow. A single parallel()/pipeline() call accepts at most ${gy} items; passing more is an explicit error, not a silent truncation.
+Concurrent agent() calls are capped at min(16, available CPUs - 2) per workflow \u2014 excess calls queue and run as slots free up. You can still pass 100 items to parallel()/pipeline() and they all complete; only ~10 run at any moment. Total agent count across a workflow's lifetime is capped at 1000 \u2014 a runaway-loop backstop set far above any real workflow. A single parallel()/pipeline() call accepts at most ${MAX_SERIALIZED_ARRAY_ELEMENTS} items; passing more is an explicit error, not a silent truncation.
 
 When a barrier IS correct \u2014 dedup across all findings before expensive verification:
   const all = await parallel(DIMENSIONS.map(d => () => agent(d.prompt, {schema: FINDINGS_SCHEMA})))

@@ -11,13 +11,13 @@ import { default as RT } from "../../02-功能模块/文件监听-Watch/文件�
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qt } from "../共享小工具-未细化/chunk-km6n9zrg.js";
 import { Qs, Si } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { o9 } from "../../02-功能模块/认证-OAuth登录/chunk-n76cf9e6.js";
 import { kle, Y0e } from "../../02-功能模块/权限系统/chunk-3kjwvb3e.js";
-import { Vb } from "../共享小工具-未细化/chunk-d3d1v4d6.js";
+import { getDaemonJsonPath } from "../共享小工具-未细化/daemon-paths.js";
 import { s, v, c, $e } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 import { stat as C } from "fs/promises";
@@ -27,7 +27,7 @@ function x(r) {
     .optional()
     .transform((o) => (o === void 0 ? [] : Array.isArray(o) ? o : [o]));
 }
-var p = m(() => {
+var p = createLazyValue(() => {
   let r = Si(o9, (o) => x(o.schema()));
   return c({ $schema: s().optional(), ...r });
 });
@@ -36,7 +36,7 @@ function HIt() {
 }
 async function Jae(r, o) {
   let t;
-  if (M() && o !== void 0 && r === Vb()) {
+  if (isHoverRestEnabled() && o !== void 0 && r === getDaemonJsonPath()) {
     let e = await D(o, r);
     if (!e.ok) return e.result;
     t = e.raw;

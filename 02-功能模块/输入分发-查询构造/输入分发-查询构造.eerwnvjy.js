@@ -80,11 +80,11 @@ import {
   ic,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, po, zn, An, gp, pl, jf, Uxe } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z, Dt, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep, withTimeout, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { tl, be, Xur, uo, Hr, xg, NL } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Io, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { bc, ja, env as a, antEnv, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { OAUTH_BETA_HEADER, getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
@@ -288,7 +288,7 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync, logFeatureSadAsync, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { Bf } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import {
@@ -798,7 +798,7 @@ import {
   MXn,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isViolinWoodEnabled, isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
-import { Dl } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
+import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { Uk, ZAe, ti, _Qn, eCe } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { of, N$e, Qn, AR } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { isBridgeEnabled, isRemoteControlOfferable, isRunningInRemoteEnvironment, isBridgeStateFramesEnabled, isBridgePartialMessagesEnabled } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
@@ -843,14 +843,14 @@ import { Q3 } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { getTeamFilePath, readTeamFileAsync } from "../Teammates团队/chunk-6b13bhw1.js";
 import { v$e, Eo, XH } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { Per } from "../Artifact发布-渲染/chunk-rr78st95.js";
-import { hG } from "../Bridge-RemoteControl/chunk-3j7ezsr7.js";
+import { isPushNotificationsEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import { isKairosCronEnabled } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { Ts, VXn } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
 import { reportBridgePermissionMode, reportBridgeModel } from "../权限系统/chunk-1y2g140m.js";
 import { Fy } from "../会话-历史-恢复/chunk-m1xj4s02.js";
 import { getOwnJobShortId, writeStateAtomic, logJobWriteError, readJobState, syncRespawnFlag } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { Dpe, Ayn } from "../权限系统/chunk-8rrcddth.js";
+import { cliCarriesSessionConfig, cliCarriesForkRestrictedConfig } from "../权限系统/fork-restricted-launch-flags.js";
 import { hw, MYn, Fpe } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { dNe } from "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
 import { collectContextData } from "../上下文压缩-Compact/chunk-40jcpbzh.js";
@@ -866,14 +866,14 @@ import { hLt } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { BAn, qJe, O4t, b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { _ee, c3e, fIe, knn } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { o, t, ct, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Lze } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
 import { ui, fa, $o, vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { shouldOfferTerminalSetup } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { flushAnalyticsSinks } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
@@ -894,7 +894,7 @@ import {
   gen,
 } from "../插件系统/chunk-q8w2zntw.js";
 import { Xae, zst } from "../Skills技能/Skills技能.dpy2ket5.js";
-import { KFn } from "../../01-核心基础设施/共享小工具-未细化/chunk-th8d86j4.js";
+import { publishPermissionSnapshot } from "../../01-核心基础设施/共享小工具-未细化/publish-permission-snapshot.js";
 import { v3n } from "../权限系统/chunk-8zbmhy8a.js";
 import { printCliError, cliError, cliWarn, exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { bootstrapFetchCanConvergeSlot, fetchBootstrapData } from "../上下文压缩-Compact/chunk-npckj9cm.js";
@@ -912,20 +912,20 @@ import { ir, mE, $Ie } from "../MCP客户端/chunk-g4gdwpa0.js";
 import { SFt, Sze, Nan } from "../权限系统/chunk-z0pt04s8.js";
 import { zL, uWe } from "../权限系统/chunk-hv6z01db.js";
 import { Y$n, J$n, Hit } from "../../03-入口与运行时/Headless-SDK模式/chunk-9r4nh249.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Qg } from "../../01-核心基础设施/共享小工具-未细化/chunk-awxpn5er.js";
-import { Ule } from "../插件系统/chunk-gzfe39h3.js";
-import { ut } from "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
+import { formatHyperlink } from "../../01-核心基础设施/共享小工具-未细化/format-hyperlink.js";
+import { getDisusedPlugins } from "../插件系统/plugin-disuse.js";
+import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import { Hv } from "../MCP客户端/chunk-k2gczbnj.js";
 import { fut } from "../../01-核心基础设施/共享小工具-未细化/chunk-4p4f6hsz.js";
 import { zSe } from "../Teammates团队/chunk-w2g8t42p.js";
 import { Lee } from "../后台任务-Shell管理/chunk-531ast3t.js";
 import { Dv } from "../../01-核心基础设施/共享小工具-未细化/chunk-1rpyafm2.js";
 import { wF } from "../Bridge-RemoteControl/chunk-z5v9hvat.js";
-import { lbe } from "../../01-核心基础设施/共享小工具-未细化/chunk-42rkrq9r.js";
+import { getCooContextProperties } from "../../01-核心基础设施/共享小工具-未细化/coo-context-properties.js";
 import { ube } from "../../01-核心基础设施/共享小工具-未细化/chunk-kv5vaqew.js";
-import { N6n } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
+import { flushPendingScopeExpansionNotice } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
 import { tWn } from "../../01-核心基础设施/设置-配置/chunk-ekwet1zd.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { i4e, bGn } from "../../01-核心基础设施/共享小工具-未细化/chunk-ck2sjz96.js";
@@ -937,12 +937,12 @@ import { xJn } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { gD, Fbt } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
 import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
 import { Twt } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
-import { XE } from "../../01-核心基础设施/共享小工具-未细化/chunk-6eskfcpn.js";
-import { jy } from "../../01-核心基础设施/共享小工具-未细化/chunk-vp8yvx5r.js";
-import { Y$ } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+import { isRemoteSettingsEligible } from "../../01-核心基础设施/共享小工具-未细化/remote-settings-eligibility.js";
+import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
+import { createFieldUpdater } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { isBypassPermissionsModeDisabled } from "../权限系统/chunk-pcxn6gwz.js";
 import { mt, Vh } from "../工具Task-Agent调度/chunk-1px84m19.js";
-import { e5 } from "../Bridge-RemoteControl/chunk-eg5a0eq0.js";
+import { REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE } from "../Bridge-RemoteControl/remote-control-policy-messages.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
@@ -954,8 +954,8 @@ import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/ch
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { Wxe, Gxe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0cy1k3q5.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { pe, p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { toESM, MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { constants } from "fs";
 import {
   lstat as Mg,
@@ -1123,7 +1123,7 @@ async function readFileForRemote(w, I, O, U = "utf-8", V, te = nc) {
       await Se.close();
     }
     if (V)
-      i("tengu_bridge_read_file_served", {
+      logEvent("tengu_bridge_read_file_served", {
         success: !0,
         source: fromEnum(V),
         size_bytes: xe.length,
@@ -1148,7 +1148,7 @@ async function readFileForRemote(w, I, O, U = "utf-8", V, te = nc) {
       n(`readFileForRemote failed pre-deny: ${Me}`, { level: "error" });
     } catch {}
     try {
-      if (V) i("tengu_bridge_read_file_served", { success: !1, source: fromEnum(V) });
+      if (V) logEvent("tengu_bridge_read_file_served", { success: !1, source: fromEnum(V) });
     } catch {}
     if (me instanceof R && me.message.startsWith("read denied: ")) throw me;
     throw lr(w);
@@ -2005,7 +2005,7 @@ async function N_e({
       ((We = 2), ($e = await n6e({ ...dn, transcript: [] }, ne, Se)));
   }
   if ($e.success) {
-    (i("tengu_bug_report_submitted", {
+    (logEvent("tengu_bug_report_submitted", {
       surface: fromEnum(O),
       remote_workspace: S(xe.remoteWorkspace ? "true" : "false"),
       retried_after_too_large: !Ae.success && Ae.payloadTooLarge === !0,
@@ -2034,7 +2034,7 @@ async function N_e({
   }
   if ($e.failureReason)
     (logFeatureBad("feedback_submit", $e.failureReason),
-      i("tengu_bug_report_failed", {
+      logEvent("tengu_bug_report_failed", {
         surface: fromEnum(O),
         remote_workspace: S(xe.remoteWorkspace ? "true" : "false"),
         reason: fromEnum($e.failureReason),
@@ -2148,7 +2148,7 @@ function fc(w) {
 import { randomUUID as fy } from "crypto";
 var dy = 6,
   cy = 32,
-  my = m(() => c({ text: s().optional() }));
+  my = createLazyValue(() => c({ text: s().optional() }));
 function gJt(w) {
   let I = my().safeParse(w);
   if (!I.success || I.data.text === void 0) return null;
@@ -2365,7 +2365,7 @@ function hc(w, I, O, U, V, te, ne, me, Me, Se, xe) {
     Nt = me ? null : pZ(),
     at = me ? void 0 : vMn();
   if (
-    (i("tengu_input_prompt", {
+    (logEvent("tengu_input_prompt", {
       is_negative: We,
       is_keep_going: Ye,
       is_wakeup: Ze,
@@ -2795,11 +2795,11 @@ async function wy(
   if (Tt === null && I !== "prompt")
     throw Error(`Mode: ${I} requires a string input.`);
   let Kt = V ? Object.values(V).filter(CDe) : [],
-    Hn = V ? await R9n(V, Y$(O.setAppState, "storedImagePaths")) : new Map();
+    Hn = V ? await R9n(V, createFieldUpdater(O.setAppState, "storedImagePaths")) : new Map();
   Rc("query_pasted_image_processing_start");
   let Zt = await Promise.all(
       Kt.map(async (et) => {
-        i("tengu_pasted_image_resize_attempt", {
+        logEvent("tengu_pasted_image_resize_attempt", {
           original_size_bytes: et.content.length,
         });
         let tt = await Bg({
@@ -2898,7 +2898,7 @@ async function wy(
     AR(at) &&
     nyt(Ze ?? Tt)
   ) {
-    i("tengu_ultraplan_keyword", {});
+    logEvent("tengu_ultraplan_keyword", {});
     let et = EWt(Tt).trim(),
       { processSlashCommand: tt } = await import("../斜杠命令-框架/chunk-s195n5de.js"),
       He = await tt(
@@ -3025,7 +3025,7 @@ async function wy(
       let He = `@agent-${tt.attachment.agentType}`,
         Qe = et === He,
         Je = et.startsWith(He) && !Qe;
-      i("tengu_subagent_at_mention", { is_subagent_only: Qe, is_prefix: Je });
+      logEvent("tengu_subagent_at_mention", { is_subagent_only: Qe, is_prefix: Je });
     }
   }
   if (It && !O.abortController.signal.aborted) (bht(), fht(O.setAppState));
@@ -3094,7 +3094,7 @@ function Py({ querySource: w, context: I }) {
                   n(`[classifier] error: ${l($e)}`, { level: "error" });
                 });
               if (isBgSession())
-                await Dt(Ae, 60000, "classifier write timed out").catch(
+                await withTimeout(Ae, 60000, "classifier write timed out").catch(
                   () => {},
                 );
               return;
@@ -3934,7 +3934,7 @@ function oHe({
       if (Qr) yield It(Qr);
     }
     while (Fn.length > 0 && !Mn?.signal.aborted && Ss())
-      (yield* Ko(), await Z(100));
+      (yield* Ko(), await sleep(100));
     if (
       Fn.length > 0 &&
       Mn?.signal.aborted &&
@@ -4206,7 +4206,7 @@ function oHe({
         });
       },
       backgroundTasks: async (Ke) => {
-        if (Dl())
+        if (areBackgroundTasksDisabled())
           throw (
             logFeatureBad("task_local_shell_background_all", "disabled"),
             Error("Background tasks are disabled in this session.")
@@ -4237,7 +4237,7 @@ function oHe({
         cleared: vt = !1,
       }) => {
         if (isPolicyAllowed("allow_product_feedback"))
-          i("tengu_message_rated", {
+          logEvent("tengu_message_rated", {
             message_uuid: Ee(Ke),
             sentiment: fromEnum(ze),
             surface: fromEnum(ft),
@@ -4424,7 +4424,7 @@ function Ri() {
   };
 }
 function r6e(w) {
-  return M() && w !== void 0
+  return isHoverRestEnabled() && w !== void 0
     ? tzn((I) =>
         Kdn({
           recordOperation: (O) => {
@@ -4976,7 +4976,7 @@ function YNn(w) {
     let me = Obt(O) === "fullscreen";
     if (ne.kind !== "disabled") {
       if (
-        (i("tengu_fullscreen_crash_auto_off", {
+        (logEvent("tengu_fullscreen_crash_auto_off", {
           sticky: ne.kind === "tripped",
           strikes: ne.strikes,
           new_strikes: ne.newStrikes,
@@ -5245,7 +5245,7 @@ async function Gc(w) {
     f0t(w),
     (I.persisted = !0),
     logFeatureOk("tui_fullscreen_upsell_trial"),
-    i("tengu_fullscreen_upsell_trial_persisted", {
+    logEvent("tengu_fullscreen_upsell_trial_persisted", {
       session_age_ms: Math.round(process.uptime() * 1000),
     }),
     n("fullscreen trial: healthy \u2014 persisted settings.tui=fullscreen"),
@@ -5373,7 +5373,7 @@ F();
 function Us() {
   let WT = _(1),
     rh;
-  if (WT[0] === p)
+  if (WT[0] === MEMO_CACHE_SENTINEL)
     ((rh = r(t, {
       children: [
         "MCP servers may execute code or access system resources. All tool calls require approval. Learn more in the",
@@ -5390,20 +5390,20 @@ function Us() {
   return rh;
 }
 function Aot({ serverName: w, isPluginServer: I = !1, onDone: O }) {
-  let { storageV5: U } = _e(),
+  let { storageV5: U } = useStorageV5Context(),
     V = C(!1),
-    te = ui(mo),
+    te = ui(REFUSE_INPUT_WINDOW_MS),
     { refusedWithin: ne, noteRefused: me, epoch: Me } = $o(),
-    Se = fa(Me, mo);
+    Se = fa(Me, REFUSE_INPUT_WINDOW_MS);
   function xe() {
-    if (te() || ne(mo)) return (me(), !0);
+    if (te() || ne(REFUSE_INPUT_WINDOW_MS)) return (me(), !0);
     return !1;
   }
   async function De(Oe) {
     if (xe()) return;
     if (V.current) return;
     switch (
-      ((V.current = !0), i("tengu_mcp_dialog_choice", { choice: fromEnum(Oe) }), Oe)
+      ((V.current = !0), logEvent("tengu_mcp_dialog_choice", { choice: fromEnum(Oe) }), Oe)
     ) {
       case "yes":
       case "yes_all": {
@@ -5480,13 +5480,13 @@ function Aot({ serverName: w, isPluginServer: I = !1, onDone: O }) {
 }
 F();
 function Cot({ serverNames: w, pluginServerNames: I, onDone: O }) {
-  let { storageV5: U } = _e(),
+  let { storageV5: U } = useStorageV5Context(),
     V = C(!1),
-    te = ui(mo),
+    te = ui(REFUSE_INPUT_WINDOW_MS),
     { refusedWithin: ne, noteRefused: me } = $o(),
     Me = tn(),
     Se = re(() => {
-      if (te() || ne(mo)) return (me(), !0);
+      if (te() || ne(REFUSE_INPUT_WINDOW_MS)) return (me(), !0);
       return !1;
     }, [te, ne, me]);
   async function xe(Oe) {
@@ -5494,7 +5494,7 @@ function Cot({ serverNames: w, pluginServerNames: I, onDone: O }) {
     if (V.current) return;
     V.current = !0;
     let [Ae, $e] = xF(w, (Ye) => Oe.includes(Ye));
-    i("tengu_mcp_multidialog_choice", {
+    logEvent("tengu_mcp_multidialog_choice", {
       approved: Ae.length,
       rejected: $e.length,
     });
@@ -5503,7 +5503,7 @@ function Cot({ serverNames: w, pluginServerNames: I, onDone: O }) {
       let { error: Ye } = await updateSettingsForSourceWithTransform(
         "localSettings",
         (Ze) => ({
-          enabledMcpjsonServers: Y([
+          enabledMcpjsonServers: dedupe([
             ...(Ze?.enabledMcpjsonServers || []),
             ...Ae,
           ]),
@@ -5517,7 +5517,7 @@ function Cot({ serverNames: w, pluginServerNames: I, onDone: O }) {
       let { error: Ye } = await updateSettingsForSourceWithTransform(
         "localSettings",
         (Ze) => ({
-          disabledMcpjsonServers: Y([
+          disabledMcpjsonServers: dedupe([
             ...(Ze?.disabledMcpjsonServers || []),
             ...$e,
           ]),
@@ -5536,7 +5536,7 @@ function Cot({ serverNames: w, pluginServerNames: I, onDone: O }) {
     let { error: Oe } = await updateSettingsForSourceWithTransform(
       "localSettings",
       (Ae) => ({
-        disabledMcpjsonServers: Y([
+        disabledMcpjsonServers: dedupe([
           ...(Ae?.disabledMcpjsonServers || []),
           ...w,
         ]),
@@ -5576,10 +5576,10 @@ function Cot({ serverNames: w, pluginServerNames: I, onDone: O }) {
         children: e(t, {
           dimColor: !0,
           italic: !0,
-          children: r(ue, {
+          children: r(DotSeparatedList, {
             children: [
-              e(D, { chord: "space", action: "select" }),
-              e(je, {
+              e(KeybindingHint, { chord: "space", action: "select" }),
+              e(ActionKeybindingHint, {
                 action: "confirm:no",
                 context: "Confirmation",
                 fallback: "Esc",
@@ -5715,7 +5715,7 @@ function mh(w, I, O) {
   let U = w.resyncTimer,
     V = Date.now() - O;
   if (V > uh) {
-    (q("info", "skills_sync_resync_skipped_after_sleep", { late_ms: V }),
+    (writeDiagnosticsEvent("info", "skills_sync_resync_skipped_after_sleep", { late_ms: V }),
       rl(w, I, ch));
     return;
   }
@@ -5813,7 +5813,7 @@ async function uu(w) {
 async function mu(w, I) {
   let O = 0;
   for (let U of w) if (await xi(_o(dr(), U), I)) O++;
-  if (O > 0) q("info", "skills_sync_stray_entry_trashed", { count: O });
+  if (O > 0) writeDiagnosticsEvent("info", "skills_sync_stray_entry_trashed", { count: O });
   return O;
 }
 async function bh(w) {
@@ -5856,7 +5856,7 @@ async function JHt(w) {
     }
     ((U += await mu(V.strays, w)), await rmdir(dr()).catch(() => {}));
   }
-  q("info", "skills_sync_pruned_for_closed_gate", {
+  writeDiagnosticsEvent("info", "skills_sync_pruned_for_closed_gate", {
     moved: (U ?? 0) + (O ? 1 : 0),
   });
   let te = O || (U !== null && U > 0);
@@ -5871,7 +5871,7 @@ function Fi(w) {
 }
 var Zc = new Set(),
   tu = [],
-  Ch = m(() =>
+  Ch = createLazyValue(() =>
     it({
       lastUpdated: T().catch(0),
       skills: v(se()),
@@ -5879,7 +5879,7 @@ var Zc = new Set(),
       pendingClaims: se().optional(),
     }),
   ),
-  vh = m(() =>
+  vh = createLazyValue(() =>
     it({
       name: s(),
       skillId: s().catch(""),
@@ -5888,7 +5888,7 @@ var Zc = new Set(),
       updatedAt: s().nullable().catch(null),
     }),
   ),
-  kh = m(() =>
+  kh = createLazyValue(() =>
     it({ staleDirs: se().optional(), pendingClaims: se().optional() }),
   );
 function yu(w) {
@@ -5903,7 +5903,7 @@ async function dl(w, I) {
       let Se = await w.read([{ key: yu(I.root), offset: 0, length: $4e + 1 }]);
       if (!Se.ok) {
         if (O)
-          q("warn", "skills_sync_manifest_unreadable", {
+          writeDiagnosticsEvent("warn", "skills_sync_manifest_unreadable", {
             code: "backend_read_failed",
           });
         return null;
@@ -5912,7 +5912,7 @@ async function dl(w, I) {
       if (!xe.found) return null;
       if (xe.totalBytes > $4e || xe.value.byteLength > $4e) {
         if (O)
-          q("warn", "skills_sync_manifest_unreadable", {
+          writeDiagnosticsEvent("warn", "skills_sync_manifest_unreadable", {
             code: "parse_or_size",
           });
         return null;
@@ -5920,7 +5920,7 @@ async function dl(w, I) {
       U = Buffer.from(xe.value).toString("utf8");
     } catch (Se) {
       if (O)
-        q("warn", "skills_sync_manifest_unreadable", {
+        writeDiagnosticsEvent("warn", "skills_sync_manifest_unreadable", {
           code: A(Se) ?? "backend_read_failed",
         });
       return null;
@@ -5970,7 +5970,7 @@ async function sl(w, I, O, U) {
     });
     if (!Me.ok)
       throw (
-        q("error", "skills_sync_manifest_write_failed", {
+        writeDiagnosticsEvent("error", "skills_sync_manifest_write_failed", {
           code: Me.error.code,
         }),
         Error("skillsSync: manifest write failed")
@@ -6126,12 +6126,12 @@ async function ou(
       Oe = _o(Se, Ae[0].name);
     try {
       if (!(await iu(_o(Oe, "SKILL.md"))).isFile())
-        return (q("warn", "skills_sync_extracted_zip_unusable"), Ai);
+        return (writeDiagnosticsEvent("warn", "skills_sync_extracted_zip_unusable"), Ai);
     } catch {
-      return (q("warn", "skills_sync_extracted_zip_unusable"), Ai);
+      return (writeDiagnosticsEvent("warn", "skills_sync_extracted_zip_unusable"), Ai);
     }
     if (await zUt(Oe))
-      return (q("warn", "skills_sync_extracted_zip_unusable"), Ai);
+      return (writeDiagnosticsEvent("warn", "skills_sync_extracted_zip_unusable"), Ai);
     if (!(await I.guard.verify())) return fDe;
     if (V) await $r(Me, { recursive: !0, force: !0 });
     try {
@@ -6141,13 +6141,13 @@ async function ou(
       if (V || !ymt(We)) {
         if (V) ne();
         return (
-          q("warn", "skills_sync_promotion_failed", { code: We ?? "unknown" }),
+          writeDiagnosticsEvent("warn", "skills_sync_promotion_failed", { code: We ?? "unknown" }),
           mDe(We)
         );
       }
       let Ye = await te(jo(Me));
       if (Ye === "inFlight")
-        return (q("info", "skills_sync_target_in_flight_elsewhere"), Eqn);
+        return (writeDiagnosticsEvent("info", "skills_sync_target_in_flight_elsewhere"), Eqn);
       if (Ye === "landed") await $r(Me, { recursive: !0, force: !0 });
       else if (!(await xi(Me, U))) return F4e;
       try {
@@ -6156,7 +6156,7 @@ async function ou(
         ne();
         let Nt = A(Ze);
         return (
-          q("warn", "skills_sync_promotion_failed", { code: Nt ?? "unknown" }),
+          writeDiagnosticsEvent("warn", "skills_sync_promotion_failed", { code: Nt ?? "unknown" }),
           mDe(Nt)
         );
       }
@@ -6181,7 +6181,7 @@ async function Ih(w, I) {
   try {
     return await ou(w, I);
   } catch {
-    return (q("warn", "skills_sync_extract_retry"), await Z(Th), ou(w, I));
+    return (writeDiagnosticsEvent("warn", "skills_sync_extract_retry"), await sleep(Th), ou(w, I));
   }
 }
 async function cl(w, I, O) {
@@ -6198,7 +6198,7 @@ async function bu(w, I) {
   let O = await Cu(_h(), w, I);
   if (O === null) return !1;
   return (
-    q("info", "skills_sync_legacy_layout_migrated", { removed: O }),
+    writeDiagnosticsEvent("info", "skills_sync_legacy_layout_migrated", { removed: O }),
     O > 0
   );
 }
@@ -6243,7 +6243,7 @@ async function Cu(w, I, O) {
       staleDirs: Ae.size > 0 ? Array.from(Ae) : void 0,
       pendingClaims: $e.size > 0 ? Array.from($e) : void 0,
     }),
-      q("warn", "skills_sync_legacy_manifest_repaired", {
+      writeDiagnosticsEvent("warn", "skills_sync_legacy_manifest_repaired", {
         claims: Ae.size + $e.size,
       }));
   }
@@ -6270,11 +6270,11 @@ async function Cu(w, I, O) {
     try {
       let We = Yfe($e.name, w);
       if (await dDe(We, dr())) {
-        q("info", "skills_sync_sibling_root_row_skipped");
+        writeDiagnosticsEvent("info", "skills_sync_sibling_root_row_skipped");
         continue;
       }
       if (await dDe(We, Oi())) {
-        q("info", "skills_sync_trash_root_row_skipped");
+        writeDiagnosticsEvent("info", "skills_sync_trash_root_row_skipped");
         continue;
       }
       if (await xi(We, O)) Se++;
@@ -6317,7 +6317,7 @@ async function xh(w, I, O) {
   try {
     if (((ne = Hrt()), i2t())) ne = !0;
     if (!Nde(w) || !SVe()) {
-      q("info", "skills_sync_gate_closed");
+      writeDiagnosticsEvent("info", "skills_sync_gate_closed");
       let { placeholders: He } = mT();
       if (He.size > 0) (He.clear(), Bs());
       logFeatureSad("skills_sync_round", "gate_closed", {
@@ -6327,7 +6327,7 @@ async function xh(w, I, O) {
       return;
     }
     if (Jzn()) {
-      (q("info", "skills_sync_policy_verdict_pending"),
+      (writeDiagnosticsEvent("info", "skills_sync_policy_verdict_pending"),
         logFeatureSad("skills_sync_round", "policy_verdict_pending", {
           account_opt_in: ne,
           duration_ms: Date.now() - U,
@@ -6336,7 +6336,7 @@ async function xh(w, I, O) {
     }
     let De = await oH(O);
     if (De === null) {
-      (q("info", "skills_sync_bucket_unresolved"),
+      (writeDiagnosticsEvent("info", "skills_sync_bucket_unresolved"),
         logFeatureSad("skills_sync_round", "bucket_unresolved", {
           account_opt_in: ne,
           duration_ms: Date.now() - U,
@@ -6346,7 +6346,7 @@ async function xh(w, I, O) {
     let Oe = Ah(I, du(De));
     Se = Oe;
     let Ae = Oe.root;
-    q("info", "skills_sync_starting");
+    writeDiagnosticsEvent("info", "skills_sync_starting");
     let $e;
     if (cJ(w)) {
       let [He, Qe] = await Promise.all([
@@ -6367,11 +6367,11 @@ async function xh(w, I, O) {
     if (!$e.success) {
       xe.consecutiveFailedRounds++;
       let He = mwt($e);
-      (q("warn", "skills_sync_list_failed", {
+      (writeDiagnosticsEvent("warn", "skills_sync_list_failed", {
         duration_ms: Date.now() - U,
         ...He,
       }),
-        i("tengu_skills_sync_list_failed", {
+        logEvent("tengu_skills_sync_list_failed", {
           duration_ms: Date.now() - U,
           ...He,
         }),
@@ -6397,7 +6397,7 @@ async function xh(w, I, O) {
           storageV5: I,
         }).catch(() => !1)))
     )
-      q("info", "skills_sync_unmarked_bucket_quarantined");
+      writeDiagnosticsEvent("info", "skills_sync_unmarked_bucket_quarantined");
     (await Pu(I, Ae),
       await ZUt(dr(), De),
       (Me = !0),
@@ -6450,7 +6450,7 @@ async function xh(w, I, O) {
           $V(),
           clearCommandMemoizationCaches(),
           (te = !0),
-          q("info", "skills_sync_materialized_elsewhere"));
+          writeDiagnosticsEvent("info", "skills_sync_materialized_elsewhere"));
     }
     let Un = Nt.filter((He) => !Tt.has(He.skillId)),
       yn = new Map(
@@ -6504,7 +6504,7 @@ async function xh(w, I, O) {
         let He = new Date();
         await lutimes(Fi(Ae), He, He).catch(() => {});
       }
-      (q("info", "skills_sync_no_changes", { duration_ms: Date.now() - U }),
+      (writeDiagnosticsEvent("info", "skills_sync_no_changes", { duration_ms: Date.now() - U }),
         logFeatureOk("skills_sync_round", {
           account_opt_in: ne,
           no_changes: !0,
@@ -6543,7 +6543,7 @@ async function xh(w, I, O) {
         );
     } catch (He) {
       if (He instanceof k2) throw He;
-      ((Mn = !1), q("warn", "skills_sync_pending_claims_write_failed"));
+      ((Mn = !1), writeDiagnosticsEvent("warn", "skills_sync_pending_claims_write_failed"));
     }
     if ((il().resolve(), !Mn)) {
       if (
@@ -6580,7 +6580,7 @@ async function xh(w, I, O) {
                 yn.has(He.skillId),
             });
           } catch {
-            ((Je = Ai), q("warn", "skills_sync_extract_failed"));
+            ((Je = Ai), writeDiagnosticsEvent("warn", "skills_sync_extract_failed"));
           }
           if (Je.ok) {
             if ((rn.push(He), Qe && Qe.name !== He.name)) {
@@ -6589,7 +6589,7 @@ async function xh(w, I, O) {
             (d8n(jo(xo(Ae, He.name))), $V(), clearCommandMemoizationCaches(), logFeatureOk("skills_sync_download"));
           } else {
             let Ot = Aqn(Je.cause);
-            if (Ot === null) (Tn++, q("info", "skills_sync_landing_deferred"));
+            if (Ot === null) (Tn++, writeDiagnosticsEvent("info", "skills_sync_landing_deferred"));
             else ((kn[Ot] = (kn[Ot] ?? 0) + 1), logFeatureBad("skills_sync_download", Ot));
             let nn = Qe ?? yn.get(He.skillId);
             if (nn && Je.cause === "deferred") {
@@ -6659,12 +6659,12 @@ async function xh(w, I, O) {
     }
     let tt = Ye.length - rn.length - Tn;
     if (
-      (q("info", "skills_sync_complete", {
+      (writeDiagnosticsEvent("info", "skills_sync_complete", {
         downloaded: rn.length,
         removed: Ze.length,
         duration_ms: Date.now() - U,
       }),
-      i("tengu_skills_sync_success", {
+      logEvent("tengu_skills_sync_success", {
         downloaded: rn.length,
         removed: Ze.length,
         total: $e.skills.length,
@@ -6696,7 +6696,7 @@ async function xh(w, I, O) {
   } catch (De) {
     if (te || V) Bs();
     if (De instanceof k2 && Me)
-      (q("warn", "skills_sync_late_root_refusal", {
+      (writeDiagnosticsEvent("warn", "skills_sync_late_root_refusal", {
         reason: De.reason,
         duration_ms: Date.now() - U,
       }),
@@ -6706,7 +6706,7 @@ async function xh(w, I, O) {
         }),
         (Me = !1));
     else if (De instanceof k2)
-      (q("warn", "skills_sync_root_refused_round", {
+      (writeDiagnosticsEvent("warn", "skills_sync_root_refused_round", {
         reason: De.reason,
         duration_ms: Date.now() - U,
       }),
@@ -6716,10 +6716,10 @@ async function xh(w, I, O) {
         }));
     else
       (xe.consecutiveFailedRounds++,
-        q("error", "skills_sync_unexpected_error", {
+        writeDiagnosticsEvent("error", "skills_sync_unexpected_error", {
           duration_ms: Date.now() - U,
         }),
-        i("tengu_skills_sync_error", { duration_ms: Date.now() - U }),
+        logEvent("tengu_skills_sync_error", { duration_ms: Date.now() - U }),
         logFeatureBad("skills_sync_round", "unexpected_error", {
           account_opt_in: ne,
           duration_ms: Date.now() - U,
@@ -6846,7 +6846,7 @@ async function Lae(w, I, O) {
       break;
   }
   let me = O ? xy(O, Xf()) : {};
-  (await qs("tengu_plugin_command_failed", {
+  (await logEventAsync("tengu_plugin_command_failed", {
     command: fromEnum(I),
     error_category: fromEnum(U),
     ...me,
@@ -7045,7 +7045,7 @@ async function FNn(w, I = {}, O) {
   }
   let De = xe ? xj(xe.entry.source) : void 0;
   if (!xe || !De) return;
-  let Oe = (M() && O !== void 0 ? await Zv(O) : hT()).plugins[Se] ?? [],
+  let Oe = (isHoverRestEnabled() && O !== void 0 ? await Zv(O) : hT()).plugins[Se] ?? [],
     Ae = vC(De),
     $e = !afe(),
     We = $e && Oe.some((Ye) => Ye.sourceCommand === Ae);
@@ -7081,7 +7081,7 @@ async function $Nn(w, I = "user", O, U, V, te, ne) {
     );
     if (!me.success) throw new Dae(me.message);
     let Me = me.pluginId || w;
-    i("tengu_plugin_installed_cli", {
+    logEvent("tengu_plugin_installed_cli", {
       ...xy(Me, Xf()),
       plugin_id: Rmt(Me),
       scope: fromEnum(me.scope || I),
@@ -7108,9 +7108,9 @@ ${Se}`
 }
 async function xu(w, I) {
   let O = o9e(w),
-    { enabled: U, disabled: V } = await ei(M() ? I : void 0);
+    { enabled: U, disabled: V } = await ei(isHoverRestEnabled() ? I : void 0);
   return qqn(
-    (M() && I !== void 0 ? await Zv(I) : hT()).plugins,
+    (isHoverRestEnabled() && I !== void 0 ? await Zv(I) : hT()).plugins,
     [...U, ...V],
     w,
     O,
@@ -7120,7 +7120,7 @@ async function UNn(w, I = "user", O = !1, U = !1, V = !1, te) {
   try {
     let ne = await r4(w, I, !O, te);
     if (!ne.success) throw new Dae(ne.message);
-    await qs("tengu_plugin_uninstalled_cli", {
+    await logEventAsync("tengu_plugin_uninstalled_cli", {
       ...xy(ne.pluginId || w, Xf()),
       scope: fromEnum(ne.scope || I),
     });
@@ -7166,7 +7166,7 @@ async function Du(w, I, O, U) {
     return w.autoCount === 0
       ? `Nothing to prune (no auto-installed plugins at ${I} scope).`
       : `Nothing to prune (${w.autoCount} auto-installed ${x(w.autoCount, "plugin", "plugins")} at ${I} scope, all still needed).`;
-  let V = (M() && U !== void 0 ? await Zv(U) : hT()).plugins,
+  let V = (isHoverRestEnabled() && U !== void 0 ? await Zv(U) : hT()).plugins,
     te = o9e(I),
     ne = [...w.orphans].map((Se) => {
       let xe = V[Se]?.find((De) => De.scope === I && De.projectPath === te);
@@ -7193,7 +7193,7 @@ Remove? [y/N] `),
   }
   let Me = await u7n(w.orphans, I, te, { deleteDataDir: O.deleteDataDir }, U);
   return (
-    await qs("tengu_plugin_prune_cli", {
+    await logEventAsync("tengu_plugin_prune_cli", {
       scope: fromEnum(I),
       removed_count: Me.length,
     }),
@@ -7214,7 +7214,7 @@ async function jNn(w, I, O) {
     let U = await m0e(w, I, O);
     if (!U.success) throw new Dae(U.message);
     return (
-      await qs("tengu_plugin_disabled_cli", {
+      await logEventAsync("tengu_plugin_disabled_cli", {
         ...xy(U.pluginId || w, Xf()),
         scope: fromEnumOpt(U.scope),
       }),
@@ -7229,7 +7229,7 @@ async function WNn(w) {
     let I = await AUn(w);
     if (!I.success) throw new Dae(I.message);
     return (
-      await qs("tengu_plugin_disabled_all_cli", {}),
+      await logEventAsync("tengu_plugin_disabled_all_cli", {}),
       `${L.tick} ${I.message}`
     );
   } catch (I) {
@@ -7273,7 +7273,7 @@ async function GNn(w, I, { yes: O = !1 } = {}, U) {
 `),
       V.outcome === "updated")
     )
-      i("tengu_plugin_updated_cli", {
+      logEvent("tengu_plugin_updated_cli", {
         ...xy(V.pluginId || w, Xf()),
         old_version: Ms(V.oldVersion),
         new_version: Ms(V.newVersion),
@@ -7618,7 +7618,7 @@ function A8() {
     return `Cloud sessions aren't available with ${THIRD_PARTY_PROVIDER_LABELS[w]}. They run on Anthropic's infrastructure and require an Anthropic account.`;
   return policyDeniedReason("allow_remote_sessions", "Cloud sessions", "are");
 }
-var gl = pe(g4e(), 1);
+var gl = toESM(g4e(), 1);
 import { readFile as cS, stat as uS } from "fs/promises";
 function* Bu(w) {
   for (let I of w)
@@ -7776,7 +7776,7 @@ async function y0t(w, I) {
           }
         return null;
       })(),
-      Me = await Dt(me, 50, "manifestDep scan").catch(() => null);
+      Me = await withTimeout(me, 50, "manifestDep scan").catch(() => null);
     if (Me) return { signal: "manifestDep", file: Me };
   }
   return null;
@@ -7881,7 +7881,7 @@ function wJt() {
   return _l() && (ee().pushNotifUpsellSeenCount ?? 0) < pS;
 }
 function _l() {
-  return isBridgeEnabled() && hG() && fS() && Eo("agentPushNotifEnabled", !1).value !== !0;
+  return isBridgeEnabled() && isPushNotificationsEnabled() && fS() && Eo("agentPushNotifEnabled", !1).value !== !0;
 }
 function l1n(w) {
   ($u("pushNotifUpsellSeenCount", w), logFeatureOk("tips_push_upsell_show"));
@@ -7924,7 +7924,7 @@ function p1n(w) {
     logFeatureOk("tips_rc_permission_nudge_show"));
 }
 function f1n() {
-  if (!hG()) return null;
+  if (!isPushNotificationsEnabled()) return null;
   let w = H("tengu_kairos_ready_nudge", null);
   if (w === !0) return { probability: 1, maxImpressions: 5, impressionKey: "" };
   if (w === null || typeof w !== "object") return null;
@@ -8193,7 +8193,7 @@ function Not(w, I, O, U, V) {
       Me = { ...Me, sessionMode: Se };
   }
   if (typeof te?.expected_steps === "string") {
-    let Se = Y(
+    let Se = dedupe(
       te.expected_steps
         .split(",")
         .map((xe) => vl(xe))
@@ -8496,7 +8496,7 @@ var FS = 268435456,
   Zu = Symbol("first line too long"),
   Bi,
   em,
-  LS = m(() =>
+  LS = createLazyValue(() =>
     c({
       type: k("control_request"),
       request: it({ subtype: k("initialize"), plugins: se().optional() }),
@@ -8767,7 +8767,7 @@ async function sm(w) {
       dangerousPermissions: V,
       overlyBroadBashPermissions: te,
     } = I;
-  if ((KFn(O), w.permissionMode === "auto")) O = stripDangerousPermissionsForAutoMode(O);
+  if ((publishPermissionSnapshot(O), w.permissionMode === "auto")) O = stripDangerousPermissionsForAutoMode(O);
   if (w.permissionMode === "plan") {
     let ne = activatePlanAutoMode(O);
     if (ne) O = { ...ne, prePlanMode: "default" };
@@ -9185,7 +9185,7 @@ function ym(w) {
       if (V === O) return;
       let ne = O;
       ((O = V),
-        i("tengu_session_start", {
+        logEvent("tengu_session_start", {
           previous_session_id: Ee(ne),
           source: fromEnum(te),
           permissionMode: fromEnum(w.permissionMode),
@@ -9438,7 +9438,7 @@ function vm(w) {
     settingLayer: me,
   };
 }
-var s_ = m(() =>
+var s_ = createLazyValue(() =>
     nt({
       group: le(),
       intervening: Io(),
@@ -9448,7 +9448,7 @@ var s_ = m(() =>
       tags: cr(le()),
     }),
   ),
-  $U = m(() =>
+  $U = createLazyValue(() =>
     nt({
       model: le().optional(),
       groups: cr(s_()),
@@ -9668,7 +9668,7 @@ async function y_(w, I) {
       ),
       te = O.filter(([ne]) => V.has(ne));
     if (te.length === 0) return;
-    (q("info", "claudeai_catalog_background_refresh", { count: te.length }),
+    (writeDiagnosticsEvent("info", "claudeai_catalog_background_refresh", { count: te.length }),
       await Promise.all(
         te.map(([ne, me]) =>
           mV(ne, me.source, {
@@ -9692,7 +9692,7 @@ async function h_(w, I) {
   } catch {
     throw new vr("root_refused");
   }
-  q("info", "marketplaces_sync_starting");
+  writeDiagnosticsEvent("info", "marketplaces_sync_starting");
   let te = Rdn.of(w.host),
     ne = await vdn(U),
     me = PH() !== null && Object.keys(await UF()).length > 0,
@@ -9704,13 +9704,13 @@ async function h_(w, I) {
   switch (Me.status) {
     case "ok": {
       if (Me.dropped > 0)
-        q("warn", "marketplaces_sync_rows_dropped", { count: Me.dropped });
+        writeDiagnosticsEvent("warn", "marketplaces_sync_rows_dropped", { count: Me.dropped });
       let Se = !0;
       try {
         await Oqn(Me.rows, V);
       } catch (Oe) {
         ((Se = !1),
-          q("warn", "marketplaces_sync_scope_sync_failed"),
+          writeDiagnosticsEvent("warn", "marketplaces_sync_scope_sync_failed"),
           n(
             `claude.ai marketplaces: could not re-derive added marketplaces' scopes: ${l(Oe)}`,
             { level: "warn" },
@@ -9720,7 +9720,7 @@ async function h_(w, I) {
         De = ne === null || ne.etag !== xe || xe === void 0;
       if (De) (await Pqn(U, { etag: xe, rows: Me.rows }), te.invalidate());
       return (
-        q("info", "marketplaces_sync_complete", {
+        writeDiagnosticsEvent("info", "marketplaces_sync_complete", {
           count: Me.rows.length,
           changed: De,
         }),
@@ -9728,12 +9728,12 @@ async function h_(w, I) {
       );
     }
     case "not_modified":
-      if ((q("info", "marketplaces_sync_not_modified"), ne === null))
+      if ((writeDiagnosticsEvent("info", "marketplaces_sync_not_modified"), ne === null))
         throw new vr("not_modified_without_cache");
       return !1;
     case "denied":
       throw (
-        q("warn", "marketplaces_sync_failed", { code: Me.code }),
+        writeDiagnosticsEvent("warn", "marketplaces_sync_failed", { code: Me.code }),
         await xdn(O, FFe),
         te.invalidate(),
         new vr(Me.code)
@@ -9741,7 +9741,7 @@ async function h_(w, I) {
     case "skipped":
     case "failed":
       throw (
-        q("warn", "marketplaces_sync_failed", { code: Me.code }),
+        writeDiagnosticsEvent("warn", "marketplaces_sync_failed", { code: Me.code }),
         new vr(Me.code)
       );
   }
@@ -9755,7 +9755,7 @@ function Am({ deferToCleanup: w, storageV5: I }) {
   if (
     (Br("action_after_plugins_init"),
     U.then(async () => {
-      (i("tengu_timer", {
+      (logEvent("tengu_timer", {
         event: S("plugins_init"),
         durationMs: Math.round(performance.now() - O),
         headless: w,
@@ -10174,7 +10174,7 @@ function e1n(w, I, { offerBypass: O = !0 } = {}) {
     I.proactivityBaseline?.mode,
   );
 }
-var $m = pe(pg(), 1);
+var $m = toESM(pg(), 1);
 var m0t = "1.1.9669";
 function Ml() {
   let w = [process.argv[1] || "", process.execPath || ""],
@@ -10343,7 +10343,7 @@ class Ym {
           providerAgnostic: !0,
           cooldownSessions: 3,
           content: async (Oe) => {
-            let Ae = ut("suggestion", Oe.theme);
+            let Ae = getThemeColor("suggestion", Oe.theme);
             return `Working with ${xe}? Install the ${me.name} plugin:
 ${Ae(`/plugin install ${me.name}@${V}`)}`;
           },
@@ -10372,7 +10372,7 @@ ${Ae(`/plugin install ${me.name}@${V}`)}`;
 }
 var vZ = new j(() => new Ym());
 function jm(w) {
-  if (M() && w?.storageV5 !== void 0)
+  if (isHoverRestEnabled() && w?.storageV5 !== void 0)
     return vZ.of(w.session.host).countSessionsOnce(w.storageV5);
   return countConcurrentSessions(w?.storageV5);
 }
@@ -10416,7 +10416,7 @@ function Il(w) {
   return !1;
 }
 function xl(w) {
-  return `available in Claude for Enterprise \xB7 ${Qg("https://clau.de/enterprise", "Learn more", { themeName: w.theme })}`;
+  return `available in Claude for Enterprise \xB7 ${formatHyperlink("https://clau.de/enterprise", "Learn more", { themeName: w.theme })}`;
 }
 function Fl(w, I, O) {
   return w.some((U) => U !== I && l9(U) < O);
@@ -10509,7 +10509,7 @@ var Qm = [
       priority: 3,
       providerAgnostic: !0,
       content: async (w) =>
-        `New to Claude Code? Run ${ut("suggestion", w.theme)("/powerup")} for a quick interactive tutorial`,
+        `New to Claude Code? Run ${getThemeColor("suggestion", w.theme)("/powerup")} for a quick interactive tutorial`,
       cooldownSessions: 1,
       async isRelevant() {
         let w = ee();
@@ -10603,7 +10603,7 @@ var Qm = [
       maxLifetimeShows: 5,
       cooldownSessions: 1,
       content: async (w) =>
-        `Running multiple Claude sessions? Press ${ut("suggestion", w.theme)(DP)} on an empty prompt to see them all in one place`,
+        `Running multiple Claude sessions? Press ${getThemeColor("suggestion", w.theme)(DP)} on an empty prompt to see them all in one place`,
       isRelevant: async (w) => {
         if (!Lee()) return !1;
         if (isTranscriptPersistenceDisabled()) return !1;
@@ -10933,7 +10933,7 @@ var Qm = [
       id: "desktop-shortcut",
       advertisedCommand: "desktop",
       content: async (w) =>
-        `Continue your session in Claude Code Desktop with ${ut("suggestion", w.theme)("/desktop")}`,
+        `Continue your session in Claude Code Desktop with ${getThemeColor("suggestion", w.theme)("/desktop")}`,
       cooldownSessions: 15,
       isRelevant: async () => nNe() && Tl().enable_shortcut_tip,
     },
@@ -10942,7 +10942,7 @@ var Qm = [
       advertisedCommand: "desktop",
       priority: 1,
       content: async (w) => {
-        let I = ut("suggestion", w.theme);
+        let I = getThemeColor("suggestion", w.theme);
         if (await vZ.of(w.session.host).getDesktopInstalled())
           return `Working on UI? See a live preview in Claude Code Desktop \xB7 run ${I("/desktop")}`;
         return `Working on UI? Claude Code Desktop has live preview and inline images \xB7 ${I("clau.de/desktop")}`;
@@ -10958,7 +10958,7 @@ var Qm = [
       id: "claude-design-contextual",
       priority: 1,
       content: async (w) =>
-        `Use Claude Design to mock up screens before you build \xB7 ${Qg("https://claude.ai/design?utm_source=claude_code&utm_medium=tip&utm_campaign=tengu_cedar_plume", "claude.ai/design", { themeName: w.theme })}`,
+        `Use Claude Design to mock up screens before you build \xB7 ${formatHyperlink("https://claude.ai/design?utm_source=claude_code&utm_medium=tip&utm_campaign=tengu_cedar_plume", "claude.ai/design", { themeName: w.theme })}`,
       cooldownSessions: 15,
       isRelevant: async (w) => {
         if (!isClaudeAISubscriber()) return !1;
@@ -10971,11 +10971,11 @@ var Qm = [
       advertisedCommand: "design",
       priority: 1,
       content: async (w) =>
-        `Working on UI? Run ${ut("suggestion", w.theme)("/design")} to mock up a few directions before you build`,
+        `Working on UI? Run ${getThemeColor("suggestion", w.theme)("/design")} to mock up a few directions before you build`,
       cooldownSessions: 15,
       isRelevant: async (w) => {
         if (!Il(w)) return !1;
-        if (jy()) return !1;
+        if (areBundledSkillsDisabled()) return !1;
         return ube();
       },
     },
@@ -11013,7 +11013,7 @@ var Qm = [
       cooldownSessions: Wm,
       maxLifetimeShows: zm,
       content: async (w) =>
-        `Run ${ut("suggestion", w.theme)("/web-setup")} to use Claude Code on the web with the GitHub account gh is signed in to`,
+        `Run ${getThemeColor("suggestion", w.theme)("/web-setup")} to use Claude Code on the web with the GitHub account gh is signed in to`,
       isRelevant: async (w) => {
         if (ke() || !isClaudeAISubscriber() || !isWebSetupEnabled()) return !1;
         let I = A7t(),
@@ -11035,8 +11035,8 @@ var Qm = [
     {
       id: "remote-control",
       content: async (w) => {
-        let I = ut("suggestion", w.theme);
-        return `Control this session from ${Qg("https://claude.com/download#mobile", "the Claude mobile app", { themeName: w.theme })} \xB7 run ${I("/remote-control")}`;
+        let I = getThemeColor("suggestion", w.theme);
+        return `Control this session from ${formatHyperlink("https://claude.com/download#mobile", "the Claude mobile app", { themeName: w.theme })} \xB7 run ${I("/remote-control")}`;
       },
       cooldownSessions: 15,
       isRelevant: async () => isRemoteControlOfferable() && !ee().hasUsedRemoteControl && !yq(),
@@ -11052,7 +11052,7 @@ var Qm = [
                 "the Claude mobile app",
                 "",
               ];
-        return `You can also drive this session from ${Qg(I, O, { themeName: w.theme })}${U}`;
+        return `You can also drive this session from ${formatHyperlink(I, O, { themeName: w.theme })}${U}`;
       },
       cooldownSessions: 15,
       maxLifetimeShows: 3,
@@ -11065,7 +11065,7 @@ var Qm = [
     {
       id: "push-notif",
       content: async (w) =>
-        `Get pinged on your phone when long tasks finish \xB7 enable push notifications in ${ut("suggestion", w.theme)("/config")}`,
+        `Get pinged on your phone when long tasks finish \xB7 enable push notifications in ${getThemeColor("suggestion", w.theme)("/config")}`,
       cooldownSessions: 15,
       isRelevant: async () => _l(),
     },
@@ -11090,7 +11090,7 @@ var Qm = [
     {
       id: "console-api-key",
       content: async (w) =>
-        `Build your AI product with Claude API. Run ${ut("suggestion", w.theme)("/claude-api")} to get started`,
+        `Build your AI product with Claude API. Run ${getThemeColor("suggestion", w.theme)("/claude-api")} to get started`,
       cooldownSessions: 15,
       isRelevant: async () => {
         if (!isClaudeAISubscriber() || !isMaxSubscriber()) return !1;
@@ -11132,7 +11132,7 @@ var Qm = [
       priority: 1,
       cooldownSessions: 8,
       content: async (w) => {
-        let I = ut("suggestion", w.theme),
+        let I = getThemeColor("suggestion", w.theme),
           O = dlt(),
           U =
             O !== null && O.reviews_remaining > 0
@@ -11168,7 +11168,7 @@ var Qm = [
       content: async (
         w,
       ) => `Working with HTML/CSS? Install the frontend-design plugin:
-${ut("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
+${getThemeColor("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
       cooldownSessions: 3,
       maxLifetimeShows: 3,
       advertisedCommand: "plugin",
@@ -11181,7 +11181,7 @@ ${ut("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
       id: "subagent-fanout-nudge",
       providerAgnostic: !0,
       content: async (w) =>
-        `Say ${ut("suggestion", w.theme)('"fan out subagents"')} and Claude sends a team. Each one digs deep so nothing gets missed.`,
+        `Say ${getThemeColor("suggestion", w.theme)('"fan out subagents"')} and Claude sends a team. Each one digs deep so nothing gets missed.`,
       cooldownSessions: 3,
       isRelevant: async () => !isClaudeAISubscriber(),
     },
@@ -11189,7 +11189,7 @@ ${ut("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
       id: "dynamic-workflows",
       providerAgnostic: !0,
       content: async (w) =>
-        `Dynamic workflows let Claude write a script that orchestrates many agents for you. Mention the keyword ${ut("suggestion", w.theme)("ultracode")} or ask Claude to use a workflow directly.`,
+        `Dynamic workflows let Claude write a script that orchestrates many agents for you. Mention the keyword ${getThemeColor("suggestion", w.theme)("ultracode")} or ask Claude to use a workflow directly.`,
       cooldownSessions: 3,
       isRelevant: async () => Dc(),
     },
@@ -11199,7 +11199,7 @@ ${ut("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
       advertisedCommand: "config",
       priority: 1,
       content: async (w) => {
-        let I = ut("suggestion", w.theme);
+        let I = getThemeColor("suggestion", w.theme);
         return `You can control how big a workflow is just by prompting. Try ${I('"use a small workflow, 5 agents max"')}, or set a default with ${I("Dynamic workflow size")} in ${I("/config")}.`;
       },
       cooldownSessions: 5,
@@ -11214,7 +11214,7 @@ ${ut("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
       providerAgnostic: !0,
       advertisedCommand: "config",
       content: async (w) => {
-        let I = ut("suggestion", w.theme);
+        let I = getThemeColor("suggestion", w.theme);
         return `You can control how big a workflow is just by prompting. Ask for a small workflow, cap it with ${I('"use at most 5 agents"')}, or set a default with ${I("Dynamic workflow size")} in ${I("/config")}.`;
       },
       cooldownSessions: 12,
@@ -11228,7 +11228,7 @@ ${ut("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
       id: "loop-command-nudge",
       providerAgnostic: !0,
       content: async (w) =>
-        `${ut("suggestion", w.theme)(`/${Fbt}`)} runs any prompt on a recurring schedule. Great for monitoring deploys, babysitting PRs, or polling status.`,
+        `${getThemeColor("suggestion", w.theme)(`/${Fbt}`)} runs any prompt on a recurring schedule. Great for monitoring deploys, babysitting PRs, or polling status.`,
       cooldownSessions: 3,
       isRelevant: async () => {
         if (isRunningInRemoteEnvironment()) return !1;
@@ -11240,7 +11240,7 @@ ${ut("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
       id: "code-review-low-fast",
       providerAgnostic: !0,
       content: async (w) =>
-        `For a fast, cheap code review, try ${ut("suggestion", w.theme)("/code-review low")}. It runs the built-in skill at its lightest effort level.`,
+        `For a fast, cheap code review, try ${getThemeColor("suggestion", w.theme)("/code-review low")}. It runs the built-in skill at its lightest effort level.`,
       cooldownSessions: 8,
       isRelevant: async () => {
         let w = ee().skillUsage ?? {};
@@ -11257,8 +11257,8 @@ ${ut("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
       providerAgnostic: !0,
       advertisedCommand: "plugin",
       content: async (w) => {
-        let I = ut("suggestion", w.theme),
-          O = await Ule(),
+        let I = getThemeColor("suggestion", w.theme),
+          O = await getDisusedPlugins(),
           U = O[0];
         if (!U) return "";
         if (O.length === 1)
@@ -11266,19 +11266,19 @@ ${ut("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
         return `You have ${O.length} plugins you haven't used lately. Disable them with ${I("/plugin")} to free up context and speed up startup.`;
       },
       cooldownSessions: 30,
-      isRelevant: async () => (await Ule()).length > 0,
+      isRelevant: async () => (await getDisusedPlugins()).length > 0,
     },
     {
       id: "goal-command-nudge",
       content: async (w) =>
-        `Set an objective with ${ut("suggestion", w.theme)("/goal")} \u2014 Claude keeps working until it's met`,
+        `Set an objective with ${getThemeColor("suggestion", w.theme)("/goal")} \u2014 Claude keeps working until it's met`,
       cooldownSessions: 3,
       isRelevant: async () => cge(),
     },
     {
       id: "guest-passes",
       content: async (w) => {
-        let I = ut("claude", w.theme),
+        let I = getThemeColor("claude", w.theme),
           O = sAe();
         return O
           ? `Share Claude Code and earn ${I(bre(O))} in usage credits \xB7 ${I("/passes")}`
@@ -11304,7 +11304,7 @@ ${ut("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}`,
       id: "team-onboarding-share",
       advertisedCommand: "team-onboarding",
       content: async (w) =>
-        `Run ${ut("suggestion", w.theme)("/team-onboarding")} to turn your Claude usage into an onboarding guide \u2014 share it with your team in one link`,
+        `Run ${getThemeColor("suggestion", w.theme)("/team-onboarding")} to turn your Claude usage into an onboarding guide \u2014 share it with your team in one link`,
       cooldownSessions: 5,
       async isRelevant() {
         let w = ee();
@@ -11429,7 +11429,7 @@ var Hs = 1,
   kr = 16384,
   _b = 1,
   Cb = "RSASSA-PKCS1-v1_5-SHA512",
-  sp = m(() =>
+  sp = createLazyValue(() =>
     c({
       schema: k(_b),
       algorithm: k(Cb),
@@ -11444,7 +11444,7 @@ function ip(w) {
   let I = Date.parse(w);
   return Number.isFinite(I) ? I : void 0;
 }
-var Er = m(() =>
+var Er = createLazyValue(() =>
   c({
     $schema: s().optional(),
     schema_version: k(Hs),
@@ -11482,7 +11482,7 @@ var lp = 2,
   dp = 3600000,
   cp = 0.1,
   wb = ["hosted", "custom_url", "file"],
-  Pb = m(() =>
+  Pb = createLazyValue(() =>
     c({
       version: k(lp),
       fetchedAt: T(),
@@ -11635,7 +11635,7 @@ var Sp = {
     },
   },
 };
-var Mb = m(() => {
+var Mb = createLazyValue(() => {
   let w = Er().safeParse(Sp);
   if (!w.success) logError(Error("published model-catalog seed does not parse"));
   return { document: w.success ? w.data : null };
@@ -12355,7 +12355,7 @@ async function Hp({ allowNetwork: w }) {
       Ae = () => (w ? Math.max(0, I - Date.now()) : jp);
     if (Se === void 0 && Oe) {
       xe = "fetch";
-      let Ze = await Dt(
+      let Ze = await withTimeout(
         Ys({ allowNetwork: w }),
         Ae(),
         "published catalog first fetch",
@@ -12367,7 +12367,7 @@ async function Hp({ allowNetwork: w }) {
         (xe = `fetch:${De}`));
     } else if (Se !== void 0 && Oe && ss(Se)) {
       let Ze = Date.now(),
-        Nt = await Dt(
+        Nt = await withTimeout(
           Ys({ allowNetwork: w }),
           Ae(),
           "published catalog stale refresh",
@@ -12444,7 +12444,7 @@ function lC() {
   return w === null || (w === "essential_traffic" && (Ep() || getRemoteManagedSettingsSyncFromCache() === null));
 }
 function uC() {
-  if (!XE() || isRemoteManagedSettingsVerified() || getLastLoadStatus() !== void 0) return !1;
+  if (!isRemoteSettingsEligible() || isRemoteManagedSettingsVerified() || getLastLoadStatus() !== void 0) return !1;
   return is() || getRemoteManagedSettingsSyncFromCache() === null;
 }
 async function mC(w) {
@@ -12459,7 +12459,7 @@ async function mC(w) {
         U();
     });
   try {
-    await kt(O, w);
+    await withDeadline(O, w);
   } finally {
     I();
   }
@@ -12521,7 +12521,7 @@ function sa(w, I) {
     maxOutputTokens: Gp(I.maxOutputTokens, jrr(w, I.mainLoopModel)),
     mainLoopKnowledge: CQe(w, I.mainLoopModel),
     offeredCount: te.length,
-    mappedCount: G(te, (ne) => CQe(w, ne.id).status === "mapped"),
+    mappedCount: countMatching(te, (ne) => CQe(w, ne.id).status === "mapped"),
     notOfferedCount: Yrr(w).length,
     capabilities: fC(eQ(w, I.mainLoopModel), I.capabilities),
     familyDefaults: gC(w, I.registryAliasTargets),
@@ -12531,7 +12531,7 @@ function fC(w, I) {
   let O = w?.runtime?.capabilities;
   if (O === void 0) return { match: void 0, servedCount: 0 };
   let U = Zkn,
-    V = Y(
+    V = dedupe(
       O.map((ne) => ne.trim().toLowerCase()).filter((ne) => U.includes(ne)),
     ),
     te = new Set(I);
@@ -12561,7 +12561,7 @@ import { join as yC } from "path";
 var Xp = 2,
   Jp = 3600000,
   Qp = 0.1,
-  SC = m(() =>
+  SC = createLazyValue(() =>
     c({
       version: k(Xp),
       fetchedAt: T(),
@@ -12859,7 +12859,7 @@ async function kC(w) {
     } catch (te) {
       ((V = !0), logError(te));
     }
-  (i(
+  (logEvent(
     "tengu_model_catalog_compare",
     AC({
       outcome: I,
@@ -13025,7 +13025,7 @@ async function xC(w) {
     } catch (ne) {
       ((te = !0), logError(ne));
     }
-  (i(
+  (logEvent(
     "tengu_model_catalog_compare",
     DC({
       outcome: I,
@@ -13113,7 +13113,7 @@ async function yf({ allowNetwork: w }) {
       te;
     if (U === void 0 && w) {
       V = "fetch";
-      let Me = await Dt(
+      let Me = await withTimeout(
         Xs({ allowNetwork: !0 }),
         BC,
         "served catalog first fetch",
@@ -13125,7 +13125,7 @@ async function yf({ allowNetwork: w }) {
         (V = `fetch:${te}`));
     } else if (U !== void 0 && w && ds(U)) {
       let Me = Date.now(),
-        Se = await Dt(
+        Se = await withTimeout(
           Xs({ allowNetwork: !0 }),
           jC,
           "served catalog stale refresh",
@@ -13244,7 +13244,7 @@ async function Sf(w, I, O, U) {
     for (let xe of me) {
       if (xe.type !== "prompt") continue;
       if (xe.source === "builtin") continue;
-      i("tengu_skill_loaded", {
+      logEvent("tengu_skill_loaded", {
         _PROTO_skill_name: xe.name,
         ...!1,
         ...(Ddn(xe) && Pdn(xe.name)),
@@ -13338,7 +13338,7 @@ function qC() {
     let w = getSettingsForSource("policySettings");
     if (w) {
       let I = getPolicyEnvCompositionForLogging();
-      i("tengu_managed_settings_loaded", {
+      logEvent("tengu_managed_settings_loaded", {
         ...bf(w),
         ...(I && {
           envUnionOptedOut: I.unionOptedOut,
@@ -13391,7 +13391,7 @@ async function YC({
       Hn = {},
       Zt = Fm().catch(() => null),
       $t = await getGitPresenceForAnalytics(),
-      At = (await kt(Zt, Lm)) ?? null,
+      At = (await withDeadline(Zt, Lm)) ?? null,
       Mn = We === null ? null : _m(We),
       rn = {
         entrypoint: S("claude"),
@@ -13418,7 +13418,7 @@ async function YC({
         proactivityLevel: fromEnumOpt(Qt),
         modeIsBypass: dn,
         inProtectedNamespace: NL(),
-        ...lbe(),
+        ...getCooContextProperties(),
         ...$n,
         apiKeySource: fromEnum(getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 }).source),
         allowDangerouslySkipPermissionsPassed: ro,
@@ -13457,7 +13457,7 @@ async function YC({
         }),
         ...{},
       };
-    i("tengu_init", rn);
+    logEvent("tengu_init", rn);
   } catch (on) {
     logError(on);
   }
@@ -13469,7 +13469,7 @@ function jot(w) {
   let { isBriefEntitled: U } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js"),
     V = U();
   if (V) lZ(!0);
-  i("tengu_brief_mode_enabled", {
+  logEvent("tengu_brief_mode_enabled", {
     enabled: V,
     gated: !V,
     source: fromEnum(O ? "env" : "flag"),
@@ -13508,7 +13508,7 @@ async function JC(w, I) {
             O.map((te) => ({ name: te })),
           );
   if (!V) return;
-  (await qs("tengu_unknown_command_suggestion", {}),
+  (await logEventAsync("tengu_unknown_command_suggestion", {}),
     process.stderr.write(
       [
         ie.red(L.cross) + ` unknown command "${w}"`,
@@ -13530,11 +13530,11 @@ async function JC(w, I) {
 }
 function QC(w) {
   if (ke()) {
-    (q("info", "prefetch_system_context_non_interactive"), j_(w));
+    (writeDiagnosticsEvent("info", "prefetch_system_context_non_interactive"), j_(w));
     return;
   }
-  if (Bo()) (q("info", "prefetch_system_context_has_trust"), j_(w));
-  else q("info", "prefetch_system_context_skipped_no_trust");
+  if (Bo()) (writeDiagnosticsEvent("info", "prefetch_system_context_has_trust"), j_(w));
+  else writeDiagnosticsEvent("info", "prefetch_system_context_skipped_no_trust");
 }
 function E0t(w, I, O) {
   if (a.CLAUDE_CODE_EXIT_AFTER_FIRST_RENDER || uo()) return;
@@ -13634,7 +13634,7 @@ async function x1n(w, I, O, U, V, te, ne, me, Me) {
         Zf("deeplink: originalCwd changed"));
       let Le;
       using Ve = { [Symbol.dispose]: () => Le?.() };
-      if (M() && me !== void 0) Le = await resetSettingsCacheWithBackendRead(me);
+      if (isHoverRestEnabled() && me !== void 0) Le = await resetSettingsCacheWithBackendRead(me);
       if (U()) Vde(me, "deeplink");
       if ((resetGitFileWatcher(), Le !== void 0)) updateHooksConfigSnapshot({ userLayer: "retain" });
       else updateHooksConfigSnapshot();
@@ -13657,12 +13657,12 @@ async function x1n(w, I, O, U, V, te, ne, me, Me) {
     return cliError(l(Le));
   }
   if (w === "code")
-    (i("tengu_code_prompt_ignored", {}),
+    (logEvent("tengu_code_prompt_ignored", {}),
       cliWarn("Tip: You can launch Claude Code with just `claude`"),
       (w = void 0));
   if (w && typeof w === "string" && !/\s/.test(w) && w.length > 0) {
     if (
-      (i("tengu_single_word_prompt", { length: w.length }),
+      (logEvent("tengu_single_word_prompt", { length: w.length }),
       !I.print && !I.continue && !I.resume && /^[a-zA-Z][a-zA-Z-]*$/.test(w))
     )
       await JC(w, O);
@@ -13676,7 +13676,7 @@ async function x1n(w, I, O, U, V, te, ne, me, Me) {
       logError(Le);
     }
   if (!mg())
-    i(
+    logEvent(
       "tengu_cli_flags",
       Cf(I, (Le) => O.getOptionValueSource(Le)),
     );
@@ -13968,12 +13968,12 @@ ${Le}`
     zo = async (Le, Ve, st) => {
       Br(st.before);
       let Wt = performance.now();
-      (await Dt(df(), 1500, Le).catch(() => {}),
+      (await withTimeout(df(), 1500, Le).catch(() => {}),
         Ts(Ve, performance.now() - Wt, Wt),
         Br(st.after));
     },
     Zo = () => {
-      if (XE() && !isRemoteManagedSettingsVerified()) return !0;
+      if (isRemoteSettingsEligible() && !isRemoteManagedSettingsVerified()) return !0;
       if (tt) return !0;
       for (let Le of Ow) {
         let Ve = Dj(getSettingsForSource(Le)?.env, Le);
@@ -14196,7 +14196,7 @@ ${Cn.map((So) => `  - ${yo(So.message)}`).join(`
   else if (rr) {
     let Le = P();
     try {
-      i("tengu_claude_in_chrome_setup", { platform: u0(Le) });
+      logEvent("tengu_claude_in_chrome_setup", { platform: u0(Le) });
       let { mcpConfig: Ve, allowedTools: st, systemPrompt: Wt } = setupClaudeInChrome();
       if (((gn = { ...gn, ...Ve }), Ye.push(...st), Wt))
         Gn = Gn
@@ -14206,7 +14206,7 @@ ${Gn}`
           : Wt;
     } catch (Ve) {
       return (
-        i("tengu_claude_in_chrome_setup_failed", { platform: u0(Le) }),
+        logEvent("tengu_claude_in_chrome_setup_failed", { platform: u0(Le) }),
         n(`[Claude in Chrome] Error: ${Ve}`),
         logError(Ve),
         cliError("Error: Failed to run with Claude in Chrome.")
@@ -14217,8 +14217,8 @@ ${Gn}`
     Ct = I.strictMcpConfig || !1;
   if (
     (EOn(Ct),
-    art(Dpe(I)),
-    COn(Ayn(I)),
+    art(cliCarriesSessionConfig(I)),
+    COn(cliCarriesForkRestrictedConfig(I)),
     vOn({
       ...(typeof I.appendSystemPrompt === "string" &&
         I.appendSystemPrompt !== "" && {
@@ -14321,7 +14321,7 @@ ${Gn}`
       );
       return st.length > 0 ? st.sort().join(",") : void 0;
     };
-    i("tengu_mcp_channel_flags", {
+    logEvent("tengu_mcp_channel_flags", {
       channels_count: As.length,
       dev_count: In?.length ?? 0,
       plugins: Le(As),
@@ -14402,7 +14402,7 @@ ${Gn}`
     let Le = _ir(nn);
     if (Le !== null)
       return (
-        await qs("tengu_sdk_url_host_rejected", { code: fromEnum(Le.code) }),
+        await logEventAsync("tengu_sdk_url_host_rejected", { code: fromEnum(Le.code) }),
         cliErrorAfterAnalyticsFlush(
           `Error: --sdk-url rejected: ${Le.reason}. This flag is reserved for Remote Control worker processes connecting to Anthropic's backend.`,
         )
@@ -14417,7 +14417,7 @@ ${Gn}`
       await b_();
       let Le = policyDeniedReason("allow_remote_control", "Remote Control", "is");
       if (Le) return cliError(Le);
-      if (getSettingsWithErrors().settings.disableRemoteControl === !0) return cliError(`Error: ${e5}`);
+      if (getSettingsWithErrors().settings.disableRemoteControl === !0) return cliError(`Error: ${REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE}`);
     }
   }
   let Kf =
@@ -14499,7 +14499,7 @@ ${Gn}`
   let ba = !!te?.host;
   if (qJe()) {
     let Le = performance.now();
-    (await Dt(b_(), BAn, "policy_limits_cold_await").then(
+    (await withTimeout(b_(), BAn, "policy_limits_cold_await").then(
       () => O4t("completed"),
       () => O4t("timed_out"),
     ),
@@ -14596,9 +14596,9 @@ ${Gn}`
     return cliError(`--agent '${Zt}' not found. Available agents: ${Le || "(none)"}`);
   }
   if (
-    (M1({ tool_count: ci.length, skill_count: G(Zr, isSkillToolCommand) }),
+    (M1({ tool_count: ci.length, skill_count: countMatching(Zr, isSkillToolCommand) }),
     Ud?.then(
-      (Le) => M1({ skill_count: G(Le, isSkillToolCommand) }),
+      (Le) => M1({ skill_count: countMatching(Le, isSkillToolCommand) }),
       () => {},
     ),
     ei(me, Me).then(
@@ -14648,20 +14648,20 @@ ${Gn}`
       }
       ((Nd = Ve),
         (ci = [...ci, Ve]),
-        i("tengu_structured_output_enabled", {
+        logEvent("tengu_structured_output_enabled", {
           schema_property_count: Object.keys(sr.properties || {}).length,
           has_required_fields: Boolean(sr.required),
         }));
     } else
       return (
-        await qs("tengu_structured_output_failure", {
+        await logEventAsync("tengu_structured_output_failure", {
           error: S("Invalid JSON schema"),
         }),
         cliErrorAfterAnalyticsFlush(`Error: --json-schema is not a valid JSON Schema: ${Le.error}`)
       );
   }
   if (hn)
-    i("tengu_agent_flag", {
+    logEvent("tengu_agent_flag", {
       agentType: agentTypeForAnalytics_GATE_EVALUATED(hn.agentType, isBuiltInAgent(hn)),
       ...(Zt && { source: S("cli") }),
     });
@@ -15054,7 +15054,7 @@ ${so}`
     )
       Fo.displayExplicit = !1;
   }
-  (q("info", "started", {
+  (writeDiagnosticsEvent("info", "started", {
     version: {
       ISSUES_EXPLAINER:
         "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -15071,7 +15071,7 @@ ${so}`
     is_native_binary: bc(),
   }),
     Et(async () => {
-      q("info", "exited");
+      writeDiagnosticsEvent("info", "exited");
     }));
   let Yd = !(Ro === null && Go === null && vo === null && !Nn() && _s === null)
     ? void 0
@@ -15138,7 +15138,7 @@ ${so}`
         },
       }),
         countConcurrentSessions(me).then((st) => {
-          if (st >= 2) i("tengu_concurrent_sessions", { num_sessions: st });
+          if (st >= 2) logEvent("tengu_concurrent_sessions", { num_sessions: st });
         }));
     }),
     uo())
@@ -15588,7 +15588,7 @@ function pa(w, I, O, U = !1, V, te) {
       }
       xe.getMcpToolsCommandsAndResources(
         (De) => {
-          (v0t(O, De), N6n(), me.get(De.client.name)?.());
+          (v0t(O, De), flushPendingScopeExpansionNotice(), me.get(De.client.name)?.());
         },
         w,
         V,
@@ -15707,7 +15707,7 @@ async function qot(w, I, O, U = (V) => v0t(I, V)) {
   if (V().length === 0) return;
   let te = ir();
   for (let me of PJt) {
-    if ((await Z(me), ir() !== te)) {
+    if ((await sleep(me), ir() !== te)) {
       n(
         "[MCP] Retry: identity changed during backoff, stopping (these rows belong to the previous account)",
       );

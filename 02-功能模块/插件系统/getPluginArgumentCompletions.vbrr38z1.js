@@ -14,7 +14,7 @@ import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { bd } from "./chunk-hh8f1qrw.js";
 import { hMe, c$, Ql, CE, Cf, nD, A5e, _H } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getPluginEditableScopes } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
-import { SC } from "../../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js";
+import { isSkillDoctorEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 var p = [
     {
       value: "--enabled",
@@ -42,7 +42,7 @@ async function getPluginArgumentCompletions(a, n, r) {
       { value: "install", description: "Install a plugin from a marketplace" },
       { value: "uninstall", description: "Remove an installed plugin" },
       { value: "marketplace", description: "Manage plugin marketplaces" },
-      ...(SC()
+      ...(isSkillDoctorEnabled()
         ? [
             {
               value: "stats",

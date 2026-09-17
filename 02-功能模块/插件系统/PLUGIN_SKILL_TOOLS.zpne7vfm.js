@@ -9,23 +9,23 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 85 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { gv } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { raceWithAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ve, yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { h1, zRe, VRe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
-import { Ei } from "../Hooks钩子/chunk-9em0d4k5.js";
+import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { sJ, TGt, pXe, fXe, cJ, roe } from "./chunk-ajtn749s.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { _un, cue } from "../../01-核心基础设施/共享小工具-未细化/chunk-m9kab71c.js";
 import { i4e } from "../../01-核心基础设施/共享小工具-未细化/chunk-ck2sjz96.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-t0m264jc.js";
-import { IZn, PZn, OZn, DZn, LZn, MZn } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wbbnp7y.js";
+import "../../01-核心基础设施/共享小工具-未细化/first-party-remote-session.js";
+import { SEARCH_PLUGINS_TOOL_NAME, SEARCH_SKILLS_TOOL_NAME, SUGGEST_PLUGIN_INSTALL_TOOL_NAME, SUGGEST_SKILLS_TOOL_NAME, LIST_PLUGINS_TOOL_NAME, LIST_SKILLS_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/plugin-skill-tool-names.js";
 import { s, O, v, c, Qe, it, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var z = m(() =>
+var z = createLazyValue(() =>
     it({
       id: s(),
       name: s(),
@@ -33,7 +33,7 @@ var z = m(() =>
       enabled: O().nullish(),
     }),
   ),
-  Z = m(() => c({ results: v(z()) }));
+  Z = createLazyValue(() => c({ results: v(z()) }));
 class d extends Error {
   constructor(e) {
     super(e);
@@ -109,7 +109,7 @@ function R(e, t) {
 async function E(e, t, r) {
   if (!cJ(e)) return null;
   if (fXe()) return [];
-  let o = await gv(
+  let o = await raceWithAbortSignal(
     roe.of(e).fetch(),
     t,
     () => new Ve("plugin manifest read aborted"),
@@ -117,13 +117,13 @@ async function E(e, t, r) {
   if (!o.ok) throw (logFeatureBad(r, "manifest_failed"), new d(`manifest ${o.reason}`));
   return o.plugins;
 }
-var F = m(() =>
+var F = createLazyValue(() =>
     v(s().min(1).max(64))
       .min(1)
       .max(8)
       .describe("Keyword phrases describing the user's intent."),
   ),
-  k = m(() => c({ results: v(z()) }));
+  k = createLazyValue(() => c({ results: v(z()) }));
 function w(e, t) {
   return { tool_use_id: t, type: "tool_result", content: b(e) };
 }
@@ -133,7 +133,7 @@ function _(e) {
 function B(e) {
   return e.contextLabel ?? "";
 }
-var te = m(() =>
+var te = createLazyValue(() =>
   Qe({
     keywords: v(s().min(1).max(64))
       .max(8)
@@ -152,7 +152,7 @@ function se(e, t) {
   );
 }
 function V(e) {
-  return Tt({
+  return buildTool({
     name: e.name,
     searchHint: `list ${e.subject}`,
     maxResultSizeChars: 50000,
@@ -185,7 +185,7 @@ function V(e) {
 var q =
     "the plugins enabled for this session (in a channel session, the plugins the channel has)",
   x = V({
-    name: LZn,
+    name: LIST_PLUGINS_TOOL_NAME,
     subject: q,
     async fetch(e, t, r, o) {
       let i = await E(o, t, "plugin_list");
@@ -225,7 +225,7 @@ var q =
     prompt: `List ${q}. Call this when the user asks what plugins they have, or to confirm what was installed after a SuggestPluginInstall card. Pass keywords to filter to a topic; omit to list all. To suggest a plugin they do NOT have yet, use SearchPlugins, then SuggestPluginInstall when it is among your tools; otherwise relay the relevant results in text instead.`,
   }),
   C = V({
-    name: MZn,
+    name: LIST_SKILLS_TOOL_NAME,
     subject: "the user's enabled claude.ai skills",
     async fetch(e, t, r) {
       let o = await i4e({ credentials: r });
@@ -254,9 +254,9 @@ var q =
     prompt:
       "List the user's enabled claude.ai skills. Call this when the user asks what skills they have. Pass keywords to filter to a topic; omit to list all. To recommend skills they do NOT have yet, use SuggestSkills when it is among your tools; otherwise use SearchSkills and relay the relevant results in text instead.",
   });
-var re = m(() => Qe({ keywords: F() }));
+var re = createLazyValue(() => Qe({ keywords: F() }));
 function W(e) {
-  return Tt({
+  return buildTool({
     name: e.name,
     searchHint: `discover claude.ai ${e.noun}s by keyword`,
     maxResultSizeChars: 50000,
@@ -304,7 +304,7 @@ function W(e) {
   });
 }
 var U = W({
-    name: IZn,
+    name: SEARCH_PLUGINS_TOOL_NAME,
     noun: "plugin",
     run: G,
     description:
@@ -318,7 +318,7 @@ Examples:
 Returns a ranked list with id, name, description, and whether the plugin is already enabled for this session (in a channel session, whether the channel has it). When results fit and SuggestPluginInstall is among your tools, call it to render the install card; otherwise relay the relevant results in text instead. If nothing relevant, proceed without mentioning that you searched.`,
   }),
   A = W({
-    name: PZn,
+    name: SEARCH_SKILLS_TOOL_NAME,
     noun: "skill",
     run: P,
     description:
@@ -331,7 +331,7 @@ Examples:
 
 Returns a ranked list with id, name, description, and whether the skill is enabled. When results fit and SuggestSkills is among your tools, call it to render the add card; otherwise relay the relevant results in text instead. If nothing relevant, proceed without mentioning that you searched.`,
   });
-var oe = m(() =>
+var oe = createLazyValue(() =>
     Qe({
       pluginId: s().min(1).max(256),
       pluginName: s().min(1).max(256),
@@ -343,7 +343,7 @@ var oe = m(() =>
         .optional(),
     }),
   ),
-  Y = m(() =>
+  Y = createLazyValue(() =>
     Qe({
       contextLabel: s()
         .max(128)
@@ -354,11 +354,11 @@ var oe = m(() =>
         .describe("Plugins sourced from SearchPlugins results."),
     }),
   ),
-  ne = m(() => Y().extend({ note: s() })),
+  ne = createLazyValue(() => Y().extend({ note: s() })),
   le =
     "Plugin card rendered. The user enables the plugin out of band \u2014 call ListPlugins on follow-up to discover what was actually installed.",
-  j = Tt({
-    name: OZn,
+  j = buildTool({
+    name: SUGGEST_PLUGIN_INSTALL_TOOL_NAME,
     searchHint: "render a plugin install card",
     maxResultSizeChars: 50000,
     shouldDefer: !0,
@@ -392,11 +392,11 @@ function Q() {
     .getFeatureValueWithSource_CACHED_MAY_BE_STALE(ie, !1);
 }
 function J() {
-  let e = Ei();
+  let e = getSessionFeatureCache();
   return ((e.suggestRolloutEnabled ??= Q().value), e.suggestRolloutEnabled);
 }
 function ae() {
-  let e = Ei();
+  let e = getSessionFeatureCache();
   if (e.suggestRolloutEnabled === void 0) {
     let { value: t, source: r } = Q();
     if (r === "fallback") return t;
@@ -405,7 +405,7 @@ function ae() {
   return e.suggestRolloutEnabled;
 }
 _un(ae);
-var ue = m(() =>
+var ue = createLazyValue(() =>
     Qe({
       keywords: v(s().min(1).max(64))
         .min(1)
@@ -417,11 +417,11 @@ var ue = m(() =>
         .describe("How this suggestion started: 'user_asked' or 'proactive'."),
     }),
   ),
-  ce = m(() =>
+  ce = createLazyValue(() =>
     k().extend({ trigger: X(["user_asked", "proactive"]).optional() }),
   ),
-  H = Tt({
-    name: DZn,
+  H = buildTool({
+    name: SUGGEST_SKILLS_TOOL_NAME,
     searchHint: "render addable claude.ai skills by keyword",
     maxResultSizeChars: 50000,
     get shouldDefer() {

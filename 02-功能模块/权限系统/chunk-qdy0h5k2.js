@@ -68,7 +68,7 @@ function l(e) {
     recordQueuedGoalOrigin: (o, t) => dnr(e.setAppState, o, t),
   };
 }
-var rf = () => ({
+var createDefaultToolPermissionContext = () => ({
   mode: "default",
   additionalWorkingDirectories: new Map(),
   alwaysAllowRules: {},
@@ -77,10 +77,10 @@ var rf = () => ({
   isBypassPermissionsModeAvailable: !1,
   mcpPermissionModeOverrides: {},
 });
-function NN(e) {
+function filterOutHookProgressMessages(e) {
   return e.filter((o) => o.data?.type !== "hook_progress");
 }
-function QEn(e) {
+function hasAfterResultCommittedHook(e) {
   return (
     e !== null &&
     typeof e === "object" &&
@@ -88,25 +88,25 @@ function QEn(e) {
     typeof e.afterResultCommitted === "function"
   );
 }
-function FEt(e, o, t) {
-  if (o || !QEn(e)) return;
+function runAfterResultCommittedHook(e, o, t) {
+  if (o || !hasAfterResultCommittedHook(e)) return;
   try {
     e.afterResultCommitted();
   } catch (n) {
     t(n);
   }
 }
-function Kt(e, o) {
+function matchesToolName(e, o) {
   return e.name === o || (e.aliases?.includes(o) ?? !1);
 }
-function Xoe(e, o) {
+function compareToolNames(e, o) {
   return e.name.localeCompare(o.name);
 }
 var m;
-function unr(e) {
+function registerToolListProvider(e) {
   m = e;
 }
-function J$() {
+function getRegisteredTools() {
   return m?.();
 }
 var u = new WeakMap(),
@@ -121,23 +121,23 @@ function T(e) {
   }
   return o;
 }
-function ar(e, o, t) {
+function findToolByName(e, o, t) {
   let n = t && Object.hasOwn(t, o) ? t[o] : void 0;
-  if (n !== void 0 && n !== o) return ar(e, n);
+  if (n !== void 0 && n !== o) return findToolByName(e, n);
   let s = u.get(e);
   if (s) return s.get(o);
   if (p.has(e)) {
     let r = T(e);
     return (u.set(e, r), r.get(o));
   }
-  return (p.add(e), e.find((r) => Kt(r, o)));
+  return (p.add(e), e.find((r) => matchesToolName(r, o)));
 }
-function LT(e, o) {
+function parseToolInput(e, o) {
   let t = e.coerceInput?.(o) ?? null;
   return e.inputSchema.safeParse(t === null ? o : t.input);
 }
 var g = Object.freeze({ supported: !1 });
-function ID(e) {
+function getToolRemoteExecution(e) {
   return e.remoteExecution ?? g;
 }
 var d = {
@@ -151,7 +151,7 @@ var d = {
   toAutoClassifierInput: (e) => "",
   userFacingName: (e) => "",
 };
-function Tt(e) {
+function buildTool(e) {
   let o = e.create;
   if (!e.call && !o) throw Error("buildTool: a tool def needs call or create");
   if (o && (e.call || e.checkPermissions || e.validateInput))
@@ -209,7 +209,7 @@ function Tt(e) {
     Object.getOwnPropertyDescriptors(e),
   );
 }
-function oA(e) {
+function isBatchToolDefinition(e) {
   let o = e;
   return (
     typeof o.underlyingV1ToolName === "string" &&
@@ -218,7 +218,7 @@ function oA(e) {
     typeof o.reassemble === "function"
   );
 }
-function TR(e, o) {
+function matchesAnyToolName(e, o) {
   let t = "has" in o ? (n) => o.has(n) : (n) => o.includes(n);
   return (
     t(e.name) ||
@@ -226,4 +226,4 @@ function TR(e, o) {
     (e.familyParentToolName !== void 0 && t(e.familyParentToolName))
   );
 }
-export { rf, NN, QEn, FEt, Kt, Xoe, unr, J$, ar, LT, ID, Tt, oA, TR };
+export { createDefaultToolPermissionContext, filterOutHookProgressMessages, hasAfterResultCommittedHook, runAfterResultCommittedHook, matchesToolName, compareToolNames, registerToolListProvider, getRegisteredTools, findToolByName, parseToolInput, getToolRemoteExecution, buildTool, isBatchToolDefinition, matchesAnyToolName };

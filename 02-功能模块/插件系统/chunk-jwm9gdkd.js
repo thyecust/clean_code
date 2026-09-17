@@ -9,16 +9,16 @@
 // Version: 2.1.263
 import { Ie, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { Wf, x, ft, cd, j0 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   getMainLoopModel,
@@ -65,21 +65,21 @@ import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chu
 import { getSettingsForSource, getSettings_DEPRECATED, updateSettingsForSource, updateSettingsForSourceWithTransform } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { sv, Lw } from "../权限系统/chunk-e4pfvp7x.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { dd } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { Ma, ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { Ne, Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { qp, ss } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
-import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
-import { Me } from "../../01-核心基础设施/共享小工具-未细化/chunk-0dh9gct8.js";
+import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
+import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import { b9e, l4, d_, U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import {
   Sl,
@@ -178,7 +178,7 @@ import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { nA, zH, aP } from "../MCP客户端/chunk-3kmsshb6.js";
 import { ig, y1e, vC, aXe, Ui } from "./chunk-ajtn749s.js";
 import { bd, JS, yN, xGt, _Xe, yXe } from "./chunk-hh8f1qrw.js";
-import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { getPluginEditableScopes, editableScopeOf } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
@@ -219,32 +219,32 @@ import { Fz, _0t, y0t } from "../输入分发-查询构造/输入分发-查询�
 import { nl, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { BJt, Vi, jm, jx, Sf, Bae, P8 } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { ir, xh, i2 } from "../MCP客户端/chunk-g4gdwpa0.js";
-import { e9, YL, JL } from "../../01-核心基础设施/共享小工具-未细化/chunk-r2ab1bp6.js";
+import { useCopyToClipboard, CopyFeedbackHint, CopyFallbackNotice } from "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import { gHe, rFn, oFn } from "../后台任务-Shell管理/chunk-n6g2zfwn.js";
 import { getPluginInventory } from "../MCP客户端/chunk-4xr0rjb4.js";
 import { wle } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { i3e } from "../成本-Token统计/chunk-3nwwgatc.js";
 import { cQt, lIt } from "./chunk-d0tph3ay.js";
 import { t0e } from "../../01-核心基础设施/共享小工具-未细化/chunk-4bdjksjf.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import { Gc } from "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import { BackgroundText } from "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { iOt, aOt, Kit, YZ } from "../MCP客户端/chunk-35zjqw7h.js";
-import { Ur } from "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
-import { lu } from "../../01-核心基础设施/共享小工具-未细化/chunk-qck6h2yw.js";
+import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
+import { BulletItem } from "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Xx, mee } from "../MCP客户端/chunk-49ds54j4.js";
+import { refreshActivePlugins, getPluginReloadCacheImpact } from "../MCP客户端/plugin-reload-cache-impact.js";
 import { JB, cIe } from "./chunk-bh1q9esj.js";
 import { PBn, OBn } from "../CodeReview/chunk-rp57gfa9.js";
 import { fF, xv, s3e, hee, flt } from "../MCP客户端/chunk-d7zajrh1.js";
-import { Ule, FBn } from "./chunk-gzfe39h3.js";
-import { ut } from "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
-import { sI } from "../../01-核心基础设施/共享小工具-未细化/chunk-g2fqhcwj.js";
+import { getDisusedPlugins, getPluginDaysSinceLastUse } from "./plugin-disuse.js";
+import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
+import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
 import { Cee, s2, NIe } from "../MCP客户端/chunk-k2gczbnj.js";
-import { TF } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
-import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { hasFirstPartyDesignAuth } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
+import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import {
   ew,
   Dn,
@@ -260,7 +260,7 @@ import {
   d,
   F,
 } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { SC } from "../../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js";
+import { isSkillDoctorEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import {
   np,
@@ -280,13 +280,13 @@ import {
 } from "./chunk-33bdfgmx.js";
 import { s, O, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 async function Bl(a, k, v, b) {
   let w = await gy(a, k, v, b);
   if (
-    (i("tengu_plugin_install_auto_activate", {
+    (logEvent("tengu_plugin_install_auto_activate", {
       activated: w === null,
       ...(w !== null && { reason: fromEnum(w) }),
     }),
@@ -303,12 +303,12 @@ async function Bl(a, k, v, b) {
 async function gy(a, k, v, b) {
   let w = v;
   try {
-    if ((await mee(a())).wouldInvalidateCache) return "cache_impact";
-    let A = await Xx(k, b),
+    if ((await getPluginReloadCacheImpact(a())).wouldInvalidateCache) return "cache_impact";
+    let A = await refreshActivePlugins(k, b),
       Q = await JB(A.errors, b);
     if (Q.installed.length > 0) {
-      if ((await mee(a())).wouldInvalidateCache) return "cache_impact";
-      ((A = await Xx(k, b)), (w = [...w, ...Q.installed]));
+      if ((await getPluginReloadCacheImpact(a())).wouldInvalidateCache) return "cache_impact";
+      ((A = await refreshActivePlugins(k, b)), (w = [...w, ...Q.installed]));
     }
     if (A.error_count > A.errors.length) return "refresh_failed";
     if (A.errors.some((I) => fy(I, w))) return "plugin_load_error";
@@ -356,7 +356,7 @@ function Ol({
   autoAdd: X,
   claudeAiListing: B,
 }) {
-  let { storageV5: K, credentials: se } = _e(),
+  let { storageV5: K, credentials: se } = useStorageV5Context(),
     fe = C(!1),
     [Fe, ze] = d(!1),
     [xe, we] = d(""),
@@ -390,7 +390,7 @@ function Ol({
           { error: Re } = await T5e(Je, { source: ae }, "userSettings", K);
         if (Re) throw Re;
         (fu(K, se),
-          i("tengu_marketplace_added", {
+          logEvent("tengu_marketplace_added", {
             _PROTO_marketplace_name: Je,
             source_type: fromEnum(xt.source),
             repo_hash: xt.source === "github" ? Tn(xt.repo) : void 0,
@@ -499,7 +499,7 @@ function Ol({
                   }),
                 ],
               }),
-            w && e(o, { marginTop: 1, children: e(Ur, { error: ff(w) }) }),
+            w && e(o, { marginTop: 1, children: e(ErrorMessage, { error: ff(w) }) }),
             A && e(o, { marginTop: 1, children: e(t, { children: ff(A) }) }),
           ],
         }),
@@ -508,10 +508,10 @@ function Ol({
           children: e(t, {
             dimColor: !0,
             italic: !0,
-            children: r(ue, {
+            children: r(DotSeparatedList, {
               children: [
-                e(D, { chord: "enter", action: "add" }),
-                e(je, {
+                e(KeybindingHint, { chord: "enter", action: "add" }),
+                e(ActionKeybindingHint, {
                   action: "confirm:no",
                   context: "Settings",
                   fallback: "Esc",
@@ -602,7 +602,7 @@ function Li(Ow) {
     return null;
   }
   let Cy;
-  if (kr[10] === p)
+  if (kr[10] === MEMO_CACHE_SENTINEL)
     ((Cy = (_w, Fw) => Nw((Uw) => ({ ...Uw, [_w]: Fw }))), (kr[10] = Cy));
   else Cy = kr[10];
   let _l;
@@ -710,7 +710,7 @@ function Mr(aC) {
     Ty = C(!1),
     Iy,
     Ry;
-  if (Pa[0] === p)
+  if (Pa[0] === MEMO_CACHE_SENTINEL)
     ((Iy = () => () => {
       Ty.current = !0;
     }),
@@ -759,8 +759,8 @@ function Mr(aC) {
   let Fi = Ey;
   if (cC) {
     let ji;
-    if (Pa[7] === p)
-      ((ji = e($n, { message: "Activating plugin\u2026" })), (Pa[7] = ji));
+    if (Pa[7] === MEMO_CACHE_SENTINEL)
+      ((ji = e(SpinnerMessageLine, { message: "Activating plugin\u2026" })), (Pa[7] = ji));
     else ji = Pa[7];
     return ji;
   }
@@ -836,7 +836,7 @@ function Mr(aC) {
 function Tr(yC) {
   let mi = _(24),
     { plugin: ro, pluginId: ti, onDone: ni } = yC,
-    { storageV5: Vl, credentials: Cr } = _e(),
+    { storageV5: Vl, credentials: Cr } = useStorageV5Context(),
     Fy;
   if (mi[0] !== Cr || mi[1] !== ro || mi[2] !== ti || mi[3] !== Vl)
     ((Fy = async function Ta() {
@@ -916,8 +916,8 @@ function Tr(yC) {
       (mi[14] = Ki));
   else Ki = mi[14];
   let Ky;
-  if (mi[15] === p)
-    ((Ky = e($n, { message: "Loading\u2026", dimColor: !0 })), (mi[15] = Ky));
+  if (mi[15] === MEMO_CACHE_SENTINEL)
+    ((Ky = e(SpinnerMessageLine, { message: "Loading\u2026", dimColor: !0 })), (mi[15] = Ky));
   else Ky = mi[15];
   let jl;
   if (mi[16] !== Ki)
@@ -1164,9 +1164,9 @@ function Er(_C) {
   let VC = _(1),
     { onCancel: FC, children: UC } = _C,
     dh;
-  if (VC[0] === p) ((dh = { context: "Settings" }), (VC[0] = dh));
+  if (VC[0] === MEMO_CACHE_SENTINEL) ((dh = { context: "Settings" }), (VC[0] = dh));
   else dh = VC[0];
-  return (Ne("confirm:no", FC, dh), UC ?? null);
+  return (useKeybinding("confirm:no", FC, dh), UC ?? null);
 }
 F();
 function qi(a) {
@@ -1182,16 +1182,16 @@ function qi(a) {
 function Da() {
   let ep = _(3),
     hh;
-  if (ep[0] === p) ((hh = xGt()), (ep[0] = hh));
+  if (ep[0] === MEMO_CACHE_SENTINEL) ((hh = xGt()), (ep[0] = hh));
   else hh = ep[0];
   let kh = hh,
     bh;
-  if (ep[1] === p)
+  if (ep[1] === MEMO_CACHE_SENTINEL)
     ((bh = r(t, { color: "claude", children: [L.warning, " "] })),
       (ep[1] = bh));
   else bh = ep[1];
   let Sh;
-  if (ep[2] === p)
+  if (ep[2] === MEMO_CACHE_SENTINEL)
     ((Sh = r(o, {
       marginBottom: 1,
       children: [
@@ -1277,7 +1277,7 @@ function ec(SP) {
   bb0: {
     if (!Wn) {
       let Ko;
-      if (gi[0] === p) ((Ko = []), (gi[0] = Ko));
+      if (gi[0] === MEMO_CACHE_SENTINEL) ((Ko = []), (gi[0] = Ko));
       else Ko = gi[0];
       rp = Ko;
       break bb0;
@@ -1327,8 +1327,8 @@ function ec(SP) {
       if ($r === "install-user") Ba(Wn, "user");
       else if ($r === "install-project") Ba(Wn, "project");
       else if ($r === "install-local") Ba(Wn, "local");
-      else if ($r === "homepage" && wh) Gr(wh);
-      else if ($r === "github" && Ch) Gr(`https://github.com/${Ch}`);
+      else if ($r === "homepage" && wh) tryOpenUrlInBrowser(wh);
+      else if ($r === "github" && Ch) tryOpenUrlInBrowser(`https://github.com/${Ch}`);
       else if ($r === "back") op();
     }),
       (gi[9] = ko),
@@ -1350,7 +1350,7 @@ function ec(SP) {
   if (gi[19] !== tp)
     ((Ih = { context: "Select", isActive: tp }), (gi[19] = tp), (gi[20] = Ih));
   else Ih = gi[20];
-  Ze(Th, Ih);
+  useKeybindings(Th, Ih);
   const sp = vh === Wn ? ko : 0;
   let Rh;
   if (gi[21] !== oi || gi[22] !== sp)
@@ -1483,11 +1483,11 @@ function Lr(CP) {
     ((xs = e(Xs, { entry: Nt.entry })), (jn[28] = Nt.entry), (jn[29] = xs));
   else xs = jn[29];
   let Eh;
-  if (jn[30] === p) ((Eh = e(Da, {})), (jn[30] = Eh));
+  if (jn[30] === MEMO_CACHE_SENTINEL) ((Eh = e(Da, {})), (jn[30] = Eh));
   else Eh = jn[30];
   let Ss;
   if (jn[31] !== zi)
-    ((Ss = zi && e(o, { marginBottom: 1, children: e(Ur, { error: ff(zi) }) })),
+    ((Ss = zi && e(o, { marginBottom: 1, children: e(ErrorMessage, { error: ff(zi) }) })),
       (jn[31] = zi),
       (jn[32] = Ss));
   else Ss = jn[32];
@@ -1530,18 +1530,18 @@ function Lr(CP) {
       (jn[41] = Wi));
   else Wi = jn[41];
   let Mh;
-  if (jn[42] === p)
+  if (jn[42] === MEMO_CACHE_SENTINEL)
     ((Mh = e(t, {
       dimColor: !0,
-      children: r(ue, {
+      children: r(DotSeparatedList, {
         children: [
-          e(je, {
+          e(ActionKeybindingHint, {
             action: "select:accept",
             context: "Select",
             fallback: "Enter",
             description: "select",
           }),
-          e(je, {
+          e(ActionKeybindingHint, {
             action: "confirm:no",
             context: "Settings",
             fallback: "Esc",
@@ -1592,7 +1592,7 @@ function _r(TP) {
   if (Dr[0] !== yp)
     ((Ps =
       yp &&
-      e(je, {
+      e(ActionKeybindingHint, {
         action: "plugin:install",
         context: "Plugin",
         fallback: "i",
@@ -1603,13 +1603,13 @@ function _r(TP) {
       (Dr[1] = Ps));
   else Ps = Dr[1];
   let Dh;
-  if (Dr[2] === p) ((Dh = e(t, { children: "Type to search" })), (Dr[2] = Dh));
+  if (Dr[2] === MEMO_CACHE_SENTINEL) ((Dh = e(t, { children: "Type to search" })), (Dr[2] = Dh));
   else Dh = Dr[2];
   let Ts;
   if (Dr[3] !== hp)
     ((Ts =
       hp &&
-      e(je, {
+      e(ActionKeybindingHint, {
         action: "plugin:toggle",
         context: "Plugin",
         fallback: "Space",
@@ -1622,7 +1622,7 @@ function _r(TP) {
   if (Dr[5] !== kp)
     ((Is =
       kp &&
-      e(je, {
+      e(ActionKeybindingHint, {
         action: "select:accept",
         context: "Select",
         fallback: "Enter",
@@ -1632,8 +1632,8 @@ function _r(TP) {
       (Dr[6] = Is));
   else Is = Dr[6];
   let Bh;
-  if (Dr[7] === p)
-    ((Bh = e(je, {
+  if (Dr[7] === MEMO_CACHE_SENTINEL)
+    ((Bh = e(ActionKeybindingHint, {
       action: "confirm:no",
       context: "Settings",
       fallback: "Esc",
@@ -1648,7 +1648,7 @@ function _r(TP) {
       children: e(t, {
         dimColor: !0,
         italic: !0,
-        children: r(ue, { children: [Ps, Dh, Ts, Is, Bh] }),
+        children: r(DotSeparatedList, { children: [Ps, Dh, Ts, Is, Bh] }),
       }),
     })),
       (Dr[8] = Ps),
@@ -1695,7 +1695,7 @@ function Gs(MP) {
 }
 function Ar(xp) {
   let DP = _(3),
-    { storageV5: Sp } = _e(),
+    { storageV5: Sp } = useStorageV5Context(),
     Fh;
   if (DP[0] !== xp || DP[1] !== Sp)
     ((Fh = tOt(xp, Sp).then(fk).catch(yk)),
@@ -1743,7 +1743,7 @@ function Qs(AP) {
       (Br[4] = Ms));
   else Ms = Br[4];
   let Uh;
-  if (Br[5] === p)
+  if (Br[5] === MEMO_CACHE_SENTINEL)
     ((Uh = e(t, { bold: !0, children: "Will install:" })), (Br[5] = Uh));
   else Uh = Br[5];
   let $s;
@@ -1784,7 +1784,7 @@ function Ys(Tp) {
     Os,
     Rp;
   if (Ip[0] !== As || Ip[1] !== La) {
-    Rp = en;
+    Rp = EARLY_RETURN_SENTINEL;
     bb0: {
       let jh = As?.components ? qi(As.components) : [];
       if (jh.length === 0) {
@@ -1799,7 +1799,7 @@ function Ys(Tp) {
     }
     ((Ip[0] = As), (Ip[1] = La), (Ip[2] = Os), (Ip[3] = Rp));
   } else ((Os = Ip[2]), (Rp = Ip[3]));
-  if (Rp !== en) return Rp;
+  if (Rp !== EARLY_RETURN_SENTINEL) return Rp;
   let _a;
   if (Ip[6] !== Os) ((_a = e(N, { children: Os })), (Ip[6] = Os), (Ip[7] = _a));
   else _a = Ip[7];
@@ -1817,8 +1817,8 @@ function Js(_P) {
   else qh = fi[1];
   let zo = qh,
     zh;
-  if (fi[2] === p)
-    ((zh = e(et, { status: "warning", withSpace: !0 })), (fi[2] = zh));
+  if (fi[2] === MEMO_CACHE_SENTINEL)
+    ((zh = e(StatusIndicator, { status: "warning", withSpace: !0 })), (fi[2] = zh));
   else zh = fi[2];
   let Ls;
   if (fi[3] !== Ep)
@@ -1848,7 +1848,7 @@ function Js(_P) {
       (fi[8] = Fs));
   else Fs = fi[8];
   let Wh;
-  if (fi[9] === p)
+  if (fi[9] === MEMO_CACHE_SENTINEL)
     ((Wh = r(t, { dimColor: !0, children: ["  ", "The command:"] })),
       (fi[9] = Wh));
   else Wh = fi[9];
@@ -1880,7 +1880,7 @@ function Xs(FP) {
     return null;
   }
   let Qh;
-  if (Gi[0] === p)
+  if (Gi[0] === MEMO_CACHE_SENTINEL)
     ((Qh = e(t, {
       dimColor: !0,
       children: "Installed by running a command on this machine:",
@@ -1905,7 +1905,7 @@ function Xs(FP) {
     ((Hs = e(t, { dimColor: !0, children: js })), (Gi[5] = js), (Gi[6] = Hs));
   else Hs = Gi[6];
   let Yh;
-  if (Gi[7] === p)
+  if (Gi[7] === MEMO_CACHE_SENTINEL)
     ((Yh = JS() && e(t, { color: "warning", children: yN })), (Gi[7] = Yh));
   else Yh = Gi[7];
   let Ks;
@@ -1935,7 +1935,7 @@ function Fr(Mp) {
   let qs = _(5),
     $p = C(void 0),
     Xh;
-  if (qs[0] === p)
+  if (qs[0] === MEMO_CACHE_SENTINEL)
     ((Xh = () => {
       $p.current = void 0;
     }),
@@ -1946,7 +1946,7 @@ function Fr(Mp) {
   else Zh = qs[2];
   E(Xh, Zh);
   let tk;
-  if (qs[3] === p)
+  if (qs[3] === MEMO_CACHE_SENTINEL)
     ((tk = (UP) => {
       $p.current = UP;
     }),
@@ -1954,7 +1954,7 @@ function Fr(Mp) {
   else tk = qs[3];
   let VP = tk,
     nk;
-  if (qs[4] === p) {
+  if (qs[4] === MEMO_CACHE_SENTINEL) {
     let jP = () => $p.current ?? null;
     nk = { record: VP, pinned: jP };
     qs[4] = nk;
@@ -1964,7 +1964,7 @@ function Fr(Mp) {
 function Or(HP) {
   let ok = _(8),
     { pluginId: Dp, entry: Bp, verb: Ap, onShown: Op } = HP,
-    { storageV5: Np } = _e(),
+    { storageV5: Np } = useStorageV5Context(),
     ik;
   if (ok[0] !== Bp || ok[1] !== Dp || ok[2] !== Np)
     ((ik = g0e(Dp, Bp, Np).catch(kk)),
@@ -2027,7 +2027,7 @@ function Nr(Fa) {
     uk[5] !== On.skills ||
     uk[6] !== On.source
   ) {
-    Fp = en;
+    Fp = EARLY_RETURN_SENTINEL;
     bb0: {
       let zP = [
         ["Commands", co(On.commands)],
@@ -2064,7 +2064,7 @@ function Nr(Fa) {
       (uk[7] = dk),
       (uk[8] = Fp));
   } else ((dk = uk[7]), (Fp = uk[8]));
-  if (Fp !== en) return Fp;
+  if (Fp !== EARLY_RETURN_SENTINEL) return Fp;
   return dk;
 }
 function co(a) {
@@ -2324,7 +2324,7 @@ function Ka({
   onInstallComplete: R,
   onSearchModeChange: A,
 }) {
-  let { storageV5: Q } = _e(),
+  let { storageV5: Q } = useStorageV5Context(),
     [I, j] = d(k),
     [q, X] = d(null),
     B = re((it) => {
@@ -2336,7 +2336,7 @@ function Ka({
     se = I === "plugin-list",
     fe = se && !b,
     Fe = I === "plugin-details" && !!q && !b,
-    ze = Me(a, Yi),
+    ze = useStoreSelector(a, Yi),
     [xe, we] = d(!1),
     tt = () => we(!1),
     {
@@ -2353,7 +2353,7 @@ function Ka({
   }, [Lt, A]),
     E(() => () => A(!1), [A]));
   let We = Va(),
-    { columns: nt } = Se(),
+    { columns: nt } = useTerminalSize(),
     at = V(() => {
       if (!pt) return v;
       let it = pt.toLowerCase();
@@ -2423,7 +2423,7 @@ function Ka({
     if (!Ve) return;
     (it.preventDefault(), we(!0), xt(Ve));
   }
-  (Ze(
+  (useKeybindings(
     {
       "select:previous": () => {
         if (Be === 0) {
@@ -2449,7 +2449,7 @@ function Ka({
     },
     { context: "Select", isActive: fe && !xe },
   ),
-    Ze(
+    useKeybindings(
       {
         "plugin:toggle": () => {
           if (Be < at.length) {
@@ -2524,8 +2524,8 @@ function cc({
   targetMarketplace: b,
   targetPlugin: w,
 }) {
-  let { storageV5: R, credentials: A } = _e(),
-    Q = Me(a, Yi),
+  let { storageV5: R, credentials: A } = useStorageV5Context(),
+    Q = useStoreSelector(a, Yi),
     { setError: I, setResult: j } = a,
     q = a.setViewState,
     [X, B] = d(null),
@@ -2579,7 +2579,7 @@ function cc({
       else if (Je === "plugin-details") Lt();
       else q({ type: "menu" });
     }, [Je, ae, Lt, b, q, K.length, Ut, St]);
-  (Ne("confirm:no", Ce, {
+  (useKeybinding("confirm:no", Ce, {
     context: "Settings",
     isActive: typeof Je === "string" && !(Je === "plugin-list" && nt),
   }),
@@ -2604,7 +2604,7 @@ function cc({
           let bt = [];
           for (let { name: me, config: Ge, data: wt } of _t)
             if (wt) {
-              let st = G(wt.plugins, (Bt) => _H(c$(Bt.name, me)));
+              let st = countMatching(wt.plugins, (Bt) => _H(c$(Bt.name, me)));
               bt.push({
                 name: me,
                 totalPlugins: wt.plugins.length,
@@ -2618,7 +2618,7 @@ function cc({
             return 0;
           }),
             se(bt));
-          let te = G(_t, (me) => me.data !== null),
+          let te = countMatching(_t, (me) => me.data !== null),
             Ee = w5e(Ot, te);
           if (Ee)
             if (Ee.type === "warning")
@@ -2747,7 +2747,7 @@ function cc({
         }
       );
     }, [X, I, Ct, St, Ut, at, R]),
-    Ze(
+    useKeybindings(
       {
         "select:previous": () => {
           if (sn > 0) St(sn - 1);
@@ -2771,8 +2771,8 @@ function cc({
         (j(ie), q({ type: "menu" }));
       },
     });
-  if (ze) return e($n, { message: we });
-  if (Q) return e(Ur, { error: Q });
+  if (ze) return e(SpinnerMessageLine, { message: we });
+  if (Q) return e(ErrorMessage, { error: Q });
   if (Je === "marketplace-list") {
     if (K.length === 0)
       return r(o, {
@@ -2796,7 +2796,7 @@ function cc({
             paddingLeft: 1,
             children: e(t, {
               dimColor: !0,
-              children: e(je, {
+              children: e(ActionKeybindingHint, {
                 action: "confirm:no",
                 context: "Settings",
                 fallback: "Esc",
@@ -2819,7 +2819,7 @@ function cc({
             flexDirection: "column",
             children: r(t, {
               color: "warning",
-              children: [e(et, { status: "warning", withSpace: !0 }), Cn],
+              children: [e(StatusIndicator, { status: "warning", withSpace: !0 }), Cn],
             }),
           }),
         K.map((ie, kt) =>
@@ -2846,7 +2846,7 @@ function cc({
                   marginLeft: 2,
                   children: e(t, {
                     dimColor: !0,
-                    children: r(ue, {
+                    children: r(DotSeparatedList, {
                       children: [
                         r(N, {
                           children: [
@@ -2873,15 +2873,15 @@ function cc({
           children: e(t, {
             dimColor: !0,
             italic: !0,
-            children: r(ue, {
+            children: r(DotSeparatedList, {
               children: [
-                e(je, {
+                e(ActionKeybindingHint, {
                   action: "select:accept",
                   context: "Select",
                   fallback: "Enter",
                   description: "select",
                 }),
-                e(je, {
+                e(ActionKeybindingHint, {
                   action: "confirm:no",
                   context: "Settings",
                   fallback: "Esc",
@@ -2904,7 +2904,7 @@ function cc({
             flexDirection: "column",
             children: r(t, {
               color: "warning",
-              children: [e(et, { status: "warning", withSpace: !0 }), Ve],
+              children: [e(StatusIndicator, { status: "warning", withSpace: !0 }), Ve],
             }),
           }),
         e(Lr, {
@@ -2928,7 +2928,7 @@ function cc({
           marginBottom: 1,
           children: e(t, { bold: !0, children: "Install plugins" }),
         }),
-        e(Rn, {
+        e(EmptyStateMessage, {
           hint: "All plugins from this marketplace are already installed.",
           children: "No new plugins available to install.",
         }),
@@ -2937,7 +2937,7 @@ function cc({
           children: e(t, {
             dimColor: !0,
             italic: !0,
-            children: e(je, {
+            children: e(ActionKeybindingHint, {
               action: "confirm:no",
               context: "Settings",
               fallback: "Esc",
@@ -2977,7 +2977,7 @@ function cc({
         Be &&
         e(o, {
           marginBottom: 1,
-          children: r(Rn, { children: ['No plugins match "', Be, '"'] }),
+          children: r(EmptyStateMessage, { children: ['No plugins match "', Be, '"'] }),
         }),
       yt.scrollPosition.canScrollUp &&
         e(o, {
@@ -3077,7 +3077,7 @@ function cc({
           marginTop: 1,
           children: r(t, {
             color: "error",
-            children: [e(et, { status: "error", withSpace: !0 }), Q],
+            children: [e(StatusIndicator, { status: "error", withSpace: !0 }), Q],
           }),
         }),
       e(_r, { ...tn }),
@@ -3087,7 +3087,7 @@ function cc({
 function Jp(lI) {
   let yi = _(22),
     { pluginId: tc } = lI,
-    { storageV5: nc } = _e(),
+    { storageV5: nc } = useStorageV5Context(),
     [Eo, vk] = d(null),
     wk,
     Ck;
@@ -3183,9 +3183,9 @@ function dc({
   grantedSuggestions: w,
   targetPlugin: R,
 }) {
-  let { storageV5: A, credentials: Q } = _e(),
-    I = Me(a, Yi),
-    j = Me(a, Ek),
+  let { storageV5: A, credentials: Q } = useStorageV5Context(),
+    I = useStoreSelector(a, Yi),
+    j = useStoreSelector(a, Ek),
     { setError: q, setResult: X } = a,
     B = a.setViewState,
     [K, se] = d([]),
@@ -3306,7 +3306,7 @@ function dc({
             te = "all-plugins-project-installed";
           Gt(te);
         }
-        let Ot = G(ke, (te) => te.data !== null),
+        let Ot = countMatching(ke, (te) => te.data !== null),
           bt = w5e(Oe, Ot);
         if (bt)
           if (bt.type === "warning")
@@ -3418,11 +3418,11 @@ function dc({
       for (let ne of Ve) w?.add(ne);
       OBn(Ve, A);
     }, [fe, I, j, Je, pt, w, A]),
-    Ne("confirm:no", Lt, {
+    useKeybinding("confirm:no", Lt, {
       context: "Settings",
       isActive: Je === "plugin-details",
     }),
-    Ne(
+    useKeybinding(
       "confirm:no",
       () => {
         B({ type: "menu" });
@@ -3438,8 +3438,8 @@ function dc({
         (X(Ve), B({ type: "menu" }));
       },
     });
-  if (fe) return e($n, { message: ze });
-  if (I) return e(Ur, { error: I });
+  if (fe) return e(SpinnerMessageLine, { message: ze });
+  if (I) return e(ErrorMessage, { error: I });
   if (Je === "plugin-details" && Re)
     return e(Lr, {
       onEntryHelperShown: We,
@@ -3470,7 +3470,7 @@ function dc({
           children: e(t, {
             dimColor: !0,
             italic: !0,
-            children: e(je, {
+            children: e(ActionKeybindingHint, {
               action: "confirm:no",
               context: "Settings",
               fallback: "Esc",
@@ -3515,7 +3515,7 @@ function dc({
         at &&
         e(o, {
           marginBottom: 1,
-          children: r(Rn, { children: ['No plugins match "', at, '"'] }),
+          children: r(EmptyStateMessage, { children: ['No plugins match "', at, '"'] }),
         }),
       St.scrollPosition.canScrollUp &&
         e(o, {
@@ -3610,7 +3610,7 @@ function Zp(ZI) {
   switch (eR) {
     case "git-not-installed": {
       let Nn;
-      if (Ji[0] === p)
+      if (Ji[0] === MEMO_CACHE_SENTINEL)
         ((Nn = r(N, {
           children: [
             e(t, {
@@ -3629,7 +3629,7 @@ function Zp(ZI) {
     }
     case "all-blocked-by-policy": {
       let Nn;
-      if (Ji[1] === p)
+      if (Ji[1] === MEMO_CACHE_SENTINEL)
         ((Nn = r(N, {
           children: [
             e(t, {
@@ -3646,7 +3646,7 @@ function Zp(ZI) {
     }
     case "policy-restricts-sources": {
       let Nn;
-      if (Ji[2] === p)
+      if (Ji[2] === MEMO_CACHE_SENTINEL)
         ((Nn = r(N, {
           children: [
             e(t, {
@@ -3667,7 +3667,7 @@ function Zp(ZI) {
     }
     case "all-marketplaces-failed": {
       let Nn;
-      if (Ji[3] === p)
+      if (Ji[3] === MEMO_CACHE_SENTINEL)
         ((Nn = r(N, {
           children: [
             e(t, {
@@ -3683,7 +3683,7 @@ function Zp(ZI) {
     }
     case "all-plugins-installed": {
       let Nn;
-      if (Ji[4] === p)
+      if (Ji[4] === MEMO_CACHE_SENTINEL)
         ((Nn = r(N, {
           children: [
             e(t, {
@@ -3702,7 +3702,7 @@ function Zp(ZI) {
     }
     case "all-plugins-project-installed": {
       let Nn;
-      if (Ji[5] === p)
+      if (Ji[5] === MEMO_CACHE_SENTINEL)
         ((Nn = r(N, {
           children: [
             e(t, {
@@ -3722,8 +3722,8 @@ function Zp(ZI) {
     case "no-marketplaces-configured":
     default: {
       let Nn;
-      if (Ji[6] === p)
-        ((Nn = e(Rn, {
+      if (Ji[6] === MEMO_CACHE_SENTINEL)
+        ((Nn = e(EmptyStateMessage, {
           hint: "Add a marketplace first using the Marketplaces tab.",
           children: "No plugins available.",
         })),
@@ -3756,7 +3756,7 @@ import { readdir, readFile as em } from "fs/promises";
 import { homedir } from "os";
 import * as Wo from "path";
 var pc = 5,
-  Bk = m(() => c({ query: s().min(1), should_trigger: O() })),
+  Bk = createLazyValue(() => c({ query: s().min(1), should_trigger: O() })),
   mc = async () => null;
 async function Ak(a) {
   let k = [],
@@ -3883,9 +3883,9 @@ async function gc(a, k, v) {
     queries: I,
     warnings: j,
     triggerResults: q,
-    passCount: G(q, (X) => X.verdict === "pass"),
-    failCount: G(q, (X) => X.verdict === "fail"),
-    skippedCount: G(q, (X) => X.verdict === "skipped"),
+    passCount: countMatching(q, (X) => X.verdict === "pass"),
+    failCount: countMatching(q, (X) => X.verdict === "fail"),
+    skippedCount: countMatching(q, (X) => X.verdict === "skipped"),
   };
 }
 function fc(a) {
@@ -3935,7 +3935,7 @@ function qa(vR) {
   let tm = _(6),
     { onComplete: Vr, target: jr } = vR,
     Nk;
-  if (tm[0] === p) ((Nk = new AbortController()), (tm[0] = Nk));
+  if (tm[0] === MEMO_CACHE_SENTINEL) ((Nk = new AbortController()), (tm[0] = Nk));
   else Nk = tm[0];
   let wR = C(Nk),
     Lk,
@@ -3995,7 +3995,7 @@ ${L.tick} Evaluation passed`;
   else ((Lk = tm[3]), (_k = tm[4]));
   E(Lk, _k);
   let yc;
-  if (tm[5] === p)
+  if (tm[5] === MEMO_CACHE_SENTINEL)
     ((yc = e(o, {
       flexDirection: "column",
       children: e(t, { children: "Running evaluation\u2026" }),
@@ -4016,7 +4016,7 @@ function wc({
   targetMarketplace: A,
   action: Q,
 }) {
-  let { storageV5: I, credentials: j } = _e(),
+  let { storageV5: I, credentials: j } = useStorageV5Context(),
     [q, X] = d([]),
     [B, K] = d({ available: [], hosted: [], browseOnly: [] }),
     [se, fe] = d(null),
@@ -4031,7 +4031,7 @@ function wc({
     [Be, Ct] = d(null),
     [pe, tn] = d(0),
     Rt = C(!1),
-    sn = vt(),
+    sn = useClock(),
     St = C(void 0),
     Wt = C(!0);
   (E(
@@ -4052,7 +4052,7 @@ function wc({
             K({ ...Hue(Dt, Ce), browseOnly: Dt?.browseOnly ?? [] }));
           let _t = im(kt, $t, ie, await UF());
           X(_t);
-          let Ot = G(kt, (te) => te.data !== null),
+          let Ot = countMatching(kt, (te) => te.data !== null),
             bt = w5e($t, Ot);
           if (bt)
             if (bt.type === "warning") ae(bt.message);
@@ -4089,8 +4089,8 @@ function wc({
     }, [A, Q, k]));
   let Ut = () => q.some((ne) => ne.pendingUpdate || ne.pendingRemove),
     zn = () => {
-      let ne = G(q, (ke) => ke.pendingUpdate),
-        Ce = G(q, (ke) => ke.pendingRemove);
+      let ne = countMatching(q, (ke) => ke.pendingUpdate),
+        Ce = countMatching(q, (ke) => ke.pendingRemove);
       return { updateCount: ne, removeCount: Ce };
     },
     yt = async (ne) => {
@@ -4121,7 +4121,7 @@ function wc({
               );
             (await TEe(Tt.name, void 0, I, j),
               ie++,
-              i("tengu_marketplace_removed", {
+              logEvent("tengu_marketplace_removed", {
                 marketplace_name: Tt.name,
                 plugins_uninstalled: Tt.installedPlugins.length,
               }));
@@ -4148,7 +4148,7 @@ function wc({
             }
             (Oe++,
               Dt.add(Tt.name.toLowerCase()),
-              i("tengu_marketplace_updated", { marketplace_name: Tt.name }));
+              logEvent("tengu_marketplace_updated", { marketplace_name: Tt.name }));
           }
         }
         let _t = 0,
@@ -4167,12 +4167,12 @@ function wc({
           } = await cQt(Dt, new Set(), { skipCommandSources: !0 }, I);
           ((_t = Tt.length),
             (Ge = Co),
-            (Ot = G(
+            (Ot = countMatching(
               nn,
               (En) => En.type === "autoupdate-deferred-entry-helper",
             )),
-            (bt = G(nn, (En) => En.type === "autoupdate-disabled-by-policy")),
-            (te = G(nn, (En) => En.type === "autoupdate-blocked-by-pinner")),
+            (bt = countMatching(nn, (En) => En.type === "autoupdate-disabled-by-policy")),
+            (te = countMatching(nn, (En) => En.type === "autoupdate-blocked-by-pinner")),
             (Ee = Oo));
           let Po = nn.filter(
             (En) =>
@@ -4285,7 +4285,7 @@ function wc({
         ae(nv(ke));
       }
     };
-  (Ne(
+  (useKeybinding(
     "confirm:no",
     () => {
       (St.current?.(), at("list"), tn(0));
@@ -4299,7 +4299,7 @@ function wc({
           nt === "confirm-add-claudeai"),
     },
   ),
-    Ne(
+    useKeybinding(
       "confirm:no",
       () => {
         (St.current?.(),
@@ -4310,14 +4310,14 @@ function wc({
       },
       { context: "Confirmation", isActive: !pt && nt === "list" && Ut() },
     ),
-    Ne(
+    useKeybinding(
       "confirm:no",
       () => {
         a({ type: "menu" });
       },
       { context: "Confirmation", isActive: !pt && nt === "list" && !Ut() },
     ),
-    Ze(
+    useKeybindings(
       {
         "select:previous": () => tt((ne) => Math.max(0, ne - 1)),
         "select:next": () => {
@@ -4368,7 +4368,7 @@ function wc({
         (ne.preventDefault(), Ct(ke), St.current?.(), at("confirm-remove"));
     }
   }
-  Ze(
+  useKeybindings(
     {
       "select:previous": () => tn((ne) => Math.max(0, ne - 1)),
       "select:next": () => {
@@ -4412,7 +4412,7 @@ function wc({
         credentials: j,
       });
       if (
-        (i("tengu_marketplace_added", { source_type: S("claudeai") }),
+        (logEvent("tengu_marketplace_added", { source_type: S("claudeai") }),
         fu(I, j),
         await R(),
         !Wt.current)
@@ -4465,15 +4465,15 @@ function wc({
             italic: !0,
             children: w.pending
               ? r(N, { children: ["Press ", w.keyName, " again to go back"] })
-              : r(ue, {
+              : r(DotSeparatedList, {
                   children: [
-                    e(je, {
+                    e(ActionKeybindingHint, {
                       action: "select:accept",
                       context: "Select",
                       fallback: "Enter",
                       description: "select",
                     }),
-                    e(je, {
+                    e(ActionKeybindingHint, {
                       action: "confirm:no",
                       context: "Confirmation",
                       fallback: "Esc",
@@ -4486,7 +4486,7 @@ function wc({
       ],
     });
   if (nt === "confirm-add-claudeai" && se)
-    return r(mr, {
+    return r(FocusableBox, {
       onKeyDown: Gt,
       children: [
         r(t, { bold: !0, children: ["Add marketplace ", wr(se.name), "?"] }),
@@ -4533,7 +4533,7 @@ function wc({
                   children: "Adding marketplace\u2026",
                 }),
               }),
-            Je && e(o, { marginTop: 1, children: e(Ur, { error: ff(Je) }) }),
+            Je && e(o, { marginTop: 1, children: e(ErrorMessage, { error: ff(Je) }) }),
             !pt &&
               e(o, {
                 marginTop: 1,
@@ -4553,7 +4553,7 @@ function wc({
     });
   if (nt === "confirm-remove" && Be) {
     let ne = Be.installedPlugins.length;
-    return r(mr, {
+    return r(FocusableBox, {
       onKeyDown: un,
       children: [
         r(t, {
@@ -4590,7 +4590,7 @@ function wc({
                 marginLeft: 2,
                 children: Be.installedPlugins.map((Ce) =>
                   e(
-                    lu,
+                    BulletItem,
                     { children: e(t, { dimColor: !0, children: wr(Ce.name) }) },
                     Ce.name,
                   ),
@@ -4651,7 +4651,7 @@ function wc({
                 marginLeft: 1,
                 children: Be.installedPlugins.map((ke) =>
                   r(
-                    lu,
+                    BulletItem,
                     {
                       children: [
                         wr(ke.name),
@@ -4684,7 +4684,7 @@ function wc({
             marginTop: 1,
             children: e(t, { color: "claude", children: wr(Re) }),
           }),
-        !ne && Je && e(o, { marginTop: 1, children: e(Ur, { error: ff(Je) }) }),
+        !ne && Je && e(o, { marginTop: 1, children: e(ErrorMessage, { error: ff(Je) }) }),
         !ne &&
           e(o, {
             flexDirection: "column",
@@ -4726,15 +4726,15 @@ function wc({
             italic: !0,
             children: ne
               ? e(N, { children: "Please wait\u2026" })
-              : r(ue, {
+              : r(DotSeparatedList, {
                   children: [
-                    e(je, {
+                    e(ActionKeybindingHint, {
                       action: "select:accept",
                       context: "Select",
                       fallback: "Enter",
                       description: "select",
                     }),
-                    e(je, {
+                    e(ActionKeybindingHint, {
                       action: "confirm:no",
                       context: "Confirmation",
                       fallback: "Esc",
@@ -4748,7 +4748,7 @@ function wc({
     });
   }
   let { updateCount: it, removeCount: Ve } = zn();
-  return r(mr, {
+  return r(FocusableBox, {
     onKeyDown: Xn,
     children: [
       e(o, {
@@ -4973,7 +4973,7 @@ function wc({
                 " ",
                 e(t, {
                   dimColor: !0,
-                  children: e(je, {
+                  children: e(ActionKeybindingHint, {
                     action: "select:accept",
                     context: "Select",
                     fallback: "Enter",
@@ -4983,9 +4983,9 @@ function wc({
               ],
             }),
             it > 0 &&
-              r(lu, { children: ["Update ", it, " ", x(it, "marketplace")] }),
+              r(BulletItem, { children: ["Update ", it, " ", x(it, "marketplace")] }),
             Ve > 0 &&
-              r(lu, {
+              r(BulletItem, {
                 color: "warning",
                 children: ["Remove ", Ve, " ", x(Ve, "marketplace")],
               }),
@@ -4999,7 +4999,7 @@ function wc({
             children: "Processing changes\u2026",
           }),
         }),
-      Je && e(o, { marginTop: 1, children: e(Ur, { error: ff(Je) }) }),
+      Je && e(o, { marginTop: 1, children: e(ErrorMessage, { error: ff(Je) }) }),
       e(rm, { exitState: w, hasPendingActions: Ut() }),
     ],
   });
@@ -5027,7 +5027,7 @@ function rm(cE) {
   if (Xi[2] !== uo)
     ((Zi =
       uo &&
-      e(je, {
+      e(ActionKeybindingHint, {
         action: "select:accept",
         context: "Select",
         fallback: "Enter",
@@ -5040,7 +5040,7 @@ function rm(cE) {
   if (Xi[4] !== uo)
     ((kc =
       !uo &&
-      e(je, {
+      e(ActionKeybindingHint, {
         action: "select:accept",
         context: "Select",
         fallback: "Enter",
@@ -5051,20 +5051,20 @@ function rm(cE) {
   else kc = Xi[5];
   let bc;
   if (Xi[6] !== uo)
-    ((bc = !uo && e(D, { chord: "u", action: "update" })),
+    ((bc = !uo && e(KeybindingHint, { chord: "u", action: "update" })),
       (Xi[6] = uo),
       (Xi[7] = bc));
   else bc = Xi[7];
   let xc;
   if (Xi[8] !== uo)
-    ((xc = !uo && e(D, { chord: "d", action: "remove" })),
+    ((xc = !uo && e(KeybindingHint, { chord: "d", action: "remove" })),
       (Xi[8] = uo),
       (Xi[9] = xc));
   else xc = Xi[9];
   const om = uo ? "cancel" : "go back";
   let Sc;
   if (Xi[10] !== om)
-    ((Sc = e(je, {
+    ((Sc = e(ActionKeybindingHint, {
       action: "confirm:no",
       context: "Confirmation",
       fallback: "Esc",
@@ -5086,7 +5086,7 @@ function rm(cE) {
       children: e(t, {
         dimColor: !0,
         italic: !0,
-        children: r(ue, { children: [Zi, kc, bc, xc, Sc] }),
+        children: r(DotSeparatedList, { children: [Zi, kc, bc, xc, Sc] }),
       }),
     })),
       (Xi[12] = Zi),
@@ -5110,7 +5110,7 @@ function im(a, k, v, b) {
         let B =
           I === null
             ? 0
-            : G(j, (K) => {
+            : countMatching(j, (K) => {
                 let se = I.plugins.find((fe) => fe.name === K.name);
                 return (
                   se !== void 0 &&
@@ -5350,12 +5350,12 @@ function zr(LE) {
     ((Mc[0] = xm), (Mc[1] = Sm), (Mc[2] = bm), (Mc[3] = ki));
   } else ki = Mc[3];
   let nb;
-  if (Mc[4] === p)
+  if (Mc[4] === MEMO_CACHE_SENTINEL)
     ((nb = e(t, { bold: !0, children: "Capabilities: " })), (Mc[4] = nb));
   else nb = Mc[4];
   let $c;
   if (Mc[5] !== ki)
-    (($c = ki.length > 0 ? e(ue, { children: ki }) : "none"),
+    (($c = ki.length > 0 ? e(DotSeparatedList, { children: ki }) : "none"),
       (Mc[5] = ki),
       (Mc[6] = $c));
   else $c = Mc[6];
@@ -5383,36 +5383,36 @@ function Oc() {
 }
 function ub(a, k, v) {
   if (a.type === "disabled")
-    return r(t, { children: [ut("inactive", v)(L.radioOff), " disabled"] });
+    return r(t, { children: [getThemeColor("inactive", v)(L.radioOff), " disabled"] });
   if (a.type === "connected") {
     if (a.discoveryBearerRejected)
       return r(t, {
         children: [
-          e(et, { status: "warning", withSpace: !0 }),
+          e(StatusIndicator, { status: "warning", withSpace: !0 }),
           "connected \xB7 session token rejected",
         ],
       });
     if (a.toolsListError)
       return r(t, {
         children: [
-          e(et, { status: "warning", withSpace: !0 }),
+          e(StatusIndicator, { status: "warning", withSpace: !0 }),
           "connected \xB7 tools fetch failed",
         ],
       });
     if (a.capabilities?.tools && k === 0)
       return r(t, {
         children: [
-          e(et, { status: "warning", withSpace: !0 }),
+          e(StatusIndicator, { status: "warning", withSpace: !0 }),
           "connected \xB7 no tools",
         ],
       });
     return r(t, {
-      children: [e(et, { status: "success", withSpace: !0 }), "connected"],
+      children: [e(StatusIndicator, { status: "success", withSpace: !0 }), "connected"],
     });
   }
   if (a.type === "cached") {
     let b = oye(a.cacheSavedAt, k);
-    return r(t, { children: [ut(b.tone, v)(b.glyph), " ", b.statusText] });
+    return r(t, { children: [getThemeColor(b.tone, v)(b.glyph), " ", b.statusText] });
   }
   if (a.type === "pending")
     return r(t, {
@@ -5424,7 +5424,7 @@ function ub(a, k, v) {
   if (a.type === "needs-auth")
     return r(t, {
       children: [
-        ut("warning", v)(L.triangleUpOutline),
+        getThemeColor("warning", v)(L.triangleUpOutline),
         " needs authentication",
       ],
     });
@@ -5437,7 +5437,7 @@ function ub(a, k, v) {
     });
   return r(t, {
     children: [
-      e(et, { status: "error", withSpace: !0 }),
+      e(StatusIndicator, { status: "error", withSpace: !0 }),
       a.errorCode === "INVALID_CONFIG" ? "config issue" : "failed",
     ],
   });
@@ -5457,7 +5457,7 @@ function sye(bo) {
   let wm = ib,
     rb;
   if (Si[3] !== wm)
-    ((rb = () => (wm ? TF().catch(db) : null)), (Si[3] = wm), (Si[4] = rb));
+    ((rb = () => (wm ? hasFirstPartyDesignAuth().catch(db) : null)), (Si[3] = wm), (Si[4] = rb));
   else rb = Si[4];
   let [Cm] = d(rb);
   const Pm = bo.borderless ? 1 : 0,
@@ -5467,9 +5467,9 @@ function sye(bo) {
   else ab = Si[6];
   const Im = `${ab} MCP Server`;
   let lb, sb;
-  if (Si[7] === p)
-    ((lb = e(ue, {
-      children: e(je, {
+  if (Si[7] === MEMO_CACHE_SENTINEL)
+    ((lb = e(DotSeparatedList, {
+      children: e(ActionKeybindingHint, {
         action: "confirm:no",
         context: "Confirmation",
         fallback: "Esc",
@@ -5534,8 +5534,8 @@ function Rm({
     ),
     j = d_(),
     [q] = cn();
-  is();
-  let { columns: X } = Se(),
+  useGlobalExitKeybinding();
+  let { columns: X } = useTerminalSize(),
     [B, K] = d(!1),
     [se, fe] = d(null),
     Fe = U((te) => te.mcp),
@@ -5548,7 +5548,7 @@ function Rm({
     [Lt, We] = d(!1),
     [nt, at] = d(!1),
     Be = xe || Re || (nt ? jV() : null),
-    { copiedVia: Ct, copy: pe } = e9(Be),
+    { copiedVia: Ct, copy: pe } = useCopyToClipboard(Be),
     [tn, Rt] = d(""),
     [sn, St] = d(0),
     [Wt, Ut] = d(null);
@@ -5565,7 +5565,7 @@ function Rm({
       try {
         let te = await yt(a.name, { discardDiscovery: !1 }),
           Ee = te.client.type === "connected";
-        if ((i("tengu_claudeai_mcp_auth_completed", { success: Ee }), Ee))
+        if ((logEvent("tengu_claudeai_mcp_auth_completed", { success: Ee }), Ee))
           I(`Authentication successful. Connected to ${gr(a.name)}.`);
         else if (te.client.type === "needs-auth")
           I(
@@ -5573,7 +5573,7 @@ function Rm({
           );
         else {
           let me = te.client.type === "failed" ? iOt(te.client) : "";
-          if (lo(j)) {
+          if (mayHaveRemoteClient(j)) {
             if (me)
               n(`mcp reconnect failed for ${Qn(a.name)}: ${me}`, {
                 level: "error",
@@ -5591,8 +5591,8 @@ function Rm({
           }
         }
       } catch (te) {
-        (i("tengu_claudeai_mcp_auth_completed", { success: !1 }),
-          I(Kit(te, a.name, { persistsOffBox: lo(j) })));
+        (logEvent("tengu_claudeai_mcp_auth_completed", { success: !1 }),
+          I(Kit(te, a.name, { persistsOffBox: mayHaveRemoteClient(j) })));
       } finally {
         pt(!1);
       }
@@ -5619,26 +5619,26 @@ function Rm({
             },
           };
         }),
-        i("tengu_claudeai_mcp_clear_auth_completed", {}),
+        logEvent("tengu_claudeai_mcp_clear_auth_completed", {}),
         I(`Disconnected from ${gr(a.name)}.`),
         We(!1),
         at(!1));
     }, [a.name, a.config, a.scope, ze, I]);
-  (Ne(
+  (useKeybinding(
     "confirm:no",
     () => {
       (xt.current?.abort(), (xt.current = null), K(!1), we(null));
     },
     { context: "Confirmation", isActive: B },
   ),
-    Ne(
+    useKeybinding(
       "confirm:no",
       () => {
         (ae(!1), Mt(null));
       },
       { context: "Confirmation", isActive: Je },
     ),
-    Ne(
+    useKeybinding(
       "confirm:no",
       () => {
         (We(!1), at(!1));
@@ -5653,7 +5653,7 @@ function Rm({
         return;
       }
       if (nt) fn();
-      else (at(!0), Gr(jV()));
+      else (at(!0), tryOpenUrlInBrowser(jV()));
     }
     if (te.key === "c" && !te.ctrl && !te.meta && Be)
       (te.preventDefault(), pe(Be));
@@ -5677,26 +5677,26 @@ function Rm({
       if (Cn()) return;
       let te =
         (a.config.type === "claudeai-proxy" ? fY(a.config) : null) ?? jV();
-      (Mt(te), ae(!0), i("tengu_claudeai_mcp_auth_started", {}), await Gr(te));
+      (Mt(te), ae(!0), logEvent("tengu_claudeai_mcp_auth_started", {}), await tryOpenUrlInBrowser(te));
     }, [a.config, Cn]),
     Ve = re(() => {
-      (We(!0), i("tengu_claudeai_mcp_clear_auth_started", {}));
+      (We(!0), logEvent("tengu_claudeai_mcp_clear_auth_started", {}));
     }, []),
     ne = re(async () => {
       let te = a.client.type !== "disabled";
       try {
         if ((await Gt(a.name), a.config.type === "claudeai-proxy"))
-          i("tengu_claudeai_mcp_toggle", {
+          logEvent("tengu_claudeai_mcp_toggle", {
             new_state: S(te ? "disabled" : "enabled"),
           });
         b();
       } catch (Ee) {
-        I(YZ(Ee, a.name, te ? "disable" : "enable", { persistsOffBox: lo(j) }));
+        I(YZ(Ee, a.name, te ? "disable" : "enable", { persistsOffBox: mayHaveRemoteClient(j) }));
       }
     }, [a.client.type, a.config.type, a.name, Gt, b, I, j]),
     Ce = re(async () => {
       if (Cn()) return;
-      let te = sI(a.name, { ...a.config, scope: a.scope });
+      let te = classifyMcpServerAuth(a.name, { ...a.config, scope: a.scope });
       if (te.kind === "anthropic-hosted") {
         fe(te.message);
         return;
@@ -5714,7 +5714,7 @@ function Rm({
             Ut(() => wt);
           },
         }),
-          i("tengu_mcp_auth_config_authenticate", {
+          logEvent("tengu_mcp_auth_config_authenticate", {
             wasAuthenticated: a.isAuthenticated,
           }));
         let Ge = await yt(a.name, { discardDiscovery: !1 });
@@ -5731,7 +5731,7 @@ function Rm({
         else {
           logMCPDebug(a.name, "Reconnection failed after authentication");
           let wt = Ge.client.type === "failed" ? iOt(Ge.client) : "";
-          if (lo(j)) {
+          if (mayHaveRemoteClient(j)) {
             if (wt)
               n(`mcp post-auth reconnect failed for ${Qn(a.name)}: ${wt}`, {
                 level: "error",
@@ -5762,7 +5762,7 @@ function Rm({
       if (a.config.type === "claudeai-proxy") return;
       if (a.config) {
         (await Yr().revokeServerTokens(a.name, a.config),
-          i("tengu_mcp_auth_config_clear", {}));
+          logEvent("tengu_mcp_auth_config_clear", {}));
         let te = { ...a.config, scope: a.scope },
           Ee = ir();
         if (AE())
@@ -5826,10 +5826,10 @@ function Rm({
                       " ",
                     ],
                   }),
-                  e(YL, { via: Ct }),
+                  e(CopyFeedbackHint, { via: Ct }),
                 ],
               }),
-              e(JL, { via: Ct }),
+              e(CopyFallbackNotice, { via: Ct }),
               e(ct, { url: xe, assumeSupport: !0 }),
             ],
           }),
@@ -5869,7 +5869,7 @@ function Rm({
             children: [
               "Return here after authenticating in your browser. Press",
               " ",
-              e(D, { chord: "escape", action: "go back" }),
+              e(KeybindingHint, { chord: "escape", action: "go back" }),
               ".",
             ],
           }),
@@ -5911,10 +5911,10 @@ function Rm({
                       " ",
                     ],
                   }),
-                  e(YL, { via: Ct }),
+                  e(CopyFeedbackHint, { via: Ct }),
                 ],
               }),
-              e(JL, { via: Ct }),
+              e(CopyFallbackNotice, { via: Ct }),
               e(ct, { url: Re, assumeSupport: !0 }),
             ],
           }),
@@ -5933,7 +5933,7 @@ function Rm({
             e(t, {
               dimColor: !0,
               italic: !0,
-              children: e(je, {
+              children: e(ActionKeybindingHint, {
                 action: "confirm:no",
                 context: "Confirmation",
                 fallback: "Esc",
@@ -5976,10 +5976,10 @@ function Rm({
                             " ",
                           ],
                         }),
-                        e(YL, { via: Ct }),
+                        e(CopyFeedbackHint, { via: Ct }),
                       ],
                     }),
-                    e(JL, { via: Ct }),
+                    e(CopyFallbackNotice, { via: Ct }),
                     e(ct, { url: jV() }),
                   ],
                 }),
@@ -5998,7 +5998,7 @@ function Rm({
                     e(t, {
                       dimColor: !0,
                       italic: !0,
-                      children: e(je, {
+                      children: e(ActionKeybindingHint, {
                         action: "confirm:no",
                         context: "Confirmation",
                         fallback: "Esc",
@@ -6024,7 +6024,7 @@ function Rm({
                       children: [
                         "Press",
                         " ",
-                        e(D, {
+                        e(KeybindingHint, {
                           chord: "enter",
                           action: "open the browser",
                           bold: !0,
@@ -6035,7 +6035,7 @@ function Rm({
                     e(t, {
                       dimColor: !0,
                       italic: !0,
-                      children: e(je, {
+                      children: e(ActionKeybindingHint, {
                         action: "confirm:no",
                         context: "Confirmation",
                         fallback: "Esc",
@@ -6115,11 +6115,11 @@ function Rm({
       title: `${Xn} MCP Server`,
       onCancel: b,
       hideBorder: R,
-      inputGuide: r(ue, {
+      inputGuide: r(DotSeparatedList, {
         children: [
-          e(D, { chord: ["up", "down"], action: "navigate" }),
-          e(D, { chord: "enter", action: "select" }),
-          e(je, {
+          e(KeybindingHint, { chord: ["up", "down"], action: "navigate" }),
+          e(KeybindingHint, { chord: "enter", action: "select" }),
+          e(ActionKeybindingHint, {
             action: "confirm:no",
             context: "Confirmation",
             fallback: "Esc",
@@ -6161,13 +6161,13 @@ function Rm({
                       zn
                         ? r(t, {
                             children: [
-                              e(et, { status: "success", withSpace: !0 }),
+                              e(StatusIndicator, { status: "success", withSpace: !0 }),
                               "authenticated",
                             ],
                           })
                         : r(t, {
                             children: [
-                              e(et, { status: "error", withSpace: !0 }),
+                              e(StatusIndicator, { status: "error", withSpace: !0 }),
                               "not authenticated",
                             ],
                           }),
@@ -6247,7 +6247,7 @@ function Rm({
               }),
           ],
         }),
-        se && e(o, { children: e(Ur, { error: se }) }),
+        se && e(o, { children: e(ErrorMessage, { error: se }) }),
         Oe.length > 0 &&
           e(o, {
             children: e(ve, {
@@ -6287,20 +6287,20 @@ function Rm({
                     try {
                       let Ee = await yt(a.name);
                       if (a.config.type === "claudeai-proxy")
-                        i("tengu_claudeai_mcp_reconnect", {
+                        logEvent("tengu_claudeai_mcp_reconnect", {
                           success: Ee.client.type === "connected",
                         });
                       let { message: me } = aOt(
                         Ee,
                         a.name,
-                        { persistsOffBox: lo(j) },
+                        { persistsOffBox: mayHaveRemoteClient(j) },
                         { hasHeadersHelper: _t },
                       );
                       I(me);
                     } catch (Ee) {
                       if (a.config.type === "claudeai-proxy")
-                        i("tengu_claudeai_mcp_reconnect", { success: !1 });
-                      I(Kit(Ee, a.name, { persistsOffBox: lo(j) }));
+                        logEvent("tengu_claudeai_mcp_reconnect", { success: !1 });
+                      I(Kit(Ee, a.name, { persistsOffBox: mayHaveRemoteClient(j) }));
                     } finally {
                       pt(!1);
                     }
@@ -6323,35 +6323,35 @@ function Rm({
 F();
 function pb(a, k, v) {
   if (a.type === "disabled")
-    return r(t, { children: [ut("inactive", v)(L.radioOff), " disabled"] });
+    return r(t, { children: [getThemeColor("inactive", v)(L.radioOff), " disabled"] });
   if (a.type === "connected") {
     if (a.toolsListError)
       return r(t, {
         children: [
-          e(et, { status: "warning", withSpace: !0 }),
+          e(StatusIndicator, { status: "warning", withSpace: !0 }),
           "connected \xB7 tools fetch failed",
         ],
       });
     if (a.capabilities?.tools && k === 0)
       return r(t, {
         children: [
-          e(et, { status: "warning", withSpace: !0 }),
+          e(StatusIndicator, { status: "warning", withSpace: !0 }),
           "connected \xB7 no tools",
         ],
       });
     return r(t, {
-      children: [e(et, { status: "success", withSpace: !0 }), "connected"],
+      children: [e(StatusIndicator, { status: "success", withSpace: !0 }), "connected"],
     });
   }
   if (a.type === "pending")
     return r(t, {
       children: [
-        e(et, { status: "pending", withSpace: !0 }),
+        e(StatusIndicator, { status: "pending", withSpace: !0 }),
         "connecting\u2026",
       ],
     });
   return r(t, {
-    children: [e(et, { status: "error", withSpace: !0 }), "failed"],
+    children: [e(StatusIndicator, { status: "error", withSpace: !0 }), "failed"],
   });
 }
 function sit({
@@ -6377,7 +6377,7 @@ function sit({
       try {
         (await X(a.name), b());
       } catch (we) {
-        A(YZ(we, a.name, xe ? "disable" : "enable", { persistsOffBox: lo(Q) }));
+        A(YZ(we, a.name, xe ? "disable" : "enable", { persistsOffBox: mayHaveRemoteClient(Q) }));
       }
     }, [a.client.type, a.name, X, b, A, Q]),
     fe = Wf(String(a.name)),
@@ -6417,11 +6417,11 @@ function sit({
     title: `${fe} MCP Server`,
     onCancel: b,
     hideBorder: R,
-    inputGuide: r(ue, {
+    inputGuide: r(DotSeparatedList, {
       children: [
-        e(D, { chord: ["up", "down"], action: "navigate" }),
-        e(D, { chord: "enter", action: "select" }),
-        e(je, {
+        e(KeybindingHint, { chord: ["up", "down"], action: "navigate" }),
+        e(KeybindingHint, { chord: "enter", action: "select" }),
+        e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Confirmation",
           fallback: "Esc",
@@ -6511,10 +6511,10 @@ function sit({
               K(!0);
               try {
                 let we = await q(a.name),
-                  { message: tt } = aOt(we, a.name, { persistsOffBox: lo(Q) });
+                  { message: tt } = aOt(we, a.name, { persistsOffBox: mayHaveRemoteClient(Q) });
                 A?.(tt);
               } catch (we) {
-                A?.(Kit(we, a.name, { persistsOffBox: lo(Q) }));
+                A?.(Kit(we, a.name, { persistsOffBox: mayHaveRemoteClient(Q) }));
               } finally {
                 K(!1);
               }
@@ -6621,8 +6621,8 @@ function sWe(v$) {
   else xb = Kn[23];
   let Lm = xb,
     Sb;
-  if (Kn[24] === p)
-    ((Sb = e(je, {
+  if (Kn[24] === MEMO_CACHE_SENTINEL)
+    ((Sb = e(ActionKeybindingHint, {
       action: "confirm:no",
       context: "Confirmation",
       fallback: "Esc",
@@ -6631,7 +6631,7 @@ function sWe(v$) {
       (Kn[24] = Sb));
   else Sb = Kn[24];
   let vb;
-  if (Kn[25] === p)
+  if (Kn[25] === MEMO_CACHE_SENTINEL)
     ((vb = e(t, { bold: !0, children: "Tool name: " })), (Kn[25] = vb));
   else vb = Kn[25];
   let Fc;
@@ -6641,7 +6641,7 @@ function sWe(v$) {
       (Kn[27] = Fc));
   else Fc = Kn[27];
   let wb;
-  if (Kn[28] === p)
+  if (Kn[28] === MEMO_CACHE_SENTINEL)
     ((wb = e(t, { bold: !0, children: "Full name: " })), (Kn[28] = wb));
   else wb = Kn[28];
   let Uc;
@@ -6694,7 +6694,7 @@ function sWe(v$) {
                 let [_m, vi] = Xr;
                 let P$ = Ft.inputJSONSchema?.required?.includes(_m);
                 return r(
-                  lu,
+                  BulletItem,
                   {
                     children: [
                       _m,
@@ -6773,7 +6773,7 @@ function iWe(q$) {
   bb0: {
     if (!ts(Yo.client)) {
       let Ci;
-      if (wi[0] === p) ((Ci = []), (wi[0] = Ci));
+      if (wi[0] === MEMO_CACHE_SENTINEL) ((Ci = []), (wi[0] = Ci));
       else Ci = wi[0];
       Km = Ci;
       break bb0;
@@ -6788,7 +6788,7 @@ function iWe(q$) {
     Km = Ci;
   }
   let po = Km,
-    Ya = G(po, Bb),
+    Ya = countMatching(po, Bb),
     Ci;
   if (wi[4] !== Yo.name || wi[5] !== po) {
     let Ja;
@@ -6843,12 +6843,12 @@ function iWe(q$) {
   let zm = Ja;
   const Wm = `Tools for ${Yo.name}`;
   let Rb;
-  if (wi[13] === p)
-    ((Rb = r(ue, {
+  if (wi[13] === MEMO_CACHE_SENTINEL)
+    ((Rb = r(DotSeparatedList, {
       children: [
-        e(D, { chord: ["up", "down"], action: "navigate" }),
-        e(D, { chord: "enter", action: "select" }),
-        e(je, {
+        e(KeybindingHint, { chord: ["up", "down"], action: "navigate" }),
+        e(KeybindingHint, { chord: "enter", action: "select" }),
+        e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Confirmation",
           fallback: "Esc",
@@ -6862,7 +6862,7 @@ function iWe(q$) {
   if (wi[14] !== Zr || wi[15] !== Vm || wi[16] !== po || wi[17] !== qm)
     ((Kc =
       po.length === 0
-        ? e(Rn, { children: "No tools available" })
+        ? e(EmptyStateMessage, { children: "No tools available" })
         : e(ve, {
             options: qm,
             onChange: (J$) => {
@@ -6925,7 +6925,7 @@ async function Lb(a) {
   }
 }
 function Gm() {
-  let { credentials: a } = _e(),
+  let { credentials: a } = useStorageV5Context(),
     [k, v] = d(null);
   return (
     E(() => {
@@ -6946,7 +6946,7 @@ import { readFile as _b } from "fs/promises";
 import { join as Fb, resolve, sep as Ub } from "path";
 async function Jm(a, k) {
   let v = Fb(k.path, "..", ".claude-plugin", "marketplace.json");
-  if (M() && a !== void 0 && (await Vb(a, k))) {
+  if (isHoverRestEnabled() && a !== void 0 && (await Vb(a, k))) {
     let b = await q4e(a, "workspace", v);
     if ("absent" in b) throw Omt(v);
     return b.text;
@@ -7272,7 +7272,7 @@ function Qc(jD) {
       (tr[8] = nr));
   else nr = tr[8];
   let qb, zb;
-  if (tr[9] === p)
+  if (tr[9] === MEMO_CACHE_SENTINEL)
     ((qb = e(t, { bold: !0, children: "Skill-listing footprint" })),
       (zb = e(t, {
         dimColor: !0,
@@ -7354,7 +7354,7 @@ function Wc(WD) {
   let xo = Gb,
     Qb,
     Yb;
-  if (rg[3] === p)
+  if (rg[3] === MEMO_CACHE_SENTINEL)
     ((Qb = e(t, { bold: !0, children: "Activity" })),
       (Yb = e(t, {
         dimColor: !0,
@@ -7429,7 +7429,7 @@ function Jc(lB) {
     let Do;
     if (be.pendingToggle) {
       if ($e[0] !== be.pendingToggle || $e[1] !== mt)
-        (($o = ut("suggestion", mt)(L.arrowRight)),
+        (($o = getThemeColor("suggestion", mt)(L.arrowRight)),
           (Do =
             be.pendingToggle === "will-enable"
               ? "will enable"
@@ -7441,7 +7441,7 @@ function Jc(lB) {
       else (($o = $e[2]), (Do = $e[3]));
     } else if (be.errorCount > 0) {
       if ($e[4] !== be.errorCount || $e[5] !== mt)
-        (($o = ut("error", mt)(L.cross)),
+        (($o = getThemeColor("error", mt)(L.cross)),
           (Do = `${be.errorCount} ${x(be.errorCount, "error")}`),
           ($e[4] = be.errorCount),
           ($e[5] = mt),
@@ -7450,14 +7450,14 @@ function Jc(lB) {
       else (($o = $e[6]), (Do = $e[7]));
     } else if (!be.isEnabled) {
       if ($e[8] !== mt)
-        (($o = ut("inactive", mt)(L.radioOff)),
+        (($o = getThemeColor("inactive", mt)(L.radioOff)),
           (Do = "disabled"),
           ($e[8] = mt),
           ($e[9] = $o),
           ($e[10] = Do));
       else (($o = $e[9]), (Do = $e[10]));
     } else if ($e[11] !== mt)
-      (($o = ut("success", mt)(L.tick)),
+      (($o = getThemeColor("success", mt)(L.tick)),
         (Do = "enabled"),
         ($e[11] = mt),
         ($e[12] = $o),
@@ -7476,15 +7476,15 @@ function Jc(lB) {
     else on = $e[18];
     let gn;
     if ($e[19] !== Yc || $e[20] !== mt)
-      ((gn = Yc && r(t, { children: [" ", ut(mg[Yc], mt)(L.bullet)] })),
+      ((gn = Yc && r(t, { children: [" ", getThemeColor(mg[Yc], mt)(L.bullet)] })),
         ($e[19] = Yc),
         ($e[20] = mt),
         ($e[21] = gn));
     else gn = $e[21];
     const vn = !lt;
     let wn;
-    if ($e[22] === p)
-      ((wn = e(Gc, {
+    if ($e[22] === MEMO_CACHE_SENTINEL)
+      ((wn = e(BackgroundText, {
         color: "userMessageBackground",
         textColor: "text",
         children: "Plugin",
@@ -7593,7 +7593,7 @@ function Jc(lB) {
   if (be.type === "flagged-plugin") {
     let Ln;
     if ($e[49] !== mt)
-      ((Ln = ut("warning", mt)(L.warning)), ($e[49] = mt), ($e[50] = Ln));
+      ((Ln = getThemeColor("warning", mt)(L.warning)), ($e[49] = mt), ($e[50] = Ln));
     else Ln = $e[50];
     let lg = Ln;
     const mn = lt ? "suggestion" : void 0;
@@ -7606,8 +7606,8 @@ function Jc(lB) {
     else on = $e[53];
     const gn = !lt;
     let vn;
-    if ($e[54] === p)
-      ((vn = e(Gc, {
+    if ($e[54] === MEMO_CACHE_SENTINEL)
+      ((vn = e(BackgroundText, {
         color: "userMessageBackground",
         textColor: "text",
         children: "Plugin",
@@ -7669,7 +7669,7 @@ function Jc(lB) {
   if (be.type === "failed-plugin") {
     let Ln;
     if ($e[73] !== mt)
-      ((Ln = ut("error", mt)(L.cross)), ($e[73] = mt), ($e[74] = Ln));
+      ((Ln = getThemeColor("error", mt)(L.cross)), ($e[73] = mt), ($e[74] = Ln));
     else Ln = $e[74];
     let sg = Ln;
     const mn = be.errorCount;
@@ -7690,8 +7690,8 @@ function Jc(lB) {
     else vn = $e[79];
     const wn = !lt;
     let jt;
-    if ($e[80] === p)
-      ((jt = e(Gc, {
+    if ($e[80] === MEMO_CACHE_SENTINEL)
+      ((jt = e(BackgroundText, {
         color: "userMessageBackground",
         textColor: "text",
         children: "Plugin",
@@ -7755,7 +7755,7 @@ function Jc(lB) {
     let Bo = gg[be.override];
     let Ln;
     if ($e[100] !== Bo.color || $e[101] !== Bo.glyph || $e[102] !== mt)
-      ((Ln = Bo.color ? ut(Bo.color, mt)(Bo.glyph) : Bo.glyph),
+      ((Ln = Bo.color ? getThemeColor(Bo.color, mt)(Bo.glyph) : Bo.glyph),
         ($e[100] = Bo.color),
         ($e[101] = Bo.glyph),
         ($e[102] = mt),
@@ -7772,8 +7772,8 @@ function Jc(lB) {
     else on = $e[106];
     const gn = !lt;
     let vn;
-    if ($e[107] === p)
-      ((vn = e(Gc, {
+    if ($e[107] === MEMO_CACHE_SENTINEL)
+      ((vn = e(BackgroundText, {
         color: "userMessageBackground",
         textColor: "text",
         children: "Skill",
@@ -7871,7 +7871,7 @@ function Jc(lB) {
   let _n, Fn;
   if (be.status === "connected") {
     if ($e[134] !== mt)
-      ((_n = ut("success", mt)(L.tick)),
+      ((_n = getThemeColor("success", mt)(L.tick)),
         (Fn = "connected"),
         ($e[134] = mt),
         ($e[135] = _n),
@@ -7880,7 +7880,7 @@ function Jc(lB) {
   } else if (be.status === "cached" && be.client.type === "cached") {
     if ($e[137] !== be.client.cacheSavedAt || $e[138] !== mt) {
       let dg = oye(be.client.cacheSavedAt);
-      ((_n = ut(dg.tone, mt)(dg.glyph)), (Fn = dg.statusText));
+      ((_n = getThemeColor(dg.tone, mt)(dg.glyph)), (Fn = dg.statusText));
       (($e[137] = be.client.cacheSavedAt),
         ($e[138] = mt),
         ($e[139] = _n),
@@ -7888,7 +7888,7 @@ function Jc(lB) {
     } else ((_n = $e[139]), (Fn = $e[140]));
   } else if (be.status === "disabled") {
     if ($e[141] !== mt)
-      ((_n = ut("inactive", mt)(L.radioOff)),
+      ((_n = getThemeColor("inactive", mt)(L.radioOff)),
         (Fn = "disabled"),
         ($e[141] = mt),
         ($e[142] = _n),
@@ -7896,7 +7896,7 @@ function Jc(lB) {
     else ((_n = $e[142]), (Fn = $e[143]));
   } else if (be.status === "pending") {
     if ($e[144] !== mt)
-      ((_n = ut("inactive", mt)(L.radioOff)),
+      ((_n = getThemeColor("inactive", mt)(L.radioOff)),
         (Fn = "connecting\u2026"),
         ($e[144] = mt),
         ($e[145] = _n),
@@ -7904,8 +7904,8 @@ function Jc(lB) {
     else ((_n = $e[145]), (Fn = $e[146]));
   } else if (be.status === "needs-auth") {
     if ($e[147] !== mt)
-      ((_n = ut("warning", mt)(L.triangleUpOutline)),
-        (Fn = e(je, {
+      ((_n = getThemeColor("warning", mt)(L.triangleUpOutline)),
+        (Fn = e(ActionKeybindingHint, {
           action: "select:accept",
           context: "Select",
           fallback: "Enter",
@@ -7917,14 +7917,14 @@ function Jc(lB) {
     else ((_n = $e[148]), (Fn = $e[149]));
   } else if (be.status === "unconfigured") {
     if ($e[150] !== mt)
-      ((_n = ut("inactive", mt)(L.radioOff)),
+      ((_n = getThemeColor("inactive", mt)(L.radioOff)),
         (Fn = "not configured"),
         ($e[150] = mt),
         ($e[151] = _n),
         ($e[152] = Fn));
     else ((_n = $e[151]), (Fn = $e[152]));
   } else if ($e[153] !== mt)
-    ((_n = ut("error", mt)(L.cross)),
+    ((_n = getThemeColor("error", mt)(L.cross)),
       (Fn = "failed"),
       ($e[153] = mt),
       ($e[154] = _n),
@@ -7953,8 +7953,8 @@ function Jc(lB) {
     else gn = $e[160];
     const vn = !lt;
     let wn;
-    if ($e[161] === p)
-      ((wn = e(Gc, {
+    if ($e[161] === MEMO_CACHE_SENTINEL)
+      ((wn = e(BackgroundText, {
         color: "userMessageBackground",
         textColor: "text",
         children: "MCP",
@@ -8027,8 +8027,8 @@ function Jc(lB) {
   else mn = $e[185];
   const on = !lt;
   let gn;
-  if ($e[186] === p)
-    ((gn = e(Gc, {
+  if ($e[186] === MEMO_CACHE_SENTINEL)
+    ((gn = e(BackgroundText, {
       color: "userMessageBackground",
       textColor: "text",
       children: "MCP",
@@ -8193,8 +8193,8 @@ function kg(
     if (
       (A.push({
         kind: "disabled-header",
-        disabledCount: G(X, fg),
-        unusedConnectorCount: G(X, eu),
+        disabledCount: countMatching(X, fg),
+        unusedConnectorCount: countMatching(X, eu),
       }),
       b)
     )
@@ -8244,7 +8244,7 @@ function xg(a, k, v) {
 function kx(Sg) {
   let [dx, GA] = Sg;
   return e(
-    lu,
+    BulletItem,
     { children: r(t, { dimColor: !0, children: [dx, ": ", GA.join(", ")] }) },
     dx,
   );
@@ -8325,7 +8325,7 @@ function Tg(Sg) {
   else ((ax = ol[2]), (lx = ol[3]));
   if ((E(ax, lx), ru)) {
     let il;
-    if (ol[4] === p)
+    if (ol[4] === MEMO_CACHE_SENTINEL)
       ((il = e(t, { bold: !0, children: "Components:" })), (ol[4] = il));
     else il = ol[4];
     let ia;
@@ -8345,7 +8345,7 @@ function Tg(Sg) {
   }
   let il, ia;
   if (ol[7] !== iu) {
-    ia = en;
+    ia = EARLY_RETURN_SENTINEL;
     bb0: {
       let cx = qi(iu);
       if (cx.length === 0) {
@@ -8353,7 +8353,7 @@ function Tg(Sg) {
         break bb0;
       }
       let ux;
-      if (ol[10] === p)
+      if (ol[10] === MEMO_CACHE_SENTINEL)
         ((ux = e(t, { bold: !0, children: "Installed components:" })),
           (ol[10] = ux));
       else ux = ol[10];
@@ -8365,7 +8365,7 @@ function Tg(Sg) {
     }
     ((ol[7] = iu), (ol[8] = il), (ol[9] = ia));
   } else ((il = ol[8]), (ia = ol[9]));
-  if (ia !== en) return ia;
+  if (ia !== EARLY_RETURN_SENTINEL) return ia;
   return il;
 }
 async function gx(a, k, v) {
@@ -8443,7 +8443,7 @@ function pu({
   action: A,
   commands: Q,
 }) {
-  let { storageV5: I, credentials: j } = _e(),
+  let { storageV5: I, credentials: j } = useStorageV5Context(),
     q = U((T) => T.mcp.clients),
     X = U((T) => T.mcp.tools),
     B = U((T) => T.plugins.errors),
@@ -8454,7 +8454,7 @@ function pu({
     xe = () => ze(!1),
     we = Va(),
     tt = Ma(),
-    pt = Se(),
+    pt = useTerminalSize(),
     { columns: xt } = pt,
     { rows: Je } = ks(pt),
     [ae, Re] = d("plugin-list"),
@@ -8527,7 +8527,7 @@ function pu({
         a({ type: "menu" });
       }
     }, [ae, a, Ve, k, Ot]);
-  Ne("confirm:no", wt, {
+  useKeybinding("confirm:no", wt, {
     context: "Settings",
     isActive:
       (ae !== "plugin-list" || !Fe) &&
@@ -8569,7 +8569,7 @@ function pu({
           Un = B.filter((Vn) => !UJ(Vn) && z8(Vn, Pt, qe.plugin.name));
         for (let Vn of Un) oe.add(Vn);
         let An = qe.plugin.isBuiltin ? "builtin" : qe.scope || "user",
-          Ke = Q && SC() ? Xa(qe.plugin.manifest.name, Q) : void 0;
+          Ke = Q && isSkillDoctorEnabled() ? Xa(qe.plugin.manifest.name, Q) : void 0;
         le.push({
           item: {
             type: "plugin",
@@ -8833,7 +8833,7 @@ function pu({
   E(() => {
     let T = !1;
     return (
-      Ule().then((Z) => {
+      getDisusedPlugins().then((Z) => {
         if (T || Z.length === 0) return;
         Po(new Map(Z.map((oe) => [s9e(oe.pluginId), oe.daysSinceLastUse])));
       }),
@@ -8846,7 +8846,7 @@ function pu({
       (T, Z) => {
         if (Z === null || !Co.has(Z)) return;
         (logFeatureOk("cli_plugin_disuse_review"),
-          i("tengu_plugin_disuse_review_action", { action: fromEnum(T), ...xy(Z) }),
+          logEvent("tengu_plugin_disuse_review_action", { action: fromEnum(T), ...xy(Z) }),
           Po((oe) => {
             if (!oe.has(Z)) return oe;
             let le = new Map(oe);
@@ -8947,7 +8947,7 @@ function pu({
     let Z = !1;
     return (
       T(),
-      M() && I !== void 0
+      isHoverRestEnabled() && I !== void 0
         ? () => {
             Z = !0;
           }
@@ -8970,7 +8970,7 @@ function pu({
           let gt = [],
             Qe = _De();
           for (let [Ye, ot] of Object.entries(He)) {
-            let eo = G(ot, (Pn) => {
+            let eo = countMatching(ot, (Pn) => {
                 let $l = s9e(Pn.source);
                 return p0e($l, Pn.manifest, Qe);
               }),
@@ -9334,7 +9334,7 @@ function pu({
       else if (Z.type === "skill")
         (Re({ type: "skill-detail", skill: Z }), ie(null));
     }, [Zn, Mn, yt]);
-  Ze(
+  useKeybindings(
     {
       "select:previous": () => {
         let T = yr(Zn - 1, -1);
@@ -9355,7 +9355,7 @@ function pu({
     if (T?.kind !== "item") return !1;
     ((El.current = { section: T.section, id: T.item.id }), Tt(T.item.id));
   }, [Mn, Zn, Tt]);
-  Ze(
+  useKeybindings(
     { "plugin:toggle": oy, "plugin:favorite": ry },
     { context: "Plugin", isActive: ae === "plugin-list" && !Fe },
   );
@@ -9363,7 +9363,7 @@ function pu({
     if (typeof ae !== "object" || ae.type !== "flagged-detail") return;
     (oFn(ae.plugin.id, I), Re("plugin-list"));
   }, [ae, I]);
-  Ze(
+  useKeybindings(
     { "select:accept": ly },
     {
       context: "Select",
@@ -9466,10 +9466,10 @@ function pu({
         ce.push({ label: "Uninstall", action: () => void xa("uninstall") }));
     }
     let He = ttt(pe.plugin.manifest.homepage);
-    if (He) ce.push({ label: "Open homepage", action: () => void Gr(He) });
+    if (He) ce.push({ label: "Open homepage", action: () => void tryOpenUrlInBrowser(He) });
     let gt = ttt(pe.plugin.manifest.repository);
-    if (gt) ce.push({ label: "View repository", action: () => void Gr(gt) });
-    if (SC()) ce.push({ label: "Usage", action: () => Re("plugin-usage") });
+    if (gt) ce.push({ label: "View repository", action: () => void tryOpenUrlInBrowser(gt) });
+    if (isSkillDoctorEnabled()) ce.push({ label: "Usage", action: () => Re("plugin-usage") });
     return (
       ce.push({
         label: "Back to plugin list",
@@ -9480,7 +9480,7 @@ function pu({
       ce
     );
   }, [ae, pe, Id, yt, wo, Tt, I, fn]);
-  (Ze(
+  (useKeybindings(
     {
       "select:previous": () => {
         if (ui > 0) ha(ui - 1);
@@ -9494,7 +9494,7 @@ function pu({
     },
     { context: "Select", isActive: ae === "plugin-details" && !!pe },
   ),
-    Ze(
+    useKeybindings(
       {
         "select:accept": () => {
           if (typeof ae === "object" && ae.type === "failed-plugin-details")
@@ -9668,12 +9668,12 @@ function pu({
             paddingLeft: 2,
             children: e(t, { color: "success", children: kt }),
           }),
-        e(Rn, { children: "No plugins or MCP servers installed." }),
+        e(EmptyStateMessage, { children: "No plugins or MCP servers installed." }),
         e(o, {
           marginTop: 1,
           children: e(t, {
             dimColor: !0,
-            children: e(je, {
+            children: e(ActionKeybindingHint, {
               action: "confirm:no",
               context: "Settings",
               fallback: "Esc",
@@ -9834,15 +9834,15 @@ function pu({
             ],
           }),
         }),
-        r(ue, {
+        r(DotSeparatedList, {
           children: [
-            e(je, {
+            e(ActionKeybindingHint, {
               action: "select:accept",
               context: "Select",
               fallback: "Enter",
               description: "dismiss",
             }),
-            e(je, {
+            e(ActionKeybindingHint, {
               action: "confirm:no",
               context: "Settings",
               fallback: "Esc",
@@ -9855,7 +9855,7 @@ function pu({
   }
   if (ae === "plugin-usage" && pe) return e(Qc, { plugin: pe.plugin });
   if (ae === "confirm-project-uninstall" && pe)
-    return r(mr, {
+    return r(FocusableBox, {
       onKeyDown: sy,
       children: [
         r(t, {
@@ -9881,20 +9881,20 @@ function pu({
             }),
           ],
         }),
-        Oe && e(o, { marginTop: 1, children: e(Ur, { error: Oe }) }),
+        Oe && e(o, { marginTop: 1, children: e(ErrorMessage, { error: Oe }) }),
         e(o, {
           marginTop: 1,
           children: Ce
             ? e(t, { dimColor: !0, children: "Processing\u2026" })
-            : r(ue, {
+            : r(DotSeparatedList, {
                 children: [
-                  e(D, { chord: "y", action: "disable for me", bold: !0 }),
-                  e(D, {
+                  e(KeybindingHint, { chord: "y", action: "disable for me", bold: !0 }),
+                  e(KeybindingHint, {
                     chord: "u",
                     action: "uninstall for everyone",
                     bold: !0,
                   }),
-                  e(D, {
+                  e(KeybindingHint, {
                     chord: "escape",
                     action: "cancel",
                     bold: !0,
@@ -9906,7 +9906,7 @@ function pu({
       ],
     });
   if (typeof ae === "object" && ae.type === "confirm-data-cleanup" && pe)
-    return r(mr, {
+    return r(FocusableBox, {
       onKeyDown: cy,
       children: [
         r(t, {
@@ -9927,16 +9927,16 @@ function pu({
             e(t, { dimColor: !0, children: sve(Rt) }),
           ],
         }),
-        Oe && e(o, { marginTop: 1, children: e(Ur, { error: Oe }) }),
+        Oe && e(o, { marginTop: 1, children: e(ErrorMessage, { error: Oe }) }),
         e(o, {
           marginTop: 1,
           children: Ce
             ? e(t, { dimColor: !0, children: "Uninstalling\u2026" })
-            : r(ue, {
+            : r(DotSeparatedList, {
                 children: [
-                  e(D, { chord: "y", action: "delete", bold: !0 }),
-                  e(D, { chord: "n", action: "keep", bold: !0 }),
-                  e(D, {
+                  e(KeybindingHint, { chord: "y", action: "delete", bold: !0 }),
+                  e(KeybindingHint, { chord: "n", action: "keep", bold: !0 }),
+                  e(KeybindingHint, {
                     chord: "escape",
                     action: "cancel",
                     bold: !0,
@@ -9961,7 +9961,7 @@ function pu({
           guidance: qzt(Ae),
         })),
       ],
-      He = FBn(pe.plugin.repository),
+      He = getPluginDaysSinceLastUse(pe.plugin.repository),
       gt =
         le.length === 0 && ce.length === 0
           ? null
@@ -10068,27 +10068,27 @@ function pu({
             marginTop: 1,
             children: e(t, { children: "Processing\u2026" }),
           }),
-        Oe && e(o, { marginTop: 1, children: e(Ur, { error: Oe }) }),
+        Oe && e(o, { marginTop: 1, children: e(ErrorMessage, { error: Oe }) }),
         e(o, {
           marginTop: 1,
           children: e(t, {
             dimColor: !0,
             italic: !0,
-            children: r(ue, {
+            children: r(DotSeparatedList, {
               children: [
-                e(je, {
+                e(ActionKeybindingHint, {
                   action: "select:previous",
                   context: "Select",
                   fallback: "\u2191",
                   description: "navigate",
                 }),
-                e(je, {
+                e(ActionKeybindingHint, {
                   action: "select:accept",
                   context: "Select",
                   fallback: "Enter",
                   description: "select",
                 }),
-                e(je, {
+                e(ActionKeybindingHint, {
                   action: "confirm:no",
                   context: "Settings",
                   fallback: "Esc",
@@ -10140,7 +10140,7 @@ function pu({
                 ],
               }),
         Ce && e(t, { children: "Processing\u2026" }),
-        e(Ur, { error: Oe }),
+        e(ErrorMessage, { error: Oe }),
         Ul(T.marketplace) &&
           e(o, {
             marginTop: 1,
@@ -10151,17 +10151,17 @@ function pu({
           children: e(t, {
             dimColor: !0,
             italic: !0,
-            children: r(ue, {
+            children: r(DotSeparatedList, {
               children: [
                 T.scope !== "managed" &&
                   !Ul(T.marketplace) &&
-                  e(je, {
+                  e(ActionKeybindingHint, {
                     action: "select:accept",
                     context: "Select",
                     fallback: "Enter",
                     description: "remove",
                   }),
-                e(je, {
+                e(ActionKeybindingHint, {
                   action: "confirm:no",
                   context: "Settings",
                   fallback: "Esc",
@@ -10294,11 +10294,11 @@ function pu({
                 ),
               ],
             }),
-        r(ue, {
+        r(DotSeparatedList, {
           children: [
-            e(D, { chord: "Enter", action: "set state" }),
+            e(KeybindingHint, { chord: "Enter", action: "set state" }),
             e(t, { dimColor: !0, children: " \xB7 " }),
-            e(D, { chord: "Esc", action: "go back" }),
+            e(KeybindingHint, { chord: "Esc", action: "go back" }),
           ],
         }),
       ],
@@ -10395,8 +10395,8 @@ function pu({
           color: "warning",
           children: ["No details view for ", T.name, " (transport: ", gt, ")."],
         }),
-        e(ue, {
-          children: e(je, {
+        e(DotSeparatedList, {
+          children: e(ActionKeybindingHint, {
             action: "confirm:no",
             context: "Settings",
             fallback: "Esc",
@@ -10544,7 +10544,7 @@ function pu({
         Mt &&
         e(o, {
           marginBottom: 1,
-          children: r(Rn, { children: ['No items match "', Mt, '"'] }),
+          children: r(EmptyStateMessage, { children: ['No items match "', Mt, '"'] }),
         }),
       Oi.scrollPosition.canScrollUp &&
         e(o, {
@@ -10659,28 +10659,28 @@ function pu({
         children: e(t, {
           dimColor: !0,
           italic: !0,
-          children: r(ue, {
+          children: r(DotSeparatedList, {
             children: [
               e(t, { children: "Type to search" }),
-              e(je, {
+              e(ActionKeybindingHint, {
                 action: "plugin:toggle",
                 context: "Plugin",
                 fallback: "Space",
                 description: "toggle",
               }),
-              e(je, {
+              e(ActionKeybindingHint, {
                 action: "plugin:favorite",
                 context: "Plugin",
                 fallback: "f",
                 description: "favorite",
               }),
-              e(je, {
+              e(ActionKeybindingHint, {
                 action: "select:accept",
                 context: "Select",
                 fallback: "Enter",
                 description: "view",
               }),
-              e(je, {
+              e(ActionKeybindingHint, {
                 action: "confirm:no",
                 context: "Settings",
                 fallback: "Esc",
@@ -10691,7 +10691,7 @@ function pu({
         }),
       }),
       Oe &&
-        e(o, { marginTop: 1, marginLeft: 1, children: e(Ur, { error: Oe }) }),
+        e(o, { marginTop: 1, marginLeft: 1, children: e(ErrorMessage, { error: Oe }) }),
       Ve.size > 0 &&
         e(o, {
           marginLeft: 1,
@@ -10759,7 +10759,7 @@ function mu(a) {
     case "manage":
       return { type: "manage" };
     case "stats": {
-      if (SC()) return { type: "stats" };
+      if (isSkillDoctorEnabled()) return { type: "stats" };
       return { type: "menu" };
     }
     case "uninstall":
@@ -10866,11 +10866,11 @@ function kl(h0) {
   let [Rg] = d(bx),
     [b0] = d(i3e),
     Sx;
-  if (ra[2] === p) ((Sx = { context: "Confirmation" }), (ra[2] = Sx));
+  if (ra[2] === MEMO_CACHE_SENTINEL) ((Sx = { context: "Confirmation" }), (ra[2] = Sx));
   else Sx = ra[2];
-  Ne("confirm:no", k0, Sx);
+  useKeybinding("confirm:no", k0, Sx);
   let vx;
-  if (ra[3] === p)
+  if (ra[3] === MEMO_CACHE_SENTINEL)
     ((vx = e(t, { bold: !0, children: "Skills loaded this session" })),
       (ra[3] = vx));
   else vx = ra[3];
@@ -10935,7 +10935,7 @@ function Du(x0) {
       weekTokensNote: yu,
     } = ll.report,
     sl;
-  if (rr[2] === p)
+  if (rr[2] === MEMO_CACHE_SENTINEL)
     ((sl = e(t, { bold: !0, children: "Skills loaded this session" })),
       (rr[2] = sl));
   else sl = rr[2];
@@ -11038,7 +11038,7 @@ function Bu(v0) {
     { rows: cl } = v0;
   if (cl.length === 0) {
     let ul;
-    if (Su[0] === p)
+    if (Su[0] === MEMO_CACHE_SENTINEL)
       ((ul = e(t, { dimColor: !0, children: "  (no skills loaded)" })),
         (Su[0] = ul));
     else ul = Su[0];
@@ -11105,7 +11105,7 @@ function Au(E0) {
     sr[2] !== ar.length ||
     sr[3] !== Ri.length
   ) {
-    let Ex = Y(aa.map(Ax));
+    let Ex = dedupe(aa.map(Ax));
     let cr;
     if (sr[12] !== lr)
       ((cr = lr.length > 0 ? `, from ${lr.join(", ")}` : ""),
@@ -11227,7 +11227,7 @@ function Ou(D0) {
     return null;
   }
   let $x;
-  if (hl[0] === p)
+  if (hl[0] === MEMO_CACHE_SENTINEL)
     (($x = e(t, { bold: !0, children: "Plugins not used recently" })),
       (hl[0] = $x));
   else $x = hl[0];
@@ -11241,7 +11241,7 @@ function Ou(D0) {
       (hl[4] = $u));
   else $u = hl[4];
   let Dx;
-  if (hl[5] === p)
+  if (hl[5] === MEMO_CACHE_SENTINEL)
     ((Dx = e(o, {
       marginTop: 1,
       children: r(t, {
@@ -11384,7 +11384,7 @@ ${bl}`,
   else ((_x = Lx[6]), (Fx = Lx[7]));
   E(_x, Fx);
   let Vx;
-  if (Lx[8] === p)
+  if (Lx[8] === MEMO_CACHE_SENTINEL)
     ((Vx = e(o, {
       flexDirection: "column",
       children: e(t, { children: "Preparing tag\u2026" }),
@@ -11544,7 +11544,7 @@ Or from the command line:
   else ((qx = Kx[2]), (zx = Kx[3]));
   E(qx, zx);
   let ju;
-  if (Kx[4] === p)
+  if (Kx[4] === MEMO_CACHE_SENTINEL)
     ((ju = e(o, {
       flexDirection: "column",
       children: e(t, { children: "Running validation..." }),
@@ -11611,7 +11611,7 @@ function Hv(iL) {
   return !UJ(iL);
 }
 function jv(kv) {
-  let bv = G(kv.plugins.errors, Hv);
+  let bv = countMatching(kv.plugins.errors, Hv);
   for (const rL of kv.plugins.installationStatus.marketplaces) {
     if (rL.status === "failed") bv++;
   }
@@ -11620,7 +11620,7 @@ function jv(kv) {
 function kd(tN) {
   let eS = _(5),
     { onComplete: ua } = tN,
-    { storageV5: Hu } = _e(),
+    { storageV5: Hu } = useStorageV5Context(),
     tS,
     nS;
   if (eS[0] !== ua || eS[1] !== Hu)
@@ -11671,7 +11671,7 @@ function kd(tN) {
   else ((tS = eS[2]), (nS = eS[3]));
   E(tS, nS);
   let aS;
-  if (eS[4] === p)
+  if (eS[4] === MEMO_CACHE_SENTINEL)
     ((aS = e(t, { children: "Loading marketplaces..." })), (eS[4] = aS));
   else aS = eS[4];
   return aS;
@@ -11751,7 +11751,7 @@ function xd(rN) {
   else ((sS = lS[5]), (cS = lS[6]));
   E(sS, cS);
   let yS;
-  if (lS[7] === p)
+  if (lS[7] === MEMO_CACHE_SENTINEL)
     ((yS = e(t, { children: "Loading plugins..." })), (lS[7] = yS));
   else yS = lS[7];
   return yS;
@@ -11762,7 +11762,7 @@ function Sd() {
 function vd() {
   let xN = _(1),
     hS;
-  if (xN[0] === p)
+  if (xN[0] === MEMO_CACHE_SENTINEL)
     ((hS = e(o, {
       marginTop: 1,
       children: e(Sf, {
@@ -11795,7 +11795,7 @@ function wd() {
       (Gu[3] = Yu));
   else Yu = Gu[3];
   let kS;
-  if (Gu[4] === p)
+  if (Gu[4] === MEMO_CACHE_SENTINEL)
     ((kS = e(t, {
       dimColor: !0,
       wrap: "wrap-trim",
@@ -11815,7 +11815,7 @@ function wd() {
 function Cd() {
   let wN = _(1),
     xS;
-  if (wN[0] === p)
+  if (wN[0] === MEMO_CACHE_SENTINEL)
     ((xS = e(o, {
       marginTop: 1,
       children: e(Sf, {
@@ -12019,7 +12019,7 @@ function Jf(a, k, v) {
 function Td(CN) {
   let to = _(27),
     { setViewState: Ju, setActiveTab: PN, markPluginsChanged: SS } = CN,
-    { storageV5: ai, credentials: Zg } = _e(),
+    { storageV5: ai, credentials: Zg } = useStorageV5Context(),
     TN = U($v),
     IN = U(Dv),
     RN = U(Av),
@@ -12029,7 +12029,7 @@ function Td(CN) {
     [ef, tf] = d(0),
     [Xu, nf] = d(null),
     vS;
-  if (to[0] === p) ((vS = []), (to[0] = vS));
+  if (to[0] === MEMO_CACHE_SENTINEL) ((vS = []), (to[0] = vS));
   else vS = to[0];
   let [DN, wS] = d(vS),
     CS,
@@ -12073,9 +12073,9 @@ function Td(CN) {
       (to[5] = $S));
   else $S = to[5];
   let DS;
-  if (to[6] === p) ((DS = { context: "Confirmation" }), (to[6] = DS));
+  if (to[6] === MEMO_CACHE_SENTINEL) ((DS = { context: "Confirmation" }), (to[6] = DS));
   else DS = to[6];
-  Ne("confirm:no", $S, DS);
+  useKeybinding("confirm:no", $S, DS);
   let VN = () => {
       let BS = pr[ef];
       if (!BS) {
@@ -12135,14 +12135,14 @@ function Td(CN) {
       }
     },
     OS;
-  if (to[7] === p) ((OS = () => tf(Uv)), (to[7] = OS));
+  if (to[7] === MEMO_CACHE_SENTINEL) ((OS = () => tf(Uv)), (to[7] = OS));
   else OS = to[7];
   const rf = pr.length > 0;
   let NS;
   if (to[8] !== rf)
     ((NS = { context: "Select", isActive: rf }), (to[8] = rf), (to[9] = NS));
   else NS = to[9];
-  Ze(
+  useKeybindings(
     {
       "select:previous": OS,
       "select:next": () => tf((jN) => Math.min(pr.length - 1, jN + 1)),
@@ -12156,15 +12156,15 @@ function Td(CN) {
     sf = af && af.kind !== "none" && af.kind !== "managed-only";
   if (pr.length === 0) {
     let Zu;
-    if (to[10] === p)
+    if (to[10] === MEMO_CACHE_SENTINEL)
       ((Zu = e(o, {
         marginLeft: 1,
-        children: e(Rn, { children: "No plugin errors" }),
+        children: e(EmptyStateMessage, { children: "No plugin errors" }),
       })),
         (to[10] = Zu));
     else Zu = to[10];
     let ed;
-    if (to[11] === p)
+    if (to[11] === MEMO_CACHE_SENTINEL)
       ((ed = r(o, {
         flexDirection: "column",
         children: [
@@ -12174,7 +12174,7 @@ function Td(CN) {
             children: e(t, {
               dimColor: !0,
               italic: !0,
-              children: e(je, {
+              children: e(ActionKeybindingHint, {
                 action: "confirm:no",
                 context: "Confirmation",
                 fallback: "Esc",
@@ -12255,8 +12255,8 @@ function Td(CN) {
       (to[15] = td));
   else td = to[15];
   let US;
-  if (to[16] === p)
-    ((US = e(je, {
+  if (to[16] === MEMO_CACHE_SENTINEL)
+    ((US = e(ActionKeybindingHint, {
       action: "select:previous",
       context: "Select",
       fallback: "\u2191",
@@ -12268,7 +12268,7 @@ function Td(CN) {
   if (to[17] !== sf)
     ((nd =
       sf &&
-      e(je, {
+      e(ActionKeybindingHint, {
         action: "select:accept",
         context: "Select",
         fallback: "Enter",
@@ -12278,8 +12278,8 @@ function Td(CN) {
       (to[18] = nd));
   else nd = to[18];
   let VS;
-  if (to[19] === p)
-    ((VS = e(je, {
+  if (to[19] === MEMO_CACHE_SENTINEL)
+    ((VS = e(ActionKeybindingHint, {
       action: "confirm:no",
       context: "Confirmation",
       fallback: "Esc",
@@ -12293,7 +12293,7 @@ function Td(CN) {
       children: e(t, {
         dimColor: !0,
         italic: !0,
-        children: r(ue, { children: [US, nd, VS] }),
+        children: r(DotSeparatedList, { children: [US, nd, VS] }),
       }),
     })),
       (to[20] = nd),
@@ -12418,7 +12418,7 @@ function aWe(ZN) {
   if (At[3] !== Bi) ((KS = () => new ja(Bi)), (At[3] = Bi), (At[4] = KS));
   else KS = At[4];
   let [Jn] = d(KS),
-    { viewState: Pe, result: vo, error: ga } = Me(Jn),
+    { viewState: Pe, result: vo, error: ga } = useStoreSelector(Jn),
     { setViewState: no, setResult: li, setError: fa } = Jn,
     [xf] = d(Vv),
     vf = C(null),
@@ -12460,15 +12460,15 @@ function aWe(ZN) {
     [$f, Df] = d(!1),
     ya = l4(),
     Bf = b9e(),
-    { storageV5: ad } = _e(),
+    { storageV5: ad } = useStorageV5Context(),
     YS = U(jv),
     Af = YS > 0 ? `Errors (${YS})` : "Errors",
-    Of = is(),
+    Of = useGlobalExitKeybinding(),
     Nf =
       Rl.type === "marketplace" && Rl.action === "add" && Rl.target !== void 0,
     XS;
   if (At[11] !== fr)
-    ((XS = fr !== void 0 && SC()), (At[11] = fr), (At[12] = XS));
+    ((XS = fr !== void 0 && isSkillDoctorEnabled()), (At[11] = fr), (At[12] = XS));
   else XS = At[12];
   let Lf = XS,
     ZS;
@@ -12589,7 +12589,7 @@ function aWe(ZN) {
       (At[33] = Ff),
       (At[34] = pv));
   else pv = At[34];
-  Ne("confirm:no", oL, pv);
+  useKeybinding("confirm:no", oL, pv);
   let mv, gv;
   if (At[35] !== qt || At[36] !== vo)
     ((mv = () => {
@@ -12615,7 +12615,7 @@ function aWe(ZN) {
   else ((fv = At[41]), (yv = At[42]));
   if ((E(fv, yv), Pe.type === "help")) {
     let ln;
-    if (At[43] === p)
+    if (At[43] === MEMO_CACHE_SENTINEL)
       ((ln = r(o, {
         flexDirection: "column",
         children: [
@@ -12647,7 +12647,7 @@ function aWe(ZN) {
             ],
           }),
           e(t, { children: " /plugin manage - Manage installed plugins" }),
-          SC() &&
+          isSkillDoctorEnabled() &&
             e(t, {
               children: " /plugin stats - Show skill usage and context costs",
             }),

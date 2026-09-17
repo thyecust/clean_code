@@ -11,13 +11,13 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { K, kg } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { truncate, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { ite } from "../MCP客户端/chunk-xcbagjx9.js";
+import { getSessionProjectDir } from "../MCP客户端/mcp-task-metadata.js";
 import { bp, qDe, Vp, STe, a$, lEe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { JI, f1e, K_ } from "./chunk-9d5wk5b9.js";
 import { gNe } from "./chunk-7wsy8vxb.js";
-import { fee } from "../Teammates团队/chunk-2j84y871.js";
+import { formatBackgroundTaskSummary } from "../Teammates团队/background-task-summary.js";
 import { Pbe, lte, b9n } from "../../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function a7() {
   return !a.CLAUDE_DISABLE_ADOPT;
 }
@@ -88,7 +88,7 @@ function T(e) {
   if (e.type === "mcp_task" && e.abortController === void 0) {
     if (e.protocol === "sep2663") {
       if (e.parked === !0) return !1;
-      return e.sidecarSessionId !== K() || e.sidecarProjectDir !== ite();
+      return e.sidecarSessionId !== K() || e.sidecarProjectDir !== getSessionProjectDir();
     }
     return !1;
   }
@@ -120,13 +120,13 @@ function iIe(e, o) {
 function Rv(e) {
   let o = d(e),
     n = kg().length,
-    t = Y(o.map(g)),
+    t = dedupe(o.map(g)),
     i = new Set(o.flatMap((r) => (m(r) ? [r.frameLive.slug] : []))),
-    s = !a7() ? 0 : G(Y([...Pbe(), ...lte()]), (r) => !i.has(r));
+    s = !a7() ? 0 : countMatching(dedupe([...Pbe(), ...lte()]), (r) => !i.has(r));
   if (s > 0 && !t.includes("monitor_ws")) t.push("monitor_ws");
   let u = bDt() ? i.size + s : 0;
   if (n > 0) t.push("session_cron");
-  let k = G(
+  let k = countMatching(
     Object.values(e),
     (r) =>
       r.type === "local_agent" &&
@@ -149,9 +149,9 @@ function Nle(e, o) {
   let n = d(e),
     t = l(o?.cronFilter),
     i = n.length + t.length,
-    s = Y(n.map(g));
+    s = dedupe(n.map(g));
   if (t.length > 0) s.push("session_cron");
-  let u = [fee(n), t.length ? `${t.length} ${x(t.length, "loop")}` : ""];
+  let u = [formatBackgroundTaskSummary(n), t.length ? `${t.length} ${x(t.length, "loop")}` : ""];
   return { count: i, kinds: s, summary: u.filter(Boolean).join(", ") };
 }
 function RBn() {

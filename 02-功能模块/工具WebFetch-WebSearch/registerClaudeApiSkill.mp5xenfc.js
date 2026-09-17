@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 99 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { registerBundledSkill } from "../Skills技能/chunk-1zy5c8mf.js";
@@ -128,7 +128,7 @@ function registerClaudeApiSkill({ disabled: o = !1 } = {}) {
     async getPromptForCommand(t, e, r) {
       let [n, a] = await Promise.all([f(), l()]);
       return (
-        i("tengu_claude_api_skill_loaded", {
+        logEvent("tengu_claude_api_skill_loaded", {
           detected_lang: fromEnum(n ?? "none"),
           subcommand: fromEnum(p(t)),
           has_args: t.trim().length > 0,
