@@ -11,10 +11,10 @@ import { Gt, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { go } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { b5t, tie } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { nse } from "../图表-Mermaid/chunk-743atbtj.js";
+import { matchDataIdAttribute } from "../图表-Mermaid/chunk-743atbtj.js";
 import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID as ee } from "crypto";
@@ -910,7 +910,7 @@ function $er(e) {
         : t === "ready"
           ? "Ready to build"
           : i > 0
-            ? `In progress \u2014 ${i} ${x(i, "decision")} open`
+            ? `In progress \u2014 ${i} ${pluralize(i, "decision")} open`
             : "In progress";
   return `<div class="ws-banner" data-ws-state="${t}">${a}</div>`;
 }
@@ -1083,7 +1083,7 @@ function wFe(e, t) {
     a = e.indexOf(r);
   while (a !== -1) {
     let o = a + r.length,
-      s = o + nse(e, o);
+      s = o + matchDataIdAttribute(e, o);
     if (e.charCodeAt(s) === 62) i.push([a, s + 1]);
     a = e.indexOf(r, o);
   }

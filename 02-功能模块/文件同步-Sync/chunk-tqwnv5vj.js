@@ -10,7 +10,7 @@
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { IZe, nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { DANGEROUS_FILES_LC } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
   Vfn,
@@ -32,9 +32,9 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { P9, Zan, eln, u3n, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import { o3n } from "../Git-Worktree/chunk-v967hawf.js";
-import { oT } from "./chunk-ht8ydg1v.js";
-import { sln, JA, Jbe, pOe } from "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { normalizeFileMode } from "./sync-journal.js";
+import { stripSentField, computeGitBlobId, computeContentDigests, matchesAgreedDigest } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { lstat, realpath } from "fs/promises";
 import {
@@ -53,7 +53,7 @@ var Ban = "Claude's conflicted copy",
 function ie(e, t) {
   if (e === void 0) return t === null ? "unchanged" : "changed";
   if (t === null) return "changed";
-  return pOe(e.agreed, t) ? "unchanged" : "changed";
+  return matchesAgreedDigest(e.agreed, t) ? "unchanged" : "changed";
 }
 function oe({
   localChange: e,
@@ -62,7 +62,7 @@ function oe({
   incomingSha256: a,
   incomingMode: i,
 }) {
-  if (t === a) return r !== null && oT(r) === oT(i) ? "already_equal" : "apply";
+  if (t === a) return r !== null && normalizeFileMode(r) === normalizeFileMode(i) ? "already_equal" : "apply";
   return e === "unchanged" ? "apply" : "conflict";
 }
 function _e(e) {
@@ -219,9 +219,9 @@ async function Ne(e) {
   }
 }
 function F(e, t, r = null) {
-  if (e === null) return oT(t);
-  if (r !== null && oT(e) !== oT(r)) return e & 511;
-  let a = oT(t) === 493;
+  if (e === null) return normalizeFileMode(t);
+  if (r !== null && normalizeFileMode(e) !== normalizeFileMode(r)) return e & 511;
+  let a = normalizeFileMode(t) === 493;
   return (e & 438) | (a ? (e & 292) >> 2 : 0);
 }
 async function V(e) {
@@ -293,7 +293,7 @@ function lOe(e, t, r, a = !1) {
         (r === "file" && nc(s.at(-1) ?? "") === "head") ||
         (r === "file" ? s.slice(0, -1) : s).some((d) => ge(d) !== null) ||
         (r === "file" && s.slice(-1).some(Gan)) ||
-        (P() === "wsl" && Lne(c))
+        (getCurrentPlatform() === "wsl" && Lne(c))
       );
     })
   );
@@ -444,7 +444,7 @@ function Ue(e) {
 function ve(e, t, r) {
   return {
     agreed: { kind: "sha256", sha256: e.sha256 },
-    stat: r !== null && oT(r.mode) === e.mode && r.size === e.size ? r : null,
+    stat: r !== null && normalizeFileMode(r.mode) === e.mode && r.size === e.size ? r : null,
     etag: t,
     origin: "pulled",
     ...(e.gen !== void 0 && { peerGen: e.gen }),
@@ -452,7 +452,7 @@ function ve(e, t, r) {
 }
 function Ke(e, t, r) {
   return {
-    ...sln(e),
+    ...stripSentField(e),
     agreed: { kind: "sha256", sha256: t.sha256 },
     stat: null,
     etag: r,
@@ -552,13 +552,13 @@ async function e3n({
     ((S = g.kind === "ok" ? g.content.length : 0),
     g.kind === "not_found" ||
       g.content.length !== e.size ||
-      mn(g.content) !== e.sha256)
+      hashSha256(g.content) !== e.sha256)
   )
     return h("stale_entry", null, {
       understated:
         g.kind === "ok" &&
         g.content.length > e.size &&
-        !(l !== void 0 && pOe(l.agreed, Jbe(g.content))),
+        !(l !== void 0 && matchesAgreedDigest(l.agreed, computeContentDigests(g.content))),
     });
   let I = s.digestFile ?? ((y, _, N) => P9(y, _, N, a)),
     k = await Le(t, r, e.path, I);
@@ -568,7 +568,7 @@ async function e3n({
   let Q =
     c !== null &&
     b === null &&
-    pOe(c, { sha256: e.sha256, gitBlobId: JA(g.content) });
+    matchesAgreedDigest(c, { sha256: e.sha256, gitBlobId: computeGitBlobId(g.content) });
   if (b === null && (l?.trashedAt !== void 0 || (c !== null && !Q))) l = void 0;
   if (b !== null && l?.trashedAt !== void 0) {
     let { trashedAt: y, ..._ } = l;
@@ -594,15 +594,15 @@ async function e3n({
     !Q &&
     l !== void 0 &&
     (b === null || b.sha256 !== e.sha256) &&
-    pOe(l.agreed, { sha256: e.sha256, gitBlobId: JA(g.content) })
+    matchesAgreedDigest(l.agreed, { sha256: e.sha256, gitBlobId: computeGitBlobId(g.content) })
   ) {
-    let y = m && b !== null && oT(b.mode) === e.mode;
+    let y = m && b !== null && normalizeFileMode(b.mode) === e.mode;
     return U(
       h(
         "already_equal",
         y
           ? {
-              ...sln(l),
+              ...stripSentField(l),
               etag: g.etag,
               ...(e.gen !== void 0 && { peerGen: e.gen }),
             }
@@ -659,7 +659,7 @@ async function e3n({
                     keptAt: E.keptAt,
                     ...(l !== void 0 &&
                       b !== null &&
-                      pOe(l.agreed, b) &&
+                      matchesAgreedDigest(l.agreed, b) &&
                       Ve(l) && { keptEarlierCloudVersion: !0 }),
                   },
                 }),

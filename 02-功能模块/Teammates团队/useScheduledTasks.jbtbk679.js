@@ -11,25 +11,25 @@
 // [preload stripped] 原本在此预载 200 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ze, wje, Ixe, Lrt, Eje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { g6 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Zgt, nY, Re, Dk, Hyt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { It, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useSetAppState, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useTaskRegistry } from "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
-import { SK } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
+import { deleteScheduledTasks } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { getCronJitterConfig } from "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
-import { YXn, QXn, BY } from "../语音-音频/chunk-cfhndstm.js";
+import { isLoopKeepaliveEnabled, armLoopKeepalive, hasPendingLoopWakeup } from "../语音-音频/loop-wakeup-scheduler.js";
 import { isKairosCronEnabled } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { createCronScheduler } from "../工具AskUserQuestion/工具AskUserQuestion.72ht85nd.js";
 import { useCommandQueue } from "../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
 import { queueTeammateUserMessage } from "./teammate-task-messages.js";
 import { E, vr, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { xs } from "./chunk-mrfx53ye.js";
-import { Xi } from "./chunk-z2t8b9yc.js";
+import { isTerminalTaskStatus } from "./chunk-mrfx53ye.js";
+import { SCHEDULE_WAKEUP_TOOL_NAME } from "./chunk-z2t8b9yc.js";
 F();
 import { randomUUID } from "crypto";
 function I(o) {
@@ -68,7 +68,7 @@ function v(o) {
     if (e.type === "assistant")
       for (let i of e.message.content) {
         if (i.type !== "tool_use") continue;
-        if ((c.add(i.id), i.name === Xi)) p = i.input?.noop === !0;
+        if ((c.add(i.id), i.name === SCHEDULE_WAKEUP_TOOL_NAME)) p = i.input?.noop === !0;
       }
     else if (e.type === "user") {
       if (e.toolDenialKind !== void 0)
@@ -113,7 +113,7 @@ function v(o) {
 function K(o) {
   return {
     ...Re({
-      content: `[${o} prior /loop ${x(o, "wakeup")} found nothing actionable; loop is healthy.]`,
+      content: `[${o} prior /loop ${pluralize(o, "wakeup")} found nothing actionable; loop is healthy.]`,
       isMeta: !0,
     }),
     turnCompanion: !0,
@@ -148,7 +148,7 @@ function D(o, r, s, p) {
     }),
     [
       ...o,
-      Hyt(`${a} \xB7 ${i} no-op ${x(i, "tick")} since ${d}`, {
+      Hyt(`${a} \xB7 ${i} no-op ${pluralize(i, "tick")} since ${d}`, {
         task: s,
         uuid: p,
         cronKind: "loop",
@@ -173,8 +173,8 @@ function useScheduledTasks({ isLoading: o, assistantMode: r, transcript: s, stor
     a = vr(() => o),
     e = C(null),
     i = useSession(),
-    d = Yn(),
-    b = It(),
+    d = useAppState(),
+    b = useSetAppState(),
     _ = useTaskRegistry();
   (E(() => {
     if (!isKairosCronEnabled() || jn() !== null) return;
@@ -236,14 +236,14 @@ function useScheduledTasks({ isLoading: o, assistantMode: r, transcript: s, stor
         onFireTask: (t) => {
           if (t.agentId) {
             let u = nY(t.agentId, d.getState().tasks);
-            if (u && !xs(u.status)) {
+            if (u && !isTerminalTaskStatus(u.status)) {
               queueTeammateUserMessage(u.id, t.prompt, _, { kind: "task-notification" });
               return;
             }
             (n(
               `[ScheduledTasks] teammate ${t.agentId} gone, removing orphaned cron ${t.id}`,
             ),
-              SK([t.id]));
+              deleteScheduledTasks([t.id]));
             return;
           }
           let l = randomUUID();
@@ -280,8 +280,8 @@ function useScheduledTasks({ isLoading: o, assistantMode: r, transcript: s, stor
       if (o) return;
       let m = wje();
       if (m !== null) {
-        if ((Ixe(null), YXn() && !BY())) QXn(m);
-        if (!BY()) Eje();
+        if ((Ixe(null), isLoopKeepaliveEnabled() && !hasPendingLoopWakeup())) armLoopKeepalive(m);
+        if (!hasPendingLoopWakeup()) Eje();
       }
       e.current?.checkNow();
     }, [o]));

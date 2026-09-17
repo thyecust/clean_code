@@ -12,7 +12,7 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { b, Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { $h, EYe, ne, xer, hTt, Her, Ier } from "./chunk-rr78st95.js";
-import { P0, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { ARTIFACT_WATCH_LIFECYCLE_ORIGIN, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
   qwt,
@@ -120,7 +120,7 @@ import {
   sweepResultLineText,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { ybe, R1t, Wdt, v7, WPe, Hqe, wsEgressDenyReason } from "../工具Monitor/工具Monitor.981fw9dy.js";
-import { P7, p9n, _9n } from "./chunk-qdg189tc.js";
+import { isArtifactReplyYieldEnabled, registerPendingClaim, dropDeliveredSlug } from "./artifact-reply-yield.js";
 import {
   k9,
   _2,
@@ -144,7 +144,7 @@ import {
   x9,
 } from "./chunk-p1dkvpxj.js";
 import { ian, r9n, H9, hpt, Ibe, a9n } from "./chunk-5gz5xvw9.js";
-import { uan } from "../../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js";
+import { hasLiveAutoReactSupervision } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
 import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { s, T, O, se, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 class kn {
@@ -1432,7 +1432,7 @@ function he(
   let p = H7(() => t.autoReactWiring?.title, t.url);
   ha({
     value: _a({
-      taskType: P0,
+      taskType: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
       summary: Nt(b5n(p, i)),
       body: `
 <event>${Nt(`Watch on ${t.url} ended \u2014 ${r}. This session will no longer hear when it is republished; ${d}.`)}</event>`,
@@ -1442,7 +1442,7 @@ function he(
     priority: "next",
     origin: {
       kind: "task-notification",
-      source: P0,
+      source: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
       slug: t.slug,
       displayName: p,
       watchEnded: !0,
@@ -1831,7 +1831,7 @@ function Bi(e) {
   return r;
 }
 function hasStoppableAutoReactSupervision() {
-  return Zu() && uan();
+  return Zu() && hasLiveAutoReactSupervision();
 }
 function frameLiveWatchRows(e, t) {
   let r = [],
@@ -2017,7 +2017,7 @@ function ji(e) {
   return (
     ha({
       value: _a({
-        taskType: P0,
+        taskType: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
         summary: Nt(
           `Stopped watching ${i} (${e === "signed_out" ? "signed out" : "the signed-in account changed"})`,
         ),
@@ -2027,7 +2027,7 @@ function ji(e) {
       mode: "task-notification",
       passive: !0,
       priority: "next",
-      origin: { kind: "task-notification", source: P0 },
+      origin: { kind: "task-notification", source: ARTIFACT_WATCH_LIFECYCLE_ORIGIN },
       agentId: ze(),
     }),
     r
@@ -3285,7 +3285,7 @@ ${Nt(w.detail)}`,
                       }));
                   if (!N || fe) oze(r);
                   (p5n(r),
-                    _9n(r),
+                    dropDeliveredSlug(r),
                     __t(r),
                     kI(e, r),
                     x9({ slug: r, url: i, ...W, seed: !0 }));
@@ -3337,11 +3337,11 @@ ${Nt(w.detail)}`,
                 ne().autoReact.enabledMemo === !0
               ) {
                 mn = !0;
-                let N = P7() ? p9n([r], Date.now()) : void 0;
+                let N = isArtifactReplyYieldEnabled() ? registerPendingClaim([r], Date.now()) : void 0;
                 (async () => {
                   let fe = await import("../跨会话消息(UDS)/chunk-ddtmwhn7.js"),
-                    An = await import("../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js"),
-                    AnQ = await import("../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js"),
+                    An = await import("../../01-核心基础设施/共享小工具-未细化/process-record.js"),
+                    AnQ = await import("../../01-核心基础设施/核心工具-进程与信号/process-identity.js"),
                     Ke = await Hbe({
                       records: await fe.listRegisteredSessionRecords(),
                       sessionId: pn,
@@ -3370,7 +3370,7 @@ ${Nt(w.detail)}`,
                     qe = H7(() => Ue(), i);
                   ha({
                     value: _a({
-                      taskType: P0,
+                      taskType: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
                       summary: Nt(
                         Rt
                           ? `Another session of this conversation handed its replies on ${qe} to this one`
@@ -3386,7 +3386,7 @@ ${Nt(w.detail)}`,
                     priority: "next",
                     origin: {
                       kind: "task-notification",
-                      source: P0,
+                      source: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
                       slug: r,
                       displayName: qe,
                     },
@@ -3682,7 +3682,7 @@ function pullStaleWatchLifecycleNotices(e) {
   Hy(
     (t) =>
       t.origin?.kind === "task-notification" &&
-      t.origin.source === P0 &&
+      t.origin.source === ARTIFACT_WATCH_LIFECYCLE_ORIGIN &&
       t.origin.slug === e &&
       (t.origin.armFailed === !0 || t.origin.watchEnded === !0),
   );
@@ -3701,7 +3701,7 @@ function is(e, t, r, i) {
 function Er(e) {
   ha({
     value: _a({
-      taskType: P0,
+      taskType: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
       summary: Nt(w5n(e.artifactName, e.shortReason)),
       body: `
 <event>${Nt(e.event)}</event>`,
@@ -3710,7 +3710,7 @@ function Er(e) {
     priority: "next",
     origin: {
       kind: "task-notification",
-      source: P0,
+      source: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
       slug: e.slug,
       displayName: e.artifactName,
       armFailed: !0,

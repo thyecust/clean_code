@@ -14,13 +14,13 @@ import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { LPn, P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { CLAUDE_DESKTOP_SUPPORTED_PLATFORMS, getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { readdir, readFile, stat as p } from "fs/promises";
 import { homedir } from "os";
 import { join as l } from "path";
 async function g() {
-  let o = P();
-  if (!LPn.includes(o))
+  let o = getCurrentPlatform();
+  if (!CLAUDE_DESKTOP_SUPPORTED_PLATFORMS.includes(o))
     throw Error(
       `Unsupported platform: ${o} - Claude Desktop integration only works on macOS and WSL.`,
     );
@@ -73,7 +73,7 @@ async function g() {
   );
 }
 async function readClaudeDesktopMcpServers() {
-  if (!LPn.includes(P()))
+  if (!CLAUDE_DESKTOP_SUPPORTED_PLATFORMS.includes(getCurrentPlatform()))
     throw Error(
       "Unsupported platform - Claude Desktop integration only works on macOS and WSL.",
     );

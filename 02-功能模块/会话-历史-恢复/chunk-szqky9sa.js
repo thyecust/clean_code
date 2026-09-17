@@ -11,13 +11,13 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { l, W, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { We, z, Is, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be, T_e } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { getClaudeConfigDir, getTeamsDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { uxe, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { kA, Yie } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { logDirectories, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isTempFileFor, writeFileAtomicWithOptions } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { Sl } from "../插件系统/chunk-7s6mt1vg.js";
-import { Gcr, _n, O1, Ce, Vcr } from "../Teammates团队/chunk-qe04h4c5.js";
+import { isTempFileName, isValidPathSegment, getNormalizedNames, STORAGE_KEYS, createBridgeSpawnKey } from "../Teammates团队/storage-keys.js";
 import { Nr, H8t, t2e } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
   b2,
@@ -43,14 +43,14 @@ import {
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { readJobStateFreshOrNull, readPinnedJobIds, isSettled } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { wvn, QN, H, getMemoryBaseDir, getAutoMemPath } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { isSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { LITE_READ_BUF_SIZE, extractFieldFromFirstEntryStrict, extractFieldFromLastEntryStrict, readHeadAndTail, anchorOffsetTail } from "./chunk-mkmy4cx2.js";
 import { The, lcr, txt, xIn, ccr, Ehe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { kPn } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getSettingsForSource, getSettings_DEPRECATED, anyAdminPolicyTierGovernsRetention, getPolicySettingsLoadErrors, getSecuritySensitiveSetting, rawSettingsKeyPresence } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { pm } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import { isTainted } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
-import { Apt } from "../../01-核心基础设施/共享小工具-未细化/chunk-5pc36v8n.js";
+import { sweepStaleJobDrafts } from "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
 import {
   IN,
   PN,
@@ -63,17 +63,17 @@ import {
   UFe,
   Otr,
 } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
-import { wSn } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
-import { tOe, wan } from "../Skills技能/chunk-wwgqvtfr.js";
-import { FG, jK, zo } from "../MCP客户端/chunk-3kmsshb6.js";
-import { k9n, yan, W4 } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
-import { Pl } from "../Teammates团队/chunk-thxapyam.js";
+import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
+import { emitRetentionSweepEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
+import { MCP_SKILL_ARCHIVES_DIR_NAME, readMcpSkillCacheMeta } from "../Skills技能/mcp-skill-cache.js";
+import { MAX_FILE_READ_LINES, MAX_FILE_READ_BYTES, parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
+import { k9n, PUBLISHED_FLOOR_FILE_NAME, getSettingsWithMcpErrors } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
+import { getProjectsDir } from "../Teammates团队/transcript-paths.js";
 import { resetPlanFileCacheToUnknown } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { Gyn } from "../图片-截图-ComputerUse/chunk-b8jsase9.js";
-import { Mpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
-import { fze } from "../跨会话消息(UDS)/chunk-qvnte9zp.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { NON_REGULAR_PATH_ERRNOS } from "../图片-截图-ComputerUse/computer-use-lock.js";
+import { RECEIVED_FILES_MAX_AGE_DAYS } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
+import { peerTransferSpoolDir } from "../跨会话消息(UDS)/peer-file-transfer.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import * as A from "fs/promises";
 import { homedir, tmpdir } from "os";
@@ -110,12 +110,12 @@ var q = 30,
     BBt,
   ];
 function ue(e) {
-  let t = O1(e);
-  return _n(e) && t.length === 1 && t[0] === e.toLowerCase() && ccr(e);
+  let t = getNormalizedNames(e);
+  return isValidPathSegment(e) && t.length === 1 && t[0] === e.toLowerCase() && ccr(e);
 }
 function ve(e) {
   return (
-    Oe.some((t) => e === t || kA(e, t)) ||
+    Oe.some((t) => e === t || isTempFileFor(e, t)) ||
     (e.startsWith(jBt) && (e.endsWith(".json") || e.includes(".json.tmp."))) ||
     (e.startsWith(sgt) && e.endsWith(".md"))
   );
@@ -130,7 +130,7 @@ async function Ept(e) {
     );
   if (getSettingsForSource("policySettings")?.cleanupPeriodDays !== void 0) return null;
   if (
-    W4().errors.filter((r) => !r.mcpErrorMetadata && r.severity !== "warning")
+    getSettingsWithMcpErrors().errors.filter((r) => !r.mcpErrorMetadata && r.severity !== "warning")
       .length > 0
   )
     for (let r of t2e) {
@@ -206,7 +206,7 @@ function Ae() {
   );
 }
 function v9n() {
-  return Ae() || pm("hipaa") || pm("zdr");
+  return Ae() || isTainted("hipaa") || isTainted("zdr");
 }
 function E() {
   return { messages: 0, errors: 0, filesRetainedFresh: 0, filesPastCutoff: 0 };
@@ -220,7 +220,7 @@ function F(e, t) {
   };
 }
 function Ne(e) {
-  let t = ft(e, ".").replace(
+  let t = beforeFirst(e, ".").replace(
     /T(\d{2})-(\d{2})-(\d{2})-(\d{3})Z/,
     "T$1:$2:$3.$4Z",
   );
@@ -255,8 +255,8 @@ async function je() {
   let e = ae(),
     t = NS();
   if (t === null) return E();
-  let r = uxe.errors(),
-    a = uxe.baseLogs(),
+  let r = logDirectories.errors(),
+    a = logDirectories.baseLogs(),
     o = await pe(r, t, !1);
   try {
     let f;
@@ -454,7 +454,7 @@ async function Be() {
   let e = NS(),
     t = { ...E(), transcripts: 0, transcriptsExemptedDesktop: 0 };
   if (e === null) return t;
-  let r = Pl(),
+  let r = getProjectsDir(),
     a = ae(),
     o;
   try {
@@ -464,7 +464,7 @@ async function Be() {
   }
   let f;
   try {
-    if (((f = bl()), !(await a.lstat(f)).isDirectory())) f = null;
+    if (((f = getClaudeTempDir()), !(await a.lstat(f)).isDirectory())) f = null;
   } catch {
     f = null;
   }
@@ -474,7 +474,7 @@ async function Be() {
     g = w
       ? void 0
       : async (D, R) => {
-          if (pm("hipaa") || pm("zdr")) return !1;
+          if (isTainted("hipaa") || isTainted("zdr")) return !1;
           if (y !== null && R.mtime < y) return !1;
           let P = await fe(te(D), a, e);
           if (P === "release-now") return !1;
@@ -706,7 +706,7 @@ async function Le() {
   let e = E(),
     t = NS();
   if (t === null) return e;
-  let r = d(be(), "hfi-auth.json");
+  let r = d(getClaudeConfigDir(), "hfi-auth.json");
   try {
     if (await x(r, t, ae(), e)) e.messages++;
   } catch (a) {
@@ -720,7 +720,7 @@ async function Ue() {
   let e = E(),
     t = NS();
   if (t === null) return e;
-  let r = d(be(), "cache", "team-discovery.json");
+  let r = d(getClaudeConfigDir(), "cache", "team-discovery.json");
   try {
     if (await x(r, t, ae(), e)) e.messages++;
   } catch (a) {
@@ -736,7 +736,7 @@ async function $e() {
     QN(),
     (e) =>
       e !== wvn &&
-      e !== yan &&
+      e !== PUBLISHED_FLOOR_FILE_NAME &&
       (e.endsWith(".json") || e.includes(".json.tmp.")),
   );
 }
@@ -744,7 +744,7 @@ async function He() {
   let e = E(),
     t = NS();
   if (t === null) return e;
-  let r = d(be(), "mcp-needs-auth-cache.json");
+  let r = d(getClaudeConfigDir(), "mcp-needs-auth-cache.json");
   try {
     if (await x(r, t, ae(), e)) e.messages++;
   } catch (a) {
@@ -759,7 +759,7 @@ async function Ye() {
   let e = E(),
     t = NS();
   if (t === null) return e;
-  let r = d(be(), "state", "device-unbound-creates.json");
+  let r = d(getClaudeConfigDir(), "state", "device-unbound-creates.json");
   try {
     if (await x(r, t, ae(), e)) e.messages++;
   } catch (a) {
@@ -805,7 +805,7 @@ async function Ke(e, t) {
   let a = t.getTime();
   await Promise.all(
     r
-      .filter((o) => kA(o, "history.jsonl") || b2(o))
+      .filter((o) => isTempFileFor(o, "history.jsonl") || b2(o))
       .map(async (o) => {
         let f = d(e, o);
         try {
@@ -816,7 +816,7 @@ async function Ke(e, t) {
   );
 }
 async function Xe(e) {
-  let t = d(be(), "history.jsonl"),
+  let t = d(getClaudeConfigDir(), "history.jsonl"),
     r = e.getTime(),
     a = (p) => ze(p, r) || Ge(p),
     o,
@@ -897,7 +897,7 @@ async function Xe(e) {
       return { entriesPruned: 0, errors: 0 };
     let R = f.kept.concat(g.kept);
     return (
-      await Yie(
+      await writeFileAtomicWithOptions(
         t,
         R.length
           ? `${R.join(`
@@ -925,7 +925,7 @@ async function Xe(e) {
   }
 }
 async function Je() {
-  let e = d(be(), "mcp-discovery-cache"),
+  let e = d(getClaudeConfigDir(), "mcp-discovery-cache"),
     t = await v(e, (f) => f.endsWith(".json") || f.includes(".json.tmp."), !1),
     r = NS();
   if (r === null) return t;
@@ -948,7 +948,7 @@ async function Je() {
   return (await O(e, a), t);
 }
 async function qe(e) {
-  let t = d(be(), "plans");
+  let t = d(getClaudeConfigDir(), "plans");
   try {
     if (e !== void 0)
       return await v(t, (r) => r.endsWith(".md") || r.includes(".md.tmp."));
@@ -973,7 +973,7 @@ async function j(
     g = E();
   if (p === null) return g;
   let D = ae(),
-    R = be(),
+    R = getClaudeConfigDir(),
     P = w ?? d(R, e);
   if (a) {
     if (
@@ -1044,7 +1044,7 @@ async function tt(e) {
 }
 async function rt(e) {
   let t = E(),
-    r = Vcr(),
+    r = createBridgeSpawnKey(),
     a = await e.scopeKind(r);
   if (!a.ok) return a.error.code === "InvalidArgument" ? "unaddressed" : t;
   if (
@@ -1066,7 +1066,7 @@ async function rt(e) {
   );
 }
 function nt() {
-  return v(fze(), "", !1, Mpt);
+  return v(peerTransferSpoolDir(), "", !1, RECEIVED_FILES_MAX_AGE_DAYS);
 }
 async function st(e) {
   return F(
@@ -1080,7 +1080,7 @@ async function st(e) {
 async function ge(e, t) {
   let r = E();
   if (NS() === null) return r;
-  let a = be(),
+  let a = getClaudeConfigDir(),
     o = d(a, e);
   if (
     (await sH(
@@ -1119,7 +1119,7 @@ async function Se(e, t, r, a) {
   if (f === null) return o;
   let w = await oH().catch(() => null);
   if (w === null) return o;
-  let y = be(),
+  let y = getClaudeConfigDir(),
     p = d(y, e);
   if (
     (await sH(
@@ -1198,7 +1198,7 @@ async function pt() {
     t = E();
   if (e === null) return t;
   let r = ae(),
-    a = d(be(), tOe),
+    a = d(getClaudeConfigDir(), MCP_SKILL_ARCHIVES_DIR_NAME),
     o;
   try {
     o = await r.readdir(a);
@@ -1208,7 +1208,7 @@ async function pt() {
   for (let f of o) {
     if (!f.isDirectory()) continue;
     let w = d(a, f.name),
-      y = (await wan(w))?.cacheKey ?? null,
+      y = (await readMcpSkillCacheMeta(w))?.cacheKey ?? null,
       p;
     try {
       p = await r.readdir(w);
@@ -1236,7 +1236,7 @@ async function pt() {
   return (await O(a, r), t);
 }
 async function dt() {
-  let e = d(be(), "usage-data"),
+  let e = d(getClaudeConfigDir(), "usage-data"),
     t = await v(
       d(e, "facets"),
       (r) => r.endsWith(".json") || r.includes(".json.tmp."),
@@ -1249,7 +1249,7 @@ async function dt() {
         (r) => r.endsWith(".json") || r.includes(".json.tmp."),
       ),
     )),
-    (t = F(t, await v(e, (r) => r.endsWith(".html") || Gcr(r), !1))),
+    (t = F(t, await v(e, (r) => r.endsWith(".html") || isTempFileName(r), !1))),
     await O(e, ae()),
     t
   );
@@ -1261,7 +1261,7 @@ async function mt() {
   let r = ae(),
     a;
   try {
-    a = bl();
+    a = getClaudeTempDir();
   } catch {
     return t;
   }
@@ -1290,7 +1290,7 @@ async function ht() {
   let r = ae(),
     a;
   try {
-    if (((a = bl()), !(await r.lstat(a)).isDirectory())) return e;
+    if (((a = getClaudeTempDir()), !(await r.lstat(a)).isDirectory())) return e;
   } catch {
     return e;
   }
@@ -1313,12 +1313,12 @@ async function ht() {
   return (await O(o, r), e);
 }
 async function wt() {
-  let e = d(be(), "shares"),
+  let e = d(getClaudeConfigDir(), "shares"),
     t = await j("shares");
   return ((t = F(t, await v(e, ".zip", !1))), await O(e, ae()), t);
 }
 async function yt() {
-  let e = d(be(), "telemetry"),
+  let e = d(getClaudeConfigDir(), "telemetry"),
     t = await v(e, ".json", !1),
     r = NS();
   if (r === null) return t;
@@ -1329,17 +1329,17 @@ async function yt() {
   return (await O(e, ae()), t);
 }
 function gt() {
-  return v(d(be(), "dump-prompts"), ".jsonl", !0, ce);
+  return v(d(getClaudeConfigDir(), "dump-prompts"), ".jsonl", !0, ce);
 }
 function St() {
-  return v(d(be(), "shell-snapshots"), ".sh");
+  return v(d(getClaudeConfigDir(), "shell-snapshots"), ".sh");
 }
 async function Dt() {
   let e = NS(),
     t = E();
   if (e === null) return t;
   let r = ae(),
-    a = T_e();
+    a = getTeamsDir();
   for (let o of await r.readdir(a).catch(() => [])) {
     if (!o.isDirectory()) continue;
     let f = d(a, o.name, "inboxes");
@@ -1407,7 +1407,7 @@ async function kt(e, t = tmpdir()) {
   return r;
 }
 async function Pt(e) {
-  let t = be(),
+  let t = getClaudeConfigDir(),
     r = await v(d(t, "jobs", "settled"), ".json");
   ((r = F(r, await v(d(t, "daemon", "dispatch", "rejected"), ".json"))),
     (r = F(r, await v(d(t, "daemon", "dispatch"), ".json", !1))),
@@ -1528,17 +1528,17 @@ async function Pt(e) {
       }
     }
   }
-  return (await Apt(), r);
+  return (await sweepStaleJobDrafts(), r);
 }
 function _t() {
-  return v(d(be(), "backups"), "", !1);
+  return v(d(getClaudeConfigDir(), "backups"), "", !1);
 }
 async function Et() {
   let e = NS(),
     t = E();
   if (e === null) return t;
   let r = ae(),
-    a = d(be(), "debug"),
+    a = d(getClaudeConfigDir(), "debug"),
     o;
   try {
     o = await r.readdir(a);
@@ -1556,24 +1556,24 @@ async function Et() {
   return t;
 }
 async function Ct() {
-  return v(d(be(), "feedback-bundles"), ".zip");
+  return v(d(getClaudeConfigDir(), "feedback-bundles"), ".zip");
 }
 async function Ot() {
   return v(
-    d(be(), "feedback", "drafts"),
+    d(getClaudeConfigDir(), "feedback", "drafts"),
     (e) => e.endsWith(".json") || e.includes(".json.tmp."),
     !0,
     30,
   );
 }
 async function vt() {
-  let e = await v(d(be(), "traces"), ".json"),
-    t = await v(d(be(), "startup-perf"), ".txt"),
-    r = await v(d(be(), "startup-perf"), ".json");
+  let e = await v(d(getClaudeConfigDir(), "traces"), ".json"),
+    t = await v(d(getClaudeConfigDir(), "startup-perf"), ".txt"),
+    r = await v(d(getClaudeConfigDir(), "startup-perf"), ".json");
   return F(F(e, t), r);
 }
 var bt = 86400000,
-  De = Gyn;
+  De = NON_REGULAR_PATH_ERRNOS;
 function It(e) {
   if (e === void 0) return S("none");
   if (!De.has(e)) return S("other");
@@ -1592,7 +1592,7 @@ function Tt(e) {
     : `could not remove it (${e.error.code})`;
 }
 async function gan(e) {
-  let t = await e.statMeta(Ce.state("last-cleanup"));
+  let t = await e.statMeta(STORAGE_KEYS.state("last-cleanup"));
   if (t.ok || t.error.code === "NotFound" || !Ft(t.error)) return;
   logEvent("tengu_cleanup_throttle_marker", {
     marker: S("last-cleanup"),
@@ -1600,7 +1600,7 @@ async function gan(e) {
     code: fromEnum(t.error.code),
     errno: It("telemetryCode" in t.error ? t.error.telemetryCode : void 0),
   });
-  let r = await e.delete(Ce.state("last-cleanup"));
+  let r = await e.delete(STORAGE_KEYS.state("last-cleanup"));
   n(
     `.last-cleanup: sentinel is not a regular file (${We(t.error)}) \u2014 ${Tt(r)}; rewriting`,
     { level: "warn" },
@@ -1623,7 +1623,7 @@ async function han(e, t) {
   let a = Date.now() - bt;
   await Promise.all(
     r
-      .filter((o) => xt.some((f) => kA(o, f)))
+      .filter((o) => xt.some((f) => isTempFileFor(o, f)))
       .map(async (o) => {
         let f = d(e, o);
         try {
@@ -1639,7 +1639,7 @@ async function At() {
   if (e === null) return t;
   let r = ae();
   for (let a of ["todos", "statsig", "logs"]) {
-    let o = d(be(), a),
+    let o = d(getClaudeConfigDir(), a),
       f;
     try {
       f = await r.readdir(o);
@@ -1718,11 +1718,11 @@ async function de(e, t, r) {
     if (!f.isFile() || !f.name.endsWith(".md")) continue;
     let w = d(e, f.name);
     try {
-      let { content: y, mtimeMs: p } = await w2(w, 0, FG, jK, void 0, {
+      let { content: y, mtimeMs: p } = await w2(w, 0, MAX_FILE_READ_LINES, MAX_FILE_READ_BYTES, void 0, {
         truncateOnByteLimit: !0,
       });
       if (!(p < t.getTime())) continue;
-      if (zo(y, w).frontmatter.type !== Mt) continue;
+      if (parseFrontmatter(y, w).frontmatter.type !== Mt) continue;
       (await r.unlink(w), a.messages++);
     } catch (y) {
       if (!W(y)) a.errors++;
@@ -1736,7 +1736,7 @@ async function _an(e) {
     r = getSettings_DEPRECATED()?.cleanupPeriodDays;
   if (t !== null) {
     (logEvent("tengu_retention_sweep", { skipped: !0, skipReason: fromEnum(t) }),
-      wSn({
+      emitRetentionSweepEvent({
         result: "skipped",
         skipReason: t,
         periodDays: r ?? q,
@@ -1792,8 +1792,8 @@ async function _an(e) {
     let p = await Tmn(w);
     if (p > 0) logEvent("tengu_worktree_cleanup", { removed: p });
     if (
-      (await Ke(be(), w),
-      pm("hipaa") && H("tengu_hipaa_history_retention_prune", !0))
+      (await Ke(getClaudeConfigDir(), w),
+      isTainted("hipaa") && H("tengu_hipaa_history_retention_prune", !0))
     )
       ((f = await Xe(w)), o.push({ ...E(), errors: f.errors }));
   }
@@ -1812,7 +1812,7 @@ async function _an(e) {
     periodDays: r ?? q,
     usedDefault: r === void 0,
   }),
-    wSn({
+    emitRetentionSweepEvent({
       result: "complete",
       periodDays: r ?? q,
       usedDefault: r === void 0,

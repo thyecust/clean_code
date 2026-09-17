@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
+import { readEmbeddedAssetSync } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
 import { commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var c = commonJS(function (ie, b) {
   b.exports = importMetaRequire("./detect.mjs-4ep12q1p.txt");
@@ -28,11 +28,11 @@ var f = commonJS(function (me, x) {
   x.exports = importMetaRequire("./probe.mjs-24tedw09.txt");
 });
 var s = "./SKILL-057df712.md.zst";
-var o = Ke(s, import.meta.dirname);
+var o = readEmbeddedAssetSync(s, import.meta.dirname);
 var r = "./SKILL-b6859017.md.zst";
-var n = Ke(r, import.meta.dirname);
+var n = readEmbeddedAssetSync(r, import.meta.dirname);
 var i = "./SKILL-76b8b2a9.md.zst";
-var a = Ke(i, import.meta.dirname);
+var a = readEmbeddedAssetSync(i, import.meta.dirname);
 var e = (t) => (typeof t === "string" ? t : t.default),
   R = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.db4qa869.js"),
   C = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.fwytydyr.js"),

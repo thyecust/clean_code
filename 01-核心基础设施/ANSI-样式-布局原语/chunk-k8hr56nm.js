@@ -13,17 +13,17 @@ import { fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { w3t } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import { Zd, m4, uF, ga, Kx, Z0 } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
-import { xat, Ty, $0e } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
+import { ThemeProvider, useResolvedTheme, KillRingProvider } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { StorageV5ContextProvider } from "../共享小工具-未细化/storage-v5-context.js";
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { te, X5, _h, Ccr, vcr, ePn, sB } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
-import { pt } from "../共享小工具-未细化/chunk-jjr7hzzf.js";
-import { Ta } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { stripAnsi } from "../共享小工具-未细化/text-sanitization.js";
+import { shouldUseFullscreen } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { sessionServicesFor } from "../../02-功能模块/认证-OAuth登录/credentials-store.js";
-import { Pyn, Jp, mw, _d, CYn, vYn, jSt, z8e, RYn } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { setTerminalHooks, formatOscSequence, wrapOscForMultiplexer, OSC_CODES, parseOscSequence, RESET_TITLE_AND_ICON_SEQUENCE, RESET_TAB_STATUS_SEQUENCE, isTabStatusEnabled, formatTabStatus } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { getInkInstanceRegistry } from "../共享小工具-未细化/ink-instance-registry.js";
 import {
   KB,
@@ -37,13 +37,13 @@ import {
   Yye,
   lF,
 } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { zf, s7 } from "../共享小工具-未细化/chunk-z3y2y7w9.js";
-import { Ev, vle, cF, Rle, sDt, ok } from "../共享小工具-未细化/chunk-k0wct4tn.js";
+import { TERMINAL_MODE_CODES, DISABLE_MOUSE_TRACKING } from "../共享小工具-未细化/terminal-mode-sequences.js";
+import { CLOCK_TICK_INTERVAL_MS, useTerminalFocusState, setTimeoutWithCancel, noopSubscribe, sDt, ClockContext } from "../共享小工具-未细化/clock-and-terminal-focus.js";
 import { uee, Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
 import { useClock } from "../共享小工具-未细化/use-clock.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, Ry, Yl, re, De, E, dn, V, C, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { Xs } from "../共享小工具-未细化/chunk-xcc43dkx.js";
+import { getGraphemeSegmenter } from "../共享小工具-未细化/intl-text-utils.js";
 import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
@@ -52,7 +52,7 @@ function ao() {
 }
 var de = Qt(null);
 function Ke() {
-  return Ta() ? "fullscreen" : "inline";
+  return shouldUseFullscreen() ? "fullscreen" : "inline";
 }
 function fe(Rr) {
   let Er = _(3),
@@ -105,7 +105,7 @@ import { writeSync } from "fs";
 function co() {
   if (!process.stdout.isTTY) return;
   try {
-    (QOt(), writeSync(1, s7));
+    (QOt(), writeSync(1, DISABLE_MOUSE_TRACKING));
     let r = getInkInstanceRegistry().get(process.stdout);
     if (r?.isAltScreenActive)
       try {
@@ -119,7 +119,7 @@ function co() {
       rDt(),
       !a.CLAUDE_CODE_DISABLE_TERMINAL_TITLE)
     )
-      writeSync(1, vYn);
+      writeSync(1, RESET_TITLE_AND_ICON_SEQUENCE);
   } catch {}
 }
 function po() {
@@ -176,7 +176,7 @@ async function $e({
   await Promise.resolve();
   let x = getInkInstanceRegistry();
   while (x.pendingStandaloneRender) await x.pendingStandaloneRender;
-  Pyn(ye);
+  setTerminalHooks(ye);
   let R = new Yye({
     stdout: r,
     stdin: s,
@@ -204,7 +204,7 @@ var ho = (r = {}) => {
   bo = (r, s) => {
     let l = getInkInstanceRegistry(),
       c = l.get(r);
-    if (!c) (Pyn(ye), (c = s()), l.set(r, c));
+    if (!c) (setTerminalHooks(ye), (c = s()), l.set(r, c));
     return c;
   };
 function zUn() {
@@ -284,7 +284,7 @@ function w(r, s) {
 }
 function Xe(k) {
   let Y = _(26),
-    T = Ty(),
+    T = useResolvedTheme(),
     be;
   if (Y[0] !== k.borderColor || Y[1] !== T)
     ((be = w(k.borderColor, T)),
@@ -430,7 +430,7 @@ function t(Qe) {
     dt = rt === void 0 ? !1 : rt,
     ft = nt === void 0 ? !1 : nt,
     mt = it === void 0 ? "wrap" : it,
-    J = Ty(),
+    J = useResolvedTheme(),
     yt = De(F0e),
     vo;
   if (Re[12] !== Ae || Re[13] !== st || Re[14] !== yt || Re[15] !== J)
@@ -760,7 +760,7 @@ function* Ct(r) {
     for (let l = 0; l < r.length; l++) yield { value: r[l], width: 1 };
     return;
   }
-  for (let { segment: l } of Xs().segment(r)) {
+  for (let { segment: l } of getGraphemeSegmenter().segment(r)) {
     if (l.length === 1) {
       let c = l.charCodeAt(0);
       if (c >= 32 && c < 127) {
@@ -773,32 +773,32 @@ function* Ct(r) {
 }
 function Oo(r, s) {
   switch (r) {
-    case zf.CURSOR_VISIBLE:
+    case TERMINAL_MODE_CODES.CURSOR_VISIBLE:
       return {
         type: "cursor",
         action: s ? { type: "show" } : { type: "hide" },
       };
-    case zf.ALT_SCREEN_CLEAR:
-    case zf.ALT_SCREEN:
+    case TERMINAL_MODE_CODES.ALT_SCREEN_CLEAR:
+    case TERMINAL_MODE_CODES.ALT_SCREEN:
       return { type: "mode", action: { type: "alternateScreen", enabled: s } };
-    case zf.BRACKETED_PASTE:
+    case TERMINAL_MODE_CODES.BRACKETED_PASTE:
       return { type: "mode", action: { type: "bracketedPaste", enabled: s } };
-    case zf.MOUSE_NORMAL:
+    case TERMINAL_MODE_CODES.MOUSE_NORMAL:
       return {
         type: "mode",
         action: { type: "mouseTracking", mode: s ? "normal" : "off" },
       };
-    case zf.MOUSE_BUTTON:
+    case TERMINAL_MODE_CODES.MOUSE_BUTTON:
       return {
         type: "mode",
         action: { type: "mouseTracking", mode: s ? "button" : "off" },
       };
-    case zf.MOUSE_ANY:
+    case TERMINAL_MODE_CODES.MOUSE_ANY:
       return {
         type: "mode",
         action: { type: "mouseTracking", mode: s ? "any" : "off" },
       };
-    case zf.FOCUS_EVENTS:
+    case TERMINAL_MODE_CODES.FOCUS_EVENTS:
       return { type: "mode", action: { type: "focusEvents", enabled: s } };
     default:
       return null;
@@ -1003,7 +1003,7 @@ class ce {
         let l = r.slice(2);
         if (l.endsWith("\x07")) l = l.slice(0, -1);
         else if (l.endsWith("\x1B\\")) l = l.slice(0, -2);
-        let c = CYn(l);
+        let c = parseOscSequence(l);
         if (c) {
           if (c.type === "link")
             if (c.action.type === "start")
@@ -1527,16 +1527,16 @@ function He(r) {
   return a.CLAUDE_CODE_ALT_SCREEN_FULL_REPAINT ? Math.max(r, dr) : r;
 }
 function bs(r = 16) {
-  let s = De(ok),
+  let s = De(ClockContext),
     [l, { isVisible: c }, f] = see(),
-    h = vle(),
+    h = useTerminalFocusState(),
     m = C(h),
     b = c;
   if (m.current !== h) ((m.current = h), (b = f()));
   let S = !!s && b && r !== null,
-    x = r === null ? null : Math.ceil(He(r) / Ev) * Ev,
+    x = r === null ? null : Math.ceil(He(r) / CLOCK_TICK_INTERVAL_MS) * CLOCK_TICK_INTERVAL_MS,
     R = C(0),
-    v = At(S ? s.subscribeKeepAlive : Rle, () =>
+    v = At(S ? s.subscribeKeepAlive : noopSubscribe, () =>
       S
         ? (R.current = Math.max(R.current, Math.floor(s.now() / x) * x))
         : R.current,
@@ -1548,13 +1548,13 @@ var fr = () => De(Q0),
   uE = fr;
 F();
 function nk(r, s) {
-  let l = De(ok),
+  let l = De(ClockContext),
     c = C(r);
   c.current = r;
   let f = C(null),
     h = re((b) => () => f.current?.(), []);
   At(h, sDt);
-  let m = l?.setTimeout ?? cF;
+  let m = l?.setTimeout ?? setTimeoutWithCancel;
   return V(() => {
     let b = (...S) => {
       (f.current?.(),
@@ -1612,11 +1612,11 @@ function KOt(r) {
 }
 F();
 function XOt(r) {
-  let s = De(ok),
-    l = r === null ? null : Math.ceil(He(r) / Ev) * Ev,
+  let s = De(ClockContext),
+    l = r === null ? null : Math.ceil(He(r) / CLOCK_TICK_INTERVAL_MS) * CLOCK_TICK_INTERVAL_MS,
     c = C(null),
     f = V(() => {
-      if (!s || l === null) return Rle;
+      if (!s || l === null) return noopSubscribe;
       return (h) =>
         s.subscribeFollower(() => {
           ((c.current = s.now()), h());
@@ -1631,7 +1631,7 @@ function XOt(r) {
 function ko(r, s, l) {
   let c = C(r);
   c.current = r;
-  let f = De(ok),
+  let f = De(ClockContext),
     h = l?.immediate ?? !1,
     m = C(null),
     b = V(
@@ -1730,14 +1730,14 @@ function Rat(r, s) {
     c = C(null);
   E(() => {
     if (r === null) {
-      if (c.current !== null && l && z8e()) l(mw(jSt));
+      if (c.current !== null && l && isTabStatusEnabled()) l(wrapOscForMultiplexer(RESET_TAB_STATUS_SEQUENCE));
       c.current = null;
       return;
     }
-    if (((c.current = r), !l || !z8e())) return;
+    if (((c.current = r), !l || !isTabStatusEnabled())) return;
     let f = br[r],
       h = r === "idle" && s !== void 0 ? { ...f, status: s } : f;
-    l(mw(RYn(h)));
+    l(wrapOscForMultiplexer(formatTabStatus(h)));
   }, [r, s, l]);
 }
 F();
@@ -1745,14 +1745,14 @@ function n7(r) {
   let s = De(Z0);
   E(() => {
     if (r === null || !s) return;
-    let l = pt(r);
-    s(Jp(_d.SET_TITLE_AND_ICON, l));
+    let l = stripAnsi(r);
+    s(formatOscSequence(OSC_CODES.SET_TITLE_AND_ICON, l));
   }, [r, s]);
 }
 F();
 var gr = () => !1;
 function Un(r, s, l) {
-  let c = De(ok),
+  let c = De(ClockContext),
     f = typeof r === "function",
     h = f ? r : null,
     m = f ? s : r,
@@ -1760,9 +1760,9 @@ function Un(r, s, l) {
     S = C(h);
   S.current = h;
   let x = C(null),
-    R = c?.setTimeout ?? cF,
+    R = c?.setTimeout ?? setTimeoutWithCancel,
     v = V(() => {
-      if (m === null) return Rle;
+      if (m === null) return noopSubscribe;
       let O = (P) => (
         (x.current = null),
         P(),
@@ -1782,7 +1782,7 @@ var xr = (r) => ({
   }),
   Od = xr;
 function je(r, s) {
-  let l = Ry(fe, null, Ry(xat, null, Ry($0e, null, Ry(Je, null, r))));
+  let l = Ry(fe, null, Ry(ThemeProvider, null, Ry(KillRingProvider, null, Ry(Je, null, r))));
   return s !== void 0 ? Ry(StorageV5ContextProvider, { ...s, children: l }) : l;
 }
 function qt() {

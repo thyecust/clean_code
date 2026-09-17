@@ -8,28 +8,28 @@
 
 // Version: 2.1.263
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Bf, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { le, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { bc, ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
+import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { getOtelHeadersHelperLastFailure, ee, ZUe, hQ } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Tb, Xge, lL } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { S0 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { _x } from "../../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js";
-import { tv } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
+import { WSL_MANAGED_SETTINGS_DIR } from "../../01-核心基础设施/共享小工具-未细化/mdm-policy-paths.js";
+import { getKeychainAccountName } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import { Jqn, isScrubOnlySandboxMode, SandboxManager, ULe, vde } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { L9n, pte, Fbe, Gce, kan, M9n, $9n } from "./chunk-548xet6h.js";
 import { getLocalBinDir } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
 import { join as J } from "path";
 var Q = createLazyValue(() =>
@@ -44,10 +44,10 @@ var Q = createLazyValue(() =>
   }),
 );
 function T() {
-  return J(be(), ".last-update-result.json");
+  return J(getClaudeConfigDir(), ".last-update-result.json");
 }
 function O() {
-  return Ce.state("last-update-result");
+  return STORAGE_KEYS.state("last-update-result");
 }
 async function Wce(e, t) {
   if (isHoverRestEnabled() && t) {
@@ -57,7 +57,7 @@ async function Wce(e, t) {
     return;
   }
   try {
-    await qt().atomicWrite(T(), b(e));
+    await getFileStorage().atomicWrite(T(), b(e));
   } catch (i) {
     n(`Failed to record update result: ${i}`, { level: "error" });
   }
@@ -76,7 +76,7 @@ async function sFt(e) {
     t = Buffer.from(r.value).toString("utf8");
   } else
     try {
-      t = await qt().read(T());
+      t = await getFileStorage().read(T());
     } catch (i) {
       if (!W(i)) n(`Failed to read update result: ${i}`, { level: "error" });
       return null;
@@ -196,7 +196,7 @@ class E {
 var te = new j(
   () =>
     new E({
-      platform: P,
+      platform: getCurrentPlatform,
       readOsRelease: () => Y("/etc/os-release", "utf8"),
       execFileNoThrow: execFileNoThrow,
       execPath: () => process.execPath || process.argv[0] || "",
@@ -242,7 +242,7 @@ import { delimiter, join as g, posix, win32 as A } from "path";
 function re() {
   let e = process.argv[1] || "",
     t = process.execPath || process.argv[0] || "";
-  if (P() === "windows")
+  if (getCurrentPlatform() === "windows")
     ((e = e.split(A.sep).join(posix.sep)), (t = t.split(A.sep).join(posix.sep)));
   return [e, t];
 }
@@ -250,7 +250,7 @@ async function ce() {
   let [e, t] = re();
   if (bc()) {
     let l =
-      be().replace(/\\/g, "/").replace(/\/+$/, "") + "/local/node_modules/";
+      getClaudeConfigDir().replace(/\\/g, "/").replace(/\/+$/, "") + "/local/node_modules/";
     if (t.startsWith(l)) return "npm-local";
     if (t.includes("/node_modules/@anthropic-ai/")) return "npm-global";
     if (
@@ -377,7 +377,7 @@ async function pe() {
   let s = await execFileNoThrow("npm", ["-g", "config", "get", "prefix"]);
   if (s.code === 0 && s.stdout) {
     let o = s.stdout.trim(),
-      y = P() === "windows",
+      y = getCurrentPlatform() === "windows",
       d = y ? g(o, "claude") : g(o, "bin", "claude"),
       u = !1;
     try {
@@ -421,7 +421,7 @@ async function pe() {
   return t;
 }
 function me(e, t) {
-  let i = P() === "windows",
+  let i = getCurrentPlatform() === "windows",
     r = t;
   if (i) r = t.split(A.sep).join(posix.sep).toLowerCase();
   return e.some((s) => {
@@ -435,7 +435,7 @@ function me(e, t) {
 async function fe(e) {
   let t = [],
     i = [Tb()];
-  if (P() === "wsl" && S0()) i.unshift(_x);
+  if (getCurrentPlatform() === "wsl" && S0()) i.unshift(WSL_MANAGED_SETTINGS_DIR);
   for (let o of i)
     try {
       let y = await ie(g(o, "managed-settings.json"), "utf-8"),
@@ -477,7 +477,7 @@ async function fe(e) {
         fix: `If you put a launcher wrapper there on purpose, this is expected \u2014 new versions still install under $XDG_DATA_HOME/claude/versions, your launcher decides what runs, and automatic version cleanup is disabled on this machine (the installer cannot tell which version your launcher needs, so it keeps them all). To let Claude Code manage the launcher again, remove ${u} and run \`claude update\`.`,
       });
     if (!me(o, d))
-      if (P() === "windows") {
+      if (getCurrentPlatform() === "windows") {
         let c = d.split(posix.sep).join(A.sep);
         t.push({
           issue: `Native installation exists but ${c} is not in your PATH`,
@@ -530,7 +530,7 @@ async function fe(e) {
 }
 async function ge() {
   let e = "Claude Code-doctor-probe",
-    t = tv(),
+    t = getKeychainAccountName(),
     i = Buffer.from("probe", "utf-8").toString("hex"),
     r = `add-generic-password -U -a "${t}" -s "${e}" -X "${i}"
 `,
@@ -574,7 +574,7 @@ function he() {
   });
 }
 function ye() {
-  if (P() !== "linux") return [];
+  if (getCurrentPlatform() !== "linux") return [];
   let e = [],
     t = SandboxManager.getLinuxGlobPatternWarnings();
   if (t.length > 0) {
@@ -588,13 +588,13 @@ function ye() {
   return e;
 }
 function I(e) {
-  let t = e.map((s) => Sn(stripVTControlCharacters(s)).trim()),
+  let t = e.map((s) => replaceControlChars(stripVTControlCharacters(s)).trim()),
     i = t.slice(0, 3).join(", "),
     r = t.length - 3;
   return r > 0 ? `${i} (${r} more)` : i;
 }
 async function we() {
-  let e = P();
+  let e = getCurrentPlatform();
   if (e !== "linux" && e !== "wsl") return [];
   if (!SandboxManager.isSandboxingEnabled()) return [];
   let t = SandboxManager.getConfig();
@@ -700,7 +700,7 @@ async function Mbe({ probeKeychain: e = !1, storageV5: t } = {}) {
           f.type === "npm-global-orphan" ||
           f.type === "npm-local",
       ),
-      D = P() === "windows";
+      D = getCurrentPlatform() === "windows";
     for (let f of w)
       if (f.type === "npm-global") {
         let L = "npm -g uninstall @anthropic-ai/claude-code";

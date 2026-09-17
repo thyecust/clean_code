@@ -10,12 +10,12 @@
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { X0n, t7t, n7t } from "./chunk-5ss8pwgq.js";
+import { adoptStorageV5EnvPin, recordHoverRestDecision, tryCreateV5Backend } from "./storage-v5-env-pin.js";
 function pinStorageV5(e) {
   if (
-    (t7t(a.CLAUDE_CODE_HOVER_REST ?? H("tengu_hover_rest", !1)), e === void 0)
+    (recordHoverRestDecision(a.CLAUDE_CODE_HOVER_REST ?? H("tengu_hover_rest", !1)), e === void 0)
   )
-    return isHoverRestEnabled() ? n7t() : void 0;
-  return X0n(e);
+    return isHoverRestEnabled() ? tryCreateV5Backend() : void 0;
+  return adoptStorageV5EnvPin(e);
 }
 export { pinStorageV5 };

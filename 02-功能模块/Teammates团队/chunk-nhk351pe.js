@@ -10,7 +10,7 @@
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { K, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { OSt } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Zy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -18,10 +18,10 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { yBt, BS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { hCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
+import { isUuidString } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import { Nu, qI, dK, uN } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { Wee, Rsn, DPe } from "../权限系统/chunk-4tar9p3n.js";
-import { isSaneEpochMs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { getInboundPolicy, getPeerInboundPolicy, getHeldPeerMessageCount } from "../权限系统/cross-session-inbound-gate.js";
+import { isSaneEpochMs } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { s, se, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var R = 43200000,
@@ -110,12 +110,12 @@ var d = new F(),
   Y = 4,
   Q = 4;
 function ysn(e, i, t, r, o, a, _, v) {
-  if (!hCe(t))
+  if (!isUuidString(t))
     return (logFeatureSad("cross_session_notify_idle", "invalid_frame"), "invalid");
   let b = Zy(i);
   if (b === void 0)
     return (logFeatureSad("cross_session_notify_idle", "invalid_frame"), "invalid");
-  if (Wee() === "refuse")
+  if (getInboundPolicy() === "refuse")
     return (logFeatureSad("cross_session_notify_idle", "refused_by_policy"), "refused");
   let u = d;
   if (u.exited)
@@ -182,7 +182,7 @@ function JNt(e, i) {
         (t.turnConversationId = K()),
         (t.busyObserved = !1));
     else if (!t.turnEnded) t.idleSince = Date.now();
-    if (((t.parkedHoldBack = DPe() > 0), t.subscribers.length > 0)) P();
+    if (((t.parkedHoldBack = getHeldPeerMessageCount() > 0), t.subscribers.length > 0)) P();
     return;
   }
   if (t.debounce) (clearTimeout(t.debounce), (t.debounce = null));
@@ -198,7 +198,7 @@ function Z() {
     P();
     return;
   }
-  if (DPe() > 0) {
+  if (getHeldPeerMessageCount() > 0) {
     ((d.parkedHoldBack = !0), P(z));
     return;
   }
@@ -215,7 +215,7 @@ async function QNt(e) {
       await Promise.all([...i.inflight].map((a) => a.catch(() => {})));
   }
   let t =
-    e === "exited" && i.idle && yBt() === 0 && !i.parkedHoldBack && DPe() === 0
+    e === "exited" && i.idle && yBt() === 0 && !i.parkedHoldBack && getHeldPeerMessageCount() === 0
       ? "idle"
       : e;
   if ((O(Date.now()), i.subscribers.length === 0 || i.sendNotice === null))
@@ -232,13 +232,13 @@ async function QNt(e) {
   }
 }
 async function J(e, i, t, r, o) {
-  if (Wee() === "refuse") {
+  if (getInboundPolicy() === "refuse") {
     logFeatureSad("cross_session_notify_idle", "revoked_before_fire");
     return;
   }
   let a = e.turnEnded && e.turnConversationId === K(),
     _ = o === "idle" ? (a ? e.idleSince : void 0) : Date.now(),
-    v = (l) => Rsn({ fromMode: l.fromMode, selfSent: l.selfSent }) === "accept",
+    v = (l) => getPeerInboundPolicy({ fromMode: l.fromMode, selfSent: l.selfSent }) === "accept",
     b =
       o === "idle" && a && t.some((l) => l.verifiedPeerPid !== void 0 && v(l))
         ? ee()
@@ -257,13 +257,13 @@ async function J(e, i, t, r, o) {
         `[peer-idle] registry unreadable at fire time; notices carry no detail (${qI(String(l))})`,
       );
     }
-  if (Wee() === "refuse") {
+  if (getInboundPolicy() === "refuse") {
     logFeatureSad("cross_session_notify_idle", "revoked_before_fire");
     return;
   }
-  if (r === "idle" && (!e.idle || yBt() > 0 || DPe() > 0)) {
+  if (r === "idle" && (!e.idle || yBt() > 0 || getHeldPeerMessageCount() > 0)) {
     if ((B(t), e.idle)) {
-      let l = DPe() > 0;
+      let l = getHeldPeerMessageCount() > 0;
       ((e.parkedHoldBack = l), P(l ? z : L));
     }
     return;
@@ -361,7 +361,7 @@ function pdt(e) {
   return E(e) ?? "(unnamed session)";
 }
 function E(e) {
-  let i = oe(e, D * 8)
+  let i = truncateToCodeUnits(e, D * 8)
     .replace(/[\p{Cc}\p{Cf}<>\u00ab\u00bb"[\]]/gu, " ")
     .replace(/[\s\p{Z}]+/gu, " ");
   for (;;) {
@@ -482,7 +482,7 @@ function bsn(e, i, t, r, o, a) {
 }
 function te(e) {
   let { gate: i, detail: t, ...r } = e,
-    o = i === "local" ? Wee() : Rsn(i);
+    o = i === "local" ? getInboundPolicy() : getPeerInboundPolicy(i);
   if (o === "refuse") return null;
   let a = i === "local" || o === "accept";
   return { ...r, modelVisible: a, ...(a && t !== void 0 && { detail: t }) };
@@ -610,7 +610,7 @@ function re(e) {
   }
 }
 function Esn() {
-  d.parkedHoldBack = DPe() > 0;
+  d.parkedHoldBack = getHeldPeerMessageCount() > 0;
 }
 function Dhr(e) {
   (d.hostStatusUnsubscribe?.(), (d.hostStatusUnsubscribe = e));
@@ -636,7 +636,7 @@ function B(e) {
 }
 function mdt(e, i, t, r, o, a = !1) {
   let _ = d.sendNotice;
-  if (_ === null || Wee() === "refuse") return;
+  if (_ === null || getInboundPolicy() === "refuse") return;
   _(e, { orig_msg_id: i, state: "unavailable" }, t, H(t, r), o).then(
     () => {},
     (v) => {

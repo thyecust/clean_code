@@ -15,14 +15,14 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, Kd, Vje } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { E, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { createJsonFileStore } from "../../01-核心基础设施/共享小工具-未细化/json-file-store.js";
@@ -36,20 +36,20 @@ var q = createLazyValue(() => c({ number: T(), title: s(), closedAt: s() })),
   Q = 86400000,
   X = 30;
 function B() {
-  return createJsonFileStore(V(be(), "cache", "my-closed-issues.json"), L, {
+  return createJsonFileStore(V(getClaudeConfigDir(), "cache", "my-closed-issues.json"), L, {
     defaultValue: () => [],
     ensureDir: !0,
   });
 }
 function K() {
-  return Ce.cache("my-closed-issues", "my-closed-issues.json");
+  return STORAGE_KEYS.cache("my-closed-issues", "my-closed-issues.json");
 }
 function Z(e) {
   return new Date(e - X * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 }
 async function O(e) {
   if (ke()) return null;
-  if (St()) return null;
+  if (isEssentialTrafficOnly()) return null;
   let t = ee(),
     o = Date.now();
   if (o - (t.closedIssuesLastChecked ?? 0) < Q) return null;

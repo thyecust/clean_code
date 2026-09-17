@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Qur } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getCooContext } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 function getCooContextProperties() {
-  let { namespace: _, cluster: a } = Qur();
+  let { namespace: _, cluster: a } = getCooContext();
   return { ...(_ && { cooNamespace: _ }), ...(a && { cooCluster: a }) };
 }
 export { getCooContextProperties };

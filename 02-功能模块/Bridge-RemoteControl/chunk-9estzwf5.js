@@ -10,7 +10,7 @@
 import { ns, fv, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { uo } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSimpleMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { CLAUDE_AI_INFERENCE_SCOPE } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import {
   r0,
@@ -32,10 +32,10 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { yXt } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getTelemetryDisabledEnvVar } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Pw } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Jo } from "../权限系统/chunk-ynkf3yy4.js";
-import { mx } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import { getSessionRuntimeState } from "../权限系统/chunk-ynkf3yy4.js";
+import { getComplianceTaints } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { THIRD_PARTY_PROVIDER_LABELS, THIRD_PARTY_PROVIDER_ENV_VARS, getAPIProvider, isFirstPartyProvider, getSecondaryProvider, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { D6, MRe, lBe, Qse, cBe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { getPolicyCacheRevision, isPolicyLimitsEligible, isPolicyAllowed, isPolicyRouteMissing, hasNameableComplianceTaint, getPolicyDefault, getResponseFromCache } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
@@ -80,7 +80,7 @@ function S() {
   return isPolicyLimitsCacheLoaded();
 }
 function describeRemoteControlPolicyDenial() {
-  return lBe("Remote Control", "is", mx(), O);
+  return lBe("Remote Control", "is", getComplianceTaints(), O);
 }
 async function getBridgeDisabledReason() {
   if (u()) return null;
@@ -103,7 +103,7 @@ async function getBridgeDisabledReason() {
   if (e === "unavailable") return REMOTE_CONTROL_POLICY_UNVERIFIABLE_MESSAGE;
   if (e === "denied") return T();
   if (!CU()) {
-    let o = yXt();
+    let o = getTelemetryDisabledEnvVar();
     if (o)
       return `Remote Control requires feature-flag evaluation, which is disabled because ${o} is set. Unset it (or run in a shell without it) to use Remote Control.`;
     if (a.DISABLE_GROWTHBOOK)
@@ -136,7 +136,7 @@ function D(e) {
 function getRemoteControlPolicyLockReason() {
   if (u()) return null;
   if (isRemoteControlHardDisabled()) return REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE;
-  let e = Jo(),
+  let e = getSessionRuntimeState(),
     o = getPolicyCacheRevision(),
     t = e.remoteControlLockReason;
   if (t !== void 0 && t.policyCacheRevision === o) return t.reason;
@@ -161,7 +161,7 @@ function getBridgeAuthDebugInfo() {
     return [
       "",
       "[debug] Remote Control auth state:",
-      `  isBareMode=${uo()}`,
+      `  isBareMode=${isSimpleMode()}`,
       `  hasOAuthAccessToken=${!!o?.accessToken}`,
       `  oauthScopes=${o?.scopes?.join(",") ?? "none"}`,
       `  hasClaudeAIInferenceScope=${d()}`,
@@ -189,7 +189,7 @@ function v() {
     t = L();
   return [
     `  isGrowthBookEnabled=${CU()}`,
-    `  telemetryDisabledBy=${yXt() ?? "none"}`,
+    `  telemetryDisabledBy=${getTelemetryDisabledEnvVar() ?? "none"}`,
     `  DISABLE_GROWTHBOOK=${e(process.env.DISABLE_GROWTHBOOK)}`,
     `  hasFreshGrowthBookFeatures=${XC()}`,
     `  growthBookFeaturesLoaded=${Object.keys(o).length}`,
@@ -202,7 +202,7 @@ async function getBridgeDoctorInfo() {
     return { disabledReason: null, inRemoteSession: !0, checks: [] };
   (_q(), await ensurePolicyLimitsLoadedForDiagnostic());
   let e = await getBridgeDisabledReason(),
-    o = yXt() ?? (a.DISABLE_GROWTHBOOK ? "DISABLE_GROWTHBOOK" : null),
+    o = getTelemetryDisabledEnvVar() ?? (a.DISABLE_GROWTHBOOK ? "DISABLE_GROWTHBOOK" : null),
     t = isBridgeFirstParty(),
     r = !isRemoteControlHardDisabled(),
     i = d(),
@@ -211,7 +211,7 @@ async function getBridgeDoctorInfo() {
     p = !!h()?.organizationUuid,
     c = getRemoteControlPolicyVerdict(),
     m = S(),
-    I = D(mx()),
+    I = D(getComplianceTaints()),
     E = CU(),
     C = await od("tengu_ccr_bridge"),
     R = XC(),
@@ -386,7 +386,7 @@ async function k() {
   } catch {}
   let e = await import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
   e.initializePolicyLimitsLoadingPromise();
-  let o = Jo();
+  let o = getSessionRuntimeState();
   if (o.diagnosticPolicyKick === void 0) {
     let t = e.loadPolicyLimits();
     (t

@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ke } from "./chunk-fcskxvsh.js";
+import { readEmbeddedAssetSync } from "./embedded-text-asset.js";
 import { importMetaRequire } from "./chunk-2c9tjhwd.js";
 var t = importMetaRequire("./SKILL-e1sgkfee.md");
 var a = "./artifact-plan.html-1506d178.txt.zst";
-var e = Ke(a, import.meta.dirname);
+var e = readEmbeddedAssetSync(a, import.meta.dirname);
 var SKILL_MD = t,
   PLAN_TEMPLATE = e,
   SKILL_FILES = { "templates/artifact-plan.html": e };

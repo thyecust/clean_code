@@ -10,27 +10,27 @@
 
 // [preload stripped] 原本在此预载 81 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { $I, V3 } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
-import { aft } from "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
+import { getTerminalFocus, subscribeTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
+import { aft } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { mw, _d } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
-import { gBn } from "../../01-核心基础设施/共享小工具-未细化/chunk-ewa397cg.js";
-import { dG } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { wrapOscForMultiplexer, OSC_CODES } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { createOscQuery } from "../../01-核心基础设施/共享小工具-未细化/terminal-querier.js";
+import { isTmuxControlMode } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { sk } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
-import { cft, I3n } from "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
+import { setSystemTheme, detectThemeFromColor } from "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
 var v = 2000;
 function watchSystemTheme(e, d, p) {
   let o = !1,
     i = !1,
     y = p?.muxTimeoutMs ?? v,
-    m = Boolean(a.TMUX || a.STY) && !dG();
+    m = Boolean(a.TMUX || a.STY) && !isTmuxControlMode();
   async function u() {
     if (i) return;
     i = !0;
     try {
-      let s = gBn(_d.SET_BG_COLOR),
-        l = m ? { ...s, request: mw(s.request) } : s,
+      let s = createOscQuery(OSC_CODES.SET_BG_COLOR),
+        l = m ? { ...s, request: wrapOscForMultiplexer(s.request) } : s,
         t,
         f = m ? "dcs" : "direct";
       if (m) {
@@ -58,7 +58,7 @@ function watchSystemTheme(e, d, p) {
         return;
       }
       sk().osc11Responsive = !0;
-      let r = I3n(t.data);
+      let r = detectThemeFromColor(t.data);
       if (
         (n(`systemTheme: OSC 11 response=${t.data} detected=${r} via=${f}`, {
           level: "debug",
@@ -66,7 +66,7 @@ function watchSystemTheme(e, d, p) {
         r === void 0)
       )
         return;
-      (cft(r), d(r));
+      (setSystemTheme(r), d(r));
     } finally {
       i = !1;
     }
@@ -75,8 +75,8 @@ function watchSystemTheme(e, d, p) {
   if (sk().osc11Responsive !== !1 && !c) u();
   let T = e.subscribeThemeChange(() => void u()),
     h = c
-      ? V3(() => {
-          if ($I() === "focused")
+      ? subscribeTerminalFocus(() => {
+          if (getTerminalFocus() === "focused")
             aft().then(() => {
               if (!o) u();
             });

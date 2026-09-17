@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { PP, PQ } from "../../01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js";
+import { ZOD_ISSUE_CODES, createCoercedZodNumber } from "../../01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js";
 import {
   Mke,
   lW,
@@ -576,7 +576,7 @@ var kSe = Hb(() => $e([s(), T(), O(), Uf(), fe(s(), kSe), v(kSe)])),
       if (!URL.canParse(e))
         return (
           o.addIssue({
-            code: PP.custom,
+            code: ZOD_ISSUE_CODES.custom,
             message: "URL must be parseable",
             fatal: !0,
           }),
@@ -683,7 +683,7 @@ var kSe = Hb(() => $e([s(), T(), O(), Uf(), fe(s(), kSe), v(kSe)])),
     access_token: s(),
     id_token: s().optional(),
     token_type: s(),
-    expires_in: PQ().optional(),
+    expires_in: createCoercedZodNumber().optional(),
     scope: s().optional(),
     refresh_token: s().optional(),
   }).strip(),

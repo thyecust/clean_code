@@ -17,11 +17,11 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { isBgSession, isUnattendedBgSession, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { io, cnt, Xkt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { mS } from "../权限系统/chunk-e4pfvp7x.js";
+import { formatSingleLineText, MAX_DESCRIPTION_LENGTH, MARKDOWN_SYNTAX_CHARS } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { FORK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { o, t, ko, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
-import { yln } from "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
+import { setClipboard } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { isDetachedSinceLastAttach } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
@@ -44,7 +44,7 @@ import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-a
 import { Td } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { js } from "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import { $8 } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
@@ -60,7 +60,7 @@ import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
+import { isCoordinatorModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
 import { s, se, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -126,7 +126,7 @@ function ve({
       ((P.current = null), Pe(null), V.current?.scrollTo(0));
     },
     [ge, Ee] = d(0),
-    { rows: at, columns: lt } = ks(useTerminalSize()),
+    { rows: at, columns: lt } = useVirtualScrollViewportSize(useTerminalSize()),
     ye = jn(),
     J = isBgSession() && !ye;
   (ko(() => st((a) => a + 1), T || ne ? null : 80),
@@ -232,7 +232,7 @@ function ve({
     }
     if (a.key === "c" && !a.ctrl && !a.meta && A) {
       (a.preventDefault(),
-        z_(Td(A)).then((f) => {
+        setClipboard(Td(A)).then((f) => {
           if (f) process.stdout.write(f);
         }),
         Ee((f) => f + 1));
@@ -261,7 +261,7 @@ ${T}`
         S = () => {
           ((K.current = !1), Me(!1));
         };
-      if (!Ci())
+      if (!isCoordinatorModeEnabled())
         Promise.all([
           import("../权限系统/chunk-asdzywd2.js"),
           import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
@@ -272,7 +272,7 @@ ${T}`
           )
           .then((g) => {
             if (g)
-              w(`${mS} forked ${g.name} (${g.agentId.slice(-4)})`, {
+              w(`${FORK_GLYPH} forked ${g.name} (${g.agentId.slice(-4)})`, {
                 display: "system",
               });
             else
@@ -375,9 +375,9 @@ ${T}`
             ? {
                 originalModel: v.refusal_fallback.original_model,
                 fallbackModel: v.refusal_fallback.fallback_model,
-                content: io(v.refusal_fallback.content, {
-                  drop: Xkt,
-                  maxCodeUnits: cnt,
+                content: formatSingleLineText(v.refusal_fallback.content, {
+                  drop: MARKDOWN_SYNTAX_CHARS,
+                  maxCodeUnits: MAX_DESCRIPTION_LENGTH,
                 }),
               }
             : void 0;
@@ -566,7 +566,7 @@ function Ge(i) {
   return { error: l(i) || "Failed to get response" };
 }
 function fe() {
-  return isUnattendedBgSession() || (isBgSession() && yln());
+  return isUnattendedBgSession() || (isBgSession() && isDetachedSinceLastAttach());
 }
 function Rt(i) {
   i.clearPendingReopen();
@@ -599,7 +599,7 @@ function j(i, u, h = fe()) {
   if (
     (i.armReopen(u, () =>
       VP(() => {
-        if (yln()) i.reopenAway = !0;
+        if (isDetachedSinceLastAttach()) i.reopenAway = !0;
         if (isUnattendedBgSession()) {
           i.reopenAway = !0;
           return;

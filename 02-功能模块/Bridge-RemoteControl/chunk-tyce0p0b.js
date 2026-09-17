@@ -16,11 +16,11 @@ import { H, od } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { getSecureStorage } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { eVt, mrr } from "./chunk-5ne99rq3.js";
-import { tZ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getPlatformDisplayName } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { hostname } from "os";
 var m = "tengu_sessions_elevated_auth_enforcement",
   c = "require_trusted_devices",
@@ -185,7 +185,7 @@ async function enrollTrustedDevice({ trigger: e = "proactive", credentials: t })
       return;
     }
     let d = { trigger: fromEnum(e), org_enforced: E };
-    if (St()) {
+    if (isEssentialTrafficOnly()) {
       n("[trusted-device] Essential traffic only, skipping enrollment");
       return;
     }
@@ -200,7 +200,7 @@ async function enrollTrustedDevice({ trigger: e = "proactive", credentials: t })
     try {
       s = await at.post(
         `${P}/api/auth/trusted_devices`,
-        { display_name: `Claude Code on ${hostname()} \xB7 ${tZ("darwin")}` },
+        { display_name: `Claude Code on ${hostname()} \xB7 ${getPlatformDisplayName("darwin")}` },
         {
           headers: {
             Authorization: `Bearer ${D}`,

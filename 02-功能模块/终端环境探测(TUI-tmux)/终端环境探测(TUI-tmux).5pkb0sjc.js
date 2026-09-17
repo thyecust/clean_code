@@ -12,11 +12,11 @@ import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { zg, CU, $f, H, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
-import { Vd } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { getEnvEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { spawnSync } from "child_process";
 function C() {
   return {
@@ -34,7 +34,7 @@ function C() {
     crashAutoOff: !1,
   };
 }
-var XI = C();
+var defaultFullscreenState = C();
 function f() {
   if (!a.TMUX) return !1;
   if (a.TERM_PROGRAM !== "iTerm.app") return !1;
@@ -62,12 +62,12 @@ function g(e) {
   if (o.status !== 0) return;
   e.tmuxControlModeProbed = o.stdout.trim() === "1";
 }
-function dG(e = XI) {
+function isTmuxControlMode(e = defaultFullscreenState) {
   if (e.tmuxControlModeProbed === void 0) g(e);
   return e.tmuxControlModeProbed ?? !1;
 }
 function u() {
-  if (P() !== "windows") return !1;
+  if (getCurrentPlatform() !== "windows") return !1;
   return Boolean(a.SSH_CONNECTION || a.SSH_CLIENT || a.SSH_TTY);
 }
 class c {
@@ -84,17 +84,17 @@ class c {
   }
 }
 var x = new j(() => new c());
-function Pbt() {
+function getTuiTrialState() {
   return x.of(B().host);
 }
-function BJn() {
-  Pbt().latchFromEnv();
+function latchTuiTrialFromEnv() {
+  getTuiTrialState().latchFromEnv();
 }
 function a1e() {
-  let e = Pbt();
+  let e = getTuiTrialState();
   return (e.latchFromEnv(), e.mode);
 }
-function F7e() {
+function wasFullscreenAutoDisabledForVersion() {
   return (
     ee().fullscreenAutoDisabled?.version ===
     {
@@ -135,14 +135,14 @@ function S(e) {
   if (r !== void 0) e.freshInstallCached = r;
   return r ?? !1;
 }
-function Ta(e = XI) {
-  if (Vd() === "local-agent") return !1;
+function shouldUseFullscreen(e = defaultFullscreenState) {
+  if (getEnvEntrypoint() === "local-agent") return !1;
   if (a.CLAUDE_CODE_SESSION_KIND === "bg") return !0;
   if (zg()) return !1;
   if (s()) return !1;
   if (a.CLAUDE_CODE_NO_FLICKER === !0) return !0;
   if (e.crashAutoOff) return !1;
-  if (dG(e)) {
+  if (isTmuxControlMode(e)) {
     if (!e.loggedTmuxCcDisable)
       ((e.loggedTmuxCcDisable = !0),
         n(
@@ -172,19 +172,19 @@ function Ta(e = XI) {
   }
   return e.gbGateCached;
 }
-function p(e = XI) {
+function p(e = defaultFullscreenState) {
   return (
     (e.downsellGateCached ??= H("tengu_amber_creek", !1)),
     e.downsellGateCached
   );
 }
-function XAe(e = XI) {
+function isFullscreenEnabled(e = defaultFullscreenState) {
   if (zg()) return !1;
   if (s()) return !1;
   if (a.CLAUDE_CODE_NO_FLICKER === !0) return !0;
-  if (e.crashAutoOff || F7e()) return !1;
+  if (e.crashAutoOff || wasFullscreenAutoDisabledForVersion()) return !1;
   if (u()) return !1;
-  if (dG(e)) return !1;
+  if (isTmuxControlMode(e)) return !1;
   switch (getInitialSettings().tui) {
     case "fullscreen":
       return !0;
@@ -193,13 +193,13 @@ function XAe(e = XI) {
   }
   return !0;
 }
-function kH(e = XI) {
+function getFullscreenReason(e = defaultFullscreenState) {
   if (a.CLAUDE_CODE_SESSION_KIND === "bg") return "bg_forced_on";
   if (zg()) return "sr_auto_off";
   if (s()) return "env_off";
   if (a.CLAUDE_CODE_NO_FLICKER === !0) return "env_on";
   if (e.crashAutoOff) return "crash_auto_off";
-  if (dG(e)) return "tmux_cc_auto_off";
+  if (isTmuxControlMode(e)) return "tmux_cc_auto_off";
   if (u()) return "win_ssh_auto_off";
   let r = getInitialSettings().tui;
   switch (r ?? a1e()) {
@@ -212,7 +212,7 @@ function kH(e = XI) {
   if (e.downsellGateCached ?? H("tengu_amber_creek", !1)) return "downsell_on";
   return (e.gbGateCached ?? H("tengu_pewter_brook", !1)) ? "gb_on" : "gb_off";
 }
-function Obt(e) {
+function fullscreenReasonToMode(e) {
   switch (e) {
     case "env_on":
     case "bg_forced_on":
@@ -233,7 +233,7 @@ function Obt(e) {
       return "default";
   }
 }
-function Dbt(e) {
+function isAutoDisabledFullscreenReason(e) {
   return (
     e === "env_off" ||
     e === "sr_auto_off" ||
@@ -241,15 +241,15 @@ function Dbt(e) {
     e === "win_ssh_auto_off"
   );
 }
-function jJn(e = XI) {
+function jJn(e = defaultFullscreenState) {
   return CU() && e.gbGateSource === "fallback";
 }
-function WJn() {
+function getNoFlickerEnvOverride() {
   if (a.CLAUDE_CODE_NO_FLICKER === !0) return "on";
   if (a.CLAUDE_CODE_NO_FLICKER === !1) return "off";
   return;
 }
-function xH() {
+function getMouseMode() {
   if (a.CLAUDE_CODE_DISABLE_MOUSE !== void 0)
     return a.CLAUDE_CODE_DISABLE_MOUSE ? "off" : "full";
   if (a.CLAUDE_CODE_DISABLE_MOUSE_CLICKS !== void 0)
@@ -275,15 +275,15 @@ function zSn() {
 function $7e() {
   return i.of(B().host).hasObserved;
 }
-function U7e(e) {
+function subscribeMouseObserved(e) {
   return i.of(B().host).subscribe(e);
 }
-function h_(e = XI) {
-  return ld() && Ta(e);
+function isFullscreenActive(e = defaultFullscreenState) {
+  return ld() && shouldUseFullscreen(e);
 }
-async function GJn(e = XI) {
+async function getTmuxMouseHint(e = defaultFullscreenState) {
   if (!a.TMUX) return null;
-  if (!h_(e) || dG(e)) return null;
+  if (!isFullscreenActive(e) || isTmuxControlMode(e)) return null;
   if (e.checkedTmuxMouseHint) return null;
   e.checkedTmuxMouseHint = !0;
   let r = await t(e, "mouse");
@@ -306,13 +306,13 @@ function t(e, r) {
     e[o]
   );
 }
-function qJn(e = XI) {
+function qJn(e = defaultFullscreenState) {
   if (!a.TMUX || f()) return;
   (t(e, "mouse"), t(e, "focus-events"));
 }
-async function zJn(e = XI) {
+async function zJn(e = defaultFullscreenState) {
   if (!a.TMUX) return null;
-  if (dG(e)) return null;
+  if (isTmuxControlMode(e)) return null;
   if (e.checkedTmuxFocusHint) return null;
   e.checkedTmuxFocusHint = !0;
   let r = await t(e, "focus-events");
@@ -320,26 +320,26 @@ async function zJn(e = XI) {
   return "tmux focus-events off \xB7 add 'set -g focus-events on' to ~/.tmux.conf and reattach for focus tracking";
 }
 export {
-  XI,
-  dG,
-  Pbt,
-  BJn,
+  defaultFullscreenState,
+  isTmuxControlMode,
+  getTuiTrialState,
+  latchTuiTrialFromEnv,
   a1e,
-  F7e,
+  wasFullscreenAutoDisabledForVersion,
   l1e,
-  Ta,
-  XAe,
-  kH,
-  Obt,
-  Dbt,
+  shouldUseFullscreen,
+  isFullscreenEnabled,
+  getFullscreenReason,
+  fullscreenReasonToMode,
+  isAutoDisabledFullscreenReason,
   jJn,
-  WJn,
-  xH,
+  getNoFlickerEnvOverride,
+  getMouseMode,
   zSn,
   $7e,
-  U7e,
-  h_,
-  GJn,
+  subscribeMouseObserved,
+  isFullscreenActive,
+  getTmuxMouseHint,
   qJn,
   zJn,
 };

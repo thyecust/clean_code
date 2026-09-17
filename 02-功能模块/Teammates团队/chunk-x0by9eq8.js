@@ -10,9 +10,9 @@
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { tur } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { isInsideTmux, getLeaderPaneId, getUserTmuxSocket, isTmuxAvailable } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
-import { jk, cCe } from "./chunk-6b13bhw1.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
+import { isInsideTmux, getLeaderPaneId, getUserTmuxSocket, isTmuxAvailable } from "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
+import { SwarmPaneError, assertNoControlCharacters } from "./team-file-store.js";
 import { SWARM_TMUX_SESSION_NAME, SWARM_TMUX_WINDOW_NAME, TMUX_BINARY, PANE_PLACEHOLDER_COMMAND, getSwarmTmuxSocketName } from "./chunk-enjekn9t.js";
 import { createMutex } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -55,7 +55,7 @@ async function respawnPaneWithCommand(e, t, a) {
     tur("agent", a),
   ]);
   if (r.code !== 0)
-    throw new jk(`Failed to send command to pane ${t}: ${r.stderr}`);
+    throw new SwarmPaneError(`Failed to send command to pane ${t}: ${r.stderr}`);
 }
 class TmuxBackend {
   type = "tmux";
@@ -81,7 +81,7 @@ class TmuxBackend {
   }
   async sendCommandToPane(e, t, a = !1) {
     try {
-      cCe(t);
+      assertNoControlCharacters(t);
     } catch (o) {
       throw (logFeatureBad("swarm_pane_spawn", "swarm_pane_command_control_chars"), o);
     }
@@ -214,7 +214,7 @@ class TmuxBackend {
         { useCwd: !0, toolCgroupClass: "agent" },
       );
       if (o.code !== 0)
-        throw new jk(
+        throw new SwarmPaneError(
           `Failed to create swarm session: ${o.stderr || "Unknown error"}`,
         );
       let i = o.stdout.trim(),
@@ -258,7 +258,7 @@ class TmuxBackend {
       PANE_PLACEHOLDER_COMMAND,
     ]);
     if (s.code !== 0)
-      throw new jk(
+      throw new SwarmPaneError(
         `Failed to create swarm-view window: ${s.stderr || "Unknown error"}`,
       );
     return (
@@ -269,10 +269,10 @@ class TmuxBackend {
   async createTeammatePaneWithLeader(e, t) {
     let a = await this.getCurrentPaneId(),
       r = await this.getCurrentWindowTarget();
-    if (!a || !r) throw new jk("Could not determine current tmux pane/window");
+    if (!a || !r) throw new SwarmPaneError("Could not determine current tmux pane/window");
     let s = await this.getCurrentWindowPaneCount(r);
     if (s === null)
-      throw new jk("Could not determine pane count for current window");
+      throw new SwarmPaneError("Could not determine pane count for current window");
     let o = s === 1,
       i;
     if (o)
@@ -316,7 +316,7 @@ class TmuxBackend {
         PANE_PLACEHOLDER_COMMAND,
       ]);
     }
-    if (i.code !== 0) throw new jk(h(i.stderr));
+    if (i.code !== 0) throw new SwarmPaneError(h(i.stderr));
     let u = i.stdout.trim();
     return (
       n(`[TmuxBackend] Created teammate pane for ${e}: ${u}`),
@@ -331,7 +331,7 @@ class TmuxBackend {
         await this.createExternalSwarmSession(),
       s = await this.getCurrentWindowPaneCount(a, !0);
     if (s === null)
-      throw new jk("Could not determine pane count for swarm window");
+      throw new SwarmPaneError("Could not determine pane count for swarm window");
     let o = !this.firstPaneUsedForExternal && s === 1,
       i;
     if (o)
@@ -363,7 +363,7 @@ class TmuxBackend {
           "--",
           PANE_PLACEHOLDER_COMMAND,
         ]);
-      if (m.code !== 0) throw new jk(h(m.stderr));
+      if (m.code !== 0) throw new SwarmPaneError(h(m.stderr));
       ((i = m.stdout.trim()),
         n(`[TmuxBackend] Created teammate pane for ${e}: ${i}`));
     }

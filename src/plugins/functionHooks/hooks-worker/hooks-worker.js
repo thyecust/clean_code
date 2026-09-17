@@ -10,8 +10,8 @@
 import { BMn, jMn, $0, XMn, YMn, JMn, Dz } from "./chunk-0t0sve49.js";
 import { l } from "./chunk-h4f48kbj.js";
 import "./analytics-fields.js";
-import { NHt, Je, QMn } from "./chunk-bzqqe6xh.js";
-import "./chunk-1wezmyx2.js";
+import { formatAbortReason, HooksError, getErrorCauseString } from "./chunk-bzqqe6xh.js";
+import "./string-utils.js";
 import { workerData } from "worker_threads";
 var H = (t) => ({
   post: (n) => t.postMessage(n),
@@ -51,7 +51,7 @@ var x = ({
     try {
       e();
     } catch (r) {
-      (t.delete(n), p(new Je(d(r))));
+      (t.delete(n), p(new HooksError(d(r))));
       return;
     }
     o = $0(c, { abort: u });
@@ -63,7 +63,7 @@ var T = (t, n) => (e, u) => {
     key: `${n}:${c}`,
     send: () => t.post({ type: "next", id: n, nextId: c, argument: e }),
     onAbort: () =>
-      t.post({ type: "next_abort", id: n, nextId: c, reason: NHt(u) }),
+      t.post({ type: "next_abort", id: n, nextId: c, reason: formatAbortReason(u) }),
     signal: u,
     notPlainMessage: (d) => `next() argument is not plain data: ${l(d)}`,
   });
@@ -74,7 +74,7 @@ function I(
 ) {
   let p = t.ports.get(n);
   if (!p)
-    return Promise.reject(new Je(`${e}: the plugin's environment is unloaded`));
+    return Promise.reject(new HooksError(`${e}: the plugin's environment is unloaded`));
   let { port: o } = p,
     r = ++t.opCounter;
   return x({
@@ -90,7 +90,7 @@ function I(
         args: u,
       }),
     onAbort: c
-      ? () => o.postMessage({ type: "op_abort", opId: r, reason: NHt(c) })
+      ? () => o.postMessage({ type: "op_abort", opId: r, reason: formatAbortReason(c) })
       : () => {},
     signal: c,
     notPlainMessage: (i) => `${e}: arguments are not plain data: ${l(i)}`,
@@ -98,7 +98,7 @@ function I(
 }
 function w(t) {
   for (let n of t.pendingOps.values())
-    n.reject(new Je("the plugin's environment was unloaded"));
+    n.reject(new HooksError("the plugin's environment was unloaded"));
   t.pendingOps.clear();
 }
 function E(t) {
@@ -135,7 +135,7 @@ function R(t) {
               let k = Dz(f, s.opId);
               s.type === "op_result"
                 ? k?.resolve(s.value)
-                : k?.reject(new Je(s.error));
+                : k?.reject(new HooksError(s.error));
             }),
             a.load(r, o.args).then(
               (m) => {
@@ -148,7 +148,7 @@ function R(t) {
               },
               (m) => {
                 (u.delete(r), i.close());
-                let s = QMn(m);
+                let s = getErrorCauseString(m);
                 e({
                   type: "load_error",
                   environmentId: r,
@@ -225,7 +225,7 @@ function R(t) {
           return;
         }
         case "abort":
-          d.get(o.id)?.abort(new Je(o.reason));
+          d.get(o.id)?.abort(new HooksError(o.reason));
           return;
         case "press": {
           let { pressId: r, environmentId: i, handle: f, e: m } = o;
@@ -245,7 +245,7 @@ function R(t) {
           let r = Dz(c, `${o.id}:${o.nextId}`);
           o.type === "next_result"
             ? r?.resolve(o.result)
-            : r?.reject(new Je(o.error));
+            : r?.reject(new HooksError(o.error));
           return;
         }
       }

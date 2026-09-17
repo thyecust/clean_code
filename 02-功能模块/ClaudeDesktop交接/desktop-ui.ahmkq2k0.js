@@ -17,7 +17,7 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { m0t, SJt, ZNn } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { a9, YB } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
+import { recordExitTranscript, appendCancelledContinueNotice } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
@@ -31,7 +31,7 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
@@ -136,13 +136,13 @@ Learn more at ${D}`,
           });
           return;
         }
-        ((c = await a9(x(), "desktop_handoff", {}, H)),
+        ((c = await recordExitTranscript(x(), "desktop_handoff", {}, H)),
           s({ state: "flushing" }),
           await flushSessionStorage(),
           s({ state: "opening" }));
         let i = await ZNn();
         if (!i.success) {
-          s({ state: "error", error: YB(i.error, c) });
+          s({ state: "error", error: appendCancelledContinueNotice(i.error, c) });
           return;
         }
         (s({ state: "success" }),
@@ -158,7 +158,7 @@ Learn more at ${D}`,
           }, 500));
       }
       T().catch((a) => {
-        s({ state: "error", error: YB(l(a), c, { as: "clause" }) });
+        s({ state: "error", error: appendCancelledContinueNotice(l(a), c, { as: "clause" }) });
       });
     }, []),
     p === "error")

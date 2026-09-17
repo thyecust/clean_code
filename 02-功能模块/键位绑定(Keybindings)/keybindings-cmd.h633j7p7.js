@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 79 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSafeMode, getSafeModeExitHint } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { K3, X8e, PNe, iN, Y8e, Uyn } from "./键位绑定(Keybindings).sanfja6a.js";
@@ -72,8 +72,8 @@ async function _(s, n) {
       type: "text",
       value: `${t ? "Opened" : "Created"} ${e}. ${o.error}`,
     };
-  let d = Hr()
-    ? ` (Safe mode: custom keybindings are disabled this session \u2014 changes take effect after you ${yf()}.)`
+  let d = isSafeMode()
+    ? ` (Safe mode: custom keybindings are disabled this session \u2014 changes take effect after you ${getSafeModeExitHint()}.)`
     : "";
   return {
     type: "text",

@@ -13,20 +13,20 @@ import { isHoverRestEnabled } from "../../../01-核心基础设施/共享小工�
 import { dt } from "../../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum, fromNumber } from "../../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, z, n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Wf, x, oe, ft, ln, To } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { capitalize, pluralize, truncateToCodeUnits, beforeFirst, countOccurrences, normalizeWhitespace } from "../../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import {
-  pp,
-  fz,
-  I0,
-  vu,
-  Ag,
-  BP,
-  jP,
-  Pd,
-  Rur,
-  Px,
-  gz,
-  St,
+  COMMAND_MESSAGE_TAG,
+  BASH_STDOUT_TAG,
+  BASH_STDERR_TAG,
+  LOCAL_COMMAND_STDOUT_TAG,
+  LOCAL_COMMAND_STDERR_TAG,
+  LOCAL_COMMAND_CAVEAT_TAG,
+  TICK_TAG,
+  TASK_NOTIFICATION_TAG,
+  buildArtifactRoomViewNotificationPrefix,
+  TEAMMATE_MESSAGE_TAG,
+  hashString,
+  isEssentialTrafficOnly,
   logError,
 } from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -65,32 +65,32 @@ import {
   getAutoMemPath,
   isAutoMemPath,
 } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Q } from "../../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { Pt } from "../../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te, truncateToWidth, truncateToWidthNoEllipsis, truncate, formatSecondsShort, formatDuration, formatNumber, formatTokens, formatResetTime } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Uw, Ce } from "../../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
+import { hasValidPathSegments, STORAGE_KEYS } from "../../../02-功能模块/Teammates团队/storage-keys.js";
 import { oL, xt } from "../../jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Js } from "../../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { j6, Uet, HQ, Ao, yx, TRt } from "../../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { pt } from "../../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { stripAnsi } from "../../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import {
-  Ar,
-  $Q,
-  Dw,
-  a2e,
-  kke,
-  g0n,
-  mS,
-  Dp,
-  r_,
-  _0n,
-  fkt,
-  TA,
+  CLAUDE_BULLET_GLYPH,
+  BULLET_OPERATOR_GLYPH,
+  CLAUDE_ASTERISK_GLYPH,
+  THEREFORE_GLYPH,
+  RETURN_KEY_GLYPH,
+  UPDATE_GLYPH,
+  FORK_GLYPH,
+  LOZENGE_OUTLINE_GLYPH,
+  LOZENGE_FILLED_GLYPH,
+  REFERENCE_MARK_GLYPH,
+  MUSIC_NOTE_GLYPH,
+  getPermissionModeColor,
 } from "../../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { SA, M5 } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { Skn, wkn } from "../../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
-import { Yxn } from "../../../02-功能模块/认证-OAuth登录/chunk-y7b7kf5n.js";
-import { dW } from "../../../02-功能模块/Git-Worktree/chunk-bk9696gx.js";
+import { isKeychainLocked } from "../../../02-功能模块/认证-OAuth登录/secure-storage.js";
+import { isGitLabMergeRequestUrl } from "../../../02-功能模块/Git-Worktree/git-repository-detection.js";
 import { BRIEF_TOOL_NAME } from "../../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import { iy, gc, _b, hA, JZe } from "../../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { SEND_USER_FILE_TOOL_NAME } from "../../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
@@ -98,15 +98,15 @@ import { rg } from "../../../02-功能模块/键位绑定(Keybindings)/键位绑
 import { Vm } from "../../ink/ink + react-reconciler.5rs3h07b.js";
 import { KeybindingHint } from "../../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
 import { qA } from "../Ink终端渲染器/chunk-hm8z9h7j.js";
-import { cn } from "../../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
+import { useTheme } from "../../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { useStorageV5Context } from "../../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { Eo } from "../../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
+import { resolveSetting } from "../../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
 import { gi, o, t, ct, jr, tn, pd, bs, ko } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Va, cF, Rle, ok } from "../../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
+import { useTerminalFocus, setTimeoutWithCancel, noopSubscribe, ClockContext } from "../../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { claimRegistriesByHost } from "../../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { Tf } from "../第三方库-其他/chunk-gdyh44zt.js";
 import { useClock } from "../../../01-核心基础设施/共享小工具-未细化/use-clock.js";
-import { ZHe, Ac, vh, Yd } from "../../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
+import { ExpandedTranscriptProvider, TranscriptExpandHint, OverflowHint, ToolErrorMessage } from "../../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import { DotSeparatedList } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { Oye } from "./chunk-jjqazdgg.js";
 import { ENTER_PLAN_MODE_TOOL_NAME, ASK_USER_QUESTION_TOOL_NAME } from "../../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
@@ -212,9 +212,9 @@ import {
 } from "../../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Td, PC, $a, U$, UCe, zfe, qj, UYe, Ni } from "../../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { ps } from "../../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { aP, eve, zo } from "../../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
+import { FRONTMATTER_PATTERN, STRICT_FRONTMATTER_PATTERN, parseFrontmatter } from "../../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import { eU } from "../../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
-import { so } from "../../../02-功能模块/权限系统/chunk-fjrcf22x.js";
+import { SKILL_TOOL_NAME } from "../../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { filterOutHookProgressMessages, getRegisteredTools, findToolByName, parseToolInput } from "../../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import { Jc, getPlan } from "../../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { Cr } from "../../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
@@ -255,12 +255,12 @@ import { Bl } from "../第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import { PUSH_NOTIFICATION_TOOL_NAME } from "../../../02-功能模块/Bridge-RemoteControl/push-notification-tool.js";
 import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, CRON_LIST_TOOL_NAME } from "../../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js";
 import { E$ } from "../../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
-import { zr } from "../../../02-功能模块/Teammates团队/chunk-3k2smxfn.js";
-import { CFC_TOOL_PREFIX } from "../../../02-功能模块/ClaudeinChrome/chunk-hnp84hf6.js";
-import { tm } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
+import { isAgentSwarmsEnabled } from "../../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
+import { CFC_TOOL_PREFIX } from "../../../02-功能模块/ClaudeinChrome/claude-in-chrome-host.js";
+import { isFromCurrentAgent } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import { useTerminalSize } from "../../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { ToolResultRow, Mye } from "../../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { rO, U, Yn, Os } from "../../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { ToolResultRow, useIsInsideToolResultRow } from "../../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import { AppStateContext, useAppStateSelector, useAppState, useAppStateSelectorUnchecked } from "../../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useHyperlinkSupport } from "../../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import { js } from "../../../02-功能模块/语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import { useSession } from "../../../01-核心基础设施/共享小工具-未细化/session-context.js";
@@ -284,26 +284,26 @@ import { shouldExpandContent } from "../../../01-核心基础设施/共享小工
 import { nF, QL, La, QZ, jA } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { StaticFrameContext } from "../../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import { useElapsedDuration } from "../../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
-import { bit, Pg } from "../../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
-import { fLt, Crn, H4 } from "../../../01-核心基础设施/共享小工具-未细化/chunk-s3mpt973.js";
-import { yPt, l_ } from "../../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
+import { ToolResultPreviewWidthContext, TruncatedFilePath } from "../../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
+import { MCP_TOOL_UI_TABLE_KEY, MCP_TOOL_OUTPUT_SCHEMA, MCP_TOOL_BASE } from "../../../01-核心基础设施/共享小工具-未细化/mcp-tool-base.js";
+import { VerboseToolResultProvider, ToolResultContent } from "../../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import { getHandbackPayloadSchema, getHandbackDisplayText } from "../../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
 import { renderToolUseMessageForTool } from "../../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
 import { resolveAgentColor, CollapsedMessagesHint } from "../../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
-import { LFt } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-0mg59v9m.js";
-import { Wm, MB } from "../../../02-功能模块/GitHub集成/chunk-bfz9rjjm.js";
-import { Tv, dtn } from "../../../02-功能模块/Hooks钩子/chunk-22aft7vr.js";
+import { conjugateVerbPhrase } from "../../../01-核心基础设施/核心工具-字符串与文本/verb-conjugation.js";
+import { DiffStatLabel, PullRequestBadge } from "../../../02-功能模块/GitHub集成/chunk-bfz9rjjm.js";
+import { pickRandom, useSpinnerThinkingStartedAt } from "../../../02-功能模块/Hooks钩子/spinner-store.js";
 import { sPt, yye, iPt, aPt } from "../../../02-功能模块/Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import { OffscreenFrozenContent, useOffscreenFrozenValue } from "../../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
 import { useCommandQueue } from "../../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
-import { tPt, nPt } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ctr3zhmb.js";
+import { CLOUD_SESSION_ENTRY_LABELS, CLOUD_SESSION_URL_SEPARATOR } from "../../../01-核心基础设施/共享小工具-未细化/cloud-session-status-message.js";
 import { BashToolOutputView } from "../../../02-功能模块/工具Bash-Shell/bash-output-view.js";
-import { wye, AWe, CWe, UA } from "../../../02-功能模块/工具UI渲染/chunk-g4k5jjwt.js";
+import { formatTimestamp, AWe, UserPromptText, TruncatedText } from "../../../02-功能模块/工具UI渲染/chunk-g4k5jjwt.js";
 import { renderWebFetchProgressMessage, ReceivedBytesStatus, renderWebFetchResultMessage } from "../../../01-核心基础设施/共享小工具-未细化/webfetch-tool-messages.js";
 import { DashedBorderBox } from "../../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
 import { BackgroundText } from "../../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import { EmptyStateMessage } from "../../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
-import { yv } from "../../../02-功能模块/通知(Notifications)/通知(Notifications).g4xng0pg.js";
+import { showNotification } from "../../../02-功能模块/通知(Notifications)/通知(Notifications).g4xng0pg.js";
 import { TitledBorderBox } from "../../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
 import { ProgressBar } from "../../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import { LinkifiedText } from "../../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
@@ -315,7 +315,7 @@ import { N, e, r } from "../../react/react.kwtapczy.js";
 import { formatHyperlink } from "../../../01-核心基础设施/共享小工具-未细化/format-hyperlink.js";
 import { formatBackgroundTaskSummary } from "../../../02-功能模块/Teammates团队/background-task-summary.js";
 import { get1MContextSuggestion } from "../../../01-核心基础设施/共享小工具-未细化/model-1m-context-suggestion.js";
-import { mLt, Rrn, N2n } from "../../../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js";
+import { stripControlChars, SLACK_SEND_TOOL_KEY, getSlackChannelDisplay } from "../../../01-核心基础设施/共享小工具-未细化/slack-send-tool.js";
 import { estimateContentTokens } from "../../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
 import { openPathInDefaultApp } from "../../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import {
@@ -334,15 +334,15 @@ import {
   At,
   F,
 } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { xs, L, fw } from "../../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
-import { sg } from "../../../02-功能模块/Teammates团队/chunk-z2t8b9yc.js";
+import { isTerminalTaskStatus, figures, sanitizeDisplayName } from "../../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
+import { TASK_STOP_TOOL_NAME } from "../../../02-功能模块/Teammates团队/chunk-z2t8b9yc.js";
 import { SEND_MESSAGE_TOOL_NAME } from "../../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 import { yCe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-xm1bhjkr.js";
 import { MONITOR_TOOL_NAME } from "../../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
-import { mt, Vh } from "../../../02-功能模块/工具Task-Agent调度/chunk-1px84m19.js";
-import { Mtt } from "../../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
+import { AGENT_TOOL_NAME, TASK_TOOL_NAME } from "../../../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
+import { detectLineEndings } from "../../../01-核心基础设施/共享小工具-未细化/safe-file-read.js";
 import { s, v, c, $e } from "../../zod/zod.5ef0bk11.js";
-import { Qo } from "../../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
+import { runPaginatedScan } from "../../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
 import { xA } from "../../lru-cache/lru-cache.8crev50p.js";
 import { formatFileSize } from "../../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { isRecord } from "../../../01-核心基础设施/共享小工具-未细化/is-record.js";
@@ -524,7 +524,7 @@ function jd(Oq) {
     if (Pr[2] === MEMO_CACHE_SENTINEL)
       ((Dd = e(o, {
         minWidth: 2,
-        children: e(t, { "aria-hidden": !0, color: "text", children: Ar }),
+        children: e(t, { "aria-hidden": !0, color: "text", children: CLAUDE_BULLET_GLYPH }),
       })),
         (Pr[2] = Dd));
     else Dd = Pr[2];
@@ -605,7 +605,7 @@ function jd(Oq) {
   if (Pr[13] === MEMO_CACHE_SENTINEL)
     ((Dd = e(o, {
       minWidth: 2,
-      children: e(t, { "aria-hidden": !0, color: "text", children: Ar }),
+      children: e(t, { "aria-hidden": !0, color: "text", children: CLAUDE_BULLET_GLYPH }),
     })),
       (Pr[13] = Dd));
   else Dd = Pr[13];
@@ -678,7 +678,7 @@ function pye() {
 }
 var pL = 600;
 function X_(l, f = pL) {
-  let g = Va(),
+  let g = useTerminalFocus(),
     [T, y] = bs(l && g ? f : null);
   if (!l || !g) return [T, !0];
   let R = Math.floor(y / f) % 2 === 0;
@@ -704,7 +704,7 @@ function Ho({ isError: l, isUnresolved: f, shouldAnimate: g }) {
         "aria-label": l ? "tool error:" : "tool:",
         color: f ? void 0 : l ? "error" : "success",
         dimColor: f,
-        children: !g || R || l || !f ? Ar : " ",
+        children: !g || R || l || !f ? CLAUDE_BULLET_GLYPH : " ",
       }),
     })
   );
@@ -796,7 +796,7 @@ function Fd(dH) {
     let ta;
     if (Go[25] !== sa || Go[26] !== jn)
       ((ta =
-        sa !== void 0 && !jn ? r(N, { children: [" ", e(Ac, {})] }) : null),
+        sa !== void 0 && !jn ? r(N, { children: [" ", e(TranscriptExpandHint, {})] }) : null),
         (Go[25] = sa),
         (Go[26] = jn),
         (Go[27] = ta));
@@ -844,9 +844,9 @@ function Fd(dH) {
             : r(t, {
                 dimColor: !0,
                 children: [
-                  r(t, { "aria-hidden": !0, children: [L.tick, " "] }),
+                  r(t, { "aria-hidden": !0, children: [figures.tick, " "] }),
                   "Advisor has reviewed the conversation and will apply the feedback ",
-                  e(Ac, {}),
+                  e(TranscriptExpandHint, {}),
                 ],
               })),
             (Go[36] = po.content),
@@ -862,7 +862,7 @@ function Fd(dH) {
           ((Ko = r(t, {
             dimColor: !0,
             children: [
-              r(t, { "aria-hidden": !0, children: [L.tick, " "] }),
+              r(t, { "aria-hidden": !0, children: [figures.tick, " "] }),
               "Advisor has reviewed the conversation and will apply the feedback",
             ],
           })),
@@ -953,7 +953,7 @@ function XIt(l) {
 function iu(l) {
   let f = getSubscriptionType(),
     g = f === "team" || f === "enterprise";
-  return XIt(l) && !g && !St() && planModeConstituentFamily(getUserSpecifiedModelSetting()) === null;
+  return XIt(l) && !g && !isEssentialTrafficOnly() && planModeConstituentFamily(getUserSpecifiedModelSetting()) === null;
 }
 F();
 var ML = 30000;
@@ -977,9 +977,9 @@ function pZt(l, f, g) {
   );
 }
 function DB(l) {
-  let g = De(ok)?.setTimeout ?? cF,
+  let g = De(ClockContext)?.setTimeout ?? setTimeoutWithCancel,
     T = V(() => {
-      if (l === null) return Rle;
+      if (l === null) return noopSubscribe;
       return (y) => pZt(l, g, y);
     }, [l, g]);
   return At(T, () => l !== null && Date.now() >= l);
@@ -1103,7 +1103,7 @@ function QIt(o2) {
     UL;
   if (au[9] !== sS || au[10] !== aa || au[11] !== iS)
     ((UL = (i2, a2) =>
-      void yv({ message: i2, notificationType: a2 }, iS, {
+      void showNotification({ message: i2, notificationType: a2 }, iS, {
         storageV5: aa,
         credentials: sS,
       })),
@@ -1503,7 +1503,7 @@ function tp(v2) {
     ((da = Xd
       ? r(t, {
           dimColor: !0,
-          children: ["Press ", kke, " to continue after reset"],
+          children: ["Press ", RETURN_KEY_GLYPH, " to continue after reset"],
         })
       : null),
       (ho[52] = Xd),
@@ -1616,12 +1616,12 @@ var git = "session running",
   DS = 20;
 function fZt(l) {
   let f = l
-    .split(mS)
+    .split(FORK_GLYPH)
     .map((y) => y.trim())
     .filter(Boolean);
   if (f.length === 0) return;
   let [g, ...T] = f;
-  return T.length === 0 ? g : `${g} ${mS} ${T.join(du)}`;
+  return T.length === 0 ? g : `${g} ${FORK_GLYPH} ${T.join(du)}`;
 }
 function pu(l) {
   if (!l.startsWith(git) && !l.startsWith(mWe)) return null;
@@ -1676,7 +1676,7 @@ function fu(l) {
 var BS = 200,
   xh = 5,
   pa = 1000,
-  dO = [`${Dp} `, `${r_} `];
+  dO = [`${LOZENGE_OUTLINE_GLYPH} `, `${LOZENGE_FILLED_GLYPH} `];
 function _h(l) {
   switch (l.subtype) {
     case "informational":
@@ -1805,8 +1805,8 @@ function Sh(l, f) {
   };
 }
 function Ph(l) {
-  let f = Lr(l, vu),
-    g = Lr(l, Ag),
+  let f = Lr(l, LOCAL_COMMAND_STDOUT_TAG),
+    g = Lr(l, LOCAL_COMMAND_STDERR_TAG),
     T = f === null ? "" : SA(f),
     y = g === null ? "" : SA(g),
     R = T.trim() !== "" && T.trim() !== sp,
@@ -1900,7 +1900,7 @@ function ga(
       .map((S) => S.trim())
       .filter((S) => S.length > 0);
   let R = y.slice(0, g).map((S) => {
-      let P = oe(S, f);
+      let P = truncateToCodeUnits(S, f);
       return P.length < S.length ? `${P}\u2026` : S;
     }),
     k = y.length - R.length;
@@ -1957,7 +1957,7 @@ var ip = 1000,
   nP = new Set([Bue, rgt, ngt, ogt, FDe]);
 function Hh() {
   let oz = _(1);
-  if (!kn(Yxn())) {
+  if (!kn(isKeychainLocked())) {
     return null;
   }
   let yO;
@@ -1979,8 +1979,8 @@ function Gh() {
     tz = Ie(process.env.DISABLE_COMPACT)
       ? "/clear to continue"
       : "/compact or /clear to continue",
-    rz = U(DO) !== void 0,
-    nz = Mye(),
+    rz = useAppStateSelector(DO) !== void 0,
+    nz = useIsInsideToolResultRow(),
     Nh =
       !rz && !nz && rfn()
         ? " \xB7 auto-compact is off \xB7 /config to turn it on"
@@ -2072,7 +2072,7 @@ function Kh(az) {
       onRateLimitAutoQueueContinue: JS,
     } = az,
     { text: Be } = lz,
-    mz = Mye(),
+    mz = useIsInsideToolResultRow(),
     Ih = jA(Oh) && !mz;
   if (OMe(Be)) {
     return null;
@@ -2328,7 +2328,7 @@ function Kh(az) {
             children: e(t, {
               "aria-label": "claude:",
               color: "text",
-              children: Ar,
+              children: CLAUDE_BULLET_GLYPH,
             }),
           })),
           (lo[43] = XS),
@@ -2402,7 +2402,7 @@ function Xh(cz) {
   let $n = _(23),
     { text: OO, verbose: oP, addMargin: dz } = cz,
     { columns: pz } = useTerminalSize(),
-    hz = Mye();
+    hz = useIsInsideToolResultRow();
   const tP = OO === Bl ? `${Bl}: Please wait a moment and try again.` : OO;
   let vO, si;
   if ($n[0] !== tP || $n[1] !== oP) {
@@ -2420,7 +2420,7 @@ function Xh(cz) {
         ($n[5] = ii));
     else ii = $n[5];
     let Ta;
-    if ($n[6] !== si) ((Ta = si && e(Ac, {})), ($n[6] = si), ($n[7] = Ta));
+    if ($n[6] !== si) ((Ta = si && e(TranscriptExpandHint, {})), ($n[6] = si), ($n[7] = Ta));
     else Ta = $n[7];
     let yu;
     if ($n[8] !== ii || $n[9] !== Ta)
@@ -2439,7 +2439,7 @@ function Xh(cz) {
       children: e(t, {
         "aria-label": "error:",
         color: "warning",
-        children: Ar,
+        children: CLAUDE_BULLET_GLYPH,
       }),
     })),
       ($n[11] = Ta));
@@ -2452,7 +2452,7 @@ function Xh(cz) {
       ($n[13] = $h));
   else $h = $n[13];
   let Wh;
-  if ($n[14] !== si) ((Wh = si && e(Ac, {})), ($n[14] = si), ($n[15] = Wh));
+  if ($n[14] !== si) ((Wh = si && e(TranscriptExpandHint, {})), ($n[14] = si), ($n[15] = Wh));
   else Wh = $n[15];
   let qh;
   if ($n[16] !== yu || $n[17] !== $h || $n[18] !== Wh)
@@ -2511,7 +2511,7 @@ function ai(Sz) {
             "aria-label": "thinking:",
             dimColor: !0,
             italic: !0,
-            children: a2e,
+            children: THEREFORE_GLYPH,
           }),
         })),
           (Qh[14] = ap));
@@ -2633,7 +2633,7 @@ function aT(l) {
     (f.add(T.data.toolUseId),
       g.set(T.data.toolName, (g.get(T.data.toolName) ?? 0) + 1));
   }
-  return [...g].map(([T, y]) => `${y} ${x(y, T, FO(T))}`).join(", ");
+  return [...g].map(([T, y]) => `${y} ${pluralize(y, T, FO(T))}`).join(", ");
 }
 function FO(l) {
   return /(?:s|sh|ch|x|z)$/i.test(l) ? `${l}es` : `${l}s`;
@@ -2716,7 +2716,7 @@ function DT(Qz) {
     ((pT =
       fP &&
       (cT
-        ? e(o, { minWidth: 2, children: e(t, { dimColor: !0, children: Ar }) })
+        ? e(o, { minWidth: 2, children: e(t, { dimColor: !0, children: CLAUDE_BULLET_GLYPH }) })
         : e(Ho, { shouldAnimate: pP, isUnresolved: !lp, isError: dT }))),
       (Wn[2] = dT),
       (Wn[3] = cT),
@@ -2856,7 +2856,7 @@ function jT(rK) {
     case "failed": {
       let Yt;
       if (dn[16] !== RT)
-        ((Yt = (RT ? truncateToWidth(ft(RT, ":"), 40) : "Failed") || "Failed"),
+        ((Yt = (RT ? truncateToWidth(beforeFirst(RT, ":"), 40) : "Failed") || "Failed"),
           (dn[16] = RT),
           (dn[17] = Yt));
       else Yt = dn[17];
@@ -3027,7 +3027,7 @@ function HT(_u, kK) {
   E(mv, cv);
 }
 function GT(l) {
-  return Os((f) => f.classifierApprovals.checking.has(l)) ?? !1;
+  return useAppStateSelectorUnchecked((f) => f.classifierApprovals.checking.has(l)) ?? !1;
 }
 F();
 class Yz extends Aln {
@@ -3137,7 +3137,7 @@ function ui(yY) {
   if (YT[0] === MEMO_CACHE_SENTINEL)
     ((bv = e(o, {
       minWidth: 2,
-      children: e(t, { "aria-hidden": !0, dimColor: !0, children: _0n }),
+      children: e(t, { "aria-hidden": !0, dimColor: !0, children: REFERENCE_MARK_GLYPH }),
     })),
       (YT[0] = bv));
   else bv = YT[0];
@@ -3239,7 +3239,7 @@ function QT(l, f) {
   let g = estimateContentTokens(l),
     y =
       g > Pv
-        ? `${L.warning} Large MCP response (~${formatNumber(g)} tokens), this can fill up context quickly`
+        ? `${figures.warning} Large MCP response (~${formatNumber(g)} tokens), this can fill up context quickly`
         : null,
     R;
   if (Array.isArray(l)) {
@@ -3271,7 +3271,7 @@ function QT(l, f) {
         children: e(t, { dimColor: !0, children: "(No content)" }),
       }),
     });
-  else R = e(l_, { content: l, verbose: f });
+  else R = e(ToolResultContent, { content: l, verbose: f });
   if (y)
     return r(o, {
       flexDirection: "column",
@@ -3294,7 +3294,7 @@ function vP(XY) {
         : "",
     Sv;
   if (QY[0] !== LP || QY[1] !== EP)
-    ((Sv = e(l_, { content: LP, verbose: EP })),
+    ((Sv = e(ToolResultContent, { content: LP, verbose: EP })),
       (QY[0] = LP),
       (QY[1] = EP),
       (QY[2] = Sv));
@@ -3331,7 +3331,7 @@ function Uv(l, f) {
   if (!R) return null;
   let k = f,
     S = k?.channel_id ?? k?.channel ?? R[1],
-    P = (typeof S === "string" ? mLt(S) : "") || "slack";
+    P = (typeof S === "string" ? stripControlChars(S) : "") || "slack";
   return { channel: P.startsWith("#") ? P : `#${P}`, url: y };
 }
 var Ev = 256,
@@ -3344,7 +3344,7 @@ function Zae(l, f) {
 }
 var Lv = createLazyValue(() =>
     $e([
-      Crn(),
+      MCP_TOOL_OUTPUT_SCHEMA(),
       c({ content: $e([s(), v(c({ type: s() }).passthrough())]) }).transform(
         (l) => l.content,
       ),
@@ -3358,14 +3358,14 @@ function vv(l, f, g) {
     );
   };
   return {
-    ...H4,
+    ...MCP_TOOL_BASE,
     name: l,
     mcpInfo: { serverName: f, toolName: g },
     isEnabled: () => !1,
     outputSchema: Lv(),
     isResultTruncated: (y, R) => {
       let k = Iv(y);
-      return H4.isResultTruncated(k, R) || H4.isResultTruncated(FP(k), R);
+      return MCP_TOOL_BASE.isResultTruncated(k, R) || MCP_TOOL_BASE.isResultTruncated(FP(k), R);
     },
     renderToolResultMessage: (y, R, { verbose: k }) => QT(FP(y), k),
     userFacingName: () => `${f} - ${g} (MCP)`,
@@ -3525,7 +3525,7 @@ function qP(l) {
   };
 }
 function HP(l) {
-  let f = N2n(l);
+  let f = getSlackChannelDisplay(l);
   if (f === null) return null;
   return e(o, {
     flexWrap: "nowrap",
@@ -3575,7 +3575,7 @@ function zP(l, f, { theme: g }) {
       children: r(o, {
         flexDirection: "row",
         children: [
-          e(t, { color: TA("plan"), children: Ar }),
+          e(t, { color: getPermissionModeColor("plan"), children: CLAUDE_BULLET_GLYPH }),
           e(t, { children: " Exited plan mode" }),
         ],
       }),
@@ -3588,7 +3588,7 @@ function zP(l, f, { theme: g }) {
         r(o, {
           flexDirection: "row",
           children: [
-            e(t, { color: TA("plan"), children: Ar }),
+            e(t, { color: getPermissionModeColor("plan"), children: CLAUDE_BULLET_GLYPH }),
             e(t, { children: " Plan submitted for team lead approval" }),
           ],
         }),
@@ -3613,7 +3613,7 @@ function zP(l, f, { theme: g }) {
       r(o, {
         flexDirection: "row",
         children: [
-          e(t, { color: TA("plan"), children: Ar }),
+          e(t, { color: getPermissionModeColor("plan"), children: CLAUDE_BULLET_GLYPH }),
           e(t, { children: " User approved Claude's plan" }),
         ],
       }),
@@ -3718,7 +3718,7 @@ function gp(ZV) {
     return Xv;
   }
   let Sa;
-  if (fn[20] !== pn) ((Sa = pn > 0 && e(Ac, {})), (fn[20] = pn), (fn[21] = Sa));
+  if (fn[20] !== pn) ((Sa = pn > 0 && e(TranscriptExpandHint, {})), (fn[20] = pn), (fn[21] = Sa));
   else Sa = fn[21];
   let Pa;
   if (fn[22] !== wu || fn[23] !== Uu || fn[24] !== Sa)
@@ -3743,7 +3743,7 @@ function ty(l, { verbose: f }) {
       children: e(t, { color: "error", children: "Error searching files" }),
     });
   }
-  return e(Yd, { result: l, verbose: f });
+  return e(ToolErrorMessage, { result: l, verbose: f });
 }
 function ry(
   {
@@ -3869,7 +3869,7 @@ function ZP(uX) {
     return oI;
   }
   let Ca;
-  if (Jn[18] !== mi) ((Ca = mi > 0 && e(Ac, {})), (Jn[18] = mi), (Jn[19] = Ca));
+  if (Jn[18] !== mi) ((Ca = mi > 0 && e(TranscriptExpandHint, {})), (Jn[18] = mi), (Jn[19] = Ca));
   else Ca = Jn[19];
   let wa;
   if (Jn[20] !== Lu || Jn[21] !== Ou || Jn[22] !== Ca)
@@ -3889,7 +3889,7 @@ function eC(l, { verbose: f }) {
     return e(ToolResultRow, {
       children: e(t, { color: "error", children: "LSP operation failed" }),
     });
-  return e(Yd, { result: l, verbose: f });
+  return e(ToolErrorMessage, { result: l, verbose: f });
 }
 function oC(l, f, { verbose: g }) {
   if (l.resultCount !== void 0 && l.fileCount !== void 0)
@@ -3950,7 +3950,7 @@ function cC(tC) {
     ((nI = r(o, {
       flexDirection: "row",
       children: [
-        r(t, { color: TA("default"), children: [Ar, "\xA0"] }),
+        r(t, { color: getPermissionModeColor("default"), children: [CLAUDE_BULLET_GLYPH, "\xA0"] }),
         e(t, { children: "Claude asked:" }),
       ],
     })),
@@ -3974,7 +3974,7 @@ function cC(tC) {
   if (Iu[9] !== my || Iu[10] !== iC)
     ((cy = r(t, {
       dimColor: !0,
-      children: [Ar, " No response after ", my, "s \u2014", " ", iC],
+      children: [CLAUDE_BULLET_GLYPH, " No response after ", my, "s \u2014", " ", iC],
     })),
       (Iu[9] = my),
       (Iu[10] = iC),
@@ -4016,7 +4016,7 @@ function dC(lC) {
       : "User answered Claude's questions:",
     lI;
   if (yp[2] === MEMO_CACHE_SENTINEL)
-    ((lI = r(t, { color: TA("default"), children: [Ar, "\xA0"] })),
+    ((lI = r(t, { color: getPermissionModeColor("default"), children: [CLAUDE_BULLET_GLYPH, "\xA0"] })),
       (yp[2] = lI));
   else lI = yp[2];
   let py;
@@ -4080,7 +4080,7 @@ function hC({ questions: l }) {
       r(o, {
         flexDirection: "row",
         children: [
-          r(t, { color: TA("default"), children: [Ar, "\xA0"] }),
+          r(t, { color: getPermissionModeColor("default"), children: [CLAUDE_BULLET_GLYPH, "\xA0"] }),
           e(t, { children: "User declined to answer questions" }),
         ],
       }),
@@ -4119,14 +4119,14 @@ function RI(gn) {
         r(t, {
           dimColor: !0,
           children: [
-            L.pointerSmall,
+            figures.pointerSmall,
             " ",
             gn.isImage ? "[image]" : "[file]",
             " ",
           ],
         }),
         DX
-          ? e(Pg, { filePath: gn.path, children: Ao(gn.path) })
+          ? e(TruncatedFilePath, { filePath: gn.path, children: Ao(gn.path) })
           : e(t, { children: Ao(gn.path) }),
         r(t, { dimColor: !0, children: [" (", formatFileSize(gn.size), ")"] }),
       ],
@@ -4142,7 +4142,7 @@ function yC(l, f, g) {
       flexDirection: "row",
       marginTop: 1,
       children: [
-        e(o, { minWidth: 2, children: e(t, { color: "text", children: Ar }) }),
+        e(o, { minWidth: 2, children: e(t, { color: "text", children: CLAUDE_BULLET_GLYPH }) }),
         r(o, {
           flexDirection: "column",
           children: [
@@ -4153,7 +4153,7 @@ function yC(l, f, g) {
       ],
     });
   if (g?.isBriefOnly) {
-    let y = l.sentAt ? wye(l.sentAt) : "";
+    let y = l.sentAt ? formatTimestamp(l.sentAt) : "";
     return r(o, {
       flexDirection: "column",
       marginTop: 1,
@@ -4183,7 +4183,7 @@ function yC(l, f, g) {
       e(pd, {
         fromLeftEdge: !0,
         minWidth: 2,
-        children: e(t, { color: "text", children: Ar }),
+        children: e(t, { color: "text", children: CLAUDE_BULLET_GLYPH }),
       }),
       r(o, {
         flexDirection: "column",
@@ -4546,7 +4546,7 @@ function jC(l, f, g) {
       r(o, {
         flexDirection: "row",
         children: [
-          e(t, { color: TA("plan"), children: Ar }),
+          e(t, { color: getPermissionModeColor("plan"), children: CLAUDE_BULLET_GLYPH }),
           e(t, { children: " Entered plan mode" }),
         ],
       }),
@@ -4566,7 +4566,7 @@ function FC() {
     flexDirection: "row",
     marginTop: 1,
     children: [
-      e(t, { color: TA("default"), children: Ar }),
+      e(t, { color: getPermissionModeColor("default"), children: CLAUDE_BULLET_GLYPH }),
       e(t, { children: " User declined to enter plan mode" }),
     ],
   });
@@ -4628,7 +4628,7 @@ function qC(l, f, { verbose: g }) {
       children: e(EmptyStateMessage, { children: "(No resources found)" }),
     });
   let T = b(l, null, 2);
-  return e(l_, { content: T, verbose: g });
+  return e(ToolResultContent, { content: T, verbose: g });
 }
 function HC(l) {
   return e(ToolResultRow, {
@@ -4744,17 +4744,17 @@ function zC(l) {
   return e(ToolResultRow, { height: 1, children: f });
 }
 function KC(l, f, { verbose: g }) {
-  if (l?.error) return e(l_, { content: l.error, verbose: g });
+  if (l?.error) return e(ToolResultContent, { content: l.error, verbose: g });
   if (!l || l.resources.length === 0)
     return e(ToolResultRow, {
       height: 1,
       children: e(EmptyStateMessage, { children: "(Empty directory)" }),
     });
   let T = b(l, null, 2);
-  return e(l_, { content: T, verbose: g });
+  return e(ToolResultContent, { content: T, verbose: g });
 }
 function YC(l, f, { verbose: g }) {
-  if (l?.error) return e(l_, { content: l.error, verbose: g });
+  if (l?.error) return e(ToolResultContent, { content: l.error, verbose: g });
   if (!l || !l.contents || l.contents.length === 0)
     return e(o, {
       justifyContent: "space-between",
@@ -4766,11 +4766,11 @@ function YC(l, f, { verbose: g }) {
       }),
     });
   let T = b(l, null, 2);
-  return e(l_, { content: T, verbose: g });
+  return e(ToolResultContent, { content: T, verbose: g });
 }
 function VC(l) {
   let f =
-    ln(
+    countOccurrences(
       l.json,
       `
 `,
@@ -4838,7 +4838,7 @@ function JC(l) {
 function ZC(l, f, { verbose: g }) {
   let T = getHandbackPayloadSchema().safeParse(typeof l === "string" ? xt(l, !1) : l);
   if (!T.success)
-    return typeof l === "string" ? e(l_, { content: pt(l), verbose: g }) : null;
+    return typeof l === "string" ? e(ToolResultContent, { content: stripAnsi(l), verbose: g }) : null;
   let y = getHandbackDisplayText(T.data);
   return y === void 0
     ? null
@@ -4866,7 +4866,7 @@ function ow(l) {
     flexDirection: "row",
     marginTop: 1,
     children: [
-      e(o, { minWidth: 2, children: e(t, { color: "text", children: Ar }) }),
+      e(o, { minWidth: 2, children: e(t, { color: "text", children: CLAUDE_BULLET_GLYPH }) }),
       r(o, {
         flexDirection: "column",
         children: [
@@ -4886,7 +4886,7 @@ function tw(l) {
 }
 function rw(l) {
   return e(t, {
-    children: `Shown ${l.proposalCount} ${x(l.proposalCount, "skill proposal")} to the user for review`,
+    children: `Shown ${l.proposalCount} ${pluralize(l.proposalCount, "skill proposal")} to the user for review`,
   });
 }
 var _y = {
@@ -4928,7 +4928,7 @@ var _y = {
     ui: import.meta.require("../../../02-功能模块/工具UI渲染/renderToolResultMessage.pwg9xdk6.js"),
   },
   Iy = {
-    [mt]: {
+    [AGENT_TOOL_NAME]: {
       renderGroupedToolUse: A$n,
       renderToolResultMessage: b$n,
       renderToolUseErrorMessage: E$n,
@@ -4946,7 +4946,7 @@ var _y = {
         renderToolUseErrorMessage: l.renderToolUseErrorMessage,
       };
     },
-    [sg]: { renderToolResultMessage: IC },
+    [TASK_STOP_TOOL_NAME]: { renderToolResultMessage: IC },
     [ASK_USER_QUESTION_TOOL_NAME]: {
       renderToolResultMessage: gC,
       renderToolUseRejectedMessage: hC,
@@ -5018,7 +5018,7 @@ var _y = {
     [Cr]: { renderToolResultMessage: renderWebFetchResultMessage, renderToolUseProgressMessage: renderWebFetchProgressMessage },
     [_D]: { renderToolResultMessage: BC, renderToolUseProgressMessage: DC },
     [bk]: { renderToolResultMessage: EC },
-    get [so]() {
+    get [SKILL_TOOL_NAME]() {
       let l = import.meta.require("../../../02-功能模块/工具UI渲染/renderToolUseErrorMessage.gg04apb2.js");
       return {
         renderToolResultMessage: l.renderToolResultMessage,
@@ -5049,8 +5049,8 @@ var _y = {
     [CRON_DELETE_TOOL_NAME]: { renderToolResultMessage: QC },
     [CRON_LIST_TOOL_NAME]: { renderToolResultMessage: JC },
     [E$]: { renderToolResultMessage: VC },
-    [fLt]: { renderToolResultMessage: Pu, renderToolUseProgressMessage: XT },
-    [Rrn]: {
+    [MCP_TOOL_UI_TABLE_KEY]: { renderToolResultMessage: Pu, renderToolUseProgressMessage: XT },
+    [SLACK_SEND_TOOL_KEY]: {
       renderToolResultMessage: Pu,
       renderToolUseProgressMessage: XT,
       renderToolUseTag: HP,
@@ -5300,12 +5300,12 @@ function qy(S4) {
       toolLabel: sw,
     } = S4,
     Jt = useTerminalSize(),
-    [va] = cn(),
+    [va] = useTheme(),
     yn = useSession(),
     Ia = De(StaticFrameContext),
-    Da = Os(xD);
-  (GT(Ue.id), De(rO), Os(SD));
-  let Yo = Os(PD),
+    Da = useAppStateSelectorUnchecked(xD);
+  (GT(Ue.id), De(AppStateContext), useAppStateSelectorUnchecked(SD));
+  let Yo = useAppStateSelectorUnchecked(PD),
     yD;
   if (ht[0] !== Ue.name || ht[1] !== yn.host)
     ((yD = Zae(Ue.name, yn.host)),
@@ -5624,7 +5624,7 @@ function qy(S4) {
                   children: e(t, {
                     "aria-label": "tool:",
                     dimColor: rs,
-                    children: Ar,
+                    children: CLAUDE_BULLET_GLYPH,
                   }),
                 })
               : e(Ho, {
@@ -5648,7 +5648,7 @@ function qy(S4) {
           else ja = ht[155];
           im =
             dw !== "" &&
-            e(bit.Provider, {
+            e(ToolResultPreviewWidthContext.Provider, {
               value: Lt || Ia ? null : U4,
               children: e(o, {
                 flexWrap: "nowrap",
@@ -6106,7 +6106,7 @@ function UD(Op, fileIndex) {
             e(t, {
               bold: !0,
               children: bw(
-                Q(),
+                getCwd(),
                 Op.uri.replace("file://", "").replace("_claude_fs_right:", ""),
               ),
             }),
@@ -6117,7 +6117,7 @@ function UD(Op, fileIndex) {
                 ? "(file://)"
                 : Op.uri.startsWith("_claude_fs_right:")
                   ? "(claude_fs_right)"
-                  : `(${ft(Op.uri, ":")})`,
+                  : `(${beforeFirst(Op.uri, ":")})`,
             }),
             ":",
           ],
@@ -6234,7 +6234,7 @@ async function $D(l) {
     g = 0,
     T = !1,
     y = !1,
-    R = await Qo(
+    R = await runPaginatedScan(
       async (S) => {
         let P = await l.storageV5.listRecursive(
             { namespace: "memory", projectKey: l.projectKey },
@@ -6419,14 +6419,14 @@ async function zD(l, f, g, T) {
     } catch {
       return !1;
     }
-    if (T !== void 0 && Uw(y)) {
-      let S = await T.storageV5.updateText(Ce.memory(T.projectKey, y), (P) => {
+    if (T !== void 0 && hasValidPathSegments(y)) {
+      let S = await T.storageV5.updateText(STORAGE_KEYS.memory(T.projectKey, y), (P) => {
         if (P === void 0 || Buffer.byteLength(P.value, "utf8") > _w)
           return { skip: !0 };
         let A = Sw(P.value, f, g);
         return A === null
           ? { skip: !0 }
-          : { write: Uet(A, Mtt(P.value)), result: P.mtimeMs };
+          : { write: Uet(A, detectLineEndings(P.value)), result: P.mtimeMs };
       });
       if (!S.ok)
         return (
@@ -6444,7 +6444,7 @@ async function zD(l, f, g, T) {
       }
       let P = Sw(S, f, g);
       if (P === null) return !1;
-      await HQ(f, P, "utf8", Mtt(S));
+      await HQ(f, P, "utf8", detectLineEndings(S));
     }
     try {
       await utimes(f, k, R);
@@ -6453,10 +6453,10 @@ async function zD(l, f, g, T) {
   });
 }
 function Sw(l, f, g) {
-  let T = l.match(aP),
-    y = l.match(eve);
+  let T = l.match(FRONTMATTER_PATTERN),
+    y = l.match(STRICT_FRONTMATTER_PATTERN);
   if (T === null || y === null || T[1].trim() !== y[1].trim()) return null;
-  let R = zo(l, f);
+  let R = parseFrontmatter(l, f);
   if (R.parseError || Object.keys(R.frontmatter).length === 0) return null;
   let k = PC(l, f),
     { frontmatter: S } = k,
@@ -6481,7 +6481,7 @@ function Sw(l, f, g) {
     O.body !== k.body
   )
     return null;
-  let K = A.match(eve);
+  let K = A.match(STRICT_FRONTMATTER_PATTERN);
   if (K === null || A.slice(K[0].length) !== l.slice(y[0].length)) return null;
   return A;
 }
@@ -6687,7 +6687,7 @@ function Ri(v3) {
           Fp,
           " more",
           " ",
-          e(Ac, {}),
+          e(TranscriptExpandHint, {}),
         ],
       })),
       (oR[11] = Fp),
@@ -7035,7 +7035,7 @@ function bi(H6) {
     } = H6,
     gB;
   if (ki[0] === MEMO_CACHE_SENTINEL)
-    ((gB = e(t, { "aria-hidden": !0, children: L.pointer })), (ki[0] = gB));
+    ((gB = e(t, { "aria-hidden": !0, children: figures.pointer })), (ki[0] = gB));
   else gB = ki[0];
   let CR;
   if (ki[1] !== Zw || ki[2] !== e0)
@@ -7088,11 +7088,11 @@ function xi(o9) {
   let _m = _(15),
     { imageId: xm, addMargin: yB, startsUserTurn: t9 } = o9,
     LR =
-      Os((r9) =>
+      useAppStateSelectorUnchecked((r9) =>
         xm !== void 0 ? (r9.storedImagePaths.get(xm) ?? null) : null,
       ) ?? null,
     OR =
-      Os((n9) =>
+      useAppStateSelectorUnchecked((n9) =>
         xm !== void 0 ? (n9.imageDescriptions.get(xm) ?? null) : null,
       ) ?? null,
     vR = xm ? `[Image #${xm}]` : "[Image]",
@@ -7160,13 +7160,13 @@ function zB(KR, v9) {
         v9,
       );
 }
-var dM = `</${Px}>`;
+var dM = `</${TEAMMATE_MESSAGE_TAG}>`;
 function hWe(l) {
-  if (l.startsWith(`<${Px} `)) return !0;
+  if (l.startsWith(`<${TEAMMATE_MESSAGE_TAG} `)) return !0;
   return (
     l.startsWith(dJ) &&
     l.startsWith(
-      `<${Px} `,
+      `<${TEAMMATE_MESSAGE_TAG} `,
       l.indexOf(`
 `) + 1,
     )
@@ -7179,12 +7179,12 @@ function pM(l) {
       break;
     }
   for (let y of Ij)
-    if (l.startsWith(y) && l.startsWith(`<${Px} `, y.length)) {
+    if (l.startsWith(y) && l.startsWith(`<${TEAMMATE_MESSAGE_TAG} `, y.length)) {
       l = l.slice(y.length);
       break;
     }
   let f = new RegExp(
-      `<${Px}\\s+teammate_id="([^"]+)"(?:\\s+color="([^"]+)")?(?:\\s+summary="([^"]+)")?>\\n?`,
+      `<${TEAMMATE_MESSAGE_TAG}\\s+teammate_id="([^"]+)"(?:\\s+color="([^"]+)")?(?:\\s+summary="([^"]+)")?>\\n?`,
       "y",
     ),
     g = [],
@@ -7218,8 +7218,8 @@ function pM(l) {
 }
 function fM() {
   let n0 = _(7),
-    r0 = U(HB),
-    Kp = Yn(),
+    r0 = useAppStateSelector(HB),
+    Kp = useAppState(),
     Yp;
   if (n0[0] !== r0 || n0[1] !== Kp) {
     Yp = new Map();
@@ -7326,7 +7326,7 @@ function Zp(P9) {
                     children: [
                       "@ ",
                       Jp,
-                      e(t, { "aria-hidden": !0, children: L.pointer }),
+                      e(t, { "aria-hidden": !0, children: figures.pointer }),
                     ],
                   }),
                   r(t, { children: [" ", GR] }),
@@ -7439,7 +7439,7 @@ function Zp(P9) {
   if (BR[17] !== fr || BR[18] !== Ya)
     ((Xa =
       Ya &&
-      (fr ? e(UA, { text: Ya }) : e(o, { children: e(t, { children: Ya }) }))),
+      (fr ? e(TruncatedText, { text: Ya }) : e(o, { children: e(t, { children: Ya }) }))),
       (BR[17] = fr),
       (BR[18] = Ya),
       (BR[19] = Xa));
@@ -7484,7 +7484,7 @@ function el(I9) {
     vB;
   if (ls[0] !== _i || ls[1] !== f0)
     ((vB = f0
-      ? e(UA, { text: _i })
+      ? e(TruncatedText, { text: _i })
       : e(js, { stripPromptTags: !1, children: _i })),
       (ls[0] = _i),
       (ls[1] = f0),
@@ -7512,7 +7512,7 @@ function el(I9) {
   }
   let Qa;
   if (ls[8] === MEMO_CACHE_SENTINEL)
-    ((Qa = e(t, { "aria-hidden": !0, children: L.pointer })), (ls[8] = Qa));
+    ((Qa = e(t, { "aria-hidden": !0, children: figures.pointer })), (ls[8] = Qa));
   else Qa = ls[8];
   let Pi;
   if (ls[9] !== d0 || ls[10] !== p0)
@@ -7602,7 +7602,7 @@ function ol(B9) {
   let nM = WB,
     sM;
   if (er[12] !== y0)
-    ((sM = e(t, { "aria-hidden": !0, color: y0, children: Ar })),
+    ((sM = e(t, { "aria-hidden": !0, color: y0, children: CLAUDE_BULLET_GLYPH })),
       (er[12] = y0),
       (er[13] = sM));
   else sM = er[13];
@@ -7697,7 +7697,7 @@ function KB() {
     : "hidden";
 }
 function ef(l) {
-  return l.startsWith(Rur()) && KB() === "hidden";
+  return l.startsWith(buildArtifactRoomViewNotificationPrefix()) && KB() === "hidden";
 }
 function S0(l) {
   switch (l) {
@@ -7825,7 +7825,7 @@ function Ai(s8) {
   const Om = hM ? 1 : 0;
   let rl;
   if (Nr[22] !== yM)
-    ((rl = e(t, { "aria-hidden": !0, color: yM, children: Ar })),
+    ((rl = e(t, { "aria-hidden": !0, color: yM, children: CLAUDE_BULLET_GLYPH })),
       (Nr[22] = yM),
       (Nr[23] = rl));
   else rl = Nr[23];
@@ -7948,7 +7948,7 @@ function nf(L8) {
     { addMargin: r1, param: O8 } = L8,
     { text: il } = O8,
     n1;
-  if (us[0] !== il) ((n1 = Lr(il, pp)), (us[0] = il), (us[1] = n1));
+  if (us[0] !== il) ((n1 = Lr(il, COMMAND_MESSAGE_TAG)), (us[0] = il), (us[1] = n1));
   else n1 = us[1];
   let al = n1,
     s1;
@@ -7966,7 +7966,7 @@ function nf(L8) {
       ((Dm = e(t, {
         "aria-label": "you:",
         color: "subtle",
-        children: L.pointer,
+        children: figures.pointer,
       })),
         (us[4] = Dm));
     else Dm = us[4];
@@ -8011,7 +8011,7 @@ function nf(L8) {
     ((ll = e(t, {
       "aria-label": "you:",
       color: "subtle",
-      children: L.pointer,
+      children: figures.pointer,
     })),
       (us[13] = ll));
   else ll = us[13];
@@ -8080,7 +8080,7 @@ function jm(sJ) {
     else Ei = af[3];
     return Ei;
   }
-  if (hr.startsWith(`${Dp} `) || hr.startsWith(`${r_} `)) {
+  if (hr.startsWith(`${LOZENGE_OUTLINE_GLYPH} `) || hr.startsWith(`${LOZENGE_FILLED_GLYPH} `)) {
     let Ei;
     if (af[4] !== hr)
       ((Ei = e(ek, { children: hr })), (af[4] = hr), (af[5] = Ei));
@@ -8122,7 +8122,7 @@ function QM(iJ) {
   if (AM[0] !== Li) {
     v0 = EARLY_RETURN_SENTINEL;
     bb0: {
-      Bm = Li.indexOf(mS);
+      Bm = Li.indexOf(FORK_GLYPH);
       if (Bm === -1) {
         v0 = Li;
         break bb0;
@@ -8134,11 +8134,11 @@ function QM(iJ) {
   if (v0 !== EARLY_RETURN_SENTINEL) return v0;
   let f1;
   if (AM[4] === MEMO_CACHE_SENTINEL)
-    ((f1 = e(t, { "aria-label": "of", children: mS })), (AM[4] = f1));
+    ((f1 = e(t, { "aria-label": "of", children: FORK_GLYPH })), (AM[4] = f1));
   else f1 = AM[4];
   let LM;
   if (AM[5] !== Bm || AM[6] !== Li)
-    ((LM = Li.slice(Bm + mS.length)), (AM[5] = Bm), (AM[6] = Li), (AM[7] = LM));
+    ((LM = Li.slice(Bm + FORK_GLYPH.length)), (AM[5] = Bm), (AM[6] = Li), (AM[7] = LM));
   else LM = AM[7];
   let g1;
   if (AM[8] !== EM || AM[9] !== LM)
@@ -8346,7 +8346,7 @@ function ff(RJ) {
   let tk = b1,
     x1;
   if (Fm[2] === MEMO_CACHE_SENTINEL)
-    ((x1 = Tv(["Got it.", "Good to know.", "Noted."])), (Fm[2] = x1));
+    ((x1 = pickRandom(["Got it.", "Good to know.", "Noted."])), (Fm[2] = x1));
   else x1 = Fm[2];
   let kJ = x1;
   if (!tk) {
@@ -8474,7 +8474,7 @@ function fl(Or) {
     Or.addMargin && !Or.followsSpeakerLabel && !Or.followsInboundLabel ? 1 : 0;
   let v1;
   if ($m[9] === MEMO_CACHE_SENTINEL)
-    ((v1 = r(t, { "aria-hidden": !0, children: [L.pointerSmall, " "] })),
+    ((v1 = r(t, { "aria-hidden": !0, children: [figures.pointerSmall, " "] })),
       ($m[9] = v1));
   else v1 = $m[9];
   let lk;
@@ -8516,8 +8516,8 @@ function ck(KJ) {
     { text: pl } = VJ,
     QJ = D1 === void 0 ? !1 : D1,
     JJ = B1 === void 0 ? !1 : B1,
-    Y0 = U(W1),
-    V0 = U(q1),
+    Y0 = useAppStateSelector(W1),
+    V0 = useAppStateSelector(q1),
     ZJ = a.CLAUDE_CODE_BRIEF,
     j1;
   if (qm[0] !== Y0 || qm[1] !== K0 || qm[2] !== V0)
@@ -8537,7 +8537,7 @@ function ck(KJ) {
   }
   if (JJ) {
     let cs;
-    if (qm[6] !== pl) ((cs = e(UA, { text: pl })), (qm[6] = pl), (qm[7] = cs));
+    if (qm[6] !== pl) ((cs = e(TruncatedText, { text: pl })), (qm[6] = pl), (qm[7] = cs));
     else cs = qm[7];
     return cs;
   }
@@ -8546,7 +8546,7 @@ function ck(KJ) {
     if (qm[8] !== zm)
       ((cs = e(o, {
         flexDirection: "column",
-        children: e(CWe, { text: zm, bodyOnly: !0 }),
+        children: e(UserPromptText, { text: zm, bodyOnly: !0 }),
       })),
         (qm[8] = zm),
         (qm[9] = cs));
@@ -8559,7 +8559,7 @@ function ck(KJ) {
     J0 = Gm ? XJ : void 0;
   let mk;
   if (qm[10] !== zm || qm[11] !== J0 || qm[12] !== Gm)
-    ((mk = e(CWe, { text: zm, useBriefLayout: Gm, timestamp: J0 })),
+    ((mk = e(UserPromptText, { text: zm, useBriefLayout: Gm, timestamp: J0 })),
       (qm[10] = zm),
       (qm[11] = J0),
       (qm[12] = Gm),
@@ -8588,7 +8588,7 @@ function K1(Ym, mZ) {
     {
       children: r(t, {
         children: [
-          e(t, { "aria-label": "update:", color: "success", children: g0n }),
+          e(t, { "aria-label": "update:", color: "success", children: UPDATE_GLYPH }),
           " ",
           r(t, { dimColor: !0, children: [Ym.server, ":"] }),
           " ",
@@ -8685,21 +8685,21 @@ function y$n(l, f) {
 }
 function mye(l) {
   if (!l || l.trim() === sp) return !0;
-  if (zr() && hWe(l)) return b0(l);
+  if (isAgentSwarmsEnabled() && hWe(l)) return b0(l);
   if (TUt(l)) return !1;
   if (aoe(l)) return !1;
-  if (Lr(l, jP) !== null) return !0;
-  if (l.includes(`<${BP}>`)) return !0;
-  if (l.startsWith(`<${vu}`) || l.startsWith(`<${Ag}`)) {
-    let f = Lr(l, vu)?.trim(),
-      g = Lr(l, Ag)?.trim();
+  if (Lr(l, TICK_TAG) !== null) return !0;
+  if (l.includes(`<${LOCAL_COMMAND_CAVEAT_TAG}>`)) return !0;
+  if (l.startsWith(`<${LOCAL_COMMAND_STDOUT_TAG}`) || l.startsWith(`<${LOCAL_COMMAND_STDERR_TAG}`)) {
+    let f = Lr(l, LOCAL_COMMAND_STDOUT_TAG)?.trim(),
+      g = Lr(l, LOCAL_COMMAND_STDERR_TAG)?.trim();
     return !((f && f !== sp) || g);
   }
-  if (l.startsWith(`<${fz}`) || l.startsWith(`<${I0}`)) return !1;
+  if (l.startsWith(`<${BASH_STDOUT_TAG}`) || l.startsWith(`<${BASH_STDERR_TAG}`)) return !1;
   if (l.includes("<bash-input>")) return !Lr(l, "bash-input");
-  if (l.includes(`<${pp}>`)) return !Lr(l, pp);
+  if (l.includes(`<${COMMAND_MESSAGE_TAG}>`)) return !Lr(l, COMMAND_MESSAGE_TAG);
   if (l.includes("<user-memory-input>")) return !Lr(l, "user-memory-input");
-  if (l.includes(`<${Pd}`)) return !Lr(l, "summary") || ef(l);
+  if (l.includes(`<${TASK_NOTIFICATION_TAG}`)) return !Lr(l, "summary") || ef(l);
   if (l.includes("<mcp-resource-update") || l.includes("<mcp-polling-update"))
     return gf(l).length === 0;
   return !1;
@@ -8734,7 +8734,7 @@ function Jz(jZ) {
     return Re;
   }
   let fs = gl || Y1;
-  if (zr() && hWe(fe.text)) {
+  if (isAgentSwarmsEnabled() && hWe(fe.text)) {
     let Re;
     if (
       jo[3] !== Ae ||
@@ -8835,10 +8835,10 @@ function Jz(jZ) {
     else Re = jo[27];
     return Re;
   }
-  if (Lr(fe.text, jP)) {
+  if (Lr(fe.text, TICK_TAG)) {
     return null;
   }
-  if (fe.text.includes(`<${BP}>`)) {
+  if (fe.text.includes(`<${LOCAL_COMMAND_CAVEAT_TAG}>`)) {
     return null;
   }
   if (fye(fe.text)) {
@@ -8906,7 +8906,7 @@ function Jz(jZ) {
     else Re = jo[44];
     return Re;
   }
-  if (fe.text.includes(`<${pp}>`)) {
+  if (fe.text.includes(`<${COMMAND_MESSAGE_TAG}>`)) {
     let Re;
     if (jo[45] !== Ae || jo[46] !== fe)
       ((Re = e(nf, { addMargin: Ae, param: fe })),
@@ -8926,7 +8926,7 @@ function Jz(jZ) {
     else Re = jo[50];
     return Re;
   }
-  if (fe.text.includes(`<${Pd}`)) {
+  if (fe.text.includes(`<${TASK_NOTIFICATION_TAG}`)) {
     if (ef(fe.text)) {
       return null;
     }
@@ -9094,7 +9094,7 @@ function Cf(Pee) {
     aU = Q1 === void 0 ? !1 : Q1,
     hl = shouldExpandContent(fo, Fo),
     Jm = jA(fo);
-  if (zr() && w.type === "teammate_mailbox") {
+  if (isAgentSwarmsEnabled() && w.type === "teammate_mailbox") {
     const q = w.messages;
     let gs, Z, ae, Te;
     if (X[0] !== w.messages || X[1] !== hl) {
@@ -9119,7 +9119,7 @@ function Cf(Pee) {
                       children: [
                         "@",
                         yf,
-                        e(t, { "aria-hidden": !0, children: L.pointer }),
+                        e(t, { "aria-hidden": !0, children: figures.pointer }),
                       ],
                     }),
                     r(t, { children: [" ", Rk] }),
@@ -9329,7 +9329,7 @@ function Cf(Pee) {
           ((q = r(t, {
             "aria-hidden": !0,
             color: "warning",
-            children: [fkt, " "],
+            children: [MUSIC_NOTE_GLYPH, " "],
           })),
             (X[38] = q));
         else q = X[38];
@@ -9361,7 +9361,7 @@ function Cf(Pee) {
       let ec = hl || kf.length <= imt;
       let q;
       if (X[46] !== ec || X[47] !== kf)
-        ((q = ec ? kf : oe(kf, imt)), (X[46] = ec), (X[47] = kf), (X[48] = q));
+        ((q = ec ? kf : truncateToCodeUnits(kf, imt)), (X[46] = ec), (X[47] = kf), (X[48] = q));
       else q = X[48];
       let kk = q;
       let Z, ae;
@@ -9369,7 +9369,7 @@ function Cf(Pee) {
         ((Z = r(t, {
           "aria-hidden": !0,
           color: "claude",
-          children: [fkt, " "],
+          children: [MUSIC_NOTE_GLYPH, " "],
         })),
           (ae = e(t, { dimColor: !0, children: "Transcribed " })),
           (X[49] = Z),
@@ -9388,7 +9388,7 @@ function Cf(Pee) {
       const rr = w.wordCount ?? 0;
       const Br = w.wordCount ?? 0;
       let Ts;
-      if (X[55] !== Br) ((Ts = x(Br, "word")), (X[55] = Br), (X[56] = Ts));
+      if (X[55] !== Br) ((Ts = pluralize(Br, "word")), (X[55] = Br), (X[56] = Ts));
       else Ts = X[56];
       let ys;
       if (X[57] !== Ts || X[58] !== It || X[59] !== rr)
@@ -9425,7 +9425,7 @@ function Cf(Pee) {
                   wrap: "wrap",
                   children: [
                     kk,
-                    ec ? null : r(N, { children: ["\u2026 ", e(Ac, {})] }),
+                    ec ? null : r(N, { children: ["\u2026 ", e(TranscriptExpandHint, {})] }),
                   ],
                 }),
               })
@@ -9495,7 +9495,7 @@ function Cf(Pee) {
       else Z = X[81];
       let ae;
       if (X[82] !== w.lineCount)
-        ((ae = x(w.lineCount, "line")), (X[82] = w.lineCount), (X[83] = ae));
+        ((ae = pluralize(w.lineCount, "line")), (X[82] = w.lineCount), (X[83] = ae));
       else ae = X[83];
       let Te;
       if (X[84] !== Z || X[85] !== ae)
@@ -9533,7 +9533,7 @@ function Cf(Pee) {
       const Te = w.memories.length === 1 ? "memory" : "memories";
       let uo;
       if (X[92] !== Fo)
-        ((uo = !Fo && r(N, { children: [" ", e(Ac, {})] })),
+        ((uo = !Fo && r(N, { children: [" ", e(TranscriptExpandHint, {})] })),
           (X[92] = Fo),
           (X[93] = uo));
       else uo = X[93];
@@ -9564,7 +9564,7 @@ function Cf(Pee) {
                       e(ToolResultRow, {
                         children: e(t, {
                           dimColor: !0,
-                          children: e(Pg, {
+                          children: e(TruncatedFilePath, {
                             filePath: xk.path,
                             children: yU(xk.path),
                           }),
@@ -9610,7 +9610,7 @@ function Cf(Pee) {
     case "dynamic_skill": {
       let oc = w.skillNames.length;
       let q;
-      if (X[106] !== oc) ((q = x(oc, "skill")), (X[106] = oc), (X[107] = q));
+      if (X[106] !== oc) ((q = pluralize(oc, "skill")), (X[106] = oc), (X[107] = q));
       else q = X[107];
       let Z;
       if (X[108] !== oc || X[109] !== q)
@@ -9646,7 +9646,7 @@ function Cf(Pee) {
       else q = X[117];
       let Z;
       if (X[118] !== w.skillCount)
-        ((Z = x(w.skillCount, "skill")), (X[118] = w.skillCount), (X[119] = Z));
+        ((Z = pluralize(w.skillCount, "skill")), (X[118] = w.skillCount), (X[119] = Z));
       else Z = X[119];
       let ae;
       if (X[120] !== q || X[121] !== Z)
@@ -9672,7 +9672,7 @@ function Cf(Pee) {
         ((Z = e(t, { bold: !0, children: tc })), (X[125] = tc), (X[126] = Z));
       else Z = X[126];
       let ae;
-      if (X[127] !== tc) ((ae = x(tc, "type")), (X[127] = tc), (X[128] = ae));
+      if (X[127] !== tc) ((ae = pluralize(tc, "type")), (X[127] = tc), (X[128] = ae));
       else ae = X[128];
       let Te;
       if (X[129] !== Z || X[130] !== ae)
@@ -10087,7 +10087,7 @@ function Cf(Pee) {
             const q = w.iterations;
             let Z;
             if (X[237] !== w.iterations)
-              ((Z = x(w.iterations, "turn")),
+              ((Z = pluralize(w.iterations, "turn")),
                 (X[237] = w.iterations),
                 (X[238] = Z));
             else Z = X[238];
@@ -10137,7 +10137,7 @@ function Cf(Pee) {
       else rr = X[248];
       let Br;
       if (X[249] !== fo)
-        ((Br = !fo ? r(t, { children: [" ", e(Ac, {})] }) : null),
+        ((Br = !fo ? r(t, { children: [" ", e(TranscriptExpandHint, {})] }) : null),
           (X[249] = fo),
           (X[250] = Br));
       else Br = X[250];
@@ -10294,13 +10294,13 @@ function Cf(Pee) {
     case "teammate_shutdown_batch": {
       let q;
       if (X[287] === MEMO_CACHE_SENTINEL)
-        ((q = r(t, { "aria-hidden": !0, dimColor: !0, children: [Ar, " "] })),
+        ((q = r(t, { "aria-hidden": !0, dimColor: !0, children: [CLAUDE_BULLET_GLYPH, " "] })),
           (X[287] = q));
       else q = X[287];
       const Z = w.count;
       let ae;
       if (X[288] !== w.count)
-        ((ae = x(w.count, "teammate")), (X[288] = w.count), (X[289] = ae));
+        ((ae = pluralize(w.count, "teammate")), (X[288] = w.count), (X[289] = ae));
       else ae = X[289];
       let Te;
       if (X[290] !== w.count || X[291] !== ae)
@@ -10333,7 +10333,7 @@ function Ak($ee) {
   if (ym() && Ii.status === "killed") {
     return null;
   }
-  if (zr() && Ii.taskType === "in_process_teammate") {
+  if (isAgentSwarmsEnabled() && Ii.taskType === "in_process_teammate") {
     let Sf;
     if (uj[0] !== Ii)
       ((Sf = e(Ek, { attachment: Ii })), (uj[0] = Ii), (uj[1] = Sf));
@@ -10359,7 +10359,7 @@ function uc(Wee) {
             : Tl.status,
     mj;
   if (dU[0] === MEMO_CACHE_SENTINEL)
-    ((mj = r(t, { "aria-hidden": !0, dimColor: !0, children: [Ar, " "] })),
+    ((mj = r(t, { "aria-hidden": !0, dimColor: !0, children: [CLAUDE_BULLET_GLYPH, " "] })),
       (dU[0] = mj));
   else mj = dU[0];
   let Uk;
@@ -10392,7 +10392,7 @@ function Ek(qee) {
   if (ac[0] !== Di.taskId)
     ((dj = (Hee) => Hee.tasks[Di.taskId]), (ac[0] = Di.taskId), (ac[1] = dj));
   else dj = ac[1];
-  let yl = U(dj);
+  let yl = useAppStateSelector(dj);
   if (yl?.type !== "in_process_teammate") {
     let Pf;
     if (ac[2] !== Di)
@@ -10408,7 +10408,7 @@ function Ek(qee) {
     fU = Di.status === "completed" ? "shut down gracefully" : Di.status,
     pj;
   if (ac[6] === MEMO_CACHE_SENTINEL)
-    ((pj = r(t, { "aria-hidden": !0, dimColor: !0, children: [Ar, " "] })),
+    ((pj = r(t, { "aria-hidden": !0, dimColor: !0, children: [CLAUDE_BULLET_GLYPH, " "] })),
       (ac[6] = pj));
   else pj = ac[6];
   let Nk;
@@ -10443,7 +10443,7 @@ function Ek(qee) {
 function MU(l, f) {
   let g = l?.trim() ? l : f?.trim() ? f : "";
   if (!g) return "";
-  let T = ft(
+  let T = beforeFirst(
       g,
       `
 
@@ -10672,7 +10672,7 @@ function ji(Eoe) {
       verbose: jk,
       isTranscriptMode: wU,
     } = Eoe,
-    UU = Os(Aj);
+    UU = useAppStateSelectorUnchecked(Aj);
   if (
     typeof $o.content === "string" &&
     ($o.content.includes(gc) || $o.content.includes(_b))
@@ -10712,19 +10712,19 @@ function ji(Eoe) {
     let Loe = Dt;
     let Ef;
     if (Sn[7] !== $o.content)
-      ((Ef = thn(pt($o.content))), (Sn[7] = $o.content), (Sn[8] = Ef));
+      ((Ef = thn(stripAnsi($o.content))), (Sn[7] = $o.content), (Sn[8] = Ef));
     else Ef = Sn[8];
     let Fk = Ef;
     let Uj;
     if (Sn[9] === MEMO_CACHE_SENTINEL)
-      ((Uj = r(t, { "aria-hidden": !0, children: [$Q, " "] })), (Sn[9] = Uj));
+      ((Uj = r(t, { "aria-hidden": !0, children: [BULLET_OPERATOR_GLYPH, " "] })), (Sn[9] = Uj));
     else Uj = Sn[9];
     let $k;
     if (Sn[10] !== Fk)
       (($k =
         Fk &&
         r(N, {
-          children: [Fk, " ", r(t, { "aria-hidden": !0, children: [$Q, " "] })],
+          children: [Fk, " ", r(t, { "aria-hidden": !0, children: [BULLET_OPERATOR_GLYPH, " "] })],
         })),
         (Sn[10] = Fk),
         (Sn[11] = $k));
@@ -10768,7 +10768,7 @@ function ji(Eoe) {
         isTranscriptMode: wU,
         input: CU,
         activeAgents: UU,
-      }) ?? e(Yd, { result: $o.content, verbose: jk })),
+      }) ?? e(ToolErrorMessage, { result: $o.content, verbose: jk })),
       (Sn[14] = UU),
       (Sn[15] = CU),
       (Sn[16] = wU),
@@ -10870,7 +10870,7 @@ var wN = 700,
   AN = 10,
   qF = 200;
 function EN(l) {
-  let f = l === void 0 ? "" : To(pt(l));
+  let f = l === void 0 ? "" : normalizeWhitespace(stripAnsi(l));
   return f === "" ? void 0 : truncateToWidth(f, qF);
 }
 function Ob(Wk) {
@@ -10980,7 +10980,7 @@ function vb(Hte) {
       toolLabel: LU,
     } = Hte,
     OU = useSession(HF),
-    Of = Os(GF),
+    Of = useAppStateSelectorUnchecked(GF),
     zk,
     xl,
     _l,
@@ -11216,7 +11216,7 @@ function Ib(Yte) {
       progressMessagesForMessage: xc,
     } = Yte,
     { columns: IU } = useTerminalSize(),
-    [DU] = cn();
+    [DU] = useTheme();
   if (Zk?.type !== "user") {
     return null;
   }
@@ -11465,7 +11465,7 @@ function Db(ere) {
       memoryWriteCount: Ec,
       messages: Wt,
     } = se,
-    [FU] = cn(),
+    [FU] = useTheme(),
     { columns: $U } = useTerminalSize(),
     lb = mne(se),
     mF;
@@ -11630,7 +11630,7 @@ function Db(ere) {
       (Fe[22] = Ne),
       (Fe[23] = Ff));
   else Ff = Fe[23];
-  let An = Os(Ff);
+  let An = useAppStateSelectorUnchecked(Ff);
   if (wc) {
     let Hc;
     if (Fe[24] !== Wt) {
@@ -11647,7 +11647,7 @@ function Db(ere) {
       if (Fe[29] !== wc)
         ((Mo = (dN) => {
           let pN = dN.type === "user" ? dN.message.content[0] : null;
-          if (pN?.type !== "text" || !pN.text.includes(`<${Pd}`)) {
+          if (pN?.type !== "text" || !pN.text.includes(`<${TASK_NOTIFICATION_TAG}`)) {
             return null;
           }
           return e(
@@ -11929,7 +11929,7 @@ function Db(ere) {
             " ",
             vc === 1 ? "file" : "files",
             " ",
-            e(Wm, { added: eN, removed: oN }),
+            e(DiffStatLabel, { added: eN, removed: oN }),
           ],
         }),
       );
@@ -11944,7 +11944,7 @@ function Db(ere) {
             " ",
             Ic === 1 ? "edit" : "edits",
             " ",
-            e(Wm, { added: rN, removed: nN }),
+            e(DiffStatLabel, { added: rN, removed: nN }),
           ],
         }),
       );
@@ -11959,7 +11959,7 @@ function Db(ere) {
             " ",
             Dc === 1 ? "edit" : "edits",
             " ",
-            e(Wm, { added: sN, removed: iN }),
+            e(DiffStatLabel, { added: sN, removed: iN }),
           ],
         }),
       );
@@ -12006,15 +12006,15 @@ function Db(ere) {
           `pr-${Gr.action}-${Gr.number}`,
           yre[Gr.action],
           Gr.url && bVe(Gr.url)
-            ? e(MB, {
+            ? e(PullRequestBadge, {
                 number: Gr.number,
                 url: Gr.url,
                 bold: !0,
-                kind: dW(Gr.url) ? "mr" : void 0,
+                kind: isGitLabMergeRequestUrl(Gr.url) ? "mr" : void 0,
               })
             : r(t, {
                 bold: !0,
-                children: [Gr.url && dW(Gr.url) ? "MR !" : "PR #", Gr.number],
+                children: [Gr.url && isGitLabMergeRequestUrl(Gr.url) ? "MR !" : "PR #", Gr.number],
               }),
         );
     }
@@ -12086,7 +12086,7 @@ function Db(ere) {
     if (Al > 0) {
       let Mre = IN(se.messages);
       let kb = Al === 1 && !Mre ? se.agentDescriptions?.[0] : void 0;
-      let kN = kb !== void 0 ? LFt(kb) : void 0;
+      let kN = kb !== void 0 ? conjugateVerbPhrase(kb) : void 0;
       let EF = Ne ? "running" : "ran";
       if (kN !== void 0) {
         let LF = Tt.length === 0;
@@ -12238,7 +12238,7 @@ function Db(ere) {
   const Hr = !Ne;
   let Ss;
   if (Fe[99] !== An || Fe[100] !== Tt)
-    ((Ss = An ? e(t, { children: Wf(An) }, "task-summary") : Tt),
+    ((Ss = An ? e(t, { children: capitalize(An) }, "task-summary") : Tt),
       (Fe[99] = An),
       (Fe[100] = Tt),
       (Fe[101] = Ss));
@@ -12273,7 +12273,7 @@ function Db(ere) {
       (Fe[113] = xb));
   else xb = Fe[113];
   let OF;
-  if (Fe[114] === MEMO_CACHE_SENTINEL) ((OF = e(Ac, {})), (Fe[114] = OF));
+  if (Fe[114] === MEMO_CACHE_SENTINEL) ((OF = e(TranscriptExpandHint, {})), (Fe[114] = OF));
   else OF = Fe[114];
   let Sb;
   if (
@@ -12432,11 +12432,11 @@ function Db(ere) {
 function jb(Cre) {
   let _N = _(6),
     { baseMs: BF, lastThinkingAtMs: wre } = Cre,
-    xN = U(QF),
+    xN = useAppStateSelector(QF),
     jF;
   if (_N[0] !== xN) ((jF = xN ?? ze()), (_N[0] = xN), (_N[1] = jF));
   else jF = _N[1];
-  let SN = dtn(jF);
+  let SN = useSpinnerThinkingStartedAt(jF);
   bs(SN !== null ? 1000 : null);
   let Ure =
     SN !== null
@@ -12480,7 +12480,7 @@ function vN(l, f, g) {
   let R = y.slice(0, g).join("").replace(/\s+/g, " ").trim();
   while (
     R.length > 0 &&
-    ln(
+    countOccurrences(
       Vm(`${R}\u2026`, f, "wrap"),
       `
 `,
@@ -12499,7 +12499,7 @@ function IN(l) {
   for (let R of l) {
     if (R.type !== "assistant") continue;
     for (let k of R.message.content)
-      if (k.type === "tool_use" && (k.name === mt || k.name === Vh)) {
+      if (k.type === "tool_use" && (k.name === AGENT_TOOL_NAME || k.name === TASK_TOOL_NAME)) {
         if ((f.add(k.id), k.input?.run_in_background !== !1)) g.add(k.id);
       }
   }
@@ -12593,8 +12593,8 @@ function Qf(rne) {
       (Dl[0] = Wi.url),
       (Dl[1] = o$));
   else o$ = Dl[1];
-  let ane = U(o$),
-    lne = U(l$),
+  let ane = useAppStateSelector(o$),
+    lne = useAppStateSelector(l$),
     [BN, Wb] = useOffscreenFrozenValue(lne);
   if (!ane) {
     return null;
@@ -12604,12 +12604,12 @@ function Qf(rne) {
   if (Dl[2] === MEMO_CACHE_SENTINEL)
     ((r$ = e(o, {
       minWidth: 2,
-      children: e(t, { "aria-hidden": !0, color: "inactive", children: Ar }),
+      children: e(t, { "aria-hidden": !0, color: "inactive", children: CLAUDE_BULLET_GLYPH }),
     })),
       (Dl[2] = r$));
   else r$ = Dl[2];
   const FN = sne - 10,
-    $N = tPt[Wi.entry];
+    $N = CLOUD_SESSION_ENTRY_LABELS[Wi.entry];
   let qb;
   if (Dl[3] !== Wi.url)
     ((qb = e(ct, { url: Wi.url, children: Wi.url })),
@@ -12618,7 +12618,7 @@ function Qf(rne) {
   else qb = Dl[4];
   let Hb;
   if (Dl[5] !== $N || Dl[6] !== qb)
-    ((Hb = r(t, { color: "inactive", wrap: "wrap", children: [$N, nPt, qb] })),
+    ((Hb = r(t, { color: "inactive", wrap: "wrap", children: [$N, CLOUD_SESSION_URL_SEPARATOR, qb] })),
       (Dl[5] = $N),
       (Dl[6] = qb),
       (Dl[7] = Hb));
@@ -12875,7 +12875,7 @@ function $8(WN) {
 }
 function ele(l, f) {
   if (!l) return null;
-  let g = getMarketingNameForModel(l) ?? fw(l),
+  let g = getMarketingNameForModel(l) ?? sanitizeDisplayName(l),
     T = f === void 0 ? void 0 : typeof f === "number" ? void 0 : eU(f);
   return T !== void 0 ? `${g} (${T})` : g;
 }
@@ -12883,11 +12883,11 @@ function JP(l) {
   return l === "completed" || l === "failed" || l === "killed";
 }
 function _Zt(l) {
-  if (l === "running") return L.play;
-  if (l === "completed") return L.tick;
-  if (l === "failed" || l === "killed") return L.cross;
-  if (l === "paused") return L.hamburger;
-  return L.bullet;
+  if (l === "running") return figures.play;
+  if (l === "completed") return figures.tick;
+  if (l === "failed" || l === "killed") return figures.cross;
+  if (l === "paused") return figures.hamburger;
+  return figures.bullet;
 }
 function yZt(l) {
   if (l === "completed") return "success";
@@ -12925,7 +12925,7 @@ var nx = [
 ];
 var d$ = "Worked";
 function sx(l) {
-  let f = (gz(l) >>> 0) % nx.length;
+  let f = (hashString(l) >>> 0) % nx.length;
   return nx[f] ?? d$;
 }
 function tle({ tasks: l, queuedCommands: f = [] }) {
@@ -12936,9 +12936,9 @@ function tle({ tasks: l, queuedCommands: f = [] }) {
       else if (R.type === "local_workflow") T.add(R.id);
     };
   for (let R of Object.values(l))
-    if (R.status === "running" || (xs(R.status) && !R.notified)) y(R);
+    if (R.status === "running" || (isTerminalTaskStatus(R.status) && !R.notified)) y(R);
   for (let R of f) {
-    if (R.mode !== "task-notification" || !tm(R) || R.taskId === void 0)
+    if (R.mode !== "task-notification" || !isFromCurrentAgent(R) || R.taskId === void 0)
       continue;
     let k = l[R.taskId];
     if (k) y(k);
@@ -13063,7 +13063,7 @@ function ig(Rse) {
     if (xo[10] === MEMO_CACHE_SENTINEL)
       ((Oo = e(o, {
         minWidth: 2,
-        children: e(t, { "aria-hidden": !0, color: "error", children: Ar }),
+        children: e(t, { "aria-hidden": !0, color: "error", children: CLAUDE_BULLET_GLYPH }),
       })),
         (yo = e(t, {
           dimColor: !0,
@@ -13100,7 +13100,7 @@ function ig(Rse) {
         children: e(t, {
           "aria-label": "warning:",
           color: "warning",
-          children: Ar,
+          children: CLAUDE_BULLET_GLYPH,
         }),
       })),
         (xo[14] = Oo));
@@ -13158,7 +13158,7 @@ function ig(Rse) {
         children: e(t, {
           "aria-label": "warning:",
           color: "warning",
-          children: Ar,
+          children: CLAUDE_BULLET_GLYPH,
         }),
       })),
         (xo[23] = Oo));
@@ -13213,7 +13213,7 @@ function ig(Rse) {
     const Ee = mo ? 1 : 0;
     let Oo;
     if (xo[36] === MEMO_CACHE_SENTINEL)
-      ((Oo = r(t, { "aria-hidden": !0, children: [Dw, " "] })), (xo[36] = Oo));
+      ((Oo = r(t, { "aria-hidden": !0, children: [CLAUDE_ASTERISK_GLYPH, " "] })), (xo[36] = Oo));
     else Oo = xo[36];
     let yo;
     if (xo[37] !== he.content)
@@ -13234,7 +13234,7 @@ function ig(Rse) {
     const Ee = mo ? 1 : 0;
     let Oo, yo;
     if (xo[42] === MEMO_CACHE_SENTINEL)
-      ((Oo = r(t, { "aria-hidden": !0, dimColor: !0, children: [Dw, " "] })),
+      ((Oo = r(t, { "aria-hidden": !0, dimColor: !0, children: [CLAUDE_ASTERISK_GLYPH, " "] })),
         (yo = e(t, { children: "Allowed " })),
         (xo[42] = Oo),
         (xo[43] = yo));
@@ -13382,7 +13382,7 @@ function $x(Mse) {
   if (yt[13] === MEMO_CACHE_SENTINEL)
     ((Zc = e(o, {
       minWidth: 2,
-      children: e(t, { "aria-hidden": !0, children: Ar }),
+      children: e(t, { "aria-hidden": !0, children: CLAUDE_BULLET_GLYPH }),
     })),
       (yt[13] = Zc));
   else Zc = yt[13];
@@ -13395,7 +13395,7 @@ function $x(Mse) {
     YN = Ki === 1 ? "hook" : "hooks";
   let cx;
   if (yt[16] !== Xr || yt[17] !== Xc)
-    ((cx = !Xc && Xr.length > 0 && r(N, { children: [" ", e(Ac, {})] })),
+    ((cx = !Xc && Xr.length > 0 && r(N, { children: [" ", e(TranscriptExpandHint, {})] })),
       (yt[16] = Xr),
       (yt[17] = Xc),
       (yt[18] = cx));
@@ -13512,7 +13512,7 @@ function Wx(Ase) {
           "aria-hidden": !0,
           color: od,
           dimColor: td,
-          children: Ar,
+          children: CLAUDE_BULLET_GLYPH,
         }),
       })),
       (og[0] = od),
@@ -13596,7 +13596,7 @@ function Hx(Ose) {
 function Gx(Ise) {
   let Ls = _(37),
     { message: Rt, addMargin: nA, verb: sA } = Ise,
-    iA = Yn(),
+    iA = useAppState(),
     aA = useCommandQueue(),
     k$;
   if (Ls[0] !== Rt.timestamp || Ls[1] !== aA || Ls[2] !== iA)
@@ -13608,8 +13608,8 @@ function Gx(Ise) {
       return {
         hasPendingAgents: b$.pendingAgents > 0,
         hasPendingWorkflows: b$.pendingWorkflows > 0,
-        showTurnDuration: Eo("showTurnDuration", !0).value,
-        doneAt: wye(Rt.timestamp),
+        showTurnDuration: resolveSetting("showTurnDuration", !0).value,
+        doneAt: formatTimestamp(Rt.timestamp),
       };
     }),
       (Ls[0] = Rt.timestamp),
@@ -13624,7 +13624,7 @@ function Gx(Ise) {
       showTurnDuration: Hl,
       doneAt: _x,
     } = Dse,
-    Sx = U(Y$),
+    Sx = useAppStateSelector(Y$),
     _$;
   if (Ls[4] !== Rt.durationMs)
     ((_$ = formatDuration(Rt.durationMs)), (Ls[4] = Rt.durationMs), (Ls[5] = _$));
@@ -13649,7 +13649,7 @@ function Gx(Ise) {
                 " used (",
                 formatNumber(nd),
                 " min",
-                r(t, { "aria-hidden": !0, children: [" ", L.tick] }),
+                r(t, { "aria-hidden": !0, children: [" ", figures.tick] }),
                 ")",
               ],
             })
@@ -13750,7 +13750,7 @@ function Gx(Ise) {
           children: [
             e(o, {
               minWidth: 2,
-              children: e(t, { "aria-hidden": !0, dimColor: !0, children: Dw }),
+              children: e(t, { "aria-hidden": !0, dimColor: !0, children: CLAUDE_ASTERISK_GLYPH }),
             }),
             r(t, {
               children: [
@@ -13821,7 +13821,7 @@ function zx(Wse) {
   if (sd[5] === MEMO_CACHE_SENTINEL)
     ((O$ = e(o, {
       minWidth: 2,
-      children: e(t, { "aria-hidden": !0, dimColor: !0, children: Ar }),
+      children: e(t, { "aria-hidden": !0, dimColor: !0, children: CLAUDE_BULLET_GLYPH }),
     })),
       (sd[5] = O$));
   else O$ = sd[5];
@@ -13872,7 +13872,7 @@ function Kx(Gse) {
   else vx = id[5];
   let Ix;
   if (id[6] !== vs || id[7] !== vx)
-    ((Ix = e(Pg, { filePath: vs, children: vx })),
+    ((Ix = e(TruncatedFilePath, { filePath: vs, children: vx })),
       (id[6] = vs),
       (id[7] = vx),
       (id[8] = Ix));
@@ -13913,7 +13913,7 @@ function Yx(zse) {
       (ad[0] = Qr),
       (ad[1] = $$));
   else $$ = ad[1];
-  if (!U($$)) {
+  if (!useAppStateSelector($$)) {
     return null;
   }
   const LA = Kse ? 1 : 0;
@@ -14007,7 +14007,7 @@ function Ql(sie) {
     if (Ds[0] !== Is) ((Vi = lg(Is)), (Ds[0] = Is), (Ds[1] = Vi));
     else Vi = Ds[1];
     let ag;
-    if (Ds[2] !== Vi) ((ag = e(UA, { text: Vi })), (Ds[2] = Vi), (Ds[3] = ag));
+    if (Ds[2] !== Vi) ((ag = e(TruncatedText, { text: Vi })), (Ds[2] = Vi), (Ds[3] = ag));
     else ag = Ds[3];
     return ag;
   }
@@ -14029,7 +14029,7 @@ function Ql(sie) {
   const Vi = Vx ? 1 : 0;
   let ag;
   if (Ds[9] === MEMO_CACHE_SENTINEL)
-    ((ag = r(t, { "aria-hidden": !0, children: [L.pointerSmall, " "] })),
+    ((ag = r(t, { "aria-hidden": !0, children: [figures.pointerSmall, " "] })),
       (Ds[9] = ag));
   else ag = Ds[9];
   let Qx;
@@ -14080,8 +14080,8 @@ function mg(Mie) {
       isTranscriptMode: GA,
     } = Mie,
     { columns: zA } = useTerminalSize(),
-    [KA] = cn(),
-    YA = Os(tW),
+    [KA] = useTheme(),
+    YA = useAppStateSelectorUnchecked(tW),
     Z$,
     o_;
   if (
@@ -14168,10 +14168,10 @@ function dg(Bie) {
       isTranscriptMode: dd,
     } = Bie,
     eE = useSession(mW),
-    [oE] = cn(),
-    tE = U(cW),
-    rE = U(pW),
-    Bs = Yn(),
+    [oE] = useTheme(),
+    tE = useAppStateSelector(cW),
+    rE = useAppStateSelector(pW),
+    Bs = useAppState(),
     rW;
   if (Xi[0] !== Bs || Xi[1] !== Mt)
     ((rW = () => spn(Bs.getState(), Mt)),
@@ -14265,7 +14265,7 @@ function dg(Bie) {
   if (Xi[25] !== Jr.name || Xi[26] !== nE)
     ((i_ =
       nE &&
-      Jr.name !== mt &&
+      Jr.name !== AGENT_TOOL_NAME &&
       e(ToolResultRow, {
         height: 1,
         children: e(t, {
@@ -14911,7 +14911,7 @@ function FE(nle) {
       let b_ = kt;
       let lr;
       if (to[97] !== b_ || to[98] !== ME)
-        ((lr = ME ? e(yPt, { children: b_ }) : b_),
+        ((lr = ME ? e(VerboseToolResultProvider, { children: b_ }) : b_),
           (to[97] = b_),
           (to[98] = ME),
           (to[99] = lr));
@@ -15344,7 +15344,7 @@ function N_(_le) {
       (Ys[1] = Je.type),
       (Ys[2] = vW));
   else vW = Ys[2];
-  let C_ = Os(vW);
+  let C_ = useAppStateSelectorUnchecked(vW);
   if (_I(Je)) {
     return null;
   }
@@ -15900,7 +15900,7 @@ function b$n(
     children: [
       R && W && e(ToolResultRow, { children: e(hye, { prompt: W, theme: y }) }),
       R
-        ? e(ZHe, {
+        ? e(ExpandedTranscriptProvider, {
             children: e(XE, { progressMessages: f, tools: g, verbose: T }),
           })
         : null,
@@ -15925,7 +15925,7 @@ function b$n(
           isStatic: !0,
         }),
       }),
-      !R && r(t, { dimColor: !0, children: ["  ", e(Ac, {})] }),
+      !R && r(t, { dimColor: !0, children: ["  ", e(TranscriptExpandHint, {})] }),
     ],
   });
 }
@@ -16089,7 +16089,7 @@ function jHe(
     children: r(o, {
       flexDirection: "column",
       children: [
-        r(ZHe, {
+        r(ExpandedTranscriptProvider, {
           children: [
             R &&
               ne &&
@@ -16134,7 +16134,7 @@ function jHe(
             }),
           ],
         }),
-        e(vh, { count: K, unit: "tool use", expandable: !0 }),
+        e(OverflowHint, { count: K, unit: "tool use", expandable: !0 }),
       ],
     }),
   });
@@ -16168,11 +16168,11 @@ function E$n(
     activeAgents: k,
   },
 ) {
-  if (!y && uht(f, k, pKe(R, k))) return e(Yd, { result: l, verbose: T });
+  if (!y && uht(f, k, pKe(R, k))) return e(ToolErrorMessage, { result: l, verbose: T });
   return r(N, {
     children: [
       jHe(f, { tools: g, verbose: T, isTranscriptMode: y, activeAgents: k }),
-      e(Yd, { result: l, verbose: T }),
+      e(ToolErrorMessage, { result: l, verbose: T }),
     ],
   });
 }
@@ -16306,7 +16306,7 @@ function A$n(l, f) {
               " ",
             ],
           }),
-          !I && e(Ac, {}),
+          !I && e(TranscriptExpandHint, {}),
         ],
       }),
       R.map((B, K) =>

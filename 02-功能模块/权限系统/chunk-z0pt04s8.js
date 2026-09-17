@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { randomUUID } from "crypto";
 var f = "is not supported in a cloud-hosted session",
   y =
@@ -36,7 +36,7 @@ function v(e) {
     ? e.subtype
     : void 0;
 }
-function X9n(e, t) {
+function routeCloudControlRequest(e, t) {
   let s = w(e, t);
   return s === null
     ? {
@@ -47,14 +47,14 @@ function X9n(e, t) {
 }
 var d = 8;
 function _(e) {
-  let t = e.slice(0, d).map((s) => oe(D_(s), 64));
+  let t = e.slice(0, d).map((s) => truncateToCodeUnits(sanitizeAndTruncateText(s), 64));
   return e.length > d
     ? `${t.join(", ")} (and ${e.length - d} more)`
     : t.join(", ");
 }
 function C(e) {
   return typeof e === "string"
-    ? oe(D_(e), 64)
+    ? truncateToCodeUnits(sanitizeAndTruncateText(e), 64)
     : "a request without a string subtype";
 }
 function w(e, t) {
@@ -212,18 +212,18 @@ var g = {
     proactivity: "preference",
   },
   x = Object.keys(g);
-function Y9n(e) {
+function getOptionRetentionKind(e) {
   return g[e] ?? "lost";
 }
 var O = new Set();
-function SFt(e) {
+function hasNonEmptyArrayValues(e) {
   return (
     typeof e === "object" &&
     e !== null &&
     Object.values(e).some((t) => Array.isArray(t) && t.length > 0)
   );
 }
-function Sze(e) {
+function isRestrictiveAgentDefinition(e) {
   if (typeof e !== "object" || e === null) return !1;
   let t = "tools" in e ? e.tools : void 0,
     s = "disallowedTools" in e ? e.disallowedTools : void 0,
@@ -234,7 +234,7 @@ function Sze(e) {
   return (
     (t !== void 0 && !a(t)) ||
     (u(s) && !a(s)) ||
-    SFt(n) ||
+    hasNonEmptyArrayValues(n) ||
     o === "plan" ||
     o === "dontAsk"
   );
@@ -244,14 +244,14 @@ function D(e) {
   if (typeof e !== "object" || e === null || Array.isArray(e))
     return ["(unreadable)"];
   return Object.entries(e)
-    .filter(([, t]) => Sze(t))
+    .filter(([, t]) => isRestrictiveAgentDefinition(t))
     .map(([t]) => t);
 }
 var L =
     "agent definitions that list tools or hooks, or set a permission mode, are not enforced by a cloud session",
-  Nan = "structured output is not delivered to a cloud session yet";
-function bFt(e, t, s = O) {
-  let n = SFt(e.hooks),
+  JSON_SCHEMA_UNSUPPORTED_REASON = "structured output is not delivered to a cloud session yet";
+function validateCloudInitializeOptions(e, t, s = O) {
+  let n = hasNonEmptyArrayValues(e.hooks),
     o = e.sdkMcpServers,
     a = Array.isArray(o) && o.length > 0,
     u = e.jsonSchema !== void 0,
@@ -271,7 +271,7 @@ function bFt(e, t, s = O) {
       error: b(
         c.map((i) =>
           i === "jsonSchema"
-            ? `jsonSchema (${Nan})`
+            ? `jsonSchema (${JSON_SCHEMA_UNSUPPORTED_REASON})`
             : i === "agents"
               ? `agents (${_(r)}: ${L})`
               : i,
@@ -286,7 +286,7 @@ function M(e, t) {
     e === "systemPrompt" && Array.isArray(t) && t.length === 1 && t[0] === ""
   );
 }
-function J9n(e) {
+function buildInitializeSuccessFields(e) {
   return {
     commands: [],
     agents: [],
@@ -297,7 +297,7 @@ function J9n(e) {
     pid: process.pid,
   };
 }
-function sOe(e, t, s) {
+function buildReplayUserMessage(e, t, s) {
   return {
     type: "user",
     uuid: t,
@@ -307,7 +307,7 @@ function sOe(e, t, s) {
     message: { role: "user", content: s },
   };
 }
-function AF(e, t, s) {
+function buildInformationalSystemMessage(e, t, s) {
   return {
     type: "system",
     subtype: "informational",
@@ -318,9 +318,9 @@ function AF(e, t, s) {
   };
 }
 var P = 512,
-  Gbe = 200;
-function _O(e) {
-  return D_(e, Gbe);
+  TRUNCATE_MAX_LENGTH = 200;
+function truncateSanitizedTextShort(e) {
+  return sanitizeAndTruncateText(e, TRUNCATE_MAX_LENGTH);
 }
 var T = 2048,
   m = "[\\u200C\\u200D\\uFE00-\\uFE0F\\u{E0100}-\\u{E01EF}]",
@@ -330,13 +330,13 @@ var T = 2048,
     "gu",
   ),
   H = 8;
-function bze(e) {
-  return D_(e, T);
+function truncateSanitizedTextLong(e) {
+  return sanitizeAndTruncateText(e, T);
 }
-function D_(e, t = P) {
+function sanitizeAndTruncateText(e, t = P) {
   let s = 0;
-  return oe(
-    pt(e)
+  return truncateToCodeUnits(
+    stripAnsi(e)
       .replace(K, " ")
       .replace(N, (n) => (s++ < H ? n : ""))
       .trim(),
@@ -344,7 +344,7 @@ function D_(e, t = P) {
   );
 }
 var l = "Cloud session disconnected";
-function wFt(e) {
+function normalizeDisconnectReason(e) {
   switch (e) {
     case "untrusted_device":
     case "session_stale_relogin":
@@ -356,7 +356,7 @@ function wFt(e) {
       return "stream_closed";
   }
 }
-function TFt(e) {
+function formatDisconnectMessage(e) {
   switch (e) {
     case "stream_closed":
       return `${l} (stream_closed): this machine is no longer attached. If the session still exists it keeps running in the cloud; open it again to re-attach.`;
@@ -369,19 +369,19 @@ function TFt(e) {
   }
 }
 export {
-  X9n,
-  Y9n,
-  SFt,
-  Sze,
-  Nan,
-  bFt,
-  J9n,
-  sOe,
-  AF,
-  Gbe,
-  _O,
-  bze,
-  D_,
-  wFt,
-  TFt,
+  routeCloudControlRequest,
+  getOptionRetentionKind,
+  hasNonEmptyArrayValues,
+  isRestrictiveAgentDefinition,
+  JSON_SCHEMA_UNSUPPORTED_REASON,
+  validateCloudInitializeOptions,
+  buildInitializeSuccessFields,
+  buildReplayUserMessage,
+  buildInformationalSystemMessage,
+  TRUNCATE_MAX_LENGTH,
+  truncateSanitizedTextShort,
+  truncateSanitizedTextLong,
+  sanitizeAndTruncateText,
+  normalizeDisconnectReason,
+  formatDisconnectMessage,
 };

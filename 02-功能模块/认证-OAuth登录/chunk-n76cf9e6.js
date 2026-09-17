@@ -10,24 +10,24 @@
 import { NR, EP } from "./认证-OAuth登录.419zdfz3.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, zR, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { ea } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { EXTERNAL_PERMISSION_MODES, normalizePermissionModeAlias } from "../权限系统/chunk-e4pfvp7x.js";
-import { JK } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
+import { isDaemonWorkerRegistryEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
 import { credentialsStoreFor } from "./credentials-store.js";
 import { getBridgeTokenOverride } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
-import { ANe } from "../Bridge-RemoteControl/chunk-ct52ffwb.js";
-import { M9e, $tn, Utn, pBn } from "../权限系统/chunk-3kjwvb3e.js";
-import { NSt, j8e } from "../../01-核心基础设施/共享小工具-未细化/chunk-h14anec2.js";
+import { REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE } from "../Bridge-RemoteControl/remote-control-messages.js";
+import { updateDaemonConfig, normalizeRemoteControlEntries, scheduledTasksFileSchema, runScheduledWorker } from "../权限系统/chunk-3kjwvb3e.js";
+import { PERMANENT_FAILURE_EXIT_CODE, TEMP_FAILURE_EXIT_CODE } from "../../01-核心基础设施/共享小工具-未细化/exit-codes.js";
 import { s, T, O, c, X, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { randomUUID } from "crypto";
 import { join as ee } from "path";
 function ae(e) {
@@ -49,10 +49,10 @@ var ce = 300000,
   le = 30000,
   pe = 86400000;
 function te() {
-  return Ce.state("daemon-auth-cooldown");
+  return STORAGE_KEYS.state("daemon-auth-cooldown");
 }
 function fe() {
-  return Ce.state("daemon-auth-status");
+  return STORAGE_KEYS.state("daemon-auth-status");
 }
 function uBn(e, t, y = () => !0, d, p) {
   let u,
@@ -206,7 +206,7 @@ function uBn(e, t, y = () => !0, d, p) {
       t("auth: browser login skipped (3P provider, no OAuth-consuming worker)");
       return;
     }
-    let i = be(),
+    let i = getClaudeConfigDir(),
       A = ee(i, "daemon-auth-cooldown"),
       a = ee(i, "daemon-auth-status.json");
     try {
@@ -220,7 +220,7 @@ function uBn(e, t, y = () => !0, d, p) {
           );
         let Q = E.value.items[0];
         o = Q.found ? Buffer.from(Q.value).toString("utf8") : null;
-      } else o = await qt().read(A);
+      } else o = await getFileStorage().read(A);
       let B = o === null ? NaN : parseInt(o, 10);
       if (!Number.isNaN(B) && Date.now() - B < de) {
         t("auth: browser login skipped (cooldown)");
@@ -230,7 +230,7 @@ function uBn(e, t, y = () => !0, d, p) {
       if (!W(o)) t(`auth: cooldown read error: ${o}`);
     }
     try {
-      if ((await qt().mkdir(i), isHoverRestEnabled() && d !== void 0)) {
+      if ((await getFileStorage().mkdir(i), isHoverRestEnabled() && d !== void 0)) {
         let o = await d.write(te(), String(Date.now()), {
           publishDiscipline: "inPlace",
         });
@@ -239,12 +239,12 @@ function uBn(e, t, y = () => !0, d, p) {
             `v5 cooldown write failed: ${o.error.code}${"telemetryCode" in o.error && o.error.telemetryCode ? ` (${o.error.telemetryCode})` : ""}`,
             "daemon-auth v5 cooldown write failed",
           );
-      } else await qt().write(A, String(Date.now()));
+      } else await getFileStorage().write(A, String(Date.now()));
     } catch (o) {
       t(`auth: cooldown write error: ${o}`);
     }
     try {
-      let { execFileNoThrow: o } = await import("../Git-Worktree/chunk-9ys1bnqr.js");
+      let { execFileNoThrow: o } = await import("../Git-Worktree/git-exec-hardening.js");
       o("osascript", [
         "-e",
         'display notification "Your Claude assistant needs re-authentication" with title "Claude"',
@@ -263,7 +263,7 @@ function uBn(e, t, y = () => !0, d, p) {
             "daemon-auth v5 status write failed",
           );
       } else
-        await qt().write(a, b({ status: "auth_required", since: Date.now() }));
+        await getFileStorage().write(a, b({ status: "auth_required", since: Date.now() }));
     } catch (o) {
       t(`auth: status write error: ${o}`);
     }
@@ -464,7 +464,7 @@ var V = createLazyValue(() =>
       { initializeAnalyticsSink: k } = await import("../../01-核心基础设施/共享小工具-未细化/initializeAnalyticsSink.3hb68836.js");
     (f(), k());
     let w = () => getBridgeTokenOverride() ?? d.getAccessToken();
-    if (!w()) (y(ANe), process.exit(1));
+    if (!w()) (y(REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE), process.exit(1));
     let [
       {
         initializeGrowthBook: g,
@@ -555,15 +555,15 @@ var V = createLazyValue(() =>
     } finally {
       (U(), process.off("message", r), await D());
     }
-    if (A) process.exit(NSt);
+    if (A) process.exit(PERMANENT_FAILURE_EXIT_CODE);
   };
 async function D9e(e, t, y) {
   return withFeatureTelemetry("daemon_rc_add", async () => {
     let d = "added";
     return (
-      await M9e(
+      await updateDaemonConfig(
         (p) => {
-          let u = $tn(p.remoteControl),
+          let u = normalizeRemoteControlEntries(p.remoteControl),
             h = u.findIndex((f) => f.dir === e.dir);
           if (h >= 0) {
             let f = ea(e, (k) => k !== void 0);
@@ -580,9 +580,9 @@ async function D9e(e, t, y) {
 }
 async function L9e(e, t, y) {
   return withFeatureTelemetry("daemon_rc_remove", async () => {
-    await M9e(
+    await updateDaemonConfig(
       (d) => {
-        let p = $tn(d.remoteControl),
+        let p = normalizeRemoteControlEntries(d.remoteControl),
           u = p.filter((h) => h.dir !== e);
         if (u.length === p.length) return !1;
         if (u.length === 0) delete d.remoteControl;
@@ -596,7 +596,7 @@ async function L9e(e, t, y) {
 var se = createLazyValue(() => c({ intervalSeconds: T().positive().default(30) }).strict()),
   o9 = {
     heartbeat: { schema: se, run: ye, needsOAuth: !1 },
-    scheduled: { schema: Utn, run: pBn, needsOAuth: !0 },
+    scheduled: { schema: scheduledTasksFileSchema, run: runScheduledWorker, needsOAuth: !0 },
     remoteControl: { schema: V, run: ne, needsOAuth: !0 },
   };
 async function ye(e, t, y, d) {
@@ -617,7 +617,7 @@ async function Lgr(e, t) {
     (process.stderr.write(`unknown worker kind: ${e}
 `),
       process.exit(2));
-  if (e !== "heartbeat" && !JK())
+  if (e !== "heartbeat" && !isDaemonWorkerRegistryEnabled())
     (process.stderr.write(`worker kind '${e}' is not available.
 `),
       process.exit(2));
@@ -678,7 +678,7 @@ async function Lgr(e, t) {
     if (ve(v) === 429)
       (process.stdout.write(`rate limited (429): ${l(v)}
 `),
-        process.exit(j8e));
+        process.exit(TEMP_FAILURE_EXIT_CODE));
     throw v;
   }
 }
@@ -721,7 +721,7 @@ function ge(e, t) {
   let p = !1,
     u = setInterval(() => {
       if (p) return;
-      if (!(!y.isAlive(d) || (P() !== "windows" && y.ppid() !== d))) return;
+      if (!(!y.isAlive(d) || (getCurrentPlatform() !== "windows" && y.ppid() !== d))) return;
       ((p = !0),
         clearInterval(u),
         y.log("parent supervisor gone \u2014 exiting"),

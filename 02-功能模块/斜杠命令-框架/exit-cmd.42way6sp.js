@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 211 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { isBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { IF, due } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { h4 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
+import { handlePromptInputExit } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 async function a(t, e) {
   if (isBgSession())
     return {
@@ -19,7 +19,7 @@ async function a(t, e) {
       value: "Session keeps running. Use /stop to end it.",
     };
   return (
-    await h4(IF(e), { responseStreaming: due(e) }, e.storageV5),
+    await handlePromptInputExit(IF(e), { responseStreaming: due(e) }, e.storageV5),
     { type: "skip" }
   );
 }

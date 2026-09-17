@@ -8,18 +8,18 @@
 
 // Version: 2.1.263
 import { sanitizePath, getProjectKey, getProjectDir, canonicalizePath } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
-import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
+import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { kd, R7t } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { If } from "./chunk-gyn0kh7v.js";
+import { createHoverRestOptions } from "./hover-rest-transcript.js";
 import { join as a } from "path";
 function sanitizePathSegment(e) {
   return /^[A-Za-z0-9_-]{1,128}$/.test(e) ? e : sanitizePath(e);
 }
 async function getDirSyncRecordPath(e, t, n) {
-  return a(getProjectDir(await canonicalizePath(e, If(n))), getDirSyncRecordFileName(t));
+  return a(getProjectDir(await canonicalizePath(e, createHoverRestOptions(n))), getDirSyncRecordFileName(t));
 }
 async function resolveDirSyncRecordLocation(e, t, n) {
-  let r = await canonicalizePath(e, If(n)),
+  let r = await canonicalizePath(e, createHoverRestOptions(n)),
     c = a(getProjectDir(r), getDirSyncRecordFileName(t)),
     o = getProjectKey(r),
     i = n === void 0 ? void 0 : getDirSyncRecordKey(o, t);
@@ -30,7 +30,7 @@ async function resolveDirSyncRecordLocation(e, t, n) {
   };
 }
 function getDirSyncRecordKey(e, t) {
-  let n = Ce.dirSyncRecord(e, sanitizePathSegment(t));
+  let n = STORAGE_KEYS.dirSyncRecord(e, sanitizePathSegment(t));
   return kd(n) === void 0 ? n : void 0;
 }
 function getDirSyncRecordFileName(e) {

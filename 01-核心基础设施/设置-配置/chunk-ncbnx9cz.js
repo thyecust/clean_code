@@ -9,12 +9,12 @@
 // Version: 2.1.263
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { zn, An, SZ } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { x, us } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize, truncateToCodePoints } from "../核心工具-字符串与文本/string-utils.js";
 import { Gur, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
-import { yW } from "../共享小工具-未细化/chunk-rsr7cnyv.js";
+import { runWithCwd } from "../共享小工具-未细化/cwd-context.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { wb } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { qe, Ut } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -22,10 +22,10 @@ import { ike } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js
 import { updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { sC, l2t, addMcpConfig, userScopeMcpServerExists, readRawMcpJsonServersFromCwd } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { G$ } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { o$e } from "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
-import { Fk } from "../共享小工具-未细化/chunk-7wm8t84g.js";
+import { stringifyYaml } from "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
+import { MAX_SKILL_FILE_BYTES } from "../共享小工具-未细化/chunk-7wm8t84g.js";
 import { s, T, O, se, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { countMatching } from "../共享小工具-未细化/chunk-d16fhdtx.js";
 import { join as Ae } from "path";
 import {
@@ -165,7 +165,7 @@ async function re(e, t) {
   let a = await Ee(resolve(t));
   if (a === null) return !0;
   let o;
-  switch (P()) {
+  switch (getCurrentPlatform()) {
     case "windows":
       o = Gur;
       break;
@@ -293,11 +293,11 @@ function Ce(e) {
 var Ne = /\p{C}|\p{DI}|[\u2028\u2029]/gu;
 function fO(e) {
   let t = e.replace(Ne, " ").trim();
-  return t.length > 120 ? us(t, 117) + "\u2026" : t;
+  return t.length > 120 ? truncateToCodePoints(t, 117) + "\u2026" : t;
 }
 function Qw(e) {
   let t = e.replace(Ne, " ").trim();
-  return t.length > 500 ? us(t, 497) + "\u2026" : t;
+  return t.length > 500 ? truncateToCodePoints(t, 497) + "\u2026" : t;
 }
 function Xe(e) {
   return `<!-- import-fallback: ${e} -->`;
@@ -315,14 +315,14 @@ ${o}`);
   }
   if (r.length > 0)
     a.push(
-      `There ${r.length === 1 ? "is" : "are"} also ${r.length} unmapped ${x(r.length, "item")} from the project-level ${e.displayName} config in the repo where the import ran. Those are not listed here (project config can be authored by anyone with write access to that repo). If you still need them, re-open that project and review its \`.codex/\` or \`.gemini/\` directory directly.`,
+      `There ${r.length === 1 ? "is" : "are"} also ${r.length} unmapped ${pluralize(r.length, "item")} from the project-level ${e.displayName} config in the repo where the import ran. Those are not listed here (project config can be authored by anyone with write access to that repo). If you still need them, re-open that project and review its \`.codex/\` or \`.gemini/\` directory directly.`,
     );
   return a.join(`
 
 `);
 }
 async function b3e(e, t) {
-  let r = be(),
+  let r = getClaudeConfigDir(),
     a = process.env.CLAUDE_CONFIG_DIR !== void 0;
   if (((B() || a) && X(r)) || (a && (await re(r, he()))))
     return {
@@ -535,7 +535,7 @@ async function ze(e, t, r, a, o) {
   let u = await ct(e, t, o);
   if (!u) return;
   let { config: d, extraKeys: p } = u,
-    f = be(),
+    f = getClaudeConfigDir(),
     k = (...y) => b(r, ".claude", ...y),
     h = te(d.mcp_servers, "[mcp_servers]", t, o);
   for (let [y, C] of Object.entries(h)) {
@@ -595,12 +595,12 @@ async function ze(e, t, r, a, o) {
           return {
             skipped: `${g}: .mcp.json is (or is under) a symlink \u2014 refusing project-scope write`,
           };
-        if (A === "user" ? userScopeMcpServerExists(g) : (await yW(r, readRawMcpJsonServersFromCwd))[g] !== void 0)
+        if (A === "user" ? userScopeMcpServerExists(g) : (await runWithCwd(r, readRawMcpJsonServersFromCwd))[g] !== void 0)
           return { skipped: `${g}: MCP server already exists in ${A} config` };
         if (z) return `would add MCP server ${g} (${t})`;
         return (
           await (A === "project"
-            ? yW(r, () => addMcpConfig(g, L, A, M))
+            ? runWithCwd(r, () => addMcpConfig(g, L, A, M))
             : addMcpConfig(g, L, A, M)),
           `added MCP server ${g} (${A})`
         );
@@ -663,7 +663,7 @@ async function ze(e, t, r, a, o) {
       j = t === "user" ? b(f, "agents") : k("agents"),
       F = Array.isArray(w.tools) && w.tools.length > 0,
       z = `---
-${o$e({ name: g, description: de(w.description || `Subagent imported from Codex (${g}).`) })}---
+${stringifyYaml({ name: g, description: de(w.description || `Subagent imported from Codex (${g}).`) })}---
 
 ${w.instructions ?? ""}
 `;
@@ -752,9 +752,9 @@ ${w.instructions ?? ""}
           return {
             skipped: `${g}: SKILL.md is a symlink \u2014 copy the skill manually`,
           };
-        if (z.size > Fk)
+        if (z.size > MAX_SKILL_FILE_BYTES)
           return {
-            skipped: `${g}: SKILL.md is ${z.size} bytes \u2014 Claude Code skips skills over ${Fk} bytes, so the copy would never load`,
+            skipped: `${g}: SKILL.md is ${z.size} bytes \u2014 Claude Code skips skills over ${MAX_SKILL_FILE_BYTES} bytes, so the copy would never load`,
           };
         let M;
         try {
@@ -769,9 +769,9 @@ ${w.instructions ?? ""}
         let A = ne(M, []);
         if (A !== null) return { skipped: `${g}: ${A}` };
         let Q = Buffer.byteLength(M, "utf8");
-        if (Q > Fk)
+        if (Q > MAX_SKILL_FILE_BYTES)
           return {
-            skipped: `${g}: SKILL.md would be ${Q} bytes after utf-8 re-encoding \u2014 Claude Code skips skills over ${Fk} bytes, so the copy would never load`,
+            skipped: `${g}: SKILL.md would be ${Q} bytes after utf-8 re-encoding \u2014 Claude Code skips skills over ${MAX_SKILL_FILE_BYTES} bytes, so the copy would never load`,
           };
         if (/^\s*---/.test(M))
           return {
@@ -861,7 +861,7 @@ ${w.instructions ?? ""}
   }
 }
 async function dt(e, t, r, a, o) {
-  let u = be(),
+  let u = getClaudeConfigDir(),
     d = [];
   if (r !== "project")
     d.push(
@@ -926,7 +926,7 @@ async function dt(e, t, r, a, o) {
 async function ut(e, t, r) {
   let a = b(e, "prompts"),
     o = await readdir(a, { withFileTypes: !0 }).catch(() => []),
-    u = be();
+    u = getClaudeConfigDir();
   for (let d of o) {
     if (!d.isFile()) continue;
     let p = d.name;
@@ -1010,7 +1010,7 @@ var Me = {
       u =
         (e.homeDir === void 0 && B()) ||
         (process.env.CLAUDE_CONFIG_DIR !== void 0 &&
-          (X(be()) || (await re(be(), r))));
+          (X(getClaudeConfigDir()) || (await re(getClaudeConfigDir(), r))));
     if (u)
       o.push({
         scope: "user",
@@ -1245,7 +1245,7 @@ async function kt(e, t, r) {
 async function bt(e, t, r) {
   let a = E(e, "commands"),
     o = await readdir(a, { withFileTypes: !0 }).catch(() => []),
-    u = be(),
+    u = getClaudeConfigDir(),
     d = o.filter((p) => p.isDirectory()).map((p) => p.name);
   if (d.length > 0)
     r.push({
@@ -1313,7 +1313,7 @@ async function bt(e, t, r) {
           z =
             Object.keys(L).length > 0
               ? `---
-${o$e(L)}---
+${stringifyYaml(L)}---
 
 `
               : "",
@@ -1336,7 +1336,7 @@ ${o$e(L)}---
   }
 }
 async function St(e, t, r, a, o) {
-  let u = be(),
+  let u = getClaudeConfigDir(),
     d = [
       {
         id: "gemini:user:instructions",
@@ -1418,7 +1418,7 @@ var Te = {
       u =
         (e.homeDir === void 0 && B()) ||
         (process.env.CLAUDE_CONFIG_DIR !== void 0 &&
-          (X(be()) || (await re(be(), r))));
+          (X(getClaudeConfigDir()) || (await re(getClaudeConfigDir(), r))));
     if (u)
       o.push({
         scope: "user",

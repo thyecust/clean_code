@@ -18,16 +18,16 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { jo, Bf, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
+import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Eg } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { isDesktopHostSession } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { ot, _ie, W6 } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSdkHostedBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { outsideReadBlocked, pathInAllowedWorkingPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var B = null;
 async function aK() {
@@ -758,7 +758,7 @@ var lK = 800,
     win32: ["powershell", "-NoProfile", "-Command", "Get-Clipboard"],
   };
 function we() {
-  let t = bl(),
+  let t = getClaudeTempDir(),
     r = "claude_cli_latest_screenshot.png",
     o = {
       darwin: D(t, "claude_cli_latest_screenshot.png"),
@@ -932,7 +932,7 @@ function X(e) {
 }
 var J = /^(?:[A-Za-z]:\\|\\\\)/;
 function Z(e) {
-  if (P() === "wsl" && J.test(e)) return e;
+  if (getCurrentPlatform() === "wsl" && J.test(e)) return e;
   let o = `__DOUBLE_BACKSLASH_${randomBytes(8).toString("hex")}__`;
   return e
     .replaceAll("\\\\", o)
@@ -954,7 +954,7 @@ async function fJn(e, t) {
   let r = _e(e);
   if (!r) return null;
   let o = r;
-  if (P() === "wsl" && J.test(o))
+  if (getCurrentPlatform() === "wsl" && J.test(o))
     o = await new LAe(a.WSL_DISTRO_NAME).toLocalPath(o);
   let s;
   try {
@@ -1016,7 +1016,7 @@ function ubt(e) {
   return "none";
 }
 function dbt(e) {
-  return e === "sdk_hosted" && Eg();
+  return e === "sdk_hosted" && isDesktopHostSession();
 }
 var Se = {
   ".png": "image/png",
@@ -1103,7 +1103,7 @@ function _Sn(e) {
   return;
 }
 async function pbt(e, t) {
-  let r = Q();
+  let r = getCwd();
   for (let o of e) {
     if (K(o)) continue;
     let s = _Sn(o);

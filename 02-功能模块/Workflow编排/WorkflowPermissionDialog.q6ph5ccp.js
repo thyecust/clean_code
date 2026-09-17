@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 248 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { Hn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -19,7 +19,7 @@ import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import { an } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import { Ch } from "../语法高亮-Markdown渲染/chunk-mnn6q099.js";
+import { CodeBlock } from "../语法高亮-Markdown渲染/code-block.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import { ps, _i, Rm, aA, Us, OD, km, Jk, Oo } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Fs, Hg, qw, Ig, XW, Wst } from "../权限系统/chunk-0hcqee2w.js";
@@ -30,12 +30,12 @@ import "../../01-核心基础设施/共享小工具-未细化/tool-use-message-r
 import "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import { PermissionDialogFrame } from "../权限系统/permission-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js";
+import "../../01-核心基础设施/共享小工具-未细化/slack-send-tool.js";
 import { Nl, V, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -271,7 +271,7 @@ function Tn(ct) {
   return !ct;
 }
 function Mn(Je) {
-  return `\xB7 "${ps(Je.length > 60 ? oe(Je, 59) + "\u2026" : Je)}"`;
+  return `\xB7 "${ps(Je.length > 60 ? truncateToCodeUnits(Je, 59) + "\u2026" : Je)}"`;
 }
 function On(H, ht) {
   return r(N, {
@@ -698,7 +698,7 @@ function WorkflowPermissionDialog(it) {
             borderStyle: "dashed",
             borderColor: "subtle",
             paddingX: 1,
-            children: e(Ch, { code: Ee, filePath: "workflow.js" }),
+            children: e(CodeBlock, { code: Ee, filePath: "workflow.js" }),
           })
         : r(o, {
             flexDirection: "column",

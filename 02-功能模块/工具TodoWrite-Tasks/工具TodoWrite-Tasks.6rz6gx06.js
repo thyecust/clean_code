@@ -18,7 +18,7 @@ import { Mse, NR, EP } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.j
 import { initializeAnalyticsSink } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
 import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
 import { getClaudeAiOrigin } from "../../01-核心基础设施/共享小工具-未细化/self-hosted-runner-api.js";
-import { sPe } from "../../01-核心基础设施/设置-配置/chunk-6rz5fqzm.js";
+import { ensureFastPathSettingsLoaded } from "../../01-核心基础设施/设置-配置/fast-path-policy-loader.js";
 import { spawnSync } from "child_process";
 function l(t) {
   return `You are guiding an operator from zero to a working **self-hosted runner** for Claude Code on the web. The operator must leave able to do this themselves \u2014 you have typed tools that make *you* efficient, but every API tool you call returns an \`equivalent.ui\` path. **After every API tool call, surface that \`equivalent.ui\` path to the operator** so they can repeat the action without you.
@@ -98,7 +98,7 @@ runner, verifies it appears in the Admin UI, and writes a CHEAT-SHEET.md.
 Any extra args are passed to the underlying Claude Code session.`);
     return;
   }
-  (await sPe(s), initializeAnalyticsSink());
+  (await ensureFastPathSettingsLoaded(s), initializeAnalyticsSink());
   let n = pinStorageV5(s);
   if ((Mse(n), isHoverRestEnabled() && n !== void 0)) {
     (zR({ storageV5: n }), NR(n));

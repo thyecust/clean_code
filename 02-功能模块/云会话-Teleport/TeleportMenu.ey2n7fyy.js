@@ -18,7 +18,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { isCCREnvironmentKind, yq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { findGitRoot, getBranch, getIsHeadOnRemote, hasUnpushedCommits, getIsClean } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -31,7 +31,7 @@ import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { getTrustedDeviceToken } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
-import { oauthHeaders } from "../Bridge-RemoteControl/chunk-mxsfy35q.js";
+import { oauthHeaders } from "../Bridge-RemoteControl/code-session-api.js";
 import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
@@ -39,7 +39,7 @@ import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import { tye } from "../Bridge-RemoteControl/chunk-m1vpawx6.js";
+import { TeleportResumeWrapper } from "../Bridge-RemoteControl/teleport-resume-ui.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import "../认证-OAuth登录/chunk-9g86t9bp.js";
 import { jlt, Wlt, Tee } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
@@ -52,12 +52,12 @@ import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js"
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
 import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
 import "./teleport-errors.js";
-import { YB } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ps79w9dv.js";
+import { appendCancelledContinueNotice } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
+import "../../01-核心基础设施/共享小工具-未细化/transcript-replaced-bus.js";
 import { nWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-vm6pzj28.js";
 import { oWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0dk7tzf3.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
-import "../认证-OAuth登录/chunk-dtt2nn79.js";
+import "../认证-OAuth登录/oauth-login-completion.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
 import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
@@ -67,8 +67,8 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import "../认证-OAuth登录/chunk-5bg9xwqx.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
+import "../认证-OAuth登录/oauth-login-flow.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
 async function U(s) {
@@ -157,7 +157,7 @@ function G(s) {
   };
 }
 async function K(s) {
-  if (!findGitRoot(Q())) return { kind: "no-git" };
+  if (!findGitRoot(getCwd())) return { kind: "no-git" };
   let [a, c, h, m] = await Promise.all([
     getBranch(),
     getIsClean({ ignoreUntracked: !0 }),
@@ -202,7 +202,7 @@ async function P(s) {
         logFeatureBad("teleport_to_cloud", "no_git"),
         {
           kind: "precondition",
-          message: `${Q()} isn\u2019t a git repository. The cloud session clones your repo from its remote, so there\u2019s nothing for it to check out here \u2014 try again from inside a git repo that has a remote.`,
+          message: `${getCwd()} isn\u2019t a git repository. The cloud session clones your repo from its remote, so there\u2019s nothing for it to check out here \u2014 try again from inside a git repo that has a remote.`,
         }
       );
     case "dirty":
@@ -380,13 +380,13 @@ async function V(s) {
           _ht(c.sessionId),
           clearBridgeSession(void 0, void 0, void 0, s.storageV5),
           setTimeout(H, L, s, !0),
-          YB(
+          appendCancelledContinueNotice(
             `Couldn\u2019t teleport: ${c.failure.message}
 ${x}`,
             a,
           )
         );
-      return YB(`Couldn\u2019t teleport: ${c.failure.message}`, a);
+      return appendCancelledContinueNotice(`Couldn\u2019t teleport: ${c.failure.message}`, a);
     }
     case "ok": {
       (_ht(c.success.sessionId), clearBridgeSession(void 0, void 0, void 0, s.storageV5));
@@ -429,7 +429,7 @@ function TeleportMenu({
       if (v("cancel")) s("Teleport cancelled", { display: "system" });
     };
   if (_ === "resume")
-    return e(tye, {
+    return e(TeleportResumeWrapper, {
       onComplete: (k) => {
         (nWe(a, k.log, h, R),
           s("Session resumed successfully", { display: "system" }));

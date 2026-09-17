@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { b, Tc, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Lhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { isSuspiciousUrl } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { yi, ms, Ow, B5, SHn, gke, wx, XT, NQ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -26,12 +26,12 @@ import { getHostStateStore } from "../../01-核心基础设施/共享小工具-�
 import { uD } from "../Hooks钩子/chunk-z3433nr6.js";
 import { YC } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { toe, ig } from "../插件系统/chunk-ajtn749s.js";
-import { bK, T1e, Hc } from "../插件系统/chunk-hh8f1qrw.js";
+import { areLocalPluginDirsAllowedByPolicy, isMarketplaceRestrictionPolicyActive, isSourceAllowedByPolicy } from "../插件系统/plugin-source-policy.js";
 import { iH, isRemoteToolServingMuted, onServingMuteRecheck, pT, an, wEe, Ql, pY, tD, nD } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { CLOUD_PLUGINS_FORWARDED_SETTING_KEY, PLUGIN_FORWARDING_DISABLED_MESSAGE } from "../插件系统/plugin-forwarding.js";
-import { ale, eUn } from "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { np, Xc, $g, Lu } from "../插件系统/chunk-33bdfgmx.js";
+import { isLocalHostname, isPrivateAddress } from "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
+import { INLINE_PLUGIN_SOURCE, SKILLS_DIR_PLUGIN_SOURCE, BUILTIN_PLUGIN_SOURCE, getPluginMarketplace } from "../插件系统/chunk-33bdfgmx.js";
 import { s, T, v, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -47,10 +47,10 @@ var mn = createLazyValue(() =>
   ),
   xe = "cloud-plugins-consent";
 function De() {
-  return Ce.state(xe);
+  return STORAGE_KEYS.state(xe);
 }
 function WZ() {
-  return hn(be(), "state", `${xe}.json`);
+  return hn(getClaudeConfigDir(), "state", `${xe}.json`);
 }
 async function Ne(e) {
   let t;
@@ -115,7 +115,7 @@ function WHe(e) {
         return o.found ? o.value : void 0;
       }
       try {
-        return await qt().read(WZ());
+        return await getFileStorage().read(WZ());
       } catch (t) {
         if (W(t)) return;
         throw t;
@@ -128,7 +128,7 @@ function WHe(e) {
         return;
       }
       let o = WZ();
-      (await qt().mkdir(dirname(o), 448), await qt().atomicWrite(o, t, 384));
+      (await getFileStorage().mkdir(dirname(o), 448), await getFileStorage().atomicWrite(o, t, 384));
     },
     now: () => new Date(),
     hostname: hostname,
@@ -236,7 +236,7 @@ function yWe(e) {
       asReserved: Me(e.reservedNameConflicts),
     };
   for (let [A, R] of [...Yn(e, t)].sort(([V], [Z]) => we(V, Z))) {
-    let V = Lu(A) ?? "",
+    let V = getPluginMarketplace(A) ?? "",
       Z = r.get(V) ?? Jn(V, e, O);
     r.set(V, Z);
     let N = qn(A, R, V, Z, w, e);
@@ -375,13 +375,13 @@ function qn(
   },
 ) {
   let a = o.toLowerCase();
-  if (a === np) return "directory_loaded";
+  if (a === INLINE_PLUGIN_SOURCE) return "directory_loaded";
   if (typeof t.value !== "boolean") return "invalid_value";
-  if (a === Xc && !S) return "blocked_by_policy";
-  if (a === $g && !O.has(e)) return "unknown_builtin";
+  if (a === SKILLS_DIR_PLUGIN_SOURCE && !S) return "blocked_by_policy";
+  if (a === BUILTIN_PLUGIN_SOURCE && !O.has(e)) return "unknown_builtin";
   if (t.value && d.has(e.toLowerCase())) return "blocked_by_policy";
   if (r.kind === "drop" && t.value) return r.reason;
-  if (t.value && !t.ownChoice && !w.has(e) && a !== $g && a !== Xc)
+  if (t.value && !t.ownChoice && !w.has(e) && a !== BUILTIN_PLUGIN_SOURCE && a !== SKILLS_DIR_PLUGIN_SOURCE)
     return "not_installed_here";
   return;
 }
@@ -400,7 +400,7 @@ function Me(e) {
 }
 function Jn(e, t, o) {
   let r = e.toLowerCase();
-  if (r === $g || r === Xc) return { kind: "reserved" };
+  if (r === BUILTIN_PLUGIN_SOURCE || r === SKILLS_DIR_PLUGIN_SOURCE) return { kind: "reserved" };
   if (o.byPolicy.has(r)) return { kind: "drop", reason: "blocked_by_policy" };
   let d = Qn(e, t),
     w = B5.has(r);
@@ -537,7 +537,7 @@ function Ee(e, t) {
     : { kind: "drop", reason: "invalid_marketplace" };
 }
 function at(e) {
-  if (e.startsWith("-") || jn.test(e) || Lhe(e)) return "invalid_marketplace";
+  if (e.startsWith("-") || jn.test(e) || isSuspiciousUrl(e)) return "invalid_marketplace";
   if (e.includes("://")) return Ye(e, Nn);
   if (/^[A-Za-z]:[\\/]/.test(e) || /^[./~]/.test(e)) return "local_marketplace";
   let t = Wn.exec(e);
@@ -578,7 +578,7 @@ function Ye(e, t) {
   return Le.has(o.protocol) ? "insecure_transport" : "network";
 }
 function Ve(e) {
-  return eUn(e, "address") || ale(e) || !/[.:]/.test(e.replace(/\.+$/, ""));
+  return isPrivateAddress(e, "address") || isLocalHostname(e) || !/[.:]/.test(e.replace(/\.+$/, ""));
 }
 function dt(e, t, o) {
   let r = new Map();
@@ -684,13 +684,13 @@ async function rPt(e) {
     localSettingsAreOwnChoice:
       !(isRecord(S) && Object.keys(S).length > 0) ||
       !YC({ onIndeterminate: "tracked" }),
-    directoryPluginsAllowedByPolicy: bK(),
+    directoryPluginsAllowedByPolicy: areLocalPluginDirsAllowedByPolicy(),
     builtinPluginIds: new Set(
-      [...getHostStateStore().builtinPlugins.keys()].map((a) => `${a}@${$g}`),
+      [...getHostStateStore().builtinPlugins.keys()].map((a) => `${a}@${BUILTIN_PLUGIN_SOURCE}`),
     ),
     trustedOnlyBuiltinIds: new Set(
       [...getHostStateStore().builtinPlugins.keys()]
-        .map((a) => `${a}@${$g}`)
+        .map((a) => `${a}@${BUILTIN_PLUGIN_SOURCE}`)
         .filter(iH)
         .map((a) => a.toLowerCase()),
     ),
@@ -700,9 +700,9 @@ async function rPt(e) {
         .map(([a]) => a),
     ),
     policyRefusedMarketplaces: new Set(
-      O.filter(([, a]) => !Hc(a)).map(([a]) => a),
+      O.filter(([, a]) => !isSourceAllowedByPolicy(a)).map(([a]) => a),
     ),
-    marketplaceRestrictionPolicyActive: T1e(),
+    marketplaceRestrictionPolicyActive: isMarketplaceRestrictionPolicyActive(),
     reservedNameConflicts: new Set([
       ...Object.entries(o)
         .filter(([a, E]) => pY(a, E) !== null)
@@ -1444,7 +1444,7 @@ function Rt(e) {
   return `The saved answer about your plugins is not used for this cloud session, because ${e === "in_launch_dir" ? `the session itself can change ${t} from the folder or repository it runs in` : e === "in_sync_root" ? `the session itself can change ${t} through the folder it syncs` : e === "in_other_root" ? `the session itself can change ${t} through a folder it may write on this machine (an added directory or a settings write grant)` : `it could not be checked that the session cannot change ${t}`}; run /cloud-plugins to decide for this session.`;
 }
 function Ct(e, t) {
-  return `${e > 0 ? `Your ${e} enabled ${x(e, "plugin")} can be used in` : `Your ${t} plugin ${x(t, "choice")} can apply to`} your cloud sessions from this machine \u2014 run /cloud-plugins to decide (nothing is sent until you do).`;
+  return `${e > 0 ? `Your ${e} enabled ${pluralize(e, "plugin")} can be used in` : `Your ${t} plugin ${pluralize(t, "choice")} can apply to`} your cloud sessions from this machine \u2014 run /cloud-plugins to decide (nothing is sent until you do).`;
 }
 function vt(e) {
   return {
@@ -1483,21 +1483,21 @@ function At(e) {
     o = e.forwardedDisabled,
     r =
       o > 0
-        ? ` (${o} you turned off here ${x(o, "stays", "stay")} off there)`
+        ? ` (${o} you turned off here ${pluralize(o, "stays", "stay")} off there)`
         : "";
   if (t === 0)
     return [
       {
-        line: `The ${o} ${x(o, "plugin")} you turned off here ${x(o, "is", "are")} off in this cloud session too.`,
+        line: `The ${o} ${pluralize(o, "plugin")} you turned off here ${pluralize(o, "is", "are")} off in this cloud session too.`,
         level: "debug",
       },
     ];
   let d = e.loaded !== null && e.loaded >= t,
     w =
       e.loaded === null
-        ? `Sent your ${t} enabled ${x(t, "plugin")} to this cloud session${r}; it has not confirmed them \u2014 /reload-plugins shows what loaded.`
+        ? `Sent your ${t} enabled ${pluralize(t, "plugin")} to this cloud session${r}; it has not confirmed them \u2014 /reload-plugins shows what loaded.`
         : e.loaded >= t
-          ? `Using your ${t} ${x(t, "plugin")} in this cloud session${r}.`
+          ? `Using your ${t} ${pluralize(t, "plugin")} in this cloud session${r}.`
           : e.loaded === 0
             ? `${t === 1 ? "Your enabled plugin could not" : `None of your ${t} enabled plugins could`} be installed in this cloud session yet${r} \u2014 the session is still fetching ${t === 1 ? "it" : "them"} or cannot reach ${t === 1 ? "its" : "their"} marketplace; /reload-plugins shows what loaded.`
             : `Using ${e.loaded} of your ${t} plugins in this cloud session${r}; the other ${t - e.loaded} could not be installed there yet \u2014 the session is still fetching ${t - e.loaded === 1 ? "it" : "them"} or cannot reach ${t - e.loaded === 1 ? "its" : "their"} marketplace; /reload-plugins shows what loaded.`,
@@ -1515,13 +1515,13 @@ function Ft(e, t) {
   let o = e
       .slice(0, Te)
       .map(
-        ({ id: w, reason: O }) => `${io(w, { maxCodeUnits: 80 })} (${Tt[O]})`,
+        ({ id: w, reason: O }) => `${formatSingleLineText(w, { maxCodeUnits: 80 })} (${Tt[O]})`,
       )
       .join("; "),
     r = e.length > Te ? `; and ${e.length - Te} more` : "";
   return [
     {
-      line: `${t ? `Not using your plugins in this cloud session; ${e.length} ${x(e.length, "stays", "stay")} on this machine` : `${e.length} of your plugin choices ${x(e.length, "stays", "stay")} on this machine`}: ${o}${r}.`,
+      line: `${t ? `Not using your plugins in this cloud session; ${e.length} ${pluralize(e.length, "stays", "stay")} on this machine` : `${e.length} of your plugin choices ${pluralize(e.length, "stays", "stay")} on this machine`}: ${o}${r}.`,
       level: "debug",
     },
   ];
@@ -1580,8 +1580,8 @@ var sPt = "Synced from this computer:",
     plugins: "Plugins",
   },
   nn = ["projectFiles", "settings", "plugins"],
-  Dt = L.tick,
-  iPt = L.cross,
+  Dt = figures.tick,
+  iPt = figures.cross,
   xt = "\u2026",
   pe = { mark: "synced" },
   fe = { mark: "pending" };
@@ -1697,7 +1697,7 @@ function on(e) {
   let t = [
     ...(e.syncedFiles === null
       ? []
-      : [`${e.syncedFiles} ${x(e.syncedFiles, "file")}`]),
+      : [`${e.syncedFiles} ${pluralize(e.syncedFiles, "file")}`]),
     ...(e.uploadOnly ? ["upload only"] : []),
   ];
   return t.length === 0 ? pe : { mark: "synced", note: t.join(", ") };

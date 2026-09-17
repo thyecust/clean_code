@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { _c } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { getExternalPermissionMode } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { U2, hd } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function getPlanApprovalPermissionMode({
   recipientName: i,
@@ -16,7 +16,7 @@ function getPlanApprovalPermissionMode({
   tasks: r,
 }) {
   let n = s(i, r) ? t : U2(t, e),
-    o = _c(n);
+    o = getExternalPermissionMode(n);
   return o === "plan" ? "default" : o;
 }
 function s(i, t) {

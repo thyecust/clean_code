@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 249 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { isSafeMode, getSafeModeExitHint } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { bytesPerTokenForModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -20,9 +20,9 @@ import { formatTokenEstimate } from "../../01-核心基础设施/核心工具-�
 import { getSettingsForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { oa } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
-import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
+import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -46,8 +46,8 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js"
 import "../插件系统/chunk-akd9b588.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-3eztvm1y.js";
-import "../认证-OAuth登录/chunk-7jz937t3.js";
+import "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js";
+import "../认证-OAuth登录/url-and-error-redaction.js";
 import "../插件系统/chunk-rbjz1q03.js";
 import "../插件系统/channel-gate.js";
 import "../MCP客户端/chunk-4xr0rjb4.js";
@@ -56,7 +56,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-4bdjksjf.js"
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
-import "../MCP客户端/chunk-35zjqw7h.js";
+import "../MCP客户端/mcp-error-messages.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
@@ -65,14 +65,14 @@ import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import "../MCP客户端/plugin-reload-cache-impact.js";
-import "../MCP客户端/chunk-d7zajrh1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ey89qg3e.js";
+import "../MCP客户端/skill-doctor-data.js";
+import "../../01-核心基础设施/共享小工具-未细化/mcp-control-handlers.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
 import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 import { re, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function et(ss) {
   return ss.workerInventory?.skills;
@@ -84,7 +84,7 @@ function tt() {}
 function Oe(ts) {
   let K = _(18),
     { onExit: ze } = ts,
-    h = U(et),
+    h = useAppStateSelector(et),
     Wo;
   if (K[0] !== ze)
     ((Wo = () => ze("Skills dialog dismissed", { display: "system" })),
@@ -96,7 +96,7 @@ function Oe(ts) {
   if (K[2] !== h)
     ((Ce =
       h && h.length > 0
-        ? `${h.length} ${x(h.length, "skill")} loaded in the cloud session`
+        ? `${h.length} ${pluralize(h.length, "skill")} loaded in the cloud session`
         : void 0),
       (K[2] = h),
       (K[3] = Ce));
@@ -202,14 +202,14 @@ function qt(Hs) {
 }
 var H = ["on", "name-only", "user-invocable-only", "off"],
   Lo = {
-    on: { glyph: L.tick, label: "on", color: "success" },
-    "name-only": { glyph: L.bullet, label: "name-only" },
+    on: { glyph: figures.tick, label: "on", color: "success" },
+    "name-only": { glyph: figures.bullet, label: "name-only" },
     "user-invocable-only": {
-      glyph: L.circle,
+      glyph: figures.circle,
       label: "user-only",
       color: "warning",
     },
-    off: { glyph: L.cross, label: "off", color: "error" },
+    off: { glyph: figures.cross, label: "off", color: "error" },
   };
 function $o(a, c) {
   let P = getSettingsForSource("policySettings")?.skillOverrides?.[c];
@@ -310,7 +310,7 @@ function Ae(Es) {
   else mt = i[11];
   let [te, Bs] = d(mt),
     [lo, Ks] = d(l[0]),
-    ao = Va(),
+    ao = useTerminalFocus(),
     [v, Re] = d(!1),
     se = C(v),
     dt,
@@ -357,7 +357,7 @@ function Ae(Es) {
     po = ne;
   }
   let g = po,
-    { rows: Ns } = ks(useTerminalSize());
+    { rows: Ns } = useVirtualScrollViewportSize(useTerminalSize());
   const ne = Ns - 13;
   let ft;
   if (i[19] !== g.length || i[20] !== ne)
@@ -436,7 +436,7 @@ function Ae(Es) {
         }
         clearCommandMemoizationCaches();
       }
-      R(Fe > 0 ? `Updated ${Fe} skill ${x(Fe, "override")}` : "No changes", {
+      R(Fe > 0 ? `Updated ${Fe} skill ${pluralize(Fe, "override")}` : "No changes", {
         display: "system",
       });
     }),
@@ -546,8 +546,8 @@ function Ae(Es) {
     let Q;
     if (i[53] === MEMO_CACHE_SENTINEL)
       ((Q = e(EmptyStateMessage, {
-        hint: Hr()
-          ? `Custom skills are disabled in safe mode \u2014 ${yf()} to load them`
+        hint: isSafeMode()
+          ? `Custom skills are disabled in safe mode \u2014 ${getSafeModeExitHint()} to load them`
           : "Create skills in .claude/skills/ or ~/.claude/skills/",
         children: "No skills found",
       })),
@@ -569,8 +569,8 @@ function Ae(Es) {
   let q;
   if (i[56] !== g.length || i[57] !== u || i[58] !== l.length)
     ((q = u
-      ? `${g.length}/${l.length} ${x(l.length, "skill")}`
-      : `${l.length} ${x(l.length, "skill")}`),
+      ? `${g.length}/${l.length} ${pluralize(l.length, "skill")}`
+      : `${l.length} ${pluralize(l.length, "skill")}`),
       (i[56] = g.length),
       (i[57] = u),
       (i[58] = l.length),
@@ -673,7 +673,7 @@ function Ae(Es) {
   let It;
   if (i[78] === MEMO_CACHE_SENTINEL)
     ((It =
-      Hr() &&
+      isSafeMode() &&
       e(o, {
         marginTop: 1,
         children: r(t, {
@@ -681,7 +681,7 @@ function Ae(Es) {
           children: [
             "Custom skills are disabled in safe mode \u2014",
             " ",
-            `${yf()} to load them`,
+            `${getSafeModeExitHint()} to load them`,
           ],
         }),
       })),

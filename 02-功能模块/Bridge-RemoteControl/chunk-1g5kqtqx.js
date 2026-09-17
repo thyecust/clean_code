@@ -11,19 +11,19 @@ import { withDeadline } from "../../01-核心基础设施/共享小工具-未细
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { PUe, getClaudeAIOAuthTokenOriginAsync, getClaudeAIOAuthTokensAsync, readFreshOAuthCredentialSnapshot, getOauthAccountInfo, getAuthenticatedAccountInfo, ERe, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getBridgeTokenOverride } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { isBridgeFirstParty, isBridgeOwnerPinnedEndEnabled } from "./chunk-9estzwf5.js";
 import { getBridgeSession, updateBridgeSessionTitle } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-async function Wtn(t) {
+async function resolveBridgeDaemonOwner(t) {
   let i = getAuthenticatedAccountInfo();
   if (i?.accountUuid)
     return {
       accountUuid: i.accountUuid,
       organizationUuid: i.organizationUuid || void 0,
     };
-  if (!isBridgeOwnerPinnedEndEnabled() || St()) return;
+  if (!isBridgeOwnerPinnedEndEnabled() || isEssentialTrafficOnly()) return;
   let e = t(),
     r = e === void 0 ? void 0 : await A(e);
   if (r === void 0)
@@ -39,10 +39,10 @@ var J = 1000,
   L = 4,
   K = 1e4,
   Q = 3000;
-async function Gtn(t) {
+async function isBridgeStoreLogin(t) {
   return getBridgeTokenOverride() === void 0 && isBridgeFirstParty() && (await getClaudeAIOAuthTokenOriginAsync(t)) === "store";
 }
-async function _Bn(t) {
+async function createBridgeOwnerPin(t) {
   return (await Z(t)).pin;
 }
 async function Z({
@@ -53,8 +53,8 @@ async function Z({
 }) {
   let d = t();
   if (d === void 0) return { pin: void 0, reason: "no_token" };
-  if (!isBridgeOwnerPinnedEndEnabled() || St()) return { pin: void 0, reason: "disabled" };
-  if (r === void 0 && !(await Gtn(e)))
+  if (!isBridgeOwnerPinnedEndEnabled() || isEssentialTrafficOnly()) return { pin: void 0, reason: "disabled" };
+  if (r === void 0 && !(await isBridgeStoreLogin(e)))
     return { pin: void 0, reason: "not_store_login" };
   let u = await sy(i),
     a,
@@ -283,7 +283,7 @@ async function A(t) {
       }
     : void 0;
 }
-function Xat(t) {
+function createBridgeTitleWriter(t) {
   let i = {
     entries: new Map(),
     burst: t?.burst ?? 3,
@@ -474,4 +474,4 @@ function X(t, i, e) {
   if (t.inFlight || t.retryTimer !== void 0) return !0;
   return t.lastSentOk && !e?.userInitiated;
 }
-export { Wtn, Gtn, _Bn, Xat };
+export { resolveBridgeDaemonOwner, isBridgeStoreLogin, createBridgeOwnerPin, createBridgeTitleWriter };

@@ -9,21 +9,21 @@
 // Version: 2.1.263
 import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import {
-  NHt,
-  Je,
-  pdr,
-  fdr,
-  FHt,
-  eNn,
-  rot,
-  nNn,
-  rNn,
-  aNn,
-  $Ht,
-  BYt,
-  Nje,
+  formatAbortReason,
+  HooksError,
+  validateNextArgument,
+  isAbortSignal,
+  createUnloadedModuleError,
+  transpileHookSource,
+  CLAUDE_CODE_MODULE_ID,
+  createBadImportError,
+  isRelativeImportPath,
+  resolveHookImport,
+  OPERATION_EVENT_NAMES,
+  HOOK_EVENT_NAMES,
+  isHookEventName,
 } from "../Hooks钩子/chunk-bzqqe6xh.js";
-import { iu, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { escapeRegExp, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { MAX_SERIALIZED_ARRAY_ELEMENTS } from "../../01-核心基础设施/共享小工具-未细化/max-serialized-array-elements.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -100,7 +100,7 @@ function we(e, t) {
   Object.freeze(e);
 }
 function er(e, t) {
-  if (e.length > MAX_SERIALIZED_ARRAY_ELEMENTS) throw new Je(tt(e.length));
+  if (e.length > MAX_SERIALIZED_ARRAY_ELEMENTS) throw new HooksError(tt(e.length));
   for (let r of e) we(r, t);
   Object.freeze(e);
 }
@@ -162,11 +162,11 @@ var Ee = (e) => (e.includes("g") ? "g" : e.includes("y") ? "y" : void 0);
 function nt({ source: e, flags: t, where: r, at: o }) {
   let n = Ee(t);
   if (n)
-    throw new Je(
+    throw new HooksError(
       `${r}: matcher${o} is a RegExp with the ${n} flag, which keeps state between tests; drop it`,
     );
   if (rr(e))
-    throw new Je(
+    throw new HooksError(
       `${r}: matcher${o} is a RegExp with a nested quantifier (${e}), which can backtrack without bound; rewrite it`,
     );
 }
@@ -176,7 +176,7 @@ var de = (e) => ({
 });
 function st(e, t, r) {
   if (Object.hasOwn(e, tr))
-    throw new Je(`${t}: matcher${r} has the key ${tr}, which no event has`);
+    throw new HooksError(`${t}: matcher${r} has the key ${tr}, which no event has`);
 }
 function it(e, t, r) {
   let o = r === "" ? "" : ` at ${r}`;
@@ -190,7 +190,7 @@ function it(e, t, r) {
   }
   if (W(e)) {
     if (Object.hasOwn(e, ce))
-      throw new Je(
+      throw new HooksError(
         `${t}: matcher${o} uses the reserved key ${ce} (how a RegExp crosses the worker boundary); a RegExp goes in as a RegExp`,
       );
     st(e, t, o);
@@ -200,7 +200,7 @@ function it(e, t, r) {
   switch (typeof e) {
     case "string":
       if (e.length > be)
-        throw new Je(
+        throw new HooksError(
           `${t}: matcher${o} is a string longer than ${be} characters, which cannot match`,
         );
       return;
@@ -216,7 +216,7 @@ function it(e, t, r) {
     case "function":
       break;
   }
-  throw new Je(
+  throw new HooksError(
     `${t}: matcher${r === "" ? "" : ` at ${r}`} must be a string, a number, a boolean, null, a RegExp, an array of those, or a nested object; got ${vn(e)}`,
   );
 }
@@ -263,7 +263,7 @@ function BMn(e) {
 }
 function Jn(e, t) {
   if (!W(e))
-    throw new Je(`${t}: the matcher must be a plain object (a partial of e)`);
+    throw new HooksError(`${t}: the matcher must be a plain object (a partial of e)`);
   it(e, t, "");
 }
 var xmr = (e, t = "matcher") => ot(e, t, "");
@@ -843,7 +843,7 @@ var Re = (e, t) => (t.startsWith(`${e.name}: `) ? t : `${e.name}: ${t}`);
 function ws(e) {
   return (
     h().log(`hooks module ${e}: next() after it settled; refused`, "warn"),
-    new Je(`${e}: next() after it settled`)
+    new HooksError(`${e}: next() after it settled`)
   );
 }
 function Es({ error: e, handler: t, site: r, effect: o }) {
@@ -928,16 +928,16 @@ function Is({
   return {
     runBelow: i,
     call: async (a, f) => {
-      let c = pdr(a, e.name),
+      let c = validateNextArgument(a, e.name),
         m = L(e) ? void 0 : r.checkArgument?.(c, o);
       if (m !== void 0)
-        throw new Je(`${e.name}: next() passed an argument with ${m}`);
+        throw new HooksError(`${e.name}: next() passed an argument with ${m}`);
       if (p.settled) throw ws(e.name);
       return i(fr(c), f);
     },
   };
 }
-var Ps = (e) => Promise.reject(new Je(`no implementation for ${e}`));
+var Ps = (e) => Promise.reject(new HooksError(`no implementation for ${e}`));
 var cr = (e, t) => ({
   name: t.map((r) => r.name).join("+"),
   budgetMs: 0,
@@ -991,7 +991,7 @@ var gr = () => ({
   fromBelow: [],
   belowRejected: void 0,
 });
-var xr = (e, t) => t.aborted && (yt(e) || l(e) === NHt(t));
+var xr = (e, t) => t.aborted && (yt(e) || l(e) === formatAbortReason(t));
 var Vs =
   ({
     handler: e,
@@ -1024,11 +1024,11 @@ var Vs =
       S = ft.run(u, () => e.run(dr(p), T, y));
       let C =
         u.expired === void 0 ? await S : await Promise.race([S, u.expired]);
-      if (C === void 0) throw new Je("returned no result");
+      if (C === void 0) throw new HooksError("returned no result");
       let R = r.settle,
         I = L(e) || R === void 0 ? C : R(C),
         M = L(e) ? void 0 : r.check?.(I, p, a.fromBelow);
-      if (M !== void 0) throw new Je(`returned ${M}`);
+      if (M !== void 0) throw new HooksError(`returned ${M}`);
       w = I;
     } catch (O) {
       if (xr(O, i)) throw O;
@@ -1042,12 +1042,12 @@ var Vs =
       let C = a.inFlight === void 0,
         R = Es({ error: O, handler: e, site: r, effect: C ? Ts : vs });
       if (((a.settled = !0), u.isExpired() && S !== void 0))
-        (m.abort(new Je(R)), Os(S, e, r));
+        (m.abort(new HooksError(R)), Os(S, e, r));
       if (a.inFlight === void 0 && s) throw O;
       w = await (a.inFlight ?? b(p));
     } finally {
       if (((a.settled = !0), u.clear(), d(), c(), a.pendingDownstream > 0))
-        f.abort(new Je(`${e.name} settled the call`));
+        f.abort(new HooksError(`${e.name} settled the call`));
     }
     return w;
   };
@@ -2384,7 +2384,7 @@ var _p = {
   }),
 };
 var Sm = {
-  ...Object.fromEntries($Ht.map((e) => [e, Pe(e)])),
+  ...Object.fromEntries(OPERATION_EVENT_NAMES.map((e) => [e, Pe(e)])),
   PreToolUse: Ip,
   "tool.call": Cp,
   "agent.offer": Ep,
@@ -2417,7 +2417,7 @@ var Sm = {
   "engine.create": hi,
 };
 function NYt(e) {
-  return Nje(e) ? Sm[e] : Pe(e);
+  return isHookEventName(e) ? Sm[e] : Pe(e);
 }
 var Imr = (e, t, r = {}) => Aae({ e, handlers: t, site: Sm.PreToolUse, ...r });
 function Gr(e, t) {
@@ -2432,7 +2432,7 @@ function Gr(e, t) {
       }),
     );
   function a() {
-    ((s = !0), p(new Je(t)));
+    ((s = !0), p(new HooksError(t)));
   }
   function f() {
     ((o = Date.now()), (n = setTimeout(a, r)));
@@ -2517,11 +2517,11 @@ function Dp({
 }
 function Yr(e, t, r) {
   if (typeof r !== "object" || !r)
-    throw new Je(`${e}: $.${t} must be an object of methods, not ${typeof r}`);
+    throw new HooksError(`${e}: $.${t} must be an object of methods, not ${typeof r}`);
   let o = [];
   for (let [n, s] of Object.entries(r)) {
     if (typeof s !== "function")
-      throw new Je(
+      throw new HooksError(
         `${e}: $.${t}.${n} is not a function; an interface is an object of methods (a value another plugin can call)`,
       );
     o.push(n);
@@ -2530,14 +2530,14 @@ function Yr(e, t, r) {
 }
 function Kp(e, t, r) {
   if (typeof t !== "object" || !t)
-    throw new Je(
+    throw new HooksError(
       `${e.pluginName}: engine.create must return $ ({ ...await next(e), <noun>: { <event>() {} } }), not ${typeof t}`,
     );
   let o = Object.create(null);
   for (let [n, s] of Object.entries(t)) {
     if (e.identity.has(n)) {
       if (s === e.slots[n]) continue;
-      throw new Je(
+      throw new HooksError(
         `${e.pluginName}: engine.create returned $.${n} changed; it is this plugin's identity, not a noun`,
       );
     }
@@ -2555,7 +2555,7 @@ function qr(e, t, r) {
   let o = {};
   for (let n of r.methods)
     o[n] = e.wrapMethod(() => {
-      throw new Je(
+      throw new HooksError(
         `${e.pluginName}: $.${t}.${n} is not callable from an engine.create step registered through on("*"); hook engine.create by name to compose nouns`,
       );
     });
@@ -2586,7 +2586,7 @@ var R_e = "core";
 var Yp = (e) => e.withheldBy?.at(-1);
 var ddr = (e, t) => `$.${e}: removed by plugin \`${t}\``;
 function ke(e, t, r) {
-  let o = (n) => r(() => Promise.reject(new Je(ddr(`${e}.${n}`, t))));
+  let o = (n) => r(() => Promise.reject(new HooksError(ddr(`${e}.${n}`, t))));
   return new Proxy(re, { get: (n, s) => (Le(s) ? o(s) : void 0) });
 }
 function St(e, t, r) {
@@ -2595,7 +2595,7 @@ function St(e, t, r) {
   if (r.owner === R_e) {
     let n = e.local[t];
     if (!n)
-      throw new Je(
+      throw new HooksError(
         `${e.pluginName}: the interface table names core as the owner of $.${t}, which core does not provide`,
       );
     return n;
@@ -2613,7 +2613,7 @@ function Zp(e, { table: t, beneath: r, isObserving: o }) {
 var ea = (e, t) =>
   new Proxy(re, { get: (r, o) => (Le(o) ? ke(o, e, t) : void 0) });
 var eo = (e) => (t, r) => {
-  if (e.isFinalized) throw new Je(`${e.pluginName}: $ is already built`);
+  if (e.isFinalized) throw new HooksError(`${e.pluginName}: $ is already built`);
   for (let [n, s] of Object.entries(t)) e.slots[n] = St(e, n, s);
   for (let [n, s] of Object.entries(r ?? {}))
     if (n !== "*" && !Object.hasOwn(t, n) && !e.identity.has(n))
@@ -2674,18 +2674,18 @@ function sa(e) {
       let s = t.own.get(r);
       if (!s)
         return Promise.reject(
-          new Je(`${t.pluginName} provides no interface named ${r}`),
+          new HooksError(`${t.pluginName} provides no interface named ${r}`),
         );
       let p = s[o];
       return typeof p === "function"
         ? t.invoke(p, n, s)
-        : Promise.reject(new Je(`$.${r} (${t.pluginName}) has no method ${o}`));
+        : Promise.reject(new HooksError(`$.${r} (${t.pluginName}) has no method ${o}`));
     },
   };
 }
-var aa = BYt.filter((e) => e !== "PreToolUse");
+var aa = HOOK_EVENT_NAMES.filter((e) => e !== "PreToolUse");
 function De() {
-  throw new Je("core table: not an operation");
+  throw new HooksError("core table: not an operation");
 }
 var ma = (e) =>
   E({ value: (t, r) => e("flag.value", { name: t, fallback: r }) });
@@ -2695,7 +2695,7 @@ var la = (e) => e !== ca || VMn();
 function da(e, t, r) {
   let { register: o } = typeof e === "object" && e ? e : {};
   if (typeof o !== "function")
-    throw new Je(`${t}: ${r} exports no register(on, options) function`);
+    throw new HooksError(`${t}: ${r} exports no register(on, options) function`);
   return o;
 }
 function ya(e, t) {
@@ -2712,13 +2712,13 @@ var xa = (e, t) =>
   E({
     play: (r, o) => {
       let { signal: n, shouldLoop: s, gain: p } = o ?? {};
-      return n !== void 0 && !fdr(n)
+      return n !== void 0 && !isAbortSignal(n)
         ? Promise.reject(
-            new Je(`${e}: $.audio.play options.signal must be an AbortSignal`),
+            new HooksError(`${e}: $.audio.play options.signal must be an AbortSignal`),
           )
         : oo(s, n)
           ? Promise.reject(
-              new Je(
+              new HooksError(
                 `${e}: $.audio.play with shouldLoop needs options.signal: the clip repeats until it aborts`,
               ),
             )
@@ -2728,7 +2728,7 @@ var xa = (e, t) =>
   });
 function Rt(e) {
   let { reason: t } = e;
-  return t instanceof Error ? t : new Je(NHt(e, "sleep aborted"));
+  return t instanceof Error ? t : new HooksError(formatAbortReason(e, "sleep aborted"));
 }
 function so(e, t, r) {
   (e?.delete(t), r());
@@ -2736,16 +2736,16 @@ function so(e, t, r) {
 function wa({ pluginName: e, live: t, unloaded: r, invoke: o, signalFrom: n }) {
   function s(i, a) {
     if (typeof i !== "number" || !Number.isFinite(i) || i < 0)
-      throw new Je(
+      throw new HooksError(
         `${e}: $.clock.${a} takes a non-negative number of milliseconds`,
       );
     return i;
   }
   function p({ event: i, ms: a, fn: f, shouldRepeat: c }) {
     if (typeof f !== "function")
-      throw new Je(`${e}: $.clock.${i} takes a function`);
+      throw new HooksError(`${e}: $.clock.${i} takes a function`);
     let m = s(a, i);
-    if (r()) throw FHt(e);
+    if (r()) throw createUnloadedModuleError(e);
     let d = () => {
         o(f, []).catch((b) =>
           h().log(`${e}: $.clock.${i}: the callback threw: ` + l(b), "warn"),
@@ -2768,7 +2768,7 @@ function wa({ pluginName: e, live: t, unloaded: r, invoke: o, signalFrom: n }) {
     sleep: (i, a = {}) => {
       let f, c;
       try {
-        if (((f = s(i, "sleep")), r())) throw FHt(e);
+        if (((f = s(i, "sleep")), r())) throw createUnloadedModuleError(e);
         c = n(a.signal);
       } catch (u) {
         return Promise.reject(u);
@@ -2802,7 +2802,7 @@ function wa({ pluginName: e, live: t, unloaded: r, invoke: o, signalFrom: n }) {
           });
         let S = E({
           cancel: () => {
-            (clearTimeout(w), T(), y(FHt(e)));
+            (clearTimeout(w), T(), y(createUnloadedModuleError(e)));
           },
         });
         t?.add(S);
@@ -2842,7 +2842,7 @@ var Oa = (e, t) =>
                   },
                 }),
           })
-        : Promise.reject(new Je(`${e}: $.http.fetch takes a URL`)),
+        : Promise.reject(new HooksError(`${e}: $.http.fetch takes a URL`)),
   });
 var Ra = (e, t) =>
   E({ call: (r, o, n = {}) => t({ server: r, tool: o, args: n }) });
@@ -2850,7 +2850,7 @@ var mo = 20;
 var co = (e, t) =>
   [...t]
     .sort((r, o) => o.length - r.length)
-    .find((r) => new RegExp(`(^|\\W)${iu(r)}(\\W|$)`, "i").test(e));
+    .find((r) => new RegExp(`(^|\\W)${escapeRegExp(r)}(\\W|$)`, "i").test(e));
 async function Omr({
   pluginName: e,
   complete: t,
@@ -2864,7 +2864,7 @@ async function Omr({
     n.length < 2 ||
     n.some((f) => typeof f !== "string" || f === "")
   )
-    throw new Je(`${e}: $.model.classify takes two or more non-empty labels`);
+    throw new HooksError(`${e}: $.model.classify takes two or more non-empty labels`);
   let a = (
     await t({
       model: s.model ?? r,
@@ -2888,7 +2888,7 @@ Which label fits best?`,
     .trim()
     .replace(/^["'`]|["'`.]+$/g, "");
   if (a === "")
-    throw new Je(`${e}: $.model.classify: the model answered with no text`);
+    throw new HooksError(`${e}: $.model.classify: the model answered with no text`);
   return n.find((f) => f.toLowerCase() === a.toLowerCase()) ?? co(a, n);
 }
 var Ca = (e) =>
@@ -2925,7 +2925,7 @@ var ja = (e, t) =>
       let o = isRecord(r) ? r.text : void 0;
       return typeof o !== "string" || o.trim() === ""
         ? Promise.reject(
-            new Je(`${e}: $.prompt.submit takes { text } (a non-empty prompt)`),
+            new HooksError(`${e}: $.prompt.submit takes { text } (a non-empty prompt)`),
           )
         : t("prompt.submit", { text: o });
     },
@@ -2947,14 +2947,14 @@ function go(e, t) {
   try {
     r = JSON.stringify(e);
   } catch (o) {
-    throw new Je(`${t}: $.store.set: value is not JSON data (${l(o)})`);
+    throw new HooksError(`${t}: $.store.set: value is not JSON data (${l(o)})`);
   }
   if (typeof r !== "string")
-    throw new Je(
+    throw new HooksError(
       `${t}: $.store.set: value is not JSON data (${e === void 0 ? "undefined" : `a ${typeof e}`})`,
     );
   if (r.length > k_e)
-    throw new Je(
+    throw new HooksError(
       `${t}: $.store.set: the value is ${r.length} characters, over the ${k_e} limit`,
     );
   return JSON.parse(r);
@@ -2962,7 +2962,7 @@ function go(e, t) {
 function $a(e, t) {
   function r(o, n) {
     if (typeof o !== "string" || o === "")
-      throw new Je(`${e}: $.store.${n} takes a non-empty string key`);
+      throw new HooksError(`${e}: $.store.${n} takes a non-empty string key`);
     return o;
   }
   return E({
@@ -2998,7 +2998,7 @@ var Ua = (e, t) =>
     spawn: async (r) => {
       let o = r?.prompt;
       if (r === void 0 || typeof o !== "string" || o.trim() === "")
-        throw new Je(
+        throw new HooksError(
           `${e}: $.agent.spawn takes { prompt, ... } (a non-empty prompt)`,
         );
       let s = await t("agent.spawn", bo(r, o));
@@ -3017,13 +3017,13 @@ var Wa = (e, t) =>
     register: (r) => {
       if (!isRecord(r) || typeof r.name !== "string" || !wo.test(r.name))
         return Promise.reject(
-          new Je(
+          new HooksError(
             `${e}: $.tool.register takes { name, description, inputSchema? }; name is letters, digits, _ or - (up to 64)`,
           ),
         );
       if (typeof r.description !== "string" || r.description.trim() === "")
         return Promise.reject(
-          new Je(
+          new HooksError(
             `${e}: $.tool.register: ${r.name} needs a description (what the model reads)`,
           ),
         );
@@ -3035,16 +3035,16 @@ var Wa = (e, t) =>
             inputSchema: { type: "object", ...s },
           })
         : Promise.reject(
-            new Je(
+            new HooksError(
               `${e}: $.tool.register: ${r.name}'s inputSchema must be a JSON schema object`,
             ),
           );
     },
     list: () => t("tool.list", {}),
     call: async (r) => {
-      if (!isRecord(r)) throw new Je(`${e}: $.tool.call: input must be an object`);
+      if (!isRecord(r)) throw new HooksError(`${e}: $.tool.call: input must be an object`);
       if (typeof r.tool !== "string" || r.tool.length === 0)
-        throw new Je(
+        throw new HooksError(
           `${e}: $.tool.call takes the event's input: { tool, ...args }`,
         );
       return t("tool.call", r);
@@ -3056,7 +3056,7 @@ var za = (e, t) =>
       let o = isRecord(r) ? r.turnId : void 0;
       return typeof o !== "string" || o === ""
         ? Promise.reject(
-            new Je(
+            new HooksError(
               `${e}: $.turn.abort takes { turnId } (the id turn.start carried)`,
             ),
           )
@@ -3097,15 +3097,15 @@ function Qa(e, t) {
     status: s,
     ask: async (i, a) => {
       if (typeof i !== "string" || i.trim() === "")
-        throw new Je(`${e}: $.ui.ask takes the question first`);
+        throw new HooksError(`${e}: $.ui.ask takes the question first`);
       let f = Array.isArray(a) ? { options: a } : (a ?? {}),
         c = (f.options ?? []).map(String);
       if (c.length > vo)
-        throw new Je(
+        throw new HooksError(
           `${e}: $.ui.ask takes at most ${vo} options (got ${c.length})`,
         );
       let m = Ro(c),
-        d = oe(f.header ?? "Plugin", Va),
+        d = truncateToCodeUnits(f.header ?? "Plugin", Va),
         u = await t("ui.ask", {
           tool: Oo,
           questions: [
@@ -3120,8 +3120,8 @@ function Qa(e, t) {
         y = u.result?.answers?.[i];
       if (typeof y === "string") return y;
       if (Array.isArray(y)) return y.map(String).join(", ");
-      throw new Je(
-        `${e}: $.ui.ask: no answer (${oe(u.deny ?? u.text ?? "", Ga) || "the dialog was dismissed"})`,
+      throw new HooksError(
+        `${e}: $.ui.ask: no answer (${truncateToCodeUnits(u.deny ?? u.text ?? "", Ga) || "the dialog was dismissed"})`,
       );
     },
     toast: n,
@@ -3200,7 +3200,7 @@ function Ue(e, t) {
     { event: s, matcher: p } = t;
   if (p !== void 0) {
     let c = NYt(s).checkMatcher?.(p);
-    if (c !== void 0) throw new Je(`${r}: ${s}: ${c}`);
+    if (c !== void 0) throw new HooksError(`${r}: ${s}: ${c}`);
   }
   let i = jo(e, t),
     a = o.get(s);
@@ -3217,7 +3217,7 @@ function Ue(e, t) {
           call: n((d) =>
             i.run(d, m).then((u) => {
               if (!u)
-                throw new Je(`${r}: the on("${s}") hook returned no result`);
+                throw new HooksError(`${r}: the on("${s}") hook returned no result`);
               return u;
             }),
           ),
@@ -3249,13 +3249,13 @@ var pf = (
 function Ho(e, { event: t, hook: r, matcher: o }) {
   if (o === void 0) {
     if (e.named.has(t))
-      throw new Je(`${e.pluginName}: on("${t}") registered twice`);
+      throw new HooksError(`${e.pluginName}: on("${t}") registered twice`);
     e.named.add(t);
   }
   Ue(e, { event: t, hook: r, matcher: o, isObserving: !1 });
 }
 function No(e, t, r) {
-  if (e.isEveryEvent) throw new Je(`${e.pluginName}: on("*") registered twice`);
+  if (e.isEveryEvent) throw new HooksError(`${e.pluginName}: on("*") registered twice`);
   e.isEveryEvent = !0;
   for (let o of aa) Ue(e, { event: o, hook: t, matcher: r, isObserving: !0 });
 }
@@ -3265,11 +3265,11 @@ var mf = (e) =>
       let { pluginName: o } = e,
         [n, s] = r.length === 1 ? [void 0, r[0]] : r;
       if (e.isRegistered)
-        throw new Je(
+        throw new HooksError(
           `${o}: on("${t}") after register() returned: on() is for register(); a hook may not register hooks`,
         );
       if (typeof s !== "function")
-        throw new Je(
+        throw new HooksError(
           `${o}: on("${t}") takes (event, hook) or (event, matcher, hook); the hook must be a function`,
         );
       let p = n === void 0 ? void 0 : e.copyMatcher(n);
@@ -3418,7 +3418,7 @@ function Fo(e, t, r) {
   function o(s) {
     if (We(s)) return s;
     let { name: p, message: i } = e(s);
-    return new Je(i === "" ? p : i);
+    return new HooksError(i === "" ? p : i);
   }
   function n(s) {
     if (We(s)) return t.makeError(s.name, s.message);
@@ -3451,16 +3451,16 @@ async function Hf({ args: e, context: t, intoEnvironment: r, stamped: o }) {
   let { modulePath: n, pluginName: s, pluginRoot: p, source: i } = e,
     a = _t(p),
     f = new Map(),
-    c = new Ve.SyntheticModule([], () => {}, { context: t, identifier: rot }),
+    c = new Ve.SyntheticModule([], () => {}, { context: t, identifier: CLAUDE_CODE_MODULE_ID }),
     m = Ko(e),
     d = Uo(e.links);
   async function u(w, S) {
-    if (w === rot) return c;
-    if (!rNn(w)) throw nNn(s, w, relative(a, S.identifier) || n);
+    if (w === CLAUDE_CODE_MODULE_ID) return c;
+    if (!isRelativeImportPath(w)) throw createBadImportError(s, w, relative(a, S.identifier) || n);
     let O = d.get(ze(_t(S.identifier), w)),
       C = O === void 0 ? void 0 : m.get(O);
     if (O !== void 0 && C !== void 0) return b(O, C);
-    let R = await aNn(
+    let R = await resolveHookImport(
       { spelled: w, importer: S.identifier, root: a, pluginName: s },
       m,
     );
@@ -3470,7 +3470,7 @@ async function Hf({ args: e, context: t, intoEnvironment: r, stamped: o }) {
   function b(w, S) {
     let O = f.get(w);
     if (O) return O;
-    let C = new Ve.SourceTextModule(eNn(w, S), {
+    let C = new Ve.SourceTextModule(transpileHookSource(w, S), {
       context: t,
       identifier: w,
       initializeImportMeta: (R) => {
@@ -3716,12 +3716,12 @@ function Uf({ timers: e, id: t, fire: r }) {
 }
 var Go = (e, t) => (r) => {
   if (r === void 0 || r === null) return;
-  if (!fdr(r)) throw new Je(`${e}: options.signal must be an AbortSignal`);
+  if (!isAbortSignal(r)) throw new HooksError(`${e}: options.signal must be an AbortSignal`);
   let o = new AbortController(),
     n = t.relaySignal(
       r,
       B((s, p) => {
-        let i = new Je(p);
+        let i = new HooksError(p);
         ((i.name = s), o.abort(i));
       }),
     );
@@ -3798,7 +3798,7 @@ async function Qf(e, t, r = {}) {
     { fromEnvironment: J, intoEnvironment: I } = Fo(b, R, T),
     M = se.runInContext($f, m)(B(I));
   function dn(x, v) {
-    if (p) throw FHt(o);
+    if (p) throw createUnloadedModuleError(o);
     try {
       return i(() => d(x, O(v)));
     } catch (A) {
@@ -3806,7 +3806,7 @@ async function Qf(e, t, r = {}) {
     }
   }
   let Ge = async (x, v, A) => {
-      if (p) throw FHt(o);
+      if (p) throw createUnloadedModuleError(o);
       let H;
       try {
         H = i(() => (A === void 0 ? d(x, ...v) : u(A, x, ...v)));
@@ -3852,8 +3852,8 @@ async function Qf(e, t, r = {}) {
     return B(
       M((A, H, ...N) => {
         if (typeof A !== "function")
-          throw new Je(`${o}: ${v} takes a function`);
-        if (p) throw new Je(`${o}: ${v}: its environment was unloaded`);
+          throw new HooksError(`${o}: ${v} takes a function`);
+        if (p) throw new HooksError(`${o}: ${v}: its environment was unloaded`);
         let F = typeof H === "number" && Number.isFinite(H) && H >= 0 ? H : 0,
           Qe = ++f,
           Xt = Qo({ pluginName: o, api: v, invoke: Ge, fn: A, args: N }),
@@ -3908,7 +3908,7 @@ async function Qf(e, t, r = {}) {
       })),
       s?.aborted === !0)
     )
-      throw new Je(`${o}: unloaded while its module loaded`);
+      throw new HooksError(`${o}: unloaded while its module loaded`);
   } catch (x) {
     throw (qe(), x);
   }
@@ -4085,11 +4085,11 @@ function Ft(e, t) {
   let { handle: c, plugin: m } = n;
   if (typeof c !== "number") return e;
   if (m === "") {
-    if (typeof a !== "function") throw new Je(`${t.plugin}: ${fn[o.type]}`);
+    if (typeof a !== "function") throw new HooksError(`${t.plugin}: ${fn[o.type]}`);
     return (t.take(c, a), an(o, t.plugin, c));
   }
   if (typeof m !== "string" || !t.seen.has(Lt(m, c)))
-    throw new Je(
+    throw new HooksError(
       `${t.plugin}: returned ${pn[o.type]} it did not draw (${String(m)}#${c}); a render hook may keep the ones next(e) returned, not address another plugin's`,
     );
   return e;
@@ -4106,7 +4106,7 @@ function _m(e, t, r) {
 }
 function G(e, t) {
   let r = e.environments.get(t);
-  if (r === void 0) throw new Je(`environment ${t} is not loaded`);
+  if (r === void 0) throw new HooksError(`environment ${t} is not loaded`);
   return r;
 }
 function mn(e, t, r) {
@@ -4129,7 +4129,7 @@ function Dt(e, t) {
   let { environmentId: r, event: o, resolver: n } = t,
     { environment: s, name: p } = G(e, r),
     i = s.activation.registrations.get(o);
-  if (i === void 0) throw new Je(`${p}: no ${o} handler`);
+  if (i === void 0) throw new HooksError(`${p}: no ${o} handler`);
   return {
     name: p,
     run: async (a, f) => {
@@ -4141,7 +4141,7 @@ function Dt(e, t) {
           s.nextFor(
             ge({
               call: async (b) => {
-                ae(pdr(b, p));
+                ae(validateNextArgument(b, p));
                 let T = await f(b);
                 if (o === "ui.render")
                   for (let w of OHt(T)) m.add(Lt(w.plugin, w.handle));
@@ -4290,7 +4290,7 @@ function JMn(e, t) {
         u = i.get(X(f, c));
       if (u === void 0)
         return Promise.reject(
-          new Je(
+          new HooksError(
             `ui.press/ui.input/ui.select: no handler is held under handle ${c}`,
           ),
         );
@@ -4308,7 +4308,7 @@ function Dz(e, t) {
   return (e.delete(t), r);
 }
 function MHt(e, t) {
-  for (let r of e.values()) r.reject(new Je(t));
+  for (let r of e.values()) r.reject(new HooksError(t));
   e.clear();
 }
 export {

@@ -13,7 +13,7 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Ar, Ptt, pkt, xke, Dp, r_ } from "../权限系统/chunk-e4pfvp7x.js";
+import { CLAUDE_BULLET_GLYPH, EFFORT_MEDIUM_GLYPH, PAUSE_GLYPH, AUTO_ACCEPT_GLYPH, LOZENGE_OUTLINE_GLYPH, LOZENGE_FILLED_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { o, t, bs, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -24,11 +24,11 @@ import { StatusIndicator, shouldReduceMotion } from "../../01-核心基础设施
 import { ProgressBar } from "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { Tv } from "../Hooks钩子/chunk-22aft7vr.js";
+import { pickRandom } from "../Hooks钩子/spinner-store.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { eIe } from "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import { splitTextForShimmer } from "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import { V, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Go(Wt) {
@@ -97,7 +97,7 @@ function Y(Yt) {
   else de = $e[1];
   const Fe = !Ke,
     Je = Ke ? "claude" : void 0,
-    Xe = Ke ? `${r_} try it` : `  ${Ptt} demo`;
+    Xe = Ke ? `${LOZENGE_FILLED_GLYPH} try it` : `  ${EFFORT_MEDIUM_GLYPH} demo`;
   let me;
   if ($e[2] !== Fe || $e[3] !== Je || $e[4] !== Xe)
     ((me = e(o, {
@@ -164,9 +164,9 @@ function v(jt) {
 }
 var W = [
     { label: "default", symbol: "", color: "text" },
-    { label: "accept edits on", symbol: xke, color: "autoAccept" },
-    { label: "plan mode on", symbol: pkt, color: "planMode" },
-    { label: "auto mode on", symbol: xke, color: "warning" },
+    { label: "accept edits on", symbol: AUTO_ACCEPT_GLYPH, color: "autoAccept" },
+    { label: "plan mode on", symbol: PAUSE_GLYPH, color: "planMode" },
+    { label: "auto mode on", symbol: AUTO_ACCEPT_GLYPH, color: "warning" },
   ],
   Z = 80,
   po = 60,
@@ -174,7 +174,7 @@ var W = [
   P = 16,
   ho = 60,
   ke = 100,
-  Jo = [r_, Dp, Ar, "\xB7"],
+  Jo = [LOZENGE_FILLED_GLYPH, LOZENGE_OUTLINE_GLYPH, CLAUDE_BULLET_GLYPH, "\xB7"],
   Xo = ["claude", "success", "warning", "suggestion", "autoAccept"];
 function fo(s) {
   let c = [];
@@ -183,8 +183,8 @@ function fo(s) {
       x: Math.floor(Math.random() * ke),
       delay: Math.random() * 400,
       speed: 0.7 + Math.random() * 0.6,
-      char: Tv(Jo),
-      color: Tv(Xo),
+      char: pickRandom(Jo),
+      color: pickRandom(Xo),
     });
   return c;
 }
@@ -235,7 +235,7 @@ function S(un) {
     ro = (Math.floor(hn / Z) % fn) - 10,
     Vo;
   if (X[0] !== ro || X[1] !== fe)
-    ((Vo = eIe(fe, ro)), (X[0] = ro), (X[1] = fe), (X[2] = Vo));
+    ((Vo = splitTextForShimmer(fe, ro)), (X[0] = ro), (X[1] = fe), (X[2] = Vo));
   else Vo = X[2];
   let { before: io, shimmer: ao, after: co } = Vo,
     ge;
@@ -953,7 +953,7 @@ function LHe(cs) {
   if (f[6] !== h)
     ((bt = Vw.map((Pe) => {
       let xt = h.has(Pe.id);
-      let wt = `${xt ? L.tick : L.circle} ${Pe.title}`;
+      let wt = `${xt ? figures.tick : figures.circle} ${Pe.title}`;
       return {
         label: xt ? e(t, { color: "success", children: wt }) : wt,
         value: Pe.id,

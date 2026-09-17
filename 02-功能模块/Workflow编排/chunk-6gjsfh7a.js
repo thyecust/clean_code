@@ -10,13 +10,13 @@
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, Tc, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { y8 } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Ar, Dlr, sv, Lw, kke, LP, Tg, Ulr, v_ } from "../权限系统/chunk-e4pfvp7x.js";
+import { isConfigDirPath } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { CLAUDE_BULLET_GLYPH, DOTTED_CIRCLE_GLYPH, UP_ARROW_GLYPH, DOWN_ARROW_GLYPH, RETURN_KEY_GLYPH, HORIZONTAL_LINE_GLYPH, ROUNDED_BOX_CORNER_GLYPHS, EN_DASH_GLYPH, TREE_CONNECTOR_GLYPHS } from "../权限系统/chunk-e4pfvp7x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
+import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Gu, nke, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -53,9 +53,9 @@ import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { summarizeToolInput } from "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
 import { getWorkflowTranscriptDir } from "./workflow-snapshots.js";
-import { jPe, v1t } from "./chunk-pqyn1fh3.js";
+import { getUserWorkflowsDir, clearWorkflowCaches } from "./workflow-registry.js";
 import { E, V, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { expandTabs } from "../../01-核心基础设施/共享小工具-未细化/expand-tabs.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -224,7 +224,7 @@ import { mkdir, writeFile } from "fs/promises";
 import { dirname, join as En } from "path";
 var Oe = "Use a different name or overwrite.";
 async function ll(s, a) {
-  if (s === "user") return jPe();
+  if (s === "user") return getUserWorkflowsDir();
   let l = findGitRoot(a);
   if (l === null) return En(a, ".claude", "workflows");
   let c = (await gV("workflows", a))[0];
@@ -236,7 +236,7 @@ async function _n(s, a) {
     c = await ll(s.scope, s.cwd),
     m = En(c, `${l}.js`);
   if (a !== void 0 && s.scope === "user") return cl(a, l, m, s);
-  let w = s.scope !== "user" && !y8(dirname(c));
+  let w = s.scope !== "user" && !isConfigDirPath(dirname(c));
   if (w)
     try {
       await nke(dirname(dirname(c)), c);
@@ -259,7 +259,7 @@ async function _n(s, a) {
   return ci(l, m, s);
 }
 async function ci(s, a, l) {
-  v1t();
+  clearWorkflowCaches();
   let [{ clearCommandMemoizationCaches: c }, { resetSentSkillNames: m }] =
     await Promise.all([
       import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
@@ -279,7 +279,7 @@ async function ci(s, a, l) {
 }
 async function cl(s, a, l, c) {
   let m = await s.write(
-    Ce.userConfigDir("workflows", [`${a}.js`]),
+    STORAGE_KEYS.userConfigDir("workflows", [`${a}.js`]),
     c.script,
     c.overwrite
       ? { mode: 384, publishDiscipline: "atomic" }
@@ -415,7 +415,7 @@ function DHe(Vu) {
     ((Sl =
       Te === "project"
         ? `.claude/workflows/${Jn}.js`
-        : Gu(Mi(jPe(), `${Jn}.js`))),
+        : Gu(Mi(getUserWorkflowsDir(), `${Jn}.js`))),
       (st[17] = Te),
       (st[18] = Jn),
       (st[19] = Sl));
@@ -588,18 +588,18 @@ function Pt(s, a) {
 function xo(s) {
   switch (s) {
     case "done":
-      return { glyph: L.tick, color: "success" };
+      return { glyph: figures.tick, color: "success" };
     case "failed":
-      return { glyph: L.cross, color: "error" };
+      return { glyph: figures.cross, color: "error" };
     case "skipped":
-      return { glyph: L.cross, color: "subtle" };
+      return { glyph: figures.cross, color: "subtle" };
     case "blocked":
-      return { glyph: L.cross, color: "permission" };
+      return { glyph: figures.cross, color: "permission" };
     case "queued":
     case "interrupted":
-      return { glyph: Dlr, color: "subtle" };
+      return { glyph: DOTTED_CIRCLE_GLYPH, color: "subtle" };
     case "running":
-      return { glyph: Ar, color: "subtle" };
+      return { glyph: CLAUDE_BULLET_GLYPH, color: "subtle" };
   }
 }
 var Et = [
@@ -613,7 +613,7 @@ var Et = [
   "interrupted",
 ];
 function He(s, a) {
-  return a ? `showing ${s} ${a}` : `${s} ${x(s, "agent")}`;
+  return a ? `showing ${s} ${a}` : `${s} ${pluralize(s, "agent")}`;
 }
 function xn(s, a) {
   if (s.status === "not-started") return "Not started yet";
@@ -722,7 +722,7 @@ function rt(Dm) {
     { segs: Ti, contentWidth: Pi } = Dm,
     Nl;
   if (er[0] === MEMO_CACHE_SENTINEL)
-    ((Nl = r(t, { color: "text", children: [" ", v_.pipe, " "] })),
+    ((Nl = r(t, { color: "text", children: [" ", TREE_CONNECTOR_GLYPHS.pipe, " "] })),
       (er[0] = Nl));
   else Nl = er[0];
   let or;
@@ -734,7 +734,7 @@ function rt(Dm) {
   else or = er[3];
   let jl;
   if (er[4] === MEMO_CACHE_SENTINEL)
-    ((jl = r(t, { color: "text", children: [" ", v_.pipe] })), (er[4] = jl));
+    ((jl = r(t, { color: "text", children: [" ", TREE_CONNECTOR_GLYPHS.pipe] })), (er[4] = jl));
   else jl = er[4];
   let Il;
   if (er[5] !== or)
@@ -745,9 +745,9 @@ function rt(Dm) {
   return Il;
 }
 function ht(s, a) {
-  let l = s.from > 0 ? L.arrowUp : " ",
-    c = s.to < a ? L.arrowDown : " ";
-  return `${l} ${s.from + 1}${Ulr}${s.to} of ${a} ${c}`;
+  let l = s.from > 0 ? figures.arrowUp : " ",
+    c = s.to < a ? figures.arrowDown : " ";
+  return `${l} ${s.from + 1}${EN_DASH_GLYPH}${s.to} of ${a} ${c}`;
 }
 function Ws(Wm) {
   let Ll = _(5),
@@ -779,7 +779,7 @@ function Ns(Nm) {
     } = Nm,
     Bt = qt.agents,
     Fl;
-  if (lt[0] !== tt) ((Fl = LP.repeat(tt + 2)), (lt[0] = tt), (lt[1] = Fl));
+  if (lt[0] !== tt) ((Fl = HORIZONTAL_LINE_GLYPH.repeat(tt + 2)), (lt[0] = tt), (lt[1] = Fl));
   else Fl = lt[1];
   let ae = Fl,
     Ro,
@@ -883,7 +883,7 @@ function Ns(Nm) {
             {
               contentWidth: tt,
               segs: [
-                { text: ar ? L.pointer : " ", color: "permission" },
+                { text: ar ? figures.pointer : " ", color: "permission" },
                 { text: " " },
                 { text: Im, color: Lm },
                 { text: " " },
@@ -908,11 +908,11 @@ function Ns(Nm) {
       let lr = ` ${ht(Ii, Bt.length)} `;
       let Fi = Math.max(0, tt + 2 - te(lr));
       let et;
-      if (lt[35] !== Fi) ((et = LP.repeat(Fi)), (lt[35] = Fi), (lt[36] = et));
+      if (lt[35] !== Fi) ((et = HORIZONTAL_LINE_GLYPH.repeat(Fi)), (lt[35] = Fi), (lt[36] = et));
       else et = lt[36];
       let mt;
       if (lt[37] !== et)
-        ((mt = r(t, { color: "text", children: [" ", Tg.bottomLeft, et] })),
+        ((mt = r(t, { color: "text", children: [" ", ROUNDED_BOX_CORNER_GLYPHS.bottomLeft, et] })),
           (lt[37] = et),
           (lt[38] = mt));
       else mt = lt[38];
@@ -924,7 +924,7 @@ function Ns(Nm) {
       else At = lt[40];
       let Pe;
       if (lt[41] === MEMO_CACHE_SENTINEL)
-        ((Pe = e(t, { color: "text", children: Tg.bottomRight })),
+        ((Pe = e(t, { color: "text", children: ROUNDED_BOX_CORNER_GLYPHS.bottomRight })),
           (lt[41] = Pe));
       else Pe = lt[41];
       let Do;
@@ -941,7 +941,7 @@ function Ns(Nm) {
         ((et = r(t, {
           color: "text",
           wrap: "truncate-end",
-          children: [" ", Tg.bottomLeft, ae, Tg.bottomRight],
+          children: [" ", ROUNDED_BOX_CORNER_GLYPHS.bottomLeft, ae, ROUNDED_BOX_CORNER_GLYPHS.bottomRight],
         })),
           (lt[45] = ae),
           (lt[46] = et));
@@ -966,7 +966,7 @@ function Ns(Nm) {
     ((et = r(t, {
       color: "text",
       wrap: "truncate-end",
-      children: [" ", Tg.topLeft, ae, Tg.topRight],
+      children: [" ", ROUNDED_BOX_CORNER_GLYPHS.topLeft, ae, ROUNDED_BOX_CORNER_GLYPHS.topRight],
     })),
       (lt[47] = ae),
       (lt[48] = et));
@@ -986,7 +986,7 @@ function bo(qm) {
     { left: qi, right: Ji, leftWidth: Ki, rightWidth: Gi } = qm,
     Kl;
   if (eo[0] === MEMO_CACHE_SENTINEL)
-    ((Kl = r(t, { color: "text", children: [" ", v_.pipe, " "] })),
+    ((Kl = r(t, { color: "text", children: [" ", TREE_CONNECTOR_GLYPHS.pipe, " "] })),
       (eo[0] = Kl));
   else Kl = eo[0];
   let cr;
@@ -998,7 +998,7 @@ function bo(qm) {
   else cr = eo[3];
   let Gl;
   if (eo[4] === MEMO_CACHE_SENTINEL)
-    ((Gl = r(t, { color: "text", children: [" ", v_.pipe, " "] })),
+    ((Gl = r(t, { color: "text", children: [" ", TREE_CONNECTOR_GLYPHS.pipe, " "] })),
       (eo[4] = Gl));
   else Gl = eo[4];
   let ur;
@@ -1010,7 +1010,7 @@ function bo(qm) {
   else ur = eo[7];
   let Hl;
   if (eo[8] === MEMO_CACHE_SENTINEL)
-    ((Hl = r(t, { color: "text", children: [" ", v_.pipe] })), (eo[8] = Hl));
+    ((Hl = r(t, { color: "text", children: [" ", TREE_CONNECTOR_GLYPHS.pipe] })), (eo[8] = Hl));
   else Hl = eo[8];
   let Vl;
   if (eo[9] !== cr || eo[10] !== ur)
@@ -1037,7 +1037,7 @@ function gn(s, a) {
   }
   let m = a.tag ? ` ${truncateToWidth(a.tag, Math.max(0, s - c - 2))} ` : "",
     w = Math.max(0, s - c - te(m));
-  if ((l.push(e(t, { color: "text", children: LP.repeat(w) }, "dash")), m))
+  if ((l.push(e(t, { color: "text", children: HORIZONTAL_LINE_GLYPH.repeat(w) }, "dash")), m))
     l.push(e(t, { dimColor: !0, children: m }, "tag"));
   return l;
 }
@@ -1052,9 +1052,9 @@ function Vt(Jm) {
       leftTag: Vi,
       rightTag: zi,
     } = Jm,
-    Bi = Hi === "top" ? Tg.topLeft : Tg.bottomLeft,
-    Yi = Hi === "top" ? v_.teeDown : v_.teeUp,
-    Qi = Hi === "top" ? Tg.topRight : Tg.bottomRight,
+    Bi = Hi === "top" ? ROUNDED_BOX_CORNER_GLYPHS.topLeft : ROUNDED_BOX_CORNER_GLYPHS.bottomLeft,
+    Yi = Hi === "top" ? TREE_CONNECTOR_GLYPHS.teeDown : TREE_CONNECTOR_GLYPHS.teeUp,
+    Qi = Hi === "top" ? ROUNDED_BOX_CORNER_GLYPHS.topRight : ROUNDED_BOX_CORNER_GLYPHS.bottomRight,
     dr;
   if (oo[0] !== Bi)
     ((dr = r(t, { color: "text", children: [" ", Bi] })),
@@ -1111,10 +1111,10 @@ function Wa(s, a, l, c, m) {
   let w = a === l,
     h = s.status === "done",
     v = s.status === "failed",
-    C = h ? L.tick : v ? L.cross : String(a + 1),
+    C = h ? figures.tick : v ? figures.cross : String(a + 1),
     W = w ? "permission" : h ? "success" : v ? "error" : "subtle",
     k = s.totalCount > 0 ? `${s.doneCount}/${s.totalCount}` : "",
-    S = c === "phases" && w ? `${L.pointer} ` : "  ",
+    S = c === "phases" && w ? `${figures.pointer} ` : "  ",
     I = te(S) + te(C) + 1,
     T = k ? 1 + te(k) : 0,
     j = truncateToWidth(s.title, Math.max(1, m - I - T)),
@@ -1137,7 +1137,7 @@ function Na(s, a, l, c, m, w, h) {
     S = " ".repeat(Math.max(0, w - te(k))),
     I = Math.max(0, m - (w + 4));
   return [
-    { text: v ? L.pointer : " ", color: "permission" },
+    { text: v ? figures.pointer : " ", color: "permission" },
     { text: C, color: W },
     { text: " " },
     {
@@ -1154,7 +1154,7 @@ function ja(s, a, l, c, m) {
     { glyph: h, color: v } = xo(Pt(s, m)),
     C = truncateToWidth(s.label, Math.max(1, c - 4));
   return [
-    { text: w ? `${L.pointer} ` : "  ", color: "permission" },
+    { text: w ? `${figures.pointer} ` : "  ", color: "permission" },
     { text: h, color: v },
     { text: " " },
     { text: C, color: w ? "permission" : void 0, dimColor: !w && St(s) },
@@ -1390,7 +1390,7 @@ function La({
   if (C > 0)
     W.push({
       text: truncateToWidth(
-        ` \xB7 ${l.length} lines${m ? "" : ` \xB7 ${kke} expand`}`,
+        ` \xB7 ${l.length} lines${m ? "" : ` \xB7 ${RETURN_KEY_GLYPH} expand`}`,
         h - te(a),
       ),
       dimColor: !0,
@@ -1400,7 +1400,7 @@ function La({
   for (let S of k) s.push(S);
   if (!m && C > 0)
     s.push([
-      { text: truncateToWidth(`${w}\u2026 ${C} more ${x(C, "line")}`, h), dimColor: !0 },
+      { text: truncateToWidth(`${w}\u2026 ${C} more ${pluralize(C, "line")}`, h), dimColor: !0 },
     ]);
   return C;
 }
@@ -1455,7 +1455,7 @@ function Ea({
   let j = [];
   if (s.tokens != null) j.push(`${formatTokens(s.tokens)} tok`);
   if (s.toolCalls != null && s.toolCalls > 0)
-    j.push(`${s.toolCalls} ${x(s.toolCalls, "tool call")}`);
+    j.push(`${s.toolCalls} ${pluralize(s.toolCalls, "tool call")}`);
   if (s.durationMs != null) j.push(formatDuration(s.durationMs));
   if (a === "queued" && s.queuedAt != null)
     j.push(`waiting ${formatDuration(Math.max(0, w - s.queuedAt))}`);
@@ -1755,7 +1755,7 @@ function Es(Xm) {
       viewport: lo,
     } = Xm,
     ec;
-  if (gt[0] !== Tt) ((ec = LP.repeat(Tt + 2)), (gt[0] = Tt), (gt[1] = ec));
+  if (gt[0] !== Tt) ((ec = HORIZONTAL_LINE_GLYPH.repeat(Tt + 2)), (gt[0] = Tt), (gt[1] = ec));
   else ec = gt[1];
   let pe = ec,
     da = Math.max(0, je.length - lo),
@@ -1810,11 +1810,11 @@ function Es(Xm) {
       let Or = ` ${ht({ from: Hr, to: ga }, je.length)} `;
       let xa = Math.max(0, Tt + 2 - te(Or));
       let Ee;
-      if (gt[25] !== xa) ((Ee = LP.repeat(xa)), (gt[25] = xa), (gt[26] = Ee));
+      if (gt[25] !== xa) ((Ee = HORIZONTAL_LINE_GLYPH.repeat(xa)), (gt[25] = xa), (gt[26] = Ee));
       else Ee = gt[26];
       let Zr;
       if (gt[27] !== Ee)
-        ((Zr = r(t, { color: "text", children: [" ", Tg.bottomLeft, Ee] })),
+        ((Zr = r(t, { color: "text", children: [" ", ROUNDED_BOX_CORNER_GLYPHS.bottomLeft, Ee] })),
           (gt[27] = Ee),
           (gt[28] = Zr));
       else Zr = gt[28];
@@ -1826,7 +1826,7 @@ function Es(Xm) {
       else Xr = gt[30];
       let nc;
       if (gt[31] === MEMO_CACHE_SENTINEL)
-        ((nc = e(t, { color: "text", children: Tg.bottomRight })),
+        ((nc = e(t, { color: "text", children: ROUNDED_BOX_CORNER_GLYPHS.bottomRight })),
           (gt[31] = nc));
       else nc = gt[31];
       let rc;
@@ -1843,7 +1843,7 @@ function Es(Xm) {
         ((Ee = r(t, {
           color: "text",
           wrap: "truncate-end",
-          children: [" ", Tg.bottomLeft, pe, Tg.bottomRight],
+          children: [" ", ROUNDED_BOX_CORNER_GLYPHS.bottomLeft, pe, ROUNDED_BOX_CORNER_GLYPHS.bottomRight],
         })),
           (gt[35] = pe),
           (gt[36] = Ee));
@@ -1866,7 +1866,7 @@ function Es(Xm) {
     ((ge = r(t, {
       color: "text",
       wrap: "truncate-end",
-      children: [" ", Tg.topLeft, pe, Tg.topRight],
+      children: [" ", ROUNDED_BOX_CORNER_GLYPHS.topLeft, pe, ROUNDED_BOX_CORNER_GLYPHS.topRight],
     })),
       (gt[37] = pe),
       (gt[38] = ge));
@@ -1893,7 +1893,7 @@ function eye({
   initialPhaseIndex: C,
   promptVisibleBelow: W = !1,
 }) {
-  Rs("workflow-detail-dialog");
+  useActiveOverlay("workflow-detail-dialog");
   let { availableRows: k, width: S, rows: I } = qIt(W),
     T = Math.max(12, S - 6),
     j = zIt(s),
@@ -2091,9 +2091,9 @@ function eye({
       ...q.map((M, at) => {
         let bt =
             M.status === "done"
-              ? L.tick
+              ? figures.tick
               : M.status === "failed"
-                ? L.cross
+                ? figures.cross
                 : String(at + 1),
           Rt = M.totalCount > 0 ? `${M.doneCount}/${M.totalCount}` : "";
         return 2 + te(bt) + 1 + te(M.title) + (Rt ? 1 + te(Rt) : 0);
@@ -2110,9 +2110,9 @@ function eye({
   let Be = Ae !== "all" && Y !== "phases" ? yn[Ae].toLowerCase() : void 0,
     xt = [];
   if (Y === "agent") {
-    if ((xt.push(`${sv}${Lw} agent`), vo.length > Xs)) xt.push("j/k scroll");
-    if (Mo.expandable) xt.push(`${kke} ${ve ? "collapse" : "expand"}`);
-  } else if (Ao) xt.push(`${sv}${Lw} select`);
+    if ((xt.push(`${UP_ARROW_GLYPH}${DOWN_ARROW_GLYPH} agent`), vo.length > Xs)) xt.push("j/k scroll");
+    if (Mo.expandable) xt.push(`${RETURN_KEY_GLYPH} ${ve ? "collapse" : "expand"}`);
+  } else if (Ao) xt.push(`${UP_ARROW_GLYPH}${DOWN_ARROW_GLYPH} select`);
   if (Js) xt.push("x stop");
   if (zs) xt.push("x stop workflow");
   if (Ks) xt.push("r restart");

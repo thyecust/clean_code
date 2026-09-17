@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 92 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
-import { Yb } from "./chunk-sr4920wy.js";
+import { isTeammateContext } from "./peer-target-guard.js";
 import { osn, ssn, isn } from "./chunk-780k92tm.js";
 var p = async (m, s) => {
   let [
@@ -23,7 +23,7 @@ var p = async (m, s) => {
       listTruncated: o,
     },
     t,
-  ] = await Promise.all([osn(s.session, void 0, s.credentials), ssn(s, Yb(s))]);
+  ] = await Promise.all([osn(s.session, void 0, s.credentials), ssn(s, isTeammateContext(s))]);
   return {
     type: "text",
     value: isn(a, t, {

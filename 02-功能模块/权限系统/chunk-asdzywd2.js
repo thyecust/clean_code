@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { oo, bh, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { sr, kw, mc, o0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getParentSessionId } from "../Teammates团队/chunk-811z9z0t.js";
+import { getParentSessionId } from "../Teammates团队/teammate-context.js";
 import {
   FORK_AGENT,
   buildChildMessage,
@@ -30,11 +30,11 @@ import {
 import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 import { Cj } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { CC } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
-import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
+import { isCoordinatorModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
 async function spawnForkFromDirective(t, e, a, m, p) {
   if (e.getAppState().endedByModel)
     return (logFeatureBad("subagent_launch", "subagent_fork_ended_by_model"), null);
-  if (Ci())
+  if (isCoordinatorModeEnabled())
     return (logFeatureBad("subagent_launch", "subagent_fork_coordinator_mode"), null);
   let o = e.renderedSystemPrompt;
   if (!o) {
@@ -53,7 +53,7 @@ async function spawnForkFromDirective(t, e, a, m, p) {
     },
     r = e.agentLifecycle.allocateName(h(t)),
     l = t.replace(/\s+/g, " ").trim(),
-    g = l.length > 50 ? oe(l, 49) + "\u2026" : l,
+    g = l.length > 50 ? truncateToCodeUnits(l, 49) + "\u2026" : l,
     n = bh(r),
     { taskRegistry: s } = e,
     T = Date.now(),

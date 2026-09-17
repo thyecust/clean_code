@@ -11,13 +11,13 @@ import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Ve, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { sleep, fullJitterBackoffMs } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { j, MA, d8, mp } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { iu } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { escapeRegExp } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { WZ, R$n } from "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
-import { yW } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { runWithCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getGlobalClaudeFile, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -84,29 +84,29 @@ import {
   H9t,
   evaluateHookIfCondition,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { findGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { getSettingsFilePathForSource, getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { I6 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isViolinWoodEnabledCached, isViolinAmatiEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { hD } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { untrustedDeviceHint } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
-import { primeUnattendedServingConsent } from "../AutoMode-自动模式/chunk-15n5gf3t.js";
+import { primeUnattendedServingConsent } from "../AutoMode-自动模式/unattended-serving-consent.js";
 import { p2n, m2n } from "../远程工具执行/chunk-66axrkvh.js";
 import { xC, moe } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { kS } from "../Bridge-RemoteControl/chunk-x379yyxb.js";
 import { NOT_HELD_STATE } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
-import { f$n, cye } from "./chunk-y7gz94r8.js";
+import { findTemplateByDigest, getHookTemplateById } from "./hook-template-catalog.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
 import { logRemoteToolsEvent } from "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
 import { truncateWithEllipsis } from "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
 import { defineDialog } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { s, T, v, c, it, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function Ke() {
   let e = new Map();
@@ -181,7 +181,7 @@ function Qe(e) {
   }
 }
 function Q(e) {
-  return io(Qe(e), { maxCodeUnits: 200 });
+  return formatSingleLineText(Qe(e), { maxCodeUnits: 200 });
 }
 async function Se(e, o, d, t = {}) {
   let r = [
@@ -193,7 +193,7 @@ async function Se(e, o, d, t = {}) {
     if (O === null || ve([H, O], o) || (H === t.pluginRoot && Ye([H, O], o)))
       return {
         kind: "source_in_reach",
-        notice: `"${Q(e)}" is configured in a place the cloud session can write on this machine (${io(H, { maxCodeUnits: 200 })}), so it is not run for the cloud session from this machine.`,
+        notice: `"${Q(e)}" is configured in a place the cloud session can write on this machine (${formatSingleLineText(H, { maxCodeUnits: 200 })}), so it is not run for the cloud session from this machine.`,
       };
   }
   if (e.type !== "command") return { kind: "not_command", hookType: e.type };
@@ -211,7 +211,7 @@ async function Se(e, o, d, t = {}) {
       reason: k.reason,
       notice: `"${Q(e)}" is not a single script this machine can pin, so it is not run for the cloud session from this machine: it would run whatever it names in the checkout, which the session may have written. Point it at one script outside the checkout (under ~/.claude, say).`,
     };
-  let R = io(k.rawPath, { maxCodeUnits: 200 }),
+  let R = formatSingleLineText(k.rawPath, { maxCodeUnits: 200 }),
     { located: _, digest: C } = await Ze(k.resolvedPath, o, d, t.resolved);
   if (_.realPath === null || C === null || !C.ok)
     return {
@@ -1014,7 +1014,7 @@ ${O}
       .flatMap((M) => yn(M, d))
       .find((M) =>
         new RegExp(
-          `(?<![\\w./~$-])${iu(Kf(M))}${M.endsWith("/") ? "" : "(?![\\w.-])"}`,
+          `(?<![\\w./~$-])${escapeRegExp(Kf(M))}${M.endsWith("/") ? "" : "(?![\\w.-])"}`,
         ).test(C),
       );
   if (D !== void 0) return `it names ${D.replace('"', "")}`;
@@ -1096,7 +1096,7 @@ function xn(e, o) {
     o === "source_in_sync_root"
       ? "the file sits where the cloud session can write on this machine (the synced directory or a sandbox write inlet), so the session could rewrite it (or it could no longer be resolved on this machine)"
       : "a directory the cloud session can write on this machine is a Claude config directory";
-  return `Hooks from ${io(e.settingsFile ?? "", { maxCodeUnits: 200 })} are not offered to the cloud session: ${d}.`;
+  return `Hooks from ${formatSingleLineText(e.settingsFile ?? "", { maxCodeUnits: 200 })} are not offered to the cloud session: ${d}.`;
 }
 function $e(e) {
   return Object.entries(e.hooks).flatMap(([o, d]) =>
@@ -1201,7 +1201,7 @@ async function Ne(e, o, d = !1, t = !1) {
         (D = {
           kind: "held",
           reason: "unverifiable_target",
-          notice: `This entry for ${io(S.rawPath, { maxCodeUnits: 200 })} in ${oe[e.source.source]} could not be read and pinned at start-up (missing, too large, not a regular file, more than one hard link, or it resolves to a file this machine does not read as a hook script), so it is not offered to the cloud session.`,
+          notice: `This entry for ${formatSingleLineText(S.rawPath, { maxCodeUnits: 200 })} in ${oe[e.source.source]} could not be read and pinned at start-up (missing, too large, not a regular file, more than one hard link, or it resolves to a file this machine does not read as a hook script), so it is not offered to the cloud session.`,
         }));
     else if (
       S.kind === "script_in_reach" ||
@@ -1238,14 +1238,14 @@ async function Ne(e, o, d = !1, t = !1) {
         let U = await o.deps.realpath(I).catch(() => null);
         if (U === null) {
           B = {
-            path: io(I, { maxCodeUnits: 200 }),
+            path: formatSingleLineText(I, { maxCodeUnits: 200 }),
             why: "cannot be located on this machine",
           };
           break;
         }
         if ([I, U].some((G) => W.some((x) => y4e(G, x)))) {
           B = {
-            path: io(I, { maxCodeUnits: 200 }),
+            path: formatSingleLineText(I, { maxCodeUnits: 200 }),
             why: "sits where the cloud session can write on this machine (a sandbox write inlet covers it)",
           };
           break;
@@ -1304,7 +1304,7 @@ async function Ne(e, o, d = !1, t = !1) {
       }
       let z = t
           ? void 0
-          : (o.deps.findTemplateByDigest ?? f$n)(S.pinnedTarget.sha256),
+          : (o.deps.findTemplateByDigest ?? findTemplateByDigest)(S.pinnedTarget.sha256),
         N = k && !_ ? void 0 : z;
       if (
         k &&
@@ -1349,7 +1349,7 @@ async function Ne(e, o, d = !1, t = !1) {
         )
           p = void 0;
         else if (!C9t(e.matcher, I.matcher))
-          p = `${I.filename} is configured with the matcher "${io(e.matcher ?? "", { maxCodeUnits: 200 })}" and the cloud runs it on "${I.matcher}", so it runs on this machine instead.`;
+          p = `${I.filename} is configured with the matcher "${formatSingleLineText(e.matcher ?? "", { maxCodeUnits: 200 })}" and the cloud runs it on "${I.matcher}", so it runs on this machine instead.`;
         else {
           let q = qe(r.timeout);
           E = {
@@ -1376,7 +1376,7 @@ async function Ne(e, o, d = !1, t = !1) {
             ...(e.matcher !== void 0 &&
               !nAe(e.matcher) &&
               !C9t(I.matcher, e.matcher) && {
-                narrowNotice: `${I.filename} is configured with the matcher "${io(e.matcher, { maxCodeUnits: 200 })}"; in the cloud it runs on "${I.matcher}" only.`,
+                narrowNotice: `${I.filename} is configured with the matcher "${formatSingleLineText(e.matcher, { maxCodeUnits: 200 })}"; in the cloud it runs on "${I.matcher}" only.`,
               }),
           };
         }
@@ -1410,7 +1410,7 @@ async function Ne(e, o, d = !1, t = !1) {
     return {
       kind: "held",
       reason: "pattern_matcher",
-      notice: `"${Q(r)}" is configured with the pattern matcher "${io(e.matcher, { maxCodeUnits: 200 })}", which a cloud session cannot take, so it is not offered to it and runs in local sessions only. Use a plain list such as Edit|Write for it to run for cloud sessions too.`,
+      notice: `"${Q(r)}" is configured with the pattern matcher "${formatSingleLineText(e.matcher, { maxCodeUnits: 200 })}", which a cloud session cannot take, so it is not offered to it and runs in local sessions only. Use a plain list such as Edit|Write for it to run for cloud sessions too.`,
     };
   if (M !== void 0) return M;
   if (r.type === "command" && !H) {
@@ -1496,7 +1496,7 @@ async function nIt(e, o, d) {
         (t.held.push({
           event: p.event,
           ...(p.matcher !== void 0 && {
-            matcher: io(p.matcher, { maxCodeUnits: 200 }),
+            matcher: formatSingleLineText(p.matcher, { maxCodeUnits: 200 }),
           }),
           source: p.source.source,
           command: Q(p.hook),
@@ -1716,14 +1716,14 @@ async function nIt(e, o, d) {
       if (
         S === void 0 ||
         L === void 0 ||
-        !C9t(cye(S)?.matcher ?? "", p.local.matcher ?? "*")
+        !C9t(getHookTemplateById(S)?.matcher ?? "", p.local.matcher ?? "*")
       )
         return !0;
       return (
         t.held.push({
           event: p.wire.event,
           ...(p.local.matcher !== void 0 && {
-            matcher: io(p.local.matcher, { maxCodeUnits: 200 }),
+            matcher: formatSingleLineText(p.local.matcher, { maxCodeUnits: 200 }),
           }),
           source: p.local.source,
           command: Q(p.local.hook),
@@ -1808,7 +1808,7 @@ function sIt(e, o) {
 }
 function Est() {
   return (
-    P() !== "windows" && isViolinWoodEnabledCached() && isViolinAmatiEnabledCached() && !a.CLAUDE_CODE_DISABLE_HOOK_FORWARDING
+    getCurrentPlatform() !== "windows" && isViolinWoodEnabledCached() && isViolinAmatiEnabledCached() && !a.CLAUDE_CODE_DISABLE_HOOK_FORWARDING
   );
 }
 function qn(e) {
@@ -1905,7 +1905,7 @@ function Be({
       ...(_ && { isMuted: _ }),
       pin: rAe(),
       staging: D,
-      run: (p, S, L) => yW(S.launchDir, () => Q7n(p, S, J7n, L)),
+      run: (p, S, L) => runWithCwd(S.launchDir, () => Q7n(p, S, J7n, L)),
       evaluateCondition: (p, S) => evaluateHookIfCondition(p, S, d(), S.cwd),
       parseTarget: (p) => {
         let S = F();
@@ -2016,7 +2016,7 @@ function ze({
           instanceId: E,
           launchDir: e,
           projectDir: e,
-          configHome: be(),
+          configHome: getClaudeConfigDir(),
           ...(p !== null && { sync: { rootReal: p.real, root: p.root } }),
           ...(H !== e && { repoRoot: H }),
           extraReachRoots: S,
@@ -2176,7 +2176,7 @@ function Ast(e) {
       realpath: zn,
       repoRootOf: findGitRootUncached,
       consentPath: WZ,
-      configHome: be,
+      configHome: getClaudeConfigDir,
       ...e.deps,
     },
     { launchDir: d, memory: t } = e,
@@ -2384,7 +2384,7 @@ function xst({
         ...("cause" in A && { cause: fromEnum(A.cause) }),
         ...("status" in A && { status: A.status }),
         ...(A.attempt !== void 0 && { attempt: A.attempt }),
-        session_id: Ee(t),
+        session_id: sanitizeAnalyticsId(t),
       });
     },
     M = () => {
@@ -2445,7 +2445,7 @@ function xst({
           let w = iD(F);
           if (
             (n(
-              `[remote] The create's ${o} permission mode push was not taken (${w}): ${io(l(F), { maxCodeUnits: 200 })}`,
+              `[remote] The create's ${o} permission mode push was not taken (${w}): ${formatSingleLineText(l(F), { maxCodeUnits: 200 })}`,
             ),
             w !== "server_error")
           ) {
@@ -2463,7 +2463,7 @@ function xst({
           (E.then(({ response: p }) =>
             p?.catch((S) => {
               n(
-                `[remote] The default mode sent after that refusal was not taken either: ${io(l(S), { maxCodeUnits: 200 })}`,
+                `[remote] The default mode sent after that refusal was not taken either: ${formatSingleLineText(l(S), { maxCodeUnits: 200 })}`,
               );
             }),
           ),

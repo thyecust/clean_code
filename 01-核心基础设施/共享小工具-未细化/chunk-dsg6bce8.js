@@ -12,13 +12,13 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { L } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 var STATUS_PRESENTATION = {
-  success: { icon: L.tick, color: "success", ariaLabel: "done:" },
-  error: { icon: L.cross, color: "error", ariaLabel: "failed:" },
-  warning: { icon: L.warning, color: "warning", ariaLabel: "warning:" },
-  info: { icon: L.info, color: "suggestion", ariaLabel: "note:" },
-  pending: { icon: L.circle, color: void 0, ariaLabel: "pending:" },
+  success: { icon: figures.tick, color: "success", ariaLabel: "done:" },
+  error: { icon: figures.cross, color: "error", ariaLabel: "failed:" },
+  warning: { icon: figures.warning, color: "warning", ariaLabel: "warning:" },
+  info: { icon: figures.info, color: "suggestion", ariaLabel: "note:" },
+  pending: { icon: figures.circle, color: void 0, ariaLabel: "pending:" },
   loading: { icon: "\u2026", color: void 0, ariaLabel: "loading:" },
 };
 function StatusIndicator(m) {

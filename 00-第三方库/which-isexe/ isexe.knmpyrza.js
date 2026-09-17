@@ -16,8 +16,8 @@ import { R, A, Jr } from "../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { qR, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
-import { Zie, wxt } from "../../01-核心基础设施/共享小工具-未细化/chunk-h1jrnver.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getProcStartTime, getProcParentPid } from "../../01-核心基础设施/共享小工具-未细化/linux-proc-stat.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var it = commonJS(function (gi, ot) {
   ot.exports = rt;
@@ -1853,7 +1853,7 @@ var T = new j(() => new Fn());
 function ze() {
   let e = bi(T);
   if (e.dir !== void 0) return e.dir ?? void 0;
-  let t = P();
+  let t = getCurrentPlatform();
   if (t !== "linux" && t !== "wsl") {
     e.dir = null;
     return;
@@ -2063,7 +2063,7 @@ function Nn(e, t) {
 }
 function Jo(e) {
   try {
-    return Zie(G(`/proc/${e}/stat`, "utf8"));
+    return getProcStartTime(G(`/proc/${e}/stat`, "utf8"));
   } catch {
     return;
   }
@@ -2071,8 +2071,8 @@ function Jo(e) {
 function ei(e) {
   try {
     let t = G(`/proc/${e}/stat`, "utf8"),
-      r = wxt(t),
-      o = Zie(t);
+      r = getProcParentPid(t),
+      o = getProcStartTime(t);
     return r === void 0 || o === void 0 ? void 0 : { ppid: r, starttime: o };
   } catch {
     return;
@@ -2281,7 +2281,7 @@ var Bn = {
   writeFileSync: writeFileSync,
 };
 function Kn(e) {
-  let t = P();
+  let t = getCurrentPlatform();
   if (t !== "linux" && t !== "wsl") return;
   try {
     let r = ii(e.readSelfCgroup());

@@ -14,44 +14,44 @@ function l(e) {
 function u(e) {
   return e === "inline";
 }
-var np = "inline",
-  Xc = "skills-dir",
-  Qp = "synced",
-  $g = "builtin";
-function Ul(e) {
-  return e === np || e === Xc || e === Qp;
+var INLINE_PLUGIN_SOURCE = "inline",
+  SKILLS_DIR_PLUGIN_SOURCE = "skills-dir",
+  SYNCED_PLUGIN_SOURCE = "synced",
+  BUILTIN_PLUGIN_SOURCE = "builtin";
+function isNonMarketplacePluginSource(e) {
+  return e === INLINE_PLUGIN_SOURCE || e === SKILLS_DIR_PLUGIN_SOURCE || e === SYNCED_PLUGIN_SOURCE;
 }
-function fD(e) {
+function normalizePluginId(e) {
   let n = e.lastIndexOf("@");
   if (n <= 0) return e;
-  return `${e.slice(0, n)}@${Yyn(e.slice(n + 1))}`;
+  return `${e.slice(0, n)}@${normalizePluginSourceName(e.slice(n + 1))}`;
 }
-function Yyn(e) {
+function normalizePluginSourceName(e) {
   let n = e.toLowerCase();
   return Wge(n) ? n : e;
 }
-function Fre(e) {
-  return jI(e) !== void 0;
+function hasNonMarketplacePluginSource(e) {
+  return getNonMarketplacePluginSource(e) !== void 0;
 }
-function jI(e) {
-  let n = Lu(e);
-  if (Ul(n)) return n;
+function getNonMarketplacePluginSource(e) {
+  let n = getPluginMarketplace(e);
+  if (isNonMarketplacePluginSource(n)) return n;
   if (e.includes("@")) return;
-  if (e.startsWith(`${np}[`)) return np;
-  if (e.startsWith(`${Qp}[`)) return Qp;
+  if (e.startsWith(`${INLINE_PLUGIN_SOURCE}[`)) return INLINE_PLUGIN_SOURCE;
+  if (e.startsWith(`${SYNCED_PLUGIN_SOURCE}[`)) return SYNCED_PLUGIN_SOURCE;
   return;
 }
-function Jyn(e, n) {
-  return Bpe(e, Qyn(n));
+function findPluginEnablementFromRecords(e, n) {
+  return findPluginEnablementEntry(e, parsePluginSettingsRecords(n));
 }
-function Qyn(e) {
-  return e.map((n) => (n === void 0 ? void 0 : Zyn(n)));
+function parsePluginSettingsRecords(e) {
+  return e.map((n) => (n === void 0 ? void 0 : parsePluginSettingsRecord(n)));
 }
-function Zyn(e) {
+function parsePluginSettingsRecord(e) {
   let n = new Map();
   for (let [t, i] of Object.entries(e)) {
     if (i === void 0) continue;
-    let d = xi(t),
+    let d = normalizeLookupKey(t),
       o = c(t, i),
       r = n.get(d);
     if (r === void 0 || r.enabled)
@@ -61,24 +61,24 @@ function Zyn(e) {
 }
 function c(e, n) {
   if (n === void 0) return !1;
-  let t = Lu(fD(e));
-  return t === np || t === Xc ? n !== !1 : n === !0;
+  let t = getPluginMarketplace(normalizePluginId(e));
+  return t === INLINE_PLUGIN_SOURCE || t === SKILLS_DIR_PLUGIN_SOURCE ? n !== !1 : n === !0;
 }
-function $Ne(e) {
-  let n = Lu(fD(e));
-  return n === np || n === Qp;
+function isInlineOrSyncedPluginId(e) {
+  let n = getPluginMarketplace(normalizePluginId(e));
+  return n === INLINE_PLUGIN_SOURCE || n === SYNCED_PLUGIN_SOURCE;
 }
-function Bpe(e, n) {
-  if (!$Ne(e)) {
+function findPluginEnablementEntry(e, n) {
+  if (!isInlineOrSyncedPluginId(e)) {
     for (let [o, r] of n.entries()) {
       let a = r?.record[e];
       if (a !== void 0) return { index: o, enabled: c(e, a), key: e };
     }
     return;
   }
-  let t = xi(e),
-    i = fD(e),
-    d = Lu(i) === Qp ? xi(`${i.slice(0, i.lastIndexOf("@"))}@${np}`) : void 0;
+  let t = normalizeLookupKey(e),
+    i = normalizePluginId(e),
+    d = getPluginMarketplace(i) === SYNCED_PLUGIN_SOURCE ? normalizeLookupKey(`${i.slice(0, i.lastIndexOf("@"))}@${INLINE_PLUGIN_SOURCE}`) : void 0;
   for (let [o, r] of n.entries()) {
     if (r === void 0) continue;
     let a = r.byFold.get(t);
@@ -91,76 +91,76 @@ function Bpe(e, n) {
   }
   return;
 }
-function eSn(e, n) {
-  return Jyn(e, n)?.enabled;
+function getPluginEnabledFromRecords(e, n) {
+  return findPluginEnablementFromRecords(e, n)?.enabled;
 }
-function GYn(e, n, t) {
-  return eSn(e, n) ?? t !== !1;
+function resolvePluginEnabledFromRecords(e, n, t) {
+  return getPluginEnabledFromRecords(e, n) ?? t !== !1;
 }
-function tSn(e, n, t) {
-  return Bpe(e, n)?.enabled ?? t !== !1;
+function resolvePluginEnabledFromEntries(e, n, t) {
+  return findPluginEnablementEntry(e, n)?.enabled ?? t !== !1;
 }
-function KSt(e) {
-  return Ul(e) || e === $g;
+function isNonMarketplaceOrBuiltinPluginSource(e) {
+  return isNonMarketplacePluginSource(e) || e === BUILTIN_PLUGIN_SOURCE;
 }
-function aN(e) {
-  return e.scope === "project" && e.source.endsWith(`@${Xc}`);
+function isProjectSkillsDirPlugin(e) {
+  return e.scope === "project" && e.source.endsWith(`@${SKILLS_DIR_PLUGIN_SOURCE}`);
 }
-var H3t = {
+var SETTINGS_SOURCE_TO_CLI_SCOPE = {
   policySettings: "managed",
   userSettings: "user",
   projectSettings: "project",
   localSettings: "local",
   flagSettings: "flag",
 };
-function Bn(e) {
+function splitPluginId(e) {
   if (e.includes("@")) {
     let n = e.split("@");
     return { name: n[0] || "", marketplace: n[1] };
   }
   return { name: e };
 }
-function Y3(e) {
+function splitPluginIdOnLastAt(e) {
   let n = e.lastIndexOf("@");
   if (n < 0) return { name: e };
   return { name: e.slice(0, n), marketplace: e.slice(n + 1) };
 }
-function J3(e) {
-  let n = fD(e),
-    t = Y3(n);
-  return Ul(t.marketplace) ? t : Bn(n);
+function parsePluginId(e) {
+  let n = normalizePluginId(e),
+    t = splitPluginIdOnLastAt(n);
+  return isNonMarketplacePluginSource(t.marketplace) ? t : splitPluginId(n);
 }
-function XSt(e, n) {
+function formatPluginId(e, n) {
   return n ? `${e}@${n}` : e;
 }
-function Lu(e) {
+function getPluginMarketplace(e) {
   let n = e.lastIndexOf("@");
   if (n < 0) return;
   let t = e.slice(n + 1);
   return t === "" ? void 0 : t;
 }
-function og(e) {
-  let { name: n, marketplace: t } = Y3(e);
-  if ((rSn(t) || t === $g) && !wx().safeParse(e).success) return { name: n };
+function parsePluginIdIgnoringReservedMarketplace(e) {
+  let { name: n, marketplace: t } = splitPluginIdOnLastAt(e);
+  if ((isOfficialOrCommunityMarketplace(t) || t === BUILTIN_PLUGIN_SOURCE) && !wx().safeParse(e).success) return { name: n };
   return { name: n, marketplace: t };
 }
-function $y(e, n) {
+function isEqualIgnoringCase(e, n) {
   return e === n || e.toLowerCase() === n.toLowerCase();
 }
-function xi(e) {
+function normalizeLookupKey(e) {
   return e.normalize("NFC").toLowerCase();
 }
-function WI(e, n) {
-  return e.find((t) => t === n) ?? e.find((t) => $y(t, n));
+function findKeyIgnoringCase(e, n) {
+  return e.find((t) => t === n) ?? e.find((t) => isEqualIgnoringCase(t, n));
 }
-function nSn(e, n) {
-  return e.filter((t) => $y(Bn(t).name, n));
+function filterPluginIdsByName(e, n) {
+  return e.filter((t) => isEqualIgnoringCase(splitPluginId(t).name, n));
 }
-function Ug(e) {
+function isOfficialMarketplace(e) {
   return e !== void 0 && d8t.has(e.toLowerCase());
 }
-function rSn(e) {
-  return Ug(e) || (e !== void 0 && stt.has(e.toLowerCase()));
+function isOfficialOrCommunityMarketplace(e) {
+  return isOfficialMarketplace(e) || (e !== void 0 && stt.has(e.toLowerCase()));
 }
 var f = new Set([
   "anthropic-skills",
@@ -204,7 +204,7 @@ var f = new Set([
   "clinical-trial-protocol",
   "documents",
 ]);
-function YSt(e, n) {
+function isFirstPartyPlugin(e, n) {
   return l(n) && f.has(e);
 }
 var g = {
@@ -212,47 +212,47 @@ var g = {
   project: "projectSettings",
   local: "localSettings",
 };
-function bC(e) {
+function getSettingsSourceForScope(e) {
   if (e === "managed") throw Error("Cannot install plugins to managed scope");
   return g[e];
 }
-function I3t(e) {
-  return H3t[e];
+function getCliScopeForSettingsSource(e) {
+  return SETTINGS_SOURCE_TO_CLI_SCOPE[e];
 }
 export {
-  np,
-  Xc,
-  Qp,
-  $g,
-  Ul,
-  fD,
-  Yyn,
-  Fre,
-  jI,
-  Jyn,
-  Qyn,
-  Zyn,
-  $Ne,
-  Bpe,
-  eSn,
-  GYn,
-  tSn,
-  KSt,
-  aN,
-  H3t,
-  Bn,
-  Y3,
-  J3,
-  XSt,
-  Lu,
-  og,
-  $y,
-  xi,
-  WI,
-  nSn,
-  Ug,
-  rSn,
-  YSt,
-  bC,
-  I3t,
+  INLINE_PLUGIN_SOURCE,
+  SKILLS_DIR_PLUGIN_SOURCE,
+  SYNCED_PLUGIN_SOURCE,
+  BUILTIN_PLUGIN_SOURCE,
+  isNonMarketplacePluginSource,
+  normalizePluginId,
+  normalizePluginSourceName,
+  hasNonMarketplacePluginSource,
+  getNonMarketplacePluginSource,
+  findPluginEnablementFromRecords,
+  parsePluginSettingsRecords,
+  parsePluginSettingsRecord,
+  isInlineOrSyncedPluginId,
+  findPluginEnablementEntry,
+  getPluginEnabledFromRecords,
+  resolvePluginEnabledFromRecords,
+  resolvePluginEnabledFromEntries,
+  isNonMarketplaceOrBuiltinPluginSource,
+  isProjectSkillsDirPlugin,
+  SETTINGS_SOURCE_TO_CLI_SCOPE,
+  splitPluginId,
+  splitPluginIdOnLastAt,
+  parsePluginId,
+  formatPluginId,
+  getPluginMarketplace,
+  parsePluginIdIgnoringReservedMarketplace,
+  isEqualIgnoringCase,
+  normalizeLookupKey,
+  findKeyIgnoringCase,
+  filterPluginIdsByName,
+  isOfficialMarketplace,
+  isOfficialOrCommunityMarketplace,
+  isFirstPartyPlugin,
+  getSettingsSourceForScope,
+  getCliScopeForSettingsSource,
 };

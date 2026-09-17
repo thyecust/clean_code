@@ -9,20 +9,20 @@
 // Version: 2.1.263
 import { po } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { os, oe, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { repeatString, truncateToCodeUnits, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { Npn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { jit, BB } from "./语法高亮-Markdown渲染.jhbtay9y.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
+import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { basename, extname } from "path";
 var Mit = 2000;
 function Rye(e, n = 0) {
   if (e.length - n <= Mit) return { code: e.slice(n), truncatedChars: 0 };
   let t = e.slice(n, n + Mit + 1),
-    s = oe(t, Mit);
+    s = truncateToCodeUnits(t, Mit);
   return { code: s, truncatedChars: e.length - n - s.length };
 }
 function lle(e) {
@@ -43,7 +43,7 @@ function x(e) {
 var w = { r: 0, g: 0, b: 0, a: 1 };
 function q(e) {
   if (e.includes("ansi")) return "ansi";
-  return ie.level >= 3 ? "truecolor" : "color256";
+  return chalk.level >= 3 ? "truecolor" : "color256";
 }
 var v = [0, 95, 135, 175, 215, 255];
 function ce(e, n, t) {
@@ -344,7 +344,7 @@ var P = new Map([
 function X(e, n) {
   let t = basename(e),
     s = extname(e).slice(1),
-    r = ft(t, "."),
+    r = beforeFirst(t, "."),
     i = P.get(t) ?? P.get(r);
   if (i) {
     let o = BB(i);
@@ -372,7 +372,7 @@ function pe(e, n, t) {
   if (!e) return t.foreground;
   if (e === "keyword" && de.has(n.trim()))
     return t.scopes.get("_storage") ?? t.foreground;
-  return t.scopes.get(e) ?? t.scopes.get(ft(e, ".")) ?? t.foreground;
+  return t.scopes.get(e) ?? t.scopes.get(beforeFirst(e, ".")) ?? t.foreground;
 }
 function J(e, n, t, s) {
   let r = e.scope ?? e.kind ?? t;
@@ -501,7 +501,7 @@ function B(e) {
 }
 function H(e) {
   let n = 0;
-  for (let { segment: t } of Xs().segment(e)) n += B(t);
+  for (let { segment: t } of getGraphemeSegmenter().segment(e)) n += B(t);
   return n;
 }
 function Me(e, n, t) {
@@ -529,10 +529,10 @@ function Le(e) {
     }
     t = !0;
     let o = "";
-    for (let { segment: d } of Xs().segment(i))
+    for (let { segment: d } of getGraphemeSegmenter().segment(i))
       if (d === "\t") {
         let u = 8 - (n % 8);
-        ((o += os(" ", u)), (n += u));
+        ((o += repeatString(" ", u)), (n += u));
       } else ((o += d), (n += B(d)));
     s.push([r, o]);
   }
@@ -552,7 +552,7 @@ function Q(e, n, t, s, r) {
       }
       let b = 0,
         k = 0;
-      for (let { segment: C, index: m } of Xs().segment(f)) {
+      for (let { segment: C, index: m } of getGraphemeSegmenter().segment(f)) {
         let y = B(C);
         if (c + k + y > n) {
           if (m > b) u.push([p, f.slice(b, m)]);
@@ -577,7 +577,7 @@ function Q(e, n, t, s, r) {
         p = 0;
       e: for (let [g, b] of o) {
         let k = 0;
-        for (let { segment: C } of Xs().segment(b)) {
+        for (let { segment: C } of getGraphemeSegmenter().segment(b)) {
           let m = B(C);
           if (p + m > u) {
             if (k > 0) c.push([g, b.slice(0, k)]);
@@ -597,8 +597,8 @@ function Q(e, n, t, s, r) {
     for (let u of e.lines) {
       let c = 0;
       for (let [, p] of u)
-        for (let { segment: f } of Xs().segment(p)) c += B(f);
-      if (c < n) u.push([d, os(" ", n - c)]);
+        for (let { segment: f } of getGraphemeSegmenter().segment(p)) c += B(f);
+      if (c < n) u.push([d, repeatString(" ", n - c)]);
     }
   }
 }
@@ -631,7 +631,7 @@ function Te(e) {
 function De(e, n) {
   if (n.length === 0) return n;
   let t = [0];
-  for (let o of Xs().segment(e)) t.push(o.index + o.segment.length);
+  for (let o of getGraphemeSegmenter().segment(e)) t.push(o.index + o.segment.length);
   let s = (o) => {
       let d = 0,
         u = t.length - 1;

@@ -31,9 +31,9 @@ import {
 } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { A, W, Nz } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { _z } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { Wf, ft } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { writeToStderr } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { capitalize, beforeFirst } from "../核心工具-字符串与文本/string-utils.js";
 import {
   appendFile as Z,
   mkdir as Re,
@@ -1499,7 +1499,7 @@ class Oe {
           ruleId: r.id,
           label: r.id
             .split("-")
-            .map((i) => _t[i] ?? Wf(i))
+            .map((i) => _t[i] ?? capitalize(i))
             .join(" "),
         });
     if (kt(e)) t.push({ ruleId: "private-key", label: "Private Key" });
@@ -1581,7 +1581,7 @@ function fp(e) {
       t.toString().replace(/\/$/, "")
     );
   } catch {
-    let t = ft(ft(e, "?"), "#"),
+    let t = beforeFirst(beforeFirst(e, "?"), "#"),
       r = t.lastIndexOf("@");
     return r >= 0 ? t.slice(r + 1) : t;
   }
@@ -2121,7 +2121,7 @@ function Q(e, t) {
     argv: process.argv,
     env: process.env,
     sessionId: () => K(),
-    configHomeDir: () => be(),
+    configHomeDir: () => getClaudeConfigDir(),
     onExit: (r) => {
       process.on("exit", r);
     },
@@ -2129,13 +2129,13 @@ function Q(e, t) {
       Et(r);
     },
     writeToStderr: (r) => {
-      _z(r);
+      writeToStderr(r);
     },
     isAnt: t?.isAnt ?? !1,
     isTestEnvironment: t?.isTestEnvironment ?? !1,
     launchIdentity: t,
     storageV5:
-      e.init.storageV5 !== void 0 && e.init.configHome === be()
+      e.init.storageV5 !== void 0 && e.init.configHome === getClaudeConfigDir()
         ? e.init.storageV5
         : void 0,
     syncExitDrain: e.init.syncExitDrain,
@@ -2145,7 +2145,7 @@ function zR(e) {
   let t = _();
   t.setInit({
     storageV5: e.storageV5,
-    configHome: be(),
+    configHome: getClaudeConfigDir(),
     syncExitDrain: e.syncExitDrain,
   });
   let r = t.instance;

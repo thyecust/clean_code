@@ -13,8 +13,8 @@ import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash
 import { maxSlugLength, uf, qCt, slugify, si, getRegisteredSessionName, whenSessionRegistered, updateSessionName, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { xU, qir } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { generateAdjectiveNounName, isAdjectiveNounName } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { Nu, sendToUdsSocket, listAllLiveSessions, ownMessagingSocket } from "./chunk-ddtmwhn7.js";
 var T = 16,
@@ -38,8 +38,8 @@ function E(e, i, s) {
 function D(e) {
   return new Set(e.flatMap((i) => (i.name === void 0 ? [] : [slugify(i.name)])));
 }
-function generateUniqueName(e, i, s = xU) {
-  let t = (r) => `${oe(e, maxSlugLength - r.length - 1)}-${r}`;
+function generateUniqueName(e, i, s = generateAdjectiveNounName) {
+  let t = (r) => `${truncateToCodeUnits(e, maxSlugLength - r.length - 1)}-${r}`;
   for (let r = 0; r < T; r++) {
     let o = t(s());
     if (!i.has(slugify(o))) return o;
@@ -162,12 +162,12 @@ function U(e, i) {
     r = t === void 0 ? void 0 : b(t);
   if (t === void 0 || r === void 0) return;
   let o = x(e) ?? e,
-    a = oe(o, maxSlugLength - r.suffix.length - 1);
+    a = truncateToCodeUnits(o, maxSlugLength - r.suffix.length - 1);
   return r.base.toLowerCase() === a.toLowerCase() ? t : void 0;
 }
 function b(e) {
   let i = /-([a-z]+-[a-z]+)(-\d{1,4})?$/i.exec(e);
-  if (!i || !qir(i[1].toLowerCase())) return;
+  if (!i || !isAdjectiveNounName(i[1].toLowerCase())) return;
   let s = e.slice(0, e.length - i[0].length);
   return s.length > 0 ? { base: s, suffix: i[0].slice(1) } : void 0;
 }

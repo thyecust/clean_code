@@ -9,18 +9,18 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 79 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { DA } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { HELP_FLAGS } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getDefaultMainLoopModelSetting, parseUserSpecifiedModel } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ib, VK } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { getEffortValue } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
-import { olt, K9e, lSe } from "../../02-功能模块/斜杠命令-UI组件/chunk-d9snm4c7.js";
+import { formatEffortUsageText, formatEffortStatus, runEffortCommand } from "../../02-功能模块/斜杠命令-UI组件/effort-level.js";
 async function f(s, t) {
   let e = s.trim(),
     o = t.getAppState(),
     r = parseUserSpecifiedModel(o.mainLoopModelForSession ?? o.mainLoopModel ?? getDefaultMainLoopModelSetting());
-  if (DA.includes(e)) return { type: "text", value: olt() };
+  if (HELP_FLAGS.includes(e)) return { type: "text", value: formatEffortUsageText() };
   if (e === "current" || e === "status") {
-    let { message: a } = K9e(getEffortValue(t), r, o.ultracode);
+    let { message: a } = formatEffortStatus(getEffortValue(t), r, o.ultracode);
     return { type: "text", value: a };
   }
   if (!e)
@@ -31,7 +31,7 @@ async function f(s, t) {
   return {
     type: "text",
     value: (
-      await lSe(
+      await runEffortCommand(
         e,
         t.setAppState,
         !t.options.isNonInteractiveSession,

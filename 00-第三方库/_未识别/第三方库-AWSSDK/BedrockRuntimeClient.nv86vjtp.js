@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import "../../../01-核心基础设施/共享小工具-未细化/chunk-8549txjj.js";
+import "../../../01-核心基础设施/共享小工具-未细化/tslib-helpers.js";
 import "../../../01-核心基础设施/共享小工具-未细化/byte-array-conversion.js";
 import {
   wkt,
@@ -55,7 +55,7 @@ import {
 import "./chunk-zdrvwe5r.js";
 import { ta } from "./chunk-mwf4pmq2.js";
 import { Rb } from "../第三方库-其他/chunk-jtb5q5xr.js";
-import { s_, hS } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
+import { utilUtf8Module, utilBase64Module } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
 import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
 import { getUrlParserModule } from "../../../01-核心基础设施/共享小工具-未细化/url-parser.js";
 import { toESM } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -393,8 +393,8 @@ var ue = toESM(R_()),
   ve = toESM(Lm()),
   Ce = toESM(ta()),
   ge = toESM(getUrlParserModule()),
-  R = toESM(hS()),
-  h = toESM(s_());
+  R = toESM(utilBase64Module()),
+  h = toESM(utilUtf8Module());
 var de = toESM(XU()),
   p = toESM(gL());
 var Z = { ["required"]: !1, type: "string" },

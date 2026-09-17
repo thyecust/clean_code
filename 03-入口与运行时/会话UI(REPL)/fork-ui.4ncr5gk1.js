@@ -11,11 +11,11 @@
 // [preload stripped] 原本在此预载 264 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Tn } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { qP } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { uo, Hr } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSimpleMode, isSafeMode } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qr } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -25,17 +25,17 @@ import { _X, tY, isTranscriptPersistenceDisabled } from "../核心应用-Agent�
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { $i } from "../../02-功能模块/Teammates团队/chunk-t899nada.js";
+import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { LIST_AGENTS_TOOL_NAME } from "../../02-功能模块/Teammates团队/list-agents-tool-constants.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-jfk5mpe1.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-xmxjyg29.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-gnmy62vg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
+import "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import "../../02-功能模块/语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
+import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
@@ -44,7 +44,7 @@ import { git, mWe, fZt, ZIt } from "../../00-第三方库/_未识别/React组件
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { E, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
+import { isCoordinatorModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
 import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -61,7 +61,7 @@ function re(Be) {
   return Be.toolPermissionContext.alwaysDenyRules;
 }
 var Ne = async (r, n, g) => {
-  if (Ci()) return (r(F0t, { display: "system" }), null);
+  if (isCoordinatorModeEnabled()) return (r(F0t, { display: "system" }), null);
   if (isTranscriptPersistenceDisabled())
     return (
       r(
@@ -69,7 +69,7 @@ var Ne = async (r, n, g) => {
       ),
       null
     );
-  if (Hr() || uo() || qP())
+  if (isSafeMode() || isSimpleMode() || qP())
     return (
       r(
         `Can't fork: this session was started with launch flags (safe or bare mode, ${FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION}) that the copy wouldn't inherit, so it would run with fewer restrictions than this session. Run the task here, or start a session without those flags and fork from there.`,
@@ -85,12 +85,12 @@ var Ne = async (r, n, g) => {
 function W(Pe) {
   let G = _(14),
     { onDone: d, prompt: c, seed: w, messages: k } = Pe,
-    R = U(ee),
-    v = U(_X),
-    I = U(tY),
-    T = U(oe),
-    S = U(se),
-    L = U(re),
+    R = useAppStateSelector(ee),
+    v = useAppStateSelector(_X),
+    I = useAppStateSelector(tY),
+    T = useAppStateSelector(oe),
+    S = useAppStateSelector(se),
+    L = useAppStateSelector(re),
     { storageV5: M } = useStorageV5Context(),
     q = C(!1),
     H,
@@ -133,7 +133,7 @@ function W(Pe) {
               ...(s.relocatedFrom && { relocated_from: fromEnum(s.relocatedFrom) }),
               ...(s.sessionId && { child_session_hash: Tn(s.sessionId) }),
             }));
-          let De = s.name ? fZt(qr(To(s.name))) : void 0;
+          let De = s.name ? fZt(qr(normalizeWhitespace(s.name))) : void 0;
           let Ee = c ? git : mWe;
           let z = s.relocatedTo
             ? "runs in the origin tree"
@@ -147,7 +147,7 @@ function W(Pe) {
             chips: z ? [z] : [],
           });
           let Q = isCrossSessionMessagingEnabled()
-            ? `The fork runs as its own separate session \u2014 nothing it does arrives in this conversation, and it does not see what happens here after the fork point. If you need to coordinate with it, it appears in the ${$i} listing as '${qr(To(s.rosterName))}' (it may be renamed later) and ${SEND_MESSAGE_TOOL_NAME} can message it there; it can message this session the same way.`
+            ? `The fork runs as its own separate session \u2014 nothing it does arrives in this conversation, and it does not see what happens here after the fork point. If you need to coordinate with it, it appears in the ${LIST_AGENTS_TOOL_NAME} listing as '${qr(normalizeWhitespace(s.rosterName))}' (it may be renamed later) and ${SEND_MESSAGE_TOOL_NAME} can message it there; it can message this session the same way.`
             : void 0;
           d(Xe, {
             display: "system",

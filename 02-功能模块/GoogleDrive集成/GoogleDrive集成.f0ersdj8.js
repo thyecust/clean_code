@@ -12,7 +12,7 @@ import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { OAUTH_BETA_HEADER, CLAUDE_AI_OAUTH_SCOPES, preservableScopesFrom } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   ht,
@@ -27,13 +27,13 @@ import {
   checkAndRefreshOAuthTokenIfNeeded,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var w = 30000,
   R = "/v2/ccr-sessions/-/chat-project";
-function kce() {
-  return Gi() !== null;
+function hasSessionAccessToken() {
+  return getSessionAccessToken() !== null;
 }
 async function p(e, t, r, i, o) {
   let s = await ht.post(
@@ -47,7 +47,7 @@ async function p(e, t, r, i, o) {
       maxContentLength: o,
     },
   );
-  if (s.ok && s.status >= 300) throw new fqe(r, s.status, D(s.data));
+  if (s.ok && s.status >= 300) throw new ProjectsApiError(r, s.status, D(s.data));
   return u(s, r);
 }
 function D(e) {
@@ -71,41 +71,41 @@ function d(e, t) {
 function f(e, t) {
   return `/api/organizations/:orgUUID/projects/${encodeURIComponent(e)}${t}`;
 }
-async function dbe(e, t, r) {
-  if (kce()) return p("detail", {}, "get project detail", t);
+async function getProjectDetail(e, t, r) {
+  if (hasSessionAccessToken()) return p("detail", {}, "get project detail", t);
   let i = await ht.get(f(e, "/detail"), d(t, r));
   return u(i, "get project detail");
 }
-async function d6n(e, t, r, i) {
-  if (kce()) return p("read-doc", { doc_uuid: t }, "read doc", r);
+async function readProjectDoc(e, t, r, i) {
+  if (hasSessionAccessToken()) return p("read-doc", { doc_uuid: t }, "read doc", r);
   let o = await ht.get(f(e, `/docs/${encodeURIComponent(t)}`), d(r, i));
   return u(o, "read doc");
 }
-async function p6n(e, t, r, i) {
-  if (kce()) return p("read-file", { file_uuid: t }, "read file", r);
+async function readProjectFile(e, t, r, i) {
+  if (hasSessionAccessToken()) return p("read-file", { file_uuid: t }, "read file", r);
   let o = await ht.get(
     f(e, `/files/${encodeURIComponent(t)}/extracted`),
     d(r, i),
   );
   return u(o, "read file");
 }
-var o1t = 20971520,
-  k = Math.ceil((o1t * 4) / 3) + 65536;
-async function Hsn(e, t, r, i) {
-  if (kce()) return p("read-file-raw", { file_uuid: t }, "download file", r, k);
+var MAX_IN_SESSION_DOWNLOAD_BYTES = 20971520,
+  k = Math.ceil((MAX_IN_SESSION_DOWNLOAD_BYTES * 4) / 3) + 65536;
+async function downloadProjectFileRaw(e, t, r, i) {
+  if (hasSessionAccessToken()) return p("read-file-raw", { file_uuid: t }, "download file", r, k);
   let o = await ht.get(f(e, `/files/${encodeURIComponent(t)}/raw`), {
     ...d(r, i),
     maxContentLength: k,
   });
   return u(o, "download file");
 }
-async function Isn(e, t, r, i, o) {
-  if (kce())
+async function createProjectDoc(e, t, r, i, o) {
+  if (hasSessionAccessToken())
     return p("write-doc", { file_name: t, content: r }, "create doc", i);
   let s = await ht.post(f(e, "/docs"), { file_name: t, content: r }, d(i, o));
   return u(s, "create doc");
 }
-async function f6n(e, t, r, i, o) {
+async function updateProjectDoc(e, t, r, i, o) {
   let s = await ht.patch(
     f(e, `/docs/${encodeURIComponent(t)}`),
     { content: r },
@@ -113,8 +113,8 @@ async function f6n(e, t, r, i, o) {
   );
   return u(s, "update doc");
 }
-async function Psn(e, t, r, i) {
-  if (kce()) {
+async function deleteProjectDoc(e, t, r, i) {
+  if (hasSessionAccessToken()) {
     await p("delete-doc", { doc_uuid: t }, "delete doc", r);
     return;
   }
@@ -125,8 +125,8 @@ async function Psn(e, t, r, i) {
   );
   u(o, "delete doc");
 }
-async function m6n(e, t, r, i, o) {
-  if (kce())
+async function searchProjectKnowledgeBase(e, t, r, i, o) {
+  if (hasSessionAccessToken())
     return S(
       await p("kb-search", { query: t, n: r }, "search knowledge base", i),
     );
@@ -145,11 +145,11 @@ function S(e) {
     }
   return e;
 }
-function g6n(e, t) {
+function redactOAuthToken(e, t) {
   if (!t) return e;
   return e.split(t).join("[redacted-oauth-token]");
 }
-class fqe extends Error {
+class ProjectsApiError extends Error {
   action;
   status;
   body;
@@ -162,8 +162,8 @@ class fqe extends Error {
   }
 }
 function u(e, t) {
-  if (!e.ok) throw new fqe(t, 0, e.reason === "no-auth" ? e.detail : e.reason);
-  if (e.status < 200 || e.status >= 300) throw new fqe(t, e.status, e.data);
+  if (!e.ok) throw new ProjectsApiError(t, 0, e.reason === "no-auth" ? e.detail : e.reason);
+  if (e.status < 200 || e.status >= 300) throw new ProjectsApiError(t, e.status, e.data);
   return e.data;
 }
 function E(e) {
@@ -177,11 +177,11 @@ function E(e) {
 }
 var P = "user:projects:read",
   x = "user:projects:write";
-async function s1t(e) {
+async function ensureProjectsAccessToken(e) {
   if (!isPolicyAllowed("allow_projects_tool")) return { ok: !1, reason: "policy_disabled" };
   if (!isFirstPartyProvider()) return { ok: !1, reason: "wrong_provider" };
-  if (St()) return { ok: !1, reason: "essential_traffic_only" };
-  let t = Gi();
+  if (isEssentialTrafficOnly()) return { ok: !1, reason: "essential_traffic_only" };
+  let t = getSessionAccessToken();
   if (t) return { ok: !0, accessToken: t, expanded: !1 };
   try {
     await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });
@@ -278,13 +278,13 @@ async function getProjectContextBlock(e) {
   }
 }
 async function I(e, t) {
-  let r = await s1t(t);
+  let r = await ensureProjectsAccessToken(t);
   if (!r.ok)
     return (
       n(`project context skipped: ${r.reason}`, { level: "verbose" }),
       null
     );
-  return F(await dbe(e, void 0, t));
+  return F(await getProjectDetail(e, void 0, t));
 }
 function safeInline(e) {
   return e.replace(/[\r\n]+/g, " ").replace(/`/g, "'");
@@ -356,19 +356,19 @@ function F(e) {
 `);
 }
 export {
-  kce,
-  dbe,
-  d6n,
-  p6n,
-  o1t,
-  Hsn,
-  Isn,
-  f6n,
-  Psn,
-  m6n,
-  g6n,
-  fqe,
-  s1t,
+  hasSessionAccessToken,
+  getProjectDetail,
+  readProjectDoc,
+  readProjectFile,
+  MAX_IN_SESSION_DOWNLOAD_BYTES,
+  downloadProjectFileRaw,
+  createProjectDoc,
+  updateProjectDoc,
+  deleteProjectDoc,
+  searchProjectKnowledgeBase,
+  redactOAuthToken,
+  ProjectsApiError,
+  ensureProjectsAccessToken,
   getProjectContextBlock,
   safeInline,
 };

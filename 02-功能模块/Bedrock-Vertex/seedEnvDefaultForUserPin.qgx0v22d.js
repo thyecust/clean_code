@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 69 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum, fromNumber } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { Iz } from "./chunk-5ndhfaq9.js";
+import { parseRegionName } from "./chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
@@ -175,7 +175,7 @@ async function _(o, s) {
           import("../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js"),
         ]),
       g =
-        (s === "haiku" && Iz(a.ANTHROPIC_SMALL_FAST_MODEL_AWS_REGION)) ||
+        (s === "haiku" && parseRegionName(a.ANTHROPIC_SMALL_FAST_MODEL_AWS_REGION)) ||
         (await cA()),
       f = {
         awsRegion: g,

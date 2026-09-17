@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
@@ -28,7 +28,7 @@ import {
   bE,
   lLe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { xs, Md } from "../Teammates团队/chunk-mrfx53ye.js";
+import { isTerminalTaskStatus, createPendingTask } from "../Teammates团队/chunk-mrfx53ye.js";
 var I = 500;
 function registerWorkflowTask({
   taskId: e,
@@ -50,7 +50,7 @@ function registerWorkflowTask({
   initTaskOutput(e);
   let _ = createAbortController(0),
     h = {
-      ...Md(e, "local_workflow", s ?? "Dynamic workflow", c),
+      ...createPendingTask(e, "local_workflow", s ?? "Dynamic workflow", c),
       ...(m !== void 0 && { startTime: m }),
       type: "local_workflow",
       status: "running",
@@ -78,7 +78,7 @@ function registerWorkflowTask({
   return (w.register(h), h);
 }
 function registerAdoptedWorkflowTask(e, r) {
-  let o = Md(e.taskId, "local_workflow", e.description, void 0),
+  let o = createPendingTask(e.taskId, "local_workflow", e.description, void 0),
     t = {
       ...o,
       startTime: e.startTime ?? o.startTime,
@@ -169,16 +169,16 @@ function A(e, r, o, t) {
         ...(t.error !== void 0 && { error: Jl(t.error) }),
         status: o,
         endTime: u,
-        ...(xs(o) && a && { evictAfter: u + fT }),
+        ...(isTerminalTaskStatus(o) && a && { evictAfter: u + fT }),
         abortController: void 0,
         agentControllers: void 0,
       };
     }),
-    s && xs(o) && !a)
+    s && isTerminalTaskStatus(o) && !a)
   )
     E4e(e, () => {
       r.update(e, (l) => {
-        if (!xs(l.status) || l.evictAfter !== void 0) return l;
+        if (!isTerminalTaskStatus(l.status) || l.evictAfter !== void 0) return l;
         return { ...l, evictAfter: Date.now() + fT };
       });
     });
@@ -353,7 +353,7 @@ function enqueueWorkflowNotification({
     let d = Nt(b(t)),
       S = 8000;
     if (d.length > 8000) {
-      let v = oe(d, 8000);
+      let v = truncateToCodeUnits(d, 8000);
       L = `
 <result>${v}
 ... (truncated ${d.length - v.length} chars, full result in ${x})</result>`;

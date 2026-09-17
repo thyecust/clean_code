@@ -15,7 +15,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { OAUTH_BETA_HEADER, getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
@@ -44,8 +44,8 @@ import {
   tkn,
   rkn,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Vd } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { xb, eB } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { getEnvEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { formatLabelText, formatDescriptionText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { er, BR, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getWIFCredentials, getWIFTokenCache } from "../认证-OAuth登录/chunk-x3rm9w4b.js";
 import { lDe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -133,7 +133,7 @@ var X = createLazyValue(() =>
 );
 function O() {
   return {
-    entrypoint: Vd(),
+    entrypoint: getEnvEntrypoint(),
     model: er(getMainLoopModel()),
     ccVersion: {
       ISSUES_EXPLAINER:
@@ -241,7 +241,7 @@ async function tt(t, e) {
     let o = await ot(e);
     return o && { response: o, viaScopelessOAuth: !1 };
   }
-  if (St())
+  if (isEssentialTrafficOnly())
     return (n("[Bootstrap] Skipped: Nonessential traffic disabled"), null);
   if (getAPIProvider() !== "firstParty")
     return (n("[Bootstrap] Skipped: 3P provider"), null);
@@ -510,8 +510,8 @@ async function ot(t) {
       })
       .map((c) => ({
         value: c.id,
-        label: xb(c.display_name ?? "") || xb(c.id),
-        description: eB(c.description ?? ""),
+        label: formatLabelText(c.display_name ?? "") || formatLabelText(c.id),
+        description: formatDescriptionText(c.description ?? ""),
       }));
     return (
       n(`[Bootstrap] Gateway /v1/models \u2192 ${d.length} custom options`),

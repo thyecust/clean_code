@@ -20,13 +20,13 @@ import { Aw, getMainLoopModel, isFableFamilyOrPinnedModel, cf, Hse, uRe, H, Te, 
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { o, t, tn, n9, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { zs } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
+import { zs } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { ui, Gm, fa, $o, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { Xw, useIsKeyRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
+import { DEFAULT_RECENT_WINDOW_MS, useIsKeyRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -56,7 +56,7 @@ import {
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { K8 } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import { ReserveHeightBox } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { ClawdMascot } from "../../03-入口与运行时/会话UI(REPL)/clawd-mascot.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
@@ -64,7 +64,7 @@ import { ProgressBar } from "../../01-核心基础设施/共享小工具-未细�
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { E, vr, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { stripVTControlCharacters } from "util";
 F();
@@ -564,7 +564,7 @@ function WIt(Dm) {
     fu[5] !== Os ||
     fu[6] !== Ns
   )
-    ((pu = e(K8, {
+    ((pu = e(ReserveHeightBox, {
       children: e(vl, {
         onDone: Ms,
         step: Ns,
@@ -599,7 +599,7 @@ function vl({
     [M, B] = d(a.s),
     [T, X] = d(!1);
   if (M !== a.s) (X(sd(M)), B(a.s));
-  let V = Un(Xw, M),
+  let V = Un(DEFAULT_RECENT_WINDOW_MS, M),
     O = T && !V && w(),
     [R, U] = d("USD"),
     [I, ie] = d([]),
@@ -1277,7 +1277,7 @@ function Dl(Em) {
   return xu;
 }
 function Cl(s) {
-  return Sn(stripVTControlCharacters(s)).trim();
+  return replaceControlChars(stripVTControlCharacters(s)).trim();
 }
 function rd(s, a) {
   let c = (g) => new Date(g.getFullYear(), g.getMonth(), g.getDate()).getTime();
@@ -2384,7 +2384,7 @@ function $l(ef) {
           t,
           {
             color: Me === 1 && On === fc ? "suggestion" : void 0,
-            children: [Me === 1 && On === fc ? L.pointer : " ", " ", ua[mc]],
+            children: [Me === 1 && On === fc ? figures.pointer : " ", " ", ua[mc]],
           },
           mc,
         ),
@@ -2874,7 +2874,7 @@ function Ml(af) {
         t,
         {
           color: Z === 2 && Ye === Mc ? "suggestion" : void 0,
-          children: [Z === 2 && Ye === Mc ? L.pointer : " ", " ", Ca[$c]],
+          children: [Z === 2 && Ye === Mc ? figures.pointer : " ", " ", Ca[$c]],
         },
         $c,
       ),

@@ -14,7 +14,7 @@ import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { tm, WNe } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
+import { isFromCurrentAgent, clearCcrTurnIdOnMismatch } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import { _G, m1e, ZQn, Tbn, Rj, rCe, ofe, oCe, h1e } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { s, T, v, c, Qe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var d = createLazyValue(() => Qe({})),
@@ -102,7 +102,7 @@ async function g(e, t, o) {
       let u = n.map(rCe);
       return (
         logFeatureOk("poll_event_delivery"),
-        WNe(n),
+        clearCcrTurnIdOnMismatch(n),
         oCe(n),
         {
           data: {
@@ -114,7 +114,7 @@ async function g(e, t, o) {
         }
       );
     }
-    if (e.peek(tm) !== void 0) return i;
+    if (e.peek(isFromCurrentAgent) !== void 0) return i;
     if (o !== null && o.outstanding() === 0) return i;
     await new Promise((u) => {
       function r() {
@@ -125,7 +125,7 @@ async function g(e, t, o) {
       if (
         (t.addEventListener("abort", r),
         t.aborted ||
-          e.peek(tm) !== void 0 ||
+          e.peek(isFromCurrentAgent) !== void 0 ||
           (o !== null && o.outstanding() === 0))
       )
         r();

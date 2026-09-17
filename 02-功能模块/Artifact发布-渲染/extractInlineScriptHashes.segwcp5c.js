@@ -10,8 +10,8 @@
 
 // [preload stripped] 原本在此预载 11 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { S4t, rAt } from "../../00-第三方库/parse5/parse5.2zwbfepc.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { b$e, BN, jN } from "../图表-Mermaid/chunk-743atbtj.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { MERMAID_RUNTIME_URL_PATH, trimAsciiWhitespace, sanitizeInvisibleCharacters } from "../图表-Mermaid/chunk-743atbtj.js";
 import {
   Ufe,
   L$,
@@ -27,7 +27,7 @@ import {
 } from "./chunk-rr78st95.js";
 import { TAn } from "../../00-第三方库/_未识别/第三方库-parse5/chunk-psby6rnv.js";
 import { sFe } from "./chunk-01ymf0ar.js";
-import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 var S = new RegExp(`^${Hoe}$`),
   W = "http://www.w3.org/2000/svg",
   _ = "http://www.w3.org/1998/Math/MathML",
@@ -40,7 +40,7 @@ function extractInlineScriptHashes(e) {
           (cg(s, "type") ?? "").trim().toLowerCase() !== "application/json" &&
           cg(s, "src") === void 0
         )
-          t.add(mn(y(s)));
+          t.add(hashSha256(y(s)));
       }
       for (let i of s.childNodes ?? []) h(i);
       for (let i of s.content?.childNodes ?? []) h(i);
@@ -64,11 +64,11 @@ function o(e, t) {
       i = !0;
       break;
     }
-    s += ` ${oe(f.name, 40).replace(/[<>"'=]/g, "")}="\u2026"`;
+    s += ` ${truncateToCodeUnits(f.name, 40).replace(/[<>"'=]/g, "")}="\u2026"`;
   }
   s += i ? " \u2026>" : ">";
-  let r = jN(s),
-    p = (r.length > 120 ? `${oe(r, N)}\u2026` : r).replace(/\s+/g, " ");
+  let r = sanitizeInvisibleCharacters(s),
+    p = (r.length > 120 ? `${truncateToCodeUnits(r, N)}\u2026` : r).replace(/\s+/g, " ");
   return (t.set(e, p), p);
 }
 var T = new Set([
@@ -117,7 +117,7 @@ function G(e, t, h, s) {
       a.push({
         rule: "event-handler-attribute",
         where: o(e, t.snippets),
-        hint: `Remove the ${jN(oe(n.name, 60))} attribute \u2014 inline event handlers are not allowed; interactivity comes only from the blessed scripts.`,
+        hint: `Remove the ${sanitizeInvisibleCharacters(truncateToCodeUnits(n.name, 60))} attribute \u2014 inline event handlers are not allowed; interactivity comes only from the blessed scripts.`,
       });
       continue;
     }
@@ -169,7 +169,7 @@ function G(e, t, h, s) {
           a.push({
             rule: "unsafe-url",
             where: o(e, t.snippets),
-            hint: `srcset entry "${jN(oe(w, 60))}" \u2014 only http(s), mailto, relative, or fragment URLs are allowed.`,
+            hint: `srcset entry "${sanitizeInvisibleCharacters(truncateToCodeUnits(w, 60))}" \u2014 only http(s), mailto, relative, or fragment URLs are allowed.`,
           });
       }
       continue;
@@ -182,11 +182,11 @@ function G(e, t, h, s) {
             where: o(e, t.snippets),
             hint: "Only http(s), mailto, relative, or fragment URLs are allowed.",
           });
-      } else if (!BN(n.value).startsWith("#"))
+      } else if (!trimAsciiWhitespace(n.value).startsWith("#"))
         a.push({
           rule: "svg-nonlocal-reference",
           where: o(e, t.snippets),
-          hint: `<${jN(oe(i, 60))}> may only reference fragments within the page (href="#\u2026").`,
+          hint: `<${sanitizeInvisibleCharacters(truncateToCodeUnits(i, 60))}> may only reference fragments within the page (href="#\u2026").`,
         });
       continue;
     }
@@ -258,7 +258,7 @@ function G(e, t, h, s) {
       );
     if (cg(e, "src") !== void 0) {
       if (!(
-        cg(e, "src") === b$e &&
+        cg(e, "src") === MERMAID_RUNTIME_URL_PATH &&
         (e.attrs ?? []).length === 1 &&
         (e.childNodes ?? []).length === 0
       ))
@@ -279,7 +279,7 @@ function G(e, t, h, s) {
         });
       return d;
     }
-    let l = mn(y(e));
+    let l = hashSha256(y(e));
     if (!h.has(l))
       a.push({
         rule: "script-not-blessed",
@@ -450,7 +450,7 @@ function verifyWorkshopHtml(e, t, h = "strict") {
         {
           rule: "verifier-error",
           where: "(document)",
-          hint: `The verifier could not examine this page (${jN(s instanceof Error ? s.name : "error")}) \u2014 refusing rather than publishing unexamined markup; simplify the page structure.`,
+          hint: `The verifier could not examine this page (${sanitizeInvisibleCharacters(s instanceof Error ? s.name : "error")}) \u2014 refusing rather than publishing unexamined markup; simplify the page structure.`,
         },
       ],
     };
@@ -489,7 +489,7 @@ function z(e, t, h) {
       violations: [
         {
           rule: "reparse-not-fixed-point",
-          where: `(document, first divergence near "\u2026${jN(oe(c, 117).replace(/\s+/g, " "))}\u2026")`,
+          where: `(document, first divergence near "\u2026${sanitizeInvisibleCharacters(truncateToCodeUnits(c, 117).replace(/\s+/g, " "))}\u2026")`,
           hint: "The page serializes to different bytes on a second parse\u2192serialize round, so each decision confirm would keep rewriting it \u2014 this indicates parser/serializer-divergent markup; simplify the construct at the quoted position.",
         },
       ],
@@ -636,7 +636,7 @@ function C(e, t, h) {
           r.push({
             rule: "island-markup-mismatch",
             where: `decision "${n.id}"`,
-            hint: `Island says state "${jN(n.state)}" but the markup says "${jN(oe(l.state, 60))}" \u2014 flip them together.`,
+            hint: `Island says state "${sanitizeInvisibleCharacters(n.state)}" but the markup says "${sanitizeInvisibleCharacters(truncateToCodeUnits(l.state, 60))}" \u2014 flip them together.`,
           });
         if (
           n.state === "open" &&
@@ -718,7 +718,7 @@ function L(e, t, h) {
       h.push({
         rule: "banner-state-mismatch",
         where: o(i.node, e.snippets),
-        hint: `data-ws-state says "${jN(i.value)}" but the island derives "${s}" \u2014 flip them together (text stays yours; the attribute is the wire contract).`,
+        hint: `data-ws-state says "${sanitizeInvisibleCharacters(i.value)}" but the island derives "${s}" \u2014 flip them together (text stays yours; the attribute is the wire contract).`,
       });
 }
 export { extractInlineScriptHashes, verifyWorkshopHtml };

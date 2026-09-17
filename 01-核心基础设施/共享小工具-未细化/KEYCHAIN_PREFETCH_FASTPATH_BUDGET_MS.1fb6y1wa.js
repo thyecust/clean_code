@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS as Qxn, isWindowsCredManagerAvailable as ubr, getLastKnown as dbr, setLastKnown as pbr, startKeychainPrefetch as Zxn, ensureKeychainPrefetchCompleted as Bet, getLegacyApiKeyPrefetchResult as Y5t, clearLegacyApiKeyPrefetch as J5t } from "./keychain-prefetch.js";
-import "./chunk-h3avap4w.js";
+import "./keychain-access.js";
 import "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";

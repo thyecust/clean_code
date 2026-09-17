@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { m0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { mN } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
+import { DEFAULT_CRON_JITTER_CONFIG } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { isMonitorToolEnabled } from "../工具Monitor/monitor-tool-description.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 var CRON_CREATE_TOOL_NAME = "CronCreate",
   CRON_DELETE_TOOL_NAME = "CronDelete",
   CRON_LIST_TOOL_NAME = "CronList";
 var t = 300000,
-  DEFAULT_MAX_AGE_DAYS = mN.recurringMaxAgeMs / 86400000;
+  DEFAULT_MAX_AGE_DAYS = DEFAULT_CRON_JITTER_CONFIG.recurringMaxAgeMs / 86400000;
 function isKairosCronEnabled() {
   return !a.CLAUDE_CODE_DISABLE_CRON && m0("tengu_kairos_cron", !0, t);
 }

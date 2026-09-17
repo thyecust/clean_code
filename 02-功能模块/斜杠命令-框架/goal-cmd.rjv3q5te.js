@@ -10,8 +10,8 @@
 
 // [preload stripped] 原本在此预载 76 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { x, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m$e, cve, BEt, uve, dve } from "../Skills技能/chunk-sapykxw7.js";
+import { pluralize, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { MAX_GOAL_CONDITION_LENGTH, isGoalClearKeyword, buildGoalHookPrompt, setSessionGoal, clearSessionGoal } from "../Skills技能/chunk-sapykxw7.js";
 var u = async (l, o) => {
   let e = l.trim();
   if (e === "") {
@@ -21,30 +21,30 @@ var u = async (l, o) => {
     let r =
         t.iterations === 0
           ? "not yet evaluated"
-          : `${t.iterations} ${x(t.iterations, "turn")}`,
+          : `${t.iterations} ${pluralize(t.iterations, "turn")}`,
       n = t.lastReason
         ? `
-Last check: ${kr(t.lastReason.trim())}`
+Last check: ${firstLine(t.lastReason.trim())}`
         : "";
     return { type: "text", value: `Goal active: ${t.condition} (${r})${n}` };
   }
-  if (cve(e)) {
-    let t = dve(o);
+  if (isGoalClearKeyword(e)) {
+    let t = clearSessionGoal(o);
     return {
       type: "text",
       value: t === null ? "No goal set" : `Goal cleared: ${t}`,
     };
   }
-  if (e.length > m$e)
+  if (e.length > MAX_GOAL_CONDITION_LENGTH)
     return (
       logFeatureSad("goal_set", "too_long"),
       {
         type: "text",
-        value: `Goal condition is limited to ${m$e} characters (got ${e.length})`,
+        value: `Goal condition is limited to ${MAX_GOAL_CONDITION_LENGTH} characters (got ${e.length})`,
       }
     );
-  let a = uve(e, o);
+  let a = setSessionGoal(e, o);
   if (a !== null) return { type: "text", value: a };
-  return { type: "query", value: `Goal set: ${e}`, prompt: BEt(e) };
+  return { type: "query", value: `Goal set: ${e}`, prompt: buildGoalHookPrompt(e) };
 };
 export { u as call };

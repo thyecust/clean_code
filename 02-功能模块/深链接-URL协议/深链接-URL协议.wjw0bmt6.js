@@ -11,10 +11,10 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { ja } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { getInstalledClaudePath } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { WB } from "../插件系统/chunk-q8w2zntw.js";
@@ -22,7 +22,7 @@ import { getXdgDataHome } from "../../01-核心基础设施/共享小工具-未�
 import { promises } from "fs";
 import * as g from "os";
 import * as o from "path";
-var pQt = "com.anthropic.claude-code-url-handler",
+var URL_HANDLER_BUNDLE_ID = "com.anthropic.claude-code-url-handler",
   p = "Claude Code URL Handler",
   w = "claude-code-url-handler.desktop",
   P = "Claude Code URL Handler.app",
@@ -53,7 +53,7 @@ async function D(e) {
 <plist version="1.0">
 <dict>
   <key>CFBundleIdentifier</key>
-  <string>${pQt}</string>
+  <string>${URL_HANDLER_BUNDLE_ID}</string>
   <key>CFBundleName</key>
   <string>${p}</string>
   <key>CFBundleExecutable</key>
@@ -167,14 +167,14 @@ async function S(e) {
     return !1;
   }
 }
-async function RFn(e) {
+async function ensureDeepLinkHandlerRegistered(e) {
   if (getInitialSettings().disableDeepLinkRegistration === "disable") return;
   if (!["darwin", "linux", "win32"].includes("darwin")) return;
   let t = await E();
   if (await S(t)) return;
-  let r = o.join(be(), ".deep-link-register-failed");
+  let r = o.join(getClaudeConfigDir(), ".deep-link-register-failed");
   if (isHoverRestEnabled() && e !== void 0) {
-    let i = await e.stat(Ce.state("deep-link-register-failed"));
+    let i = await e.stat(STORAGE_KEYS.state("deep-link-register-failed"));
     if (i.ok && Date.now() - i.value.mtimeMs < m) return;
   } else
     try {
@@ -188,7 +188,7 @@ async function RFn(e) {
       n("Auto-registered claude-cli:// deep link protocol handler"),
       isHoverRestEnabled() && e !== void 0)
     )
-      await e.delete(Ce.state("deep-link-register-failed"));
+      await e.delete(STORAGE_KEYS.state("deep-link-register-failed"));
     else await promises.rm(r, { force: !0 }).catch(() => {});
   } catch (i) {
     let s = Jr(i);
@@ -201,10 +201,10 @@ async function RFn(e) {
       s === "EACCES" || s === "ENOSPC")
     )
       if (isHoverRestEnabled() && e !== void 0)
-        await e.write(Ce.state("deep-link-register-failed"), "", {
+        await e.write(STORAGE_KEYS.state("deep-link-register-failed"), "", {
           publishDiscipline: "inPlace",
         });
       else await promises.writeFile(r, "").catch(() => {});
   }
 }
-export { pQt, RFn };
+export { URL_HANDLER_BUNDLE_ID, ensureDeepLinkHandlerRegistered };

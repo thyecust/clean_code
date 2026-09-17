@@ -16,7 +16,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, l, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, z, nje, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { eje, St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { stripXmlTags, isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
@@ -39,12 +39,12 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getProjectsDir, SKIP_PRECOMPACT_THRESHOLD } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { kd, snapshotGitEvidenceForBridge } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { _n, Uw, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { hc, getSecureStorage } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import { isValidPathSegment, hasValidPathSegments, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
+import { SECURE_STORAGE_READ_FAILED_SENTINEL, getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { setCseShimGate, toInfraSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { isTeammate } from "../Teammates团队/chunk-811z9z0t.js";
-import { xU } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
-import { getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { isTeammate } from "../Teammates团队/teammate-context.js";
+import { generateAdjectiveNounName } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
+import { getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { getBridgeTokenOverride, getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl, getBridgeSessionNamePrefix } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { p6, F$e, lrr, Dve } from "./chunk-5ne99rq3.js";
 import { retireBridgeHandle, setSelfBridgeTitle } from "../权限系统/chunk-1y2g140m.js";
@@ -94,34 +94,34 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { listRegisteredSessionRecords } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { isPolicyAllowed, policyDenyKind, policyDeniedHint } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { Ud, wEt } from "../Teammates团队/chunk-thxapyam.js";
+import { getAgentTranscriptPath, listAgentIds } from "../Teammates团队/transcript-paths.js";
 import { createDefaultToolPermissionContext } from "../权限系统/chunk-qdy0h5k2.js";
 import { isBridgeEnabledBlocking, describeRemoteControlPolicyDenial, isCseShimEnabled, isBridgeStateFramesEnabled, isBridgeResumeRespectsLocalOwnerEnabled, isBridgeRestoredMatchMintEnabled } from "./chunk-9estzwf5.js";
 import { AGENT_COLOR_NAMES } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { logBridgeSkip } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { isPushNotificationsEnabled } from "./push-notification-tool.js";
 import { PROACTIVE_ENROLLMENT_DISABLED_MESSAGE, getAttestationFilterPolicy, preflightTrustedDeviceBlocking } from "./chunk-tyce0p0b.js";
-import { RAe, W8e } from "./chunk-ct52ffwb.js";
+import { LOGIN_SLASH_COMMAND, REMOTE_CONTROL_ACCOUNT_UNVERIFIED_MESSAGE } from "./remote-control-messages.js";
 import { globalFileIndexCache, generateFileSuggestions } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
 import { createClientPresenceReporter } from "./client-presence.js";
 import { hydratePushNotificationPreferences } from "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
 import { b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { readFileForRemote } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { buildWorkspaceDiffResponse } from "../Git-Worktree/chunk-qdn32vbw.js";
-import { ult, S4 } from "../会话-历史-恢复/chunk-ybcvb652.js";
+import { collectConversationText, generateSessionTitle } from "../会话-历史-恢复/session-title.js";
 import { ndt, Yjn } from "./chunk-ga43tr2w.js";
 import "./chunk-znhfst8k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-thdf1760.js";
-import "./chunk-jpq2fv3g.js";
+import "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
+import "./bridge-inbound-origin.js";
 import { WorkSecretShapeError, parseWorkSecret, sessionIdsMatch, buildSessionApiUrl, registerWorker } from "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
-import { Gtn, _Bn, Xat } from "./chunk-1g5kqtqx.js";
+import { isBridgeStoreLogin, createBridgeOwnerPin, createBridgeTitleWriter } from "./chunk-1g5kqtqx.js";
 import "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
-import { Jsr, FR } from "./chunk-4zd60pbm.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
-import { Qo, pxt } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
+import { getTokenSessionId, getTokenExpiry } from "./chunk-4zd60pbm.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
+import { runPaginatedScan, createPageBudget } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
 var gn = 3000;
 async function gt(d, c) {
-  if (!(await Gtn(c)) || !getStoredOauthAccountInfo()?.accountUuid) return;
+  if (!(await isBridgeStoreLogin(c)) || !getStoredOauthAccountInfo()?.accountUuid) return;
   return (s) => mn(s, d, c);
 }
 async function mn(d, c, s) {
@@ -145,7 +145,7 @@ async function hn(d, c) {
     return h ? "unknown_identity_cached_only" : "unknown_identity_present";
   }
   let p = await s.readAsyncStrict?.(c);
-  if (p === void 0 || p === hc) return "unknown_store_unreadable";
+  if (p === void 0 || p === SECURE_STORAGE_READ_FAILED_SENTINEL) return "unknown_store_unreadable";
   if (p?.claudeAiOauth?.refreshToken === "") return "refresh_token_dead";
   if (p?.claudeAiOauth !== void 0)
     return "unknown_identity_absent_token_present";
@@ -354,7 +354,7 @@ async function bt(d, c, s = !0, r, h) {
   }
   return k.reverse();
 }
-async function vt(d, c = Ud(d)) {
+async function vt(d, c = getAgentTranscriptPath(d)) {
   try {
     let s = await Sn(c);
     return { agentId: d, path: c, size: s.size, mtimeMs: s.mtimeMs };
@@ -364,7 +364,7 @@ async function vt(d, c = Ud(d)) {
 }
 async function bn(d, c) {
   let s = c.map((f) => {
-      let b = Ud(f);
+      let b = getAgentTranscriptPath(f);
       return { agentId: f, path: b, key: At(b) };
     }),
     r = (f) =>
@@ -383,7 +383,7 @@ async function bn(d, c) {
       });
   }
   let k = new Map(),
-    F = pxt();
+    F = createPageBudget();
   return (
     await Promise.all(
       [...p].map(
@@ -396,7 +396,7 @@ async function bn(d, c) {
                 ? `session ${w}`
                 : `session ${w} subtree ${S.join("/")}`;
           try {
-            let P = await Qo(
+            let P = await runPaginatedScan(
               (x) =>
                 d.listEntries(
                   {
@@ -457,7 +457,7 @@ function At(d) {
   if (s.length === 2 && s[1].endsWith(".jsonl")) {
     let r = s[0],
       h = s[1].slice(0, -6);
-    return _n(r) && _n(h) ? wt(Ce.transcript(r, h)) : null;
+    return isValidPathSegment(r) && isValidPathSegment(h) ? wt(STORAGE_KEYS.transcript(r, h)) : null;
   }
   if (
     s.length >= 4 &&
@@ -469,8 +469,8 @@ function At(d) {
       h = s[1],
       p = s.slice(3, -1),
       k = s.at(-1).slice(6, -6);
-    return _n(r) && _n(h) && _n(k) && (p.length === 0 || Uw(p))
-      ? wt(Ce.transcript(r, h, k, p.length > 0 ? p : void 0))
+    return isValidPathSegment(r) && isValidPathSegment(h) && isValidPathSegment(k) && (p.length === 0 || hasValidPathSegments(p))
+      ? wt(STORAGE_KEYS.transcript(r, h, k, p.length > 0 ? p : void 0))
       : null;
   }
   return null;
@@ -511,7 +511,7 @@ function Rt(d) {
         }),
         null
       );
-    let T = FR(S.session_ingress_token);
+    let T = getTokenExpiry(S.session_ingress_token);
     if (
       k &&
       (S.session_ingress_token === k.secret.session_ingress_token ||
@@ -544,7 +544,7 @@ function Rt(d) {
       if (S && (j === 401 || j === 403)) return ((F = !0), null);
       return { terminal: !0, reason: "request_rejected", status: j };
     }
-    let E = FR(T);
+    let E = getTokenExpiry(T);
     ((k = { secret: w, exp: E }), (F = !1));
     let P = E === null ? wn : Math.max(0, E - Math.floor(Date.now() / 1000));
     return (
@@ -591,7 +591,7 @@ function Ct(d, c) {
   } catch (h) {
     return h instanceof WorkSecretShapeError ? h.message : "undecodable";
   }
-  let r = Jsr(s.session_ingress_token);
+  let r = getTokenSessionId(s.session_ingress_token);
   if (r === void 0) return "token carries no session_id claim";
   if (!sessionIdsMatch(r, c)) return "token is for a different session";
   return s;
@@ -690,7 +690,7 @@ async function initReplBridge(d) {
                 "[bridge:repl] Persistence backfill suppressed (cross-account veto or foreign binding) \u2014 installing live writer only",
               );
             else {
-              let _ = await wEt(O);
+              let _ = await listAgentIds(O);
               await Tt(e, t, _, O, o);
             }
           } catch (_) {
@@ -872,7 +872,7 @@ async function initReplBridge(d) {
   if (!(pe ? await getBridgeAccessTokenAsync(U) : getBridgeAccessToken()))
     return (
       logBridgeSkip("no_oauth", "[bridge:repl] Skipping: no OAuth tokens"),
-      G?.("failed", RAe, "auth"),
+      G?.("failed", LOGIN_SLASH_COMMAND, "auth"),
       null
     );
   let nt = async (e, t, o) => {
@@ -880,7 +880,7 @@ async function initReplBridge(d) {
       return;
     });
     if (sameOwnerAccount(m, e)) return !0;
-    return (logBridgeSkip(t, o), G?.("failed", W8e, "terminal"), !1);
+    return (logBridgeSkip(t, o), G?.("failed", REMOTE_CONTROL_ACCOUNT_UNVERIFIED_MESSAGE, "terminal"), !1);
   };
   if (
     qe &&
@@ -984,7 +984,7 @@ async function initReplBridge(d) {
         "oauth_expired_unrefreshable",
         "[bridge:repl] Skipping: OAuth token expired and refresh failed (re-login required)",
       ),
-        G?.("failed", RAe, "auth"));
+        G?.("failed", LOGIN_SLASH_COMMAND, "auth"));
       let o = t;
       return (
         await Te(
@@ -1010,7 +1010,7 @@ async function initReplBridge(d) {
       null
     );
   let Q = getBridgeBaseUrl(),
-    V = `${getBridgeSessionNamePrefix()}-${xU()}`,
+    V = `${getBridgeSessionNamePrefix()}-${generateAdjectiveNounName()}`,
     Z = !1,
     N = !1;
   if ($e) ((V = $e), (Z = !0), (N = !0));
@@ -1039,7 +1039,7 @@ async function initReplBridge(d) {
     Ue = !1,
     He,
     Zt = (e) => He?.bridgeSessionId === e && He.sessionId === K(),
-    q = Xat({
+    q = createBridgeTitleWriter({
       isOwnTitle: (e, t) => te.has(t),
       onRemoteTitleAdopted: (e, t) => {
         (setSelfBridgeTitle(e, t), (re = e));
@@ -1047,7 +1047,7 @@ async function initReplBridge(d) {
     }),
     ge = (e, t) => te.has(t) || q.hasSent(e, t),
     re,
-    it = `${getBridgeSessionNamePrefix()}-${xU()}`,
+    it = `${getBridgeSessionNamePrefix()}-${generateAdjectiveNounName()}`,
     te = new Set([V]),
     ot;
   if (I) {
@@ -1085,7 +1085,7 @@ async function initReplBridge(d) {
       let m = ++Fe,
         _ = X,
         H = AbortSignal.timeout(15000);
-      S4(e, H, U).then(async (ie) => {
+      generateSessionTitle(e, H, U).then(async (ie) => {
         let Le = () => {
             let Se = getCurrentSessionAiTitle(K());
             return Boolean(Se && !te.has(Se));
@@ -1192,7 +1192,7 @@ async function initReplBridge(d) {
       if (((Ae = t), X++, X === 1 && !Z)) at(e, t, !1);
       else if (X === 3) {
         let m = I || isBridgeBindingForeign() || be() ? void 0 : xt?.(),
-          _ = m ? ult(ya(m)) : e;
+          _ = m ? collectConversationText(ya(m)) : e;
         at(_, t, m !== void 0);
       }
       return (X >= 3 && (Z || N)) || X >= 8;
@@ -1202,11 +1202,11 @@ async function initReplBridge(d) {
   if (!lt)
     return (
       logBridgeSkip("no_org_uuid", "[bridge:repl] Skipping: no org UUID"),
-      G?.("failed", RAe, "auth"),
+      G?.("failed", LOGIN_SLASH_COMMAND, "auth"),
       null
     );
   let on = pe ? await getBridgeAccessTokenAsync(U) : void 0,
-    sn = await _Bn({
+    sn = await createBridgeOwnerPin({
       getAccessToken: pe ? () => on : getBridgeAccessToken,
       storageV5: O,
       credentials: U,
@@ -1325,7 +1325,7 @@ async function initReplBridge(d) {
             if (!o || J) return null;
             return { Authorization: `Bearer ${o}` };
           })),
-          isPushNotificationsEnabled() && !St())
+          isPushNotificationsEnabled() && !isEssentialTrafficOnly())
         )
           hydratePushNotificationPreferences(O);
         let t = getCurrentSessionAgentColor();
@@ -1447,7 +1447,7 @@ function An(d, c) {
 }
 var Et = 50;
 function Cn(d) {
-  let c = eje(d),
+  let c = stripXmlTags(d),
     r = (/^(.*?[.!?])\s/.exec(c)?.[1] ?? c).replace(/\s+/g, " ").trim();
   if (!r) return;
   return r.length > Et ? r.slice(0, Et - 1) + "\u2026" : r;

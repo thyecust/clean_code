@@ -13,12 +13,12 @@ import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { hU, Dse, Uor, Zy, NOTIFY_IDLE_PEER_FEATURE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { SD } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
+import { createMessageEnvelope } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import { dK, BAe, bbt, mD, sendStampedControlToUdsSocket, registeredLivePeerForSocket, ownMessagingSocket } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { v7e } from "../后台任务-Shell管理/chunk-djserjj5.js";
-import { cbe, Wee } from "../权限系统/chunk-4tar9p3n.js";
+import { getCurrentUid } from "../后台任务-Shell管理/chunk-djserjj5.js";
+import { getConfiguredInboundPolicy, getInboundPolicy } from "../权限系统/cross-session-inbound-gate.js";
 import { RPe, pdt, Ssn, nqe, fdt } from "./chunk-nhk351pe.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 async function subscribeToPeerIdle(e, r, s, i) {
   try {
     return await y(e, r, s, i);
@@ -31,7 +31,7 @@ async function subscribeToPeerIdle(e, r, s, i) {
   }
 }
 async function y(e, r, s, i) {
-  if (Wee() === "refuse") return t("requester-refuses-inbound");
+  if (getInboundPolicy() === "refuse") return t("requester-refuses-inbound");
   let n = ownMessagingSocket();
   if (n === void 0) return t("no-inbox");
   let a = Zy(e);
@@ -47,8 +47,8 @@ async function y(e, r, s, i) {
     return t("peer-unsupported");
   if (!Uor(n, a, o?.features, await x()) || !Dse(hU(n)))
     return t("unreachable-namespace");
-  let p = P() !== "windows" ? o?.pid : void 0,
-    u = SD(),
+  let p = getCurrentPlatform() !== "windows" ? o?.pid : void 0,
+    u = createMessageEnvelope(),
     l = Ssn(u.msg_id, r, e);
   if (!l.ok) return t(l.reason === "cap" ? "cap" : "unreachable-namespace");
   let b = l.priors;
@@ -112,7 +112,7 @@ function _(e, r = !0) {
   let s = pdt(e);
   if (!r)
     return `Subscription sent to "${s}" \u2014 but whether it supports idle notices is unknown (no readable session-registry record vouches for it), so a notice may never come; you will be told if it lapses unheard. Do not rely on it.`;
-  let i = cbe();
+  let i = getConfiguredInboundPolicy();
   if (i === "accept")
     return `Subscribed \u2014 you will get one notice here when "${s}" is next idle (or exits). Do not poll or wait for it; carry on.`;
   let n = ke();
@@ -122,7 +122,7 @@ function _(e, r = !0) {
       : `Subscribed \u2014 "${s}" will send one notice when it is next idle (or exits); this session holds ALL inbound peer traffic (crossSessionInbound: hold), so it will be shown to your user in the transcript, not delivered to you. Carry on; do not poll.`;
   let a =
     "that session runs in the same permission class as this one (or is one this session spawned)";
-  return Wee() === "accept"
+  return getInboundPolicy() === "accept"
     ? `Subscribed \u2014 you will get one notice here when "${s}" is next idle (or exits), provided ${a} or asserts none; otherwise it is ${n ? "only logged here" : "shown to your user in the transcript"}. Do not poll or wait for it; carry on.`
     : `Subscribed \u2014 "${s}" will send one notice when it is next idle (or exits). It is delivered to you if ${a}; otherwise it is ${n ? "only logged here" : "shown to your user in the transcript"} (this session holds other inbound peer traffic). Carry on; do not poll.`;
 }
@@ -194,7 +194,7 @@ function idleSubscriptionLines(e, r, s) {
   }
 }
 async function x() {
-  let e = (await v7e()) ?? process.getuid?.();
+  let e = (await getCurrentUid()) ?? process.getuid?.();
   return e === void 0 ? [] : [e];
 }
 export {

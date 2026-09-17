@@ -11,17 +11,17 @@
 // [preload stripped] 原本在此预载 121 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { jc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { x, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Ott } from "../权限系统/chunk-e4pfvp7x.js";
+import { GOAL_MODE_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { m$e, cve, nAn, BEt, uve, dve } from "../Skills技能/chunk-sapykxw7.js";
+import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { MAX_GOAL_CONDITION_LENGTH, isGoalClearKeyword, findMetGoalStatus, buildGoalHookPrompt, setSessionGoal, clearSessionGoal } from "../Skills技能/chunk-sapykxw7.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -36,7 +36,7 @@ function Y(Ct) {
 function L(ut) {
   let s = _(38),
     { messages: T, onDone: m } = ut,
-    i = U(W),
+    i = useAppStateSelector(W),
     [, ft] = d(0),
     Q;
   if (s[0] === MEMO_CACHE_SENTINEL) ((Q = () => ft(Y)), (s[0] = Q));
@@ -56,7 +56,7 @@ function L(ut) {
     const k = `running ${gt}`;
     let A;
     if (s[5] !== i.iterations)
-      ((A = i.iterations > 0 && `${i.iterations} ${x(i.iterations, "turn")}`),
+      ((A = i.iterations > 0 && `${i.iterations} ${pluralize(i.iterations, "turn")}`),
         (s[5] = i.iterations),
         (s[6] = A));
     else A = s[6];
@@ -90,7 +90,7 @@ function L(ut) {
     let O;
     if (s[14] !== i.lastReason)
       ((O = i.lastReason
-        ? e(S, { label: "Last check", children: kr(i.lastReason.trim()) })
+        ? e(S, { label: "Last check", children: firstLine(i.lastReason.trim()) })
         : null),
         (s[14] = i.lastReason),
         (s[15] = O));
@@ -105,7 +105,7 @@ function L(ut) {
     let K;
     if (s[19] !== m || s[20] !== B || s[21] !== R)
       ((K = e(de, {
-        title: `${Ott} Goal active`,
+        title: `${GOAL_MODE_GLYPH} Goal active`,
         subtitle: B,
         onCancel: m,
         inputGuide: z,
@@ -122,13 +122,13 @@ function L(ut) {
   if (s[23] !== T || s[24] !== m) {
     N = EARLY_RETURN_SENTINEL;
     bb0: {
-      let c = nAn(T);
+      let c = findMetGoalStatus(T);
       if (c) {
         let b = [];
         if (c.durationMs !== void 0)
           b.push(formatDuration(c.durationMs, { mostSignificantOnly: !0 }));
         if (c.iterations !== void 0)
-          b.push(`${c.iterations} ${x(c.iterations, "turn")}`);
+          b.push(`${c.iterations} ${pluralize(c.iterations, "turn")}`);
         if (c.tokens !== void 0) b.push(`${formatTokens(c.tokens)} tokens`);
         let h;
         if (s[26] === MEMO_CACHE_SENTINEL)
@@ -231,8 +231,8 @@ var Rt = async (u, f, l) => {
       messages: f.messages,
       onDone: () => u(void 0, { display: "skip" }),
     });
-  if (cve(y)) {
-    let n = dve(f);
+  if (isGoalClearKeyword(y)) {
+    let n = clearSessionGoal(f);
     return (
       u(n === null ? "No goal set" : `Goal cleared: ${n}`, {
         display: "system",
@@ -240,18 +240,18 @@ var Rt = async (u, f, l) => {
       null
     );
   }
-  if (y.length > m$e)
+  if (y.length > MAX_GOAL_CONDITION_LENGTH)
     return (
       logFeatureSad("goal_set", "too_long"),
-      u(`Goal condition is limited to ${m$e} characters (got ${y.length})`, {
+      u(`Goal condition is limited to ${MAX_GOAL_CONDITION_LENGTH} characters (got ${y.length})`, {
         display: "system",
       }),
       null
     );
-  let a = uve(y, f);
+  let a = setSessionGoal(y, f);
   if (a !== null) return (u(a, { display: "system" }), null);
   return (
-    u(`Goal set: ${y}`, { shouldQuery: !0, metaMessages: [BEt(y)] }),
+    u(`Goal set: ${y}`, { shouldQuery: !0, metaMessages: [buildGoalHookPrompt(y)] }),
     null
   );
 };

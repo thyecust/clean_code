@@ -9,16 +9,16 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 246 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { zj } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { useTaskRegistry } from "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Ma, ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
+import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
+import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { h_ } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { isFullscreenActive } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { oa } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -45,13 +45,13 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
 import { loadWorkflowSnapshots } from "./workflow-snapshots.js";
-import "./chunk-pqyn1fh3.js";
+import "./workflow-registry.js";
 import "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
 import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -121,7 +121,7 @@ function ot(i) {
 function Vt(Oe) {
   let nt = _(15),
     { onDone: st, toolUseContext: ut } = Oe;
-  Rs("workflow-history-dialog");
+  useActiveOverlay("workflow-history-dialog");
   let yo;
   if (nt[0] !== ut.storageV5)
     ((yo = () => loadWorkflowSnapshots(ut.storageV5).catch(Qo)),
@@ -176,9 +176,9 @@ function Xt(We) {
   let a = _(128),
     { snapshotsPromise: Ve, onDone: c, promptVisibleBelow: gt } = We,
     Qt = kn(Ve),
-    { rows: qt } = ks(useTerminalSize()),
-    je = Ma(),
-    zt = U(qo),
+    { rows: qt } = useVirtualScrollViewportSize(useTerminalSize()),
+    je = useHasVirtualScrollViewport(),
+    zt = useAppStateSelector(qo),
     T = useTaskRegistry(),
     So;
   if (a[0] !== Qt || a[1] !== zt) {
@@ -425,7 +425,7 @@ function Xt(We) {
   }
   let H = countMatching(s, ee),
     at = s.length - H,
-    to = gt && !je && !h_() ? mit : 0,
+    to = gt && !je && !isFullscreenActive() ? mit : 0,
     Tt,
     vt,
     J,
@@ -529,7 +529,7 @@ function Xt(We) {
               Wo > 0 &&
                 r(t, {
                   dimColor: !0,
-                  children: ["  ", L.arrowUp, " ", Wo, " more above"],
+                  children: ["  ", figures.arrowUp, " ", Wo, " more above"],
                 }),
               Ke.map(($o, He) =>
                 e(Wt, { item: $o, isSelected: Oo + He === ct }, $o.task.id),
@@ -537,7 +537,7 @@ function Xt(We) {
               Vo > 0 &&
                 r(t, {
                   dimColor: !0,
-                  children: ["  ", L.arrowDown, " ", Vo, " more below"],
+                  children: ["  ", figures.arrowDown, " ", Vo, " more below"],
                 }),
             ],
           });
@@ -615,12 +615,12 @@ function Wt(ls) {
     mt;
   bb0: switch (v.status) {
     case "completed": {
-      ((it = L.tick), (mt = "success"));
+      ((it = figures.tick), (mt = "success"));
       break bb0;
     }
     case "failed":
     case "killed": {
-      ((it = L.cross), (mt = "error"));
+      ((it = figures.cross), (mt = "error"));
       break bb0;
     }
     default: {
@@ -636,7 +636,7 @@ function Wt(ls) {
     xt;
   if (O[2] !== v.agentCount)
     ((xt =
-      v.agentCount > 0 ? `${v.agentCount} ${x(v.agentCount, "agent")}` : null),
+      v.agentCount > 0 ? `${v.agentCount} ${pluralize(v.agentCount, "agent")}` : null),
       (O[2] = v.agentCount),
       (O[3] = xt));
   else xt = O[3];
@@ -658,7 +658,7 @@ function Wt(ls) {
   let cs = Go,
     eo = v.workflowName ?? v.summary ?? v.description,
     so = eo.length > 50 ? eo.slice(0, 49) + "\u2026" : eo;
-  const no = Uo ? L.pointer + " " : "  ";
+  const no = Uo ? figures.pointer + " " : "  ";
   let Pt;
   if (O[12] !== no) ((Pt = e(t, { children: no })), (O[12] = no), (O[13] = Pt));
   else Pt = O[13];

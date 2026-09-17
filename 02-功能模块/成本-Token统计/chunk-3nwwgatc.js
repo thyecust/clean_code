@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { pm } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import { isTainted } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, Is, qur, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { kae } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { fz, I0, vu, Ag, BP, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { formatTruncatedText } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { BASH_STDOUT_TAG, BASH_STDERR_TAG, LOCAL_COMMAND_STDOUT_TAG, LOCAL_COMMAND_STDERR_TAG, LOCAL_COMMAND_CAVEAT_TAG, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { listedProjectKey, getProjectsDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { _n } from "../Teammates团队/chunk-qe04h4c5.js";
+import { isValidPathSegment } from "../Teammates团队/storage-keys.js";
 import { BRIEF_ENFORCE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import {
   iy,
@@ -29,7 +29,7 @@ import {
   net,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isPolicyAllowed, policyDeniedReason, policyDenyKind } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { Uc, Qo, pxt, $cr, Ucr } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
+import { DEFAULT_MAX_PAGES, runPaginatedScan, createPageBudget, $cr, getAdditionalTruncationCount } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
 var Te = "allow_usage_transcript_scan",
   he = "allow_skill_doctor_transcript_scan",
   Me = {
@@ -46,7 +46,7 @@ var Te = "allow_usage_transcript_scan",
   };
 function j(e) {
   if (isPolicyAllowed(e.policy)) return { allowed: !0 };
-  if (policyDenyKind(e.policy) === "org_denied" && pm("hipaa"))
+  if (policyDenyKind(e.policy) === "org_denied" && isTainted("hipaa"))
     return { allowed: !1, reason: e.hipaaReason };
   return {
     allowed: !1,
@@ -115,9 +115,9 @@ var D = 4,
   un = d.encode('"subtype":"local_command"'),
   w = (e) => [d.encode(`"content":"<${e}>`), d.encode(`"text":"<${e}>`)],
   V = [...w("command-message"), ...w("command-name")],
-  dn = w(BP),
-  Q = [...w(vu), ...w(Ag)],
-  ln = [...w(fz), ...w(I0)],
+  dn = w(LOCAL_COMMAND_CAVEAT_TAG),
+  Q = [...w(LOCAL_COMMAND_STDOUT_TAG), ...w(LOCAL_COMMAND_STDERR_TAG)],
+  ln = [...w(BASH_STDOUT_TAG), ...w(BASH_STDERR_TAG)],
   L = (e, t, o) => t.some((s) => _(e, s, 0, o) >= 0),
   pn = [
     d.encode(`"content":${b(TQ).slice(0, -1)}`),
@@ -272,8 +272,8 @@ function de(e, t) {
 }
 async function En(e, t, o, s, r) {
   let i = [],
-    c = pxt(),
-    a = await Qo(
+    c = createPageBudget(),
+    a = await runPaginatedScan(
       (S) =>
         e.listEntries(
           { namespace: "transcript" },
@@ -281,7 +281,7 @@ async function En(e, t, o, s, r) {
         ),
       (S) => {
         for (let E of S) {
-          let y = listedProjectKey(E, _n);
+          let y = listedProjectKey(E, isValidPathSegment);
           if (y !== void 0) i.push(y);
         }
       },
@@ -297,16 +297,16 @@ async function En(e, t, o, s, r) {
       (u(p), y[T]?.end(p));
     });
   }
-  let g = Ucr(c);
+  let g = getAdditionalTruncationCount(c);
   if (g > 0)
     n(
-      `foldRecentRecords: ${g} more v5 listings were cut short after the scan's ${Uc}-page budget ran out`,
+      `foldRecentRecords: ${g} more v5 listings were cut short after the scan's ${DEFAULT_MAX_PAGES}-page budget ran out`,
     );
 }
 async function On(e, t, o, s) {
   let r = [],
     i = [],
-    c = await Qo(
+    c = await runPaginatedScan(
       (u) =>
         e.listEntries(
           { namespace: "transcript", projectKey: t },
@@ -318,7 +318,7 @@ async function On(e, t, o, s) {
           else if (
             g.scope.namespace === "transcript" &&
             g.scope.sessionId !== void 0 &&
-            _n(g.scope.sessionId)
+            isValidPathSegment(g.scope.sessionId)
           )
             i.push(g.scope.sessionId);
       },
@@ -340,7 +340,7 @@ async function On(e, t, o, s) {
 async function le(e, t, o, s, r) {
   let i = [],
     c = [],
-    a = await Qo(
+    a = await runPaginatedScan(
       (m) =>
         e.listEntries(
           {
@@ -378,7 +378,7 @@ function q(e, t, o) {
     n(`foldRecentRecords: v5 ${e} listing failed: ${t.error.code}`);
   else if (s === "first-truncation")
     n(
-      `foldRecentRecords: v5 ${e} listing cut short (the scan's ${Uc}-page budget is spent); keeping what was listed`,
+      `foldRecentRecords: v5 ${e} listing cut short (the scan's ${DEFAULT_MAX_PAGES}-page budget is spent); keeping what was listed`,
     );
 }
 function pe(e, t) {
@@ -641,7 +641,7 @@ function xn(e, t) {
         C = T ? Date.parse(T) : NaN;
       if (Number.isNaN(C)) return;
       let O = x(l, Sn, 0, p, K),
-        M = O ? kae(O, W) : void 0,
+        M = O ? formatTruncatedText(O, W) : void 0,
         A = _(l, Tn, 0, p) >= 0;
       if (M && A) ((S ??= M), (M = S));
       s.push({
@@ -667,13 +667,13 @@ function Pn(e, t) {
 var ge = 64,
   Bn = 6 * ge;
 function Un(e) {
-  return e === void 0 ? void 0 : kae(e, ge);
+  return e === void 0 ? void 0 : formatTruncatedText(e, ge);
 }
 function Fn(e, t) {
   let o = x(e, hn, 0, t, K) ?? x(e, Mn, 0, t, K);
   if (!o) return null;
   let s = o.match(Dn)?.[1],
-    r = kae(s ?? o, W);
+    r = formatTruncatedText(s ?? o, W);
   return r ? { prompt: r, cron: void 0, isDynamic: !1 } : null;
 }
 function Hn(e, t, o, s) {

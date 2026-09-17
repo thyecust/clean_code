@@ -10,16 +10,16 @@
 import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { MC, $t } from "./chunk-7s6mt1vg.js";
-import { PH } from "./chunk-hh8f1qrw.js";
+import { getStrictKnownMarketplaces } from "./plugin-source-policy.js";
 import { Xf, Idn, Cmt, vmt, Odn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Ul, Bn } from "./chunk-33bdfgmx.js";
+import { isNonMarketplacePluginSource, splitPluginId } from "./chunk-33bdfgmx.js";
 var d = 14,
   f = 10;
 async function getDisusedPlugins() {
   try {
     let e = $t().pluginLoadCacheOnly;
     if (e === void 0) return [];
-    if (PH() !== null) return [];
+    if (getStrictKnownMarketplaces() !== null) return [];
     let { enabled: s } = await e;
     if (s.length === 0) return [];
     let u = Xf(),
@@ -28,8 +28,8 @@ async function getDisusedPlugins() {
       c = Date.now(),
       r = [];
     for (let t of s) {
-      let { marketplace: o } = Bn(t.repository);
-      if (!o || Ul(o)) continue;
+      let { marketplace: o } = splitPluginId(t.repository);
+      if (!o || isNonMarketplacePluginSource(o)) continue;
       if (Odn(t, u, l) !== "user-install") continue;
       if (p(t)) continue;
       let i = Cmt(t.repository);
@@ -50,7 +50,7 @@ async function getDisusedPlugins() {
   }
 }
 function getPluginDaysSinceLastUse(e) {
-  if (PH() !== null) return null;
+  if (getStrictKnownMarketplaces() !== null) return null;
   let s = Cmt(e);
   if (!s) return null;
   if (Idn(e)) return 0;

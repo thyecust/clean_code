@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { dnr } from "../Skills技能/chunk-sapykxw7.js";
+import { setQueuedGoalOrigin } from "../Skills技能/chunk-sapykxw7.js";
 import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 function l(e) {
   return {
@@ -65,7 +65,7 @@ function l(e) {
     get requestDialog() {
       return e.requestDialog;
     },
-    recordQueuedGoalOrigin: (o, t) => dnr(e.setAppState, o, t),
+    recordQueuedGoalOrigin: (o, t) => setQueuedGoalOrigin(e.setAppState, o, t),
   };
 }
 var createDefaultToolPermissionContext = () => ({

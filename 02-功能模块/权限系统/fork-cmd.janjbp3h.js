@@ -9,10 +9,10 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 208 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { mS } from "./chunk-e4pfvp7x.js";
+import { FORK_GLYPH } from "./chunk-e4pfvp7x.js";
 import { hasPermissionsToUseTool } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { spawnForkFromDirective } from "./chunk-asdzywd2.js";
-import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
+import { isCoordinatorModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
 var m = async (o, s, t) => {
   let i = t.trim();
   if (!i)
@@ -21,7 +21,7 @@ var m = async (o, s, t) => {
   if (!r)
     return (
       o(
-        Ci()
+        isCoordinatorModeEnabled()
           ? "Forking is not available in coordinator sessions. Use /branch instead."
           : "Cannot fork before the first conversation turn",
         { display: "system" },
@@ -29,7 +29,7 @@ var m = async (o, s, t) => {
       null
     );
   return (
-    o(`${mS} forked ${r.name} (${r.agentId.slice(-4)})`, { display: "system" }),
+    o(`${FORK_GLYPH} forked ${r.name} (${r.agentId.slice(-4)})`, { display: "system" }),
     null
   );
 };

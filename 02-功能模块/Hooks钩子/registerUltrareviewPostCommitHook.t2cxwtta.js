@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 78 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ke, wB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { qe, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { NBn } from "../CodeReview/chunk-rp57gfa9.js";
+import { getUltrareviewPostCommitTip } from "../CodeReview/ultrareview-tips.js";
 import { lBn, cBn } from "../../01-核心基础设施/共享小工具-未细化/chunk-0en55mb4.js";
 async function m(o, a, l, u, s) {
   if (o.hook_event_name !== "PostToolUse") return {};
@@ -22,7 +22,7 @@ async function m(o, a, l, u, s) {
     r = typeof t?.stdout === "string" ? t.stdout : "",
     i = typeof t?.stderr === "string" ? t.stderr : "";
   if (!cBn(r, i, void 0)) return {};
-  let n = NBn(s?.storageV5);
+  let n = getUltrareviewPostCommitTip(s?.storageV5);
   return n !== null ? { systemMessage: n } : {};
 }
 function registerUltrareviewPostCommitHook() {

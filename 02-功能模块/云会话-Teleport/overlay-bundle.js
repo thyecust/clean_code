@@ -12,10 +12,10 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { WJ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { createTempFilePath } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { Ct, nn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Jb } from "../Git-Worktree/chunk-7jshw9s9.js";
+import { runProbeGit } from "../Git-Worktree/local-divergence-probe.js";
 import { Jan, dOe, i3n } from "../Git-Worktree/chunk-v967hawf.js";
 var MAX_OVERLAY_BUNDLE_BYTES = 20971520,
   C = 60000,
@@ -51,15 +51,15 @@ async function D({ gitRoot: e, prerequisiteSha: r, maxBytes: o, signal: t }) {
       signal: t ?? new AbortController().signal,
       timeoutMs: C,
     },
-    c = await Jb(l, ["rev-parse", "-q", "--verify", "HEAD"]),
+    c = await runProbeGit(l, ["rev-parse", "-q", "--verify", "HEAD"]),
     a = c.stdout.trim();
   if (c.exitCode !== 0 || !nn.test(a))
     return Ct(t)
       ? { ok: !1, reason: "aborted" }
       : s("head", "HEAD does not resolve");
   let [b, m] = await Promise.all([
-    Jb(l, ["rev-list", "--count", `${r}..${a}`, "--"]),
-    Jb(l, ["merge-base", "--is-ancestor", r, a]),
+    runProbeGit(l, ["rev-list", "--count", `${r}..${a}`, "--"]),
+    runProbeGit(l, ["merge-base", "--is-ancestor", r, a]),
   ]);
   if (Ct(t)) return { ok: !1, reason: "aborted" };
   if (m.exitCode === 1) return { ok: !1, reason: "not_ancestor" };
@@ -70,7 +70,7 @@ async function D({ gitRoot: e, prerequisiteSha: r, maxBytes: o, signal: t }) {
       `${x("rev-list", b.exitCode)}, ${x("merge-base", m.exitCode)}`,
     );
   if (_ === 0) return { ok: !1, reason: "not_diverged" };
-  let p = await Jb(l, [
+  let p = await runProbeGit(l, [
     "rev-list",
     "--objects",
     "--disk-usage",
@@ -82,9 +82,9 @@ async function D({ gitRoot: e, prerequisiteSha: r, maxBytes: o, signal: t }) {
   let v = /^\d+$/.test(p.stdout.trim()) ? Number(p.stdout.trim()) : null;
   if (p.exitCode === 0 && v !== null && v > R * o)
     return { ok: !1, reason: "too_large", sizeBytes: v, aheadCount: _ };
-  let k = WJ("ccr-overlay", ".bundle");
+  let k = createTempFilePath("ccr-overlay", ".bundle");
   try {
-    let O = await Jb(l, ["bundle", "create", "--quiet", k, `^${r}`, w, "--"]);
+    let O = await runProbeGit(l, ["bundle", "create", "--quiet", k, `^${r}`, w, "--"]);
     if (Ct(t)) return { ok: !1, reason: "aborted" };
     if (O.exitCode !== 0)
       return s("bundle_create", x("bundle create", O.exitCode));
@@ -110,7 +110,7 @@ async function D({ gitRoot: e, prerequisiteSha: r, maxBytes: o, signal: t }) {
       ok: !0,
       content: d.content,
       sizeBytes: d.content.length,
-      sha256: mn(d.content),
+      sha256: hashSha256(d.content),
       headSha: a,
       prerequisiteSha: r,
       prerequisites: B.prerequisites,

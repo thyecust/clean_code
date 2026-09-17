@@ -10,10 +10,10 @@
 
 // [preload stripped] 原本在此预载 247 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { s4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
+import { useScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
+import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { truncateStartToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { jJt, IB, $ae } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -33,8 +33,8 @@ import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
-import "./chunk-p2gj9dsf.js";
-import { Wm } from "../GitHub集成/chunk-bfz9rjjm.js";
+import "./structured-diff.js";
+import { DiffStatLabel } from "../GitHub集成/chunk-bfz9rjjm.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
@@ -43,9 +43,9 @@ import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js"
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import { E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
@@ -210,7 +210,7 @@ function fe(wn) {
         ee &&
         e(t, {
           dimColor: !0,
-          children: ze ? ` \u2191 ${j} more ${x(j, "file")}` : " ",
+          children: ze ? ` \u2191 ${j} more ${pluralize(j, "file")}` : " ",
         })),
         (Z[17] = ze),
         (Z[18] = ee),
@@ -256,7 +256,7 @@ function fe(wn) {
       e(t, {
         dimColor: !0,
         children: ge
-          ? ` \u2193 ${k.length - K} more ${x(k.length - K, "file")}`
+          ? ` \u2193 ${k.length - K} more ${pluralize(k.length - K, "file")}`
           : " ",
       })),
       (Z[25] = K),
@@ -291,7 +291,7 @@ function xe(Fn) {
     ((kt = truncateStartToWidth(ie.path, Ge)), (ce[0] = ie.path), (ce[1] = Ge), (ce[2] = kt));
   else kt = ce[2];
   let Mn = kt,
-    Ve = `${Q ? L.pointer + " " : "  "}${Mn}`;
+    Ve = `${Q ? figures.pointer + " " : "  "}${Mn}`;
   const Le = Q ? "background" : void 0;
   let Te;
   if (ce[3] !== Q || ce[4] !== Ve || ce[5] !== Le)
@@ -355,7 +355,7 @@ function Pe(An) {
   }
   let w;
   if (oe[6] !== H.linesAdded || oe[7] !== H.linesRemoved || oe[8] !== Y)
-    ((w = e(Wm, { added: H.linesAdded, removed: H.linesRemoved, bold: Y })),
+    ((w = e(DiffStatLabel, { added: H.linesAdded, removed: H.linesRemoved, bold: Y })),
       (oe[6] = H.linesAdded),
       (oe[7] = H.linesRemoved),
       (oe[8] = Y),
@@ -469,8 +469,8 @@ function DiffDialog(tr) {
       (h[15] = Bt),
       (h[16] = Ot));
   else ((Bt = h[15]), (Ot = h[16]));
-  (E(Bt, Ot), Rs("diff-dialog"));
-  let Xe = s4(),
+  (E(Bt, Ot), useActiveOverlay("diff-dialog"));
+  let Xe = useScrollViewport(),
     St;
   if (h[17] !== Xe?.handle || h[18] !== c)
     ((St = function v(ir) {
@@ -627,11 +627,11 @@ function DiffDialog(tr) {
           children: [
             a.stats.filesCount,
             " ",
-            x(a.stats.filesCount, "file"),
+            pluralize(a.stats.filesCount, "file"),
             " ",
             "changed",
             " ",
-            e(Wm, { added: a.stats.linesAdded, removed: a.stats.linesRemoved }),
+            e(DiffStatLabel, { added: a.stats.linesAdded, removed: a.stats.linesRemoved }),
           ],
         })
       : null),

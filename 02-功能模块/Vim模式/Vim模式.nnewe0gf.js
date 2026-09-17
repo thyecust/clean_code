@@ -12,28 +12,28 @@ import { j, Gt, uOn, aMn, lMn } from "../../00-第三方库/lodash/lodash.2x3q7c
 import { A, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { os, ln, WL } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { repeatString, countOccurrences, normalizeIdeographicSpaces } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Ar, Olr, Dp } from "../权限系统/chunk-e4pfvp7x.js";
+import { CLAUDE_BULLET_GLYPH, SEARCH_PREFIX_GLYPH, LOZENGE_OUTLINE_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { Zd } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Ty, Pat, Oat, T9e } from "../状态栏-主题/chunk-w5jaj6kg.js";
+import { useResolvedTheme, getCurrentKillRingText, getNextKillRingEntry, useKillRing } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { cf, ph, Ms, isClaudeAISubscriber, getSubscriptionName, ee, Sq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { te, dp, truncatePathMiddle, truncateToWidth, truncateStartToWidth, truncateToWidthNoEllipsis, truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { getInitialSettings, getSecuritySensitiveSetting } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { THIRD_PARTY_PROVIDER_LABELS, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { Eo } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
+import { resolveSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 import { o, t, ct, bs, ko, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Mpe, Npe, $St, USt } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { getNativeCopyModifierKey, getClipboardCopyStrategy, probeLinuxClipboardTool, getOsc52Utf8PasteWarning } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { lF } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
@@ -52,14 +52,14 @@ import {
   T0e,
 } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
-import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { shouldShowNotification, useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { aH, _8e, z9t, V9t } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useKeybindingContext } from "../键位绑定(Keybindings)/keybinding-context.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { CH } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { registerMcpNotificationHandler } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
-import { eM } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
+import { useHasNonAutocompleteOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { useVoiceSelector, useVoiceSetState, useVoiceGetState } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import { A3t, hw, zSt, w$, DNe } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import {
@@ -86,10 +86,10 @@ import { useSettings } from "../../01-核心基础设施/共享小工具-未细�
 import { getAutoUpdatesChannel } from "../自动更新-安装/auto-updates-channel.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Yl, re, E, vr, dn, V, C, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { s, T, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { Xs, Wke, P1, iB, Lcr } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
+import { getGraphemeSegmenter, getFirstGrapheme, getLastGrapheme, countGraphemes, countWords } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
 import { toESM, MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 class Wo {
@@ -115,8 +115,8 @@ var bn = /\s+/g,
   na = 5;
 function Qo(l) {
   if (l.startsWith("file-")) return "+";
-  if (l.startsWith("mcp-resource-")) return Dp;
-  if (l.startsWith("mcp-template")) return Dp;
+  if (l.startsWith("mcp-resource-")) return LOZENGE_OUTLINE_GLYPH;
+  if (l.startsWith("mcp-template")) return LOZENGE_OUTLINE_GLYPH;
   if (l.startsWith("agent-")) return "*";
   return "+";
 }
@@ -306,7 +306,7 @@ var ns = Yl(function (Tl) {
     ((Nn = fe.id.startsWith("emoji:")), (Ue[19] = fe.id), (Ue[20] = Nn));
   else Nn = Ue[20];
   let Xi = Nn,
-    Ht = Xi ? ($e ? `${L.pointer} ` : "  ") : "",
+    Ht = Xi ? ($e ? `${figures.pointer} ` : "  ") : "",
     Xo = te(Ht),
     Je = Xi && $e,
     He = fe.displayText;
@@ -633,7 +633,7 @@ function zr(l) {
         : l.kind === "info"
           ? "config"
           : l.kind,
-    O = l.kind === void 0 ? "" : x + os(" ", 7 - te(x)),
+    O = l.kind === void 0 ? "" : x + repeatString(" ", 7 - te(x)),
     R = l.sourceTag ? `[${l.sourceTag}] ` : "";
   return { kindLaneText: O, kindLabel: x, sourceText: R };
 }
@@ -660,7 +660,7 @@ var oa = /[^\u0020-\u02ff]/;
 function ts(l, b) {
   if (b.length === 0 || !oa.test(l)) return b;
   let x = new Set();
-  for (let { index: R } of Xs().segment(l)) x.add(R);
+  for (let { index: R } of getGraphemeSegmenter().segment(l)) x.add(R);
   let O = [];
   for (let [R, v] of b) {
     let w = R;
@@ -675,7 +675,7 @@ function ts(l, b) {
 }
 F();
 function zz() {
-  return Eo("editorMode", "normal").value === "vim";
+  return resolveSetting("editorMode", "normal").value === "vim";
 }
 function WQt() {
   if (supportsShiftEnter()) return "shift + \u23CE for newline";
@@ -806,7 +806,7 @@ function Hn(l, b, x, O) {
 }
 function ss(l, b, x, O) {
   let R = [];
-  for (let { segment: q, index: ie } of Xs().segment(l))
+  for (let { segment: q, index: ie } of getGraphemeSegmenter().segment(l))
     R.push({ segment: q, index: ie });
   if (R.length === 0) return null;
   let v = R.length - 1;
@@ -930,7 +930,7 @@ function Ut(l, b, x) {
   let O = x.text,
     R = O.split(`
 `),
-    v = ln(
+    v = countOccurrences(
       O.slice(0, x.cursor.offset),
       `
 `,
@@ -969,7 +969,7 @@ function Ut(l, b, x) {
       P -= 1;
     let B = O.slice(0, P) + O.slice(H);
     x.setText(B || "");
-    let q = Math.max(0, B.length - (P1(B).length || 1));
+    let q = Math.max(0, B.length - (getLastGrapheme(B).length || 1));
     x.setOffset(Math.min(P, q));
   } else if (l === "change")
     if (R.length === 1) (x.setText(""), x.enterInsert(0));
@@ -1006,7 +1006,7 @@ function Xn(l, b, x) {
   let O = x.cursor.offset,
     R = x.text;
   for (let v = 0; v < b && O < R.length; v++) {
-    let w = Wke(R.slice(O)).length || 1;
+    let w = getFirstGrapheme(R.slice(O)).length || 1;
     ((R = R.slice(0, O) + l + R.slice(O + w)), (O += l.length));
   }
   (x.setText(R),
@@ -1020,7 +1020,7 @@ function Jn(l, b) {
     R = x,
     v = 0;
   while (R < O.length && v < l) {
-    let w = Wke(O.slice(R)),
+    let w = getFirstGrapheme(O.slice(R)),
       S = w.length,
       M = w === w.toUpperCase() ? w.toLowerCase() : w.toUpperCase();
     ((O = O.slice(0, R) + M + O.slice(R + S)), (R += M.length), v++);
@@ -1092,7 +1092,7 @@ function xn(l, b, x) {
       H = w.includes(`
 `)
         ? NZ(P, D)
-        : D + w.length - (P1(w).length || 1);
+        : D + w.length - (getLastGrapheme(w).length || 1);
     (x.setText(P), x.setOffset(H));
   }
 }
@@ -1221,13 +1221,13 @@ function NZ(l, b) {
       `
 `
   )
-    return b - (P1(l.slice(0, b)).length || 1);
+    return b - (getLastGrapheme(l.slice(0, b)).length || 1);
   if (
     b >= l.length &&
     !l.endsWith(`
 `)
   )
-    return Math.max(0, l.length - (P1(l).length || 1));
+    return Math.max(0, l.length - (getLastGrapheme(l).length || 1));
   return b;
 }
 function as(l, b) {
@@ -1241,7 +1241,7 @@ function as(l, b) {
 }
 function er(l, b) {
   if (b) {
-    let x = ln(
+    let x = countOccurrences(
       l,
       `
 `,
@@ -1251,7 +1251,7 @@ function er(l, b) {
       ? x
       : x + 1;
   }
-  return iB(l);
+  return countGraphemes(l);
 }
 function On(l, b, x) {
   let O = l.text;
@@ -1309,13 +1309,13 @@ function us(l, b) {
   let x = Math.min(l, b.cursor.offset),
     O = Math.max(l, b.cursor.offset),
     R = b.text,
-    v = ln(
+    v = countOccurrences(
       R.slice(0, x),
       `
 `,
     ),
     w =
-      ln(
+      countOccurrences(
         R.slice(x, O),
         `
 `,
@@ -1345,14 +1345,14 @@ function ls(l, b, x, O) {
   let R = Math.min(x, O.cursor.offset),
     v = Math.max(x, O.cursor.offset),
     w = O.text,
-    S = ln(
+    S = countOccurrences(
       w.slice(0, R),
       `
 `,
     ),
     M =
       S +
-      ln(
+      countOccurrences(
         w.slice(R, v),
         `
 `,
@@ -1376,7 +1376,7 @@ function cs(l, b, x, O) {
   let R = O.text,
     v = R.split(`
 `),
-    w = ln(
+    w = countOccurrences(
       R.slice(0, O.cursor.offset),
       `
 `,
@@ -1437,7 +1437,7 @@ function fs(l, b, x, O, R, v = !1) {
       S -= 1;
     let M = O.text.slice(0, S) + O.text.slice(x);
     O.setText(M);
-    let D = Math.max(0, M.length - (P1(M).length || 1));
+    let D = Math.max(0, M.length - (getLastGrapheme(M).length || 1));
     O.setOffset(Math.min(S, D));
     return;
   }
@@ -1483,13 +1483,13 @@ function ms(l, b, x, O) {
         : M,
     P = O.text.slice(0, R) + x + D;
   O.setText(P);
-  let H = P1(x);
+  let H = getLastGrapheme(x);
   O.setOffset(Math.max(R, R + x.length - (H.length || 1)));
 }
 function gs(l, b, x, O) {
   let R = O.text.slice(b, x),
     v = "";
-  for (let { segment: S } of Xs().segment(R))
+  for (let { segment: S } of getGraphemeSegmenter().segment(R))
     v +=
       S ===
       `
@@ -1514,7 +1514,7 @@ function xs(l, b, x, O) {
 function ys(l, b, x, O) {
   let R = O.text.slice(b, x),
     v = "";
-  for (let { segment: S } of Xs().segment(R))
+  for (let { segment: S } of getGraphemeSegmenter().segment(R))
     if (l === "upper") v += S.toUpperCase();
     else if (l === "lower") v += S.toLowerCase();
     else v += S === S.toUpperCase() ? S.toLowerCase() : S.toUpperCase();
@@ -1577,7 +1577,7 @@ function Rs(l, b, x, O, R) {
   )
     O.setOffset(b);
   else {
-    let D = P1(w);
+    let D = getLastGrapheme(w);
     O.setOffset(Math.max(b, b + w.length - (D.length || 1)));
   }
   return w;
@@ -1602,7 +1602,7 @@ function fa(l) {
   for (let [x, O] of Object.entries(l)) {
     if (typeof O !== "string" || O.toLowerCase() !== "<esc>") continue;
     let R = x.normalize("NFC");
-    if (!/^[^\p{C}\p{Z}]{2}$/u.test(R) || iB(R) !== 2) continue;
+    if (!/^[^\p{C}\p{Z}]{2}$/u.test(R) || countGraphemes(R) !== 2) continue;
     b.set(R, "<Esc>");
   }
   return b;
@@ -2139,7 +2139,7 @@ function ao(l) {
       },
       enterInsert: (X) => {
         let Ve = K.slice(0, X) + z + K.slice(X);
-        (I.setText(Ve), I.setOffset(X + z.length - (P1(z).length || 1)));
+        (I.setText(Ve), I.setOffset(X + z.length - (getLastGrapheme(z).length || 1)));
       },
     };
   }
@@ -2253,7 +2253,7 @@ function ao(l) {
             mode: "INSERT",
             insertedText: B.current.insertedText + Re,
           }));
-        let ze = P1(je.text.slice(0, je.offset));
+        let ze = getLastGrapheme(je.text.slice(0, je.offset));
         if (ze && Re.endsWith(ze)) de(ke, ze, je.offset, !0);
         return;
       }
@@ -2333,7 +2333,7 @@ function ao(l) {
             mode: "INSERT",
             insertedText: K.insertedText.slice(
               0,
-              -(P1(K.insertedText).length || 1),
+              -(getLastGrapheme(K.insertedText).length || 1),
             ),
           };
       }
@@ -2347,7 +2347,7 @@ function ao(l) {
           je &&
           Re <= 2 &&
           W &&
-          xe.has(W.char + Wke(Ce)) &&
+          xe.has(W.char + getFirstGrapheme(Ce)) &&
           Date.now() - W.at <= ws &&
           z.offset === W.offsetAfter &&
           X.text.startsWith(W.char, X.offset - W.char.length)
@@ -2372,7 +2372,7 @@ function ao(l) {
             I.preventDefault());
           return;
         }
-        let An = je ? P1(Ce) : "";
+        let An = je ? getLastGrapheme(Ce) : "";
         if (An) de(xe, An, z.offset + Ce.length, [...I.key].length === 1);
       }
       z.handleKeyDown(I);
@@ -2677,7 +2677,7 @@ function jp({
   onTabOnEmpty: B,
   honorEditorMode: q = !1,
 }) {
-  let ie = T9e(),
+  let ie = useKillRing(),
     { columns: Te } = useTerminalSize(),
     Z = v ?? Te,
     [me, G] = d(S),
@@ -2924,7 +2924,7 @@ function jp({
             return;
           }
           case "y": {
-            let le = Pat(ie.state);
+            let le = getCurrentKillRingText(ie.state);
             if (le.length > 0) {
               let xe = ae.offset,
                 Ce = ae.insert(le);
@@ -2959,7 +2959,7 @@ function jp({
             return;
           }
           case "y": {
-            let le = Oat(ie.state);
+            let le = getNextKillRingEntry(ie.state);
             if (le) {
               let { text: xe, start: Ce, length: Re } = le;
               ie.dispatch({ type: "yankPop" });
@@ -3188,7 +3188,7 @@ function Xd({
   placeholder: b = "Search\u2026",
   isFocused: x,
   isTerminalFocused: O,
-  prefix: R = Olr,
+  prefix: R = SEARCH_PREFIX_GLYPH,
   width: v,
   cursorOffset: w,
   borderless: S = !1,
@@ -3374,8 +3374,8 @@ function Kst(l, b = !0) {
 }
 F();
 function Xst(l) {
-  let b = Npe(),
-    x = iB(l),
+  let b = getClipboardCopyStrategy(),
+    x = countGraphemes(l),
     O = x === 1 ? "char" : "chars",
     R;
   switch (b) {
@@ -3386,10 +3386,10 @@ function Xst(l) {
       R = `copied ${x} ${O} to tmux buffer \xB7 paste with prefix + ]`;
       break;
     case "osc52":
-      R = `sent ${x} ${O} via OSC 52 \xB7 if paste fails, hold ${Mpe()} while selecting for native copy`;
+      R = `sent ${x} ${O} via OSC 52 \xB7 if paste fails, hold ${getNativeCopyModifierKey()} while selecting for native copy`;
       break;
   }
-  let v = USt(l);
+  let v = getOsc52Utf8PasteWarning(l);
   if (v) R = `\u26A0 ${v} \xB7 ${R}`;
   return {
     key: "selection-copied",
@@ -3414,7 +3414,7 @@ function Yst(l, b, x) {
     E(() => {
       if (!b) return;
       return (
-        $St(),
+        probeLinuxClipboardTool(),
         l.subscribe(() => {
           let M = l.getState(),
             D = l.hasSelection();
@@ -3444,7 +3444,7 @@ function Yst(l, b, x) {
   );
 }
 function Jst(l) {
-  let b = Ty();
+  let b = useResolvedTheme();
   E(() => {
     l.setSelectionBgColor(b.selectionBg);
   }, [l, b.selectionBg]);
@@ -3490,7 +3490,7 @@ function J6e(l, b) {
     O = C(void 0);
   E(() => {
     if (((O.current = x), !x)) return;
-    CH(x, Ka(), (R) => {
+    registerMcpNotificationHandler(x, Ka(), (R) => {
       if (O.current !== x) return;
       try {
         let v = R.params,
@@ -3505,7 +3505,7 @@ function J6e(l, b) {
   }, [x, b]);
 }
 function Q6e(l, b) {
-  let x = Ua.relative(Q(), l.filePath),
+  let x = Ua.relative(getCwd(), l.filePath),
     O;
   if (l.lineStart && l.lineEnd)
     O =
@@ -3522,7 +3522,7 @@ function Y6e() {
   return useStoreSelector(OHe.of(l), (b) => b.loginCompleted);
 }
 function JR() {
-  let l = U((O) => _8e(O.settings)),
+  let l = useAppStateSelector((O) => _8e(O.settings)),
     b = Y6e(),
     x = V(() => l && z9t(), [b, l]);
   return (
@@ -3620,7 +3620,7 @@ function Y_e({ composer: l, isActive: b = !0 }) {
         let { value: de, cursorOffset: ce } = l,
           he = de.slice(0, ce),
           ne = de.slice(ce),
-          be = oe === " " ? WL(he) : he,
+          be = oe === " " ? normalizeIdeographicSpaces(he) : he,
           ge = 0;
         while (ge < be.length && be[be.length - 1 - ge] === oe) ge++;
         let Y = Math.max(0, Math.min(ge - ye, G)),
@@ -3651,8 +3651,8 @@ function Y_e({ composer: l, isActive: b = !0 }) {
         l.setValueWithCursor(G + oe, G.length));
     }, [l]),
     P = JR(),
-    H = U((G) => G.settings.voice?.autoSubmit === !0),
-    B = U((G) => G.settings.voice?.mode ?? "hold"),
+    H = useAppStateSelector((G) => G.settings.voice?.autoSubmit === !0),
+    B = useAppStateSelector((G) => G.settings.voice?.mode ?? "hold"),
     q = useVoiceSelector((G) => G.voiceState),
     ie = useVoiceSelector((G) => G.voiceInterimTranscript);
   (E(() => {
@@ -3701,7 +3701,7 @@ function Y_e({ composer: l, isActive: b = !0 }) {
           logFeatureOk("voice_transcript_insert"),
           (v.current = oe + ce + G));
         let ge = B === "tap" || H,
-          Y = l.submit !== void 0 && ge && Lcr(G) >= 3 && l.submit(ne, !0);
+          Y = l.submit !== void 0 && ge && countWords(G) >= 3 && l.submit(ne, !0);
         O((ue) => {
           let se = l.submit !== void 0 && B !== "tap" && !Y;
           if (ue.awaitingVoiceSubmitDoubleTap === se) return ue;
@@ -3761,10 +3761,10 @@ function Yae(Vf) {
     ht = useVoiceGetState(),
     nt = useVoiceSetState(),
     ja = useKeybindingContext(),
-    js = eM(),
+    js = useHasNonAutocompleteOverlay(),
     uo = JR(),
     lo = useVoiceSelector(eu),
-    co = U(tu),
+    co = useAppStateSelector(tu),
     pr = useClock(),
     Lf = At(ci, fi),
     Fs = ja ? ja.bindings : Lf,
@@ -3904,7 +3904,7 @@ function Yae(Vf) {
           !Ke.ctrl &&
           !Ke.meta &&
           !Ke.shift &&
-          (Ae === " " ? WL(Ke.key) : Ke.key)[0] === Ae;
+          (Ae === " " ? normalizeIdeographicSpaces(Ke.key) : Ke.key)[0] === Ae;
         let Df = Kt.cursorOffset === Kt.value.length;
         if (!Pf || !Df) qs();
         else if (at.current !== null) qs();
@@ -3944,7 +3944,7 @@ function Yae(Vf) {
       }
       let ut;
       if (Ae !== null) {
-        let hr = Ae === " " ? WL(Ke.key) : Ke.key;
+        let hr = Ae === " " ? normalizeIdeographicSpaces(Ke.key) : Ke.key;
         ut =
           !Ke.ctrl &&
           !Ke.meta &&
@@ -4096,7 +4096,7 @@ function PHe() {
       a.DEMO_VERSION ??
       `${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}${getBuildRefName()}`,
     b = uOn(),
-    x = a.DEMO_VERSION ? "/code/claude" : Ao(Q()),
+    x = a.DEMO_VERSION ? "/code/claude" : Ao(getCwd()),
     O = a.CLAUDE_CODE_HIDE_CWD
       ? ""
       : b
@@ -4129,7 +4129,7 @@ var gi = { r: 153, g: 153, b: 153 },
 function UZ(fd) {
   let di = _(3),
     { voiceState: dd } = fd,
-    pd = U(mu);
+    pd = useAppStateSelector(mu);
   switch (dd) {
     case "recording": {
       if (pd === "tap") {
@@ -4137,7 +4137,7 @@ function UZ(fd) {
         if (di[0] === MEMO_CACHE_SENTINEL)
           ((Ft = r(t, {
             children: [
-              r(t, { color: "error", children: [Ar, " REC"] }),
+              r(t, { color: "error", children: [CLAUDE_BULLET_GLYPH, " REC"] }),
               e(t, { dimColor: !0, children: " \xB7 tap to send" }),
             ],
           })),
@@ -4258,8 +4258,8 @@ function Ro({
   verbose: O,
 }) {
   let { storageV5: R } = useStorageV5Context(),
-    v = U((me) => me.autoUpdaterResult),
-    w = It(),
+    v = useAppStateSelector((me) => me.autoUpdaterResult),
+    w = useSetAppState(),
     [S, M] = d({}),
     [D, P] = d(!1),
     H = Tn(v?.version);
@@ -4707,8 +4707,8 @@ function wo({
   verbose: O,
 }) {
   let { storageV5: R } = useStorageV5Context(),
-    v = U((G) => G.autoUpdaterResult),
-    w = It(),
+    v = useAppStateSelector((G) => G.autoUpdaterResult),
+    w = useSetAppState(),
     [S, M] = d({
       current: {
         ISSUES_EXPLAINER:
@@ -4971,8 +4971,8 @@ function Pr($p) {
       showSuccessMessage: Bp,
       verbose: kn,
     } = $p,
-    wt = U(Xu),
-    Lr = It(),
+    wt = useAppStateSelector(Xu),
+    Lr = useSetAppState(),
     cn = $Z.of(useSession().host),
     [Hp, Lu] = d(cn.packageManagerLatestVersion),
     [Bt, Gp] = d("unknown"),
@@ -5391,8 +5391,8 @@ function ol(Nm) {
 }
 function Q_e() {
   let Po = _(12),
-    De = U(rl),
-    Lm = U(ol);
+    De = useAppStateSelector(rl),
+    Lm = useAppStateSelector(ol);
   if (!De || !shouldShowNotification(De, Lm)) {
     return null;
   }

@@ -11,11 +11,11 @@ import { An, jf } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { j1, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getLogDisplayTitle } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { Vl } from "../权限系统/chunk-e4pfvp7x.js";
-import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { ARTIFACT_MARKER_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
+import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -25,8 +25,8 @@ import { te, truncateToWidth, formatRelativeTimeAgo, formatLogMetadata } from ".
 import { B2e } from "./chunk-mkmy4cx2.js";
 import { Oq } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { jY } from "../状态栏-主题/chunk-jz6b76hr.js";
-import { Ty } from "../状态栏-主题/chunk-w5jaj6kg.js";
-import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
+import { useResolvedTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
+import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
@@ -55,7 +55,7 @@ import { WA, Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { re, L9, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { basename, sep as fn } from "path";
 F();
@@ -497,7 +497,7 @@ var Ir = 2,
   Br = 50,
   $r = 5;
 function bn({ before: s, match: u, after: l }, f) {
-  return ie.dim(s) + f(u) + ie.dim(l);
+  return chalk.dim(s) + f(u) + chalk.dim(l);
 }
 function Wr(s) {
   return s.replace(new RegExp(Tgt.source + '[^,\\s"]*', "g"), (u) => {
@@ -527,7 +527,7 @@ function St(s, u, l) {
     O = s.isSidechain ? " (sidechain)" : "",
     I =
       s.artifactCount !== void 0 && s.artifactCount > 0
-        ? `  ${Vl} ${s.artifactCount}`
+        ? `  ${ARTIFACT_MARKER_GLYPH} ${s.artifactCount}`
         : "",
     w = u - S - O.length - x.length - te(I);
   return `${Rr(getLogDisplayTitle(s), w)}${O}${x}${I}`;
@@ -554,13 +554,13 @@ function rit({
   onToggleAllProjects: N,
 }) {
   let { storageV5: ze } = useStorageV5Context(),
-    Ve = ks(useTerminalSize()),
+    Ve = useVirtualScrollViewportSize(useTerminalSize()),
     Ze = l === void 0 ? Ve.columns : l,
     be = useGlobalExitKeybinding(f),
-    Oe = Va(),
+    Oe = useTerminalFocus(),
     X = useClock(),
     Je = !1,
-    ye = Ty(),
+    ye = useResolvedTheme(),
     Q = V(() => (n) => jY(n, ye.warning), [ye.warning]),
     [Y, et] = d(null),
     [G, Fe] = d(!0),
@@ -1185,7 +1185,7 @@ function Ar(s) {
 import { lstat } from "fs/promises";
 import { posix, sep as qr, win32 as zr } from "path";
 function LIt() {
-  return P() === "windows" ? ";" : "&&";
+  return getCurrentPlatform() === "windows" ? ";" : "&&";
 }
 async function oit(s, u, l) {
   let f = he();
@@ -1199,7 +1199,7 @@ async function oit(s, u, l) {
   return `cd ${jo([s.projectPath])} ${LIt()} claude --resume${S}`;
 }
 async function Vr(s) {
-  let u = P() === "windows",
+  let u = getCurrentPlatform() === "windows",
     { parse: l, sep: f } = u ? zr : posix,
     h = u ? l(s).root.replaceAll("/", f) : l(s).root,
     T = s

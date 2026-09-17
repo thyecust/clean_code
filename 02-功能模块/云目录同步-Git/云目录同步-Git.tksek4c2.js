@@ -13,18 +13,18 @@ import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具
 import { toCompatSessionId, toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { Ve, yt, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { lv, Ri } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { RENAME_FALLBACK_ERRNOS, renameWithRetry } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x, us, kr, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize, truncateToCodePoints, firstLine, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { Sn, io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { replaceControlChars, formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
-import { Wd, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { getEnvVarCaseInsensitive, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import {
   Ds,
   Ct,
@@ -107,8 +107,8 @@ import {
   Fne,
   c6t,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { F7, Qbe, ewe, oT, fOe } from "../文件同步-Sync/chunk-ht8ydg1v.js";
-import { JA } from "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
+import { JOURNAL_VERSION_WITH_NOTE, MAX_USER_EVENT_UUIDS, parseSyncJournal, normalizeFileMode, encodeSyncJournal } from "../文件同步-Sync/sync-journal.js";
+import { computeGitBlobId } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
 import { Rze, pI, c3n, P9, SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import {
   Aze,
@@ -174,11 +174,11 @@ import {
 } from "../目录同步(dir-sync)/chunk-zbxyj64j.js";
 import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { qbe } from "../文件同步-Sync/chunk-eg4wmaq4.js";
-import { K9n, ed, oOe, dI, zpt } from "../目录同步(dir-sync)/chunk-1vkmxx3s.js";
+import { getSideGitDirPath, buildSessionRefName, listSessionRefs, UNREADABLE_CARRIER_STATUS, createDirSyncJournalTransport } from "../目录同步(dir-sync)/dir-sync-git-lane.js";
 import { truncateWithEllipsis } from "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
 import { sanitizePathSegment, getDirSyncRecordPath, resolveDirSyncRecordLocation } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
-import { If } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { createHoverRestOptions } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import {
   lstat as al,
@@ -448,7 +448,7 @@ async function Jl(e, t, r) {
         ...HKe(_t),
         ..._t.filter((I) => I.split("/").at(-1) === ".gitattributes"),
       ]);
-    if (P() === "windows") {
+    if (getCurrentPlatform() === "windows") {
       for (let I of jt)
         if ((await Cde(s.workTree, I)) === "symlink")
           return se("unreadable_path", "an attributes file lies beyond a link");
@@ -466,7 +466,7 @@ async function Jl(e, t, r) {
         ".git/info/attributes sets or unsets filter attributes, or is not a plain file",
       );
     let Rt = dedupe([at, p]),
-      mt = P(),
+      mt = getCurrentPlatform(),
       lt = {
         caseBlind: wt || mt === "macos" || mt === "windows",
         normalizationBlind: mt === "macos",
@@ -983,7 +983,7 @@ async function Yi(e, t) {
         await vo(re, te, {
           mode: 384,
           flag:
-            P() === "windows"
+            getCurrentPlatform() === "windows"
               ? "wx"
               : rn.O_WRONLY | rn.O_CREAT | rn.O_EXCL | rn.O_NOFOLLOW,
         }));
@@ -1034,7 +1034,7 @@ async function sd(e, t, r, o) {
   );
 }
 async function ls(e) {
-  let t = P(),
+  let t = getCurrentPlatform(),
     r = t !== "windows" && t !== "wsl";
   return (
     await Promise.all(
@@ -1102,10 +1102,10 @@ async function ad(e, t) {
   }
 }
 async function xr(e, t) {
-  if (P() === "windows" && !(await Dn(e)).isFile()) return "";
+  if (getCurrentPlatform() === "windows" && !(await Dn(e)).isFile()) return "";
   let r = await Or(
     e,
-    P() === "windows"
+    getCurrentPlatform() === "windows"
       ? "r"
       : rn.O_RDONLY | rn.O_NOFOLLOW | (rn.O_NONBLOCK ?? 0),
   );
@@ -1200,7 +1200,7 @@ async function Ao(e, t) {
       if (A(a) === "ELOOP") return "link";
       throw a;
     };
-  if (P() === "windows") {
+  if (getCurrentPlatform() === "windows") {
     let a = await Dn(e).catch(r);
     if (a === null) return { kind: "absent" };
     if (!a.isFile())
@@ -1208,7 +1208,7 @@ async function Ao(e, t) {
   }
   let s = await Or(
     e,
-    P() === "windows"
+    getCurrentPlatform() === "windows"
       ? "r"
       : rn.O_RDONLY | rn.O_NOFOLLOW | (rn.O_NONBLOCK ?? 0),
   )
@@ -1266,7 +1266,7 @@ function Qi(e, t) {
   );
 }
 async function hd(e) {
-  let t = P();
+  let t = getCurrentPlatform();
   if (t === "windows") return !0;
   if (t !== "wsl") return !1;
   let r = await ad("/proc/self/mountinfo", 4194304).catch(() => ""),
@@ -1304,7 +1304,7 @@ function se(e, t) {
   return { kind: "refused", reason: e, detail: t };
 }
 function st(e) {
-  return kr(e.trim());
+  return firstLine(e.trim());
 }
 var pd = ["filter", "working-tree-encoding", "ident"];
 async function Zi(e, t, r, o) {
@@ -1954,7 +1954,7 @@ async function _s({
 }
 async function Md(e, t) {
   try {
-    return (await Ri(e, t), !0);
+    return (await renameWithRetry(e, t), !0);
   } catch {
     return !1;
   }
@@ -2304,7 +2304,7 @@ async function Do(e, t, r, o) {
     f = (
       await xl(e, ["config", "--type=bool", "--get", "core.filemode"], void 0)
     ).stdout.trim(),
-    p = f === "" ? P() !== "windows" : f !== "false",
+    p = f === "" ? getCurrentPlatform() !== "windows" : f !== "false",
     y = new Map(),
     w = new Map(),
     k = (J) => {
@@ -2716,8 +2716,8 @@ async function fu({
   if (!nn.test(s))
     return V("bad_arguments", "expectedHead is not an object id");
   let D = `refs/claude/sessions/${r}/head`,
-    pe = ed(r, lu),
-    re = ed(r, "x")?.replace(/x$/, "");
+    pe = buildSessionRefName(r, lu),
+    re = buildSessionRefName(r, "x")?.replace(/x$/, "");
   if (!qO(D) || pe === null || re === void 0)
     return V("bad_arguments", "the session id cannot name a ref");
   let te = (q) => (C?.aborted === !0 ? { kind: "aborted" } : q);
@@ -3186,12 +3186,12 @@ function qs(e, t, r, o = new Map(), s = async () => new Map(), a) {
       let w = await yu(d, t, f, p, y).catch((k) => {
         let _ = A(k);
         if (_ === void 0 || !gu.has(_)) throw k;
-        return (n(`dirSync pull: no copy kept of ${Sn(f)} (${_})`), null);
+        return (n(`dirSync pull: no copy kept of ${replaceControlChars(f)} (${_})`), null);
       });
       if (w === null) return null;
       if (t.startsWith(dr)) await bu(d);
       return (
-        n(`dirSync pull: kept the replaced copy of ${Sn(f)} at ${Sn(w)}`),
+        n(`dirSync pull: kept the replaced copy of ${replaceControlChars(f)} at ${replaceControlChars(w)}`),
         w
       );
     },
@@ -3753,7 +3753,7 @@ async function Qu({
   if (Pn === null) return ur(a.report);
   let pt = re.digestFile ?? P9,
     Rn = await t.modesTrusted(te),
-    I = (m, U) => !Rn || oT(m) === oT(U),
+    I = (m, U) => !Rn || normalizeFileMode(m) === normalizeFileMode(U),
     he = t.cleanFilterBlobIds,
     Qe = new Map(),
     ut = [],
@@ -3848,7 +3848,7 @@ async function Qu({
       continue;
     }
     let $e = await pt(o, s, m, Le).catch(() => null),
-      Pe = oT(U.entry?.mode ?? 33188);
+      Pe = normalizeFileMode(U.entry?.mode ?? 33188);
     if ($e === null) {
       if (await oa(o, m))
         if (St(m, U)) ne.trashed.push({ path: m, mode: Pe });
@@ -3979,7 +3979,7 @@ async function Qu({
           : Ue;
     if (He !== null && Pe === U.blobId && I(He.mode, U.mode)) {
       (ne.alreadyEqual.push(m),
-        ne.installed.push({ path: m, blobId: U.blobId, mode: oT(U.mode) }));
+        ne.installed.push({ path: m, blobId: U.blobId, mode: normalizeFileMode(U.mode) }));
       continue;
     }
     if (Pe !== $e && Pe !== U.blobId && !(Xce(m) && U.blobId !== $e)) {
@@ -4072,7 +4072,7 @@ async function Qu({
         Mn.status === "applied" &&
         Mn.written &&
         Rn &&
-        (await Wo(o, m)) !== oT(U.mode)
+        (await Wo(o, m)) !== normalizeFileMode(U.mode)
           ? { ...(await Qs(yr)), written: !0 }
           : Mn;
     if (Jt) {
@@ -4083,7 +4083,7 @@ async function Qu({
       ) {
         if ((ne.replaced.push(m), wr)) ne.replacedEarlierCloud.push(m);
       } else if (!tr && He !== null && (await oa(o, m)))
-        (ne.trashed.push({ path: m, mode: oT(He.mode) }), an.push(m));
+        (ne.trashed.push({ path: m, mode: normalizeFileMode(He.mode) }), an.push(m));
     }
     switch (un.status) {
       case "applied":
@@ -4091,7 +4091,7 @@ async function Qu({
         if (
           ((qn += 1),
           ($n += Pt.bytes.length),
-          ne.installed.push({ path: m, blobId: U.blobId, mode: oT(U.mode) }),
+          ne.installed.push({ path: m, blobId: U.blobId, mode: normalizeFileMode(U.mode) }),
           un.written)
         )
           ne.contentWritten.push(m);
@@ -4150,9 +4150,9 @@ async function Qs({
 }) {
   let k = {
       path: e,
-      sha256: mn(t),
+      sha256: hashSha256(t),
       size: t.length,
-      mode: oT(r.mode),
+      mode: normalizeFileMode(r.mode),
       etag: r.blobId,
     },
     _ =
@@ -4160,7 +4160,7 @@ async function Qs({
         ? void 0
         : {
             agreed: { kind: "git_blob", blobId: o.blobId },
-            stat: { size: 0, mtimeMs: 0, mode: oT(o.mode), observedAtMs: 0 },
+            stat: { size: 0, mtimeMs: 0, mode: normalizeFileMode(o.mode), observedAtMs: 0 },
             etag: o.blobId,
             origin: "pulled",
           },
@@ -4419,7 +4419,7 @@ async function lc({
       ? { kind: "nothing_new" }
       : { kind: "refused", reason: k };
   }
-  let f = ed(t, `in/${r.generation}`);
+  let f = buildSessionRefName(t, `in/${r.generation}`);
   if (f === null) return { kind: "refused", reason: "git_error" };
   let p = await e.receiveBundle({
     content: o,
@@ -4620,7 +4620,7 @@ async function pc(e, t) {
     },
     o = new Map(),
     s = dedupe(t.flatMap(Eze)),
-    a = (p) => ln(p, "/"),
+    a = (p) => countOccurrences(p, "/"),
     d = s.reduce((p, y) => Math.max(p, a(y)), -1);
   for (let p = 0; p <= d; p++) {
     let y = s.filter((k) => a(k) === p),
@@ -4685,7 +4685,7 @@ async function zo(
 async function Wo(e, t) {
   try {
     let r = await fr(Tn(e, t));
-    return r.isFile() ? oT(r.mode) : null;
+    return r.isFile() ? normalizeFileMode(r.mode) : null;
   } catch {
     return null;
   }
@@ -4762,7 +4762,7 @@ async function bc(e, t) {
 function _c(e, t) {
   return e.length === 64
     ? Cu("sha256").update(`blob ${t.length}\x00`).update(t).digest("hex")
-    : JA(t);
+    : computeGitBlobId(t);
 }
 function ia(e, t) {
   if (t === null) return null;
@@ -4779,7 +4779,7 @@ function sa(e) {
 }
 function kc(e) {
   return dedupe(e.flatMap(Eze)).toSorted(
-    (t, r) => ln(r, "/") - ln(t, "/") || (t < r ? -1 : 1),
+    (t, r) => countOccurrences(r, "/") - countOccurrences(t, "/") || (t < r ? -1 : 1),
   );
 }
 function ha(e) {
@@ -4804,7 +4804,7 @@ function lo(e) {
 }
 function la(e) {
   let t = e & 61440;
-  return (t === 0 ? 32768 : t) | oT(e);
+  return (t === 0 ? 32768 : t) | normalizeFileMode(e);
 }
 import { dirname as Ac } from "path";
 import { randomBytes as Sc } from "crypto";
@@ -4842,7 +4842,7 @@ async function ga(e, t) {
 }
 async function Ko(e) {
   let t = null;
-  if (P() === "windows") {
+  if (getCurrentPlatform() === "windows") {
     let o = await Ec(e, { bigint: !0 }).catch((s) =>
       A(s) === "ENOENT" ? null : "unreadable",
     );
@@ -5083,7 +5083,7 @@ async function Nc(e, t) {
       ...(ba(C, t.installedTree?.() ?? null) && { installedBaseline: !0 }),
     };
   let te = X4(C),
-    ge = ed(o, `${qo}/${te}`);
+    ge = buildSessionRefName(o, `${qo}/${te}`);
   if (ge === null)
     return bn(C, "refs", "git_error", "the session id cannot name a ref");
   if (!(await r.writeRefs([{ name: ge, id: E.worktreeCommit }])))
@@ -5572,7 +5572,7 @@ function Ra({ gitDir: e, timeoutMs: t, checkoutShallowFile: r }) {
     readTrees: (a) => $c(s, a),
     writeRefs: (a) => K4(s, a),
     createBundle: (a) => uOe({ ...a, repository: s }),
-    listSessionRefs: (a) => oOe(s, a),
+    listSessionRefs: (a) => listSessionRefs(s, a),
     deleteRefs: (a) => cOe(s, a),
   });
   return o({ gitDir: e, timeoutMs: t });
@@ -5631,8 +5631,8 @@ async function Fr(e, t, r) {
   };
 }
 async function ya(e, t, r) {
-  let o = new Set(r.sent.map((f) => ed(t, `${qo}/${f.generation}`))),
-    s = ed(t, qo),
+  let o = new Set(r.sent.map((f) => buildSessionRefName(t, `${qo}/${f.generation}`))),
+    s = buildSessionRefName(t, qo),
     a = s === null ? null : await e.listSessionRefs(t);
   if (a === null || s === null) return;
   let d = a
@@ -5652,7 +5652,7 @@ async function $c(e, t) {
   return o;
 }
 function Bc(e) {
-  return (e.conflicted ?? []).slice(0, XTe).map((t) => us(t, YTe));
+  return (e.conflicted ?? []).slice(0, XTe).map((t) => truncateToCodePoints(t, YTe));
 }
 function Mc(e) {
   return {
@@ -5772,7 +5772,7 @@ async function La(e, t) {
 }
 var Fa = new Set(["aborted", "git_error"]);
 function Oe(e) {
-  return io(e, { maxCodeUnits: xKe }).trim();
+  return formatSingleLineText(e, { maxCodeUnits: xKe }).trim();
 }
 function Da(e, t, r, o, s = !1) {
   logEvent("tengu_dir_sync_push", {
@@ -6202,7 +6202,7 @@ var Pf =
   Rf = (e) =>
     e === 0
       ? "The cloud session has no files from this directory yet"
-      : `Files from this directory are in the cloud session${e === null ? "" : ` (${e} ${x(e, "file")})`}`,
+      : `Files from this directory are in the cloud session${e === null ? "" : ` (${e} ${pluralize(e, "file")})`}`,
   vf = "withdrawn before it was sent",
   $r = "Claude Code was shutting down before your files could be synced for it",
   Tf =
@@ -7371,7 +7371,7 @@ function hFt({
         case "aborted":
           return (await Ee(z), v(!1, "object_pending"));
         case "failed":
-          if ((await Ee(z), de.status === dI))
+          if ((await Ee(z), de.status === UNREADABLE_CARRIER_STATUS))
             return (
               (vr = `${H.worktreeCommit}:${H.bundle.sha256}`),
               sr(H),
@@ -7911,7 +7911,7 @@ function hFt({
         if (oe !== null && oe !== ki) {
           let Nt = Re.slice(0, 5).map(Oe).join(", ");
           Ie(
-            `${Re.length} ${x(Re.length, "file")} changed while ${x(Re.length, "it was", "they were")} being read (${Nt}${Re.length > 5 ? ` and ${Re.length - 5} more` : ""}); ${x(Re.length, "it goes", "they go")} up with the first message after ${x(Re.length, "it holds", "they hold")} still`,
+            `${Re.length} ${pluralize(Re.length, "file")} changed while ${pluralize(Re.length, "it was", "they were")} being read (${Nt}${Re.length > 5 ? ` and ${Re.length - 5} more` : ""}); ${pluralize(Re.length, "it goes", "they go")} up with the first message after ${pluralize(Re.length, "it holds", "they hold")} still`,
             "info",
           );
         }
@@ -7921,7 +7921,7 @@ function hFt({
           let Nt = de.slice(0, 5).map(Oe).join(", ");
           Fe(
             `conflicted:${de.length}:${Nt}`,
-            `${de.length} ${x(de.length, "file holds", "files hold")} unresolved conflicts here (${Nt}${de.length > 5 ? ` and ${de.length - 5} more` : ""}); ${x(de.length, "it was", "they were")} synced as ${x(de.length, "it is", "they are")}, conflict markers included, and Claude is told; whatever you change in ${x(de.length, "it", "them")}, resolving included, goes up with your next message`,
+            `${de.length} ${pluralize(de.length, "file holds", "files hold")} unresolved conflicts here (${Nt}${de.length > 5 ? ` and ${de.length - 5} more` : ""}); ${pluralize(de.length, "it was", "they were")} synced as ${pluralize(de.length, "it is", "they are")}, conflict markers included, and Claude is told; whatever you change in ${pluralize(de.length, "it", "them")}, resolving included, goes up with your next message`,
             "info",
           );
         }
@@ -8457,7 +8457,7 @@ function hFt({
   }
   function Wi(c) {
     if (ze.includes(c)) return;
-    (ze.push(c), ze.splice(0, Math.max(0, ze.length - Qbe)));
+    (ze.push(c), ze.splice(0, Math.max(0, ze.length - MAX_USER_EVENT_UUIDS)));
   }
   function Bl(c, b) {
     if (c) return { next: "landed" };
@@ -9544,10 +9544,10 @@ async function Yhr({
     if ((await Ybe(k, w), k === p)) return { recordPath: p, record: w };
     if (s?.aborted) throw (await rl(k).catch(() => {}), new Ve());
     try {
-      return (await Ri(k, p), { recordPath: p, record: w });
+      return (await renameWithRetry(k, p), { recordPath: p, record: w });
     } catch (_) {
       let E = A(_);
-      if ((await rl(k).catch(() => {}), E === void 0 || !lv.has(E))) throw _;
+      if ((await rl(k).catch(() => {}), E === void 0 || !RENAME_FALLBACK_ERRNOS.has(E))) throw _;
       k = p;
     }
   }
@@ -9558,7 +9558,7 @@ function gh(e) {
 function wh(e) {
   let t = e
       .slice(0, 3)
-      .map((o) => io(o, { maxCodeUnits: 120 }))
+      .map((o) => formatSingleLineText(o, { maxCodeUnits: 120 }))
       .join(", "),
     r = e.length === 1;
   return `${r ? "1 file with a credential-like name" : `${e.length} files with credential-like names`} (${t}${e.length > 3 ? ", \u2026" : ""}) ${r ? "is" : "are"} in commits this machine would upload and the cloud session does not have; sync will not carry those commits while any of them contains ${r ? "that file" : "those files"} \u2014 amend or reset the commits (deleting the file in a later commit is not enough)`;
@@ -9577,8 +9577,8 @@ async function Jhr({
 }) {
   let w = qVn();
   logEvent("tengu_dir_sync_git_open", { branch_rule: w, upload_at_open: f });
-  let k = await canonicalizePath(t, If(y)),
-    _ = K9n(getProjectDir(k)),
+  let k = await canonicalizePath(t, createHoverRestOptions(y)),
+    _ = getSideGitDirPath(getProjectDir(k)),
     E = { gitDir: _, timeoutMs: Aze },
     R = await getDirSyncRecordPath(t, e, y),
     N = await lh(t),
@@ -9589,7 +9589,7 @@ async function Jhr({
     push: Ra({ ...E, checkoutShallowFile: ph(t) }),
     recordPath: R,
     snapshot: Ah({ gitRoot: t, realRoot: N, sideGitDir: _, pinCommit: gh(r) }),
-    transport: zpt({ client: C, direct: C }),
+    transport: createDirSyncJournalTransport({ client: C, direct: C }),
     applyDown: gFt({
       gitRoot: t,
       realRoot: N,
@@ -9600,7 +9600,7 @@ async function Jhr({
         now: () => new Date(),
         trash: _Ft(t, N, Ph(t, e), (O) =>
           s(
-            `When Claude deletes or replaces a file in the cloud, your copy is moved to ${io(O, { maxCodeUnits: 512 })} on this machine, not discarded`,
+            `When Claude deletes or replaces a file in the cloud, your copy is moved to ${formatSingleLineText(O, { maxCodeUnits: 512 })} on this machine, not discarded`,
             "info",
           ),
         ),
@@ -9736,7 +9736,7 @@ function kh(e, t) {
   };
 }
 async function Sh(e, t, r) {
-  let o = ed(t, "in/0")?.replace(/0$/, "") ?? null;
+  let o = buildSessionRefName(t, "in/0")?.replace(/0$/, "") ?? null;
   if (o === null || !nn.test(r)) return { kind: "none" };
   let s = await on(e, [
     "for-each-ref",
@@ -9895,7 +9895,7 @@ function Ah({
         pe = (Ae) => ({
           kind: "refused",
           reason: "unreadable",
-          detail: `${Ae} staged ${x(Ae, "file is", "files are")} covered by your Read rules or sandbox read-deny settings (or named like a credential under another spelling); unstage ${x(Ae, "it", "them")} for sync to continue (committing ${x(Ae, "it", "them")} would ship ${x(Ae, "its", "their")} bytes as history)`,
+          detail: `${Ae} staged ${pluralize(Ae, "file is", "files are")} covered by your Read rules or sandbox read-deny settings (or named like a credential under another spelling); unstage ${pluralize(Ae, "it", "them")} for sync to continue (committing ${pluralize(Ae, "it", "them")} would ship ${pluralize(Ae, "its", "their")} bytes as history)`,
         }),
         re = (Ae) => ({
           kind: "refused",
@@ -9905,7 +9905,7 @@ function Ah({
         te = (Ae) => ({
           kind: "refused",
           reason: "unreadable",
-          detail: `${Ae} ${x(Ae, "file")} covered by your Read rules or sandbox read-deny settings (or named like a credential under another spelling) ${x(Ae, "was", "were")} committed here since the session began; sync will not carry those commits`,
+          detail: `${Ae} ${pluralize(Ae, "file")} covered by your Read rules or sandbox read-deny settings (or named like a credential under another spelling) ${pluralize(Ae, "was", "were")} committed here since the session began; sync will not carry those commits`,
         }),
         ge = await C(["rev-parse", "-q", "--verify", "HEAD^{commit}"]);
       if (
@@ -10119,8 +10119,8 @@ function il(e) {
 }
 function ul(e) {
   let t = hardenedSpawnEnv(void 0),
-    r = Wd(t, "GIT_CONFIG_GLOBAL"),
-    o = Wd(t, "GIT_CONFIG_SYSTEM"),
+    r = getEnvVarCaseInsensitive(t, "GIT_CONFIG_GLOBAL"),
+    o = getEnvVarCaseInsensitive(t, "GIT_CONFIG_SYSTEM"),
     s = {
       ...(r === void 0 ? {} : { GIT_CONFIG_GLOBAL: r }),
       ...(o === void 0 ? {} : { GIT_CONFIG_SYSTEM: o }),
@@ -10194,8 +10194,8 @@ async function gi(e, t, r) {
 }
 var yFt = {
   encodeLaptop(e) {
-    return fOe({
-      version: F7,
+    return encodeSyncJournal({
+      version: JOURNAL_VERSION_WITH_NOTE,
       side: "laptop",
       generation: e.note.generation,
       turnIndex: 0,
@@ -10214,8 +10214,8 @@ var yFt = {
     });
   },
   announceUpload(e, t) {
-    return fOe({
-      version: F7,
+    return encodeSyncJournal({
+      version: JOURNAL_VERSION_WITH_NOTE,
       side: "laptop",
       generation: 0,
       turnIndex: 0,
@@ -10233,7 +10233,7 @@ var yFt = {
     });
   },
   decodeLaptop(e) {
-    let t = ewe(e, "laptop", { engine: "git" });
+    let t = parseSyncJournal(e, "laptop", { engine: "git" });
     if (!t.ok) return null;
     let { note: r, uploading: o } = t.journal;
     if (r === void 0)
@@ -10248,7 +10248,7 @@ var yFt = {
     return r.engine === "git" && "downApplied" in r ? { note: r } : null;
   },
   decodeWorker(e) {
-    let t = ewe(e, "worker", { engine: "git" });
+    let t = parseSyncJournal(e, "worker", { engine: "git" });
     if (!t.ok) return null;
     let { note: r, userEventUuids: o } = t.journal;
     return r !== void 0 && r.engine === "git" && "report" in r
@@ -10256,7 +10256,7 @@ var yFt = {
       : null;
   },
   decodeWorkerStartFailed(e) {
-    let t = ewe(e, "worker", { engine: "git" });
+    let t = parseSyncJournal(e, "worker", { engine: "git" });
     return t.ok && t.journal.halted === "start_failed"
       ? { line: t.journal.haltLine ?? null }
       : null;

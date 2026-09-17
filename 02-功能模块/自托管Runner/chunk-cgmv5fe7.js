@@ -11,14 +11,14 @@ import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCACertificates, getMTLSConfig, parseProxyUrl, getUsableProxyUrl, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Bs, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
 import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
-import { H5 } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
+import { decodeTaggedId } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
 var Pae = {
     ISSUES_EXPLAINER:
       "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -418,7 +418,7 @@ function mot(e) {
     async postWorkerEvents(r, t, s, a, i, d) {
       (qL(t, "sessionId"),
         n(
-          `[runner:api] POST ${r}/v1/code/sessions/${t}/worker/events (${i.length} ${x(i.length, "event")})`,
+          `[runner:api] POST ${r}/v1/code/sessions/${t}/worker/events (${i.length} ${pluralize(i.length, "event")})`,
         ));
       let p = await at.post(
         `${r}/v1/code/sessions/${t}/worker/events`,
@@ -903,7 +903,7 @@ function it(e) {
             : `exited ${d.exitCode ?? d.signal ?? "abnormally"}`,
           m = d.stderr?.trim();
         throw new X(
-          `proxy authorization command ${p}${m ? `: ${oe(redactSecrets(m), 500)}` : ""}`,
+          `proxy authorization command ${p}${m ? `: ${truncateToCodeUnits(redactSecrets(m), 500)}` : ""}`,
         );
       }
       return $e(d.stdout ?? "");
@@ -1891,7 +1891,7 @@ async function CNn(e) {
   let n = {
     ...Ne(),
     CLAUDE_RUNNER_SESSION_ID: e.sessionId.replace(/^cse_/, "session_"),
-    CLAUDE_RUNNER_SESSION_UUID: H5(e.sessionId),
+    CLAUDE_RUNNER_SESSION_UUID: decodeTaggedId(e.sessionId),
     CLAUDE_RUNNER_REPO_URL: e.repoUrl,
     CLAUDE_RUNNER_REPO_REF: e.repoRef ?? "",
     CLAUDE_RUNNER_CHECKOUT_PATH: e.checkoutPath,
@@ -2041,7 +2041,7 @@ async function vNn(e) {
   let n = {
     ...Ne(),
     CLAUDE_RUNNER_SESSION_ID: e.sessionId.replace(/^cse_/, "session_"),
-    CLAUDE_RUNNER_SESSION_UUID: H5(e.sessionId),
+    CLAUDE_RUNNER_SESSION_UUID: decodeTaggedId(e.sessionId),
     CLAUDE_RUNNER_EXIT_REASON: e.exitReason,
     CLAUDE_RUNNER_DEBUG_LOG_PATH: e.debugLogPath,
     CLAUDE_RUNNER_WORKSPACE_PATHS: e.workspacePaths.join(":"),

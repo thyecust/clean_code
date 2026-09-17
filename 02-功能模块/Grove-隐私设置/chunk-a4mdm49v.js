@@ -14,7 +14,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { _z } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { writeToStderr } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { withOAuth401Retry, ICn, prepareApiRequest, ht, getClaudeAIOAuthTokenOrigin, getOauthAccountInfo, isConsumerSubscriber, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -23,7 +23,7 @@ import { xn } from "../../03-入口与运行时/核心应用-Agent循环/核心�
 import { s, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var v = 86400000,
   S = 3000,
-  ZB = rs(
+  getAccountSettings = rs(
     async (t) => {
       try {
         return {
@@ -49,12 +49,12 @@ var v = 86400000,
           !/data-residency|essential-traffic-only|no-auth/.test(e.message)
         )
           n(`Failed to fetch Grove settings: ${e}`, { level: "error" });
-        return (ZB.cache.clear?.(), { success: !1 });
+        return (getAccountSettings.cache.clear?.(), { success: !1 });
       }
     },
     () => "account",
   );
-async function NDt(t) {
+async function markGroveNoticeViewed(t) {
   try {
     (await withOAuth401Retry(
       async () => {
@@ -69,7 +69,7 @@ async function NDt(t) {
       },
       { credentials: t },
     ),
-      ZB.cache.clear?.(),
+      getAccountSettings.cache.clear?.(),
       logFeatureOk("api_grove_notice_mark_viewed"));
   } catch (e) {
     (n(
@@ -79,7 +79,7 @@ async function NDt(t) {
       logFeatureBad("api_grove_notice_mark_viewed", "request_failed"));
   }
 }
-async function pIe(t, e) {
+async function updateGroveSettings(t, e) {
   try {
     (await withOAuth401Retry(
       async () => {
@@ -93,14 +93,14 @@ async function pIe(t, e) {
       },
       { credentials: e },
     ),
-      ZB.cache.clear?.(),
+      getAccountSettings.cache.clear?.(),
       logFeatureOk("api_grove_settings_update"));
   } catch (o) {
     (n(`updateGroveSettings failed: ${String(o)}`, { level: "error" }),
       logFeatureBad("api_grove_settings_update", "request_failed"));
   }
 }
-async function dSe(t, e) {
+async function shouldShowGroveNotice(t, e) {
   if (!isConsumerSubscriber()) return !1;
   let o = getOauthAccountInfo()?.accountUuid;
   if (!o) return !1;
@@ -126,7 +126,7 @@ async function dSe(t, e) {
 }
 async function _(t, e, o) {
   try {
-    let r = await l7(o);
+    let r = await getGroveConfig(o);
     if (!r.success) return;
     let u = r.data.grove_enabled,
       l = ee().groveConfigCache?.[t];
@@ -145,7 +145,7 @@ async function _(t, e, o) {
     n(`Grove: Failed to fetch and store config: ${r}`);
   }
 }
-var l7 = rs(
+var getGroveConfig = rs(
   async (t) => {
     try {
       let e = await withOAuth401Retry(
@@ -181,7 +181,7 @@ var l7 = rs(
   },
   () => "config",
 );
-function FDt(t, e, o) {
+function isGroveNoticeDue(t, e, o) {
   if (!t.success || !e.success) return !1;
   let r = t.data,
     u = e.data;
@@ -206,9 +206,9 @@ function FDt(t, e, o) {
     return p === null || p === void 0;
   }
 }
-async function qBn(t) {
-  let [e, o] = await Promise.all([ZB(t), l7(t)]);
-  if (FDt(e, o, !1)) {
+async function printGroveNotice(t) {
+  let [e, o] = await Promise.all([getAccountSettings(t), getGroveConfig(t)]);
+  if (isGroveNoticeDue(e, o, !1)) {
     let u = o.success ? o.data : null;
     if (
       (logEvent("tengu_grove_print_viewed", {
@@ -216,20 +216,20 @@ async function qBn(t) {
       }),
       u === null || u.notice_is_grace_period)
     )
-      (_z(`
+      (writeToStderr(`
 An update to our Consumer Terms and Privacy Policy will take effect on October 8, 2025. Run \`claude\` to review the updated terms.
 
 `),
-        await NDt(t));
+        await markGroveNoticeViewed(t));
     else
-      (_z(`
+      (writeToStderr(`
 [ACTION REQUIRED] An update to our Consumer Terms and Privacy Policy has taken effect on October 8, 2025. You must run \`claude\` to review the updated terms.
 
 `),
         await xn(1));
   }
 }
-class bnn {
+class RedactedGitHubToken {
   #e;
   constructor(t) {
     this.#e = t;
@@ -247,7 +247,7 @@ class bnn {
     return "[REDACTED:gh-token]";
   }
 }
-async function wnn(t, e) {
+async function importGitHubToken(t, e) {
   let o;
   try {
     o = await ht.post(
@@ -280,7 +280,7 @@ async function wnn(t, e) {
     { ok: !1, error: { kind: "server", status: o.status } }
   );
 }
-async function zBn(t) {
+async function canPrepareApiRequest(t) {
   try {
     return (await prepareApiRequest(t), !0);
   } catch {
@@ -306,7 +306,7 @@ async function k(t, { timeout: e, isBackground: o }) {
     return null;
   }
 }
-async function Tnn(t) {
+async function getGitHubAuthSource(t) {
   let e = await k(t, { timeout: 1e4, isBackground: !1 });
   return e?.isAuthenticated ? e.authSource : null;
 }
@@ -319,7 +319,7 @@ async function C(t) {
     e.isAuthenticated ? "connected" : "not_connected"
   );
 }
-function c7() {
+function getClaudeAiCodeBaseUrl() {
   return `${getOauthConfig().CLAUDE_AI_ORIGIN}/code`;
 }
 class G {
@@ -374,7 +374,7 @@ class G {
     ((this.status = e), w(e, o));
   }
 }
-var b4 = new j(() => new G());
+var githubConnectionStatusStore = new j(() => new G());
 function b() {
   return H("tengu_cheerful_horizon", !1);
 }
@@ -414,4 +414,4 @@ function w(t, e) {
     e,
   );
 }
-export { ZB, NDt, pIe, dSe, l7, FDt, qBn, bnn, wnn, zBn, Tnn, c7, b4 };
+export { getAccountSettings, markGroveNoticeViewed, updateGroveSettings, shouldShowGroveNotice, getGroveConfig, isGroveNoticeDue, printGroveNotice, RedactedGitHubToken, importGitHubToken, canPrepareApiRequest, getGitHubAuthSource, getClaudeAiCodeBaseUrl, githubConnectionStatusStore };

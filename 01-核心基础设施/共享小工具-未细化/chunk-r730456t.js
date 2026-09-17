@@ -11,7 +11,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logEvent } from "./analytics-event-queue.js";
 import { o, t, uE } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "./keybinding-hooks.js";
-import { Yn } from "./chunk-r3y9qj3r.js";
+import { useAppState } from "./app-state-context.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "./chunk-2c9tjhwd.js";
@@ -20,7 +20,7 @@ function rWe(k) {
   let n = _(17),
     { Wizard: u, cancelledEvent: v, onDone: C } = k,
     g = uE(),
-    x = Yn(),
+    x = useAppState(),
     [a, A] = d(null),
     E;
   if (n[0] !== g || n[1] !== x)

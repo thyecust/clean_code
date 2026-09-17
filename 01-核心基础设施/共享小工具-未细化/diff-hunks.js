@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { o, t, pd } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { QP } from "../../02-功能模块/Diff引擎/chunk-p2gj9dsf.js";
+import { StructuredDiff } from "../../02-功能模块/Diff引擎/structured-diff.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { intersperse } from "./chunk-d16fhdtx.js";
 function DiffHunks({
@@ -25,7 +25,7 @@ function DiffHunks({
         o,
         {
           flexDirection: "column",
-          children: e(QP, {
+          children: e(StructuredDiff, {
             patch: r,
             dim: f,
             width: n,

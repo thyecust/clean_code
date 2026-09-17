@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-var Xi = "ScheduleWakeup",
+var SCHEDULE_WAKEUP_TOOL_NAME = "ScheduleWakeup",
   sCe = "<<autonomous-loop>>",
-  eoe = "<<autonomous-loop-dynamic>>",
+  AUTONOMOUS_LOOP_DYNAMIC_SENTINEL = "<<autonomous-loop-dynamic>>",
   t = `Schedule when to resume work in /loop dynamic mode \u2014 the user invoked /loop without an interval, asking you to self-pace iterations of a specific task.
 
 Do NOT schedule a short-interval wakeup to poll for background work you started \u2014 when harness-tracked work finishes, you are re-invoked automatically, so polling is wasted. Instead schedule a long fallback (1200s+) so the loop survives if the work hangs or never notifies. The exception is external work the harness cannot track (a CI run, a deploy, a remote queue) \u2014 there, pick a delay matched to how fast that state actually changes.
@@ -66,8 +66,8 @@ One short sentence on what you chose and why. Goes to telemetry and is shown bac
 }
 var aZn =
   "Schedule when to resume work in /loop dynamic mode (always pass the `prompt` arg unless stopping). Call before ending the turn to keep the loop alive; call with `stop: true` to end the loop immediately.";
-var kT = "TaskList";
-var sg = "TaskStop",
+var TASK_LIST_TOOL_NAME = "TaskList";
+var TASK_STOP_TOOL_NAME = "TaskStop",
   lZn = `
 - Stops a running background task by its ID
 - Takes a task_id parameter identifying the task to stop
@@ -76,4 +76,4 @@ var sg = "TaskStop",
 - Returns a success or failure status
 - Use this tool when you need to terminate a long-running task
 `;
-export { Xi, sCe, eoe, iZn, aZn, kT, sg, lZn };
+export { SCHEDULE_WAKEUP_TOOL_NAME, sCe, AUTONOMOUS_LOOP_DYNAMIC_SENTINEL, iZn, aZn, TASK_LIST_TOOL_NAME, TASK_STOP_TOOL_NAME, lZn };

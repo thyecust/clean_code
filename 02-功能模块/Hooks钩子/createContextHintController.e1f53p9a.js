@@ -15,7 +15,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { SS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { KGn, Dg, hfn, _fn, EVn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Gre, TSn, tG, nG } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 function c() {
@@ -50,7 +50,7 @@ function T(e) {
 }
 function C(e) {
   logEvent("tengu_context_hint_reject", {
-    requestId: Ee(e.requestId),
+    requestId: sanitizeAnalyticsId(e.requestId),
     preCompactTokenEstimate: e.preCompactTokenEstimate,
     postCompactTokenEstimate: e.postCompactTokenEstimate,
     tokensSaved: e.tokensSaved,
@@ -59,7 +59,7 @@ function C(e) {
   });
 }
 function d(e, t) {
-  logEvent("tengu_context_hint_busy_fallback", { requestId: Ee(e), status: t });
+  logEvent("tengu_context_hint_busy_fallback", { requestId: sanitizeAnalyticsId(e), status: t });
 }
 var S = 5,
   _ = new Set(),

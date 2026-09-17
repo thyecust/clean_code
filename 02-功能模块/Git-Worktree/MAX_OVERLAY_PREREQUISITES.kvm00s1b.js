@@ -46,14 +46,14 @@ import {
   vKn,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { pI, a3n, l3n, SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
-import "../文件同步-Sync/chunk-ht8ydg1v.js";
-import { E3n, JA, Jbe } from "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
-import "./chunk-7jshw9s9.js";
+import "../文件同步-Sync/sync-journal.js";
+import { inferHashAlgorithmFromDigestLength, computeGitBlobId, computeContentDigests } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
+import "./local-divergence-probe.js";
 import { Xbe } from "./chunk-v967hawf.js";
 import { EFt } from "../文件同步-Sync/chunk-tqwnv5vj.js";
 import { createOverlayBundle } from "../云会话-Teleport/overlay-bundle.js";
 import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var Ue =
     /^:([0-7]{6}) ([0-7]{6}) ([0-9a-f]{40}(?:[0-9a-f]{24})?) ([0-9a-f]{40}(?:[0-9a-f]{24})?) ([A-Z])[0-9]*$/,
@@ -303,7 +303,7 @@ function Je(e, t) {
     let s = e[o];
     if (s !== 13 || e[o + 1] !== 10) r[i++] = s;
   }
-  return JA(r.subarray(0, i), t);
+  return computeGitBlobId(r.subarray(0, i), t);
 }
 async function ae(e, t, r) {
   let i = await Ee(
@@ -604,15 +604,15 @@ async function Fe(e, t, r, i, o, s) {
         let R = await readlink(K(e, p.path), "buffer").catch(() => null);
         if (R !== null) {
           let k =
-            P() === "windows"
+            getCurrentPlatform() === "windows"
               ? Buffer.from(R.toString("utf8").replaceAll("\\", "/"))
               : R;
-          return { unchanged: JA(k, o) === p.oldId, checkin: null };
+          return { unchanged: computeGitBlobId(k, o) === p.oldId, checkin: null };
         }
       } else if (!Q.has(p.oldMode)) return b;
       let m = await o$(e, t, p.path, r);
       if (m.kind !== "read") return b;
-      return JA(m.content, o) === p.oldId
+      return computeGitBlobId(m.content, o) === p.oldId
         ? { unchanged: !0, checkin: null }
         : {
             unchanged: !1,
@@ -662,7 +662,7 @@ async function at({
     y = g.code === 0 ? ye(g.stdout) : null;
   if (y === null || c.code !== 0)
     return { kind: "failed", reason: Ct(s) ? "aborted" : "diff_index_failed" };
-  let w = E3n(i);
+  let w = inferHashAlgorithmFromDigestLength(i);
   if (y.some((a) => a.oldId.length !== i.length))
     return { kind: "failed", reason: "diff_index_failed" };
   let p = new Set(
@@ -736,8 +736,8 @@ async function at({
         }
         return { kind: "skip", reason: O.skipped.reason };
       }
-      let he = Jbe(O.content),
-        Le = w === "sha1" ? he.gitBlobId : JA(O.content, w),
+      let he = computeContentDigests(O.content),
+        Le = w === "sha1" ? he.gitBlobId : computeGitBlobId(O.content, w),
         me = H || a.oldMode === a.newMode;
       if (a.status !== "A" && me && Le === a.oldId)
         return { kind: "unchanged", path: a.path, resurfaced: H };

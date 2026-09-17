@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 213 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { yrn, Srn } from "../工具WebFetch-WebSearch/chunk-rj210cds.js";
+import { clearConversation as yrn, hasAgentTaskSurvivingClear as Srn } from "../工具WebFetch-WebSearch/clear-conversation.js";
 import "../工具WebFetch-WebSearch/chunk-1mxgbqzj.js";
 import "../工具Glob-Grep-搜索/chunk-57axeagj.js";
 import "../上下文压缩-Compact/chunk-1ntrf0ja.js";
@@ -17,5 +17,5 @@ import "../../01-核心基础设施/共享小工具-未细化/session-announceme
 import "../Teammates团队/agent-lifecycle.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
-import "../权限系统/chunk-n4x6jsp3.js";
+import "../权限系统/swarm-permission-poller.js";
 export { yrn as clearConversation, Srn as hasAgentTaskSurvivingClear };

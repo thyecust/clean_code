@@ -13,13 +13,13 @@ import { bh, K, sn, Nb, Rg, TB, Oxe, Rje } from "../../00-第三方库/lodash/lo
 import { raceWithAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Id, pp, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { COMMAND_NAME_TAG, COMMAND_MESSAGE_TAG, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { cmdFeature, logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { nq, inlineSkillModelOverride, mc, o0, isBgSession, wl, Ms } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { C_ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { nxt, Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
+import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { Rir, kir, TQ } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { validateBridgeId, toCompatSessionId } from "../权限系统/chunk-ynkf3yy4.js";
@@ -27,9 +27,9 @@ import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具
 import { isRestrictedToPluginOnly, isSourceAdminTrusted } from "../Skills技能/chunk-sapykxw7.js";
 import { isPolicyAllowed, policyDeniedReason, policyDenyKind } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { CSt } from "../Hooks钩子/chunk-z3433nr6.js";
-import { getBundledSkills } from "../Skills技能/chunk-1zy5c8mf.js";
+import { getBundledSkills } from "../Skills技能/bundled-skills.js";
 import { iA, Xy } from "../权限系统/chunk-t3b7pg2x.js";
-import { so, getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
+import { SKILL_TOOL_NAME, getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
 import { isSilentAbortReason, shutdownInterruptStamp } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
   Nft,
@@ -101,26 +101,26 @@ import {
   deriveRequires,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { sp, Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { f7e, bo } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
+import { redactPromptUnlessEnabled, emitOtelEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import {
-  kbe,
-  tpt,
-  tH,
-  xbe,
-  U1t,
-  B1t,
-  j1t,
-  B4,
-  npt,
-  wWn,
-  TWn,
+  resolvePromptCommandFromUri,
+  setAlwaysDenyCommands,
+  parseSlashCommandInput,
+  resolveSubcommandTarget,
+  getFotwCommand,
+  isFotwCommand,
+  isClaimableFotwCommand,
+  getFotwCreditAmount,
+  refreshFotwEligibility,
+  claimFotwCredit,
+  markFotwUpsellFulfilled,
 } from "../用量额度-限额/chunk-1bfn62xh.js";
-import { Mk } from "../../01-核心基础设施/共享小工具-未细化/chunk-rrrsz7e6.js";
-import { Mu } from "../MCP客户端/chunk-0mwqsv0r.js";
-import { gD } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
-import { iCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
-import { dfe } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
+import { appendEndedByModelSuffix } from "../../01-核心基础设施/共享小工具-未细化/ended-by-model.js";
+import { isMcpSkillsEnabled } from "../MCP客户端/mcp-skills-extension.js";
+import { CODE_REVIEW_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
+import { iCe } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
+import { isModelInvocable } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { randomUUID } from "crypto";
 function Me(e, o, t, m, l) {
   let c = 0;
@@ -150,20 +150,20 @@ function _e({
 }) {
   if (o !== void 0 || t) return;
   if (isBgSession()) return;
-  TWn(e);
-  let c = npt(l);
-  if (!B1t(e)) return;
-  if (j1t(e)) {
+  markFotwUpsellFulfilled(e);
+  let c = refreshFotwEligibility(l);
+  if (!isFotwCommand(e)) return;
+  if (isClaimableFotwCommand(e)) {
     Ee(e, m, l);
     return;
   }
   c.then((_) => {
-    if (j1t(e)) {
+    if (isClaimableFotwCommand(e)) {
       Ee(e, m, l);
       return;
     }
     if (!_) return;
-    let v = U1t();
+    let v = getFotwCommand();
     if (!v) return;
     m((T) => ({
       ...T,
@@ -177,8 +177,8 @@ function _e({
   });
 }
 function Ee(e, o, t) {
-  let m = U1t(),
-    l = B4();
+  let m = getFotwCommand(),
+    l = getFotwCreditAmount();
   if (!m || !l) return;
   (o((c) => ({
     ...c,
@@ -189,7 +189,7 @@ function Ee(e, o, t) {
       currency: l.currency,
     },
   })),
-    wWn(e, t)
+    claimFotwCredit(e, t)
       .catch(() => ({ outcome: "failed" }))
       .then((c) => {
         o((_) => {
@@ -638,9 +638,9 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
     });
     let ee = c || randomUUID();
     return (
-      bo("user_prompt", {
+      emitOtelEvent("user_prompt", {
         prompt_length: String(e.length),
-        prompt: f7e(e),
+        prompt: redactPromptUnlessEnabled(e),
         ...(L && { "prompt.id": L }),
         "message.uuid": ee,
       }),
@@ -659,7 +659,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
       }
     );
   }
-  let s = tH(e);
+  let s = parseSlashCommandInput(e);
   if (!s) {
     if ((logEvent("tengu_input_slash_missing", {}), l.options.isNonInteractiveSession))
       return te();
@@ -679,12 +679,12 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
     { isMcp: A } = s,
     M;
   if (W !== void 0) {
-    let w = tH(W);
+    let w = parseSlashCommandInput(W);
     M = w && w.commandName === s.commandName ? w.args : void 0;
   }
   let I = !1;
-  if (Mu()) {
-    let w = kbe(d, l.options.commands);
+  if (isMcpSkillsEnabled()) {
+    let w = resolvePromptCommandFromUri(d, l.options.commands);
     if (w) ((d = w.commandName), (p = w.args));
     else if (d.includes("://")) I = !0;
   }
@@ -701,7 +701,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
   }
   let r, k;
   if (b && !isSkillOff(b)) {
-    let w = xbe(b, p);
+    let w = resolveSubcommandTarget(b, p);
     if (w) {
       let L = findCommand(w.targetName, l.options.commands);
       if (L && isCommandEnabled(L))
@@ -709,7 +709,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
           (b = L),
           (d = w.targetName),
           (p = w.remainingArgs));
-      else if (b.name === gD) {
+      else if (b.name === CODE_REVIEW_SKILL_NAME) {
         let z = Nft();
         if (z) r = Ht(`${z} Running a local review instead.`, "warning");
       }
@@ -718,7 +718,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
   if (b?.loadedFrom === "syncedSkills" && wV()) b = void 0;
   let C = builtInCommandNames().has(d);
   if (isSlashCommandBlockedByEndedByModel(b, l.getAppState().endedByModel)) {
-    let w = Mk(
+    let w = appendEndedByModelSuffix(
       "Claude ended this conversation. Start a new session (or /clear) to continue.",
     );
     return { messages: [Ht(w, "warning")], shouldQuery: !1, resultText: w };
@@ -849,9 +849,9 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
   if (!(l.deferSlashToEngine?.(b) ?? !1)) {
     let w = randomUUID();
     (Rje(w),
-      bo("user_prompt", {
+      emitOtelEvent("user_prompt", {
         prompt_length: String(R.length),
-        prompt: f7e(R),
+        prompt: redactPromptUnlessEnabled(R),
         "prompt.id": w,
         command_name: O === "builtin" || wl() ? d : O,
         command_source: O,
@@ -1589,12 +1589,12 @@ function Xe(e, o, t, m) {
       v = !0;
       break;
     }
-    let P = tH(U);
+    let P = parseSlashCommandInput(U);
     if (!P) break;
     let W = _;
     if (_ !== void 0) {
       let x = _.trimStart(),
-        V = x.startsWith("/") ? tH(x) : void 0;
+        V = x.startsWith("/") ? parseSlashCommandInput(x) : void 0;
       if (!V || V.commandName !== P.commandName) break;
       W = V.args;
     }
@@ -1617,16 +1617,16 @@ function Xe(e, o, t, m) {
 }
 function formatSkillLoadingMetadata(e, o = "loading") {
   return [
-    `<${pp}>${e}</${pp}>`,
-    `<${Id}>${e}</${Id}>`,
+    `<${COMMAND_MESSAGE_TAG}>${e}</${COMMAND_MESSAGE_TAG}>`,
+    `<${COMMAND_NAME_TAG}>${e}</${COMMAND_NAME_TAG}>`,
     "<skill-format>true</skill-format>",
   ].join(`
 `);
 }
 function Fe(e, o) {
   return [
-    `<${pp}>${e}</${pp}>`,
-    `<${Id}>/${e}</${Id}>`,
+    `<${COMMAND_MESSAGE_TAG}>${e}</${COMMAND_MESSAGE_TAG}>`,
+    `<${COMMAND_NAME_TAG}>/${e}</${COMMAND_NAME_TAG}>`,
     o ? `<command-args>${o}</command-args>` : null,
   ].filter(Boolean).join(`
 `);
@@ -1733,8 +1733,8 @@ async function ve(e, o, t, m = [], l = [], c, _ = [], v, T, U, P = !1) {
     if (e.disableModelInvocation || k || C) {
       let O = [
         k
-          ? `"/${Qn(e.name)}" is an MCP prompt and cannot run in coordinator mode: the coordinator does not load prompt content, and workers cannot invoke MCP prompts via the ${so} tool.`
-          : `Skill "/${Qn(e.name)}" is user-invocable only (${e.disableModelInvocation ? "disable-model-invocation" : "disabled for model invocation in settings"}) and cannot run in coordinator mode: the coordinator does not load skill content, and workers cannot invoke it via the ${so} tool.`,
+          ? `"/${Qn(e.name)}" is an MCP prompt and cannot run in coordinator mode: the coordinator does not load prompt content, and workers cannot invoke MCP prompts via the ${SKILL_TOOL_NAME} tool.`
+          : `Skill "/${Qn(e.name)}" is user-invocable only (${e.disableModelInvocation ? "disable-model-invocation" : "disabled for model invocation in settings"}) and cannot run in coordinator mode: the coordinator does not load skill content, and workers cannot invoke it via the ${SKILL_TOOL_NAME} tool.`,
       ];
       if (e.description) O.push(`Description: ${e.description}`);
       let R = Object.entries(e.subcommands ?? {})
@@ -1754,7 +1754,7 @@ async function ve(e, o, t, m = [], l = [], c, _ = [], v, T, U, P = !1) {
           `Note: the subcommands ${R.map((D) => `"/${Qn(e.name)} ${Qn(D)}"`).join(", ")} route to their own dedicated commands and DO still work when the user types them directly in the terminal (remote-control clients gate some commands separately).`,
         );
       O.push(`
-Do not instruct workers to invoke this via the ${so} tool \u2014 it will be refused. Tell the user that ${R.length > 0 ? `/${Qn(e.name)} itself (beyond the subcommands above) is` : `the /${Qn(e.name)} command is`} unavailable in coordinator mode. If \u2014 and only if \u2014 the underlying task is achievable with the tools workers actually hold, you may brief a worker to do that work directly; do not promise this otherwise.`);
+Do not instruct workers to invoke this via the ${SKILL_TOOL_NAME} tool \u2014 it will be refused. Tell the user that ${R.length > 0 ? `/${Qn(e.name)} itself (beyond the subcommands above) is` : `the /${Qn(e.name)} command is`} unavailable in coordinator mode. If \u2014 and only if \u2014 the underlying task is achievable with the tools workers actually hold, you may brief a worker to do that work directly; do not promise this otherwise.`);
       let N = [
         {
           type: "text",
@@ -1768,7 +1768,7 @@ Do not instruct workers to invoke this via the ${so} tool \u2014 it will be refu
           ...be([Re({ content: Ce(l, m, N), isMeta: !0 }), ..._]),
         ],
         shouldQuery: !0,
-        disallowedTools: qu(e.disallowedTools ?? []),
+        disallowedTools: splitToolRuleList(e.disallowedTools ?? []),
         command: e,
       };
     }
@@ -1795,7 +1795,7 @@ Instruct a worker to use this skill by including "Use the /${Qn(e.name)} skill" 
         ...be([Re({ content: Ce(l, m, j), isMeta: !0 }), ..._]),
       ],
       shouldQuery: !0,
-      disallowedTools: qu(e.disallowedTools ?? []),
+      disallowedTools: splitToolRuleList(e.disallowedTools ?? []),
       command: e,
     };
   }
@@ -1835,12 +1835,12 @@ Instruct a worker to use this skill by including "Use the /${Qn(e.name)} skill" 
   if (q && !P) t.applyAttributionOp({ kind: "recordVerification", method: q });
   t.options.activeSkill = attributionSkillName(e);
   let te = Ue(e, o),
-    s = P ? [] : qu((await e.getAllowedTools?.()) ?? e.allowedTools ?? []),
-    d = qu(e.disallowedTools ?? []);
-  if (d.length > 0) tpt(t.setToolPermissionContext, d, "union");
+    s = P ? [] : splitToolRuleList((await e.getAllowedTools?.()) ?? e.allowedTools ?? []),
+    d = splitToolRuleList(e.disallowedTools ?? []);
+  if (d.length > 0) setAlwaysDenyCommands(t.setToolPermissionContext, d, "union");
   let p = Ce(l, m, W),
     M =
-      dfe(e) || P || v
+      isModelInvocable(e) || P || v
         ? []
         : await UTe(
             getAttachmentMessages(

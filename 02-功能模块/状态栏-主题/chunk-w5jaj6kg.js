@@ -11,15 +11,15 @@ import { Nk, V8e } from "./chunk-jz6b76hr.js";
 import { m4 } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { dk, NFt, Zb, _Oe, $Ft } from "./chunk-q7ekqy5h.js";
-import { Eo, XH } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
+import { getThemeStore, getCachedCustomThemes, parseCustomThemeRef, loadCustomThemes, watchCustomThemes } from "./custom-themes.js";
+import { resolveSetting, saveUserIntentSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Q4, hOe } from "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
+import { resolveSystemTheme, hOe } from "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
 import { Qt, re, De, E, V, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 var be = () => De(m4),
-  rk = be;
+  useStdin = be;
 F();
 var B = "dark",
   l = Qt({
@@ -36,27 +36,27 @@ var B = "dark",
     reloadCustomThemes: () => Promise.resolve(),
     setPreviewOverrides: () => {},
   });
-function kat() {
-  return Eo("theme", "dark").value;
+function getStoredThemeSetting() {
+  return resolveSetting("theme", "dark").value;
 }
-function xat(Pt) {
+function ThemeProvider(Pt) {
   let r = _(52),
     { children: ie, initialState: U, onThemeSave: G } = Pt,
     { storageV5: y } = useStorageV5Context(),
     Ce;
   if (r[0] !== G || r[1] !== y)
-    ((Ce = (Ie) => (G ? G(Ie) : XH("theme", Ie, y))),
+    ((Ce = (Ie) => (G ? G(Ie) : saveUserIntentSetting("theme", Ie, y))),
       (r[0] = G),
       (r[1] = y),
       (r[2] = Ce));
   else Ce = r[2];
   let P = Ce,
-    [g, Le] = d(U ?? kat),
+    [g, Le] = d(U ?? getStoredThemeSetting),
     [s, q] = d(null),
     [Rt, St] = d(null),
-    [oe, xt] = d(NFt),
+    [oe, xt] = d(getCachedCustomThemes),
     Oe;
-  if (r[3] === MEMO_CACHE_SENTINEL) ((Oe = dk()), (r[3] = Oe));
+  if (r[3] === MEMO_CACHE_SENTINEL) ((Oe = getThemeStore()), (r[3] = Oe));
   else Oe = r[3];
   let Ne = Oe.pluginThemes,
     le = At(Ne.subscribe, Ne.getState),
@@ -67,7 +67,7 @@ function xat(Pt) {
   let R = Ae,
     He;
   if (r[7] !== U || r[8] !== g)
-    ((He = () => ((U ?? g) === "auto" ? Q4() : "dark")),
+    ((He = () => ((U ?? g) === "auto" ? resolveSystemTheme() : "dark")),
       (r[7] = U),
       (r[8] = g),
       (r[9] = He));
@@ -75,20 +75,20 @@ function xat(Pt) {
   let [kt, I] = d(He),
     m = s ?? g,
     Ee;
-  if (r[10] !== y) ((Ee = () => _Oe(y).then(xt)), (r[10] = y), (r[11] = Ee));
+  if (r[10] !== y) ((Ee = () => loadCustomThemes(y).then(xt)), (r[10] = y), (r[11] = Ee));
   else Ee = r[11];
   let h = Ee,
     Me,
     Ve;
   if (r[12] !== h)
-    ((Me = () => (h(), $Ft(() => void h()))),
+    ((Me = () => (h(), watchCustomThemes(() => void h()))),
       (Ve = [h]),
       (r[12] = h),
       (r[13] = Me),
       (r[14] = Ve));
   else ((Me = r[13]), (Ve = r[14]));
   E(Me, Ve);
-  let { internal_querier: L } = rk(),
+  let { internal_querier: L } = useStdin(),
     Ye,
     Ue;
   if (r[15] !== m)
@@ -96,7 +96,7 @@ function xat(Pt) {
       if (m !== "auto") {
         return;
       }
-      return (I(Q4()), hOe(() => I(Q4())));
+      return (I(resolveSystemTheme()), hOe(() => I(resolveSystemTheme())));
     }),
       (Ue = [m]),
       (r[15] = m),
@@ -133,7 +133,7 @@ function xat(Pt) {
   else ((Ge = r[20]), (qe = r[21]));
   E(Ge, qe);
   let D;
-  if (r[22] !== m) ((D = Zb(m)), (r[22] = m), (r[23] = D));
+  if (r[22] !== m) ((D = parseCustomThemeRef(m)), (r[22] = m), (r[23] = D));
   else D = r[23];
   let O = D,
     Ze;
@@ -154,7 +154,7 @@ function xat(Pt) {
     X;
   if (r[30] !== P)
     ((X = (de) => {
-      if ((Le(de), q(null), de === "auto")) I(Q4());
+      if ((Le(de), q(null), de === "auto")) I(resolveSystemTheme());
       P(de);
     }),
       (r[30] = P),
@@ -163,7 +163,7 @@ function xat(Pt) {
   let Be;
   if (r[32] === MEMO_CACHE_SENTINEL)
     ((Be = (Je) => {
-      if ((q(Je), Je === "auto")) I(Q4());
+      if ((q(Je), Je === "auto")) I(resolveSystemTheme());
     }),
       (r[32] = Be));
   else Be = r[32];
@@ -233,7 +233,7 @@ function xat(Pt) {
   else We = r[51];
   return We;
 }
-function cn() {
+function useTheme() {
   let bt = _(3),
     { currentTheme: se, setThemeSetting: ce } = De(l),
     $e;
@@ -242,10 +242,10 @@ function cn() {
   else $e = bt[2];
   return $e;
 }
-function c4() {
+function useThemeSetting() {
   return De(l).themeSetting;
 }
-function Hat() {
+function usePreviewTheme() {
   let Ct = _(4),
     { setPreviewTheme: he, savePreview: ae, cancelPreview: ge } = De(l),
     je;
@@ -258,13 +258,13 @@ function Hat() {
   else je = Ct[3];
   return je;
 }
-function Ty() {
+function useResolvedTheme() {
   return De(l).resolvedTheme;
 }
-function Iat() {
+function useActiveThemeOverrides() {
   return De(l).activeThemeOverrides;
 }
-function u4() {
+function useCustomThemes() {
   let It = _(5),
     {
       customThemes: pe,
@@ -327,16 +327,16 @@ function mt(t, n) {
       return { ...t, mode: { type: "idle" } };
   }
 }
-function Pat(t) {
+function getCurrentKillRingText(t) {
   return t.ring[0] ?? "";
 }
-function Oat(t) {
+function getNextKillRingEntry(t) {
   if (t.mode.type !== "yanked" || t.ring.length <= 1) return null;
   let n = (t.mode.index + 1) % t.ring.length,
     { start: i, length: u } = t.mode;
   return { text: t.ring[n] ?? "", start: i, length: u };
 }
-function YOt() {
+function createKillRing() {
   let t = lt;
   return {
     get state() {
@@ -348,11 +348,11 @@ function YOt() {
   };
 }
 var N = Qt(null);
-function $0e(Et) {
+function KillRingProvider(Et) {
   let tt = _(5),
     { handle: J, children: ye } = Et,
     nt;
-  if (tt[0] !== J) ((nt = () => J ?? YOt()), (tt[0] = J), (tt[1] = nt));
+  if (tt[0] !== J) ((nt = () => J ?? createKillRing()), (tt[0] = J), (tt[1] = nt));
   else nt = tt[1];
   let [Mt] = d(nt);
   const Pe = J ?? Mt;
@@ -365,7 +365,7 @@ function $0e(Et) {
   else rt = tt[4];
   return rt;
 }
-function T9e() {
+function useKillRing() {
   let it = De(N);
   if (!it) {
     throw ReferenceError(
@@ -374,4 +374,4 @@ function T9e() {
   }
   return it;
 }
-export { rk, kat, xat, cn, c4, Hat, Ty, Iat, u4, Pat, Oat, YOt, $0e, T9e };
+export { useStdin, getStoredThemeSetting, ThemeProvider, useTheme, useThemeSetting, usePreviewTheme, useResolvedTheme, useActiveThemeOverrides, useCustomThemes, getCurrentKillRingText, getNextKillRingEntry, createKillRing, KillRingProvider, useKillRing };

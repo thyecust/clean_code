@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { TYn, G8e } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { setTerminalUiMounted, getTerminalUiMounted } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
 class o extends Map {
   get everMounted() {
-    return G8e();
+    return getTerminalUiMounted();
   }
   set everMounted(e) {
-    TYn(e);
+    setTerminalUiMounted(e);
   }
   set(e, n) {
     return ((this.everMounted = !0), super.set(e, n));

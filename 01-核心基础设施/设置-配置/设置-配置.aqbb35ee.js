@@ -62,25 +62,25 @@ import {
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep } from "../共享小工具-未细化/async-timeout-utils.js";
-import { Ce, gxt } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
+import { STORAGE_KEYS, serializeStorageKey } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ou, We, b, z, Ru, Ro, ae, fp, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be, w_e } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { Wf, x, oe, Wc, Rae, ft, ln, hy } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { getClaudeConfigDir, isSameAsConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { capitalize, pluralize, truncateToCodeUnits, isWellFormed, removeLoneSurrogates, beforeFirst, countOccurrences, escapeAllControlCharacters } from "../核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { Ghe, env as a } from "./chunk-zqr5ctyf.js";
-import { mhe, ZU, Sn } from "../共享小工具-未细化/chunk-jjr7hzzf.js";
+import { mhe, replaceInvisibleChars, replaceControlChars } from "../共享小工具-未细化/text-sanitization.js";
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { EXTERNAL_PERMISSION_MODES, PERMISSION_MODES, normalizePermissionModeAlias } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
-import { NU, tHn, Mge, Gar, CRt, jet, ske, HBe } from "../../02-功能模块/图片-截图-ComputerUse/chunk-x87xxkp4.js";
-import { mn, Do, Lhe } from "../共享小工具-未细化/chunk-z5tdbda7.js";
-import { Tx, Cke, Ett, Fr, Er } from "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
+import { NOTIFICATION_CHANNELS, tHn, TIME_FORMATS, TEAMMATE_MODES, THEME_OPTIONS, MODEL_PROPOSED_GOALS_MODES, AUTO_COMPACT_WINDOW_MIN, AUTO_COMPACT_WINDOW_MAX } from "../../02-功能模块/图片-截图-ComputerUse/settings-option-values.js";
+import { hashSha256, isGitHubHost, isSuspiciousUrl } from "../共享小工具-未细化/git-host-utils.js";
+import { containsWildcard, matchesToolNameGlob, parseToolRuleSpec, parsePermissionRule, formatPermissionRule } from "../../02-功能模块/工具Bash-Shell/permission-rule-parsing.js";
 import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
-import { Uhe } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { _x } from "../共享小工具-未细化/chunk-24x3spwe.js";
-import { PP, oHn } from "../共享小工具-未细化/chunk-p3e024j6.js";
+import { isHostManagedSettingsEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { WSL_MANAGED_SETTINGS_DIR } from "../共享小工具-未细化/mdm-policy-paths.js";
+import { ZOD_ISSUE_CODES, oHn } from "../共享小工具-未细化/chunk-p3e024j6.js";
 import { normalizeMcpName } from "../共享小工具-未细化/mcp-name-normalization.js";
-import { J6, ohe, Ex } from "../共享小工具-未细化/chunk-a7cfts2d.js";
+import { isFileTooLargeError, decodeBufferText, readFileSyncText } from "../共享小工具-未细化/safe-file-read.js";
 import {
   _he,
   yhe,
@@ -101,7 +101,7 @@ import {
   Hb,
   ai,
 } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { isRecord } from "../共享小工具-未细化/is-record.js";
 import { countMatching, dedupe } from "../共享小工具-未细化/chunk-d16fhdtx.js";
 import { defineExportGetters } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -347,14 +347,14 @@ var fa = createLazyValue(() =>
 function Zn(e, t, o) {
   if (e.length === 0 || e.some((r) => r.length === 0))
     o.addIssue({
-      code: PP.custom,
+      code: ZOD_ISSUE_CODES.custom,
       path: ["maskClaims"],
       message:
         "maskClaims must name at least one non-empty claim \u2014 omit maskClaims for whole-token masking.",
     });
   if (t === void 0)
     o.addIssue({
-      code: PP.custom,
+      code: ZOD_ISSUE_CODES.custom,
       path: ["maskClaims"],
       message:
         "maskClaims requires decode \u2014 without a decode format there is no token to read claims from. Set decode, or omit maskClaims.",
@@ -366,7 +366,7 @@ function Qn(e, t) {
     o = new RegExp(e);
   } catch (i) {
     t.addIssue({
-      code: PP.custom,
+      code: ZOD_ISSUE_CODES.custom,
       path: ["extract"],
       message: `extract is not a valid regular expression: ${l(i)}`,
     });
@@ -374,7 +374,7 @@ function Qn(e, t) {
   }
   if (new RegExp(o.source + "|").exec("").length - 1 < 1)
     t.addIssue({
-      code: PP.custom,
+      code: ZOD_ISSUE_CODES.custom,
       path: ["extract"],
       message:
         "extract must contain at least one capturing group \u2014 " +
@@ -471,7 +471,7 @@ var pt = createLazyValue(() =>
       }).superRefine((e, t) => {
         if (e.mode === "mask" && e.path.endsWith("/"))
           t.addIssue({
-            code: PP.custom,
+            code: ZOD_ISSUE_CODES.custom,
             path: ["path"],
             message:
               'Credential mode "mask" applies to a single file, not a directory. List the specific credential file(s), or use "deny" for the directory.',
@@ -535,7 +535,7 @@ var pt = createLazyValue(() =>
           Zn(e.maskClaims, e.decode, t);
         if (e.mode === "mask" && e.decode !== void 0 && e.extract !== void 0)
           t.addIssue({
-            code: PP.custom,
+            code: ZOD_ISSUE_CODES.custom,
             path: ["extract"],
             message:
               "extract cannot be combined with decode on an env entry \u2014 the runtime takes the decode path (whole-value JWT verification) and never consults extract, silently disabling the structured masking. Remove one of the two.",
@@ -546,7 +546,7 @@ var pt = createLazyValue(() =>
           (e.onExtractNoMatch === "deny" || e.onExtractNoMatch === "error")
         )
           t.addIssue({
-            code: PP.custom,
+            code: ZOD_ISSUE_CODES.custom,
             path: ["onExtractNoMatch"],
             message:
               "onExtractNoMatch cannot be honored on an env entry with decode \u2014 the runtime takes the decode path (which is unconditionally fail-open on verify failure) and never consults extract or onExtractNoMatch. Remove onExtractNoMatch, or drop decode to use extract-based masking (whose no-match handling does honor it).",
@@ -585,7 +585,7 @@ var pt = createLazyValue(() =>
         let d = o.get(i);
         if (d !== void 0)
           t.addIssue({
-            code: PP.custom,
+            code: ZOD_ISSUE_CODES.custom,
             path: [r],
             message: `${r} names the same env var ('${i}') as ${d} \u2014 each pair member must be a distinct variable.`,
           });
@@ -663,7 +663,7 @@ var pt = createLazyValue(() =>
             if (g === void 0) continue;
             if (o.has(g))
               t.addIssue({
-                code: PP.custom,
+                code: ZOD_ISSUE_CODES.custom,
                 path: ["awsPairs", r, p],
                 message: `"${g}" appears in more than one awsPairs slot (within or across pairs) \u2014 each variable can fill exactly one slot.`,
               });
@@ -1662,13 +1662,13 @@ function Qar() {
   da().clearPluginBase();
 }
 function wr(e) {
-  return ZU(e, " ", { keepEmojiJoiners: !0 });
+  return replaceInvisibleChars(e, " ", { keepEmojiJoiners: !0 });
 }
 function ff(e) {
-  return ZU(e, " ", { keepNewlines: !0 });
+  return replaceInvisibleChars(e, " ", { keepNewlines: !0 });
 }
 function fo(e) {
-  return ZU(e, "", { keepEmojiJoiners: !0 });
+  return replaceInvisibleChars(e, "", { keepEmojiJoiners: !0 });
 }
 function UBe(e, t = wr) {
   if (e === void 0) return;
@@ -1677,7 +1677,7 @@ function UBe(e, t = wr) {
 }
 function ttt(e) {
   if (e === void 0) return;
-  let t = ZU(e, "");
+  let t = replaceInvisibleChars(e, "");
   try {
     let { protocol: o } = new URL(t);
     return o === "https:" || o === "http:" ? t : void 0;
@@ -3786,11 +3786,11 @@ function slr(e) {
     return "Only ${CLAUDE_PROJECT_DIR}, ${CLAUDE_PLUGIN_ROOT} and ${CLAUDE_PLUGIN_DATA} are expanded in `file` (no shell runs); any other $\u2026, backtick or %NAME% is not expanded";
   let t = /^[a-zA-Z]:/.test(e) || e.includes("\\");
   if (
-    P() === "windows"
+    getCurrentPlatform() === "windows"
       ? /^[\\/](?![\\/])/.test(e) || /^[a-zA-Z]:(?![\\/])/.test(e)
       : t
   )
-    return P() === "windows"
+    return getCurrentPlatform() === "windows"
       ? "`file` is drive-relative on Windows (\\path or C:path); use a drive-absolute path, ~/ or a ${CLAUDE_\u2026} placeholder"
       : "`file` is a Windows path (C:\u2026 or \\\u2026) read on another platform; use ~/, a ${CLAUDE_\u2026} placeholder or a relative path so the hook resolves everywhere";
   if (e.startsWith("~") && e !== "~" && !/^~[\\/]/.test(e))
@@ -3832,7 +3832,7 @@ function $l(e, t) {
     };
   }
   if (!t.has(o)) {
-    let i = hy(o);
+    let i = escapeAllControlCharacters(o);
     return { problem: `Unknown hook type "${i}"`, received: i, aboutType: !0 };
   }
   let r = Et().safeParse(e);
@@ -4026,7 +4026,7 @@ function Fq(e) {
     r = [],
     i = [];
   for (let [d, u] of Object.entries(t)) {
-    let p = hy(d);
+    let p = escapeAllControlCharacters(d);
     if (!o.has(d)) {
       if (DQ(u, 3, { matchersCount: !Array.isArray(u) })) {
         i.push(
@@ -4134,7 +4134,7 @@ function he(e) {
   return `${t === "object" ? "an" : "a"} ${t}`;
 }
 function BU(e) {
-  return Sn(Gl(Rae(e)))
+  return replaceControlChars(Gl(removeLoneSurrogates(e)))
     .replace(/ {2,}/g, " ")
     .trim();
 }
@@ -4161,17 +4161,17 @@ function Vn(e, t = 160) {
 }
 function yHn(e, t = 2000) {
   let o = BU(ns(e, t));
-  return o.length > t ? `${oe(o, t)}\u2026` : o;
+  return o.length > t ? `${truncateToCodeUnits(o, t)}\u2026` : o;
 }
 function ott(e, t = 2000) {
-  return e.length > t ? `${oe(e, t)}\u2026` : e;
+  return e.length > t ? `${truncateToCodeUnits(e, t)}\u2026` : e;
 }
 function w1(e, t = 160) {
-  let o = Rae(e)
+  let o = removeLoneSurrogates(e)
     .replace(/[\p{Cc}\p{Cf}]/gu, (r) => (/\s/.test(r) ? r : ""))
     .replace(/\s+/g, " ")
     .trim();
-  return o.length > t ? `${oe(o, t)}\u2026` : o;
+  return o.length > t ? `${truncateToCodeUnits(o, t)}\u2026` : o;
 }
 function Al(e, t = 300) {
   return Vn(e ?? "", t);
@@ -4187,7 +4187,7 @@ function zt(e, t = 300) {
     .replace(os, "");
 }
 function ns(e, t) {
-  let o = oe(e, t * 8);
+  let o = truncateToCodeUnits(e, t * 8);
   if (o.length === e.length) return o;
   let r = /\x1b(?:[\]PX^_][^\x1b\x07]*\x1b?|\[[\x30-\x3f]*[\x20-\x2f]*)$/.exec(
     o,
@@ -4314,10 +4314,10 @@ var Ct = "anthropics",
   ]);
 function tc(e) {
   let t = e.trim();
-  if (Lhe(t)) return !1;
+  if (isSuspiciousUrl(t)) return !1;
   let o = /^git@([^:]+):anthropics\/(.+)$/i.exec(t);
   if (o) {
-    if (!Do(o[1] ?? "")) return !1;
+    if (!isGitHubHost(o[1] ?? "")) return !1;
     return !(o[2] ?? "").split("/").includes("..");
   }
   try {
@@ -4325,7 +4325,7 @@ function tc(e) {
     if (!ec.has(r.protocol.toLowerCase())) return !1;
     if (r.pathname.split("/").includes("..")) return !1;
     return (
-      Do(r.hostname) && r.pathname.toLowerCase().startsWith("/anthropics/")
+      isGitHubHost(r.hostname) && r.pathname.toLowerCase().startsWith("/anthropics/")
     );
   } catch {
     return !1;
@@ -5984,7 +5984,7 @@ function zRt(e, t) {
     o.serverName === r.serverName &&
     (o.toolName === void 0 ||
       o.toolName === "*" ||
-      (r.toolName !== void 0 && Tx(o.toolName) && Cke(o.toolName, r.toolName)))
+      (r.toolName !== void 0 && containsWildcard(o.toolName) && matchesToolNameGlob(o.toolName, r.toolName)))
   );
 }
 var bie = {
@@ -6086,9 +6086,9 @@ function Xc(e) {
   return;
 }
 function KBe(e) {
-  if (!Tx(e)) return null;
+  if (!containsWildcard(e)) return null;
   let t = Js(e);
-  if (t && !Tx(t.serverName)) return null;
+  if (t && !containsWildcard(t.serverName)) return null;
   return {
     valid: !1,
     error: `Wildcard tool name "${e}" is not supported in allow rules`,
@@ -6100,7 +6100,7 @@ function KBe(e) {
 function Ske(e, t) {
   if (!e || e.trim() === "")
     return { valid: !1, error: "Permission rule cannot be empty" };
-  let o = Ett(e);
+  let o = parseToolRuleSpec(e);
   if (o.kind === "malformed")
     return {
       valid: !1,
@@ -6122,7 +6122,7 @@ function Ske(e, t) {
       examples: [`${o.toolName}`, `${o.toolName}(some-pattern)`],
     };
   }
-  let r = Fr(e),
+  let r = parsePermissionRule(e),
     i = Js(r.toolName);
   if (i) {
     if (o.kind === "call")
@@ -6157,7 +6157,7 @@ function Ske(e, t) {
     return {
       valid: !1,
       error: "Tool names must start with uppercase",
-      suggestion: `Use "${Wf(String(r.toolName))}"`,
+      suggestion: `Use "${capitalize(String(r.toolName))}"`,
     };
   if (o.kind === "call" && Gc(o.rawContent)) {
     let u = An(r.toolName);
@@ -6210,7 +6210,7 @@ function Ske(e, t) {
           f = g ? " (for example Bash(git status *))" : "";
         return {
           valid: !0,
-          warning: `${Er(r)} has a wildcard before the rest of the command, so it also matches any options inserted at that position and approves them without a prompt.${h} Replace that * with the exact value you mean, or only use * after the subcommand${f}.`,
+          warning: `${formatPermissionRule(r)} has a wildcard before the rest of the command, so it also matches any options inserted at that position and approves them without a prompt.${h} Replace that * with the exact value you mean, or only use * after the subcommand${f}.`,
         };
       }
     }
@@ -6240,7 +6240,7 @@ function Ske(e, t) {
     if (u !== void 0 && !r.ruleContent.includes(":*"))
       return {
         valid: !0,
-        warning: `${Er(r)} is not matched by file permission checks \u2014 only ${u}(path) rules are. Use ${Er({ toolName: u, ruleContent: r.ruleContent })} instead (${u} rules cover all file-${u === "Edit" ? "editing" : "reading"} tools).`,
+        warning: `${formatPermissionRule(r)} is not matched by file permission checks \u2014 only ${u}(path) rules are. Use ${formatPermissionRule({ toolName: u, ruleContent: r.ruleContent })} instead (${u} rules cover all file-${u === "Edit" ? "editing" : "reading"} tools).`,
       };
   }
   return { valid: !0 };
@@ -6255,7 +6255,7 @@ function xs(e) {
       if (r.suggestion) i += `. ${r.suggestion}`;
       if (r.examples && r.examples.length > 0)
         i += `. Examples: ${r.examples.join(", ")}`;
-      o.addIssue({ code: PP.custom, message: i, params: { received: t } });
+      o.addIssue({ code: ZOD_ISSUE_CODES.custom, message: i, params: { received: t } });
     }
   });
 }
@@ -6534,7 +6534,7 @@ var It = createLazyValue(() =>
       .refine((t) => !t.includes("\x00"), {
         message: "script must not contain NUL bytes",
       })
-      .refine((t) => Wc(t), {
+      .refine((t) => isWellFormed(t), {
         message: "script must be valid UTF-8 (no lone surrogates)",
       })
       .refine((t) => e !== "windows" || !/[\u0080-\uffff]/.test(t), {
@@ -6703,8 +6703,8 @@ var cd = createLazyValue(() =>
   ud = () =>
     T()
       .int()
-      .min(ske)
-      .max(HBe)
+      .min(AUTO_COMPACT_WINDOW_MIN)
+      .max(AUTO_COMPACT_WINDOW_MAX)
       .optional()
       .catch(void 0);
 function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
@@ -7528,7 +7528,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
       .describe(
         "Name of an agent (built-in or custom) to use for the main thread. Applies the agent's system prompt, tool restrictions, and model.",
       ),
-    modelProposedGoals: X(jet)
+    modelProposedGoals: X(MODEL_PROPOSED_GOALS_MODES)
       .optional()
       .catch(void 0)
       .describe(
@@ -7628,7 +7628,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
       .describe(
         "Reduce or disable animations for accessibility (spinner shimmer, flash effects, etc.)",
       ),
-    timeFormat: $e([X(Mge), s()])
+    timeFormat: $e([X(TIME_FORMATS), s()])
       .optional()
       .describe(
         'Clock format for times shown in the UI: "auto" (default, follows the locale), "12-hour", "24-hour", "24-hour-utc" ("18:05Z"), or a strftime pattern such as "%H:%M" (any value containing "%"; other values read as "auto"). A pattern replaces the time everywhere; message timestamps show only the pattern, so include %Y-%m-%d for the date. /config offers the presets; a pattern is set here.',
@@ -7750,7 +7750,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
         'Custom message to append to the plugin trust warning shown before installation. Only read from policy settings (managed-settings.json / MDM). Useful for enterprise administrators to add organization-specific context (e.g., "All plugins from our internal marketplace are vetted and approved.").',
       ),
     theme: $e([
-      X(CRt),
+      X(THEME_OPTIONS),
       s()
         .startsWith("custom:")
         .transform((i) => i),
@@ -7777,7 +7777,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
     verbose: O()
       .optional()
       .describe("Show full tool output instead of truncated summaries"),
-    preferredNotifChannel: X(NU)
+    preferredNotifChannel: X(NOTIFICATION_CHANNELS)
       .optional()
       .catch(void 0)
       .describe("Preferred OS notification channel"),
@@ -7824,7 +7824,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
     todoFeatureEnabled: O()
       .optional()
       .describe("Enable the todo / task tracking panel"),
-    teammateMode: X(Gar)
+    teammateMode: X(TEAMMATE_MODES)
       .optional()
       .catch(void 0)
       .describe(
@@ -8791,7 +8791,7 @@ function _d(e) {
   return {
     bytes: Buffer.byteLength(e, "utf8"),
     lines:
-      ln(
+      countOccurrences(
         e,
         `
 `,
@@ -8803,7 +8803,7 @@ function _d(e) {
   };
 }
 function tr(e) {
-  return mn(b(e));
+  return hashSha256(b(e));
 }
 function bd(e) {
   if (typeof e === "string") return e || void 0;
@@ -8842,14 +8842,14 @@ function Ye(e) {
   return b(NQ(e));
 }
 function YRt(e) {
-  return mn(Ln(e));
+  return hashSha256(Ln(e));
 }
 function Nn(e, t, o) {
   if (YRt(t) === e) return !0;
   return (
     typeof o === "string" &&
     o.length > 0 &&
-    mn(Ye({ ...nr(t), claudeMd: o })) === e
+    hashSha256(Ye({ ...nr(t), claudeMd: o })) === e
   );
 }
 function Ed(e) {
@@ -8986,7 +8986,7 @@ function MHn(e, t) {
   if (typeof r === "string" && r) u = Dd(r);
   else if (Sd(r)) {
     let g = t
-      ? ` (${t.bytes} ${x(t.bytes, "byte")}, ${t.lines} ${x(t.lines, "line")})`
+      ? ` (${t.bytes} ${pluralize(t.bytes, "byte")}, ${t.lines} ${pluralize(t.lines, "line")})`
       : "";
     u = `script for ${r.interpreter}${g} sha256:${r.script.slice(0, sr)}`;
   } else return;
@@ -9074,7 +9074,7 @@ var SETTINGS_FILENAME = "remote-settings.json",
   Nt = 2097152,
   HELPER_CONSENT_STATE_ID = "remote-settings-helper-consent";
 function getHelperConsentPath() {
-  return ar(be(), HELPER_CONSENT_STATE_ID);
+  return ar(getClaudeConfigDir(), HELPER_CONSENT_STATE_ID);
 }
 function lr(e) {
   if (
@@ -9239,7 +9239,7 @@ function Ud(e) {
   return e && isEvalPolicySnapshotOnly() ? { ...o8t(e), managedSourcesBehavior: "merge" } : e;
 }
 function getSettingsPath() {
-  return getRemoteSettingsPathOverride() ?? ar(be(), SETTINGS_FILENAME);
+  return getRemoteSettingsPathOverride() ?? ar(getClaudeConfigDir(), SETTINGS_FILENAME);
 }
 function getMockRemoteSettingsValue() {
   return;
@@ -9259,7 +9259,7 @@ function zd() {
     if (!t || typeof t !== "object" || Array.isArray(t)) return null;
     return stripReservedKeys(t);
   } catch (e) {
-    if (J6(e))
+    if (isFileTooLargeError(e))
       n(
         `Remote settings: Disk cache exceeds ${dr} bytes; ignoring it as if absent`,
       );
@@ -9271,7 +9271,7 @@ function jd() {
   let e = Un();
   if (e !== void 0) return e.attestation;
   try {
-    return Ex(getHelperConsentPath(), Hd).trim() || void 0;
+    return readFileSyncText(getHelperConsentPath(), Hd).trim() || void 0;
   } catch {
     return;
   }
@@ -9279,20 +9279,20 @@ function jd() {
 function Kd() {
   let e = Un();
   if (e !== void 0) return e.content;
-  return Ex(getSettingsPath(), dr);
+  return readFileSyncText(getSettingsPath(), dr);
 }
 function Un() {
   let e = ee().backendView;
   if (!isHoverRestEnabled() || e === void 0 || !e.ready || e.stoodDown || getRemoteSettingsPathOverride() !== void 0)
     return;
-  if (!w_e(e.configHome)) {
+  if (!isSameAsConfigDir(e.configHome)) {
     e.standDown("config home changed");
     return;
   }
   return e;
 }
-var Hn = Ce.state("remote-settings"),
-  jn = Ce.state(HELPER_CONSENT_STATE_ID),
+var Hn = STORAGE_KEYS.state("remote-settings"),
+  jn = STORAGE_KEYS.state(HELPER_CONSENT_STATE_ID),
   Fd = 2000;
 function remoteSettingsFileWritten(e, t) {
   ee().backendView?.written(e === "cache" ? Hn : jn, t);
@@ -9345,7 +9345,7 @@ class ur {
   ready = !1;
   priming = Promise.resolve();
   stoodDown = !1;
-  configHome = be();
+  configHome = getClaudeConfigDir();
   subscriptions = [];
   cache = ir(Hn, "cache file");
   sidecar = ir(jn, "helper consent sidecar");
@@ -9385,7 +9385,7 @@ class ur {
     (this.install(o, t), this.follow(o, t === null));
   }
   heldOf(e) {
-    let t = gxt(e);
+    let t = serializeStorageKey(e);
     return t === this.cache.id
       ? this.cache
       : t === this.sidecar.id
@@ -9468,7 +9468,7 @@ class ur {
     if (this.stoodDown) return !1;
     if (t !== null && t.byteLength > Nt)
       return (this.standDown(`oversize ${e.label}`), !1);
-    return (this.install(e, t === null ? null : ohe(t)), !0);
+    return (this.install(e, t === null ? null : decodeBufferText(t)), !0);
   }
   install(e, t) {
     if (e === this.cache) {
@@ -9492,7 +9492,7 @@ class ur {
 function ir(e, t) {
   return {
     key: e,
-    id: gxt(e),
+    id: serializeStorageKey(e),
     label: t,
     observed: !1,
     begun: !1,
@@ -10114,7 +10114,7 @@ function Yet(e) {
   }
 }
 function Zar(e) {
-  return Wf(Yet(e));
+  return capitalize(Yet(e));
 }
 function elr(e) {
   if (e === "") return [];
@@ -10181,7 +10181,7 @@ function Tb() {
 function Iu() {
   let e = uHn();
   if (e !== void 0) return e;
-  switch (P()) {
+  switch (getCurrentPlatform()) {
     case "macos":
       return "/Library/Application Support/ClaudeCode";
     case "windows":
@@ -10795,7 +10795,7 @@ function Ai(e) {
   let o = { ...t.tip };
   if (e.code === "invalid_value" && e.enumValues && !o.suggestion)
     o.suggestion = `Valid values: ${e.enumValues.map((r) => `"${r}"`).join(", ")}`;
-  if (!o.docLink && e.path) o.docLink = pg[ft(e.path, ".")];
+  if (!o.docLink && e.path) o.docLink = pg[beforeFirst(e.path, ".")];
   return o;
 }
 var gg = createLazyValue(() => YBe(zBe(), { strictPolicyHelperKeys: !0 }).strict());
@@ -10861,7 +10861,7 @@ function qe(e, t) {
       else i = `Expected ${o.expected}, but received ${y}`;
     } else if (mg(o)) {
       let y = o.keys.join(", ");
-      i = `Unrecognized ${x(o.keys.length, "field")}: ${y}`;
+      i = `Unrecognized ${pluralize(o.keys.length, "field")}: ${y}`;
     } else if (Oi(o))
       ((i = `Number must be greater than or equal to ${o.minimum}`),
         (d = String(o.minimum)));
@@ -11068,7 +11068,7 @@ function Sg(e, t) {
     ];
   let r = [];
   for (let i of Object.keys(o)) {
-    let d = hy(i);
+    let d = escapeAllControlCharacters(i);
     if (!hg.has(i)) {
       if (DQ(o[i], 3, { matchersCount: !Array.isArray(o[i]) })) {
         r.push({
@@ -11493,8 +11493,8 @@ function Mg() {
   return ye(Tb(), "managed-settings.json");
 }
 function QBe(e) {
-  if (P() === "wsl" && e.wslInherits?.()) {
-    let t = Fn(_x, e.store);
+  if (getCurrentPlatform() === "wsl" && e.wslInherits?.()) {
+    let t = Fn(WSL_MANAGED_SETTINGS_DIR, e.store);
     if (t.settings) return t;
     let o = Fn(Tb(), e.store);
     return { settings: o.settings, errors: [...t.errors, ...o.errors] };
@@ -11502,7 +11502,7 @@ function QBe(e) {
   return Fn(Tb(), e.store);
 }
 function ZBe(e) {
-  return P() === "wsl" && e ? [_x, Tb()] : [Tb()];
+  return getCurrentPlatform() === "wsl" && e ? [WSL_MANAGED_SETTINGS_DIR, Tb()] : [Tb()];
 }
 function rkt(e) {
   return e.endsWith(".json") && !e.startsWith(".");
@@ -11597,7 +11597,7 @@ function Lg(e, t) {
 }
 function e2e(e) {
   return (
-    Uhe() && (e === "managedMcpServers" || e.startsWith("managedMcpServers."))
+    isHostManagedSettingsEntrypoint() && (e === "managedMcpServers" || e.startsWith("managedMcpServers."))
   );
 }
 function Mi(e, t) {
@@ -11694,7 +11694,7 @@ function parseSettingsFileUncached(e, t, o) {
     if (t !== void 0) r = t;
     else {
       let { resolvedPath: i } = Ro(ae(), e);
-      r = Ex(i, n_);
+      r = readFileSyncText(i, n_);
     }
     return Eke(r, e, o);
   } catch (r) {
@@ -11705,7 +11705,7 @@ function Slr(e, t) {
   let o;
   try {
     let { resolvedPath: d } = Ro(ae(), e);
-    o = Ex(d, n_);
+    o = readFileSyncText(d, n_);
   } catch (d) {
     return (t.delete(e), Ni(d, e));
   }
@@ -11778,7 +11778,7 @@ function okt(e, t, o = "file") {
 function skt(e, t) {
   switch (e) {
     case "userSettings":
-      return resolve(be());
+      return resolve(getClaudeConfigDir());
     case "policySettings":
     case "projectSettings":
       return resolve(t.cwd);
@@ -12111,7 +12111,7 @@ function isAdminPolicyOrigin(e) {
   return e === "helper" || e === "plist" || e === "hklm" || e === "file";
 }
 function Gn() {
-  return P() === "macos" ? "plist" : "hklm";
+  return getCurrentPlatform() === "macos" ? "plist" : "hklm";
 }
 function Alr(e) {
   let t = {
@@ -12242,7 +12242,7 @@ function Yg(e, t, o) {
         for (let _ of Bg) if (Ee(f, _) !== void 0) Re(f, _, void 0);
       }
       let y = Ee(f.sandbox, ["enabledPlatforms"]);
-      if (Array.isArray(y) && y.includes(P()))
+      if (Array.isArray(y) && y.includes(getCurrentPlatform()))
         Re(f, ["sandbox", "enabledPlatforms"], void 0);
       else if (y !== void 0) delete f.sandbox;
       return f;
@@ -12361,7 +12361,7 @@ function Wq(e) {
   if (!e.store.policy.mergedHelper) {
     let r, i;
     if (o === "remoteSlot") ((r = Bq(e).settings), (i = "remote"));
-    else if ((r = Wn(e).settings)) i = P() === "macos" ? "plist" : "hklm";
+    else if ((r = Wn(e).settings)) i = getCurrentPlatform() === "macos" ? "plist" : "hklm";
     else ((r = (e.file?.() ?? QBe(e)).settings), (i = "file"));
     e.store.policy.mergedHelper = {
       helper: im(r, t),

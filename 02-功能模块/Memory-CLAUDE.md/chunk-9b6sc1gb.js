@@ -10,7 +10,7 @@
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { s, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-class YA {
+class DesignSessionState {
   cachedSessionId = null;
   initialized = !1;
   initializeInFlight = null;
@@ -46,15 +46,15 @@ function R(e) {
     n = randomBytes(6).toString("hex");
   return `plan_${t}_${n}`;
 }
-function tT(e) {
+function normalizeRelativePath(e) {
   return e
     .replace(/\\/g, "/")
     .split("/")
     .filter((t) => t !== "" && t !== ".")
     .join("/");
 }
-function wdt(e) {
-  let t = tT(e).toLowerCase();
+function isClaudeInstructionPath(e) {
+  let t = normalizeRelativePath(e).toLowerCase();
   return (
     t === "claude.md" ||
     t.startsWith("claude.md/") ||
@@ -62,11 +62,11 @@ function wdt(e) {
     t.startsWith(".claude/")
   );
 }
-function $Pe(e) {
+function isGlobPattern(e) {
   return /[*?]/.test(e);
 }
 var g = 3,
-  UPe = 256;
+  MAX_PATH_LENGTH = 256;
 function h(e) {
   let t = "",
     n = 0,
@@ -86,14 +86,14 @@ function h(e) {
   }
   return new RegExp(`^${t}$`);
 }
-function Tdt(e, t) {
-  let n = tT(e);
+function isPathAllowedByPatterns(e, t) {
+  let n = normalizeRelativePath(e);
   if (!n) return !1;
-  if (n.length > UPe) return !1;
+  if (n.length > MAX_PATH_LENGTH) return !1;
   if (n.split("/").includes("..") || n.includes("\x00")) return !1;
   for (let o of t) {
-    let r = tT(o);
-    if ($Pe(r))
+    let r = normalizeRelativePath(o);
+    if (isGlobPattern(r))
       try {
         if (h(r).test(n)) return !0;
       } catch {}
@@ -101,20 +101,20 @@ function Tdt(e, t) {
   }
   return !1;
 }
-function C6n(e, t) {
+function registerPlan(e, t) {
   let n = {
       projectId: t.projectId,
-      writes: t.writes.map(tT),
-      deletes: t.deletes.map(tT),
+      writes: t.writes.map(normalizeRelativePath),
+      deletes: t.deletes.map(normalizeRelativePath),
       ...(t.localDir !== void 0 && { localDir: t.localDir }),
     },
     o = j().safeParse(n);
   if (!o.success) throw Error("registerPlan: plan failed shape validation");
-  for (let i of [...o.data.writes, ...o.data.deletes]) if ($Pe(i)) h(i);
+  for (let i of [...o.data.writes, ...o.data.deletes]) if (isGlobPattern(i)) h(i);
   let r = R(t.projectId);
   return (e.planStore.set(r, o.data), r);
 }
-function Edt(e, t) {
+function getPlanById(e, t) {
   if (!_.test(t)) return null;
   return e.planStore.get(t) ?? null;
 }
@@ -124,17 +124,17 @@ function a(e) {
     .replace(/^urn:uuid:/, "")
     .replace(/[{}-]/g, "");
 }
-function v6n(e) {
+function clearPlans(e) {
   e.planStore.clear();
 }
-function mbe(e, t) {
+function deletePlansForProject(e, t) {
   let n = a(t);
   for (let [o, r] of e.planStore)
     if (a(r.projectId) === n) e.planStore.delete(o);
 }
 var y = 900000,
   d = 20,
-  hqe = 80,
+  MAX_IDENTIFIER_LENGTH = 80,
   x = 2000,
   P = 256,
   k =
@@ -144,7 +144,7 @@ function p(e) {
 }
 function F(e, t) {
   if (e.length > d || t.length > d) return !1;
-  for (let r of [...e, ...t]) if (r.length > hqe || p(r)) return !1;
+  for (let r of [...e, ...t]) if (r.length > MAX_IDENTIFIER_LENGTH || p(r)) return !1;
   let n = (r) =>
     r.length === 0
       ? 0
@@ -153,9 +153,9 @@ function F(e, t) {
         2 * Math.max(0, r.length - 1);
   return 240 + n(e) + n(t) <= x;
 }
-function $sn(e) {
+function areTargetsWithinPlanLimits(e) {
   if (e === void 0 || e.length === 0 || e.length > d) return !1;
-  for (let r of e) if ((b(r)?.length ?? 1 / 0) > hqe || p(r)) return !1;
+  for (let r of e) if ((b(r)?.length ?? 1 / 0) > MAX_IDENTIFIER_LENGTH || p(r)) return !1;
   let t = Math.max(0, Math.min(200, Math.floor(1800 / e.length) - 95)),
     n = 44 + (t > 0 ? t + 3 : 0);
   return (
@@ -166,49 +166,49 @@ function $sn(e) {
   );
 }
 function C(e) {
-  return e.length > 0 && b(e).length <= hqe && !p(e);
+  return e.length > 0 && b(e).length <= MAX_IDENTIFIER_LENGTH && !p(e);
 }
-var Xee = new Set(["update_sharing", "add_member", "update_member_role"]);
-function Yee(e, t) {
+var PLAN_INVALIDATING_OPERATIONS = new Set(["update_sharing", "add_member", "update_member_role"]);
+function deleteApprovedPlansForProject(e, t) {
   let n = a(t);
   for (let [o, r] of e.approvedPlans)
     if (a(r.projectId) === n) e.approvedPlans.delete(o);
 }
-function R6n(e) {
+function clearApprovedPlans(e) {
   e.approvedPlans.clear();
 }
-function Jee(e, t) {
+function addVerifiedProjectGrant(e, t) {
   if (typeof t !== "string" || t.length === 0) return;
   e.verifiedProjectGrants.add(t);
 }
-function Adt(e, t) {
+function isProjectGrantVerified(e, t) {
   return e.verifiedProjectGrants.has(t);
 }
-function Ice(e, t) {
+function deleteVerifiedProjectGrantsForProject(e, t) {
   let n = a(t);
   for (let o of e.verifiedProjectGrants)
     if (a(o) === n) e.verifiedProjectGrants.delete(o);
 }
-function N4(e, t) {
+function shouldRecardProject(e, t) {
   return e.recardAllProjects || e.recardProjects.has(a(t));
 }
-function gbe(e, t) {
+function markProjectForRecard(e, t) {
   if (typeof t !== "string" || t.length === 0) return;
   e.recardProjects.add(a(t));
 }
-function k6n(e) {
+function markAllProjectsForRecard(e) {
   (e.verifiedProjectGrants.clear(), (e.recardAllProjects = !0));
 }
-function x6n(e, t) {
+function markProjectGrantIneligible(e, t) {
   if (typeof t !== "string" || t.length === 0) return;
   e.grantIneligibleProjects.add(a(t));
 }
-function H6n(e, t) {
+function isProjectGrantIneligible(e, t) {
   return e.grantIneligibleProjects.has(a(t));
 }
-function I6n(e, t, n, o = Date.now()) {
+function approvePlan(e, t, n, o = Date.now()) {
   if (typeof t !== "string" || t.length === 0) return !1;
-  if ((Yee(e, n.projectId), !C(n.projectId) || !F(n.writes, n.deletes)))
+  if ((deleteApprovedPlansForProject(e, n.projectId), !C(n.projectId) || !F(n.writes, n.deletes)))
     return !1;
   let r = n.serverExpiresAtMs;
   if (typeof r === "number" && !Number.isFinite(r)) return !1;
@@ -216,8 +216,8 @@ function I6n(e, t, n, o = Date.now()) {
   return (
     e.approvedPlans.set(t, {
       projectId: n.projectId,
-      writes: new Set(n.writes.map(tT)),
-      deletes: new Set(n.deletes.map(tT)),
+      writes: new Set(n.writes.map(normalizeRelativePath)),
+      deletes: new Set(n.deletes.map(normalizeRelativePath)),
       expiresAt:
         typeof r === "number" && Number.isFinite(r)
           ? Math.min(r, o + y)
@@ -271,9 +271,9 @@ function D(e) {
 }
 function E(e) {
   if (p(e)) return `rejected character in path: ${e}`;
-  if (wdt(e)) return `reserved path: ${e}`;
+  if (isClaudeInstructionPath(e)) return `reserved path: ${e}`;
   if (
-    tT(e)
+    normalizeRelativePath(e)
       .toLowerCase()
       .split("/")
       .some((n) => {
@@ -282,7 +282,7 @@ function E(e) {
       })
   )
     return `reserved segment: ${e}`;
-  let t = tT(e);
+  let t = normalizeRelativePath(e);
   if (
     !t ||
     t.split("/").some((n) => /^\s*\.\.[\s.]*$/.test(n)) ||
@@ -291,7 +291,7 @@ function E(e) {
     return `path does not normalize: ${e}`;
   return null;
 }
-function _qe(e, t) {
+function resolvePlanTargets(e, t) {
   let n = D(e) ? S[e] : void 0;
   if (!n || !t) return { outcome: "ask", reason: "not a plan-gated operation" };
   let o = n(t);
@@ -311,7 +311,7 @@ function _qe(e, t) {
   }
   return { outcome: "pass", targets: r, set: i };
 }
-function P6n(e, t, n, o = Date.now()) {
+function checkPlanApproval(e, t, n, o = Date.now()) {
   if (!D(t) || !n)
     return { outcome: "ask", reason: "not a plan-gated operation" };
   let { plan_token: r, project_id: i } = n;
@@ -330,15 +330,15 @@ function P6n(e, t, n, o = Date.now()) {
     );
   if (l.projectId !== i)
     return { outcome: "ask", reason: "plan_token is for a different project" };
-  let u = _qe(t, n);
+  let u = resolvePlanTargets(t, n);
   if (u.outcome !== "pass") return { outcome: "ask", reason: u.reason };
   let w = u.set === "writes" ? l.writes : l.deletes;
   for (let f of u.targets)
-    if (!w.has(tT(f)))
+    if (!w.has(normalizeRelativePath(f)))
       return { outcome: "ask", reason: `path not in approved plan: ${f}` };
   return { outcome: "allow" };
 }
-function O6n(e) {
+function extractPlanToken(e) {
   for (let t of e)
     if (t?.type === "text" && typeof t.text === "string")
       try {
@@ -357,31 +357,31 @@ function O6n(e) {
   return null;
 }
 export {
-  YA,
-  tT,
-  wdt,
-  $Pe,
-  UPe,
-  Tdt,
-  C6n,
-  Edt,
-  v6n,
-  mbe,
-  hqe,
-  $sn,
-  Xee,
-  Yee,
-  R6n,
-  Jee,
-  Adt,
-  Ice,
-  N4,
-  gbe,
-  k6n,
-  x6n,
-  H6n,
-  I6n,
-  _qe,
-  P6n,
-  O6n,
+  DesignSessionState,
+  normalizeRelativePath,
+  isClaudeInstructionPath,
+  isGlobPattern,
+  MAX_PATH_LENGTH,
+  isPathAllowedByPatterns,
+  registerPlan,
+  getPlanById,
+  clearPlans,
+  deletePlansForProject,
+  MAX_IDENTIFIER_LENGTH,
+  areTargetsWithinPlanLimits,
+  PLAN_INVALIDATING_OPERATIONS,
+  deleteApprovedPlansForProject,
+  clearApprovedPlans,
+  addVerifiedProjectGrant,
+  isProjectGrantVerified,
+  deleteVerifiedProjectGrantsForProject,
+  shouldRecardProject,
+  markProjectForRecard,
+  markAllProjectsForRecard,
+  markProjectGrantIneligible,
+  isProjectGrantIneligible,
+  approvePlan,
+  resolvePlanTargets,
+  checkPlanApproval,
+  extractPlanToken,
 };

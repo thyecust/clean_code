@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ke } from "./chunk-fcskxvsh.js";
+import { readEmbeddedAssetSync } from "./embedded-text-asset.js";
 var a = "./docs.mjs-0d218ce7.txt.zst";
-var t = Ke(a, import.meta.dirname);
+var t = readEmbeddedAssetSync(a, import.meta.dirname);
 export { t as default };

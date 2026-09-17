@@ -24,8 +24,8 @@ import { aWe } from "../插件系统/chunk-jwm9gdkd.js";
 import "../插件系统/chunk-akd9b588.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-3eztvm1y.js";
-import "../认证-OAuth登录/chunk-7jz937t3.js";
+import "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js";
+import "../认证-OAuth登录/url-and-error-redaction.js";
 import "../插件系统/chunk-rbjz1q03.js";
 import "../插件系统/channel-gate.js";
 import "../MCP客户端/chunk-4xr0rjb4.js";
@@ -35,7 +35,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-4bdjksjf.js"
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
-import "../MCP客户端/chunk-35zjqw7h.js";
+import "../MCP客户端/mcp-error-messages.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
@@ -43,10 +43,10 @@ import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js"
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import "../MCP客户端/plugin-reload-cache-impact.js";
-import { uSe } from "../MCP客户端/chunk-d7zajrh1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ey89qg3e.js";
+import { buildSkillDoctorContext } from "../MCP客户端/skill-doctor-data.js";
+import "../../01-核心基础设施/共享小工具-未细化/mcp-control-handlers.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
 import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 var r = async (s, o) => {
@@ -63,7 +63,7 @@ var r = async (s, o) => {
     showSkillDoctorRedirectMessage: !0,
     commands: o.options.commands,
     getSessionContext: () => Lot(o.messages, o.readFileState),
-    getSkillStatsInputs: () => uSe(o),
+    getSkillStatsInputs: () => buildSkillDoctorContext(o),
     getReloadCacheImpactOptions: () => ({
       model: o.options.mainLoopModel,
       dynamicMcpConfig: o.options.dynamicMcpConfig,

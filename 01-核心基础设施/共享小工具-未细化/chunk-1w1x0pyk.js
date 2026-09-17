@@ -7,15 +7,15 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-function yEt(n) {
+function normalizeKeyName(n) {
   return n.replace(/[-_]/g, "").toLowerCase();
 }
-function SEt(n) {
-  return new Map(n.map((t) => [yEt(t), t]));
+function buildKeyNameLookup(n) {
+  return new Map(n.map((t) => [normalizeKeyName(t), t]));
 }
-function jh(n) {
+function isPlainObject(n) {
   if (typeof n !== "object" || n === null) return !1;
   let t = Object.getPrototypeOf(n);
   return t === Object.prototype || t === null;
 }
-export { yEt, SEt, jh };
+export { normalizeKeyName, buildKeyNameLookup, isPlainObject };

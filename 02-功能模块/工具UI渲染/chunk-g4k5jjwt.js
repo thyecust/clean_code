@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { oe, Qu, Rae, ln, jW } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits, takeLastCodeUnits, removeLoneSurrogates, countOccurrences, CONTROL_CHARS_REGEX } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { S6, LQe, mUe, zC } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -15,9 +15,9 @@ import { w0e } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { js } from "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import { Divider } from "../../01-核心基础设施/共享小工具-未细化/divider.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { eLt, vIe, Flt, RIe } from "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { VQ, sz } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
+import { getSystemLocale, getTimeFormatConfig, formatDateWithPreset, formatDateWithPattern } from "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
+import { withTimeZone, getDateTimeFormat } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var se = /(?![\u200C\u200D])[\p{Cf}\u2028\u2029]/gu,
   he = /[\u001b\u0080-\u009f]/g,
@@ -25,30 +25,30 @@ var se = /(?![\u200C\u200D])[\p{Cf}\u2028\u2029]/gu,
 function y(n) {
   let i = n
     .replace(he, "")
-    .replace(jW, "")
+    .replace(CONTROL_CHARS_REGEX, "")
     .replace(/[\v\f\r]/g, "");
   for (let c = 0; c < ye; c++) {
-    let s = Rae(i.replace(se, ""));
+    let s = removeLoneSurrogates(i.replace(se, ""));
     if (s === i) return i;
     i = s;
   }
   return i.replace(/[\ud800-\udfff]/g, "").replace(se, "");
 }
-function wye(n, i = new Date()) {
+function formatTimestamp(n, i = new Date()) {
   let c = new Date(n);
   if (Number.isNaN(c.getTime())) return "";
-  let s = eLt(),
-    a = vIe(),
+  let s = getSystemLocale(),
+    a = getTimeFormatConfig(),
     { timeZone: d } = a,
     m = ae(i, d) - ae(c, d),
     w = Math.round(m / 86400000),
     u = "older";
   if (w === 0) u = "today";
   else if (w > 0 && w < 7) u = "week";
-  if (a.kind === "preset") return Flt(a, Re[u], s, c);
-  let M = RIe(a.pattern, d, c);
+  if (a.kind === "preset") return formatDateWithPreset(a, Re[u], s, c);
+  let M = formatDateWithPattern(a.pattern, d, c);
   if (u === "today") return M;
-  let h = sz(s, VQ(Te[u], d)).format(c);
+  let h = getDateTimeFormat(s, withTimeZone(Te[u], d)).format(c);
   return u === "week" ? `${h} ${M}` : `${h}, ${M}`;
 }
 var Re = {
@@ -68,7 +68,7 @@ var Re = {
   };
 function ae(n, i) {
   if (!i) return new Date(n.getFullYear(), n.getMonth(), n.getDate()).getTime();
-  let c = sz("en-US", VQ(Ae, i)).formatToParts(n),
+  let c = getDateTimeFormat("en-US", withTimeZone(Ae, i)).formatToParts(n),
     s = {};
   for (let a of c) s[a.type] = a.value;
   return Date.UTC(Number(s.year), Number(s.month) - 1, Number(s.day));
@@ -79,16 +79,16 @@ var Se = 1e4,
   $e = 2500;
 function AWe(n) {
   if (n.length <= Se) return n;
-  let i = oe(n, ke),
-    c = Qu(n, $e),
+  let i = truncateToCodeUnits(n, ke),
+    c = takeLastCodeUnits(n, $e),
     s =
-      ln(
+      countOccurrences(
         n,
         `
 `,
         i.length,
       ) -
-      ln(
+      countOccurrences(
         c,
         `
 `,
@@ -97,7 +97,7 @@ function AWe(n) {
   return { head: i, hiddenLines: s, hiddenChars: a, tail: c };
 }
 var me = 4000;
-function CWe(Je) {
+function UserPromptText(Je) {
   let T = _(33),
     { text: l, useBriefLayout: Ve, timestamp: K, bodyOnly: De } = Je,
     R = De === void 0 ? !1 : De,
@@ -116,7 +116,7 @@ function CWe(Je) {
     p = F?.selectionHighlight === "on";
   if (Ve || R) {
     let b;
-    if (T[4] !== K) ((b = K ? wye(K) : ""), (T[4] = K), (T[5] = b));
+    if (T[4] !== K) ((b = K ? formatTimestamp(K) : ""), (T[4] = K), (T[5] = b));
     else b = T[5];
     let Z = b;
     let O = p ? "suggestion" : C ? "subtle" : "text";
@@ -132,7 +132,7 @@ function CWe(Je) {
                 ? r(t, {
                     "aria-label": "selected:",
                     color: "suggestion",
-                    children: [L.pointer, " "],
+                    children: [figures.pointer, " "],
                   })
                 : null,
               e(t, {
@@ -194,7 +194,7 @@ function CWe(Je) {
           : r(t, {
               "aria-label": p ? "selected:" : "you:",
               color: p ? "suggestion" : "subtle",
-              children: [L.pointer, " "],
+              children: [figures.pointer, " "],
             }),
     })),
       (T[21] = F?.selectionHighlight),
@@ -299,7 +299,7 @@ function P(ve) {
   if (ue !== EARLY_RETURN_SENTINEL) return ue;
   return Ne;
 }
-function UA(st) {
+function TruncatedText(st) {
   let fe = _(19),
     { text: pe } = st,
     j,
@@ -375,4 +375,4 @@ function UA(st) {
   else Me = fe[18];
   return Me;
 }
-export { wye, AWe, CWe, UA };
+export { formatTimestamp, AWe, UserPromptText, TruncatedText };

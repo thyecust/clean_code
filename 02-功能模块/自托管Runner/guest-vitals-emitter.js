@@ -10,7 +10,7 @@
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { spawn } from "child_process";
@@ -24,7 +24,7 @@ var E = "/root/.local/bin/vitals-emitter-guest",
 async function startGuestVitalsEmitter(e) {
   let { log: r } = e;
   try {
-    if (a.CLAUDE_CODE_DISABLE_VITALS_EMITTER || St())
+    if (a.CLAUDE_CODE_DISABLE_VITALS_EMITTER || isEssentialTrafficOnly())
       return (
         r(
           "[vitals] kill switch or essential-traffic-only set; guest vitals disabled",

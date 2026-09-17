@@ -9,17 +9,17 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 231 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { wle, VB } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { he, MA, LL, Mx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { be, Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { Wf, x, Fje, hy } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { getClaudeConfigDir, isSafeMode, getSafeModeExitHint } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { capitalize, pluralize, escapeInvisibleCharacters, escapeAllControlCharacters } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { zar, yi } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { War } from "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
+import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { NOTIFICATION_TYPES } from "../图片-截图-ComputerUse/settings-option-values.js";
 import { getSettingsFilePathForSource, getSettingsForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { findGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import {
@@ -76,7 +76,7 @@ import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-�
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dn, kn, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -160,7 +160,7 @@ function hn(n, a) {
       : /^https?:\/\//i.test(n.trim())
         ? pn(n.trim())
         : basename(n.trim().split(/\s+/)[0] ?? "") || "hook";
-  return io(s, { maxCodeUnits: 120 }) || "hook";
+  return formatSingleLineText(s, { maxCodeUnits: 120 }) || "hook";
 }
 function gs(n, a = new Set()) {
   let s = (c) => (a.has(c) ? { fromWritableFile: !0 } : {}),
@@ -174,7 +174,7 @@ function gs(n, a = new Set()) {
             : "hook",
       event: c.wire.event,
       ...(c.wire.matcher !== void 0 && {
-        matcher: io(c.wire.matcher, { maxCodeUnits: 200 }),
+        matcher: formatSingleLineText(c.wire.matcher, { maxCodeUnits: 200 }),
       }),
       source: c.local.source,
       ...s(c.local.source),
@@ -184,7 +184,7 @@ function gs(n, a = new Set()) {
       label: `${c.local.templateId}${c.local.label === "legacy" ? " (older copy)" : ""}`,
       event: c.wire.event,
       ...(c.wire.matcher !== void 0 && {
-        matcher: io(c.wire.matcher, { maxCodeUnits: 200 }),
+        matcher: formatSingleLineText(c.wire.matcher, { maxCodeUnits: 200 }),
       }),
       source: c.local.source,
       ...s(c.local.source),
@@ -291,7 +291,7 @@ async function Fo({
           instanceId: "dev-0000000000000000",
           launchDir: n,
           projectDir: n,
-          configHome: be(),
+          configHome: getClaudeConfigDir(),
           extraReachRoots: ie,
           ...(Ee !== n && { repoRoot: Ee }),
           ...(k.lastSyncRoot !== null && {
@@ -413,7 +413,7 @@ function So(Mr) {
     ((Jo =
       vo > 0
         ? [
-            `${vo} ${x(vo, "hook")} would run on this machine when a cloud session started from it asks`,
+            `${vo} ${pluralize(vo, "hook")} would run on this machine when a cloud session started from it asks`,
           ]
         : []),
       (J[3] = vo),
@@ -424,7 +424,7 @@ function So(Mr) {
     ((jo =
       _o.length > 0
         ? [
-            `your ${_o.join(", ")} ${x(_o.length, "hook")} would run inside the cloud session instead`,
+            `your ${_o.join(", ")} ${pluralize(_o.length, "hook")} would run inside the cloud session instead`,
           ]
         : []),
       (J[5] = _o),
@@ -598,7 +598,7 @@ Exit code 0 - stdout/stderr not shown
 Other exit codes - show stderr to user only`,
       matcherMetadata: {
         fieldToMatch: "notification_type",
-        values: [...War, "elicitation_complete", "elicitation_response"],
+        values: [...NOTIFICATION_TYPES, "elicitation_complete", "elicitation_response"],
       },
     },
     UserPromptSubmit: {
@@ -943,7 +943,7 @@ function Je(Vr) {
     { summaryPromise: Cn, savedLine: Qo } = Vr,
     Is;
   if (Co[0] === MEMO_CACHE_SENTINEL)
-    ((Is = r(t, { color: "suggestion", children: [L.info, " Cloud session"] })),
+    ((Is = r(t, { color: "suggestion", children: [figures.info, " Cloud session"] })),
       (Co[0] = Is));
   else Is = Co[0];
   let Zo;
@@ -1320,7 +1320,7 @@ function Mo(pa) {
       onCancel: ao,
     } = pa,
     js;
-  if (Z[0] !== _t) ((js = x(_t, "hook")), (Z[0] = _t), (Z[1] = js));
+  if (Z[0] !== _t) ((js = pluralize(_t, "hook")), (Z[0] = _t), (Z[1] = js));
   else js = Z[1];
   let Jn = `${_t} ${js} configured`,
     St;
@@ -1330,7 +1330,7 @@ function Mo(pa) {
       r(o, {
         flexDirection: "column",
         children: [
-          r(t, { color: "warning", children: [L.info, " Safe mode"] }),
+          r(t, { color: "warning", children: [figures.info, " Safe mode"] }),
           r(t, {
             dimColor: !0,
             children: [
@@ -1340,7 +1340,7 @@ function Mo(pa) {
                 : "",
               "; session hooks created by /goal, agents, and skills still run. Settings edits save but don't load until safe mode is off.",
               " ",
-              Wf(Ho.exitHint),
+              capitalize(Ho.exitHint),
               " to re-enable.",
             ],
           }),
@@ -1358,7 +1358,7 @@ function Mo(pa) {
         children: [
           r(t, {
             color: "suggestion",
-            children: [L.info, " Hooks Restricted by Policy"],
+            children: [figures.info, " Hooks Restricted by Policy"],
           }),
           e(t, {
             dimColor: !0,
@@ -1377,7 +1377,7 @@ function Mo(pa) {
       children: r(t, {
         dimColor: !0,
         children: [
-          L.info,
+          figures.info,
           " This menu is read-only. To add or modify hooks, edit settings.json directly or ask Claude.",
           " ",
           e(ct, {
@@ -1492,7 +1492,7 @@ function Vs(qe, Oa) {
     value: Oa.toString(),
     description:
       qe.source === "pluginHook" && qe.pluginName
-        ? `${oSt(qe.source)} (${hy(qe.pluginName)})`
+        ? `${oSt(qe.source)} (${escapeAllControlCharacters(qe.pluginName)})`
         : oSt(qe.source),
   };
 }
@@ -1510,7 +1510,7 @@ function Oo(Ha) {
   if (Le[0] !== ge.matcherMetadata || Le[1] !== It || Le[2] !== Pt)
     ((qs =
       ge.matcherMetadata !== void 0
-        ? `${It} - Matcher: ${Pt ? hy(Pt) : "(all)"}`
+        ? `${It} - Matcher: ${Pt ? escapeAllControlCharacters(Pt) : "(all)"}`
         : It),
       (Le[0] = ge.matcherMetadata),
       (Le[1] = It),
@@ -1593,11 +1593,11 @@ function Zs(Ya) {
 }
 function ei(uo) {
   let Va = uo.sources.map(m_n).join(", ");
-  let za = uo.matcher ? hy(uo.matcher) : "(all)";
+  let za = uo.matcher ? escapeAllControlCharacters(uo.matcher) : "(all)";
   return {
     label: `[${Va}] ${za}`,
     value: uo.matcher,
-    description: `${uo.hookCount} ${x(uo.hookCount, "hook")}`,
+    description: `${uo.hookCount} ${pluralize(uo.hookCount, "hook")}`,
   };
 }
 function Po(Ua) {
@@ -1715,7 +1715,7 @@ function To(rc) {
       r(Vi.Row, {
         children: [
           e(N, { children: "Matcher:" }),
-          e(t, { children: v.matcher ? hy(v.matcher) : "(all)" }),
+          e(t, { children: v.matcher ? escapeAllControlCharacters(v.matcher) : "(all)" }),
         ],
       })),
       (M[5] = $n),
@@ -1751,7 +1751,7 @@ function To(rc) {
       r(Vi.Row, {
         children: [
           e(N, { children: "Plugin:" }),
-          e(t, { dimColor: !0, children: hy(v.pluginName) }),
+          e(t, { dimColor: !0, children: escapeAllControlCharacters(v.pluginName) }),
         ],
       })),
       (M[16] = v.pluginName),
@@ -1765,7 +1765,7 @@ function To(rc) {
       r(Vi.Row, {
         children: [
           e(N, { children: "Status message:" }),
-          e(t, { dimColor: !0, children: hy(v.config.statusMessage) }),
+          e(t, { dimColor: !0, children: escapeAllControlCharacters(v.config.statusMessage) }),
         ],
       })),
       (M[18] = v.config),
@@ -1809,7 +1809,7 @@ function To(rc) {
       (M[32] = Gt));
   else Gt = M[32];
   let Yt;
-  if (M[33] !== Gt) ((Yt = Fje(Gt)), (M[33] = Gt), (M[34] = Yt));
+  if (M[33] !== Gt) ((Yt = escapeInvisibleCharacters(Gt)), (M[33] = Gt), (M[34] = Yt));
   else Yt = M[34];
   let Vt;
   if (M[35] !== Yt)
@@ -1972,7 +1972,7 @@ function dn(Bc) {
   let Zt = l.mode,
     go = "event" in l ? l.event : "PreToolUse",
     Xn = "matcher" in l ? l.matcher : null,
-    Qn = U($i),
+    Qn = useAppStateSelector($i),
     Zn = VB(),
     hi;
   if (m[8] !== Qn.tools || m[9] !== Yn)
@@ -2172,10 +2172,10 @@ function dn(Bc) {
       ((eo = e(t, { bold: !0, children: te })), (m[53] = te), (m[54] = eo));
     else eo = m[54];
     let on;
-    if (m[55] !== te) ((on = x(te, "hook")), (m[55] = te), (m[56] = on));
+    if (m[55] !== te) ((on = pluralize(te, "hook")), (m[55] = te), (m[56] = on));
     else on = m[56];
     let tn;
-    if (m[57] !== te) ((tn = x(te, "is", "are")), (m[57] = te), (m[58] = tn));
+    if (m[57] !== te) ((tn = pluralize(te, "is", "are")), (m[57] = te), (m[58] = tn));
     else tn = m[58];
     let nn;
     if (m[59] !== Pe || m[60] !== eo || m[61] !== on || m[62] !== tn)
@@ -2274,8 +2274,8 @@ function dn(Bc) {
     case "select-event": {
       let T;
       if (m[80] === MEMO_CACHE_SENTINEL)
-        ((T = Hr()
-          ? { exitHint: yf(), managedHooksStillApply: Qot() }
+        ((T = isSafeMode()
+          ? { exitHint: getSafeModeExitHint(), managedHooksStillApply: Qot() }
           : void 0),
           (m[80] = T));
       else T = m[80];

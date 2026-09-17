@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 85 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { sPe, mut, SGe } from "../设置-配置/chunk-6rz5fqzm.js";
+import { ensureFastPathSettingsLoaded as sPe, runFastPathPolicyHelper as mut, loadFastPathPolicy as SGe } from "../设置-配置/fast-path-policy-loader.js";
 export {
   sPe as ensureFastPathSettingsLoaded,
   SGe as loadFastPathPolicy,

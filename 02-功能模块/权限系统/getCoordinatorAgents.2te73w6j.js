@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 18 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
 import { yCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-xm1bhjkr.js";
-import { mt } from "../工具Task-Agent调度/chunk-1px84m19.js";
+import { AGENT_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
 function e() {
   return `You are a worker agent executing a task assigned by the coordinator.
 
@@ -25,7 +25,7 @@ Complete exactly what was asked. Don't fix unrelated issues you discover \u2014 
 - If you changed any files, commit your changes when done. Use a clear, descriptive commit message. Only stage files you actually changed \u2014 never use \`git add .\` or \`git add -A\`. Report the commit hash in your summary.
 ${
   getMaxSubagentSpawnDepth() > 1
-    ? `- If you have the ${mt} tool, you may use it to fan out (e.g. \`/simplify\`, \`/code-review\`, or your own parallel research/verification) \u2014 workers at the depth cap don't receive it
+    ? `- If you have the ${AGENT_TOOL_NAME} tool, you may use it to fan out (e.g. \`/simplify\`, \`/code-review\`, or your own parallel research/verification) \u2014 workers at the depth cap don't receive it
 `
     : ""
 }- Limit changes to what your task requires

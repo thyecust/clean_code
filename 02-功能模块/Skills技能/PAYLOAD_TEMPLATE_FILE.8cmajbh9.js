@@ -12,19 +12,19 @@
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { _4t, qJ, Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
+import { _4t, readEmbeddedAsset, readEmbeddedAssetSync } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
 var D = "./SKILL-59d7da6d.md.zst";
-var E = Ke(D, import.meta.dirname);
+var E = readEmbeddedAssetSync(D, import.meta.dirname);
 var H = "./payload.template.html.asset";
 var t = "./seed-canvas.mjs-a5d6a8af.txt.zst";
-var Q = Ke(t, import.meta.dirname);
+var Q = readEmbeddedAssetSync(t, import.meta.dirname);
 var SKILL_MD = E,
   PAYLOAD_TEMPLATE_FILE = "payload.template.html",
   SEED_HELPER_FILE = "seed-canvas.mjs";
 async function loadSkillFiles() {
   let d;
   try {
-    d = await qJ(H, import.meta.dirname);
+    d = await readEmbeddedAsset(H, import.meta.dirname);
   } catch (P) {
     throw (
       logError(P),

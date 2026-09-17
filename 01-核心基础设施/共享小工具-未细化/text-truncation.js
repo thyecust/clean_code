@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { oe } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits } from "../核心工具-字符串与文本/string-utils.js";
 import { ps } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 function collapseNewlines(n) {
   return n.replace(/[\r\n\u2028\u2029]+/g, " ");
@@ -15,7 +15,7 @@ function collapseNewlines(n) {
 function truncateForDisplay(n, r) {
   let e = ps(n);
   if (e.length <= r) return e;
-  let t = oe(e, r),
+  let t = truncateToCodeUnits(e, r),
     o = Array.from(e.slice(t.length)).length;
   return `${t} \u2026 (${o} more characters follow that are NOT shown in this message)`;
 }

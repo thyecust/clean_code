@@ -37,7 +37,7 @@ import {
   myt,
   getConnectablePluginMcpServerNames,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Zj, e6, Z_ } from "../工具ToolSearch/chunk-1m51pqtd.js";
+import { isVertexModelUnsupportedForToolSearch, isToolSearchSupportedModel, isToolSearchEnabled } from "../工具ToolSearch/tool-search-enablement.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 async function EDt(r, o) {
   return 0;
@@ -135,7 +135,7 @@ async function getPluginReloadCacheImpact(r) {
     g = [...d].filter((s) => !o.has(s)).sort(),
     f = [...o].filter((s) => !d.has(s)).sort(),
     y = g.length > 0 || f.length > 0,
-    c = Z_() && e6(r.model) && !Zj(r.model),
+    c = isToolSearchEnabled() && isToolSearchSupportedModel(r.model) && !isVertexModelUnsupportedForToolSearch(r.model),
     t = jc() > 0,
     u = null;
   if (dMe() && !c && t && !isCustomizationDisabled("lspServers")) {

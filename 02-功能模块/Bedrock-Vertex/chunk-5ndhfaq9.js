@@ -12,7 +12,7 @@ var f = /^[a-z]{2,}(?:-[a-z0-9]+){0,4}$/i;
 function m(e) {
   return !!e && f.test(e);
 }
-function Iz(e) {
+function parseRegionName(e) {
   return m(e) ? e : void 0;
 }
 var l = /^[+-]?(\d+(\.\d*)?|\.\d+)[eE][+-]?\d+$/,
@@ -28,11 +28,11 @@ function N(e) {
   }
   return;
 }
-function tl(e) {
+function parseConfigInteger(e) {
   let n = String(e).trim();
   return N(n) ?? parseInt(n, 10);
 }
-function Nx(e) {
+function parseNumericValue(e) {
   let n = Number(e);
   if (!Number.isNaN(n)) return n;
   let r = String(e).trim();
@@ -62,28 +62,28 @@ var d = [
 function s() {
   return process.env.CLAUDE_CONFIG_DIR;
 }
-var be = rs(() => (s() ?? i(homedir(), ".claude")).normalize("NFC"), s);
-function w_e(e) {
-  return resolve(be()) === resolve(e);
+var getClaudeConfigDir = rs(() => (s() ?? i(homedir(), ".claude")).normalize("NFC"), s);
+function isSameAsConfigDir(e) {
+  return resolve(getClaudeConfigDir()) === resolve(e);
 }
-function T_e() {
-  return i(be(), "teams");
+function getTeamsDir() {
+  return i(getClaudeConfigDir(), "teams");
 }
 function _() {
   return process.env.CLAUDE_CODE_PROJECT_DIR_NAME;
 }
 var D = /^[A-Za-z0-9_-]{1,64}$/,
   C = /^(?:con|prn|aux|nul|com[0-9]|lpt[0-9])$/i;
-function xMn(e) {
+function parseProjectDirName(e) {
   if (!e || !D.test(e) || C.test(e)) return;
   return e;
 }
 function I() {
   return `${s() ?? ""}\x00${_() ?? ""}`;
 }
-var Kur = rs(() => (s() ? xMn(_()) : void 0), I);
-function y8(e) {
-  let n = be();
+var getConfiguredProjectDirName = rs(() => (s() ? parseProjectDirName(_()) : void 0), I);
+function isConfigDirPath(e) {
+  let n = getClaudeConfigDir();
   if (resolve(e) === resolve(n)) return !0;
   return p(e) === p(n);
 }
@@ -93,21 +93,21 @@ function p(e) {
     o = RS(r) ?? r;
   return zn(i(o, basename(n)));
 }
-function kje(e) {
+function hasNodeOption(e) {
   let n = process.env.NODE_OPTIONS;
   if (!n) return !1;
   return n.split(/\s+/).includes(e);
 }
-function Lxe(e, n) {
+function parseConfigIntegerOrDefault(e, n) {
   if (e === void 0) return n;
-  let r = tl(e);
+  let r = parseConfigInteger(e);
   return Number.isNaN(r) ? n : r;
 }
-function Xur(e) {
+function resolveMaxTurns(e) {
   if (e !== void 0) return e;
   let n = process.env.CLAUDE_CODE_MAX_TURNS?.trim();
   if (!n) return;
-  let r = Nx(n);
+  let r = parseNumericValue(n);
   if (!Number.isInteger(r) || r <= 0)
     throw Error(`CLAUDE_CODE_MAX_TURNS must be a positive integer; got "${n}"`);
   return r;
@@ -116,24 +116,24 @@ function a(e) {
   let n = process.argv.indexOf("--");
   return (n === -1 ? process.argv : process.argv.slice(0, n)).includes(e);
 }
-function uo() {
+function isSimpleMode() {
   return Ie(process.env.CLAUDE_CODE_SIMPLE) || a("--bare");
 }
-function Hr() {
+function isSafeMode() {
   return Ie(process.env.CLAUDE_CODE_SAFE_MODE) || a("--safe-mode");
 }
-function DW() {
+function isRestrictedMode() {
   return Ie(process.env.CLAUDE_CODE_RESTRICTED);
 }
-function yf() {
+function getSafeModeExitHint() {
   return a("--safe-mode")
     ? "restart without --safe-mode"
     : "unset CLAUDE_CODE_SAFE_MODE";
 }
-function Grt() {
+function isSupervisedMode() {
   return Ie(process.env.CLAUDE_CODE_SUPERVISED);
 }
-function Yur(e) {
+function parseEnvAssignments(e) {
   let n = {};
   if (e)
     for (let r of e) {
@@ -146,10 +146,10 @@ function Yur(e) {
     }
   return n;
 }
-function RYt() {
-  return Iz(process.env.CLOUD_ML_REGION?.trim()) || "us-east5";
+function getDefaultGcpRegion() {
+  return parseRegionName(process.env.CLOUD_ML_REGION?.trim()) || "us-east5";
 }
-function Mxe(e) {
+function buildVertexBaseUrl(e) {
   switch (e) {
     case "global":
       return "https://aiplatform.googleapis.com";
@@ -160,49 +160,49 @@ function Mxe(e) {
       return `https://${e}-aiplatform.googleapis.com`;
   }
 }
-function Jur() {
+function shouldMaintainProjectWorkingDir() {
   return Ie(process.env.CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR);
 }
 function xg() {
   return !1;
 }
-function NL() {
+function isInProtectedNamespace() {
   return !1;
 }
-function Qur() {
+function getCooContext() {
   return { namespace: void 0, cluster: void 0 };
 }
-function mZ(e) {
+function getVertexRegionForModel(e) {
   if (e) {
     let n = d.find(([r]) => e.startsWith(r));
-    if (n) return Iz(process.env[n[1]]?.trim()) || RYt();
+    if (n) return parseRegionName(process.env[n[1]]?.trim()) || getDefaultGcpRegion();
   }
-  return RYt();
+  return getDefaultGcpRegion();
 }
 export {
-  Iz,
-  tl,
-  Nx,
-  be,
-  w_e,
-  T_e,
-  xMn,
-  Kur,
-  y8,
-  kje,
-  Lxe,
-  Xur,
-  uo,
-  Hr,
-  DW,
-  yf,
-  Grt,
-  Yur,
-  RYt,
-  Mxe,
-  Jur,
+  parseRegionName,
+  parseConfigInteger,
+  parseNumericValue,
+  getClaudeConfigDir,
+  isSameAsConfigDir,
+  getTeamsDir,
+  parseProjectDirName,
+  getConfiguredProjectDirName,
+  isConfigDirPath,
+  hasNodeOption,
+  parseConfigIntegerOrDefault,
+  resolveMaxTurns,
+  isSimpleMode,
+  isSafeMode,
+  isRestrictedMode,
+  getSafeModeExitHint,
+  isSupervisedMode,
+  parseEnvAssignments,
+  getDefaultGcpRegion,
+  buildVertexBaseUrl,
+  shouldMaintainProjectWorkingDir,
   xg,
-  NL,
-  Qur,
-  mZ,
+  isInProtectedNamespace,
+  getCooContext,
+  getVertexRegionForModel,
 };

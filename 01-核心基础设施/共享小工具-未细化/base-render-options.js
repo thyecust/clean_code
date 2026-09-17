@@ -10,10 +10,10 @@
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { logEvent } from "./analytics-event-queue.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Vnt } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { handleStreamGoneErrors } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { lm, zg } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { kBn } from "./chunk-tkfrb8jm.js";
-import { Dvt } from "../../02-功能模块/上下文压缩-Compact/chunk-qbdgst52.js";
+import { kBn } from "./relaunch-terminal-size.js";
+import { getFirstPositionalArg } from "../../02-功能模块/上下文压缩-Compact/cli-args.js";
 import { openSync } from "fs";
 import { ReadStream } from "tty";
 class o {
@@ -28,7 +28,7 @@ class o {
       this.override = void 0;
       return;
     }
-    if (Dvt() === "mcp") {
+    if (getFirstPositionalArg() === "mcp") {
       this.override = void 0;
       return;
     }
@@ -36,7 +36,7 @@ class o {
       let t = openSync("/dev/tty", "r"),
         e = new ReadStream(t);
       return (
-        Vnt(e),
+        handleStreamGoneErrors(e),
         e.on("error", (r) => {
           (logEvent("tengu_tty_stream_error", lm(r)),
             n(`/dev/tty stream error: ${r}`, { level: "debug" }));

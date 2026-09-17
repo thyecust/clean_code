@@ -20,15 +20,15 @@ import { isClaudeAISubscriber, Te, ee } from "../认证-OAuth登录/认证-OAuth
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { HI, CHROME_EXTENSION_RECONNECT_URL, isChromeExtensionInstalled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { openInChrome } from "./chunk-hnp84hf6.js";
-import { GI } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { openInChrome } from "./claude-in-chrome-host.js";
+import { invokeMcpToolRaw } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
 import { s, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -257,7 +257,7 @@ async function Ye(b) {
   return w.success ? w.data : [];
 }
 async function Se(b, R, w) {
-  let M = await GI(b, { name: R, arguments: w }),
+  let M = await invokeMcpToolRaw(b, { name: R, arguments: w }),
     D = Array.isArray(M.content) ? M.content[0] : void 0;
   return D && typeof D === "object" && "text" in D && typeof D.text === "string"
     ? D.text
@@ -291,7 +291,7 @@ function Je(Sn) {
       isClaudeAISubscriber: Pe,
       isWSL: ke,
     } = Sn,
-    qe = U(So),
+    qe = useAppStateSelector(So),
     { storageV5: Le } = useStorageV5Context(),
     [Ve, Be] = d(0),
     [oe, _n] = d(kn ?? !1),

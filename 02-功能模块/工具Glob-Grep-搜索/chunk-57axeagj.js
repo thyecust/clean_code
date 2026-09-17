@@ -12,10 +12,10 @@ import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { jn, Pt, Ks, findGitRoot, gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { OP, Vet, Ket } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -83,7 +83,7 @@ function C(e) {
   return `${r}:${(t >>> 0).toString(16)}`;
 }
 function G() {
-  let e = findGitRoot(Q());
+  let e = findGitRoot(getCwd());
   if (!e) return null;
   try {
     return statSync(m.join(e, ".git", "index")).mtimeMs;
@@ -163,10 +163,10 @@ async function j(e, r, s) {
   let t = Date.now(),
     a = e.cacheGeneration;
   n("[FileIndex] getFilesUsingGit called");
-  let o = findGitRoot(Q());
+  let o = findGitRoot(getCwd());
   if (!o) return (n("[FileIndex] not a git repo, returning null"), null);
   try {
-    let g = Q(),
+    let g = getCwd(),
       c = Date.now(),
       u = await execFileNoThrowWithCwd(
         gitExe(),
@@ -269,7 +269,7 @@ async function E(e, r, s) {
     return (n(`[FileIndex] using git ls-files result (${t.length} files)`), t);
   n("[FileIndex] git ls-files returned null, falling back to ripgrep");
   let a = Date.now(),
-    o = Q(),
+    o = getCwd(),
     g = null,
     c;
   {
@@ -311,7 +311,7 @@ async function N(e, r) {
     let a = getInitialSettings(),
       o = ee(),
       g = a.respectGitignore ?? o.respectGitignore ?? !0,
-      c = Q(),
+      c = getCwd(),
       [u, f] = await Promise.all([E(e, s, g), A(c, r)]);
     e.cachedConfigFiles = f;
     let d = [...u, ...f],
@@ -401,7 +401,7 @@ function startBackgroundCacheRefresh(e, r) {
 }
 async function O() {
   let e = ae(),
-    r = Q();
+    r = getCwd();
   try {
     return (await e.readdir(r)).map((t) => {
       let a = m.join(r, t.name),
@@ -425,7 +425,7 @@ async function generateFileSuggestions(e, r, s = !1, t) {
   if (!r && !s) return [];
   if (dUt(getInitialSettings().fileSuggestion)?.type === "command") {
     let g = { id: K(), project: { originalCwd: he(), projectRoot: sn() } },
-      c = { ...createBaseHookInput(g, Q()), query: r };
+      c = { ...createBaseHookInput(g, getCwd()), query: r };
     return (await executeFileSuggestionCommand(g, c)).slice(0, S).map(I);
   }
   if (r === "" || r === "." || r === "./") {

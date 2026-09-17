@@ -13,7 +13,7 @@ import { ge, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ou, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { hL, _L, PIn, OIn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
+import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { u1, Mvt, Oir, Dir } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 var Wre = "https://claude.com/claude-code";
@@ -92,7 +92,7 @@ async function tG(t, e, r, s) {
     }
     if (d.ok) n(`Persisted tool result to ${o} (${formatFileSize(l.length)})`);
   } else {
-    let d = qt();
+    let d = getFileStorage();
     try {
       (await PIn(dirname(o), d),
         await OIn(o, d),

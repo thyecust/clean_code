@@ -14,7 +14,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { DA, Hur, St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { HELP_FLAGS, isInfoSubcommandAlias, isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
@@ -61,7 +61,7 @@ import {
 import { VH, Yk, Ya, ese, tse, zG } from "../权限系统/chunk-t3b7pg2x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { U, It, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector, useSetAppState, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { RZ, Q1, fHe } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
@@ -88,8 +88,8 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import "../成本-Token统计/chunk-f1ehes3v.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
+import "../成本-Token统计/usage-credits-flow.js";
 import {
   p7,
   Yle,
@@ -109,7 +109,7 @@ import {
   Qle,
 } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { Lh } from "../Teammates团队/chunk-mrfx53ye.js";
+import { formatModelRestrictedMessage } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 var Ot = "tengu_swift_garden",
@@ -131,7 +131,7 @@ function Ue() {
     return !1;
   if (getAPIProvider() !== "firstParty" || !isFirstPartyAnthropicBaseUrl()) return !1;
   if (mU()) return !1;
-  if (St() || !bootstrapHasAnswered()) return !1;
+  if (isEssentialTrafficOnly() || !bootstrapHasAnswered()) return !1;
   if (getAdditionalModelOptionsCache().some((o) => typeof o.value === "string" && isFableModelValue(o.value))) return !1;
   let t = getDefaultFableModel();
   return isModelAllowed(t) && getModelUnavailabilityReason(t)?.reason === "absent";
@@ -254,12 +254,12 @@ function io({
   credentials: O,
   session: T,
 }) {
-  let c = Yn(),
-    M = U((s) => s.mainLoopModel),
-    q = U((s) => s.mainLoopModelForSession),
+  let c = useAppState(),
+    M = useAppStateSelector((s) => s.mainLoopModel),
+    q = useAppStateSelector((s) => s.mainLoopModelForSession),
     x = useMainLoopModelOverride() ?? M,
-    X = U((s) => s.fastMode),
-    ee = It(),
+    X = useAppStateSelector((s) => s.fastMode),
+    ee = useSetAppState(),
     { addNotification: de } = useNotificationQueue(),
     [D, k] = d(null),
     Q = C([]),
@@ -496,7 +496,7 @@ function Rt(yn) {
       credentials: it,
       session: lt,
     } = yn,
-    G = U(lo),
+    G = useAppStateSelector(lo),
     [ie, _n] = d(null),
     [We, Mn] = d(null),
     [ue] = d(ao),
@@ -669,8 +669,8 @@ function De(wn) {
       credentials: we,
       session: ae,
     } = wn,
-    R = Yn(),
-    be = It(),
+    R = useAppState(),
+    be = useSetAppState(),
     { addNotification: Fe } = useNotificationQueue(),
     [I, Wt] = d(null),
     Ht;
@@ -701,7 +701,7 @@ function De(wn) {
         Fe({
           key: `model-restricted-${Be}`,
           kind: "warning",
-          text: Lh(gt, Be),
+          text: formatModelRestrictedMessage(gt, Be),
           priority: "immediate",
         });
       Ze(Be, Fe);
@@ -859,7 +859,7 @@ ${qt.map(Rl).join(`
                 Fe({
                   key: `model-restricted-${z}`,
                   kind: "warning",
-                  text: Lh(ye.substitutedFrom, z),
+                  text: formatModelRestrictedMessage(ye.substitutedFrom, z),
                   priority: "immediate",
                 });
               if (ye.substitutedFrom !== void 0)
@@ -1093,10 +1093,10 @@ function Ze(r, t) {
 }
 function $t(In) {
   let { onDone: Bn } = In,
-    Dn = U(uo),
-    Wn = U(po),
-    Hn = U(go),
-    Vn = U(bo);
+    Dn = useAppStateSelector(uo),
+    Wn = useAppStateSelector(po),
+    Hn = useAppStateSelector(go),
+    Vn = useAppStateSelector(bo);
   return (
     Bn(
       P3e({
@@ -1110,12 +1110,12 @@ function $t(In) {
   );
 }
 var bn = async (r, t, o) => {
-  if (((o = o?.trim() || ""), Hur(o)))
+  if (((o = o?.trim() || ""), isInfoSubcommandAlias(o)))
     return (
       logEvent("tengu_model_command_inline_help", { args: fromEnum(o) }),
       e($t, { onDone: r })
     );
-  if (DA.includes(o)) {
+  if (HELP_FLAGS.includes(o)) {
     r(
       "Run /model to open the model selection menu, or /model [modelName] to set the model.",
       { display: "system" },

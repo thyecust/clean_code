@@ -10,11 +10,11 @@
 
 // [preload stripped] 原本在此预载 79 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { iSe, aSe } from "../../02-功能模块/成本-Token统计/chunk-f1ehes3v.js";
+import { USAGE_CREDITS_ADMIN_REQUEST_NOTICE, resolveExtraUsageOutcome } from "../../02-功能模块/成本-Token统计/usage-credits-flow.js";
 async function a(r, t) {
-  let e = await aSe({ openInBrowser: ke() }, t.credentials);
+  let e = await resolveExtraUsageOutcome({ openInBrowser: ke() }, t.credentials);
   if (e.type === "message") return { type: "text", value: e.value };
-  if (e.type === "confirm-admin-request") return { type: "text", value: iSe };
+  if (e.type === "confirm-admin-request") return { type: "text", value: USAGE_CREDITS_ADMIN_REQUEST_NOTICE };
   return {
     type: "text",
     value: e.opened

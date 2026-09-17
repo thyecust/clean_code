@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 106 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { c6e } from "../../02-功能模块/Bridge-RemoteControl/chunk-2m80582f.js";
-import "./chunk-33vqsej8.js";
+import "./device-passthrough-meta.js";
 import "../../02-功能模块/远程工具执行/chunk-66axrkvh.js";
 import "./chunk-d4kaq0ds.js";
 export { c6e as startDeviceRegistration };

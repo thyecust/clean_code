@@ -10,19 +10,19 @@
 
 // [preload stripped] 原本在此预载 204 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { DA, EW } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { HELP_FLAGS, INFO_SUBCOMMAND_ALIASES } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { renderFableModelName, parseUserSpecifiedModel, Tn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { RP } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Ym } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ySe, P_, Rl, rI, I3e, P3e, n2 } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
-import { fw, Lh } from "../Teammates团队/chunk-mrfx53ye.js";
+import { sanitizeDisplayName, formatModelRestrictedMessage } from "../Teammates团队/chunk-mrfx53ye.js";
 var s = `Usage: /model <name>. Available: ${RP.join(", ")}, default, or a full model ID.`,
   m = 15000;
 async function h(a, t) {
   let n = a.trim();
-  if (!n || EW.includes(n)) {
+  if (!n || INFO_SUBCOMMAND_ALIASES.includes(n)) {
     let e = t.getAppState();
     return {
       type: "text",
@@ -30,7 +30,7 @@ async function h(a, t) {
 ${s}`,
     };
   }
-  if (DA.includes(n)) return { type: "text", value: s };
+  if (HELP_FLAGS.includes(n)) return { type: "text", value: s };
   return (
     logEvent("tengu_model_command_inline", {
       args_hash: Tn(n),
@@ -41,7 +41,7 @@ ${s}`,
       if (e === void 0)
         return {
           type: "text",
-          value: `Couldn't confirm model '${fw(n)}' is available (the check timed out) \xB7 try again`,
+          value: `Couldn't confirm model '${sanitizeDisplayName(n)}' is available (the check timed out) \xB7 try again`,
         };
       if (!e.ok) return { type: "text", value: e.message };
       if (e.model !== null && n2(e.model))
@@ -79,7 +79,7 @@ ${s}`,
         ),
         r =
           e.substitutedFrom !== void 0 && e.model !== null
-            ? `${Lh(e.substitutedFrom, e.model)}
+            ? `${formatModelRestrictedMessage(e.substitutedFrom, e.model)}
 `
             : "",
         d =

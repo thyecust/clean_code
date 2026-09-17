@@ -16,7 +16,7 @@ import { truncate } from "../../01-核心基础设施/核心工具-字符串与�
 import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { Sk, formatDescriptionWithSource } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
@@ -193,7 +193,7 @@ function Q(he) {
   let n = _(41),
     { onClose: co, commands: x } = he,
     z = useTerminalSize(),
-    { rows: Ce, columns: c } = ks(z),
+    { rows: Ce, columns: c } = useVirtualScrollViewportSize(z),
     d = Ce,
     To;
   if (n[0] !== z.rows)

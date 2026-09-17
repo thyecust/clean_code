@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { CT } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
-import { os } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { repeatString } from "../核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -30,7 +30,7 @@ var p = [
   T = (a) => Math.min(1, Math.max(0, a)),
   B = (a, o) => {
     let n = Math.floor(a * o),
-      s = [os(p.at(-1), n)];
+      s = [repeatString(p.at(-1), n)];
     if (n < o) {
       let f = a * o - n,
         m = Math.floor(f * (p.length - 1));
@@ -59,8 +59,8 @@ function ProgressBar(q) {
         let H = Math.round(M * c);
         C = r(t, {
           children: [
-            e(t, { color: L, children: os(v, H) }),
-            e(t, { color: i, dimColor: i === void 0, children: os(K, c - H) }),
+            e(t, { color: L, children: repeatString(v, H) }),
+            e(t, { color: i, dimColor: i === void 0, children: repeatString(K, c - H) }),
           ],
         });
         break bb0;

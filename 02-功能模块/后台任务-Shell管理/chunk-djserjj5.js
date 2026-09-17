@@ -10,11 +10,11 @@
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { b, z, ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { processIdentity } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import { On, x0 } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { writeFileAtomic, writeFileAtomicSync } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 var m = 65534,
   C = new Set([
     "/",
@@ -33,7 +33,7 @@ var m = 65534,
     "/mnt",
     "/mnt/wslg",
   ]);
-function OJn() {
+function getSystemDirAllowlist() {
   return C;
 }
 import { readFile as v } from "fs/promises";
@@ -85,7 +85,7 @@ function M(e, t) {
     ? void 0
     : t;
 }
-async function DJn() {
+async function detectUidCollapse() {
   return;
 }
 async function B(e, t) {
@@ -97,12 +97,12 @@ async function B(e, t) {
     rootUidAmbiguous: n === 0,
   };
 }
-async function v7e() {
+async function getCurrentUid() {
   let e = process.getuid?.();
   if (e === void 0) return;
   return e;
 }
-function X3t() {
+function hasUidCollapse() {
   return ((processIdentity.uidsCollapse ??= L(ae())), processIdentity.uidsCollapse);
 }
 function L(e) {
@@ -128,23 +128,23 @@ import {
 import { connect } from "net";
 import { basename, dirname, join as i, resolve } from "path";
 function c() {
-  return i(be(), "daemon");
+  return i(getClaudeConfigDir(), "daemon");
 }
 function Z() {
-  return createHash("sha256").update(resolve(be())).digest("hex").slice(0, 8);
+  return createHash("sha256").update(resolve(getClaudeConfigDir())).digest("hex").slice(0, 8);
 }
-function KY() {
+function getDaemonRuntimeDir() {
   let e = process.getuid?.() ?? 0,
     t = a.TERMUX_VERSION && a.PREFIX ? i(a.PREFIX, "tmp") : "/tmp";
   return i(t, `cc-daemon-${e}`, Z());
 }
 var ee = /^[a-f0-9]{16}$/;
-function MSn() {
+function getPipeKeyPath() {
   return i(c(), "pipe.key");
 }
 var te = rs(
   () => {
-    let e = MSn();
+    let e = getPipeKeyPath();
     for (let t = 0; t < 8; t++) {
       let n;
       try {
@@ -162,7 +162,7 @@ var te = rs(
         if (ee.test(n)) return n;
         if (n === "" && t < 3) continue;
         let o = randomBytes(8).toString("hex");
-        return (x0(e, o, 384), o);
+        return (writeFileAtomicSync(e, o, 384), o);
       }
       let r = randomBytes(8).toString("hex");
       mkdirSync(c(), { recursive: !0, mode: 448 });
@@ -174,26 +174,26 @@ var te = rs(
     }
     throw Error("daemon pipe.key is not a valid nonce");
   },
-  () => be(),
+  () => getClaudeConfigDir(),
 );
 function U(e) {
   return `\\\\.\\pipe\\cc-daemon-${te()}-${e}`;
 }
-function g_(e) {
+function redactDaemonNonce(e) {
   return e.replace(/cc-daemon-[0-9a-f]{16}/g, "cc-daemon-*");
 }
-function n1e(e) {
+function redactDaemonNonceFromError(e) {
   if (e instanceof Error) {
-    if (((e.message = g_(e.message)), typeof e.stack === "string"))
-      e.stack = g_(e.stack);
+    if (((e.message = redactDaemonNonce(e.message)), typeof e.stack === "string"))
+      e.stack = redactDaemonNonce(e.stack);
   }
   return e;
 }
-function wbt() {
+function getControlKeyPath() {
   return i(c(), "control.key");
 }
-async function LJn() {
-  let e = wbt();
+async function readOrCreateControlKey() {
+  let e = getControlKeyPath();
   try {
     let n = await lstat(e);
     if (n.isFile() && n.size <= 4096) {
@@ -204,20 +204,20 @@ async function LJn() {
     if (!W(n)) throw n;
   }
   let t = randomBytes(16).toString("hex");
-  return (await mkdir(c(), { recursive: !0, mode: 448 }), await On(e, t, 384), t);
+  return (await mkdir(c(), { recursive: !0, mode: 448 }), await writeFileAtomic(e, t, 384), t);
 }
-async function zre() {
+async function readControlKey() {
   try {
-    let e = await lstat(wbt());
+    let e = await lstat(getControlKeyPath());
     if (!e.isFile() || e.size > 4096) return;
-    return (await R(wbt(), "utf8")).trim() || void 0;
+    return (await R(getControlKeyPath(), "utf8")).trim() || void 0;
   } catch {
     return;
   }
 }
-async function MJn() {
+async function ensureDaemonDirSecure() {
   let e = c();
-  if (P() === "windows") {
+  if (getCurrentPlatform() === "windows") {
     (await mkdir(e, { recursive: !0 }), await chmod(e, 448).catch(() => {}));
     return;
   }
@@ -228,14 +228,14 @@ async function MJn() {
     throw Error(`refusing to use daemon dir: ${e} is owned by uid ${n.uid}`);
   if ((n.mode & 511) !== 448) await chmod(e, 448);
 }
-async function R7e() {
-  if (P() === "windows") return;
-  let e = KY();
+async function ensureDaemonRuntimeDir() {
+  if (getCurrentPlatform() === "windows") return;
+  let e = getDaemonRuntimeDir();
   await mkdir(e, { recursive: !0, mode: 448 });
   let t = new Date();
   (await utimes(e, t, t).catch(() => {}), await _([dirname(e), e]));
 }
-var Y3t = "ENOTOWNED";
+var NOT_OWNED_ERROR_CODE = "ENOTOWNED";
 async function _(e) {
   let t = process.getuid?.();
   k();
@@ -244,23 +244,23 @@ async function _(e) {
     if (t !== void 0 && r.uid !== t)
       throw Object.assign(
         Error(`refusing to bind: ${n} is owned by uid ${r.uid}`),
-        { code: Y3t },
+        { code: NOT_OWNED_ERROR_CODE },
       );
     if ((r.mode & 511) !== 448) await chmod(n, 448);
   }
 }
-var NSn =
+var UID_COLLAPSE_REFUSAL_MESSAGE =
   "refusing to use the daemon socket: this process runs in a user namespace without a uid mapping, so directory and peer ownership cannot be verified (start it with a mapping, e.g. unshare -Ur)";
 function k() {
-  if (X3t()) throw Object.assign(Error(NSn), { code: Y3t });
+  if (hasUidCollapse()) throw Object.assign(Error(UID_COLLAPSE_REFUSAL_MESSAGE), { code: NOT_OWNED_ERROR_CODE });
 }
-async function NJn(e) {
-  if (P() === "windows") {
+async function ensureSocketDirsOwned(e) {
+  if (getCurrentPlatform() === "windows") {
     await mkdir(e, { recursive: !0 }).catch(() => {});
     return;
   }
-  await R7e();
-  let t = [qAe(), J3t()];
+  await ensureDaemonRuntimeDir();
+  let t = [getPtySocketDir(), getRendezvousDir()];
   for (let n of t) await mkdir(n, { recursive: !0, mode: 448 });
   if (!t.includes(e)) {
     if (
@@ -273,9 +273,9 @@ async function NJn(e) {
   }
   await _(t);
 }
-function FJn() {
-  if (P() === "windows") return;
-  let e = KY(),
+function pruneStaleDaemonDirs() {
+  if (getCurrentPlatform() === "windows") return;
+  let e = getDaemonRuntimeDir(),
     t = dirname(e),
     n = basename(e);
   readdir(t, { withFileTypes: !0 })
@@ -317,98 +317,98 @@ function ne(e) {
     n
   );
 }
-function iG() {
+function getDispatchDir() {
   return i(c(), "dispatch");
 }
-function FSn() {
+function getRejectedDispatchDir() {
   return i(c(), "dispatch", "rejected");
 }
-function zI() {
+function getRosterFilePath() {
   return i(c(), "roster.json");
 }
-var Tbt = "attach-journal";
-function aG() {
-  return i(c(), Tbt);
+var ATTACH_JOURNAL_NAMESPACE = "attach-journal";
+function getAttachJournalDir() {
+  return i(c(), ATTACH_JOURNAL_NAMESPACE);
 }
-function J3t() {
-  return i(KY(), "rv");
+function getRendezvousDir() {
+  return i(getDaemonRuntimeDir(), "rv");
 }
-function jAe() {
+function getDaemonAuthDir() {
   return i(c(), "auth");
 }
-function WAe(e) {
-  return i(jAe(), `${e}.json`);
+function getCredentialFilePath(e) {
+  return i(getDaemonAuthDir(), `${e}.json`);
 }
-function k7e() {
+function getHostManagedDir() {
   return i(c(), "host-managed");
 }
-function XY(e) {
-  return i(k7e(), e);
+function getHostManagedMarkerPath(e) {
+  return i(getHostManagedDir(), e);
 }
-function GAe(e) {
-  return i(jAe(), `${e}.tokens.json`);
+function getTokensFilePath(e) {
+  return i(getDaemonAuthDir(), `${e}.tokens.json`);
 }
-function x7e(e) {
-  if (P() === "windows") return U(`rv-${e}`);
-  return i(J3t(), `${e}.sock`);
+function getRendezvousSocketPath(e) {
+  if (getCurrentPlatform() === "windows") return U(`rv-${e}`);
+  return i(getRendezvousDir(), `${e}.sock`);
 }
-function qAe() {
-  return i(KY(), "pty");
+function getPtySocketDir() {
+  return i(getDaemonRuntimeDir(), "pty");
 }
-function oh(e) {
-  if (P() === "windows") return U(`pty-${e}`);
-  return i(qAe(), `${e}.sock`);
+function getPtySocketPath(e) {
+  if (getCurrentPlatform() === "windows") return U(`pty-${e}`);
+  return i(getPtySocketDir(), `${e}.sock`);
 }
-function Aj() {
-  return i(KY(), "spare");
+function getSparePtyDir() {
+  return i(getDaemonRuntimeDir(), "spare");
 }
-function $Jn(e) {
-  return i(Aj(), `${e}.pty.sock`);
+function getSparePtySocketPath(e) {
+  return i(getSparePtyDir(), `${e}.pty.sock`);
 }
-function UJn(e) {
-  return i(Aj(), `${e}.claim.sock`);
+function getSpareClaimSocketPath(e) {
+  return i(getSparePtyDir(), `${e}.claim.sock`);
 }
-function Jpe() {
+function getPtyPidDir() {
   return i(c(), "pty-pids");
 }
-function lG(e) {
-  return i(Jpe(), `${e}.pid`);
+function getPtyPidFilePath(e) {
+  return i(getPtyPidDir(), `${e}.pid`);
 }
-function Nh(e) {
+function getPtyHostStderrPath(e) {
   return T(e, "err");
 }
-function vT(e) {
+function getPtyLateOutputPath(e) {
   return T(e, "late");
 }
 function T(e, t) {
-  if (P() === "windows") return i(Jpe(), `${e.split("\\").pop()}.${t}`);
+  if (getCurrentPlatform() === "windows") return i(getPtyPidDir(), `${e.split("\\").pop()}.${t}`);
   return `${e}.${t}`;
 }
-function dN(e) {
-  if (P() === "windows") return i(Jpe(), `${e.split("\\").pop()}.exec-exit`);
+function getPtyExecExitPath(e) {
+  if (getCurrentPlatform() === "windows") return i(getPtyPidDir(), `${e.split("\\").pop()}.exec-exit`);
   return `${e}.exec-exit`;
 }
-function VI() {
-  if (P() === "windows") return U("control");
-  return (k(), i(KY(), "control.sock"));
+function getControlSocketPath() {
+  if (getCurrentPlatform() === "windows") return U("control");
+  return (k(), i(getDaemonRuntimeDir(), "control.sock"));
 }
-var zAe = 0,
-  Ebt = 1,
-  H7e = 262144,
+var FRAME_KIND_DATA = 0,
+  FRAME_KIND_CONTROL = 1,
+  RING_BUFFER_MAX_BYTES = 262144,
   f = 5,
-  I7e = 1048576,
-  YY = 1e4;
-function P7e(e) {
+  MAX_FRAME_BYTES = 1048576,
+  MAX_TERMINAL_DIMENSION = 1e4;
+function encodeDataFrame(e) {
   let t = typeof e === "string" ? Buffer.from(e, "utf8") : e,
     n = Buffer.allocUnsafe(f + t.length);
-  return (n.writeUInt32BE(t.length, 0), n.writeUInt8(zAe, 4), t.copy(n, f), n);
+  return (n.writeUInt32BE(t.length, 0), n.writeUInt8(FRAME_KIND_DATA, 4), t.copy(n, f), n);
 }
-function TC(e) {
+function encodeControlFrame(e) {
   let t = Buffer.from(b(e), "utf8"),
     n = Buffer.allocUnsafe(f + t.length);
-  return (n.writeUInt32BE(t.length, 0), n.writeUInt8(Ebt, 4), t.copy(n, f), n);
+  return (n.writeUInt32BE(t.length, 0), n.writeUInt8(FRAME_KIND_CONTROL, 4), t.copy(n, f), n);
 }
-function Abt(e, t) {
+function createFrameDecoder(e, t) {
   let n = Buffer.alloc(0),
     r = !1;
   return (o) => {
@@ -416,17 +416,17 @@ function Abt(e, t) {
     n = n.length === 0 ? o : Buffer.concat([n, o]);
     while (n.length >= f) {
       let s = n.readUInt32BE(0);
-      if (s > I7e) {
-        ((r = !0), t(`frame too large (${s} > ${I7e})`));
+      if (s > MAX_FRAME_BYTES) {
+        ((r = !0), t(`frame too large (${s} > ${MAX_FRAME_BYTES})`));
         return;
       }
       let u = f + s;
       if (n.length < u) return;
       let p = n.readUInt8(4),
         g = n.subarray(f, u);
-      if (((n = n.subarray(u)), p === zAe))
-        e({ kind: zAe, payload: Buffer.from(g) });
-      else if (p === Ebt) {
+      if (((n = n.subarray(u)), p === FRAME_KIND_DATA))
+        e({ kind: FRAME_KIND_DATA, payload: Buffer.from(g) });
+      else if (p === FRAME_KIND_CONTROL) {
         let w;
         try {
           w = z(g.toString("utf8"));
@@ -434,7 +434,7 @@ function Abt(e, t) {
           ((r = !0), t("bad ctrl json"));
           return;
         }
-        e({ kind: Ebt, ctrl: w });
+        e({ kind: FRAME_KIND_CONTROL, ctrl: w });
       } else {
         ((r = !0), t(`unknown frame kind ${p}`));
         return;
@@ -443,52 +443,52 @@ function Abt(e, t) {
   };
 }
 export {
-  OJn,
-  DJn,
-  v7e,
-  X3t,
-  KY,
-  MSn,
-  g_,
-  n1e,
-  wbt,
-  LJn,
-  zre,
-  MJn,
-  R7e,
-  Y3t,
-  NSn,
-  NJn,
-  FJn,
-  iG,
-  FSn,
-  zI,
-  Tbt,
-  aG,
-  J3t,
-  jAe,
-  WAe,
-  k7e,
-  XY,
-  GAe,
-  x7e,
-  qAe,
-  oh,
-  Aj,
-  $Jn,
-  UJn,
-  Jpe,
-  lG,
-  Nh,
-  vT,
-  dN,
-  VI,
-  zAe,
-  Ebt,
-  H7e,
-  I7e,
-  YY,
-  P7e,
-  TC,
-  Abt,
+  getSystemDirAllowlist,
+  detectUidCollapse,
+  getCurrentUid,
+  hasUidCollapse,
+  getDaemonRuntimeDir,
+  getPipeKeyPath,
+  redactDaemonNonce,
+  redactDaemonNonceFromError,
+  getControlKeyPath,
+  readOrCreateControlKey,
+  readControlKey,
+  ensureDaemonDirSecure,
+  ensureDaemonRuntimeDir,
+  NOT_OWNED_ERROR_CODE,
+  UID_COLLAPSE_REFUSAL_MESSAGE,
+  ensureSocketDirsOwned,
+  pruneStaleDaemonDirs,
+  getDispatchDir,
+  getRejectedDispatchDir,
+  getRosterFilePath,
+  ATTACH_JOURNAL_NAMESPACE,
+  getAttachJournalDir,
+  getRendezvousDir,
+  getDaemonAuthDir,
+  getCredentialFilePath,
+  getHostManagedDir,
+  getHostManagedMarkerPath,
+  getTokensFilePath,
+  getRendezvousSocketPath,
+  getPtySocketDir,
+  getPtySocketPath,
+  getSparePtyDir,
+  getSparePtySocketPath,
+  getSpareClaimSocketPath,
+  getPtyPidDir,
+  getPtyPidFilePath,
+  getPtyHostStderrPath,
+  getPtyLateOutputPath,
+  getPtyExecExitPath,
+  getControlSocketPath,
+  FRAME_KIND_DATA,
+  FRAME_KIND_CONTROL,
+  RING_BUFFER_MAX_BYTES,
+  MAX_FRAME_BYTES,
+  MAX_TERMINAL_DIMENSION,
+  encodeDataFrame,
+  encodeControlFrame,
+  createFrameDecoder,
 };

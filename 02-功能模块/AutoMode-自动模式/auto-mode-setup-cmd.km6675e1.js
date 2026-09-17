@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 205 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { NP } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { isFileReadDenied } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -205,7 +205,7 @@ async function q(e, t) {
 async function isAllowedApplyFilePath(e) {
   let t = resolve(e),
     s = new Set();
-  for (let o of [tmpdir(), be()]) {
+  for (let o of [tmpdir(), getClaudeConfigDir()]) {
     s.add(resolve(o));
     try {
       s.add(await realpath(o));

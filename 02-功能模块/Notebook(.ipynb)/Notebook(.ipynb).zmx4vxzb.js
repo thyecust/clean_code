@@ -9,19 +9,19 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { Lr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { _i, jd, Oo } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
-import { Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
+import { ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { Pg } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
+import { TruncatedFilePath } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import { Ch } from "../语法高亮-Markdown渲染/chunk-mnn6q099.js";
+import { CodeBlock } from "../语法高亮-Markdown渲染/code-block.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -53,7 +53,7 @@ function M(q) {
     ((T = e(t, {
       bold: !0,
       color: "subtle",
-      children: e(Pg, { filePath: n, children: j }),
+      children: e(TruncatedFilePath, { filePath: n, children: j }),
     })),
       (a[5] = j),
       (a[6] = n),
@@ -83,7 +83,7 @@ function M(q) {
       e(o, {
         marginTop: 1,
         flexDirection: "column",
-        children: e(Ch, {
+        children: e(CodeBlock, {
           code: _i(b),
           filePath: k === "markdown" ? "file.md" : "file.py",
           dim: !0,
@@ -113,15 +113,15 @@ function renderToolUseMessage(
   let f = p ? s : Ao(s),
     d = jd(Oo(_i(`${i}`)));
   if (p) {
-    let v = Oo(_i(oe(l, 30)));
+    let v = Oo(_i(truncateToCodeUnits(l, 30)));
     return r(N, {
       children: [
-        e(Pg, { filePath: s, children: f }),
+        e(TruncatedFilePath, { filePath: s, children: f }),
         `@${d}, content: ${v}\u2026, cell_type: ${c}, edit_mode: ${m ?? "replace"}`,
       ],
     });
   }
-  return r(N, { children: [e(Pg, { filePath: s, children: f }), `@${d}`] });
+  return r(N, { children: [e(TruncatedFilePath, { filePath: s, children: f }), `@${d}`] });
 }
 function renderToolUseRejectedMessage(s, { verbose: i }) {
   return e(M, {
@@ -138,7 +138,7 @@ function renderToolUseErrorMessage(s, { verbose: i }) {
     return e(ToolResultRow, {
       children: e(t, { color: "error", children: "Error editing notebook" }),
     });
-  return e(Yd, { result: s, verbose: i });
+  return e(ToolErrorMessage, { result: s, verbose: i });
 }
 function renderToolResultMessage({ cell_id: s, new_source: i, error: l }) {
   if (l) return e(ToolResultRow, { children: e(t, { color: "error", children: _i(l) }) });
@@ -156,7 +156,7 @@ function renderToolResultMessage({ cell_id: s, new_source: i, error: l }) {
         }),
         e(o, {
           marginLeft: 2,
-          children: e(Ch, { code: _i(i), filePath: "notebook.py" }),
+          children: e(CodeBlock, { code: _i(i), filePath: "notebook.py" }),
         }),
       ],
     }),

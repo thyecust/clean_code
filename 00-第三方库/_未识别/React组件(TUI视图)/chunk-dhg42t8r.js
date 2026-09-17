@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { dd } from "../../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { Ux, WL } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { normalizeFullWidthDigits, normalizeIdeographicSpaces } from "../../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../react/react.zhnvc798.js";
 import { o, t, tn } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Rs } from "../../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
+import { useActiveOverlay } from "../../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { fOt, qB, Y8, qm, gOt, u9e, d9e } from "../../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { e, r } from "../../react/react.kwtapczy.js";
 import { re, C, d, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 F();
 F();
 import { isDeepStrictEqual } from "util";
@@ -63,7 +63,7 @@ function ie({
       [f, x],
     ),
     y = gOt({ visibleOptionCount: W, options: f, onFocus: Y });
-  Rs("multi-select");
+  useActiveOverlay("multi-select");
   let s = re(
     (n, l) => {
       let v = f.find((h) => h.value === n);
@@ -95,7 +95,7 @@ function ie({
     onCancel: q,
     handleKeyDown: (n) => {
       if (u) return;
-      let l = Ux(n.key),
+      let l = normalizeFullWidthDigits(n.key),
         v = y.getFocusedValue(),
         k = f.find((I) => I.value === v)?.type === "input",
         b = ne();
@@ -153,7 +153,7 @@ function ie({
         (n.preventDefault(), y.focusPreviousPage());
         return;
       }
-      if (n.key === "return" || WL(n.key) === " ") {
+      if (n.key === "return" || normalizeIdeographicSpaces(n.key) === " ") {
         if ((n.preventDefault(), n.ctrl && n.key === "return" && k && m)) {
           m(O());
           return;
@@ -395,7 +395,7 @@ function he(gt) {
               extraChromeWidth: 4,
               children: r(t, {
                 color: ye ? "success" : void 0,
-                children: ["[", ye ? L.tick : " ", "]", " "],
+                children: ["[", ye ? figures.tick : " ", "]", " "],
               }),
             }),
           },
@@ -417,7 +417,7 @@ function he(gt) {
               !H && e(t, { dimColor: !0, children: `${Xe}.`.padEnd(Ue) }),
               r(t, {
                 color: ye ? "success" : void 0,
-                children: ["[", ye ? L.tick : " ", "]"],
+                children: ["[", ye ? figures.tick : " ", "]"],
               }),
               e(t, { color: Ee ? "suggestion" : void 0, children: g.label }),
             ],
@@ -487,9 +487,9 @@ function he(gt) {
         onMouseLeave: () => ze(!1),
         children: [
           !p && a.isSubmitFocused
-            ? e(t, { color: "suggestion", children: L.pointer })
+            ? e(t, { color: "suggestion", children: figures.pointer })
             : !p && Fe
-              ? e(t, { dimColor: !0, children: L.pointer })
+              ? e(t, { dimColor: !0, children: figures.pointer })
               : e(t, { children: " " }),
           e(o, {
             marginLeft: 3,

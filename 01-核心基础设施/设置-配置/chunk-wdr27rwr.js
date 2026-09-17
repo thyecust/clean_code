@@ -12,7 +12,7 @@ import { lit as S, fromEnumOpt } from "../共享小工具-未细化/analytics-fi
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { getSettingsForSource, updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { parsePermissionMode } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
-import { zL } from "../../02-功能模块/权限系统/chunk-hv6z01db.js";
+import { canCycleToAuto } from "../../02-功能模块/权限系统/permission-mode-cycle.js";
 function shouldShowAutoDefaultNudge(u, { requireOnboarding: r = !0 } = {}) {
   let o = ee();
   if (
@@ -28,7 +28,7 @@ function shouldShowAutoDefaultNudge(u, { requireOnboarding: r = !0 } = {}) {
       "flagSettings",
       "policySettings",
     ].some((n) => getSettingsForSource(n)?.permissions?.defaultMode);
-  if (e && e !== "auto" && !t && zL(u)) return e;
+  if (e && e !== "auto" && !t && canCycleToAuto(u)) return e;
   return null;
 }
 function handleAutoDefaultNudgeEventFromHost(u, r, o) {

@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { U } from "./chunk-r3y9qj3r.js";
+import { useAppStateSelector } from "./app-state-context.js";
 function useSettings() {
-  return U((t) => t.settings);
+  return useAppStateSelector((t) => t.settings);
 }
 export { useSettings };

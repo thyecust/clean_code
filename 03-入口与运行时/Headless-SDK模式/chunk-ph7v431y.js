@@ -11,14 +11,14 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { pt, io, cnt, Xkt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { stripAnsi, formatSingleLineText, MAX_DESCRIPTION_LENGTH, MARKDOWN_SYNTAX_CHARS } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { iy, gc } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { IT } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { sDe, b6t, createAttachmentMessage, Vc, Re, wH } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { xZ, Pst } from "../../02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js";
-import { iQt } from "../../01-核心基础设施/共享小工具-未细化/chunk-cbdr3qdm.js";
-import { mt } from "../../02-功能模块/工具Task-Agent调度/chunk-1px84m19.js";
+import { iQt } from "../../01-核心基础设施/共享小工具-未细化/remote-autocompact-state.js";
+import { AGENT_TOOL_NAME } from "../../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
 function eFn(e) {
@@ -51,7 +51,7 @@ function v(e) {
   };
 }
 function b(e, s) {
-  return typeof e === "string" ? pt(e) : s;
+  return typeof e === "string" ? stripAnsi(e) : s;
 }
 function p(e) {
   let s = e;
@@ -102,7 +102,7 @@ function k(e) {
   return {
     type: "system",
     subtype: "informational",
-    content: pt(r.join(", ")),
+    content: stripAnsi(r.join(", ")),
     level: "warning",
     uuid: p(e.uuid),
     timestamp: new Date().toISOString(),
@@ -125,7 +125,7 @@ function h(e) {
     type: "system",
     subtype: "informational",
     content:
-      s === "compacting" ? "Compacting conversation\u2026" : `Status: ${pt(s)}`,
+      s === "compacting" ? "Compacting conversation\u2026" : `Status: ${stripAnsi(s)}`,
     level: "info",
     uuid: p(e.uuid),
     timestamp: new Date().toISOString(),
@@ -149,7 +149,7 @@ function D(e) {
   return {
     type: "system",
     subtype: "informational",
-    content: `Tool ${pt(s)} running for ${r}s\u2026`,
+    content: `Tool ${stripAnsi(s)} running for ${r}s\u2026`,
     level: "info",
     uuid: p(e.uuid),
     timestamp: new Date().toISOString(),
@@ -266,12 +266,12 @@ function mHe(e) {
   )
     return;
   return {
-    condition: io(e.condition, { maxCodeUnits: 4000 }),
+    condition: formatSingleLineText(e.condition, { maxCodeUnits: 4000 }),
     iterations: e.iterations,
     setAt: e.set_at,
     tokensAtStart: e.tokens_at_start,
     ...(e.last_reason !== void 0 && {
-      lastReason: io(e.last_reason, { maxCodeUnits: 512 }),
+      lastReason: formatSingleLineText(e.last_reason, { maxCodeUnits: 512 }),
     }),
   };
 }
@@ -419,9 +419,9 @@ function kZ(e, s) {
                     e.fallback_model,
                     e.api_refusal_category ?? null,
                   )
-                : io(typeof e.content === "string" ? e.content : "", {
-                    drop: Xkt,
-                    maxCodeUnits: cnt,
+                : formatSingleLineText(typeof e.content === "string" ? e.content : "", {
+                    drop: MARKDOWN_SYNTAX_CHARS,
+                    maxCodeUnits: MAX_DESCRIPTION_LENGTH,
                   }),
             level: "warning",
             trigger: e.trigger,
@@ -450,7 +450,7 @@ function kZ(e, s) {
           message: {
             type: "system",
             subtype: "model_fallback",
-            content: pt(e.content),
+            content: stripAnsi(e.content),
             level: "warning",
             trigger: e.trigger,
             originalModel: e.original_model,
@@ -468,7 +468,7 @@ function kZ(e, s) {
           message: {
             type: "system",
             subtype: "model_consent_fallback",
-            content: pt(e.content),
+            content: stripAnsi(e.content),
             level: "warning",
             choice: e.choice,
             originalModel: e.original_model,
@@ -487,7 +487,7 @@ function kZ(e, s) {
           message: {
             type: "system",
             subtype: "informational",
-            content: pt(e.content),
+            content: stripAnsi(e.content),
             level: e.level,
             isMeta: !1,
             uuid: p(e.uuid),
@@ -504,12 +504,12 @@ function kZ(e, s) {
             ? e.lines
                 .filter((c) => typeof c === "string")
                 .slice(0, 32)
-                .map((c) => io(c, { maxCodeUnits: 2100 }))
+                .map((c) => formatSingleLineText(c, { maxCodeUnits: 2100 }))
                 .filter((c) => c.trim() !== "")
             : [],
           l =
             typeof e.label === "string"
-              ? io(e.label, { maxCodeUnits: 320 })
+              ? formatSingleLineText(e.label, { maxCodeUnits: 320 })
               : void 0,
           a = e.unverified === !0 && l !== void 0 && l.trim() !== "";
         if (typeof e.tool_use_id !== "string" || (t.length === 0 && !a))
@@ -536,7 +536,7 @@ function kZ(e, s) {
         let t = p(e.uuid);
         return {
           type: "message",
-          message: Vc({ content: pt(e.content), uuid: () => t }),
+          message: Vc({ content: stripAnsi(e.content), uuid: () => t }),
         };
       }
       return (
@@ -547,7 +547,7 @@ function kZ(e, s) {
       if (
         e.heartbeat === !0 ||
         e.subagent_retry !== void 0 ||
-        e.tool_name === mt
+        e.tool_name === AGENT_TOOL_NAME
       )
         return (
           n(
@@ -589,7 +589,7 @@ function kZ(e, s) {
       let l = t.split(/\r\n?|\n/),
         a = "";
       for (let d = l.length - 1; d >= 0; d--)
-        if (((a = io(l[d], { maxCodeUnits: 512 })), a !== "")) break;
+        if (((a = formatSingleLineText(l[d], { maxCodeUnits: 512 })), a !== "")) break;
       return { type: "env_log", message: a };
     }
     case "conversation_reset": {

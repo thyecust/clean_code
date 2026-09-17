@@ -10,14 +10,14 @@
 
 // [preload stripped] 原本在此预载 244 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { P6 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { parseSettingsFileUncached, X6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { findCanonicalGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -35,18 +35,18 @@ import {
   jPt,
   s0e,
   i0e,
-  jb,
-  WPt,
-  GPt,
+  formatListWithAnd,
+  hasOtelHeadersHelper,
+  hasApiKeyHelper,
   qPt,
   zPt,
-  VPt,
-} from "../状态栏-主题/chunk-67rzccvb.js";
+  hasProxyAuthHelper,
+} from "../状态栏-主题/trust-dialog-settings.js";
 import { PermissionDialogFrame } from "./permission-dialog.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Dbe } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
+import { getGatingSettingsErrors } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { resolve as so } from "path";
 F();
@@ -97,7 +97,7 @@ function Oe(s) {
           ? v.flatMap((io) => Szt(io, S))
           : Szt(g[S] ?? null, S),
     },
-    i = (S) => GPt(S) || qPt(S) || zPt(S) || WPt(S) || VPt(S),
+    i = (S) => hasApiKeyHelper(S) || qPt(S) || zPt(S) || hasOtelHeadersHelper(S) || hasProxyAuthHelper(S),
     m = [],
     ae = [];
   if (jPt(c)) m.push(".claude/settings.json");
@@ -132,7 +132,7 @@ function E(pt) {
   Un(mt, 0);
   let pe;
   if (Le[0] !== He)
-    ((pe = r(t, { dimColor: !0, children: [L.pointer, " /cd ", He] })),
+    ((pe = r(t, { dimColor: !0, children: [figures.pointer, " /cd ", He] })),
       (Le[0] = He),
       (Le[1] = pe));
   else pe = Le[1];
@@ -345,13 +345,13 @@ function Je(vt) {
           "This directory pre-approves ",
           b.rawCount,
           " ",
-          x(b.rawCount, "tool permission", "tool permissions"),
+          pluralize(b.rawCount, "tool permission", "tool permissions"),
           " ",
           "in ",
-          jb(b.sources),
+          formatListWithAnd(b.sources),
           ":",
           " ",
-          jb(b.rules, 8),
+          formatListWithAnd(b.rules, 8),
         ],
       })),
       (q[0] = b.rawCount),
@@ -373,13 +373,13 @@ function Je(vt) {
           " ",
           "additional",
           " ",
-          x(P.rawCount, "directory", "directories"),
+          pluralize(P.rawCount, "directory", "directories"),
           " ",
           "in ",
-          jb(P.sources),
+          formatListWithAnd(P.sources),
           ":",
           " ",
-          jb(P.dirs, 6),
+          formatListWithAnd(P.dirs, 6),
         ],
       })),
       (q[4] = P.dirs),
@@ -399,7 +399,7 @@ function Je(vt) {
           e(StatusIndicator, { status: "warning", withSpace: !0 }),
           "This directory configures hooks that run commands, declared in",
           " ",
-          jb(be),
+          formatListWithAnd(be),
         ],
       })),
       (q[8] = X),
@@ -420,7 +420,7 @@ function Je(vt) {
           "'",
           "s behalf (auth / header helpers), declared in",
           " ",
-          jb(Pe),
+          formatListWithAnd(Pe),
         ],
       })),
       (q[11] = X),
@@ -463,19 +463,19 @@ async function ut(s, a, l) {
   let u = await validateCdTarget(c, getToolPermissionContext(a));
   switch (u.result) {
     case "not_found": {
-      let i = `Couldn't find a directory at ${ie.bold(u.path)}.`;
+      let i = `Couldn't find a directory at ${chalk.bold(u.path)}.`;
       return e(E, { message: i, args: c, onDone: () => s(i) });
     }
     case "not_a_directory": {
-      let i = `${ie.bold(u.path)} is not a directory. Did you mean ${ie.bold(u.parent)}?`;
+      let i = `${chalk.bold(u.path)} is not a directory. Did you mean ${chalk.bold(u.parent)}?`;
       return e(E, { message: i, args: c, onDone: () => s(i) });
     }
     case "same": {
-      let i = `Already in ${ie.bold(an(u.directory))}.`;
+      let i = `Already in ${chalk.bold(an(u.directory))}.`;
       return e(E, { message: i, args: c, onDone: () => s(i) });
     }
     case "blocked_by_rule": {
-      let i = cdRuleRefusalMessage(u.directory, u.check, ie.bold, { display: an });
+      let i = cdRuleRefusalMessage(u.directory, u.check, chalk.bold, { display: an });
       return e(E, { message: i, args: c, onDone: () => s(i) });
     }
     case "ok":
@@ -490,7 +490,7 @@ async function ut(s, a, l) {
         return (
           n(`/cd relocate failed: ${m}`, { level: "error" }),
           s(
-            `Couldn't move to ${ie.bold(an(h))} \u2014 the directory may no longer exist, or the session couldn't be moved. Staying in ${ie.bold(an(Q()))}.`,
+            `Couldn't move to ${chalk.bold(an(h))} \u2014 the directory may no longer exist, or the session couldn't be moved. Staying in ${chalk.bold(an(getCwd()))}.`,
           ),
           null
         );
@@ -518,8 +518,8 @@ async function ut(s, a, l) {
       else if (m) logFeatureOk("mcp_project_approval_dialog");
       s(
         m?.persistFailed
-          ? `Moved to ${ie.bold(an(h))}. One or more of your MCP server choices could not be saved (check permissions on .claude/settings.local.json) \u2014 you will be asked again next time.`
-          : `Moved to ${ie.bold(an(h))}`,
+          ? `Moved to ${chalk.bold(an(h))}. One or more of your MCP server choices could not be saved (check permissions on .claude/settings.local.json) \u2014 you will be asked again next time.`
+          : `Moved to ${chalk.bold(an(h))}`,
         { display: "system", metaMessages: [i] },
       );
     };
@@ -556,7 +556,7 @@ async function ut(s, a, l) {
     ),
     onComplete: w,
     onCancel: () => {
-      s(`Staying in ${ie.bold(an(Q()))}`);
+      s(`Staying in ${chalk.bold(an(getCwd()))}`);
     },
   });
 }
@@ -564,7 +564,7 @@ async function Mo(s) {
   let a = { pendingServers: [], pluginServerNames: new Set() };
   try {
     let l = await vot(s.storageV5);
-    if (l.pendingServers.length > 0 && Dbe().length > 0)
+    if (l.pendingServers.length > 0 && getGatingSettingsErrors().length > 0)
       return (
         n(
           "/cd: project MCP servers await approval but a settings file has errors; leaving them pending",
@@ -718,7 +718,7 @@ function ne(We) {
     { storageV5: eo } = useStorageV5Context(),
     [oo, bt] = d(j.modelMessage),
     [Pt, Dt] = d(!j.projectGrantsGated),
-    [O] = d(Q),
+    [O] = d(getCwd),
     wo;
   if (B[0] !== O) ((wo = () => findCanonicalGitRootUncached(O)), (B[0] = O), (B[1] = wo));
   else wo = B[1];

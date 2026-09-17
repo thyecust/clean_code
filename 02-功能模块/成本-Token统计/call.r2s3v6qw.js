@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 279 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
+import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Aw, getOauthAccountInfo, getSubscriptionType, getRateLimitTier, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -34,7 +34,7 @@ import {
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { Zle, wee, xIe, orn, R4, Jx } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { fWe, QR, XIt, DB, LB } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
-import { Lle, rIe, B9e, j9e, W9e } from "../限流-重试/限流-重试.4mc5yc28.js";
+import { shouldOfferLowPriority, trackLowPriorityOfferShown, enableLowPriorityMode, formatLowPriorityEnabledMessage, formatLowPriorityUnavailableMessage } from "../限流-重试/限流-重试.4mc5yc28.js";
 import { oM, G9e, oIe, sIe, q9e, nnn, z9e } from "../用量额度-限额/chunk-n4zff40p.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
 import "../认证-OAuth登录/chunk-9g86t9bp.js";
@@ -58,13 +58,13 @@ import "../../01-核心基础设施/设置-配置/chunk-tswdb9jt.js";
 import "../../01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
-import "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
+import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import "../Bridge-RemoteControl/chunk-3b6ct3yp.js";
 import { startExtraUsageFlow } from "../../01-核心基础设施/共享小工具-未细化/extra-usage-flow.js";
 import { callUpgradeFromSurface } from "../../01-核心基础设施/共享小工具-未细化/upgrade-flow.js";
 import "../权限系统/permission-dialog.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
-import "../认证-OAuth登录/chunk-dtt2nn79.js";
+import "../认证-OAuth登录/oauth-login-completion.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
 import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
@@ -74,13 +74,13 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import "./chunk-f1ehes3v.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
+import "./usage-credits-flow.js";
 import "../../01-核心基础设施/共享小工具-未细化/usage-limit-continuation.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
-import "../认证-OAuth登录/chunk-5bg9xwqx.js";
+import "../认证-OAuth登录/oauth-login-flow.js";
 import { E, V, C, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
@@ -107,7 +107,7 @@ function Ge(bn) {
   let b = _(61),
     { balance: ot, onDone: S, context: v } = bn,
     [ni, Rn] = d(null),
-    [st] = cn(),
+    [st] = useTheme(),
     rt = QR(),
     oi;
   if (b[0] === MEMO_CACHE_SENTINEL) ((oi = getSubscriptionType()), (b[0] = oi));
@@ -419,7 +419,7 @@ function Ge(bn) {
             children: [
               r(t, {
                 color: Ri ? "suggestion" : void 0,
-                children: [Ri ? L.pointer : " ", " ", gt.label],
+                children: [Ri ? figures.pointer : " ", " ", gt.label],
               }),
               gt.hint
                 ? e(t, {
@@ -523,7 +523,7 @@ function zt(co) {
   else Si = l[6];
   let Ft = Si,
     ji;
-  if (l[7] !== n) ((ji = Lle(n)), (l[7] = n), (l[8] = ji));
+  if (l[7] !== n) ((ji = shouldOfferLowPriority(n)), (l[7] = n), (l[8] = ji));
   else ji = l[8];
   let Re = ji,
     vt = At(G9e, oM, oM).phase,
@@ -698,7 +698,7 @@ function zt(co) {
     qe;
   if (l[47] !== n || l[48] !== Re)
     ((N = () => {
-      if (Re) rIe(n, "dialog");
+      if (Re) trackLowPriorityOfferShown(n, "dialog");
     }),
       (qe = [Re, n]),
       (l[47] = n),
@@ -765,12 +765,12 @@ function zt(co) {
     if (l[71] !== h)
       ((ze = function je() {
         logEvent("tengu_rate_limit_options_menu_select_low_priority", {});
-        let Gi = B9e("dialog");
+        let Gi = enableLowPriorityMode("dialog");
         if (Gi === "unavailable") {
-          h(W9e());
+          h(formatLowPriorityUnavailableMessage());
           return;
         }
-        h(j9e(Gi));
+        h(formatLowPriorityEnabledMessage(Gi));
       }),
         (l[71] = h),
         (l[72] = ze));

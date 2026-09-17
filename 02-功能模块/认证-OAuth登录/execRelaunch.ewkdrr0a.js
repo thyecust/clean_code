@@ -12,9 +12,9 @@
 import { setBgExitCause } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { eb, Il, Pc, YE } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
+import { PROCESS_WRAPPER_ENV_VAR, getLauncherArgv, getLauncherConfigError, isLauncherRunnable } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
-import { aIe, alt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tkfrb8jm.js";
+import { aIe, getRelaunchTerminalSizeEnv } from "../../01-核心基础设施/共享小工具-未细化/relaunch-terminal-size.js";
 import { spawn } from "child_process";
 import { closeSync } from "fs";
 import { constants } from "os";
@@ -28,18 +28,18 @@ function d() {
   }
 }
 async function execRelaunch({ proactivity: r } = {}) {
-  if ((await new Promise((e) => setImmediate(e)), !(await YE())))
+  if ((await new Promise((e) => setImmediate(e)), !(await isLauncherRunnable())))
     return (
       await logFeatureBadAsync("agent_launcher", "relaunch_launcher_not_runnable"),
       process.stderr.write(`
-${Pc() ?? `${eb}: launcher \`${Il()[0]}\` was deleted or is not executable \u2014 restore it (or fix the setting), then start claude again`}
+${getLauncherConfigError() ?? `${PROCESS_WRAPPER_ENV_VAR}: launcher \`${getLauncherArgv()[0]}\` was deleted or is not executable \u2014 restore it (or fix the setting), then start claude again`}
 `),
       exitAfterAnalyticsFlush(1)
     );
   let { cmd: n, prefixArgs: a } = resolveWrappedClaudeInvocation(),
     c = process.argv.slice(2),
     t = { ...process.env };
-  (delete t[aIe], Object.assign(t, alt()));
+  (delete t[aIe], Object.assign(t, getRelaunchTerminalSizeEnv()));
   let i = spawn(n, [...a, ...c], { stdio: "inherit", env: t });
   d();
   let s = ["SIGINT", "SIGTERM", "SIGHUP"];

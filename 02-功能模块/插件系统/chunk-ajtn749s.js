@@ -42,17 +42,17 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { yt, R, l, A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, z, fp, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { fi } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { GITHUB_HOST } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { eae, jhe, Kl, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { CLAUDE_AI_OAUTH_SCOPES, preservableScopesFrom } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import {
   nve,
@@ -102,24 +102,24 @@ import {
   isNotDisabledInTrustedSources,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { h1, zRe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import { isPolicyAllowed, zRe } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { getAPIProvider, isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { default as at, isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { dz } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
-import { L1, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
-import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import { dz } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
+import { isClaudeDownloadsHost, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
+import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
-import { JS, lCe, Swt, uJ, yN, yG } from "./chunk-hh8f1qrw.js";
+import { areCommandPluginSourcesDisabledByPolicy, policyTierCommandsMayRun, REMOTE_POLICY_UNCONSENTED_MESSAGE, headersHelperPolicyRefusal, COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE, canonicalFetchSourceUrl } from "./plugin-source-policy.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
-import { $bn } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
+import { isRemoteOrCoworkSession } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var toe = { source: "github", repo: "anthropics/claude-plugins-official" },
   ig = "claude-plugins-official";
 var Xe = [
-  fi,
+  GITHUB_HOST,
   "raw.githubusercontent.com",
   "objects.githubusercontent.com",
   "gist.githubusercontent.com",
@@ -220,7 +220,7 @@ function fe(e) {
   return e === "__MACOSX" || e === ".DS_Store";
 }
 function _1e() {
-  if (St()) return !1;
+  if (isEssentialTrafficOnly()) return !1;
   if (afe()) return !1;
   return V();
 }
@@ -231,14 +231,14 @@ var ot = 30000;
 function afe() {
   let e = Sl(),
     t = Oz(sb());
-  if (P() === "windows" ? rdr(e) : li(e)) return !0;
+  if (getCurrentPlatform() === "windows" ? rdr(e) : li(e)) return !0;
   let r = $t().provenLocalRoots,
     o = r.get(t);
   if (o === void 0 || !X$(o, ot)) {
     if (Bxe(t, { allowLocalWsl: !0 })) return (r.delete(t), !0);
     r.set(t, Date.now());
   }
-  if (wh(be(), t)) return !1;
+  if (wh(getClaudeConfigDir(), t)) return !1;
   return it().some(
     (s) => wh(t, s, { foldCase: !0 }) || wh(s, t, { foldCase: !0 }),
   );
@@ -323,7 +323,7 @@ function Ee(
         cwd: t,
         env: r,
         stdio: ["ignore", "pipe", "pipe"],
-        detached: P() !== "windows",
+        detached: getCurrentPlatform() !== "windows",
         windowsHide: !0,
         ...Bs("plugin"),
       }),
@@ -476,7 +476,7 @@ async function wt(e) {
       `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, which is not an absolute path.`,
       "plugin command source printed a relative path",
     );
-  if ((P() === "windows" && Ww(d)) || jf(d))
+  if ((getCurrentPlatform() === "windows" && Ww(d)) || jf(d))
     throw new Ui(
       `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, a network path (UNC or automount), which is not supported as a plugin directory.`,
       "plugin command source printed a network path",
@@ -495,7 +495,7 @@ async function wt(e) {
       "plugin command source path does not resolve",
     );
   }
-  if (jf(h) || (P() === "windows" && Ww(h)))
+  if (jf(h) || (getCurrentPlatform() === "windows" && Ww(h)))
     throw new Ui(
       `Plugin source command \`${r}\` printed a path that resolves to a network location, which is not supported as a plugin directory.`,
       "plugin command source path resolves to a network path",
@@ -815,9 +815,9 @@ function R$(e) {
   return xj(e)?.mode === "link";
 }
 async function pZn(e, t, r, o) {
-  if (JS())
-    throw new Ui(yN, "plugin command source disabled by managed policy");
-  if (e.mode === "link" && P() === "windows")
+  if (areCommandPluginSourcesDisabledByPolicy())
+    throw new Ui(COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE, "plugin command source disabled by managed policy");
+  if (e.mode === "link" && getCurrentPlatform() === "windows")
     throw new Ui(y1e, "plugin command source link mode unsupported on windows");
   return (
     At(e, o),
@@ -845,8 +845,8 @@ function Lt(e, t) {
   let r = t?.baseURL,
     o = Nt.test(e),
     s = null;
-  if (o && !L1(e)) s = e;
-  else if (r != null && !L1(r)) s = r;
+  if (o && !isClaudeDownloadsHost(e)) s = e;
+  else if (r != null && !isClaudeDownloadsHost(r)) s = r;
   else if (!o && r == null) s = e;
   if (s !== null)
     throw Error(
@@ -927,7 +927,7 @@ async function fZn(e, t = {}) {
   n(`Downloading plugin archive from ${r}`);
   let o = t.headers ?? {},
     s = { ...o, "User-Agent": Hbn },
-    c = L1(e) ? hN.get : externalHttp.get,
+    c = isClaudeDownloadsHost(e) ? hN.get : externalHttp.get,
     p = performance.now(),
     d;
   try {
@@ -1048,12 +1048,12 @@ function lwt(e, t) {
   return null;
 }
 function He(e) {
-  return yG(fp(e));
+  return canonicalFetchSourceUrl(fp(e));
 }
 function dXe(e, t = "lockdown") {
   let r = zt(e);
   if (t === "remote_policy_unconsented")
-    return `"${r}" fetches its archive through a headersHelper command that was not run: ${Swt}. The plugin was not installed or updated.`;
+    return `"${r}" fetches its archive through a headersHelper command that was not run: ${REMOTE_POLICY_UNCONSENTED_MESSAGE}. The plugin was not installed or updated.`;
   return `"${r}" fetches its archive through a marketplace-declared headersHelper command, and your organization's managed settings disable marketplace-declared commands (disableCommandPluginSources / allowManagedHooksOnly). The plugin was not installed or updated and the command was not run; ask your admin to allow it or to declare the marketplace in managed settings.`;
 }
 var jt = {
@@ -1126,10 +1126,10 @@ function noe(e) {
     if (
       t.headersHelper !== void 0 &&
       t.operatorTier === "policySettings" &&
-      !lCe()
+      !policyTierCommandsMayRun()
     )
       throw new k$(
-        `This plugin's headersHelper was not run: ${Swt}.`,
+        `This plugin's headersHelper was not run: ${REMOTE_POLICY_UNCONSENTED_MESSAGE}.`,
         "entry_helper_remote_policy_unconsented",
       );
     return {
@@ -1174,15 +1174,15 @@ async function dwt(e, t) {
       }),
       c
     );
-  if (r.authoredBy === "policySettings" && !lCe())
+  if (r.authoredBy === "policySettings" && !policyTierCommandsMayRun())
     throw (
       logFeatureSad("plugin_headers_helper", "remote_policy_unconsented"),
       new Ui(
-        `${o}: headersHelper not run \u2014 ${Swt}. The marketplace was not fetched.`,
+        `${o}: headersHelper not run \u2014 ${REMOTE_POLICY_UNCONSENTED_MESSAGE}. The marketplace was not fetched.`,
         "marketplace headersHelper from remote managed settings not yet verified and consented",
       )
     );
-  if (JS() && r.authoredBy !== "policySettings")
+  if (areCommandPluginSourcesDisabledByPolicy() && r.authoredBy !== "policySettings")
     throw new Ui(
       `${o}: your organization's managed settings disable marketplace-declared commands (disableCommandPluginSources / allowManagedHooksOnly), and this marketplace's headersHelper is not declared in managed settings. The marketplace was not fetched and the command was not run; ask your admin to allow it or to declare the marketplace in managed settings.`,
       "marketplace headersHelper disabled by managed policy",
@@ -1223,7 +1223,7 @@ async function Xt(e, t, r, o) {
     command: e,
     scrubCredentialEnv: !o,
     isRepoResidentConfig: !1,
-    cwd: be(),
+    cwd: getClaudeConfigDir(),
     env: {
       CLAUDE_CODE_MARKETPLACE_URL: t,
       ...(r !== void 0 && { CLAUDE_CODE_MARKETPLACE_NAME: r }),
@@ -1246,11 +1246,11 @@ async function Jt(e, t) {
       }),
     o = r(e.headers ?? {});
   if (!aJ(e) || e.headersHelper === void 0) return o;
-  $e(e, { ...t, disabledByPolicy: uJ(t.marketplaceSource, t.marketplaceName) });
+  $e(e, { ...t, disabledByPolicy: headersHelperPolicyRefusal(t.marketplaceSource, t.marketplaceName) });
   let s = await swt({
     command: e.headersHelper,
     scrubCredentialEnv: !t.operatorAuthored,
-    cwd: be(),
+    cwd: getClaudeConfigDir(),
     isRepoResidentConfig: !1,
     env: {
       CLAUDE_CODE_PLUGIN_NAME: t.pluginName,
@@ -1355,7 +1355,7 @@ async function b1e(e) {
     }),
     c =
       e.marketplaceSource?.source === "url" ? e.marketplaceSource.url : void 0,
-    p = uJ(e.marketplaceSource, e.marketplaceName);
+    p = headersHelperPolicyRefusal(e.marketplaceSource, e.marketplaceName);
   if (aJ(r))
     $e(r, {
       pluginName: e.pluginName,
@@ -1393,7 +1393,7 @@ function yD(e) {
   return t.length === 2 && t[1] ? t[1] : void 0;
 }
 function tn(e, t) {
-  return yG(e) === yG(t);
+  return canonicalFetchSourceUrl(e) === canonicalFetchSourceUrl(t);
 }
 function fwt(e, t) {
   try {
@@ -1455,8 +1455,8 @@ function CGt(e) {
   if (a.ANTHROPIC_UNIX_SOCKET) return !1;
   if (Nn()) return !1;
   if (getAuthTokenSource().source !== "claude.ai") return !1;
-  if (St()) return !1;
-  if (!h1(e.policyKey)) return !1;
+  if (isEssentialTrafficOnly()) return !1;
+  if (!isPolicyAllowed(e.policyKey)) return !1;
   return O(e);
 }
 function hwt() {
@@ -1466,7 +1466,7 @@ function O(e) {
   return H(e.flagName, !1) === !0;
 }
 function vGt(e) {
-  if ($bn()) return !1;
+  if (isRemoteOrCoworkSession()) return !1;
   let t = zRe(e.policyKey);
   return t === "cache_miss" || t === "route_missing";
 }
@@ -1540,11 +1540,11 @@ function cJ(e) {
 }
 var B = "user:plugins";
 async function sn(e) {
-  if (!h1("allow_plugin_skill_search"))
+  if (!isPolicyAllowed("allow_plugin_skill_search"))
     return { ok: !1, reason: "policy_disabled" };
   if (!isFirstPartyProvider()) return { ok: !1, reason: "wrong_provider" };
-  if (St()) return { ok: !1, reason: "essential_traffic_only" };
-  if (Gi()) return { ok: !0, expanded: !1 };
+  if (isEssentialTrafficOnly()) return { ok: !1, reason: "essential_traffic_only" };
+  if (getSessionAccessToken()) return { ok: !0, expanded: !1 };
   try {
     await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });
   } catch (o) {

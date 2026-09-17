@@ -12,19 +12,19 @@ import { O_NONBLOCK_FLAG, O_NOFOLLOW_NONBLOCK_FLAGS } from "../共享小工具-�
 import { R, l, A, Jr, W, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { j, Gt, B, K, he, urt, Mx, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
-import { Q } from "../共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../共享小工具-未细化/cwd-context.js";
 import { hs, Wnt, Gnt, Dur, CL, Cg, wc, Et, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x, ft } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize, beforeFirst } from "../核心工具-字符串与文本/string-utils.js";
 import { qR } from "../设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { fn, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { GIT_HARDENED_ARGS, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getProjectsDir, getProjectKey, getProjectDir, BACKUP_FILE_NAME_PATTERN_WITH_LEGACY } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
-import { qt } from "../共享小工具-未细化/chunk-km6n9zrg.js";
-import { _n, Uw, Pnt, O1, Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
+import { getFileStorage } from "../共享小工具-未细化/file-storage.js";
+import { isValidPathSegment, hasValidPathSegments, isJsonlFileName, getNormalizedNames, STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
-import { fi, Do } from "../共享小工具-未细化/chunk-z5tdbda7.js";
-import { Qo } from "../共享小工具-未细化/chunk-0hk68fj9.js";
+import { GITHUB_HOST, isGitHubHost } from "../共享小工具-未细化/git-host-utils.js";
+import { runPaginatedScan } from "../共享小工具-未细化/paginated-scan.js";
 import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { formatFileSize } from "../共享小工具-未细化/chunk-7axvc6rn.js";
 import {
@@ -220,13 +220,13 @@ function je(e, t) {
           Array.isArray(o) &&
           o.length === 0
         ) &&
-        (!Array.isArray(o) || !Uw(o))
+        (!Array.isArray(o) || !hasValidPathSegments(o))
       )
         return hs(
           i,
           "expected a non-empty array of segments, none empty or made only of dots and spaces, with no path separator, NUL or set-aside shape",
         );
-    } else if (typeof o !== "string" || !_n(o)) return rn(i);
+    } else if (typeof o !== "string" || !isValidPathSegment(o)) return rn(i);
   }
   return;
 }
@@ -399,7 +399,7 @@ function Ye(e) {
   return (
     Array.isArray(e) &&
     typeof e[0] === "string" &&
-    O1(e[0]).some((t) => xIn(t) !== void 0)
+    getNormalizedNames(e[0]).some((t) => xIn(t) !== void 0)
   );
 }
 function xIn(e) {
@@ -410,26 +410,26 @@ function xIn(e) {
 var Xe = [".ccr-tip.json", ".precompact.json", te],
   Rn = `must not end with ${Xe.join(", ")}: those name a session's project-level sibling files`;
 function qe(e) {
-  return O1(e).some((t) => Xe.some((r) => t.endsWith(r)));
+  return getNormalizedNames(e).some((t) => Xe.some((r) => t.endsWith(r)));
 }
 var R7t = ".dir-sync.json",
   wn = `must not end with ${R7t}: that names a cloud session's directory-sync record at the project level`;
 function Pn(e) {
-  return O1(e).some((t) => t.endsWith(R7t));
+  return getNormalizedNames(e).some((t) => t.endsWith(R7t));
 }
 var In = `${[...We].join(", ")} are reserved: they name project-level entries, not sessions`;
 function Je(e) {
-  return O1(e).some((t) => We.has(t));
+  return getNormalizedNames(e).some((t) => We.has(t));
 }
 function ccr(e) {
-  return !Je(e) && !Pnt(e) && !qe(e);
+  return !Je(e) && !isJsonlFileName(e) && !qe(e);
 }
 function ne(e, t) {
   if (typeof t !== "string") return;
   if (Je(t)) return hs(e, In);
   if (qe(t)) return hs(e, Rn);
   if (Pn(t)) return hs(e, wn);
-  return Pnt(t) ? hs(e, Y) : void 0;
+  return isJsonlFileName(t) ? hs(e, Y) : void 0;
 }
 var kn = ".meta.json",
   xn =
@@ -438,11 +438,11 @@ function Cn(e) {
   return vn(`${e}.json`);
 }
 function vn(e) {
-  return O1(e).includes(kn);
+  return getNormalizedNames(e).includes(kn);
 }
 var Y = "names a .jsonl stream, which only a transcript key addresses";
 function re(e) {
-  return Array.isArray(e) && e.some((t) => typeof t === "string" && Pnt(t));
+  return Array.isArray(e) && e.some((t) => typeof t === "string" && isJsonlFileName(t));
 }
 function Fn(e) {
   return e === "user" || e === "project" || e === "local";
@@ -501,7 +501,7 @@ function On(e) {
 var et = "timeline.jsonl",
   tt = `${et} is the job's timeline stream: address it as keys.jobTimeline(jobId)`;
 function nt(e) {
-  return Array.isArray(e) && typeof e[0] === "string" && O1(e[0]).includes(et);
+  return Array.isArray(e) && typeof e[0] === "string" && getNormalizedNames(e[0]).includes(et);
 }
 var Tn = /^\d{4}$/,
   Ae = /^\d{2}$/,
@@ -940,7 +940,7 @@ function _nt(e) {
 }
 function tE(e) {
   let t = ot(e);
-  if (Pnt(t)) return;
+  if (isJsonlFileName(t)) return;
   let r = getProjectsDir(),
     o = [t],
     s = st(e);
@@ -951,8 +951,8 @@ function tE(e) {
   }
   if (s !== r || o.length < 3) return;
   let [i, a, ...u] = o;
-  if (!_n(i) || !_n(a) || u.length === 0 || !u.every(_n)) return;
-  let m = Ce.sidecar(i, a, u);
+  if (!isValidPathSegment(i) || !isValidPathSegment(a) || u.length === 0 || !u.every(isValidPathSegment)) return;
+  let m = STORAGE_KEYS.sidecar(i, a, u);
   return kd(m) === void 0 ? m : void 0;
 }
 var Ehe = "tool-results";
@@ -963,7 +963,7 @@ function SS() {
   return yS({ root: { id: K(), project: { originalCwd: he() } } });
 }
 function hL(e, t) {
-  if (Jn(e) !== Ehe || !_n(t)) return;
+  if (Jn(e) !== Ehe || !isValidPathSegment(t)) return;
   return tE(pe(e, t));
 }
 function nr(e) {
@@ -984,7 +984,7 @@ async function _L(e, t) {
         if ((await t.ensureScope(s)).ok) return;
       } catch {}
   }
-  let r = qt(),
+  let r = getFileStorage(),
     o = !1;
   try {
     o = await or(r, e);
@@ -1020,7 +1020,7 @@ async function PIn(e, t) {
     );
 }
 async function Ahe(e, t, r) {
-  let o = qt();
+  let o = getFileStorage();
   await PIn(Zn(e), o);
   for (let s = 1; ; s++) {
     if (s > 1) await ct(o, e);
@@ -1208,7 +1208,7 @@ async function DIn(e, t, r) {
           success: !1,
           error: {
             reason: "page_out_of_range",
-            message: `Requested ${fr(t)} is outside the document (PDF has ${O} ${x(O, "page")}). Use a range within 1-${O}, maximum ${$ie} pages per request (e.g. pages: "1-${$t}").`,
+            message: `Requested ${fr(t)} is outside the document (PDF has ${O} ${pluralize(O, "page")}). Use a range within 1-${O}, maximum ${$ie} pages per request (e.g. pages: "1-${$t}").`,
           },
         };
       }
@@ -1337,7 +1337,7 @@ async function LIn(e, t, r) {
   let o = r ?? mt(t),
     { projectKey: s, sessionId: i, relPath: a } = o,
     u = [],
-    m = await Qo(
+    m = await runPaginatedScan(
       (S) =>
         e.listEntries(
           { namespace: "sidecar", projectKey: s, sessionId: i, relPath: a },
@@ -1366,7 +1366,7 @@ async function LIn(e, t, r) {
   if (u.length === 0) {
     b = !1;
     let S = a.at(-1),
-      p = await Qo(
+      p = await runPaginatedScan(
         (c) =>
           e.listEntries(
             {
@@ -2124,7 +2124,7 @@ var Ct = new Gt(() => new Map());
 async function Or() {
   let e = Date.now();
   writeDiagnosticsEvent("info", "is_git_check_started");
-  let t = findGitRoot(Q()) !== null;
+  let t = findGitRoot(getCwd()) !== null;
   return (
     writeDiagnosticsEvent("info", "is_git_check_completed", {
       duration_ms: Date.now() - e,
@@ -2159,7 +2159,7 @@ var dirIsInGitRepo = async (e) => findGitRoot(e) !== null,
     if (e === void 0) return getCachedBranch();
     let { stdout: t, code: r } = await execFileNoThrowWithCwd(
       gitExe(),
-      [...fn, "rev-parse", "--abbrev-ref", "HEAD"],
+      [...GIT_HARDENED_ARGS, "rev-parse", "--abbrev-ref", "HEAD"],
       { cwd: e, preserveOutputOnError: !1 },
     );
     return r === 0 ? t.trim() || "HEAD" : "HEAD";
@@ -2169,8 +2169,8 @@ async function isBranchOnOrigin(e, t) {
     (
       await execFileNoThrowWithCwd(
         gitExe(),
-        [...fn, "show-ref", "--verify", "--quiet", `refs/remotes/origin/${e}`],
-        { cwd: t ?? Q(), preserveOutputOnError: !1 },
+        [...GIT_HARDENED_ARGS, "show-ref", "--verify", "--quiet", `refs/remotes/origin/${e}`],
+        { cwd: t ?? getCwd(), preserveOutputOnError: !1 },
       )
     ).code === 0
   );
@@ -2185,7 +2185,7 @@ var getDefaultBranch = async (e) => {
           await execFileNoThrowWithCwd(
             gitExe(),
             [
-              ...fn,
+              ...GIT_HARDENED_ARGS,
               "show-ref",
               "--verify",
               "--quiet",
@@ -2201,8 +2201,8 @@ var getDefaultBranch = async (e) => {
   getDefaultBranchIfKnown = async (e) => {
     let { stdout: t, code: r } = await execFileNoThrowWithCwd(
       gitExe(),
-      [...fn, "symbolic-ref", "--short", "refs/remotes/origin/HEAD"],
-      { cwd: e ?? Q(), preserveOutputOnError: !1 },
+      [...GIT_HARDENED_ARGS, "symbolic-ref", "--short", "refs/remotes/origin/HEAD"],
+      { cwd: e ?? getCwd(), preserveOutputOnError: !1 },
     );
     if (r !== 0) return null;
     let o = t.trim().replace(/^origin\//, "");
@@ -2210,8 +2210,8 @@ var getDefaultBranch = async (e) => {
     return (
       await execFileNoThrowWithCwd(
         gitExe(),
-        [...fn, "show-ref", "--verify", "--quiet", `refs/remotes/origin/${o}`],
-        { cwd: e ?? Q(), preserveOutputOnError: !1 },
+        [...GIT_HARDENED_ARGS, "show-ref", "--verify", "--quiet", `refs/remotes/origin/${o}`],
+        { cwd: e ?? getCwd(), preserveOutputOnError: !1 },
       )
     ).code === 0
       ? o
@@ -2219,7 +2219,7 @@ var getDefaultBranch = async (e) => {
   },
   Tr = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 async function readGitConfigValue(e) {
-  let { stdout: t, code: r } = await execFileNoThrow(gitExe(), [...fn, "config", "--get", e], {
+  let { stdout: t, code: r } = await execFileNoThrow(gitExe(), [...GIT_HARDENED_ARGS, "config", "--get", e], {
     preserveOutputOnError: !1,
     useCwd: !0,
   });
@@ -2228,7 +2228,7 @@ async function readGitConfigValue(e) {
   return o.length > 0 ? o : null;
 }
 async function Mr() {
-  let { stdout: e, code: t } = await execFileNoThrow(gitExe(), [...fn, "remote"], {
+  let { stdout: e, code: t } = await execFileNoThrow(gitExe(), [...GIT_HARDENED_ARGS, "remote"], {
     preserveOutputOnError: !1,
     useCwd: !0,
   });
@@ -2253,7 +2253,7 @@ async function getGitPushShellPatterns() {
 }
 var getRemoteUrl = async () => getCachedRemoteUrl(),
   Nr = async () => {
-    let e = findGitRoot(Q());
+    let e = findGitRoot(getCwd());
     if (e === null) return null;
     try {
       let t = homedir();
@@ -2290,9 +2290,9 @@ function normalizeGitRemoteUrl(e) {
   return null;
 }
 function Kr(e) {
-  let t = e ? ft(e, ":").toLowerCase() : null;
+  let t = e ? beforeFirst(e, ":").toLowerCase() : null;
   if (!t) return "none";
-  if (Do(t) || t.endsWith(`.${fi}`)) return "github";
+  if (isGitHubHost(t) || t.endsWith(`.${GITHUB_HOST}`)) return "github";
   if (t.endsWith(".ghe.com") || t.includes("github")) return "ghe";
   if (t === "gitlab.com" || t.includes("gitlab")) return "gitlab";
   if (t === "bitbucket.org" || t.includes("bitbucket")) return "bitbucket";
@@ -2312,7 +2312,7 @@ async function getGitPresenceForAnalytics() {
   return {
     is_git: e,
     has_remote: r !== null,
-    remote_host_class: Kr(r ? ft(r, "/") : null),
+    remote_host_class: Kr(r ? beforeFirst(r, "/") : null),
   };
 }
 function Br(e) {
@@ -2363,7 +2363,7 @@ async function getRepoRemoteHash() {
   return createHash("sha256").update(t).digest("hex").substring(0, 16);
 }
 var getIsHeadOnRemote = async () => {
-    let { code: e } = await execFileNoThrow(gitExe(), [...fn, "rev-parse", "@{u}"], {
+    let { code: e } = await execFileNoThrow(gitExe(), [...GIT_HARDENED_ARGS, "rev-parse", "@{u}"], {
       preserveOutputOnError: !1,
     });
     return e === 0;
@@ -2371,19 +2371,19 @@ var getIsHeadOnRemote = async () => {
   hasUnpushedCommits = async (e) => {
     let { stdout: t, code: r } = await execFileNoThrowWithCwd(
       gitExe(),
-      [...fn, "rev-list", "--count", "@{u}..HEAD"],
+      [...GIT_HARDENED_ARGS, "rev-list", "--count", "@{u}..HEAD"],
       { cwd: e, preserveOutputOnError: !1 },
     );
     return r === 0 && parseInt(t.trim(), 10) > 0;
   },
   getIsClean = async (e) => {
-    let t = [...fn, "--no-optional-locks", "status", "--porcelain"];
+    let t = [...GIT_HARDENED_ARGS, "--no-optional-locks", "status", "--porcelain"];
     if (e?.ignoreUntracked) t.push("-uno");
     let { stdout: r } = await execFileNoThrow(gitExe(), t, { preserveOutputOnError: !1 });
     return r.trim().length === 0;
   },
   getFileStatus = async (e) => {
-    let t = [...fn, "--no-optional-locks", "status", "--porcelain"],
+    let t = [...GIT_HARDENED_ARGS, "--no-optional-locks", "status", "--porcelain"],
       { stdout: r } =
         e === void 0
           ? await execFileNoThrow(gitExe(), t, { preserveOutputOnError: !1 })
@@ -2413,14 +2413,14 @@ var getIsHeadOnRemote = async () => {
       let t = e || `Claude Code auto-stash - ${new Date().toISOString()}`,
         { untracked: r } = await getFileStatus();
       if (r.length > 0) {
-        let { code: s } = await execFileNoThrow(gitExe(), [...fn, "add", "--", ...r], {
+        let { code: s } = await execFileNoThrow(gitExe(), [...GIT_HARDENED_ARGS, "add", "--", ...r], {
           preserveOutputOnError: !1,
         });
         if (s !== 0) return !1;
       }
       let { code: o } = await execFileNoThrow(
         gitExe(),
-        [...fn, "stash", "push", "--message", t],
+        [...GIT_HARDENED_ARGS, "stash", "push", "--message", t],
         { preserveOutputOnError: !1 },
       );
       return o === 0;
@@ -2458,7 +2458,7 @@ async function getGithubRepo() {
     t = await getRemoteUrl();
   if (!t) return (n("Local GitHub repo: unknown"), null);
   let r = e(t);
-  if (r && Do(r.host)) {
+  if (r && isGitHubHost(r.host)) {
     let o = `${r.owner}/${r.name}`;
     return (n(`Local GitHub repo: ${o}`), o);
   }
@@ -2514,7 +2514,7 @@ function wt(e, t, r) {
 }
 function isCurrentDirectoryBareGitRepo() {
   let e = ae(),
-    t = Q(),
+    t = getCwd(),
     r = wt(e, t, t) ?? t;
   try {
     r = realpathSync.native(r);
@@ -2760,7 +2760,7 @@ function clearResolveGitDirCache() {
   Eu().gitDirByCwd.clear();
 }
 async function resolveGitDir(e) {
-  let t = D(e ?? Q()),
+  let t = D(e ?? getCwd()),
     r = Eu().gitDirByCwd,
     o = r.get(t);
   if (o !== void 0) return o;

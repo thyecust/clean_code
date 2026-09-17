@@ -15,7 +15,7 @@ import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { up } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { stripInvisibleChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { JJe } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { isExiting, getNeverResolvingPromise } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { isAnthropicHostedEnvironment } from "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
@@ -288,7 +288,7 @@ function Zre(e) {
   );
 }
 function tZn(e) {
-  return JJe(up(C(e)));
+  return JJe(stripInvisibleChars(C(e)));
 }
 function g1e({ kind: e, at: t, content: n, attributes: r }) {
   if (!A.test(e))

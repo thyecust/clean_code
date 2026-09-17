@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { os } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { repeatString } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { fAe } from "../../00-第三方库/acorn/acorn.pk8w19yv.js";
 import { Uh } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 var S = new Set(["__proto__", "constructor", "prototype"]),
@@ -96,7 +96,7 @@ function R(e, t) {
   let l = Math.max(0, Math.min(i.column, o.length)),
     a = Math.max(0, Math.min(l - Math.floor(d / 2), o.length - d)),
     y = o.slice(a, a + d),
-    p = `${os(" ", l - a)}^`;
+    p = `${repeatString(" ", l - a)}^`;
   return `Script parse error: ${n}
 
 ${y}

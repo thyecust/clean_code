@@ -10,18 +10,18 @@
 
 // [preload stripped] 原本在此预载 243 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
-import { U, It, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
-import { x, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
+import { setClipboard } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { useAppStateSelector, useSetAppState, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
+import { pluralize, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, Io, Xu, cr, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { te, formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Itt, Vl } from "../权限系统/chunk-e4pfvp7x.js";
+import { BRANCH_ARROW_GLYPH, ARTIFACT_MARKER_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { uuidSlugFromUrl, TITLE_MAX_RUNES } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import {
@@ -42,7 +42,7 @@ import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { oa } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
+import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -67,12 +67,12 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import { gPe, Dut, _Pe, Kon } from "./chunk-b6k1z7an.js";
-import { Wjn, Tce, SPe, $ee, Dv } from "../../01-核心基础设施/共享小工具-未细化/chunk-1rpyafm2.js";
+import { ATTACHED_FRAME_URL_PREFIX, CREATED_FRAME_URL_PREFIX, isCreatedFrameKey, OPENED_FRAME_URL_PREFIX, getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/共享小工具-未细化/frame-url-prefixes.js";
 import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { re, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 F();
 F();
@@ -307,7 +307,7 @@ function Yr(i, l, p) {
     u = h.indexOf(i);
   return h[(u + p + h.length) % h.length] ?? "all";
 }
-var Ie = Itt,
+var Ie = BRANCH_ARROW_GLYPH,
   Qr = 400;
 function bt({
   onDone: i,
@@ -317,10 +317,10 @@ function bt({
   onDetach: u,
   onDeleted: S,
 }) {
-  Rs("artifacts-dialog");
+  useActiveOverlay("artifacts-dialog");
   let { credentials: R } = useStorageV5Context(),
-    { rows: v, columns: w } = ks(useTerminalSize()),
-    O = Va(),
+    { rows: v, columns: w } = useVirtualScrollViewportSize(useTerminalSize()),
+    O = useTerminalFocus(),
     [P, B] = d([]),
     [se, Ve] = d(!1),
     [Z, be] = d(""),
@@ -736,7 +736,7 @@ function bt({
       else if (n.key === "c" && T) {
         n.preventDefault();
         let c = artifactViewerUrl(T.slug);
-        z_(c).then((b) => {
+        setClipboard(c).then((b) => {
           if (b) process.stdout.write(b);
           k(`Copied ${c}`);
         });
@@ -943,7 +943,7 @@ function bt({
                               dimColor: !0,
                               children: [
                                 "  ",
-                                L.arrowUp,
+                                figures.arrowUp,
                                 " ",
                                 Mt,
                                 " more above",
@@ -966,7 +966,7 @@ function bt({
                               dimColor: !0,
                               children: [
                                 "  ",
-                                L.arrowDown,
+                                figures.arrowDown,
                                 " ",
                                 Ut,
                                 " more below",
@@ -1010,7 +1010,7 @@ function rr(bo) {
   let tt;
   if (ve[0] !== Xt) ((tt = ["all", Xt]), (ve[0] = Xt), (ve[1] = tt));
   else tt = ve[1];
-  const Ht = `${Vl} Created by me ${Kr}`;
+  const Ht = `${ARTIFACT_MARKER_GLYPH} Created by me ${Kr}`;
   let rt;
   if (ve[2] !== Ht) ((rt = ["mine", Ht]), (ve[2] = Ht), (ve[3] = rt));
   else rt = ve[3];
@@ -1022,7 +1022,7 @@ function rr(bo) {
   if (ve[6] !== et || ve[7] !== tt || ve[8] !== rt || ve[9] !== ot) {
     Me = [tt, rt, ot];
     if (et !== null) {
-      const xe = `${L.star} Pinned ${et}`;
+      const xe = `${figures.star} Pinned ${et}`;
       let at;
       if (ve[11] !== xe) ((at = ["pinned", xe]), (ve[11] = xe), (ve[12] = at));
       else at = ve[12];
@@ -1077,7 +1077,7 @@ function nr(Co) {
   let zt = Hr,
     qr;
   if (j[6] !== A.ownerEmail || j[7] !== A.rel)
-    ((qr = A.rel === "shared" && A.ownerEmail ? ft(A.ownerEmail, "@") : null),
+    ((qr = A.rel === "shared" && A.ownerEmail ? beforeFirst(A.ownerEmail, "@") : null),
       (j[6] = A.ownerEmail),
       (j[7] = A.rel),
       (j[8] = qr));
@@ -1096,7 +1096,7 @@ function nr(Co) {
   else ct = j[12];
   let ut;
   if (j[13] !== A.view_count)
-    ((ut = A.view_count ? `${A.view_count} ${x(A.view_count, "view")}` : null),
+    ((ut = A.view_count ? `${A.view_count} ${pluralize(A.view_count, "view")}` : null),
       (j[13] = A.view_count),
       (j[14] = ut));
   else ut = j[14];
@@ -1117,7 +1117,7 @@ function nr(Co) {
       (j[20] = zr));
   else zr = j[20];
   let dt = zr;
-  const Yt = jr ? L.pointer + " " : "  ";
+  const Yt = jr ? figures.pointer + " " : "  ";
   let mt;
   if (j[21] !== Yt) ((mt = e(t, { children: Yt })), (j[21] = Yt), (j[22] = mt));
   else mt = j[22];
@@ -1127,14 +1127,14 @@ function nr(Co) {
     ((pt =
       A.rel === "shared"
         ? e(t, { color: "permission", children: Ie })
-        : e(t, { color: "claude", children: Vl })),
+        : e(t, { color: "claude", children: ARTIFACT_MARKER_GLYPH })),
       (j[23] = A.rel),
       (j[24] = pt));
   else pt = j[24];
   let gt;
   if (j[25] !== A.starred)
     ((gt =
-      A.starred === !0 && r(t, { color: "warning", children: [L.star, " "] })),
+      A.starred === !0 && r(t, { color: "warning", children: [figures.star, " "] })),
       (j[25] = A.starred),
       (j[26] = gt));
   else gt = j[26];
@@ -1205,14 +1205,14 @@ function en(i) {
   return zZn(N0t(i));
 }
 function Te(i, l) {
-  for (let [p, h] of Dv(i)) if (!SPe(p) && uuidSlugFromUrl(h.url) === l) return p;
+  for (let [p, h] of getNonOpenedFrameUrlEntries(i)) if (!isCreatedFrameKey(p) && uuidSlugFromUrl(h.url) === l) return p;
   return;
 }
 function Rt(i) {
   let l = new Set();
-  for (let [p, h] of Dv(i)) {
+  for (let [p, h] of getNonOpenedFrameUrlEntries(i)) {
     let u = uuidSlugFromUrl(h.url);
-    if (u !== null && !SPe(p)) l.add(u);
+    if (u !== null && !isCreatedFrameKey(p)) l.add(u);
   }
   return l;
 }
@@ -1229,7 +1229,7 @@ async function Ct(i) {
   if (Te(p, l.slug) !== void 0)
     return (
       logFeatureOk("artifact_attach", { already_attached: !0 }),
-      { status: `${Vl} ${v} is already attached` }
+      { status: `${ARTIFACT_MARKER_GLYPH} ${v} is already attached` }
     );
   let O = await subscribeFrameLiveOnAttach({
     slug: l.slug,
@@ -1240,14 +1240,14 @@ async function Ct(i) {
   if (S.abortController.signal.aborted)
     return (
       logFeatureSad("artifact_attach", "cancelled"),
-      { status: `${Vl} ${v} \u2014 attach cancelled` }
+      { status: `${ARTIFACT_MARKER_GLYPH} ${v} \u2014 attach cancelled` }
     );
   let P = !1;
   if (
     (h((Z) => {
       if (Te(Z.frameUrls, l.slug) !== void 0) return ((P = !0), Z);
-      let be = `${$ee}${l.slug}`,
-        De = `${Tce}${l.slug}`,
+      let be = `${OPENED_FRAME_URL_PREFIX}${l.slug}`,
+        De = `${CREATED_FRAME_URL_PREFIX}${l.slug}`,
         { [be]: je, [De]: oe, ...Ce } = Z.frameUrls,
         ce = Z.frameOpenFailedPath === be || Z.frameOpenFailedPath === De;
       return {
@@ -1255,7 +1255,7 @@ async function Ct(i) {
         ...(ce && { frameOpenFailedPath: null }),
         frameUrls: {
           ...Ce,
-          [`${Wjn}${l.slug}`]: {
+          [`${ATTACHED_FRAME_URL_PREFIX}${l.slug}`]: {
             url: R,
             updatedAt: Date.now(),
             ...(l.title !== void 0 && { title: l.title }),
@@ -1268,7 +1268,7 @@ async function Ct(i) {
   )
     return (
       logFeatureOk("artifact_attach", { already_attached: !0 }),
-      { status: `${Vl} ${v} is already attached` }
+      { status: `${ARTIFACT_MARKER_GLYPH} ${v} is already attached` }
     );
   if (l.rel === "mine") S.setArtifactContractTarget(l.slug);
   let B = O.outcome !== "skipped",
@@ -1282,10 +1282,10 @@ async function Ct(i) {
     logFeatureOk("artifact_attach", { watching: B }),
     {
       status: B
-        ? `Attached ${Vl} ${v} \u2014 you'll be notified when it's republished`
+        ? `Attached ${ARTIFACT_MARKER_GLYPH} ${v} \u2014 you'll be notified when it's republished`
         : se
-          ? `Attached ${Vl} ${v} \u2014 not watching (its watch was stopped earlier in this session)`
-          : `Attached ${Vl} ${v}`,
+          ? `Attached ${ARTIFACT_MARKER_GLYPH} ${v} \u2014 not watching (its watch was stopped earlier in this session)`
+          : `Attached ${ARTIFACT_MARKER_GLYPH} ${v}`,
       metaMessage: `The user attached the artifact ${R} to this session as the current artifact of interest. re-read it before editing or republishing (${qwt()}).${Ve}`,
     }
   );
@@ -1299,9 +1299,9 @@ async function Vo(i, l) {
 function lr(Xo) {
   let Ee = _(20),
     { onDone: or, context: Q } = Xo,
-    ne = It(),
-    St = Yn(),
-    ar = U(cn),
+    ne = useSetAppState(),
+    St = useAppState(),
+    ar = useAppStateSelector(cn),
     tn;
   if (Ee[0] !== ar) ((tn = Rt(ar)), (Ee[0] = ar), (Ee[1] = tn));
   else tn = Ee[1];

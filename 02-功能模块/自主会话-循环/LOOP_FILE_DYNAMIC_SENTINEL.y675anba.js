@@ -9,15 +9,15 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 73 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { PUSH_NOTIFICATION_TOOL_NAME, isAgentPushNotificationEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
-import { Xi, sCe, eoe, kT, sg } from "../Teammates团队/chunk-z2t8b9yc.js";
+import { SCHEDULE_WAKEUP_TOOL_NAME, sCe, AUTONOMOUS_LOOP_DYNAMIC_SENTINEL, TASK_LIST_TOOL_NAME, TASK_STOP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { readFileSync } from "fs";
@@ -47,25 +47,25 @@ Use ${PUSH_NOTIFICATION_TOOL_NAME} when the loop can't move further without the 
 function b() {
   return `# Autonomous loop tick
 
-Run the autonomous check using the loop instructions established earlier in this conversation. If you cannot find them, treat this as a no-op tick. The recurring cron will fire the next tick automatically \u2014 do not call ${Xi} from this tick.${h()}`;
+Run the autonomous check using the loop instructions established earlier in this conversation. If you cannot find them, treat this as a no-op tick. The recurring cron will fire the next tick automatically \u2014 do not call ${SCHEDULE_WAKEUP_TOOL_NAME} from this tick.${h()}`;
 }
 var m = `
 
-If a ${MONITOR_TOOL_NAME} is armed (check ${kT}), keep \`delaySeconds\` at 1200\u20131800s \u2014 the ${MONITOR_TOOL_NAME} is the wake signal and this is only the fallback heartbeat. If you were woken by a \`<task-notification>\`, handle the event before deciding whether to re-arm. To stop the loop, call ${Xi} with \`stop: true\` and ${sg} the monitor (use ${kT} to find its task ID if no longer in context).`;
+If a ${MONITOR_TOOL_NAME} is armed (check ${TASK_LIST_TOOL_NAME}), keep \`delaySeconds\` at 1200\u20131800s \u2014 the ${MONITOR_TOOL_NAME} is the wake signal and this is only the fallback heartbeat. If you were woken by a \`<task-notification>\`, handle the event before deciding whether to re-arm. To stop the loop, call ${SCHEDULE_WAKEUP_TOOL_NAME} with \`stop: true\` and ${TASK_STOP_TOOL_NAME} the monitor (use ${TASK_LIST_TOOL_NAME} to find its task ID if no longer in context).`;
 function E() {
   return `# Autonomous loop tick (dynamic pacing)
 
 Run the autonomous check using the loop instructions established earlier in this conversation. If you cannot find them, treat this as a no-op tick.
 
-You scheduled this tick via the ${Xi} tool (not a recurring cron). To keep the loop alive, call ${Xi} again at the end of this turn with \`prompt\` set to the literal sentinel \`${eoe}\` and \`noop\` set to \`true\` if this tick changed nothing (or \`false\` if it did) \u2014 otherwise the loop ends after this tick.${m}${h()}`;
+You scheduled this tick via the ${SCHEDULE_WAKEUP_TOOL_NAME} tool (not a recurring cron). To keep the loop alive, call ${SCHEDULE_WAKEUP_TOOL_NAME} again at the end of this turn with \`prompt\` set to the literal sentinel \`${AUTONOMOUS_LOOP_DYNAMIC_SENTINEL}\` and \`noop\` set to \`true\` if this tick changed nothing (or \`false\` if it did) \u2014 otherwise the loop ends after this tick.${m}${h()}`;
 }
 function I(e) {
-  return e === sCe || e === eoe;
+  return e === sCe || e === AUTONOMOUS_LOOP_DYNAMIC_SENTINEL;
 }
 function L(e, t) {
   if (!I(t)) return null;
   logAutonomousLoopActivation();
-  let o = t === eoe ? E() : b();
+  let o = t === AUTONOMOUS_LOOP_DYNAMIC_SENTINEL ? E() : b();
   if (e.autonomousPreambleDelivered || e.lastLoopFileDelivered !== null)
     return o;
   return (
@@ -83,21 +83,21 @@ var k = "__autonomous_preamble__",
 function C() {
   return `# /loop tick \u2014 loop.md tasks
 
-Work the tasks from the loop.md contents established earlier in this conversation. If you cannot find them, treat this as a no-op tick. The recurring cron will fire the next tick automatically \u2014 do not call ${Xi} from this tick.${h(!0)}`;
+Work the tasks from the loop.md contents established earlier in this conversation. If you cannot find them, treat this as a no-op tick. The recurring cron will fire the next tick automatically \u2014 do not call ${SCHEDULE_WAKEUP_TOOL_NAME} from this tick.${h(!0)}`;
 }
 function F() {
   return `# /loop tick \u2014 loop.md tasks (dynamic pacing)
 
 Work the tasks from the loop.md contents established earlier in this conversation. If you cannot find them, treat this as a no-op tick.
 
-You scheduled this tick via the ${Xi} tool (not a recurring cron). To keep the loop alive, call ${Xi} again at the end of this turn with \`prompt\` set to the literal sentinel \`${LOOP_FILE_DYNAMIC_SENTINEL}\` and \`noop\` set to \`true\` if this tick changed nothing (or \`false\` if it did) \u2014 otherwise the loop ends after this tick.${m}${h(!0)}`;
+You scheduled this tick via the ${SCHEDULE_WAKEUP_TOOL_NAME} tool (not a recurring cron). To keep the loop alive, call ${SCHEDULE_WAKEUP_TOOL_NAME} again at the end of this turn with \`prompt\` set to the literal sentinel \`${LOOP_FILE_DYNAMIC_SENTINEL}\` and \`noop\` set to \`true\` if this tick changed nothing (or \`false\` if it did) \u2014 otherwise the loop ends after this tick.${m}${h(!0)}`;
 }
 function M() {
   return `# /loop tick \u2014 loop.md absent (dynamic pacing)
 
 loop.md is not currently present. Run the autonomous check using the loop instructions established earlier in this conversation.
 
-You scheduled this tick via the ${Xi} tool (not a recurring cron). To keep the loop alive \u2014 and to pick up loop.md if it is recreated \u2014 call ${Xi} again at the end of this turn with \`prompt\` set to the literal sentinel \`${LOOP_FILE_DYNAMIC_SENTINEL}\` and \`noop\` set to \`true\` if this tick changed nothing (or \`false\` if it did) \u2014 otherwise the loop ends after this tick.${m}${h()}`;
+You scheduled this tick via the ${SCHEDULE_WAKEUP_TOOL_NAME} tool (not a recurring cron). To keep the loop alive \u2014 and to pick up loop.md if it is recreated \u2014 call ${SCHEDULE_WAKEUP_TOOL_NAME} again at the end of this turn with \`prompt\` set to the literal sentinel \`${LOOP_FILE_DYNAMIC_SENTINEL}\` and \`noop\` set to \`true\` if this tick changed nothing (or \`false\` if it did) \u2014 otherwise the loop ends after this tick.${m}${h()}`;
 }
 var l = 25000;
 function P(e) {
@@ -112,7 +112,7 @@ function P(e) {
 > WARNING: loop.md was truncated to ${l} bytes. Keep the task list concise.`;
 }
 function _() {
-  return c(u(sn(), ".claude", "loop.md")) ?? c(u(be(), "loop.md"));
+  return c(u(sn(), ".claude", "loop.md")) ?? c(u(getClaudeConfigDir(), "loop.md"));
 }
 function c(e) {
   let t;
@@ -130,8 +130,8 @@ async function readLoopFileAsync(e) {
   if (!e) return _();
   let t = c(u(sn(), ".claude", "loop.md"));
   if (t) return t;
-  let o = u(be(), "loop.md"),
-    n = await e.read([Ce.state("loop-file")]);
+  let o = u(getClaudeConfigDir(), "loop.md"),
+    n = await e.read([STORAGE_KEYS.state("loop-file")]);
   if (!n.ok) return c(o);
   let r = n.value.items[0];
   if (!r.found) return null;

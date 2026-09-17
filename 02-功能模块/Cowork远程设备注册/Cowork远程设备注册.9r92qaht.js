@@ -11,12 +11,12 @@ import { OAUTH_BETA_HEADER } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Xn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { us, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodePoints, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getSecureStorage } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { isEgressAllowed } from "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
-import { tZ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getPlatformDisplayName } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import {
   createPrivateKey,
   createPublicKey,
@@ -106,7 +106,7 @@ function x() {
   return "darwin";
 }
 function E(e) {
-  return us(e.trim(), 255) || us(buildDefaultDeviceDisplayName().trim(), 255);
+  return truncateToCodePoints(e.trim(), 255) || truncateToCodePoints(buildDefaultDeviceDisplayName().trim(), 255);
 }
 async function registerDevice(e, i, r) {
   try {
@@ -167,7 +167,7 @@ async function H(e, i, r) {
   let a = Xn(o.data?.id);
   if (o.status !== 201 || a === null)
     throw new R(
-      `deviceRegistry: register ${o.status}: ${oe(String(b(o.data) ?? ""), 200)}`,
+      `deviceRegistry: register ${o.status}: ${truncateToCodeUnits(String(b(o.data) ?? ""), 200)}`,
       "deviceRegistry: register HTTP error",
       "http_error",
     );
@@ -241,6 +241,6 @@ async function clearCachedDeviceRegistration(e, i) {
   );
 }
 function buildDefaultDeviceDisplayName() {
-  return `Claude Code on ${hostname()} \xB7 ${tZ("darwin")}`;
+  return `Claude Code on ${hostname()} \xB7 ${getPlatformDisplayName("darwin")}`;
 }
 export { readLocalDeviceId, loadDeviceKey, registerDevice, DeviceLimitReachedError, DeviceRegistrationUnavailableError, clearCachedDeviceRegistration, buildDefaultDeviceDisplayName };

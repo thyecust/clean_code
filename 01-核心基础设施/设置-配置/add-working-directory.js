@@ -11,8 +11,8 @@ import { ze, mp, Hz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { zn, Dr, vS, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { SandboxManager, an, recordSessionAlias, executeDirectoryAddedHooks, persistHookOutput, nR, ET } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ro, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { ie } from "../ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { pluralize } from "../核心工具-字符串与文本/string-utils.js";
+import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
 import { Nr } from "./设置-配置.aqbb35ee.js";
 import { Oc, DG, pathInAllowedWorkingPath, pathInWorkingPath } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { isCustomizationDisabled } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
@@ -43,11 +43,11 @@ async function addWorkingDirectory(e, o, r) {
   if (r)
     try {
       (await DG(s, e.storageV5),
-        (d = `Added ${ie.bold(o)} as a working directory and saved to local settings`));
+        (d = `Added ${chalk.bold(o)} as a working directory and saved to local settings`));
     } catch (t) {
-      d = `Added ${ie.bold(o)} as a working directory. Failed to save to local settings: ${t instanceof Error ? t.message : "Unknown error"}`;
+      d = `Added ${chalk.bold(o)} as a working directory. Failed to save to local settings: ${t instanceof Error ? t.message : "Unknown error"}`;
     }
-  else d = `Added ${ie.bold(o)} as a working directory for this session`;
+  else d = `Added ${chalk.bold(o)} as a working directory for this session`;
   let g = randomUUID();
   return (
     executeDirectoryAddedHooks(e.session, o, "slash_command", {
@@ -69,7 +69,7 @@ async function addWorkingDirectory(e, o, r) {
             )),
             ...(a > 0
               ? [
-                  `${a} DirectoryAdded ${x(a, "hook")} failed; output is in the debug log, not shown here`,
+                  `${a} DirectoryAdded ${pluralize(a, "hook")} failed; output is in the debug log, not shown here`,
                 ]
               : []),
           ];
@@ -101,7 +101,7 @@ function explainAlreadyAccessibleDirectory(e, o) {
   let m = ae(),
     { resolvedPath: s, isCanonical: d } = Ro(m, o.absolutePath),
     { resolvedPath: g, isCanonical: t } = Ro(m, o.workingDir),
-    l = ie.bold(an(o.directoryPath));
+    l = chalk.bold(an(o.directoryPath));
   if (!d || !t) {
     if ([o.absolutePath, o.workingDir].some((i) => Xo(i) || Dr(i) || vS(i)))
       return null;
@@ -114,10 +114,10 @@ function explainAlreadyAccessibleDirectory(e, o) {
     let i = an(s);
     return s === o.absolutePath
       ? `${l} leads outside the working directory, so its skills, commands, and agents weren't loaded. Add that location with /add-dir to grant access to it.`
-      : `${l} leads outside the working directory through a link (it resolves to ${ie.bold(i)}), so its skills, commands, and agents weren't loaded. Run /add-dir ${i} to grant access to it.`;
+      : `${l} leads outside the working directory through a link (it resolves to ${chalk.bold(i)}), so its skills, commands, and agents weren't loaded. Run /add-dir ${i} to grant access to it.`;
   }
   if (s === g) return null;
-  let a = `${l} is inside the current working directory ${ie.bold(an(o.workingDir))}`;
+  let a = `${l} is inside the current working directory ${chalk.bold(an(o.workingDir))}`;
   if (
     isCustomizationDisabled("skills", { explicitlyRequested: !0 }) ||
     !Nr("projectSettings") ||

@@ -9,13 +9,13 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 110 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { nZ, cxe } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { mS } from "../权限系统/chunk-e4pfvp7x.js";
+import { FORK_BOILERPLATE_TAG, DIRECTIVE_PREFIX } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { FORK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var g = new RegExp(`<${nZ}>[\\s\\S]*?</${nZ}>\\n*`);
+var g = new RegExp(`<${FORK_BOILERPLATE_TAG}>[\\s\\S]*?</${FORK_BOILERPLATE_TAG}>\\n*`);
 function UserForkBoilerplateMessage(L) {
   let i = _(8),
     { addMargin: b, param: A } = L,
@@ -23,14 +23,14 @@ function UserForkBoilerplateMessage(L) {
     x;
   if (i[0] !== n) {
     let c = n.replace(g, "");
-    x = c.startsWith(cxe) ? c.slice(cxe.length) : c;
+    x = c.startsWith(DIRECTIVE_PREFIX) ? c.slice(DIRECTIVE_PREFIX.length) : c;
     ((i[0] = n), (i[1] = x));
   } else x = i[1];
   let m = x;
   const d = b ? 1 : 0;
   let T;
   if (i[2] === MEMO_CACHE_SENTINEL)
-    ((T = e(t, { "aria-label": "fork:", dimColor: !0, children: mS })),
+    ((T = e(t, { "aria-label": "fork:", dimColor: !0, children: FORK_GLYPH })),
       (i[2] = T));
   else T = i[2];
   let s;

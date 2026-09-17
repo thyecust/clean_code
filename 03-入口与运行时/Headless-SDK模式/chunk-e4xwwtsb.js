@@ -27,19 +27,19 @@ import {
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Xn, K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { Ve, zi, yt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Kn, sje } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { writeToStdout, drainStdoutBeforeExit } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { writeDiagnosticsEvent, flushDiagnostics } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { drainRegisteredWriteQueues } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { pt, io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { stripAnsi, formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { HOOK_REWRITE_HEADLESS_DENY_REASON, CAN_USE_TOOL_STREAM_CLOSED_DENY_REASON, CAN_USE_TOOL_INVALID_RESULT_DENY_REASON, CAN_USE_TOOL_REQUEST_FAILED_DENY_REASON, CAN_USE_TOOL_ABORTED_DENY_REASON } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { ps } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
@@ -80,9 +80,9 @@ import { Cr } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.j
 import { u1e } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { N$e, wAt, TAt } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { s7e } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
-import { Fy } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
-import { d3e, p3e, Inn, f3e } from "../../01-核心基础设施/共享小工具-未细化/chunk-d1t6d4k8.js";
-import { isJsonRpcRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-t4xxq70d.js";
+import { AsyncQueue } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
+import { d3e, p3e, RequestWithdrawnUnsentError, f3e } from "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
+import { isJsonRpcRequest } from "../../01-核心基础设施/共享小工具-未细化/sdk-mcp-transports.js";
 import { buildPendingActionDetail, markUserInteraction, isUserDrivenInbound, isHumanInputRequest } from "./chunk-yb7jadvp.js";
 import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
 import { AA, s, O, tB, se, v, c, $e, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -315,7 +315,7 @@ function re(t) {
               )?.reason ??
               (T.circuitBreaker === "outsideReadsBlocked" ? void 0 : T.reason))
             : void 0),
-        V = f.localDisplayOnly ? ps(pt(Q ?? "")) || G : G,
+        V = f.localDisplayOnly ? ps(stripAnsi(Q ?? "")) || G : G,
         Y = x(i$(e.name), o.storageV5, o.credentials),
         N = t
           .request(
@@ -523,12 +523,12 @@ function ue(t) {
     : e.data;
 }
 function le(t) {
-  let e = io(oe(t, 4096), { maxCodeUnits: 512 });
+  let e = formatSingleLineText(truncateToCodeUnits(t, 4096), { maxCodeUnits: 512 });
   return t.length > 512 ? `${e}\u2026 [${t.length} chars total]` : e;
 }
 function de(t) {
   return typeof t === "string"
-    ? io(oe(t, 4096), { maxCodeUnits: 200 })
+    ? formatSingleLineText(truncateToCodeUnits(t, 4096), { maxCodeUnits: 200 })
     : "a non-string error field";
 }
 function Ce(t, e) {
@@ -591,7 +591,7 @@ class Fae {
   hostOwnsStdinOrigin = !0;
   persistsOutboundFrames = !1;
   sessionState;
-  outbound = new Fy();
+  outbound = new AsyncQueue();
   constructor(t, e, r, o = Te) {
     this.input = t;
     this.replayUserMessages = e;
@@ -1221,11 +1221,11 @@ class Fae {
     }
   }
   writeActivityLine(t) {
-    Kn(t);
+    writeToStdout(t);
   }
   async write(t) {
     (this.trackWrite(t),
-      Kn(
+      writeToStdout(
         gre(t) +
           `
 `,
@@ -1534,7 +1534,7 @@ class Fae {
     )
       return !1;
     if (!this.withdrawQueuedRequest(t)) return !1;
-    return (this.pendingRequests.delete(t), r.reject(new Inn()), !0);
+    return (this.pendingRequests.delete(t), r.reject(new RequestWithdrawnUnsentError()), !0);
   }
   async handleElicitation(t, e, r, o, l, d, p, f) {
     if (!this.hostAnswersElicitations) return { action: "cancel" };
@@ -1774,7 +1774,7 @@ async function L(t) {
       Math.max(0, e - Date.now()),
       "diagnostic log flush timeout (exit)",
     ).catch(() => {}),
-    await sje(Math.max(0, e - Date.now()), { scaleBudgetToQueue: !1 }),
+    await drainStdoutBeforeExit(Math.max(0, e - Date.now()), { scaleBudgetToQueue: !1 }),
     process.exit(1));
 }
 var Ee = new Set([

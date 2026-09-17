@@ -21,14 +21,14 @@ import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import { PB } from "../../03-入口与运行时/会话UI(REPL)/chunk-7gt0xchv.js";
+import { ChecklistStepRow } from "../../03-入口与运行时/会话UI(REPL)/remote-bootstrap-checklist.js";
 import { k8, CZ, $_e, HJt, IJt } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import { V, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -39,7 +39,7 @@ function Z(ft) {
   return CZ(ft, "new");
 }
 function j(K) {
-  return e(PB, { status: "pending", label: K }, K);
+  return e(ChecklistStepRow, { status: "pending", label: K }, K);
 }
 function CloudCreateChecklist(st) {
   let n = _(26),
@@ -149,7 +149,7 @@ function T(Ct) {
     Q[7] !== i.detail ||
     Q[8] !== i.label
   )
-    ((W = e(PB, {
+    ((W = e(ChecklistStepRow, {
       status: u.status,
       label: i.label,
       annotation: i.annotation,

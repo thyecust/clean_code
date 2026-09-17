@@ -11,8 +11,8 @@
 // [preload stripped] 原本在此预载 249 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { ay } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -37,7 +37,7 @@ import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js"
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -139,7 +139,7 @@ function fe(fn) {
           j.id !== void 0 && j.id !== LO(L) && j.source !== void 0
             ? ` \u2014 note: ${ay(j.source)} settings pin ${j.id}, which takes precedence here`
             : "";
-        i(`Set default ${Nn} to ${ie.bold(L.name)} (${LO(L)})${Tn}`);
+        i(`Set default ${Nn} to ${chalk.bold(L.name)} (${LO(L)})${Tn}`);
       });
     }),
       (s[5] = i),
@@ -263,7 +263,7 @@ function fe(fn) {
 function K(o) {
   let a = LO(o),
     c = y3(o)
-      ? ` \xB7 ${o.alive_runner_count} ${x(o.alive_runner_count, "runner")}`
+      ? ` \xB7 ${o.alive_runner_count} ${pluralize(o.alive_runner_count, "runner")}`
       : "";
   return {
     label: r(t, {

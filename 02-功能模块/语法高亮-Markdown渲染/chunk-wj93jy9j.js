@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { os, x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Fxt, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { repeatString, pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { hashStringWithBun, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { _u } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { ree, o, t, jr, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useHyperlinkSupport } from "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
-import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
+import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { te, dp } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { $7e, U7e } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { $7e, subscribeMouseObserved } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { rre } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import {
@@ -33,7 +33,7 @@ import {
   MPt,
   ZZt,
 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -48,7 +48,7 @@ var ae = 4,
   wt = 4,
   Xe = 200;
 function me(s) {
-  return `\u2026 ${s.toLocaleString()} more ${x(s, "row")} not shown`;
+  return `\u2026 ${s.toLocaleString()} more ${pluralize(s, "row")} not shown`;
 }
 var qe = "\x1B[1m",
   Ge = "\x1B[22m";
@@ -66,8 +66,8 @@ function G(s, i, l) {
 var we = Yl(function (Kt) {
   let Oe = _(14),
     { token: Be, highlight: _e, forceWidth: Jt, linkCap: De } = Kt,
-    [ve] = cn(),
-    { columns: Qt } = ks(useTerminalSize()),
+    [ve] = useTheme(),
+    { columns: Qt } = useVirtualScrollViewportSize(useTerminalSize()),
     Fe = tn(),
     ee = Jt ?? Qt,
     xt;
@@ -141,7 +141,7 @@ function Ye(s, i, l, u, a, f) {
     return (S.set(c, g), g);
   }
   function W(c) {
-    return pt(y(c));
+    return stripAnsi(y(c));
   }
   if (f) {
     let c = ZZt(
@@ -268,7 +268,7 @@ ${me(m)}`;
     H.push(J("bottom")));
   let M = 0;
   for (let c of H) {
-    let p = te(pt(c));
+    let p = te(stripAnsi(c));
     if (p > M) M = p;
   }
   if (M > i - ae) return U();
@@ -286,7 +286,7 @@ function Re(Zt) {
   if (je[0] !== $e || je[1] !== He || je[2] !== ne || je[3] !== re) {
     q = [];
     let en = Math.min(ne - 1, 40);
-    let Tt = os("\u2500", en);
+    let Tt = repeatString("\u2500", en);
     He.forEach((nn) => {
       let ye = [];
       if (
@@ -386,7 +386,7 @@ function We(Ve) {
   if (Ct[0] !== Ve)
     (({ token: Me, ...Ce } = Ve), (Ct[0] = Ve), (Ct[1] = Ce), (Ct[2] = Me));
   else ((Ce = Ct[1]), (Me = Ct[2]));
-  let { columns: Ln } = ks(useTerminalSize()),
+  let { columns: Ln } = useVirtualScrollViewportSize(useTerminalSize()),
     Ue = Math.max(1, Math.min(Ke, Ln - Ie - ae)),
     Mt;
   if (Ct[3] !== Ue || Ct[4] !== Ce || Ct[5] !== Me)
@@ -593,7 +593,7 @@ function Ne(s, i) {
   }
 }
 function vt(s, i, l) {
-  let u = s === null ? "" : `${l ? "_" : ""}${i.length}:${Fxt(i)}`,
+  let u = s === null ? "" : `${l ? "_" : ""}${i.length}:${hashStringWithBun(i)}`,
     a = s?.get(u);
   if (s !== null && a) return (s.delete(u), s.set(u, a), a);
   if (!Dt.test(i)) return ut(i);
@@ -637,11 +637,11 @@ function lt({
   skipTokenCache: S = !1,
   highlight: y,
 }) {
-  let [W] = cn();
+  let [W] = useTheme();
   o0e();
   let A = useHyperlinkSupport(),
     L = tn(),
-    P = At(U7e, $7e),
+    P = At(subscribeMouseObserved, $7e),
     { markdownTokens: B } = ree(),
     N = V(() => {
       let R = m && !f ? rre(s) : s,
@@ -774,7 +774,7 @@ function mt(jn) {
         (st[9] = de),
         (st[10] = be));
     else be = st[10];
-    Bt = ie.italic(rt.tokens.map(be).join("").replace(/^\n+/, "").trimEnd());
+    Bt = chalk.italic(rt.tokens.map(be).join("").replace(/^\n+/, "").trimEnd());
     ((st[0] = he),
       (st[1] = ke),
       (st[2] = ge),

@@ -14,9 +14,9 @@ import { Ao, yx } from "../../01-核心基础设施/核心工具-路径与平台
 import { _i, Oo } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
-import { Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
+import { ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { Pg } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
+import { TruncatedFilePath } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { basename } from "path";
@@ -27,7 +27,7 @@ function renderToolUseMessage({ file_path: o, offset: n, limit: s, pages: l }, {
   if (l)
     return r(N, {
       children: [
-        e(Pg, { filePath: o, children: i }),
+        e(TruncatedFilePath, { filePath: o, children: i }),
         ` \xB7 pages ${Oo(_i(`${l}`))}`,
       ],
     });
@@ -35,10 +35,10 @@ function renderToolUseMessage({ file_path: o, offset: n, limit: s, pages: l }, {
     let a = n ?? 1,
       f = s ? `lines ${a}-${a + s - 1}` : `from line ${a}`;
     return r(N, {
-      children: [e(Pg, { filePath: o, children: i }), ` \xB7 ${f}`],
+      children: [e(TruncatedFilePath, { filePath: o, children: i }), ` \xB7 ${f}`],
     });
   }
-  return e(Pg, { filePath: o, children: i });
+  return e(TruncatedFilePath, { filePath: o, children: i });
 }
 function renderToolUseTag({ file_path: o }) {
   let n = o ? gMe(o) : null;
@@ -127,7 +127,7 @@ function renderToolUseErrorMessage(o, { verbose: n }) {
         children: e(t, { color: "error", children: "Error reading file" }),
       });
   }
-  return e(Yd, { result: o, verbose: n });
+  return e(ToolErrorMessage, { result: o, verbose: n });
 }
 export {
   renderToolResultMessage,

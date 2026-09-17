@@ -19,7 +19,7 @@ import { OP } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { readStoredTrustedDeviceToken, clearTrustedDeviceToken, enrollTrustedDevice } from "./chunk-tyce0p0b.js";
-import { Hre } from "./chunk-ct52ffwb.js";
+import { REMOTE_CONTROL_DISCONNECTED_MESSAGE } from "./remote-control-messages.js";
 import { Oer } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { IF, xn, relatchTenguSandboxGbConfig, tg, Ht, fhn, isTranscriptPersistenceDisabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -29,10 +29,10 @@ import { dR } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby
 import { vre, rK, Rre } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { zJe } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { Ann, KBn, hlt, mIe, xnn } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
-import { Ma } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { useHasVirtualScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { removeNotificationFromState } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { WA, Vx, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -41,10 +41,10 @@ import { showStandaloneSecurityDialog } from "../../01-核心基础设施/共享
 import { useMainLoopModel } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import { hasPolicyDiverged } from "../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js";
 import { resetAuthCachesAfterLogin, runAutoModeGateCheck, rearmAutoModeCheck } from "../../01-核心基础设施/共享小工具-未细化/chunk-8r3h1dwe.js";
-import { dF, y4 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
+import { persistTranscriptLeafCheckpoint, relaunchClaudeCode } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { ik } from "./chunk-2c3z3wjk.js";
+import { BRIDGE_FAILED_ERROR } from "./remote-control-ui-strings.js";
 import { C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -111,7 +111,7 @@ async function N8(o, s, i) {
           replBridgeOutboundOnly: !1,
           replBridgeError: void 0,
           replBridgeErrorKind: void 0,
-          notifications: removeNotificationFromState(f.notifications, ik),
+          notifications: removeNotificationFromState(f.notifications, BRIDGE_FAILED_ERROR),
         }
       );
     });
@@ -175,7 +175,7 @@ async function le(o, s, i) {
   )
     return { ...D, gatewayLoginError: i };
   let c = !isTranscriptPersistenceDisabled();
-  if (c) await dF(o.messages, o.storageV5);
+  if (c) await persistTranscriptLeafCheckpoint(o.messages, o.storageV5);
   return (
     await xn(0, "other", {
       finalMessage: `${i}
@@ -251,7 +251,7 @@ function Ldr(o, s, i, u, c = !isTranscriptPersistenceDisabled()) {
 async function fe(o, s, i) {
   if (isExiting()) return;
   let u = (m) => xn(0, "other", { finalMessage: i(m) });
-  if ((await dF(IF(o), o.storageV5), isExiting())) return;
+  if ((await persistTranscriptLeafCheckpoint(IF(o), o.storageV5), isExiting())) return;
   if (isBgSession())
     return u(
       "a background session cannot restart itself (sign in from a session started directly with `claude`)",
@@ -267,7 +267,7 @@ async function fe(o, s, i) {
     toolPermissionContext: c,
   };
   try {
-    await y4(
+    await relaunchClaudeCode(
       {
         freshIfNoTranscript: !0,
         extraArgs: [...vre(c, getSessionEffort(o)), ...Rre(c, Tz())],
@@ -329,7 +329,7 @@ function $dr(o) {
 function Udr(o, s) {
   if (!o) return "Login interrupted";
   let i = s.bridgeDisconnected
-    ? `Login successful. ${Hre}`
+    ? `Login successful. ${REMOTE_CONTROL_DISCONNECTED_MESSAGE}`
     : "Login successful";
   return s.includeEnvTokenWarning
     ? `${i}
@@ -375,8 +375,8 @@ async function ngr(o, s) {
 function Kz(R) {
   let b = _(23),
     X = useMainLoopModel(),
-    z = It(),
-    yt = Ma(),
+    z = useSetAppState(),
+    yt = useHasVirtualScrollViewport(),
     [G, wt] = d(!1),
     te;
   if (b[0] === MEMO_CACHE_SENTINEL) ((te = () => wt(!0)), (b[0] = te));

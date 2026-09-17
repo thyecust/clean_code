@@ -11,10 +11,10 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { te } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
-import { ckt, ukt } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { PROPORTION_GLYPH, THINKING_SPINNER_FRAMES } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { o, t, ct, iO } from "./chunk-k8hr56nm.js";
 import { LYt } from "../../02-功能模块/Workflow编排/chunk-0t0sve49.js";
-import { Je } from "../../02-功能模块/Hooks钩子/chunk-bzqqe6xh.js";
+import { HooksError } from "../../02-功能模块/Hooks钩子/chunk-bzqqe6xh.js";
 import {
   Uzn,
   Bzn,
@@ -448,7 +448,7 @@ function Ne(s, p, { version: i, staticFrame: f, submittedBy: u }) {
             },
           ),
         () => {
-          y.abort(new Je("ui.render: superseded"));
+          y.abort(new HooksError("ui.render: superseded"));
         }
       );
     }, [c, i, s, u, f]),
@@ -540,8 +540,8 @@ function QZ(Fe) {
     w = Gs ? LinkifiedText : t,
     mr =
       Fe.state === "live" && !Fe.reducedMotion
-        ? ukt[Fe.frame % ukt.length]
-        : ckt,
+        ? THINKING_SPINNER_FRAMES[Fe.frame % THINKING_SPINNER_FRAMES.length]
+        : PROPORTION_GLYPH,
     J = me === "gold" ? "warning" : me === "red" ? "error" : void 0,
     A = me === "dim";
   const lr = me === "red" ? "error:" : me === "gold" ? "warning:" : void 0;

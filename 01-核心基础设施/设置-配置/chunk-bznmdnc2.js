@@ -39,13 +39,13 @@ import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash
 import { Nr, XBe } from "./设置-配置.aqbb35ee.js";
 import { Pt } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getInitialSettings, updateSettingsForSource, getSecuritySensitiveSettingWithSources, getAskUserQuestionTimeout, getDialogExpiry, getModelProposedGoalsSettingParsed } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { xb } from "../共享小工具-未细化/chunk-jjr7hzzf.js";
-import { PERMISSION_MODES, DP, E1, _c, Eb } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
-import { NU, ARt, Mge, CRt, jet } from "../../02-功能模块/图片-截图-ComputerUse/chunk-x87xxkp4.js";
+import { formatLabelText } from "../共享小工具-未细化/text-sanitization.js";
+import { PERMISSION_MODES, LEFT_ARROW_GLYPH, isSelectablePermissionMode, getExternalPermissionMode, parsePermissionModeOrDefault } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { NOTIFICATION_CHANNELS, REMOTE_HOME_SETTINGS_MODES, TIME_FORMATS, THEME_OPTIONS, MODEL_PROPOSED_GOALS_MODES } from "../../02-功能模块/图片-截图-ComputerUse/settings-option-values.js";
 import { RP } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { XH } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
+import { saveUserIntentSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
 import { OYe, DCe, jfe, vTt, Xer, Yer } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Dc, gAn } from "../共享小工具-未细化/chunk-15vfjgmh.js";
+import { areWorkflowsEnabled, isWorkflowsEnabledByDefault } from "../共享小工具-未细化/workflow-feature-gates.js";
 import { Yk, iA, zG } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import {
   lqn,
@@ -70,22 +70,22 @@ import { Qn } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js
 import { isRemoteControlHardDisabled, isBridgeEnabled, getRemoteControlPolicyLockReason, applyRemoteControlToAppState } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
 import { isInputNeededPushEnabled } from "../../02-功能模块/Bridge-RemoteControl/push-notification-tool.js";
 import { resolveArtifactEnableSetting, getArtifactDefaultOn } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
-import { zs } from "../共享小工具-未细化/chunk-k2rb4dgd.js";
-import { zr } from "../../02-功能模块/Teammates团队/chunk-3k2smxfn.js";
-import { ny } from "../共享小工具-未细化/chunk-6smvq03f.js";
-import { JDt, writeUnattendedServingConsent, unattendedServingConsentView, managedSettingsForbidUnattendedServing, unattendedServingForbiddenBy, unattendedServingConsentMayHoldYes } from "../../02-功能模块/AutoMode-自动模式/chunk-15n5gf3t.js";
-import { Zb } from "../../02-功能模块/状态栏-主题/chunk-q7ekqy5h.js";
+import { zs } from "../共享小工具-未细化/terminal-focus-state.js";
+import { isAgentSwarmsEnabled } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
+import { ny } from "../共享小工具-未细化/agent-view-feature-gates.js";
+import { isUnattendedServingEnabledCached, writeUnattendedServingConsent, unattendedServingConsentView, managedSettingsForbidUnattendedServing, unattendedServingForbiddenBy, unattendedServingConsentMayHoldYes } from "../../02-功能模块/AutoMode-自动模式/unattended-serving-consent.js";
+import { parseCustomThemeRef } from "../../02-功能模块/状态栏-主题/custom-themes.js";
 import { Ult } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { syncPushPreferencesToServer } from "../../02-功能模块/推送通知(Push)/推送通知(Push).8ab67cqd.js";
 import { DEFAULT_TEAMMATE_MODE, getCliTeammateModeOverride, clearCliTeammateModeOverride } from "../../02-功能模块/Teammates团队/chunk-88ybhavr.js";
-import { c4e } from "../../02-功能模块/Teammates团队/chunk-qy9488g9.js";
-import { Xnn } from "../核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
-import { A4 } from "./chunk-992erern.js";
+import { resetBackendDetection } from "../../02-功能模块/Teammates团队/backend-registry.js";
+import { sanitizeTimeFormatPattern } from "../核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
+import { getFastModeTargetModel } from "./fast-mode.js";
 import { p7, P_, Rl, rI, Znn, ern, t2, n2, Qle } from "../模型目录-ModelCatalog/chunk-qgx6a5a0.js";
-import { Lee } from "../../02-功能模块/后台任务-Shell管理/chunk-531ast3t.js";
+import { isAgentsViewAvailable } from "../../02-功能模块/后台任务-Shell管理/chunk-531ast3t.js";
 import { _dt } from "../共享小工具-未细化/chunk-ch1x7wx1.js";
-import { Y_n, bSt, Tre } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
-import { Dcr } from "../共享小工具-未细化/chunk-xcc43dkx.js";
+import { WORKFLOW_SIZE_GUIDELINE_VALUES, parseWorkflowSizeGuideline, resolveWorkflowSizeGuideline } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
+import { getLanguageDisplayNames } from "../共享小工具-未细化/intl-text-utils.js";
 function F(l, r) {
   return hpe() ? r : l;
 }
@@ -183,7 +183,7 @@ function De(l) {
     let f = r.toLowerCase(),
       D = Ie.get(f) ?? f;
     try {
-      let I = Dcr().of(D);
+      let I = getLanguageDisplayNames().of(D);
       if (I && I !== D) return I;
     } catch {}
   }
@@ -261,8 +261,8 @@ function gSe(l) {
       : updateSettingsForSource("localSettings", e);
   }
   function k(e, o) {
-    if (isHoverRestEnabled() && v !== void 0) XH(e, o, v);
-    else XH(e, o);
+    if (isHoverRestEnabled() && v !== void 0) saveUserIntentSetting(e, o, v);
+    else saveUserIntentSetting(e, o);
   }
   function E(e) {
     if (isHoverRestEnabled() && v !== void 0) Te(e, v);
@@ -375,7 +375,7 @@ function gSe(l) {
         value: e,
       }));
   }
-  let J = Tre(r.workflowSizeGuideline);
+  let J = resolveWorkflowSizeGuideline(r.workflowSizeGuideline);
   function X(e) {
     if (e !== "false") {
       let t = getRemoteControlPolicyLockReason();
@@ -476,7 +476,7 @@ function gSe(l) {
             id: "remoteHomeSettings",
             label: "Use this machine's settings in cloud sessions",
             value: r.remoteHomeSettingsMode === "forward",
-            isDefaultValue: !ARt.some((e) => e === r.remoteHomeSettingsMode),
+            isDefaultValue: !REMOTE_HOME_SETTINGS_MODES.some((e) => e === r.remoteHomeSettingsMode),
             consentGated: !0,
             type: "boolean",
             onChange(e) {
@@ -515,7 +515,7 @@ function gSe(l) {
           },
         ]
       : []),
-    ...(JDt() || unattendedServingConsentView() !== "unset" || unattendedServingConsentMayHoldYes()
+    ...(isUnattendedServingEnabledCached() || unattendedServingConsentView() !== "unset" || unattendedServingConsentMayHoldYes()
       ? [
           {
             id: "unattendedServing",
@@ -642,7 +642,7 @@ function gSe(l) {
                   let b = !1;
                   if (
                     (A((_) => {
-                      let O = A4(_);
+                      let O = getFastModeTargetModel(_);
                       return ((b = O !== void 0 && O !== t), _);
                     }),
                     b)
@@ -658,7 +658,7 @@ function gSe(l) {
                 let c;
                 return (
                   A((b) => {
-                    let _ = A4(b),
+                    let _ = getFastModeTargetModel(b),
                       O = _ !== void 0 && (!s || _ === t);
                     if (O && C) Jf(C.session, b, _, "command");
                     return (
@@ -685,7 +685,7 @@ function gSe(l) {
                 let { session: t, readState: s } = C,
                   d = ++C.latestFastPick.current;
                 return Ym(t, async () => {
-                  let c = A4(s());
+                  let c = getFastModeTargetModel(s());
                   if (c === void 0 || !UO(t)) {
                     if (d !== C.latestFastPick.current) return;
                     return o(void 0, !1, "");
@@ -814,10 +814,10 @@ function gSe(l) {
             id: "workflows",
             label: "Dynamic workflows",
             value:
-              f?.disableWorkflows === !0 ? !1 : (f?.enableWorkflows ?? gAn()),
+              f?.disableWorkflows === !0 ? !1 : (f?.enableWorkflows ?? isWorkflowsEnabledByDefault()),
             type: "boolean",
             onChange(e) {
-              let o = e === gAn() ? void 0 : e;
+              let o = e === isWorkflowsEnabledByDefault() ? void 0 : e;
               (h({ enableWorkflows: o, disableWorkflows: void 0 }),
                 m((t) => ({
                   ...t,
@@ -844,17 +844,17 @@ function gSe(l) {
           },
         ]
       : []),
-    ...(we && (j || Dc())
+    ...(we && (j || areWorkflowsEnabled())
       ? [
           {
             id: "workflowSizeGuideline",
             label: "Dynamic workflow size",
             value: J.size,
             isDefaultValue: J.isDefault,
-            options: [...Y_n],
+            options: [...WORKFLOW_SIZE_GUIDELINE_VALUES],
             type: "enum",
             onChange(e) {
-              let o = bSt(e) ?? "unrestricted";
+              let o = parseWorkflowSizeGuideline(e) ?? "unrestricted";
               (E((t) => {
                 if (t.workflowSizeGuideline === o) return t;
                 return { ...t, workflowSizeGuideline: o };
@@ -968,12 +968,12 @@ function gSe(l) {
     {
       id: "timeFormat",
       label: "Time format",
-      value: Xnn(f?.timeFormat ?? "auto"),
-      options: [...Mge],
+      value: sanitizeTimeFormatPattern(f?.timeFormat ?? "auto"),
+      options: [...TIME_FORMATS],
       type: "enum",
       pickToCommit: !0,
       onChange(e) {
-        let o = Mge.find((t) => t === e);
+        let o = TIME_FORMATS.find((t) => t === e);
         if (!o) return;
         (h({ timeFormat: o }),
           m((t) => ({ ...t, timeFormat: o })),
@@ -993,8 +993,8 @@ function gSe(l) {
       })(),
       type: "enum",
       async onChange(e) {
-        let o = Eb(e),
-          t = E1(o) ? _c(o) : o,
+        let o = parsePermissionModeOrDefault(e),
+          t = isSelectablePermissionMode(o) ? getExternalPermissionMode(o) : o,
           s = f?.permissions?.defaultMode;
         (m((c) => ({
           ...c,
@@ -1109,13 +1109,13 @@ function gSe(l) {
         ]
       : []),
     ...(hpe()
-      ? ny() || Lee()
+      ? ny() || isAgentsViewAvailable()
         ? [
             {
               id: "agentsView",
               label: "Agents view",
               value:
-                (Lee() && (r.leftArrowOpensAgents ?? !0)) ||
+                (isAgentsViewAvailable() && (r.leftArrowOpensAgents ?? !0)) ||
                 (ny() && (r.defaultToAgentsView ?? !1))
                   ? "on"
                   : "off",
@@ -1139,11 +1139,11 @@ function gSe(l) {
                 },
               ]
             : []),
-          ...(Lee()
+          ...(isAgentsViewAvailable()
             ? [
                 {
                   id: "leftArrowOpensAgents",
-                  label: `${DP} opens agents`,
+                  label: `${LEFT_ARROW_GLYPH} opens agents`,
                   value: r.leftArrowOpensAgents ?? !0,
                   type: "boolean",
                   onChange(e) {
@@ -1176,9 +1176,9 @@ function gSe(l) {
     {
       id: "theme",
       label: "Theme",
-      value: isCustomizationDisabled("themes") && Zb(D) ? `${D} (disabled in safe mode)` : D,
+      value: isCustomizationDisabled("themes") && parseCustomThemeRef(D) ? `${D} (disabled in safe mode)` : D,
       type: "managedEnum",
-      options: CRt,
+      options: THEME_OPTIONS,
       optionsHint: "For custom themes, use /theme.",
       onChange: Ae,
     },
@@ -1189,7 +1189,7 @@ function gSe(l) {
             label: "Notifications",
             value: YDt(r.preferredNotifChannel),
             type: "managedEnum",
-            options: [...NU],
+            options: [...NOTIFICATION_CHANNELS],
             onChange: K,
           },
         ]
@@ -1198,7 +1198,7 @@ function gSe(l) {
             id: "notifChannel",
             label: "Local notifications",
             value: r.preferredNotifChannel,
-            options: [...NU],
+            options: [...NOTIFICATION_CHANNELS],
             type: "enum",
             onChange: K,
           },
@@ -1334,11 +1334,11 @@ function gSe(l) {
             id: "modelProposedGoals",
             label: "Claude-proposed goals",
             value: f?.modelProposedGoals ?? getModelProposedGoalsSettingParsed(),
-            options: [...jet],
+            options: [...MODEL_PROPOSED_GOALS_MODES],
             type: "enum",
             consentGated: !0,
             async onChange(e) {
-              let o = jet.find((s) => s === e);
+              let o = MODEL_PROPOSED_GOALS_MODES.find((s) => s === e);
               if (!o) return;
               m((s) => ({ ...s, modelProposedGoals: o }));
               let t = await h({ modelProposedGoals: o });
@@ -1382,7 +1382,7 @@ function gSe(l) {
     {
       id: "model",
       label: "Model",
-      value: V === null ? "Default (recommended)" : xb(V),
+      value: V === null ? "Default (recommended)" : formatLabelText(V),
       type: "managedEnum",
       options: Pe(),
       optionsHint: "For a specific model ID, use /model.",
@@ -1467,7 +1467,7 @@ function gSe(l) {
           logEvent("tengu_claude_in_chrome_setting_changed", { enabled: e }));
       },
     },
-    ...(zr()
+    ...(isAgentSwarmsEnabled()
       ? (() => {
           let e = getCliTeammateModeOverride();
           return [
@@ -1486,7 +1486,7 @@ function gSe(l) {
                 )
                   return;
                 (clearCliTeammateModeOverride(t),
-                  c4e(),
+                  resetBackendDetection(),
                   k("teammateMode", t),
                   p((s) => ({ ...s, teammateMode: t })),
                   logEvent("tengu_teammate_mode_changed", { mode: fromEnum(t) }));

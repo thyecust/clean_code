@@ -18,7 +18,7 @@ import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getModelProposedGoalsSettingParsed, getModelProposedGoalsSetting } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { cve, AJe } from "../Skills技能/chunk-sapykxw7.js";
+import { isGoalClearKeyword, getGoalGateError } from "../Skills技能/chunk-sapykxw7.js";
 import { GOAL_PROPOSAL_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
 import { t5 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
@@ -118,11 +118,11 @@ var ProposeGoalTool = buildTool({
             `The goal condition exceeds ${PROPOSE_GOAL_MAX_CONDITION_CHARS} characters once canonicalized for display (tabs expand to spaces). Shorten the condition \u2014 the user must be able to read all of it in the approval dialog.`,
             "goal condition exceeds the canonicalized-length cap",
           );
-        if (cve(o))
+        if (isGoalClearKeyword(o))
           throw Error(
             "ProposeGoal only proposes a new goal; it cannot clear one. The user can clear an active goal with /goal clear.",
           );
-        let n = AJe();
+        let n = getGoalGateError();
         if (n !== null)
           throw (
             logFeatureSad("goal_propose", n.code),

@@ -14,18 +14,18 @@ import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS } from "../认证-OAuth登录/chunk-
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
+import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { isUnattendedBgSession, lm, isAnthropicAuthEnabled, getAnthropicApiKeySafe, validateForceLoginMethod, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { getGithubRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { fi, Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { bhe } from "../Git-Worktree/chunk-bk9696gx.js";
+import { GITHUB_HOST, isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { resolveRemoteUrl } from "../Git-Worktree/git-repository-detection.js";
 import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
@@ -58,13 +58,13 @@ import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { BulletItem } from "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
-import { ck } from "../认证-OAuth登录/chunk-5bg9xwqx.js";
+import { OAuthLoginFlow } from "../认证-OAuth登录/oauth-login-flow.js";
 import { isHeadlessEnvironment, tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { av, $ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
+import { getGitProvider, $ke } from "../../01-核心基础设施/共享小工具-未细化/git-remote-url.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
@@ -349,7 +349,7 @@ function Pt(Rl) {
     K = Lr === void 0 ? (Le ? "existing" : me ? "oauth" : "new") : Lr,
     [xs, vl] = d(0),
     As = useTerminalSize(),
-    [Ie] = cn(),
+    [Ie] = useTheme(),
     Fr;
   if (
     oe[0] !== Le ||
@@ -570,7 +570,7 @@ function It(Wl) {
     } = Wl,
     [Is, Dl] = d(0),
     Os = useTerminalSize(),
-    [rt] = cn(),
+    [rt] = useTheme(),
     Qr;
   if (ee[0] !== ot) ((Qr = () => ot(!0)), (ee[0] = ot), (ee[1] = Qr));
   else Qr = ee[1];
@@ -1341,7 +1341,7 @@ function Gt(Mc) {
       children: r(t, {
         bold: !0,
         color: "permission",
-        children: ["Press Enter once you've installed the app", L.ellipsis],
+        children: ["Press Enter once you've installed the app", figures.ellipsis],
       }),
     })),
       (xe[8] = Fi));
@@ -1377,7 +1377,7 @@ function Gt(Mc) {
 }
 F();
 function wn() {
-  return new ck();
+  return new OAuthLoginFlow();
 }
 function _n(xu) {
   return xu();
@@ -2378,7 +2378,7 @@ function Vt(dp) {
       flexDirection: "column",
       marginBottom: 1,
       children: [
-        r(t, { bold: !0, children: [L.warning, " Setup Warnings"] }),
+        r(t, { bold: !0, children: [figures.warning, " Setup Warnings"] }),
         e(t, {
           dimColor: !0,
           children:
@@ -2627,7 +2627,7 @@ function Or(ke) {
               error: `GitHub CLI is missing required permissions: ${Ct.join(", ")}.`,
               errorReason: "Missing required scopes",
               errorInstructions: [
-                `Your GitHub CLI authentication is missing the "${Ct.join('" and "')}" ${x(Ct.length, "scope")} needed to manage GitHub Actions and secrets.`,
+                `Your GitHub CLI authentication is missing the "${Ct.join('" and "')}" ${pluralize(Ct.length, "scope")} needed to manage GitHub Actions and secrets.`,
                 "",
                 "To fix this, run:",
                 "  gh auth refresh -h github.com -s repo,workflow",
@@ -2870,7 +2870,7 @@ function Or(ke) {
             if (Ar > 0) ((zt = se.slice(0, Ar)), (ns = se.slice(Ar + 1)));
           }
         }
-        if (zt && Do(zt)) {
+        if (zt && isGitHubHost(zt)) {
           let aa = ns?.match(/^([^/]+\/[^/]+?)(?:\.git)?\/?$/);
           if (aa?.[1]) se = aa[1];
           else
@@ -2878,7 +2878,7 @@ function Or(ke) {
               title: "Invalid GitHub URL format",
               message: "The repository URL format appears to be invalid.",
               instructions: [
-                `Use format: owner/repo or https://${fi}/owner/repo`,
+                `Use format: owner/repo or https://${GITHUB_HOST}/owner/repo`,
                 "Example: anthropics/claude-cli",
               ],
             });
@@ -3475,9 +3475,9 @@ async function tm(g, b) {
       null
     );
   }
-  let f = await bhe(Q()),
+  let f = await resolveRemoteUrl(getCwd()),
     a = f ? $ke(f) : null,
-    c = a ? av(a) : null;
+    c = a ? getGitProvider(a) : null;
   if (c === "gitlab")
     return (
       g(

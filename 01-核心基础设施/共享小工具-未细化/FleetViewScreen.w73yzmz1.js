@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 95 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { e$n, kIt, Zmr } from "./chunk-sxbs7q5c.js";
+import { e$n, kIt, applyFleetViewHostWindowsEnv as Zmr } from "./fleet-view-screen.js";
 import "./alt-screen-container.js";
 export {
   kIt as FleetViewScreen,

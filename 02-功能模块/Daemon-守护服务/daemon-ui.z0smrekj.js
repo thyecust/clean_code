@@ -12,7 +12,7 @@
 import { B, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ju } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { P6, XUe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -28,18 +28,18 @@ import { nl, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import { readRoster } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { Rh } from "../后台任务-Shell管理/chunk-5jv5fvbn.js";
-import { JI, f1e, K_ } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
-import { dBn } from "../权限系统/chunk-3kjwvb3e.js";
+import { getVerifiedDaemonLock } from "../后台任务-Shell管理/daemon-lock.js";
+import { parseCronExpression, getNextCronFireDate, formatCronSchedule } from "../后台任务-Shell管理/scheduled-tasks.js";
+import { readScheduledStatus } from "../权限系统/chunk-3kjwvb3e.js";
 import { NF } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Lc } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
+import { bgSupervisorNoun } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { XL } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import { D9e, L9e } from "../认证-OAuth登录/chunk-n76cf9e6.js";
-import { Jae } from "../../01-核心基础设施/设置-配置/chunk-bmk73cc4.js";
-import { l$n, eZt, tZt } from "../权限系统/chunk-0w8vky7d.js";
-import { d$n } from "../../01-核心基础设施/共享小工具-未细化/chunk-me1cqqmp.js";
+import { loadDaemonConfig } from "../../01-核心基础设施/设置-配置/daemon-config.js";
+import { loadScheduledTasks, ScheduledTaskDetail, ScheduledTaskForm } from "../权限系统/scheduled-task-ui.js";
+import { readDaemonStatus } from "../../01-核心基础设施/共享小工具-未细化/daemon-status.js";
 import { ole, XHe, DWe, tF } from "../后台任务-Shell管理/chunk-jfk5mpe1.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
@@ -47,7 +47,7 @@ import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { getDaemonJsonPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
 import { E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
@@ -58,7 +58,7 @@ function po(mn) {
     : "All sessions share the directory.";
 }
 async function Nt(n, s) {
-  let i = await Jae(getDaemonJsonPath(), s);
+  let i = await loadDaemonConfig(getDaemonJsonPath(), s);
   if (!i.ok) return [];
   return (i.config.remoteControl ?? []).map((f) => ({
     dir: f.dir,
@@ -113,7 +113,7 @@ function _e(Zo) {
   if (en) {
     const Ce = K.dir;
     let ge;
-    if (J[6] === MEMO_CACHE_SENTINEL) ((ge = Lc()), (J[6] = ge));
+    if (J[6] === MEMO_CACHE_SENTINEL) ((ge = bgSupervisorNoun()), (J[6] = ge));
     else ge = J[6];
     const ae = `Stop serving ${Ce} to claude.ai. The ${ge} will stop the worker on its next reconcile.`;
     let Re;
@@ -157,7 +157,7 @@ function _e(Zo) {
   let Ce;
   if (J[16] === MEMO_CACHE_SENTINEL)
     ((Ce = [
-      { label: `Restart ${Lc()}`, value: "restart" },
+      { label: `Restart ${bgSupervisorNoun()}`, value: "restart" },
       { label: "Remove", value: "remove" },
       { label: "Back", value: "back" },
     ]),
@@ -465,13 +465,13 @@ function tt(nn) {
 }
 async function yt(n) {
   let s = await ole(),
-    i = Rh(1, n).catch(() => null),
+    i = getVerifiedDaemonLock(1, n).catch(() => null),
     [k, f, H, R, T, m, b] = await Promise.all([
       i,
-      l$n(n),
+      loadScheduledTasks(n),
       i.then((A) => Nt(A !== null, n)),
-      d$n(n).catch(() => null),
-      dBn(n).catch(() => null),
+      readDaemonStatus(n).catch(() => null),
+      readScheduledStatus(n).catch(() => null),
       readRoster({ silent: !0 }, n),
       s ? tF() : Promise.resolve(!1),
     ]);
@@ -548,7 +548,7 @@ function DaemonHub({ initialData: n, modelOptions: s, onDone: i, storageV5: k })
   }
   switch (A.type) {
     case "detail-scheduled":
-      return e(eZt, {
+      return e(ScheduledTaskDetail, {
         task: A.entry,
         onBack: fe,
         onEdit: (I) => u({ type: "new", kind: "scheduled", prefill: I }),
@@ -572,7 +572,7 @@ function DaemonHub({ initialData: n, modelOptions: s, onDone: i, storageV5: k })
           onAdded: () => fe(),
           storageV5: k,
         });
-      return e(tZt, {
+      return e(ScheduledTaskForm, {
         defaultDir: he(),
         existingIds: f.tasks.map((I) => I.id),
         prefill: A.prefill,
@@ -758,7 +758,7 @@ function ht(Wn) {
             children: [
               r(t, {
                 color: Vt ? "suggestion" : void 0,
-                children: [Vt ? L.pointer : " ", " "],
+                children: [Vt ? figures.pointer : " ", " "],
               }),
               e(t, { bold: Vt, children: G.rows[it].text }),
               G.rows[it].suffix,
@@ -931,7 +931,7 @@ function zt(n, s, i, k) {
           v = y.enabled ? Fo(y.cron, f) : null;
         return [
           y.id,
-          K_(y.cron),
+          formatCronSchedule(y.cron),
           !y.enabled
             ? "disabled"
             : !H
@@ -986,8 +986,8 @@ function Mo(n, s) {
     : e(t, { dimColor: !0, children: i });
 }
 function Fo(n, s) {
-  let i = JI(n);
-  return i ? f1e(i, s) : null;
+  let i = parseCronExpression(n);
+  return i ? getNextCronFireDate(i, s) : null;
 }
 function Po(n) {
   return truncateStartToWidth(n, 40);
@@ -1073,7 +1073,7 @@ function bt(lr) {
   if (Q[13] !== S.bgCount)
     ((pt =
       S.bgCount > 0 &&
-      r(N, { children: [S.bgCount, " ", x(S.bgCount, "background session")] })),
+      r(N, { children: [S.bgCount, " ", pluralize(S.bgCount, "background session")] })),
       (Q[13] = S.bgCount),
       (Q[14] = pt));
   else pt = Q[14];

@@ -16,17 +16,17 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getBridgeBaseUrlOverride, getBridgeAccessToken, getBridgeAccessTokenAsync } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { policyDeniedReason, policyDenyKind } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { hO } from "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
+import { MAX_TRANSFER_SIZE_BYTES } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { randomUUID } from "crypto";
 import { readFile } from "fs/promises";
 import { basename, extname } from "path";
-var B = hO,
+var B = MAX_TRANSFER_SIZE_BYTES,
   k = B / 1048576;
 function x(e) {
   return `${(e / 1048576).toFixed(1)} MiB`;
@@ -61,7 +61,7 @@ function E(e) {
           "upload disabled: uploading file contents to Anthropic servers is not permitted on this API provider",
       }
     );
-  if (St())
+  if (isEssentialTrafficOnly())
     return (
       logFeatureSad("bridge_attachment_upload", "essential_traffic", e),
       {

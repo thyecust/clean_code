@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Wc, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { isWellFormed, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -18,14 +18,14 @@ import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-m
 import { The, txt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { Ds, Ct, Dne, o$, nn, Mne } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { O9 } from "../文件同步-Sync/chunk-ht8ydg1v.js";
-import { JA, iln } from "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
+import { compareByPath } from "../文件同步-Sync/sync-journal.js";
+import { computeGitBlobId, isMtimeSettled } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
 import { iOe, wze, $an, Tze, Uan } from "../文件同步-Sync/chunk-eg4wmaq4.js";
 import { sanitizePathSegment } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
-import { If } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
+import { createHoverRestOptions } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { s, T, se, v, c, uW, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { createHash as _t } from "crypto";
 var Ie = {
@@ -59,7 +59,7 @@ function pe({ name: e, kind: t, id: r }, a) {
   if (e === "") return "empty_name";
   if (e.includes("/")) return "name_has_slash";
   if (e.includes("\x00")) return "name_has_nul";
-  if (!Wc(e)) return "name_not_unicode";
+  if (!isWellFormed(e)) return "name_not_unicode";
   if (e === "." || e === "..") return "dot_name";
   if (Buffer.byteLength(e) > me) return "name_too_long";
   if (be(e).some((o) => o === ".git" || Ot.test(o))) return "dotgit_name";
@@ -160,7 +160,7 @@ function Ce({ name: e, email: t, unixSeconds: r, utcOffsetMinutes: a }) {
   return `${e} <${t}> ${r} ${a < 0 ? "-" : "+"}${d.padStart(4, "0")}`;
 }
 function be(e) {
-  return e.split("\\").map((t) => nc(ft(t, ":")));
+  return e.split("\\").map((t) => nc(beforeFirst(t, ":")));
 }
 function De(e, t) {
   let r = Array.from(
@@ -1669,7 +1669,7 @@ async function Bpt(e, { maxEntries: t = mt } = {}) {
         d.ctimeMs !== o.ctimeMs ||
         d.stat.mode !== o.mode ||
         d.ino !== o.ino ||
-        !iln(d.stat)
+        !isMtimeSettled(d.stat)
       )
         return null;
       return ((d.touched = !0), d.blobId);
@@ -1680,7 +1680,7 @@ async function Bpt(e, { maxEntries: t = mt } = {}) {
       g,
     ) {
       let p = { size: o, mtimeMs: d, mode: l, observedAtMs: y };
-      if (iln(p))
+      if (isMtimeSettled(p))
         r.set(a, { stat: p, ctimeMs: i, ino: h, blobId: g, touched: !0 });
       else r.delete(a);
     },
@@ -1711,7 +1711,7 @@ async function Bpt(e, { maxEntries: t = mt } = {}) {
       try {
         return (
           await vn(dirname(e), { recursive: !0, mode: Hn }),
-          await On(e, o, Gn),
+          await writeFileAtomic(e, o, Gn),
           !0
         );
       } catch (d) {
@@ -1793,12 +1793,12 @@ function ht({
     demoted: y,
     bytesPlanned: [...l.values()].reduce((p, { bytes: f }) => p + f, 0),
     largest: [...l.values()]
-      .toSorted((p, f) => f.bytes - p.bytes || O9(p, f))
+      .toSorted((p, f) => f.bytes - p.bytes || compareByPath(p, f))
       .slice(0, Un),
   };
 }
 function Kn(e, t) {
-  return O9({ path: e[0] }, { path: t[0] });
+  return compareByPath({ path: e[0] }, { path: t[0] });
 }
 var Xn = 33188,
   Vn = 33261,
@@ -1930,7 +1930,7 @@ async function Man({
       `a tree for this folder could not be built (${I.reason} at ${I.path})`,
     );
   if (j.hashed > 0 || F.slipped.length > 0) await a.save();
-  let H = F.slipped.toSorted(O9),
+  let H = F.slipped.toSorted(compareByPath),
     q = gr(R, x, D),
     fe = {
       listedPaths: R.files.length,
@@ -2107,7 +2107,7 @@ function K(e, t) {
   return { kind: "refused", reason: e, detail: t };
 }
 function or(e) {
-  return P() !== "windows" && (e & Jn) !== 0 ? Vn : Xn;
+  return getCurrentPlatform() !== "windows" && (e & Jn) !== 0 ? Vn : Xn;
 }
 function ir(e, t) {
   let r = Math.min(tr, Math.floor(e / 16));
@@ -2200,7 +2200,7 @@ async function cr({
       let u = await o$(t, r, y.path, o);
       if (u.kind === "skip")
         return { kind: "skip", path: y.path, reason: u.skipped.reason };
-      let E = JA(u.content),
+      let E = computeGitBlobId(u.content),
         R = { ...y, size: u.content.length, mode: u.mode },
         x = { ...p, size: R.size, mode: u.mode, observedAtMs: y.observedAtMs };
       if (g) a.remember(y.path, x, E);
@@ -2275,7 +2275,7 @@ async function fr({
       continue;
     if (Ct(p)) break;
     let N = r.get(B)?.kept ?? null ?? (await mr(h, y, B, g));
-    if (N === null || JA(N) !== M.blobId) {
+    if (N === null || computeGitBlobId(N) !== M.blobId) {
       d.forget(B);
       let D = a.get(B),
         z =
@@ -2345,7 +2345,7 @@ import { join as Pe } from "path";
 var z9n = "trash",
   hr = "stat-cache.json";
 async function Gpt(e, t) {
-  return br(getProjectDir(await canonicalizePath(e, If(t))));
+  return br(getProjectDir(await canonicalizePath(e, createHoverRestOptions(t))));
 }
 function br(e) {
   return Pe(e, The, txt);

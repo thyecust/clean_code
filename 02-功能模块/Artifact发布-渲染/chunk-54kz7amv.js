@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { ze, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { P0 } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { ARTIFACT_WATCH_LIFECYCLE_ORIGIN } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { hU, Zy, ARTIFACT_YIELD_PEER_FEATURE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
@@ -33,15 +33,15 @@ import {
   nMe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { SD } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
+import { createMessageEnvelope } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import { Nu, qI, mD, sendControlToUdsSocket, sendStampedControlToUdsSocket, listRegisteredSessionRecords, ownMessagingSocket } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { ne } from "./chunk-rr78st95.js";
-import { P7, aze, ypt, d9n, f9n, aan } from "./chunk-qdg189tc.js";
+import { isArtifactReplyYieldEnabled, MAX_YIELD_SLUGS, unrefTimers, waitForYieldAnswer, cancelOutstandingYieldWait, setReplyYieldHolder } from "./artifact-reply-yield.js";
 import { dpt, san, x9 } from "./chunk-p1dkvpxj.js";
 import { Ibe } from "./chunk-5gz5xvw9.js";
-import { lte } from "../../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getBootingAutoReactArmSlugs } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 var z = 1000,
   Q = 200,
   R = { armable: new Set(), yielded: new Set(), undo: () => {} };
@@ -65,7 +65,7 @@ async function requestReplyTakeover(e) {
   return o;
 }
 async function ee(e) {
-  if (!P7()) return { ...R, kind: "disabled" };
+  if (!isArtifactReplyYieldEnabled()) return { ...R, kind: "disabled" };
   if (!isCrossSessionMessagingEnabled()) return { ...R, kind: "messaging_off" };
   let o = ownMessagingSocket();
   if (o === void 0 || e.holders.length === 0) return { ...R, kind: "no_inbox" };
@@ -75,7 +75,7 @@ async function ee(e) {
       return;
     });
   if (s?.sessionId !== e.conversationId) {
-    let t = e.transport?.timers ?? ypt;
+    let t = e.transport?.timers ?? unrefTimers;
     (await new Promise((d) => void t.setTimeout(d, Q)),
       (s = await a().catch(() => {
         return;
@@ -86,7 +86,7 @@ async function ee(e) {
   let l = s.tmux;
   if (e.holdersIncomplete === !0 && !e.alreadyReplying)
     return { ...R, kind: "holder_unreachable" };
-  let f = e.slugs.filter((t) => !(e.claim?.lost.has(t) ?? !1)).slice(0, aze);
+  let f = e.slugs.filter((t) => !(e.claim?.lost.has(t) ?? !1)).slice(0, MAX_YIELD_SLUGS);
   if (f.length === 0) return { ...R, kind: "nothing_freed" };
   let h = [];
   for (let t of e.holders) {
@@ -105,10 +105,10 @@ async function ee(e) {
   if (h.length === 0) return { ...R, kind: "holder_unreachable" };
   let c = e.transport?.send ?? sendStampedControlToUdsSocket,
     u = e.transport?.sendControl ?? sendControlToUdsSocket,
-    I = e.transport?.timers ?? ypt,
+    I = e.transport?.timers ?? unrefTimers,
     T = e.transport?.now ?? Date.now,
     G = hU(o),
-    Y = (t) => (P() !== "windows" ? { expectPeerPid: t } : {}),
+    Y = (t) => (getCurrentPlatform() !== "windows" ? { expectPeerPid: t } : {}),
     v = [],
     D = new Set(),
     { wakes: b, autoReact: X, durable: V } = ne(),
@@ -164,10 +164,10 @@ async function ee(e) {
     },
     N = [];
   for (let t of h) {
-    let d = SD(),
+    let d = createMessageEnvelope(),
       i = { sock: t.sock, pid: t.pid, msgId: d.msg_id, yielded: new Set() };
     v.push(i);
-    let m = d9n(d.msg_id, f, {
+    let m = waitForYieldAnswer(d.msg_id, f, {
       sentAt: U,
       expectPid: t.pid,
       ...(e.transport?.timeoutMs !== void 0 && {
@@ -211,7 +211,7 @@ async function ee(e) {
           );
         } catch (_) {
           if (mD(_)) {
-            let p = f9n(d.msg_id),
+            let p = cancelOutstandingYieldWait(d.msg_id),
               k = p.map(([J]) => J);
             return isProcessRunning(t.pid)
               ? { kind: "unreachable", lost: k, lostTo: p }
@@ -309,7 +309,7 @@ function j(e, o, r) {
         slugs: [e],
         ...(o && { stopped: !0 }),
       },
-      h = P() !== "windows" ? { expectPeerPid: l.pid } : {};
+      h = getCurrentPlatform() !== "windows" ? { expectPeerPid: l.pid } : {};
     r(l.sock, f, h).catch((c) => {
       if (
         (n(`[reply-yield] release to ${Nu(l.sock)} failed: ${qI(String(c))}`),
@@ -320,7 +320,7 @@ function j(e, o, r) {
         void r(l.sock, f, h).catch(() => {
           logFeatureSad("artifact_live_subscribe", "takeover_release_failed");
         });
-      if (mD(c)) ypt.setTimeout(u, z);
+      if (mD(c)) unrefTimers.setTimeout(u, z);
       else u();
     });
   }
@@ -370,7 +370,7 @@ function notifyModelOfReplyYield(e, o) {
     a = e === "yielded" ? te : e === "reverted" ? ie : oe;
   ha({
     value: _a({
-      taskType: P0,
+      taskType: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
       summary: Nt(r),
       body: `
 <event>${Nt(a)}</event>`,
@@ -378,13 +378,13 @@ function notifyModelOfReplyYield(e, o) {
     mode: "task-notification",
     passive: !0,
     priority: "next",
-    origin: { kind: "task-notification", source: P0 },
+    origin: { kind: "task-notification", source: ARTIFACT_WATCH_LIFECYCLE_ORIGIN },
     agentId: ze(),
   });
 }
 function registerReplyYieldHolder(e) {
   return (
-    aan(
+    setReplyYieldHolder(
       (o) => {
         let r = se(o.slugs, o.msgId),
           a = r.newlyYielded;
@@ -419,7 +419,7 @@ function registerReplyYieldHolder(e) {
         return f;
       },
     ),
-    () => aan(null)
+    () => setReplyYieldHolder(null)
   );
 }
 function se(e, o) {
@@ -453,7 +453,7 @@ function E(e) {
   return (
     (r !== void 0 && !r.stopped && r.autoReactWiring !== void 0) ||
     o.inFlightWiredIntent.has(e) ||
-    lte().has(e)
+    getBootingAutoReactArmSlugs().has(e)
   );
 }
 function re(e, o) {

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { X, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 var EXTERNAL_PERMISSION_MODES = [
     "acceptEdits",
     "auto",
@@ -170,52 +170,52 @@ var BASH_COMMAND_CLAMP_DENY_REASON = "bashCommandClamp: no clamp rule matches th
   CAN_USE_TOOL_PROMPT_TOOL_GONE_DENY_REASON = { type: "other", reason: "permission prompt tool no longer connected" },
   CAN_USE_TOOL_REQUEST_FAILED_DENY_REASON = { type: "other", reason: CAN_USE_TOOL_REQUEST_FAILED_REASON },
   CAN_USE_TOOL_ABORTED_DENY_REASON = { type: "other", reason: CAN_USE_TOOL_ABORTED_REASON };
-var Ar = P() === "macos" ? "\u23FA" : "\u25CF",
-  $Q = "\u2219",
-  Olr = "\u2315",
-  Dw = "\u273B",
-  a2e = "\u2234",
-  ckt = "\u2237",
+var CLAUDE_BULLET_GLYPH = getCurrentPlatform() === "macos" ? "\u23FA" : "\u25CF",
+  BULLET_OPERATOR_GLYPH = "\u2219",
+  SEARCH_PREFIX_GLYPH = "\u2315",
+  CLAUDE_ASTERISK_GLYPH = "\u273B",
+  THEREFORE_GLYPH = "\u2234",
+  PROPORTION_GLYPH = "\u2237",
   c = "\u2235",
-  ukt = [a2e, ckt, c, ckt],
-  Dlr = "\u25CC",
-  sv = "\u2191",
-  Lw = "\u2193",
-  Itt = "\u21B3",
-  DP = "\u2190",
-  Llr = "\u2192",
-  kke = "\u23CE",
-  Gq = "\u21AF",
-  Mlr = "\u25CB",
-  Ptt = "\u25D0",
-  m0n = "\u25CF",
-  Nlr = "\u25C9",
-  Flr = "\u25C8",
-  dkt = "\u2726",
-  Ott = "\u25CE",
-  pkt = "\u23F8",
-  xke = "\u23F5\u23F5",
-  g0n = "\u21BB",
-  h0n = "\u2190",
-  mS = "\u2442",
-  Dp = "\u25C7",
-  r_ = "\u25C6",
-  _0n = "\u203B",
-  iv = "\u26A0",
-  Vl = "\u29C9";
-function y0n(e) {
-  return `${Vl} ${e}`;
+  THINKING_SPINNER_FRAMES = [THEREFORE_GLYPH, PROPORTION_GLYPH, c, PROPORTION_GLYPH],
+  DOTTED_CIRCLE_GLYPH = "\u25CC",
+  UP_ARROW_GLYPH = "\u2191",
+  DOWN_ARROW_GLYPH = "\u2193",
+  BRANCH_ARROW_GLYPH = "\u21B3",
+  LEFT_ARROW_GLYPH = "\u2190",
+  RIGHT_ARROW_GLYPH = "\u2192",
+  RETURN_KEY_GLYPH = "\u23CE",
+  FAST_MODE_GLYPH = "\u21AF",
+  EFFORT_LOW_GLYPH = "\u25CB",
+  EFFORT_MEDIUM_GLYPH = "\u25D0",
+  EFFORT_HIGH_GLYPH = "\u25CF",
+  EFFORT_XHIGH_GLYPH = "\u25C9",
+  EFFORT_MAX_GLYPH = "\u25C8",
+  ULTRACODE_EFFORT_GLYPH = "\u2726",
+  GOAL_MODE_GLYPH = "\u25CE",
+  PAUSE_GLYPH = "\u23F8",
+  AUTO_ACCEPT_GLYPH = "\u23F5\u23F5",
+  UPDATE_GLYPH = "\u21BB",
+  INBOUND_ARROW_GLYPH = "\u2190",
+  FORK_GLYPH = "\u2442",
+  LOZENGE_OUTLINE_GLYPH = "\u25C7",
+  LOZENGE_FILLED_GLYPH = "\u25C6",
+  REFERENCE_MARK_GLYPH = "\u203B",
+  WARNING_GLYPH = "\u26A0",
+  ARTIFACT_MARKER_GLYPH = "\u29C9";
+function withArtifactMarker(e) {
+  return `${ARTIFACT_MARKER_GLYPH} ${e}`;
 }
-var fkt = "\u266A";
-var $lr = "\u258E",
-  S0n = "\u2588",
-  LP = "\u2500",
-  mkt = ["\xB7|\xB7", "\xB7/\xB7", "\xB7\u2014\xB7", "\xB7\\\xB7"],
-  Dtt = "\xB7\u2714\uFE0E\xB7",
-  Ltt = "\xD7",
-  b0n = "\u2715",
-  A0 = "\u25B8",
-  gkt = "\u283F",
+var MUSIC_NOTE_GLYPH = "\u266A";
+var BLOCKQUOTE_BAR_GLYPH = "\u258E",
+  FULL_BLOCK_GLYPH = "\u2588",
+  HORIZONTAL_LINE_GLYPH = "\u2500",
+  ASCII_SPINNER_FRAMES = ["\xB7|\xB7", "\xB7/\xB7", "\xB7\u2014\xB7", "\xB7\\\xB7"],
+  CHECK_MARK_GLYPH = "\xB7\u2714\uFE0E\xB7",
+  CROSS_MARK_GLYPH = "\xD7",
+  MULTIPLICATION_X_GLYPH = "\u2715",
+  LOG_BULLET_GLYPH = "\u25B8",
+  PROGRESS_BAR_CELL_GLYPH = "\u283F",
   d = [
     "\u280B",
     "\u2819",
@@ -228,25 +228,25 @@ var $lr = "\u258E",
     "\u2807",
     "\u280F",
   ];
-function w0n() {
+function getBrailleSpinnerFrames() {
   return d;
 }
-var Tg = {
+var ROUNDED_BOX_CORNER_GLYPHS = {
     topLeft: "\u256D",
     topRight: "\u256E",
     bottomLeft: "\u2570",
     bottomRight: "\u256F",
   },
-  Ulr = "\u2013",
-  v_ = {
+  EN_DASH_GLYPH = "\u2013",
+  TREE_CONNECTOR_GLYPHS = {
     branch: "\u251C",
     last: "\u2514",
     pipe: "\u2502",
     teeDown: "\u252C",
     teeUp: "\u2534",
   };
-var Blr = createLazyValue(() => ai(normalizePermissionModeAlias, X(PERMISSION_MODES))),
-  hkt = createLazyValue(() => ai(normalizePermissionModeAlias, X(EXTERNAL_PERMISSION_MODES))),
+var permissionModeSchema = createLazyValue(() => ai(normalizePermissionModeAlias, X(PERMISSION_MODES))),
+  externalPermissionModeSchema = createLazyValue(() => ai(normalizePermissionModeAlias, X(EXTERNAL_PERMISSION_MODES))),
   r = {
     plan: 0,
     bubble: 1,
@@ -256,7 +256,7 @@ var Blr = createLazyValue(() => ai(normalizePermissionModeAlias, X(PERMISSION_MO
     auto: 3,
     bypassPermissions: 4,
   };
-function Y6(e, o) {
+function clampPermissionMode(e, o) {
   if (!e) return;
   if (o === "auto" && e === "acceptEdits") return;
   return r[e] <= r[o] ? e : void 0;
@@ -266,7 +266,7 @@ var a = {
     title: "Manual",
     shortTitle: "Manual",
     indicator: "manual mode",
-    symbol: pkt,
+    symbol: PAUSE_GLYPH,
     color: "inactive",
     external: "default",
   },
@@ -274,7 +274,7 @@ var a = {
     title: "Plan",
     shortTitle: "Plan",
     indicator: "plan mode",
-    symbol: pkt,
+    symbol: PAUSE_GLYPH,
     color: "planMode",
     external: "plan",
   },
@@ -282,7 +282,7 @@ var a = {
     title: "Accept edits",
     shortTitle: "Accept",
     indicator: "accept edits",
-    symbol: xke,
+    symbol: AUTO_ACCEPT_GLYPH,
     color: "autoAccept",
     external: "acceptEdits",
   },
@@ -290,7 +290,7 @@ var a = {
     title: "Bypass Permissions",
     shortTitle: "Bypass",
     indicator: "bypass permissions",
-    symbol: xke,
+    symbol: AUTO_ACCEPT_GLYPH,
     color: "error",
     external: "bypassPermissions",
   },
@@ -298,7 +298,7 @@ var a = {
     title: "Don't Ask",
     shortTitle: "DontAsk",
     indicator: "don't ask",
-    symbol: xke,
+    symbol: AUTO_ACCEPT_GLYPH,
     color: "error",
     external: "dontAsk",
   },
@@ -306,51 +306,51 @@ var a = {
     title: "Auto",
     shortTitle: "Auto",
     indicator: "auto mode",
-    symbol: xke,
+    symbol: AUTO_ACCEPT_GLYPH,
     color: "warning",
     external: "auto",
   },
 };
-function E1(e) {
+function isSelectablePermissionMode(e) {
   return e !== "bubble";
 }
 function s(e) {
   return a[e] ?? a.default;
 }
-function _c(e) {
+function getExternalPermissionMode(e) {
   return s(e).external;
 }
-function jlr(e) {
-  let o = _c(e.newMode),
+function buildPermissionModeMetadata(e) {
+  let o = getExternalPermissionMode(e.newMode),
     n = o === "plan" && Boolean(e.newUltraplan),
     l =
       e.rule === "while-latched"
         ? n
-        : n && _c(e.prevMode) !== "plan" && !e.prevUltraplan;
+        : n && getExternalPermissionMode(e.prevMode) !== "plan" && !e.prevUltraplan;
   return { permission_mode: o, is_ultraplan_mode: l ? !0 : null };
 }
-function Eb(e) {
+function parsePermissionModeOrDefault(e) {
   return parsePermissionMode(e) ?? "default";
 }
-function VU(e) {
+function getPermissionModeTitle(e) {
   return s(e).title;
 }
-function Wlr(e) {
+function isDefaultPermissionMode(e) {
   return e === "default" || e === void 0;
 }
-function l2e(e, o) {
+function resolvePermissionDecisionKind(e, o) {
   if (e === "auto") return "classify";
   if (e === "bypassPermissions" || (e === "plan" && o)) return "allow";
   if (e === "dontAsk") return "deny";
   return "ask";
 }
-function dL(e) {
+function getPermissionModeIndicator(e) {
   return s(e).indicator;
 }
-function rhe(e) {
+function getPermissionModeSymbol(e) {
   return s(e).symbol;
 }
-function TA(e) {
+function getPermissionModeColor(e) {
   return s(e).color;
 }
 export {
@@ -394,64 +394,64 @@ export {
   CAN_USE_TOOL_PROMPT_TOOL_GONE_DENY_REASON,
   CAN_USE_TOOL_REQUEST_FAILED_DENY_REASON,
   CAN_USE_TOOL_ABORTED_DENY_REASON,
-  Ar,
-  $Q,
-  Olr,
-  Dw,
-  a2e,
-  ckt,
-  ukt,
-  Dlr,
-  sv,
-  Lw,
-  Itt,
-  DP,
-  Llr,
-  kke,
-  Gq,
-  Mlr,
-  Ptt,
-  m0n,
-  Nlr,
-  Flr,
-  dkt,
-  Ott,
-  pkt,
-  xke,
-  g0n,
-  h0n,
-  mS,
-  Dp,
-  r_,
-  _0n,
-  iv,
-  Vl,
-  y0n,
-  fkt,
-  $lr,
-  S0n,
-  LP,
-  mkt,
-  Dtt,
-  Ltt,
-  b0n,
-  A0,
-  gkt,
-  w0n,
-  Tg,
-  Ulr,
-  v_,
-  Blr,
-  hkt,
-  Y6,
-  E1,
-  _c,
-  jlr,
-  Eb,
-  VU,
-  Wlr,
-  l2e,
-  dL,
-  rhe,
-  TA,
+  CLAUDE_BULLET_GLYPH,
+  BULLET_OPERATOR_GLYPH,
+  SEARCH_PREFIX_GLYPH,
+  CLAUDE_ASTERISK_GLYPH,
+  THEREFORE_GLYPH,
+  PROPORTION_GLYPH,
+  THINKING_SPINNER_FRAMES,
+  DOTTED_CIRCLE_GLYPH,
+  UP_ARROW_GLYPH,
+  DOWN_ARROW_GLYPH,
+  BRANCH_ARROW_GLYPH,
+  LEFT_ARROW_GLYPH,
+  RIGHT_ARROW_GLYPH,
+  RETURN_KEY_GLYPH,
+  FAST_MODE_GLYPH,
+  EFFORT_LOW_GLYPH,
+  EFFORT_MEDIUM_GLYPH,
+  EFFORT_HIGH_GLYPH,
+  EFFORT_XHIGH_GLYPH,
+  EFFORT_MAX_GLYPH,
+  ULTRACODE_EFFORT_GLYPH,
+  GOAL_MODE_GLYPH,
+  PAUSE_GLYPH,
+  AUTO_ACCEPT_GLYPH,
+  UPDATE_GLYPH,
+  INBOUND_ARROW_GLYPH,
+  FORK_GLYPH,
+  LOZENGE_OUTLINE_GLYPH,
+  LOZENGE_FILLED_GLYPH,
+  REFERENCE_MARK_GLYPH,
+  WARNING_GLYPH,
+  ARTIFACT_MARKER_GLYPH,
+  withArtifactMarker,
+  MUSIC_NOTE_GLYPH,
+  BLOCKQUOTE_BAR_GLYPH,
+  FULL_BLOCK_GLYPH,
+  HORIZONTAL_LINE_GLYPH,
+  ASCII_SPINNER_FRAMES,
+  CHECK_MARK_GLYPH,
+  CROSS_MARK_GLYPH,
+  MULTIPLICATION_X_GLYPH,
+  LOG_BULLET_GLYPH,
+  PROGRESS_BAR_CELL_GLYPH,
+  getBrailleSpinnerFrames,
+  ROUNDED_BOX_CORNER_GLYPHS,
+  EN_DASH_GLYPH,
+  TREE_CONNECTOR_GLYPHS,
+  permissionModeSchema,
+  externalPermissionModeSchema,
+  clampPermissionMode,
+  isSelectablePermissionMode,
+  getExternalPermissionMode,
+  buildPermissionModeMetadata,
+  parsePermissionModeOrDefault,
+  getPermissionModeTitle,
+  isDefaultPermissionMode,
+  resolvePermissionDecisionKind,
+  getPermissionModeIndicator,
+  getPermissionModeSymbol,
+  getPermissionModeColor,
 };

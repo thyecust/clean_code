@@ -12,13 +12,13 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { ge, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Jn, GI, QSt } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { getMcpServerConfigCacheKey, invokeMcpToolRaw, listMcpToolsRaw } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { g0, UR, VZe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { _U } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { rc } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { _S } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { sanitizeDeep } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { sme } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { ka, vM, isRemoteToolForwardingEnabled, isSessionChannelDisabled, rj, s$, aY, lY, MV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
@@ -36,7 +36,7 @@ import {
   u7,
   e2,
 } from "../远程工具执行/chunk-66axrkvh.js";
-import { pSe, ylt, u3e } from "../../01-核心基础设施/共享小工具-未细化/chunk-33vqsej8.js";
+import { DEVICE_PASSTHROUGH_META_KEY, parseDevicePassthroughMeta, isNonDeviceToolName } from "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
 import { BDt, jDt } from "./chunk-bm9p9vh6.js";
 import { RemoteSessionHostRegistry } from "./remote-session-host-registry.js";
 import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
@@ -144,7 +144,7 @@ async function Te(t, e, r, o, s) {
         idempotent: s.idempotent,
       },
       (m, f) =>
-        GI(
+        invokeMcpToolRaw(
           m,
           { name: r, arguments: { ...o } },
           { signal: s.signal, timeout: f },
@@ -197,7 +197,7 @@ async function Ee(t, e, r, o, s, d) {
       t,
       { deadlineAt: g + p, recovery: e, signal: d.signal },
       (_, b) =>
-        GI(
+        invokeMcpToolRaw(
           _,
           {
             name: r,
@@ -336,12 +336,12 @@ function W(t) {
 }
 var ke = "attached-machine";
 function X(t, e, r) {
-  let o = e.map((c) => ({ ...c, name: _S(c.name) })),
+  let o = e.map((c) => ({ ...c, name: sanitizeDeep(c.name) })),
     s = o
       .filter((c) => lY.has(c.name))
       .map((c) => ({ toolName: c.name, meta: Ae(c), raw: c._meta?.[sM] })),
     d = o.filter(
-      (c) => !lY.has(c.name) && u3e(c.name) && c._meta?.[pSe] !== void 0,
+      (c) => !lY.has(c.name) && isNonDeviceToolName(c.name) && c._meta?.[DEVICE_PASSTHROUGH_META_KEY] !== void 0,
     ),
     g = d.flatMap((c) => {
       let R = Pe(c);
@@ -406,7 +406,7 @@ function X(t, e, r) {
   };
 }
 function Pe(t) {
-  let e = ylt(_S(t._meta?.[pSe]));
+  let e = parseDevicePassthroughMeta(sanitizeDeep(t._meta?.[DEVICE_PASSTHROUGH_META_KEY]));
   return e !== void 0 && e.tool === rc(...Oe(t.name)) && sme(e.target.name)
     ? e
     : void 0;
@@ -416,7 +416,7 @@ function Oe(t) {
   return e < 0 ? ["", t] : [t.slice(0, e), t.slice(e + 2)];
 }
 function Ae(t) {
-  let e = vlt(_S(t._meta?.[sM]));
+  let e = vlt(sanitizeDeep(t._meta?.[sM]));
   return e !== void 0 && e.tool === t.name && sme(e.target.name) ? e : void 0;
 }
 var Le = 8000,
@@ -454,7 +454,7 @@ function JBn(t) {
     return !1;
   e.lastForcedRelistAt = r;
   let s = e.connection;
-  if (s !== void 0) T().fetchToolsForClient.cache.delete(Jn(s.name, s.config));
+  if (s !== void 0) T().fetchToolsForClient.cache.delete(getMcpServerConfigCacheKey(s.name, s.config));
   return ((e.synced = !1), (e.listingMemo = void 0), !0);
 }
 var xe = 30000;
@@ -532,7 +532,7 @@ async function Ue(t, e, r, o) {
         }));
     return;
   }
-  let g = T().fetchToolsForClient.cache.get(Jn(d.name, d.config)),
+  let g = T().fetchToolsForClient.cache.get(getMcpServerConfigCacheKey(d.name, d.config)),
     p = t.toolState
       .get(RemoteSessionHostRegistry)
       .entries()
@@ -580,7 +580,7 @@ async function Ue(t, e, r, o) {
       tool_count: f.value.tools.length,
       truncated: f.value.truncated,
       has_served_name: f.value.tools.some((v) => lY.has(v.name)),
-      marker_count: countMatching(f.value.tools, (v) => v._meta?.[pSe] !== void 0),
+      marker_count: countMatching(f.value.tools, (v) => v._meta?.[DEVICE_PASSTHROUGH_META_KEY] !== void 0),
       stub: f.value.stub,
     }),
       n(
@@ -598,7 +598,7 @@ async function Ue(t, e, r, o) {
     trigger: o,
   });
   let y = !b && e.provisional !== void 0 && g !== void 0 && g === e.listingMemo;
-  if (y) T().fetchToolsForClient.cache.delete(Jn(d.name, d.config));
+  if (y) T().fetchToolsForClient.cache.delete(getMcpServerConfigCacheKey(d.name, d.config));
   ((e.connection = d),
     (e.listingMemo = y ? void 0 : g),
     (e.synced = !0),
@@ -619,7 +619,7 @@ async function Ue(t, e, r, o) {
     ));
 }
 async function He(t, e) {
-  let r = await QSt(t, { timeout: e }),
+  let r = await listMcpToolsRaw(t, { timeout: e }),
     o = r._meta;
   return {
     tools: r.tools.filter(Fe),

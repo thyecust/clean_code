@@ -10,18 +10,18 @@
 
 // [preload stripped] 原本在此预载 1 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
-  oje,
-  Vnt,
+  isStdinUnusableError as oje,
+  handleStreamGoneErrors as Vnt,
   nOn,
-  Kn,
-  sje,
-  fB,
+  writeToStdout as Kn,
+  drainStdoutBeforeExit as sje,
+  markStdoutDrainExternallyClocked as fB,
   rOn,
   bXt,
   wXt,
-  _z,
-  Abr,
-  Knt,
+  writeToStderr as _z,
+  exitWithError as Abr,
+  peekForStdinData as Knt,
   oOn,
 } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 export {

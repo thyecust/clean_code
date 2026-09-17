@@ -12,12 +12,12 @@
 import { isBgSession } from "./认证-OAuth登录.419zdfz3.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Pr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { zY } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
+import { emitAuthEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { performLogout } from "./chunk-9g86t9bp.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 async function l(n, o) {
   let r = isBgSession();
-  if (!r) zY({ action: "logout", success: !0, authMethod: "oauth" });
+  if (!r) emitAuthEvent({ action: "logout", success: !0, authMethod: "oauth" });
   if (
     (await performLogout({
       clearOnboarding: !0,

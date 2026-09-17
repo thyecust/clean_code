@@ -10,8 +10,8 @@
 
 // [preload stripped] 原本在此预载 81 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { w3e } from "./chunk-md00q5qh.js";
-import "../../02-功能模块/DesignSync/chunk-20rab5yy.js";
-import "../../02-功能模块/DesignSync/chunk-aycc6z76.js";
-import "../../02-功能模块/认证-OAuth登录/chunk-5bg9xwqx.js";
+import "../../02-功能模块/DesignSync/design-consent-and-grants.js";
+import "../../02-功能模块/DesignSync/design-oauth-credentials.js";
+import "../../02-功能模块/认证-OAuth登录/oauth-login-flow.js";
 import "../../02-功能模块/Memory-CLAUDE.md/chunk-9b6sc1gb.js";
 export { w3e as call };

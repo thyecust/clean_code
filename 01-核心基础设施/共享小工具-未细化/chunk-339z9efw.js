@@ -8,15 +8,15 @@
 
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { ZQ } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { Sn } from "./chunk-jjr7hzzf.js";
+import { isRemoteCoworkEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { replaceControlChars } from "./text-sanitization.js";
 var r = /[\x00-\x1f\x7f-\x9f\u2028\u2029]/g,
-  bXe = 256,
-  bwt = /[\x00-\x1f\x7f-\x9f\u2028\u2029<>]/;
-function wXe(e) {
-  return e.length > 0 && e.length <= 256 && !bwt.test(e);
+  MAX_NAME_LENGTH = 256,
+  UNSAFE_CHARS_PATTERN = /[\x00-\x1f\x7f-\x9f\u2028\u2029<>]/;
+function isValidName(e) {
+  return e.length > 0 && e.length <= 256 && !UNSAFE_CHARS_PATTERN.test(e);
 }
-function QS(e) {
+function escapeMarkupText(e) {
   return t(
     e.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
   );
@@ -24,14 +24,14 @@ function QS(e) {
 function t(e) {
   return e.replace(r, (n) => `&#${n.charCodeAt(0)};`);
 }
-function Hj(e) {
+function escapeAngleBrackets(e) {
   return e.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 }
-function Ic(e) {
-  return t(Hj(String(e ?? "")));
+function escapePromptText(e) {
+  return t(escapeAngleBrackets(String(e ?? "")));
 }
-function ooe(e) {
-  return Ic(e).replaceAll('"', "&quot;");
+function escapeMarkupAttribute(e) {
+  return escapePromptText(e).replaceAll('"', "&quot;");
 }
 function i(e) {
   if (e.loadedFrom === void 0) return Boolean(e.isMcp);
@@ -48,16 +48,16 @@ function i(e) {
       return !0;
   }
 }
-function dfe(e) {
-  if (e.loadedFrom === "syncedSkills") return !$bn();
+function isModelInvocable(e) {
+  if (e.loadedFrom === "syncedSkills") return !isRemoteOrCoworkSession();
   return i(e);
 }
-function $bn() {
+function isRemoteOrCoworkSession() {
   return (
-    Boolean(a.CLAUDE_CODE_REMOTE) || Boolean(a.CLAUDE_CODE_IS_COWORK) || ZQ()
+    Boolean(a.CLAUDE_CODE_REMOTE) || Boolean(a.CLAUDE_CODE_IS_COWORK) || isRemoteCoworkEntrypoint()
   );
 }
-function wwt() {
+function createEmptyCommandMetadata() {
   return {
     hooks: void 0,
     allowedTools: [],
@@ -75,22 +75,22 @@ function wwt() {
     metadata: void 0,
   };
 }
-function A1e(e) {
+function escapeCommandFrontmatter(e) {
   return {
-    description: Twt(e.description),
-    argumentHint: C1e(e.argumentHint),
-    whenToUse: C1e(e.whenToUse),
-    argumentNames: e.argumentNames.map(Twt),
+    description: escapeSingleLineText(e.description),
+    argumentHint: escapeOptionalSingleLineText(e.argumentHint),
+    whenToUse: escapeOptionalSingleLineText(e.whenToUse),
+    argumentNames: e.argumentNames.map(escapeSingleLineText),
   };
 }
-function C1e(e) {
-  return e === void 0 ? void 0 : Twt(e);
+function escapeOptionalSingleLineText(e) {
+  return e === void 0 ? void 0 : escapeSingleLineText(e);
 }
-function Twt(e) {
-  return Hj(Sn(e));
+function escapeSingleLineText(e) {
+  return escapeAngleBrackets(replaceControlChars(e));
 }
-function Ewt(e) {
-  return Hj(
+function escapeMultilineText(e) {
+  return escapeAngleBrackets(
     e.replace(/\p{Cc}/gu, (n) =>
       n === "\t" ||
       n ===
@@ -102,4 +102,4 @@ function Ewt(e) {
     ),
   );
 }
-export { bXe, bwt, wXe, QS, Hj, Ic, ooe, dfe, $bn, wwt, A1e, C1e, Twt, Ewt };
+export { MAX_NAME_LENGTH, UNSAFE_CHARS_PATTERN, isValidName, escapeMarkupText, escapeAngleBrackets, escapePromptText, escapeMarkupAttribute, isModelInvocable, isRemoteOrCoworkSession, createEmptyCommandMetadata, escapeCommandFrontmatter, escapeOptionalSingleLineText, escapeSingleLineText, escapeMultilineText };

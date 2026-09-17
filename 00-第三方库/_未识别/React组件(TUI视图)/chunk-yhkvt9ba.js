@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { _ } from "../../react/react.zhnvc798.js";
-import { u_, Ma, ks, s4, $ye } from "../../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { VirtualScrollViewportStateContext, useHasVirtualScrollViewport, useVirtualScrollViewportSize, useScrollViewport, useClaimScrollBox } from "../../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { te } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { ScrollBox } from "../../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
@@ -67,9 +67,9 @@ function qp(Pe) {
     [Nt, Kt] = d(En !== -1 ? En : 0),
     Nn = Ke ? x.findIndex((Wt) => Wt[0] === Mn) : -1,
     A = Ke ? (Nn !== -1 ? Nn : 0) : Nt,
-    ae = De(u_),
-    T = s4(),
-    D = $ye(),
+    ae = De(VirtualScrollViewportStateContext),
+    T = useScrollViewport(),
+    D = useClaimScrollBox(),
     We = C(null),
     [le, Vt] = d(0),
     Kn;
@@ -102,7 +102,7 @@ function qp(Pe) {
   let Gn;
   if (l[6] === MEMO_CACHE_SENTINEL) ((Gn = { rows: 0, columns: 0 }), (l[6] = Gn));
   else Gn = l[6];
-  let { rows: jt } = ks(Gn),
+  let { rows: jt } = useVirtualScrollViewportSize(Gn),
     R = D !== null && T !== null,
     Ve = T?.attach,
     je = R ? jt - U : void 0,
@@ -261,7 +261,7 @@ function qp(Pe) {
               flexShrink: 0,
               maxHeight: je,
               stickyScroll: !1,
-              children: e(u_, { value: Ge, children: G }),
+              children: e(VirtualScrollViewportStateContext, { value: Ge, children: G }),
             },
             A,
           ),
@@ -389,7 +389,7 @@ function ss(ro) {
   let co = _(4),
     { title: so, id: io, children: an } = ro,
     { selectedTab: ao, width: ln } = De(m),
-    lo = Ma();
+    lo = useHasVirtualScrollViewport();
   if (ao !== (io ?? so)) {
     return null;
   }

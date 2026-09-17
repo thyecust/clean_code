@@ -11,12 +11,12 @@ import { Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ne, HCe, vTn, ker, PCe } from "./chunk-rr78st95.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { ARTIFACT_TOOL_NAME, PR_REVIEW_SECURITY_WALL, ArtifactInputError, ARTIFACT_VERSION_SAFE_RE, ARTIFACT_DELETED_NOTE_TAG, ARTIFACT_DELETED_NOTE_RE, uuidSlugFromUrl, canonicalArtifactTargetFor, sanitizeArtifactTitle } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { runBundledSkillSessionResets } from "../Skills技能/chunk-1zy5c8mf.js";
+import { runBundledSkillSessionResets } from "../Skills技能/bundled-skills.js";
 import { Tn, tt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Js } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Cr, yw, linkPathToSlug, unlinkPath, retainPathLinks } from "./chunk-01ymf0ar.js";
-import { Tce, $ee, Dv } from "../../01-核心基础设施/共享小工具-未细化/chunk-1rpyafm2.js";
+import { CREATED_FRAME_URL_PREFIX, OPENED_FRAME_URL_PREFIX, getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/共享小工具-未细化/frame-url-prefixes.js";
 import { nze, KWn } from "./chunk-p1dkvpxj.js";
 var E = 3,
   I = 1024,
@@ -44,11 +44,11 @@ function S(e, r, t) {
 var T = `IMPORTANT: Artifact calls for this target have now been rejected ${E} or more times in this session for the same reason.`,
   _ = `${T} Do not send the same call again: either make the specific change the error describes, or stop calling Artifact for this target and tell the user what is failing and why.`,
   b = `${T} Stop calling Artifact for this target and tell the user the artifact could not be published and why \u2014 do not try to work around this refusal.`,
-  Oon = Math.max(_.length, b.length) + 2;
+  MAX_REJECT_NOTICE_LENGTH = Math.max(_.length, b.length) + 2;
 function O(e) {
   return P.has(e) ? b : _;
 }
-function xut(e) {
+function stripRejectNotice(e) {
   for (let r of [_, b])
     if (
       e.startsWith(`${r}
@@ -60,7 +60,7 @@ function xut(e) {
 }
 var N = "live_edit_conflict";
 function j(e, r, t) {
-  let n = xut(r),
+  let n = stripRejectNotice(r),
     a = t === N ? Tn(n + U(e, n)) : Tn(n);
   return S(e, t, a)
     ? `${O(t)}
@@ -106,7 +106,7 @@ function D(e) {
 function w(e) {
   return KWn(e.toolUseId) || nze(e.toolUseId);
 }
-function bjn(e) {
+function withArtifactRejectBreaker(e) {
   let { validationErrorSteer: r, validateInput: t, call: n } = e,
     a = {
       validationErrorSteer: (s, l) => M(s, l, r?.(s, l) ?? null),
@@ -160,7 +160,7 @@ class C {
     return this.order.map((e) => ({ slug: e }));
   }
 }
-function NGe(e, r) {
+function collectArtifactStateFromMessages(e, r) {
   let t = new Set(),
     n = new Set(),
     a = new Set();
@@ -238,11 +238,11 @@ function W(e) {
             ).join(`
 `)
           : "",
-    t = xut(r.replace(G, "")),
+    t = stripRejectNotice(r.replace(G, "")),
     n = K.exec(t)?.[1];
   return n !== void 0 ? uuidSlugFromUrl(n) : null;
 }
-function wjn(e) {
+function collectUsedMcpServerNames(e) {
   let r = new Map();
   for (let n of e) {
     if (n.type !== "assistant" || !Array.isArray(n.message.content)) continue;
@@ -296,7 +296,7 @@ function H(e, r, t, n, a, s, l) {
       m = typeof d === "string" ? uuidSlugFromUrl(d) : null;
     if (typeof o?.path !== "string") {
       if (f !== null && typeof o?.url === "string") {
-        let R = `${Tce}${f}`,
+        let R = `${CREATED_FRAME_URL_PREFIX}${f}`,
           y = typeof o.title === "string" ? sanitizeArtifactTitle(o.title) : null;
         if (
           (delete t[R],
@@ -320,9 +320,9 @@ function H(e, r, t, n, a, s, l) {
     if (
       typeof o?.url === "string" &&
       u !== null &&
-      !Dv(t).some(([, f]) => uuidSlugFromUrl(f.url) === u)
+      !getNonOpenedFrameUrlEntries(t).some(([, f]) => uuidSlugFromUrl(f.url) === u)
     ) {
-      let f = `${$ee}${u}`,
+      let f = `${OPENED_FRAME_URL_PREFIX}${u}`,
         d = (typeof o.title === "string" ? yw(o.title) : null) ?? t[f]?.title;
       (delete t[f],
         (t[f] = {
@@ -360,13 +360,13 @@ function H(e, r, t, n, a, s, l) {
     A(n, u, o.version);
   a.touch(u);
 }
-function Tjn(e, r, t) {
+function buildArtifactReadSeed(e, r, t) {
   let n = new Set();
   for (let s of e)
     if (s.type === "assistant" && s.message.id) n.add(s.message.id);
   if ((ker(n), vTn(), !t))
     return { artifactReadVersions: {}, artifactReadObservers: {} };
-  let a = NGe(e, { applyLinks: !1 }).artifactReadVersions;
+  let a = collectArtifactStateFromMessages(e, { applyLinks: !1 }).artifactReadVersions;
   return { artifactReadVersions: a, artifactReadObservers: F(a, r) };
 }
 function F(e, r) {
@@ -414,7 +414,7 @@ function Z(e, r) {
   )
     A(r, t.slug, t.ver);
 }
-function ebe(e, r, t) {
+function rehydrateArtifactFrameState(e, r, t) {
   let { legacyConflict: n, continuesConversation: a = !1 } = t,
     { frameUrls: s, artifactReadVersions: l, artifactRefs: o } = r;
   (runBundledSkillSessionResets(), PCe({ continuesConversation: a }));
@@ -456,4 +456,4 @@ function ebe(e, r, t) {
     };
   });
 }
-export { Oon, xut, bjn, NGe, wjn, Tjn, ebe };
+export { MAX_REJECT_NOTICE_LENGTH, stripRejectNotice, withArtifactRejectBreaker, collectArtifactStateFromMessages, collectUsedMcpServerNames, buildArtifactReadSeed, rehydrateArtifactFrameState };

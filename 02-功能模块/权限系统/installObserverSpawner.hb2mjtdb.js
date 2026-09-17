@@ -11,10 +11,10 @@
 // [preload stripped] 原本在此预载 202 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { oo, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Q5, Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { Y6 } from "./chunk-e4pfvp7x.js";
+import { runWithCwdOrDefault, getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { clampPermissionMode } from "./chunk-e4pfvp7x.js";
 import { kw, mc, o0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getParentSessionId } from "../Teammates团队/chunk-811z9z0t.js";
+import { getParentSessionId } from "../Teammates团队/teammate-context.js";
 import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 import {
   isBuiltInAgent,
@@ -36,7 +36,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { excludeCoordinatorCommsMcpTools } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
 import { gNt, pjn } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
-import { og } from "../插件系统/chunk-33bdfgmx.js";
+import { parsePluginIdIgnoringReservedMarketplace } from "../插件系统/chunk-33bdfgmx.js";
 async function v(e, r, o) {
   if (
     (await writeAgentMetadata(oo(e), { agentType: r.agentType, isObserver: !0 }, o),
@@ -54,11 +54,11 @@ var b = {
     canUseTool: f,
   }) {
     let s = r.observerTaskId,
-      d = t.session.withProject({ cwd: Q() });
+      d = t.session.withProject({ cwd: getCwd() });
     await v(s, e, t.storageV5);
     let { taskRegistry: p } = t,
       m = getToolPermissionContext(t),
-      g = Y6(r.armingPermissionMode, m.mode) ?? m.mode,
+      g = clampPermissionMode(r.armingPermissionMode, m.mode) ?? m.mode,
       c = { ...m, mode: g },
       w = t.options.tools.filter(nh),
       l = `${e.agentType}@${r.observedEnvelopeName}`,
@@ -91,7 +91,7 @@ var b = {
         agentDepth: i,
         isAsync: !0,
         source: e.source,
-        pluginId: isPluginAgent(e) ? og(e.plugin) : void 0,
+        pluginId: isPluginAgent(e) ? parsePluginIdIgnoringReservedMarketplace(e.plugin) : void 0,
       },
       k = {
         agentId: s,
@@ -106,7 +106,7 @@ var b = {
         ...o0(t.agentContext),
       };
     await kw(k, () =>
-      Q5(d.project.cwd, () =>
+      runWithCwdOrDefault(d.project.cwd, () =>
         k3({
           taskId: s,
           abortController: y.abortController,

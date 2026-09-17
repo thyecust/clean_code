@@ -11,10 +11,10 @@ import { KLn, XLn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { sXt } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { getSpawnTimestampMs } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 function n() {
   let e = XLn(),
-    o = e === void 0 ? sXt() : void 0,
+    o = e === void 0 ? getSpawnTimestampMs() : void 0,
     [r, s] =
       e !== void 0
         ? [Math.max(0, Date.now() - e), "session_switch"]

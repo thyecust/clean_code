@@ -14,7 +14,7 @@ import { Jh, isBgSession, isBeingWatched, isBeingWatchedV5, H } from "../../02-�
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { eE } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Ta } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { shouldUseFullscreen } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { getBgJobRuntimeState } from "./bg-job-runtime-state.js";
 var u = new Set(["remote", "remote_cowork", "remote_desktop", "remote_mobile"]);
 function detectSurfaces(e) {
@@ -25,7 +25,7 @@ function detectSurfaces(e) {
   if (a.CLAUDE_CODE_ENVIRONMENT_KIND === "bridge" || ic()) t.add("bridge");
   if (a.CLAUDE_CODE_ENTRYPOINT === "claude-desktop") t.add("desktop");
   if (isPostTurnSummaryVisibleInCli()) t.add("cli");
-  if (!ke() && Ta()) t.add("repl");
+  if (!ke() && shouldUseFullscreen()) t.add("repl");
   return t;
 }
 function hasCcrSurface() {

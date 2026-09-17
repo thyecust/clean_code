@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 209 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { trackClaudeInChromeTabId } from "./chunk-hnp84hf6.js";
+import { trackClaudeInChromeTabId } from "./claude-in-chrome-host.js";
 import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import "./chrome-tool-error-classifier.js";
 import "../图片-截图-ComputerUse/chunk-csvzwhzk.js";

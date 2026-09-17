@@ -10,16 +10,16 @@
 
 // [preload stripped] 原本在此预载 84 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { PERMISSION_MODE_MANUAL_ALIAS, normalizePermissionModeAlias } from "../权限系统/chunk-e4pfvp7x.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { D9e, L9e } from "../认证-OAuth登录/chunk-n76cf9e6.js";
-import { Qre } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
-import { Zye, eSe, tSe, J0e } from "../权限系统/chunk-3kjwvb3e.js";
-import { Jae } from "../../01-核心基础设施/设置-配置/chunk-bmk73cc4.js";
+import { parseScheduleInput } from "../后台任务-Shell管理/scheduled-tasks.js";
+import { VALID_PERMISSION_MODES, addScheduledTask, removeScheduledTask, J0e } from "../权限系统/chunk-3kjwvb3e.js";
+import { loadDaemonConfig } from "../../01-核心基础设施/设置-配置/daemon-config.js";
 import { tF } from "../后台任务-Shell管理/chunk-jfk5mpe1.js";
 import { getDaemonJsonPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
-import { If } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
+import { createHoverRestOptions } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { basename, resolve } from "path";
 function u(e) {
   process.stdout.write(
@@ -86,7 +86,7 @@ async function k() {
     );
 }
 async function T(e, i) {
-  let o = await Jae(e, i);
+  let o = await loadDaemonConfig(e, i);
   if (!o.ok) c(o.error);
   return o.config;
 }
@@ -152,7 +152,7 @@ async function K(e, i, o) {
   }
   if (e.action === "remove") {
     if (!e.removeTarget) c("usage: claude daemon scheduled remove <task-id>");
-    if ((await k(), !(await tSe(e.removeTarget, i, o))))
+    if ((await k(), !(await removeScheduledTask(e.removeTarget, i, o))))
       c(`No scheduled task with id "${e.removeTarget}"`);
     u(`removed ${e.removeTarget}`);
     return;
@@ -162,17 +162,17 @@ async function K(e, i, o) {
   if (e.flags.has("model") && !e.flags.get("model"))
     c("--model requires a non-empty value");
   function r(g) {
-    return Zye.includes(g);
+    return VALID_PERMISSION_MODES.includes(g);
   }
   let a = normalizePermissionModeAlias(e.flags.get("permission-mode"));
   if (e.flags.has("permission-mode") && !r(a ?? "")) {
-    let g = Zye.map((w) => (w === "default" ? PERMISSION_MODE_MANUAL_ALIAS : w));
+    let g = VALID_PERMISSION_MODES.map((w) => (w === "default" ? PERMISSION_MODE_MANUAL_ALIAS : w));
     c(`--permission-mode must be one of ${g.join(", ")}`);
   }
   let n = e.flags.get("prompt"),
     t = e.flags.get("id"),
     l = e.flags.get("dir"),
-    f = resolve(l ?? Q());
+    f = resolve(l ?? getCwd());
   if (!t && !n)
     c("--prompt is required (or pass --id to update an existing task)");
   let s = t ?? O(f, n),
@@ -181,10 +181,10 @@ async function K(e, i, o) {
     S = e.flags.get("cron") ?? m?.cron;
   if (!p) c("--prompt is required");
   if (!S) c("--cron is required");
-  let M = Qre(S);
+  let M = parseScheduleInput(S);
   if (M.error !== void 0) c(`invalid --cron '${S}': ${M.error}`);
   let F = M.cron,
-    C = l ? resolve(l) : (m?.directory ?? resolve(Q())),
+    C = l ? resolve(l) : (m?.directory ?? resolve(getCwd())),
     E = a ?? normalizePermissionModeAlias(m?.permissionMode) ?? "dontAsk",
     x = e.flags.get("model") ?? m?.model ?? void 0,
     { isPathTrusted: P } = await import("../../01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js");
@@ -205,7 +205,7 @@ async function K(e, i, o) {
     permissionMode: E,
     ...(x && { model: x }),
   };
-  if ((await eSe(R, i, o), m)) u(`updated scheduled task '${s}'`);
+  if ((await addScheduledTask(R, i, o), m)) u(`updated scheduled task '${s}'`);
   else u(`added scheduled task '${s}'`);
 }
 function O(e, i) {
@@ -245,7 +245,7 @@ async function j(e, i, o) {
     return;
   }
   await k();
-  let r = await canonicalizePath(resolve(e.flags.get("dir") ?? Q()), If(o)),
+  let r = await canonicalizePath(resolve(e.flags.get("dir") ?? getCwd()), createHoverRestOptions(o)),
     { isPathTrusted: a } = await import("../../01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js");
   if (!a(r))
     c(
@@ -266,7 +266,7 @@ async function q(e, i, o) {
     c(
       `ambiguous: multiple remote-control servers match name '${e}'. Use a dir instead.`,
     );
-  let t = If(o),
+  let t = createHoverRestOptions(o),
     l = await canonicalizePath(resolve(e), t),
     f = [];
   for (let s of a) if ((await canonicalizePath(s.dir, t)) === l) f.push(s);

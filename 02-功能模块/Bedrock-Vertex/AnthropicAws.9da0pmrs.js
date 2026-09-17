@@ -10,12 +10,12 @@
 import { gn, xu, Bx } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getNodeConfigProviderModule } from "../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
 import { cy } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-dm9sg03f.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8549txjj.js";
+import "../../01-核心基础设施/共享小工具-未细化/tslib-helpers.js";
 import { FOe } from "../../00-第三方库/_未识别/第三方库-加密库/chunk-e0ewk5yt.js";
 import "../../01-核心基础设施/共享小工具-未细化/byte-array-conversion.js";
 import { nu } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { lhe } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-zdrvwe5r.js";
-import { q5 } from "./chunk-p991cddr.js";
+import { fetchHttpHandlerModule } from "./chunk-p991cddr.js";
 import "../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
 import "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -117,7 +117,7 @@ function v(e) {
 }
 var H = toESM(getNodeConfigProviderModule(), 1),
   b = toESM(cy(), 1);
-var k = toESM(q5(), 1),
+var k = toESM(fetchHttpHandlerModule(), 1),
   j = toESM(nu(), 1),
   N = toESM(lhe(), 1);
 import J from "assert";

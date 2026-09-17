@@ -12,11 +12,11 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { parseUserSpecifiedModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { er } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { K9, tDe, X9, Mte, DF } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
@@ -24,7 +24,7 @@ import { useMainLoopModel } from "../../01-核心基础设施/共享小工具-�
 import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { snn, cSe } from "../../01-核心基础设施/共享小工具-未细化/chunk-xkt71qzj.js";
+import { formatAdvisorConsentHint, applyAdvisorModelSetting } from "../../01-核心基础设施/共享小工具-未细化/advisor-command.js";
 import { Yle, Zg } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
 import { E, vr, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -42,9 +42,9 @@ var H = "https://claude.com/blog/the-advisor-strategy";
 function K(Lo) {
   let a = _(37),
     { onDone: f, storageV5: j } = Lo,
-    l = U(lo),
+    l = useAppStateSelector(lo),
     h = useMainLoopModel(),
-    A = It(),
+    A = useSetAppState(),
     g,
     w,
     Q;
@@ -52,7 +52,7 @@ function K(Lo) {
     let Y = X9();
     let Z = l?.toLowerCase();
     w = Z ? Y.find((To) => Z.includes(To)) : void 0;
-    g = l && !w && tDe(l) ? { label: pt(Zg(l)), value: l } : void 0;
+    g = l && !w && tDe(l) ? { label: stripAnsi(Zg(l)), value: l } : void 0;
     let k;
     if (a[4] !== g) ((k = g ? [g] : []), (a[4] = g), (a[5] = k));
     else k = a[5];
@@ -96,7 +96,7 @@ function K(Lo) {
         color: "warning",
         children: [
           "The current main model (",
-          pt(Zg(h)),
+          stripAnsi(Zg(h)),
           ") does not support the advisor.",
         ],
       })),
@@ -105,7 +105,7 @@ function K(Lo) {
   else O = a[16];
   let R;
   if (a[17] !== h || a[18] !== f || a[19] !== A || a[20] !== j)
-    ((R = (Xo) => f(cSe(Xo, h, A, j))),
+    ((R = (Xo) => f(applyAdvisorModelSetting(Xo, h, A, j))),
       (a[17] = h),
       (a[18] = f),
       (a[19] = A),
@@ -173,12 +173,12 @@ function K(Lo) {
 function T(jo) {
   let z = _(9),
     { choice: x, onDone: I, storageV5: M } = jo,
-    W = It(),
+    W = useSetAppState(),
     q = useMainLoopModel(),
     no;
   if (z[0] !== q || z[1] !== x || z[2] !== I || z[3] !== W || z[4] !== M)
     ((no = () => {
-      I(cSe(x, q, W, M));
+      I(applyAdvisorModelSetting(x, q, W, M));
     }),
       (z[0] = q),
       (z[1] = x),
@@ -214,7 +214,7 @@ var Bo = async (s, m, d) => {
     return (
       s(
         DF(c)
-          ? snn(c)
+          ? formatAdvisorConsentHint(c)
           : `${n} cannot be used as an advisor. Valid options: ${[...X9(), "off"].join(", ")}`,
       ),
       null

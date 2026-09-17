@@ -11,7 +11,7 @@ import { jc, Cz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { ALLOWED_OAUTH_BASE_URLS } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Lt, xu, xae, Hae, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { ie } from "../ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   Or,
@@ -525,8 +525,8 @@ function Qnn(e) {
   return h(`${o} pins `, renderModelSetting(n), " \u2014 that applies on restart");
 }
 function h(e, t, n) {
-  return `${ie.dim(`
-     ${e}`)}${eg(t)}${ie.dim(n)}`;
+  return `${chalk.dim(`
+     ${e}`)}${eg(t)}${chalk.dim(n)}`;
 }
 function _(e) {
   let t = renderModelSetting(e.model);

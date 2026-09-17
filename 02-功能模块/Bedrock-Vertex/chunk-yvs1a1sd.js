@@ -11,8 +11,8 @@ import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk
 import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Mxe } from "./chunk-5ndhfaq9.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { buildVertexBaseUrl } from "./chunk-5ndhfaq9.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -407,7 +407,7 @@ async function Wr(n) {
       defaultHeaders: vertexResidualCredentialPins(),
       ...Rw,
       timeout: 15000,
-      fetchOptions: c({ url: a.ANTHROPIC_VERTEX_BASE_URL || Mxe(n.region) }),
+      fetchOptions: c({ url: a.ANTHROPIC_VERTEX_BASE_URL || buildVertexBaseUrl(n.region) }),
     }),
   );
 }
@@ -1111,7 +1111,7 @@ function eo(vs) {
     const Zt = R.length;
     let Ve;
     if (S[8] !== R.length)
-      ((Ve = x(R.length, "project")), (S[8] = R.length), (S[9] = Ve));
+      ((Ve = pluralize(R.length, "project")), (S[8] = R.length), (S[9] = Ve));
     else Ve = S[9];
     let Le;
     if (S[10] !== R.length || S[11] !== Ve)

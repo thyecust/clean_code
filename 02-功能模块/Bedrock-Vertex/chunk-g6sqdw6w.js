@@ -10,7 +10,7 @@
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -50,7 +50,7 @@ import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { q5 } from "./chunk-p991cddr.js";
+import { fetchHttpHandlerModule } from "./chunk-p991cddr.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { toESM, MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -516,7 +516,7 @@ function Fo(Jr) {
   return vn;
 }
 F();
-var lt = toESM(q5(), 1);
+var lt = toESM(fetchHttpHandlerModule(), 1);
 var oo = "Bedrock setup verification timed out";
 function ko(n) {
   let s = Mve(n),
@@ -1243,7 +1243,7 @@ function Nt({
           dimColor: !0,
           children:
             ee > 0
-              ? `${ee} ${Ee[n]} ${x(ee, "profile")} in your account \xB7 each tested with a one-token request.`
+              ? `${ee} ${Ee[n]} ${pluralize(ee, "profile")} in your account \xB7 each tested with a one-token request.`
               : `No ${Ee[n]} profiles found in your account.`,
         }),
         e(
@@ -1495,7 +1495,7 @@ function Ar(Fc) {
     const Sr = v.length;
     let $e;
     if (I[11] !== v.length)
-      (($e = x(v.length, "profile")), (I[11] = v.length), (I[12] = $e));
+      (($e = pluralize(v.length, "profile")), (I[11] = v.length), (I[12] = $e));
     else $e = I[12];
     let Ve;
     if (I[13] !== v.length || I[14] !== $e)
@@ -1847,7 +1847,7 @@ function Br() {
         ((Pe =
           N.note ??
           (N.profiles.length > 0
-            ? `Found ${N.profiles.length} Anthropic inference ${x(N.profiles.length, "profile")} in this region.`
+            ? `Found ${N.profiles.length} Anthropic inference ${pluralize(N.profiles.length, "profile")} in this region.`
             : "No Anthropic inference profiles found in this region. You may still proceed \u2014 model defaults will use the built-in IDs.")),
           (K[10] = N.note),
           (K[11] = N.profiles),

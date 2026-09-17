@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 212 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Hd } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { isDesktopHostEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { parseUltrareviewArgs, ultrareviewLaunchAcknowledgementNudge, runUltrareviewHeadless } from "../CodeReview/CodeReview.ddrd6y06.js";
 var m = async (o, r, t) => {
   let a = t ? `/${t}` : "/ultrareview",
@@ -29,7 +29,7 @@ var m = async (o, r, t) => {
     case "launched":
       return { type: "query", value: e.message, prompt: ultrareviewLaunchAcknowledgementNudge(n) };
     case "needs-confirm": {
-      let l = Hd()
+      let l = isDesktopHostEntrypoint()
         ? "Run /ultrareview to confirm and launch the cloud review."
         : 'Run "claude ultrareview" from your terminal to consent and launch, or use /ultrareview in an interactive Claude Code session.';
       return {

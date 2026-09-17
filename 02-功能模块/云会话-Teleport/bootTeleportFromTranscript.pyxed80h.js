@@ -16,7 +16,7 @@ import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash
 import { getTranscriptPathForSession, readTranscriptTailV5 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getTeleportCacheState, activateTeleportCache } from "../../01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js";
 import { getCcrSessionConfig, getCcrSessionConfigFailureReason, getCcrSessionProfile } from "../../01-核心基础设施/共享小工具-未细化/ccr-session-config.js";
-import { hu } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
+import { resolveTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var v = 1,
   L = "upgrade_relay_marker";
@@ -167,7 +167,7 @@ function noteTeleportBootUnreached(e) {
 }
 async function B(e, a) {
   let t = getTranscriptPathForSession(e),
-    i = hu(t, a);
+    i = resolveTranscriptLocator(t, a);
   if (i !== void 0) {
     let r = await readTranscriptTailV5(i.key, w, i.backend).catch((l) => {
       n(

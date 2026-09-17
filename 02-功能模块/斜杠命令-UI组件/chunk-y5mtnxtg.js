@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { RYt } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { oe, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { getDefaultGcpRegion } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { truncateToCodeUnits, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Rh } from "../后台任务-Shell管理/chunk-5jv5fvbn.js";
+import { getVerifiedDaemonLock } from "../后台任务-Shell管理/daemon-lock.js";
 import { isClaudeMdLoadingDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import {
   Lve,
@@ -32,24 +32,24 @@ import { Zar, ms } from "../../01-核心基础设施/设置-配置/设置-配置
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { formatNumber } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Rar, getSettingsForSource, getArmedHelperOutput, getMergedPolicySources, getManagedFileSettingsPresence, getPolicySettingsOrigin, getShadowedManagedSources } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { getMTLSConfig, getProxyUrl, parseProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { THIRD_PARTY_PROVIDER_LABELS, getAPIProvider, getSecondaryProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { vvt, qZe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { iDe, pmt, TV, Ppn, Ng, m8e, Ny, g8e } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Pc, YE, Gk } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
+import { getLauncherConfigError, isLauncherRunnable, getLauncherCommandString } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
-import { W4 } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
+import { getSettingsWithMcpErrors } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { Mbe } from "../自动更新-安装/chunk-brx72pf1.js";
 import { Bce } from "../自动更新-安装/chunk-2g5h49pk.js";
 import { Ept } from "../会话-历史-恢复/chunk-szqky9sa.js";
 import { M_e } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { getPolicyLimitsStatus, formatPolicyLimitsStatus, shouldReportPolicyLimits } from "../Bridge-RemoteControl/policy-limits-status.js";
-import { Sle, NUn, mat } from "../../01-核心基础设施/共享小工具-未细化/chunk-ga0qgvpz.js";
+import { getManagedSettingsStatus, shouldReportManagedSettingsStatus, formatManagedSettingsStatus } from "../../01-核心基础设施/共享小工具-未细化/managed-settings-status.js";
 import { r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function BWe(s) {
   let e = s.map((l) => l.filter((i) => !i.antOnly));
@@ -72,7 +72,7 @@ function rUn(s, e = null, l) {
           label: "IDE",
           value: r(t, {
             children: [
-              getThemeColor("error", l)(L.cross),
+              getThemeColor("error", l)(figures.cross),
               " Error installing ",
               o,
               " ",
@@ -111,7 +111,7 @@ function rUn(s, e = null, l) {
       return [
         {
           label: "IDE",
-          value: `${getThemeColor("error", l)(L.cross)} Not connected to ${o}`,
+          value: `${getThemeColor("error", l)(figures.cross)} Not connected to ${o}`,
         },
       ];
   }
@@ -223,9 +223,9 @@ function iUn() {
     ],
     n = getShadowedManagedSources();
   if (n.length > 0) o.push({ label: "Skipped sources", value: n.map(v) });
-  let u = Sle();
-  if (u && NUn(u))
-    o.push({ label: "Managed settings (remote)", value: mat(u) });
+  let u = getManagedSettingsStatus();
+  if (u && shouldReportManagedSettingsStatus(u))
+    o.push({ label: "Managed settings (remote)", value: formatManagedSettingsStatus(u) });
   let p = getPolicyLimitsStatus();
   if (shouldReportPolicyLimits(p)) o.push({ label: "Organization policy", value: formatPolicyLimitsStatus(p) });
   return o;
@@ -256,8 +256,8 @@ async function aUn() {
   return (await Bce()).filter((e) => e.type !== "error").map((e) => e.message);
 }
 async function lUn(s) {
-  let e = Gk(),
-    l = Pc();
+  let e = getLauncherCommandString(),
+    l = getLauncherConfigError();
   if (!e && !l) return [];
   let i = [];
   if (l)
@@ -272,12 +272,12 @@ async function lUn(s) {
     (i.push(
       `Self-exec: \`${[o.cmd, ...o.prefixArgs].join(" ")}\` (CLAUDE_CODE_PROCESS_WRAPPER)`,
     ),
-    !(await YE()))
+    !(await isLauncherRunnable()))
   )
     i.push(
       `The launcher \`${o.cmd}\` cannot run right now (deleted or not executable) \u2014 new background sessions are refused until it is restored; a background service that validated it earlier keeps serving its existing sessions (\`claude daemon status\`)`,
     );
-  let n = await Rh(1, s).catch(() => null);
+  let n = await getVerifiedDaemonLock(1, s).catch(() => null);
   if (!n) return i;
   let [{ controlRequest: u }, { BG_PROTO: p }] = await Promise.all([
       import("../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js"),
@@ -288,7 +288,7 @@ async function lUn(s) {
       c?.ok && c.op === "nudge"
         ? (c.processWrapper ?? "")
         : (n.processWrapper ?? ""),
-    f = oe(To(pt(d)), 200);
+    f = truncateToCodeUnits(normalizeWhitespace(stripAnsi(d)), 200);
   if (n.origin === "service")
     i.push(
       `The installed background service predates launcher support and runs outside \`${o.cmd}\`; its sessions are covered, the service process itself is not \u2014 a launcher-aware \`claude daemon install\` will close this`,
@@ -302,7 +302,7 @@ async function lUn(s) {
 async function cUn(s) {
   let e = await Mbe({ storageV5: s }),
     l = [],
-    { statusNotices: i, invalidEntries: o } = M_e(W4().errors);
+    { statusNotices: i, invalidEntries: o } = M_e(getSettingsWithMcpErrors().errors);
   if (o.length > 0) {
     let u = dedupe(o.map((c) => c.file)).join(", ");
     l.push(`Found invalid entries in: ${u}.`);
@@ -404,7 +404,7 @@ function Dit() {
     let n = a.ANTHROPIC_VERTEX_PROJECT_ID;
     if (n) e.push({ label: "GCP project", value: n });
     if (
-      (e.push({ label: "Default region", value: RYt() }),
+      (e.push({ label: "Default region", value: getDefaultGcpRegion() }),
       a.CLAUDE_CODE_SKIP_VERTEX_AUTH)
     )
       e.push({ value: "GCP auth skipped" });

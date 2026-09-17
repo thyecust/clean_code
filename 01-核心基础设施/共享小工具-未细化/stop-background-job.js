@@ -14,7 +14,7 @@ import { isBgSession, isDaemonBgWorker } from "../../02-功能模块/认证-OAut
 import { logEvent } from "./analytics-event-queue.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { xn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function s() {
   return a.CLAUDE_JOB_DIR;
@@ -23,7 +23,7 @@ async function stopOwnBackgroundJob(n, e) {
   logEvent("tengu_bg_agent_action", {
     action: S("stop"),
     source: fromEnum(n),
-    jobSessionId: Ee(K()),
+    jobSessionId: sanitizeAnalyticsId(K()),
   });
   let o = s();
   if (isBgSession() && o) {

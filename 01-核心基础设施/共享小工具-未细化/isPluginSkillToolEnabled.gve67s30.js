@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 20 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { _un, cue, u_r } from "./chunk-m9kab71c.js";
+import { _un, isPluginSkillToolEnabled as cue, u_r } from "./plugin-skill-tool-gating.js";
 import "./first-party-remote-session.js";
 export {
   _un as _registerSuggestRolloutPinReader,

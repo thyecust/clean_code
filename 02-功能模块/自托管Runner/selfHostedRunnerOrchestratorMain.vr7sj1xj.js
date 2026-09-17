@@ -13,7 +13,7 @@ import { CS } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { tl } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseConfigInteger } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import {
@@ -35,7 +35,7 @@ import { $3e } from "../Git-Worktree/chunk-33y3h2sy.js";
 import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
 import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
 import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
-import { AP, Svt } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
+import { decodeTokenClaims, encodeTaggedId } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { randomUUID } from "crypto";
 import { constants } from "fs";
 import {
@@ -158,7 +158,7 @@ async function ne(e) {
       CLAUDE_RUNNER_WORK_ORDER_FILE: o,
       CLAUDE_RUNNER_ORDER_ID: e.claims.jti,
       CLAUDE_RUNNER_SESSION_ID:
-        Svt("session", e.claims.session_id) ?? e.claims.session_id,
+        encodeTaggedId("session", e.claims.session_id) ?? e.claims.session_id,
       CLAUDE_RUNNER_SESSION_UUID: e.claims.session_id,
       CLAUDE_RUNNER_ATTEMPT: String(e.claims.attempt),
       CLAUDE_RUNNER_POOL_ID: e.claims.pool_id,
@@ -812,7 +812,7 @@ function ct(e) {
         break;
       case "--health-port":
         if (a) {
-          let u = tl(a);
+          let u = parseConfigInteger(a);
           if (Number.isNaN(u) || u < 0 || u > 65535)
             throw Error(
               `--health-port must be an integer in [0, 65535] (0 disables), got: ${a}`,
@@ -822,7 +822,7 @@ function ct(e) {
         break;
       case "--hook-concurrency":
         if (a) {
-          let u = tl(a);
+          let u = parseConfigInteger(a);
           if (Number.isNaN(u) || u < 1 || u > 100)
             throw Error(
               `--hook-concurrency must be an integer in [1, 100], got: ${a}`,
@@ -924,7 +924,7 @@ function ct(e) {
 }
 function lt(e, t, r) {
   if (e === void 0 || e === "") return t;
-  let o = tl(e);
+  let o = parseConfigInteger(e);
   if (Number.isNaN(o) || o < 0 || o > 65535)
     throw Error(`${r} must be an integer in [0, 65535], got: "${e}"`);
   return o;
@@ -954,7 +954,7 @@ async function ut(e) {
 }
 function dt(e) {
   let t = e.replace(/^sk-ant-[a-z]+-/, ""),
-    r = AP(t),
+    r = decodeTokenClaims(t),
     o = r !== null && typeof r === "object" ? r["ccr:pool_id"] : void 0;
   if (typeof o !== "string" || o === "")
     throw Error(
@@ -970,7 +970,7 @@ function _t(e) {
   return String(e);
 }
 function pt(e, t) {
-  let r = AP(e.work_order_jwt),
+  let r = decodeTokenClaims(e.work_order_jwt),
     o = r !== null && typeof r === "object" ? r : {},
     d = (p) => (typeof o[p] === "string" ? o[p] : ""),
     n = o.aud,

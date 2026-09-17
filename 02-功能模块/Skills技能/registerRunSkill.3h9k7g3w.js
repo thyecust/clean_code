@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 101 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { zo } from "../MCP客户端/chunk-3kmsshb6.js";
-import { registerBundledSkill } from "./chunk-1zy5c8mf.js";
+import { parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
+import { registerBundledSkill } from "./bundled-skills.js";
 function r() {
   return import("../../01-核心基础设施/共享小工具-未细化/RUN_EXAMPLE_FILES.gz0wcr9k.js");
 }
@@ -26,7 +26,7 @@ function registerRunSkill() {
     files: () => r().then((t) => t.RUN_EXAMPLE_FILES),
     async getPromptForCommand(t) {
       let { SKILL_MD: n } = await r(),
-        e = [zo(n).content.trimStart()];
+        e = [parseFrontmatter(n).content.trimStart()];
       if (t)
         e.push(`## User Request
 

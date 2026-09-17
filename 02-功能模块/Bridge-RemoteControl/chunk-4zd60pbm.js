@@ -17,7 +17,7 @@ function B(r) {
     s = Math.round((r % 60000) / 1000);
   return s > 0 ? `${t}m ${s}s` : `${t}m`;
 }
-function AP(r) {
+function decodeTokenClaims(r) {
   let s = (r.startsWith("sk-ant-si-") ? r.slice(10) : r).split(".");
   if (s.length !== 3 || !s[1]) return null;
   try {
@@ -26,8 +26,8 @@ function AP(r) {
     return null;
   }
 }
-function Jsr(r) {
-  let t = AP(r);
+function getTokenSessionId(r) {
+  let t = decodeTokenClaims(r);
   return t !== null &&
     typeof t === "object" &&
     "session_id" in t &&
@@ -35,8 +35,8 @@ function Jsr(r) {
     ? t.session_id
     : void 0;
 }
-function FR(r) {
-  let t = AP(r);
+function getTokenExpiry(r) {
+  let t = decodeTokenClaims(r);
   if (
     t !== null &&
     typeof t === "object" &&
@@ -50,7 +50,7 @@ var L = 300000,
   b = 1800000,
   j = 3,
   G = 60000;
-function vRe({
+function createTokenRefreshScheduler({
   getAccessToken: r,
   onRefresh: t,
   onExhausted: s,
@@ -59,7 +59,7 @@ function vRe({
   maxFailures: p = j,
   adaptiveBuffer: R = !1,
   rescheduleFromNewToken: T = !1,
-  decodeExpiry: v = FR,
+  decodeExpiry: v = getTokenExpiry,
   formatDelay: k = B,
 }) {
   let d = new Map(),
@@ -223,7 +223,7 @@ function J(r) {
   if (t.length !== 32) throw Error(`Invalid UUID hex length: ${t.length}`);
   return BigInt("0x" + t);
 }
-function Svt(r, t) {
+function encodeTaggedId(r, t) {
   try {
     let s = J(t);
     return `${r}_01${I(s)}`;
@@ -243,7 +243,7 @@ function P(r) {
   }
   return s;
 }
-function H5(r) {
+function decodeTaggedId(r) {
   let t = r.lastIndexOf("_");
   if (t < 0) return;
   let s = r.slice(t + 1);
@@ -254,4 +254,4 @@ function H5(r) {
   if (c.length !== 32) return;
   return `${c.slice(0, 8)}-${c.slice(8, 12)}-${c.slice(12, 16)}-${c.slice(16, 20)}-${c.slice(20, 32)}`;
 }
-export { AP, Jsr, FR, vRe, Svt, H5 };
+export { decodeTokenClaims, getTokenSessionId, getTokenExpiry, createTokenRefreshScheduler, encodeTaggedId, decodeTaggedId };

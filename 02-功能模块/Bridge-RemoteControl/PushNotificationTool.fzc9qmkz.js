@@ -16,7 +16,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { Eo } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
+import { resolveSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 import { PUSH_NOTIFICATION_TOOL_NAME, PUSH_NOTIFICATION_TOOL_DESCRIPTION, getPushNotificationToolPrompt } from "./push-notification-tool.js";
 import { s, O, c, Qe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var S = createLazyValue(() =>
@@ -114,7 +114,7 @@ var S = createLazyValue(() =>
                 disabled_reason: fromEnumOpt(h),
               });
             };
-          if (p && !r && !Eo("agentPushNotifEnabled", !1).value)
+          if (p && !r && !resolveSetting("agentPushNotifEnabled", !1).value)
             return (
               l({ pushSent: !1, localSent: !1, disabledReason: "config_off" }),
               {

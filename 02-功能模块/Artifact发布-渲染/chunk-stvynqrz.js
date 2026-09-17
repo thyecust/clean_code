@@ -11,7 +11,7 @@ import { Dr, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Ve, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, Tr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -20,7 +20,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { G5, KU } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import { ASSET_ID_RE, ARTIFACT_SLUG_RE } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { ne } from "./chunk-rr78st95.js";
 import {
@@ -407,7 +407,7 @@ function z(e, r) {
   return { code: "upstream_error", reason: `http_${e}` };
 }
 function U(e) {
-  return oe(e.replace(/[\p{Cc}\p{Cf}\p{Co}]/gu, " "), 200);
+  return truncateToCodeUnits(e.replace(/[\p{Cc}\p{Cf}\p{Co}]/gu, " "), 200);
 }
 function xe(e, r, s = "upload", u) {
   let t = `asset ${s} failed (${e})`;
@@ -1029,7 +1029,7 @@ async function J3n(e, r, s, u) {
     k = o
       ? (h?.["x-frame-asset-content-type"] ?? h?.["content-type"])
       : h?.["content-type"],
-    R = typeof k === "string" ? ft(k, ";").trim().toLowerCase() : "";
+    R = typeof k === "string" ? beforeFirst(k, ";").trim().toLowerCase() : "";
   if (S$t(R) === void 0)
     return t(
       "unexpected_type",

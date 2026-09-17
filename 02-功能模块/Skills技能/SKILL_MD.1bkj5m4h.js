@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 80 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { s3t, aYn } from "../Hooks钩子/chunk-z3433nr6.js";
-import { zo } from "../MCP客户端/chunk-3kmsshb6.js";
+import { parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
 import { SKILL_MD } from "../../01-核心基础设施/共享小工具-未细化/chunk-ngp4wa3z.js";
 import { defineExportGetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var s = {};
@@ -26,7 +26,7 @@ defineExportGetters(s, {
 var isAvailable = () => s3t();
 var SKILL_NAME = "plugin-authoring";
 function skillPromptOf(t, o) {
-  let m = zo(
+  let m = parseFrontmatter(
     t.replace(
       /\r\n/g,
       `

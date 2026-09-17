@@ -14,8 +14,8 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { us, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { sxe, Eur, Aur, Cur } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { truncateToCodePoints, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { ARTIFACT_TYPE_INSTRUCTIONS_TAG, ARTIFACT_TYPE_INSTRUCTIONS_INTRO, ARTIFACT_TYPE_INSTRUCTIONS_FOUND_INTRO, ARTIFACT_TYPE_INSTRUCTIONS_OUTRO } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import {
@@ -568,7 +568,7 @@ function u$t(e, r) {
   let o = e
       .filter(B)
       .slice(0, He)
-      .map((l) => b(l.length > ie ? `${oe(l, ie)}\u2026` : l)),
+      .map((l) => b(l.length > ie ? `${truncateToCodeUnits(l, ie)}\u2026` : l)),
     i = Math.max(e.length, r ?? 0) - o.length;
   if (o.length === 0) return i > 0 ? `${i} not shown` : "none";
   return scrubArtifactEnvelopeTags(i > 0 ? `${o.join(", ")} and ${i} more` : o.join(", "));
@@ -1229,7 +1229,7 @@ function Acn(e, r) {
     i = o > W;
   return {
     kind: "read",
-    text: i ? scrubArtifactEnvelopeTags(us(t, W)) : t,
+    text: i ? scrubArtifactEnvelopeTags(truncateToCodePoints(t, W)) : t,
     chars: o,
     clipped: i,
     fromType: r,
@@ -1250,17 +1250,17 @@ function f$t(e) {
     case "read":
       return `
 
-${ae(e.text)}${e.fromType ? Eur : Aur}
-<${sxe}>
+${ae(e.text)}${e.fromType ? ARTIFACT_TYPE_INSTRUCTIONS_INTRO : ARTIFACT_TYPE_INSTRUCTIONS_FOUND_INTRO}
+<${ARTIFACT_TYPE_INSTRUCTIONS_TAG}>
 ${e.text}${
         e.clipped
           ? `
 [\u2026clipped at ${W} of ${e.chars} characters]`
           : ""
       }
-</${sxe}>
+</${ARTIFACT_TYPE_INSTRUCTIONS_TAG}>
 
-${Cur}`;
+${ARTIFACT_TYPE_INSTRUCTIONS_OUTRO}`;
   }
 }
 async function G3n(e, r, t) {

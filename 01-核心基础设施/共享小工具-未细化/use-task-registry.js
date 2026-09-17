@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { Tm } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Yn } from "./chunk-r3y9qj3r.js";
+import { useAppState } from "./app-state-context.js";
 import { V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
 function useTaskRegistry() {
-  let t = Yn();
+  let t = useAppState();
   return V(() => Tm(() => t.getState(), t.setState), [t]);
 }
 export { useTaskRegistry };

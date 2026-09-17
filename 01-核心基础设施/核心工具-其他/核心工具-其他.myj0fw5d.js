@@ -757,7 +757,7 @@ function g(e) {
 function a(e) {
   return e[g(e.length)];
 }
-function C5t() {
+function generateAdjectiveVerbNounName() {
   let e = a(t),
     n = a(s),
     i = a(l);
@@ -765,7 +765,7 @@ function C5t() {
 }
 var c =
   /\[(?:Pasted text #\d+(?: \+\d+ lines)?|Image #\d+|Audio #\d+|\.\.\.Truncated text #\d+ \+\d+ lines\.\.\.)\]/g;
-function het(e, n = {}) {
+function slugifyText(e, n = {}) {
   let { words: i = 4, maxLen: r = 40 } = n;
   return e
     .replace(c, " ")
@@ -778,15 +778,15 @@ function het(e, n = {}) {
     .slice(0, r)
     .replace(/^-+|-+$/g, "");
 }
-function xU() {
+function generateAdjectiveNounName() {
   let e = a(t),
     n = a(l);
   return `${e}-${n}`;
 }
-function qir(e) {
+function isAdjectiveNounName(e) {
   let [n, i, ...r] = e.split("-");
   return r.length === 0 && n !== void 0 && i !== void 0 && u.has(n) && d.has(i);
 }
 var u = new Set(t),
   d = new Set(l);
-export { C5t, het, xU, qir };
+export { generateAdjectiveVerbNounName, slugifyText, generateAdjectiveNounName, isAdjectiveNounName };

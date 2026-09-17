@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Dp, r_ } from "../权限系统/chunk-e4pfvp7x.js";
+import { LOZENGE_OUTLINE_GLYPH, LOZENGE_FILLED_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { a$ } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function formatBackgroundTaskSummary(r) {
@@ -38,11 +38,11 @@ function formatBackgroundTaskSummary(r) {
         if (e === 1 && n.isUltraplan)
           switch (n.ultraplanPhase) {
             case "plan_ready":
-              return `${r_} ultraplan ready`;
+              return `${LOZENGE_FILLED_GLYPH} ultraplan ready`;
             case "needs_input":
-              return `${Dp} ultraplan needs your input`;
+              return `${LOZENGE_OUTLINE_GLYPH} ultraplan needs your input`;
             default:
-              return `${Dp} ultraplan`;
+              return `${LOZENGE_OUTLINE_GLYPH} ultraplan`;
           }
         if (
           r.every(
@@ -52,9 +52,9 @@ function formatBackgroundTaskSummary(r) {
           )
         )
           return e === 1
-            ? `${Dp} 1 remote dynamic workflow`
-            : `${Dp} ${e} remote dynamic workflows`;
-        return e === 1 ? `${Dp} 1 cloud session` : `${Dp} ${e} cloud sessions`;
+            ? `${LOZENGE_OUTLINE_GLYPH} 1 remote dynamic workflow`
+            : `${LOZENGE_OUTLINE_GLYPH} ${e} remote dynamic workflows`;
+        return e === 1 ? `${LOZENGE_OUTLINE_GLYPH} 1 cloud session` : `${LOZENGE_OUTLINE_GLYPH} ${e} cloud sessions`;
       }
       case "local_workflow":
         return e === 1

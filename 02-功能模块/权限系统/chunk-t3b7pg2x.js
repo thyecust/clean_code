@@ -44,11 +44,11 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ms, Nr } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Cxt, PA } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { isTopLevelCoworkSession, isVsCodeExtensionSession } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { yar, getSettingsForSource, getInitialSettings, getEffectiveSettingSource, updateSettingsForSource, hasVouchedSkipDangerousModePermissionPrompt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { normalizePermissionModeAlias, parsePermissionMode, Y6, Eb } from "./chunk-e4pfvp7x.js";
+import { normalizePermissionModeAlias, parsePermissionMode, clampPermissionMode, parsePermissionModeOrDefault } from "./chunk-e4pfvp7x.js";
 import { Xt, Qa, dm, getAPIProvider, getProviderForModel, hasFirstPartyCapabilities } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { Dc } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
+import { areWorkflowsEnabled } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 function gnr(e, t, o) {
   switch (e) {
     case "ask":
@@ -73,7 +73,7 @@ function Zoe(e, t) {
   return !1;
 }
 function WG(e) {
-  return !Cxt() && dm(e, "fable_5_1_prompt_bundle") === !0;
+  return !isTopLevelCoworkSession() && dm(e, "fable_5_1_prompt_bundle") === !0;
 }
 function fve(e) {
   return e.startsWith("claude-fable-");
@@ -152,13 +152,13 @@ function i6(e) {
   return hasFirstPartyCapabilities(getProviderForModel(e));
 }
 function ib(e) {
-  return Dc() && (e === void 0 || (i6(e) && _me("xhigh", e)));
+  return areWorkflowsEnabled() && (e === void 0 || (i6(e) && _me("xhigh", e)));
 }
 function mve(e) {
   return Z$(FN(e) && _me("max", e) ? "max" : "high", e);
 }
 function sA(e, t, o) {
-  return o === !0 && Dc() && MT(e, t) === "xhigh";
+  return o === !0 && areWorkflowsEnabled() && MT(e, t) === "xhigh";
 }
 function $C(e) {
   return im.includes(e);
@@ -571,7 +571,7 @@ function fAn(e) {
           "inherited auto mode dropped \u2014 auto mode killswitch active (override- or payload-served)",
         )
       : void 0,
-    b = s ? (_?.mode ?? Eb(s)) : void 0;
+    b = s ? (_?.mode ?? parsePermissionModeOrDefault(s)) : void 0;
   if (l)
     if (O("bypassPermissions")) ((y = x), c.push("default"));
     else c.push("bypassPermissions");
@@ -592,14 +592,14 @@ function fAn(e) {
         "agent frontmatter requested auto mode but circuit breaker active \u2014 falling through",
         { level: "warn" },
       );
-    else if (b && Y6(p, b) === void 0)
+    else if (b && clampPermissionMode(p, b) === void 0)
       (n(
         `agent frontmatter permissionMode "${p}" ignored \u2014 it would widen the agent view's inherited mode (effective "${b}"), and the dispatched agent name is repo-controllable (settings \`agent\`)`,
         { level: "warn" },
       ),
         logEvent("tengu_agent_frontmatter_mode_widening_carry_ignored", {}));
     else c.push(p);
-  if (PA()) {
+  if (isVsCodeExtensionSession()) {
     let f = !GEt()
       ? void 0
       : T()
@@ -660,7 +660,7 @@ function fAn(e) {
         c.push("default");
       } else c.push(f);
     else if (f !== "auto")
-      if (b && !C(f) && Y6(f, b) === void 0)
+      if (b && !C(f) && clampPermissionMode(f, b) === void 0)
         (n(
           `settings defaultMode "${f}" ignored \u2014 it would widen the agent view's inherited mode (effective "${b}"), and only policy/user/flag settings may do that (projectSettings and localSettings are repo-controllable)`,
           { level: "warn" },
@@ -703,7 +703,7 @@ function fAn(e) {
     if (
       m &&
       GEt() &&
-      (!t.isNonInteractiveSession || PA() || H("tengu_moss_anchor", !1))
+      (!t.isNonInteractiveSession || isVsCodeExtensionSession() || H("tengu_moss_anchor", !1))
     )
       ((f = "auto"), (h = !0));
     S = { mode: f, notification: y };
@@ -967,7 +967,7 @@ function O(e) {
   return !1;
 }
 function j(e, t, o) {
-  let r = Eb(e);
+  let r = parsePermissionModeOrDefault(e);
   if (O(r)) return { mode: "default", unconsented: !0 };
   if (r === "auto" && t) {
     n(o, { level: "warn" });

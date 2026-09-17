@@ -13,7 +13,7 @@ import "./chrome-tool-error-classifier.js";
 import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/chunk-98spw152.js";
-import "../MCP客户端/chunk-j8556pzt.js";
+import "../MCP客户端/mcp-server.js";
 import "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import { aNt } from "../Bridge-RemoteControl/chunk-hbndb8am.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
@@ -28,12 +28,12 @@ import { getAPIProvider, isActualFirstPartyAnthropicBaseUrl } from "../../01-核
 import { initializeAnalyticsSink } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
-import { SGe } from "../../01-核心基础设施/设置-配置/chunk-6rz5fqzm.js";
+import { loadFastPathPolicy } from "../../01-核心基础设施/设置-配置/fast-path-policy-loader.js";
 import { isPolicyAllowedInResponse } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { jAn } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { credentialsStoreFor } from "../认证-OAuth登录/credentials-store.js";
 import { HI } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getSecureSocketPath, getAllSocketPaths } from "./chunk-hnp84hf6.js";
+import { getSecureSocketPath, getAllSocketPaths } from "./claude-in-chrome-host.js";
 import { logChromeBridgeConnected, logChromeExtensionConnected, logChromeToolCallDisconnected } from "../Hooks钩子/chrome-telemetry-events.js";
 import { StdioServerTransport } from "../../01-核心基础设施/共享小工具-未细化/stdio-server-transport.js";
 import "../../01-核心基础设施/共享小工具-未细化/stdio-message-framing.js";
@@ -233,7 +233,7 @@ function k(e) {
 }
 async function runClaudeInChromeMcpServer(e) {
   return withFeatureTelemetry("chrome_mcp_server_start", async () => {
-    let r = await SGe(e);
+    let r = await loadFastPathPolicy(e);
     if (r)
       process.stderr.write(`${r}
 `);

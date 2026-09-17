@@ -10,18 +10,18 @@
 
 // [preload stripped] 原本在此预载 33 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
-  V3e,
-  Sct,
-  phr,
-  TLt,
-  fhr,
-  ELt,
-  mhr,
-  bct,
-  Prn,
-} from "../../02-功能模块/认证-OAuth登录/chunk-zh0ph2b3.js";
-import "./chunk-nw3qvjhe.js";
-import "../../02-功能模块/认证-OAuth登录/chunk-7jz937t3.js";
+  issuerKey as V3e,
+  getCachedIdpIdToken as Sct,
+  saveIdpIdTokenFromJwt as phr,
+  clearIdpIdToken as TLt,
+  saveIdpClientSecret as fhr,
+  getIdpClientSecret as ELt,
+  clearIdpClientSecret as mhr,
+  discoverOidc as bct,
+  acquireIdpIdToken as Prn,
+} from "../../02-功能模块/认证-OAuth登录/xaa-idp-login.js";
+import "./oauth-callback.js";
+import "../../02-功能模块/认证-OAuth登录/url-and-error-redaction.js";
 import "../../02-功能模块/MCP客户端/chunk-78r8f7dw.js";
 import "../../02-功能模块/MCP客户端/chunk-5wa92x7d.js";
 import "../../02-功能模块/认证-OAuth登录/chunk-3wfaaze4.js";

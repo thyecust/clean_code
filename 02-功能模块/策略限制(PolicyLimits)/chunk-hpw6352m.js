@@ -12,7 +12,7 @@ import { j, B, hB, u8, Nm } from "../../00-第三方库/lodash/lodash.2x3q7cfh.j
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { OAUTH_BETA_HEADER, getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l, A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qPn, We, Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -36,16 +36,16 @@ import { bke } from "../../01-核心基础设施/设置-配置/设置-配置.aqb
 import { getAPIProvider, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { NRe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import {
-  aAt,
-  nU,
-  Wnr,
-  Cve,
-  lse,
-  KJe,
+  isMainLoopActive,
+  computeRetryDelayMs,
+  verifySignedCacheJws,
+  extractSignatureHeader,
+  writeSignatureSidecar,
+  deleteSignatureSidecars,
   XJe,
-  Gnr,
-  qnr,
-  znr,
+  readStoredSignature,
+  readAcceptedSignatureIat,
+  recordAcceptedSignatureIat,
 } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import {
   eQe,
@@ -101,7 +101,7 @@ function I4t(e, t, r = {}) {
   function h() {
     let _ = fe(),
       L = Math.max(Nm(), u8() ?? 0);
-    if (!(_ > 0 && !aAt() && Date.now() - L > _) || o >= he) {
+    if (!(_ > 0 && !isMainLoopActive() && Date.now() - L > _) || o >= he) {
       m();
       return;
     }
@@ -135,9 +135,9 @@ async function re({
 }) {
   try {
     let d = { typ: e, aud: o, sub: s, ws: a },
-      [p, m] = await Promise.all([Gnr(t), qnr(t, d)]),
+      [p, m] = await Promise.all([readStoredSignature(t), readAcceptedSignatureIat(t, d)]),
       h = Date.now(),
-      _ = Wnr({
+      _ = verifySignedCacheJws({
         jws: p?.jws,
         kind: e,
         orgUuid: o,
@@ -149,7 +149,7 @@ async function re({
         roots: oe,
       });
     if (_.result === "valid" && _.issuedAt !== void 0)
-      await znr(t, d, Math.min(_.issuedAt, Math.floor(h / 1000)));
+      await recordAcceptedSignatureIat(t, d, Math.min(_.issuedAt, Math.floor(h / 1000)));
     logEvent("tengu_signed_cache_shadow", {
       cache: fromEnum(e),
       result: fromEnum(_.result),
@@ -234,7 +234,7 @@ async function Ae(e, t, r) {
     )
       return o;
     r(o);
-    let a = nU(s);
+    let a = computeRetryDelayMs(s);
     (n(`Policy limits: Retry ${s}/${G} after ${a}ms`), await sleep(a));
   }
   return o;
@@ -275,7 +275,7 @@ async function ke(e, t) {
         );
       return (
         n("Policy limits: Using cached restrictions (304)"),
-        { success: !0, response: null, etag: e, signature: Cve(d.headers) }
+        { success: !0, response: null, etag: e, signature: extractSignatureHeader(d.headers) }
       );
     }
     let p = projectPolicyLimitsBody(d.data);
@@ -307,12 +307,12 @@ async function ke(e, t) {
           response: p.data,
           parseErrorField: "compliance_taints",
           lossyComplianceTaints: !0,
-          signature: Cve(d.headers),
+          signature: extractSignatureHeader(d.headers),
         }
       );
     return (
       n("Policy limits: Fetched successfully"),
-      { success: !0, response: p.data, signature: Cve(d.headers) }
+      { success: !0, response: p.data, signature: extractSignatureHeader(d.headers) }
     );
   } catch (o) {
     let { kind: s, status: a, message: d } = Ps(o),
@@ -446,7 +446,7 @@ function Fe(e) {
   return pe(t === "UnexpectedAbsent" || t === qPn ? "ENOENT" : t);
 }
 function D() {
-  return Ce.state("policy-limits");
+  return STORAGE_KEYS.state("policy-limits");
 }
 var de = 1048576;
 async function WAn(e) {
@@ -565,7 +565,7 @@ class GAn {
         if (a.ok)
           return (
             n(`Policy limits: Saved to ${getCachePath()}`),
-            await lse(getCachePath(), r),
+            await writeSignatureSidecar(getCachePath(), r),
             "saved"
           );
         ((o = We(a.error)), (s = Fe(a.error)));
@@ -579,7 +579,7 @@ class GAn {
       return (
         await writeFile(o, b(serverBodyOf(e), null, 2), { encoding: "utf-8", mode: 384 }),
         n(`Policy limits: Saved to ${o}`),
-        await lse(o, r),
+        await writeSignatureSidecar(o, r),
         "saved"
       );
     } catch (o) {
@@ -757,12 +757,12 @@ class GAn {
         try {
           if (isHoverRestEnabled() && this.storageV5 !== void 0) {
             if ((await this.storageV5.touch(D())).ok)
-              (await lse(getCachePath(), c.signature),
+              (await writeSignatureSidecar(getCachePath(), c.signature),
                 await XJe(getCachePath(), this.cacheClearEpoch !== m));
           } else {
             let w = new Date();
             (await utimes(getCachePath(), w, w),
-              await lse(getCachePath(), c.signature),
+              await writeSignatureSidecar(getCachePath(), c.signature),
               await XJe(getCachePath(), this.cacheClearEpoch !== m));
           }
         } catch {}
@@ -914,7 +914,7 @@ class GAn {
   async deleteCacheFile() {
     if (
       (this.cacheClearEpoch++,
-      await KJe(getCachePath()),
+      await deleteSignatureSidecars(getCachePath()),
       isHoverRestEnabled() && this.storageV5 !== void 0)
     )
       try {

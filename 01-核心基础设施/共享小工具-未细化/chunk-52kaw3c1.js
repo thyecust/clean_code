@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { m0 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createLazyValue } from "./lazy-value.js";
-import { mN } from "../../02-功能模块/后台任务-Shell管理/chunk-9d5wk5b9.js";
+import { DEFAULT_CRON_JITTER_CONFIG } from "../../02-功能模块/后台任务-Shell管理/scheduled-tasks.js";
 import { T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var o = 60000,
   r = 1800000,
@@ -21,13 +21,13 @@ var o = 60000,
       oneShotMaxMs: T().int().min(0).max(r),
       oneShotFloorMs: T().int().min(0).max(r),
       oneShotMinuteMod: T().int().min(1).max(60),
-      recurringMaxAgeMs: T().int().min(0).max(t).default(mN.recurringMaxAgeMs),
-      cacheLeadMs: T().int().min(0).max(60000).default(mN.cacheLeadMs),
+      recurringMaxAgeMs: T().int().min(0).max(t).default(DEFAULT_CRON_JITTER_CONFIG.recurringMaxAgeMs),
+      cacheLeadMs: T().int().min(0).max(60000).default(DEFAULT_CRON_JITTER_CONFIG.cacheLeadMs),
     }).refine((n) => n.oneShotFloorMs <= n.oneShotMaxMs),
   );
 function getCronJitterConfig() {
-  let n = m0("tengu_kairos_cron_config", mN, o),
+  let n = m0("tengu_kairos_cron_config", DEFAULT_CRON_JITTER_CONFIG, o),
     e = i().safeParse(n);
-  return e.success ? e.data : mN;
+  return e.success ? e.data : DEFAULT_CRON_JITTER_CONFIG;
 }
 export { getCronJitterConfig };

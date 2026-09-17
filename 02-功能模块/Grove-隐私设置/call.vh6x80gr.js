@@ -11,15 +11,15 @@
 // [preload stripped] 原本在此预载 260 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { ZB, dSe, l7 } from "./chunk-a4mdm49v.js";
-import { OIt, DIt } from "../../01-核心基础设施/设置-配置/chunk-11v2vkwp.js";
+import { getAccountSettings, shouldShowGroveNotice, getGroveConfig } from "./chunk-a4mdm49v.js";
+import { GroveDialog, PrivacySettingsDialog } from "../../01-核心基础设施/设置-配置/grove-privacy-dialogs.js";
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 var d =
   "Review and manage your privacy settings at https://claude.ai/settings/data-privacy-controls";
 async function C(t, o) {
-  if (!(await dSe(o.storageV5, o.credentials))) return (t(d), null);
-  let [r, l] = await Promise.all([ZB(o.credentials), l7(o.credentials)]);
+  if (!(await shouldShowGroveNotice(o.storageV5, o.credentials))) return (t(d), null);
+  let [r, l] = await Promise.all([getAccountSettings(o.credentials), getGroveConfig(o.credentials)]);
   if (!r.success) return (t(d), null);
   let n = r.data,
     g = l.success ? l.data : null;
@@ -31,7 +31,7 @@ async function C(t, o) {
     await c();
   }
   async function c() {
-    let a = await ZB(o.credentials);
+    let a = await getAccountSettings(o.credentials);
     if (!a.success) {
       t("Unable to retrieve updated privacy settings", { display: "system" });
       return;
@@ -48,11 +48,11 @@ async function C(t, o) {
       });
   }
   if (n.grove_enabled !== null)
-    return e(DIt, {
+    return e(PrivacySettingsDialog, {
       settings: n,
       domainExcluded: g?.domain_excluded,
       onDone: c,
     });
-  return e(OIt, { showIfAlreadyViewed: !0, onDone: u, location: "settings" });
+  return e(GroveDialog, { showIfAlreadyViewed: !0, onDone: u, location: "settings" });
 }
 export { C as call };

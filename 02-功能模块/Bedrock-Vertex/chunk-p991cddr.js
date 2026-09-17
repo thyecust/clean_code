@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { nu, A0n } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var V0n = commonJS(function (M) {
+var isArrayBufferModule = commonJS(function (M) {
   var D = (e) =>
     (typeof ArrayBuffer === "function" && e instanceof ArrayBuffer) ||
     Object.prototype.toString.call(e) === "[object ArrayBuffer]";
   M.isArrayBuffer = D;
 });
-var E2e = commonJS(function (z) {
-  var G = V0n(),
+var utilBufferFromModule = commonJS(function (z) {
+  var G = isArrayBufferModule(),
     g = importMetaRequire("buffer"),
     N = (e, r = 0, t = e.byteLength - r) => {
       if (!G.isArrayBuffer(e))
@@ -35,8 +35,8 @@ var E2e = commonJS(function (z) {
   z.fromArrayBuffer = N;
   z.fromString = Y;
 });
-var s_ = commonJS(function (J) {
-  var R = E2e(),
+var utilUtf8Module = commonJS(function (J) {
+  var R = utilBufferFromModule(),
     T = (e) => {
       let r = R.fromString(e, "utf8");
       return new Uint8Array(
@@ -76,7 +76,7 @@ var s_ = commonJS(function (J) {
 var O = commonJS(function (U) {
   Object.defineProperty(U, "__esModule", { value: !0 });
   U.fromBase64 = void 0;
-  var re = E2e(),
+  var re = utilBufferFromModule(),
     te = /^[A-Za-z0-9+/]*={0,2}$/,
     oe = (e) => {
       if ((e.length * 3) % 4 !== 0)
@@ -90,8 +90,8 @@ var O = commonJS(function (U) {
 var _ = commonJS(function (q) {
   Object.defineProperty(q, "__esModule", { value: !0 });
   q.toBase64 = void 0;
-  var ne = E2e(),
-    fe = s_(),
+  var ne = utilBufferFromModule(),
+    fe = utilUtf8Module(),
     se = (e) => {
       let r;
       if (typeof e === "string") r = (0, fe.fromUtf8)(e);
@@ -112,7 +112,7 @@ var _ = commonJS(function (q) {
     };
   q.toBase64 = se;
 });
-var hS = commonJS(function (h) {
+var utilBase64Module = commonJS(function (h) {
   var S = O(),
     j = _();
   Object.keys(S).forEach(function (e) {
@@ -134,10 +134,10 @@ var hS = commonJS(function (h) {
       });
   });
 });
-var q5 = commonJS(function (he) {
+var fetchHttpHandlerModule = commonJS(function (he) {
   var H = nu(),
     ie = A0n(),
-    ae = hS();
+    ae = utilBase64Module();
   function C(e, r) {
     return new Request(e, r);
   }
@@ -309,4 +309,4 @@ var q5 = commonJS(function (he) {
   he.keepAliveSupport = p;
   he.streamCollector = ce;
 });
-export { V0n, E2e, s_, hS, q5 };
+export { isArrayBufferModule, utilBufferFromModule, utilUtf8Module, utilBase64Module, fetchHttpHandlerModule };

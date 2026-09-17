@@ -101,7 +101,7 @@ class i {
   repoCheckouts = new r();
 }
 var s = new j(() => new i());
-function Jo() {
+function getSessionRuntimeState() {
   return s.of(B().host);
 }
 var d = /^[a-zA-Z0-9_-]+$/;
@@ -113,11 +113,11 @@ function isSafeBridgeId(e) {
   return e !== "" && d.test(e);
 }
 function setCseShimGate(e) {
-  Jo().cseShimGate = e;
+  getSessionRuntimeState().cseShimGate = e;
 }
 function toCompatSessionId(e) {
   if (!e.startsWith("cse_")) return e;
-  let n = Jo().cseShimGate;
+  let n = getSessionRuntimeState().cseShimGate;
   if (n && !n()) return e;
   return "session_" + e.slice(4);
 }
@@ -136,4 +136,4 @@ function isSelfAddressableSessionId(e) {
     (e.startsWith("session_") || e.startsWith("cse_")) && isSafeBridgeId(e) && sessionIdBody(e) !== ""
   );
 }
-export { Jo, validateBridgeId, isSafeBridgeId, setCseShimGate, toCompatSessionId, remoteRowId, toInfraSessionId, sessionIdBody, isSelfAddressableSessionId };
+export { getSessionRuntimeState, validateBridgeId, isSafeBridgeId, setCseShimGate, toCompatSessionId, remoteRowId, toInfraSessionId, sessionIdBody, isSelfAddressableSessionId };

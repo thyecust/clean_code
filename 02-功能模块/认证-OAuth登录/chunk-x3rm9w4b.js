@@ -32,7 +32,7 @@ import { logFeatureOk, logFeatureBad, withFeatureTelemetry } from "../../00-第�
 import { gge, iBe, nS, Avt } from "./chunk-wk0e3dz4.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { getFederationCacheDir } from "../../01-核心基础设施/共享小工具-未细化/federation-cache-dir.js";
-import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { mkdir, readFile, stat as F } from "fs/promises";
 import { join as b } from "path";
 import { dirname } from "path";
@@ -403,7 +403,7 @@ async function K(e, t) {
       null
     );
   }
-  let c = mn(
+  let c = hashSha256(
     JSON.stringify([
       e.authentication.federation_rule_id,
       e.organization_id,
@@ -411,7 +411,7 @@ async function K(e, t) {
       e.authentication.service_account_id ?? "",
       e.authentication.scope ?? "",
       t,
-      mn(s),
+      hashSha256(s),
     ]),
   );
   return b(o, `${c}.json`);

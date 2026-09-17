@@ -11,10 +11,10 @@
 // [preload stripped] 原本在此预载 229 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { E9e, A9e } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
@@ -24,14 +24,14 @@ import { OM, PVe, Ngt, Lr } from "../../03-入口与运行时/核心应用-Agent
 import { isScratchpadDisplayPath, isWorkshopDisplayPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
-import { Ac, vh, Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
+import { TranscriptExpandHint, OverflowHint, ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
-import "../Diff引擎/chunk-p2gj9dsf.js";
+import "../Diff引擎/structured-diff.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import { Ch } from "../语法高亮-Markdown渲染/chunk-mnn6q099.js";
-import { Pg } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
-import { FB, wWe } from "../Diff引擎/chunk-arr1hvsk.js";
+import { CodeBlock } from "../语法高亮-Markdown渲染/code-block.js";
+import { TruncatedFilePath } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
+import { RejectedToolUseDiff, wWe } from "../Diff引擎/diff-tool-result-render.js";
 import "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -118,11 +118,11 @@ function he(gt) {
     ((q = e(t, { bold: !0, children: M })), (g[6] = M), (g[7] = q));
   else q = g[7];
   let z;
-  if (g[8] !== M) ((z = x(M, "line")), (g[8] = M), (g[9] = z));
+  if (g[8] !== M) ((z = pluralize(M, "line")), (g[8] = M), (g[9] = z));
   else z = g[9];
   let A;
   if (g[10] !== D || g[11] !== m)
-    ((A = m ? D : relative(Q(), D)), (g[10] = D), (g[11] = m), (g[12] = A));
+    ((A = m ? D : relative(getCwd(), D)), (g[10] = D), (g[11] = m), (g[12] = A));
   else A = g[12];
   let G;
   if (g[13] !== A)
@@ -144,7 +144,7 @@ function he(gt) {
     ae = m ? void 0 : b;
   let Z;
   if (g[22] !== ne || g[23] !== D || g[24] !== v)
-    ((Z = e(Ch, { code: ne, filePath: D, width: v })),
+    ((Z = e(CodeBlock, { code: ne, filePath: D, width: v })),
       (g[22] = ne),
       (g[23] = D),
       (g[24] = v),
@@ -165,7 +165,7 @@ function he(gt) {
   else E = g[29];
   let I;
   if (g[30] !== ie || g[31] !== m)
-    ((I = !m && e(vh, { count: ie, expandable: !0 })),
+    ((I = !m && e(OverflowHint, { count: ie, expandable: !0 })),
       (g[30] = ie),
       (g[31] = m),
       (g[32] = I));
@@ -202,7 +202,7 @@ function isResultTruncated(i, { columns: a }) {
 function renderToolUseMessage(i, { verbose: a }) {
   if (!i.file_path) return null;
   if (i.file_path.startsWith(getPlansDirectory())) return "";
-  return e(Pg, {
+  return e(TruncatedFilePath, {
     filePath: i.file_path,
     children: a ? i.file_path : Ao(i.file_path),
   });
@@ -219,12 +219,12 @@ function ye(bt) {
   else ve = H[2];
   let [ce] = d(ve),
     Ce;
-  if (H[3] !== P) ((Ce = kr(P)), (H[3] = P), (H[4] = Ce));
+  if (H[3] !== P) ((Ce = firstLine(P)), (H[3] = P), (H[4] = Ce));
   else Ce = H[4];
   let L = Ce,
     Me;
   if (H[5] !== P || H[6] !== y || H[7] !== L || H[8] !== W)
-    ((Me = e(FB, {
+    ((Me = e(RejectedToolUseDiff, {
       file_path: y,
       operation: "write",
       content: P,
@@ -303,7 +303,7 @@ function te(yt) {
     Le[5] !== ue ||
     Le[6] !== de
   )
-    ((S = e(FB, {
+    ((S = e(RejectedToolUseDiff, {
       file_path: fe,
       operation: "update",
       patch: T.patch,
@@ -324,7 +324,7 @@ function te(yt) {
 }
 async function ge(i, a) {
   try {
-    let s = isAbsolute(i) ? i : resolve(Q(), i),
+    let s = isAbsolute(i) ? i : resolve(getCwd(), i),
       l = await PVe(s);
     if (l === null) return { type: "create" };
     let f;
@@ -357,7 +357,7 @@ function renderToolUseErrorMessage(i, { verbose: a }) {
     return e(ToolResultRow, {
       children: e(t, { color: "error", children: "Error writing file" }),
     });
-  return e(Yd, { result: i, verbose: a });
+  return e(ToolErrorMessage, { result: i, verbose: a });
 }
 function renderToolResultMessage(i, a, { style: s, verbose: l }) {
   return Pe(i, a, { style: s, verbose: l });
@@ -385,10 +385,10 @@ function Pe(i, a, { style: s, verbose: l, replacedUndiffedContent: f = !1 }) {
             "Wrote ",
             e(t, { bold: !0, children: C }),
             " ",
-            x(C, "line"),
+            pluralize(C, "line"),
             " to",
             " ",
-            e(t, { bold: !0, children: relative(Q(), c) }),
+            e(t, { bold: !0, children: relative(getCwd(), c) }),
             f && e(N, {}),
           ],
         });
@@ -400,10 +400,10 @@ function Pe(i, a, { style: s, verbose: l, replacedUndiffedContent: f = !1 }) {
               "Wrote ",
               e(t, { bold: !0, children: C }),
               " ",
-              x(C, "line"),
+              pluralize(C, "line"),
               f && e(N, {}),
               " ",
-              e(Ac, {}),
+              e(TranscriptExpandHint, {}),
             ],
           }),
         });
@@ -426,7 +426,7 @@ function Pe(i, a, { style: s, verbose: l, replacedUndiffedContent: f = !1 }) {
       return e(wWe, {
         filePath: c,
         structuredPatch: k,
-        firstLine: kr(u),
+        firstLine: firstLine(u),
         fileContent: B ?? void 0,
         style: s,
         verbose: l,

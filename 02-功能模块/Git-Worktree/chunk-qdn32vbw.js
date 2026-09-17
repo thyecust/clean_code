@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { dT, dne, CX, H2t, Fpn, Dgt, IVe, $pn, ZDe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { fn, execFileNoThrowWithCwd } from "./chunk-9ys1bnqr.js";
+import { GIT_HARDENED_ARGS, execFileNoThrowWithCwd } from "./git-exec-hardening.js";
 import { gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { matchingRuleForInput } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { R8, $z, REMOTE_READ_OPEN_FLAGS, bindCanonicalPathToHandle, isCanonicalPathContained, readHandleBounded } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
@@ -47,7 +47,7 @@ function tt(t) {
 }
 var W = /^[0-9a-f]{40,64}$/;
 function w(t) {
-  return ["--literal-pathspecs", ...fn, ...t];
+  return ["--literal-pathspecs", ...GIT_HARDENED_ARGS, ...t];
 }
 function E(t) {
   return { cwd: t, timeout: CX, preserveOutputOnError: !1 };

@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isTeammate } from "./chunk-811z9z0t.js";
+import { isTeammate } from "./teammate-context.js";
 import { getBridgeTokenOverride, getBridgeBaseUrlOverride } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { getOwnJobShortId, syncJobColor } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { AGENT_COLOR_NAMES, resolveAgentColorName } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
-import { yl } from "./chunk-thxapyam.js";
+import { getSessionTranscriptPath } from "./transcript-paths.js";
 import { saveAgentColor } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Vle } from "../../01-核心基础设施/共享小工具-未细化/chunk-tc59qdh4.js";
+import { updateStandaloneAgentContext } from "../../01-核心基础设施/共享小工具-未细化/standalone-agent-context.js";
 var g = ["default", "reset", "none", "gray", "grey"];
 async function callSetColorCommand(n, e, t) {
   return (n(await performSetColor(t, e), { display: "system" }), null);
@@ -31,10 +31,10 @@ async function performSetColor(n, e) {
     return `Invalid color "${o}". Available colors: ${s}, default`;
   }
   let m = K(),
-    d = yl(),
+    d = getSessionTranscriptPath(),
     i = r ? "default" : o,
     l = r ? void 0 : o;
-  (await saveAgentColor(m, i, d, e.storageV5), e.setAppState((s) => Vle(s, { color: l })));
+  (await saveAgentColor(m, i, d, e.storageV5), e.setAppState((s) => updateStandaloneAgentContext(s, { color: l })));
   let a = e.getAppState(),
     c = a.agent
       ? a.agentDefinitions.activeAgents.find((s) => s.agentType === a.agent)

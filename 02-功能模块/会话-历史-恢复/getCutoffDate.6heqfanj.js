@@ -10,13 +10,13 @@
 
 // [preload stripped] 原本在此预载 213 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Ept, Vhr, NS, v9n, Obe, gan, han, _an } from "./chunk-szqky9sa.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-5pc36v8n.js";
+import "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
-import "../Skills技能/chunk-wwgqvtfr.js";
-import "../跨会话消息(UDS)/chunk-qvnte9zp.js";
+import "../Skills技能/mcp-skill-cache.js";
+import "../跨会话消息(UDS)/peer-file-transfer.js";
 import "../自动更新-安装/chunk-2g5h49pk.js";
 import "../自动更新-安装/chunk-brx72pf1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
+import "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
 export {
   _an as cleanupOldMessageFilesInBackground,
   NS as getCutoffDate,

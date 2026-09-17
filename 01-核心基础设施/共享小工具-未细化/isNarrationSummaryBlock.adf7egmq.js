@@ -12,7 +12,7 @@
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getClaimRegistry } from "./host-claim-registry.js";
 import "./protobuf-decoding.js";
-import { _Gn, yGn } from "./chunk-se27pkgx.js";
+import { NARRATION_BLOCK_TAG, yGn } from "./narration-signature.js";
 var t = new WeakMap();
 function isNarrationTaggedBlock(n) {
   try {
@@ -20,7 +20,7 @@ function isNarrationTaggedBlock(n) {
     let r;
     if (t.has(n)) r = t.get(n);
     else ((r = yGn(n.signature)), t.set(n, r));
-    return r === _Gn;
+    return r === NARRATION_BLOCK_TAG;
   } catch (r) {
     if (getClaimRegistry().claim("narration_classifier_error")) logError(r);
     return !1;

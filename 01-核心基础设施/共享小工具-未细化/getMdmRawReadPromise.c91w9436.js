@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { hRt, Gxn, qxn } from "../核心工具-路径与平台/chunk-svk2cp17.js";
-import "./chunk-24x3spwe.js";
+import { fireRawRead as hRt, startMdmRawRead as Gxn, getMdmRawReadPromise as qxn } from "../核心工具-路径与平台/mdm-raw-read.js";
+import "./mdm-policy-paths.js";
 export {
   hRt as fireRawRead,
   qxn as getMdmRawReadPromise,

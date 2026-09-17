@@ -10,9 +10,9 @@
 
 // [preload stripped] 原本在此预载 2 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { vvn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { cye } from "./chunk-y7gz94r8.js";
+import { getHookTemplateById } from "./hook-template-catalog.js";
 import { createHash } from "crypto";
-function createDeviceHookTemplateStore(d = { byId: cye }) {
+function createDeviceHookTemplateStore(d = { byId: getHookTemplateById }) {
   let t = new Map();
   return {
     accept({ template: r, digest: e, contentBase64: s }) {

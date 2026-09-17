@@ -14,9 +14,9 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { mi, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { DA, EW } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { HELP_FLAGS, INFO_SUBCOMMAND_ALIASES } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { ts, Js, Oa } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -25,14 +25,14 @@ import { te } from "../../01-核心基础设施/核心工具-字符串与文本/
 import { V$ } from "../插件系统/chunk-7s6mt1vg.js";
 import { gr, ka, ow, g3 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../远程工具执行/chunk-66axrkvh.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-33vqsej8.js";
+import "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
 import { gIe } from "../Bridge-RemoteControl/chunk-qp3gv3vk.js";
 import "../Bridge-RemoteControl/chunk-bm9p9vh6.js";
 import "../Bridge-RemoteControl/remote-session-host-registry.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-d1t6d4k8.js";
+import "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
-import { Rlt, _2n, Gle } from "../../01-核心基础设施/共享小工具-未细化/chunk-ey89qg3e.js";
-import { I4, MIe, s2, j3e, CSe, W3e } from "./chunk-k2gczbnj.js";
+import { getReconnectMcpServer, _2n, getIsMcpServerDisabled } from "../../01-核心基础设施/共享小工具-未细化/mcp-control-handlers.js";
+import { getMcpServerType, getBlockingMcpServerState, formatDisabledElsewhereMessage, formatDisableNotPersistedMessage, formatBulkTogglePersistWarning, formatStaleDisableMessage } from "./mcp-server-state-messages.js";
 import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function U(t) {
@@ -89,7 +89,7 @@ async function Oe(t, c) {
   let g = t.trim(),
     r = c.getMcp().clients.filter((o) => o.name !== "ide"),
     S = g.toLowerCase();
-  if (!g || EW.includes(S)) {
+  if (!g || INFO_SUBCOMMAND_ALIASES.includes(S)) {
     let o = ke();
     if (o && Boolean(a.CLAUDE_CODE_REMOTE) && !mayHaveRemoteClient(c.session)) {
       let v = c.toolState.get(g3);
@@ -126,7 +126,7 @@ ${j}`);
 ${j}`),
     );
   }
-  if (DA.includes(S)) return s(j);
+  if (HELP_FLAGS.includes(S)) return s(j);
   let w = /^(\S+)\s*(.*)$/.exec(g),
     C = (w?.[1] ?? "").toLowerCase(),
     e = w?.[2] || "all";
@@ -142,9 +142,9 @@ ${j}`),
         ? "No MCP servers are configured. Add one with `claude mcp add`."
         : `There's no MCP server named "${m(e)}". Run \`/mcp\` in the terminal to see configured servers.`,
     );
-  let p = Rlt(),
+  let p = getReconnectMcpServer(),
     N = _2n(),
-    b = Gle();
+    b = getIsMcpServerDisabled();
   if (!p || !N || !b) {
     if (ke())
       return s(
@@ -156,7 +156,7 @@ ${j}`),
   }
   if (C === "reconnect") {
     let o = e !== "all" ? d[0] : void 0,
-      y = o && MIe(o);
+      y = o && getBlockingMcpServerState(o);
     if (y === "disabled")
       return s(
         W(
@@ -174,7 +174,7 @@ ${j}`),
         `"${m(e)}" is pending approval. Approve it with \`/mcp\` in the terminal first.`,
       );
     let R = e === "all" ? d.filter((h) => J(h, b)) : d,
-      P = e === "all" ? CSe(d, !0, b) : null;
+      P = e === "all" ? formatBulkTogglePersistWarning(d, !0, b) : null;
     if (R.length === 0) {
       let h = countMatching(d, (v) => v.type === "disabled"),
         M = countMatching(d, (v) => ow(v) && !b(v.name));
@@ -225,23 +225,23 @@ ${j}`),
     );
   }
   let f = C === "enable";
-  if (e !== "all" && d.some((o) => I4(o) === "needs-approval"))
+  if (e !== "all" && d.some((o) => getMcpServerType(o) === "needs-approval"))
     return s(
       `"${m(e)}" is pending approval. Approve it with \`/mcp\` in the terminal first.`,
     );
   let A = d.filter((o) =>
     f
       ? o.type === "disabled"
-      : o.type !== "disabled" && I4(o) !== "needs-approval",
+      : o.type !== "disabled" && getMcpServerType(o) !== "needs-approval",
   );
   if (A.length === 0) {
     if (f && e !== "all" && b(e)) {
-      if (d.some(ts)) return s(W3e(e));
-      return s(s2(e));
+      if (d.some(ts)) return s(formatStaleDisableMessage(e));
+      return s(formatDisabledElsewhereMessage(e));
     }
-    if (!f && e !== "all" && !b(e)) return s(j3e(e));
+    if (!f && e !== "all" && !b(e)) return s(formatDisableNotPersistedMessage(e));
     if (e === "all") {
-      let o = CSe(d, f, b);
+      let o = formatBulkTogglePersistWarning(d, f, b);
       if (o !== null) {
         let y = f ? countMatching(d, (R) => J(R, b)) : 0;
         return s(y > 0 ? `${o} ${V(y)}` : o);
@@ -266,7 +266,7 @@ ${j}`),
         : `"${m(e)}" is already ${f ? "enabled" : "disabled"}.`,
     );
   }
-  let D = e === "all" ? CSe(d, f, b) : null,
+  let D = e === "all" ? formatBulkTogglePersistWarning(d, f, b) : null,
     L = await Promise.allSettled(A.map((o) => N(o.name))),
     T = countMatching(L, (o) => o.status === "fulfilled"),
     H = f
@@ -325,7 +325,7 @@ function ne(t, c, g) {
             .map((p) => {
               let N = Oa(p.name),
                 b = countMatching(c, (A) => A.name.startsWith(N)),
-                f = ow(p) ? "not configured" : B[I4(p)];
+                f = ow(p) ? "not configured" : B[getMcpServerType(p)];
               return `  ${_(m(p.name))}  ${_(f)}  ${p.config.type ?? "stdio"}${X(b)}`;
             }),
     e = w.map((p) => {
@@ -337,7 +337,7 @@ function ne(t, c, g) {
         ...N.map(re),
         ...(b > 0
           ? [
-              `  (${b} more of its MCP ${x(b, "tool")} couldn't be read \u2014 likely a Claude Code version mismatch between this session and that machine)`,
+              `  (${b} more of its MCP ${pluralize(b, "tool")} couldn't be read \u2014 likely a Claude Code version mismatch between this session and that machine)`,
             ]
           : []),
       ].join(`
@@ -366,7 +366,7 @@ function _(t) {
   return t + " ".repeat(Math.max(0, 28 - te(t)));
 }
 function X(t) {
-  return t > 0 ? ` \xB7 ${t} ${x(t, "tool")}` : "";
+  return t > 0 ? ` \xB7 ${t} ${pluralize(t, "tool")}` : "";
 }
 function z(t, c, g, r) {
   if (g instanceof mi) return s(ka(l(g), void 0, "none"));

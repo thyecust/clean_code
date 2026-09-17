@@ -12,7 +12,7 @@
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { an } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -31,7 +31,7 @@ import { y6e } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).q
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
+import "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
@@ -41,14 +41,14 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js"
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s3mpt973.js";
+import "../../01-核心基础设施/共享小工具-未细化/mcp-tool-base.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
-import "../Diff引擎/chunk-p2gj9dsf.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
+import "../Diff引擎/structured-diff.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-0mg59v9m.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/verb-conjugation.js";
 import "../GitHub集成/chunk-bfz9rjjm.js";
 import "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
@@ -57,7 +57,7 @@ import "../工具Bash-Shell/bash-output-view.js";
 import "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
 import "../工具UI渲染/chunk-g4k5jjwt.js";
 import "../../01-核心基础设施/共享小工具-未细化/webfetch-tool-messages.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
+import "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
 import "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
@@ -70,7 +70,7 @@ import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../01-核心基础设施/共享小工具-未细化/model-1m-context-suggestion.js";
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js";
+import "../../01-核心基础设施/共享小工具-未细化/slack-send-tool.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
 import "../Teammates团队/teammate-task-messages.js";
 import { dn, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -83,7 +83,7 @@ function Ro() {}
 function J(Oo) {
   let i = _(29),
     { onDone: q } = Oo,
-    Po = U(wo),
+    Po = useAppStateSelector(wo),
     [M, _o] = d(void 0),
     no;
   if (i[0] === MEMO_CACHE_SENTINEL) ((no = new Set()), (i[0] = no));

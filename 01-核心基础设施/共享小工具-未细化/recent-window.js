@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
-var Xw = 150,
+var DEFAULT_RECENT_WINDOW_MS = 150,
   REFUSE_INPUT_WINDOW_MS = 250;
-function isRecent(e, n = Xw) {
+function isRecent(e, n = DEFAULT_RECENT_WINDOW_MS) {
   let t = Date.now() - e;
   return t >= 0 && t < n;
 }
@@ -22,4 +22,4 @@ function useIsKeyRecent(e) {
     return isRecent(n.at);
   };
 }
-export { Xw, REFUSE_INPUT_WINDOW_MS, isRecent, useIsKeyRecent };
+export { DEFAULT_RECENT_WINDOW_MS, REFUSE_INPUT_WINDOW_MS, isRecent, useIsKeyRecent };

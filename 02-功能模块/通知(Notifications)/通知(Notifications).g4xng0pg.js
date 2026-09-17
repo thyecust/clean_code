@@ -11,21 +11,21 @@ import { K, he, sn, dl } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { NU } from "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
+import { NOTIFICATION_CHANNELS } from "../图片-截图-ComputerUse/settings-option-values.js";
 import { executeNotificationHooks } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Eo } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
+import { resolveSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 import { isPlainObject, parsePlist } from "../../01-核心基础设施/共享小工具-未细化/plist-parser.js";
 var m = /^[A-Za-z0-9][A-Za-z0-9._+-]{0,63}$/;
-function a9e(e) {
+function sanitizeTerminalName(e) {
   if (e == null) return;
   if (m.test(e)) return fromSanitizer_SANITIZER_OUTPUT_ONLY(e);
   return S("nonconforming");
 }
-async function yv(e, t, { storageV5: o, credentials: r } = {}) {
-  let l = Eo("preferredNotifChannel", "auto").value;
+async function showNotification(e, t, { storageV5: o, credentials: r } = {}) {
+  let l = resolveSetting("preferredNotifChannel", "auto").value;
   await executeNotificationHooks({ id: K(), project: { originalCwd: he(), projectRoot: sn() } }, e, {
     storageV5: o,
     credentials: r,
@@ -34,11 +34,11 @@ async function yv(e, t, { storageV5: o, credentials: r } = {}) {
   if (s === "error") logFeatureBad("notification_show", "send_failed");
   else logFeatureOk("notification_show");
   logEvent("tengu_notification_method_used", {
-    configured_channel: fromEnum(NU.includes(l) ? l : "invalid"),
+    configured_channel: fromEnum(NOTIFICATION_CHANNELS.includes(l) ? l : "invalid"),
     notification_type: fromEnum(e.notificationType),
     method_used: fromEnum(s),
-    term: a9e(a.terminal),
-    attacher_term: a9e(dl()?.terminal),
+    term: sanitizeTerminalName(a.terminal),
+    attacher_term: sanitizeTerminalName(dl()?.terminal),
   });
 }
 var c = "Claude Code";
@@ -147,4 +147,4 @@ async function h() {
     );
   }
 }
-export { a9e, yv };
+export { sanitizeTerminalName, showNotification };

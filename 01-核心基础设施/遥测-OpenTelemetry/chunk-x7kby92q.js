@@ -26,11 +26,11 @@ import {
   ett,
   $Be,
 } from "../设置-配置/设置-配置.aqbb35ee.js";
-import { Hd } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { isDesktopHostEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { kar, getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { loadExtraCACerts, clearCACertsCache, loadMTLSClientMaterial, getLoadedMTLSPaths, clearMTLSCache, configureGlobalAgents, clearProxyCache } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { LRe } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
-import { eb } from "../核心工具-进程与信号/chunk-w78brv7j.js";
+import { PROCESS_WRAPPER_ENV_VAR } from "../核心工具-进程与信号/process-wrapper-launcher.js";
 import { setSettingsColorEnv } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { isRemoteSettingsEligible } from "../共享小工具-未细化/remote-settings-eligibility.js";
 import { lz } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
@@ -56,7 +56,7 @@ var l = Object.freeze({
 });
 function T() {
   let t = Ie(process.env.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST),
-    s = Hd(),
+    s = isDesktopHostEntrypoint(),
     e = process.env.CLAUDE_CODE_ENVIRONMENT_KIND;
   return {
     managedByHost: t || !!process.env.CLAUDE_CODE_HOST_AUTH_ENV_VAR,
@@ -68,7 +68,7 @@ function T() {
 var H = new Set(["policySettings", "projectSettings", "localSettings"]),
   B = [],
   K = new Set([
-    eb,
+    PROCESS_WRAPPER_ENV_VAR,
     "CLAUDE_CODE_CUSTOM_OAUTH_URL",
     "CLAUDE_CODE_SYNC_SKILLS",
     "CLAUDE_CODE_SYNC_PLUGINS",
@@ -577,7 +577,7 @@ class y {
     for (let { key: e, value: o } of t.values())
       if ($Be(e, o)) process.env[e] = o;
     setSettingsColorEnv(this.settingsColorEnv);
-    let s = process.env[eb];
+    let s = process.env[PROCESS_WRAPPER_ENV_VAR];
     if (!s || s === this.materializedProcessWrapper) {
       let e = [
         getSettingsForSource("policySettings")?.processWrapper,
@@ -585,7 +585,7 @@ class y {
         Nr("userSettings") ? getSettingsForSource("userSettings")?.processWrapper : void 0,
       ].find((o) => typeof o === "string" && o !== "");
       if (e !== void 0)
-        ((process.env[eb] = e), (this.materializedProcessWrapper = e));
+        ((process.env[PROCESS_WRAPPER_ENV_VAR] = e), (this.materializedProcessWrapper = e));
     }
     this.enforceManagedOtelFamilyDominance();
   }

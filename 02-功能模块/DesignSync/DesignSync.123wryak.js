@@ -12,16 +12,16 @@
 import { getOAuthHeaders, ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, dt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { YA, tT, wdt, $Pe, UPe, Tdt, C6n, Edt } from "../Memory-CLAUDE.md/chunk-9b6sc1gb.js";
-import { mqe, Vee, C9, NPe, gqe, Msn, Kee } from "./chunk-20rab5yy.js";
-import { FPe, Fsn, A6n } from "./chunk-aycc6z76.js";
-import "../认证-OAuth登录/chunk-5bg9xwqx.js";
-import { p7e, ySn, uK } from "./chunk-5kyac4wk.js";
+import { DesignSessionState, normalizeRelativePath, isClaudeInstructionPath, isGlobPattern, MAX_PATH_LENGTH, isPathAllowedByPatterns, registerPlan, getPlanById } from "../Memory-CLAUDE.md/chunk-9b6sc1gb.js";
+import { isDesignConsentBit, getDesignConsentPrompt, seedDesignConsentBit, resolveDesignAuth, wouldNeedDesignConsent, needsDesignAuthorization, postDesignConsent } from "./design-consent-and-grants.js";
+import { isDesignOauthClientConfigured, isRemoteSession, startDesignBrowserLogin } from "./design-oauth-credentials.js";
+import "../认证-OAuth登录/oauth-login-flow.js";
+import { DESIGN_SYNC_TOOL_NAME, DESIGN_SYNC_TOOL_DESCRIPTION, uK } from "./design-sync-tool-metadata.js";
 import { s, T, O, v, c, Qe, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { constants } from "fs";
@@ -177,7 +177,7 @@ var ge = createLazyValue(() =>
     Qe({
       path: s()
         .min(1)
-        .max(UPe)
+        .max(MAX_PATH_LENGTH)
         .describe("Path within the project, e.g. components/button/index.html"),
       localPath: s()
         .min(1)
@@ -206,7 +206,7 @@ var ge = createLazyValue(() =>
         .describe('Short human-readable label ("Primary buttons"), not a path'),
       path: s()
         .min(1)
-        .max(UPe)
+        .max(MAX_PATH_LENGTH)
         .describe(
           "Project-relative path to the preview/spec file this card renders",
         ),
@@ -252,7 +252,7 @@ var ge = createLazyValue(() =>
           "Required for all methods except list_projects and create_project",
         ),
       path: s().min(1).optional().describe("get_file: file path to read"),
-      writes: v(s().min(1).max(UPe))
+      writes: v(s().min(1).max(MAX_PATH_LENGTH))
         .max(256)
         .optional()
         .describe(
@@ -260,7 +260,7 @@ var ge = createLazyValue(() =>
             "pattern and max 256 entries \u2014 use broader globs to cover more " +
             "files rather than enumerating paths.",
         ),
-      deletes: v(s().min(1).max(UPe))
+      deletes: v(s().min(1).max(MAX_PATH_LENGTH))
         .max(256)
         .optional()
         .describe(
@@ -279,7 +279,7 @@ var ge = createLazyValue(() =>
           "write_files: file contents to write (max 256 per call \u2014 split " +
             "larger bundles across multiple write_files calls under the same planId).",
         ),
-      paths: v(s().min(1).max(UPe))
+      paths: v(s().min(1).max(MAX_PATH_LENGTH))
         .max(256)
         .optional()
         .describe(
@@ -434,14 +434,14 @@ function F(e) {
             : r === t && t > 0
               ? " from disk"
               : "";
-      return `Write ${t} ${x(t, "file")}${o}`;
+      return `Write ${t} ${pluralize(t, "file")}${o}`;
     }
     case "delete_files":
-      return `Delete ${e.paths?.length ?? 0} ${x(e.paths?.length ?? 0, "file")}`;
+      return `Delete ${e.paths?.length ?? 0} ${pluralize(e.paths?.length ?? 0, "file")}`;
     case "register_assets":
-      return `Register ${e.assets?.length ?? 0} ${x(e.assets?.length ?? 0, "asset card")}`;
+      return `Register ${e.assets?.length ?? 0} ${pluralize(e.assets?.length ?? 0, "asset card")}`;
     case "unregister_assets":
-      return `Unregister ${e.paths?.length ?? 0} ${x(e.paths?.length ?? 0, "asset card")}`;
+      return `Unregister ${e.paths?.length ?? 0} ${pluralize(e.paths?.length ?? 0, "asset card")}`;
     case "create_project":
       return e.name
         ? `Create project "${e.name}"`
@@ -476,8 +476,8 @@ class S extends Error {
 }
 var je = new Set(["default", "acceptEdits", "auto"]);
 async function ze(e, t) {
-  let r = await Msn(e),
-    o = await NPe(e);
+  let r = await needsDesignAuthorization(e),
+    o = await resolveDesignAuth(e);
   if (
     !o.ok &&
     o.reason === "needs_design_login" &&
@@ -487,7 +487,7 @@ async function ze(e, t) {
     t?.permissionMode !== void 0 &&
     je.has(t.permissionMode)
   ) {
-    let i = await A6n(t?.signal);
+    let i = await startDesignBrowserLogin(t?.signal);
     if (i.ok) return i.accessToken;
     throw new S(`DesignSync needs design-system authorization. ${i.message}`);
   }
@@ -506,7 +506,7 @@ function Ie(e) {
     t == null ||
     typeof t !== "object" ||
     t.error !== "needs_consent" ||
-    !mqe(t.consent)
+    !isDesignConsentBit(t.consent)
   )
     return null;
   return t.consent;
@@ -520,7 +520,7 @@ function te(e) {
   );
 }
 var DesignSyncTool = buildTool({
-  name: p7e,
+  name: DESIGN_SYNC_TOOL_NAME,
   searchHint:
     "sync local design system components to a claude.ai/design project",
   shouldDefer: !0,
@@ -529,10 +529,10 @@ var DesignSyncTool = buildTool({
     return uK();
   },
   async description() {
-    return ySn;
+    return DESIGN_SYNC_TOOL_DESCRIPTION;
   },
   async prompt() {
-    return ySn;
+    return DESIGN_SYNC_TOOL_DESCRIPTION;
   },
   get inputSchema() {
     return fe();
@@ -567,7 +567,7 @@ var DesignSyncTool = buildTool({
         if (o.length <= 50) return o.join(", ");
         return `${o.length} paths (too many to list here; the user's permission prompt shows the full list)`;
       };
-      return `project ${e.projectId ?? "?"} from ${resolve(Q(), e.localDir ?? ".")}: write ${t(e.writes)}; delete ${t(e.deletes)}`;
+      return `project ${e.projectId ?? "?"} from ${resolve(getCwd(), e.localDir ?? ".")}: write ${t(e.writes)}; delete ${t(e.deletes)}`;
     }
     if (e.method === "create_project")
       return `create project "${e.name ?? "?"}"`;
@@ -615,11 +615,11 @@ var DesignSyncTool = buildTool({
     return { result: !0 };
   },
   async checkPermissions(e, t) {
-    let r = await gqe(t.toolState.get(YA), t.credentials),
+    let r = await wouldNeedDesignConsent(t.toolState.get(DesignSessionState), t.credentials),
       o = { ...e, __consentBitShown: r, __consentAskCanReachUser: te(t) },
-      i = r !== null ? Vee(r) : null,
+      i = r !== null ? getDesignConsentPrompt(r) : null,
       d =
-        (await Msn(t.credentials)) && FPe() && !Fsn()
+        (await needsDesignAuthorization(t.credentials)) && isDesignOauthClientConfigured() && !isRemoteSession()
           ? "DesignSync needs design-system authorization for your claude.ai account. Approving opens your browser to authorize " +
             "access to your org's design-system projects \u2014 this session's " +
             "own authentication is not changed."
@@ -656,15 +656,15 @@ var DesignSyncTool = buildTool({
         },
       };
     if (e.method === "finalize_plan") {
-      let h = (e.writes ?? []).map(tT),
-        u = (e.deletes ?? []).map(tT),
+      let h = (e.writes ?? []).map(normalizeRelativePath),
+        u = (e.deletes ?? []).map(normalizeRelativePath),
         g;
       try {
         g = await oe(e.localDir);
       } catch (z) {
         return {
           behavior: "deny",
-          message: `localDir does not exist or is not accessible: ${e.localDir ?? Q()} (${l(z)})`,
+          message: `localDir does not exist or is not accessible: ${e.localDir ?? getCwd()} (${l(z)})`,
           decisionReason: {
             type: "safetyCheck",
             reason: "localDir not found",
@@ -672,10 +672,10 @@ var DesignSyncTool = buildTool({
           },
         };
       }
-      let p = h.filter($Pe),
-        f = h.filter((z) => !$Pe(z)),
-        _ = u.filter($Pe),
-        y = u.filter((z) => !$Pe(z)),
+      let p = h.filter(isGlobPattern),
+        f = h.filter((z) => !isGlobPattern(z)),
+        _ = u.filter(isGlobPattern),
+        y = u.filter((z) => !isGlobPattern(z)),
         A = await Promise.all(
           f.map(async (z) => {
             try {
@@ -688,7 +688,7 @@ var DesignSyncTool = buildTool({
         P = f.filter((z, ae) => !A[ae]),
         ie =
           f.length - P.length > 0 && P.length > 0
-            ? `\u26A0 ${P.length} of ${f.length} literal write ${x(f.length, "path")} not found under localDir \u2014 ` +
+            ? `\u26A0 ${P.length} of ${f.length} literal write ${pluralize(f.length, "path")} not found under localDir \u2014 ` +
               `expected if they use a different localPath or inline data, otherwise check for a typo: ${P.slice(0, 5).join(", ")}` +
               (P.length > 5 ? `, \u2026 and ${P.length - 5} more` : "")
             : null;
@@ -699,12 +699,12 @@ var DesignSyncTool = buildTool({
           `To project: ${ee(e.projectId)}`,
           `From folder: ${g}`,
           f.length > 0
-            ? `Upload ${f.length} ${x(f.length, "file")}: ${f.join(", ")}`
+            ? `Upload ${f.length} ${pluralize(f.length, "file")}: ${f.join(", ")}`
             : null,
           p.length > 0 ? `Upload files matching: ${p.join(", ")}` : null,
           ie,
           y.length > 0
-            ? `Delete ${y.length} ${x(y.length, "file")}: ${y.join(", ")}`
+            ? `Delete ${y.length} ${pluralize(y.length, "file")}: ${y.join(", ")}`
             : null,
           _.length > 0 ? `Delete files matching: ${_.join(", ")}` : null,
         ].filter((z) => z !== null).join(`
@@ -744,7 +744,7 @@ var DesignSyncTool = buildTool({
     let r = t.abortController.signal;
     if (e.method === "report_validate")
       return { data: { method: "report_validate" } };
-    let o = t.toolState.get(YA),
+    let o = t.toolState.get(DesignSessionState),
       i = e.__consentBitShown ?? null,
       d = getToolPermissionContext(t),
       a = e.__consentAskCanReachUser ?? !1,
@@ -760,7 +760,7 @@ var DesignSyncTool = buildTool({
         })),
         i !== null && h && e.method === "finalize_plan")
       )
-        await Kee(o, i, t.credentials).catch((p) => {
+        await postDesignConsent(o, i, t.credentials).catch((p) => {
           n(
             `Proactive design consent POST for finalize_plan failed (${l(p)}); the next RPC call's 403 intercept will retry.`,
           );
@@ -771,7 +771,7 @@ var DesignSyncTool = buildTool({
           ((g = await re(o, e, u, r)),
           i !== null && e.method !== "finalize_plan")
         )
-          C9(o, i, !0);
+          seedDesignConsentBit(o, i, !0);
       } catch (p) {
         let f = Ie(p);
         if (f === null) {
@@ -787,19 +787,19 @@ var DesignSyncTool = buildTool({
           throw p;
         } else if (f !== i)
           throw (
-            C9(o, f, !1),
+            seedDesignConsentBit(o, f, !1),
             new S(
-              `${Vee(f)} The user hasn't granted this yet \u2014 ask them to retry (the prompt will show on the next call) or run /design consent.`,
+              `${getDesignConsentPrompt(f)} The user hasn't granted this yet \u2014 ask them to retry (the prompt will show on the next call) or run /design consent.`,
             )
           );
         else if (!h)
           throw (
-            C9(o, f, !1),
+            seedDesignConsentBit(o, f, !1),
             new S(
-              `${Vee(f)} The user hasn't granted this \u2014 run /design consent to grant it (it can't be approved automatically in this permission mode).`,
+              `${getDesignConsentPrompt(f)} The user hasn't granted this \u2014 run /design consent to grant it (it can't be approved automatically in this permission mode).`,
             )
           );
-        else (await Kee(o, f, t.credentials), (g = await re(o, e, u, r)));
+        else (await postDesignConsent(o, f, t.credentials), (g = await re(o, e, u, r)));
       }
       return { data: g };
     } catch (g) {
@@ -842,10 +842,10 @@ var Pe = new Set([
   ]),
   ne = 12582912;
 async function oe(e) {
-  return realpath(resolve(Q(), e ?? "."));
+  return realpath(resolve(getCwd(), e ?? "."));
 }
 async function Se(e, t) {
-  let r = tT(e.path);
+  let r = normalizeRelativePath(e.path);
   if (e.localPath === void 0) {
     if (e.data === void 0)
       throw Error(`write_files: ${r} has neither data nor localPath`);
@@ -954,12 +954,12 @@ async function re(e, t, r, o) {
     }
     case "finalize_plan": {
       let i = w(t.projectId, "projectId", t.method),
-        d = w(t.writes, "writes", t.method).map(tT),
-        a = w(t.deletes, "deletes", t.method).map(tT),
+        d = w(t.writes, "writes", t.method).map(normalizeRelativePath),
+        a = w(t.deletes, "deletes", t.method).map(normalizeRelativePath),
         h = await oe(t.localDir);
       return {
         method: "finalize_plan",
-        planId: C6n(e, { projectId: i, writes: d, deletes: a, localDir: h }),
+        planId: registerPlan(e, { projectId: i, writes: d, deletes: a, localDir: h }),
         writes: d,
         deletes: a,
       };
@@ -968,17 +968,17 @@ async function re(e, t, r, o) {
       let i = w(t.projectId, "projectId", t.method),
         d = w(t.planId, "planId", t.method),
         a = w(t.files, "files", t.method),
-        h = Edt(e, d);
+        h = getPlanById(e, d);
       if (!h || h.projectId !== i)
         throw Error(
           "Plan token is missing or does not match this project. Call finalize_plan first.",
         );
-      let u = a.map((y) => y.path).filter(wdt);
+      let u = a.map((y) => y.path).filter(isClaudeInstructionPath);
       if (u.length > 0)
         throw Error(
           `Cannot write reserved paths: ${u.join(", ")}. CLAUDE.md and .claude/ carry instructions to the design agent and are blocked regardless of the plan.`,
         );
-      let g = a.map((y) => tT(y.path)).filter((y) => !Tdt(y, h.writes));
+      let g = a.map((y) => normalizeRelativePath(y.path)).filter((y) => !isPathAllowedByPatterns(y, h.writes));
       if (g.length > 0)
         throw Error(
           `Cannot write paths outside the finalized plan: ${g.join(", ")}. Re-run finalize_plan with the full set.`,
@@ -999,33 +999,33 @@ async function re(e, t, r, o) {
       let i = w(t.projectId, "projectId", t.method),
         d = w(t.planId, "planId", t.method),
         a = w(t.paths, "paths", t.method),
-        h = Edt(e, d);
+        h = getPlanById(e, d);
       if (!h || h.projectId !== i)
         throw Error(
           "Plan token is missing or does not match this project. Call finalize_plan first.",
         );
-      let u = a.filter(wdt);
+      let u = a.filter(isClaudeInstructionPath);
       if (u.length > 0)
         throw Error(
           `Cannot delete reserved paths: ${u.join(", ")}. CLAUDE.md and .claude/ carry instructions to the design agent and are blocked regardless of the plan.`,
         );
-      let g = a.map(tT).filter((f) => !Tdt(f, h.deletes));
+      let g = a.map(normalizeRelativePath).filter((f) => !isPathAllowedByPatterns(f, h.deletes));
       if (g.length > 0)
         throw Error(
           `Cannot delete paths outside the finalized plan: ${g.join(", ")}. Re-run finalize_plan with the full set.`,
         );
-      return { method: "delete_files", deleted: await Y(r, i, a.map(tT), o) };
+      return { method: "delete_files", deleted: await Y(r, i, a.map(normalizeRelativePath), o) };
     }
     case "register_assets": {
       let i = w(t.projectId, "projectId", t.method),
         d = w(t.planId, "planId", t.method),
         a = w(t.assets, "assets", t.method),
-        h = Edt(e, d);
+        h = getPlanById(e, d);
       if (!h || h.projectId !== i)
         throw Error(
           "Plan token is missing or does not match this project. Call finalize_plan first.",
         );
-      let u = a.map((p) => tT(p.path)).filter((p) => !Tdt(p, h.writes));
+      let u = a.map((p) => normalizeRelativePath(p.path)).filter((p) => !isPathAllowedByPatterns(p, h.writes));
       if (u.length > 0)
         throw Error(
           `Cannot register paths outside the finalized plan: ${u.join(", ")}. Re-run finalize_plan with the full set.`,
@@ -1033,7 +1033,7 @@ async function re(e, t, r, o) {
       let g = 0;
       for (let p of a) {
         if (o.aborted) throw new Ve();
-        (await J(r, i, { ...p, path: tT(p.path) }, o), g++);
+        (await J(r, i, { ...p, path: normalizeRelativePath(p.path) }, o), g++);
       }
       return { method: "register_assets", registered: g };
     }
@@ -1041,18 +1041,18 @@ async function re(e, t, r, o) {
       let i = w(t.projectId, "projectId", t.method),
         d = w(t.planId, "planId", t.method),
         a = w(t.paths, "paths", t.method),
-        h = Edt(e, d);
+        h = getPlanById(e, d);
       if (!h || h.projectId !== i)
         throw Error(
           "Plan token is missing or does not match this project. Call finalize_plan first.",
         );
-      let u = a.map(tT).filter((p) => !Tdt(p, h.deletes));
+      let u = a.map(normalizeRelativePath).filter((p) => !isPathAllowedByPatterns(p, h.deletes));
       if (u.length > 0)
         throw Error(
           `Cannot unregister cards for paths outside the finalized plan's deletes: ${u.join(", ")}. Re-run finalize_plan with the full set.`,
         );
       let g = 0;
-      for (let p of a.map(tT)) {
+      for (let p of a.map(normalizeRelativePath)) {
         if (o.aborted) throw new Ve();
         (await H(r, i, p, o), g++);
       }

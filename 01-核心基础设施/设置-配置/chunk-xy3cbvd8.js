@@ -10,8 +10,8 @@
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { qt } from "../共享小工具-未细化/chunk-km6n9zrg.js";
+import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getFileStorage } from "../共享小工具-未细化/file-storage.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { Or, QN } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -23,7 +23,7 @@ import { join as d } from "path";
 var g = "image-cache",
   x = 200;
 function f() {
-  return d(be(), g, K());
+  return d(getClaudeConfigDir(), g, K());
 }
 async function O() {
   let e = f();
@@ -33,17 +33,17 @@ function p(e, t) {
   let r = t.split("/")[1] || "png";
   return d(f(), `${e}.${r}`);
 }
-function D7(e, t) {
+function setImageCachePath(e, t) {
   if (e.type !== "image") return null;
   let r = p(e.id, e.mediaType || "image/png");
   return (t((o) => u(o, e.id, r)), r);
 }
-async function L7(e, t) {
+async function storeImageToCache(e, t) {
   let r = await h(e);
   if (r) t((o) => u(o, e.id, r));
   return r;
 }
-async function R9n(e, t) {
+async function storeImageBatchToCache(e, t) {
   let r = new Map();
   for (let [o, i] of Object.entries(e))
     if (i.type === "image") {
@@ -88,7 +88,7 @@ function u(e, t, r) {
 }
 async function k9n() {
   let e = ae(),
-    t = d(be(), g),
+    t = d(getClaudeConfigDir(), g),
     r = K();
   try {
     let o;
@@ -111,7 +111,7 @@ async function k9n() {
   } catch {}
 }
 import { join as _ } from "path";
-var yan = "published-floor.json",
+var PUBLISHED_FLOOR_FILE_NAME = "published-floor.json",
   y = 1,
   R = 32,
   S = 65536,
@@ -129,7 +129,7 @@ var yan = "published-floor.json",
     }),
   );
 function F() {
-  return _(QN(), yan);
+  return _(QN(), PUBLISHED_FLOOR_FILE_NAME);
 }
 function l() {
   return Or().publishedCatalogFloorMarks;
@@ -137,7 +137,7 @@ function l() {
 async function x9n(e) {
   return (await w(), l().get(e)?.version ?? 0);
 }
-async function Z1t(e, t, r = Date.now()) {
+async function recordPublishedCatalogFloorVersion(e, t, r = Date.now()) {
   await w();
   let o = l().get(e);
   if (o !== void 0 && o.version >= t.version) return;
@@ -165,7 +165,7 @@ function v(e) {
 async function C() {
   let e;
   try {
-    e = await qt().readRange(F(), 0, S + 1);
+    e = await getFileStorage().readRange(F(), 0, S + 1);
   } catch (r) {
     if (!W(r))
       n(
@@ -193,7 +193,7 @@ async function P() {
     let e = [...l().entries()]
         .sort(([, r], [, o]) => o.recordedAt - r.recordedAt)
         .slice(0, R),
-      t = qt();
+      t = getFileStorage();
     (await t.mkdir(QN()),
       await t.atomicWrite(
         F(),
@@ -204,23 +204,23 @@ async function P() {
     n(`[publishedCatalog] floor file write failed: ${A(e) ?? "unknown"}`);
   }
 }
-function W4() {
+function getSettingsWithMcpErrors() {
   let e = getSettingsWithErrors(),
     t = MCP_SETTINGS_SCOPES.flatMap((r) =>
       getMcpConfigsByScope(r).errors.map((o) => (o.file ? o : { ...o, file: cw(r) })),
     );
   return { settings: e.settings, errors: [...e.errors, ...t] };
 }
-function uze() {
+function getLocalSettingsErrorsBlockingWrite() {
   return getLocalSettingsValidationErrors().filter((e) => !e.preserveOnWrite);
 }
-function Dbe() {
+function getGatingSettingsErrors() {
   let e = getSettingsFilePathForSource("localSettings");
   return [
-    ...W4().errors.filter(
+    ...getSettingsWithMcpErrors().errors.filter(
       (r) => !r.mcpErrorMetadata && r.severity !== "warning" && r.file !== e,
     ),
-    ...uze(),
+    ...getLocalSettingsErrorsBlockingWrite(),
   ];
 }
-export { D7, L7, R9n, k9n, yan, x9n, Z1t, W4, uze, Dbe };
+export { setImageCachePath, storeImageToCache, storeImageBatchToCache, k9n, PUBLISHED_FLOOR_FILE_NAME, x9n, recordPublishedCatalogFloorVersion, getSettingsWithMcpErrors, getLocalSettingsErrorsBlockingWrite, getGatingSettingsErrors };

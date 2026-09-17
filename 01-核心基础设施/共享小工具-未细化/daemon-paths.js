@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { join as o } from "path";
 function getDaemonJsonPath() {
-  return o(be(), "daemon.json");
+  return o(getClaudeConfigDir(), "daemon.json");
 }
 function getDaemonLogPath() {
-  return o(be(), "daemon.log");
+  return o(getClaudeConfigDir(), "daemon.log");
 }
 export { getDaemonJsonPath, getDaemonLogPath };

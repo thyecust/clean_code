@@ -9,10 +9,10 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 1 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 var f = 500;
 function i(t) {
-  return Sn(t).replaceAll("`", "").slice(0, f);
+  return replaceControlChars(t).replaceAll("`", "").slice(0, f);
 }
 function buildSettingsFixPrompt(t, { flagSettingsPath: n } = {}) {
   if (t.length === 0) return null;

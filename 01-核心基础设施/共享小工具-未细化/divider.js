@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { LP } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { HORIZONTAL_LINE_GLYPH } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { useTerminalSize } from "./use-terminal-size.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { te } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -16,7 +16,7 @@ import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 function Divider(I) {
   let a = _(27),
     { width: J, color: o, char: w, padding: N, title: i, titleAlign: j } = I,
-    m = w === void 0 ? LP : w,
+    m = w === void 0 ? HORIZONTAL_LINE_GLYPH : w,
     K = N === void 0 ? 0 : N,
     L = j === void 0 ? "center" : j,
     { columns: O } = useTerminalSize(),

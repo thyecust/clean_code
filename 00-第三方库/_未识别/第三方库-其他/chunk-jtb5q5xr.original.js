@@ -10,7 +10,7 @@
 import { nu, EA } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { hexEncodingModule } from "../../../01-核心基础设施/共享小工具-未细化/hex-encoding-module.js";
 import { Mie } from "./chunk-cpfawwsx.js";
-import { E2e, s_, hS, q5 } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
+import { utilBufferFromModule, utilUtf8Module, utilBase64Module, fetchHttpHandlerModule } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
 import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
 import { commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var Rb = commonJS(function (wr) {
@@ -548,7 +548,7 @@ var Rb = commonJS(function (wr) {
 var fe = commonJS(function (qe) {
   Object.defineProperty(qe, "__esModule", { value: !0 });
   qe.ChecksumStream = void 0;
-  var Jr = hS(),
+  var Jr = utilBase64Module(),
     Wr = importMetaRequire("stream");
   class De extends Wr.Duplex {
     expectedChecksum;
@@ -626,7 +626,7 @@ var ve = commonJS(function (Fe) {
 var Ve = commonJS(function (Je) {
   Object.defineProperty(Je, "__esModule", { value: !0 });
   Je.createChecksumStream = void 0;
-  var Zr = hS(),
+  var Zr = utilBase64Module(),
     Kr = B(),
     Xr = ve(),
     es = ({
@@ -970,10 +970,10 @@ var yt = commonJS(function (lt) {
 var Tt = commonJS(function (wt) {
   Object.defineProperty(wt, "__esModule", { value: !0 });
   wt.sdkStreamMixin = void 0;
-  var _s = q5(),
-    Ms = hS(),
+  var _s = fetchHttpHandlerModule(),
+    Ms = utilBase64Module(),
     Cs = hexEncodingModule(),
-    Os = s_(),
+    Os = utilUtf8Module(),
     bt = B(),
     gt = "The stream has already been transformed.",
     $s = (e) => {
@@ -1024,7 +1024,7 @@ var Ct = commonJS(function (_t) {
   Object.defineProperty(_t, "__esModule", { value: !0 });
   _t.sdkStreamMixin = void 0;
   var Rs = EA(),
-    Bs = E2e(),
+    Bs = utilBufferFromModule(),
     me = importMetaRequire("stream"),
     Is = Tt(),
     Et = "The stream has already been transformed.",
@@ -1092,8 +1092,8 @@ var Pt = commonJS(function (It) {
   }
 });
 var q0n = commonJS(function (y) {
-  var Nt = hS(),
-    zt = s_(),
+  var Nt = utilBase64Module(),
+    zt = utilUtf8Module(),
     At = fe(),
     Dt = Ge(),
     qt = at(),
@@ -1876,8 +1876,8 @@ var Oke = commonJS(function (Ci) {
     T = Rb(),
     x = w2e(),
     V = nu(),
-    oe = hS(),
-    Me = s_(),
+    oe = utilBase64Module(),
+    Me = utilUtf8Module(),
     P = async (e = new Uint8Array(), t) => {
       if (e instanceof Uint8Array) return ie.Uint8ArrayBlobAdapter.mutate(e);
       if (!e) return ie.Uint8ArrayBlobAdapter.mutate(new Uint8Array());

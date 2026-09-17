@@ -7,19 +7,19 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
+import { readEmbeddedAssetSync } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
 import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var e = importMetaRequire("./SKILL-8cc0kwr3.md");
 var t = "./template.html-cfc12d66.txt.zst";
-var a = Ke(t, import.meta.dirname);
+var a = readEmbeddedAssetSync(t, import.meta.dirname);
 var r = importMetaRequire("./SKILL-5vqnvygj.md");
 var o = "./template.html-cad26093.txt.zst";
-var s = Ke(o, import.meta.dirname);
+var s = readEmbeddedAssetSync(o, import.meta.dirname);
 var i = importMetaRequire("./SKILL-sq87gt02.md");
 var n = importMetaRequire("./template.html-j5g90adz.txt");
 var l = importMetaRequire("./SKILL-z3x847gz.md");
 var h = "./template.html-4414d93a.txt.zst";
-var d = Ke(h, import.meta.dirname);
+var d = readEmbeddedAssetSync(h, import.meta.dirname);
 var SKILL_MD = { dashboard: e, report: l, "data-table": r, explainer: i },
   SKILL_FILES = {
     dashboard: { "template.html": a },

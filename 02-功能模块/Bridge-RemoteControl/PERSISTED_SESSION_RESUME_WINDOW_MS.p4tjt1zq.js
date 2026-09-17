@@ -9,9 +9,9 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 14 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -49,7 +49,7 @@ function g(e) {
 }
 function P(e) {
   let r = getProjectKey(e);
-  return _n(r) ? Ce.bridgePointer(r) : null;
+  return isValidPathSegment(r) ? STORAGE_KEYS.bridgePointer(r) : null;
 }
 async function writeBridgePointer(e, r, t) {
   let i = g(e),
@@ -66,7 +66,7 @@ async function writeBridgePointer(e, r, t) {
   try {
     return (
       await mkdir(dirname(i), { recursive: !0 }),
-      await On(i, b(r)),
+      await writeFileAtomic(i, b(r)),
       n(`[bridge:pointer] wrote ${i}`),
       !0
     );

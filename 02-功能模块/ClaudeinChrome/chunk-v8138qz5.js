@@ -16,11 +16,11 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { isAutoClassifierActive, sx, si } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { c2e, u2e } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
-import { yd, CFC_TOOL_PREFIX, CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL } from "./chunk-hnp84hf6.js";
+import { getClaudeInChromeState, CFC_TOOL_PREFIX, CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL } from "./claude-in-chrome-host.js";
 import { JGn, nTe, Ka, OVn, getCurrentSessionDisplayTitle } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { stripReservedMetaKeys } from "../../01-核心基础设施/共享小工具-未细化/mcp-tool-result-fields.js";
 import { getBrowserToolVerbPhrase } from "../../01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js";
@@ -62,21 +62,21 @@ function j(e, t) {
   return n === void 0 || r === void 0 || n !== r;
 }
 function A(e, t) {
-  let n = yd().lastExecutedTabUrlByScope.get(e);
+  let n = getClaudeInChromeState().lastExecutedTabUrlByScope.get(e);
   if (n === void 0) return;
   return j(n, t) ? { from: n, to: t } : void 0;
 }
 function E(e, t) {
-  yd().lastExecutedTabUrlByScope.set(e, t);
+  getClaudeInChromeState().lastExecutedTabUrlByScope.set(e, t);
 }
 var D = 200;
 function O(e, t) {
-  let n = yd().resolvedHostByToolUseId;
+  let n = getClaudeInChromeState().resolvedHostByToolUseId;
   if (n.size >= D) n.clear();
   n.set(e, t);
 }
 function q(e, t) {
-  let n = yd().resolvedUrlByToolUseId;
+  let n = getClaudeInChromeState().resolvedUrlByToolUseId;
   if (n.size >= D) n.clear();
   n.set(e, t);
 }
@@ -85,7 +85,7 @@ function F() {
   return { sessionId: e };
 }
 function Hhr(e, t) {
-  yd().bridgeBinding = { context: e, socketClient: t };
+  getClaudeInChromeState().bridgeBinding = { context: e, socketClient: t };
 }
 var V = new RegExp(`^${CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL}\\(([^)]+)\\)$`);
 function x(e) {
@@ -204,7 +204,7 @@ async function M(e) {
   }
 }
 async function H() {
-  let e = yd().bridgeBinding;
+  let e = getClaudeInChromeState().bridgeBinding;
   if (!e) return;
   try {
     return await withTimeout(
@@ -245,7 +245,7 @@ function B(e) {
 }
 function te(e) {
   if (!e) return !1;
-  let t = ft(e, ";").trim().toLowerCase();
+  let t = beforeFirst(e, ";").trim().toLowerCase();
   return ee.has(t === "image/jpg" ? "image/jpeg" : t);
 }
 async function ne(e, t) {
@@ -317,7 +317,7 @@ function ie(e) {
   };
 }
 async function ae(e, t, n, r) {
-  let o = yd().bridgeBinding;
+  let o = getClaudeInChromeState().bridgeBinding;
   if (!o)
     throw (
       logFeatureBad("chrome_permission_prompt", "binding_missing"),
@@ -437,7 +437,7 @@ function uon(e) {
         T,
         I = () => {
           if (!i) return;
-          if (T === void 0) yd().resolvedUrlByToolUseId.delete(i);
+          if (T === void 0) getClaudeInChromeState().resolvedUrlByToolUseId.delete(i);
           else q(i, T);
           if (h === void 0) JGn(i);
         };
@@ -574,11 +574,11 @@ function uon(e) {
     },
     call: async (o, s) => {
       let i = s.toolUseId,
-        m = i ? yd().resolvedHostByToolUseId.get(i)?.host : void 0,
-        d = i ? yd().resolvedUrlByToolUseId.get(i) : void 0;
+        m = i ? getClaudeInChromeState().resolvedHostByToolUseId.get(i)?.host : void 0,
+        d = i ? getClaudeInChromeState().resolvedUrlByToolUseId.get(i) : void 0;
       if (i)
-        (yd().resolvedHostByToolUseId.delete(i),
-          yd().resolvedUrlByToolUseId.delete(i));
+        (getClaudeInChromeState().resolvedHostByToolUseId.delete(i),
+          getClaudeInChromeState().resolvedUrlByToolUseId.delete(i));
       let l = getToolPermissionContext(s),
         a = s.options?.tools?.find((w) => matchesToolName(w, t)),
         u = sx(a, l) === "bypassPermissions",

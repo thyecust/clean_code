@@ -13,12 +13,12 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { l, A, Jg, AZ, GW, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { iu, x, us, oe, Wc, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { escapeRegExp, pluralize, truncateToCodePoints, truncateToCodeUnits, isWellFormed, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { nS, aBe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { rae, St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { ARTIFACT_ORIGIN_NOTES_TAG, isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
@@ -46,28 +46,28 @@ import {
   RU,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ea, Pw, Nr, Vn, hke, $q } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
-  Vd,
-  Hd,
-  lXt,
-  txe,
-  IA,
-  nxe,
-  UP,
-  N1,
-  Eg,
-  Cxt,
-  AL,
-  xPn,
+  getEnvEntrypoint,
+  isDesktopHostEntrypoint,
+  isCoworkEntrypoint,
+  isCoworkSession,
+  isSlackEntrypoint,
+  isTeamsEntrypoint,
+  isSdkEntrypoint,
+  getSessionEntrypoint,
+  isDesktopHostSession,
+  isTopLevelCoworkSession,
+  isClaudecodeEnv,
+  hasCoworkFrameArtifacts,
 } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { projectSettingsAliasesUserSettings, getSettingsForSource, getLegacyLocalSettingsOverlay, getAllPolicyTierSettings, getAdminTierEnvValue, getDurablePolicyTierSettings, getPolicySettingsOrigin } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { G5, KU, bkt, getUsableProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
 import {
   Vo,
   YZe,
@@ -101,41 +101,41 @@ import {
   sweepMarkerLookalikes,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { go, vge } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { isTeammate } from "../Teammates团队/chunk-811z9z0t.js";
-import { isTransportError, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { isTeammate } from "../Teammates团队/teammate-context.js";
+import { isTransportError, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import {
-  yme,
-  hAn,
-  d4t,
-  _An,
-  QEt,
-  p4t,
-  Pnr,
-  VG,
-  YK,
-  Dnr,
-  bve,
-  f4t,
-  BN,
-  ZEt,
-  m4t,
-  yAn,
-  Lnr,
-  eAt,
-  tU,
-  nse,
-  tAt,
-  Mnr,
-  Nnr,
-  DJe,
-  rse,
-  GJ,
-  c6,
-  SAn,
-  jN,
-  g4t,
-  ose,
-  MJe,
+  MERMAID_RUNTIME_BEGIN_PREFIX,
+  MERMAID_RUNTIME_END,
+  HLJS_RUNTIME_BEGIN_PREFIX,
+  HLJS_RUNTIME_END,
+  CHART_RUNTIME_BEGIN,
+  CHART_RUNTIME_END,
+  MERMAID_RUNTIME_SCRIPT_TAG,
+  FRAME_RUNTIME_BEGIN,
+  FRAME_RUNTIME_END,
+  hasRuntimeSentinel,
+  findBundleSafetyIssue,
+  TAG_NAME_TERMINATOR_CHARS,
+  trimAsciiWhitespace,
+  removeRanges,
+  hasCommentAndScriptTag,
+  findScriptCloseTagEnd,
+  findStyleCloseTag,
+  DATA_ID_ATTRIBUTE_LENGTH,
+  DATA_ID_ATTRIBUTE_PATTERN,
+  matchDataIdAttribute,
+  matchScriptOpenTag,
+  matchStyleOpenTag,
+  matchMermaidRuntimeScriptTag,
+  countNestedScriptTags,
+  findTagEnd,
+  getContentTypeForPath,
+  normalizeContentType,
+  isRenderableOrExecutableContentType,
+  sanitizeInvisibleCharacters,
+  WORKSHOP_MARKDOWN_EXTENSION,
+  MARKUP_CONTENT_TYPES,
+  EXECUTABLE_CONTENT_TYPES,
 } from "../图表-Mermaid/chunk-743atbtj.js";
 import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import {
@@ -164,10 +164,10 @@ import { xC, moe } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-
 import { isAnthropicHostedEnvironment, isByocEnvironment } from "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
 import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
 import { defineStoreField, createLocalStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
-import { AP } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
+import { decodeTokenClaims } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { CLAUDE_AI_MCP_SERVER_PREFIX, normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
 import { s, T, O, se, v, c, it, $e, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var oc = 8,
@@ -279,25 +279,25 @@ function cs(e) {
   return e.includes(lc);
 }
 function cc(e) {
-  return bve(e);
+  return findBundleSafetyIssue(e);
 }
 function ds(e) {
-  return DJe(e) >= 0;
+  return countNestedScriptTags(e) >= 0;
 }
 function fs(e) {
   let t = [],
-    r = e.indexOf(QEt),
+    r = e.indexOf(CHART_RUNTIME_BEGIN),
     o = -1;
   while (r >= 0) {
-    let d = r + QEt.length;
+    let d = r + CHART_RUNTIME_BEGIN.length;
     if (o < d) {
-      if (((o = e.indexOf(p4t, d)), o < 0)) break;
+      if (((o = e.indexOf(CHART_RUNTIME_END, d)), o < 0)) break;
     }
-    let p = e.indexOf(QEt, d);
-    if ((p < 0 || p > o) && ds(e.slice(d, o))) t.push([r, o + p4t.length]);
+    let p = e.indexOf(CHART_RUNTIME_BEGIN, d);
+    if ((p < 0 || p > o) && ds(e.slice(d, o))) t.push([r, o + CHART_RUNTIME_END.length]);
     r = p;
   }
-  return ZEt(e, t);
+  return removeRanges(e, t);
 }
 var as = `(function () {
   if (typeof Chart === 'undefined') return;
@@ -432,7 +432,7 @@ async function $r() {
   }
   if (cc(e) !== null)
     return (logFeatureSad("artifact_publish", "chart_bundle_unsafe"), null);
-  if (bve(as) !== null)
+  if (findBundleSafetyIssue(as) !== null)
     return (logFeatureSad("artifact_publish", "chart_init_unsafe"), null);
   let t =
     `
@@ -444,7 +444,7 @@ async function $r() {
     `</script>
 `;
   if (!ds(t)) return (logFeatureSad("artifact_publish", "chart_block_unstrippable"), null);
-  return QEt + t + p4t;
+  return CHART_RUNTIME_BEGIN + t + CHART_RUNTIME_END;
 }
 var G1e = {
     abnf: "Augmented Backus-Naur Form",
@@ -873,11 +873,11 @@ var G1e = {
     yaml: ["ruby"],
   };
 function uc(e) {
-  return bve(e);
+  return findBundleSafetyIssue(e);
 }
 var dc = 8;
 function fc(e) {
-  return `${d4t}${e}-->`;
+  return `${HLJS_RUNTIME_BEGIN_PREFIX}${e}-->`;
 }
 var ps = 4194304;
 function hs(e, t = 0) {
@@ -885,17 +885,17 @@ function hs(e, t = 0) {
     e[0] ===
       `
 ` &&
-    tAt(e, 1) > 0 &&
+    matchScriptOpenTag(e, 1) > 0 &&
     e.endsWith(`</script>
 `) &&
-    !e.includes(d4t) &&
-    DJe(e) === t
+    !e.includes(HLJS_RUNTIME_BEGIN_PREFIX) &&
+    countNestedScriptTags(e) === t
   );
 }
 var pc = 2,
   gs = {
-    beginPrefix: d4t,
-    end: _An,
+    beginPrefix: HLJS_RUNTIME_BEGIN_PREFIX,
+    end: HLJS_RUNTIME_END,
     lenDigitsMax: dc,
     maxSpan: ps,
     openTags: pc,
@@ -911,7 +911,7 @@ function ms(e) {
     if (((r = t.indexOf("<code", r)), r < 0)) return !1;
     let o = t[r + 5];
     if (o === void 0) return !1;
-    if (!f4t.has(o)) {
+    if (!TAG_NAME_TERMINATOR_CHARS.has(o)) {
       r += 5;
       continue;
     }
@@ -970,7 +970,7 @@ async function Lr() {
   if (t.hljs !== null)
     return (logFeatureSad("artifact_publish", "hljs_bundle_unsafe"), null);
   let r = bc();
-  if (bve(r) !== null) return (logFeatureSad("artifact_publish", "hljs_init_unsafe"), null);
+  if (findBundleSafetyIssue(r) !== null) return (logFeatureSad("artifact_publish", "hljs_init_unsafe"), null);
   let o =
     `
 <script>` +
@@ -990,7 +990,7 @@ async function Lr() {
 ` +
     fc(o.length) +
     o +
-    _An +
+    HLJS_RUNTIME_END +
     `
 `
   );
@@ -1093,7 +1093,7 @@ if(typeof MutationObserver!=='undefined')new MutationObserver(render).observe(ro
 }
 var kc = 8;
 function vc(e) {
-  return `${yme}${e}-->`;
+  return `${MERMAID_RUNTIME_BEGIN_PREFIX}${e}-->`;
 }
 var xc = 8388608;
 function bs(e, t = 0) {
@@ -1101,32 +1101,32 @@ function bs(e, t = 0) {
     e[0] ===
     `
 `
-      ? Mnr(e, 1)
+      ? matchStyleOpenTag(e, 1)
       : 0;
   if (
     !r ||
     !e.endsWith(`</script>
 `) ||
-    e.includes(yme)
+    e.includes(MERMAID_RUNTIME_BEGIN_PREFIX)
   )
     return !1;
   let o = 1 + r,
-    d = Lnr(e.slice(o));
+    d = findStyleCloseTag(e.slice(o));
   if (d === null || e.indexOf("<", o) !== o + d.data) return !1;
   let p = r > 7 ? 1 : 0,
-    _ = BN(e.slice(o + d.after)),
-    w = Nnr(_, 0);
+    _ = trimAsciiWhitespace(e.slice(o + d.after)),
+    w = matchMermaidRuntimeScriptTag(_, 0);
   if (w !== null) {
     if (!_.startsWith("</script>", w.len)) return !1;
     ((p += w.annotated ? 1 : 0), (_ = _.slice(w.len + 9)));
   }
-  let E = DJe(_);
+  let E = countNestedScriptTags(_);
   return E >= 0 && E + p === t;
 }
 var Sc = 3,
   ys = {
-    beginPrefix: yme,
-    end: hAn,
+    beginPrefix: MERMAID_RUNTIME_BEGIN_PREFIX,
+    end: MERMAID_RUNTIME_END,
     lenDigitsMax: kc,
     maxSpan: xc,
     openTags: Sc,
@@ -1140,7 +1140,7 @@ function _s(e) {
     if (((r = t.indexOf("<pre", r)), r < 0)) return !1;
     let o = t[r + 4];
     if (o === void 0) return !1;
-    if (!f4t.has(o)) {
+    if (!TAG_NAME_TERMINATOR_CHARS.has(o)) {
       r += 4;
       continue;
     }
@@ -1201,7 +1201,7 @@ function Ec(e) {
 }
 function Wwt() {
   let e = wc();
-  if (bve(e) !== null)
+  if (findBundleSafetyIssue(e) !== null)
     return (logFeatureSad("artifact_publish", "mermaid_init_unsafe"), null);
   let t =
       `
@@ -1209,7 +1209,7 @@ function Wwt() {
       _c +
       `
 ` +
-      Pnr +
+      MERMAID_RUNTIME_SCRIPT_TAG +
       `</script>
 <script>` +
       e +
@@ -1224,7 +1224,7 @@ function Wwt() {
 ` +
     vc(t.length) +
     t +
-    hAn +
+    MERMAID_RUNTIME_END +
     `
 `
   );
@@ -1272,7 +1272,7 @@ var Fr = (e) => e.attrs?.find((t) => t.name === "id")?.value,
   $c = new Set(["", "text/javascript", "application/javascript", "module"]),
   Mr = (e, t) => e.attrs?.some((r) => r.name === t) ?? !1,
   xs = (e) =>
-    BN(e.attrs?.find((t) => t.name === "type")?.value ?? "").toLowerCase(),
+    trimAsciiWhitespace(e.attrs?.find((t) => t.name === "type")?.value ?? "").toLowerCase(),
   Lc = (e) => xs(e) === "module",
   Fc = (e) =>
     e.tagName === "script" &&
@@ -1443,12 +1443,12 @@ async function As(e) {
   }
 }
 function B1e() {
-  return aBe().status === "ok" && Gi() !== null;
+  return aBe().status === "ok" && getSessionAccessToken() !== null;
 }
 function Dn() {
-  let e = Gi();
+  let e = getSessionAccessToken();
   if (e === null) return null;
-  let t = AP(e);
+  let t = decodeTokenClaims(e);
   return t !== null && typeof t === "object" && !Array.isArray(t) ? t : null;
 }
 function Ir() {
@@ -2144,7 +2144,7 @@ function Efe(e) {
       ? ""
       : " force:true discards that newer version \u2014 someone's save from the page itself, or another session's publish \u2014 so use it only when the user explicitly asks to overwrite.",
     contentReadsBlocked: d
-      ? lXt()
+      ? isCoworkEntrypoint()
         ? `The artifact content host is blocked from this session, so the live version can be neither read nor handed over here. ${Bn(p)} Tell the user, and publish again only once you can build on the live version.`
         : `This environment's network allowlist blocks the artifact content host, so the live version can be neither read nor handed over here until ${p} is added at environment settings \u2192 Code \u2192 Network access \u2192 Custom \u2192 Allowed domains. An admin can add the same entry to a shared environment from admin settings \u2192 Cloud environments; sessions that run in that environment get the access. Tell the user, and publish again only once you can build on the live version.`
       : null,
@@ -2206,9 +2206,9 @@ function Y1e(e, t, r) {
 }
 var BXe = "prr-anchor";
 function uqt(e) {
-  let t = rse(e, 7),
-    r = t - 1 - eAt;
-  return t > 0 && r > 0 && nse(e, r) !== 0 ? e.slice(0, r) + e.slice(t - 1) : e;
+  let t = findTagEnd(e, 7),
+    r = t - 1 - DATA_ID_ATTRIBUTE_LENGTH;
+  return t > 0 && r > 0 && matchDataIdAttribute(e, r) !== 0 ? e.slice(0, r) + e.slice(t - 1) : e;
 }
 function jXe(e) {
   let t = [],
@@ -2435,7 +2435,7 @@ function ku(e) {
   );
 }
 function vu(e) {
-  return new RegExp(`<script type="application/json" id="${e}"${tU}>`);
+  return new RegExp(`<script type="application/json" id="${e}"${DATA_ID_ATTRIBUTE_PATTERN}>`);
 }
 function Wr(e) {
   return new RegExp(`(?<!-)\\bid\\s*=\\s*["']?${e}`, "i");
@@ -2609,7 +2609,7 @@ function _J(e, { parsedAsMarkup: t } = { parsedAsMarkup: !0 }) {
   if (Cfe.some((d) => Wr(d.id).test(e)) || (t && Au(e))) return !0;
   if (e.length > no) return !1;
   let o = new Set(VXe.map((d) => d.sha256));
-  return jXe(e).some((d) => o.has(mn(uqt(d))));
+  return jXe(e).some((d) => o.has(hashSha256(uqt(d))));
 }
 function ro(e, t, r = {}) {
   let o = r.crUrlRe ?? null;
@@ -2624,7 +2624,7 @@ function ro(e, t, r = {}) {
     p = new Map(VXe.map((U) => [U.sha256, U])),
     _ = (U) => ({ applies: !0, ok: !1, reason: U }),
     w = !Wr(J1e).test(e),
-    E = !d.some((U) => mn(U) === Kwt),
+    E = !d.some((U) => hashSha256(U) === Kwt),
     R = t.pinnedMarkup.find((U) => U.label === "stamp-control"),
     C = R !== void 0 && R.bytes !== "" && !e.includes(R.bytes);
   if (w && E && C)
@@ -2672,7 +2672,7 @@ function ro(e, t, r = {}) {
   let N = new Map();
   for (let U of d) {
     if (M.has(U)) continue;
-    let te = p.get(mn(U));
+    let te = p.get(hashSha256(U));
     if (te === void 0)
       return _(
         "a script block matches neither a registered island nor a pinned template script \u2014 the page must carry the template blocks byte-for-byte",
@@ -2749,7 +2749,7 @@ function ACe(e, t) {
     .replace(/\s+/g, " ")
     .trim();
   if (r === "") return null;
-  let o = us(r, t);
+  let o = truncateToCodePoints(r, t);
   return scrubArtifactEnvelopeTags(
     (o === r ? r : `${o.trimEnd()}\u2026`).replace(/:\/\//g, ":\u2215\u2215"),
   );
@@ -2824,7 +2824,7 @@ function VZn(e) {
 function yw(e) {
   let t = Q1e(e);
   if (t === null) return null;
-  let r = us(t, Ru);
+  let r = truncateToCodePoints(t, Ru);
   return scrubArtifactEnvelopeTags((r === t ? t : `${r}\u2026`).replace(/:\/\//g, ":\u2215\u2215"));
 }
 var Yr = 128,
@@ -2916,7 +2916,7 @@ function Y_(e, t) {
   return d ? `${p}\u2026` : p;
 }
 function fqt(e) {
-  return scrubArtifactEnvelopeTags(us(e, sn).replace(Gu, Yn));
+  return scrubArtifactEnvelopeTags(truncateToCodePoints(e, sn).replace(Gu, Yn));
 }
 function zt(e) {
   return e.declarable !== !1 && Xwt(e.server);
@@ -2997,7 +2997,7 @@ function bo(e, t, r, o = {}) {
       else C.push({ kind: "undeclarable_name", server: U, name: U });
     else if (U.startsWith(CLAUDE_AI_MCP_SERVER_PREFIX)) E.push(U);
     else if (U.startsWith("mcp__")) {
-      let Te = _.get(Wn(ft(U.slice(5), "__")));
+      let Te = _.get(Wn(beforeFirst(U.slice(5), "__")));
       C.push({
         kind: "tool_name",
         server: U,
@@ -3016,7 +3016,7 @@ function bo(e, t, r, o = {}) {
       C.push({ kind: "host_unavailable", server: U });
     else if (pe !== null) {
       let Te = (De) =>
-          mKt(De, pe) || mKt(ft(`${normalizeMcpName(De)}__`, "__"), pe) || mKt(wo(De), pe),
+          mKt(De, pe) || mKt(beforeFirst(`${normalizeMcpName(De)}__`, "__"), pe) || mKt(wo(De), pe),
         Me = r.find(Te) ?? t.find((De) => Te(De.server))?.server;
       if (Me === void 0) Le = `host:${pe}`;
       else
@@ -3045,7 +3045,7 @@ function bo(e, t, r, o = {}) {
       ", ",
     );
     N.push(
-      `rewrote mcp server ${x(D.size, "name")} to the connector display ${x(D.size, "name")} viewers match \u2014 ${V}; the page must pass exactly ${D.size === 1 ? "that name" : "those names"} to callTool(\u2026) / watchTool(\u2026).`,
+      `rewrote mcp server ${pluralize(D.size, "name")} to the connector display ${pluralize(D.size, "name")} viewers match \u2014 ${V}; the page must pass exactly ${D.size === 1 ? "that name" : "those names"} to callTool(\u2026) / watchTool(\u2026).`,
     );
   }
   let ae = [];
@@ -3056,7 +3056,7 @@ function bo(e, t, r, o = {}) {
       let re = Y_(V),
         ce = an(V);
       N.push(
-        `${J.from} manifest entries resolve to ${ce} "${re}" and were merged into one (${U} ${x(U, "tool")}). A viewer with more than one ${ce} named "${re}" gets server_ambiguous on every call until the duplicates are renamed or removed.`,
+        `${J.from} manifest entries resolve to ${ce} "${re}" and were merged into one (${U} ${pluralize(U, "tool")}). A viewer with more than one ${ce} named "${re}" gets server_ambiguous on every call until the duplicates are renamed or removed.`,
       );
     }
     if (U > Yr) ae.push({ server: V, toolCount: U });
@@ -3343,12 +3343,12 @@ function mqt(e) {
     if (C === "mcp" && gn(M))
       ((o = rt(M.servers, 8, (D) => {
         let F = Array.isArray(D?.tools) ? D.tools.length : 0;
-        return `${nd(D?.server)}[${F} ${x(F, "tool")}]`;
+        return `${nd(D?.server)}[${F} ${pluralize(F, "tool")}]`;
       }).join(", ")),
         t.unshift("mcp"));
     else if (Eo.has(C)) {
       let D = Gn(M) ? M.rules : void 0;
-      r.push(Array.isArray(D) ? `${C}[${D.length} ${x(D.length, "rule")}]` : C);
+      r.push(Array.isArray(D) ? `${C}[${D.length} ${pluralize(D.length, "rule")}]` : C);
     } else t.push(Nj.test(C) ? C : To);
   let d = t.length + r.length;
   if (d === 0) return "";
@@ -3440,7 +3440,7 @@ function Ha() {
   return Zr.O_RDONLY | XXe();
 }
 function XXe() {
-  if (P() === "windows") return 0;
+  if (getCurrentPlatform() === "windows") return 0;
   return Zr.O_NOFOLLOW | Zr.O_NONBLOCK;
 }
 var eer = [
@@ -3465,7 +3465,7 @@ function sd(e, t) {
 }
 var ter = 268435456;
 function ner() {
-  return sd(P(), "arm64");
+  return sd(getCurrentPlatform(), "arm64");
 }
 function YXe(e, t) {
   if (e.endsWith(`-${t}`)) {
@@ -3773,7 +3773,7 @@ function Fd() {
   return {
     "X-Frame-CP": "go",
     "X-Frame-Surface": "code",
-    "X-Frame-Platform": Hd() ? "desktop" : "cli",
+    "X-Frame-Platform": isDesktopHostEntrypoint() ? "desktop" : "cli",
     "X-Frame-Client-Version": {
       ISSUES_EXPLAINER:
         "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -6144,14 +6144,14 @@ function _f(e, t) {
 }
 async function fa(e) {
   return fi(e, {
-    eyebrow: `Plan \xB7 ${basename(Q())}`,
+    eyebrow: `Plan \xB7 ${basename(getCwd())}`,
     fallbackTitle: "Plan",
     extractLede: !0,
     feature: "plan",
   });
 }
 async function ier(e, t) {
-  let r = (t.endsWith(g4t) ? t.slice(0, -g4t.length) : t) || t;
+  let r = (t.endsWith(WORKSHOP_MARKDOWN_EXTENSION) ? t.slice(0, -WORKSHOP_MARKDOWN_EXTENSION.length) : t) || t;
   return fi(e, {
     eyebrow: `Workshop \xB7 ${r}`,
     fallbackTitle: t,
@@ -6531,8 +6531,8 @@ async function fetchContractPrompt(e, t) {
   return { promptMd: r.body, missingCaps: o };
 }
 function derivePublishContextFrom(e) {
-  let t = Vd(),
-    r = !e.isNonInteractiveSession || t === "claude-vscode" || Hd(),
+  let t = getEnvEntrypoint(),
+    r = !e.isNonInteractiveSession || t === "claude-vscode" || isDesktopHostEntrypoint(),
     o =
       e.agentType === "teammate" || isTeammate()
         ? "teammate"
@@ -6867,7 +6867,7 @@ async function Hf(e) {
       });
       let F = rt(D, 8, jg).join(", "),
         I = rt(M.capabilities, 8, (N) => N).join(", ");
-      return `unknown ${x(D.length, "capability", "capabilities")}: ${F} \u2014 contract ${M.version} supports: ${I || "(none)"}. Fix or drop the declaration; the control plane would reject it anyway.`;
+      return `unknown ${pluralize(D.length, "capability", "capabilities")}: ${F} \u2014 contract ${M.version} supports: ${I || "(none)"}. Fix or drop the declaration; the control plane would reject it anyway.`;
     },
     E = (C, M, D) => {
       let F = Ao(C, M);
@@ -6937,49 +6937,49 @@ function hasFramePreambleLead(e) {
   return e.startsWith(ya) && ",}".includes(e[ya.length] ?? " ");
 }
 var Uf = new RegExp(
-    `^<base[\\t\\n\\f\\r ]+href="\\/_f\\/[^">]*"(?:${tU})?[\\t\\n\\f\\r ]*\\/?>`,
+    `^<base[\\t\\n\\f\\r ]+href="\\/_f\\/[^">]*"(?:${DATA_ID_ATTRIBUTE_PATTERN})?[\\t\\n\\f\\r ]*\\/?>`,
   ),
   zf = new RegExp(
-    `<base\\s+href="\\/_f\\/[^">]*"(?:${tU})?\\s*\\/?>\\n?`,
+    `<base\\s+href="\\/_f\\/[^">]*"(?:${DATA_ID_ATTRIBUTE_PATTERN})?\\s*\\/?>\\n?`,
     "gi",
   );
 function _a(e) {
-  let t = BN(e),
+  let t = trimAsciiWhitespace(e),
     r = t.match(Uf);
-  if (r) t = BN(t.slice(r[0].length));
+  if (r) t = trimAsciiWhitespace(t.slice(r[0].length));
   else if (!t.length) return !1;
   let o = r !== null;
   while (t.length) {
     if (!/^<script(?=[\t\n\f\r />])/.test(t)) return !1;
-    let d = rse(t, 7);
+    let d = findTagEnd(t, 7);
     if (d < 0) return !1;
     let p = t.slice(d);
-    if (!o && (tAt(t, 0) !== d || !hasFramePreambleLead(p))) return !1;
+    if (!o && (matchScriptOpenTag(t, 0) !== d || !hasFramePreambleLead(p))) return !1;
     o = !0;
-    let _ = yAn(p);
+    let _ = findScriptCloseTagEnd(p);
     if (_ < 0) return !1;
-    t = BN(p.slice(_));
+    t = trimAsciiWhitespace(p.slice(_));
   }
   return !0;
 }
 function Fa(e) {
-  let t = BN(e);
+  let t = trimAsciiWhitespace(e);
   if (t.startsWith("<head>") && t.endsWith("</head>"))
     return _a(t.slice(6, -7));
   return _a(t);
 }
 function exciseFrameAssetServeBlock(e, t = () => !0) {
   let r = 4,
-    o = e.indexOf(VG);
+    o = e.indexOf(FRAME_RUNTIME_BEGIN);
   while (o >= 0 && o < Ci && r > 0) {
-    let d = o + VG.length,
-      p = e.subarray(0, o + FRAME_RUNTIME_MAX_SPAN + YK.length).indexOf(YK, d);
+    let d = o + FRAME_RUNTIME_BEGIN.length,
+      p = e.subarray(0, o + FRAME_RUNTIME_MAX_SPAN + FRAME_RUNTIME_END.length).indexOf(FRAME_RUNTIME_END, d);
     if (p >= 0 && Fa(e.toString("utf8", d, p))) {
-      let _ = Buffer.concat([e.subarray(0, o), e.subarray(p + YK.length)]);
+      let _ = Buffer.concat([e.subarray(0, o), e.subarray(p + FRAME_RUNTIME_END.length)]);
       if (t(_)) return _;
       r--;
     }
-    o = e.indexOf(VG, d);
+    o = e.indexOf(FRAME_RUNTIME_BEGIN, d);
   }
   return;
 }
@@ -7013,18 +7013,18 @@ function _i(e, t, r) {
     let p = Wf.exec(e.slice(d, d + 11));
     if (p) {
       let _ = p[1].toLowerCase(),
-        w = _ === "plaintext" ? -1 : rse(e, d + 1 + _.length),
+        w = _ === "plaintext" ? -1 : findTagEnd(e, d + 1 + _.length),
         E = new RegExp(`</${_}(?=[\\t\\n\\f\\r />])`, "gi");
       E.lastIndex = Math.max(w, 0);
       let R = w < 0 ? null : E.exec(e),
-        C = R === null ? -1 : rse(e, R.index + R[0].length);
-      if (C < 0 || (_ === "script" && m4t(e.slice(w, R.index)))) return -1;
+        C = R === null ? -1 : findTagEnd(e, R.index + R[0].length);
+      if (C < 0 || (_ === "script" && hasCommentAndScriptTag(e.slice(w, R.index)))) return -1;
       d = C;
     } else if (t.test(e.slice(d, d + 8))) return d;
     else if (/^<\/?[a-zA-Z]/.test(e.slice(d, d + 3))) {
       o.lastIndex = d + 2;
       let _ = o.exec(e);
-      if (((d = _ === null ? -1 : rse(e, _.index)), d < 0)) return -1;
+      if (((d = _ === null ? -1 : findTagEnd(e, _.index)), d < 0)) return -1;
     } else if (/^<(?:[?!]|\/(?!>))/.test(e.slice(d, d + 3))) {
       if (((d = e.indexOf(">", d + 2)), d < 0)) return -1;
       d++;
@@ -7076,16 +7076,16 @@ function Ba(e) {
     r = 0,
     o = _i(e, Vf, 0),
     d = o < 0 ? 1 / 0 : o,
-    p = e.indexOf(VG),
+    p = e.indexOf(FRAME_RUNTIME_BEGIN),
     _ = -1;
   while (p >= 0 && p < d && p - r < Ci) {
-    let w = p + VG.length;
+    let w = p + FRAME_RUNTIME_BEGIN.length;
     if (_ < w) {
-      if (((_ = e.indexOf(YK, w)), _ < 0)) break;
+      if (((_ = e.indexOf(FRAME_RUNTIME_END, w)), _ < 0)) break;
     }
-    let E = e.indexOf(VG, w);
+    let E = e.indexOf(FRAME_RUNTIME_BEGIN, w);
     if ((E < 0 || E > _) && _ - p < FRAME_RUNTIME_MAX_SPAN && Fa(e.slice(w, _))) {
-      let R = _ + YK.length;
+      let R = _ + FRAME_RUNTIME_END.length;
       if (
         e[R] ===
         `
@@ -7097,7 +7097,7 @@ function Ba(e) {
     p = E;
   }
   return (
-    (e = Xf(ZEt(e, t))),
+    (e = Xf(removeRanges(e, t))),
     (e = Jf(e)),
     e.replace(zf, "").replace(/\sdata-frame-runtime="[^">]*"/gi, "")
   );
@@ -7165,7 +7165,7 @@ async function prepareArtifactBody(e, t = {}) {
       break;
   }
   if (!E.unwrapped && _ === !0) logFeatureSad("artifact_publish", "round_trip_unwrap_miss");
-  if (Dnr(R)) logFeatureSad("artifact_publish", "runtime_sentinel_residual");
+  if (hasRuntimeSentinel(R)) logFeatureSad("artifact_publish", "runtime_sentinel_residual");
   let D = 0;
   if (w !== !1) {
     let re = await za(R);
@@ -7248,7 +7248,7 @@ function Va(e, t) {
         R = _ + 3,
         C = 0,
         M = R + E;
-      while (C <= t.openTags && !e.startsWith(t.end, M)) (C++, (M += eAt));
+      while (C <= t.openTags && !e.startsWith(t.end, M)) (C++, (M += DATA_ID_ATTRIBUTE_LENGTH));
       if (
         E < t.maxSpan &&
         C <= t.openTags &&
@@ -7274,7 +7274,7 @@ function Va(e, t) {
     }
     o = p;
   }
-  return ZEt(e, r);
+  return removeRanges(e, r);
 }
 var Wa = 2097152;
 async function readFrameDecl(e, t, r) {
@@ -7341,7 +7341,7 @@ function Zf(e) {
   let t = /[\t\n\f\r ]/,
     r = _i(e, wa, 0);
   while (r >= 0) {
-    let o = rse(e, r + 5);
+    let o = findTagEnd(e, r + 5);
     if (o < 0) return;
     let d = r + 5;
     while (d < o - 1) {
@@ -7535,7 +7535,7 @@ function ki(e) {
   return { pins: r, warnings: o };
 }
 function Ja() {
-  let e = Vd();
+  let e = getEnvEntrypoint();
   return e ? { entrypoint: e.toLowerCase().slice(0, 64) } : {};
 }
 function Za() {
@@ -7583,14 +7583,14 @@ var Ot = "<!doctype html>",
   dr = `
 </body></html>`,
   SERVED_SPLICE_PREFIX_RE = new RegExp(
-    `^(?:${Ot}|${Ot.replace("doctype", "DOCTYPE")})?${Oi}(?: lang="(?=[^"]{1,35}")${Ua.source.slice(1, -1)}")?(?:${tU})?><head(?:${tU})?>$`,
+    `^(?:${Ot}|${Ot.replace("doctype", "DOCTYPE")})?${Oi}(?: lang="(?=[^"]{1,35}")${Ua.source.slice(1, -1)}")?(?:${DATA_ID_ATTRIBUTE_PATTERN})?><head(?:${DATA_ID_ATTRIBUTE_PATTERN})?>$`,
   );
 function composeArtifactPage(e, t) {
   let r = t !== void 0 && isValidArtifactLang(t) ? ` lang="${t}"` : "";
   return `${pr}${r}><head>${Qa}${Nf}${el}${e}${dr}`;
 }
 function mi(e, t, r) {
-  return rse(e, t) === r;
+  return findTagEnd(e, t) === r;
 }
 function startsWithSkeletonOpen(e) {
   return yp.test(e) && e.startsWith(Oi, Ot.length);
@@ -7621,7 +7621,7 @@ function tl(e) {
     }
   }
   let _ = o + 12,
-    w = rse(e, _);
+    w = findTagEnd(e, _);
   if (w < 0) return null;
   let E = e.slice(_, w - 1);
   if (!/^(?:[\t\n\f\r ][^>]*)?$/.test(E)) return null;
@@ -7697,7 +7697,7 @@ function wp(e, t, r, o) {
 }
 function nl(e) {
   if (!startsWithSkeletonOpen(e)) return !1;
-  let t = e.indexOf(VG);
+  let t = e.indexOf(FRAME_RUNTIME_BEGIN);
   return t !== -1 && t < Ci;
 }
 function kp(e) {
@@ -7713,7 +7713,7 @@ function kp(e) {
     if (w === -1 || !isValidArtifactLang(e.slice(t, w))) return null;
     ((o = e.slice(t, w)), (t = w + 1));
   }
-  if (!r("><head>" + VG)) return null;
+  if (!r("><head>" + FRAME_RUNTIME_BEGIN)) return null;
   let d = t + FRAME_RUNTIME_MAX_SPAN,
     p = 0;
   while (p < 2 && r("<script>")) {
@@ -7723,7 +7723,7 @@ function kp(e) {
     if (E === "" || E.includes("<!--") || /<\/script/i.test(E)) return null;
     ((t = w + 9), p++);
   }
-  if (p === 0 || !r(YK + Qa)) return null;
+  if (p === 0 || !r(FRAME_RUNTIME_END + Qa)) return null;
   if (!r("<style>")) return null;
   let _ = e.indexOf("</style>", t);
   if (_ === -1 || e.slice(t, _).includes("<")) return null;
@@ -7823,7 +7823,7 @@ function $i(e, t = "supporting file") {
         : MANIFEST_TEXT_TYPES.has(r.contentType)
           ? r.content.toString("utf8")
           : null;
-    if (o !== null && _J(o, { parsedAsMarkup: ose.has(c6(r.contentType)) }))
+    if (o !== null && _J(o, { parsedAsMarkup: MARKUP_CONTENT_TYPES.has(normalizeContentType(r.contentType)) }))
       return (
         logFeatureBad("artifact_publish", "file_review_machinery"),
         ie(
@@ -7989,7 +7989,7 @@ async function ka(e, t) {
     Be = [];
   if (t.files !== void 0 && t.files.length > 0)
     Be = t.files
-      .filter((L) => SAn(L.contentType))
+      .filter((L) => isRenderableOrExecutableContentType(L.contentType))
       .map((L) => `${L.path} (${L.contentType})`);
   if (t.verifyWorkshopHtml !== void 0) {
     let { verifyWorkshopHtml: L } = await import("./extractInlineScriptHashes.segwcp5c.js"),
@@ -8058,7 +8058,7 @@ async function ka(e, t) {
               err:
                 "workshop pages cannot ship renderable or executable sidecar files \u2014 " +
                 "each is a URL that bypasses the publish-time verifier: " +
-                jN(Be.join(", ")),
+                sanitizeInvisibleCharacters(Be.join(", ")),
             }
           );
       } else {
@@ -8126,7 +8126,7 @@ async function ka(e, t) {
               : ` (connectors this session: ${cn.join(", ")})`,
           Fn = jt.some((lt) => Xn(lt.toolPrefix) !== null);
         at.push(
-          `unknown ${x(ee.unresolved.length, "connector")}: ${ze.join(", ")} \u2014 ` +
+          `unknown ${pluralize(ee.unresolved.length, "connector")}: ${ze.join(", ")} \u2014 ` +
             (Fn
               ? "set `server` to the connector's exact display name"
               : "set `server` to the segment between `mcp__` and the next `__` of a tool name from this session (for `mcp__claude_ai_Slack_beta__search`, use `claude_ai_Slack_beta`, copied exactly), or to the connector's exact display name") +
@@ -8136,7 +8136,7 @@ async function ka(e, t) {
       if (ee.internal.length > 0) {
         let ze = rt(dedupe(ee.internal), 8, (jt) => `"${Y_(jt)}"`);
         at.push(
-          `built-in ${x(ee.internal.length, "server")} ${ze.join(", ")} ` +
+          `built-in ${pluralize(ee.internal.length, "server")} ${ze.join(", ")} ` +
             "\u2014 the Claude app's own servers, which it never exposes to " +
             "pages as host servers; declare only servers from the MCP configuration (host:<name> for the `mcp__<name>__<tool>` tools of a server you configured). The control plane would accept this manifest, but the page would break at view time",
         );
@@ -8164,7 +8164,7 @@ async function ka(e, t) {
     if (st.length > 0)
       Je = [
         ...Je,
-        `the page calls callTool/watchTool with ${x(st.length, "a server name", "server names")} not in this manifest \u2014 ${rt(st, 8, (Ye) => `"${Y_(Ye)}"`).join(", ")} \u2014 and those calls fail for every viewer; the manifest declares ${rt(ee.servers, 8, (Ye) => `"${Y_(Ye)}"`).join(", ")}.`,
+        `the page calls callTool/watchTool with ${pluralize(st.length, "a server name", "server names")} not in this manifest \u2014 ${rt(st, 8, (Ye) => `"${Y_(Ye)}"`).join(", ")} \u2014 and those calls fail for every viewer; the manifest declares ${rt(ee.servers, 8, (Ye) => `"${Y_(Ye)}"`).join(", ")}.`,
       ];
   } else if (R !== void 0) {
     let L = _o(R).length;
@@ -8267,7 +8267,7 @@ async function ka(e, t) {
     let L = rt(Tt, 8, ([ee]) => jg(ee)),
       de = jg(b({ ...Object.fromEntries(Tt), ...Ue }), { max: 600 });
     return ie(
-      `your capabilities declaration omits the stored ${x(Tt.length, "capability", "capabilities")} ${L.join(", ")} while adding new ones \u2014 a sent declaration replaces the stored one, so this publish would have silently revoked ${Tt.length === 1 ? "it" : "them"}. To keep ${Tt.length === 1 ? "it" : "them"}, republish declaring the union${de.length < 600 ? `: ${de}` : " (republish with capabilities omitted to read the stored declaration back, then resend it plus your additions)"}. To revoke on purpose, publish that union first, then republish without the revoked names (a declaration that adds no new name goes out as sent); capabilities: {} clears everything.`,
+      `your capabilities declaration omits the stored ${pluralize(Tt.length, "capability", "capabilities")} ${L.join(", ")} while adding new ones \u2014 a sent declaration replaces the stored one, so this publish would have silently revoked ${Tt.length === 1 ? "it" : "them"}. To keep ${Tt.length === 1 ? "it" : "them"}, republish declaring the union${de.length < 600 ? `: ${de}` : " (republish with capabilities omitted to read the stored declaration back, then resend it plus your additions)"}. To revoke on purpose, publish that union first, then republish without the revoked names (a declaration that adds no new name goes out as sent); capabilities: {} clears everything.`,
     );
   }
   let Nt = await Hf({
@@ -8459,8 +8459,8 @@ async function bi(e, t) {
     : _;
 }
 function surfacedViaForEntrypoint() {
-  if (Vd() === "claude-vscode") return "epitaxy_pane";
-  if (Hd()) return "desktop_pane";
+  if (getEnvEntrypoint() === "claude-vscode") return "epitaxy_pane";
+  if (isDesktopHostEntrypoint()) return "desktop_pane";
   return "terminal_link";
 }
 async function trackFrameEvent(e, t) {
@@ -8920,7 +8920,7 @@ function pl(e) {
   return typeof e === "string" ? e : e.toString("utf8");
 }
 async function Li(e, t, r, o = "sidecar file") {
-  let d = e.filter((_) => ose.has(c6(_.contentType)));
+  let d = e.filter((_) => MARKUP_CONTENT_TYPES.has(normalizeContentType(_.contentType)));
   if (d.length === 0) return null;
   let { verifyWorkshopHtml: p } = await import("./extractInlineScriptHashes.segwcp5c.js");
   for (let _ of d) {
@@ -8940,7 +8940,7 @@ async function Li(e, t, r, o = "sidecar file") {
 (and ${w.violations.length - 6} more)`
           : "";
     return ie(
-      `${o} ${jN(_.path)} refused by the workshop structural verifier:
+      `${o} ${sanitizeInvisibleCharacters(_.path)} refused by the workshop structural verifier:
 ` +
         E.join(`
 `) +
@@ -9027,7 +9027,7 @@ function wr(e, t, r) {
     d = (E) => ({ kind: "too_large", msg: E });
   if (t.length + r.length + (e === null ? 0 : 1) > gr)
     return o(
-      `This publish lists ${t.length} ${x(t.length, "file")}${r.length > 0 ? ` and ${r.length} ${x(r.length, "removal")}` : ""}${e === null ? "" : " plus the page"}, which is over the limit of ${gr} entries per version. Publish fewer files per version.`,
+      `This publish lists ${t.length} ${pluralize(t.length, "file")}${r.length > 0 ? ` and ${r.length} ${pluralize(r.length, "removal")}` : ""}${e === null ? "" : " plus the page"}, which is over the limit of ${gr} entries per version. Publish fewer files per version.`,
     );
   let _ = new Set(["index.html"]);
   for (let E of r) {
@@ -9101,7 +9101,7 @@ var Fi =
 function Mi(e, t, r, o) {
   if (r.length === 0) return null;
   if (t.length + r.length + o.length + (e === null ? 0 : 1) > gr)
-    return `This publish lists ${t.length + r.length} ${x(t.length + r.length, "file")} (copies included)${o.length > 0 ? ` and ${o.length} ${x(o.length, "removal")}` : ""}${e === null ? "" : " plus the page"}, which is over the limit of ${gr} entries per version. Publish fewer files per version.`;
+    return `This publish lists ${t.length + r.length} ${pluralize(t.length + r.length, "file")} (copies included)${o.length > 0 ? ` and ${o.length} ${pluralize(o.length, "removal")}` : ""}${e === null ? "" : " plus the page"}, which is over the limit of ${gr} entries per version. Publish fewer files per version.`;
   let p = new Set(["index.html", ...t.map((w) => w.path), ...o]),
     _ = new Set();
   for (let w of r) {
@@ -9118,8 +9118,8 @@ function Mi(e, t, r, o) {
     if (w.from.path === "index.html")
       return `file ${b(w.path)}: another artifact's page (index.html) is not a copyable file \u2014 read it and publish your own content`;
     for (let E of [w.path, w.from.path]) {
-      let R = GJ(E);
-      if (R !== void 0 && ose.has(c6(R)))
+      let R = getContentTypeForPath(E);
+      if (R !== void 0 && MARKUP_CONTENT_TYPES.has(normalizeContentType(R)))
         return `file ${b(w.path)}: an HTML, SVG or XML document cannot be copied from another artifact \u2014 read it with action "read_file" and publish it as your own file`;
     }
     _.add(`${w.from.slug}@${w.from.ver ?? ""}`);
@@ -9307,7 +9307,7 @@ async function Ni(e, t, r, o, d, p, _) {
   for (let L of t) {
     if (L.reseed === !0 && L.live !== void 0)
       return ae("invalid publish options");
-    if ((L.live === !0 || L.reseed === !0) && c6(L.contentType) !== "text/html")
+    if ((L.live === !0 || L.reseed === !0) && normalizeContentType(L.contentType) !== "text/html")
       return ae("invalid publish options");
     let de = F?.base?.get(L.path);
     if (
@@ -9351,7 +9351,7 @@ async function Ni(e, t, r, o, d, p, _) {
         !xe.live &&
         xe.sha256 !== void 0 &&
         xe.contentType === ee &&
-        xe.sha256 === mn(de)
+        xe.sha256 === hashSha256(de)
       );
     },
     ge = [],
@@ -9412,7 +9412,7 @@ async function Ni(e, t, r, o, d, p, _) {
     if (ee <= he)
       ((he -= ee), (Me[L.path] = { content: de, contentType: L.contentType }));
     else {
-      let xe = mn(L.content);
+      let xe = hashSha256(L.content);
       (De.push({ f: L, sha: xe, wire: de }),
         (Me[L.path] = { sha256: xe, contentType: L.contentType }));
     }
@@ -9514,7 +9514,7 @@ async function Ni(e, t, r, o, d, p, _) {
       xe = !1,
       st = !1;
     if (He.length > 0 || tt.length > 0) {
-      let ve = He.map((et) => ({ f: et, sha: mn(et.content), wire: Rn(et) })),
+      let ve = He.map((et) => ({ f: et, sha: hashSha256(et.content), wire: Rn(et) })),
         Re = async (et, We) => {
           let en = () =>
               Nd.post(
@@ -9726,17 +9726,17 @@ async function Ni(e, t, r, o, d, p, _) {
           }
           if (
             ((Rt = tt
-              .filter((Ke) => SAn(Ke.contentType ?? ""))
+              .filter((Ke) => isRenderableOrExecutableContentType(Ke.contentType ?? ""))
               .map((Ke) => `${Ke.c.path} (${Ke.contentType})`)),
             _.workshopSurface && Rt.length > 0)
           )
             return (
               logFeatureBad("artifact_publish", "copy_refused_sidecar", N),
               ie(
-                `workshop pages cannot ship renderable or executable sidecar files \u2014 each is a URL that bypasses the publish-time verifier: ${jN(Rt.join(", "))} (copied). Nothing was published.${Ee}`,
+                `workshop pages cannot ship renderable or executable sidecar files \u2014 each is a URL that bypasses the publish-time verifier: ${sanitizeInvisibleCharacters(Rt.join(", "))} (copied). Nothing was published.${Ee}`,
               )
             );
-          let tn = tt.filter((Ke) => ose.has(c6(Ke.contentType ?? "")));
+          let tn = tt.filter((Ke) => MARKUP_CONTENT_TYPES.has(normalizeContentType(Ke.contentType ?? "")));
           if (tn.length > 0)
             return (
               logFeatureBad("artifact_publish", "copy_refused_document", N),
@@ -9744,12 +9744,12 @@ async function Ni(e, t, r, o, d, p, _) {
                 `copied file ${b(tn[0].c.path)} is ${tn[0].contentType}: a page, SVG or XML document cannot be copied from another artifact into a publish (its content must pass this tool's checks, which a server-side copy skips) \u2014 read it with action "read_file" and publish it from the local copy instead. Nothing was published.${Ee}`,
               )
             );
-          let rs = (Ke) => MJe.has(c6(GJ(Ke) ?? "")),
+          let rs = (Ke) => EXECUTABLE_CONTENT_TYPES.has(normalizeContentType(getContentTypeForPath(Ke) ?? "")),
             Or =
               e === null
                 ? tt.find(
                     (Ke) =>
-                      MJe.has(c6(Ke.contentType ?? "")) &&
+                      EXECUTABLE_CONTENT_TYPES.has(normalizeContentType(Ke.contentType ?? "")) &&
                       !rs(Ke.c.path) &&
                       !rs(Ke.c.from.path),
                   )
@@ -10360,7 +10360,7 @@ function Ip(e, t) {
     return {
       kind: "priors",
       err:
-        `this artifact was previously published with renderable or executable sidecar files (${jN(t.join(", "))}) \u2014 those URLs would remain addressable beside the workshop page. ` +
+        `this artifact was previously published with renderable or executable sidecar files (${sanitizeInvisibleCharacters(t.join(", "))}) \u2014 those URLs would remain addressable beside the workshop page. ` +
         "Publish the workshop to a new artifact, or republish this one without workshop surface.",
     };
   return null;
@@ -11142,12 +11142,12 @@ function Sl(e, t) {
 }
 function Bi({ text: e, truncated: t }, r, o) {
   let d = r(e),
-    p = t ? oe(d, d.length - Wp) : d,
+    p = t ? truncateToCodeUnits(d, d.length - Wp) : d,
     _ = Vn(p, o);
   return _ === "" ? void 0 : _;
 }
 function ji(e) {
-  return { text: oe(e, xr), truncated: e.length > xr };
+  return { text: truncateToCodeUnits(e, xr), truncated: e.length > xr };
 }
 function Zp(e) {
   let t;
@@ -11262,7 +11262,7 @@ function Vi(e, t) {
   if (e.length === 0) return { errMsg: `${t} may not be empty` };
   if (e.length > TD) return { errMsg: `${t} is longer than ${TD} characters` };
   let r = e.normalize("NFC");
-  if (/[\p{Cc}\p{Cf}\p{Co}\p{Zl}\p{Zp}]/u.test(r) || !Wc(r))
+  if (/[\p{Cc}\p{Cf}\p{Co}\p{Zl}\p{Zp}]/u.test(r) || !isWellFormed(r))
     return {
       errMsg: `${t} ${HC(e)} contains control, formatting, line-separator, or private-use characters, or a malformed one`,
     };
@@ -11577,7 +11577,7 @@ async function nTn(e, t, r, o) {
         return {
           errMsg: `files: total content exceeds ${MANIFEST_TOTAL_BUDGET / 1024 / 1024}MB at ${JSON.stringify(I)} \u2014 a version's files may total at most that`,
         };
-      if (((te = M.contentType ?? GJ(F)), te === void 0))
+      if (((te = M.contentType ?? getContentTypeForPath(F)), te === void 0))
         return {
           errMsg:
             `files: ${HC(F)} has no known content type for its ` +
@@ -11668,7 +11668,7 @@ function rTn(e, t) {
 }
 var hh = /[\x00-\x08\x0b-\x1f\x7f-\x9f\u2028\u2029]+/g;
 function oTn(e) {
-  return scrubArtifactEnvelopeTags(vge(rae, e.replace(hh, " ")));
+  return scrubArtifactEnvelopeTags(vge(ARTIFACT_ORIGIN_NOTES_TAG, e.replace(hh, " ")));
 }
 var her = 524288,
   Ol = 3149824;
@@ -11816,7 +11816,7 @@ async function Mqt(
       status: N.status,
       errorCode: "boot_relay_error",
     };
-  let ue = IA() ? "Slack" : nxe() ? "Teams" : void 0,
+  let ue = isSlackEntrypoint() ? "Slack" : isTeamsEntrypoint() ? "Teams" : void 0,
     V = `${ue ?? "chat"} channel`,
     J = `add this ${V} (under "Add people, groups, or Claude Tags", paste the channel ID)`,
     U = `sharing with a person or service account does not reach a ${V}'s Claude \u2014 ask the owner to open Share and ${J}, or widen General access to the organization.`;
@@ -12135,7 +12135,7 @@ async function wh(e, t) {
 }
 function kh(e) {
   if (e === void 0) return "";
-  if (!Wc(e) || Buffer.byteLength(e, "utf8") > 512) return;
+  if (!isWellFormed(e) || Buffer.byteLength(e, "utf8") > 512) return;
   let t = e.split("/");
   for (let r of t)
     if (r === "" || r === "." || r === ".." || /[\\%\x00-\x1f\x7f]/.test(r))
@@ -12200,7 +12200,7 @@ async function jl(e, t, r, o, d) {
           o === void 0
             ? "text/html"
             : typeof he === "string"
-              ? ft(he, ";").trim().toLowerCase()
+              ? beforeFirst(he, ";").trim().toLowerCase()
               : "",
         Ue = le.toString("utf-8"),
         Je = He === "text/html" ? $l(Ue) : Ue;
@@ -12262,7 +12262,7 @@ async function jl(e, t, r, o, d) {
       e.env === "staging"
         ? "*.frame.staging.claudeusercontent.com"
         : "*.frame.claudeusercontent.com",
-    ce = lXt()
+    ce = isCoworkEntrypoint()
       ? Bn(re)
       : isAnthropicHostedEnvironment()
         ? `To allow direct artifact reads here, add ${re} to the environment's allowed domains: environment settings \u2192 Code \u2192 Network access \u2192 Custom \u2192 Allowed domains. An admin can add the same entry to a shared environment from admin settings \u2192 Cloud environments; sessions that run in that environment get the access.`
@@ -12511,7 +12511,7 @@ var Wi = 16,
 function Nl(e, t, r) {
   if (t.length <= Wi) return e.replaceAll(t, "[redacted]");
   let o = new Set();
-  for (let w = 0; w + Wi <= t.length; w++) o.add(iu(t.slice(w, w + Wi)));
+  for (let w = 0; w + Wi <= t.length; w++) o.add(escapeRegExp(t.slice(w, w + Wi)));
   let d = new RegExp(`(?:${[...o].join("|")})${Fl.source}*`, r),
     p = "",
     _ = 0;
@@ -12692,19 +12692,19 @@ function Ar() {
 }
 function $h() {
   let e = a.CLAUDE_CODE_ENTRYPOINT;
-  return UP() || e === "claude-code-github-action" || e === "mcp";
+  return isSdkEntrypoint() || e === "claude-code-github-action" || e === "mcp";
 }
 function Yl(e) {
   return e === "local-agent" || e?.startsWith("claude-coworker") === !0;
 }
 function isCoworkFramePublishSession() {
-  return N1() === "local-agent" && Eg() && !AL() && xPn();
+  return getSessionEntrypoint() === "local-agent" && isDesktopHostSession() && !isClaudecodeEnv() && hasCoworkFrameArtifacts();
 }
 function isCoworkHostSession() {
-  return (txe() && Cxt()) || isCoworkFramePublishSession();
+  return (isCoworkSession() && isTopLevelCoworkSession()) || isCoworkFramePublishSession();
 }
 function othersArtifactReadConsentSurface() {
-  return txe();
+  return isCoworkSession();
 }
 function othersArtifactReadIsUserOnly(e) {
   return e !== void 0 && othersArtifactReadConsentSurface() && artifactHostUnreachable(e);
@@ -12715,7 +12715,7 @@ function Lh() {
   return Yl(e);
 }
 function isArtifactReadOnlySurface() {
-  return Yl(N1()) && !isCoworkFramePublishSession();
+  return Yl(getSessionEntrypoint()) && !isCoworkFramePublishSession();
 }
 function Mh() {
   return M1e() && Nh();
@@ -12725,7 +12725,7 @@ function Nh() {
 }
 function Kl() {
   if (getAPIProvider() !== "firstParty") return "third_party_provider";
-  if (St()) return "essential_traffic_only";
+  if (isEssentialTrafficOnly()) return "essential_traffic_only";
   if (po(a.CLAUDE_CODE_ARTIFACT)) return "artifact_env_off";
   if (!Ie(a.CLAUDE_CODE_ARTIFACT) && $h()) return "sdk_default_off";
   return null;
@@ -12819,13 +12819,13 @@ function maybeLogArtifactDisabledSession() {
   logEvent("tengu_artifact_disabled_session", {
     mechanism: fromEnum(t),
     session_interactivity:
-      !ke() || Vd() === "claude-vscode" || Hd()
+      !ke() || getEnvEntrypoint() === "claude-vscode" || isDesktopHostEntrypoint()
         ? S("interactive")
         : S("noninteractive"),
   });
 }
 function maybeLogArtifactToolWithheld(e) {
-  if (!xPn() || N1() !== "local-agent" || AL()) return;
+  if (!hasCoworkFrameArtifacts() || getSessionEntrypoint() !== "local-agent" || isClaudecodeEnv()) return;
   let t = ne();
   if (e === null) {
     t.artifactRegisteredSeen = !0;
@@ -12848,7 +12848,7 @@ function maybeLogArtifactToolWithheld(e) {
 function jh(e) {
   switch (e) {
     case "surface_excluded":
-      return Eg() ? "surface_excluded" : "nested_child_session";
+      return isDesktopHostSession() ? "surface_excluded" : "nested_child_session";
     case "admin_policy": {
       if (!ec(getSubscriptionType())) return "subscription_ineligible";
       let t = getResponseFromCache();

@@ -13,7 +13,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, De, dn, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
-function K8(ee) {
+function ReserveHeightBox(ee) {
   let p = _(10),
     { children: v, lock: Y } = ee,
     te = Y === void 0 ? "always" : Y,
@@ -115,12 +115,12 @@ function ToolResultRow(Re) {
   }
   let K;
   if (w[9] !== P)
-    ((K = e(K8, { lock: "offscreen", children: P })), (w[9] = P), (w[10] = K));
+    ((K = e(ReserveHeightBox, { lock: "offscreen", children: P })), (w[9] = P), (w[10] = K));
   else K = w[10];
   return K;
 }
 var i = Qt(!1);
-function Mye() {
+function useIsInsideToolResultRow() {
   return De(i);
 }
 function b(he) {
@@ -132,4 +132,4 @@ function b(he) {
   else Q = ge[1];
   return Q;
 }
-export { K8, ToolResultRow, Mye };
+export { ReserveHeightBox, ToolResultRow, useIsInsideToolResultRow };

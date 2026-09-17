@@ -14,11 +14,11 @@ import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash
 import { t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { uee, Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
-import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { PM } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-function Wm(Te) {
+function DiffStatLabel(Te) {
   let j = _(10),
     { added: T, removed: k, bold: S } = Te;
   if (T === 0 && k === 0) {
@@ -53,8 +53,8 @@ function Wm(Te) {
 }
 F();
 F();
-var lPt = "current-pr";
-function EZt(o, i) {
+var CURRENT_PR_LINK_KEY = "current-pr";
+function buildPullRequestLink(o, i) {
   if (!o || !i) return null;
   let s = o.kind === "cr" && !1,
     p = o.kind === "mr";
@@ -92,7 +92,7 @@ function AZt(o, i, s) {
 function _e(Ge) {
   return Ge.settings?.prUrlTemplate;
 }
-function MB(Ie) {
+function PullRequestBadge(Ie) {
   let m = _(41),
     {
       number: C,
@@ -110,7 +110,7 @@ function MB(Ie) {
     f = de === "cr" && !1,
     u = de === "mr",
     v = u ? "!" : "#",
-    X = U(_e),
+    X = useAppStateSelector(_e),
     me;
   if (m[0] !== f || m[1] !== u || m[2] !== X || m[3] !== c)
     ((me = f || u ? c : PM(c, X)),
@@ -236,4 +236,4 @@ function re(o) {
       return;
   }
 }
-export { Wm, lPt, EZt, AZt, MB };
+export { DiffStatLabel, CURRENT_PR_LINK_KEY, buildPullRequestLink, AZt, PullRequestBadge };

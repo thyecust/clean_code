@@ -9,10 +9,10 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 111 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Oan, Dan, dFt, _ze, Jb, pFt, Lan, Kce } from "../Git-Worktree/chunk-7jshw9s9.js";
+import { LOCAL_DIVERGENCE_DEADLINE_MS as Oan, probeLocalDivergence as Dan, unservedLayout as dFt, failureCause as _ze, runProbeGit as Jb, countProbeGitOutput as pFt, listPathsChangedFromHead as Lan, nullOnAbort as Kce } from "../Git-Worktree/local-divergence-probe.js";
 import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
-import "../文件同步-Sync/chunk-ht8ydg1v.js";
+import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
+import "../文件同步-Sync/sync-journal.js";
 export {
   Oan as LOCAL_DIVERGENCE_DEADLINE_MS,
   pFt as countProbeGitOutput,

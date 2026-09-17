@@ -46,21 +46,21 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { le, Zt, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import { Tvt, Yse, c1, Evt } from "./chunk-wk0e3dz4.js";
-import { getSecureStorage } from "./chunk-y7b7kf5n.js";
+import { getSecureStorage } from "./secure-storage.js";
 import { J5n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ps } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { xH, h_ } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
-import { Mpe } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { getMouseMode, isFullscreenActive } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { getNativeCopyModifierKey } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { kG } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import { uIe, UBn, BBn, jBn, ODt, WBn, GBn } from "./chunk-9g86t9bp.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Ma } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { useHasVirtualScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { qA } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { o, t, ct, uE, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -68,7 +68,7 @@ import { useClock } from "../../01-核心基础设施/共享小工具-未细化/
 import { useCopyToClipboard, CopyFeedbackHint, CopyFallbackNotice } from "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { Os } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { AuthenticationStatusBox } from "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { Sv } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -77,10 +77,10 @@ import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
 import { y0e } from "../Bedrock-Vertex/chunk-yvs1a1sd.js";
-import { ple, _en, yen } from "./chunk-dtt2nn79.js";
-import { yv } from "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
+import { finalizeOAuthLogin, _en, refreshAuthStateAfterLogin } from "./oauth-login-completion.js";
+import { showNotification } from "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { ck } from "./chunk-5bg9xwqx.js";
+import { OAuthLoginFlow } from "./oauth-login-flow.js";
 import { isHeadlessEnvironment, tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
@@ -152,7 +152,7 @@ async function Wt(s, c, { loginHint: M, loginMethod: H, orgUUID: D }) {
   }
   return (
     await fetchAndStoreUserRoles(T.accessToken).catch((U) => n(String(U), { level: "error" })),
-    await yen({ ...ee }),
+    await refreshAuthStateAfterLogin({ ...ee }),
     R
   );
 }
@@ -697,7 +697,7 @@ function To(s) {
   let c = Math.round(s / 86400);
   if (c < 1) return "less than a day";
   if (c === 365) return "1 year";
-  return `${c} ${x(c, "day")}`;
+  return `${c} ${pluralize(c, "day")}`;
 }
 function V8({
   onDone: s,
@@ -709,10 +709,10 @@ function V8({
   forceLoginMethod: z,
   urlOutdent: ee = 0,
 }) {
-  let R = Ma(),
+  let R = useHasVirtualScrollViewport(),
     { storageV5: U, credentials: Q } = useStorageV5Context(),
-    se = Os((q) => q.proactivityLevel),
-    fe = Os((q) => q.toolPermissionContext),
+    se = useAppStateSelectorUnchecked((q) => q.proactivityLevel),
+    fe = useAppStateSelectorUnchecked((q) => q.toolPermissionContext),
     de = (R ? Sv : 0) + ee,
     te = getSettings_DEPRECATED() || {},
     I = getForcedLoginMethod() === "gateway",
@@ -738,7 +738,7 @@ function V8({
     }),
     [Ue, Ae] = d(""),
     [It, Qe] = d(0),
-    [he] = d(() => new ck()),
+    [he] = d(() => new OAuthLoginFlow()),
     [ge, Mt] = d(() => D === "setup-token" || v === "claudeai"),
     [et, Ft] = d(!1),
     [Nt, tt] = d(null),
@@ -762,7 +762,7 @@ function V8({
       reset: it,
     } = useCopyToClipboard(w.state === "waiting_for_login" ? w.url : null),
     Bt = useTerminalSize().columns - qe.length - 1,
-    [Ht] = d(() => h_() && xH() !== "off");
+    [Ht] = d(() => isFullscreenActive() && getMouseMode() !== "off");
   (E(() => {
     if (v === "claudeai") logEvent("tengu_oauth_claudeai_forced", {});
     else if (v === "console") logEvent("tengu_oauth_console_forced", {});
@@ -903,7 +903,7 @@ function V8({
             (await dt(he, async (L) => q(L), { orgUUID: Me }),
               B({ state: "success" }),
               c?.(),
-              yv(
+              showNotification(
                 {
                   message: "Claude Code login successful",
                   notificationType: "auth_success",
@@ -964,12 +964,12 @@ function V8({
           }),
             c?.());
         else {
-          await ple(X, { storageV5: U, credentials: Q });
+          await finalizeOAuthLogin(X, { storageV5: U, credentials: Q });
           let L = await validateForceLoginOrg(Q);
           if (!L.valid) throw Error(L.message);
           (B({ state: "success" }),
             c?.(),
-            yv(
+            showNotification(
               {
                 message: "Claude Code login successful",
                 notificationType: "auth_success",
@@ -1074,7 +1074,7 @@ function V8({
                       dimColor: !0,
                       children: [
                         "Hold ",
-                        Mpe(),
+                        getNativeCopyModifierKey(),
                         " while selecting to use your terminal's native copy",
                       ],
                     }),

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { b2e, $0n, Xlr } from "../../../01-核心基础设施/共享小工具-未细化/chunk-8549txjj.js";
+import { b2e, $0n, tslibAsyncValues } from "../../../01-核心基础设施/共享小工具-未细化/tslib-helpers.js";
 import { H0n, Hke } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { E$e } from "../../_未识别/第三方库-加密库/第三方库-加密库.z54vzq0y.js";
 import { pg } from "../../_未识别/第三方库-其他/chunk-jm5cswvd.js";
@@ -2555,7 +2555,7 @@ async function kl(e) {
           for (let l of t)
             try {
               for (
-                var s = !0, a = ((n = void 0), Xlr(l)), c;
+                var s = !0, a = ((n = void 0), tslibAsyncValues(l)), c;
                 (c = yield b2e(a.next())), (r = c.done), !r;
                 s = !0
               )

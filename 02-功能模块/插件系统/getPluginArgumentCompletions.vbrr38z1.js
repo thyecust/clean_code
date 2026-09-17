@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 206 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { bd } from "./chunk-hh8f1qrw.js";
+import { isPluginBlockedByPolicy } from "./plugin-source-policy.js";
 import { hMe, c$, Ql, CE, Cf, nD, A5e, _H } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getPluginEditableScopes } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { isSkillDoctorEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
@@ -134,7 +134,7 @@ async function f(a, n) {
     (i.sort((t, o) => t.pluginId.localeCompare(o.pluginId)), a.store(s, i));
   }
   return i
-    .filter((e) => !_H(e.pluginId) && !bd(e.pluginId))
+    .filter((e) => !_H(e.pluginId) && !isPluginBlockedByPolicy(e.pluginId))
     .map((e) => ({
       value: e.pluginId,
       description: e.description,

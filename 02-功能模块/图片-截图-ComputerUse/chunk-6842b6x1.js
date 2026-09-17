@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { POe, ywe, R$t } from "../../01-核心基础设施/共享小工具-未细化/chunk-bvvxxmrb.js";
+import { MIN_IMAGE_SCALE, MAX_IMAGE_SCALE, IMAGE_SCALE_DESCRIPTION } from "../../01-核心基础设施/共享小工具-未细化/image-scaling.js";
 var f = {
     pixels: {
       x: "Horizontal pixel position read directly from the most recent screenshot image, measured from the left edge. The server handles all scaling.",
@@ -64,7 +64,7 @@ var f = {
       },
       scale: {
         type: "number",
-        description: `For screenshot/zoom only. ${R$t}`,
+        description: `For screenshot/zoom only. ${IMAGE_SCALE_DESCRIPTION}`,
       },
       start_coordinate: {
         type: "array",
@@ -201,7 +201,7 @@ Applications currently installed on this machine are listed below. This list is 
       inputSchema: {
         type: "object",
         properties: {
-          ...(r ? { scale: { type: "number", description: R$t } } : {}),
+          ...(r ? { scale: { type: "number", description: IMAGE_SCALE_DESCRIPTION } } : {}),
           ...n(
             "Save the image to disk so it can be attached to a message for the user. Returns the saved path in the tool result. Only set this when you intend to share the image \u2014 screenshots you're just looking at don't need saving.",
           ),
@@ -228,7 +228,7 @@ Applications currently installed on this machine are listed below. This list is 
             ? {
                 scale: {
                   type: "number",
-                  description: `Scale factor in [${POe}, ${ywe}] for the returned zoom image; smaller images use fewer tokens. Region and click coordinates always stay in the full-resolution coordinate frame; never rescale coordinates yourself.`,
+                  description: `Scale factor in [${MIN_IMAGE_SCALE}, ${MAX_IMAGE_SCALE}] for the returned zoom image; smaller images use fewer tokens. Region and click coordinates always stay in the full-resolution coordinate frame; never rescale coordinates yourself.`,
                 },
               }
             : {}),

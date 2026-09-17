@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { ok } from "./chunk-k0wct4tn.js";
+import { ClockContext } from "./clock-and-terminal-focus.js";
 import { De, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
 function useClock() {
-  let o = De(ok);
+  let o = De(ClockContext);
   if (!o) throw Error("useClock must be used within a ClockProvider");
   return o;
 }

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { us, oe } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodePoints, truncateToCodeUnits } from "../核心工具-字符串与文本/string-utils.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { vc, Ute } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { cJn } from "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
@@ -76,7 +76,7 @@ async function M(e, n) {
       if (s <= 0) break;
       if (o.text.length <= s) (t.push(o), (r += o.text.length));
       else {
-        let i = oe(o.text, s);
+        let i = truncateToCodeUnits(o.text, s);
         if (i) {
           let c = { type: "text", text: i };
           if (o._meta) c._meta = o._meta;
@@ -125,7 +125,7 @@ async function T(e) {
   if (!e) return e;
   let n = getMaxOutputChars(),
     t = P();
-  if (typeof e === "string") return us(e, n) + t;
+  if (typeof e === "string") return truncateToCodePoints(e, n) + t;
   else {
     let r = await M(e, n);
     return (r.push({ type: "text", text: t }), r);

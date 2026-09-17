@@ -10,23 +10,23 @@
 import { r0, Cvn, gCt, qe, Ut, Ff, o5t, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { hB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { NL } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isInProtectedNamespace } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { xU } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
-import { Jo, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { axn, eRt } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import { generateAdjectiveNounName } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
+import { getSessionRuntimeState, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
+import { buildBearerAuthHeader, setSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { FRe, WT } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { isProcessProvablyGone, isSameProcessAsync, ownProcStartAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { CNe, b3t, xyn, Hyn, Lpe } from "./chunk-ct52ffwb.js";
+import { isProcessProvablyGone, isSameProcessAsync, ownProcStartAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
+import { REMOTE_CONTROL_MALFORMED_RESPONSE_MESSAGE, b3t, REMOTE_CONTROL_HOST_SIGNED_OUT_MESSAGE, REMOTE_CONTROL_HOST_ACCOUNT_CHANGED_MESSAGE, REMOTE_CONTROL_PREVIOUS_SESSION_UNAVAILABLE_MESSAGE } from "./remote-control-messages.js";
 import { fmt, wgt, i4n, getBridgeSessionOrStatus, Ly, QWt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { Wh } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
@@ -46,18 +46,18 @@ import {
 import { isBridgeAuthReviveEnabled, isBridgeNonOrigin403RetryEnabled, isBridgeOwnerPinnedEndEnabled, isBridgeHostDeclinedEndEnabled, isBridgeSignedOutNeutralEnabled, isCcrV2SessionCrudEnabled } from "./chunk-9estzwf5.js";
 import { logBridgeSkip } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { isProactiveEnrollmentDisabled, isTrustedDeviceGateEnabled, getTrustedDeviceToken, withUntrustedDeviceRecovery, untrustedDeviceHint } from "./chunk-tyce0p0b.js";
-import { fse, rVt, isCreateSessionFailure, createCodeSession, isCredentialsFailure, isCredentialsRejection, fetchRemoteCredentials, archiveCodeSession, unarchiveCodeSession } from "./chunk-mxsfy35q.js";
+import { isNonOriginSource, describeNonOriginSource, isCreateSessionFailure, createCodeSession, isCredentialsFailure, isCredentialsRejection, fetchRemoteCredentials, archiveCodeSession, unarchiveCodeSession } from "./code-session-api.js";
 import { reseedBridgePermissionMode, reseedBridgeCrossSessionInbound, reseedBridgeModel } from "../权限系统/chunk-1y2g140m.js";
 import { getBridgeBaseUrlOverride, getBridgeSessionNamePrefix } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { aSn } from "./chunk-1yq098a7.js";
 import { VGe, KGe, Qjn, pM, rdt } from "./chunk-znhfst8k.js";
-import { ddt } from "./chunk-jpq2fv3g.js";
+import { isHumanTurnEvent } from "./bridge-inbound-origin.js";
 import { buildSessionApiUrl, registerWorker } from "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
 import { buildPendingActionDetail, isUserActivityRequest, isHumanInputRequest } from "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
-import { e6n } from "./chunk-z5v9hvat.js";
+import { reseedBridgeEffort } from "./bridge-effort-sync.js";
 import { getCooContextProperties } from "../../01-核心基础设施/共享小工具-未细化/coo-context-properties.js";
-import { vRe } from "./chunk-4zd60pbm.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { createTokenRefreshScheduler } from "./chunk-4zd60pbm.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var Vn = {
@@ -201,13 +201,13 @@ var Bo = 300000,
   No = 15000,
   Ho = /^(session|cse)_[A-Za-z0-9_-]+$/;
 async function ni() {
-  if (St()) return !1;
+  if (isEssentialTrafficOnly()) return !1;
   let { getFeatureValue_CACHED_MAY_BE_STALE: t } =
     await import("../../01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js");
   return t("tengu_bridge_placeholder_sweep", !0);
 }
 function ii(t) {
-  let p = Jo();
+  let p = getSessionRuntimeState();
   return (
     (p.placeholderWriteChain = p.placeholderWriteChain.then(t, t)),
     p.placeholderWriteChain
@@ -315,7 +315,7 @@ async function $o(t, p, v) {
   );
 }
 function ai(t) {
-  let p = Jo();
+  let p = getSessionRuntimeState();
   if (p.placeholderSweepStarted) return Promise.resolve();
   return (
     (p.placeholderSweepStarted = !0),
@@ -376,11 +376,11 @@ function $t(t, p, v) {
     case 401:
       return "auth token expired (code 401)";
     case 403: {
-      if (!fse(v?.rejectSource)) return "server rejected connection (code 403)";
-      let w = rVt(v.rejectSource);
+      if (!isNonOriginSource(v?.rejectSource)) return "server rejected connection (code 403)";
+      let w = describeNonOriginSource(v.rejectSource);
       if (v.streak === void 0) return w;
       let I = Math.max(1, Math.round(v.streak.streakMs / 60000));
-      return `${w}, and kept refusing for ${I} ${x(I, "minute")}`;
+      return `${w}, and kept refusing for ${I} ${pluralize(I, "minute")}`;
     }
     case 404:
       return "session not found on server (code 404)";
@@ -403,8 +403,8 @@ async function xt(t) {
       getAuthToken: S,
     } = t,
     L;
-  if (S) L = () => axn(S());
-  else eRt(v);
+  if (S) L = () => buildBearerAuthHeader(S());
+  else setSessionAccessToken(v);
   let B = t.epoch ?? (await registerWorker(p, v));
   n(
     `[bridge:repl] CCR v2: worker sessionId=${w} epoch=${B}${t.epoch !== void 0 ? " (from /bridge)" : " (via registerWorker)"}`,
@@ -807,7 +807,7 @@ async function Yjn(t) {
     }
     if (e?.reason === "request_rejected")
       return `Session creation failed (server ${e.status}) \u2014 see debug log`;
-    if (e?.reason === "malformed_response") return CNe;
+    if (e?.reason === "malformed_response") return REMOTE_CONTROL_MALFORMED_RESPONSE_MESSAGE;
     return "Session creation failed \u2014 see debug log";
   }
   function nn(e) {
@@ -836,7 +836,7 @@ async function Yjn(t) {
         ),
         writeDiagnosticsEvent("info", "bridge_repl_v2_revive_reattach_teleported"),
         Ge?.(),
-        _e?.("failed", Lpe, "terminal"),
+        _e?.("failed", REMOTE_CONTROL_PREVIOUS_SESSION_UNAVAILABLE_MESSAGE, "terminal"),
         logBridgeSkip("v2_revive_reattach_teleported", void 0, !0),
         logFeatureBad("bridge_connect", "bridge_connect_reattach_teleported"),
         null
@@ -903,7 +903,7 @@ async function Yjn(t) {
         writeDiagnosticsEvent("info", "bridge_repl_v2_revive_reattach_gone"),
         le(),
         Ge?.(),
-        _e?.("failed", Lpe, "terminal"),
+        _e?.("failed", REMOTE_CONTROL_PREVIOUS_SESSION_UNAVAILABLE_MESSAGE, "terminal"),
         logBridgeSkip("v2_revive_reattach_gone", void 0, !0, {
           reattach_origin: fromEnumOpt(S),
           revive_initiated: L === !0,
@@ -917,7 +917,7 @@ async function Yjn(t) {
       ),
         (ft = !0),
         le(),
-        (Xt = ke ?? `${getBridgeSessionNamePrefix()}-${xU()}`),
+        (Xt = ke ?? `${getBridgeSessionNamePrefix()}-${generateAdjectiveNounName()}`),
         writeDiagnosticsEvent("info", "bridge_repl_v2_reattach_fallback", {
           via: "unarchive",
           status: e.status,
@@ -941,7 +941,7 @@ async function Yjn(t) {
         ),
         writeDiagnosticsEvent("info", "bridge_repl_v2_revive_fresh_refused"),
         le(),
-        _e?.("failed", Lpe, "terminal"),
+        _e?.("failed", REMOTE_CONTROL_PREVIOUS_SESSION_UNAVAILABLE_MESSAGE, "terminal"),
         logBridgeSkip("v2_revive_fresh_refused", void 0, !0),
         logFeatureBad("bridge_connect", "bridge_connect_revive_fresh_refused"),
         null
@@ -1334,7 +1334,7 @@ async function Yjn(t) {
       Jr = !0;
   }
   function yt(e) {
-    if (!fse(e?.rejectSource)) {
+    if (!isNonOriginSource(e?.rejectSource)) {
       te(ci(e));
       return;
     }
@@ -1404,7 +1404,7 @@ async function Yjn(t) {
     return e === void 0 ? void 0 : Sn(e.reason);
   }
   function Cn(e) {
-    return e === "host_signed_out" ? xyn : Hyn;
+    return e === "host_signed_out" ? REMOTE_CONTROL_HOST_SIGNED_OUT_MESSAGE : REMOTE_CONTROL_HOST_ACCOUNT_CHANGED_MESSAGE;
   }
   function kn(e) {
     return e === "host_signed_out" ? "auth" : "terminal";
@@ -1734,7 +1734,7 @@ async function Yjn(t) {
   function Dn(e) {
     return e !== void 0 && e === At && an();
   }
-  let Ue = vRe({
+  let Ue = createTokenRefreshScheduler({
     refreshBufferMs: D.token_refresh_buffer_ms,
     onExhausted: (e) => {
       if (!R && !X) wt({ leg: "bad", code: "chain_exhausted_no_oauth" });
@@ -2101,7 +2101,7 @@ async function Yjn(t) {
         Sr,
         uo,
         (a) => {
-          if (ddt(a, "bridge")) wr.noteActivity();
+          if (isHumanTurnEvent(a, "bridge")) wr.noteActivity();
           return gi?.(a);
         },
         Wt
@@ -2293,7 +2293,7 @@ async function Yjn(t) {
         reseedBridgePermissionMode(),
         reseedBridgeCrossSessionInbound(),
         reseedBridgeModel(),
-        e6n(),
+        reseedBridgeEffort(),
         xi?.(),
         (gr = setTimeout(Bn, D.connect_timeout_ms, Zr)),
         Ue.scheduleFromExpiresIn(b, e.expires_in),
@@ -2881,7 +2881,7 @@ async function Yjn(t) {
     has_initial_messages: !!(me && me.length > 0),
     v2: !0,
     expires_in_s: K.expires_in,
-    inProtectedNamespace: NL(),
+    inProtectedNamespace: isInProtectedNamespace(),
     ...getCooContextProperties(),
   }),
     logFeatureOk("bridge_connect"));
@@ -3209,7 +3209,7 @@ function Le(t) {
   return Vo(t) ? "auth" : "terminal";
 }
 function at(t) {
-  return t.reason === "request_rejected" && t.status === 403 && fse(t.source);
+  return t.reason === "request_rejected" && t.status === 403 && isNonOriginSource(t.source);
 }
 function st(t, p) {
   return at(p)
@@ -3240,10 +3240,10 @@ function A7(t) {
     case "invalid_session_id":
       return "session id contains unsupported characters \u2014 check the --session-id value";
     case "request_rejected":
-      if (at(t)) return `${rVt(t.source)} \u2014 run /remote-control to retry`;
+      if (at(t)) return `${describeNonOriginSource(t.source)} \u2014 run /remote-control to retry`;
       return `Remote Control server rejected the request (HTTP ${t.status}) \u2014 run /remote-control to retry`;
     case "malformed_response":
-      return CNe;
+      return REMOTE_CONTROL_MALFORMED_RESPONSE_MESSAGE;
   }
 }
 async function Ko(t, p, v, w, I, S) {

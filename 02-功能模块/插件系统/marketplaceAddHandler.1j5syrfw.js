@@ -16,15 +16,15 @@ import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { dt, ge, l, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Jlr } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { escapeInvisibleChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { wr, ff, sd } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Ui, mXe } from "./chunk-ajtn749s.js";
-import { bK, gXe, hXe } from "./chunk-hh8f1qrw.js";
+import { areLocalPluginDirsAllowedByPolicy, localPluginDirsBlockedMessage, marketplacesRefusedByPolicyClause } from "./plugin-source-policy.js";
 import { V$, Aa, vm, K$ } from "./chunk-7s6mt1vg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _se, brr, getMainLoopModel, Tn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -102,24 +102,24 @@ import {
   Rot,
 } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { JB } from "./chunk-bh1q9esj.js";
+import { resolveMissingDependencies } from "./plugin-dependency-resolution.js";
 import { Dn, kn, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import {
-  np,
-  Xc,
-  Qp,
-  $g,
-  Ul,
-  jI,
-  Bn,
-  J3,
-  XSt,
-  Lu,
-  $y,
-  xi,
-  Ug,
-  bC,
+  INLINE_PLUGIN_SOURCE,
+  SKILLS_DIR_PLUGIN_SOURCE,
+  SYNCED_PLUGIN_SOURCE,
+  BUILTIN_PLUGIN_SOURCE,
+  isNonMarketplacePluginSource,
+  getNonMarketplacePluginSource,
+  splitPluginId,
+  parsePluginId,
+  formatPluginId,
+  getPluginMarketplace,
+  isEqualIgnoringCase,
+  normalizeLookupKey,
+  isOfficialMarketplace,
+  getSettingsSourceForScope,
 } from "./chunk-33bdfgmx.js";
 F();
 import { join as ce, relative, resolve } from "path";
@@ -131,11 +131,11 @@ async function ee(a, o, s) {
 function Le(a, o, s, d = 0) {
   let c = a - o.length - s.length,
     p = [];
-  if (o.length > 0) p.push(hXe(o.length, o));
+  if (o.length > 0) p.push(marketplacesRefusedByPolicyClause(o.length, o));
   if (s.length > 0) p.push(vgn(s.length, s));
   if (d > 0)
     p.push(
-      `${d} ${x(d, "marketplace")} skipped (nothing to refresh: declared in settings, managed, or not allowed)`,
+      `${d} ${pluralize(d, "marketplace")} skipped (nothing to refresh: declared in settings, managed, or not allowed)`,
     );
   return { messages: p, summary: Be(c, o.length, s.length) };
 }
@@ -144,10 +144,10 @@ function Be(a, o, s) {
     c =
       s > 0
         ? a > 0
-          ? `Updated ${a} ${x(a, "marketplace")}, but not all`
+          ? `Updated ${a} ${pluralize(a, "marketplace")}, but not all`
           : "No marketplaces were updated"
         : a > 0
-          ? `Successfully updated ${a} ${x(a, "marketplace")}`
+          ? `Successfully updated ${a} ${pluralize(a, "marketplace")}`
           : o > 0
             ? "No marketplaces were updated"
             : "No marketplaces needed updating";
@@ -157,31 +157,31 @@ function Z(a, o) {
   if (a instanceof Ui)
     return (n(`${o} refused: ${a.message}`), cliError(ff(a.message)));
   (n(`Failed to ${o}: ${l(a)}`, { level: "error" }),
-    cliError(ff(`${L.cross} Failed to ${o}: ${l(a)}`)));
+    cliError(ff(`${figures.cross} Failed to ${o}: ${l(a)}`)));
 }
 function de(a) {
   let o = [];
   if (a.errors.length > 0)
     (o.push(
-      `${L.cross} Found ${a.errors.length} ${x(a.errors.length, "error")}:`,
+      `${figures.cross} Found ${a.errors.length} ${pluralize(a.errors.length, "error")}:`,
       "",
     ),
       a.errors.forEach((s) => {
-        o.push(`  ${L.pointer} ${s.path}: ${s.message}`);
+        o.push(`  ${figures.pointer} ${s.path}: ${s.message}`);
       }),
       o.push(""));
   if (a.warnings.length > 0)
     (o.push(
-      `${L.warning} Found ${a.warnings.length} ${x(a.warnings.length, "warning")}:`,
+      `${figures.warning} Found ${a.warnings.length} ${pluralize(a.warnings.length, "warning")}:`,
       "",
     ),
       a.warnings.forEach((s) => {
-        o.push(`  ${L.pointer} ${s.path}: ${s.message}`);
+        o.push(`  ${figures.pointer} ${s.path}: ${s.message}`);
       }),
       o.push(""));
   if (a.notes !== void 0)
     (a.notes.forEach((s) => {
-      o.push(`  ${L.pointer} ${s}`);
+      o.push(`  ${figures.pointer} ${s}`);
     }),
       o.push(""));
   return o;
@@ -197,7 +197,7 @@ async function pluginValidateHandler(a, o, s) {
     else logError(C);
     return (
       console.error(
-        `${L.cross} Unexpected error during validation: ${ek(l(C), 200)}`,
+        `${figures.cross} Unexpected error during validation: ${ek(l(C), 200)}`,
       ),
       await logFeatureBadAsync("cli_plugin_validate", "cli_plugin_validate_exception"),
       exitAfterAnalyticsFlush(2)
@@ -227,12 +227,12 @@ async function pluginValidateHandler(a, o, s) {
   if (k)
     R.push(
       v
-        ? `${L.tick} Validation passed with warnings`
-        : `${L.tick} Validation passed`,
+        ? `${figures.tick} Validation passed with warnings`
+        : `${figures.tick} Validation passed`,
     );
   else if (w && v)
-    R.push(`${L.cross} Validation failed (--strict treats warnings as errors)`);
-  else R.push(`${L.cross} Validation failed`);
+    R.push(`${figures.cross} Validation failed (--strict treats warnings as errors)`);
+  else R.push(`${figures.cross} Validation failed`);
   return (
     await renderAndWaitForExit(await a(), e(t, { children: X(R) })),
     await P(),
@@ -242,10 +242,10 @@ async function pluginValidateHandler(a, o, s) {
 async function pluginTagHandler(a, o, s) {
   let d = await e9e(o ?? ".", { force: s.force }),
     c = [];
-  for (let C of d.warnings) c.push(`${L.warning} ${C}`);
+  for (let C of d.warnings) c.push(`${figures.warning} ${C}`);
   if (!d.ok) {
     (logFeatureBad("cli_plugin_tag", "cli_plugin_tag_prepare_failed"),
-      c.push(`${L.cross} ${d.error}`),
+      c.push(`${figures.cross} ${d.error}`),
       z(a, c, 1));
     return;
   }
@@ -271,7 +271,7 @@ async function pluginTagHandler(a, o, s) {
   if (s.dryRun) {
     (logFeatureOk("cli_plugin_tag"),
       c.push(
-        `${L.tick} Dry run \u2014 would create tag ${p.tag} at HEAD in ${p.gitRoot}`,
+        `${figures.tick} Dry run \u2014 would create tag ${p.tag} at HEAD in ${p.gitRoot}`,
         `  git -C ${p.gitRoot} tag ${w ? "-f " : ""}-a ${p.tag} -m ${b(v)}`,
         `  ${P}`,
       ),
@@ -286,12 +286,12 @@ async function pluginTagHandler(a, o, s) {
   });
   if (!R.ok) {
     (logFeatureBad("cli_plugin_tag", "cli_plugin_tag_create_failed"),
-      c.push(`${L.cross} ${R.error}`),
+      c.push(`${figures.cross} ${R.error}`),
       z(a, c, 1));
     return;
   }
-  if ((logFeatureOk("cli_plugin_tag"), c.push(`${L.tick} Created tag ${p.tag}`), R.pushed))
-    c.push(`${L.tick} Pushed to ${k}`);
+  if ((logFeatureOk("cli_plugin_tag"), c.push(`${figures.tick} Created tag ${p.tag}`), R.pushed))
+    c.push(`${figures.tick} Pushed to ${k}`);
   else c.push(`  Push with: ${P}`);
   z(a, c, 0);
 }
@@ -304,7 +304,7 @@ async function pluginInitHandler(a, o, s, d) {
     p = qNn(o);
   if (p) {
     (logFeatureBad("cli_plugin_init", "invalid_name"),
-      c.push(`${L.cross} Invalid plugin name "${o}": ${p}`),
+      c.push(`${figures.cross} Invalid plugin name "${o}": ${p}`),
       z(a, c, 1));
     return;
   }
@@ -314,22 +314,22 @@ async function pluginInitHandler(a, o, s, d) {
     else {
       (logFeatureBad("cli_plugin_init", "invalid_component"),
         c.push(
-          `${L.cross} Unknown --with component "${D}". Valid: ${t6e.join(", ")}`,
+          `${figures.cross} Unknown --with component "${D}". Valid: ${t6e.join(", ")}`,
         ),
         z(a, c, 1));
       return;
     }
-  if (!bK()) {
+  if (!areLocalPluginDirsAllowedByPolicy()) {
     (logFeatureBad("cli_plugin_init", "policy_blocked"),
-      c.push(`${L.cross} ${gXe(Gu(ce(be(), "skills")))}`),
+      c.push(`${figures.cross} ${localPluginDirsBlockedMessage(Gu(ce(getClaudeConfigDir(), "skills")))}`),
       z(a, c, 1));
     return;
   }
-  let w = ce(be(), "skills"),
+  let w = ce(getClaudeConfigDir(), "skills"),
     v = ce(w, o);
   if (relative(w, resolve(v)).startsWith("..")) {
     (logFeatureBad("cli_plugin_init", "invalid_name"),
-      c.push(`${L.cross} Plugin name "${o}" would write outside ${Gu(w)}`),
+      c.push(`${figures.cross} Plugin name "${o}" would write outside ${Gu(w)}`),
       z(a, c, 1));
     return;
   }
@@ -337,7 +337,7 @@ async function pluginInitHandler(a, o, s, d) {
     R = s.authorEmail ?? (await _se());
   if (!P && s.authorEmail)
     c.push(
-      `${L.warning} --author-email was ignored because no author name was found. Pass --author or set git config user.name.`,
+      `${figures.warning} --author-email was ignored because no author name was found. Pass --author or set git config user.name.`,
     );
   let C = P ? (R ? { name: P, email: R } : { name: P }) : void 0,
     N = zNn({ name: o, description: s.description, author: C, with: k }),
@@ -346,7 +346,7 @@ async function pluginInitHandler(a, o, s, d) {
     let D = await VNn(v, N, { force: s.force });
     if (!D.ok) {
       (logFeatureBad("cli_plugin_init", "target_exists"),
-        c.push(`${L.cross} ${D.error}`),
+        c.push(`${figures.cross} ${D.error}`),
         z(a, c, 1));
       return;
     }
@@ -354,7 +354,7 @@ async function pluginInitHandler(a, o, s, d) {
   } catch (D) {
     (logFeatureBad("cli_plugin_init", "write_failed"),
       logError(D),
-      c.push(`${L.cross} Failed to write scaffold: ${l(D)}`),
+      c.push(`${figures.cross} Failed to write scaffold: ${l(D)}`),
       z(a, c, 1));
     return;
   }
@@ -366,34 +366,34 @@ async function pluginInitHandler(a, o, s, d) {
     return;
   }
   logFeatureOk("cli_plugin_init");
-  let H = `${o}@${Xc}`;
-  c.push(`${L.tick} Created plugin "${o}" at ${Gu(v)}`);
+  let H = `${o}@${SKILLS_DIR_PLUGIN_SOURCE}`;
+  c.push(`${figures.tick} Created plugin "${o}" at ${Gu(v)}`);
   let E = getSettings_DEPRECATED().enabledPlugins ?? {},
     B = Xf()?.has(o) ?? !1,
     Y = await Ql(d),
     T = Object.keys(E).find((D) => {
-      let J = Bn(D);
+      let J = splitPluginId(D);
       return (
         J.name === o &&
         J.marketplace !== void 0 &&
-        J.marketplace !== $g &&
-        !Ul(J.marketplace) &&
+        J.marketplace !== BUILTIN_PLUGIN_SOURCE &&
+        !isNonMarketplacePluginSource(J.marketplace) &&
         Y[J.marketplace] !== void 0
       );
     }),
     O = E[H] === !1;
   if (B)
     c.push(
-      `  ${L.warning} A plugin named "${o}" is locked by managed settings, which takes precedence \u2014 ${H} won't load. To load this copy, give it a different "name" in .claude-plugin/plugin.json.`,
+      `  ${figures.warning} A plugin named "${o}" is locked by managed settings, which takes precedence \u2014 ${H} won't load. To load this copy, give it a different "name" in .claude-plugin/plugin.json.`,
     );
   else if (T)
     c.push(
-      `  ${L.warning} The name "${o}" is already taken by ${T} \u2014 when that plugin loads, ${H} won't. To load this copy, give it a different "name" in .claude-plugin/plugin.json or uninstall the conflicting plugin.`,
+      `  ${figures.warning} The name "${o}" is already taken by ${T} \u2014 when that plugin loads, ${H} won't. To load this copy, give it a different "name" in .claude-plugin/plugin.json or uninstall the conflicting plugin.`,
     );
   else if (O) {
     let D = Aa("plugin enable", H);
     c.push(
-      `  ${L.warning} A disabled setting for ${H} exists, so it won't load until you re-enable it${D ? `: ${D}` : " in /plugin"}`,
+      `  ${figures.warning} A disabled setting for ${H} exists, so it won't load until you re-enable it${D ? `: ${D}` : " in /plugin"}`,
     );
   } else
     c.push(
@@ -426,7 +426,7 @@ async function pluginListHandler(a, o, s, d) {
         standaloneWarningScope: "session",
         pathOf: (T) => T.path,
         showScope: !1,
-        ...ue(np, H),
+        ...ue(INLINE_PLUGIN_SOURCE, H),
       },
       {
         header: `Synced from claude.ai${mXe() ? "" : " \u2014 sync is off in this shell; these load only in a synced session"}:`,
@@ -435,7 +435,7 @@ async function pluginListHandler(a, o, s, d) {
         standaloneWarningScope: "synced",
         pathOf: (T) => T.path,
         showScope: !1,
-        ...ue(Qp, H),
+        ...ue(SYNCED_PLUGIN_SOURCE, H),
       },
       {
         header: "Skills-directory plugins (.claude/skills/*):",
@@ -444,7 +444,7 @@ async function pluginListHandler(a, o, s, d) {
         standaloneWarningScope: "project",
         pathOf: AEe,
         showScope: !0,
-        ...ue(Xc, H),
+        ...ue(SKILLS_DIR_PLUGIN_SOURCE, H),
       },
     ];
   if (o.json) {
@@ -453,7 +453,7 @@ async function pluginListHandler(a, o, s, d) {
       let D = c.plugins[U];
       if (!D || D.length === 0) continue;
       let J = m.get(U),
-        W = J?.name ?? Bn(U).name,
+        W = J?.name ?? splitPluginId(U).name,
         G = C.filter((V) => z8(V, U, W)).map(vm),
         K = N.filter((V) => z8(V, U, W)).map(K$);
       for (let V of D) {
@@ -521,20 +521,20 @@ async function pluginListHandler(a, o, s, d) {
   for (let T of v.sort()) {
     let O = c.plugins[T];
     if (!O || O.length === 0) continue;
-    let U = m.get(T)?.name ?? Bn(T).name,
+    let U = m.get(T)?.name ?? splitPluginId(T).name,
       D = C.filter((W) => z8(W, T, U)),
       J = N.filter((W) => z8(W, T, U));
     for (let W of O) {
       let G = k(w, T) !== void 0,
         K =
           D.length > 0
-            ? `${L.cross} failed to load`
+            ? `${figures.cross} failed to load`
             : G
-              ? `${L.tick} enabled`
-              : `${L.cross} disabled`,
+              ? `${figures.tick} enabled`
+              : `${figures.cross} disabled`,
         V = W.version || "unknown",
         q = W.scope;
-      (B.push(`  ${L.pointer} ${T}`),
+      (B.push(`  ${figures.pointer} ${T}`),
         B.push(`    Version: ${V}`),
         B.push(`    Scope: ${q}`),
         B.push(`    Status: ${K}`));
@@ -568,7 +568,7 @@ async function marketplaceAddHandler(a, o, s, d, c) {
   if (s.claudeai) {
     if (s.sparse !== void 0 || s.scope !== void 0)
       return cliError(
-        `${L.cross} --claudeai takes only the marketplace name (no --sparse or --scope: a claude.ai marketplace is hosted for your account, not declared in settings)`,
+        `${figures.cross} --claudeai takes only the marketplace name (no --sparse or --scope: a claude.ai marketplace is hosted for your account, not declared in settings)`,
       );
     await Ne(a, o, d, c);
     return;
@@ -580,27 +580,27 @@ async function marketplaceAddHandler(a, o, s, d, c) {
       return (
         await logFeatureBadAsync("cli_marketplace_add", "cli_marketplace_add_invalid_source"),
         cliErrorAfterAnalyticsFlush(
-          `${L.cross} Invalid marketplace source format. Try: owner/repo, https://..., or ./path`,
+          `${figures.cross} Invalid marketplace source format. Try: owner/repo, https://..., or ./path`,
         )
       );
     if ("error" in P)
       return (
         await logFeatureBadAsync("cli_marketplace_add", "cli_marketplace_add_parse_failed"),
-        cliErrorAfterAnalyticsFlush(`${L.cross} ${P.error}`)
+        cliErrorAfterAnalyticsFlush(`${figures.cross} ${P.error}`)
       );
     if (
       ((w = s.scope ?? "user"),
       w !== "user" && w !== "project" && w !== "local")
     )
       return cliError(
-        `${L.cross} Invalid scope '${w}'. Use: user, project, or local`,
+        `${figures.cross} Invalid scope '${w}'. Use: user, project, or local`,
       );
-    if (((k = bC(w)), (p = P), s.sparse && s.sparse.length > 0))
+    if (((k = getSettingsSourceForScope(w)), (p = P), s.sparse && s.sparse.length > 0))
       if (p.source === "github" || p.source === "git")
         p = { ...p, sparsePaths: s.sparse };
       else
         return cliError(
-          `${L.cross} --sparse is only supported for github and git marketplace sources (got: ${p.source})`,
+          `${figures.cross} --sparse is only supported for github and git marketplace sources (got: ${p.source})`,
         );
   } catch (P) {
     return (
@@ -629,12 +629,12 @@ async function marketplaceAddHandler(a, o, s, d, c) {
           _PROTO_marketplace_name: R,
           source_type: fromEnum(p.source),
           repo_hash: p.source === "github" ? Tn(p.repo) : void 0,
-          is_official_marketplace: Ug(R),
+          is_official_marketplace: isOfficialMarketplace(R),
         }),
         await logFeatureOkAsync("cli_marketplace_add"));
       let m = [];
       try {
-        m = (await JB((await Ph(d, c)).errors, d)).installed;
+        m = (await resolveMissingDependencies((await Ph(d, c)).errors, d)).installed;
       } catch (E) {
         n(`marketplace add: dep auto-resolve skipped: ${l(E)}`, {
           level: "warn",
@@ -644,8 +644,8 @@ async function marketplaceAddHandler(a, o, s, d, c) {
       return (
         P.push(
           C
-            ? `${L.tick} Marketplace '${R}' already on disk \u2014 declared in ${w} settings${H}`
-            : `${L.tick} Successfully added marketplace: ${R} (declared in ${w} settings)${H}`,
+            ? `${figures.tick} Marketplace '${R}' already on disk \u2014 declared in ${w} settings${H}`
+            : `${figures.tick} Successfully added marketplace: ${R} (declared in ${w} settings)${H}`,
         ),
         P
       );
@@ -704,7 +704,7 @@ async function Ne(a, o, s, d) {
       let N = Vwe(C),
         A = R.plugins.length;
       return [
-        `${L.tick} Successfully added marketplace: ${hDe(v)} \u2014 hosted on claude.ai, ${aX(v.scope)} \u2014 ${A} ${x(A, "plugin")}${N ? ` (${N})` : ""}`,
+        `${figures.tick} Successfully added marketplace: ${hDe(v)} \u2014 hosted on claude.ai, ${aX(v.scope)} \u2014 ${A} ${pluralize(A, "plugin")}${N ? ` (${N})` : ""}`,
         `  Install its plugins with: claude plugin install <plugin>@${P}`,
       ];
     } catch (p) {
@@ -797,7 +797,7 @@ async function marketplaceListHandler(a, o, s) {
     if (
       (c.forEach((m) => {
         let H = d[m];
-        if ((A.push(`  ${L.pointer} ${m}`), H?.source)) {
+        if ((A.push(`  ${figures.pointer} ${m}`), H?.source)) {
           let E = H.source;
           if (E.source === "github") {
             let B = E.ref ? `@${E.ref}` : "";
@@ -824,7 +824,7 @@ async function marketplaceListHandler(a, o, s) {
       A.push("From claude.ai:", "");
     for (let m of k)
       (A.push(
-        `  ${L.pointer} ${m.name} (available from claude.ai${m.scope ? `, ${m.scope}` : ""} \u2014 not added)`,
+        `  ${figures.pointer} ${m.name} (available from claude.ai${m.scope ? `, ${m.scope}` : ""} \u2014 not added)`,
       ),
         A.push(
           `    Source: ${m.source.source === "github" ? "GitHub" : "Git"} (${Gte(m.source)})`,
@@ -832,14 +832,14 @@ async function marketplaceListHandler(a, o, s) {
         A.push(""));
     for (let m of w)
       (A.push(
-        `  ${L.pointer} ${hDe(m)} \u2014 hosted on claude.ai, ${aX(m.scope)} \xB7 not added`,
+        `  ${figures.pointer} ${hDe(m)} \u2014 hosted on claude.ai, ${aX(m.scope)} \xB7 not added`,
       ),
         A.push(
           `    Add: claude plugin marketplace add --claudeai ${V$(m.name) ? m.name : "<name>"}`,
         ),
         A.push(""));
     for (let m of v)
-      (A.push(`  ${L.pointer} ${zwe(m)} (browse on claude.ai)`), A.push(""));
+      (A.push(`  ${figures.pointer} ${zwe(m)} (browse on claude.ai)`), A.push(""));
     C = e(t, { children: X(A) });
   }
   logFeatureOk("cli_marketplace_list");
@@ -853,9 +853,9 @@ async function marketplaceRemoveHandler(a, o, s, d) {
     let p = s.scope;
     if (p !== "user" && p !== "project" && p !== "local")
       return cliError(
-        `${L.cross} Invalid scope '${p}'. Use: user, project, or local`,
+        `${figures.cross} Invalid scope '${p}'. Use: user, project, or local`,
       );
-    c = bC(p);
+    c = getSettingsSourceForScope(p);
   }
   try {
     (await TEe(o, c, d),
@@ -871,7 +871,7 @@ async function marketplaceRemoveHandler(a, o, s, d) {
       a,
       r(t, {
         children: [
-          L.tick,
+          figures.tick,
           " Successfully removed marketplace:",
           " ",
           wr(o),
@@ -922,7 +922,7 @@ async function marketplaceUpdateHandler(a, o, s, d) {
           await logFeatureOkAsync("cli_marketplace_update"),
           {
             messages: w,
-            summary: `${L.tick} Successfully updated marketplace: ${o}`,
+            summary: `${figures.tick} Successfully updated marketplace: ${o}`,
           }
         ),
       )
@@ -1003,7 +1003,7 @@ function ve(Pa) {
   else le = xe[1];
   let Oe;
   if (xe[2] !== le)
-    ((Oe = e(RenderOnceAndExit, { children: r(t, { children: [L.tick, " ", le] }) })),
+    ((Oe = e(RenderOnceAndExit, { children: r(t, { children: [figures.tick, " ", le] }) })),
       (xe[2] = le),
       (xe[3] = Oe));
   else Oe = xe[3];
@@ -1031,7 +1031,7 @@ function Ie(a) {
   return o;
 }
 function ae(a, o, s) {
-  let { name: d, marketplace: c } = J3(o);
+  let { name: d, marketplace: c } = parsePluginId(o);
   logEvent(a, {
     _PROTO_plugin_name: d,
     ...(c && { _PROTO_marketplace_name: c }),
@@ -1103,7 +1103,7 @@ async function pluginUninstallHandler(a, o, s, d) {
   let c = me(s);
   ae("tengu_plugin_uninstall_command", o, fromEnum(c));
   let p = await UNn(o, c, s.keepData, s.prune, s.yes, d);
-  (await renderAndWaitForExit(a, e(t, { children: ff(s.prune ? p : `${L.tick} ${p}`) })),
+  (await renderAndWaitForExit(a, e(t, { children: ff(s.prune ? p : `${figures.tick} ${p}`) })),
     await logFeatureOkAsync("cli_plugin_uninstall"),
     await exitAfterAnalyticsFlush(0));
 }
@@ -1127,7 +1127,7 @@ async function pluginEnableHandler(a, o, s, d) {
   } catch (k) {
     return await Lae(k, "enable", o);
   }
-  (await renderAndWaitForExit(a, r(t, { children: [L.tick, " ", ff(p.message)] })),
+  (await renderAndWaitForExit(a, r(t, { children: [figures.tick, " ", ff(p.message)] })),
     await logEventAsync("tengu_plugin_enabled_cli", {
       ...xy(p.pluginId || o, Xf()),
       scope: fromEnumOpt(p.scope),
@@ -1178,9 +1178,9 @@ async function pluginDetailsHandler(a, o, s, d, c) {
     { formatTokenEstimate: v } = await import("../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js");
   await qwe();
   let { enabled: P, disabled: R } = await Ph(isHoverRestEnabled() ? d : void 0, c),
-    C = J3(o),
-    N = C.marketplace ? XSt(C.name, C.marketplace) : C.name,
-    A = Ul(C.marketplace) ? (I) => xi(I) === xi(N) : (I) => $y(I, N),
+    C = parsePluginId(o),
+    N = C.marketplace ? formatPluginId(C.name, C.marketplace) : C.name,
+    A = isNonMarketplacePluginSource(C.marketplace) ? (I) => normalizeLookupKey(I) === normalizeLookupKey(N) : (I) => isEqualIgnoringCase(I, N),
     m = [...P, ...R].find((I) => A(C.marketplace ? I.source : I.name));
   if (!m) {
     logFeatureBad("cli_plugin_details", "not_found");
@@ -1189,7 +1189,7 @@ async function pluginDetailsHandler(a, o, s, d, c) {
     let j = await a();
     (await renderAndWaitForExit(j, e(t, { children: ff(I) })), process.exit(1));
   }
-  let H = Lu(m.source) ?? np,
+  let H = getPluginMarketplace(m.source) ?? INLINE_PLUGIN_SOURCE,
     E = s.models?.length ? s.models : [getMainLoopModel()],
     B;
   try {
@@ -1198,7 +1198,7 @@ async function pluginDetailsHandler(a, o, s, d, c) {
   } catch (I) {
     (logError(dt(ge(I), "plugin details: inventory/token-cost failed")),
       logFeatureBad("cli_plugin_details", "inventory_failed"));
-    let j = `${L.cross} Could not load details for "${m.name}": ${l(I)}`;
+    let j = `${figures.cross} Could not load details for "${m.name}": ${l(I)}`;
     if (s.json) return cliError(ff(j));
     let Q = await a();
     (await renderAndWaitForExit(Q, e(t, { children: ff(j) })), process.exit(1));
@@ -1301,10 +1301,10 @@ function X(a) {
 `);
 }
 function ne(a) {
-  return Jlr(b(a, null, 2));
+  return escapeInvisibleChars(b(a, null, 2));
 }
 function ue(a, o) {
-  let s = (k) => jI(k.source) === a,
+  let s = (k) => getNonMarketplacePluginSource(k.source) === a,
     d = o.plugins.filter(s),
     c = o.errors.filter(s),
     p = o.warnings.filter(s);
@@ -1327,18 +1327,18 @@ function He(a) {
   if (!Re(a)) return [];
   let { standaloneErrorRows: o, standaloneWarningRows: s } = a,
     d = [a.header, ""];
-  for (let c of s) d.push(`  ${L.warning} ${K$(c)}`, "");
+  for (let c of s) d.push(`  ${figures.warning} ${K$(c)}`, "");
   for (let c of a.plugins) {
     let p = a.errors.filter((v) => ZPt(v, c)),
       k = a.warnings.filter((v) => eOt(v, c)),
       w =
         c.enabled === !1
-          ? `${L.cross} disabled`
+          ? `${figures.cross} disabled`
           : p.length > 0
-            ? `${L.cross} loaded with errors`
-            : `${L.tick} loaded`;
+            ? `${figures.cross} loaded with errors`
+            : `${figures.tick} loaded`;
     if (
-      (d.push(`  ${L.pointer} ${c.source}`),
+      (d.push(`  ${figures.pointer} ${c.source}`),
       d.push(`    Version: ${c.manifest.version ?? "unknown"}`),
       a.showScope)
     )
@@ -1349,7 +1349,7 @@ function He(a) {
     d.push("");
   }
   for (let c of o)
-    d.push(`  ${L.pointer} ${c.source}: ${L.cross} ${vm(c)}`, "");
+    d.push(`  ${figures.pointer} ${c.source}: ${figures.cross} ${vm(c)}`, "");
   return d;
 }
 function $e({ path: a, message: o }) {

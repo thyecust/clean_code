@@ -10,7 +10,7 @@
 import { Pw } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { getTaskOutputPath } from "../后台任务-Shell管理/chunk-x3txegas.js";
-function xs(e) {
+function isTerminalTaskStatus(e) {
   return e === "completed" || e === "failed" || e === "killed";
 }
 import { randomBytes } from "crypto";
@@ -20,22 +20,22 @@ var w = new Set([
   "in_process_teammate",
   "local_workflow",
 ]);
-function MI(e) {
-  return Object.values(e).some(n3t);
+function hasActiveAgentTask(e) {
+  return Object.values(e).some(isActiveAgentTask);
 }
-function n3t(e) {
+function isActiveAgentTask(e) {
   return (
     w.has(e.type) &&
-    !xs(e.status) &&
+    !isTerminalTaskStatus(e.status) &&
     !(e.type === "in_process_teammate" && e.isIdle) &&
     !(e.type === "remote_agent" && e.isLongRunning)
   );
 }
-function X_n(e) {
-  return Object.values(e).some(r3t);
+function hasActiveShellTask(e) {
+  return Object.values(e).some(isActiveShellTask);
 }
-function r3t(e) {
-  return e.type === "local_bash" && !xs(e.status);
+function isActiveShellTask(e) {
+  return e.type === "local_bash" && !isTerminalTaskStatus(e.status);
 }
 var k = {
     local_bash: "b",
@@ -50,14 +50,14 @@ var k = {
     auto_mode_scan: "e",
   },
   d = "0123456789abcdefghijklmnopqrstuvwxyz";
-function Dh(e) {
+function generateTaskId(e) {
   let t = k[e] ?? "x",
     o = randomBytes(8),
     i = t;
   for (let n = 0; n < 8; n++) i += d[o[n] % d.length];
   return i;
 }
-function Md(e, t, o, i) {
+function createPendingTask(e, t, o, i) {
   return {
     id: e,
     type: t,
@@ -360,30 +360,30 @@ var c = {
   B = { ...c, ...S },
   R = a(),
   U = R ? b : B,
-  L = U,
+  figures = U,
   I = Object.entries(p);
-function fw(e) {
+function sanitizeDisplayName(e) {
   let t = e.replace(/[^A-Za-z0-9._:/@[\]-]/g, "");
   if (t.length === 0) return "(unrecognized model name)";
   return t.length > 128 ? `${t.slice(0, 128)}\u2026` : t;
 }
-function Lh(e, t) {
-  return `Model "${fw(e)}" is restricted by your organization's settings. Using ${fw(t)} instead.`;
+function formatModelRestrictedMessage(e, t) {
+  return `Model "${sanitizeDisplayName(e)}" is restricted by your organization's settings. Using ${sanitizeDisplayName(t)} instead.`;
 }
-var Y_n = ["unrestricted", "small", "medium", "large"],
+var WORKFLOW_SIZE_GUIDELINE_VALUES = ["unrestricted", "small", "medium", "large"],
   f = "medium";
-function bSt(e) {
-  return Y_n.find((t) => t === e);
+function parseWorkflowSizeGuideline(e) {
+  return WORKFLOW_SIZE_GUIDELINE_VALUES.find((t) => t === e);
 }
 var l = { small: 5, medium: 15, large: 50 };
 function T(e) {
   let t = e === "small" || e === "medium" || e === "large" ? l[e] : void 0;
   return t === void 0 ? e : `${e} (aim for <${t} agents)`;
 }
-function J_n(e, t) {
+function formatWorkflowSizeGuidelineLabel(e, t) {
   return t && e !== "unrestricted" ? `${e} (default)` : T(e);
 }
-function eYn(e) {
+function getWorkflowSizeAgentLimit(e) {
   return e === "small" || e === "medium" || e === "large" ? l[e] : void 0;
 }
 function g(e) {
@@ -402,34 +402,34 @@ function D(e, t) {
       : "";
   return `${o} ${g(e)}. ${h()}${i}`;
 }
-function tYn(e) {
+function formatWorkflowSizeGuidelineChangedMessage(e) {
   if (e === "unrestricted")
     return "Workflow size is now unrestricted \u2014 no size guideline applies.";
   return `The workflow size guideline for this session changed: ${g(e)}. ${h()}`;
 }
-function dAe() {
+function isWorkflowSizeGuidelineConfigured() {
   return Pw()?.settings.workflowSizeGuideline !== void 0;
 }
-function Tre(e) {
-  let t = bSt(Pw()?.settings.workflowSizeGuideline) ?? bSt(e);
+function resolveWorkflowSizeGuideline(e) {
+  let t = parseWorkflowSizeGuideline(Pw()?.settings.workflowSizeGuideline) ?? parseWorkflowSizeGuideline(e);
   return t === void 0 ? { size: f, isDefault: !0 } : { size: t, isDefault: !1 };
 }
-function wSt(e) {
+function getSessionStartWorkflowSizeGuideline(e) {
   let t = getSessionFeatureCache();
   return (
-    (t.sessionStartWorkflowSizeGuideline ??= Tre(e)),
+    (t.sessionStartWorkflowSizeGuideline ??= resolveWorkflowSizeGuideline(e)),
     t.sessionStartWorkflowSizeGuideline
   );
 }
-function Q_n(e) {
-  let { size: t, isDefault: o } = wSt(e);
+function getWorkflowSizeGuidelinePromptText(e) {
+  let { size: t, isDefault: o } = getSessionStartWorkflowSizeGuideline(e);
   if (t === "unrestricted") return "";
   return `
 
 ${D(t, o)}`;
 }
-function nYn(e, t) {
-  let o = Tre(t).size,
+function getWorkflowSizeGuidelineChangeAttachment(e, t) {
+  let o = resolveWorkflowSizeGuideline(t).size,
     i;
   for (let r = e.length - 1; r >= 0; r--) {
     let s = e[r];
@@ -441,29 +441,29 @@ function nYn(e, t) {
       break;
     }
   }
-  let n = i ?? wSt(t).size;
+  let n = i ?? getSessionStartWorkflowSizeGuideline(t).size;
   if (o !== n) return [{ type: "workflow_size_guideline_change", size: o }];
   return [];
 }
 export {
-  xs,
-  MI,
-  n3t,
-  X_n,
-  r3t,
-  Dh,
-  Md,
-  L,
-  fw,
-  Lh,
-  Y_n,
-  bSt,
-  J_n,
-  eYn,
-  tYn,
-  dAe,
-  Tre,
-  wSt,
-  Q_n,
-  nYn,
+  isTerminalTaskStatus,
+  hasActiveAgentTask,
+  isActiveAgentTask,
+  hasActiveShellTask,
+  isActiveShellTask,
+  generateTaskId,
+  createPendingTask,
+  figures,
+  sanitizeDisplayName,
+  formatModelRestrictedMessage,
+  WORKFLOW_SIZE_GUIDELINE_VALUES,
+  parseWorkflowSizeGuideline,
+  formatWorkflowSizeGuidelineLabel,
+  getWorkflowSizeAgentLimit,
+  formatWorkflowSizeGuidelineChangedMessage,
+  isWorkflowSizeGuidelineConfigured,
+  resolveWorkflowSizeGuideline,
+  getSessionStartWorkflowSizeGuideline,
+  getWorkflowSizeGuidelinePromptText,
+  getWorkflowSizeGuidelineChangeAttachment,
 };

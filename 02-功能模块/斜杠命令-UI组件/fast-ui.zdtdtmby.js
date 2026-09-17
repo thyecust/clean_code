@@ -12,6 +12,6 @@
 import { nst, Kmr } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
-import "../../01-核心基础设施/设置-配置/chunk-992erern.js";
+import "../../01-核心基础设施/设置-配置/fast-mode.js";
 import "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
 export { nst as FastModePicker, Kmr as call };

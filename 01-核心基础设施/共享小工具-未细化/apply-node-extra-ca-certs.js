@@ -11,7 +11,7 @@ import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ee } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { Hd } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { isDesktopHostEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { Nr, uke } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 function applyNodeExtraCaCertsFromConfig() {
@@ -27,7 +27,7 @@ function i() {
   try {
     if (
       a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST &&
-      !Hd() &&
+      !isDesktopHostEntrypoint() &&
       uke("NODE_EXTRA_CA_CERTS")
     ) {
       n(

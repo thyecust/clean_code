@@ -14,7 +14,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { tu } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { Ext } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
+import { checkWebSocketEgress } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
 import { Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { rU, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
@@ -40,8 +40,8 @@ import {
   Xne,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ys } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { hWn, Vqe } from "../../01-核心基础设施/共享小工具-未细化/chunk-3k9e6gxt.js";
-import { Dh, Md } from "../Teammates团队/chunk-mrfx53ye.js";
+import { hWn, formatSubprotocolList } from "../../01-核心基础设施/共享小工具-未细化/websocket-subprotocols.js";
+import { generateTaskId, createPendingTask } from "../Teammates团队/chunk-mrfx53ye.js";
 import { getMonitorPushNotificationHint, isMonitorToolEnabled, getMonitorToolDescription, MONITOR_WS_SOURCE_HELP } from "./monitor-tool-description.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { s, T, O, v, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -143,10 +143,10 @@ async function Hqe(e, t) {
   let o = WPe(t),
     { description: u, timeout_ms: h, persistent: w } = e,
     { url: M, protocols: k } = e.ws;
-  Ext(M);
+  checkWebSocketEgress(M);
   let { toolUseId: P, taskRegistry: p } = o,
     f = qne(o),
-    r = e.reuseTaskId ?? Dh("monitor_ws"),
+    r = e.reuseTaskId ?? generateTaskId("monitor_ws"),
     C = R6t({
       description: u,
       agentId: f,
@@ -324,7 +324,7 @@ async function Hqe(e, t) {
           e.quietLifecycle,
         ),
     K = {
-      ...Md(r, "monitor_ws", u, P),
+      ...createPendingTask(r, "monitor_ws", u, P),
       type: "monitor_ws",
       status: "running",
       url: M,
@@ -579,7 +579,7 @@ function he(e) {
     };
   let o =
     e.protocols !== void 0 && e.protocols.length > 0
-      ? ` (subprotocols: ${Vqe(e.protocols)})`
+      ? ` (subprotocols: ${formatSubprotocolList(e.protocols)})`
       : "";
   return {
     behavior: "ask",

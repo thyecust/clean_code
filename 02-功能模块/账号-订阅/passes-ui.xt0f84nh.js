@@ -10,14 +10,14 @@
 
 // [preload stripped] 原本在此预载 113 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Dw } from "../权限系统/chunk-e4pfvp7x.js";
+import { CLAUDE_ASTERISK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { setClipboard } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { IXn, bre, dSt, U_n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -130,7 +130,7 @@ function re(Ye) {
       }
       if (U.key === "return" && h)
         (U.preventDefault(),
-          z_(h)
+          setClipboard(h)
             .then((Pe) => {
               if (Pe) process.stdout.write(Pe);
               (logEvent("tengu_guest_passes_link_copied", {}),
@@ -333,7 +333,7 @@ function ie(ts) {
             children:
               "\u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2571",
           }),
-          e(t, { dimColor: !0, children: ` ) CC ${Dw} \u250A\u2571` }),
+          e(t, { dimColor: !0, children: ` ) CC ${CLAUDE_ASTERISK_GLYPH} \u250A\u2571` }),
           e(t, {
             dimColor: !0,
             children: "\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2571",
@@ -362,7 +362,7 @@ function ie(ts) {
         r(t, {
           children: [
             " ) CC ",
-            e(t, { color: "claude", children: Dw }),
+            e(t, { color: "claude", children: CLAUDE_ASTERISK_GLYPH }),
             " \u250A ( ",
           ],
         }),

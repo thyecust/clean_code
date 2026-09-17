@@ -33,7 +33,7 @@ import {
   mdt,
   Asn,
 } from "../Teammates团队/chunk-nhk351pe.js";
-import "../权限系统/chunk-4tar9p3n.js";
+import "../权限系统/cross-session-inbound-gate.js";
 export {
   RPe as MAX_IDLE_SUBSCRIPTIONS,
   bsn as admitIdleNotice,

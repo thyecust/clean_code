@@ -13,16 +13,16 @@ import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工�
 import "./chunk-bkcg0nbj.js";
 import "../../01-核心基础设施/共享小工具-未细化/nondeterminism-check.js";
 import "./workflow-script.js";
-import { TDt } from "./chunk-hsn6gkzy.js";
-import { clt } from "./chunk-a5048zpn.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-gkztysec.js";
+import { workflowLaunchHandoffs } from "./workflow-launch.js";
+import { launchWorkflow } from "./remote-workflow-launch.js";
+import "../../01-核心基础设施/共享小工具-未细化/structured-output-retry-errors.js";
 import "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
 import "../../01-核心基础设施/共享小工具-未细化/fd-real-path.js";
-import "./chunk-pqyn1fh3.js";
+import "./workflow-registry.js";
 import "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
 var i = async (n, t) => {
   let r = n.trim(),
-    e = r ? TDt.of(t.session.host).take(r) : void 0;
+    e = r ? workflowLaunchHandoffs.of(t.session.host).take(r) : void 0;
   if (!e)
     return (
       writeDiagnosticsEvent("info", "workflow_launch_exec_no_slot", {}),
@@ -32,7 +32,7 @@ var i = async (n, t) => {
           "workflow-launch-exec: no pending launch handoff for this invocation (expected when a restored session replays the dispatch turn); nothing executed.",
       }
     );
-  let o = await clt({
+  let o = await launchWorkflow({
     script: e.script,
     args: e.args,
     telemetrySource: "remote_event",

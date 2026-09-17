@@ -7,31 +7,31 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { qAe, oh, Aj, Jpe, lG, Nh, vT, dN, TC } from "./chunk-djserjj5.js";
+import { getPtySocketDir, getPtySocketPath, getSparePtyDir, getPtyPidDir, getPtyPidFilePath, getPtyHostStderrPath, getPtyLateOutputPath, getPtyExecExitPath, encodeControlFrame } from "./chunk-djserjj5.js";
 import { readRoster, updateRoster, writeReapedTerminalState, Ep, al } from "./chunk-7wsy8vxb.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { Wi, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { sigtermThenKill, reapDetachedRepl, captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { sigtermThenKill, reapDetachedRepl, captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { lstat, readdir, unlink } from "fs/promises";
 import { connect } from "net";
 import { basename, join as x } from "path";
-async function HPt(e, t) {
+async function readExecExitStatus(e, t) {
   if (t.launch.mode !== "exec" || !e) return null;
   try {
-    let i = await Wi(dN(e), 8192);
+    let i = await Wi(getPtyExecExitPath(e), 8192);
     if (i == null) return null;
     let r = JSON.parse(i);
     if (typeof r?.code !== "number") return null;
     let s =
-        pt(typeof r.tail === "string" ? r.tail : "")
+        stripAnsi(typeof r.tail === "string" ? r.tail : "")
           .replace(
             /\r\n?/g,
             `
@@ -60,7 +60,7 @@ async function HPt(e, t) {
     return null;
   }
 }
-async function NZt(e = {}, t) {
+async function reapAllDaemonWorkers(e = {}, t) {
   return withFeatureTelemetry("daemon_bg_reap_all", async () => {
     let i = await readRoster({ silent: !0 }, t),
       r = new Map();
@@ -73,9 +73,9 @@ async function NZt(e = {}, t) {
         replPid: o.replPid,
         replProcStart: o.replProcStart,
       });
-    let s = P() === "windows",
-      [c, l] = s ? [Jpe(), ".pid"] : [qAe(), ".sock"],
-      f = s && t ? await FZt(t) : await readdir(c).catch(() => []),
+    let s = getCurrentPlatform() === "windows",
+      [c, l] = s ? [getPtyPidDir(), ".pid"] : [getPtySocketDir(), ".sock"],
+      f = s && t ? await listPtyPidFiles(t) : await readdir(c).catch(() => []),
       w = new Set(f.filter((a) => a.endsWith(l)));
     for (let a of f) {
       if (!a.endsWith(l)) {
@@ -94,17 +94,17 @@ async function NZt(e = {}, t) {
       let o = a.slice(0, -l.length);
       if (r.has(o)) continue;
       let u = s
-        ? Number((t ? await $Zt(t, o) : await Wi(lG(o), FWe)) ?? "0")
+        ? Number((t ? await readStoredPtyPid(t, o) : await Wi(getPtyPidFilePath(o), MAX_PTY_PID_FILE_BYTES)) ?? "0")
         : 0;
-      r.set(o, { pid: u, ptySock: oh(o) });
+      r.set(o, { pid: u, ptySock: getPtySocketPath(o) });
     }
     if (!s) {
       let a = new Set();
       for (let u of r.values()) if (u.ptySock) a.add(u.ptySock);
-      let o = await readdir(Aj()).catch(() => []);
+      let o = await readdir(getSparePtyDir()).catch(() => []);
       for (let u of o) {
         if (!u.endsWith(".pty.sock")) continue;
-        let d = x(Aj(), u);
+        let d = x(getSparePtyDir(), u);
         if (a.has(d)) continue;
         r.set(`spare:${u}`, { pid: 0, ptySock: d });
       }
@@ -114,10 +114,10 @@ async function NZt(e = {}, t) {
     if (
       (await Promise.all(
         Array.from(r.entries()).map(async ([a, o]) => {
-          let u = o.dispatch ? await HPt(o.ptySock, o.dispatch) : null;
-          if (o.ptySock && (await sle(o.ptySock, t))) m++;
+          let u = o.dispatch ? await readExecExitStatus(o.ptySock, o.dispatch) : null;
+          if (o.ptySock && (await killPtySocket(o.ptySock, t))) m++;
           else if (o.pid) {
-            let d = await UZt(o.pid, o.procStart),
+            let d = await killVerifiedProcess(o.pid, o.procStart),
               g = d !== "unverified" && (await reapDetachedRepl(o.replPid, o.replProcStart));
             switch (d) {
               case "killed":
@@ -139,18 +139,18 @@ async function NZt(e = {}, t) {
                 u?.state === "done" ? u : e.supervisorKilledAll ? d : (u ?? d);
             if ((await writeReapedTerminalState(a, g.state, g.detail, void 0, t), s && t))
               await t
-                .delete(Ce.daemon(["pty-pids", basename(dN(o.ptySock ?? oh(a)))]))
+                .delete(STORAGE_KEYS.daemon(["pty-pids", basename(getPtyExecExitPath(o.ptySock ?? getPtySocketPath(a)))]))
                 .catch(() => {});
-            else await unlink(dN(o.ptySock ?? oh(a))).catch(() => {});
+            else await unlink(getPtyExecExitPath(o.ptySock ?? getPtySocketPath(a))).catch(() => {});
           }
           if (s)
             if (t) await L(t, a);
             else {
-              await unlink(lG(a)).catch(() => {});
-              let d = Nh(oh(a));
+              await unlink(getPtyPidFilePath(a)).catch(() => {});
+              let d = getPtyHostStderrPath(getPtySocketPath(a));
               (await unlink(d).catch(() => {}),
                 await unlink(`${d}.read`).catch(() => {}),
-                await unlink(vT(oh(a))).catch(() => {}));
+                await unlink(getPtyLateOutputPath(getPtySocketPath(a))).catch(() => {}));
             }
         }),
       ),
@@ -162,7 +162,7 @@ async function NZt(e = {}, t) {
     return { reaped: m, kept: S.size };
   });
 }
-async function FZt(e) {
+async function listPtyPidFiles(e) {
   let t = [],
     i;
   do {
@@ -178,45 +178,45 @@ async function FZt(e) {
     for (let s of r.value.items)
       if (s.kind === "key" && s.key.namespace === "daemon") {
         let c = s.key.relPath.at(-1);
-        if (c !== void 0 && s.key.relPath.length === 2 && _n(c)) t.push(c);
+        if (c !== void 0 && s.key.relPath.length === 2 && isValidPathSegment(c)) t.push(c);
       }
     i = r.value.cursor;
   } while (i !== void 0);
   return t;
 }
-var FWe = 4096;
+var MAX_PTY_PID_FILE_BYTES = 4096;
 async function M(e) {
   try {
-    let t = await lstat(lG(e));
-    return !t.isFile() || t.size > FWe;
+    let t = await lstat(getPtyPidFilePath(e));
+    return !t.isFile() || t.size > MAX_PTY_PID_FILE_BYTES;
   } catch (t) {
     return !W(t);
   }
 }
-async function $Zt(e, t) {
+async function readStoredPtyPid(e, t) {
   if (await M(t)) return null;
   let i = await e
     .readText([
-      { key: Ce.daemon(["pty-pids", `${t}.pid`]), offset: 0, length: FWe + 1 },
+      { key: STORAGE_KEYS.daemon(["pty-pids", `${t}.pid`]), offset: 0, length: MAX_PTY_PID_FILE_BYTES + 1 },
     ])
     .catch(() => {
       return;
     });
   if (i === void 0 || !i.ok) return null;
   let r = i.value.items[0];
-  if (!r.found || r.totalBytes > FWe) return null;
+  if (!r.found || r.totalBytes > MAX_PTY_PID_FILE_BYTES) return null;
   return r.value;
 }
 async function L(e, t) {
-  (await e.delete(Ce.daemon(["pty-pids", `${t}.pid`])).catch(() => {}),
-    await E(e, oh(t)));
+  (await e.delete(STORAGE_KEYS.daemon(["pty-pids", `${t}.pid`])).catch(() => {}),
+    await E(e, getPtySocketPath(t)));
 }
 async function E(e, t) {
-  let i = Nh(t);
-  for (let r of [basename(i), `${basename(i)}.read`, basename(vT(t))])
-    await e.delete(Ce.daemon(["pty-pids", r])).catch(() => {});
+  let i = getPtyHostStderrPath(t);
+  for (let r of [basename(i), `${basename(i)}.read`, basename(getPtyLateOutputPath(t))])
+    await e.delete(STORAGE_KEYS.daemon(["pty-pids", r])).catch(() => {});
 }
-function sle(e, t) {
+function killPtySocket(e, t) {
   return new Promise((i) => {
     let r = !1,
       s = (l) => {
@@ -230,21 +230,21 @@ function sle(e, t) {
       }),
       c.on("error", () => {
         unlink(e).catch(() => {});
-        let l = Nh(e);
-        if (t && P() === "windows") E(t, e).catch(() => {});
+        let l = getPtyHostStderrPath(e);
+        if (t && getCurrentPlatform() === "windows") E(t, e).catch(() => {});
         else
           (unlink(l).catch(() => {}),
             unlink(`${l}.read`).catch(() => {}),
-            unlink(vT(e)).catch(() => {}));
+            unlink(getPtyLateOutputPath(e)).catch(() => {}));
         s(!1);
       }),
       c.once("connect", () => {
-        (c.resume(), c.write(TC({ t: "kill", sig: "SIGTERM" })));
+        (c.resume(), c.write(encodeControlFrame({ t: "kill", sig: "SIGTERM" })));
       }),
       c.once("close", () => s(!0)));
   });
 }
-function xit(e) {
+function pingPtySocket(e) {
   return new Promise((t) => {
     let i = !1,
       r = (c) => {
@@ -258,11 +258,11 @@ function xit(e) {
       }),
       s.on("error", () => r(!1)),
       s.once("connect", () => {
-        (s.end(TC({ t: "pong" })), r(!0));
+        (s.end(encodeControlFrame({ t: "pong" })), r(!0));
       }));
   });
 }
-async function UZt(e, t) {
+async function killVerifiedProcess(e, t) {
   try {
     process.kill(e, 0);
   } catch (r) {
@@ -277,19 +277,19 @@ async function UZt(e, t) {
 }
 var y = toESM(pg(), 1),
   R = ["dev", "engine"];
-function Eye(e) {
+function getVersionTarget(e) {
   return R.find((t) => e.includes(`-${t}.`)) ?? null;
 }
-function MWe(e) {
-  return Eye(e) !== null;
+function hasVersionTarget(e) {
+  return getVersionTarget(e) !== null;
 }
-function Aye(e, t) {
+function areVersionTargetsDifferent(e, t) {
   if (!e) return !1;
-  let i = Eye(e),
-    r = Eye(t);
+  let i = getVersionTarget(e),
+    r = getVersionTarget(t);
   return i !== null && r !== null && i !== r;
 }
-function Cye(e) {
+function parseVersionTimestamp(e) {
   let t;
   for (let f of e.matchAll(/-(?:dev|engine)\.(\d{8})\.t(\d{6})(?:\.|$)/g))
     t = f;
@@ -312,32 +312,32 @@ function Cye(e) {
     ? s
     : null;
 }
-function X$n(e, t) {
-  let i = Cye(e),
-    r = Cye(t);
+function isNewerBuildTimestamp(e, t) {
+  let i = parseVersionTimestamp(e),
+    r = parseVersionTimestamp(t);
   return i !== null && r !== null && r < i;
 }
-function JHe(e, t) {
-  let i = Cye(e),
-    r = Cye(t);
+function isVersionGreater(e, t) {
+  let i = parseVersionTimestamp(e),
+    r = parseVersionTimestamp(t);
   if (i !== null && r !== null) {
-    if (Eye(e) !== Eye(t)) return !1;
+    if (getVersionTarget(e) !== getVersionTarget(t)) return !1;
     return i > r;
   }
-  if (MWe(e) || MWe(t)) return !1;
+  if (hasVersionTarget(e) || hasVersionTarget(t)) return !1;
   return y.valid(e) !== null && y.valid(t) !== null && y.gt(e, t);
 }
-function DZt(e, t, i) {
+function satisfiesVersionRequirement(e, t, i) {
   if (!e) return !1;
   if (e === i) return !0;
-  let r = Cye(e);
+  let r = parseVersionTimestamp(e);
   if (r !== null) return r >= t.commitMs;
-  if (MWe(e)) return !1;
+  if (hasVersionTarget(e)) return !1;
   return y.valid(e) !== null && y.gte(e, t.release);
 }
 var _ = new Set([1000, 1002, 1003, 1004, 1006, 2004, 2031]),
   C = /\x1b\[\?([\d;]+)([hl])/g;
-function NWe() {
+function createDecModeTracker() {
   let e = new Set(),
     t = "";
   return {
@@ -376,15 +376,15 @@ function NWe() {
   };
 }
 import { freemem } from "os";
-function LZt() {
+function getLowMemoryStatus() {
   let e = H("tengu_bg_low_mem_mb", 1024) * 1024 * 1024;
   if (e <= 0) return { lowMem: !1, level: void 0 };
-  if (P() !== "macos") return { lowMem: freemem() < e, level: void 0 };
+  if (getCurrentPlatform() !== "macos") return { lowMem: freemem() < e, level: void 0 };
   let t = I();
   return { lowMem: t !== void 0 && t >= N, level: t };
 }
-function W8() {
-  return LZt().lowMem;
+function isLowMemory() {
+  return getLowMemoryStatus().lowMem;
 }
 var T = { normal: 1, warning: 2, critical: 4 },
   N = T.critical;
@@ -400,27 +400,27 @@ function I() {
     return;
   }
 }
-function MZt() {
+function isBackgroundAttachUpgradeEnabled() {
   return H("tengu_bg_attach_upgrade", !0);
 }
 export {
-  Eye,
-  MWe,
-  Aye,
-  Cye,
-  X$n,
-  JHe,
-  DZt,
-  NWe,
-  LZt,
-  W8,
-  MZt,
-  HPt,
-  NZt,
-  FZt,
-  FWe,
-  $Zt,
-  sle,
-  xit,
-  UZt,
+  getVersionTarget,
+  hasVersionTarget,
+  areVersionTargetsDifferent,
+  parseVersionTimestamp,
+  isNewerBuildTimestamp,
+  isVersionGreater,
+  satisfiesVersionRequirement,
+  createDecModeTracker,
+  getLowMemoryStatus,
+  isLowMemory,
+  isBackgroundAttachUpgradeEnabled,
+  readExecExitStatus,
+  reapAllDaemonWorkers,
+  listPtyPidFiles,
+  MAX_PTY_PID_FILE_BYTES,
+  readStoredPtyPid,
+  killPtySocket,
+  pingPtySocket,
+  killVerifiedProcess,
 };

@@ -31,7 +31,7 @@ import {
 } from "../../@aws-sdk/core/core.7j004336.js";
 import { ta } from "./chunk-mwf4pmq2.js";
 import { Rb } from "../第三方库-其他/chunk-jtb5q5xr.js";
-import { s_, hS } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
+import { utilUtf8Module, utilBase64Module } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
 import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
 import { getUrlParserModule } from "../../../01-核心基础设施/共享小工具-未细化/url-parser.js";
 import { toESM } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -213,8 +213,8 @@ var ee = toESM(R_()),
   oe = toESM(Lm()),
   se = toESM(ta()),
   re = toESM(getUrlParserModule()),
-  _ = toESM(hS()),
-  f = toESM(s_());
+  _ = toESM(utilBase64Module()),
+  f = toESM(utilUtf8Module());
 var X = toESM(XU()),
   p = toESM(gL());
 var G = { ["required"]: !1, type: "string" },

@@ -10,19 +10,19 @@
 
 // [preload stripped] 原本在此预载 106 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
-  pze,
-  Rpt,
-  kpt,
+  sanitizePeerFileName as pze,
+  peerFileFailureNote as Rpt,
+  peerFileCountCapNote as kpt,
   tFt,
   nFt,
-  xpt,
+  readPeerFileBounded as xpt,
   rFt,
-  fze,
-  Ean,
-  Aan,
-  Khr,
-} from "./chunk-qvnte9zp.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
+  peerTransferSpoolDir as fze,
+  stageLocalPeerFile as Ean,
+  sweepStaleSpoolEntries as Aan,
+  materializeLocalPeerFiles as Khr,
+} from "./peer-file-transfer.js";
+import "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
 export {
   nFt as emitPeerFileReceiveTelemetry,
   rFt as injectPeerFilePrefix,

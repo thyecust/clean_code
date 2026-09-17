@@ -11,12 +11,12 @@
 // [preload stripped] 原本在此预载 257 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Xn, K, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { dt, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { $1, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { sortByModifiedDesc, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { setClipboard } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import {
   q9,
   isCustomTitleEnabled,
@@ -38,7 +38,7 @@ import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未�
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import { Ma } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { useHasVirtualScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
@@ -55,18 +55,18 @@ import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-a
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
-import "../Diff引擎/chunk-p2gj9dsf.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
+import "../Diff引擎/structured-diff.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
+import "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s3mpt973.js";
+import "../../01-核心基础设施/共享小工具-未细化/mcp-tool-base.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-0mg59v9m.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/verb-conjugation.js";
 import "../GitHub集成/chunk-bfz9rjjm.js";
 import "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
@@ -78,7 +78,7 @@ import "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
 import "../工具UI渲染/chunk-g4k5jjwt.js";
 import { formatSessionLiveElsewhereMessage, getLiveSessionHolder } from "../../01-核心基础设施/共享小工具-未细化/session-live-elsewhere.js";
 import "../../01-核心基础设施/共享小工具-未细化/webfetch-tool-messages.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
+import "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
 import "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
@@ -89,22 +89,22 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ga0qgvpz.js";
+import "../../01-核心基础设施/共享小工具-未细化/managed-settings-status.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import "../../01-核心基础设施/共享小工具-未细化/model-1m-context-suggestion.js";
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js";
+import "../../01-核心基础设施/共享小工具-未细化/slack-send-tool.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 F();
 function q(s) {
   switch (s.resultType) {
     case "sessionNotFound":
-      return `Session ${ie.bold(s.arg)} was not found.`;
+      return `Session ${chalk.bold(s.arg)} was not found.`;
     case "multipleMatches":
-      return `Found ${s.count} sessions matching ${ie.bold(s.arg)}. Please use /resume to pick a specific session.`;
+      return `Found ${s.count} sessions matching ${chalk.bold(s.arg)}. Please use /resume to pick a specific session.`;
   }
 }
 function j(Oe) {
@@ -113,7 +113,7 @@ function j(Oe) {
   Un(Ve, 0);
   let U;
   if (z[0] !== X)
-    ((U = r(t, { dimColor: !0, children: [L.pointer, " /resume ", X] })),
+    ((U = r(t, { dimColor: !0, children: [figures.pointer, " /resume ", X] })),
       (z[0] = X),
       (z[1] = U));
   else U = z[1];
@@ -137,7 +137,7 @@ function te({ onDone: s, onResume: g }) {
     [M, a] = d(!1),
     [n, c] = d(!1),
     { rows: f } = useTerminalSize(),
-    I = Ma(),
+    I = useHasVirtualScrollViewport(),
     { storageV5: P } = useStorageV5Context(),
     S = C(!1),
     D = C(!1),
@@ -186,7 +186,7 @@ function te({ onDone: s, onResume: g }) {
             let y = filterResumableSessions(p.logs, K());
             if (y.length > 0) {
               let Z = A.current;
-              ($1(y).forEach((N, ee) => {
+              (sortByModifiedDesc(y).forEach((N, ee) => {
                 N.value = Z + ee;
               }),
                 T((N) => N.concat(y)),
@@ -216,7 +216,7 @@ function te({ onDone: s, onResume: g }) {
       if (((R = isLiteLog(u) ? await loadFullLog(u, { storageV5: P }) : u), S.current)) return;
       if (((p = await oit(R, n, m)), S.current)) return;
       if (p) {
-        let y = await z_(p);
+        let y = await setClipboard(p);
         if (S.current) return;
         if (y) process.stdout.write(y);
       }

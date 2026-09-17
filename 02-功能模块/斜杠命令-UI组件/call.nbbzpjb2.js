@@ -16,20 +16,20 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { archiveRemoteSession, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { findGitRoot, getBranch, getDefaultBranch, hasUnpushedCommits } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { Os } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { PM, ede, _ne, IX, cde, teleportToRemote, subscribeRemoteSessionToPR } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { nCe, vj } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
+import { createScheduledTask, listScheduledTasks } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { CRON_DELETE_TOOL_NAME } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { getSdkHostedBridgeHandle, getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
@@ -45,9 +45,9 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 var me = {
@@ -79,7 +79,7 @@ async function Je(a, n, { signal: c, onProgress: w }) {
     } = a,
     Y = a.skills ?? [];
   try {
-    let h = g ?? Q(),
+    let h = g ?? getCwd(),
       [G, H, b, I] = f
         ? [
             void 0,
@@ -114,7 +114,7 @@ ${s}`,
     let k;
     if (f) k = "remote_session";
     else {
-      let s = !g || findGitRoot(g) === findGitRoot(Q());
+      let s = !g || findGitRoot(g) === findGitRoot(getCwd());
       k = "remote_session";
     }
     let J = ["pr", "view"];
@@ -214,7 +214,7 @@ ${B.join(`
         {
           kind: "ok",
           message: `Already monitoring ${ce} in a cloud session
-  ${L.arrowRight} ${wa(Ee.sessionId, void 0, { from: "cli" })}`,
+  ${figures.arrowRight} ${wa(Ee.sessionId, void 0, { from: "cli" })}`,
         }
       );
     w?.({ step: "spawning" });
@@ -288,7 +288,7 @@ ${B.join(`
       {
         kind: "ok",
         message: `Spawned cloud autofix PR session on ${q} (PR #${v})
-  ${L.arrowRight} ${Xe}${Ye}`,
+  ${figures.arrowRight} ${Xe}${Ye}`,
       }
     );
   } catch (h) {
@@ -317,10 +317,10 @@ async function Ke(a, n, c, w) {
     f = ic() && !!m,
     Y = g && f && m ? await m.subscribePR(n, c) : { ok: !1 },
     h = `${Ie}${a} (created in this session). Check state with \`gh pr view ${c} -R ${n} --json state,mergeable,mergeStateStatus,statusCheckRollup\` and new review comments with \`gh api --paginate repos/${n}/pulls/${c}/comments\`. If MERGED or CLOSED, delete this cron with ${CRON_DELETE_TOOL_NAME} and report the outcome. If CI is failing, comments are unaddressed, or there are merge conflicts, fix and push.${w} Otherwise nothing to do \u2014 complete the turn without commentary.`,
-    H = (await vj()).some(
+    H = (await listScheduledTasks()).some(
       (I) => I.durable === !1 && I.prompt.startsWith(`${Ie}${a} `),
     );
-  if (!H) (await nCe("*/30 * * * *", h, !0, !1), bB(!0));
+  if (!H) (await createScheduledTask("*/30 * * * *", h, !0, !1), bB(!0));
   let b = [`Monitoring ${a} in this session.`];
   if (Y.ok)
     b.push(
@@ -354,7 +354,7 @@ async function Ke(a, n, c, w) {
   );
 }
 function De({ owner: a, repo: n, host: c }) {
-  return Do(c) ? `${a}/${n}` : `${c}/${a}/${n}`;
+  return isGitHubHost(c) ? `${a}/${n}` : `${c}/${a}/${n}`;
 }
 function lt() {
   return !ee().hasSeenAutofixPrChatOpsNotice;
@@ -458,7 +458,7 @@ function Ve(Qt) {
 function ye(or) {
   let X = _(31),
     { onDone: te, context: re, args: oe } = or,
-    Le = Os(pt),
+    Le = useAppStateSelectorUnchecked(pt),
     [We, nr] = d("checking"),
     [ae, sr] = d(null),
     [R, ir] = d(null),

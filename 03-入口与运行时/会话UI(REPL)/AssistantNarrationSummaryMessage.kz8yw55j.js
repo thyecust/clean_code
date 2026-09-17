@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Ar } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { CLAUDE_BULLET_GLYPH } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { getCanonicalName, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { useFeatureFlagValue } from "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -23,7 +23,7 @@ import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51
 import { js } from "../../02-功能模块/语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { run } from "../../01-核心基础设施/共享小工具-未细化/chunk-se27pkgx.js";
+import { SUMMARIZED_HINT_LABEL } from "../../01-核心基础设施/共享小工具-未细化/narration-signature.js";
 function AssistantNarrationSummaryMessage(N) {
   let n = _(13),
     { param: S, model: i, addMargin: E, shouldShowDot: c } = N,
@@ -48,13 +48,13 @@ function AssistantNarrationSummaryMessage(N) {
         children: e(t, {
           "aria-label": "claude:",
           color: "text",
-          children: Ar,
+          children: CLAUDE_BULLET_GLYPH,
         }),
       })),
       (n[2] = c),
       (n[3] = m));
   else m = n[3];
-  const h = G ? void 0 : run;
+  const h = G ? void 0 : SUMMARIZED_HINT_LABEL;
   let f;
   if (n[4] !== l) ((f = l.trim()), (n[4] = l), (n[5] = f));
   else f = n[5];

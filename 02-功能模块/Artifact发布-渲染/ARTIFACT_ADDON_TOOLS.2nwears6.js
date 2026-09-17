@@ -32,7 +32,7 @@ import {
 import "../Teammates团队/chunk-weg7y2ya.js";
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js";
-import "../Bridge-RemoteControl/chunk-jpq2fv3g.js";
+import "../Bridge-RemoteControl/bridge-inbound-origin.js";
 import { Out, Fon } from "./chunk-yrjr7v83.js";
 import "./chunk-5gvg7p5p.js";
 import { respell } from "../Teammates团队/chunk-y89mhs4a.js";

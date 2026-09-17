@@ -12,28 +12,28 @@
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
+import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { qe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { yi, ay, cke, getRelativeSettingsFilePathForSource } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { jn, Pt, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { parseSettingsFile, getSettingsFilePathForSource, getSettingsForSource, updateSettingsForSourceWithTransform, autoModeConfigSchema, AUTO_MODE_TRUSTED_SOURCES } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { Fr, Er } from "../工具Bash-Shell/chunk-4pap8y5n.js";
+import { parsePermissionRule, formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { gi, o, t, zb } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
+import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { supportsShiftEnter } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import {
@@ -69,7 +69,7 @@ import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
-import { Hye } from "./chunk-sx24y271.js";
+import { AddDirectoryToWorkspaceDialog } from "./add-directory-to-workspace.js";
 import { m7, SSe, F3e, TSe, oI } from "./chunk-4wrkmv3h.js";
 import { openFileInEditor, resolveEditorCommand, getEditorDisplayName, editFileInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
 import { xS, Fs } from "./chunk-0hcqee2w.js";
@@ -84,14 +84,14 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import "../Git-Worktree/chunk-33y3h2sy.js";
 import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { s, se, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
+import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -153,7 +153,7 @@ async function ql(i, u) {
       if (g === null) continue;
       let { source: w, settings: S } = g,
         P = yi.find((I) => I === w),
-        B = P ? ay(P) : Xl(oe(w, 40)) + (w.length > 40 ? "\u2026" : "");
+        B = P ? ay(P) : Xl(truncateToCodeUnits(w, 40)) + (w.length > 40 ? "\u2026" : "");
       for (let { kind: I } of ri)
         for (let W of S.permissions?.[I] ?? [])
           a[I].push({ rule: Xl(W), source: B });
@@ -271,10 +271,10 @@ function ii(ng) {
         children: [
           At.skippedFiles,
           " settings ",
-          x(At.skippedFiles, "file"),
+          pluralize(At.skippedFiles, "file"),
           " in the session failed to parse; rules from",
           " ",
-          x(At.skippedFiles, "it", "them"),
+          pluralize(At.skippedFiles, "it", "them"),
           " aren't listed.",
         ],
       })),
@@ -496,11 +496,11 @@ function Rd(sa) {
     {
       flexDirection: "column",
       children: [
-        e(t, { bold: !0, children: Er(sa) }),
+        e(t, { bold: !0, children: formatPermissionRule(sa) }),
         e(go, { ruleValue: sa }),
       ],
     },
-    Er(sa),
+    formatPermissionRule(sa),
   );
 }
 function la(i) {
@@ -596,7 +596,7 @@ function tr(Ig) {
   let na = hd,
     vd;
   if (Gt[9] !== pt.length)
-    ((vd = x(pt.length, "rule")), (Gt[9] = pt.length), (Gt[10] = vd));
+    ((vd = pluralize(pt.length, "rule")), (Gt[9] = pt.length), (Gt[10] = vd));
   else vd = Gt[10];
   let ra = `Add ${gn} permission ${vd}`,
     ui;
@@ -662,7 +662,7 @@ function or(ly) {
       if (xd.length === 0) {
         return;
       }
-      let fy = Fr(xd);
+      let fy = parsePermissionRule(xd);
       aa(fy, bi);
     }),
       (yo[1] = aa),
@@ -686,7 +686,7 @@ function or(ly) {
   else Ad = yo[5];
   let Pd, kd;
   if (yo[6] === MEMO_CACHE_SENTINEL)
-    ((Pd = e(t, { bold: !0, children: Er({ toolName: WebFetchTool.name }) })),
+    ((Pd = e(t, { bold: !0, children: formatPermissionRule({ toolName: WebFetchTool.name }) })),
       (kd = e(t, { bold: !1, children: " or " })),
       (yo[6] = Pd),
       (yo[7] = kd));
@@ -703,7 +703,7 @@ function or(ly) {
         kd,
         e(t, {
           bold: !0,
-          children: Er({ toolName: Lo.name, ruleContent: "ls *" }),
+          children: formatPermissionRule({ toolName: Lo.name, ruleContent: "ls *" }),
         }),
       ],
     })),
@@ -725,7 +725,7 @@ function or(ly) {
             value: ca,
             onChange: cy,
             onSubmit: ma,
-            placeholder: `Enter permission rule${L.ellipsis}`,
+            placeholder: `Enter permission rule${figures.ellipsis}`,
             columns: da,
             cursorOffset: ua,
             onChangeCursorOffset: uy,
@@ -1134,7 +1134,7 @@ function fr(cb) {
     let db = Qk(Wo.map(bm), vm);
     let mm = Wo.map((mb, fb) => ({ label: db[fb], value: mb.path }));
     dm =
-      (mm.push({ label: `Add directory${L.ellipsis}`, value: "add-directory" }),
+      (mm.push({ label: `Add directory${figures.ellipsis}`, value: "add-directory" }),
       mm);
     ((kt[12] = Wo), (kt[13] = dm));
   } else dm = kt[13];
@@ -1667,7 +1667,7 @@ function tf(i, u) {
   let f = [],
     a = "",
     g = 0;
-  for (let { segment: w } of Xs().segment(i)) {
+  for (let { segment: w } of getGraphemeSegmenter().segment(i)) {
     let S = te(w);
     if (g + S > u && a.length > 0) (f.push(a), (a = ""), (g = 0));
     ((a += w), (g += S));
@@ -1680,7 +1680,7 @@ function Cr(i, u) {
   if (te(i) <= u) return i;
   let f = "",
     a = 0;
-  for (let { segment: g } of Xs().segment(i)) {
+  for (let { segment: g } of getGraphemeSegmenter().segment(i)) {
     let w = te(g);
     if (a + w > u - 1) break;
     ((f += g), (a += w));
@@ -1935,7 +1935,7 @@ ${" ".repeat(Pe)}\u2026 (+${Ja} more ${Ja === 1 ? "line" : "lines"})`,
     Bm = Tt
       ? [...zi.map(zm), ...(jm ? [Xm()] : [])]
       : [
-          { label: `Add a new rule${L.ellipsis}`, value: "add-new-rule" },
+          { label: `Add a new rule${figures.ellipsis}`, value: "add-new-rule" },
           ...tt.flatMap((Hi) => {
             if (Hi === "environment" && wo) {
               return [Xm()];
@@ -2080,7 +2080,7 @@ function Lf(aw) {
   return `- ${aw}`;
 }
 async function vc(i, u) {
-  let f = join(bl(), `${igt}${i}-${Nf(8).toString("hex")}.md`),
+  let f = join(getClaudeTempDir(), `${igt}${i}-${Nf(8).toString("hex")}.md`),
     a = await Of(f, Dr.O_WRONLY | Dr.O_CREAT | Dr.O_EXCL | Dr.O_NOFOLLOW, 384);
   try {
     await a.writeFile(u, "utf8");
@@ -2670,7 +2670,7 @@ function Mr(rw) {
     }
     if (Rt.length === 1 && Rt[0].length > Ss) {
       let iw = Rt[0].length - Ss;
-      Rt[0] = `${oe(Rt[0], Ss)}\u2026 +${iw} more characters \u2014 View in editor for the full text.`;
+      Rt[0] = `${truncateToCodeUnits(Rt[0], Ss)}\u2026 +${iw} more characters \u2014 View in editor for the full text.`;
     }
     ((Te[1] = pc),
       (Te[2] = jt),
@@ -3187,7 +3187,7 @@ function Ur(Fw) {
         value: xc,
         onChange: Jf,
         onSubmit: kc,
-        placeholder: `Enter rule${L.ellipsis}`,
+        placeholder: `Enter rule${figures.ellipsis}`,
         columns: Ac,
         cursorOffset: Ec,
         onChangeCursorOffset: Ow,
@@ -3270,7 +3270,7 @@ function Ph(rC) {
   return rC.display;
 }
 function kh(iC) {
-  return ie.bold(iC.text);
+  return chalk.bold(iC.text);
 }
 function Th(sC) {
   return sC.value !== "add-new-rule";
@@ -3320,7 +3320,7 @@ function _l(FR) {
   useKeybinding("confirm:no", Js, pp);
   let Zs;
   if (Xe[1] !== Ke.ruleValue)
-    ((Zs = xS(Er(Ke.ruleValue))), (Xe[1] = Ke.ruleValue), (Xe[2] = Zs));
+    ((Zs = xS(formatPermissionRule(Ke.ruleValue))), (Xe[1] = Ke.ruleValue), (Xe[2] = Zs));
   else Zs = Xe[2];
   let el;
   if (Xe[3] !== Zs)
@@ -3659,10 +3659,10 @@ function Fl(NR) {
   if (R[2] === MEMO_CACHE_SENTINEL) ((Ap = []), (R[2] = Ap));
   else Ap = R[2];
   let [hl, Ge] = d(Ap),
-    re = U(vh),
-    Ct = It(),
-    Wn = Va(),
-    [tu] = cn(),
+    re = useAppStateSelector(vh),
+    Ct = useSetAppState(),
+    Wn = useTerminalFocus(),
+    [tu] = useTheme(),
     Pp;
   if (R[3] === MEMO_CACHE_SENTINEL)
     ((Pp = { approved: new Set(), retry: new Set(), denials: [] }),
@@ -3725,15 +3725,15 @@ function Fl(NR) {
       let pu = [];
       if (Zo !== "workspace" && Zo !== "recent" && Zo !== "automode" && !fu)
         pu.push({
-          label: `Add a new rule${L.ellipsis}`,
+          label: `Add a new rule${figures.ellipsis}`,
           value: "add-new-rule",
         });
       let qR = Array.from(Wr.keys()).sort((zR, HR) => {
         let Fp = Wr.get(zR);
         let Bp = Wr.get(HR);
         if (Fp && Bp) {
-          let KR = Er(Fp.ruleValue).toLowerCase();
-          let XR = Er(Bp.ruleValue).toLowerCase();
+          let KR = formatPermissionRule(Fp.ruleValue).toLowerCase();
+          let XR = formatPermissionRule(Bp.ruleValue).toLowerCase();
           return KR.localeCompare(XR);
         }
         return 0;
@@ -3743,7 +3743,7 @@ function Fl(NR) {
       for (const Op of qR) {
         let Np = Wr.get(Op);
         if (Np) {
-          let Up = Er(Np.ruleValue);
+          let Up = formatPermissionRule(Np.ruleValue);
           if (fu && !Up.toLowerCase().includes(GR)) {
             continue;
           }
@@ -3850,7 +3850,7 @@ function Fl(NR) {
       for (const Gp of iS)
         Ge((lS) => [
           ...lS,
-          `Added ${Gp.ruleBehavior} rule ${ie.bold(xS(Er(Gp.ruleValue)))}`,
+          `Added ${Gp.ruleBehavior} rule ${chalk.bold(xS(formatPermissionRule(Gp.ruleValue)))}`,
         ]);
       for (const xl of sS) {
         let aS = xl.shadowType === "deny" ? "blocked" : "shadowed";
@@ -3859,9 +3859,9 @@ function Fl(NR) {
           getThemeColor(
             "warning",
             tu,
-          )(`${L.warning} Warning: ${xS(Er(xl.rule.ruleValue))} is ${aS}`),
-          ie.dim(`  ${xl.reason}`),
-          ie.dim(`  Fix: ${xl.fix}`),
+          )(`${figures.warning} Warning: ${xS(formatPermissionRule(xl.rule.ruleValue))} is ${aS}`),
+          chalk.dim(`  ${xl.reason}`),
+          chalk.dim(`  Fix: ${xl.fix}`),
         ]);
       }
     }),
@@ -3959,7 +3959,7 @@ function Fl(NR) {
         else if (Yr > 0) Eu = El[Yr - 1];
       }
       WR(Eu);
-      let ih = xS(Er(yt.ruleValue));
+      let ih = xS(formatPermissionRule(yt.ruleValue));
       let RS = yt.ruleBehavior;
       (deletePermissionRule({
         rule: yt,
@@ -3970,13 +3970,13 @@ function Fl(NR) {
         storageV5: Be,
       })
         .then(() => {
-          Ge((ES) => [...ES, `Deleted ${RS} rule ${ie.bold(ih)}`]);
+          Ge((ES) => [...ES, `Deleted ${RS} rule ${chalk.bold(ih)}`]);
         })
         .catch((AS) => {
           (logError(AS),
             Ge((PS) => [
               ...PS,
-              `Could not delete ${ie.bold(ih)} \u2014 the rule is unchanged`,
+              `Could not delete ${chalk.bold(ih)} \u2014 the rule is unchanged`,
             ]));
         }),
         ou(void 0));
@@ -4265,7 +4265,7 @@ function Fl(NR) {
                 Yt(Ce()),
                 Ge((_S) => [
                   ..._S,
-                  `Updated auto mode ${Al} rule ${ie.bold(Oo(Us(qn).text))}`,
+                  `Updated auto mode ${Al} rule ${chalk.bold(Oo(Us(qn).text))}`,
                 ]));
             })
             .catch((Mu) => {
@@ -4276,7 +4276,7 @@ function Fl(NR) {
                 Yt(Ce()),
                 Ge((MS) => [
                   ...MS,
-                  `Could not update ${ie.bold(Oo(Us(wt.text).text))} \u2014 ${Mu instanceof Error ? Mu.message : "the rule is unchanged"}`,
+                  `Could not update ${chalk.bold(Oo(Us(wt.text).text))} \u2014 ${Mu instanceof Error ? Mu.message : "the rule is unchanged"}`,
                 ]));
             });
         else
@@ -4286,7 +4286,7 @@ function Fl(NR) {
                 Yt(Ce()),
                 Ge((FS) => [
                   ...FS,
-                  `Added auto mode ${Al} rule ${ie.bold(Oo(Us(qn).text))}`,
+                  `Added auto mode ${Al} rule ${chalk.bold(Oo(Us(qn).text))}`,
                 ]));
             })
             .catch((Fu) => {
@@ -4297,7 +4297,7 @@ function Fl(NR) {
                 Yt(Ce()),
                 Ge((BS) => [
                   ...BS,
-                  `Could not add ${ie.bold(Oo(Us(qn).text))} \u2014 ${Fu instanceof Error ? Fu.message : "nothing was saved"}`,
+                  `Could not add ${chalk.bold(Oo(Us(qn).text))} \u2014 ${Fu instanceof Error ? Fu.message : "nothing was saved"}`,
                 ]));
             });
         be(null);
@@ -4425,7 +4425,7 @@ function Fl(NR) {
             (gl(mh ? Ut(mh) : void 0),
               Ge((jS) => [
                 ...jS,
-                `Deleted auto mode ${me(je.section).toLowerCase()} rule ${ie.bold(Oo(Us(je.text).text))}`,
+                `Deleted auto mode ${me(je.section).toLowerCase()} rule ${chalk.bold(Oo(Us(je.text).text))}`,
               ]));
           })
           .catch((Iu) => {
@@ -4436,7 +4436,7 @@ function Fl(NR) {
               Yt(Ce()),
               Ge((WS) => [
                 ...WS,
-                `Could not delete ${ie.bold(Oo(Us(je.text).text))} \u2014 ${Iu instanceof Error ? Iu.message : "the rule is unchanged"}`,
+                `Could not delete ${chalk.bold(Oo(Us(je.text).text))} \u2014 ${Iu instanceof Error ? Iu.message : "the rule is unchanged"}`,
               ]));
           }),
           be(null));
@@ -4542,7 +4542,7 @@ function Fl(NR) {
           DG(ph, Be).catch(logError);
         (Ge((KS) => [
           ...KS,
-          `Added directory ${ie.bold(an(fh))} to workspace${Lu ? " and saved to local settings" : " for this session"}`,
+          `Added directory ${chalk.bold(an(fh))} to workspace${Lu ? " and saved to local settings" : " for this session"}`,
         ]),
           su(!1));
       }),
@@ -4556,7 +4556,7 @@ function Fl(NR) {
     else H = R[154];
     let Q;
     if (R[155] !== O || R[156] !== re)
-      ((Q = e(Hye, { onAddDirectory: O, onCancel: H, permissionContext: re })),
+      ((Q = e(AddDirectoryToWorkspaceDialog, { onAddDirectory: O, onCancel: H, permissionContext: re })),
         (R[155] = O),
         (R[156] = re),
         (R[157] = Q));
@@ -4567,7 +4567,7 @@ function Fl(NR) {
     let O;
     if (R[158] !== Po)
       ((O = () => {
-        (Ge((XS) => [...XS, `Removed directory ${ie.bold(Po)} from workspace`]),
+        (Ge((XS) => [...XS, `Removed directory ${chalk.bold(Po)} from workspace`]),
           lu(null));
       }),
         (R[158] = Po),

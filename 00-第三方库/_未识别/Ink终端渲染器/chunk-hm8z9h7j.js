@@ -29,23 +29,23 @@ import { j, B, dl } from "../../lodash/lodash.2x3q7cfh.js";
 import { JETBRAINS_IDES, env as a } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
-  P9e,
-  Qye,
-  rBn,
-  jat,
-  Wat,
-  q0e,
-  oBn,
-  Gat,
-  Cv,
-  vv,
-  z0e,
-  V0e,
-  s7,
-  O9e,
-} from "../../../01-核心基础设施/共享小工具-未细化/chunk-z3y2y7w9.js";
+  ENABLE_SYNCHRONIZED_UPDATE,
+  DISABLE_SYNCHRONIZED_UPDATE,
+  ENABLE_BRACKETED_PASTE,
+  DISABLE_BRACKETED_PASTE,
+  ENABLE_FOCUS_EVENTS,
+  DISABLE_FOCUS_EVENTS,
+  ENABLE_THEME_REPORTS,
+  DISABLE_THEME_REPORTS,
+  SHOW_CURSOR,
+  HIDE_CURSOR,
+  ENTER_ALT_SCREEN,
+  EXIT_ALT_SCREEN,
+  DISABLE_MOUSE_TRACKING,
+  getMouseTrackingSequence,
+} from "../../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
 import { ph } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Jp, mw, _d, kAe, RNe, kNe } from "../../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { formatOscSequence, wrapOscForMultiplexer, OSC_CODES, formatHyperlinkStart, ITERM2_OSC_COMMANDS, ITERM2_PROGRESS_STATES } from "../../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { e } from "../../react/react.kwtapczy.js";
 import { Qt, re, De, V, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { pg } from "../第三方库-其他/chunk-jm5cswvd.js";
@@ -265,10 +265,10 @@ function G0e(t) {
   return cDt() ? rz + (t?.legacyKitty ? Pcr : Icr) + Ocr : "";
 }
 function Nat(t) {
-  return z0e + i_ + gm + G0e(t);
+  return ENTER_ALT_SCREEN + i_ + gm + G0e(t);
 }
 function uF() {
-  return rz + V0e + Hhe;
+  return rz + EXIT_ALT_SCREEN + Hhe;
 }
 function Fat() {
   return !!a.WT_SESSION;
@@ -299,7 +299,7 @@ function Ltn(t, r, o = !1, u) {
   let s = u !== void 0 && u > 1 ? u - 1 : void 0;
   if (r.length === 0) return;
   let p = !o,
-    i = p ? P9e : "";
+    i = p ? ENABLE_SYNCHRONIZED_UPDATE : "";
   for (let l of r)
     switch (l.type) {
       case "stdout":
@@ -312,10 +312,10 @@ function Ltn(t, r, o = !1, u) {
         i += l.altScreen ? getClearTerminalSequence() : eraseViewportInPlace(l.viewportRows);
         break;
       case "cursorHide":
-        i += vv;
+        i += HIDE_CURSOR;
         break;
       case "cursorShow":
-        i += Cv;
+        i += SHOW_CURSOR;
         break;
       case "cursorMove":
         i += fW(l.x, s !== void 0 ? Math.max(-s, Math.min(s, l.y)) : l.y);
@@ -327,13 +327,13 @@ function Ltn(t, r, o = !1, u) {
         i += "\r";
         break;
       case "hyperlink":
-        i += kAe(l.uri);
+        i += formatHyperlinkStart(l.uri);
         break;
       case "styleStr":
         i += l.str;
         break;
     }
-  if (p) i += Qye;
+  if (p) i += DISABLE_SYNCHRONIZED_UPDATE;
   Dtn(t, i);
 }
 function v(t) {
@@ -463,21 +463,21 @@ function qA() {
   let r = re(
       ({ message: i, title: l }) => {
         let c = l ? `${l}: ${i}` : i;
-        t(mw(Jp(_d.ITERM2, m(c))));
+        t(wrapOscForMultiplexer(formatOscSequence(OSC_CODES.ITERM2, m(c))));
       },
       [t],
     ),
     o = re(
       ({ message: i, title: l, id: c }) => {
-        (t(mw(Jp(_d.KITTY, `i=${c}:d=0:p=title`, m(l)))),
-          t(mw(Jp(_d.KITTY, `i=${c}:p=body`, m(i)))),
-          t(mw(Jp(_d.KITTY, `i=${c}:d=1:a=focus`, ""))));
+        (t(wrapOscForMultiplexer(formatOscSequence(OSC_CODES.KITTY, `i=${c}:d=0:p=title`, m(l)))),
+          t(wrapOscForMultiplexer(formatOscSequence(OSC_CODES.KITTY, `i=${c}:p=body`, m(i)))),
+          t(wrapOscForMultiplexer(formatOscSequence(OSC_CODES.KITTY, `i=${c}:d=1:a=focus`, ""))));
       },
       [t],
     ),
     u = re(
       ({ message: i, title: l }) => {
-        t(mw(Jp(_d.GHOSTTY, "notify", m(l), m(i))));
+        t(wrapOscForMultiplexer(formatOscSequence(OSC_CODES.GHOSTTY, "notify", m(l), m(i))));
       },
       [t],
     ),
@@ -488,22 +488,22 @@ function qA() {
       (i, l) => {
         if (!Jye()) return;
         if (!i) {
-          t(mw(Jp(_d.ITERM2, RNe.PROGRESS, kNe.CLEAR, "")));
+          t(wrapOscForMultiplexer(formatOscSequence(OSC_CODES.ITERM2, ITERM2_OSC_COMMANDS.PROGRESS, ITERM2_PROGRESS_STATES.CLEAR, "")));
           return;
         }
         let c = Math.max(0, Math.min(100, Math.round(l ?? 0)));
         switch (i) {
           case "completed":
-            t(mw(Jp(_d.ITERM2, RNe.PROGRESS, kNe.CLEAR, "")));
+            t(wrapOscForMultiplexer(formatOscSequence(OSC_CODES.ITERM2, ITERM2_OSC_COMMANDS.PROGRESS, ITERM2_PROGRESS_STATES.CLEAR, "")));
             break;
           case "error":
-            t(mw(Jp(_d.ITERM2, RNe.PROGRESS, kNe.ERROR, c)));
+            t(wrapOscForMultiplexer(formatOscSequence(OSC_CODES.ITERM2, ITERM2_OSC_COMMANDS.PROGRESS, ITERM2_PROGRESS_STATES.ERROR, c)));
             break;
           case "indeterminate":
-            t(mw(Jp(_d.ITERM2, RNe.PROGRESS, kNe.INDETERMINATE, "")));
+            t(wrapOscForMultiplexer(formatOscSequence(OSC_CODES.ITERM2, ITERM2_OSC_COMMANDS.PROGRESS, ITERM2_PROGRESS_STATES.INDETERMINATE, "")));
             break;
           case "running":
-            t(mw(Jp(_d.ITERM2, RNe.PROGRESS, kNe.SET, c)));
+            t(wrapOscForMultiplexer(formatOscSequence(OSC_CODES.ITERM2, ITERM2_OSC_COMMANDS.PROGRESS, ITERM2_PROGRESS_STATES.SET, c)));
             break;
           case null:
             break;
@@ -604,10 +604,10 @@ var m4 = R;
 F();
 var Kx = Qt(null);
 function T(t) {
-  return Jp(_d.SET_BG_COLOR, t);
+  return formatOscSequence(OSC_CODES.SET_BG_COLOR, t);
 }
 function h() {
-  return Jp(_d.RESET_BG_COLOR);
+  return formatOscSequence(OSC_CODES.RESET_BG_COLOR);
 }
 var f = {
   bracketedPaste: 0,
@@ -622,15 +622,15 @@ var f = {
 function x(t) {
   switch (t) {
     case "bracketedPaste":
-      return { mode: t, on: rBn, off: jat };
+      return { mode: t, on: ENABLE_BRACKETED_PASTE, off: DISABLE_BRACKETED_PASTE };
     case "themeReports":
-      return { mode: t, on: oBn, off: Gat };
+      return { mode: t, on: ENABLE_THEME_REPORTS, off: DISABLE_THEME_REPORTS };
     case "focusEvents":
-      return { mode: t, on: Wat, off: q0e };
+      return { mode: t, on: ENABLE_FOCUS_EVENTS, off: DISABLE_FOCUS_EVENTS };
     case "extendedKeys":
       return { mode: t, on: G0e(), off: Hhe + rz };
     case "altScreen":
-      return { mode: t, on: z0e + i_ + gm, off: V0e + Hhe };
+      return { mode: t, on: ENTER_ALT_SCREEN + i_ + gm, off: EXIT_ALT_SCREEN + Hhe };
     case "altScreenKeys":
       return { mode: t, on: G0e(), off: rz };
   }
@@ -690,7 +690,7 @@ class Uat {
     switch (t) {
       case "mouse": {
         let o = r ?? "off";
-        return { mode: t, on: O9e(o), off: o === "off" ? "" : s7 };
+        return { mode: t, on: getMouseTrackingSequence(o), off: o === "off" ? "" : DISABLE_MOUSE_TRACKING };
       }
       case "background":
         return { mode: t, on: T(r ?? ""), off: h() };

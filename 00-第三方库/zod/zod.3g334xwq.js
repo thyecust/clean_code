@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Ie, po } from "../lodash/lodash.207999qb.js";
-import { tl } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseConfigInteger } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 var y;
 (function (e) {
@@ -3171,7 +3171,7 @@ function Ne(e) {
       .transform((t) => {
         if (t === void 0) return;
         if (e?.digitsOnly && !/^[+-]?\d+$/.test(t.trim())) return;
-        let r = tl(t);
+        let r = parseConfigInteger(t);
         if (!Number.isFinite(r)) return;
         if (e?.min !== void 0 && r < e.min) return;
         if (e?.max !== void 0 && r > e.max) return;

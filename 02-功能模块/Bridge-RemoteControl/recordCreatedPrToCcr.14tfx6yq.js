@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 76 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -24,7 +24,7 @@ async function recordCreatedPrToCcr(r, e) {
     i = c ? null : (getReplBridgeHandle() ?? getSdkHostedBridgeHandle());
   if (!c && !i?.recordCreatedPR) return;
   if (r.provider !== "github") return;
-  if (St()) return;
+  if (isEssentialTrafficOnly()) return;
   let d = r.prRepository.indexOf("/"),
     s = r.prRepository.slice(0, d),
     a = r.prRepository.slice(d + 1),

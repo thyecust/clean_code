@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { og } from "./chunk-33bdfgmx.js";
+import { parsePluginIdIgnoringReservedMarketplace } from "./chunk-33bdfgmx.js";
 import { s, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var l = createLazyValue(() => v(c({ marketplace: s(), plugin: s() })));
 function getChannelAllowlist() {
@@ -22,7 +22,7 @@ function isChannelsEnabled() {
 }
 function isChannelAllowlisted(e) {
   if (!e) return !1;
-  let { name: n, marketplace: t } = og(e);
+  let { name: n, marketplace: t } = parsePluginIdIgnoringReservedMarketplace(e);
   if (!t) return !1;
   return getChannelAllowlist().some((r) => r.plugin === n && r.marketplace === t);
 }

@@ -49,23 +49,23 @@ import { j, B, Ez, Az, dl } from "../lodash/lodash.2x3q7cfh.js";
 import { root as globalObject, isObject as Fm, Ie, po } from "../lodash/lodash.207999qb.js";
 import { R, dt, ge, A, Po } from "../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { os, Yg, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { repeatString, toWellFormed, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../react/react.zhnvc798.js";
 import { cz } from "../which-isexe/ isexe.knmpyrza.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { usr, zg, n5t, Isr, Psr, Dsr, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { ie, $Ze } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk, getColorLevelGeneration } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { CT, xYn, HYn, iK, HNe, jY, IYn } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
-import { rue, Nze, aft } from "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
+import { getAttachStampMs, Nze, aft } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import { getSessionFeatureCache } from "../../02-功能模块/Hooks钩子/session-feature-cache.js";
-import { CF } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
-import { dG, Ta, zSn } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { stopCapturingEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
+import { isTmuxControlMode, shouldUseFullscreen, zSn } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
-import { mw, z_, vNe, kAe, xAe, BSt, jSt, z8e } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { wrapOscForMultiplexer, setClipboard, readClipboard, formatHyperlinkStart, HYPERLINK_END, CLEAR_ITERM2_PROGRESS_SEQUENCE, RESET_TAB_STATUS_SEQUENCE, isTabStatusEnabled } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
 import {
   cee,
@@ -95,30 +95,30 @@ import {
   Bat,
 } from "../_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import {
-  zf,
-  jat,
-  Wat,
-  q0e,
-  Gat,
-  Cv,
-  vv,
-  z0e,
-  V0e,
-  qat,
-  s7,
-  O9e,
-} from "../../01-核心基础设施/共享小工具-未细化/chunk-z3y2y7w9.js";
-import { Lyn, Pre, $I, kYn } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
-import { fBn, mBn, hBn, Btn } from "../../01-核心基础设施/共享小工具-未细化/chunk-ewa397cg.js";
-import { Ev, xtn, Htn } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
+  TERMINAL_MODE_CODES,
+  DISABLE_BRACKETED_PASTE,
+  ENABLE_FOCUS_EVENTS,
+  DISABLE_FOCUS_EVENTS,
+  DISABLE_THEME_REPORTS,
+  SHOW_CURSOR,
+  HIDE_CURSOR,
+  ENTER_ALT_SCREEN,
+  EXIT_ALT_SCREEN,
+  DISABLE_WIN32_INPUT_MODE,
+  DISABLE_MOUSE_TRACKING,
+  getMouseTrackingSequence,
+} from "../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
+import { setTerminalFocus, isTerminalFocused, getTerminalFocus, getTerminalFocusGainedAt } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
+import { createDecrpmQuery, createCursorPositionQuery, createXtVersionQuery, TerminalQuerier } from "../../01-核心基础设施/共享小工具-未细化/terminal-querier.js";
+import { CLOCK_TICK_INTERVAL_MS, TerminalFocusProvider, ClockProvider } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { e, r } from "../react/react.kwtapczy.js";
 import { trySetRawMode } from "../../01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js";
 import { toNumber } from "../../01-核心基础设施/共享小工具-未细化/lodash-to-number.js";
 import { Cln, Uze, Qt, vln, V, F } from "../_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { expandTabs } from "../../01-核心基础设施/共享小工具-未细化/expand-tabs.js";
-import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { toESM, commonJS, initESM, MEMO_CACHE_SENTINEL, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function Uf(t, s) {
@@ -8883,7 +8883,7 @@ var tS = 4194304,
 function lS() {
   if (!process.stdout.isTTY) return { reason: "not_a_tty" };
   let t, s;
-  switch (P()) {
+  switch (getCurrentPlatform()) {
     case "linux":
     case "wsl":
       ((t = "/proc/self/fd/1"), (s = 524288));
@@ -14382,7 +14382,7 @@ function eDt() {
   return !0;
 }
 async function qv(t) {
-  let [s] = await Promise.all([t.send(hBn()), t.flush()]);
+  let [s] = await Promise.all([t.send(createXtVersionQuery()), t.flush()]);
   if (s) {
     let y = s.name;
     if (a.TMUX && y.startsWith("tmux ")) {
@@ -14398,7 +14398,7 @@ async function qv(t) {
   } else n("XTVERSION: no reply (terminal ignored query)");
   let c = !s || a.TERM_PROGRAM === "Apple_Terminal",
     [f] = await Promise.all([
-      c ? Promise.resolve(void 0) : t.send(fBn(zf.SYNCHRONIZED_UPDATE)),
+      c ? Promise.resolve(void 0) : t.send(createDecrpmQuery(TERMINAL_MODE_CODES.SYNCHRONIZED_UPDATE)),
       c ? Promise.resolve() : t.flush(),
     ]),
     m = f?.status === 1 || f?.status === 2;
@@ -14426,7 +14426,7 @@ class Ru extends Cln {
   incompleteEscapeTimer = null;
   querier =
     this.props.stdout.isTTY && this.props.stdin.isTTY
-      ? new Btn(this.props.stdout)
+      ? new TerminalQuerier(this.props.stdout)
       : null;
   lastClickTime = 0;
   lastClickCol = -1;
@@ -14471,8 +14471,8 @@ class Ru extends Cln {
             internal_querier: this.querier,
             internal_jediTermInput: this.jediTermInput,
           },
-          children: e(xtn, {
-            children: e(Htn, {
+          children: e(TerminalFocusProvider, {
+            children: e(ClockProvider, {
               children: e(ZOt.Provider, {
                 value: this.props.onCursorDeclaration ?? LE,
                 children: this.state.error
@@ -14499,7 +14499,7 @@ class Ru extends Cln {
       (this.props.rootNode.setRawMode = void 0),
       this.props.stdout.isTTY)
     )
-      this.props.stdout.write(Cv);
+      this.props.stdout.write(SHOW_CURSOR);
     if (this.incompleteEscapeTimer)
       (clearTimeout(this.incompleteEscapeTimer),
         (this.incompleteEscapeTimer = null));
@@ -14525,12 +14525,12 @@ Read about how to prevent this error on https://github.com/vadimdemedes/ink/#isr
     if ((s.setEncoding("utf8"), t)) {
       if (this.rawModeEnabledCount === 0) {
         if (
-          (CF(),
+          (stopCapturingEarlyInput(),
           this.props.onRawModeEnter?.(),
           s.ref(),
           trySetRawMode(s, !0),
           s.addListener("readable", this.handleReadable),
-          P() === "windows")
+          getCurrentPlatform() === "windows")
         )
           (s.resume(), s.pause());
         let { modes: c } = this.props;
@@ -14540,9 +14540,9 @@ Read about how to prevent this error on https://github.com/vadimdemedes/ink/#isr
               c.set("themeReports") +
               c.set("focusEvents"),
           ),
-          P() === "windows")
+          getCurrentPlatform() === "windows")
         )
-          this.props.stdout.write(qat);
+          this.props.stdout.write(DISABLE_WIN32_INPUT_MODE);
         if (
           (this.props.stdout.write(c.set("extendedKeys")),
           a.CLAUDE_BG_BACKEND !== "daemon")
@@ -14631,10 +14631,10 @@ Read about how to prevent this error on https://github.com/vadimdemedes/ink/#isr
     );
   }
   handleTerminalFocus = (t) => {
-    let s = $I();
+    let s = getTerminalFocus();
     if (!t || Date.now() - this.lastActivationInputTime >= Zv)
       this.windowActivationClickArmed = !0;
-    if ((Lyn(t), t && s === "blurred"))
+    if ((setTerminalFocus(t), t && s === "blurred"))
       getInkInstanceRegistry().get(this.props.stdout)?.proactiveAtlasResetOnFocus();
     if (
       t &&
@@ -14661,7 +14661,7 @@ Read about how to prevent this error on https://github.com/vadimdemedes/ink/#isr
     if (!this.isRawModeSupported()) return;
     let t = this.rawModeEnabledCount;
     if (this.props.stdout.isTTY)
-      this.props.stdout.write(Cv + s7 + this.props.modes.suspend());
+      this.props.stdout.write(SHOW_CURSOR + DISABLE_MOUSE_TRACKING + this.props.modes.suspend());
     while (this.rawModeEnabledCount > 0) this.handleSetRawMode(!1);
     this.internal_eventEmitter.emit("suspend");
     let s = () => {
@@ -14673,7 +14673,7 @@ Read about how to prevent this error on https://github.com/vadimdemedes/ink/#isr
         let c = this.props.isScreenReaderEnabled ?? !1;
         this.props.stdout.write(
           this.props.modes.resume() +
-            (a.CLAUDE_CODE_ACCESSIBILITY || c ? "" : vv),
+            (a.CLAUDE_CODE_ACCESSIBILITY || c ? "" : HIDE_CURSOR),
         );
       }
       this.internal_eventEmitter.emit("resume");
@@ -14696,7 +14696,7 @@ function UE(t, s, c, f) {
   for (let S of y) {
     if (m && zd(S) && !(S.kind === "key" && S.name === "left")) {
       n(
-        `attachQuietDrain: dropped ${S.kind} (ms_since_stamp=${Date.now() - rue()})`,
+        `attachQuietDrain: dropped ${S.kind} (ms_since_stamp=${Date.now() - getAttachStampMs()})`,
         { level: "debug" },
       );
       continue;
@@ -14706,7 +14706,7 @@ function UE(t, s, c, f) {
       continue;
     }
     if (S.kind === "mouse") {
-      if ((zSn(), S.action === "press" && !Ud(S.button) && !Pre()))
+      if ((zSn(), S.action === "press" && !Ud(S.button) && !isTerminalFocused()))
         t.handleTerminalFocus(!0);
       if (t.props.getMouseMode?.() === "scroll" && (S.button & 3) === 0)
         continue;
@@ -14728,7 +14728,7 @@ function UE(t, s, c, f) {
       continue;
     }
     if (S.name !== "wheelup" && S.name !== "wheeldown" && S.name !== "mouse") {
-      if (!Pre()) Lyn(!0);
+      if (!isTerminalFocused()) setTerminalFocus(!0);
       t.consumeWindowActivationLatch(Date.now());
     }
     if (S.name === "z" && S.ctrl && eDt()) {
@@ -14765,15 +14765,15 @@ function FE(t, s) {
       if (((t.clickCount = 0), (s.button & 32) === 0))
         t.consumeWindowActivationLatch(Date.now());
       if ((s.button & 32) === 0) {
-        let S = P();
+        let S = getCurrentPlatform();
         if (y === 2 && (S === "windows" || S === "wsl" || S === "linux")) {
           if (pi(c)) (Va(c), t.props.onSelectionChange());
           else if (!Zd())
-            vNe("clipboard").then((E) => {
+            readClipboard("clipboard").then((E) => {
               if (E) t.props.dispatchPasteEvent(E);
             });
         } else if (y === 1 && S === "linux")
-          vNe("primary").then((E) => {
+          readClipboard("primary").then((E) => {
             if (E) t.props.dispatchPasteEvent(E);
           });
       }
@@ -14787,7 +14787,7 @@ function FE(t, s) {
     let b = Date.now();
     if (
       ((t.pressIsWindowActivation =
-        t.consumeWindowActivationLatch(b) && b - kYn() < Zv),
+        t.consumeWindowActivationLatch(b) && b - getTerminalFocusGainedAt() < Zv),
       t.pressIsWindowActivation)
     )
       t.clickCount = 0;
@@ -14955,9 +14955,9 @@ class iee extends r7 {
       let f = s
         .replace(qE, "$1\x1B\\")
         .split(XE)
-        .map((m, y) => (y % 2 === 1 ? m : pt(m)))
+        .map((m, y) => (y % 2 === 1 ? m : stripAnsi(m)))
         .join("");
-      s = Yg(f.replaceAll("\x07", ""));
+      s = toWellFormed(f.replaceAll("\x07", ""));
     }
     this.text = s;
   }
@@ -15158,8 +15158,8 @@ class Yd {
         let x = dn(s, E, y);
         if (x && x.width !== 2) {
           if (x.hyperlink !== m) {
-            if (m !== void 0) b += xAe;
-            if (x.hyperlink !== void 0) b += kAe(x.hyperlink);
+            if (m !== void 0) b += HYPERLINK_END;
+            if (x.hyperlink !== void 0) b += formatHyperlinkStart(x.hyperlink);
             m = x.hyperlink;
           }
           let C = this.options.stylePool.get(x.styleId),
@@ -15168,7 +15168,7 @@ class Yd {
           b += x.char;
         }
       }
-      if (m !== void 0) ((b += xAe), (m = void 0));
+      if (m !== void 0) ((b += HYPERLINK_END), (m = void 0));
       let S = pNe(f, []);
       if (S.length > 0) ((b += NI(S)), (f = []));
       c.push(b.trimEnd());
@@ -15444,7 +15444,7 @@ function ig(t, s, c) {
   let S = f >= 3 || (f === 2 && JE(s.char));
   if (S && m + 1 < y)
     (b.push({ type: "cursorTo", col: m + 2 }),
-      b.push({ type: "stdout", content: os(" ", f - 1) }),
+      b.push({ type: "stdout", content: repeatString(" ", f - 1) }),
       b.push({ type: "cursorTo", col: m + 1 }));
   if ((b.push({ type: "stdout", content: s.char }), S))
     b.push({ type: "cursorTo", col: m + f + 1 });
@@ -16243,7 +16243,7 @@ class Xye {
       (this.stylePool = f),
       (this.screen = m),
       (this.charCacheGeneration = f.generation),
-      (this.charCacheChalkGeneration = $Ze()),
+      (this.charCacheChalkGeneration = getColorLevelGeneration()),
       yd(m, s, c));
   }
   reset(t, s, c) {
@@ -16254,10 +16254,10 @@ class Xye {
       (this.operations.length = 0),
       yd(c, t, s),
       this.stylePool.generation !== this.charCacheGeneration ||
-        $Ze() !== this.charCacheChalkGeneration)
+        getColorLevelGeneration() !== this.charCacheChalkGeneration)
     )
       ((this.charCacheGeneration = this.stylePool.generation),
-        (this.charCacheChalkGeneration = $Ze()),
+        (this.charCacheChalkGeneration = getColorLevelGeneration()),
         this.charCache.clear());
     else if (this.charCache.size > cg) {
       let f = this.charCache.size - cg;
@@ -16518,7 +16518,7 @@ function fg(t, s, c, f) {
         ? fv(s)
         : s,
     S = c.intern(HYn(xYn(b)));
-  for (let { segment: E } of Xs().segment(t))
+  for (let { segment: E } of getGraphemeSegmenter().segment(t))
     f.push({ value: E, width: te(E), styleId: S, hyperlink: m });
 }
 function Gd(t, s, c) {
@@ -16746,13 +16746,13 @@ function mg(t, s, c, f = 0, m) {
   else if (c === "start") S = f + 1;
   else S = b - y - f - 1;
   S = Math.max(1, Math.min(S, b - y - 1));
-  let E = t.substring(0, 1) + os(m, S - 1),
-    x = os(m, b - S - y - 1) + t.substring(b - 1);
+  let E = t.substring(0, 1) + repeatString(m, S - 1),
+    x = repeatString(m, b - S - y - 1) + t.substring(b - 1);
   return [E, s, x];
 }
 function Fo(t, s, c) {
   let f = jY(t, s);
-  if (c) f = ie.dim(f);
+  if (c) f = chalk.dim(f);
   return f;
 }
 var dx = (t, s, c, f) => {
@@ -16800,13 +16800,13 @@ var dx = (t, s, c, f) => {
         `
 `
       ).repeat(Q);
-      if (T) ce = ie.dim(ce);
+      if (T) ce = chalk.dim(ce);
       let le = (
         jY(b.right, C) +
         `
 `
       ).repeat(Q);
-      if (L) le = ie.dim(le);
+      if (L) le = chalk.dim(le);
       let oe = z
           ? (W ? b.bottomLeft : "") +
             b.bottom.repeat(X) +
@@ -17824,7 +17824,7 @@ function Tx(t, s, c) {
   }
 }
 function Nx(t, s, c, f) {
-  let m = $Ze(),
+  let m = getColorLevelGeneration(),
     y = t.rawBgRewriteCache.get(s);
   if (y && y.text === c && y.color === f && y.levelGeneration === m)
     return y.out;
@@ -17889,7 +17889,7 @@ function Du(t) {
         `
 `,
       )
-      .map((f) => pt(f)).join(`
+      .map((f) => stripAnsi(f)).join(`
 `),
     c = "";
   for (let f = 0; f < s.length; f++) {
@@ -18134,15 +18134,15 @@ function rDt() {
       (Ui(1, G7t),
       Ui(1, Hhe),
       Ui(1, rz),
-      Ui(1, q0e),
-      Ui(1, Gat),
-      Ui(1, jat),
-      Ui(1, Cv),
+      Ui(1, DISABLE_FOCUS_EVENTS),
+      Ui(1, DISABLE_THEME_REPORTS),
+      Ui(1, DISABLE_BRACKETED_PASTE),
+      Ui(1, SHOW_CURSOR),
       Ui(1, "\x1B7" + oB + "\x1B8"),
       Jye())
     )
-      Ui(1, BSt);
-    if (z8e()) Ui(1, mw(jSt));
+      Ui(1, CLEAR_ITERM2_PROGRESS_SEQUENCE);
+    if (isTabStatusEnabled()) Ui(1, wrapOscForMultiplexer(RESET_TAB_STATUS_SEQUENCE));
   } catch (t) {
     if (Po(t))
       n(`restoreTerminalModes writeSync failed: ${t}`, { level: "error" });
@@ -18188,7 +18188,7 @@ var wu = 8192,
   Bx = 16,
   Dg = 5,
   Lx = 50,
-  zx = mBn(),
+  zx = createCursorPositionQuery(),
   Ux = Object.freeze({ x: 0, y: 0, visible: !1 }),
   Fx = Object.freeze({ type: "stdout", content: gm }),
   Px = Object.freeze({ type: "stdout", content: i_ + gm }),
@@ -18197,7 +18197,7 @@ var wu = 8192,
   kx = 2000;
 function wg(t, s) {
   if (s <= 0) return !0;
-  for (let c of Xs().segment(t)) {
+  for (let c of getGraphemeSegmenter().segment(t)) {
     if (c.index === s) return !0;
     if (c.index > s) return !1;
   }
@@ -18333,7 +18333,7 @@ class Yye {
         this.altScreenFullRepaint &&
         !this.options.nativeCursor &&
         a.CLAUDE_CODE_SESSION_KIND === "bg" &&
-        P() === "windows"),
+        getCurrentPlatform() === "windows"),
       (this.nativeCursorVisible = this.accessibilityMode),
       (this.liveCountsEnabled = a.CLAUDE_CODE_BENCH_LIVE_COUNTS),
       (this.isScreenReaderEnabled =
@@ -18354,7 +18354,7 @@ class Yye {
     )
       this.nonBlockingStdout = fp(this.handleStdoutBackpressure);
     if (t.stdout === process.stdout) {
-      if (t.stdout.isTTY) t.stdout.write("\x1B7" + oB + "\x1B8" + Cv);
+      if (t.stdout.isTTY) t.stdout.write("\x1B7" + oB + "\x1B8" + SHOW_CURSOR);
     }
     let { cols: s, rows: c } = oDt(t.stdout, this.warnGarbageWinsizeOnce);
     if (
@@ -18390,7 +18390,7 @@ class Yye {
         stylePool: this.stylePool,
       })));
     let f = () => queueMicrotask(this.onRender);
-    ((this.scheduleRender = Tp(f, Ev, { leading: !0, trailing: !0 })),
+    ((this.scheduleRender = Tp(f, CLOCK_TICK_INTERVAL_MS, { leading: !0, trailing: !0 })),
       (this.isUnmounted = !1),
       (this.unsubscribeExit = cz(this.unmount, { alwaysLast: !1 })),
       (this.rootNode = fu("ink-root", tu.Config.create())),
@@ -18492,7 +18492,7 @@ class Yye {
       this.altScreenActive && !this.isHandedOff && this.options.stdout.isTTY)
     ) {
       if (this.altScreenMouseTracking !== "off")
-        this.options.stdout.write(O9e(this.altScreenMouseTracking));
+        this.options.stdout.write(getMouseTrackingSequence(this.altScreenMouseTracking));
       (this.resetFramesForAltScreen(), (this.needsEraseBeforePaint = !0));
     }
     return !0;
@@ -18514,7 +18514,7 @@ class Yye {
     (this.pause(),
       this.options.stdout.write(
         this.modes.suspend("altScreen") +
-          (this.altScreenActive ? "" : z0e + rz) +
+          (this.altScreenActive ? "" : ENTER_ALT_SCREEN + rz) +
           "\x1B[0m\x1B[?25h\x1B[2J\x1B[H",
       ),
       this.nonBlockingStdout?.flush(),
@@ -18527,8 +18527,8 @@ class Yye {
       !(this.accessibilityMode || this.isScreenReaderEnabled);
     if (
       (this.options.stdout.write(
-        (this.altScreenActive ? "" : V0e) +
-          (t ? vv : "") +
+        (this.altScreenActive ? "" : EXIT_ALT_SCREEN) +
+          (t ? HIDE_CURSOR : "") +
           this.modes.resume({ clearKeys: !0 }),
       ),
       this.altScreenActive)
@@ -18540,20 +18540,20 @@ class Yye {
   prepareTerminalForHandoff() {
     (this.pause(),
       this.options.stdout.write(
-        (this.altScreenMouseTracking !== "off" ? s7 : "") + q0e,
+        (this.altScreenMouseTracking !== "off" ? DISABLE_MOUSE_TRACKING : "") + DISABLE_FOCUS_EVENTS,
       ),
       this.nonBlockingStdout?.flush(),
       this.suspendStdin());
   }
   restoreTerminalAfterHandoff() {
     (this.resumeStdin(),
-      this.options.stdout.write(O9e(this.altScreenMouseTracking) + Wat),
+      this.options.stdout.write(getMouseTrackingSequence(this.altScreenMouseTracking) + ENABLE_FOCUS_EVENTS),
       this.resume());
   }
   ensureInteractive = () => {
     if (this.unsubscribeTTYHandlers || !this.options.stdout.isTTY) return;
     if (!this.accessibilityMode && !this.isScreenReaderEnabled)
-      this.options.stdout.write(vv);
+      this.options.stdout.write(HIDE_CURSOR);
     (this.options.stdout.on("resize", this.handleResize),
       process.on("SIGCONT", this.handleResume),
       (this.unsubscribeTTYHandlers = () => {
@@ -18723,7 +18723,7 @@ class Yye {
           this.maybeResetPools(t),
           he === "tick")
         )
-          this.drainTimer = setTimeout(() => this.onRender(), Ev >> 2);
+          this.drainTimer = setTimeout(() => this.onRender(), CLOCK_TICK_INTERVAL_MS >> 2);
         this.options.onFrame?.({
           durationMs: performance.now() - t,
           flickers: [],
@@ -18929,7 +18929,7 @@ class Yye {
       (this.prevFrameContaminated = !1),
       x.scrollDrainPending)
     )
-      this.drainTimer = setTimeout(() => this.onRender(), Ev >> 2);
+      this.drainTimer = setTimeout(() => this.onRender(), CLOCK_TICK_INTERVAL_MS >> 2);
     let se = this.rootNode.lastCommitMs ?? 0,
       ve = this.lastYogaCounters;
     ((this.rootNode.lastCommitMs = 0),
@@ -19209,7 +19209,7 @@ ${re}`
     if (y === null) return null;
     let b = t.slice(0, y),
       E =
-        ln(
+        countOccurrences(
           b,
           `
 `,
@@ -19461,7 +19461,7 @@ ${re}`
   copySelectionNoClear() {
     let t = this.getSelectedText();
     if (t)
-      z_(t).then((s) => {
+      setClipboard(t).then((s) => {
         if (s) this.options.stdout.write(s);
       });
     return t;
@@ -19774,7 +19774,7 @@ ${re}`
           if (s) $d(1, s);
           this.altScreenActive = !1;
         }
-        ($d(1, s7), this.drainStdin(), rDt());
+        ($d(1, DISABLE_MOUSE_TRACKING), this.drainStdin(), rDt());
       } catch (s) {
         if (Po(s))
           n(`unmount terminal cleanup writeSync failed: ${s}`, {
@@ -19952,9 +19952,9 @@ function lee() {
     let t = getSessionFeatureCache();
     if (t.decstbmRendererEnabled !== void 0) return t.decstbmRendererEnabled;
     if (!process.stdout.isTTY) return (t.decstbmRendererEnabled = !1);
-    if (dG()) return (t.decstbmRendererEnabled = !1);
+    if (isTmuxControlMode()) return (t.decstbmRendererEnabled = !1);
     if (!lDt()) return (t.decstbmRendererEnabled = !1);
-    if (Ta()) return (t.decstbmRendererEnabled = !1);
+    if (shouldUseFullscreen()) return (t.decstbmRendererEnabled = !1);
     if (zg()) return (t.decstbmRendererEnabled = !1);
     if (Ie(a.CLAUDE_CODE_DECSTBM)) return (t.decstbmRendererEnabled = !0);
     return (

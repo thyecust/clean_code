@@ -15,15 +15,15 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, yt, R, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { lxe, St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { AGENT_MESSAGE_TAG, isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Eg } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { isDesktopHostSession } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { PERMISSION_MODES } from "../权限系统/chunk-e4pfvp7x.js";
 import { HU } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
@@ -49,13 +49,13 @@ import {
   zCt,
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getAgentId, getAgentName, getTeamName, isTeammate, getTeammateColor, isTeamLead } from "./chunk-811z9z0t.js";
+import { getAgentId, getAgentName, getTeamName, isTeammate, getTeammateColor, isTeamLead } from "./teammate-context.js";
 import { qNe, $re, abt } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
 import { ps, t5 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, findToolByName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { ewt } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
-import { $i } from "./chunk-t899nada.js";
+import { LIST_AGENTS_TOOL_NAME } from "./list-agents-tool-constants.js";
 import {
   nH,
   xn,
@@ -86,28 +86,28 @@ import {
 import { isCrossSessionMessagingEnabled, CROSS_SESSION_MESSAGING_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { Sbt, $Ae, UAe, V3t, dK, BAe, bbt, uN } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { FGt, $Gt, writeToMailbox, createShutdownRequestMessage, createShutdownApprovedMessage, createShutdownRejectedMessage, isStructuredProtocolMessage, markMessagesAsReadByPredicate } from "./chunk-g6nvp9mm.js";
-import { zr } from "./chunk-3k2smxfn.js";
+import { isAgentSwarmsEnabled } from "./agent-swarms-enablement.js";
 import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
 import { primePeerIdentityOwner, getPeerBridgeIdentity } from "../权限系统/chunk-1y2g140m.js";
-import { readTeamFileAsync, updateTeamFile } from "./chunk-6b13bhw1.js";
+import { readTeamFileAsync, updateTeamFile } from "./team-file-store.js";
 import { _bt } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import {
-  tdt,
-  bPe,
-  Uee,
-  qGe,
-  zGe,
-  Kjn,
-  f2,
-  Yb,
-  obe,
-  wPe,
-  TPe,
-  EPe,
-  SF,
-} from "./chunk-sr4920wy.js";
-import { ajn } from "../../01-核心基础设施/共享小工具-未细化/chunk-mybtnk9f.js";
-import { kPe, HPe } from "../权限系统/chunk-4tar9p3n.js";
+  SELF_TARGET_REASON,
+  isOwnMessagingSocket,
+  isLikelyOwnMessagingSocket,
+  isImpersonatedTarget,
+  formatImpersonationMessage,
+  formatImpersonationDisplayMessage,
+  isOwnSessionId,
+  isTeammateContext,
+  formatOwnNameDisplayMessage,
+  formatMainSessionNotice,
+  hasCompleteTargetLookup,
+  classifySelfNameMatch,
+  formatOwnSessionMessage,
+} from "./peer-target-guard.js";
+import { resolveSendMessagePin } from "../../01-核心基础设施/共享小工具-未细化/send-message-pins.js";
+import { isHarborKiteModeEmitEnabled, classifyPermissionMode } from "../权限系统/cross-session-inbound-gate.js";
 import { Ton, Ou, uM, y9, Dee, Eon } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
 import { RESUMED_AGENT_REPORT_OMITTED_MESSAGE, RESUMED_AGENT_REPORT_FOLLOWS_JSON_MESSAGE, formatResumedAgentResult, parseHandbackDisplayText } from "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
 import { getPlanApprovalPermissionMode } from "../../01-核心基础设施/共享小工具-未细化/plan-approval-permission-mode.js";
@@ -132,11 +132,11 @@ import { wakeTeammateTask } from "./teammate-task-messages.js";
 import { buildBooleanFromStringSchema, parseStringBoolean } from "../../01-核心基础设施/共享小工具-未细化/boolean-from-string-schema.js";
 import { getRemoteSessionCompatId } from "../../01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js";
 import { SEND_MESSAGE_TOOL_NAME, SEND_MESSAGE_SUMMARY_MAX_LENGTH } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
-import { mt } from "../工具Task-Agent调度/chunk-1px84m19.js";
+import { AGENT_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
 import { MAIN_CONVERSATION_NAME, formatAgentMessage, TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
 import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
 import { s, O, c, $e, Ko, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { iB, oz } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
+import { countGraphemes, splitGraphemes } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 var Be = /^local_[0-9a-f-]{8,}$/,
   xe = "ccd_session_mgmt",
@@ -361,7 +361,7 @@ async function Xe({
           planModeRequired: r.planModeRequired,
           joinedAt: Date.now(),
           tmuxPaneId: "in-process",
-          cwd: Q(),
+          cwd: getCwd(),
           subscriptions: [],
           backendType: "in-process",
         });
@@ -379,7 +379,7 @@ async function Xe({
       agentType: r.customAgentType,
       tmuxSessionName: "in-process",
       tmuxPaneId: "in-process",
-      cwd: Q(),
+      cwd: getCwd(),
       spawnedAt: Date.now(),
     }),
     se({
@@ -413,7 +413,7 @@ var We = "Send a message to another agent";
 function Ge(e) {
   let t = isCrossSessionMessagingEnabled()
       ? `
-| \`"worker"\` | Any agent from \`${$i}\` \u2014 subagent, another local Claude session |
+| \`"worker"\` | Any agent from \`${LIST_AGENTS_TOOL_NAME}\` \u2014 subagent, another local Claude session |
 | \`"worker [3fa9c1]"\` | Same, plus its \`[ref]\` \u2014 only when a listing or an error shows one |`
       : "",
     p = "",
@@ -422,18 +422,18 @@ function Ge(e) {
 
 ## Cross-session
 
-Use \`${$i}\` to discover targets. Every row leads with the agent's \`name [ref]\` \u2014 the name IS the address; there is no separate address syntax.
+Use \`${LIST_AGENTS_TOOL_NAME}\` to discover targets. Every row leads with the agent's \`name [ref]\` \u2014 the name IS the address; there is no separate address syntax.
 
 \`\`\`json
 {"to": "worker", "message": "check if tests pass over there"}
 {"to": "worker [3fa9c1]", "message": "you, specifically"}
 \`\`\`
 
-Send the bare name \u2014 a name that exactly matches one live agent or session (on this machine, on another machine, or in the cloud) delivers directly. Append the \` [ref]\` only when the bare name is not enough \u2014 \`${$i}\` shows two rows with it, or an error asks you to disambiguate (you typed only a prefix, or a session list could not be checked). A ref you did not just read from a listing or an error will not resolve, and if the same name also names an in-process agent, the bare name always wins \u2014 use the in-process one.
+Send the bare name \u2014 a name that exactly matches one live agent or session (on this machine, on another machine, or in the cloud) delivers directly. Append the \` [ref]\` only when the bare name is not enough \u2014 \`${LIST_AGENTS_TOOL_NAME}\` shows two rows with it, or an error asks you to disambiguate (you typed only a prefix, or a session list could not be checked). A ref you did not just read from a listing or an error will not resolve, and if the same name also names an in-process agent, the bare name always wins \u2014 use the in-process one.
 
-A listed peer is alive and will process your message; messages enqueue and drain at the receiver's next tool round (its \`${$i}\` row says whether it is busy or idle right now). Your message arrives wrapped as \`<cross-session-message from="...">\`. **To reply to an incoming message, copy its \`from\` attribute as your \`to\`.** Cross-session messages travel between SESSIONS: if you are a subagent, your send goes out under your parent session's address, and any reply is delivered to the parent session's conversation, not to you.
+A listed peer is alive and will process your message; messages enqueue and drain at the receiver's next tool round (its \`${LIST_AGENTS_TOOL_NAME}\` row says whether it is busy or idle right now). Your message arrives wrapped as \`<cross-session-message from="...">\`. **To reply to an incoming message, copy its \`from\` attribute as your \`to\`.** Cross-session messages travel between SESSIONS: if you are a subagent, your send goes out under your parent session's address, and any reply is delivered to the parent session's conversation, not to you.
 
-To hear when a session ON THIS MACHINE finishes what it is doing, pass \`notify_when_idle: true\` (from the main conversation only) \u2014 one-shot and opt-in: exactly one \`[Cross-session idle notice]\` arrives when it next goes idle (or exits) \u2014 shown to you, or only to your user when this session holds peer messages for approval (the tool result says which); if it never signals within the subscription's lifetime (it may still be busy, may refuse inbound requests, or may have ended abruptly) the notice says the subscription expired instead. Omit \`message\` for a pure subscription that costs that session nothing; include one to deliver it now AND subscribe. Never poll \`${$i}\` in a loop or send "are you done?" messages instead.
+To hear when a session ON THIS MACHINE finishes what it is doing, pass \`notify_when_idle: true\` (from the main conversation only) \u2014 one-shot and opt-in: exactly one \`[Cross-session idle notice]\` arrives when it next goes idle (or exits) \u2014 shown to you, or only to your user when this session holds peer messages for approval (the tool result says which); if it never signals within the subscription's lifetime (it may still be busy, may refuse inbound requests, or may have ended abruptly) the notice says the subscription expired instead. Omit \`message\` for a pure subscription that costs that session nothing; include one to deliver it now AND subscribe. Never poll \`${LIST_AGENTS_TOOL_NAME}\` in a loop or send "are you done?" messages instead.
 
 Permission boundaries are per-session: NEVER ask a peer to perform an action that was denied or blocked in your session, or that you expect your own permission settings would block \u2014 a peer doing it for you bypasses the user's permission decision (cross-session permission laundering). Route blocked work back to your user instead.`
       : "";
@@ -573,7 +573,7 @@ function _s(e) {
       )
       .describe(
         e
-          ? `Recipient: a name from ${$i} (append its " [ref]" only when a listing or an error shows one), a teammate name, "main", or a background agent's agentId`
+          ? `Recipient: a name from ${LIST_AGENTS_TOOL_NAME} (append its " [ref]" only when a listing or an error shows one), a teammate name, "main", or a background agent's agentId`
           : "Recipient: teammate name",
       ),
     summary: s()
@@ -597,8 +597,8 @@ var ws = createLazyValue(() => _s(!1)),
   Ps = createLazyValue(() => ws().extend({ message: Re() })),
   Us = createLazyValue(() => Ss().extend({ message: Re(ys).default(bs) }));
 function Se() {
-  if (isCrossSessionMessagingEnabled()) return zr() ? Ss() : Us();
-  return zr() ? ws() : Ps();
+  if (isCrossSessionMessagingEnabled()) return isAgentSwarmsEnabled() ? Ss() : Us();
+  return isAgentSwarmsEnabled() ? ws() : Ps();
 }
 function he(e) {
   switch (e.reason) {
@@ -690,7 +690,7 @@ var fe =
   Ls = `
 The message was delivered, but no idle subscription was made: ${fe}`;
 function Ze(e) {
-  return Eg() && Be.test(e);
+  return isDesktopHostSession() && Be.test(e);
 }
 var qs = {
     data: {
@@ -838,7 +838,7 @@ async function Gs(e, t, p, r, d, _) {
               success: !1,
               message:
                 mc(r.agentContext) < getMaxSubagentSpawnDepth()
-                  ? `No teammate named '${e}' is currently on team '${w}'. Spawn one with ${mt}({name: '${e}'}) \u2014 or message the lead to do so.`
+                  ? `No teammate named '${e}' is currently on team '${w}'. Spawn one with ${AGENT_TOOL_NAME}({name: '${e}'}) \u2014 or message the lead to do so.`
                   : `No teammate named '${e}' is currently on team '${w}'. Message the lead to spawn one.`,
             },
             errorClass: "not_reachable",
@@ -934,7 +934,7 @@ function ns(e) {
   return "resume_failed";
 }
 function Ae(e) {
-  return parseShortId(e) ? oe(e, 7) : e;
+  return parseShortId(e) ? truncateToCodeUnits(e, 7) : e;
 }
 function os(e, t) {
   return {
@@ -1177,7 +1177,7 @@ async function Qs(e, t, p, r, d) {
 var rs =
   "Cross-machine messaging is unavailable: it sends the message through Anthropic servers, which is not allowed on a third-party provider or with nonessential traffic disabled. Messages to sessions on this machine still work.";
 function is() {
-  return getAPIProvider() === "firstParty" && !St();
+  return getAPIProvider() === "firstParty" && !isEssentialTrafficOnly();
 }
 function ds() {
   if (getPeerBridgeIdentity()?.live) return;
@@ -1355,11 +1355,11 @@ var SendMessageTool = buildTool({
           );
         }
         if (d.kind === "cloud-session") {
-          if (f2(d.sessionId))
+          if (isOwnSessionId(d.sessionId))
             return {
               behavior: "deny",
-              message: ps(SF(e.to, Yb(t))),
-              decisionReason: { type: "other", reason: tdt },
+              message: ps(formatOwnSessionMessage(e.to, isTeammateContext(t))),
+              decisionReason: { type: "other", reason: SELF_TARGET_REASON },
             };
           let {
             isRemoteControlPeerUnreachableFromHere: _,
@@ -1487,12 +1487,12 @@ var SendMessageTool = buildTool({
       if (r === "bridge" || r === "did")
         return { result: !1, message: fe, errorCode: 9 };
     }
-    let p = GCt(e.to, $i);
+    let p = GCt(e.to, LIST_AGENTS_TOOL_NAME);
     if (p !== void 0) return { result: !1, message: p, errorCode: 9 };
     {
       let r = uf(e.to);
-      if (r.scheme === "uds" && Uee(r.target))
-        return { result: !1, message: SF(e.to, Yb(t)), errorCode: 9 };
+      if (r.scheme === "uds" && isLikelyOwnMessagingSocket(r.target))
+        return { result: !1, message: formatOwnSessionMessage(e.to, isTeammateContext(t)), errorCode: 9 };
     }
     if (e.to.includes("@"))
       return {
@@ -1508,8 +1508,8 @@ var SendMessageTool = buildTool({
     )
       return { result: !1, message: vs, errorCode: 9 };
     if (uf(e.to).scheme === "bridge") {
-      if (f2(uf(e.to).target))
-        return { result: !1, message: SF(e.to, Yb(t)), errorCode: 9 };
+      if (isOwnSessionId(uf(e.to).target))
+        return { result: !1, message: formatOwnSessionMessage(e.to, isTeammateContext(t)), errorCode: 9 };
       if (typeof e.message !== "string")
         return {
           result: !1,
@@ -1553,7 +1553,7 @@ var SendMessageTool = buildTool({
       } catch {}
       return { result: !0 };
     }
-    if (!zr())
+    if (!isAgentSwarmsEnabled())
       return {
         result: !1,
         message:
@@ -1600,7 +1600,7 @@ var SendMessageTool = buildTool({
     return We;
   },
   async prompt() {
-    return Ge(zr());
+    return Ge(isAgentSwarmsEnabled());
   },
   mapToolResultToToolResultBlockParam(e, t) {
     let p = e;
@@ -1657,7 +1657,7 @@ ${w[0].text}`,
     function i(h, I, D) {
       de({ route: h, startedAt: _, errorClass: I, ...D });
     }
-    let w = kPe() ? HPe(getToolPermissionContext(t)) : void 0;
+    let w = isHarborKiteModeEmitEnabled() ? classifyPermissionMode(getToolPermissionContext(t)) : void 0;
     if (d !== void 0 && Agt(t.session, d))
       return (
         i("unresolved", "not_reachable"),
@@ -1777,14 +1777,14 @@ ${w[0].text}`,
         return { data: { success: !1, message: CROSS_SESSION_MESSAGING_DISABLED_MESSAGE } };
       let D = getCurrentSessionPeerNameFor(h.scheme === "bridge" ? "bridge" : "uds");
       if (h.scheme === "bridge") {
-        if (f2(h.target))
+        if (isOwnSessionId(h.target))
           return (
             i("bridge", "invalid_target"),
             {
               data: {
                 success: !1,
-                message: SF(e.to, Yb(t)),
-                display: obe(e.to),
+                message: formatOwnSessionMessage(e.to, isTeammateContext(t)),
+                display: formatOwnNameDisplayMessage(e.to),
               },
             }
           );
@@ -1867,7 +1867,7 @@ ${w[0].text}`,
           ...(v.asked && { blockedWait: !0 }),
         });
         let ae = E(G.error)
-          ? ` \u2014 the peer session may have ended or restarted, so this bridge ID is stale. Call ${$i} to get the current address.`
+          ? ` \u2014 the peer session may have ended or restarted, so this bridge ID is stale. Call ${LIST_AGENTS_TOOL_NAME} to get the current address.`
           : "";
         return {
           data: {
@@ -1877,14 +1877,14 @@ ${w[0].text}`,
         };
       }
       if (h.scheme === "uds") {
-        if (Uee(h.target))
+        if (isLikelyOwnMessagingSocket(h.target))
           return (
             i("uds", "invalid_target"),
             {
               data: {
                 success: !1,
-                message: SF(e.to, Yb(t)),
-                display: obe(e.to),
+                message: formatOwnSessionMessage(e.to, isTeammateContext(t)),
+                display: formatOwnNameDisplayMessage(e.to),
               },
             }
           );
@@ -1917,7 +1917,7 @@ ${w[0].text}`,
             i("uds", void 0, { ...(L && !L.ok && { degradedClass: he(L) }) });
           else if (L) Je(L, i);
           let J = e.summary || truncate(e.message, 50),
-            G = L ? B(e.to, L, $i) : void 0,
+            G = L ? B(e.to, L, LIST_AGENTS_TOOL_NAME) : void 0,
             te = [
               ...(j ? [`\u201C${J}\u201D \u2192 ${e.to}${ee.message}`] : []),
               ...(G ? [G.model] : []),
@@ -1943,7 +1943,7 @@ ${w[0].text}`,
         } catch (j) {
           i("uds", ge(j));
           let L = dK(j),
-            J = L === "gone" ? BAe($i) : L === "busy" ? bbt(j) : "";
+            J = L === "gone" ? BAe(LIST_AGENTS_TOOL_NAME) : L === "busy" ? bbt(j) : "";
           return {
             data: {
               success: !1,
@@ -1972,25 +1972,25 @@ ${w[0].text}`,
       ));
     if ((o.kind === "local-session" || o.kind === "cloud-session") && !isCrossSessionMessagingEnabled())
       return { data: { success: !1, message: CROSS_SESSION_MESSAGING_DISABLED_MESSAGE } };
-    if (o.kind === "cloud-session" && f2(o.sessionId))
+    if (o.kind === "cloud-session" && isOwnSessionId(o.sessionId))
       return (
         i("unresolved", "invalid_target"),
-        { data: { success: !1, message: SF(e.to, Yb(t)), display: obe(e.to) } }
+        { data: { success: !1, message: formatOwnSessionMessage(e.to, isTeammateContext(t)), display: formatOwnNameDisplayMessage(e.to) } }
       );
-    if (o.kind === "local-session" && bPe(o.sock))
+    if (o.kind === "local-session" && isOwnMessagingSocket(o.sock))
       return (
         i("unresolved", "invalid_target"),
-        { data: { success: !1, message: SF(e.to, Yb(t)), display: obe(e.to) } }
+        { data: { success: !1, message: formatOwnSessionMessage(e.to, isTeammateContext(t)), display: formatOwnNameDisplayMessage(e.to) } }
       );
-    if (o.kind === "local-session" && qGe(e.to, o.sock))
+    if (o.kind === "local-session" && isImpersonatedTarget(e.to, o.sock))
       return (
         i("unresolved", void 0, { degradedClass: "claimed_locally" }),
-        { data: { success: !1, message: zGe(e.to), display: Kjn(e.to) } }
+        { data: { success: !1, message: formatImpersonationMessage(e.to), display: formatImpersonationDisplayMessage(e.to) } }
       );
-    if (o.kind === "local-session" && Uee(o.sock))
+    if (o.kind === "local-session" && isLikelyOwnMessagingSocket(o.sock))
       return (
         i("unresolved", "invalid_target"),
-        { data: { success: !1, message: SF(e.to, Yb(t)), display: obe(e.to) } }
+        { data: { success: !1, message: formatOwnSessionMessage(e.to, isTeammateContext(t)), display: formatOwnNameDisplayMessage(e.to) } }
       );
     if (
       Bs(e, r, t.toolUseId) &&
@@ -2017,8 +2017,8 @@ ${w[0].text}`,
         }
       );
     }
-    let X = t.options.tools.some((h) => matchesToolName(h, $i)),
-      se = X ? ` (${$i} lists them)` : "";
+    let X = t.options.tools.some((h) => matchesToolName(h, LIST_AGENTS_TOOL_NAME)),
+      se = X ? ` (${LIST_AGENTS_TOOL_NAME} lists them)` : "";
     if (
       o.kind === "agent-live" ||
       o.kind === "agent-stopped" ||
@@ -2035,13 +2035,13 @@ ${w[0].text}`,
       if (h?.isObserver) return (i("unresolved", "not_reachable"), Ie);
     }
     if (o.kind === "not-found") {
-      let h = typeof e.message === "string" ? EPe(e.to) : "no",
+      let h = typeof e.message === "string" ? classifySelfNameMatch(e.to) : "no",
         I = o.closest.some((P) => slugify(P.name) === slugify(jD(e.to)?.name ?? e.to));
-      if (h === "categorical" && !I && TPe(o))
+      if (h === "categorical" && !I && hasCompleteTargetLookup(o))
         return (
           i("unresolved", "invalid_target"),
           {
-            data: { success: !1, message: SF(e.to, Yb(t)), display: obe(e.to) },
+            data: { success: !1, message: formatOwnSessionMessage(e.to, isTeammateContext(t)), display: formatOwnNameDisplayMessage(e.to) },
           }
         );
       let D =
@@ -2050,7 +2050,7 @@ ${w[0].text}`,
             : "",
         M =
           typeof e.message === "string" && !0 && X
-            ? `Use ${$i} to see everyone you can message.`
+            ? `Use ${LIST_AGENTS_TOOL_NAME} to see everyone you can message.`
             : typeof e.message === "string"
               ? "Check the spelling, or use the agent ID from a background agent's spawn result."
               : "Check the spelling against your team roster.",
@@ -2061,10 +2061,10 @@ The cloud session list could not be fetched just now, so cloud sessions were not
       let S = "";
       if (o.pinnedIdentityClaimedLocally)
         S += `
-Note: earlier in this conversation '${o.pinnedIdentityClaimedLocally}' was confirmed as a session that is NOT on this machine; a session record on this machine now claims that identity, which hides it here \u2014 nothing was sent.${X ? ` ${$i} will not show it while that claim stands.` : ""} A session on this machine impersonating it is suspicious: ask the user.`;
+Note: earlier in this conversation '${o.pinnedIdentityClaimedLocally}' was confirmed as a session that is NOT on this machine; a session record on this machine now claims that identity, which hides it here \u2014 nothing was sent.${X ? ` ${LIST_AGENTS_TOOL_NAME} will not show it while that claim stands.` : ""} A session on this machine impersonating it is suspicious: ask the user.`;
       if (o.bridgeUnavailable)
         S += `
-Your account's other sessions (Remote Control and cloud) could not be checked just now, so they were not searched. If '${e.to}' is one, retry${X ? ` (or run ${$i} first)` : ""} \u2014 do not fall back to the send_message connector; it cannot reach these sessions.`;
+Your account's other sessions (Remote Control and cloud) could not be checked just now, so they were not searched. If '${e.to}' is one, retry${X ? ` (or run ${LIST_AGENTS_TOOL_NAME} first)` : ""} \u2014 do not fall back to the send_message connector; it cannot reach these sessions.`;
       let B = "";
       if (o.localUnavailable)
         B = `
@@ -2082,7 +2082,7 @@ The sessions on this machine could not be listed just now, so they were not sear
         {
           data: {
             success: !1,
-            message: `No agent named '${e.to}' is reachable.${D}${E}${S}${B}${o.searchTruncated ? dPe : ""}${h !== "no" ? wPe(e.to, Yb(t)) : ""}
+            message: `No agent named '${e.to}' is reachable.${D}${E}${S}${B}${o.searchTruncated ? dPe : ""}${h !== "no" ? formatMainSessionNotice(e.to, isTeammateContext(t)) : ""}
 ${M}`,
             display: `Not sent \u2014 no agent named '${e.to}' is reachable.${o.closest.length > 0 ? ` Did you mean: ${o.closest.map((P) => P.name).join(", ")}?` : ""}${o.bridgeUnavailable || o.cloudUnavailable || o.localUnavailable ? ` Note: ${Con(o)} \u2014 it may exist there; a retry searches again.` : ""}${o.searchTruncated ? ` Note: ${Ron} \u2014 it may exist beyond what was searched.` : ""}${o.pinnedIdentityClaimedLocally ? ` ${von(o.pinnedIdentityClaimedLocally)} \u2014 that is suspicious if you did not set it up.` : ""}`,
           },
@@ -2090,12 +2090,12 @@ ${M}`,
       );
     }
     if (o.kind === "ambiguous") {
-      let h = typeof e.message === "string" ? EPe(e.to) : "no";
-      if (h === "categorical" && o.matchedBy === "prefix" && TPe(o))
+      let h = typeof e.message === "string" ? classifySelfNameMatch(e.to) : "no";
+      if (h === "categorical" && o.matchedBy === "prefix" && hasCompleteTargetLookup(o))
         return (
           i("unresolved", "invalid_target"),
           {
-            data: { success: !1, message: SF(e.to, Yb(t)), display: obe(e.to) },
+            data: { success: !1, message: formatOwnSessionMessage(e.to, isTeammateContext(t)), display: formatOwnNameDisplayMessage(e.to) },
           }
         );
       let I = Date.now(),
@@ -2104,7 +2104,7 @@ ${M}`,
         M =
           o.total > o.candidates.length
             ? `
-  \u2026and ${o.total - o.candidates.length} more${X ? ` \u2014 use ${$i} to see them all.` : "."}`
+  \u2026and ${o.total - o.candidates.length} more${X ? ` \u2014 use ${LIST_AGENTS_TOOL_NAME} to see them all.` : "."}`
             : "",
         E = Boolean(
           o.bridgeUnavailable || o.cloudUnavailable || o.localUnavailable,
@@ -2124,7 +2124,7 @@ ${M}`,
         v = "";
       if (o.bridgeUnavailable)
         v += `
-Your account's other sessions (Remote Control and cloud) could not be checked just now, so this list may be missing one; if you meant one of them, retry${X ? ` (or run ${$i} first)` : ""}.`;
+Your account's other sessions (Remote Control and cloud) could not be checked just now, so this list may be missing one; if you meant one of them, retry${X ? ` (or run ${LIST_AGENTS_TOOL_NAME} first)` : ""}.`;
       if (o.cloudUnavailable)
         v += `
 The cloud session list could not be fetched just now, so this list may be missing a cloud session; retry if you meant one.`;
@@ -2133,7 +2133,7 @@ The cloud session list could not be fetched just now, so this list may be missin
 The sessions on this machine could not be listed just now, so this list may be missing one here; retry if you meant a session on this machine.`;
       if (o.pinnedIdentityClaimedLocally)
         v += `
-Note: earlier in this conversation '${o.pinnedIdentityClaimedLocally}' was confirmed as a session that is NOT on this machine; a session record on this machine now claims that identity, so nothing was assumed and nothing was sent. ${X ? `${$i} will not show the other session while that claim stands. ` : ""}A session on this machine claiming that identity, that your user did not set up, is suspicious: ask the user before confirming anyone.`;
+Note: earlier in this conversation '${o.pinnedIdentityClaimedLocally}' was confirmed as a session that is NOT on this machine; a session record on this machine now claims that identity, so nothing was assumed and nothing was sent. ${X ? `${LIST_AGENTS_TOOL_NAME} will not show the other session while that claim stands. ` : ""}A session on this machine claiming that identity, that your user did not set up, is suspicious: ask the user before confirming anyone.`;
       let x =
           o.total === 1 &&
           !o.bridgeUnavailable &&
@@ -2170,13 +2170,13 @@ e.g. {"to": "${bU(o.candidates[0])}", ...}`
         data: {
           success: !1,
           message: `${P}
-${D}${M}${x}${v}${S}${h !== "no" ? wPe(e.to, Yb(t)) : ""}`,
+${D}${M}${x}${v}${S}${h !== "no" ? formatMainSessionNotice(e.to, isTeammateContext(t)) : ""}`,
           display: J,
         },
       };
     }
     await primePeerIdentityOwner({ refresh: !0, credentials: t.credentials });
-    let U = await ajn({
+    let U = await resolveSendMessagePin({
       session: t.session,
       to: e.to,
       message: e.message,
@@ -2195,10 +2195,10 @@ ${D}${M}${x}${v}${S}${h !== "no" ? wPe(e.to, Yb(t)) : ""}`,
         M =
           parseShortId(D) !== null
             ? "If you need the earlier agent and it is still running, address it by its agent ID from its spawn result."
-            : `The earlier recipient is ${sessionIdBody(D) !== D ? "a Claude session on another machine (cloud or Remote Control)" : _ce}; this name now belongs to an agent in this session.${X ? ` Use ${$i} if you still need that session.` : ""}`;
+            : `The earlier recipient is ${sessionIdBody(D) !== D ? "a Claude session on another machine (cloud or Remote Control)" : _ce}; this name now belongs to an agent in this session.${X ? ` Use ${LIST_AGENTS_TOOL_NAME} if you still need that session.` : ""}`;
       if (U.next === void 0) {
         let E = X
-          ? `Use ${$i} to see everyone you can message.`
+          ? `Use ${LIST_AGENTS_TOOL_NAME} to see everyone you can message.`
           : "Check the spelling, or use the agent ID from a background agent's spawn result.";
         return {
           data: {
@@ -2348,7 +2348,7 @@ ${M}`,
               from: N,
               senderTaskId: d,
               ...(ie && { name: ie }),
-              body: HU(lxe, e.message),
+              body: HU(AGENT_MESSAGE_TAG, e.message),
             }
           : { kind: "coordinator" };
     switch (o.kind) {
@@ -2611,7 +2611,7 @@ ${M}`,
           });
           let C = x ? ENt(o, se, "live session", "subscription") : "",
             V = x ? ANt(o, "live session", "subscription") : "",
-            { model: ee, display: j } = E(o.displayName, v, $i),
+            { model: ee, display: j } = E(o.displayName, v, LIST_AGENTS_TOOL_NAME),
             L = !v.ok && v.reason === "peer-gone";
           return {
             data: {
@@ -2634,7 +2634,7 @@ ${M}`,
               w,
             ),
             x = S ? await M(o.sock, o.displayName, t.storageV5, w) : void 0,
-            C = x ? E(o.displayName, x, $i) : void 0,
+            C = x ? E(o.displayName, x, LIST_AGENTS_TOOL_NAME) : void 0,
             V = C ? void 0 : ss(B, e, r, t.toolUseId),
             ee = C
               ? `
@@ -2677,7 +2677,7 @@ ${V.display}`
           let C = dK(v),
             V =
               C === "gone"
-                ? ` \u2014 that session may have just exited.${X ? ` Call ${$i} to see who is reachable now.` : ""}`
+                ? ` \u2014 that session may have just exited.${X ? ` Call ${LIST_AGENTS_TOOL_NAME} to see who is reachable now.` : ""}`
                 : C === "busy"
                   ? V3t(v)
                     ? " \u2014 this machine's session registry could not be read just now (a transient local condition). Retry the same name shortly."
@@ -2763,7 +2763,7 @@ ${V.display}`
           !L.ok)
         ) {
           let _e = M(L.error)
-            ? ` \u2014 that ${h} may have ended${o.via === "cloud" ? " or been archived" : " or disconnected"}.${X ? ` Call ${$i} to see who is reachable now.` : ""}`
+            ? ` \u2014 that ${h} may have ended${o.via === "cloud" ? " or been archived" : " or disconnected"}.${X ? ` Call ${LIST_AGENTS_TOOL_NAME} to see who is reachable now.` : ""}`
             : "";
           return {
             data: {
@@ -2824,10 +2824,10 @@ ${V.display}`
             .replace(/[\s\u2800]+/g, " ")
             .trim(),
         p = t(e.message),
-        r = iB(p),
+        r = countGraphemes(p),
         d =
           r > 200
-            ? `${oz(p).slice(0, 200).join("")}\u2026 [${r} chars total]`
+            ? `${splitGraphemes(p).slice(0, 200).join("")}\u2026 [${r} chars total]`
             : p;
       return ps(`${t(e.to)} \u2190 "${d}"`);
     }

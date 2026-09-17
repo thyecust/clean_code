@@ -10,7 +10,7 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-var aXt = {
+var KNOWN_ENTRYPOINTS = {
   cli: !0,
   mcp: !0,
   "sdk-cli": !0,
@@ -38,16 +38,16 @@ var aXt = {
   "claude-coworker": !0,
   "claude-coworker-terminal": !0,
 };
-var c = new Set(Object.keys(aXt));
+var c = new Set(Object.keys(KNOWN_ENTRYPOINTS));
 function u(e) {
   return c.has(e);
 }
-function Vd() {
+function getEnvEntrypoint() {
   let e = a.CLAUDE_CODE_ENTRYPOINT;
   return e && u(e) ? e : void 0;
 }
-function our() {
-  switch (Vd()) {
+function getEntrypointDisplayName() {
+  switch (getEnvEntrypoint()) {
     case "claude-desktop":
     case "claude-desktop-3p":
     case "remote_desktop":
@@ -69,54 +69,54 @@ function our() {
   }
 }
 var r = new Set(["claude-desktop", "claude-desktop-3p", "local-agent"]);
-function Hd() {
+function isDesktopHostEntrypoint() {
   let e = a.CLAUDE_CODE_ENTRYPOINT;
   return e !== void 0 && r.has(e);
 }
 var l = new Set(["claude-desktop-3p", "local-agent"]);
-function Uhe() {
+function isHostManagedSettingsEntrypoint() {
   let e = a.CLAUDE_CODE_ENTRYPOINT;
   return e !== void 0 && l.has(e);
 }
 function kPn(e) {
   return r.has(e === "local_agent" ? "local-agent" : e);
 }
-function sur(e) {
+function isNonTerminalEntrypoint(e) {
   return (
     e !== void 0 && (r.has(e) || e === "claude-vscode" || e.startsWith("sdk-"))
   );
 }
-function Bhe() {
-  let e = N1();
+function isClaudeDesktopAppSession() {
+  let e = getSessionEntrypoint();
   return (
     (e === "claude-desktop" || e === "claude-desktop-3p") && !o().childSession
   );
 }
 function d() {
-  let e = N1();
+  let e = getSessionEntrypoint();
   return e !== void 0 && r.has(e);
 }
-function Axt() {
+function isRemoteTriggerEntrypoint() {
   let e = a.CLAUDE_CODE_ENTRYPOINT;
   return e === "remote_trigger" || e === "remote_cowork_trigger";
 }
-function ZQ() {
+function isRemoteCoworkEntrypoint() {
   return a.CLAUDE_CODE_ENTRYPOINT === "remote_cowork";
 }
 var s = new Set(["remote_cowork", "remote_cowork_trigger"]);
-function lXt() {
+function isCoworkEntrypoint() {
   let e = a.CLAUDE_CODE_ENTRYPOINT;
   return e !== void 0 && s.has(e);
 }
-function txe() {
-  let e = N1();
+function isCoworkSession() {
+  let e = getSessionEntrypoint();
   return e !== void 0 && s.has(e);
 }
-function IA() {
+function isSlackEntrypoint() {
   let e = a.CLAUDE_CODE_ENTRYPOINT;
   return e === "claude_in_slack" || e === "claude-in-slack";
 }
-function nxe() {
+function isTeamsEntrypoint() {
   return a.CLAUDE_CODE_ENTRYPOINT === "claude-in-teams";
 }
 var p = new Set([
@@ -131,7 +131,7 @@ var p = new Set([
   "claude-in-slack",
   "claude-in-teams",
 ]);
-function iur() {
+function isRemoteEntrypoint() {
   let e = a.CLAUDE_CODE_ENTRYPOINT;
   return e !== void 0 && p.has(e);
 }
@@ -144,12 +144,12 @@ var E = new Set([
   "remote_cowork",
   "remote_baku",
 ]);
-function aur() {
+function shouldAppendPermissionRuleHint() {
   if (Ie(a.CLAUDE_CODE_HIDE_SETTINGS_HINT)) return !1;
   let e = a.CLAUDE_CODE_ENTRYPOINT;
   return e === void 0 || !E.has(e);
 }
-function UP() {
+function isSdkEntrypoint() {
   let e = a.CLAUDE_CODE_ENTRYPOINT;
   return e === "sdk-ts" || e === "sdk-py" || e === "sdk-cli";
 }
@@ -175,13 +175,13 @@ var _ = new j(() => new i());
 function o() {
   return _.of(B().host);
 }
-function N1() {
+function getSessionEntrypoint() {
   return o().entrypoint;
 }
-function Eg() {
+function isDesktopHostSession() {
   return d() && !o().childSession;
 }
-function Cxt() {
+function isTopLevelCoworkSession() {
   let e = o();
   return (
     e.entrypoint !== void 0 &&
@@ -192,7 +192,7 @@ function Cxt() {
   );
 }
 var f = new Set(["remote", "remote_desktop", "remote_mobile", "ssh-remote"]);
-function lur() {
+function isThinClientSession() {
   let e = o();
   return (
     e.entrypoint !== void 0 &&
@@ -201,17 +201,17 @@ function lur() {
     !e.claudecode
   );
 }
-function PA() {
+function isVsCodeExtensionSession() {
   let e = o();
   return e.entrypoint === "claude-vscode" && !e.childSession && !e.claudecode;
 }
-function AL() {
+function isClaudecodeEnv() {
   return o().claudecode;
 }
-function xPn() {
+function hasCoworkFrameArtifacts() {
   return o().coworkFrameArtifacts;
 }
-function cur(e) {
+function initHostState(e) {
   T(e);
   let t = o();
   (t.setEntrypoint(a.CLAUDE_CODE_ENTRYPOINT),
@@ -243,7 +243,7 @@ function C(e) {
   let t = e.indexOf("--");
   return t === -1 ? e : e.slice(0, t);
 }
-function uur(e) {
+function parseSessionStartMode(e) {
   let t = C(e);
   if (
     t.includes("-r") ||
@@ -256,30 +256,30 @@ function uur(e) {
   return "fresh";
 }
 export {
-  aXt,
-  Vd,
-  our,
-  Hd,
-  Uhe,
+  KNOWN_ENTRYPOINTS,
+  getEnvEntrypoint,
+  getEntrypointDisplayName,
+  isDesktopHostEntrypoint,
+  isHostManagedSettingsEntrypoint,
   kPn,
-  sur,
-  Bhe,
-  Axt,
-  ZQ,
-  lXt,
-  txe,
-  IA,
-  nxe,
-  iur,
-  aur,
-  UP,
-  N1,
-  Eg,
-  Cxt,
-  lur,
-  PA,
-  AL,
-  xPn,
-  cur,
-  uur,
+  isNonTerminalEntrypoint,
+  isClaudeDesktopAppSession,
+  isRemoteTriggerEntrypoint,
+  isRemoteCoworkEntrypoint,
+  isCoworkEntrypoint,
+  isCoworkSession,
+  isSlackEntrypoint,
+  isTeamsEntrypoint,
+  isRemoteEntrypoint,
+  shouldAppendPermissionRuleHint,
+  isSdkEntrypoint,
+  getSessionEntrypoint,
+  isDesktopHostSession,
+  isTopLevelCoworkSession,
+  isThinClientSession,
+  isVsCodeExtensionSession,
+  isClaudecodeEnv,
+  hasCoworkFrameArtifacts,
+  initHostState,
+  parseSessionStartMode,
 };

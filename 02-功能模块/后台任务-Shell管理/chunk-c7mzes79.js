@@ -32,9 +32,9 @@ import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { R, A, Jg } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { q2e, Ri, On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { RENAME_CONTENTION_ERRNOS, renameWithRetry, writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { We, Et, dv, b, z, WP, Wur, Xg, Sh, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -56,13 +56,13 @@ import {
   eu,
   QUe,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
 import { v7t } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getSettingsForSource, getInitialSettings, getSettings_DEPRECATED, isAdminPolicyUnreadable } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { iA } from "../权限系统/chunk-t3b7pg2x.js";
-import { Pl, lP, bEt, Ud } from "../Teammates团队/chunk-thxapyam.js";
+import { getProjectsDir, getProjectKeyFromDir, getSessionSubagentsDir, getAgentTranscriptPath } from "../Teammates团队/transcript-paths.js";
 import { iP, OG, rEt, tme, Oc, $d, bR, ZYe, iEt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
 import { createDefaultToolPermissionContext } from "../权限系统/chunk-qdy0h5k2.js";
@@ -111,14 +111,14 @@ import {
   flushSessionStorage,
   clearCommandMemoizationCaches,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Jn } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { getMcpServerConfigCacheKey } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
-import { PAe, MNe } from "../图片-截图-ComputerUse/chunk-b8jsase9.js";
+import { ComputerUseMcpStateStore, ComputerUseLockOwnerContext } from "../图片-截图-ComputerUse/computer-use-lock.js";
 import { $h, $fe, ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { DYn, hw, ONe, FYn, $pe, LNe, X3 } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { pauseWorkflowTask } from "../Workflow编排/chunk-va9cgbfs.js";
 import { ize } from "../Artifact发布-渲染/chunk-5gz5xvw9.js";
-import { y9e, Gye } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
+import { y9e, killIfSameProcess } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
 import {
   EMPTY_ARTIFACT_PLAN_PUBLISH_CONSENT_PATHS,
   EMPTY_ARTIFACT_DB_READ_CONSENT_SLUGS,
@@ -135,7 +135,7 @@ import {
   EMPTY_ARTIFACT_ROOM_JOIN_CONSENT_SLUGS,
 } from "../../01-核心基础设施/共享小工具-未细化/empty-artifact-consent-slugs.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { rO, qOt, zOt, VOt } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { AppStateContext, AppStateSessionContext, McpConnectionsContext, ActivePluginsContext } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { NotificationProvider } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { StorageV5ContextProvider, useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
@@ -146,23 +146,23 @@ import { buildInkKeyEvent, createKeyHandlerRegistry, KeybindingProvider, useKeyb
 import { SessionProvider, useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { CommandQueueProvider } from "../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
 import { xh } from "../MCP客户端/chunk-g4gdwpa0.js";
-import { ctn, jOt } from "../Hooks钩子/chunk-22aft7vr.js";
+import { createSpinnerStore, SpinnerStoreContext } from "../Hooks钩子/spinner-store.js";
 import { isRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
-import { UOt, BOt } from "../工具TodoWrite-Tasks/chunk-5a7p8d2p.js";
+import { TasksV2Store, TasksV2StoreContext } from "../工具TodoWrite-Tasks/tasks-v2-store.js";
 import { worktreeStateStore } from "../../01-核心基础设施/共享小工具-未细化/worktree-state-store.js";
 import { VoiceProvider } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import { N, e } from "../../00-第三方库/react/react.kwtapczy.js";
-import { tIe } from "../权限系统/chunk-2ttypdwq.js";
-import { a7, Rv } from "./chunk-nhnqmzyt.js";
+import { isAwaySummaryEnabled } from "../权限系统/ccr-recap.js";
+import { isTaskAdoptionEnabled, summarizeBackgroundTasks } from "./background-task-inventory.js";
 import { PluginStateStore } from "../插件系统/plugin-state-store.js";
-import { Hv } from "../MCP客户端/chunk-k2gczbnj.js";
+import { getBlockedServerErrorFields } from "../MCP客户端/mcp-server-state-messages.js";
 import { getWorkflowTranscriptDir } from "../Workflow编排/workflow-snapshots.js";
-import { Pbe, lte, Spt, eOe, bpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js";
+import { getAutoReactWiredSlugs, getBootingAutoReactArmSlugs, disposeSupervisors, MAX_UNATTENDED_REPLIES, drainUnattendedReplies } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
 import { Qt, re, De, E, vr, dn, V, C, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
+import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
 import { createFieldAccessor, createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { isBypassPermissionsModeDisabled } from "../权限系统/chunk-pcxn6gwz.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -400,7 +400,7 @@ var Lr = createLazyValue(() => cn(Fr)),
       argsJson: le().optional(),
       description: le(),
       startTime: Zt().optional(),
-      transcriptDir: kt(() => [Pl()]),
+      transcriptDir: kt(() => [getProjectsDir()]),
     }),
   ),
   Br = createLazyValue(() =>
@@ -411,7 +411,7 @@ var Lr = createLazyValue(() => cn(Fr)),
       toolUseId: le().optional(),
       spawnDepth: Zt().int().optional(),
       startTime: Zt().optional(),
-      transcriptPath: kt(() => [Pl()]).optional(),
+      transcriptPath: kt(() => [getProjectsDir()]).optional(),
       parentAgentId: le().regex(ct).optional(),
       forkedSkillName: le().min(1).max(256).optional(),
     }),
@@ -421,7 +421,7 @@ var Lr = createLazyValue(() => cn(Fr)),
       slug: le().uuid(),
       title: le().min(1).max(256).optional(),
       writtenAtMs: Zt().finite().optional(),
-      unattendedReplies: Zt().int().min(0).max(eOe).optional(),
+      unattendedReplies: Zt().int().min(0).max(MAX_UNATTENDED_REPLIES).optional(),
     }),
   );
 function un(t = Lr()) {
@@ -499,7 +499,7 @@ async function detachAndSerializeShell(t, o) {
           if (T.nlink !== 1) return await k("gate target has another name");
           let x = await dt(
             w,
-            P() === "windows" ? "r" : constants.O_RDONLY | (constants.O_NONBLOCK ?? 0) | O_NOFOLLOW_NONBLOCK_FLAGS,
+            getCurrentPlatform() === "windows" ? "r" : constants.O_RDONLY | (constants.O_NONBLOCK ?? 0) | O_NOFOLLOW_NONBLOCK_FLAGS,
           );
           try {
             let I = await x.stat();
@@ -521,12 +521,12 @@ async function detachAndSerializeShell(t, o) {
               try {
                 (await H.recheckBeforeWrite(),
                   (j =
-                    P() === "windows"
+                    getCurrentPlatform() === "windows"
                       ? await dt(W, "wx")
                       : await cG(
                           W,
                           constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW,
-                          P(),
+                          getCurrentPlatform(),
                         )));
               } catch {
                 return await k("reroot destination not creatable");
@@ -580,7 +580,7 @@ async function detachAndSerializeShell(t, o) {
   };
 }
 async function serializeAdoptAgent(t, o = {}) {
-  let r = o.derivedTranscriptPath ?? Ud(oo(t.agentId));
+  let r = o.derivedTranscriptPath ?? getAgentTranscriptPath(oo(t.agentId));
   return {
     agentId: t.agentId,
     agentType: t.agentType,
@@ -611,20 +611,20 @@ async function serializeAdoptWorkflow(t, o = {}) {
   };
 }
 function isCarriedFrameLiveWatch(t) {
-  return a7() && a$(t) && t.frameLive !== void 0;
+  return isTaskAdoptionEnabled() && a$(t) && t.frameLive !== void 0;
 }
 function carriedFrameLiveSlugs(t) {
   let o = new Set();
-  if (!a7()) return o;
+  if (!isTaskAdoptionEnabled()) return o;
   for (let r of Object.values(t))
     if (isCarriedFrameLiveWatch(r) && r.frameLive !== void 0) o.add(r.frameLive.slug);
-  for (let r of Pbe()) o.add(r);
-  for (let r of lte()) o.add(r);
+  for (let r of getAutoReactWiredSlugs()) o.add(r);
+  for (let r of getBootingAutoReactArmSlugs()) o.add(r);
   return o;
 }
 function collectFrameLiveConsent(t) {
   let { supervisors: o, bootingWiredArms: r } = ne().live,
-    s = lte(),
+    s = getBootingAutoReactArmSlugs(),
     l = [],
     k = Date.now();
   for (let c of carriedFrameLiveSlugs(t)) {
@@ -673,7 +673,7 @@ async function serializeAdoptable(t, o) {
     H = !1,
     W = (x) => {
       if (H) return;
-      ((H = !0), ize(D), Spt(D));
+      ((H = !0), ize(D), disposeSupervisors(D));
       let I = new Set(O);
       if (D.size > 0) {
         for (let j of Object.values(x.all()))
@@ -767,7 +767,7 @@ function dedupFrameLiveNewest(t) {
         k = o.get(s.slug),
         c = Math.min(
           (k?.unattendedReplies ?? 0) + (s.unattendedReplies ?? 0),
-          eOe,
+          MAX_UNATTENDED_REPLIES,
         ),
         v = k === void 0 || l.writtenAtMs > (k.writtenAtMs ?? 0) ? l : k;
       o.set(s.slug, c > 0 ? { ...v, unattendedReplies: c } : v);
@@ -800,7 +800,7 @@ function Wr(t, o) {
   };
 }
 async function Ur(t, o) {
-  let r = await t.read([Ce.job(o, ["adopt.json"])]);
+  let r = await t.read([STORAGE_KEYS.job(o, ["adopt.json"])]);
   if (!r.ok) return (n(`[adopt] v5 merge read refused: ${We(r.error)}`), null);
   let s = r.value.items[0];
   if (!s.found) return null;
@@ -809,7 +809,7 @@ async function Ur(t, o) {
 async function writeAdoptJson(t, o, r = {}, s) {
   let l = Ae(t, "adopt.json"),
     k = basename(t),
-    c = isHoverRestEnabled() && s !== void 0 && _n(k) && t === getJobDir(k) ? s : void 0,
+    c = isHoverRestEnabled() && s !== void 0 && isValidPathSegment(k) && t === getJobDir(k) ? s : void 0,
     v = o;
   try {
     let w = c ? await Ur(c, k) : await readFile(l, "utf-8");
@@ -831,7 +831,7 @@ async function writeAdoptJson(t, o, r = {}, s) {
     }
   } catch {}
   if (c) {
-    let w = await c.write(Ce.job(k, ["adopt.json"]), b(v), {
+    let w = await c.write(STORAGE_KEYS.job(k, ["adopt.json"]), b(v), {
       publishDiscipline: "atomic",
       mode: 438 & ~process.umask(),
       parent: r.parent ?? "mustExist",
@@ -848,7 +848,7 @@ async function writeAdoptJson(t, o, r = {}, s) {
       );
     return;
   }
-  await On(l, b(v));
+  await writeFileAtomic(l, b(v));
 }
 async function readAndConsumeAdoptJson(t, o = {}) {
   if (!t) return null;
@@ -858,7 +858,7 @@ async function readAndConsumeAdoptJson(t, o = {}) {
     k = !1;
   for (;;)
     try {
-      k = await Ri(r, s);
+      k = await renameWithRetry(r, s);
       break;
     } catch (w) {
       let T = A(w);
@@ -872,7 +872,7 @@ async function readAndConsumeAdoptJson(t, o = {}) {
       return (
         n(`[adopt] rename failed: ${w}`, { level: "warn" }),
         logEvent("tengu_adopt_claim", {
-          result: T !== void 0 && q2e.has(T) ? S("ebusy_gave_up") : Jg(w),
+          result: T !== void 0 && RENAME_CONTENTION_ERRNOS.has(T) ? S("ebusy_gave_up") : Jg(w),
         }),
         null
       );
@@ -1102,10 +1102,10 @@ async function zr(t, o, r) {
     if (r) return "kept";
   }
   try {
-    await Ri(t, o);
+    await renameWithRetry(t, o);
   } catch (l) {
     if (s === void 0 || A(l) !== "EEXIST") throw l;
-    (await unlink(o), await Ri(t, o));
+    (await unlink(o), await renameWithRetry(t, o));
   }
   return s === void 0 ? "created" : "replaced";
 }
@@ -1154,7 +1154,7 @@ async function linkAdoptedAgentTranscript(t, { storageV5: o, linkFn: r = on } = 
 }
 async function qr(t) {
   if (!t.transcriptPath) return {};
-  let o = Ud(oo(t.agentId)),
+  let o = getAgentTranscriptPath(oo(t.agentId)),
     r = (c) => c.replace(/\.jsonl$/, ".meta.json");
   await rn(r(t.transcriptPath));
   let s = null,
@@ -1213,7 +1213,7 @@ function st(t, o) {
 }
 async function Yr(t, o) {
   if (!t.transcriptPath) return {};
-  let r = Ud(oo(t.agentId)),
+  let r = getAgentTranscriptPath(oo(t.agentId)),
     s = (W) => W.replace(/\.jsonl$/, ".meta.json");
   if (basename(t.transcriptPath) !== basename(r))
     throw st(
@@ -1345,7 +1345,7 @@ function gn(t, o) {
 async function relinkAdoptedAgentSymlinks({ storageV5: t, linkFn: o = on } = {}) {
   if (t === void 0) return;
   try {
-    await ei(bEt(), o);
+    await ei(getSessionSubagentsDir(), o);
   } catch (r) {
     if (A(r) !== void 0) {
       n(`[adopt] relink sweep abandoned: ${r}`, { level: "warn" });
@@ -1385,12 +1385,12 @@ async function ei(t, o) {
     w = v.length > 1 ? randomBytes(4).readUInt32BE() % v.length : 0,
     T = [...v.slice(w), ...v.slice(0, w)],
     [L, D] = await Promise.all([
-      realpath(Pl()).catch(() => null),
+      realpath(getProjectsDir()).catch(() => null),
       realpath(t).catch(() => null),
     ]);
   if (L === null || D === null) return;
   let O = gn(L, D);
-  if (lP(dirname(dirname(t))) === void 0 || O === null || O.depth !== 3) {
+  if (getProjectKeyFromDir(dirname(dirname(t))) === void 0 || O === null || O.depth !== 3) {
     n(
       `[adopt] relink sweep: ${l.length} symlinked name(s) left as is (session dir outside the transcript store)`,
       { level: "warn" },
@@ -1584,7 +1584,7 @@ async function Zo(t, o) {
   return (await Xt(t.linkPath, t.real, t.gate, o, !0)).method;
 }
 function killOrphanedAdoptedShell(t) {
-  return Gye(t.pid, t.startTimeTicks, t.procStart);
+  return killIfSameProcess(t.pid, t.startTimeTicks, t.procStart);
 }
 async function linkAdoptedWorkflowDir(t) {
   let o = getWorkflowTranscriptDir(t.workflowRunId);
@@ -1629,7 +1629,7 @@ function lt(t, o, r, s = ze()) {
     pi(t, "failed", { summary: o }));
 }
 function resolveAdoptedScriptPath(t) {
-  let o = kt(() => [Pl()]).safeParse(t);
+  let o = kt(() => [getProjectsDir()]).safeParse(t);
   if (!o.success)
     throw new R(
       o.error.issues[0]?.message ?? "scriptPath rejected",
@@ -1663,7 +1663,7 @@ function adoptCron(t, o) {
 }
 function computeAdoptability(t) {
   let o = new Map();
-  if (!a7()) return o;
+  if (!isTaskAdoptionEnabled()) return o;
   let r = (c) =>
       nr(c) ? c.parentAgentId : "agentId" in c ? c.agentId : void 0,
     s = new Map();
@@ -1726,7 +1726,7 @@ function isAdoptableShellTask(t, o) {
   return bp(t) && (o.get(t.id) ?? !1);
 }
 function isAdoptableCron(t, o) {
-  return a7() && (t.agentId === void 0 || (o.get(t.agentId) ?? !1));
+  return isTaskAdoptionEnabled() && (t.agentId === void 0 || (o.get(t.agentId) ?? !1));
 }
 function isAdoptableAgentTask(t, o) {
   return nr(t) && (o.get(t.id) ?? !1);
@@ -1744,7 +1744,7 @@ function countAdoptable(t, o = computeAdoptability(t)) {
   );
 }
 function countAbandonable(t, o = computeAdoptability(t)) {
-  return Rv(t).count - countAdoptable(t, o);
+  return summarizeBackgroundTasks(t).count - countAdoptable(t, o);
 }
 function countLiveWorkflowAgents(t, o = computeAdoptability(t)) {
   let r = 0,
@@ -1797,7 +1797,7 @@ function adoptedCounts(t) {
   };
 }
 function aF() {
-  let t = import.meta.require("../Teammates团队/chunk-811z9z0t.js"),
+  let t = import.meta.require("../Teammates团队/teammate-context.js"),
     o = t.isTeammate() && t.isPlanModeRequired() ? "plan" : "default";
   return {
     sessionNoticesPoll: { pendingDeliveryUuids: [] },
@@ -1879,7 +1879,7 @@ function aF() {
     ultrareviewOverageConfirmed: !1,
     thinkingEnabled: JN(),
     promptSuggestionEnabled: ght(),
-    awaySummaryEnabled: tIe(),
+    awaySummaryEnabled: isAwaySummaryEnabled(),
     displayedMessageContent: {},
     inbox: { messages: [] },
     pendingMemoryUpdates: [],
@@ -2738,7 +2738,7 @@ function tt() {
   return import.meta.require("../MCP客户端/mcpClientModule.4cyej0np.js").mcpClientModule();
 }
 function Gi(t) {
-  ((Yo(t.client).onclose = void 0),
+  ((asMcpSdkClient(t.client).onclose = void 0),
     tt()
       .clearServerCache(t.name, t.config)
       .catch(() => {}));
@@ -2888,9 +2888,9 @@ class v0e {
         if (Y) {
           o.onDoorDenied(D.name);
           let Q = D.config;
-          if (D.type === "connected") Yo(D.client).onclose = void 0;
+          if (D.type === "connected") asMcpSdkClient(D.client).onclose = void 0;
           else if (q?.type === "connected")
-            ((Yo(q.client).onclose = void 0), (Q = q.config));
+            ((asMcpSdkClient(q.client).onclose = void 0), (Q = q.config));
           if (
             (tt()
               .clearServerCache(D.name, Q)
@@ -2902,7 +2902,7 @@ class v0e {
             ...s,
             clients: s.clients.map((ie) =>
               ie.name === D.name
-                ? { name: D.name, type: "failed", config: D.config, ...Hv(Y) }
+                ? { name: D.name, type: "failed", config: D.config, ...getBlockedServerErrorFields(Y) }
                 : ie,
             ),
             ...$n(s, D.name, I),
@@ -2916,7 +2916,7 @@ class v0e {
             s.clients[j]?.type === "disabled")
         ) {
           if (D.type === "connected")
-            ((Yo(D.client).onclose = void 0),
+            ((asMcpSdkClient(D.client).onclose = void 0),
               tt()
                 .clearServerCache(D.name, D.config)
                 .catch(() => {}));
@@ -2924,7 +2924,7 @@ class v0e {
         }
         if (j === -1 && T) {
           if (D.type === "connected")
-            ((Yo(D.client).onclose = void 0),
+            ((asMcpSdkClient(D.client).onclose = void 0),
               tt()
                 .clearServerCache(D.name, D.config)
                 .catch(() => {}));
@@ -2934,7 +2934,7 @@ class v0e {
           T &&
           Ws() &&
           j !== -1 &&
-          Jn(D.name, s.clients[j].config) !== Jn(D.name, D.config)
+          getMcpServerConfigCacheKey(D.name, s.clients[j].config) !== getMcpServerConfigCacheKey(D.name, D.config)
         ) {
           if (D.type === "connected") tt().detachAndCloseConnection(D);
           continue;
@@ -3261,10 +3261,10 @@ function wle(t) {
   );
 }
 function ns(t) {
-  let { bySlug: o } = bpt();
+  let { bySlug: o } = drainUnattendedReplies();
   if (o.size === 0) return t;
   return t.map((r) => {
-    let s = Math.min((o.get(r.slug) ?? 0) + (r.unattendedReplies ?? 0), eOe);
+    let s = Math.min((o.get(r.slug) ?? 0) + (r.unattendedReplies ?? 0), MAX_UNATTENDED_REPLIES);
     return s > 0 ? { ...r, unattendedReplies: s } : r;
   });
 }
@@ -3284,7 +3284,7 @@ function Yn(t) {
       let O = ne().live;
       if ((drainUnresumedFrameLive(o), O.bootingWiredArms.size > 0))
         logFeatureSad("artifact_live_subscribe", "booting_consent_uncarried");
-      Spt(O.inFlightSubscribes);
+      disposeSupervisors(O.inFlightSubscribes);
     }
     return {
       shells: [],
@@ -3320,7 +3320,7 @@ function Yn(t) {
   if ([...D.bootingWiredArms.keys()].some((O) => !L.has(O)))
     logFeatureSad("artifact_live_subscribe", "booting_consent_uncarried");
   return (
-    Spt(new Set([...L, ...D.inFlightSubscribes])),
+    disposeSupervisors(new Set([...L, ...D.inFlightSubscribes])),
     {
       shells: s.filter((O) => isAdoptableShellTask(O, r) && O.agentId === void 0),
       workflows: l,
@@ -3335,7 +3335,7 @@ function Yn(t) {
         .map((O) => O.id),
       jobDir: o,
       agentTranscriptPaths: Object.fromEntries(
-        k.map((O) => [O.agentId, Ud(oo(O.agentId))]),
+        k.map((O) => [O.agentId, getAgentTranscriptPath(oo(O.agentId))]),
       ),
       workflowTranscriptDirs: Object.fromEntries(
         l.map((O) => [O.workflowRunId, getWorkflowTranscriptDir(O.workflowRunId)]),
@@ -3552,7 +3552,7 @@ function Eat(t, o, r, s, l) {
         T.blockReadsOutsideWorkingDirectories !== !0 && tVe())
       )
         T = { ...T, blockReadsOutsideWorkingDirectories: !0 };
-      let D = tIe();
+      let D = isAwaySummaryEnabled();
       if (
         w.settings.effortLevel !== k.effortLevel ||
         b(w.settings.modelSettings) !== b(k.modelSettings)
@@ -3726,12 +3726,12 @@ function qt(jp) {
   else cs = te[4];
   let [or] = d(cs),
     [ir] = d(ho),
-    [sr] = d(ctn),
+    [sr] = d(createSpinnerStore),
     { storageV5: be } = useStorageV5Context(),
     fe = useSession(),
     us;
   if (te[5] !== be || te[6] !== oe)
-    ((us = () => new UOt(be, globalThis, () => oe.setState(Fs))),
+    ((us = () => new TasksV2Store(be, globalThis, () => oe.setState(Fs))),
       (te[5] = be),
       (te[6] = oe),
       (te[7] = us));
@@ -3795,13 +3795,13 @@ function qt(jp) {
   else ws = te[27];
   E(ks, ws);
   let bs;
-  if (te[28] !== oe) ((bs = () => PAe.over(oe)), (te[28] = oe), (te[29] = bs));
+  if (te[28] !== oe) ((bs = () => ComputerUseMcpStateStore.over(oe)), (te[28] = oe), (te[29] = bs));
   else bs = te[29];
   let [bo] = d(bs),
     vs,
     As;
   if (te[30] !== bo || te[31] !== fe)
-    ((vs = () => MNe.of(fe).acquire(bo)),
+    ((vs = () => ComputerUseLockOwnerContext.of(fe).acquire(bo)),
       (As = [fe, bo]),
       (te[30] = bo),
       (te[31] = fe),
@@ -3882,14 +3882,14 @@ function qt(jp) {
   else Ro = te[58];
   let Po;
   if (te[59] !== Ro || te[60] !== ar)
-    ((Po = e(BOt.Provider, { value: ar, children: Ro })),
+    ((Po = e(TasksV2StoreContext.Provider, { value: ar, children: Ro })),
       (te[59] = Ro),
       (te[60] = ar),
       (te[61] = Po));
   else Po = te[61];
   let Co;
   if (te[62] !== sr || te[63] !== Po)
-    ((Co = e(jOt.Provider, { value: sr, children: Po })),
+    ((Co = e(SpinnerStoreContext.Provider, { value: sr, children: Po })),
       (te[62] = sr),
       (te[63] = Po),
       (te[64] = Co));
@@ -3914,21 +3914,21 @@ function qt(jp) {
   else xo = te[70];
   let Mo;
   if (te[71] !== fe || te[72] !== xo)
-    ((Mo = e(qOt.Provider, { value: fe, children: xo })),
+    ((Mo = e(AppStateSessionContext.Provider, { value: fe, children: xo })),
       (te[71] = fe),
       (te[72] = xo),
       (te[73] = Mo));
   else Mo = te[73];
   let Eo;
   if (te[74] !== ur || te[75] !== Mo)
-    ((Eo = e(VOt.Provider, { value: ur, children: Mo })),
+    ((Eo = e(ActivePluginsContext.Provider, { value: ur, children: Mo })),
       (te[74] = ur),
       (te[75] = Mo),
       (te[76] = Eo));
   else Eo = te[76];
   let Do;
   if (te[77] !== ue || te[78] !== Eo)
-    ((Do = e(zOt.Provider, { value: ue, children: Eo })),
+    ((Do = e(McpConnectionsContext.Provider, { value: ue, children: Eo })),
       (te[77] = ue),
       (te[78] = Eo),
       (te[79] = Do));
@@ -3937,7 +3937,7 @@ function qt(jp) {
   if (te[80] !== oe || te[81] !== Do)
     ((Is = e(zt.Provider, {
       value: !0,
-      children: e(rO.Provider, { value: oe, children: Do }),
+      children: e(AppStateContext.Provider, { value: oe, children: Do }),
     })),
       (te[80] = oe),
       (te[81] = Do),

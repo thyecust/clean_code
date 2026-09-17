@@ -12,10 +12,10 @@ import { o, t, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/c
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { fromNumber } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { up, Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { stripInvisibleChars, replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { an, KTe, Z6t, mEe, d5e, p5e, aWt, I3, R8n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { supportsShiftEnter } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
@@ -25,12 +25,12 @@ import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { m6e } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { xye, YWe } from "./chunk-rmpn4ety.js";
+import { submitFeedbackDraft, discardFeedbackDraft } from "./feedback-draft-submit.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { re, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -144,7 +144,7 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
         if (((le.current = Math.max(a, l)), a - l < We || Le.current)) return;
         Le.current = !0;
         try {
-          (await YWe(n, "panel", K).catch(() => {}),
+          (await discardFeedbackDraft(n, "panel", K).catch(() => {}),
             M("list"),
             P(null),
             await X());
@@ -271,7 +271,7 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
       if (((ae.current = !0), M("submitting"), B(null), l !== s)) await pe(l);
       let f;
       try {
-        f = await xye({
+        f = await submitFeedbackDraft({
           draft: l,
           includeTranscript: j && l.transcriptAvailable,
           currentSessionMessages: m,
@@ -658,7 +658,7 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
                                   "with ",
                                   s.subagent_count,
                                   " ",
-                                  x(s.subagent_count, "subagent"),
+                                  pluralize(s.subagent_count, "subagent"),
                                 ],
                               }),
                           ],
@@ -667,7 +667,7 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
                       it(s.created_at),
                       " ago)",
                       Ke > 0
-                        ? ` and ${Ke} API request ${x(Ke, "id")} are`
+                        ? ` and ${Ke} API request ${pluralize(Ke, "id")} are`
                         : " is",
                       " ",
                       "always attached.",
@@ -724,7 +724,7 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
 }
 var Te = `That edit would push Details past the ${Math.floor(Z6t / 1024)}KB limit. Trim the details first.`;
 function Tt(m, y) {
-  return up(
+  return stripInvisibleChars(
     m.replace(
       /\r\n|\r/g,
       `
@@ -735,7 +735,7 @@ function Tt(m, y) {
       `
 `,
     )
-    .map((w) => Sn(w))
+    .map((w) => replaceControlChars(w))
     .join(
       y
         ? `
@@ -747,7 +747,7 @@ function S(bn) {
   let wn = _(3),
     { isFocused: At } = bn;
   const ut = At ? "suggestion" : void 0,
-    ft = At ? `${L.pointer} ` : "  ";
+    ft = At ? `${figures.pointer} ` : "  ";
   let Lt;
   if (wn[0] !== ut || wn[1] !== ft)
     ((Lt = e(t, { color: ut, children: ft })),
@@ -769,12 +769,12 @@ function se(kn) {
   }
   let ye;
   if (Pe[2] === MEMO_CACHE_SENTINEL)
-    ((ye = r(t, { dimColor: !0, children: [L.triangleLeft, " "] })),
+    ((ye = r(t, { dimColor: !0, children: [figures.triangleLeft, " "] })),
       (Pe[2] = ye));
   else ye = Pe[2];
   let It;
   if (Pe[3] === MEMO_CACHE_SENTINEL)
-    ((It = r(t, { dimColor: !0, children: [" ", L.triangleRight] })),
+    ((It = r(t, { dimColor: !0, children: [" ", figures.triangleRight] })),
       (Pe[3] = It));
   else It = Pe[3];
   let Ot;
@@ -894,7 +894,7 @@ function nt(Dn) {
   let _n = _(3),
     { isSelected: Nt } = Dn;
   const wt = Nt ? "suggestion" : void 0,
-    kt = Nt ? `${L.pointer} ` : "  ";
+    kt = Nt ? `${figures.pointer} ` : "  ";
   let Pt;
   if (_n[0] !== wt || _n[1] !== kt)
     ((Pt = e(o, {
@@ -928,7 +928,7 @@ function rt(Tn) {
               color: $t ? "suggestion" : void 0,
               wrap: "truncate-end",
               children: [
-                $t ? `${L.pointer} ` : "  ",
+                $t ? `${figures.pointer} ` : "  ",
                 "[",
                 tt[ie.type],
                 "]",

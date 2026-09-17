@@ -7,34 +7,34 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { U0 } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { ANY_CONTROL_CHAR_REGEX } from "../核心工具-字符串与文本/string-utils.js";
 import { An, jf } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { posix } from "path";
-var Rdt = String.raw`\s\u2800\uFFF9-\uFFFB\p{Cc}\p{M}\p{Default_Ignorable_Code_Point}`,
-  c = new RegExp(`^[${Rdt}]+`, "u");
-function Wsn(n) {
+var INVISIBLE_CHAR_CLASS_SOURCE = String.raw`\s\u2800\uFFF9-\uFFFB\p{Cc}\p{M}\p{Default_Ignorable_Code_Point}`,
+  c = new RegExp(`^[${INVISIBLE_CHAR_CLASS_SOURCE}]+`, "u");
+function stripLeadingInvisibleChars(n) {
   return n.replace(c, "");
 }
-function c1t(n, r = Gsn(n)) {
+function isUnsafePath(n, r = decodePercentVariants(n)) {
   return (
-    An(n) || hbe(n) || U0.test(r[0]) || r.map(Wsn).some((e) => An(e) || hbe(e))
+    An(n) || isAbsolutePath(n) || ANY_CONTROL_CHAR_REGEX.test(r[0]) || r.map(stripLeadingInvisibleChars).some((e) => An(e) || isAbsolutePath(e))
   );
 }
 var u = /^\.\.\//;
-function hbe(n) {
+function isAbsolutePath(n) {
   return jf(n) || jf(posix.normalize(n).replace(u, "/")) || (l(n) && jf("/" + n));
 }
 function l(n) {
   let r = posix.normalize(n);
   return r === ".." || r.startsWith("../");
 }
-function kdt(n) {
+function isUnsafeFileUrl(n) {
   let r = n.slice(7);
-  return c1t(r) || c1t(r.slice(1));
+  return isUnsafePath(r) || isUnsafePath(r.slice(1));
 }
 var i = /(?:%[0-9A-Fa-f]{2}){1,512}/g,
   f = /^%[0-9A-Fa-f]{2}/;
-function Gsn(n) {
+function decodePercentVariants(n) {
   if (!n.includes("%")) return [n, n];
   let r = new TextDecoder("utf-8", { fatal: !1, ignoreBOM: !0 });
   return [
@@ -50,4 +50,4 @@ function Gsn(n) {
 function s(n) {
   return Uint8Array.from(n.slice(1).split("%"), (r) => parseInt(r, 16));
 }
-export { Rdt, Wsn, c1t, hbe, kdt, Gsn };
+export { INVISIBLE_CHAR_CLASS_SOURCE, stripLeadingInvisibleChars, isUnsafePath, isAbsolutePath, isUnsafeFileUrl, decodePercentVariants };

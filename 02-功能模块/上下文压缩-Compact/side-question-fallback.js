@@ -12,8 +12,8 @@ import { Tm, asSystemPrompt, fEe, j_, hC, VS, e3t } from "../../03-入口与运�
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { artifactReadObservationIn, makeSetArtifactReadVersion, makeSetArtifactContractTarget, makeGetArtifactContractTarget } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { makeSetWebBrowserSlice } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
-import { Ole, Dle, i7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
-import { sSe, dee, pee } from "../../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js";
+import { createArtifactRegistries, createTeammateColorAssigner, EMPTY_PERMISSION_RELAYS } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
+import { sSe, markUltrareviewOverageConfirmed, makeToolPermissionContextSetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js";
 import { createAgentLifecycle } from "../Teammates团队/agent-lifecycle.js";
 import { createFieldAccessor } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 async function fetchSystemPromptParts({
@@ -123,28 +123,28 @@ async function buildSideQuestionFallbackParams({
       abortController: createAbortController(),
       readFileState: c,
       toolState: d,
-      permissionRelays: i7,
+      permissionRelays: EMPTY_PERMISSION_RELAYS,
       getAppState: e,
       setAppState: o,
       markPrResolvedThisSession: () => sSe(o),
       isUltrareviewOverageConfirmed: () => e().ultrareviewOverageConfirmed,
-      markUltrareviewOverageConfirmed: () => dee(o),
+      markUltrareviewOverageConfirmed: () => markUltrareviewOverageConfirmed(o),
       getAdvisorSetting: () => e().advisorModel,
       getMcp: () => e().mcp,
       getProactivityLevel: () => e().proactivityLevel,
       getWebBrowser: () => e().webBrowser,
-      ...pee(o),
+      ...makeToolPermissionContextSetters(o),
       taskRegistry: Tm(e, o),
       queuedNotificationsRegistry: fEe(e, o, s),
       sessionHooksRegistry: g,
       setWebBrowserSlice: makeSetWebBrowserSlice(o),
       setArtifactReadVersion: makeSetArtifactReadVersion(o),
       getArtifactReadObservation: artifactReadObservationIn(e),
-      artifactRegistries: Ole(e, o),
+      artifactRegistries: createArtifactRegistries(e, o),
       setArtifactContractTarget: makeSetArtifactContractTarget(o),
       getArtifactContractTarget: makeGetArtifactContractTarget(e),
       agentLifecycle: createAgentLifecycle(e, o),
-      teammateColors: Dle(createFieldAccessor(e, o, "teammateColors")),
+      teammateColors: createTeammateColorAssigner(createFieldAccessor(e, o, "teammateColors")),
       rootToolSurface: { tools: n, mainLoopModel: C },
       messages: v,
       turnStartIndex: 0,

@@ -13,7 +13,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isExtraUsageAllowed, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { POST_IGNORED_NOTE, POST_DISABLED_NOTE, parseUltrareviewArgs, precheckLaunchScope, previewInstructions, checkOverageGate, launchRemoteReview, ultrareviewLaunchAcknowledgementNudge } from "../CodeReview/CodeReview.ddrd6y06.js";
 import { getReviewCostNote, getReviewDurationNote, BOe, Km, q3 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -22,7 +22,7 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { o, t, ct, bs } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
+import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { l9e, o4 } from "../状态栏-主题/chunk-jrr487ty.js";
 import { b6e, sst } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
@@ -52,7 +52,7 @@ function me(ho) {
       onProceed: be,
       onCancel: x,
     } = ho;
-  Rs("ultrareview-launch");
+  useActiveOverlay("ultrareview-launch");
   let { storageV5: we } = useStorageV5Context(),
     [T] = d(qe),
     [Ce, De] = d(!1),
@@ -468,7 +468,7 @@ var $o = async (l, f, b, n) => {
         logEvent("tengu_review_overage_dialog_shown", {});
       let y = !BOe(),
         v =
-          m.mode === "pr" && Do(m.host) && g !== !1 && !y
+          m.mode === "pr" && isGitHubHost(m.host) && g !== !1 && !y
             ? { githubLogin: s.githubLogin ?? null, preferPost: g === !0 }
             : null;
       return e(me, {

@@ -7,26 +7,26 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { PERMISSION_MODE_MANUAL_ALIAS } from "./chunk-e4pfvp7x.js";
-import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { isSameProcessAsync, ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { isSameProcessAsync, ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { JI, mN, eXe } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
-import { Pc } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
+import { parseCronExpression, DEFAULT_CRON_JITTER_CONFIG, computeRecurringTaskFireTime } from "../后台任务-Shell管理/scheduled-tasks.js";
+import { getLauncherConfigError } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { g6 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
+import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { getDaemonJsonPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
 import { s, T, O, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var kle = 1048576;
-async function Y0e(o) {
+var DAEMON_CONFIG_MAX_BYTES = 1048576;
+async function readDaemonConfigContent(o) {
   let t;
   try {
     t = await V(o);
@@ -41,12 +41,12 @@ async function Y0e(o) {
   }
   let e = t.value.items[0];
   if (!e.found) return { kind: "absent" };
-  if (e.totalBytes > kle) return { kind: "refused" };
+  if (e.totalBytes > DAEMON_CONFIG_MAX_BYTES) return { kind: "refused" };
   return { kind: "text", text: Buffer.from(e.value).toString("utf8") };
 }
 function V(o) {
   return o.read([
-    { key: Ce.state("daemon-config"), offset: 0, length: kle + 1 },
+    { key: STORAGE_KEYS.state("daemon-config"), offset: 0, length: DAEMON_CONFIG_MAX_BYTES + 1 },
   ]);
 }
 import { readFile as re } from "fs/promises";
@@ -60,7 +60,7 @@ async function D(o, t) {
   else
     try {
       let u = await Z(e);
-      if (!u.isFile() || u.size > kle)
+      if (!u.isFile() || u.size > DAEMON_CONFIG_MAX_BYTES)
         throw Error(
           `${e} is not a regular file (or exceeds 1MiB); refusing read-modify-write`,
         );
@@ -79,7 +79,7 @@ async function D(o, t) {
   return {};
 }
 async function te(o, t) {
-  let e = await Y0e(o);
+  let e = await readDaemonConfigContent(o);
   switch (e.kind) {
     case "text":
       return e.text;
@@ -101,13 +101,13 @@ async function te(o, t) {
       throw e.error;
   }
 }
-async function M9e(o, t, e) {
+async function updateDaemonConfig(o, t, e) {
   let r = t ?? getDaemonJsonPath(),
     a = await D(r, e);
   if ((await o(a)) === !1) return;
   if (isHoverRestEnabled() && e !== void 0 && r === getDaemonJsonPath()) {
     let f = await e.write(
-      Ce.state("daemon-config"),
+      STORAGE_KEYS.state("daemon-config"),
       b(a, null, 2) +
         `
 `,
@@ -123,15 +123,15 @@ async function M9e(o, t, e) {
       );
     return;
   }
-  (await qt().mkdir(dirname(r)),
-    await On(
+  (await getFileStorage().mkdir(dirname(r)),
+    await writeFileAtomic(
       r,
       b(a, null, 2) +
         `
 `,
     ));
 }
-function $tn(o) {
+function normalizeRemoteControlEntries(o) {
   if (Array.isArray(o))
     return o.filter((t) => !!t && typeof t.dir === "string");
   if (o && typeof o.dir === "string") return [o];
@@ -139,7 +139,7 @@ function $tn(o) {
 }
 var ne = 1000,
   B = 10080,
-  Zye = [
+  VALID_PERMISSION_MODES = [
     "dontAsk",
     "auto",
     "default",
@@ -150,13 +150,13 @@ var ne = 1000,
   j = createLazyValue(() =>
     c({
       id: s().min(1),
-      cron: s().refine((o) => JI(o) !== null, {
+      cron: s().refine((o) => parseCronExpression(o) !== null, {
         message: "invalid 5-field cron expression",
       }),
       prompt: s().min(1),
       directory: s().min(1),
       enabled: O().default(!0),
-      permissionMode: X([...Zye, PERMISSION_MODE_MANUAL_ALIAS])
+      permissionMode: X([...VALID_PERMISSION_MODES, PERMISSION_MODE_MANUAL_ALIAS])
         .transform((o) => (o === PERMISSION_MODE_MANUAL_ALIAS ? "default" : o))
         .default("dontAsk"),
       model: s().optional(),
@@ -164,7 +164,7 @@ var ne = 1000,
       maxQueued: T().int().positive().default(1),
     }).strict(),
   ),
-  Utn = createLazyValue(() =>
+  scheduledTasksFileSchema = createLazyValue(() =>
     c({
       tasks: v(j())
         .default([])
@@ -175,10 +175,10 @@ var ne = 1000,
     }).strict(),
   );
 function z() {
-  return oe(be(), "daemon.scheduled.status.json");
+  return oe(getClaudeConfigDir(), "daemon.scheduled.status.json");
 }
 function N() {
-  return Ce.state("scheduled-status");
+  return STORAGE_KEYS.state("scheduled-status");
 }
 async function se(o, t) {
   let e = {
@@ -197,10 +197,10 @@ async function se(o, t) {
     return;
   }
   try {
-    await On(z(), b(e));
+    await writeFileAtomic(z(), b(e));
   } catch {}
 }
-async function dBn(o) {
+async function readScheduledStatus(o) {
   let t;
   if (isHoverRestEnabled() && o !== void 0) {
     let a;
@@ -236,8 +236,8 @@ async function dBn(o) {
   if (!(await isSameProcessAsync(r.workerPid, r.workerProcStart))) return null;
   return e;
 }
-var pBn = async (o, t, e, r, a) => {
-  let { tasks: u, maxConcurrent: f } = Utn().parse(o),
+var runScheduledWorker = async (o, t, e, r, a) => {
+  let { tasks: u, maxConcurrent: f } = scheduledTasksFileSchema().parse(o),
     { initializeErrorLogSink: y } = await import("../../01-核心基础设施/共享小工具-未细化/initializeErrorLogSink.64dfk6kr.js"),
     { initializeAnalyticsSink: q } = await import("../../01-核心基础设施/共享小工具-未细化/initializeAnalyticsSink.3hb68836.js");
   if ((y(), q(), !r.getAccessToken()))
@@ -287,7 +287,7 @@ var pBn = async (o, t, e, r, a) => {
   F();
   function J(d) {
     let i = C.get(d.id) ?? H;
-    return eXe(d.cron, i, d.id, mN);
+    return computeRecurringTaskFireTime(d.cron, i, d.id, DEFAULT_CRON_JITTER_CONFIG);
   }
   let K = setInterval(
     (d, i, p, k) => {
@@ -313,7 +313,7 @@ var pBn = async (o, t, e, r, a) => {
   let x = new Set();
   async function G(d) {
     let { task: i } = d,
-      p = Pc();
+      p = getLauncherConfigError();
     if (p) {
       e(`task=${i.id} refused: ${p}`);
       return;
@@ -389,10 +389,10 @@ function L(o, t) {
     ((r[0] = t), (o.scheduled = r));
   } else o.scheduled = t;
 }
-async function eSe(o, t, e) {
+async function addScheduledTask(o, t, e) {
   return withFeatureTelemetry("daemon_scheduled_add", async () => {
     (j().parse(o),
-      await M9e(
+      await updateDaemonConfig(
         (r) => {
           let a = I(r),
             u = a.tasks.filter(
@@ -405,11 +405,11 @@ async function eSe(o, t, e) {
       ));
   });
 }
-async function tSe(o, t, e) {
+async function removeScheduledTask(o, t, e) {
   return withFeatureTelemetry("daemon_scheduled_remove", async () => {
     let r = !1;
     return (
-      await M9e(
+      await updateDaemonConfig(
         (a) => {
           if (!("scheduled" in a)) return !1;
           let u = I(a),
@@ -442,4 +442,4 @@ async function J0e(o, t) {
   }
   return a;
 }
-export { kle, Y0e, M9e, $tn, Zye, Utn, dBn, pBn, eSe, tSe, J0e };
+export { DAEMON_CONFIG_MAX_BYTES, readDaemonConfigContent, updateDaemonConfig, normalizeRemoteControlEntries, VALID_PERMISSION_MODES, scheduledTasksFileSchema, readScheduledStatus, runScheduledWorker, addScheduledTask, removeScheduledTask, J0e };

@@ -13,7 +13,7 @@ import { ge, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js"
 import { b, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { $ar } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { writeFileSync } from "fs";
 import { readdir, readFile, writeFile } from "fs/promises";
 import { join as w } from "path";
@@ -89,7 +89,7 @@ async function T(u, a = 0) {
       available: p.space_available_size,
     })),
     resourceUsage: {
-      maxRSS: o.maxRSS * (P() === "macos" ? 1 : 1024),
+      maxRSS: o.maxRSS * (getCurrentPlatform() === "macos" ? 1 : 1024),
       userCPUTime: o.userCPUTime,
       systemCPUTime: o.systemCPUTime,
     },

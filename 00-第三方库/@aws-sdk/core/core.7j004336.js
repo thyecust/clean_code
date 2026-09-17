@@ -15,7 +15,7 @@ import { nu } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.
 import { lhe } from "../../_未识别/第三方库-AWSSDK/chunk-zdrvwe5r.js";
 import { ta } from "../../_未识别/第三方库-AWSSDK/chunk-mwf4pmq2.js";
 import { Rb, z0n, w2e, Oke } from "../../_未识别/第三方库-其他/chunk-jtb5q5xr.js";
-import { E2e, s_, hS } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
+import { utilBufferFromModule, utilUtf8Module, utilBase64Module } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
 import { awsSdkCoreClientModule } from "../../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
 import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
 import { getUrlParserModule } from "../../../01-核心基础设施/共享小工具-未细化/url-parser.js";
@@ -587,13 +587,13 @@ var Zr = commonJS(function (zo) {
 });
 var Bt = commonJS(function (aa) {
   var Ze = w2e(),
-    ss = s_(),
+    ss = utilUtf8Module(),
     Be = Oke(),
     Bo = nu(),
     Lo = Zr(),
     Re = Rb(),
     Uo = smithyContextModule(),
-    ns = hS(),
+    ns = utilBase64Module(),
     Ye = 0,
     Je = 1,
     Ne = 2,
@@ -3964,8 +3964,8 @@ var R_ = commonJS(function (Ka) {
     de = ta(),
     Q = Oke(),
     G = w2e(),
-    Fe = hS(),
-    As = s_(),
+    Fe = utilBase64Module(),
+    As = utilUtf8Module(),
     re = Vt(),
     Ft = { warningEmitted: !1 },
     Oa = (e) => {
@@ -6929,8 +6929,8 @@ var nW = commonJS(function (od) {
   od.defaultUserAgent = sd;
 });
 var rW = commonJS(function (md) {
-  var hr = E2e(),
-    fd = s_(),
+  var hr = utilBufferFromModule(),
+    fd = utilUtf8Module(),
     pd = importMetaRequire("buffer"),
     Wn = importMetaRequire("crypto");
   class Qn {
@@ -7047,8 +7047,8 @@ var sW = commonJS(function (Fd) {
     he = ta(),
     Y = Oke(),
     X = w2e(),
-    He = hS(),
-    ri = s_(),
+    He = utilBase64Module(),
+    ri = utilUtf8Module(),
     se = Vt();
   class Pe {
     queryCompat;

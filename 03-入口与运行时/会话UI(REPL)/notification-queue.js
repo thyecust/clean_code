@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { It, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useSetAppState, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -46,8 +46,8 @@ function NotificationProvider(Q) {
   return R;
 }
 function useNotificationQueue() {
-  let u = Yn(),
-    r = It(),
+  let u = useAppState(),
+    r = useSetAppState(),
     c = useClock(),
     k = De(h),
     [m] = d(() => ({

@@ -15,7 +15,7 @@ import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
-import "./chunk-pqyn1fh3.js";
+import "./workflow-registry.js";
 import "./workflow-script.js";
 import "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
 export { eye as WorkflowDetailDialog };

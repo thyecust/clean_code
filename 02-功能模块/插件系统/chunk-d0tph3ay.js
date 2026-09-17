@@ -12,13 +12,13 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Vn, mke, MQ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { H, bq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Aa, $t, Koe } from "./chunk-7s6mt1vg.js";
 import {
@@ -39,14 +39,14 @@ import {
   touchSessionTranscript,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _1e, vC, Ui, w1e } from "./chunk-ajtn749s.js";
-import { bd, JS, lCe, ZI, Hc } from "./chunk-hh8f1qrw.js";
+import { isPluginBlockedByPolicy, areCommandPluginSourcesDisabledByPolicy, policyTierCommandsMayRun, isSourceDisallowedOrUnverifiable, isSourceAllowedByPolicy } from "./plugin-source-policy.js";
 import { oFt } from "../自动更新-安装/chunk-2g5h49pk.js";
 import { Obe, gan, han, _an } from "../会话-历史-恢复/chunk-szqky9sa.js";
-import { RFn } from "../深链接-URL协议/深链接-URL协议.wjw0bmt6.js";
+import { ensureDeepLinkHandlerRegistered } from "../深链接-URL协议/深链接-URL协议.wjw0bmt6.js";
 import { checkEnabledPlugins } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { Pye } from "./chunk-q8w2zntw.js";
-import { JB } from "./chunk-bh1q9esj.js";
-import { Bn } from "./chunk-33bdfgmx.js";
+import { resolveMissingDependencies } from "./plugin-dependency-resolution.js";
+import { splitPluginId } from "./chunk-33bdfgmx.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { stat as z, writeFile } from "fs/promises";
 import { join as B } from "path";
@@ -70,7 +70,7 @@ async function F(t) {
     c = hH(),
     s = new Set();
   for (let [p, o] of Object.entries(e)) {
-    if (!Hc(o.source)) continue;
+    if (!isSourceAllowedByPolicy(o.source)) continue;
     if (TM(o.source) && !w1e()) continue;
     if (MQ(p, o, c[p]?.autoUpdate)) s.add(p.toLowerCase());
   }
@@ -99,16 +99,16 @@ async function L(t, e, c, s, p) {
             k = {
               type: "autoupdate-deferred-entry-helper",
               source: t,
-              plugin: Bn(t).name,
+              plugin: splitPluginId(t).name,
               message: a.message,
             };
           else if (a.blockedBy && a.blockedBy.length > 0) {
-            let y = a.blockedBy.map((r) => Bn(r).name),
-              _ = a.blockedBy.filter((r) => c.has(r)).map((r) => Bn(r).name);
+            let y = a.blockedBy.map((r) => splitPluginId(r).name),
+              _ = a.blockedBy.filter((r) => c.has(r)).map((r) => splitPluginId(r).name);
             k = {
               type: "autoupdate-blocked-by-pinner",
               source: t,
-              plugin: Bn(t).name,
+              plugin: splitPluginId(t).name,
               heldAt: a.oldVersion,
               blockedBy: y,
               disabledPinners: _,
@@ -122,19 +122,19 @@ async function L(t, e, c, s, p) {
             a.failureCode === "entry_helper_disabled_by_policy" ||
             a.failureCode === "entry_helper_remote_policy_unconsented" ||
             a.failureCode === "plugin_policy_blocked" ||
-            (a.failureCode === "command_source_refused" && (JS() || !lCe()))
+            (a.failureCode === "command_source_refused" && (areCommandPluginSourcesDisabledByPolicy() || !policyTierCommandsMayRun()))
           )
             k = {
               type: "autoupdate-disabled-by-policy",
               source: t,
-              plugin: Bn(t).name,
+              plugin: splitPluginId(t).name,
               message: a.message,
             };
           else if (a.failureCode === "entry_helper_not_inlined")
             ((k = {
               type: "generic-error",
               source: t,
-              plugin: Bn(t).name,
+              plugin: splitPluginId(t).name,
               error: a.message,
             }),
               (g = !0));
@@ -173,7 +173,7 @@ async function cQt(t, e = new Set(), { skipCommandSources: c = !1 } = {}, s) {
     b = new Set(g.map((r) => r.source)),
     k = await Promise.allSettled(
       o.map(async (r) => {
-        let { marketplace: d } = Bn(r);
+        let { marketplace: d } = splitPluginId(r);
         if (!d || !t.has(d.toLowerCase())) return null;
         if (e.has(r)) return null;
         let f = p.plugins[r];
@@ -210,7 +210,7 @@ async function I(t) {
       blocked: [],
       failedCount: 0,
     },
-    c = JS(),
+    c = areCommandPluginSourcesDisabledByPolicy(),
     s = !_1e();
   if (c || s)
     n(
@@ -223,7 +223,7 @@ async function I(t) {
       o = new Map();
     for (let [m, a] of Object.entries(p.plugins)) {
       let y = (a ?? []).filter(nD),
-        { name: _, marketplace: r } = Bn(m);
+        { name: _, marketplace: r } = splitPluginId(m);
       if (y.length === 0 || !_ || !r) continue;
       let d = o.get(r) ?? [];
       (d.push({ pluginId: m, name: _, installations: y }), o.set(r, d));
@@ -233,7 +233,7 @@ async function I(t) {
       k = o.size > 0 ? await Ql(t) : {};
     for (let [m, a] of o) {
       let y = k[m];
-      if (ZI(y?.source)) {
+      if (isSourceDisallowedOrUnverifiable(y?.source)) {
         for (let { pluginId: r, installations: d } of a)
           if (d.some((f) => f.sourceCommand !== void 0))
             e.commandSourced.add(r);
@@ -249,7 +249,7 @@ async function I(t) {
         if (!g)
           ((g = new Set(await checkEnabledPlugins())),
             (b = new Set((await ei(t)).disabled.map((C) => C.source))));
-        if (!g.has(r) || bd(r)) {
+        if (!g.has(r) || isPluginBlockedByPolicy(r)) {
           n(
             `Plugin autoupdate: not re-resolving ${r} (disabled or blocked by policy)`,
           );
@@ -437,10 +437,10 @@ function N(t) {
       )
         Zf("autoupdate dep-resolution");
       let { errors: _ } = await ei(t),
-        r = await JB(
+        r = await resolveMissingDependencies(
           _.filter((d) => {
             if (d.type !== "dependency-unsatisfied") return !1;
-            let f = Bn(d.source).marketplace;
+            let f = splitPluginId(d.source).marketplace;
             return f !== void 0 && o.has(f.toLowerCase());
           }),
           t,
@@ -476,11 +476,11 @@ var O = 86400000,
   X = 3600000;
 async function q(t) {
   if (isHoverRestEnabled() && t !== void 0) {
-    let e = await t.statMeta(Ce.state("last-cleanup"));
+    let e = await t.statMeta(STORAGE_KEYS.state("last-cleanup"));
     return e.ok && Date.now() - e.value.mtimeMs < O;
   }
   try {
-    let e = await z(B(be(), ".last-cleanup"));
+    let e = await z(B(getClaudeConfigDir(), ".last-cleanup"));
     return Date.now() - e.mtimeMs < O;
   } catch {
     return !1;
@@ -489,7 +489,7 @@ async function q(t) {
 async function dQt(t, e) {
   if (!t.backgroundHousekeeping.claim()) return;
   if ((initExtractMemories(t), xVn(t), N(e), ld()))
-    (RFn(e), touchSessionTranscript(e), setInterval(touchSessionTranscript, X, e).unref());
+    (ensureDeepLinkHandlerRegistered(e), touchSessionTranscript(e), setInterval(touchSessionTranscript, X, e).unref());
   let c = "sentinel-unchecked";
   async function s() {
     if (ld() && Nm() > Date.now() - 60000) {
@@ -504,16 +504,16 @@ async function dQt(t, e) {
         }
       }
       if (((c = "done"), await _an(e), isHoverRestEnabled() && e !== void 0)) {
-        (await han(be(), t.backgroundHousekeeping), await gan(e));
+        (await han(getClaudeConfigDir(), t.backgroundHousekeeping), await gan(e));
         let o = await e.write(
-          Ce.state("last-cleanup"),
+          STORAGE_KEYS.state("last-cleanup"),
           new Date().toISOString(),
           { publishDiscipline: "inPlace" },
         );
         if (!o.ok)
           n(`.last-cleanup write failed: ${o.error.code}`, { level: "error" });
       } else
-        await writeFile(B(be(), ".last-cleanup"), new Date().toISOString()).catch(
+        await writeFile(B(getClaudeConfigDir(), ".last-cleanup"), new Date().toISOString()).catch(
           (o) =>
             Po(o)
               ? n(`.last-cleanup write failed: ${o.code} ${o.message}`, {

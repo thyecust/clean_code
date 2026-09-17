@@ -18,8 +18,8 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Ve, zi, yt, Iu, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, rje, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { truncateToCodeUnits, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { isEssentialTrafficOnly, logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { printCliError } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -45,10 +45,10 @@ import {
 import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { findGitRoot, getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Ee } from "../CLI入口-Commander/chunk-6rfqqsva.js";
+import { sanitizeAnalyticsId } from "../CLI入口-Commander/startup-profiler.js";
 import { getSettingsForSource, getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { PERMISSION_MODE_MANUAL_ALIAS, parsePermissionMode, CAN_USE_TOOL_INVALID_RESULT_REASON, CAN_USE_TOOL_REQUEST_FAILED_REASON, _c } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { PERMISSION_MODE_MANUAL_ALIAS, parsePermissionMode, CAN_USE_TOOL_INVALID_RESULT_REASON, CAN_USE_TOOL_REQUEST_FAILED_REASON, getExternalPermissionMode } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { wa } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { xJe, qEt, zEt } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
@@ -89,20 +89,20 @@ import {
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isViolinWoodEnabled, isViolinWoodEnabledCached, isSettingsToCloudEnabled, isCloudPluginForwardingFlagOn } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import {
-  X9n,
-  Y9n,
-  bFt,
-  J9n,
-  sOe,
-  AF,
-  Gbe,
-  _O,
-  bze,
-  D_,
-  wFt,
-  TFt,
+  routeCloudControlRequest,
+  getOptionRetentionKind,
+  validateCloudInitializeOptions,
+  buildInitializeSuccessFields,
+  buildReplayUserMessage,
+  buildInformationalSystemMessage,
+  TRUNCATE_MAX_LENGTH,
+  truncateSanitizedTextShort,
+  truncateSanitizedTextLong,
+  sanitizeAndTruncateText,
+  normalizeDisconnectReason,
+  formatDisconnectMessage,
 } from "../../02-功能模块/权限系统/chunk-z0pt04s8.js";
-import { A2n, UNATTENDED_SERVING_CONSENT_VERSION, UNATTENDED_SERVING_CONSENT_TERMS, unattendedServingMachineName, readUnattendedServingConsent, writeUnattendedServingConsent, managedSettingsForbidUnattendedServing, primeUnattendedServingConsent } from "../../02-功能模块/AutoMode-自动模式/chunk-15n5gf3t.js";
+import { isUnattendedServingEnabled, UNATTENDED_SERVING_CONSENT_VERSION, UNATTENDED_SERVING_CONSENT_TERMS, unattendedServingMachineName, readUnattendedServingConsent, writeUnattendedServingConsent, managedSettingsForbidUnattendedServing, primeUnattendedServingConsent } from "../../02-功能模块/AutoMode-自动模式/unattended-serving-consent.js";
 import {
   z_e,
   sIt,
@@ -135,7 +135,7 @@ import {
 } from "../../02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js";
 import { c6e } from "../../02-功能模块/Bridge-RemoteControl/chunk-2m80582f.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-33vqsej8.js";
+import "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
 import { resolveAttachDeviceBinding, pullsBackToThisMachine, registerAttachedDevice } from "../../02-功能模块/认证-OAuth登录/attach-device-binding.js";
 import {
   WHe,
@@ -179,15 +179,15 @@ import { localBindIdentity } from "../../02-功能模块/Bridge-RemoteControl/de
 import { deviceEventSignerFor } from "../../02-功能模块/认证-OAuth登录/device-event-signer.js";
 import { B_e, Fae } from "./chunk-e4xwwtsb.js";
 import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
-import "../../02-功能模块/文件同步-Sync/chunk-ht8ydg1v.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
-import { Jb } from "../../02-功能模块/Git-Worktree/chunk-7jshw9s9.js";
+import "../../02-功能模块/文件同步-Sync/sync-journal.js";
+import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
+import { runProbeGit } from "../../02-功能模块/Git-Worktree/local-divergence-probe.js";
 import "../../02-功能模块/Git-Worktree/chunk-v967hawf.js";
 import { KHt, lJt } from "../../02-功能模块/文件同步-Sync/chunk-54bf3exn.js";
 import { buildControlSuccessResponse, buildControlErrorResponse, buildErrorResultMessage } from "./headless-sdk-messages.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
+import "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-d1t6d4k8.js";
+import "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
 import "./chunk-yb7jadvp.js";
 import { buildDefaultDeviceDisplayName } from "../../02-功能模块/Cowork远程设备注册/Cowork远程设备注册.9r92qaht.js";
@@ -621,8 +621,8 @@ function rn(e) {
   }
 }
 function an(e) {
-  if (oe(e, Gbe) === e) return e;
-  let t = oe(e, Gbe),
+  if (truncateToCodeUnits(e, TRUNCATE_MAX_LENGTH) === e) return e;
+  let t = truncateToCodeUnits(e, TRUNCATE_MAX_LENGTH),
     o = Math.max(
       t.lastIndexOf(" \u2014 "),
       t.lastIndexOf("; "),
@@ -741,7 +741,7 @@ function ln(e, t, o, r) {
       state: "off",
       reason: d,
       ...(d === "declined" && { source: "stored" }),
-      ...(_ !== void 0 && { message: oe(_, 200) }),
+      ...(_ !== void 0 && { message: truncateToCodeUnits(_, 200) }),
     };
   }
   let p = rSt(t, r);
@@ -750,7 +750,7 @@ function ln(e, t, o, r) {
   return {
     state: "forwarded",
     source: "stored",
-    ...(o.line !== void 0 && { message: oe(o.line, 200) }),
+    ...(o.line !== void 0 && { message: truncateToCodeUnits(o.line, 200) }),
   };
 }
 var un = {
@@ -831,7 +831,7 @@ var fn = new Set([
   "answer_failed",
 ]);
 function lt(e) {
-  return D_(oe(e, 64));
+  return sanitizeAndTruncateText(truncateToCodeUnits(e, 64));
 }
 class be {
   ports;
@@ -962,7 +962,7 @@ class be {
               return;
             }
             let A = !(I instanceof Error) || I instanceof AA,
-              R = A ? oe(l(I), 2000) : oe(kr(l(I)), 200);
+              R = A ? truncateToCodeUnits(l(I), 2000) : truncateToCodeUnits(firstLine(l(I)), 200);
             (n(
               `[headlessCloudClient] host could not answer ${e} ${lt(t)}: ${R}`,
               { level: "error" },
@@ -1236,7 +1236,7 @@ class Ae {
     if (o !== e)
       (this.cloudSessionKeysDroppedCount++,
         n(
-          `[headlessCloudClient] dropped a cloud_session key on a ${D_(oe(o.type, 40))} frame from source=${D_(oe(t.source ?? "unknown", 40))}`,
+          `[headlessCloudClient] dropped a cloud_session key on a ${sanitizeAndTruncateText(truncateToCodeUnits(o.type, 40))} frame from source=${sanitizeAndTruncateText(truncateToCodeUnits(t.source ?? "unknown", 40))}`,
           { level: "warn" },
         ));
     if (o.type === "env_manager_log") return (this.reduceBootstrap(o), !0);
@@ -1316,7 +1316,7 @@ class Ae {
     if (o) this.serviceEventsDroppedCount++;
     else this.unknownFramesDroppedCount++;
     n(
-      `[headlessCloudClient] dropped a ${D_(oe(e, 40))} ${o ? "service event" : "frame this build does not write"}, from source=${D_(oe(t ?? "unknown", 40))}`,
+      `[headlessCloudClient] dropped a ${sanitizeAndTruncateText(truncateToCodeUnits(e, 40))} ${o ? "service event" : "frame this build does not write"}, from source=${sanitizeAndTruncateText(truncateToCodeUnits(t ?? "unknown", 40))}`,
       o ? void 0 : { level: "warn" },
     );
   }
@@ -1330,7 +1330,7 @@ class Ae {
         this.emitAfterInit(
           o.sent === void 0
             ? { ...e, isReplay: !0, session_id: this.stamped }
-            : sOe(this.stamped, e.uuid, o.sent),
+            : buildReplayUserMessage(this.stamped, e.uuid, o.sent),
           { synthesized: !0, ownEcho: !0 },
         );
         return;
@@ -1512,7 +1512,7 @@ class Ae {
     let t = this.ports.summaryLine?.(e);
     if (t !== void 0 && t !== "")
       ((this.summaryWritten = !0),
-        this.ports.emit(AF(this.stamped, "notice", t)));
+        this.ports.emit(buildInformationalSystemMessage(this.stamped, "notice", t)));
   }
   adoptWorkerSessionId(e) {
     if (e.type === "user" || !("session_id" in e)) return;
@@ -1691,19 +1691,19 @@ function Me(e) {
       e.device.status === "unbound"
         ? {
             ...e.device,
-            reason: _O(e.device.reason),
-            message: _O(e.device.message),
+            reason: truncateSanitizedTextShort(e.device.reason),
+            message: truncateSanitizedTextShort(e.device.message),
           }
         : {
             ...e.device,
             ...(e.device.display_name !== void 0 && {
-              display_name: _O(e.device.display_name),
+              display_name: truncateSanitizedTextShort(e.device.display_name),
             }),
           },
     directory_sync: {
       state: o.state,
-      ...(o.reason !== void 0 && { reason: _O(o.reason) }),
-      ...(o.message !== void 0 && { message: _O(o.message) }),
+      ...(o.reason !== void 0 && { reason: truncateSanitizedTextShort(o.reason) }),
+      ...(o.message !== void 0 && { message: truncateSanitizedTextShort(o.message) }),
       ...(o.first_upload !== void 0 && { first_upload: o.first_upload }),
       ...(o.synced_files !== void 0 && { synced_files: o.synced_files }),
       ...(o.other_window !== void 0 && { other_window: o.other_window }),
@@ -1716,11 +1716,11 @@ function Me(e) {
     },
     ...(e.host !== void 0 && {
       host: {
-        handle: _O(e.host.handle),
-        working_dir: _O(e.host.working_dir),
-        platform: _O(e.host.platform),
+        handle: truncateSanitizedTextShort(e.host.handle),
+        working_dir: truncateSanitizedTextShort(e.host.working_dir),
+        platform: truncateSanitizedTextShort(e.host.platform),
         ...(e.host.cli_version !== void 0 && {
-          cli_version: _O(e.host.cli_version),
+          cli_version: truncateSanitizedTextShort(e.host.cli_version),
         }),
       },
     }),
@@ -1736,7 +1736,7 @@ function Me(e) {
       calls: {
         live: e.calls.live.map((r) => ({
           call_id: r.call_id,
-          tool: _O(r.tool),
+          tool: truncateSanitizedTextShort(r.tool),
           state: r.state,
           since: r.since,
           ...(r.ask_id !== void 0 && { ask_id: r.ask_id }),
@@ -1744,9 +1744,9 @@ function Me(e) {
         })),
         recent: e.calls.recent.map((r) => ({
           call_id: r.call_id,
-          tool: _O(r.tool),
+          tool: truncateSanitizedTextShort(r.tool),
           ended: r.ended,
-          ...(r.code !== void 0 && { code: _O(r.code) }),
+          ...(r.code !== void 0 && { code: truncateSanitizedTextShort(r.code) }),
           at: r.at,
         })),
       },
@@ -1765,10 +1765,10 @@ function Un(e) {
         [
           o,
           {
-            ...(typeof d === "string" && { state: _O(d) }),
-            ...(typeof p === "string" && { source: _O(p) }),
-            ...(typeof _ === "string" && { reason: _O(_) }),
-            ...(typeof w === "string" && { message: _O(w) }),
+            ...(typeof d === "string" && { state: truncateSanitizedTextShort(d) }),
+            ...(typeof p === "string" && { source: truncateSanitizedTextShort(p) }),
+            ...(typeof _ === "string" && { reason: truncateSanitizedTextShort(_) }),
+            ...(typeof w === "string" && { message: truncateSanitizedTextShort(w) }),
           },
         ],
       ];
@@ -1964,7 +1964,7 @@ class Te {
                   : [],
               )
               .join(" "),
-      o = truncateToWidth(D_(oe(t, jn)), Wn);
+      o = truncateToWidth(sanitizeAndTruncateText(truncateToCodeUnits(t, jn)), Wn);
     if (o === "") {
       this.title = "skipped";
       return;
@@ -1979,7 +1979,7 @@ class Te {
   }
   line(e, t) {
     if (this.stopped) return;
-    let o = D_(t);
+    let o = sanitizeAndTruncateText(t);
     if (o === "") return;
     let r = this.ports.clock.now();
     if (
@@ -1993,7 +1993,7 @@ class Te {
     }
     ((this.lastLine = { level: e, text: o, at: r }),
       (this.linesWritten += 1),
-      this.ports.emit(AF(this.ports.stampedSessionId(), e, o)));
+      this.ports.emit(buildInformationalSystemMessage(this.ports.stampedSessionId(), e, o)));
   }
 }
 import { randomUUID as zn } from "crypto";
@@ -2032,7 +2032,7 @@ class He {
         "dropped"
       );
     let r = o,
-      { route: d, telemetrySubtype: p } = X9n(r, {
+      { route: d, telemetrySubtype: p } = routeCloudControlRequest(r, {
         strict: this.ports.initializePolicy === "strict",
       });
     switch (d.kind) {
@@ -2090,7 +2090,7 @@ class He {
     let o = !this.ports.openRequested(),
       { hooks: r, sdkMcpServers: d, sdkMcpServerConfigs: p, ..._ } = t,
       w = SCt().safeParse(_),
-      C = bFt(
+      C = validateCloudInitializeOptions(
         t,
         this.ports.initializePolicy,
         o && w.success ? this.ports.openingInitializeHonours : void 0,
@@ -2124,7 +2124,7 @@ class He {
     if (
       (this.ports.emit(
         buildControlSuccessResponse(e, {
-          ...J9n(this.ports.account()),
+          ...buildInitializeSuccessFields(this.ports.account()),
           ...(C.ignored.includes("hooks") && { hooks_applied: !1 }),
           ...(C.ignored.includes("plugins") && { plugins_applied: !1 }),
         }),
@@ -2531,7 +2531,7 @@ class Ne {
   payOwed(e) {
     let t = this.ports.stampedSessionId();
     e.forEach(({ uuid: o, content: r }) =>
-      this.contained(() => this.writeEcho(sOe(t, o, r))),
+      this.contained(() => this.writeEcho(buildReplayUserMessage(t, o, r))),
     );
   }
   wasTaken(e) {
@@ -2570,7 +2570,7 @@ class Ne {
       if (this.ledger.wasTaken(e.uuid)) {
         if (e.kind === "message" && this.ports.replayUserMessages)
           this.writeEcho(
-            sOe(this.ports.stampedSessionId(), e.uuid, e.content),
+            buildReplayUserMessage(this.ports.stampedSessionId(), e.uuid, e.content),
             this.ledger.hadBefore(e.uuid),
           );
         return "redelivered";
@@ -2704,7 +2704,7 @@ class Ne {
     return o.length;
   }
   answerForwardsInFlight(e) {
-    let t = D_(e);
+    let t = sanitizeAndTruncateText(e);
     for (let o of [...this.forwardsInFlight.keys()])
       (this.contained(() => this.ports.emit(buildControlErrorResponse(o, t))),
         this.forwardsInFlight.delete(o));
@@ -2824,7 +2824,7 @@ class Ne {
       composedHere: p = !1,
     } = {},
   ) {
-    let _ = p ? bze(t) : D_(t),
+    let _ = p ? truncateSanitizedTextLong(t) : sanitizeAndTruncateText(t),
       w = this.ports.stampedSessionId();
     switch (e.kind) {
       case "message": {
@@ -2837,7 +2837,7 @@ class Ne {
           );
           return;
         }
-        if (C) this.contained(() => this.ports.emit(sOe(w, e.uuid, e.content)));
+        if (C) this.contained(() => this.ports.emit(buildReplayUserMessage(w, e.uuid, e.content)));
         this.contained(() => this.ports.emit(buildErrorResultMessage(w, [`${Jn}: ${_}`], e.uuid)));
         return;
       }
@@ -2932,7 +2932,7 @@ class Ne {
       if (w && e.kind === "message")
         this.contained(() =>
           this.writeEcho(
-            sOe(this.ports.stampedSessionId(), e.uuid, e.content),
+            buildReplayUserMessage(this.ports.stampedSessionId(), e.uuid, e.content),
             d.duplicate === !0,
           ),
         );
@@ -3038,7 +3038,7 @@ function ns(e) {
       n(`[headlessCloudClient] forward failed: ${t}`),
       "the cloud session is not connected"
     );
-  return D_(t);
+  return sanitizeAndTruncateText(t);
 }
 var vt = 100,
   ss = 120000,
@@ -3131,7 +3131,7 @@ class It {
       : new Fae(t, e.replayUserMessages)),
       this.io.setUnexpectedResponseCallback(async (p) => {
         n(
-          `[headlessCloudClient] dropped control_response for unknown request ${D_(oe(String(p.response?.request_id), 64))}`,
+          `[headlessCloudClient] dropped control_response for unknown request ${sanitizeAndTruncateText(truncateToCodeUnits(String(p.response?.request_id), 64))}`,
         );
       }));
     let o = (p) => this.track(p),
@@ -3243,7 +3243,7 @@ class It {
       (o) => {
         if (!o) return;
         (logEvent("tengu_remote_headless_client_seed_cut_short", { at: fromEnum(t) }),
-          this.emit(AF(this.stampedSessionId, o.level, bze(o.text))));
+          this.emit(buildInformationalSystemMessage(this.stampedSessionId, o.level, truncateSanitizedTextLong(o.text))));
       },
       (o) => {
         n(`[headlessCloudClient] settling the opener's work failed: ${l(o)}`);
@@ -3284,7 +3284,7 @@ class It {
             ),
           (O) =>
             n(
-              `[headlessCloudClient] this client's initialize (${r}) was not answered: ${D_(oe(l(O), 200))}`,
+              `[headlessCloudClient] this client's initialize (${r}) was not answered: ${sanitizeAndTruncateText(truncateToCodeUnits(l(O), 200))}`,
             ),
         );
         let E = await D.posted;
@@ -3312,7 +3312,7 @@ class It {
       } catch (p) {
         if (
           (n(
-            `[headlessCloudClient] opening request ${o.subtype} failed: ${D_(oe(l(p), 200))}`,
+            `[headlessCloudClient] opening request ${o.subtype} failed: ${sanitizeAndTruncateText(truncateToCodeUnits(l(p), 200))}`,
           ),
           logEvent("tengu_remote_headless_client_opening_request", {
             subtype: fromEnum(o.subtype),
@@ -3324,7 +3324,7 @@ class It {
             `Error: the cloud session did not accept ${d}, so this attach was stopped rather than continue without it.`,
           );
         this.emit(
-          AF(
+          buildInformationalSystemMessage(
             this.stampedSessionId,
             "warning",
             `The cloud session did not accept ${d}; it keeps its own.`,
@@ -3654,7 +3654,7 @@ class It {
     ((this.frames = t),
       this.guarded(() => e.onWorkerSessionId?.(t.stampedSessionId)),
       e.notices?.forEach((R) =>
-        this.emit(AF(this.stampedSessionId, R.level, bze(R.text))),
+        this.emit(buildInformationalSystemMessage(this.stampedSessionId, R.level, truncateSanitizedTextLong(R.text))),
       ),
       this.releasePreSessionEchoes(t));
     let o = new Te(
@@ -3665,7 +3665,7 @@ class It {
         reconnect: () => this.session?.manager.reconnect(),
         queuedSendCount: () => this.outbound.queuedSendUuids().length,
         sessionId: e.sessionId,
-        essentialTrafficOnly: St(),
+        essentialTrafficOnly: isEssentialTrafficOnly(),
         api: { markSessionRead: markSessionRead, updateSessionTitle: updateSessionTitle },
       },
       { titleFromFirstMessage: e.entry === "create" && !e.hasTitle },
@@ -3701,18 +3701,18 @@ class It {
             if (Ie(R.dialog_kind)) {
               (this.dialogsReservedCount++,
                 n(
-                  `[headlessCloudClient] not passing a ${D_(oe(String(R.dialog_kind), 64))} dialog to the host: that kind is this client's own question, never the cloud session's`,
+                  `[headlessCloudClient] not passing a ${sanitizeAndTruncateText(truncateToCodeUnits(String(R.dialog_kind), 64))} dialog to the host: that kind is this client's own question, never the cloud session's`,
                 ));
               return;
             }
             if (!this.hostDialogKinds.has(R.dialog_kind)) {
               this.dialogsNotDeclaredCount++;
-              let M = D_(oe(String(R.dialog_kind), 64));
+              let M = sanitizeAndTruncateText(truncateToCodeUnits(String(R.dialog_kind), 64));
               (n(
                 `[headlessCloudClient] not passing a ${M} dialog to the host: its initialize did not declare the kind`,
               ),
                 this.emit(
-                  AF(
+                  buildInformationalSystemMessage(
                     this.stampedSessionId,
                     "notice",
                     `The cloud session is waiting on a ${M} dialog this host did not declare it can show; it continues when another client answers it or the session's dialog timeout passes.`,
@@ -3741,7 +3741,7 @@ class It {
               this.reconnectingTold)
             )
               ((this.reconnectingTold = !1),
-                this.emit(AF(this.stampedSessionId, "notice", "Reconnected.")));
+                this.emit(buildInformationalSystemMessage(this.stampedSessionId, "notice", "Reconnected.")));
           }),
         onReconnecting: () =>
           this.guarded(() => {
@@ -3759,7 +3759,7 @@ class It {
               ((this.cancelReconnectNotice = null),
                 (this.reconnectingTold = !0),
                 this.emit(
-                  AF(
+                  buildInformationalSystemMessage(
                     this.stampedSessionId,
                     "notice",
                     "Lost the connection to the cloud session \u2014 reconnecting\u2026",
@@ -3773,7 +3773,7 @@ class It {
             let R = this.outbound.synthesizeMissedEchoes();
             (this.logStream("catch_up_truncated", { missed_echoes: R }),
               this.emit(
-                AF(
+                buildInformationalSystemMessage(
                   this.stampedSessionId,
                   "warning",
                   "Some earlier messages from this session could not be loaded after reconnecting.",
@@ -3781,8 +3781,8 @@ class It {
               ));
           }),
         onDisconnected: (R) => {
-          let F = wFt(R);
-          this.end("disconnected", TFt(F), F);
+          let F = normalizeDisconnectReason(R);
+          this.end("disconnected", formatDisconnectMessage(F), F);
         },
         onResponseUndelivered: (R, F, H) =>
           this.guarded(() => {
@@ -3790,7 +3790,7 @@ class It {
             if (this.undeliveredKindsTold.size === 0)
               queueMicrotask(() => this.undeliveredKindsTold.clear());
             (this.undeliveredKindsTold.add(F),
-              this.emit(AF(this.stampedSessionId, "warning", Dst(F, H))));
+              this.emit(buildInformationalSystemMessage(this.stampedSessionId, "warning", Dst(F, H))));
           }),
         onError: (R) => n(`[headlessCloudClient] stream error: ${R.message}`),
       }),
@@ -3852,7 +3852,7 @@ class It {
           observedMode: () => this.lastWorkerMode,
           seededModeReported: () => this.workerModesSeen.has(E),
           onRefused: (R) => this.outbound.holdLaterSendsBehind(R),
-          onGaveUp: (R) => this.emit(AF(this.stampedSessionId, "warning", R)),
+          onGaveUp: (R) => this.emit(buildInformationalSystemMessage(this.stampedSessionId, "warning", R)),
         }),
       );
     this.initializeWorker(e, w);
@@ -3873,11 +3873,11 @@ class It {
       () => this.markWorkerReady("preflight"),
       (R) => {
         (n(
-          `[headlessCloudClient] attach preflight failed: ${D_(oe(l(R), 200))}`,
+          `[headlessCloudClient] attach preflight failed: ${sanitizeAndTruncateText(truncateToCodeUnits(l(R), 200))}`,
         ),
           this.end(
             "disconnected",
-            R instanceof Be ? R.message : TFt("attach_rejected"),
+            R instanceof Be ? R.message : formatDisconnectMessage("attach_rejected"),
             "attach_rejected",
           ));
       },
@@ -3954,15 +3954,15 @@ class It {
         : void 0;
     if (t === void 0 || typeof e !== "string") return;
     let o = parsePermissionMode(e),
-      r = o === void 0 ? void 0 : _c(o);
+      r = o === void 0 ? void 0 : getExternalPermissionMode(o);
     if (r === t) return;
     logEvent("tengu_remote_headless_client_mode_not_applied", {
       requested: fromEnum(t),
       actual: fromEnumOpt(r),
     });
-    let d = `The cloud session did not apply the ${t} permission mode requested when it was created; it is in ${r ?? D_(oe(e, 24))} mode.`;
+    let d = `The cloud session did not apply the ${t} permission mode requested when it was created; it is in ${r ?? sanitizeAndTruncateText(truncateToCodeUnits(e, 24))} mode.`;
     (n(`[headlessCloudClient] ${d}`, { level: "warn" }),
-      this.emit(AF(this.stampedSessionId, "warning", d)));
+      this.emit(buildInformationalSystemMessage(this.stampedSessionId, "warning", d)));
   }
   readCloudSession() {
     try {
@@ -4131,7 +4131,7 @@ class It {
   }
   async end(e, t, o) {
     if (this.phase === "ending" || this.phase === "ended") return;
-    let r = e === "disconnected" ? (o ?? wFt(void 0)) : void 0,
+    let r = e === "disconnected" ? (o ?? normalizeDisconnectReason(void 0)) : void 0,
       d = ys(e, t, r),
       p = d.exitCode,
       _ = this.phase;
@@ -4186,7 +4186,7 @@ function gs(e) {
   );
 }
 function ys(e, t, o) {
-  let r = o ?? wFt(void 0);
+  let r = o ?? normalizeDisconnectReason(void 0);
   switch (e) {
     case "stdin_eof":
     case "end_session":
@@ -4198,13 +4198,13 @@ function ys(e, t, o) {
         exitCode: 1,
         reason: e,
         disconnectCode: r,
-        message: D_(t ?? TFt(r)),
+        message: sanitizeAndTruncateText(t ?? formatDisconnectMessage(r)),
       };
     case "rejected_options":
     case "open_failed":
-      return { exitCode: 1, reason: e, message: bze(t ?? e) };
+      return { exitCode: 1, reason: e, message: truncateSanitizedTextLong(t ?? e) };
     case "output_failed":
-      return { exitCode: 1, reason: e, message: D_(t ?? e) };
+      return { exitCode: 1, reason: e, message: sanitizeAndTruncateText(t ?? e) };
   }
 }
 function Ss(e) {
@@ -4271,7 +4271,7 @@ async function Dt(e, { folder: t, attempts: o, lastError: r, signal: d }) {
   }
 }
 function ws(e) {
-  let t = pt(e)
+  let t = stripAnsi(e)
     .replace(
       /[\p{Cc}\p{Cf}\p{Cs}\p{Zl}\p{Zp}\p{Default_Ignorable_Code_Point}\u2800\s]+/gu,
       " ",
@@ -4295,7 +4295,7 @@ async function Rs(e, t, o) {
   if (t.reason === "folder") return { fileCount: t.files };
   let r = findGitRoot(e);
   if (r === null) return;
-  let d = await Jb({ gitRoot: r, signal: o, timeoutMs: ks }, [
+  let d = await runProbeGit({ gitRoot: r, signal: o, timeoutMs: ks }, [
     "ls-tree",
     "-r",
     "-z",
@@ -4390,7 +4390,7 @@ async function Ot({ dialogs: e, permissionMode: t, signal: o, seams: r = {} }) {
       e === void 0 ||
         (t !== "auto" && t !== "bypassPermissions") ||
         !(r.servingOn ?? isRemoteToolServingSwitchOn)() ||
-        !(await (r.gateOn ?? A2n)().catch(() => !1)) ||
+        !(await (r.gateOn ?? isUnattendedServingEnabled)().catch(() => !1)) ||
         (r.forbiddenBySettings ?? managedSettingsForbidUnattendedServing)())
     )
       return;
@@ -4560,7 +4560,7 @@ function Ft(e) {
         return {
           state: "forwarded",
           source: "stored",
-          ...(L !== void 0 && { message: oe(L, 200) }),
+          ...(L !== void 0 && { message: truncateToCodeUnits(L, 200) }),
           ...(!(P !== void 0 && Mt(P)) && { pending: !0 }),
         };
       },
@@ -4612,7 +4612,7 @@ function le(e, t, o, r, d, p) {
         state: "off",
         reason: e,
         ...(d && { source: d }),
-        ...(p !== void 0 && { message: oe(p, 200) }),
+        ...(p !== void 0 && { message: truncateToCodeUnits(p, 200) }),
       }),
     }
   );
@@ -4944,12 +4944,12 @@ function Bs(e, t, o) {
     d =
       t === null
         ? []
-        : bFt(
+        : validateCloudInitializeOptions(
             t,
             "strict",
             new Set([...(o === "create" ? R0t : []), "supportedDialogKinds"]),
           ).ignored.map((O) => ({
-            kind: r.has(O) ? "kept" : Y9n(O),
+            kind: r.has(O) ? "kept" : getOptionRetentionKind(O),
             name: `initialize.${O}`,
           })),
     p = { lost: 0, kept: 1, preference: 2 },
@@ -5434,7 +5434,7 @@ async function Qs(
 ) {
   let k = toCompatSessionId(w);
   logEvent("tengu_remote_attach_session", {
-    session_id: Ee(k),
+    session_id: sanitizeAnalyticsId(k),
     entry_point: fromEnum("cloud_headless"),
   });
   let D = wa(k, void 0, { from: "cli", m: "0" }),

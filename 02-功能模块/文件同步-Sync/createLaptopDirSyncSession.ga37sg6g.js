@@ -43,8 +43,8 @@ import {
   an,
   LLe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import "./chunk-ht8ydg1v.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
+import "./sync-journal.js";
+import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
 import { p3n, mte } from "../目录同步(dir-sync)/chunk-zbxyj64j.js";
 import { createStatusFeed } from "../../01-核心基础设施/共享小工具-未细化/status-feed.js";
 import { getFileEntryKind } from "../../01-核心基础设施/共享小工具-未细化/file-entry-kind.js";

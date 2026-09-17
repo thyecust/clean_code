@@ -20,12 +20,12 @@ import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chun
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { nl } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { JI, K_, nCe, SK, vj } from "./chunk-9d5wk5b9.js";
-import { Joe, uve, dve } from "../Skills技能/chunk-sapykxw7.js";
+import { parseCronExpression, formatCronSchedule, createScheduledTask, deleteScheduledTasks, listScheduledTasks } from "./scheduled-tasks.js";
+import { listGoalStopHooks, setSessionGoal, clearSessionGoal } from "../Skills技能/chunk-sapykxw7.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Dt(no) {
@@ -227,7 +227,7 @@ function ge(_t) {
   else kt = l[42];
   let eo = kt;
   const $e = a !== "every",
-    Me = a === "every" ? L.radioOn : L.radioOff;
+    Me = a === "every" ? figures.radioOn : figures.radioOff;
   let se;
   if (l[43] !== $e || l[44] !== Me)
     ((se = r(t, { dimColor: $e, children: [Me, " every"] })),
@@ -240,7 +240,7 @@ function ge(_t) {
     ((gt = e(t, { dimColor: !0, children: "  " })), (l[46] = gt));
   else gt = l[46];
   const Ee = a !== "until",
-    Te = a === "until" ? L.radioOn : L.radioOff;
+    Te = a === "until" ? figures.radioOn : figures.radioOff;
   let ae;
   if (l[47] !== Ee || l[48] !== Te)
     ((ae = r(t, { dimColor: Ee, children: [Te, " until"] })),
@@ -515,18 +515,18 @@ function $t(s) {
     default:
       return null;
   }
-  return JI(k) ? k : null;
+  return parseCronExpression(k) ? k : null;
 }
 var yo = async (s, u) => {
   logEvent("tengu_loops_command", {});
-  let v = await vj(),
-    k = Joe(u.sessionHooksRegistry, K()),
+  let v = await listScheduledTasks(),
+    k = listGoalStopHooks(u.sessionHooksRegistry, K()),
     g = [
       ...v.map((c) => ({
         kind: "cron",
         id: c.id,
         cron: c.cron,
-        human: K_(c.cron),
+        human: formatCronSchedule(c.cron),
         prompt: c.prompt,
       })),
       ...k.map((c, m) => ({
@@ -538,13 +538,13 @@ var yo = async (s, u) => {
   async function V(c) {
     if (c.kind === "cron") {
       try {
-        (await SK([c.id]), s(`Loop ${c.id} deleted`, { display: "system" }));
+        (await deleteScheduledTasks([c.id]), s(`Loop ${c.id} deleted`, { display: "system" }));
       } catch (I) {
         s(`Failed to delete loop ${c.id}: ${I}`, { display: "system" });
       }
       return;
     }
-    let m = dve(u);
+    let m = clearSessionGoal(u);
     s(m === null ? "Stop hook not found" : "Stop hook cleared", {
       display: "system",
     });
@@ -556,11 +556,11 @@ var yo = async (s, u) => {
         s(`Invalid interval: ${c.interval}`, { display: "system" });
         return;
       }
-      let O = await nCe(I, c.prompt, !0, !1);
-      s(`Loop ${O} created (${K_(I)})`, { display: "system" });
+      let O = await createScheduledTask(I, c.prompt, !0, !1);
+      s(`Loop ${O} created (${formatCronSchedule(I)})`, { display: "system" });
       return;
     }
-    let m = uve(c.condition, u, "loops_dialog");
+    let m = setSessionGoal(c.condition, u, "loops_dialog");
     s(m ?? "Stop hook set", { display: "system" });
   }
   return e(ge, {

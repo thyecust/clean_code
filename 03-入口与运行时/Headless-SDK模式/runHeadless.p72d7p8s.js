@@ -12,7 +12,7 @@
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Ie, Uxe } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep, withTimeout, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { Nx, be, uo } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseNumericValue, getClaudeConfigDir, isSimpleMode } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
   Xn,
@@ -105,9 +105,9 @@ import {
   Kd,
 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, z, aae, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Kn, fB, bXt } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { oe, kr, kae } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Id, K2e, I0, vu, Ag, logError, getInMemoryErrors, logMCPDebug } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { writeToStdout, markStdoutDrainExternallyClocked, bXt } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { truncateToCodeUnits, firstLine, formatTruncatedText } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { COMMAND_NAME_TAG, BASH_INPUT_TAG, BASH_STDERR_TAG, LOCAL_COMMAND_STDOUT_TAG, LOCAL_COMMAND_STDERR_TAG, logError, getInMemoryErrors, logMCPDebug } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   getCommandName,
   wwe,
@@ -553,7 +553,7 @@ import {
   sy,
   YUe,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Hd, Bhe, Eg, PA, AL } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { isDesktopHostEntrypoint, isClaudeDesktopAppSession, isDesktopHostSession, isVsCodeExtensionSession, isClaudecodeEnv } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import {
   Nr,
   zl,
@@ -569,14 +569,14 @@ import {
   ctt,
   zge,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { writeDiagnosticsEvent, runTimedDiagnosticStep } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { CA } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { Ee, CPn, Db, vPn, M1, Br } from "../CLI入口-Commander/chunk-6rfqqsva.js";
+import { sanitizeAnalyticsId, startHeadlessTurn, markHeadlessCheckpoint, reportHeadlessTurnMetrics, addStartupContext, profileCheckpoint } from "../CLI入口-Commander/startup-profiler.js";
 import { getInitialSettings, getSettings_DEPRECATED, getSettingsWithSources, getSettingsWithErrors, surfaceManagedSettingsErrorsHeadless, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import {
   parsePermissionMode,
   UNRECOGNIZED_PERMISSION_MODE_ERROR,
@@ -586,19 +586,19 @@ import {
   CAN_USE_TOOL_INVALID_RESULT_DENY_REASON,
   CAN_USE_TOOL_PROMPT_TOOL_GONE_DENY_REASON,
   CAN_USE_TOOL_ABORTED_DENY_REASON,
-  E1,
-  _c,
-  l2e,
+  isSelectablePermissionMode,
+  getExternalPermissionMode,
+  resolvePermissionDecisionKind,
 } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { fkn } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
+import { registerMemoryAttributor } from "../../01-核心基础设施/核心工具-进程与信号/sdk-memory-summary.js";
 import { c1, jt, g0 } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
-import { $6, bBe, Rq, AQ, Gi, ZD, eRt } from "../../02-功能模块/认证-OAuth登录/chunk-7rf7w8yf.js";
-import { mnt } from "../../02-功能模块/Git-Worktree/chunk-bk9696gx.js";
+import { isReviewOriginSession, OAUTH_TOKEN_WELL_KNOWN_PATH, SESSION_INGRESS_TOKEN_WELL_KNOWN_PATH, MAX_CREDENTIAL_BYTES, getSessionAccessToken, getSessionAuthHeaders, setSessionAccessToken } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
+import { isCachedGitHubRepo } from "../../02-功能模块/Git-Worktree/git-repository-detection.js";
 import { iy, gc, _b, oS, eie, dBe, WT, canonicalizeArtifactUrlInput, uuidSlugFromUrl } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { sessionIdBody } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
-import { isModelDrivenSession, hasNonLeadTeammate, isTeamLead, hasActiveInProcessTeammates, hasWorkingInProcessTeammates, waitForTeammatesToBecomeIdle } from "../../02-功能模块/Teammates团队/chunk-811z9z0t.js";
+import { isModelDrivenSession, hasNonLeadTeammate, isTeamLead, hasActiveInProcessTeammates, hasWorkingInProcessTeammates, waitForTeammatesToBecomeIdle } from "../../02-功能模块/Teammates团队/teammate-context.js";
 import { isPolicyAllowed, getResponseFromCache } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import {
   GEt,
@@ -617,7 +617,7 @@ import {
   iA,
   MT,
 } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
-import { so, uP, getToolPermissionContext } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
+import { SKILL_TOOL_NAME, SKILL_TOOL_NAME_PREFIX, getToolPermissionContext } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, findToolByName } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import {
   HYe,
@@ -633,7 +633,7 @@ import {
   pathInWorkingPath,
   matchingRuleForInput,
 } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { tA, qy, DT } from "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
+import { FILE_STATE_MAX_ENTRIES, normalizeFileContent, createFileStateCache } from "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import { ive, vm, K$, $t } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
 import { createAbortController, createChildAbortController, userAbortReason, shutdownInterruptStamp, isServerFallbackDiscard } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { Jc } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
@@ -670,11 +670,11 @@ import { isArtifactConflictLegacy, artifactReadObservationIn, makeSetArtifactRea
 import { isExiting, commitExit } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { Vre } from "../../02-功能模块/后台任务-Shell管理/chunk-x3txegas.js";
 import { CK } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
-import { bo } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
+import { emitOtelEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { isProjectsHumanOriginEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { Nu, b7e } from "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { Fy, MSt } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
-import { Ts, _St, WXn, qXn, zXn, XXn } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
+import { AsyncQueue, formatContinuedInMessage } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
+import { recordStartupPhase, getRecordedStartupPhase, markResumeHydratePrefetch, qXn, zXn, consumeApiRequestSentFromSpawn } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { areBackgroundTasksDisabled, BACKGROUND_TASKS_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { mQn, ZAe, ti, eCe } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import {
@@ -698,27 +698,27 @@ import {
 } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { dCe, readUnreadMessages, MARK_READ_FAILURE_CAP, markMessagesAsRead, formatTeammateMessages, isShutdownApproved, isHeadlessLeadDisplayableMessage } from "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
 import { isRemoteControlDeploymentAvailable, isRunningInRemoteEnvironment, isBridgeStateFramesEnabled, isSdkBridgeStateAnnounceEnabled, isQuotaRejectedReemitEnabled, getCcrAutoConnectDefault, isPersistentRemoteSessionEnabled, isRemoteControlInternalEventsEnabled, getBridgeSubagentFrameGate } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
-import { wK } from "../../02-功能模块/插件系统/chunk-hh8f1qrw.js";
-import { PAe, MNe } from "../../02-功能模块/图片-截图-ComputerUse/chunk-b8jsase9.js";
+import { areSideloadFlagsDisabledByPolicy } from "../../02-功能模块/插件系统/plugin-source-policy.js";
+import { ComputerUseMcpStateStore, ComputerUseLockOwnerContext } from "../../02-功能模块/图片-截图-ComputerUse/computer-use-lock.js";
 import { sessionTransportRegistry, isRemoteTransportPersistent, summarizeMcpServersIfRemote, hidePluginsIfRemote, keepPrimaryIfRemote, withholdDetailIfRemote } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
-import { Jn, CH, Q3, zYn, VYn, XYn } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { Eo } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
+import { getMcpServerConfigCacheKey, registerMcpNotificationHandler, setMcpClientOnClose, addMcpClientOnCloseHandler, isMcpClientTransportClosed, deliverMcpTransportMessage } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { resolveSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
 import { ne } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
 import { kG } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
-import { removeTeammateFromTeamFile } from "../../02-功能模块/Teammates团队/chunk-6b13bhw1.js";
+import { removeTeammateFromTeamFile } from "../../02-功能模块/Teammates团队/team-file-store.js";
 import { wa } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { setSdkHostedBridgeHandle, getSdkHostedBridgeHandle, reportBridgePermissionMode, setSupervisedBridgeSession, reportBridgeCrossSessionInbound, reportBridgeModel, ownBridgePeerAddress } from "../../02-功能模块/权限系统/chunk-1y2g140m.js";
 import {
-  YYn,
-  sSn,
-  tm,
-  cN,
-  r7e,
-  BNe,
-  tJn,
-  ebt,
-  nJn,
-  rJn,
+  isPollEventWakeItem,
+  isKnownQueueMode,
+  isFromCurrentAgent,
+  normalizeTaskNotificationOrigin,
+  resolveQueueOrigin,
+  shouldSkipAttachments,
+  runWithCcrTurnId,
+  clearCcrTurnId,
+  parseRelayTurnId,
+  getCommonCcrTurnId,
 } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import { GY, oJn } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
 import {
@@ -771,35 +771,35 @@ import { b_ } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw63
 import { _ee } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
 import { B_e, D0t, L0t, Fae } from "./chunk-e4xwwtsb.js";
 import {
-  Cce,
-  YGe,
-  cdt,
-  dsn,
+  parseFileAttachments,
+  isClaudeAiClientPlatform,
+  isClaudeCodeClientPlatform,
+  getClaudeCodeHumanOrigin,
   n6n,
-  JGe,
-  psn,
-  fsn,
-  vce,
-  udt,
+  resolveTriggerPriority,
+  getReceiverGroupingId,
+  getActivityObservation,
+  isHumanRelayTurn,
+  isHumanOriginTurn,
   r6n,
-  VNt,
+  isHumanRelayOrigin,
   o6n,
-  QGe,
-  ZGe,
+  classifyInboundOrigin,
+  getInboundOriginOverride,
   s6n,
-  Rce,
+  isVerifiedSlackHumanTurn,
   i6n,
-  KNt,
-  msn,
-  eqe,
+  stripSystemReminderWrappers,
+  stripSystemRemindersFromBlocks,
+  parseInboundUserEvent,
   vPe,
-  tqe,
-} from "../../02-功能模块/Bridge-RemoteControl/chunk-jpq2fv3g.js";
+  hasPeerEnvelope,
+} from "../../02-功能模块/Bridge-RemoteControl/bridge-inbound-origin.js";
 import "../../01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js";
 import "../../02-功能模块/远程工具执行/chunk-66axrkvh.js";
 import { I0t, j1n, lHe, W1n, P0t, O0t, Uz, FJt } from "../../02-功能模块/远程工具执行/chunk-31b8kd0f.js";
 import { lsn } from "../../02-功能模块/Bridge-RemoteControl/chunk-znhfst8k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-thdf1760.js";
+import "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
 import { withoutStaticMcpShadows, mergeAndFilterTools, stripSoleNonDeniableTool } from "../../01-核心基础设施/共享小工具-未细化/chunk-1m91n7yv.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
 import {
@@ -853,18 +853,18 @@ import {
 import { Ou, d2, KSe, uM, y9, S9 } from "../../02-功能模块/工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
 import { isChannelsEnabled, isChannelAllowlisted } from "../../02-功能模块/插件系统/chunk-rbjz1q03.js";
 import { ChannelMessageNotificationSchema, wrapChannelMessage, findChannelEntry, gateChannelServer } from "../../02-功能模块/插件系统/channel-gate.js";
-import { r2, Aee, ak, x4 } from "../../02-功能模块/MCP客户端/chunk-z2a573sr.js";
-import { collectContextData } from "../../02-功能模块/上下文压缩-Compact/chunk-40jcpbzh.js";
+import { MCP_URL_ELICITATION_DIALOG, clearMcpNeedsAuthCache, createMcpAuthStubTools, initMcpDiscoveryCacheKillSwitch } from "../../02-功能模块/MCP客户端/mcp-auth-cache.js";
+import { collectContextData } from "../../02-功能模块/上下文压缩-Compact/context-usage.js";
 import { Qqe, tze, ran, MWn, UWn } from "../../02-功能模块/Artifact发布-渲染/chunk-p1dkvpxj.js";
 import { killAutoReactSubscriptions } from "../../02-功能模块/Artifact发布-渲染/chunk-kshc4v5t.js";
-import { xBn, mnn, S4 } from "../../02-功能模块/会话-历史-恢复/chunk-ybcvb652.js";
+import { xBn, syncTitleToRemoteSession, generateSessionTitle } from "../../02-功能模块/会话-历史-恢复/session-title.js";
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 import { makeSetWebBrowserSlice } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
-import { Ole, Dle, i7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
+import { createArtifactRegistries, createTeammateColorAssigner, EMPTY_PERMISSION_RELAYS } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
 import { fetchSystemPromptParts, buildSideQuestionFallbackParams } from "../../02-功能模块/上下文压缩-Compact/side-question-fallback.js";
-import { NGe, ebe } from "../../02-功能模块/Artifact发布-渲染/chunk-fx5ekm7e.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
-import "../../02-功能模块/跨会话消息(UDS)/chunk-qvnte9zp.js";
+import { collectArtifactStateFromMessages, rehydrateArtifactFrameState } from "../../02-功能模块/Artifact发布-渲染/chunk-fx5ekm7e.js";
+import "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
+import "../../02-功能模块/跨会话消息(UDS)/peer-file-transfer.js";
 import { dIt } from "../../02-功能模块/图片-截图-ComputerUse/chunk-2xnaevpn.js";
 import { runSideQuestion } from "../../02-功能模块/权限系统/chunk-qjqc5vxm.js";
 import { runUltrareviewHeadless } from "../../02-功能模块/CodeReview/CodeReview.ddrd6y06.js";
@@ -881,7 +881,7 @@ import {
   Cat,
 } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import { shouldShowAutoDefaultNudge, handleAutoDefaultNudgeEventFromHost } from "../../01-核心基础设施/设置-配置/chunk-wdr27rwr.js";
-import { dSe, qBn } from "../../02-功能模块/Grove-隐私设置/chunk-a4mdm49v.js";
+import { shouldShowGroveNotice, printGroveNotice } from "../../02-功能模块/Grove-隐私设置/chunk-a4mdm49v.js";
 import { performLogout } from "../../02-功能模块/认证-OAuth登录/chunk-9g86t9bp.js";
 import {
   Act,
@@ -898,9 +898,9 @@ import {
   i2,
   Oct,
 } from "../../02-功能模块/MCP客户端/chunk-g4gdwpa0.js";
-import { O4, _7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-3eztvm1y.js";
+import { cachedRowAdoptEmitter, cachedRowDialFailedEmitter } from "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js";
 import "../../02-功能模块/成本-Token统计/chunk-3nwwgatc.js";
-import { o3e } from "../../02-功能模块/MCP客户端/chunk-22bnxvxv.js";
+import { collectUsageData } from "../../02-功能模块/MCP客户端/usage-rate-limits.js";
 import { activeTimeTracker } from "../../02-功能模块/Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import { worktreeStateStore } from "../../01-核心基础设施/共享小工具-未细化/worktree-state-store.js";
 import {
@@ -918,78 +918,78 @@ import {
   yQt,
   DZ,
 } from "../../02-功能模块/Git-Worktree/chunk-xercceag.js";
-import { iM } from "../../02-功能模块/文件监听-Watch/chunk-mmg1rsp2.js";
+import { skillChangeDetector } from "../../02-功能模块/文件监听-Watch/skill-change-detector.js";
 import {
-  rqe,
-  oqe,
-  sqe,
-  iqe,
-  l6n,
-  aqe,
-  lqe,
-  cqe,
-  dqe,
-  pqe,
-  IPe,
-  PPe,
-  xsn,
-  Gee,
-  qee,
-  OPe,
-  c6n,
-} from "../../02-功能模块/权限系统/chunk-4tar9p3n.js";
-import { _on } from "../../01-核心基础设施/共享小工具-未细化/chunk-mybtnk9f.js";
+  setInboundModeGetter,
+  setPeerHeldHandler,
+  setInboundAvailabilityPublisher,
+  settleHeldPeerMessagesOnShutdown,
+  getAnnouncedHoldCause,
+  setPeerHoldDroppedHandler,
+  setPeerHoldReleasedHandler,
+  gatePeerInboundMessage,
+  isCrossSessionIngress,
+  gateInboundMessageByOrigin,
+  getIngressRefuseCause,
+  getSessionRefuseCause,
+  gateHostInjectedInboundMessage,
+  logInboundRefused,
+  reapplyInboundPolicy,
+  resolveHeldPeerMessage,
+  isInboundShuttingDown,
+} from "../../02-功能模块/权限系统/cross-session-inbound-gate.js";
+import { extractSendMessagePins } from "../../01-核心基础设施/共享小工具-未细化/send-message-pins.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kaxe7rw8.js";
 import { bridgeSlashLineBuildsRequest } from "../../02-功能模块/Bridge-RemoteControl/chunk-x2kwwph8.js";
-import { Tot, kNn } from "../../02-功能模块/Memory-CLAUDE.md/chunk-3ehd7vx0.js";
+import { parseIsoTimestamp, createHomeSeedAnnouncer } from "../../02-功能模块/Memory-CLAUDE.md/chunk-3ehd7vx0.js";
 import { buildControlSuccessResponse, buildControlErrorResponse, buildErrorResultMessage } from "./headless-sdk-messages.js";
-import { q1n } from "../../01-核心基础设施/共享小工具-未细化/chunk-ezjdm9sg.js";
-import { TFn } from "../../01-核心基础设施/共享小工具-未细化/chunk-cbdr3qdm.js";
+import { recoverSessionIngressToken } from "../../01-核心基础设施/共享小工具-未细化/session-ingress-token.js";
+import { createRemoteAutocompactStateEmitter } from "../../01-核心基础设施/共享小工具-未细化/remote-autocompact-state.js";
 import { CLOUD_PLUGINS_FORWARDED_SETTING_KEY, FORWARDABLE_PLUGIN_SETTING_KEYS, PLUGIN_FORWARDING_DISABLED_MESSAGE } from "../../02-功能模块/插件系统/plugin-forwarding.js";
 import { formatSessionLiveElsewhereMessage, getLiveSessionHolder } from "../../01-核心基础设施/共享小工具-未细化/session-live-elsewhere.js";
 import { SANDBOX_REQUIRED_UNAVAILABLE_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/sandbox-unavailable-message.js";
 import { getBashSpawnFailureDetail } from "../../01-核心基础设施/共享小工具-未细化/bash-spawn-failure-detail.js";
-import { ple } from "../../02-功能模块/认证-OAuth登录/chunk-dtt2nn79.js";
+import { finalizeOAuthLogin } from "../../02-功能模块/认证-OAuth登录/oauth-login-completion.js";
 import { PerClassInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/per-class-instance-registry.js";
 import { parsePositiveInteger } from "../../01-核心基础设施/共享小工具-未细化/parse-positive-integer.js";
-import { Jat } from "../../02-功能模块/Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import { sSe, dee, pee } from "../../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js";
-import { SDt, Ztn } from "../../02-功能模块/权限系统/chunk-2ttypdwq.js";
+import { buildSessionWebUrl } from "../../02-功能模块/Bridge-RemoteControl/remote-control-ui-strings.js";
+import { sSe, markUltrareviewOverageConfirmed, makeToolPermissionContextSetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js";
+import { maybeStartCcrRecap, resetCcrRecap } from "../../02-功能模块/权限系统/ccr-recap.js";
 import { refreshActivePlugins } from "../../02-功能模块/MCP客户端/plugin-reload-cache-impact.js";
 import { PluginStateStore } from "../../02-功能模块/插件系统/plugin-state-store.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-d1t6d4k8.js";
+import "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
 import { applyFlagSettingsPatch } from "../../02-功能模块/上下文压缩-Compact/apply-flag-settings.js";
 import { P_, Jle, Rl } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
 import { reloadSkills } from "../../01-核心基础设施/共享小工具-未细化/reload-skills.js";
 import { createAgentLifecycle } from "../../02-功能模块/Teammates团队/agent-lifecycle.js";
 import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
-import { xrn, _Lt, Hv } from "../../02-功能模块/MCP客户端/chunk-k2gczbnj.js";
+import { formatServerDisabledBeforeAction, formatServerNotApprovedBeforeAction, getBlockedServerErrorFields } from "../../02-功能模块/MCP客户端/mcp-server-state-messages.js";
 import { Hjn } from "../../02-功能模块/Artifact发布-渲染/chunk-b6k1z7an.js";
 import "./chunk-yb7jadvp.js";
-import { A9, adt, wF } from "../../02-功能模块/Bridge-RemoteControl/chunk-z5v9hvat.js";
-import { ck } from "../../02-功能模块/认证-OAuth登录/chunk-5bg9xwqx.js";
-import { Udt, q6n, z6n, V6n } from "../../01-核心基础设施/共享小工具-未细化/chunk-gkztysec.js";
+import { getEffectiveEffortLevel, applyBridgeFlagSettings, reportSessionEffort } from "../../02-功能模块/Bridge-RemoteControl/bridge-effort-sync.js";
+import { OAuthLoginFlow } from "../../02-功能模块/认证-OAuth登录/oauth-login-flow.js";
+import { DEFAULT_MAX_STRUCTURED_OUTPUT_RETRIES, STRUCTURED_OUTPUT_RETRACTED_MESSAGE, formatStructuredOutputRetryError, findLastStructuredOutputError } from "../../01-核心基础设施/共享小工具-未细化/structured-output-retry-errors.js";
 import { buildLocalDisplayOnlyDenialResult } from "../../01-核心基础设施/共享小工具-未细化/local-display-only-denial.js";
 import { zPe } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
-import { Fze } from "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
-import { xs, Lh } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
-import { Mk } from "../../01-核心基础设施/共享小工具-未细化/chunk-rrrsz7e6.js";
-import { Fre, og } from "../../02-功能模块/插件系统/chunk-33bdfgmx.js";
-import { Mu } from "../../02-功能模块/MCP客户端/chunk-0mwqsv0r.js";
-import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
-import { Hl } from "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
+import { resolveThemeName } from "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
+import { isTerminalTaskStatus, formatModelRestrictedMessage } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
+import { appendEndedByModelSuffix } from "../../01-核心基础设施/共享小工具-未细化/ended-by-model.js";
+import { hasNonMarketplacePluginSource, parsePluginIdIgnoringReservedMarketplace } from "../../02-功能模块/插件系统/chunk-33bdfgmx.js";
+import { isMcpSkillsEnabled } from "../../02-功能模块/MCP客户端/mcp-skills-extension.js";
+import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
+import { getMcpTimeoutMs } from "../../01-核心基础设施/共享小工具-未细化/mcp-timeouts.js";
 import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
 import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 import { isAnthropicHostedEnvironment } from "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
 import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
-import { Zj, e6, Z_ } from "../../02-功能模块/工具ToolSearch/chunk-1m51pqtd.js";
+import { isVertexModelUnsupportedForToolSearch, isToolSearchSupportedModel, isToolSearchEnabled } from "../../02-功能模块/工具ToolSearch/tool-search-enablement.js";
 import { createFieldAccessor } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
-import { mt, Vh } from "../../02-功能模块/工具Task-Agent调度/chunk-1px84m19.js";
-import { FR } from "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
+import { AGENT_TOOL_NAME, TASK_TOOL_NAME } from "../../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
+import { getTokenExpiry } from "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
 import { serializeAsyncCalls } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
 import { s, se, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -1378,12 +1378,12 @@ function Bc(
       je = te.length;
     while (ve < je) {
       let en = ve + Math.ceil((je - ve) / 2),
-        Ne = oe(te, en);
+        Ne = truncateToCodeUnits(te, en);
       if (Buffer.byteLength(Zre(Ne), "utf8") <= N - 128) ve = en;
       else je = en - 1;
     }
     let ut = te.length,
-      Tt = oe(te, ve);
+      Tt = truncateToCodeUnits(te, ve);
     ((te =
       Tt +
       `
@@ -1546,11 +1546,11 @@ function Hc(e, t) {
     }
   };
 }
-var qc = { sessionIngressTokenPath: Rq, oauthTokenPath: bBe };
+var qc = { sessionIngressTokenPath: SESSION_INGRESS_TOKEN_WELL_KNOWN_PATH, oauthTokenPath: OAUTH_TOKEN_WELL_KNOWN_PATH };
 async function Rp(e = qc) {
   let [t, o] = await Promise.all([
-      Wi(e.sessionIngressTokenPath, AQ),
-      Wi(e.oauthTokenPath, AQ),
+      Wi(e.sessionIngressTokenPath, MAX_CREDENTIAL_BYTES),
+      Wi(e.oauthTokenPath, MAX_CREDENTIAL_BYTES),
     ]),
     d = t?.trim() ?? "",
     _ = o?.trim() ?? "";
@@ -1571,7 +1571,7 @@ async function Ip(e, t = qc) {
     return { adopted: !1, reason: "no_advertised_ttl" };
   let o = await Rp(t);
   if (!o) return { adopted: !1, reason: "read_failed" };
-  let d = FR(o.sessionIngressToken);
+  let d = getTokenExpiry(o.sessionIngressToken);
   if (d === null)
     return (
       n(
@@ -1580,7 +1580,7 @@ async function Ip(e, t = qc) {
       ),
       { adopted: !1, reason: "not_a_jwt" }
     );
-  let _ = Gi();
+  let _ = getSessionAccessToken();
   if (_ === o.sessionIngressToken) return { adopted: !1, reason: "unchanged" };
   let E = Date.now() / 1000 + e;
   if (Math.abs(d - E) > Dp)
@@ -1591,7 +1591,7 @@ async function Ip(e, t = qc) {
       ),
       { adopted: !1, reason: "exp_mismatch" }
     );
-  let I = _ ? FR(_) : null;
+  let I = _ ? getTokenExpiry(_) : null;
   if (I !== null && d <= I)
     return (
       n(
@@ -1600,7 +1600,7 @@ async function Ip(e, t = qc) {
       ),
       { adopted: !1, reason: "not_newer" }
     );
-  if (a.CLAUDE_CODE_SESSION_ACCESS_TOKEN) eRt(o.sessionIngressToken);
+  if (a.CLAUDE_CODE_SESSION_ACCESS_TOKEN) setSessionAccessToken(o.sessionIngressToken);
   if ((mae(o.sessionIngressToken), N0(o.oauthToken), a.CLAUDE_CODE_OAUTH_TOKEN))
     a.set("CLAUDE_CODE_OAUTH_TOKEN", o.oauthToken);
   return (
@@ -1860,7 +1860,7 @@ function Zc(e, t, { planModeOnResume: o, restored: d, restartedWorker: _ }) {
   let E = Boolean(d?.external || d?.internal);
   if (_ && !E) return;
   if ((e.enableWorkerPermissionModeRecord(), o !== void 0 && E))
-    e.notifyInternalMetadataChanged({ worker_permission_mode: _c(t) });
+    e.notifyInternalMetadataChanged({ worker_permission_mode: getExternalPermissionMode(t) });
 }
 function Sl(e, t, o, d) {
   let _ =
@@ -1888,7 +1888,7 @@ function Sl(e, t, o, d) {
   });
 }
 function eu(e) {
-  let t = `<${Id}>/plan</${Id}>`,
+  let t = `<${COMMAND_NAME_TAG}>/plan</${COMMAND_NAME_TAG}>`,
     o = new Set(),
     d = new Set(),
     _ = Lp(e),
@@ -2686,7 +2686,7 @@ async function* ku({
   earlyResult: v,
 }) {
   if (e) {
-    (ebt(), Lvn());
+    (clearCcrTurnId(), Lvn());
     let B = yield* o5n(e, d, _, E),
       w = {
         waited_ms: B.toolWait?.waitedMs ?? 0,
@@ -2739,7 +2739,7 @@ async function* ku({
     }
   }
   if (!t) return !1;
-  (ebt(), Lvn());
+  (clearCcrTurnId(), Lvn());
   let C = (B, w) =>
     zW({
       startedAt: v.startedAt,
@@ -2785,17 +2785,17 @@ async function* ku({
   return (yield C(re, !1), !0);
 }
 async function wu(e) {
-  Db("before_skills_plugins");
+  markHeadlessCheckpoint("before_skills_plugins");
   let t = performance.now(),
-    o = await Promise.all([getSlashCommandToolSkills(Q(), e), ei(e)]);
+    o = await Promise.all([getSlashCommandToolSkills(getCwd(), e), ei(e)]);
   return (
-    Ts("qe_plugin_skills_load_ms", performance.now() - t, t),
-    Db("after_skills_plugins"),
+    recordStartupPhase("qe_plugin_skills_load_ms", performance.now() - t, t),
+    markHeadlessCheckpoint("after_skills_plugins"),
     o
   );
 }
 function bu({ shouldQuery: e, fromUserInput: t, fromOptions: o }) {
-  (Db("system_message_yielded"),
+  (markHeadlessCheckpoint("system_message_yielded"),
     writeDiagnosticsEvent("info", "cli_ask_should_query_resolved", {
       should_query: e,
       from_user_input: t,
@@ -2803,7 +2803,7 @@ function bu({ shouldQuery: e, fromUserInput: t, fromOptions: o }) {
     }));
 }
 function Cu(e) {
-  return ive(e) || Fre(e.source);
+  return ive(e) || hasNonMarketplacePluginSource(e.source);
 }
 function ia({ proactivityLevel: e, toolPermissionContext: t }) {
   return;
@@ -2835,7 +2835,7 @@ async function Tl({
   storageV5: C,
   credentials: re,
 }) {
-  Db("before_getSystemPrompt");
+  markHeadlessCheckpoint("before_getSystemPrompt");
   let B = performance.now(),
     {
       defaultSystemPrompt: w,
@@ -2852,8 +2852,8 @@ async function Tl({
       storageV5: C,
       credentials: re,
     });
-  (Ts("qe_system_prompt_ms", performance.now() - B, B),
-    Db("after_getSystemPrompt"));
+  (recordStartupPhase("qe_system_prompt_ms", performance.now() - B, B),
+    markHeadlessCheckpoint("after_getSystemPrompt"));
   let ye = { ...X, ...Gp(v, isScratchpadEnabled() ? (getScratchpadDir() ?? void 0) : void 0) },
     N = _ !== void 0 && hasAutoMemPathOverride() ? await jYe(OK(o)) : null,
     fe = yne(t);
@@ -2882,7 +2882,7 @@ async function Pu({
   proactivityState: re,
   capabilities: B,
 }) {
-  if ((await getAutoMemPathState().warmCanonicalWcRoot(), P() === "windows")) await Uv();
+  if ((await getAutoMemPathState().warmCanonicalWcRoot(), getCurrentPlatform() === "windows")) await Uv();
   let w = performance.now(),
     X = isRemoteTransportPersistent(e),
     te = nHe({
@@ -2909,7 +2909,7 @@ async function Pu({
       pluginWarnings: X
         ? []
         : v.warnings
-            .filter((ye) => Fre(ye.source))
+            .filter((ye) => hasNonMarketplacePluginSource(ye.source))
             .map((ye) => ({
               plugin: ye.source,
               type: ye.type,
@@ -2947,7 +2947,7 @@ function la(e, t) {
     onChangeAPIKey: () => {},
     onPermissionDenial: e.onPermissionDenial,
     requestDialog: e.requestDialog,
-    permissionRelays: i7,
+    permissionRelays: EMPTY_PERMISSION_RELAYS,
     sessionState: e.sessionState,
     agentContext: aa(),
     options: {
@@ -2976,7 +2976,7 @@ function la(e, t) {
         allAgents: [],
         allowedAgentTypes: e.allowedAgentTypes,
       },
-      theme: Fze(Eo("theme", "dark").value),
+      theme: resolveThemeName(resolveSetting("theme", "dark").value),
       maxBudgetUsd: e.maxBudgetUsd,
       messageClientPlatform: e.messageClientPlatform,
       forwardSubagentText: e.forwardSubagentText,
@@ -2996,19 +2996,19 @@ function la(e, t) {
     getWebBrowser: () => o().webBrowser,
     markPrResolvedThisSession: () => sSe(d),
     isUltrareviewOverageConfirmed: () => o().ultrareviewOverageConfirmed,
-    markUltrareviewOverageConfirmed: () => dee(d),
-    ...pee(d),
+    markUltrareviewOverageConfirmed: () => markUltrareviewOverageConfirmed(d),
+    ...makeToolPermissionContextSetters(d),
     taskRegistry: Tm(o, d),
     queuedNotificationsRegistry: fEe(o, d, e.session),
     sessionHooksRegistry: e.sessionHooks,
     setWebBrowserSlice: makeSetWebBrowserSlice(d),
     setArtifactReadVersion: makeSetArtifactReadVersion(d),
     getArtifactReadObservation: artifactReadObservationIn(o),
-    artifactRegistries: Ole(o, d),
+    artifactRegistries: createArtifactRegistries(o, d),
     setArtifactContractTarget: makeSetArtifactContractTarget(d),
     getArtifactContractTarget: makeGetArtifactContractTarget(o),
     agentLifecycle: createAgentLifecycle(o, d),
-    teammateColors: Dle(createFieldAccessor(o, d, "teammateColors")),
+    teammateColors: createTeammateColorAssigner(createFieldAccessor(o, d, "teammateColors")),
     rootToolSurface: { tools: E, mainLoopModel: t.mainLoopModel },
     abortController: t.abortController,
     readFileState: e.readFileState,
@@ -3152,12 +3152,12 @@ function* Au(e, t, o, { replayUserMessages: d, includePartialMessages: _ }) {
   }
 }
 function Tu(e) {
-  return e.includes(`<${vu}>`) || e.includes(`<${Ag}>`);
+  return e.includes(`<${LOCAL_COMMAND_STDOUT_TAG}>`) || e.includes(`<${LOCAL_COMMAND_STDERR_TAG}>`);
 }
 function Du(e, t) {
   return {
     type: "user",
-    message: { ...e.message, content: pt(t) },
+    message: { ...e.message, content: stripAnsi(t) },
     session_id: K(),
     parent_tool_use_id: null,
     uuid: e.uuid,
@@ -3220,7 +3220,7 @@ function hi(e) {
   return {
     type: "system",
     subtype: "informational",
-    content: pt(e.content),
+    content: stripAnsi(e.content),
     level: e.level,
     ...(e.toolUseID && { tool_use_id: e.toolUseID }),
     ...(e.preventContinuation && {
@@ -3280,7 +3280,7 @@ function Lu(e) {
     let _t = le;
     return ((le = void 0), _t);
   }
-  let U = new Fy(),
+  let U = new AsyncQueue(),
     ve = oHe({
       run: FM,
       queryParams: async () => {
@@ -3512,7 +3512,7 @@ function Lu(e) {
       })
     )
       return;
-    let Ct = Br("before_processUserInput", { once: !0 }),
+    let Ct = profileCheckpoint("before_processUserInput", { once: !0 }),
       Zt =
         Qe?.hearthRelayMessageIds !== void 0 ||
         Qe?.hearthRelayRows !== void 0 ||
@@ -3548,7 +3548,7 @@ function Lu(e) {
         verifiedSlackHumanTurn: Qe?.verifiedSlackHumanTurn,
         inlinedImagePaths: Qe?.inlinedImagePaths,
       });
-    if (Ct) Br("after_processUserInput");
+    if (Ct) profileCheckpoint("after_processUserInput");
     let Rn =
         Qe?.orphanedPermission !== void 0 && !Ir
           ? eo.filter((De) => !Ryt(De))
@@ -3577,12 +3577,12 @@ function Lu(e) {
         Boolean(a.CLAUDE_CODE_EAGER_FLUSH) || Boolean(a.CLAUDE_CODE_IS_COWORK);
     if (nn && Rn.length > 0) {
       let De = hn.record();
-      if (uo());
+      if (isSimpleMode());
       else if ((await De, yr)) await flushSessionStorage();
     }
     let os = e.replayUserMessages ? cu(Rn) : [],
       ss = e.includePartialMessages ?? !1;
-    nZn(pee(o), dr, Qe);
+    nZn(makeToolPermissionContextSetters(o), dr, Qe);
     let go = Oe != null && (isExemptDefaultResolvingPick(Oe) || isModelAllowed(Oe));
     if (Oe && !go)
       n(
@@ -3962,7 +3962,7 @@ function Lu(e) {
                   },
                   variant: {
                     subtype: "error_max_structured_output_retries",
-                    errors: [q6n],
+                    errors: [STRUCTURED_OUTPUT_RETRACTED_MESSAGE],
                     ...En.errorVariantFields(),
                   },
                 }));
@@ -3970,7 +3970,7 @@ function Lu(e) {
             }
             if ($n && Fr)
               logEvent("tengu_sdk_ttft", { ttft_ms: Ho(dn, Fr), model: bt(Ro) });
-            let $r = $n ? XXn() : void 0,
+            let $r = $n ? consumeApiRequestSentFromSpawn() : void 0,
               An = mr.findLast(
                 (ds) => ds.type === "assistant" || ds.type === "user",
               ),
@@ -4067,7 +4067,7 @@ function Lu(e) {
         if (zs) yield* yo("served");
         if (br) return;
         if (De.type === "user" && _r !== void 0 && !Y9(e.maxBudgetUsd)) {
-          let $e = a.MAX_STRUCTURED_OUTPUT_RETRIES ?? Udt;
+          let $e = a.MAX_STRUCTURED_OUTPUT_RETRIES ?? DEFAULT_MAX_STRUCTURED_OUTPUT_RETRIES;
           if (phn(d, ti) + Ko - Ia >= $e && ct.length === 0) {
             if (((co = !0), await vt(Wt, Ut), (br = !0), Ft(hn, Xt), nn)) {
               if ((await hn.record(!0), yr)) await flushSessionStorage();
@@ -4095,7 +4095,7 @@ function Lu(e) {
                 },
                 variant: {
                   subtype: "error_max_structured_output_retries",
-                  errors: [z6n($e, Ko, V6n(d, Ri))],
+                  errors: [formatStructuredOutputRetryError($e, Ko, findLastStructuredOutputError(d, Ri))],
                   ...En.errorVariantFields(),
                 },
               }));
@@ -4183,7 +4183,7 @@ function Lu(e) {
     if ((d.push(_t), Wt))
       (Qe.push(_t),
         logEvent("tengu_refusal_fallback_entry_recorded", {
-          request_id: Ee(_t.requestId),
+          request_id: sanitizeAnalyticsId(_t.requestId),
         }));
   }
   async function Cn(_t, Qe, Wt) {
@@ -4228,7 +4228,7 @@ function Lu(e) {
         U.done(),
         ve.return(void 0).catch(logError),
         (d = []),
-        (_ = DT(tA)),
+        (_ = createFileStateCache(FILE_STATE_MAX_ENTRIES)),
         (C = {}),
         (E = new Map()),
         (O = new PerClassInstanceRegistry()),
@@ -4396,7 +4396,7 @@ function qu(e, t, o, d, _, E) {
   return async (v) => {
     let C = t();
     if (O !== C) (I.clear(), (O = C));
-    switch (l2e(C.mode, C.isBypassPermissionsModeAvailable)) {
+    switch (resolvePermissionDecisionKind(C.mode, C.isBypassPermissionsModeAvailable)) {
       case "allow":
         return !0;
       case "deny":
@@ -4472,13 +4472,13 @@ ${lg(o)}`;
 var cg = 80,
   ug = /[^A-Za-z0-9 .,;:!?_/@#%&+=~-]/g;
 function fg(e) {
-  let t = kae(e, Number.MAX_SAFE_INTEGER)
+  let t = formatTruncatedText(e, Number.MAX_SAFE_INTEGER)
       .normalize("NFKD")
       .replace(/\p{M}+/gu, "")
       .replace(ug, " ")
       .replace(/\s+/g, " ")
       .trim(),
-    o = oe(t, cg).trimEnd();
+    o = truncateToCodeUnits(t, cg).trimEnd();
   return o.length < t.length ? `${o}\u2026` : t;
 }
 function Fl(e) {
@@ -4590,7 +4590,7 @@ function Mg({
     return (logFeatureSad("artifact_editor_codelivery", "url_mismatch"), null);
   if (I === void 0)
     return (logFeatureSad("artifact_editor_codelivery", "no_copy_uuid"), null);
-  if (E.peek((te) => te.uuid !== I && Rce(te)) !== void 0)
+  if (E.peek((te) => te.uuid !== I && isVerifiedSlackHumanTurn(te)) !== void 0)
     return (logFeatureSad("artifact_editor_codelivery", "human_turn_ahead"), null);
   let { slug: B, editor: w } = C,
     X = _.taskRegistry.get(w.agentId);
@@ -4932,7 +4932,7 @@ function Vl(e, t) {
   return o ? jl(e, t.config, o) : void 0;
 }
 function jl(e, t, o) {
-  return { name: e, type: "failed", config: t, ...Hv(o) };
+  return { name: e, type: "failed", config: t, ...getBlockedServerErrorFields(o) };
 }
 function ha(e, t, o) {
   let {
@@ -4950,8 +4950,8 @@ function ha(e, t, o) {
     v = d().mcp.clients.find((N) => N.name === t),
     C = E().clients.find((N) => N.name === t);
   if (!v && !C) return (O(), "dropped");
-  let re = Jn(t, o.client.config),
-    B = (N) => N !== void 0 && Jn(t, N.config) !== re;
+  let re = getMcpServerConfigCacheKey(t, o.client.config),
+    B = (N) => N !== void 0 && getMcpServerConfigCacheKey(t, N.config) !== re;
   if (B(v) || B(C))
     return (
       n(
@@ -5031,7 +5031,7 @@ function wi(e) {
     force: O = !1,
     spareUnchangedFrom: v,
   } = e;
-  Aee(E);
+  clearMcpNeedsAuthCache(E);
   let C = ga(),
     re = jt();
   if (!C.mcpIdentityChangedSinceLastCheck() && !O)
@@ -5050,7 +5050,7 @@ function wi(e) {
   }
   for (let Ne of X) {
     if (!xh(Ne.config) || fe.has(Ne.name)) {
-      N.add(Jn(Ne.name, Ne.config));
+      N.add(getMcpServerConfigCacheKey(Ne.name, Ne.config));
       continue;
     }
     if (
@@ -5074,7 +5074,7 @@ function wi(e) {
       continue;
     }
     let pn = (le[Ne.name] ??= gt);
-    if (pn !== Ne.config && Jn(Ne.name, pn) !== Jn(Ne.name, Ne.config))
+    if (pn !== Ne.config && getMcpServerConfigCacheKey(Ne.name, pn) !== getMcpServerConfigCacheKey(Ne.name, Ne.config))
       n(
         `[MCP] ${Ne.name}: appState and dynamic-store rows disagree on config at the identity boundary \u2014 converging both under the ${Object.hasOwn(U, Ne.name) ? "host's" : "appState row's"} config and re-dialing it`,
         { level: "warn" },
@@ -5216,7 +5216,7 @@ function nm(e) {
           }),
         );
       };
-      if ((zYn(d, () => _(!1)), VYn(d))) setImmediate(_, !0);
+      if ((addMcpClientOnCloseHandler(d, () => _(!1)), isMcpClientTransportClosed(d))) setImmediate(_, !0);
     }
   };
 }
@@ -5297,7 +5297,7 @@ async function Lg(e, t, o) {
         if (!Ne) return;
         let Ot = ye(),
           un = Ot?.type === "connected" && Ot.client === Ne.client,
-          Bn = Ot !== void 0 && Jn(B, Ot.config) === Jn(B, w);
+          Bn = Ot !== void 0 && getMcpServerConfigCacheKey(B, Ot.config) === getMcpServerConfigCacheKey(B, w);
         if (!un && (!gt || !Bn))
           xe.detachAndCloseConnection(Ne).catch(() => {});
       };
@@ -5326,7 +5326,7 @@ async function Lg(e, t, o) {
         (logMCPDebug(B, `Reconnect gave up after ${U} attempts: ${nt.type}`),
         le({
           client: nt,
-          tools: nt.type === "needs-auth" ? ak(B, w) : [],
+          tools: nt.type === "needs-auth" ? createMcpAuthStubTools(B, w) : [],
           commands: [],
           attemptEpoch: ve,
         }),
@@ -5381,7 +5381,7 @@ function bi(e) {
   return typeof e === "string" ? e : void 0;
 }
 function mm() {
-  if (!PA() && !Eg()) return;
+  if (!isVsCodeExtensionSession() && !isDesktopHostSession()) return;
   if (!H("tengu_vscode_feedback_survey", !1)) return;
   if (a.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY) return;
   if (Zk()) return;
@@ -5402,8 +5402,8 @@ function Kl(e, t) {
   let o = rm(e.event_type),
     d = om(e.response),
     _ = sm(e.survey_type),
-    E = Ee(bi(e.appearance_id)),
-    I = Ee(bi(e.last_assistant_message_id));
+    E = sanitizeAnalyticsId(bi(e.appearance_id)),
+    I = sanitizeAnalyticsId(bi(e.last_assistant_message_id));
   if (
     (logEvent("tengu_feedback_survey_event", {
       event_type: o,
@@ -5417,7 +5417,7 @@ function Kl(e, t) {
   )
     return !0;
   return (
-    bo("feedback_survey", {
+    emitOtelEvent("feedback_survey", {
       event_type: o,
       appearance_id: E,
       response: d,
@@ -5450,11 +5450,11 @@ var Kg = new Set(["tengu_message_rated", "tengu_feedback_survey_event"]),
 function pm(e) {
   let t = e.find((o) => o.name === "ccd_session");
   if (!t || t.type !== "connected") return;
-  if (t.config.type !== "sdk" || !Eg()) return;
-  (CH(t, Gg(), async (o) => {
+  if (t.config.type !== "sdk" || !isDesktopHostSession()) return;
+  (registerMcpNotificationHandler(t, Gg(), async (o) => {
     f7n(o.params, t.name);
   }),
-    CH(t, Qgn(), async (o) => {
+    registerMcpNotificationHandler(t, Qgn(), async (o) => {
       let { eventName: d, eventData: _ } = o.params;
       if (!Kg.has(d)) return;
       if (!isPolicyAllowed("allow_product_feedback")) return;
@@ -5462,7 +5462,7 @@ function pm(e) {
       switch (d) {
         case "tengu_message_rated":
           logEvent(d, {
-            message_uuid: Ee(bi(E.message_uuid)),
+            message_uuid: sanitizeAnalyticsId(bi(E.message_uuid)),
             sentiment: cm(E.sentiment),
             surface: um(E.surface),
             cleared: E.cleared === !0,
@@ -5473,7 +5473,7 @@ function pm(e) {
           break;
       }
     }),
-    (Yo(t.client).onerror = UWt("notification_channel_error", "ccd_session")));
+    (asMcpSdkClient(t.client).onerror = UWt("notification_channel_error", "ccd_session")));
 }
 import { randomUUID as tr } from "crypto";
 import { realpath as zg, stat as Qg } from "fs/promises";
@@ -5777,7 +5777,7 @@ function Yl(e) {
 function Xl(e) {
   if (!xM(e)) return !1;
   if ("isBackgrounded" in e && e.isBackgrounded === !1) return !1;
-  if (!xs(e.status)) return !1;
+  if (!isTerminalTaskStatus(e.status)) return !1;
   return !e.notified;
 }
 function Mi({ tasks: e, waits: t, now: o }) {
@@ -6082,7 +6082,7 @@ function rd(e) {
     if (!bp(t) || t.status !== "running") continue;
     if (!t.isBackgrounded && t.agentId !== void 0) {
       let o = e.get(t.agentId);
-      if (o === void 0 || !xs(o.status)) continue;
+      if (o === void 0 || !isTerminalTaskStatus(o.status)) continue;
     }
     n(
       `print teardown: killing shell ${t.id} ("${t.description}") still running at stream close`,
@@ -6446,7 +6446,7 @@ function sf(e) {
   return { start: !0, configHome: o };
 }
 function lf() {
-  return be();
+  return getClaudeConfigDir();
 }
 var g_ = new Set(["outputStyle"]);
 function __(e, t, o, d) {
@@ -6510,7 +6510,7 @@ The user cannot receive your response until the team is completely shut down.
 
 Shut down your team and prepare your final response for the user.`;
 function ud(e) {
-  return tm(e) && e.value === Of;
+  return isFromCurrentAgent(e) && e.value === Of;
 }
 function _f() {
   return a.CLAUDE_CODE_TEAM_TEARDOWN_PARK_TIMEOUT_MS ?? 1e4;
@@ -6535,7 +6535,7 @@ function A_(e, t) {
   return (
     VOn(!0),
     async function (d, _, E) {
-      if (d.kind === r2.kind) {
+      if (d.kind === MCP_URL_ELICITATION_DIALOG.kind) {
         let I = _;
         return await e.handleElicitation(
           I.serverName,
@@ -6603,7 +6603,7 @@ function yf(e) {
     fileAttachments: e.flatMap((o) => o.fileAttachments ?? []),
     clientPlatform:
       e.find((o) => o.clientPlatform)?.clientPlatform ?? t.clientPlatform,
-    ccrTurnId: rJn(e),
+    ccrTurnId: getCommonCcrTurnId(e),
   };
 }
 function x_(e, t) {
@@ -6639,7 +6639,7 @@ function x_(e, t) {
   );
 }
 function hf(e) {
-  return tm(e) && !AC(e) && !n3(e);
+  return isFromCurrentAgent(e) && !AC(e) && !n3(e);
 }
 function U_(e, t) {
   return parseInt(t ?? "1", 10) > 1 && e === "archived";
@@ -6650,11 +6650,11 @@ function Uf(e) {
 function F_(e, t) {
   if (t.status === "needs-confirm") return [];
   let o = Re({
-    content: `<${Id}>/ultrareview${e ? " " + Nt(e) : ""}</${Id}>`,
+    content: `<${COMMAND_NAME_TAG}>/ultrareview${e ? " " + Nt(e) : ""}</${COMMAND_NAME_TAG}>`,
     isMeta: !0,
   });
   if (t.status === "launched")
-    return [o, Re({ content: `<${vu}>${Nt(t.message)}</${vu}>`, isMeta: !0 })];
+    return [o, Re({ content: `<${LOCAL_COMMAND_STDOUT_TAG}>${Nt(t.message)}</${LOCAL_COMMAND_STDOUT_TAG}>`, isMeta: !0 })];
   let d =
     t.status === "blocked" && t.actionUrl
       ? `${t.message}
@@ -6663,7 +6663,7 @@ More: ${t.actionUrl}`
   return [
     o,
     Re({
-      content: `<${Ag}>Ultrareview did not launch: ${Nt(d)}</${Ag}>`,
+      content: `<${LOCAL_COMMAND_STDERR_TAG}>Ultrareview did not launch: ${Nt(d)}</${LOCAL_COMMAND_STDERR_TAG}>`,
       isMeta: !0,
     }),
   ];
@@ -6763,7 +6763,7 @@ function K_(e, t) {
 function G_(e, t, o) {
   let d = e.message.content;
   if (!t || o) return d;
-  return typeof d === "string" ? KNt(d) : Array.isArray(d) ? msn(d) : d;
+  return typeof d === "string" ? stripSystemReminderWrappers(d) : Array.isArray(d) ? stripSystemRemindersFromBlocks(d) : d;
 }
 function z_(e, t, o) {
   if (!t || o) return e;
@@ -6798,8 +6798,8 @@ function X_(e, t, o, d) {
       t,
       e.client_platform,
       e.inbound_origin,
-      psn(e),
-      fsn(e),
+      getReceiverGroupingId(e),
+      getActivityObservation(e),
       isProjectsHumanOriginEnabled(),
       Kmt() !== "off" &&
         n6n({ relayMessageIds: pGt(e), isSynthetic: e.isSynthetic }),
@@ -6807,7 +6807,7 @@ function X_(e, t, o, d) {
   return;
 }
 function J_(e, t, o) {
-  let d = ZGe(e, t.client_platform, t.inbound_origin);
+  let d = getInboundOriginOverride(e, t.client_platform, t.inbound_origin);
   if (!o && d?.kind === "human" && iQe(t.origin, !1)) return;
   return d;
 }
@@ -6830,8 +6830,8 @@ function ey({
       !o &&
       e.inbound_origin === void 0 &&
       (e.client_platform === void 0 ||
-        YGe(e.client_platform) ||
-        cdt(e.client_platform)) &&
+        isClaudeAiClientPlatform(e.client_platform) ||
+        isClaudeCodeClientPlatform(e.client_platform)) &&
       !E;
   return {
     ...(E && { skipAttachments: !0 }),
@@ -6839,8 +6839,8 @@ function ey({
   };
 }
 async function Sf(e, t) {
-  await iqe();
-  let o = t.dequeueAllMatching(tm);
+  await settleHeldPeerMessagesOnShutdown();
+  let o = t.dequeueAllMatching(isFromCurrentAgent);
   sfe(o.filter(AC), "session teardown");
   for (let d of o)
     if (d.uuid !== void 0) e.onCommandLifecycle?.(d.uuid, "discarded");
@@ -6860,7 +6860,7 @@ function Pa(e, t, o) {
   if (d !== void 0) e.onCommandLifecycle?.(d, Ff());
 }
 function Ff() {
-  return c6n() ? "discarded" : "refused";
+  return isInboundShuttingDown() ? "discarded" : "refused";
 }
 function wf(e) {
   return e.type === "system" && e.subtype === "informational";
@@ -6934,11 +6934,11 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
   if (
     (kl.subscribe(re),
     kl.subscribe(() => {
-      qee("policy-accepts");
+      reapplyInboundPolicy("policy-accepts");
     }),
     Aat(() => re("policySettings")),
-    CPn(),
-    Db("runHeadless_entry"),
+    startHeadlessTurn(),
+    markHeadlessCheckpoint("runHeadless_entry"),
     logEvent("tengu_timer", {
       event: S("startup"),
       durationMs: Math.round(process.uptime() * 1000),
@@ -6946,11 +6946,11 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
       mcpClientCount: C.configuredMcpServerCount,
       resumed: !!(C.resume || C.continue),
     }),
-    await dSe(C.storageV5, C.credentials))
+    await shouldShowGroveNotice(C.storageV5, C.credentials))
   )
-    await qBn(C.credentials);
+    await printGroveNotice(C.credentials);
   if (
-    (Db("after_grove_check"),
+    (markHeadlessCheckpoint("after_grove_check"),
     df().catch((Oe) => logError(ge(Oe))),
     C.resumeSessionAt && !C.resume)
   ) {
@@ -7032,7 +7032,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
   let ve =
       xe && U.start
         ? import("../../02-功能模块/云目录同步-Git/startWorkerDirSync.45jsr6k0.js")
-            .then((Oe) => Oe.startWorkerDirSync(Q()))
+            .then((Oe) => Oe.startWorkerDirSync(getCwd()))
             .catch(() => (writeDiagnosticsEvent("warn", "dir_sync_worker_import_failed", {}), null))
         : void 0,
     je = sf({
@@ -7049,7 +7049,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
       ? Ey({
           configHome: je.configHome,
           session: e,
-          repoRoot: Q(),
+          repoRoot: getCwd(),
           storageV5: C.storageV5,
           workerDirSync: ve,
         })
@@ -7094,8 +7094,8 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
     SDK_OAUTH_REFRESH_ENTRYPOINTS.has(process.env.CLAUDE_CODE_ENTRYPOINT ?? "")
   )
     pje(() => le.requestOAuthTokenRefresh());
-  if (a.CLAUDE_CODE_SDK_HAS_HOST_AUTH_REFRESH && Hd()) {
-    let Oe = Nx(process.env.CLAUDE_CODE_HOST_AUTH_REFRESH_TIMEOUT_MS) || void 0;
+  if (a.CLAUDE_CODE_SDK_HAS_HOST_AUTH_REFRESH && isDesktopHostEntrypoint()) {
+    let Oe = parseNumericValue(process.env.CLAUDE_CODE_HOST_AUTH_REFRESH_TIMEOUT_MS) || void 0;
     mrt(() => le.requestHostAuthTokenRefresh(Oe));
   }
   if (C.outputFormat === "stream-json") zc(e.host);
@@ -7146,7 +7146,7 @@ Error: sandbox required but unavailable: ${Bn}
 
 `);
   } else if (SandboxManager.isSandboxingEnabled()) {
-    Br("before_sandbox_init");
+    profileCheckpoint("before_sandbox_init");
     try {
       await SandboxManager.initialize(
         qu(
@@ -7175,7 +7175,7 @@ Error: sandbox required but unavailable: ${Bn}
         Pr(1, "other"));
       return;
     }
-    Br("after_sandbox_init");
+    profileCheckpoint("after_sandbox_init");
   }
   if (!Bn) {
     let Oe = SandboxManager.getMaskCredentialWarning();
@@ -7194,8 +7194,8 @@ Error: sandbox required but unavailable: ${Bn}
       storageV5: C.storageV5,
       credentials: C.credentials,
     });
-  (Db("before_loadInitialMessages"),
-    Br("before_loadInitialMessages", { once: !0 }));
+  (markHeadlessCheckpoint("before_loadInitialMessages"),
+    profileCheckpoint("before_loadInitialMessages", { once: !0 }));
   let Ft = o(),
     On = T2();
   gde.of(e).registry = On;
@@ -7287,7 +7287,7 @@ Error: sandbox required but unavailable: ${Bn}
     C.restrictedStartupModel &&
     uy(C.userSpecifiedModel, C.restrictedStartupModel)
   ) {
-    let Oe = Lh(C.restrictedStartupModel, getMainLoopModel());
+    let Oe = formatModelRestrictedMessage(C.restrictedStartupModel, getMainLoopModel());
     if (
       !sn.some(
         (Vt) =>
@@ -7320,7 +7320,7 @@ Error: sandbox required but unavailable: ${Bn}
       process.stderr
         .write(`Warning: ${Vt.skippedLinks} tracked ${Vt.skippedLinks === 1 ? "path was" : "paths were"} skipped: ${mAt}. Run with --debug for the paths.
 `);
-    (Kn(`Files rewound to state at message ${C.rewindFiles}
+    (writeToStdout(`Files rewound to state at message ${C.rewindFiles}
 `),
       Pr(0));
     return;
@@ -7370,7 +7370,7 @@ Error: sandbox required but unavailable: ${Bn}
     );
   if (C.permissionPromptToolName)
     an = an.filter((Oe) => !matchesToolName(Oe, C.permissionPromptToolName));
-  let or = _on(sn);
+  let or = extractSendMessagePins(sn);
   if (Object.keys(or).length > 0) d((Oe) => ({ ...Oe, sendMessagePins: or }));
   let Ut = (Oe) => {
       withDeadline(
@@ -7504,12 +7504,12 @@ Error: sandbox required but unavailable: ${Bn}
       level: "error",
     });
   }
-  (Db("after_loadInitialMessages"),
-    Br("after_loadInitialMessages", { once: !0 }),
+  (markHeadlessCheckpoint("after_loadInitialMessages"),
+    profileCheckpoint("after_loadInitialMessages", { once: !0 }),
     fe("transcript_hydrated", `messages=${sn.length}`));
   let Zr = getUserSpecifiedModelSetting();
   (await xAt({ sessionModelIsProviderId: Zr != null && !modelSettingResolvesThroughModelStrings(Zr) }),
-    Db("after_modelStrings"));
+    markHeadlessCheckpoint("after_modelStrings"));
   let rs = C.outputFormat === "json" && C.verbose,
     Ir = [],
     zn,
@@ -7518,7 +7518,7 @@ Error: sandbox required but unavailable: ${Bn}
     lr = 0,
     eo = !1,
     Or = [];
-  (Db("before_runHeadlessStreaming"), fe("starting_query_loop"));
+  (markHeadlessCheckpoint("before_runHeadlessStreaming"), fe("starting_query_loop"));
   for await (let Oe of _y(
     e,
     le,
@@ -7597,14 +7597,14 @@ Error: sandbox required but unavailable: ${Bn}
         return;
       }
       if (C.verbose) {
-        Kn(
+        writeToStdout(
           b(Ir) +
             `
 `,
         );
         break;
       }
-      Kn(
+      writeToStdout(
         b(zn) +
           `
 `,
@@ -7629,7 +7629,7 @@ Error: sandbox required but unavailable: ${Bn}
               ? zn.result
               : `${Ct.partialForResult}
 ${zn.result}`;
-          Kn(
+          writeToStdout(
             Oe.endsWith(`
 `)
               ? Oe
@@ -7640,21 +7640,21 @@ ${zn.result}`;
           break;
         }
         case "error_during_execution":
-          Kn("Execution error");
+          writeToStdout("Execution error");
           break;
         case "error_max_turns":
-          Kn(`Error: Reached max turns (${C.maxTurns})`);
+          writeToStdout(`Error: Reached max turns (${C.maxTurns})`);
           break;
         case "error_max_budget_usd":
-          Kn(`Error: Exceeded USD budget (${C.maxBudgetUsd})`);
+          writeToStdout(`Error: Exceeded USD budget (${C.maxBudgetUsd})`);
           break;
         case "error_max_structured_output_retries":
-          Kn(
+          writeToStdout(
             `Error: ${zn.errors[0] ?? "Failed to provide valid structured output after maximum retries"}`,
           );
       }
   }
-  if ((vPn(), isExtractModeActive())) await k_.drainPendingExtraction(e.host);
+  if ((reportHeadlessTurnMetrics(), isExtractModeActive())) await k_.drainPendingExtraction(e.host);
   (await flushPendingAsyncRewakeHooks(),
     await Promise.race([
       Promise.all([
@@ -7680,9 +7680,9 @@ ${zn.result}`;
   (sessionTransportRegistry.of(e).setActive(void 0),
     Pr((zn?.type === "result" && zn?.is_error) || dr ? 1 : 0));
 }
-var ry = new Set([mt, Vh, so, Ni]);
+var ry = new Set([AGENT_TOOL_NAME, TASK_TOOL_NAME, SKILL_TOOL_NAME, Ni]);
 function oy(e) {
-  return typeof e === "string" && (ry.has(e) || e.startsWith(uP));
+  return typeof e === "string" && (ry.has(e) || e.startsWith(SKILL_TOOL_NAME_PREFIX));
 }
 function Lf(e, t, o, d) {
   let _ = e?.external?.pending_action,
@@ -7871,7 +7871,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     ut = PluginStateStore.over(ve);
   if (
     (e.mcpSessionWiring.registerConnections(je),
-    MNe.of(e).acquire(PAe.over(ve)),
+    ComputerUseLockOwnerContext.of(e).acquire(ComputerUseMcpStateStore.over(ve)),
     t instanceof Uz)
   )
     $m(t.sessionState, v);
@@ -7897,7 +7897,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       AC(p) ||
       p.pollEmptyDispatch === !0 ||
       p.passive === !0,
-    mn = () => U.getCommandQueue().some((p) => tm(p) && !Wt(p)),
+    mn = () => U.getCommandQueue().some((p) => isFromCurrentAgent(p) && !Wt(p)),
     Xt = !1,
     Gn = !1,
     Vn = Date.now(),
@@ -7989,7 +7989,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     },
     Wo = () =>
       vr !== null &&
-      U.getCommandQueue().some((p) => vr.has(p) && tm(p) && !Wt(p)),
+      U.getCommandQueue().some((p) => vr.has(p) && isFromCurrentAgent(p) && !Wt(p)),
     Zr = () => {
       if (fo && !Er && !Wo()) po();
     },
@@ -8007,7 +8007,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   function Oe(p, T) {
     return {
       session_url: wa(p.bridgeSessionId, p.sessionIngressUrl),
-      connect_url: Jat(p.environmentId, p.sessionIngressUrl),
+      connect_url: buildSessionWebUrl(p.environmentId, p.sessionIngressUrl),
       environment_id: p.environmentId,
       bridge_epoch: T,
       bridge_session_id: p.bridgeSessionId,
@@ -8123,7 +8123,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   }
   function Vo() {
     if (!isSdkBridgeStateAnnounceEnabled()) return;
-    Vs(Ro(_c(v().toolPermissionContext.mode), tr()));
+    Vs(Ro(getExternalPermissionMode(v().toolPermissionContext.mode), tr()));
   }
   if (
     (yse(() => {
@@ -8136,11 +8136,11 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     });
   let Ti = () => {
     if ((writeDiagnosticsEvent("info", "shutdown_signal", { signal: "SIGINT" }), $s())) {
-      fB();
+      markStdoutDrainExternallyClocked();
       return;
     }
     if (Ut && !Ut.signal.aborted) Ut.abort(userAbortReason("user-cancel"));
-    (zn.abort(), fB(), xn(0));
+    (zn.abort(), markStdoutDrainExternallyClocked(), xn(0));
   };
   process.on("SIGINT", Ti);
   let Ks = !1,
@@ -8169,7 +8169,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           run_phase: fromEnum(it ?? "init"),
           exit_code:
             typeof process.exitCode === "number" ? process.exitCode : void 0,
-          user_message_uuid: Ee(_r),
+          user_message_uuid: sanitizeAnalyticsId(_r),
         }),
           (qr = !0),
           (Tr = void 0),
@@ -8209,10 +8209,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   }
   if (
     ((t.sessionState.onPermissionModeChanged = (p) => {
-      let T = _c(p),
+      let T = getExternalPermissionMode(p),
         x = _o(T);
       if (isSdkBridgeStateAnnounceEnabled()) Vs(Ro(T, x));
-      qee("mode-changed");
+      reapplyInboundPolicy("mode-changed");
     }),
     w.planModeOnResume === "restored" || w.planModeOnResume === "declined")
   )
@@ -8222,7 +8222,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       let T = hs.get(p);
       if (T !== void 0) (clearTimeout(T), hs.delete(p));
     };
-  (lqe((p) => {
+  (setPeerHoldReleasedHandler((p) => {
     for (let T of p) {
       Ss(T);
       let x = en.laneOf(T),
@@ -8230,18 +8230,18 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       if (r !== void 0) t.onCommandLifecycle?.(r, "queued");
     }
   }),
-    oqe((p, T, x) => {
+    setPeerHeldHandler((p, T, x) => {
       if ((Ss(p), x !== "mode-mismatch" && x !== "no-mode-asserted")) return;
       let r = dV();
       if (r <= 0) return;
       let L = setTimeout(
         (de, V, W, Se) => {
-          (V.delete(de), qee("policy-accepts"));
-          let Ce = l6n(de);
+          (V.delete(de), reapplyInboundPolicy("policy-accepts"));
+          let Ce = getAnnouncedHoldCause(de);
           if (
             (Ce === "mode-mismatch" || Ce === "no-mode-asserted") &&
             !V.has(de) &&
-            OPe(de, "cancelled") === "dropped"
+            resolveHeldPeerMessage(de, "cancelled") === "dropped"
           )
             (n(
               "[cross-session-inbound] headless: held peer message expired (no approval surface) \u2014 dropped with an expired receipt",
@@ -8256,7 +8256,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       );
       (L.unref(), hs.set(p, L));
     }),
-    aqe((p) => {
+    setPeerHoldDroppedHandler((p) => {
       (Ss(p), vf(t, en, p));
     }));
   {
@@ -8270,7 +8270,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     });
   }
   if (
-    (rqe(() => {
+    (setInboundModeGetter(() => {
       let p = v().toolPermissionContext;
       return {
         mode: p.mode,
@@ -8280,7 +8280,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     a.CLAUDE_CODE_REMOTE || w.sdkUrl)
   ) {
     let p;
-    sqe((T) => {
+    setInboundAvailabilityPublisher((T) => {
       let x = T ? "available" : "unavailable";
       if (x === p) return;
       ((p = x),
@@ -8298,7 +8298,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       });
     };
     ((t.sessionState.onActiveGoalChanged = p), p(v().activeGoal));
-    let T = TFn((r) => {
+    let T = createRemoteAutocompactStateEmitter((r) => {
         Ct.enqueue({
           type: "autocompact_state",
           value: {
@@ -8396,11 +8396,11 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       builtin_tool_calls: x - r - L,
     };
   }
-  let ao = p_t(E, Ca(), tA),
+  let ao = p_t(E, Ca(), FILE_STATE_MAX_ENTRIES),
     ho = Promise.withResolvers();
   if (isResumeFrameSeedEligible()) {
     if (
-      (ebe(C, NGe(E), { legacyConflict: isArtifactConflictLegacy() }),
+      (rehydrateArtifactFrameState(C, collectArtifactStateFromMessages(E), { legacyConflict: isArtifactConflictLegacy() }),
       E.some((p) => p.type !== "system"))
     )
       cFn({
@@ -8419,8 +8419,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         },
       });
   }
-  (fkn("messages", () => ({ entries: ct.length })),
-    fkn("file_state_cache", () => ({
+  (registerMemoryAttributor("messages", () => ({ entries: ct.length })),
+    registerMemoryAttributor("file_state_cache", () => ({
       entries: ao.size,
       bytes: ao.calculatedSize,
     })));
@@ -8429,7 +8429,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     Do = w.sessionHooks ?? T2(),
     as = z2(),
     lo = Ude(getCurrentSessionIsolationLatch() ?? l5e(E, _), (p) => saveIsolationLatch(p, w.storageV5)),
-    Go = DT(tA);
+    Go = createFileStateCache(FILE_STATE_MAX_ENTRIES);
   function ls() {
     for (let [p, T] of Go.entries()) {
       let x = ao.get(p);
@@ -8451,8 +8451,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       value: X.message.message.content,
       uuid: X.message.isMeta ? tr() : (X.message.uuid ?? tr()),
       isMeta: X.message.isMeta,
-      origin: r7e(X.message),
-      skipAttachments: BNe(X.message),
+      origin: resolveQueueOrigin(X.message),
+      skipAttachments: shouldSkipAttachments(X.message),
       ...(X.message.taskDelivery && { taskDelivery: X.message.taskDelivery }),
       ...tXe(X.message),
     };
@@ -8693,7 +8693,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     for (let r of x)
       if (
         typeof r.message.content === "string" &&
-        r.message.content.includes(`<${vu}>`)
+        r.message.content.includes(`<${LOCAL_COMMAND_STDOUT_TAG}>`)
       )
         Ct.enqueue({
           type: "user",
@@ -8709,7 +8709,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   function cs(p, T) {
     if (p === Oi) return;
     Oi = p;
-    let x = Ht(Lh(p, T ?? getMainLoopModel()), "warning");
+    let x = Ht(formatModelRestrictedMessage(p, T ?? getMainLoopModel()), "warning");
     (ct.push(x), Ct.enqueue({ ...x, session_id: K() }));
   }
   function Ua(p) {
@@ -9034,16 +9034,16 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         let x = ir();
         try {
           let r = v().mcp.clients.find((Sn) => Sn.name === p);
-          if (r?.type !== "cached" || Jn(p, r.config) !== Jn(p, T)) return;
+          if (r?.type !== "cached" || getMcpServerConfigCacheKey(p, r.config) !== getMcpServerConfigCacheKey(p, T)) return;
           let L = Yt(),
             de = mcpDialBlockCause(p, T),
             V =
               de === "managed-policy"
-                ? { name: p, type: "failed", config: T, ...Hv(de) }
+                ? { name: p, type: "failed", config: T, ...getBlockedServerErrorFields(de) }
                 : isMcpServerDisabled(p)
                   ? { name: p, type: "disabled", config: T }
                   : de
-                    ? { name: p, type: "failed", config: T, ...Hv(de) }
+                    ? { name: p, type: "failed", config: T, ...getBlockedServerErrorFields(de) }
                     : void 0;
           if (V) {
             if ((L.clearServerCache(p, T).catch(() => {}), de))
@@ -9070,7 +9070,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           if (W.type === "needs-auth") {
             Fo(p, {
               client: W,
-              tools: ak(p, T),
+              tools: createMcpAuthStubTools(p, T),
               commands: [],
               attemptEpoch: x,
             });
@@ -9087,7 +9087,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             [Je, Ye, at, ht] = await Promise.all([
               L.fetchToolsForClient(W, w.storageV5),
               L.fetchCommandsForClient(W),
-              Mu() && Ce
+              isMcpSkillsEnabled() && Ce
                 ? S_.fetchMcpSkillsForClient(W, w.storageV5)
                 : Promise.resolve([]),
               Ce ? L.fetchResourcesForClient(W) : Promise.resolve([]),
@@ -9137,7 +9137,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         let de = mcpDialBlockCause(p, T);
         if (de) {
           Fo(p, {
-            client: { name: p, type: "failed", config: T, ...Hv(de) },
+            client: { name: p, type: "failed", config: T, ...getBlockedServerErrorFields(de) },
             tools: [],
             commands: [],
             attemptEpoch: x,
@@ -9170,7 +9170,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         if (
           Fo(p, {
             ...W,
-            tools: W.client.type === "needs-auth" ? ak(p, T) : W.tools,
+            tools: W.client.type === "needs-auth" ? createMcpAuthStubTools(p, T) : W.tools,
             attemptEpoch: x,
           }) === "superseded" ||
           W.client.type !== "failed" ||
@@ -9182,7 +9182,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     bd = (p, T) => {
       let { name: x, config: r } = p,
         L = v().mcp.clients.find((de) => de.name === x);
-      if (L?.type !== "cached" || Jn(x, L.config) !== Jn(x, r)) return;
+      if (L?.type !== "cached" || getMcpServerConfigCacheKey(x, L.config) !== getMcpServerConfigCacheKey(x, r)) return;
       if (
         (Fo(x, { client: p, tools: [], commands: [], attemptEpoch: ir() }),
         kde(p))
@@ -9191,13 +9191,13 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       if (T) Oct(x, r);
     };
   function rp() {
-    if ((x4(), !Ws())) return;
+    if ((initMcpDiscoveryCacheKillSwitch(), !Ws())) return;
     (jt().headlessMcpTeardown?.(),
       Pxe((V) => {
         (Zs([V]), La([V]));
       }));
-    let p = O4.subscribe(ep),
-      T = _7.subscribe((V, W) => {
+    let p = cachedRowAdoptEmitter.subscribe(ep),
+      T = cachedRowDialFailedEmitter.subscribe((V, W) => {
         (Yt().takeSettledCachedDialFailure(V.name, V.config), bd(V, W));
       }),
       x = Act(
@@ -9239,7 +9239,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           let Se = V.takeSettledCachedDialFailure(W.name, W.config),
             Ce = await V.peekSettledConnection(W.name, W.config);
           if (Ce?.type === "connected" || Ce?.type === "needs-auth") {
-            O4.emit(W.name, W.config);
+            cachedRowAdoptEmitter.emit(W.name, W.config);
             continue;
           }
           if (Se && !(await V.hasUnsettledDial(W.name, W.config)))
@@ -9249,7 +9249,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   }
   let Cd = !1;
   function ri() {
-    if ((x4(), !Ws())) return;
+    if ((initMcpDiscoveryCacheKillSwitch(), !Ws())) return;
     if (!Cd) ((Cd = !0), Yt().seedMcpIdentityCheck());
   }
   let Hi = new Set(),
@@ -9360,7 +9360,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           let p = performance.now(),
             T = await d.catch((x) => (logError(x), []));
           if (!ja) Rs = T;
-          Ts("commands_deferred_join_ms", performance.now() - p, p);
+          recordStartupPhase("commands_deferred_join_ms", performance.now() - p, p);
         })();
   function ps(p = v().mcp.commands) {
     return E6e(Rs, p, lne());
@@ -9390,10 +9390,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       T = v();
     return [
       p,
-      _c(T.toolPermissionContext.mode),
+      getExternalPermissionMode(T.toolPermissionContext.mode),
       pU(p, T.fastMode),
       GN(p) ?? "",
-      A9(p, Ya(T)) ?? "",
+      getEffectiveEffortLevel(p, Ya(T)) ?? "",
     ].join("\x00");
   }
   function Lo(p, T) {
@@ -9405,7 +9405,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           return;
         }
         let x = Zt,
-          r = await getSlashCommandToolSkills(Q(), w.storageV5);
+          r = await getSlashCommandToolSkills(getCwd(), w.storageV5);
         if (Zt !== x) return;
         let L = Dd();
         if (!T?.force && L === As) {
@@ -9487,7 +9487,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           ode(),
           ym(),
           getResponseFromCache(),
-          mnt(),
+          isCachedGitHubRepo(),
           x,
         ],
         L = xd;
@@ -9909,7 +9909,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     }
     if (wo)
       ((wo.end = performance.now()),
-        Ts("plugin_mcp_reconcile_ms", wo.end - wo.start, wo.start));
+        recordStartupPhase("plugin_mcp_reconcile_ms", wo.end - wo.start, wo.start));
     return T;
   }
   let Xo = null,
@@ -9927,7 +9927,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     Xa = !1,
     Ja = !1,
     gs;
-  if (!uo())
+  if (!isSimpleMode())
     if (a.CLAUDE_CODE_SYNC_PLUGIN_INSTALL) {
       ((gs =
         w.outputFormat === "stream-json"
@@ -9969,7 +9969,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               : null,
             L = performance.now();
           if (
-            (await zi(), Ts("registry_refresh_ms", performance.now() - L, L), r)
+            (await zi(), recordStartupPhase("registry_refresh_ms", performance.now() - L, L), r)
           )
             await Yd(r);
         } catch (r) {
@@ -10011,7 +10011,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     ((cr = [...T.allAgents, ...x]),
       Ji(),
       ei(w.storageV5, w.credentials).then(
-        (r) => M1({ plugin_count: r.enabled.length }),
+        (r) => addStartupContext({ plugin_count: r.enabled.length }),
         () => {},
       ));
   }
@@ -10036,7 +10036,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         ? W
         : { ...W, mcp: { ...W.mcp, suppressedPluginMcpServers: Ce } };
     }),
-      M1({ mcp_server_count: Object.keys(x).length }));
+      addStartupContext({ mcp_server_count: Object.keys(x).length }));
     let r = VW(),
       L = Object.create(null);
     for (let [W, Se] of Object.entries(x)) {
@@ -10074,7 +10074,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       r = Us(p, "plugins_sync");
     if (x === 0) {
       (r.catch((de) => logError(de)),
-        Ts("plugins_sync_mcp_ms", 0),
+        recordStartupPhase("plugins_sync_mcp_ms", 0),
         logEvent("tengu_plugins_sync_mcp_skipped", {}));
       return;
     }
@@ -10086,7 +10086,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     } catch (de) {
       logError(de);
     }
-    Ts("plugins_sync_mcp_ms", performance.now() - T);
+    recordStartupPhase("plugins_sync_mcp_ms", performance.now() - T);
   }
   let di = null,
     Za = 0;
@@ -10115,7 +10115,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               Xa = !0;
             }).catch(logError));
         if (
-          (Ts("plugins_sync_install_ms", performance.now() - p),
+          (recordStartupPhase("plugins_sync_install_ms", performance.now() - p),
           (Os = null),
           !Xo)
         ) {
@@ -10133,7 +10133,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             );
             (await zi(),
               await Yd(de),
-              Ts("plugin_state_refresh_inline_ms", performance.now() - L, L));
+              recordStartupPhase("plugin_state_refresh_inline_ms", performance.now() - L, L));
           } catch (de) {
             logError(de);
           }
@@ -10150,15 +10150,15 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             ),
               logEvent("tengu_sync_plugin_install_timeout", { timeout_ms: $i }));
         } else await Xo;
-        if ((Ts("plugin_install_ms", performance.now() - p, p), wo))
-          Ts(
+        if ((recordStartupPhase("plugin_install_ms", performance.now() - p, p), wo))
+          recordStartupPhase(
             "plugin_mcp_reconcile_ms",
             (wo.end ?? performance.now()) - wo.start,
             wo.start,
           );
         ((Xo = null),
           ji?.(),
-          Ts("plugin_install_total_ms", performance.now() - p, p));
+          recordStartupPhase("plugin_install_total_ms", performance.now() - p, p));
       }
     } finally {
       (gs?.({ status: "completed" }), (gs = void 0), ji?.());
@@ -10176,7 +10176,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   }
   async function cp(p, T, x) {
     let r = (Ye) => Ye.find((at) => at.type === "connected"),
-      L = T !== void 0 ? Tot(T) : Number.POSITIVE_INFINITY,
+      L = T !== void 0 ? parseIsoTimestamp(T) : Number.POSITIVE_INFINITY,
       de = Math.min(Date.now() + M_, Number.isNaN(L) ? Date.now() : L),
       V = !1;
     async function W(Ye) {
@@ -10256,7 +10256,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     Xd = () => {
       Zi().catch(logError);
     },
-    Jd = iM.subscribe(() => {
+    Jd = skillChangeDetector.subscribe(() => {
       (Xd(),
         getAgentDefinitionsWithOverrides(he(), w.storageV5)
           .then((p) => {
@@ -10442,10 +10442,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           ((Gn = !0), t.sessionState.notifyStateChanged("running"));
         };
       if (!Qe()) T();
-      if ((Ztn(e.ccrRecap), t.resetStallWatchdog(), Ki.stop(), oi)) await oi;
+      if ((resetCcrRecap(e.ccrRecap), t.resetStallWatchdog(), Ki.stop(), oi)) await oi;
       if (Ot) await Ot;
-      if ((Db("run_entry"), !tc))
-        ((tc = !0), Ts("first_message_read_ms", performance.now(), 0), qXn());
+      if ((markHeadlessCheckpoint("run_entry"), !tc))
+        ((tc = !0), recordStartupPhase("first_message_read_ms", performance.now(), 0), qXn());
       try {
         let V = performance.now();
         if (w.sdkUrl) {
@@ -10459,8 +10459,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 })));
         } else await ms();
         if (
-          (Ts("sdk_mcp_update_ms", performance.now() - V, V),
-          Db("after_updateSdkMcp"),
+          (recordStartupPhase("sdk_mcp_update_ms", performance.now() - V, V),
+          markHeadlessCheckpoint("after_updateSdkMcp"),
           Qa)
         ) {
           let W = performance.now(),
@@ -10468,7 +10468,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             Ce = sleep(Math.max(0, Se)).then(() => "timeout");
           if ((await Promise.race([Qa, Ce])) === "timeout")
             logEvent("tengu_skills_sync_wait_timeout", {});
-          (Ts("skills_sync_wait_ms", performance.now() - W, W),
+          (recordStartupPhase("skills_sync_wait_ms", performance.now() - W, W),
             await Zi(),
             (Qa = null));
         } else if ($d) {
@@ -10507,7 +10507,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           Ye = !1,
           at = !0,
           ht = 0,
-          Hn = (In) => tm(In) && In.mode === "orphaned-permission",
+          Hn = (In) => isFromCurrentAgent(In) && In.mode === "orphaned-permission",
           Wn = () => {
             let In = U.dequeue(Hn);
             if (In)
@@ -10535,11 +10535,11 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 let cn = U.peek(RO);
                 if (
                   cn !== void 0 &&
-                  YYn(cn, In) &&
+                  isPollEventWakeItem(cn, In) &&
                   U.peek(Hn) === void 0 &&
-                  U.peek((to) => tm(to) && Rce(to)) === void 0
+                  U.peek((to) => isFromCurrentAgent(to) && isVerifiedSlackHumanTurn(to)) === void 0
                 ) {
-                  let to = U.peek((Dr) => RO(Dr) && !AC(Dr) && sSn(Dr.mode));
+                  let to = U.peek((Dr) => RO(Dr) && !AC(Dr) && isKnownQueueMode(Dr.mode));
                   if (to !== void 0) return U.dequeue((Dr) => Dr === to);
                   return (
                     (Sn = cn),
@@ -10576,7 +10576,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               if (
                 (t.sessionState.notifyTurnStarting(V.mode, V.taskId),
                 Ei?.(),
-                !sSn(V.mode))
+                !isKnownQueueMode(V.mode))
               )
                 throw Error(
                   "only prompt commands are supported in streaming mode",
@@ -10611,7 +10611,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               ) {
                 for (let pe of cn)
                   if (pe.uuid && pe.uuid !== V.uuid) {
-                    let _e = cN(pe.origin);
+                    let _e = normalizeTaskNotificationOrigin(pe.origin);
                     Ct.enqueue({
                       type: "user",
                       message: { role: "user", content: pe.value },
@@ -10631,9 +10631,9 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   let _e = performance.now();
                   (await Is,
                     (Is = null),
-                    Ts("registry_refresh_join_ms", performance.now() - _e, _e));
+                    recordStartupPhase("registry_refresh_join_ms", performance.now() - _e, _e));
                 }
-                Db("before_mcp_prewait");
+                markHeadlessCheckpoint("before_mcp_prewait");
                 let pe = performance.now();
                 if (v().mcp.clients.length > zd)
                   await bf(v, re, Vd, {
@@ -10644,8 +10644,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       w.permissionPromptToolServerName,
                   });
                 else await lp;
-                (Ts("mcp_prewait_ms", performance.now() - pe, pe),
-                  Db("after_mcp_prewait"));
+                (recordStartupPhase("mcp_prewait_ms", performance.now() - pe, pe),
+                  markHeadlessCheckpoint("after_mcp_prewait"));
               }
               let to = v(),
                 Dr = Af(to.mcp.clients, kn, At.clients);
@@ -10734,7 +10734,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 let pe = await gn;
                 if (pe.kind === "fail") throw new Jl(pe.message);
               }
-              (Db("before_ask"), fKe());
+              (markHeadlessCheckpoint("before_ask"), fKe());
               let D = V,
                 F,
                 ue,
@@ -10747,7 +10747,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         `
 `,
                       );
-              await ((pe) => cKt(Ror(D), () => tJn(D.ccrTurnId, pe)))(() =>
+              await ((pe) => cKt(Ror(D), () => runWithCcrTurnId(D.ccrTurnId, pe)))(() =>
                 IAt(D.workload ?? w.workload, () =>
                   qft(Me, async () => {
                     let pe = !1,
@@ -10798,7 +10798,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         modelScheduledOrigin: D.modelScheduledOrigin,
                         wakeupSource: D.wakeupSource,
                         origin:
-                          cN(D.origin) ??
+                          normalizeTaskNotificationOrigin(D.origin) ??
                           (D.mode === "task-notification"
                             ? { kind: "task-notification" }
                             : void 0),
@@ -10866,7 +10866,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                 qe.subtype === "success"
                                   ? (qe.api_error_status ?? void 0)
                                   : void 0,
-                              user_message_uuid: Ee(_r),
+                              user_message_uuid: sanitizeAnalyticsId(_r),
                               ...Ko(Ze, Bo),
                             }),
                               (Tr = void 0),
@@ -10958,7 +10958,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         cs(Qt.blockedByAllowlist, An);
                       let qe = getMainLoopModel();
                       (reportBridgeModel(qe),
-                        wF(qe, v()),
+                        reportSessionEffort(qe, v()),
                         Lo("turn_end"),
                         iV(),
                         activeTimeTracker.endCLIActivity("print-ask"));
@@ -11061,14 +11061,14 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     (zt.inflightPromise = et.promise));
                 }
               }
-              (vPn(), dht(), CPn());
+              (reportHeadlessTurnMetrics(), dht(), startHeadlessTurn());
             }
           };
         do {
           for (let Sn of go()) Ct.enqueue(Sn);
           if ((await r(), U.peek(RO) !== void 0)) {
             if (
-              (Ztn(e.ccrRecap),
+              (resetCcrRecap(e.ccrRecap),
               t.sessionState.getState() === "idle" && !isExiting() && (Gn || !Cn))
             )
               t.sessionState.notifyStateChanged("running");
@@ -11161,7 +11161,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   })
                 )
                   (t.sessionState.notifyStateChanged("idle"),
-                    SDt(e.ccrRecap, t.sessionState));
+                    maybeStartCcrRecap(e.ccrRecap, t.sessionState));
                 (L(), await sleep(100));
               }
             }
@@ -11226,7 +11226,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             duration_api_ms: 0,
             saw_retry: !1,
             saw_compact: !1,
-            user_message_uuid: Ee(_r),
+            user_message_uuid: sanitizeAnalyticsId(_r),
           }),
             (qr = !0));
         try {
@@ -11281,7 +11281,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           else if (!V && !Gn && Cn && !Qe() && !isExiting() && !Fs()) nl();
           rc();
           for (let Se of go()) Ct.enqueue(Se);
-          if (W) SDt(e.ccrRecap, t.sessionState);
+          if (W) maybeStartCcrRecap(e.ccrRecap, t.sessionState);
         }
         if (((gt = !1), (Xt = !1), Ki.start(), vt !== void 0 && !$s())) {
           let V = vt;
@@ -11327,7 +11327,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     ci()
                   )
                     (t.sessionState.notifyStateChanged("idle"),
-                      SDt(e.ccrRecap, t.sessionState));
+                      maybeStartCcrRecap(e.ccrRecap, t.sessionState));
                   break;
                 }
               else nn = !1;
@@ -11470,7 +11470,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       let p = U.getCommandQueueSnapshot();
       if (
         (clearTimeout(sl),
-        p.some((x) => x.agentId && !tm(x) && x.mode === "task-notification"))
+        p.some((x) => x.agentId && !isFromCurrentAgent(x) && x.mode === "task-notification"))
       )
         ((sl = setTimeout((x) => x.recheckCommandQueue(), 60000, U)),
           sl.unref?.());
@@ -11740,7 +11740,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     };
   async function hp(p, T) {
     try {
-      let x = await cd(Q()),
+      let x = await cd(getCwd()),
         r,
         L;
       try {
@@ -12230,10 +12230,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         },
         x = E.some((r) => r.type !== "system") || xBn();
       if (
-        (Ts("input_ready_ms", performance.now(), 0),
+        (recordStartupPhase("input_ready_ms", performance.now(), 0),
         zXn(),
         writeDiagnosticsEvent("info", "cli_message_loop_started"),
-        Db("stdin_listen_started"),
+        markHeadlessCheckpoint("stdin_listen_started"),
         a.CLAUDE_CODE_RESUME_INTERRUPTED_TURN &&
           t.isRemoteTransport() &&
           (await t.restoredWorkerState)?.internal?.workflow_launch != null)
@@ -12288,19 +12288,19 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 ((fo = !0),
                   ($o = Er),
                   (vr = new WeakSet(
-                    U.getCommandQueue().filter((Ae) => tm(Ae) && !Wt(Ae)),
+                    U.getCommandQueue().filter((Ae) => isFromCurrentAgent(Ae) && !Wt(Ae)),
                   )));
               let D = ns(),
                 F = killAutoReactSubscriptions(D.taskRegistry, { durable: !1 }),
                 ue = DV(U, { leaveArtifactRooms: !0 });
               ul();
               let ie = U.getCommandQueueSnapshot()
-                  .filter(tm)
+                  .filter(isFromCurrentAgent)
                   .map((Ae) => Ae.uuid)
                   .filter((Ae) => Ae !== void 0),
                 Me = qKe();
               if (r.request.cancel_queued === !0) {
-                let Ae = U.removeByFilter(tm, { reason: "cleared_on_cancel" });
+                let Ae = U.removeByFilter(isFromCurrentAgent, { reason: "cleared_on_cancel" });
                 (ki(Ae),
                   (Me = E_t(Ae)),
                   sfe(Ae.filter(AC), "interrupt cleared the queue"));
@@ -12479,12 +12479,12 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 });
               if (r.request.agentProgressSummaries) BDn(!0);
               let _e = !p;
-              if ((T(), _e && Bhe())) a4n(e.host);
+              if ((T(), _e && isClaudeDesktopAppSession())) a4n(e.host);
               if (U.peek(RO) !== void 0) Ar();
             } else if (r.request.subtype === "set_permission_mode") {
               let D = r.request,
                 F = parsePermissionMode(D.mode);
-              if (F === void 0 || !E1(F)) {
+              if (F === void 0 || !isSelectablePermissionMode(F)) {
                 Be(r, UNRECOGNIZED_PERMISSION_MODE_ERROR);
                 continue;
               }
@@ -12636,7 +12636,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     : "(error detail unavailable)",
                   Me = ue
                     ? ue(
-                        `The session's working directory is ${Q()}.`,
+                        `The session's working directory is ${getCwd()}.`,
                         "The session stayed in its previous working directory.",
                       )
                     : "The session stayed in its previous working directory.";
@@ -12698,10 +12698,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 Yn(r, "list_models", D);
               }
             else if (r.request.subtype === "get_session_cost")
-              Xe(r, { text: pt(fV()) });
+              Xe(r, { text: stripAnsi(fV()) });
             else if (r.request.subtype === "get_usage")
               try {
-                let D = await o3e({
+                let D = await collectUsageData({
                   storageV5: w.storageV5,
                   credentials: w.credentials,
                   includeBehaviors: !isRemoteTransportPersistent(e) && r.request.skip_behaviors !== !0,
@@ -12713,7 +12713,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             else if (r.request.subtype === "mcp_message") {
               let D = r.request,
                 F = kn.find((ue) => ue.name === D.server_name);
-              if (F && F.type === "connected") XYn(F, D.message);
+              if (F && F.type === "connected") deliverMcpTransportMessage(F, D.message);
               Xe(r);
             } else if (r.request.subtype === "rewind_files") {
               let D = v(),
@@ -13349,7 +13349,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         matchingRuleForInput(ft, v().toolPermissionContext, "read", "ask") !==
                           null
                       )) {
-                        let tt = qy(Ze.bytes.toString("utf-8"));
+                        let tt = normalizeFileContent(Ze.bytes.toString("utf-8"));
                         Go.set(D, {
                           content: tt,
                           timestamp: He,
@@ -13478,7 +13478,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             else if (r.request.subtype === "reload_output_styles")
               try {
                 (Lmt(), yDe());
-                let D = await dX(Q(), w.storageV5);
+                let D = await dX(getCwd(), w.storageV5);
                 Xe(r, { available_output_styles: Object.keys(D) });
               } catch (D) {
                 Yn(r, "reload_output_styles", D);
@@ -13495,8 +13495,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   r,
                   `MCP server ${Qn(F)} is blocked by enterprise managed policy`,
                 );
-              else if (isMcpServerDisabled(F)) Be(r, xrn(F, "reconnecting"));
-              else if (ie) Be(r, _Lt(F, "reconnecting"));
+              else if (isMcpServerDisabled(F)) Be(r, formatServerDisabledBeforeAction(F, "reconnecting"));
+              else if (ie) Be(r, formatServerNotApprovedBeforeAction(F, "reconnecting"));
               else {
                 let Me =
                     D.mcp.clients.find((pe) => pe.name === F) ??
@@ -13769,7 +13769,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   r,
                   Ae === "managed-policy"
                     ? `MCP server ${Qn(F)} is blocked by enterprise managed policy`
-                    : _Lt(F, "enabling"),
+                    : formatServerNotApprovedBeforeAction(F, "enabling"),
                 );
               else {
                 (setMcpServerEnabled(F, !0, w.storageV5), Ui(F, Me));
@@ -13855,8 +13855,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   r,
                   `MCP server ${Qn(D)} is blocked by enterprise managed policy`,
                 );
-              else if (isMcpServerDisabled(D)) Be(r, xrn(D, "authenticating"));
-              else if (Me) Be(r, _Lt(D, "authenticating"));
+              else if (isMcpServerDisabled(D)) Be(r, formatServerDisabledBeforeAction(D, "authenticating"));
+              else if (Me) Be(r, formatServerNotApprovedBeforeAction(D, "authenticating"));
               else if (ie.kind === "claudeai-proxy") {
                 let Ae = fY(ie.config);
                 if (!Ae)
@@ -13948,7 +13948,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       );
                       return;
                     }
-                    if ((Aee(w.storageV5), isMcpServerDisabled(D))) return;
+                    if ((clearMcpNeedsAuthCache(w.storageV5), isMcpServerDisabled(D))) return;
                     if (isMcpDialBlockedByPolicy(D, ue)) {
                       n(
                         `MCP server ${D} blocked by managed policy after OAuth \u2014 skipping reconnect`,
@@ -14027,7 +14027,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               (_s?.service.cleanup(),
                 logEvent("tengu_oauth_flow_start", { loginWithClaudeAi: D ?? !0 }));
               let ue = !1,
-                ie = new ck(),
+                ie = new OAuthLoginFlow(),
                 Me = getSettings_DEPRECATED(),
                 Ae =
                   Me.forceLoginMethod !== void 0 &&
@@ -14065,7 +14065,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       ...xo.getDynamicMcpState().clients,
                     ]);
                     if (
-                      (await ple(et, {
+                      (await finalizeOAuthLogin(et, {
                         storageV5: w.storageV5,
                         credentials: w.credentials,
                       }),
@@ -14228,7 +14228,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                             name: D,
                             type: "failed",
                             config: Ae.config,
-                            ...Hv(Le),
+                            ...getBlockedServerErrorFields(Le),
                           }
                         : isMcpServerDisabled(D)
                           ? { name: D, type: "disabled", config: Ae.config }
@@ -14237,7 +14237,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                 name: D,
                                 type: "failed",
                                 config: Ae.config,
-                                ...Hv(Le),
+                                ...getBlockedServerErrorFields(Le),
                               }
                             : {
                                 name: D,
@@ -14479,7 +14479,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                           : { ...yn, sessionEffort: Pt },
                       ),
                         iA(w.storageV5),
-                        wF(getMainLoopModel(), v()),
+                        reportSessionEffort(getMainLoopModel(), v()),
                         Lo("state_change"));
                     }
                     if (hve(We.effortLevel) === "ultracode")
@@ -14505,7 +14505,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       }),
                       lt)
                     )
-                      (iA(w.storageV5), wF(getMainLoopModel(), v()), Lo("state_change"));
+                      (iA(w.storageV5), reportSessionEffort(getMainLoopModel(), v()), Lo("state_change"));
                   }
                   if (Ae) Xe(r);
                   return !0;
@@ -14649,7 +14649,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               let ue = (Ut && !Ut.signal.aborted ? Ut : createAbortController()).signal;
               Mn(async () => {
                 try {
-                  let ie = await S4(D, ue, w.credentials);
+                  let ie = await generateSessionTitle(D, ue, w.credentials);
                   if (ie && F) {
                     try {
                       saveAiGeneratedTitle(K(), ie, w.storageV5);
@@ -14657,7 +14657,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       if (Rt(Me)) n(`saveAiGeneratedTitle failed: ${Me}`);
                       else logError(Me);
                     }
-                    (getSdkHostedBridgeHandle()?.adoptLocalAiTitle?.(), mnn(ie));
+                    (getSdkHostedBridgeHandle()?.adoptLocalAiTitle?.(), syncTitleToRemoteSession(ie));
                   }
                   Xe(r, { title: ie });
                 } catch (ie) {
@@ -14829,7 +14829,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   let ue = await runUltrareviewHeadless(D, {
                       confirm: F,
                       overageConfirmed: v().ultrareviewOverageConfirmed,
-                      markOverageConfirmed: () => dee(C),
+                      markOverageConfirmed: () => markUltrareviewOverageConfirmed(C),
                       context: {
                         abortController: createAbortController(),
                         taskRegistry: Tm(v, C),
@@ -14872,7 +14872,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   cleared: Me = !1,
                 } = D.data;
                 logEvent("tengu_message_rated", {
-                  message_uuid: Ee(F),
+                  message_uuid: sanitizeAnalyticsId(F),
                   sentiment: fromEnum(ue),
                   surface: fromEnum(ie),
                   cleared: Me,
@@ -14956,7 +14956,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                               workspaceDiffComputeBudget: et,
                               getInitializeState: () => ({
                                 current_model: getMainLoopModel(),
-                                current_permission_mode: _c(
+                                current_permission_mode: getExternalPermissionMode(
                                   v().toolPermissionContext.mode,
                                 ),
                               }),
@@ -14970,11 +14970,11 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                   Qt = qe;
                                 });
                                 try {
-                                  let qe = eqe(Ke);
+                                  let qe = parseInboundUserEvent(Ke);
                                   if (!qe) return;
                                   let { uuid: ln } = qe;
                                   Mot(qe.clientPlatform, w.storageV5);
-                                  let _n = QGe(
+                                  let _n = classifyInboundOrigin(
                                       qe.content,
                                       qe.clientPlatform,
                                       qe.inboundOrigin,
@@ -14982,28 +14982,28 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                       qe.slackOrigin,
                                       qe.activityObservation,
                                     ),
-                                    Un = ZGe(
+                                    Un = getInboundOriginOverride(
                                       _n,
                                       qe.clientPlatform,
                                       qe.inboundOrigin,
                                     );
                                   (await tt, await Vv.of(e).tail);
-                                  let ur = IPe(_n);
+                                  let ur = getIngressRefuseCause(_n);
                                   if (ur !== void 0) {
-                                    (Gee(
+                                    (logInboundRefused(
                                       "bridge:onInboundMessage: dropped before attachment materialization",
                                       ur,
                                     ),
                                       Pa(t, ln, "bridge"));
                                     return;
                                   }
-                                  let Dn = Cce(Ke),
+                                  let Dn = parseFileAttachments(Ke),
                                     Gr = qe.content,
                                     { content: zr, inlinedImagePaths: Jo } =
                                       await dIt(
                                         Ke,
                                         Gr,
-                                        udt(
+                                        isHumanOriginTurn(
                                           _n,
                                           qe.clientPlatform,
                                           qe.inboundOrigin,
@@ -15012,10 +15012,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                         w.credentials,
                                       ),
                                     on = jQe(ln, {
-                                      isCrossSession: dqe({
+                                      isCrossSession: isCrossSessionIngress({
                                         ingressOrigin: _n,
                                         inboundOrigin: qe.inboundOrigin,
-                                        envelopePeer: tqe(qe.content),
+                                        envelopePeer: hasPeerEnvelope(qe.content),
                                       }),
                                     }),
                                     lt = {
@@ -15050,11 +15050,11 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                               }),
                                             ...(Un?.kind ===
                                               "task-notification" &&
-                                              JGe(void 0, qe.clientPlatform) ===
+                                              resolveTriggerPriority(void 0, qe.clientPlatform) ===
                                                 "later" && {
                                                 priority: "later",
                                               }),
-                                            ...(vce(
+                                            ...(isHumanRelayTurn(
                                               qe.clientPlatform,
                                               qe.inboundOrigin,
                                             ) && {
@@ -15068,7 +15068,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                           }),
                                     };
                                   en.mark(lt, "bridge");
-                                  let Pt = pqe(_n, lt);
+                                  let Pt = gateInboundMessageByOrigin(_n, lt);
                                   if (Pt !== "accept") {
                                     if (Pt === "refused") Pa(t, ln, "bridge");
                                     return;
@@ -15137,7 +15137,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                   let Dn = Cr();
                                   return (
                                     cs(Qt, Dn),
-                                    { ok: !1, error: Lh(Qt, Dn ?? getMainLoopModel()) }
+                                    { ok: !1, error: formatModelRestrictedMessage(Qt, Dn ?? getMainLoopModel()) }
                                   );
                                 }
                                 let _n = ln ?? Qt,
@@ -15205,17 +15205,17 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                 ),
                               onApplyFlagSettings: (Ke) => {
                                 let tt = getMainLoopModel(),
-                                  Qt = A9(tt, Ya(v())),
-                                  qe = adt(Ke, {
+                                  Qt = getEffectiveEffortLevel(tt, Ya(v())),
+                                  qe = applyBridgeFlagSettings(Ke, {
                                     model: tt,
                                     getAppState: v,
                                     setAppState: C,
                                     storageV5: w.storageV5,
                                   });
                                 if (!qe.ok) return qe;
-                                let ln = A9(tt, Ya(v()));
+                                let ln = getEffectiveEffortLevel(tt, Ya(v()));
                                 return (
-                                  wF(tt, v()),
+                                  reportSessionEffort(tt, v()),
                                   Lo("state_change", { force: ln === Qt }),
                                   { ok: !0 }
                                 );
@@ -15317,11 +15317,11 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                             setSdkHostedBridgeHandle(ft, w.storageV5),
                             registerLiveSuppressionProbe(() => getSdkHostedBridgeHandle()?.noHistoryBackfill === !0),
                             reportBridgePermissionMode(v().toolPermissionContext.mode),
-                            sqe(reportBridgeCrossSessionInbound));
+                            setInboundAvailabilityPublisher(reportBridgeCrossSessionInbound));
                           let Ke = getMainLoopModel();
                           if (
                             (reportBridgeModel(Ke),
-                            wF(Ke, v()),
+                            reportSessionEffort(Ke, v()),
                             (er = ft.noHistoryBackfill
                               ? Math.max(Pn, er)
                               : Math.min(Pn, er)),
@@ -15398,7 +15398,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     F.createDeviceHooksWorker(
                       await F.productionDeviceHooksWorkerDeps({
                         projectRoot: he,
-                        cwd: Q,
+                        cwd: getCwd,
                         workerEpoch: a.CLAUDE_CODE_WORKER_EPOCH,
                         sender: t,
                         toolAliases: () => w.toolAliases,
@@ -15538,7 +15538,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 type: "user",
                 message: {
                   role: "user",
-                  content: `<${I0}>Command failed: missing command</${I0}>`,
+                  content: `<${BASH_STDERR_TAG}>Command failed: missing command</${BASH_STDERR_TAG}>`,
                 },
                 session_id: St,
                 parent_tool_use_id: null,
@@ -15555,7 +15555,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             type: "user",
             message: {
               role: "user",
-              content: `<${K2e}>${Nt(r.command)}</${K2e}>`,
+              content: `<${BASH_INPUT_TAG}>${Nt(r.command)}</${BASH_INPUT_TAG}>`,
             },
             session_id: St,
             parent_tool_use_id: null,
@@ -15588,7 +15588,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   type: "user",
                   message: {
                     role: "user",
-                    content: `<${I0}>Command failed: ${Nt(getBashSpawnFailureDetail(gn, e))}</${I0}>`,
+                    content: `<${BASH_STDERR_TAG}>Command failed: ${Nt(getBashSpawnFailureDetail(gn, e))}</${BASH_STDERR_TAG}>`,
                   },
                   session_id: St,
                   parent_tool_use_id: null,
@@ -15652,7 +15652,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               w.replayUserMessages)
             ) {
               n(`Sending acknowledgment for duplicate user message: ${r.uuid}`);
-              let ie = Cce(r);
+              let ie = parseFileAttachments(r);
               Ct.enqueue({
                 type: "user",
                 message: r.message,
@@ -15697,7 +15697,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               : f6(at)
                 ? at
                 : void 0
-            : (at ?? (V ? dsn(Ce, r.inbound_origin) : fCn(r.origin, !1))),
+            : (at ?? (V ? getClaudeCodeHumanOrigin(Ce, r.inbound_origin) : fCn(r.origin, !1))),
           Lr = UWn({
             declared: r.seeded_summon,
             isRemoteIO: V,
@@ -15706,7 +15706,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             inboundOrigin: r.inbound_origin,
             clientPlatform: Ce,
           }),
-          In = Je ? VNt(r.inbound_origin, isProjectsHumanOriginEnabled()) : vce(Ce, r.inbound_origin);
+          In = Je ? isHumanRelayOrigin(r.inbound_origin, isProjectsHumanOriginEnabled()) : isHumanRelayTurn(Ce, r.inbound_origin);
         if (!x && r.shouldQuery !== !1 && !Ye && !r.isSynthetic && Ew(at)) {
           let St = B_(Se);
           if (St && !EO(St) && !wwe(St, (Mn) => hasCommand(Mn, Rs))) {
@@ -15714,14 +15714,14 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             let Mn = K();
             if (!getCurrentSessionTitle(Mn)) {
               let gn = (Ut && !Ut.signal.aborted ? Ut : createAbortController()).signal;
-              S4(St, gn, w.credentials)
+              generateSessionTitle(St, gn, w.credentials)
                 .then((D) => {
                   if (!D) {
                     x = !1;
                     return;
                   }
                   if (getCurrentSessionTitle(Mn)) return;
-                  (saveAiGeneratedTitle(Mn, D, w.storageV5), getSdkHostedBridgeHandle()?.adoptLocalAiTitle?.(), mnn(D));
+                  (saveAiGeneratedTitle(Mn, D, w.storageV5), getSdkHostedBridgeHandle()?.adoptLocalAiTitle?.(), syncTitleToRemoteSession(D));
                 })
                 .catch((D) => {
                   ((x = !1), logError(D));
@@ -15729,19 +15729,19 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             }
           }
         }
-        let Sn = Cce(r),
-          wr = nJn(r, { isRelayHuman: In }),
+        let Sn = parseFileAttachments(r),
+          wr = parseRelayTurnId(r, { isRelayHuman: In }),
           fr = jQe(r.uuid, {
-            isCrossSession: dqe({
+            isCrossSession: isCrossSessionIngress({
               ingressOrigin: Je,
               inboundOrigin: r.inbound_origin,
-              envelopePeer: tqe(Se),
+              envelopePeer: hasPeerEnvelope(Se),
             }),
           }),
           cn = Ye
             ? i6n(r.priority, I6e(U))
             : at?.kind === "task-notification"
-              ? JGe(r.priority, Ce, r.inbound_origin)
+              ? resolveTriggerPriority(r.priority, Ce, r.inbound_origin)
               : In
                 ? x6e(r.priority, Se, H6e(U))
                 : r.priority,
@@ -15755,11 +15755,11 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               : void 0,
           Dr = Ye
             ? Nn
-              ? IPe({ kind: "peer", hostInjected: !0 })
-              : PPe()
-            : IPe(Je);
+              ? getIngressRefuseCause({ kind: "peer", hostInjected: !0 })
+              : getSessionRefuseCause()
+            : getIngressRefuseCause(Je);
         if (Dr !== void 0) {
-          (Gee(
+          (logInboundRefused(
             Nn
               ? "local stdin (host-injected): dropped before attachment materialization"
               : "remote-io: dropped before attachment materialization",
@@ -15828,7 +15828,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           },
           Mo = () => {
             en.mark(Kr, "stdin");
-            let St = Ye ? (Nn ? xsn(Kr) : cqe(Kr)) : pqe(Je, Kr);
+            let St = Ye ? (Nn ? gateHostInjectedInboundMessage(Kr) : gatePeerInboundMessage(Kr)) : gateInboundMessageByOrigin(Je, Kr);
             if (St !== "accept") {
               if (St === "refused") Pa(t, r.uuid, "stdin");
               return;
@@ -15943,7 +15943,7 @@ function yy(e) {
   return (
     (o = jo?.isCoordinatorMode() ?? !1),
     {
-      deadlineMs: e.explicitMcpConfigFlag && !t ? Hl() : void 0,
+      deadlineMs: e.explicitMcpConfigFlag && !t ? getMcpTimeoutMs() : void 0,
       localOnly: t && !o,
     }
   );
@@ -15955,7 +15955,7 @@ async function bf(e, t, o = 2000, d = {}) {
       localOnly: I = !1,
       permissionPromptToolServerName: O,
     } = d,
-    v = !E && Z_() && e6(getMainLoopModel()) && !Zj(getCanonicalName(getMainLoopModel())),
+    v = !E && isToolSearchEnabled() && isToolSearchSupportedModel(getMainLoopModel()) && !isVertexModelUnsupportedForToolSearch(getCanonicalName(getMainLoopModel())),
     C = (ut) =>
       (!I || Yt().isLocalMcpServer(ut.config)) &&
       (!v || ut.config.alwaysLoad === !0),
@@ -15976,7 +15976,7 @@ async function bf(e, t, o = 2000, d = {}) {
   let ve = 0;
   if (N)
     (await yHe(le, (ut) => !ut.mcp.clients.some(B), {
-      timeoutMs: Math.max(0, U + Hl() - Date.now()),
+      timeoutMs: Math.max(0, U + getMcpTimeoutMs() - Date.now()),
     }),
       (ve = Date.now() - U - xe));
   if (_) return;
@@ -16089,7 +16089,7 @@ function wy(e, t, o, d, _, E) {
   let I = wX(E);
   if (!I && e === "stdio") {
     let v = t.createCanUseTool(d);
-    return PA() || (Bhe() && !AL()) ? Qqe(v) : v;
+    return isVsCodeExtensionSession() || (isClaudeDesktopAppSession() && !isClaudecodeEnv()) ? Qqe(v) : v;
   }
   if (I || !e)
     return async (v, C, re, B, w, X) => {
@@ -16279,11 +16279,11 @@ async function Cy(e, t, o, d, _, E, I, O, v, C, re, B, w, X) {
 }
 async function Pf(e, t, o, d, _, E, I, O, v, C) {
   let B = getSettings_DEPRECATED()?.outputStyle || uT,
-    w = await dX(Q(), C),
+    w = await dX(getCwd(), C),
     X = getAccountInformation(),
     te = _().toolPermissionContext.mode,
     ye =
-      PA() && GEt()
+      isVsCodeExtensionSession() && GEt()
         ? shouldShowAutoDefaultNudge(_().toolPermissionContext, { requireOnboarding: !1 })
         : null,
     N = {
@@ -16306,12 +16306,12 @@ async function Pf(e, t, o, d, _, E, I, O, v, C) {
         apiProvider: getAPIProvider(),
       },
       pid: process.pid,
-      current_permission_mode: _c(te),
+      current_permission_mode: getExternalPermissionMode(te),
       hooks_applied: O,
       plugins_applied: v,
-      ...(PA() && {
+      ...(isVsCodeExtensionSession() && {
         permission_mode_from_default_fallback: isAutoModeFromFallback() && te === "auto",
-        ...(ye && { auto_default_nudge: _c(ye) }),
+        ...(ye && { auto_default_nudge: getExternalPermissionMode(ye) }),
       }),
       feedback_survey_config: mm(),
       analytics_disabled: mg(),
@@ -16362,7 +16362,7 @@ function My(e, t, o, d, _) {
   if (!I || I.type !== "connected")
     return E(`server ${Qn(t)} is not connected`);
   let O = I.config.pluginSource,
-    v = O ? og(O) : void 0;
+    v = O ? parsePluginIdIgnoringReservedMarketplace(O) : void 0;
   if (!v?.marketplace)
     return E(
       `server ${Qn(t)} is not plugin-sourced; channel_enable requires a marketplace plugin`,
@@ -16384,7 +16384,7 @@ function My(e, t, o, d, _) {
   let X = `${C.name}@${C.marketplace}`;
   (logMCPDebug(t, "Channel notifications registered"),
     logEvent("tengu_mcp_channel_enable", { plugin: X }),
-    CH(I, ChannelMessageNotificationSchema(), async (te) => {
+    registerMcpNotificationHandler(I, ChannelMessageNotificationSchema(), async (te) => {
       let { content: ye, meta: N } = te.params;
       (logMCPDebug(t, `notifications/claude/channel: ${ye.slice(0, 80)}`),
         logEvent("tengu_mcp_channel_message", {
@@ -16417,7 +16417,7 @@ function fd(e, t) {
   let d = findChannelEntry(e.name, ym()),
     _ = d?.kind === "plugin" ? `${d.name}@${d.marketplace}` : void 0;
   (logMCPDebug(e.name, "Channel notifications re-registered after reconnect"),
-    CH(e, ChannelMessageNotificationSchema(), async (E) => {
+    registerMcpNotificationHandler(e, ChannelMessageNotificationSchema(), async (E) => {
       let { content: I, meta: O } = E.params;
       (logMCPDebug(e.name, `notifications/claude/channel: ${I.slice(0, 80)}`),
         logEvent("tengu_mcp_channel_message", {
@@ -16466,7 +16466,7 @@ function Ey({
   storageV5: d,
   workerDirSync: _,
 }) {
-  let E = kNn();
+  let E = createHomeSeedAnnouncer();
   return {
     handle: import("../../02-功能模块/后台任务-Shell管理/stopHomeSeedWithoutDirSync.njwew93r.js")
       .then((O) => {
@@ -16495,8 +16495,8 @@ function Ey({
 }
 function Ea(e) {
   try {
-    let t = pt(kr(l(e))).trimEnd(),
-      o = oe(t, 200);
+    let t = stripAnsi(firstLine(l(e))).trimEnd(),
+      o = truncateToCodeUnits(t, 200);
     return o.length < t.length ? `${o}\u2026` : o;
   } catch {
     return "unknown error";
@@ -16571,7 +16571,7 @@ function io(e, t) {
     n(e, { level: "error" }),
     t === "stream-json")
   )
-    Kn(
+    writeToStdout(
       b(buildErrorResultMessage(K(), [e])) +
         `
 `,
@@ -16581,7 +16581,7 @@ function Tf(e, t) {
   if (e?.endedByModel)
     return (
       io(
-        Mk("Claude ended this conversation. Start a new session to continue."),
+        appendEndedByModelSuffix("Claude ended this conversation. Start a new session to continue."),
         t,
       ),
       Pr(1),
@@ -16630,7 +16630,7 @@ async function Ay(e, t, o, d) {
       if (!O && I !== void 0)
         return (
           await logEventAsync("tengu_continue", { success: !1, entrypoint: S("print") }),
-          io(MSt(I), d.outputFormat),
+          io(formatContinuedInMessage(I), d.outputFormat),
           Pr(1),
           { messages: [], aborted: !0 }
         );
@@ -16643,7 +16643,7 @@ async function Ay(e, t, o, d) {
                 `
 `,
             );
-            let w = await O8(Q(), d.cliAgents ?? [], d.storageV5);
+            let w = await O8(getCwd(), d.cliAgents ?? [], d.storageV5);
             t((X) => ({ ...X, agentDefinitions: w }));
           }
         }
@@ -16784,7 +16784,7 @@ ${le}`,
           [, le] = await Promise.all([
             (d.hydratePrefetch ?? Promise.resolve(null)).then(
               (xe) => (
-                WXn(xe, fe),
+                markResumeHydratePrefetch(xe, fe),
                 setTranscriptLocalGcEnabled(j1n()),
                 hydrateFromCCRv2InternalEvents(v.sessionId, xe, I0t(), d.storageV5)
               ),
@@ -16793,7 +16793,7 @@ ${le}`,
             Il().restore(Ol()),
           ]);
         if (
-          (Ts("resume_hydrate_ms", performance.now() - fe, fe),
+          (recordStartupPhase("resume_hydrate_ms", performance.now() - fe, fe),
           (re = le),
           le?.external || le?.internal)
         ) {
@@ -16814,7 +16814,7 @@ ${le}`,
       if (!d.forkSession) {
         let fe = performance.now(),
           le = await getLiveSessionHolder(v.sessionId);
-        if ((Ts("resume_live_check_ms", performance.now() - fe, fe), le))
+        if ((recordStartupPhase("resume_live_check_ms", performance.now() - fe, fe), le))
           return (
             process.stderr
               .write(`Error: ${formatSessionLiveElsewhereMessage({ sessionId: v.sessionId, holder: le, canFork: !0 })}
@@ -16833,9 +16833,9 @@ ${le}`,
           ...LX(e.precompute, d.storageV5, { forkSession: !!d.forkSession }),
         });
       if (
-        (Ts(
+        (recordStartupPhase(
           "resume_deserialize_ms",
-          performance.now() - X - (_St("hooks_init_ms") ?? 0),
+          performance.now() - X - (getRecordedStartupPhase("hooks_init_ms") ?? 0),
           X,
         ),
         (E = "processing_error"),
@@ -16875,7 +16875,7 @@ ${le}`,
                 storageV5: d.storageV5,
                 credentials: d.credentials,
               }));
-          Ts("hooks_init_ms", performance.now() - le, le);
+          recordStartupPhase("hooks_init_ms", performance.now() - le, le);
           let U = Vre(te?.sessionId, !!d.forkSession, {
             acceptCustomIds: !!d.sdkUrl,
           });
@@ -16958,7 +16958,7 @@ ${le}`,
               `
 `,
           );
-          let le = await O8(Q(), d.cliAgents ?? [], d.storageV5);
+          let le = await O8(getCwd(), d.cliAgents ?? [], d.storageV5);
           t((xe) => ({ ...xe, agentDefinitions: le }));
         }
       }
@@ -17099,15 +17099,15 @@ function Oy(e, t) {
   else o = e;
   if (!t.sdkUrl) return new Fae(o, t.replayUserMessages, t.sessionState);
   let d = process.env.CLAUDE_CODE_ENVIRONMENT_KIND ?? null,
-    _ = d === null && !$6(),
+    _ = d === null && !isReviewOriginSession(),
     E = new Uz({
       streamUrl: t.sdkUrl,
       initialPrompt: o,
       replayUserMessages: t.replayUserMessages,
       sessionState: t.sessionState,
       storageV5: t.storageV5,
-      getAuthHeaders: ZD,
-      rereadMissingAuthHeaders: _ ? q1n : void 0,
+      getAuthHeaders: getSessionAuthHeaders,
+      rereadMissingAuthHeaders: _ ? recoverSessionIngressToken : void 0,
       sessionId: K(),
       workerEpoch: lsn(),
       environmentKind: d,
@@ -17365,7 +17365,7 @@ async function Hy(e, t, o, d, _, E, I = !1, O = !1, v, C, re) {
         ? jf
         : a.CLAUDE_CODE_REMOTE && doesEnterpriseMcpConfigExist()
           ? Wf
-          : a.CLAUDE_CODE_REMOTE && wK()
+          : a.CLAUDE_CODE_REMOTE && areSideloadFlagsDisabledByPolicy()
             ? Vf
             : g0.isBridgeCarrierChild
               ? Kf
@@ -17494,7 +17494,7 @@ async function Yf(e, t, o, d, _ = "unknown", E = !1, I = !1, O, v, C, re) {
       Ve = t.configs[Fe];
     if (Ve) {
       if (it?.type === "connected") {
-        Q3(it, void 0);
+        setMcpClientOnClose(it, void 0);
         try {
           await it.cleanup();
         } catch (qt) {

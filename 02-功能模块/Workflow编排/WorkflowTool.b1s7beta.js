@@ -18,22 +18,22 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, t8, z, Is, Ru, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe, ln, B0 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits, countOccurrences, stripInvisibleCharacters } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { kd } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te, formatOverflowHint } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { READ_ONLY_AUTO_ALLOW_REASON, A0 } from "../权限系统/chunk-e4pfvp7x.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
+import { READ_ONLY_AUTO_ALLOW_REASON, LOG_BULLET_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { yve, Dc, Rnr } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
+import { areWorkflowsDisabledBySettings, areWorkflowsEnabled, Rnr } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { nH, eh, Jl, RDe, Epe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Uh, NTt, ah } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { isServerFallbackDiscard } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { lP, ll } from "../Teammates团队/chunk-thxapyam.js";
+import { getProjectKeyFromDir, getProjectDir } from "../Teammates团队/transcript-paths.js";
 import { S8, bZ, Y1, NA, vae } from "./chunk-0t0sve49.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import {
@@ -59,15 +59,15 @@ import { parseWorkflowScript } from "./workflow-script.js";
 import { fin } from "./chunk-w0pgmfvw.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kaxe7rw8.js";
 import { isWorkflowAuthoringSkillAvailable } from "../../01-核心基础设施/共享小工具-未细化/is-workflow-authoring-skill-available.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-gkztysec.js";
+import "../../01-核心基础设施/共享小工具-未细化/structured-output-retry-errors.js";
 import "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
 import "../../01-核心基础设施/共享小工具-未细化/fd-real-path.js";
 import { getWorkflowTranscriptDir } from "./workflow-snapshots.js";
-import { Y6n, _be, rte, kqe } from "./chunk-pqyn1fh3.js";
+import { WORKFLOW_NAME_ONLY_ENV, isWorkflowNameOnlyEnabled, getAllWorkflows, getWorkflowByName } from "./workflow-registry.js";
 import { getBundledWorkflows } from "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
-import { Dh, Q_n } from "../Teammates团队/chunk-mrfx53ye.js";
-import { $E } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
-import { sg } from "../Teammates团队/chunk-z2t8b9yc.js";
+import { generateTaskId, getWorkflowSizeGuidelinePromptText } from "../Teammates团队/chunk-mrfx53ye.js";
+import { WORKFLOW_AUTHORING_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
+import { TASK_STOP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
 import {
   s,
   T,
@@ -882,7 +882,7 @@ function Vr(e) {
           return;
         }
         (o.hooks.reservePhase(ye, "child"),
-          o.hooks.log(`${A0} running dynamic workflow ${de}`));
+          o.hooks.log(`${LOG_BULLET_GLYPH} running dynamic workflow ${de}`));
         let Ye = {
           vmContext: H.childCtx,
           hooks: { ...o.hooks, agent: H.agent },
@@ -907,7 +907,7 @@ function Vr(e) {
           Ie = Jl(_e);
         throw (
           w.set(D, { name: Re, message: Ie, rendered: `${Re}: ${Ie}` }),
-          o.hooks.log(`${A0} workflow() failed to start: ${Ie}`),
+          o.hooks.log(`${LOG_BULLET_GLYPH} workflow() failed to start: ${Ie}`),
           new R(Ie, "workflow v2: child workflow failed to start")
         );
       }
@@ -925,15 +925,15 @@ function Vr(e) {
             message: Jl(ue.thrown.message),
             rendered: ue.error,
           }),
-          o.hooks.log(`${A0} ${de} failed: ${ue.error}`),
+          o.hooks.log(`${LOG_BULLET_GLYPH} ${de} failed: ${ue.error}`),
           new R(ue.error, "workflow v2: child workflow script failed")
         );
       if (ue.error !== void 0)
         throw (
-          o.hooks.log(`${A0} ${de} failed: ${ue.error}`),
+          o.hooks.log(`${LOG_BULLET_GLYPH} ${de} failed: ${ue.error}`),
           new R(ue.error, "workflow v2: child workflow result refused")
         );
-      return (o.hooks.log(`${A0} ${de} done`), ue.value);
+      return (o.hooks.log(`${LOG_BULLET_GLYPH} ${de} done`), ue.value);
     }
     let ge;
     try {
@@ -955,8 +955,8 @@ function Vr(e) {
               : typeof we.scriptPath === "string"
                 ? `workflow(${we.scriptPath})`
                 : "workflow()";
-        (o.hooks.recordFailure(`${A0} ${ye}: ${Jl(de)}`),
-          o.hooks.log(`${A0} workflow() failed to start: ${Jl(de)}`));
+        (o.hooks.recordFailure(`${LOG_BULLET_GLYPH} ${ye}: ${Jl(de)}`),
+          o.hooks.log(`${LOG_BULLET_GLYPH} workflow() failed to start: ${Jl(de)}`));
       }
       throw le;
     }
@@ -1185,7 +1185,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
         Se =
           typeof re.label === "string"
             ? re.label
-            : oe(ve, 60).replace(/\s+/g, " ").trim(),
+            : truncateToCodeUnits(ve, 60).replace(/\s+/g, " ").trim(),
         Te =
           re.fact !== null &&
           typeof re.fact === "object" &&
@@ -1625,7 +1625,7 @@ class sr {
         ...U.map((E) => Jl(`script error: ${E.error ?? ""}`)),
         ...j.map((E) =>
           Jl(
-            `${A0} ${typeof E.fact.name === "string" ? E.fact.name : typeof E.fact.scriptPath === "string" ? `workflow(${E.fact.scriptPath})` : "workflow()"}: ${E.error ?? ""}`,
+            `${LOG_BULLET_GLYPH} ${typeof E.fact.name === "string" ? E.fact.name : typeof E.fact.scriptPath === "string" ? `workflow(${E.fact.scriptPath})` : "workflow()"}: ${E.error ?? ""}`,
           ),
         ),
       ];
@@ -2095,14 +2095,14 @@ var Bt = createLazyValue(() => {
   Gr = "world.jsonl",
   Ut = 4194304;
 function Xr() {
-  let e = fy() ?? ll(he());
+  let e = fy() ?? getProjectDir(he());
   return Vt(e, K(), Gr);
 }
 function Zr(e) {
   let r = dirname(e),
-    t = lP(dirname(r));
+    t = getProjectKeyFromDir(dirname(r));
   if (t === void 0 || qr(e) !== Gr) return;
-  let d = Ce.sessionJournal(t, qr(r), "world");
+  let d = STORAGE_KEYS.sessionJournal(t, qr(r), "world");
   return kd(d) === void 0 ? d : void 0;
 }
 function Qr(e, r, t) {
@@ -2398,7 +2398,7 @@ function Ir(e, r) {
     (e.script !== void 0 || e.scriptPath !== void 0) &&
     isWorkflowAuthoringSkillAvailable(r)
     ? `
-Load the \`${$E}\` skill for the script reference if you have not, fix the script, and retry.`
+Load the \`${WORKFLOW_AUTHORING_SKILL_NAME}\` skill for the script reference if you have not, fix the script, and retry.`
     : "";
 }
 function lt() {
@@ -2418,7 +2418,7 @@ var Yt =
         ),
       name: s()
         .refine(
-          (e) => B0(e) === e,
+          (e) => stripInvisibleCharacters(e) === e,
           "contains control or invisible format characters",
         )
         .optional()
@@ -2444,7 +2444,7 @@ var Yt =
         ),
       scriptPath: s()
         .refine(
-          (e) => B0(e) === e,
+          (e) => stripInvisibleCharacters(e) === e,
           "contains control or invisible format characters",
         )
         .optional()
@@ -2455,7 +2455,7 @@ var Yt =
         .regex(/^wf_[a-z0-9-]{6,}$/)
         .optional()
         .describe(
-          `Run ID of a prior Workflow invocation to resume from. Completed agent() calls with unchanged (prompt, opts) return their cached results instantly; only edited or new calls re-run. Same-session only. Stop the prior run first (${sg}) before resuming.`,
+          `Run ID of a prior Workflow invocation to resume from. Completed agent() calls with unchanged (prompt, opts) return their cached results instantly; only edited or new calls re-run. Same-session only. Stop the prior run first (${TASK_STOP_TOOL_NAME}) before resuming.`,
         ),
       ...(ke()?.runOpFields() ?? {}),
       ...!1,
@@ -2518,7 +2518,7 @@ class De extends Error {
 async function dt(e, r, t) {
   if (e.scriptPath) {
     let d, o;
-    if (e.script) ((d = e.script), (o = resolve(Q(), e.scriptPath)));
+    if (e.script) ((d = e.script), (o = resolve(getCwd(), e.scriptPath)));
     else {
       let a = await Ndt(e.scriptPath, r);
       if ("error" in a) return a;
@@ -2534,9 +2534,9 @@ async function dt(e, r, t) {
     return { script: d, resolvedScriptPath: o };
   }
   if (e.name) {
-    let d = await kqe(e.name, Q(), t);
+    let d = await getWorkflowByName(e.name, getCwd(), t);
     if (!d) {
-      let o = (await rte(Q(), t)).map((a) => a.name).join(", ");
+      let o = (await getAllWorkflows(getCwd(), t)).map((a) => a.name).join(", ");
       return {
         error: `Workflow "${e.name}" not found. Available: ${o || "(none)"}`,
       };
@@ -2562,12 +2562,12 @@ var ut = {
     searchHint: "orchestrate subagents with deterministic JavaScript workflow",
     enablesCodeExecution: !0,
     maxResultSizeChars: 1e5,
-    isEnabled: () => Dc(),
+    isEnabled: () => areWorkflowsEnabled(),
     async prompt(e) {
-      return fin(isWorkflowAuthoringSkillAvailable(e?.tools)) + Q_n(ee().workflowSizeGuideline) + lt();
+      return fin(isWorkflowAuthoringSkillAvailable(e?.tools)) + getWorkflowSizeGuidelinePromptText(ee().workflowSizeGuideline) + lt();
     },
     async description(e, r) {
-      return fin(isWorkflowAuthoringSkillAvailable(r?.tools)) + Q_n(ee().workflowSizeGuideline) + lt();
+      return fin(isWorkflowAuthoringSkillAvailable(r?.tools)) + getWorkflowSizeGuidelinePromptText(ee().workflowSizeGuideline) + lt();
     },
     get inputSchema() {
       return Xt();
@@ -2591,14 +2591,14 @@ name: ${e.name}`;
     },
     async validateInput(e, r) {
       if (isServerFallbackDiscard(r.abortController.signal)) return ut;
-      if (yve())
+      if (areWorkflowsDisabledBySettings())
         return {
           result: !1,
           message:
             "Dynamic workflows are disabled by managed settings (`disableWorkflows`).",
           errorCode: 5,
         };
-      if (!Dc())
+      if (!areWorkflowsEnabled())
         return {
           result: !1,
           message:
@@ -2617,7 +2617,7 @@ name: ${e.name}`;
         let a = await o.validateRunOp(e, r);
         if (a) return a;
       }
-      if (_be()) {
+      if (isWorkflowNameOnlyEnabled()) {
         let o = [
           e.script && "script",
           e.scriptPath && "scriptPath",
@@ -2627,7 +2627,7 @@ name: ${e.name}`;
         if (o.length > 0)
           return {
             result: !1,
-            message: `This session restricts the Workflow tool to named workflows (${Y6n} is set). Not allowed here: ${o.join(", ")}. Invoke as {name, args} only.`,
+            message: `This session restricts the Workflow tool to named workflows (${WORKFLOW_NAME_ONLY_ENV} is set). Not allowed here: ${o.join(", ")}. Invoke as {name, args} only.`,
             errorCode: 8,
           };
       }
@@ -2695,7 +2695,7 @@ name: ${e.name}`;
           };
         _ = { ...e, script: B.script };
       } else if (e.name) {
-        let B = await kqe(e.name, Q(), r.storageV5);
+        let B = await getWorkflowByName(e.name, getCwd(), r.storageV5);
         _ = { ...e, script: B?.script };
       }
       let I =
@@ -2739,13 +2739,13 @@ name: ${e.name}`;
       let r = e ? qe(e) : void 0;
       if (r && ke()) return `workflow ${r.runId} \xB7 ${br(r) ?? "?"}`;
       if (e?.scriptPath) {
-        let t = st(B0(e.scriptPath));
+        let t = st(stripInvisibleCharacters(e.scriptPath));
         return e.script ? `${t} \xB7 ${Le(e.script)}` : t;
       }
       if (e?.name)
         return e.script
-          ? `dynamic workflow: ${B0(e.name)} \xB7 ${Le(e.script)}`
-          : `dynamic workflow: ${B0(e.name)}`;
+          ? `dynamic workflow: ${stripInvisibleCharacters(e.name)} \xB7 ${Le(e.script)}`
+          : `dynamic workflow: ${stripInvisibleCharacters(e.name)}`;
       if (!e?.script) return null;
       return Le(e.script);
     },
@@ -2779,7 +2779,7 @@ name: ${e.name}`;
         x = parseWorkflowScript(p);
       if ("error" in x) throw new De(`Invalid workflow script: ${x.error}`);
       let F = e.resumeFromRunId ?? `wf_${randomUUID().slice(0, 12)}`,
-        B = Dh("local_workflow"),
+        B = generateTaskId("local_workflow"),
         U = x.meta.description,
         j = x.meta.name,
         J = v9(x.scriptBody);
@@ -2871,7 +2871,7 @@ name: ${e.name}`;
         d = ke();
       if (t && d) return d.renderRunOp(t, r);
       if (e.scriptPath) {
-        let o = B0(e.scriptPath),
+        let o = stripInvisibleCharacters(e.scriptPath),
           a = r ? o : st(o);
         if (!e.script) return a;
         return r
@@ -2880,7 +2880,7 @@ ${e.script}`
           : `${a} \xB7 ${Le(e.script)}`;
       }
       if (e.name) {
-        let o = B0(e.name);
+        let o = stripInvisibleCharacters(e.name);
         if (!e.script) return `dynamic workflow: ${o}`;
         return r
           ? `dynamic workflow: ${o}
@@ -2955,38 +2955,38 @@ You will be notified when it completes. Use /workflows to watch live progress.`;
   });
 function Le(e) {
   let r = parseWorkflowScript(e);
-  if (!("error" in r)) return B0(r.meta.description);
+  if (!("error" in r)) return stripInvisibleCharacters(r.meta.description);
   let t =
       e
         .split(
           `
 `,
         )
-        .find((w) => w.trim()) ?? oe(e, 40),
-    d = te(t) > _r || t.length > _r ? oe(t, _r - 1) + "\u2026" : t,
+        .find((w) => w.trim()) ?? truncateToCodeUnits(e, 40),
+    d = te(t) > _r || t.length > _r ? truncateToCodeUnits(t, _r - 1) + "\u2026" : t,
     o =
-      ln(
+      countOccurrences(
         e,
         `
 `,
       ) + 1,
     a = formatOverflowHint(o - 1),
-    p = B0(d);
+    p = stripInvisibleCharacters(d);
   return a ? `${p} ${a}` : p;
 }
 function ct(e, r) {
   for (let [d, o] of Object.entries(r.taskRegistry?.all() ?? {})) {
     if (o.type !== "local_workflow" || o.workflowRunId !== e) continue;
     if (o.status === "running")
-      return `Workflow ${e} is still running (task ${d}). Stop it first with ${sg}({taskId: "${d}"}) before resuming.`;
+      return `Workflow ${e} is still running (task ${d}). Stop it first with ${TASK_STOP_TOOL_NAME}({taskId: "${d}"}) before resuming.`;
     if (!eh(d))
       return o.status === "paused"
         ? `Workflow ${e} is paused but its run has not exited yet (task ${d}); its agents are being stopped. Resuming now would run two copies of its agents against the same journal \u2014 wait for it to exit.`
-        : `Workflow ${e} is not running but its run has not exited yet (task ${d}). Resuming now would run two copies of its agents against the same journal. Run ${sg}({taskId: "${d}"}) on it or wait for it to exit.`;
+        : `Workflow ${e} is not running but its run has not exited yet (task ${d}). Resuming now would run two copies of its agents against the same journal. Run ${TASK_STOP_TOOL_NAME}({taskId: "${d}"}) on it or wait for it to exit.`;
   }
   let t = r.toolState.get(je).byId.get(e);
   if (t !== void 0 && !t.isKilled && t.isActive)
-    return `Workflow ${e} is still running. Wait for it to settle, or stop it first with ${sg}, before resuming.`;
+    return `Workflow ${e} is still running. Wait for it to settle, or stop it first with ${TASK_STOP_TOOL_NAME}, before resuming.`;
   return;
 }
 export { WorkflowTool };

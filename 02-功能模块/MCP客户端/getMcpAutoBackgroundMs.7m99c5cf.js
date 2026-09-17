@@ -26,7 +26,7 @@ import "./chunk-tv3jbp8f.js";
 import "../认证-OAuth登录/chunk-3wfaaze4.js";
 import "../认证-OAuth登录/chunk-j990pwax.js";
 import { createMcpTaskRecord } from "../../01-核心基础设施/共享小工具-未细化/mcp-task-record.js";
-import { _9 } from "../MCP传输(stdio-SSE-HTTP)/chunk-5xgsb1c1.js";
+import { StreamableHTTPError } from "../MCP传输(stdio-SSE-HTTP)/streamable-http-client-transport.js";
 var K = new Set([
   "ClaudeAiProxyBearerRejectedError",
   "McpAuthError",
@@ -43,7 +43,7 @@ function w(e) {
   if (e instanceof DOMException) return e.name === "TimeoutError";
   if (!(e instanceof Error)) return !1;
   if (e instanceof R) return !0;
-  if (e instanceof _9) return !0;
+  if (e instanceof StreamableHTTPError) return !0;
   if (
     (("errorCode" in e && typeof e.errorCode === "string") ||
       ("code" in e && typeof e.code === "string")) &&

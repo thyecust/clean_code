@@ -15,19 +15,19 @@ import { sleep, withDeadline, raceWithAbortSignal } from "../../01-核心基础�
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { tl, NL } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { normalizePermissionModeAlias, mkt, Dtt, Ltt } from "../权限系统/chunk-e4pfvp7x.js";
+import { parseConfigInteger, isInProtectedNamespace } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { normalizePermissionModeAlias, ASCII_SPINNER_FRAMES, CHECK_MARK_GLYPH, CROSS_MARK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { Ve, R, dt, l, A, dot, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, dxe, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { pluralize, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { isEssentialTrafficOnly, getNonessentialTrafficDisabledEnvVar, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { pXt, IPn, $nt, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Pc } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
+import { getLauncherConfigError } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { te, truncateToWidth, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { HCn, Wi, si, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { redactGitRemoteCredentials } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -44,10 +44,10 @@ import {
   getAllPolicyTierSettings,
   getPolicySettingsLoadErrors,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
-import { xU } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
+import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { generateAdjectiveNounName } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
 import { validateBridgeId, toCompatSessionId, toInfraSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Eq, Hvt, Pvt, Ovt } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import {
@@ -62,31 +62,31 @@ import {
   MCP_SETTINGS_SCOPES,
   getMcpConfigsByScope,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { Dve, $$e } from "./chunk-5ne99rq3.js";
 import { isBridgeEnvReregisterEnabled, isCcrV2SendEventsEnabled, isCcrV2SessionCrudEnabled, isBridgeServerSessionConfigEnabled } from "./chunk-9estzwf5.js";
 import { debugTruncate, debugBody, describeAxiosError, parseRetryAfterHeader, extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { getAttestationFilterPolicy, getTrustedDeviceToken, withUntrustedDeviceRecovery } from "./chunk-tyce0p0b.js";
 import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeSessionNamePrefix } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
-import { vAe, ANe, Iyn } from "./chunk-ct52ffwb.js";
+import { vAe, REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE, BRIDGE_WORK_STATE_QUEUED } from "./remote-control-messages.js";
 import "../自动更新-安装/chunk-brx72pf1.js";
 import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
-import { i9, g4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
+import { removeGuiHostEntrypoint, g4 } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import { NESTED_SESSION_MARKER_ENV_VARS, NON_INHERITED_SESSION_ENV_VARS } from "../Workflow编排/session-env-vars.js";
 import { eI } from "../../00-第三方库/_未识别/第三方库-其他/chunk-x46ksw6d.js";
 import { getBridgePollIntervalConfig } from "../../01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js";
 import { parseWorkSecret, sessionIdsMatch, buildSessionApiUrl, registerWorker } from "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
-import { Wtn, Xat } from "./chunk-1g5kqtqx.js";
+import { resolveBridgeDaemonOwner, createBridgeTitleWriter } from "./chunk-1g5kqtqx.js";
 import { isPlainObject, parsePlist } from "../../01-核心基础设施/共享小工具-未细化/plist-parser.js";
-import { yBn, Ple, Jat, N9e, F9e, bBn, wBn } from "./chunk-2c3z3wjk.js";
+import { yBn, formatClockTime, buildSessionWebUrl, formatCodeAnywhereMessage, formatContinueCodingMessage, RERUN_REMOTE_CONTROL_CLI_MESSAGE, formatTerminalHyperlink } from "./remote-control-ui-strings.js";
 import { trySetRawMode } from "../../01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js";
 import { appendClaudeCodeArgs } from "../../01-核心基础设施/共享小工具-未细化/claude-code-args.js";
 import { getCooContextProperties } from "../../01-核心基础设施/共享小工具-未细化/coo-context-properties.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 import { REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE } from "./remote-control-policy-messages.js";
-import { vRe } from "./chunk-4zd60pbm.js";
+import { createTokenRefreshScheduler } from "./chunk-4zd60pbm.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { P, Hxt } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform, getLinuxDistroInfo } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
@@ -594,7 +594,7 @@ function Jt(e) {
         let j = e.debugFile.lastIndexOf(".");
         if (j > 0) p = `${e.debugFile.slice(0, j)}-${d}${e.debugFile.slice(j)}`;
         else p = `${e.debugFile}-${d}`;
-      } else if (e.verbose) p = lr(bl(), `bridge-session-${d}.log`);
+      } else if (e.verbose) p = lr(getClaudeTempDir(), `bridge-session-${d}.log`);
       let r = null,
         C;
       if (e.debugFile)
@@ -677,7 +677,7 @@ function Jt(e) {
         if (!ce.has(j) && ce.has(j.toUpperCase())) delete ae[j];
       if (
         (g4(ae),
-        i9(ae),
+        removeGuiHostEntrypoint(ae),
         e.onDebug(
           `[bridge:session] Spawning sessionId=${t.sessionId} sdkUrl=${t.sdkUrl} accessToken=${t.accessToken ? "present" : "MISSING"}`,
         ),
@@ -707,7 +707,7 @@ function Jt(e) {
       if (I.stderr)
         createInterface({ input: I.stderr }).on("line", (Se) => {
           if (Se.startsWith($$e)) {
-            let $e = To(Se.slice($$e.length));
+            let $e = normalizeWhitespace(Se.slice($$e.length));
             if (e.onChildWarning) e.onChildWarning(t.sessionId, $e);
             else
               process.stderr.write(
@@ -906,7 +906,7 @@ function wr(e) {
     p = 0;
   for (let [w, _] of Object.entries(e))
     if (rn.has(w)) {
-      if (((t[w] = _), nn.has(w) && typeof _ === "string")) d.push(...qu([_]));
+      if (((t[w] = _), nn.has(w) && typeof _ === "string")) d.push(...splitToolRuleList([_]));
     } else if (w === sn) o = typeof _ === "string" && _ ? _ : null;
     else p++;
   let r = [],
@@ -1042,7 +1042,7 @@ async function gn(e) {
       let o = await EBt(),
         d = await lstat(o);
       if (!d.isDirectory()) throw Error("bridge spawn root is not a directory");
-      if (P() !== "windows") {
+      if (getCurrentPlatform() !== "windows") {
         if (
           (typeof process.getuid === "function" &&
             d.uid !== process.getuid()) ||
@@ -1215,11 +1215,11 @@ function vr(e) {
   }
   function Ae() {
     Se();
-    let k = mkt[Je % mkt.length],
+    let k = ASCII_SPINNER_FRAMES[Je % ASCII_SPINNER_FRAMES.length],
       J = "";
-    if (w) J += ie.dim(" \xB7 ") + ie.dim(w);
-    if (_) J += ie.dim(" \xB7 ") + ie.dim(_);
-    j(`${ie.yellow(k)} ${ie.yellow("Connecting")}${J}
+    if (w) J += chalk.dim(" \xB7 ") + chalk.dim(w);
+    if (_) J += chalk.dim(" \xB7 ") + chalk.dim(_);
+    j(`${chalk.yellow(k)} ${chalk.yellow("Connecting")}${J}
 `);
   }
   function Oe() {
@@ -1235,11 +1235,11 @@ function vr(e) {
   function He(k, J) {
     if (ne)
       for (let be of ue)
-        j(`${ie.dim(be)}
+        j(`${chalk.dim(be)}
 `);
-    let de = mkt[Je % mkt.length];
+    let de = ASCII_SPINNER_FRAMES[Je % ASCII_SPINNER_FRAMES.length];
     (Je++,
-      j(`${ie.yellow(de)} ${ie.yellow("Reconnecting")} ${ie.dim("\xB7")} ${ie.dim(`retrying in ${k}`)} ${ie.dim("\xB7")} ${ie.dim(`disconnected ${J}`)}
+      j(`${chalk.yellow(de)} ${chalk.yellow("Reconnecting")} ${chalk.dim("\xB7")} ${chalk.dim(`retrying in ${k}`)} ${chalk.dim("\xB7")} ${chalk.dim(`disconnected ${J}`)}
 `));
   }
   function De() {
@@ -1248,14 +1248,14 @@ function vr(e) {
     let k = p === "idle";
     if (ne)
       for (let ze of ue)
-        j(`${ie.dim(ze)}
+        j(`${chalk.dim(ze)}
 `);
-    let J = Dtt,
-      de = k ? ie.green : ie.cyan,
-      Te = (k ? ie.green : ie.cyan)(r),
+    let J = CHECK_MARK_GLYPH,
+      de = k ? chalk.green : chalk.cyan,
+      Te = (k ? chalk.green : chalk.cyan)(r),
       Fe = "";
-    if (w) Fe += ie.dim(" \xB7 ") + ie.dim(w);
-    if (_ && D !== "worktree") Fe += ie.dim(" \xB7 ") + ie.dim(_);
+    if (w) Fe += chalk.dim(" \xB7 ") + chalk.dim(w);
+    if (_ && D !== "worktree") Fe += chalk.dim(" \xB7 ") + chalk.dim(_);
     if (
       (j(`${de(J)} ${Te}${Fe}
 `),
@@ -1265,15 +1265,15 @@ function vr(e) {
         D === "worktree"
           ? "New sessions will be created in an isolated worktree"
           : "New sessions will be created in the current directory";
-      j(`    ${ie.dim(`Capacity: ${I}/${X} \xB7 ${ze}`)}
+      j(`    ${chalk.dim(`Capacity: ${I}/${X} \xB7 ${ze}`)}
 `);
       for (let [, rt] of Ke) {
-        let Ye = rt.title ? truncateToWidth(rt.title, 35) : ie.dim("Attached"),
-          Ce = wBn(Ye, rt.url),
+        let Ye = rt.title ? truncateToWidth(rt.title, 35) : chalk.dim("Attached"),
+          Ce = formatTerminalHyperlink(Ye, rt.url),
           Ie = rt.activity,
           Ee =
             Ie && Ie.type !== "result" && Ie.type !== "error"
-              ? ie.dim(` ${truncateToWidth(Ie.summary, 40)}`)
+              ? chalk.dim(` ${truncateToWidth(Ie.summary, 40)}`)
               : "";
         j(`    ${Ce}${Ee}
 `);
@@ -1286,22 +1286,22 @@ function vr(e) {
           : D === "worktree"
             ? `Capacity: ${I}/1 \xB7 New sessions will be created in an isolated worktree`
             : `Capacity: ${I}/1 \xB7 New sessions will be created in the current directory`;
-      j(`    ${ie.dim(ze)}
+      j(`    ${chalk.dim(ze)}
 `);
     }
     if (X === 1 && !k && ae && Date.now() - ce < yBn)
-      j(`  ${ie.dim(truncateToWidth(ae, 60))}
+      j(`  ${chalk.dim(truncateToWidth(ae, 60))}
 `);
     let ot = N ?? E;
     if (ot) {
       j(`
 `);
-      let ze = k ? N9e(ot) : F9e(ot),
+      let ze = k ? formatCodeAnywhereMessage(ot) : formatContinueCodingMessage(ot),
         rt = ne
-          ? ie.dim.italic("space to hide QR code")
-          : ie.dim.italic("space to show QR code"),
-        Ye = ge ? ie.dim.italic(" \xB7 w to toggle spawn mode") : "";
-      (j(`${ie.dim(ze)}
+          ? chalk.dim.italic("space to hide QR code")
+          : chalk.dim.italic("space to show QR code"),
+        Ye = ge ? chalk.dim.italic(" \xB7 w to toggle spawn mode") : "";
+      (j(`${chalk.dim(ze)}
 `),
         j(`${rt}${Ye}
 `));
@@ -1309,40 +1309,40 @@ function vr(e) {
   }
   return {
     printBanner(k, J) {
-      if (((W = k.sessionIngressUrl), (E = Jat(J, W)), fe(E), o))
+      if (((W = k.sessionIngressUrl), (E = buildSessionWebUrl(J, W)), fe(E), o))
         t(
-          ie.dim("Remote Control") +
+          chalk.dim("Remote Control") +
             ` v${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}
 `,
         );
       if (o) {
         if (k.spawnMode !== "single-session")
           (t(
-            ie.dim("Spawn mode: ") +
+            chalk.dim("Spawn mode: ") +
               `${k.spawnMode}
 `,
           ),
             t(
-              ie.dim("Max concurrent sessions: ") +
+              chalk.dim("Max concurrent sessions: ") +
                 `${k.maxSessions}
 `,
             ));
         t(
-          ie.dim("Environment ID: ") +
+          chalk.dim("Environment ID: ") +
             `${J}
 `,
         );
       }
       if (k.sandbox)
         t(
-          ie.dim("Sandbox: ") +
-            `${ie.green("Enabled")}
+          chalk.dim("Sandbox: ") +
+            `${chalk.green("Enabled")}
 `,
         );
       if (k.livePreviewPorts && k.livePreviewPorts.size > 0) {
         let de = [...k.livePreviewPorts].sort((be, Te) => be - Te).join(", ");
         t(
-          ie.yellow(`\u26A0  Live preview enabled: 127.0.0.1 ${x(k.livePreviewPorts.size, "port")} ${de} ${k.livePreviewPorts.size > 1 ? "are" : "is"} reachable from this session's livepreview URL while Remote Control is running.
+          chalk.yellow(`\u26A0  Live preview enabled: 127.0.0.1 ${pluralize(k.livePreviewPorts.size, "port")} ${de} ${k.livePreviewPorts.size > 1 ? "are" : "is"} reachable from this session's livepreview URL while Remote Control is running.
 `),
         );
       }
@@ -1354,29 +1354,29 @@ function vr(e) {
       if (o) {
         let de = truncateToWidth(J, 80);
         $e(
-          ie.dim(`[${Ple()}]`) +
-            ` Session started: ${ie.white(`"${de}"`)} (${ie.dim(k)})
+          chalk.dim(`[${formatClockTime()}]`) +
+            ` Session started: ${chalk.white(`"${de}"`)} (${chalk.dim(k)})
 `,
         );
       }
     },
     logSessionComplete(k, J) {
       $e(
-        ie.dim(`[${Ple()}]`) +
-          ` Session ${ie.green("completed")} (${formatDuration(J)}) ${ie.dim(k)}
+        chalk.dim(`[${formatClockTime()}]`) +
+          ` Session ${chalk.green("completed")} (${formatDuration(J)}) ${chalk.dim(k)}
 `,
       );
     },
     logSessionFailed(k, J) {
       $e(
-        ie.dim(`[${Ple()}]`) +
-          ` Session ${ie.red("failed")}: ${J} ${ie.dim(k)}
+        chalk.dim(`[${formatClockTime()}]`) +
+          ` Session ${chalk.red("failed")}: ${J} ${chalk.dim(k)}
 `,
       );
     },
     logStatus(k) {
       $e(
-        ie.dim(`[${Ple()}]`) +
+        chalk.dim(`[${formatClockTime()}]`) +
           ` ${k}
 `,
       );
@@ -1384,21 +1384,21 @@ function vr(e) {
     logVerbose(k) {
       if (o)
         $e(
-          ie.dim(`[${Ple()}] ${k}`) +
+          chalk.dim(`[${formatClockTime()}] ${k}`) +
             `
 `,
         );
     },
     logError(k) {
       $e(
-        ie.red(`[${Ple()}] Error: ${k}`) +
+        chalk.red(`[${formatClockTime()}] Error: ${k}`) +
           `
 `,
       );
     },
     logWarning(k) {
       $e(
-        ie.yellow(`[${Ple()}] Warning: ${k}`) +
+        chalk.yellow(`[${formatClockTime()}] Warning: ${k}`) +
           `
 `,
       );
@@ -1406,8 +1406,8 @@ function vr(e) {
     logReconnected(k) {
       ((C = null),
         $e(
-          ie.dim(`[${Ple()}]`) +
-            ` ${ie.green("Reconnected")} after ${formatDuration(k)}
+          chalk.dim(`[${formatClockTime()}]`) +
+            ` ${chalk.green("Reconnected")} after ${formatDuration(k)}
 `,
         ));
     },
@@ -1449,16 +1449,16 @@ function vr(e) {
     updateFailedStatus(k) {
       (xe(), Se(), (p = "failed"));
       let J = "";
-      if (w) J += ie.dim(" \xB7 ") + ie.dim(w);
-      if (_) J += ie.dim(" \xB7 ") + ie.dim(_);
+      if (w) J += chalk.dim(" \xB7 ") + chalk.dim(w);
+      if (_) J += chalk.dim(" \xB7 ") + chalk.dim(_);
       if (
-        (j(`${ie.red(Ltt)} ${ie.red("Remote Control Failed")}${J}
+        (j(`${chalk.red(CROSS_MARK_GLYPH)} ${chalk.red("Remote Control Failed")}${J}
 `),
-        j(`${ie.dim(bBn)}
+        j(`${chalk.dim(RERUN_REMOTE_CONTROL_CLI_MESSAGE)}
 `),
         k)
       )
-        j(`${ie.red(k)}
+        j(`${chalk.red(k)}
 `);
     },
     updateSessionStatus(k, J, de, be) {
@@ -1702,7 +1702,7 @@ async function Bn({ includeMcpServers: e, signal: t }) {
         ...(Pn.test("arm64") && { arch: "arm64" }),
         ...(p.osVersion !== void 0 && { os_version: p.osVersion }),
         ...(p.distro !== void 0 && { distro: p.distro }),
-        ...(P() === "wsl" && { wsl: !0 }),
+        ...(getCurrentPlatform() === "wsl" && { wsl: !0 }),
         tools: T,
         ...(e && { mcp_servers: p.mcpServers.slice(0, $n) }),
         collected_at: new Date().toISOString(),
@@ -1750,7 +1750,7 @@ async function Nn(e, t) {
       t.osVersion = await Rr(Cn, "ProductVersion");
       return;
     case "linux": {
-      let o = await Hxt();
+      let o = await getLinuxDistroInfo();
       if (o?.linuxDistroVersion && jt.test(o.linuxDistroVersion))
         t.osVersion = o.linuxDistroVersion;
       let d = o?.linuxDistroId?.toLowerCase();
@@ -2160,7 +2160,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
     }
   }
   let ze = T
-      ? vRe({
+      ? createTokenRefreshScheduler({
           getAccessToken: T,
           onRefresh: (v, V) => {
             if (!D.get(v)) return;
@@ -2336,7 +2336,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
     if (
       (r.logStatus(
         v > 0
-          ? `${v} ${x(v, "session")} ended while this machine was offline \u2014 the environment was cleaned up on the server and can't be resumed.`
+          ? `${v} ${pluralize(v, "session")} ended while this machine was offline \u2014 the environment was cleaned up on the server and can't be resumed.`
           : "This environment was cleaned up while the machine was offline and can't be resumed.",
       ),
       xe.size > 0)
@@ -2454,7 +2454,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
         continue;
       }
       let F = D.size >= e.maxSessions;
-      if (fe.has(L.id) && L.state === Iyn)
+      if (fe.has(L.id) && L.state === BRIDGE_WORK_STATE_QUEUED)
         (fe.delete(L.id),
           n(
             `[bridge:work] Previously completed workId=${L.id} was re-queued by the server, handling as new work`,
@@ -2670,7 +2670,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                     n(`[bridge:title] derived title for ${ke}: ${Ne}`),
                     import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js")
                       .then(async ({ getBridgeSession: Ge }) => {
-                        k ??= Xat({
+                        k ??= createBridgeTitleWriter({
                           isOwnTitle: (oe, _e) => De.get(oe)?.has(_e) ?? !1,
                           onRemoteTitleAdopted: (oe, _e) =>
                             r.setSessionTitle(oe, _e),
@@ -2720,7 +2720,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             in_worktree: Ae.has(U),
             spawn_duration_ms: It,
             worktree_create_ms: pt,
-            inProtectedNamespace: NL(),
+            inProtectedNamespace: isInProtectedNamespace(),
             ...getCooContextProperties(),
           }),
             writeDiagnosticsEvent("info", "bridge_session_started", {
@@ -2745,7 +2745,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             if (ve > 0)
               bt = `${e.debugFile.slice(0, ve)}-${mt}${e.debugFile.slice(ve)}`;
             else bt = `${e.debugFile}-${mt}`;
-          } else if (e.verbose) bt = zn(bl(), `bridge-session-${mt}.log`);
+          } else if (e.verbose) bt = zn(getClaudeTempDir(), `bridge-session-${mt}.log`);
           if (bt) r.logVerbose(`Debug log: ${bt}`);
           (r.addSession(ke, wa(ke, e.sessionIngressUrl, { from: "cli" })),
             nt(),
@@ -3173,7 +3173,7 @@ async function nr(e, t, o) {
       ? { dirty: !1, commitsAhead: 0, gitError: !1 }
       : await KLe(e.worktreePath, e.headCommit, { hookBased: e.hookBased });
   if (p || r > 0) {
-    let _ = `${r} ${x(r, "commit")}`,
+    let _ = `${r} ${pluralize(r, "commit")}`,
       T = C
         ? "git error checking changes"
         : p && r > 0
@@ -3223,7 +3223,7 @@ function ts(e) {
   return `--spawn requires one of: ${es.join(", ")} (got: ${e ?? "<missing>"})`;
 }
 function rs(e) {
-  let t = e === void 0 ? NaN : tl(e);
+  let t = e === void 0 ? NaN : parseConfigInteger(e);
   if (isNaN(t) || t < 1)
     return `--capacity requires a positive integer (got: ${e ?? "<missing>"})`;
   return t;
@@ -3310,9 +3310,9 @@ Run 'claude remote-control --help' for usage.`);
     return ae(
       "--enable-live-preview and --preview-port are not available in this build.",
     );
-  if (St() && (ne || Pe.length > 0))
+  if (isEssentialTrafficOnly() && (ne || Pe.length > 0))
     return ae(
-      `--enable-live-preview is unavailable while nonessential network traffic is disabled (${dxe() ?? "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC"} is set).`,
+      `--enable-live-preview is unavailable while nonessential network traffic is disabled (${getNonessentialTrafficDisabledEnvVar() ?? "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC"} is set).`,
     );
   if (ne && Pe.length === 0)
     return ae(
@@ -3437,7 +3437,7 @@ async function ds(e, t, o) {
     let p = await as(o);
     if (!p) return !1;
     let { accessToken: r, useV2: C, orgUUID: w, trustedDeviceToken: _ } = p,
-      { unarchiveCodeSession: T } = await import("./chunk-mxsfy35q.js"),
+      { unarchiveCodeSession: T } = await import("./code-session-api.js"),
       E = await T(t, r, e, 1e4, {
         useV2: C,
         orgUUID: w,
@@ -3523,7 +3523,7 @@ async function bridgeMain(e, t, o) {
     return;
   }
   if (d.error) (console.error(`Error: ${d.error}`), process.exit(1));
-  let p = Pc();
+  let p = getLauncherConfigError();
   if (p) {
     (logFeatureBad("agent_launcher", "remote_control_refused"),
       console.error(
@@ -3572,7 +3572,7 @@ async function bridgeMain(e, t, o) {
   let { setOriginalCwd: et, setCwdState: j } =
     await import("../AppState-状态管理/getOriginalCwd.mg2gq0d6.js");
   if ((et(D), j(D), !We())) {
-    let B = homedir() === Q();
+    let B = homedir() === getCwd();
     (console.error(
       B
         ? `Error: Workspace not trusted. ${D} is your home directory, and for security home-directory trust is never saved, so running \`claude\` here first won't help. Run \`claude rc\` from a project directory instead (run \`claude\` there once to accept the trust dialog).`
@@ -3588,7 +3588,7 @@ async function bridgeMain(e, t, o) {
       getBridgeBaseUrl: Oe,
     } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js"),
     xe = isHoverRestEnabled() && o !== void 0;
-  if (!(xe ? await Ae(o) : fe())) (console.error(ANe), process.exit(1));
+  if (!(xe ? await Ae(o) : fe())) (console.error(REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE), process.exit(1));
   let {
     getGlobalConfig: De,
     saveGlobalConfig: k,
@@ -3717,9 +3717,9 @@ Spawn mode for this project:
       K = await B(D, void 0, t);
     if (K) {
       let { isProcessRunning: se } =
-        await import("../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js"),
+        await import("../../01-核心基础设施/共享小工具-未细化/process-record.js"),
       { isSameProcessAsync: Me } =
-        await import("../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js");
+        await import("../../01-核心基础设施/核心工具-进程与信号/process-identity.js");
       if (
         K.pid !== void 0 &&
         K.pid !== process.pid &&
@@ -3791,9 +3791,9 @@ Spawn mode for this project:
       se = await B(K, { noClear: !0 }, t);
     if (se?.pid !== void 0 && se.pid !== process.pid) {
       let { isProcessRunning: Bt } =
-        await import("../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js"),
+        await import("../../01-核心基础设施/共享小工具-未细化/process-record.js"),
       { isSameProcessAsync: Lr } =
-        await import("../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js");
+        await import("../../01-核心基础设施/核心工具-进程与信号/process-identity.js");
       if (Bt(se.pid) && (await Lr(se.pid, se.procStart))) {
         if (sessionIdsMatch(se.sessionId, X))
           (console.error(
@@ -3917,7 +3917,7 @@ Spawn mode for this project:
     } else {
       let { writeBridgePointer: B, readBridgePointer: oe } =
           await import("./PERSISTED_SESSION_RESUME_WINDOW_MS.p4tjt1zq.js"),
-        { ownProcStartAsync: _e } = await import("../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js");
+        { ownProcStartAsync: _e } = await import("../../01-核心基础设施/核心工具-进程与信号/process-identity.js");
       if (
         ((ee.preserveOnShutdown = await B(
           D,
@@ -4047,7 +4047,7 @@ The session may still be resumable \u2014 try running the same command again.`,
       spawn_mode: ee.spawnMode,
     }));
   let he = vr({ verbose: r }),
-    Ue = await Wtn(fe),
+    Ue = await resolveBridgeDaemonOwner(fe),
     st = resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 }),
     lt = Jt({
       execPath: st.cmd,
@@ -4130,7 +4130,7 @@ The session may still be resumable \u2014 try running the same command again.`,
   let mt = U ?? nt ?? null,
     bt;
   if (Be && !U && !nt) {
-    let B = T ?? `${getBridgeSessionNamePrefix()}-${xU()}`,
+    let B = T ?? `${getBridgeSessionNamePrefix()}-${generateAdjectiveNounName()}`,
       { createBridgeSession: oe } = await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
     try {
       let _e = xe ? await Ae(o) : void 0;
@@ -4168,7 +4168,7 @@ The session may still be resumable \u2014 try running the same command again.`,
         PERSISTED_SESSION_RESUME_WINDOW_MS: _e,
         isPersistedStampFresh: K,
       } = await import("./PERSISTED_SESSION_RESUME_WINDOW_MS.p4tjt1zq.js"),
-      { ownProcStartAsync: se } = await import("../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js"),
+      { ownProcStartAsync: se } = await import("../../01-核心基础设施/核心工具-进程与信号/process-identity.js"),
       Me = oe();
     if (
       ((ee.enqueuePointerWrite = Me),
@@ -4273,7 +4273,7 @@ function cs(e, t) {
 }
 async function runBridgeHeadless(e, t) {
   let { dir: o, log: d } = e,
-    p = Pc();
+    p = getLauncherConfigError();
   if (p)
     throw new R(
       `${p} \u2014 Remote Control sessions are not started unwrapped; the worker retries once the launcher is fixed`,
@@ -4304,11 +4304,11 @@ async function runBridgeHeadless(e, t) {
   if (ae) throw ae;
   if (!_())
     throw new BridgeHeadlessPermanentError(
-      homedir() === Q()
+      homedir() === getCwd()
         ? `Workspace not trusted: ${o} is the home directory, whose trust is never saved \u2014 running \`claude\` there first won't help. Run Remote Control from a project directory instead.`
         : `Workspace not trusted: ${o}. Run \`claude\` in that directory first to accept the trust dialog.`,
     );
-  if (!e.getAccessToken()) throw Error(ANe);
+  if (!e.getAccessToken()) throw Error(REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE);
   let { getBridgeBaseUrl: ce } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js"),
     I = ce();
   if (
@@ -4349,9 +4349,9 @@ async function runBridgeHeadless(e, t) {
       le = await pe(o, void 0, e.storageV5);
     if (le) {
       let { isProcessRunning: Qe } =
-        await import("../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js"),
+        await import("../../01-核心基础设施/共享小工具-未细化/process-record.js"),
       { isSameProcessAsync: je } =
-        await import("../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js");
+        await import("../../01-核心基础设施/核心工具-进程与信号/process-identity.js");
       if (
         le.pid !== void 0 &&
         le.pid !== process.pid &&
@@ -4454,7 +4454,7 @@ async function runBridgeHeadless(e, t) {
     ((k.initialSessionRequeues = [...Te, ...Fe]),
       (k.initialSessionRequeuesPersistedAt = De));
   let ot = us(d),
-    ze = await Wtn(e.getAccessToken),
+    ze = await resolveBridgeDaemonOwner(e.getAccessToken),
     rt = resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 }),
     Ye = Jt({
       execPath: rt.cmd,
@@ -4502,7 +4502,7 @@ async function runBridgeHeadless(e, t) {
         PERSISTED_SESSION_RESUME_WINDOW_MS: Be,
         isPersistedStampFresh: le,
       } = await import("./PERSISTED_SESSION_RESUME_WINDOW_MS.p4tjt1zq.js"),
-      { ownProcStartAsync: Qe } = await import("../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js"),
+      { ownProcStartAsync: Qe } = await import("../../01-核心基础设施/核心工具-进程与信号/process-identity.js"),
       je = {
         sessionId: Ce ?? "",
         environmentId: de,

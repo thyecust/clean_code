@@ -12,9 +12,9 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { We, b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be, yf, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { x, ln, Ux } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getClaudeConfigDir, getSafeModeExitHint, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { pluralize, countOccurrences, normalizeFullWidthDigits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -44,40 +44,40 @@ import {
   hQ,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { jn, Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te, formatDuration, formatNumber, formatTokens, formatRelativeTimeAgo, formatResetText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { listedProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { ake } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { getSettingsForSource, getInitialSettings, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { DP, iv, VU } from "../权限系统/chunk-e4pfvp7x.js";
-import { NU } from "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
-import { mx } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { LEFT_ARROW_GLYPH, WARNING_GLYPH, getPermissionModeTitle } from "../权限系统/chunk-e4pfvp7x.js";
+import { NOTIFICATION_CHANNELS } from "../图片-截图-ComputerUse/settings-option-values.js";
+import { getComplianceTaints } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { D6, Lvt, KZe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { jY, T3t } from "../状态栏-主题/chunk-jz6b76hr.js";
-import { cn, c4 } from "../状态栏-主题/chunk-w5jaj6kg.js";
+import { useTheme, useThemeSetting } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { Zb } from "../状态栏-主题/chunk-q7ekqy5h.js";
-import { Eo } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
-import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
+import { parseCustomThemeRef } from "../状态栏-主题/custom-themes.js";
+import { resolveSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
+import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { Ma, ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { dd } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import { isChannelsEnabled } from "../插件系统/chunk-rbjz1q03.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { isChannelsPolicyBlocked } from "../插件系统/channel-gate.js";
-import { d_, U, It, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSession, useAppStateSelector, useSetAppState, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useMainLoopModelOverride } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import { fc } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import {
@@ -103,16 +103,16 @@ import {
   tN,
   Tpe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { YEt } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
-import { Pl } from "../Teammates团队/chunk-thxapyam.js";
-import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import { areWorkflowsAvailable } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
+import { getProjectsDir } from "../Teammates团队/transcript-paths.js";
+import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { isArtifactConfigToggleable } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { ensurePolicyLimitsLoadedForDiagnostic } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { isPushNotificationsEnabled, isInputNeededPushEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
-import { K_ } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
-import { ny } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
+import { formatCronSchedule } from "../后台任务-Shell管理/scheduled-tasks.js";
+import { ny } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { fDt } from "../跨会话消息(UDS)/chunk-t2esphmv.js";
-import { b4 } from "../Grove-隐私设置/chunk-a4mdm49v.js";
+import { githubConnectionStatusStore } from "../Grove-隐私设置/chunk-a4mdm49v.js";
 import { isWebSetupEnabled } from "../斜杠命令-框架/chunk-a4vej95c.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
@@ -120,7 +120,7 @@ import { cE, qm, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js
 import { Vi, RZ, jm } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { KZ } from "../状态栏-主题/chunk-rhjpq9s2.js";
+import { ThemePicker } from "../状态栏-主题/theme-picker.js";
 import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { WA, Vx, Sv, Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { RemoteHomeSettingsDialog } from "../Memory-CLAUDE.md/chunk-54xx04er.js";
@@ -129,7 +129,7 @@ import { Ult, Blt } from "../AppState-状态管理/AppState-状态管理.wyzjbwp
 import { getPushReachability, subscribePushReachability, subscribePushPreferencesHydrated } from "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
 import { YDt, Olt, AIe, gSe } from "../../01-核心基础设施/设置-配置/chunk-bznmdnc2.js";
 import { Ble, a3e } from "../成本-Token统计/chunk-3nwwgatc.js";
-import { r3e, plt } from "../MCP客户端/chunk-22bnxvxv.js";
+import { seedUtilization, loadPlanRateLimits } from "../MCP客户端/usage-rate-limits.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
 import {
   BWe,
@@ -154,8 +154,8 @@ import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工�
 import { BulletItem } from "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Rl } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
-import { Lee } from "../后台任务-Shell管理/chunk-531ast3t.js";
-import { $7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
+import { isAgentsViewAvailable } from "../后台任务-Shell管理/chunk-531ast3t.js";
+import { resolveThemePalette } from "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
 import {
   Nl,
   Dn,
@@ -171,10 +171,10 @@ import {
   F,
 } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { isSkillDoctorEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
-import { L, J_n, dAe } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures, formatWorkflowSizeGuidelineLabel, isWorkflowSizeGuidelineConfigured } from "../Teammates团队/chunk-mrfx53ye.js";
 import { zNe } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
 import { toESM, commonJS, MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var Pm = commonJS(function (Oi) {
@@ -279,7 +279,7 @@ F();
 F();
 function gr(s, c, m) {
   if (getAPIProvider() !== "firstParty" || !isConsumerSubscriber() || !isWebSetupEnabled()) return;
-  let T = b4.of(s);
+  let T = githubConnectionStatusStore.of(s);
   return { current: () => T.peek(c, m), settled: T.read(c, m) };
 }
 function $u(s) {
@@ -428,7 +428,7 @@ function od({ sessionId: s, cwd: c, accountStatus: m, webSetupStatus: T }) {
   ];
 }
 function $f() {
-  let s = mx();
+  let s = getComplianceTaints();
   return s.length > 0
     ? [{ label: "Compliance", value: KZe(s).map((c) => (Lvt(c) ? D6(c) : c)) }]
     : [];
@@ -526,7 +526,7 @@ function Zs(Mb) {
       (ao[8] = xf));
   else ((vf = ao[7]), (xf = ao[8]));
   E(vf, xf);
-  let Kn = Ma() ? 1 : void 0,
+  let Kn = useHasVirtualScrollViewport() ? 1 : void 0,
     yr;
   if (ao[9] !== Wu || ao[10] !== Gn || ao[11] !== ju)
     ((yr = e(Dn, {
@@ -592,10 +592,10 @@ function Tr(Hu) {
   let Qs = _(15),
     { context: Vu, accountStatusRead: Rf, webSetupStatus: Gu } = Hu,
     Ku = Rf === void 0 ? void 0 : kn(Rf),
-    Ab = U(Ff),
+    Ab = useAppStateSelector(Ff),
     zu = useMainLoopModelOverride() ?? Ab,
-    Yu = U(Uf),
-    [qu] = cn(),
+    Yu = useAppStateSelector(Uf),
+    [qu] = useTheme(),
     Xu = useSession(Wf),
     Ju = useSession(jf),
     If;
@@ -871,7 +871,7 @@ function $r(mC) {
       gd &&
       e(t, {
         dimColor: !0,
-        children: `Your saved output style "${lo}" is a custom style disabled in safe mode \u2014 ${yf()} to use it; selecting a style here replaces it`,
+        children: `Your saved output style "${lo}" is a custom style disabled in safe mode \u2014 ${getSafeModeExitHint()} to use it; selecting a style here replaces it`,
       })),
       (si[3] = lo),
       (si[4] = gd),
@@ -931,7 +931,7 @@ function Hr(xC) {
       (sn[4] = ug));
   else ug = sn[4];
   let dg;
-  if (sn[5] === MEMO_CACHE_SENTINEL) ((dg = e(t, { children: L.pointer })), (sn[5] = dg));
+  if (sn[5] === MEMO_CACHE_SENTINEL) ((dg = e(t, { children: figures.pointer })), (sn[5] = dg));
   else dg = sn[5];
   const Sd = Ur ?? "";
   let Wr;
@@ -947,7 +947,7 @@ function Hr(xC) {
           onSubmit: ri,
           focus: !0,
           showCursor: !0,
-          placeholder: `e.g., Japanese, \u65E5\u672C\u8A9E, Espa\xF1ol${L.ellipsis}`,
+          placeholder: `e.g., Japanese, \u65E5\u672C\u8A9E, Espa\xF1ol${figures.ellipsis}`,
           columns: 60,
           cursorOffset: yd,
           onChangeCursorOffset: AC,
@@ -1124,7 +1124,7 @@ function ea(qC) {
                 children: [
                   r(t, {
                     "aria-hidden": !0,
-                    children: [qr ? L.pointer : " ", " "],
+                    children: [qr ? figures.pointer : " ", " "],
                   }),
                   Md.label,
                 ],
@@ -1193,7 +1193,7 @@ function rn() {
       wrap: "truncate-end",
       children: [
         "  ",
-        iv,
+        WARNING_GLYPH,
         " No mobile registered \xB7",
         " ",
         e(ct, {
@@ -1384,15 +1384,15 @@ function ga({
   let v = gi(),
     { storageV5: A, credentials: H } = useStorageV5Context(),
     B = useSession(),
-    Y = Yn(),
-    G = d_(),
+    Y = useAppState(),
+    G = useAppStateSession(),
     { addNotification: j } = useNotificationQueue(),
     O = C(0),
     q = C(0),
     { headerFocused: Z, focusHeader: Q } = Jd(),
-    se = Ma(),
-    [, ce] = cn(),
-    K = c4(),
+    se = useHasVirtualScrollViewport(),
+    [, ce] = useTheme(),
+    K = useThemeSetting(),
     [I, X] = d(AIe),
     J = C(I),
     [me, he] = d(() => ({
@@ -1414,7 +1414,7 @@ function ga({
     [Ue, Lt] = d(0),
     at = tn(),
     [tt, zt] = d(!at),
-    qo = Va(),
+    qo = useTerminalFocus(),
     { rows: Fn, columns: ro } = useTerminalSize(),
     or = C(null),
     [nr, Lp] = d(1),
@@ -1427,16 +1427,16 @@ function ga({
         : "Changes here update this machine's settings, not the running remote session.",
     Bp = Us === null ? 0 : Math.ceil((Us.length + 2) / Math.max(1, ro - 4)),
     Xo = Math.max(5, Np - 8 - nr - Bp),
-    Ws = U((k) => k.mainLoopModel),
-    $p = U((k) => k.mainLoopModelForSession),
+    Ws = useAppStateSelector((k) => k.mainLoopModel),
+    $p = useAppStateSelector((k) => k.mainLoopModelForSession),
     vu = useMainLoopModelOverride() ?? Ws,
-    Fp = U((k) => k.verbose),
-    xu = U((k) => k.thinkingEnabled),
-    Mu = U((k) => (Mr() ? k.fastMode : !1)),
-    Up = U((k) => k.promptSuggestionEnabled),
-    Wp = U((k) => k.awaySummaryEnabled),
+    Fp = useAppStateSelector((k) => k.verbose),
+    xu = useAppStateSelector((k) => k.thinkingEnabled),
+    Mu = useAppStateSelector((k) => (Mr() ? k.fastMode : !1)),
+    Up = useAppStateSelector((k) => k.promptSuggestionEnabled),
+    Wp = useAppStateSelector((k) => k.awaySummaryEnabled),
     Hp = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js").isBriefEntitled(),
-    Vp = It(),
+    Vp = useSetAppState(),
     [Eu, Gp] = d({}),
     Kp = C(xu);
   E(() => subscribePushPreferencesHydrated(() => X(AIe())), []);
@@ -1468,19 +1468,19 @@ function ga({
   }, [_u, T]);
   let Xp = ATe(c.options.mcpClients),
     Jp = !a.CLAUDE_CODE_DISABLE_FILE_CHECKPOINTING,
-    Pu = Eo("disableWorkflows", !1),
-    Ou = Eo("enableWorkflows", !1),
+    Pu = resolveSetting("disableWorkflows", !1),
+    Ou = resolveSetting("enableWorkflows", !1),
     Qp =
-      YEt() &&
+      areWorkflowsAvailable() &&
       (Pu.value !== !0 || Pu.source === "userSettings") &&
       (Ou.source === "default" || Ou.source === "userSettings"),
-    Zp = !dAe(),
+    Zp = !isWorkflowSizeGuidelineConfigured(),
     ef = Blt(),
     tf = isArtifactConfigToggleable(),
     Lu = kn(Ny(B, !0, A, H)),
     of = M_n(Lu),
     bt = hQ(),
-    rr = isPushNotificationsEnabled() && !St() && hasStoredOAuthToken(),
+    rr = isPushNotificationsEnabled() && !isEssentialTrafficOnly() && hasStoredOAuthToken(),
     {
       settings: Po,
       helpers: {
@@ -1573,7 +1573,7 @@ function ga({
     ar = Hg(Yt, uf),
     df = Math.min(zp, ar.length),
     lr =
-      ln(
+      countOccurrences(
         Vm(ma, Math.max(1, Wn - 2)),
         `
 `,
@@ -1581,7 +1581,7 @@ function ga({
     cr =
       Jo === null
         ? 0
-        : ln(
+        : countOccurrences(
             Vm(Jo, Math.max(1, Wn - 2)),
             `
 `,
@@ -1592,7 +1592,7 @@ function ga({
         if (oe.lock !== void 0)
           k.set(
             oe.id,
-            ln(
+            countOccurrences(
               Vm(oe.lock.reason, Math.max(1, Wn - 4)),
               `
 `,
@@ -1647,7 +1647,7 @@ function ga({
             setting: Ae,
             value: Tn(String(Xs)),
           }),
-          `Set ${Ae} to ${ie.bold(Xs)}`
+          `Set ${Ae} to ${chalk.bold(Xs)}`
         ),
       ),
       oe = xg() ? void 0 : a.ANTHROPIC_API_KEY,
@@ -1662,16 +1662,16 @@ function ga({
           setting: S("env.ANTHROPIC_API_KEY"),
           value: le,
         }));
-    if (I.theme !== J.current.theme) k.push(`Set theme to ${ie.bold(I.theme)}`);
+    if (I.theme !== J.current.theme) k.push(`Set theme to ${chalk.bold(I.theme)}`);
     if (I.preferredNotifChannel !== J.current.preferredNotifChannel)
-      k.push(`Set notifications to ${ie.bold(I.preferredNotifChannel)}`);
-    if (Ie !== ke.current) k.push(`Set output style to ${ie.bold(Ie)}`);
+      k.push(`Set notifications to ${chalk.bold(I.preferredNotifChannel)}`);
+    if (Ie !== ke.current) k.push(`Set output style to ${chalk.bold(Ie)}`);
     if (mt !== tr.current)
-      k.push(`Set response language to ${ie.bold(mt ?? "Default (English)")}`);
+      k.push(`Set response language to ${chalk.bold(mt ?? "Default (English)")}`);
     if (I.editorMode !== J.current.editorMode)
-      k.push(`Set editor mode to ${ie.bold(I.editorMode || "emacs")}`);
+      k.push(`Set editor mode to ${chalk.bold(I.editorMode || "emacs")}`);
     if (I.diffTool !== J.current.diffTool)
-      k.push(`Set diff tool to ${ie.bold(I.diffTool)}`);
+      k.push(`Set diff tool to ${chalk.bold(I.diffTool)}`);
     if (I.autoConnectIde !== J.current.autoConnectIde)
       k.push(
         `${I.autoConnectIde ? "Enabled" : "Disabled"} auto-connect to IDE`,
@@ -1696,7 +1696,7 @@ function ga({
       k.push(`${I.copyOnSelect ? "Enabled" : "Disabled"} copy on select`);
     if (I.leftArrowOpensAgents !== J.current.leftArrowOpensAgents)
       k.push(
-        `${(I.leftArrowOpensAgents ?? !0) ? "Enabled" : "Disabled"} ${DP} opens agents`,
+        `${(I.leftArrowOpensAgents ?? !0) ? "Enabled" : "Disabled"} ${LEFT_ARROW_GLYPH} opens agents`,
       );
     if (I.defaultToAgentsView !== J.current.defaultToAgentsView)
       k.push(
@@ -1725,7 +1725,7 @@ function ga({
     }
     if (me?.autoUpdatesChannel !== Re.current?.autoUpdatesChannel)
       k.push(
-        `Set auto-update channel to ${ie.bold(me?.autoUpdatesChannel === "rc" ? "slow" : (me?.autoUpdatesChannel ?? "latest"))}`,
+        `Set auto-update channel to ${chalk.bold(me?.autoUpdatesChannel === "rc" ? "slow" : (me?.autoUpdatesChannel ?? "latest"))}`,
       );
     if (k.length > 0)
       s(
@@ -1969,11 +1969,11 @@ function ga({
   );
   let Vn = V(
       () => [
-        ...(Lee()
+        ...(isAgentsViewAvailable()
           ? [
               {
                 id: "leftArrowOpensAgents",
-                label: `${DP} opens agents`,
+                label: `${LEFT_ARROW_GLYPH} opens agents`,
                 value: I.leftArrowOpensAgents ?? !0,
               },
             ]
@@ -2045,7 +2045,7 @@ function ga({
       Fe === "Theme"
         ? r(N, {
             children: [
-              e(KZ, {
+              e(ThemePicker, {
                 onThemeSelect: (k) => {
                   (ce(k), De(null), m(!1));
                 },
@@ -2053,7 +2053,7 @@ function ga({
                   (De(null), m(!1));
                 },
                 helpText: isCustomizationDisabled("themes")
-                  ? `Custom themes are disabled in safe mode \u2014 ${yf()} to load them${Zb(K) ? `. Your saved theme "${Zb(K)}" is a custom theme; selecting a preset here replaces it` : ""}`
+                  ? `Custom themes are disabled in safe mode \u2014 ${getSafeModeExitHint()} to load them${parseCustomThemeRef(K) ? `. Your saved theme "${parseCustomThemeRef(K)}" is a custom theme; selecting a preset here replaces it` : ""}`
                   : "",
                 hideEscToCancel: !0,
                 skipExitHandling: !0,
@@ -2132,7 +2132,7 @@ function ga({
             })
           : Fe === "RemoteHomeSettings"
             ? e(RemoteHomeSettingsDialog, {
-                configHome: be(),
+                configHome: getClaudeConfigDir(),
                 storageV5: A,
                 origin: "config_panel",
                 onDone: (k) => {
@@ -2298,7 +2298,7 @@ function ga({
                                               r(t, {
                                                 "aria-hidden": !0,
                                                 children: [
-                                                  ne ? L.pointer : " ",
+                                                  ne ? figures.pointer : " ",
                                                   " ",
                                                 ],
                                               }),
@@ -2497,8 +2497,8 @@ function ga({
                                   I.inputNeededNotifEnabled ?? !1,
                                 doneEnabled: I.agentPushNotifEnabled ?? !1,
                                 onCycleChannel: () => {
-                                  let k = NU.indexOf(I.preferredNotifChannel),
-                                    oe = NU[(k + 1) % NU.length];
+                                  let k = NOTIFICATION_CHANNELS.indexOf(I.preferredNotifChannel),
+                                    oe = NOTIFICATION_CHANNELS[(k + 1) % NOTIFICATION_CHANNELS.length];
                                   (sf(oe),
                                     logEvent("tengu_config_changed", {
                                       setting: S("notifChannel"),
@@ -2603,7 +2603,7 @@ function ga({
                                                   r(t, {
                                                     dimColor: !0,
                                                     children: [
-                                                      L.arrowUp,
+                                                      figures.arrowUp,
                                                       " ",
                                                       Ue,
                                                       " more above",
@@ -2670,7 +2670,7 @@ function ga({
                                                                       children:
                                                                         [
                                                                           le
-                                                                            ? L.pointer
+                                                                            ? figures.pointer
                                                                             : " ",
                                                                           " ",
                                                                         ],
@@ -2771,7 +2771,7 @@ function ga({
                                                                                     Nt,
                                                                                   wrap: "truncate-end",
                                                                                   children:
-                                                                                    VU(
+                                                                                    getPermissionModeTitle(
                                                                                       k.value,
                                                                                     ),
                                                                                 },
@@ -2789,7 +2789,7 @@ function ga({
                                                                                       Nt,
                                                                                     wrap: "truncate-end",
                                                                                     children:
-                                                                                      J_n(
+                                                                                      formatWorkflowSizeGuidelineLabel(
                                                                                         k.value.toString(),
                                                                                         k.isDefaultValue ??
                                                                                           !1,
@@ -2871,7 +2871,7 @@ function ga({
                                                                             : "permission",
                                                                         dimColor:
                                                                           Nt,
-                                                                        children: ` ${L.pointerSmall}`,
+                                                                        children: ` ${figures.pointerSmall}`,
                                                                       }),
                                                                   ],
                                                                 },
@@ -2926,7 +2926,7 @@ function ga({
                                                   r(t, {
                                                     dimColor: !0,
                                                     children: [
-                                                      L.arrowDown,
+                                                      figures.arrowDown,
                                                       " ",
                                                       we.length - Ue - Zo,
                                                       " ",
@@ -3137,8 +3137,8 @@ function Vg(s, c) {
   let m = String(s.value);
   if (s.lock !== void 0) return `${m} (${s.lock.reason})`;
   if (s.id === "theme") return Gd[m] ?? m;
-  if (s.id === "permissionMode") return VU(s.value);
-  if (s.id === "workflowSizeGuideline") return J_n(m, s.isDefaultValue ?? !1);
+  if (s.id === "permissionMode") return getPermissionModeTitle(s.value);
+  if (s.id === "workflowSizeGuideline") return formatWorkflowSizeGuidelineLabel(m, s.isDefaultValue ?? !1);
   if (s.id === "autoUpdatesChannel" && c.autoUpdaterDisabledReason)
     return `disabled (${ZUe(c.autoUpdaterDisabledReason)})`;
   if (s.id === "notifChannel" && !c.revampSections) return cE(ha({ value: m }));
@@ -3193,7 +3193,7 @@ function fa(Nk) {
         ($t.preventDefault(), ra(zg));
         return;
       }
-      let Wg = Ux($t.key);
+      let Wg = normalizeFullWidthDigits($t.key);
       if (/^[0-9]$/.test(Wg) && !$t.ctrl && !$t.meta)
         ($t.preventDefault(), Ud(null), ra((Fk) => Fk + Wg));
     }),
@@ -3270,7 +3270,7 @@ function nh(di) {
           children: [
             di.skillCount,
             " ",
-            x(di.skillCount, "skill"),
+            pluralize(di.skillCount, "skill"),
             " \xB7 ~",
             di.approxTokens,
             " ",
@@ -3284,9 +3284,9 @@ function nh(di) {
 }
 function mi() {
   let os = _(15),
-    Kd = U(eh),
-    zd = U(th),
-    Zk = U(oh),
+    Kd = useAppStateSelector(eh),
+    zd = useAppStateSelector(th),
+    Zk = useAppStateSelector(oh),
     Yd = useMainLoopModelOverride() ?? Zk,
     qg;
   if (os[0] !== zd || os[1] !== Yd || os[2] !== Kd)
@@ -3872,7 +3872,7 @@ function mm(s) {
     if (c[5] || c[6]) return `${c[5] ?? 1}d`;
     return `at ${c[8].padStart(2, "0")}:${c[7].padStart(2, "0")}`;
   }
-  return K_(s.cron).toLowerCase();
+  return formatCronSchedule(s.cron).toLowerCase();
 }
 function ol(BD) {
   let mo = _(28),
@@ -4393,7 +4393,7 @@ function Ll(E0) {
   let Ri = _(10),
     { isThinClient: dl } = E0,
     Yh;
-  if (Ri[0] === MEMO_CACHE_SENTINEL) ((Yh = pt(fV())), (Ri[0] = Yh));
+  if (Ri[0] === MEMO_CACHE_SENTINEL) ((Yh = stripAnsi(fV())), (Ri[0] = Yh));
   else Yh = Ri[0];
   let A0 = Yh,
     qh;
@@ -4458,7 +4458,7 @@ function $l(wm) {
     { maxWidth: kt } = wm,
     { storageV5: Cs, credentials: km } = useStorageV5Context(),
     Qh;
-  if ($e[0] !== Cs) ((Qh = () => r3e(Cs)), ($e[0] = Cs), ($e[1] = Qh));
+  if ($e[0] !== Cs) ((Qh = () => seedUtilization(Cs)), ($e[0] = Cs), ($e[1] = Qh));
   else Qh = $e[1];
   let [Co] = d(Qh),
     Zh;
@@ -4486,7 +4486,7 @@ function $l(wm) {
   if ($e[6] !== km || $e[7] !== Cs)
     ((ty = async () => {
       (ey(!0), gl(null), Dm(Sy));
-      let Ve = await plt(Cs, km);
+      let Ve = await loadPlanRateLimits(Cs, km);
       bb34: switch (Ve.status) {
         case "ok": {
           (Dm({
@@ -5056,11 +5056,11 @@ function Dy(s, c) {
   if (s >= c.p25) return 2;
   return 1;
 }
-var To = ie.hex("#da7756");
+var To = chalk.hex("#da7756");
 function Ty(s) {
   switch (s) {
     case 0:
-      return ie.gray("\xB7");
+      return chalk.gray("\xB7");
     case 1:
       return To("\u2591");
     case 2:
@@ -5070,7 +5070,7 @@ function Ty(s) {
     case 4:
       return To("\u2588");
     default:
-      return ie.gray("\xB7");
+      return chalk.gray("\xB7");
   }
 }
 import { spawn } from "child_process";
@@ -5078,7 +5078,7 @@ import { mkdir, unlink, writeFile } from "fs/promises";
 import { join as Om } from "path";
 async function Lm(s, c) {
   try {
-    let m = Om(bl(), "screenshots");
+    let m = Om(getClaudeTempDir(), "screenshots");
     await mkdir(m, { recursive: !0, mode: 448 });
     let T = Om(m, `screenshot-${Date.now()}.png`),
       { ansiToPng: R } = await import("../图片-截图-ComputerUse/ansiToPng.5cwtw2dv.js"),
@@ -5114,7 +5114,7 @@ async function Lm(s, c) {
   }
 }
 async function Ay(s) {
-  let c = P();
+  let c = getCurrentPlatform();
   if (c === "macos") {
     let T = `set the clipboard to (read (POSIX file "${s.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}") as \xABclass PNGf\xBB)`,
       R = await execFileNoThrowWithCwd("osascript", ["-e", T], { timeout: 5000 });
@@ -5200,7 +5200,7 @@ async function Fm(s) {
   }
 }
 function Um() {
-  return Iy(be(), Py);
+  return Iy(getClaudeConfigDir(), Py);
 }
 function Mn() {
   return {
@@ -5248,12 +5248,12 @@ async function Wm(s) {
   try {
     let m;
     if (s !== void 0) {
-      let v = await s.read([Ce.state("stats-cache")]);
+      let v = await s.read([STORAGE_KEYS.state("stats-cache")]);
       if (!v.ok) return (n(`Failed to load stats cache: ${We(v.error)}`), Mn());
       if (!v.value.items[0].found)
         return (n("Failed to load stats cache: not found"), Mn());
       m = Buffer.from(v.value.items[0].value).toString("utf8");
-    } else m = await qt().read(c);
+    } else m = await getFileStorage().read(c);
     let T = z(m);
     if (T.version !== Ko) {
       let v = Oy(T);
@@ -5288,7 +5288,7 @@ async function En(s, c) {
   try {
     let T = b(s, null, 2);
     if (c !== void 0) {
-      let v = await c.write(Ce.state("stats-cache"), T, {
+      let v = await c.write(STORAGE_KEYS.state("stats-cache"), T, {
         mode: 384,
         publishDiscipline: "atomic",
       });
@@ -5301,9 +5301,9 @@ async function En(s, c) {
       );
       return;
     }
-    let R = be();
-    (await qt().mkdir(R),
-      await qt().atomicWrite(m, T, 384),
+    let R = getClaudeConfigDir();
+    (await getFileStorage().mkdir(R),
+      await getFileStorage().atomicWrite(m, T, 384),
       n(
         `Stats cache saved successfully (lastComputedDate: ${s.lastComputedDate})`,
       ));
@@ -5675,7 +5675,7 @@ async function Ts(s, c = {}, m, T) {
   };
 }
 async function zm(s) {
-  let c = Pl();
+  let c = getProjectsDir();
   if (isHoverRestEnabled() && s !== void 0) return Fy(s, c);
   let m = ae(),
     T;
@@ -5726,7 +5726,7 @@ async function Fy(s, c) {
   let m = new Map(),
     T = new Set(),
     R = (G) => {
-      if (_n(G)) return !0;
+      if (isValidPathSegment(G)) return !0;
       if (!T.has(G))
         (T.add(G),
           n(
@@ -5735,7 +5735,7 @@ async function Fy(s, c) {
       return !1;
     },
     v = (G, j, O) =>
-      Qo(
+      runPaginatedScan(
         (q) =>
           s.listEntries(G, {
             skipScopeStats: !0,
@@ -5755,7 +5755,7 @@ async function Fy(s, c) {
     throw Error("stats: transcript project listing failed");
   if (H.status === "capped")
     throw Error("stats: transcript project listing unfinished at the page cap");
-  let B = { pagesLeft: Uc + A.size };
+  let B = { pagesLeft: DEFAULT_MAX_PAGES + A.size };
   return {
     files: (
       await Promise.all(
@@ -6178,7 +6178,7 @@ function er(Cv) {
   if (An[2] !== xs) ((Ky = Tp(xs)), (An[2] = xs), (An[3] = Ky));
   else Ky = An[3];
   let Zm = Ky,
-    { rows: wv } = ks(useTerminalSize()),
+    { rows: wv } = useVirtualScrollViewportSize(useTerminalSize()),
     ep = Math.max(8, Math.min(wv - 4, 31)),
     zy;
   if (An[4] !== Jm)
@@ -7302,9 +7302,9 @@ function Su(dp) {
         children: r(t, {
           color: "subtle",
           children: [
-            $c ? L.arrowUp : " ",
+            $c ? figures.arrowUp : " ",
             " ",
-            Bc ? L.arrowDown : " ",
+            Bc ? figures.arrowDown : " ",
             " ",
             Tt + 1,
             "-",
@@ -7438,7 +7438,7 @@ function bu(s, c, m) {
     A = [];
     for (let se of s) for (let ce = 0; ce < Q; ce++) A.push(se);
   }
-  let H = $7(Eo("theme", "dark").value),
+  let H = resolveThemePalette(resolveSetting("theme", "dark").value),
     B = [T3t(H.suggestion), T3t(H.success), T3t(H.warning)],
     Y = [],
     G = [],
@@ -7450,7 +7450,7 @@ function bu(s, c, m) {
       (Y.push(se),
         G.push({
           model: renderModelName(Q),
-          coloredBullet: jY(L.bullet, O[(Y.length - 1) % O.length]),
+          coloredBullet: jY(figures.bullet, O[(Y.length - 1) % O.length]),
         }));
   }
   if (Y.length === 0) return null;
@@ -7498,21 +7498,21 @@ function DS(s, c, m) {
   let T = [];
   if (m === "Overview") T.push(...TS(s, c));
   else T.push(...vS(s));
-  while (T.length > 0 && pt(T.at(-1)).trim() === "") T.pop();
+  while (T.length > 0 && stripAnsi(T.at(-1)).trim() === "") T.pop();
   if (T.length > 0) {
     let R = T.at(-1),
       v = te(R),
       A = m === "Overview" ? 70 : 80,
       H = "/stats",
       B = Math.max(2, A - v - 6);
-    T[T.length - 1] = R + " ".repeat(B) + ie.gray("/stats");
+    T[T.length - 1] = R + " ".repeat(B) + chalk.gray("/stats");
   }
   return T.join(`
 `);
 }
 function TS(s, c) {
   let m = [],
-    T = $7(Eo("theme", "dark").value),
+    T = resolveThemePalette(resolveSetting("theme", "dark").value),
     R = (ce) => jY(ce, T.claude),
     v = 18,
     A = 40,
@@ -7547,12 +7547,12 @@ function TS(s, c) {
         ? `${s.peakActivityHour}:00-${s.peakActivityHour + 1}:00`
         : "N/A";
   if ((m.push(B("Active days", Z, "Peak hour", Q)), G > 0))
-    m.push(ie.gray(pu(s.modelUsage)));
+    m.push(chalk.gray(pu(s.modelUsage)));
   m.push("");
   let se = yu(s);
   return (
     m.push(R(se)),
-    m.push(ie.gray(`Stats from the last ${s.totalDays} days`)),
+    m.push(chalk.gray(`Stats from the last ${s.totalDays} days`)),
     m
   );
 }
@@ -7560,7 +7560,7 @@ function vS(s) {
   let c = [],
     { modelEntries: m, totalTokens: T } = Bn(s.modelUsage);
   if (m.length === 0)
-    return (c.push(ie.gray("No model usage data available")), c);
+    return (c.push(chalk.gray("No model usage data available")), c);
   let R = m[0],
     v = bu(
       s.dailyModelTokens,
@@ -7568,24 +7568,24 @@ function vS(s) {
       80,
     );
   if (v) {
-    (c.push(ie.bold("Tokens per Day")),
+    (c.push(chalk.bold("Tokens per Day")),
       c.push(v.chart),
-      c.push(ie.gray(v.xAxisLabels)));
+      c.push(chalk.gray(v.xAxisLabels)));
     let H = v.legend.map((B) => `${B.coloredBullet} ${B.model}`).join(" \xB7 ");
     (c.push(H), c.push(""));
   }
   (c.push(
-    `${L.star} Favorite: ${ie.magenta.bold(renderModelName(R?.[0] || ""))} \xB7 ${L.circle} Total: ${ie.magenta(formatNumber(T))} tokens`,
+    `${figures.star} Favorite: ${chalk.magenta.bold(renderModelName(R?.[0] || ""))} \xB7 ${figures.circle} Total: ${chalk.magenta(formatNumber(T))} tokens`,
   ),
     c.push(""));
   let A = m.slice(0, 3);
   for (let [H, B] of A) {
     let Y = fu(B, T);
-    (c.push(`${L.bullet} ${ie.bold(renderModelName(H))} ${ie.gray(`(${Y}%)`)}`),
+    (c.push(`${figures.bullet} ${chalk.bold(renderModelName(H))} ${chalk.gray(`(${Y}%)`)}`),
       c.push(
-        ie.dim(`  In: ${formatNumber(B.inputTokens)} \xB7 Out: ${formatNumber(B.outputTokens)}`),
+        chalk.dim(`  In: ${formatNumber(B.inputTokens)} \xB7 Out: ${formatNumber(B.outputTokens)}`),
       ),
-      c.push(ie.dim(`  ${gu(B)}`)));
+      c.push(chalk.dim(`  ${gu(B)}`)));
   }
   return c;
 }
@@ -7599,8 +7599,8 @@ function n4(cx) {
     [$n, dx] = d(!1),
     [px, fx] = d(!1),
     [gx] = d(!1),
-    hx = Ma(),
-    { rows: IS } = ks(useTerminalSize()),
+    hx = useHasVirtualScrollViewport(),
+    { rows: IS } = useVirtualScrollViewportSize(useTerminalSize()),
     Ep = hx ? IS + 1 : Math.max(15, Math.min(Math.floor(IS * 0.8), 30)),
     Fs = useSession(),
     _S;

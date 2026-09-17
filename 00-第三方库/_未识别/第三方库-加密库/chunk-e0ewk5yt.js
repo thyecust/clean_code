@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Tkt, Ekt } from "../../../01-核心基础设施/共享小工具-未细化/chunk-8549txjj.js";
+import { tslibAwaiter, tslibGenerator } from "../../../01-核心基础设施/共享小工具-未细化/tslib-helpers.js";
 import { toUint8Array, isEmptyData } from "../../../01-核心基础设施/共享小工具-未细化/byte-array-conversion.js";
 var s = 64,
   y = 32,
@@ -166,8 +166,8 @@ var FOe = (function () {
       return this.hash.digest();
     }),
     (h.prototype.digest = function () {
-      return Tkt(this, void 0, void 0, function () {
-        return Ekt(this, function (r) {
+      return tslibAwaiter(this, void 0, void 0, function () {
+        return tslibGenerator(this, function (r) {
           return [2, this.digestSync()];
         });
       });

@@ -8,40 +8,40 @@
 
 // Version: 2.1.263
 import { ze, Ox } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { U, Os } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector, useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { X_ } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { getMainLoopModel, H, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { te, truncateToWidth, formatDuration, formatDurationCoarse, formatNumber, formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Dw } from "../权限系统/chunk-e4pfvp7x.js";
-import { Ale } from "../工具TodoWrite-Tasks/chunk-5a7p8d2p.js";
+import { CLAUDE_ASTERISK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
+import { useTasksV2 } from "../工具TodoWrite-Tasks/tasks-v2-store.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { Ty } from "./chunk-w5jaj6kg.js";
+import { useResolvedTheme } from "./chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, tn, bs } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { AGENT_COLOR_THEME_KEYS } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
-import { zr } from "../Teammates团队/chunk-3k2smxfn.js";
+import { isAgentSwarmsEnabled } from "../Teammates团队/agent-swarms-enablement.js";
 import { Ya, IJe } from "../权限系统/chunk-t3b7pg2x.js";
 import { LF, mpn, NBt, hd, Vp, Ggt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { iat, _le, by, lat, PS, wy, Wb } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { nF, QL, La, QZ, jA } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import { Lye } from "../../01-核心基础设施/设置-配置/chunk-9m8zsynn.js";
+import { shouldExcludeDefaultTips } from "../../01-核心基础设施/设置-配置/spinner-tips-override.js";
 import { activeTimeTracker } from "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { Tv, O0e, utn } from "../Hooks钩子/chunk-22aft7vr.js";
+import { pickRandom, getSpinnerVerbs, useSpinnerState } from "../Hooks钩子/spinner-store.js";
 import { ProgressBar } from "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { useReducedMotion } from "../../01-核心基础设施/共享小工具-未细化/reduced-motion.js";
 import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Vtn, Ktn, eIe } from "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import { SHIMMER_STEP_MS, getShimmerPosition, splitTextForShimmer } from "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import { E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
+import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -57,8 +57,8 @@ function wr(Rs) {
 function lOt(fs) {
   let hs = _(2),
     { hidden: ds } = fs,
-    ps = U(xr) === "tasks",
-    Oe = Ale();
+    ps = useAppStateSelector(xr) === "tasks",
+    Oe = useTasksV2();
   if (ds || !ps || !Oe || Oe.length === 0) {
     return null;
   }
@@ -82,8 +82,8 @@ function Te(n, s) {
   return n.id.localeCompare(s.id);
 }
 function We({ tasks: n, isStandalone: s = !1 }) {
-  let c = U((m) => m.teamContext),
-    l = U((m) => m.tasks),
+  let c = useAppStateSelector((m) => m.teamContext),
+    l = useAppStateSelector((m) => m.tasks),
     [f, g] = d(0),
     { rows: h, columns: k } = useTerminalSize(),
     b = useClock(),
@@ -114,7 +114,7 @@ function We({ tasks: n, isStandalone: s = !1 }) {
     return null;
   if (n.length === 0) return null;
   let I = {};
-  if (zr() && c?.teammates) {
+  if (isAgentSwarmsEnabled() && c?.teammates) {
     for (let m of Object.values(c.teammates))
       if (m.color) {
         let Y = AGENT_COLOR_THEME_KEYS[m.color];
@@ -123,7 +123,7 @@ function We({ tasks: n, isStandalone: s = !1 }) {
   }
   let K = {},
     T = new Set();
-  if (zr()) {
+  if (isAgentSwarmsEnabled()) {
     for (let m of Object.values(l))
       if (hd(m) && m.status === "running") {
         (T.add(m.identity.agentName), T.add(m.identity.agentId));
@@ -221,11 +221,11 @@ function We({ tasks: n, isStandalone: s = !1 }) {
 function io(n) {
   switch (n) {
     case "completed":
-      return { icon: L.tick, color: "success" };
+      return { icon: figures.tick, color: "success" };
     case "in_progress":
-      return { icon: L.squareSmallFilled, color: "claude" };
+      return { icon: figures.squareSmallFilled, color: "claude" };
     case "pending":
-      return { icon: L.squareSmall, color: void 0 };
+      return { icon: figures.squareSmall, color: void 0 };
   }
 }
 function so(Ts) {
@@ -316,7 +316,7 @@ function so(Ts) {
         dimColor: !0,
         children: [
           " ",
-          L.pointerSmall,
+          figures.pointerSmall,
           " blocked by",
           " ",
           [...rn].sort(Sr).map(wr).join(", "),
@@ -341,7 +341,7 @@ function so(Ts) {
       Zn &&
       an &&
       e(o, {
-        children: r(t, { dimColor: !0, children: ["  ", an, L.ellipsis] }),
+        children: r(t, { dimColor: !0, children: ["  ", an, figures.ellipsis] }),
       })),
       (Et[31] = an),
       (Et[32] = Zn),
@@ -357,7 +357,7 @@ function so(Ts) {
   return br;
 }
 function qf() {
-  return U((n) => Ya(n));
+  return useAppStateSelector((n) => Ya(n));
 }
 var Ge = "\u25CF",
   mo = 2000,
@@ -377,7 +377,7 @@ function o4(As) {
     Bt = Mr === void 0 ? 0 : Mr,
     Ps = yr === void 0 ? !1 : yr,
     Ds = _r === void 0 ? 0 : _r,
-    ke = Ty();
+    ke = useResolvedTheme();
   if (Ps) {
     let hn = 1 - lat(Ds, mo);
     let gn = Bt > 0 ? "warning" : Xt;
@@ -603,11 +603,11 @@ function l9e(cc) {
     } = cc,
     Ke = Pr === void 0 ? 0 : Pr,
     Fe = Or === void 0 ? 0 : Or,
-    ie = Ty(),
+    ie = useResolvedTheme(),
     Ue;
   if (D[0] !== O) {
     Ue = [];
-    for (const { segment: Dr } of Xs().segment(O))
+    for (const { segment: Dr } of getGraphemeSegmenter().segment(O))
       Ue.push({ segment: Dr, width: te(Dr) });
     ((D[0] = O), (D[1] = Ue));
   } else Ue = D[1];
@@ -1141,7 +1141,7 @@ function Bo({
     ne = te(Kt),
     ut = yt,
     $t = formatNumber(ut),
-    _t = `${L.arrowDown} ${$t} tokens`,
+    _t = `${figures.arrowDown} ${$t} tokens`,
     St = te(_t),
     J = q.kind === "thinking" ? ei(q.thinkingMs) : "thinking",
     ft;
@@ -1279,7 +1279,7 @@ function Fo({
       showToolCallTimer: R,
       agentId: X,
     }),
-    q = Ty(),
+    q = useResolvedTheme(),
     v = tn(),
     ct = jA(w),
     {
@@ -1455,7 +1455,7 @@ function Xit(Yc) {
       flexWrap: "wrap",
       height: 1,
       width: 2,
-      children: e(t, { color: "error", children: Dw }),
+      children: e(t, { color: "error", children: CLAUDE_ASTERISK_GLYPH }),
     })),
       (Q[5] = ii));
   else ii = Q[5];
@@ -1502,7 +1502,7 @@ function Xit(Yc) {
         flexWrap: "wrap",
         height: 1,
         width: 2,
-        children: e(t, { color: "warning", children: Dw }),
+        children: e(t, { color: "warning", children: CLAUDE_ASTERISK_GLYPH }),
       })),
         (Q[9] = At));
     else At = Q[9];
@@ -1662,7 +1662,7 @@ function Uo(Zc) {
           children: e(t, {
             "aria-hidden": !0,
             dimColor: !0,
-            children: L.arrowDown,
+            children: figures.arrowDown,
           }),
         })),
           (mi[0] = Ye));
@@ -1677,7 +1677,7 @@ function Uo(Zc) {
           children: e(t, {
             "aria-hidden": !0,
             dimColor: !0,
-            children: L.arrowUp,
+            children: figures.arrowUp,
           }),
         })),
           (mi[1] = Ye));
@@ -1693,7 +1693,7 @@ function Vi(qa) {
   return qa.viewingAgentTaskId;
 }
 function Ki() {
-  return Tv(O0e()) ?? "Working";
+  return pickRandom(getSpinnerVerbs()) ?? "Working";
 }
 function Fi(el) {
   return el.remoteConnectionStatus;
@@ -1724,9 +1724,9 @@ function cOt(Jt) {
       turnModel: Zo,
       retryStatus: tr,
       defaultVerb: Ln,
-    } = utn(Jt.agentId),
-    er = U(Hi),
-    nr = U(Vi),
+    } = useSpinnerState(Jt.agentId),
+    er = useAppStateSelector(Hi),
+    nr = useAppStateSelector(Vi),
     Ka = a.CLAUDE_CODE_BRIEF,
     bi,
     xi;
@@ -1822,18 +1822,18 @@ function dr({
   let P = useSettings(),
     X = tn(),
     Z = shouldReduceMotion(P.prefersReducedMotion) || X,
-    q = U((J) => J.spinnerTip),
-    v = U((J) => J.spinnerTipLabel),
-    ct = U((J) => J.expandedView) === "tasks",
+    q = useAppStateSelector((J) => J.spinnerTip),
+    v = useAppStateSelector((J) => J.spinnerTipLabel),
+    ct = useAppStateSelector((J) => J.expandedView) === "tasks",
     { columns: Dt } = useTerminalSize(),
-    m = Ale(),
+    m = useTasksV2(),
     Y = Ao(n),
     z = R === void 0 || R === ze(),
     ot = z
       ? m?.find((J) => J.status !== "pending" && J.status !== "completed")
       : void 0,
     tt = z ? Gi(m) : void 0,
-    [at] = d(() => Tv(O0e())),
+    [at] = d(() => pickRandom(getSpinnerVerbs())),
     lt = (k ?? ot?.activeForm ?? ot?.subject ?? (B || at)) + "\u2026";
   E(() => {
     let J = "spinner-" + n;
@@ -1855,15 +1855,15 @@ function dr({
     fe = g ?? zt,
     bt = h ?? Zt,
     Ht = H("tengu_shining_fractals", !1),
-    Vt = U((J) => J.narration),
-    de = U((J) => J.briefTranscript),
+    Vt = useAppStateSelector((J) => J.narration),
+    de = useAppStateSelector((J) => J.briefTranscript),
     yt = !1,
     gt = P.spinnerTipsEnabled !== !1,
     Wt = gt && xt > 1800000,
     pe = gt && xt > 30000 && !ee().btwUseCount,
     Kt = yt
       ? q
-      : Lye()
+      : shouldExcludeDefaultTips()
         ? q
         : Wt && !tt
           ? "Use /clear to start fresh when switching topics and free up context"
@@ -2002,7 +2002,7 @@ function Xn(za) {
   let le = Ri,
     [Ja] = d(Ki),
     Ce = Xa ?? Ja,
-    ar = U(Fi),
+    ar = useAppStateSelector(Fi),
     Mi,
     yi;
   if (Ut[3] !== Wn)
@@ -2022,7 +2022,7 @@ function Xn(za) {
   else ((Mi = Ut[4]), (yi = Ut[5]));
   E(Mi, yi);
   let [, $n] = bs(le ? null : 120),
-    Ci = U(Ui),
+    Ci = useAppStateSelector(Ui),
     qt = ar === "reconnecting" || ar === "disconnected",
     Ie = ar === "reconnecting" ? "Reconnecting" : "Disconnected",
     lr = Math.floor($n / 300) % 3,
@@ -2046,8 +2046,8 @@ function Xn(za) {
     Ut[14] !== Ce ||
     Ut[15] !== Ee
   ) {
-    let Qa = le || qt ? -100 : Ktn(Math.floor($n / Vtn), Ee);
-    Bi = eIe(Ce, Qa);
+    let Qa = le || qt ? -100 : getShimmerPosition(Math.floor($n / SHIMMER_STEP_MS), Ee);
+    Bi = splitTextForShimmer(Ce, Qa);
     ((Ut[11] = le),
       (Ut[12] = qt),
       (Ut[13] = $n),
@@ -2126,8 +2126,8 @@ function Xn(za) {
 }
 function uOt() {
   let Un = _(9),
-    ur = U(qi),
-    Oi = U(zi),
+    ur = useAppStateSelector(qi),
+    Oi = useAppStateSelector(zi),
     { columns: nl } = useTerminalSize(),
     Be =
       ur === "reconnecting" || ur === "disconnected"
@@ -2179,7 +2179,7 @@ function uOt() {
 function yo() {
   let Qe = _(9),
     rl = tn(),
-    Wi = shouldReduceMotion(Os(Xi)) || rl,
+    Wi = shouldReduceMotion(useAppStateSelectorUnchecked(Xi)) || rl,
     [Ae, il] = bs(Wi ? null : 120);
   if (Wi) {
     let Ze;

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 19 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { M1, RPn, Br, Fnt } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { addStartupContext as M1, getBootstrapEntry as RPn, profileCheckpoint as Br, profileReport as Fnt } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 export {
   M1 as addStartupContext,
   RPn as getBootstrapEntry,

@@ -14,7 +14,7 @@ import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
-import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { eN } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -37,8 +37,8 @@ var N = async (t, o) => {
 function ToggleDiffSidebar(B) {
   let G = _(9),
     { onDone: s, sidebar: r } = B,
-    m = U(h),
-    n = It(),
+    m = useAppStateSelector(h),
+    n = useSetAppState(),
     { storageV5: f } = useStorageV5Context(),
     p = useSession().host,
     { columns: l } = useTerminalSize(),

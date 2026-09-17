@@ -15,11 +15,11 @@ import { Ve, yt, l, A, Rt, FA, CB } from "../../00-第三方库/@anthropic-ai/sd
 import { WP, Xg, Sh, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Q5, Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { Y6 } from "../权限系统/chunk-e4pfvp7x.js";
-import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
-import { getParentSessionId } from "../Teammates团队/chunk-811z9z0t.js";
-import { WEt, getToolPermissionContext, getMainLoopModel } from "../权限系统/chunk-fjrcf22x.js";
+import { runWithCwdOrDefault, getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { clampPermissionMode } from "../权限系统/chunk-e4pfvp7x.js";
+import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { getParentSessionId } from "../Teammates团队/teammate-context.js";
+import { createCommandRulesGetAppState, getToolPermissionContext, getMainLoopModel } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   nH,
@@ -102,13 +102,13 @@ import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-
 import { CRON_CREATE_TOOL_NAME } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { _bt } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { excludeCoordinatorCommsMcpTools } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
-import { cPe, Eut } from "../后台任务-Shell管理/chunk-531ast3t.js";
-import { xs } from "../Teammates团队/chunk-mrfx53ye.js";
-import { og } from "../插件系统/chunk-33bdfgmx.js";
-import { Xi, sg } from "../Teammates团队/chunk-z2t8b9yc.js";
+import { stripAbortedTurnMessages, hasPendingUserTurn } from "../后台任务-Shell管理/chunk-531ast3t.js";
+import { isTerminalTaskStatus } from "../Teammates团队/chunk-mrfx53ye.js";
+import { parsePluginIdIgnoringReservedMarketplace } from "../插件系统/chunk-33bdfgmx.js";
+import { SCHEDULE_WAKEUP_TOOL_NAME, TASK_STOP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
 import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
-import { mt, Vh } from "./chunk-1px84m19.js";
+import { AGENT_TOOL_NAME, TASK_TOOL_NAME } from "./agent-tool-constants.js";
 import { formatAgentMessage } from "../Teammates团队/chunk-enjekn9t.js";
 import { s, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -234,14 +234,14 @@ ${p.report}`,
       return `report: ${e.report}`;
     },
   });
-var At = [SEND_MESSAGE_TOOL_NAME, re, mt, WORKFLOW_TOOL_NAME, Xi, MONITOR_TOOL_NAME, CRON_CREATE_TOOL_NAME];
+var At = [SEND_MESSAGE_TOOL_NAME, re, AGENT_TOOL_NAME, WORKFLOW_TOOL_NAME, SCHEDULE_WAKEUP_TOOL_NAME, MONITOR_TOOL_NAME, CRON_CREATE_TOOL_NAME];
 function gNt(e) {
   return [...e.filter((p) => At.every((c) => !matchesToolName(p, c))), qe];
 }
 import { promises } from "fs";
 function won(e) {
   return (
-    (e.name === mt || e.name === Vh) &&
+    (e.name === AGENT_TOOL_NAME || e.name === TASK_TOOL_NAME) &&
     typeof e.input === "object" &&
     e.input !== null &&
     "subagent_type" in e.input &&
@@ -380,9 +380,9 @@ async function _t(
     throw new Dee(
       "This agent has been stopped and its stop is still completing; it cannot resume other agents.",
     );
-  if (nH(e) || (!eh(e) && xs(d.get(e)?.status ?? "running")))
+  if (nH(e) || (!eh(e) && isTerminalTaskStatus(d.get(e)?.status ?? "running")))
     throw new Dee(
-      `Agent ${e} is still stopping \u2014 its previous run was stopped but has not exited. Re-run ${sg} on it or wait for it to exit before resuming.`,
+      `Agent ${e} is still stopping \u2014 its previous run was stopped but has not exited. Re-run ${TASK_STOP_TOOL_NAME} on it or wait for it to exit before resuming.`,
     );
   let O = d.get(e),
     q = 0;
@@ -507,7 +507,7 @@ async function _t(
           `Agent ${e} ran as forked skill ${T.skillName}, an account-synced skill that is currently disabled (skills sync turned off or denied by policy); refusing to resume it.`,
         )
       );
-    ((K = qu(
+    ((K = splitToolRuleList(
       (await a.getAllowedTools?.()?.catch((_) => {
         throw (
           logFeatureBad("subagent_launch", "forked_skill_resume_allowed_tools_failed"),
@@ -518,7 +518,7 @@ async function _t(
         a.allowedTools ??
         [],
     )),
-      (J = qu(a.disallowedTools ?? [])),
+      (J = splitToolRuleList(a.disallowedTools ?? [])),
       (de = attributionSkillName(a)));
   }
   let Ue = T
@@ -546,7 +546,7 @@ async function _t(
     et = T
       ? {
           ..._e,
-          getAppState: WEt(r.getAppState, K, J, {
+          getAppState: createCommandRulesGetAppState(r.getAppState, K, J, {
             replaceCommandRules: !0,
             frozenCommandDenies: Ue,
           }),
@@ -579,9 +579,9 @@ async function _t(
       })
     );
   (sne(P.messages), ewt(P.messages));
-  let st = k ? [...cPe(P.messages)] : P.messages,
+  let st = k ? [...stripAbortedTurnMessages(P.messages)] : P.messages,
     I = npe(rpe(UEe(PX(st, { site: "agent_resume" }))));
-  if (k && I.length > 0 && !Eut(I))
+  if (k && I.length > 0 && !hasPendingUserTurn(I))
     return (
       d.update(e, (t) => ({
         ...t,
@@ -641,7 +641,7 @@ async function _t(
   let Z = oe === "inline" || (oe === "reply" && (areBackgroundTasksDisabled() || sw(D))),
     U = (t, i) => {
       let a = Ia(),
-        _ = o?.cwd && !WP(o.cwd) ? o.cwd : Q(),
+        _ = o?.cwd && !WP(o.cwd) ? o.cwd : getCwd(),
         je = uw(_),
         ft =
           a !== null &&
@@ -773,7 +773,7 @@ async function _t(
     }
   }
   let ve = o?.cwd && !WP(o.cwd) ? o.cwd : L,
-    Se = r.session.withProject({ cwd: ve ?? Q() }),
+    Se = r.session.withProject({ cwd: ve ?? getCwd() }),
     b = T?.effort !== void 0 ? { ...D, effort: T.effort } : D,
     j = o?.description ?? "(resumed)",
     te;
@@ -830,7 +830,7 @@ async function _t(
         `Observer sidecar for ${e} missing or did not confirm isObserver; refusing delivery`,
       )
     );
-  let Me = o?.isObserver ? (Y6(E, z) ?? z) : void 0,
+  let Me = o?.isObserver ? (clampPermissionMode(E, z) ?? z) : void 0,
     Ne = { ...x, mode: Me ?? E ?? o?.spawnMode ?? b.permissionMode ?? z },
     Fe = r.options.tools.filter(nh),
     Ee = r.getAppState(),
@@ -1001,7 +1001,7 @@ async function _t(
       isAsync: !0,
       agentDepth: X,
       source: b.source,
-      pluginId: isPluginAgent(b) ? og(b.plugin) : void 0,
+      pluginId: isPluginAgent(b) ? parsePluginIdIgnoringReservedMarketplace(b.plugin) : void 0,
       persistedToolResultFiles: Le,
       spawnedSubagent: nr(v) ? v.spawnedSubagent : void 0,
     },
@@ -1024,7 +1024,7 @@ async function _t(
     },
     pt = c?.kind === "observer-activity" ? () => {} : d.takeConcurrencySlot(),
     Be = kw(We, () =>
-      Q5(Se.project.cwd, () =>
+      runWithCwdOrDefault(Se.project.cwd, () =>
         k3({
           taskId: V.agentId,
           abortController: V.abortController,

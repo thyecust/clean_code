@@ -34,7 +34,7 @@ import "./chunk-zdrvwe5r.js";
 import { ta } from "./chunk-mwf4pmq2.js";
 import { Rb } from "../第三方库-其他/chunk-jtb5q5xr.js";
 import { Mie } from "../第三方库-其他/chunk-cpfawwsx.js";
-import { s_, hS } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
+import { utilUtf8Module, utilBase64Module } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
 import { awsSdkCoreClientModule } from "../../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
 import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
 import { getUrlParserModule } from "../../../01-核心基础设施/共享小工具-未细化/url-parser.js";
@@ -434,8 +434,8 @@ var $e = commonJS(function (Le) {
     io = Lm(),
     so = ta(),
     co = getUrlParserModule(),
-    Fe = hS(),
-    Ue = s_(),
+    Fe = utilBase64Module(),
+    Ue = utilUtf8Module(),
     ao = z(),
     uo = je(),
     lo = (e) => ({

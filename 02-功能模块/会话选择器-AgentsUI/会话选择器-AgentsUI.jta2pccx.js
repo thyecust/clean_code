@@ -15,9 +15,9 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
-import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { Pre } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
-import { Va, cF } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
+import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { isTerminalFocused } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
+import { useTerminalFocus, setTimeoutWithCancel } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
@@ -38,32 +38,32 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, w8, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { Hr } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { os, x, ft, kr, ln, jW, U0, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { isSafeMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { repeatString, pluralize, beforeFirst, firstLine, countOccurrences, CONTROL_CHARS_REGEX, ANY_CONTROL_CHAR_REGEX, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getLogDisplayTitle, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { Pt, findCanonicalGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te, truncateToWidth, truncateStartToWidth, truncate, formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { getInitialSettings, hasSkipDangerousModePermissionPrompt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { $Q, Vl, Eb, dL, rhe, TA } from "../权限系统/chunk-e4pfvp7x.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { BULLET_OPERATOR_GLYPH, ARTIFACT_MARKER_GLYPH, parsePermissionModeOrDefault, getPermissionModeIndicator, getPermissionModeSymbol, getPermissionModeColor } from "../权限系统/chunk-e4pfvp7x.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { SQ } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { dW } from "../Git-Worktree/chunk-bk9696gx.js";
+import { isGitLabMergeRequestUrl } from "../Git-Worktree/git-repository-detection.js";
 import { remoteRowId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { oa, iee, oDt } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { getEraseScreenSequence, eraseViewportInPlace, cDt, Nat, uF, qA } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
-import { rk } from "../状态栏-主题/chunk-w5jaj6kg.js";
-import { XAe } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { useStdin } from "../状态栏-主题/chunk-w5jaj6kg.js";
+import { isFullscreenEnabled } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { o, t, ct, bs, ko, e7, aO, n7, Un, w9e } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Jp, _d } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { formatOscSequence, OSC_CODES } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
 import { useKeybindingContext } from "../键位绑定(Keybindings)/keybinding-context.js";
 import { K3, Dre, HAe, w$, Wyn, R3t } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
@@ -111,7 +111,7 @@ import { Wh } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { sendControlToUdsSocket, listAllLiveSessions } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { AGENT_COLOR_THEME_KEYS, isAgentColorName } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
-import { zr } from "../Teammates团队/chunk-3k2smxfn.js";
+import { isAgentSwarmsEnabled } from "../Teammates团队/agent-swarms-enablement.js";
 import {
   UNGROUPED,
   EARLIER,
@@ -144,7 +144,7 @@ import {
   isSelfDriving,
   al,
 } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { FJe, sAt } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
+import { isPastSessionsExperimentEnabled, sAt } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { useVoiceSelector, useVoiceGetState } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import { openDaemonLease } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
@@ -183,15 +183,15 @@ import {
   IWe,
   eF,
 } from "../后台任务-Shell管理/chunk-xmxjyg29.js";
-import { y4 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
-import { dze, eFt, San, ban, H9n, Apt } from "../../01-核心基础设施/共享小工具-未细化/chunk-5pc36v8n.js";
+import { relaunchClaudeCode } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
+import { saveJobDraft, writeJobDraft, writeJobDraftSync, deleteJobDraft, readJobDraft, sweepStaleJobDrafts } from "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
 import { CCR_LIST_TARGET_VISIBLE } from "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js";
 import { Xae, zst } from "../Skills技能/Skills技能.dpy2ket5.js";
 import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工具-未细化/base-render-options.js";
 import { hasTeammateModeSnapshot, captureTeammateModeSnapshot } from "../Teammates团队/chunk-88ybhavr.js";
 import { createFleetViewHost, useAttachFleetOwners } from "../../01-核心基础设施/共享小工具-未细化/chunk-6nr84z8c.js";
 import { DotSeparatedList, useDoublePressConfirm } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { kIt } from "../../01-核心基础设施/共享小工具-未细化/chunk-sxbs7q5c.js";
+import { kIt } from "../../01-核心基础设施/共享小工具-未细化/fleet-view-screen.js";
 import { dd, iat, _le, Fye } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import {
@@ -217,29 +217,29 @@ import {
   Q_e,
 } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { ScrollBox } from "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
-import { Wm, MB } from "../GitHub集成/chunk-bfz9rjjm.js";
+import { DiffStatLabel, PullRequestBadge } from "../GitHub集成/chunk-bfz9rjjm.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { editTextInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
-import { slt } from "../Teammates团队/chunk-6878k9n1.js";
+import { resolveLauncher } from "../Teammates团队/update-command.js";
 import { ClawdMascot } from "../../03-入口与运行时/会话UI(REPL)/clawd-mascot.js";
 import { SESSION_LIVE_ELSEWHERE_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/session-live-elsewhere.js";
 import { BackgroundText } from "../../01-核心基础设施/共享小工具-未细化/background-text.js";
-import { yv } from "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
+import { showNotification } from "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
 import { LinkifiedText } from "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import { toLocalFileUrl } from "../../01-核心基础设施/共享小工具-未细化/to-local-file-url.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { trySetRawMode } from "../../01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js";
 import { openHyperlink } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { fromJobState } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
-import { nue, Og, Qb, mOe } from "../../01-核心基础设施/共享小工具-未细化/chunk-zdf7z1m1.js";
+import { buildDraftText, getDraftMode, getDraftValue, isBashModeShortcut } from "../../01-核心基础设施/共享小工具-未细化/bash-mode-draft-text.js";
 import { Nl, re, E, dn, V, pk, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { If, hu } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
+import { createHoverRestOptions, resolveTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { lK, Z3 } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { isBypassPermissionsModeDisabled } from "../权限系统/chunk-pcxn6gwz.js";
-import { Xs, iB, oz } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getGraphemeSegmenter, countGraphemes, splitGraphemes } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { randomUUID as pu } from "crypto";
@@ -370,7 +370,7 @@ function xi(s, c, m) {
 function ec(s) {
   let c = s?.agent ?? getInitialSettings().agent;
   if (!s && !c) return;
-  let m = s?.permissionMode ? Eb(s.permissionMode) : void 0,
+  let m = s?.permissionMode ? parsePermissionModeOrDefault(s.permissionMode) : void 0,
     b = !isBypassPermissionsModeDisabled() && (hasSkipDangerousModePermissionPrompt() || Boolean(ee().bypassPermissionsModeAccepted)),
     k = m === "bypassPermissions" && !b ? void 0 : m,
     w = s?.allowBypass && b ? !0 : void 0,
@@ -411,7 +411,7 @@ function Fi(vS) {
   }
   let fa;
   if (Sr[0] !== Mn || Sr[1] !== Oi)
-    ((fa = Oi && r(t, { color: TA(Mn), children: [rhe(Mn), " ", dL(Mn)] })),
+    ((fa = Oi && r(t, { color: getPermissionModeColor(Mn), children: [getPermissionModeSymbol(Mn), " ", getPermissionModeIndicator(Mn)] })),
       (Sr[0] = Mn),
       (Sr[1] = Oi),
       (Sr[2] = fa));
@@ -421,8 +421,8 @@ function Fi(vS) {
     ((ma =
       pa &&
       r(t, {
-        color: TA("bypassPermissions"),
-        children: [rhe("bypassPermissions"), " bypass available"],
+        color: getPermissionModeColor("bypassPermissions"),
+        children: [getPermissionModeSymbol("bypassPermissions"), " bypass available"],
       })),
       (Sr[3] = pa),
       (Sr[4] = ma));
@@ -487,7 +487,7 @@ function nc(s, c, m = logEvent) {
       entry_channel: s.entryChannel,
       seen_latency_ms: Math.max(0, b - R),
       terminal_at_missing: v === null,
-      jobSessionId: Ee(w.state.sessionId),
+      jobSessionId: sanitizeAnalyticsId(w.state.sessionId),
     });
   }
 }
@@ -553,7 +553,7 @@ function ic(s, c) {
 }
 import { stat as Ah } from "fs/promises";
 async function Mi(s, c) {
-  let m = hu(s, c);
+  let m = resolveTranscriptLocator(s, c);
   if (m !== void 0) {
     let k = await m.backend.statMeta(m.key);
     if (k.ok) return { kind: "present", mtimeMs: k.value.mtimeMs };
@@ -567,7 +567,7 @@ async function Mi(s, c) {
   return { kind: "present", mtimeMs: (await Ah(s)).mtimeMs };
 }
 async function sc(s, c, m) {
-  let b = hu(s, m);
+  let b = resolveTranscriptLocator(s, m);
   if (b !== void 0) {
     let k = await b.backend.read([{ key: b.key, tail: c }]);
     if (!k.ok)
@@ -704,7 +704,7 @@ function Bh(s) {
             typeof w.content === "string"
               ? w.content
               : w.content?.find((R) => R.type === "text")?.text;
-          if (v) return `\u2717 ${kr(v)}`;
+          if (v) return `\u2717 ${firstLine(v)}`;
         }
       }
     }
@@ -721,9 +721,9 @@ function vr(s) {
   return s === SEED_DETAIL || s === IDLE_DETAIL;
 }
 function Nt(s) {
-  return uc(pt(s))
+  return uc(stripAnsi(s))
     .replace(/<\/?[\w-]+>/g, " ")
-    .replace(jW, "")
+    .replace(CONTROL_CHARS_REGEX, "")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -751,7 +751,7 @@ function Ji(s, c) {
   return m ?? s;
 }
 function Uo(s) {
-  return s?.filter((c) => !U0.test(c.href)) ?? [];
+  return s?.filter((c) => !ANY_CONTROL_CHAR_REGEX.test(c.href)) ?? [];
 }
 function Co(s, c) {
   let m = terminalOutcome(s.state);
@@ -1086,7 +1086,7 @@ class kc {
     ((this.#t = { ...this.#t, [s]: b }), this.#a.emit());
   }
   #E(s, c) {
-    return (this.#i?.setTimeout ?? cF)(s, c);
+    return (this.#i?.setTimeout ?? setTimeoutWithCancel)(s, c);
   }
   attachView(s) {
     if ((this.#r++, this.#r === 1)) this.#I(s);
@@ -1416,7 +1416,7 @@ class kc {
         return q !== "MERGED" && q !== "CLOSED";
       }),
       W = Date.now(),
-      A = W - this.#y >= ic(Pre(), W - Nm());
+      A = W - this.#y >= ic(isTerminalFocused(), W - Nm());
     if (O.length > 0 && A) {
       this.#y = W;
       let I = H("tengu_fleetview_pr_batch", !0);
@@ -1630,7 +1630,7 @@ class kc {
         logEvent("tengu_bg_agent_action", {
           action: S("stop"),
           source: S("fleet"),
-          jobSessionId: Ee(c),
+          jobSessionId: sanitizeAnalyticsId(c),
         }));
     } catch (m) {
       throw (
@@ -1653,7 +1653,7 @@ class kc {
         logEvent("tengu_bg_agent_action", {
           action: S("archive"),
           source: S("fleet"),
-          jobSessionId: Ee(c),
+          jobSessionId: sanitizeAnalyticsId(c),
         }));
     } catch (m) {
       throw (
@@ -1834,7 +1834,7 @@ class _c {
     let m = c === "state" ? this.#l : this.#m;
     for (let [k, w] of s) (m.set(k, w), this.#c.push(this.#n.holdJob(k)));
     this.#g?.();
-    let b = this.#r?.setTimeout ?? cF;
+    let b = this.#r?.setTimeout ?? setTimeoutWithCancel;
     this.#g = b(() => {
       ((this.#g = null), this.#n.bumpGen());
       let k = this.#c;
@@ -2359,10 +2359,10 @@ import { randomUUID as nb } from "crypto";
 import { basename as rb } from "path";
 var eb = 200;
 function qi() {
-  return Ca() && FJe();
+  return Ca() && isPastSessionsExperimentEnabled();
 }
 function Ca() {
-  return !Hr() && !AOn();
+  return !isSafeMode() && !AOn();
 }
 async function zi(s, c, m) {
   try {
@@ -2376,7 +2376,7 @@ async function zi(s, c, m) {
         {
           sessionId: R.sessionId,
           fullPath: R.fullPath,
-          title: To(pt(getLogDisplayTitle(R))) || R.sessionId.slice(0, 8),
+          title: normalizeWhitespace(stripAnsi(getLogDisplayTitle(R))) || R.sessionId.slice(0, 8),
           modified: R.modified,
           cwd: R.relocatedCwd ?? R.projectPath ?? b,
         },
@@ -2434,7 +2434,7 @@ function Yi(s, c, m = {}, b = []) {
 function xa(s) {
   let c = s.trim();
   if (/\s/.test(c)) return null;
-  if (/^https?:\/\//.test(c)) return U0.test(c) ? null : c;
+  if (/^https?:\/\//.test(c)) return ANY_CONTROL_CHAR_REGEX.test(c) ? null : c;
   let m = Ju(c);
   return tb(m) ? toLocalFileUrl(m) : null;
 }
@@ -2501,7 +2501,7 @@ function Bc() {
       .map((s) => ({
         kind: "model",
         name: String(s.value),
-        description: kr(s.description),
+        description: firstLine(s.description),
       })),
     {
       kind: "model",
@@ -2513,7 +2513,7 @@ function Bc() {
 var Aa = [],
   Qi = [];
 function Ea(s) {
-  return { kind: "agent", name: s.name, description: kr(s.description) };
+  return { kind: "agent", name: s.name, description: firstLine(s.description) };
 }
 function Nc(s, c) {
   if (s === c || c.length === 0) return s;
@@ -2548,7 +2548,7 @@ function Hc(
     showAllAgents: O = !1,
   },
 ) {
-  let W = ft(s, " ").toLowerCase(),
+  let W = beforeFirst(s, " ").toLowerCase(),
     A = W.startsWith("/"),
     I = s.match(/(?:^|\s)@(\S*)$/),
     q = I?.[1]?.toLowerCase(),
@@ -2638,7 +2638,7 @@ function Hc(
 }
 function Xi(s) {
   if (s.key !== "v") return !1;
-  let c = P();
+  let c = getCurrentPlatform();
   if (s.ctrl && !s.meta) return c !== "windows";
   if (s.meta && !s.ctrl) return c === "windows" || c === "wsl";
   return !1;
@@ -2751,7 +2751,7 @@ function Uc(s, c) {
     Tt = () => {
       (m.beginProgrammaticChange(),
         m.setQuery(""),
-        dze(J, { q: "", collapsed: [...k.getSnapshot().collapsed] }, R));
+        saveJobDraft(J, { q: "", collapsed: [...k.getSnapshot().collapsed] }, R));
     };
   if (pSt.includes(He)) {
     (Tt(), A());
@@ -2956,7 +2956,7 @@ function Uc(s, c) {
       (k.followOrigin = null),
       m.setQuery(""),
       m.setMode("prompt"),
-      dze(J, { q: "", collapsed: [...k.getSnapshot().collapsed] }, R),
+      saveJobDraft(J, { q: "", collapsed: [...k.getSnapshot().collapsed] }, R),
       m.replacePastes({ ...m.pastes }),
       m.pruneOrphanedPastes({ pruneTextPastes: !0 }));
     let Ft = (fe) => {
@@ -3108,7 +3108,7 @@ async function Oa(s, c, m) {
         ((I = X?.err ?? null), (q = X?.code));
       }
     }
-    if (I === nle && Og(m) === "prompt") {
+    if (I === nle && getDraftMode(m) === "prompt") {
       let oe = await wn(c.id, { knownState: c.state, initialPrompt: m }, R);
       if (!oe.ok && oe.alive) {
         let X = await VHe(c.id, m, c.state, void 0, ne, R);
@@ -3150,7 +3150,7 @@ async function Oa(s, c, m) {
         )?.[0];
       n(`[fleetview] peek-reply send failed: ${se}`);
       let X = !1;
-      if (!q && oe !== void 0 && sb.has(oe) && Og(m) === "prompt")
+      if (!q && oe !== void 0 && sb.has(oe) && getDraftMode(m) === "prompt")
         X = await writeStateAtomic(
           getJobDir(c.id),
           { ...c.state, queuedPrompt: m, updatedAt: new Date().toISOString() },
@@ -3256,9 +3256,9 @@ function Hn(s, c) {
   return yb(s);
 }
 function So(s, c = !1, m = !1) {
-  if (s.name) return qr(To(s.name));
+  if (s.name) return qr(normalizeWhitespace(s.name));
   let b = 25,
-    k = qr(To(s.displayIntent ?? s.intent))
+    k = qr(normalizeWhitespace(s.displayIntent ?? s.intent))
       .split(" ")
       .filter(Boolean);
   if (k.length === 0) {
@@ -3270,13 +3270,13 @@ function So(s, c = !1, m = !1) {
       return m ? "untitled session" : "new session";
     if (m && (s.template === "bg" || s.template === $B.name))
       return "untitled session";
-    return To(s.template);
+    return normalizeWhitespace(s.template);
   }
   let w = k.length > 3 ? `${k.slice(0, 3).join(" ")}\u2026` : k.join(" ");
   if (te(w) <= b) return w;
   let v = "",
     R = 0;
-  for (let O of oz(w)) {
+  for (let O of splitGraphemes(w)) {
     let W = te(O);
     if (R + W > b - 1) break;
     ((v += O), (R += W));
@@ -3305,7 +3305,7 @@ function ss(yo, yn) {
       }
       let jc = Er.current.label;
       Er.current = { label: yo, hasName: !0, fired: !0 };
-      let qc = Math.max(iB(jc), iB(yo));
+      let qc = Math.max(countGraphemes(jc), countGraphemes(yo));
       if (qc === 0) {
         return;
       }
@@ -3345,8 +3345,8 @@ function ss(yo, yn) {
   return pb;
 }
 function Qc(s, c, m) {
-  let b = oz(s),
-    k = oz(c),
+  let b = splitGraphemes(s),
+    k = splitGraphemes(c),
     w = k.slice(0, Math.min(m, k.length)).join(""),
     v = Math.max(te(s), te(c)),
     R = te(w),
@@ -3356,7 +3356,7 @@ function Qc(s, c, m) {
     if (R + A > v) break;
     ((O += W), (R += A));
   }
-  return { display: w + O + os(" ", v - R), newLen: w.length };
+  return { display: w + O + repeatString(" ", v - R), newLen: w.length };
 }
 function Sb(s) {
   let c = Uo(s.children);
@@ -3367,7 +3367,7 @@ function Sb(s) {
     let b = ip(m[0]);
     return te(b !== void 0 ? `#${b}` : "PR");
   }
-  return te(c.length > 1 ? `${c.length} ${Vl}` : Vl);
+  return te(c.length > 1 ? `${c.length} ${ARTIFACT_MARKER_GLYPH}` : ARTIFACT_MARKER_GLYPH);
 }
 function op(s, c, m, b) {
   let k = Math.max(wb, ...s.map((O) => te(Hn(O, c(O))))),
@@ -3421,7 +3421,7 @@ function Wo(s) {
   return s.row.kind === "frame";
 }
 function xr(s) {
-  return dW(s.href) ? "mr" : "pr";
+  return isGitLabMergeRequestUrl(s.href) ? "mr" : "pr";
 }
 function ip(s) {
   let c = Bn(s.href);
@@ -3442,15 +3442,15 @@ function Cb(s) {
   let c = [],
     { failed: m, pending: b, passed: k } = s.checks,
     w = m + b + k;
-  if (m > 0) c.push({ text: `${L.cross} ${m}/${w}`, color: "error" });
+  if (m > 0) c.push({ text: `${figures.cross} ${m}/${w}`, color: "error" });
   else if (b > 0) c.push({ text: `${k}/${w}`, color: "warning" });
-  else if (w > 0) c.push({ text: L.tick, color: "success" });
+  else if (w > 0) c.push({ text: figures.tick, color: "success" });
   switch (s.review) {
     case "APPROVED":
       c.push({ text: "approved", color: "success" });
       break;
     case "CHANGES_REQUESTED":
-      c.push({ text: L.cross, color: "error" });
+      c.push({ text: figures.cross, color: "error" });
       break;
     case "REVIEW_REQUIRED":
       c.push({ text: "needs review", color: void 0 });
@@ -3469,7 +3469,7 @@ function Gn(s, c) {
         return {
           row: m,
           prNumber: void 0,
-          label: To(m.title ?? "") || To(m.id),
+          label: normalizeWhitespace(m.title ?? "") || normalizeWhitespace(m.id),
           status: [],
           diffStat: void 0,
           isDraft: !1,
@@ -3481,7 +3481,7 @@ function Gn(s, c) {
       return {
         row: m,
         prNumber: b?.number ?? ip(m),
-        label: b?.title ? To(b.title) : "",
+        label: b?.title ? normalizeWhitespace(b.title) : "",
         status: b ? Cb(b) : [],
         diffStat:
           b && b.state !== "MERGED" && b.state !== "CLOSED"
@@ -3527,7 +3527,7 @@ function Vn(s, c, m, b, k, w = !1) {
   return `${v}${R}${O.toLowerCase()}:`;
 }
 function Wn(s, c, m) {
-  if (c && s.tempo !== "active" && m === void 0) return $Q;
+  if (c && s.tempo !== "active" && m === void 0) return BULLET_OPERATOR_GLYPH;
   if (m === "busy" || m === "shell") return null;
   if (isLoopJob(s)) return vb();
   return kb();
@@ -3662,7 +3662,7 @@ function Bb(s) {
 function Nb(s, c) {
   if (s === void 0 || s <= 0) return;
   let m = `${formatTokens(s)} tokens`;
-  return c ? `${L.arrowDown} ${m}` : m;
+  return c ? `${figures.arrowDown} ${m}` : m;
 }
 function Ga(s, c) {
   let m = c(s),
@@ -4424,7 +4424,7 @@ function Tr(s, c, m) {
   logEvent("tengu_bg_agent_action", {
     action: fromEnum(s),
     source: S("fleet"),
-    jobSessionId: Ee(c.sessionId),
+    jobSessionId: sanitizeAnalyticsId(c.sessionId),
     agent: c.template,
     jobState: fromJobState(c.state),
     tempo: fromEnum(c.tempo),
@@ -4479,7 +4479,7 @@ function hp(s, c, m, b, k, w) {
           (logEvent("tengu_bg_agent_action", {
             action: S("stop"),
             source: S("fleet"),
-            jobSessionId: Ee(v.state.sessionId),
+            jobSessionId: sanitizeAnalyticsId(v.state.sessionId),
           }),
             logFeatureOk("fleet_view_stop_job"));
           let A = getJobDir(v.id),
@@ -4542,7 +4542,7 @@ function hp(s, c, m, b, k, w) {
             (logFeatureSad("fleet_view_delete_job", `worktree_kept_${j}`),
             K && I !== void 0)
           ) {
-            let se = x(K.count, "it", "them");
+            let se = pluralize(K.count, "it", "them");
             if (J === void 0)
               return (
                 b(v.id, {
@@ -4572,7 +4572,7 @@ function hp(s, c, m, b, k, w) {
           (logEvent("tengu_bg_agent_action", {
             action: S("delete"),
             source: S("fleet"),
-            jobSessionId: Ee(v.state.sessionId),
+            jobSessionId: sanitizeAnalyticsId(v.state.sessionId),
           }),
           A.leftWorktreeDir)
         )
@@ -4828,7 +4828,7 @@ function Io(s, c, m, b = !1) {
     });
   }
   let { length: k, length: w } = s;
-  for (let { segment: W, index: A } of Xs().segment(s))
+  for (let { segment: W, index: A } of getGraphemeSegmenter().segment(s))
     if (A + W.length > c) {
       ((k = A), (w = A + W.length));
       break;
@@ -4876,7 +4876,7 @@ function ks(HC) {
       $o === "armed"
         ? void 0
         : xo?.justKilled
-          ? $Q
+          ? BULLET_OPERATOR_GLYPH
           : $o
             ? void 0
             : Wn(wt.state, qn, ll),
@@ -5195,7 +5195,7 @@ function ks(HC) {
                   })
                 : ys.length === 1
                   ? en?.prNumber !== void 0
-                    ? e(MB, {
+                    ? e(PullRequestBadge, {
                         number: en.prNumber,
                         url: en.row.href,
                         kind: xr(en.row),
@@ -5210,7 +5210,7 @@ function ks(HC) {
                         url: en.row.href,
                         children: r(t, {
                           color: "claude",
-                          children: [Pp.length > 1 && `${Pp.length} `, Vl],
+                          children: [Pp.length > 1 && `${Pp.length} `, ARTIFACT_MARKER_GLYPH],
                         }),
                       })
                     : null,
@@ -5578,7 +5578,7 @@ function od(CE) {
                     color: Pf ? "suggestion" : void 0,
                     dimColor: !Pf,
                     wrap: "truncate",
-                    children: [Pf ? L.pointer : " ", " ", Sw],
+                    children: [Pf ? figures.pointer : " ", " ", Sw],
                   },
                   Sw,
                 );
@@ -5796,7 +5796,7 @@ function od(CE) {
               dimColor: !ql,
               "aria-label": `${eo ? "selected, " : ""}${Ze.hidden} more finished sessions folded:`,
               children: [
-                _n ? (eo ? "\u276F" : " ") + os(" ", jo - 1) : "",
+                _n ? (eo ? "\u276F" : " ") + repeatString(" ", jo - 1) : "",
                 Ze.group === Zo
                   ? `\u2026 show all (${Ze.hidden} more${nr !== null && nr.doneFoldHiddenFailed > 0 ? ` \xB7 ${nr.doneFoldHiddenFailed} failed` : ""})`
                   : `\u2026 ${Ze.hidden} more`,
@@ -6257,7 +6257,7 @@ function fd(hx) {
     { query: Fo, error: rd, hint: id, expandHintPasteId: Lf } = useStoreSelector(vx),
     { pending: sd } = useStoreSelector(Rx),
     Ds = JR(),
-    Jf = U(Fw),
+    Jf = useAppStateSelector(Fw),
     ad = useVoiceSelector(Mw),
     Bf = useVoiceSelector(Lw),
     {
@@ -6325,7 +6325,7 @@ function fd(hx) {
             ii
               ? "press ctrl+c or q again to exit"
               : "Press Ctrl-C again to exit",
-            Fs > 0 && ` \xB7 ${Fs} ${x(Fs, "agent")} will keep running`,
+            Fs > 0 && ` \xB7 ${Fs} ${pluralize(Fs, "agent")} will keep running`,
           ],
         })
       : $f !== null || si !== null
@@ -6350,7 +6350,7 @@ function fd(hx) {
                 si?.kind === "assign" &&
                   Df >= 0 &&
                   e(KeybindingHint, {
-                    chord: L.arrowLeft,
+                    chord: figures.arrowLeft,
                     action: "deselect",
                     format: { keyCase: "lower" },
                   }),
@@ -6390,8 +6390,8 @@ function fd(hx) {
                             e(t, {
                               children:
                                 zo?.kind === "newsession"
-                                  ? `${L.arrowRight} or enter to start`
-                                  : `${L.arrowRight} or enter to open`,
+                                  ? `${figures.arrowRight} or enter to start`
+                                  : `${figures.arrowRight} or enter to open`,
                             }),
                             sn &&
                               !ai &&
@@ -6628,7 +6628,7 @@ function Ls(qx) {
     sm[16] !== bd
   ) {
     let io = [];
-    if (Zf) io.push(`shift+${L.arrowUp + L.arrowDown} to reorder`);
+    if (Zf) io.push(`shift+${figures.arrowUp + figures.arrowDown} to reorder`);
     if (em) io.push("ctrl+r to rename");
     if (tm) io.push("ctrl+e to set group");
     if (gd) {
@@ -6640,7 +6640,7 @@ function Ls(qx) {
     if (om && wd) io.push(`${wd} to ${Xf ? "unpin" : "pin to top"}`);
     if (Ms > 0) io.push(`alt+1${Ms > 1 ? `-${Ms}` : ""} to open`);
     if (hd) io.push(`ctrl+x to ${hd}`);
-    if (im) io.push(`${L.arrowLeft} to go back`);
+    if (im) io.push(`${figures.arrowLeft} to go back`);
     io.push(gd ? "esc to quit" : "esc to close \xB7 esc again quits");
     io.push("? to close");
     let Uw = [];
@@ -6875,11 +6875,11 @@ function ly(Ld, lI) {
           children: r(t, {
             wrap: "truncate",
             children: [
-              To(Ld.label),
+              normalizeWhitespace(Ld.label),
               Ld.description &&
                 r(t, {
                   dimColor: !0,
-                  children: [" \xB7 ", To(Ld.description)],
+                  children: [" \xB7 ", normalizeWhitespace(Ld.description)],
                 }),
             ],
           }),
@@ -6898,7 +6898,7 @@ function Jd(aI) {
   }
   let Od;
   if (fi[0] !== sr.question)
-    ((Od = To(sr.question)), (fi[0] = sr.question), (fi[1] = Od));
+    ((Od = normalizeWhitespace(sr.question)), (fi[0] = sr.question), (fi[1] = Od));
   else Od = fi[1];
   let Td;
   if (fi[2] !== Od)
@@ -6949,7 +6949,7 @@ function dm(s, c) {
   let m = c?.[0];
   if (!m || s < "1" || s > "9") return null;
   let b = Number(s) - 1;
-  return m.options[b]?.label.replace(jW, "") ?? null;
+  return m.options[b]?.label.replace(CONTROL_CHARS_REGEX, "") ?? null;
 }
 var um = 8,
   cm = 5,
@@ -6998,7 +6998,7 @@ function Nd({
     le = C(null);
   dd(le, !0);
   let Fe = W.replyDraft(s.id) ?? "",
-    [pe, je] = d(Og(Fe) === "bash" ? "bash" : "prompt"),
+    [pe, je] = d(getDraftMode(Fe) === "bash" ? "bash" : "prompt"),
     We = C(pe),
     yt = (ae) => {
       ((We.current = ae), je(ae));
@@ -7008,10 +7008,10 @@ function Nd({
       s.state.tempo === "blocked" &&
       !s.state.block?.questions &&
       s.state.suggestedReply
-        ? To(s.state.suggestedReply) || void 0
+        ? normalizeWhitespace(s.state.suggestedReply) || void 0
         : void 0,
     xe = JR(),
-    nt = U((ae) => ae.settings.voice?.mode ?? "hold"),
+    nt = useAppStateSelector((ae) => ae.settings.voice?.mode ?? "hold"),
     tt = useClock(),
     ye = C(null),
     $e = useVoiceGetState();
@@ -7035,7 +7035,7 @@ function Nd({
     multiline: !0,
     honorEditorMode: !0,
     backspaceExitsOnEmpty: !1,
-    initialQuery: Qb(Fe),
+    initialQuery: getDraftValue(Fe),
     onExit: () => {
       if (be.current) return;
       let ae = Ue.current.trim();
@@ -7044,7 +7044,7 @@ function Nd({
         return;
       }
       if (!ae) return;
-      let gt = nue(ae, We.current),
+      let gt = buildDraftText(ae, We.current),
         It = We.current;
       ((be.current = !0),
         ze(""),
@@ -7058,7 +7058,7 @@ function Nd({
         if (oo) Re[Ke.id] = oo;
       }
       let kt = () => {
-        if (Ue.current === "" && Qb(W.replyDraft(s.id) ?? "") === "") {
+        if (Ue.current === "" && getDraftValue(W.replyDraft(s.id) ?? "") === "") {
           (W.saveReplyDraft(s.id, gt), ze(ae), yt(It));
           for (let Ke of Zt) {
             let oo = Re[Ke.id];
@@ -7120,7 +7120,7 @@ function Nd({
         : void 0,
   });
   (E(() => {
-    W.saveReplyDraft(s.id, nue(ot, pe));
+    W.saveReplyDraft(s.id, buildDraftText(ot, pe));
   }, [ot, pe, s.id, W]),
     E(() => {
       let ae = W.registerLivePeekQuery(() => Ue.current);
@@ -7161,8 +7161,8 @@ function Nd({
   E(() => {
     if (Ye !== "idle" && ye.current) (ye.current(), (ye.current = null));
   }, [Ye]);
-  let dt = U((ae) => shouldReduceMotion(ae.settings.prefersReducedMotion)),
-    Dt = U((ae) => ae.settings?.prUrlTemplate),
+  let dt = useAppStateSelector((ae) => shouldReduceMotion(ae.settings.prefersReducedMotion)),
+    Dt = useAppStateSelector((ae) => ae.settings?.prUrlTemplate),
     ut = Ye === "recording" && !dt,
     { handleKeyDown: Lt } = Yae({
       voiceHandleKeyEvent: Ve.handleKeyEvent,
@@ -7180,7 +7180,7 @@ function Nd({
     { rows: Xt, columns: jt } = useTerminalSize(),
     Jt = 8,
     st = ot
-      ? ln(
+      ? countOccurrences(
           ot,
           `
 `,
@@ -7198,7 +7198,7 @@ function Nd({
               : []),
       ) / Math.max(40, jt - 6),
     ),
-    St = XAe()
+    St = isFullscreenEnabled()
       ? Math.min(
           Qt,
           Math.max(
@@ -7255,7 +7255,7 @@ function Nd({
               ((be.current = !0), w());
               return;
             }
-            if (mOe(ae.key) && !Ue.current) {
+            if (isBashModeShortcut(ae.key) && !Ue.current) {
               (ae.preventDefault(), yt("bash"));
               return;
             }
@@ -7339,7 +7339,7 @@ function Nd({
                             wrap: "truncate",
                             children: [
                               ae.prNumber !== void 0
-                                ? e(MB, {
+                                ? e(PullRequestBadge, {
                                     number: ae.prNumber,
                                     url: ae.row.href,
                                     kind: xr(ae.row),
@@ -7350,7 +7350,7 @@ function Nd({
                                 : e(t, {
                                     color: ae.color,
                                     dimColor: !Wo(ae),
-                                    children: Wo(ae) ? Vl : "PR",
+                                    children: Wo(ae) ? ARTIFACT_MARKER_GLYPH : "PR",
                                   }),
                               ae.label
                                 ? r(N, {
@@ -7381,7 +7381,7 @@ function Nd({
                             paddingLeft: 1,
                             children: e(ct, {
                               url: `${ae.row.href}/files`,
-                              children: e(Wm, {
+                              children: e(DiffStatLabel, {
                                 added: ae.diffStat.additions,
                                 removed: ae.diffStat.deletions,
                               }),
@@ -7450,7 +7450,7 @@ function Nd({
                     : ve && !qe
                       ? ve
                       : "reply",
-              prefix: qe ? "!" : L.pointer,
+              prefix: qe ? "!" : figures.pointer,
               prefixColor: qe ? "bashBorder" : void 0,
               prefixDim: !ot.trim(),
               dimRange: Ve.interimRange
@@ -7644,7 +7644,7 @@ function qd(SP) {
                               color: Fm ? "suggestion" : void 0,
                               dimColor: !Fm,
                               wrap: "truncate",
-                              children: [Fm ? L.pointer : " ", " ", Dm.title],
+                              children: [Fm ? figures.pointer : " ", " ", Dm.title],
                             }),
                           }),
                           e(o, {
@@ -8027,7 +8027,7 @@ function ou(oA) {
               cr || (Qm && (Xm !== "idle" || Zm))
                 ? ""
                 : "describe a task for a new session",
-            prefix: Km === "bash" ? "!" : !rg ? L.pointer : void 0,
+            prefix: Km === "bash" ? "!" : !rg ? figures.pointer : void 0,
             prefixDim: !ng && !cr,
             prefixColor: cr ? "bashBorder" : void 0,
             highlights: Jm,
@@ -8095,7 +8095,7 @@ function nu(cA) {
     ((Cy = () => {
       let Ey = Lo.draftForDisk();
       let xy = [...Jo.getSnapshot().collapsed];
-      Ey || xy.length ? dze(so, { q: Ey, collapsed: xy }, _o) : ban(so, _o);
+      Ey || xy.length ? saveJobDraft(so, { q: Ey, collapsed: xy }, _o) : deleteJobDraft(so, _o);
     }),
       (tu[0] = so),
       (tu[1] = Lo),
@@ -8131,7 +8131,7 @@ function nu(cA) {
             let Dy = [...Jo.getSnapshot().collapsed];
             Py.current =
               Ty || Dy.length
-                ? await eFt(so, { q: Ty, collapsed: Dy }, _o)
+                ? await writeJobDraft(so, { q: Ty, collapsed: Dy }, _o)
                 : !0;
           })
         : void 0),
@@ -8153,7 +8153,7 @@ function nu(cA) {
         }
         let Ly = Lo.draftForDisk();
         let Jy = [...Jo.getSnapshot().collapsed];
-        if (Ly || Jy.length) San(so, { q: Ly, collapsed: Jy });
+        if (Ly || Jy.length) writeJobDraftSync(so, { q: Ly, collapsed: Jy });
       })),
       (My = [so, Lo, Jo]),
       (tu[17] = so),
@@ -9116,7 +9116,7 @@ function wg(s, c) {
     }
     if (!X || $e.some((fe) => fe.id === X.id)) return;
     if (X.state.backend !== "daemon" && !X.state.sock) return;
-    (Je(To(X.state.name ?? "")),
+    (Je(normalizeWhitespace(X.state.name ?? "")),
       St(),
       w.startRename(
         X.id,
@@ -9326,7 +9326,7 @@ function wg(s, c) {
   if (
     HWe() &&
     !Ue &&
-    mOe(c.key) &&
+    isBashModeShortcut(c.key) &&
     !m.getSnapshot().query &&
     m.getSnapshot().mode === "prompt"
   ) {
@@ -9354,10 +9354,10 @@ var Us = 3600000,
   au = "CLAUDE_AGENTS_AUTO_RELAUNCHED_AT";
 function Sg(s, { cwdFilter: c, onError: m }) {
   (logEvent("tengu_bg_agent_action", { action: fromEnum(`fleetview_update_${s}`) }),
-    slt()
+    resolveLauncher()
       .then((b) => {
         if (s === "auto" && Date.now() - Nm() < Us) return;
-        return y4({
+        return relaunchClaudeCode({
           launcher: b,
           args: ["agents", ...(c ? ["--cwd", c] : []), ...j$n()],
           env: {
@@ -9367,7 +9367,7 @@ function Sg(s, { cwdFilter: c, onError: m }) {
           },
           preSpawn: () =>
             process.stdout.write(
-              ie.dim(`
+              chalk.dim(`
 Switching from ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION} to latest\u2026
 
 `),
@@ -9444,7 +9444,7 @@ class kg {
                     : "skill",
               name: w.name,
               aliases: w.aliases,
-              description: kr(w.description ?? ""),
+              description: firstLine(w.description ?? ""),
             }));
           this.#a({ skills: new Map(this.#e.skills).set(s, k) });
         });
@@ -9505,13 +9505,13 @@ function _g(s, c) {
   E(() => {
     let { next: v, notifications: R, notified: O } = $y(w.current, s);
     w.current = v;
-    for (let A of R) yv(A, m, { storageV5: b, credentials: k });
+    for (let A of R) showNotification(A, m, { storageV5: b, credentials: k });
     let W = Date.now();
     for (let A of O)
       if (Zu(c, A.sessionId, A.kind, W))
         logEvent("tengu_bg_agent_notification", {
           kind: fromEnum(A.kind),
-          jobSessionId: Ee(A.sessionId),
+          jobSessionId: sanitizeAnalyticsId(A.sessionId),
         });
   });
 }
@@ -9530,7 +9530,7 @@ function Cg({
   storageV5: A,
 }) {
   let I = useClock(),
-    { stdin: q, isRawModeSupported: K } = rk(),
+    { stdin: q, isRawModeSupported: K } = useStdin(),
     { credentials: J } = useStorageV5Context(),
     j = useKeybindingContext()?.bindings,
     ne = a.CLAUDE_CODE_FLEETVIEW_SIMPLE || H("tengu_fleetview_simple", !1),
@@ -9599,13 +9599,13 @@ function Cg({
     de.setRemoteWanted(se);
   }, [de, se]),
     E(() => de.attachView(I), [de, I]));
-  let ut = Q(),
+  let ut = getCwd(),
     Lt = Ui({ cwd: ut }),
     [mt, Gt] = d(ut);
   E(() => {
     let T = !1;
     return (
-      canonicalizePath(ut, If(A)).then((Oe) => {
+      canonicalizePath(ut, createHoverRestOptions(A)).then((Oe) => {
         if (!T && Oe !== ut) Gt(Oe);
       }),
       () => {
@@ -9691,18 +9691,18 @@ function Cg({
         It(T),
         xe.getSnapshot().groupMode === "state" ? T : null,
       ),
-    Ke = Va();
+    Ke = useTerminalFocus();
   E(() => {
     if (Ke) de.resetPrFetchGate();
   }, [de, Ke]);
-  let oo = U((T) => T.autoUpdaterResult?.status === "success"),
+  let oo = useAppStateSelector((T) => T.autoUpdaterResult?.status === "success"),
     { columns: Bo, rows: me } = useTerminalSize(),
     [ht] = d(() => Date.now()),
     Ct = C(null),
     $t = C(null);
   dd($t, ce !== null && !Ue);
   let Vt = JR(),
-    Ne = U((T) => T.settings.voice?.mode ?? "hold"),
+    Ne = useAppStateSelector((T) => T.settings.voice?.mode ?? "hold"),
     No = useVoiceGetState(),
     wi = () => {
       let T = pe.focusedRow(),
@@ -9776,7 +9776,7 @@ function Cg({
       isActive: (Ne !== "tap" || Bt.trim().length > 0) && Tt !== "bash" && Mt,
       composer: gu,
     }),
-    Ig = U((T) => shouldReduceMotion(T.settings.prefersReducedMotion)),
+    Ig = useAppStateSelector((T) => shouldReduceMotion(T.settings.prefersReducedMotion)),
     Pg = Ks === "recording" && !Ig;
   (nu({
     editor: He,
@@ -10556,7 +10556,7 @@ async function BQt(s, c) {
     ((await import("../../01-核心基础设施/共享小工具-未细化/chunk-dypysnt9.js")).registerToolHosts(),
     Xae(),
     zst(),
-    zr() && !hasTeammateModeSnapshot())
+    isAgentSwarmsEnabled() && !hasTeammateModeSnapshot())
   )
     captureTeammateModeSnapshot();
   (B$n(c?.dispatchExtraArgs ?? []),
@@ -10579,7 +10579,7 @@ async function BQt(s, c) {
     }
   }
   process.stdin.on("readable", R);
-  let O = c?.cwdFilter ? await canonicalizePath(resolve(c.cwdFilter), If(c?.storageV5)) : void 0,
+  let O = c?.cwdFilter ? await canonicalizePath(resolve(c.cwdFilter), createHoverRestOptions(c?.storageV5)) : void 0,
     W = ec(c?.dispatchDefaults),
     A = isHoverRestEnabled() ? c?.storageV5 : void 0;
   (Et(A ? () => CPt(A) : CPt), Et(openDaemonLease("claude agents")));
@@ -10600,12 +10600,12 @@ async function BQt(s, c) {
     X = c?.originJobId,
     de = c?.originSpawn;
   delete process.env.CLAUDE_AGENTS_SELECT;
-  let ce = await H9n(await canonicalizePath(Q(), If(c?.storageV5)), c?.storageV5),
+  let ce = await readJobDraft(await canonicalizePath(getCwd(), createHoverRestOptions(c?.storageV5)), c?.storageV5),
     Ie = _r(w, c?.storageV5);
   Wi(w, Ie, c?.storageV5, ce?.collapsed);
   let ge = ji(w, { query: ce?.q || void 0 }),
     ke = Ki(w);
-  Apt();
+  sweepStaleJobDrafts();
   let Ce;
   process.stdin.off("readable", R);
   while (v.length) process.stdin.unshift(v.pop());
@@ -10669,7 +10669,7 @@ async function BQt(s, c) {
         );
       }));
     be = void 0;
-    let Fe = XAe();
+    let Fe = isFullscreenEnabled();
     if (le.type === "back") {
       I.unmount();
       break;
@@ -10713,11 +10713,11 @@ async function BQt(s, c) {
     }
     let pe = getInkInstanceRegistry().get(process.stdout);
     if (Fe && le.type === "open") pe?.handoffAltScreen();
-    if (P() === "windows" && le.type === "open") pe?.handoffRawMode();
+    if (getCurrentPlatform() === "windows" && le.type === "open") pe?.handoffRawMode();
     let je = pe?.lastFrameFillsCurrentViewport ?? !1;
     if (!Fe) I.render(null);
     if ((I.unmount(), le.type === "done")) break;
-    if (P() === "windows" && process.stdin.isTTY)
+    if (getCurrentPlatform() === "windows" && process.stdin.isTTY)
       (trySetRawMode(process.stdin, !0), process.stdin.ref());
     let We = Fe ? cz(() => void process.stdout.write(uF())) : () => {};
     if (((q = le.job.id), !le.keepQuery)) ge.dropDraft();
@@ -10740,11 +10740,11 @@ async function BQt(s, c) {
       ve.ok || ve.alive)
     ) {
       (Tr("attach", le.job.state, {
-        jobId: Ee(le.job.id),
-        attachShort: Ee(ve.short ?? le.job.id),
+        jobId: sanitizeAnalyticsId(le.job.id),
+        attachShort: sanitizeAnalyticsId(ve.short ?? le.job.id),
         ...oe(le.job),
       }),
-        process.stdout.write(Jp(_d.SET_TITLE_AND_ICON, So(le.job.state, !0))));
+        process.stdout.write(formatOscSequence(OSC_CODES.SET_TITLE_AND_ICON, So(le.job.state, !0))));
       let xe = Date.now(),
         nt = {
           gestureId: le.gestureId ?? qe ?? pu(),

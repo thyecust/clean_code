@@ -13,29 +13,29 @@ import { i8, j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, zn } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { createAbortController } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
-import { Qu, Wc } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { be, xMn } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { takeLastCodeUnits, isWellFormed } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { getClaudeConfigDir, parseProjectDirName } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { Ls, nq, gor } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, J1, x_e, ge, l, A, Jr, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
+import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Hx, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { validateUuid, writeEntriesToJsonlFile, sanitizePath, getProjectKey } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
-import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
-import { Fy } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
-import { $5, Sx, tv } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
+import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
+import { AsyncQueue } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
+import { CREDENTIALS_SUFFIX, getKeychainServiceName, getKeychainAccountName } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import "../../02-功能模块/MCP客户端/chunk-tv3jbp8f.js";
 import "../../02-功能模块/MCP客户端/chunk-98spw152.js";
-import "../../02-功能模块/MCP客户端/chunk-j8556pzt.js";
+import "../../02-功能模块/MCP客户端/mcp-server.js";
 import { Fge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { parsePositiveInteger } from "../../01-核心基础设施/共享小工具-未细化/parse-positive-integer.js";
 import { pushCliArg } from "../../01-核心基础设施/共享小工具-未细化/claude-code-args.js";
-import { isJsonRpcRequest, krn } from "../../01-核心基础设施/共享小工具-未细化/chunk-t4xxq70d.js";
+import { isJsonRpcRequest, SdkMcpServerTransport } from "../../01-核心基础设施/共享小工具-未细化/sdk-mcp-transports.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { execFile } from "child_process";
@@ -82,13 +82,13 @@ function St(e) {
       (e.initPromise = Promise.resolve()),
       e.initPromise
     );
-  let t = mt(be(), "debug");
+  let t = mt(getClaudeConfigDir(), "debug");
   return (
     (e.logStem = `sdk-${ds()}`),
     (e.debugFilePath = mt(t, `${e.logStem}.txt`)),
     process.stderr.write(`SDK debug logs: ${e.debugFilePath}
 `),
-    (e.initPromise = qt()
+    (e.initPromise = getFileStorage()
       .mkdir(t)
       .catch(() => {})),
     e.initPromise
@@ -115,7 +115,7 @@ function x(e, t) {
       return;
     }
     if (r.debugFilePath)
-      qt()
+      getFileStorage()
         .append(r.debugFilePath, d)
         .catch(() => {});
   });
@@ -179,7 +179,7 @@ var ve = new Et(),
 function ks(e) {
   if (typeof e !== "string" || e.trim() === "")
     throw Error("Skill names must be non-empty strings.");
-  if (!Wc(e))
+  if (!isWellFormed(e))
     throw new R(
       `Invalid skill name ${b(e)}: the name contains an unpaired surrogate, which cannot survive the UTF-8 encoding of the CLI invocation; no skill discovered from the filesystem can have such a name.`,
       "skill name with unpaired surrogate rejected",
@@ -298,7 +298,7 @@ class We {
       if (k) return;
       let T = g.write(E);
       if (((this.stderrTail += T), this.stderrTail.length > 2 * He))
-        this.stderrTail = Qu(nq(this.stderrTail), He);
+        this.stderrTail = takeLastCodeUnits(nq(this.stderrTail), He);
       if (C) (x(T), this.options.stderr?.(T));
     }),
       f.stderr.on("error", (E) => {
@@ -601,7 +601,7 @@ class We {
     return;
   }
   formatStderrTail() {
-    let e = Qu(nq(this.stderrTail), He).trim();
+    let e = takeLastCodeUnits(nq(this.stderrTail), He).trim();
     return e ? `. stderr: ${e}` : "";
   }
   write(e) {
@@ -897,7 +897,7 @@ class _e {
   static UNMATCHED_CONTROL_RESPONSES_MAX = 1024;
   cleanupPerformed = !1;
   sdkMessages;
-  inputStream = new Fy();
+  inputStream = new AsyncQueue();
   initialization;
   cancelControllers = new Map();
   hookCallbacks = new Map();
@@ -1952,7 +1952,7 @@ class _e {
     return d(t, r, { signal: o });
   }
   connectSdkMcpServer(e, t) {
-    let r = new krn((o) => this.sendMcpServerMessageToCli(e, o));
+    let r = new SdkMcpServerTransport((o) => this.sendMcpServerMessageToCli(e, o));
     (this.sdkMcpServers.set(e, { transport: r, timeout: parsePositiveInteger(t.timeout) }),
       t.instance.connect(r).catch((o) => {
         if (this.sdkMcpServers.get(e)?.transport === r)
@@ -2252,11 +2252,11 @@ async function Zs(e, t) {
   await Kt(t, r, { mode: 384 });
 }
 function er() {
-  let e = Sx($5);
+  let e = getKeychainServiceName(CREDENTIALS_SUFFIX);
   return new Promise((t) => {
     execFile(
       "security",
-      ["find-generic-password", "-a", tv(), "-w", "-s", e],
+      ["find-generic-password", "-a", getKeychainAccountName(), "-w", "-s", e],
       { encoding: "utf-8", timeout: 5000, windowsHide: !0 },
       (r, o) => t(r ? void 0 : o.trim() || void 0),
     );
@@ -2298,7 +2298,7 @@ async function tr(e, t, r, o, d = 60000, p) {
       E,
       D(h, ".claude.json"),
       void 0,
-      Ye(p, E, U.globalConfig, Ce.globalConfig()),
+      Ye(p, E, U.globalConfig, STORAGE_KEYS.globalConfig()),
     );
     let T = D(C, "settings.json");
     if (
@@ -2306,7 +2306,7 @@ async function tr(e, t, r, o, d = 60000, p) {
         T,
         D(h, "settings.json"),
         Lt,
-        Ye(p, T, U.userSettings, Ce.userSettings()),
+        Ye(p, T, U.userSettings, STORAGE_KEYS.userSettings()),
       ),
       await Me(D(C, "cowork_settings.json"), D(h, "cowork_settings.json"), Lt),
       e.listSubkeys)
@@ -2729,7 +2729,7 @@ function Vt(e, t) {
   let r = or(e);
   if (t === void 0) return getProjectKey(r);
   return (
-    (t.CLAUDE_CONFIG_DIR ? xMn(t.CLAUDE_CODE_PROJECT_DIR_NAME) : void 0) ??
+    (t.CLAUDE_CONFIG_DIR ? parseProjectDirName(t.CLAUDE_CODE_PROJECT_DIR_NAME) : void 0) ??
     sanitizePath(r)
   );
 }

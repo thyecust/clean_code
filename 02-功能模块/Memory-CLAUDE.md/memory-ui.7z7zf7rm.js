@@ -16,8 +16,8 @@ import { withDeadline } from "../../01-核心基础设施/共享小工具-未细
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be, Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { os, x, us } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { getClaudeConfigDir, isSafeMode, getSafeModeExitHint } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { repeatString, pluralize, truncateToCodePoints } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -25,13 +25,13 @@ import { useKeybinding } from "../../01-核心基础设施/共享小工具-未�
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ff, isAutoMemoryEnabled, isAutoMemoryDisabledForCurrentMainLoopModel, getAutoMemPath, ee, es } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { jn, Ks, findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { formatTokens, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getInitialSettings, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
@@ -40,7 +40,7 @@ import { KeybindingScope } from "../../01-核心基础设施/共享小工具-未
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { Efn, Djt, Ljt, an, Na, qMe, QMe, Ny, nR } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import {
   jj,
@@ -104,12 +104,12 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
 import { openPathInDefaultApp } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { Dn, jFt, kn, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { QS } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
+import { escapeMarkupText } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { s, T, O, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -478,7 +478,7 @@ function Ot(Xn) {
         dimColor: !0,
         children: [
           "\u2026 ",
-          Fe > 0 ? `${Fe} more ${x(Fe, "line")}` : "more",
+          Fe > 0 ? `${Fe} more ${pluralize(Fe, "line")}` : "more",
           K.truncated ? " (the session sent only the beginning)" : "",
           " \u2014 ask Claude to show or change the rest",
         ],
@@ -624,7 +624,7 @@ function en(w) {
     .replace(/[\u2028\u2029]/g, " ")
     .trim();
   if (b === "") return null;
-  return us(b, to) === b ? b : `${us(b, to - 1)}\u2026`;
+  return truncateToCodePoints(b, to) === b ? b : `${truncateToCodePoints(b, to - 1)}\u2026`;
 }
 function tn(w, b) {
   return (
@@ -761,7 +761,7 @@ function Ve(w) {
     case "picked":
       return w.name === null
         ? "a project with no displayable name"
-        : `project "${QS(w.name).replace(Yo, (b) => `&#${b.codePointAt(0)};`)}"`;
+        : `project "${escapeMarkupText(w.name).replace(Yo, (b) => `&#${b.codePointAt(0)};`)}"`;
   }
 }
 function mn(w, b, M, k, R, P = !1) {
@@ -900,8 +900,8 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     j = rt.of(w),
     { storageV5: W, credentials: V } = useStorageV5Context(),
     B = kn(Ny(w, !1, W, V)),
-    I = isAutoMemoryEnabled() || Hr(),
-    Ce = isAutoMemoryEnabled() && !Hr(),
+    I = isAutoMemoryEnabled() || isSafeMode(),
+    Ce = isAutoMemoryEnabled() && !isSafeMode(),
     { mounts: z, picker: Ie } = Ce
       ? kn(fn(j, W, V))
       : { mounts: [], picker: null },
@@ -936,7 +936,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
                     : "signed out \u2014 next session decides fresh",
               }
             : null,
-    mt = xt(be(), "CLAUDE.md"),
+    mt = xt(getClaudeConfigDir(), "CLAUDE.md"),
     Ke = xt(R, "CLAUDE.md"),
     ho = B.some((S) => S.path === mt),
     yo = B.some((S) => S.path === Ke),
@@ -954,7 +954,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
         me = S.exists ? "" : " (new)",
         pe = S.parent ? (Et.get(S.parent) ?? 0) + 1 : 0;
       Et.set(S.path, pe);
-      let J = pe > 0 ? os("  ", pe - 1) : "",
+      let J = pe > 0 ? repeatString("  ", pe - 1) : "",
         Z;
       if (S.type === "User" && !S.isNested && S.path === mt)
         Z = "User instructions";
@@ -974,7 +974,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     }),
     Dt = [],
     Le = [],
-    bo = U((S) => S.agentDefinitions),
+    bo = useAppStateSelector((S) => S.agentDefinitions),
     [Re] = d(() => ({ write: !1, picker: !1, pickerData: null }));
   if (Ie !== null) Re.pickerData = Ie;
   let Y = Ie ?? Re.pickerData,
@@ -1043,7 +1043,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
       if (S.memory) {
         let H = LFe(S.agentType, S.memory);
         Le.push({
-          label: `Open ${ie.bold(S.agentType)} agent memory`,
+          label: `Open ${chalk.bold(S.agentType)} agent memory`,
           value: `${Ae}${H}`,
           description: `${S.memory} scope`,
         });
@@ -1065,7 +1065,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
   );
   let Oo = Xe && !Oe,
     [ye] = d(() => Oe && Efn()),
-    Lt = U((S) =>
+    Lt = useAppStateSelector((S) =>
       Object.values(S.tasks).some(
         (H) => H.type === "dream" && H.status === "running",
       ),
@@ -1103,7 +1103,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     });
   }
   function jo() {
-    if (Hr()) return;
+    if (isSafeMode()) return;
     if (Xe) return;
     let S = !Oe;
     (updateSettingsForSource("userSettings", { autoMemoryEnabled: S }, void 0, W),
@@ -1173,12 +1173,12 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
                         dimColor: !0,
                         children: "unavailable for current model",
                       })
-                    : Hr()
+                    : isSafeMode()
                       ? r(t, {
                           dimColor: !0,
                           children: [
                             "off in safe mode \u2014 ",
-                            yf(),
+                            getSafeModeExitHint(),
                             " to re-enable",
                           ],
                         })
@@ -1398,7 +1398,7 @@ import { homedir } from "os";
 import { relative } from "path";
 function it(w) {
   let b = homedir(),
-    M = Q(),
+    M = getCwd(),
     k = w.startsWith(b) ? "~" + w.slice(b.length) : null,
     R = w.startsWith(M) ? "./" + relative(M, w) : null;
   if (k && R) return k.length <= R.length ? k : R;
@@ -1407,7 +1407,7 @@ function it(w) {
 function bn({ session: w, onDone: b }) {
   let M = async (R) => {
       try {
-        if (R.includes(be())) await ae().mkdir(be());
+        if (R.includes(getClaudeConfigDir())) await ae().mkdir(getClaudeConfigDir());
         try {
           await writeFile(R, "", { encoding: "utf8", flag: "wx" });
         } catch (I) {
@@ -1428,10 +1428,10 @@ function bn({ session: w, onDone: b }) {
           V = W
             ? `> ${W} To change editor, set $EDITOR or $VISUAL environment variable.`
             : "> To use a different editor, set the $EDITOR or $VISUAL environment variable.",
-          B = Hr()
+          B = isSafeMode()
             ? `
 
-> Safe mode: this session doesn't load CLAUDE.md files, so changes take effect after you ${yf()}.`
+> Safe mode: this session doesn't load CLAUDE.md files, so changes take effect after you ${getSafeModeExitHint()}.`
             : "";
         b(
           `Opened ${it(R)}${B}
@@ -1455,17 +1455,17 @@ ${V}`,
       flexDirection: "column",
       gap: 1,
       children: [
-        Hr() &&
+        isSafeMode() &&
           r(o, {
             flexDirection: "column",
             children: [
-              r(t, { color: "suggestion", children: [L.info, " Safe mode"] }),
+              r(t, { color: "suggestion", children: [figures.info, " Safe mode"] }),
               r(t, {
                 dimColor: !0,
                 children: [
                   "CLAUDE.md files aren't loaded into this session. You can still edit them \u2014 changes take effect after you",
                   " ",
-                  yf(),
+                  getSafeModeExitHint(),
                   ".",
                 ],
               }),

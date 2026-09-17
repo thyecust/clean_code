@@ -26,7 +26,7 @@ import {
   getRegisteredSessionName,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { getAgentId, getTeamName } from "./chunk-811z9z0t.js";
+import { getAgentId, getTeamName } from "./teammate-context.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { SessionRecordsUnreadableError, ownMessagingSocket, listLivePeerSessions } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { getSessionNamingState } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
@@ -45,8 +45,8 @@ import {
   jpe,
   l7e,
 } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
-import { f2 } from "./chunk-sr4920wy.js";
-import { readTeamFileAsync } from "./chunk-6b13bhw1.js";
+import { isOwnSessionId } from "./peer-target-guard.js";
+import { readTeamFileAsync } from "./team-file-store.js";
 import { MAIN_CONVERSATION_NAME } from "./chunk-enjekn9t.js";
 import { basename } from "path";
 var k = "not reachable from this cloud session",
@@ -78,7 +78,7 @@ async function osn(e, n, i) {
       session: d,
     }));
   for (let d of r.sessions) {
-    if (nZe(g, d.id) || f2(d.id)) continue;
+    if (nZe(g, d.id) || isOwnSessionId(d.id)) continue;
     m.push({ transport: "cloud", address: void 0, session: d });
   }
   let a = uSn(c.rows, g, r.sessions);
