@@ -122,7 +122,7 @@ import {
   Rt,
   Ps,
 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we, fromNumber as Yr, concatSafe as _y, fromEnumArr as Ga } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt, fromNumber, concatSafe, fromEnumArr } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import {
   We,
   Et,
@@ -159,7 +159,7 @@ import {
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { getOauthConfig as Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import {
   pp,
   vu,
@@ -171,9 +171,9 @@ import {
   Uxt,
   Pur,
   St,
-  logError as h,
-  logMCPError as Wr,
-  logMCPDebug as J,
+  logError,
+  logMCPError,
+  logMCPDebug,
 } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { LE, lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { yQ, ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
@@ -185,9 +185,9 @@ import {
   Zk,
   g6,
   IAt,
-  getUserAgent as ex,
-  getAuthHeaders as l5,
-  withOAuth401Retry as T_,
+  getUserAgent,
+  getAuthHeaders,
+  withOAuth401Retry,
   ry,
   bt,
   sr,
@@ -217,33 +217,33 @@ import {
   Gve,
   Ese,
   UAt,
-  isModelAllowed as Rr,
-  getMainLoopModel as rt,
-  isFableFamilyOrPinnedModel as hg,
-  isModeDependentModelSetting as xR,
-  stepDownRestrictedFamilyAliasPick as Xh,
-  getRuntimeMainLoopModel as ip,
-  isModelAllowedUnderActiveEnforcement as dA,
-  isExemptDefaultResolvingPick as am,
-  getDefaultMainLoopModel as ol,
-  getFableDeclineFallbackModel as m5,
-  getCanonicalName as Ue,
-  renderModelSetting as VN,
-  getModelSourceAnnotation as rCt,
-  renderModelName as oi,
-  renderFableModelName as Hm,
-  parseUserSpecifiedModel as wt,
-  resolveSkillModelOverride as OQe,
-  modelDisplayString as WC,
+  isModelAllowed,
+  getMainLoopModel,
+  isFableFamilyOrPinnedModel,
+  isModeDependentModelSetting,
+  stepDownRestrictedFamilyAliasPick,
+  getRuntimeMainLoopModel,
+  isModelAllowedUnderActiveEnforcement,
+  isExemptDefaultResolvingPick,
+  getDefaultMainLoopModel,
+  getFableDeclineFallbackModel,
+  getCanonicalName,
+  renderModelSetting,
+  getModelSourceAnnotation,
+  renderModelName,
+  renderFableModelName,
+  parseUserSpecifiedModel,
+  resolveSkillModelOverride,
+  modelDisplayString,
   vp,
   zVt,
-  setAutoModeActive as qC,
-  isAutoModeActive as fb,
-  isAutoModeFromFallback as aq,
-  getAutoModeEnvOnboardingEligible as lCt,
-  setAutoModeEnvOnboardingEligible as Jve,
-  getAutoModeEnvOnboardingShownLogged as KVt,
-  setAutoModeEnvOnboardingShownLogged as XVt,
+  setAutoModeActive,
+  isAutoModeActive,
+  isAutoModeFromFallback,
+  getAutoModeEnvOnboardingEligible,
+  setAutoModeEnvOnboardingEligible,
+  getAutoModeEnvOnboardingShownLogged,
+  setAutoModeEnvOnboardingShownLogged,
   lor,
   S6,
   mUe,
@@ -265,8 +265,8 @@ import {
   jQe,
   PCt,
   aa,
-  updateSessionTitle as qQe,
-  markSessionRead as zQe,
+  updateSessionTitle,
+  markSessionRead,
   ht,
   SP,
   Qme,
@@ -285,18 +285,18 @@ import {
   kUe,
   T6,
   Jh,
-  getRegisteredSessionName as mb,
-  isBgSession as _t,
-  isUnattendedInteractiveSession as Sg,
-  isUnattendedBgSession as ap,
-  isActingAsBgJob as Ja,
-  getBgJobDir as WD,
-  isDaemonBgWorker as pq,
-  updateSessionName as t1,
-  markSessionParked as aRn,
-  clearSessionParked as XCt,
-  updateSessionActivity as xUe,
-  isRegistrySweepPermitted as Lse,
+  getRegisteredSessionName,
+  isBgSession,
+  isUnattendedInteractiveSession,
+  isUnattendedBgSession,
+  isActingAsBgJob,
+  getBgJobDir,
+  isDaemonBgWorker,
+  updateSessionName,
+  markSessionParked,
+  clearSessionParked,
+  updateSessionActivity,
+  isRegistrySweepPermitted,
   wl,
   wP,
   Hn,
@@ -304,29 +304,29 @@ import {
   TP,
   E_,
   dsr,
-  shouldUseWIFAuth as Zc,
-  isAnthropicAuthEnabled as cl,
-  describeHowToDisableAuthTokenSource as E5,
-  getAuthTokenSource as Gl,
-  getAnthropicApiKeySafe as gb,
-  getAnthropicApiKeyWithSourceSafe as kp,
-  getAnthropicApiKeyWithSource as qg,
-  getConfiguredApiKeyHelper as bg,
-  getApiKeyHelperElapsedMs as jKt,
-  getApiKeyFromApiKeyHelper as ige,
-  getApiKeyFromConfigOrMacOSKeychain as qKt,
-  getClaudeAIOAuthTokens as Yt,
-  getClaudeAIOAuthTokenOriginAsync as $T,
-  sameOwnerAccount as wg,
-  readFreshOAuthCredentialSnapshot as v5,
-  checkAndRefreshOAuthTokenIfNeeded as Ss,
-  isClaudeAISubscriber as gt,
-  hasStoredOAuthToken as wu,
-  getOauthAccountInfo as vn,
-  isExtraUsageAllowed as hb,
-  getSubscriptionType as qn,
-  isEnterpriseSubscriber as uge,
-  toAccountInfo as CZe,
+  shouldUseWIFAuth,
+  isAnthropicAuthEnabled,
+  describeHowToDisableAuthTokenSource,
+  getAuthTokenSource,
+  getAnthropicApiKeySafe,
+  getAnthropicApiKeyWithSourceSafe,
+  getAnthropicApiKeyWithSource,
+  getConfiguredApiKeyHelper,
+  getApiKeyHelperElapsedMs,
+  getApiKeyFromApiKeyHelper,
+  getApiKeyFromConfigOrMacOSKeychain,
+  getClaudeAIOAuthTokens,
+  getClaudeAIOAuthTokenOriginAsync,
+  sameOwnerAccount,
+  readFreshOAuthCredentialSnapshot,
+  checkAndRefreshOAuthTokenIfNeeded,
+  isClaudeAISubscriber,
+  hasStoredOAuthToken,
+  getOauthAccountInfo,
+  isExtraUsageAllowed,
+  getSubscriptionType,
+  isEnterpriseSubscriber,
+  toAccountInfo,
   zg,
   hq,
   H6,
@@ -336,7 +336,7 @@ import {
   od,
   r1,
   Qh,
-  isAutoMemoryEnabled as ua,
+  isAutoMemoryEnabled,
   Bo,
   pge,
   Te,
@@ -349,11 +349,11 @@ import {
   ql,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { cmdFeature as uz, logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { cmdFeature, logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
 import { SW } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { fn, Fo, execFileNoThrow as Fe, execFileNoThrowWithCwd as Be } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { fn, Fo, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import {
   v0,
   k7t,
@@ -363,15 +363,15 @@ import {
   eE,
   x7t,
   H7t,
-  onWatchedGitStateChange as BIn,
-  findGitRoot as tr,
-  findCanonicalGitRoot as $r,
-  isLinkedWorktree as kx,
-  getGitWorktreeName as VIn,
-  gitExe as lt,
-  getHead as L2e,
-  getBranch as Da,
-  getRemoteUrl as ez,
+  onWatchedGitStateChange,
+  findGitRoot,
+  findCanonicalGitRoot,
+  isLinkedWorktree,
+  getGitWorktreeName,
+  gitExe,
+  getHead,
+  getBranch,
+  getRemoteUrl,
 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import {
   te,
@@ -383,17 +383,17 @@ import {
   nz,
   oB,
   dp,
-  truncatePathMiddle as el,
-  truncateToWidth as Xe,
-  truncateStartToWidth as Ob,
-  truncateToWidthNoEllipsis as SL,
-  truncate as or,
-  formatDuration as Ot,
-  formatNumber as No,
-  formatTokens as Pn,
-  formatRelativeTimeAgo as uy,
-  formatLogMetadata as Ent,
-  formatResetTime as Au,
+  truncatePathMiddle,
+  truncateToWidth,
+  truncateStartToWidth,
+  truncateToWidthNoEllipsis,
+  truncate,
+  formatDuration,
+  formatNumber,
+  formatTokens,
+  formatRelativeTimeAgo,
+  formatLogMetadata,
+  formatResetTime,
 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { _n, Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
@@ -424,29 +424,29 @@ import {
   plr,
   flr,
   pS,
-  getLastLoadStatus as V6,
-  onLastLoadStatusChanged as _tt,
+  getLastLoadStatus,
+  onLastLoadStatusChanged,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { _1, bRt, wRt, ot, Lge, Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Ee, rur } from "../CLI入口-Commander/chunk-6rfqqsva.js";
 import {
-  getSettingsForSource as ye,
-  getInitialSettings as Ge,
-  getSettings_DEPRECATED as bn,
-  updateSettingsForSource as Jt,
-  updateSettingsForSourceWithTransform as Ii,
-  getSettingsAfterPluginLoad as Oet,
-  getSecuritySensitiveSetting as hx,
-  getSecuritySensitiveSettingWithSources as Hq,
-  hasDisableClaudeAiConnectors as RQ,
-  getAskUserQuestionTimeout as eke,
-  getAutoModeConfig as tL,
+  getSettingsForSource,
+  getInitialSettings,
+  getSettings_DEPRECATED,
+  updateSettingsForSource,
+  updateSettingsForSourceWithTransform,
+  getSettingsAfterPluginLoad,
+  getSecuritySensitiveSetting,
+  getSecuritySensitiveSettingWithSources,
+  hasDisableClaudeAiConnectors,
+  getAskUserQuestionTimeout,
+  getAutoModeConfig,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pt, lnt, io, hhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import {
-  EXTERNAL_PERMISSION_MODES as cL,
-  PERMISSION_MODES as ly,
-  parsePermissionMode as gf,
+  EXTERNAL_PERMISSION_MODES,
+  PERMISSION_MODES,
+  parsePermissionMode,
   Ar,
   Dw,
   sv,
@@ -483,11 +483,11 @@ import {
 import { vie, Er } from "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
 import { Jo } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { isInProcessTeammate as f1, getDynamicTeamContext as L5, getAgentName as Ip, getTeamName as ii, isTeammate as Zi, isModelDrivenSession as vP, getTeammateColor as cS, isPlanModeRequired as _et, hasNonLeadTeammate as jRe, isTeamLead as ZC } from "../../02-功能模块/Teammates团队/chunk-811z9z0t.js";
-import { isProcessProvablyGone as Vg, isSameProcessAsync as Pm, provenSameProcessAsync as mA, ownProcStartMemo as Kse, procIdentityOf as jT } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { ownPidSpace as UZe } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import { isInProcessTeammate, getDynamicTeamContext, getAgentName, getTeamName, isTeammate, isModelDrivenSession, getTeammateColor, isPlanModeRequired, hasNonLeadTeammate, isTeamLead } from "../../02-功能模块/Teammates团队/chunk-811z9z0t.js";
+import { isProcessProvablyGone, isSameProcessAsync, provenSameProcessAsync, ownProcStartMemo, procIdentityOf } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { ownPidSpace } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import { id } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { Xt, er, Qa, getAPIProvider as Pe, usesFirstPartyModelIds as Ca } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { Xt, er, Qa, getAPIProvider, usesFirstPartyModelIds } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { pm, mx, qRe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
 import { H2e, dW, Mw, Pb, mnt, Rx } from "../../02-功能模块/Git-Worktree/chunk-bk9696gx.js";
 import {
@@ -498,28 +498,28 @@ import {
   Zse,
   iy,
   gc,
-  ARTIFACT_TOOL_NAME as _r,
-  ARTIFACT_SLUG_RE as fr,
-  parseArtifactUrl as Wt,
-  parseArtifactUrlAnyCase as _ge,
-  artifactViewerUrlFor as br,
-  artifactViewerUrlSpellings as cet,
-  INVISIBLE_BLANKS as QC,
-  isDecisionSurfaceControl as sS,
+  ARTIFACT_TOOL_NAME,
+  ARTIFACT_SLUG_RE,
+  parseArtifactUrl,
+  parseArtifactUrlAnyCase,
+  artifactViewerUrlFor,
+  artifactViewerUrlSpellings,
+  INVISIBLE_BLANKS,
+  isDecisionSurfaceControl,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import {
   xF,
   ZA,
   IF,
   due,
-  getCommandName as qo,
-  isCommandEnabled as zp,
+  getCommandName,
+  isCommandEnabled,
   wwe,
   pue,
   mue,
-  findCommand as Di,
-  hasCommand as B9,
-  getCommand as gue,
+  findCommand,
+  hasCommand,
+  getCommand,
   K7,
   hue,
   p4e,
@@ -668,9 +668,9 @@ import {
   SDe,
   fBt,
   hBt,
-  toAgentInfos as V4e,
-  rebuildAgentDefinitions as Lue,
-  getAgentDefinitionsWithOverrides as SE,
+  toAgentInfos,
+  rebuildAgentDefinitions,
+  getAgentDefinitionsWithOverrides,
   jdn,
   _Bt,
   CDe,
@@ -696,11 +696,11 @@ import {
   Z4e,
   Ydn,
   kl,
-  sandboxReadBlockApplies as Wmt,
-  shouldAllowManagedSandboxDomainsOnly as ene,
-  isMisleadingConsentHost as CM,
-  consentHostEntry as tne,
-  SandboxManager as st,
+  sandboxReadBlockApplies,
+  shouldAllowManagedSandboxDomainsOnly,
+  isMisleadingConsentHost,
+  consentHostEntry,
+  SandboxManager,
   IBt,
   uzn,
   dzn,
@@ -741,9 +741,9 @@ import {
   agt,
   l3,
   UDe,
-  hasPermissionsToUseToolWithSink as fTe,
-  isAskRuleDrivenReason as Gue,
-  findSafetyCheckReason as WS,
+  hasPermissionsToUseToolWithSink,
+  isAskRuleDrivenReason,
+  findSafetyCheckReason,
   fVe,
   JBt,
   hTe,
@@ -772,7 +772,7 @@ import {
   yVe,
   Xzn,
   s2t,
-  isSkillOff as Tk,
+  isSkillOff,
   Rpn,
   Zzn,
   iC,
@@ -808,15 +808,15 @@ import {
   JDe,
   Igt,
   OM,
-  reduceFileHistoryState as EV,
-  fileHistoryEnabled as iw,
-  fileHistoryMakeSnapshot as AX,
-  RewindNoFilesRestoredError as Pgt,
-  fileHistoryRewind as kVe,
-  fileHistoryCanRestore as xVe,
-  fileHistoryGetDiffStats as QDe,
-  fileHistoryRestoreStateFromLog as HVe,
-  copyFileHistoryForResume as Ogt,
+  reduceFileHistoryState,
+  fileHistoryEnabled,
+  fileHistoryMakeSnapshot,
+  RewindNoFilesRestoredError,
+  fileHistoryRewind,
+  fileHistoryCanRestore,
+  fileHistoryGetDiffStats,
+  fileHistoryRestoreStateFromLog,
+  copyFileHistoryForResume,
   Dgt,
   IVe,
   x4n,
@@ -889,7 +889,7 @@ import {
   Zpn,
   eVn,
   efn,
-  asSystemPrompt as Zo,
+  asSystemPrompt,
   MO,
   nVn,
   rVn,
@@ -940,8 +940,8 @@ import {
   vjt,
   Ka,
   RVn,
-  WebFetchTool as Em,
-  isArtifactFetchEnabled as dKe,
+  WebFetchTool,
+  isArtifactFetchEnabled,
   pKe,
   X2,
   fKe,
@@ -957,18 +957,18 @@ import {
   SLe,
   Y2,
   zS,
-  memoryWatchers as bLe,
+  memoryWatchers,
   FM,
   $Vn,
   Ipr,
   Mfn,
-  loadPluginHooks as w3,
+  loadPluginHooks,
   TLe,
   IV,
   Ufn,
-  dropMalformedAttachments as Eht,
-  deserializeMessages as Cht,
-  dedupeSessionStartHookMessages as ALe,
+  dropMalformedAttachments,
+  deserializeMessages,
+  dedupeSessionStartHookMessages,
   Mht,
   an,
   KTe,
@@ -983,7 +983,7 @@ import {
   MKe,
   jne,
   tEe,
-  teleportResumeCodeSession as Wne,
+  teleportResumeCodeSession,
   KKn,
   rEe,
   i$,
@@ -1025,15 +1025,15 @@ import {
   v_t,
   Gmn,
   QX,
-  stripDangerousPermissionsForAutoMode as qM,
-  restoreDangerousPermissions as ZX,
-  transitionPermissionMode as Ik,
-  guardPermissionModeChange as sMe,
-  setPermissionModeWithGuards as mH,
-  getAutoModeUnavailableNotification as ij,
-  getAutoModeUnavailableText as iMe,
-  isAutoModeGateEnabled as cC,
-  getAutoModeUnavailableReason as eY,
+  stripDangerousPermissionsForAutoMode,
+  restoreDangerousPermissions,
+  transitionPermissionMode,
+  guardPermissionModeChange,
+  setPermissionModeWithGuards,
+  getAutoModeUnavailableNotification,
+  getAutoModeUnavailableText,
+  isAutoModeGateEnabled,
+  getAutoModeUnavailableReason,
   x_t,
   o8n,
   Xne,
@@ -1094,8 +1094,8 @@ import {
   ggn,
   yEe,
   nyt,
-  getQueuedCommandAttachments as SEe,
-  createAttachmentMessage as pn,
+  getQueuedCommandAttachments,
+  createAttachmentMessage,
   bEe,
   ayt,
   uY,
@@ -1127,20 +1127,20 @@ import {
   hyt,
   O5e,
   fY,
-  dedupClaudeAiMcpServers as CMe,
-  filterMcpServersByPolicy as yH,
-  isMcpDialBlockedByPolicy as d$,
-  mcpDialBlockCause as Yp,
-  filterDynamicMcpServersByPolicy as vEe,
-  getMcpConfigsByScope as nd,
-  getClaudeCodeMcpConfigs as SH,
-  shouldSkipClaudeAiFetchForEnterpriseLockdown as REe,
-  isMcpServerDisabled as Uo,
-  setMcpServerEnabled as kEe,
+  dedupClaudeAiMcpServers,
+  filterMcpServersByPolicy,
+  isMcpDialBlockedByPolicy,
+  mcpDialBlockCause,
+  filterDynamicMcpServersByPolicy,
+  getMcpConfigsByScope,
+  getClaudeCodeMcpConfigs,
+  shouldSkipClaudeAiFetchForEnterpriseLockdown,
+  isMcpServerDisabled,
+  setMcpServerEnabled,
   HI,
-  shouldEnableClaudeInChrome as N5e,
-  markClaudeInChromeUnwiredIfChrome as Qde,
-  isChromeExtensionInstalled as bH,
+  shouldEnableClaudeInChrome,
+  markClaudeInChromeUnwiredIfChrome,
+  isChromeExtensionInstalled,
   Lo,
   eg,
   xMe,
@@ -1208,81 +1208,81 @@ import {
   Dyt,
   Lyt,
   Myt,
-  isChainParticipant as spe,
-  transcriptCursorEnd as V5e,
-  isEphemeralToolProgress as _hn,
-  getMaterializedSessionFile as il,
-  isTranscriptPersistenceDisabled as hl,
-  getPersistenceSuppressionCause as Fyt,
-  transcriptStamp as e9t,
-  getTranscriptWriterHealth as n9t,
-  registerTranscriptExitReStamp as sre,
-  getCurrentSessionFile as r9t,
-  recordTranscript as ST,
-  removeTranscriptMessage as Y5e,
-  removeTranscriptMessageIfPersisted as xhn,
-  resetSessionFilePointer as XM,
-  adoptResumedSessionFile as XV,
-  adoptResumedSessionFileAsync as YV,
-  flushSessionStorage as kc,
-  appendEntryToFileAsync as RE,
-  applyEndedByModelOnResume as Q5e,
-  saveAiGeneratedTitle as pj,
-  saveBridgeSession as YEe,
-  writeHistorySuppression as JEe,
-  isOwnTranscriptFile as SY,
-  buildForkAdoptionMeta as FMe,
-  pinSessionId as Li,
-  holdPrecautionarySuppressionFor as JM,
-  markPrecautionClearResilientFor as W3,
-  claimPrecautionHoldForObservedCause as lre,
-  copyPrecautionarySuppressionTo as d9t,
-  registerLiveSuppressionProbe as lpe,
-  PENDING_BRIDGE_SESSION as cre,
-  registerForeignConversationProbe as p9t,
-  isCompactPairWithheldFromRemote as bY,
-  clearBridgeSessionCache as Xyt,
-  clearBridgeSession as mj,
-  getCurrentSessionBridge as sD,
-  getCurrentSessionTitle as mu,
-  getCurrentSessionAiTitle as G3,
-  getCurrentSessionDisplayTitle as TY,
-  getCurrentSessionAgentColor as upe,
-  getCurrentSessionAgentName as QV,
-  restoreSessionMetadata as EH,
-  clearSessionMetadata as r8e,
-  subscribeSessionAgentNameChanged as zhn,
-  saveAgentName as EY,
-  saveAgentColor as o8e,
-  subscribeSessionTitleChanged as Vhn,
-  cacheSessionTitle as h$,
-  cacheAgentName as ZEe,
-  titleCacheStillOn as $Me,
-  cacheHookSessionTitle as eAe,
-  savePermissionMode as y9t,
-  saveIsolationLatch as ZV,
-  getCurrentSessionIsolationLatch as s8e,
-  saveWorktreeState as mC,
-  getSessionIdFromLog as Kc,
-  searchSessionsByCustomTitle as QM,
-  getLastSessionLog as CY,
-  getAgentTranscript as pre,
-  extractAgentIdsFromMessages as Qhn,
-  loadSubagentTranscripts as T9t,
-  isLoggableMessage as bT,
-  collectReplIds as E9t,
-  cleanMessagesForLogging as BMe,
+  isChainParticipant,
+  transcriptCursorEnd,
+  isEphemeralToolProgress,
+  getMaterializedSessionFile,
+  isTranscriptPersistenceDisabled,
+  getPersistenceSuppressionCause,
+  transcriptStamp,
+  getTranscriptWriterHealth,
+  registerTranscriptExitReStamp,
+  getCurrentSessionFile,
+  recordTranscript,
+  removeTranscriptMessage,
+  removeTranscriptMessageIfPersisted,
+  resetSessionFilePointer,
+  adoptResumedSessionFile,
+  adoptResumedSessionFileAsync,
+  flushSessionStorage,
+  appendEntryToFileAsync,
+  applyEndedByModelOnResume,
+  saveAiGeneratedTitle,
+  saveBridgeSession,
+  writeHistorySuppression,
+  isOwnTranscriptFile,
+  buildForkAdoptionMeta,
+  pinSessionId,
+  holdPrecautionarySuppressionFor,
+  markPrecautionClearResilientFor,
+  claimPrecautionHoldForObservedCause,
+  copyPrecautionarySuppressionTo,
+  registerLiveSuppressionProbe,
+  PENDING_BRIDGE_SESSION,
+  registerForeignConversationProbe,
+  isCompactPairWithheldFromRemote,
+  clearBridgeSessionCache,
+  clearBridgeSession,
+  getCurrentSessionBridge,
+  getCurrentSessionTitle,
+  getCurrentSessionAiTitle,
+  getCurrentSessionDisplayTitle,
+  getCurrentSessionAgentColor,
+  getCurrentSessionAgentName,
+  restoreSessionMetadata,
+  clearSessionMetadata,
+  subscribeSessionAgentNameChanged,
+  saveAgentName,
+  saveAgentColor,
+  subscribeSessionTitleChanged,
+  cacheSessionTitle,
+  cacheAgentName,
+  titleCacheStillOn,
+  cacheHookSessionTitle,
+  savePermissionMode,
+  saveIsolationLatch,
+  getCurrentSessionIsolationLatch,
+  saveWorktreeState,
+  getSessionIdFromLog,
+  searchSessionsByCustomTitle,
+  getLastSessionLog,
+  getAgentTranscript,
+  extractAgentIdsFromMessages,
+  loadSubagentTranscripts,
+  isLoggableMessage,
+  collectReplIds,
+  cleanMessagesForLogging,
   wT,
   hre,
   iD,
-  deviceHooksProcessMemories as aD,
+  deviceHooksProcessMemories,
   g_n,
   h_n,
-  executeSessionEndHooks as YMe,
-  getSessionEndHookTimeoutMs as ppe,
-  shouldSkipHookDueToTrust as HY,
-  createBaseHookInput as Sa,
-  executeStatusLineCommand as $9t,
+  executeSessionEndHooks,
+  getSessionEndHookTimeoutMs,
+  shouldSkipHookDueToTrust,
+  createBaseHookInput,
+  executeStatusLineCommand,
   QMe,
   m8e,
   Ny,
@@ -1318,21 +1318,21 @@ import {
   dSt,
   pSt,
   z3,
-  shippedCommandNames as LY,
-  shippedCommandNameForAnalytics as aNe,
-  getCommands as kf,
-  clearCommandMemoizationCaches as rR,
-  clearCommandsCache as xE,
-  dropShadowedBundledSkills as lNe,
-  getSkillToolCommands as HE,
-  getSlashCommandToolSkills as bpe,
-  REMOTE_SAFE_COMMANDS as Q9t,
-  isBridgeSafeCommand as cAe,
-  findBridgeFallback as uAe,
-  routeThinClientCommand as j_n,
-  filterCommandsForRemoteMode as W_n,
-  formatDescriptionWithSource as MY,
-  toSlashCommands as NY,
+  shippedCommandNames,
+  shippedCommandNameForAnalytics,
+  getCommands,
+  clearCommandMemoizationCaches,
+  clearCommandsCache,
+  dropShadowedBundledSkills,
+  getSkillToolCommands,
+  getSlashCommandToolSkills,
+  REMOTE_SAFE_COMMANDS,
+  isBridgeSafeCommand,
+  findBridgeFallback,
+  routeThinClientCommand,
+  filterCommandsForRemoteMode,
+  formatDescriptionWithSource,
+  toSlashCommands,
   VS,
   DXn,
   FXn,
@@ -1376,7 +1376,7 @@ import {
   dAt,
   QG,
   Qnr,
-  isPolicyAllowed as Mt,
+  isPolicyAllowed,
 } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import {
   XI,
@@ -1416,16 +1416,16 @@ import {
   Wg,
   qFe,
   ni,
-  normalizeCaseForComparison as dr,
-  toPosixPath as MG,
-  isScratchpadEnabled as eA,
-  getScratchpadDir as GH,
-  matchingRuleForInput as vi,
-  generateSuggestions as lJe,
+  normalizeCaseForComparison,
+  toPosixPath,
+  isScratchpadEnabled,
+  getScratchpadDir,
+  matchingRuleForInput,
+  generateSuggestions,
 } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { tA, qy, DT, Xtr } from "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import { $J, $t } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
-import { shouldAllowManagedHooksOnly as S_, shouldDisableAllHooksIncludingManaged as FC, Q$ } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
+import { shouldAllowManagedHooksOnly, shouldDisableAllHooksIncludingManaged, Q$ } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
 import { Dc, PJe } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
 import {
   im,
@@ -1457,54 +1457,54 @@ import {
   IJe,
   eU,
 } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
-import { so, getToolPermissionContext as ce, getSessionEffort as gme } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
+import { so, getToolPermissionContext, getSessionEffort } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { rf, Kt, ar, LT } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
-import { createAbortController as hr, userAbortReason as yu, unwrapAbortReason as Ua } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController, userAbortReason, unwrapAbortReason } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
   Jc,
-  notePlanFileForgotten as Cp,
-  primePlanSlugCollisions as lh,
-  peekPlanSlug as GK,
-  setPlanSlug as $zt,
-  getPlansDirectory as Ea,
-  saveRejectedUltraplan as lme,
-  getPlanFilePath as Gh,
-  copyPlanForResume as a$e,
-  copyPlanForFork as GEn,
+  notePlanFileForgotten,
+  primePlanSlugCollisions,
+  peekPlanSlug,
+  setPlanSlug,
+  getPlansDirectory,
+  saveRejectedUltraplan,
+  getPlanFilePath,
+  copyPlanForResume,
+  copyPlanForFork,
 } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
-import { subprocessEnv as Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
-import { taskOutputDirForSession as $Sn, getTaskOutputPath as _l, tailTaskOutput as Kre, openTaskOutputForAppend as i1e, initTaskOutputAsSymlink as fK } from "../../02-功能模块/后台任务-Shell管理/chunk-x3txegas.js";
-import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { taskOutputDirForSession, getTaskOutputPath, tailTaskOutput, openTaskOutputForAppend, initTaskOutputAsSymlink } from "../../02-功能模块/后台任务-Shell管理/chunk-x3txegas.js";
+import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { ds } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
 import { b7e, PJn } from "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { getSessionNamingState as rh, takePendingYield as D3t, reclaimSessionNameOnResume as Gpe } from "../../02-功能模块/跨会话消息(UDS)/chunk-9kzxq41e.js";
+import { getSessionNamingState, takePendingYield, reclaimSessionNameOnResume } from "../../02-功能模块/跨会话消息(UDS)/chunk-9kzxq41e.js";
 import { Es } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import {
   Cr,
   Efe,
   yw,
-  makeOwnPublishesStore as eFe,
-  isArtifactConflictLegacy as HT,
-  artifactReadObservationIn as P$,
-  mainObservedArtifactVersion as D$,
-  makeSetArtifactReadVersion as Rfe,
-  makeSetArtifactContractTarget as kfe,
-  makeGetArtifactContractTarget as xfe,
-  workshopVerifiedSlugsWith as kCe,
-  publishPlanArtifact as oTt,
-  clearAutoReactNoticePending as vN,
-  isPlanArtifactEnabled as voe,
-  isWorkshopEnabled as $H,
-  isPublishToolEnabled as Lfe,
-  isResumeFrameSeedEligible as SFe,
+  makeOwnPublishesStore,
+  isArtifactConflictLegacy,
+  artifactReadObservationIn,
+  mainObservedArtifactVersion,
+  makeSetArtifactReadVersion,
+  makeSetArtifactContractTarget,
+  makeGetArtifactContractTarget,
+  workshopVerifiedSlugsWith,
+  publishPlanArtifact,
+  clearAutoReactNoticePending,
+  isPlanArtifactEnabled,
+  isWorkshopEnabled,
+  isPublishToolEnabled,
+  isResumeFrameSeedEligible,
 } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
-import { isCustomizationDisabled as Xr, isClaudeMdLoadingDisabled as uR } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
+import { isCustomizationDisabled, isClaudeMdLoadingDisabled } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
 import { bo, eG } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
 import { Cl, BW } from "../../02-功能模块/Workflow编排/chunk-0t0sve49.js";
-import { isViolinWoodEnabledCached as ri, isSettingsToCloudEnabledCached as aU, isCloudPluginForwardingEnabledCached as uQe } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabledCached, isSettingsToCloudEnabledCached, isCloudPluginForwardingEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { Dl } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
-import { Uk, hD, XS, ZY, V_, lR, ti, X7e, isCoordinatorMode as gG } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { Uk, hD, XS, ZY, V_, lR, ti, X7e, isCoordinatorMode } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { Tj } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import {
   q8e,
@@ -1548,36 +1548,36 @@ import {
   Wk,
   CXe,
   dCe,
-  readUnreadMessages as mfe,
-  writeToMailbox as ag,
-  markMessagesAsRead as fJ,
-  formatTeammateMessages as coe,
-  IdleNotificationMessageSchema as bG,
-  capFrameBodyForDisplay as OH,
-  IDLE_FRAME_TOTAL_RECEIVE_BOUND as pCe,
-  FRAME_SANITIZED_FOR_DISPLAY_MARKER as gfe,
-  createIdleNotification as H1e,
-  logIdleResultDeliveryOutcome as fCe,
-  stripFrameControlChars as tP,
-  capStrippedFrameField as Pj,
-  capRawFrameTextForDisplay as wG,
-  isPermissionRequest as jGt,
-  isPermissionResponse as I1e,
-  isSandboxPermissionRequest as WGt,
-  isSandboxPermissionResponse as GGt,
-  isShutdownRequest as mCe,
-  isPlanApprovalRequest as Dwt,
-  isShutdownApproved as mJ,
-  planVerdictBinding as kXe,
-  planVerdictMismatchRejection as xXe,
-  isPlanApprovalResponse as HXe,
-  parseFrameForDisplay as By,
-  isTeamPermissionUpdate as swn,
-  isModeSetRequest as IXe,
-  isStructuredProtocolMessage as DH,
-  planApprovalResumeText as PXe,
+  readUnreadMessages,
+  writeToMailbox,
+  markMessagesAsRead,
+  formatTeammateMessages,
+  IdleNotificationMessageSchema,
+  capFrameBodyForDisplay,
+  IDLE_FRAME_TOTAL_RECEIVE_BOUND,
+  FRAME_SANITIZED_FOR_DISPLAY_MARKER,
+  createIdleNotification,
+  logIdleResultDeliveryOutcome,
+  stripFrameControlChars,
+  capStrippedFrameField,
+  capRawFrameTextForDisplay,
+  isPermissionRequest,
+  isPermissionResponse,
+  isSandboxPermissionRequest,
+  isSandboxPermissionResponse,
+  isShutdownRequest,
+  isPlanApprovalRequest,
+  isShutdownApproved,
+  planVerdictBinding,
+  planVerdictMismatchRejection,
+  isPlanApprovalResponse,
+  parseFrameForDisplay,
+  isTeamPermissionUpdate,
+  isModeSetRequest,
+  isStructuredProtocolMessage,
+  planApprovalResumeText,
 } from "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
-import { isBridgeEnabled as lb, getRemoteControlPolicyVerdict as k$e, isPolicyLimitsCacheLoaded as C4t, isBridgeAuthReviveEnabled as x$e, getCcrAutoConnectDefault as BJe, isPersistentRemoteSessionEnabled as VJ, isRemoteControlInternalEventsEnabled as jJe, getBridgeSubagentFrameGate as WJe } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
+import { isBridgeEnabled, getRemoteControlPolicyVerdict, isPolicyLimitsCacheLoaded, isBridgeAuthReviveEnabled, getCcrAutoConnectDefault, isPersistentRemoteSessionEnabled, isRemoteControlInternalEventsEnabled, getBridgeSubagentFrameGate } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
 import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
 import { toe, ig, Ui, cwt, lJ } from "../../02-功能模块/插件系统/chunk-ajtn749s.js";
 import { bd, Hc } from "../../02-功能模块/插件系统/chunk-hh8f1qrw.js";
@@ -1587,13 +1587,13 @@ import { Jn, GI, CH } from "../../01-核心基础设施/共享小工具-未细�
 import { Eo, XH } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { vJ, xoe, ICe } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
 import { zs, $I, V3 } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
-import { readTeamFileAsync as Pf, removeTeammateFromTeamFile as pfe, syncTeammateMode as EXe, setMemberActive as AXe } from "../../02-功能模块/Teammates团队/chunk-6b13bhw1.js";
+import { readTeamFileAsync, removeTeammateFromTeamFile, syncTeammateMode, setMemberActive } from "../../02-功能模块/Teammates团队/chunk-6b13bhw1.js";
 import { QNe, wa, TJn, q3t, vJn } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { zr } from "../../02-功能模块/Teammates团队/chunk-3k2smxfn.js";
-import { isTrustedDeviceGateEnabled as ZG } from "../../02-功能模块/Bridge-RemoteControl/chunk-tyce0p0b.js";
-import { isInsideTmux as Oj } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
-import { CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL as Nre, isTrackedClaudeInChromeTabId as Kyn } from "../../02-功能模块/ClaudeinChrome/chunk-hnp84hf6.js";
-import { setReplBridgeHandle as STt, getReplBridgeHandle as Yi, reportBridgePermissionMode as Ioe, reportBridgeCrossSessionInbound as TFe, reportBridgeModel as xG, ownBridgePeerAddress as kYe } from "../../02-功能模块/权限系统/chunk-1y2g140m.js";
+import { isTrustedDeviceGateEnabled } from "../../02-功能模块/Bridge-RemoteControl/chunk-tyce0p0b.js";
+import { isInsideTmux } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
+import { CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL, isTrackedClaudeInChromeTabId } from "../../02-功能模块/ClaudeinChrome/chunk-hnp84hf6.js";
+import { setReplBridgeHandle, getReplBridgeHandle, reportBridgePermissionMode, reportBridgeCrossSessionInbound, reportBridgeModel, ownBridgePeerAddress } from "../../02-功能模块/权限系统/chunk-1y2g140m.js";
 import { tm, OAe, eJn, cN, r7e, iSn, BNe } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import { Fy, yYn } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
 import {
@@ -1601,7 +1601,7 @@ import {
   Rpe,
   tyn,
   Cre,
-  daemonDetachApc as Sj,
+  daemonDetachApc,
   bj,
   uyn,
   vre,
@@ -1610,21 +1610,21 @@ import {
   Rre,
   W_,
   pyn,
-  getJobDir as rr,
-  getOwnJobShortId as gu,
-  jobKeyFor as bAe,
-  jobStateKey as wAe,
-  isOwnStateWriteInFlight as y3t,
-  writeStateAtomic as Ti,
-  logJobWriteError as Mi,
-  resolveBridgeHandoffIdentity as F8e,
-  buildBridgeReattachEnv as oK,
-  invalidateJobStateCache as xc,
-  readJobState as Zn,
-  syncJobName as b$,
-  syncJobColor as $8e,
-  syncLiveInFlightSnapshot as kre,
-  listJobs as q_,
+  getJobDir,
+  getOwnJobShortId,
+  jobKeyFor,
+  jobStateKey,
+  isOwnStateWriteInFlight,
+  writeStateAtomic,
+  logJobWriteError,
+  resolveBridgeHandoffIdentity,
+  buildBridgeReattachEnv,
+  invalidateJobStateCache,
+  readJobState,
+  syncJobName,
+  syncJobColor,
+  syncLiveInFlightSnapshot,
+  listJobs,
   al,
 } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { V_n, BY, t3t } from "../../02-功能模块/语音-音频/chunk-cfhndstm.js";
@@ -1768,7 +1768,7 @@ import { mle, Rs, Een, Aen, hOt, eM, p9e, _Ot } from "../../01-核心基础设�
 import {
   dd,
   _p,
-  getNativeCSIuTerminalDisplayName as SOt,
+  getNativeCSIuTerminalDisplayName,
   Zs,
   sat,
   xen,
@@ -1797,11 +1797,11 @@ import { Zr } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
 import { WA, Vx, Sv, Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { _M, x3n, tue, mln, ift, MFt, Oze, gln } from "../../01-核心基础设施/共享小工具-未细化/chunk-dhg3raay.js";
-import { Pze, sendRv as J4, markReplayNoOp as fln } from "../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js";
+import { Pze, sendRv, markReplayNoOp } from "../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js";
 import { qye, qc } from "../../01-核心基础设施/共享小工具-未细化/chunk-vke340te.js";
 import { wf } from "../../01-核心基础设施/共享小工具-未细化/chunk-pbd0pf42.js";
 import { HBn, S4 } from "../../02-功能模块/会话-历史-恢复/chunk-ybcvb652.js";
-import { registerAdoptedWorkflowTask as Uin, pauseWorkflowTask as k7, killWorkflowTask as EF, skipWorkflowAgent as Cbe, retryWorkflowAgent as vbe } from "../../02-功能模块/Workflow编排/chunk-va9cgbfs.js";
+import { registerAdoptedWorkflowTask, pauseWorkflowTask, killWorkflowTask, skipWorkflowAgent, retryWorkflowAgent } from "../../02-功能模块/Workflow编排/chunk-va9cgbfs.js";
 import { sze, gpt, o9n, ate } from "../../02-功能模块/Artifact发布-渲染/chunk-5gz5xvw9.js";
 import {
   J8,
@@ -1823,44 +1823,44 @@ import {
   POt,
   hat,
   sF,
-  useFleetNudgeStore as k0e,
-  STALE_THRESHOLD_MS as Wye,
-  TAKEOVER_ADOPT_WAIT_MS as Oen,
-  isCarriedFrameLiveWatch as tM,
-  carriedFrameLiveSlugs as i4,
-  serializeAdoptable as _at,
-  writeAdoptJson as x0e,
-  readAndConsumeAdoptJson as Fen,
-  recordUnresumedAdopt as $en,
-  takeUnresumedAdopt as Uen,
-  recordUnresumedFrameLive as jen,
-  takeUnresumedFrameLive as Wen,
-  reparkUnresumedFrameLive as Gen,
-  releaseReparkedFrameLive as qen,
-  linkAdoptedAgentTranscript as zen,
-  killOrphanedAdoptedShell as Ken,
-  linkAdoptedWorkflowDir as Xen,
-  emitAdoptWorkflowFailed as yat,
-  resolveAdoptedScriptPath as Yen,
-  mcpSettledForAdopt as MOt,
-  classifyAdoptLinkFailure as Jen,
-  emitAdoptAgentFailed as Sat,
-  adoptCron as Qen,
-  computeAdoptability as iF,
-  isAdoptableCron as tee,
-  isAdoptableTask as Tle,
-  countAdoptable as H0e,
-  countAbandonable as I0e,
-  countLiveWorkflowAgents as Ele,
-  leftArrowNeedsInterstitial as ttn,
-  countCarriedSince as P0e,
-  carriesTasks as ntn,
-  adoptedCounts as bat,
+  useFleetNudgeStore,
+  STALE_THRESHOLD_MS,
+  TAKEOVER_ADOPT_WAIT_MS,
+  isCarriedFrameLiveWatch,
+  carriedFrameLiveSlugs,
+  serializeAdoptable,
+  writeAdoptJson,
+  readAndConsumeAdoptJson,
+  recordUnresumedAdopt,
+  takeUnresumedAdopt,
+  recordUnresumedFrameLive,
+  takeUnresumedFrameLive,
+  reparkUnresumedFrameLive,
+  releaseReparkedFrameLive,
+  linkAdoptedAgentTranscript,
+  killOrphanedAdoptedShell,
+  linkAdoptedWorkflowDir,
+  emitAdoptWorkflowFailed,
+  resolveAdoptedScriptPath,
+  mcpSettledForAdopt,
+  classifyAdoptLinkFailure,
+  emitAdoptAgentFailed,
+  adoptCron,
+  computeAdoptability,
+  isAdoptableCron,
+  isAdoptableTask,
+  countAdoptable,
+  countAbandonable,
+  countLiveWorkflowAgents,
+  leftArrowNeedsInterstitial,
+  countCarriedSince,
+  carriesTasks,
+  adoptedCounts,
   rtn,
   Cat,
   VB,
-  getDefaultAppState as _9e,
-  AppRoot as zm,
+  getDefaultAppState,
+  AppRoot,
 } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import {
   THe,
@@ -1900,7 +1900,7 @@ import {
   gJt,
   Pot,
   rHe,
-  REMOTE_READ_MAX_BYTES as a0t,
+  REMOTE_READ_MAX_BYTES,
   _Jt,
   oHe,
   u0t,
@@ -1950,7 +1950,7 @@ import { Act, Cct, ir, xh, xct, gE, Qx, Oct } from "../../02-功能模块/MCP客
 import { Tv, a4, ptn } from "../../02-功能模块/Hooks钩子/chunk-22aft7vr.js";
 import { Ale, atn, ltn, qUn } from "../../02-功能模块/工具TodoWrite-Tasks/chunk-5a7p8d2p.js";
 import { oF } from "../../01-核心基础设施/共享小工具-未细化/chunk-vz37aa8z.js";
-import { showScreen as Gx } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
+import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
 import { P7 } from "../../02-功能模块/Artifact发布-渲染/chunk-qdg189tc.js";
 import {
   Qqe,
@@ -1971,11 +1971,11 @@ import {
   Hdt,
   d1t,
   Idt,
-  isClaimableAutoReactSubscription as wqe,
-  killAutoReactSubscriptions as F4,
-  hasStoppableAutoReactSupervision as Tqe,
-  teardownFrameLiveForProcessHandoff as Ksn,
-  watchArtifactFromStartup as iin,
+  isClaimableAutoReactSubscription,
+  killAutoReactSubscriptions,
+  hasStoppableAutoReactSupervision,
+  teardownFrameLiveForProcessHandoff,
+  watchArtifactFromStartup,
 } from "../../02-功能模块/Artifact发布-渲染/chunk-kshc4v5t.js";
 import { wv } from "../../01-核心基础设施/共享小工具-未细化/chunk-ajpjkvdj.js";
 import {
@@ -2024,19 +2024,19 @@ import {
 import { IS } from "./chunk-vwjrfkgt.js";
 import {
   TWe,
-  DIFF_SIDEBAR_MIN_COLS as qZ,
-  DIFF_SIDEBAR_AUTO_OPEN_MIN_COLS as uPt,
-  DIFF_SIDEBAR_NO_GIT_MESSAGE as dPt,
-  markReplDiffPanelAutoOpen as pPt,
-  consumeReplDiffPanelAutoOpen as CZt,
-  diffSidebarHasGitRepo as bye,
-  diffPanelCanMount as Sit,
-  shouldAutoOpenDiffSidebar as fPt,
-  toggleReplDiffTab as mPt,
-  resetReplTabToConvo as j8,
-  closeReplDiffTab as gPt,
-  getPersistedDiffBaseMode as hPt,
-  cycleDiffBaseMode as _Pt,
+  DIFF_SIDEBAR_MIN_COLS,
+  DIFF_SIDEBAR_AUTO_OPEN_MIN_COLS,
+  DIFF_SIDEBAR_NO_GIT_MESSAGE,
+  markReplDiffPanelAutoOpen,
+  consumeReplDiffPanelAutoOpen,
+  diffSidebarHasGitRepo,
+  diffPanelCanMount,
+  shouldAutoOpenDiffSidebar,
+  toggleReplDiffTab,
+  resetReplTabToConvo,
+  closeReplDiffTab,
+  getPersistedDiffBaseMode,
+  cycleDiffBaseMode,
   Pg,
 } from "./chunk-vpp75aza.js";
 import {
@@ -2077,13 +2077,13 @@ import {
 import { xIt, XQt, JQt, QQt, r$n } from "../../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
 import { BA, eO } from "../../01-核心基础设施/共享小工具-未细化/chunk-csjxh2sy.js";
 import { KPt, Wit, Git, qa } from "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
-import { getProTrialState as dit, shouldAutoOpenProTrialExpired as sZt, formatTrialBadge as BIt } from "../../01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js";
+import { getProTrialState, shouldAutoOpenProTrialExpired, formatTrialBadge } from "../../01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js";
 import { UB } from "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
 import { yy } from "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
 import { pit, YW, F8, jIt, WIt, fit } from "../../02-功能模块/成本-Token统计/chunk-adrc9xt1.js";
 import { aM } from "../../01-核心基础设施/共享小工具-未细化/chunk-c9wxfdax.js";
-import { POWERUP_DISCOVERY_COPY as jZ, resolvePowerupDiscoveryArm as oZt } from "../../01-核心基础设施/共享小工具-未细化/chunk-aeg1pn1f.js";
-import { isChannelsEnabled as R9 } from "../../02-功能模块/插件系统/chunk-rbjz1q03.js";
+import { POWERUP_DISCOVERY_COPY, resolvePowerupDiscoveryArm } from "../../01-核心基础设施/共享小工具-未细化/chunk-aeg1pn1f.js";
+import { isChannelsEnabled } from "../../02-功能模块/插件系统/chunk-rbjz1q03.js";
 import {
   VPe,
   P1t,
@@ -2233,9 +2233,9 @@ import {
 } from "../../02-功能模块/权限系统/chunk-0hcqee2w.js";
 import { Ole, Dle, yDt } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
 import { iM } from "../../02-功能模块/文件监听-Watch/chunk-mmg1rsp2.js";
-import { mergeAndFilterTools as M6e, stripSoleNonDeniableTool as N6e } from "../../01-核心基础设施/共享小工具-未细化/chunk-1m91n7yv.js";
+import { mergeAndFilterTools, stripSoleNonDeniableTool } from "../../01-核心基础设施/共享小工具-未细化/chunk-1m91n7yv.js";
 import { X0 } from "../../02-功能模块/Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import { checkEnabledPlugins as Fle } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
+import { checkEnabledPlugins } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { NHe, FHe, ait } from "../../01-核心基础设施/共享小工具-未细化/chunk-8r3h1dwe.js";
 import { xZ, EFn, Dst, D6e, V_e, Lst, Mst } from "../../02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js";
 import {
@@ -2298,18 +2298,18 @@ import {
   Hst,
   Ist,
 } from "../../02-功能模块/Hooks钩子/chunk-6wg4v2yj.js";
-import { isSlashCommandBlockedByEndedByModel as Kqe, looksLikeCommand as Xqe, commandThrowTextForTranscript as Fce } from "../../02-功能模块/斜杠命令-框架/chunk-s195n5de.js";
-import { globalFileIndexCache as k4, findLongestCommonPrefix as Trn, startBackgroundCacheRefresh as Ylt, generateFileSuggestions as U3e, applyFileSuggestion as Jlt } from "../../02-功能模块/工具Glob-Grep-搜索/chunk-57axeagj.js";
+import { isSlashCommandBlockedByEndedByModel, looksLikeCommand, commandThrowTextForTranscript } from "../../02-功能模块/斜杠命令-框架/chunk-s195n5de.js";
+import { globalFileIndexCache, findLongestCommonPrefix, startBackgroundCacheRefresh, generateFileSuggestions, applyFileSuggestion } from "../../02-功能模块/工具Glob-Grep-搜索/chunk-57axeagj.js";
 import { pLt } from "../../02-功能模块/工具WebFetch-WebSearch/chunk-1mxgbqzj.js";
 import { Q9e, fnn } from "../../02-功能模块/Teammates团队/chunk-r8fvp46d.js";
 import { NGe, Tjn, ebe } from "../../02-功能模块/Artifact发布-渲染/chunk-fx5ekm7e.js";
 import { ljn } from "../../01-核心基础设施/共享小工具-未细化/chunk-mybtnk9f.js";
 import { g2 } from "../../01-核心基础设施/共享小工具-未细化/chunk-6k8nm416.js";
-import { makeSetWebBrowserSlice as tce } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
+import { makeSetWebBrowserSlice } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import { Ou, d2, KSe, uM, y9, Dee, S9 } from "../../02-功能模块/工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
 import { G6n } from "../../02-功能模块/Workflow编排/chunk-bkcg0nbj.js";
 import { nye } from "../../01-核心基础设施/共享小工具-未细化/chunk-ps79w9dv.js";
-import { repliesYieldedLine as qin, repliesYieldRevertedLine as zin, repliesStoppedElsewhereLine as Vin, registerReplyYieldHolder as Kin } from "../../02-功能模块/Artifact发布-渲染/chunk-54kz7amv.js";
+import { repliesYieldedLine, repliesYieldRevertedLine, repliesStoppedElsewhereLine, registerReplyYieldHolder } from "../../02-功能模块/Artifact发布-渲染/chunk-54kz7amv.js";
 import {
   rqe,
   oqe,
@@ -2329,13 +2329,13 @@ import { Z1 } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { Sen, dOt, Lye } from "../../01-核心基础设施/设置-配置/chunk-9m8zsynn.js";
 import { lOt, qf, Xit, cOt, uOt, yo, IUn } from "../../02-功能模块/状态栏-主题/chunk-jrr487ty.js";
 import { pWe, $He } from "../../02-功能模块/Workflow编排/chunk-dyq13fbm.js";
-import { createDialFailureLatch as Win } from "../../01-核心基础设施/共享小工具-未细化/chunk-aqawy2mp.js";
+import { createDialFailureLatch } from "../../01-核心基础设施/共享小工具-未细化/chunk-aqawy2mp.js";
 import { n3e, gee, IBn, l9, LBn } from "../../02-功能模块/CodeReview/chunk-rp57gfa9.js";
 import { eye } from "../../02-功能模块/Workflow编排/chunk-6gjsfh7a.js";
 import { Fbe } from "../../02-功能模块/自动更新-安装/chunk-548xet6h.js";
 import { sFt } from "../../02-功能模块/自动更新-安装/chunk-brx72pf1.js";
 import { Bce } from "../../02-功能模块/自动更新-安装/chunk-2g5h49pk.js";
-import { findBtwTriggerPositions as YPt } from "../../02-功能模块/权限系统/chunk-qjqc5vxm.js";
+import { findBtwTriggerPositions } from "../../02-功能模块/权限系统/chunk-qjqc5vxm.js";
 import {
   Hft,
   Aun,
@@ -2366,7 +2366,7 @@ import { Lle, TBn, rIe } from "../../02-功能模块/限流-重试/限流-重试
 import { oM, G9e, tnn, oIe, sIe, ABn, q9e } from "../../02-功能模块/用量额度-限额/chunk-n4zff40p.js";
 import { Ree, vSe, O4, _7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-3eztvm1y.js";
 import { O_, as } from "../../02-功能模块/认证-OAuth登录/chunk-7jz937t3.js";
-import { deviceToolNotices as Y0t } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdeyn1dg.js";
+import { deviceToolNotices } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdeyn1dg.js";
 import { $A } from "../../02-功能模块/Bridge-RemoteControl/chunk-x4nk7xx6.js";
 import { qz } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
 import { Wx } from "../../01-核心基础设施/共享小工具-未细化/chunk-c172f2at.js";
@@ -2498,37 +2498,37 @@ import { v1e, Awt, soe, Cwt, Ubn, yZn, SZn, OGt } from "../../02-功能模块/Te
 import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
 import { Y$, zK, Xa } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
 import { mt } from "../../02-功能模块/工具Task-Agent调度/chunk-1px84m19.js";
-import { CLAUDE_IN_CHROME_MCP_SERVER_NAME as vd } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
 import { qse, Kr, oir } from "../../02-功能模块/对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
-import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { fs, Tet } from "../../02-功能模块/Teammates团队/chunk-enjekn9t.js";
 import { PQ, gmr } from "../../01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js";
 import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
 import { Ike } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
 import { s, T, O, se, T7t, v, c, $e, fe, X, k, qd } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { sz } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
-import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { gy } from "../../01-核心基础设施/共享小工具-未细化/chunk-1adkzsnc.js";
 import { b8, G, Y, lc } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { au, p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { randomUUID as vJe } from "crypto";
 import {
-  appendFile as O$t,
-  copyFile as wJe,
+  appendFile,
+  copyFile,
   mkdir as CJe,
   rm as _Je,
 } from "fs/promises";
 F();
 import { dirname as TJe, join as xJe } from "path";
 function HB(w) {
-  if (!pq()) return;
+  if (!isDaemonBgWorker()) return;
   let I = RBn();
-  if (J4({ type: "detach-request", msg: I, broadcast: w?.broadcast })) {
+  if (sendRv({ type: "detach-request", msg: I, broadcast: w?.broadcast })) {
     Mze();
     return;
   }
-  (process.stdout.write(Sj(I)), Mze());
+  (process.stdout.write(daemonDetachApc(I)), Mze());
 }
 var m$t = /^(.*\S) \((\d{1,6})\)$/,
   p$t = 1500;
@@ -2561,7 +2561,7 @@ async function t8(w, I) {
   if (!w.name) return w;
   let ne;
   try {
-    ne = (await Dt(q_(void 0, I), p$t, "seed name settle")).flatMap((be) =>
+    ne = (await Dt(listJobs(void 0, I), p$t, "seed name settle")).flatMap((be) =>
       be.state.name ? [be.state.name] : [],
     );
   } catch (pe) {
@@ -2674,8 +2674,8 @@ function q$t(x2o) {
   return x2o.tasks;
 }
 var Vmr = async (w, I, ne) => {
-    if (_t()) return (i("tengu_background_already_bg", {}), w(), HB(), null);
-    if (hl())
+    if (isBgSession()) return (i("tengu_background_already_bg", {}), w(), HB(), null);
+    if (isTranscriptPersistenceDisabled())
       return (
         w(
           "Cannot background \u2014 session persistence is disabled, so the forked job would have nothing to resume.",
@@ -2735,30 +2735,30 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
           to: ao.originalCwd,
           from: ao.enteredExisting ? "entered" : "owned",
         };
-      if (!kx(he())) return null;
-      let no = $r(he());
-      return no && tr(no) === no ? { to: no, from: "launched" } : null;
+      if (!isLinkedWorktree(he())) return null;
+      let no = findCanonicalGitRoot(he());
+      return no && findGitRoot(no) === no ? { to: no, from: "launched" } : null;
     })(),
     fo = go?.to,
-    ro = Ge().worktree?.bgIsolation === "none",
+    ro = getInitialSettings().worktree?.bgIsolation === "none",
     ho = (() => {
       if (!He?.keepParent || go !== null) return;
-      if (tr(he()) === null) return;
-      return kx(he()) || ro ? "this-tree" : "own-worktree";
+      if (findGitRoot(he()) === null) return;
+      return isLinkedWorktree(he()) || ro ? "this-tree" : "own-worktree";
     })();
-  if (r9t() === null && Oe.length > 0 && Mx().transcriptSource !== "ccr-api")
-    await ST([...Oe], void 0, void 0, Oe, He?.storageV5);
-  let _o = r9t(),
+  if (getCurrentSessionFile() === null && Oe.length > 0 && Mx().transcriptSource !== "ccr-api")
+    await recordTranscript([...Oe], void 0, void 0, Oe, He?.storageV5);
+  let _o = getCurrentSessionFile(),
     Ho = K();
   cDe(void 0, He?.storageV5);
   let po = !1;
   try {
     if (He?.keepParent) await dF(Oe, He.storageV5);
-    (await Dt(kc(), He?.keepParent ? 1e4 : 2000, "flush timeout"), (po = !0));
+    (await Dt(flushSessionStorage(), He?.keepParent ? 1e4 : 2000, "flush timeout"), (po = !0));
   } catch {
     if (He?.keepParent)
       return (
-        i("tengu_background_spawn_failed", { via: u(Ae) }),
+        i("tengu_background_spawn_failed", { via: fromEnum(Ae) }),
         {
           ok: !1,
           error:
@@ -2774,14 +2774,14 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
         : ho === "own-worktree"
           ? `This conversation was forked from a session that is still working in this checkout (${he()}). Before making code changes, create a new worktree of your own with ${lR} so your edits don't land where the original session is editing.`
           : void 0,
-    Wo = Oe.findLast(bT),
+    Wo = Oe.findLast(isLoggableMessage),
     Ro =
       xo !== void 0 && lnn(Oe) !== void 0 && Wo !== void 0
         ? {
             parentUuid: Wo.uuid,
             isSidechain: !1,
-            ...pn({ type: "fork_briefing", text: xo }),
-            ...e9t(Ho),
+            ...createAttachmentMessage({ type: "fork_briefing", text: xo }),
+            ...transcriptStamp(Ho),
           }
         : void 0,
     on = _o,
@@ -2794,7 +2794,7 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
     } catch (no) {
       return (
         await X1n(wn, He.storageV5),
-        i("tengu_background_spawn_failed", { via: u(Ae) }),
+        i("tengu_background_spawn_failed", { via: fromEnum(Ae) }),
         {
           ok: !1,
           error: `Couldn't fork \u2014 ${l(no)}`,
@@ -2873,7 +2873,7 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
     }));
   if (!Kn.ok) {
     if (
-      (i("tengu_background_spawn_failed", { via: u(Ae) }),
+      (i("tengu_background_spawn_failed", { via: fromEnum(Ae) }),
       wn !== void 0 && !Kn.alive)
     )
       X1n(wn, He?.storageV5);
@@ -2884,8 +2884,8 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
       _o !== null &&
       !Kn.alive
     ) {
-      let jo = rr(He.providedSessionId.slice(0, 8)),
-        Cn = await Zn(jo, He.storageV5);
+      let jo = getJobDir(He.providedSessionId.slice(0, 8)),
+        Cn = await readJobState(jo, He.storageV5);
       if (Cn)
         no = await vdr({
           sessionFile: _o,
@@ -2902,8 +2902,8 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
       }
     }
     if (Ae === "left_arrow")
-      if (no) g("repl_background_fork", "queued_for_later");
-      else f("repl_background_fork", "spawn_failed");
+      if (no) logFeatureSad("repl_background_fork", "queued_for_later");
+      else logFeatureBad("repl_background_fork", "spawn_failed");
     return {
       ok: !1,
       error: Kn.error,
@@ -2913,9 +2913,9 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
     };
   }
   if (
-    (i("tengu_background", { via_flag: !1, via: u(Ae) }), Ae === "left_arrow")
+    (i("tengu_background", { via_flag: !1, via: fromEnum(Ae) }), Ae === "left_arrow")
   )
-    y("repl_background_fork");
+    logFeatureOk("repl_background_fork");
   let nn = Kn.sessionId ?? An;
   if (!He?.keepParent && _o !== null && nn !== void 0)
     await SJe(_o, Ho, nn, He?.storageV5);
@@ -2928,7 +2928,7 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
       jo = Q9e(ya([...Oe]), AbortSignal.timeout(F$t), {
         credentials: He?.credentials,
       })
-        .then((Cn) => (Cn ? b$(no, Cn, "auto", He?.storageV5) : void 0))
+        .then((Cn) => (Cn ? syncJobName(no, Cn, "auto", He?.storageV5) : void 0))
         .catch(() => {});
     if (Ae === "command") Et(() => jo);
   }
@@ -2949,13 +2949,13 @@ async function SJe(w, I, ne, me) {
   let pe = Xn(I),
     be = Xn(ne);
   if (pe === null || be === null) return;
-  await RE(w, yYn(pe, be), me, { onlyIfExists: !0 }).catch((xe) => {
+  await appendEntryToFileAsync(w, yYn(pe, be), me, { onlyIfExists: !0 }).catch((xe) => {
     n(`[bg] continued-in record not written: ${l(xe)}`, { level: "warn" });
   });
 }
 var kJe = ["tmp", "parent-transcript.jsonl"];
 async function Cdr(w, I, ne, me) {
-  let pe = xJe(rr(I), ...kJe),
+  let pe = xJe(getJobDir(I), ...kJe),
     be =
       me === void 0
         ? void 0
@@ -2990,10 +2990,10 @@ async function Cdr(w, I, ne, me) {
   }
   if (
     (await CJe(TJe(pe), { recursive: !0, mode: 448 }),
-    await wJe(w, pe),
+    await copyFile(w, pe),
     be !== void 0)
   )
-    await O$t(pe, be, { mode: 384 }).catch((Ae) =>
+    await appendFile(pe, be, { mode: 384 }).catch((Ae) =>
       n(`[bg] fork briefing not written to snapshot: ${l(Ae)}`, {
         level: "warn",
       }),
@@ -3005,7 +3005,7 @@ async function X1n(w, I) {
     await I.deleteScope({ namespace: "job", jobId: w }).catch(() => {});
     return;
   }
-  await _Je(rr(w), { recursive: !0, force: !0 }).catch(() => {});
+  await _Je(getJobDir(w), { recursive: !0, force: !0 }).catch(() => {});
 }
 async function vdr(w) {
   let {
@@ -3019,7 +3019,7 @@ async function vdr(w) {
     Ae = xJe(TJe(I), `${ne}.jsonl`);
   return B$t(I, Ae, xe)
     .then(() =>
-      Ti(
+      writeStateAtomic(
         me,
         {
           ...pe,
@@ -3041,7 +3041,7 @@ async function vdr(w) {
     )
     .then(
       () => !0,
-      (Oe) => (h(Oe), !1),
+      (Oe) => (logError(Oe), !1),
     );
 }
 async function B$t(w, I, ne) {
@@ -3060,7 +3060,7 @@ async function B$t(w, I, ne) {
     }
     return;
   }
-  await wJe(w, I);
+  await copyFile(w, I);
 }
 async function U$t(w, I) {
   let ne = hu(w, I);
@@ -3071,10 +3071,10 @@ async function U$t(w, I) {
   await _Je(w, { force: !0 }).catch(() => {});
 }
 async function Rdr(w, I, ne) {
-  let me = rr(w),
+  let me = getJobDir(w),
     pe = M() && ne !== void 0 ? ne : void 0;
   if (pe === void 0) await CJe(me, { recursive: !0, mode: 448 });
-  await x0e(me, I, { parent: "create" }, pe);
+  await writeAdoptJson(me, I, { parent: "create" }, pe);
 }
 function xB(w) {
   let I =
@@ -3090,7 +3090,7 @@ ${vB(w.adopted.adopted_frame_live)}`
   return I + ne;
 }
 async function $0t(w) {
-  let I = await _at(w.tasks, w.queue),
+  let I = await serializeAdoptable(w.tasks, w.queue),
     ne;
   if (I) {
     ne = vJe();
@@ -3101,7 +3101,7 @@ async function $0t(w) {
         await I.checkpointAgents(w.taskRegistry));
     } catch {
       if (((ne = void 0), I.payload.frameLive !== void 0))
-        g(
+        logFeatureSad(
           "artifact_live_subscribe",
           Oe ? "consent_carry_checkpoint_failed" : "consent_carry_write_failed",
         );
@@ -3131,7 +3131,7 @@ async function $0t(w) {
         providedSessionId: ne,
         workerName: be,
         taskFreeInFlight:
-          I && ne && ntn(I.payload)
+          I && ne && carriesTasks(I.payload)
             ? void 0
             : { tasks: 0, queued: 0, kinds: [] },
         storageV5: w.storageV5,
@@ -3144,14 +3144,14 @@ async function $0t(w) {
     if (I && ne) I.disown(w.taskRegistry);
     return {
       ...xe,
-      adopted: bat(ne ? I?.payload : null),
+      adopted: adoptedCounts(ne ? I?.payload : null),
       frameLiveLost: ne === void 0 ? (I?.payload.frameLive?.length ?? 0) : 0,
     };
   }
   if (ne) I?.abandon();
   let Ae = I?.payload.frameLive?.length ?? 0;
   if (w.exitsAfterward && ne && Ae > 0)
-    g("artifact_live_subscribe", "adopt_spawn_failed");
+    logFeatureSad("artifact_live_subscribe", "adopt_spawn_failed");
   return {
     ok: !1,
     error: YB(xe.error, me, { exitsAfterward: w.exitsAfterward }),
@@ -3159,7 +3159,7 @@ async function $0t(w) {
   };
 }
 function WJt(w) {
-  return ny() && !_t() && !hl() && a7() && Uae(w, "") !== null;
+  return ny() && !isBgSession() && !isTranscriptPersistenceDisabled() && a7() && Uae(w, "") !== null;
 }
 function U0t(g2o) {
   let S$t = _(11),
@@ -3188,7 +3188,7 @@ function U0t(g2o) {
       b$t.current = !0;
       let w$t = Uae(o8, "");
       if (w$t === null) {
-        (f("bg_exit_dialog_background", "no_seed"),
+        (logFeatureBad("bg_exit_dialog_background", "no_seed"),
           xn(0, "prompt_input_exit", {
             finalMessage: "Nothing to background \u2014 exiting.",
           }));
@@ -3196,11 +3196,11 @@ function U0t(g2o) {
       }
       (async () => {
         let Px = ame.getState();
-        let fJe = iF(Px.tasks);
-        let h2o = Ele(Px.tasks, fJe);
+        let fJe = computeAdoptability(Px.tasks);
+        let h2o = countLiveWorkflowAgents(Px.tasks, fJe);
         let gJe = Nle(
-          tu(Px.tasks, (C$t) => Tle(C$t, fJe) || tM(C$t)),
-          { cronFilter: (y2o) => !tee(y2o, fJe) },
+          tu(Px.tasks, (C$t) => isAdoptableTask(C$t, fJe) || isCarriedFrameLiveWatch(C$t)),
+          { cronFilter: (y2o) => !isAdoptableCron(y2o, fJe) },
         );
         let BV = await $0t({
           seed: w$t,
@@ -3223,7 +3223,7 @@ function U0t(g2o) {
           credentials: dme,
         });
         if (BV.ok) {
-          y("bg_exit_dialog_background");
+          logFeatureOk("bg_exit_dialog_background");
           let b2o =
             gJe.count > 0
               ? `
@@ -3242,7 +3242,7 @@ ${_$t}`
               xB(BV),
           });
         } else
-          (f("bg_exit_dialog_background", "spawn_failed"),
+          (logFeatureBad("bg_exit_dialog_background", "spawn_failed"),
             await xn(0, "prompt_input_exit", {
               finalMessage: BV.error + xB(BV),
             }));
@@ -3289,10 +3289,10 @@ function Uae(w, I, ne = "(backgrounded)") {
     if (pe && me && be !== void 0) break;
   }
   if (!pe && !I) return null;
-  let xe = mu(K()),
-    Ae = G3(K()),
-    Oe = mb(),
-    He = upe();
+  let xe = getCurrentSessionTitle(K()),
+    Ae = getCurrentSessionAiTitle(K()),
+    Oe = getRegisteredSessionName(),
+    He = getCurrentSessionAgentColor();
   return {
     intent: oe(me || ne, 200),
     name: xe ?? Ae,
@@ -3330,14 +3330,14 @@ function RJe(S2o) {
     hme,
     yme;
   if (jy[2] !== Vh) {
-    let bme = iF(Vh);
-    let R$t = i4(Vh).size;
-    pme = H0e(Vh, bme) - R$t;
+    let bme = computeAdoptability(Vh);
+    let R$t = carriedFrameLiveSlugs(Vh).size;
+    pme = countAdoptable(Vh, bme) - R$t;
     fme = R$t;
-    hme = Ele(Vh, bme);
+    hme = countLiveWorkflowAgents(Vh, bme);
     yme = Nle(
-      tu(Vh, (P$t) => Tle(P$t, bme) || tM(P$t)),
-      { cronFilter: (k2o) => !tee(k2o, bme) },
+      tu(Vh, (P$t) => isAdoptableTask(P$t, bme) || isCarriedFrameLiveWatch(P$t)),
+      { cronFilter: (k2o) => !isAdoptableCron(k2o, bme) },
     );
     ((jy[2] = Vh), (jy[3] = pme), (jy[4] = fme), (jy[5] = hme), (jy[6] = yme));
   } else ((pme = jy[3]), (fme = jy[4]), (hme = jy[5]), (yme = jy[6]));
@@ -3622,13 +3622,13 @@ var AUTO_DEFAULT_NOTICE_TITLE = "Auto mode is now Claude Code's default permissi
 function shouldShowAutoDefaultNotice(w) {
   let I = ee();
   return (
-    aq() &&
+    isAutoModeFromFallback() &&
     w === "auto" &&
     !zae(B().host) &&
-    !Ja() &&
+    !isActingAsBgJob() &&
     !Nn() &&
     !a.CLAUDE_BRIDGE_REATTACH_SESSION &&
-    cC() &&
+    isAutoModeGateEnabled() &&
     I.hasCompletedOnboarding === !0 &&
     !I.hasSeenAutoDefaultNotice
   );
@@ -3636,7 +3636,7 @@ function shouldShowAutoDefaultNotice(w) {
 function shouldShowAutoModeEntryWarning() {
   return (
     !["policySettings", "userSettings", "flagSettings"].some(
-      (I) => ye(I)?.skipAutoPermissionPrompt === !0,
+      (I) => getSettingsForSource(I)?.skipAutoPermissionPrompt === !0,
     ) && !ee().hasSeenAutoModeEntryWarning
   );
 }
@@ -3685,7 +3685,7 @@ function _1t(Hzo) {
   return { ...Hzo, fastMode: !1 };
 }
 function T1t(jzo) {
-  return h(ge(jzo));
+  return logError(ge(jzo));
 }
 function R1t($zo) {
   return !$zo;
@@ -3711,8 +3711,8 @@ function nst(Mzo) {
     _w = a8 !== null,
     o1t;
   if (Wy[1] === p) {
-    let r1t = rt();
-    let Izo = af(r1t) ? Ue(r1t) : "claude-opus-5";
+    let r1t = getMainLoopModel();
+    let Izo = af(r1t) ? getCanonicalName(r1t) : "claude-opus-5";
     o1t = Ese(Gve(Izo));
     Wy[1] = o1t;
   } else o1t = Wy[1];
@@ -3757,7 +3757,7 @@ function nst(Mzo) {
             if ((fM(!1), m8.signal.aborted)) {
               return;
             }
-            (h(ge(Ezo)),
+            (logError(ge(Ezo)),
               Yb(
                 s1t
                   ? "Fast mode was not changed: applying it failed"
@@ -3770,7 +3770,7 @@ function nst(Mzo) {
       (fM(!0),
         Ym(Ex, () => Dme()).catch((Dzo) => {
           (fM(!1),
-            h(ge(Dzo)),
+            logError(ge(Dzo)),
             Yb("Fast mode was not changed: applying it failed", {
               display: "system",
             }));
@@ -3963,7 +3963,7 @@ ${l1t.map(Rl).join(`
                       ? "Fast mode overloaded and is temporarily unavailable"
                       : "You've hit your fast limit",
                     " \xB7 resets in ",
-                    Ot(Ame.resetAt - Date.now(), { hideTrailingZeros: !0 }),
+                    formatDuration(Ame.resetAt - Date.now(), { hideTrailingZeros: !0 }),
                   ],
                 }),
               }),
@@ -4175,19 +4175,19 @@ var Xmr = async (w, I, ne) => {
     );
   let be = me,
     xe = () => {
-      let to = ce(I);
-      return [...vre(to, gme(I)), ...Rre(to, Tz())];
+      let to = getToolPermissionContext(I);
+      return [...vre(to, getSessionEffort(I)), ...Rre(to, Tz())];
     },
     Ae = () => ({
       proactivityLevel: I.getProactivityLevel(),
-      toolPermissionContext: ce(I),
+      toolPermissionContext: getToolPermissionContext(I),
     }),
     Oe = () => IF(I),
     He = () => due(I),
     Ke = () => iIe(I.taskRegistry.all());
-  if (_t()) {
+  if (isBgSession()) {
     let to = kH(),
-      { error: zt } = await Jt(
+      { error: zt } = await updateSettingsForSource(
         "userSettings",
         { tui: be },
         void 0,
@@ -4208,9 +4208,9 @@ var Xmr = async (w, I, ne) => {
     return (
       i("tengu_tui_command", {
         fullscreen: be === "fullscreen",
-        from: u(pe),
-        to: u(be),
-        from_entry_path: u(to),
+        from: fromEnum(pe),
+        to: fromEnum(be),
+        from_entry_path: fromEnum(to),
         session_age_ms: Math.round(process.uptime() * 1000),
         bounce: !1,
         scroll_decay_curve: ao.useDecayCurve,
@@ -4234,14 +4234,14 @@ var Xmr = async (w, I, ne) => {
     );
   let Je = be === "fullscreen",
     Qe = Je === Ta();
-  if (Qe && Ge().tui === be)
+  if (Qe && getInitialSettings().tui === be)
     return (
       await d0t(I.storageV5),
       w(`Already using the ${be} renderer.`, { display: "system" }),
       null
     );
   let it = (to) => {
-      let zt = rK(ce(I), qP());
+      let zt = rK(getToolPermissionContext(I), qP());
       if (zt.length > 0)
         return (i("tengu_tui_refused", { uncarriable: !0 }), kdr(be, zt));
       let ao = Ke();
@@ -4268,7 +4268,7 @@ var Xmr = async (w, I, ne) => {
     if (to !== void 0) return (w(to, { display: "system" }), null);
   }
   let Zt = kH(),
-    { error: Ct } = await Jt("userSettings", { tui: be }, void 0, I.storageV5);
+    { error: Ct } = await updateSettingsForSource("userSettings", { tui: be }, void 0, I.storageV5);
   if (Ct)
     return (
       w(
@@ -4289,9 +4289,9 @@ var Xmr = async (w, I, ne) => {
   if (
     (i("tengu_tui_command", {
       fullscreen: Je,
-      from: u(pe),
-      to: u(be),
-      from_entry_path: u(Zt),
+      from: fromEnum(pe),
+      to: fromEnum(be),
+      from_entry_path: fromEnum(Zt),
       session_age_ms: Math.round(process.uptime() * 1000),
       bounce: jt,
       scroll_decay_curve: eo.useDecayCurve,
@@ -4308,7 +4308,7 @@ var Xmr = async (w, I, ne) => {
     be === "default" &&
     (jt || Zt === "gb_on" || Zt === "settings_on") &&
     TP() &&
-    Mt("allow_product_feedback")
+    isPolicyAllowed("allow_product_feedback")
   )
     return e(KJe, {
       fromEntryPath: Zt,
@@ -4329,7 +4329,7 @@ var Xmr = async (w, I, ne) => {
     responseStreaming: He(),
   }).catch(
     (to) => (
-      h(to),
+      logError(to),
       w(
         lo(I.session)
           ? _4(
@@ -4413,12 +4413,12 @@ function KJe(IQo) {
             let FQo = qr(Nx).slice(0, GJe);
             await E_("tengu_tui_optout_reason", {
               reason: FQo,
-              from_entry_path: u(pG),
+              from_entry_path: fromEnum(pG),
               bounce: fG,
               downsell_gate: XI.downsellGateCached === !0,
-              revert_kind: u(hG),
+              revert_kind: fromEnum(hG),
               downsell_seen_count: ee().fullscreenDownsellSeenCount ?? 0,
-            }).catch(h);
+            }).catch(logError);
           }
           if ((await Z(Ev * 2), D1t)) {
             return;
@@ -4437,7 +4437,7 @@ function KJe(IQo) {
           rst("default", yG(), SG(), AB(), CG, {
             responseStreaming: kG(),
           }).catch(($Je) => {
-            (h($Je),
+            (logError($Je),
               s0(
                 lo(OJe)
                   ? _4(
@@ -4751,7 +4751,7 @@ function a0(w) {
   return w.load ?? (Object.hasOwn(qme, w.name) ? qme[w.name] : void 0);
 }
 function _G(w) {
-  return `/${qo(w)} is currently unavailable.`;
+  return `/${getCommandName(w)} is currently unavailable.`;
 }
 var YJe = "idle-return-hint";
 class x8 {
@@ -4855,7 +4855,7 @@ class x8 {
               { text: "new task? ", dim: !0 },
               { text: "/clear", color: "suggestion" },
               { text: " to save ", dim: !0 },
-              { text: `${Pn(Oe)} tokens`, color: "suggestion" },
+              { text: `${formatTokens(Oe)} tokens`, color: "suggestion" },
             ],
             priority: "medium",
             timeoutMs: 2147483647,
@@ -4877,7 +4877,7 @@ class x8 {
   }
 }
 import { randomUUID as K1t } from "crypto";
-import { rename as z1t, rm as Q1t, unlink as Y1t } from "fs/promises";
+import { rename, rm as Q1t, unlink as Y1t } from "fs/promises";
 import { join as Gme } from "path";
 import { writeSync as G1t } from "fs";
 function Vme() {
@@ -4890,11 +4890,11 @@ function Vme() {
   ]);
 }
 async function JJe(w, I, ne) {
-  (xoe(), Ksn(), Hy(n3), vJ());
-  let me = q_(void 0, ne?.storageV5).catch(() => []);
-  await Dt(kc(), 2000, "flush timeout").catch(() => {});
+  (xoe(), teardownFrameLiveForProcessHandoff(), Hy(n3), vJ());
+  let me = listJobs(void 0, ne?.storageV5).catch(() => []);
+  await Dt(flushSessionStorage(), 2000, "flush timeout").catch(() => {});
   let pe = _tn(process.stdout);
-  if (pe) Gx(pe, null);
+  if (pe) showScreen(pe, null);
   process.env.CLAUDE_AGENTS_SELECT = w;
   let [
     { createRoot: be },
@@ -5031,14 +5031,14 @@ async function eWt(w, I, ne, me) {
     n("[tasks] carry to fork stopped at the cap", { level: "warn" });
 }
 async function tWt(w, I, ne) {
-  if (ne && w === rr(I)) {
+  if (ne && w === getJobDir(I)) {
     await ne.deleteScope({ namespace: "job", jobId: I }).catch(() => {});
     return;
   }
   await Q1t(w, { recursive: !0, force: !0 }).catch(() => {});
 }
 function oWt(w) {
-  return z1t(w, `${w}.expired`);
+  return rename(w, `${w}.expired`);
 }
 function nWt(w) {
   return Y1t(`${w}.expired`).then(
@@ -5052,12 +5052,12 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
     let Qe = await (async () => {
       n("[PERF:bg-leftarrow-start]");
       let it = Uae(w, "");
-      if (it !== null && hl())
+      if (it !== null && isTranscriptPersistenceDisabled())
         return (
           i("tengu_left_arrow_blocked", {
             reason: S("persistence"),
             inflight_count: Oe?.inflightCount ?? 0,
-            inflight_kinds: Ga(Oe?.inflightKinds ?? []),
+            inflight_kinds: fromEnumArr(Oe?.inflightKinds ?? []),
           }),
           "Cannot open agents \u2014 session persistence is disabled, so this conversation cannot be backgrounded."
         );
@@ -5070,7 +5070,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
         Tt = Boolean(jt && !jt.enteredExisting),
         to = Oe?.taskRegistry?.all(),
         zt = to ? Rv(to) : void 0,
-        ao = to ? i4(to) : void 0,
+        ao = to ? carriedFrameLiveSlugs(to) : void 0,
         co = zt
           ? zt.count - zt.carriedMonitors === 0 && zt.restartableCount === 0
           : Oe?.inflightCount === 0 && Oe?.restartableCount === 0,
@@ -5112,12 +5112,12 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
         He,
       );
       let ro = null;
-      if (Oe?.taskRegistry) ro = await _at(Oe.taskRegistry.all(), xe);
+      if (Oe?.taskRegistry) ro = await serializeAdoptable(Oe.taskRegistry.all(), xe);
       let ho =
           ao === void 0
             ? 0
             : G(ro?.payload.frameLive ?? [], (nn) => !ao.has(nn.slug)),
-        _o = Yi(),
+        _o = getReplBridgeHandle(),
         Ho = 16384,
         po = Oe?.partialText?.trimEnd() ?? "",
         xo = po.length > Ho ? po.slice(-Ho) : po,
@@ -5134,7 +5134,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
       if (ro || Wo)
         try {
           if (
-            (await x0e(
+            (await writeAdoptJson(
               fo,
               {
                 ...(ro?.payload ?? {
@@ -5156,7 +5156,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
               ro.disown(Oe.taskRegistry));
         } catch (nn) {
           if (((An = ro?.payload.frameLive?.length ?? 0), An > 0 && !on))
-            (g("artifact_live_subscribe", "consent_carry_write_failed"),
+            (logFeatureSad("artifact_live_subscribe", "consent_carry_write_failed"),
               (An = 0));
           (n(`[adopt] hand-off step failed (written=${on}): ${nn}`, {
             level: "warn",
@@ -5169,10 +5169,10 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
           was_empty: it === null,
           nudge_active: wn !== void 0 && wn.needsInput > 0,
           nudge_needs_input_count: wn?.needsInput ?? 0,
-          via: u(Oe?.via ?? "idle-fork"),
+          via: fromEnum(Oe?.via ?? "idle-fork"),
           confirmed_interstitial: Oe?.confirmedInterstitial ?? !1,
           inflight_count: Oe?.inflightCount ?? 0,
-          inflight_kinds: Ga(Oe?.inflightKinds ?? []),
+          inflight_kinds: fromEnumArr(Oe?.inflightKinds ?? []),
           restartable_count: Oe?.restartableCount ?? 0,
           partial_chars: Oe?.partialChars ?? 0,
           has_prefill: Ro,
@@ -5180,7 +5180,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
           prefill_truncated: po.length > Ho,
           defer_wait_ms: Oe?.deferWaitMs ?? 0,
           defer_cap_fired: Oe?.deferCapFired ?? !1,
-          ...bat(ro?.payload),
+          ...adoptedCounts(ro?.payload),
           ...(An !== void 0 && { adopted_frame_live: An }),
           undisclosed_frame_live: An === 0 ? 0 : ho,
         }),
@@ -5189,14 +5189,14 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
         let nn = Oe?.replyOnResume ? 5000 : 2000;
         (await Dt(_o.flush(), nn, "bridge flush").catch(() => {
           i("tengu_bg_bridge_flush_truncated", {
-            via: u(Oe?.via ?? "idle-fork"),
+            via: fromEnum(Oe?.via ?? "idle-fork"),
             cap_ms: nn,
           });
         }),
           _o.teardown({ skipArchive: !0 }));
       }
       if (Oe?.abortAfterFlush)
-        await Dt(kc(), 2000, "flush timeout").catch(() => {});
+        await Dt(flushSessionStorage(), 2000, "flush timeout").catch(() => {});
       let yn = 2000,
         vo = new AbortController();
       await Dt(X1t(eo, vo.signal, He), yn, "task-list carry").catch(() =>
@@ -5213,12 +5213,12 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
             workerName: Ct,
             storageV5: He,
             credentials: Ke,
-            extraEnv: oK(
+            extraEnv: buildBridgeReattachEnv(
               _o?.bridgeSessionId,
               _o?.getLastSequenceNum(),
               _o?.outboundOnly,
               _o?.sessionGroupingId,
-              F8e(_o, sD()),
+              resolveBridgeHandoffIdentity(_o, getCurrentSessionBridge()),
             ),
           }).then(async (nn) => {
             if (!nn.ok && !nn.queued && !nn.alive)
@@ -5234,7 +5234,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
               (zo.transcriptMaterialized = no || nn.queued === !0),
               !no && !nn.queued)
             )
-              XCt(He).catch(() => {});
+              clearSessionParked(He).catch(() => {});
             if (!nn.ok) {
               if (nn.queued && ro) {
                 let jo = Gme(fo, "adopt.json"),
@@ -5245,7 +5245,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
                     ),
                   un = Math.max(
                     0,
-                    Wye - 5000 - (Date.now() - ro.payload.writtenAtMs),
+                    STALE_THRESHOLD_MS - 5000 - (Date.now() - ro.payload.writtenAtMs),
                   ),
                   lr = Et(Cn);
                 setTimeout(
@@ -5262,7 +5262,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
                 nn.reason === "spawn_failed_unknown" ||
                 nn.reason.startsWith("spawn_failed_ERR_")
               )
-                h(
+                logError(
                   dt(
                     Error(`background spawn failed: ${nn.error}`),
                     `background spawn failed: ${nn.reason ?? "unclassified"}`,
@@ -5273,13 +5273,13 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
           })
           .catch((nn) => {
             if (!zo.settled) ((zo.settled = !0), (zo.ok = !1));
-            h(nn);
+            logError(nn);
           }),
-        Oe?.abortAfterFlush?.abort(yu("background")),
+        Oe?.abortAfterFlush?.abort(userAbortReason("background")),
         Oe?.sessionScratch)
       )
         (pht(Oe.sessionScratch), UVe(Oe.sessionScratch));
-      (xe.removeByFilter(OAe), aRn(go, He).catch(() => {}));
+      (xe.removeByFilter(OAe), markSessionParked(go, He).catch(() => {}));
       let Sr = J1t(ne);
       if (H("tengu_bg_leftarrow_inprocess", !0))
         try {
@@ -5295,7 +5295,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
             fleetNudgeStore: Oe?.fleetNudgeStore,
           });
         } catch (nn) {
-          h(nn);
+          logError(nn);
         }
       let Kn = await y4({
         args: ["agents", ...Eit(Sr)],
@@ -5305,13 +5305,13 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
           ...(pv() && { CLAUDE_CODE_RESTRICTED: "1" }),
         },
       });
-      return (XCt(He).catch(() => {}), Kn);
+      return (clearSessionParked(He).catch(() => {}), Kn);
     })();
     return YB(Qe, Je);
   } catch (Qe) {
     return (
-      h(Qe),
-      XCt(He).catch(() => {}),
+      logError(Qe),
+      clearSessionParked(He).catch(() => {}),
       YB("Couldn't background this session (an internal error was logged)", Je)
     );
   }
@@ -5389,7 +5389,7 @@ class R8 {
     return this.#s !== void 0;
   }
   onAttachRequest(w) {
-    if (_t()) return;
+    if (isBgSession()) return;
     ((this.#l = w), (this.#a = !0), this.onLeftArrow());
   }
   confirm = () => {
@@ -5398,7 +5398,7 @@ class R8 {
     i("tengu_left_arrow_confirm", {
       accepted: !0,
       count: w.inFlight.count,
-      kinds: Ga(w.inFlight.kinds),
+      kinds: fromEnumArr(w.inFlight.kinds),
       carryover_count: w.carryOverCount,
       workflow_agent_count: w.workflowAgents.running,
     });
@@ -5414,7 +5414,7 @@ class R8 {
     (i("tengu_left_arrow_confirm", {
       accepted: !1,
       count: w.inFlight.count,
-      kinds: Ga(w.inFlight.kinds),
+      kinds: fromEnumArr(w.inFlight.kinds),
       carryover_count: w.carryOverCount,
       workflow_agent_count: w.workflowAgents.running,
     }),
@@ -5480,8 +5480,8 @@ class R8 {
       if (this.#r || this.#o !== null) return;
       let { tasks: He } = w.getState(),
         Ke = Rv(He),
-        Je = iF(He),
-        Qe = i4(He),
+        Je = computeAdoptability(He),
+        Qe = carriedFrameLiveSlugs(He),
         it = (jt) =>
           Ae((Tt) => {
             let to = Tt.at(-1);
@@ -5493,11 +5493,11 @@ class R8 {
               return Tt;
             return [...Tt, Ht(jt, "warning")];
           });
-      if (hl()) {
+      if (isTranscriptPersistenceDisabled()) {
         (i("tengu_left_arrow_blocked", {
           reason: S("persistence"),
           inflight_count: Ke.count,
-          inflight_kinds: Ga(Ke.kinds),
+          inflight_kinds: fromEnumArr(Ke.kinds),
         }),
           it(
             "Cannot open agents \u2014 session persistence is disabled, so this conversation cannot be backgrounded.",
@@ -5527,7 +5527,7 @@ class R8 {
         (i("tengu_left_arrow_blocked", {
           reason: S("queued-commands"),
           inflight_count: at,
-          inflight_kinds: Ga(Ke.kinds),
+          inflight_kinds: fromEnumArr(Ke.kinds),
         }),
           it(
             `Cannot open agents \u2014 ${at} queued ${x(at, "command")} would be lost. Run or clear ${at === 1 ? "it" : "them"} first.`,
@@ -5538,7 +5538,7 @@ class R8 {
         (i("tengu_left_arrow_blocked", {
           reason: S("draft"),
           inflight_count: Ke.count,
-          inflight_kinds: Ga(Ke.kinds),
+          inflight_kinds: fromEnumArr(Ke.kinds),
         }),
           it(
             "Cannot open agents \u2014 you have unsent text in the input. Send it or clear it first (double-tap esc clears).",
@@ -5565,14 +5565,14 @@ class R8 {
           ao = (zt?.length ?? 0) + hNt(I.getSnapshot()),
           co = _Nt(I.getSnapshot(), zt),
           go = xGe(I.getSnapshot()),
-          fo = I0e(He);
+          fo = countAbandonable(He);
         if (!jt.confirmedInterstitial && fo > 0) {
           it(
             `Still backgrounding after the current tool \u2014 ${fo} background ${x(fo, "task")} would be abandoned by skipping ahead.`,
           );
           return;
         }
-        let ro = P0e(He, jt.carriedAtPress);
+        let ro = countCarriedSince(He, jt.carriedAtPress);
         if (ro > 0) {
           (this.clearPending(),
             it(
@@ -5611,9 +5611,9 @@ class R8 {
       });
       if (!Ct.ok) {
         i("tengu_left_arrow_blocked", {
-          reason: u(Ct.reason),
+          reason: fromEnum(Ct.reason),
           inflight_count: Ct.inFlight.count,
-          inflight_kinds: Ga(Ct.inFlight.kinds),
+          inflight_kinds: fromEnumArr(Ct.inFlight.kinds),
         });
         return;
       }
@@ -5635,14 +5635,14 @@ class R8 {
           });
         if (!go.ok) {
           (i("tengu_left_arrow_blocked", {
-            reason: u(go.reason),
+            reason: fromEnum(go.reason),
             inflight_count: Tt.count,
-            inflight_kinds: Ga(Tt.kinds),
+            inflight_kinds: fromEnumArr(Tt.kinds),
           }),
             it("Cannot open agents \u2014 a foregrounded task is running."));
           return;
         }
-        let fo = P0e(w.getState().tasks, Qe);
+        let fo = countCarriedSince(w.getState().tasks, Qe);
         if (fo > 0) {
           it(
             `Backgrounding cancelled \u2014 ${fo} Artifact comment ${x(fo, "monitor")} started after you pressed \u2190. Press \u2190 again to review and confirm.`,
@@ -5670,8 +5670,8 @@ class R8 {
                 on = G(me.getCommandQueue(), (vo) => !OAe(vo));
               if (
                 on > 0 ||
-                (!Wo.confirmedInterstitial && I0e(Ro) > 0) ||
-                P0e(Ro, Wo.carriedAtPress) > 0
+                (!Wo.confirmedInterstitial && countAbandonable(Ro) > 0) ||
+                countCarriedSince(Ro, Wo.carriedAtPress) > 0
               ) {
                 if (on > 0)
                   i("tengu_defer_cap_refused_queued", {
@@ -5740,13 +5740,13 @@ class R8 {
           Zt,
         );
       };
-      if (ttn(He, Je)) {
-        let jt = tu(He, (go) => Tle(go, Je) || tM(go)),
-          Tt = Nle(jt, { cronFilter: (go) => !tee(go, Je) }).summary,
+      if (leftArrowNeedsInterstitial(He, Je)) {
+        let jt = tu(He, (go) => isAdoptableTask(go, Je) || isCarriedFrameLiveWatch(go)),
+          Tt = Nle(jt, { cronFilter: (go) => !isAdoptableCron(go, Je) }).summary,
           to = Tt !== "",
           zt = Qe.size,
-          ao = H0e(He, Je) - zt,
-          co = Ele(He, Je);
+          ao = countAdoptable(He, Je) - zt,
+          co = countLiveWorkflowAgents(He, Je);
         ((this.#o = {
           inFlight: Ke,
           carryOverCount: ao,
@@ -5773,7 +5773,7 @@ class R8 {
                   return;
               }
             })
-            .catch(h));
+            .catch(logError));
         return;
       }
       eo(!1);
@@ -5800,7 +5800,7 @@ class R8 {
       { terminalTitle: it } = Ae.getSnapshot(),
       { mainThreadAgentDefinition: at } = xe,
       { toolPermissionContext: Zt } = w.getState();
-    me.abortController?.abort(yu("background"));
+    me.abortController?.abort(userAbortReason("background"));
     let Ct = pe.removeByFilter((eo) => eJn(eo) && !Vdn(eo));
     (async () => {
       let eo = me.buildToolUseContext(
@@ -5812,7 +5812,7 @@ class R8 {
         [jt, Tt, to] = await Promise.all([
           VS(
             eo.options.tools,
-            ip({ permissionMode: Zt.mode, mainLoopModel: Oe }),
+            getRuntimeMainLoopModel({ permissionMode: Zt.mode, mainLoopModel: Oe }),
             Array.from(Zt.additionalWorkingDirectories.keys()),
           ),
           hC(eo.session, eo.storageV5, eo.credentials),
@@ -5826,7 +5826,7 @@ class R8 {
           appendSystemPrompt: Ke,
         });
       eo.renderedSystemPrompt = zt;
-      let co = (await SEe(Ct, Ka(Oe)).catch(() => [])).map((ho) => pn(ho)),
+      let co = (await getQueuedCommandAttachments(Ct, Ka(Oe)).catch(() => [])).map((ho) => createAttachmentMessage(ho)),
         go = new Set();
       for (let ho of ne.getSnapshot())
         if (
@@ -5862,7 +5862,7 @@ class R8 {
           agentDefinition: at,
           setAppState: I,
         }));
-    })().catch(h);
+    })().catch(logError);
   };
   dispose() {
     this.clearPending();
@@ -5881,7 +5881,7 @@ function eXe(
   if (I) return { handler: I, confirmHint: "Press \u2190 again to go back" };
   {
     let xe = HGe({
-      isBg: _t(),
+      isBg: isBgSession(),
       isLoading: ne,
       isExternalLoading: me,
       betweenCalls: pe,
@@ -5898,7 +5898,7 @@ function eXe(
   return;
 }
 F();
-import { mkdir as uet, writeFile as det } from "fs/promises";
+import { mkdir as uet, writeFile } from "fs/promises";
 import { join as met } from "path";
 F();
 F();
@@ -7829,8 +7829,8 @@ function p9(Zpe) {
     D6o = U(DVt),
     N6o = qf(),
     hVt = Git(),
-    L6o = wt(hVt),
-    yVt = VN(hVt),
+    L6o = parseUserSpecifiedModel(hVt),
+    yVt = renderModelSetting(hVt),
     { version: kVt, cwd: vVt, billingType: CVt, agentName: O6o } = PHe(),
     efe = D6o ?? O6o,
     _Vt;
@@ -7848,14 +7848,14 @@ function p9(Zpe) {
   else xVt = Jb[5];
   let b3e = xVt,
     ofe = Math.max(E6o - 15, 20),
-    S3e = h3e ? kVt : or(kVt, Math.max(ofe - 13, 6)),
+    S3e = h3e ? kVt : truncate(kVt, Math.max(ofe - 13, 6)),
     RVt = IJe(L6o, N6o),
     jG = null,
     v3e = 0,
     PVt,
     w3e;
   if (Jb[6] === p)
-    ((w3e = dit()), (PVt = BIt(w3e)), (Jb[6] = PVt), (Jb[7] = w3e));
+    ((w3e = getProTrialState()), (PVt = formatTrialBadge(w3e)), (Jb[6] = PVt), (Jb[7] = w3e));
   else ((PVt = Jb[6]), (w3e = Jb[7]));
   let C3e = PVt;
   if (C3e) {
@@ -8074,7 +8074,7 @@ function dfe() {
   if (zs.startupUpdateSummary === void 0) {
     let w = WVt();
     if (((zs.startupUpdateSummary = w), w !== null && !pit()))
-      y("startup_update_summary");
+      logFeatureOk("startup_update_summary");
   }
   return zs.startupUpdateSummary;
 }
@@ -8126,7 +8126,7 @@ function g9() {
     N3e = fh(),
     qVt;
   if ($G[0] !== D3e || $G[1] !== N3e)
-    ((qVt = () => !N3e || zae(D3e) || _t() || f8() !== void 0),
+    ((qVt = () => !N3e || zae(D3e) || isBgSession() || f8() !== void 0),
       ($G[0] = D3e),
       ($G[1] = N3e),
       ($G[2] = qVt));
@@ -8198,7 +8198,7 @@ function vfe(w) {
 }
 F();
 function wfe() {
-  return At(_tt, V6);
+  return At(onLastLoadStatusChanged, getLastLoadStatus);
 }
 var ZVt = {
   MCP: "run /mcp for details",
@@ -8285,7 +8285,7 @@ function Ife(w) {
     }, 0);
 }
 function Qot() {
-  let w = ye("policySettings");
+  let w = getSettingsForSource("policySettings");
   return w !== null && Object.keys(w).length > 0;
 }
 F();
@@ -8302,12 +8302,12 @@ function rGt() {
     };
   }
   let s8o = v9.map(k_).join(", ");
-  let nGt = ye("policySettings");
+  let nGt = getSettingsForSource("policySettings");
   let a8o = Ydt(nGt?.allowedChannelPlugins);
   return {
     channels: v9,
-    disabled: !R9(),
-    is3P: Pe() !== "firstParty",
+    disabled: !isChannelsEnabled(),
+    is3P: getAPIProvider() !== "firstParty",
     policyBlocked: Ebe(nGt),
     list: s8o,
     unmatched: W3e(v9, a8o),
@@ -8472,7 +8472,7 @@ function k_(w) {
 function W3e(w, I) {
   let ne = ["enterprise", "managed", "user", "project", "local"],
     me = new Set();
-  for (let Oe of ne) for (let He of Object.keys(nd(Oe).servers)) me.add(He);
+  for (let Oe of ne) for (let He of Object.keys(getMcpConfigsByScope(Oe).servers)) me.add(He);
   let pe = Object.keys(Cf().plugins),
     { entries: be, source: xe } = I,
     Ae = [];
@@ -8566,8 +8566,8 @@ function Hfe(w) {
 var Q3e = 86400000,
   z3e = 3 * Q3e;
 function iU() {
-  if (Pe() !== "firstParty" || !cl()) return null;
-  let w = Yt();
+  if (getAPIProvider() !== "firstParty" || !isAnthropicAuthEnabled()) return null;
+  let w = getClaudeAIOAuthTokens();
   if (!w || typeof w.refreshTokenExpiresAt !== "number") return null;
   let I = w.refreshTokenExpiresAt;
   if (typeof w.expiresAt === "number" && w.expiresAt > I + z3e) return null;
@@ -8578,12 +8578,12 @@ function iU() {
 F();
 function Y3e() {
   let w = Git(),
-    I = V(rCt, [w]),
+    I = V(getModelSourceAnnotation, [w]),
     ne = k9();
   if (!I && !ne) return null;
   let me =
     I && ne ? `${I.slice(0, -1)}, auto-updated)` : ne ? " (auto-updated)" : I;
-  return r(Iw, { command: "/model", children: ["Using ", VN(w), me] });
+  return r(Iw, { command: "/model", children: ["Using ", renderModelSetting(w), me] });
 }
 F();
 var fGt = "tengu-top-of-feed-tip";
@@ -8630,13 +8630,13 @@ function vGt() {
   return w9(!1);
 }
 function t6e() {
-  let w = Ge().companyAnnouncements;
+  let w = getInitialSettings().companyAnnouncements;
   return !!w && w.some((I) => I);
 }
 function w9(w) {
   let I = aM();
   if (I.companyAnnouncement !== null) return I.companyAnnouncement;
-  let ne = (Ge().companyAnnouncements ?? []).filter((pe) => pe);
+  let ne = (getInitialSettings().companyAnnouncements ?? []).filter((pe) => pe);
   if (ne.length === 0) return null;
   let me =
     ee().numStartups === 1 ? ne[0] : ne[Math.floor(Math.random() * ne.length)];
@@ -8647,7 +8647,7 @@ function w9(w) {
 function Vfe() {
   let Wfe = _(7),
     hGt;
-  if (Wfe[0] === p) ((hGt = vn()), (Wfe[0] = hGt));
+  if (Wfe[0] === p) ((hGt = getOauthAccountInfo()), (Wfe[0] = hGt));
   else hGt = Wfe[0];
   let yGt = hGt,
     X3e = fh(),
@@ -8967,7 +8967,7 @@ function Zfe(C9o) {
 }
 F();
 function eKt() {
-  return cu(Ge().prefersReducedMotion);
+  return cu(getInitialSettings().prefersReducedMotion);
 }
 var sge = 1500,
   ZGt = 2,
@@ -9067,9 +9067,9 @@ async function G6e(w) {
       w,
     ),
     i("tengu_fullscreen_downsell_shown", { seen_count: I }),
-    I >= z6e && Ge().tui === void 0)
+    I >= z6e && getInitialSettings().tui === void 0)
   ) {
-    let { error: ne } = await Jt(
+    let { error: ne } = await updateSettingsForSource(
       "userSettings",
       { tui: "fullscreen" },
       void 0,
@@ -9176,7 +9176,7 @@ function cge() {
   return cKt;
 }
 async function c4e() {
-  if (gt()) return null;
+  if (isClaudeAISubscriber()) return null;
   let w = await dsr();
   if (!w) return null;
   if (w.account.has_claude_max && !Lwe()) return "Max";
@@ -9254,17 +9254,17 @@ function kKt() {
 function v4e() {
   let w = k4e();
   if (w === null || I9[w] === void 0) return !1;
-  let I = vn()?.organizationRole;
+  let I = getOauthAccountInfo()?.organizationRole;
   if (!I || !SKt.has(I)) return !1;
   if (!kKt()) return !1;
-  return !zae(B().host) && !Ja() && !a.CLAUDE_BRIDGE_REATTACH_SESSION;
+  return !zae(B().host) && !isActingAsBgJob() && !a.CLAUDE_BRIDGE_REATTACH_SESSION;
 }
 function b4e(w, I) {
   (Te((ne) => {
     let me = ne.seenNotifications ?? {};
     return { ...ne, seenNotifications: { ...me, [LDt]: (me[LDt] ?? 0) + 1 } };
   }, I),
-    i("tengu_cc_ce_migrate_notice_shown", { cohort_group: u(w) }));
+    i("tengu_cc_ce_migrate_notice_shown", { cohort_group: fromEnum(w) }));
 }
 function M9(w) {
   let I = aM();
@@ -9399,10 +9399,10 @@ function Sge() {
   return TKt;
 }
 function S2t() {
-  return y("oauth_expiry_warning");
+  return logFeatureOk("oauth_expiry_warning");
 }
 function v2t() {
-  return i("tengu_powerup_discovery_shown", { arm: u("banner") });
+  return i("tengu_powerup_discovery_shown", { arm: fromEnum("banner") });
 }
 var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
   LKt = {
@@ -9455,9 +9455,9 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
                 e(t, { bold: !0, children: pe }),
                 " is over the",
                 " ",
-                No(ne),
+                formatNumber(ne),
                 "-char limit (",
-                No(me.content.length),
+                formatNumber(me.content.length),
                 " chars)",
                 e(t, {
                   dimColor: !0,
@@ -9476,14 +9476,14 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
     tier: "warning",
     type: "warning",
     isActive: () => {
-      let w = Gl();
+      let w = getAuthTokenSource();
       return (
-        gt() &&
+        isClaudeAISubscriber() &&
         (w.source === "ANTHROPIC_AUTH_TOKEN" || w.source === "apiKeyHelper")
       );
     },
     render: () => {
-      let w = Gl();
+      let w = getAuthTokenSource();
       return e(o, {
         marginTop: 1,
         children: r(Sf, {
@@ -9505,11 +9505,11 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
     tier: "warning",
     type: "warning",
     isActive: () => {
-      let { source: w } = kp({ skipRetrievingKeyFromApiKeyHelper: !0 });
-      return !!qKt() && (w === "ANTHROPIC_API_KEY" || w === "apiKeyHelper");
+      let { source: w } = getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 });
+      return !!getApiKeyFromConfigOrMacOSKeychain() && (w === "ANTHROPIC_API_KEY" || w === "apiKeyHelper");
     },
     render: () => {
-      let { source: w } = kp({ skipRetrievingKeyFromApiKeyHelper: !0 });
+      let { source: w } = getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 });
       return e(o, {
         marginTop: 1,
         children: r(Sf, {
@@ -9531,8 +9531,8 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
     tier: "warning",
     type: "warning",
     isActive: () => {
-      let { source: w } = kp({ skipRetrievingKeyFromApiKeyHelper: !0 }),
-        I = Gl();
+      let { source: w } = getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 }),
+        I = getAuthTokenSource();
       return (
         w !== "none" &&
         I.source !== "none" &&
@@ -9540,8 +9540,8 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
       );
     },
     render: () => {
-      let { source: w } = kp({ skipRetrievingKeyFromApiKeyHelper: !0 }),
-        I = Gl();
+      let { source: w } = getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 }),
+        I = getAuthTokenSource();
       return r(o, {
         flexDirection: "column",
         marginTop: 1,
@@ -9577,7 +9577,7 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
               }),
               r(t, {
                 dimColor: !0,
-                children: ["\xB7 to use ", w, ":", " ", E5(I.source)],
+                children: ["\xB7 to use ", w, ":", " ", describeHowToDisableAuthTokenSource(I.source)],
               }),
             ],
           }),
@@ -9597,9 +9597,9 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
         children: [
           "Agent descriptions are over the",
           " ",
-          No(Afe),
+          formatNumber(Afe),
           "-token limit (~",
-          No(I),
+          formatNumber(I),
           " tokens)",
           r(t, {
             dimColor: !0,
@@ -9617,7 +9617,7 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
     tier: "info",
     type: "info",
     isActive: (w) =>
-      w.modelRestrictedWarning === null && (rCt() !== "" || k9()),
+      w.modelRestrictedWarning === null && (getModelSourceAnnotation() !== "" || k9()),
     render: () => e(Y3e, {}),
   },
   WKt = {
@@ -9806,9 +9806,9 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
 function ZKt(w) {
   if (!H("tengu_cobalt_harbor_notice", !0)) return !1;
   if (!w.replBridgeAutoOnByDefault) return !1;
-  if (!lb()) return !1;
-  if (!C4t()) return !1;
-  if (k$e() !== "allowed") return !1;
+  if (!isBridgeEnabled()) return !1;
+  if (!isPolicyLimitsCacheLoaded()) return !1;
+  if (getRemoteControlPolicyVerdict() !== "allowed") return !1;
   return (ee().seenNotifications?.[h0] ?? 0) < U4e;
 }
 function N4e(w) {
@@ -9924,14 +9924,14 @@ var n2t = {
   id: "powerup-discovery",
   tier: "info",
   type: "info",
-  isActive: () => xLn() && oZt() === "banner",
+  isActive: () => xLn() && resolvePowerupDiscoveryArm() === "banner",
   render: () => e($4e, {}),
 };
 function $4e() {
   let oen = _(1);
   Bu("powerup-discovery", v2t);
   let DKt;
-  if (oen[0] === p) ((DKt = e(Iw, { children: jZ.banner })), (oen[0] = DKt));
+  if (oen[0] === p) ((DKt = e(Iw, { children: POWERUP_DISCOVERY_COPY.banner })), (oen[0] = DKt));
   else DKt = oen[0];
   return DKt;
 }
@@ -10115,7 +10115,7 @@ function B4e(w) {
   return [3, I === -1 ? F4e.length : I];
 }
 function aK() {
-  return uge() || Pe() !== "firstParty" || St();
+  return isEnterpriseSubscriber() || getAPIProvider() !== "firstParty" || St();
 }
 function Tge(w, I, ne) {
   let me = aM(),
@@ -10182,7 +10182,7 @@ function Ege(W4e, q4e, K4e) {
   let C2t = _(7),
     _2t;
   if (C2t[0] !== K4e || C2t[1] !== W4e || C2t[2] !== q4e)
-    ((_2t = uR() ? null : Ny(W4e, !1, q4e, K4e)),
+    ((_2t = isClaudeMdLoadingDisabled() ? null : Ny(W4e, !1, q4e, K4e)),
       (C2t[0] = K4e),
       (C2t[1] = W4e),
       (C2t[2] = q4e),
@@ -10248,12 +10248,12 @@ function O9(xge) {
       Pge = null;
       break bb0;
     }
-    let L2t = rt();
+    let L2t = getMainLoopModel();
     let O2t = Xt(Mge.requested.trim().toLowerCase());
     if (
-      !xR(O2t) &&
+      !isModeDependentModelSetting(O2t) &&
       O2t !== "best" &&
-      wt(Mge.requested).toLowerCase() === L2t.toLowerCase()
+      parseUserSpecifiedModel(Mge.requested).toLowerCase() === L2t.toLowerCase()
     ) {
       Pge = null;
       break bb0;
@@ -10812,7 +10812,7 @@ function d8e(w, I, ne) {
   for (let pe of I) if (w.has(pe)) ((me ??= new Set()), me.add(pe));
   return me ?? ne;
 }
-import { types as p8e } from "util";
+import { types } from "util";
 var f8e = new Set([iy, gc]),
   h8e = new WeakMap();
 function uK(w) {
@@ -10882,7 +10882,7 @@ function rzt(w) {
   return Pur(I);
 }
 function izt(w) {
-  if (!w || typeof w !== "object" || p8e.isProxy(w)) return "";
+  if (!w || typeof w !== "object" || types.isProxy(w)) return "";
   let I = w,
     ne = [];
   for (let me of [
@@ -10908,7 +10908,7 @@ function izt(w) {
     if (
       be === null ||
       typeof be !== "object" ||
-      p8e.isProxy(be) ||
+      types.isProxy(be) ||
       !Array.isArray(be)
     )
       continue;
@@ -12493,12 +12493,12 @@ function She(w, I, ne, me) {
     be =
       "VirtualMessageList: undefined element in messages[] \u2014 " +
       `undefined at messages[${I}] (len=${ne.length} ${me} neighbors=[${pe(ne[I - 1])},${pe(ne[I + 1])}])`;
-  h(new R(be));
+  logError(new R(be));
 }
 function kQt(w, I, ne, me) {
   if (!l6.of(w).claim("vml-keys-desync")) return;
   let pe = `VirtualMessageList: itemKeys/messages length desync (keys=${I} messages=${ne} range=[${me[0]},${me[1]}))`;
-  h(new R(pe));
+  logError(new R(pe));
 }
 function a9e(prn) {
   let WM = _(36),
@@ -12750,7 +12750,7 @@ function wQt(w, I, ne, me = (pe) => sVe(pe.type)) {
     let xe = [...be]
       .slice(0, 3)
       .map(([Ae, Oe]) => `[${Oe}] \xD7${ne.seen.get(Ae)}`);
-    h(
+    logError(
       Error(
         `VirtualMessageList: duplicate sibling itemKeys (deduped via #N suffix; upstream uuid-dup): ${be.size} ${x(be.size, "key")}, ${xe.join(", ")}`,
       ),
@@ -14111,7 +14111,7 @@ function NU() {
     o5t;
   if (ZK[1] === p)
     ((t5t = () => {
-      let n5t = st.getSandboxViolationStore();
+      let n5t = SandboxManager.getSandboxViolationStore();
       return n5t.subscribe((Fsn) => {
         (Lsn(Fsn.slice(-10)), Osn(n5t.getTotalCount()));
       });
@@ -14120,7 +14120,7 @@ function NU() {
       (ZK[1] = t5t),
       (ZK[2] = o5t));
   else ((t5t = ZK[1]), (o5t = ZK[2]));
-  if ((E(t5t, o5t), !st.isSandboxingEnabled() || P() === "linux")) {
+  if ((E(t5t, o5t), !SandboxManager.isSandboxingEnabled() || P() === "linux")) {
     return null;
   }
   if (T0 === 0) {
@@ -14779,7 +14779,7 @@ function x0(Oan) {
   if (lA[0] !== pZe || lA[1] !== Bk)
     ((O5t = () => {
       (i("tengu_toggle_todos", { is_expanded: pZe === "tasks" }),
-        y("todo_toggle_panel"),
+        logFeatureOk("todo_toggle_panel"),
         Bk(z5t));
     }),
       (lA[0] = pZe),
@@ -14910,14 +14910,14 @@ function yye() {
 }
 F();
 function b7(w) {
-  return SZe(w, [...(V_() ? nLe() : []), ...(hBt() ? [Em] : [])]);
+  return SZe(w, [...(V_() ? nLe() : []), ...(hBt() ? [WebFetchTool] : [])]);
 }
 function J1n(w, I) {
   return SZe(
     w,
     [
       ...(V_() ? nLe() : []),
-      ...(hBt() && !a.CLAUDE_CODE_SIMPLE ? [Em] : []),
+      ...(hBt() && !a.CLAUDE_CODE_SIMPLE ? [WebFetchTool] : []),
     ].filter((ne) => ne.isEnabled() && !ni(I, ne)),
   );
 }
@@ -15000,11 +15000,11 @@ async function sJt(
   } = {},
 ) {
   let He = rJt(I),
-    Ke = { ..._9e(), verbose: be, ...(He && { mainLoopModel: He }) },
+    Ke = { ...getDefaultAppState(), verbose: be, ...(He && { mainLoopModel: He }) },
     Je = b7(ne),
     Qe = (at) =>
       yle(
-        e(zm, {
+        e(AppRoot, {
           session: w,
           storageV5: Oe,
           initialState: Ke,
@@ -15714,7 +15714,7 @@ function x7(_cn) {
               let AXt = bl();
               await uet(AXt, { recursive: !0, mode: 448 });
               let cbe = met(AXt, `cc-transcript-${Date.now()}.txt`);
-              await det(cbe, Ecn);
+              await writeFile(cbe, Ecn);
               let Dcn = zle(cbe);
               iet(
                 Dcn
@@ -15977,7 +15977,7 @@ function x7(_cn) {
 }
 F();
 function n3t() {
-  if (!KVt()) (XVt(!0), i("tengu_auto_mode_env_onboarding_shown", {}));
+  if (!getAutoModeEnvOnboardingShownLogged()) (setAutoModeEnvOnboardingShownLogged(!0), i("tengu_auto_mode_env_onboarding_shown", {}));
 }
 function r3t(iun) {
   return { ...iun, autoModeEnvSetup: void 0 };
@@ -15999,7 +15999,7 @@ var ZXt = 604800000,
   M7 = 5;
 function UU() {
   if (!OY()) return !1;
-  if ((tL()?.environment?.length ?? 0) > 0) return !1;
+  if ((getAutoModeConfig()?.environment?.length ?? 0) > 0) return !1;
   let w = ee();
   if (w.numStartups < e3t) return !1;
   if ((w.autoModeEnvSetup?.denials ?? 0) < M7) return !1;
@@ -16010,15 +16010,15 @@ function UU() {
   return !0;
 }
 function o3t() {
-  if (aq()) return shouldShowAutoDefaultNotice("auto") || E3e(fU);
+  if (isAutoModeFromFallback()) return shouldShowAutoDefaultNotice("auto") || E3e(fU);
   return shouldShowAutoModeEntryWarning();
 }
 function bet(w) {
   return (
-    lCt() === !0 &&
+    getAutoModeEnvOnboardingEligible() === !0 &&
     w.toolPermissionContext.mode === "auto" &&
     !w.viewingAgentTaskId &&
-    !Ja() &&
+    !isActingAsBgJob() &&
     !Nn() &&
     !a.CLAUDE_BRIDGE_REATTACH_SESSION &&
     UU()
@@ -16145,13 +16145,13 @@ function zy(w, I, { perReveal: ne = !1 } = {}) {
   }, [me, pe, w, ne, xe]);
 }
 function Cet() {
-  if (_t()) return !1;
+  if (isBgSession()) return !1;
   if (Nn()) return !1;
   if (Jh() !== null) return !1;
   if (a.CLAUDE_CODE_FORCE_FULLSCREEN_UPSELL) return !0;
   if (Ta()) return !1;
   if (zg()) return !1;
-  if (Ge().tui !== void 0) return !1;
+  if (getInitialSettings().tui !== void 0) return !1;
   if (a1e() === "fullscreen") return !1;
   if (Dbt(kH())) return !1;
   if (jJn()) return !1;
@@ -16263,7 +16263,7 @@ function Lbe(Hun) {
 }
 var Obe = Kr({
   kind: oNe,
-  payload: m(() => c({ currentMode: X(ly) })),
+  payload: m(() => c({ currentMode: X(PERMISSION_MODES) })),
   result: m(() => X(["accept", "decline", "cancelled"])),
   default: "cancelled",
   hideWhile: ["panel", "draft"],
@@ -16275,7 +16275,7 @@ async function xet(w, I, ne, me) {
     { currentMode: I },
     { place: "under", signal: ne.signal },
   );
-  if (pe === "cancelled" || Sg()) return;
+  if (pe === "cancelled" || isUnattendedInteractiveSession()) return;
   m3t(pe, I, me);
 }
 function m3t(w, I, ne) {
@@ -16287,11 +16287,11 @@ function m3t(w, I, ne) {
           ? pe
           : { ...pe, hasSeenAutoDefaultNudge: !0 },
       ne.storageV5,
-    ).catch(h);
+    ).catch(logError);
   i("tengu_auto_default_nudge_resolved", {
-    choice: u(w),
-    outcome: u(me),
-    current_mode: u(I),
+    choice: fromEnum(w),
+    outcome: fromEnum(me),
+    current_mode: fromEnum(I),
   });
 }
 function p3t({
@@ -16302,19 +16302,19 @@ function p3t({
 }) {
   let pe = w();
   if (zL(pe)) {
-    if (mH("auto", pe, I, "auto_default_nudge").ok)
+    if (setPermissionModeWithGuards("auto", pe, I, "auto_default_nudge").ok)
       return (
-        Jt(
+        updateSettingsForSource(
           "userSettings",
           { permissions: { defaultMode: "auto" } },
           void 0,
           me,
-        ).catch(h),
+        ).catch(logError),
         H6(`[${dL("auto")} on]`),
         "switched"
       );
   }
-  let be = iMe();
+  let be = getAutoModeUnavailableText();
   return (
     ne({
       key: "auto-default-nudge-unavailable",
@@ -16477,7 +16477,7 @@ function w3t(w) {
   if (ne.success) return Met(ne.data);
   if (typeof w !== "object" || w === null || Object.keys(w).length === 0)
     return;
-  g("effort_medium_nudge", "served_copy_invalid");
+  logFeatureSad("effort_medium_nudge", "served_copy_invalid");
   let me = new Set(ne.error.issues.map((be) => be.path[0]));
   if (me.has("body") || me.has("fromEffort") || me.has("toEffort")) return;
   let pe = I.safeParse(tu(w, (be, xe) => me.has(xe)));
@@ -16485,7 +16485,7 @@ function w3t(w) {
 }
 function Met(w) {
   if (k3t(w)) return w;
-  g("effort_medium_nudge", "served_copy_invalid");
+  logFeatureSad("effort_medium_nudge", "served_copy_invalid");
   return;
 }
 function Vbe({ model: w, effortValue: I, ultracode: ne }) {
@@ -16495,7 +16495,7 @@ function Vbe({ model: w, effortValue: I, ultracode: ne }) {
     VH() !== void 0 ||
     Pt() ||
     !Nr("userSettings") ||
-    Ja() ||
+    isActingAsBgJob() ||
     a.CLAUDE_BRIDGE_REATTACH_SESSION !== void 0 ||
     f8() !== void 0 ||
     ne
@@ -16518,7 +16518,7 @@ function T3t(w) {
     ne = ms();
   for (let me = ne.length - 1; me >= 0; me--) {
     let pe = ne[me],
-      be = ye(pe),
+      be = getSettingsForSource(pe),
       xe;
     for (let [Oe, He] of Object.entries(be?.modelSettings ?? {})) {
       let Ke = He?.effortLevel;
@@ -16595,18 +16595,18 @@ async function x3t(
   Ae,
 ) {
   let Oe = {
-    cohort: u(ne),
-    option_order: u(I),
+    cohort: fromEnum(ne),
+    option_order: fromEnum(I),
     nudge_model: bt(me),
-    from_level: u(pe),
-    to_level: u(be),
+    from_level: fromEnum(pe),
+    to_level: fromEnum(be),
     warning_shown: xe === !0,
   };
   if (w === "accept" && !R3t(me, pe, Ae)) {
-    (f("effort_medium_nudge", "unavailable_at_accept"),
+    (logFeatureBad("effort_medium_nudge", "unavailable_at_accept"),
       i("tengu_effort_medium_nudge_resolved", {
-        choice: u(w),
-        outcome: u("unavailable"),
+        choice: fromEnum(w),
+        outcome: fromEnum("unavailable"),
         ...Oe,
       }));
     let Ke = "Effort setting unavailable right now \xB7 nothing changed";
@@ -16621,12 +16621,12 @@ async function x3t(
     return;
   }
   let He = w === "accept" ? await P3t(Ae, be) : "declined";
-  if ((Te((Ke) => Net(Ke, me), Ae.storageV5).catch(h), He === "write_failed"))
-    f("effort_medium_nudge", "settings_write_failed");
-  else y("effort_medium_nudge");
+  if ((Te((Ke) => Net(Ke, me), Ae.storageV5).catch(logError), He === "write_failed"))
+    logFeatureBad("effort_medium_nudge", "settings_write_failed");
+  else logFeatureOk("effort_medium_nudge");
   i("tengu_effort_medium_nudge_resolved", {
-    choice: u(w),
-    outcome: u(He),
+    choice: fromEnum(w),
+    outcome: fromEnum(He),
     ...Oe,
   });
 }
@@ -16739,14 +16739,14 @@ async function A3t({
       { responseStreaming: ne(), trial: !0 },
     );
   } catch (Ke) {
-    h(Ke);
-    let { error: Je } = await Jt(
+    logError(Ke);
+    let { error: Je } = await updateSettingsForSource(
       "userSettings",
       { tui: "fullscreen" },
       void 0,
       pe,
     );
-    if (Je) h(Je);
+    if (Je) logError(Je);
     else f0t(pe);
     let Qe = Ke instanceof Error ? Ke.message : String(Ke);
     me({
@@ -16808,7 +16808,7 @@ class j7 {
   }
   start() {
     let { store: w, requestDialog: I, addNotification: ne } = this.#e,
-      me = hr();
+      me = createAbortController();
     if (this.#e.presentation === "fullscreen")
       GJn()
         .then((be) => {
@@ -16820,7 +16820,7 @@ class j7 {
               priority: "low",
             });
         })
-        .catch(h);
+        .catch(logError);
     zJn()
       .then((be) => {
         if (be)
@@ -16831,10 +16831,10 @@ class j7 {
             priority: "low",
           });
       })
-      .catch(h);
+      .catch(logError);
     let pe = Het(I);
-    if ((this.#r(me).catch(h), lCt() === void 0))
-      Jve(w.getState().toolPermissionContext.mode === "auto" && UU());
+    if ((this.#r(me).catch(logError), getAutoModeEnvOnboardingEligible() === void 0))
+      setAutoModeEnvOnboardingEligible(w.getState().toolPermissionContext.mode === "auto" && UU());
     return () => {
       (me.abort(), pe());
     };
@@ -16851,9 +16851,9 @@ class j7 {
       getIsResponseStreaming: Oe,
       turnActivity: He,
     } = this.#e;
-    if (_t()) return;
+    if (isBgSession()) return;
     let Ke = this.#i ? HXn(He, w.signal) : Promise.resolve(),
-      Je = Sg()
+      Je = isUnattendedInteractiveSession()
         ? Promise.resolve(null)
         : import("../../01-核心基础设施/设置-配置/chunk-wdr27rwr.js")
             .then((at) =>
@@ -16861,7 +16861,7 @@ class j7 {
                 ne.getState().toolPermissionContext,
               ),
             )
-            .catch((at) => (h(at), null));
+            .catch((at) => (logError(at), null));
     if (this.#o) {
       if (
         (await Uet(pe, {
@@ -16870,7 +16870,7 @@ class j7 {
           getIsResponseStreaming: Oe,
           addNotification: be,
           storageV5: xe,
-        }).catch(h),
+        }).catch(logError),
         w.signal.aborted)
       )
         return;
@@ -16892,7 +16892,7 @@ class j7 {
             }),
           addNotification: be,
           storageV5: xe,
-        }).catch(h),
+        }).catch(logError),
         w.signal.aborted)
       )
         return;
@@ -16903,9 +16903,9 @@ class j7 {
         addNotification: be,
         storageV5: xe,
         getLiveEffort: () => Ya(ne.getState()),
-        getLiveModel: rt,
+        getLiveModel: getMainLoopModel,
         getLiveUltracode: () => ne.getState().ultracode === !0,
-      }).catch(h);
+      }).catch(logError);
   }
 }
 var N3t = "Claude Code";
@@ -16936,7 +16936,7 @@ class W7 {
     this.#r = !0;
     let w = this.#t;
     (this.#o.push(
-      Vhn(this.#a),
+      subscribeSessionTitleChanged(this.#a),
       w.session.subscribe(this.#a),
       w.sessionController.subscribe(this.#a),
       w.scope.subscribe(this.#a),
@@ -16962,8 +16962,8 @@ class W7 {
   };
   #s() {
     let { session: w, sessionController: I, scope: ne, disabled: me } = this.#t,
-      pe = this.#i ? mu(w.id) : void 0,
-      be = G3(w.id),
+      pe = this.#i ? getCurrentSessionTitle(w.id) : void 0,
+      be = getCurrentSessionAiTitle(w.id),
       { haikuTitle: xe } = I.getSnapshot(),
       Ae = ne.getSnapshot().mainThreadAgentDefinition?.agentType;
     return {
@@ -17002,7 +17002,7 @@ class q7 {
     this.deps = w;
   }
   ask(w, { forwardToBridge: I = !0 } = {}) {
-    if (CM(w.host))
+    if (isMisleadingConsentHost(w.host))
       return (
         n(
           `[SandboxNetworkPrompts] Refusing to ask for a host srt would re-spell: ${QG(w.host) ?? "(unshowable)"}`,
@@ -17044,7 +17044,7 @@ class q7 {
       { signal: me.signal, place: "under", armInputGrace: !0 },
     );
     if ((be(pe !== void 0), Ae === "cancelled")) {
-      if (pe) st.addSessionAllowedHost(w);
+      if (pe) SandboxManager.addSessionAllowedHost(w);
       return pe ?? !1;
     }
     return (qet(Ae, w, this.deps.applyPermissionUpdate), Ae.allow);
@@ -17079,10 +17079,10 @@ function qet({ allow: w, persistToSettings: I, persistRow: ne }, me, pe) {
     for (let be of ne.applies)
       (pe(be),
         DG(be)
-          .then(() => st.refreshConfig())
-          .catch(h));
-    st.addSessionAllowedHost(me);
-  } else if (w) st.addSessionAllowedHost(me);
+          .then(() => SandboxManager.refreshConfig())
+          .catch(logError));
+    SandboxManager.addSessionAllowedHost(me);
+  } else if (w) SandboxManager.addSessionAllowedHost(me);
 }
 F();
 F();
@@ -17490,7 +17490,7 @@ function Zbe(w, I, ne) {
     me.unsubscribeFocus?.(),
     (me.unsubscribeFocus = V3(() => {
       if ($I() !== "blurred" && me.requested && !me.runner && b_e())
-        ltt(me).catch(h);
+        ltt(me).catch(logError);
     })));
 }
 function _2(w) {
@@ -17514,7 +17514,7 @@ function t6t(w) {
     me.roundsThisTurn <= vVn)
   )
     return;
-  if (((me.requested = w), !me.runner)) ltt(me).catch(h);
+  if (((me.requested = w), !me.runner)) ltt(me).catch(logError);
 }
 async function ltt(w) {
   let I = new AbortController();
@@ -17538,7 +17538,7 @@ async function ltt(w) {
         case "ok":
           ((w.lastLine = be.statusLine),
             w.sink?.({ text: be.statusLine, at: be.roundStartedAt }),
-            y("narration_generate", {
+            logFeatureOk("narration_generate", {
               input_tokens: be.usage.inputTokens,
               output_tokens: be.usage.outputTokens,
             }));
@@ -17548,13 +17548,13 @@ async function ltt(w) {
         case "empty":
           break;
         case "truncated":
-          g("narration_generate", "truncated");
+          logFeatureSad("narration_generate", "truncated");
           break;
         case "api-error":
-          f("narration_generate", "api_error");
+          logFeatureBad("narration_generate", "api_error");
           break;
         case "failed":
-          f("narration_generate", "failed");
+          logFeatureBad("narration_generate", "failed");
           break;
       }
     }
@@ -17619,7 +17619,7 @@ PREVIOUS LINE: ${pe ?? ""}`,
         n(`[narration] query failed: ${ge(be).message}`),
         { kind: "api-error" }
       );
-    return (h(be), { kind: "failed" });
+    return (logError(be), { kind: "failed" });
   }
 }
 var r6t =
@@ -17640,9 +17640,9 @@ function a6t(w) {
 function utt(w) {
   for (let I of w.split(`
 `)) {
-    let ne = Array.from(I, (me) => (sS(me.codePointAt(0) ?? 0) ? " " : me))
+    let ne = Array.from(I, (me) => (isDecisionSurfaceControl(me.codePointAt(0) ?? 0) ? " " : me))
       .join("")
-      .replace(QC, " ")
+      .replace(INVISIBLE_BLANKS, " ")
       .replace(/\s+/g, " ")
       .trim();
     if (!ne) continue;
@@ -17795,38 +17795,38 @@ class tSe {
   }
   verify = async ({ credentials: w, storageV5: I }) => {
     let ne = ++this.#t;
-    if (!cl() || gt()) {
-      (this.#i(ne, "valid"), y("auth_api_key_verify"));
+    if (!isAnthropicAuthEnabled() || isClaudeAISubscriber()) {
+      (this.#i(ne, "valid"), logFeatureOk("auth_api_key_verify"));
       return;
     }
-    await ige(ke());
-    let { key: me, source: pe } = qg();
+    await getApiKeyFromApiKeyHelper(ke());
+    let { key: me, source: pe } = getAnthropicApiKeyWithSource();
     if (!me?.trim()) {
       if (pe === "apiKeyHelper") {
-        (this.#i(ne, "error"), f("auth_api_key_verify", "apikeyhelper_failed"));
+        (this.#i(ne, "error"), logFeatureBad("auth_api_key_verify", "apikeyhelper_failed"));
         return;
       }
-      (this.#i(ne, "missing"), g("auth_api_key_verify", "missing"));
+      (this.#i(ne, "missing"), logFeatureSad("auth_api_key_verify", "missing"));
       return;
     }
     try {
       let be = await FXn(me, !1, w, I);
-      if ((this.#i(ne, be ? "valid" : "invalid"), be)) y("auth_api_key_verify");
-      else f("auth_api_key_verify", "invalid");
+      if ((this.#i(ne, be ? "valid" : "invalid"), be)) logFeatureOk("auth_api_key_verify");
+      else logFeatureBad("auth_api_key_verify", "invalid");
     } catch {
-      (this.#i(ne, "error"), f("auth_api_key_verify", "network_error"));
+      (this.#i(ne, "error"), logFeatureBad("auth_api_key_verify", "network_error"));
     }
   };
 }
 function l6t() {
-  if (!cl() || gt()) return "valid";
-  let { key: w, source: I } = qg({ skipRetrievingKeyFromApiKeyHelper: !0 });
+  if (!isAnthropicAuthEnabled() || isClaudeAISubscriber()) return "valid";
+  let { key: w, source: I } = getAnthropicApiKeyWithSource({ skipRetrievingKeyFromApiKeyHelper: !0 });
   if (w || I === "apiKeyHelper") return "loading";
   return "missing";
 }
 function u6t(w, I) {
   if (I === null) return w;
-  return w.filter((ne) => I.has(ne.name) || Q9t.has(ne));
+  return w.filter((ne) => I.has(ne.name) || REMOTE_SAFE_COMMANDS.has(ne));
 }
 var d6t = [
   "commands",
@@ -17875,7 +17875,7 @@ class z7 {
   narrowToWorker = jU(u6t);
   mergePluginCommands = jU(E6e);
   mergeMcpCommands = jU(E6e);
-  filterForThinClient = jU(W_n);
+  filterForThinClient = jU(filterCommandsForRemoteMode);
   addDisplayOnlyTools = jU(b7);
   buildCombinedInitialTools = jU((w, I, ne, me, pe, be, xe, Ae) => [
     ...dC(w, { activeAgents: I.activeAgents }),
@@ -17894,7 +17894,7 @@ class z7 {
       (this.dynamicMcp = w.initialDynamicMcpConfig),
       (this.mainThreadAgent = w.mainThreadAgentDefinition),
       (this.readFileState = DT(tA)),
-      (this.isolationLatch = Ude(null, (I) => ZV(I, this.storageV5))),
+      (this.isolationLatch = Ude(null, (I) => saveIsolationLatch(I, this.storageV5))),
       (this.contentReplacementState = TJn(
         w.initialMessages,
         w.initialContentReplacements,
@@ -18031,7 +18031,7 @@ class z7 {
     try {
       w = this.derive();
     } catch (ne) {
-      h(ne);
+      logError(ne);
       return;
     }
     let I = this.snapshot;
@@ -18041,7 +18041,7 @@ class z7 {
       if (w.commands !== I.commands) this.onCommandsChange?.(w.commands);
       this.changed.emit();
     } catch (ne) {
-      h(ne);
+      logError(ne);
     }
   };
   derive() {
@@ -18086,29 +18086,29 @@ class z7 {
   reloadCommandsAndAgents = async () => {
     let w = this.session.project.projectRoot;
     try {
-      xE();
-      let I = await kf(w, this.storageV5);
+      clearCommandsCache();
+      let I = await getCommands(w, this.storageV5);
       this.replaceLocalCommands(I);
-      let ne = await SE(w, this.storageV5);
+      let ne = await getAgentDefinitionsWithOverrides(w, this.storageV5);
       if (this.disposed) return;
       this.store.setState((me) => {
         let pe = me.agentDefinitions.allAgents.filter(
           (be) => be.source === "flagSettings",
         );
-        return { ...me, agentDefinitions: Lue(ne, [...ne.allAgents, ...pe]) };
+        return { ...me, agentDefinitions: rebuildAgentDefinitions(ne, [...ne.allAgents, ...pe]) };
       });
     } catch (I) {
-      if (I instanceof Error) h(I);
+      if (I instanceof Error) logError(I);
     }
   };
   refilterCommands = async () => {
     try {
-      (rR(),
+      (clearCommandMemoizationCaches(),
         this.replaceLocalCommands(
-          await kf(this.session.project.projectRoot, this.storageV5),
+          await getCommands(this.session.project.projectRoot, this.storageV5),
         ));
     } catch (w) {
-      if (w instanceof Error) h(w);
+      if (w instanceof Error) logError(w);
     }
   };
   replaceLocalCommands(w) {
@@ -18160,7 +18160,7 @@ class z7 {
         skillTools: w.skillTools,
         activeAgents: w.agentDefinitions.activeAgents,
       }),
-      xe = M6e(I, be, w.toolPermissionContext.mode, [...I, ...w.mcp.tools]),
+      xe = mergeAndFilterTools(I, be, w.toolPermissionContext.mode, [...I, ...w.mcp.tools]),
       Ae = this.mainThreadAgent,
       Oe = Ae
         ? EE(
@@ -18172,7 +18172,7 @@ class z7 {
             !0,
           )
         : void 0,
-      He = N6e(Oe ? Oe.resolvedTools : xe, w.toolPermissionContext),
+      He = stripSoleNonDeniableTool(Oe ? Oe.resolvedTools : xe, w.toolPermissionContext),
       Ke = Oe?.allowedAgentTypes,
       Je = pe !== null && nSe(pe.result.tools, He),
       Qe = pe !== null && nSe(pe.result.allowedAgentTypes, Ke),
@@ -18198,7 +18198,7 @@ class z7 {
   }
   reseatIsolationLatch(w) {
     ((this.isolationLatch.onLatch = void 0),
-      (this.isolationLatch = Ude(w, (I) => ZV(I, this.storageV5))));
+      (this.isolationLatch = Ude(w, (I) => saveIsolationLatch(I, this.storageV5))));
   }
   reconstructContentReplacementState(w, I) {
     if (!this.contentReplacementState) return;
@@ -18252,11 +18252,11 @@ function cSe({ store: w, scope: I, readPendingQueryParams: ne }) {
   return oHe({
     run: FM,
     queryParams: async (me) => ne(),
-    commands: () => NY(I.commands),
+    commands: () => toSlashCommands(I.commands),
     models: () => oX(NF()),
     unavailableModels: () => oX(cmt()),
-    agents: () => V4e(w.getState().agentDefinitions.activeAgents),
-    account: CZe(),
+    agents: () => toAgentInfos(w.getState().agentDefinitions.activeAgents),
+    account: toAccountInfo(),
     outputStyle: SDe(),
     mcpServers: () => XHt(w.getState().mcp.clients),
     hostOwnsPermissionMode: !0,
@@ -18275,7 +18275,7 @@ async function f6t(w = new Set(), I) {
   let ne = new Set();
   if (bq()) return ne;
   try {
-    let me = await Fle();
+    let me = await checkEnabledPlugins();
     if (me.length === 0) return ne;
     let pe = await Ql(I),
       be = hH(),
@@ -18331,8 +18331,8 @@ async function f6t(w = new Set(), I) {
           Ke !== void 0 ? "refresh_failed" : Zt ? "resolved" : "still_missing";
         (n(`refresh-on-miss: ${it} \u2192 ${Ct}`),
           i("tengu_plugin_refresh_on_miss", {
-            outcome: u(Ct),
-            ...(Ke !== void 0 && { error_kind: u(GF(Ke)) }),
+            outcome: fromEnum(Ct),
+            ...(Ke !== void 0 && { error_kind: fromEnum(GF(Ke)) }),
             ...xy(it),
           }));
       }
@@ -18369,7 +18369,7 @@ async function g6t(w, I = mtt) {
       await Z(Oe, void 0, { unref: !0 });
     }
   } catch (me) {
-    h(me);
+    logError(me);
   }
   return ne;
 }
@@ -18431,7 +18431,7 @@ async function ptt(w, I) {
         }),
           Zf("performBackgroundPluginInstallations: auto-refresh failed"),
           w.markNeedsRefresh(),
-          g("plugin_marketplace_bg_install", "auto_refresh_failed"));
+          logFeatureSad("plugin_marketplace_bg_install", "auto_refresh_failed"));
         return;
       }
     } else if (xe.updated.length > 0)
@@ -18439,10 +18439,10 @@ async function ptt(w, I) {
         Zf("performBackgroundPluginInstallations: marketplaces reconciled"),
         w.markNeedsRefresh());
     if (xe.failed.length > 0)
-      g("plugin_marketplace_bg_install", "reconcile_partial_failure");
-    else y("plugin_marketplace_bg_install");
+      logFeatureSad("plugin_marketplace_bg_install", "reconcile_partial_failure");
+    else logFeatureOk("plugin_marketplace_bg_install");
   } catch (ne) {
-    (h(ne), f("plugin_marketplace_bg_install", "reconcile_error"));
+    (logError(ne), logFeatureBad("plugin_marketplace_bg_install", "reconcile_error"));
   }
 }
 async function dSe(w, I) {
@@ -18480,13 +18480,13 @@ function y6t(w) {
     xtversion: Lat() ?? "no_reply",
     term_program_version: a.TERM_PROGRAM_VERSION ?? "unset",
     is_ssh: a.isSSH(),
-    multiplexer: u(h6t()),
+    multiplexer: fromEnum(h6t()),
     term_rows: process.stdout.rows ?? 0,
     term_cols: process.stdout.columns ?? 0,
     dec2026_allowlist: lO(),
-    renderer_entry_path: u(w),
-    mouse_mode: u(xH()),
-    linux_clipboard_tool: u(EYn()),
+    renderer_entry_path: fromEnum(w),
+    mouse_mode: fromEnum(xH()),
+    linux_clipboard_tool: fromEnum(EYn()),
     vte_terminal: AYn(),
   };
 }
@@ -18550,14 +18550,14 @@ function fSe(w, I) {
           filePath: xe.filePath,
         });
       } catch (xe) {
-        h(xe);
+        logError(xe);
       }
     }),
       (ne.current = !0));
   }, [w, I]);
 }
 F();
-import { isDeepStrictEqual as k6t } from "util";
+import { isDeepStrictEqual } from "util";
 async function v6t(w) {
   let I = [];
   for (let ne of w) {
@@ -18568,14 +18568,14 @@ async function v6t(w) {
   }
   return (
     dk().addCustomThemeBases(I),
-    y("plugin_load_themes"),
+    logFeatureOk("plugin_load_themes"),
     I.sort((ne, me) => ne.name.localeCompare(me.name))
   );
 }
 async function ftt(w) {
-  if (Xr("themes")) return (dk().pluginThemes.setState(() => []), []);
+  if (isCustomizationDisabled("themes")) return (dk().pluginThemes.setState(() => []), []);
   let I = await v6t(w);
-  return (dk().pluginThemes.setState((ne) => (k6t(ne, I) ? ne : I)), I);
+  return (dk().pluginThemes.setState((ne) => (isDeepStrictEqual(ne, I) ? ne : I)), I);
 }
 function gSe({ enabled: w = !0 } = {}) {
   let I = It(),
@@ -18623,7 +18623,7 @@ function gSe({ enabled: w = !0 } = {}) {
           });
         }
         try {
-          await w3(be);
+          await loadPluginHooks(be);
         } catch (fo) {
           Qe.push({
             type: "generic-error",
@@ -18728,7 +18728,7 @@ function gSe({ enabled: w = !0 } = {}) {
       } catch (Oe) {
         let He = ge(Oe);
         return (
-          h(dt(He, "plugin initial load failed")),
+          logError(dt(He, "plugin initial load failed")),
           n(`Error loading plugins: ${Oe}`),
           I((Ke) => {
             let Je = Ke.plugins.errors.filter(
@@ -18853,7 +18853,7 @@ function hSe() {
     FHe(xe, pe.getState().toolPermissionContext, me, ne, be);
   }, [w, I, ne]);
   let Oe = d_();
-  E(() => rtn.of(Oe).subscribe(() => be(NHe(ij("settings")))), [be, Oe]);
+  E(() => rtn.of(Oe).subscribe(() => be(NHe(getAutoModeUnavailableNotification("settings")))), [be, Oe]);
 }
 F();
 async function _6t(w, I, ne) {
@@ -18893,8 +18893,8 @@ async function x6t(w, I) {
           ));
       }
   }
-  if (me) f("plugin_load_monitors", "plugin_load_monitors_resolve_failed");
-  else y("plugin_load_monitors");
+  if (me) logFeatureBad("plugin_load_monitors", "plugin_load_monitors_resolve_failed");
+  else logFeatureOk("plugin_load_monitors");
   return ne;
 }
 function R6t(w, I, ne = GM, me = tMe(eMe, aEe)) {
@@ -18920,8 +18920,8 @@ function R6t(w, I, ne = GM, me = tMe(eMe, aEe)) {
   };
 }
 async function P6t(w, I, ne) {
-  if (FC()) return;
-  if (HY()) {
+  if (shouldDisableAllHooksIncludingManaged()) return;
+  if (shouldSkipHookDueToTrust()) {
     n(
       `Skipping plugin monitor ${w.pluginName}:${w.name} - workspace trust not accepted`,
     );
@@ -18958,7 +18958,7 @@ async function P6t(w, I, ne) {
   );
 }
 async function ySe(w, I, ne, me, pe = P6t, be = $t().armedMonitorKeys) {
-  if (Xr("pluginMonitors")) return;
+  if (isCustomizationDisabled("pluginMonitors")) return;
   if (!QI()) return;
   if (ke()) return;
   let xe = !1;
@@ -18975,8 +18975,8 @@ async function ySe(w, I, ne, me, pe = P6t, be = $t().armedMonitorKeys) {
         n(`plugin monitor ${Oe}: failed to arm: ${He}`, { level: "error" }));
     }
   }
-  if (xe) g("plugin_arm_monitor", "plugin_arm_monitor_failed");
-  else y("plugin_arm_monitor");
+  if (xe) logFeatureSad("plugin_arm_monitor", "plugin_arm_monitor_failed");
+  else logFeatureOk("plugin_arm_monitor");
 }
 function bSe({ enabled: w }) {
   let I = Ye(),
@@ -19009,10 +19009,10 @@ function bSe({ enabled: w }) {
 F();
 function O6t() {}
 function F6t() {
-  return y("chrome_permission_sync");
+  return logFeatureOk("chrome_permission_sync");
 }
 function B6t(Ebn) {
-  (g("chrome_permission_sync", "set_mode_failed"),
+  (logFeatureSad("chrome_permission_sync", "set_mode_failed"),
     n(`claude-in-chrome set_permission_mode failed: ${ge(Ebn).message}`, {
       level: "error",
     }));
@@ -19078,7 +19078,7 @@ function Q7() {
   return Rz() ? "skip_all_permission_checks" : "ask";
 }
 function kSe(w) {
-  return w.find((I) => I.type === "connected" && I.name === vd);
+  return w.find((I) => I.type === "connected" && I.name === CLAUDE_IN_CHROME_MCP_SERVER_NAME);
 }
 F();
 var T2 = null;
@@ -19100,7 +19100,7 @@ function wSe() {
       if (!T2 || !ZY() || Rg()) return;
       let xe = !1;
       return (
-        HE(ne, me)
+        getSkillToolCommands(ne, me)
           .then((Ae) => {
             if (xe) return;
             let Oe = T2.filterSkillToolPool(Ae, I);
@@ -19114,7 +19114,7 @@ function wSe() {
               };
             });
           })
-          .catch(h),
+          .catch(logError),
         () => {
           xe = !0;
         }
@@ -19124,7 +19124,7 @@ function wSe() {
 F();
 async function CSe(w, I, ne, me, pe) {
   let { teamName: be, agentId: xe, agentName: Ae } = me,
-    Oe = await Pf(be, pe);
+    Oe = await readTeamFileAsync(be, pe);
   if (!Oe) {
     n(`[TeammateInit] Team file not found for team: ${be}`);
     return;
@@ -19139,7 +19139,7 @@ async function CSe(w, I, ne, me, pe) {
   if (Ke && Ke.length > 0) {
     n(`[TeammateInit] Found ${Ke.length} team-wide allowed path(s)`);
     for (let Qe of Ke) {
-      let it = MG(Qe.path),
+      let it = toPosixPath(Qe.path),
         at = vie(it),
         Zt = it.startsWith("/")
           ? `/${at}/**`
@@ -19175,24 +19175,24 @@ async function CSe(w, I, ne, me, pe) {
       "Stop",
       "",
       async (Qe, it) => {
-        AXe(be, Ae, !1, pe);
+        setMemberActive(be, Ae, !1, pe);
         let { result: at, summary: Zt } = Tbe(Qe, { emitTelemetry: !0 }),
-          Ct = H1e(Ae, { idleReason: "available", summary: Zt, result: at }),
+          Ct = createIdleNotification(Ae, { idleReason: "available", summary: Zt, result: at }),
           eo;
         try {
-          eo = await ag(
+          eo = await writeToMailbox(
             Je,
             {
               from: Ae,
               text: b(Ct),
               timestamp: new Date().toISOString(),
-              color: cS(),
+              color: getTeammateColor(),
             },
             void 0,
             pe,
           );
         } finally {
-          fCe(Ct, at, eo);
+          logIdleResultDeliveryOutcome(Ct, at, eo);
         }
         return (
           n(
@@ -19213,10 +19213,10 @@ async function vtt(w, I, ne, me) {
   if (!pe) return;
   let be = y7n(I);
   if (be === void 0) return;
-  AXe(w.teamName, pe, !1, me);
+  setMemberActive(w.teamName, pe, !1, me);
   let { result: xe, summary: Ae } = Tbe(I, { emitTelemetry: !0 }),
     Oe = fs,
-    He = H1e(pe, {
+    He = createIdleNotification(pe, {
       idleReason: "failed",
       failureReason: be,
       summary: Ae,
@@ -19224,13 +19224,13 @@ async function vtt(w, I, ne, me) {
     }),
     Ke;
   try {
-    Ke = await ag(
+    Ke = await writeToMailbox(
       Oe,
       {
         from: pe,
         text: b(He),
         timestamp: new Date().toISOString(),
-        color: cS(),
+        color: getTeammateColor(),
       },
       void 0,
       me,
@@ -19240,10 +19240,10 @@ async function vtt(w, I, ne, me) {
       `[TeammateInit] Failed to send failed idle notification to team leader: ${l(Je)}`,
       { level: "error" },
     ),
-      fCe(He, xe, void 0));
+      logIdleResultDeliveryOutcome(He, xe, void 0));
     return;
   }
-  (fCe(He, xe, Ke),
+  (logIdleResultDeliveryOutcome(He, xe, Ke),
     n(
       Ke !== void 0
         ? `[TeammateInit] Sent failed idle notification to leader ${Oe}`
@@ -19264,7 +19264,7 @@ function TSe(w, { enabled: I = !0 } = {}) {
         Oe = xe && "agentName" in xe ? xe.agentName : void 0;
       if (Ae && Oe) {
         await _1n(me, Ae, Oe, be);
-        let Ke = (await Pf(Ae, be))?.members.find((Je) => Je.name === Oe);
+        let Ke = (await readTeamFileAsync(Ae, be))?.members.find((Je) => Je.name === Oe);
         if (Ke)
           await CSe(
             me,
@@ -19274,7 +19274,7 @@ function TSe(w, { enabled: I = !0 } = {}) {
             be,
           );
       } else {
-        let He = L5?.();
+        let He = getDynamicTeamContext?.();
         if (He?.teamName && He?.agentId && He?.agentName)
           await CSe(
             me,
@@ -19350,7 +19350,7 @@ function tZ(VSn) {
   let G6t, K6t;
   if (qU[12] !== J7)
     ((K6t = () => {
-      y9t(J7);
+      savePermissionMode(J7);
     }),
       (G6t = [J7]),
       (qU[12] = J7),
@@ -19726,7 +19726,7 @@ function o4t(w) {
   return w === F_ || w === Py;
 }
 function n4t(w) {
-  if (w.lookup === void 0 || !Wg(w.input) || !ri()) return;
+  if (w.lookup === void 0 || !Wg(w.input) || !isViolinWoodEnabledCached()) return;
   try {
     let I = w.lookup({
       toolUseId: w.toolUseId,
@@ -19737,7 +19737,7 @@ function n4t(w) {
       ? { preview: "local", startCwd: I.startCwd }
       : { preview: "remote", reason: I.reason };
   } catch (I) {
-    return (h(I), { preview: "remote", reason: "lookup_error" });
+    return (logError(I), { preview: "remote", reason: "lookup_error" });
   }
 }
 async function r4t(w) {
@@ -19786,8 +19786,8 @@ async function r4t(w) {
 function i4t(w, I) {
   i("tengu_remote_tool_served_preview", {
     tool: Hn(w.name),
-    preview: u(I.preview),
-    reason: we(I.preview === "remote" ? I.reason : void 0),
+    preview: fromEnum(I.preview),
+    reason: fromEnumOpt(I.preview === "remote" ? I.reason : void 0),
   });
 }
 var s4t = 1e4;
@@ -19798,7 +19798,7 @@ async function l4t(w) {
       jn().sendControlRequest({
         subtype: "read_file",
         path: w,
-        max_bytes: a0t,
+        max_bytes: REMOTE_READ_MAX_BYTES,
       }),
       s4t,
       "remote read_file timed out",
@@ -20129,7 +20129,7 @@ function Btt(w, I = p4t) {
                 sZ(pe, Ct),
                 !ao)
               )
-                y("mode_switch");
+                logFeatureOk("mode_switch");
             })
             .catch((co) => {
               (sZ(pe, Ct, ge(co)),
@@ -20140,7 +20140,7 @@ function Btt(w, I = p4t) {
                 return;
               }
               if (
-                (f("mode_switch", iD(co)),
+                (logFeatureBad("mode_switch", iD(co)),
                 Oe.getState().toolPermissionContext.mode !== Ct)
               )
                 return;
@@ -20177,7 +20177,7 @@ function Btt(w, I = p4t) {
                   return;
                 }
                 if (
-                  mH(_o, Oe.getState().toolPermissionContext, (po) => {
+                  setPermissionModeWithGuards(_o, Oe.getState().toolPermissionContext, (po) => {
                     ((Je.current = _o),
                       Ae((xo) =>
                         xo.toolPermissionContext.mode !== Ct
@@ -20437,7 +20437,7 @@ function aZ({
                   (Ho(Sn),
                     i("tengu_remote_notification_routed", {
                       via: S("thin_client_stream"),
-                      priority: u(Fn.priority),
+                      priority: fromEnum(Fn.priority),
                     }));
                 } else
                   n(
@@ -20744,8 +20744,8 @@ function Htt(w, I, ne, me = () => Ydn({ bridgeStore: !1 }), pe = kl) {
     };
   let be = me();
   be.initialize(w, I, { machineServesSession: !0 }).then(
-    () => y("remote_served_settings_watch"),
-    () => f("remote_served_settings_watch", "watch_failed_to_start"),
+    () => logFeatureOk("remote_served_settings_watch"),
+    () => logFeatureBad("remote_served_settings_watch", "watch_failed_to_start"),
   );
   let xe = be.subscribe(() => pge()),
     Ae = be.subscribe((Oe) => ne.servedSettingsChanged.emit(Oe));
@@ -20955,7 +20955,7 @@ function $tt({
           ) {
             if (!zn.dismissed) xe((Ri) => [...Ri, Ht($ot(zn), "info")]);
             if (!zn.steps.some((Ri) => Ri.status === "failed"))
-              y("remote_bootstrap");
+              logFeatureOk("remote_bootstrap");
           }
         }
       },
@@ -20970,7 +20970,7 @@ function $tt({
       (zn = !0) => {
         let xi = Gn.current.length;
         if (((Gn.current = []), Or.forget(), xi > 0)) {
-          if (zn) g("remote_bootstrap", "queue_dropped");
+          if (zn) logFeatureSad("remote_bootstrap", "queue_dropped");
           xe((Ri) => [
             ...Ri,
             Ht(
@@ -21015,7 +21015,7 @@ function $tt({
       if (xi === "provisioning" && gn.current) return;
       let Ri = An.get().overrideMessage;
       if (Ri === null || Ri === Gi.current) {
-        let ns = Xe(
+        let ns = truncateToWidth(
           xi === "held" ? zn.replace(/(\u2026|\.\.\.)$/, "") : zn,
           Math.max(40, fo() - 8),
         );
@@ -21027,7 +21027,7 @@ function $tt({
     Jr = C(void 0),
     ai = C(null),
     Fr = re(() => {
-      if (!w || w.viewerOnly || !ri() || ai.current === null) return;
+      if (!w || w.viewerOnly || !isViolinWoodEnabledCached() || ai.current === null) return;
       let zn = Io.current,
         xi = w.dirSync?.sync.state() ?? {
           state: "absent",
@@ -21271,7 +21271,7 @@ function $tt({
             via: S("seed"),
             enabled: Wn.enabled,
             enforced: Wn.enforced,
-            source: u(Wn.source),
+            source: fromEnum(Wn.source),
           }));
       }
       let yc = new D0(),
@@ -21290,15 +21290,15 @@ function $tt({
         },
         Wa = () => Mht(w.dirSync),
         vl = (() => {
-          if (w.viewerOnly || !ri()) return null;
+          if (w.viewerOnly || !isViolinWoodEnabledCached()) return null;
           try {
-            return Htt(iHe(to, jt, eo), jt, aD.of(Tt));
+            return Htt(iHe(to, jt, eo), jt, deviceHooksProcessMemories.of(Tt));
           } catch (Wn) {
-            return (h(Wn), null);
+            return (logError(Wn), null);
           }
         })(),
         Tl = (() => {
-          if (w.servedTools === void 0 || w.viewerOnly || !ri()) return null;
+          if (w.servedTools === void 0 || w.viewerOnly || !isViolinWoodEnabledCached()) return null;
           try {
             let Wn = Rst({
               sessionId: w.sessionId,
@@ -21317,7 +21317,7 @@ function $tt({
               },
             };
           } catch (Wn) {
-            return (h(Wn), null);
+            return (logError(Wn), null);
           }
         })(),
         ll = (() => {
@@ -21326,7 +21326,7 @@ function $tt({
             return vst({
               launchDir: he(),
               cloudSessionId: w.sessionId,
-              memory: aD.of(Tt),
+              memory: deviceHooksProcessMemories.of(Tt),
               getTools: () => ao(),
               storageV5: jt,
               manager: () => wi,
@@ -21336,17 +21336,17 @@ function $tt({
               subscribeSettingsChanges: (Wn) => vl.subscribe(Wn),
             });
           } catch (Wn) {
-            return (h(Wn), null);
+            return (logError(Wn), null);
           }
         })(),
         zl = {
           ...w,
-          keepUndeliveredResponses: w.keepUndeliveredResponses ?? ri(),
-          nameToolOnPermissionAllow: w.nameToolOnPermissionAllow ?? ri(),
+          keepUndeliveredResponses: w.keepUndeliveredResponses ?? isViolinWoodEnabledCached(),
+          nameToolOnPermissionAllow: w.nameToolOnPermissionAllow ?? isViolinWoodEnabledCached(),
           rearmRedeliveredPermissionRequests:
-            w.rearmRedeliveredPermissionRequests ?? ri(),
+            w.rearmRedeliveredPermissionRequests ?? isViolinWoodEnabledCached(),
           ignoreErrorShapedDialogReplies:
-            w.ignoreErrorShapedDialogReplies ?? ri(),
+            w.ignoreErrorShapedDialogReplies ?? isViolinWoodEnabledCached(),
         };
       So.current = ll;
       let Hl = new Set(),
@@ -21410,7 +21410,7 @@ function $tt({
                       !Il.steps.some((Ei) => Ei.status === "failed"))
                   ) {
                     if (
-                      (f("remote_bootstrap", "step_failed"),
+                      (logFeatureBad("remote_bootstrap", "step_failed"),
                       (lr.current = !1),
                       Br(!1),
                       (Qo.current = !0),
@@ -21522,7 +21522,7 @@ function $tt({
               "permissionMode" in Wn &&
               Wn.permissionMode
             ) {
-              if (((Rd = gf(Wn.permissionMode) ?? Rd), Rd !== void 0))
+              if (((Rd = parsePermissionMode(Wn.permissionMode) ?? Rd), Rd !== void 0))
                 Ey.add(Rd);
               (pf(Wn.permissionMode), Ke(Wn.permissionMode));
             }
@@ -21584,7 +21584,7 @@ function $tt({
                   (wn(hs),
                     i("tengu_remote_notification_routed", {
                       via: S("stream"),
-                      priority: u(Wn.priority),
+                      priority: fromEnum(Wn.priority),
                     }));
                 } else
                   n("[useRemoteSession] Dropping malformed notification frame");
@@ -21643,7 +21643,7 @@ function $tt({
                   }
                   Xs.add(hs.id);
                 }
-                (Pa(), i("tengu_remote_reply_channel_frame", { kind: u(Cs) }));
+                (Pa(), i("tengu_remote_reply_channel_frame", { kind: fromEnum(Cs) }));
               }
             let Ba = null;
             if (Ba !== null) {
@@ -21660,7 +21660,7 @@ function $tt({
                 if (!Ri.has(hs))
                   (Ri.add(hs),
                     i("tengu_remote_subagent_frame_nested", {
-                      frame_type: u(Wn.type),
+                      frame_type: fromEnum(Wn.type),
                     }));
                 xe((Cs) => {
                   let ys = Ba.filter(
@@ -21716,7 +21716,7 @@ function $tt({
                 )
                   ((ns = !0),
                     i("tengu_remote_tool_result_rendered", {
-                      viewer_only: u(w.viewerOnly ? "true" : "false"),
+                      viewer_only: fromEnum(w.viewerOnly ? "true" : "false"),
                     }));
               }
               let hs = Pl.message.uuid;
@@ -21902,7 +21902,7 @@ function $tt({
             if (
               (n("[useRemoteSession] Disconnected"),
               Wn === "session_stale_relogin" ||
-                (Wn === "untrusted_device" && ri() && ZG()))
+                (Wn === "untrusted_device" && isViolinWoodEnabledCached() && isTrustedDeviceGateEnabled()))
             )
               xe((di) => [
                 ...di,
@@ -21928,7 +21928,7 @@ function $tt({
         }),
         xl = Boolean(w.isAttachToExisting) && !w.viewerOnly,
         Ju =
-          !w.isAttachToExisting && !w.viewerOnly && ri()
+          !w.isAttachToExisting && !w.viewerOnly && isViolinWoodEnabledCached()
             ? w.createPermissionMode
             : void 0,
         Xu = w.sessionId,
@@ -21985,7 +21985,7 @@ function $tt({
         }).then(
           () => {
             (n(`[useRemoteSession] Applied launch permission mode: ${Wn}`),
-              y("mode_switch"));
+              logFeatureOk("mode_switch"));
           },
           (di) => {
             let Ds = iD(di);
@@ -21993,7 +21993,7 @@ function $tt({
               (n(
                 `[useRemoteSession] Launch set_permission_mode rejected (${Ds}): ${l(di)}`,
               ),
-              f("mode_switch", Ds),
+              logFeatureBad("mode_switch", Ds),
               ai.current !== Fa ||
                 Ds === "disconnected" ||
                 Ds === "not_connected" ||
@@ -22011,14 +22011,14 @@ function $tt({
           fu !== "default" &&
           fu !== "plan" &&
           E1(fu) &&
-          !(fu === "auto" && ri() && aq()),
+          !(fu === "auto" && isViolinWoodEnabledCached() && isAutoModeFromFallback()),
         cg = null,
         Ey = new Set(),
         Rd,
         qu = null;
       function pf(Wn) {
         if (!ed) return;
-        if (!cL.includes(Wn)) return;
+        if (!EXTERNAL_PERMISSION_MODES.includes(Wn)) return;
         ((cg = Wn), ug());
       }
       function ug() {
@@ -22040,13 +22040,13 @@ function $tt({
         wk = Xm === void 0;
       function Ck() {
         if (wk || ai.current !== Fa) return;
-        if (((wk = !0), Xm === void 0 || !ri())) return;
+        if (((wk = !0), Xm === void 0 || !isViolinWoodEnabledCached())) return;
         try {
           let Wn = on.getState().toolPermissionContext.mode;
           (Ke(Xm),
             i("tengu_remote_permission_mode_adopted", {
               via: S("seed"),
-              mode: u(Xm),
+              mode: fromEnum(Xm),
               applied:
                 Wn !== Xm && on.getState().toolPermissionContext.mode === Xm,
             }));
@@ -22073,7 +22073,7 @@ function $tt({
         ? null
         : a.CLAUDE_CODE_DISABLE_PLUGIN_FORWARDING
           ? "switched_off"
-          : uQe()
+          : isCloudPluginForwardingEnabledCached()
             ? null
             : "not_enabled";
       try {
@@ -22101,7 +22101,7 @@ function $tt({
               })
             : null;
       } catch (Wn) {
-        (h(Wn), (Go.current = "attach_failed"));
+        (logError(Wn), (Go.current = "attach_failed"));
       }
       if (
         ((Io.current = Lu),
@@ -22129,14 +22129,14 @@ function $tt({
               let Ds = di === "continue";
               if (
                 (i("tengu_dir_sync_offline_told", {
-                  via: u(Ds ? "dialog" : "dialog_unanswered"),
+                  via: fromEnum(Ds ? "dialog" : "dialog_unanswered"),
                   attempts: Wn.attempts,
                   surface: S("terminal"),
                 }),
                 Ds)
               )
-                y("remote_sync_offline_dialog");
-              else g("remote_sync_offline_dialog", "dialog_unanswered");
+                logFeatureOk("remote_sync_offline_dialog");
+              else logFeatureSad("remote_sync_offline_dialog", "dialog_unanswered");
               return { acknowledged: Ds };
             },
             (di) => {
@@ -22146,7 +22146,7 @@ function $tt({
                   attempts: Wn.attempts,
                   surface: S("terminal"),
                 }),
-                g("remote_sync_offline_dialog", "failed"),
+                logFeatureSad("remote_sync_offline_dialog", "failed"),
                 di
               );
             },
@@ -22208,9 +22208,9 @@ function $tt({
         },
         Ys = Ust(
           w.sessionId,
-          Vt().BASE_API_URL,
+          getOauthConfig().BASE_API_URL,
           async () => (
-            await Ss({ credentials: eo, storageV5: jt }),
+            await checkAndRefreshOAuthTokenIfNeeded({ credentials: eo, storageV5: jt }),
             { Authorization: `Bearer ${w.getAccessToken()}` }
           ),
           (Wn) => {
@@ -22257,7 +22257,7 @@ function $tt({
             qu?.(),
             (qu = null),
             Ys.teardown(),
-            zQe(w.sessionId),
+            markSessionRead(w.sessionId),
             qs(),
             Lu?.teardown(),
             (Io.current = null),
@@ -22324,7 +22324,7 @@ function $tt({
           Ri = typeof zn === "string" ? zn : xr(zn, " ");
         if (Ri)
           S4(Ri, new AbortController().signal, eo).then((ns) => {
-            qQe(xi, ns ?? Xe(Ri, 75));
+            updateSessionTitle(xi, ns ?? truncateToWidth(Ri, 75));
           });
       },
       [w, eo],
@@ -22377,7 +22377,7 @@ function $tt({
     }, [wr, In]);
   E(() => {
     Mn.current = () => {
-      ur().catch((zn) => h(zn));
+      ur().catch((zn) => logError(zn));
     };
   }, [ur]);
   let Pi = re(
@@ -22460,7 +22460,7 @@ function $tt({
   );
 }
 function y4t(w) {
-  if (!aU()) return "not_enabled";
+  if (!isSettingsToCloudEnabledCached()) return "not_enabled";
   if (!w) return "launch_keeps_them";
   switch (pmn()) {
     case "keep_local":
@@ -22629,11 +22629,11 @@ class LSe {
       ne((xe) => (xe.mainLoopModel === be ? xe : { ...xe, mainLoopModel: be }));
   };
   onPermissionModeChange = (w) => {
-    if (!cL.includes(w)) return;
+    if (!EXTERNAL_PERMISSION_MODES.includes(w)) return;
     let { store: I, setAppState: ne } = this.#e;
     if ((Ftt(this.modeWire, w), I.getState().toolPermissionContext.mode === w))
       return;
-    let me = mH(w, I.getState().toolPermissionContext, (pe) => {
+    let me = setPermissionModeWithGuards(w, I.getState().toolPermissionContext, (pe) => {
       ((this.modeWire.applied = w),
         ne((be) => ({
           ...be,
@@ -22673,19 +22673,19 @@ class LSe {
       He = Oe
         ? xe.find(
             (Qe) =>
-              zp(Qe) &&
-              (Qe.name === Oe || Qe.aliases?.includes(Oe) || qo(Qe) === Oe),
+              isCommandEnabled(Qe) &&
+              (Qe.name === Oe || Qe.aliases?.includes(Oe) || getCommandName(Qe) === Oe),
           )
         : void 0,
-      Ke = He ? j_n(He, Ks()) : "post-text",
+      Ke = He ? routeThinClientCommand(He, Ks()) : "post-text",
       Je =
         Ke === "unavailable" && He
           ? He.name
-          : Oe && !He && LY().has(Oe)
+          : Oe && !He && shippedCommandNames().has(Oe)
             ? Oe
             : void 0;
     if (Je) {
-      f(uz(LY().has(Je) ? Je : "custom"), "remote_unavailable");
+      logFeatureBad(cmdFeature(shippedCommandNames().has(Je) ? Je : "custom"), "remote_unavailable");
       let Qe = pe.sessionId === void 0 ? void 0 : k4t.get(Je);
       return (
         be({
@@ -22762,7 +22762,7 @@ class LSe {
       try {
         let { mainLoopModel: Ae } = this.#r(),
           Oe = qtt(
-            me.buildToolUseContext(pe.getSnapshot(), [], hr(), Ae),
+            me.buildToolUseContext(pe.getSnapshot(), [], createAbortController(), Ae),
             me.guard,
           );
         xe = Oe.session;
@@ -22788,10 +22788,10 @@ class LSe {
           n(
             `bridge immediate command aborted: ${Ae instanceof Error ? Ae.message : String(Ae)}`,
           );
-        else h(dt(ge(Ae), "bridge immediate command failed"));
+        else logError(dt(ge(Ae), "bridge immediate command failed"));
         let He = Oe ? vu : Ag,
           Ke = xe
-            ? Fce(Ae, w.name, xe)
+            ? commandThrowTextForTranscript(Ae, w.name, xe)
             : `${$S(Qn(w.name))} failed (detail withheld on this connection)`;
         be((Je) => [...Je, em(qV(ne, I)), em(`<${He}>${Nt(Ke)}</${He}>`)]);
       }
@@ -23005,7 +23005,7 @@ async function Ztt(w, I, { getMessageCount: ne, storage: me, runCompact: pe }) {
   if (be === "cancelled") return;
   if (
     (i("tengu_resume_return_action", {
-      action: u(be),
+      action: fromEnum(be),
       sessionAgeMinutes: Math.round(I.sessionAgeMinutes),
       messageCount: ne(),
       estimatedTokens: I.estimatedTokens,
@@ -23018,7 +23018,7 @@ async function Ztt(w, I, { getMessageCount: ne, storage: me, runCompact: pe }) {
     }, me);
   if (be === "compact") pe();
 }
-import { lstat as eot } from "fs/promises";
+import { lstat } from "fs/promises";
 import { join as R4t } from "path";
 var USe = 1048576,
   P4t = 64;
@@ -23043,7 +23043,7 @@ async function tot(w, I, ne) {
       staleMs: Qe,
       skewMs: it,
     } = await xe();
-    if (Oe.holderPidSpace !== UZe().slice(0, 160)) {
+    if (Oe.holderPidSpace !== ownPidSpace().slice(0, 160)) {
       me.set(Ae, "unproven");
       continue;
     }
@@ -23055,12 +23055,12 @@ async function tot(w, I, ne) {
     me.set(
       Ae,
       await YWn(Oe, Ae, {
-        pidViewTrusted: () => at("trusted", Lse),
-        pidState: (Zt) => (Vs(Zt) ? "alive" : Vg(Zt) ? "gone" : "unknown"),
-        isSameProcess: mA,
-        self: { pid: process.pid, token: Kse.token, actingAsJob: Ja() },
+        pidViewTrusted: () => at("trusted", isRegistrySweepPermitted),
+        pidState: (Zt) => (isProcessRunning(Zt) ? "alive" : isProcessProvablyGone(Zt) ? "gone" : "unknown"),
+        isSameProcess: provenSameProcessAsync,
+        self: { pid: process.pid, token: ownProcStartMemo.token, actingAsJob: isActingAsBgJob() },
         identityOf: (Zt) =>
-          jT({
+          procIdentityOf({
             ...(Zt.holderProcStart !== void 0 && {
               procStart: Zt.holderProcStart,
             }),
@@ -23072,7 +23072,7 @@ async function tot(w, I, ne) {
           at("dir:" + Zt, async () => {
             if (I !== void 0) return !0;
             try {
-              return (await eot(He(Zt)), !0);
+              return (await lstat(He(Zt)), !0);
             } catch (Ct) {
               if (W(Ct)) return !1;
               throw Ct;
@@ -23081,7 +23081,7 @@ async function tot(w, I, ne) {
         jobDirTouchedRecently: (Zt) =>
           at("touched:" + Zt, async () => {
             try {
-              let Ct = await eot(He(Zt)),
+              let Ct = await lstat(He(Zt)),
                 eo = ne - Ct.mtimeMs;
               return eo <= Qe && -eo <= Qe + it;
             } catch (Ct) {
@@ -23209,7 +23209,7 @@ function jSe(w, I) {
             `[footerLinks] pattern ${be} exceeded ${oot} matches in one scan; stopping (newest matches beyond the ceiling are not collected)`,
             { level: "warn" },
           ),
-            g("repl_footer_links", "scan_ceiling"));
+            logFeatureSad("repl_footer_links", "scan_ceiling"));
           break;
         }
         if ((Je.push(eo), Je.length > rot)) Je.shift();
@@ -23224,7 +23224,7 @@ function jSe(w, I) {
                 `[footerLinks] dropping over-length url (${Tt.length} > ${not} chars) for pattern ${be}`,
                 { level: "warn" },
               ),
-              g("repl_footer_links", "url_too_long"));
+              logFeatureSad("repl_footer_links", "url_too_long"));
           continue;
         }
         let to = Tt === null ? null : aot(Tt);
@@ -23235,7 +23235,7 @@ function jSe(w, I) {
                 `[footerLinks] dropping ${Tt === null ? "dot-segment" : to ? "origin-shifted" : "unparseable"} url for pattern ${be}`,
                 { level: "warn" },
               ),
-              g(
+              logFeatureSad(
                 "repl_footer_links",
                 Tt === null
                   ? "dot_segment_url"
@@ -23245,7 +23245,7 @@ function jSe(w, I) {
               ));
           continue;
         }
-        let zt = Xe(O4t(Ae ? F4t(Ae, jt) : eo[0]).trim(), A4t);
+        let zt = truncateToWidth(O4t(Ae ? F4t(Ae, jt) : eo[0]).trim(), A4t);
         if (zt === "") {
           if (!at)
             ((at = !0),
@@ -23253,7 +23253,7 @@ function jSe(w, I) {
                 `[footerLinks] dropping match with empty label for pattern ${be}`,
                 { level: "warn" },
               ),
-              g("repl_footer_links", "empty_label"));
+              logFeatureSad("repl_footer_links", "empty_label"));
           continue;
         }
         me.push({ index: eo.index ?? 0, match: { url: Tt, label: zt } });
@@ -23262,7 +23262,7 @@ function jSe(w, I) {
       (n(`[footerLinks] regex exec failed for ${be}: ${l(eo)}`, {
         level: "warn",
       }),
-        g("repl_footer_links", "regex_exec_failed"));
+        logFeatureSad("repl_footer_links", "regex_exec_failed"));
     }
     let Ct = performance.now() - Zt;
     if (Ct > I4t)
@@ -23351,7 +23351,7 @@ class lot {
       `[footerLinks] skipping a 'regex' entry with non-string fields (pattern/url/label types: ${w}); the entry is preserved in settings`,
       { level: "warn" },
     ),
-      g("repl_footer_links", "unreadable_entry"),
+      logFeatureSad("repl_footer_links", "unreadable_entry"),
       this.warnedUnreadableShapes.add(w));
   }
   warnUnknownPlaceholders(w, I, ne) {
@@ -23377,7 +23377,7 @@ ${ne ?? ""}`;
           `[footerLinks] url template "${w}" must have a literal origin with an allowlisted scheme (e.g. https://host/...); skipping`,
           { level: "warn" },
         ),
-        g("repl_footer_links", "bad_url_template"),
+        logFeatureSad("repl_footer_links", "bad_url_template"),
         this.pinByTemplate.set(w, null),
         null
       );
@@ -23391,7 +23391,7 @@ ${ne ?? ""}`;
       I = new RegExp(w, "g");
     } catch (ne) {
       (n(`[footerLinks] invalid pattern ${w}: ${l(ne)}`, { level: "warn" }),
-        g("repl_footer_links", "invalid_pattern"));
+        logFeatureSad("repl_footer_links", "invalid_pattern"));
     }
     return (this.regexByPattern.set(w, I), I);
   }
@@ -23401,7 +23401,7 @@ var cot = 8192,
   WSe = 65536,
   U4t = 256;
 function dot() {
-  let w = hx("footerLinksRegexes").flat();
+  let w = getSecuritySensitiveSetting("footerLinksRegexes").flat();
   return w.length > 0 ? w : void 0;
 }
 function mot(w, I) {
@@ -23433,13 +23433,13 @@ function pot(w, I) {
     let me = fot($4t(w)),
       pe = me ? jSe(ne, me).reverse() : [];
     if (pe.length === 0) return;
-    (y("repl_footer_links"),
+    (logFeatureOk("repl_footer_links"),
       I((be) => {
         let xe = $Se(be.footerLinks, pe);
         return xe === be.footerLinks ? be : { ...be, footerLinks: xe };
       }));
   } catch (ne) {
-    (h(ne), f("repl_footer_links", "scan_failed"));
+    (logError(ne), logFeatureBad("repl_footer_links", "scan_failed"));
   }
 }
 function H4t(w, I, ne = []) {
@@ -23633,7 +23633,7 @@ class QSe {
     let w = !0;
     try {
       if ((process.kill(this.#e, 0), this.#t !== void 0)) {
-        if (!(await Pm(this.#e, this.#t))) w = !1;
+        if (!(await isSameProcessAsync(this.#e, this.#t))) w = !1;
       } else if (this.#o !== void 0) {
         let I = await y9e(this.#e);
         if (I !== null && I !== this.#o) w = !1;
@@ -23653,7 +23653,7 @@ class QSe {
           ? "[SIGTERM requested for detached process tree (sent if identity still matched) \u2014 adopted handle released]"
           : "[detached process still running \u2014 adopted handle released]"
         : "[process exited while detached; exit code unknown]";
-    await i1e(this.taskOutput.path)
+    await openTaskOutputForAppend(this.taskOutput.path)
       .then(async (pe) => {
         try {
           await pe.appendFile(`
@@ -23697,7 +23697,7 @@ function Q4t(w, I) {
   if (w == null) return !1;
   let ne = er(w),
     me = er(I);
-  return ne === me || Ue(ne) === Ue(me);
+  return ne === me || getCanonicalName(ne) === getCanonicalName(me);
 }
 function bot(w) {
   let I = w.slicedMessages.filter(yot),
@@ -23805,7 +23805,7 @@ function Sot({
               ));
           else if (eo instanceof Ou)
             n(`[wakeRouter] resume state error for ${Qe}: ${l(eo)}`);
-          else h(eo);
+          else logError(eo);
         })
         .finally(() => {
           if ((at(), Ct !== "retry" || be)) {
@@ -24018,7 +24018,7 @@ function vot({
         if (dZ(Ae) || Ae instanceof uM) return;
         if (Ae instanceof Ou)
           n(`stranded resume of ${xe} failed: ${l(Ae)}`, { level: "warn" });
-        else h(Ae);
+        else logError(Ae);
         me({
           key: `stranded-resume-failed-${xe}`,
           kind: "warning",
@@ -24039,13 +24039,13 @@ function wot({ transcript: w }) {
   {
     let I = (me) => {
         let pe = Vo();
-        return me.map((be) => br({ slug: be, env: pe }));
+        return me.map((be) => artifactViewerUrlFor({ slug: be, env: pe }));
       },
       ne = (me) => w.replace((pe) => [...pe, Ht(me, "notice")]);
-    return Kin({
-      yielded: (me, pe, be) => ne(qin(I(me), pe, be, Date.now())),
-      reverted: (me) => ne(zin(I(me))),
-      stoppedElsewhere: (me) => ne(Vin(I(me))),
+    return registerReplyYieldHolder({
+      yielded: (me, pe, be) => ne(repliesYieldedLine(I(me), pe, be, Date.now())),
+      reverted: (me) => ne(repliesYieldRevertedLine(I(me))),
+      stoppedElsewhere: (me) => ne(repliesStoppedElsewhereLine(I(me))),
     });
   }
   return () => {};
@@ -24281,7 +24281,7 @@ function Rot({
         go = () => {
           if (ao <= 0) return;
           co = w.setTimeout(() => {
-            if (ap() || be()) {
+            if (isUnattendedBgSession() || be()) {
               go();
               return;
             }
@@ -24354,9 +24354,9 @@ function Rot({
     aqe((at) => {
       Ae(at, "dropped");
     }));
-  let Oe = ap(),
+  let Oe = isUnattendedBgSession(),
     He = VP(() => {
-      let at = ap();
+      let at = isUnattendedBgSession();
       if (Oe && !at) for (let Zt of xe.values()) Zt.rearmDeadline();
       Oe = at;
     });
@@ -24441,7 +24441,7 @@ function d8t(w) {
     Je =
       Ae.map((zt) => zt.replace(/\s+/g, " ").trim()).find((zt) => zt !== "") ??
       "",
-    Qe = SL(oe(Je, aKt), Ivn),
+    Qe = truncateToWidthNoEllipsis(oe(Je, aKt), Ivn),
     it = Oe > 1 || Ke || Qe !== Je,
     at = Qe,
     Zt = it
@@ -24449,7 +24449,7 @@ function d8t(w) {
       : "",
     Ct = 8,
     eo = 72,
-    jt = Ae.slice(0, 8).map((zt) => SL(oe(zt, 240), 72)),
+    jt = Ae.slice(0, 8).map((zt) => truncateToWidthNoEllipsis(oe(zt, 240), 72)),
     Tt = Oe > 8 || Ke || jt.some((zt, ao) => zt !== Ae[ao]),
     to =
       jt.join(`
@@ -24585,7 +24585,7 @@ function mZ(w, I, ne, me, pe) {
           xe = to.value;
         };
       try {
-        w.subscribe({ target: "key", key: wAe(I) }, (to) => at(to, jt)).then(
+        w.subscribe({ target: "key", key: jobStateKey(I) }, (to) => at(to, jt)).then(
           Tt,
           (to) => it(l(to)),
         );
@@ -24653,12 +24653,12 @@ function Iot({
 }
 function S8t({ session: w, storageV5: I, credentials: ne, setAppState: me }) {
   if (Pt()) return () => {};
-  let pe = gu(),
-    be = rr(pe),
+  let pe = getOwnJobShortId(),
+    be = getJobDir(pe),
     xe,
     Ae = async () => {
-      if (y3t()) return;
-      let Je = await Zn(be, I);
+      if (isOwnStateWriteInFlight()) return;
+      let Je = await readJobState(be, I);
       if (!Je) return;
       if (
         (me((Zt) => {
@@ -24667,7 +24667,7 @@ function S8t({ session: w, storageV5: I, credentials: ne, setAppState: me }) {
           if (
             Je.name &&
             (Je.nameSource === "user" ||
-              (Je.nameSource === "collision" && si(Je.name) === mb()?.name)) &&
+              (Je.nameSource === "collision" && si(Je.name) === getRegisteredSessionName()?.name)) &&
             !Ct?.name
           ) {
             let jt = si(Je.name);
@@ -24681,8 +24681,8 @@ function S8t({ session: w, storageV5: I, credentials: ne, setAppState: me }) {
         return;
       let Qe = si(Je.name);
       if (!Qe) return;
-      if (Qe === QV() || Qe === mu(w.id)) return;
-      if (Je.nameSource === "collision" && Qe !== mb()?.name) {
+      if (Qe === getCurrentSessionAgentName() || Qe === getCurrentSessionTitle(w.id)) return;
+      if (Je.nameSource === "collision" && Qe !== getRegisteredSessionName()?.name) {
         n(
           "[jobStateNameSync] ignoring a collision-suffixed name another process wrote to this job",
         );
@@ -24707,7 +24707,7 @@ function S8t({ session: w, storageV5: I, credentials: ne, setAppState: me }) {
       }
     };
   if (I && _n(pe))
-    return mZ(I, pe, Ke, "[jobStateNameSync]", { deferWhile: y3t });
+    return mZ(I, pe, Ke, "[jobStateNameSync]", { deferWhile: isOwnStateWriteInFlight });
   try {
     ((xe = b8t(be, (Je, Qe) => {
       if (Qe && !Qe.startsWith("state.json")) return;
@@ -24727,7 +24727,7 @@ function k8t({ storageV5: w, credentials: I }) {
   return (
     mDt((ne) => {
       let me = si(ne ?? "");
-      if (!me || me === QV()) return;
+      if (!me || me === getCurrentSessionAgentName()) return;
       Eot(me, "peer", w, I);
     }),
     () => mDt(null)
@@ -24742,19 +24742,19 @@ function v8t({
 }) {
   let be = (He, Ke) => {
       let Je = si(He);
-      if (!Je || mb()?.name !== He) return;
-      if ((me((Qe) => Vle(Qe, { name: Je })), !il())) {
-        if ($Me(w.id, Ke, Je)) (h$(Je), ZEe(Je));
-      } else if ($Me(w.id, Ke, Je)) $Te(Je, "collision", I, !1, !1, ne);
+      if (!Je || getRegisteredSessionName()?.name !== He) return;
+      if ((me((Qe) => Vle(Qe, { name: Je })), !getMaterializedSessionFile())) {
+        if (titleCacheStillOn(w.id, Ke, Je)) (cacheSessionTitle(Je), cacheAgentName(Je));
+      } else if (titleCacheStillOn(w.id, Ke, Je)) $Te(Je, "collision", I, !1, !1, ne);
       else SLe(Je, "collision", I, void 0, !1, void 0, ne);
       pe?.(Je, Ke);
     },
-    xe = rh(),
-    Ae = D3t();
+    xe = getSessionNamingState(),
+    Ae = takePendingYield();
   if (Ae) be(...Ae);
   xe.hasAdopter = !0;
   let Oe = xe.yielded.subscribe((He, Ke) => {
-    (D3t(), be(He, Ke));
+    (takePendingYield(), be(He, Ke));
   });
   return () => {
     ((xe.hasAdopter = !1), Oe());
@@ -24763,7 +24763,7 @@ function v8t({
 function Eot(w, I, ne, me) {
   return gKe(w, I, ne, !1, !1, me).then(
     () => {},
-    (pe) => h(pe),
+    (pe) => logError(pe),
   );
 }
 var ZSe = {
@@ -24796,7 +24796,7 @@ function Dot(w) {
 }
 function tke(w, I, ne) {
   let me = Dot(I.url),
-    pe = cet({ slug: I.slug, env: Vo() }),
+    pe = artifactViewerUrlSpellings({ slug: I.slug, env: Vo() }),
     be = Math.max(...pe.map((Oe) => ne(Dot(Oe))), ne(XSe)),
     xe = w.metaMessage;
   if (xe !== void 0) {
@@ -24840,8 +24840,8 @@ function Fot(w) {
 }
 function rke(w) {
   let I = w.toLowerCase();
-  if (fr.test(I)) return I;
-  return _ge(w)?.slug ?? null;
+  if (ARTIFACT_SLUG_RE.test(I)) return I;
+  return parseArtifactUrlAnyCase(w)?.slug ?? null;
 }
 async function Bot(w) {
   let {
@@ -24851,7 +24851,7 @@ async function Bot(w) {
       getKnownVer: pe,
       context: be,
     } = w,
-    xe = w.arm ?? iin,
+    xe = w.arm ?? watchArtifactFromStartup,
     Ae = w.autoReactGate ?? Zu,
     Oe = await xe({
       slug: I.slug,
@@ -24867,8 +24867,8 @@ async function Bot(w) {
         Oe.reason === "other_org" ||
         Oe.reason === "boot_failed" ||
         Oe.reason === "ws_open_error"
-        ? f
-        : g)("artifact_watch_startup", Oe.reason),
+        ? logFeatureBad
+        : logFeatureSad)("artifact_watch_startup", Oe.reason),
       {
         notificationText:
           w8t[Oe.reason] ??
@@ -24876,7 +24876,7 @@ async function Bot(w) {
       }
     );
   let He = ne !== void 0 && me && Ae() && !Xp(I.slug);
-  y("artifact_watch_startup", {
+  logFeatureOk("artifact_watch_startup", {
     already_watching: Oe.outcome === "already_watching",
     comments: He,
   });
@@ -24921,30 +24921,30 @@ function Hot({
   be()
     .then(({ toolUseContext: Qe, allowed: it }) => {
       if (!it) {
-        (g("artifact_watch_startup", "fetch_gate"), He(ZSe.fetch_gate), Je());
+        (logFeatureSad("artifact_watch_startup", "fetch_gate"), He(ZSe.fetch_gate), Je());
         return;
       }
-      let at = ar(Qe.options.tools ?? [], _r);
+      let at = ar(Qe.options.tools ?? [], ARTIFACT_TOOL_NAME);
       return Bot({
         target: Oe,
         ...(at !== void 0 && { tool: at }),
         commentVerbsInSchema: nT(),
-        getKnownVer: () => D$(ne.getState(), Oe.slug),
+        getKnownVer: () => mainObservedArtifactVersion(ne.getState(), Oe.slug),
         context: Qe,
       }).then((Zt) => {
         try {
           (He(Zt.notificationText), Ae(tke(Zt, Oe, Ke)));
         } catch (Ct) {
-          if (!yt(Ct)) h(Ct);
+          if (!yt(Ct)) logError(Ct);
         }
       });
     })
     .catch(() => {
-      (f("artifact_watch_startup", "arm_error"), He(ZSe.arm_error));
+      (logFeatureBad("artifact_watch_startup", "arm_error"), He(ZSe.arm_error));
       try {
         Je();
       } catch (Qe) {
-        if (!yt(Qe)) h(Qe);
+        if (!yt(Qe)) logError(Qe);
       }
     });
 }
@@ -24963,7 +24963,7 @@ function Wot({ store: w, setAppState: I, storageV5: ne }) {
     (me, pe) => {
       if (!me || !pe) return;
       let be = me;
-      pre(oo(be), ne)
+      getAgentTranscript(oo(be), ne)
         .then((xe) => {
           I((Ae) => {
             let Oe = Ae.tasks[be];
@@ -24989,7 +24989,7 @@ function Wot({ store: w, setAppState: I, storageV5: ne }) {
             );
           });
         })
-        .catch(h);
+        .catch(logError);
     },
   );
 }
@@ -25159,8 +25159,8 @@ class fZ {
       Ct = performance.now();
     try {
       THe(me.host);
-      let eo = { ...I, messages: Eht(I.messages) },
-        jt = Cht(eo.messages);
+      let eo = { ...I, messages: dropMalformedAttachments(I.messages) },
+        jt = deserializeMessages(eo.messages);
       {
         let po = import.meta
           .require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js")
@@ -25171,8 +25171,8 @@ class fZ {
             jt.push(Ht(po, "warning")));
         }
       }
-      let Tt = ppe();
-      await YMe(me, "resume", {
+      let Tt = getSessionEndHookTimeoutMs();
+      await executeSessionEndHooks(me, "resume", {
         sessionHooks: this.sessionHooks,
         getAppState: () => pe.getState(),
         signal: AbortSignal.timeout(Tt),
@@ -25212,9 +25212,9 @@ class fZ {
         storageV5: Ke,
         credentials: Je,
       });
-      if ((jt.push(...ALe(jt, go)), ne === "fork")) GEn(I, _m(w), Ke);
-      else a$e(I, _m(w), Ke);
-      if (I.fileHistorySnapshots) Ogt(I, _m(w), Ke);
+      if ((jt.push(...dedupeSessionStartHookMessages(jt, go)), ne === "fork")) copyPlanForFork(I, _m(w), Ke);
+      else copyPlanForResume(I, _m(w), Ke);
+      if (I.fileHistorySnapshots) copyFileHistoryForResume(I, _m(w), Ke);
       (be((Ho) => ({
         ...Ho,
         standaloneAgentContext: AHe(I.agentName, I.agentColor),
@@ -25232,7 +25232,7 @@ class fZ {
         this._resetTurnEventTail(),
         cDe(void 0, Ke));
       let fo = _m(w),
-        ro = Li(fo);
+        ro = pinSessionId(fo);
       if (
         ($p(
           fo,
@@ -25241,7 +25241,7 @@ class fZ {
         ),
         ne !== "fork")
       )
-        sr().inheritPredecessorLinks($Sn(fo), I.modified.getTime());
+        sr().inheritPredecessorLinks(taskOutputDirForSession(fo), I.modified.getTime());
       if (ne !== "fork")
         o9n(I.artifactCommentMonitor, {
           ...(Ke !== void 0 && { storageV5: Ke }),
@@ -25257,7 +25257,7 @@ class fZ {
       (OZ(jt, ne === "fork"), ao?.());
       let { renameRecordingForSession: ho } =
         await import("../../02-功能模块/Git-Worktree/chunk-xercceag.js");
-      if ((await ho(me, Ke), await XM(), ne !== "fork")) {
+      if ((await ho(me, Ke), await resetSessionFilePointer(), ne !== "fork")) {
         if (
           (j0t(pe.getState, pe.setState, Ae),
           ICe(),
@@ -25278,22 +25278,22 @@ class fZ {
         (EHe(eo, pe.setState, this.sessionHooks, {
           preserveLiveBudget: ne === "fork" || ne === "rewind_pre_clear",
         }),
-        Q5e(Ire(I), be),
-        r8e(),
-        EH(
+        applyEndedByModelOnResume(Ire(I), be),
+        clearSessionMetadata(),
+        restoreSessionMetadata(
           ne === "fork"
-            ? FMe(I, { stripRelocatedCwd: !0 })
+            ? buildForkAdoptionMeta(I, { stripRelocatedCwd: !0 })
             : { ...I, artifactCommentMonitor: void 0 },
           { taintSid: ro, storageV5: Ke },
         ),
         ne === "fork")
       )
-        if (I.precautionarySuppressionHeld) (JM(ro), W3(ro));
-        else d9t(ro, Li(Kc(I)));
+        if (I.precautionarySuppressionHeld) (holdPrecautionarySuppressionFor(ro), markPrecautionClearResilientFor(ro));
+        else copyPrecautionarySuppressionTo(ro, pinSessionId(getSessionIdFromLog(I)));
       let _o = TLe();
-      if (_o) eAe(_o);
+      if (_o) cacheHookSessionTitle(_o);
       if (
-        (Gpe(I.agentName, Ke, { autoOnly: !I.customTitle }),
+        (reclaimSessionNameOnResume(I.agentName, Ke, { autoOnly: !I.customTitle }),
         ne !== "fork" && I.bridgeSessionId)
       )
         be((Ho) =>
@@ -25317,8 +25317,8 @@ class fZ {
           (He.isolationLatch.onLatch = void 0),
           M() && Ke !== void 0)
         )
-          await YV(Ke);
-        else XV();
+          await adoptResumedSessionFileAsync(Ke);
+        else adoptResumedSessionFile();
         He.reseatIsolationLatch(
           I.isolationLatch ?? l5e(jt, He.combinedInitialTools),
         );
@@ -25328,7 +25328,7 @@ class fZ {
           if (xo.length > 0) {
             let Ro = Vo();
             jt.push(
-              Ht(iFn(xo.map((on) => br({ slug: on, env: Ro }))), "warning"),
+              Ht(iFn(xo.map((on) => artifactViewerUrlFor({ slug: on, env: Ro }))), "warning"),
             );
           }
           let Wo = aFn(po, ate);
@@ -25345,18 +25345,18 @@ class fZ {
                   records: await Kn(),
                   sessionId: Ro,
                   selfPid: process.pid,
-                  isRunning: Vs,
-                  isSameProcess: mA,
+                  isRunning: isProcessRunning,
+                  isSameProcess: provenSameProcessAsync,
                 });
               ((yn = !0),
                 (on = nn.verdict),
                 (An = nn.holder),
                 (wn = nn.otherHolders?.length ?? 0));
             } catch {
-              g("artifact_live_subscribe", "holder_probe_failed");
+              logFeatureSad("artifact_live_subscribe", "holder_probe_failed");
             }
             let vo = Vo(),
-              zo = Wo.map((Kn) => br({ slug: Kn, env: vo })),
+              zo = Wo.map((Kn) => artifactViewerUrlFor({ slug: Kn, env: vo })),
               Sr = Date.now();
             if (on !== "none" && yn)
               Q0t(on === "live" ? "held_by_live_session" : "holder_unknown", {
@@ -25399,8 +25399,8 @@ class fZ {
       } else {
         sze({ ...(Ke !== void 0 && { storageV5: Ke }) });
         let Ho = Ia();
-        if (Ho) mC(Ho, Ke);
-        if (He.isolationLatch.current) ZV(He.isolationLatch.current, Ke);
+        if (Ho) saveWorktreeState(Ho, Ke);
+        if (He.isolationLatch.current) saveIsolationLatch(He.isolationLatch.current, Ke);
       }
       {
         let { saveMode: Ho } = import.meta.require("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
@@ -25415,14 +25415,14 @@ class fZ {
         it.replaceValue("");
       if (ne !== "fork") this.maybePromptStaleResume(jt);
       i("tengu_session_resumed", {
-        entrypoint: u(ne),
+        entrypoint: fromEnum(ne),
         success: !0,
         resume_duration_ms: Math.round(performance.now() - Ct),
       });
     } catch (eo) {
       throw (
         i("tengu_session_resumed", {
-          entrypoint: u(ne),
+          entrypoint: fromEnum(ne),
           success: !1,
           failure_reason: S("processing_error"),
           error_name: z0(ge(eo)),
@@ -25435,7 +25435,7 @@ class fZ {
     let { _setAppState: ne } = this;
     ebe(
       ne,
-      SFe()
+      isResumeFrameSeedEligible()
         ? NGe(w)
         : {
             frameUrls: {},
@@ -25443,7 +25443,7 @@ class fZ {
             artifactRefs: [],
             createdFromType: {},
           },
-      { legacyConflict: HT(), continuesConversation: I },
+      { legacyConflict: isArtifactConflictLegacy(), continuesConversation: I },
     );
   }
   restoreReadFileState(w, I, ne = !1) {
@@ -25472,8 +25472,8 @@ class fZ {
     (w.push(Wot({ store: I, setAppState: I.setState, storageV5: pe })),
       this._startFeeds(w),
       w.push(
-        zhn(() => {
-          let Ae = QV();
+        subscribeSessionAgentNameChanged(() => {
+          let Ae = getCurrentSessionAgentName();
           if (!Ae) return;
           I.setState((Oe) =>
             Oe.standaloneAgentContext?.name === Ae
@@ -25493,18 +25493,18 @@ class fZ {
     try {
       this.restoreOnMount();
     } catch (Ae) {
-      h(Error("SessionController.start: restoreOnMount threw", { cause: Ae }));
+      logError(Error("SessionController.start: restoreOnMount threw", { cause: Ae }));
     }
     try {
       this.rearmArtifactLiveOnMount();
     } catch (Ae) {
-      h(
+      logError(
         Error("SessionController.start: rearmArtifactLiveOnMount threw", {
           cause: Ae,
         }),
       );
     }
-    this.onInit().catch(h);
+    this.onInit().catch(logError);
     let be = this._sandbox.start();
     if ((w.push(be.stop), be.refused)) return;
     let xe = Kdt.of(me);
@@ -25552,7 +25552,7 @@ class fZ {
       ));
   }
   _startUnattendedMonitoringWatch() {
-    if (!_t()) return () => {};
+    if (!isBgSession()) return () => {};
     let { store: w, taskRegistry: I, storageV5: ne } = this,
       me = () => {};
     {
@@ -25563,13 +25563,13 @@ class fZ {
         if (((xe = Ae), Ae)) this.discloseUnattendedActivity();
       });
     }
-    let pe = G(Object.values(w.getState().tasks), tM),
+    let pe = G(Object.values(w.getState().tasks), isCarriedFrameLiveWatch),
       be = iS(
         [w],
-        () => [G(Object.values(w.getState().tasks), tM)],
+        () => [G(Object.values(w.getState().tasks), isCarriedFrameLiveWatch)],
         (xe) => {
           if (xe === pe) return;
-          ((pe = xe), kre(Rv(I.all()), ne));
+          ((pe = xe), syncLiveInFlightSnapshot(Rv(I.all()), ne));
         },
       );
     return () => {
@@ -25597,7 +25597,7 @@ class fZ {
           setAppState: I.setState,
           onYieldedName: (pe, be) => {
             let xe = fnn(be, pe);
-            if (!il()) {
+            if (!getMaterializedSessionFile()) {
               this._requireHost().addNotification({
                 key: "session-name-yielded",
                 kind: "warning",
@@ -25621,7 +25621,7 @@ class fZ {
   }
   _raiseSessionStart() {
     XJt({
-      loaded: w3(this.storageV5, this.credentials),
+      loaded: loadPluginHooks(this.storageV5, this.credentials),
       surface: "terminal",
       interactive: !0,
     });
@@ -25663,7 +25663,7 @@ class fZ {
     } = this;
     if (w && w.length > 0) {
       if (
-        (xe.reseatIsolationLatch(s8e() ?? l5e(w, xe.combinedInitialTools)),
+        (xe.reseatIsolationLatch(getCurrentSessionIsolationLatch() ?? l5e(w, xe.combinedInitialTools)),
         this.restoreReadFileState(w, I.project.originalCwd),
         GVe({
           abortController: new AbortController(),
@@ -25680,10 +25680,10 @@ class fZ {
           storageV5: me,
           credentials: pe,
         });
-      if (Ja()) {
-        let Oe = WD(),
-          He = Fen(Oe, {
-            waitMs: _t() || !Jh()?.expectHandoff ? 0 : Oen,
+      if (isActingAsBgJob()) {
+        let Oe = getBgJobDir(),
+          He = readAndConsumeAdoptJson(Oe, {
+            waitMs: isBgSession() || !Jh()?.expectHandoff ? 0 : TAKEOVER_ADOPT_WAIT_MS,
             extraShellOutputRoot: (() => {
               let Qe = Jh();
               if (!Qe?.adoptShellOutputRoot) {
@@ -25701,7 +25701,7 @@ class fZ {
         })),
           (this._adoptedFrameLive = He.then((Qe) => {
             if (Qe?.frameLive === void 0) return;
-            if (Oe !== void 0) jen(Oe, Qe.frameLive, Ke);
+            if (Oe !== void 0) recordUnresumedFrameLive(Oe, Qe.frameLive, Ke);
             return { entries: Qe.frameLive, jobDir: Oe, owner: Ke };
           }).catch(() => {
             return;
@@ -25718,9 +25718,9 @@ class fZ {
                 );
               for (let eo of Zt) {
                 if (eo.parentAgentId !== void 0 && !it.has(eo.parentAgentId)) {
-                  (Sat(eo, "owner not resumed", ne, Ae),
-                    g("task_local_agent", "adopt_owner_skipped", {
-                      skipped_kind: u("agent"),
+                  (emitAdoptAgentFailed(eo, "owner not resumed", ne, Ae),
+                    logFeatureSad("task_local_agent", "adopt_owner_skipped", {
+                      skipped_kind: fromEnum("agent"),
                     }),
                     n(
                       `[adopt] agent ${eo.agentId} skipped: parent ${eo.parentAgentId} not registered`,
@@ -25729,7 +25729,7 @@ class fZ {
                   continue;
                 }
                 try {
-                  let jt = await zen(eo, { storageV5: me });
+                  let jt = await linkAdoptedAgentTranscript(eo, { storageV5: me });
                   (Y4n(
                     {
                       ...eo,
@@ -25741,15 +25741,15 @@ class fZ {
                     it.add(eo.agentId),
                     at.push(eo));
                 } catch (jt) {
-                  let Tt = Jen(eo);
+                  let Tt = classifyAdoptLinkFailure(eo);
                   if (Tt.emit) {
                     if (
-                      (Sat(eo, "transcript link failed", ne, Ae),
+                      (emitAdoptAgentFailed(eo, "transcript link failed", ne, Ae),
                       Tt.excludeFromReconcile)
                     )
                       Je.add(eo.agentId);
                   }
-                  (g("task_local_agent", "adopt_link_failed"),
+                  (logFeatureSad("task_local_agent", "adopt_link_failed"),
                     n(`[adopt] agent ${eo.agentId} skipped: ${jt}`, {
                       level: "warn",
                     }));
@@ -25757,9 +25757,9 @@ class fZ {
               }
               for (let eo of Qe.shells) {
                 if (eo.agentId !== void 0 && !it.has(eo.agentId)) {
-                  (Ken(eo),
-                    g("task_local_agent", "adopt_owner_skipped", {
-                      skipped_kind: u("shell"),
+                  (killOrphanedAdoptedShell(eo),
+                    logFeatureSad("task_local_agent", "adopt_owner_skipped", {
+                      skipped_kind: fromEnum("shell"),
                     }),
                     n(
                       `[adopt] shell ${eo.taskId} skipped: owner ${eo.agentId} not registered`,
@@ -25768,8 +25768,8 @@ class fZ {
                   continue;
                 }
                 try {
-                  (await fK(eo.taskId, eo.outputPath, (jt) =>
-                    i("tengu_adopt_link", { kind: S("shell"), method: u(jt) }),
+                  (await initTaskOutputAsSymlink(eo.taskId, eo.outputPath, (jt) =>
+                    i("tengu_adopt_link", { kind: S("shell"), method: fromEnum(jt) }),
                   ),
                     s8n(
                       {
@@ -25795,12 +25795,12 @@ class fZ {
                   });
                 }
               }
-              Qen(
+              adoptCron(
                 Qe.cron.filter((eo) => {
                   if (eo.agentId !== void 0 && !it.has(eo.agentId))
                     return (
-                      g("task_local_agent", "adopt_owner_skipped", {
-                        skipped_kind: u("cron"),
+                      logFeatureSad("task_local_agent", "adopt_owner_skipped", {
+                        skipped_kind: fromEnum("cron"),
                       }),
                       !1
                     );
@@ -25812,34 +25812,34 @@ class fZ {
               for (let eo of Qe.workflows ?? []) {
                 let jt;
                 try {
-                  ((jt = { ...eo, scriptPath: Yen(eo.scriptPath) }),
-                    await Xen(jt),
-                    Uin(jt, ne),
+                  ((jt = { ...eo, scriptPath: resolveAdoptedScriptPath(eo.scriptPath) }),
+                    await linkAdoptedWorkflowDir(jt),
+                    registerAdoptedWorkflowTask(jt, ne),
                     Ct.push(jt));
                 } catch (Tt) {
                   if (jt === void 0) {
                     let { scriptPath: to, ...zt } = eo;
-                    (yat(zt, "adopt scriptPath rejected", Ae),
-                      g("task_local_workflow", "adopt_scriptpath_rejected"),
+                    (emitAdoptWorkflowFailed(zt, "adopt scriptPath rejected", Ae),
+                      logFeatureSad("task_local_workflow", "adopt_scriptpath_rejected"),
                       n(
                         `[adopt] workflow ${eo.taskId} skipped: scriptPath rejected`,
                         { level: "warn" },
                       ));
                   } else
-                    (yat(
+                    (emitAdoptWorkflowFailed(
                       jt,
                       Tt instanceof Error
                         ? Tt.message
                         : "transcript link failed",
                       Ae,
                     ),
-                      g("task_local_workflow", "adopt_link_failed"),
+                      logFeatureSad("task_local_workflow", "adopt_link_failed"),
                       n(`[adopt] workflow ${eo.taskId} skipped: ${Tt}`, {
                         level: "warn",
                       }));
                 }
               }
-              if (Oe !== void 0) $en(Oe, at, Ct, Ke);
+              if (Oe !== void 0) recordUnresumedAdopt(Oe, at, Ct, Ke);
               this.resumeAdoptedAgents(at, Ct, Oe, Ke);
             }
           } finally {
@@ -25852,16 +25852,16 @@ class fZ {
   }
   resumeAdoptedAgents(w, I, ne, me) {
     let { store: pe, taskRegistry: be, storageV5: xe, messageQueue: Ae } = this;
-    yHe(pe, MOt, { timeoutMs: Wye / 4 })
+    yHe(pe, mcpSettledForAdopt, { timeoutMs: STALE_THRESHOLD_MS / 4 })
       .then(() => {
-        if (!Ja() || WD() !== ne) {
+        if (!isActingAsBgJob() || getBgJobDir() !== ne) {
           n(
             "[adopt] deferred resume skipped: takeover released or replaced during MCP-settle wait",
           );
           return;
         }
         if (ne !== void 0 && (w.length > 0 || I.length > 0)) {
-          let He = Uen(ne, me);
+          let He = takeUnresumedAdopt(ne, me);
           if (He.agents.length === 0 && He.workflows.length === 0) {
             n(
               "[adopt] deferred resume skipped: parked entries already taken by the exit handoff or a later consume",
@@ -25882,13 +25882,13 @@ class fZ {
             canUseTool: Oe,
           })
             .then(() => {
-              kre(Rv(be.all()), xe);
+              syncLiveInFlightSnapshot(Rv(be.all()), xe);
             })
             .catch((Ke) => {
               (be.remove(He.taskId),
-                yat(He, Ke instanceof Error ? Ke.message : "resume failed", Ae),
-                g("task_local_workflow", "adopt_resume_failed"),
-                h(Ke));
+                emitAdoptWorkflowFailed(He, Ke instanceof Error ? Ke.message : "resume failed", Ae),
+                logFeatureSad("task_local_workflow", "adopt_resume_failed"),
+                logError(Ke));
             });
         for (let He of w)
           S9({
@@ -25899,13 +25899,13 @@ class fZ {
             canUseTool: Oe,
           })
             .then((Ke) => {
-              if (!Ke.alreadyCompleted) kre(Rv(be.all()), xe);
+              if (!Ke.alreadyCompleted) syncLiveInFlightSnapshot(Rv(be.all()), xe);
             })
             .catch((Ke) => {
               if (
                 (be.remove(He.agentId),
-                Sat(He, "resume failed", be, Ae),
-                g("task_local_agent", "adopt_resume_failed"),
+                emitAdoptAgentFailed(He, "resume failed", be, Ae),
+                logFeatureSad("task_local_agent", "adopt_resume_failed"),
                 Ke instanceof Ou)
               ) {
                 n(`[adopt] agent ${He.agentId} resume skipped: ${Ke.message}`, {
@@ -25913,16 +25913,16 @@ class fZ {
                 });
                 return;
               }
-              h(Ke);
+              logError(Ke);
             });
       })
-      .catch(h);
+      .catch(logError);
   }
   resumeOrphanedAgents(w, I) {
     let { store: ne, taskRegistry: me, storageV5: pe } = this;
-    yHe(ne, MOt, { timeoutMs: Wye / 4 })
+    yHe(ne, mcpSettledForAdopt, { timeoutMs: STALE_THRESHOLD_MS / 4 })
       .then(() => {
-        if (!Ja() || WD() !== I) {
+        if (!isActingAsBgJob() || getBgJobDir() !== I) {
           n(
             "[orphan-resume] deferred auto-resume skipped: takeover released or replaced during MCP-settle wait",
           );
@@ -25943,11 +25943,11 @@ class fZ {
                 fFn({ ...xe, outputFile: xe.outputFile ?? Ae.outputFile }, me);
                 return;
               }
-              (pFn(xe), kre(Rv(me.all()), pe));
+              (pFn(xe), syncLiveInFlightSnapshot(Rv(me.all()), pe));
             })
             .catch((Ae) => {
               if (
-                (g("task_local_agent", "orphan_auto_resume_failed"),
+                (logFeatureSad("task_local_agent", "orphan_auto_resume_failed"),
                 mFn(xe, l(Ae)),
                 Ae instanceof Ou)
               ) {
@@ -25957,10 +25957,10 @@ class fZ {
                 );
                 return;
               }
-              h(Ae);
+              logError(Ae);
             });
       })
-      .catch(h);
+      .catch(logError);
   }
   artifactMountGate = async () => {
     await df().catch(() => null);
@@ -25970,7 +25970,7 @@ class fZ {
         new AbortController(),
         this._requireHost().mainLoopModel,
       ),
-      I = await dKe(
+      I = await isArtifactFetchEnabled(
         w.options.tools,
         this.store.getState().toolPermissionContext,
         { promptless: !0 },
@@ -25982,11 +25982,11 @@ class fZ {
       ne = this.transcript.replace,
       me = bpt();
     if (me.total === 0) return;
-    let pe = Object.values(I.all()).filter(tM),
+    let pe = Object.values(I.all()).filter(isCarriedFrameLiveWatch),
       be = Vo(),
       xe = [...me.bySlug.keys()]
-        .map((Ke) => ({ slug: Ke, url: br({ slug: Ke, env: be }) }))
-        .filter(({ slug: Ke, url: Je }) => Wt(Je)?.slug === Ke)
+        .map((Ke) => ({ slug: Ke, url: artifactViewerUrlFor({ slug: Ke, env: be }) }))
+        .filter(({ slug: Ke, url: Je }) => parseArtifactUrl(Je)?.slug === Ke)
         .map(({ url: Ke }) => Ke),
       Ae = me.bySlug.size === 1 && xe.length === 1 ? ` on ${xe[0]}` : "",
       Oe = p_("chat:killAgents", "Chat", "ctrl+x ctrl+k"),
@@ -26005,7 +26005,7 @@ class fZ {
         storageV5: ne,
       },
       {
-        publishContext: _t() ? "bg_session" : "interactive",
+        publishContext: isBgSession() ? "bg_session" : "interactive",
         ui: "repl",
         emit: (me) => this.transcript.replace((pe) => [...pe, ...me]),
         gate: this.artifactMountGate,
@@ -26017,7 +26017,7 @@ class fZ {
             frameUrls: me.frameUrls,
           };
         },
-        getKnownVer: (me) => D$(w.getState(), me),
+        getKnownVer: (me) => mainObservedArtifactVersion(w.getState(), me),
         commentsGateOpen: () =>
           import.meta
             .require("../../02-功能模块/Artifact发布-渲染/chunk-b6k1z7an.js")
@@ -26034,15 +26034,15 @@ class fZ {
                 be === void 0
                   ? void 0
                   : {
-                      take: () => Wen(be, xe),
-                      repark: (Ae) => Gen(be, Ae, xe),
-                      release: (Ae) => qen(be, Ae, xe),
+                      take: () => takeUnresumedFrameLive(be, xe),
+                      repark: (Ae) => reparkUnresumedFrameLive(be, Ae, xe),
+                      release: (Ae) => releaseReparkedFrameLive(be, Ae, xe),
                     },
             };
           }),
           discloseUnattended: (me) => this.discloseUnattendedActivity(me),
           onCarriedArmed: () => {
-            if (_t()) kre(Rv(I.all()), ne);
+            if (isBgSession()) syncLiveInFlightSnapshot(Rv(I.all()), ne);
           },
         },
       },
@@ -26061,13 +26061,13 @@ class fZ {
       slicedMessages: Ke,
       currentOverride: Ec(),
       latchActive: RW() || a_e(),
-      firstParty: Ca(),
+      firstParty: usesFirstPartyModelIds(),
       initialModel: KR(),
     });
     try {
       pe.evictRewoundFileTracking(f_t(Ke));
     } catch (Ct) {
-      h(Ct);
+      logError(Ct);
     }
     if (I !== "auto_restore_cancel") V2(pe.memorySelector);
     if (
@@ -26076,7 +26076,7 @@ class fZ {
         postRewindMessageCount: Oe,
         messagesRemoved: Ae.length - Oe,
         rewindToMessageIndex: Oe,
-        source: u(I),
+        source: fromEnum(I),
       }),
       K2("rewind"),
       me.replace(He),
@@ -26090,7 +26090,7 @@ class fZ {
       if (Je.clearLatch) zOn();
       if (Je.model.action === "restore") ad(Je.model.value);
       i("tengu_refusal_fallback_rewind_unwind", {
-        action: u(
+        action: fromEnum(
           Je.model.action === "restore"
             ? "model_restored"
             : Je.model.reason === "not_first_party"
@@ -26098,12 +26098,12 @@ class fZ {
               : "model_kept_writer_mismatch",
         ),
         ...(Je.model.action === "restore" && {
-          restored_from: u(Je.model.restoredFrom),
+          restored_from: fromEnum(Je.model.restoredFrom),
         }),
         latch_cleared: Je.clearLatch,
         banners_sliced: Je.bannersSliced,
-        model_scope: u(FF(Je.lastSlicedFallbackModel)),
-        source: u(I),
+        model_scope: fromEnum(FF(Je.lastSlicedFallbackModel)),
+        source: fromEnum(I),
       });
     }
     let Qe =
@@ -26112,7 +26112,7 @@ class fZ {
           : void 0,
       it = be.getState().fastMode,
       at = Qe && Mr() ? db(Qe.mainLoopModel, it) : void 0,
-      Zt = I === "auto_restore_cancel" ? null : Tjn(He, HT(), SFe());
+      Zt = I === "auto_restore_cancel" ? null : Tjn(He, isArtifactConflictLegacy(), isResumeFrameSeedEligible());
     if (
       (be.setState((Ct) => ({
         ...(I === "auto_restore_cancel" ? Ct : VSe(He, Ct)),
@@ -26129,7 +26129,7 @@ class fZ {
       at !== void 0)
     )
       pb(it, at);
-    y("repl_rewind_conversation");
+    logFeatureOk("repl_rewind_conversation");
   }
   restoreMessageSync = (w, I) => {
     (this.rewindConversationTo(w, I), this.restoreDraftFrom(w));
@@ -26198,7 +26198,7 @@ class fZ {
       ]);
       return;
     }
-    let Qe = hr(),
+    let Qe = createAbortController(),
       it = pe.buildToolUseContext(Ke, [], Qe, Ae),
       at = await Plt({
         toolUseContext: it,
@@ -26253,7 +26253,7 @@ class fZ {
       credentials: pe,
     } = this;
     I.apiKeyVerification.verify({ credentials: pe, storageV5: me });
-    let be = uR() ? [] : await Ny(w, !1, me, pe);
+    let be = isClaudeMdLoadingDisabled() ? [] : await Ny(w, !1, me, pe);
     if (be.length > 0) {
       let Ae = be.map(
         (Oe) =>
@@ -26303,8 +26303,8 @@ class gZ {
   }
   start() {
     let { store: w, setAppState: I, isRemoteSession: ne } = this.#e,
-      me = st.getSandboxUnavailableReason();
-    if (me && st.isSandboxRequired())
+      me = SandboxManager.getSandboxUnavailableReason();
+    if (me && SandboxManager.isSandboxRequired())
       return (
         process.stderr.write(
           `
@@ -26318,7 +26318,7 @@ Error: sandbox required but unavailable: ${me}
         { stop: () => {}, refused: !0 }
       );
     if (me) n(`sandbox disabled: ${me}`, { level: "warn" });
-    let pe = me ? void 0 : st.getMaskCredentialWarning();
+    let pe = me ? void 0 : SandboxManager.getMaskCredentialWarning();
     if (pe) n(`sandbox: ${pe}`, { level: "warn" });
     if (me || pe)
       (Zm("sandbox", 1),
@@ -26333,10 +26333,10 @@ Error: sandbox required but unavailable: ${me}
     return {
       stop: iS(
         [w],
-        () => [st.isSandboxingEnabled()],
+        () => [SandboxManager.isSandboxingEnabled()],
         (xe) => {
           if (!xe) return;
-          st.initialize(this.ask).catch((Ae) => {
+          SandboxManager.initialize(this.ask).catch((Ae) => {
             (process.stderr.write(`
 \u274C Sandbox Error: ${l(Ae)}
 `),
@@ -26377,7 +26377,7 @@ Error: sandbox required but unavailable: ${me}
               Oe.toolPermissionContext,
               new AbortController().signal,
               {
-                isSubagentLoop: vP(void 0),
+                isSubagentLoop: isModelDrivenSession(void 0),
                 recordPresumed: !0,
                 storageV5: me,
                 credentials: pe,
@@ -26388,7 +26388,7 @@ Error: sandbox required but unavailable: ${me}
         break;
     }
     if (zr() && soe()) {
-      if (CM(w.host))
+      if (isMisleadingConsentHost(w.host))
         return (
           n(
             `[sandbox] Refusing to forward a worker ask for a host srt would re-spell: ${QG(w.host) ?? "(unshowable)"}`,
@@ -26430,7 +26430,7 @@ function rnt({
 }) {
   let Ke = U((Mn) => Mn.fileHistory),
     [Je, Qe] = d(void 0),
-    it = iw(),
+    it = fileHistoryEnabled(),
     { rows: at } = Se(),
     Zt = gi() ? Math.floor(at / 2) : at,
     Ct = it ? 3 : 2,
@@ -26457,7 +26457,7 @@ function rnt({
     if (!xe || !it) return;
     let Mn = !1;
     return (
-      QDe(Ke, xe.uuid).then((Or) => {
+      fileHistoryGetDiffStats(Ke, xe.uuid).then((Or) => {
         if (!Mn) xo(Or);
       }),
       () => {
@@ -26509,7 +26509,7 @@ function rnt({
     try {
       (await ne(Mn), Ro(null), be());
     } catch (Or) {
-      (h(Or),
+      (logError(Or),
         Ro(null),
         Qe(`Failed to restore the conversation:
 ${l(Or)}`));
@@ -26525,7 +26525,7 @@ ${l(Or)}`));
     if (
       (i("tengu_message_selector_selected", {
         index_from_end: Br,
-        message_type: u(Mn.type),
+        message_type: fromEnum(Mn.type),
         is_current_prompt: !1,
       }),
       !w.includes(Mn))
@@ -26541,12 +26541,12 @@ ${l(Or)}`));
       Ho(Mn);
       return;
     }
-    let fi = await QDe(Ke, Mn.uuid);
+    let fi = await fileHistoryGetDiffStats(Ke, Mn.uuid);
     (Ho(Mn), xo(fi));
   }
   async function jo(Mn) {
     if (
-      (i("tengu_message_selector_restore_option_selected", { option: u(Mn) }),
+      (i("tengu_message_selector_restore_option_selected", { option: fromEnum(Mn) }),
       !_o)
     ) {
       Qe("Message not found.");
@@ -26564,7 +26564,7 @@ ${l(Or)}`));
           Gi = (Ln === "up_to" ? zo : yn).trim() || void 0;
         (await pe(_o, Gi, Ln), Ro(null), Ho(void 0), be());
       } catch (Ln) {
-        if (!(Ln instanceof $O)) h(Ln);
+        if (!(Ln instanceof $O)) logError(Ln);
         (Ro(null),
           Ho(void 0),
           Qe(`Failed to summarize:
@@ -26580,17 +26580,17 @@ ${l(Ln)}`));
       try {
         fi = (await me(_o))?.skippedLinks ?? 0;
       } catch (Ln) {
-        if (((Or = Ln), Or instanceof Pgt))
+        if (((Or = Ln), Or instanceof RewindNoFilesRestoredError))
           n(`MessageSelector: rewind failed: ${Or.message}`, {
             level: "error",
           });
-        else h(Or);
+        else logError(Or);
       }
     if (Mn === "conversation" || Mn === "both")
       try {
         await ne(_o);
       } catch (Ln) {
-        ((Br = Ln), h(Br));
+        ((Br = Ln), logError(Br));
       }
     (Ro(null), Ho(void 0));
     let Xi =
@@ -26653,7 +26653,7 @@ ${l(Br)}`
       Promise.all(
         ao.map(async (Or, Br) => {
           if (Or.uuid !== Tt && Or.uuid !== to) {
-            let fi = xVe(Ke, Or.uuid),
+            let fi = fileHistoryCanRestore(Ke, Or.uuid),
               Xi = ao.at(Br + 1),
               Ln = fi
                 ? M8t(w, Or.uuid, Xi?.uuid !== Tt ? Xi?.uuid : void 0)
@@ -26709,7 +26709,7 @@ ${l(Br)}`
                 e(Ske, { userMessage: _o, color: "text", isCurrent: !1 }),
                 r(t, {
                   dimColor: !0,
-                  children: ["(", uy(new Date(_o.timestamp)), ")"],
+                  children: ["(", formatRelativeTimeAgo(new Date(_o.timestamp)), ")"],
                 }),
               ],
             }),
@@ -27129,7 +27129,7 @@ function Ske(dIn) {
       ZU = aS;
       pke = lS;
       gke = uke
-        ? or(yA, ent - uke, !0)
+        ? truncate(yA, ent - uke, !0)
         : yA
             .slice(0, 500)
             .split(
@@ -27264,10 +27264,10 @@ function A8t({ turn: w, sessionController: I, onClose: ne }) {
     onPreRestore: w.cancel,
     onRestoreCode: async (Oe) => {
       try {
-        return await kVe(() => pe.getState().fileHistory, Oe.uuid);
+        return await fileHistoryRewind(() => pe.getState().fileHistory, Oe.uuid);
       } finally {
         be((He) => {
-          let Ke = EV(He.fileHistory, { kind: "touch" }, me);
+          let Ke = reduceFileHistoryState(He.fileHistory, { kind: "touch" }, me);
           if (Ke === He.fileHistory) return He;
           return { ...He, fileHistory: Ke };
         });
@@ -27283,10 +27283,10 @@ function A8t({ turn: w, sessionController: I, onClose: ne }) {
             try {
               let Oe = r_e();
               if (!Oe || Oe === xe.id) return;
-              let He = await CY(Oe, void 0, me);
+              let He = await getLastSessionLog(Oe, void 0, me);
               if (He) await I.resume(Oe, He, "rewind_pre_clear");
             } catch (Oe) {
-              h(Oe);
+              logError(Oe);
             }
           }
         : void 0,
@@ -27331,15 +27331,15 @@ function eH(KIn) {
   let Q_ = _(15),
     { toolName: fnt, description: gnt } = KIn,
     D8t;
-  if (Q_[0] === p) ((D8t = ii()), (Q_[0] = D8t));
+  if (Q_[0] === p) ((D8t = getTeamName()), (Q_[0] = D8t));
   else D8t = Q_[0];
   let N8t = D8t,
     L8t;
-  if (Q_[1] === p) ((L8t = Ip()), (Q_[1] = L8t));
+  if (Q_[1] === p) ((L8t = getAgentName()), (Q_[1] = L8t));
   else L8t = Q_[1];
   let O8t = L8t,
     F8t;
-  if (Q_[2] === p) ((F8t = cS()), (Q_[2] = F8t));
+  if (Q_[2] === p) ((F8t = getTeammateColor()), (Q_[2] = F8t));
   else F8t = Q_[2];
   let B8t = F8t,
     U8t;
@@ -27945,7 +27945,7 @@ function Trt(w, I, ne, me) {
     be = pe > 0 ? `${pe} queued` : "",
     xe = w.progress?.tokenCount,
     Ae = w.progress?.lastActivity ? L.arrowDown : L.arrowUp,
-    Oe = xe !== void 0 && xe > 0 ? `${Ae} ${No(xe)} tokens` : "";
+    Oe = xe !== void 0 && xe > 0 ? `${Ae} ${formatNumber(xe)} tokens` : "";
   if (w.type === "in_process_teammate") {
     if (w.status === "running" && w.awaitingPlanApproval)
       return {
@@ -27965,7 +27965,7 @@ function Trt(w, I, ne, me) {
       let it = ne ?? w.startTime,
         at = w.endTime ?? I;
       return {
-        elapsed: Ot(Math.max(0, at - it)),
+        elapsed: formatDuration(Math.max(0, at - it)),
         tokenText: Oe,
         queuedText: be,
         queuedCount: pe,
@@ -27973,7 +27973,7 @@ function Trt(w, I, ne, me) {
     }
     let Qe = ne ?? w.startTime;
     return {
-      elapsed: Ot(Math.max(0, I - Qe)),
+      elapsed: formatDuration(Math.max(0, I - Qe)),
       tokenText: Oe,
       queuedText: be,
       queuedCount: pe,
@@ -27994,7 +27994,7 @@ function Trt(w, I, ne, me) {
       0,
       He ? I - w.startTime - Ke : (w.endTime ?? w.startTime) - w.startTime - Ke,
     );
-  return { elapsed: Ot(Je), tokenText: Oe, queuedText: be, queuedCount: pe };
+  return { elapsed: formatDuration(Je), tokenText: Oe, queuedText: be, queuedCount: pe };
 }
 function xrt(w, I, ne, me) {
   let pe = JP(w.status),
@@ -28004,8 +28004,8 @@ function xrt(w, I, ne, me) {
     Oe = w.workflowName ?? w.summary ?? w.description ?? "Dynamic workflow",
     He = ft(w.description ?? w.summary ?? "", ":").trim(),
     Ke = `${I.done}/${I.total} agents done${Ae}`,
-    Je = w.totalTokens > 0 ? `${L.arrowDown} ${No(w.totalTokens)} tokens` : "",
-    Qe = [{ text: Ke }, { text: Ot(xe) }, ...(Je ? [{ text: Je }] : [])];
+    Je = w.totalTokens > 0 ? `${L.arrowDown} ${formatNumber(w.totalTokens)} tokens` : "",
+    Qe = [{ text: Ke }, { text: formatDuration(xe) }, ...(Je ? [{ text: Je }] : [])];
   return {
     name: Oe,
     description: He === Oe ? "" : He,
@@ -28095,9 +28095,9 @@ function cee(Nke) {
         let B0 = nR[yDn]?.warning;
         if (B0 && !JP(xnt.status) && !iR.has(xnt.id))
           (iR.add(xnt.id),
-            y("workflow_size_warning"),
+            logFeatureOk("workflow_size_warning"),
             i("tengu_workflow_size_warning_shown", {
-              axis: u(B0.axis),
+              axis: fromEnum(B0.axis),
               scheduled_agents: B0.scheduledAgents,
               total_tokens: B0.totalTokens,
               projected_tokens: B0.projectedTokens,
@@ -29213,7 +29213,7 @@ function G0(w, I, ne, me) {
 }
 function Hve({ taskId: w, taskStatus: I, taskRegistry: ne, setAppState: me }) {
   let pe = ne.get(w)?.status ?? I;
-  if (pe === "running") return (EF(w, ne, "user"), "killed");
+  if (pe === "running") return (killWorkflowTask(w, ne, "user"), "killed");
   if (xs(pe) && !eh(w)) {
     for (let be of A4e(w))
       be.abort(new DOMException("workflow-abort", "AbortError"));
@@ -29286,7 +29286,7 @@ function qve(w) {
     xo = po && Je === !0,
     Wo = Ho === "armed" || Ho === "stale",
     Ro = U((In) => Object.values(In.tasks).some(Ert)),
-    on = U((In) => Object.values(In.tasks).some(wqe)),
+    on = U((In) => Object.values(In.tasks).some(isClaimableAutoReactSubscription)),
     An = to.some(T_t),
     wn = re(() => {
       let In = it.getState().tasks,
@@ -29326,12 +29326,12 @@ function qve(w) {
         suppressBackgroundAgentKill: Fn = !1,
         pressLandedOnWork: Qo = !1,
       }) => {
-        let Gn = Xy(rt(), ro),
+        let Gn = Xy(getMainLoopModel(), ro),
           Sn = Qe?.(),
           Mn = {
             source: S("escape"),
-            streamMode: u(Zt.get().mode),
-            ...(Gn && { effort_level: u(Gn) }),
+            streamMode: fromEnum(Zt.get().mode),
+            ...(Gn && { effort_level: fromEnum(Gn) }),
             ...(Sn && { message_id: Ee(Sn) }),
           },
           Or = t3t();
@@ -29344,9 +29344,9 @@ function qve(w) {
         if (R2n() && fi) (uee(zt, In), (Ln = !0));
         if ((be !== void 0 && !be.aborted) || xe)
           return ((go.current = Date.now()), i("tengu_cancel", Mn), I(), !0);
-        let gn = Object.values(it.getState().tasks).some(wqe),
+        let gn = Object.values(it.getState().tasks).some(isClaimableAutoReactSubscription),
           On = Tt.getCommandQueueSnapshot().some(T_t),
-          Jr = !Fn && (Ro || gn || On || Tqe()),
+          Jr = !Fn && (Ro || gn || On || hasStoppableAutoReactSupervision()),
           ai = nzn(Tt, Br) && Ae !== void 0,
           Fr = Or > 0,
           Oi =
@@ -29358,7 +29358,7 @@ function qve(w) {
             Date.now() - go.current < bZt;
         if (Wo && !Ln && !Oi && fi) (uee(zt, In), (Ln = !0));
         if (ai && Ae) return (Ae(), !0);
-        if (!Fn && On && !Ro && !gn && !Tqe())
+        if (!Fn && On && !Ro && !gn && !hasStoppableAutoReactSupervision())
           return (
             R3(),
             QLe(),
@@ -29368,8 +29368,8 @@ function qve(w) {
             Ln || Fr
           );
         let Fi = Object.values(it.getState().tasks).some(Ert);
-        if (!Fn && (Ro || gn || Tqe())) {
-          let Wi = F4(Ct, { durable: !1 }),
+        if (!Fn && (Ro || gn || hasStoppableAutoReactSupervision())) {
+          let Wi = killAutoReactSubscriptions(Ct, { durable: !1 }),
             qs = DV(Tt);
           XO(Wi, qs, { nameChordGesture: !0, passive: !0 });
           let ta = wn();
@@ -29397,7 +29397,7 @@ function qve(w) {
     un = pe !== "transcript" && !me && !Sr && !vo && !Oe,
     lr = un && !zo && !Kn && (nn || no || _o || xo) && !jo && !He && !Cn,
     Io =
-      un && (nn || (zo ? !1 : no || _o || po || Ro || on || An || Tqe() || Cn));
+      un && (nn || (zo ? !1 : no || _o || po || Ro || on || An || hasStoppableAutoReactSupervision() || Cn));
   Ne(
     "chat:cancel",
     () => {
@@ -29431,7 +29431,7 @@ function qve(w) {
     let In = it.getState().tasks,
       Fn = Object.values(In).some(Wve),
       Qo = AVe(eo, W2)?.state === "armed",
-      Gn = Object.values(In).some(wqe),
+      Gn = Object.values(In).some(isClaimableAutoReactSubscription),
       Sn = Zu(),
       Mn = $ve != null && $ve.liveDocWatchCount() > 0,
       Or =
@@ -29451,10 +29451,10 @@ function qve(w) {
     let Br = Date.now();
     if (Br - co.current <= Irt) {
       ((co.current = 0), ao("kill-agents-confirm"));
-      let Ln = Xy(rt(), ro);
+      let Ln = Xy(getMainLoopModel(), ro);
       i("tengu_cancel", {
         source: S("kill_agents"),
-        ...(Ln && { effort_level: u(Ln) }),
+        ...(Ln && { effort_level: fromEnum(Ln) }),
       });
       let Gi = DV(Tt),
         gn = qKe(),
@@ -29468,7 +29468,7 @@ function qve(w) {
       let Jr = d4n(eo, jt);
       ($ve?.stopAllLiveDocWatches(), Bmn());
       let ai = Sn,
-        Fr = F4(Ct, { storageV5: jt });
+        Fr = killAutoReactSubscriptions(Ct, { storageV5: jt });
       if ((B5n(Tt), Fr > 0 || ai || Gi.length > 0))
         Tt.enqueuePendingNotification({
           agentId: ze(),
@@ -29854,7 +29854,7 @@ function nwe(w) {
     n(`History search reader failed: ${l(w)}`, { level: "error" });
     return;
   }
-  h(w);
+  logError(w);
 }
 function rwe(w, I) {
   let { storageV5: ne } = _e(),
@@ -29906,7 +29906,7 @@ function rwe(w, I) {
         while (!0) {
           if (xo?.aborted) return;
           let An = await Ro.next();
-          if (Ol().claim("history_search_scan_ok")) y("history_search_scan");
+          if (Ol().claim("history_search_scan_ok")) logFeatureOk("history_search_scan");
           if (eo.current !== Ro) return;
           if (An.done) {
             Qe(!0);
@@ -29928,7 +29928,7 @@ function rwe(w, I) {
       [He, Tt, to, me, pe, be, ne],
     ),
     co = re(() => {
-      (y("history_search_open"),
+      (logFeatureOk("history_search_open"),
         (Zt.current = w.getSnapshot()),
         (Ct.current = !1),
         Oe(!0),
@@ -29942,7 +29942,7 @@ function rwe(w, I) {
       let po = Zt.current;
       if (!po) return;
       if (it) {
-        y("history_search_accept");
+        logFeatureOk("history_search_accept");
         let xo = fX({ display: it.display, pastedContents: it.pastedContents }),
           Wo = Og(xo.display),
           Ro = Qb(xo.display);
@@ -29950,7 +29950,7 @@ function rwe(w, I) {
         let on = Ro.toLowerCase().lastIndexOf(He.toLowerCase());
         (pe(on !== -1 ? on : Ro.length), be(Wo), xe(xo.pastedContents));
       } else {
-        if (He.length > 0) g("history_search_accept", "accept_no_match");
+        if (He.length > 0) logFeatureSad("history_search_accept", "accept_no_match");
         xe(po.pastedContents);
       }
       zt();
@@ -29975,7 +29975,7 @@ function rwe(w, I) {
         ((Ct.current = !0),
           I({ display: po.value, pastedContents: po.pastedContents }));
     } else if (it) {
-      y("history_search_execute");
+      logFeatureOk("history_search_execute");
       let xo = fX({ display: it.display, pastedContents: it.pastedContents }),
         Wo = Og(xo.display),
         Ro = Qb(xo.display);
@@ -29983,7 +29983,7 @@ function rwe(w, I) {
         be(Wo),
         (Ct.current = !0),
         I({ display: Ro, pastedContents: xo.pastedContents }));
-    } else g("history_search_execute", "execute_no_match");
+    } else logFeatureSad("history_search_execute", "execute_no_match");
     zt();
   }, [He, it, I, me, be, zt]);
   Ne("history:search", co, { context: "Global", isActive: h_() ? !1 : !Ae });
@@ -30380,7 +30380,7 @@ function KZt(w, I) {
   let ne = new e8t(
     I.filter((me) => !me.isHidden).map((me) => ({
       name: me.name,
-      displayName: qo(me),
+      displayName: getCommandName(me),
       description: me.description,
       aliases: me.aliases,
       command: me,
@@ -30421,7 +30421,7 @@ function dwe(w, I, ne) {
   let pe = I.toLowerCase();
   for (let be of me) {
     if (!uwe(be.metadata)) continue;
-    for (let xe of [be.metadata.name, qo(be.metadata)])
+    for (let xe of [be.metadata.name, getCommandName(be.metadata)])
       if (xe.toLowerCase().startsWith(pe)) {
         let Ae = xe.slice(I.length);
         if (Ae) return { suffix: Ae, fullCommand: xe };
@@ -30438,7 +30438,7 @@ function K0(w) {
     ne = I === -1 ? w.slice(1) : w.slice(1, I);
   if (mwe(ne)) return !0;
   let me = ne.indexOf(":");
-  return me > 0 && Xqe(ne.slice(0, me)) && ne.slice(me + 1).includes("://");
+  return me > 0 && looksLikeCommand(ne.slice(0, me)) && ne.slice(me + 1).includes("://");
 }
 function vee(w) {
   let I = w.name;
@@ -30467,11 +30467,11 @@ function YZt(w, I) {
   }
 }
 function cwe(w, I, ne, me, pe) {
-  let be = qo(I),
+  let be = getCommandName(I),
     xe = me ? ` (${me})` : "",
     Ae = I.type === "prompt" && I.kind === "workflow",
     Oe = ne ? YZt(w, I) : void 0,
-    He = ne ? (I.menuDescription ?? I.description) : Ae ? I.description : MY(I),
+    He = ne ? (I.menuDescription ?? I.description) : Ae ? I.description : formatDescriptionWithSource(I),
     Ke = Oe && `[${Oe}] `;
   if (Ke && He.startsWith(Ke)) He = He.slice(Ke.length);
   let Je =
@@ -30495,11 +30495,11 @@ function xee(w, I, ne) {
   if (!K0(I)) return [];
   if (I.includes(" ") && !I.endsWith(" ")) return [];
   let me = NO.of(w);
-  ne = lNe(ne);
+  ne = dropShadowedBundledSkills(ne);
   let pe = I.slice(1).toLowerCase().trim(),
     be = a.CLAUDE_CODE_ENABLE_MENU_KIND_LANES || H("tengu_mint_lanes", !1);
   if (pe === "") {
-    let Je = ne.filter((zt) => !zt.isHidden && !Tk(zt)),
+    let Je = ne.filter((zt) => !zt.isHidden && !isSkillOff(zt)),
       Qe = [],
       it = Je.filter((zt) => zt.type === "prompt")
         .map((zt) => ({ cmd: zt, score: fLe(zt.name) }))
@@ -30526,7 +30526,7 @@ function xee(w, I, ne) {
         jt.push(zt);
       else Tt.push(zt);
     });
-    let to = (zt, ao) => qo(zt).localeCompare(qo(ao));
+    let to = (zt, ao) => getCommandName(zt).localeCompare(getCommandName(ao));
     return (
       Zt.sort(to),
       Ct.sort(to),
@@ -30536,14 +30536,14 @@ function xee(w, I, ne) {
       [...Qe, ...Zt, ...Ct, ...eo, ...jt, ...Tt].map((zt) => cwe(me, zt, be))
     );
   }
-  let xe = (Je) => qo(Je).toLowerCase() === pe || Je.name.toLowerCase() === pe,
+  let xe = (Je) => getCommandName(Je).toLowerCase() === pe || Je.name.toLowerCase() === pe,
     Ae = ne.find((Je) => Je.isHidden && xe(Je));
   if (Ae && ne.some((Je) => !Je.isHidden && xe(Je))) Ae = void 0;
   let Ke = KZt(me, ne)
     .search(pe, {
       getScoreBoost: (Je) =>
         Je.command.type === "prompt" ? fLe(Je.command.name) : 0,
-      filter: (Je) => !Tk(Je.command),
+      filter: (Je) => !isSkillOff(Je.command),
     })
     .map((Je) => {
       let Qe = Je.command,
@@ -30566,7 +30566,7 @@ function pwe(w, I) {
   let pe = me.split(RRt).join("");
   if (pe === "") return !1;
   let be = ne.metadata;
-  return [be.name, qo(be), ...(be.aliases ?? [])].some((xe) => {
+  return [be.name, getCommandName(be), ...(be.aliases ?? [])].some((xe) => {
     let Ae = xe.toLowerCase().split(RRt).filter(Boolean);
     return Ae.some((Oe, He) => Ae.slice(He).join("").startsWith(pe));
   });
@@ -30590,16 +30590,16 @@ function Pee({
     }
   }
   let xe, Ae;
-  if (typeof w === "string") ((xe = w), (Ae = I ? gue(xe, ne) : void 0));
+  if (typeof w === "string") ((xe = w), (Ae = I ? getCommand(xe, ne) : void 0));
   else {
     if (!uwe(w.metadata)) return null;
     let Ke = w.matchedAlias;
-    ((xe = Ke && Di(Ke, ne) === w.metadata ? Ke : w.metadata.name),
+    ((xe = Ke && findCommand(Ke, ne) === w.metadata ? Ke : w.metadata.name),
       (Ae = w.metadata));
   }
   if (Mu()) {
     if (Ae?.type === "prompt" && Ae.urlTemplate) {
-      let Ke = `/${qo(Ae)}`;
+      let Ke = `/${getCommandName(Ae)}`;
       return (
         me(Ke),
         pe(Ke.length),
@@ -32471,7 +32471,7 @@ function lit(w) {
 var mz = 15,
   ueo = 60;
 function pz(w) {
-  return Xe(w, ueo);
+  return truncateToWidth(w, ueo);
 }
 function deo(w, I, ne = !1) {
   if (!I && !ne) return [];
@@ -32491,7 +32491,7 @@ function deo(w, I, ne = !1) {
         be.displayText.toLowerCase().includes(pe),
     );
   } catch (me) {
-    return (h(me), []);
+    return (logError(me), []);
   }
 }
 async function vwe(
@@ -32507,7 +32507,7 @@ async function vwe(
 ) {
   if (!I && !pe) return [];
   let [Ae, Oe] = await Promise.all([
-      U3e(w, I, pe, xe),
+      generateFileSuggestions(w, I, pe, xe),
       Promise.resolve(deo(me, I, pe)),
     ]),
     He = Ae.map((at) => ({
@@ -32841,7 +32841,7 @@ function Awe({
   let fo = V(() => {
       let Ko = I.filter((pr) => !pr.isHidden);
       if (Ko.length === 0) return;
-      return Math.max(...Ko.map((pr) => qo(pr).length)) + 6;
+      return Math.max(...Ko.map((pr) => getCommandName(pr).length)) + 6;
     }, [I]),
     ro = U((Ko) => Ko.mcp.resources),
     ho = U((Ko) => Ko.mcp.resourceTemplates),
@@ -32913,7 +32913,7 @@ function Awe({
     }, [Ke, vo, Oe]),
     nn = be ? void 0 : Ke === "prompt" ? Sr : Kn,
     no = C(null);
-  if (no.current === null) no.current = Win();
+  if (no.current === null) no.current = createDialFailureLatch();
   let jo = C(null),
     Cn = C("file"),
     un = C(""),
@@ -32973,7 +32973,7 @@ function Awe({
         }
         if (!Vr)
           Vr = await vwe(
-            k4,
+            globalFileIndexCache,
             Ko,
             {
               mcpResources: pr ? {} : ro,
@@ -32999,9 +32999,9 @@ function Awe({
     );
   E(() => {
     let Ko = setImmediate((pr) => {
-        if (!Pt()) Ylt(k4, pr);
+        if (!Pt()) startBackgroundCacheRefresh(globalFileIndexCache, pr);
       }, Ro),
-      cr = k4.indexBuildComplete.subscribe(() => {
+      cr = globalFileIndexCache.indexBuildComplete.subscribe(() => {
         let pr = jo.current;
         if (pr === null) return;
         let Vr = Cn.current;
@@ -33133,7 +33133,7 @@ function Awe({
               description: Xs ? `send message \xB7 ${Xs}` : "send message",
             });
           }
-          if (Mo() && !Pt()) {
+          if (isCrossSessionMessagingEnabled() && !Pt()) {
             let Ri = Mn.current,
               ns =
                 Ri?.value === Ko && Ri.partial === yi
@@ -33173,7 +33173,7 @@ function Awe({
             hi = yi ? git(Ko) : null,
             zn =
               hi !== null &&
-              Di(hi.commandName, I)?.completesHashChannels === !0;
+              findCommand(hi.commandName, I)?.completesHashChannels === !0;
           if (yi && !zn && dz(_o.getState().mcp.clients)) {
             Jr(yi[2]);
             return;
@@ -33191,7 +33191,7 @@ function Awe({
                 (Je(ns),
                   Qe(Ri + xi.length),
                   Ln(),
-                  y("input_emoji_completion", { inline: !0 }));
+                  logFeatureOk("input_emoji_completion", { inline: !0 }));
                 return;
               }
             }
@@ -33252,14 +33252,14 @@ function Awe({
             Ko.includes(" ")
           ) {
             let { args: hi } = yi,
-              zn = await QM(hi, { limit: 10 }, Ro);
+              zn = await searchSessionsByCustomTitle(hi, { limit: 10 }, Ro);
             if (Gn.current !== Ko || Qo.current === Ko) return;
             let xi = zn.map((Ri) => {
-              let ns = Kc(Ri);
+              let ns = getSessionIdFromLog(Ri);
               return {
                 id: `resume-title-${ns}`,
                 displayText: Ri.customTitle ?? Ri.aiTitle,
-                description: Ent(Ri),
+                description: formatLogMetadata(Ri),
                 metadata: { sessionId: ns },
               };
             });
@@ -33276,7 +33276,7 @@ function Awe({
             return;
           }
           if (yi && Ko.includes(" ")) {
-            let hi = Di(yi.commandName, I);
+            let hi = findCommand(yi.commandName, I);
             if (hi?.getArgumentCompletions) {
               let zn = await Krt(Ko, hi.getArgumentCompletions, Ro);
               if (Gn.current !== Ko || Qo.current === Ko) return;
@@ -33306,7 +33306,7 @@ function Awe({
               Xs = Ri !== -1 && Ko.slice(Ri + 1).trim().length > 0,
               Is = Ri !== -1 && Ko.length === Ri + 1;
             if (Ri !== -1) {
-              let Pa = Di(ns, I);
+              let Pa = findCommand(ns, I);
               if (Pa || Xs) {
                 if (Pa?.argumentHint && Is) yi = Pa.argumentHint;
                 else if (
@@ -33571,7 +33571,7 @@ function Awe({
           let wr = at[pr];
           if (wr) {
             let ur = gH(wr, Oe, He, _we, Je, Qe);
-            if ((Ln(), ur)) y("input_emoji_completion", { inline: !1 });
+            if ((Ln(), ur)) logFeatureOk("input_emoji_completion", { inline: !1 });
           }
         } else if (Ct === "file" && at.length > 0) {
           let wr = aR(Oe, He, !0);
@@ -33579,7 +33579,7 @@ function Awe({
             Ln();
             return;
           }
-          let Pi = at.some((hi) => Yqe(hi.metadata) !== null) ? "" : Trn(at),
+          let Pi = at.some((hi) => Yqe(hi.metadata) !== null) ? "" : findLongestCommonPrefix(at),
             ki = wr.token.startsWith("@"),
             yi;
           if (wr.isQuoted) yi = wr.token.slice(2).replace(/"$/, "").length;
@@ -33594,7 +33594,7 @@ function Awe({
               isQuoted: wr.isQuoted,
               isComplete: !1,
             });
-            (Jlt({
+            (applyFileSuggestion({
               suggestion: hi,
               input: Oe,
               partialPath: wr.token,
@@ -33617,7 +33617,7 @@ function Awe({
                       isQuoted: wr.isQuoted,
                       isComplete: !0,
                     }),
-                Ri = Jlt({
+                Ri = applyFileSuggestion({
                   suggestion: xi,
                   input: Oe,
                   partialPath: wr.token,
@@ -33671,7 +33671,7 @@ function Awe({
               ((cr =
                 ki ??
                 (await vwe(
-                  k4,
+                  globalFileIndexCache,
                   wr,
                   {
                     mcpResources: ur ? {} : ro,
@@ -33839,7 +33839,7 @@ function Awe({
         } else if (xo && ur === "emoji" && yi < Vr.length) {
           if (hi) {
             let zn = gH(hi, cr, pr, _we, Je, Qe);
-            if ((Ln(), zn)) y("input_emoji_completion", { inline: !1 });
+            if ((Ln(), zn)) logFeatureOk("input_emoji_completion", { inline: !1 });
           }
         } else if (ur === "file" && yi < Vr.length) {
           let zn = aR(cr, pr, !0);
@@ -33857,7 +33857,7 @@ function Awe({
                       isQuoted: zn.isQuoted,
                       isComplete: !0,
                     }),
-                Xs = Jlt({
+                Xs = applyFileSuggestion({
                   suggestion: ns,
                   input: cr,
                   partialPath: zn.token,
@@ -34117,7 +34117,7 @@ async function Dwe(w) {
         timeoutMs: 3000,
       }),
       w.clearInput(),
-      y("input_at_member_message"),
+      logFeatureOk("input_at_member_message"),
       "handled"
     );
   if (I.error === "write_failed")
@@ -34129,7 +34129,7 @@ async function Dwe(w) {
         priority: "immediate",
         timeoutMs: 5000,
       }),
-      f("input_at_member_message", "mailbox_write_failed"),
+      logFeatureBad("input_at_member_message", "mailbox_write_failed"),
       "handled"
     );
   return "fall_through";
@@ -34169,7 +34169,7 @@ function Hwe(w) {
   }
 }
 function Oee(w, I) {
-  i("tengu_rc_pill_clicked", { trigger: u(w), label: u(I) });
+  i("tengu_rc_pill_clicked", { trigger: fromEnum(w), label: fromEnum(I) });
 }
 function qwe(w) {
   let { label: I } = oSe({
@@ -34296,7 +34296,7 @@ function Vee(GBn) {
     Reo;
   if (wd[2] === p)
     ((xeo = () => {
-      Da().then(YBn).catch(Qeo);
+      getBranch().then(YBn).catch(Qeo);
     }),
       (Reo = []),
       (wd[2] = xeo),
@@ -35254,7 +35254,7 @@ function LCe({ initialQuery: w, onSelect: I, onCancel: ne }) {
     [He, Ke] = d(w ?? ""),
     Je = C({});
   (E(() => {
-    y("history_search_open");
+    logFeatureOk("history_search_open");
   }, []),
     E(() => {
       let jt = Je.current[be];
@@ -35296,20 +35296,20 @@ function LCe({ initialQuery: w, onSelect: I, onCancel: ne }) {
             if (!Tt) {
               let fo = { items: to, status: go ? "truncated" : "complete" };
               if (((Je.current[be] = fo), Oe(fo), go))
-                g("history_search_scan", "text_limit_reached");
-              else y("history_search_scan");
+                logFeatureSad("history_search_scan", "text_limit_reached");
+              else logFeatureOk("history_search_scan");
             }
           } catch (zt) {
             if (!Tt)
               if (to.length > 0)
                 (Oe({ items: to, status: "truncated" }),
-                  g("history_search_scan", "picker_scan_interrupted"));
+                  logFeatureSad("history_search_scan", "picker_scan_interrupted"));
               else
                 (Oe({ items: [], status: "failed" }),
-                  f("history_search_scan", "picker_scan_failed"));
+                  logFeatureBad("history_search_scan", "picker_scan_failed"));
             if (Z$t(zt))
               n(`History picker read failed: ${l(zt)}`, { level: "error" });
-            else h(zt);
+            else logError(zt);
           }
         })(),
         () => {
@@ -35323,7 +35323,7 @@ function LCe({ initialQuery: w, onSelect: I, onCancel: ne }) {
     () => {
       let jt = Q$t.indexOf(be),
         Tt = Q$t[(jt + 1) % Q$t.length];
-      (xe(Tt), i("tengu_history_picker_scope", { from: u(be), to: u(Tt) }));
+      (xe(Tt), i("tengu_history_picker_scope", { from: fromEnum(be), to: fromEnum(Tt) }));
     },
     { context: "HistorySearch" },
   );
@@ -35373,10 +35373,10 @@ function LCe({ initialQuery: w, onSelect: I, onCancel: ne }) {
       }),
         jt.entry.resolve().then(
           (Tt) => {
-            (y("history_search_accept"), I(Tt));
+            (logFeatureOk("history_search_accept"), I(Tt));
           },
           (Tt) => {
-            throw (f("history_search_accept", "accept_resolve_failed"), Tt);
+            throw (logFeatureBad("history_search_accept", "accept_resolve_failed"), Tt);
           },
         ));
     },
@@ -35391,7 +35391,7 @@ function LCe({ initialQuery: w, onSelect: I, onCancel: ne }) {
     direction: "up",
     previewPosition: at ? "right" : "bottom",
     renderItem: (jt, Tt) => {
-      let to = uy(new Date(jt.entry.timestamp));
+      let to = formatRelativeTimeAgo(new Date(jt.entry.timestamp));
       return r(t, {
         children: [
           r(t, {
@@ -35400,7 +35400,7 @@ function LCe({ initialQuery: w, onSelect: I, onCancel: ne }) {
           }),
           r(t, {
             color: Tt ? "suggestion" : void 0,
-            children: [" ", Xe(jt.firstLine, Ct)],
+            children: [" ", truncateToWidth(jt.firstLine, Ct)],
           }),
         ],
       });
@@ -35498,8 +35498,8 @@ function FCe(w) {
   let I = zto();
   if (Object.keys(I).length === 0) return;
   let ne = w.toLowerCase(),
-    me = wt(w).toLowerCase(),
-    pe = Ue(me, { identity: !0 }).toLowerCase();
+    me = parseUserSpecifiedModel(w).toLowerCase(),
+    pe = getCanonicalName(me, { identity: !0 }).toLowerCase();
   for (let [be, xe] of Object.entries(I)) {
     let Ae = be.toLowerCase();
     if (Ae === ne || Ae === me || Ae === pe || me.includes(Ae)) return xe;
@@ -35546,7 +35546,7 @@ function RZ({
       cursorOffset: An,
       handleKeyDown: wn,
       handlePaste: yn,
-    } = OCe({ canEnter: !1, onEnter: () => y("model_picker_search") }),
+    } = OCe({ canEnter: !1, onEnter: () => logFeatureOk("model_picker_search") }),
     vo = Wo || on !== "" ? 4 : 0,
     zo = Mr() && (xe || (Jy() && !Sse())),
     Sr = zo ? 3 : 0,
@@ -35570,9 +35570,9 @@ function RZ({
           As !== null &&
           !Ct.some((Bi) => Bi.value === Ls) &&
           !Ki.some((Bi) => Bi.value === As) &&
-          Rr(As)
+          isModelAllowed(As)
         )
-          Ki.push({ value: As, label: WC(As), description: va });
+          Ki.push({ value: As, label: modelDisplayString(As), description: va });
       if (Ki.length === 0) return Ct;
       let qi = Ct.findIndex((As) => As.disabled === !0);
       if (qi === -1) return [...Ct, ...Ki];
@@ -35717,7 +35717,7 @@ function RZ({
     let qi = oT(Ki),
       As = qi && Io !== void 0 && Io !== "ultracode" ? Z$(Io, qi) : Io;
     if (
-      (i("tengu_model_command_menu_effort", { effort: we(As) }),
+      (i("tengu_model_command_menu_effort", { effort: fromEnumOpt(As) }),
       As === "ultracode" && no && !He)
     ) {
       iA(Ke);
@@ -35730,7 +35730,7 @@ function RZ({
     } else if (!He && no) {
       let va = As === "ultracode" ? "xhigh" : As,
         Bi = KK(va);
-      if (Bi !== void 0) a4t(Bi, qi ?? ol(), Ke);
+      if (Bi !== void 0) a4t(Bi, qi ?? getDefaultMainLoopModel(), Ke);
       (iA(Ke), Qe((ss) => ({ ...ss, sessionEffort: XK(va), ultracode: !1 })));
     }
     let Ls = no && qi && zh(qi) && (As !== "ultracode" || He) ? As : void 0;
@@ -35764,9 +35764,9 @@ function RZ({
                   dimColor: !0,
                   children: [
                     "Currently using ",
-                    WC(Tt),
+                    modelDisplayString(Tt),
                     " for this session only (base model: ",
-                    WC(w),
+                    modelDisplayString(w),
                     "). Selecting a model here replaces both.",
                   ],
                 }),
@@ -35934,7 +35934,7 @@ function RZ({
 }
 function oT(w) {
   if (!w) return;
-  return w === Qw ? ol() : wt(w);
+  return w === Qw ? getDefaultMainLoopModel() : parseUserSpecifiedModel(w);
 }
 function Lz(t$n) {
   let Foo = _(5),
@@ -35972,7 +35972,7 @@ function olt(w, I, ne, me, pe, be) {
   else return xe[(He - 1 + xe.length) % xe.length];
 }
 function p_e(w) {
-  let I = oT(w) ?? ol();
+  let I = oT(w) ?? getDefaultMainLoopModel();
   return KH(I);
 }
 function gte(w) {
@@ -36582,7 +36582,7 @@ function xte(Nqn) {
     ((nTe =
       Tte !== void 0 &&
       Tte > 0 &&
-      r(N, { children: [" \xB7 ", No(Tte), " tokens"] })),
+      r(N, { children: [" \xB7 ", formatNumber(Tte), " tokens"] })),
       (Mm[20] = Tte),
       (Mm[21] = nTe));
   else nTe = Mm[21];
@@ -37062,7 +37062,7 @@ function Ute(WVn) {
       const Pc = Qi.kind === "monitor" ? Qi.description : Qi.command;
       let rc;
       if (nc[0] !== $d || nc[1] !== Pc)
-        ((rc = or(Pc, $d, !0)), (nc[0] = $d), (nc[1] = Pc), (nc[2] = rc));
+        ((rc = truncate(Pc, $d, !0)), (nc[0] = $d), (nc[1] = Pc), (nc[2] = rc));
       else rc = nc[2];
       let bc;
       if (nc[3] !== Qi)
@@ -37097,7 +37097,7 @@ function Ute(WVn) {
       else rc = nc[11];
       let bc;
       if (nc[12] !== $d || nc[13] !== Qi.title)
-        ((bc = or(Qi.title, $d, !0)),
+        ((bc = truncate(Qi.title, $d, !0)),
           (nc[12] = $d),
           (nc[13] = Qi.title),
           (nc[14] = bc));
@@ -37124,7 +37124,7 @@ function Ute(WVn) {
       let Pc;
       if (nc[22] !== Qi.effort || nc[23] !== Qi.model) {
         let Dno = ele(Qi.model, Qi.effort);
-        Pc = Dno ? ` \xB7 ${or(Dno, 28, !0)}` : "";
+        Pc = Dno ? ` \xB7 ${truncate(Dno, 28, !0)}` : "";
         ((nc[22] = Qi.effort), (nc[23] = Qi.model), (nc[24] = Pc));
       } else Pc = nc[24];
       let ITe = Pc;
@@ -37133,7 +37133,7 @@ function Ute(WVn) {
       const rc = ETe ? $d - ict : $d;
       let bc;
       if (nc[25] !== rc || nc[26] !== Qi.description)
-        ((bc = or(Qi.description, rc, !0)),
+        ((bc = truncate(Qi.description, rc, !0)),
           (nc[25] = rc),
           (nc[26] = Qi.description),
           (nc[27] = bc));
@@ -37191,7 +37191,7 @@ function Ute(WVn) {
         DTe = t;
         Pc = !0;
         rc = ": ";
-        bc = or(GVn, $d, !0);
+        bc = truncate(GVn, $d, !0);
         ((nc[39] = $d),
           (nc[40] = Qi),
           (nc[41] = DTe),
@@ -37230,7 +37230,7 @@ function Ute(WVn) {
       const Pc = Qi.workflowName ?? Qi.summary ?? Qi.description;
       let rc;
       if (nc[61] !== $d || nc[62] !== Pc)
-        ((rc = or(Pc, $d, !0)), (nc[61] = $d), (nc[62] = Pc), (nc[63] = rc));
+        ((rc = truncate(Pc, $d, !0)), (nc[61] = $d), (nc[62] = Pc), (nc[63] = rc));
       else rc = nc[63];
       let bc;
       if (nc[64] !== Qi.agentCount || nc[65] !== Qi.status)
@@ -37286,7 +37286,7 @@ function Ute(WVn) {
       const Mc = `${bc}/${Pu}`;
       let Wd;
       if (nc[81] !== $d || nc[82] !== Mc)
-        ((Wd = or(Mc, $d, !0)), (nc[81] = $d), (nc[82] = Mc), (nc[83] = Wd));
+        ((Wd = truncate(Mc, $d, !0)), (nc[81] = $d), (nc[82] = Mc), (nc[83] = Wd));
       else Wd = nc[83];
       let GA;
       if (nc[84] !== sct || nc[85] !== Qi.mcpStatus)
@@ -37322,7 +37322,7 @@ function Ute(WVn) {
       const Pc = act ? $d - Bte(act) : $d;
       let rc;
       if (nc[93] !== Pc || nc[94] !== Qi.description)
-        ((rc = or(Qi.description, Pc, !0)),
+        ((rc = truncate(Qi.description, Pc, !0)),
           (nc[93] = Pc),
           (nc[94] = Qi.description),
           (nc[95] = rc));
@@ -37399,7 +37399,7 @@ function Ute(WVn) {
     case "auto_mode_scan": {
       let Pc;
       if (nc[118] !== $d || nc[119] !== Qi.description)
-        ((Pc = or(Qi.description, $d, !0)),
+        ((Pc = truncate(Qi.description, $d, !0)),
           (nc[118] = $d),
           (nc[119] = Qi.description),
           (nc[120] = Pc));
@@ -37842,7 +37842,7 @@ function Xte($Gn) {
   let sxe = Qno,
     Yno;
   if (Vd[14] !== ba.prompt)
-    ((Yno = Xe(ba.prompt, 300)), (Vd[14] = ba.prompt), (Vd[15] = Yno));
+    ((Yno = truncateToWidth(ba.prompt, 300)), (Vd[14] = ba.prompt), (Vd[15] = Yno));
   else Yno = Vd[15];
   let Ict = Yno,
     axe;
@@ -37900,7 +37900,7 @@ function Xte($Gn) {
     ((dxe =
       Jte !== void 0 &&
       Jte > 0 &&
-      r(N, { children: [" \xB7 ", No(Jte), " tokens"] })),
+      r(N, { children: [" \xB7 ", formatNumber(Jte), " tokens"] })),
       (Vd[28] = Jte),
       (Vd[29] = dxe));
   else dxe = Vd[29];
@@ -38075,14 +38075,14 @@ function tut(w, I, ne) {
             : null;
       if (pe) {
         let be = pe.replace(/\s+/g, " ").trim();
-        return `Answer in browser: ${Xe(be, ne - 10)}`;
+        return `Answer in browser: ${truncateToWidth(be, ne - 10)}`;
       }
     }
   }
   for (let me of Object.values(I))
     if (typeof me === "string" && me.trim()) {
       let pe = me.replace(/\s+/g, " ").trim();
-      return `${w} ${Xe(pe, ne)}`;
+      return `${w} ${truncateToWidth(pe, ne)}`;
     }
   return w;
 }
@@ -38708,14 +38708,14 @@ function nRe({
   async function Ct() {
     (xe(!0), Oe(null));
     try {
-      await Wne(w.sessionId);
+      await teleportResumeCodeSession(w.sessionId);
     } catch (Tt) {
       Oe(l(Tt));
     } finally {
       xe(!1);
     }
   }
-  let eo = Xe(w.title, 50),
+  let eo = truncateToWidth(w.title, 50),
     jt = w.status === "pending" ? "starting" : w.status;
   return e(mr, {
     onKeyDown: Zt,
@@ -39012,9 +39012,9 @@ function Gro(B2n, U2n) {
 }
 var Vro = 8192;
 async function yoe(w) {
-  let I = _l(w.id);
+  let I = getTaskOutputPath(w.id);
   try {
-    let ne = await Kre(I, Vro);
+    let ne = await tailTaskOutput(I, Vro);
     return { content: ne.content, bytesTotal: ne.bytesTotal };
   } catch {
     return { content: "", bytesTotal: 0 };
@@ -39053,7 +39053,7 @@ function boe(M2n) {
     Ero = iu.kind === "monitor",
     Dro;
   if (rp[10] !== iu.command)
-    ((Dro = Xe(iu.command, 280)), (rp[10] = iu.command), (rp[11] = Dro));
+    ((Dro = truncateToWidth(iu.command, 280)), (rp[10] = iu.command), (rp[11] = Dro));
   else Dro = rp[11];
   let kut = Dro;
   const vut = Ero ? "Monitor details" : "Shell details",
@@ -39119,7 +39119,7 @@ function boe(M2n) {
   else Fro = rp[22];
   const Rut = Fro - iu.startTime;
   let gRe;
-  if (rp[23] !== Rut) ((gRe = Ot(Rut)), (rp[23] = Rut), (rp[24] = gRe));
+  if (rp[23] !== Rut) ((gRe = formatDuration(Rut)), (rp[23] = Rut), (rp[24] = gRe));
   else gRe = rp[24];
   let hRe;
   if (rp[25] !== gRe)
@@ -39263,7 +39263,7 @@ function RRe(D2n) {
   const Aut = `Showing ${AQ.length} lines`;
   let TRe;
   if (yj[10] !== TQ || yj[11] !== wRe)
-    ((TRe = wRe ? ` of ${Ft(TQ)}` : ""),
+    ((TRe = wRe ? ` of ${formatFileSize(TQ)}` : ""),
       (yj[10] = TQ),
       (yj[11] = wRe),
       (yj[12] = TRe));
@@ -39336,18 +39336,18 @@ function rso(kQn) {
   return Math.max(0, kQn - 1);
 }
 function iso(vQn) {
-  return h(vQn);
+  return logError(vQn);
 }
 function sso() {}
 function aso() {}
 function lso(wQn) {
-  return h(wQn);
+  return logError(wQn);
 }
 function cso(CQn) {
   return CQn.status === "running";
 }
 function uso(_Qn) {
-  return h(_Qn);
+  return logError(_Qn);
 }
 function dso(TQn) {
   return TQn.status === "running";
@@ -40750,7 +40750,7 @@ function EN(EQn) {
     { columns: DQn } = Se(),
     zut = Math.max(30, DQn - 26),
     Oio;
-  if (Doe[0] === p) ((Oio = gG()), (Doe[0] = Oio));
+  if (Doe[0] === p) ((Oio = isCoordinatorMode()), (Doe[0] = Oio));
   else Oio = Doe[0];
   let Fio = Oio;
   const Qut = Fio && Kut,
@@ -40857,7 +40857,7 @@ function uPe(w, { isTeammate: I }) {
 }
 F();
 F();
-import { parse as Vso } from "path";
+import { parse } from "path";
 function Kso(mPe) {
   if (mPe.footerSelection === "frame" || !mPe.frameExpanded) {
     return mPe;
@@ -40928,7 +40928,7 @@ function LPe() {
       if (!wso) {
         return !1;
       }
-      (Gr(ON(wso)), y("frame_link_open"));
+      (Gr(ON(wso)), logFeatureOk("frame_link_open"));
       let Cso = Object.keys(vso).at(-1) ?? null;
       if (
         (NN((joe) =>
@@ -41280,7 +41280,7 @@ function Bdt(w, I, ne, me) {
   if (Ke.length === 1 && Ae(Oe, He) > I) {
     let Je = Ae(Oe, He) - te(Ke[0].name),
       Qe = Math.max(1, I - Je);
-    Ke = [{ ...Ke[0], name: Xe(Ke[0].name, Qe) }];
+    Ke = [{ ...Ke[0], name: truncateToWidth(Ke[0].name, Qe) }];
   }
   return { visible: Ke, before: Oe, after: pe - 1 - He };
 }
@@ -41289,7 +41289,7 @@ function xj(w, I) {
     return (
       (I.title !== void 0 ? yw(I.title) : null) ?? w.slice(w.indexOf(":") + 1)
     );
-  return Vso(w).name;
+  return parse(w).name;
 }
 function ON(w) {
   try {
@@ -41425,13 +41425,13 @@ var $dt = "persistence-suppressed";
 function Zoe() {
   let p5n = _(4),
     { host: $Pe } = Ye(),
-    [BN] = d(Fyt),
+    [BN] = d(getPersistenceSuppressionCause),
     aao,
     lao;
   if (p5n[0] !== BN || p5n[1] !== $Pe)
     ((aao = () => {
       if (BN !== null && jPe($Pe))
-        i("tengu_persistence_suppressed", { cause: u(BN) });
+        i("tengu_persistence_suppressed", { cause: fromEnum(BN) });
     }),
       (lao = [BN, $Pe]),
       (p5n[0] = BN),
@@ -41485,7 +41485,7 @@ var qdt = "transcript-writer-degraded";
 function one() {
   let v5n = _(1),
     cao;
-  if (v5n[0] === p) ((cao = n9t()), (v5n[0] = cao));
+  if (v5n[0] === p) ((cao = getTranscriptWriterHealth()), (v5n[0] = cao));
   else cao = v5n[0];
   let { degradedStore: uao } = cao,
     w5n = At(uao.subscribe, uao.getState);
@@ -41607,7 +41607,7 @@ function aMe(w) {
   return (ko(() => ne(Date.now()), w), I);
 }
 function BQ() {
-  return (Y6e(), qn());
+  return (Y6e(), getSubscriptionType());
 }
 F();
 function Rj() {
@@ -41637,7 +41637,7 @@ function Xdt() {
         (i("tengu_memory_threshold_crossed", {
           rss_mb: Math.round(pe / 1024 / 1024),
           heap_used_mb: Math.round(me / 1024 / 1024),
-          status: u(be),
+          status: fromEnum(be),
         }),
           (ne.current = be));
       I((xe) => {
@@ -41761,7 +41761,7 @@ function gMe({ withSeparator: w }) {
     Je = Math.floor(Ke / tmt) % ane;
   if (!ne || Ae === null) return null;
   let Qe = be.now() - Ae.clockStart,
-    it = Qe < 1000 ? "" : ` (${Ot(Qe, { mostSignificantOnly: !0 })})`;
+    it = Qe < 1000 ? "" : ` (${formatDuration(Qe, { mostSignificantOnly: !0 })})`;
   return r(o, {
     flexShrink: 0,
     children: [
@@ -41795,10 +41795,10 @@ function dne() {
     Lao;
   if (Dao[0] !== hMe)
     ((Nao = () => {
-      if (!st.isSandboxingEnabled()) {
+      if (!SandboxManager.isSandboxingEnabled()) {
         return;
       }
-      let rmt = st.getSandboxViolationStore();
+      let rmt = SandboxManager.getSandboxViolationStore();
       let Oao = rmt.getTotalCount();
       let YJn = rmt.subscribe(() => {
         let Fao = rmt.getTotalCount();
@@ -41817,7 +41817,7 @@ function dne() {
       (Dao[1] = Nao),
       (Dao[2] = Lao));
   else ((Nao = Dao[1]), (Lao = Dao[2]));
-  if ((E(Nao, Lao), !st.isSandboxingEnabled() || lne === 0)) {
+  if ((E(Nao, Lao), !SandboxManager.isSandboxingEnabled() || lne === 0)) {
     return null;
   }
   const imt = lne === 1 ? "operation" : "operations";
@@ -42118,12 +42118,12 @@ function oAe(YXn) {
   else olo = TS[5];
   let WMe = olo,
     [qMe, XXn] = d(null),
-    ZXn = !Pt() && Boolean(bg()),
+    ZXn = !Pt() && Boolean(getConfiguredApiKeyHelper()),
     nlo;
   if (TS[6] === p)
     ((nlo = () => {
-      let rlo = jKt();
-      let ilo = rlo >= 1e4 ? Ot(rlo) : null;
+      let rlo = getApiKeyHelperElapsedMs();
+      let ilo = rlo >= 1e4 ? formatDuration(rlo) : null;
       XXn((slo) => (ilo === slo ? slo : ilo));
     }),
       (TS[6] = nlo));
@@ -42351,8 +42351,8 @@ function fne(w) {
 }
 async function rAe(w) {
   let [I, ne] = await Promise.all([
-    VIn(w),
-    Pt() ? Promise.resolve(null) : ez(),
+    getGitWorktreeName(w),
+    Pt() ? Promise.resolve(null) : getRemoteUrl(),
   ]);
   return { gitWorktree: I, repo: ne ? Rx(ne) : null };
 }
@@ -42376,11 +42376,11 @@ function xlo({
 }) {
   let Ct = H_(),
     eo = Ia(),
-    jt = ip({ permissionMode: I, mainLoopModel: Ae, exceeds200kTokens: ne }),
+    jt = getRuntimeMainLoopModel({ permissionMode: I, mainLoopModel: Ae, exceeds200kTokens: ne }),
     Tt = pe?.outputStyle || uT,
     to = jue(be),
     zt = vp(jt, Up()),
-    ao = TY(w.id),
+    ao = getCurrentSessionDisplayTitle(w.id),
     co = RM(),
     go = {
       ...(co.five_hour && {
@@ -42395,7 +42395,7 @@ function xlo({
           resets_at: co.seven_day.resets_at,
         },
       }),
-      ...(Pe() === "gateway" &&
+      ...(getAPIProvider() === "gateway" &&
         co.overage && {
           spend_limit: {
             used_percentage: co.overage.utilization * 100,
@@ -42404,9 +42404,9 @@ function xlo({
         }),
     };
   return {
-    ...Sa(w, it),
+    ...createBaseHookInput(w, it),
     ...(ao && { session_name: ao }),
-    model: { id: jt, display_name: oi(jt) },
+    model: { id: jt, display_name: renderModelName(jt) },
     workspace: {
       current_dir: it,
       project_dir: w.project.originalCwd,
@@ -42619,7 +42619,7 @@ class gne {
     this.#d = !1;
     let me = fne(I);
     if (me !== this.#u) ((this.#u = me), (this.#p = SX(I)));
-    this.#T(w.signal, I, ne, this.#p).catch(h);
+    this.#T(w.signal, I, ne, this.#p).catch(logError);
   }
   async #T(w, I, ne, me) {
     let { session: pe } = this.#e,
@@ -42777,7 +42777,7 @@ function Umt(n6n) {
           getMessages: hne.getSnapshot,
           setTimeout: (r6n, i6n) => Emt.setTimeout(r6n, i6n),
           memory: iAe.of(yne),
-          execute: (s6n, a6n, l6n) => $9t(yne, s6n, a6n, l6n),
+          execute: (s6n, a6n, l6n) => executeStatusLineCommand(yne, s6n, a6n, l6n),
           getWorkspaceGit: rAe,
           isVimModeEnabled: qlo,
           isTrustAccepted: Vlo,
@@ -43097,7 +43097,7 @@ var Pne = 2500;
 function j_e() {
   let ev = _(32),
     Gj = !tn(),
-    _ne = k0e(),
+    _ne = useFleetNudgeStore(),
     uco = Me(Gj ? _ne : null),
     Rh = uco?.needsInput,
     Kj = uco?.succeeded,
@@ -43271,14 +43271,14 @@ function xco(w) {
   return;
 }
 function NAe() {
-  let w = S_()
-    ? ye("policySettings")?.subagentStatusLine
-    : Oet("subagentStatusLine");
+  let w = shouldAllowManagedHooksOnly()
+    ? getSettingsForSource("policySettings")?.subagentStatusLine
+    : getSettingsAfterPluginLoad("subagentStatusLine");
   return w?.type === "command" ? w.command : void 0;
 }
 async function rpt(w, I, ne, me) {
-  if (FC()) return {};
-  if (HY())
+  if (shouldDisableAllHooksIncludingManaged()) return {};
+  if (shouldSkipHookDueToTrust())
     return (
       n("Skipping subagentStatusLine execution - workspace trust not accepted"),
       {}
@@ -43288,7 +43288,7 @@ async function rpt(w, I, ne, me) {
   let be = Q(),
     xe = { id: K(), project: { originalCwd: he(), projectRoot: sn() } },
     Ae = {
-      ...Sa(xe, be),
+      ...createBaseHookInput(xe, be),
       columns: I,
       tasks: w.map((Ct) => ({
         id: Ct.id,
@@ -43311,7 +43311,7 @@ async function rpt(w, I, ne, me) {
     Ke = Oe && !He ? await Uv() : null,
     Je = Oe && He ? (Ct) => Ct.replaceAll("\\", "/") : (Ct) => Ct,
     Qe = {
-      ...Hi(),
+      ...subprocessEnv(),
       ...qOe(Tue(Ae)),
       CLAUDE_PROJECT_DIR: Je(xe.project.projectRoot),
     };
@@ -43325,8 +43325,8 @@ async function rpt(w, I, ne, me) {
       toolCgroupClass: "plugin",
     },
     at = Ke
-      ? await Be(Ke, Yft(pe), { ...it })
-      : await Be(He ? wRt(pe) : pe, [], { shell: Oe ? (He ?? !0) : !0, ...it });
+      ? await execFileNoThrowWithCwd(Ke, Yft(pe), { ...it })
+      : await execFileNoThrowWithCwd(He ? wRt(pe) : pe, [], { shell: Oe ? (He ?? !0) : !0, ...it });
   if (at.code !== 0)
     return (
       n(`subagentStatusLine exited ${at.code}: ${at.error ?? at.stderr}`, {
@@ -43373,7 +43373,7 @@ function FAe() {
     I = It(),
     me =
       U((He) => He.settings?.subagentStatusLine?.command !== void 0) &&
-      (!S_() || NAe() !== void 0),
+      (!shouldAllowManagedHooksOnly() || NAe() !== void 0),
     pe = U((He) => (me ? LAe(He.tasks).length : 0)),
     { columns: be } = Se(),
     xe = vt(),
@@ -43513,12 +43513,12 @@ function WAe() {
     ne = _e().storageV5;
   return (
     E(() => {
-      if (!_t() || Pt()) return;
-      let me = gu(),
-        pe = rr(me),
+      if (!isBgSession() || Pt()) return;
+      let me = getOwnJobShortId(),
+        pe = getJobDir(me),
         be,
         xe = async () => {
-          let Oe = (await Zn(pe, ne))?.children?.find(
+          let Oe = (await readJobState(pe, ne))?.children?.find(
               (Ke) => Ke.kind !== "frame" && !U0.test(Ke.href),
             ),
             He = Oe ? Number(Oe.id) : NaN;
@@ -43652,7 +43652,7 @@ class qAe {
     }, I);
   }
   #S(w) {
-    this.#w(w).catch(h);
+    this.#w(w).catch(logError);
   }
   #y(w) {
     return Bco(
@@ -43673,7 +43673,7 @@ class qAe {
     try {
       be = await this.#e.fetchPrStatus();
     } catch (it) {
-      (h(it), (be = null));
+      (logError(it), (be = null));
     }
     let xe = be;
     if (w !== this.#a) return;
@@ -43695,13 +43695,13 @@ class qAe {
       ne.pollerBadStreak >= Lco)
     ) {
       ((ne.pollerDisabled = !0),
-        g("github_pr_status_direct", "bad_streak_disabled"));
+        logFeatureSad("github_pr_status_direct", "bad_streak_disabled"));
       return;
     }
     let Qe = I() - pe;
     if (Qe > Eco) {
       ((ne.pollerDisabled = !0),
-        g("github_pr_status_direct", "slow_disabled", { elapsed_ms: Qe }));
+        logFeatureSad("github_pr_status_direct", "slow_disabled", { elapsed_ms: Qe }));
       return;
     }
     this.#b(w, this.#y(!1));
@@ -43721,7 +43721,7 @@ class qAe {
     try {
       this.#n.emit();
     } catch (me) {
-      h(me);
+      logError(me);
     }
   }
 }
@@ -43965,7 +43965,7 @@ function One(H7n) {
             QAe.key,
             " again to",
             " ",
-            _t() || eE("catchupReplay")
+            isBgSession() || eE("catchupReplay")
               ? "detach (session keeps running)"
               : "exit",
           ],
@@ -44460,7 +44460,7 @@ function qpt({
     );
   else if (ne) ss.push(...oc);
   let hc =
-      (_t() || Nn()) && Qe && Oe && !xo && !be && !Fn
+      (isBgSession() || Nn()) && Qe && Oe && !xo && !be && !Fn
         ? e(j_e, {}, "bg-detach")
         : null,
     cr =
@@ -44470,7 +44470,7 @@ function qpt({
       !be &&
       bNt(
         HGe({
-          isBg: _t(),
+          isBg: isBgSession(),
           isLoading: He,
           isExternalLoading: Ke,
           betweenCalls: Je,
@@ -44801,7 +44801,7 @@ function guo(w, I, ne, me, pe) {
   ];
 }
 function Vpt(w) {
-  if (_t() && w === "unknown") return !1;
+  if (isBgSession() && w === "unknown") return !1;
   return ee().prStatusFooterEnabled ?? !0;
 }
 function mIe(Y7n) {
@@ -45469,7 +45469,7 @@ function zne(otr) {
     { columns: kft } = Se(),
     quo;
   if (_g[5] !== Sft || _g[6] !== kft)
-    ((quo = Sft && kft >= cY && lb()),
+    ((quo = Sft && kft >= cY && isBridgeEnabled()),
       (_g[5] = Sft),
       (_g[6] = kft),
       (_g[7] = quo));
@@ -46229,7 +46229,7 @@ var Yne = 2,
   Jne = 1;
 function Jgt() {
   if (!zr()) return;
-  let w = cS();
+  let w = getTeammateColor();
   if (!w) return;
   if (ef.includes(w)) return KE[w];
   return;
@@ -46336,7 +46336,7 @@ function tmo(ure) {
     if (typeof mT === "string") mT = C$(mT, tht);
     else if (Array.isArray(mT)) {
       let S$ = [];
-      let rv = pCe;
+      let rv = IDLE_FRAME_TOTAL_RECEIVE_BOUND;
       for (const k$ of mT) {
         if (rv <= 0 || S$.length >= rht) {
           break;
@@ -46344,9 +46344,9 @@ function tmo(ure) {
         if (k$.type === "text") {
           let oht = C$(k$.text, tht, rv);
           let Gdo =
-            Object.keys(k$).some(omo) && !oht.includes(gfe)
+            Object.keys(k$).some(omo) && !oht.includes(FRAME_SANITIZED_FOR_DISPLAY_MARKER)
               ? `${oht}
-${gfe}`
+${FRAME_SANITIZED_FOR_DISPLAY_MARKER}`
               : oht;
           (S$.push({ type: "text", text: Gdo }),
             (rv = rv - Math.max(Gdo.length, v$)),
@@ -46359,7 +46359,7 @@ ${gfe}`
             (rv = rv - Math.max(34, v$)),
             rv);
         else {
-          let Kdo = Pj(typeof k$.type === "string" ? k$.type : "unknown", dre);
+          let Kdo = capStrippedFrameField(typeof k$.type === "string" ? k$.type : "unknown", dre);
           let rDe;
           try {
             rDe = aDe(k$, rv, !0);
@@ -46370,7 +46370,7 @@ ${gfe}`
             rDe !== null
               ? C$(`[${Kdo}] ${rDe}`, tht, rv, !0)
               : `[${Kdo} block not shown in preview]
-${gfe}`;
+${FRAME_SANITIZED_FOR_DISPLAY_MARKER}`;
           (S$.push({ type: "text", text: zdo }),
             (rv = rv - Math.max(zdo.length, v$)),
             rv);
@@ -46427,8 +46427,8 @@ function sht(w) {
         return !1;
       return !(
         mre(Ae.origin) !== void 0 &&
-        By(bG(), Ae.value) !== null &&
-        wG(Ae.value, mre(Ae.origin)) === Ae.value
+        parseFrameForDisplay(IdleNotificationMessageSchema(), Ae.value) !== null &&
+        capRawFrameTextForDisplay(Ae.value, mre(Ae.origin)) === Ae.value
       );
     }),
     ne = I.filter((Ae) => Ae.mode === "task-notification"),
@@ -46556,13 +46556,13 @@ function aht(w) {
       return !0;
   }
 }
-function C$(w, I, ne = pCe, me = !1) {
-  let pe = wG(w, I),
-    be = me || pe !== w || tP(pe) !== pe,
-    xe = OH(pe, ne);
+function C$(w, I, ne = IDLE_FRAME_TOTAL_RECEIVE_BOUND, me = !1) {
+  let pe = capRawFrameTextForDisplay(w, I),
+    be = me || pe !== w || stripFrameControlChars(pe) !== pe,
+    xe = capFrameBodyForDisplay(pe, ne);
   return be
     ? `${xe}
-${gfe}`
+${FRAME_SANITIZED_FOR_DISPLAY_MARKER}`
     : xe;
 }
 function sDe(w, I, ne) {
@@ -46636,7 +46636,7 @@ function aDe(w, I, ne) {
             : typeof xe.type === "string"
               ? xe.type
               : "unknown";
-        Ae = `[${Pj(He, dre)} source not shown]`;
+        Ae = `[${capStrippedFrameField(He, dre)} source not shown]`;
       }
     return (
       oe(
@@ -46648,7 +46648,7 @@ function aDe(w, I, ne) {
   }
   if (me === "search_result") {
     let pe =
-        "source" in w && typeof w.source === "string" ? Pj(w.source, dre) : "",
+        "source" in w && typeof w.source === "string" ? capStrippedFrameField(w.source, dre) : "",
       be = "title" in w && typeof w.title === "string" ? oe(w.title, I) : "",
       xe =
         "content" in w && Array.isArray(w.content) ? sDe(w.content, I, ne) : "";
@@ -47125,7 +47125,7 @@ class bht {
   }
   #h() {
     this.#b().catch((w) => {
-      (h(w), this.#_(`internal error: ${l(w)}`, "internal_error"));
+      (logError(w), this.#_(`internal error: ${l(w)}`, "internal_error"));
     });
   }
   async #b() {
@@ -47171,7 +47171,7 @@ class bht {
     }
     if (this.#o || this.#t.status !== "resolving") return;
     if (!w) {
-      (g("input_spellcheck", I ? "checker_lookup_failed" : "checker_not_found"),
+      (logFeatureSad("input_spellcheck", I ? "checker_lookup_failed" : "checker_not_found"),
         (this.#t = { status: "unavailable" }),
         this.#c.clear());
       return;
@@ -47181,7 +47181,7 @@ class bht {
       (n(`[spellcheck] starting ${w.command} ${w.args.join(" ")}`),
         (ne = SW(w.command, w.args, {
           stdio: ["pipe", "pipe", "pipe"],
-          env: Hi(),
+          env: subprocessEnv(),
           extendEnv: !1,
           cwd: imo(),
           windowsHide: !0,
@@ -47271,7 +47271,7 @@ class bht {
         this.#t.process.stdin?.write(clr),
         !this.#a)
       )
-        ((this.#a = !0), y("input_spellcheck", { backend: u(ne) }));
+        ((this.#a = !0), logFeatureOk("input_spellcheck", { backend: fromEnum(ne) }));
       n(`[spellcheck] ${ne} ready`);
       return;
     }
@@ -47373,7 +47373,7 @@ class bht {
     (n(`[spellcheck] ${w}; spell checking is off for this session`, {
       level: "warn",
     }),
-      f("input_spellcheck", I),
+      logFeatureBad("input_spellcheck", I),
       this.#P(),
       (this.#t = { status: "unavailable" }),
       this.#c.clear());
@@ -47498,13 +47498,13 @@ function gDe({
   placeholders: pe,
 }) {
   let be = U((fo) => fo.settings.spellcheck),
-    xe = Hq("spellcheck")[0],
+    xe = getSecuritySensitiveSettingWithSources("spellcheck")[0],
     Ae = xe?.value,
     Oe = xe?.source;
   E(() => {
     if (
-      ye("projectSettings")?.spellcheck !== void 0 ||
-      ye("localSettings")?.spellcheck !== void 0
+      getSettingsForSource("projectSettings")?.spellcheck !== void 0 ||
+      getSettingsForSource("localSettings")?.spellcheck !== void 0
     )
       wht(
         w,
@@ -47838,13 +47838,13 @@ function kI(w) {
   let pe = Yn(),
     [be, xe] = d(null);
   E(() => {
-    Oj().then(xe);
+    isInsideTmux().then(xe);
   }, []);
   let Ae = pe.getState();
-  if (Zi() && !f1()) {
-    let it = Ip();
-    if (it && ii())
-      return { text: `@${it}`, bgColor: _re(I?.selfAgentColor ?? cS()) };
+  if (isTeammate() && !isInProcessTeammate()) {
+    let it = getAgentName();
+    if (it && getTeamName())
+      return { text: `@${it}`, bgColor: _re(I?.selfAgentColor ?? getTeammateColor()) };
   }
   if (I?.teammates && Object.keys(I.teammates).length > 1) {
     let it = qk(Ae),
@@ -47901,8 +47901,8 @@ function M$(w, I) {
 }
 function jmo(w) {
   if (w === "bash") return "bashBorder";
-  if (f1()) return "promptBorder";
-  let I = cS();
+  if (isInProcessTeammate()) return "promptBorder";
+  let I = getTeammateColor();
   return LH(I) ? KE[I] : "promptBorder";
 }
 function A$(
@@ -48005,7 +48005,7 @@ function Ggo(Sbt) {
   return Sbt.hasUsedStash ? Sbt : { ...Sbt, hasUsedStash: !0 };
 }
 function Kgo(Llr) {
-  (f("input_image_paste", "clipboard_read_failed"), h(Llr));
+  (logFeatureBad("input_image_paste", "clipboard_read_failed"), logError(Llr));
 }
 var kbt = 5,
   vbt = 3,
@@ -48297,14 +48297,14 @@ function _bt(Wsr) {
   E(fpo, gpo);
   let PI = Zr("chat:workflowKeywordToggle", "Chat", "alt+w"),
     ypo;
-  if (Ts[65] !== Cu) ((ypo = YPt(Cu)), (Ts[65] = Cu), (Ts[66] = ypo));
+  if (Ts[65] !== Cu) ((ypo = findBtwTriggerPositions(Cu)), (Ts[65] = Cu), (Ts[66] = ypo));
   else ypo = Ts[66];
   let syt = ypo,
     bpo;
   if (Ts[67] !== UY || Ts[68] !== Cu)
     ((bpo = sU(Cu).filter((Spo) => {
       let ear = Cu.slice(Spo.start + 1, Spo.end);
-      return B9(ear, UY);
+      return hasCommand(ear, UY);
     })),
       (Ts[67] = UY),
       (Ts[68] = Cu),
@@ -48884,7 +48884,7 @@ function _bt(Wsr) {
           for (const ffo of KY.images) pfo[ffo.id] = ffo;
           return pfo;
         });
-      return (y("input_queue_pop_to_edit"), !0);
+      return (logFeatureOk("input_queue_pop_to_edit"), !0);
     }),
       (Ts[177] = bi.cursorOffset),
       (Ts[178] = bi.pastedContents),
@@ -49086,7 +49086,7 @@ function _bt(Wsr) {
       }
       if (P() === "macos" && Byn(Om.key)) {
         let _fo = C3t[Om.key];
-        let Tfo = SOt();
+        let Tfo = getNativeCSIuTerminalDisplayName();
         let Ear = Tfo
           ? [
               { text: `To enable ${_fo}, set `, dim: !0 },
@@ -49232,7 +49232,7 @@ function _bt(Wsr) {
       let Hfo = K7(II);
       let Har = Math.max(0, Math.min(Vmo - 10, 2));
       if (II.length > lK || Hfo > Har) {
-        y("input_paste_large");
+        logFeatureOk("input_paste_large");
         let t0e = rC(Bfo, Kyt);
         Zht.current = t0e;
         let jar = { id: t0e, type: "text", content: II };
@@ -49308,7 +49308,7 @@ function _bt(Wsr) {
         continuesGesture: tlr,
       } = Yar ?? {};
       (i("tengu_paste_image", {}),
-        y(Gfo ? "input_image_drag" : "input_image_paste"),
+        logFeatureOk(Gfo ? "input_image_drag" : "input_image_paste"),
         DS("prompt"));
       let o0e = rC(bi.value, bi.pastedContents);
       Zht.current = o0e;
@@ -49418,7 +49418,7 @@ function _bt(Wsr) {
         EI = await Yx(obt, bi.pastedContents, Xfo);
       } catch (i0e) {
         let nbt = i0e;
-        if (nbt instanceof Error) h(nbt);
+        if (nbt instanceof Error) logError(nbt);
         (ku({
           key: "external-editor-error",
           kind: "warning",
@@ -49426,7 +49426,7 @@ function _bt(Wsr) {
           color: "warning",
           priority: "high",
         }),
-          f("input_external_editor", "spawn_failed"),
+          logFeatureBad("input_external_editor", "spawn_failed"),
           Mre(!1));
         return;
       }
@@ -49438,8 +49438,8 @@ function _bt(Wsr) {
           color: "warning",
           priority: "high",
         }),
-          g("input_external_editor", "editor_error"));
-      else y("input_external_editor");
+          logFeatureSad("input_external_editor", "editor_error"));
+      else logFeatureOk("input_external_editor");
       if (EI.content !== null && EI.content !== obt)
         (Mh(obt, bi.cursorOffset, bi.pastedContents),
           Ed(EI.content),
@@ -49466,9 +49466,9 @@ function _bt(Wsr) {
   if (Ts[272] !== bi || Ts[273] !== qht)
     ((i0e = () => {
       if (bi.value.trim() === "" && bi.stashedPrompt !== void 0)
-        (bi.popStash("input"), y("input_stash"));
+        (bi.popStash("input"), logFeatureOk("input_stash"));
       else if (bi.value.trim() !== "")
-        (bi.stash(), Te(Ggo, qht), y("input_stash"));
+        (bi.stash(), Te(Ggo, qht), logFeatureOk("input_stash"));
     }),
       (Ts[272] = bi),
       (Ts[273] = qht),
@@ -49515,10 +49515,10 @@ function _bt(Wsr) {
             }
             let a0e = await vNe("clipboard");
             if (a0e && !hSn(a0e)) {
-              (g("input_image_paste", "text_fallback"), $$(a0e));
+              (logFeatureSad("input_image_paste", "text_fallback"), $$(a0e));
               return;
             }
-            f("input_image_paste", a0e ? "binary_garbage" : "not_found");
+            logFeatureBad("input_image_paste", a0e ? "binary_garbage" : "not_found");
             let alr = p_("chat:imagePaste", "Chat", "ctrl+v");
             let llr = a.isSSH()
               ? "No image found in clipboard. You're SSH'd; try scp?"
@@ -50076,7 +50076,7 @@ function w0e({
     );
   return V(() => {
     if (!w) return;
-    if (me) return `Message @${or(me, Qgo)}\u2026`;
+    if (me) return `Message @${truncate(me, Qgo)}\u2026`;
     if (pe.some(th)) {
       if (xe !== "none")
         return xe === "oldest"
@@ -50512,7 +50512,7 @@ function Okt(pmr) {
     Kbt = U(tSo),
     fho;
   if ($i[19] !== Kbt || $i[20] !== U0e)
-    ((fho = Kbt && U0e >= cY && lb()),
+    ((fho = Kbt && U0e >= cY && isBridgeEnabled()),
       ($i[19] = Kbt),
       ($i[20] = U0e),
       ($i[21] = fho));
@@ -50521,7 +50521,7 @@ function Okt(pmr) {
     Smr = U(oSo),
     c5 = U(nSo),
     gho;
-  if ($i[22] !== c5) ((gho = c5 && Lfe()), ($i[22] = c5), ($i[23] = gho));
+  if ($i[22] !== c5) ((gho = c5 && isPublishToolEnabled()), ($i[22] = c5), ($i[23] = gho));
   else gho = $i[23];
   let kmr = gho,
     hL = U(rSo),
@@ -50924,13 +50924,13 @@ function Okt(pmr) {
             timeoutMs: 2000,
           }),
           X$(),
-          g("input_queue_pop_to_edit", "bash_needs_empty_draft"),
+          logFeatureSad("input_queue_pop_to_edit", "bash_needs_empty_draft"),
           !0
         );
       }
       let w5 = B0e.popEditableAt(PSt, Xho, ra.cursorOffset, ra.pastedContents);
       if ((X$(), !w5)) {
-        return (g("input_queue_pop_to_edit", "stale_index"), !0);
+        return (logFeatureSad("input_queue_pop_to_edit", "stale_index"), !0);
       }
       if ((UI(w5.text), o5(w5.mode), CT(w5.cursorOffset), w5.images.length > 0))
         bC((Fmr) => {
@@ -50938,7 +50938,7 @@ function Okt(pmr) {
           for (const tyo of w5.images) eyo[tyo.id] = tyo;
           return eyo;
         });
-      return (y("input_queue_pop_to_edit"), !0);
+      return (logFeatureOk("input_queue_pop_to_edit"), !0);
     }),
       ($i[110] = tc),
       ($i[111] = X$),
@@ -51062,7 +51062,7 @@ function Okt(pmr) {
               recipientName: FSt.recipientName,
               message: j9(FSt.message, cyo),
               teamContext: hL,
-              writeToMailbox: ag,
+              writeToMailbox: writeToMailbox,
               storageV5: cp,
               addNotification: tc,
               clearInput: () => {
@@ -51084,7 +51084,7 @@ function Okt(pmr) {
         if (pyo !== null) ((C5 = pyo), (Z0e = !0));
       }
       if (C5.trim() === "" && !LSt) {
-        if (!(myo && Hmr && !NSt && Mbt())) y("prompt_submit_empty");
+        if (!(myo && Hmr && !NSt && Mbt())) logFeatureOk("prompt_submit_empty");
         return;
       }
       let { suggestions: eNe } = HR.getState();
@@ -51098,7 +51098,7 @@ function Okt(pmr) {
       let BSt = Gw(_u.getState());
       if (BSt.type !== "leader") {
         let fyo = tH(C5);
-        let nNe = fyo && Di(fyo.commandName, fC.commands);
+        let nNe = fyo && findCommand(fyo.commandName, fC.commands);
         if (!(nNe?.type === "local" || nNe?.type === "local-jsx")) {
           (i("tengu_transcript_input_to_teammate", {}),
             Yre(),
@@ -51421,8 +51421,8 @@ function Okt(pmr) {
       (Ra((GSt) =>
         GSt.attentionBudget === uNe ? GSt : { ...GSt, attentionBudget: uNe },
       ),
-        i("tengu_attention_budget_cycle", { to: u(uNe) }),
-        y("attention_budget"));
+        i("tengu_attention_budget_cycle", { to: fromEnum(uNe) }),
+        logFeatureOk("attention_budget"));
     },
     Nyo;
   if (
@@ -51444,8 +51444,8 @@ function Okt(pmr) {
       if (YSt) {
         let npr = { ...QSt, mode: YSt.permissionMode };
         let JSt = dWe(npr, void 0);
-        (i("tengu_mode_cycle", { to: u(JSt), trigger: u("shift_tab") }),
-          y("mode_switch"));
+        (i("tengu_mode_cycle", { to: fromEnum(JSt), trigger: fromEnum("shift_tab") }),
+          logFeatureOk("mode_switch"));
         let Lyo = YSt.id;
         (Ra((tie) => {
           let dNe = tie.tasks[Lyo];
@@ -51473,7 +51473,7 @@ function Okt(pmr) {
         return;
       }
       if (YI === I5) {
-        if ((f("mode_switch", "no_other_modes"), Pt()))
+        if ((logFeatureBad("mode_switch", "no_other_modes"), Pt()))
           tc({
             key: "remote-permission-mode-noop",
             kind: "feedback",
@@ -51487,16 +51487,16 @@ function Okt(pmr) {
       let { context: rpr } =
         null ??
         (!1
-          ? { context: Ik(I5, null, QSt, "shift_tab") }
+          ? { context: transitionPermissionMode(I5, null, QSt, "shift_tab") }
           : rZt(_T, hL, "shift_tab"));
       H6(`[${dL(YI)} on]`);
       if (
-        (i("tengu_mode_cycle", { to: u(YI), trigger: u("shift_tab") }), !Ks())
+        (i("tengu_mode_cycle", { to: fromEnum(YI), trigger: fromEnum("shift_tab") }), !Ks())
       )
-        y("mode_switch");
-      if (YI === "plan") y("mode_plan_enter");
-      else if (I5 === "plan") y("mode_plan_exit");
-      if (YI === "auto") y("mode_auto_enter");
+        logFeatureOk("mode_switch");
+      if (YI === "plan") logFeatureOk("mode_plan_enter");
+      else if (I5 === "plan") logFeatureOk("mode_plan_exit");
+      if (YI === "auto") logFeatureOk("mode_auto_enter");
       if (
         YI === "plan" &&
         (zSt.kind === "carousel" || zSt.selection.mode === "plan")
@@ -51505,7 +51505,7 @@ function Okt(pmr) {
         Te((spr) => T0e(spr, ipr), cp);
       }
       (I2(Ra, { ...rpr, mode: YI }),
-        (cho.current = cho.current.then(() => EXe(YI, hL?.teamName, cp))),
+        (cho.current = cho.current.then(() => syncTeammateMode(YI, hL?.teamName, cp))),
         zc(!1));
     }),
       ($i[198] = tc),
@@ -51548,7 +51548,7 @@ function Okt(pmr) {
     Hyo;
   if ($i[214] !== Ra || $i[215] !== dm)
     ((Hyo = () => {
-      if ((Jve(!1), dm.dismissEnvOnboardingOffer(), !OY())) {
+      if ((setAutoModeEnvOnboardingEligible(!1), dm.dismissEnvOnboardingOffer(), !OY())) {
         return;
       }
       Ra(BSo);
@@ -51561,7 +51561,7 @@ function Okt(pmr) {
     jyo;
   if ($i[217] !== dm)
     ((jyo = () => {
-      (Jve(!1), dm.dismissEnvOnboardingOffer());
+      (setAutoModeEnvOnboardingEligible(!1), dm.dismissEnvOnboardingOffer());
     }),
       ($i[217] = dm),
       ($i[218] = jyo));
@@ -51828,7 +51828,7 @@ function Okt(pmr) {
           priority: "immediate",
           timeoutMs: 3000,
         }),
-        y("frame_link_dismiss"),
+        logFeatureOk("frame_link_dismiss"),
         !0
       );
     }),
@@ -51891,7 +51891,7 @@ function Okt(pmr) {
         case "workflows": {
           let ikt = BS[qS];
           if (ikt)
-            (y("workflow_progress_preview"),
+            (logFeatureOk("workflow_progress_preview"),
               Ra((skt) =>
                 skt.workflowDetail?.taskId === ikt.id
                   ? skt
@@ -51915,7 +51915,7 @@ function Okt(pmr) {
           let pbo = _u.getState();
           let fbo = Object.entries(pbo.frameUrls);
           let gbo = fbo[kR(fbo, pbo.frameNavPath)]?.[1]?.url;
-          if (gbo) (Gr(ON(gbo)), y("frame_link_open"));
+          if (gbo) (Gr(ON(gbo)), logFeatureOk("frame_link_open"));
           Ra(qSo);
         }
       }
@@ -52248,7 +52248,7 @@ function Okt(pmr) {
         MNe)
       )
         kIe(TL, cp);
-      let aie = `Model set to ${WC(TL)}${MNe ? " and saved as your default for new sessions" : " for this session only"}`;
+      let aie = `Model set to ${modelDisplayString(TL)}${MNe ? " and saved as your default for new sessions" : " for this session only"}`;
       if (((aie = aie + p7(iie, sie, TL)), Cbo.length > 0))
         aie = aie + ` \xB7 ${Cbo.map(Rl).join(" \xB7 ")}`;
       (tc({
@@ -52289,7 +52289,7 @@ function Okt(pmr) {
               return;
             }
             if (O5.decision !== "proceed") {
-              (g("model_switch", "blocked_by_hook"),
+              (logFeatureSad("model_switch", "blocked_by_hook"),
                 tc({
                   key: "model-switch-blocked",
                   kind: "warning",
@@ -52308,7 +52308,7 @@ function Okt(pmr) {
             fkt(ENe, O5.messages, Spr, kpr);
           })
           .catch((xbo) => {
-            (h(ge(xbo)),
+            (logError(ge(xbo)),
               tc({
                 key: "model-switch-blocked",
                 kind: "warning",
@@ -52439,7 +52439,7 @@ function Okt(pmr) {
           })
           .catch(KSo),
         i("tengu_thinking_toggled_hotkey", { enabled: cie }),
-        y("thinking_toggle"),
+        logFeatureOk("thinking_toggle"),
         tc({
           key: "thinking-toggled-hotkey",
           kind: "feedback",
@@ -52539,7 +52539,7 @@ function Okt(pmr) {
     const Bf = mho?.phaseIndex;
     let $g;
     if ($i[412] !== CC || $i[413] !== my || $i[414] !== jg.id)
-      (($g = CC ? () => EF(jg.id, my, "user") : void 0),
+      (($g = CC ? () => killWorkflowTask(jg.id, my, "user") : void 0),
         ($i[412] = CC),
         ($i[413] = my),
         ($i[414] = jg.id),
@@ -52547,7 +52547,7 @@ function Okt(pmr) {
     else $g = $i[415];
     let $R;
     if ($i[416] !== CC || $i[417] !== my || $i[418] !== jg.id)
-      (($R = CC ? () => k7(jg.id, my) : void 0),
+      (($R = CC ? () => pauseWorkflowTask(jg.id, my) : void 0),
         ($i[416] = CC),
         ($i[417] = my),
         ($i[418] = jg.id),
@@ -52564,7 +52564,7 @@ function Okt(pmr) {
     else PT = $i[422];
     let JI;
     if ($i[423] !== CC || $i[424] !== my || $i[425] !== jg.id)
-      ((JI = CC ? (Dpr) => Cbe(jg.id, Dpr, my) : void 0),
+      ((JI = CC ? (Dpr) => skipWorkflowAgent(jg.id, Dpr, my) : void 0),
         ($i[423] = CC),
         ($i[424] = my),
         ($i[425] = jg.id),
@@ -52572,7 +52572,7 @@ function Okt(pmr) {
     else JI = $i[426];
     let ZI;
     if ($i[427] !== CC || $i[428] !== my || $i[429] !== jg.id)
-      ((ZI = CC ? (Npr) => vbe(jg.id, Npr, my) : void 0),
+      ((ZI = CC ? (Npr) => retryWorkflowAgent(jg.id, Npr, my) : void 0),
         ($i[427] = CC),
         ($i[428] = my),
         ($i[429] = jg.id),
@@ -52963,7 +52963,7 @@ function Okt(pmr) {
   else DNe = $i[540];
   let NNe;
   if ($i[541] !== c5)
-    ((NNe = c5 && Lfe() ? e(Qoe, {}) : null), ($i[541] = c5), ($i[542] = NNe));
+    ((NNe = c5 && isPublishToolEnabled() ? e(Qoe, {}) : null), ($i[541] = c5), ($i[542] = NNe));
   else NNe = $i[542];
   const xkt = gC ? null : Dbo;
   let LNe;
@@ -53425,7 +53425,7 @@ function zNe({
       [],
     ));
   function xo(Io) {
-    if (A8n(Io.draftId)) i("tengu_feedback_notice_shown", { type: u(Io.type) });
+    if (A8n(Io.draftId)) i("tengu_feedback_notice_shown", { type: fromEnum(Io.type) });
   }
   function Wo() {
     if (pe === null) return;
@@ -53437,7 +53437,7 @@ function zNe({
         Io === "dismiss"
           ? "tengu_feedback_notice_dismissed"
           : "tengu_feedback_notice_opened",
-        { type: u(pe?.type ?? "bug"), via: u(Io) },
+        { type: fromEnum(pe?.type ?? "bug"), via: fromEnum(Io) },
       );
     ((Ct.current = !1), it("idle"), Zt(null), ogn());
   }
@@ -53494,8 +53494,8 @@ function zNe({
     }
     if (
       (i("tengu_feedback_card_send", {
-        type: u(pe?.type ?? "bug"),
-        success: Yr(So.success ? 1 : 0),
+        type: fromEnum(pe?.type ?? "bug"),
+        success: fromNumber(So.success ? 1 : 0),
       }),
       eo.current !== Io)
     )
@@ -53692,8 +53692,8 @@ function zNe({
 }
 F();
 function YNe(w) {
-  let I = Xy(rt(), w);
-  return I ? { effort_level: u(I) } : {};
+  let I = Xy(getMainLoopModel(), w);
+  return I ? { effort_level: fromEnum(I) } : {};
 }
 function XNe() {
   return YNe(qf());
@@ -54517,9 +54517,9 @@ function Hvt(Eyr) {
         i("tengu_feedback_survey_event", {
           ...Nvt,
           event_type: S("followup_accepted"),
-          response: we(z5),
+          response: fromEnumOpt(z5),
           ...(Q5 && { appearance_id: Ee(Q5) }),
-          ...(Y5 && { survey_type: u(Y5) }),
+          ...(Y5 && { survey_type: fromEnum(Y5) }),
         }),
         AT && WR === "/feedback" && Q5 && Y5)
       )
@@ -55064,13 +55064,13 @@ function evo(w) {
 async function Rie(w, I) {
   try {
     if (St()) return { kind: "blocked", errorCode: "essential_traffic_only" };
-    if (!Mt("allow_product_feedback"))
+    if (!isPolicyAllowed("allow_product_feedback"))
       return { kind: "blocked", errorCode: "policy_blocked" };
     n("Collecting transcript for sharing", { level: "info" });
     let ne = vrt(),
-      me = Qhn(w),
+      me = extractAgentIdsFromMessages(w),
       pe = Pt(),
-      [be, xe] = await Promise.all([T9t(me, I), pe ? "" : L2e()]),
+      [be, xe] = await Promise.all([loadSubagentTranscripts(me, I), pe ? "" : getHead()]),
       Ae = (await pJt(yl(), tHe, I)) ?? void 0;
     return {
       kind: "captured",
@@ -55089,11 +55089,11 @@ async function eJ(w, I, ne, me, pe) {
 }
 async function FLe(w, I, ne, me) {
   if (St()) return tE(S("essential_traffic_only"));
-  if (!Mt("allow_product_feedback")) return tE(S("policy_blocked"));
+  if (!isPolicyAllowed("allow_product_feedback")) return tE(S("policy_blocked"));
   let pe = Mae().kind === "bundle" ? "bundle" : "post";
   try {
     let be = await w;
-    if (be.kind === "blocked") return tE(u(be.errorCode));
+    if (be.kind === "blocked") return tE(fromEnum(be.errorCode));
     if (be.kind === "capture_failed") throw be.error;
     let xe = yT(be.messages),
       { subagentTranscripts: Ae, headSha: Oe, lastApiRequest: He } = be,
@@ -55153,7 +55153,7 @@ async function FLe(w, I, ne, me) {
         zt = await fJt(to, "transcript.json");
       if (zt.success)
         return (
-          y("feedback_transcript_share"),
+          logFeatureOk("feedback_transcript_share"),
           { success: !0, bundlePath: zt.zipPath }
         );
       return tE(S("bundle_write_failed"));
@@ -55193,8 +55193,8 @@ async function FLe(w, I, ne, me) {
       switch (co.kind) {
         case "success":
           if ((n("Transcript shared successfully", { level: "info" }), to > 0))
-            g("feedback_transcript_share", "payload_stripped");
-          else y("feedback_transcript_share");
+            logFeatureSad("feedback_transcript_share", "payload_stripped");
+          else logFeatureOk("feedback_transcript_share");
           return { success: !0, transcriptId: co.transcriptId };
         case "blocked":
           return tE(co.errorCode);
@@ -55209,15 +55209,15 @@ async function FLe(w, I, ne, me) {
   }
 }
 function tE(w) {
-  return (f("feedback_transcript_share", w), { success: !1, errorCode: w });
+  return (logFeatureBad("feedback_transcript_share", w), { success: !1, errorCode: w });
 }
 async function tvo(w, I) {
   try {
-    let ne = await T_(
+    let ne = await withOAuth401Retry(
       () =>
         ht.post("/api/claude_code_shared_session_transcripts", w, {
           timeout: Xko,
-          headers: { "Content-Type": "application/json", "User-Agent": ex() },
+          headers: { "Content-Type": "application/json", "User-Agent": getUserAgent() },
           credentials: I,
         }),
       { credentials: I },
@@ -55249,7 +55249,7 @@ async function tvo(w, I) {
   }
 }
 function Gvt(w) {
-  return _y(S("http_"), Yr(w));
+  return concatSafe(S("http_"), fromNumber(w));
 }
 function Kvt(w) {
   if (w instanceof RangeError) return S("payload_range_error");
@@ -55257,7 +55257,7 @@ function Kvt(w) {
   switch (I) {
     case "timeout":
     case "network":
-      return u(I);
+      return fromEnum(I);
     case "auth":
     case "http":
       if (ne !== void 0) return Gvt(ne);
@@ -55475,7 +55475,7 @@ function ULe({
     Ct = DL("tengu_good_survey_transcript_ask_config", eIt),
     [eo, jt] = d(Wae),
     [Tt, to] = d(!1),
-    zt = Ge().feedbackSurveyRate,
+    zt = getInitialSettings().feedbackSurveyRate,
     ao = vt(),
     co = C(ao.now()),
     go = C(He),
@@ -55495,8 +55495,8 @@ function ULe({
           event_type: S("transcript_share_yes"),
           appearance_id: Ee(gn),
           last_assistant_message_id: Ee(nE(I.getSnapshot())),
-          survey_type: u(ne),
-          trigger: u(BLe(On)),
+          survey_type: fromEnum(ne),
+          trigger: fromEnum(BLe(On)),
         }),
           (Ho.current = Rie(I.getSnapshot(), pe)));
       },
@@ -55551,7 +55551,7 @@ function ULe({
             event_type: S("appeared"),
             appearance_id: Ee(gn),
             last_assistant_message_id: Ee(nE(I.getSnapshot())),
-            survey_type: u(ne),
+            survey_type: fromEnum(ne),
             prompt_index: Dxe(),
           }),
           bo("feedback_survey", {
@@ -55570,9 +55570,9 @@ function ULe({
             ..._C(xe),
             event_type: S("responded"),
             appearance_id: Ee(gn),
-            response: u(On),
+            response: fromEnum(On),
             last_assistant_message_id: Ee(nE(I.getSnapshot())),
-            survey_type: u(ne),
+            survey_type: fromEnum(ne),
             prompt_index: Dxe(),
           }),
           bo("feedback_survey", {
@@ -55592,7 +55592,7 @@ function ULe({
           event_type: S("abandoned"),
           appearance_id: Ee(gn),
           last_assistant_message_id: Ee(nE(I.getSnapshot())),
-          survey_type: u(ne),
+          survey_type: fromEnum(ne),
           prompt_index: Dxe(),
         }),
           bo("feedback_survey", {
@@ -55608,7 +55608,7 @@ function ULe({
       (gn) => {
         if (gn !== "bad" && gn !== "fine" && gn !== "good") return !1;
         if (St()) return !1;
-        if (!Mt("allow_product_feedback")) return !1;
+        if (!isPolicyAllowed("allow_product_feedback")) return !1;
         if (Mae().kind === "disabled") return !1;
         if (Pie()) return !0;
         if (ee().transcriptShareDismissed) return !1;
@@ -55630,8 +55630,8 @@ function ULe({
           event_type: S("transcript_prompt_appeared"),
           appearance_id: Ee(gn),
           last_assistant_message_id: Ee(nE(I.getSnapshot())),
-          survey_type: u(ne),
-          trigger: u(Jr),
+          survey_type: fromEnum(ne),
+          trigger: fromEnum(Jr),
         }),
           bo("feedback_survey", {
             event_type: "transcript_prompt_appeared",
@@ -55648,11 +55648,11 @@ function ULe({
         if (!(On === "yes" && Ho.current !== null))
           i("tengu_feedback_survey_event", {
             ..._C(xe),
-            event_type: u(`transcript_share_${On}`),
+            event_type: fromEnum(`transcript_share_${On}`),
             appearance_id: Ee(gn),
             last_assistant_message_id: Ee(nE(I.getSnapshot())),
-            survey_type: u(ne),
-            trigger: u(ai),
+            survey_type: fromEnum(ne),
+            trigger: fromEnum(ai),
           });
         if (On === "dont_ask_again")
           await Te((Oi) => ({ ...Oi, transcriptShareDismissed: !0 }), pe);
@@ -55669,7 +55669,7 @@ function ULe({
                   : "transcript_share_failed",
               ),
               appearance_id: Ee(gn),
-              trigger: u(ai),
+              trigger: fromEnum(ai),
               error_code: rs.errorCode,
             }),
             rs
@@ -55692,10 +55692,10 @@ function ULe({
           Jr.value.trim() !== ""
         )
           return !1;
-        if (Pe() !== "firstParty") return !1;
+        if (getAPIProvider() !== "firstParty") return !1;
         let ai = Mae().kind;
         if (ai !== "post" && ai !== "share") return !1;
-        if (ai === "share" && l5().error) return !1;
+        if (ai === "share" && getAuthHeaders().error) return !1;
         if (Qvt()) return (jt({ ...Wae, enabled: !0 }), to(!0), ho(), !0);
         let Fr = H(gFn, Wae) ?? {},
           Oi = (Wi, qs) =>
@@ -55724,8 +55724,8 @@ function ULe({
           event_type: S("followup_prompt_appeared"),
           appearance_id: Ee(gn),
           last_assistant_message_id: Ee(nE(I.getSnapshot())),
-          response: u(On),
-          survey_type: u(ne),
+          response: fromEnum(On),
+          survey_type: fromEnum(ne),
         }),
           bo("feedback_survey", {
             event_type: "followup_prompt_appeared",
@@ -55743,9 +55743,9 @@ function ULe({
             ..._C(xe),
             event_type: S("followup_skipped"),
             appearance_id: Ee(gn),
-            skip_method: u(On.method),
-            response: we(Jr),
-            survey_type: u(ne),
+            skip_method: fromEnum(On.method),
+            response: fromEnumOpt(Jr),
+            survey_type: fromEnum(ne),
           }),
             bo("feedback_survey", {
               event_type: "followup_skipped",
@@ -55761,9 +55761,9 @@ function ULe({
           ..._C(xe),
           event_type: S("followup_submitted"),
           appearance_id: Ee(gn),
-          char_count: Yr(Array.from(ai).length),
-          response: we(Jr),
-          survey_type: u(ne),
+          char_count: fromNumber(Array.from(ai).length),
+          response: fromEnumOpt(Jr),
+          survey_type: fromEnum(ne),
         }),
           bo("feedback_survey", {
             event_type: "followup_submitted",
@@ -55796,7 +55796,7 @@ function ULe({
                 ...(rs.success
                   ? { feedback_id: Ee(rs.feedbackId) }
                   : { error_code: Ee(rs.failureReason ?? "unknown") }),
-                survey_type: u(ne),
+                survey_type: fromEnum(ne),
               });
             })
             .catch(() => {})
@@ -55831,7 +55831,7 @@ function ULe({
       onFollowupPromptShown: un,
       onFollowupResolve: lr,
     }),
-    Xi = rt(),
+    Xi = getMainLoopModel(),
     Ln = V(() => {
       if (it.onForModels.length === 0) return !1;
       if (it.onForModels.includes("*")) return !0;
@@ -55847,7 +55847,7 @@ function ULe({
       if (me) return !1;
       if (a.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY) return !1;
       if (Zk()) return !1;
-      if (!Mt("allow_product_feedback")) return !1;
+      if (!isPolicyAllowed("allow_product_feedback")) return !1;
       if (Ie(process.env.CLAUDE_FORCE_DISPLAY_SURVEY) && !Je.timeLastShown)
         return !0;
       if (!Ln) return !1;
@@ -55984,8 +55984,8 @@ function Nie(DSr) {
       let LL = $Le.current;
       (i("tengu_long_context_survey_event", {
         event_type: S("appeared"),
-        question_variant: u(LL?.variant ?? "generic"),
-        trigger_mode: u(LL?.triggerMode ?? "cumulative"),
+        question_variant: fromEnum(LL?.variant ?? "generic"),
+        trigger_mode: fromEnum(LL?.triggerMode ?? "cumulative"),
         appearance_id: Ee(cvo),
         threshold: LL?.threshold,
         token_count_at_trigger: LL?.tokenCount,
@@ -56009,10 +56009,10 @@ function Nie(DSr) {
       let FL = $Le.current;
       (i("tengu_long_context_survey_event", {
         event_type: S("responded"),
-        question_variant: u(FL?.variant ?? "generic"),
-        trigger_mode: u(FL?.triggerMode ?? "cumulative"),
+        question_variant: fromEnum(FL?.variant ?? "generic"),
+        trigger_mode: fromEnum(FL?.triggerMode ?? "cumulative"),
         appearance_id: Ee(dvo),
-        response: u(mvo),
+        response: fromEnum(mvo),
         threshold: FL?.threshold,
         token_count_at_trigger: FL?.tokenCount,
         cumulative_tokens: FL?.cumulativeTokens,
@@ -56036,8 +56036,8 @@ function Nie(DSr) {
       let BL = $Le.current;
       (i("tengu_long_context_survey_event", {
         event_type: S("abandoned"),
-        question_variant: u(BL?.variant ?? "generic"),
-        trigger_mode: u(BL?.triggerMode ?? "cumulative"),
+        question_variant: fromEnum(BL?.variant ?? "generic"),
+        trigger_mode: fromEnum(BL?.triggerMode ?? "cumulative"),
         appearance_id: Ee(fvo),
         threshold: BL?.threshold,
         token_count_at_trigger: BL?.tokenCount,
@@ -56123,7 +56123,7 @@ function Nie(DSr) {
       if (Zk()) {
         return;
       }
-      if (!Mt("allow_product_feedback")) {
+      if (!isPolicyAllowed("allow_product_feedback")) {
         return;
       }
       if (a.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY) {
@@ -56211,7 +56211,7 @@ function nJ() {
   return !1;
 }
 function nwo(Yvo, Jvo, Xvo) {
-  (i(IT, { event_type: u(Yvo), appearance_id: Ee(Jvo), response: we(Xvo) }),
+  (i(IT, { event_type: fromEnum(Yvo), appearance_id: Ee(Jvo), response: fromEnumOpt(Xvo) }),
     bo("feedback_survey", {
       event_type: Yvo,
       appearance_id: Jvo,
@@ -56226,8 +56226,8 @@ function iwo(Zvo, ewo) {
   (i(IT, {
     event_type: S("transcript_prompt_appeared"),
     appearance_id: Ee(Zvo),
-    trigger: u(rE),
-    response: we(ewo),
+    trigger: fromEnum(rE),
+    response: fromEnumOpt(ewo),
   }),
     bo("feedback_survey", {
       event_type: "transcript_prompt_appeared",
@@ -56269,9 +56269,9 @@ function Hwt() {
 function jwt() {
   return (
     H(two, !1) &&
-    ua() &&
+    isAutoMemoryEnabled() &&
     !Zk() &&
-    Mt("allow_product_feedback") &&
+    isPolicyAllowed("allow_product_feedback") &&
     !a.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY
   );
 }
@@ -56293,7 +56293,7 @@ function Fie(bb, VLe, Tvo, KLe) {
     YLe = Rvo === void 0 ? !0 : Rvo,
     C1 = Pvo === void 0 ? !1 : Pvo,
     { storageV5: T1, credentials: pwt } = _e(),
-    fwt = bLe.of(Ye().host),
+    fwt = memoryWatchers.of(Ye().host),
     gwt = It(),
     Mvo;
   if (TC[2] === p) ((Mvo = new Set()), (TC[2] = Mvo));
@@ -56343,7 +56343,7 @@ function Fie(bb, VLe, Tvo, KLe) {
           }
           gwt((Lkr) => gWe(Lkr, Uvo.map(rwo), ZLe));
         })
-        .catch(h);
+        .catch(logError);
     }),
       (TC[9] = fwt),
       (TC[10] = gwt),
@@ -56357,10 +56357,10 @@ function Fie(bb, VLe, Tvo, KLe) {
     ((Hvo = async (kwt, vwt, jvo) => {
       if (
         (i(IT, {
-          event_type: u(`transcript_share_${vwt}`),
+          event_type: fromEnum(`transcript_share_${vwt}`),
           appearance_id: Ee(kwt),
-          trigger: u(rE),
-          response: we(jvo),
+          trigger: fromEnum(rE),
+          response: fromEnumOpt(jvo),
         }),
         vwt === "dont_ask_again")
       )
@@ -56375,9 +56375,9 @@ function Fie(bb, VLe, Tvo, KLe) {
                 : "transcript_share_failed",
             ),
             appearance_id: Ee(kwt),
-            trigger: u(rE),
+            trigger: fromEnum(rE),
             error_code: wwt.errorCode,
-            response: we(jvo),
+            response: fromEnumOpt(jvo),
           }),
           wwt.success
         );
@@ -56628,13 +56628,13 @@ function qwt(w, I, ne, me, pe) {
   });
 }
 function pwo() {
-  if (!gb() && Zc()) return !1;
-  return gt();
+  if (!getAnthropicApiKeySafe() && shouldUseWIFAuth()) return !1;
+  return isClaudeAISubscriber();
 }
 async function fwo(w) {
   let I = a.CLAUDE_CODE_ORGANIZATION_UUID,
-    ne = vn()?.organizationUuid,
-    me = await $T(w);
+    ne = getOauthAccountInfo()?.organizationUuid,
+    me = await getClaudeAIOAuthTokenOriginAsync(w);
   if (me === "store") return !I || I === ne;
   if (me === "env" || me === "fd") return Boolean(I);
   return !1;
@@ -56643,16 +56643,16 @@ async function Vwt(w, I) {
   if (a.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY) return null;
   if (Zk()) return null;
   if (mg()) return null;
-  if (!Mt("allow_product_feedback")) return null;
+  if (!isPolicyAllowed("allow_product_feedback")) return null;
   if (St()) return null;
-  if (Pe() !== "firstParty") return null;
+  if (getAPIProvider() !== "firstParty") return null;
   if (w.marketplace === void 0 || Ul(w.marketplace)) return null;
   if (!pwo()) {
-    if (wu()) g("cli_plugin_rating_store", "skip_auth_org_mismatch");
+    if (hasStoredOAuthToken()) logFeatureSad("cli_plugin_rating_store", "skip_auth_org_mismatch");
     return null;
   }
   if (!(await fwo(I)))
-    return (g("cli_plugin_rating_store", "skip_org_unpinned"), null);
+    return (logFeatureSad("cli_plugin_rating_store", "skip_org_unpinned"), null);
   if ((await r1(uwo, cwo)).enabled !== !0) return null;
   return { marketplaceName: w.marketplace, pluginName: w.name };
 }
@@ -56675,7 +56675,7 @@ function Gwt(w, I, ne) {
   return (
     (me.chain = me.chain.then(() =>
       ne(pe).catch((be) => {
-        (h(be), f("cli_plugin_rating_store", "chain_exception"));
+        (logError(be), logFeatureBad("cli_plugin_rating_store", "chain_exception"));
       }),
     )),
     me.chain
@@ -56697,7 +56697,7 @@ async function Bie(w, I, ne, me, pe) {
               ? (GHt(A(Ae)) ?? "no_response")
               : Oe;
     return (
-      f("cli_plugin_rating_store", `${w}_${Ke}`),
+      logFeatureBad("cli_plugin_rating_store", `${w}_${Ke}`),
       n(`plugin rating store ${w} failed: ${Ke}`, { level: "warn" }),
       !1
     );
@@ -56707,18 +56707,18 @@ async function Bie(w, I, ne, me, pe) {
       xe.reason === "no-auth"
         ? "auth_unavailable"
         : xe.reason.replaceAll("-", "_");
-    return (g("cli_plugin_rating_store", `${w}_${Ae}`), !1);
+    return (logFeatureSad("cli_plugin_rating_store", `${w}_${Ae}`), !1);
   }
   if (xe.status >= 200 && xe.status < 300)
-    return (y("cli_plugin_rating_store"), !0);
+    return (logFeatureOk("cli_plugin_rating_store"), !0);
   if ([401, 403, 404, 409].includes(xe.status))
     return (
-      g("cli_plugin_rating_store", `${w}_http_${xe.status}`),
+      logFeatureSad("cli_plugin_rating_store", `${w}_http_${xe.status}`),
       n(`plugin rating store ${w} skipped: http_${xe.status}`),
       !1
     );
   return (
-    f("cli_plugin_rating_store", `${w}_http_${xe.status}`),
+    logFeatureBad("cli_plugin_rating_store", `${w}_http_${xe.status}`),
     n(`plugin rating store ${w} failed: http_${xe.status}`, { level: "warn" }),
     !1
   );
@@ -56792,10 +56792,10 @@ function ywo(w, I, ne, me) {
 }
 function rOe(w, I, ne, me) {
   i("tengu_plugin_feedback_survey_event", {
-    event_type: u(w),
+    event_type: fromEnum(w),
     appearance_id: Ee(I),
-    trigger_type: u(ne.trigger),
-    ...(me && { response: u(me) }),
+    trigger_type: fromEnum(ne.trigger),
+    ...(me && { response: fromEnum(me) }),
     ...e3(ne.name, ne.marketplace),
   });
   let pe = jF(BF(ne.name, ne.marketplace, null)) || wl();
@@ -56917,7 +56917,7 @@ function sOe({
       if (!ne || Oe.probability <= 0) return;
       if (a.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY) return;
       if (Zk()) return;
-      if (!Mt("allow_product_feedback")) return;
+      if (!isPolicyAllowed("allow_product_feedback")) return;
       let ro = Date.now(),
         ho = ee().pluginSurveyState,
         _o = efn(it.current);
@@ -56983,7 +56983,7 @@ function Fwo(Dwo, Nwo) {
   (i("tengu_post_compact_survey_event", {
     event_type: S("responded"),
     appearance_id: Ee(Dwo),
-    response: u(Nwo),
+    response: fromEnum(Nwo),
   }),
     bo("feedback_survey", {
       event_type: "responded",
@@ -57106,7 +57106,7 @@ function Hie(P1, aOe, Swo, lOe) {
       if (Zk()) {
         return;
       }
-      if (!Mt("allow_product_feedback")) {
+      if (!isPolicyAllowed("allow_product_feedback")) {
         return;
       }
       if (a.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY) {
@@ -58504,7 +58504,7 @@ function nFe(JTr) {
     q_o;
   if (dE[0] !== wJ)
     ((q_o = () => {
-      i("tengu_auto_default_nudge_shown", { current_mode: u(wJ) });
+      i("tengu_auto_default_nudge_shown", { current_mode: fromEnum(wJ) });
     }),
       (dE[0] = wJ),
       (dE[1] = q_o));
@@ -58627,7 +58627,7 @@ function K1n() {
 }
 function g6e(w, I) {
   if (!zh(w)) return null;
-  let ne = Qa(Ue(w))?.effort_cost_index;
+  let ne = Qa(getCanonicalName(w))?.effort_cost_index;
   if (!ne) return null;
   let me = ne[I],
     pe = ne[KH(w)];
@@ -58670,11 +58670,11 @@ function RFe(Axr) {
   )
     ((Z_o = () => {
       i("tengu_effort_medium_nudge_shown", {
-        cohort: u(ec.cohort),
-        option_order: u(_J),
+        cohort: fromEnum(ec.cohort),
+        option_order: fromEnum(_J),
         nudge_model: bt(ec.modelKey),
-        from_level: u(ec.fromLevel),
-        to_level: u(ec.toLevel),
+        from_level: fromEnum(ec.fromLevel),
+        to_level: fromEnum(ec.toLevel),
         warning_shown: ec.showWarning === !0,
       });
     }),
@@ -58756,7 +58756,7 @@ function RFe(Axr) {
     RC[25] !== ec.warningText ||
     RC[26] !== rFe
   ) {
-    let Exr = oi(rFe);
+    let Exr = renderModelName(rFe);
     let hse = (Dxr) =>
       V_t(
         Dxr.replaceAll("{model}", Exr)
@@ -58940,7 +58940,7 @@ function q_t(w, I) {
 `);
   if (me.length <= xFe) return w;
   let pe = me.length - (xFe - 1),
-    be = Xe(`\u2026 (+${pe} more lines)`, ne);
+    be = truncateToWidth(`\u2026 (+${pe} more lines)`, ne);
   return `${me.slice(0, xFe - 1).join(`
 `)}
 ${be}`;
@@ -58958,7 +58958,7 @@ function pE(w, I, ne) {
   if (pe.length <= vse) return w;
   let be = pe.slice(0, vse);
   return (
-    (be[vse - 1] = `${SL(be[vse - 1] ?? "", Math.max(0, me - 1))}\u2026`),
+    (be[vse - 1] = `${truncateToWidthNoEllipsis(be[vse - 1] ?? "", Math.max(0, me - 1))}\u2026`),
     be.join(`
 `)
   );
@@ -58971,7 +58971,7 @@ function zR(w) {
   if (!YG(ne)) return "";
   let me = Xnr(ne.replace(/\s+/g, " ").trim()).trimEnd();
   if (!YG(me)) return "";
-  return Xe(I.length < w.length ? `${me}\u2026` : me, sTo);
+  return truncateToWidth(I.length < w.length ? `${me}\u2026` : me, sTo);
 }
 var tTt = 30000,
   nTt = 24;
@@ -59003,7 +59003,7 @@ function FFe(Jxr) {
   let AFe = uTo,
     dTo;
   if (Jg[6] !== $1)
-    ((dTo = () => $1(Sg() ? "cancelled" : "no")), (Jg[6] = $1), (Jg[7] = dTo));
+    ((dTo = () => $1(isUnattendedInteractiveSession() ? "cancelled" : "no")), (Jg[6] = $1), (Jg[7] = dTo));
   else dTo = Jg[7];
   let mTo;
   if (Jg[8] === p) ((mTo = []), (Jg[8] = mTo));
@@ -59015,7 +59015,7 @@ function FFe(Jxr) {
       if (!MFe) {
         return;
       }
-      if (Sg()) {
+      if (isUnattendedInteractiveSession()) {
         $1("cancelled");
         return;
       }
@@ -59047,7 +59047,7 @@ function FFe(Jxr) {
       (Jg[13] = fTo));
   else fTo = Jg[13];
   let Cse = fTo,
-    X_t = Xe(Zxr, nTt),
+    X_t = truncateToWidth(Zxr, nTt),
     gTo;
   if (Jg[14] === p)
     ((gTo = [
@@ -59242,7 +59242,7 @@ function _To(w, I) {
       });
       return;
     }
-    h(ne);
+    logError(ne);
   }
 }
 function ETo() {
@@ -59506,12 +59506,12 @@ function fHe(w) {
         fo.current.then((Sr) => {
           if (zo || ro.current) return;
           if (((ro.current = !0), Sr.type === "confirm-admin-request")) {
-            if (_t()) {
-              (g("model_fable_consent", "overage_enable_deferred"),
+            if (isBgSession()) {
+              (logFeatureSad("model_fable_consent", "overage_enable_deferred"),
                 BT(() =>
                   Oe(
                     "dismiss",
-                    hb()
+                    isExtraUsageAllowed()
                       ? iSe
                       : "Contact your admin to manage usage credit settings.",
                   ),
@@ -59525,7 +59525,7 @@ function fHe(w) {
             });
             return;
           }
-          (g("model_fable_consent", "overage_enable_deferred"),
+          (logFeatureSad("model_fable_consent", "overage_enable_deferred"),
             BT(() =>
               Oe(
                 "dismiss",
@@ -59545,7 +59545,7 @@ function fHe(w) {
   }, [He.s, Oe, Ae, xe]);
   function ho() {
     if (Oe("consent") === !1) return;
-    (Cue(xe), y("model_fable_consent"));
+    (Cue(xe), logFeatureOk("model_fable_consent"));
   }
   function _o(zo, Sr) {
     if (!be()) return;
@@ -59560,11 +59560,11 @@ function fHe(w) {
   }
   function po() {
     if (Oe("switch") === !1) return;
-    f("model_fable_consent", "declined");
+    logFeatureBad("model_fable_consent", "declined");
   }
   function xo(zo) {
     if (Oe("dismiss", zo) === !1) return;
-    g("model_fable_consent", "upsell_selected");
+    logFeatureSad("model_fable_consent", "upsell_selected");
   }
   function Wo() {
     if (Ct() || ao()) {
@@ -59572,12 +59572,12 @@ function fHe(w) {
       return;
     }
     if (Oe("dismiss") === !1) return;
-    g("model_fable_consent", "dismissed");
+    logFeatureSad("model_fable_consent", "dismissed");
   }
-  let Ro = m5(),
+  let Ro = getFableDeclineFallbackModel(),
     on =
       I === "mid-session" && Ro !== null
-        ? `Switch to ${oi(Ro)} and continue`
+        ? `Switch to ${renderModelName(Ro)} and continue`
         : I === "mid-session"
           ? "Not now"
           : "No, keep my current model",
@@ -59735,11 +59735,11 @@ function fHe(w) {
               })
           : void 0,
         onPurchaseSuccess: (zo) => {
-          (Cue(xe), y("model_fable_consent"), BT(() => Oe("consent", zo)));
+          (Cue(xe), logFeatureOk("model_fable_consent"), BT(() => Oe("consent", zo)));
         },
         onDone: (zo) => {
           if (typeof zo === "string") {
-            (g("model_fable_consent", "buy_fallback"),
+            (logFeatureSad("model_fable_consent", "buy_fallback"),
               BT(() => Oe("dismiss", zo)));
             return;
           }
@@ -59757,9 +59757,9 @@ function fHe(w) {
           failure: !1,
           onDone: (zo) => {
             if (zo)
-              (Cue(xe), y("model_fable_consent"), BT(() => Oe("consent")));
+              (Cue(xe), logFeatureOk("model_fable_consent"), BT(() => Oe("consent")));
             else
-              (g("model_fable_consent", "reenable_failed"),
+              (logFeatureSad("model_fable_consent", "reenable_failed"),
                 BT(() =>
                   Oe(
                     "dismiss",
@@ -59788,13 +59788,13 @@ function fHe(w) {
         onOutcome: (zo) => {
           switch (zo) {
             case "filed":
-              g("model_fable_consent", "overage_enable_deferred");
+              logFeatureSad("model_fable_consent", "overage_enable_deferred");
               return;
             case "failed":
-              f("model_fable_consent", "admin_request_failed");
+              logFeatureBad("model_fable_consent", "admin_request_failed");
               return;
             case "cancelled":
-              g("model_fable_consent", "dismissed");
+              logFeatureSad("model_fable_consent", "dismissed");
               return;
           }
         },
@@ -59947,7 +59947,7 @@ function mTt(w) {
     }),
     w,
   ),
-    y("onboarding_ide_dialog_shown"));
+    logFeatureOk("onboarding_ide_dialog_shown"));
 }
 var vTt = 30000;
 function iBe(HPr) {
@@ -59982,7 +59982,7 @@ function iBe(HPr) {
   let bTt = QTo,
     YTo;
   if (mp[8] !== V1)
-    ((YTo = () => V1(Sg() ? "cancelled" : "timeout")),
+    ((YTo = () => V1(isUnattendedInteractiveSession() ? "cancelled" : "timeout")),
       (mp[8] = V1),
       (mp[9] = YTo));
   else YTo = mp[9];
@@ -59996,7 +59996,7 @@ function iBe(HPr) {
       if (!JFe) {
         return;
       }
-      if (Sg()) {
+      if (isUnattendedInteractiveSession()) {
         V1("cancelled");
         return;
       }
@@ -60276,7 +60276,7 @@ function uBe(uMr) {
   else dxo = K1[1];
   let dMr = dxo,
     mxo;
-  if (K1[2] !== xTt) ((mxo = Pn(xTt)), (K1[2] = xTt), (K1[3] = mxo));
+  if (K1[2] !== xTt) ((mxo = formatTokens(xTt)), (K1[2] = xTt), (K1[3] = mxo));
   else mxo = K1[3];
   const RTt = `This session is ${dMr} old and ${mxo} tokens.`;
   let lBe;
@@ -60340,13 +60340,13 @@ function cHe(w, I, ne = Ase + 1) {
         `
 `,
       )
-      .map((xe) => Xe(xe, me));
+      .map((xe) => truncateToWidth(xe, me));
   if (pe.length <= ne)
     return pe.join(`
 `);
   if (ne <= 1) {
     let xe = ` \u2026 (+${pe.length - 1} more lines)`;
-    return Xe(kr(w), Math.max(1, me - te(xe))) + xe;
+    return truncateToWidth(kr(w), Math.max(1, me - te(xe))) + xe;
   }
   let be = ne - 1;
   return (
@@ -60364,7 +60364,7 @@ async function MTt(w, I, ne, me) {
     Oe = Math.abs(xe) % 60,
     Ke = `${xe >= 0 ? "+" : "-"}${String(Ae).padStart(2, "0")}:${String(Oe).padStart(2, "0")}`,
     Je = pe.toLocaleDateString("en-US", { weekday: "long" }),
-    Qe = Zo([
+    Qe = asSystemPrompt([
       "You are a date/time parser that converts natural language into ISO 8601 format.",
       "You MUST respond with ONLY the ISO 8601 formatted string, with no explanation or additional text.",
       "If the input is ambiguous, prefer future dates over past dates.",
@@ -60407,18 +60407,18 @@ Parse the user's input into ISO 8601 format. Return ONLY the formatted string, o
       Ct = xr(Zt.message.content).trim();
     if (!Ct || Ct === "INVALID")
       return (
-        f("mcp_elicitation_nl_datetime_parse", "parse_failed"),
+        logFeatureBad("mcp_elicitation_nl_datetime_parse", "parse_failed"),
         { success: !1, error: "Unable to parse date/time from input" }
       );
     if (!/^\d{4}/.test(Ct))
       return (
-        f("mcp_elicitation_nl_datetime_parse", "parse_failed"),
+        logFeatureBad("mcp_elicitation_nl_datetime_parse", "parse_failed"),
         { success: !1, error: "Unable to parse date/time from input" }
       );
-    return (y("mcp_elicitation_nl_datetime_parse"), { success: !0, value: Ct });
+    return (logFeatureOk("mcp_elicitation_nl_datetime_parse"), { success: !0, value: Ct });
   } catch (Zt) {
     if (!ne.aborted)
-      (f("mcp_elicitation_nl_datetime_parse", "haiku_error"), h(Zt));
+      (logFeatureBad("mcp_elicitation_nl_datetime_parse", "haiku_error"), logError(Zt));
     return {
       success: !1,
       error:
@@ -61287,7 +61287,7 @@ ${ai}`
     ss = Math.max(ek, wn - ZS),
     oc = ss - te(va) - te(`${Bi}${Oe}`) >= tRo ? `${Bi}${Oe}` : Bi,
     hc = Mn
-      ? Xe(va + Xe(cW(w), Math.max(1, ss - te(va) - te(oc))) + oc, ss)
+      ? truncateToWidth(va + truncateToWidth(cW(w), Math.max(1, ss - te(va) - te(oc))) + oc, ss)
       : `${va}${cW(w)}${Bi}${Oe}`;
   return e(de, {
     title: hc,
@@ -62077,7 +62077,7 @@ function rxt(wAr) {
         let $xo = oae ? "error" : kO ? "success" : jxo ? "error" : "suggestion";
         let nae = IC ? $xo : void 0;
         let Wxo = Zg.title || sW;
-        let qxo = Sb ? Xe(Gg(Wxo), Math.max(8, rP - ZS - 8 - ek)) : Gg(Wxo);
+        let qxo = Sb ? truncateToWidth(Gg(Wxo), Math.max(8, rP - ZS - 8 - ek)) : Gg(Wxo);
         let RAr = e(t, { color: nae, bold: IC, children: qxo });
         let rae = Math.max(ek, rP - ZS - 8 - te(qxo));
         let Vxo = Math.max(ek, rP - ZS - 6 - 4);
@@ -62105,7 +62105,7 @@ function rxt(wAr) {
                   }),
                 zTt.slice(aW.start, aW.end).map((_Be, PAr) => {
                   let MAr = aW.start + PAr;
-                  let AAr = Sb ? Xe(Gg(eP(Zg, _Be)), Vxo) : Gg(eP(Zg, _Be));
+                  let AAr = Sb ? truncateToWidth(Gg(eP(Zg, _Be)), Vxo) : Gg(eP(Zg, _Be));
                   let Gxo = QTt.includes(_Be);
                   let YTt = MAr === UJ;
                   return r(
@@ -62156,7 +62156,7 @@ function rxt(wAr) {
                   e(t, {
                     color: nae,
                     bold: IC,
-                    children: Sb ? Xe(zxo, rae) : zxo,
+                    children: Sb ? truncateToWidth(zxo, rae) : zxo,
                   }),
                 ],
               });
@@ -62189,7 +62189,7 @@ function rxt(wAr) {
                   }),
                 JTt.slice(lW.start, lW.end).map((TBe, EAr) => {
                   let DAr = lW.start + EAr;
-                  let NAr = Sb ? Xe(Gg(MC(Zg, TBe)), Vxo) : Gg(MC(Zg, TBe));
+                  let NAr = Sb ? truncateToWidth(Gg(MC(Zg, TBe)), Vxo) : Gg(MC(Zg, TBe));
                   let Qxo = _v === TBe;
                   let XTt = DAr === UJ;
                   return r(
@@ -62239,7 +62239,7 @@ function rxt(wAr) {
                   e(t, {
                     color: nae,
                     bold: IC,
-                    children: Sb ? Xe(Gg(MC(Zg, _v)), rae) : Gg(MC(Zg, _v)),
+                    children: Sb ? truncateToWidth(Gg(MC(Zg, _v)), rae) : Gg(MC(Zg, _v)),
                   }),
                 ],
               });
@@ -62282,13 +62282,13 @@ function rxt(wAr) {
             let LAr = kO && z1(Zg) ? txt(String(_v), Zg) : String(_v);
             let Jxo = jd(Oo(_i(LAr)));
             EC = kO
-              ? e(t, { children: Sb ? Xe(Jxo, rae) : Jxo })
+              ? e(t, { children: Sb ? truncateToWidth(Jxo, rae) : Jxo })
               : e(t, { dimColor: !0, italic: !0, children: "not set" });
           }
         } else {
           let Xxo = jd(Oo(_i(String(_v))));
           EC = kO
-            ? e(t, { children: Sb ? Xe(Xxo, rae) : Xxo })
+            ? e(t, { children: Sb ? truncateToWidth(Xxo, rae) : Xxo })
             : e(t, { dimColor: !0, italic: !0, children: "not set" });
         }
         let xBe = Zg.description ? Us(Zg.description) : null;
@@ -62314,7 +62314,7 @@ function rxt(wAr) {
                   children: Sb
                     ? e(t, {
                         dimColor: !0,
-                        children: Xe(Oo(xBe.text), Math.max(ek, rP - 6 - ZS)),
+                        children: truncateToWidth(Oo(xBe.text), Math.max(ek, rP - 6 - ZS)),
                       })
                     : e(Fs, {
                         multiline: xBe.needsGutter,
@@ -62329,7 +62329,7 @@ function rxt(wAr) {
                       color: "error",
                       italic: !0,
                       children: Sb
-                        ? Xe(Oo(Us(oae).text), Math.max(ek, rP - 6 - ZS))
+                        ? truncateToWidth(Oo(Us(oae).text), Math.max(ek, rP - 6 - ZS))
                         : Oo(Us(oae).text),
                     })
                   : e(t, { children: " " }),
@@ -62584,7 +62584,7 @@ function iUe(uIr) {
       switch (dIr) {
         case "open_accessibility": {
           (fRo.tcc.requestAccessibility(),
-            Fe(
+            execFileNoThrow(
               "open",
               [
                 "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility",
@@ -62595,7 +62595,7 @@ function iUe(uIr) {
         }
         case "open_screen_recording": {
           (fRo.tcc.requestScreenRecording(),
-            Fe(
+            execFileNoThrow(
               "open",
               [
                 "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture",
@@ -63115,7 +63115,7 @@ function yUe(XIr) {
   let jf = _(45),
     { hostPattern: ZIr, requestSource: _xt, onUserResponse: Txt } = XIr,
     { host: lk } = ZIr,
-    eEr = ene(),
+    eEr = shouldAllowManagedSandboxDomainsOnly(),
     ERo;
   if (jf[0] !== lk)
     ((ERo = km(lk, { maxUnits: lAt(lk) })), (jf[0] = lk), (jf[1] = ERo));
@@ -63127,7 +63127,7 @@ function yUe(XIr) {
       YJ = null;
       break bb0;
     }
-    if (CM(lk)) {
+    if (isMisleadingConsentHost(lk)) {
       YJ = null;
       break bb0;
     }
@@ -63146,7 +63146,7 @@ function yUe(XIr) {
     let hW;
     if (jf[4] !== lk || jf[5] !== lUe) {
       let kae;
-      if (jf[7] !== lk) ((kae = tne(lk)), (jf[7] = lk), (jf[8] = kae));
+      if (jf[7] !== lk) ((kae = consentHostEntry(lk)), (jf[7] = lk), (jf[8] = kae));
       else kae = jf[8];
       hW = qw(
         [
@@ -63166,7 +63166,7 @@ function yUe(XIr) {
               vae.type !== "addRules" ||
               vae.rules.length !== 1 ||
               vae.rules[0]?.toolName !== Cr ||
-              vae.rules[0]?.ruleContent !== `domain:${tne(lk)}`
+              vae.rules[0]?.ruleContent !== `domain:${consentHostEntry(lk)}`
             ) {
               return null;
             }
@@ -63550,7 +63550,7 @@ function CUe(bEr) {
 F();
 async function b6e() {
   let [w, I] = await Promise.all([Pb(), od("tengu_ccr_bundle_seed_enabled")]),
-    ne = tr(Q()) !== null && (a.CCR_ENABLE_BUNDLE || I);
+    ne = findGitRoot(Q()) !== null && (a.CCR_ENABLE_BUNDLE || I);
   if (!ne) return { cloneViable: !1, bundleSeedEnabled: ne };
   return {
     cloneViable:
@@ -64971,7 +64971,7 @@ function JT(g0r) {
           if (mP[8] !== Dd)
             ((TW = (b0r, fMo) => {
               let S0r = b0r?.displayHeader || `Q${fMo + 1}`;
-              return fMo === Dd ? Xe(S0r, 3) : "";
+              return fMo === Dd ? truncateToWidth(S0r, 3) : "";
             }),
               (mP[8] = Dd),
               (mP[9] = TW));
@@ -64998,10 +64998,10 @@ function JT(g0r) {
         ((pP = (gMo, _0r) => {
           if (_0r === Dd) {
             let T0r = uje - 2 - 2;
-            return Xe(gMo, T0r);
+            return truncateToWidth(gMo, T0r);
           } else {
             let x0r = XRt - 2 - 2;
-            return Xe(gMo, x0r);
+            return truncateToWidth(gMo, x0r);
           }
         }),
           (mP[10] = Dd),
@@ -66382,13 +66382,13 @@ function GIo(KOr) {
   return KOr.textInputValue;
 }
 function KIo(zOr) {
-  throw (f("ask_user_question_answer", "build_result_failed"), zOr);
+  throw (logFeatureBad("ask_user_question_answer", "build_result_failed"), zOr);
 }
 function zIo(QOr) {
   return QOr.type === "image";
 }
 function QIo(YOr) {
-  return (h(YOr), !1);
+  return (logError(YOr), !1);
 }
 var EMt = 40;
 function ale(w) {
@@ -66444,7 +66444,7 @@ function m$e(fOr) {
   else BAo = Kje[1];
   let JPt = BAo,
     UAo;
-  if (Kje[2] === p) ((UAo = NMt(eke())), (Kje[2] = UAo));
+  if (Kje[2] === p) ((UAo = NMt(getAskUserQuestionTimeout())), (Kje[2] = UAo));
   else UAo = Kje[2];
   let gOr = UAo,
     HAo,
@@ -66690,7 +66690,7 @@ function c$e(bOr) {
     nh = TOr === "plan",
     rIo;
   if (Iu[21] !== nh)
-    ((rIo = nh ? Gh() : void 0), (Iu[21] = nh), (Iu[22] = rIo));
+    ((rIo = nh ? getPlanFilePath() : void 0), (Iu[21] = nh), (Iu[22] = rIo));
   else rIo = Iu[22];
   let dMt = rIo,
     {
@@ -66794,8 +66794,8 @@ function c$e(bOr) {
         isScreenReader: UC,
       }).catch((xOr) => {
         ((yP.current = !1),
-          f("ask_user_question_answer", "respond_build_failed"),
-          h(xOr));
+          logFeatureBad("ask_user_question_answer", "respond_build_failed"),
+          logError(xOr));
       });
       if (gIo === void 0) {
         return;
@@ -66836,7 +66836,7 @@ function c$e(bOr) {
         ...(Qp && { source_hash: Tn(Qp) }),
         skippedCount: yIo,
         questionCount: pl.length,
-        reason: u(POr),
+        reason: fromEnum(POr),
         isInPlanMode: nh,
       });
     }),
@@ -66880,9 +66880,9 @@ function c$e(bOr) {
           isInPlanMode: nh,
         });
       if ((UX(t$e, "user_submit"), G(pl, (IOr) => !t$e[IOr.key]) === 0))
-        y("ask_user_question_answer", { questionCount: pl.length });
+        logFeatureOk("ask_user_question_answer", { questionCount: pl.length });
       else
-        g("ask_user_question_answer", "user_skipped_questions", {
+        logFeatureSad("ask_user_question_answer", "user_skipped_questions", {
           questionCount: pl.length,
         });
       return !0;
@@ -66938,7 +66938,7 @@ function c$e(bOr) {
                   (yMt.current = null),
                   NW(mF, { selectedValue: void 0 }, !1));
             })
-            .catch(h));
+            .catch(logError));
         return;
       }
       pMt(mF, pF, kIo);
@@ -66971,7 +66971,7 @@ function c$e(bOr) {
             if (!OOr) yP.current = !1;
           })
           .catch((FOr) => {
-            (h(FOr), (yP.current = !1));
+            (logError(FOr), (yP.current = !1));
           });
       }
     }),
@@ -67026,7 +67026,7 @@ function c$e(bOr) {
     ((EIo =
       !UC &&
       !$m.hasExternalRacer &&
-      !_t() &&
+      !isBgSession() &&
       (NX !== null || a.CLAUDE_AFK_TIMEOUT_MS !== void 0)),
       (Iu[90] = NX),
       (Iu[91] = UC),
@@ -67069,7 +67069,7 @@ function c$e(bOr) {
       })
         .catch((UOr) => {
           if (e$e.current === "afk") yP.current = !1;
-          throw (f("ask_user_question_answer", "afk_build_failed"), UOr);
+          throw (logFeatureBad("ask_user_question_answer", "afk_build_failed"), UOr);
         })
         .then((HOr) => {
           if (e$e.current !== "afk") {
@@ -67091,12 +67091,12 @@ function c$e(bOr) {
             isInPlanMode: nh,
           }),
             UX(Qm, "afk_timeout"),
-            g("ask_user_question_answer", "afk_timeout", {
+            logFeatureSad("ask_user_question_answer", "afk_timeout", {
               questionCount: pl.length,
               hadPartialAnswers: Object.keys(Qm).length > 0,
             }));
         })
-        .catch(h);
+        .catch(logError);
     }),
       (Iu[94] = YE),
       (Iu[95] = LC),
@@ -68088,7 +68088,7 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       [w.input],
     ),
     Ke =
-      WS(be, (un) => !un.classifierApprovable) !== void 0 ||
+      findSafetyCheckReason(be, (un) => !un.classifierApprovable) !== void 0 ||
       w.isAskCappedByOrg ||
       y5(w.requestSource),
     Je = Oe !== void 0,
@@ -68173,7 +68173,7 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
     } = V(() => {
       let un = typeof w.input.command === "string" ? w.input.command : pe,
         lr = !Ae && H("tengu_destructive_command_warning", !1) ? ozn(un) : null,
-        Io = st.isSandboxingEnabled(),
+        Io = SandboxManager.isSandboxingEnabled(),
         So =
           Io &&
           w.requestSource?.type !== "remote-agent" &&
@@ -68188,7 +68188,7 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       enableAutoMode: vo,
     } = U6e(w.requestSource),
     zo =
-      Gue(be) ||
+      isAskRuleDrivenReason(be) ||
       w.permissionResult.matchedAskRule?.ruleBehavior === "ask" ||
       be?.type === "hook",
     Sr = yn && !zo,
@@ -68374,7 +68374,7 @@ function SAt(w) {
     [
       {
         type: "addRules",
-        rules: [{ toolName: Nre, ruleContent: w.host }],
+        rules: [{ toolName: CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL, ruleContent: w.host }],
         behavior: "allow",
         destination: "session",
       },
@@ -68387,7 +68387,7 @@ function SAt(w) {
           ne === void 0 ||
           ne.type !== "addRules" ||
           ne.rules.length !== 1 ||
-          ne.rules[0]?.toolName !== Nre ||
+          ne.rules[0]?.toolName !== CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL ||
           ne.rules[0]?.ruleContent !== w.host
         )
           return null;
@@ -68893,7 +68893,7 @@ function x1e(KUr) {
   let XX = HEo,
     jEo;
   if (xb[7] !== ky.folder)
-    ((jEo = el(an(ky.folder).replace(/\s+/g, " "), FAt)),
+    ((jEo = truncatePathMiddle(an(ky.folder).replace(/\s+/g, " "), FAt)),
       (xb[7] = ky.folder),
       (xb[8] = jEo));
   else jEo = xb[8];
@@ -69320,9 +69320,9 @@ function ZAt(w) {
   _6e.register(w);
 }
 ZAt({
-  isPlanArtifactEnabled: voe,
-  publishPlanArtifact: (w, I, ne) => oTt(w, $H(), I, ne),
-  workshopVerifiedSlugsWith: kCe,
+  isPlanArtifactEnabled: isPlanArtifactEnabled,
+  publishPlanArtifact: (w, I, ne) => publishPlanArtifact(w, isWorkshopEnabled(), I, ne),
+  workshopVerifiedSlugsWith: workshopVerifiedSlugsWith,
 });
 var eq = 300,
   A0o =
@@ -69335,10 +69335,10 @@ function $It(w) {
 }
 function NIt(w, I, ne, me, pe) {
   if (IL()) return;
-  if (!ne && mu(K())) return;
+  if (!ne && getCurrentSessionTitle(K())) return;
   let be;
-  if (Ja()) {
-    let xe = WD();
+  if (isActingAsBgJob()) {
+    let xe = getBgJobDir();
     if (xe) be = M0o(xe);
   }
   Q9e([Re({ content: w.slice(0, 1000) })], new AbortController().signal, {
@@ -69346,16 +69346,16 @@ function NIt(w, I, ne, me, pe) {
   })
     .then(async (xe) => {
       let Ae = xe ? si(xe) : "";
-      if (!Ae || mu(K())) return;
+      if (!Ae || getCurrentSessionTitle(K())) return;
       let Oe = K(),
         He = yl();
       if (
-        (pj(Oe, Ae, me),
-        await EY(Oe, Ae, He, "auto", me),
-        t1(Ae, me, "auto"),
+        (saveAiGeneratedTitle(Oe, Ae, me),
+        await saveAgentName(Oe, Ae, He, "auto", me),
+        updateSessionName(Ae, me, "auto"),
         be)
       )
-        await b$(be, Ae, "auto", me);
+        await syncJobName(be, Ae, "auto", me);
       I((Ke) => {
         if (Ke.standaloneAgentContext?.name === Ae) return Ke;
         return {
@@ -69364,7 +69364,7 @@ function NIt(w, I, ne, me, pe) {
         };
       });
     })
-    .catch(h);
+    .catch(logError);
 }
 var LIt = [
     { label: "Review plan as artifact", value: "review-artifact" },
@@ -69479,9 +69479,9 @@ function FIt({
 }
 function UIt(w, I) {
   if (!w) return null;
-  let ne = ip({
+  let ne = getRuntimeMainLoopModel({
       permissionMode: I,
-      mainLoopModel: rt(),
+      mainLoopModel: getMainLoopModel(),
       exceeds200kTokens: !1,
     }),
     me = vp(ne, Up()),
@@ -69555,7 +69555,7 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
     jt = U((ur) => ur.ultraplanLaunching),
     Tt = qa(),
     to = JOe(),
-    zt = cD() && Mt("allow_remote_sessions") && !eo && !jt && to !== null,
+    zt = cD() && isPolicyAllowed("allow_remote_sessions") && !eo && !jt && to !== null,
     {
       mode: ao,
       isAutoModeAvailable: co,
@@ -69572,14 +69572,14 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
     ((po.current = ur), Ho(ur));
   }
   let Wo = !fo || fo.trim() === "",
-    [Ro] = d(() => voe() && !Wo),
+    [Ro] = d(() => isPlanArtifactEnabled() && !Wo),
     [on, An] = d(() => (Ro ? "review" : "proceed")),
     [wn, yn] = d({ status: "idle" }),
     vo = C(wn);
   function zo(ur) {
     ((vo.current = ur), yn(ur));
   }
-  let Sr = V(() => cC(), []),
+  let Sr = V(() => isAutoModeGateEnabled(), []),
     Kn = _o.length <= EIt,
     nn = V(() => Kn && !Jk(_o), [Kn, _o]),
     no = V(() => (nn ? dAt(_o) : null), [nn, _o]),
@@ -69689,7 +69689,7 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
     if (Bi.current) return;
     ((Bi.current = !0),
       i("tengu_plan_review_step", {
-        choice: u(ur),
+        choice: fromEnum(ur),
         msSinceShown: Date.now() - Fi.current,
         viaChord: Pi,
       }));
@@ -69702,7 +69702,7 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
     if (!ne()) return;
     if (rs.current) return;
     if (((rs.current = !0), ss(ur, !1), ur === "review-artifact")) {
-      if (!voe() || !_o.trim()) {
+      if (!isPlanArtifactEnabled() || !_o.trim()) {
         (n(
           "plan artifact: unavailable at review selection (gate off or empty plan)",
         ),
@@ -69716,12 +69716,12 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
           (zo({ status: "failed" }), As(oWe));
         },
         ki = _o;
-      oTt(ki, $H(), eFe(be.getState, be.setState), Ae)
+      publishPlanArtifact(ki, isWorkshopEnabled(), makeOwnPublishesStore(be.getState, be.setState), Ae)
         .then((yi) => {
           if (yi.url)
             if (
               (pe((hi) => {
-                let zn = kCe(hi.workshopVerifiedSlugs, yi);
+                let zn = workshopVerifiedSlugsWith(hi.workshopVerifiedSlugs, yi);
                 return zn === null ? hi : { ...hi, workshopVerifiedSlugs: zn };
               }),
               po.current !== ki)
@@ -69736,7 +69736,7 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
           else (n(`plan artifact: publish returned ${yi.err}`), Pi());
         })
         .catch((yi) => {
-          (h(yi), Pi());
+          (logError(yi), Pi());
         });
     }
     va();
@@ -69783,7 +69783,7 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
           credentials: Ae,
         })
           .then(As)
-          .catch(h));
+          .catch(logError));
       return;
     }
     let Ri =
@@ -69797,14 +69797,14 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
     let ns =
         (ur === "yes-resume-auto-mode" || ur === "yes-auto-clear-context") &&
         Cn.autoModeGateSnapshot,
-      Xs = fb();
+      Xs = isAutoModeActive();
     if (ur !== "no" && !ns && Xs)
-      (qC(!1),
+      (setAutoModeActive(!1),
         OL(!0),
         pe((yc) => ({
           ...yc,
           toolPermissionContext: {
-            ...ZX(yc.toolPermissionContext),
+            ...restoreDangerousPermissions(yc.toolPermissionContext),
             prePlanMode: void 0,
           },
         })));
@@ -69819,10 +69819,10 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       if (ur === "yes-bypass-permissions") yc = "bypassPermissions";
       else if (ur === "yes-accept-edits") yc = "acceptEdits";
       else if (ur === "yes-auto-clear-context" && Cn.autoModeGateSnapshot)
-        ((yc = "auto"), qC(!0));
+        ((yc = "auto"), setAutoModeActive(!0));
       (i("tengu_plan_exit", {
         planLengthChars: _o.length,
-        outcome: u(ur),
+        outcome: fromEnum(ur),
         clearContext: !0,
         hasFeedback: !!hi,
         publishRequested: qv(vo.current),
@@ -69861,14 +69861,14 @@ ${_o}${wi}${Ms}${da}`,
     if (ur === "yes-resume-auto-mode" && Cn.autoModeGateSnapshot) {
       (i("tengu_plan_exit", {
         planLengthChars: _o.length,
-        outcome: u(ur),
+        outcome: fromEnum(ur),
         clearContext: !1,
         hasFeedback: !!hi,
         publishRequested: qv(vo.current),
       }),
         PL(!0),
         IW(!0),
-        qC(!0),
+        setAutoModeActive(!0),
         eG({ from: "plan", to: "auto", trigger: "exit_plan_mode" }),
         pe((yc) => {
           let zu = {
@@ -69876,7 +69876,7 @@ ${_o}${wi}${Ms}${da}`,
             mode: "auto",
             prePlanMode: void 0,
           };
-          return { ...yc, toolPermissionContext: qM(zu) };
+          return { ...yc, toolPermissionContext: stripDangerousPermissionsForAutoMode(zu) };
         }),
         I(zn()));
       return;
@@ -69891,7 +69891,7 @@ ${_o}${wi}${Ms}${da}`,
       (eG({ from: "plan", to: zu, trigger: "exit_plan_mode" }),
         i("tengu_plan_exit", {
           planLengthChars: _o.length,
-          outcome: u(ur),
+          outcome: fromEnum(ur),
           clearContext: !1,
           hasFeedback: !!hi,
           publishRequested: qv(vo.current),
@@ -69956,14 +69956,14 @@ ${_o}${wi}${Ms}${da}`,
           outcome: S("yes-default"),
           publishRequested: !1,
         }),
-        fb())
+        isAutoModeActive())
       )
-        (qC(!1),
+        (setAutoModeActive(!1),
           OL(!0),
           pe((ki) => ({
             ...ki,
             toolPermissionContext: {
-              ...ZX(ki.toolPermissionContext),
+              ...restoreDangerousPermissions(ki.toolPermissionContext),
               prePlanMode: void 0,
             },
           })));
@@ -69998,7 +69998,7 @@ ${_o}${wi}${Ms}${da}`,
         (async () => {
           if (ro) {
             let Pi = await f9(ro);
-            if ((Cp(ro), Pi.error))
+            if ((notePlanFileForgotten(ro), Pi.error))
               Ke({
                 key: "external-editor-error",
                 kind: "warning",
@@ -70336,7 +70336,7 @@ async function tEt(w, I, ne, me) {
       n(`FileEditToolDiff: fs error computing diff for ${w}: ${xe.message}`, {
         level: "error",
       });
-    else h(xe);
+    else logError(xe);
     return tq(w, pe);
   }
 }
@@ -70369,15 +70369,15 @@ import { join as O0o, sep as sEt } from "path";
 function F0o(w) {
   let I = ot(w),
     ne = ot(`${he()}/.claude`),
-    me = dr(I),
-    pe = dr(ne);
+    me = normalizeCaseForComparison(I),
+    pe = normalizeCaseForComparison(ne);
   return me.startsWith(pe + sEt.toLowerCase()) || me.startsWith(pe + "/");
 }
 function B0o(w) {
   let I = ot(w),
     ne = O0o(L0o(), ".claude"),
-    me = dr(I),
-    pe = dr(ne);
+    me = normalizeCaseForComparison(I),
+    pe = normalizeCaseForComparison(ne);
   return me.startsWith(pe + sEt.toLowerCase()) || me.startsWith(pe + "/");
 }
 var rEt = new Set(["addRules"]),
@@ -70435,7 +70435,7 @@ function j0o(w, I, ne) {
       );
     return it === null ? null : { row: it, value: "yes-claude-folder" };
   }
-  let be = lJe(w, I, ne),
+  let be = generateSuggestions(w, I, ne),
     xe = [],
     Ae = be.find((Qe) => Qe.type === "setMode");
   if (Ae?.type === "setMode" && Ae.mode === "acceptEdits") {
@@ -70653,7 +70653,7 @@ function kEt(w) {
   let ne = Oo(_i(I)),
     me = jd(ne);
   if (!YG(me)) return "(unnamed cell)";
-  return Xe(cAt(me, me, me !== ne || I.length < w.length), Eme);
+  return truncateToWidth(cAt(me, me, me !== ne || I.length < w.length), Eme);
 }
 function LWe(Zp) {
   let z0o = _(8),
@@ -71055,7 +71055,7 @@ function hNo(w, I, ne) {
           );
           pe = GHe(w.toolName, be, { theme: I, verbose: !0 });
         } catch (be) {
-          (h(
+          (logError(
             new R(
               `Error rendering tool use line for ${w.toolName}: ${be}`,
               "Error rendering tool use line (file consent dialog fallback)",
@@ -71245,7 +71245,7 @@ function vEt({ payload: w, answer: I }) {
                 children: [
                   "Auto mode and the sandbox read outside the working directories without asking. Yes or Block settles this question; Ask again asks on the next outside read. Block: the file tools refuse reads outside the working directories in every project.",
                   " ",
-                  Wmt()
+                  sandboxReadBlockApplies()
                     ? "Sandboxed commands lose your home directory (SSH keys, home-installed tools) until you re-open paths with sandbox.filesystem.allowRead."
                     : "Sandboxed commands are not changed on this machine (the sandbox is off, its filesystem rules are relaxed, a managed read-path lock is on, or the working directory name has glob characters).",
                   " ",
@@ -71568,7 +71568,7 @@ function BEt(w) {
       ? w.permissionResult.decisionReason
       : void 0;
   return (
-    WS(I, (ne) => !ne.classifierApprovable) !== void 0 || w.isAskCappedByOrg
+    findSafetyCheckReason(I, (ne) => !ne.classifierApprovable) !== void 0 || w.isAskCappedByOrg
   );
 }
 function UEt(w) {
@@ -72231,7 +72231,7 @@ function KEt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       ((ao.current = !0), Tt(on));
     }, []),
     { sandboxingEnabled: go, isSandboxed: fo } = V(() => {
-      let on = st.isSandboxingEnabled(),
+      let on = SandboxManager.isSandboxingEnabled(),
         An =
           on &&
           w.requestSource?.type !== "remote-agent" &&
@@ -72250,7 +72250,7 @@ function KEt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       return mzn(on);
     }, [pe, w.input, ho]),
     Ho =
-      WS(
+      findSafetyCheckReason(
         w.permissionResult.decisionReason,
         (on) => !on.classifierApprovable,
       ) !== void 0 ||
@@ -72393,14 +72393,14 @@ function Cy(w) {
 F();
 function YEt(w, I) {
   let ne = Bwe(I),
-    me = oi(w);
+    me = renderModelName(w);
   if (!d6(me)) return `${cqn} ${kue(w)}${ne}`;
   let pe = JG(me);
   return `${$te(I) ? O4e(pe) : D4e(pe)} ${kue(w)}${ne}`;
 }
 function JEt(w, I) {
-  let ne = oi(I),
-    me = oi(w);
+  let ne = renderModelName(I),
+    me = renderModelName(w);
   return {
     retry_fallback: d6(ne)
       ? `Switch to ${JG(ne)}`
@@ -73459,7 +73459,7 @@ var VVe = {
   ...fl(f6e, J$e),
 };
 F();
-import { spawn as tOo } from "child_process";
+import { spawn } from "child_process";
 var oOo = 300,
   nOo = 240000,
   rOo = 30000;
@@ -73530,7 +73530,7 @@ class o0t {
         }));
     try {
       let [I, ne] = w,
-        me = tOo(I, ne, { stdio: "ignore", windowsHide: !0 });
+        me = spawn(I, ne, { stdio: "ignore", windowsHide: !0 });
       ((this.inhibitorProcess = me),
         me.unref(),
         me.on("error", (pe) => {
@@ -73729,7 +73729,7 @@ function wOo(w) {
 }
 F();
 function JVe() {
-  let w = _t(),
+  let w = isBgSession(),
     I = COo(),
     ne = I === I0.kind,
     me = TOo(),
@@ -73999,7 +73999,7 @@ function dce(AQr) {
   let $Oo, WOo;
   if (cx[33] !== uce || cx[34] !== ZVe || cx[35] !== eGe)
     (($Oo = () => {
-      xUe({ status: uce, waitingFor: eGe }, ZVe).catch(oFo);
+      updateSessionActivity({ status: uce, waitingFor: eGe }, ZVe).catch(oFo);
     }),
       (WOo = [uce, eGe, ZVe]),
       (cx[33] = uce),
@@ -74786,7 +74786,7 @@ function WGe(DGe) {
       if (!DGe || !LGe || Tce === null) {
         return;
       }
-      i("tengu_dialoghost_suppressed", { reason: u(Tce) });
+      i("tengu_dialoghost_suppressed", { reason: fromEnum(Tce) });
     }),
       (QFo = [DGe, LGe, Tce]),
       (Y5r[0] = LGe),
@@ -75339,7 +75339,7 @@ class Oce {
       pe?.conversationKey !== this.#n?.conversationKey
     )
       ((this.#n = pe), this.#t.emit());
-    (this.#e.onClear(), y("repl_clear_view"));
+    (this.#e.onClear(), logFeatureOk("repl_clear_view"));
   };
   #l = () => {
     let w = this.#e.loading.getSnapshot();
@@ -75462,7 +75462,7 @@ function QNt(w) {
   );
 }
 async function YNt(w) {
-  if (bn().spinnerTipsEnabled === !1) return;
+  if (getSettings_DEPRECATED().spinnerTipsEnabled === !1) return;
   let I = await b0t(w);
   if (I.length === 0) return;
   return QNt(I);
@@ -75473,7 +75473,7 @@ async function XNt(w, I) {
   } catch (ne) {
     return (
       vZ.of(I.session.host).failedTipIds.add(w.id),
-      h(dt(ge(ne), "tip content threw")),
+      logError(dt(ge(ne), "tip content threw")),
       ""
     );
   }
@@ -75489,8 +75489,8 @@ class eLt {
     if (this.fired.has(pe)) return;
     (this.fired.add(pe),
       i("tengu_dead_probe_legacy_plugin_tip_counts", {
-        changes_max: u(ne),
-        changes_outcome: u(me),
+        changes_max: fromEnum(ne),
+        changes_outcome: fromEnum(me),
       }));
   }
 }
@@ -75499,7 +75499,7 @@ function BBo() {
   return FBo.of(B().host);
 }
 async function oLt(w) {
-  if (bn().spinnerTipsEnabled === !1) return;
+  if (getSettings_DEPRECATED().spinnerTipsEnabled === !1) return;
   let I = vZ.of(w.session.host);
   if (Lye()) return;
   let ne = await I.getMarketplacePluginTips(w.storageV5);
@@ -75520,7 +75520,7 @@ async function oLt(w) {
 }
 function Hce(w, I = "spinner", ne) {
   (n3e(w.id, ne),
-    y(I === "startup" ? "tips_startup_show" : "tips_spinner_show"));
+    logFeatureOk(I === "startup" ? "tips_startup_show" : "tips_spinner_show"));
   let me =
     w.id.startsWith("marketplace-plugin:") && w.id.includes("@")
       ? "marketplace-plugin:org-marketplace"
@@ -75530,7 +75530,7 @@ function Hce(w, I = "spinner", ne) {
   i("tengu_tip_shown", {
     tipIdLength: me,
     cooldownSessions: w.cooldownSessions,
-    surface: u(I),
+    surface: fromEnum(I),
   });
 }
 import { randomUUID as HBo } from "crypto";
@@ -75545,8 +75545,8 @@ function jce(w, I) {
 function nLt(w, I) {
   let ne = tH(w);
   if (!ne) return !0;
-  let me = Di(ne.commandName, I);
-  if (!me) return !Xqe(ne.commandName) && !ne.commandName.includes("://");
+  let me = findCommand(ne.commandName, I);
+  if (!me) return !looksLikeCommand(ne.commandName) && !ne.commandName.includes("://");
   return me.type !== "local" && me.type !== "local-jsx";
 }
 function jBo() {
@@ -75557,8 +75557,8 @@ function $Bo(w, I) {
     pe = Xy(ne, Ya(me()));
   i("tengu_cancel", {
     source: w,
-    streamMode: we(I.streamMode),
-    ...(pe && { effort_level: u(pe) }),
+    streamMode: fromEnumOpt(I.streamMode),
+    ...(pe && { effort_level: fromEnum(pe) }),
   });
 }
 function iLt(w) {
@@ -75570,8 +75570,8 @@ function iLt(w) {
   )
     return !1;
   if (!w.interruptRunningTurn())
-    return (g("input_send_queued_now", "no_live_controller"), !1);
-  return (y("input_send_queued_now"), $Bo(S("queued_send_now"), w), !0);
+    return (logFeatureSad("input_send_queued_now", "no_live_controller"), !1);
+  return (logFeatureOk("input_send_queued_now"), $Bo(S("queued_send_now"), w), !0);
 }
 async function t6(w) {
   let {
@@ -75669,11 +75669,11 @@ async function t6(w) {
   ) {
     let nn = xo.trim(),
       { name: no, args: jo } = mue(nn),
-      Cn = Di(no, me),
-      un = Cn && zp(Cn) ? Cn : void 0,
+      Cn = findCommand(no, me),
+      un = Cn && isCommandEnabled(Cn) ? Cn : void 0,
       lr = un && pue(un, jo, pe) ? un : void 0;
     if (lr && lr.type === "local-jsx" && (zt.isActive || ao)) {
-      if (Kqe(lr, Ke().endedByModel)) {
+      if (isSlashCommandBlockedByEndedByModel(lr, Ke().endedByModel)) {
         (be(""),
           jt(0),
           w.addNotification?.({
@@ -75688,7 +75688,7 @@ async function t6(w) {
       }
       let Io = a0(lr);
       if (!Io) {
-        (f(uz(lr.name), "cmd_local_jsx_no_dialog_resolution"),
+        (logFeatureBad(cmdFeature(lr.name), "cmd_local_jsx_no_dialog_resolution"),
           w.addNotification?.({
             key: `immediate-${lr.name}`,
             kind: "feedback",
@@ -75699,15 +75699,15 @@ async function t6(w) {
       }
       if ((w.onSubmitProceed?.(), w.historyEntry))
         m4e(w.historyEntry, w.storageV5, go);
-      (i("tengu_immediate_command_executed", { commandName: aNe(lr.name) }),
+      (i("tengu_immediate_command_executed", { commandName: shippedCommandNameForAnalytics(lr.name) }),
         be(""),
         jt(0),
         xe({}),
         Tt());
-      let So = ne.buildToolUseContext(Ae, [], hr(), Oe),
+      let So = ne.buildToolUseContext(Ae, [], createAbortController(), Oe),
         Go = So.localJsx;
       if (!Go) {
-        (f(uz(lr.name), "cmd_local_jsx_no_panel_host"),
+        (logFeatureBad(cmdFeature(lr.name), "cmd_local_jsx_no_panel_host"),
           w.addNotification?.({
             key: `immediate-${lr.name}`,
             kind: "feedback",
@@ -75743,9 +75743,9 @@ async function t6(w) {
         Sn = await (
           await Io()
         ).call(Qo, { ...So, isMidTurn: !0, dispatchedAsImmediate: !0 }, jo, no);
-      if ((y(uz(lr.name)), Sn && !In))
+      if ((logFeatureOk(cmdFeature(lr.name)), Sn && !In))
         Fn = Go.show(Sn, {
-          commandName: qo(lr),
+          commandName: getCommandName(lr),
           immediate: !0,
           hidesPrompt: !1,
           retireAtTurnBoundary: !0,
@@ -75776,7 +75776,7 @@ async function t6(w) {
     Kn = () => w.resumesStaleQuotaWait === !0 && !arn();
   if (zt.isActive || ao) {
     if (go !== "prompt" && go !== "bash") {
-      f("prompt_queued", "mode_not_queueable");
+      logFeatureBad("prompt_queued", "mode_not_queueable");
       return;
     }
     if (Kn()) return;
@@ -75797,14 +75797,14 @@ async function t6(w) {
       }),
       !Cn)
     ) {
-      y("prompt_queued");
+      logFeatureOk("prompt_queued");
       return;
     }
     let lr = { messages: [], shouldQuery: !0 },
       Io,
       So;
     try {
-      let In = ne.buildToolUseContext(Ae, [], ne.abortController ?? hr(), Oe);
+      let In = ne.buildToolUseContext(Ae, [], ne.abortController ?? createAbortController(), Oe);
       ((Io = MTe(In)),
         (So = await fjt({
           submission: {
@@ -75834,10 +75834,10 @@ async function t6(w) {
     if (So?.ended !== void 0 && So.stopped === void 0) {
       if (!eo.settleScreening(ro, { dropped: !0 })) {
         (n("prompt.submit at Enter dropped a prompt that had left the queue"),
-          y("prompt_queued"));
+          logFeatureOk("prompt_queued"));
         return;
       }
-      if ((f("prompt_queued", "dropped_by_hook"), w.historyEntry))
+      if ((logFeatureBad("prompt_queued", "dropped_by_hook"), w.historyEntry))
         m4e(w.historyEntry, w.storageV5, go);
       w.addNotification?.({
         key: "prompt-submit-dropped",
@@ -75874,14 +75874,14 @@ async function t6(w) {
               },
       drainOnly: So === void 0 || Go || So.ended !== void 0 ? !0 : void 0,
     }),
-      y("prompt_queued"));
+      logFeatureOk("prompt_queued"));
     return;
   }
   if (Kn()) {
     ne.stream.setUserInputOnProcessing(void 0);
     return;
   }
-  if ((w.onSubmitProceed?.(), fKe(), y("prompt_submit"), Sr))
+  if ((w.onSubmitProceed?.(), fKe(), logFeatureOk("prompt_submit"), Sr))
     Glt(ro, { dispatching: !0 });
   await rLt({
     inputSource: w.inputSource ?? "typed",
@@ -75925,7 +75925,7 @@ async function rLt(w) {
     { guard: Zt, run: Ct } = be,
     eo = be.stream.setUserInputOnProcessing;
   WOe(Je ?? [], it);
-  let jt = hr();
+  let jt = createAbortController();
   be.setAbortController(jt);
   let Tt = null,
     to = (Je ?? []).flatMap((_o) => (_o.uuid === void 0 ? [] : [_o.uuid])),
@@ -76086,7 +76086,7 @@ async function rLt(w) {
             else
               w.onInputChange(bKe(w.getCurrentInput?.() ?? "", Sn.nextInput));
         }
-        if ((Rc("query_process_user_input_end"), iw()))
+        if ((Rc("query_process_user_input_end"), fileHistoryEnabled()))
           (Rc("query_file_history_snapshot_start"),
             _o.filter(dj).forEach((So) => {
               if (un.has(So.uuid)) return;
@@ -76130,7 +76130,7 @@ async function rLt(w) {
                   mode: xe().toolPermissionContext.mode,
                   fastMode: xe().fastMode ?? !1,
                 })
-                ? OQe(xo, ne)
+                ? resolveSkillModelOverride(xo, ne)
                 : ne,
               Fn ? Oe : void 0,
               In,
@@ -76222,11 +76222,11 @@ function sLt({
   messageUuid: ne,
   storageV5: me,
 }) {
-  return AX(
+  return fileHistoryMakeSnapshot(
     () => w().fileHistory,
     (pe) =>
       I((be) => {
-        let xe = EV(be.fileHistory, pe, me);
+        let xe = reduceFileHistoryState(be.fileHistory, pe, me);
         if (xe === be.fileHistory) return be;
         return { ...be, fileHistory: xe };
       }),
@@ -76235,7 +76235,7 @@ function sLt({
 }
 function VBo(w, I, ne) {
   try {
-    return iVn(w.buildToolUseContext(I, [], hr(), ne));
+    return iVn(w.buildToolUseContext(I, [], createAbortController(), ne));
   } catch (me) {
     return (
       n(`prompt.submit at Enter could not read the hooks: ${l(me)}`, {
@@ -76307,7 +76307,7 @@ async function cLt({
   let Ae = me.findLast((Qe) => Qe.type === "user");
   if (I.input === null) {
     let Qe = new Fy();
-    ((I.input = Qe), w.streamInput(Qe).catch(h));
+    ((I.input = Qe), w.streamInput(Qe).catch(logError));
   }
   I.input.enqueue({
     type: "user",
@@ -76774,14 +76774,14 @@ class kKe {
     try {
       this._changed.emit();
     } catch (I) {
-      h(I);
+      logError(I);
     }
   }
   _mirrorTiming(w) {
     try {
       this._onTimingChange(w);
     } catch (I) {
-      h(I);
+      logError(I);
     }
   }
 }
@@ -76895,7 +76895,7 @@ class Wce {
           )
             this.stream.previewStore.setSalvage(null);
         } catch (Oe) {
-          h(Oe);
+          logError(Oe);
         }
       })),
       me)
@@ -76928,7 +76928,7 @@ class Wce {
           (this._setPaused(this._isBlockingDialogOpen()),
             this._syncUserWaiting());
         } catch (be) {
-          h(be);
+          logError(be);
         }
       })),
       this._setPaused(this._isBlockingDialogOpen()));
@@ -76943,7 +76943,7 @@ class Wce {
         ((this._engineThinkingEnabled = { value: be }),
           this._engine.setMaxThinkingTokens(be === !1 ? 0 : null));
       } catch (be) {
-        h(be);
+        logError(be);
       }
     };
     ((this._unwatchThinking = I.subscribe(pe)),
@@ -76952,13 +76952,13 @@ class Wce {
         try {
           this._syncUserWaiting();
         } catch (be) {
-          h(be);
+          logError(be);
         }
       })));
     try {
       (X0.recordUserActivity(), Ez(!0));
     } catch (be) {
-      h(be);
+      logError(be);
     }
   }
   _abortOnNowPriorityCommand() {
@@ -76968,9 +76968,9 @@ class Wce {
           .messageQueue.getCommandQueueSnapshot()
           .some((w) => w.priority === "now")
       )
-        this._snapshot.abortController?.abort(yu("interrupt"));
+        this._snapshot.abortController?.abort(userAbortReason("interrupt"));
     } catch (w) {
-      h(w);
+      logError(w);
     }
   }
   _displayTransform(w) {
@@ -77025,7 +77025,7 @@ class Wce {
     try {
       CEt(this.isMainLoopBusy);
     } catch (w) {
-      h(w);
+      logError(w);
     }
   };
   _requireHost() {
@@ -77045,7 +77045,7 @@ class Wce {
     this._publish({ abortController: w });
   };
   abort(w) {
-    this._snapshot.abortController?.abort(yu(w));
+    this._snapshot.abortController?.abort(userAbortReason(w));
   }
   setExternalLoading = (w) => {
     let I = this._snapshot.isExternalLoading;
@@ -77063,7 +77063,7 @@ class Wce {
       let I = this._host;
       if (w === 1 && I !== null) dQt(I.session.host, I.storageV5);
     } catch (I) {
-      h(I);
+      logError(I);
     }
   }
   markQueryComplete(w) {
@@ -77076,7 +77076,7 @@ class Wce {
     try {
       this._host?.axBell();
     } catch (ne) {
-      h(ne);
+      logError(ne);
     }
   }
   resetLoadingState = () => {
@@ -77143,7 +77143,7 @@ class Wce {
           Hce(He, "spinner", be);
       })
       .catch((He) => {
-        (Oe(), h(dt(ge(He), "spinner tip failed")));
+        (Oe(), logError(dt(ge(He), "spinner tip failed")));
       });
   }
   _absorbSessionSignals(w) {
@@ -77204,10 +77204,10 @@ class Wce {
     try {
       this._requireHost().transcript.replace((pe) => [
         ...pe,
-        Iyt(ne, me, G(pe, bT)),
+        Iyt(ne, me, G(pe, isLoggableMessage)),
       ]);
     } catch (pe) {
-      h(pe);
+      logError(pe);
     }
   }
   get turnStartTime() {
@@ -77290,20 +77290,20 @@ class Wce {
             streamed_chars: (Qe ?? "").length,
           }));
     }
-    let it = Oe !== null && Oe.signal.aborted ? Ua(Oe.signal.reason) : void 0;
+    let it = Oe !== null && Oe.signal.aborted ? unwrapAbortReason(Oe.signal.reason) : void 0;
     if (!(it === "user-cancel" || it === "remote-cancel"))
       uHt(this.stream.inFlightMessageId);
     this.resetLoadingState();
     let at = w === "remote" ? "remote-cancel" : "user-cancel";
-    if (I.isRemoteMode) (I.cancelRequest(), Oe?.abort(yu(at)));
-    else if ((Oe?.abort(yu(at)), w !== "remote"))
+    if (I.isRemoteMode) (I.cancelRequest(), Oe?.abort(userAbortReason(at)));
+    else if ((Oe?.abort(userAbortReason(at)), w !== "remote"))
       this._engine.interrupt(at, _Jt(w));
     return (this.setAbortController(null), be(), !0);
   };
   interruptForSubmit = () => {
     let w = this.abortController;
     if (!w || w.signal.aborted) return !1;
-    return (uHt(this.stream.inFlightMessageId), w.abort(yu("user-cancel")), !0);
+    return (uHt(this.stream.inFlightMessageId), w.abort(userAbortReason("user-cancel")), !0);
   };
   buildToolUseContext = (w, I, ne, me) =>
     this._buildToolUseContextWith(this._requireHost(), w, I, ne, me);
@@ -77394,12 +77394,12 @@ class Wce {
       getProactivityLevel: () => be.getState().proactivityLevel,
       getWebBrowser: () => be.getState().webBrowser,
       ...pee(Tt),
-      setWebBrowserSlice: tce(Tt),
-      setArtifactReadVersion: Rfe(Tt),
-      getArtifactReadObservation: P$(() => be.getState()),
+      setWebBrowserSlice: makeSetWebBrowserSlice(Tt),
+      setArtifactReadVersion: makeSetArtifactReadVersion(Tt),
+      getArtifactReadObservation: artifactReadObservationIn(() => be.getState()),
       artifactRegistries: Ole(() => be.getState(), Tt),
-      setArtifactContractTarget: kfe(Tt),
-      getArtifactContractTarget: xfe(() => be.getState()),
+      setArtifactContractTarget: makeSetArtifactContractTarget(Tt),
+      getArtifactContractTarget: makeGetArtifactContractTarget(() => be.getState()),
       taskRegistry: ao,
       queuedNotificationsRegistry: fEe(() => be.getState(), Tt, He),
       sessionHooksRegistry: co,
@@ -77427,17 +77427,17 @@ class Wce {
       getFileHistoryState: () => be.getState().fileHistory,
       applyFileHistoryOp(no) {
         Tt((jo) => {
-          let Cn = EV(jo.fileHistory, no, ro);
+          let Cn = reduceFileHistoryState(jo.fileHistory, no, ro);
           if (Cn === jo.fileHistory) return jo;
           return { ...jo, fileHistory: Cn };
         });
       },
       makeFileHistorySnapshot: (no) =>
-        AX(
+        fileHistoryMakeSnapshot(
           () => be.getState().fileHistory,
           (jo) => {
             Tt((Cn) => {
-              let un = EV(Cn.fileHistory, jo, ro);
+              let un = reduceFileHistoryState(Cn.fileHistory, jo, ro);
               if (un === Cn.fileHistory) return Cn;
               return { ...Cn, fileHistory: un };
             });
@@ -77545,7 +77545,7 @@ class Wce {
         }),
           (this.stream.pendingPreservedInsert = null));
       (ne((Qe) => Z0t(Qe, [...I.getSnapshot(), ...Ke])), me());
-    } else if (w.type === "progress" && _hn(w.data.type))
+    } else if (w.type === "progress" && isEphemeralToolProgress(w.data.type))
       Ae({ type: "replace-last-ephemeral-progress", message: w });
     else {
       if (
@@ -77569,7 +77569,7 @@ class Wce {
             for (let Qe of Je)
               (Ae({ type: "remove-by-uuid", uuid: Qe }),
                 this.stream.transcriptRetractedUuids.add(Qe),
-                xhn(Qe, pe));
+                removeTranscriptMessageIfPersisted(Qe, pe));
           }
         }
         Oe.setSalvage(null);
@@ -77594,7 +77594,7 @@ class Wce {
             TBn(w.quotaLimits),
             ABn(w.quotaLimits, be));
         } catch (He) {
-          h(He);
+          logError(He);
         }
     }
   };
@@ -77649,7 +77649,7 @@ class Wce {
             this.stream.transcriptRetractedUuids.delete(Zt.uuid))
           )
             return;
-          Y5e(Zt.uuid, Ke);
+          removeTranscriptMessage(Zt.uuid, Ke);
         },
         onRefusalContinuation: (Zt) => {
           if (Zt.phase === "begin")
@@ -77738,9 +77738,9 @@ class Wce {
       return;
     }
     if (zr()) {
-      let yn = ii(),
-        vo = Ip();
-      if (yn && vo) AXe(yn, vo, !0, eo);
+      let yn = getTeamName(),
+        vo = getAgentName();
+      if (yn && vo) setMemberActive(yn, vo, !0, eo);
     }
     let xo = this.guard.tryStart();
     if (xo === null) {
@@ -77770,7 +77770,7 @@ class Wce {
                   count: nn.coalesced.count,
                 },
               ]);
-            vN(nn.slug);
+            clearAutoReactNoticePending(nn.slug);
           }
           continue;
         }
@@ -77843,7 +77843,7 @@ class Wce {
           newMessages: w,
           input: xe,
           signal: I.signal,
-          abort: () => I.abort(yu("turn-abort")),
+          abort: () => I.abort(userAbortReason("turn-abort")),
         });
       on = await this._runImpl(
         at,
@@ -77909,7 +77909,7 @@ class Wce {
                   Iyt(
                     no.durationMs,
                     Kn,
-                    G(jo, bT),
+                    G(jo, isLoggableMessage),
                     no.pendingBackgroundAgentCount,
                     no.pendingWorkflowCount,
                   ),
@@ -77927,7 +77927,7 @@ class Wce {
           durationMs: vo,
           aborted: I.signal.aborted,
         });
-      let zo = Ua(I.signal.reason),
+      let zo = unwrapAbortReason(I.signal.reason),
         Sr = zo === "refusal-fallback-edit";
       if (
         (zo === "user-cancel" || Sr) &&
@@ -77990,14 +77990,14 @@ class Wce {
     if (!yn && !vo && !zo && !Sr && !this._haikuTitleAttempted) {
       let Br = HBn(ne),
         fi = Br ? B_(Br.message.content) : null,
-        Xi = fi !== null && wwe(fi, (Ln) => B9(Ln, Ct.commands));
+        Xi = fi !== null && wwe(fi, (Ln) => hasCommand(Ln, Ct.commands));
       if (fi && !EO(fi) && !Xi) {
         this._haikuTitleAttempted = !0;
         let Ln = eo.id;
         this._engine.generateSessionTitle(fi, { credentials: on }).then(
           (gn) => {
             if (Ln !== eo.id) return;
-            if (gn) (Tt(gn), pj(Ln, gn, to), Yi()?.adoptLocalAiTitle?.());
+            if (gn) (Tt(gn), saveAiGeneratedTitle(Ln, gn, to), getReplBridgeHandle()?.adoptLocalAiTitle?.());
             else this._haikuTitleAttempted = !1;
           },
           () => {
@@ -78047,7 +78047,7 @@ class Wce {
         ao.main.setTurnEffort(Ae));
     Rc("query_context_loading_start");
     let Cn = co.getState().toolPermissionContext,
-      un = ip({ permissionMode: Cn.mode, mainLoopModel: xe });
+      un = getRuntimeMainLoopModel({ permissionMode: Cn.mode, mainLoopModel: xe });
     Mfn();
     let lr = xz(),
       [, Io, So, Go] = await Promise.all([
@@ -78056,7 +78056,7 @@ class Wce {
         hC(Kn.session, Kn.storageV5, Kn.credentials),
         j_(Kn.session, Kn.options.cacheBreakerPhrase),
       ]),
-      In = { ...So, ...JBo(jo, eA() ? (GH() ?? void 0) : void 0) };
+      In = { ...So, ...JBo(jo, isScratchpadEnabled() ? (getScratchpadDir() ?? void 0) : void 0) };
     Rc("query_context_loading_end");
     let Fn = MO({
       mainThreadAgentDefinition: Ct.mainThreadAgentDefinition,
@@ -78150,8 +78150,8 @@ class Wce {
     ) {
       let Br = po.pending;
       if ((po.clearPending(), !me.signal.aborted)) {
-        let fi = I0e(co.getState().tasks),
-          Xi = P0e(co.getState().tasks, Br.carriedAtPress),
+        let fi = countAbandonable(co.getState().tasks),
+          Xi = countCarriedSince(co.getState().tasks, Br.carriedAtPress),
           Ln = SNt(
             Ro.getCommandQueue(),
             yNt(() => this.buildToolUseContext(ne, [], me, xe)),
@@ -78188,7 +78188,7 @@ class Wce {
         } else {
           if (
             (po.markForkInFlight(),
-            await ST(Ho.getSnapshot(), void 0, void 0, void 0, to),
+            await recordTranscript(Ho.getSnapshot(), void 0, void 0, void 0, to),
             it !== void 0)
           )
             nfn(it);
@@ -78205,7 +78205,7 @@ class Wce {
           try {
             return xyt(Br, Kn.options.tools);
           } catch (fi) {
-            return (h(fi), Br);
+            return (logError(fi), Br);
           }
         },
       }),
@@ -78337,7 +78337,7 @@ ${fo}
                 n(`[reply-on-resume] partial-hint ${to.text.length} chars`));
             }
             n("[reply-on-resume] \u2192 onQuery");
-            let go = hr();
+            let go = createAbortController();
             return (
               this.setAbortController(go),
               this.run([], go, !0, [], He),
@@ -78345,12 +78345,12 @@ ${fo}
             );
           } else
             (n("[reply-on-resume] \u2192 markReplayNoOp"),
-              fln().catch(() => {}));
+              markReplayNoOp().catch(() => {}));
         }
         return !1;
       }
       if (jt.clearContext) {
-        let to = jt.message.planContent ? GK() : void 0,
+        let to = jt.message.planContent ? peekPlanSlug() : void 0,
           { clearConversation: zt } = await import("../../02-功能模块/会话-历史-恢复/hasAgentTaskSurvivingClear.shwgnjpr.js");
         for await (let ao of zt({
           session: be,
@@ -78369,7 +78369,7 @@ ${fo}
           credentials: Oe,
         }))
           this.applyEvent(ao);
-        if (to) $zt(be.id, to);
+        if (to) setPlanSlug(be.id, to);
         if (jt.clearedNotice) {
           let ao = Ht(jt.clearedNotice, "suggestion");
           Ct((co) => [...co, ao]);
@@ -78381,20 +78381,20 @@ ${fo}
             ? Kk(to.toolPermissionContext, $It(jt.mode))
             : to.toolPermissionContext;
           if (jt.mode === "auto")
-            zt = qM({ ...zt, mode: "auto", prePlanMode: void 0 });
+            zt = stripDangerousPermissionsForAutoMode({ ...zt, mode: "auto", prePlanMode: void 0 });
           return {
             ...to,
             initialMessage: to.initialMessage === jt ? null : to.initialMessage,
             toolPermissionContext: zt,
           };
         }),
-        iw())
+        fileHistoryEnabled())
       )
-        AX(
+        fileHistoryMakeSnapshot(
           () => ne.getState().fileHistory,
           (to) =>
             me((zt) => {
-              let ao = EV(zt.fileHistory, to, Ae);
+              let ao = reduceFileHistoryState(zt.fileHistory, to, Ae);
               if (ao === zt.fileHistory) return zt;
               return { ...zt, fileHistory: ao };
             }),
@@ -78424,7 +78424,7 @@ ${fo}
           skipAttachments: jt.skipAttachments || BNe(jt.message),
         });
       else {
-        let to = hr();
+        let to = createAbortController();
         (this.setAbortController(to), this.run([jt.message], to, !0, [], He));
       }
       return !0;
@@ -78437,13 +78437,13 @@ ${fo}
         (jt) => {
           if (
             ((this._launchPromptPhase = "idle"),
-            h(jt),
+            logError(jt),
             me((Tt) =>
               Tt.initialMessage === w ? { ...Tt, initialMessage: null } : Tt,
             ),
             "preservePlanOnDrop" in w && w.preservePlanOnDrop)
           )
-            XBo(w.preservePlanOnDrop, Ae, Ct).catch(h);
+            XBo(w.preservePlanOnDrop, Ae, Ct).catch(logError);
         },
       )
       .then(() => {
@@ -78459,7 +78459,7 @@ ${fo}
         .some((xe) => xe.mode === "prompt" || xe.mode === "bash")
     )
       return !1;
-    let pe = hr();
+    let pe = createAbortController();
     this.setAbortController(pe);
     let be = Re({ content: w, isMeta: I?.isMeta ? !0 : void 0 });
     return (this.run([be], pe, !0, [], ne), !0);
@@ -78522,7 +78522,7 @@ ${fo}
   };
   armRateLimitAutoContinue = (w) => {
     if (w === this._autoContinueResetsAt) return !1;
-    if (Sg()) return !1;
+    if (isUnattendedInteractiveSession()) return !1;
     if (nrn() || O3e(w)) return !1;
     let { store: I, session: ne, draft: me } = this._requireHost();
     if (
@@ -78545,7 +78545,7 @@ ${fo}
     let w = md().resetsAt ?? "no-reset";
     if (this._autoOpenedRateLimitKeys.has(w)) return !1;
     if (nrn()) return (this._autoOpenedRateLimitKeys.add(w), !1);
-    if (Sg()) return !1;
+    if (isUnattendedInteractiveSession()) return !1;
     let { onSubmit: I } = this._requireHost();
     return (
       this._autoOpenedRateLimitKeys.add(w),
@@ -78553,7 +78553,7 @@ ${fo}
         setCursorOffset: () => {},
         clearBuffer: () => {},
         resetHistory: () => {},
-      }).catch(h),
+      }).catch(logError),
       !0
     );
   };
@@ -78642,19 +78642,19 @@ ${fo}
     try {
       this._changed.emit();
     } catch (pe) {
-      h(pe);
+      logError(pe);
     }
   }
   _mirrorTiming(w) {
     try {
       this._onTimingChange(w);
     } catch (I) {
-      h(I);
+      logError(I);
     }
   }
 }
 async function XBo(w, I, ne) {
-  let me = await lme(w, I);
+  let me = await saveRejectedUltraplan(w, I);
   ne((pe) => [
     ...pe,
     Ht(
@@ -78670,7 +78670,7 @@ function vKe() {
     ne = sF(Cy),
     me = ne?.kind === Sbe.kind;
   E(() => {
-    if (!_t()) {
+    if (!isBgSession()) {
       Pze(w, null);
       return;
     }
@@ -78747,21 +78747,21 @@ class wKe {
         xe !== void 0 && !Oe && xe === this.firstMessageUuid && Ae > w.length,
       Qe = Ke ? Ae : 0,
       it = Ke || Oe ? this.holdFloor : DMe(w),
-      at = V5e(w, Math.max(Qe, it), ne);
+      at = transcriptCursorEnd(w, Math.max(Qe, it), ne);
     if (!Ke) this.holdFloor = at;
     this.lastTailUuid = w[at - 1]?.uuid;
     let Zt = at - 1;
-    while (Zt >= Qe && !bT(w[Zt])) Zt--;
+    while (Zt >= Qe && !isLoggableMessage(w[Zt])) Zt--;
     if (Zt >= Qe) this.lastLoggable = { index: Zt, uuid: w[Zt].uuid };
     else if (!Ke) this.lastLoggable = void 0;
     if (at === Qe) return;
     let Ct = Qe === 0 && at === w.length ? w : w.slice(Qe, at),
       eo = Ke ? this.lastParentUuid : void 0;
     if (Qe === 0) this.replIds.clear();
-    E9t(Ct, this.replIds);
+    collectReplIds(Ct, this.replIds);
     let jt = ++this.callSequence;
     if (
-      (ST(
+      (recordTranscript(
         Ct,
         zr() && pe ? { teamName: me, agentName: pe } : {},
         eo,
@@ -78773,7 +78773,7 @@ class wKe {
       }),
       Ke || Oe || Je)
     ) {
-      let Tt = BMe(Ct, this.replIds).findLast(spe);
+      let Tt = cleanMessagesForLogging(Ct, this.replIds).findLast(isChainParticipant);
       if (Tt) this.lastParentUuid = Tt.uuid;
     }
     ((this.lastRecordedLength = at), (this.firstMessageUuid = xe));
@@ -78783,7 +78783,7 @@ class wKe {
     if (ne !== void 0 && w[ne.index]?.uuid !== ne.uuid) return !1;
     for (let me = ne === void 0 ? 0 : ne.index + 1; me < I; me++) {
       let pe = w[me];
-      if (pe === void 0 || bT(pe)) return !1;
+      if (pe === void 0 || isLoggableMessage(pe)) return !1;
     }
     return !0;
   }
@@ -78824,7 +78824,7 @@ function kLt(w) {
   (w ? Promise.resolve(0) : Xjn())
     .then((I) => {
       if (I >= 2)
-        f("bridge_repl", "multi_session_crash", {
+        logFeatureBad("bridge_repl", "multi_session_crash", {
           concurrent_bridge_sessions: I,
         });
     })
@@ -78856,11 +78856,11 @@ var _Ke = "\x00baseline-pending",
 function rUo(w, I, ne) {
   let me = tH(w);
   if (!me) return null;
-  let pe = Di(me.commandName, I);
+  let pe = findCommand(me.commandName, I);
   if (!pe || !pue(pe, me.args, ne)) return null;
-  let be = pe.type === "local" && cAe(pe) ? pe : uAe(pe);
+  let be = pe.type === "local" && isBridgeSafeCommand(pe) ? pe : findBridgeFallback(pe);
   if (!be || be.type !== "local") return null;
-  return { target: be, args: me.args, displayName: qo(pe) };
+  return { target: be, args: me.args, displayName: getCommandName(pe) };
 }
 var iUo = 3;
 function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
@@ -78912,18 +78912,18 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
     vo = C(void 0);
   function zo(wi) {
     for (let [da, Wa] of Ro.current)
-      if (Wa.delete(cre)) {
+      if (Wa.delete(PENDING_BRIDGE_SESSION)) {
         if (wi !== void 0) Wa.add(wi);
         else if (Wa.size === 0) Ro.current.delete(da);
       }
     let Ms = yn.current;
-    if (Ms?.bridgeSessionId === cre)
+    if (Ms?.bridgeSessionId === PENDING_BRIDGE_SESSION)
       yn.current =
         wi === void 0 ? void 0 : { sids: Ms.sids, bridgeSessionId: wi };
   }
   function Sr(wi) {
     if (Mn.current === wi) return Cn.current;
-    return wi === K() ? sD()?.id : void 0;
+    return wi === K() ? getCurrentSessionBridge()?.id : void 0;
   }
   E(() => {
     let wi = nye.of(Ct).subscribe((da, Wa) => {
@@ -78936,7 +78936,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
             nn.current === vl
               ? Tt.current?.bridgeSessionId
               : vo.current?.sid === vl
-                ? cre
+                ? PENDING_BRIDGE_SESSION
                 : Sr(vl);
         if (ll === void 0) return;
         let zl = wn(vl, ll),
@@ -78974,18 +78974,18 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
     let wi = yn.current;
     if (wi === void 0 || !wi.sids.has(K())) return !1;
     let Ms = Tt.current?.bridgeSessionId;
-    return wi.bridgeSessionId === Ms || wi.bridgeSessionId === cre;
+    return wi.bridgeSessionId === Ms || wi.bridgeSessionId === PENDING_BRIDGE_SESSION;
   }
   let nn = C(void 0);
   E(
     () => (
-      p9t(() => ({
+      registerForeignConversationProbe(() => ({
         foreign: po.current || Wo.current || Kn(),
         boundSid: nn.current,
         pulledWindow: yn.current,
         pulledRows: Ro.current,
       })),
-      () => p9t(void 0)
+      () => registerForeignConversationProbe(void 0)
     ),
     [],
   );
@@ -79039,7 +79039,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
   let rs = C([]);
   function Fi() {
     for (let wi of rs.current)
-      mj(wi.sessionId, wi.path, { targetExists: !0 }, it);
+      clearBridgeSession(wi.sessionId, wi.path, { targetExists: !0 }, it);
     rs.current = [];
   }
   let Wi = It(),
@@ -79051,7 +79051,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
       if (!Ms) return !1;
       return (
         i("tengu_immediate_command_executed", {
-          commandName: aNe(Ms.displayName),
+          commandName: shippedCommandNameForAnalytics(Ms.displayName),
           fromKeybinding: !1,
           bridgeOrigin: !0,
         }),
@@ -79078,14 +79078,14 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
     hi = qf(),
     [, zn] = pk((wi) => wi + 1, 0),
     xi = ss && !wr,
-    Ri = ss ? A9(rt(), hi) : null,
+    Ri = ss ? A9(getMainLoopModel(), hi) : null,
     [ns, Xs] = d(() => process.env.CLAUDE_BG_SOURCE === "spare");
   if (ns && w.some(s5)) Xs(!1);
-  (E(() => (b7e(kYe), () => b7e(void 0)), []),
+  (E(() => (b7e(ownBridgePeerAddress), () => b7e(void 0)), []),
     E(() => {
       if (Pt() || ns) return;
       i("tengu_bridge_repl_evaluated", {
-        would_auto_on: BJe(),
+        would_auto_on: getCcrAutoConnectDefault(),
         repl_bridge_enabled: qi.getState().replBridgeEnabled,
       });
     }, [qi, ns]));
@@ -79104,11 +79104,11 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
         );
     (async () => {
       try {
-        let vl = await bpe(Q(), it),
+        let vl = await getSlashCommandToolSkills(Q(), it),
           Tl = qi.getState(),
           ll = performance.now(),
           zl = _st({
-            model: rt(),
+            model: getMainLoopModel(),
             permissionMode: Tl.toolPermissionContext.mode,
             commands: qs(),
             agents: Tl.agentDefinitions.activeAgents,
@@ -79140,7 +79140,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
   }, [Pa, pe, ki, yi, Ri]),
     E(() => {
       if (!xi) return;
-      wF(rt(), qi.getState());
+      wF(getMainLoopModel(), qi.getState());
     }, [xi, Ri, qi]),
     E(() => {
       if (!xi) return;
@@ -79232,7 +79232,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
         ((fi.current = _Ke),
           (Jr.current = pr.getSnapshot().credentialsPersisted));
         let Ns = ++ai.current;
-        v5(it, at)
+        readFreshOAuthCredentialSnapshot(it, at)
           .catch(() => {
             return;
           })
@@ -79356,14 +79356,14 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
       vo.current = Xu;
       let fu = xl,
         lg = null,
-        Sp = () => (xl === K() ? (il() ?? Ju) : Ju);
+        Sp = () => (xl === K() ? (getMaterializedSessionFile() ?? Ju) : Ju);
       if (Mn.current !== void 0 && Mn.current !== xl)
         Oi({ archiveAbandoned: !0 });
       let ac =
         (Gn.current !== void 0 && w[0]?.uuid !== Gn.current) ||
         (Sn.current !== void 0 &&
           w[Sn.current.index]?.uuid !== Sn.current.uuid);
-      if (ac) Xyt();
+      if (ac) clearBridgeSessionCache();
       let mf =
           !ac && Qo.current !== void 0
             ? Math.min(Qo.current, w.length)
@@ -79393,7 +79393,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                 let Ds = await sy(it).catch(() => {
                   return;
                 });
-                if (!wg(Ds, Wn)) return;
+                if (!sameOwnerAccount(Ds, Wn)) return;
                 await Ys.archive?.().catch((Ba) => {
                   n(`[bridge:repl] Deferred archive failed: ${l(Ba)}`, {
                     level: "error",
@@ -79437,7 +79437,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
         om = sc((Ns, Js) => {
           if (zl) return;
           let Ys = fu;
-          if (((fu = Ns), Js !== "clear" && Ys !== fu && Ys === xl)) lg = il();
+          if (((fu = Ns), Js !== "clear" && Ys !== fu && Ys === xl)) lg = getMaterializedSessionFile();
           if (Js !== "clear") {
             switch (Js) {
               case "resume":
@@ -79458,7 +79458,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
           ((po.current = !1), (xo.current = !1), (Wo.current = !1));
           try {
             if (!wi) {
-              let di = Ys === xl ? il() : lg;
+              let di = Ys === xl ? getMaterializedSessionFile() : lg;
               if (di !== null) rs.current.push({ sessionId: xl, path: di });
             }
             ((lg = null),
@@ -79469,7 +79469,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
               (Fa = !0));
             let Wn = Tt.current;
             if (Wn && !wi)
-              EH({
+              restoreSessionMetadata({
                 bridgeSessionId: Wn.bridgeSessionId,
                 bridgeLastSeq: Wn.getLastSequenceNum(),
                 bridgeDialogKinds: [...qu],
@@ -79482,7 +79482,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
             (n(`[bridge:repl] /clear repoint failed: ${l(Wn)}`, {
               level: "error",
             }),
-              h(Wn));
+              logError(Wn));
           }
         });
       function Xm(Ns) {
@@ -79654,8 +79654,8 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
       let Dy = Gi.current;
       Gi.current = void 0;
       let Bd = xl,
-        mh = il(),
-        rd = mh !== null && !SY(Bd, mh),
+        mh = getMaterializedSessionFile(),
+        rd = mh !== null && !isOwnTranscriptFile(Bd, mh),
         dg = rd ? void 0 : (mh ?? Ju);
       return (
         (async () => {
@@ -79677,7 +79677,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
               di;
             if (Cn.current !== void 0) {
               let Ei = Fr.current,
-                Bs = await v5(it, at).catch(() => {
+                Bs = await readFreshOAuthCredentialSnapshot(it, at).catch(() => {
                   return;
                 });
               if (Bs?.accountUuid)
@@ -79691,7 +79691,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                 Xc =
                   Boolean(Ei?.accountUuid) &&
                   Boolean(Bs?.accountUuid) &&
-                  !wg(Bs, Ei);
+                  !sameOwnerAccount(Bs, Ei);
               if (Xc || la) {
                 if (hf) {
                   (n(
@@ -79717,26 +79717,26 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                   (Ys = !0),
                   Or.current?.unregister(),
                   (Or.current = void 0),
-                  JM(Li(Bd)),
-                  W3(Li(Bd)),
-                  lre(Li(Bd)),
+                  holdPrecautionarySuppressionFor(pinSessionId(Bd)),
+                  markPrecautionClearResilientFor(pinSessionId(Bd)),
+                  claimPrecautionHoldForObservedCause(pinSessionId(Bd)),
                   Xc && !rd)
                 )
-                  y("rc_cross_account_suppression");
+                  logFeatureOk("rc_cross_account_suppression");
                 else
-                  g(
+                  logFeatureSad(
                     "rc_cross_account_suppression",
                     rd ? "torn_entry_pair" : "identity_unreadable",
                   );
                 if (Xc && !rd)
-                  await JEe(Bd, dg, "chokepoint_veto", Bs?.accountUuid, it);
+                  await writeHistorySuppression(Bd, dg, "chokepoint_veto", Bs?.accountUuid, it);
                 else if (Xc)
                   n(
                     "[bridge:repl] Chokepoint veto under a TORN entry pair: precautionary suppression only, no permanent taint write",
                     { level: "warn" },
                   );
                 if ((Oi({ archiveAbandoned: !1 }), qu.clear(), K() === Bd))
-                  Xyt();
+                  clearBridgeSessionCache();
               }
             }
             let Ds = Io.current === Bd;
@@ -79765,7 +79765,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                   if (
                     (Oi({ archiveAbandoned: !1 }),
                     (Io.current = lr.current ? Bd : void 0),
-                    _t())
+                    isBgSession())
                   )
                     CLt(it);
                 },
@@ -79803,7 +79803,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                       for (let la of Bs)
                         i("tengu_request_user_dialog_implicit_cancel", {
                           dialog_kind: Tn(la),
-                          reason: u("new_user_message"),
+                          reason: fromEnum("new_user_message"),
                           lane: S("repl_bridge"),
                         });
                     },
@@ -79830,7 +79830,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                       Sst(qu, Ei, Bs, () => {
                         let la = Tt.current;
                         if (la)
-                          YEe(
+                          saveBridgeSession(
                             xl,
                             la.bridgeSessionId,
                             la.getLastSequenceNum(),
@@ -79865,20 +79865,20 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                 },
                 onSetModel(Ei) {
                   let Bs = Ei == null || Ei.trim().toLowerCase() === "default",
-                    la = Bs ? ol() : Ei;
+                    la = Bs ? getDefaultMainLoopModel() : Ei;
                   if (!Bs) {
                     let li = bst(la, S("bridge_repl"));
                     if (li) return li;
                   }
                   let Xc = (li) => (Bs ? null : li),
-                    Md = !Bs && !am(la) && !(dA(la) ?? Rr(la)),
-                    Fu = Md ? Xh(la) : null,
+                    Md = !Bs && !isExemptDefaultResolvingPick(la) && !(isModelAllowedUnderActiveEnforcement(la) ?? isModelAllowed(la)),
+                    Fu = Md ? stepDownRestrictedFamilyAliasPick(la) : null,
                     El = Fu ?? la;
                   if (Md && Fu === null) {
                     let li = qi.getState(),
                       zi = Lh(
                         El,
-                        wt(KPt(li.mainLoopModelForSession, li.mainLoopModel)),
+                        parseUserSpecifiedModel(KPt(li.mainLoopModelForSession, li.mainLoopModel)),
                       );
                     return (
                       Ls({
@@ -79887,7 +79887,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                         text: zi,
                         priority: "immediate",
                       }),
-                      f("model_switch", "not_allowed"),
+                      logFeatureBad("model_switch", "not_allowed"),
                       { ok: !1, error: zi }
                     );
                   }
@@ -79900,8 +79900,8 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                           priority: "immediate",
                         });
                       if (Fu !== null)
-                        g("model_switch", "family_alias_stepped_down");
-                      else y("model_switch");
+                        logFeatureSad("model_switch", "family_alias_stepped_down");
+                      else logFeatureOk("model_switch");
                       if (Mr()) QH();
                       ad(El);
                       let li, zi;
@@ -79944,7 +79944,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                     P_(Ct, qi.getState, Xc(El), "sdk")
                       .then((li) => {
                         if (li.decision !== "proceed") {
-                          g("model_switch", "blocked_by_hook");
+                          logFeatureSad("model_switch", "blocked_by_hook");
                           let zi = Jle(li);
                           return (
                             Ls({
@@ -79972,7 +79972,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                       })
                       .catch(
                         (li) => (
-                          h(ge(li)),
+                          logError(ge(li)),
                           { ok: !1, error: "Model switch failed" }
                         ),
                       ),
@@ -79992,7 +79992,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                 },
                 onSetPermissionMode: (Ei) => aUo(Ei, qi, Wi),
                 onApplyFlagSettings: (Ei) => {
-                  let Bs = rt(),
+                  let Bs = getMainLoopModel(),
                     la = A9(Bs, Ya(qi.getState())),
                     Xc = adt(Ei, {
                       model: Bs,
@@ -80220,7 +80220,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                     };
                   let la = Bs ? void 0 : Ei,
                     Xc = K();
-                  o8e(Xc, Ei, il() ?? yl(), it).catch((El) => {
+                  saveAgentColor(Xc, Ei, getMaterializedSessionFile() ?? yl(), it).catch((El) => {
                     n(`saveAgentColor: transcript append failed: ${l(El)}`);
                   });
                   let Md = qi.getState(),
@@ -80230,8 +80230,8 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                         )
                       : void 0;
                   return (
-                    $8e(
-                      gu(),
+                    syncJobColor(
+                      getOwnJobShortId(),
                       uoe({
                         userOverride: la,
                         agentDefinitionColor: Fu?.color,
@@ -80265,7 +80265,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                 getMessages: I.getSnapshot,
                 initialName: ur,
                 sessionGroupingId: Pi,
-                enableSessionPersistence: wi || VJ() || jJe(),
+                enableSessionPersistence: wi || isPersistentRemoteSessionEnabled() || isRemoteControlInternalEventsEnabled(),
                 storageV5: it,
                 credentials: at,
                 onTransportRebuilt: hst,
@@ -80290,7 +80290,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                 ),
                 !wi)
               ) {
-                let Ei = SBn(Cs, { crossSessionMessaging: Mo() });
+                let Ei = SBn(Cs, { crossSessionMessaging: isCrossSessionMessagingEnabled() });
                 I.replace((Bs) => {
                   let la = Bs.at(-1);
                   if (
@@ -80356,7 +80356,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                 qi.getState().replBridgeError !== void 0)
               )
                 cg();
-              else if (Ms && !wi && lb()) Tl(RAe, "auth");
+              else if (Ms && !wi && isBridgeEnabled()) Tl(RAe, "auth");
               else
                 Wi((Ei) =>
                   Ei.replBridgeEnabled
@@ -80370,16 +80370,16 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
               return;
             }
             ((Tt.current = ys),
-              STt(ys, it),
-              lpe(() => Yi()?.noHistoryBackfill === !0),
+              setReplBridgeHandle(ys, it),
+              registerLiveSuppressionProbe(() => getReplBridgeHandle()?.noHistoryBackfill === !0),
               (Br.current = gn.current),
-              Ioe(qi.getState().toolPermissionContext.mode),
+              reportBridgePermissionMode(qi.getState().toolPermissionContext.mode),
               Njt("bridge_connected", at));
-            let Il = rt();
+            let Il = getMainLoopModel();
             if (
-              (xG(Il),
+              (reportBridgeModel(Il),
               wF(Il, qi.getState()),
-              sqe(TFe),
+              sqe(reportBridgeCrossSessionInbound),
               e6e(qi.getState()),
               q_e(ys),
               Pb(),
@@ -80406,7 +80406,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
               )),
               (Ho.current = ro.current > 0 ? { head: w[0]?.uuid } : {}),
               (Wo.current = !1),
-              _t())
+              isBgSession())
             )
               uUo(
                 ys.bridgeSessionId,
@@ -80420,7 +80420,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                 it,
               );
             else if (!wi)
-              YEe(
+              saveBridgeSession(
                 xl,
                 ys.bridgeSessionId,
                 ys.getLastSequenceNum(),
@@ -80514,7 +80514,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
           let Ns = qi.getState().replBridgeSkipNextArchive,
             Js = !wi && SVt((Ys) => Ys.type === "conversation_reset");
           if (Js)
-            (g("bridge_conversation_reset", "undelivered_at_teardown"),
+            (logFeatureSad("bridge_conversation_reset", "undelivered_at_teardown"),
               Oi({ archiveAbandoned: Tt.current === null }),
               Fi());
           if (Ns)
@@ -80530,10 +80530,10 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
             if (!ed) Oi({ archiveAbandoned: !1 });
             if (((Br.current = void 0), !wi))
               if (di) {
-                if ((mj(xl, Sp(), void 0, it), Fi(), _t())) CLt(it);
-              } else if (Ns && !ed) Xyt();
+                if ((clearBridgeSession(xl, Sp(), void 0, it), Fi(), isBgSession())) CLt(it);
+              } else if (Ns && !ed) clearBridgeSessionCache();
               else
-                YEe(
+                saveBridgeSession(
                   xl,
                   Ys.bridgeSessionId,
                   Ys.getLastSequenceNum(),
@@ -80559,8 +80559,8 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
             ),
               (ao.current = Ys.teardown({ skipArchive: Ds, reason: Pl })),
               (Tt.current = null),
-              STt(null, it),
-              lpe(void 0));
+              setReplBridgeHandle(null, it),
+              registerLiveSuppressionProbe(void 0));
           }
           if (!ed && !wi) va(ik);
           (xe.disconnectBridge(),
@@ -80632,7 +80632,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
           xl = [],
           Ju = [],
           Xu,
-          fu = WJe();
+          fu = getBridgeSubagentFrameGate();
         for (let Sp = Hl; Sp < w.length; Sp++) {
           let ac = w[Sp];
           if (!ac || !xme(ac)) {
@@ -80650,7 +80650,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
             Ms || Ro.current.get(ac.uuid)?.has(wi.bridgeSessionId) === !0)
           )
             continue;
-          if (tpe(ac) && (Wo.current || Kn() || bY())) continue;
+          if (tpe(ac) && (Wo.current || Kn() || isCompactPairWithheldFromRemote())) continue;
           xl.push(ac);
         }
         ro.current = w.length;
@@ -80668,7 +80668,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
         if (Ju.length > 0) wi.writeSdkMessages(Ju);
       } catch (da) {
         if (Ms) xo.current = !0;
-        h(da);
+        logError(da);
       }
     }, [w, ss, hc]),
     E(() => {
@@ -80690,7 +80690,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
           if (Wa.subtype === "task_notification") Ms = !0;
           else if (Wa.subtype === "background_tasks_changed") da = !0;
         if (Ms || da)
-          g(
+          logFeatureSad(
             "ccr_task_status_publish",
             qi.getState().replBridgeError !== void 0
               ? "status_discarded_failed_init"
@@ -80700,13 +80700,13 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
       }
     }, [Bi]),
     E(() => {
-      if (Bi || Ko === void 0 || cr !== "auth" || wr || !x$e()) return;
+      if (Bi || Ko === void 0 || cr !== "auth" || wr || !isBridgeAuthReviveEnabled()) return;
       let wi = !1,
         Ms,
         da = 300000;
       async function Wa() {
         let vl = pr.getSnapshot().credentialsPersisted !== Jr.current,
-          Tl = !x$e(),
+          Tl = !isBridgeAuthReviveEnabled(),
           ll = Tl || (!vl && On.current >= nUo);
         if (ll)
           n(
@@ -80717,7 +80717,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
         let zl = fi.current === _Ke,
           Hl;
         try {
-          Hl = ll || zl ? void 0 : await v5(it, at);
+          Hl = ll || zl ? void 0 : await readFreshOAuthCredentialSnapshot(it, at);
         } catch {
           Hl = void 0;
         }
@@ -80731,7 +80731,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
           Hl.accountUuid !== void 0 &&
           xl?.accountUuid !== void 0
         ) {
-          if (!wg(Hl, xl)) {
+          if (!sameOwnerAccount(Hl, xl)) {
             n(
               "[bridge:repl] Auth-revive watcher: credential belongs to a different account \u2014 disarming",
             );
@@ -80778,7 +80778,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
       );
     }, [Bi, Ko, cr, Vr, Wi, eo, qi, wr, it, at]));
   let yc = re((wi) => {
-      (Tt.current?.sendResult(wi), xG(rt()));
+      (Tt.current?.sendResult(wi), reportBridgeModel(getMainLoopModel()));
     }, []),
     zu = re((wi) => {
       Tt.current?.stampReply(wi);
@@ -80887,14 +80887,14 @@ async function sUo(w, I, ne, me, pe, be, xe, Ae) {
   }
 }
 function aUo(w, I, ne) {
-  let me = sMe(w, I.getState().toolPermissionContext);
+  let me = guardPermissionModeChange(w, I.getState().toolPermissionContext);
   if (!me.ok) return me;
   let pe = me.mode;
   return (
     ne((be) => {
       let xe = be.toolPermissionContext.mode;
       if (xe === pe) return be;
-      let Ae = Ik(xe, pe, be.toolPermissionContext);
+      let Ae = transitionPermissionMode(xe, pe, be.toolPermissionContext);
       return { ...be, toolPermissionContext: { ...Ae, mode: pe } };
     }),
     setImmediate(() => {
@@ -80976,11 +80976,11 @@ async function CLt(w) {
   let I = process.env.CLAUDE_JOB_DIR;
   if (!I) return;
   try {
-    let ne = await Zn(I, w);
+    let ne = await readJobState(I, w);
     if (!ne || ne.bridgeSessionId === void 0) return;
-    xc(I);
-    let me = (await Zn(I, w)) ?? ne;
-    await Ti(
+    invalidateJobStateCache(I);
+    let me = (await readJobState(I, w)) ?? ne;
+    await writeStateAtomic(
       I,
       {
         ...me,
@@ -80996,14 +80996,14 @@ async function CLt(w) {
       w,
     );
   } catch (ne) {
-    Mi(ne);
+    logJobWriteError(ne);
   }
 }
 async function uUo(w, I, ne, me, pe, be) {
   let xe = process.env.CLAUDE_JOB_DIR;
   if (!xe) return;
   try {
-    let Ae = await Zn(xe, be);
+    let Ae = await readJobState(xe, be);
     if (
       !Ae ||
       (Ae.bridgeSessionId === w &&
@@ -81014,9 +81014,9 @@ async function uUo(w, I, ne, me, pe, be) {
         (Ae.bridgeNoHistoryBackfill ?? !1) === pe)
     )
       return;
-    xc(xe);
-    let Oe = (await Zn(xe, be)) ?? Ae;
-    await Ti(
+    invalidateJobStateCache(xe);
+    let Oe = (await readJobState(xe, be)) ?? Ae;
+    await writeStateAtomic(
       xe,
       {
         ...Oe,
@@ -81033,7 +81033,7 @@ async function uUo(w, I, ne, me, pe, be) {
       be,
     );
   } catch (Ae) {
-    Mi(Ae);
+    logJobWriteError(Ae);
   }
 }
 function TKe({
@@ -81242,7 +81242,7 @@ class Kce {
       w();
       return;
     }
-    if (_t()) {
+    if (isBgSession()) {
       HB();
       return;
     }
@@ -81267,8 +81267,8 @@ class Kce {
         { responseStreaming: this.exitReaders.isResponseStreaming() },
         this.#i,
       )
-        .catch((me) => (h(me), xn(0, "prompt_input_exit")))
-        .catch(h));
+        .catch((me) => (logError(me), xn(0, "prompt_input_exit")))
+        .catch(logError));
   };
   cancelExit = () => {
     if (this.#r.exit.kind === "none") return;
@@ -81341,13 +81341,13 @@ class Qce {
     if (w.trim().startsWith("/")) {
       let vo = j9(w, ro).trim(),
         { name: zo, args: Sr } = mue(vo),
-        Kn = Di(zo, _o),
-        nn = Kn && zp(Kn) ? Kn : void 0;
+        Kn = findCommand(zo, _o),
+        nn = Kn && isCommandEnabled(Kn) ? Kn : void 0;
       if (nn?.name === "clear") jt.onClearSubmitted();
       let no = pue(nn, Sr, this.#e.presentation),
         jo = Qe.guard.isActive && (no || ne?.fromKeybinding);
       if (nn && jo && nn.type === "local-jsx") {
-        if (Kqe(nn, pe.getState().endedByModel)) {
+        if (isSlashCommandBlockedByEndedByModel(nn, pe.getState().endedByModel)) {
           zt({
             key: "immediate-ended-by-model",
             kind: "feedback",
@@ -81360,7 +81360,7 @@ class Qce {
         }
         let Cn = a0(nn);
         if (!Cn) {
-          (f(uz(nn.name), "cmd_local_jsx_no_dialog_resolution"),
+          (logFeatureBad(cmdFeature(nn.name), "cmd_local_jsx_no_dialog_resolution"),
             zt({
               key: `immediate-${nn.name}`,
               kind: "feedback",
@@ -81378,7 +81378,7 @@ class Qce {
           Io = un.reduce((So, Go) => So + (ro[Go.id]?.content.length ?? 0), 0);
         (i("tengu_paste_text", { pastedTextCount: lr, pastedTextBytes: Io }),
           i("tengu_immediate_command_executed", {
-            commandName: aNe(nn.name),
+            commandName: shippedCommandNameForAnalytics(nn.name),
             fromKeybinding: ne?.fromKeybinding ?? !1,
           }),
           this.#n({
@@ -81531,7 +81531,7 @@ class Qce {
             }),
             this.#e.presentation !== "fullscreen")
           )
-            zt.push(em(qV(qo(w), ne)), em(`<${vu}>${Nt(Tt)}</${vu}>`));
+            zt.push(em(qV(getCommandName(w), ne)), em(`<${vu}>${Nt(Tt)}</${vu}>`));
         }
         if (to?.metaMessages?.length)
           zt.push(
@@ -81558,13 +81558,13 @@ class Qce {
             });
           else Oe.replaceValue(to.nextInput);
       },
-      Ct = Ae.buildToolUseContext(xe.getSnapshot(), [], hr(), be),
+      Ct = Ae.buildToolUseContext(xe.getSnapshot(), [], createAbortController(), be),
       jt = await (
         await pe()
       ).call(Zt, { ...Ct, isMidTurn: !0, dispatchedAsImmediate: me }, ne, I);
-    if ((y(uz(w.name)), jt && !it))
+    if ((logFeatureOk(cmdFeature(w.name)), jt && !it))
       at = Qe.show(jt, {
-        commandName: qo(w),
+        commandName: getCommandName(w),
         immediate: !0,
         hidesPrompt: !1,
         retireAtTurnBoundary: !0,
@@ -81717,7 +81717,7 @@ function PKe(w) {
               (await pqn(w?.(), ne), (be = !0));
             })
           : void 0;
-    (dDn(), sre(bdn));
+    (dDn(), registerTranscriptExitReStamp(bdn));
     let Ae = () => {
       if (LUt()) {
         let Oe = I ? "Cost: " : "";
@@ -81867,21 +81867,21 @@ async function IKe(w) {
             { once: !0 },
           ));
       });
-    if (He) f("permission_swarm_forward", "mailbox_write_failed");
+    if (He) logFeatureBad("permission_swarm_forward", "mailbox_write_failed");
     else if (Ke !== null)
-      g(
+      logFeatureSad(
         "permission_swarm_forward",
         Ke === "denial"
           ? "denial_binding_mismatch"
           : "approval_binding_mismatch",
       );
-    else if (Je) g("permission_swarm_forward", "verdict_unbound");
-    else y("permission_swarm_forward");
+    else if (Je) logFeatureSad("permission_swarm_forward", "verdict_unbound");
+    else logFeatureOk("permission_swarm_forward");
     return Qe;
   } catch (Oe) {
     return (
-      f("permission_swarm_forward", "permission_swarm_forward_failed"),
-      h(ge(Oe)),
+      logFeatureBad("permission_swarm_forward", "permission_swarm_forward_failed"),
+      logError(ge(Oe)),
       null
     );
   }
@@ -81938,7 +81938,7 @@ function FLt() {
         return (
           CUo !== void 0
             ? Promise.resolve(CUo)
-            : fTe(YC, KF, zF, wUo, Yce, EKe, o6)
+            : hasPermissionsToUseToolWithSink(YC, KF, zF, wUo, Yce, EKe, o6)
         )
           .then(async (gp) => {
             if (gp.behavior === "allow") {
@@ -81962,7 +81962,7 @@ function FLt() {
                 ));
               return;
             }
-            let DKe = ce(zF);
+            let DKe = getToolPermissionContext(zF);
             let LLt = await YC.description(KF, {
               isNonInteractiveSession: zF.options.isNonInteractiveSession,
               toolPermissionContext: DKe,
@@ -82071,7 +82071,7 @@ function FLt() {
                 Zv.logCancelled(),
                 fx(Zv.cancelAndAbort(void 0, !0)));
             else
-              (h(dt(ge(Xce), "useCanUseTool permission flow failed")),
+              (logError(dt(ge(Xce), "useCanUseTool permission flow failed")),
                 fx(Zv.cancelAndAbort(void 0, !0)));
           })
           .finally(() => {
@@ -82086,7 +82086,7 @@ function FLt() {
               toolName: Hn(YC.name),
               isMcp: YC.isMcp ?? !1,
               msSinceDeny: Date.now() - EUo.timestamp,
-              allowReasonType: we(DUo.decisionReason?.type),
+              allowReasonType: fromEnumOpt(DUo.decisionReason?.type),
             }),
               ALt(EUo));
         });
@@ -82137,7 +82137,7 @@ function KLt() {
 }
 function VLt(w, I) {
   let ne = LF(),
-    me = w.phase === "active" ? Au(w.resetsAtSeconds, !1) : void 0,
+    me = w.phase === "active" ? formatResetTime(w.resetsAtSeconds, !1) : void 0,
     pe = ne.statusLine.includes("{reset}")
       ? ne.statusLine.replace("{reset}", me ?? "your usage limit resets")
       : ne.statusLine,
@@ -82165,7 +82165,7 @@ function GLt(w, I = Fte()) {
     case "extra_usage":
       return "Extra usage is now covering your requests \xB7 lower-priority mode ended";
     case "max_wait": {
-      let ne = I === void 0 ? void 0 : Au(Math.ceil(I / 1000), !1);
+      let ne = I === void 0 ? void 0 : formatResetTime(Math.ceil(I / 1000), !1);
       return `No room for lower-priority work for a while \xB7 lower-priority mode stopped; new messages wait for your usage limit to reset${ne ? ` \xB7 /${rX} again after ${ne}` : ""}`;
     }
   }
@@ -82587,8 +82587,8 @@ function lue(Xoi) {
 F();
 import { randomUUID as aOt } from "crypto";
 function mOt() {
-  if (f1()) return { kind: "in-process" };
-  if (Zi()) return { kind: "teammate", agentName: Ip() };
+  if (isInProcessTeammate()) return { kind: "in-process" };
+  if (isTeammate()) return { kind: "teammate", agentName: getAgentName() };
   return { kind: "session" };
 }
 function cue(w, I) {
@@ -82598,8 +82598,8 @@ function cue(w, I) {
     case "teammate":
       return w.agentName;
     case "session": {
-      if (ZC(I.teamContext)) {
-        if (!jRe(I.teamContext)) return;
+      if (isTeamLead(I.teamContext)) {
+        if (!hasNonLeadTeammate(I.teamContext)) return;
         let { leadAgentId: ne, teammates: me } = I.teamContext;
         return me[ne]?.name || "team-lead";
       }
@@ -82706,7 +82706,7 @@ class r2e {
       ((this.#a = !0), this.#h());
   }
   #h() {
-    this.#y().catch((w) => h(ge(w)));
+    this.#y().catch((w) => logError(ge(w)));
   }
   #b() {
     return Object.values(this.#e.store.getState().teamContext?.teammates ?? {});
@@ -82738,9 +82738,9 @@ class r2e {
     }
     n(`[InboxPoller] Found ${at.length} unread message(s)`);
     let Zt = new Map();
-    if (Zi() && _et())
+    if (isTeammate() && isPlanModeRequired())
       for (let po of at) {
-        let xo = HXe(po.text);
+        let xo = isPlanApprovalResponse(po.text);
         if (!xo) continue;
         if (po.from !== fs) {
           n(
@@ -82756,7 +82756,7 @@ class r2e {
         }
         let Wo = ds().swarmPermissions,
           Ro = Wo.pendingPlanApproval,
-          on = kXe(Ro, xo);
+          on = planVerdictBinding(Ro, xo);
         if (on === "already_answered") {
           n(
             `[InboxPoller] Ignoring plan approval response ${b(xo.requestId)}: the pending request ${b(Ro?.requestId)} was already answered`,
@@ -82769,12 +82769,12 @@ class r2e {
             `[InboxPoller] Plan approval response ${b(xo.requestId)} does not name the pending plan request ${b(Ro?.requestId)}; resolving the wait as a rejection`,
             { level: "warn" },
           ),
-            g("plan_approval", "request_binding_mismatch"),
-            Zt.set(po, xXe(xo)));
+            logFeatureSad("plan_approval", "request_binding_mismatch"),
+            Zt.set(po, planVerdictMismatchRejection(xo)));
           continue;
         }
-        if (on === "unbound") g("plan_approval", "verdict_unbound");
-        else y("plan_approval");
+        if (on === "unbound") logFeatureSad("plan_approval", "verdict_unbound");
+        else logFeatureOk("plan_approval");
         if (
           (Zt.set(po, xo),
           n(
@@ -82795,7 +82795,7 @@ class r2e {
             { level: "warn" },
           ),
             nOt("default", Qe.toolPermissionContext, be));
-        (await EXe(wn.ok ? wn.mode : "default", Qe.teamContext?.teamName, ne),
+        (await syncTeammateMode(wn.ok ? wn.mode : "default", Qe.teamContext?.teamName, ne),
           n(
             `[InboxPoller] Plan approved by team lead, exited plan mode to ${wn.ok ? wn.mode : "default"}`,
           ));
@@ -82808,7 +82808,7 @@ class r2e {
         })),
       Tt = () => {
         w.markMessagesAsRead(it, Qe.teamContext?.teamName, at, ne)
-          .catch((po) => (h(po), !1))
+          .catch((po) => (logError(po), !1))
           .then((po) => {
             if (!po) {
               if (
@@ -82818,7 +82818,7 @@ class r2e {
                 ),
                 !this.#d)
               )
-                ((this.#d = !0), g("swarm_inbox_poll", "mark_read_failed"));
+                ((this.#d = !0), logFeatureSad("swarm_inbox_poll", "mark_read_failed"));
               return;
             }
             this.#d = !1;
@@ -82835,21 +82835,21 @@ class r2e {
       ro = [],
       ho = [];
     for (let po of at) {
-      let xo = jGt(po.text),
-        Wo = I1e(po.text),
-        Ro = WGt(po.text),
-        on = GGt(po.text),
-        An = mCe(po.text),
-        wn = mJ(po.text),
-        yn = IXe(po.text),
-        vo = Dwt(po.text);
+      let xo = isPermissionRequest(po.text),
+        Wo = isPermissionResponse(po.text),
+        Ro = isSandboxPermissionRequest(po.text),
+        on = isSandboxPermissionResponse(po.text),
+        An = isShutdownRequest(po.text),
+        wn = isShutdownApproved(po.text),
+        yn = isModeSetRequest(po.text),
+        vo = isPlanApprovalRequest(po.text);
       if (xo) to.push(po);
       else if (Wo) zt.push(po);
       else if (Ro) ao.push(po);
       else if (on) co.push(po);
       else if (An) go.push(po);
       else if (wn) fo.push(po);
-      else if (swn(po.text))
+      else if (isTeamPermissionUpdate(po.text))
         n(
           "[InboxPoller] Dropping team_permission_update message: permission rules are never accepted from the inbox",
           { level: "warn" },
@@ -82860,9 +82860,9 @@ class r2e {
           { level: "warn" },
         );
       else if (vo) ro.push(po);
-      else if (DH(po.text)) {
+      else if (isStructuredProtocolMessage(po.text)) {
         let zo = Zt.get(po);
-        if (zo) ho.push({ ...po, text: PXe(zo) });
+        if (zo) ho.push({ ...po, text: planApprovalResumeText(zo) });
         else
           n(
             `[InboxPoller] Dropping unrouted protocol frame from ${b(po.from)}: ${b(po.text.substring(0, 80))}`,
@@ -82870,12 +82870,12 @@ class r2e {
           );
       } else ho.push(po);
     }
-    if (to.length > 0 && ZC(Qe.teamContext)) {
+    if (to.length > 0 && isTeamLead(Qe.teamContext)) {
       n(`[InboxPoller] Found ${to.length} permission request(s)`);
       let po = Qe.teamContext?.teamName,
         xo;
       for (let Wo of to) {
-        let Ro = jGt(Wo.text);
+        let Ro = isPermissionRequest(Wo.text);
         if (!Ro) continue;
         if (Ro.agent_id !== Wo.from) {
           n(
@@ -82912,7 +82912,7 @@ class r2e {
               toolPermissionContext: Qe.toolPermissionContext,
             })));
         } catch (jo) {
-          h(jo);
+          logError(jo);
           let Cn =
               zo === void 0
                 ? void 0
@@ -82944,7 +82944,7 @@ class r2e {
           )
             .then(() => yn)
             .finally(() => this.#c.delete(wn))
-            .catch(h);
+            .catch(logError);
           continue;
         }
         let { dialog: Kn, descriptor: nn } = Sr,
@@ -82989,7 +82989,7 @@ class r2e {
           )
             .then(() => yn)
             .finally(() => this.#c.delete(wn))
-            .catch(h);
+            .catch(logError);
         });
       }
       if (xo && !Ae && !Oe)
@@ -83002,10 +83002,10 @@ class r2e {
           { storageV5: ne, credentials: me },
         );
     }
-    if (zt.length > 0 && Zi()) {
+    if (zt.length > 0 && isTeammate()) {
       n(`[InboxPoller] Found ${zt.length} permission response(s)`);
       for (let po of zt) {
-        let xo = I1e(po.text);
+        let xo = isPermissionResponse(po.text);
         if (!xo) continue;
         if (po.from !== fs) {
           n(
@@ -83039,7 +83039,7 @@ class r2e {
             });
       }
     }
-    if (ao.length > 0 && ZC(Qe.teamContext)) {
+    if (ao.length > 0 && isTeamLead(Qe.teamContext)) {
       n(`[InboxPoller] Found ${ao.length} sandbox permission request(s)`);
       let po = Qe.teamContext?.teamName,
         xo = this.#m;
@@ -83069,7 +83069,7 @@ class r2e {
       }
       let Ro = !1;
       for (let on of ao) {
-        let An = WGt(on.text);
+        let An = isSandboxPermissionRequest(on.text);
         if (!An) continue;
         if (typeof An.hostPattern?.host !== "string" || !An.hostPattern.host) {
           n(
@@ -83109,7 +83109,7 @@ class r2e {
           )
             .then(() => no)
             .finally(() => this.#c.delete(wn))
-            .catch(h);
+            .catch(logError);
           continue;
         }
         if (this.#c.has(wn)) continue;
@@ -83130,7 +83130,7 @@ class r2e {
           )
             .then(() => no)
             .finally(() => this.#c.delete(wn))
-            .catch(h);
+            .catch(logError);
           continue;
         }
         let Sr = An.hostPattern.host;
@@ -83161,7 +83161,7 @@ class r2e {
           )
             .then(() => Kn)
             .finally(() => this.#c.delete(wn))
-            .catch(h),
+            .catch(logError),
           !Ro && !Ae && !Oe)
         ) {
           Ro = !0;
@@ -83177,10 +83177,10 @@ class r2e {
         }
       }
     }
-    if (co.length > 0 && Zi()) {
+    if (co.length > 0 && isTeammate()) {
       n(`[InboxPoller] Found ${co.length} sandbox permission response(s)`);
       for (let po of co) {
-        let xo = GGt(po.text);
+        let xo = isSandboxPermissionResponse(po.text);
         if (!xo) continue;
         if (po.from !== fs) {
           n(
@@ -83204,13 +83204,13 @@ class r2e {
         }
       }
     }
-    if (ro.length > 0 && ZC(Qe.teamContext)) {
+    if (ro.length > 0 && isTeamLead(Qe.teamContext)) {
       n(
         `[InboxPoller] Found ${ro.length} plan approval request(s), auto-approving`,
       );
       let po = Qe.teamContext?.teamName;
       for (let xo of ro) {
-        let Wo = Dwt(xo.text);
+        let Wo = isPlanApprovalRequest(xo.text);
         if (!Wo) continue;
         let Ro = I.getState(),
           on = wut({
@@ -83247,20 +83247,20 @@ class r2e {
           ho.push(xo));
       }
     }
-    if (go.length > 0 && Zi()) {
+    if (go.length > 0 && isTeammate()) {
       n(`[InboxPoller] Found ${go.length} shutdown request(s)`);
       for (let po of go) ho.push(po);
     }
-    if (fo.length > 0 && ZC(Qe.teamContext)) {
+    if (fo.length > 0 && isTeamLead(Qe.teamContext)) {
       n(`[InboxPoller] Found ${fo.length} shutdown approval(s)`);
       for (let po of fo) {
-        let xo = mJ(po.text);
+        let xo = isShutdownApproved(po.text);
         if (!xo) continue;
         if (xo.paneId && xo.backendType)
           (async () => {
             try {
               await G$t();
-              let Wo = await Oj(),
+              let Wo = await isInsideTmux(),
                 on = await a4e(xo.backendType)?.killPane(xo.paneId, !Wo);
               n(
                 `[InboxPoller] Killed pane ${b(xo.paneId)} for ${b(xo.from)}: ${on}`,
@@ -83276,7 +83276,7 @@ class r2e {
       Tt();
       return;
     }
-    let _o = coe(ho, { recipientIsLead: ZC(Qe.teamContext) }),
+    let _o = formatTeammateMessages(ho, { recipientIsLead: isTeamLead(Qe.teamContext) }),
       Ho = () => {
         be((po) => ({
           ...po,
@@ -83330,7 +83330,7 @@ class r2e {
     }
     if (Oe.length === 0) return;
     n(`[InboxPoller] Session idle, delivering ${Oe.length} pending message(s)`);
-    let Ke = coe(Oe, { recipientIsLead: ZC(xe.teamContext) });
+    let Ke = formatTeammateMessages(Oe, { recipientIsLead: isTeamLead(xe.teamContext) });
     if (be(Ke)) {
       let Qe = new Set(Oe.map((it) => it.id));
       I((it) => ({
@@ -83347,7 +83347,7 @@ async function mHo(w, I, ne, me) {
   )?.[0];
   if (!pe) return;
   let be = I.teamContext?.teamName;
-  if (be) await pfe(be, { agentId: pe, name: w }, me);
+  if (be) await removeTeammateFromTeamFile(be, { agentId: pe, name: w }, me);
   let { notificationMessage: xe } = be
     ? await dCe(be, pe, w, "shutdown", me)
     : { notificationMessage: `${w} has shut down.` };
@@ -83389,7 +83389,7 @@ function nOt(w, I, ne) {
   let me = Eb(w),
     pe = E1(me) ? me : Eb(_c(me)),
     be = pe === "bypassPermissions",
-    xe = mH(pe, be ? { ...I, isBypassPermissionsModeAvailable: !0 } : I, (Ae) =>
+    xe = setPermissionModeWithGuards(pe, be ? { ...I, isBypassPermissionsModeAvailable: !0 } : I, (Ae) =>
       ne((Oe) => {
         let He = Oe.toolPermissionContext,
           Ke =
@@ -83411,7 +83411,7 @@ function iOt(w) {
   return I === null ? "A subagent" : String(I);
 }
 function pHo(w) {
-  if (CM(w))
+  if (isMisleadingConsentHost(w))
     return w.includes("*")
       ? "a wildcard, which srt matches against every host"
       : "a host srt would re-spell";
@@ -83446,9 +83446,9 @@ function i2e(w) {
             storageV5: He,
             credentials: Ke,
             setTimeout: (Qe, it) => Oe.setTimeout(Qe, it),
-            readUnreadMessages: (...Qe) => mfe(...Qe),
-            markMessagesAsRead: (...Qe) => fJ(...Qe),
-            writeToMailbox: (...Qe) => ag(...Qe),
+            readUnreadMessages: (...Qe) => readUnreadMessages(...Qe),
+            markMessagesAsRead: (...Qe) => markMessagesAsRead(...Qe),
+            writeToMailbox: (...Qe) => writeToMailbox(...Qe),
             hasPermissionCallback: aWn,
             processMailboxPermissionResponse: Wqe,
             hasSandboxPermissionCallback: uWn,
@@ -83493,7 +83493,7 @@ function uue(eri) {
       if (Pt()) {
         return;
       }
-      if (_t() && !s6) {
+      if (isBgSession() && !s6) {
         return;
       }
       let gOt = function gOt(a6) {
@@ -83512,13 +83512,13 @@ function uue(eri) {
           scope: "dynamic",
         });
       };
-      let hHo = hr();
+      let hHo = createAbortController();
       return (
         Opn(
           gOt,
           s6,
           (rri) => {
-            if (_t() || fOt.current) {
+            if (isBgSession() || fOt.current) {
               return;
             }
             fOt.current = !0;
@@ -83788,7 +83788,7 @@ async function sw(w, I) {
       p6().reportRelocateSessionTranscriptFailure(Oe, "WorktreeExitDialog");
     }
   }
-  (p6().saveWorktreeState(null, I), Ea.cache.clear?.(), lh(I));
+  (p6().saveWorktreeState(null, I), getPlansDirectory.cache.clear?.(), primePlanSlugCollisions(I));
 }
 function Mue(Kri) {
   let nw = _(35),
@@ -83827,7 +83827,7 @@ function Mue(Kri) {
         }
         let TOt = [];
         let ROt = Sl
-          ? await Be(lt(), [...fn, "status", "--porcelain"], {
+          ? await execFileNoThrowWithCwd(gitExe(), [...fn, "status", "--porcelain"], {
               cwd: Sl.worktreePath,
               env: Fo(),
             })
@@ -83854,8 +83854,8 @@ function Mue(Kri) {
         if (Sl) {
           let AOt = Sl.hookBased ? 0 : null;
           if (Sl.originalHeadCommit) {
-            let { stdout: Jri, code: Xri } = await Be(
-              lt(),
+            let { stdout: Jri, code: Xri } = await execFileNoThrowWithCwd(
+              gitExe(),
               [...fn, "rev-list", "--count", `${Sl.originalHeadCommit}..HEAD`],
               { cwd: Sl.worktreePath, env: Fo() },
             );
@@ -84386,7 +84386,7 @@ function O2e(w, I, ne, me) {
                 (jo.config.type === "sse" || jo.config.type === "http") &&
                 (Qme(
                   jo.config,
-                  !!Yt()?.accessToken || (await TF(xe).catch(() => !1)),
+                  !!getClaudeAIOAuthTokens()?.accessToken || (await TF(xe).catch(() => !1)),
                 ) ||
                   (SP() && !!jo.config.oauth?.xaa))
               )
@@ -84401,7 +84401,7 @@ function O2e(w, I, ne, me) {
               }),
                 (Cn = !0));
             } catch (un) {
-              J(no, `Auth-lost notice skipped: ${l(un)}`);
+              logMCPDebug(no, `Auth-lost notice skipped: ${l(un)}`);
             } finally {
               if (!Cn) Wo.current.delete(no);
             }
@@ -84419,7 +84419,7 @@ function O2e(w, I, ne, me) {
       ((on.current = []),
         Oe.applyQueuedUpdates(no, {
           currentEpoch: ir(),
-          onDoorDenied: Qde,
+          onDoorDenied: markClaudeInChromeUnwiredIfChrome,
           onOrphanedDisable: (jo) => {
             (ro.current.delete(jo), Ho.current.delete(jo));
             let Cn = to.current.get(jo);
@@ -84487,9 +84487,9 @@ function O2e(w, I, ne, me) {
                     .catch(() => {
                       n(`Failed to invalidate the server cache: ${no.name}`);
                     }),
-                  Uo(no.name))
+                  isMcpServerDisabled(no.name))
                 ) {
-                  J(
+                  logMCPDebug(
                     no.name,
                     "Server is disabled, skipping automatic reconnection",
                   );
@@ -84497,7 +84497,7 @@ function O2e(w, I, ne, me) {
                 }
                 if (Or !== "stdio" && Or !== "sdk") {
                   let Br = ejo(Or);
-                  J(
+                  logMCPDebug(
                     no.name,
                     `${Br} transport closed/disconnected, attempting automatic reconnection`,
                   );
@@ -84507,8 +84507,8 @@ function O2e(w, I, ne, me) {
                     Ln = () => ir() === Xi || !xh(no.config);
                   (async () => {
                     for (let gn = 1; gn <= N2; gn++) {
-                      if (Uo(no.name)) {
-                        (J(
+                      if (isMcpServerDisabled(no.name)) {
+                        (logMCPDebug(
                           no.name,
                           "Server disabled during reconnection, stopping retry",
                         ),
@@ -84517,16 +84517,16 @@ function O2e(w, I, ne, me) {
                         return;
                       }
                       if (!Ln()) {
-                        J(
+                        logMCPDebug(
                           no.name,
                           "Identity changed during reconnection, stopping retry",
                         );
                         return;
                       }
-                      let On = Yp(no.name, no.config);
+                      let On = mcpDialBlockCause(no.name, no.config);
                       if (On) {
-                        (Qde(no.name),
-                          J(
+                        (markClaudeInChromeUnwiredIfChrome(no.name),
+                          logMCPDebug(
                             no.name,
                             "Server blocked by managed policy during reconnection, stopping retry",
                           ),
@@ -84555,14 +84555,14 @@ function O2e(w, I, ne, me) {
                           ),
                           Oi = Math.round(Tt.now() - Jr);
                         if (!Ln()) {
-                          J(
+                          logMCPDebug(
                             no.name,
                             `Identity changed during reconnection attempt ${gn}, discarding result`,
                           );
                           return;
                         }
                         if (Fr.client.type === "connected") {
-                          (J(
+                          (logMCPDebug(
                             no.name,
                             `${Br} reconnection successful after ${Oi}ms (attempt ${gn})`,
                           ),
@@ -84571,13 +84571,13 @@ function O2e(w, I, ne, me) {
                           return;
                         }
                         if (
-                          (J(
+                          (logMCPDebug(
                             no.name,
                             `${Br} reconnection attempt ${gn} completed with status: ${Fr.client.type}`,
                           ),
                           gn === N2)
                         ) {
-                          (J(
+                          (logMCPDebug(
                             no.name,
                             `Max reconnection attempts (${N2}) reached, giving up`,
                           ),
@@ -84588,7 +84588,7 @@ function O2e(w, I, ne, me) {
                       } catch (Fr) {
                         let Oi = Math.round(Tt.now() - Jr);
                         if (
-                          (Wr(
+                          (logMCPError(
                             no.name,
                             `${Br} reconnection attempt ${gn} failed after ${Oi}ms: ${as(Fr, no.config)}`,
                           ),
@@ -84596,7 +84596,7 @@ function O2e(w, I, ne, me) {
                         )
                           return;
                         if (gn === N2) {
-                          (J(
+                          (logMCPDebug(
                             no.name,
                             `Max reconnection attempts (${N2}) reached, giving up`,
                           ),
@@ -84606,7 +84606,7 @@ function O2e(w, I, ne, me) {
                         }
                       }
                       let ai = ODe(gn);
-                      (J(
+                      (logMCPDebug(
                         no.name,
                         `Scheduling reconnection attempt ${gn + 1} in ${ai}ms`,
                       ),
@@ -84634,14 +84634,14 @@ function O2e(w, I, ne, me) {
                   (Ho.current.add(no.name),
                   Qc().onMcpNotification(no, VPe(), async (Or) => {
                     let { content: Br, meta: fi } = Or.params;
-                    (J(
+                    (logMCPDebug(
                       no.name,
                       `notifications/claude/channel: ${Br.slice(0, 80)}`,
                     ),
                       i("tengu_mcp_channel_message", {
                         content_length: Br.length,
                         meta_key_count: Object.keys(fi ?? {}).length,
-                        entry_kind: we(In?.kind),
+                        entry_kind: fromEnumOpt(In?.kind),
                         is_dev: In?.dev ?? !1,
                         plugin: Fn,
                       }),
@@ -84661,7 +84661,7 @@ function O2e(w, I, ne, me) {
                   Qc().onMcpNotification(no, Hin(), async (Or) => {
                     let { request_id: Br, behavior: fi } = Or.params,
                       Xi = po.current?.resolve(Br, fi, no.name) ?? !1;
-                    J(
+                    logMCPDebug(
                       no.name,
                       `notifications/claude/channel/permission: ${Br} \u2192 ${fi} (${Xi ? "matched pending" : "no pending entry \u2014 stale or unknown ID"})`,
                     );
@@ -84669,7 +84669,7 @@ function O2e(w, I, ne, me) {
               };
             switch (Go.action) {
               case "register":
-                (J(no.name, "Channel notifications registered"),
+                (logMCPDebug(no.name, "Channel notifications registered"),
                   Gn(),
                   (Qo = !0));
                 break;
@@ -84682,7 +84682,7 @@ function O2e(w, I, ne, me) {
                   (Xi.removeNotificationHandler("notifications/claude/channel"),
                     Xi.removeNotificationHandler(P1t));
                 } else if (Br) {
-                  (J(
+                  (logMCPDebug(
                     no.name,
                     `Channel gate says skip:${Go.kind} but was previously registered \u2014 preserving handler`,
                   ),
@@ -84690,7 +84690,7 @@ function O2e(w, I, ne, me) {
                     (Qo = !0));
                   break;
                 }
-                J(no.name, `Channel notifications skipped: ${Go.reason}`);
+                logMCPDebug(no.name, `Channel notifications skipped: ${Go.reason}`);
                 let fi =
                   Go.kind === "capability" || Go.kind === "session"
                     ? null
@@ -84732,8 +84732,8 @@ function O2e(w, I, ne, me) {
             if (Qo || (Go.action === "skip" && Go.kind !== "capability"))
               i("tengu_mcp_channel_gate", {
                 registered: Qo,
-                skip_kind: Go.action === "skip" ? u(Go.kind) : void 0,
-                entry_kind: we(In?.kind),
+                skip_kind: Go.action === "skip" ? fromEnum(Go.kind) : void 0,
+                entry_kind: fromEnumOpt(In?.kind),
                 is_dev: In?.dev ?? !1,
                 plugin: Fn,
               });
@@ -84749,7 +84749,7 @@ function O2e(w, I, ne, me) {
                   } = Qc(),
                   Ln = Qx(no.name, no.config),
                   Gi = GLe(Or);
-                J(
+                logMCPDebug(
                   no.name,
                   Or === s3
                     ? "Synthesized tools refetch after listen-stream reopen (no notification received)"
@@ -84768,7 +84768,7 @@ function O2e(w, I, ne, me) {
                     );
                   let Fr = no.discoveryAuthFailure && Jr.length === 0;
                   if (Fr)
-                    J(
+                    logMCPDebug(
                       no.name,
                       "tools refresh returned the needs-auth empty list; keeping previous tools",
                     );
@@ -84809,7 +84809,7 @@ function O2e(w, I, ne, me) {
                       Xi(no, Jr, { identityEpoch: Sn, grantLeg: Fi }),
                     );
                 } catch (gn) {
-                  Wr(
+                  logMCPError(
                     no.name,
                     `Failed to refresh tools after list_changed notification: ${as(gn, no.config)}`,
                   );
@@ -84820,7 +84820,7 @@ function O2e(w, I, ne, me) {
                 if (!Mn()) return;
                 let { fetchCommandsForClient: Br, getDiscoveryFetchError: fi } =
                   Qc();
-                J(
+                logMCPDebug(
                   no.name,
                   Or === s3
                     ? "Synthesized prompts refetch after listen-stream reopen (no notification received)"
@@ -84849,7 +84849,7 @@ function O2e(w, I, ne, me) {
                       cause: GLe(Or),
                     }));
                 } catch (Xi) {
-                  Wr(
+                  logMCPError(
                     no.name,
                     `Failed to refresh prompts after list_changed notification: ${as(Xi, no.config)}`,
                   );
@@ -84864,7 +84864,7 @@ function O2e(w, I, ne, me) {
                   fetchCommandsForClient: Xi,
                   getDiscoveryFetchError: Ln,
                 } = Qc();
-                J(
+                logMCPDebug(
                   no.name,
                   Or === s3
                     ? "Synthesized resources refetch after listen-stream reopen (no notification received)"
@@ -84920,7 +84920,7 @@ function O2e(w, I, ne, me) {
                     cause: GLe(Or),
                   });
                 } catch (Gi) {
-                  Wr(
+                  logMCPError(
                     no.name,
                     `Failed to refresh resources after list_changed notification: ${as(Gi, no.config)}`,
                   );
@@ -84933,7 +84933,7 @@ function O2e(w, I, ne, me) {
             if (kde(no) && So <= Bue) {
               ro.current.set(no.name, So);
               let Go = ODe(So);
-              (J(
+              (logMCPDebug(
                 no.name,
                 `Transient ${no.errorCode ?? "<sse-no-code>"} on initial connect \u2014 retry ${So}/${Bue} in ${Go}ms`,
               ),
@@ -84948,15 +84948,15 @@ function O2e(w, I, ne, me) {
               if (In) In();
               let Fn = ir(),
                 Qo = Tt.setTimeout(() => {
-                  if ((to.current.delete(no.name), Uo(no.name))) {
+                  if ((to.current.delete(no.name), isMcpServerDisabled(no.name))) {
                     yn({ ...no });
                     return;
                   }
                   if (ir() !== Fn) return;
-                  let Gn = Yp(no.name, no.config);
+                  let Gn = mcpDialBlockCause(no.name, no.config);
                   if (Gn) {
-                    (Qde(no.name),
-                      J(
+                    (markClaudeInChromeUnwiredIfChrome(no.name),
+                      logMCPDebug(
                         no.name,
                         "Server blocked by managed policy during initial-connect retry, stopping retry",
                       ),
@@ -84977,7 +84977,7 @@ function O2e(w, I, ne, me) {
                       },
                       (Sn) => {
                         if (
-                          (Wr(
+                          (logMCPError(
                             no.name,
                             `Initial-connect retry ${So} threw: ${as(Sn, no.config)}`,
                           ),
@@ -85015,7 +85015,7 @@ function O2e(w, I, ne, me) {
             un = ir();
           try {
             let lr = Oe.get().clients.find((Sn) => Sn.name === no);
-            if (lr === void 0 || !ts(lr) || Uo(no) || d$(no, jo)) {
+            if (lr === void 0 || !ts(lr) || isMcpServerDisabled(no) || isMcpDialBlockedByPolicy(no, jo)) {
               Cn();
               return;
             }
@@ -85045,7 +85045,7 @@ function O2e(w, I, ne, me) {
               return;
             }
             let Gn = Oe.get().clients.find((Sn) => Sn.name === no);
-            if (Gn === void 0 || !ts(Gn) || Uo(no) || d$(no, jo)) {
+            if (Gn === void 0 || !ts(Gn) || isMcpServerDisabled(no) || isMcpDialBlockedByPolicy(no, jo)) {
               Cn();
               return;
             }
@@ -85058,7 +85058,7 @@ function O2e(w, I, ne, me) {
               replaceOnly: !0,
             });
           } catch (lr) {
-            if ((Cn(), !Uo(no) && ir() === un))
+            if ((Cn(), !isMcpServerDisabled(no) && ir() === un))
               yn({
                 name: no,
                 type: "failed",
@@ -85096,9 +85096,9 @@ function O2e(w, I, ne, me) {
             try {
               let lr = vo(no);
               if (lr?.type !== "cached") return;
-              let Io = Yp(no, jo);
+              let Io = mcpDialBlockCause(no, jo);
               if (Io) {
-                (Qde(no),
+                (markClaudeInChromeUnwiredIfChrome(no),
                   un.clearServerCache(no, jo).catch(() => {}),
                   un.dropDiscoveryEntry(no, jo).catch(() => {}),
                   yn({
@@ -85110,7 +85110,7 @@ function O2e(w, I, ne, me) {
                   }));
                 return;
               }
-              if (Uo(no)) {
+              if (isMcpServerDisabled(no)) {
                 (un.clearServerCache(no, jo).catch(() => {}),
                   zo({
                     client: {
@@ -85132,7 +85132,7 @@ function O2e(w, I, ne, me) {
               }
               let So = await un.connectToServer(no, jo, void 0, be, xe);
               if (ir() !== Cn) return;
-              if (So.type === "connected" && Uo(no)) {
+              if (So.type === "connected" && isMcpServerDisabled(no)) {
                 zo({ client: So, tools: [], commands: [], replaceOnly: !0 });
                 return;
               }
@@ -85163,9 +85163,9 @@ function O2e(w, I, ne, me) {
               if ((await un.peekSettledConnection(no, jo)) !== So) return;
               let Mn = vo(no);
               if (ir() !== Cn || Mn?.type !== "cached") return;
-              let Or = Yp(no, jo);
+              let Or = mcpDialBlockCause(no, jo);
               if (Or) {
-                (Qde(no),
+                (markClaudeInChromeUnwiredIfChrome(no),
                   (Yo(So.client).onclose = void 0),
                   un.clearServerCache(no, jo).catch(() => {}),
                   un.dropDiscoveryEntry(no, jo).catch(() => {}),
@@ -85266,8 +85266,8 @@ function O2e(w, I, ne, me) {
           warnings: un,
         } = I
           ? { servers: {}, errors: [], warnings: [] }
-          : await SH(w, { storageV5: be }),
-        { configs: lr, blocked: Io } = vEe(w),
+          : await getClaudeCodeMcpConfigs(w, { storageV5: be }),
+        { configs: lr, blocked: Io } = filterDynamicMcpServersByPolicy(w),
         So = { ...jo, ...lr };
       if (Io.length > 0) {
         (Io.sort(),
@@ -85312,7 +85312,7 @@ function O2e(w, I, ne, me) {
         }));
     }
     no().catch((jo) => {
-      Wr(
+      logMCPError(
         "useManageMCPConnections",
         `Failed to initialize servers as pending: ${l(jo)}`,
       );
@@ -85377,7 +85377,7 @@ function O2e(w, I, ne, me) {
         if (So) Je.current = Ke;
         let In,
           Fn = !1;
-        if (I || REe()) In = Promise.resolve({});
+        if (I || shouldSkipClaudeAiFetchForEnterpriseLockdown()) In = Promise.resolve({});
         else {
           if ((gyt(), Io)) {
             if (!Go) Aee(be);
@@ -85391,18 +85391,18 @@ function O2e(w, I, ne, me) {
           warnings: Sn,
         } = I
           ? { servers: {}, errors: [], warnings: [] }
-          : await SH(w, { storageV5: be });
+          : await getClaudeCodeMcpConfigs(w, { storageV5: be });
         if (no) return;
         (He.addErrors(Gn), He.addWarnings(Sn));
-        let Mn = { ...Qo, ...vEe(w).configs },
-          Or = tu(Mn, (Gi, gn) => Uo(gn));
+        let Mn = { ...Qo, ...filterDynamicMcpServersByPolicy(w).configs },
+          Or = tu(Mn, (Gi, gn) => isMcpServerDisabled(gn));
         if (Object.keys(Or).length > 0 || (So && Object.keys(Mn).length > 0))
           Qc().seedMcpIdentityCheck();
         if (Object.keys(Or).length > 0)
           Qc()
             .getMcpToolsCommandsAndResources(zo, Or, be, xe)
             .catch((Gi) => {
-              Wr(
+              logMCPError(
                 "useManageMcpConnections",
                 `Failed to get MCP resources: ${l(Gi)}`,
               );
@@ -85410,7 +85410,7 @@ function O2e(w, I, ne, me) {
         let Br = {};
         if (!I) {
           let Gi = (await In) ?? {},
-            { allowed: gn, blocked: On } = yH(Gi);
+            { allowed: gn, blocked: On } = filterMcpServersByPolicy(Gi);
           if (((Br = gn), no)) return;
           try {
             if (Fn && p7n(Gi)) {
@@ -85427,12 +85427,12 @@ function O2e(w, I, ne, me) {
                   }, Oi)));
             } else if (Fn) co.current = 0;
           } catch (Fr) {
-            Wr(
+            logMCPError(
               "useManageMcpConnections",
               `Failed to schedule claude.ai catalog retry: ${l(Fr)}`,
             );
           }
-          if (RQ())
+          if (hasDisableClaudeAiConnectors())
             for (let Fr of Oe.get().clients) {
               if (Fr.config.scope !== "claudeai") continue;
               if (Fr.type === "disabled") continue;
@@ -85485,7 +85485,7 @@ function O2e(w, I, ne, me) {
             });
           let ai = [];
           if (Object.keys(Br).length > 0) {
-            let { servers: Fr, suppressed: Oi } = await CMe(Br, Mn);
+            let { servers: Fr, suppressed: Oi } = await dedupClaudeAiMcpServers(Br, Mn);
             if (no) return;
             ((Br = Fr), (ai = Oi));
           }
@@ -85493,7 +85493,7 @@ function O2e(w, I, ne, me) {
             (Oe.setSuppressedClaudeAiConnectors(ai), Object.keys(Br).length > 0)
           ) {
             Oe.addPendingServers(Br);
-            let Fr = tu(Br, (Oi, rs) => Uo(rs));
+            let Fr = tu(Br, (Oi, rs) => isMcpServerDisabled(rs));
             if (
               Object.keys(Fr).length > 0 ||
               (So && Object.keys(Br).length > 0)
@@ -85503,7 +85503,7 @@ function O2e(w, I, ne, me) {
               Qc()
                 .getMcpToolsCommandsAndResources(zo, Fr, be, xe)
                 .catch((Oi) => {
-                  Wr(
+                  logMCPError(
                     "useManageMcpConnections",
                     `Failed to get claude.ai MCP resources: ${l(Oi)}`,
                   );
@@ -85529,7 +85529,7 @@ function O2e(w, I, ne, me) {
       }
       return (
         jo().catch((Cn) => {
-          Wr(
+          logMCPError(
             "useManageMcpConnections",
             `MCP connect failed on mount: ${O_(Cn)}`,
           );
@@ -85571,7 +85571,7 @@ function O2e(w, I, ne, me) {
             Error(`MCP server ${no} not found`),
             "MCP server not found in store",
           );
-        if (Uo(no))
+        if (isMcpServerDisabled(no))
           throw new mi(
             un.type === "disabled" ? Cee(no) : s2(no),
             "MCP server disabled; enable before reconnect",
@@ -85586,12 +85586,12 @@ function O2e(w, I, ne, me) {
             try {
               let Qo =
                   w?.[no] ??
-                  (I ? void 0 : (await SH(w, { storageV5: be })).servers[no]) ??
+                  (I ? void 0 : (await getClaudeCodeMcpConfigs(w, { storageV5: be })).servers[no]) ??
                   un.config,
-                Gn = Yp(no, Qo);
+                Gn = mcpDialBlockCause(no, Qo);
               if (Gn)
                 throw (
-                  Qde(no),
+                  markClaudeInChromeUnwiredIfChrome(no),
                   Hrn(
                     no,
                     Gn,
@@ -85602,7 +85602,7 @@ function O2e(w, I, ne, me) {
               let Sn = await (Go
                 ? Qc().reconnectMcpServerDistrusted(no, Qo, be, xe)
                 : Qc().reconnectMcpServerImpl(no, Qo, be, xe));
-              if (Uo(no)) {
+              if (isMcpServerDisabled(no)) {
                 if (Sn.client.type === "connected") qOt(Sn.client);
                 throw new mi(
                   `"${gr(no)}" was disabled while reconnecting`,
@@ -85638,7 +85638,7 @@ function O2e(w, I, ne, me) {
           let un = to.current.get(no);
           if (un) (un(), to.current.delete(no));
           if (
-            (kEe(no, !1, be),
+            (setMcpServerEnabled(no, !1, be),
             Ho.current.delete(no),
             ro.current.delete(no),
             jo.type === "connected")
@@ -85655,22 +85655,22 @@ function O2e(w, I, ne, me) {
         } else {
           let un =
               w?.[no] ??
-              (I ? void 0 : (await SH(w, { storageV5: be })).servers[no]) ??
+              (I ? void 0 : (await getClaudeCodeMcpConfigs(w, { storageV5: be })).servers[no]) ??
               jo.config,
-            lr = Yp(no, un);
+            lr = mcpDialBlockCause(no, un);
           if (lr)
             throw (
-              Qde(no),
+              markClaudeInChromeUnwiredIfChrome(no),
               Hrn(
                 no,
                 lr,
                 `MCP server ${gr(no)} is blocked by enterprise managed policy`,
               )
             );
-          (kEe(no, !0, be), yn({ name: no, type: "pending", config: un }));
+          (setMcpServerEnabled(no, !0, be), yn({ name: no, type: "pending", config: un }));
           let Io = ir(),
             So = await Qc().reconnectMcpServerImpl(no, un, be, xe);
-          if (Uo(no)) {
+          if (isMcpServerDisabled(no)) {
             if (So.client.type === "connected") qOt(So.client);
             throw (
               yn({ name: no, type: "disabled", config: un }),
@@ -85763,7 +85763,7 @@ function Eq(Jsi) {
     ijo,
     sjo;
   if (B2e[5] !== Mq || B2e[6] !== Aq)
-    ((ijo = () => (Mnn(Mq, Aq, Uo, Yp), ljo)),
+    ((ijo = () => (Mnn(Mq, Aq, isMcpServerDisabled, mcpDialBlockCause), ljo)),
       (sjo = [Mq, Aq]),
       (B2e[5] = Mq),
       (B2e[6] = Aq),
@@ -85816,10 +85816,10 @@ function j2e(w) {
     Ct = re((to, zt) => {
       let ao = Je.current;
       i(djo, {
-        event_type: u(to),
+        event_type: fromEnum(to),
         appearance_id: Ee(Ke.current),
-        trigger: u(zOt),
-        response: we(ao?.rating),
+        trigger: fromEnum(zOt),
+        response: fromEnumOpt(ao?.rating),
         rated_good_count: ao?.ratedGoodCount,
         rated_bad_count: ao?.ratedBadCount,
         error_code: zt,
@@ -86246,10 +86246,10 @@ function Hze(fli) {
         nze.current = new Set([...nze.current, Fq.path]);
       if (!Ejo && !Djo)
         i("tengu_session_memory_rated", {
-          rating: u(Bq),
-          source: u(Fq.source),
-          surface: u(Sli),
-          target: u(kli ? "index" : "memory"),
+          rating: fromEnum(Bq),
+          source: fromEnum(Fq.source),
+          surface: fromEnum(Sli),
+          target: fromEnum(kli ? "index" : "memory"),
         });
       (uw.arm({
         rating: Bq,
@@ -86903,9 +86903,9 @@ function jze({
     pinned_count: G(be, (Ae) => Ae.source === "pinned"),
     unrated_count: U8(be),
     fullscreen: pe === "fullscreen",
-    trigger: u(me),
+    trigger: fromEnum(me),
   }),
-    y("memory_session_viewer"));
+    logFeatureOk("memory_session_viewer"));
   let xe = w.show(
     e(Hze, {
       transcript: ne,
@@ -86972,7 +86972,7 @@ function Wze() {
           delegatedWorkRunning: MI(I.getState().tasks),
         });
       } catch (be) {
-        h(be);
+        logError(be);
       }
     }
     (Kun(!0), me());
@@ -87020,7 +87020,7 @@ var r$o = "no_permissions",
   KFt = {
     id: "sudo-npm-install",
     maxImpressions: 1,
-    onShown: () => y("sudo_npm_install_notice"),
+    onShown: () => logFeatureOk("sudo_npm_install_notice"),
     compute: async (w) => {
       if (Ie(process.env.DISABLE_INSTALLATION_CHECKS)) return null;
       let I = await sFt(w?.storageV5);
@@ -87106,7 +87106,7 @@ function Vze(w = JFt) {
     ).then((Oe) => {
       for (let He of Oe)
         if (He.status === "rejected")
-          h(dt(ge(He.reason), "startup notification spec failed"));
+          logError(dt(ge(He.reason), "startup notification spec failed"));
       if (Ae.length === 0) return;
       Te((He) => {
         let Ke = { ...(He.seenNotifications ?? {}) };
@@ -87197,7 +87197,7 @@ var s$o = 800,
               w = !0;
               return;
             }
-            if (((w = !0), _t())) return;
+            if (((w = !0), isBgSession())) return;
             let { shouldShowAutoModeEntryWarning: Ae } =
               await Promise.resolve({ shouldShowAutoModeEntryWarning });
             if (Ae()) {
@@ -87241,13 +87241,13 @@ var tBt = {
       if (w) return;
       if (!(pe === "default" && xe !== "default" && xe !== "auto" && !be))
         return;
-      let Oe = eY();
+      let Oe = getAutoModeUnavailableReason();
       if (!Oe) return;
       ((w = !0),
         ne({
           key: "auto-mode-unavailable",
           kind: "feedback",
-          text: ij(Oe),
+          text: getAutoModeUnavailableNotification(Oe),
           color: "warning",
           priority: "medium",
         }));
@@ -87270,16 +87270,16 @@ var oBt = {
           a.CLAUDE_CODE_ENABLE_CFC ||
           me.claudeInChromeDefaultEnabled === !0
         ) ||
-        !N5e(ne)
+        !shouldEnableClaudeInChrome(ne)
       )
         return;
       if (me.chromeExtension?.pairedDeviceId) return;
-      if (!gt()) {
+      if (!isClaudeAISubscriber()) {
         Zm("chrome", 1);
         return;
       }
       if (xg()) return;
-      bH()
+      isChromeExtensionInstalled()
         .then((be) => {
           if (be) return;
           (Zm("chrome", 1),
@@ -87294,7 +87294,7 @@ var oBt = {
               };
             }));
         })
-        .catch(h);
+        .catch(logError);
     };
   },
 };
@@ -87413,7 +87413,7 @@ var aBt = {
   deps: (w) => [w.addNotification, w.session],
   setup() {
     return ({ addNotification: w, session: I }) =>
-      Y0t.of(I).subscribe((ne, me) => {
+      deviceToolNotices.of(I).subscribe((ne, me) => {
         w({
           key: ne,
           kind: "warning",
@@ -87488,7 +87488,7 @@ function d$o({ addNotification: w, fastMode: I }) {
   if (Nn()) return;
   if (!I) return;
   let ne = bVt((pe, be) => {
-      let xe = Ot(pe - Date.now(), { hideTrailingZeros: !0 }),
+      let xe = formatDuration(pe - Date.now(), { hideTrailingZeros: !0 }),
         Ae = m$o(be, xe);
       w({
         key: lBt,
@@ -87587,7 +87587,7 @@ function p$o() {
           });
       Zm("install", I);
     })
-    .catch(h);
+    .catch(logError);
 }
 var f$o = [
     /\bcurl\b/,
@@ -87847,7 +87847,7 @@ async function wBt(w) {
       be = v$o(pe, ig);
     if ((await ayt(be, pe, w)) !== null)
       return (
-        y("plugin_official_marketplace_fetch"),
+        logFeatureOk("plugin_official_marketplace_fetch"),
         await Gde((He) => {
           let Ke = He[ig];
           if (Ke && pw(Ke.installLocation)) return null;
@@ -87880,7 +87880,7 @@ async function wBt(w) {
         { installed: !0, skipped: !1 }
       );
     if (!H("tengu_plugin_official_mkt_git_fallback", !0)) {
-      (f("plugin_official_marketplace_fetch", "gcs_failed_fallback_disabled"),
+      (logFeatureBad("plugin_official_marketplace_fetch", "gcs_failed_fallback_disabled"),
         n(
           "Official marketplace GCS failed; git fallback disabled by flag \u2014 skipping install",
         ));
@@ -87910,7 +87910,7 @@ async function wBt(w) {
       );
     }
     if (((ne = !0), !(await G4e()))) {
-      (f("plugin_official_marketplace_fetch", "gcs_failed_git_unavailable"),
+      (logFeatureBad("plugin_official_marketplace_fetch", "gcs_failed_git_unavailable"),
         n("Git not available, skipping official marketplace auto-install"));
       let He = (I.officialMarketplaceAutoInstallRetryCount || 0) + 1,
         Ke = Date.now(),
@@ -87955,7 +87955,7 @@ async function wBt(w) {
         }),
         w,
       ),
-      g("plugin_official_marketplace_fetch", "gcs_failed_git_fallback"),
+      logFeatureSad("plugin_official_marketplace_fetch", "gcs_failed_git_fallback"),
       i("tengu_official_marketplace_auto_install", {
         installed: !0,
         skipped: !1,
@@ -87967,7 +87967,7 @@ async function wBt(w) {
     let pe = me instanceof Error ? me.message : String(me);
     if (pe.includes("xcrun: error:")) {
       if ((Xqn(), ne))
-        f("plugin_official_marketplace_fetch", "gcs_failed_git_unavailable");
+        logFeatureBad("plugin_official_marketplace_fetch", "gcs_failed_git_unavailable");
       return (
         n(
           "Official marketplace auto-install: git is a non-functional macOS xcrun shim, treating as git_unavailable",
@@ -87981,7 +87981,7 @@ async function wBt(w) {
         { installed: !1, skipped: !0, reason: "git_unavailable" }
       );
     }
-    if (ne) f("plugin_official_marketplace_fetch", "gcs_and_git_failed");
+    if (ne) logFeatureBad("plugin_official_marketplace_fetch", "gcs_and_git_failed");
     n(`Failed to auto-install official marketplace: ${pe}`, { level: "error" });
     let be = (I.officialMarketplaceAutoInstallRetryCount || 0) + 1,
       xe = Date.now(),
@@ -88031,7 +88031,7 @@ var CBt = {
                 };
               }));
           })
-          .catch(h));
+          .catch(logError));
     };
   },
 };
@@ -88100,19 +88100,19 @@ var TBt = {
               })
             ).wouldInvalidateCache
           )
-            return (g("plugin_command_reresolve_reload", "cache_impact"), !1);
+            return (logFeatureSad("plugin_command_reresolve_reload", "cache_impact"), !1);
           if ((await Xx(QB.over(me), pe, be)).error_count > 0)
             return (
-              g("plugin_command_reresolve_reload", "load_errors"),
+              logFeatureSad("plugin_command_reresolve_reload", "load_errors"),
               "with-errors"
             );
-          return (y("plugin_command_reresolve_reload"), "ok");
+          return (logFeatureOk("plugin_command_reresolve_reload"), "ok");
         } catch (Ke) {
           return (
             n(`Plugin autoupdate: in-session reload failed: ${l(Ke)}`, {
               level: "warn",
             }),
-            f("plugin_command_reresolve_reload", "refresh_failed"),
+            logFeatureBad("plugin_command_reresolve_reload", "refresh_failed"),
             !1
           );
         }
@@ -88181,7 +88181,7 @@ var RBt = {
   id: "pro-trial-expired-auto-open",
   setup() {
     return ({ submitPrompt: w }) => {
-      if (!sZt()) return;
+      if (!shouldAutoOpenProTrialExpired()) return;
       w("/pro-trial-expired", $k);
     };
   },
@@ -88193,7 +88193,7 @@ var MBt = {
     let w = !1;
     return ({ addNotification: I }) =>
       kzn((ne, me, pe) => {
-        if (!hg(ne)) return;
+        if (!isFableFamilyOrPinnedModel(ne)) return;
         if (me || pe) return;
         if (AO()) return;
         if (OF()) return;
@@ -88203,7 +88203,7 @@ var MBt = {
               I({
                 kind: "contextual",
                 key: "fable-credits-info",
-                text: `${Hm(ne)} is drawing from usage credits`,
+                text: `${renderFableModelName(ne)} is drawing from usage credits`,
                 priority: "medium",
               }));
           return;
@@ -88211,7 +88211,7 @@ var MBt = {
         I({
           kind: "warning",
           key: "fable-usage-credits",
-          text: `${Hm(ne)} is now using usage credits instead of your plan limits`,
+          text: `${renderFableModelName(ne)} is now using usage credits instead of your plan limits`,
           color: "error",
           priority: "immediate",
         });
@@ -88219,7 +88219,7 @@ var MBt = {
   },
 };
 function PBt() {
-  let w = qn();
+  let w = getSubscriptionType();
   return {
     hasBillingAccess: Km(),
     isTeamOrEnterprise: w === "team" || w === "enterprise",
@@ -88290,7 +88290,7 @@ var ABt = {
           }),
           xe)
         )
-          i("tengu_rate_limit_lever_hint", { lever: u(xe.lever) });
+          i("tengu_rate_limit_lever_hint", { lever: fromEnum(xe.lever) });
       };
     },
   };
@@ -88456,7 +88456,7 @@ var Qze = "rc-permission-nudge",
             timeoutMs: 2147483647,
           }),
           i("tengu_rc_permission_nudge_shown", {
-            permission_mode: u(Ke),
+            permission_mode: fromEnum(Ke),
             prompt_count: Je,
           }));
       }
@@ -88605,7 +88605,7 @@ var M$o = "routine-fired";
 function A$o(w) {
   let I = Date.now() - Date.parse(w);
   if (!Number.isFinite(I) || I < 60000) return "just now";
-  return `${Ot(I, { mostSignificantOnly: !0 })} ago`;
+  return `${formatDuration(I, { mostSignificantOnly: !0 })} ago`;
 }
 function ode(w, I) {
   return Date.parse(w) > Date.parse(I);
@@ -88623,7 +88623,7 @@ function I$o(w, I) {
   };
 }
 function E$o(w) {
-  let I = `${Vt().CLAUDE_AI_ORIGIN}/code/routines`,
+  let I = `${getOauthConfig().CLAUDE_AI_ORIGIN}/code/routines`,
     ne = w.reduce((pe, be) =>
       ode(be.last_fired_at ?? "", pe.last_fired_at ?? "") ? be : pe,
     ),
@@ -88675,7 +88675,7 @@ var KBt = {
       if (w) return;
       if (
         ((w = !0),
-        Nn() || St() || !gt() || !Mt("allow_remote_sessions") || !Mt(gM))
+        Nn() || St() || !isClaudeAISubscriber() || !isPolicyAllowed("allow_remote_sessions") || !isPolicyAllowed(gM))
       )
         return;
       let pe = ee().routineFiredWatermark;
@@ -88774,7 +88774,7 @@ var oUt = {
             };
           });
         })
-        .catch(h);
+        .catch(logError);
     };
   },
 };
@@ -88873,7 +88873,7 @@ var lUt = {
         Ke = Oe?.extraUsageStatus !== void 0;
       if (!He) w = "none";
       else {
-        if (w === "none" && Ae === null) y("usage_limit_grace_notice");
+        if (w === "none" && Ae === null) logFeatureOk("usage_limit_grace_notice");
         if (Ke) w = "covered";
         else if ((w === "none" || w === "covered") && xe) w = "finishing";
         else if (!xe && w !== "waiting") w = "waiting";
@@ -88881,7 +88881,7 @@ var lUt = {
       let Je = Ae ?? (He && w !== "none" ? w : null),
         Qe = "";
       if (Je !== null && Oe !== null) {
-        let Zt = Au(Oe.resetsAt),
+        let Zt = formatResetTime(Oe.resetsAt),
           Ct = Je === "covered" ? null : ppn(Oe.rateLimitType);
         Qe = `${Zt ? ` \xB7 resets ${Zt}` : ""}${Ct ? ` \xB7 ${Ct}` : ""}`;
       }
@@ -89286,7 +89286,7 @@ class Zze {
     let be = await this.#e.generate(pe.signal);
     if (pe.signal.aborted) return;
     if (be.kind !== "ok") {
-      f("away_summary_generate", "generate_failed");
+      logFeatureBad("away_summary_generate", "generate_failed");
       return;
     }
     let xe = this.#l < Y$o ? `${be.text} (disable recaps in /config)` : be.text;
@@ -89295,8 +89295,8 @@ class Zze {
       this.#e.transcript.replace((Ae) => [...Ae, v7n(xe)]),
       be.capped)
     )
-      g("away_summary_generate", "capped");
-    else y("away_summary_generate");
+      logFeatureSad("away_summary_generate", "capped");
+    else logFeatureOk("away_summary_generate");
   }
   #C() {
     ((this.#c = this.#e.focus.subscribe(this.#w)),
@@ -89379,14 +89379,14 @@ class Zze {
   }
   #R() {
     {
-      if (!_t()) return;
+      if (!isBgSession()) return;
       let w = a.CLAUDE_JOB_DIR;
       if (!w) return;
       let I = q$o(w, vWe),
         ne = () => this.#o,
         me = (He) => this.#v(He),
         { clock: pe, storageV5: be } = this.#e,
-        xe = M() && be !== void 0 ? bAe(w, [vWe]) : void 0,
+        xe = M() && be !== void 0 ? jobKeyFor(w, [vWe]) : void 0,
         Ae = be !== void 0 && xe !== void 0 ? { backend: be, key: xe } : void 0,
         Oe = pe.setTimeout(function He() {
           try {
@@ -89438,8 +89438,8 @@ F();
 function tQe(w, I) {
   let ne = C(!1);
   E(() => {
-    if (!iw() || ne.current) return;
-    if (((ne.current = !0), w)) HVe(w, I);
+    if (!fileHistoryEnabled() || ne.current) return;
+    if (((ne.current = !0), w)) fileHistoryRestoreStateFromLog(w, I);
   }, [w, I]);
 }
 import { extname as EUt } from "path";
@@ -89619,14 +89619,14 @@ function nQe() {
   let w = C(!1),
     I = C(new Map()),
     ne = re((me, pe) => {
-      if (Pt() || Sg()) return;
+      if (Pt() || isUnattendedInteractiveSession()) return;
       if (w.current) {
         I.current.set(me, pe);
         return;
       }
       ((w.current = !0),
         pe()
-          .catch(h)
+          .catch(logError)
           .finally(() => {
             w.current = !1;
             let [be] = I.current;
@@ -89658,7 +89658,7 @@ async function E6(w, I, ne, me, pe, be) {
         priority: "immediate",
         timeoutMs: 5000,
       }),
-      y("plugin_recommendation_install"));
+      logFeatureOk("plugin_recommendation_install"));
   } catch (Ae) {
     if (Ae instanceof Ui) {
       (n(`Plugin ${w} not installed: ${Ae.message}`),
@@ -89670,8 +89670,8 @@ async function E6(w, I, ne, me, pe, be) {
           timeoutMs: 8000,
         }));
       let { code: Oe, kind: He } = cwt(Ae);
-      if (He === "bad") f("plugin_recommendation_install", Oe);
-      else g("plugin_recommendation_install", Oe);
+      if (He === "bad") logFeatureBad("plugin_recommendation_install", Oe);
+      else logFeatureSad("plugin_recommendation_install", Oe);
       return;
     }
     (n(
@@ -89685,7 +89685,7 @@ async function E6(w, I, ne, me, pe, be) {
         priority: "immediate",
         timeoutMs: 5000,
       }),
-      f("plugin_recommendation_install", "install_failed"));
+      logFeatureBad("plugin_recommendation_install", "install_failed"));
   }
 }
 function m1o(Ggi) {
@@ -89818,7 +89818,7 @@ function DUt({ pluginId: w, pluginName: I }, ne, me, pe) {
             pe,
             { explicitInstall: !1 },
           ),
-            await Ii(
+            await updateSettingsForSourceWithTransform(
               "userSettings",
               (Oe) => ({ enabledPlugins: { ...Oe?.enabledPlugins, [w]: !0 } }),
               void 0,
@@ -89982,7 +89982,7 @@ function yde(yQe, bQe) {
           i("tengu_plugin_hint_response", {
             _PROTO_plugin_name: Bn(t_.pluginId).name,
             _PROTO_marketplace_name: t_.marketplaceName,
-            response: u(OUt),
+            response: fromEnum(OUt),
           }),
           OUt)
         ) {
@@ -90115,7 +90115,7 @@ function Sde(w = 0, I = !0, ne = "auto") {
     Ke = C(!1),
     [Je, Qe] = d(0);
   return (
-    E(() => BIn(() => Qe((it) => it + 1)), []),
+    E(() => onWatchedGitStateChange(() => Qe((it) => it + 1)), []),
     E(() => {
       if (!I) return;
       let it = !1,
@@ -90125,7 +90125,7 @@ function Sde(w = 0, I = !0, ne = "auto") {
           let eo = await Dgt(be, at.signal, ne);
           if (it) return;
           if (eo === null) {
-            (g("repl_diff_read", "git_diff_failed"), (Ke.current = !0), He(!1));
+            (logFeatureSad("repl_diff_read", "git_diff_failed"), (Ke.current = !0), He(!1));
             return;
           }
           let jt = IVe(eo),
@@ -90140,13 +90140,13 @@ function Sde(w = 0, I = !0, ne = "auto") {
             })),
             Tt === null)
           )
-            g("repl_diff_read", "git_hunks_failed");
-          else y("repl_diff_read");
+            logFeatureSad("repl_diff_read", "git_hunks_failed");
+          else logFeatureOk("repl_diff_read");
           ((Ke.current = !0), He(!1));
         } catch (eo) {
           if (it) return;
-          (h(eo),
-            g("repl_diff_read", "git_diff_threw"),
+          (logError(eo),
+            logFeatureSad("repl_diff_read", "git_diff_threw"),
             (Ke.current = !0),
             He(!1));
         }
@@ -90243,7 +90243,7 @@ function _1o(w) {
       if (!w) return;
       let me = jn();
       if (!me || !eE("controlChannel")) {
-        (g("remote_workspace_diff_fetch", "no_channel"),
+        (logFeatureSad("remote_workspace_diff_fetch", "no_channel"),
           ne({
             data: bde(!1),
             notice:
@@ -90257,7 +90257,7 @@ function _1o(w) {
           .sendControlRequest({ subtype: "get_workspace_diff" })
           .then((be) => {
             if (pe) return;
-            (y("remote_workspace_diff_fetch"),
+            (logFeatureOk("remote_workspace_diff_fetch"),
               ne({ data: be.diff ? C1o(be.diff) : bde(!1), notice: null }));
           })
           .catch((be) => {
@@ -90267,8 +90267,8 @@ function _1o(w) {
                 ? "unsupported_subtype"
                 : iD(be);
             if (Ae === "unsupported_subtype")
-              g("remote_workspace_diff_fetch", Ae);
-            else f("remote_workspace_diff_fetch", Ae);
+              logFeatureSad("remote_workspace_diff_fetch", Ae);
+            else logFeatureBad("remote_workspace_diff_fetch", Ae);
             ne({
               data: bde(!1),
               notice:
@@ -90324,7 +90324,7 @@ function wQe(w, I, ne, me) {
           ) + 1,
         it = me?.(Math.min(Ae.anchor.row, Ae.focus.row));
       (ne({ source: "diff", text: Je, lineCount: Qe, filePath: it }),
-        y("diff_selection_attach"));
+        logFeatureOk("diff_selection_attach"));
     });
   E(() => pe.subscribe(() => xe()), [pe]);
 }
@@ -90677,18 +90677,18 @@ function Ibi() {
 function MQe(w, I, ne) {
   if (eN()) {
     let me = TWe.of(w),
-      pe = CZt(w) ? "auto_open" : "manual";
+      pe = consumeReplDiffPanelAutoOpen(w) ? "auto_open" : "manual";
     if (I === me.lastLoggedSessionId) return;
     ((me.lastLoggedSessionId = I),
       i("tengu_repl_diff_panel_shown", {
-        trigger: u(pe),
-        terminal_width_bucket: u(P1o(ne)),
+        trigger: fromEnum(pe),
+        terminal_width_bucket: fromEnum(P1o(ne)),
       }));
   }
 }
 function P1o(w) {
-  if (w < qZ) return "under_110";
-  if (w < uPt) return "110_to_143";
+  if (w < DIFF_SIDEBAR_MIN_COLS) return "under_110";
+  if (w < DIFF_SIDEBAR_AUTO_OPEN_MIN_COLS) return "110_to_143";
   if (w < 200) return "144_to_199";
   return "200_plus";
 }
@@ -90789,7 +90789,7 @@ function Nde(dw, M1o) {
   if (A1o[3] !== dw || A1o[4] !== DQe || A1o[5] !== IQe)
     ((D1o = () => {
       let DSi = E1o.current;
-      if (((E1o.current = dw), DSi && !dw)) j8(DQe, IQe);
+      if (((E1o.current = dw), DSi && !dw)) resetReplTabToConvo(DQe, IQe);
     }),
       (N1o = [dw, DQe, IQe]),
       (A1o[3] = dw),
@@ -90836,10 +90836,10 @@ function Lde(LSi) {
       if (!Ta() || jD) {
         return;
       }
-      if (!fPt(Sx)) {
+      if (!shouldAutoOpenDiffSidebar(Sx)) {
         return;
       }
-      (pPt(mw), $D(qWo));
+      (markReplDiffPanelAutoOpen(mw), $D(qWo));
     }),
       (Zq[0] = Jq),
       (Zq[1] = Sx),
@@ -90880,28 +90880,28 @@ function Lde(LSi) {
   )
     ((B1o = () => {
       if (bx !== "diff") {
-        if (!bye()) {
+        if (!diffSidebarHasGitRepo()) {
           NQe({
             key: "diff-sidebar-no-git",
             kind: "feedback",
-            text: dPt,
+            text: DIFF_SIDEBAR_NO_GIT_MESSAGE,
             priority: "immediate",
             timeoutMs: 3000,
           });
           return;
         }
-        if (Sx < qZ) {
+        if (Sx < DIFF_SIDEBAR_MIN_COLS) {
           NQe({
             key: "diff-sidebar-too-narrow",
             kind: "feedback",
-            text: `Resize your terminal to at least ${qZ} columns to show the diff panel`,
+            text: `Resize your terminal to at least ${DIFF_SIDEBAR_MIN_COLS} columns to show the diff panel`,
             priority: "immediate",
             timeoutMs: 3000,
           });
           return;
         }
       }
-      mPt(mw, $D, bx, eHt);
+      toggleReplDiffTab(mw, $D, bx, eHt);
     }),
       (Zq[15] = NQe),
       (Zq[16] = Sx),
@@ -90958,7 +90958,7 @@ function RYe(USi) {
     nHt = Ye().host,
     { storageV5: j6 } = _e(),
     $Si = U(KWo),
-    [qD, WSi] = d(hPt),
+    [qD, WSi] = d(getPersistedDiffBaseMode),
     {
       stats: GP,
       files: bw,
@@ -90970,7 +90970,7 @@ function RYe(USi) {
     } = Sde($Si, !0, qD),
     W1o;
   if (ou[0] !== qD || ou[1] !== j6)
-    ((W1o = () => WSi(_Pt(qD, j6))), (ou[0] = qD), (ou[1] = j6), (ou[2] = W1o));
+    ((W1o = () => WSi(cycleDiffBaseMode(qD, j6))), (ou[0] = qD), (ou[1] = j6), (ou[2] = W1o));
   else W1o = ou[2];
   let q1o;
   if (ou[3] === p) ((q1o = { context: "DiffPanel" }), (ou[3] = q1o));
@@ -91069,7 +91069,7 @@ function RYe(USi) {
   wQe(HSi, eWo, X1o ? void 0 : jSi, oWo);
   let [Pde, nWo] = d(!1),
     rWo;
-  if (ou[26] !== UQe) ((rWo = tr(UQe) ?? UQe), (ou[26] = UQe), (ou[27] = rWo));
+  if (ou[26] !== UQe) ((rWo = findGitRoot(UQe) ?? UQe), (ou[26] = UQe), (ou[27] = rWo));
   else rWo = ou[27];
   let dHt = rWo,
     iWo;
@@ -91079,7 +91079,7 @@ function RYe(USi) {
     let lWo = [];
     let cWo = [];
     for (const K6 of bw) {
-      if (vi(qHt(dHt, K6.path), iHt, "read", "deny") !== null) {
+      if (matchingRuleForInput(qHt(dHt, K6.path), iHt, "read", "deny") !== null) {
         aWo++;
         continue;
       }
@@ -91243,7 +91243,7 @@ function RYe(USi) {
   else kWo = ou[53];
   let tYe;
   if (ou[54] !== nHt || ou[55] !== sB || ou[56] !== j6)
-    ((tYe = e(MYe, { onClose: () => gPt(nHt, sB, j6) })),
+    ((tYe = e(MYe, { onClose: () => closeReplDiffTab(nHt, sB, j6) })),
       (ou[54] = nHt),
       (ou[55] = sB),
       (ou[56] = j6),
@@ -91620,7 +91620,7 @@ function PYe(hki) {
                   children: [
                     e(t, {
                       dimColor: !0,
-                      children: Ob(hYe.path, Math.max(Y6 - 12, 8)),
+                      children: truncateStartToWidth(hYe.path, Math.max(Y6 - 12, 8)),
                     }),
                     e(o, { flexGrow: 1 }),
                     e(Wm, { added: hYe.linesAdded, removed: hYe.linesRemoved }),
@@ -91770,7 +91770,7 @@ function IYe(vki) {
   const jHt = Math.max(wki - 12, 8);
   let OWo;
   if (Z6[0] !== FHt || Z6[1] !== jHt)
-    ((OWo = Ob(FHt, jHt)), (Z6[0] = FHt), (Z6[1] = jHt), (Z6[2] = OWo));
+    ((OWo = truncateStartToWidth(FHt, jHt)), (Z6[0] = FHt), (Z6[1] = jHt), (Z6[2] = OWo));
   else OWo = Z6[2];
   let $Ht = OWo,
     FWo,
@@ -91821,7 +91821,7 @@ function EYe() {
   let w = U((me) => me.fileHistory.trackSequence ?? 0),
     I = U((me) => me.replTab),
     ne = Q();
-  return V(() => bye(), [ne, w, I]);
+  return V(() => diffSidebarHasGitRepo(), [ne, w, I]);
 }
 function mGo(g_i) {
   return g_i.replTab;
@@ -91885,7 +91885,7 @@ function EGo(R_i) {
   return R_i === "transcript" ? "prompt" : "transcript";
 }
 function DGo(_error, dGo) {
-  f(
+  logFeatureBad(
     "repl_diff_read",
     "render_threw",
     dGo.componentStack
@@ -91958,7 +91958,7 @@ function w5e(SCi) {
     ng = sO(),
     gV = ng === "fullscreen",
     { storageV5: Bc, credentials: jb } = _e(),
-    sjt = k0e(),
+    sjt = useFleetNudgeStore(),
     kw = qc(),
     Jd = !!YP,
     pqo;
@@ -92386,7 +92386,7 @@ function w5e(SCi) {
         sessionHooks: p4,
         initialMessages: Iy,
         initialMainThreadAgentDefinition: t4,
-        resetReplTabToConvo: () => j8(mc.host, Tc),
+        resetReplTabToConvo: () => resetReplTabToConvo(mc.host, Tc),
         resetTurnEventTail: () => YD.reset(),
         clock: $b,
         sandbox: yjt,
@@ -93454,7 +93454,7 @@ function w5e(SCi) {
                 fromKeybinding: !0,
                 inputModeOverride: "prompt",
               })
-              .catch(h),
+              .catch(logError),
             !0
           );
         }),
@@ -93823,7 +93823,7 @@ function w5e(SCi) {
   )
     (($4 =
       ajt === "diff" &&
-      Sit({
+      diffPanelCanMount({
         fullscreen: gV,
         columns: qde,
         isThinClient: o_,
