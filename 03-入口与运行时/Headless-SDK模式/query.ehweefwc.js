@@ -14,7 +14,7 @@ import { Ie, zn } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { createAbortController } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { takeLastCodeUnits, isWellFormed } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { getClaudeConfigDir, parseProjectDirName } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, parseProjectDirName } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { otelApiModule, redactSecretsInText, isCredentialInvalidationReason } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, J1, x_e, ge, l, A, Jr, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";

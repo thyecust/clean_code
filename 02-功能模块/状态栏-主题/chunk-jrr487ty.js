@@ -30,7 +30,7 @@ import { getSpinnerFrames, getSpinnerPingPongFrames, quantizeToEighth, getPulseP
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useRenderHook, useRenderInput, ansiPrimitives, StatusRow, jA } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { shouldExcludeDefaultTips } from "../../01-核心基础设施/设置-配置/spinner-tips-override.js";
-import { activeTimeTracker } from "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
+import { activeTimeTracker } from "../使用时长-Wellbeing/使用时长-Wellbeing.0s8r3ncd.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { pickRandom, getSpinnerVerbs, useSpinnerState } from "../Hooks钩子/spinner-store.js";
 import { ProgressBar } from "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
@@ -38,7 +38,7 @@ import { useSettings } from "../../01-核心基础设施/共享小工具-未细�
 import { useReducedMotion } from "../../01-核心基础设施/共享小工具-未细化/reduced-motion.js";
 import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { SHIMMER_STEP_MS, getShimmerPosition, splitTextForShimmer } from "../Bridge-RemoteControl/remote-control-ui-strings.js";
+import { SHIMMER_STEP_MS, getShimmerPosition, splitTextForShimmer } from "../远程控制-Bridge/remote-control-ui-strings.js";
 import { E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";

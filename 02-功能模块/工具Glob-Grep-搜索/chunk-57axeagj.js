@@ -13,14 +13,14 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { resolvePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
-import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel, findGitRoot, gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
+import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel, findGitRoot, gitExe } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { yieldToEventLoop, YIELD_BUDGET_MS, FuzzyFilePathIndex } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { nodeIgnoreModule, filterCompilableIgnorePatterns, splitNonEmptyLines } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { nodeIgnoreModule, filterCompilableIgnorePatterns, splitNonEmptyLines } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { getEffectiveFileSuggestion, runRipgrepSearch, MARKDOWN_SUBDIRS, getMarkdownFiles, createBaseHookInput, executeFileSuggestionCommand } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";

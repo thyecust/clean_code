@@ -10,7 +10,7 @@
 import { An, jf } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { j1, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { getLogDisplayTitle } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getLogDisplayTitle } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
@@ -20,7 +20,7 @@ import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { jo } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
-import { getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getBranch } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getStringWidth, truncateToWidth, formatRelativeTimeAgo, formatLogMetadata } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { listGitWorktrees } from "./chunk-mkmy4cx2.js";
 import { Fuse } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -45,9 +45,9 @@ import {
   loadFullLog,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
-import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { WelcomeChrome, ConversationMessageList } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { WelcomeChrome, ConversationMessageList } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";

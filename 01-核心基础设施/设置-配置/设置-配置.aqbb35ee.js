@@ -65,7 +65,7 @@ import { sleep } from "../共享小工具-未细化/async-timeout-utils.js";
 import { STORAGE_KEYS, serializeStorageKey } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getTelemetryCode, describeStorageError, jsonStringify, jsonParse, deepClone, resolvePathInfo, getFsSurface, sanitizeUrl, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getClaudeConfigDir, isSameAsConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, isSameAsConfigDir } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { capitalize, pluralize, truncateToCodeUnits, isWellFormed, removeLoneSurrogates, beforeFirst, countOccurrences, escapeAllControlCharacters } from "../核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { PROMPT_CACHE_TTL_VALUES, env as a } from "./chunk-zqr5ctyf.js";

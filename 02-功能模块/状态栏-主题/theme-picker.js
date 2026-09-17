@@ -10,7 +10,7 @@
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { useActiveKeybindingContext } from "../键位绑定(Keybindings)/keybinding-context.js";
+import { useActiveKeybindingContext } from "../键位绑定-Keybindings/keybinding-context.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
@@ -23,9 +23,9 @@ import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { gracefulShutdown } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { getSyntaxHighlightOverrideSource, getSyntaxThemeDescriptor } from "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
-import { StructuredDiff } from "../Diff引擎/structured-diff.js";
+import { StructuredDiff } from "../差异引擎-Diff/structured-diff.js";
 import { DashedBorderBox } from "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";

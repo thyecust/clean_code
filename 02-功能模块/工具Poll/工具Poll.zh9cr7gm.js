@@ -15,7 +15,7 @@ import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { isFromCurrentAgent, clearCcrTurnIdOnMismatch } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
-import { POLL_TOOL_NAME, NO_PENDING_EVENTS_RESULT, POLL_TOOL_DESCRIPTION, EVENT_AUTHORITY_VALUES, isPollEventChannelEnabled, getPollEventEnvelope, formatEventDelivery, settleDeliveredPollEvents, getAsyncEvalDispatcher } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+import { POLL_TOOL_NAME, NO_PENDING_EVENTS_RESULT, POLL_TOOL_DESCRIPTION, EVENT_AUTHORITY_VALUES, isPollEventChannelEnabled, getPollEventEnvelope, formatEventDelivery, settleDeliveredPollEvents, getAsyncEvalDispatcher } from "../通道集成-Slack/通道集成-Slack.wnn25q3j.js";
 import { s, T, v, c, Qe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var d = createLazyValue(() => Qe({})),
   f = createLazyValue(() =>

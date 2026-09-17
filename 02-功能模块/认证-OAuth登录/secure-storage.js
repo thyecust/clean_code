@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { fileSuffixForOauthConfig } from "./chunk-9g2q4bjq.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -17,8 +17,8 @@ import { jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../0
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { CREDENTIALS_SUFFIX, getSecureStorageDir, getKeychainServiceName, getKeychainAccountName, KEYCHAIN_CACHE_TTL_MS, getKeychainState, KEYCHAIN_READ_FAILURE_BACKOFF_MS, invalidateKeychainCache } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import { Bf } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
-import { execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING, execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
-import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING, execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
+import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { homedir } from "os";
 import { join as x } from "path";
 var SECURE_STORAGE_READ_FAILED_SENTINEL = Symbol("secureStorage.READ_FAILED");

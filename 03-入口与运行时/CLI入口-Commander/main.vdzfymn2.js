@@ -52,14 +52,14 @@ import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小�
 import { lit as S, fromEnum, fromEnumOpt, fromEnumArr } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Iu, dt, ge, l, A, Gw, EZ, hv, Bp, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, jsonStringify, changeWorkingDirectory, redactSensitiveKeys, sanitizeUrl, initDefaultDebugLog, setHasFormattedOutput, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { parseConfigInteger, parseNumericValue, getClaudeConfigDir, hasNodeOption, isSimpleMode, isSafeMode, isSupervisedMode, parseEnvAssignments } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseConfigInteger, parseNumericValue, getClaudeConfigDir, hasNodeOption, isSimpleMode, isSafeMode, isSupervisedMode, parseEnvAssignments } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { repeatString } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import "../../00-第三方库/zod/zod.3g334xwq.js";
 import { isRunningWithBun, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
-import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-0d0nn4ae.js";
 import { initHostState, parseSessionStartMode } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { sanitizeAnalyticsId, profileCheckpoint, profileReport } from "./startup-profiler.js";
@@ -125,13 +125,13 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
-import "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
+import "../../02-功能模块/工作树-Git/git-exec-hardening.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
-import { isRemoteActive, getIsGit, getBranch, getWorktreeCount } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isRemoteActive, getIsGit, getBranch, getWorktreeCount } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getStringWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { isTranscriptFileResumeArg } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
-import "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import "../../02-功能模块/Teammates团队/storage-keys.js";
 import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
@@ -180,7 +180,7 @@ import { isReviewOriginSession, hasCredentialDescriptor, getOAuthToken, getGatew
 import "../../02-功能模块/认证-OAuth登录/secure-storage.js";
 import "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import "../../01-核心基础设施/核心工具-进程与信号/sdk-memory-summary.js";
-import "../../02-功能模块/Git-Worktree/git-repository-detection.js";
+import "../../02-功能模块/工作树-Git/git-repository-detection.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
@@ -191,7 +191,7 @@ import { USER_INTENT_SETTING_KEYS, resolveSetting } from "../../02-功能模块/
 import { isAgentsFleetEnabled, isPastSessionsExperimentEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { printCliError, cliError, cliOk, cliWarn, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { buildCliCommand } from "../../02-功能模块/插件系统/plugin-system-core.js";
-import "../../02-功能模块/ClaudeinChrome/claude-in-chrome-host.js";
+import "../../02-功能模块/浏览器集成-ClaudeinChrome/claude-in-chrome-host.js";
 import { isClaudeMdLoadingDisabled } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
 import "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
@@ -277,16 +277,16 @@ import "../../01-核心基础设施/共享小工具-未细化/host-state-store.j
 import "../../02-功能模块/Hooks钩子/chunk-z3433nr6.js";
 import "../../02-功能模块/Hooks钩子/chunk-bzqqe6xh.js";
 import "../../02-功能模块/插件系统/chunk-ajtn749s.js";
-import { getEffectivePermissionRules, getEffectiveAdditionalDirectories } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getEffectivePermissionRules, getEffectiveAdditionalDirectories } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { areSideloadFlagsDisabledByPolicy, sideloadFlagsBlockedMessage } from "../../02-功能模块/插件系统/plugin-source-policy.js";
 import "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import "../../02-功能模块/图片-截图-ComputerUse/computer-use-lock.js";
 import { isViolinWoodEnabled, isViolinWoodEnabledCached, isSettingsToCloudEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
-import "../../02-功能模块/Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
-import "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
+import "../../02-功能模块/通道集成-Slack/通道集成-Slack.wnn25q3j.js";
+import "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import "../../02-功能模块/远程控制-Bridge/chunk-5ne99rq3.js";
 import "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
 import "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
@@ -308,35 +308,35 @@ import "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import "../../02-功能模块/图表-Mermaid/chunk-743atbtj.js";
 import "../核心应用-Agent循环/chunk-h3cty6gp.js";
-import { primePlanSlugCollisions, getPlansDirectory } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { primePlanSlugCollisions, getPlansDirectory } from "../../02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import "../../02-功能模块/Teammates团队/transcript-paths.js";
-import { resolveCcrAutoConnectDefault } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
+import { resolveCcrAutoConnectDefault } from "../../02-功能模块/远程控制-Bridge/chunk-9estzwf5.js";
 import "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
 import { isExiting, commitExit } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
 import "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
-import "../../02-功能模块/Bridge-RemoteControl/push-notification-tool.js";
+import "../../02-功能模块/远程控制-Bridge/push-notification-tool.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import "../../02-功能模块/Teammates团队/list-agents-tool-constants.js";
 import "../../02-功能模块/后台任务-Shell管理/scheduled-tasks.js";
-import "../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js";
+import "../../02-功能模块/定时任务-Cron/chunk-mk3zm4ew.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
-import "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
-import "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import "../../02-功能模块/制品发布-Artifact/chunk-rr78st95.js";
+import "../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import "../../02-功能模块/权限系统/chunk-1y2g140m.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import "../../02-功能模块/后台任务-Shell管理/task-output.js";
-import "../../02-功能模块/Workflow编排/chunk-0t0sve49.js";
+import "../../02-功能模块/编排-Workflow/chunk-0t0sve49.js";
 import "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
-import "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import "../../02-功能模块/跨会话消息(UDS)/chunk-9kzxq41e.js";
+import "../../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js";
+import "../../02-功能模块/跨会话消息-UDS/chunk-9kzxq41e.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-reporting-eligibility.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-6kad94y1.js";
 import { reportError } from "../../01-核心基础设施/HTTP-网络层/error-tracking-report.js";
-import { latchTuiTrialFromEnv } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { latchTuiTrialFromEnv } from "../../02-功能模块/终端环境探测-TUI-tmux/终端环境探测-TUI-tmux.5pkb0sjc.js";
 import "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { formatContinuedInMessage } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
 import "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
@@ -355,8 +355,8 @@ import "../../01-核心基础设施/共享小工具-未细化/plugin-eval-quickr
 import { buildClaudeAiSessionUrl } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { isAgentSwarmsEnabled } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
-import "../../02-功能模块/Bridge-RemoteControl/chunk-tyce0p0b.js";
-import "../../02-功能模块/Bridge-RemoteControl/code-session-api.js";
+import "../../02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js";
+import "../../02-功能模块/远程控制-Bridge/code-session-api.js";
 import "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-0qtt3z52.js";
@@ -368,12 +368,12 @@ import "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { foldRestricted, cliCarriesSessionConfig } from "../../02-功能模块/权限系统/fork-restricted-launch-flags.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
 import "../../02-功能模块/语音-音频/loop-wakeup-scheduler.js";
-import "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import "../../02-功能模块/键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/ansi-text-primitives.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
 import "../../02-功能模块/图片-截图-ComputerUse/computer-use-session.js";
-import { SessionStateStore } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
-import "../../02-功能模块/Bridge-RemoteControl/remote-control-messages.js";
+import { SessionStateStore } from "../../02-功能模块/远程控制-Bridge/chunk-1yq098a7.js";
+import "../../02-功能模块/远程控制-Bridge/remote-control-messages.js";
 import "../../01-核心基础设施/共享小工具-未细化/c4e-upsell-command-gate.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-sdk-generation.js";
 import "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
@@ -384,12 +384,12 @@ import { migrateChangelogFromConfig, PLUGIN_SUBCOMMAND_SPECS } from "../../02-�
 import { setSessionPromptLaunchWarning } from "../../01-核心基础设施/共享小工具-未细化/prompt-input-store.js";
 import "../../02-功能模块/上下文压缩-Compact/context-usage.js";
 import "../../02-功能模块/工具Monitor/工具Monitor.981fw9dy.js";
-import "../../02-功能模块/Artifact发布-渲染/chunk-qpgskeea.js";
-import "../../02-功能模块/Artifact发布-渲染/artifact-reply-yield.js";
-import "../../02-功能模块/Artifact发布-渲染/chunk-p1dkvpxj.js";
+import "../../02-功能模块/制品发布-Artifact/chunk-qpgskeea.js";
+import "../../02-功能模块/制品发布-Artifact/artifact-reply-yield.js";
+import "../../02-功能模块/制品发布-Artifact/chunk-p1dkvpxj.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js";
-import "../../02-功能模块/Artifact发布-渲染/artifact-comment-monitor-intent.js";
-import "../../02-功能模块/Artifact发布-渲染/chunk-kshc4v5t.js";
+import "../../02-功能模块/制品发布-Artifact/artifact-comment-monitor-intent.js";
+import "../../02-功能模块/制品发布-Artifact/chunk-kshc4v5t.js";
 import {
   awaitMcpPolicyColdStart,
   getPendingMcpServers,
@@ -443,21 +443,21 @@ import "../../02-功能模块/会话-历史-恢复/session-title.js";
 import { createSessionMetricsStore, runExitHandoff, subscribeToRefusalFallbackRestoreSync, applyDisabledModePolicies, syncAdditionalWorkingDirectories, createBaseAppState, EMPTY_PROJECTS_SELF_IDENTITY, AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { TIER_LABELS, withProbeDeadline, apply3PDefaultFallbacks as Bnn } from "../../02-功能模块/Bedrock-Vertex/apply-3p-default-fallbacks.js";
+import "../../02-功能模块/状态管理-AppState/状态管理-AppState.wyzjbwp5.js";
+import { TIER_LABELS, withProbeDeadline, apply3PDefaultFallbacks as Bnn } from "../../02-功能模块/模型接入-Bedrock-Vertex/apply-3p-default-fallbacks.js";
 import "../../01-核心基础设施/共享小工具-未细化/additional-working-directories.js";
 import { registerToolHosts } from "../../01-核心基础设施/共享小工具-未细化/chunk-dypysnt9.js";
-import { shouldAwaitPolicyLimitsOnStartup, waitForPolicyLimitsToLoad, loadPolicyLimits, refreshPolicyLimits } from "../../02-功能模块/策略限制(PolicyLimits)/policy-limits-client.js";
+import { shouldAwaitPolicyLimitsOnStartup, waitForPolicyLimitsToLoad, loadPolicyLimits, refreshPolicyLimits } from "../../02-功能模块/策略限制-PolicyLimits/policy-limits-client.js";
 import { markNoConsentSurface, isRemoteSettingsFetchPending, initializeRemoteManagedSettings, tryRefreshRemoteManagedSettings, awaitRemoteSettingsRefreshAfterLogin, validateRemoteManagedSettingsLoad, stopRemoteSettingsPoller } from "../../01-核心基础设施/设置-配置/remote-managed-settings.js";
 import "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
 import { capturePolicySnapshot, hasPolicyDiverged } from "../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js";
-import { isModelExplicitlyConfigured, restoreSessionFromTranscript } from "../../02-功能模块/Git-Worktree/resume-session-state.js";
+import { isModelExplicitlyConfigured, restoreSessionFromTranscript } from "../../02-功能模块/工作树-Git/resume-session-state.js";
 import { stopCapturingEarlyInput, consumeEarlyInput, hasEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
 import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工具-未细化/base-render-options.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
-import "../会话UI(REPL)/notification-queue.js";
+import "../会话UI-REPL/notification-queue.js";
 import "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
@@ -468,7 +468,7 @@ import "../../01-核心基础设施/共享小工具-未细化/attach-state-track
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kk7p3hsm.js";
 import { SHOW_CURSOR } from "../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
 import "../../01-核心基础设施/共享小工具-未细化/terminal-querier.js";
-import "../../02-功能模块/键位绑定(Keybindings)/keybinding-context.js";
+import "../../02-功能模块/键位绑定-Keybindings/keybinding-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
 import "../../02-功能模块/MCP客户端/mcp-discovery-cache.js";
@@ -476,7 +476,7 @@ import "../../02-功能模块/Hooks钩子/spinner-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import "../../02-功能模块/工具TodoWrite-Tasks/tasks-v2-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/worktree-state-store.js";
-import "../../02-功能模块/Workflow编排/chunk-va9cgbfs.js";
+import "../../02-功能模块/编排-Workflow/chunk-va9cgbfs.js";
 import "../../02-功能模块/MCP客户端/mcp-task-metadata.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-s1hpfa12.js";
@@ -492,21 +492,21 @@ import "../../01-核心基础设施/共享小工具-未细化/publish-permission
 import "../../02-功能模块/权限系统/inherit-permission-mode-flag.js";
 import "../../02-功能模块/Skills技能/Skills技能.dpy2ket5.js";
 import { registerClientDataGetters } from "../../02-功能模块/上下文压缩-Compact/chunk-npckj9cm.js";
-import "../../02-功能模块/Artifact发布-渲染/artifact-db.js";
-import "../../02-功能模块/Artifact发布-渲染/chunk-01jnk0v2.js";
-import "../../02-功能模块/Artifact发布-渲染/chunk-pdd7kz7p.js";
-import "../../02-功能模块/Artifact发布-渲染/artifact-asset-store.js";
-import "../../02-功能模块/Artifact发布-渲染/chunk-b6k1z7an.js";
+import "../../02-功能模块/制品发布-Artifact/artifact-db.js";
+import "../../02-功能模块/制品发布-Artifact/chunk-01jnk0v2.js";
+import "../../02-功能模块/制品发布-Artifact/chunk-pdd7kz7p.js";
+import "../../02-功能模块/制品发布-Artifact/artifact-asset-store.js";
+import "../../02-功能模块/制品发布-Artifact/chunk-b6k1z7an.js";
 import "../../01-核心基础设施/共享小工具-未细化/workshop-telemetry.js";
-import "../../02-功能模块/Artifact发布-渲染/artifact-prompt-paragraphs.js";
-import "../../02-功能模块/CodeReview/ultrareview-tips.js";
+import "../../02-功能模块/制品发布-Artifact/artifact-prompt-paragraphs.js";
+import "../../02-功能模块/代码审查/ultrareview-tips.js";
 import "../../02-功能模块/后台任务-Shell管理/daemon-lock.js";
-import "../../02-功能模块/DesignSync/register-design-skill.js";
-import "../../02-功能模块/CodeReview/pr-review-target.js";
+import "../../02-功能模块/设计同步/register-design-skill.js";
+import "../../02-功能模块/代码审查/pr-review-target.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js";
 import "../../02-功能模块/自动更新-安装/auto-updater.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-hrfnq7gz.js";
-import { shouldShowGroveNotice } from "../../02-功能模块/Grove-隐私设置/chunk-a4mdm49v.js";
+import { shouldShowGroveNotice } from "../../02-功能模块/隐私设置-Grove/chunk-a4mdm49v.js";
 import "../../02-功能模块/斜杠命令-框架/chunk-a4vej95c.js";
 import "../../02-功能模块/用量额度-限额/chunk-1bfn62xh.js";
 import "../../01-核心基础设施/设置-配置/spinner-tips-override.js";
@@ -520,7 +520,7 @@ import "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.
 import "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-keybinding-chord-text.js";
-import "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
+import "../../02-功能模块/键位绑定-Keybindings/keybinding-display.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
@@ -562,12 +562,12 @@ import "../../02-功能模块/MCP客户端/mcp-server-state-messages.js";
 import "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
 import "../../02-功能模块/Teammates团队/onboarding-guide-api.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-531ast3t.js";
-import "../../02-功能模块/Bridge-RemoteControl/bridge-effort-sync.js";
+import "../../02-功能模块/远程控制-Bridge/bridge-effort-sync.js";
 import "../../01-核心基础设施/共享小工具-未细化/coo-context-properties.js";
 import "../../01-核心基础设施/共享小工具-未细化/design-feature-gates.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
 import "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
-import "../../02-功能模块/Workflow编排/workflow-snapshots.js";
+import "../../02-功能模块/编排-Workflow/workflow-snapshots.js";
 import "../../01-核心基础设施/设置-配置/shell-allow-rule-analytics.js";
 import "../../01-核心基础设施/共享小工具-未细化/websocket-subprotocols.js";
 import "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
@@ -583,7 +583,7 @@ import "../../01-核心基础设施/共享小工具-未细化/json-file-store.js
 import "../../02-功能模块/插件系统/chunk-33bdfgmx.js";
 import "../../02-功能模块/MCP客户端/mcp-skills-extension.js";
 import "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import "../../02-功能模块/DesignSync/design-sync-tool-metadata.js";
+import "../../02-功能模块/设计同步/design-sync-tool-metadata.js";
 import "../../02-功能模块/MCP客户端/mcp-task-id.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-timeouts.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js";
@@ -604,13 +604,13 @@ import { createStore } from "../../01-核心基础设施/共享小工具-未细�
 import "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
 import "../../02-功能模块/权限系统/bypass-permissions-mode-policy.js";
 import "../../01-核心基础设施/共享小工具-未细化/expand-tabs.js";
-import "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
+import "../../02-功能模块/远程控制-Bridge/chunk-4zd60pbm.js";
 import { isFlagPresent, isNonInteractiveMode, findArgIndex, isCcProtocolUrl, isHelpRequested } from "../../02-功能模块/上下文压缩-Compact/cli-args.js";
 import "../../02-功能模块/Teammates团队/chunk-enjekn9t.js";
 import "../../01-核心基础设施/共享小工具-未细化/safe-file-read.js";
 import { serializeAsyncCalls } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
 import "../../01-核心基础设施/共享小工具-未细化/federation-cache-dir.js";
-import "../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
+import "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-p991cddr.js";
 import { mL, s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import "../../01-核心基础设施/共享小工具-未细化/git-remote-url.js";
 import "../../01-核心基础设施/共享小工具-未细化/user-prompt-text.js";
@@ -3769,7 +3769,7 @@ function ia(
       if (a.CLAUBBIT || !(await shouldShowExternalIncludesDialog(v, D))) return null;
       let V = getExternalInstructionIncludes(await getSessionMemoryFiles(v, !0, D, N)),
         { ClaudeMdExternalIncludesDialog: q } =
-          await import("../../02-功能模块/Memory-CLAUDE.md/ClaudeMdExternalIncludesDialog.5tp7a8xn.js");
+          await import("../../02-功能模块/记忆-CLAUDE.md/ClaudeMdExternalIncludesDialog.5tp7a8xn.js");
       return e(q, {
         onDone: () => j(),
         isStandaloneDialog: !0,
@@ -3791,7 +3791,7 @@ function ia(
     },
     async (j) => {
       if (!(await shouldShowGroveNotice(D, N))) return null;
-      let { GroveDialog: V } = await import("../../02-功能模块/Grove-隐私设置/PrivacySettingsDialog.xfhvxg8z.js");
+      let { GroveDialog: V } = await import("../../02-功能模块/隐私设置-Grove/PrivacySettingsDialog.xfhvxg8z.js");
       return e(V, {
         showIfAlreadyViewed: !1,
         location: I.onboardingShown ? "onboarding" : "policy_update_modal",
@@ -3822,7 +3822,7 @@ function ia(
       let { resolvePowerupDiscoveryArm: V } =
         await import("../../01-核心基础设施/共享小工具-未细化/chunk-aeg1pn1f.js");
       if (V() !== "step") return null;
-      let { PowerupDiscoveryStep: q } = await import("../../02-功能模块/新手引导(Onboarding)/PowerupDiscoveryStep.p1f3ce53.js");
+      let { PowerupDiscoveryStep: q } = await import("../../02-功能模块/新手引导-Onboarding/PowerupDiscoveryStep.p1f3ce53.js");
       return e(q, { onDone: () => j() });
     },
     (j) => {
@@ -3887,7 +3887,7 @@ function ia(
     },
     (j) => {
       if (!T || getGlobalConfig().hasCompletedClaudeInChromeOnboarding) return null;
-      return import("../../02-功能模块/ClaudeinChrome/ClaudeInChromeOnboarding.gf6zmqr4.js").then(
+      return import("../../02-功能模块/浏览器集成-ClaudeinChrome/ClaudeInChromeOnboarding.gf6zmqr4.js").then(
         ({ ClaudeInChromeOnboarding: V }) => e(V, { onDone: () => j() }),
       );
     },
@@ -3943,7 +3943,7 @@ function ia(
           ),
           null
         );
-      let { ChromeAutoEnableDialog: $e } = await import("../../02-功能模块/ClaudeinChrome/ChromeAutoEnableDialog.vfs4tecm.js");
+      let { ChromeAutoEnableDialog: $e } = await import("../../02-功能模块/浏览器集成-ClaudeinChrome/ChromeAutoEnableDialog.vfs4tecm.js");
       return e($e, {
         onDone: (ut) => {
           ((I.claudeInChromeAccepted = ut), j());
@@ -4008,12 +4008,12 @@ function Dn(v, k) {
     try {
       let [T, { upgradeKey: x }] = await Promise.all([
           v === "bedrock"
-            ? import("../../02-功能模块/Bedrock-Vertex/seedEnvDefaultForUserPin.qgx0v22d.js").then((W) =>
+            ? import("../../02-功能模块/模型接入-Bedrock-Vertex/seedEnvDefaultForUserPin.qgx0v22d.js").then((W) =>
                 withProbeDeadline("bedrock-upgrade", W.findBedrockUpgradeCandidates()).then(
                   (K) => K.map((j) => ({ ...j, toId: j.toBedrockId })),
                 ),
               )
-            : import("../../02-功能模块/Bedrock-Vertex/seedEnvDefaultForUserPin.jmem3wk1.js").then((W) =>
+            : import("../../02-功能模块/模型接入-Bedrock-Vertex/seedEnvDefaultForUserPin.jmem3wk1.js").then((W) =>
                 withProbeDeadline("vertex-upgrade", W.findVertexUpgradeCandidates()).then(
                   (K) => K.map((j) => ({ ...j, toId: j.toVertexId })),
                 ),
@@ -4031,7 +4031,7 @@ function Dn(v, k) {
         { ThirdPartyModelUpgradeDialog: I },
       ] = await Promise.all([
         import("../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js"),
-        import("../../02-功能模块/Bedrock-Vertex/ThirdPartyModelUpgradeDialog.gcjbt04b.js"),
+        import("../../02-功能模块/模型接入-Bedrock-Vertex/ThirdPartyModelUpgradeDialog.gcjbt04b.js"),
       ]);
       async function L(W, K) {
         let j = fromEnum(W.tier);
@@ -4349,7 +4349,7 @@ async function Gn(v, k) {
   );
 }
 async function Yn(v, k) {
-  let { RemoteHomeSettingsDialog: O } = await import("../../02-功能模块/Memory-CLAUDE.md/chunk-54xx04er.js");
+  let { RemoteHomeSettingsDialog: O } = await import("../../02-功能模块/记忆-CLAUDE.md/chunk-54xx04er.js");
   return qt(v, (R) =>
     e(O, {
       configHome: k.configHome,
@@ -5539,7 +5539,7 @@ function ki(v) {
       initDefaultDebugLog({ storageV5: R });
     if ((profileCheckpoint("preAction_after_init"), !a.CLAUDE_CODE_DISABLE_TERMINAL_TITLE))
       process.title = "claude";
-    let { initSinks: K } = await import("../../02-功能模块/Bridge-RemoteControl/initSinks.6cfazjmq.js");
+    let { initSinks: K } = await import("../../02-功能模块/远程控制-Bridge/initSinks.6cfazjmq.js");
     (K(), profileCheckpoint("preAction_after_sinks"));
     let j = performance.now(),
       V = await getInitializeRequestResult();
@@ -6691,7 +6691,7 @@ async function ja(v) {
     Ve = Bn(!1),
     { getFpsMetrics: Tt, stats: Bt } = Ve;
   checkFullscreenBootCanary({ storageV5: fe });
-  let { createRoot: Je } = await import("../../02-功能模块/Daemon-守护服务/createRoot.pw1402cq.js"),
+  let { createRoot: Je } = await import("../../02-功能模块/守护服务-Daemon/createRoot.pw1402cq.js"),
     De = await Je(Ve.renderOptions, { storageV5: fe });
   (logEvent("tengu_timer", {
     event: S("startup"),
@@ -6768,7 +6768,7 @@ ${Rt}`
       le =
         "--teleport sessions start without Remote Control. Use /remote-control to enable it.";
     else {
-      let { getBridgeDisabledReason: mt } = await import("../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js");
+      let { getBridgeDisabledReason: mt } = await import("../../02-功能模块/远程控制-Bridge/chunk-9estzwf5.js");
       le = await mt();
     }
     if (((Ue = le === null), le))
@@ -6845,7 +6845,7 @@ ${Le ? "--rc and --project ignored." : "--rc flag ignored."}`);
     (refreshPolicyLimits(),
       resetUserData(),
       refreshGrowthBookAfterAuthChange(),
-      import("../../02-功能模块/Bridge-RemoteControl/chunk-tyce0p0b.js").then(
+      import("../../02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js").then(
         (le) => (
           le.clearTrustedDeviceToken(),
           le.enrollTrustedDevice({ credentials: oe })
@@ -7374,9 +7374,9 @@ Usage: claude --cloud "your task description"`,
           { applyFleetViewHostWindowsEnv: zo },
           { createRoot: At },
         ] = await Promise.all([
-          import("../../02-功能模块/Fleet多会话视图/Fleet多会话视图.r6bvyjj3.js"),
+          import("../../02-功能模块/多会话视图-Fleet/多会话视图-Fleet.r6bvyjj3.js"),
           import("../../01-核心基础设施/共享小工具-未细化/FleetViewScreen.w73yzmz1.js"),
-          import("../../02-功能模块/Daemon-守护服务/createRoot.pw1402cq.js"),
+          import("../../02-功能模块/守护服务-Daemon/createRoot.pw1402cq.js"),
         ]);
         (zo(), (process.env.CLAUDE_AGENTS_SELECT = remoteRowId(Z)));
         let Mt = await At(getBaseRenderOptions(!1));
@@ -8109,7 +8109,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
         ));
       let [{ mountFleetView: ne }, { applyFleetViewHostWindowsEnv: Z }] =
         await Promise.all([
-          import("../../02-功能模块/Fleet多会话视图/mountFleetView.pctyn7re.js"),
+          import("../../02-功能模块/多会话视图-Fleet/mountFleetView.pctyn7re.js"),
           import("../../01-核心基础设施/共享小工具-未细化/FleetViewScreen.w73yzmz1.js"),
         ]);
       return (

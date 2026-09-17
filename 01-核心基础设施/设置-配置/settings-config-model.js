@@ -32,19 +32,19 @@ import {
   getCurrentProjectConfig,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { xg } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { xg } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "./chunk-zqr5ctyf.js";
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isSettingsSourceEnabled, CROSS_SESSION_INBOUND_MODES } from "./设置-配置.aqbb35ee.js";
-import { isRemoteActive } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isRemoteActive } from "../安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getInitialSettings, updateSettingsForSource, getSecuritySensitiveSettingWithSources, getAskUserQuestionTimeout, getDialogExpiry, getModelProposedGoalsSettingParsed } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { formatLabelText } from "../共享小工具-未细化/text-sanitization.js";
 import { PERMISSION_MODES, LEFT_ARROW_GLYPH, isSelectablePermissionMode, getExternalPermissionMode, parsePermissionModeOrDefault } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { NOTIFICATION_CHANNELS, REMOTE_HOME_SETTINGS_MODES, TIME_FORMATS, THEME_OPTIONS, MODEL_PROPOSED_GOALS_MODES } from "../../02-功能模块/图片-截图-ComputerUse/settings-option-values.js";
 import { MODEL_ALIASES } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { saveUserIntentSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
-import { isMonorepoWriteBlockEnabled, areOrgMemoryWriteGatesOpen, isOrgMemoryWriteOptedInForAccount, setOrgMemoryWriteOptIn, shouldOfferOrgMemoryReadSetting, setOrgMemoryReadEnabled } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isMonorepoWriteBlockEnabled, areOrgMemoryWriteGatesOpen, isOrgMemoryWriteOptedInForAccount, setOrgMemoryWriteOptIn, shouldOfferOrgMemoryReadSetting, setOrgMemoryReadEnabled } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { areWorkflowsEnabled, isWorkflowsEnabledByDefault } from "../共享小工具-未细化/workflow-feature-gates.js";
 import { createEffortLevel, unpinLaunchEffortLevels, applyEffortLevelChange } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import {
@@ -66,17 +66,17 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isCustomizationDisabled } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
 import { isSettingsToCloudEnabledCached } from "../共享小工具-未细化/chunk-97crm80y.js";
-import { sanitizeForRelay } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { isRemoteControlHardDisabled, isBridgeEnabled, getRemoteControlPolicyLockReason, applyRemoteControlToAppState } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
-import { isInputNeededPushEnabled } from "../../02-功能模块/Bridge-RemoteControl/push-notification-tool.js";
-import { resolveArtifactEnableSetting, getArtifactDefaultOn } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import { sanitizeForRelay } from "../../02-功能模块/远程控制-Bridge/chunk-5ne99rq3.js";
+import { isRemoteControlHardDisabled, isBridgeEnabled, getRemoteControlPolicyLockReason, applyRemoteControlToAppState } from "../../02-功能模块/远程控制-Bridge/chunk-9estzwf5.js";
+import { isInputNeededPushEnabled } from "../../02-功能模块/远程控制-Bridge/push-notification-tool.js";
+import { resolveArtifactEnableSetting, getArtifactDefaultOn } from "../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js";
 import { appStateStore } from "../共享小工具-未细化/terminal-focus-state.js";
 import { isAgentSwarmsEnabled } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
 import { isAgentsFleetEnabled } from "../共享小工具-未细化/agent-view-feature-gates.js";
-import { isUnattendedServingEnabledCached, writeUnattendedServingConsent, unattendedServingConsentView, managedSettingsForbidUnattendedServing, unattendedServingForbiddenBy, unattendedServingConsentMayHoldYes } from "../../02-功能模块/AutoMode-自动模式/unattended-serving-consent.js";
+import { isUnattendedServingEnabledCached, writeUnattendedServingConsent, unattendedServingConsentView, managedSettingsForbidUnattendedServing, unattendedServingForbiddenBy, unattendedServingConsentMayHoldYes } from "../../02-功能模块/自动模式-AutoMode/unattended-serving-consent.js";
 import { parseCustomThemeRef } from "../../02-功能模块/状态栏-主题/custom-themes.js";
-import { getEffectiveAutoContinueAtUsageLimit } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { syncPushPreferencesToServer } from "../../02-功能模块/推送通知(Push)/推送通知(Push).8ab67cqd.js";
+import { getEffectiveAutoContinueAtUsageLimit } from "../../02-功能模块/状态管理-AppState/状态管理-AppState.wyzjbwp5.js";
+import { syncPushPreferencesToServer } from "../../02-功能模块/推送通知-Push/推送通知-Push.8ab67cqd.js";
 import { DEFAULT_TEAMMATE_MODE, getCliTeammateModeOverride, clearCliTeammateModeOverride } from "../../02-功能模块/Teammates团队/chunk-88ybhavr.js";
 import { resetBackendDetection } from "../../02-功能模块/Teammates团队/backend-registry.js";
 import { sanitizeTimeFormatPattern } from "../核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";

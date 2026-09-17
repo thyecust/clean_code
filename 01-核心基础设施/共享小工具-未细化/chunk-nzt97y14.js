@@ -11,7 +11,7 @@ import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { getInitialSettings } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { MODEL_CONFIGS_BY_KEY } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { DEFAULT_3P_SONNET_KEY, DEFAULT_3P_HAIKU_KEY, firstPartyNameToCanonical } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isProbeWrittenTierDefault } from "../../02-功能模块/Bedrock-Vertex/apply-3p-default-fallbacks.js";
+import { isProbeWrittenTierDefault } from "../../02-功能模块/模型接入-Bedrock-Vertex/apply-3p-default-fallbacks.js";
 var u = Object.keys(MODEL_CONFIGS_BY_KEY);
 function tierConfig(e) {
   return {

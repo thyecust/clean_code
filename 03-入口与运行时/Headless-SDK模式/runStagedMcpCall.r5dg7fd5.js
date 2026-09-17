@@ -18,7 +18,7 @@ import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工�
 import { getPluginToolStagingDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { SYNCED_FILE_ROOT, WORKING_FILESTORE_PREFIX, MAX_WORKING_FILE_BYTES, relUnderSyncDir, getSyncedFile, writeLaneRowFromWorker } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { parseIsoTimestamp } from "../../02-功能模块/Memory-CLAUDE.md/chunk-3ehd7vx0.js";
+import { parseIsoTimestamp } from "../../02-功能模块/记忆-CLAUDE.md/chunk-3ehd7vx0.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { constants } from "fs";

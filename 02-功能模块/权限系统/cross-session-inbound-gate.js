@@ -19,7 +19,7 @@ import { PERMISSION_MODES } from "./chunk-e4pfvp7x.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { MCP_SEND_MESSAGE_ORIGIN, SLACK_BOT_ORIGIN, enqueueReportingAdmission } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
-import { formatRedactedPreview } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { formatRedactedPreview } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
 function isHarborKiteModeEmitEnabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_harbor_kite_mode_emit", !0);
 }

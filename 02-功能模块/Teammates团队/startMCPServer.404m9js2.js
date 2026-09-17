@@ -12,15 +12,15 @@
 import { ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/mcp-protocol.js";
 import { McpServer } from "../MCP客户端/mcp-server.js";
-import { artifactReadObservationIn } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { artifactReadObservationIn } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { bh, B, Nb, HW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { dt, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 import { getMainLoopModel, BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { HOST_FIELD_NAME } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { HOST_FIELD_NAME } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { FILE_STATE_MAX_ENTRIES, createFileStateCache } from "../MCP客户端/chunk-3kmsshb6.js";
 import { createDefaultToolPermissionContext, findToolByName, parseToolInput, getToolRemoteExecution, isBatchToolDefinition } from "../权限系统/chunk-qdy0h5k2.js";
 import { createAbortController, createChildAbortController, userAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
@@ -44,7 +44,7 @@ import {
   createAssistantMessage,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { MAIN_AGENT_ID } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { AsyncEvalDispatcher } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+import { AsyncEvalDispatcher } from "../通道集成-Slack/通道集成-Slack.wnn25q3j.js";
 import { refreshPluginsSyncVetoed } from "../插件系统/chunk-ajtn749s.js";
 import { pruneSyncedSkillsForClosedGate } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { createBaseAppState } from "../后台任务-Shell管理/chunk-c7mzes79.js";

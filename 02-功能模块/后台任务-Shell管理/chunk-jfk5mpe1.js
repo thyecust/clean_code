@@ -15,10 +15,10 @@ import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共
 import { R, l, A, Jr, w8, H_e, I_e, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getTelemetryCode, jsonStringify, jsonParse, jsonParseUntraced, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, takeLastCodeUnits, CONTROL_CHARS_REGEX, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { wS } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
+import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { PROCESS_WRAPPER_ENV_VAR, getProcessWrapperState, getLauncherArgv, getLauncherConfigError, isLauncherRunnable, isExecutableFile, getAbsoluteLauncherPaths, getLauncherErrorMessage, getLauncherCommandString } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
@@ -61,10 +61,10 @@ import {
 } from "./chunk-7wsy8vxb.js";
 import { controlRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import { enableTerminalMode, HIDE_CURSOR } from "../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
-import { markdownParser } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { markdownParser } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { getPowerShellPath } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import { getPeerUidRefusalReason } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { getPeerUidRefusalReason } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
 import { ensureMarkdownExtensionsRegistered, renderMarkdownToken } from "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import { fromJobState } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";

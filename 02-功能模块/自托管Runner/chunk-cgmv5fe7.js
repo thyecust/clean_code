@@ -18,7 +18,7 @@ import { getCACertificates, getMTLSConfig, parseProxyUrl, getUsableProxyUrl, con
 import { Bs, a_ } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
 import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
-import { decodeTaggedId } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
+import { decodeTaggedId } from "../远程控制-Bridge/chunk-4zd60pbm.js";
 var RUNNER_VERSION = {
     ISSUES_EXPLAINER:
       "report the issue at https://github.com/anthropics/claude-code/issues",

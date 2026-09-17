@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { hashPairWithBun } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { hashPairWithBun } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";

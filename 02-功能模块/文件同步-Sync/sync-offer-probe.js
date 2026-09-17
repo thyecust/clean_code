@@ -11,11 +11,11 @@ import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cw
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { isNestedGitLabProject, repoDetectionGuards, resolveRemote, detectCurrentRepositoryWithHost } from "../Git-Worktree/git-repository-detection.js";
-import { findGitRoot, getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isNestedGitLabProject, repoDetectionGuards, resolveRemote, detectCurrentRepositoryWithHost } from "../工作树-Git/git-repository-detection.js";
+import { findGitRoot, getBranch } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { checkGate_CACHED_OR_BLOCKING } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
@@ -36,9 +36,9 @@ import {
   getMaxBundleBytes,
   probeRepositorySize,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { DEFAULT_MAX_SYNC_FILES, MAX_SYNC_UPLOAD_BYTES, isSafePortablePath } from "../../01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js";
-import { LOCAL_DIVERGENCE_DEADLINE_MS, probeLocalDivergence, unservedLayout, failureCause, runProbeGit, countProbeGitOutput, listPathsChangedFromHead, nullOnAbort } from "../Git-Worktree/local-divergence-probe.js";
-import { createFilterAttributedChecker } from "../Git-Worktree/dir-sync-git-repository.js";
+import { DEFAULT_MAX_SYNC_FILES, MAX_SYNC_UPLOAD_BYTES, isSafePortablePath } from "../../01-核心基础设施/安全文件系统-FS加固/hardened-fs-primitives.js";
+import { LOCAL_DIVERGENCE_DEADLINE_MS, probeLocalDivergence, unservedLayout, failureCause, runProbeGit, countProbeGitOutput, listPathsChangedFromHead, nullOnAbort } from "../工作树-Git/local-divergence-probe.js";
+import { createFilterAttributedChecker } from "../工作树-Git/dir-sync-git-repository.js";
 import { MAX_OVERLAY_BUNDLE_BYTES } from "../云会话-Teleport/overlay-bundle.js";
 import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";

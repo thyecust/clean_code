@@ -21,10 +21,10 @@ import { supportsShiftEnter } from "../文本编辑-输入缓冲/文本编辑-�
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { BorderedTextPreview } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { BorderedTextPreview } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
 import { submitFeedbackDraft, discardFeedbackDraft } from "./feedback-draft-submit.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";

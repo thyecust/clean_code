@@ -9,10 +9,10 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 218 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { parseConfigShorthand as E3e, applyConfigShorthand as TIe, collapseShorthandResultOffBox as EIe, listConfigKeys as A3e, getConfigArgumentCompletions as Jgr } from "../../02-功能模块/Memory-CLAUDE.md/config-shorthand.js";
+import { parseConfigShorthand as E3e, applyConfigShorthand as TIe, collapseShorthandResultOffBox as EIe, listConfigKeys as A3e, getConfigArgumentCompletions as Jgr } from "../../02-功能模块/记忆-CLAUDE.md/config-shorthand.js";
 import "./settings-config-model.js";
-import "../../02-功能模块/推送通知(Push)/推送通知(Push).8ab67cqd.js";
-import "../../02-功能模块/AutoMode-自动模式/unattended-serving-consent.js";
+import "../../02-功能模块/推送通知-Push/推送通知-Push.8ab67cqd.js";
+import "../../02-功能模块/自动模式-AutoMode/unattended-serving-consent.js";
 import "../核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import "./fast-mode.js";
 import "../模型目录-ModelCatalog/model-switch.js";

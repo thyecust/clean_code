@@ -28,7 +28,7 @@ import {
   hashString,
   isEssentialTrafficOnly,
   logError,
-} from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+} from "../../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, nt, uv } from "../../zod/zod.3g334xwq.js";
 import { env as a } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -66,7 +66,7 @@ import {
   isAutoMemPath,
 } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { isRemoteActive } from "../../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isRemoteActive } from "../../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getStringWidth, truncateToWidth, truncateToWidthNoEllipsis, truncate, formatSecondsShort, formatDuration, formatNumber, formatTokens, formatResetTime } from "../../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { hasValidPathSegments, STORAGE_KEYS } from "../../../02-功能模块/Teammates团队/storage-keys.js";
 import { oL, xt } from "../../jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -90,13 +90,13 @@ import {
 import { unescapeHtmlText, unescapeHtmlAttribute } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { extractFirstUrl, isAccountOnHoldMessage } from "../../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { isKeychainLocked } from "../../../02-功能模块/认证-OAuth登录/secure-storage.js";
-import { isGitLabMergeRequestUrl } from "../../../02-功能模块/Git-Worktree/git-repository-detection.js";
+import { isGitLabMergeRequestUrl } from "../../../02-功能模块/工作树-Git/git-repository-detection.js";
 import { BRIEF_TOOL_NAME } from "../../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import { INTERRUPTED_BY_USER_MARKER, INTERRUPTED_FOR_TOOL_USE_MARKER, TOOL_CALL_NOT_COMPLETED_MARKER, API_REQUEST_ABORTED_MESSAGE, isUserRefusalOrSkipMessage } from "../../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { SEND_USER_FILE_TOOL_NAME } from "../../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
-import { sanitizeSingleLineDisplayText } from "../../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { sanitizeSingleLineDisplayText } from "../../../02-功能模块/键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
 import { Vm } from "../../ink/ink + react-reconciler.5rs3h07b.js";
-import { KeybindingHint } from "../../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../../../02-功能模块/键位绑定-Keybindings/keybinding-display.js";
 import { qA } from "../Ink终端渲染器/chunk-hm8z9h7j.js";
 import { useTheme } from "../../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { useStorageV5Context } from "../../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
@@ -106,7 +106,7 @@ import { useTerminalFocus, setTimeoutWithCancel, noopSubscribe, ClockContext } f
 import { claimRegistriesByHost } from "../../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { Tf } from "../第三方库-其他/chunk-gdyh44zt.js";
 import { useClock } from "../../../01-核心基础设施/共享小工具-未细化/use-clock.js";
-import { ExpandedTranscriptProvider, TranscriptExpandHint, OverflowHint, ToolErrorMessage } from "../../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
+import { ExpandedTranscriptProvider, TranscriptExpandHint, OverflowHint, ToolErrorMessage } from "../../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
 import { DotSeparatedList } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { Oye } from "./chunk-jjqazdgg.js";
 import { ENTER_PLAN_MODE_TOOL_NAME, ASK_USER_QUESTION_TOOL_NAME } from "../../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
@@ -210,17 +210,17 @@ import {
   shouldInjectMemoryFile,
   USAGE_CREDITS_COMMAND,
 } from "../../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { stripMemoryTags, parseMemoryDocument, MEMORY_WRITE_TOOL_NAME, getMemoryProjectKey, canUseTeamMemoryStorage, resolveAutoMemPath, isWithinTeamMemoryDir, isStoneShellEnabled, REPL_TOOL_NAME } from "../../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { sanitizeTextForDisplay } from "../../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { stripMemoryTags, parseMemoryDocument, MEMORY_WRITE_TOOL_NAME, getMemoryProjectKey, canUseTeamMemoryStorage, resolveAutoMemPath, isWithinTeamMemoryDir, isStoneShellEnabled, REPL_TOOL_NAME } from "../../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
+import { sanitizeTextForDisplay } from "../../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { FRONTMATTER_PATTERN, STRICT_FRONTMATTER_PATTERN, parseFrontmatter } from "../../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import { sanitizeEffortLevel } from "../../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME } from "../../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { filterOutHookProgressMessages, getRegisteredTools, findToolByName, parseToolInput } from "../../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
-import { EXIT_PLAN_MODE_TOOL_NAME, getPlan } from "../../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { WEB_FETCH_TOOL_NAME } from "../../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import { EXIT_PLAN_MODE_TOOL_NAME, getPlan } from "../../../02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js";
+import { WEB_FETCH_TOOL_NAME } from "../../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js";
 import { isViolinWoodEnabledCached } from "../../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { GET_TASK_TOOL_NAME, isGetTaskToolEnabled, WEB_SEARCH_TOOL_NAME, REPL_REGISTERED_TOOL_UI_TABLE_KEY, TASK_OUTPUT_TOOL_NAME, ENTER_WORKTREE_TOOL_NAME, STRUCTURED_OUTPUT_TOOL_NAME, getStructuredOutputText, PROPOSE_SKILLS_TOOL_NAME, EXIT_WORKTREE_TOOL_NAME } from "../../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { NO_CONTENT_PLACEHOLDER, NO_RESPONSE_REQUESTED_TEXT, isPeerOrObserverOrigin, getOriginDisplayName } from "../../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { NO_CONTENT_PLACEHOLDER, NO_RESPONSE_REQUESTED_TEXT, isPeerOrObserverOrigin, getOriginDisplayName } from "../../../02-功能模块/远程控制-Bridge/chunk-5ne99rq3.js";
 import {
   CROSS_SESSION_MESSAGE_PREFIX,
   PEER_LANE_SUFFIX_VARIANTS,
@@ -252,11 +252,11 @@ import {
 } from "../../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
 import { getAgentTypeColorThemeKey } from "../../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { Bl } from "../第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
-import { PUSH_NOTIFICATION_TOOL_NAME } from "../../../02-功能模块/Bridge-RemoteControl/push-notification-tool.js";
-import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, CRON_LIST_TOOL_NAME } from "../../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js";
+import { PUSH_NOTIFICATION_TOOL_NAME } from "../../../02-功能模块/远程控制-Bridge/push-notification-tool.js";
+import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, CRON_LIST_TOOL_NAME } from "../../../02-功能模块/定时任务-Cron/chunk-mk3zm4ew.js";
 import { REMOTE_TRIGGER_TOOL_NAME } from "../../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { isAgentSwarmsEnabled } from "../../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
-import { CFC_TOOL_PREFIX } from "../../../02-功能模块/ClaudeinChrome/claude-in-chrome-host.js";
+import { CFC_TOOL_PREFIX } from "../../../02-功能模块/浏览器集成-ClaudeinChrome/claude-in-chrome-host.js";
 import { isFromCurrentAgent } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import { useTerminalSize } from "../../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { ToolResultRow, useIsInsideToolResultRow } from "../../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
@@ -277,14 +277,14 @@ import {
   subscribeToAutoResumeState,
   tickAutoResume,
   startAutoResumeSubscriptions,
-} from "../../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { useNotificationQueue } from "../../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
+} from "../../../02-功能模块/状态管理-AppState/状态管理-AppState.wyzjbwp5.js";
+import { useNotificationQueue } from "../../../03-入口与运行时/会话UI-REPL/notification-queue.js";
 import { useKeybindingDisplayText } from "../../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import { shouldExpandContent } from "../../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import { useRenderHook, useRenderInput, ansiPrimitives, StatusRow, jA } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { StaticFrameContext } from "../../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import { useElapsedDuration } from "../../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
-import { ToolResultPreviewWidthContext, TruncatedFilePath } from "../../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
+import { ToolResultPreviewWidthContext, TruncatedFilePath } from "../../../03-入口与运行时/会话UI-REPL/chunk-vpp75aza.js";
 import { MCP_TOOL_UI_TABLE_KEY, MCP_TOOL_OUTPUT_SCHEMA, MCP_TOOL_BASE } from "../../../01-核心基础设施/共享小工具-未细化/mcp-tool-base.js";
 import { VerboseToolResultProvider, ToolResultContent } from "../../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import { getHandbackPayloadSchema, getHandbackDisplayText } from "../../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
@@ -293,7 +293,7 @@ import { resolveAgentColor, CollapsedMessagesHint } from "../../../01-核心基�
 import { conjugateVerbPhrase } from "../../../01-核心基础设施/核心工具-字符串与文本/verb-conjugation.js";
 import { DiffStatLabel, PullRequestBadge } from "../../../02-功能模块/GitHub集成/chunk-bfz9rjjm.js";
 import { pickRandom, useSpinnerThinkingStartedAt } from "../../../02-功能模块/Hooks钩子/spinner-store.js";
-import { SYNCED_FROM_THIS_COMPUTER_LABEL, SYNC_ROW_LABELS, NOT_SYNCED_MARK, getWhileClosedMessage } from "../../../02-功能模块/Bridge-RemoteControl/chunk-sc8n0cp3.js";
+import { SYNCED_FROM_THIS_COMPUTER_LABEL, SYNC_ROW_LABELS, NOT_SYNCED_MARK, getWhileClosedMessage } from "../../../02-功能模块/远程控制-Bridge/chunk-sc8n0cp3.js";
 import { OffscreenFrozenContent, useOffscreenFrozenValue } from "../../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
 import { useCommandQueue } from "../../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
 import { CLOUD_SESSION_ENTRY_LABELS, CLOUD_SESSION_URL_SEPARATOR } from "../../../01-核心基础设施/共享小工具-未细化/cloud-session-status-message.js";
@@ -303,7 +303,7 @@ import { renderWebFetchProgressMessage, ReceivedBytesStatus, renderWebFetchResul
 import { DashedBorderBox } from "../../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
 import { BackgroundText } from "../../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import { EmptyStateMessage } from "../../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
-import { showNotification } from "../../../02-功能模块/通知(Notifications)/通知(Notifications).g4xng0pg.js";
+import { showNotification } from "../../../02-功能模块/通知-Notifications/通知-Notifications.g4xng0pg.js";
 import { TitledBorderBox } from "../../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
 import { ProgressBar } from "../../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import { LinkifiedText } from "../../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
@@ -4912,7 +4912,7 @@ var _y = {
   Ly = null,
   Gu = {
     name: import.meta.require("../../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js").WORKFLOW_TOOL_NAME,
-    ui: import.meta.require("../../../02-功能模块/Workflow编排/renderToolResultMessage.ew7kwnxk.js"),
+    ui: import.meta.require("../../../02-功能模块/编排-Workflow/renderToolResultMessage.ew7kwnxk.js"),
   },
   Sp = null,
   di = import.meta.require("../../../02-功能模块/MCP客户端/makeResultCountRenderer.rtp0eamn.js"),
@@ -4921,7 +4921,7 @@ var _y = {
   es = {
     name: import.meta.require("../../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js").ARTIFACT_TOOL_NAME,
     names: import.meta.require("../../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js"),
-    ui: import.meta.require("../../../02-功能模块/Artifact发布-渲染/renderCheckToolUseMessage.zxaexmtx.js"),
+    ui: import.meta.require("../../../02-功能模块/制品发布-Artifact/renderCheckToolUseMessage.zxaexmtx.js"),
   },
   vy = {
     name: import.meta.require("../../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js").END_CONVERSATION_TOOL_NAME,
@@ -4997,7 +4997,7 @@ var _y = {
       };
     },
     get [NOTEBOOK_EDIT_TOOL_NAME]() {
-      let l = import.meta.require("../../../02-功能模块/Notebook(.ipynb)/Notebook(.ipynb).zmx4vxzb.js");
+      let l = import.meta.require("../../../02-功能模块/Notebook-ipynb/Notebook-ipynb.zmx4vxzb.js");
       return {
         renderToolResultMessage: l.renderToolResultMessage,
         renderToolUseRejectedMessage: l.renderToolUseRejectedMessage,
@@ -14552,7 +14552,7 @@ function BW(Cle) {
 }
 var wg = import.meta.require("../../../01-核心基础设施/共享小工具-未细化/isNarrationSummaryBlock.adf7egmq.js").isNarrationSummaryBlock,
   Ug = import.meta.require(
-    "../../../03-入口与运行时/会话UI(REPL)/AssistantNarrationSummaryMessage.kz8yw55j.js",
+    "../../../03-入口与运行时/会话UI-REPL/AssistantNarrationSummaryMessage.kz8yw55j.js",
   ).AssistantNarrationSummaryMessage,
   Vs = null;
 function FE(nle) {

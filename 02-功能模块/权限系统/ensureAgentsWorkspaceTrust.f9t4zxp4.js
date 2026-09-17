@@ -26,7 +26,7 @@ async function ensureAgentsWorkspaceTrust(r, i, o) {
       if (!a.CLAUBBIT && checkHasTrustDialogAccepted()) {
         Dx(!0);
         let { primePlanSlugCollisions: t } =
-          await import("../计划模式(Plan)/计划模式(Plan).e5mh1avy.js");
+          await import("../计划模式-Plan/计划模式-Plan.e5mh1avy.js");
         t(o);
       }
       {
@@ -38,7 +38,7 @@ async function ensureAgentsWorkspaceTrust(r, i, o) {
       Dx(!0);
       let [{ primePlanSlugCollisions: t }, { capturePolicySnapshot: s }] =
         await Promise.all([
-          import("../计划模式(Plan)/计划模式(Plan).e5mh1avy.js"),
+          import("../计划模式-Plan/计划模式-Plan.e5mh1avy.js"),
           import("../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js"),
         ]);
       (t(o), s());
@@ -66,8 +66,8 @@ async function ensureAgentsWorkspaceTrust(r, i, o) {
         { capturePolicySnapshot: g },
       ] = await Promise.all([
         import("../../01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
-        import("../计划模式(Plan)/计划模式(Plan).e5mh1avy.js"),
-        import("../Bedrock-Vertex/chunk-27ncq5fr.js"),
+        import("../计划模式-Plan/计划模式-Plan.e5mh1avy.js"),
+        import("../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js"),
         import("../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js"),
       ]);
       (m({ preservePendingExposures: !0 }), u().catch(d), l(o), g());

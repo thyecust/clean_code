@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 182 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { isSimpleMode, isSafeMode } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSimpleMode, isSafeMode } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { identity as _m, j, B, K, $p, sn, ES, o_e, ke, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
@@ -18,14 +18,14 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { ud, l, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, changeWorkingDirectory, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { setBgExitCause } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { getCurrentWorktreeSession, isBgSession, getBgJobDir, prefetchApiKeyFromApiKeyHelperIfSafe, onGrowthBookRefresh, getFeatureValue_CACHED_MAY_BE_STALE, checkHasTrustDialogAccepted, saveGlobalConfig, getGlobalConfig, getCurrentProjectConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import { findCanonicalGitRoot, isLinkedWorktree, getIsGit } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { findCanonicalGitRoot, isLinkedWorktree, getIsGit } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { sanitizeAnalyticsId, profileCheckpoint } from "./startup-profiler.js";
 import { getSettingsForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { _setProxyAuthHelperConfig, prefetchProxyAuthFromHelperIfSafe } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
@@ -58,11 +58,11 @@ import {
   warmCommandSourceCaches,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { captureHooksConfigSnapshot, updateHooksConfigSnapshot, updateHooksConfigSnapshotThroughBackend } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
-import { primePlanSlugCollisions, getPlanSlug, getPlansDirectory } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { prefetchTmuxOptionProbes } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { primePlanSlugCollisions, getPlanSlug, getPlansDirectory } from "../../02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js";
+import { prefetchTmuxOptionProbes } from "../../02-功能模块/终端环境探测-TUI-tmux/终端环境探测-TUI-tmux.5pkb0sjc.js";
 import { recordStartupPhase } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { isAgentSwarmsEnabled, captureTeammateModeSnapshotIfEnabled } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
-import { keybindingStore, warmKeybindingsFromBackend } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { keybindingStore, warmKeybindingsFromBackend } from "../../02-功能模块/键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
 import { publishInboundAvailability } from "../../02-功能模块/权限系统/cross-session-inbound-gate.js";
 import { fetchChangelogIfOutdated } from "../../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
 import "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
@@ -85,7 +85,7 @@ function X(e, o) {
   return (registerCleanup(async () => c()), c);
 }
 async function se(e, o) {
-  let r = await import("../../02-功能模块/Bridge-RemoteControl/validateExplicitMessagingSocketPath.knbv811d.js"),
+  let r = await import("../../02-功能模块/远程控制-Bridge/validateExplicitMessagingSocketPath.knbv811d.js"),
     c;
   try {
     c = await r.startCrossSessionInbox(e, o);
@@ -313,7 +313,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
       if (!Nn()) {
         if (w !== void 0)
           await (
-            await import("../../02-功能模块/Bridge-RemoteControl/validateExplicitMessagingSocketPath.knbv811d.js")
+            await import("../../02-功能模块/远程控制-Bridge/validateExplicitMessagingSocketPath.knbv811d.js")
           ).validateExplicitMessagingSocketPath(w);
         (logForDebugging(
           "[uds-messaging] Skipped: cross-session messaging gate off (will late-bind if a GrowthBook refresh enables it)",
@@ -323,7 +323,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
     else if (Nn()) logForDebugging("[uds-messaging] Skipped: remote thin client");
     else {
       let t = performance.now(),
-        d = await import("../../02-功能模块/Bridge-RemoteControl/validateExplicitMessagingSocketPath.knbv811d.js"),
+        d = await import("../../02-功能模块/远程控制-Bridge/validateExplicitMessagingSocketPath.knbv811d.js"),
         v = await d.startCrossSessionInbox(w, s);
       if (v) {
         let C = d.getUdsStartDegradedCause();
@@ -645,11 +645,11 @@ function maybePrewarmRecallIndex(e) {
       o.isMemoryRecallEnabled() &&
       o.isIndexRecallEnabled()
     ) {
-      let c = await import("../../02-功能模块/Memory-CLAUDE.md/searchMemoryFilesWithIndex.5h247hbm.js"),
-        m = await import("../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js"),
-        _ = await import("../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js"),
-        S = await import("../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js"),
-        k = await import("../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js");
+      let c = await import("../../02-功能模块/记忆-CLAUDE.md/searchMemoryFilesWithIndex.5h247hbm.js"),
+        m = await import("../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js"),
+        _ = await import("../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js"),
+        S = await import("../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js"),
+        k = await import("../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js");
       if (_.isMultiStoreSyncAvailable() || k.hasOrgMemoryDecisionRunStarted()) {
         if (
           (await m.waitForOrgMemoryDecisionSettled(

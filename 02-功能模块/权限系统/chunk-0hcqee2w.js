@@ -12,7 +12,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
@@ -45,17 +45,17 @@ import {
   formatListEntryForDisplay,
   toUniqueDisplayLabels,
   replaceLineBreaks,
-} from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+} from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { NO_COMMITTED_ROW, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useKeybindingChordText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-chord-text.js";
-import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
+import { useNotificationQueue } from "../../03-入口与运行时/会话UI-REPL/notification-queue.js";
 import { KeybindingScope } from "../../01-核心基础设施/共享小工具-未细化/keybinding-scope.js";
-import { isPermissionRuleCanonical } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isPermissionRuleCanonical } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { renderToolUseMessageByToolName } from "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
 import { useAnswerRefusalState } from "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
 import { linkifyUrls } from "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";

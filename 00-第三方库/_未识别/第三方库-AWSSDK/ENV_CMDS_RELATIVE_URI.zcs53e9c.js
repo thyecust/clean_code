@@ -10,7 +10,7 @@
 import { getNodeConfigProviderModule } from "../../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
 import { getUrlParserModule } from "../../../01-核心基础设施/共享小工具-未细化/url-parser.js";
 import "./chunk-z7ktsccq.js";
-import { getPropertyProviderModule } from "../../../02-功能模块/Bedrock-Vertex/smithy-property-provider.js";
+import { getPropertyProviderModule } from "../../../02-功能模块/模型接入-Bedrock-Vertex/smithy-property-provider.js";
 import { toESM, initESM } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { Buffer as ae } from "buffer";
 import { request } from "http";

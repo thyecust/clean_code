@@ -9,13 +9,13 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 123 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { sanitizeSingleLineDisplayText } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { sanitizeSingleLineDisplayText } from "../键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useElapsedDuration } from "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { useDetailDialogKeys } from "../../01-核心基础设施/共享小工具-未细化/detail-dialog-keys.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";

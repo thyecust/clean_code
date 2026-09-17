@@ -10,15 +10,15 @@
 
 // [preload stripped] 原本在此预载 211 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { MAX_WORKFLOW_SCRIPT_BYTES } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import "../Workflow编排/workflow-runtime.js";
+import { MAX_WORKFLOW_SCRIPT_BYTES } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
+import "../编排-Workflow/workflow-runtime.js";
 import "../../01-核心基础设施/共享小工具-未细化/nondeterminism-check.js";
-import "../Workflow编排/workflow-script.js";
-import { formatWorkflowErrorLine, getWorkflowDisabledReason, launchWorkflow } from "../Workflow编排/remote-workflow-launch.js";
+import "../编排-Workflow/workflow-script.js";
+import { formatWorkflowErrorLine, getWorkflowDisabledReason, launchWorkflow } from "../编排-Workflow/remote-workflow-launch.js";
 import "../../01-核心基础设施/共享小工具-未细化/structured-output-retry-errors.js";
 import "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
 import "../../01-核心基础设施/共享小工具-未细化/fd-real-path.js";
-import { REMOTE_WORKFLOW_SCRIPT_ENV, REMOTE_WORKFLOW_ARGS_ENV } from "../Workflow编排/workflow-registry.js";
+import { REMOTE_WORKFLOW_SCRIPT_ENV, REMOTE_WORKFLOW_ARGS_ENV } from "../编排-Workflow/workflow-registry.js";
 import "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
 function e(s, t) {
   return { type: "text", value: formatWorkflowErrorLine(s, t) };

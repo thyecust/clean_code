@@ -14,7 +14,7 @@ import { useStoreSelector } from "../../01-核心基础设施/共享小工具-�
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { l, A, Bp, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { describeStorageError, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isTeamLead } from "../Teammates团队/teammate-context.js";
 import { subscribeToTaskListUpdates, resetTaskList, getTaskListId, sanitizeStorageId, getTaskListDir, readTaskList, readAllTasks } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { Qt, re, De, E, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";

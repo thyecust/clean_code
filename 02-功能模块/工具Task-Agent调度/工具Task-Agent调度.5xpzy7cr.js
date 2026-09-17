@@ -14,7 +14,7 @@ import { getSessionStateStore, runWithAgentContext, getAgentDepth, getWorkflowRu
 import { Ve, yt, l, A, Rt, FA, CB } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { hasNetworkPathSpelling, resolveSymlinkAncestrySync, fsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { runWithCwdOrDefault, getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { clampPermissionMode } from "../权限系统/chunk-e4pfvp7x.js";
 import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
@@ -97,9 +97,9 @@ import {
 import { getTaskOutputPath } from "../后台任务-Shell管理/task-output.js";
 import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { isCoordinatorMode } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { scrubRestoredTranscriptMetadata } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+import { scrubRestoredTranscriptMetadata } from "../通道集成-Slack/通道集成-Slack.wnn25q3j.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
-import { CRON_CREATE_TOOL_NAME } from "../Cron-定时任务/chunk-mk3zm4ew.js";
+import { CRON_CREATE_TOOL_NAME } from "../定时任务-Cron/chunk-mk3zm4ew.js";
 import { restoreContentReplacementState } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { excludeCoordinatorCommsMcpTools } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
 import { stripAbortedTurnMessages, hasPendingUserTurn } from "../后台任务-Shell管理/chunk-531ast3t.js";

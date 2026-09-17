@@ -18,19 +18,19 @@ import { isPathTrusted } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { parseSettingsFileUncached, resolveLocalSettingsStoreRoot } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { findCanonicalGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { findCanonicalGitRootUncached } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { Box, Text, Link, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { REFUSE_INPUT_WINDOW_MS, isRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { NewMcpServerDialog, NewMcpServersDialog, getPendingMcpServers } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { getPermissionRulesFromSettings } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getPermissionRulesFromSettings } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
-import { recordDirectoryTrust, validateCdTarget, cdRuleRefusalMessage, relocateSession, reapplyProjectSettingsAfterTrustChange, withGatedGrantsApplied } from "../Memory-CLAUDE.md/chunk-br7dq41d.js";
+import { recordDirectoryTrust, validateCdTarget, cdRuleRefusalMessage, relocateSession, reapplyProjectSettingsAfterTrustChange, withGatedGrantsApplied } from "../记忆-CLAUDE.md/chunk-br7dq41d.js";
 import {
   hasHookSettings,
   collectAllowRules,

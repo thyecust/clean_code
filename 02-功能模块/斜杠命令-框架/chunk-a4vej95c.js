@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isPolicyAllowed } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
 function isWebSetupEnabled() {
   return !isEssentialTrafficOnly() && isPolicyAllowed("allow_remote_sessions") && isPolicyAllowed("allow_quick_web_setup");
 }

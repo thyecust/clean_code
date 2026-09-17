@@ -10,7 +10,7 @@
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
+import { execFileNoThrow, execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import { terminalBackendRegistry, isInsideTmuxSync, isInsideTmux, isTmuxAvailable, isInITerm2, isIt2CliAvailable } from "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
 import { saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getTeammateModeFromSnapshot } from "./chunk-88ybhavr.js";

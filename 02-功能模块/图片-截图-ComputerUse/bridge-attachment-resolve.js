@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { DEFAULT_IMAGE_LIMITS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { DEFAULT_IMAGE_LIMITS } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { isCrossSessionMessage } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
@@ -17,9 +17,9 @@ import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-key
 import { describeStorageError, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
-import { sanitizePeerFileName, peerFileFailureNote, peerFileCountCapNote, verifyPeerFileIntegrity, emitPeerFileReceiveTelemetry, injectPeerFilePrefix } from "../跨会话消息(UDS)/peer-file-transfer.js";
+import { sanitizePeerFileName, peerFileFailureNote, peerFileCountCapNote, verifyPeerFileIntegrity, emitPeerFileReceiveTelemetry, injectPeerFilePrefix } from "../跨会话消息-UDS/peer-file-transfer.js";
 import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
-import { parseFileAttachments, dropEmptyTextBlocks } from "../Bridge-RemoteControl/bridge-inbound-origin.js";
+import { parseFileAttachments, dropEmptyTextBlocks } from "../远程控制-Bridge/bridge-inbound-origin.js";
 import { createConcurrencyLimiter, getUploadsDirectory, buildUploadFileName, cacheFileHash } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getImageMediaTypeOrDefault, buildImageBlockFromBytes } from "./chunk-0dcnsftb.js";
 import { randomUUID } from "crypto";

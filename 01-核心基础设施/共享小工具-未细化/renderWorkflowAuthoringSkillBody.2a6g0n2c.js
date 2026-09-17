@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 104 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { renderWorkflowAuthoringSkillBody as XPt, registerWorkflowAuthoringSkill as Sgr } from "./workflow-authoring-skill.js";
-import "../../02-功能模块/Workflow编排/workflow-tool-prompt.js";
+import "../../02-功能模块/编排-Workflow/workflow-tool-prompt.js";
 export {
   Sgr as registerWorkflowAuthoringSkill,
   XPt as renderWorkflowAuthoringSkillBody,

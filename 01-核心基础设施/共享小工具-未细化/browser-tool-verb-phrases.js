@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { AUTO_APPROVABLE_BROWSER_TOOL_NAMES } from "../../02-功能模块/图片-截图-ComputerUse/chunk-mk8kjx9c.js";
-import { CFC_TOOL_PREFIX } from "../../02-功能模块/ClaudeinChrome/claude-in-chrome-host.js";
+import { CFC_TOOL_PREFIX } from "../../02-功能模块/浏览器集成-ClaudeinChrome/claude-in-chrome-host.js";
 import { isAutoApprovableBrowserToolCall } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isRecord } from "./is-record.js";
 var a = {

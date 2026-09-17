@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { ym } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { CHANNEL_TAG } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { CHANNEL_TAG } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isClaudeAISubscriber, getSubscriptionType } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";

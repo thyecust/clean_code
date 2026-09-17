@@ -28,8 +28,8 @@ import {
 import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { getAgentId, getTeamName } from "./teammate-context.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { SessionRecordsUnreadableError, ownMessagingSocket, listLivePeerSessions } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { getSessionNamingState } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
+import { SessionRecordsUnreadableError, ownMessagingSocket, listLivePeerSessions } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
+import { getSessionNamingState } from "../跨会话消息-UDS/chunk-9kzxq41e.js";
 import {
   REMOTE_CONTROL_LABEL,
   getSessionTransportLabel,
@@ -44,7 +44,7 @@ import {
   isCloudListUnavailable,
   listCloudPeerSessions,
   CANNOT_RECEIVE_MESSAGES_LABEL,
-} from "../Bridge-RemoteControl/chunk-1yq098a7.js";
+} from "../远程控制-Bridge/chunk-1yq098a7.js";
 import { isOwnSessionId } from "./peer-target-guard.js";
 import { readTeamFileAsync } from "./team-file-store.js";
 import { MAIN_CONVERSATION_NAME } from "./chunk-enjekn9t.js";

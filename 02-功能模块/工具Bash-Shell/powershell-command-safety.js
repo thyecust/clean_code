@@ -11,7 +11,7 @@ import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cw
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { escapeRegExp, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { normalizeDashCharacters, POWERSHELL_COMMAND_ALIASES, PARAMETER_PREFIX_CHARS, isParameterToken, getStatements, isNullRedirectTarget, getCommandSecurityPatterns } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { GIT_SAFE_FLAGS_BY_SUBCOMMAND, GH_SAFE_FLAGS_BY_SUBCOMMAND, DOCKER_CONNECTION_FLAGS, DOCKER_SAFE_FLAGS_BY_SUBCOMMAND, DOCKER_READ_ONLY_SUBCOMMANDS, isCliFlagToken, areCommandFlagsSafe, INTERPRETER_COMMAND_NAMES } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { GIT_SAFE_FLAGS_BY_SUBCOMMAND, GH_SAFE_FLAGS_BY_SUBCOMMAND, DOCKER_CONNECTION_FLAGS, DOCKER_SAFE_FLAGS_BY_SUBCOMMAND, DOCKER_READ_ONLY_SUBCOMMANDS, isCliFlagToken, areCommandFlagsSafe, INTERPRETER_COMMAND_NAMES } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { statSync } from "fs";
 import { join as me } from "path";

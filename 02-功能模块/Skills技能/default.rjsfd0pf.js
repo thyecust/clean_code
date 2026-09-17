@@ -14,10 +14,10 @@ import { getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig } from "../认证
 import { W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
-import { normalizeGitRemoteUrl } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
+import { normalizeGitRemoteUrl } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getProjectDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyAllowed } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { SHARE_ONBOARDING_GUIDE_TOOL_NAME } from "../Teammates团队/share-onboarding-guide-tool.js";
 import { isOnboardingGuideSharingEnabled } from "../Teammates团队/onboarding-guide-api.js";
 import { readFile as L } from "fs/promises";

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getAgentId, getAgentName, getTeamName, getTeammateColor } from "./teammate-context.js";
 import { writeToMailbox, createPermissionRequestMessage, createPermissionResponseMessage, createSandboxPermissionRequestMessage, createSandboxPermissionResponseMessage } from "./chunk-g6nvp9mm.js";
 import { readTeamFileAsync } from "./team-file-store.js";

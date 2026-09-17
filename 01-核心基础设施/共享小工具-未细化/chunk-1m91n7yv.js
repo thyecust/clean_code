@@ -12,7 +12,7 @@ import { getMcpToolPrefix } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { BRIEF_TOOL_NAME } from "./chunk-q599wyee.js";
 import { SEND_USER_FILE_TOOL_NAME } from "./chunk-a5errgr8.js";
 import { compareToolNames, matchesAnyToolName } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
-import { isExemptToolDeniedByRule } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isExemptToolDeniedByRule } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { partition, uniqBy, isMcpTool, isToolFromMcpServer, filterToolsForRemoteDevice } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { COORDINATOR_ALLOWED_TOOL_NAMES } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { isCoordinatorCommsMcpTool } from "./chunk-qg9n8r78.js";

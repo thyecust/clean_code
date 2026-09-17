@@ -26,7 +26,7 @@ import {
   endLowPriorityMode,
   getCurrentLimits,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getAutoResumeState, hasArmedQuotaAutoResume, cancelAutoResume, isConversationResetSwitchReason } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
+import { getAutoResumeState, hasArmedQuotaAutoResume, cancelAutoResume, isConversationResetSwitchReason } from "../状态管理-AppState/状态管理-AppState.wyzjbwp5.js";
 import { isLowPriorityEligibleClient, isContinuableUsageLimitWall, getSubscriptionTier, sendAutoContinuationPrompt } from "../../01-核心基础设施/共享小工具-未细化/usage-limit-continuation.js";
 var l = new j(() => ({
   notedWallResetsAt: null,

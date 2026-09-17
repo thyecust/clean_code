@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { getArtifactState } from "../Artifact发布-渲染/chunk-rr78st95.js";
+import { getArtifactState } from "../制品发布-Artifact/chunk-rr78st95.js";
 import { ARTIFACT_COMMENTS_TOOL_NAME, ARTIFACT_DATA_TOOL_NAME, ARTIFACT_CHECK_TOOL_NAME } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { isCoworkHostSession, isRepublishInlinePromptEnabled } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { TOOL_SEARCH_TOOL_NAME } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isCoworkHostSession, isRepublishInlinePromptEnabled } from "../制品发布-Artifact/chunk-01ymf0ar.js";
+import { TOOL_SEARCH_TOOL_NAME } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { SKILL_TOOL_NAME, buildSkillToolName } from "../权限系统/chunk-fjrcf22x.js";
-import { PIN_CORE_BULLET, HEAD_PARAGRAPH, DELIVERABLE_PARAGRAPH, FILE_LOCATION_SENTENCE, langPromptParagraph, FILES_PROMPT_PARAGRAPH, COMMENTS_OFF_SENTENCE, ROOM_PROMPT_PARAGRAPH } from "../Artifact发布-渲染/chunk-pdd7kz7p.js";
+import { PIN_CORE_BULLET, HEAD_PARAGRAPH, DELIVERABLE_PARAGRAPH, FILE_LOCATION_SENTENCE, langPromptParagraph, FILES_PROMPT_PARAGRAPH, COMMENTS_OFF_SENTENCE, ROOM_PROMPT_PARAGRAPH } from "../制品发布-Artifact/chunk-pdd7kz7p.js";
 import {
   buildRuntimeCapabilitiesParagraph,
   buildStateKeepingPagesParagraph,
@@ -25,9 +25,9 @@ import {
   THEME_AWARE_PARAGRAPH,
   NEVER_PUBLISH_PARAGRAPH,
   buildPageContractFallback,
-} from "../Artifact发布-渲染/artifact-prompt-paragraphs.js";
-import { isArtifactToolsetEnabled } from "../Artifact发布-渲染/chunk-qpgskeea.js";
-import { artifactSchemaGates, artifactLiveEditPromptGateOpen, artifactLivePathsSchemaOpen, artifactTypesPromptParagraph, artifactTypeCatalogPromptParagraph } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
+} from "../制品发布-Artifact/artifact-prompt-paragraphs.js";
+import { isArtifactToolsetEnabled } from "../制品发布-Artifact/chunk-qpgskeea.js";
+import { artifactSchemaGates, artifactLiveEditPromptGateOpen, artifactLivePathsSchemaOpen, artifactTypesPromptParagraph, artifactTypeCatalogPromptParagraph } from "../制品发布-Artifact/chunk-b6k1z7an.js";
 import { ARTIFACT_DESIGN_SKILL_NAME, ARTIFACT_DIAGRAMMING_SKILL_NAME, WORKSHOP_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
 var h = null,
   p = null;

@@ -21,7 +21,7 @@ import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js"
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getStringWidth, CONTROL_CHAR_CODES, CSI_COMMAND_CODES, ERASE_DISPLAY_REGIONS, ERASE_LINE_REGIONS, CURSOR_STYLE_PRESETS, createAnsiTokenizer } from "../核心工具-字符串与文本/ansi-text-utils.js";
 import { stripAnsi } from "../共享小工具-未细化/text-sanitization.js";
-import { shouldUseFullscreen } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { shouldUseFullscreen } from "../../02-功能模块/终端环境探测-TUI-tmux/终端环境探测-TUI-tmux.5pkb0sjc.js";
 import { sessionServicesFor } from "../../02-功能模块/认证-OAuth登录/credentials-store.js";
 import { setTerminalHooks, formatOscSequence, wrapOscForMultiplexer, OSC_CODES, parseOscSequence, RESET_TITLE_AND_ICON_SEQUENCE, RESET_TAB_STATUS_SEQUENCE, isTabStatusEnabled, formatTabStatus } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { getInkInstanceRegistry } from "../共享小工具-未细化/ink-instance-registry.js";

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { getDefaultGcpRegion } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getDefaultGcpRegion } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { truncateToCodeUnits, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getVerifiedDaemonLock } from "../后台任务-Shell管理/daemon-lock.js";
@@ -45,7 +45,7 @@ import { getInstallationDiagnostics } from "../自动更新-安装/install-diagn
 import { checkInstall } from "../自动更新-安装/native-installer.js";
 import { retentionCleanupSkipReason } from "../会话-历史-恢复/retention-cleanup.js";
 import { partitionSettingsErrors } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { getPolicyLimitsStatus, formatPolicyLimitsStatus, shouldReportPolicyLimits } from "../Bridge-RemoteControl/policy-limits-status.js";
+import { getPolicyLimitsStatus, formatPolicyLimitsStatus, shouldReportPolicyLimits } from "../远程控制-Bridge/policy-limits-status.js";
 import { getManagedSettingsStatus, shouldReportManagedSettingsStatus, formatManagedSettingsStatus } from "../../01-核心基础设施/共享小工具-未细化/managed-settings-status.js";
 import { r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";

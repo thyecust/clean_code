@@ -10,7 +10,7 @@
 import { dl, VP, ODn, DDn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { pluralize } from "../核心工具-字符串与文本/string-utils.js";
 import { isBgSession } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { stopArtifactSupervisor, getArtifactState, disposePresenceSlug } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
+import { stopArtifactSupervisor, getArtifactState, disposePresenceSlug } from "../../02-功能模块/制品发布-Artifact/chunk-rr78st95.js";
 import { createInformationalSystemMessage, getStopGeneration, isSlugStopped, isSlugStopLatched, isSlugSwept } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function isUserPresent() {
   if (!isBgSession()) return !0;

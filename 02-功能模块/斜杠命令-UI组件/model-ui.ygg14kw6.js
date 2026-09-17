@@ -14,7 +14,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { HELP_FLAGS, isInfoSubcommandAlias, isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { HELP_FLAGS, isInfoSubcommandAlias, isEssentialTrafficOnly, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
@@ -42,7 +42,7 @@ import {
   getAdditionalModelOptionsCache,
   getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel, hasRemoteCapability } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel, hasRemoteCapability } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { strip1mSuffix, getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import {
   toModelPickerOption,
@@ -62,12 +62,12 @@ import { getEnvEffortLevelOverride, createEffortLevel, getSessionEffortLevel, re
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useAppStateSelector, useSetAppState, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { ModelPicker, CancellableStatusMessage, ExtraUsageDialog } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
+import { ModelPicker, CancellableStatusMessage, ExtraUsageDialog } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
+import { useNotificationQueue } from "../../03-入口与运行时/会话UI-REPL/notification-queue.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
-import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
+import "../使用时长-Wellbeing/使用时长-Wellbeing.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
@@ -77,7 +77,7 @@ import "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { useMainLoopModelOverride } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
-import "../../03-入口与运行时/会话UI(REPL)/clawd-mascot.js";
+import "../../03-入口与运行时/会话UI-REPL/clawd-mascot.js";
 import { ModelOrEffortSwitchDialog } from "../../01-核心基础设施/共享小工具-未细化/switch-confirm-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
@@ -88,7 +88,7 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/remote-control-ui-strings.js";
+import "../远程控制-Bridge/remote-control-ui-strings.js";
 import "../成本-Token统计/usage-credits-flow.js";
 import {
   formatFastModeChangeNote,

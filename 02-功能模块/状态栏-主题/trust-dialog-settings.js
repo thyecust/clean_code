@@ -13,7 +13,7 @@ import { getSettingsForSource } from "../../01-核心基础设施/核心工具-�
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { BASH_TOOL_NAME, isLocalSettingsGitTracked } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getSettingsTrustGates, getPermissionRulesForSource } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getSettingsTrustGates, getPermissionRulesForSource } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { isAbsolute } from "path";
 function S() {
   return { sources: m(), read: getSettingsForSource, rules: getPermissionRulesForSource };

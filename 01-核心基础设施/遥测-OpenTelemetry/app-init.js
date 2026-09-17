@@ -24,10 +24,10 @@ import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { ud, YR, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isSameAsConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSameAsConfigDir } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { primeSystemInfo, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
-import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { profileCheckpoint } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import {
   getProviderState,
@@ -57,7 +57,7 @@ import { getSettingsForSource } from "../核心工具-路径与平台/核心工�
 import { loadExtraCACerts, loadMTLSClientMaterial, configureGlobalMTLS, getProxyUrlWithSource, parseProxyUrl, describeInvalidProxyUrl, configureGlobalAgents, clearProxyCache } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { setFeatureGateLookup, getAPIProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { primeProfileReadAhead } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
-import { detectCurrentRepository, setRepoDetectionGuards } from "../../02-功能模块/Git-Worktree/git-repository-detection.js";
+import { detectCurrentRepository, setRepoDetectionGuards } from "../../02-功能模块/工作树-Git/git-repository-detection.js";
 import { primeWindowsCredManBackendEnabled } from "../../02-功能模块/认证-OAuth登录/secure-storage.js";
 import { assertScrubSandboxAvailable } from "../核心工具-进程与信号/subprocess-env-scrub.js";
 import {
@@ -72,17 +72,17 @@ import {
   installHostCredentials,
   registerKeepForeignThinkingReset,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isScratchpadEnabled, ensureScratchpadDir } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isScratchpadEnabled, ensureScratchpadDir } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { buildOtelResourceAttributes } from "./otel-events.js";
-import { isPolicyLimitsEligible } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyLimitsEligible } from "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { isPowerShellToolEnabled, isBashToolAvailable } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { seedUserSettings, primeSettings } from "../设置-配置/chunk-b536v45y.js";
-import { primePlanSlugCollisions } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { primePlanSlugCollisions } from "../../02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import { applySafeConfigEnvironmentVariables, applyConfigEnvironmentVariables } from "./settings-env-application.js";
 import { pinStorageV5FromEnv } from "../共享小工具-未细化/storage-v5-env-pin.js";
 import { pinStorageV5 } from "../共享小工具-未细化/pin-storage-v5.js";
 import { primeWorkspaceRoots } from "../共享小工具-未细化/chunk-bgf8jybv.js";
-import { primePolicyLimitsCache, composePolicyLimitsClient, initializePolicyLimitsLoadingPromise } from "../../02-功能模块/策略限制(PolicyLimits)/policy-limits-client.js";
+import { primePolicyLimitsCache, composePolicyLimitsClient, initializePolicyLimitsLoadingPromise } from "../../02-功能模块/策略限制-PolicyLimits/policy-limits-client.js";
 import { startRemoteSettingsLoadBarrier, isRemoteSettingsLoadEligible, awaitRemoteSettingsFetchSettled } from "../设置-配置/remote-managed-settings.js";
 import { primeFileDescriptorCredentials } from "../共享小工具-未细化/chunk-fpak7ean.js";
 import { credentialsStoreFor } from "../../02-功能模块/认证-OAuth登录/credentials-store.js";
@@ -192,7 +192,7 @@ async function T(t = {}) {
       populateOAuthAccountInfoIfNeeded(m, o).catch(logError),
       profileCheckpoint("init_after_oauth_populate"),
       primePlanSlugCollisions(o),
-      import("../../02-功能模块/AutoMode-自动模式/unattended-serving-consent.js")
+      import("../../02-功能模块/自动模式-AutoMode/unattended-serving-consent.js")
         .then((i) => i.primeUnattendedServingConsent())
         .catch(() => {}),
       setRepoDetectionGuards({ trustProbe: checkHasTrustDialogAccepted }),
@@ -334,7 +334,7 @@ function initializeTelemetryAfterTrust(t) {
           ),
             applyConfigEnvironmentVariables());
           let { captureAdmin3PSteeringSnapshot: e } =
-            await import("../../02-功能模块/Bedrock-Vertex/apply-3p-default-fallbacks.js");
+            await import("../../02-功能模块/模型接入-Bedrock-Vertex/apply-3p-default-fallbacks.js");
           e();
           let [s, c] = await Promise.all([loadExtraCACerts(), loadMTLSClientMaterial()]);
           if (s || c.changed) (clearProxyCache(), configureGlobalAgents());

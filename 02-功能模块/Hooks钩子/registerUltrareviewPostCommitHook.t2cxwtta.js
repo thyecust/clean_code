@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 78 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ke, wB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { BASH_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getUltrareviewPostCommitTip } from "../CodeReview/ultrareview-tips.js";
+import { getUltrareviewPostCommitTip } from "../代码审查/ultrareview-tips.js";
 import { isGitCommitCommand, looksLikeGitCommitOutput } from "../../01-核心基础设施/共享小工具-未细化/git-commit-detection.js";
 async function m(o, a, l, u, s) {
   if (o.hook_event_name !== "PostToolUse") return {};

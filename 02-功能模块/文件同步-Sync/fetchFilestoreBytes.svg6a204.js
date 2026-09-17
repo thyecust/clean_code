@@ -12,7 +12,7 @@
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { A, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import { STAGE_TMP_PREFIX, getStageFileRoot, getOutputsRoot, isManagedRemoteSession } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { STAGE_TMP_PREFIX, getStageFileRoot, getOutputsRoot, isManagedRemoteSession } from "../计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getTrustedOrigin, getUntrustedOriginReason, httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";

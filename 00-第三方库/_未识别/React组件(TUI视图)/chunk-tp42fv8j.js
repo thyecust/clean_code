@@ -11,7 +11,7 @@ import { _ } from "../../react/react.zhnvc798.js";
 import { useVoiceSelector } from "../../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import { useTerminalFocus } from "../../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { useClock } from "../../../01-核心基础设施/共享小工具-未细化/use-clock.js";
-import { useNotificationQueue } from "../../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
+import { useNotificationQueue } from "../../../03-入口与运行时/会话UI-REPL/notification-queue.js";
 import { invertText, chalk } from "../../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { useTheme } from "../../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { stripAnsi } from "../../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";

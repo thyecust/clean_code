@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isSimpleMode } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSimpleMode } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { consumeBgAuthSnapshotAsync, getOAuthTokenAsync, getApiKeyAsync, getSessionIngressTokenAsync } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
 async function primeFileDescriptorCredentials(e, r = {}) {

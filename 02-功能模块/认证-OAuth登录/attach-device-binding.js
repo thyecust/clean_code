@@ -15,9 +15,9 @@ import { logForDebugging } from "../../01-核心基础设施/核心工具-日志
 import { isUnboundCreateReason, formatCreatedUnboundNotice, formatUnboundNotice } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { unboundCreateReason, productionUnboundCreatesDeps } from "../../01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js";
 import { isViolinWoodEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
-import { startDeviceRegistration } from "../Bridge-RemoteControl/device-bridge-registration.js";
+import { startDeviceRegistration } from "../远程控制-Bridge/device-bridge-registration.js";
 import { NOT_HELD_STATE } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
-import { readLocalDeviceId } from "../Cowork远程设备注册/Cowork远程设备注册.9r92qaht.js";
+import { readLocalDeviceId } from "../设备注册-Cowork/设备注册-Cowork.9r92qaht.js";
 import { resolveAccountIdentity, isEgressAllowed } from "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
 async function resolveAttachDeviceBinding(e) {
   let s = e.session.then(

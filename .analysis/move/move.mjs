@@ -45,6 +45,15 @@ const allSet = new Set(allFiles.map(normalize));
 const fileMap = new Map(); // 绝对旧路径 -> 绝对新路径
 const dirRemovals = [];
 
+// 先挑出「显式列出的文件移动」：目录展开时要跳过它们，让显式那条决定文件名
+// （目录改名时入口文件要跟着改名，所以同一条路径会在计划里出现两次 —— 一次由目录
+//  展开得到「同名搬走」，一次显式给出「搬走且改名」。后者优先。）
+const explicitFiles = new Set();
+for (const mv of moves) {
+  const from = normalize(join(ROOT, mv.from));
+  if (existsSync(from) && allSet.has(from)) explicitFiles.add(from);
+}
+
 for (const mv of moves) {
   const from = normalize(join(ROOT, mv.from));
   const to = normalize(join(ROOT, mv.to));
@@ -66,7 +75,10 @@ for (const mv of moves) {
     })(from);
     if (!inner.length) { errors.push(`目录为空: ${mv.from}`); continue; }
     dirRemovals.push(from);
-    for (const p of inner) fileMap.set(p, join(to, relative(from, p)));
+    for (const p of inner) {
+      if (explicitFiles.has(p)) continue;
+      fileMap.set(p, join(to, relative(from, p)));
+    }
   }
 }
 

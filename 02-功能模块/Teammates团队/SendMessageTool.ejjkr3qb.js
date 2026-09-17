@@ -16,7 +16,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { Ve, yt, R, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { AGENT_MESSAGE_TAG, isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { AGENT_MESSAGE_TAG, isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { normalizeSingleLineText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -50,11 +50,11 @@ import {
   getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getAgentId, getAgentName, getTeamName, isTeammate, getTeammateColor, isTeamLead } from "./teammate-context.js";
-import { formatUnreachablePeerRefusal, formatCannotReceiveRefusal, isPeerInboundUnconfirmed } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
-import { sanitizeTextForDisplay, sanitizePlainText } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { formatUnreachablePeerRefusal, formatCannotReceiveRefusal, isPeerInboundUnconfirmed } from "../远程控制-Bridge/chunk-1yq098a7.js";
+import { sanitizeTextForDisplay, sanitizePlainText } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, findToolByName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { scrubRestoredTranscriptMetadata } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+import { scrubRestoredTranscriptMetadata } from "../通道集成-Slack/通道集成-Slack.wnn25q3j.js";
 import { LIST_AGENTS_TOOL_NAME } from "./list-agents-tool-constants.js";
 import {
   isAgentStopPending,
@@ -84,7 +84,7 @@ import {
   getParentPromptId,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isCrossSessionMessagingEnabled, CROSS_SESSION_MESSAGING_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { DEFAULT_PEER_GUARD_LIMITS, isMessageTooLargeError, isSenderPacedError, isRegistryUnreadableRefusal, classifySendFailure, formatStaleSocketHint, formatBusySocketHint, UdsSendRefusedError } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { DEFAULT_PEER_GUARD_LIMITS, isMessageTooLargeError, isSenderPacedError, isRegistryUnreadableRefusal, classifySendFailure, formatStaleSocketHint, formatBusySocketHint, UdsSendRefusedError } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
 import { getCleanMessageSplit, repairSendMessageInput, writeToMailbox, createShutdownRequestMessage, createShutdownApprovedMessage, createShutdownRejectedMessage, isStructuredProtocolMessage, markMessagesAsReadByPredicate } from "./chunk-g6nvp9mm.js";
 import { isAgentSwarmsEnabled } from "./agent-swarms-enablement.js";
 import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
@@ -1364,7 +1364,7 @@ var SendMessageTool = buildTool({
           let {
             isRemoteControlPeerUnreachableFromHere: _,
             formatUnreachableElevatedRefusal: i,
-          } = import.meta.require("../Bridge-RemoteControl/chunk-tyce0p0b.js");
+          } = import.meta.require("../远程控制-Bridge/chunk-tyce0p0b.js");
           if (d.via === "remote-control" && _())
             return (
               de({
@@ -1793,7 +1793,7 @@ ${w[0].text}`,
             postInterClaudeMessage: M,
             isLikelyStaleBridgeError: E,
             classifyBridgeSendError: S,
-          } = import.meta.require("../Bridge-RemoteControl/listBridgePeerSessions.g159fp6a.js"),
+          } = import.meta.require("../远程控制-Bridge/listBridgePeerSessions.g159fp6a.js"),
           B = formatUnreachablePeerRefusal(t.session, h.target, e.to);
         if (B)
           return (
@@ -1889,7 +1889,7 @@ ${w[0].text}`,
             }
           );
         let { sendToUdsSocket: M, ownMessagingSocket: E } = import.meta.require(
-            "../跨会话消息(UDS)/chunk-ddtmwhn7.js",
+            "../跨会话消息-UDS/chunk-ddtmwhn7.js",
           ),
           { subscribeToPeerIdle: S, idleSubscriptionLines: B } =
             import.meta.require("./subscribeToPeerIdle.tk67nd8x.js"),
@@ -2582,7 +2582,7 @@ ${M}`,
       }
       case "local-session": {
         let { sendToUdsSocket: h, ownMessagingSocket: I } = import.meta.require(
-            "../跨会话消息(UDS)/chunk-ddtmwhn7.js",
+            "../跨会话消息-UDS/chunk-ddtmwhn7.js",
           ),
           D = getCurrentSessionPeerName(),
           { subscribeToPeerIdle: M, idleSubscriptionLines: E } =
@@ -2701,11 +2701,11 @@ ${V.display}`
             postInterClaudeMessage: D,
             isLikelyStaleBridgeError: M,
             classifyBridgeSendError: E,
-          } = import.meta.require("../Bridge-RemoteControl/listBridgePeerSessions.g159fp6a.js"),
+          } = import.meta.require("../远程控制-Bridge/listBridgePeerSessions.g159fp6a.js"),
           {
             isRemoteControlPeerUnreachableFromHere: S,
             formatUnreachableElevatedRefusal: B,
-          } = import.meta.require("../Bridge-RemoteControl/chunk-tyce0p0b.js");
+          } = import.meta.require("../远程控制-Bridge/chunk-tyce0p0b.js");
         if (o.via === "remote-control" && S())
           return (
             i("bridge", "bridge_auth", { via: I }),

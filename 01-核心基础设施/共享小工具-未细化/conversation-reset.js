@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { rearmWatchNoticeBudgets, clearRefusedPublishBodies, disposeArtifactRoom, retireLiveDocWatches, resetArtifactConversationState } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
+import { rearmWatchNoticeBudgets, clearRefusedPublishBodies, disposeArtifactRoom, retireLiveDocWatches, resetArtifactConversationState } from "../../02-功能模块/制品发布-Artifact/chunk-rr78st95.js";
 import { endLowPriorityMode, advancePasteIdsFromMessages, isPassiveCommand, removeCommandsByFilter, clearHostContextRegistry } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { listGoalStopHooks } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
 import { runBundledSkillSessionResets } from "../../02-功能模块/Skills技能/bundled-skills.js";
-import { cancelAutoResume } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
+import { cancelAutoResume } from "../../02-功能模块/状态管理-AppState/状态管理-AppState.wyzjbwp5.js";
 import { transcriptReplacedBus } from "./transcript-replaced-bus.js";
 function resetConversation(o, e, r, i) {
   (cancelAutoResume("conversation_reset"),

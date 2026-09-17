@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { writeFileAtomicWithOptions } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { writeFileAtomicWithOptions } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { jsonStringify, getFsSurface } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getSecureStorageDir } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";

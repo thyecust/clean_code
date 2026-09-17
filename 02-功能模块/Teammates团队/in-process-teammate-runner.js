@@ -13,7 +13,7 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { gbt } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { emitTaskNotification, bytesPerTokenForModel, runWithAgentContext, getAgentDepth } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -56,7 +56,7 @@ import {
   isLoggableMessage,
   buildDefaultSystemPrompt,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { readPrimedAgentMemory, persistPermissionUpdates } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { readPrimedAgentMemory, persistPermissionUpdates } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { cloneFileStateCache } from "../MCP客户端/chunk-3kmsshb6.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";

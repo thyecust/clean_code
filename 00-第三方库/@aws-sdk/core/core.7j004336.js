@@ -15,11 +15,11 @@ import { nu } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.
 import { lhe } from "../../_未识别/第三方库-AWSSDK/chunk-zdrvwe5r.js";
 import { ta } from "../../_未识别/第三方库-AWSSDK/chunk-mwf4pmq2.js";
 import { Rb, z0n, w2e, Oke } from "../../_未识别/第三方库-其他/chunk-jtb5q5xr.js";
-import { utilBufferFromModule, utilUtf8Module, utilBase64Module } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
+import { utilBufferFromModule, utilUtf8Module, utilBase64Module } from "../../../02-功能模块/模型接入-Bedrock-Vertex/chunk-p991cddr.js";
 import { awsSdkCoreClientModule } from "../../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
 import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
 import { getUrlParserModule } from "../../../01-核心基础设施/共享小工具-未细化/url-parser.js";
-import { getPropertyProviderModule } from "../../../02-功能模块/Bedrock-Vertex/smithy-property-provider.js";
+import { getPropertyProviderModule } from "../../../02-功能模块/模型接入-Bedrock-Vertex/smithy-property-provider.js";
 import { commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var Q6 = commonJS(function (Zi) {
   var Qi = nu();

@@ -20,14 +20,14 @@ import { truncateToCodeUnits, toWellFormed, beforeFirst } from "../../01-核心�
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { httpClient, normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
-import { clearIsGitMemo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
+import { clearIsGitMemo } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { SHA256_HEX_REGEX, hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { getPreSettingsEnvSnapshot } from "../../01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js";
-import { HOST_FIELD_NAME } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { HOST_FIELD_NAME } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import {
   createConcurrencyLimiter,
   isSignalAborted,
@@ -76,7 +76,7 @@ import {
   GIT_PATHSPEC_ENV,
   GIT_ATTRIBUTE_FILTER_REGEX,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getStageFileRoot } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { getStageFileRoot } from "../计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import {
   DEFAULT_GIT_TIMEOUT_MS,
   runDirSyncGit,
@@ -96,7 +96,7 @@ import {
   createBundle,
   receiveBundle,
   readFileWithMaxBytes,
-} from "../Git-Worktree/dir-sync-git-repository.js";
+} from "../工作树-Git/dir-sync-git-repository.js";
 import {
   JOURNAL_VERSION_WITH_NOTE,
   MAX_USER_EVENT_UUIDS,
@@ -109,10 +109,10 @@ import {
   encodeSyncJournal,
 } from "../文件同步-Sync/sync-journal.js";
 import { DEFAULT_BEFORE_TURN_CAP_MS, getDirSyncWorkerSessionFile, announceDirSyncVerdict, stageDirSyncNotice, markDirSyncCopyCleared, isDirSyncEnabled } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-worker-lane.js";
-import { buildSessionRefName, listSessionRefs, UNREADABLE_CARRIER_STATUS } from "../目录同步(dir-sync)/dir-sync-git-lane.js";
+import { buildSessionRefName, listSessionRefs, UNREADABLE_CARRIER_STATUS } from "../目录同步-dir-sync/dir-sync-git-lane.js";
 import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
 import { escapeMarkupText, escapePromptText, escapeMarkupAttribute } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
-import { getSafeReadOpenFlags } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { getSafeReadOpenFlags } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { s, T, O, v, c, $e, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { dirname as vu, join as Cr } from "path";

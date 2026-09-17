@@ -21,22 +21,22 @@ import {
   A$n,
   Bdr,
 } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
-import "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
+import "../远程控制-Bridge/chunk-sc8n0cp3.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
 import "../GitHub集成/chunk-bfz9rjjm.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
 import "../工具Bash-Shell/bash-output-view.js";
 import "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
+import "../../03-入口与运行时/会话UI-REPL/chunk-vpp75aza.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import "../工具UI渲染/chunk-g4k5jjwt.js";
 import "../../01-核心基础设施/共享小工具-未细化/webfetch-tool-messages.js";
-import "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
+import "../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
 import "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
 import "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
-import "../Diff引擎/structured-diff.js";
+import "../差异引擎-Diff/structured-diff.js";
 import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import "../语法高亮-Markdown渲染/markdown-renderer.js";
@@ -49,7 +49,7 @@ import "../../01-核心基础设施/共享小工具-未细化/feature-flag-versi
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
-import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
+import "../通知-Notifications/通知-Notifications.g4xng0pg.js";
 import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";

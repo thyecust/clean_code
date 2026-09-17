@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { sanitizeSingleLineDisplayText } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { sanitizeSingleLineDisplayText } from "../../02-功能模块/键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
 import { generateTaskId, createPendingTask } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 function formatMcpServerToolLabel(t, r) {
   return `${sanitizeSingleLineDisplayText(t) ?? ""}/${sanitizeSingleLineDisplayText(r) ?? ""}`;

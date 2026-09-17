@@ -13,7 +13,7 @@ import { A, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { repeatString, countOccurrences, normalizeIdeographicSpaces } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { CLAUDE_BULLET_GLYPH, SEARCH_PREFIX_GLYPH, LOZENGE_OUTLINE_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { Zd } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
@@ -27,7 +27,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
+import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import { getStringWidth, wrapAnsi, truncatePathMiddle, truncateToWidth, truncateStartToWidth, truncateToWidthNoEllipsis, truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { getInitialSettings, getSecuritySensitiveSetting } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { THIRD_PARTY_PROVIDER_LABELS, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -53,15 +53,15 @@ import {
 } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { shouldShowNotification, useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
+import { shouldShowNotification, useNotificationQueue } from "../../03-入口与运行时/会话UI-REPL/notification-queue.js";
 import { getConnectedIdeClient, isVoiceEnabled, hasVoiceAuth, isVoiceModeAllowed } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { useKeybindingContext } from "../键位绑定(Keybindings)/keybinding-context.js";
+import { useKeybindingContext } from "../键位绑定-Keybindings/keybinding-context.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { registerMcpNotificationHandler } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { useHasNonAutocompleteOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { useVoiceSelector, useVoiceSetState, useVoiceGetState } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
-import { formatKeybindingKeyForPlatform, keybindingStore, getActiveKeybindings, getKeybindingPlatform, isSameKeySpec } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { formatKeybindingKeyForPlatform, keybindingStore, getActiveKeybindings, getKeybindingPlatform, isSameKeySpec } from "../键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
 import {
   applyLocalUpdate,
   localInstallExists,

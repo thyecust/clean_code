@@ -114,14 +114,14 @@ import {
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { UNSUPPORTED_TELEMETRY_CODE, isUnsupportedFailure, pathSpaces, jsonStringify, deepClone, resolvePathInfo, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isConfigDirPath } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isConfigDirPath } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getCwd } from "../共享小工具-未细化/cwd-context.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ATOMIC_WRITE_STAGING_DIR_NAME, writeFileAndFlush } from "./chunk-fx8qr1md.js";
 import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
-import { execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
-import { findCanonicalGitRoot, dirIsInGitRepo } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrowWithCwd } from "../../02-功能模块/工作树-Git/git-exec-hardening.js";
+import { findCanonicalGitRoot, dirIsInGitRepo } from "../安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { hashSha256 } from "../共享小工具-未细化/git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";

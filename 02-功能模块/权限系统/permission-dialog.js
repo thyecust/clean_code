@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { tryFormatShortLabel } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { tryFormatShortLabel } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 function p(l) {
   let s = tryFormatShortLabel(l);

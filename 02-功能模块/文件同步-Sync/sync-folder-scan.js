@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { truncateToCodePoints, isWellFormed, toWellFormed, ANY_CONTROL_CHAR_REGEX } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { nodeIgnoreModule, getIgnorePatternCompileError, filterCompilableIgnorePatterns } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { nodeIgnoreModule, getIgnorePatternCompileError, filterCompilableIgnorePatterns } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import {
   createConcurrencyLimiter,
   isSignalAborted,
@@ -27,10 +27,10 @@ import {
   looksLikeGitDirEntries,
   isGitDirectoryAtPath,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { DEFAULT_MAX_SYNC_FILES } from "../../01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js";
+import { DEFAULT_MAX_SYNC_FILES } from "../../01-核心基础设施/安全文件系统-FS加固/hardened-fs-primitives.js";
 import { isPathEligibleForSync, compareByPath } from "./sync-journal.js";
 import { isRefusedFilePath, isRefusedDirectoryPath } from "./chunk-tqwnv5vj.js";
-import { getSafeReadOpenFlags } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { getSafeReadOpenFlags } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var P = toESM(nodeIgnoreModule(), 1);

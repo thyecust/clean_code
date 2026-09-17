@@ -21,10 +21,10 @@ import { getDetectedBuildTools } from "../../01-核心基础设施/设置-配置
 import { Ve, yt, G0, R, dt, ge, l, Ub, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { resolvePathInfo, resolveSymlinkTargetSync, expandPathAliases, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { TruncatingOutputBuffer } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { emitTaskNotification, getOwnValue, isForegroundSubagentContext, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, POWERSHELL_TOOL_NAME, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { getToolResultsDirForSession, getSidecarKeyForToolResultFile, ensureToolResultsDirectory, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getToolResultsDirForSession, getSidecarKeyForToolResultFile, ensureToolResultsDirectory, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { getContainingDirectory, containsPathTraversal } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { INLINE_CODE_FLAGS, isOutsideReadsBlockedAsk, outsideReadsRuntimePathAsk, outsideReadsTooComplexAsk, BASH_COMMAND_CLAMP_DENY_REASON, BASH_COMMAND_CLAMP_CRASH_REASON } from "../权限系统/chunk-e4pfvp7x.js";
@@ -41,9 +41,9 @@ import {
   normalizeCaseForComparison,
   allWorkingDirectories,
   matchingRuleForInput,
-} from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+} from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { isBashToolAvailable, isGetTaskToolEnabled } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { hasNoControlCharacters } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { hasNoControlCharacters } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {

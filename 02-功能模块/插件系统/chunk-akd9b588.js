@@ -43,18 +43,18 @@ import {
   getPluginIdSchema,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
-import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { getPluginRegistryFileScope, getPluginsDir } from "./plugin-system-core.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
-import { findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
+import { findGitRoot } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { logPluginRemoteFetch, classifyNetworkErrorKind, MAX_MARKETPLACE_CATALOG_BYTES, hasHeadersHelper, isRequestRoutingHeader } from "./chunk-ajtn749s.js";
 import { FRONTMATTER_PATTERN, parseFrontmatterYaml } from "../MCP客户端/chunk-3kmsshb6.js";
 import { analyzeHooksModule } from "../Hooks钩子/chunk-z3433nr6.js";
 import { validatePluginManifest, damerauLevenshteinDistance, buildVersionTagName, resolvePluginRenameChain } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isNonMarketplacePluginSource, hasNonMarketplacePluginSource, getNonMarketplacePluginSource, splitPluginIdOnLastAt, getPluginMarketplace, isEqualIgnoringCase } from "./chunk-33bdfgmx.js";
-import { SUPPORTED_BINARY_TARGETS, stripBinaryTargetSuffix, isExistingDirectory, checkContainedDirectory, readOptionalFileContent, readTextFileCapped } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { SUPPORTED_BINARY_TARGETS, stripBinaryTargetSuffix, isExistingDirectory, checkContainedDirectory, readOptionalFileContent, readTextFileCapped } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { s, T, se, v, c, fe, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";

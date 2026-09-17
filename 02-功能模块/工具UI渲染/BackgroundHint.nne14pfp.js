@@ -15,7 +15,7 @@ import "../工具Bash-Shell/shell-output-view.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
-import "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
+import "../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 export {

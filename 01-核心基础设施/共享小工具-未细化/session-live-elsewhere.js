@@ -26,9 +26,9 @@ async function getLiveSessionHolder(o) {
 async function listLiveSessionHolders(o, i) {
   let s = i?.rejectUnreadable
       ? await (
-          await import("../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js")
+          await import("../../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js")
         ).listAllLiveSessions(void 0, { rejectUnreadable: !0 })
-      : await import("../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js")
+      : await import("../../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js")
           .then((n) => n.listAllLiveSessions())
           .catch(() => []),
     e = [];

@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 212 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { isDesktopHostEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { parseUltrareviewArgs, ultrareviewLaunchAcknowledgementNudge, runUltrareviewHeadless } from "../CodeReview/CodeReview.ddrd6y06.js";
+import { parseUltrareviewArgs, ultrareviewLaunchAcknowledgementNudge, runUltrareviewHeadless } from "../代码审查/代码审查.ddrd6y06.js";
 var m = async (o, r, t) => {
   let a = t ? `/${t}` : "/ultrareview",
     { scopeArgs: s, applyFixes: n, postReview: i } = parseUltrareviewArgs(o),

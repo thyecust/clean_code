@@ -11,7 +11,7 @@ import { j, B, dl } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { resolveExecutablePathAsync, JETBRAINS_IDES, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
+import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import { ESCAPE_CHARACTER, BELL_CHARACTER, PARAM_SEPARATOR, CONTROL_INTRODUCER_CODES } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { isLocalAddress } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { terminalCapabilities } from "../状态栏-主题/chunk-jz6b76hr.js";

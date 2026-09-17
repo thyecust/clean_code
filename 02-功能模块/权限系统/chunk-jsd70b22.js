@@ -14,7 +14,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { lit as S, fromEnum, fromEnumOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ve, zi, yt, dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { jsonParse, resolvePathInfo, getFsSurface, redactSecretsFromText, redactForDisplay, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, truncateWithCharCount } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -117,14 +117,14 @@ import {
   shouldWithholdValue,
   hasCollapsedInvisibleRuns,
   replaceLineBreaks,
-} from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+} from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { unstripSkillInvocationAllowRules, getToolPermissionContext } from "./chunk-fjrcf22x.js";
-import { areUserPermissionRulesAllowed, sanitizePermissionUpdates, applyPermissionUpdates, isPersistableSettingsSource, persistPermissionUpdates, hasRequestedMachine } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS, notePlanFileForgotten, getPlanFilePath, getPlan } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { areUserPermissionRulesAllowed, sanitizePermissionUpdates, applyPermissionUpdates, isPersistableSettingsSource, persistPermissionUpdates, hasRequestedMachine } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
+import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS, notePlanFileForgotten, getPlanFilePath, getPlan } from "../计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import { isTeammateWakeupPrompt, getLastPeerDmSummary } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { sendMcpNotification } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { appStateStore } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
-import { CFC_TOOL_PREFIX } from "../ClaudeinChrome/claude-in-chrome-host.js";
+import { CFC_TOOL_PREFIX } from "../浏览器集成-ClaudeinChrome/claude-in-chrome-host.js";
 import { CHANNEL_PERMISSION_REQUEST_METHOD, findChannelEntry } from "../插件系统/channel-gate.js";
 import { logShellAllowRulesAdded } from "../../01-核心基础设施/设置-配置/shell-allow-rule-analytics.js";
 import { createProfanityFreeShortId, sanitizeAndTruncateText, truncateForPreview, findChannelPermissionServers } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
@@ -1834,9 +1834,9 @@ var fo = null,
   go = null,
   yo = null,
   Po = null,
-  De = import.meta.require("../Workflow编排/WorkflowTool.b1s7beta.js").WorkflowTool,
+  De = import.meta.require("../编排-Workflow/WorkflowTool.b1s7beta.js").WorkflowTool,
   ho = import.meta.require("../../01-核心基础设施/共享小工具-未细化/workflowPermissionDialog.pk0trr3f.js").workflowPermissionDialog,
-  bo = import.meta.require("../Workflow编排/recordWorkflowUsageConsent.w6jg9g54.js"),
+  bo = import.meta.require("../编排-Workflow/recordWorkflowUsageConsent.w6jg9g54.js"),
   Qo = import.meta.require("../工具Monitor/工具Monitor.981fw9dy.js").MonitorTool,
   ko =
     "The request this approval was for had already been withdrawn; the answer applied to nothing.";

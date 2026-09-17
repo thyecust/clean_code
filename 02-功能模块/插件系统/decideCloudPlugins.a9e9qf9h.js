@@ -16,13 +16,13 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { getCloudPluginsConsentPath, saveCloudPluginsConsent, createCloudPluginsConsentStorage, resolveCloudPluginsConsent, computeCloudPluginsForwardPlan, collectCloudPluginsForwardingInputs } from "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
+import { getCloudPluginsConsentPath, saveCloudPluginsConsent, createCloudPluginsConsentStorage, resolveCloudPluginsConsent, computeCloudPluginsForwardPlan, collectCloudPluginsForwardingInputs } from "../远程控制-Bridge/chunk-sc8n0cp3.js";
 import { cloudPluginsForwarderMemories } from "../Hooks钩子/device-hooks-serving.js";
 import "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";

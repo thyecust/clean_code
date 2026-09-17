@@ -15,7 +15,7 @@ var r = null,
   e = {
     name: import.meta.require("../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js").ARTIFACT_TOOL_NAME,
     names: import.meta.require("../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js"),
-    ui: import.meta.require("../../02-功能模块/Artifact发布-渲染/renderCheckToolUseMessage.zxaexmtx.js"),
+    ui: import.meta.require("../../02-功能模块/制品发布-Artifact/renderCheckToolUseMessage.zxaexmtx.js"),
   },
   M = [
     AGENT_TOOL_NAME,
@@ -54,7 +54,7 @@ var r = null,
       return import.meta.require("../../02-功能模块/工具文件读写编辑/renderToolUseTag.1xg51k6k.js").renderToolUseMessage;
     },
     get [NOTEBOOK_EDIT_TOOL_NAME]() {
-      return import.meta.require("../../02-功能模块/Notebook(.ipynb)/Notebook(.ipynb).zmx4vxzb.js").renderToolUseMessage;
+      return import.meta.require("../../02-功能模块/Notebook-ipynb/Notebook-ipynb.zmx4vxzb.js").renderToolUseMessage;
     },
     get [POWERSHELL_TOOL_NAME]() {
       return import.meta.require("../../02-功能模块/工具Bash-Shell/renderToolUseErrorMessage.fxtssd7a.js").renderToolUseMessage;

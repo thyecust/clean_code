@@ -12,7 +12,7 @@ import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共
 import { invalidateAllSettings } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { isSafeMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSafeMode } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getSettingsForSource, parentManagedTierParticipates, getSettings_DEPRECATED, getPolicySettingsLoadErrors, filterFatalPolicyErrors } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { resetSettingsCacheWithBackendRead } from "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
 import { checkHasTrustDialogAccepted } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";

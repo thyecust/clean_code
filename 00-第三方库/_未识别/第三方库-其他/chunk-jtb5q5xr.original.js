@@ -10,7 +10,7 @@
 import { nu, EA } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { hexEncodingModule } from "../../../01-核心基础设施/共享小工具-未细化/hex-encoding-module.js";
 import { Mie } from "./chunk-cpfawwsx.js";
-import { utilBufferFromModule, utilUtf8Module, utilBase64Module, fetchHttpHandlerModule } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
+import { utilBufferFromModule, utilUtf8Module, utilBase64Module, fetchHttpHandlerModule } from "../../../02-功能模块/模型接入-Bedrock-Vertex/chunk-p991cddr.js";
 import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
 import { commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var Rb = commonJS(function (wr) {
@@ -1996,7 +1996,7 @@ var Oke = commonJS(function (Ci) {
       });
     }
     async loadEventStreamCapability() {
-      let { EventStreamSerde: e } = await import("../../../02-功能模块/Bedrock-Vertex/EventStreamSerde.rztqpvts.js");
+      let { EventStreamSerde: e } = await import("../../../02-功能模块/模型接入-Bedrock-Vertex/EventStreamSerde.rztqpvts.js");
       return new e({
         marshaller: this.getEventStreamMarshaller(),
         serializer: this.serializer,

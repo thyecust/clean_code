@@ -13,12 +13,12 @@ import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具
 import { toCompatSessionId, toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { Ve, yt, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { RENAME_FALLBACK_ERRNOS, renameWithRetry } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { RENAME_FALLBACK_ERRNOS, renameWithRetry } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { registerCleanup, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodePoints, firstLine, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { replaceControlChars, formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -109,7 +109,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { JOURNAL_VERSION_WITH_NOTE, MAX_USER_EVENT_UUIDS, parseSyncJournal, normalizeFileMode, encodeSyncJournal } from "../文件同步-Sync/sync-journal.js";
 import { computeGitBlobId } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
-import { MAX_SYNC_UPLOAD_BYTES, isSafePortablePath, parseTaggedPathListing, readFileWithDigests, openTreeAnchor, createFileSystemHost } from "../../01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js";
+import { MAX_SYNC_UPLOAD_BYTES, isSafePortablePath, parseTaggedPathListing, readFileWithDigests, openTreeAnchor, createFileSystemHost } from "../../01-核心基础设施/安全文件系统-FS加固/hardened-fs-primitives.js";
 import {
   DEFAULT_GIT_TIMEOUT_MS,
   runDirSyncGit,
@@ -129,7 +129,7 @@ import {
   createBundle,
   receiveBundle,
   readDeliveredObjectIds,
-} from "../Git-Worktree/dir-sync-git-repository.js";
+} from "../工作树-Git/dir-sync-git-repository.js";
 import {
   CONFLICTED_COPY_MARKER,
   MAX_CONFLICTED_COPY_ATTEMPTS,
@@ -171,10 +171,10 @@ import {
   recordReceivedUpload,
   recordAppliedTurn,
   recordSentUpload,
-} from "../目录同步(dir-sync)/chunk-zbxyj64j.js";
-import { getSafeReadOpenFlags } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+} from "../目录同步-dir-sync/chunk-zbxyj64j.js";
+import { getSafeReadOpenFlags } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { segmentScopeSkip } from "../文件同步-Sync/sync-folder-scan.js";
-import { getSideGitDirPath, buildSessionRefName, listSessionRefs, UNREADABLE_CARRIER_STATUS, createDirSyncJournalTransport } from "../目录同步(dir-sync)/dir-sync-git-lane.js";
+import { getSideGitDirPath, buildSessionRefName, listSessionRefs, UNREADABLE_CARRIER_STATUS, createDirSyncJournalTransport } from "../目录同步-dir-sync/dir-sync-git-lane.js";
 import { truncateWithEllipsis } from "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
 import { sanitizePathSegment, getDirSyncRecordPath, resolveDirSyncRecordLocation } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
 import { createHoverRestOptions } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";

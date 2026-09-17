@@ -14,8 +14,8 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isExtraUsageAllowed, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-import { policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { POST_IGNORED_NOTE, POST_DISABLED_NOTE, parseUltrareviewArgs, precheckLaunchScope, previewInstructions, checkOverageGate, launchRemoteReview, ultrareviewLaunchAcknowledgementNudge } from "../CodeReview/CodeReview.ddrd6y06.js";
+import { policyDeniedReason } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { POST_IGNORED_NOTE, POST_DISABLED_NOTE, parseUltrareviewArgs, precheckLaunchScope, previewInstructions, checkOverageGate, launchRemoteReview, ultrareviewLaunchAcknowledgementNudge } from "../代码审查/代码审查.ddrd6y06.js";
 import { getReviewCostNote, getReviewDurationNote, isUltrareviewPostEnabled, canSelfManageUsageCredits, CLAUDE_CODE_ON_WEB_DOCS_URL } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
@@ -25,7 +25,7 @@ import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-
 import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { SpinnerMessageText, IntensitySpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
-import { resolveBundleSeedViability, getBundleSeedNotice } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { resolveBundleSeedViability, getBundleSeedNotice } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
 import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dn, kn, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";

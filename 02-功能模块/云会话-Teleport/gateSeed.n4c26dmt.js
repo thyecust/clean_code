@@ -28,7 +28,7 @@ import {
   parseSequenceNum,
   getSessionRequestTarget,
   fetchOlderSessionEvents,
-} from "../Bridge-RemoteControl/chunk-x379yyxb.js";
+} from "../远程控制-Bridge/chunk-x379yyxb.js";
 import { createSystemInfoMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../远程工具执行/remote-tool-protocol.js";
 import { parseSdkInitFrame, parseActiveGoalState, parseRemoteAutocompactState, adaptSdkMessageFrame, extractRetractionSignal } from "../../03-入口与运行时/Headless-SDK模式/sdk-message-adapter.js";

@@ -11,9 +11,9 @@ import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getNonMainAgentTaskId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { derivePublishContextFrom, makeMainObservedVersionReader } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { getArtifactState } from "../Artifact发布-渲染/chunk-rr78st95.js";
-import { maybeSubscribeFrameLive, isSocketHoldingPublishContext } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
+import { derivePublishContextFrom, makeMainObservedVersionReader } from "../制品发布-Artifact/chunk-01ymf0ar.js";
+import { getArtifactState } from "../制品发布-Artifact/chunk-rr78st95.js";
+import { maybeSubscribeFrameLive, isSocketHoldingPublishContext } from "../制品发布-Artifact/chunk-kshc4v5t.js";
 var l = 32;
 function subagentPublishAdopter(n) {
   if (

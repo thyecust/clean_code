@@ -10,7 +10,7 @@
 import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
+import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import { getComputerUseSession, getComputerUseNativeModule, runComputerUseNativeCall, notifyExpectedEscape } from "./computer-use-session.js";
 import { getComputerUseInputNativeModule } from "./computer-use-input-native.js";
 import { IMAGE_TOKEN_BUDGET, fitSizeToTokenBudget } from "../../01-核心基础设施/共享小工具-未细化/image-scaling.js";

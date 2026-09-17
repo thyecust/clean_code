@@ -473,7 +473,7 @@ import {
   xg,
   isInProtectedNamespace,
   getVertexRegionForModel,
-} from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+} from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { setBgExitCause, registerProcessIOErrorHandlers, drainStdoutBeforeExit, markStdoutDrainExternallyClocked, getStdoutDrainBudgetMs, writeToStderr } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import {
   repeatString,
@@ -590,7 +590,7 @@ import {
   logMCPError,
   logMCPDebug,
   captureAPIRequest,
-} from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+} from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   isFocusModeEnabled,
   clearFocusModeSections,
@@ -916,7 +916,7 @@ import {
   internalPathDecisionStands,
   checkEditableInternalPath,
   checkReadableInternalPath,
-} from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+} from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import {
   FILE_STATE_MAX_ENTRIES,
   isFullFileView,
@@ -1073,7 +1073,7 @@ import {
   getGithubRepo,
   isLocalHost,
   isCurrentDirectoryBareGitRepo,
-} from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+} from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import {
   CLOUD_GATEWAY_SESSION_EXPIRED_MESSAGE,
   getAwsRegionOrDefault,
@@ -1867,7 +1867,7 @@ import {
   writeFileAtomic,
   writeFileAtomicWithOptions,
   writeFileAtomicSync,
-} from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+} from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import {
   getShellConfig,
   getGitBashPath,
@@ -1943,7 +1943,7 @@ import {
   prepareGitCwdEnv,
   execFileNoThrow,
   execFileNoThrowWithCwd,
-} from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
+} from "../../02-功能模块/工作树-Git/git-exec-hardening.js";
 import { FileSystemStorage, getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { SHA256_HEX_REGEX, hashSha256, GITHUB_HOST, hostnameEquals, isGitHubHost, isSameHost, getRestApiBaseUrl, getGraphqlApiUrl, hasBackslashInUrlAuthority } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { cs, Get, qet, bx, xt, Nge } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -2138,7 +2138,7 @@ import {
   parseGitRemote,
   parseRepoSlug,
   parseGitHubRepository,
-} from "../../02-功能模块/Git-Worktree/git-repository-detection.js";
+} from "../../02-功能模块/工作树-Git/git-repository-detection.js";
 import { BRIEF_TOOL_NAME, LEGACY_BRIEF_TOOL_NAME, DESCRIPTION, BRIEF_TOOL_PROMPT, PEWTER_OWL_TOOL_PROMPT } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import {
   policyCacheMissMessage,
@@ -2199,9 +2199,9 @@ import {
   hasNameableComplianceTaint,
   isPolicyEnforced,
   getResponseFromCache,
-} from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+} from "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { reportError } from "../../01-核心基础设施/HTTP-网络层/error-tracking-report.js";
-import { shouldUseFullscreen, isFullscreenActive } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { shouldUseFullscreen, isFullscreenActive } from "../../02-功能模块/终端环境探测-TUI-tmux/终端环境探测-TUI-tmux.5pkb0sjc.js";
 import { getProjectsDir as Pl, getProjectKeyFromDir, getProjectDir, getSessionTranscriptPath, setAgentTranscriptSubdir, clearAgentTranscriptSubdir, getAgentTranscriptPath, listAgentIds } from "../../02-功能模块/Teammates团队/transcript-paths.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import {
@@ -2394,7 +2394,7 @@ import {
   copyPlanForResume,
   WORKSHOP_DOC_SNAPSHOT_MAX_CHARS,
   PLAN_SNAPSHOT_MAX_CHARS,
-} from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+} from "../../02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import { getTempBaseDir, MAX_TMP_DIR_PATH_BYTES, assertSafeTempDir, getClaudeTempDir, getChildProcessTmpDir, createTempFilePath } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import {
   getConfiguredBwrapPath,
@@ -2446,8 +2446,8 @@ import {
 import { isExiting, commitExit, getNeverResolvingPromise } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
-import { createPeerAdmissionController, getOwnHopTokens, createPeerDropReporter, getPeerGuardLimits } from "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { getSessionNamingState, claimUniqueSessionName, settledYieldFor, scheduleSettledRecheck, renameSupersededDuringScan, notifyCorrespondentsOfRename } from "../../02-功能模块/跨会话消息(UDS)/chunk-9kzxq41e.js";
+import { createPeerAdmissionController, getOwnHopTokens, createPeerDropReporter, getPeerGuardLimits } from "../../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js";
+import { getSessionNamingState, claimUniqueSessionName, settledYieldFor, scheduleSettledRecheck, renameSupersededDuringScan, notifyCorrespondentsOfRename } from "../../02-功能模块/跨会话消息-UDS/chunk-9kzxq41e.js";
 import {
   ENTER_PLAN_MODE_TOOL_NAME,
   ASK_USER_QUESTION_TOOL_NAME,
@@ -2479,7 +2479,7 @@ import {
   clearAutoReactNoticePending,
   isArtifactToolEnabled,
   isPlanPrototypeOfferEnabled,
-} from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+} from "../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js";
 import { isCustomizationDisabled, isClaudeMdLoadingDisabled } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
 import { getPreSettingsEnvSnapshot, peekPreSettingsEnvSnapshot, getAppliedGlobalConfigEnv, filterPolicyPredicateEnv } from "../../01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js";
 import {
@@ -2545,7 +2545,7 @@ import {
   createEnvironmentRegistry,
   rejectAllPending,
   takeFromMap,
-} from "../../02-功能模块/Workflow编排/chunk-0t0sve49.js";
+} from "../../02-功能模块/编排-Workflow/chunk-0t0sve49.js";
 import { isViolinWoodEnabled, isViolinWoodEnabledCached, isSettingsToCloudEnabled, isSettingsToCloudEnabledCached, isViolinWoodServedOff, isCloudPluginForwardingEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { sendActivityHeartbeat, notifyNestedChainDropped, getMainLoopRefcount, beginActivity, endActivity, computeRetryDelayMs, getSignatureSidecarPath, getSignatureIatSidecarPath } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import { getHostCapabilityState, areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
@@ -2674,7 +2674,7 @@ import {
   isUserDrivenOrUnstampedOrigin,
   isPlainUserMessage,
   logHumanOriginPresumed,
-} from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
+} from "../../02-功能模块/远程控制-Bridge/chunk-5ne99rq3.js";
 import {
   HEARTH_ROWS_META_KEY,
   getHearthRelayRowSchema,
@@ -2708,7 +2708,7 @@ import {
   MAX_ASYNC_EVAL_QUEUE_DEPTH,
   AsyncEvalDispatcher,
   getAsyncEvalDispatcher,
-} from "../../02-功能模块/Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+} from "../../02-功能模块/通道集成-Slack/通道集成-Slack.wnn25q3j.js";
 import {
   CROSS_SESSION_MESSAGE_PREFIX,
   annotateReceivedMessage,
@@ -2734,7 +2734,7 @@ import {
   isStructuredProtocolMessage,
   markMessagesAsReadByPredicate,
 } from "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
-import { isBridgeFirstParty, hasBridgeEntitlement, getBridgeEntitlementBlocker, describeAuthPrecedenceBlocker, isRunningInRemoteEnvironment, isCcrV2SendEventsEnabled, isPersistentRemoteSessionEnabled } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
+import { isBridgeFirstParty, hasBridgeEntitlement, getBridgeEntitlementBlocker, describeAuthPrecedenceBlocker, isRunningInRemoteEnvironment, isCcrV2SendEventsEnabled, isPersistentRemoteSessionEnabled } from "../../02-功能模块/远程控制-Bridge/chunk-9estzwf5.js";
 import { getOrCompute, getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import {
   PLUGIN_HOOKS_MODULES_FLAG,
@@ -2857,7 +2857,7 @@ import { sessionTransportRegistry, mayHaveRemoteClient } from "../../01-核心�
 import { MAX_SKILL_FILE_BYTES, registerMcpSkillBuilders, getMcpSkillBuilders, hashMcpServerConfig, getMcpServerConfigCacheKey, invokeMcpToolRaw, readMcpResourceRaw, registerMcpNotificationHandler } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { getPipeKeyPath, getControlKeyPath, getDispatchDir, getRosterFilePath, getDaemonAuthDir } from "../../02-功能模块/后台任务-Shell管理/chunk-djserjj5.js";
 import { resolveSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
-import { getArtifactState, rearmWatchNoticeBudgets, getArtifactRoom } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
+import { getArtifactState, rearmWatchNoticeBudgets, getArtifactRoom } from "../../02-功能模块/制品发布-Artifact/chunk-rr78st95.js";
 import {
   Aer,
   Bqt,
@@ -2893,9 +2893,9 @@ import { LIST_AGENTS_TOOL_NAME } from "../../02-功能模块/Teammates团队/lis
 import { END_CONVERSATION_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
 import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
 import { parseRetryAfterHeader, extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { PUSH_NOTIFICATION_TOOL_NAME, isAgentPushNotificationEnabled } from "../../02-功能模块/Bridge-RemoteControl/push-notification-tool.js";
+import { PUSH_NOTIFICATION_TOOL_NAME, isAgentPushNotificationEnabled } from "../../02-功能模块/远程控制-Bridge/push-notification-tool.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
-import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME } from "../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js";
+import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME } from "../../02-功能模块/定时任务-Cron/chunk-mk3zm4ew.js";
 import {
   CLAUDE_CODE_URL,
   isLocalEnvironmentRef,
@@ -2918,11 +2918,11 @@ import {
 } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { isAgentSwarmsEnabled } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
 import { excludeCoordinatorCommsMcpTools } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
-import { getTrustedDeviceToken, recoverFromUntrustedDevice } from "../../02-功能模块/Bridge-RemoteControl/chunk-tyce0p0b.js";
+import { getTrustedDeviceToken, recoverFromUntrustedDevice } from "../../02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js";
 import { recordStartupPhase, getRecordedStartupPhase, markResumeHydrateDelta, recordApiRequestSentFromSpawn } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
-import { classifyElevatedAuthError } from "../../02-功能模块/Bridge-RemoteControl/code-session-api.js";
+import { classifyElevatedAuthError } from "../../02-功能模块/远程控制-Bridge/code-session-api.js";
 import { isInITerm2 } from "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
-import { getClaudeInChromeState, getAllNativeMessagingHostsDirs, getAllWindowsRegistryKeys, openInChrome } from "../../02-功能模块/ClaudeinChrome/claude-in-chrome-host.js";
+import { getClaudeInChromeState, getAllNativeMessagingHostsDirs, getAllWindowsRegistryKeys, openInChrome } from "../../02-功能模块/浏览器集成-ClaudeinChrome/claude-in-chrome-host.js";
 import { getMcpSdkGeneration } from "../../01-核心基础设施/共享小工具-未细化/mcp-sdk-generation.js";
 import { getSdkHostedBridgeHandle, getReplBridgeHandle, getRemoteControlSessionCompatId, setSelfBridgeTitle } from "../../02-功能模块/权限系统/chunk-1y2g140m.js";
 import { isFromCurrentAgent, GOAL_CHECKIN_ORIGIN, isGoalCheckinOrigin, WORKER_CHECKIN_ORIGIN, normalizeTaskNotificationOrigin, clearCcrTurnIdOnMismatch, clearCcrTurnIdForBatch } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
@@ -2933,14 +2933,14 @@ import { getBridgeTokenOverride, getBridgeBaseUrlOverride } from "../../01-核�
 import { buildGitSessionContext } from "../../01-核心基础设施/共享小工具-未细化/chunk-ve2h3qad.js";
 import { getJobDir, getOwnJobShortId, writeStateAtomic, logJobWriteError, invalidateJobStateCache, readJobState, syncJobName, syncRespawnFlag, MAX_DETAIL_CHARS, clipWithEllipsis } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { scheduleDynamicWakeup, stopLoopWakeups } from "../../02-功能模块/语音-音频/loop-wakeup-scheduler.js";
-import { isKeybindingCustomizationEnabled, keybindingStore, getActiveKeybindings, getKeybindingDisplayText, logKeybindingFallbackUsed, sanitizeSingleLineDisplayText } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { isKeybindingCustomizationEnabled, keybindingStore, getActiveKeybindings, getKeybindingDisplayText, logKeybindingFallbackUsed, sanitizeSingleLineDisplayText } from "../../02-功能模块/键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
 import { sliceAnsi, noopFunction, cliBoxesModule } from "../../01-核心基础设施/ANSI-样式-布局原语/ansi-text-primitives.js";
 import { isWorktreeModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
 import { unregisterComputerUseEscapeHotkey } from "../../02-功能模块/图片-截图-ComputerUse/computer-use-session.js";
-import { REMOTE_CONTROL_DISCONNECTED_MESSAGE } from "../../02-功能模块/Bridge-RemoteControl/remote-control-messages.js";
+import { REMOTE_CONTROL_DISCONNECTED_MESSAGE } from "../../02-功能模块/远程控制-Bridge/remote-control-messages.js";
 import { isAgentViewDisabled, isAgentsFleetEnabled, isDaemonWorkerRegistryEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { registerC4EUpsellCommandGate } from "../../01-核心基础设施/共享小工具-未细化/c4e-upsell-command-gate.js";
-import { refreshPeerIdentityOwner, getWarmBridgeSessionRows, getWarmBridgeSessionListing, getWarmCloudSessions } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
+import { refreshPeerIdentityOwner, getWarmBridgeSessionRows, getWarmBridgeSessionListing, getWarmCloudSessions } from "../../02-功能模块/远程控制-Bridge/chunk-1yq098a7.js";
 import { isSkillDoctorEnabled, getPluginEvalAvailabilityNotice } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 import {
   isTerminalTaskStatus,
@@ -3007,7 +3007,7 @@ import {
   validateAttachments,
   resolveAttachmentsForUpload,
 } from "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { DESIGN_SYNC_TOOL_NAME, DESIGN_SYNC_POLICY_GATE, isDesignSyncPolicyAllowed } from "../../02-功能模块/DesignSync/design-sync-tool-metadata.js";
+import { DESIGN_SYNC_TOOL_NAME, DESIGN_SYNC_POLICY_GATE, isDesignSyncPolicyAllowed } from "../../02-功能模块/设计同步/design-sync-tool-metadata.js";
 import { buildBooleanFromStringSchema, parseStringBoolean } from "../../01-核心基础设施/共享小工具-未细化/boolean-from-string-schema.js";
 import { MCP_TASKS_EXTENSION_ID, sanitizeMcpTaskId, formatDurationMs as y7e } from "../../02-功能模块/MCP客户端/mcp-task-id.js";
 import { getMcpTimeoutMs } from "../../01-核心基础设施/共享小工具-未细化/mcp-timeouts.js";
@@ -87311,7 +87311,7 @@ async function createAnthropicClient({
     });
   }
   if (Me === "bedrock") {
-    let { AnthropicBedrock: He } = await import("../../02-功能模块/Bedrock-Vertex/AnthropicBedrockMantle.wb95xgtr.js"),
+    let { AnthropicBedrock: He } = await import("../../02-功能模块/模型接入-Bedrock-Vertex/AnthropicBedrockMantle.wb95xgtr.js"),
       je = hAe(r, xe),
       Ke = Ie(process.env.CLAUDE_CODE_SKIP_BEDROCK_AUTH),
       ct = K0(Oe.defaultHeaders),
@@ -87363,7 +87363,7 @@ async function createAnthropicClient({
       : new He(cn);
   }
   if (Me === "foundry") {
-    let { AnthropicFoundry: He } = await import("../../02-功能模块/Bedrock-Vertex/AnthropicFoundry.v59fjmt8.js"),
+    let { AnthropicFoundry: He } = await import("../../02-功能模块/模型接入-Bedrock-Vertex/AnthropicFoundry.v59fjmt8.js"),
       je,
       Ke = !1;
     if (a.ANTHROPIC_FOUNDRY_AUTH_TOKEN)
@@ -87396,7 +87396,7 @@ async function createAnthropicClient({
     return new He(vt);
   }
   if (Me === "anthropicAws") {
-    let { AnthropicAws: He } = await import("../../02-功能模块/Bedrock-Vertex/AnthropicAws.9da0pmrs.js"),
+    let { AnthropicAws: He } = await import("../../02-功能模块/模型接入-Bedrock-Vertex/AnthropicAws.9da0pmrs.js"),
       je = Ie(process.env.CLAUDE_CODE_SKIP_ANTHROPIC_AWS_AUTH),
       Ke = await resolveAwsRegion(),
       ct = K0(Oe.defaultHeaders),
@@ -87441,7 +87441,7 @@ async function createAnthropicClient({
     let He = a.CLAUDE_CODE_SKIP_ANTHROPIC_GOOGLE_CLOUD_AUTH,
       je = isHostManagedProviderAuth();
     if (!He && !je) await refreshGcpCredentialsIfNeeded();
-    let { AnthropicGoogleCloud: Ke } = await import("../../02-功能模块/Bedrock-Vertex/AnthropicGoogleCloud.sts4ygex.js"),
+    let { AnthropicGoogleCloud: Ke } = await import("../../02-功能模块/模型接入-Bedrock-Vertex/AnthropicGoogleCloud.sts4ygex.js"),
       ct = K0(Oe.defaultHeaders),
       vt = He ? ct.value : void 0,
       ut = {
@@ -87454,7 +87454,7 @@ async function createAnthropicClient({
     return new Ke(ut);
   }
   if (Me === "mantle") {
-    let { AnthropicBedrockMantle: He } = await import("../../02-功能模块/Bedrock-Vertex/AnthropicBedrockMantle.wb95xgtr.js"),
+    let { AnthropicBedrockMantle: He } = await import("../../02-功能模块/模型接入-Bedrock-Vertex/AnthropicBedrockMantle.wb95xgtr.js"),
       je = Ie(process.env.CLAUDE_CODE_SKIP_MANTLE_AUTH),
       Ke = K0(Oe.defaultHeaders),
       ct = je ? Ke.value : void 0,
@@ -87508,7 +87508,7 @@ async function createAnthropicClient({
     if (!He && !je) await refreshGcpCredentialsIfNeeded();
     let [{ AnthropicVertex: Ke }, { buildVertexGoogleAuth: ct }] =
         await Promise.all([
-          import("../../02-功能模块/Bedrock-Vertex/AnthropicVertex.1thfsdgf.js"),
+          import("../../02-功能模块/模型接入-Bedrock-Vertex/AnthropicVertex.1thfsdgf.js"),
           Promise.resolve({ buildVertexGoogleAuth }),
         ]),
       vt = await ct(He ? { kind: "skip" } : { kind: "default" }, getConfiguredVertexProjectId()),
@@ -95507,7 +95507,7 @@ async function jso(e) {
   let en, tn, dn;
   if (D.remoteCall === void 0 && getArtifactState().pendingHandoverReads.has(r)) {
     let { prepareHandoverRead: gn, describeHandoverCoverage: Qt } =
-        await import("../../02-功能模块/Artifact发布-渲染/chunk-x29r16ke.js"),
+        await import("../../02-功能模块/制品发布-Artifact/chunk-x29r16ke.js"),
       wn = await gn(r, D, N, {
         firstLine: ue,
         lineCount: vt ? je - 1 : je,
@@ -98964,7 +98964,7 @@ function wZe(e, t = "created", r = !1) {
 function jao(e) {
   if (!e || !getFeatureValue_CACHED_MAY_BE_STALE("tengu_record_created_pr_to_ccr", !1) || !isValidPrUrl(e.prUrl)) return;
   let t = getCwd();
-  X0(import("../../02-功能模块/Bridge-RemoteControl/recordCreatedPrToCcr.14tfx6yq.js").then((r) => r.recordCreatedPrToCcr(e, t)));
+  X0(import("../../02-功能模块/远程控制-Bridge/recordCreatedPrToCcr.14tfx6yq.js").then((r) => r.recordCreatedPrToCcr(e, t)));
 }
 function Wao(e) {
   let t = _Ht();
@@ -99141,7 +99141,7 @@ async function xZe(e, t) {
   if (!isValidPrUrl(e.prUrl)) return "url_rejected";
   let [{ linkSessionToPR: r }, { getSessionId: o }] = await Promise.all([
       Promise.resolve({ linkSessionToPR }),
-      import("../../02-功能模块/AppState-状态管理/getOriginalCwd.mg2gq0d6.js"),
+      import("../../02-功能模块/状态管理-AppState/getOriginalCwd.mg2gq0d6.js"),
     ]),
     d = o();
   if (!d) return "no_session";
@@ -99416,9 +99416,9 @@ var rlo = import.meta.require("../../01-核心基础设施/核心工具-常量�
     "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js",
   ).isPublishShapedArtifactAction,
   slo = () =>
-    import.meta.require("../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js").isScratchpadDisplayPath,
-  ilo = () => import.meta.require("../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js").isWorkshopDisplayPath,
-  alo = () => import.meta.require("../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js").getPlansDirectory;
+    import.meta.require("../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js").isScratchpadDisplayPath,
+  ilo = () => import.meta.require("../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js").isWorkshopDisplayPath,
+  alo = () => import.meta.require("../../02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js").getPlansDirectory;
 function r9(e) {
   return e.file_path ?? e.path;
 }
@@ -104773,7 +104773,7 @@ function Wet(e, t) {
 async function Ufo(e) {
   if (!e) return null;
   try {
-    let { parseCommand: t } = await import("../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js"),
+    let { parseCommand: t } = await import("../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js"),
       r = await t(e);
     if (r) return Wet(e, r.rootNode);
   } catch {}
@@ -112682,7 +112682,7 @@ function Pbn(e, t) {
       : "Not flagged by the server-side auto mode classifier",
   };
 }
-var Pgo = import.meta.require("../../02-功能模块/Workflow编排/recordWorkflowUsageConsent.w6jg9g54.js");
+var Pgo = import.meta.require("../../02-功能模块/编排-Workflow/recordWorkflowUsageConsent.w6jg9g54.js");
 function isAutoModeConsentFlowEnabled(e) {
   return !isModelDrivenSession(e.agentId) && int();
 }
@@ -134603,7 +134603,7 @@ var WebFetchTool = buildTool({
           if (je !== null) r = De(je);
           else if (
             (
-              await import("../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js")
+              await import("../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js")
             ).othersArtifactReadConsentSurface()
           )
             o = async () => {
@@ -134618,10 +134618,10 @@ var WebFetchTool = buildTool({
                 },
                 { OTHER_ORG_DECISION_REASON: dn, OTHER_ORG_DENY: cn },
               ] = await Promise.all([
-                import("../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js"),
+                import("../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js"),
                 import("../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js"),
-                import("../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js"),
-                import("../../02-功能模块/Artifact发布-渲染/chunk-pdd7kz7p.js"),
+                import("../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js"),
+                import("../../02-功能模块/制品发布-Artifact/chunk-pdd7kz7p.js"),
               ]);
               await ct(ve, t.abortController.signal);
               let It = Ke(ve);
@@ -134916,7 +134916,7 @@ async function isArtifactFetchEnabled(e, t, r) {
         },
       ] = await Promise.all([
         import("../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js"),
-        import("../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js"),
+        import("../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js"),
       ]),
       C = () => {
         if (t === null) return !1;
@@ -134952,7 +134952,7 @@ async function kCo(e, t, r, o, d) {
     if (!F) {
       if (qG(r.agentContext)) {
         let { isArtifactToolRegistered: De } =
-            await import("../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js"),
+            await import("../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js"),
           He = _(N);
         if (He !== null && De()) {
           let je = findMatchingDenyRule(getToolPermissionContext(r), { name: I, mcpInfo: void 0 }) !== null,
@@ -134997,10 +134997,10 @@ async function kCo(e, t, r, o, d) {
       { othersArtifactReadConsentSurface: Se },
     ] = await Promise.all([
       import("../../02-功能模块/工具WebFetch-WebSearch/DEFAULT_ARTIFACT_READ_PROMPT.hsn2594d.js"),
-      import("../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js"),
+      import("../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js"),
     ]);
     if (Se()) {
-      let { probeArtifactHostEgress: De } = await import("../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js");
+      let { probeArtifactHostEgress: De } = await import("../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js");
       await De(F, r.abortController.signal);
     }
     let ve = _e(N, F, r),
@@ -144541,7 +144541,7 @@ async function loadConversationForResume(e, t, r) {
         xe,
         Oe = new Set();
       try {
-        let { listAllLiveSessions: Ne } = await import("../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js"),
+        let { listAllLiveSessions: Ne } = await import("../../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js"),
           { ownPidDomain: De } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js"),
           [He, je] = await Promise.all([
             Ne(r.storageV5, { rejectUnreadable: !0 }),
@@ -155727,7 +155727,7 @@ async function teleportFromSessionsAPI(e, t, r, o, d) {
       E;
     if (isPersistentRemoteSessionEnabled()) {
       let { readStoredTrustedDeviceToken: F } =
-        await import("../../02-功能模块/Bridge-RemoteControl/chunk-tyce0p0b.js");
+        await import("../../02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js");
       E = await F();
     } else E = (await trustedDeviceHeaders())["X-Trusted-Device-Token"];
     let C = await UAt(e, r, t, E);
@@ -155933,7 +155933,7 @@ function TBn(e) {
   };
 }
 async function d1o({ sessionId: e, v2: t, orgUUID: r }) {
-  let { updateCodeSession: o } = await import("../../02-功能模块/Bridge-RemoteControl/code-session-api.js"),
+  let { updateCodeSession: o } = await import("../../02-功能模块/远程控制-Bridge/code-session-api.js"),
     d = getAccessTokenWithCcrFallback(),
     p =
       d === void 0
@@ -156598,7 +156598,7 @@ async function teleportToRemote(e) {
       kn =
         yo === null
           ? null
-          : import("../../02-功能模块/目录同步(dir-sync)/LOCAL_DIVERGENCE_DEADLINE_MS.9y8d6e21.js")
+          : import("../../02-功能模块/目录同步-dir-sync/LOCAL_DIVERGENCE_DEADLINE_MS.9y8d6e21.js")
               .then(
                 ({
                   probeLocalDivergence: ui,
@@ -156678,7 +156678,7 @@ async function teleportToRemote(e) {
         else if (!isDirSyncPullSupported()) Kn = "pull_unsupported";
         else if (!isDirSyncEnabled() || on.engine !== "git") Kn = "engine_declined";
         else if (tn !== null) {
-          let ui = await import("../../02-功能模块/Git-Worktree/MAX_OVERLAY_PREREQUISITES.kvm00s1b.js").catch(
+          let ui = await import("../../02-功能模块/工作树-Git/MAX_OVERLAY_PREREQUISITES.kvm00s1b.js").catch(
               (za) => (logError(za), null),
             ),
             ba =
@@ -175457,7 +175457,7 @@ var _zo = new yjn();
 function bzo() {
   let e = [LocalShellTask, LocalAgentTask, RemoteAgentTask, DreamTask, AutoModeScanTask, xHn, InProcessTeammateTask];
   return (
-    e.push(import.meta.require("../../02-功能模块/Workflow编排/LocalWorkflowTask.c8wnxdrq.js").LocalWorkflowTask),
+    e.push(import.meta.require("../../02-功能模块/编排-Workflow/LocalWorkflowTask.c8wnxdrq.js").LocalWorkflowTask),
     e.push(import.meta.require("../../01-核心基础设施/共享小工具-未细化/MCP_TASK.5jmzdjnv.js").MCP_TASK),
     new Map(e.map((t) => [t.type, t]))
   );
@@ -176188,9 +176188,9 @@ async function createBridgeSession({
     { getOauthConfig: re } = await import("../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js"),
     { sessionsApiWire: ue } = await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
     { getMainLoopModel: de } = await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
-    { getOriginalCwd: _e } = await import("../../02-功能模块/AppState-状态管理/getOriginalCwd.mg2gq0d6.js"),
+    { getOriginalCwd: _e } = await import("../../02-功能模块/状态管理-AppState/getOriginalCwd.mg2gq0d6.js"),
     { default: Se } = await import("../../00-第三方库/axios/axios.t0fczzmz.js"),
-    { isCcrV2BridgeCreateEnabled: ve } = await import("../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js"),
+    { isCcrV2BridgeCreateEnabled: ve } = await import("../../02-功能模块/远程控制-Bridge/chunk-9estzwf5.js"),
     Me = ve() ? "v1alpha2" : "v1",
     xe = { create_endpoint: fromEnum(Me) },
     { isFirstPartyProvider: Oe } = await import("../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js");
@@ -176284,8 +176284,8 @@ async function getBridgeSessionOrStatus(e, t) {
   let { getClaudeAIOAuthTokens: r, getClaudeAIOAuthTokensAsync: o } =
       await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
     { getOauthConfig: d } = await import("../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js"),
-    { getCodeSession: p } = await import("../../02-功能模块/Bridge-RemoteControl/code-session-api.js"),
-    { isCcrV2SessionCrudEnabled: _ } = await import("../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js"),
+    { getCodeSession: p } = await import("../../02-功能模块/远程控制-Bridge/code-session-api.js"),
+    { isCcrV2SessionCrudEnabled: _ } = await import("../../02-功能模块/远程控制-Bridge/chunk-9estzwf5.js"),
     E =
       t?.getAccessToken?.() ??
       (isHoverRestEnabled() && t?.credentials !== void 0
@@ -176343,8 +176343,8 @@ async function Cjn(e, t, r, o) {
   let { getClaudeAIOAuthTokens: d, getClaudeAIOAuthTokensAsync: p } =
       await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
     { getOauthConfig: _ } = await import("../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js"),
-    { updateCodeSession: E } = await import("../../02-功能模块/Bridge-RemoteControl/code-session-api.js"),
-    { isCcrV2SessionCrudEnabled: C } = await import("../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js"),
+    { updateCodeSession: E } = await import("../../02-功能模块/远程控制-Bridge/code-session-api.js"),
+    { isCcrV2SessionCrudEnabled: C } = await import("../../02-功能模块/远程控制-Bridge/chunk-9estzwf5.js"),
     I =
       o?.getAccessToken?.() ??
       (isHoverRestEnabled() && o?.credentials !== void 0
@@ -183486,7 +183486,7 @@ function EKo(e, t, r) {
 async function resolveFeedbackDraftTranscriptPath(e) {
   if (!e.transcript_ref) return null;
   if (!T2n.test(e.source_session_id)) return null;
-  let { getSessionId: t } = await import("../../02-功能模块/AppState-状态管理/getOriginalCwd.mg2gq0d6.js");
+  let { getSessionId: t } = await import("../../02-功能模块/状态管理-AppState/getOriginalCwd.mg2gq0d6.js");
   if (e.source_session_id === t()) {
     let { getTranscriptPathForSession: p } =
       await Promise.resolve({ getTranscriptPathForSession });
@@ -183703,7 +183703,7 @@ function vKo(e, t) {
 async function CKo(e, t) {
   let r = await resolveFeedbackDraftTranscriptPath(e);
   if (r === null) return !1;
-  let { getSessionId: o } = await import("../../02-功能模块/AppState-状态管理/getOriginalCwd.mg2gq0d6.js"),
+  let { getSessionId: o } = await import("../../02-功能模块/状态管理-AppState/getOriginalCwd.mg2gq0d6.js"),
     d = e.source_session_id === o();
   if (t) {
     let { getProjectsDir: p } = await import("../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js"),
@@ -187752,34 +187752,34 @@ function r6n() {
 }
 var N4o = [
     import.meta.require("../../02-功能模块/Teammates团队/CronCreateTool.vxzz8tyy.js").CronCreateTool,
-    import.meta.require("../../02-功能模块/Cron-定时任务/CronDeleteTool.k1x233hx.js").CronDeleteTool,
-    import.meta.require("../../02-功能模块/Cron-定时任务/CronListTool.3h3nj5kh.js").CronListTool,
+    import.meta.require("../../02-功能模块/定时任务-Cron/CronDeleteTool.k1x233hx.js").CronDeleteTool,
+    import.meta.require("../../02-功能模块/定时任务-Cron/CronListTool.3h3nj5kh.js").CronListTool,
   ],
   L4o = import.meta.require("../../02-功能模块/自托管Runner/SELF_HOSTED_RUNNER_TOOLS.54hpaec5.js").SELF_HOSTED_RUNNER_TOOLS,
   o6n = import.meta.require("../../02-功能模块/工具RemoteTrigger/工具RemoteTrigger.dr5cd8kh.js").RemoteTriggerTool,
-  s6n = import.meta.require("../../02-功能模块/MCP连接器(Connector)/SearchMcpRegistryTool.4z5z1s3c.js").SearchMcpRegistryTool,
-  i6n = import.meta.require("../../02-功能模块/MCP连接器(Connector)/SuggestConnectorsTool.kxmaf32p.js").SuggestConnectorsTool,
-  a6n = import.meta.require("../../02-功能模块/MCP连接器(Connector)/ListConnectorsTool.xbgcrjmm.js").ListConnectorsTool,
+  s6n = import.meta.require("../../02-功能模块/MCP连接器-Connector/SearchMcpRegistryTool.4z5z1s3c.js").SearchMcpRegistryTool,
+  i6n = import.meta.require("../../02-功能模块/MCP连接器-Connector/SuggestConnectorsTool.kxmaf32p.js").SuggestConnectorsTool,
+  a6n = import.meta.require("../../02-功能模块/MCP连接器-Connector/ListConnectorsTool.xbgcrjmm.js").ListConnectorsTool,
   F4o = import.meta.require("../../02-功能模块/插件系统/PLUGIN_SKILL_TOOLS.zpne7vfm.js").PLUGIN_SKILL_TOOLS,
   l6n = import.meta.require("../../02-功能模块/工具Monitor/工具Monitor.981fw9dy.js").MonitorTool,
   $4o = import.meta.require("../../02-功能模块/图表-Mermaid/SendUserFileTool.g6fxeqj3.js").SendUserFileTool,
   B4o = import.meta.require("../../02-功能模块/Skills技能/ProposeSkillsTool.sy5sraqa.js").ProposeSkillsTool,
-  U4o = import.meta.require("../../02-功能模块/Goal-目标模式/Goal-目标模式.gs6mjdq6.js").ProposeGoalTool,
-  c6n = import.meta.require("../../02-功能模块/Bridge-RemoteControl/PushNotificationTool.fzc9qmkz.js").PushNotificationTool,
-  H4o = import.meta.require("../../02-功能模块/DesignSync/DesignSync.123wryak.js").DesignSyncTool,
+  U4o = import.meta.require("../../02-功能模块/目标模式-Goal/目标模式-Goal.gs6mjdq6.js").ProposeGoalTool,
+  c6n = import.meta.require("../../02-功能模块/远程控制-Bridge/PushNotificationTool.fzc9qmkz.js").PushNotificationTool,
+  H4o = import.meta.require("../../02-功能模块/设计同步/设计同步.123wryak.js").DesignSyncTool,
   j4o = () => {
     if (isEssentialTrafficOnly()) return null;
-    return import.meta.require("../../02-功能模块/工具Design(MCP)/工具Design(MCP).6tpbhye8.js").DesignTool;
+    return import.meta.require("../../02-功能模块/工具Design-MCP/工具Design-MCP.6tpbhye8.js").DesignTool;
   },
   W4o = import.meta.require("../../02-功能模块/工具Project/工具Project.dmke67yf.js").ProjectsTool,
   u6n = import.meta.require("../../02-功能模块/自主会话-循环/自主会话-循环.s74271c8.js").EndConversationTool,
   Rdt = () => import.meta.require("../../02-功能模块/Teammates团队/SendMessageTool.ejjkr3qb.js").SendMessageTool,
-  G4o = () => import.meta.require("../../02-功能模块/跨会话消息(UDS)/SendFileTool.dmme15m7.js").SendFileTool,
-  z4o = import.meta.require("../../02-功能模块/ClaudeinChrome/BROWSER_ENABLE_STUB_TOOLS.gvnv2w95.js").BROWSER_ENABLE_STUB_TOOLS,
+  G4o = () => import.meta.require("../../02-功能模块/跨会话消息-UDS/SendFileTool.dmme15m7.js").SendFileTool,
+  z4o = import.meta.require("../../02-功能模块/浏览器集成-ClaudeinChrome/BROWSER_ENABLE_STUB_TOOLS.gvnv2w95.js").BROWSER_ENABLE_STUB_TOOLS,
   rK = import.meta.require("../../02-功能模块/工具Poll/工具Poll.zh9cr7gm.js").PollTool,
   d6n = null,
-  f6n = import.meta.require("../../02-功能模块/Artifact发布-渲染/ArtifactTool.5x9mh6vy.js").ArtifactTool,
-  q4o = () => import.meta.require("../../02-功能模块/Artifact发布-渲染/ARTIFACT_ADDON_TOOLS.2nwears6.js").ARTIFACT_ADDON_TOOLS,
+  f6n = import.meta.require("../../02-功能模块/制品发布-Artifact/ArtifactTool.5x9mh6vy.js").ArtifactTool,
+  q4o = () => import.meta.require("../../02-功能模块/制品发布-Artifact/ARTIFACT_ADDON_TOOLS.2nwears6.js").ARTIFACT_ADDON_TOOLS,
   p6n = null;
 function V4o() {
   return [];
@@ -187793,8 +187793,8 @@ var m6n = null,
   b6n = import.meta.require("../../02-功能模块/Teammates团队/ListAgentsTool.jrhvm1mr.js").ListAgentsTool,
   S6n = import.meta.require("../../02-功能模块/Teammates团队/ShareOnboardingGuideTool.7qpf1er4.js").ShareOnboardingGuideTool,
   nJ = (() => (
-    import.meta.require("../../02-功能模块/Workflow编排/initBundledWorkflows.qzxf1256.js").initBundledWorkflows(),
-    import.meta.require("../../02-功能模块/Workflow编排/WorkflowTool.b1s7beta.js").WorkflowTool
+    import.meta.require("../../02-功能模块/编排-Workflow/initBundledWorkflows.qzxf1256.js").initBundledWorkflows(),
+    import.meta.require("../../02-功能模块/编排-Workflow/WorkflowTool.b1s7beta.js").WorkflowTool
   ))(),
   Pdt = () => {
     if (!isPowerShellToolEnabled()) return null;
@@ -190013,7 +190013,7 @@ This is a configuration issue in your canUseTool callback, PermissionRequest hoo
       await di(Ir);
       let Wo = qOn(e, o.getAppState().mcp.clients) ? VOn(Cn.data) : null;
       if (Wo !== null)
-        import("../../02-功能模块/Artifact发布-渲染/chunk-kshc4v5t.js")
+        import("../../02-功能模块/制品发布-Artifact/chunk-kshc4v5t.js")
           .then((hs) =>
             hs.touchFrameLiveForMcpWrite(
               Wo,
@@ -193779,7 +193779,7 @@ async function n9n(e, t) {
     p
   );
 }
-var z9o = () => import("../../02-功能模块/MCP传输(stdio-SSE-HTTP)/MCP传输(stdio-SSE-HTTP).d0bebdj3.js");
+var z9o = () => import("../../02-功能模块/MCP传输-stdio-SSE-HTTP/MCP传输-stdio-SSE-HTTP.d0bebdj3.js");
 async function o9n(e, t, r) {
   let [, o = "", d = ""] = new URL(e.url).pathname.split("/"),
     p = e9n(d),
@@ -199777,7 +199777,7 @@ function logPromptSuggestionSuppressed(e, t, r) {
   });
 }
 var mQo = ({ executeExtractMemories }),
-  fpt = import.meta.require("../../02-功能模块/AutoMode-自动模式/LINK_SCAN_MAX_BYTES.mjs9q59k.js"),
+  fpt = import.meta.require("../../02-功能模块/自动模式-AutoMode/LINK_SCAN_MAX_BYTES.mjs9q59k.js"),
   gQo = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-s1hpfa12.js");
 var LJn = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js"),
   xpe = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js");
@@ -203521,7 +203521,7 @@ function notifyAutoReactHumanTurnObserver() {
   }
 }
 var ker = null,
-  WC = () => import.meta.require("../../02-功能模块/AutoMode-自动模式/LINK_SCAN_MAX_BYTES.mjs9q59k.js"),
+  WC = () => import.meta.require("../../02-功能模块/自动模式-AutoMode/LINK_SCAN_MAX_BYTES.mjs9q59k.js"),
   Ppe = () => import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-s1hpfa12.js");
 var Opt;
 function fF(e) {
@@ -234790,7 +234790,7 @@ var gwt = {
     get isHidden() {
       return !ke();
     },
-    load: () => import("../../02-功能模块/AutoMode-自动模式/auto-mode-setup-cmd.km6675e1.js"),
+    load: () => import("../../02-功能模块/自动模式-AutoMode/auto-mode-setup-cmd.km6675e1.js"),
   },
   Xls = {
     type: "local-jsx",
@@ -235681,7 +235681,7 @@ var vcs = {
     supportsNonInteractive: !1,
     type: "local",
     requires: { workspace: !1 },
-    load: () => import("../../02-功能模块/键位绑定(Keybindings)/keybindings-cmd.h633j7p7.js"),
+    load: () => import("../../02-功能模块/键位绑定-Keybindings/keybindings-cmd.h633j7p7.js"),
   },
   Hwt = vcs;
 var Ccs = {
@@ -238530,7 +238530,7 @@ var kds = {
     isHidden: !0,
     disableModelInvocation: !0,
     supportsNonInteractive: !0,
-    load: () => import("../../02-功能模块/Workflow编排/workflow-launch-exec-cmd.57cqn97y.js").then((e) => ({ call: e.call })),
+    load: () => import("../../02-功能模块/编排-Workflow/workflow-launch-exec-cmd.57cqn97y.js").then((e) => ({ call: e.call })),
   },
   Adr = kds;
 var wds = {
@@ -238857,7 +238857,7 @@ var vTt = null,
     disableModelInvocation: !0,
     requires: { workspace: !0 },
     async getPromptForCommand(e, t) {
-      let r = (await import("../../02-功能模块/Insights报告/default.axhd6c0p.js")).default;
+      let r = (await import("../../02-功能模块/洞察报告-Insights/default.axhd6c0p.js")).default;
       if (r.type !== "prompt") throw Error("unreachable");
       return r.getPromptForCommand(e, t);
     },
@@ -239159,9 +239159,9 @@ async function Gds(e, t) {
     );
   }
 }
-var Gdr = import.meta.require("../../02-功能模块/Workflow编排/getWorkflowCommands.nd3hcr54.js").getWorkflowCommands,
-  zds = import.meta.require("../../02-功能模块/Workflow编排/getWorkflowCommands.nd3hcr54.js").invalidateWorkflowCache,
-  zdr = import.meta.require("../../02-功能模块/Workflow编排/getWorkflowCommands.nd3hcr54.js").warmWorkflows;
+var Gdr = import.meta.require("../../02-功能模块/编排-Workflow/getWorkflowCommands.nd3hcr54.js").getWorkflowCommands,
+  zds = import.meta.require("../../02-功能模块/编排-Workflow/getWorkflowCommands.nd3hcr54.js").invalidateWorkflowCache,
+  zdr = import.meta.require("../../02-功能模块/编排-Workflow/getWorkflowCommands.nd3hcr54.js").warmWorkflows;
 function meetsAvailabilityRequirement(e) {
   if (!e.availability) return !0;
   for (let t of e.availability)
@@ -239818,7 +239818,7 @@ async function listPeerSessions() {
 async function loadLivePeerSessions() {
   if (isCrossSessionMessagingEnabled()) {
     let { listLivePeerSessions: e, SessionRecordsUnreadableError: t } =
-      import.meta.require("../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js");
+      import.meta.require("../../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js");
     try {
       return { sessions: await e(), unavailable: !1 };
     } catch (r) {
@@ -240502,7 +240502,7 @@ async function Gfr(
       if (r === getAutoMemPath() && (D() || hasOrgMemoryDecisionRunStarted())) await waitForOrgMemoryDecisionSettledOnce(FIRST_STORE_PULL_WAIT_DEADLINE_MS, d);
       if (d.aborted) return [];
       let { searchMemoryFilesWithIndex: je } =
-          await import("../../02-功能模块/Memory-CLAUDE.md/searchMemoryFilesWithIndex.5h247hbm.js"),
+          await import("../../02-功能模块/记忆-CLAUDE.md/searchMemoryFilesWithIndex.5h247hbm.js"),
         Ke = recallVisibleTeamMounts(r),
         ct = 5 + Math.min(p.size + 10, 20),
         { ranked: vt, stats: ut } = await je(

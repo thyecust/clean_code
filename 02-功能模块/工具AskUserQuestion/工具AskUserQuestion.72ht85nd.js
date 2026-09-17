@@ -30,7 +30,7 @@ import {
   computeOneShotTaskFireTime,
   filterOverdueTasks,
 } from "../后台任务-Shell管理/scheduled-tasks.js";
-import { resolveGitDir, getCommonDir } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { resolveGitDir, getCommonDir } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";

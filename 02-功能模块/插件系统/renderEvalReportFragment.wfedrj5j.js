@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 10 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { pluralize, truncateMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { MarkdownEngine } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { MarkdownEngine } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeHtmlAttribute, INVISIBLE_CHARS_CLASS } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { computeMean } from "../成本-Token统计/eval-report.js";

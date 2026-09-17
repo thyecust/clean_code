@@ -12,13 +12,13 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createMainAgentContext } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { asSystemPrompt, joinTextBlocks, runSmallFastModelQuery } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { stripMemoryTags } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { isHumanOrUnstampedOrigin, isHumanUserMessage } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { stripMemoryTags } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
+import { isHumanOrUnstampedOrigin, isHumanUserMessage } from "../远程控制-Bridge/chunk-5ne99rq3.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var p = 1000,
   f = 10;

@@ -16,7 +16,7 @@ async function buildGitSessionContext(n, e, t) {
       parseGitRemote: G,
       parseGitHubRepository: y,
     } = await import("./parseGitHubRepository.3ng6714h.js"),
-    { getDefaultBranch: h } = await import("../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js");
+    { getDefaultBranch: h } = await import("../安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js");
   if (e === "HEAD") e = "";
   let p = !1,
     r = e || t || void 0;

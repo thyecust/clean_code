@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { isSafeMode, isRestrictedMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSafeMode, isRestrictedMode } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
 function foldRestricted(n, e) {
   return e && !n.restricted ? { ...n, restricted: !0 } : n;
 }

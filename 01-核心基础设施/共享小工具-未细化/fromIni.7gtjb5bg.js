@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { defaultProvider } from "../../02-功能模块/Bedrock-Vertex/aws-credential-provider-node.js";
+import { defaultProvider } from "../../02-功能模块/模型接入-Bedrock-Vertex/aws-credential-provider-node.js";
 import "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js";
 import { M0n } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-6ydmdmy7.js";
 var fromIni = (o = {}) => M0n({ ...o });

@@ -7,6 +7,6 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { defaultProvider as Kq } from "../../../02-功能模块/Bedrock-Vertex/aws-credential-provider-node.js";
+import { defaultProvider as Kq } from "../../../02-功能模块/模型接入-Bedrock-Vertex/aws-credential-provider-node.js";
 import "../第三方库-AWSSDK/chunk-z7ktsccq.js";
 export { Kq as defaultProvider };
