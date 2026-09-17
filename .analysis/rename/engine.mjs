@@ -245,7 +245,13 @@ export function namespaceWarnings(plan, tree, idx) {
     const src = tree.src.get(f);
     if (!src) continue;
     for (const n of oldNames) {
-      const re = new RegExp(`\\.\\s*${n}\\b|\\[\\s*["']${n}["']\\s*\\]`);
+      // 两处排除，都是实测告警里的噪声源：
+      //  (?<!\.)      展开运算符 `...MHe(x)` 的第三个点会被 `\.\s*MHe` 匹到，
+      //               而那种位置的名字是具名静态导入，引擎已按作用域改名。
+      //  (?!["'`])    导入路径的扩展名：某模块导出名叫 `js` 时，`"./foo.js"` 里
+      //               的 `.js` 会被匹到（`\b` 在 `js` 后遇引号也算边界）。
+      // 真正的命名空间取值 `ns.MHe` 里，点前面是标识符字符、后面不是引号，不受影响。
+      const re = new RegExp(`(?<!\\.)\\.\\s*${n}\\b(?!["'\`])|\\[\\s*["']${n}["']\\s*\\]`);
       if (re.test(src)) {
         const line = src.slice(0, src.search(re)).split("\n").length;
         out.push(`[${short(f)}:${line}] property access .${n} — verify it is not the module namespace`);

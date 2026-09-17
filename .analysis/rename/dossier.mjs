@@ -2,11 +2,45 @@
 // actually used by importers. This is what the naming subagents read.
 import { readFileSync } from "node:fs";
 import { join, normalize, dirname } from "node:path";
-import { ROOT, shortPath } from "./paths.mjs";
+import { ROOT, shortPath, loadTree } from "./paths.mjs";
 import { buildIndex } from "./index.mjs";
 import { analyze, moduleBindingRefs } from "./lib.mjs";
 
 export function modPath(rel) { return normalize(join(ROOT, rel)); }
+
+/**
+ * target 模块 -> { 引用方文件 -> 从该 target 具名导入/再导出的名字 }。
+ *
+ * 一次全树扫完建好，而不是每个模块扫一遍自己那批引用方：barrel 文件常常 import
+ * 十几个候选模块，按模块扫就会把同一个文件完整解析十几遍；候选池里还有引用方
+ * 438 个的模块。存的只有名字集合，比缓存 AST 省得多（AST 约为源码的 10 倍，
+ * 全树缓存要几个 GB）。
+ */
+let importNameMap = null;
+function importNames() {
+  if (importNameMap) return importNameMap;
+  const m = new Map();
+  for (const [f, s] of loadTree().src) {
+    let info;
+    // 第三方库里有 acorn 解析不过的文件；它们不可能是本树的引用方，直接跳过
+    try { info = analyze(s); } catch { continue; }
+    for (const node of info.ast.body) {
+      if (node.source?.type !== "Literal") continue;
+      const target = normalize(join(dirname(f), node.source.value));
+      let per = m.get(target);
+      if (!per) { per = new Map(); m.set(target, per); }
+      let set = per.get(f);
+      if (!set) { set = new Set(); per.set(f, set); }
+      if (node.type === "ImportDeclaration") {
+        for (const sp of node.specifiers) if (sp.type === "ImportSpecifier") set.add(sp.imported.name);
+      } else if (node.type === "ExportNamedDeclaration") {
+        for (const sp of node.specifiers) if (sp.local) set.add(sp.local.name);
+      }
+    }
+  }
+  importNameMap = m;
+  return m;
+}
 
 function contextLines(src, start, before = 2, after = 2) {
   const ls = src.lastIndexOf("\n", start - 1) + 1;
@@ -47,20 +81,13 @@ export function dossier(rel, idx) {
   // exported names, so every name still gets a real call site.
   const MAX_IMPORTERS = Number(process.env.MAX_IMPORTERS || 10);
   const byFile = new Map();
-  for (const f of new Set(allEdges.map((e) => e.from))) {
-    const fsrc = readFileSync(f, "utf8");
-    const info = analyze(fsrc);
-    const names = new Set();
-    for (const node of info.ast.body) {
-      if (node.source?.type !== "Literal") continue;
-      if (normalize(join(dirname(f), node.source.value)) !== modPath(rel)) continue;
-      if (node.type === "ImportDeclaration") {
-        for (const sp of node.specifiers) if (sp.type === "ImportSpecifier") names.add(sp.imported.name);
-      } else if (node.type === "ExportNamedDeclaration") {
-        for (const sp of node.specifiers) if (sp.local) names.add(sp.local.name);
-      }
+  {
+    // 键集合仍取自 allEdges（含「导入了但一个名字都没用上」的文件），
+    // 只有这样 byFile.size 才和改前一致，下面那句「另有 N 个未列」的计数才不变。
+    const nameMap = importNames().get(modPath(rel)) ?? new Map();
+    for (const f of new Set(allEdges.map((e) => e.from))) {
+      byFile.set(f, nameMap.get(f) ?? new Set());
     }
-    byFile.set(f, names);
   }
   const covered = new Set();
   const chosen = [];

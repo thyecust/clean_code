@@ -74,7 +74,8 @@ JSON 数组写到调用方指定的路径：
 ## 自检（必须做）
 
 ```
-cd /tmp/jsrename && node lint-plans.mjs <计划文件> <同编号的批次 json>
+cd /Users/game-netease/clean_code/.analysis/rename && \
+  node lint-plans.mjs <计划文件> <同编号的批次 json>
 ```
 
 必须 `errors=0`。有错就改到通过再收工。
