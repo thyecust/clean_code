@@ -16,7 +16,7 @@ import { getFeatureValue_CACHED_MAY_BE_STALE, checkGate_CACHED_OR_BLOCKING } fro
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { DEFAULT_ATTESTATION_FILTER_POLICY, parseAttestationFilterPolicy } from "./chunk-5ne99rq3.js";
@@ -40,7 +40,7 @@ function L() {
   return import.meta.require("../../01-核心基础设施/核心工具-未归类/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
 }
 function T() {
-  return import.meta.require("../策略限制-PolicyLimits/chunk-8sw91yn5.js");
+  return import.meta.require("../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js");
 }
 function isTrustedDeviceGateEnabled() {
   if (!getFeatureValue_CACHED_MAY_BE_STALE(m, !1)) return !1;

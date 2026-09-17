@@ -16,11 +16,11 @@ import { createLazyValue } from "../../01-核心基础设施/核心工具-并发
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getBridgeBaseUrlOverride, getBridgeAccessToken, getBridgeAccessTokenAsync } from "./chunk-203p0p9a.js";
-import { policyDeniedReason, policyDenyKind } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { policyDeniedReason, policyDenyKind } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { MAX_TRANSFER_SIZE_BYTES } from "../../01-核心基础设施/核心工具-未归类/file-transfer-config.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { randomUUID } from "crypto";

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
-import { getDefaultGcpRegion } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getDefaultGcpRegion } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { truncateToCodeUnits, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getVerifiedDaemonLock } from "../后台任务-Shell管理/daemon-lock.js";

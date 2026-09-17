@@ -10,7 +10,7 @@
 import { truncateToCodeUnits, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { Ie, po } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { parseConfigInteger } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseConfigInteger } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { normalizeKeyName, buildKeyNameLookup } from "../../01-核心基础设施/核心工具-未归类/chunk-1w1x0pyk.js";
 import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { PROMPT_CACHE_TTL_VALUES } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";

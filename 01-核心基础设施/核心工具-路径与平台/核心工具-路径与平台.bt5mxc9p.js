@@ -114,10 +114,10 @@ import {
 import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { UNSUPPORTED_TELEMETRY_CODE, isUnsupportedFailure, pathSpaces, jsonStringify, deepClone, resolvePathInfo, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isConfigDirPath } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isConfigDirPath } from "../设置-配置/chunk-5ndhfaq9.js";
 import { getCwd } from "../核心工具-未归类/cwd-context.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { ATOMIC_WRITE_STAGING_DIR_NAME, writeFileAndFlush } from "./chunk-fx8qr1md.js";
 import { writeDiagnosticsEvent } from "../核心工具-日志与脱敏/diagnostics-log.js";
 import { execFileNoThrowWithCwd } from "../../02-功能模块/工作树-Git/git-exec-hardening.js";

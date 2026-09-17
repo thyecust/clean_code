@@ -11,7 +11,7 @@ import { RL, cZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { lit as S } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { getModelForAnalytics, renderDefaultModelSetting } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { getRemoteTransport, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { stripAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";

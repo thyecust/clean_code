@@ -15,13 +15,13 @@ import { createLazyValue } from "../../01-核心基础设施/核心工具-并发
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { isDesktopHostSession } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { SEND_USER_FILE_TOOL_NAME, DESCRIPTION, SEND_USER_FILE_TOOL_PROMPT } from "../远程工具执行/chunk-a5errgr8.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
-import { isPolicyAllowed } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { isPolicyAllowed } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { isBriefEnabled } from "../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js";
 import { resolveAttachmentUploadLane, shouldRenderAttachmentsLocally, validateAttachments, resolveAttachmentsForUpload } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";

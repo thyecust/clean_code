@@ -13,7 +13,7 @@ import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-�
 import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isReviewOriginSession } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { MAX_WORKFLOW_SCRIPT_BYTES, MAX_SERVER_AUTHORED_WORKFLOW_SCRIPT_BYTES, persistWorkflowScript } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
-import { hasNoControlCharacters } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { hasNoControlCharacters } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { areWorkflowsDisabledBySettings, isWorkflowsAllowedByPolicy } from "./workflow-feature-gates.js";
 import { hasPermissionsToUseTool } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { compileWorkflowScript, sanitizeWorkflowNameForTelemetry, sanitizeWorkflowDescriptionForTelemetry, launchWorkflowTask } from "./workflow-runtime.js";

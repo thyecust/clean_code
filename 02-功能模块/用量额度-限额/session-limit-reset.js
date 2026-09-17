@@ -13,7 +13,7 @@ import { withDeadline } from "../../01-核心基础设施/核心工具-并发与
 import { ge, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";

@@ -12,7 +12,7 @@
 import { K, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { RS } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
-import { isConfigDirPath } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isConfigDirPath } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -22,7 +22,7 @@ import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash
 import { assertDirChainReal, writeFileAndFlush } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isRemoteActive, findGitRoot, gitExe, getGitDir, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { areTasksEnabled, getTaskListId, readAllTasks } from "../Teammates团队/chunk-g6nvp9mm.js";
-import { isPolicyAllowed } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { isPolicyAllowed } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { publishRateLimitCheckpointResult, getInFlightRateLimitCheckpoint, setInFlightRateLimitCheckpoint } from "../用量额度-限额/chunk-pkw2prc7.js";
 import {
   appendFile,

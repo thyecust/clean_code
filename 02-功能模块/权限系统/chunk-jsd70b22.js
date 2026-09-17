@@ -14,7 +14,7 @@ import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analy
 import { lit as S, fromEnum, fromEnumOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ve, zi, yt, dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { jsonParse, resolvePathInfo, getFsSurface, redactSecretsFromText, redactForDisplay, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, truncateWithCharCount } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
@@ -99,7 +99,7 @@ import { resolvePath, isJupyterNotebookPath, DEFAULT_MAX_FILE_READ_BYTES } from 
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { OUTSIDE_READS_BLOCKED_DENY_REASON } from "./chunk-e4pfvp7x.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
-import { turnAbortControllerOf } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { turnAbortControllerOf } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import {
   sanitizeTextForDisplay,
   sanitizeInvisibleText,
@@ -117,7 +117,7 @@ import {
   shouldWithholdValue,
   hasCollapsedInvisibleRuns,
   replaceLineBreaks,
-} from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+} from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { unstripSkillInvocationAllowRules, getToolPermissionContext } from "./chunk-fjrcf22x.js";
 import { areUserPermissionRulesAllowed, sanitizePermissionUpdates, applyPermissionUpdates, isPersistableSettingsSource, persistPermissionUpdates, hasRequestedMachine } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS, notePlanFileForgotten, getPlanFilePath, getPlan } from "../计划模式-Plan/计划模式-Plan.e5mh1avy.js";

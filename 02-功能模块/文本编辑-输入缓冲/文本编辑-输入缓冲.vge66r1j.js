@@ -13,7 +13,7 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { cs, IBe, Wet, vRt, ike, rHn, qar } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Tf } from "../../00-第三方库/supports-color/chunk-gdyh44zt.js";

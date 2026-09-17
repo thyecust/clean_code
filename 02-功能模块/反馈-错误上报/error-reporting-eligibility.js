@@ -10,7 +10,7 @@
 import { CLAUDE_AI_INFERENCE_SCOPE } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { isAnalyticsDisabled, getAuthTokenSource, getConfiguredApiKeyHelper, hasStoredOAuthToken, hasOAuthScope, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { isPolicyAllowed, areComplianceTaintsSettled, getResponseFromCache } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { isPolicyAllowed, areComplianceTaintsSettled, getResponseFromCache } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var r = toESM(pg(), 1);

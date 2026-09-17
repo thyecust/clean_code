@@ -16,9 +16,9 @@ import { withDeadline } from "../../01-核心基础设施/核心工具-并发与
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getClaudeConfigDir, isSafeMode, getSafeModeExitHint } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, isSafeMode, getSafeModeExitHint } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { repeatString, pluralize, truncateToCodePoints } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { useKeybinding } from "../键位绑定-Keybindings/keybinding-hooks.js";
@@ -87,7 +87,7 @@ import {
   formatRecalledMemoryBlock,
   getAgentMemoryDir,
 } from "./记忆-CLAUDE.md.vx19drc8.js";
-import { sanitizePlainText } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { sanitizePlainText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import "../../01-核心基础设施/UI组件-TUI/one-shot-render.js";
 import "../使用时长-Wellbeing/使用时长-Wellbeing.0s8r3ncd.js";
 import "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";

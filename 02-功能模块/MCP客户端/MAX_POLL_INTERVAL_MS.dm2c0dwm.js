@@ -15,7 +15,7 @@ import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { le, nt, uv, Cu } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { formatErrorWithCode, formatConnectionError } from "../认证-OAuth登录/url-and-error-redaction.js";

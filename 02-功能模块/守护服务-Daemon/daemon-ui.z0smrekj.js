@@ -13,7 +13,7 @@ import { B, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ju } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { isPathTrusted, setPathTrusted } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { findCanonicalGitRootUncached } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";

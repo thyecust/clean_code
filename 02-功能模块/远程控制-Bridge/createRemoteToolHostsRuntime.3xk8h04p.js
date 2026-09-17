@@ -18,12 +18,12 @@ import { omitObjectKeys, getMcpToolPrefix, buildMcpToolName, getFullToolName } f
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { getToolResultsDirForSession } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { replaceControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { CAN_USE_TOOL_STREAM_CLOSED_REASON, CAN_USE_TOOL_INVALID_RESULT_REASON, CAN_USE_TOOL_REQUEST_FAILED_REASON } from "../权限系统/chunk-e4pfvp7x.js";
-import { formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { formatPermissionRule } from "../权限系统/permission-rule-parsing.js";
 import { hashForTelemetry, REMOTE_DEVICES_MCP_SERVER_NAME, BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, getSanitizedToolName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { INTERRUPTED_FOR_TOOL_USE_MARKER, TOOL_CALL_NOT_COMPLETED_MARKER, USER_REFUSED_ACTION_MARKER } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isModelDrivenSession } from "../Teammates团队/teammate-context.js";
@@ -93,7 +93,7 @@ import {
   pinSessionId,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isReplModeEnabled } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { PromptScopedAbortController, unwrapAbortReason, shutdownInterruptStamp } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { PromptScopedAbortController, unwrapAbortReason, shutdownInterruptStamp } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import { isExiting, getNeverResolvingPromise } from "../../01-核心基础设施/核心工具-未归类/exit-commit-state.js";
 import { AsyncQueue } from "../会话-历史-恢复/chunk-m1xj4s02.js";
 import { persistToolResultForTool } from "../工具结果持久化/工具结果持久化.jj43r39n.js";

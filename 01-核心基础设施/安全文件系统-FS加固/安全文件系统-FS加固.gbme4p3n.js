@@ -16,7 +16,7 @@ import { getCwd } from "../核心工具-未归类/cwd-context.js";
 import { createInvalidArgumentError, OTHER_NAMES_TELEMETRY_CODE, LEAF_MOVED_TELEMETRY_CODE, HARDENING_UNAVAILABLE_TELEMETRY_CODE, createOkResult, createErrorResult, pathSpaces, registerCleanup, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, beforeFirst } from "../核心工具-字符串与文本/string-utils.js";
 import { resolveExecutablePath } from "../设置-配置/chunk-zqr5ctyf.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { GIT_HARDENED_ARGS, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/工作树-Git/git-exec-hardening.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getProjectsDir, getProjectKey, getProjectDir, BACKUP_FILE_NAME_PATTERN_WITH_LEGACY } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";

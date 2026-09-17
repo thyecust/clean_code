@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { zn, An, SZ } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { getClaudeConfigDir } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "./chunk-5ndhfaq9.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pluralize, truncateToCodePoints } from "../核心工具-字符串与文本/string-utils.js";
 import { tryGetRealPath, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";

@@ -19,7 +19,7 @@ import {
   ARTIFACT_FILE_CONTENT_TAG,
   ARTIFACT_FILE_CONTENT_INTRO,
   ARTIFACT_FILE_CONTENT_OUTRO,
-} from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+} from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { DEFAULT_MAX_RESULT_SIZE_CHARS, ARTIFACT_TOOL_NAME, artifactUrlSubPath, faviconClause, scrubArtifactEnvelopeTags, scrubbedHead } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { getArtifactState } from "./chunk-rr78st95.js";
 import {

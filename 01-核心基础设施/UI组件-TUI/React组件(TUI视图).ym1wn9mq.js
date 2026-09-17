@@ -28,7 +28,7 @@ import {
   hashString,
   isEssentialTrafficOnly,
   logError,
-} from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+} from "../提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { createLazyValue } from "../核心工具-并发与缓存/lazy-value.js";
 import { le, nt, uv } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
@@ -211,7 +211,7 @@ import {
   USAGE_CREDITS_COMMAND,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { stripMemoryTags, parseMemoryDocument, MEMORY_WRITE_TOOL_NAME, getMemoryProjectKey, canUseTeamMemoryStorage, resolveAutoMemPath, isWithinTeamMemoryDir, isStoneShellEnabled, REPL_TOOL_NAME } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
-import { sanitizeTextForDisplay } from "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { sanitizeTextForDisplay } from "../核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { FRONTMATTER_PATTERN, STRICT_FRONTMATTER_PATTERN, parseFrontmatter } from "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import { sanitizeEffortLevel } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";

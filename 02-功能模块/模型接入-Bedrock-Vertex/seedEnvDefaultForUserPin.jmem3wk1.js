@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 69 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { fromEnum, fromNumber } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
-import { buildVertexBaseUrl, getVertexRegionForModel } from "./chunk-5ndhfaq9.js";
+import { buildVertexBaseUrl, getVertexRegionForModel } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getModelForAnalytics, DEFAULT_3P_SONNET_KEY, DEFAULT_VERTEX_OPUS_KEY, getMarketingNameForModel, authState, getEnvAuthorizationHeader, isHostManagedProviderAuth, getConfiguredVertexProjectId, refreshGcpCredentialsIfNeeded } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";

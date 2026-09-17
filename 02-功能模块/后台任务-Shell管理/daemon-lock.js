@@ -14,7 +14,7 @@ import { isNonRegularPathErrno } from "../图片-截图-ComputerUse/computer-use
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { R, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeNewFileExclusive, writeNewFileAfterAbsenceCheck } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
-import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { provenSameProcessAsync, procIdentityOf, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";

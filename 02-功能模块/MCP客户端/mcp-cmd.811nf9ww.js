@@ -16,7 +16,7 @@ import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analy
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { HELP_FLAGS, INFO_SUBCOMMAND_ALIASES } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { HELP_FLAGS, INFO_SUBCOMMAND_ALIASES } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { mayHaveRemoteClient } from "../远程控制-Bridge/chunk-dajvcsw3.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { isConnectedMcpServer, parseMcpToolName, getMcpToolPrefix } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";

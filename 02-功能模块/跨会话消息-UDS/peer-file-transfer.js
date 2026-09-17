@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";

@@ -15,7 +15,7 @@ import { logForDebugging } from "../../01-核心基础设施/核心工具-日志
 import { getMcpServerConfigCacheKey, invokeMcpToolRaw, listMcpToolsRaw } from "../MCP客户端/chunk-7wm8t84g.js";
 import { bridgeCarrierState, isSessionIngressUrl, isRemoteDevicesProxyUrl } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { isSubagentSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { buildMcpToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { sanitizeDeep } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";

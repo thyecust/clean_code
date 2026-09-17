@@ -29,7 +29,7 @@ import { initializeAnalyticsSink } from "../../01-核心基础设施/遥测-Open
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { pinStorageV5 } from "../../01-核心基础设施/核心工具-未归类/pin-storage-v5.js";
 import { loadFastPathPolicy } from "../../01-核心基础设施/设置-配置/fast-path-policy-loader.js";
-import { isPolicyAllowedInResponse } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { isPolicyAllowedInResponse } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { fetchPolicyLimitsForBearer } from "../策略限制-PolicyLimits/policy-limits-client.js";
 import { credentialsStoreFor } from "../认证-OAuth登录/credentials-store.js";
 import { CLAUDE_IN_CHROME_URL } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";

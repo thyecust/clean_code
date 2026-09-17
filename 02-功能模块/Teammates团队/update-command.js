@@ -11,7 +11,7 @@ import { withTimeout } from "../../01-核心基础设施/核心工具-并发与�
 import { resolveExecutablePathAsync, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { K, qP, Tz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { mayHaveRemoteClient } from "../远程控制-Bridge/chunk-dajvcsw3.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";

@@ -14,7 +14,7 @@ import { logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodas
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { refreshOAuthToken, revokeOAuthToken, isOAuthTokenExpired, isInvalidGrantError } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { Cs } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";

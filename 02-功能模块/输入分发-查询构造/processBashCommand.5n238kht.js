@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 201 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { G0 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { shutdownInterruptStamp } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { shutdownInterruptStamp } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { INNER_TOOL_USE_ID_SUFFIX, BashTool, createUserMessage, prependPrecedingInputBlocks, createInterruptedMessage, createLocalCommandCaveatMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getToolResultsDirForSession } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";

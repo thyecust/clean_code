@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { truncateToCodeUnits } from "./string-utils.js";
-import { sanitizeTextForDisplay } from "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { sanitizeTextForDisplay } from "./chunk-8sw91yn5.js";
 function collapseNewlines(n) {
   return n.replace(/[\r\n\u2028\u2029]+/g, " ");
 }

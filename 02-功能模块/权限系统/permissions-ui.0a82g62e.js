@@ -13,7 +13,7 @@ import { createLazyValue } from "../../01-核心基础设施/核心工具-并发
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/核心工具-未归类/storage-v5-context.js";
@@ -24,7 +24,7 @@ import { SETTINGS_SOURCE_ORDER, describeSettingsSourceShort, HOOK_SETTINGS_SOURC
 import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getStringWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { parseSettingsFile, getSettingsFilePathForSource, getSettingsForSource, updateSettingsForSourceWithTransform, autoModeConfigSchema, AUTO_MODE_TRUSTED_SOURCES } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { parsePermissionRule, formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { parsePermissionRule, formatPermissionRule } from "./permission-rule-parsing.js";
 import { isFullscreen, Box, Text, Newline } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useTerminalFocus } from "../../01-核心基础设施/终端与时钟/clock-and-terminal-focus.js";
 import { useKeybinding } from "../键位绑定-Keybindings/keybinding-hooks.js";
@@ -55,7 +55,7 @@ import {
 import { hn } from "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { applyPermissionUpdate, persistPermissionUpdate, getAlwaysAllowRules, getAlwaysDenyRules, getAlwaysAskRules } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
-import { MAX_DISPLAY_TEXT_UNITS, MAX_DISPLAY_PAYLOAD_UNITS, prepareDisplayText, toUniqueDisplayLabels, replaceLineBreaks, formatValueListForDisplay } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { MAX_DISPLAY_TEXT_UNITS, MAX_DISPLAY_PAYLOAD_UNITS, prepareDisplayText, toUniqueDisplayLabels, replaceLineBreaks, formatValueListForDisplay } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import "../../01-核心基础设施/UI组件-TUI/one-shot-render.js";
 import "../使用时长-Wellbeing/使用时长-Wellbeing.0s8r3ncd.js";
 import "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";

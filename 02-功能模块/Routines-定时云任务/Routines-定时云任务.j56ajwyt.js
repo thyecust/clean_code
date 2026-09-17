@@ -10,12 +10,12 @@
 
 // [preload stripped] 原本在此预载 191 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { hasPluginSource, isConnectedMcpServer } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { isSimpleMode } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSimpleMode } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { M0 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { isClaudeAISubscriber, hasStoredOAuthToken, hasOAuthScope } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getRemoteUrl } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { isGitHubHost } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
@@ -24,7 +24,7 @@ import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-M
 import { isNestedGitLabProject, detectCurrentRepositoryWithHost, parseGitRemote } from "../工作树-Git/git-repository-detection.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { fetchRemoteEnvironments, createDefaultRemoteEnvironment, checkGithubAccess, normalizeClaudeAiServerId, getMcpServerSignature, shouldSkipClaudeAiFetchForEnterpriseLockdown } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isPolicyAllowed } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { isPolicyAllowed } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { getSuppressedClaudeAiConnectors } from "../权限系统/chunk-fjrcf22x.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { registerBundledSkill } from "../Skills技能/bundled-skills.js";

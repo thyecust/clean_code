@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 270 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { confirmYesNo as C0e, createSubcommandRoot as Agr, setupTokenHandler as Cgr, doctorHandler as vgr, installHandler as Rgr } from "../../02-功能模块/工具Glob-Grep-搜索/cli-command-handlers.js";
+import { confirmYesNo as C0e, createSubcommandRoot as Agr, setupTokenHandler as Cgr, doctorHandler as vgr, installHandler as Rgr } from "./cli-command-handlers.js";
 import "./welcome-banner.js";
 import "../../02-功能模块/远程控制-Bridge/policy-limits-status.js";
 import "../../01-核心基础设施/设置-配置/managed-settings-status.js";

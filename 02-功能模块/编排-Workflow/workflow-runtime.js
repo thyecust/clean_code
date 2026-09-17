@@ -15,7 +15,7 @@ import { R, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { describeStorageError, jsonStringify, jsonStringifyLine, jsonParse, jsonParseUntraced, deepClone, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { parseMcpToolName, getFullToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -23,7 +23,7 @@ import { env as a, antEnv } from "../../01-核心基础设施/设置-配置/chun
 import { validateStorageKey, getBranch, isBranchOnOrigin } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { LOG_BULLET_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
-import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { parsePermissionRule } from "../权限系统/permission-rule-parsing.js";
 import { runWithAgentContext, isMainAgentContext, getAgentDepth, archiveRemoteSession, BASH_TOOL_NAME, READ_TOOL_NAME, POWERSHELL_TOOL_NAME, isToolDetailsLoggingEnabled, getFeatureValue_CACHED_MAY_BE_STALE, checkGate_CACHED_OR_BLOCKING } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { stripLongContextTags } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js";
@@ -32,7 +32,7 @@ import { coerceEffortLevelValue } from "../权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME, getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
 import { MAX_WORKFLOW_SCRIPT_BYTES, readWorkflowScriptFile, getWorkflowScriptPathError, REPL_TOOL_NAME, findExactDenyRule, readAutoAllowedForMutation } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
-import { unwrapAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { unwrapAbortReason } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import { WORKFLOW_TOOL_NAME } from "./chunk-7fcxwgtq.js";
 import {
   createConcurrencyLimiter,

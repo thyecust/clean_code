@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { getOauthConfig } from "./chunk-9g2q4bjq.js";
 import { createHash } from "crypto";
 import { homedir, userInfo } from "os";

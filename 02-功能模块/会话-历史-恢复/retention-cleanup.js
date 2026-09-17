@@ -11,10 +11,10 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路
 import { l, W, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { describeStorageError, jsonParse, jsonParseUntraced, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getClaudeConfigDir, getTeamsDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, getTeamsDir } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
-import { logDirectories, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logDirectories, logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { isTempFileFor, writeFileAtomicWithOptions } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { getPluginsDir } from "../插件系统/plugin-system-core.js";
 import { isTempFileName, isValidPathSegment, getNormalizedNames, STORAGE_KEYS, createBridgeSpawnKey } from "../Teammates团队/storage-keys.js";

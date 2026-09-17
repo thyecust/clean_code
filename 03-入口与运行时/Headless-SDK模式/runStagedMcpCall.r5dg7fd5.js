@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 70 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { mcpCallRequestSchema } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { createAbortController } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import { Si } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";

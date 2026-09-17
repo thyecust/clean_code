@@ -10,7 +10,7 @@
 import { An, jf } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { j1, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { getLogDisplayTitle } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getLogDisplayTitle } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/核心工具-未归类/storage-v5-context.js";

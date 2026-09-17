@@ -18,7 +18,7 @@ import { jsonStringify, jsonParse, redactSecretsFromText, logForDebugging } from
 import { BG_EXIT_CAUSE_SESSION_IN_USE, setBgExitCause, readAndClearBgExitCause, readAndClearBgExitDetail } from "./chunk-z5vtnzjg.js";
 import { normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import {
   PROVIDER_CONFIG_ENV_VARS,
   BASE_URL_ENV_VARS,

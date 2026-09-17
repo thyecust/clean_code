@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 10 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { resolveEmbeddedAssetPath, readEmbeddedAsset, readEmbeddedAssetSync } from "../../01-核心基础设施/内嵌资源与模块互操作/embedded-text-asset.js";
 var D = "./SKILL-59d7da6d.md.zst";
 var E = readEmbeddedAssetSync(D, import.meta.dirname);

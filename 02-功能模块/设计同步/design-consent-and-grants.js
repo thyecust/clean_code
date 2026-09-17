@@ -11,7 +11,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { httpClient, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefreshOAuthTokenIfNeeded } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { clearPlans, clearApprovedPlans, addVerifiedProjectGrant, shouldRecardProject, markAllProjectsForRecard, markProjectGrantIneligible } from "../记忆-CLAUDE.md/chunk-9b6sc1gb.js";

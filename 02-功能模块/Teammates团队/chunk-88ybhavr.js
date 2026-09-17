@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { resolveSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 var DEFAULT_TEAMMATE_MODE = "in-process";
 class TeammateModeSnapshot {

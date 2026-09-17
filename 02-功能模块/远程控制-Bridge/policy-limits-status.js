@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { POLICY_LIMITS_API_PATH } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { EMPTY_POLICY_LIMITS_RESPONSE, getLastFetchOutcome, getPolicyLimitsIneligibleReason, getResponseFromCache } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { EMPTY_POLICY_LIMITS_RESPONSE, getLastFetchOutcome, getPolicyLimitsIneligibleReason, getResponseFromCache } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 function s() {
   let e = getResponseFromCache();
   if (e === null) return "nothing";

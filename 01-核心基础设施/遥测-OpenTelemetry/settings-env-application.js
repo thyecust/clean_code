@@ -10,7 +10,7 @@
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { getGlobalConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   getEnabledSettingsSources,

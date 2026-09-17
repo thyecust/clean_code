@@ -15,7 +15,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路
 import { withTimeout, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { Ra, R, l, A, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getClaudeConfigDir, xg } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, xg } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { markStdoutDrainExternallyClocked } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits, truncateMiddle, beforeFirst, truncateWithCharCount } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { openFileReadOnlyHardened } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
@@ -141,7 +141,7 @@ import {
   getSettingsForSource,
   getAllPolicyTierSettings,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { parsePermissionRule, splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { parsePermissionRule, splitToolRuleList } from "../权限系统/permission-rule-parsing.js";
 import { getInvisibleCharsPattern, escapeControlAndInvisibleChars } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { isModelAlias, getAPIProvider, isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getAuthPrecedenceSource, describeProfileAuthSource, getAnthropicConfigDir } from "../认证-OAuth登录/chunk-wk0e3dz4.js";

@@ -34,7 +34,7 @@ import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analy
 import { jsonStringify, jsonParse, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { writeToStdout, drainStdoutBeforeExit } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { writeDiagnosticsEvent, flushDiagnostics } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -42,10 +42,10 @@ import { drainRegisteredWriteQueues } from "../../01-核心基础设施/核心�
 import { stripAnsi, formatSingleLineText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { HOOK_REWRITE_HEADLESS_DENY_REASON, CAN_USE_TOOL_STREAM_CLOSED_DENY_REASON, CAN_USE_TOOL_INVALID_RESULT_DENY_REASON, CAN_USE_TOOL_REQUEST_FAILED_DENY_REASON, CAN_USE_TOOL_ABORTED_DENY_REASON } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { TOOL_USE_SUMMARY_MAX_CHARS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { sanitizeTextForDisplay } from "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { sanitizeTextForDisplay } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { applyPermissionUpdates, isPersistableSettingsSource, persistPermissionUpdates } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
-import { turnAbortControllerOf } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
+import { turnAbortControllerOf } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS } from "../../02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import {
   getUserDialogTimeoutMs,

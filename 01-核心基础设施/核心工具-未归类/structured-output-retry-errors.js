@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { truncateToCodeUnits, normalizeWhitespace, stripInvisibleCharacters } from "../核心工具-字符串与文本/string-utils.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { LINE_BREAK_REGEX, sanitizeSubagentText } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { STRUCTURED_OUTPUT_TOOL_NAME } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 var DEFAULT_MAX_STRUCTURED_OUTPUT_RETRIES = 5,

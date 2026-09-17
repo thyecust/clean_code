@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 76 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ErrorCode, ListResourcesResultSchema, McpError } from "./chunk-tv3jbp8f.js";
-import { logMCPDebug } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logMCPDebug } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { MCP_SKILLS_EXTENSION_ID } from "./mcp-skills-extension.js";
 import { asMcpSdkClient } from "./mcp-client-type-casts.js";
 import { getMcpTimeoutMs } from "./mcp-timeouts.js";

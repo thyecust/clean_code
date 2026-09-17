@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 10 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { getClaimRegistry } from "./host-claim-registry.js";
 import "./protobuf-decoding.js";
 import { NARRATION_BLOCK_TAG, readNarrationBlockTag } from "../../03-入口与运行时/会话UI-REPL/narration-signature.js";

@@ -71,7 +71,7 @@ import {
   serverBodyOf,
   seedSessionCacheFromPrime,
   getResponseFromCache,
-} from "./chunk-8sw91yn5.js";
+} from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { getErrorReportingPolicyState } from "../反馈-错误上报/error-reporting-eligibility.js";
 import { getClientUserAgent } from "../../01-核心基础设施/HTTP-网络层/user-agent.js";
 import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";

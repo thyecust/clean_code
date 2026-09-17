@@ -12,7 +12,7 @@ import { Ie, zn, ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { R, l, A, W, Nz, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { startSlowOperationSpan, resolvePathInfo, expandPathAliases, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { findExecutableWindows } from "../../03-入口与运行时/CLI入口-Commander/chunk-twnwwsbr.js";
 import { getCwd } from "../核心工具-未归类/cwd-context.js";
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";

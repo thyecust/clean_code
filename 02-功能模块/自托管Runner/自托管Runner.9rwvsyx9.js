@@ -15,7 +15,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路
 import { sleep, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { parseConfigInteger } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseConfigInteger } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { isBunStandaloneExecutable, getGlobalClaudeFile, env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { OAUTH_GLOBAL_FILE_SUFFIXES, fileSuffixForOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -32,7 +32,7 @@ import { GITHUB_HOST, isSameHost } from "../../01-核心基础设施/核心工�
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { MAX_SETTINGS_FILE_BYTES } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { resolvePath, ATOMIC_WRITE_STAGING_DIR_NAME } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { parsePermissionRule } from "../权限系统/permission-rule-parsing.js";
 import { getProxyFetchOptions, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { provenSameProcessAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { isTempScratchName, stripRecursiveGlobSuffix, parseRuleForSandbox, resolvePathPatternForSandboxAt, resolveSandboxFilesystemPathAt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";

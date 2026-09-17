@@ -12,7 +12,7 @@ import { getFileStorage } from "../../01-核心基础设施/文件存储-原子�
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { isSameProcessAsync, ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { join as u } from "path";

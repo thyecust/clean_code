@@ -12,7 +12,7 @@ import { Ve, dt, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48
 import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
-import { COMMAND_MESSAGE_TAG, LOCAL_COMMAND_CAVEAT_TAG, TICK_TAG, TASK_NOTIFICATION_TAG, TEAMMATE_MESSAGE_TAG, CHANNEL_SOURCE_OPEN_TAG, FORK_BOILERPLATE_TAG, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { COMMAND_MESSAGE_TAG, LOCAL_COMMAND_CAVEAT_TAG, TICK_TAG, TASK_NOTIFICATION_TAG, TEAMMATE_MESSAGE_TAG, CHANNEL_SOURCE_OPEN_TAG, FORK_BOILERPLATE_TAG, logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import {
   EXTERNAL_MESSAGE_PREFIX,
   stripWorkingPrefix,

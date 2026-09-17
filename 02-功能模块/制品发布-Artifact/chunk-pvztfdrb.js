@@ -19,7 +19,7 @@ import { registerCleanup, jsonStringify, jsonParse, expandPathAliases, logForDeb
 import { pluralize, truncateToCodePoints, truncateToCodeUnits, isWellFormed, beforeFirst, firstLine, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { G5, KU } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { COWRITTEN_ARTIFACT_HTML_TAG, COWRITTEN_ARTIFACT_HTML_INTRO, COWRITTEN_ARTIFACT_HTML_OUTRO, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { COWRITTEN_ARTIFACT_HTML_TAG, COWRITTEN_ARTIFACT_HTML_INTRO, COWRITTEN_ARTIFACT_HTML_OUTRO, logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import {
   formatNoGatewayCredentialMessage,
@@ -269,7 +269,7 @@ import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字
 import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { getEnvEntrypoint, isDesktopHostEntrypoint, isClaudeDesktopAppSession, isDesktopHostSession, isVsCodeExtensionSession, isClaudecodeEnv } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { parsePermissionRule, formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { parsePermissionRule, formatPermissionRule } from "../权限系统/permission-rule-parsing.js";
 import {
   getArtifactEnvironment,
   isInterruptLikeUserMessage,

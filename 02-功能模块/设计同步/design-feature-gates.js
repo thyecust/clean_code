@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { isPolicyAllowed } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { isPolicyAllowed } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 var e = "tengu_omelette_fouet";
 function isDesignSyncEnabled() {
   if (!isPolicyAllowed("allow_design_sync")) return !1;

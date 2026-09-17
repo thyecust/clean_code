@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, bi } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { formatSingleLineLabel } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { formatSingleLineLabel } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getFileStorage } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";

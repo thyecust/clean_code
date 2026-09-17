@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { TEAMMATE_MESSAGE_TAG, CROSS_SESSION_MESSAGE_TAG, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { TEAMMATE_MESSAGE_TAG, CROSS_SESSION_MESSAGE_TAG, logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
@@ -16,7 +16,7 @@ import { R, l, A, Po, Bp, vB, Kd } from "../../00-第三方库/@anthropic-ai/sdk
 import { getFileStorage } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
 import { isValidPathSegment, STORAGE_KEYS } from "./storage-keys.js";
 import { getTelemetryCode, describeStorageError, jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getClaudeConfigDir, getTeamsDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, getTeamsDir } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { truncateToCodeUnits, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { escapeHtmlAttribute, neutralizeOpeningTags } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { isAgentColorName } from "../多会话视图-Fleet/agent-color-palette.js";

@@ -21,7 +21,7 @@ import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Age
 import "../../01-核心基础设施/核心工具-未归类/syntax-highlight-adapter.js";
 import { CodeBlock } from "../语法高亮-Markdown渲染/code-block.js";
 import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
-import { sanitizeTextForDisplay, sanitizeUntrustedText, MAX_DISPLAY_PAYLOAD_UNITS, needsMultilineGutter, prepareDisplayText, tryFormatShortDisplayValue, formatWithholdableValue, shouldWithholdValue, replaceLineBreaks } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { sanitizeTextForDisplay, sanitizeUntrustedText, MAX_DISPLAY_PAYLOAD_UNITS, needsMultilineGutter, prepareDisplayText, tryFormatShortDisplayValue, formatWithholdableValue, shouldWithholdValue, replaceLineBreaks } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { MultilineBorderBox, isConsentRow, mintConsentRowFromUpdates, PermissionReasonPanel, ConfirmationPrompt, shouldOfferAlwaysAllow } from "../权限系统/chunk-0hcqee2w.js";
 import { WORKFLOW_TOOL_NAME } from "./chunk-7fcxwgtq.js";
 import { parseWorkflowScript } from "./workflow-script.js";

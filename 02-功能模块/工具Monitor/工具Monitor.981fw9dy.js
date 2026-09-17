@@ -16,7 +16,7 @@ import { truncate } from "../../01-核心基础设施/核心工具-字符串与�
 import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { checkWebSocketEgress } from "../../01-核心基础设施/HTTP-网络层/test-egress-guard.js";
 import { TOOL_USE_SUMMARY_MAX_CHARS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { hasNoControlCharacters, isPolicyAllowed } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { hasNoControlCharacters, isPolicyAllowed } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   isAgentStopPending,

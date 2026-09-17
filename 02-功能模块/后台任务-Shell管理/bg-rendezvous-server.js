@@ -14,7 +14,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, drainCleanup, jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { replaceInvisibleChars } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { CURSOR_HOME_SEQUENCE, ERASE_SCREEN_SEQUENCE } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { readBoundedFile } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";

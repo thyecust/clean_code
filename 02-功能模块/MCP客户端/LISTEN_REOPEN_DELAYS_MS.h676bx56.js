@@ -105,7 +105,7 @@ import { Ve, yt, R, ge, l, pot } from "../../00-第三方库/@anthropic-ai/sdk/s
 import { describeStorageError, registerCleanup, jsonStringify, sanitizeUrl, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logMCPError, logMCPDebug } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logMCPError, logMCPDebug } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { MAX_TIMER_DELAY_MS, buildMcpToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import { _xt, jo, yxt, Qie } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
@@ -181,7 +181,7 @@ import {
   isMcpServerDisabled,
   matchCodeIndexingToolByServerName,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import { getPluginToolStagingDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { agentProxyEnv, subprocessEnv, shouldUseMcpAllowlistEnv } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import { emitOtelEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";

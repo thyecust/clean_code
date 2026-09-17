@@ -10,7 +10,7 @@
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { resolvePath, getFileMtimeMs } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { buildAgentArtifactKey, getArtifactState } from "./chunk-rr78st95.js";
 import { observationStamp, observedWithoutSource, compareArtifactVersions } from "./chunk-01ymf0ar.js";

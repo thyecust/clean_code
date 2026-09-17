@@ -16,7 +16,7 @@ import { logForDebugging } from "../../01-核心基础设施/核心工具-日志
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { getThinkingBudgetDefaults, getSubscriptionType } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { parsePermissionRule } from "../权限系统/permission-rule-parsing.js";
 import { isDangerousRuleCached } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { DEFAULTS_SLOT_MARKER, getAutoModeTemplateRules, isTruncatedStopReason, resolveAutoModeClassifierModel, getClassifierFallbackModel, joinTextBlocks, sideQuery } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import { fromEnum } from "../遥测-OpenTelemetry/analytics-fields.js";
-import { parsePermissionRule } from "../../02-功能模块/工具Bash-Shell/permission-rule-parsing.js";
+import { parsePermissionRule } from "../../02-功能模块/权限系统/permission-rule-parsing.js";
 import { isDangerousBashPermission, isDangerousPowerShellPermission } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { BASH_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 var p = [

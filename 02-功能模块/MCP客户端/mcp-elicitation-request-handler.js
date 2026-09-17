@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { MCP_ELICITATION_DIALOG, MCP_ELICITATION_WAITING_DIALOG } from "./mcp-elicitation-dialogs.js";
-import { logMCPError, logMCPDebug } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logMCPError, logMCPDebug } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";

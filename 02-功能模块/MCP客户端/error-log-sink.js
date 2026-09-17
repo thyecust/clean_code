@@ -10,7 +10,7 @@
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { createStringBatchWriter, registerCleanup, registerPreExitFlush, jsonStringify, getFsSurface, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getCurrentWorkingDirectory, logDirectories, dateToFilename, attachErrorLogSink } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getCurrentWorkingDirectory, logDirectories, dateToFilename, attachErrorLogSink } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { reportError } from "../../01-核心基础设施/HTTP-网络层/error-tracking-report.js";
 import { emitInternalErrorEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { createKeyedSerialQueue } from "../../01-核心基础设施/核心工具-并发与缓存/async-serialization.js";

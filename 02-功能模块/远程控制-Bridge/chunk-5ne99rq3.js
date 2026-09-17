@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { COMMAND_NAME_TAG, LOCAL_COMMAND_STDOUT_TAG, LOCAL_COMMAND_STDERR_TAG, LOCAL_COMMAND_CAVEAT_TAG, stripXmlTags } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { COMMAND_NAME_TAG, LOCAL_COMMAND_STDOUT_TAG, LOCAL_COMMAND_STDERR_TAG, LOCAL_COMMAND_CAVEAT_TAG, stripXmlTags } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withTimeout, withDeadline } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";

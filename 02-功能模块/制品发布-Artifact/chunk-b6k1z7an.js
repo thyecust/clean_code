@@ -15,7 +15,7 @@ import { lit as S } from "../../01-核心基础设施/遥测-OpenTelemetry/analy
 import { Ve } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerPreExitFlush, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, stripAnsiAndControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { isEssentialTrafficOnly, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly, logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { CLAUDE_CODE_REMOTE_DISPLAY_NAME, isStartupCcrSessionMetaUrl } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { httpClient, REMOTE_DEVICES_MCP_SERVER_NAME, hasFreshGrowthBookFeatures, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";

@@ -10,7 +10,7 @@
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { jsonStringify, jsonStringifyUntraced, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isConfigDirPath } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isConfigDirPath } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { CLAUDE_BULLET_GLYPH, DOTTED_CIRCLE_GLYPH, UP_ARROW_GLYPH, DOWN_ARROW_GLYPH, RETURN_KEY_GLYPH, HORIZONTAL_LINE_GLYPH, ROUNDED_BOX_CORNER_GLYPHS, EN_DASH_GLYPH, TREE_CONNECTOR_GLYPHS } from "../权限系统/chunk-e4pfvp7x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 79 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { HELP_FLAGS } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { HELP_FLAGS } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { getDefaultMainLoopModelSetting, parseUserSpecifiedModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { modelSupportsUltracode, getAllowedEffortLevels } from "../权限系统/chunk-t3b7pg2x.js";
 import { getEffortValue } from "../权限系统/chunk-fjrcf22x.js";

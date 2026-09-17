@@ -31,7 +31,7 @@ import { createLazyValue } from "../../01-核心基础设施/核心工具-并发
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Iae, _dr, lot, R, l, A, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { THIRD_PARTY_PROVIDER_LABELS, getAPIProvider, isFirstPartyAnthropicHost } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getActiveProfileName, getAnthropicConfigDir } from "./chunk-wk0e3dz4.js";
 import { SECURE_STORAGE_READ_FAILED_SENTINEL, withSecureStorageWriteLock, runSecureStorageWriteWithoutLock, invalidateCredentialsCopyCache, getSecureStorage } from "./secure-storage.js";

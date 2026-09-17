@@ -13,7 +13,7 @@ import { A, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { repeatString, countOccurrences, normalizeIdeographicSpaces } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { CLAUDE_BULLET_GLYPH, SEARCH_PREFIX_GLYPH, LOZENGE_OUTLINE_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { Zd } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import { useTerminalSize } from "../../01-核心基础设施/UI组件-TUI/use-terminal-size.js";

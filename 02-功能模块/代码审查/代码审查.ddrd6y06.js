@@ -18,7 +18,7 @@ import { lit as S, fromEnum, fromEnumOpt, fromEnumArr } from "../../01-核心基
 import { l, Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { isEssentialTrafficOnly } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
@@ -29,7 +29,7 @@ import { isGitHubHost, isSameHost } from "../../01-核心基础设施/核心工�
 import { isSamePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isDesktopHostEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { isNestedGitLabProject, detectCurrentRepositoryWithHost } from "../工作树-Git/git-repository-detection.js";
-import { isPolicyAllowed, policyDeniedReason } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { isPolicyAllowed, policyDeniedReason } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { getBridgeEntitlementBlocker } from "../远程控制-Bridge/chunk-9estzwf5.js";
 import { waitForPolicyLimitsToLoad } from "../策略限制-PolicyLimits/policy-limits-client.js";
 import {

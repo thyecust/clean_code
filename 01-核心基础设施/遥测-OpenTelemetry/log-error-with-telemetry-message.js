@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { dt, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../提示词-SystemPrompt/chunk-27ncq5fr.js";
 function logErrorWithTelemetryMessage(r, o) {
   logError(dt(ge(r), o));
 }

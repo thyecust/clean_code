@@ -16,14 +16,14 @@ import { artifactReadObservationIn } from "../制品发布-Artifact/chunk-01ymf0
 import { bh, B, Nb, HW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { dt, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import "../../01-核心基础设施/遥测-OpenTelemetry/whiteboard-telemetry.js";
 import { getMainLoopModel, BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { HOST_FIELD_NAME } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { FILE_STATE_MAX_ENTRIES, createFileStateCache } from "../MCP客户端/chunk-3kmsshb6.js";
 import { createDefaultToolPermissionContext, findToolByName, parseToolInput, getToolRemoteExecution, isBatchToolDefinition } from "../权限系统/chunk-qdy0h5k2.js";
-import { createAbortController, createChildAbortController, userAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController, createChildAbortController, userAbortReason } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import { getHostCapabilityState } from "../../01-核心基础设施/核心工具-未归类/host-capability-state.js";
 import {
   prunePluginsForClosedGate,

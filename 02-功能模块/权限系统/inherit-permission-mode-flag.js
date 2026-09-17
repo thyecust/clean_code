@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { invalidateJobStateCache, readJobState, syncRespawnFlag } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 var r = "--inherit-permission-mode";

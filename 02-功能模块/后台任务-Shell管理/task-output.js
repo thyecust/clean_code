@@ -11,7 +11,7 @@ import { j1, Xn, K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Dr, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { R, l, A, WW } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { resolvePathInfo, expandPathAliases, getFsSurface, readBytesAtOffset, readTailBytes, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { getProjectsDir } from "../Teammates团队/transcript-paths.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getSessionStateStore, getBgTakeover } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";

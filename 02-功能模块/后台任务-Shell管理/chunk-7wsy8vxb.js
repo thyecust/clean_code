@@ -16,7 +16,7 @@ import { lit as S, fromEnum, fromEnumOpt, fromEnumArr, fromSanitizer_SANITIZER_O
 import { getTelemetryCode, describeStorageError, jsonStringify, jsonParse, redactSecretsFromText, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { PROVIDER_CONFIG_ENV_VARS, MODEL_ENV_VARS, CUSTOM_MODEL_OPTION_ENV_VARS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { normalizeComparableText } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 import { isModelRetiredOrRemapped, parseUserSpecifiedModel, getJobsDir as Xvn, getJobStorageKey, isLocalAddress, sanitizeSessionName, getBgTakeover } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
@@ -30,7 +30,7 @@ import { isExitedProcessAsync, isSameProcessAsync } from "../../01-核心基础�
 import { resolveAgentColorName } from "../多会话视图-Fleet/agent-color-palette.js";
 import { isUuidShaped } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION } from "../权限系统/fork-restricted-launch-flags.js";
-import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
+import { splitToolRuleList } from "../权限系统/permission-rule-parsing.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Cs } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import { getCarriableEffortLevel } from "../权限系统/chunk-t3b7pg2x.js";

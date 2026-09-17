@@ -71,7 +71,7 @@ import {
   CURRENT_MODEL_PREFIX,
   sideQuery,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { sanitizeUntrustedText, truncateToTextLimit, replaceLineBreaks } from "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
+import { sanitizeUntrustedText, truncateToTextLimit, replaceLineBreaks } from "../核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { modelSupportsUltracode, getUltracodeFallbackEffort, getSessionEffortLevel } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { fetchBootstrapData } from "../../02-功能模块/上下文压缩-Compact/chunk-npckj9cm.js";
 function b(e, t, n) {

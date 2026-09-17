@@ -36,7 +36,7 @@ import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-key
 import { R, A, Jg } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { RENAME_CONTENTION_ERRNOS, renameWithRetry, writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { describeStorageError, registerCleanup, registerPreExitFlush, jsonStringify, jsonParse, hasNetworkPathSpelling, hasUnverifiableAncestrySync, resolveSymlinkAncestrySync, fsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { lr, le, Zt, Io, cr, nt, Cu, ru, Rmr } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -66,7 +66,7 @@ import { getProjectsDir, getProjectKeyFromDir, getSessionSubagentsDir, getAgentT
 import { isManagedPermissionRulesOnlyEnabled, getEffectivePermissionRules, getDeclaredAndRepoOnlyDirectories, getEffectiveAdditionalDirectories, applyPermissionUpdate, getResolvedClaudeTempDir, getCurrentProjectTempDir, getProjectTempDirForPath, realpathIfResolvable } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
 import { createDefaultToolPermissionContext } from "../权限系统/chunk-qdy0h5k2.js";
-import { userAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { userAbortReason } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import { openNoSymlinkTraversal, pinWriteTarget, evictTaskOutput } from "./task-output.js";
 import {
   baseEach,

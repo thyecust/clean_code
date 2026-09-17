@@ -14,7 +14,7 @@ import { lit as S, fromEnum } from "../遥测-OpenTelemetry/analytics-fields.js"
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits, stripInvisibleCharacters } from "../核心工具-字符串与文本/string-utils.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "./chunk-27ncq5fr.js";
 import { getMaxSubagentSpawnDepth } from "../核心工具-未归类/max-subagent-spawn-depth.js";
 import { ENTER_PLAN_MODE_TOOL_NAME, ASK_USER_QUESTION_TOOL_NAME } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import {

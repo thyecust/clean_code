@@ -17,7 +17,7 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelem
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { dt, ge, z0 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { sortByModifiedDesc, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { sortByModifiedDesc, logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { jo } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import {
   gracefulShutdown,
@@ -76,7 +76,7 @@ import {
   formatWorktreeResumeWarning,
   applyResumedWorktreeState,
   kHe,
-} from "../工作树-Git/resume-session-state.js";
+} from "./resume-session-state.js";
 import "../../01-核心基础设施/核心工具-未归类/feature-flag-version.js";
 import "../../01-核心基础设施/核心工具-未归类/main-loop-model.js";
 import "../账号-订阅/chunk-f4zey5rf.js";

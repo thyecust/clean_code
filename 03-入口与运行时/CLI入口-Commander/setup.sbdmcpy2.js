@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 182 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
-import { isSimpleMode, isSafeMode } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSimpleMode, isSafeMode } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { identity as _m, j, B, K, $p, sn, ES, o_e, ke, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
@@ -18,7 +18,7 @@ import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analy
 import { ud, l, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { registerCleanup, changeWorkingDirectory, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { setBgExitCause } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { logError } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { getCurrentWorktreeSession, isBgSession, getBgJobDir, prefetchApiKeyFromApiKeyHelperIfSafe, onGrowthBookRefresh, getFeatureValue_CACHED_MAY_BE_STALE, checkHasTrustDialogAccepted, saveGlobalConfig, getGlobalConfig, getCurrentProjectConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";

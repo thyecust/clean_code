@@ -10,7 +10,7 @@
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { isIterateeCall, sliceArrayRange, omitBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
 import { Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";

@@ -139,7 +139,7 @@ import {
   logForDebugging,
   getDebugLogPath,
 } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isSimpleMode, isSafeMode, getSafeModeExitHint, xg } from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSimpleMode, isSafeMode, getSafeModeExitHint, xg } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import {
   repeatString,
   capitalize,
@@ -174,7 +174,7 @@ import {
   logError,
   logMCPError,
   logMCPDebug,
-} from "../../02-功能模块/模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+} from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { sessionTransportRegistry, mayHaveRemoteClient } from "../../02-功能模块/远程控制-Bridge/chunk-dajvcsw3.js";
 import { invertText, chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import {
@@ -480,7 +480,7 @@ import {
   getPermissionModeSymbol,
   getPermissionModeColor,
 } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
-import { escapeGlobSpecials, formatPermissionRule } from "../../02-功能模块/工具Bash-Shell/permission-rule-parsing.js";
+import { escapeGlobSpecials, formatPermissionRule } from "../../02-功能模块/权限系统/permission-rule-parsing.js";
 import { getSessionRuntimeState } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { isInProcessTeammate, getDynamicTeamContext, getAgentName, getTeamName, isTeammate, isModelDrivenSession, getTeammateColor, isPlanModeRequired, hasNonLeadTeammate, isTeamLead } from "../../02-功能模块/Teammates团队/teammate-context.js";
@@ -1377,7 +1377,7 @@ import {
   tryFormatShortLabel,
   displayTextTemplate,
   isPolicyAllowed,
-} from "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
+} from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import {
   defaultFullscreenState,
   isTmuxControlMode,
@@ -1459,7 +1459,7 @@ import {
 } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME, getToolPermissionContext, getSessionEffort } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { createDefaultToolPermissionContext, matchesToolName, findToolByName, parseToolInput } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
-import { createAbortController, userAbortReason, unwrapAbortReason } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController, userAbortReason, unwrapAbortReason } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import {
   EXIT_PLAN_MODE_TOOL_NAME,
   notePlanFileForgotten,
@@ -1878,7 +1878,7 @@ import {
   applyResumedWorktreeState,
   exitWorktreeOnResume,
   kHe,
-} from "../../02-功能模块/工作树-Git/resume-session-state.js";
+} from "../../02-功能模块/会话-历史-恢复/resume-session-state.js";
 import {
   redactManagedMcpConfig,
   normalizeMcpServerStatus,
@@ -25256,7 +25256,7 @@ class fZ {
       }
       (rearmCyberRefusalHeaderOnResume(jt, ne === "fork"), ao?.());
       let { renameRecordingForSession: ho } =
-        await import("../../02-功能模块/工作树-Git/resume-session-state.js");
+        await import("../../02-功能模块/会话-历史-恢复/resume-session-state.js");
       if ((await ho(me, Ke), await resetSessionFilePointer(), ne !== "fork")) {
         if (
           (clearGoalOnResumeSwap(pe.getState, pe.setState, Ae),

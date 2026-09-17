@@ -13,7 +13,7 @@ import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核�
 import { emitTaskNotification } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { DEFAULT_MIDDLE_TRUNCATE_MAX_CHARS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 import { getTaskOutputPath, evictTaskOutput, writeTaskOutputSnapshot, initTaskOutput } from "../后台任务-Shell管理/task-output.js";
 import {
   hasTaskEverBeenRegistered,

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { ze, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ARTIFACT_WATCH_LIFECYCLE_ORIGIN } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
+import { ARTIFACT_WATCH_LIFECYCLE_ORIGIN } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 import { buildUdsAddress, getCanonicalSocketPath, ARTIFACT_YIELD_PEER_FEATURE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
