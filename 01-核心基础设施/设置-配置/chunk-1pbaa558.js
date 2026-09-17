@@ -9,18 +9,18 @@
 // Version: 2.1.263
 import { j, B, ld, ns, fv } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z, Dt, kt } from "../共享小工具-未细化/chunk-510m1t2d.js";
-import { ws } from "../共享小工具-未细化/chunk-0a6nmdka.js";
+import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep, withTimeout, withDeadline } from "../共享小工具-未细化/async-timeout-utils.js";
+import { getInkInstanceRegistry } from "../共享小工具-未细化/ink-instance-registry.js";
 import { Dte, Pr, $s, kl, i5n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { OAUTH_BETA_HEADER, getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { lit as S } from "../共享小工具-未细化/analytics-fields.js";
 import { l, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, Et, b, z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import {
   pRe,
   fRn,
@@ -42,7 +42,7 @@ import {
   getStoredOauthAccountInfo,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { dy } from "../共享小工具-未细化/chunk-862jyk0r.js";
+import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../共享小工具-未细化/open-flags.js";
 import { qt } from "../共享小工具-未细化/chunk-km6n9zrg.js";
 import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import {
@@ -81,12 +81,12 @@ import { Uhe } from "../../02-功能模块/运行宿主探测/运行宿主探测
 import { U5t, Tar } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { vvt, mir, gir } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
-import { a5 } from "../共享小工具-未细化/chunk-6ffbt6s0.js";
+import { commitExit } from "../共享小工具-未细化/exit-commit-state.js";
 import { mJn } from "../遥测-OpenTelemetry/chunk-5qbcynds.js";
 import { nU, Cve, lse, KJe, XJe } from "../核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import { Fy } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
 import { I4t, P4t } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
-import { QGt, I$, XE, hwn } from "../共享小工具-未细化/chunk-6eskfcpn.js";
+import { matchesOAuthBaseUrlHost, resetRemoteSettingsSyncCache, isRemoteSettingsEligible, hasTeamOrEnterpriseSubscription } from "../共享小工具-未细化/remote-settings-eligibility.js";
 import { s, T, se, c, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getClientUserAgent } from "../共享小工具-未细化/user-agent.js";
 var Te = 5000;
@@ -132,7 +132,7 @@ class ee {
       }
       let a = new Q(r);
       ((this.pendingReview = a),
-        i("tengu_managed_settings_security_dialog_shown", {}));
+        logEvent("tengu_managed_settings_security_dialog_shown", {}));
       let u;
       try {
         u = e(t, o, a.updates);
@@ -147,10 +147,10 @@ class ee {
   }
   close(e, t) {
     if (((this.pendingReview = null), t === "approved"))
-      (i("tengu_managed_settings_security_dialog_accepted", {}),
+      (logEvent("tengu_managed_settings_security_dialog_accepted", {}),
         logFeatureOk("remote_managed_settings_security_check"));
     else if (t === "rejected")
-      i("tengu_managed_settings_security_dialog_rejected", {});
+      logEvent("tengu_managed_settings_security_dialog_rejected", {});
     e.settle(t);
   }
   startupConsentRelease = null;
@@ -172,7 +172,7 @@ function F() {
   return Ae.of(B().host);
 }
 function te() {
-  return ws().pendingStandaloneRender !== null;
+  return getInkInstanceRegistry().pendingStandaloneRender !== null;
 }
 function Enn(e) {
   F().registerRequester(e);
@@ -226,7 +226,7 @@ async function X() {
     o = new Promise((a) => {
       ((t = a), e.addWaiter(a));
     }),
-    r = await Dt(
+    r = await withTimeout(
       o,
       Te,
       "managed-settings security dialog requester wait timed out",
@@ -248,7 +248,7 @@ async function oe(e, t, o) {
         let _ = a.replRequester;
         if (_)
           return ((a.consentHandoffRevealActive = !0), await a.review(_, t, r));
-        if (ws().has(process.stdout)) {
+        if (getInkInstanceRegistry().has(process.stdout)) {
           let v = await X();
           if (v)
             return (
@@ -262,14 +262,14 @@ async function oe(e, t, o) {
       }
     } else return a.review(a.replRequester, t, r);
   if (a.noConsentSurface) return "deferred_no_consent_surface";
-  let u = ws();
+  let u = getInkInstanceRegistry();
   if (u.has(process.stdout)) {
     a.fireStartupConsentRelease();
     let w = await X();
     if (w) return a.review(w, t, r);
   }
   if (o === void 0 || a.noConsentSurface) return "deferred_no_consent_surface";
-  i("tengu_managed_settings_security_dialog_shown", {});
+  logEvent("tengu_managed_settings_security_dialog_shown", {});
   let p = u.has(process.stdout),
     d = o(t, p, r);
   if (!p) u.claimForStandaloneRender(d);
@@ -283,7 +283,7 @@ async function oe(e, t, o) {
     );
   }
   if (
-    (i(
+    (logEvent(
       R === "approved"
         ? "tengu_managed_settings_security_dialog_accepted"
         : "tengu_managed_settings_security_dialog_rejected",
@@ -298,7 +298,7 @@ var Oe = "Managed settings were not approved; exiting without applying them.";
 function ie(e) {
   switch (e) {
     case "rejected":
-      if (process.stderr.isTTY && !$s()) (a5(), Dte(Oe));
+      if (process.stderr.isTTY && !$s()) (commitExit(), Dte(Oe));
       return (Pr(1), !1);
     case "deferred_no_consent_surface":
       return !1;
@@ -325,11 +325,11 @@ var He = "remote-settings-consent.json",
   De = 20,
   Ne = 86400000,
   I = 1048576,
-  Ue = m(() =>
+  Ue = createLazyValue(() =>
     c({ accountUuid: s(), dangerousSettingsHash: s(), updatedAt: T() }),
   ),
-  Be = m(() => c({ version: k(L), records: fe(s(), se()) })),
-  ze = m(() => c({ version: T().gt(L) }));
+  Be = createLazyValue(() => c({ version: k(L), records: fe(s(), se()) })),
+  ze = createLazyValue(() => c({ version: T().gt(L) }));
 function de() {
   return xe(be(), He);
 }
@@ -346,7 +346,7 @@ function ae() {
 }
 async function ue(e) {
   let t;
-  if (M() && e !== void 0) {
+  if (isHoverRestEnabled() && e !== void 0) {
     let o;
     try {
       o = await e.readText([{ key: Ce.state(ce), offset: 0, length: I + 1 }]);
@@ -366,7 +366,7 @@ async function ue(e) {
   } else {
     let o = de();
     try {
-      if (dy === 0) {
+      if (O_NOFOLLOW_NONBLOCK_FLAGS === 0) {
         let a = await qt().lstat(o);
         if (a !== void 0 && !a.isFile) return x();
       }
@@ -428,7 +428,7 @@ async function ge(e, t, o) {
       { accountUuid: e.accountUuid, dangerousSettingsHash: _, updatedAt: v },
     ]);
     let E = b({ version: L, records: Object.fromEntries(P) });
-    if (M() && o !== void 0) {
+    if (isHoverRestEnabled() && o !== void 0) {
       let C = await o.write(Ce.state(ce), E, { mode: 384 });
       if (!C.ok)
         n(`Remote settings: Failed to record org consent - ${We(C.error)}`);
@@ -439,7 +439,7 @@ async function ge(e, t, o) {
     n(`Remote settings: Failed to record org consent - ${l(r)}`);
   }
 }
-var me = m(() => c({ uuid: s(), checksum: s(), settings: fe(s(), se()) }));
+var me = createLazyValue(() => c({ uuid: s(), checksum: s(), settings: fe(s(), se()) }));
 var Ve = 1e4,
   Ye = 5,
   Xe = 3600000,
@@ -497,7 +497,7 @@ function vnn() {
   ye();
   let e = O();
   if (e.loadingCompletePromise) return;
-  if (XE())
+  if (isRemoteSettingsEligible())
     e.createBarrier((t) => {
       setTimeout(
         (o, r) => {
@@ -607,7 +607,7 @@ async function rt(e) {
   }
 }
 function Rnn() {
-  return XE();
+  return isRemoteSettingsEligible();
 }
 async function _ee() {
   let e = O();
@@ -618,10 +618,10 @@ async function c3e() {
   if (e.fetchSettledPromise) await e.fetchSettledPromise;
 }
 function fIe() {
-  return XE() && !getRemoteManagedSettingsSyncFromCache();
+  return isRemoteSettingsEligible() && !getRemoteManagedSettingsSyncFromCache();
 }
 function knn() {
-  return !Uhe() && XE() && unverifiedRemoteCacheWithholdsProvisions();
+  return !Uhe() && isRemoteSettingsEligible() && unverifiedRemoteCacheWithholdsProvisions();
 }
 function ye() {
   i5n(async () => {
@@ -639,7 +639,7 @@ async function ot(e) {
       pinnedFingerprint: r,
     };
   }
-  if (isClaudeAISubscriber() && hwn()) {
+  if (isClaudeAISubscriber() && hasTeamOrEnterpriseSubscription()) {
     let r = getClaudeAIOAuthTokens();
     if (r?.accessToken)
       return {
@@ -673,7 +673,7 @@ async function ot(e) {
           await import("../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js"),
         [u, p] = await Promise.all([a(), r()]);
       if (u !== null) {
-        if (!QGt(p?.baseURL)) {
+        if (!matchesOAuthBaseUrlHost(p?.baseURL)) {
           let R = `Remote settings: profile base URL ${p?.baseURL ?? "(unknown)"} is not the settings endpoint's host; not fetching with the profile credential`;
           return (n(R), { headers: {}, error: R, profileError: !0 });
         }
@@ -800,7 +800,7 @@ async function it(e, t = {}) {
     (n(
       `Remote settings: Retry ${u}/${a} after ${p}ms (${H({ errorKind: r.errorKind ?? "unknown_error", ...(r.httpStatus !== void 0 && { httpStatus: r.httpStatus }) })})`,
     ),
-      await Z(p));
+      await sleep(p));
   }
   return r;
 }
@@ -955,7 +955,7 @@ async function Pe(e, t = !1, o) {
           if (E && E !== r)
             return (
               p(P),
-              i("tengu_remote_settings_401_force_refresh_retry", {}),
+              logEvent("tengu_remote_settings_401_force_refresh_retry", {}),
               Pe(e, !0, o)
             );
         }
@@ -992,7 +992,7 @@ async function Pe(e, t = !1, o) {
 async function he(e, t, o) {
   let r = b(e, null, 2),
     a = helperConsentDigest(e);
-  if (M() && t !== void 0 && !getRemoteSettingsPathOverride()) {
+  if (isHoverRestEnabled() && t !== void 0 && !getRemoteSettingsPathOverride()) {
     let u = await t.write(Ce.state("remote-settings"), r, {
       publishDiscipline: "inPlace",
       mode: 384,
@@ -1039,19 +1039,19 @@ async function he(e, t, o) {
     );
     return;
   }
-  if (M() && !getRemoteSettingsPathOverride()) remoteSettingsFileWritten("cache", r);
+  if (isHoverRestEnabled() && !getRemoteSettingsPathOverride()) remoteSettingsFileWritten("cache", r);
   if ((await lse(getSettingsPath(), o), a === void 0)) return;
   try {
-    if ((await writeFile(getHelperConsentPath(), a, { mode: 384 }), M() && !getRemoteSettingsPathOverride()))
+    if ((await writeFile(getHelperConsentPath(), a, { mode: 384 }), isHoverRestEnabled() && !getRemoteSettingsPathOverride()))
       remoteSettingsFileWritten("helperConsent", a);
   } catch (u) {
     n(`Remote settings: Failed to save helper consent - ${l(u)}`);
   }
 }
 async function hlt(e) {
-  (UDt(), I$(), Za(), O().detachBarrier()?.());
+  (UDt(), resetRemoteSettingsSyncCache(), Za(), O().detachBarrier()?.());
   let t =
-    M() && e !== void 0
+    isHoverRestEnabled() && e !== void 0
       ? await e.delete(Ce.state(HELPER_CONSENT_STATE_ID)).then((o) => (o.ok ? void 0 : We(o.error)))
       : await Je(getHelperConsentPath(), { force: !0 }).then(() => {
           return;
@@ -1060,9 +1060,9 @@ async function hlt(e) {
     n(`Remote settings: Failed to remove helper consent - ${t}`);
     return;
   }
-  if (M() && !getRemoteSettingsPathOverride()) remoteSettingsFileWritten("helperConsent", null);
+  if (isHoverRestEnabled() && !getRemoteSettingsPathOverride()) remoteSettingsFileWritten("helperConsent", null);
   if (getRemoteSettingsPathOverride()) return;
-  if ((await KJe(getSettingsPath()), M() && e !== void 0)) {
+  if ((await KJe(getSettingsPath()), isHoverRestEnabled() && e !== void 0)) {
     if ((await e.delete(Ce.state("remote-settings"))).ok) remoteSettingsFileWritten("cache", null);
     return;
   }
@@ -1070,9 +1070,9 @@ async function hlt(e) {
     let o = getSettingsPath();
     await unlink(o);
   } catch (o) {
-    if (M() && !W(o)) return;
+    if (isHoverRestEnabled() && !W(o)) return;
   }
-  if (M()) remoteSettingsFileWritten("cache", null);
+  if (isHoverRestEnabled()) remoteSettingsFileWritten("cache", null);
 }
 async function Y(e = {}) {
   try {
@@ -1083,7 +1083,7 @@ async function Y(e = {}) {
   }
 }
 async function ct(e) {
-  if (!XE()) return { settings: null, fetchSucceeded: !0 };
+  if (!isRemoteSettingsEligible()) return { settings: null, fetchSucceeded: !0 };
   let t = getRemoteSettingsPathOverride();
   if (t || isEvalPolicySnapshotOnly())
     return (
@@ -1266,7 +1266,7 @@ async function ct(e) {
   }
 }
 function D(e) {
-  if (!XE()) {
+  if (!isRemoteSettingsEligible()) {
     let t = getIneligibleReason();
     if (t) setLastLoadStatus({ state: "ineligible", reason: t });
     return;
@@ -1294,7 +1294,7 @@ function D(e) {
 async function _lt(e, t, o) {
   ye();
   let r = O();
-  if (XE() && !r.loadingCompletePromise) r.createBarrier();
+  if (isRemoteSettingsEligible() && !r.loadingCompletePromise) r.createBarrier();
   let a = r.fetchSettledResolve,
     u = getSyncCacheResetEpoch();
   if (getRemoteManagedSettingsSyncFromCache() && r.loadingCompleteResolve) r.releaseLoadBarrier();
@@ -1305,7 +1305,7 @@ async function _lt(e, t, o) {
       failure: R,
     } = await Y({ ...o, showSecurityDialog: e, storageV5: t });
     if (getSyncCacheResetEpoch() === u) D({ settings: p, fetchSucceeded: d, failure: R });
-    if (getSyncCacheResetEpoch() === u && XE() && !getRemoteSettingsPathOverride() && !isEvalPolicySnapshotOnly()) Fe(e, t, o?.credentials);
+    if (getSyncCacheResetEpoch() === u && isRemoteSettingsEligible() && !getRemoteSettingsPathOverride() && !isEvalPolicySnapshotOnly()) Fe(e, t, o?.credentials);
     if (p !== null) N();
     return d;
   } finally {
@@ -1330,7 +1330,7 @@ async function YBn(e, t, o) {
       (p) => (logError(p), "failed"),
     );
   try {
-    let p = await kt(Promise.race([u, a]), dt);
+    let p = await withDeadline(Promise.race([u, a]), dt);
     if (p === void 0)
       return (
         logFeatureSad("remote_managed_settings_startup_await", "deadline_expired"),
@@ -1342,11 +1342,11 @@ async function YBn(e, t, o) {
   }
 }
 async function xnn(e, t, o) {
-  (UDt(), I$());
+  (UDt(), resetRemoteSettingsSyncCache());
   let r = getSyncCacheResetEpoch(),
     a = O(),
     u = a.detachBarrier();
-  if (!XE())
+  if (!isRemoteSettingsEligible())
     return (
       u?.(),
       D({ settings: null, fetchSucceeded: !0 }),
@@ -1430,7 +1430,7 @@ async function $Dt(e) {
   return { valid: !1, message: ut };
 }
 async function lt(e, t, o) {
-  if (!XE()) return;
+  if (!isRemoteSettingsEligible()) return;
   let r = getRemoteManagedSettingsSyncFromCache(),
     a = r ? b(r) : null,
     u = getSyncCacheResetEpoch();
@@ -1456,7 +1456,7 @@ async function lt(e, t, o) {
 function Fe(e, t, o) {
   let r = O();
   if (r.poller !== null) return;
-  if (!XE()) return;
+  if (!isRemoteSettingsEligible()) return;
   let u = I4t(() => void lt(e, t, o), Xe, { unref: !0 });
   (r.startPoller(u), Et(u));
 }

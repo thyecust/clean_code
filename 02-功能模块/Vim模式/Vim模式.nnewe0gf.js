@@ -16,14 +16,14 @@ import { os, ln, WL } from "../../01-核心基础设施/核心工具-字符串�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Ar, Olr, Dp } from "../权限系统/chunk-e4pfvp7x.js";
 import { Zd } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ty, Pat, Oat, T9e } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { cf, ph, Ms, isClaudeAISubscriber, getSubscriptionName, ee, Sq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -35,8 +35,8 @@ import { Eo } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { o, t, ct, bs, ko, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Mpe, Npe, $St, USt } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { lF } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { Ol } from "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
+import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import {
   _p,
   supportsShiftEnter,
@@ -51,16 +51,16 @@ import {
   wy,
   T0e,
 } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { Me } from "../../01-核心基础设施/共享小工具-未细化/chunk-0dh9gct8.js";
+import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { L0e, Ir } from "../../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js";
+import { shouldShowNotification, useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { aH, _8e, z9t, V9t } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { sl } from "../键位绑定(Keybindings)/chunk-qy43nqgh.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useKeybindingContext } from "../键位绑定(Keybindings)/keybinding-context.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { CH } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
+import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { eM } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
-import { Qd, vat, nee } from "../../01-核心基础设施/共享小工具-未细化/chunk-ejtvp07p.js";
+import { useVoiceSelector, useVoiceSetState, useVoiceGetState } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import { A3t, hw, zSt, w$, DNe } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import {
   Nbe,
@@ -80,10 +80,10 @@ import {
 } from "../自动更新-安装/chunk-548xet6h.js";
 import { Wce, Lbe, ute, Ran, dte } from "../自动更新-安装/chunk-brx72pf1.js";
 import { rT, mze, gze, jce, nOe } from "../自动更新-安装/chunk-2g5h49pk.js";
-import { et, cu } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
-import { Ai } from "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
-import { oO } from "../自动更新-安装/chunk-dv82rn71.js";
+import { StatusIndicator, shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import { getAutoUpdatesChannel } from "../自动更新-安装/auto-updates-channel.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Yl, re, E, vr, dn, V, C, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
@@ -91,7 +91,7 @@ import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-j
 import { s, T, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Xs, Wke, P1, iB, Lcr } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
 import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
-import { pe, p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM, MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 class Wo {
   #e = { credentialsPersisted: 0, loginCompleted: 0 };
   #t = Le();
@@ -159,7 +159,7 @@ function Nt(vl) {
     Ui[4] !== Wr ||
     Ui[5] !== kt
   ) {
-    jo = en;
+    jo = EARLY_RETURN_SENTINEL;
     bb0: {
       let Ki = Wr ? Zo(kt, Wr, Ko) : [];
       if (Ki.length === 0) {
@@ -208,7 +208,7 @@ function Nt(vl) {
       (Ui[6] = Wi),
       (Ui[7] = jo));
   } else ((Wi = Ui[6]), (jo = Ui[7]));
-  if (jo !== en) return jo;
+  if (jo !== EARLY_RETURN_SENTINEL) return jo;
   return Wi;
 }
 function qr(l) {
@@ -223,7 +223,7 @@ var ns = Yl(function (Tl) {
   let Ue = _(95),
     { item: fe, maxColumnWidth: Cl, isSelected: $e, allowWrap: qi } = Tl,
     Go = qi === void 0 ? !0 : qi,
-    _t = Se().columns;
+    _t = useTerminalSize().columns;
   if (qr(fe.id)) {
     let Nn;
     if (Ue[0] !== fe.id) ((Nn = Qo(fe.id)), (Ue[0] = fe.id), (Ue[1] = Nn));
@@ -382,7 +382,7 @@ var ns = Yl(function (Tl) {
     Ue[51] !== $r ||
     Ue[52] !== ft
   ) {
-    Kn = en;
+    Kn = EARLY_RETURN_SENTINEL;
     bb0: {
       let Qi = fe.description ? fe.description.replace(bn, " ").trim() : "";
       let [El, Zi] = Go ? es(Qi, Gr) : [truncateToWidth(Qi, Gr), ""];
@@ -502,7 +502,7 @@ var ns = Yl(function (Tl) {
       (Ue[57] = Kn));
   } else
     ((jn = Ue[53]), (Fn = Ue[54]), ($n = Ue[55]), (Br = Ue[56]), (Kn = Ue[57]));
-  if (Kn !== en) return Kn;
+  if (Kn !== EARLY_RETURN_SENTINEL) return Kn;
   let Jo = Br,
     Yt;
   if (Ue[81] !== $n) ((Yt = " ".repeat($n)), (Ue[81] = $n), (Ue[82] = Yt));
@@ -557,7 +557,7 @@ function M8({
   hoveredId: S,
   onHoverChange: M,
 }) {
-  let { rows: D, columns: P } = Se(),
+  let { rows: D, columns: P } = useTerminalSize(),
     H = R ? na : Math.max(1, Math.min(Math.max(6, Math.floor(D / 2)), D - 3));
   if (l.length === 0) {
     if (!O) return null;
@@ -566,7 +566,7 @@ function M8({
       flexDirection: "column",
       justifyContent: R ? void 0 : "flex-end",
       children: [
-        e(Rn, { children: O }),
+        e(EmptyStateMessage, { children: O }),
         Array.from({ length: ne }, (be, ge) =>
           e(t, { children: " " }, `pad-${ge}`),
         ),
@@ -2678,12 +2678,12 @@ function jp({
   honorEditorMode: q = !1,
 }) {
   let ie = T9e(),
-    { columns: Te } = Se(),
+    { columns: Te } = useTerminalSize(),
     Z = v ?? Te,
     [me, G] = d(S),
     [oe, J] = d(S.length),
-    ye = Me(M, (W) => W.query),
-    de = Me(M, (W) => W.cursorOffset),
+    ye = useStoreSelector(M, (W) => W.query),
+    de = useStoreSelector(M, (W) => W.cursorOffset),
     ce = ye ?? me,
     he = de ?? oe,
     ne = C(me),
@@ -3362,7 +3362,7 @@ function ZFn(l, b) {
   };
 }
 function Kst(l, b = !0) {
-  Ze(
+  useKeybindings(
     {
       "selection:clear": () => {
         if (!l.hasSelection()) return !1;
@@ -3475,7 +3475,7 @@ var $Z = new j(() => new Us());
 F();
 import Ua from "path";
 var Wa = "at_mentioned",
-  Ka = m(() =>
+  Ka = createLazyValue(() =>
     c({
       method: k(Wa),
       params: c({
@@ -3518,8 +3518,8 @@ function Q6e(l, b) {
 }
 F();
 function Y6e() {
-  let l = Ye();
-  return Me(OHe.of(l), (b) => b.loginCompleted);
+  let l = useSession();
+  return useStoreSelector(OHe.of(l), (b) => b.loginCompleted);
 }
 function JR() {
   let l = U((O) => _8e(O.settings)),
@@ -3527,8 +3527,8 @@ function JR() {
     x = V(() => l && z9t(), [b, l]);
   return (
     E(() => {
-      if (!Ol().claim("voice_init_gate")) return;
-      i("tengu_voice_init_gate", {
+      if (!getClaimRegistry().claim("voice_init_gate")) return;
+      logEvent("tengu_voice_init_gate", {
         user_intent_store: l,
         user_intent_disk: _8e(getInitialSettings()),
         has_voice_auth: z9t(),
@@ -3609,9 +3609,9 @@ function fi() {
   return zSt(hw);
 }
 function Y_e({ composer: l, isActive: b = !0 }) {
-  let { addNotification: x } = Ir(),
-    O = vat(),
-    R = nee(),
+  let { addNotification: x } = useNotificationQueue(),
+    O = useVoiceSetState(),
+    R = useVoiceGetState(),
     v = C(null),
     w = C(""),
     S = C(null),
@@ -3653,8 +3653,8 @@ function Y_e({ composer: l, isActive: b = !0 }) {
     P = JR(),
     H = U((G) => G.settings.voice?.autoSubmit === !0),
     B = U((G) => G.settings.voice?.mode ?? "hold"),
-    q = Qd((G) => G.voiceState),
-    ie = Qd((G) => G.voiceInterimTranscript);
+    q = useVoiceSelector((G) => G.voiceState),
+    ie = useVoiceSelector((G) => G.voiceInterimTranscript);
   (E(() => {
     if (b && R().voiceState === "recording" && v.current === null) {
       let { value: G, cursorOffset: oe } = l;
@@ -3758,14 +3758,14 @@ function Yae(Vf) {
       isActive: Ks,
       composer: Kt,
     } = Vf,
-    ht = nee(),
-    nt = vat(),
-    ja = sl(),
+    ht = useVoiceGetState(),
+    nt = useVoiceSetState(),
+    ja = useKeybindingContext(),
     js = eM(),
     uo = JR(),
-    lo = Qd(eu),
+    lo = useVoiceSelector(eu),
     co = U(tu),
-    pr = vt(),
+    pr = useClock(),
     Lf = At(ci, fi),
     Fs = ja ? ja.bindings : Lf,
     $s;
@@ -3835,7 +3835,7 @@ function Yae(Vf) {
   else (($a = Zt[7]), (Ba = Zt[8]));
   E($a, Ba);
   let Ha, Ga;
-  if (Zt[9] === p)
+  if (Zt[9] === MEMO_CACHE_SENTINEL)
     ((Ha = () => () => {
       if (at.current) (at.current(), (at.current = null));
     }),
@@ -4134,7 +4134,7 @@ function UZ(fd) {
     case "recording": {
       if (pd === "tap") {
         let Ft;
-        if (di[0] === p)
+        if (di[0] === MEMO_CACHE_SENTINEL)
           ((Ft = r(t, {
             children: [
               r(t, { color: "error", children: [Ar, " REC"] }),
@@ -4146,7 +4146,7 @@ function UZ(fd) {
         return Ft;
       }
       let Ft;
-      if (di[1] === p)
+      if (di[1] === MEMO_CACHE_SENTINEL)
         ((Ft = e(t, { dimColor: !0, children: "listening\u2026" })),
           (di[1] = Ft));
       else Ft = di[1];
@@ -4154,7 +4154,7 @@ function UZ(fd) {
     }
     case "processing": {
       let Ft;
-      if (di[2] === p) ((Ft = e(xo, {})), (di[2] = Ft));
+      if (di[2] === MEMO_CACHE_SENTINEL) ((Ft = e(xo, {})), (di[2] = Ft));
       else Ft = di[2];
       return Ft;
     }
@@ -4177,7 +4177,7 @@ function Z6e() {
 function BZ() {
   let hd = _(1),
     fu;
-  if (hd[0] === p)
+  if (hd[0] === MEMO_CACHE_SENTINEL)
     ((fu = e(t, { dimColor: !0, children: "keep holding\u2026" })),
       (hd[0] = fu));
   else fu = hd[0];
@@ -4185,12 +4185,12 @@ function BZ() {
 }
 function xo() {
   let go = _(8),
-    bd = Ai(),
-    du = cu(bd.prefersReducedMotion),
+    bd = useSettings(),
+    du = shouldReduceMotion(bd.prefersReducedMotion),
     [pi, xd] = bs(du ? null : 50);
   if (du) {
     let Or;
-    if (go[0] === p)
+    if (go[0] === MEMO_CACHE_SENTINEL)
       ((Or = e(t, { color: "warning", children: "Voice: processing\u2026" })),
         (go[0] = Or));
     else Or = go[0];
@@ -4224,7 +4224,7 @@ F();
 F();
 import { basename, dirname } from "path";
 F();
-var rn = pe(pg(), 1);
+var rn = toESM(pg(), 1);
 function xi(l) {
   return `${rn.major(l, { loose: !0 })}.${rn.minor(l, { loose: !0 })}.${rn.patch(l, { loose: !0 })}`;
 }
@@ -4257,7 +4257,7 @@ function Ro({
   showSuccessMessage: x,
   verbose: O,
 }) {
-  let { storageV5: R } = _e(),
+  let { storageV5: R } = useStorageV5Context(),
     v = U((me) => me.autoUpdaterResult),
     w = It(),
     [S, M] = d({}),
@@ -4303,7 +4303,7 @@ function Ro({
           "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
         DD_SOURCEMAP_GROUP: "darwin",
       }.VERSION,
-      G = oO(),
+      G = getAutoUpdatesChannel(),
       oe = await Ube(G),
       { maxVersion: J, forceDowngradeEnabled: ye } = await fte(),
       de = null,
@@ -4328,7 +4328,7 @@ function Ro({
     }
     if ((M({ global: me, latest: de ?? oe }), !de || zce(de))) return;
     if (ce)
-      i("tengu_auto_updater_forced_downgrade", {
+      logEvent("tengu_auto_updater_forced_downgrade", {
         from_version: Ms(me),
         to_version: Ms(de),
       });
@@ -4389,7 +4389,7 @@ function Ro({
         R,
       );
     if (ge === "success")
-      i("tengu_auto_updater_success", {
+      logEvent("tengu_auto_updater_success", {
         fromVersion: Ms(me),
         toVersion: Ms(de),
         durationMs: Date.now() - he,
@@ -4397,7 +4397,7 @@ function Ro({
         installationType: fromEnum(be),
       });
     else if (ge !== "in_progress")
-      i("tengu_auto_updater_fail", {
+      logEvent("tengu_auto_updater_fail", {
         fromVersion: Ms(me),
         attemptedVersion: Ms(de),
         status: ge,
@@ -4476,7 +4476,7 @@ function Ro({
             color: "success",
             wrap: "truncate",
             children: [
-              e(et, { status: "success", withSpace: !0 }),
+              e(StatusIndicator, { status: "success", withSpace: !0 }),
               "Update installed \xB7 Restart to apply",
             ],
           }),
@@ -4485,7 +4485,7 @@ function Ro({
           color: "error",
           wrap: "truncate",
           children: [
-            e(et, { status: "error", withSpace: !0 }),
+            e(StatusIndicator, { status: "error", withSpace: !0 }),
             "Auto-update failed: no write permission to npm prefix \xB7 Run",
             " ",
             e(t, { bold: !0, children: "claude doctor" }),
@@ -4501,7 +4501,7 @@ function Ro({
                     color: "error",
                     wrap: "truncate",
                     children: [
-                      e(et, { status: "error", withSpace: !0 }),
+                      e(StatusIndicator, { status: "error", withSpace: !0 }),
                       "Update failed and ",
                       basename(Z.originalPath),
                       " could not be restored \u2014 it was preserved at:",
@@ -4579,7 +4579,7 @@ function Ro({
                 color: "error",
                 wrap: "truncate",
                 children: [
-                  e(et, { status: "error", withSpace: !0 }),
+                  e(StatusIndicator, { status: "error", withSpace: !0 }),
                   "Update failed and ",
                   basename(Z.originalPath),
                   " could not be restored (no preserved copy found) \xB7 reinstall with",
@@ -4611,7 +4611,7 @@ function Ro({
                 color: "error",
                 wrap: "truncate",
                 children: [
-                  e(et, { status: "error", withSpace: !0 }),
+                  e(StatusIndicator, { status: "error", withSpace: !0 }),
                   "Auto-update failed: claude.exe in use (close other Claude Code sessions, including VS Code) \xB7 Run",
                   " ",
                   e(t, { bold: !0, children: "claude doctor" }),
@@ -4621,7 +4621,7 @@ function Ro({
                 color: "error",
                 wrap: "truncate",
                 children: [
-                  e(et, { status: "error", withSpace: !0 }),
+                  e(StatusIndicator, { status: "error", withSpace: !0 }),
                   "Auto-update failed \xB7 Try ",
                   e(t, { bold: !0, children: "claude doctor" }),
                   " or",
@@ -4706,7 +4706,7 @@ function wo({
   showSuccessMessage: x,
   verbose: O,
 }) {
-  let { storageV5: R } = _e(),
+  let { storageV5: R } = useStorageV5Context(),
     v = U((G) => G.autoUpdaterResult),
     w = It(),
     [S, M] = d({
@@ -4726,7 +4726,7 @@ function wo({
     }),
     [D, P] = d(null),
     H = Tn(v?.version),
-    B = oO();
+    B = getAutoUpdatesChannel();
   async function q() {
     if (l) return;
     if (v?.status === "success") return;
@@ -4757,7 +4757,7 @@ function wo({
     if ($be()) return;
     b(!0);
     let oe = Date.now();
-    i("tengu_native_auto_updater_start", {});
+    logEvent("tengu_native_auto_updater_start", {});
     try {
       let J = await jce(B, !1, R),
         ye = {
@@ -4775,12 +4775,12 @@ function wo({
         }.VERSION,
         de = Date.now() - oe;
       if (J.lockFailed) {
-        i("tengu_native_auto_updater_lock_contention", { latency_ms: de });
+        logEvent("tengu_native_auto_updater_lock_contention", { latency_ms: de });
         return;
       }
       if (
         (M({ current: ye, latest: J.latestVersion }),
-        i(Vu(J), { latency_ms: de }),
+        logEvent(Vu(J), { latency_ms: de }),
         J.wasUpdated)
       )
         (Wce(
@@ -4838,7 +4838,7 @@ function wo({
         ));
       let ce = Eu(J),
         he = Jr(J) ?? "none";
-      (i("tengu_native_auto_updater_fail", {
+      (logEvent("tengu_native_auto_updater_fail", {
         latency_ms: ye,
         error_code: he,
         error_timeout: ce === "timeout",
@@ -4899,7 +4899,7 @@ function wo({
             color: "success",
             wrap: "truncate",
             children: [
-              e(et, { status: "success", withSpace: !0 }),
+              e(StatusIndicator, { status: "success", withSpace: !0 }),
               "Update installed \xB7 Restart to update",
             ],
           }),
@@ -4908,7 +4908,7 @@ function wo({
           color: "error",
           wrap: "truncate",
           children: [
-            e(et, { status: "error", withSpace: !0 }),
+            e(StatusIndicator, { status: "error", withSpace: !0 }),
             "Auto-update failed \xB7 Run ",
             e(t, { bold: !0, children: "claude doctor" }),
           ],
@@ -4973,7 +4973,7 @@ function Pr($p) {
     } = $p,
     wt = U(Xu),
     Lr = It(),
-    cn = $Z.of(Ye().host),
+    cn = $Z.of(useSession().host),
     [Hp, Lu] = d(cn.packageManagerLatestVersion),
     [Bt, Gp] = d("unknown"),
     [wi, qp] = d(null),
@@ -4983,7 +4983,7 @@ function Pr($p) {
   let Si = vr(Au),
     Nu,
     Pu;
-  if (Qe[2] === p)
+  if (Qe[2] === MEMO_CACHE_SENTINEL)
     ((Nu = () => {
       ute().then((Du) => {
         if ((Gp(Du), Du === "homebrew")) qp(Lbe());
@@ -5022,7 +5022,7 @@ function Pr($p) {
         }
         Lr(Ju);
       }
-      let [zp, _n] = await Promise.all([oO(), ute()]);
+      let [zp, _n] = await Promise.all([getAutoUpdatesChannel(), ute()]);
       let ki = zp;
       let _o = null;
       if (_n === "homebrew")
@@ -5102,7 +5102,7 @@ function Pr($p) {
       So(!0);
       let Xp = Date.now();
       let _i = { pm_homebrew: _n === "homebrew", pm_winget: _n === "winget" };
-      i("tengu_pkg_manager_auto_updater_start", _i);
+      logEvent("tengu_pkg_manager_auto_updater_start", _i);
       let [$u, ...Jp] = Fu;
       let In = await execFileNoThrowWithCwd($u, Jp, {
         cwd: homedir(),
@@ -5114,7 +5114,7 @@ function Pr($p) {
       });
       let Bu = Date.now() - Xp;
       if ((So(!1), In.code === 0))
-        (i("tengu_pkg_manager_auto_updater_success", { ..._i, latency_ms: Bu }),
+        (logEvent("tengu_pkg_manager_auto_updater_success", { ..._i, latency_ms: Bu }),
           Lr((Ii) => {
             let Hu = Ii.autoUpdaterResult;
             if (Hu?.version === lt && Hu?.status === "success") {
@@ -5129,7 +5129,7 @@ function Pr($p) {
         (n(
           `PackageManagerAutoUpdater: ${$u} exited ${In.code}: ${In.stderr || In.error || In.stdout}`,
         ),
-          i("tengu_pkg_manager_auto_updater_fail", {
+          logEvent("tengu_pkg_manager_auto_updater_fail", {
             ..._i,
             latency_ms: Bu,
             exit_code: In.code,
@@ -5163,7 +5163,7 @@ function Pr($p) {
       (Qe[12] = Gu));
   else Gu = Qe[12];
   let qu;
-  if (Qe[13] === p) ((qu = []), (Qe[13] = qu));
+  if (Qe[13] === MEMO_CACHE_SENTINEL) ((qu = []), (Qe[13] = qu));
   else qu = Qe[13];
   if ((E(Gu, qu), ko(Io, Nr), wt?.status === "success")) {
     if (!Bp) {
@@ -5308,7 +5308,7 @@ function J_e(hm) {
     [Qu, bm] = d(null),
     [Zu, xm] = d(null),
     tl;
-  if (Lo[0] === p)
+  if (Lo[0] === MEMO_CACHE_SENTINEL)
     ((tl = async function Pi() {
       let ym = !Ran();
       let Om = Date.now();
@@ -5327,7 +5327,7 @@ function J_e(hm) {
   let Pi = tl,
     [vm] = d(xan),
     nl;
-  if (Lo[1] === p) ((nl = () => void Pi()), (Lo[1] = nl));
+  if (Lo[1] === MEMO_CACHE_SENTINEL) ((nl = () => void Pi()), (Lo[1] = nl));
   else nl = Lo[1];
   if ((Un(nl, vm), Qu === null || Zu === null)) {
     return null;
@@ -5393,7 +5393,7 @@ function Q_e() {
   let Po = _(12),
     De = U(rl),
     Lm = U(ol);
-  if (!De || !L0e(De, Lm)) {
+  if (!De || !shouldShowNotification(De, Lm)) {
     return null;
   }
   if ("jsx" in De) {

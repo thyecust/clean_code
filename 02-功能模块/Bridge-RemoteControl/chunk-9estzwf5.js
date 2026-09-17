@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { ns, fv, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { uo } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { CLAUDE_AI_INFERENCE_SCOPE } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import {
@@ -39,7 +39,7 @@ import { mx } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { THIRD_PARTY_PROVIDER_LABELS, THIRD_PARTY_PROVIDER_ENV_VARS, getAPIProvider, isFirstPartyProvider, getSecondaryProvider, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { D6, MRe, lBe, Qse, cBe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { getPolicyCacheRevision, isPolicyLimitsEligible, isPolicyAllowed, isPolicyRouteMissing, hasNameableComplianceTaint, getPolicyDefault, getResponseFromCache } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { e5, H4t } from "./chunk-eg5a0eq0.js";
+import { REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE, REMOTE_CONTROL_POLICY_UNVERIFIABLE_MESSAGE } from "./remote-control-policy-messages.js";
 function isBridgeFirstParty() {
   if (!isFirstPartyProvider()) return !1;
   return !!a.ANTHROPIC_UNIX_SOCKET || isActualFirstPartyAnthropicBaseUrl();
@@ -86,7 +86,7 @@ async function getBridgeDisabledReason() {
   if (u()) return null;
   if (!isBridgeFirstParty()) return N();
   if (isRunningInRemoteEnvironment()) return "Remote Control is not available inside a cloud session.";
-  if (isRemoteControlHardDisabled()) return e5;
+  if (isRemoteControlHardDisabled()) return REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE;
   if (!d())
     return "Remote Control requires a claude.ai subscription. Run `claude auth login` to sign in with your claude.ai account.";
   if (!l())
@@ -100,7 +100,7 @@ async function getBridgeDisabledReason() {
     return "Unable to determine your organization for Remote Control eligibility. Run `claude auth login` to refresh your account information.";
   await ensurePolicyLimitsLoadedForDiagnostic();
   let e = getRemoteControlPolicyVerdict();
-  if (e === "unavailable") return H4t;
+  if (e === "unavailable") return REMOTE_CONTROL_POLICY_UNVERIFIABLE_MESSAGE;
   if (e === "denied") return T();
   if (!CU()) {
     let o = yXt();
@@ -127,7 +127,7 @@ function T() {
     if (!S()) return Qse("Remote Control");
     return describeRemoteControlPolicyDenial();
   } catch {
-    return H4t;
+    return REMOTE_CONTROL_POLICY_UNVERIFIABLE_MESSAGE;
   }
 }
 function D(e) {
@@ -135,7 +135,7 @@ function D(e) {
 }
 function getRemoteControlPolicyLockReason() {
   if (u()) return null;
-  if (isRemoteControlHardDisabled()) return e5;
+  if (isRemoteControlHardDisabled()) return REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE;
   let e = Jo(),
     o = getPolicyCacheRevision(),
     t = e.remoteControlLockReason;
@@ -149,7 +149,7 @@ function getRemoteControlPolicyLockReason() {
 function P() {
   let e = getRemoteControlPolicyVerdict();
   if (e === "allowed") return null;
-  if (e === "unavailable") return H4t;
+  if (e === "unavailable") return REMOTE_CONTROL_POLICY_UNVERIFIABLE_MESSAGE;
   return T();
 }
 function getBridgeAuthDebugInfo() {
@@ -394,7 +394,7 @@ async function k() {
       .finally(() => {
         o.diagnosticPolicyKick = void 0;
       }),
-      (o.diagnosticPolicyKick = Dt(
+      (o.diagnosticPolicyKick = withTimeout(
         t,
         e.POLICY_LIMITS_COLD_AWAIT_MS,
         "bridge_diagnostic_policy_limits",

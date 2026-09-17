@@ -9,11 +9,11 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 213 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { _Dt, Qtn } from "../上下文压缩-Compact/chunk-86azyf7z.js";
+import { fetchSystemPromptParts as _Dt, buildSideQuestionFallbackParams as Qtn } from "../上下文压缩-Compact/side-question-fallback.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
-import "../Teammates团队/chunk-c8267s4e.js";
+import "../Teammates团队/agent-lifecycle.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wm4s322b.js";
+import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 export {
   Qtn as buildSideQuestionFallbackParams,
   _Dt as fetchSystemPromptParts,

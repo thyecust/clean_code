@@ -18,25 +18,25 @@ import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-r
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { E9e, A9e } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { OM, PVe, Ngt, Lr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isScratchpadDisplayPath, isWorkshopDisplayPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { Ac, vh, Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import "../Diff引擎/chunk-p2gj9dsf.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { Ch } from "../语法高亮-Markdown渲染/chunk-mnn6q099.js";
 import { Pg } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import { FB, wWe } from "../Diff引擎/chunk-arr1hvsk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-bhcz98rd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dn, kn, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 import { isAbsolute, relative, resolve } from "path";
 function Re(i, a, s = 1 / 0) {
@@ -78,7 +78,7 @@ function me(i, a) {
 function N() {
   let mt = _(1),
     Te;
-  if (mt[0] === p)
+  if (mt[0] === MEMO_CACHE_SENTINEL)
     ((Te = e(t, {
       dimColor: !0,
       children: " \u2014 previous content replaced (no diff shown)",
@@ -91,7 +91,7 @@ function he(gt) {
   let g = _(37),
     { filePath: D, content: Y, verbose: m, replacedUndiffedContent: Fe } = gt,
     oe = Fe === void 0 ? !1 : Fe,
-    { columns: ht } = Se(),
+    { columns: ht } = useTerminalSize(),
     v = Math.max(1, ht - 12),
     U = Y || "(No content)",
     ke;
@@ -172,7 +172,7 @@ function he(gt) {
   else I = g[32];
   let De;
   if (g[33] !== E || g[34] !== I || g[35] !== K)
-    ((De = e(xe, {
+    ((De = e(ToolResultRow, {
       children: r(o, { flexDirection: "column", children: [K, E, I] }),
     })),
       (g[33] = E),
@@ -288,8 +288,8 @@ function te(yt) {
   }
   if (T.type === "error") {
     let S;
-    if (Le[0] === p)
-      ((S = e(xe, { children: e(t, { children: "(No changes)" }) })),
+    if (Le[0] === MEMO_CACHE_SENTINEL)
+      ((S = e(ToolResultRow, { children: e(t, { children: "(No changes)" }) })),
         (Le[0] = S));
     else S = Le[0];
     return S;
@@ -354,7 +354,7 @@ async function ge(i, a) {
 }
 function renderToolUseErrorMessage(i, { verbose: a }) {
   if (!a && typeof i === "string" && Lr(i, "tool_use_error"))
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, { color: "error", children: "Error writing file" }),
     });
   return e(Yd, { result: i, verbose: a });
@@ -375,7 +375,7 @@ function Pe(i, a, { style: s, verbose: l, replacedUndiffedContent: f = !1 }) {
     case "create": {
       if (c.startsWith(getPlansDirectory()) && !l) {
         if (s !== "condensed")
-          return e(xe, {
+          return e(ToolResultRow, {
             children: e(t, { dimColor: !0, children: "/plan to preview" }),
           });
       } else if (s === "condensed" && !l) {
@@ -394,7 +394,7 @@ function Pe(i, a, { style: s, verbose: l, replacedUndiffedContent: f = !1 }) {
         });
       } else if (!l && (isScratchpadDisplayPath(c) || isWorkshopDisplayPath(c))) {
         let C = O(u);
-        return e(xe, {
+        return e(ToolResultRow, {
           children: r(t, {
             children: [
               "Wrote ",

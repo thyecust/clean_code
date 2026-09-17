@@ -13,26 +13,26 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
 import { IF, xn, flushSessionStorage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { m0t, SJt, ZNn } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { a9, YB } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import { HB } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
 var D = "https://clau.de/desktop";
@@ -48,11 +48,11 @@ function v() {
   return { current: null };
 }
 function C({ onDone: m, handoff: n, getTranscript: x }) {
-  let { storageV5: H } = _e(),
+  let { storageV5: H } = useStorageV5Context(),
     [p, f] = d(n.current?.state ?? "checking"),
     [w, g] = d(n.current?.error ?? null),
     [M, y] = d(n.current?.downloadMessage ?? ""),
-    R = vt();
+    R = useClock();
   E(() => {
     let s = n.current;
     if (s)
@@ -86,7 +86,7 @@ function C({ onDone: m, handoff: n, getTranscript: x }) {
     if (p === "prompt-download") {
       if (s.key === "y" || s.key === "Y")
         (s.preventDefault(),
-          Gr(b()).catch(() => {}),
+          tryOpenUrlInBrowser(b()).catch(() => {}),
           u(
             `Starting download. Re-run /desktop once you\u2019ve installed the app.
 Learn more at ${D}`,
@@ -188,7 +188,7 @@ Learn more at ${D}`,
     });
   return e(o, {
     paddingX: 2,
-    children: e($n, {
+    children: e(SpinnerMessageLine, {
       message: {
         checking: "Checking for Claude Desktop\u2026",
         flushing: "Saving session\u2026",

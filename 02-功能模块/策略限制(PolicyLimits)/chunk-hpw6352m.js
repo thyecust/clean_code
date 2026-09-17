@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { j, B, hB, u8, Nm } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { OAUTH_BETA_HEADER, getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l, A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qPn, We, Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   getAuthHeadersAsync,
@@ -72,9 +72,9 @@ import {
   seedSessionCacheFromPrime,
   getResponseFromCache,
 } from "./chunk-8sw91yn5.js";
-import { QAn } from "../../01-核心基础设施/共享小工具-未细化/chunk-1945b2ak.js";
+import { getErrorReportingPolicyState } from "../../01-核心基础设施/共享小工具-未细化/error-reporting-eligibility.js";
 import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { statSync } from "fs";
 import { unlink, utimes, writeFile } from "fs/promises";
 function N(e, t, r = {}) {
@@ -150,7 +150,7 @@ async function re({
       });
     if (_.result === "valid" && _.issuedAt !== void 0)
       await znr(t, d, Math.min(_.issuedAt, Math.floor(h / 1000)));
-    i("tengu_signed_cache_shadow", {
+    logEvent("tengu_signed_cache_shadow", {
       cache: fromEnum(e),
       result: fromEnum(_.result),
       age_s: _.ageSeconds,
@@ -195,7 +195,7 @@ var ne = Date.now();
 function ae(e) {
   let t = getSessionCache();
   if (!t) return e;
-  let r = Y([...t.compliance_taints, ...e.compliance_taints]).slice(0, eQe);
+  let r = dedupe([...t.compliance_taints, ...e.compliance_taints]).slice(0, eQe);
   if (r.length === t.compliance_taints.length) return t;
   return { ...t, compliance_taints: r };
 }
@@ -235,7 +235,7 @@ async function Ae(e, t, r) {
       return o;
     r(o);
     let a = nU(s);
-    (n(`Policy limits: Retry ${s}/${G} after ${a}ms`), await Z(a));
+    (n(`Policy limits: Retry ${s}/${G} after ${a}ms`), await sleep(a));
   }
   return o;
 }
@@ -450,7 +450,7 @@ function D() {
 }
 var de = 1048576;
 async function WAn(e) {
-  if (!M() || e === void 0 || !isPolicyLimitsEligible()) return;
+  if (!isHoverRestEnabled() || e === void 0 || !isPolicyLimitsEligible()) return;
   try {
     let t = await e.read([{ key: D(), offset: 0, length: de + 1 }]);
     if (!t.ok) {
@@ -555,7 +555,7 @@ class GAn {
         ),
         "stale"
       );
-    if (M() && this.storageV5 !== void 0) {
+    if (isHoverRestEnabled() && this.storageV5 !== void 0) {
       let o, s;
       try {
         let a = await this.storageV5.write(D(), b(serverBodyOf(e), null, 2), {
@@ -597,7 +597,7 @@ class GAn {
       (n(`Policy limits: Failed to save - ${e}`), !this.cacheWriteFailureLogged)
     )
       ((this.cacheWriteFailureLogged = !0),
-        i("tengu_policy_limits_cache_write_failed", { errno: fromEnum(t) }));
+        logEvent("tengu_policy_limits_cache_write_failed", { errno: fromEnum(t) }));
   }
   async fetchAndLoad(e, t = !1) {
     this.used = !0;
@@ -674,7 +674,7 @@ class GAn {
           (this.startupLoadErrorCode = Q));
       let J = Date.now();
       if (
-        (i("tengu_policy_limits_fetch", {
+        (logEvent("tengu_policy_limits_fetch", {
           duration_ms: J - _,
           ms_since_startup: J - ne,
           success: O,
@@ -747,7 +747,7 @@ class GAn {
               ? (getSessionCache()?.compliance_taints ?? [])
               : [];
         if (te.some((w) => !R.includes(w)) && nCn(serverBodyOf(s)) > 0)
-          ((S = { ...s, compliance_taints: Y([...te, ...R]).slice(0, eQe) }),
+          ((S = { ...s, compliance_taints: dedupe([...te, ...R]).slice(0, eQe) }),
             n(
               "Policy limits: lossy cached compliance_taints \u2014 kept the session taint set",
             ));
@@ -755,7 +755,7 @@ class GAn {
           (this.serverConfirmedGeneration = E),
           k({ success: !0, host: C }));
         try {
-          if (M() && this.storageV5 !== void 0) {
+          if (isHoverRestEnabled() && this.storageV5 !== void 0) {
             if ((await this.storageV5.touch(D())).ok)
               (await lse(getCachePath(), c.signature),
                 await XJe(getCachePath(), this.cacheClearEpoch !== m));
@@ -777,7 +777,7 @@ class GAn {
         if (S.length > 0)
           ((P = {
             ...P,
-            compliance_taints: Y([...P.compliance_taints, ...S]).slice(0, eQe),
+            compliance_taints: dedupe([...P.compliance_taints, ...S]).slice(0, eQe),
           }),
             n(
               "Policy limits: lossy compliance_taints \u2014 kept the known taint set",
@@ -843,8 +843,8 @@ class GAn {
       a = this.startupLoadState,
       d = this.startupAwaitResult,
       p = this.startupLoadErrorCode,
-      m = fromEnum(QAn());
-    i("tengu_policy_limits_cache_state_at_first_prompt", {
+      m = fromEnum(getErrorReportingPolicyState());
+    logEvent("tengu_policy_limits_cache_state_at_first_prompt", {
       eligible: t,
       ineligible_reason: fromEnumOpt(e),
       eligible_if_base_url_gate_removed: r,
@@ -915,7 +915,7 @@ class GAn {
     if (
       (this.cacheClearEpoch++,
       await KJe(getCachePath()),
-      M() && this.storageV5 !== void 0)
+      isHoverRestEnabled() && this.storageV5 !== void 0)
     )
       try {
         await this.storageV5.delete(D());
@@ -979,7 +979,7 @@ function qAn(e) {
         "Policy limits: start-up composition came after the bare default client was used; it keeps running without the backend and credentials store",
         { level: "warn" },
       ),
-        i("tengu_policy_limits_late_composition", {}));
+        logEvent("tengu_policy_limits_late_composition", {}));
       return;
     case "already composed":
       n(

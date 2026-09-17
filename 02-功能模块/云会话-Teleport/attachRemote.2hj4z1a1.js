@@ -15,7 +15,7 @@ import { Iu, R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.j
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { deviceToolNoticesTo } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdeyn1dg.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Ise, RCt, iKt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { Ht } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -43,7 +43,7 @@ function ce(r) {
     return;
   }
   throw (
-    i("tengu_remote_attach_session_rejected", { reason: fromEnum(e.reason) }),
+    logEvent("tengu_remote_attach_session_rejected", { reason: fromEnum(e.reason) }),
     new R(
       e.message,
       "cloud attach refused: the id names no session of this account, or is malformed",
@@ -134,7 +134,7 @@ async function attachRemote(r, e, c, t) {
       async (o) => {
         if (o.session_status === "archived")
           throw (
-            i("tengu_remote_attach_session_rejected", {
+            logEvent("tengu_remote_attach_session_rejected", {
               reason: S("archived"),
             }),
             Error(`Cloud session ${e} is archived and cannot accept new messages.

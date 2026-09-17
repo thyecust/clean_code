@@ -10,18 +10,18 @@
 import { gn, xu, Th, Xxe, GL, Eh } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-8549txjj.js";
 import { FOe } from "../../00-第三方库/_未识别/第三方库-加密库/chunk-e0ewk5yt.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-29sq3mjv.js";
+import "../../01-核心基础设施/共享小工具-未细化/byte-array-conversion.js";
 import { jtt, g2e, h2e, _2e, y2e } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-mjf8wc6r.js";
 import { nu } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { lhe } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-zdrvwe5r.js";
 import { ta } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-mwf4pmq2.js";
 import "../../00-第三方库/_未识别/第三方库-其他/chunk-jtb5q5xr.js";
 import { hS, q5 } from "./chunk-p991cddr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var j = pe(q5(), 1),
-  K = pe(nu(), 1),
-  D = pe(lhe(), 1);
+import "../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var j = toESM(q5(), 1),
+  K = toESM(nu(), 1),
+  D = toESM(lhe(), 1);
 import le from "assert";
 var v = (e) => {
   if (e instanceof Error) return e;
@@ -109,9 +109,9 @@ var de = (e) =>
     });
     return (await o.sign(i)).headers;
   };
-var k = pe(hS(), 1),
-  z = pe(q5(), 1);
-var l = pe(ta(), 1);
+var k = toESM(hS(), 1),
+  z = toESM(q5(), 1);
+var l = toESM(ta(), 1);
 var ue = async (e, t) => {
     let r = l.map({}),
       o = e.body,
@@ -608,9 +608,9 @@ function Be(e) {
     t
   );
 }
-var re = pe(q5(), 1),
-  oe = pe(nu(), 1),
-  ne = pe(lhe(), 1);
+var re = toESM(q5(), 1),
+  oe = toESM(nu(), 1),
+  ne = toESM(lhe(), 1);
 import He from "assert";
 var $e = (e, t) =>
     import("../../01-核心基础设施/共享小工具-未细化/fromIni.7gtjb5bg.js")

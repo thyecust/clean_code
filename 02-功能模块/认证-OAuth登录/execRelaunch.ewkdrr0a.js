@@ -13,7 +13,7 @@ import { setBgExitCause } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { eb, Il, Pc, YE } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
-import { rd } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { aIe, alt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tkfrb8jm.js";
 import { spawn } from "child_process";
 import { closeSync } from "fs";
@@ -36,7 +36,7 @@ ${Pc() ?? `${eb}: launcher \`${Il()[0]}\` was deleted or is not executable \u201
 `),
       exitAfterAnalyticsFlush(1)
     );
-  let { cmd: n, prefixArgs: a } = rd(),
+  let { cmd: n, prefixArgs: a } = resolveWrappedClaudeInvocation(),
     c = process.argv.slice(2),
     t = { ...process.env };
   (delete t[aIe], Object.assign(t, alt()));

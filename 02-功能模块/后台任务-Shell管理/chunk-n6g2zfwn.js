@@ -30,8 +30,8 @@ import {
   ee,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { parseShortId, Qs, j, K, ze, he, Rg, bB, kg, m8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, Io, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
@@ -39,7 +39,7 @@ import { R, ge, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kb
 import { We, b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Id, pz, _Xt, Pd, oae, Ix, O0, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { fn } from "../Git-Worktree/chunk-9ys1bnqr.js";
@@ -56,7 +56,7 @@ import { RP, um, Xt, er, kP, lie, Qa, getAPIProvider, isFirstPartyAnthropicBaseU
 import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import { Vo, ARTIFACT_TOOL_NAME, ARTIFACT_SLUG_RE, parseArtifactUrl, artifactViewerUrlFor } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { provenSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { aM } from "../../01-核心基础设施/共享小工具-未细化/chunk-c9wxfdax.js";
+import { getSessionAnnouncementState } from "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
 import { BG, Sl, xEt, $t } from "../插件系统/chunk-7s6mt1vg.js";
 import { Td, rtr, otr, HFe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
@@ -127,7 +127,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ud } from "../Teammates团队/chunk-thxapyam.js";
 import { so } from "../权限系统/chunk-fjrcf22x.js";
-import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
+import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { findLivePeerBySessionId } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { derivePublishContextFrom, mainObservedArtifactVersion, isArtifactReadOnlySurface } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
@@ -157,12 +157,12 @@ import { j4, pan, w9n, wpt } from "../../01-核心基础设施/共享小工具-�
 import { fw, Lh } from "../Teammates团队/chunk-mrfx53ye.js";
 import { wYn } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
 import { Ug } from "../插件系统/chunk-33bdfgmx.js";
-import { Vr } from "../../01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 import { mt, Vh } from "../工具Task-Agent调度/chunk-1px84m19.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { au } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var Gn = m(() =>
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { defineExportGetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var Gn = createLazyValue(() =>
     cr(
       nt({
         id: le(),
@@ -186,7 +186,7 @@ function Ut(e) {
   return e.requiresModel === void 0 || isModelAllowed(e.requiresModel);
 }
 function W_e(e) {
-  let t = aM();
+  let t = getSessionAnnouncementState();
   if (t.startupAnnouncementPick !== void 0) return t.startupAnnouncementPick;
   let o = ee().announcementImpressions ?? {},
     r = Dt()
@@ -801,7 +801,7 @@ function Zn(e, t, o) {
         }));
     },
     te = (V, D = new Set()) => {
-      let X = G([...Z], (se) => !D.has(se)),
+      let X = countMatching([...Z], (se) => !D.has(se)),
         U = [...J].filter((se) => !D.has(se));
       if (I !== "none" && X > 0)
         de(
@@ -933,7 +933,7 @@ function Zn(e, t, o) {
           ((F = await t.jobHolderVerdicts(ue, d, Date.now())),
             (ue = JWn(ue, F)),
             Mt());
-          let P = G([...F.values()], (N) => N === "gone");
+          let P = countMatching([...F.values()], (N) => N === "gone");
           if (P > 0)
             logFeatureOk("artifact_live_subscribe", { job_holder_gone: P, surface: _ });
         } catch {
@@ -1013,7 +1013,7 @@ function Zn(e, t, o) {
         t.mayRequestTakeover()
       )
         if (
-          V.options.tools.some((N) => Kt(N, ARTIFACT_TOOL_NAME)) &&
+          V.options.tools.some((N) => matchesToolName(N, ARTIFACT_TOOL_NAME)) &&
           t.commentsGateOpen() &&
           Je()
         ) {
@@ -1044,7 +1044,7 @@ function Zn(e, t, o) {
         Hn = xt ? t.commentsGateOpen : void 0,
         Ze;
       if (xt) Ze = Je();
-      let et = V.options.tools.find((P) => Kt(P, ARTIFACT_TOOL_NAME)),
+      let et = V.options.tools.find((P) => matchesToolName(P, ARTIFACT_TOOL_NAME)),
         Et = Hn?.() ?? !1;
       if (U.length > 0 && j4())
         p?.discloseUnattended({ willRearm: Ze === !0 && et !== void 0 && Et });
@@ -1297,7 +1297,7 @@ function cFn(e) {
         };
       },
       _ = e.transcriptAnchor,
-      I = M() && e.storageV5 !== void 0,
+      I = isHoverRestEnabled() && e.storageV5 !== void 0,
       E = async (w) => {
         if (_ === void 0) return null;
         if (I) {
@@ -1369,7 +1369,7 @@ async function ln(e, t, o) {
         value: _a({
           body: `
 <${_Xt}>
-This session began as a fork (copy) of another session that is still running: ${I}. The conversation up to ${d} is shared history with it; the two sessions have since diverged, and neither sees the other's new activity. To coordinate with it \u2014 hand results back, ask what it has done since, avoid duplicating its work \u2014 ${E} and message it with ${Vr}.
+This session began as a fork (copy) of another session that is still running: ${I}. The conversation up to ${d} is shared history with it; the two sessions have since diverged, and neither sees the other's new activity. To coordinate with it \u2014 hand results back, ask what it has done since, avoid duplicating its work \u2014 ${E} and message it with ${SEND_MESSAGE_TOOL_NAME}.
 </${_Xt}>`,
         }),
         agentId: ze(),
@@ -1395,7 +1395,7 @@ function an(e) {
   return Fmt().some((t) => typeof t.value === "string" && t.value.includes(e));
 }
 async function _He(e, t, o, r, s) {
-  if (M() && s !== void 0) await relinkAdoptedAgentSymlinks({ storageV5: s });
+  if (isHoverRestEnabled() && s !== void 0) await relinkAdoptedAgentSymlinks({ storageV5: s });
   let d = Ygt(a.CLAUDE_CODE_RESUME_SOURCE_ALIVE),
     c = e;
   if (d !== null) {
@@ -1607,7 +1607,7 @@ function co(e) {
 }
 async function mo(e, t) {
   let o = Ud(e);
-  if (M() && t !== void 0)
+  if (isHoverRestEnabled() && t !== void 0)
     try {
       let s = wYn(o, t);
       if (s !== void 0) {
@@ -2038,7 +2038,7 @@ function eQt(e) {
   };
 }
 var C6e = {};
-au(C6e, { createTurnEventTail: () => eQt, default: () => C6e });
+defineExportGetters(C6e, { createTurnEventTail: () => eQt, default: () => C6e });
 var Fe = (e, t) => ({
   turnId: e,
   messageId: null,
@@ -2093,7 +2093,7 @@ function tQt(e) {
   };
 }
 var v6e = {};
-au(v6e, {
+defineExportGetters(v6e, {
   createTurnStep: () => tQt,
   default: () => v6e,
   emptyStep: () => Fe,
@@ -2294,7 +2294,7 @@ function Sst(e, t, o, r) {
     e.add(d);
   }
   if (o === "restored" || e.size === s) return;
-  (i("tengu_repl_bridge_dialog_kinds_declared", {
+  (logEvent("tengu_repl_bridge_dialog_kinds_declared", {
     kind_count: e.size,
     has_refusal_fallback: e.has("refusal_fallback_prompt"),
   }),
@@ -2379,7 +2379,7 @@ function bst(e, t) {
   let o = St(e);
   if (o.recognized) return;
   return (
-    i("tengu_set_model_unrecognized", {
+    logEvent("tengu_set_model_unrecognized", {
       shape: fromEnum(o.shape),
       had_suggestion: o.suggestion !== void 0,
       surface: t,
@@ -2415,7 +2415,7 @@ async function wFn(e, t) {
   switch (d.kind) {
     case "unrecognized":
       if (
-        (i("tengu_set_model_unrecognized", {
+        (logEvent("tengu_set_model_unrecognized", {
           shape: fromEnum(d.shape),
           had_suggestion: d.suggestion !== void 0,
           surface: t.surface,
@@ -2532,7 +2532,7 @@ class bn {
 var Sc = new j(() => new bn());
 function hHe(e) {
   return {
-    messageCount: G(e, (t) => t.type !== "progress"),
+    messageCount: countMatching(e, (t) => t.type !== "progress"),
     lastMessageUuid: e.findLast((t) => t.type !== "progress")?.uuid,
   };
 }
@@ -2728,7 +2728,7 @@ function Sn(e) {
 var wn = new Set(["ENOSPC", "EROFS", "EACCES", "ENOENT", "ENOTDIR"]),
   Xo = new Set([...wn, "EEXIST", "EISDIR", "AbsentParent", "UnexpectedAbsent"]);
 function Cn(e) {
-  return M() && e !== void 0 && BG("flagged", Sl()) !== null ? e : void 0;
+  return isHoverRestEnabled() && e !== void 0 && BG("flagged", Sl()) !== null ? e : void 0;
 }
 async function je(e) {
   let t = _n(),
@@ -2841,7 +2841,7 @@ function Qo(e, t, o) {
 }
 async function cst(e) {
   await An(e);
-  let t = M() && e !== void 0 ? await tD(e) : Cf(),
+  let t = isHoverRestEnabled() && e !== void 0 ? await tD(e) : Cf(),
     o = gHe(),
     r = await Ql(e),
     s = [];
@@ -2867,7 +2867,7 @@ async function cst(e) {
           if (v !== "user" && v !== "project" && v !== "local") continue;
           try {
             let T = await r4(_, v, !0, e);
-            i("tengu_plugin_delisted_enforcement", {
+            logEvent("tengu_plugin_delisted_enforcement", {
               outcome: T.success ? S("uninstalled") : S("uninstall-failed"),
               scope: fromEnum(v),
               ...(!T.success && { error_kind: fromEnum(GF(T.message)) }),
@@ -2878,7 +2878,7 @@ async function cst(e) {
               `Failed to auto-uninstall delisted plugin ${_} from ${v}: ${l(T)}`,
               { level: "error" },
             ),
-              i("tengu_plugin_delisted_enforcement", {
+              logEvent("tengu_plugin_delisted_enforcement", {
                 outcome: S("uninstall-failed"),
                 scope: fromEnum(v),
                 error_kind: fromEnum(GF(T)),
@@ -2892,7 +2892,7 @@ async function cst(e) {
       (n(`Failed to check for delisted plugins in "${d}": ${l(c)}`, {
         level: "warn",
       }),
-        i("tengu_plugin_delisted_enforcement", {
+        logEvent("tengu_plugin_delisted_enforcement", {
           outcome: S("scan-failed"),
           error_kind: fromEnum(GF(c)),
           _PROTO_marketplace_name: d,
@@ -2975,7 +2975,7 @@ function uFn({
       if (!k.finalDispatched) w(k, !0);
       else if (k.inFlight === 0 && !k.stats.summaryEmitted)
         ((k.stats.summaryEmitted = !0),
-          i("tengu_message_display_hooks", {
+          logEvent("tengu_message_display_hooks", {
             flushCount: k.index,
             errorCount: k.stats.errorCount,
             totalDurationMs: k.stats.totalDurationMs,
@@ -3101,7 +3101,7 @@ function Tn(e, t, o) {
     let d = rtr(s.source);
     if (d.openTagCount === 0 && d.closeTagCount === 0) continue;
     let c = otr(s.source, (p) => e.citedStatus(p));
-    i("tengu_cc_memory_tag_stripped", {
+    logEvent("tengu_cc_memory_tag_stripped", {
       surface: fromEnum(s.name),
       seam: fromEnum(o),
       open_tag_count: d.openTagCount,
@@ -3272,7 +3272,7 @@ function QJt({
       de = T && E.get(T.messageId),
       te = de?.toolCallsBefore ?? T?.toolCallsBefore ?? 0;
     try {
-      i("tengu_turn_first_text", {
+      logEvent("tengu_turn_first_text", {
         first_text_wait_end: fromEnum(T ? "painted" : O),
         ...(T && {
           ttfvt_first_text_paint_ms: Y,

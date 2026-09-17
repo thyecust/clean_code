@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { _je, mae } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z } from "./chunk-510m1t2d.js";
+import { sleep } from "./async-timeout-utils.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { $6, bBe, O5t, Rq, wBe } from "../../02-功能模块/认证-OAuth登录/chunk-7rf7w8yf.js";
-import { q } from "./chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "./diagnostics-log.js";
 var $Jt = [250, 500, 500, 750, 1000];
 function g() {
   return a.CLAUDE_SESSION_INGRESS_TOKEN_FILE ?? Rq;
@@ -49,12 +49,12 @@ async function G1n(
       `[spare-claim] session ingress token file not readable yet (${_}), re-checking in ${s}ms (${r + 1}/${e.length})`,
       { level: "warn" },
     ),
-      await Z(s),
+      await sleep(s),
       r++,
       ({ token: l, miss: _ } = wBe(E, "session ingress token")));
   }
   if (!l) {
-    q("error", "cli_worker_lifecycle_claim_token_wait", {
+    writeDiagnosticsEvent("error", "cli_worker_lifecycle_claim_token_wait", {
       attempts: r,
       recovered: !1,
       last_miss: _ ?? "other",
@@ -66,9 +66,9 @@ async function G1n(
     p = performance.now(),
     c = 0,
     m = d();
-  while (!m && performance.now() - p < u) (await Z(f), c++, (m = d()));
+  while (!m && performance.now() - p < u) (await sleep(f), c++, (m = d()));
   if (r > 0 || c > 0)
-    q("info", "cli_worker_lifecycle_claim_token_wait", {
+    writeDiagnosticsEvent("info", "cli_worker_lifecycle_claim_token_wait", {
       attempts: r,
       recovered: !0,
       sibling_attempts: c,

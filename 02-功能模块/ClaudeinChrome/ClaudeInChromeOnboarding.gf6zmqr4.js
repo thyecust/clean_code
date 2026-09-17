@@ -9,17 +9,17 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 127 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { o, t, ct, zb } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { HI, isChromeExtensionInstalled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function P(U) {
   return { ...U, hasCompletedClaudeInChromeOnboarding: !0 };
@@ -29,12 +29,12 @@ function ClaudeInChromeOnboarding(J) {
   let n = _(22),
     { onDone: m } = J,
     [l, Q] = d(!1),
-    { storageV5: a } = _e(),
+    { storageV5: a } = useStorageV5Context(),
     D,
     R;
   if (n[0] !== a)
     ((D = () => {
-      (i("tengu_claude_in_chrome_onboarding_shown", {}),
+      (logEvent("tengu_claude_in_chrome_onboarding_shown", {}),
         isChromeExtensionInstalled().then(Q).catch(logError),
         Te(P, a));
     }),
@@ -99,12 +99,12 @@ function ClaudeInChromeOnboarding(J) {
       (n[12] = g));
   else g = n[12];
   let K;
-  if (n[13] === p)
+  if (n[13] === MEMO_CACHE_SENTINEL)
     ((K = e(t, { bold: !0, color: "chromeYellow", children: "/chrome" })),
       (n[13] = K));
   else K = n[13];
   let Y;
-  if (n[14] === p)
+  if (n[14] === MEMO_CACHE_SENTINEL)
     ((Y = r(t, {
       dimColor: !0,
       children: [

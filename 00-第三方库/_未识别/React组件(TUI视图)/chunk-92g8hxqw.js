@@ -13,14 +13,14 @@ import { logFeatureOk, logFeatureSad } from "../../lodash/lodash.0vqzb8ad.js";
 import { te } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t, Od } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Q0 } from "../../ink/ink + react-reconciler.5rs3h07b.js";
-import { sl } from "../../../02-功能模块/键位绑定(Keybindings)/chunk-qy43nqgh.js";
+import { useKeybindingContext } from "../../../02-功能模块/键位绑定(Keybindings)/keybinding-context.js";
 import { Ej, $Yn } from "../../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
-import { ue } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { Hen } from "../../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
-import { eee } from "../../../01-核心基础设施/共享小工具-未细化/chunk-my8s4daz.js";
-import { D } from "../../../02-功能模块/键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { je } from "../../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
-import { za } from "../../../01-核心基础设施/共享小工具-未细化/chunk-951vj555.js";
+import { DotSeparatedList } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useExitKeybindingEntries } from "../../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
+import { KeybindingScope } from "../../../01-核心基础设施/共享小工具-未细化/keybinding-scope.js";
+import { KeybindingHint } from "../../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
+import { ActionKeybindingHint } from "../../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
+import { Divider } from "../../../01-核心基础设施/共享小工具-未细化/divider.js";
 import { e, r } from "../../react/react.kwtapczy.js";
 import { De, E, dn, V, C, d, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 var WA = 2,
@@ -44,7 +44,7 @@ function Qr(Rt) {
     return H;
   }
   let H;
-  if (oe[2] !== ke) ((H = e(za, { color: ke })), (oe[2] = ke), (oe[3] = H));
+  if (oe[2] !== ke) ((H = e(Divider, { color: ke })), (oe[2] = ke), (oe[3] = H));
   else H = oe[3];
   let ie;
   if (oe[4] !== G)
@@ -123,7 +123,7 @@ function Q(Bt) {
     } = Bt,
     _t = ze === void 0 ? null : ze,
     Pe = Je === void 0 ? Te : Je,
-    T = sl(),
+    T = useKeybindingContext(),
     { focusManager: Y, rootNode: It } = De(Q0),
     [tick, At] = d(0),
     Qe,
@@ -307,10 +307,10 @@ function Be({
     hadEntryWithoutDescription: N,
   };
 }
-var ee = r(ue, {
+var ee = r(DotSeparatedList, {
   children: [
-    e(D, { chord: "enter", action: "confirm" }),
-    e(je, {
+    e(KeybindingHint, { chord: "enter", action: "confirm" }),
+    e(ActionKeybindingHint, {
       action: "confirm:no",
       context: "Confirmation",
       fallback: "Esc",
@@ -336,7 +336,7 @@ function de(on) {
     W = it === void 0 ? "permission" : it,
     X = st === void 0 ? !0 : st,
     ct = C(null),
-    { entries: Ie, exitState: q } = Hen(void 0, rn, X),
+    { entries: Ie, exitState: q } = useExitKeybindingEntries(void 0, rn, X),
     ae;
   if (h[0] !== X || h[1] !== _e)
     ((ae = X ? [{ action: "confirm:no", run: _e, hint: "cancel" }] : []),
@@ -461,7 +461,7 @@ function de(on) {
   else be = h[34];
   let ut;
   if (h[35] !== Ae || h[36] !== Le || h[37] !== be || h[38] !== Ue)
-    ((ut = r(eee, {
+    ((ut = r(KeybindingScope, {
       ref: ct,
       scope: "Confirmation",
       claimFocus: !0,

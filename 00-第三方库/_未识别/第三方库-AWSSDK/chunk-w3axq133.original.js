@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { UQ, nu } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Oke } from "../第三方库-其他/chunk-jtb5q5xr.js";
-import { Ib } from "../../../01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js";
-import { w } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var G0n = w(function (B) {
+import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
+import { commonJS } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var G0n = commonJS(function (B) {
   var N = nu(),
     S = (e, r) => (t, i) => async (n) => {
       let { response: o } = await t(n);
@@ -96,9 +96,9 @@ var G0n = w(function (B) {
   B.serializerMiddleware = A;
   B.serializerMiddlewareOption = x;
 });
-var Lm = w(function (C) {
+var Lm = commonJS(function (C) {
   var f = UQ(),
-    M = Ib(),
+    M = smithyContextModule(),
     U = G0n(),
     y = nu(),
     V = Oke(),

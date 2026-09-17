@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { mB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { ge, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -38,9 +38,9 @@ import {
 } from "../远程工具执行/chunk-66axrkvh.js";
 import { pSe, ylt, u3e } from "../../01-核心基础设施/共享小工具-未细化/chunk-33vqsej8.js";
 import { BDt, jDt } from "./chunk-bm9p9vh6.js";
-import { u9 } from "./chunk-h5053szy.js";
-import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { RemoteSessionHostRegistry } from "./remote-session-host-registry.js";
+import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function T() {
   return import.meta.require("../MCP客户端/mcpClientModule.4cyej0np.js").mcpClientModule();
 }
@@ -350,7 +350,7 @@ function X(t, e, r) {
     p = new Set(g.map((c) => c.bridgeName)),
     m = new Set(d.filter((c) => !p.has(c.name)).map((c) => c.name)),
     f = m.size,
-    _ = G(s, (c) => c.meta === void 0),
+    _ = countMatching(s, (c) => c.meta === void 0),
     b = new Set(s.map((c) => c.toolName)),
     y = new Set(o.filter((c) => MV.has(c.name)).map((c) => c.name)),
     v = new Map(
@@ -361,10 +361,10 @@ function X(t, e, r) {
       ...g.map(({ marker: c }) => c.target.name),
     ]),
     re = o.reduce((c, R) => {
-      let U = rn(R.name);
+      let U = normalizeMcpName(R.name);
       return (c.set(U, (c.get(U) ?? 0) + 1), c);
     }, new Map()),
-    ie = d.some((c) => (re.get(rn(c.name)) ?? 0) > 1),
+    ie = d.some((c) => (re.get(normalizeMcpName(c.name)) ?? 0) > 1),
     O =
       P.size > 1
         ? "two_names"
@@ -463,19 +463,19 @@ async function gIe(t, e, r) {
 }
 function J(t, e, r) {
   let o = e.sourceHosts("session");
-  e.replaceRemoteHosts("session", t.toolState.get(u9).hostsForTable());
+  e.replaceRemoteHosts("session", t.toolState.get(RemoteSessionHostRegistry).hostsForTable());
   let s = e.sourceHosts("session");
   if (k(o) === k(s)) return;
-  i("tengu_remote_tool_targets", {
+  logEvent("tengu_remote_tool_targets", {
     event:
-      t.toolState.get(u9).entries().length === 0 ? S("withdrawn") : fromEnum(oe(o, s)),
+      t.toolState.get(RemoteSessionHostRegistry).entries().length === 0 ? S("withdrawn") : fromEnum(oe(o, s)),
     source: S("session"),
     trigger: fromEnum(r),
     target_count: s.length,
     served_tool_count: s.reduce((d, g) => d + g.servedTools.size, 0),
     target_kind: fromEnumOpt(s[0]?.description?.kind),
     target_platform: fromEnumOpt(te(s[0]?.description?.platform)),
-    incompatible_count: G(s, (d) => d.protocol.kind === "incompatible"),
+    incompatible_count: countMatching(s, (d) => d.protocol.kind === "incompatible"),
   });
 }
 async function Ne(t, e, r) {
@@ -534,7 +534,7 @@ async function Ue(t, e, r, o) {
   }
   let g = T().fetchToolsForClient.cache.get(Jn(d.name, d.config)),
     p = t.toolState
-      .get(u9)
+      .get(RemoteSessionHostRegistry)
       .entries()
       .some((v) => v.status === "online");
   if (
@@ -559,7 +559,7 @@ async function Ue(t, e, r, o) {
         `[remote-tools] device-bridge tools/list failed (${f.kind}); keeping last known machines${"error" in f ? `: ${l(f.error)}` : ""}`,
         { level: "warn" },
       ),
-      i("tengu_remote_tool_targets", {
+      logEvent("tengu_remote_tool_targets", {
         event: S("list_failed"),
         trigger: fromEnum(o),
         reason: "error" in f && je(f.error) ? S("timeout") : fromEnum(f.kind),
@@ -574,13 +574,13 @@ async function Ue(t, e, r, o) {
   let _ = X(d, f.value.tools, e.recovery),
     b = _.hosts.length === 0;
   if (b && (e.provisional === void 0 || e.provisional.stub !== f.value.stub))
-    (i("tengu_remote_tool_targets", {
+    (logEvent("tengu_remote_tool_targets", {
       event: S("listed_empty"),
       trigger: fromEnum(o),
       tool_count: f.value.tools.length,
       truncated: f.value.truncated,
       has_served_name: f.value.tools.some((v) => lY.has(v.name)),
-      marker_count: G(f.value.tools, (v) => v._meta?.[pSe] !== void 0),
+      marker_count: countMatching(f.value.tools, (v) => v._meta?.[pSe] !== void 0),
       stub: f.value.stub,
     }),
       n(
@@ -644,7 +644,7 @@ function Hnn(t) {
   let e = $e(t);
   if (e === void 0) return;
   if (isSessionChannelDisabled()) return e;
-  let r = t.toolState.get(u9);
+  let r = t.toolState.get(RemoteSessionHostRegistry);
   if (r.hasAnnouncedThisLife())
     return r.entries().length === 0 ? "serves_nothing" : e;
   return (a.CLAUDE_CODE_WORKER_EPOCH ?? 1) > 1 ? "not_reannounced" : e;
@@ -658,7 +658,7 @@ async function t2n(
     routableOtherwise: s,
   } = {},
 ) {
-  let d = t.toolState.get(u9);
+  let d = t.toolState.get(RemoteSessionHostRegistry);
   if (d.entries().length > 0) return { kind: "announced" };
   let g = d.announceWaitExpired();
   if (g !== void 0) return { kind: "gave_up_earlier", waitedMs: g };
@@ -715,7 +715,7 @@ function Ge(t, e, r) {
       `[remote-tools] a '${aY}' MCP entry exists but was not adopted as the device bridge: ${o.map((d, g) => `${s[g]} (type=${d.type}, scope=${d.config.scope})`).join("; ")}`,
       { level: "warn" },
     ),
-    i("tengu_remote_tool_targets", {
+    logEvent("tengu_remote_tool_targets", {
       event: S("no_bridge_connection"),
       trigger: fromEnum(r),
       servers_seen: o.length,
@@ -798,14 +798,14 @@ function Q(
   let m = t.sourceHosts("bridge"),
     f = k(g) !== k(m);
   if (r !== void 0)
-    i("tengu_remote_tool_targets", {
+    logEvent("tengu_remote_tool_targets", {
       event: S("listing_invalid"),
       reason: fromEnum(r),
       trigger: fromEnum(d),
     });
   let _ = f ? oe(g, m) : void 0;
   if (_ !== void 0)
-    i("tengu_remote_tool_targets", {
+    logEvent("tengu_remote_tool_targets", {
       event: fromEnum(_),
       trigger: fromEnum(d),
       target_count: m.length,
@@ -816,12 +816,12 @@ function Q(
       ),
       target_kind: fromEnumOpt(m[0]?.description?.kind),
       target_platform: fromEnumOpt(te(m[0]?.description?.platform)),
-      incompatible_count: G(m, (b) => b.protocol.kind === "incompatible"),
+      incompatible_count: countMatching(m, (b) => b.protocol.kind === "incompatible"),
       protocol_version:
         m[0]?.protocol.kind === "compatible" ? m[0].protocol.version : void 0,
     });
   if (o > 0 || s > 0)
-    i("tengu_remote_tool_targets", {
+    logEvent("tengu_remote_tool_targets", {
       event: S("unreadable"),
       trigger: fromEnum(d),
       unreadable_count: o,

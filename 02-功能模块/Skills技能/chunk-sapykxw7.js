@@ -10,7 +10,7 @@
 import { j, bi, K, jc, ke, m_e, V1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Za } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Hr } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getSettingsForSource, parentManagedTierParticipates, getSettings_DEPRECATED, getPolicySettingsLoadErrors, filterFatalPolicyErrors } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -112,7 +112,7 @@ function getHooksConfigFromSnapshot() {
   return t.initialHooksConfig;
 }
 function Q$(t, o) {
-  i("tengu_goal_cleared", {
+  logEvent("tengu_goal_cleared", {
     reason: fromEnum(o),
     iterations: t.iterations,
     durationMs: Date.now() - t.setAt,
@@ -188,7 +188,7 @@ function uve(t, o, s) {
   return (
     o.setAppState((p) => ({ ...p, activeGoal: m })),
     o.applyMessageOp({ type: "append", messages: [Jzt(!1, t)] }),
-    i("tengu_stop_hook_added", {
+    logEvent("tengu_stop_hook_added", {
       promptLength: t.length,
       via: S("goal"),
       origin: fromEnum(e),
@@ -210,7 +210,7 @@ function dve(t) {
       r.activeGoal === void 0 ? r : { ...r, activeGoal: void 0 },
     ),
     t.applyMessageOp({ type: "append", messages: [Jzt(!0, e)] }),
-    i("tengu_stop_hook_removed", { via: S("goal") }),
+    logEvent("tengu_stop_hook_removed", { via: S("goal") }),
     e
   );
 }

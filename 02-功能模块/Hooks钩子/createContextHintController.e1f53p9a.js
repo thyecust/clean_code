@@ -12,7 +12,7 @@
 import { kCn, tt, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Lt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { SS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
@@ -49,7 +49,7 @@ function T(e) {
   return;
 }
 function C(e) {
-  i("tengu_context_hint_reject", {
+  logEvent("tengu_context_hint_reject", {
     requestId: Ee(e.requestId),
     preCompactTokenEstimate: e.preCompactTokenEstimate,
     postCompactTokenEstimate: e.postCompactTokenEstimate,
@@ -59,7 +59,7 @@ function C(e) {
   });
 }
 function d(e, t) {
-  i("tengu_context_hint_busy_fallback", { requestId: Ee(e), status: t });
+  logEvent("tengu_context_hint_busy_fallback", { requestId: Ee(e), status: t });
 }
 var S = 5,
   _ = new Set(),

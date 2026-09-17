@@ -14,67 +14,67 @@ import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { an } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-pbd0pf42.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nj1exzcd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nvfdjg8e.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7m5aewa3.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
 import { y6e } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
+import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-csjxh2sy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
+import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
+import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-s3mpt973.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import "../Diff引擎/chunk-p2gj9dsf.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wqaxtswb.js";
+import "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-0mg59v9m.js";
 import "../GitHub集成/chunk-bfz9rjjm.js";
 import "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-c172f2at.js";
-import "../工具Bash-Shell/chunk-qnax4jt7.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-bhcz98rd.js";
+import "../../01-核心基础设施/共享小工具-未细化/detail-dialog-keys.js";
+import "../工具Bash-Shell/bash-output-view.js";
+import "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
 import "../工具UI渲染/chunk-g4k5jjwt.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-86zcr8cb.js";
+import "../../01-核心基础设施/共享小工具-未细化/webfetch-tool-messages.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-vwjqzjhr.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
+import "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-1371sqbk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nkg0z9p5.js";
+import "../../01-核心基础设施/共享小工具-未细化/model-1m-context-suggestion.js";
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-xvyb4e66.js";
-import "../Teammates团队/chunk-4ma81w0c.js";
+import "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
+import "../Teammates团队/teammate-task-messages.js";
 import { dn, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function wo(Qo) {
   return Qo.remoteBackgroundTasks;
@@ -86,11 +86,11 @@ function J(Oo) {
     Po = U(wo),
     [M, _o] = d(void 0),
     no;
-  if (i[0] === p) ((no = new Set()), (i[0] = no));
+  if (i[0] === MEMO_CACHE_SENTINEL) ((no = new Set()), (i[0] = no));
   else no = i[0];
   let [ro, io] = d(no),
     so;
-  if (i[1] === p) ((so = new Set()), (i[1] = so));
+  if (i[1] === MEMO_CACHE_SENTINEL) ((so = new Set()), (i[1] = so));
   else so = i[1];
   let [V, jo] = d(so),
     ao;
@@ -99,7 +99,7 @@ function J(Oo) {
   let c = Po.filter(ao),
     [S, po] = d(null),
     mo;
-  if (i[4] === p) ((mo = Ks()), (i[4] = mo));
+  if (i[4] === MEMO_CACHE_SENTINEL) ((mo = Ks()), (i[4] = mo));
   else mo = i[4];
   let co = mo,
     A = C(!1),
@@ -151,27 +151,27 @@ function J(Oo) {
             }),
           ));
     };
-  const Q = mr,
+  const Q = FocusableBox,
     W = de,
     Vo = "Background",
     $o = "Running in the cloud session",
     Ao = "background",
-    Y = c.length > 0 && e(D, { chord: ["up", "down"], action: "navigate" }),
-    Z = c.length > 0 && co && e(D, { chord: "x", action: "stop" });
+    Y = c.length > 0 && e(KeybindingHint, { chord: ["up", "down"], action: "navigate" }),
+    Z = c.length > 0 && co && e(KeybindingHint, { chord: "x", action: "stop" });
   let ko;
-  if (i[10] === p)
-    ((ko = e(D, { chord: "escape", action: "close" })), (i[10] = ko));
+  if (i[10] === MEMO_CACHE_SENTINEL)
+    ((ko = e(KeybindingHint, { chord: "escape", action: "close" })), (i[10] = ko));
   else ko = i[10];
   let b;
   if (i[11] !== Y || i[12] !== Z)
-    ((b = r(ue, { children: [Y, Z, ko] })),
+    ((b = r(DotSeparatedList, { children: [Y, Z, ko] })),
       (i[11] = Y),
       (i[12] = Z),
       (i[13] = b));
   else b = i[13];
   const z =
     c.length === 0
-      ? e(Rn, { children: "No tasks currently running" })
+      ? e(EmptyStateMessage, { children: "No tasks currently running" })
       : e(ve, {
           options: c.map((h) => ({
             value: h.id,
@@ -193,7 +193,7 @@ function J(Oo) {
       (i[15] = T));
   else T = i[15];
   let ho;
-  if (i[16] === p)
+  if (i[16] === MEMO_CACHE_SENTINEL)
     ((ho = e(t, {
       dimColor: !0,
       wrap: "wrap-trim",

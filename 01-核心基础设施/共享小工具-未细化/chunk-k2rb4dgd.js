@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { $On } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Xa } from "./chunk-jzy6p47z.js";
+import { createStore } from "./state-store.js";
 var o = {
   notice: null,
   shownLoggedForDraftId: null,
@@ -21,15 +21,15 @@ var o = {
 };
 class n {
   autoDenyPresence = Le();
-  mainLoopBusy = Xa({ busy: !1 });
-  blockingToolProgress = Xa({ active: !1 });
-  dialogHostUnmounted = Xa({ unmounted: !1 });
-  onScreenBlockingDialog = Xa({ surfaceMounted: !1, kind: null });
+  mainLoopBusy = createStore({ busy: !1 });
+  blockingToolProgress = createStore({ active: !1 });
+  dialogHostUnmounted = createStore({ unmounted: !1 });
+  onScreenBlockingDialog = createStore({ surfaceMounted: !1, kind: null });
   pendingSurveyFeedbackSource = null;
   terminalFocus = "unknown";
   terminalFocusGainedAt = Number.NEGATIVE_INFINITY;
   terminalFocusChanged = Le();
-  feedbackNotice = Xa(o);
+  feedbackNotice = createStore(o);
   clawdEntranceTaken = !1;
   startupUpdateSummary = void 0;
   experimentEnrollmentsUnseen = void 0;

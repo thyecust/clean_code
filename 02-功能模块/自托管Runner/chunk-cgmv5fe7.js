@@ -16,8 +16,8 @@ import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCACertificates, getMTLSConfig, parseProxyUrl, getUsableProxyUrl, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Bs, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { uu } from "../../01-核心基础设施/共享小工具-未细化/chunk-bgwm3fhf.js";
-import { ml } from "../../01-核心基础设施/共享小工具-未细化/chunk-vdg9aytt.js";
+import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
+import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
 import { H5 } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
 var Pae = {
     ISSUES_EXPLAINER:
@@ -872,11 +872,11 @@ function it(e) {
           };
         v.then(h, h);
         try {
-          p = await uu(v, o, "read");
+          p = await raceWithTimeout(v, o, "read");
         } catch (_) {
           if (!m) r = v;
           throw new X(
-            `proxy authorization file could not be read: ${ml(l(_))}`,
+            `proxy authorization file could not be read: ${redactSecrets(l(_))}`,
           );
         }
         return $e(p);
@@ -903,7 +903,7 @@ function it(e) {
             : `exited ${d.exitCode ?? d.signal ?? "abnormally"}`,
           m = d.stderr?.trim();
         throw new X(
-          `proxy authorization command ${p}${m ? `: ${oe(ml(m), 500)}` : ""}`,
+          `proxy authorization command ${p}${m ? `: ${oe(redactSecrets(m), 500)}` : ""}`,
         );
       }
       return $e(d.stdout ?? "");
@@ -1213,7 +1213,7 @@ Host: ${c}\r
       let L =
         f instanceof X
           ? f.message
-          : `upstream proxy connection failed: ${ml(l(f))}`;
+          : `upstream proxy connection failed: ${redactSecrets(l(f))}`;
       (d(`${L} (${V(S)} answered 502)`),
         N(
           c,
@@ -1683,7 +1683,7 @@ Connection: close\r
           if (S) await D(c, S[1], f, C);
           else await Z(c, f, C);
         })().catch((f) => {
-          (d(`internal error handling a proxied connection: ${ml(l(f))}`),
+          (d(`internal error handling a proxied connection: ${redactSecrets(l(f))}`),
             c.destroy());
         }));
     });
@@ -1811,7 +1811,7 @@ async function ENn(e, n) {
     a = mt(s.url, process.env);
   if (((o.active = a), new Set(a.rewritten.map((d) => a.original[d])).size > 1))
     n.onStatus(
-      `[runner:egress-proxy] note: ${a.rewritten.join("/")} named different proxies; all of them now go through the listener to ${ml(e.upstreamProxyUrl)} (the one this runner resolves for its own traffic)`,
+      `[runner:egress-proxy] note: ${a.rewritten.join("/")} named different proxies; all of them now go through the listener to ${redactSecrets(e.upstreamProxyUrl)} (the one this runner resolves for its own traffic)`,
     );
   if ((configureGlobalAgents(), process.env.CLAUDE_CODE_ENABLE_PROXY_AUTH_HELPER))
     n.onStatus(
@@ -1819,7 +1819,7 @@ async function ENn(e, n) {
     );
   return (
     n.onStatus(
-      `[runner:egress-proxy] enabled: minting Proxy-Authorization from the configured ${e.source.kind} for every CONNECT to the upstream proxy ${ml(e.upstreamProxyUrl)}; this runner and its sessions now use the loopback listener 127.0.0.1:${s.port} (rewrote ${a.rewritten.join(", ")})`,
+      `[runner:egress-proxy] enabled: minting Proxy-Authorization from the configured ${e.source.kind} for every CONNECT to the upstream proxy ${redactSecrets(e.upstreamProxyUrl)}; this runner and its sessions now use the loopback listener 127.0.0.1:${s.port} (rewrote ${a.rewritten.join(", ")})`,
     ),
     (o.handle = {
       ...s,
@@ -1874,8 +1874,8 @@ async function yot(e, n) {
   if (!e) return null;
   let o = Oe(e, n);
   try {
-    if (!(await uu(ye(o), ce, `stat ${o}`)).isFile()) return null;
-    return (await uu(access(o, constants.X_OK), ce, `access ${o}`), o);
+    if (!(await raceWithTimeout(ye(o), ce, `stat ${o}`)).isFile()) return null;
+    return (await raceWithTimeout(access(o, constants.X_OK), ce, `access ${o}`), o);
   } catch {
     return null;
   }
@@ -1901,7 +1901,7 @@ async function CNn(e) {
     CLAUDE_CODE_SESSION_ACCESS_TOKEN: e.sessionAccessToken,
   };
   e.onStatus(
-    `[runner:hook] checkout ${ml(e.repoUrl)} -> ${e.checkoutPath} (via ${e.hookPath})`,
+    `[runner:hook] checkout ${redactSecrets(e.repoUrl)} -> ${e.checkoutPath} (via ${e.hookPath})`,
   );
   let o = [],
     u = !1;
@@ -1941,7 +1941,7 @@ async function CNn(e) {
 `),
           E = T.pop() ?? "";
         for (let k of T) {
-          let O = ml(k);
+          let O = redactSecrets(k);
           if ((e.onDebug(`[runner:hook:checkout] ${O}`), _))
             o.push(
               O +
@@ -1968,9 +1968,9 @@ async function CNn(e) {
       a.on("close", (h) => {
         if (i) clearTimeout(i);
         if ((e.signal?.removeEventListener("abort", d), p))
-          e.onDebug(`[runner:hook:checkout] ${ml(p)}`);
+          e.onDebug(`[runner:hook:checkout] ${redactSecrets(p)}`);
         if (m) {
-          let _ = ml(m);
+          let _ = redactSecrets(m);
           (e.onDebug(`[runner:hook:checkout] ${_}`), o.push(_));
         }
         if (u) s(Error("checkout hook aborted"));
@@ -1987,7 +1987,7 @@ async function CNn(e) {
   });
   let r;
   try {
-    r = await uu(ye(e.checkoutPath), ce, `stat ${e.checkoutPath}`);
+    r = await raceWithTimeout(ye(e.checkoutPath), ce, `stat ${e.checkoutPath}`);
   } catch (t) {
     if (W(t))
       throw new Jxe(
@@ -2005,7 +2005,7 @@ async function CNn(e) {
     );
   if (process.env.CLAUDE_RUNNER_SKIP_GIT_VERIFY !== "1")
     try {
-      await uu(
+      await raceWithTimeout(
         ye(Oe(e.checkoutPath, ".git")),
         ce,
         `stat ${e.checkoutPath}/.git`,
@@ -2138,7 +2138,7 @@ async function vNn(e) {
       let k = E.split(`
 `),
         O = k.pop() ?? "";
-      for (let D of k) e.onDebug(`[runner:hook:post-session] ${ml(D)}`);
+      for (let D of k) e.onDebug(`[runner:hook:post-session] ${redactSecrets(D)}`);
       return O;
     };
   return (
@@ -2150,13 +2150,13 @@ async function vNn(e) {
     }),
     t.on("error", (E) => {
       (e.onStatus(
-        `[runner:hook:post-session] spawn error (ignored): ${ml(E instanceof Error ? E.message : String(E))}`,
+        `[runner:hook:post-session] spawn error (ignored): ${redactSecrets(E instanceof Error ? E.message : String(E))}`,
       ),
         p());
     }),
     t.on("close", (E) => {
-      if (h) e.onDebug(`[runner:hook:post-session] ${ml(h)}`);
-      if (_) e.onDebug(`[runner:hook:post-session] ${ml(_)}`);
+      if (h) e.onDebug(`[runner:hook:post-session] ${redactSecrets(h)}`);
+      if (_) e.onDebug(`[runner:hook:post-session] ${redactSecrets(_)}`);
       let k = Date.now() - o;
       if (i)
         e.onStatus(

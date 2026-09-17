@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Ie, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
@@ -19,7 +19,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { eb, Uwt, Il, Pc, YE, _wn, ywn, wfe, Gk } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
@@ -27,7 +27,7 @@ import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/
 import { i9, g4, Q0e } from "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
 import { $U, iL, UU, Qet, NBe, dke } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSecureStorage } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
-import { rd, Mre, Upe, pD, FNe } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import { resolveWrappedClaudeInvocation, resolveClaudeInvocation, getInstalledClaudePath, applyProcessWrapper, findInstalledVersionBinary } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { Wi, Ms, H, ee, c5t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { te, gm, mW, i_, dp, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { quarantineJobTranscript, resolveJobTranscript } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
@@ -63,19 +63,19 @@ import { controlRequest } from "../../01-核心基础设施/共享小工具-未�
 import { cO, vv } from "../../01-核心基础设施/共享小工具-未细化/chunk-z3y2y7w9.js";
 import { _u } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { Uv } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ZR } from "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { HJn } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { o0e, aE } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import { ut } from "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
-import { fI } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
+import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
+import { fromJobState } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import { sN, Mh } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
-import { bD } from "../../01-核心基础设施/共享小工具-未细化/chunk-cyyrj58q.js";
+import { getLocalBinDir } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
 import { mPn } from "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import {
   access as dr,
   mkdir,
@@ -93,7 +93,7 @@ async function ole() {
 }
 function OZt() {
   if (!bc()) return process.argv[1];
-  return Ge(bD(), "claude");
+  return Ge(getLocalBinDir(), "claude");
 }
 function Te(t) {
   return Nt(t.replace(/[\r\n]/g, " "));
@@ -359,7 +359,7 @@ async function vit(t, e) {
       }
     );
   let c = Il(),
-    { cmd: s, prefixArgs: d, target: m } = rd(),
+    { cmd: s, prefixArgs: d, target: m } = resolveWrappedClaudeInvocation(),
     _ = [s, ...d, ...t],
     w = Br({ dropShellOAuthToken: await $r(e) });
   if (P() === "windows") {
@@ -370,7 +370,7 @@ async function vit(t, e) {
       `daemon: WMI spawn failed (${T.reason}); falling back to direct spawn \u2014 daemon will not survive SSH/terminal close`,
       { level: "warn" },
     ),
-      i("tengu_bg_daemon_wmi_fallback", {
+      logEvent("tengu_bg_daemon_wmi_fallback", {
         timeout: T.reason === "timeout",
         enoent: T.reason === "enoent",
         no_powershell: T.reason === "no-powershell",
@@ -401,7 +401,7 @@ async function vit(t, e) {
         I = A(T.err);
       }
       if (
-        (i("tengu_bg_daemon_spawn_reinstall_wait", {
+        (logEvent("tengu_bg_daemon_spawn_reinstall_wait", {
           waited_ms: r.waitedMs,
           recovered: r.recovered,
           respawn_ok: r.recovered && T.err === null,
@@ -433,29 +433,29 @@ async function vit(t, e) {
     let q = { gaveUpOnNpmInstallInProgress: ne, reinstallWaitedMs: Y };
     if (I !== "ENOENT" && I !== "EACCES") return { ...T, stderrPath: v, ...q };
     let G = new Set([m]),
-      ae = rd({ pinToCurrentBinary: !0 });
+      ae = resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 });
     if (!G.has(ae.target)) {
       (G.add(ae.target),
-        i("tengu_bg_daemon_spawn_execpath_fallback", {
+        logEvent("tengu_bg_daemon_spawn_execpath_fallback", {
           errno_enoent: I === "ENOENT",
           errno_eacces: I === "EACCES",
         }));
       let r = await Pe(await Re(k, [ae.cmd, ...ae.prefixArgs, ...t]), w, N?.fd);
       if (A(r.err) !== "ENOENT") return { ...r, stderrPath: v, ...q };
     }
-    let ue = Upe();
+    let ue = getInstalledClaudePath();
     if (!G.has(ue)) {
       (G.add(ue),
-        i("tengu_bg_daemon_spawn_launcher_fallback", {
+        logEvent("tengu_bg_daemon_spawn_launcher_fallback", {
           errno_enoent: I === "ENOENT",
           errno_eacces: I === "EACCES",
         }));
       let r = await Pe(await Re(k, [ue, ...t]), w, N?.fd);
       if (A(r.err) !== "ENOENT") return { ...r, stderrPath: v, ...q };
     }
-    let p = await FNe();
+    let p = await findInstalledVersionBinary();
     if (
-      (i("tengu_bg_daemon_spawn_versions_fallback", { found: p !== null }),
+      (logEvent("tengu_bg_daemon_spawn_versions_fallback", { found: p !== null }),
       p !== null && !G.has(p))
     )
       return {
@@ -470,10 +470,10 @@ async function vit(t, e) {
 }
 async function Dr(t, e, o, c) {
   let s = async (E) => {
-      let v = pD(E);
+      let v = applyProcessWrapper(E);
       return Pe(await Re(o, [v.cmd, ...v.prefixArgs, ...t]), e, c?.fd);
     },
-    d = Mre();
+    d = resolveClaudeInvocation();
   if (await _e(d.cmd, { rejectNpmStub: !0 })) return s(d);
   let m = !1,
     _;
@@ -481,7 +481,7 @@ async function Dr(t, e, o, c) {
     let E = await Je(d.cmd);
     if (
       ((_ = E.waitedMs),
-      i("tengu_bg_daemon_spawn_reinstall_wait", {
+      logEvent("tengu_bg_daemon_spawn_reinstall_wait", {
         waited_ms: E.waitedMs,
         recovered: E.recovered,
         respawn_ok: E.recovered,
@@ -498,19 +498,19 @@ async function Dr(t, e, o, c) {
       };
     m = E.installInProgressAtEnd;
   }
-  let w = Mre({ pinToCurrentBinary: !0 });
+  let w = resolveClaudeInvocation({ pinToCurrentBinary: !0 });
   if (w.cmd !== d.cmd && (await _e(w.cmd)))
     return (
-      i("tengu_bg_daemon_spawn_execpath_fallback", {
+      logEvent("tengu_bg_daemon_spawn_execpath_fallback", {
         errno_enoent: !1,
         errno_eacces: !1,
         probe: !0,
       }),
       { ...(await s(w)), reinstallWaitedMs: _ }
     );
-  let k = await FNe();
+  let k = await findInstalledVersionBinary();
   if (
-    (i("tengu_bg_daemon_spawn_versions_fallback", {
+    (logEvent("tengu_bg_daemon_spawn_versions_fallback", {
       found: k !== null,
       probe: !0,
     }),
@@ -571,7 +571,7 @@ async function Je(t) {
   let e = Date.now(),
     o = e + xr;
   while (Date.now() < o)
-    if ((await Z(Pr), await _e(t, { rejectNpmStub: !0 })))
+    if ((await sleep(Pr), await _e(t, { rejectNpmStub: !0 })))
       return {
         recovered: !0,
         waitedMs: Date.now() - e,
@@ -588,7 +588,7 @@ async function Je(t) {
     };
   let s = e + Ye;
   while (Date.now() < s) {
-    if ((await Z(kr), await _e(t, { rejectNpmStub: !0 })))
+    if ((await sleep(kr), await _e(t, { rejectNpmStub: !0 })))
       return {
         recovered: !0,
         waitedMs: Date.now() - e,
@@ -672,7 +672,7 @@ async function Ir() {
     (s.once("error", () => d(!1)), s.once("exit", (_) => d(_ === 0)));
   });
   return (
-    i("tengu_bg_daemon_macos_aqua_wrap", { has_gui: e }),
+    logEvent("tengu_bg_daemon_macos_aqua_wrap", { has_gui: e }),
     e ? ["/bin/launchctl", "asuser", String(t)] : []
   );
 }
@@ -789,7 +789,7 @@ function Br(t) {
   }
   return e;
 }
-var Ue = pe(pg(), 1);
+var Ue = toESM(pg(), 1);
 import {
   lstat,
   readFile as Tn,
@@ -1238,7 +1238,7 @@ function fn(t, e) {
             listDepth: 0,
             orderedListNumber: null,
             parent: null,
-            highlight: ZR(),
+            highlight: getSyntaxHighlightAdapter(),
             linkCap: !1,
           }),
         )
@@ -1313,7 +1313,7 @@ function pn(t, e, o, c) {
             } catch {
               X = K;
             }
-          let re = ut("text", m)(Ar);
+          let re = getThemeColor("text", m)(Ar);
           for (let [le, de] of _t(X, G).entries()) {
             let ce = q === 0 || de === "" ? "" : le === 0 ? `${re} ` : "  ";
             Y.push({ text: ce + de, dim: !1 });
@@ -1321,9 +1321,9 @@ function pn(t, e, o, c) {
           break;
         }
         case "user": {
-          let X = ut("subtle", m)(`${Kt} `),
-            re = ut("text", m),
-            le = ut("userMessageBackground", m, "background");
+          let X = getThemeColor("subtle", m)(`${Kt} `),
+            re = getThemeColor("text", m),
+            le = getThemeColor("userMessageBackground", m, "background");
           for (let [de, ce] of _t(K, G).entries()) {
             let se = q === 0 ? "" : de === 0 ? X : "  ";
             Y.push({ text: le(se + re(ce)), dim: !1 });
@@ -1404,7 +1404,7 @@ function vn(t, e, o, c, s, d) {
   (t.kill("SIGTERM"),
     (async () => {
       let w = Date.now() + Sn;
-      while (Date.now() < w && !t.record.outcome) await Z(100);
+      while (Date.now() < w && !t.record.outcome) await sleep(100);
       if (!s.has(m.short)) return;
       let k = await readJobState(getJobDir(m.short), d).catch(() => null),
         E = k?.resumeSessionId ?? m.sessionId,
@@ -1471,10 +1471,10 @@ async function K$n(
         if (T.has(p)) return;
         T.set(p, r);
         let x = An(r?.label);
-        (i("tengu_daemon_lease", { op: S("open"), label: x }),
+        (logEvent("tengu_daemon_lease", { op: S("open"), label: x }),
           p.once("close", () => {
             (T.delete(p),
-              i("tengu_daemon_lease", { op: S("close"), label: x }),
+              logEvent("tengu_daemon_lease", { op: S("close"), label: x }),
               V.emit());
           }),
           V.emit());
@@ -1502,7 +1502,7 @@ async function K$n(
         p.once("close", () => E.delete(p)));
       let r = HJn(p);
       if (r) {
-        (i("tengu_daemon_peer_uid_reject", {}),
+        (logEvent("tengu_daemon_peer_uid_reject", {}),
           p.once("data", () => C(p, { ok: !1, code: "EPEERUID", error: r })));
         return;
       }
@@ -1553,7 +1553,7 @@ async function K$n(
       break;
     } catch (p) {
       if (A(p) !== "EADDRINUSE" || Date.now() >= ue) throw p;
-      (G.removeAllListeners("listening"), await Z(100));
+      (G.removeAllListeners("listening"), await sleep(100));
     }
   return {
     close: (p) =>
@@ -1605,7 +1605,7 @@ function De(t) {
   return !t.record.outcome && !t.isRetiring && !t.isKilling;
 }
 function Zt(t, e) {
-  return t !== void 0 && e === void 0 ? kt(t, 25) : Z(25);
+  return t !== void 0 && e === void 0 ? withDeadline(t, 25) : sleep(25);
 }
 async function Qt(t, e, o, c, s, d, m, _) {
   let w = Date.now() + Math.min(m, 30000),
@@ -1693,7 +1693,7 @@ class tr {
 }
 function er(t, e) {
   if (!t.markFired(e)) return;
-  i("tengu_dead_probe_bg_legacy_op", { op: fromEnum(e) });
+  logEvent("tengu_dead_probe_bg_legacy_op", { op: fromEnum(e) });
 }
 async function Pn(t, e, o, c) {
   let {
@@ -1780,7 +1780,7 @@ async function Pn(t, e, o, c) {
     return C(e, { ok: !0, op: "shutdown", reaped: x });
   }
   if (!w() && G === "attach") {
-    if ((await Promise.race([k, Z(xn, void 0, { unref: !0 })]), e.destroyed))
+    if ((await Promise.race([k, sleep(xn, void 0, { unref: !0 })]), e.destroyed))
       return;
   }
   if (!w())
@@ -1792,7 +1792,7 @@ async function Pn(t, e, o, c) {
   let ae = q.proto;
   if (typeof ae !== "number" || !Number.isInteger(ae) || ae < BG_PROTO_MIN || ae > BG_PROTO)
     return (
-      i("tengu_bg_proto_mismatch", {
+      logEvent("tengu_bg_proto_mismatch", {
         client_proto: typeof ae === "number" ? ae : -1,
         server_proto: BG_PROTO,
       }),
@@ -1861,8 +1861,8 @@ async function Pn(t, e, o, c) {
             "dispatch rejected: this client didn't present the daemon control key",
           code: "EAUTH",
         });
-      if ((await Z(0), e.readableEnded || e.destroyed)) {
-        i("tengu_bg_dispatch_stale_drop", {});
+      if ((await sleep(0), e.readableEnded || e.destroyed)) {
+        logEvent("tengu_bg_dispatch_stale_drop", {});
         return;
       }
       return Qt(s, V, e, "dispatch", p.d.short, p.d.nonce, p.timeoutMs, d(p.d));
@@ -2010,7 +2010,7 @@ async function Pn(t, e, o, c) {
             code: "ERESPAWNING",
           });
         if (!r.isKilling)
-          (i("tengu_bg_attach_legacy_autorespawn", {}),
+          (logEvent("tengu_bg_attach_legacy_autorespawn", {}),
             r.kill("SIGTERM"),
             d({
               ...D,
@@ -2123,9 +2123,9 @@ async function Pn(t, e, o, c) {
             `
 `,
         ),
-        i("tengu_bg_attach", {
+        logEvent("tengu_bg_attach", {
           tempo: fromEnum(r.record.tempo),
-          state: fI(r.record.state),
+          state: fromJobState(r.record.state),
           via: fromEnum(r.via),
           attachers: r.attachers.size,
           stale: Boolean(
@@ -2217,13 +2217,13 @@ async function Pn(t, e, o, c) {
                 (clearInterval(se), (se = void 0), ce());
                 let Ne = r.dispatch.attachStallRespawns ?? 0,
                   je = {
-                    state: fI(r.record.state),
+                    state: fromJobState(r.record.state),
                     via: fromEnum(r.via),
                     attempt: Ne,
                   };
                 if (Ne >= 2) {
                   if (
-                    (i("tengu_bg_attach_stall_gave_up", je),
+                    (logEvent("tengu_bg_attach_stall_gave_up", je),
                     e.write(
                       U("Session keeps stalling at startup.") +
                         daemonDetachApc(
@@ -2240,7 +2240,7 @@ async function Pn(t, e, o, c) {
                   return;
                 }
                 if (
-                  (i("tengu_bg_attach_stall_respawn", je),
+                  (logEvent("tengu_bg_attach_stall_respawn", je),
                   e.write(
                     U("Session not responding \u2014 restarting it\u2026"),
                   ),
@@ -2300,7 +2300,7 @@ async function Pn(t, e, o, c) {
             if (!e.destroyed) e.write(D);
           },
           kick: () => {
-            if ((i("tengu_bg_attach_kick", {}), se))
+            if ((logEvent("tengu_bg_attach_kick", {}), se))
               (clearInterval(se), (se = void 0));
             if (
               (clearTimeout(nt),
@@ -2522,7 +2522,7 @@ async function Dn(t, e) {
             DD_SOURCEMAP_GROUP: "darwin",
           }.VERSION;
         if (Date.now() - o > 200 || k)
-          i("tengu_bg_skew_nudge", {
+          logEvent("tengu_bg_skew_nudge", {
             converged: !0,
             duration_ms: Date.now() - o,
             daemon_version: Ms(_.version),
@@ -2555,7 +2555,7 @@ async function Dn(t, e) {
     return "up";
   }
   return (
-    i("tengu_bg_skew_nudge", {
+    logEvent("tengu_bg_skew_nudge", {
       converged: !1,
       restarting: d === "restarting",
       etimeout: d === "etimeout",
@@ -2593,7 +2593,7 @@ async function or(t, e, o) {
     w = _ ? await RPt() : { execPathStale: !1, launcherPrefixDead: !1 },
     k = _ && (w.execPathStale || w.launcherPrefixDead);
   if (k)
-    (i("tengu_bg_daemon_service_stale_exec", {
+    (logEvent("tengu_bg_daemon_service_stale_exec", {
       launcher_dead: w.launcherPrefixDead,
     }),
       n(
@@ -2614,7 +2614,7 @@ async function or(t, e, o) {
     let J = await vPt(),
       he = await YHe(5000);
     if (
-      (i("tengu_bg_daemon_install", {
+      (logEvent("tengu_bg_daemon_install", {
         outcome_ok: he,
         via_service: !0,
         fresh_install: !1,
@@ -2627,7 +2627,7 @@ async function or(t, e, o) {
       he)
     )
       return (et(o), { ok: !0 });
-    (i("tengu_bg_daemon_service_poll_fallthrough", { sr_ok: J.ok }),
+    (logEvent("tengu_bg_daemon_service_poll_fallthrough", { sr_ok: J.ok }),
       n(
         `daemon service ${H_e} 5s${J.ok ? "" : ` (${J.error})`} \u2014 falling back to transient spawn. Run 'claude daemon install' to repair.`,
         { level: "warn" },
@@ -2641,7 +2641,7 @@ async function or(t, e, o) {
     !ee().daemonInstallPromptDismissed
   )
     return (
-      i("tengu_bg_daemon_cold_start_ask", {}),
+      logEvent("tengu_bg_daemon_cold_start_ask", {}),
       {
         ok: !1,
         askInstall: !0,
@@ -2687,7 +2687,7 @@ async function or(t, e, o) {
   if (Y) {
     if (p) Ze(dirname(p), { recursive: !0, force: !0 }).catch(() => {});
     return (
-      i("tengu_bg_daemon_spawn_failed", {
+      logEvent("tengu_bg_daemon_spawn_failed", {
         errno_enoent: A(Y) === "ENOENT",
         errno_eacces: A(Y) === "EACCES",
         errno: Jr(Y) ?? S("unknown"),
@@ -2726,7 +2726,7 @@ async function or(t, e, o) {
     let U = await Je(tt());
     if (
       ((O += U.waitedMs),
-      i("tengu_bg_daemon_spawn_reinstall_wait", {
+      logEvent("tengu_bg_daemon_spawn_reinstall_wait", {
         waited_ms: U.waitedMs,
         recovered: U.recovered,
         extended: U.extended,
@@ -2757,7 +2757,7 @@ async function or(t, e, o) {
           `daemon: respawn after the npm reinstall window failed: ${l(J.err)}`,
           { level: "warn" },
         ),
-        i("tengu_bg_daemon_spawn_failed", {
+        logEvent("tengu_bg_daemon_spawn_failed", {
           errno: Jr(J.err) ?? S("unknown"),
           launcher_configured: Il().length > 0 || Pc() !== null,
           after_reinstall_wait: !0,
@@ -2794,7 +2794,7 @@ ${U}`,
   }
   if (p) Ze(dirname(p), { recursive: !0, force: !0 }).catch(() => {});
   if (
-    (i("tengu_bg_daemon_install", {
+    (logEvent("tengu_bg_daemon_install", {
       outcome_ok: x,
       via_service: !1,
       fresh_install: !1,
@@ -2846,7 +2846,7 @@ ${U}`,
     Oe = Il()[0];
   if (Oe)
     return (
-      i("tengu_bg_daemon_spawn_failed", {
+      logEvent("tengu_bg_daemon_spawn_failed", {
         launcher_configured: !0,
         failed_stage: S("unknown"),
       }),
@@ -2882,7 +2882,7 @@ function et(t) {
   logFeatureOk("daemon_ensure_running");
 }
 function tt() {
-  return rd().target;
+  return resolveWrappedClaudeInvocation().target;
 }
 function In(t) {
   if (t.daemonOrigin !== "transient") return !1;
@@ -2933,9 +2933,9 @@ async function On(t, e, o, c, s) {
     return !1;
   let w = await realpath(tt()).catch(() => null);
   if (!w) return !1;
-  let k = Mre().cmd;
+  let k = resolveClaudeInvocation().cmd;
   if (!(await _e(k))) {
-    let I = Mre({ pinToCurrentBinary: !0 }).cmd;
+    let I = resolveClaudeInvocation({ pinToCurrentBinary: !0 }).cmd;
     if (I === k || !(await _e(I))) return !1;
   }
   let E = await Rh(1, s).catch(() => null);
@@ -3003,7 +3003,7 @@ async function On(t, e, o, c, s) {
         : `bg: ${Lc()} pid ${E.pid} predates CLAUDE_CODE_PROCESS_WRAPPER and spawns sessions unwrapped \u2014 retired it so the replacement runs through the configured launcher`,
       { level: "warn" },
     ),
-    i("tengu_bg_daemon_binary_takeover", {
+    logEvent("tengu_bg_daemon_binary_takeover", {
       daemon_age_ms: Date.now() - E.startedAt,
       via_prefix: T,
       via_version: N,
@@ -3023,7 +3023,7 @@ function Nn(t, e) {
           `bg: a raw ${Lc()} is running again after this session's launcher-driven restart. Two causes look identical from here: a claude session started BEFORE CLAUDE_CODE_PROCESS_WRAPPER was deployed cold-started it (restart those sessions), or the launcher does not pass that variable through in the environment it hands to \`exec\` (launcher contract #3). Sessions dispatched to it run unwrapped either way; \`claude daemon status\` shows the launcher it records.`,
           { level: "warn" },
         ),
-        i("tengu_bg_launcher_replacement_raw", {}));
+        logEvent("tengu_bg_launcher_replacement_raw", {}));
     return !1;
   }
   if (e) return !0;
@@ -3035,7 +3035,7 @@ async function nr(t) {
   if (!e) return null;
   if (e.bgDisabled)
     return (
-      i("tengu_bg_daemon_bg_disabled_skip", {
+      logEvent("tengu_bg_daemon_bg_disabled_skip", {
         origin_service: e.origin === "service",
       }),
       {
@@ -3070,7 +3070,7 @@ async function nr(t) {
     };
   if (o.ok || o.code === "ETIMEOUT")
     return (
-      i("tengu_bg_daemon_zombie_false_positive", {
+      logEvent("tengu_bg_daemon_zombie_false_positive", {
         ...c,
         recheck_etimeout: !o.ok,
       }),
@@ -3108,7 +3108,7 @@ async function nr(t) {
       causeCode: "zombie",
     };
   return (
-    i("tengu_bg_daemon_zombie_restart", { pid: e.pid, ...c, sock_exists: s }),
+    logEvent("tengu_bg_daemon_zombie_restart", { pid: e.pid, ...c, sock_exists: s }),
     null
   );
 }

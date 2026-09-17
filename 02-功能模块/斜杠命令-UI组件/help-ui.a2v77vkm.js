@@ -11,24 +11,24 @@
 // [preload stripped] 原本在此预载 251 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Zr } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js";
-import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
+import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
+import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { Sk, formatDescriptionWithSource } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { pHe } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tfspgges.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
+import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function xo(Wo, Xo) {
   return Wo.name.localeCompare(Xo.name);
@@ -87,7 +87,7 @@ function f(Io) {
       paddingY: 1,
       children:
         g.length === 0 && W
-          ? e(Rn, { children: W })
+          ? e(EmptyStateMessage, { children: W })
           : r(N, {
               children: [
                 e(t, { children: j }),
@@ -122,12 +122,12 @@ function f(Io) {
 var lo = 44;
 function D() {
   let X = _(8),
-    { rows: Qo } = Se(),
+    { rows: Qo } = useTerminalSize(),
     v = Qo < lo;
   const io = v ? 0 : 1,
     ro = v ? 0 : 1;
   let bo;
-  if (X[0] === p)
+  if (X[0] === MEMO_CACHE_SENTINEL)
     ((bo = e(o, {
       flexShrink: 0,
       children: e(t, {
@@ -155,7 +155,7 @@ function D() {
       (X[2] = q));
   else q = X[2];
   let So;
-  if (X[3] === p)
+  if (X[3] === MEMO_CACHE_SENTINEL)
     ((So = r(o, {
       flexDirection: "column",
       children: [
@@ -192,7 +192,7 @@ var ho = 44;
 function Q(he) {
   let n = _(41),
     { onClose: co, commands: x } = he,
-    z = Se(),
+    z = useTerminalSize(),
     { rows: Ce, columns: c } = ks(z),
     d = Ce,
     To;
@@ -208,16 +208,16 @@ function Q(he) {
   else Ho = n[3];
   let l = Ho,
     Ro;
-  if (n[4] === p) ((Ro = { context: "Help" }), (n[4] = Ro));
+  if (n[4] === MEMO_CACHE_SENTINEL) ((Ro = { context: "Help" }), (n[4] = Ro));
   else Ro = n[4];
-  Ne("help:dismiss", l, Ro);
-  let b = is(l),
-    uo = Zr("help:dismiss", "Help", "esc"),
+  useKeybinding("help:dismiss", l, Ro);
+  let b = useGlobalExitKeybinding(l),
+    uo = useKeybindingDisplayText("help:dismiss", "Help", "esc"),
     ko = Mo,
     Oo;
   if (n[5] !== x) {
     let M;
-    if (n[7] === p) ((M = (wo) => ko(wo) && !wo.isHidden), (n[7] = M));
+    if (n[7] === MEMO_CACHE_SENTINEL) ((M = (wo) => ko(wo) && !wo.isHidden), (n[7] = M));
     else M = n[7];
     Oo = x.filter(M);
     ((n[5] = x), (n[6] = Oo));
@@ -226,14 +226,14 @@ function Q(he) {
     M;
   if (n[8] !== x) {
     let P;
-    if (n[10] === p) ((P = (vo) => !ko(vo) && !vo.isHidden), (n[10] = P));
+    if (n[10] === MEMO_CACHE_SENTINEL) ((P = (vo) => !ko(vo) && !vo.isHidden), (n[10] = P));
     else P = n[10];
     M = x.filter(P);
     ((n[8] = x), (n[9] = M));
   } else M = n[9];
   let E = M,
     P;
-  if (n[11] === p)
+  if (n[11] === MEMO_CACHE_SENTINEL)
     ((P = e(
       ss,
       { id: "general", title: "General", children: e(D, {}) },
@@ -312,7 +312,7 @@ function Q(he) {
       (n[29] = h));
   else h = n[29];
   let L;
-  if (n[30] === p)
+  if (n[30] === MEMO_CACHE_SENTINEL)
     ((L = e(o, {
       marginTop: 1,
       flexShrink: 0,

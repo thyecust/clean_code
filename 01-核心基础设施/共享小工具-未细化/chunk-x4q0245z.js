@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { i } from "./chunk-an83zrbx.js";
+import { logEvent } from "./analytics-event-queue.js";
 import { fromEnum } from "./analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -89,7 +89,7 @@ function extractErrorDetail(e) {
 }
 function logBridgeSkip(e, o, r, t) {
   if (o) n(o);
-  i("tengu_bridge_repl_skipped", {
+  logEvent("tengu_bridge_repl_skipped", {
     reason: fromEnum(e),
     ...(r !== void 0 && { v2: r }),
     ...t,

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { s, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 class YA {
@@ -28,7 +28,7 @@ class YA {
   grantsFetch = null;
 }
 import { randomBytes } from "crypto";
-var j = m(() =>
+var j = createLazyValue(() =>
     c({
       projectId: s(),
       writes: v(s()),

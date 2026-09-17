@@ -30,7 +30,7 @@ import "./chunk-jfk5mpe1.js";
 import "./chunk-gnmy62vg.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
 import "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";

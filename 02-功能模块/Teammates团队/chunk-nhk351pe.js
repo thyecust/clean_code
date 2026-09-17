@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { K, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -23,7 +23,7 @@ import { Nu, qI, dK, uN } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { Wee, Rsn, DPe } from "../权限系统/chunk-4tar9p3n.js";
 import { isSaneEpochMs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { s, se, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var R = 43200000,
   RPe = 32,
   V = 3,
@@ -31,7 +31,7 @@ var R = 43200000,
   z = 30000,
   X = 750,
   D = 100,
-  hsn = m(() =>
+  hsn = createLazyValue(() =>
     c({
       action: k("notify_when_idle"),
       from: s(),
@@ -39,7 +39,7 @@ var R = 43200000,
       from_mode: se().optional(),
     }),
   ),
-  _sn = m(() =>
+  _sn = createLazyValue(() =>
     c({
       action: k("peer_idle_notice"),
       orig_msg_id: s(),
@@ -128,20 +128,20 @@ function ysn(e, i, t, r, o, a, _, v) {
     w = () => p.length >= RPe;
   if (I !== -1) p.splice(I, 1);
   else if (r !== void 0) {
-    if (G(p, (S) => S.verifiedPeerPid === r) >= Y) {
+    if (countMatching(p, (S) => S.verifiedPeerPid === r) >= Y) {
       let S = p.findIndex((x) => x.verifiedPeerPid === r);
       if (S === -1) return N();
       M(p, S);
     } else if (w()) return N();
   } else if (!a) {
     let S = (x) => x.verifiedPeerPid === void 0 && !x.authenticated;
-    if (G(p, S) >= j) {
+    if (countMatching(p, S) >= j) {
       let x = p.findIndex(S);
       if (x === -1) return N();
       M(p, x);
     } else if (w()) return N();
   } else if (
-    G(
+    countMatching(
       p,
       (x) =>
         x.verifiedPeerPid === void 0 && x.authenticated && x.targetKey === b,

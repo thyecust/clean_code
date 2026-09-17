@@ -42,7 +42,7 @@ import {
 import { getUserAgent, isActingAsBgJob, sameOwnerAccount, H, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { pCn, gAt, dse } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
   ha,
   Hy,
@@ -145,11 +145,11 @@ import {
 } from "./chunk-p1dkvpxj.js";
 import { ian, r9n, H9, hpt, Ibe, a9n } from "./chunk-5gz5xvw9.js";
 import { uan } from "../../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js";
-import { Xa } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { s, T, O, se, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 class kn {
-  working = Xa({ working: !1 });
-  userPrompt = Xa({ pending: !1 });
+  working = createStore({ working: !1 });
+  userPrompt = createStore({ pending: !1 });
 }
 var je = new Gt(() => new kn());
 function xdt(e, t) {
@@ -297,7 +297,7 @@ function We(e) {
 var zr = 60000,
   Fn = "boot_request_error",
   xt = "TOKEN_REFRESH_DECLINED_REASON_LINEAGE_EXPIRED",
-  Ze = m(() =>
+  Ze = createLazyValue(() =>
     c({
       kind: s(),
       slug: s().optional(),
@@ -305,8 +305,8 @@ var zr = 60000,
       payload: se().optional(),
     }),
   ),
-  Ct = m(() => c({ cap: s(), exp: T() })),
-  Wt = m(() => c({ reason: s() }));
+  Ct = createLazyValue(() => c({ cap: s(), exp: T() })),
+  Wt = createLazyValue(() => c({ reason: s() }));
 function Lt(e, t) {
   return b({ kind: "activity", slug: e, payload: { busyS: t } });
 }
@@ -583,7 +583,7 @@ async function Bn(e, t, r, i) {
     );
   }
 }
-var Mt = m(() => c({ tag: s(), ver: s(), replay: O().optional() })),
+var Mt = createLazyValue(() => c({ tag: s(), ver: s(), replay: O().optional() })),
   Pt = "INVALIDATE_TAG_LIVE",
   Ft = "INVALIDATE_TAG_SHARED",
   qn = "INVALIDATE_TAG_HEAD";

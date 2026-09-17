@@ -9,18 +9,18 @@
 // Version: 2.1.263
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { o, t, tn, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ui, $o, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { Pr, an, Qht } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
+import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
@@ -30,16 +30,16 @@ function x(_, { selfOpened: m, onCancelled: l }) {
     n = C(!1),
     [c, a] = d(!1),
     s = C(!1),
-    R = Un(m ? mo : null),
+    R = Un(m ? REFUSE_INPUT_WINDOW_MS : null),
     w = !m || R,
     k = tn() ? !0 : !1,
-    H = ui(mo),
+    H = ui(REFUSE_INPUT_WINDOW_MS),
     { refusedWithin: B, noteRefused: A } = $o();
   function N() {
-    if (m && (H() || B(mo))) return (A(), !0);
+    if (m && (H() || B(REFUSE_INPUT_WINDOW_MS))) return (A(), !0);
     return !1;
   }
-  let v = is(
+  let v = useGlobalExitKeybinding(
     () => {
       if (s.current) return;
       s.current = !0;
@@ -75,17 +75,17 @@ function RemoteHomeSettingsDialog({ configHome: _, storageV5: m, origin: l, onDo
       onCancelled: (a) =>
         logFeatureSad("ccr_home_seed_mode_prompt", a ? "cancelled_saving" : "cancelled"),
     });
-  (Ne("confirm:no", () => c("not_now"), {
+  (useKeybinding("confirm:no", () => c("not_now"), {
     context: "Confirmation",
     isActive: p && !n.decided,
   }),
     E(() => {
-      i("tengu_home_settings_mode_prompt_shown", { origin: fromEnum(l) });
+      logEvent("tengu_home_settings_mode_prompt_shown", { origin: fromEnum(l) });
     }, [l]));
   function c(a) {
     if (!n.take()) return;
     if (
-      (i("tengu_home_settings_mode_prompt", { choice: fromEnum(a), origin: fromEnum(l) }),
+      (logEvent("tengu_home_settings_mode_prompt", { choice: fromEnum(a), origin: fromEnum(l) }),
       a === "not_now")
     ) {
       (logFeatureSad("ccr_home_seed_mode_prompt", "dismissed"), n.handBack(a));
@@ -122,10 +122,10 @@ function RemoteHomeSettingsDialog({ configHome: _, storageV5: m, origin: l, onDo
     isCancelActive: !p,
     inputGuide: n.exit.pending
       ? r(t, { children: ["Press ", n.exit.keyName, " again to exit"] })
-      : r(ue, {
+      : r(DotSeparatedList, {
           children: [
-            e(D, { chord: "enter", action: "confirm" }),
-            e(je, {
+            e(KeybindingHint, { chord: "enter", action: "confirm" }),
+            e(ActionKeybindingHint, {
               action: "confirm:no",
               context: "Confirmation",
               fallback: "Esc",

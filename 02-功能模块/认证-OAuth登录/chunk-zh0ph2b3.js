@@ -17,7 +17,7 @@ import { Gn, yE } from "./chunk-7jz937t3.js";
 import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { getSecureStorage } from "./chunk-y7b7kf5n.js";
 import { hE, eGe, b7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-nw3qvjhe.js";
-import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { randomBytes } from "crypto";
 import { createServer } from "http";
@@ -281,7 +281,7 @@ async function Prn(n) {
       I = await X(a, f, n.abortSignal, () => {
         if ((n.onAuthorizationUrl(g.toString()), !n.skipBrowserOpen))
           (logMCPDebug("xaa", "Opening browser to IdP authorization endpoint"),
-            Gr(g.toString()));
+            tryOpenUrlInBrowser(g.toString()));
       }),
       d = await V2n(t, {
         metadata: i,

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { he, y_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, my, jf } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { bq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -153,8 +153,8 @@ import {
   bC,
 } from "./chunk-33bdfgmx.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 async function bUn(e, t, s) {
   if (bq()) return "ineligible";
   if (!t?.source || !Hc(t.source)) return "ineligible";
@@ -207,7 +207,7 @@ async function d0e(e, t, s) {
     );
   }
 }
-var _e = pe(pg(), 1);
+var _e = toESM(pg(), 1);
 import { join as Ae, resolve, sep as He } from "path";
 function We(e, t) {
   let s = { install: "installed", update: "updated", uninstall: "uninstalled" }[
@@ -454,7 +454,7 @@ This install runs that command; confirm it by running \`claude plugin install\` 
         : Ye(
             D,
             N.source,
-            (M() && o !== void 0 ? await Zv(o) : hT()).plugins[D],
+            (isHoverRestEnabled() && o !== void 0 ? await Zv(o) : hT()).plugins[D],
           ),
     storageV5: o,
   });
@@ -937,7 +937,7 @@ async function $e(e, t, s, r, i) {
     if (le.length > 0) {
       let { name: E } = Bn(P),
         H = le.map((v) => `${v.dep} (${v.scope} scope)`).join(", "),
-        ne = Y(le.map((v) => v.scope)),
+        ne = dedupe(le.map((v) => v.scope)),
         O =
           ne.length === 1
             ? `, or use --scope ${ne[0]} to write where the override lives`
@@ -989,7 +989,7 @@ async function AUn(e) {
   let t = getPluginEditableScopes();
   await qwe();
   let s = await Promise.all(y_e().map((_) => Fgn(_, e))),
-    r = Y(s.filter((_) => _ !== void 0).map((_) => `${_}@${Qp}`)),
+    r = dedupe(s.filter((_) => _ !== void 0).map((_) => `${_}@${Qp}`)),
     i = xmt(),
     p = ((_) =>
       new Set(_.flatMap(({ record: N }) => Object.keys(N ?? {}).map(xi))))(i),
@@ -1103,7 +1103,7 @@ async function qe(
     };
   let A = w,
     c = A ? `${S}@${A}` : e,
-    _ = M() && a !== void 0 ? await Zv(a) : hT(),
+    _ = isHoverRestEnabled() && a !== void 0 ? await Zv(a) : hT(),
     N = WI(Object.keys(_.plugins), c);
   if (N === void 0 && A === void 0) {
     let u = nSn(Object.keys(_.plugins), S).filter(
@@ -1609,7 +1609,7 @@ async function qe(
     )
       Koe();
     if (se && se !== u) {
-      let re = M() && a !== void 0 ? await Zv(a) : hT();
+      let re = isHoverRestEnabled() && a !== void 0 ? await Zv(a) : hT();
       if (
         !Object.values(re.plugins).some((V) =>
           V.some((Ee) => Ee.installPath === se),

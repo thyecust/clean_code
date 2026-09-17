@@ -47,7 +47,7 @@ import {
 } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
 import { f2 } from "./chunk-sr4920wy.js";
 import { readTeamFileAsync } from "./chunk-6b13bhw1.js";
-import { cp } from "./chunk-enjekn9t.js";
+import { MAIN_CONVERSATION_NAME } from "./chunk-enjekn9t.js";
 import { basename } from "path";
 var k = "not reachable from this cloud session",
   A =
@@ -116,7 +116,7 @@ function j(e = !1) {
 function D(e) {
   if (!e) return null;
   return e.callerIsSubagent
-    ? `This process's main session is ${e.token} \u2014 the name OTHER sessions use to message it (it is not listed below; from inside this process, address the main conversation as "${cp}").`
+    ? `This process's main session is ${e.token} \u2014 the name OTHER sessions use to message it (it is not listed below; from inside this process, address the main conversation as "${MAIN_CONVERSATION_NAME}").`
     : `This session is ${e.token} \u2014 the name other sessions use to message it (it is not listed below; a message to it would be a message to yourself).`;
 }
 async function ssn(e, n) {
@@ -436,7 +436,7 @@ function isn(
     l || !n.self || (u && !n.self.nameIsUserChosen)
       ? null
       : n.self.callerIsSubagent
-        ? `This process's main session: ${n.self.token} (the name OTHER sessions use for it; from inside this process, address it as "${cp}")`
+        ? `This process's main session: ${n.self.token} (the name OTHER sessions use for it; from inside this process, address it as "${MAIN_CONVERSATION_NAME}")`
         : `This session: ${n.self.token} (the name other sessions use to message it)`;
   if (u && r.length > 0)
     r.push(

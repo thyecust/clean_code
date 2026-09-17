@@ -10,10 +10,10 @@
 
 // [preload stripped] 原本在此预载 14 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { ws } from "../../01-核心基础设施/共享小工具-未细化/chunk-0a6nmdka.js";
+import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { XUn } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 var p = 200,
   T = 1000,
@@ -127,7 +127,7 @@ class b {
           : ""),
       { level: "warn" },
     ),
-      i("tengu_event_loop_stall", {
+      logEvent("tengu_event_loop_stall", {
         stall_duration_ms: t.wallDriftMs,
         expected_interval_ms: this.intervalMs,
         actual_interval_ms: t.wallElapsedMs,
@@ -167,7 +167,7 @@ class b {
           });
         this.tickCount++;
         let l = h(),
-          r = ws().get(process.stdout)?.takeSlowestFrameWrite();
+          r = getInkInstanceRegistry().get(process.stdout)?.takeSlowestFrameWrite();
         if (e.isStall) {
           if (
             (this.totalStalls++,
@@ -195,7 +195,7 @@ class b {
               intervalMs: this.intervalMs,
             });
           if ((setImmediate(this.afterTick, e, c, m, u), e.likelySleep))
-            ws().get(process.stdout)?.reassertTerminalModes();
+            getInkInstanceRegistry().get(process.stdout)?.reassertTerminalModes();
         }
         if (!e.isStall) setImmediate(this.afterTick, e, null, null, null);
         ((this.lastTickMs = s),

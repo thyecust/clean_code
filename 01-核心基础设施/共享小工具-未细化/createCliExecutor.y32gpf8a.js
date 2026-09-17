@@ -10,5 +10,5 @@
 
 // [preload stripped] 原本在此预载 25 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { zcn, l_r } from "../../02-功能模块/图片-截图-ComputerUse/chunk-w5bhde2m.js";
-import "../../02-功能模块/图片-截图-ComputerUse/chunk-jeefwg1w.js";
+import "../../02-功能模块/图片-截图-ComputerUse/computer-use-input-native.js";
 export { zcn as createCliExecutor, l_r as unhideComputerUseApps };

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { bh, j, B, K, jc, lje, cje, ke, ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Q5, Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { R, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
@@ -17,7 +17,7 @@ import { We, b, t8, z, Is, Ru, n } from "../../01-核心基础设施/核心工�
 import { x, oe, Qu } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Js, fS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { kd, getBranch, isBranchOnOrigin } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -31,7 +31,7 @@ import { getParentSessionId, isModelDrivenSession } from "../Teammates团队/chu
 import { Xk } from "../权限系统/chunk-t3b7pg2x.js";
 import { so, getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
 import { Uh, Rtr, gEn, Ni, UK, readAutoAllowedForMutation } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
+import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { unwrapAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import {
@@ -122,22 +122,22 @@ import {
 import { mbt } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
 import { excludeCoordinatorCommsMcpTools } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
 import { registerWorkflowTask, updateWorkflowProgressBatch, completeWorkflowTask, failWorkflowTask, enqueueWorkflowNotification } from "./chunk-va9cgbfs.js";
-import { Vf } from "./chunk-cd542wve.js";
+import { parseWorkflowScript } from "./workflow-script.js";
 import { Udt, win } from "../../01-核心基础设施/共享小工具-未细化/chunk-gkztysec.js";
-import { Bdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-56wrzxpk.js";
-import { jdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wprkdaj.js";
-import { eH, C1t, K6n } from "./chunk-hdhsmge4.js";
+import { summarizeToolInput } from "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
+import { getFdRealPath } from "../../01-核心基础设施/共享小工具-未细化/fd-real-path.js";
+import { getWorkflowTranscriptDir, getCurrentProjectKey, writeWorkflowSnapshot } from "./workflow-snapshots.js";
 import { _be, rte, kqe } from "./chunk-pqyn1fh3.js";
 import { xs, Lh } from "../Teammates团队/chunk-mrfx53ye.js";
 import { fAe } from "../../00-第三方库/acorn/acorn.pk8w19yv.js";
-import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { mt } from "../工具Task-Agent调度/chunk-1px84m19.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { gy } from "../../01-核心基础设施/共享小工具-未细化/chunk-1adkzsnc.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { w } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var gin = w(function (qt, Un) {
+import { MAX_SERIALIZED_ARRAY_ELEMENTS } from "../../01-核心基础设施/共享小工具-未细化/max-serialized-array-elements.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var gin = commonJS(function (qt, Un) {
   (function (t, l) {
     typeof qt === "object" && typeof Un < "u"
       ? l(qt)
@@ -574,7 +574,7 @@ function min(t, l) {
 }
 function Nn(t, l) {
   let s = l.options.tools ?? [];
-  if (s.length > 0 && !s.some((m) => Kt(m, tt)) && !s.some((m) => Kt(m, Ni)))
+  if (s.length > 0 && !s.some((m) => matchesToolName(m, tt)) && !s.some((m) => matchesToolName(m, Ni)))
     return !1;
   return readAutoAllowedForMutation(WORKFLOW_TOOL_NAME, t, l, getToolPermissionContext(l));
 }
@@ -596,7 +596,7 @@ async function Ndt(t, l) {
   try {
     let C = await k.stat({ bigint: !0 });
     if (C.ino === 0n || C.nlink > 1n) return { error: Dt(t) };
-    let I = await jdt(k.fd),
+    let I = await getFdRealPath(k.fd),
       E = I ?? (await realpath(m));
     if (I === null) {
       let J = await $n(E, p | bo);
@@ -861,7 +861,7 @@ function pn(
             fe = typeof O === "string" && O.includes("exceeds the maximum");
           } catch {}
           return fe
-            ? `[${typeof k}: array exceeds the ${gy}-element logging cap]`
+            ? `[${typeof k}: array exceeds the ${MAX_SERIALIZED_ARRAY_ELEMENTS}-element logging cap]`
             : `[${typeof k}]`;
         }
         let I = l.toStr(k);
@@ -889,7 +889,7 @@ async function _in(t, l) {
         `workflow('${s}'): no workflow with that name. Available: ${k || "(none)"}`,
       );
     }
-    let p = Vf(m.script);
+    let p = parseWorkflowScript(m.script);
     if ("error" in p) throw Error(`workflow('${s}'): ${p.error}`);
     return { childName: m.name, scriptBody: p.scriptBody };
   }
@@ -908,7 +908,7 @@ async function _in(t, l) {
     let m = await t.loadScriptPath(s.scriptPath);
     if ("error" in m)
       throw Error(`workflow({scriptPath: '${s.scriptPath}'}): ${m.error}`);
-    let p = Vf(m.script);
+    let p = parseWorkflowScript(m.script);
     if ("error" in p)
       throw Error(`workflow({scriptPath: '${s.scriptPath}'}): ${p.error}`);
     return {
@@ -1198,7 +1198,7 @@ function Jn(t, l, s) {
 }
 class Cqe {}
 function No(t) {
-  let l = C1t();
+  let l = getCurrentProjectKey();
   if (l === void 0) return;
   let s = Ce.journal(l, K(), ["workflows", t]);
   return kd(s) === void 0 ? s : void 0;
@@ -1208,7 +1208,7 @@ class en {
   storageV5;
   dirReady = !1;
   constructor(t, l) {
-    this.path = $o(eH(t), "journal.jsonl");
+    this.path = $o(getWorkflowTranscriptDir(t), "journal.jsonl");
     let s = l === void 0 ? void 0 : No(t);
     this.storageV5 =
       l === void 0 || s === void 0 ? void 0 : { backend: l, key: s };
@@ -1349,7 +1349,7 @@ function Bo(t, l, s) {
     p = () => m.abort();
   return (
     s?.addEventListener("abort", p, { once: !0 }),
-    Promise.race([t, Z(l, m.signal)]).finally(() => {
+    Promise.race([t, sleep(l, m.signal)]).finally(() => {
       (m.abort(), s?.removeEventListener("abort", p));
     })
   );
@@ -1495,7 +1495,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
   function dt() {
     if (N < Xn) return;
     if (!_)
-      ((_ = !0), i("tengu_workflow_agent_cap_exceeded", { agentCount: N }));
+      ((_ = !0), logEvent("tengu_workflow_agent_cap_exceeded", { agentCount: N }));
     throw new Qn();
   }
   function Ye() {
@@ -1504,7 +1504,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
     if (A < C.total) return;
     if (!T)
       ((T = !0),
-        i("tengu_workflow_budget_cap_exceeded", {
+        logEvent("tengu_workflow_budget_cap_exceeded", {
           spent: A,
           budget: C.total,
           agentCount: N,
@@ -1682,7 +1682,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
               "agent() opts.disallowedTools malformed \u2014 spawn refused",
             );
           if (L !== void 0)
-            L.disallowedTools = q.length === 0 ? void 0 : Y(q).sort();
+            L.disallowedTools = q.length === 0 ? void 0 : dedupe(q).sort();
         }
         let _e = L?.bashCommandClamp;
         if (_e !== void 0) {
@@ -1700,7 +1700,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
                 ". Refusing the spawn rather than running it un-clamped.",
               "agent() bashCommandClamp malformed \u2014 spawn refused",
             );
-          let De = _e.length === 0 ? void 0 : Y(_e).sort();
+          let De = _e.length === 0 ? void 0 : dedupe(_e).sort();
           for (let ot of De ?? []) {
             let { toolName: at, ruleContent: Ze } = Fr(ot);
             if (at !== qe || Ze === void 0 || Ze === "" || Ze !== Ze.trim())
@@ -1718,7 +1718,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
           if (L !== void 0) L.bashCommandClamp = De;
         }
       } catch (q) {
-        throw (await Z(0), q);
+        throw (await sleep(0), q);
       }
       let je = ++N,
         ze = tot(A),
@@ -1762,7 +1762,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         if (!(!c && _e !== void 0 && _e.length > 0 && !E?.failed.has(ye)))
           c = !0;
         if (_e && _e.length > 0)
-          i("tengu_workflow_journal_started_hit_respawn", {
+          logEvent("tengu_workflow_journal_started_hit_respawn", {
             attempts: _e.length,
           });
       }
@@ -1915,7 +1915,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
     let he;
     if (be?.schema) {
       let v = eCe(be.schema);
-      if ("error" in v || v.unsatisfiable) await Z(0);
+      if ("error" in v || v.unsatisfiable) await sleep(0);
       if ("error" in v)
         throw new R(
           `agent({schema}) received an invalid JSON Schema: ${v.error}`,
@@ -1970,13 +1970,13 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
       q = (v) => EE(Ue, v, !1, !1, !1, mc(Se) + 1),
       _e = (v) => {
         let $e = filterToolsByDenyRules([Ek, Ak, ...mbt([Ak.name, Ek.name])], ft).filter(
-          (ie) => !v.some((Ee) => Kt(Ee, ie.name)),
+          (ie) => !v.some((Ee) => matchesToolName(Ee, ie.name)),
         );
         return $e.length > 0 ? [...v, ...$e] : v;
       },
       De = bt;
     if (Le !== void 0 && Le.length > 0) {
-      if (ky() && !q(De).resolvedTools.some((ie) => Kt(ie, qe))) De = _e(De);
+      if (ky() && !q(De).resolvedTools.some((ie) => matchesToolName(ie, qe))) De = _e(De);
       let v = P_t(Ue.mcpServers),
         $e = (ie) => {
           if (ie.length === 0) return;
@@ -1999,7 +1999,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         let { toolName: U } = Fr(ie);
         if (U !== U.trim() || /[\s()]/.test(U.trim()))
           throw (
-            await Z(0),
+            await sleep(0),
             new R(
               `agent() opts.disallowedTools entry '${ie}' parses to tool name '${U}', which can never match a tool \u2014 check ` +
                 "for a space before the rule parens or an unbalanced paren. Refusing the spawn rather than running it un-narrowed.",
@@ -2010,7 +2010,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
           let le = /^mcp__/i.test(U) ? Js(`mcp__${U.slice(5)}`) : null;
           if (/^mcp__/i.test(U) && le === null)
             throw (
-              await Z(0),
+              await sleep(0),
               new R(
                 `agent() opts.disallowedTools entry '${ie}' cannot match ` +
                   "any tool \u2014 its server segment is empty, so it names no " +
@@ -2025,7 +2025,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
           ) {
             let Je = $e(le.serverName.replace(/\*+/g, ""));
             throw (
-              await Z(0),
+              await sleep(0),
               new R(
                 `agent() opts.disallowedTools entry '${ie}' cannot match ` +
                   "any tool \u2014 server names take no wildcard. Use " +
@@ -2045,7 +2045,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
           ) {
             let Je = $e(le.serverName);
             throw (
-              await Z(0),
+              await sleep(0),
               new R(
                 `agent() opts.disallowedTools entry '${ie}' cannot match ` +
                   "any tool \u2014 tool names take no wildcard. " +
@@ -2060,7 +2060,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         }
         if (U.includes("*") && Js(U) === null && !/^mcp__/i.test(U))
           throw (
-            await Z(0),
+            await sleep(0),
             new R(
               `agent() opts.disallowedTools entry '${ie}' cannot match ` +
                 "any tool \u2014 '*' is not a deny wildcard outside mcp__ server " +
@@ -2101,7 +2101,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         }
         if (ae !== void 0)
           throw (
-            await Z(0),
+            await sleep(0),
             new R(
               `agent() opts.disallowedTools entry '${ie}'` +
                 (U !== ie ? ` (parsed tool name '${U}')` : "") +
@@ -2114,7 +2114,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
           if (Te.kind === "pool-server") continue;
           if (Te.kind === "slip")
             throw (
-              await Z(0),
+              await sleep(0),
               new R(
                 `agent() opts.disallowedTools entry '${ie}'` +
                   (U !== ie ? ` (parsed tool name '${U}')` : "") +
@@ -2138,7 +2138,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
     }
     if (he !== void 0 && Dde(Ue.disallowedTools).isToolDisallowed(he))
       throw (
-        await Z(0),
+        await sleep(0),
         new R(
           `agent() schema mode needs the ${ti} tool, ` +
             "but the spawn's merged disallowedTools deny it \u2014 refusing the " +
@@ -2150,12 +2150,12 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
     if (ye !== void 0 && ye.length > 0) {
       let v = getToolPermissionContext(D).toolAliases,
         $e = D.options.toolAliases,
-        ie = [qe, ia, Ut].find(
+        ie = [qe, MONITOR_TOOL_NAME, Ut].find(
           (Ee) => v?.[Ee] !== void 0 || $e?.[Ee] !== void 0,
         );
       if (ie !== void 0)
         throw (
-          await Z(0),
+          await sleep(0),
           new R(
             `agent() opts.bashCommandClamp cannot bind in this session: the host remaps ${ie} via toolAliases, so exec ` +
               "dispatch runs the alias target's permission path instead \u2014 " +
@@ -2167,10 +2167,10 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
     if (
       ye !== void 0 &&
       ye.length > 0 &&
-      !q(De).resolvedTools.some((v) => Kt(v, qe))
+      !q(De).resolvedTools.some((v) => matchesToolName(v, qe))
     )
       throw (
-        await Z(0),
+        await sleep(0),
         new R(
           `agent() opts.bashCommandClamp can bind nothing: the spawned agent's resolved tool pool has no ${qe} (removed by this spawn's disallowedTools, the agent definition's denies, or absent from the session pool). A clamp on a Bash-less agent ` +
             "means the commands it was meant to keep are unavailable \u2014 " +
@@ -2179,7 +2179,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         )
       );
     let ot = De,
-      at = he ? [...ot.filter((v) => !Kt(v, ti)), he] : ot,
+      at = he ? [...ot.filter((v) => !matchesToolName(v, ti)), he] : ot,
       Ze = cH(
         nX(Ue, D.options.mainLoopModel),
         D.options.mainLoopModel,
@@ -2411,7 +2411,7 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
                     (Ge++,
                     Ft.add(Fe.id),
                     (le = Fe.name),
-                    (Je = Bdt(Fe.input) || void 0),
+                    (Je = summarizeToolInput(Fe.input) || void 0),
                     Fe.name === ti)
                   ) {
                     if (
@@ -2642,7 +2642,7 @@ ${Xwe(Ht)}`;
                 "sleeping 45s before retry",
             },
           }),
-          await Z(45000, D.abortController?.signal, { throwOnAbort: !0 }),
+          await sleep(45000, D.abortController?.signal, { throwOnAbort: !0 }),
           (pt += v.tokens),
           (it += v.toolCalls),
           (Tt += v.durationMs),
@@ -2777,7 +2777,7 @@ ${v.text}`),
             },
           });
         if (v.webFetchSavedFiles) {
-          let Te = me(ae);
+          let Te = isRecord(ae);
           if (
             (s({
               type: "progress",
@@ -3009,7 +3009,7 @@ ${at}`;
   }
   let co = _t(async (A) => {
       if (D.abortController?.signal.aborted) return new Promise(() => {});
-      if ((await Z(0), !Array.isArray(A)))
+      if ((await sleep(0), !Array.isArray(A)))
         throw TypeError("parallel() expects an array of functions");
       let F = $Yt(o(A));
       if (F.length === 0) return ee([]);
@@ -3044,7 +3044,7 @@ ${at}`;
     }),
     fo = _t(async (A, ...F) => {
       if (D.abortController?.signal.aborted) return new Promise(() => {});
-      if ((await Z(0), !Array.isArray(A)))
+      if ((await sleep(0), !Array.isArray(A)))
         throw TypeError("pipeline() expects an array as the first argument");
       let re = $Yt(o(A)),
         Ae = $Yt(F);
@@ -3553,7 +3553,7 @@ function Rqe(t) {
                   failures: ne.failures,
                   durationMs: ne.durationMs,
                 }),
-        i("tengu_workflow_completed", {
+        logEvent("tengu_workflow_completed", {
           workflow_run_id: s,
           workflow_source: fromEnum(N.source),
           workflow_name: N.name,
@@ -3607,7 +3607,7 @@ function Rqe(t) {
             else xe.errorCount += 1;
         }
         for (let [Pe, xe] of ge)
-          i("tengu_workflow_phase_completed", {
+          logEvent("tengu_workflow_phase_completed", {
             workflow_run_id: s,
             workflow_source: fromEnum(N.source),
             workflow_name: N.name,
@@ -3622,7 +3622,7 @@ function Rqe(t) {
           });
       }
       if (
-        (K6n(
+        (writeWorkflowSnapshot(
           s,
           {
             taskId: l,
@@ -3766,7 +3766,7 @@ async function G6n(t) {
       "script content changed since it was approved; resume via the Workflow tool to re-approve",
       "adopted workflow scriptSha256 mismatch",
     );
-  let E = Vf(I);
+  let E = parseWorkflowScript(I);
   if ("error" in E)
     throw new R(
       `Invalid workflow script: ${E.error}`,
@@ -3799,7 +3799,7 @@ async function G6n(t) {
     toolUseContext: t.toolUseContext,
     canUseTool: t.canUseTool,
     toolUseId: void 0,
-    transcriptDir: eH(s),
+    transcriptDir: getWorkflowTranscriptDir(s),
     telemetry: {
       source: "adopt",
       name: S("custom"),

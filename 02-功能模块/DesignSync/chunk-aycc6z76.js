@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { DESIGN_OAUTH_SCOPES, getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -93,7 +93,7 @@ async function y(r) {
     } catch (i) {
       if (i.code === "ELOCKED") {
         if (c < w) {
-          await Z(1000 + Math.random() * 1000);
+          await sleep(1000 + Math.random() * 1000);
           continue;
         }
         throw new T();

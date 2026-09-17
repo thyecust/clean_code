@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { Ls } from "./认证-OAuth登录.419zdfz3.js";
-import { Gtt } from "../../01-核心基础设施/共享小工具-未细化/chunk-9kpsezn2.js";
-import { w, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var u = w(function (r) {
+import { execAsyncModule } from "../../01-核心基础设施/共享小工具-未细化/exec-async-module.js";
+import { commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var u = commonJS(function (r) {
   Object.defineProperty(r, "__esModule", { value: !0 });
   r.getMachineId = void 0;
-  var n = Ae("fs"),
-    s = Gtt(),
+  var n = importMetaRequire("fs"),
+    s = execAsyncModule(),
     t = Ls();
   async function c() {
     try {

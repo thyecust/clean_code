@@ -15,7 +15,7 @@ import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Tr, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isWorkspacePersistedTrusted, P6, XUe, Gse } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { reanchorGitFileWatcher, findCanonicalGitRootUncached, clearIsGitMemoFor } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ot, pf } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -44,14 +44,14 @@ import { updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
 import { iM } from "../文件监听-Watch/chunk-mmg1rsp2.js";
 import { R8, $z } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { Ic } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { homedir } from "os";
 import { realpath, stat as j } from "fs/promises";
 import { dirname, parse } from "path";
 var _ = "Cd";
 function R(e, t) {
-  let o = Y([...Tr(e.requestedPath), e.canonicalPath]),
-    c = Y([e.canonicalPath, normalizeTrustedSymlink(e.canonicalPath)]),
+  let o = dedupe([...Tr(e.requestedPath), e.canonicalPath]),
+    c = dedupe([e.canonicalPath, normalizeTrustedSymlink(e.canonicalPath)]),
     s = (r, d, m) => m.some((y) => D(r, d, y));
   for (let r of Df(t)) {
     if (r.ruleValue.toolName !== _) continue;
@@ -172,8 +172,8 @@ async function N(e, t, o) {
 async function relocateSession(e, t, o, c) {
   let s = Q(),
     l = he(),
-    r = Y([l, s]),
-    d = Y(
+    r = dedupe([l, s]),
+    d = dedupe(
       [
         ...(getSettingsForSource("projectSettings")?.permissions?.additionalDirectories ?? []),
         ...(getSettingsForSource("localSettings")?.permissions?.additionalDirectories ?? []),
@@ -248,7 +248,7 @@ async function relocateSession(e, t, o, c) {
     getReplBridgeHandle()?.refreshGitBranch?.(),
     SandboxManager.refreshConfig(),
     QBt(),
-    i("tengu_cd_command", { source: fromEnum(o) }));
+    logEvent("tengu_cd_command", { source: fromEnum(o) }));
   let y = "";
   try {
     y = await N(e, t, c);

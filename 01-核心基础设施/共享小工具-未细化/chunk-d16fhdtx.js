@@ -7,21 +7,21 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-function b8(n, e) {
+function intersperse(n, e) {
   return n.flatMap((r, t) => (t ? [e(t), r] : [r]));
 }
-function G(n, e) {
+function countMatching(n, e) {
   let r = 0;
   for (let t of n) r += +!!e(t);
   return r;
 }
-function Y(n) {
+function dedupe(n) {
   return [...new Set(n)];
 }
-function lc(n) {
+function asStringArray(n) {
   if (!Array.isArray(n)) return [];
   return n.every((e) => typeof e === "string")
     ? n
     : n.filter((e) => typeof e === "string");
 }
-export { b8, G, Y, lc };
+export { intersperse, countMatching, dedupe, asStringArray };

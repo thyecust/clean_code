@@ -9,11 +9,11 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 205 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import {
   Ds,
   Ct,
@@ -51,10 +51,10 @@ import { E3n, JA, Jbe } from "../../01-核心基础设施/共享小工具-未细
 import "./chunk-7jshw9s9.js";
 import { Xbe } from "./chunk-v967hawf.js";
 import { EFt } from "../文件同步-Sync/chunk-tqwnv5vj.js";
-import { U9n } from "../云会话-Teleport/chunk-8scrd4ba.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ca2zxbyk.js";
+import { createOverlayBundle } from "../云会话-Teleport/overlay-bundle.js";
+import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var Ue =
     /^:([0-7]{6}) ([0-7]{6}) ([0-9a-f]{40}(?:[0-9a-f]{24})?) ([0-9a-f]{40}(?:[0-9a-f]{24})?) ([A-Z])[0-9]*$/,
   ze = /^0{40}(?:0{24})?$/,
@@ -696,7 +696,7 @@ async function at({
   );
   if (N === null)
     return { kind: "failed", reason: Ct(s) ? "aborted" : "diff_index_failed" };
-  let F = p.size + G(C, (a) => !m(a) && (!oe(a) || N.has(a.path)));
+  let F = p.size + countMatching(C, (a) => !m(a) && (!oe(a) || N.has(a.path)));
   if (F > 0) return se("tracked_unrepresentable", F);
   let M = await ve(e, C, s);
   if (M === null || Ct(s)) return { kind: "failed", reason: "aborted" };
@@ -779,7 +779,7 @@ async function at({
     let a = it(Z);
     return se(
       a,
-      a === "tracked_too_large" ? G(Z, (x) => x === "too_large") : Z.length,
+      a === "tracked_too_large" ? countMatching(Z, (x) => x === "too_large") : Z.length,
     );
   }
   return {
@@ -847,7 +847,7 @@ async function ot({
       ),
       ...c.filter((d) => d.status === "D" && o(d)),
     ].map((d) => d.path),
-    k = (d) => Y([d, d.normalize("NFC"), d.normalize("NFD")]),
+    k = (d) => dedupe([d, d.normalize("NFC"), d.normalize("NFD")]),
     C = t.filter(o).map((d) => d.path),
     [N, F, M] = await Promise.all([
       Ce(e, R.flatMap(k), s),
@@ -857,7 +857,7 @@ async function ot({
     E =
       N === null ? null : new Set(R.filter((d) => k(d).some((S) => N.has(S))));
   if (F !== null && M === null && !Ct(s))
-    q("warn", "dir_sync_overlay_pin_attrs_unread", {});
+    writeDiagnosticsEvent("warn", "dir_sync_overlay_pin_attrs_unread", {});
   let B = M ?? new Map();
   if (E === null || F === null)
     return {
@@ -917,7 +917,7 @@ function st(e, t, r) {
     };
   let { files: i, skipped: o } = e,
     s = i.reduce((c, y) => c + y.size, 0),
-    u = G(o, (c) => c.reason === "over_budget");
+    u = countMatching(o, (c) => c.reason === "over_budget");
   if (s <= t)
     return {
       files: i,
@@ -1059,7 +1059,7 @@ var OVERLAY_CHECK_DEADLINE_MS = 60000,
   de = 5000;
 async function planOverlay({ gitRoot: e, pin: t, head: r, signal: i }) {
   let o = AbortSignal.timeout(de),
-    s = await kt(
+    s = await withDeadline(
       readGitLayout(e, i === void 0 ? o : AbortSignal.any([i, o]), { bound: !0 }).catch(
         () => ({ kind: "failed" }),
       ),
@@ -1074,7 +1074,7 @@ async function planOverlay({ gitRoot: e, pin: t, head: r, signal: i }) {
   let f = Date.now(),
     g = AbortSignal.timeout(OVERLAY_CHECK_DEADLINE_MS),
     c = i === void 0 ? g : AbortSignal.any([i, g]),
-    y = (await kt(
+    y = (await withDeadline(
       Ge({
         gitRoot: e,
         containerOrigin: {
@@ -1094,7 +1094,7 @@ async function planOverlay({ gitRoot: e, pin: t, head: r, signal: i }) {
       OVERLAY_CHECK_DEADLINE_MS,
     )) ?? { ok: !1, reason: "aborted" };
   if (y.ok)
-    return (await kt(ut(e, r, c), de)) === !0
+    return (await withDeadline(ut(e, r, c), de)) === !0
       ? u
       : { kind: "not_planned", whyNot: "head_moved" };
   if (y.reason === "refused")
@@ -1111,7 +1111,7 @@ async function planOverlay({ gitRoot: e, pin: t, head: r, signal: i }) {
 }
 async function dt({ gitRoot: e, pin: t, head: r, signal: i }) {
   if (r === t) return { kind: "planned", bundle: null };
-  let o = await U9n({ gitRoot: e, prerequisiteSha: t, signal: i });
+  let o = await createOverlayBundle({ gitRoot: e, prerequisiteSha: t, signal: i });
   if (o.ok) {
     if (o.prerequisites.length > MAX_OVERLAY_PREREQUISITES)
       return { kind: "not_planned", whyNot: "too_many_prerequisites" };

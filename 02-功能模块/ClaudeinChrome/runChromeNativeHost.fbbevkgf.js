@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 19 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { le, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { getSocketDir, getSecureSocketPath } from "./chunk-hnp84hf6.js";
@@ -59,7 +59,7 @@ async function runChromeNativeHost() {
     await e.stop();
   });
 }
-var E = m(() => nt({ type: le() }).passthrough());
+var E = createLazyValue(() => nt({ type: le() }).passthrough());
 class k {
   mcpClients = new Map();
   nextClientId = 1;

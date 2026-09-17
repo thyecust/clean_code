@@ -11,9 +11,9 @@
 // [preload stripped] 原本在此预载 71 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { A, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { STAGE_TMP_PREFIX, getStageFileRoot, getOutputsRoot, AEt } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { VQe, Hor, ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createWriteStream } from "fs";
@@ -132,7 +132,7 @@ async function stageFile(t) {
     if (a.CLAUDE_CODE_ENVIRONMENT_KIND !== void 0)
       return (
         logFeatureBad("ccr_synced_file_stage", "unsupported_runner_kind"),
-        i("tengu_stage_file_completed", {
+        logEvent("tengu_stage_file_completed", {
           ok: !1,
           synced_unsupported_runner_kind: !0,
           duration_ms: 0,
@@ -161,7 +161,7 @@ async function stageFile(t) {
   } catch (u) {
     if (A(u) === "STAGE_OUTPUTS_UNSUPPORTED_RUNNER")
       (logFeatureBad("ccr_stage_file_outputs", "unsupported_runner_kind"),
-        i("tengu_stage_file_completed", {
+        logEvent("tengu_stage_file_completed", {
           ok: !1,
           outputs_unsupported_runner_kind: !0,
           duration_ms: 0,
@@ -173,8 +173,8 @@ async function stageFile(t) {
     try {
       if ((await T(r)).isFile())
         return (
-          q("debug", "stage_file_noop_already_present", {}),
-          i("tengu_stage_file_completed", {
+          writeDiagnosticsEvent("debug", "stage_file_noop_already_present", {}),
+          logEvent("tengu_stage_file_completed", {
             ok: !0,
             noop_already_present: !0,
             duration_ms: 0,
@@ -199,18 +199,18 @@ async function stageFile(t) {
         : "unknown";
     if (l && x(u) && !a.CLAUDE_STAGE_FILE_ROOT)
       return (
-        i("tengu_stage_file_completed", {
+        logEvent("tengu_stage_file_completed", {
           ok: !0,
           noop: !0,
           duration_ms: n(),
           bytes: 0,
         }),
-        q("debug", "stage_file_noop_readonly_mount", { duration_ms: n() }),
+        writeDiagnosticsEvent("debug", "stage_file_noop_readonly_mount", { duration_ms: n() }),
         { ok: !0, noop: "readonly_mount" }
       );
     if (
-      (i("tengu_stage_file_completed", { ok: !1, duration_ms: n() }),
-      q("warn", "stage_file_mkdir_failed", { code: p, duration_ms: n() }),
+      (logEvent("tengu_stage_file_completed", { ok: !1, duration_ms: n() }),
+      writeDiagnosticsEvent("warn", "stage_file_mkdir_failed", { code: p, duration_ms: n() }),
       !l)
     )
       logFeatureBad("ccr_stage_file_outputs", "mkdir_failed");
@@ -223,17 +223,17 @@ async function stageFile(t) {
       l && c.errno === "EROFS" && !a.CLAUDE_STAGE_FILE_ROOT)
     )
       return (
-        i("tengu_stage_file_completed", {
+        logEvent("tengu_stage_file_completed", {
           ok: !0,
           noop: !0,
           duration_ms: n(),
           bytes: 0,
         }),
-        q("debug", "stage_file_noop_readonly_mount", { duration_ms: n() }),
+        writeDiagnosticsEvent("debug", "stage_file_noop_readonly_mount", { duration_ms: n() }),
         { ok: !0, noop: "readonly_mount" }
       );
     if (
-      (i("tengu_stage_file_completed", {
+      (logEvent("tengu_stage_file_completed", {
         ok: !1,
         gated: c.gated,
         duration_ms: n(),
@@ -251,14 +251,14 @@ async function stageFile(t) {
       if (re(u, _))
         return (
           await unlink(o).catch(() => {}),
-          i("tengu_stage_file_completed", {
+          logEvent("tengu_stage_file_completed", {
             ok: !0,
             noop: !0,
             duration_ms: n(),
             bytes: 0,
             outputs_root: !0,
           }),
-          q("info", "stage_file_noop_newer_local", { duration_ms: n() }),
+          writeDiagnosticsEvent("info", "stage_file_noop_newer_local", { duration_ms: n() }),
           logFeatureOk("ccr_stage_file_outputs"),
           { ok: !0, noop: "newer_local" }
         );
@@ -267,14 +267,14 @@ async function stageFile(t) {
   } catch (u) {
     if ((await unlink(o).catch(() => {}), l && x(u) && !a.CLAUDE_STAGE_FILE_ROOT))
       return (
-        i("tengu_stage_file_completed", {
+        logEvent("tengu_stage_file_completed", {
           ok: !0,
           noop: !0,
           fetch_ms: h,
           duration_ms: n(),
           bytes: 0,
         }),
-        q("debug", "stage_file_noop_readonly_mount", { duration_ms: n() }),
+        writeDiagnosticsEvent("debug", "stage_file_noop_readonly_mount", { duration_ms: n() }),
         { ok: !0, noop: "readonly_mount" }
       );
     let p =
@@ -282,20 +282,20 @@ async function stageFile(t) {
         ? String(u.code)
         : "unknown";
     if (
-      (i("tengu_stage_file_completed", {
+      (logEvent("tengu_stage_file_completed", {
         ok: !1,
         fetch_ms: h,
         duration_ms: n(),
         bytes: m,
       }),
-      q("warn", "stage_file_write_failed", { code: p, duration_ms: n() }),
+      writeDiagnosticsEvent("warn", "stage_file_write_failed", { code: p, duration_ms: n() }),
       !l)
     )
       logFeatureBad("ccr_stage_file_outputs", "write_failed");
     return { ok: !1, error: `write failed: ${p}` };
   }
   if (
-    (i("tengu_stage_file_completed", {
+    (logEvent("tengu_stage_file_completed", {
       ok: !0,
       fetch_ms: h,
       duration_ms: n(),
@@ -306,7 +306,7 @@ async function stageFile(t) {
   )
     logFeatureOk("ccr_stage_file_outputs");
   return (
-    q("info", "stage_file_ok", {
+    writeDiagnosticsEvent("info", "stage_file_ok", {
       bytes: m,
       fetch_ms: h,
       duration_ms: n(),
@@ -327,7 +327,7 @@ async function F() {
     });
     if (!e.ok)
       return (
-        q("warn", "stage_file_list_gated", {
+        writeDiagnosticsEvent("warn", "stage_file_list_gated", {
           reason: e.reason,
           duration_ms: s(),
         }),
@@ -335,7 +335,7 @@ async function F() {
       );
     if (e.status < 200 || e.status >= 300)
       return (
-        q("warn", "stage_file_list_failed", {
+        writeDiagnosticsEvent("warn", "stage_file_list_failed", {
           kind: "http",
           status: e.status,
           duration_ms: s(),
@@ -348,7 +348,7 @@ async function F() {
       return { ok: !1, error: "list returned incomplete credential" };
     let l = VQe(e.data.filestore_url);
     if (e.data.filestore_url && !l)
-      q("warn", "stage_file_filestore_url_rejected", {
+      writeDiagnosticsEvent("warn", "stage_file_filestore_url_rejected", {
         reason: Hor(e.data.filestore_url),
       });
     return {
@@ -358,7 +358,7 @@ async function F() {
   } catch (e) {
     let { kind: r, status: d, message: l } = U("list", e);
     return (
-      q("warn", "stage_file_list_failed", {
+      writeDiagnosticsEvent("warn", "stage_file_list_failed", {
         kind: r,
         status: d,
         duration_ms: s(),
@@ -404,7 +404,7 @@ async function oe(t, s) {
       if (!o.ok)
         return (
           clearTimeout(n),
-          q("warn", "stage_file_read_gated", {
+          writeDiagnosticsEvent("warn", "stage_file_read_gated", {
             reason: o.reason,
             duration_ms: r(),
           }),
@@ -413,7 +413,7 @@ async function oe(t, s) {
       if (o.status === 401 && g === 0) {
         if ((clearTimeout(n), o.data instanceof I)) o.data.destroy();
         if (
-          (q("info", "stage_file_read_remint_jwt", { duration_ms: r() }),
+          (writeDiagnosticsEvent("info", "stage_file_read_remint_jwt", { duration_ms: r() }),
           (d = await F()),
           !d.ok)
         )
@@ -424,7 +424,7 @@ async function oe(t, s) {
       if (o.status < 200 || o.status >= 300) {
         if ((clearTimeout(n), o.data instanceof I)) o.data.destroy();
         return (
-          q("warn", "stage_file_read_failed", {
+          writeDiagnosticsEvent("warn", "stage_file_read_failed", {
             kind: "http",
             status: o.status,
             duration_ms: r(),
@@ -439,7 +439,7 @@ async function oe(t, s) {
       let m = await T(s);
       if (c >= 0 && m.size !== c)
         return (
-          q("warn", "stage_file_read_truncated", {
+          writeDiagnosticsEvent("warn", "stage_file_read_truncated", {
             expected: c,
             got: m.size,
             duration_ms: r(),
@@ -455,12 +455,12 @@ async function oe(t, s) {
           : void 0;
       if (c && !("isAxiosError" in o))
         return (
-          q("warn", "stage_file_write_failed", { code: c, duration_ms: r() }),
+          writeDiagnosticsEvent("warn", "stage_file_write_failed", { code: c, duration_ms: r() }),
           { ok: !1, error: `write failed: ${c}`, errno: c }
         );
       if (_.signal.aborted)
         return (
-          q("warn", "stage_file_read_stalled", {
+          writeDiagnosticsEvent("warn", "stage_file_read_stalled", {
             stall_ms: S,
             duration_ms: r(),
           }),
@@ -468,7 +468,7 @@ async function oe(t, s) {
         );
       let { kind: m, status: h, message: u } = U("read", o);
       return (
-        q("warn", "stage_file_read_failed", {
+        writeDiagnosticsEvent("warn", "stage_file_read_failed", {
           kind: m,
           status: h,
           duration_ms: r(),
@@ -478,7 +478,7 @@ async function oe(t, s) {
     }
   }
   return (
-    q("warn", "stage_file_read_failed", {
+    writeDiagnosticsEvent("warn", "stage_file_read_failed", {
       kind: "http",
       status: 401,
       duration_ms: r(),
@@ -508,7 +508,7 @@ async function fetchFilestoreBytes(t) {
     );
     if (!_.ok)
       return (
-        q("warn", "stage_file_read_gated", {
+        writeDiagnosticsEvent("warn", "stage_file_read_gated", {
           reason: _.reason,
           duration_ms: e(),
         }),
@@ -516,7 +516,7 @@ async function fetchFilestoreBytes(t) {
       );
     if (_.status < 200 || _.status >= 300)
       return (
-        q("warn", "stage_file_read_failed", {
+        writeDiagnosticsEvent("warn", "stage_file_read_failed", {
           kind: "http",
           status: _.status,
           duration_ms: e(),
@@ -527,7 +527,7 @@ async function fetchFilestoreBytes(t) {
   } catch (_) {
     let { kind: n, status: w, message: o } = U("read", _);
     return (
-      q("warn", "stage_file_read_failed", {
+      writeDiagnosticsEvent("warn", "stage_file_read_failed", {
         kind: n,
         status: w,
         duration_ms: e(),

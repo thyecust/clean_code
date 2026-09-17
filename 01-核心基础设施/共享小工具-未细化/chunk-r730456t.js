@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { i } from "./chunk-an83zrbx.js";
+import { logEvent } from "./analytics-event-queue.js";
 import { o, t, uE } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ne } from "./chunk-eebsvd7r.js";
+import { useKeybinding } from "./keybinding-hooks.js";
 import { Yn } from "./chunk-r3y9qj3r.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "./chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "./chunk-2c9tjhwd.js";
 F();
 function rWe(k) {
   let n = _(17),
@@ -42,13 +42,13 @@ function rWe(k) {
   if (n[3] !== y)
     ((J = { context: "Confirmation", isActive: y }), (n[3] = y), (n[4] = J));
   else J = n[4];
-  if ((Ne("confirm:yes", E, J), a !== null)) {
+  if ((useKeybinding("confirm:yes", E, J), a !== null)) {
     let s;
     if (n[5] !== a)
       ((s = e(t, { color: "success", children: a })), (n[5] = a), (n[6] = s));
     else s = n[6];
     let c;
-    if (n[7] === p)
+    if (n[7] === MEMO_CACHE_SENTINEL)
       ((c = r(t, {
         dimColor: !0,
         children: [
@@ -73,12 +73,12 @@ function rWe(k) {
     return l;
   }
   let s;
-  if (n[10] === p) ((s = (G) => A(G)), (n[10] = s));
+  if (n[10] === MEMO_CACHE_SENTINEL) ((s = (G) => A(G)), (n[10] = s));
   else s = n[10];
   let c;
   if (n[11] !== v || n[12] !== C)
     ((c = () => {
-      (i(v, {}), C());
+      (logEvent(v, {}), C());
     }),
       (n[11] = v),
       (n[12] = C),

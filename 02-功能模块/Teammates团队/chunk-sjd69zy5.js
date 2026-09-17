@@ -13,7 +13,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { ix } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vir } from "./chunk-811z9z0t.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
+import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { bue, cUt, hd, nr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { WE } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
@@ -58,7 +58,7 @@ async function spawnInProcessTeammate(t, o) {
         planModeRequired: l,
         parentSessionId: a,
         hasTaskListTools:
-          X_() && o.rootToolSurface.tools.some((m) => Kt(m, WE)),
+          X_() && o.rootToolSurface.tools.some((m) => matchesToolName(m, WE)),
         abortController: r,
       });
     if (bue()) cUt(s, e, a);

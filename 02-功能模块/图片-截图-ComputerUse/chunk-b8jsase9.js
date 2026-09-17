@@ -8,15 +8,15 @@
 
 // Version: 2.1.263
 import { Gt, K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { Et, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { Zp } from "./chunk-bvxymt09.js";
-import { n6 } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+import { getComputerUseSession } from "./computer-use-session.js";
+import { defineStoreField } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 var w = ["ELOOP", "ENXIO", "EISDIR"],
   Gyn = new Set(w);
 function AH(e) {
@@ -86,7 +86,7 @@ async function x() {
   }
 }
 async function m(e, r) {
-  if (M() && r !== void 0) {
+  if (isHoverRestEnabled() && r !== void 0) {
     let t = await r.write(u(), b(e), {
       precondition: { type: "ifAbsent" },
       mode: 438 & ~process.umask(),
@@ -112,7 +112,7 @@ async function m(e, r) {
   }
 }
 function k(e) {
-  let r = Zp();
+  let r = getComputerUseSession();
   (r.unregisterLockCleanup?.(),
     (r.unregisterLockCleanup = Et(async () => {
       await F(e);
@@ -135,7 +135,7 @@ async function UYn(e) {
   return { kind: "free" };
 }
 function a() {
-  return Zp().unregisterLockCleanup !== void 0;
+  return getComputerUseSession().unregisterLockCleanup !== void 0;
 }
 async function BYn(e) {
   let r = K(),
@@ -180,7 +180,7 @@ async function BYn(e) {
 }
 async function F(e) {
   let r = a(),
-    t = Zp();
+    t = getComputerUseSession();
   (t.unregisterLockCleanup?.(), (t.unregisterLockCleanup = void 0));
   let o = await s(e);
   if (!o || (!r && o.sessionId !== K())) return !1;
@@ -196,16 +196,16 @@ async function F(e) {
   }
 }
 function VSt() {
-  return Zp().activeThisTurn;
+  return getComputerUseSession().activeThisTurn;
 }
 function jYn() {
-  if (Zp().activeThisTurn) return !1;
-  return ((Zp().activeThisTurn = !0), !0);
+  if (getComputerUseSession().activeThisTurn) return !1;
+  return ((getComputerUseSession().activeThisTurn = !0), !0);
 }
 function WYn() {
-  Zp().activeThisTurn = !1;
+  getComputerUseSession().activeThisTurn = !1;
 }
-var T = n6("computerUseMcpState", void 0);
+var T = defineStoreField("computerUseMcpState", void 0);
 class PAe {
   #e;
   constructor(e) {

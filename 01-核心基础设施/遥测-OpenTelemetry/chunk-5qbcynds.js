@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B, K, hrt, TDn, ke, ns, fv, fZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { Jr, hv, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { le, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
@@ -18,8 +18,8 @@ import { Ls, Mc, ry, WQe, getOauthAccountInfo, getAuthenticatedAccountInfo, dx }
 import { Vd } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { Gi } from "../../02-功能模块/认证-OAuth登录/chunk-7rf7w8yf.js";
 import { AP, Svt } from "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
-import { pe } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
-var w = m(() =>
+import { toESM } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+var w = createLazyValue(() =>
   nt({
     sub: le()
       .optional()
@@ -171,7 +171,7 @@ function U() {
     emailAddress: o(i.account_email) ?? o(u.email),
   });
 }
-var E = pe(Ls(), 1);
+var E = toESM(Ls(), 1);
 import { AsyncLocalStorage } from "async_hooks";
 class b {
   als = new AsyncLocalStorage();
@@ -223,8 +223,8 @@ function $3t() {
   if (e !== E.ROOT_CONTEXT) return e;
   return bSn() ?? e;
 }
-var f = pe(Ls(), 1),
-  A = pe(Mc(), 1);
+var f = toESM(Ls(), 1),
+  A = toESM(Mc(), 1);
 class x {
   nextSequence = 0;
   warnedNoEventLogger = !1;

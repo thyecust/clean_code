@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { getOauthConfig } from "./chunk-9g2q4bjq.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -15,7 +15,7 @@ import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash
 import { resolveRefreshTokenExpiresAt, shouldUseClaudeAIAuth, parseScopes, buildAuthUrl, exchangeCodeForTokens, fetchProfileInfo } from "./认证-OAuth登录.419zdfz3.js";
 import { oBe, PRe, Yse, c1 } from "./chunk-wk0e3dz4.js";
 import { zY } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
-import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { createServer } from "http";
 var w = 200;
 class u {
@@ -60,14 +60,14 @@ class u {
     if (t) {
       (t(this.pendingResponse, e),
         (this.pendingResponse = null),
-        i("tengu_oauth_automatic_redirect", { custom_handler: !0 }));
+        logEvent("tengu_oauth_automatic_redirect", { custom_handler: !0 }));
       return;
     }
     let r = shouldUseClaudeAIAuth(e) ? getOauthConfig().CLAUDEAI_SUCCESS_URL : getOauthConfig().CONSOLE_SUCCESS_URL;
     (this.pendingResponse.writeHead(302, { Location: r }),
       this.pendingResponse.end(),
       (this.pendingResponse = null),
-      i("tengu_oauth_automatic_redirect", {}));
+      logEvent("tengu_oauth_automatic_redirect", {}));
   }
   handleErrorRedirect() {
     if (!this.pendingResponse) return;
@@ -75,7 +75,7 @@ class u {
     (this.pendingResponse.writeHead(302, { Location: e }),
       this.pendingResponse.end(),
       (this.pendingResponse = null),
-      i("tengu_oauth_automatic_redirect_error", {}));
+      logEvent("tengu_oauth_automatic_redirect_error", {}));
   }
   startLocalListener(e) {
     (this.localServer.on("request", this.handleRedirect.bind(this)),
@@ -223,10 +223,10 @@ class ck {
       p = buildAuthUrl({ ...n, isManual: !1 }),
       k = await this.waitForAuthorizationCode(o, async () => {
         if (t?.skipBrowserOpen) await e(s, p);
-        else (await e(s), await Gr(p));
+        else (await e(s), await tryOpenUrlInBrowser(p));
       }),
       l = this.authCodeListener?.hasPendingResponse() ?? !1;
-    i("tengu_oauth_auth_code_received", { automatic: l });
+    logEvent("tengu_oauth_auth_code_received", { automatic: l });
     try {
       let a = await exchangeCodeForTokens(k, {
           state: o,

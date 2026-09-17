@@ -12,12 +12,12 @@ import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../0
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { NU } from "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
 import { executeNotificationHooks } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Eo } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
-import { Z0e, Yat } from "../../01-核心基础设施/共享小工具-未细化/chunk-6t3vmc74.js";
+import { isPlainObject, parsePlist } from "../../01-核心基础设施/共享小工具-未细化/plist-parser.js";
 var m = /^[A-Za-z0-9][A-Za-z0-9._+-]{0,63}$/;
 function a9e(e) {
   if (e == null) return;
@@ -33,7 +33,7 @@ async function yv(e, t, { storageV5: o, credentials: r } = {}) {
   let s = await p(l, e, t);
   if (s === "error") logFeatureBad("notification_show", "send_failed");
   else logFeatureOk("notification_show");
-  i("tengu_notification_method_used", {
+  logEvent("tengu_notification_method_used", {
     configured_channel: fromEnum(NU.includes(l) ? l : "invalid"),
     notification_type: fromEnum(e.notificationType),
     method_used: fromEnum(s),
@@ -119,8 +119,8 @@ async function h() {
     if (!t) return !1;
     let o = await execFileNoThrow("defaults", ["export", "com.apple.Terminal", "-"]);
     if (o.code !== 0) return !1;
-    let r = Yat(o.stdout);
-    if (!Z0e(r))
+    let r = parsePlist(o.stdout);
+    if (!isPlainObject(r))
       return (
         n(
           "Failed to read Apple Terminal bell setting: defaults export is not a plist dict",
@@ -128,8 +128,8 @@ async function h() {
         !1
       );
     let l = r["Window Settings"],
-      s = Z0e(l) ? l[t] : void 0;
-    if (!Z0e(s))
+      s = isPlainObject(l) ? l[t] : void 0;
+    if (!isPlainObject(s))
       return (
         n(
           "Failed to read Apple Terminal bell setting: no settings dict for the current profile",

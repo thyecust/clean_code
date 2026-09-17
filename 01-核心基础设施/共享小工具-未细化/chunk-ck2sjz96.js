@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { q } from "./chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "./diagnostics-log.js";
 import { Vd } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { ht } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Voe } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
@@ -71,7 +71,7 @@ async function bGn(t, r, s, e = {}) {
     );
     if (!i.ok || !i.data)
       return (
-        q("warn", "skills_sync_download_not_ok", {
+        writeDiagnosticsEvent("warn", "skills_sync_download_not_ok", {
           reason: i.ok ? "empty_body" : i.reason,
         }),
         !1
@@ -79,7 +79,7 @@ async function bGn(t, r, s, e = {}) {
     let n = Buffer.from(i.data);
     if (n.length < 2 || n[0] !== 80 || n[1] !== 75)
       return (
-        q("warn", "skills_sync_download_not_zip", {
+        writeDiagnosticsEvent("warn", "skills_sync_download_not_zip", {
           serverError: gwt(n),
           bodyLen: n.length,
         }),
@@ -88,7 +88,7 @@ async function bGn(t, r, s, e = {}) {
     return (await writeFile(r, n), !0);
   } catch (i) {
     let { kind: n } = Ps(i);
-    return (q("warn", "skills_sync_download_exception", { kind: n }), !1);
+    return (writeDiagnosticsEvent("warn", "skills_sync_download_exception", { kind: n }), !1);
   }
 }
 export { i4e, bGn };

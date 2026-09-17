@@ -15,7 +15,7 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { archiveRemoteSession, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { findGitRoot, getBranch, getDefaultBranch, hasUnpushedCommits } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -23,8 +23,8 @@ import { Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { Os } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { PM, ede, _ne, IX, cde, teleportToRemote, subscribeRemoteSessionToPR } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
@@ -33,22 +33,22 @@ import { nCe, vj } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { CRON_DELETE_TOOL_NAME } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { getSdkHostedBridgeHandle, getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import { Ur } from "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 var me = {
   checking: "Detecting open PR for current branch\u2026",
@@ -64,7 +64,7 @@ async function ge(a, n, c) {
   );
 }
 async function Je(a, n, { signal: c, onProgress: w }) {
-  i("tengu_autofix_pr_started", {
+  logEvent("tengu_autofix_pr_started", {
     action: S("start"),
     has_pr_number: S(a.prNumber !== void 0 ? "true" : "false"),
     has_repo_path: S(a.repoPath !== void 0 ? "true" : "false"),
@@ -184,7 +184,7 @@ ${s}`,
           "Note: this is a non-interactive session \u2014 the poll cron only fires while this process stays alive. For one-shot `-p` runs, use `remote` instead.",
         );
       return (
-        i("tengu_autofix_pr_result", { result: S("success_current_session") }),
+        logEvent("tengu_autofix_pr_result", { result: S("success_current_session") }),
         B.length > 0 && s.kind === "ok"
           ? {
               ...s,
@@ -210,7 +210,7 @@ ${B.join(`
       );
     if (Ee?.type === "remote_agent")
       return (
-        i("tengu_autofix_pr_result", { result: S("success") }),
+        logEvent("tengu_autofix_pr_result", { result: S("success") }),
         {
           kind: "ok",
           message: `Already monitoring ${ce} in a cloud session
@@ -284,7 +284,7 @@ ${B.join(`
 `)
         : "";
     return (
-      i("tengu_autofix_pr_result", { result: S("success") }),
+      logEvent("tengu_autofix_pr_result", { result: S("success") }),
       {
         kind: "ok",
         message: `Spawned cloud autofix PR session on ${q} (PR #${v})
@@ -299,13 +299,13 @@ ${B.join(`
 var Ie = "Babysit PR ";
 function O(a, n) {
   return (
-    i("tengu_autofix_pr_result", { result: S("failed"), error_code: fromEnum(n) }),
+    logEvent("tengu_autofix_pr_result", { result: S("failed"), error_code: fromEnum(n) }),
     { kind: "error", message: `Autofix PR failed: ${a}`, code: n }
   );
 }
 function ie() {
   return (
-    i("tengu_autofix_pr_result", { result: S("cancelled") }),
+    logEvent("tengu_autofix_pr_result", { result: S("cancelled") }),
     { kind: "cancelled" }
   );
 }
@@ -390,11 +390,11 @@ function Ve(Qt) {
       (V[5] = K));
   else K = V[5];
   let qe;
-  if (V[6] === p)
-    ((qe = e(D, { chord: "escape", action: "cancel" })), (V[6] = qe));
+  if (V[6] === MEMO_CACHE_SENTINEL)
+    ((qe = e(KeybindingHint, { chord: "escape", action: "cancel" })), (V[6] = qe));
   else qe = V[6];
   let ze;
-  if (V[7] === p)
+  if (V[7] === MEMO_CACHE_SENTINEL)
     ((ze = e(t, {
       children:
         "Auto-fix monitors the PR and can post comments on your behalf using your GitHub identity.",
@@ -402,7 +402,7 @@ function Ve(Qt) {
       (V[7] = ze));
   else ze = V[7];
   let Qe;
-  if (V[8] === p)
+  if (V[8] === MEMO_CACHE_SENTINEL)
     ((Qe = [
       {
         value: "continue",
@@ -567,14 +567,14 @@ function ye(or) {
       (X[16] = Fe),
       (X[17] = at));
   else at = X[17];
-  Ze(it, at);
+  useKeybindings(it, at);
   let $e;
   if (X[18] !== ne || X[19] !== R)
     (($e = R
-      ? e(D, { chord: ["escape", "enter"], action: "close" })
+      ? e(KeybindingHint, { chord: ["escape", "enter"], action: "close" })
       : ne
-        ? e(D, { chord: "escape", action: "dismiss now" })
-        : e(D, { chord: "escape", action: "cancel" })),
+        ? e(KeybindingHint, { chord: "escape", action: "dismiss now" })
+        : e(KeybindingHint, { chord: "escape", action: "cancel" })),
       (X[18] = ne),
       (X[19] = R),
       (X[20] = $e));
@@ -591,10 +591,10 @@ function ye(or) {
       flexDirection: "column",
       gap: 1,
       children: R
-        ? e(Ur, { error: R })
+        ? e(ErrorMessage, { error: R })
         : r(N, {
             children: [
-              e($n, { message: ne ? "Cancelling\u2026" : me[We] }),
+              e(SpinnerMessageLine, { message: ne ? "Cancelling\u2026" : me[We] }),
               ae &&
                 r(t, {
                   dimColor: !0,

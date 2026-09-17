@@ -10,14 +10,14 @@
 import { default as RT } from "./文件监听-Watch.3efypmps.js";
 import { he, sn, Nm, mp } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { dt, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { wc, Et, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Vj } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import {
   clearAgentDefinitionsCache,
   Rk,
@@ -30,7 +30,7 @@ import {
   clearCommandMemoizationCaches,
   clearCommandsCache,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import * as b from "path";
 var re = 1000,
   oe = 500,
@@ -142,7 +142,7 @@ function fe(o) {
     if (!N || k) return;
     let t = await X(g);
     if (k) return;
-    let r = Y([...C, ...t]);
+    let r = dedupe([...C, ...t]);
     if (r.length === C.length) return;
     let d = ++E;
     if (
@@ -156,7 +156,7 @@ function fe(o) {
     u = G(H ? J : m);
     let a = u,
       P = new Promise((f) => a.once("ready", () => f()));
-    if ((await Promise.race([P, Z(ue, void 0, { unref: !0 })]), k || d !== E))
+    if ((await Promise.race([P, sleep(ue, void 0, { unref: !0 })]), k || d !== E))
       return;
     if (U && v === null) ((v = setInterval(W, Q)), v.unref?.());
     F ??= Et(j);
@@ -172,7 +172,7 @@ function fe(o) {
   }
   function z(t) {
     (n(`Detected skill change: ${t}`),
-      i("tengu_skill_file_changed", { source: S("chokidar") }),
+      logEvent("tengu_skill_file_changed", { source: S("chokidar") }),
       K(t));
   }
   function K(t) {
@@ -281,7 +281,7 @@ async function X(o) {
   if (g)
     try {
       let e = b.resolve(g);
-      if (M() && o !== void 0) {
+      if (isHoverRestEnabled() && o !== void 0) {
         if (await O(o, e)) s.push(e);
       } else (await c.stat(e), s.push(e));
     } catch {}
@@ -289,7 +289,7 @@ async function X(o) {
   if (D)
     try {
       let e = b.resolve(D);
-      if (M() && o !== void 0) {
+      if (isHoverRestEnabled() && o !== void 0) {
         if (await O(o, e)) s.push(e);
       } else (await c.stat(e), s.push(e));
     } catch {}
@@ -302,14 +302,14 @@ async function X(o) {
   if (A)
     try {
       let e = b.resolve(A);
-      if (M() && o !== void 0) {
+      if (isHoverRestEnabled() && o !== void 0) {
         if (await O(o, e)) s.push(e);
       } else (await c.stat(e), s.push(e));
     } catch {}
   for (let e of mp()) {
     let w = b.join(e, ".claude", "skills");
     try {
-      if (M() && o !== void 0) {
+      if (isHoverRestEnabled() && o !== void 0) {
         if (await O(o, b.resolve(w))) s.push(w);
       } else (await c.stat(w), s.push(w));
     } catch {}

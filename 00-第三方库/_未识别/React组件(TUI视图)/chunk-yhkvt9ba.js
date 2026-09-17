@@ -9,16 +9,16 @@
 // Version: 2.1.263
 import { _ } from "../../react/react.zhnvc798.js";
 import { u_, Ma, ks, s4, $ye } from "../../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { Se } from "../../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { te } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { IS } from "../../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
+import { ScrollBox } from "../../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { _p } from "../../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { o, t, zye, Od } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ze } from "../../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { Gc } from "../../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
+import { useKeybindings } from "../../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { BackgroundText } from "../../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import { e, r } from "../../react/react.kwtapczy.js";
 import { Qt, re, De, dn, V, C, d, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function wt(en) {
   return [en.props.id ?? en.props.title, en.props.title];
@@ -60,7 +60,7 @@ function qp(Pe) {
     } = Pe,
     Ne = An === void 0 ? !0 : An,
     Pt = Bn === void 0 ? !1 : Bn,
-    { columns: Pn } = Se(),
+    { columns: Pn } = useTerminalSize(),
     x = G.map(wt),
     En = Hn ? x.findIndex((Et) => Hn === Et[0]) : 0,
     Ke = Mn !== void 0,
@@ -100,7 +100,7 @@ function qp(Pe) {
   else ((Vn = l[4]), (jn = l[5]));
   dn(Vn, jn);
   let Gn;
-  if (l[6] === p) ((Gn = { rows: 0, columns: 0 }), (l[6] = Gn));
+  if (l[6] === MEMO_CACHE_SENTINEL) ((Gn = { rows: 0, columns: 0 }), (l[6] = Gn));
   else Gn = l[6];
   let { rows: jt } = ks(Gn),
     R = D !== null && T !== null,
@@ -129,7 +129,7 @@ function qp(Pe) {
   else Yn = l[11];
   let _n = Yn,
     qn;
-  if (l[12] === p)
+  if (l[12] === MEMO_CACHE_SENTINEL)
     ((qn = () => {
       Y(!1);
     }),
@@ -138,7 +138,7 @@ function qp(Pe) {
   let Gt = qn,
     [Ut, zn] = d(0),
     Jn;
-  if (l[13] === p) ((Jn = () => (zn(vt), () => zn(kt))), (l[13] = Jn));
+  if (l[13] === MEMO_CACHE_SENTINEL) ((Jn = () => (zn(vt), () => zn(kt))), (l[13] = Jn));
   else Jn = l[13];
   let Yt = Jn,
     q = Ut > 0,
@@ -157,7 +157,7 @@ function qp(Pe) {
   if (l[14] !== _e)
     (($n = { context: "Tabs", isActive: _e }), (l[14] = _e), (l[15] = $n));
   else $n = l[15];
-  Ze({ "tabs:next": () => de(1), "tabs:previous": () => de(-1) }, $n);
+  useKeybindings({ "tabs:next": () => de(1), "tabs:previous": () => de(-1) }, $n);
   let et;
   if (l[16] !== y || l[17] !== B || l[18] !== f || l[19] !== q)
     ((et = (ce) => {
@@ -183,7 +183,7 @@ function qp(Pe) {
   if (l[21] !== qe)
     ((tt = { context: "Tabs", isActive: qe }), (l[21] = qe), (l[22] = tt));
   else tt = l[22];
-  Ze({ "tabs:next": () => de(1), "tabs:previous": () => de(-1) }, tt);
+  useKeybindings({ "tabs:next": () => de(1), "tabs:previous": () => de(-1) }, tt);
   let qt = oe ? te(oe) + 1 : 0,
     zt = x.reduce(xt, 0),
     Jt = qt + zt,
@@ -254,7 +254,7 @@ function qp(Pe) {
           marginTop: f ? 0 : 1,
           flexShrink: 0,
           children: e(
-            IS,
+            ScrollBox,
             {
               ref: Ve,
               flexDirection: "column",
@@ -341,7 +341,7 @@ function JWe(oo) {
     sn = pe && P && at,
     ct,
     ut;
-  if (me[2] === p)
+  if (me[2] === MEMO_CACHE_SENTINEL)
     ((ct = () => lt(!0)), (ut = () => lt(!1)), (me[2] = ct), (me[3] = ut));
   else ((ct = me[2]), (ut = me[3]));
   let we;
@@ -354,7 +354,7 @@ function JWe(oo) {
     me[9] !== he
   )
     ((we = sn
-      ? e(Gc, { color: pe, bold: !0, padded: !0, children: he })
+      ? e(BackgroundText, { color: pe, bold: !0, padded: !0, children: he })
       : r(t, {
           inverse: P,
           bold: P,

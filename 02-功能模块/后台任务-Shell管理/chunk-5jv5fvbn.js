@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { AH } from "../图片-截图-ComputerUse/chunk-b8jsase9.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { R, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -41,7 +41,7 @@ async function GWe(e, r = {}) {
     } catch {
       return "exited";
     }
-    await Z(50);
+    await sleep(50);
   }
   return "timed-out";
 }
@@ -96,7 +96,7 @@ async function y(e) {
 }
 var I = 65536;
 async function pUn(e, r) {
-  if (M() && r !== void 0) {
+  if (isHoverRestEnabled() && r !== void 0) {
     let t = () =>
         r.write(cle(), b(e, null, 2), {
           precondition: { type: "ifAbsent" },
@@ -260,7 +260,7 @@ var kye = 2,
 async function qWe(e, r, t) {
   if (r === void 0) return !0;
   for (let o = 0; o < t; o++) {
-    if (o > 0) await Z(DPt);
+    if (o > 0) await sleep(DPt);
     let i = await getProcessStartTimeAsync(e, { skipCache: o > 0 });
     if (i !== void 0) return i === r;
   }

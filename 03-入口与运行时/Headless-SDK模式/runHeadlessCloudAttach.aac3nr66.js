@@ -11,9 +11,9 @@
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { identity as _m, Xn, Vur, $p, he, pje, kz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { toCompatSessionId, toInfraSessionId, sessionIdBody } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Ve, zi, yt, Iu, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -21,7 +21,7 @@ import { Et, b, rje, n } from "../../01-核心基础设施/核心工具-日志�
 import { oe, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { St, logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { printCliError } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
-import { i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   getMainLoopModel,
@@ -136,7 +136,7 @@ import {
 import "../../01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js";
 import { c6e } from "../../02-功能模块/Bridge-RemoteControl/chunk-2m80582f.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-33vqsej8.js";
-import { LJt, MJt, NJt } from "../../02-功能模块/认证-OAuth登录/chunk-wryxn776.js";
+import { resolveAttachDeviceBinding, pullsBackToThisMachine, registerAttachedDevice } from "../../02-功能模块/认证-OAuth登录/attach-device-binding.js";
 import {
   WHe,
   _ye,
@@ -175,8 +175,8 @@ import {
   zot,
   Vot,
 } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { Q1t } from "../../02-功能模块/Bridge-RemoteControl/chunk-b9tbevd9.js";
-import { Y1t } from "../../02-功能模块/认证-OAuth登录/chunk-a0axhdkv.js";
+import { localBindIdentity } from "../../02-功能模块/Bridge-RemoteControl/device-bind.js";
+import { deviceEventSignerFor } from "../../02-功能模块/认证-OAuth登录/device-event-signer.js";
 import { B_e, Fae } from "./chunk-e4xwwtsb.js";
 import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import "../../02-功能模块/文件同步-Sync/chunk-ht8ydg1v.js";
@@ -184,22 +184,22 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js"
 import { Jb } from "../../02-功能模块/Git-Worktree/chunk-7jshw9s9.js";
 import "../../02-功能模块/Git-Worktree/chunk-v967hawf.js";
 import { KHt, lJt } from "../../02-功能模块/文件同步-Sync/chunk-54bf3exn.js";
-import { I8, kB, xB } from "./chunk-bgtc75cc.js";
+import { buildControlSuccessResponse, buildControlErrorResponse, buildErrorResultMessage } from "./headless-sdk-messages.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
-import { kv } from "../../01-核心基础设施/共享小工具-未细化/chunk-mnzfncps.js";
+import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-d1t6d4k8.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-txc6d085.js";
+import "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
 import "./chunk-yb7jadvp.js";
-import { cze } from "../../02-功能模块/Cowork远程设备注册/Cowork远程设备注册.9r92qaht.js";
+import { buildDefaultDeviceDisplayName } from "../../02-功能模块/Cowork远程设备注册/Cowork远程设备注册.9r92qaht.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
-import "../../02-功能模块/云会话-Teleport/chunk-8scrd4ba.js";
-import { V4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-nbvmqw0g.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ca2zxbyk.js";
-import { N7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-rs9aqm75.js";
-import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
-import { Kr } from "../../02-功能模块/对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
+import "../../02-功能模块/云会话-Teleport/overlay-bundle.js";
+import { truncateWithEllipsis } from "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
+import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
+import { createStatusFeed } from "../../01-核心基础设施/共享小工具-未细化/status-feed.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
+import { defineDialog } from "../../02-功能模块/对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { AA, s, T, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function J(e) {
   if (yt(e)) {
     n("[headlessFeatures] a feature hook was aborted");
@@ -523,7 +523,7 @@ function at(e) {
         _.emit();
       },
       D = remoteToolServingPolicyName(),
-      E = N7(),
+      E = createStatusFeed(),
       { onAnnounceOutcome: I, onRevoked: O, onNotice: A, ...R } = t.servedTools,
       F = e.openChannel({
         ...R,
@@ -674,7 +674,7 @@ function dt(e) {
         break;
     }
     let k = (e.launchDir ?? he)(),
-      D = N7(),
+      D = createStatusFeed(),
       E,
       I,
       O = null,
@@ -808,7 +808,7 @@ function pn(e, t, o, r) {
 }
 function se(e, t, o) {
   return (
-    i("tengu_device_hooks_headless_off", { reason: fromEnum(e), reattach: t }),
+    logEvent("tengu_device_hooks_headless_off", { reason: fromEnum(e), reattach: t }),
     {
       feature: "hooks",
       report: () => ({
@@ -977,7 +977,7 @@ class be {
     );
   }
   log(e, t, o, r = !1) {
-    i("tengu_remote_headless_client_agent_request", {
+    logEvent("tengu_remote_headless_client_agent_request", {
       subtype: fromEnum(e),
       outcome: fromEnum(t),
       latency_ms: this.ports.clock.now() - o,
@@ -1006,9 +1006,9 @@ function yn(e) {
   let t = e[Boe];
   return typeof t === "string" && sme(t);
 }
-var ie = Kr({
+var ie = defineDialog({
     kind: "cloud_sync_consent",
-    payload: m(() =>
+    payload: createLazyValue(() =>
       c({
         folder: s(),
         launchFolder: s().optional(),
@@ -1019,7 +1019,7 @@ var ie = Kr({
         totalBytes: T().int().nonnegative().optional(),
       }),
     ),
-    result: m(() => X(["sync", "device_tools", "not_now"])),
+    result: createLazyValue(() => X(["sync", "device_tools", "not_now"])),
     default: "not_now",
     hideWhile: [],
   }),
@@ -1045,9 +1045,9 @@ function Re({ folder: e, launchFolder: t, upload: o }) {
     ...(o?.totalBytes !== void 0 && { totalBytes: o.totalBytes }),
   };
 }
-var re = Kr({
+var re = defineDialog({
   kind: "unattended_serving_consent",
-  payload: m(() =>
+  payload: createLazyValue(() =>
     c({
       machineName: s(),
       title: s(),
@@ -1057,7 +1057,7 @@ var re = Kr({
       version: T().int().nonnegative(),
     }),
   ),
-  result: m(() => X(["accept", "decline", "not_now"])),
+  result: createLazyValue(() => X(["accept", "decline", "not_now"])),
   default: "not_now",
   hideWhile: [],
 });
@@ -1078,7 +1078,7 @@ function ct({ io: e, declaredKinds: t, clock: o }) {
   return async function (d, p, _) {
     let w = o.now(),
       C = (O) => {
-        i("tengu_remote_headless_client_host_dialog", {
+        logEvent("tengu_remote_headless_client_host_dialog", {
           dialog_kind: Tn(d.kind),
           outcome: fromEnum(O),
           latency_ms: o.now() - w,
@@ -1488,7 +1488,7 @@ class Ae {
     let t = Me(e),
       o = gt(t),
       r = this.lastBlock,
-      d = Y([...r.keys(), ...o.keys()]).filter((p) => r.get(p) !== o.get(p));
+      d = dedupe([...r.keys(), ...o.keys()]).filter((p) => r.get(p) !== o.get(p));
     if (d.length === 0) return;
     ((this.lastBlock = o),
       (this.deltaSeq += 1),
@@ -1826,7 +1826,7 @@ class Te {
           this.armStallWarning();
           return;
         }
-        (i("tengu_remote_headless_client_bootstrap_stalled", { queued: e }),
+        (logEvent("tengu_remote_headless_client_bootstrap_stalled", { queued: e }),
           this.line(
             "warning",
             "Still waiting for the cloud session to start; what you sent will be delivered when it is ready.",
@@ -1929,7 +1929,7 @@ class Te {
     this.cancelWatchdog = this.ports.clock.setTimeout(() => {
       if (((this.cancelWatchdog = null), this.stopped)) return;
       ((this.watchdogFires += 1),
-        i("tengu_remote_headless_client_watchdog_fired", {
+        logEvent("tengu_remote_headless_client_watchdog_fired", {
           timeout: fromEnum(this.compacting ? "compacting" : "response"),
         }),
         n("[headlessCloudClient] response timeout; reconnecting"),
@@ -1998,11 +1998,11 @@ class Te {
 }
 import { randomUUID as zn } from "crypto";
 function W(e, t, o) {
-  return kt(t, o, (r, d) => e.setTimeout(r, d));
+  return withDeadline(t, o, (r, d) => e.setTimeout(r, d));
 }
 var Kn = 3000,
   $n = 256,
-  Qn = m(() =>
+  Qn = createLazyValue(() =>
     c({
       cancelled: v(s())
         .optional()
@@ -2038,7 +2038,7 @@ class He {
     switch (d.kind) {
       case "reject":
         return (
-          this.ports.emit(kB(t, d.error)),
+          this.ports.emit(buildControlErrorResponse(t, d.error)),
           this.log(p, "rejected"),
           "rejected"
         );
@@ -2067,7 +2067,7 @@ class He {
             );
           case "end_session":
             return (
-              this.ports.emit(I8(t, {})),
+              this.ports.emit(buildControlSuccessResponse(t, {})),
               this.ports.end({ reason: "end_session" }),
               this.log("end_session", "local"),
               "local"
@@ -2102,7 +2102,7 @@ class He {
       this.ports.initializePolicy === "strict"
     ) {
       (this.ports.emit(
-        kB(
+        buildControlErrorResponse(
           e,
           "the initialize request could not be read (it does not match the control schema), so its options cannot be applied to a cloud session; nothing was started",
         ),
@@ -2116,14 +2116,14 @@ class He {
       return;
     }
     if (C.outcome === "reject") {
-      if ((this.ports.emit(kB(e, C.error)), o))
+      if ((this.ports.emit(buildControlErrorResponse(e, C.error)), o))
         this.ports.end({ reason: "rejected_options", message: C.error });
       this.log("initialize", "rejected");
       return;
     }
     if (
       (this.ports.emit(
-        I8(e, {
+        buildControlSuccessResponse(e, {
           ...J9n(this.ports.account()),
           ...(C.ignored.includes("hooks") && { hooks_applied: !1 }),
           ...(C.ignored.includes("plugins") && { plugins_applied: !1 }),
@@ -2135,7 +2135,7 @@ class He {
         "[headlessCloudClient] initialize did not match its schema; opening the session without host options",
       );
     (this.ports.requestOpen(w.success ? w.data : null),
-      i("tengu_remote_headless_client_host_request", {
+      logEvent("tengu_remote_headless_client_host_request", {
         subtype: fromEnum("initialize"),
         outcome: fromEnum("local"),
         ignored_count: C.ignored.length + this.ports.ignoredOptionsCount,
@@ -2152,7 +2152,7 @@ class He {
       ];
     (this.ports.onInterrupt?.(),
       this.ports.emit(
-        I8(e, o ? { still_queued: p, cancelled: d } : { still_queued: p }),
+        buildControlSuccessResponse(e, o ? { still_queued: p, cancelled: d } : { still_queued: p }),
       ));
     let _ = this.ports.liveSession();
     if (_ === null) {
@@ -2181,7 +2181,7 @@ class He {
       e !== null && !this.ports.interruptMattersBeforeLive())
     )
       return (
-        i("tengu_remote_headless_client_interrupt_receipt", {
+        logEvent("tengu_remote_headless_client_interrupt_receipt", {
           outcome: fromEnum("nothing_to_stop"),
         }),
         null
@@ -2216,15 +2216,15 @@ class He {
       this.ports.outbound.holdLaterSendsBehind(this.issued));
   }
   logInterruptReceipt(e, t, o) {
-    i("tengu_remote_headless_client_interrupt_receipt", {
+    logEvent("tengu_remote_headless_client_interrupt_receipt", {
       outcome: fromEnum(e),
       latency_ms: this.ports.clock.now() - t,
       ...(o !== void 0 && { swept_announced: o }),
     });
   }
   announceSweptByWorker(e) {
-    let t = kv("interrupt", Qn(), e ?? {})?.cancelled ?? [],
-      o = Y(t)
+    let t = parseThinClientReply("interrupt", Qn(), e ?? {})?.cancelled ?? [],
+      o = dedupe(t)
         .filter((r) => Xn(r) !== null && !this.announcedCancelled.has(r))
         .slice(0, $n);
     return (
@@ -2255,7 +2255,7 @@ class He {
           : t,
       r = "message_uuid" in o ? o.message_uuid : void 0;
     if (this.ports.outbound.withdrawQueuedSend(r)) {
-      (this.ports.emit(I8(e, { cancelled: !0 })),
+      (this.ports.emit(buildControlSuccessResponse(e, { cancelled: !0 })),
         this.log("cancel_async_message", "local"));
       return;
     }
@@ -2268,7 +2268,7 @@ class He {
     });
   }
   log(e, t) {
-    i("tengu_remote_headless_client_host_request", {
+    logEvent("tengu_remote_headless_client_host_request", {
       subtype: fromEnum(e),
       outcome: fromEnum(t),
     });
@@ -2612,7 +2612,7 @@ class Ne {
           "too many messages are waiting for the cloud session",
           { outcome: "overflow" },
         ),
-        i("tengu_remote_headless_client_queue_overflow", { kind: fromEnum(e.kind) }),
+        logEvent("tengu_remote_headless_client_queue_overflow", { kind: fromEnum(e.kind) }),
         "refused"
       );
     if (
@@ -2697,7 +2697,7 @@ class Ne {
     if (
       (o.forEach((d) => this.failItem(d, e, { composedHere: r })), o.length > 0)
     )
-      i("tengu_remote_headless_client_queue_dropped", {
+      logEvent("tengu_remote_headless_client_queue_dropped", {
         count: o.length,
         cause: fromEnum(t),
       });
@@ -2706,7 +2706,7 @@ class Ne {
   answerForwardsInFlight(e) {
     let t = D_(e);
     for (let o of [...this.forwardsInFlight.keys()])
-      (this.contained(() => this.ports.emit(kB(o, t))),
+      (this.contained(() => this.ports.emit(buildControlErrorResponse(o, t))),
         this.forwardsInFlight.delete(o));
   }
   queuedSendUuids() {
@@ -2783,7 +2783,7 @@ class Ne {
     )
       this.forwardsInFlight.get(e)?.abort();
     r.forEach((d) =>
-      i("tengu_remote_headless_client_host_request", {
+      logEvent("tengu_remote_headless_client_host_request", {
         subtype: fromEnum(d.telemetrySubtype),
         outcome: fromEnum("cancelled"),
       }),
@@ -2838,7 +2838,7 @@ class Ne {
           return;
         }
         if (C) this.contained(() => this.ports.emit(sOe(w, e.uuid, e.content)));
-        this.contained(() => this.ports.emit(xB(w, [`${Jn}: ${_}`], e.uuid)));
+        this.contained(() => this.ports.emit(buildErrorResultMessage(w, [`${Jn}: ${_}`], e.uuid)));
         return;
       }
       case "bash":
@@ -2846,7 +2846,7 @@ class Ne {
         else this.ledger.giveUp(e.uuid);
         this.contained(() =>
           this.ports.emit(
-            xB(w, [
+            buildErrorResultMessage(w, [
               r
                 ? `bash_command may not have run: ${_}`
                 : `bash_command was not run: ${_}`,
@@ -2857,11 +2857,11 @@ class Ne {
       case "control":
         (this.contained(() =>
           this.ports.emit(
-            kB(e.hostRequestId, `${e.request.subtype} was not sent: ${_}`),
+            buildControlErrorResponse(e.hostRequestId, `${e.request.subtype} was not sent: ${_}`),
           ),
         ),
           this.contained(() =>
-            i("tengu_remote_headless_client_host_request", {
+            logEvent("tengu_remote_headless_client_host_request", {
               subtype: fromEnum(e.telemetrySubtype),
               outcome: fromEnum(d),
             }),
@@ -2962,7 +2962,7 @@ class Ne {
       ));
   }
   logSend(e, t, o = {}) {
-    i("tengu_remote_headless_client_send", { kind: fromEnum(e), outcome: fromEnum(t), ...o });
+    logEvent("tengu_remote_headless_client_send", { kind: fromEnum(e), outcome: fromEnum(t), ...o });
   }
   postOnce(e, t) {
     return t.kind === "message"
@@ -2995,7 +2995,7 @@ class Ne {
             if (this.forwardsInFlight.get(e.hostRequestId) !== t)
               return "closed";
             return (
-              this.ports.emit(I8(e.hostRequestId, w ?? {})),
+              this.ports.emit(buildControlSuccessResponse(e.hostRequestId, w ?? {})),
               this.forwardsInFlight.delete(e.hostRequestId),
               "forwarded"
             );
@@ -3009,14 +3009,14 @@ class Ne {
                 "cancelled"
               );
             return (
-              this.ports.emit(kB(e.hostRequestId, ns(w))),
+              this.ports.emit(buildControlErrorResponse(e.hostRequestId, ns(w))),
               this.forwardsInFlight.delete(e.hostRequestId),
               "error"
             );
           },
         );
     ((this.forwardCount += 1),
-      i("tengu_remote_headless_client_host_request", {
+      logEvent("tengu_remote_headless_client_host_request", {
         subtype: fromEnum(o),
         outcome: fromEnum(_),
         latency_ms: this.ports.clock.now() - d,
@@ -3242,7 +3242,7 @@ class It {
     return (this.opened?.settle?.(e) ?? Promise.resolve(void 0)).then(
       (o) => {
         if (!o) return;
-        (i("tengu_remote_headless_client_seed_cut_short", { at: fromEnum(t) }),
+        (logEvent("tengu_remote_headless_client_seed_cut_short", { at: fromEnum(t) }),
           this.emit(AF(this.stampedSessionId, o.level, bze(o.text))));
       },
       (o) => {
@@ -3259,7 +3259,7 @@ class It {
         ...(o.length > 0 && { supportedDialogKinds: o }),
       },
       p = (C, k) => {
-        i("tengu_remote_headless_client_worker_initialize", {
+        logEvent("tengu_remote_headless_client_worker_initialize", {
           reason: fromEnum(r),
           outcome: fromEnum(C.outcome),
           ...("cause" in C && { cause: fromEnum(C.cause) }),
@@ -3305,7 +3305,7 @@ class It {
     for (let { request: o, required: r, describe: d } of e)
       try {
         (await t.sendControlRequest(o),
-          i("tengu_remote_headless_client_opening_request", {
+          logEvent("tengu_remote_headless_client_opening_request", {
             subtype: fromEnum(o.subtype),
             outcome: fromEnum("applied"),
           }));
@@ -3314,7 +3314,7 @@ class It {
           (n(
             `[headlessCloudClient] opening request ${o.subtype} failed: ${D_(oe(l(p), 200))}`,
           ),
-          i("tengu_remote_headless_client_opening_request", {
+          logEvent("tengu_remote_headless_client_opening_request", {
             subtype: fromEnum(o.subtype),
             outcome: fromEnum(r ? "refused_required" : "refused_optional"),
           }),
@@ -3437,7 +3437,7 @@ class It {
         return;
       case "control_request": {
         let t = "request_id" in e ? e.request_id : void 0;
-        if (typeof t === "string") this.emit(kB(t, ps));
+        if (typeof t === "string") this.emit(buildControlErrorResponse(t, ps));
         return;
       }
       default:
@@ -3459,7 +3459,7 @@ class It {
     if (t === "invalid")
       return (
         this.emit(
-          xB(this.stampedSessionId, [
+          buildErrorResultMessage(this.stampedSessionId, [
             "Your message was not delivered to the cloud session: its uuid must be a UUID",
           ]),
         ),
@@ -3468,7 +3468,7 @@ class It {
     if (typeof r !== "string" && !Array.isArray(r))
       return (
         this.emit(
-          xB(
+          buildErrorResultMessage(
             this.stampedSessionId,
             [
               "Your message was not delivered to the cloud session: its content must be a string or content blocks",
@@ -3481,7 +3481,7 @@ class It {
     if (Array.isArray(r) && wHe({ message: { content: r } }))
       return (
         this.emit(
-          xB(
+          buildErrorResultMessage(
             this.stampedSessionId,
             [`Your message was not delivered to the cloud session: ${Ue}`],
             t,
@@ -3504,7 +3504,7 @@ class It {
     let t = this.hostFrameUuid(e),
       o = "command" in e ? e.command : void 0,
       r = "cwd" in e ? e.cwd : void 0,
-      d = (p) => (this.emit(xB(this.stampedSessionId, [p])), !1);
+      d = (p) => (this.emit(buildErrorResultMessage(this.stampedSessionId, [p])), !1);
     if (t === "invalid")
       return d("bash_command was not run: its uuid must be a UUID");
     if (typeof o !== "string")
@@ -3570,7 +3570,7 @@ class It {
         t.kind === "opened")
       ) {
         if (
-          (i("tengu_remote_headless_client_open_discarded", {
+          (logEvent("tengu_remote_headless_client_open_discarded", {
             entry: fromEnum(t.session.entry),
           }),
           t.session.entry === "attach")
@@ -3635,7 +3635,7 @@ class It {
         onTurnEnded: () => this.features?.noteTurnEnded(),
         onWorkerUp: (R) => {
           (this.features?.noteWorkerUp(R),
-            i("tengu_remote_headless_client_worker_up", {
+            logEvent("tengu_remote_headless_client_worker_up", {
               generation: R.generation,
               session_mode: fromEnumOpt(R.sessionMode),
             }));
@@ -3885,7 +3885,7 @@ class It {
     let O = this.readCloudSession(),
       A = r.reports();
     if (
-      (i("tengu_remote_headless_client_started", {
+      (logEvent("tengu_remote_headless_client_started", {
         entry: fromEnum(e.entry),
         device_status: fromEnumOpt(O?.device.status),
         sync_state: fromEnumOpt(O?.directory_sync.state),
@@ -3956,7 +3956,7 @@ class It {
     let o = parsePermissionMode(e),
       r = o === void 0 ? void 0 : _c(o);
     if (r === t) return;
-    i("tengu_remote_headless_client_mode_not_applied", {
+    logEvent("tengu_remote_headless_client_mode_not_applied", {
       requested: fromEnum(t),
       actual: fromEnumOpt(r),
     });
@@ -3999,7 +3999,7 @@ class It {
       this.liveness?.noteWorkerReady());
     let t = this.outbound.queuedCount;
     (this.goLive(this.session.manager),
-      i("tengu_remote_headless_client_worker_ready", {
+      logEvent("tengu_remote_headless_client_worker_ready", {
         via: fromEnum(e),
         wait_ms: this.clock.now() - this.connectEpoch,
         queued: t,
@@ -4015,7 +4015,7 @@ class It {
     }, this.workerReadyIdleMs);
   }
   logStream(e, t = {}) {
-    i("tengu_remote_headless_client_stream", { transition: fromEnum(e), ...t });
+    logEvent("tengu_remote_headless_client_stream", { transition: fromEnum(e), ...t });
   }
   detachIfDrained() {
     if (
@@ -4087,7 +4087,7 @@ class It {
     let d = this.outbound.stats,
       p = this.liveness?.stats;
     if (
-      (i("tengu_remote_headless_client_ended", {
+      (logEvent("tengu_remote_headless_client_ended", {
         reason: fromEnum(e),
         exit_code: t,
         ended_from: fromEnum(o),
@@ -4215,9 +4215,9 @@ function Ss(e) {
 }
 function _s(e) {
   return {
-    not_applied_lost: G(e, ({ kind: t }) => t === "lost"),
-    not_applied_kept: G(e, ({ kind: t }) => t === "kept"),
-    not_applied_preference: G(e, ({ kind: t }) => t === "preference"),
+    not_applied_lost: countMatching(e, ({ kind: t }) => t === "lost"),
+    not_applied_kept: countMatching(e, ({ kind: t }) => t === "kept"),
+    not_applied_preference: countMatching(e, ({ kind: t }) => t === "preference"),
   };
 }
 var vs = [
@@ -4235,7 +4235,7 @@ function Cs(e) {
 async function Dt(e, { folder: t, attempts: o, lastError: r, signal: d }) {
   let p = (_) => {
     if (
-      (i("tengu_dir_sync_offline_told", {
+      (logEvent("tengu_dir_sync_offline_told", {
         via: fromEnum(_),
         attempts: o,
         surface: S("sdk_host"),
@@ -4277,7 +4277,7 @@ function ws(e) {
       " ",
     )
     .trim();
-  return V4(t);
+  return truncateWithEllipsis(t);
 }
 var ks = 3000;
 function bs(e) {
@@ -4321,7 +4321,7 @@ async function Pt({
     if (e === void 0 || !(await (d.flagOn ?? isViolinWoodEnabled)().catch(() => !1))) return [];
     if (!e.kinds.has(ie.kind))
       return (
-        i("tengu_dir_sync_mode_prompt_skipped", {
+        logEvent("tengu_dir_sync_mode_prompt_skipped", {
           reason: S("host_undeclared"),
           surface: p,
         }),
@@ -4332,7 +4332,7 @@ async function Pt({
     let w = (d.launchDirectory ?? he)();
     if (Re({ folder: _, launchFolder: w, upload: void 0 }) === null)
       return (
-        i("tengu_dir_sync_mode_prompt_skipped", {
+        logEvent("tengu_dir_sync_mode_prompt_skipped", {
           reason: S("unsendable_path"),
           surface: p,
         }),
@@ -4345,7 +4345,7 @@ async function Pt({
     });
     if (!C.offer)
       return (
-        i("tengu_dir_sync_mode_prompt_skipped", {
+        logEvent("tengu_dir_sync_mode_prompt_skipped", {
           reason: fromEnum(C.reason),
           surface: p,
         }),
@@ -4359,12 +4359,12 @@ async function Pt({
       upload: await (d.measureUpload ?? Rs)(w, C, r),
     });
     if (k === null || r.aborted) return [];
-    i("tengu_dir_sync_mode_prompt_shown", { surface: p });
+    logEvent("tengu_dir_sync_mode_prompt_shown", { surface: p });
     let { answer: D, answered: E } = await e.request(ie, k, { signal: r });
     if (!E) return (logFeatureSad("ccr_dir_sync_mode_prompt", "cancelled"), []);
     let I = D === "sync" ? "container_sync" : D;
     if (
-      (i("tengu_dir_sync_mode_prompt", { choice: fromEnum(I), surface: p }),
+      (logEvent("tengu_dir_sync_mode_prompt", { choice: fromEnum(I), surface: p }),
       I === "not_now")
     )
       return (logFeatureSad("ccr_dir_sync_mode_prompt", "dismissed"), []);
@@ -4382,7 +4382,7 @@ async function Pt({
 async function Ot({ dialogs: e, permissionMode: t, signal: o, seams: r = {} }) {
   let d = S("desktop"),
     p = (_) => {
-      i("tengu_served_unattended_consent", { action: fromEnum(_), surface: d });
+      logEvent("tengu_served_unattended_consent", { action: fromEnum(_), surface: d });
     };
   try {
     if (
@@ -4461,7 +4461,7 @@ function Ft(e) {
         P !== null ? Ds(P) : Ps,
       );
     }
-    let R = N7(),
+    let R = createStatusFeed(),
       F = null,
       H = [],
       M = !1,
@@ -4601,7 +4601,7 @@ function Is(e) {
 }
 function le(e, t, o, r, d, p) {
   return (
-    i("tengu_cloud_plugins_admission", {
+    logEvent("tengu_cloud_plugins_admission", {
       admission: fromEnum(t),
       source: fromEnum(o),
       reattach: r,
@@ -4752,7 +4752,7 @@ async function xt(e, t, o = {}) {
   if (r === null) return;
   let d = r.state();
   if (d !== "started" && d !== "done") e.abort();
-  let p = await kt(
+  let p = await withDeadline(
     r.completion.then(() => !0),
     t,
   );
@@ -4809,7 +4809,7 @@ function je(e) {
 }
 function Bt({ dirSync: e, fileMode: t }) {
   let o = Lt({ dirSync: e, fileMode: t });
-  i("tengu_remote_headless_laptop_linked", {
+  logEvent("tengu_remote_headless_laptop_linked", {
     sync_state: fromEnum(o.state),
     sync_reason: fromEnumOpt("reason" in o ? o.reason : void 0),
     file_mode: fromEnum(t),
@@ -4831,7 +4831,7 @@ function Wt(e, t) {
   };
 }
 async function Us() {
-  let e = await Q1t({ accountUuid: jt() });
+  let e = await localBindIdentity({ accountUuid: jt() });
   return e.ok ? void 0 : e.error;
 }
 function jt() {
@@ -4893,7 +4893,7 @@ async function Qt(e, t, { entry: o, opener: r, features: d = [] }) {
     ignoredOptions:
       o === "create"
         ? w.ignored
-        : Y([
+        : dedupe([
             ...w.ignored,
             ...$s(w.forwarded, e, e.effectiveModel ?? a.ANTHROPIC_MODEL),
           ]),
@@ -5087,7 +5087,7 @@ async function zs(
     );
   let I = new AbortController(),
     O = Et(() => I.abort()),
-    A = Fa(I.signal, { signalB: r.signal }),
+    A = createLinkedAbortSignal(I.signal, { signalB: r.signal }),
     R = await Pt({
       dialogs: r.dialogs,
       explicitRef: e.poolOnBranch
@@ -5148,19 +5148,19 @@ async function zs(
     });
   if (P.notice !== void 0) Ye(P.notice.text);
   if (P.action !== "none")
-    i("tengu_remote_model_gate_hint", {
+    logEvent("tengu_remote_model_gate_hint", {
       entry_point: S("cloud_headless"),
       permission_mode: fromEnumOpt(z) ?? S("unset"),
       action: fromEnum(P.action),
       ...(P.repositoryModel && { repository_model: fromEnum(P.repositoryModel) }),
     });
-  i("tengu_remote_create_session", {
+  logEvent("tengu_remote_create_session", {
     has_initial_prompt: S("false"),
     forwarded_count: Object.keys(o).length,
     entry_point: fromEnum("cloud_headless"),
     branch_mode: D,
   });
-  let B = Fa(I.signal, { signalB: r.signal });
+  let B = createLinkedAbortSignal(I.signal, { signalB: r.signal });
   await Ot({
     dialogs: r.dialogs,
     permissionMode: P.permissionMode,
@@ -5232,7 +5232,7 @@ async function zs(
   if (x === null) {
     let q = fe;
     if (
-      (await qs("tengu_remote_create_session_error", {
+      (await logEventAsync("tengu_remote_create_session_error", {
         error: I.signal.aborted ? S("aborted") : q ? fromEnum(q.reason) : S("unknown"),
         entry_point: fromEnum("cloud_headless"),
         branch_mode: D,
@@ -5260,7 +5260,7 @@ async function zs(
     },
     j = Xt();
   if (j.status === "unbound") await ge();
-  await qs("tengu_remote_create_session_success", {
+  await logEventAsync("tengu_remote_create_session_success", {
     session_id: Tn(x.id),
     entry_point: fromEnum("cloud_headless"),
     branch_mode: D,
@@ -5327,7 +5327,7 @@ async function zs(
     session: {
       entry: "create",
       ...et,
-      ...(j.status === "bound" && { eventSigner: Y1t(j.deviceId, _) }),
+      ...(j.status === "bound" && { eventSigner: deviceEventSignerFor(j.deviceId, _) }),
       featureHandles: tt,
       hasTitle: Boolean(e.sessionNameArg || e.remote),
       ...(nt.length > 0 && { notices: nt }),
@@ -5364,7 +5364,7 @@ async function Ks({
   seams: w,
 }) {
   let C = await (w.remoteFileMode ?? We)(d?.gitRoot),
-    k = (w.deviceDisplayName ?? cze)(),
+    k = (w.deviceDisplayName ?? buildDefaultDeviceDisplayName)(),
     D = Ut(
       {
         sessionId: e,
@@ -5433,7 +5433,7 @@ async function Qs(
   C = {},
 ) {
   let k = toCompatSessionId(w);
-  i("tengu_remote_attach_session", {
+  logEvent("tengu_remote_attach_session", {
     session_id: Ee(k),
     entry_point: fromEnum("cloud_headless"),
   });
@@ -5463,7 +5463,7 @@ async function Qs(
     );
   if (O.archived)
     return (
-      i("tengu_remote_attach_session_rejected", {
+      logEvent("tengu_remote_attach_session_rejected", {
         reason: S("archived"),
         entry_point: fromEnum("cloud_headless"),
       }),
@@ -5482,7 +5482,7 @@ async function Qs(
         message: `Error: could not read where cloud session ${a6e(k)}'s stream stands (${Vn(A.error, 200)}).`,
       }
     );
-  let R = (C.resolveBinding ?? LJt)({
+  let R = (C.resolveBinding ?? resolveAttachDeviceBinding)({
       sessionId: k,
       storageV5: r,
       session: I.then((P) => ({
@@ -5490,8 +5490,8 @@ async function Qs(
         boundDeviceId: P.bound_device_uuid,
       })),
     }),
-    F = (C.attachDirSync ?? eo)(k, MJt(R), d, r, p),
-    H = (C.registerDevice ?? NJt)({
+    F = (C.attachDirSync ?? eo)(k, pullsBackToThisMachine(R), d, r, p),
+    H = (C.registerDevice ?? registerAttachedDevice)({
       sessionId: k,
       getAccessToken: E.getAccessToken,
       orgUuid: e.orgUUID,
@@ -5540,7 +5540,7 @@ async function Qs(
     session: {
       entry: "attach",
       ...E,
-      ...(M.status === "bound" && { eventSigner: Y1t(M.deviceId, d) }),
+      ...(M.status === "bound" && { eventSigner: deviceEventSignerFor(M.deviceId, d) }),
       initialSequenceNum: A.position,
       ...(_.length > 0 && { openingRequests: _ }),
       ...(O.awaitsAnswer && { workerAwaitsAnswer: !0 }),
@@ -5668,7 +5668,7 @@ async function to(e, t) {
   return r().catch(
     async (d) => (
       n(`[headlessCloud] stream position unreadable, retrying once: ${l(d)}`),
-      await Z(t.positionRetryMs ?? so),
+      await sleep(t.positionRetryMs ?? so),
       r()
     ),
   );

@@ -9,16 +9,16 @@
 // Version: 2.1.263
 import { j, B, sc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { ge, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { withOAuth401Retry, ht, hasProfileScope, getOauthAccountInfo } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import {
   MF,
@@ -36,7 +36,7 @@ import {
   J9t,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { v4, IIe, Jx, D3e } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { Mle, rlt, V9e } from "../../01-核心基础设施/共享小工具-未细化/chunk-hyrh6kmc.js";
+import { isContinuableUsageLimitWall, getSubscriptionTier, sendAutoContinuationPrompt } from "../../01-核心基础设施/共享小工具-未细化/usage-limit-continuation.js";
 import { s, T, O, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 function L() {
   return {
@@ -70,7 +70,7 @@ function tnn(e) {
 }
 var I = "juniper_tide",
   D = 25000,
-  H = m(() =>
+  H = createLazyValue(() =>
     c({
       surface: X(["claude_ai", "claude_code_cli", "unknown"]).catch("unknown"),
       tier: X([
@@ -103,7 +103,7 @@ var I = "juniper_tide",
       ]).catch("unknown"),
     }),
   ),
-  F = m(() =>
+  F = createLazyValue(() =>
     c({
       eligible: O(),
       ineligible_reason: X([
@@ -134,7 +134,7 @@ var I = "juniper_tide",
       event_props: H().nullable().optional().catch(null),
     }),
   ),
-  M = m(() =>
+  M = createLazyValue(() =>
     c({
       result: X([
         "reset",
@@ -283,7 +283,7 @@ function k(e) {
 function oIe(e, t = Date.now()) {
   let r = x(e);
   return (
-    Mle(e) &&
+    isContinuableUsageLimitWall(e) &&
     r !== void 0 &&
     r !== null &&
     r.arm === "reset" &&
@@ -297,7 +297,7 @@ function oIe(e, t = Date.now()) {
 function sIe(e, t = Date.now()) {
   let r = x(e);
   if (
-    !Mle(e) ||
+    !isContinuableUsageLimitWall(e) ||
     r === void 0 ||
     r === null ||
     r.arm !== "reset" ||
@@ -316,12 +316,12 @@ function S(e) {
   return Number.isFinite(t) ? formatResetTime(Math.floor(t / 1000), !1, !0, !0) : void 0;
 }
 function ABn(e, t) {
-  if (!iNe() || !Mle(e)) return;
+  if (!iNe() || !isContinuableUsageLimitWall(e)) return;
   let r = b();
   (ie(r), (r.continuableWallResetsAt = e.resetsAt ?? null), w(e, t, "wall"));
 }
 function w(e, t, r) {
-  if (!iNe() || !Mle(e)) return Promise.resolve();
+  if (!iNe() || !isContinuableUsageLimitWall(e)) return Promise.resolve();
   let a = e.resetsAt;
   if (a === void 0) return Promise.resolve();
   let d = b(),
@@ -340,7 +340,7 @@ function w(e, t, r) {
     }
   _({ phase: "asking", wallResetsAt: a, accountEpoch: o });
   let p = v4(),
-    f = kt(R(t), Q)
+    f = withDeadline(R(t), Q)
       .then((A) => {
         C({
           wallResetsAt: a,
@@ -384,7 +384,7 @@ function C({
     _({ phase: "failed", wallResetsAt: e, accountEpoch: t, failures: r + 1 });
   else _({ phase: "answered", wallResetsAt: e, accountEpoch: t, status: l });
   if (
-    (i("tengu_juniper_tide_asked", {
+    (logEvent("tengu_juniper_tide_asked", {
       outcome: fromEnum(
         a.kind === "answered" ? (l === null ? "absent" : "block") : a.kind,
       ),
@@ -396,11 +396,11 @@ function C({
     l === null || !l.eligible)
   )
     return;
-  i("tengu_juniper_tide_wall", {
+  logEvent("tengu_juniper_tide_wall", {
     in_experiment: l.inExperiment,
     arm: fromEnumOpt(l.arm) ?? void 0,
     available: l.available,
-    tier: fromEnum(rlt()),
+    tier: fromEnum(getSubscriptionTier()),
     auto_armed: d,
     low_priority_active: MF(),
     config_version: fSt(),
@@ -418,7 +418,7 @@ function q9e(e, t) {
   if (r === null || a.shownWallResetsAt === r) return;
   a.shownWallResetsAt = r;
   let d = x(e);
-  i("tengu_juniper_tide_shown", {
+  logEvent("tengu_juniper_tide_shown", {
     arm: fromEnumOpt(d?.arm) ?? void 0,
     surface: fromEnum(t),
     config_version: fSt(),
@@ -452,7 +452,7 @@ async function K(e, t) {
   if (r.claiming) return { outcome: "unavailable", text: V };
   let o = d.resetsAt,
     l = fSt();
-  i("tengu_juniper_tide_selected", {
+  logEvent("tengu_juniper_tide_selected", {
     entry: fromEnum(e),
     auto_armed: v4(),
     config_version: l,
@@ -461,12 +461,12 @@ async function K(e, t) {
     p;
   r.claiming = !0;
   try {
-    p = (await kt(E(t), G)) ?? { result: "error", nextAvailableAt: null };
+    p = (await withDeadline(E(t), G)) ?? { result: "error", nextAvailableAt: null };
   } finally {
     r.claiming = !1;
   }
   switch (
-    (i("tengu_juniper_tide_result", {
+    (logEvent("tengu_juniper_tide_result", {
       result: fromEnum(p.result),
       entry: fromEnum(e),
       latency_ms: Date.now() - v,
@@ -534,7 +534,7 @@ function Y(e, t, r, a) {
       if (o.phase !== "idle" && o.wallResetsAt === t) _({ phase: "idle" });
     },
     () => {
-      if (a) V9e();
+      if (a) sendAutoContinuationPrompt();
     },
     () => e.events.emit({ type: "reset", entry: r }),
   ];

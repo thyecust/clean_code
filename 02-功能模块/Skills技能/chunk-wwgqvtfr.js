@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { T$ } from "../../01-核心基础设施/共享小工具-未细化/chunk-1avr3bqa.js";
-import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
+import { createJsonFileStore } from "../../01-核心基础设施/共享小工具-未细化/json-file-store.js";
+import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { readFile, stat as v } from "fs/promises";
@@ -24,7 +24,7 @@ var tOe = "mcp-skill-archives",
   p = "meta.json",
   Cpt = "SKILL.md",
   I = 86400000,
-  k = m(() =>
+  k = createLazyValue(() =>
     c({
       uri: s().optional(),
       cacheKey: s(),
@@ -42,7 +42,7 @@ function w(e) {
   return Ce.userConfigDir(tOe, [e, p]);
 }
 function C(e) {
-  return T$(f(e, p), () => k().nullable(), {
+  return createJsonFileStore(f(e, p), () => k().nullable(), {
     defaultValue: null,
     ensureDir: !0,
   });
@@ -50,7 +50,7 @@ function C(e) {
 function y(e, t, i) {
   let r = mn(`${e}\x00${i}`).slice(0, 8),
     o = t.replace(/[^A-Za-z0-9._-]/g, "-").slice(0, 64);
-  return `${rn(e)}--${o}--${r}`;
+  return `${normalizeMcpName(e)}--${o}--${r}`;
 }
 function vpt(e) {
   if (!e) return;
@@ -187,7 +187,7 @@ async function D9n(e, t, i, r) {
     declaredDigest: vpt(t.digest ?? void 0),
     fetchedAt: Date.now(),
   };
-  if (M() && r) {
+  if (isHoverRestEnabled() && r) {
     await L(r, e.slug, o);
     return;
   }

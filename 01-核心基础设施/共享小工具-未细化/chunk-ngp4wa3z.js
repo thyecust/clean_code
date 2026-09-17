@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { au, Ae } from "./chunk-2c9tjhwd.js";
+import { defineExportGetters, importMetaRequire } from "./chunk-2c9tjhwd.js";
 var Ftn = {};
-au(Ftn, { SKILL_MD: () => SKILL_MD, default: () => Ftn });
-var e = Ae("./SKILL-5m53528d.md");
+defineExportGetters(Ftn, { SKILL_MD: () => SKILL_MD, default: () => Ftn });
+var e = importMetaRequire("./SKILL-5m53528d.md");
 var SKILL_MD = e;
 export { SKILL_MD, Ftn as default };

@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 66 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Tn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -21,14 +21,14 @@ import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { up, _S } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { jt } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { L4 } from "../插件系统/chunk-nejpd7jw.js";
+import { getOfficialPluginPromptOverrides } from "../插件系统/plugin-prompt-overrides.js";
 import { Fk, JSt, Jn, UNe } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { zo } from "../MCP客户端/chunk-3kmsshb6.js";
 import { Cpt, vpt, I9n, Tan, P9n, O9n, D9n } from "./chunk-wwgqvtfr.js";
 import { oSn } from "../MCP客户端/chunk-0mwqsv0r.js";
 import { Hl } from "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
 import { wwt, A1e, C1e, Ewt } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
-import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
+import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
 import { xA, Jke } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { randomBytes } from "crypto";
 import { mkdir, rename, rm as R, writeFile } from "fs/promises";
@@ -66,7 +66,7 @@ function j(e, r, s) {
     o = jt().skillsFunnelSeen,
     a = o.has(c) ? "refetch" : "initial";
   (o.add(c),
-    i("tengu_mcp_skills_funnel", {
+    logEvent("tengu_mcp_skills_funnel", {
       step: fromEnum(e),
       client: S("claude-code-cli"),
       server_name: Tn(r.name),
@@ -97,7 +97,7 @@ class I {
           else s = d;
         },
         k = await Promise.all(o.map((d) => W(e, d, a, p, r))),
-        t = L4(e.config)?.skills,
+        t = getOfficialPluginPromptOverrides(e.config)?.skills,
         h = k.filter((d) => d !== null),
         m = t
           ? h.map((d) => {
@@ -302,7 +302,7 @@ async function Z(e, r, s, c, o) {
         alreadyCached: h,
       } = await P9n(e, r, a, o);
     if (!h)
-      if (M() && o) await O9n(o, p, a, s);
+      if (isHoverRestEnabled() && o) await O9n(o, p, a, s);
       else {
         let m = b(k, `.tmp-${process.pid}-${randomBytes(4).toString("hex")}`);
         await mkdir(m, { recursive: !0 });
@@ -351,7 +351,7 @@ function D({
     { frontmatter: k, content: t } = zo(p, r, { normalizeKeys: !0 }),
     h = Ewt(t),
     m = a(k, h, s),
-    d = rn(s);
+    d = normalizeMcpName(s);
   if (m.hooks)
     logMCPDebug(
       e.name,
@@ -362,7 +362,7 @@ function D({
       e.name,
       `Skill '${d}' declared allowed-tools in frontmatter \u2014 ignored (MCP-sourced skills cannot bypass permissions)`,
     );
-  let _ = `${rn(e.name)}:${d}`,
+  let _ = `${normalizeMcpName(e.name)}:${d}`,
     L = F(r),
     C = L
       ? {

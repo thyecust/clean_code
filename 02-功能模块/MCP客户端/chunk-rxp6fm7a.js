@@ -12,11 +12,11 @@ import { cw, qLe, Bne, getMcpScopeConflicts, isOrganizationProvidedMcpScope, get
 import { isRestrictedToPluginOnly } from "../Skills技能/chunk-sapykxw7.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { fl } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function A(Te) {
   let L = _(10),
@@ -26,7 +26,7 @@ function A(Te) {
     ((b = e(t, { bold: !0, children: Q })), (L[0] = Q), (L[1] = b));
   else b = L[1];
   let D;
-  if (L[2] !== U) ((D = e(et, { status: U })), (L[2] = U), (L[3] = D));
+  if (L[2] !== U) ((D = e(StatusIndicator, { status: U })), (L[2] = U), (L[3] = D));
   else D = L[3];
   let M;
   if (L[4] !== j)
@@ -141,7 +141,7 @@ function O(ze) {
     ((H = r(o, { children: [z, C] })), (c[15] = z), (c[16] = C), (c[17] = H));
   else H = c[17];
   let ae;
-  if (c[18] === p)
+  if (c[18] === MEMO_CACHE_SENTINEL)
     ((ae = e(t, { dimColor: !0, children: "Location: " })), (c[18] = ae));
   else ae = c[18];
   let J;
@@ -247,7 +247,7 @@ function O(ze) {
 function i9e() {
   let Y = _(3),
     S;
-  if (Y[0] === p) {
+  if (Y[0] === MEMO_CACHE_SENTINEL) {
     let fe = [
       { scope: "user", config: getMcpConfigsByScope("user") },
       { scope: "project", config: getMcpConfigsByScope("project") },
@@ -273,7 +273,7 @@ function i9e() {
     return null;
   }
   let de;
-  if (Y[1] === p)
+  if (Y[1] === MEMO_CACHE_SENTINEL)
     ((de = e(A, {
       title: "MCP config diagnostics",
       status: le ? "error" : "warning",
@@ -281,7 +281,7 @@ function i9e() {
       (Y[1] = de));
   else de = Y[1];
   let ge;
-  if (Y[2] === p)
+  if (Y[2] === MEMO_CACHE_SENTINEL)
     ((ge = r(o, {
       flexDirection: "column",
       marginTop: 1,

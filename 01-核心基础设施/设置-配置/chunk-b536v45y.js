@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { wc, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { da, Za, uHn, primeRemoteManagedSettingsCache, ZBe, Ake, Eie, jq } from "./设置-配置.aqbb35ee.js";
@@ -35,7 +35,7 @@ function v() {
   return t !== void 0 && basename(t) === jq.default ? t : void 0;
 }
 async function seedUserSettings(t, e) {
-  if (!M()) return;
+  if (!isHoverRestEnabled()) return;
   let s = e.epoch;
   (await Promise.all([
     N(t, e),
@@ -271,7 +271,7 @@ class T {
   }
 }
 async function primeSettings(t, e) {
-  if (!M() || t === void 0) return;
+  if (!isHoverRestEnabled() || t === void 0) return;
   if (e.primer !== void 0) {
     if (!e.primer.primes(t))
       n(
@@ -538,7 +538,7 @@ function Q(t, e, s, i) {
   }
 }
 async function X(t, e) {
-  if (!M()) return [];
+  if (!isHoverRestEnabled()) return [];
   let s = e.epoch;
   try {
     let i = P(t, e, s);
@@ -574,7 +574,7 @@ async function q(t, e) {
   j(e, await E(t, e));
 }
 async function E(t, e) {
-  if (!M()) return;
+  if (!isHoverRestEnabled()) return;
   if (
     typeof process.getuid !== "function" &&
     typeof process.geteuid !== "function"

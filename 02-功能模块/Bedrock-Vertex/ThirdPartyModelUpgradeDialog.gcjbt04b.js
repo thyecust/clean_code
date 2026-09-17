@@ -11,10 +11,10 @@
 // [preload stripped] 原本在此预载 143 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function ThirdPartyModelUpgradeDialog(k) {
   let l = _(27),
     { tierLabel: q, fromName: x, toName: a, toProviderId: y, onDone: i } = k;
@@ -55,7 +55,7 @@ function ThirdPartyModelUpgradeDialog(k) {
       (l[13] = C));
   else C = l[13];
   let L;
-  if (l[14] === p)
+  if (l[14] === MEMO_CACHE_SENTINEL)
     ((L = e(t, {
       dimColor: !0,
       children: "Claude Code will restart to apply.",
@@ -70,7 +70,7 @@ function ThirdPartyModelUpgradeDialog(k) {
   else g = l[16];
   let b;
   if (l[17] !== i)
-    ((b = e(En, { onConfirm: () => i(!0), onCancel: () => i(!1) })),
+    ((b = e(ConfirmPrompt, { onConfirm: () => i(!0), onCancel: () => i(!1) })),
       (l[17] = i),
       (l[18] = b));
   else b = l[18];

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Uw, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import {
   Le,
@@ -42,15 +42,15 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { mhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { ay, wr, yHn, ott, Al, zt, z6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Xa } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { Wi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, se, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { isAbsolute as te } from "path";
 var nve = ".claude-plugin-link",
-  Bzt = m(() =>
+  Bzt = createLazyValue(() =>
     c({
       target: s()
         .min(1)
@@ -261,7 +261,7 @@ function z$() {
   return fe(sb(), EJe);
 }
 function HEt() {
-  return Y([
+  return dedupe([
     R(be(), "plugins"),
     R(be(), "cowork_plugins"),
     sb(),
@@ -280,7 +280,7 @@ function rA(e, t, { extra: i, tail: r = "", fallback: o }) {
   return u === null ? o : `run \`${u}\`${r ? ` ${r}` : ""}`;
 }
 var ye = ["available", "required", "auto_install", "not_available"],
-  IEt = m(() => X(ye));
+  IEt = createLazyValue(() => X(ye));
 function Gzt(e) {
   return IEt().safeParse(e).data;
 }
@@ -578,7 +578,7 @@ var Vzt = /^plugin_(?:staging_|local_)?[A-Za-z0-9]{1,64}$/;
 function Voe(e) {
   return Vzt.test(e);
 }
-var xe = m(() =>
+var xe = createLazyValue(() =>
     c({
       [ume]: s()
         .regex(Vzt)
@@ -751,10 +751,10 @@ function Ne() {
     hookHotReloadUnsubscribe: void 0,
     hookHotReloadSettingsSnapshot: void 0,
     loadedModules: [],
-    notices: Xa(new Map()),
+    notices: createStore(new Map()),
     openCalls: new Map(),
     spawnProvenance: new Map(),
-    renderVersions: Xa(new Map()),
+    renderVersions: createStore(new Map()),
     uiLogSink: null,
     pendingUiLog: [],
     armedMonitorKeys: new Set(),
@@ -815,7 +815,7 @@ function X$(e, t, i = Date.now()) {
   return Number.isFinite(e) && Math.abs(i - e) < t;
 }
 var je = 4194304,
-  He = m(() =>
+  He = createLazyValue(() =>
     c({
       sourceCommand: s()
         .optional()

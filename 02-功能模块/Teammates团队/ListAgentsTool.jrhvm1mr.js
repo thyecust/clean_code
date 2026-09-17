@@ -9,14 +9,14 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 89 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Yb } from "./chunk-sr4920wy.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { $i, jQn, cbn } from "./chunk-t899nada.js";
 import { s, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var h = 1e4,
-  d = m(() =>
+  d = createLazyValue(() =>
     Qe({
       channel: s()
         .max(256)
@@ -28,10 +28,10 @@ var h = 1e4,
         .describe("Not available in this build; leave unset."),
     }),
   ),
-  S = m(() =>
+  S = createLazyValue(() =>
     c({ listing: s().describe("Formatted list of reachable agents") }),
   ),
-  ListAgentsTool = Tt({
+  ListAgentsTool = buildTool({
     name: $i,
     aliases: [jQn],
     searchHint: "list agents you can SendMessage to",

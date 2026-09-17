@@ -10,14 +10,14 @@
 
 // [preload stripped] 原本在此预载 179 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, l, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, z, nje, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { eje, St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   si,
@@ -95,16 +95,16 @@ import {
 import { listRegisteredSessionRecords } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { isPolicyAllowed, policyDenyKind, policyDeniedHint } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Ud, wEt } from "../Teammates团队/chunk-thxapyam.js";
-import { rf } from "../权限系统/chunk-qdy0h5k2.js";
+import { createDefaultToolPermissionContext } from "../权限系统/chunk-qdy0h5k2.js";
 import { isBridgeEnabledBlocking, describeRemoteControlPolicyDenial, isCseShimEnabled, isBridgeStateFramesEnabled, isBridgeResumeRespectsLocalOwnerEnabled, isBridgeRestoredMatchMintEnabled } from "./chunk-9estzwf5.js";
-import { ef } from "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
+import { AGENT_COLOR_NAMES } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { logBridgeSkip } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { hG } from "./chunk-3j7ezsr7.js";
+import { isPushNotificationsEnabled } from "./push-notification-tool.js";
 import { PROACTIVE_ENROLLMENT_DISABLED_MESSAGE, getAttestationFilterPolicy, preflightTrustedDeviceBlocking } from "./chunk-tyce0p0b.js";
 import { RAe, W8e } from "./chunk-ct52ffwb.js";
 import { globalFileIndexCache, generateFileSuggestions } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
-import { Ust } from "./chunk-2mm1aqzx.js";
-import { E2n } from "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
+import { createClientPresenceReporter } from "./client-presence.js";
+import { hydratePushNotificationPreferences } from "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
 import { b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { readFileForRemote } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { buildWorkspaceDiffResponse } from "../Git-Worktree/chunk-qdn32vbw.js";
@@ -113,7 +113,7 @@ import { ndt, Yjn } from "./chunk-ga43tr2w.js";
 import "./chunk-znhfst8k.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-thdf1760.js";
 import "./chunk-jpq2fv3g.js";
-import { APe, ldt, CPe, Bee, abe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2skajgkt.js";
+import { WorkSecretShapeError, parseWorkSecret, sessionIdsMatch, buildSessionApiUrl, registerWorker } from "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
 import { Gtn, _Bn, Xat } from "./chunk-1g5kqtqx.js";
 import "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
 import { Jsr, FR } from "./chunk-4zd60pbm.js";
@@ -125,13 +125,13 @@ async function gt(d, c) {
   return (s) => mn(s, d, c);
 }
 async function mn(d, c, s) {
-  let r = await kt(hn(c, s), gn).then(
+  let r = await withDeadline(hn(c, s), gn).then(
     (h) => h ?? "unknown_timeout",
     () => "unknown_error",
   );
   return (
     n(`[bridge:signed-out] site=${d} verdict=${r}`),
-    i("tengu_bridge_token_absence_classified", { site: fromEnum(d), verdict: fromEnum(r) }),
+    logEvent("tengu_bridge_token_absence_classified", { site: fromEnum(d), verdict: fromEnum(r) }),
     r
   );
 }
@@ -484,7 +484,7 @@ function Rt(d) {
     h = Ct(d.secret, c);
   if (typeof h === "string")
     throw new R(`work secret rejected: ${h}`, "work secret rejected");
-  let p = Bee(s, c),
+  let p = buildSessionApiUrl(s, c),
     k = null,
     F = !1;
   async function f() {
@@ -529,7 +529,7 @@ function Rt(d) {
     let T = w.session_ingress_token,
       C;
     try {
-      C = await abe(p, T);
+      C = await registerWorker(p, T);
     } catch (x) {
       let { kind: D, status: j } = Ps(x);
       if (
@@ -587,13 +587,13 @@ function Rt(d) {
 function Ct(d, c) {
   let s;
   try {
-    s = ldt(d);
+    s = parseWorkSecret(d);
   } catch (h) {
-    return h instanceof APe ? h.message : "undecodable";
+    return h instanceof WorkSecretShapeError ? h.message : "undecodable";
   }
   let r = Jsr(s.session_ingress_token);
   if (r === void 0) return "token carries no session_id claim";
-  if (!CPe(r, c)) return "token is for a different session";
+  if (!sessionIdsMatch(r, c)) return "token is for a different session";
   return s;
 }
 var REPL_WORKSPACE_DIFF_COMPUTE_BUDGET = { perFileMs: 400, totalMs: 1500 },
@@ -707,7 +707,7 @@ async function initReplBridge(d) {
           (setInternalEventWriter(
             (_, H, ie) => (
               e(_, H, ie).catch((Le) => {
-                (i("tengu_session_persistence_failed", {}),
+                (logEvent("tengu_session_persistence_failed", {}),
                   n(`[bridge:repl] Internal event write failed: ${l(Le)}`, {
                     level: "error",
                   }));
@@ -868,7 +868,7 @@ async function initReplBridge(d) {
       logBridgeSkip("not_enabled", "[bridge:repl] Skipping: bridge not enabled"),
       null
     );
-  let pe = M() && U !== void 0;
+  let pe = isHoverRestEnabled() && U !== void 0;
   if (!(pe ? await getBridgeAccessTokenAsync(U) : getBridgeAccessToken()))
     return (
       logBridgeSkip("no_oauth", "[bridge:repl] Skipping: no OAuth tokens"),
@@ -1272,10 +1272,10 @@ async function initReplBridge(d) {
       `[bridge:repl] Attaching ${B} with the host's work secret (worker-credential path)`,
     );
   }
-  if (rt) i("tengu_bridge_restored_pointer_takeover", {});
+  if (rt) logEvent("tengu_bridge_restored_pointer_takeover", {});
   let Re,
     un = 0,
-    pn = rf(),
+    pn = createDefaultToolPermissionContext(),
     he,
     L = (Y = await Yjn({
       titleWriter: q,
@@ -1320,17 +1320,17 @@ async function initReplBridge(d) {
       onSessionEstablished: (e) => {
         if (
           (me?.teardown(),
-          (me = Ust(toInfraSessionId(e), Q, () => {
+          (me = createClientPresenceReporter(toInfraSessionId(e), Q, () => {
             let o = getBridgeAccessToken();
             if (!o || J) return null;
             return { Authorization: `Bearer ${o}` };
           })),
-          hG() && !St())
+          isPushNotificationsEnabled() && !St())
         )
-          E2n(O);
+          hydratePushNotificationPreferences(O);
         let t = getCurrentSessionAgentColor();
         if (t && t !== "default")
-          updateBridgeSessionColorTag(e, t, ef, { baseUrl: Q, getAccessToken: getBridgeAccessToken });
+          updateBridgeSessionColorTag(e, t, AGENT_COLOR_NAMES, { baseUrl: Q, getAccessToken: getBridgeAccessToken });
       },
       onBeforePushTriggeringState: () => me?.pulseIfClientPresent(),
       onPermissionResponse: k,
@@ -1351,7 +1351,7 @@ async function initReplBridge(d) {
       async onFileSuggestions(e) {
         return (await generateFileSuggestions(globalFileIndexCache, e, !0, O)).map((o) => ({ path: o.displayText }));
       },
-      onReadFile: (e, t, o) => readFileForRemote(e, t, c?.() ?? rf(), o, "repl_bridge"),
+      onReadFile: (e, t, o) => readFileForRemote(e, t, c?.() ?? createDefaultToolPermissionContext(), o, "repl_bridge"),
       onGetWorkspaceDiff: s
         ? (e) => {
             let t = c?.() ?? pn,

@@ -10,8 +10,8 @@
 
 // [preload stripped] 原本在此预载 211 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Hhr, uon } from "./chunk-v8138qz5.js";
-import "./chunk-317fgfn3.js";
+import "./chrome-tool-error-classifier.js";
 import "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-kdfkgcfn.js";
+import "../../01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js";
 import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 export { uon as getClaudeInChromePermissionOverrides, Hhr as setChromeBinding };

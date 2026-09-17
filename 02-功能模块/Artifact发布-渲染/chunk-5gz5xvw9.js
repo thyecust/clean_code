@@ -10,7 +10,7 @@
 import { Xn, Si, K, sc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ARTIFACT_SLUG_RE } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isActingAsBgJob, getBgJobDir } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -36,14 +36,14 @@ import {
 import { yl } from "../Teammates团队/chunk-thxapyam.js";
 import { ne, RTn } from "./chunk-rr78st95.js";
 import { s, T, se, v, c, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { basename } from "path";
 var ot = { published: "published", comment: "comment" },
   z = 64,
   W = 16,
   it = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
   st = "",
-  at = m(() => {
+  at = createLazyValue(() => {
     let e = c({ v: k(1), rows: fe(s(), se()) }),
       t = c({ v: T().gt(1) }),
       n = c({ stopped: fe(s(), se()) }),
@@ -63,7 +63,7 @@ var ot = { published: "published", comment: "comment" },
         events: v(s())
           .max(16)
           .transform((p) =>
-            Y(p).flatMap((f) => {
+            dedupe(p).flatMap((f) => {
               let l = o.safeParse(f);
               return l.success ? [l.data] : [];
             }),
@@ -125,7 +125,7 @@ function I7() {
       .sort(([, l], [, h]) => h.writtenAtMs - l.writtenAtMs)
       .slice(0, z);
   for (let [l, h] of i) d[l] = { at_ms: h.writtenAtMs };
-  let u = Y([...t.orphanTriggers, ...r]).slice(0, W),
+  let u = dedupe([...t.orphanTriggers, ...r]).slice(0, W),
     p =
       t.rows.size + o.length === 0 && i.length === 0 && u.length === 0
         ? null
@@ -187,7 +187,7 @@ var R = "\x00unwritten",
   q = 256,
   G = 32,
   F = 64,
-  dt = m(() => {
+  dt = createLazyValue(() => {
     let e = T().refine(Number.isFinite),
       t = c({
         state: X(["armed", "stopped"]),

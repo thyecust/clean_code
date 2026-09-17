@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { MMn } from "./chunk-krnfabt0.js";
+import { getUrlHandlerNativeModule } from "./url-handler-native-module.js";
 var r = null;
 function n() {
   if (r) return r;
   try {
-    return ((r = MMn()), r);
+    return ((r = getUrlHandlerNativeModule()), r);
   } catch {
     return null;
   }

@@ -10,8 +10,8 @@
 
 // [preload stripped] 原本在此预载 214 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { SB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { dt, ge, l, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -82,7 +82,7 @@ import {
   t9e,
   u0e,
 } from "./chunk-akd9b588.js";
-import { Gb, bv } from "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import { RenderOnceAndExit, renderAndWaitForExit } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import { cliError, writeStdoutAndDrain, flushAnalyticsBeforeExit, exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import {
   Dae,
@@ -234,7 +234,7 @@ async function pluginValidateHandler(a, o, s) {
     R.push(`${L.cross} Validation failed (--strict treats warnings as errors)`);
   else R.push(`${L.cross} Validation failed`);
   return (
-    await bv(await a(), e(t, { children: X(R) })),
+    await renderAndWaitForExit(await a(), e(t, { children: X(R) })),
     await P(),
     exitAfterAnalyticsFlush(k ? 0 : 1)
   );
@@ -296,7 +296,7 @@ async function pluginTagHandler(a, o, s) {
   z(a, c, 0);
 }
 function z(a, o, s) {
-  (a.render(e(Gb, { children: e(t, { children: X(o) }) })),
+  (a.render(e(RenderOnceAndExit, { children: e(t, { children: X(o) }) })),
     a.waitUntilExit().then(() => process.exit(s)));
 }
 async function pluginInitHandler(a, o, s, d) {
@@ -407,7 +407,7 @@ async function pluginInitHandler(a, o, s, d) {
 }
 async function pluginListHandler(a, o, s, d) {
   if (o.cowork) SB(!0);
-  (Rot(), i("tengu_plugin_list_command", {}));
+  (Rot(), logEvent("tengu_plugin_list_command", {}));
   let c = await tD(s),
     { getPluginEditableScopes: p, editableScopeOf: k } =
       await import("../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js"),
@@ -546,7 +546,7 @@ async function pluginListHandler(a, o, s, d) {
   for (let T of E) B.push(...He(T));
   logFeatureOk("cli_plugin_list");
   let Y = await a();
-  await bv(Y, e(t, { children: X(B) }));
+  await renderAndWaitForExit(Y, e(t, { children: X(B) }));
 }
 function pe(_a) {
   let Te = _(4),
@@ -557,7 +557,7 @@ function pe(_a) {
   else te = Te[1];
   let Ce;
   if (Te[2] !== te)
-    ((Ce = e(Gb, { children: e(t, { children: te }) })),
+    ((Ce = e(RenderOnceAndExit, { children: e(t, { children: te }) })),
       (Te[2] = te),
       (Te[3] = Ce));
   else Ce = Te[3];
@@ -625,7 +625,7 @@ async function marketplaceAddHandler(a, o, s, d, c) {
         { error: A } = await T5e(R, { source: N }, k, d);
       if (A) throw A;
       (fu(d, c),
-        await qs("tengu_marketplace_added", {
+        await logEventAsync("tengu_marketplace_added", {
           _PROTO_marketplace_name: R,
           source_type: fromEnum(p.source),
           repo_hash: p.source === "github" ? Tn(p.repo) : void 0,
@@ -699,7 +699,7 @@ async function Ne(a, o, s, d) {
           status: C,
         } = await Emt(v, { configured: p, credentials: d });
       (fu(s, d),
-        await qs("tengu_marketplace_added", { source_type: S("claudeai") }),
+        await logEventAsync("tengu_marketplace_added", { source_type: S("claudeai") }),
         await logFeatureOkAsync("cli_marketplace_add"));
       let N = Vwe(C),
         A = R.plugins.length;
@@ -844,7 +844,7 @@ async function marketplaceListHandler(a, o, s) {
   }
   logFeatureOk("cli_marketplace_list");
   let N = await a();
-  await bv(N, C);
+  await renderAndWaitForExit(N, C);
 }
 async function marketplaceRemoveHandler(a, o, s, d) {
   if (s.cowork) SB(!0);
@@ -860,14 +860,14 @@ async function marketplaceRemoveHandler(a, o, s, d) {
   try {
     (await TEe(o, c, d),
       fu(d),
-      i("tengu_marketplace_removed", { marketplace_name: o }));
+      logEvent("tengu_marketplace_removed", { marketplace_name: o }));
   } catch (p) {
     (await logFeatureBadAsync("cli_marketplace_remove", "cli_marketplace_remove_failed"),
       await flushAnalyticsBeforeExit(),
       Z(p, "remove marketplace"));
   }
   (logFeatureOk("cli_marketplace_remove"),
-    await bv(
+    await renderAndWaitForExit(
       a,
       r(t, {
         children: [
@@ -889,7 +889,7 @@ function Se(ka) {
     oe;
   if (ke[0] !== he || ke[1] !== _e) {
     let $a = [...he, _e];
-    ie = Gb;
+    ie = RenderOnceAndExit;
     re = t;
     oe = X($a);
     ((ke[0] = he), (ke[1] = _e), (ke[2] = re), (ke[3] = ie), (ke[4] = oe));
@@ -918,7 +918,7 @@ async function marketplaceUpdateHandler(a, o, s, d) {
       .then(
         async () => (
           fu(d),
-          await qs("tengu_marketplace_updated", { marketplace_name: o }),
+          await logEventAsync("tengu_marketplace_updated", { marketplace_name: o }),
           await logFeatureOkAsync("cli_marketplace_update"),
           {
             messages: w,
@@ -952,7 +952,7 @@ async function marketplaceUpdateHandler(a, o, s, d) {
     }
     let v = Object.keys(w);
     if (v.length === 0) {
-      (await bv(a, e(t, { children: "No marketplaces configured" })),
+      (await renderAndWaitForExit(a, e(t, { children: "No marketplaces configured" })),
         process.exit(0));
       return;
     }
@@ -962,7 +962,7 @@ async function marketplaceUpdateHandler(a, o, s, d) {
           if (
             ((p = R.length > 0 ? 1 : 0),
             fu(d),
-            await qs("tengu_marketplace_updated_all", {
+            await logEventAsync("tengu_marketplace_updated_all", {
               count: v.length,
               attempted: C,
               refreshed: C - P.length - R.length,
@@ -1003,7 +1003,7 @@ function ve(Pa) {
   else le = xe[1];
   let Oe;
   if (xe[2] !== le)
-    ((Oe = e(Gb, { children: r(t, { children: [L.tick, " ", le] }) })),
+    ((Oe = e(RenderOnceAndExit, { children: r(t, { children: [L.tick, " ", le] }) })),
       (xe[2] = le),
       (xe[3] = Oe));
   else Oe = xe[3];
@@ -1032,7 +1032,7 @@ function Ie(a) {
 }
 function ae(a, o, s) {
   let { name: d, marketplace: c } = J3(o);
-  i(a, {
+  logEvent(a, {
     _PROTO_plugin_name: d,
     ...(c && { _PROTO_marketplace_name: c }),
     ...(s !== void 0 && { scope: s }),
@@ -1065,7 +1065,7 @@ async function pluginInstallHandler(a, o, s, d) {
   if (v?.kind === "declined") {
     if (p) dle(p.outcome);
     (logFeatureSad("cli_plugin_install", "command_source_declined"),
-      await bv(a, e(t, { children: "Aborted." })),
+      await renderAndWaitForExit(a, e(t, { children: "Aborted." })),
       await xn(1));
     return;
   }
@@ -1082,7 +1082,7 @@ async function pluginInstallHandler(a, o, s, d) {
       p)
     )
       dle(p.outcome);
-    (await bv(a, e(t, { children: "Aborted \u2014 the command was not run." })),
+    (await renderAndWaitForExit(a, e(t, { children: "Aborted \u2014 the command was not run." })),
       await xn(1));
     return;
   }
@@ -1103,16 +1103,16 @@ async function pluginUninstallHandler(a, o, s, d) {
   let c = me(s);
   ae("tengu_plugin_uninstall_command", o, fromEnum(c));
   let p = await UNn(o, c, s.keepData, s.prune, s.yes, d);
-  (await bv(a, e(t, { children: ff(s.prune ? p : `${L.tick} ${p}`) })),
+  (await renderAndWaitForExit(a, e(t, { children: ff(s.prune ? p : `${L.tick} ${p}`) })),
     await logFeatureOkAsync("cli_plugin_uninstall"),
     await exitAfterAnalyticsFlush(0));
 }
 async function pluginPruneHandler(a, o, s) {
   if (o.cowork) SB(!0);
   let d = me(o);
-  i("tengu_plugin_prune_command", { scope: fromEnum(d), dry_run: o.dryRun ?? !1 });
+  logEvent("tengu_plugin_prune_command", { scope: fromEnum(d), dry_run: o.dryRun ?? !1 });
   let c = await BNn(d, { dryRun: o.dryRun, yes: o.yes }, s);
-  (await bv(a, e(t, { children: ff(c) })),
+  (await renderAndWaitForExit(a, e(t, { children: ff(c) })),
     await logFeatureOkAsync("cli_plugin_prune"),
     await exitAfterAnalyticsFlush(0));
 }
@@ -1127,8 +1127,8 @@ async function pluginEnableHandler(a, o, s, d) {
   } catch (k) {
     return await Lae(k, "enable", o);
   }
-  (await bv(a, r(t, { children: [L.tick, " ", ff(p.message)] })),
-    await qs("tengu_plugin_enabled_cli", {
+  (await renderAndWaitForExit(a, r(t, { children: [L.tick, " ", ff(p.message)] })),
+    await logEventAsync("tengu_plugin_enabled_cli", {
       ...xy(p.pluginId || o, Xf()),
       scope: fromEnumOpt(p.scope),
     }),
@@ -1143,7 +1143,7 @@ async function pluginDisableHandler(a, o, s, d) {
   let c;
   if (s.all) {
     if (s.scope) cliError("Cannot use --scope with --all");
-    (i("tengu_plugin_disable_command", {}), Rot(), (c = await WNn(d)));
+    (logEvent("tengu_plugin_disable_command", {}), Rot(), (c = await WNn(d)));
   } else {
     let p = Ie(s);
     (ae("tengu_plugin_disable_command", o, fromEnum(p ?? "auto")),
@@ -1151,7 +1151,7 @@ async function pluginDisableHandler(a, o, s, d) {
       Rot(),
       (c = await jNn(o, p, d)));
   }
-  (await bv(a, e(t, { children: ff(c) })),
+  (await renderAndWaitForExit(a, e(t, { children: ff(c) })),
     await logFeatureOkAsync("cli_plugin_disable"),
     await exitAfterAnalyticsFlush(0));
 }
@@ -1169,7 +1169,7 @@ async function pluginUpdateHandler(a, o, s) {
 }
 async function pluginDetailsHandler(a, o, s, d, c) {
   if (s.cowork) SB(!0);
-  (Rot(), i("tengu_plugin_details_command", {}));
+  (Rot(), logEvent("tengu_plugin_details_command", {}));
   let {
       getPluginInventory: p,
       computePluginTokenCost: k,
@@ -1177,7 +1177,7 @@ async function pluginDetailsHandler(a, o, s, d, c) {
     } = await import("../MCP客户端/chunk-4xr0rjb4.js"),
     { formatTokenEstimate: v } = await import("../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js");
   await qwe();
-  let { enabled: P, disabled: R } = await Ph(M() ? d : void 0, c),
+  let { enabled: P, disabled: R } = await Ph(isHoverRestEnabled() ? d : void 0, c),
     C = J3(o),
     N = C.marketplace ? XSt(C.name, C.marketplace) : C.name,
     A = Ul(C.marketplace) ? (I) => xi(I) === xi(N) : (I) => $y(I, N),
@@ -1187,7 +1187,7 @@ async function pluginDetailsHandler(a, o, s, d, c) {
     let I = `Plugin "${o}" not found. Run \`claude plugin list\` to see installed plugins, or pass --plugin-dir <path> to load one from disk.`;
     if (s.json) return cliError(ff(I));
     let j = await a();
-    (await bv(j, e(t, { children: ff(I) })), process.exit(1));
+    (await renderAndWaitForExit(j, e(t, { children: ff(I) })), process.exit(1));
   }
   let H = Lu(m.source) ?? np,
     E = s.models?.length ? s.models : [getMainLoopModel()],
@@ -1201,7 +1201,7 @@ async function pluginDetailsHandler(a, o, s, d, c) {
     let j = `${L.cross} Could not load details for "${m.name}": ${l(I)}`;
     if (s.json) return cliError(ff(j));
     let Q = await a();
-    (await bv(Q, e(t, { children: ff(j) })), process.exit(1));
+    (await renderAndWaitForExit(Q, e(t, { children: ff(j) })), process.exit(1));
   }
   let { tokens: Y, inventory: T } = B;
   if (s.json) {
@@ -1294,7 +1294,7 @@ async function pluginDetailsHandler(a, o, s, d, c) {
   if (K) logFeatureOk("cli_plugin_details");
   else logFeatureSad("cli_plugin_details", "count_tokens_unreachable");
   let q = await a();
-  await bv(q, e(t, { children: X(O) }));
+  await renderAndWaitForExit(q, e(t, { children: X(O) }));
 }
 function X(a) {
   return a.map(wr).join(`

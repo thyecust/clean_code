@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 252 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
@@ -17,29 +17,29 @@ import { setBgExitCause } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { getUserAgent, isAnthropicAuthEnabled, getUnapprovedCustomApiKey, gatewaySignInScreenConfigured, adminPolicyUnreadable, zg } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getProxyUrlWithSource, getProxyAuthFromHelper, getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { o, t, zb, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { shouldOfferTerminalSetup, setupTerminal } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { kG } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { k0t } from "../../01-核心基础设施/共享小工具-未细化/chunk-4q59mpqf.js";
 import "../认证-OAuth登录/chunk-9g86t9bp.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-r2ab1bp6.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-1phhhgcj.js";
+import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
+import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import "../Bedrock-Vertex/chunk-g6sqdw6w.js";
@@ -49,23 +49,23 @@ import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import "../Diff引擎/chunk-p2gj9dsf.js";
 import { KZ } from "../状态栏-主题/chunk-rhjpq9s2.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-vwjqzjhr.js";
-import { Gp } from "../../01-核心基础设施/共享小工具-未细化/chunk-c8g7bday.js";
+import "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
+import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
 import "../认证-OAuth登录/chunk-dtt2nn79.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-1371sqbk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
+import "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { zB } from "../../03-入口与运行时/CLI入口-Commander/chunk-nhpr06js.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import "../认证-OAuth登录/chunk-5bg9xwqx.js";
 import { ew, Qt, L_, De, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
 function be() {
@@ -113,7 +113,7 @@ async function ae() {
       },
       x = (await Promise.all(g.map(R))).find((u) => !u.success);
     if (x)
-      i("tengu_preflight_check_failed", {
+      logEvent("tengu_preflight_check_failed", {
         isConnectivityError: !1,
         hasErrorMessage: !!x.error,
         isSSLError: !!x.sslHint,
@@ -122,7 +122,7 @@ async function ae() {
   } catch (s) {
     return (
       logError(s),
-      i("tengu_preflight_check_failed", { isConnectivityError: !0 }),
+      logEvent("tengu_preflight_check_failed", { isConnectivityError: !0 }),
       {
         success: !1,
         error: `Connectivity check error: ${s instanceof Error ? s.code || s.message : String(s)}`,
@@ -139,7 +139,7 @@ function z(Ge) {
     ie = Un(1000) && I,
     Se,
     Ce;
-  if (B[0] === p)
+  if (B[0] === MEMO_CACHE_SENTINEL)
     ((Se = () => {
       let se = async function se() {
         let qe = await ae();
@@ -260,7 +260,7 @@ function z(Ge) {
 function J() {
   let tt = _(1),
     Te;
-  if (tt[0] === p)
+  if (tt[0] === MEMO_CACHE_SENTINEL)
     ((Te = r(t, {
       color: "permission",
       children: [
@@ -351,16 +351,16 @@ function Yt({ host: s, onDone: c }) {
     [x] = d(() => gatewaySignInScreenConfigured() || adminPolicyUnreadable()),
     u = C(!1),
     [S, b] = cn(),
-    { storageV5: T } = _e();
+    { storageV5: T } = useStorageV5Context();
   E(() => {
-    i("tengu_began_setup", { oauthEnabled: m });
+    logEvent("tengu_began_setup", { oauthEnabled: m });
   }, [m]);
   function n(v = 1) {
     let O = g + v;
     if (O < k.length) {
       R(O);
       for (let X = g + 1; X <= O; X++)
-        (i("tengu_onboarding_step", { oauthEnabled: m, stepId: fromEnumOpt(k[X]?.id) }),
+        (logEvent("tengu_onboarding_step", { oauthEnabled: m, stepId: fromEnumOpt(k[X]?.id) }),
           logFeatureOk("onboarding_step_complete"));
     } else {
       if (u.current) return;
@@ -370,7 +370,7 @@ function Yt({ host: s, onDone: c }) {
   function Y(v) {
     (b(v), n());
   }
-  let A = is(),
+  let A = useGlobalExitKeybinding(),
     fe = e(o, {
       marginX: 1,
       children: e(KZ, {
@@ -413,7 +413,7 @@ function Yt({ host: s, onDone: c }) {
                     children:
                       "Due to prompt injection risks, only use it with code you trust",
                   }),
-                  e(Gp, { url: "https://code.claude.com/docs/en/security" }),
+                  e(LearnMoreLink, { url: "https://code.claude.com/docs/en/security" }),
                 ],
               }),
             ],
@@ -472,7 +472,7 @@ function Yt({ host: s, onDone: c }) {
                     : "Shift+Enter for newlines",
                 ],
               }),
-              e(En, {
+              e(ConfirmPrompt, {
                 confirmLabel: "Yes, use recommended settings",
                 cancelLabel: "No, maybe later with /terminal-setup",
                 onConfirm: () =>
@@ -491,10 +491,10 @@ function Yt({ host: s, onDone: c }) {
                 dimColor: !0,
                 children: A.pending
                   ? r(N, { children: ["Press ", A.keyName, " again to exit"] })
-                  : r(ue, {
+                  : r(DotSeparatedList, {
                       children: [
-                        e(D, { chord: "enter", action: "confirm" }),
-                        e(D, { chord: "escape", action: "skip" }),
+                        e(KeybindingHint, { chord: "enter", action: "confirm" }),
+                        e(KeybindingHint, { chord: "escape", action: "skip" }),
                       ],
                     }),
               }),
@@ -508,11 +508,11 @@ function Yt({ host: s, onDone: c }) {
     n();
   }
   return (
-    Ze(
+    useKeybindings(
       { "confirm:yes": ne },
       { context: "Confirmation", isActive: G?.id === "security" },
     ),
-    Ze(
+    useKeybindings(
       { "confirm:no": ne },
       { context: "Confirmation", isActive: G?.id === "terminal-setup" },
     ),

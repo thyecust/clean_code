@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { cf, ph, r0, sQ, Ms, u0, r1, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -28,7 +28,7 @@ import { Pr } from "../../03-入口与运行时/核心应用-Agent循环/核心�
 import { hN } from "../插件系统/chunk-ajtn749s.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { access as Ae, chmod, writeFile as Me } from "fs/promises";
 import { join as N } from "path";
 function G() {
@@ -234,7 +234,7 @@ async function M9n(e) {
   } catch {}
   return null;
 }
-var U = pe(pg(), 1);
+var U = toESM(pg(), 1);
 import { randomBytes } from "crypto";
 import { constants } from "fs";
 import {
@@ -258,7 +258,7 @@ async function iFt(e, t) {
       if (((r = s), o >= t.attempts)) break;
       t.onRetry?.(o, s);
       let c = 500 * 3 ** (o - 1);
-      await Z(c * (0.75 + Math.random() * 0.5));
+      await sleep(c * (0.75 + Math.random() * 0.5));
     }
   throw r;
 }
@@ -338,7 +338,7 @@ async function fte() {
     (n(`tengu_max_version_config has invalid version '${r}' \u2014 ignoring`, {
       level: "error",
     }),
-      i("tengu_max_version_config_invalid", { raw_value: Ms(r) }));
+      logEvent("tengu_max_version_config_invalid", { raw_value: Ms(r) }));
   return {
     maxVersion: o,
     forceDowngradeEnabled: e.external_force_downgrade === !0,
@@ -442,7 +442,7 @@ async function ze(e) {
   );
 }
 async function qe(e) {
-  if (M() && e) return ze(e);
+  if (isHoverRestEnabled() && e) return ze(e);
   let t = ae(),
     r = Pe();
   try {
@@ -491,7 +491,7 @@ async function qe(e) {
   }
 }
 async function Je(e) {
-  if (M() && e) {
+  if (isHoverRestEnabled() && e) {
     let o = await e.read([X()]);
     if (!o.ok) {
       n(`AutoUpdater: failed to release update lock: ${o.error.code}`, {
@@ -809,7 +809,7 @@ async function Bbe(e, t) {
       n("Another process is currently installing an update", {
         level: "error",
       }),
-      i("tengu_auto_updater_lock_contention", {
+      logEvent("tengu_auto_updater_lock_contention", {
         pid: process.pid,
         currentVersion: Ms(
           {
@@ -838,7 +838,7 @@ async function Bbe(e, t) {
       return (
         logFeatureBad("update_apply", "update_apply_wsl_windows_npm"),
         n("Windows NPM detected in WSL environment", { level: "error" }),
-        i("tengu_auto_updater_windows_npm_in_wsl", {
+        logEvent("tengu_auto_updater_windows_npm_in_wsl", {
           currentVersion: Ms(
             {
               ISSUES_EXPLAINER:
@@ -1072,7 +1072,7 @@ To fix this issue:
           );
       }
       if (
-        (i("tengu_auto_updater_npm_failure", {
+        (logEvent("tengu_auto_updater_npm_failure", {
           npm_exit_code: E.code,
           package_manager: fromEnum(s),
           is_bundled_mode: bc(),

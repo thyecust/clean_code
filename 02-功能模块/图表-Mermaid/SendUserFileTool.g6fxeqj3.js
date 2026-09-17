@@ -11,22 +11,22 @@
 // [preload stripped] 原本在此预载 91 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Eg } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { SEND_USER_FILE_TOOL_NAME, DESCRIPTION, SEND_USER_FILE_TOOL_PROMPT } from "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
-import { Ei } from "../Hooks钩子/chunk-9em0d4k5.js";
+import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { isBriefEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
 import { ubt, dbt, pbt, fbt } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { s, T, O, v, c, Qe, X, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var g = m(() =>
+var g = createLazyValue(() =>
     Qe({
       files: ai(
         (e) => (typeof e === "string" ? [e] : e),
@@ -47,7 +47,7 @@ var g = m(() =>
         ),
     }),
   ),
-  y = m(() =>
+  y = createLazyValue(() =>
     c({
       caption: s().optional(),
       display: X(["render", "attach"]).optional(),
@@ -66,10 +66,10 @@ var g = m(() =>
     }),
   );
 function _() {
-  let e = Ei();
+  let e = getSessionFeatureCache();
   return ((e.sendUserFileDeferred ??= !h()), e.sendUserFileDeferred);
 }
-var SendUserFileTool = Tt({
+var SendUserFileTool = buildTool({
   name: SEND_USER_FILE_TOOL_NAME,
   searchHint: "deliver files (screenshots, reports, artifacts) to the user",
   get shouldDefer() {
@@ -161,7 +161,7 @@ Tell the user the ${x(r.length, "file was", "files were")} not delivered and why
       },
       async call({ files: n, caption: r, status: o, display: l }, d) {
         let t = ubt({ replBridgeEnabled: e.replBridgeEnabled() });
-        i("tengu_send_user_file", {
+        logEvent("tengu_send_user_file", {
           proactive: o === "proactive",
           file_count: n.length,
           display_set: l !== void 0,

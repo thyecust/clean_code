@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { RYt } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { oe, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -39,18 +39,18 @@ import { vvt, qZe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { iDe, pmt, TV, Ppn, Ng, m8e, Ny, g8e } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Pc, YE, Gk } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
-import { rd } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { W4 } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { Mbe } from "../自动更新-安装/chunk-brx72pf1.js";
 import { Bce } from "../自动更新-安装/chunk-2g5h49pk.js";
 import { Ept } from "../会话-历史-恢复/chunk-szqky9sa.js";
 import { M_e } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { pat, fat, LUn } from "../Bridge-RemoteControl/chunk-k2f69v5t.js";
+import { getPolicyLimitsStatus, formatPolicyLimitsStatus, shouldReportPolicyLimits } from "../Bridge-RemoteControl/policy-limits-status.js";
 import { Sle, NUn, mat } from "../../01-核心基础设施/共享小工具-未细化/chunk-ga0qgvpz.js";
 import { r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { ut } from "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
+import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function BWe(s) {
   let e = s.map((l) => l.filter((i) => !i.antOnly));
   return (e.push(s.flatMap((l) => l.filter((i) => i.antOnly))), e);
@@ -72,7 +72,7 @@ function rUn(s, e = null, l) {
           label: "IDE",
           value: r(t, {
             children: [
-              ut("error", l)(L.cross),
+              getThemeColor("error", l)(L.cross),
               " Error installing ",
               o,
               " ",
@@ -111,7 +111,7 @@ function rUn(s, e = null, l) {
       return [
         {
           label: "IDE",
-          value: `${ut("error", l)(L.cross)} Not connected to ${o}`,
+          value: `${getThemeColor("error", l)(L.cross)} Not connected to ${o}`,
         },
       ];
   }
@@ -151,16 +151,16 @@ function oUn(s = [], e) {
       default:
     }
   let o = [];
-  if (i.connected) o.push(ut("success", e)(`${i.connected} connected`));
-  if (i.cached) o.push(ut("inactive", e)(`${i.cached} cached`));
-  if (i.needsAuth) o.push(ut("warning", e)(`${i.needsAuth} need auth`));
-  if (i.pending) o.push(ut("inactive", e)(`${i.pending} pending`));
-  if (i.disabled) o.push(ut("inactive", e)(`${i.disabled} disabled`));
-  if (i.failed) o.push(ut("error", e)(`${i.failed} failed`));
+  if (i.connected) o.push(getThemeColor("success", e)(`${i.connected} connected`));
+  if (i.cached) o.push(getThemeColor("inactive", e)(`${i.cached} cached`));
+  if (i.needsAuth) o.push(getThemeColor("warning", e)(`${i.needsAuth} need auth`));
+  if (i.pending) o.push(getThemeColor("inactive", e)(`${i.pending} pending`));
+  if (i.disabled) o.push(getThemeColor("inactive", e)(`${i.disabled} disabled`));
+  if (i.failed) o.push(getThemeColor("error", e)(`${i.failed} failed`));
   return [
     {
       label: "MCP servers",
-      value: `${o.join(", ")} ${ut("inactive", e)("\xB7 /mcp")}`,
+      value: `${o.join(", ")} ${getThemeColor("inactive", e)("\xB7 /mcp")}`,
     },
   ];
 }
@@ -226,8 +226,8 @@ function iUn() {
   let u = Sle();
   if (u && NUn(u))
     o.push({ label: "Managed settings (remote)", value: mat(u) });
-  let p = pat();
-  if (LUn(p)) o.push({ label: "Organization policy", value: fat(p) });
+  let p = getPolicyLimitsStatus();
+  if (shouldReportPolicyLimits(p)) o.push({ label: "Organization policy", value: formatPolicyLimitsStatus(p) });
   return o;
 }
 function g(s) {
@@ -267,7 +267,7 @@ async function lUn(s) {
       ),
       i
     );
-  let o = rd();
+  let o = resolveWrappedClaudeInvocation();
   if (
     (i.push(
       `Self-exec: \`${[o.cmd, ...o.prefixArgs].join(" ")}\` (CLAUDE_CODE_PROCESS_WRAPPER)`,
@@ -304,7 +304,7 @@ async function cUn(s) {
     l = [],
     { statusNotices: i, invalidEntries: o } = M_e(W4().errors);
   if (o.length > 0) {
-    let u = Y(o.map((c) => c.file)).join(", ");
+    let u = dedupe(o.map((c) => c.file)).join(", ");
     l.push(`Found invalid entries in: ${u}.`);
     let p = await Ept(s);
     if (p === "settings_unknowable" || p === "settings_invalid_key_set")
@@ -323,7 +323,7 @@ async function cUn(s) {
   return l;
 }
 function jWe(s) {
-  if (!(M() && s !== void 0)) return;
+  if (!(isHoverRestEnabled() && s !== void 0)) return;
   return (async () => ({ refreshKnownDead: isAnthropicAuthEnabled() && (await isOAuthRefreshKnownDeadAsync(s)) }))().catch(
     () => ({ refreshKnownDead: !1 }),
   );
@@ -332,7 +332,7 @@ function Oit(s) {
   let e = getAccountInformation();
   if (!e) return [];
   let l = [];
-  if (s !== void 0 && M() ? s.refreshKnownDead : isAnthropicAuthEnabled() && isOAuthRefreshKnownDead()) {
+  if (s !== void 0 && isHoverRestEnabled() ? s.refreshKnownDead : isAnthropicAuthEnabled() && isOAuthRefreshKnownDead()) {
     l.push({ label: "Login", value: "Expired \u2014 log in again" });
     let n = getOauthAccountInfo();
     if (n?.organizationName && !a.IS_DEMO)

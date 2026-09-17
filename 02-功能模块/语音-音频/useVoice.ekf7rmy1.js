@@ -10,24 +10,24 @@
 
 // [preload stripped] 原本在此预载 99 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Le, Ije } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Cle } from "../../01-核心基础设施/共享小工具-未细化/chunk-ejtvp07p.js";
+import { useVoiceStore } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import { j, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { uRe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { probeVoiceConnectivity, isVoiceStreamAvailable, connectVoiceStream } from "./chunk-6098r6ax.js";
-import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
-import { Me } from "../../01-核心基础设施/共享小工具-未细化/chunk-0dh9gct8.js";
+import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
+import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { Mcr } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
 F();
@@ -343,7 +343,7 @@ class L {
               n(
                 `[voice] Silent-drop detected (no_data_timeout, ${String(this.#f.length)} chunks); replaying on fresh connection`,
               ),
-              i("tengu_voice_silent_drop_replay", {
+              logEvent("tengu_voice_silent_drop_replay", {
                 recordingDurationMs: t,
                 chunkCount: this.#f.length,
               }),
@@ -351,7 +351,7 @@ class L {
             )
               (this.#s.close(), (this.#s = null));
             let _ = this.#f;
-            if ((await Z(250), b())) return;
+            if ((await sleep(250), b())) return;
             let k = Ije(getInitialSettings().language),
               u = await this.#I();
             if (b()) return;
@@ -407,7 +407,7 @@ class L {
             (n(
               `[voice] Final transcript assembled (${String(v.length)} chars)`,
             ),
-            i("tengu_voice_recording_completed", {
+            logEvent("tengu_voice_recording_completed", {
               transcriptChars: v.length + a,
               recordingDurationMs: t,
               hadAudioSignal: r,
@@ -475,7 +475,7 @@ class L {
             `[voice] circuit breaker: ${String(t.recentEarlyFailures.length)} early failures in ${String(w)}ms \u2014 suppressing new sessions until one succeeds`,
             { level: "error" },
           ),
-          i("tengu_voice_circuit_breaker_tripped", {}),
+          logEvent("tengu_voice_circuit_breaker_tripped", {}),
           logFeatureBad("voice_start", "voice_start_breaker_paused"),
           this.#t.onError(
             t.lastExpectedHint
@@ -575,7 +575,7 @@ class L {
       D = Ije(b),
       R = Mcr();
     (logFeatureOk("voice_start"),
-      i("tengu_voice_recording_started", {
+      logEvent("tengu_voice_recording_started", {
         focusTriggered: this.#i,
         sttLanguage: uRe(D.code),
         sttLanguageIsDefault: !b?.trim(),
@@ -653,7 +653,7 @@ class L {
                     n(
                       `[voice] early voice_stream error (pre-transcript), retrying once: ${o}`,
                     ),
-                    i("tengu_voice_stream_early_retry", {}),
+                    logEvent("tengu_voice_stream_early_retry", {}),
                     (this.#s = null),
                     this.#T++,
                     this.#m.setTimeout(() => {
@@ -724,7 +724,7 @@ class L {
                 this.#t.onError(
                   "Voice mode requires a Claude.ai account. Please run /login to sign in.",
                 ),
-                M() && this.#V !== void 0)
+                isHoverRestEnabled() && this.#V !== void 0)
               )
                 (t.recordEarlyFailure(
                   "Voice mode could not read your Claude.ai login.",
@@ -816,10 +816,10 @@ function useVoice({
   focusMode: c,
   mode: a = "hold",
 }) {
-  let { host: l } = Ye(),
-    { credentials: V } = _e(),
-    C = vt(),
-    b = Cle(),
+  let { host: l } = useSession(),
+    { credentials: V } = useStorageV5Context(),
+    C = useClock(),
+    b = useVoiceStore(),
     D = Va(),
     R = {
       onTranscript: e,
@@ -848,7 +848,7 @@ function useVoice({
     v.setInputs(R);
   }),
     E(() => v.dispose, [v]));
-  let { state: _ } = Me(v);
+  let { state: _ } = useStoreSelector(v);
   return {
     state: _,
     handleKeyEvent: v.handleKeyEvent,

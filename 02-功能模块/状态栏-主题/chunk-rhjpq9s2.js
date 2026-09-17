@@ -10,26 +10,26 @@
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { nM } from "../键位绑定(Keybindings)/chunk-qy43nqgh.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useActiveKeybindingContext } from "../键位绑定(Keybindings)/keybinding-context.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { Zr } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js";
+import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import { cn, c4, Hat, u4 } from "./chunk-w5jaj6kg.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { D9, Zb } from "./chunk-q7ekqy5h.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { xn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { WWe, KZt } from "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import { QP } from "../Diff引擎/chunk-p2gj9dsf.js";
-import { Sy } from "../../01-核心基础设施/共享小工具-未细化/chunk-vwjqzjhr.js";
+import { DashedBorderBox } from "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function xt(Et) {
   return Et.settings.syntaxHighlightingDisabled;
@@ -62,12 +62,12 @@ function KZ(Bt) {
     u = Ee === void 0 ? !1 : Ee,
     pe = Je === void 0 ? !1 : Je,
     A = Me === void 0 ? !1 : Me,
-    { storageV5: be } = _e(),
+    { storageV5: be } = useStorageV5Context(),
     [xe] = cn(),
     C = c4(),
-    { columns: Yt } = Se(),
+    { columns: Yt } = useTerminalSize(),
     Oe;
-  if (i[0] === p) ((Oe = WWe()), (i[0] = Oe));
+  if (i[0] === MEMO_CACHE_SENTINEL) ((Oe = WWe()), (i[0] = Oe));
   else Oe = i[0];
   let ye = Oe,
     Qe;
@@ -78,8 +78,8 @@ function KZ(Bt) {
     { setPreviewTheme: Ce, savePreview: b, cancelPreview: s } = Hat(),
     G = U(xt) ?? !1,
     ke = It();
-  nM("ThemePicker");
-  let Te = Zr("theme:toggleSyntaxHighlighting", "ThemePicker", "ctrl+t"),
+  useActiveKeybindingContext("ThemePicker");
+  let Te = useKeybindingDisplayText("theme:toggleSyntaxHighlighting", "ThemePicker", "ctrl+t"),
     We;
   if (i[3] !== ke || i[4] !== be || i[5] !== G)
     ((We = () => {
@@ -98,10 +98,10 @@ function KZ(Bt) {
       (i[6] = We));
   else We = i[6];
   let et;
-  if (i[7] === p) ((et = { context: "ThemePicker" }), (i[7] = et));
+  if (i[7] === MEMO_CACHE_SENTINEL) ((et = { context: "ThemePicker" }), (i[7] = et));
   else et = i[7];
-  Ne("theme:toggleSyntaxHighlighting", We, et);
-  let I = is(A ? vt : void 0),
+  useKeybinding("theme:toggleSyntaxHighlighting", We, et);
+  let I = useGlobalExitKeybinding(A ? vt : void 0),
     { customThemes: x } = u4(),
     [De, jt] = d(C),
     tt;
@@ -116,7 +116,7 @@ function KZ(Bt) {
       (i[12] = ot));
   else ot = i[12];
   let c = ot,
-    we = Zr("theme:editCustom", "ThemePicker", "ctrl+e"),
+    we = useKeybindingDisplayText("theme:editCustom", "ThemePicker", "ctrl+e"),
     it;
   if (i[13] !== c || i[14] !== l || i[15] !== b)
     ((it = () => {
@@ -128,11 +128,11 @@ function KZ(Bt) {
       (i[16] = it));
   else it = i[16];
   let nt;
-  if (i[17] === p) ((nt = { context: "ThemePicker" }), (i[17] = nt));
+  if (i[17] === MEMO_CACHE_SENTINEL) ((nt = { context: "ThemePicker" }), (i[17] = nt));
   else nt = i[17];
-  Ne("theme:editCustom", it, nt);
+  useKeybinding("theme:editCustom", it, nt);
   let lt, st, rt, at, mt, ct, dt;
-  if (i[18] === p)
+  if (i[18] === MEMO_CACHE_SENTINEL)
     ((lt = { label: "Auto (match terminal)", value: "auto" }),
       (st = { label: "Dark mode", value: "dark" }),
       (rt = { label: "Light mode", value: "light" }),
@@ -182,7 +182,7 @@ function KZ(Bt) {
       (i[31] = h));
   else h = i[31];
   let gt;
-  if (i[32] === p)
+  if (i[32] === MEMO_CACHE_SENTINEL)
     ((gt = e(t, {
       bold: !0,
       children: "Choose the text style that looks best with your terminal",
@@ -277,7 +277,7 @@ function KZ(Bt) {
       (i[60] = J));
   else J = i[60];
   let ut;
-  if (i[61] === p)
+  if (i[61] === MEMO_CACHE_SENTINEL)
     ((ut = {
       oldStart: 1,
       newStart: 1,
@@ -295,7 +295,7 @@ function KZ(Bt) {
   const He = Yt - 6;
   let M;
   if (i[62] !== He)
-    ((M = e(Sy, {
+    ((M = e(DashedBorderBox, {
       paddingX: 0,
       children: e(QP, {
         patch: ut,
@@ -370,11 +370,11 @@ function KZ(Bt) {
             italic: !0,
             children: I.pending
               ? r(N, { children: ["Press ", I.keyName, " again to exit"] })
-              : r(ue, {
+              : r(DotSeparatedList, {
                   children: [
-                    e(D, { chord: "enter", action: "select" }),
-                    c && l && e(D, { chord: we, action: "edit" }),
-                    e(D, { chord: "escape", action: "cancel" }),
+                    e(KeybindingHint, { chord: "enter", action: "select" }),
+                    c && l && e(KeybindingHint, { chord: we, action: "edit" }),
+                    e(KeybindingHint, { chord: "escape", action: "cancel" }),
                   ],
                 }),
           }),

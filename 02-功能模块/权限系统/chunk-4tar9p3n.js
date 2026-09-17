@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Ff, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -105,7 +105,7 @@ async function iqe() {
   let s = [];
   for (let t of o)
     (s.push(e.sendPeerReceipt?.(t, "expired")), e.onPeerHoldDropped?.(t));
-  await Promise.race([Promise.allSettled(s), Z(F, void 0, { unref: !0 })]);
+  await Promise.race([Promise.allSettled(s), sleep(F, void 0, { unref: !0 })]);
 }
 function l6n(e) {
   let { inbound: o } = ds();

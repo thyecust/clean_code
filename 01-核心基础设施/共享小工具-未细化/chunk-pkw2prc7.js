@@ -10,15 +10,15 @@
 import { Gt, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
-var U7 = "continue";
-function P3n(t, e, n) {
-  if (n && e === U7 && t === U7 + "/") return "/";
+var AUTO_CONTINUE_PREFILL_TEXT = "continue";
+function stripAutoContinuePrefill(t, e, n) {
+  if (n && e === AUTO_CONTINUE_PREFILL_TEXT && t === AUTO_CONTINUE_PREFILL_TEXT + "/") return "/";
   if (
     e.startsWith("/") &&
-    t.length === U7.length + e.length + 1 &&
-    t.startsWith(U7 + e)
+    t.length === AUTO_CONTINUE_PREFILL_TEXT.length + e.length + 1 &&
+    t.startsWith(AUTO_CONTINUE_PREFILL_TEXT + e)
   )
-    return t.slice(U7.length);
+    return t.slice(AUTO_CONTINUE_PREFILL_TEXT.length);
   return t;
 }
 class o {
@@ -30,21 +30,21 @@ var l = new Gt(() => new o());
 function i() {
   return l.of(B());
 }
-function BFt(t) {
+function publishRateLimitCheckpointResult(t) {
   let e = i();
   e.lastResult = t;
   for (let n of e.listeners) n(t);
 }
-function O3n() {
+function getInFlightRateLimitCheckpoint() {
   return i().inFlight;
 }
-function Tln(t) {
+function setInFlightRateLimitCheckpoint(t) {
   i().inFlight = t;
 }
-function D3n() {
-  (BFt(null), (i().inFlight = null));
+function resetRateLimitCheckpoint() {
+  (publishRateLimitCheckpointResult(null), (i().inFlight = null));
 }
-function Eln() {
+function useRateLimitCheckpointResult() {
   let [t, e] = d(() => i().lastResult);
   return (
     E(() => {
@@ -60,4 +60,4 @@ function Eln() {
     t
   );
 }
-export { U7, P3n, BFt, O3n, Tln, D3n, Eln };
+export { AUTO_CONTINUE_PREFILL_TEXT, stripAutoContinuePrefill, publishRateLimitCheckpointResult, getInFlightRateLimitCheckpoint, setInFlightRateLimitCheckpoint, resetRateLimitCheckpoint, useRateLimitCheckpointResult };

@@ -12,16 +12,16 @@
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { YX, JX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Hye } from "../权限系统/chunk-sx24y271.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
+import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { qlt, L3e } from "../../01-核心基础设施/设置-配置/chunk-m0ds6tjw.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-sr0ezxnp.js";
+import { addWorkingDirectory, explainAlreadyAccessibleDirectory } from "../../01-核心基础设施/设置-配置/add-working-directory.js";
+import "../../01-核心基础设施/共享小工具-未细化/reload-skills.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 function D(X) {
   let C = _(7),
@@ -35,7 +35,7 @@ function D(X) {
   else l = C[1];
   let p;
   if (C[2] !== g)
-    ((p = e(xe, { children: e(t, { children: g }) })), (C[2] = g), (C[3] = p));
+    ((p = e(ToolResultRow, { children: e(t, { children: g }) })), (C[2] = g), (C[3] = p));
   else p = C[3];
   let k;
   if (C[4] !== l || C[5] !== p)
@@ -50,7 +50,7 @@ async function T(s, a, m) {
   let y = (m ?? "").trim(),
     d = getToolPermissionContext(a),
     f = async (n, c = !1) => {
-      let A = await qlt(a, n, c);
+      let A = await addWorkingDirectory(a, n, c);
       s(`${A} ${ie.dim("\xB7 /permissions to manage")}`);
     };
   if (!y)
@@ -58,7 +58,7 @@ async function T(s, a, m) {
       permissionContext: d,
       onAddDirectory: f,
       onAlreadyAccessible: (n) => {
-        let c = L3e(a, n);
+        let c = explainAlreadyAccessibleDirectory(a, n);
         if (c === null) return !1;
         return (s(c), !0);
       },
@@ -69,7 +69,7 @@ async function T(s, a, m) {
   let i = await YX(y, d);
   if (i.resultType !== "success") {
     let n =
-      (i.resultType === "alreadyInWorkingDirectory" ? L3e(a, i) : null) ??
+      (i.resultType === "alreadyInWorkingDirectory" ? explainAlreadyAccessibleDirectory(a, i) : null) ??
       JX(i);
     return e(D, { message: n, args: m ?? "", onDone: () => s(n) });
   }

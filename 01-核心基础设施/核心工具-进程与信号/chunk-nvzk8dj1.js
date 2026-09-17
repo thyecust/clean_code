@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Dt } from "../共享小工具-未细化/chunk-510m1t2d.js";
+import { withTimeout } from "../共享小工具-未细化/async-timeout-utils.js";
 import { setBgExitCause } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Xhe, gxe, jxt, Yu, o8, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { eb, Il, Pc, YE } from "./chunk-w78brv7j.js";
-import { Gke } from "../共享小工具-未细化/chunk-7beprh8k.js";
+import { flushDiagnostics } from "../共享小工具-未细化/diagnostics-log.js";
 import {
   Z7,
   yUt,
@@ -32,10 +32,10 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { drainRegisteredWriteQueues } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { ll } from "../../02-功能模块/Teammates团队/chunk-thxapyam.js";
-import { rd, pD } from "../共享小工具-未细化/chunk-7dzh4mjq.js";
+import { resolveWrappedClaudeInvocation, applyProcessWrapper } from "../共享小工具-未细化/claude-launcher-invocation.js";
 import { jlt, Wlt, Tee } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { aIe, alt } from "../共享小工具-未细化/chunk-tkfrb8jm.js";
-import { llt } from "../共享小工具-未细化/chunk-p1a5wztj.js";
+import { copyEnvWithoutUndefined } from "../共享小工具-未细化/copy-env-without-undefined.js";
 import { hu } from "../共享小工具-未细化/chunk-gyn0kh7v.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 import { spawnSync } from "child_process";
@@ -48,7 +48,7 @@ function E(e, t, o, r) {
   let a;
   try {
     if (r) ((a = process.cwd()), Yu(r));
-    (process.execve(e, t, llt(o)),
+    (process.execve(e, t, copyEnvWithoutUndefined(o)),
       n(`execve(${e}) returned \u2014 falling back to spawn`, {
         level: "warn",
       }));
@@ -157,7 +157,7 @@ async function X9e() {
   );
 }
 async function y4(e = {}, t) {
-  let { cmd: o, prefixArgs: r } = pD(e.launcher ?? rd());
+  let { cmd: o, prefixArgs: r } = applyProcessWrapper(e.launcher ?? resolveWrappedClaudeInvocation());
   await X9e();
   let a = e.extraArgs ?? [],
     s;
@@ -168,10 +168,10 @@ async function y4(e = {}, t) {
     Z7(),
     yUt(),
     await Promise.all([
-      Dt(flushSessionStorage(), 30000, "flush timeout (relaunch)").catch(() => {}),
-      Dt(gxe(), Xhe, "cleanup timeout")
+      withTimeout(flushSessionStorage(), 30000, "flush timeout (relaunch)").catch(() => {}),
+      withTimeout(gxe(), Xhe, "cleanup timeout")
         .catch(() => {})
-        .then(() => Dt(Eue(), 1000, "analytics flush timeout").catch(() => {})),
+        .then(() => withTimeout(Eue(), 1000, "analytics flush timeout").catch(() => {})),
     ]),
     e.preSpawn?.());
   let i = { ...process.env };
@@ -217,10 +217,10 @@ function cnn() {
 }
 async function g() {
   await Promise.all([
-    Dt(o8(), 2000, "debug flush timeout (relaunch)").catch(() => {}),
-    Dt(Gke(), 2000, "diag flush timeout (relaunch)").catch(() => {}),
-    Dt(jxt(), 2000, "pre-exit flush timeout (relaunch)").catch(() => {}),
-    Dt(drainRegisteredWriteQueues(), 2000, "write queue drain timeout (relaunch)").catch(() => {}),
+    withTimeout(o8(), 2000, "debug flush timeout (relaunch)").catch(() => {}),
+    withTimeout(flushDiagnostics(), 2000, "diag flush timeout (relaunch)").catch(() => {}),
+    withTimeout(jxt(), 2000, "pre-exit flush timeout (relaunch)").catch(() => {}),
+    withTimeout(drainRegisteredWriteQueues(), 2000, "write queue drain timeout (relaunch)").catch(() => {}),
   ]);
 }
 export { a9, wDt, h4, _4, YB, ilt, dF, lnn, X9e, y4, cnn };

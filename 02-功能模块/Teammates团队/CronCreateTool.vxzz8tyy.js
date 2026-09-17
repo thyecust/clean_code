@@ -10,32 +10,32 @@
 
 // [preload stripped] 原本在此预载 84 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { bB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { getTeammateContext } from "./chunk-811z9z0t.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { JI, K_, rJ, nCe, vj, Z7e } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { CRON_CREATE_TOOL_NAME, DEFAULT_MAX_AGE_DAYS, isKairosCronEnabled, isDurableCronEnabled, buildCronCreateDescription, buildDurableParamDescription, buildCronCreatePrompt } from "../Cron-定时任务/chunk-mk3zm4ew.js";
-import { NE } from "../../01-核心基础设施/共享小工具-未细化/chunk-1md6qpsy.js";
+import { buildBooleanFromStringSchema } from "../../01-核心基础设施/共享小工具-未细化/boolean-from-string-schema.js";
 import { s, O, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var n = 50,
-  l = m(() =>
+  l = createLazyValue(() =>
     Qe({
       cron: s().describe(
         'Standard 5-field cron expression in local time: "M H DoM Mon DoW" (e.g. "*/5 * * * *" = every 5 minutes, "30 14 28 2 *" = Feb 28 at 2:30pm local once).',
       ),
       prompt: s().describe("The prompt to enqueue at each fire time."),
-      recurring: NE(O().optional()).describe(
+      recurring: buildBooleanFromStringSchema(O().optional()).describe(
         `true (default) = fire on every cron match until deleted or auto-expired after ${DEFAULT_MAX_AGE_DAYS} days. false = fire once at the next match, then auto-delete. Use false for "remind me at X" one-shot requests with pinned minute/hour/dom/month.`,
       ),
-      durable: NE(O().optional()).describe(buildDurableParamDescription(isDurableCronEnabled())),
+      durable: buildBooleanFromStringSchema(O().optional()).describe(buildDurableParamDescription(isDurableCronEnabled())),
     }),
   ),
-  u = m(() =>
+  u = createLazyValue(() =>
     c({ id: s(), humanSchedule: s(), recurring: O(), durable: O().optional() }),
   ),
-  CronCreateTool = Tt({
+  CronCreateTool = buildTool({
     name: CRON_CREATE_TOOL_NAME,
     searchHint: "schedule a recurring or one-shot prompt",
     enablesCodeExecution: !0,

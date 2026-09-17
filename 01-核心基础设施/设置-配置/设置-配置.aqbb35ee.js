@@ -60,14 +60,14 @@ import {
   B,
   gae,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../共享小工具-未细化/async-timeout-utils.js";
 import { Ce, gxt } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ou, We, b, z, Ru, Ro, ae, fp, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be, w_e } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { Wf, x, oe, Wc, Rae, ft, ln, hy } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { Ghe, env as a } from "./chunk-zqr5ctyf.js";
 import { mhe, ZU, Sn } from "../共享小工具-未细化/chunk-jjr7hzzf.js";
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -75,11 +75,11 @@ import { EXTERNAL_PERMISSION_MODES, PERMISSION_MODES, normalizePermissionModeAli
 import { NU, tHn, Mge, Gar, CRt, jet, ske, HBe } from "../../02-功能模块/图片-截图-ComputerUse/chunk-x87xxkp4.js";
 import { mn, Do, Lhe } from "../共享小工具-未细化/chunk-z5tdbda7.js";
 import { Tx, Cke, Ett, Fr, Er } from "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
-import { q } from "../共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
 import { Uhe } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { _x } from "../共享小工具-未细化/chunk-24x3spwe.js";
 import { PP, oHn } from "../共享小工具-未细化/chunk-p3e024j6.js";
-import { rn } from "../共享小工具-未细化/chunk-q4e7ggp5.js";
+import { normalizeMcpName } from "../共享小工具-未细化/mcp-name-normalization.js";
 import { J6, ohe, Ex } from "../共享小工具-未细化/chunk-a7cfts2d.js";
 import {
   _he,
@@ -102,9 +102,9 @@ import {
   ai,
 } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
-import { me } from "../共享小工具-未细化/chunk-6rcgxa93.js";
-import { G, Y } from "../共享小工具-未细化/chunk-d16fhdtx.js";
-import { au } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { isRecord } from "../共享小工具-未细化/is-record.js";
+import { countMatching, dedupe } from "../共享小工具-未细化/chunk-d16fhdtx.js";
+import { defineExportGetters } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 var Ji = "Expected a function";
 function Xi(e) {
   if (typeof e != "function") throw TypeError(Ji);
@@ -222,7 +222,7 @@ var et = [
   { alias: "allowedMarketplaces", canonical: "strictKnownMarketplaces" },
 ];
 function Dq(e, t) {
-  if (!me(e)) return [];
+  if (!isRecord(e)) return [];
   let o = [];
   for (let { alias: r, canonical: i } of et) {
     if (!(r in e)) continue;
@@ -245,7 +245,7 @@ function Yt(e) {
 }
 import { join as ar } from "path";
 import { isAbsolute } from "path";
-var fa = m(() =>
+var fa = createLazyValue(() =>
     c({
       allowedDomains: v(s()).optional(),
       deniedDomains: v(s())
@@ -304,7 +304,7 @@ var fa = m(() =>
         ),
     }).optional(),
   ),
-  ha = m(() =>
+  ha = createLazyValue(() =>
     c({
       allowWrite: v(s())
         .optional()
@@ -415,7 +415,7 @@ function eo(e) {
     delete o.injectHosts;
   return o;
 }
-var pt = m(() =>
+var pt = createLazyValue(() =>
     ai(
       eo,
       c({
@@ -487,7 +487,7 @@ var pt = m(() =>
       /^[A-Za-z_][A-Za-z0-9_]*$/,
       "Environment variable name must start with a letter or underscore and contain only letters, digits, and underscores",
     ),
-  gt = m(() =>
+  gt = createLazyValue(() =>
     ai(
       eo,
       c({
@@ -561,7 +561,7 @@ var pt = m(() =>
   cHn = "_MERGE_PAIR_SUPPRESSOR_",
   ya = [t8t, Xet, tt, cHn],
   n8t = (e) => ya.some((t) => e.startsWith(t)),
-  mt = m(() =>
+  mt = createLazyValue(() =>
     c({
       accessKeyIdVar: He().describe(
         "Name of the masked env var holding the AWS access key id.",
@@ -593,7 +593,7 @@ var pt = m(() =>
       }
     }),
   ),
-  Sa = m(() => {
+  Sa = createLazyValue(() => {
     let e = X(["deny", "passthrough"]);
     return c({
       streaming: e
@@ -613,7 +613,7 @@ var pt = m(() =>
         ),
     });
   }),
-  _a = m(() =>
+  _a = createLazyValue(() =>
     c({
       files: v(pt())
         .optional()
@@ -674,7 +674,7 @@ var pt = m(() =>
       })
       .optional(),
   ),
-  kRt = m(() =>
+  kRt = createLazyValue(() =>
     c({
       enabled: O().optional(),
       failIfUnavailable: O()
@@ -1184,7 +1184,7 @@ var iL = [
       companions: ["CLAUDE_CODE_SKIP_MANTLE_AUTH", "ANTHROPIC_CUSTOM_HEADERS"],
     },
   ],
-  Jet = Y($ge.flatMap((e) => [e.endpoint, ...e.companions])),
+  Jet = dedupe($ge.flatMap((e) => [e.endpoint, ...e.companions])),
   UU = [
     "ANTHROPIC_API_KEY",
     "ANTHROPIC_AUTH_TOKEN",
@@ -1752,7 +1752,7 @@ var BBe = String.raw`\$\{([A-Za-z_][A-Za-z0-9_]*)(?::-[^}]*)?\}`;
 function U5(e) {
   return new RegExp(BBe).test(e);
 }
-var dHn = m(() =>
+var dHn = createLazyValue(() =>
     X([
       "local",
       "user",
@@ -1764,15 +1764,15 @@ var dHn = m(() =>
       "agent",
     ]),
   ),
-  Nf = m(() => X(["stdio", "sse", "sse-ide", "http", "ws", "sdk"])),
-  Fe = m(() =>
+  Nf = createLazyValue(() => X(["stdio", "sse", "sse-ide", "http", "ws", "sdk"])),
+  Fe = createLazyValue(() =>
     k("comms")
       .optional()
       .catch(void 0),
   ),
-  Pe = m(() => T().int().positive()),
+  Pe = createLazyValue(() => T().int().positive()),
   Na = 300000,
-  yo = m(() =>
+  yo = createLazyValue(() =>
     T()
       .int()
       .positive()
@@ -1788,7 +1788,7 @@ function l8t({ request_timeout_ms: e, ...t }) {
     ...(t.timeout === void 0 && e !== void 0 && { timeout: Math.min(e, Na) }),
   };
 }
-var rtt = m(() =>
+var rtt = createLazyValue(() =>
     c({
       type: k("stdio").optional(),
       command: s().min(1, "Command cannot be empty"),
@@ -1799,8 +1799,8 @@ var rtt = m(() =>
       role: Fe(),
     }),
   ),
-  Ua = m(() => O()),
-  So = m(() =>
+  Ua = createLazyValue(() => O()),
+  So = createLazyValue(() =>
     c({
       clientId: s().optional(),
       callbackPort: T().int().positive().optional(),
@@ -1814,7 +1814,7 @@ var rtt = m(() =>
       xaa: Ua().optional(),
     }),
   ),
-  _o = m(() =>
+  _o = createLazyValue(() =>
     c({
       name: s(),
       permission_policy: X([
@@ -1824,7 +1824,7 @@ var rtt = m(() =>
       ]).optional(),
     }),
   ),
-  c8t = m(() =>
+  c8t = createLazyValue(() =>
     c({
       type: k("sse"),
       url: s(),
@@ -1840,7 +1840,7 @@ var rtt = m(() =>
       toolPermissions: fe(s(), $Rt()).optional(),
     }).transform(l8t),
   ),
-  za = m(() =>
+  za = createLazyValue(() =>
     c({
       type: k("sse-ide"),
       url: s(),
@@ -1851,7 +1851,7 @@ var rtt = m(() =>
       role: Fe(),
     }),
   ),
-  Ha = m(() =>
+  Ha = createLazyValue(() =>
     c({
       type: k("ws-ide"),
       url: s(),
@@ -1863,7 +1863,7 @@ var rtt = m(() =>
       role: Fe(),
     }),
   ),
-  FRt = m(() =>
+  FRt = createLazyValue(() =>
     c({
       type: X(["http", "streamable-http"]).transform(() => "http"),
       url: s(),
@@ -1911,7 +1911,7 @@ function bo(e, t = "", o = 0) {
     return [[u, r, !0], ...bo(i, u, o + 1)];
   });
 }
-var Qt = m(() =>
+var Qt = createLazyValue(() =>
     fe(s(), se())
       .check((e) => {
         let t = (r, i) => {
@@ -1981,7 +1981,7 @@ function yt(e, t) {
   }
   return o;
 }
-var pHn = m(() =>
+var pHn = createLazyValue(() =>
     c({
       type: k("ws"),
       url: s(),
@@ -1992,7 +1992,7 @@ var pHn = m(() =>
       role: Fe(),
     }),
   ),
-  fHn = m(() =>
+  fHn = createLazyValue(() =>
     c({
       type: k("sdk"),
       name: s(),
@@ -2000,8 +2000,8 @@ var pHn = m(() =>
       alwaysLoad: O().optional(),
     }),
   ),
-  $Rt = m(() => X(["allow", "ask", "blocked"])),
-  mHn = m(() =>
+  $Rt = createLazyValue(() => X(["allow", "ask", "blocked"])),
+  mHn = createLazyValue(() =>
     c({
       type: k("claudeai-proxy"),
       url: s(),
@@ -2022,7 +2022,7 @@ var pHn = m(() =>
       enterpriseManaged: O().optional(),
     }),
   ),
-  Lq = m(() => $e([rtt(), c8t(), za(), Ha(), FRt(), pHn(), fHn(), mHn()]));
+  Lq = createLazyValue(() => $e([rtt(), c8t(), za(), Ha(), FRt(), pHn(), fHn(), mHn()]));
 function pke(e) {
   return e?.pluginSource !== void 0;
 }
@@ -2030,7 +2030,7 @@ function gHn(e) {
   if (e.type !== "claudeai-proxy") return !1;
   return e.scope === "claudeai" || (e.scope === "dynamic" && !pke(e));
 }
-var Uf = m(() => c({ mcpServers: fe(s(), Lq()) }));
+var Uf = createLazyValue(() => c({ mcpServers: fe(s(), Lq()) }));
 function ts(e) {
   return e.type === "connected" || e.type === "cached";
 }
@@ -3311,7 +3311,7 @@ function OP() {
       }),
         t.port2.postMessage(null));
     });
-  return Z(0);
+  return sleep(0);
 }
 var Vo = 16,
   Jo = 8,
@@ -3573,7 +3573,7 @@ var sHn = [
   ];
 class Fge extends Error {}
 var qo = ["bash", "powershell"];
-var rt = m(() =>
+var rt = createLazyValue(() =>
   s()
     .optional()
     .describe(
@@ -3756,7 +3756,7 @@ function Bl() {
   };
 }
 var olr = 24576,
-  Et = m(() => {
+  Et = createLazyValue(() => {
     let {
       BashCommandHookSchema: e,
       PromptHookSchema: t,
@@ -3766,7 +3766,7 @@ var olr = 24576,
     } = Bl();
     return Ko("type", [...[e, t, o, r, i]]);
   }),
-  kt = m(() =>
+  kt = createLazyValue(() =>
     c({
       matcher: s()
         .optional()
@@ -3776,7 +3776,7 @@ var olr = 24576,
       ),
     }),
   ),
-  G6 = m(() => x2e(X(C_), v(kt())));
+  G6 = createLazyValue(() => x2e(X(C_), v(kt())));
 function slr(e) {
   if (
     /\$(?!\{CLAUDE_(?:PROJECT_DIR|PLUGIN_ROOT|PLUGIN_DATA)\})/.test(e) ||
@@ -4346,10 +4346,10 @@ function gke(e, t) {
   }
   return `The name '${e}' is reserved for official Anthropic marketplaces and can only be used with GitHub sources from the '${Ct}' organization.`;
 }
-var pe = m(() => s().startsWith("./")),
-  Ne = m(() => pe().endsWith(".json")),
-  rs = m(() => $e([k("."), pe()])),
-  is = m(() =>
+var pe = createLazyValue(() => s().startsWith("./")),
+  Ne = createLazyValue(() => pe().endsWith(".json")),
+  rs = createLazyValue(() => $e([k("."), pe()])),
+  is = createLazyValue(() =>
     $e([
       pe()
         .refine((e) => e.endsWith(".mcpb") || e.endsWith(".dxt"), {
@@ -4364,8 +4364,8 @@ var pe = m(() => s().startsWith("./")),
         .describe("URL to MCPB file"),
     ]),
   ),
-  yn = m(() => pe().endsWith(".md")),
-  _n = m(() => $e([yn(), pe()])),
+  yn = createLazyValue(() => pe().endsWith(".md")),
+  _n = createLazyValue(() => $e([yn(), pe()])),
   ps = {
     inline: "--plugin-dir session plugins",
     builtin: "built-in plugins",
@@ -4375,7 +4375,7 @@ var pe = m(() => s().startsWith("./")),
 function Wge(e) {
   return Object.hasOwn(ps, e);
 }
-var p8t = m(() =>
+var p8t = createLazyValue(() =>
     s()
       .min(1, "Marketplace must have a name")
       .refine((e) => !e.includes(" "), {
@@ -4410,7 +4410,7 @@ var p8t = m(() =>
         });
       }),
   ),
-  wt = m(() =>
+  wt = createLazyValue(() =>
     s()
       .min(1, "Plugin name cannot be empty")
       .refine((e) => !e.includes(" "), {
@@ -4422,7 +4422,7 @@ var p8t = m(() =>
           "Plugin name cannot contain control or bidirectional-formatting characters",
       }),
   ),
-  kn = m(() =>
+  kn = createLazyValue(() =>
     c({
       name: s()
         .min(1, "Author name cannot be empty")
@@ -4433,7 +4433,7 @@ var p8t = m(() =>
         .describe("Website, GitHub profile, or organization URL"),
     }),
   ),
-  nc = m(() =>
+  nc = createLazyValue(() =>
     c({
       $schema: s()
         .optional()
@@ -4481,7 +4481,7 @@ var p8t = m(() =>
           `Plugins that must be enabled for this plugin to function. Bare names (no "@marketplace") are resolved against the declaring plugin's own marketplace.`,
         ),
       metadata: ai(
-        (e) => (me(e) ? e : void 0),
+        (e) => (isRecord(e) ? e : void 0),
         fe(s(), se()).optional(),
       ).describe(
         "Free-form metadata for the plugin author's own use (e.g. entitlement or catalog fields). Preserved on the parsed manifest but not read by Claude Code.",
@@ -4489,7 +4489,7 @@ var p8t = m(() =>
     }),
   ),
   oc = 1,
-  BRt = m(() =>
+  BRt = createLazyValue(() =>
     c({
       description: s()
         .optional()
@@ -4513,7 +4513,7 @@ var p8t = m(() =>
         "hooks.json must have `hooks` (the hook matchers) or `modules` (hooks modules), or both",
     }),
   ),
-  sc = m(() =>
+  sc = createLazyValue(() =>
     c({
       hooks: $e([
         Ne().describe(
@@ -4535,7 +4535,7 @@ var p8t = m(() =>
       ]),
     }),
   ),
-  ic = m(() =>
+  ic = createLazyValue(() =>
     c({
       source: _n()
         .optional()
@@ -4556,7 +4556,7 @@ var p8t = m(() =>
         'Command must have either "source" (file path) or "content" (inline markdown), but not both',
     }),
   ),
-  ac = m(() =>
+  ac = createLazyValue(() =>
     c({
       commands: $e([
         _n().describe(
@@ -4575,7 +4575,7 @@ var p8t = m(() =>
       ]),
     }),
   ),
-  lc = m(() =>
+  lc = createLazyValue(() =>
     c({
       agents: $e([
         yn().describe(
@@ -4591,7 +4591,7 @@ var p8t = m(() =>
       ]),
     }),
   ),
-  cc = m(() =>
+  cc = createLazyValue(() =>
     c({
       skills: $e([
         rs().describe(
@@ -4607,8 +4607,8 @@ var p8t = m(() =>
       ]),
     }),
   ),
-  f8t = m(() => $e([s(), v(s())])),
-  gs = m(() =>
+  f8t = createLazyValue(() => $e([s(), v(s())])),
+  gs = createLazyValue(() =>
     c({
       outputStyles: $e([
         pe().describe(
@@ -4624,13 +4624,13 @@ var p8t = m(() =>
       ]),
     }),
   ),
-  dc = m(() =>
+  dc = createLazyValue(() =>
     s()
       .max(64)
       .regex(/^[a-z][a-z0-9_-]*$/, "must match ^[a-z][a-z0-9_-]*$"),
   ),
   uc = 16,
-  pc = m(() =>
+  pc = createLazyValue(() =>
     c({
       id: dc(),
       remote: s()
@@ -4649,10 +4649,10 @@ var p8t = m(() =>
         .optional(),
     }).strict(),
   ),
-  gc = m(() =>
+  gc = createLazyValue(() =>
     c({ syntaxHighlighting: c({ hljsLanguages: v(pc()).max(uc) }).strict() }),
   ),
-  fs = m(() =>
+  fs = createLazyValue(() =>
     c({
       themes: $e([
         pe().describe(
@@ -4668,7 +4668,7 @@ var p8t = m(() =>
       ]),
     }),
   ),
-  mc = m(() =>
+  mc = createLazyValue(() =>
     c({
       workflows: $e([
         pe().describe(
@@ -4684,15 +4684,15 @@ var p8t = m(() =>
       ]).optional(),
     }),
   ),
-  as = m(() => s().min(1)),
-  fc = m(() =>
+  as = createLazyValue(() => s().min(1)),
+  fc = createLazyValue(() =>
     s()
       .min(2)
       .refine((e) => e.startsWith("."), {
         message: 'File extensions must start with dot (e.g., ".ts", not "ts")',
       }),
   ),
-  hc = m(() =>
+  hc = createLazyValue(() =>
     c({
       mcpServers: $e([
         Ne().describe(
@@ -4716,7 +4716,7 @@ var p8t = m(() =>
       ]),
     }),
   ),
-  hs = m(() =>
+  hs = createLazyValue(() =>
     c({
       type: X(["string", "number", "boolean", "directory", "file"]).describe(
         "Type of the configuration value",
@@ -4743,7 +4743,7 @@ var p8t = m(() =>
       max: T().optional().describe("Maximum value (number type only)"),
     }).strict(),
   ),
-  yc = m(() =>
+  yc = createLazyValue(() =>
     c({
       userConfig: fe(
         s().regex(
@@ -4758,7 +4758,7 @@ var p8t = m(() =>
         ),
     }),
   ),
-  Sc = m(() =>
+  Sc = createLazyValue(() =>
     c({
       channels: v(
         c({
@@ -4783,7 +4783,7 @@ var p8t = m(() =>
       ),
     }),
   ),
-  itt = m(() =>
+  itt = createLazyValue(() =>
     Qe({
       command: s()
         .min(1)
@@ -4854,7 +4854,7 @@ var p8t = m(() =>
         ),
     }),
   ),
-  _c = m(() =>
+  _c = createLazyValue(() =>
     Qe({
       name: s()
         .min(1)
@@ -4885,12 +4885,12 @@ var p8t = m(() =>
         ),
     }),
   ),
-  bHn = m(() =>
+  bHn = createLazyValue(() =>
     v(_c()).refine((e) => new Set(e.map((t) => t.name)).size === e.length, {
       message: "Monitor names must be unique within a plugin",
     }),
   ),
-  ys = m(() =>
+  ys = createLazyValue(() =>
     c({
       monitors: $e([
         Ne().describe(
@@ -4902,7 +4902,7 @@ var p8t = m(() =>
       ),
     }),
   ),
-  bc = m(() =>
+  bc = createLazyValue(() =>
     c({
       lspServers: $e([
         Ne().describe(
@@ -4922,7 +4922,7 @@ var p8t = m(() =>
       ]),
     }),
   ),
-  Ss = m(() =>
+  Ss = createLazyValue(() =>
     s()
       .refine(
         (e) => !e.includes("..") && !e.includes("//"),
@@ -4939,7 +4939,7 @@ var p8t = m(() =>
   GBe = 16,
   m8t = 64,
   $q = 1048576,
-  Ec = m(() => c({ sha256: s().regex(wHn) }));
+  Ec = createLazyValue(() => c({ sha256: s().regex(wHn) }));
 function qBe(e) {
   let t = fe(s(), se()).safeParse(e);
   if (!t.success) return;
@@ -4952,7 +4952,7 @@ function qBe(e) {
   }
   return r > 0 ? o : void 0;
 }
-var kc = m(() =>
+var kc = createLazyValue(() =>
     c({
       binaries: se()
         .transform(qBe)
@@ -4961,7 +4961,7 @@ var kc = m(() =>
         ),
     }),
   ),
-  vc = m(() =>
+  vc = createLazyValue(() =>
     c({
       settings: fe(s(), se())
         .optional()
@@ -4970,10 +4970,10 @@ var kc = m(() =>
         ),
     }),
   ),
-  Ac = m(() =>
+  Ac = createLazyValue(() =>
     c({
       experimental: ai(
-        (e) => (me(e) ? e : void 0),
+        (e) => (isRecord(e) ? e : void 0),
         c({
           ...fs().partial().shape,
           ...gc().partial().shape,
@@ -4993,7 +4993,7 @@ var kc = m(() =>
       ),
     }),
   );
-var Gge = m(() =>
+var Gge = createLazyValue(() =>
     c({
       ...nc().shape,
       ...sc().partial().shape,
@@ -5025,7 +5025,7 @@ var Gge = m(() =>
     "pathPattern",
     "settings",
   ]),
-  Be = m(() =>
+  Be = createLazyValue(() =>
     Ko("source", [
       c({
         source: k("url"),
@@ -5140,7 +5140,7 @@ var Gge = m(() =>
       ),
     ]),
   ),
-  hn = m(() =>
+  hn = createLazyValue(() =>
     s()
       .length(40)
       .regex(
@@ -5148,7 +5148,7 @@ var Gge = m(() =>
         "Must be a full 40-character lowercase git commit SHA",
       ),
   ),
-  bs = m(() =>
+  bs = createLazyValue(() =>
     s().regex(/^[0-9a-fA-F]{64}$/, "Must be a 64-character hex SHA-256 digest"),
   ),
   g8t =
@@ -5161,7 +5161,7 @@ function h8t(e) {
     return !1;
   }
 }
-var Cc = m(() =>
+var Cc = createLazyValue(() =>
     c({
       source: k("archive"),
       url: s()
@@ -5183,7 +5183,7 @@ var Cc = m(() =>
         "static file server or artifact repository (S3, GitLab, nginx) with no git or npm on the client. Authentication: the entry's own `headers` / `headersHelper` (bound to this URL), overlaid on the enclosing url-source marketplace's headers (static or `headersHelper`-minted) when the archive shares its origin.",
     ),
   ),
-  Es = m(() =>
+  Es = createLazyValue(() =>
     $e([
       ai((e) => (e === "." ? "./" : e), pe()).describe(
         "Path to the plugin root, relative to the marketplace root (the directory containing .claude-plugin/, not .claude-plugin/ itself)",
@@ -5293,7 +5293,7 @@ var Cc = m(() =>
       ),
     ]),
   ),
-  wc = m(() =>
+  wc = createLazyValue(() =>
     c({
       name: wt().describe("Plugin name as it appears in the target repository"),
       source: Es().describe(
@@ -5333,7 +5333,7 @@ function att(e) {
 function Om(e) {
   return e.source === "file" || e.source === "directory";
 }
-var _8t = m(() =>
+var _8t = createLazyValue(() =>
     c({
       cli: v(s().max(64))
         .max(10)
@@ -5372,7 +5372,7 @@ var _8t = m(() =>
         ),
     }),
   ),
-  y8t = m(() =>
+  y8t = createLazyValue(() =>
     c({
       topic: s()
         .max(64)
@@ -5386,7 +5386,7 @@ var _8t = m(() =>
         .describe("Matchers that determine when the plugin is relevant."),
     }),
   ),
-  jRt = m(() =>
+  jRt = createLazyValue(() =>
     Gge()
       .partial()
       .extend({
@@ -5416,12 +5416,12 @@ var _8t = m(() =>
           .describe(
             "Require the plugin manifest to be present in the plugin folder. If false, the marketplace entry provides the manifest.",
           ),
-        relevance: ai((e) => (me(e) ? e : void 0), y8t().optional()).describe(
+        relevance: ai((e) => (isRecord(e) ? e : void 0), y8t().optional()).describe(
           `Declares when this plugin is relevant to the user's work. Consumed by the spinner tip ("Working with {topic}?"), session-start auto-suggest, and marketplace browse ranking.`,
         ),
       }),
   ),
-  Oc = m(() => c({ name: wt() }));
+  Oc = createLazyValue(() => c({ name: wt() }));
 function Tc(e) {
   let t = jRt();
   return e.flatMap((o, r) => {
@@ -5444,7 +5444,7 @@ function Tc(e) {
       n(`Stubbing unparseable marketplace plugin entry (${d}): ${u}`, {
         level: "warn",
       });
-      let p = S8t(me(o) ? o.source : void 0)
+      let p = S8t(isRecord(o) ? o.source : void 0)
         ? Lc
         : vn(o)
           ? void 0
@@ -5537,17 +5537,17 @@ function THn(e) {
   return t;
 }
 function EHn(e, t) {
-  if (t === void 0 || !me(e) || !S8t(e.source)) return e;
+  if (t === void 0 || !isRecord(e) || !S8t(e.source)) return e;
   let o = t === "." ? `./${e.source}` : `./${t}/${e.source}`;
   return { ...e, source: o };
 }
 function AHn(e) {
-  if (!me(e) || !Array.isArray(e.plugins)) return e;
-  let t = me(e.metadata) ? THn(e.metadata.pluginRoot) : void 0;
+  if (!isRecord(e) || !Array.isArray(e.plugins)) return e;
+  let t = isRecord(e.metadata) ? THn(e.metadata.pluginRoot) : void 0;
   if (t === void 0) return e;
   return { ...e, plugins: e.plugins.map((o) => EHn(o, t)) };
 }
-var _ke = m(() =>
+var _ke = createLazyValue(() =>
     c({
       $schema: s()
         .optional()
@@ -5592,13 +5592,13 @@ var _ke = m(() =>
         ),
     }),
   ),
-  aL = m(() => ai(AHn, _ke())),
+  aL = createLazyValue(() => ai(AHn, _ke())),
   bn = "[A-Za-z0-9][-A-Za-z0-9._]*",
   Nc = new RegExp(`^${bn}$`);
 function ilr(e) {
   return Nc.test(e);
 }
-var wx = m(() =>
+var wx = createLazyValue(() =>
     s().regex(
       new RegExp(`^${bn}@${bn}$`),
       "Plugin ID must be in format: plugin@marketplace",
@@ -5608,7 +5608,7 @@ var wx = m(() =>
   llr = new RegExp(`[${mhe}]`, "u"),
   ltt = /[\p{Cc}\u200E\u200F\u202A-\u202E\u2066-\u2069]/u,
   Uc = /^[A-Za-z0-9][-A-Za-z0-9._]*(@[A-Za-z0-9][-A-Za-z0-9._]*)?(@\^[^@]*)?$/,
-  zc = m(() =>
+  zc = createLazyValue(() =>
     $e([
       s()
         .regex(
@@ -5631,7 +5631,7 @@ var wx = m(() =>
         ),
     ]),
   ),
-  Hc = m(() =>
+  Hc = createLazyValue(() =>
     c({
       version: s().describe("Currently installed version"),
       installedAt: s().describe("ISO 8601 timestamp of installation"),
@@ -5658,7 +5658,7 @@ var wx = m(() =>
       ...ds(),
     }),
   ),
-  WRt = m(() =>
+  WRt = createLazyValue(() =>
     c({
       version: k(1).describe("Schema version 1"),
       plugins: fe(wx(), Hc()).describe(
@@ -5666,8 +5666,8 @@ var wx = m(() =>
       ),
     }),
   ),
-  jc = m(() => X(["managed", "user", "project", "local"])),
-  Kc = m(() =>
+  jc = createLazyValue(() => X(["managed", "user", "project", "local"])),
+  Kc = createLazyValue(() =>
     c({
       scope: jc().describe("Installation scope"),
       projectPath: s()
@@ -5696,7 +5696,7 @@ var wx = m(() =>
       ...ds(),
     }),
   ),
-  b8t = m(() =>
+  b8t = createLazyValue(() =>
     c({
       version: k(2).describe("Schema version 2"),
       plugins: fe(wx(), v(Kc())).describe(
@@ -5704,7 +5704,7 @@ var wx = m(() =>
       ),
     }),
   ),
-  Fc = m(() =>
+  Fc = createLazyValue(() =>
     c({
       source: Be().describe("Where to fetch the marketplace from"),
       installLocation: s().describe(
@@ -5720,7 +5720,7 @@ var wx = m(() =>
         ),
     }),
   ),
-  yke = m(() => fe(s(), Fc())),
+  yke = createLazyValue(() => fe(s(), Fc())),
   z6 = "claudeai-",
   GRt = ["org", "default", "account"];
 var Sie = ["aspell", "hunspell", "ispell"],
@@ -5892,10 +5892,10 @@ function Js(e) {
   return { serverName: r, toolName: d };
 }
 function Oa(e) {
-  return `mcp__${rn(e)}__`;
+  return `mcp__${normalizeMcpName(e)}__`;
 }
 function rc(e, t) {
-  return `${Oa(e)}${rn(t)}`;
+  return `${Oa(e)}${normalizeMcpName(t)}`;
 }
 function ctt(e) {
   let t = { always_allow: 0, always_ask: 1, always_deny: 2 },
@@ -5947,7 +5947,7 @@ function fS(e) {
   return e.mcpInfo ? rc(e.mcpInfo.serverName, e.mcpInfo.toolName) : e.name;
 }
 function utt(e, t) {
-  let o = `mcp__${rn(t)}__`;
+  let o = `mcp__${normalizeMcpName(t)}__`;
   return e.replace(o, "");
 }
 function dtt(e) {
@@ -5973,7 +5973,7 @@ function VBe(e) {
 }
 function zge(e, t) {
   if (e.startsWith("plugin:") || t.startsWith("plugin:")) return e === t;
-  return rn(e) === rn(t);
+  return normalizeMcpName(e) === normalizeMcpName(t);
 }
 function zRt(e, t) {
   let o = Js(e),
@@ -6245,8 +6245,8 @@ function Ske(e, t) {
   }
   return { valid: !0 };
 }
-var Cn = m(() => xs()),
-  Ps = m(() => xs("allow"));
+var Cn = createLazyValue(() => xs()),
+  Ps = createLazyValue(() => xs("allow"));
 function xs(e) {
   return s().superRefine((t, o) => {
     let r = Ske(t, e);
@@ -6261,7 +6261,7 @@ function xs(e) {
 }
 var XBe = ["accept", "hold", "refuse"],
   Vge = ["off", "basic", "full"],
-  qc = m(() => fe(s(), oHn()));
+  qc = createLazyValue(() => fe(s(), oHn()));
 function Hs(e) {
   return c({
     allow: v(Ps())
@@ -6294,8 +6294,8 @@ function Hs(e) {
       .describe("Additional directories to include in the permission scope"),
   }).passthrough();
 }
-var glr = m(() => Hs(zBe())),
-  Zc = m(() =>
+var glr = createLazyValue(() => Hs(zBe())),
+  Zc = createLazyValue(() =>
     $e([
       s(),
       c({})
@@ -6305,7 +6305,7 @@ var glr = m(() => Hs(zBe())),
         ),
     ]),
   ),
-  CHn = m(() =>
+  CHn = createLazyValue(() =>
     ai(
       (e) =>
         Array.isArray(e)
@@ -6318,7 +6318,7 @@ var glr = m(() => Hs(zBe())),
       v(Zc()),
     ),
   ),
-  Tn = m(() =>
+  Tn = createLazyValue(() =>
     c({
       source: Be().describe("Where to fetch the marketplace from"),
       installLocation: s()
@@ -6333,12 +6333,12 @@ var glr = m(() => Hs(zBe())),
         ),
     }),
   ),
-  Rn = m(() => {
+  Rn = createLazyValue(() => {
     let e = () => T().min(0).max(1e4);
     return c({ input: e(), output: e(), cacheRead: e(), cacheWrite: e() });
   }),
-  Pn = m(() => T().gt(0).lte(1).optional()),
-  xn = m(() =>
+  Pn = createLazyValue(() => T().gt(0).lte(1).optional()),
+  xn = createLazyValue(() =>
     c({
       model: s().describe(
         'Model to select, taken verbatim: an alias ("opus"), an Anthropic model ID, or a provider-format ID (Vertex, Bedrock, gateway). Same values --model accepts.',
@@ -6357,7 +6357,7 @@ var glr = m(() => Hs(zBe())),
         ),
     }),
   ),
-  Dt = m(() =>
+  Dt = createLazyValue(() =>
     c({
       serverName: s()
         .regex(
@@ -6379,7 +6379,7 @@ var glr = m(() => Hs(zBe())),
         ),
     }).refine(
       (e) =>
-        G(
+        countMatching(
           [
             e.serverName !== void 0,
             e.serverCommand !== void 0,
@@ -6393,7 +6393,7 @@ var glr = m(() => Hs(zBe())),
       },
     ),
   ),
-  Mt = m(() =>
+  Mt = createLazyValue(() =>
     c({
       serverName: s()
         .min(1, "Server name must be non-empty")
@@ -6419,7 +6419,7 @@ var glr = m(() => Hs(zBe())),
         ),
     }).refine(
       (e) =>
-        G(
+        countMatching(
           [
             e.serverName !== void 0,
             e.serverCommand !== void 0,
@@ -6502,7 +6502,7 @@ function js(e) {
     Ds.every((o) => t[o] === null || t[o] === void 0)
   );
 }
-var It = m(() =>
+var It = createLazyValue(() =>
     c({
       path: ed(),
       timeoutMs: Ge(Is(1000)),
@@ -6598,7 +6598,7 @@ var In = [...Uq, "default"],
     "defaultSettings",
   ],
   Pt = ["managedSettings", "appendSystemPrompt"],
-  Kge = m(() =>
+  Kge = createLazyValue(() =>
     fe(s(), se()).superRefine((e, t) => {
       for (let o of ["policyHelper", "policyHelpers"])
         if (e[o] !== void 0 && e[o] !== null)
@@ -6655,11 +6655,11 @@ function $s(e, t) {
         o.issues.push({ code: "custom", message: r, input: o.value });
     });
 }
-var Ay = m(() => $s("linux", Kge()));
+var Ay = createLazyValue(() => $s("linux", Kge()));
 function On(e, t = Kge()) {
   return e === "default" ? Kge() : $s(e, t);
 }
-var cd = m(() =>
+var cd = createLazyValue(() =>
     c(
       Object.fromEntries(
         In.map((e) => [
@@ -6675,7 +6675,7 @@ var cd = m(() =>
   ),
   Xge = ["skills", "agents", "hooks", "mcp"],
   Ms = Object.freeze({ type: "invalid-entry-stripped" }),
-  dd = m(() =>
+  dd = createLazyValue(() =>
     $e([
       c({
         type: k("regex").describe(
@@ -7875,7 +7875,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
     ...ks(e),
   }).passthrough();
 }
-var XT = m(() => YBe(zBe())),
+var XT = createLazyValue(() => YBe(zBe())),
   Ls = Object.freeze({ serverName: "invalid-entry-stripped" });
 function Ns(e, t, o) {
   return v(
@@ -8707,7 +8707,7 @@ function jU(e) {
 var gd = new Set(["credentials", "network.tlsTerminate"]);
 function md(e) {
   return Array.isArray(e)
-    ? Y(e.filter((t) => typeof t === "string")).sort()
+    ? dedupe(e.filter((t) => typeof t === "string")).sort()
     : void 0;
 }
 function Lt(e, t) {
@@ -9283,7 +9283,7 @@ function Kd() {
 }
 function Un() {
   let e = ee().backendView;
-  if (!M() || e === void 0 || !e.ready || e.stoodDown || getRemoteSettingsPathOverride() !== void 0)
+  if (!isHoverRestEnabled() || e === void 0 || !e.ready || e.stoodDown || getRemoteSettingsPathOverride() !== void 0)
     return;
   if (!w_e(e.configHome)) {
     e.standDown("config home changed");
@@ -9298,7 +9298,7 @@ function remoteSettingsFileWritten(e, t) {
   ee().backendView?.written(e === "cache" ? Hn : jn, t);
 }
 async function primeRemoteManagedSettingsCache(e) {
-  if (!M() || e === void 0) return;
+  if (!isHoverRestEnabled() || e === void 0) return;
   let t = ee();
   if (t.backendView !== void 0) return t.backendView.priming;
   if (getRemoteSettingsPathOverride() !== void 0) {
@@ -9609,7 +9609,7 @@ function Vd(e) {
 function unverifiedRemoteCacheWithholdsProvisions() {
   let e = getRemoteManagedSettingsRawCache(),
     t = e?.managedMcpServers;
-  return e !== null && !mr(ee(), e) && me(t) && Object.keys(t).length > 0;
+  return e !== null && !mr(ee(), e) && isRecord(t) && Object.keys(t).length > 0;
 }
 function mr(e, t) {
   return t === e.verifiedPayload || Boolean(getRemoteSettingsPathOverride());
@@ -9646,7 +9646,7 @@ function Yd(e, t, o) {
 }
 var it = Yd;
 var Ht = {};
-au(Ht, { default: () => at });
+defineExportGetters(Ht, { default: () => at });
 var Sr = typeof Ht == "object" && Ht && !Ht.nodeType && Ht,
   fr = Sr && typeof Ut == "object" && Ut && !Ut.nodeType && Ut,
   Jd = fr && fr.exports === Sr,
@@ -10798,7 +10798,7 @@ function Ai(e) {
   if (!o.docLink && e.path) o.docLink = pg[ft(e.path, ".")];
   return o;
 }
-var gg = m(() => YBe(zBe(), { strictPolicyHelperKeys: !0 }).strict());
+var gg = createLazyValue(() => YBe(zBe(), { strictPolicyHelperKeys: !0 }).strict());
 function Ci(e) {
   return e.code === "invalid_type";
 }
@@ -10879,7 +10879,7 @@ function qe(e, t) {
 function zHn(e) {
   try {
     let t = z(e),
-      o = Dq(me(t) ? { ...t } : t, "settings").map(Yt),
+      o = Dq(isRecord(t) ? { ...t } : t, "settings").map(Yt),
       r = gg().safeParse(t),
       i = r.success ? [] : qe(r.error, "settings"),
       d = KHn(t);
@@ -10956,7 +10956,7 @@ function VHn(e) {
   }
   let i = [];
   for (let [d, u] of o) {
-    for (let g of Dq(me(u) ? { ...u } : u, d)) i.push(`${d}: ${Yt(g)}`);
+    for (let g of Dq(isRecord(u) ? { ...u } : u, d)) i.push(`${d}: ${Yt(g)}`);
     let p = R8t(u, d);
     if ("error" in p)
       i.push(
@@ -11032,7 +11032,7 @@ function Sg(e, t) {
     Array.isArray(e.hooks)
   ) {
     let i = ce(e.hooks);
-    if (Array.isArray(e.hooks) && (e.hooks.some(me) || LQ(e.hooks)))
+    if (Array.isArray(e.hooks) && (e.hooks.some(isRecord) || LQ(e.hooks)))
       return [
         {
           file: t,
@@ -11189,7 +11189,7 @@ function bg(e, t, o) {
   return i;
 }
 function Eg(e, t) {
-  if (!me(e) || e.managedMcpServers === void 0) return [];
+  if (!isRecord(e) || e.managedMcpServers === void 0) return [];
   let r = [],
     i = yt(e.managedMcpServers, (d, u) =>
       r.push({
@@ -11266,8 +11266,8 @@ function wg(e, t) {
     r = "modelPicker";
   if (!(r in o)) return [];
   let i = o[r];
-  if (!me(i) || !Array.isArray(i.options)) {
-    let g = me(i) ? `options: ${ce(i.options)}` : ce(i);
+  if (!isRecord(i) || !Array.isArray(i.options)) {
+    let g = isRecord(i) ? `options: ${ce(i.options)}` : ce(i);
     return (
       delete o[r],
       [
@@ -11390,7 +11390,7 @@ function Ri(e) {
 }
 var k8t = "crossSessionInbound";
 function KHn(e) {
-  if (!me(e)) return;
+  if (!isRecord(e)) return;
   let t = e.crossSessionInbound;
   if (t === void 0 || Ri(t)) return;
   return Pi(t);
@@ -11419,7 +11419,7 @@ function Pg(e, t, o = !1) {
 }
 var x8t = "remoteControl.shareHostProfile";
 function xg(e, t, o) {
-  if (!me(e) || e.remoteControl === void 0) return [];
+  if (!isRecord(e) || e.remoteControl === void 0) return [];
   let r = o?.policySource === !0,
     i = Vge.map((_) => `"${_}"`).join(", "),
     d = r
@@ -11438,7 +11438,7 @@ function xg(e, t, o) {
         ? `"${ve(_).replace(/^<key>$/, "<value>")}"`
         : ce(_),
     g = e.remoteControl;
-  if (!me(g)) {
+  if (!isRecord(g)) {
     if (r) e.remoteControl = { shareHostProfile: "off" };
     else delete e.remoteControl;
     return [
@@ -11601,7 +11601,7 @@ function e2e(e) {
   );
 }
 function Mi(e, t) {
-  if (!me(e) || !("managedMcpServers" in e)) return [];
+  if (!isRecord(e) || !("managedMcpServers" in e)) return [];
   return (
     delete e.managedMcpServers,
     e2e("managedMcpServers")
@@ -11720,7 +11720,7 @@ function Eke(e, t, o) {
   if (e.trim() === "") return { settings: {}, errors: [] };
   let r = Ru(xt(e, !1));
   if (o) {
-    if (!me(r)) return { settings: null, errors: [I8t(t)] };
+    if (!isRecord(r)) return { settings: null, errors: [I8t(t)] };
     let u = wke(r, t, { skipMcpServerEntryFilter: !0, policySource: !0 }),
       p = [],
       g = Dn(Li(t, p), t).safeParse(r);
@@ -12026,7 +12026,7 @@ function Wg(e, t) {
 function zi(e, t) {
   let o = yie,
     r = new Set(t.flatMap(Ii));
-  return Y(e.flatMap(Ii))
+  return dedupe(e.flatMap(Ii))
     .filter((i) => o.includes(i) && !r.has(i))
     .map((i, d) => ({
       accessKeyIdVar: i,
@@ -12034,7 +12034,7 @@ function zi(e, t) {
     }));
 }
 function Ii(e) {
-  if (!me(e)) return [];
+  if (!isRecord(e)) return [];
   return [e.accessKeyIdVar, e.secretAccessKeyVar, e.sessionTokenVar].filter(
     (t) => typeof t === "string",
   );
@@ -12281,7 +12281,7 @@ function Ki(e, t, o) {
   if (t === void 0) return e;
   if (Array.isArray(t))
     return o === "awsPairs" && Array.isArray(e) ? [...t, ...zi(e, t)] : [...t];
-  if (!me(t)) return t;
+  if (!isRecord(t)) return t;
   return Si(t, (r) => (Array.isArray(r) ? [...r] : r));
 }
 var qg = [
@@ -12309,7 +12309,7 @@ function em(e, t, o) {
 }
 function Fi(e, t, o) {
   if (Array.isArray(e) && Array.isArray(t) && o !== "fallbackModel")
-    return Y([...t, ...e]);
+    return dedupe([...t, ...e]);
   return settingsMergeCustomizer(e, t, o);
 }
 function tm(e, t) {
@@ -12324,7 +12324,7 @@ function tm(e, t) {
     else if (Ee(o, i) === void 0 && Ee(e, i) !== void 0) Re(r, i, void 0);
   }
   if (e.strictPluginOnlyCustomization !== !0) {
-    let i = Y(
+    let i = dedupe(
       t.flatMap((d) =>
         Array.isArray(d.strictPluginOnlyCustomization)
           ? d.strictPluginOnlyCustomization
@@ -12611,7 +12611,7 @@ function Gi(e) {
       mdmTierPresent: g.mdm,
       fileTierPresent: g.file,
       adminTierCount: r.length,
-      tiersWithEnv: G(r, (I) => Object.keys(I.env ?? {}).length > 0),
+      tiersWithEnv: countMatching(r, (I) => Object.keys(I.env ?? {}).length > 0),
     }),
     (e.store.policy.pairedModelOverrides = {
       value:
@@ -12670,28 +12670,28 @@ function settingsMergeCustomizer(e, t, o) {
   if (o === "modelPicker" && t !== void 0) return Yi(t);
   if (Array.isArray(e) && Array.isArray(t)) {
     if (o === "fallbackModel") return t;
-    return Y([...e, ...t]);
+    return dedupe([...e, ...t]);
   }
   if (
     (o === "extraKnownMarketplaces" || o === "managedMcpServers") &&
-    me(e) &&
-    me(t)
+    isRecord(e) &&
+    isRecord(t)
   )
     return Ttt(e, t);
   return;
 }
 function Yi(e) {
-  if (!me(e)) return e;
+  if (!isRecord(e)) return e;
   let t = e.options;
   return {
     ...e,
-    ...(Array.isArray(t) && { options: t.map((o) => (me(o) ? { ...o } : o)) }),
+    ...(Array.isArray(t) && { options: t.map((o) => (isRecord(o) ? { ...o } : o)) }),
   };
 }
 function Plr(e) {
   if (e.store.isLoadingFromDisk) return { settings: {}, errors: [] };
   let t = Date.now();
-  (q("info", "settings_load_started"), (e.store.isLoadingFromDisk = !0));
+  (writeDiagnosticsEvent("info", "settings_load_started"), (e.store.isLoadingFromDisk = !0));
   try {
     let o = e.store.pluginBase,
       r = {};
@@ -12749,7 +12749,7 @@ function Plr(e) {
       if (g.modelPicker !== void 0) r.modelPicker = Yi(g.modelPicker);
     }
     return (
-      q("info", "settings_load_completed", {
+      writeDiagnosticsEvent("info", "settings_load_completed", {
         duration_ms: Date.now() - t,
         source_count: u.size,
         error_count: i.length,

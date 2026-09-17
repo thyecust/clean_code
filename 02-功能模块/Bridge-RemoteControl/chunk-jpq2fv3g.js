@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { mz } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -18,7 +18,7 @@ import { Pse } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R4e, Dwe, QOe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { N3t } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { s, T, O, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var M = m(() =>
+var M = createLazyValue(() =>
   c({
     file_uuid: s(),
     file_name: s(),
@@ -174,7 +174,7 @@ function QGe(e, r, t, a, d, o) {
           ? "teams_relay"
           : "other";
   return (
-    i("tengu_bridge_ingress_demoted", { platform_class: fromEnum(k) }),
+    logEvent("tengu_bridge_ingress_demoted", { platform_class: fromEnum(k) }),
     {
       kind: "peer",
       from: "unknown",

@@ -11,8 +11,8 @@
 // [preload stripped] 原本在此预载 178 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, po, CS, An, gp, jf } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { tl } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -25,7 +25,7 @@ import { formatDuration } from "../../01-核心基础设施/核心工具-字符�
 import { Bt, Mn, Wl } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { dy } from "../../01-核心基础设施/共享小工具-未细化/chunk-862jyk0r.js";
+import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
 import { jcr, On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { fi, _W } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
@@ -71,9 +71,9 @@ import {
 } from "./chunk-cgmv5fe7.js";
 import { serverToolsValueNamesSelfHostedRunnerTool, sanitizeServerClaudeCodeArgs } from "../../01-核心基础设施/共享小工具-未细化/chunk-02q6xmh3.js";
 import { XYt } from "./chunk-vanzsjh3.js";
-import { Kot } from "./chunk-t1eaahr7.js";
-import { Qat } from "../../01-核心基础设施/共享小工具-未细化/chunk-wmwgjjnt.js";
-import { PDt } from "../../01-核心基础设施/共享小工具-未细化/chunk-274ae0qv.js";
+import { startGuestVitalsEmitter } from "./guest-vitals-emitter.js";
+import { appendClaudeCodeArgs } from "../../01-核心基础设施/共享小工具-未细化/claude-code-args.js";
+import { OTEL_DIAG_ERROR_LOG_PREFIX } from "../../01-核心基础设施/共享小工具-未细化/otel-diag-logger.js";
 import {
   cLt,
   Vlt,
@@ -94,17 +94,17 @@ import {
   M2n,
   Xlt,
 } from "../Git-Worktree/chunk-33y3h2sy.js";
-import { uu } from "../../01-核心基础设施/共享小工具-未细化/chunk-bgwm3fhf.js";
-import { idt, bF } from "../../01-核心基础设施/共享小工具-未细化/chunk-vthq2yn2.js";
-import { ml } from "../../01-核心基础设施/共享小工具-未细化/chunk-vdg9aytt.js";
+import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
+import { DRAIN_RESPONSE_TIMEOUT_MS, drainResponseBody } from "../../01-核心基础设施/共享小工具-未细化/drain-response-body.js";
+import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 import { Xi } from "../Teammates团队/chunk-z2t8b9yc.js";
-import { Uy } from "../../01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js";
+import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
 import { AP, FR, vRe, H5 } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { gS } from "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
 import { Zie, wxt, nXt, Lnt, Mhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-h1jrnver.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { execFileSync } from "child_process";
 import { createWriteStream, fchmod } from "fs";
 import {
@@ -120,7 +120,7 @@ import { access, constants as Dr, mkdir as ii } from "fs/promises";
 var oi = 1e4;
 async function Pr(e, t = oi) {
   try {
-    await uu(
+    await raceWithTimeout(
       ii(e, { recursive: !0 }).then(() => access(e, Dr.W_OK | Dr.X_OK)),
       t,
       `base directory check for ${e}`,
@@ -211,7 +211,7 @@ async function Br(e, t) {
     c = Ur(n, async ([p, i]) => {
       if ((await provenSameProcessAsync(p, i)) === !0) r.set(p, void 0);
     });
-  let m = await kt(
+  let m = await withDeadline(
     c.then(() => !0),
     t,
   ).catch(() => {
@@ -606,7 +606,7 @@ async function Qr(e = {}) {
 async function dn(e) {
   let t;
   try {
-    t = await Ei(e, Si.O_RDONLY | dy);
+    t = await Ei(e, Si.O_RDONLY | O_NOFOLLOW_NONBLOCK_FLAGS);
     let n = Buffer.alloc(Yr),
       { bytesRead: r } = await t.read(n, 0, Yr, 0),
       s = n.subarray(0, r).toString("utf8"),
@@ -708,7 +708,7 @@ var Es = 5000,
   is = 60000,
   Tn = 30000;
 function xe(e, t) {
-  return uu(e, Es, `[runner:stuck] fs op '${t}' (check TMPDIR mount health)`);
+  return raceWithTimeout(e, Es, `[runner:stuck] fs op '${t}' (check TMPDIR mount health)`);
 }
 function Wi(e) {
   if (a.CLAUDE_CODE_CUSTOM_OAUTH_URL) return "-custom-oauth";
@@ -739,7 +739,7 @@ async function bs(e, t) {
     r = new Map(),
     s = { bytes: 0 };
   try {
-    await uu(
+    await raceWithTimeout(
       Rs(
         n,
         "",
@@ -782,7 +782,7 @@ async function bs(e, t) {
             `.claude${fileSuffixForOauthConfig()}.json`,
             ...OAUTH_GLOBAL_FILE_SUFFIXES.map((i) => `.claude${i}.json`),
           ])
-        : M() && t !== void 0
+        : isHoverRestEnabled() && t !== void 0
           ? await Ki(t)
           : await Dn(getGlobalClaudeFile(), "utf8"),
       p = await z(m);
@@ -908,7 +908,7 @@ async function Ts(e) {
         return L === S ? h : `${h.slice(0, L)}.*${h.slice(S)}`;
       },
       p = d.filter(([h, L]) => !os(h, L)),
-      i = Y(p.map(([h]) => m(h))).sort();
+      i = dedupe(p.map(([h]) => m(h))).sort();
     e(
       `[runner] governed git: seed filter dropped ${p.length} non-allowlisted gitconfig entries (families: ${i.join(", ")})`,
     );
@@ -1006,7 +1006,7 @@ async function qi(e, t, n, r, s = fileSuffixForOauthConfig()) {
   let d = [];
   try {
     if (
-      (await uu(
+      (await raceWithTimeout(
         (async () => {
           let o = await ys(e, r);
           for (let [c, { buf: m, mode: p }] of t.files) {
@@ -1177,7 +1177,7 @@ async function Ln(e, t, n, r) {
     },
   );
   try {
-    return await uu(e, t, n);
+    return await raceWithTimeout(e, t, n);
   } catch (d) {
     if (!s)
       r?.(
@@ -1627,12 +1627,12 @@ async function Os(e, t, n) {
           Yt.length > 0 ? "provision,clone,start_cc" : "provision,start_cc",
       });
       let vn = Co($o(C.push_targets));
-      (await uu(
+      (await raceWithTimeout(
         Mt(He, { recursive: !0 }),
         Nn,
         `[runner:stuck] mkdir ${He} (check NFS/CSI mount health)`,
       ),
-        await uu(
+        await raceWithTimeout(
           Mt(Ze, { recursive: !0, mode: 448 }),
           Nn,
           `[runner:stuck] mkdir ${Ze}`,
@@ -1697,7 +1697,7 @@ async function Os(e, t, n) {
                     warn: `[runner:warn] not removing ${he} for skipped context source ${T.repo}: same name as the prepared checkout ${tt} modulo case (one directory on a case-insensitive filesystem); whatever the hook wrote there may remain visible to this session. Removal is retried when the session ends.`,
                   }
                 );
-              let Ve = await uu(
+              let Ve = await raceWithTimeout(
                 ct(he, { recursive: !0, force: !0 }).then(
                   () => {
                     return;
@@ -1882,7 +1882,7 @@ async function Os(e, t, n) {
             if (Vt && !Oe && tt instanceof Jxe && !n.aborted) {
               h(
                 `[runner:warn] checkout hook failed for context source ${T.repo} (${tt.telemetryMessage}); not a work repo (no push_targets entry), skipping it: ` +
-                  ml(tt.message),
+                  redactSecrets(tt.message),
               );
               let dt = await Ft();
               if (dt) h(dt.warn);
@@ -1982,12 +1982,12 @@ async function Os(e, t, n) {
         let N = Ls(He, C.cwd);
         if (!(
           N !== null &&
-          (await uu(
+          (await raceWithTimeout(
             Lo(He, N),
             Nn,
             `[runner:stuck] mkdir ${N} (check NFS/CSI mount health)`,
           ).catch(() => !1)) &&
-          (await uu(
+          (await raceWithTimeout(
             xo(He, N),
             Es,
             `[runner:stuck] realpath ${N} (check NFS/CSI mount health)`,
@@ -2297,7 +2297,7 @@ async function Os(e, t, n) {
             signal: n,
           }),
           ce = {};
-        await uu(
+        await raceWithTimeout(
           Promise.all([
             jt?.then((Oe) => (ce.atClaim = Oe)).catch(() => {}),
             jt === void 0
@@ -2318,7 +2318,7 @@ async function Os(e, t, n) {
             await E();
           (q?.cancel(), (ut = !0));
           let Oe = void 0;
-          ((Xe = Kot({
+          ((Xe = startGuestVitalsEmitter({
             sessionId: e,
             apiBaseUrl: new URL(Ds(C.api_base_url, e).sdkUrl).origin,
             tokenFilePath: rt,
@@ -2456,7 +2456,7 @@ async function Os(e, t, n) {
       if (kn(K) || Ne) {
         let Qe =
           Ne && !kn(K)
-            ? ` Setup had meanwhile thrown: ${ml(K instanceof Error ? K.message : String(K))}`
+            ? ` Setup had meanwhile thrown: ${redactSecrets(K instanceof Error ? K.message : String(K))}`
             : "";
         return (
           i(
@@ -2467,7 +2467,7 @@ async function Os(e, t, n) {
           { result: "abandoned" }
         );
       }
-      let Le = ml(K instanceof Error ? K.message : String(K));
+      let Le = redactSecrets(K instanceof Error ? K.message : String(K));
       Re = `setup threw: ${Le}`;
       let gt = K instanceof Vn || Vlt(Le);
       {
@@ -2512,7 +2512,7 @@ async function Os(e, t, n) {
         ),
         { result: "interrupted" }
       );
-    let D = ml(_e instanceof Error ? _e.message : String(_e));
+    let D = redactSecrets(_e instanceof Error ? _e.message : String(_e));
     Re = `pre-spawn threw: ${D}`;
     {
       let ue = P_e(_e);
@@ -2646,7 +2646,7 @@ async function Os(e, t, n) {
           (Je.on("close", Ne), Je.on("error", Ne));
         });
     for (let D of ze)
-      await uu(
+      await raceWithTimeout(
         ct(D, { recursive: !0, force: !0 }),
         rs,
         `[runner:hook] rm -rf ${D}`,
@@ -2746,7 +2746,7 @@ function ro(e) {
         "[runner:warn] server-supplied tools arg contained ONLY self-hosted-runner operator tool names; dropping --tools and using the default pool",
       );
   }
-  let Wt = Qat(ht, At, to, (x, ee) =>
+  let Wt = appendClaudeCodeArgs(ht, At, to, (x, ee) =>
     te(`[runner:session] Skipping ${x} claude_code_arg: ${ee}`),
   );
   if (Wt > 0)
@@ -3173,7 +3173,7 @@ function ro(e) {
             `[runner:session] ${s} sawInit latched via stderr SDKStartup marker`,
           ));
       let E = ao(ee, _);
-      if (E.startsWith(PDt)) le(`[runner:session] stderr: ${E}`);
+      if (E.startsWith(OTEL_DIAG_ERROR_LOG_PREFIX)) le(`[runner:session] stderr: ${E}`);
       else te(`[runner:session] stderr: ${E}`);
       if ((q.push(E), q.length > Jt)) q.shift();
     });
@@ -3275,7 +3275,7 @@ function Tr(e, t, n = 0, r = 0) {
   return Math.ceil((e + t + n + r + ln) / 1000);
 }
 function ao(e, t) {
-  let n = ml(e);
+  let n = redactSecrets(e);
   return n.length > t ? n.slice(0, t) + ` \u2026[+${n.length - t} chars]` : n;
 }
 var uo = 900000;
@@ -3426,7 +3426,7 @@ class Sr {
         let d;
         if (e > 0) {
           let { live: m, incomplete: p } = await Kr(s);
-          if (m > 0 || p) (await Z(e), (d = await ar(s, "SIGKILL")));
+          if (m > 0 || p) (await sleep(e), (d = await ar(s, "SIGKILL")));
         } else d = await ar(s, "SIGKILL");
         if (d?.incomplete) {
           this.onStatus(
@@ -3448,7 +3448,7 @@ class Sr {
             : `[runner:session] process tree pid=${n}: ${s.pinned.size} descendant(s) at SIGTERM (${s.unpinned} unidentifiable); ${o} outlived the child and were SIGKILLed, with ${c} tool-tree group(s)`,
         );
       })().catch(() => {});
-    this.reap = kt(r, e + io).then(() => {});
+    this.reap = withDeadline(r, e + io).then(() => {});
   }
   get descendantsReaped() {
     return this.reap;
@@ -3530,7 +3530,7 @@ async function gn(e, t) {
       if (t.maxAttempts !== void 0 && r >= t.maxAttempts) throw s;
       t.onRetry?.(r, s);
       let d = n * (0.75 + Math.random() * 0.5);
-      (await Z(d, t.signal), (n = Math.min(n * 2, t.maxDelayMs)));
+      (await sleep(d, t.signal), (n = Math.min(n * 2, t.maxDelayMs)));
     }
   }
 }
@@ -4617,7 +4617,7 @@ async function Po(e, t, n, r, s = spawn, d = !1, o, c) {
           ne = "";
         V.stderr?.on("data", (le) => (ne += String(le)));
         let ae = () => {
-          if (V.pid) Uy(V.pid);
+          if (V.pid) killProcessTree(V.pid);
           U(null);
         };
         r?.addEventListener("abort", ae, { once: !0 });
@@ -4629,7 +4629,7 @@ async function Po(e, t, n, r, s = spawn, d = !1, o, c) {
               ),
               H.pid)
             )
-              Uy(H.pid);
+              killProcessTree(H.pid);
             fe(null);
           },
           ss,
@@ -5034,11 +5034,11 @@ async function Ss(e) {
         ),
         "epoch_stale"
       );
-    let w = ml(S instanceof Error ? S.message : String(S));
+    let w = redactSecrets(S instanceof Error ? S.message : String(S));
     (i(
       `[runner:stuck] Failed to post failure-result for ${r} (attempt 1): ${w} \u2014 retrying in 2s`,
     ),
-      await Z(2000, h));
+      await sleep(2000, h));
   }
   try {
     return (
@@ -5063,7 +5063,7 @@ async function Ss(e) {
         ),
         "epoch_stale"
       );
-    let w = ml(S instanceof Error ? S.message : String(S));
+    let w = redactSecrets(S instanceof Error ? S.message : String(S));
     return (
       i(
         `[runner:stuck] Failed to post failure-result for ${r} after retry: ${w} \u2014 UI spinner may not stop`,
@@ -5236,7 +5236,7 @@ function qo({
   capMs: d = Yo,
 }) {
   if (!e || !((t ?? 0) > 1) || !n) return Promise.resolve(void 0);
-  return uu(
+  return raceWithTimeout(
     Promise.resolve().then(r),
     d,
     "post-registration /remote re-read",
@@ -5381,7 +5381,7 @@ class Or {
     (t.addEventListener("abort", r, { once: !0 }),
       s.addEventListener("abort", r, { once: !0 }));
     try {
-      await Z(e, n.signal);
+      await sleep(e, n.signal);
     } finally {
       (t.removeEventListener("abort", r), s.removeEventListener("abort", r));
     }
@@ -5436,7 +5436,7 @@ function Fs(e) {
               d(
                 `[runner:hints] stream HTTP ${w.status} \u2014 degrading to poll, retrying`,
               ),
-              bF(w, { timeoutMs: idt }),
+              drainResponseBody(w, { timeoutMs: DRAIN_RESPONSE_TIMEOUT_MS }),
               Error(`HTTP ${w.status}`)
             );
           if ((d("[runner:hints] stream connected"), await ua(w.body, s, i)))
@@ -5449,7 +5449,7 @@ function Fs(e) {
         p++;
         let L = Math.min(oa, ia * 2 ** p),
           S = Math.floor(Math.random() * L);
-        await Z(S, o);
+        await sleep(S, o);
       }
       o.removeEventListener("abort", h);
     })(),
@@ -5885,7 +5885,7 @@ async function Da(e) {
   if (e.poolSecretFile) {
     let r;
     try {
-      r = await uu(
+      r = await raceWithTimeout(
         Ks(e.poolSecretFile, { encoding: "utf-8" }),
         va,
         `environment-secret read from ${e.poolSecretFile}`,
@@ -6140,7 +6140,7 @@ Debug:
       _ot("--hooks-dir");
     (xa(t.baseDirSource), q4(), (n = await Da(t)), await Pr(t.baseDir));
   } catch (v) {
-    (console.error(`error: ${ml(l(v))}
+    (console.error(`error: ${redactSecrets(l(v))}
 Run 'claude self-hosted-runner --help' for usage.`),
       process.exit(2));
   }
@@ -6169,7 +6169,7 @@ Run 'claude self-hosted-runner --help' for usage.`),
       if (!o) return;
       let v = o;
       ((o = void 0),
-        await uu(
+        await raceWithTimeout(
           new Promise((O) => v.end(O)),
           500,
           "[runner:exit] log-file flush",
@@ -6177,12 +6177,12 @@ Run 'claude self-hosted-runner --help' for usage.`),
     },
     p = (v) => {
       if (s) {
-        let O = `${d()} [DEBUG] ${ml(v)}`;
+        let O = `${d()} [DEBUG] ${redactSecrets(v)}`;
         (console.error(O), c(O));
       }
     },
     i = (v) => {
-      let O = `${d()} [self-hosted-runner] ${ml(v)}`;
+      let O = `${d()} [self-hosted-runner] ${redactSecrets(v)}`;
       (console.log(O), c(O));
     };
   if (process.env.SELF_HOSTED_RUNNER_SIGKILL_TIMEOUT_MS !== void 0)
@@ -6327,7 +6327,7 @@ Run 'claude self-hosted-runner --help' for usage.`),
         C =
           O === void 0
             ? "session counts not yet initialized (startup in progress)"
-            : `${O.sessionIdle.size} active session(s), ${G([...O.sessionIdle.values()], (F) => F !== null)} of them idle`;
+            : `${O.sessionIdle.size} active session(s), ${countMatching([...O.sessionIdle.values()], (F) => F !== null)} of them idle`;
       return `(${v}; uptime ${formatDuration(process.uptime() * 1000)}; ${C})`;
     },
     Rt = (v) => {
@@ -6575,7 +6575,7 @@ Run 'claude self-hosted-runner --help' for usage.`),
     );
   } finally {
     if ((We.cancelAll(), Te?.close(), fe))
-      await uu(fe.close(), 2000, "[runner:exit] egress proxy close").catch(
+      await raceWithTimeout(fe.close(), 2000, "[runner:exit] egress proxy close").catch(
         () => {},
       );
     (process.removeListener("SIGTERM", ht),
@@ -6641,12 +6641,12 @@ async function Ma(e, t) {
     Et,
     Ke = !1,
     v = () =>
-      G(
+      countMatching(
         [...h.entries()],
         ([ie, ge]) => !ge.controller.signal.aborted && !F.has(ie),
       ),
     O = () =>
-      G(
+      countMatching(
         [...h.entries()],
         ([ie, ge]) => !ge.controller.signal.aborted && F.has(ie) && !ye.has(ie),
       ),
@@ -6803,7 +6803,7 @@ async function Ma(e, t) {
       let ie = We ? 0 : Math.max(0, d.capacity - ve()),
         ge = nt.consume();
       if (ge === "SSE") {
-        if ((await Z(Math.floor(Math.random() * Us), t), t.aborted)) break;
+        if ((await sleep(Math.floor(Math.random() * Us), t), t.aborted)) break;
       }
       let ze = Ae;
       if (Ee && !rt && !qe && ie > 0) {
@@ -6882,7 +6882,7 @@ async function Ma(e, t) {
           (p(
             `Poll failed: ${re} \u2014 confirming 404 (${te}/3), retrying in ${(E / 1000).toFixed(1)}s`,
           ),
-            await Z(e.pollIntervalOverrideMs ?? E, t));
+            await sleep(e.pollIntervalOverrideMs ?? E, t));
           continue;
         }
         if (((te = 0), Me || !de))
@@ -6894,7 +6894,7 @@ async function Ma(e, t) {
         else if (q === "5xx") x = Qs(In, we, ya);
         else x = In;
         (p(`Poll failed: ${re} \u2014 retrying in ${(x / 1000).toFixed(1)}s`),
-          await Z(e.pollIntervalOverrideMs ?? x, t));
+          await sleep(e.pollIntervalOverrideMs ?? x, t));
         continue;
       }
       let Pe = st.filter((_) => !V.has(_));
@@ -7644,7 +7644,7 @@ async function Ma(e, t) {
       if (h.size > 0) {
         p(`Draining ${h.size} active session(s)...`);
         try {
-          (await uu(
+          (await raceWithTimeout(
             Promise.allSettled([...h.values()].map((Pe) => Pe.task)),
             ie,
             "[runner:stuck] drain",
@@ -7666,7 +7666,7 @@ async function Ma(e, t) {
         (p(
           `[runner] shutdown: waiting for ${ye.size} in-flight session release(s) to settle before deregistering`,
         ),
-          await uu(
+          await raceWithTimeout(
             Promise.allSettled([...ye.values()]),
             Cr,
             "[runner:exit] release settle",
@@ -7679,7 +7679,7 @@ async function Ma(e, t) {
       clearInterval(ze);
     }
     let st = !1;
-    await uu(
+    await raceWithTimeout(
       n
         .deregisterRunner(s.runnerToken)
         .then(() => {

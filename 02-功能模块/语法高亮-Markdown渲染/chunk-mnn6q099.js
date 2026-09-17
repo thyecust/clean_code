@@ -18,12 +18,12 @@ import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { gi, ree, o, t, jr, pd, Od } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _$ } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
 import { cne } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ZR } from "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { Mit, Rye, lle, VZt } from "./chunk-hqp2e8nr.js";
-import { Ai } from "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Yl, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
 import { extname } from "path";
@@ -78,7 +78,7 @@ function Y(xr) {
     q,
     Et;
   if (j[0] !== xt || j[1] !== R || j[2] !== Rt) {
-    Et = en;
+    Et = EARLY_RETURN_SENTINEL;
     bb0: {
       q = LU(xt);
       if (Rt) {
@@ -97,7 +97,7 @@ function Y(xr) {
     }
     ((j[0] = xt), (j[1] = R), (j[2] = Rt), (j[3] = q), (j[4] = Et));
   } else ((q = j[3]), (Et = j[4]));
-  if (Et !== en) return Et;
+  if (Et !== EARLY_RETURN_SENTINEL) return Et;
   let A;
   if (j[8] !== yt) ((A = extname(yt).slice(1)), (j[8] = yt), (j[9] = A));
   else A = j[9];
@@ -122,7 +122,7 @@ function mt(Er) {
   let Mt = _(7),
     { codeWithSpaces: Ct, language: I } = Er,
     Jt;
-  if (Mt[0] === p) ((Jt = ZR()), (Mt[0] = Jt));
+  if (Mt[0] === MEMO_CACHE_SENTINEL) ((Jt = getSyntaxHighlightAdapter()), (Mt[0] = Jt));
   else Jt = Mt[0];
   let St = Jt,
     { highlightedCode: it } = ree(),
@@ -172,7 +172,7 @@ var Ft = 80,
       Pt = C(null),
       [_t, zr] = d(Z || Ft),
       [$t] = cn(),
-      O = Ai().syntaxHighlightingDisabled ?? !1,
+      O = useSettings().syntaxHighlightingDisabled ?? !1,
       L;
     if (W[0] !== b || W[1] !== T || W[2] !== O) {
       bb0: {

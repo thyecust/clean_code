@@ -11,13 +11,13 @@
 // [preload stripped] 原本在此预载 72 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { lZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import { isBriefEntitled } from "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
 import { O, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var r = m(() => c({ enable_slash_command: O() })),
+var r = createLazyValue(() => c({ enable_slash_command: O() })),
   n = { enable_slash_command: !1 };
 function a() {
   let t = H("tengu_kairos_brief_config", n),
@@ -36,7 +36,7 @@ var l = {
           let e = !o.getAppState().isBriefOnly;
           if (e && !isBriefEntitled())
             return (
-              i("tengu_brief_mode_toggled", {
+              logEvent("tengu_brief_mode_toggled", {
                 enabled: !1,
                 gated: !0,
                 source: S("slash_command"),
@@ -51,7 +51,7 @@ var l = {
               type: "apply_flag_settings",
               settings: { isBriefOnly: e },
             }),
-            i("tengu_brief_mode_toggled", {
+            logEvent("tengu_brief_mode_toggled", {
               enabled: e,
               gated: !1,
               source: S("slash_command"),

@@ -9,9 +9,9 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 84 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
-import { nwe } from "../../01-核心基础设施/共享小工具-未细化/chunk-1brq31d3.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
+import { getCcrSessionConfig } from "../../01-核心基础设施/共享小工具-未细化/ccr-session-config.js";
 import { s, se, c, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var o = "enable__mcp__claude-in-chrome",
   n = "enable__mcp__remote-devices__Claude_Browser",
@@ -23,10 +23,10 @@ var o = "enable__mcp__claude-in-chrome",
     "Claude in Chrome needs no enabling in this session: if it is connected, its tools are already here as the tools whose names contain claude-in-chrome or Claude_in_Chrome, and you can use them now. If you have no such tools but do have tools whose names contain Claude_Browser, use those instead; if you have neither, tell the user that Chrome on their computer is not connected and continue with what you can do here.",
   i =
     "The Claude desktop app's built-in browser needs no enabling in this session: if it is connected, its tools are already here as the tools whose names contain Claude_Browser, and you can use them now. If you have no such tools but do have tools whose names contain claude-in-chrome or Claude_in_Chrome, use those instead; if you have neither, tell the user that the browser in their Claude desktop app is not connected and continue with what you can do here.";
-var d = m(() => it({ task: se().optional() })),
-  S = m(() => c({ message: s() }));
+var d = createLazyValue(() => it({ task: se().optional() })),
+  S = createLazyValue(() => c({ message: s() }));
 function l({ name: h, label: _, description: e, result: t }) {
-  return Tt({
+  return buildTool({
     name: h,
     maxResultSizeChars: 1e4,
     async description() {
@@ -46,7 +46,7 @@ function l({ name: h, label: _, description: e, result: t }) {
     },
     shouldDefer: !0,
     isEnabled() {
-      return nwe() !== null;
+      return getCcrSessionConfig() !== null;
     },
     isConcurrencySafe() {
       return !0;

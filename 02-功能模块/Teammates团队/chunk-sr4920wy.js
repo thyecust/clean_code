@@ -10,11 +10,11 @@
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { _U, uf, ZQe, qCt, slugify, jD, tZe, eRn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getPeerBridgeIdentity } from "../权限系统/chunk-1y2g140m.js";
-import { pK } from "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
-import { cp } from "./chunk-enjekn9t.js";
+import { getRemoteSessionCompatId } from "../../01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js";
+import { MAIN_CONVERSATION_NAME } from "./chunk-enjekn9t.js";
 var tdt =
     "target is this session itself \u2014 there is no one else to send to",
-  u = `address the main conversation as "${cp}"`;
+  u = `address the main conversation as "${MAIN_CONVERSATION_NAME}"`;
 function bPe(e) {
   let { ownMessagingSocket: s } = import.meta.require("../跨会话消息(UDS)/chunk-ddtmwhn7.js"),
     n = s();
@@ -45,7 +45,7 @@ function Ace(e) {
 }
 function f2(e) {
   let s = sessionIdBody(e);
-  return [getPeerBridgeIdentity()?.bridgeSessionId, pK()].some(
+  return [getPeerBridgeIdentity()?.bridgeSessionId, getRemoteSessionCompatId()].some(
     (n) => typeof n === "string" && sessionIdBody(n) === s,
   );
 }

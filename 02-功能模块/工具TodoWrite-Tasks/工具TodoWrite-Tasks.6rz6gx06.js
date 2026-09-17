@@ -10,14 +10,14 @@
 
 // [preload stripped] 原本在此预载 81 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { b, zR } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { logFeatureOkAsync, logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Mse, NR, EP } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { _F } from "../../01-核心基础设施/共享小工具-未细化/chunk-hxq0hkxe.js";
-import { Iv } from "../../01-核心基础设施/共享小工具-未细化/chunk-bfth4n1b.js";
-import { F6n } from "../../01-核心基础设施/共享小工具-未细化/chunk-kax7bdqv.js";
+import { initializeAnalyticsSink } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
+import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
+import { getClaudeAiOrigin } from "../../01-核心基础设施/共享小工具-未细化/self-hosted-runner-api.js";
 import { sPe } from "../../01-核心基础设施/设置-配置/chunk-6rz5fqzm.js";
 import { spawnSync } from "child_process";
 function l(t) {
@@ -98,9 +98,9 @@ runner, verifies it appears in the Admin UI, and writes a CHEAT-SHEET.md.
 Any extra args are passed to the underlying Claude Code session.`);
     return;
   }
-  (await sPe(s), _F());
-  let n = Iv(s);
-  if ((Mse(n), M() && n !== void 0)) {
+  (await sPe(s), initializeAnalyticsSink());
+  let n = pinStorageV5(s);
+  if ((Mse(n), isHoverRestEnabled() && n !== void 0)) {
     (zR({ storageV5: n }), NR(n));
     let [
       { composePolicyLimitsClient: o, primePolicyLimitsCache: d },
@@ -113,7 +113,7 @@ Any extra args are passed to the underlying Claude Code session.`);
     ]);
     (o({ storageV5: n }), await p(c(n)), await d(n), await EP(n));
   }
-  let r = l(F6n()),
+  let r = l(getClaudeAiOrigin()),
     h = bc() ? [] : [process.argv[1]],
     u = t.length > 0 && !t[0].startsWith("-") ? [] : [_],
     i = [

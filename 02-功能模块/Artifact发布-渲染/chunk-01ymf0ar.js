@@ -9,17 +9,17 @@
 // Version: 2.1.263
 import { Ie, po, ac, Dr, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Xn, j, Gt, B, K, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, A, Jg, AZ, GW, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { iu, x, us, oe, Wc, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { nS, aBe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { rae, St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   NCt,
@@ -161,21 +161,21 @@ import { DANGEROUS_FILES_LC } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc
 import { isPolicyLimitsEligible, getPolicyLimitsIneligibleReason, isPolicyAllowed, isPolicyRouteMissing, getResponseFromCache } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getRemoteControlSessionCompatId } from "../权限系统/chunk-1y2g140m.js";
 import { xC, moe } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
-import { Fu, RJ } from "../../01-核心基础设施/共享小工具-未细化/chunk-px58ry6q.js";
-import { jy } from "../../01-核心基础设施/共享小工具-未细化/chunk-vp8yvx5r.js";
-import { n6, cnr } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
+import { isAnthropicHostedEnvironment, isByocEnvironment } from "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
+import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
+import { defineStoreField, createLocalStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { AP } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
-import { L8t, rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
+import { CLAUDE_AI_MCP_SERVER_PREFIX, normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
 import { s, T, O, se, v, c, it, $e, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var oc = 8,
   VER_SHAPE = /^[A-Za-z0-9._-]{1,64}$/,
   ss = { ownVers: {}, inFlight: {} },
-  makeOwnPublishesStore = n6("ownPublishes", ss);
+  makeOwnPublishesStore = defineStoreField("ownPublishes", ss);
 function makeLocalOwnPublishesStore() {
-  return cnr(ss);
+  return createLocalStore(ss);
 }
 function recordOwnPublish(e, t, r) {
   if (!VER_SHAPE.test(r)) return;
@@ -1474,7 +1474,7 @@ function Rs() {
   );
 }
 function Ts() {
-  if (!RJ()) return !1;
+  if (!isByocEnvironment()) return !1;
   let e = Dn();
   if (e === null) return !1;
   let t = "ccr:role" in e ? e["ccr:role"] : void 0,
@@ -1498,7 +1498,7 @@ function Ps() {
 var eqt = "/v1/code/agent-proxy",
   Hc = /^\/v1\/code\/sessions\/([^/]+)\/?$/;
 function Cs() {
-  if (RJ()) {
+  if (isByocEnvironment()) {
     let e = aBe();
     if (e.status === "ok") {
       let t = Hc.exec(new URL(e.url).pathname)?.[1];
@@ -1596,7 +1596,7 @@ class Ns {
 }
 var Yc = new j(() => new Ns());
 function Is() {
-  if (!Fu()) return;
+  if (!isAnthropicHostedEnvironment()) return;
   let e = a.CCR_AGENT_PROXY_FRAME_HOSTS;
   if (e === void 0) return;
   let t = Yc.of(B().host),
@@ -1709,7 +1709,7 @@ function bt(e, t) {
   });
 }
 function Ds(e) {
-  return G(e.pattern, (t) => t.startsWith("{"));
+  return countMatching(e.pattern, (t) => t.startsWith("{"));
 }
 function sqt(e, t) {
   let r = t
@@ -1728,10 +1728,10 @@ function sqt(e, t) {
   );
 }
 function RK() {
-  if (!Fu() && !RJ()) return !1;
+  if (!isAnthropicHostedEnvironment() && !isByocEnvironment()) return !1;
   if (NCt() !== void 0) return !1;
   if (!H("tengu_cobalt_plinth_sorrel", !0)) return !1;
-  if (!Fu() && !H("tengu_cobalt_plinth_madder", !0)) return !1;
+  if (!isAnthropicHostedEnvironment() && !H("tengu_cobalt_plinth_madder", !0)) return !1;
   return B1e();
 }
 function MH(e = null) {
@@ -1743,30 +1743,30 @@ function Ws(e) {
   let t = ne().frameRelay;
   if (!t.botContextNoted)
     ((t.botContextNoted = !0),
-      logFeatureSad("artifact_frame_relay", "bot_context_not_served", { hosted: Fu() }));
+      logFeatureSad("artifact_frame_relay", "bot_context_not_served", { hosted: isAnthropicHostedEnvironment() }));
   return !0;
 }
 function _oe() {
-  return Fu() && RK();
+  return isAnthropicHostedEnvironment() && RK();
 }
 var ou = "tengu_cobalt_plinth_medlar";
 function Gs() {
-  return RJ() && H(ou, !1) && Ts();
+  return isByocEnvironment() && H(ou, !1) && Ts();
 }
 function bwn() {
-  if (Fu()) return Ir() && Rs();
+  if (isAnthropicHostedEnvironment()) return Ir() && Rs();
   return Gs();
 }
 function FXe() {
-  return (Fu() || RJ()) && H("tengu_cobalt_plinth_fennel", !1) && bwn();
+  return (isAnthropicHostedEnvironment() || isByocEnvironment()) && H("tengu_cobalt_plinth_fennel", !1) && bwn();
 }
 var au = "tengu_cobalt_plinth_comfrey";
 function UZn() {
-  return RJ() && H(au, !1) && FXe();
+  return isByocEnvironment() && H(au, !1) && FXe();
 }
 function iqt(e) {
   let t = ru.get(e);
-  return t !== void 0 && Fu() && H(t, !1) && Ps();
+  return t !== void 0 && isAnthropicHostedEnvironment() && H(t, !1) && Ps();
 }
 function TN(e) {
   return (ne().frameRelay.declinedUntil.get(e) ?? 0) > Date.now();
@@ -1900,38 +1900,38 @@ function Ewn(e) {
   return { refused: Hr(e), vouched: hJ(e) || (e.ok && e.status < 300) };
 }
 function $Xe() {
-  return RK() && !Fu();
+  return RK() && !isAnthropicHostedEnvironment();
 }
 function qs(e, t, r) {
   let o = r !== "fallback",
     d = RK(),
     p = d ? sqt(e, t) : null;
   if (d && Ws(p))
-    return r === "only" && Fu()
+    return r === "only" && isAnthropicHostedEnvironment()
       ? { leg: "not-served", relaying: !1, family: null }
       : { leg: "direct", relaying: !1, family: null };
   let _ = d;
   if (p === null)
     return {
-      leg: o && Fu() && _ ? "unsent" : "direct",
+      leg: o && isAnthropicHostedEnvironment() && _ ? "unsent" : "direct",
       relaying: _,
       family: p,
     };
   if (
     TN(p) &&
-    (r === "fallback" || (r === "bound" && !Xs(p)) || (!Fu() && wwn(p)))
+    (r === "fallback" || (r === "bound" && !Xs(p)) || (!isAnthropicHostedEnvironment() && wwn(p)))
   )
     return { leg: "direct", relaying: _, family: p };
   return { leg: "relay", relaying: !0, family: p };
 }
 function Xs(e) {
-  return Fu() && (e === null || !iqt(e));
+  return isAnthropicHostedEnvironment() && (e === null || !iqt(e));
 }
 function jZn(e, t) {
   return qs(e, t, "fallback").leg === "relay" ? "relay" : "direct";
 }
 async function Ut(e, t, r, o, d = "fallback") {
-  let p = d === "only" ? Fu() : d === "bound" && Xs(sqt(e, t)),
+  let p = d === "only" ? isAnthropicHostedEnvironment() : d === "bound" && Xs(sqt(e, t)),
     { relayProbe: _, ...w } = o,
     E = async () => ({
       ...(await js(e, t, r, w)),
@@ -1939,7 +1939,7 @@ async function Ut(e, t, r, o, d = "fallback") {
       fromFrame: !0,
     }),
     R = qs(e, t, d),
-    C = R.relaying && !Fu(),
+    C = R.relaying && !isAnthropicHostedEnvironment(),
     M = (q, ge) => (
       logFeatureSad("artifact_frame_relay", "relay_only_unavailable", {
         ...(R.family !== null && { family: R.family }),
@@ -2189,10 +2189,10 @@ function cu(e) {
         terminal: "</div>",
       },
     ],
-    inlineStyleAllowlist: Y(
+    inlineStyleAllowlist: dedupe(
       [...e.matchAll(/\bstyle\s*=\s*"([^"]*)"/g)].map((r) => r[1]),
     ),
-    linkPlaceholders: Y(
+    linkPlaceholders: dedupe(
       [...e.matchAll(/(?:src|href)\s*=\s*"([^"]*)"/gi)]
         .map((r) => r[1])
         .filter((r) => !/^[a-z][a-z0-9+.-]*:|^\/\//i.test(r)),
@@ -2276,7 +2276,7 @@ function to(e) {
 var uu = new Set(["kind", "owner", "repo", "number", "headSha", "publishedAt"]),
   du = new Set(["tool", "input", "shaPath"]);
 function fu(e) {
-  if (!me(e)) return "anchor is missing";
+  if (!isRecord(e)) return "anchor is missing";
   for (let t of Object.keys(e))
     if (!uu.has(t)) return "anchor carries an unexpected key";
   if (e.kind !== "pr") return 'anchor.kind is not "pr"';
@@ -2294,12 +2294,12 @@ function fu(e) {
 }
 function pu(e) {
   if (e === null) return null;
-  if (!me(e)) return "live is neither null nor an object";
+  if (!isRecord(e)) return "live is neither null nor an object";
   for (let o of Object.keys(e))
     if (!du.has(o)) return "live carries an unexpected key";
   if (typeof e.tool !== "string" || !zXe.test(e.tool))
     return "live.tool is not a tool identifier";
-  if (!me(e.input)) return "live.input is not an object";
+  if (!isRecord(e.input)) return "live.input is not an object";
   let t = Object.keys(e.input);
   if (t.length > 8) return "live.input has too many keys";
   for (let o of t) {
@@ -2341,7 +2341,7 @@ function qZn(e) {
   } catch {
     return null;
   }
-  if (!me(r) || !me(r.live)) return null;
+  if (!isRecord(r) || !isRecord(r.live)) return null;
   let o = r.live.tool;
   return typeof o === "string" && zXe.test(o) ? o : null;
 }
@@ -2357,7 +2357,7 @@ function mu(e) {
   if (r.length > 20) return "the decisions island carries more than 20 items";
   let o = new Set();
   for (let d of r) {
-    if (!me(d)) return "a decisions item is not an object";
+    if (!isRecord(d)) return "a decisions item is not an object";
     let p = Object.keys(d);
     if (p.length !== Qs.size || p.some((w) => !Qs.has(w)))
       return "a decisions item carries an unexpected or missing key";
@@ -2386,12 +2386,12 @@ var J1e = "prr-stamp",
   bu = new Set(["tool", "input", "statePath"]);
 function yu(e) {
   if (e === null) return null;
-  if (!me(e)) return "stamp is neither null nor an object";
+  if (!isRecord(e)) return "stamp is neither null nor an object";
   for (let o of Object.keys(e))
     if (!bu.has(o)) return "stamp carries an unexpected key";
   if (typeof e.tool !== "string" || !zXe.test(e.tool))
     return "stamp.tool is not a tool identifier";
-  if (!me(e.input)) return "stamp.input is not an object";
+  if (!isRecord(e.input)) return "stamp.input is not an object";
   let t = Object.keys(e.input);
   if (t.length > 8) return "stamp.input has too many keys";
   for (let o of t) {
@@ -2655,7 +2655,7 @@ function ro(e, t, r = {}) {
     } catch {
       return _(`the ${U.id} island is not valid JSON`);
     }
-    if (!me(ce)) return _(`the ${U.id} island is not a JSON object`);
+    if (!isRecord(ce)) return _(`the ${U.id} island is not a JSON object`);
     let q = U.validate(ce);
     if (q) return _(q);
     if (b(ce) !== re)
@@ -2898,7 +2898,7 @@ function Xwt(e) {
     !Vu.test(e) &&
     !Du.test(e) &&
     !Yu(e) &&
-    !e.startsWith(L8t) &&
+    !e.startsWith(CLAUDE_AI_MCP_SERVER_PREFIX) &&
     !e.startsWith("mcp__") &&
     Xn(e) === null
   );
@@ -2995,7 +2995,7 @@ function bo(e, t, r, o = {}) {
     } else if (Ge !== void 0)
       if (zt(Ge)) Le = U;
       else C.push({ kind: "undeclarable_name", server: U, name: U });
-    else if (U.startsWith(L8t)) E.push(U);
+    else if (U.startsWith(CLAUDE_AI_MCP_SERVER_PREFIX)) E.push(U);
     else if (U.startsWith("mcp__")) {
       let Te = _.get(Wn(ft(U.slice(5), "__")));
       C.push({
@@ -3016,7 +3016,7 @@ function bo(e, t, r, o = {}) {
       C.push({ kind: "host_unavailable", server: U });
     else if (pe !== null) {
       let Te = (De) =>
-          mKt(De, pe) || mKt(ft(`${rn(De)}__`, "__"), pe) || mKt(wo(De), pe),
+          mKt(De, pe) || mKt(ft(`${normalizeMcpName(De)}__`, "__"), pe) || mKt(wo(De), pe),
         Me = r.find(Te) ?? t.find((De) => Te(De.server))?.server;
       if (Me === void 0) Le = `host:${pe}`;
       else
@@ -3036,7 +3036,7 @@ function bo(e, t, r, o = {}) {
     else {
       J.from++;
       let U = F[J.idx];
-      F[J.idx] = { ...U, tools: Y([...U.tools, ...V.tools]) };
+      F[J.idx] = { ...U, tools: dedupe([...U.tools, ...V.tools]) };
     }
   }
   let N = [];
@@ -3088,12 +3088,12 @@ function yo(e, t, r = 8) {
 function _o(e) {
   let t = e.mcp;
   if (!gn(t)) return [];
-  return t.servers.map(Xr).filter((r) => r !== void 0 && r.startsWith(L8t));
+  return t.servers.map(Xr).filter((r) => r !== void 0 && r.startsWith(CLAUDE_AI_MCP_SERVER_PREFIX));
 }
 function KZn(e, t, r) {
   let o = e.mcp;
   if (!gn(o)) return [];
-  let d = Y(o.servers.map(Xr).filter((_) => _ !== void 0)),
+  let d = dedupe(o.servers.map(Xr).filter((_) => _ !== void 0)),
     p = (_) => r.has(_) && !Gvn.has(_) && !t.some((w) => w.toolPrefix === _);
   return d
     .filter((_) => {
@@ -3114,7 +3114,7 @@ function KZn(e, t, r) {
     });
 }
 function wo(e) {
-  return rn(e)
+  return normalizeMcpName(e)
     .replace(/_+/g, "_")
     .replace(/^_|_$/g, "")
     .slice(0, 64)
@@ -3668,7 +3668,7 @@ async function rer(e, t) {
   try {
     let r = await yqt(Xe.join(e, t, "manifest.json")),
       o = r === void 0 ? void 0 : z(r);
-    return me(o) ? o.favicon : void 0;
+    return isRecord(o) ? o.favicon : void 0;
   } catch {
     return;
   }
@@ -3691,7 +3691,7 @@ var Lo = 256,
     /^(?!\/)(?!.*\/\/)(?!.*\/$)(?!(?:^|.*\/)\.\.?(?:\/|$))[^\p{Cc}\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069\u2028\u2029\\?#%:;]{1,512}$/u,
   bn =
     /^[^\p{Cc}\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069\u2028\u2029]{1,1024}$/u,
-  Fo = m(() =>
+  Fo = createLazyValue(() =>
     v(
       c({
         path: s().regex(bn),
@@ -3735,7 +3735,7 @@ function ud(e) {
       e.headSeq >= 0)
   );
 }
-var dd = m(() =>
+var dd = createLazyValue(() =>
   v(
     c({
       path: s().regex(bn),
@@ -6421,7 +6421,7 @@ function Tf() {
 function isFrameDeclaredThumbnailEnabled() {
   return H("tengu_cobalt_plinth_campion", !1) === !0;
 }
-var Pf = m(() =>
+var Pf = createLazyValue(() =>
     c({
       version: s().regex(Mj),
       capabilities: v(s().regex(Nj)).max(256),
@@ -6724,14 +6724,14 @@ function makeGetArtifactContractTarget(e) {
 }
 var Nf =
     "<style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style>",
-  If = m(() =>
+  If = createLazyValue(() =>
     c({
       contract: s().max(64),
       capabilities: fe(s().max(64), se()).nullish(),
       type: se().optional(),
     }),
   ),
-  Df = m(() =>
+  Df = createLazyValue(() =>
     it({
       slug: s().regex(ARTIFACT_SLUG_RE),
       target: s().max(64).nullish(),
@@ -6740,8 +6740,8 @@ var Nf =
       blocked: se().optional(),
     }),
   ),
-  Bf = m(() => s().min(1).max(64)),
-  jf = m(() =>
+  Bf = createLazyValue(() => s().min(1).max(64)),
+  jf = createLazyValue(() =>
     it({
       to: s()
         .min(1)
@@ -6763,7 +6763,7 @@ var Nf =
   ),
   MAX_ECHO_MANIFEST_PATH = 1024,
   MAX_ECHO_MANIFEST_ENTRIES = 512,
-  $a = m(() =>
+  $a = createLazyValue(() =>
     it({
       manifest: fe(
         s().max(MAX_ECHO_MANIFEST_PATH),
@@ -7456,7 +7456,7 @@ var dp = 32,
   fp = 16,
   pp = 200,
   hp = /^[\w./-]{1,64}$/,
-  gp = m(() =>
+  gp = createLazyValue(() =>
     c({
       pins: v(se())
         .optional()
@@ -7466,7 +7466,7 @@ var dp = 32,
         .catch(void 0),
     }),
   ),
-  mp = m(() =>
+  mp = createLazyValue(() =>
     c({
       uuid: s().regex(ARTIFACT_SLUG_RE),
       path: s().regex(hp),
@@ -7481,7 +7481,7 @@ var dp = 32,
         .catch(void 0),
     }),
   ),
-  bp = m(() =>
+  bp = createLazyValue(() =>
     c({
       src: s()
         .optional()
@@ -8078,8 +8078,8 @@ async function ka(e, t) {
     let { connectorNames: L, serverNames: de } = C,
       ee = bo(R, L, de, { hostServers: M });
     if (!ee.ok) {
-      let Ye = G(ee.malformed, (ze) => ze.kind === "host_unavailable"),
-        Bt = G(
+      let Ye = countMatching(ee.malformed, (ze) => ze.kind === "host_unavailable"),
+        Bt = countMatching(
           ee.malformed,
           (ze) =>
             ze.kind === "opaque_id" ||
@@ -8088,7 +8088,7 @@ async function ka(e, t) {
             ze.kind === "connector_as_host" ||
             ze.kind === "undeclarable_name",
         ),
-        ln = G(ee.malformed, (ze) => ze.kind === "local_server_as_first_party");
+        ln = countMatching(ee.malformed, (ze) => ze.kind === "local_server_as_first_party");
       logFeatureBad(
         "artifact_publish",
         Ye > 0
@@ -8119,7 +8119,7 @@ async function ka(e, t) {
       if (ee.unresolved.length > 0) {
         let ze = rt(ee.unresolved, 8, (lt) => `"${Y_(lt)}"`),
           jt = L.filter(zt),
-          cn = rt(Y(jt.map((lt) => lt.server)), 8, (lt) => `"${Y_(lt)}"`),
+          cn = rt(dedupe(jt.map((lt) => lt.server)), 8, (lt) => `"${Y_(lt)}"`),
           $n =
             cn.length === 0
               ? ""
@@ -8134,7 +8134,7 @@ async function ka(e, t) {
         );
       }
       if (ee.internal.length > 0) {
-        let ze = rt(Y(ee.internal), 8, (jt) => `"${Y_(jt)}"`);
+        let ze = rt(dedupe(ee.internal), 8, (jt) => `"${Y_(jt)}"`);
         at.push(
           `built-in ${x(ee.internal.length, "server")} ${ze.join(", ")} ` +
             "\u2014 the Claude app's own servers, which it never exposes to " +
@@ -8200,7 +8200,7 @@ async function ka(e, t) {
       ma(L)
     ) {
       let de = gi(L);
-      if ((await Z(ba, t.signal), !t.signal?.aborted))
+      if ((await sleep(ba, t.signal), !t.signal?.aborted))
         ((L = await readFrameDecl(o, t.signal, t.credentials)),
           logFeatureSad("artifact_publish", "pin_readback_retried", {
             page_bytes: pe,
@@ -8235,7 +8235,7 @@ async function ka(e, t) {
   ) {
     let L = await readFrameDecl(o, void 0, t.credentials);
     if (L !== null && "err" in L && t.contract === void 0 && ma(L)) {
-      if ((await Z(ba, t.signal), !t.signal?.aborted))
+      if ((await sleep(ba, t.signal), !t.signal?.aborted))
         L = await readFrameDecl(o, void 0, t.credentials);
     }
     if (L !== null && "err" in L) {
@@ -8494,7 +8494,7 @@ var vp = ["frame_daily_publish_cap_reached", "frame_daily_push_cap_reached"],
     frame_daily_publish_cap_reached: "daily_new",
     frame_daily_push_cap_reached: "daily_pushes",
   },
-  Sp = m(() => c({ error: X(vp), message: s().catch("") })),
+  Sp = createLazyValue(() => c({ error: X(vp), message: s().catch("") })),
   Ap = {
     daily_new:
       "daily new-artifact limit for your plan reached \u2014 resets at UTC midnight",
@@ -8594,7 +8594,7 @@ async function fl(e, t, r, o, d = !1) {
         t?.(F));
     },
     M = async (F) => {
-      if ((await Z(F, r), r?.aborted))
+      if ((await sleep(F, r), r?.aborted))
         return (n("[artifact] /deploy/direct retry cancelled by user"), !1);
       return ((w += 1), (E = !0), (_ = await p()), (E = !1), !0);
     },
@@ -8776,7 +8776,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
       ),
         C?.({ status: 503, attempt: 2, maxAttempts: 2, delayMs: _e }));
       try {
-        if ((await Z(_e, M), !M?.aborted)) {
+        if ((await sleep(_e, M), !M?.aborted)) {
           if (ue)
             ((re = { ...t, slug: N.slug }), (te = N.live === void 0), (J = !1));
           if (N.live !== void 0) U = N.live;
@@ -9445,7 +9445,7 @@ async function Ni(e, t, r, o, d, p, _) {
   }
   let mt = async (L) => {
       let de = parseRetryAfterHeader(L) ?? 2000;
-      if ((await Z(Math.min(de, 30000), M), M?.aborted))
+      if ((await sleep(Math.min(de, 30000), M), M?.aborted))
         return (n("[artifact] 429 retry cancelled by user"), !1);
       return !0;
     },
@@ -10066,7 +10066,7 @@ async function Ni(e, t, r, o, d, p, _) {
       tc = (un ?? []).filter(
         (ve) => (ve === "index.html" ? Te : Be[ve])?.reseed === !0,
       ),
-      es = Y([
+      es = dedupe([
         ...Bt,
         ...wi(ee.data),
         ...Ka(Er),
@@ -10136,7 +10136,7 @@ function isKnownRel(e) {
   return ARTIFACT_LIST_RELS.includes(e);
 }
 var ARTIFACT_LIST_SCOPES = ["mine", "shared", "all"],
-  $p = m(() =>
+  $p = createLazyValue(() =>
     c({
       frames: v(se()).nullable(),
       starsEnabled: O()
@@ -10150,7 +10150,7 @@ function Fp(e, t) {
     o = t === "" || (typeof t === "string" && VER_SHAPE.test(t)) ? t : void 0;
   return { read: t === void 0 || o !== void 0 ? r : void 0, shared: o };
 }
-var Ai = m(() =>
+var Ai = createLazyValue(() =>
   c({
     slug: s().regex(ARTIFACT_SLUG_RE),
     version: s().regex(VER_SHAPE),
@@ -10197,7 +10197,7 @@ function ml(e, t, r = !1) {
     ...(E !== void 0 && { stored: E }),
   };
 }
-var Mp = m(() =>
+var Mp = createLazyValue(() =>
     c({
       slug: s().regex(ARTIFACT_SLUG_RE),
       title: s().max(4000).optional(),
@@ -10235,7 +10235,7 @@ async function listArtifacts(e, t) {
       });
     } catch (I) {
       if (F === 0 && !d?.aborted) {
-        await Z(300 + Math.random() * 500);
+        await sleep(300 + Math.random() * 500);
         continue;
       }
       if (!d?.aborted) logFeatureBad("artifact_list", "request_error");
@@ -10245,7 +10245,7 @@ async function listArtifacts(e, t) {
       };
     }
     if (_.ok && _.status >= 500 && F === 0 && !d?.aborted) {
-      await Z(300 + Math.random() * 500);
+      await sleep(300 + Math.random() * 500);
       continue;
     }
     break;
@@ -10944,7 +10944,7 @@ function foldBootDocs(e, t, r = Date.now()) {
     mode: o?.mode ?? "owner",
     isSharedLive: o?.isSharedLive ?? !1,
     ...(o?.probeFailed && { probeFailed: !0 }),
-    livePaths: Y(t.map((d) => d.path)),
+    livePaths: dedupe(t.map((d) => d.path)),
     livePathsIssuedAt: r,
   });
 }
@@ -11073,7 +11073,7 @@ var xr = 8192,
   Wp = 512,
   Al = 200,
   Gp = 120,
-  Yp = m(() =>
+  Yp = createLazyValue(() =>
     c({
       message: s()
         .optional()
@@ -11623,7 +11623,7 @@ var ah = 16384;
 var N_ = `
 [prompt truncated: exceeded ${ah / 1024}KB]`;
 var lh = /^[\w.:@+-]{1,56}(?:\[[A-Za-z0-9]{1,6}\])?$/,
-  uh = m(() => {
+  uh = createLazyValue(() => {
     let e = s()
         .refine((r) => r.trim() !== "")
         .optional()
@@ -11755,7 +11755,7 @@ var Ife =
     "this Artifact is in another of the user's organizations, not the one this session is signed in to",
   Pfe = "the user runs /login and signs in to that organization",
   bh = `${Ife} \u2014 it opens here only after ${Pfe}`,
-  yh = m(() => c({ request_access: O(), reason: s().optional() })),
+  yh = createLazyValue(() => c({ request_access: O(), reason: s().optional() })),
   Lqt = 15000;
 async function Mqt(
   { slug: e, env: t, sk: r, vanity: o },
@@ -12264,7 +12264,7 @@ async function jl(e, t, r, o, d) {
         : "*.frame.claudeusercontent.com",
     ce = lXt()
       ? Bn(re)
-      : Fu()
+      : isAnthropicHostedEnvironment()
         ? `To allow direct artifact reads here, add ${re} to the environment's allowed domains: environment settings \u2192 Code \u2192 Network access \u2192 Custom \u2192 Allowed domains. An admin can add the same entry to a shared environment from admin settings \u2192 Cloud environments; sessions that run in that environment get the access.`
         : a.CLAUDE_CODE_REMOTE
           ? `To allow artifact reads here, add ${re} to the network allowlist of the environment this remote session runs in.`
@@ -12816,7 +12816,7 @@ function maybeLogArtifactDisabledSession() {
   if (((e.artifactDisabledSessionEvaluated = !0), !Bh())) return;
   let t = Ji();
   if (t === null) return;
-  i("tengu_artifact_disabled_session", {
+  logEvent("tengu_artifact_disabled_session", {
     mechanism: fromEnum(t),
     session_interactivity:
       !ke() || Vd() === "claude-vscode" || Hd()
@@ -12832,14 +12832,14 @@ function maybeLogArtifactToolWithheld(e) {
     let o = t.artifactWithheldReasonsLogged.at(-1);
     if (o === void 0 || t.artifactWithheldRecoveryLogged) return;
     ((t.artifactWithheldRecoveryLogged = !0),
-      i("tengu_artifact_tool_recovered", { withheld_reason: fromEnum(o) }));
+      logEvent("tengu_artifact_tool_recovered", { withheld_reason: fromEnum(o) }));
     return;
   }
   if (Pw() === null) return;
   let r = jh(e);
   if (t.artifactWithheldReasonsLogged.includes(r)) return;
   (t.artifactWithheldReasonsLogged.push(r),
-    i("tengu_artifact_tool_withheld", {
+    logEvent("tengu_artifact_tool_withheld", {
       reason: fromEnum(r),
       off_mechanism: fromEnumOpt(r === "switched_off" ? Ji() : null),
       after_registered: t.artifactRegisteredSeen,
@@ -12920,13 +12920,13 @@ function isDesignCanvasEnabled() {
 function isPlanWorkshopOfferEnabled() {
   return (
     isWorkshopEnabled() &&
-    !jy() &&
+    !areBundledSkillsDisabled() &&
     !H("tengu_cedar_transom", !1) &&
     H("tengu_larch_pavise", !1)
   );
 }
 function isPlanPrototypeOfferEnabled() {
-  return isPrototypeEnabled() && !jy();
+  return isPrototypeEnabled() && !areBundledSkillsDisabled();
 }
 function isMdArtifactStylingEnabled() {
   return !1;

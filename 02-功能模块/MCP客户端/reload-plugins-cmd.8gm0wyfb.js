@@ -10,16 +10,16 @@
 
 // [preload stripped] 原本在此预载 206 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { wr } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { P2 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Xx, mee, unn } from "./chunk-49ds54j4.js";
-import { kv } from "../../01-核心基础设施/共享小工具-未细化/chunk-mnzfncps.js";
+import { refreshActivePlugins, getPluginReloadCacheImpact, logPluginReloadCacheImpact } from "./plugin-reload-cache-impact.js";
+import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
 import { JB } from "../插件系统/chunk-bh1q9esj.js";
-import { QB } from "../插件系统/chunk-5ztq0v89.js";
+import { PluginStateStore } from "../插件系统/plugin-state-store.js";
 import { T, se, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var S = m(() => {
+var S = createLazyValue(() => {
     let n = v(se())
       .optional()
       .catch(void 0);
@@ -37,7 +37,7 @@ var S = m(() => {
   j = async (n, e) => {
     if (!P(e)) return { type: "text", value: REMOTE_INPUT_DECLINE };
     if (Ks()) {
-      let o = kv(
+      let o = parseThinClientReply(
         "reload_plugins",
         S(),
         await jn().sendControlRequest(
@@ -61,7 +61,7 @@ ${r(o.error_count, "error")} during load. Run /plugin on the remote for details.
         .split(/\s+/)
         .some((o) => o === "--force" || o === "force"),
       s = e.options.isNonInteractiveSession,
-      l = await mee({
+      l = await getPluginReloadCacheImpact({
         model: e.options.mainLoopModel,
         mcpClients: e.getAppState().mcp.clients,
         dynamicMcpConfig: e.options.dynamicMcpConfig,
@@ -70,18 +70,18 @@ ${r(o.error_count, "error")} during load. Run /plugin on the remote for details.
       }),
       f = t ? null : C(l, s);
     if (f !== null)
-      return (unn(l, { warned: !0, forced: !1 }), { type: "text", value: f });
+      return (logPluginReloadCacheImpact(l, { warned: !0, forced: !1 }), { type: "text", value: f });
     let i = null,
       h = l,
-      g = QB.over({ getState: e.getAppState, setState: e.setAppState });
+      g = PluginStateStore.over({ getState: e.getAppState, setState: e.setAppState });
     try {
-      let o = await Xx(g, e.storageV5, e.credentials),
+      let o = await refreshActivePlugins(g, e.storageV5, e.credentials),
         d = "",
         a = await JB(o.errors, e.storageV5);
       if (a.installed.length > 0) {
         let u = t
           ? null
-          : await mee({
+          : await getPluginReloadCacheImpact({
               model: e.options.mainLoopModel,
               mcpClients: e.getAppState().mcp.clients,
               dynamicMcpConfig: e.options.dynamicMcpConfig,
@@ -94,7 +94,7 @@ ${r(o.error_count, "error")} during load. Run /plugin on the remote for details.
             g.markNeedsRefresh());
         else
           ((d = `${P2(a.installed)} resolved`),
-            (o = await Xx(g, e.storageV5, e.credentials)));
+            (o = await refreshActivePlugins(g, e.storageV5, e.credentials)));
       }
       let p = `Reloaded: ${[r(o.enabled_count, "plugin"), r(o.command_count + o.skill_count, "skill"), r(o.agent_count, "agent"), r(o.hook_count, "hook"), ...(s ? [] : [r(o.mcp_count, "plugin MCP server")]), r(o.lsp_count, "plugin LSP server")].join(" \xB7 ")}${d}`;
       if (s && l.mcpServersAdded.length + l.mcpServersRemoved.length > 0)
@@ -108,7 +108,7 @@ ${i}`;
 ${r(o.error_count, "error")} during load. Run /plugin for details.`;
       return { type: "text", value: p };
     } finally {
-      unn(h, { warned: i !== null, forced: t });
+      logPluginReloadCacheImpact(h, { warned: i !== null, forced: t });
     }
   };
 function P(n) {

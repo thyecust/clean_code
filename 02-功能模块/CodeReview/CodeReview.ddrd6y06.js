@@ -11,7 +11,7 @@ import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { zn } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { tUe, ht, checkAndRefreshOAuthTokenIfNeeded } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum, fromEnumOpt, fromEnumArr } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
@@ -19,7 +19,7 @@ import { l, Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { fn, Kke, zie, execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
@@ -63,7 +63,7 @@ import { TTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { DBn } from "./chunk-rp57gfa9.js";
 import { homedir } from "os";
 import { resolve } from "path";
-var de = m(() =>
+var de = createLazyValue(() =>
   nt({
     action: ru(["proceed", "confirm", "blocked"]),
     billing_note: le().nullable().optional(),
@@ -160,7 +160,7 @@ function parseUltrareviewArgs(r) {
 async function precheckLaunchScope(r, t = "/code-review ultra", d) {
   if (!(await WVe()))
     return (
-      i("tengu_review_remote_precondition_failed", {
+      logEvent("tengu_review_remote_precondition_failed", {
         reason: S("not_git_repo"),
         cwd_is_home: L(),
       }),
@@ -177,7 +177,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
     let s = (C) => {
         if (C === "succeeded" && d?.suppressSucceededRecoveryEvent) return;
         if (_ !== e)
-          i("tengu_review_remote_precondition_recovery", {
+          logEvent("tengu_review_remote_precondition_recovery", {
             reason: S("base_ref_not_found"),
             method: S("pr_arg_normalization"),
             outcome: fromEnum(C),
@@ -192,7 +192,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
         o.owner.toLowerCase() !== c?.owner.toLowerCase() ||
         o.repo.toLowerCase() !== c?.name.toLowerCase())
     ) {
-      (i("tengu_review_remote_precondition_failed", {
+      (logEvent("tengu_review_remote_precondition_failed", {
         reason: S("pr_url_wrong_repo"),
         has_remote: !!c,
         cwd_is_home: L(),
@@ -210,7 +210,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
     }
     if (!c)
       return (
-        i("tengu_review_remote_precondition_failed", {
+        logEvent("tengu_review_remote_precondition_failed", {
           reason: S("no_github_remote"),
           cwd_is_home: L(),
         }),
@@ -223,7 +223,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       );
     if (TTt(c))
       return (
-        i("tengu_review_remote_precondition_failed", {
+        logEvent("tengu_review_remote_precondition_failed", {
           reason: S("monorepo_blocked"),
           cwd_is_home: L(),
         }),
@@ -261,7 +261,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
         ),
         !d?.suppressOfferedRecoveryEvent)
       )
-        i("tengu_review_remote_github_access_probe", {
+        logEvent("tengu_review_remote_github_access_probe", {
           verdict: fromEnum(I.verdict),
           http_status: I.httpStatus ?? void 0,
         });
@@ -270,7 +270,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       I?.verdict === "github_not_connected" ||
       I?.verdict === "github_repo_not_found"
     ) {
-      (i("tengu_review_remote_precondition_failed", {
+      (logEvent("tengu_review_remote_precondition_failed", {
         reason: fromEnum(I.verdict),
         cwd_is_home: L(),
       }),
@@ -302,7 +302,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
           ((M = C.changedFiles), (P = U));
         if (C.changedFiles > F || U > G)
           return (
-            i("tengu_review_remote_precondition_failed", {
+            logEvent("tengu_review_remote_precondition_failed", {
               reason: S("pr_diff_too_large"),
               files: C.changedFiles,
               lines: U,
@@ -337,7 +337,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
   let E = await FLe();
   if (E.tooLarge)
     return (
-      i("tengu_review_remote_precondition_failed", {
+      logEvent("tengu_review_remote_precondition_failed", {
         reason: S("repo_too_large_to_bundle"),
         pack_bytes: E.sizeBytes ?? void 0,
         pack_objects: E.inPackCount ?? void 0,
@@ -371,12 +371,12 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
     let s = O ? O[0] : `#${T[1]}`,
       R = O ? O[0] : T[1];
     return (
-      i("tengu_review_remote_precondition_recovery", {
+      logEvent("tengu_review_remote_precondition_recovery", {
         reason: S("base_ref_not_found"),
         method: S("embedded_pr_hint"),
         outcome: S("offered"),
       }),
-      i("tengu_review_remote_precondition_failed", {
+      logEvent("tengu_review_remote_precondition_failed", {
         reason: S("base_ref_not_found"),
         looks_like_url: /^https?:/i.test(e),
         looks_like_sha: !1,
@@ -404,14 +404,14 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       if (s === "recovered" && (await w(`origin/${h}`))) Y = !0;
       else {
         if (s !== "not_found")
-          i("tengu_review_remote_precondition_recovery", {
+          logEvent("tengu_review_remote_precondition_recovery", {
             reason: S("base_ref_not_found"),
             method: S("fetch_retry"),
             outcome: S("failed"),
           });
         if (s === "fetch_failed")
           return (
-            i("tengu_review_remote_precondition_failed", {
+            logEvent("tengu_review_remote_precondition_failed", {
               reason: S("base_ref_not_found"),
               looks_like_url: /^https?:/i.test(h),
               looks_like_sha: /^[0-9a-f]{7,40}$/i.test(h),
@@ -429,12 +429,12 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
           );
         let R = await ye(h);
         if (R)
-          i("tengu_review_remote_precondition_recovery", {
+          logEvent("tengu_review_remote_precondition_recovery", {
             reason: S("base_ref_not_found"),
             method: S("branch_suggestion"),
             outcome: S("offered"),
           });
-        i("tengu_review_remote_precondition_failed", {
+        logEvent("tengu_review_remote_precondition_failed", {
           reason: S("base_ref_not_found"),
           looks_like_url: /^https?:/i.test(h),
           looks_like_sha: /^[0-9a-f]{7,40}$/i.test(h),
@@ -455,14 +455,14 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
   }
   let H = (s) => {
       if (Y)
-        i("tengu_review_remote_precondition_recovery", {
+        logEvent("tengu_review_remote_precondition_recovery", {
           reason: S("base_ref_not_found"),
           method: S("fetch_retry"),
           outcome: fromEnum(s),
         });
       if (A) {
         if (s === "succeeded" && d?.suppressSucceededRecoveryEvent) return;
-        i("tengu_review_remote_precondition_recovery", {
+        logEvent("tengu_review_remote_precondition_recovery", {
           reason: S("base_ref_not_found"),
           method: S("prose_instructions"),
           outcome: fromEnum(s),
@@ -502,7 +502,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       if (G === 0) {
         if (!F.trim())
           return (
-            i("tengu_review_remote_precondition_failed", {
+            logEvent("tengu_review_remote_precondition_failed", {
               reason: S("empty_diff"),
               cwd_is_home: L(),
             }),
@@ -519,7 +519,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
           ee = U ? U.linesAdded + U.linesRemoved : 0,
           { maxFiles: se, maxLines: ae } = X$t();
         if (U && (U.filesCount > se || ee > ae)) {
-          (i("tengu_review_remote_precondition_failed", {
+          (logEvent("tengu_review_remote_precondition_failed", {
             reason: S("local_diff_too_large"),
             files: U.filesCount,
             lines: ee,
@@ -539,7 +539,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
           };
         }
         if (!d?.suppressOfferedRecoveryEvent)
-          i("tengu_review_remote_precondition_recovery", {
+          logEvent("tengu_review_remote_precondition_recovery", {
             reason: S("no_merge_base"),
             method: S("empty_tree_bundle"),
             outcome: S("offered"),
@@ -568,7 +568,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       }
     }
     if (
-      (i("tengu_review_remote_precondition_failed", {
+      (logEvent("tengu_review_remote_precondition_failed", {
         reason: S("no_merge_base"),
         cwd_is_home: L(),
         is_shallow: c,
@@ -586,7 +586,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       };
     if (c)
       return (
-        i("tengu_review_remote_precondition_recovery", {
+        logEvent("tengu_review_remote_precondition_recovery", {
           reason: S("no_merge_base"),
           method: S("deepen_hint"),
           outcome: S("offered"),
@@ -618,7 +618,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
     let s = await q(["for-each-ref", "--count=1", "refs/"]);
     if (s.code === 0 && s.stdout.trim() === "")
       return (
-        i("tengu_review_remote_precondition_failed", {
+        logEvent("tengu_review_remote_precondition_failed", {
           reason: S("no_refs"),
           cwd_is_home: L(),
           arg_was_explicit: !0,
@@ -633,7 +633,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
     { preserveOutputOnError: !1, env: { ...process.env, LC_ALL: "C" } },
   );
   if (k === 0 && !ne.trim()) {
-    (i("tengu_review_remote_precondition_failed", {
+    (logEvent("tengu_review_remote_precondition_failed", {
       reason: S("empty_diff"),
       used_origin_ref: D !== v,
       had_explicit_base: h.length > 0,
@@ -654,7 +654,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
     let { maxFiles: s, maxLines: R } = X$t(),
       c = b.linesAdded + b.linesRemoved;
     if (b.filesCount > s || c > R) {
-      (i("tengu_review_remote_precondition_failed", {
+      (logEvent("tengu_review_remote_precondition_failed", {
         reason: S("local_diff_too_large"),
         files: b.filesCount,
         lines: c,
@@ -851,7 +851,7 @@ async function launchRemoteReview(r, t, d, e) {
   if (!E.eligible) {
     let k = E.errors;
     if (k.length > 0) {
-      i("tengu_review_remote_precondition_failed", {
+      logEvent("tengu_review_remote_precondition_failed", {
         reason: S("remote_agent_ineligible"),
         precondition_errors: fromEnumArr(k.map((s) => s.type)),
         cwd_is_home: L(),
@@ -865,7 +865,7 @@ async function launchRemoteReview(r, t, d, e) {
       }).join(`
 `);
       if (r.mode === "branch" && r.noMergeBase)
-        i("tengu_review_remote_precondition_recovery", {
+        logEvent("tengu_review_remote_precondition_recovery", {
           reason: S("no_merge_base"),
           method: S("empty_tree_bundle"),
           outcome: S("failed"),
@@ -915,7 +915,7 @@ ${b}`)
       b = k && Mw(k) ? null : k;
     if (!b)
       return (
-        i("tengu_review_remote_precondition_failed", {
+        logEvent("tengu_review_remote_precondition_failed", {
           reason: S("no_github_remote_post_confirm"),
           cwd_is_home: L(),
         }),
@@ -989,7 +989,7 @@ ${b}`)
       })),
       !A)
     ) {
-      i("tengu_review_remote_teleport_failed", {
+      logEvent("tengu_review_remote_teleport_failed", {
         mode: S("branch"),
         reason: X,
         bundle_fail_kind: M,
@@ -999,7 +999,7 @@ ${b}`)
       });
       let P = t.abortController.signal.aborted;
       if (c && !P)
-        i("tengu_review_remote_precondition_recovery", {
+        logEvent("tengu_review_remote_precondition_recovery", {
           reason: S("no_merge_base"),
           method: S("empty_tree_bundle"),
           outcome: S("failed"),
@@ -1024,7 +1024,7 @@ ${b}`)
   }
   if (!A) {
     if (
-      (i("tengu_review_remote_teleport_failed", {
+      (logEvent("tengu_review_remote_teleport_failed", {
         mode: S("pr"),
         reason: X,
         status_code: Z,
@@ -1053,7 +1053,7 @@ ${b}`)
           : void 0,
     }).taskId;
   if (
-    (i("tengu_review_remote_launched", {
+    (logEvent("tengu_review_remote_launched", {
       mode: fromEnum(r.mode),
       had_arg: r.hadArg,
       post_armed:
@@ -1064,7 +1064,7 @@ ${b}`)
     }),
     r.mode === "branch" && r.noMergeBase)
   )
-    (i("tengu_review_remote_precondition_recovery", {
+    (logEvent("tengu_review_remote_precondition_recovery", {
       reason: S("no_merge_base"),
       method: S("empty_tree_bundle"),
       outcome: S("succeeded"),
@@ -1118,7 +1118,7 @@ async function runUltrareviewHeadless(r, t) {
   if (!ZA()) {
     let T = vGn();
     return (
-      i("tengu_review_remote_gate_blocked", {
+      logEvent("tengu_review_remote_gate_blocked", {
         reason: fromEnumOpt(T) ?? S("unknown"),
         entitlement_blocker: T === "entitlement" ? fromEnumOpt(getBridgeEntitlementBlocker()) : void 0,
       }),
@@ -1139,7 +1139,7 @@ async function runUltrareviewHeadless(r, t) {
   });
   if (o.kind === "blocked")
     return (
-      i("tengu_review_overage_blocked", { reason: Ub(o.reason) }),
+      logEvent("tengu_review_overage_blocked", { reason: Ub(o.reason) }),
       { status: "blocked", message: o.message, actionUrl: o.actionUrl }
     );
   let _ = () => {
@@ -1174,7 +1174,7 @@ ${T}${A}`;
         body: `${o.body}${_()}`,
         billingNote: o.billingNote,
       };
-    if ((i("tengu_review_overage_dialog_shown", {}), !t.confirm))
+    if ((logEvent("tengu_review_overage_dialog_shown", {}), !t.confirm))
       return {
         status: "needs-confirm",
         body: `${o.body}${_()}`,
@@ -1183,7 +1183,7 @@ ${T}${A}`;
     t.markOverageConfirmed();
   }
   if (t.confirm && e.scope.mode === "branch" && e.scope.noMergeBase)
-    i("tengu_review_remote_precondition_recovery", {
+    logEvent("tengu_review_remote_precondition_recovery", {
       reason: S("no_merge_base"),
       method: S("empty_tree_bundle"),
       outcome: S("accepted"),

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m } from "./chunk-78nzsrc6.js";
+import { createLazyValue } from "./lazy-value.js";
 import { $M, nn, Wht } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { mn } from "./chunk-z5tdbda7.js";
 import { PFt, Zce, xze, OFt } from "../../02-功能模块/文件同步-Sync/chunk-ht8ydg1v.js";
@@ -27,15 +27,15 @@ function sln(e) {
   let { sent: t, ...n } = e;
   return n;
 }
-var g = m(() =>
+var g = createLazyValue(() =>
     Ko("kind", [
       c({ kind: k("sha256"), sha256: s().regex(xze) }),
       c({ kind: k("git_blob"), blobId: s().regex(Wht) }),
       c({ kind: k("unknown") }),
     ]),
   ),
-  a = m(() => s().refine($M)),
-  h = m(() =>
+  a = createLazyValue(() => s().refine($M)),
+  h = createLazyValue(() =>
     c({
       agreed: g(),
       stat: c({
@@ -52,7 +52,7 @@ var g = m(() =>
       trashedAt: T().int().nonnegative().optional(),
     }),
   ),
-  z = m(() =>
+  z = createLazyValue(() =>
     c({
       published: v(
         c({
@@ -74,7 +74,7 @@ var g = m(() =>
       judged: v(c({ path: a(), generation: T().int().nonnegative() })).max(r),
     }),
   ),
-  S = m(() =>
+  S = createLazyValue(() =>
     c({
       version: $e([k(o), k(l), k(d)]),
       sessionId: s().min(1),
@@ -102,7 +102,7 @@ function A3n(e, t) {
   return n.success && n.data.sessionId === t ? n.data : null;
 }
 var y = ["seed_pending", "seed_incomplete"],
-  _ = m(() => c({ note: X(y), sessionId: s().min(1) }));
+  _ = createLazyValue(() => c({ note: X(y), sessionId: s().min(1) }));
 function C3n(e, t) {
   let n = _().safeParse(e);
   return n.success && n.data.sessionId === t ? n.data.note : null;

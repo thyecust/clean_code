@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { nE } from "../../../01-核心基础设施/共享小工具-未细化/chunk-p71zdaw2.js";
-import { H0 } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6rswwsrr.js";
+import { getNodeConfigProviderModule } from "../../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
+import { getUrlParserModule } from "../../../01-核心基础设施/共享小工具-未细化/url-parser.js";
 import "./chunk-z7ktsccq.js";
-import { zd } from "../../../02-功能模块/Bedrock-Vertex/chunk-yjjbkvm4.js";
-import { pe, Wo } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { getPropertyProviderModule } from "../../../02-功能模块/Bedrock-Vertex/smithy-property-provider.js";
+import { toESM, initESM } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { Buffer as ae } from "buffer";
 import { request } from "http";
 function httpRequest(e) {
@@ -58,8 +58,8 @@ function httpRequest(e) {
   });
 }
 var A;
-var S = Wo(() => {
-  A = pe(zd());
+var S = initESM(() => {
+  A = toESM(getPropertyProviderModule());
 });
 var N = (e) =>
     Boolean(e) &&
@@ -135,18 +135,18 @@ var T,
       { tryNextLink: !1, logger: e },
     );
   };
-var V = Wo(() => {
+var V = initESM(() => {
   S();
   O();
   h();
   D();
-  ((T = pe(zd())),
+  ((T = toESM(getPropertyProviderModule())),
     (le = { localhost: !0, "127.0.0.1": !0 }),
     (me = { "http:": !0, "https:": !0 }));
 });
 var U, v;
-var W = Wo(() => {
-  U = pe(zd());
+var W = initESM(() => {
+  U = toESM(getPropertyProviderModule());
   v = class v extends U.CredentialsProviderError {
     tryNextLink;
     name = "InstanceMetadataV1FallbackError";
@@ -157,13 +157,13 @@ var W = Wo(() => {
   };
 });
 var u;
-var B = Wo(() => {
+var B = initESM(() => {
   (function (e) {
     ((e.IPv4 = "http://169.254.169.254"), (e.IPv6 = "http://[fd00:ec2::254]"));
   })(u || (u = {}));
 });
 var K;
-var G = Wo(() => {
+var G = initESM(() => {
   K = {
     environmentVariableSelector: (e) => e.AWS_EC2_METADATA_SERVICE_ENDPOINT,
     configFileSelector: (e) => e.ec2_metadata_service_endpoint,
@@ -171,7 +171,7 @@ var G = Wo(() => {
   };
 });
 var l;
-var M = Wo(() => {
+var M = initESM(() => {
   (function (e) {
     ((e.IPv4 = "IPv4"), (e.IPv6 = "IPv6"));
   })(l || (l = {}));
@@ -179,7 +179,7 @@ var M = Wo(() => {
 var Ee = "AWS_EC2_METADATA_SERVICE_ENDPOINT_MODE",
   Ie = "ec2_metadata_service_endpoint_mode",
   q;
-var H = Wo(() => {
+var H = initESM(() => {
   M();
   q = {
     environmentVariableSelector: (e) => e[Ee],
@@ -204,12 +204,12 @@ var P,
         );
     }
   };
-var R = Wo(() => {
+var R = initESM(() => {
   B();
   G();
   M();
   H();
-  ((P = pe(nE())), (Y = pe(H0())));
+  ((P = toESM(getNodeConfigProviderModule())), (Y = toESM(getUrlParserModule())));
 });
 var b = (e, t) => {
   let n = 300 + Math.floor(Math.random() * 300),
@@ -237,7 +237,7 @@ var J = (e, t = {}) => {
     return ((o = r), r);
   };
 };
-var z = Wo(() => {
+var z = initESM(() => {
   j();
 });
 var Q,
@@ -364,7 +364,7 @@ var Q,
       );
     return g(o);
   };
-var te = Wo(() => {
+var te = initESM(() => {
   W();
   S();
   O();
@@ -372,10 +372,10 @@ var te = Wo(() => {
   D();
   R();
   z();
-  ((Q = pe(nE())), (L = pe(zd())));
+  ((Q = toESM(getNodeConfigProviderModule())), (L = toESM(getPropertyProviderModule())));
 });
 var oe = () => {};
-var Ce = Wo(() => {
+var Ce = initESM(() => {
   S();
   R();
   V();

@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { gL, cy } from "./chunk-dm9sg03f.js";
 import { Lm } from "./chunk-w3axq133.js";
-import { Kq } from "../../../02-功能模块/Bedrock-Vertex/chunk-q61rm009.js";
+import { defaultProvider } from "../../../02-功能模块/Bedrock-Vertex/aws-credential-provider-node.js";
 import "./chunk-z7ktsccq.js";
-import { nE } from "../../../01-核心基础设施/共享小工具-未细化/chunk-p71zdaw2.js";
+import { getNodeConfigProviderModule } from "../../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
 import { nu, EA } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import {
   Q6,
@@ -35,22 +35,22 @@ import "./chunk-zdrvwe5r.js";
 import { ta } from "./chunk-mwf4pmq2.js";
 import { Rb } from "../第三方库-其他/chunk-jtb5q5xr.js";
 import { s_, hS } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
-import { Ib } from "../../../01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js";
-import { H0 } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6rswwsrr.js";
-import { pe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var P = pe(Q6()),
-  We = pe(Z6()),
-  Oe = pe(eW()),
-  v = pe(YU()),
-  Me = pe(cy()),
-  h = pe(Lm()),
-  He = pe(Rb()),
-  Fe = pe(tW()),
-  Ne = pe(Ax()),
-  D = pe(WR()),
-  Le = pe(ta());
-var z = pe(R_()),
-  x = pe(Ib());
+import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
+import { getUrlParserModule } from "../../../01-核心基础设施/共享小工具-未细化/url-parser.js";
+import { toESM } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var P = toESM(Q6()),
+  We = toESM(Z6()),
+  Oe = toESM(eW()),
+  v = toESM(YU()),
+  Me = toESM(cy()),
+  h = toESM(Lm()),
+  He = toESM(Rb()),
+  Fe = toESM(tW()),
+  Ne = toESM(Ax()),
+  D = toESM(WR()),
+  Le = toESM(ta());
+var z = toESM(R_()),
+  x = toESM(smithyContextModule());
 var q = async (e, t, o) => ({
   operation: x.getSmithyContext(t).operation,
   region:
@@ -202,25 +202,25 @@ var Y = {
     directory: "clients/client-sts",
   },
 };
-var _ = pe(R_());
-var A = pe(nW()),
-  u = pe(cy()),
-  ye = pe(Lm()),
-  Te = pe(rW()),
-  f = pe(WR()),
-  l = pe(nE()),
-  S = pe(EA()),
-  Re = pe(oW()),
-  Pe = pe(JU());
-var xe = pe(R_()),
-  ge = pe(sW()),
-  Ie = pe(Lm()),
-  Ae = pe(ta()),
-  fe = pe(H0()),
-  g = pe(hS()),
-  I = pe(s_());
-var he = pe(XU()),
-  m = pe(gL());
+var _ = toESM(R_());
+var A = toESM(nW()),
+  u = toESM(cy()),
+  ye = toESM(Lm()),
+  Te = toESM(rW()),
+  f = toESM(WR()),
+  l = toESM(getNodeConfigProviderModule()),
+  S = toESM(EA()),
+  Re = toESM(oW()),
+  Pe = toESM(JU());
+var xe = toESM(R_()),
+  ge = toESM(sW()),
+  Ie = toESM(Lm()),
+  Ae = toESM(ta()),
+  fe = toESM(getUrlParserModule()),
+  g = toESM(hS()),
+  I = toESM(s_());
+var he = toESM(XU()),
+  m = toESM(gL());
 var X = { ["required"]: !1, ["type"]: "string" },
   U = { ["required"]: !0, default: !1, ["type"]: "boolean" },
   ae = { ["ref"]: "Endpoint" },
@@ -599,9 +599,9 @@ var Se = (e) => ({
   utf8Decoder: e?.utf8Decoder ?? I.fromUtf8,
   utf8Encoder: e?.utf8Encoder ?? I.toUtf8,
 });
-var ve = pe(ta()),
-  De = pe(iW()),
-  Ce = pe(ta()),
+var ve = toESM(ta()),
+  De = toESM(iW()),
+  Ce = toESM(ta()),
   Ge = (e) => {
     Ce.emitWarningIfUnsupportedVersion(process.version);
     let t = De.resolveDefaultsModeConfig(e),
@@ -618,7 +618,7 @@ var ve = pe(ta()),
         e?.authSchemePreference ??
         l.loadConfig(_.NODE_AUTH_SCHEME_PREFERENCE_OPTIONS, i),
       bodyLengthChecker: e?.bodyLengthChecker ?? Re.calculateBodyLength,
-      credentialDefaultProvider: e?.credentialDefaultProvider ?? Kq,
+      credentialDefaultProvider: e?.credentialDefaultProvider ?? defaultProvider,
       defaultUserAgentProvider:
         e?.defaultUserAgentProvider ??
         A.createDefaultUserAgentProvider({
@@ -630,7 +630,7 @@ var ve = pe(ta()),
           schemeId: "aws.auth#sigv4",
           identityProvider: (p) =>
             p.getIdentityProvider("aws.auth#sigv4") ||
-            (async (E) => await Kq(E?.__config || {})()),
+            (async (E) => await defaultProvider(E?.__config || {})()),
           signer: new _.AwsSdkSigV4Signer(),
         },
         {
@@ -670,9 +670,9 @@ var ve = pe(ta()),
         e?.userAgentAppId ?? l.loadConfig(A.NODE_APP_ID_CONFIG_OPTIONS, i),
     };
   };
-var y = pe(QU()),
-  T = pe(nu()),
-  R = pe(ta());
+var y = toESM(QU()),
+  T = toESM(nu()),
+  R = toESM(ta());
 var be = (e) => {
     let { httpAuthSchemes: t, httpAuthSchemeProvider: o, credentials: d } = e;
     return {
@@ -758,8 +758,8 @@ class j extends Le.Client {
     super.destroy();
   }
 }
-var a = pe(Rb());
-var je = pe(ta());
+var a = toESM(Rb());
+var je = toESM(ta());
 class s extends je.ServiceException {
   constructor(e) {
     super(e);
@@ -1052,8 +1052,8 @@ a.TypeRegistry.for("smithy.ts.sdk.synthetic.com.amazonaws.sts").registerError(
   s,
 );
 var Ue = [9, "com.amazonaws.sts", "GetCallerIdentity", 0, () => ot, () => nt];
-var Ke = pe(Ax()),
-  ze = pe(ta());
+var Ke = toESM(Ax()),
+  ze = toESM(ta());
 class GetCallerIdentityCommand extends ze.Command.classBuilder()
   .ep(B)
   .m(function (e, t, o, d) {

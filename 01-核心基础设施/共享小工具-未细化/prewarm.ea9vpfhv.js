@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ae } from "./chunk-2c9tjhwd.js";
+import { importMetaRequire } from "./chunk-2c9tjhwd.js";
 import { createRequire } from "module";
 import { fileURLToPath } from "url";
 import { dirname, join as f } from "path";
@@ -27,7 +27,7 @@ function o() {
   try {
     let e;
     if (process.env.MODIFIERS_NODE_PATH)
-      e = Ae(process.env.MODIFIERS_NODE_PATH);
+      e = importMetaRequire(process.env.MODIFIERS_NODE_PATH);
     else {
       let i = f(
         dirname(fileURLToPath(import.meta.url)),

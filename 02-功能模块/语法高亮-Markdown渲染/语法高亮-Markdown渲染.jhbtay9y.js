@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { cne, kpn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { $Zn } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { w } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var Je = w(function (su, Qe) {
+import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var Je = commonJS(function (su, Qe) {
   function Hc(e) {
     let t = e.regex,
       n = /^[a-zA-Z][a-zA-Z0-9-]*/,
@@ -57,7 +57,7 @@ var Je = w(function (su, Qe) {
   }
   Qe.exports = Hc;
 });
-var et = w(function (ou, je) {
+var et = commonJS(function (ou, je) {
   function $c(e) {
     let t = e.regex,
       n = [
@@ -121,7 +121,7 @@ var et = w(function (ou, je) {
   }
   je.exports = $c;
 });
-var nt = w(function (cu, tt) {
+var nt = commonJS(function (cu, tt) {
   function zc(e) {
     let t = e.regex,
       n = /[a-zA-Z_$][a-zA-Z0-9_$]*/,
@@ -235,7 +235,7 @@ var nt = w(function (cu, tt) {
   }
   tt.exports = zc;
 });
-var rt = w(function (lu, at) {
+var rt = commonJS(function (lu, at) {
   function Kc(e) {
     let n = "[eE][-+]?\\d(_|\\d)*",
       a = "\\d(_|\\d)*(\\.\\d(_|\\d)*)?(" + n + ")?",
@@ -404,7 +404,7 @@ var rt = w(function (lu, at) {
   }
   at.exports = Kc;
 });
-var st = w(function (du, it) {
+var st = commonJS(function (du, it) {
   function Vc(e) {
     let t = {
         className: "built_in",
@@ -527,7 +527,7 @@ var st = w(function (du, it) {
   }
   it.exports = Vc;
 });
-var ct = w(function (pu, ot) {
+var ct = commonJS(function (pu, ot) {
   function Wc(e) {
     let t = { className: "number", begin: /[$%]\d+/ },
       n = { className: "number", begin: /\b\d+/ },
@@ -597,7 +597,7 @@ var ct = w(function (pu, ot) {
   }
   ot.exports = Wc;
 });
-var dt = w(function (mu, lt) {
+var dt = commonJS(function (mu, lt) {
   function Yc(e) {
     let t = e.regex,
       n = e.inherit(e.QUOTE_STRING_MODE, { illegal: null }),
@@ -683,7 +683,7 @@ var dt = w(function (mu, lt) {
   }
   lt.exports = Yc;
 });
-var mt = w(function (_u, pt) {
+var mt = commonJS(function (_u, pt) {
   function Xc(e) {
     let t = e.regex,
       n = "[A-Za-z_][0-9A-Za-z_]*",
@@ -1088,7 +1088,7 @@ var mt = w(function (_u, pt) {
   }
   pt.exports = Xc;
 });
-var ut = w(function (uu, _t) {
+var ut = commonJS(function (uu, _t) {
   function Zc(e) {
     let t = e.regex,
       n = e.COMMENT("//", "$", { contains: [{ begin: /\\\n/ }] }),
@@ -1914,7 +1914,7 @@ var ut = w(function (uu, _t) {
   }
   _t.exports = Qc;
 });
-var gt = w(function (Eu, Et) {
+var gt = commonJS(function (Eu, Et) {
   function Jc(e) {
     let t = {
       variants: [
@@ -1974,7 +1974,7 @@ var gt = w(function (Eu, Et) {
   }
   Et.exports = Jc;
 });
-var ft = w(function (gu, bt) {
+var ft = commonJS(function (gu, bt) {
   function jc(e) {
     let t = e.regex,
       n = { begin: "^'{3,}[ \\t]*$", relevance: 10 },
@@ -2107,7 +2107,7 @@ var ft = w(function (gu, bt) {
   }
   bt.exports = jc;
 });
-var Nt = w(function (bu, Tt) {
+var Nt = commonJS(function (bu, Tt) {
   function el(e) {
     let t = e.regex,
       n = [
@@ -2305,7 +2305,7 @@ var Nt = w(function (bu, Tt) {
   }
   Tt.exports = el;
 });
-var At = w(function (fu, St) {
+var At = commonJS(function (fu, St) {
   function tl(e) {
     let t = { begin: "`[\\s\\S]" };
     return {
@@ -2341,7 +2341,7 @@ var At = w(function (fu, St) {
   }
   St.exports = tl;
 });
-var Ot = w(function (Tu, Rt) {
+var Ot = commonJS(function (Tu, Rt) {
   function nl(e) {
     let t =
         "ByRef Case Const ContinueCase ContinueLoop Dim Do Else ElseIf EndFunc EndIf EndSelect EndSwitch EndWith Enum Exit ExitLoop For Func Global If In Local Next ReDim Return Select Static Step Switch Then To Until Volatile WEnd While With",
@@ -2445,7 +2445,7 @@ var Ot = w(function (Tu, Rt) {
   }
   Rt.exports = nl;
 });
-var It = w(function (Nu, vt) {
+var It = commonJS(function (Nu, vt) {
   function al(e) {
     return {
       name: "AVR Assembly",
@@ -2479,7 +2479,7 @@ var It = w(function (Nu, vt) {
   }
   vt.exports = al;
 });
-var yt = w(function (Su, Ct) {
+var yt = commonJS(function (Su, Ct) {
   function rl(e) {
     let t = {
         className: "variable",
@@ -2512,7 +2512,7 @@ var yt = w(function (Su, Ct) {
   }
   Ct.exports = rl;
 });
-var Mt = w(function (Au, ht) {
+var Mt = commonJS(function (Au, ht) {
   function il(e) {
     let t = e.UNDERSCORE_IDENT_RE,
       o = {
@@ -2666,7 +2666,7 @@ var Mt = w(function (Au, ht) {
   }
   ht.exports = il;
 });
-var Lt = w(function (Ru, Dt) {
+var Lt = commonJS(function (Ru, Dt) {
   function sl(e) {
     let t = e.regex,
       n = {},
@@ -2984,7 +2984,7 @@ var Lt = w(function (Ru, Dt) {
   }
   Dt.exports = sl;
 });
-var xt = w(function (Ou, wt) {
+var xt = commonJS(function (Ou, wt) {
   function ol(e) {
     return {
       name: "BASIC",
@@ -3194,7 +3194,7 @@ var xt = w(function (Ou, wt) {
   }
   wt.exports = ol;
 });
-var Pt = w(function (vu, kt) {
+var Pt = commonJS(function (vu, kt) {
   function cl(e) {
     return {
       name: "Backus\u2013Naur Form",
@@ -3216,7 +3216,7 @@ var Pt = w(function (vu, kt) {
   }
   kt.exports = cl;
 });
-var Bt = w(function (Iu, Ut) {
+var Bt = commonJS(function (Iu, Ut) {
   function ll(e) {
     let t = { className: "literal", begin: /[+-]+/, relevance: 0 };
     return {
@@ -3237,7 +3237,7 @@ var Bt = w(function (Iu, Ut) {
   }
   Ut.exports = ll;
 });
-var Ft = w(function (Cu, Gt) {
+var Ft = commonJS(function (Cu, Gt) {
   function dl(e) {
     let t = e.regex,
       n = e.COMMENT("//", "$", { contains: [{ begin: /\\\n/ }] }),
@@ -3481,7 +3481,7 @@ var Ft = w(function (Cu, Gt) {
   }
   Gt.exports = dl;
 });
-var Ht = w(function (yu, qt) {
+var Ht = commonJS(function (yu, qt) {
   function pl(e) {
     let t = e.regex,
       n = [
@@ -3589,7 +3589,7 @@ var Ht = w(function (yu, qt) {
   }
   qt.exports = pl;
 });
-var zt = w(function (hu, $t) {
+var zt = commonJS(function (hu, $t) {
   function ml(e) {
     let t = [
         "struct",
@@ -3654,7 +3654,7 @@ var zt = w(function (hu, $t) {
   }
   $t.exports = ml;
 });
-var Vt = w(function (Mu, Kt) {
+var Vt = commonJS(function (Mu, Kt) {
   function _l(e) {
     let t = [
         "assembly",
@@ -3754,7 +3754,7 @@ var Vt = w(function (Mu, Kt) {
   }
   Kt.exports = _l;
 });
-var Yt = w(function (Du, Wt) {
+var Yt = commonJS(function (Du, Wt) {
   function ul(e) {
     return {
       name: "Clean",
@@ -3807,7 +3807,7 @@ var Yt = w(function (Du, Wt) {
   }
   Wt.exports = ul;
 });
-var Zt = w(function (Lu, Xt) {
+var Zt = commonJS(function (Lu, Xt) {
   function El(e) {
     let n = "[#]?[a-zA-Z_\\-!.?+*=<>&'][a-zA-Z_\\-!.?+*=<>&'0-9/;:$#]*",
       a =
@@ -3891,7 +3891,7 @@ var Zt = w(function (Lu, Xt) {
   }
   Xt.exports = El;
 });
-var Jt = w(function (wu, Qt) {
+var Jt = commonJS(function (wu, Qt) {
   function gl(e) {
     return {
       name: "Clojure REPL",
@@ -3906,7 +3906,7 @@ var Jt = w(function (wu, Qt) {
   }
   Qt.exports = gl;
 });
-var en = w(function (xu, jt) {
+var en = commonJS(function (xu, jt) {
   function bl(e) {
     return {
       name: "CMake",
@@ -3927,7 +3927,7 @@ var en = w(function (xu, jt) {
   }
   jt.exports = bl;
 });
-var nn = w(function (ku, tn) {
+var nn = commonJS(function (ku, tn) {
   var fl = [
       "as",
       "in",
@@ -4167,7 +4167,7 @@ var nn = w(function (ku, tn) {
   }
   tn.exports = Ol;
 });
-var rn = w(function (Pu, an) {
+var rn = commonJS(function (Pu, an) {
   function vl(e) {
     return {
       name: "Coq",
@@ -4597,7 +4597,7 @@ var rn = w(function (Pu, an) {
   }
   an.exports = vl;
 });
-var on = w(function (Uu, sn) {
+var on = commonJS(function (Uu, sn) {
   function Il(e) {
     return {
       name: "Cach\xE9 Object Script",
@@ -4645,7 +4645,7 @@ var on = w(function (Uu, sn) {
   }
   sn.exports = Il;
 });
-var ln = w(function (Bu, cn) {
+var ln = commonJS(function (Bu, cn) {
   function Cl(e) {
     let t = e.regex,
       n = e.COMMENT("//", "$", { contains: [{ begin: /\\\n/ }] }),
@@ -5096,7 +5096,7 @@ var ln = w(function (Bu, cn) {
   }
   cn.exports = Cl;
 });
-var pn = w(function (Gu, dn) {
+var pn = commonJS(function (Gu, dn) {
   function yl(e) {
     let n =
         "group clone ms master location colocation order fencing_topology rsc_ticket acl_target acl_group user role tag xml",
@@ -5164,7 +5164,7 @@ var pn = w(function (Gu, dn) {
   }
   dn.exports = yl;
 });
-var _n = w(function (Fu, mn) {
+var _n = commonJS(function (Fu, mn) {
   function hl(e) {
     let r = {
         $pattern: "[a-zA-Z_]\\w*[!?=]?",
@@ -5364,7 +5364,7 @@ var _n = w(function (Fu, mn) {
   }
   mn.exports = hl;
 });
-var En = w(function (qu, un) {
+var En = commonJS(function (qu, un) {
   function Ml(e) {
     let t = [
         "bool",
@@ -5687,7 +5687,7 @@ var En = w(function (qu, un) {
   }
   un.exports = Ml;
 });
-var bn = w(function (Hu, gn) {
+var bn = commonJS(function (Hu, gn) {
   function Dl(e) {
     return {
       name: "CSP",
@@ -5725,7 +5725,7 @@ var bn = w(function (Hu, gn) {
   }
   gn.exports = Dl;
 });
-var Tn = w(function ($u, fn) {
+var Tn = commonJS(function ($u, fn) {
   var Ll = (e) => ({
       IMPORTANT: { scope: "meta", begin: "!important" },
       BLOCK_COMMENT: e.C_BLOCK_COMMENT_MODE,
@@ -6601,7 +6601,7 @@ var Tn = w(function ($u, fn) {
   }
   fn.exports = Fl;
 });
-var Sn = w(function (zu, Nn) {
+var Sn = commonJS(function (zu, Nn) {
   function ql(e) {
     let t = {
         $pattern: e.UNDERSCORE_IDENT_RE,
@@ -6685,7 +6685,7 @@ var Sn = w(function (zu, Nn) {
   }
   Nn.exports = ql;
 });
-var Rn = w(function (Ku, An) {
+var Rn = commonJS(function (Ku, An) {
   function Hl(e) {
     let t = { className: "subst", variants: [{ begin: "\\$[A-Za-z0-9_]+" }] },
       n = {
@@ -6872,7 +6872,7 @@ var Rn = w(function (Ku, An) {
   }
   An.exports = Hl;
 });
-var vn = w(function (Vu, On) {
+var vn = commonJS(function (Vu, On) {
   function $l(e) {
     let t = [
         "exports",
@@ -7075,7 +7075,7 @@ var vn = w(function (Vu, On) {
   }
   On.exports = $l;
 });
-var Cn = w(function (Wu, In) {
+var Cn = commonJS(function (Wu, In) {
   function zl(e) {
     let t = e.regex;
     return {
@@ -7117,7 +7117,7 @@ var Cn = w(function (Wu, In) {
   }
   In.exports = zl;
 });
-var hn = w(function (Yu, yn) {
+var hn = commonJS(function (Yu, yn) {
   function Kl(e) {
     let t = {
       begin: /\|[A-Za-z]+:?/,
@@ -7165,7 +7165,7 @@ var hn = w(function (Yu, yn) {
   }
   yn.exports = Kl;
 });
-var Dn = w(function (Xu, Mn) {
+var Dn = commonJS(function (Xu, Mn) {
   function Vl(e) {
     return {
       name: "DNS Zone",
@@ -7229,7 +7229,7 @@ var Dn = w(function (Xu, Mn) {
   }
   Mn.exports = Vl;
 });
-var wn = w(function (Zu, Ln) {
+var wn = commonJS(function (Zu, Ln) {
   function Wl(e) {
     return {
       name: "Dockerfile",
@@ -7261,7 +7261,7 @@ var wn = w(function (Zu, Ln) {
   }
   Ln.exports = Wl;
 });
-var kn = w(function (Qu, xn) {
+var kn = commonJS(function (Qu, xn) {
   function Yl(e) {
     let t = e.COMMENT(/^\s*@?rem\b/, /$/, { relevance: 10 });
     return {
@@ -7405,7 +7405,7 @@ var kn = w(function (Qu, xn) {
   }
   xn.exports = Yl;
 });
-var Un = w(function (Ju, Pn) {
+var Un = commonJS(function (Ju, Pn) {
   function Xl(e) {
     return {
       keywords: "dsconfig",
@@ -7441,7 +7441,7 @@ var Un = w(function (Ju, Pn) {
   }
   Pn.exports = Xl;
 });
-var Gn = w(function (ju, Bn) {
+var Gn = commonJS(function (ju, Bn) {
   function Zl(e) {
     let t = {
         className: "string",
@@ -7526,7 +7526,7 @@ var Gn = w(function (ju, Bn) {
   }
   Bn.exports = Zl;
 });
-var qn = w(function (eE, Fn) {
+var qn = commonJS(function (eE, Fn) {
   function Ql(e) {
     return {
       name: "Dust",
@@ -7563,7 +7563,7 @@ var qn = w(function (eE, Fn) {
   }
   Fn.exports = Ql;
 });
-var $n = w(function (tE, Hn) {
+var $n = commonJS(function (tE, Hn) {
   function Jl(e) {
     let t = e.COMMENT(/\(\*/, /\*\)/),
       n = {
@@ -7594,7 +7594,7 @@ var $n = w(function (tE, Hn) {
   }
   Hn.exports = Jl;
 });
-var Kn = w(function (nE, zn) {
+var Kn = commonJS(function (nE, zn) {
   function jl(e) {
     let t = e.regex,
       n = "[a-zA-Z_][a-zA-Z0-9_.]*(!|\\?)?",
@@ -7765,7 +7765,7 @@ var Kn = w(function (nE, zn) {
   }
   zn.exports = jl;
 });
-var Wn = w(function (aE, Vn) {
+var Wn = commonJS(function (aE, Vn) {
   function ed(e) {
     let t = {
         variants: [
@@ -7853,7 +7853,7 @@ var Wn = w(function (aE, Vn) {
   }
   Vn.exports = ed;
 });
-var Xn = w(function (rE, Yn) {
+var Xn = commonJS(function (rE, Yn) {
   function td(e) {
     return {
       name: "ERB",
@@ -7872,7 +7872,7 @@ var Xn = w(function (rE, Yn) {
   }
   Yn.exports = td;
 });
-var Qn = w(function (iE, Zn) {
+var Qn = commonJS(function (iE, Zn) {
   function nd(e) {
     let n = "([a-z'][a-zA-Z0-9_']*:[a-z'][a-zA-Z0-9_']*|[a-z'][a-zA-Z0-9_']*)",
       a = {
@@ -8033,7 +8033,7 @@ var Qn = w(function (iE, Zn) {
   }
   Zn.exports = nd;
 });
-var jn = w(function (sE, Jn) {
+var jn = commonJS(function (sE, Jn) {
   function ad(e) {
     let t = e.regex;
     return {
@@ -8069,7 +8069,7 @@ var jn = w(function (sE, Jn) {
   }
   Jn.exports = ad;
 });
-var ta = w(function (oE, ea) {
+var ta = commonJS(function (oE, ea) {
   function rd(e) {
     return {
       name: "Excel formulae",
@@ -8626,7 +8626,7 @@ var ta = w(function (oE, ea) {
   }
   ea.exports = rd;
 });
-var aa = w(function (cE, na) {
+var aa = commonJS(function (cE, na) {
   function id(e) {
     return {
       name: "FIX",
@@ -8660,7 +8660,7 @@ var aa = w(function (cE, na) {
   }
   na.exports = id;
 });
-var ia = w(function (lE, ra) {
+var ia = commonJS(function (lE, ra) {
   function sd(e) {
     let t = { className: "string", begin: /'(.|\\[xXuU][a-zA-Z0-9]+)'/ },
       n = { className: "string", variants: [{ begin: '"', end: '"' }] },
@@ -8716,7 +8716,7 @@ var ia = w(function (lE, ra) {
   }
   ra.exports = sd;
 });
-var oa = w(function (dE, sa) {
+var oa = commonJS(function (dE, sa) {
   function od(e) {
     let t = e.regex,
       n = { className: "params", begin: "\\(", end: "\\)" },
@@ -9248,7 +9248,7 @@ var oa = w(function (dE, sa) {
   }
   sa.exports = od;
 });
-var da = w(function (pE, la) {
+var da = commonJS(function (pE, la) {
   function cd(e) {
     return new RegExp(e.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&"), "m");
   }
@@ -9600,7 +9600,7 @@ var da = w(function (pE, la) {
   }
   la.exports = dd;
 });
-var ma = w(function (mE, pa) {
+var ma = commonJS(function (mE, pa) {
   function pd(e) {
     let t = e.regex,
       n = {
@@ -9719,7 +9719,7 @@ var ma = w(function (mE, pa) {
   }
   pa.exports = pd;
 });
-var ua = w(function (_E, _a) {
+var ua = commonJS(function (_E, _a) {
   function md(e) {
     let t = {
         keyword:
@@ -9871,7 +9871,7 @@ var ua = w(function (_E, _a) {
   }
   _a.exports = md;
 });
-var ga = w(function (uE, Ea) {
+var ga = commonJS(function (uE, Ea) {
   function _d(e) {
     let t = e.regex,
       n = {
@@ -9985,7 +9985,7 @@ var ga = w(function (uE, Ea) {
   }
   Ea.exports = _d;
 });
-var fa = w(function (EE, ba) {
+var fa = commonJS(function (EE, ba) {
   function ud(e) {
     return {
       name: "Gherkin",
@@ -10009,7 +10009,7 @@ var fa = w(function (EE, ba) {
   }
   ba.exports = ud;
 });
-var Na = w(function (gE, Ta) {
+var Na = commonJS(function (gE, Ta) {
   function Ed(e) {
     return {
       name: "GLSL",
@@ -10032,7 +10032,7 @@ var Na = w(function (gE, Ta) {
   }
   Ta.exports = Ed;
 });
-var Aa = w(function (bE, Sa) {
+var Aa = commonJS(function (bE, Sa) {
   function gd(e) {
     let o = {
       keyword: [
@@ -10163,7 +10163,7 @@ var Aa = w(function (bE, Sa) {
   }
   Sa.exports = gd;
 });
-var Oa = w(function (fE, Ra) {
+var Oa = commonJS(function (fE, Ra) {
   function bd(e) {
     return {
       name: "Golo",
@@ -10228,7 +10228,7 @@ var Oa = w(function (fE, Ra) {
   }
   Ra.exports = bd;
 });
-var Ia = w(function (TE, va) {
+var Ia = commonJS(function (TE, va) {
   function fd(e) {
     return {
       name: "Gradle",
@@ -10409,7 +10409,7 @@ var Ia = w(function (TE, va) {
   }
   va.exports = fd;
 });
-var ya = w(function (NE, Ca) {
+var ya = commonJS(function (NE, Ca) {
   function Td(e) {
     let t = e.regex,
       n = /[_A-Za-z][_0-9A-Za-z]*/;
@@ -10465,7 +10465,7 @@ var ya = w(function (NE, Ca) {
   }
   Ca.exports = Td;
 });
-var Ma = w(function (SE, ha) {
+var Ma = commonJS(function (SE, ha) {
   function qe(e, t = {}) {
     return ((t.variants = e), t);
   }
@@ -10588,7 +10588,7 @@ var Ma = w(function (SE, ha) {
   }
   ha.exports = Nd;
 });
-var La = w(function (AE, Da) {
+var La = commonJS(function (AE, Da) {
   function Sd(e) {
     return {
       name: "HAML",
@@ -10667,7 +10667,7 @@ var La = w(function (AE, Da) {
   }
   Da.exports = Sd;
 });
-var xa = w(function (RE, wa) {
+var xa = commonJS(function (RE, wa) {
   function Ad(e) {
     let t = e.regex,
       n = {
@@ -10840,7 +10840,7 @@ var xa = w(function (RE, wa) {
   }
   wa.exports = Ad;
 });
-var Pa = w(function (OE, ka) {
+var Pa = commonJS(function (OE, ka) {
   function Rd(e) {
     let l = {
         variants: [
@@ -10959,7 +10959,7 @@ var Pa = w(function (OE, ka) {
   }
   ka.exports = Rd;
 });
-var Ba = w(function (vE, Ua) {
+var Ba = commonJS(function (vE, Ua) {
   function Od(e) {
     let n =
         /(-?)(\b0[xX][a-fA-F0-9_]+|(\b\d+(\.[\d_]*)?|\.[\d_]+)(([eE][-+]?\d+)|i32|u32|i64|f64)?)/,
@@ -11086,7 +11086,7 @@ var Ba = w(function (vE, Ua) {
   }
   Ua.exports = Od;
 });
-var Fa = w(function (IE, Ga) {
+var Fa = commonJS(function (IE, Ga) {
   function vd(e) {
     return {
       name: "HSP",
@@ -11132,7 +11132,7 @@ var Fa = w(function (IE, Ga) {
   }
   Ga.exports = vd;
 });
-var Ha = w(function (CE, qa) {
+var Ha = commonJS(function (CE, qa) {
   function Id(e) {
     let t = e.regex,
       n = "HTTP/([32]|1\\.[01])",
@@ -11191,7 +11191,7 @@ var Ha = w(function (CE, qa) {
   }
   qa.exports = Id;
 });
-var za = w(function (yE, $a) {
+var za = commonJS(function (yE, $a) {
   function Cd(e) {
     let n = "[a-zA-Z_\\-!.?+*=<>&#'][a-zA-Z_\\-!.?+*=<>&#'0-9/;:]*",
       a = {
@@ -11227,7 +11227,7 @@ var za = w(function (yE, $a) {
   }
   $a.exports = Cd;
 });
-var Va = w(function (hE, Ka) {
+var Va = commonJS(function (hE, Ka) {
   function yd(e) {
     return {
       name: "Inform 7",
@@ -11262,7 +11262,7 @@ var Va = w(function (hE, Ka) {
   }
   Ka.exports = yd;
 });
-var Ya = w(function (ME, Wa) {
+var Ya = commonJS(function (ME, Wa) {
   function hd(e) {
     let t = e.regex,
       n = {
@@ -11319,7 +11319,7 @@ var Ya = w(function (ME, Wa) {
   }
   Wa.exports = hd;
 });
-var Za = w(function (DE, Xa) {
+var Za = commonJS(function (DE, Xa) {
   function Md(e) {
     let t = e.regex,
       n = { className: "params", begin: "\\(", end: "\\)" },
@@ -11362,7 +11362,7 @@ var Za = w(function (DE, Xa) {
   }
   Xa.exports = Md;
 });
-var er = w(function (LE, ja) {
+var er = commonJS(function (LE, ja) {
   var _e = "[0-9](_*[0-9])*",
     Ie = `\\.(${_e})`,
     Ce = "[0-9a-fA-F](_*[0-9a-fA-F])*",
@@ -11563,7 +11563,7 @@ var er = w(function (LE, ja) {
   }
   ja.exports = Dd;
 });
-var ir = w(function (wE, rr) {
+var ir = commonJS(function (wE, rr) {
   var Ld = [
       "as",
       "in",
@@ -12083,7 +12083,7 @@ var ir = w(function (wE, rr) {
   }
   rr.exports = Pd;
 });
-var or = w(function (xE, sr) {
+var or = commonJS(function (xE, sr) {
   function Ud(e) {
     let n = {
         className: "params",
@@ -12116,7 +12116,7 @@ var or = w(function (xE, sr) {
   }
   sr.exports = Ud;
 });
-var lr = w(function (kE, cr) {
+var lr = commonJS(function (kE, cr) {
   function Bd(e) {
     let t = {
         className: "attr",
@@ -12144,7 +12144,7 @@ var lr = w(function (kE, cr) {
   }
   cr.exports = Bd;
 });
-var pr = w(function (PE, dr) {
+var pr = commonJS(function (PE, dr) {
   function Gd(e) {
     let o = {
         $pattern: "[A-Za-z_\\u00A1-\\uFFFF][A-Za-z_0-9\\u00A1-\\uFFFF]*",
@@ -12472,7 +12472,7 @@ var pr = w(function (PE, dr) {
   }
   dr.exports = Gd;
 });
-var _r = w(function (UE, mr) {
+var _r = commonJS(function (UE, mr) {
   function Fd(e) {
     return {
       name: "Julia REPL",
@@ -12489,7 +12489,7 @@ var _r = w(function (UE, mr) {
   }
   mr.exports = Fd;
 });
-var Er = w(function (BE, ur) {
+var Er = commonJS(function (BE, ur) {
   var ue = "[0-9](_*[0-9])*",
     ye = `\\.(${ue})`,
     he = "[0-9a-fA-F](_*[0-9a-fA-F])*",
@@ -12691,7 +12691,7 @@ var Er = w(function (BE, ur) {
   }
   ur.exports = Hd;
 });
-var br = w(function (GE, gr) {
+var br = commonJS(function (GE, gr) {
   function $d(e) {
     let s = {
         $pattern: "[a-zA-Z_][\\w.]*|&[lg]t;",
@@ -12799,7 +12799,7 @@ var br = w(function (GE, gr) {
   }
   gr.exports = $d;
 });
-var Tr = w(function (FE, fr) {
+var Tr = commonJS(function (FE, fr) {
   function zd(e) {
     let n = e.regex.either(
         ...[
@@ -12959,7 +12959,7 @@ var Tr = w(function (FE, fr) {
   }
   fr.exports = zd;
 });
-var Sr = w(function (qE, Nr) {
+var Sr = commonJS(function (qE, Nr) {
   function Kd(e) {
     return {
       name: "LDIF",
@@ -12973,7 +12973,7 @@ var Sr = w(function (qE, Nr) {
   }
   Nr.exports = Kd;
 });
-var Rr = w(function (HE, Ar) {
+var Rr = commonJS(function (HE, Ar) {
   function Vd(e) {
     let t = /([A-Za-z_][A-Za-z_0-9]*)?/,
       a = {
@@ -13014,7 +13014,7 @@ var Rr = w(function (HE, Ar) {
   }
   Ar.exports = Vd;
 });
-var Cr = w(function ($E, Ir) {
+var Cr = commonJS(function ($E, Ir) {
   var Wd = (e) => ({
       IMPORTANT: { scope: "meta", begin: "!important" },
       BLOCK_COMMENT: e.C_BLOCK_COMMENT_MODE,
@@ -13946,7 +13946,7 @@ var Cr = w(function ($E, Ir) {
   }
   Ir.exports = ep;
 });
-var hr = w(function (zE, yr) {
+var hr = commonJS(function (zE, yr) {
   function tp(e) {
     let s = { className: "literal", begin: "\\b(t{1}|nil)\\b" },
       o = {
@@ -14029,7 +14029,7 @@ var hr = w(function (zE, yr) {
   }
   yr.exports = tp;
 });
-var Dr = w(function (KE, Mr) {
+var Dr = commonJS(function (KE, Mr) {
   function np(e) {
     let t = {
         className: "variable",
@@ -14120,7 +14120,7 @@ var Dr = w(function (KE, Mr) {
   }
   Mr.exports = np;
 });
-var wr = w(function (VE, Lr) {
+var wr = commonJS(function (VE, Lr) {
   var ap = [
       "as",
       "in",
@@ -14394,7 +14394,7 @@ var wr = w(function (VE, Lr) {
   }
   Lr.exports = lp;
 });
-var kr = w(function (WE, xr) {
+var kr = commonJS(function (WE, xr) {
   function dp(e) {
     let t = e.regex,
       n = /([-a-zA-Z$._][\w$.-]*)/,
@@ -14460,7 +14460,7 @@ var kr = w(function (WE, xr) {
   }
   xr.exports = dp;
 });
-var Ur = w(function (YE, Pr) {
+var Ur = commonJS(function (YE, Pr) {
   function pp(e) {
     let n = {
         className: "string",
@@ -14524,7 +14524,7 @@ var Ur = w(function (YE, Pr) {
   }
   Pr.exports = pp;
 });
-var Gr = w(function (XE, Br) {
+var Gr = commonJS(function (XE, Br) {
   function mp(e) {
     let a = { begin: "\\[=*\\[", end: "\\]=*\\]", contains: ["self"] },
       s = [
@@ -14574,7 +14574,7 @@ var Gr = w(function (XE, Br) {
   }
   Br.exports = mp;
 });
-var qr = w(function (ZE, Fr) {
+var qr = commonJS(function (ZE, Fr) {
   function _p(e) {
     let t = {
         className: "variable",
@@ -14623,7 +14623,7 @@ var qr = w(function (ZE, Fr) {
   }
   Fr.exports = _p;
 });
-var $r = w(function (QE, Hr) {
+var $r = commonJS(function (QE, Hr) {
   function up(e) {
     let t = e.regex,
       n = {
@@ -14771,7 +14771,7 @@ var $r = w(function (QE, Hr) {
   }
   Hr.exports = up;
 });
-var Kr = w(function (JE, zr) {
+var Kr = commonJS(function (JE, zr) {
   function Ep(e) {
     let n = { relevance: 0, contains: [{ begin: "('|\\.')+" }] };
     return {
@@ -14823,7 +14823,7 @@ var Kr = w(function (JE, zr) {
   }
   zr.exports = Ep;
 });
-var Wr = w(function (jE, Vr) {
+var Wr = commonJS(function (jE, Vr) {
   function gp(e) {
     return {
       name: "MEL",
@@ -14848,7 +14848,7 @@ var Wr = w(function (jE, Vr) {
   }
   Vr.exports = gp;
 });
-var Xr = w(function (eg, Yr) {
+var Xr = commonJS(function (eg, Yr) {
   function bp(e) {
     let t = {
         keyword:
@@ -14903,7 +14903,7 @@ var Xr = w(function (eg, Yr) {
   }
   Yr.exports = bp;
 });
-var Qr = w(function (tg, Zr) {
+var Qr = commonJS(function (tg, Zr) {
   function fp(e) {
     return {
       name: "MIPS Assembly",
@@ -14953,7 +14953,7 @@ var Qr = w(function (tg, Zr) {
   }
   Zr.exports = fp;
 });
-var jr = w(function (ng, Jr) {
+var jr = commonJS(function (ng, Jr) {
   function Tp(e) {
     return {
       name: "Mizar",
@@ -14964,7 +14964,7 @@ var jr = w(function (ng, Jr) {
   }
   Jr.exports = Tp;
 });
-var ti = w(function (ag, ei) {
+var ti = commonJS(function (ag, ei) {
   function Np(e) {
     return {
       name: "Mojolicious",
@@ -14984,7 +14984,7 @@ var ti = w(function (ag, ei) {
   }
   ei.exports = Np;
 });
-var ai = w(function (rg, ni) {
+var ai = commonJS(function (rg, ni) {
   function Sp(e) {
     let t = {
         className: "number",
@@ -15128,7 +15128,7 @@ var ai = w(function (rg, ni) {
   }
   ni.exports = Sp;
 });
-var ii = w(function (ig, ri) {
+var ii = commonJS(function (ig, ri) {
   function Ap(e) {
     let t = {
         keyword:
@@ -15220,7 +15220,7 @@ var ii = w(function (ig, ri) {
   }
   ri.exports = Ap;
 });
-var oi = w(function (sg, si) {
+var oi = commonJS(function (sg, si) {
   function Rp(e) {
     return {
       name: "N1QL",
@@ -15565,7 +15565,7 @@ var oi = w(function (sg, si) {
   }
   si.exports = Rp;
 });
-var li = w(function (og, ci) {
+var li = commonJS(function (og, ci) {
   function Op(e) {
     let t = {
         match: [/^\s*(?=\S)/, /[^:]+/, /:\s*/, /$/],
@@ -15603,7 +15603,7 @@ var li = w(function (og, ci) {
   }
   ci.exports = Op;
 });
-var pi = w(function (cg, di) {
+var pi = commonJS(function (cg, di) {
   function vp(e) {
     let t = e.regex,
       n = {
@@ -15717,7 +15717,7 @@ var pi = w(function (cg, di) {
   }
   di.exports = vp;
 });
-var _i = w(function (lg, mi) {
+var _i = commonJS(function (lg, mi) {
   function Ip(e) {
     return {
       name: "Nim",
@@ -15875,7 +15875,7 @@ var _i = w(function (lg, mi) {
   }
   mi.exports = Ip;
 });
-var Ei = w(function (dg, ui) {
+var Ei = commonJS(function (dg, ui) {
   function Cp(e) {
     let t = e.regex,
       n = {
@@ -16161,7 +16161,7 @@ var Ei = w(function (dg, ui) {
   }
   ui.exports = Cp;
 });
-var bi = w(function (pg, gi) {
+var bi = commonJS(function (pg, gi) {
   function yp(e) {
     return {
       name: "Node REPL",
@@ -16179,7 +16179,7 @@ var bi = w(function (pg, gi) {
   }
   gi.exports = yp;
 });
-var Ti = w(function (mg, fi) {
+var Ti = commonJS(function (mg, fi) {
   function hp(e) {
     let t = e.regex,
       n = [
@@ -16642,7 +16642,7 @@ var Ti = w(function (mg, fi) {
   }
   fi.exports = hp;
 });
-var Si = w(function (_g, Ni) {
+var Si = commonJS(function (_g, Ni) {
   function Mp(e) {
     let t = {
         className: "built_in",
@@ -16852,7 +16852,7 @@ var Si = w(function (_g, Ni) {
   }
   Ni.exports = Mp;
 });
-var Ri = w(function (ug, Ai) {
+var Ri = commonJS(function (ug, Ai) {
   function Dp(e) {
     return {
       name: "OCaml",
@@ -16887,7 +16887,7 @@ var Ri = w(function (ug, Ai) {
   }
   Ai.exports = Dp;
 });
-var vi = w(function (Eg, Oi) {
+var vi = commonJS(function (Eg, Oi) {
   function Lp(e) {
     let t = { className: "keyword", begin: "\\$(f[asn]|t|vp[rtd]|children)" },
       n = { className: "literal", begin: "false|true|PI|undef" },
@@ -16939,7 +16939,7 @@ var vi = w(function (Eg, Oi) {
   }
   Oi.exports = Lp;
 });
-var Ci = w(function (gg, Ii) {
+var Ci = commonJS(function (gg, Ii) {
   function wp(e) {
     let t = {
         $pattern: /\.?\w+/,
@@ -16984,7 +16984,7 @@ var Ci = w(function (gg, Ii) {
   }
   Ii.exports = wp;
 });
-var hi = w(function (bg, yi) {
+var hi = commonJS(function (bg, yi) {
   function xp(e) {
     let t = e.COMMENT(/\{/, /\}/, { contains: ["self"] });
     return {
@@ -17012,7 +17012,7 @@ var hi = w(function (bg, yi) {
   }
   yi.exports = xp;
 });
-var Di = w(function (fg, Mi) {
+var Di = commonJS(function (fg, Mi) {
   function kp(e) {
     let t = e.regex,
       n = [
@@ -17383,7 +17383,7 @@ var Di = w(function (fg, Mi) {
   }
   Mi.exports = kp;
 });
-var wi = w(function (Tg, Li) {
+var wi = commonJS(function (Tg, Li) {
   function Pp(e) {
     let t = {
         className: "variable",
@@ -17406,7 +17406,7 @@ var wi = w(function (Tg, Li) {
   }
   Li.exports = Pp;
 });
-var ki = w(function (Ng, xi) {
+var ki = commonJS(function (Ng, xi) {
   function Up(e) {
     let t = e.COMMENT("--", "$"),
       n = "[a-zA-Z_][a-zA-Z_0-9$]*",
@@ -17614,7 +17614,7 @@ var ki = w(function (Ng, xi) {
   }
   xi.exports = Up;
 });
-var Ui = w(function (Sg, Pi) {
+var Ui = commonJS(function (Sg, Pi) {
   function Bp(e) {
     let t = e.regex,
       n = /(?![A-Za-z0-9])(?![$])/,
@@ -18053,7 +18053,7 @@ var Ui = w(function (Sg, Pi) {
   }
   Pi.exports = Bp;
 });
-var Gi = w(function (Ag, Bi) {
+var Gi = commonJS(function (Ag, Bi) {
   function Gp(e) {
     return {
       name: "PHP template",
@@ -18086,7 +18086,7 @@ var Gi = w(function (Ag, Bi) {
   }
   Bi.exports = Gp;
 });
-var qi = w(function (Rg, Fi) {
+var qi = commonJS(function (Rg, Fi) {
   function Fp(e) {
     return {
       name: "Plain text",
@@ -18096,7 +18096,7 @@ var qi = w(function (Rg, Fi) {
   }
   Fi.exports = Fp;
 });
-var $i = w(function (Og, Hi) {
+var $i = commonJS(function (Og, Hi) {
   function qp(e) {
     let t = {
         keyword:
@@ -18142,7 +18142,7 @@ var $i = w(function (Og, Hi) {
   }
   Hi.exports = qp;
 });
-var Ki = w(function (vg, zi) {
+var Ki = commonJS(function (vg, zi) {
   function Hp(e) {
     let t = [
         "string",
@@ -18319,7 +18319,7 @@ var Ki = w(function (vg, zi) {
   }
   zi.exports = Hp;
 });
-var Wi = w(function (Ig, Vi) {
+var Wi = commonJS(function (Ig, Vi) {
   function $p(e) {
     let t = e.regex,
       n = [
@@ -18717,7 +18717,7 @@ var Wi = w(function (Ig, Vi) {
   }
   Vi.exports = $p;
 });
-var Xi = w(function (Cg, Yi) {
+var Xi = commonJS(function (Cg, Yi) {
   function zp(e) {
     return {
       name: "Python profiler",
@@ -18755,7 +18755,7 @@ var Xi = w(function (Cg, Yi) {
   }
   Yi.exports = zp;
 });
-var Qi = w(function (yg, Zi) {
+var Qi = commonJS(function (yg, Zi) {
   function Kp(e) {
     let t = { begin: /[a-z][A-Za-z0-9_]*/, relevance: 0 },
       n = {
@@ -18805,7 +18805,7 @@ var Qi = w(function (yg, Zi) {
   }
   Zi.exports = Kp;
 });
-var ji = w(function (hg, Ji) {
+var ji = commonJS(function (hg, Ji) {
   function Vp(e) {
     let a = "[ \\t\\f]*[:=][ \\t\\f]*",
       s = "[ \\t\\f]+",
@@ -18849,7 +18849,7 @@ var ji = w(function (hg, Ji) {
   }
   Ji.exports = Vp;
 });
-var ts = w(function (Mg, es) {
+var ts = commonJS(function (Mg, es) {
   function Wp(e) {
     let t = [
         "package",
@@ -18905,7 +18905,7 @@ var ts = w(function (Mg, es) {
   }
   es.exports = Wp;
 });
-var as = w(function (Dg, ns) {
+var as = commonJS(function (Dg, ns) {
   function Yp(e) {
     let t = {
         keyword:
@@ -18984,7 +18984,7 @@ var as = w(function (Dg, ns) {
   }
   ns.exports = Yp;
 });
-var is = w(function (Lg, rs) {
+var is = commonJS(function (Lg, rs) {
   function Xp(e) {
     let t = { className: "string", begin: '(~)?"', end: '"', illegal: "\\n" },
       n = { className: "symbol", begin: "#[a-zA-Z_]\\w*\\$?" };
@@ -19018,7 +19018,7 @@ var is = w(function (Lg, rs) {
   }
   rs.exports = Xp;
 });
-var os = w(function (wg, ss) {
+var os = commonJS(function (wg, ss) {
   function Zp(e) {
     let t = e.regex,
       n = /[\p{XID_Start}_]\p{XID_Continue}*/u,
@@ -19299,7 +19299,7 @@ var os = w(function (wg, ss) {
   }
   ss.exports = Zp;
 });
-var ls = w(function (xg, cs) {
+var ls = commonJS(function (xg, cs) {
   function Qp(e) {
     return {
       aliases: ["pycon"],
@@ -19314,7 +19314,7 @@ var ls = w(function (xg, cs) {
   }
   cs.exports = Qp;
 });
-var ps = w(function (kg, ds) {
+var ps = commonJS(function (kg, ds) {
   function Jp(e) {
     return {
       name: "Q",
@@ -19332,7 +19332,7 @@ var ps = w(function (kg, ds) {
   }
   ds.exports = Jp;
 });
-var _s = w(function (Pg, ms) {
+var _s = commonJS(function (Pg, ms) {
   function jp(e) {
     let t = e.regex,
       n = {
@@ -19463,7 +19463,7 @@ var _s = w(function (Pg, ms) {
   }
   ms.exports = jp;
 });
-var Es = w(function (Ug, us) {
+var Es = commonJS(function (Ug, us) {
   function em(e) {
     let t = e.regex,
       n = /(?:(?:[a-zA-Z]|\.[._a-zA-Z])[._a-zA-Z0-9]*)|\.(?!\d)/,
@@ -19550,7 +19550,7 @@ var Es = w(function (Ug, us) {
   }
   us.exports = em;
 });
-var bs = w(function (Bg, gs) {
+var bs = commonJS(function (Bg, gs) {
   function tm(e) {
     return {
       name: "ReasonML",
@@ -19665,7 +19665,7 @@ var bs = w(function (Bg, gs) {
   }
   gs.exports = tm;
 });
-var Ts = w(function (Gg, fs) {
+var Ts = commonJS(function (Gg, fs) {
   function nm(e) {
     return {
       name: "RenderMan RIB",
@@ -19682,7 +19682,7 @@ var Ts = w(function (Gg, fs) {
   }
   fs.exports = nm;
 });
-var Ss = w(function (Fg, Ns) {
+var Ss = commonJS(function (Fg, Ns) {
   function am(e) {
     let n = {
       className: "attribute",
@@ -19729,7 +19729,7 @@ var Ss = w(function (Fg, Ns) {
   }
   Ns.exports = am;
 });
-var Rs = w(function (qg, As) {
+var Rs = commonJS(function (qg, As) {
   function rm(e) {
     let r = {
         className: "variable",
@@ -19837,7 +19837,7 @@ var Rs = w(function (qg, As) {
   }
   As.exports = rm;
 });
-var vs = w(function (Hg, Os) {
+var vs = commonJS(function (Hg, Os) {
   function im(e) {
     let t = [
         "abs",
@@ -19954,7 +19954,7 @@ var vs = w(function (Hg, Os) {
   }
   Os.exports = im;
 });
-var Cs = w(function ($g, Is) {
+var Cs = commonJS(function ($g, Is) {
   function sm(e) {
     let t = e.regex,
       n =
@@ -20203,7 +20203,7 @@ var Cs = w(function ($g, Is) {
   }
   Is.exports = sm;
 });
-var hs = w(function (zg, ys) {
+var hs = commonJS(function (zg, ys) {
   function om(e) {
     return {
       name: "Oracle Rules Language",
@@ -20231,7 +20231,7 @@ var hs = w(function (zg, ys) {
   }
   ys.exports = om;
 });
-var Ds = w(function (Kg, Ms) {
+var Ds = commonJS(function (Kg, Ms) {
   function cm(e) {
     let t = e.regex,
       n = /(r#)?/,
@@ -20484,7 +20484,7 @@ var Ds = w(function (Kg, Ms) {
   }
   Ms.exports = cm;
 });
-var ws = w(function (Vg, Ls) {
+var ws = commonJS(function (Vg, Ls) {
   function lm(e) {
     let t = e.regex,
       n = [
@@ -20990,7 +20990,7 @@ var ws = w(function (Vg, Ls) {
   }
   Ls.exports = lm;
 });
-var ks = w(function (Wg, xs) {
+var ks = commonJS(function (Wg, xs) {
   function dm(e) {
     let t = e.regex,
       n = { className: "meta", begin: "@[A-Za-z]+" },
@@ -21112,7 +21112,7 @@ var ks = w(function (Wg, xs) {
   }
   xs.exports = dm;
 });
-var Us = w(function (Yg, Ps) {
+var Us = commonJS(function (Yg, Ps) {
   function pm(e) {
     let a = "(-|\\+)?\\d+([./]\\d+)?[+\\-](-|\\+)?\\d+([./]\\d+)?i",
       s = {
@@ -21192,7 +21192,7 @@ var Us = w(function (Yg, Ps) {
   }
   Ps.exports = pm;
 });
-var Gs = w(function (Xg, Bs) {
+var Gs = commonJS(function (Xg, Bs) {
   function mm(e) {
     let t = [
       e.C_NUMBER_MODE,
@@ -21233,7 +21233,7 @@ var Gs = w(function (Xg, Bs) {
   }
   Bs.exports = mm;
 });
-var qs = w(function (Zg, Fs) {
+var qs = commonJS(function (Zg, Fs) {
   var _m = (e) => ({
       IMPORTANT: { scope: "meta", begin: "!important" },
       BLOCK_COMMENT: e.C_BLOCK_COMMENT_MODE,
@@ -22103,7 +22103,7 @@ var qs = w(function (Zg, Fs) {
   }
   Fs.exports = Sm;
 });
-var $s = w(function (Qg, Hs) {
+var $s = commonJS(function (Qg, Hs) {
   function Am(e) {
     return {
       name: "Shell Session",
@@ -22119,7 +22119,7 @@ var $s = w(function (Qg, Hs) {
   }
   Hs.exports = Am;
 });
-var Ks = w(function (Jg, zs) {
+var Ks = commonJS(function (Jg, zs) {
   function Rm(e) {
     let t = [
         "add",
@@ -22224,7 +22224,7 @@ var Ks = w(function (Jg, zs) {
   }
   zs.exports = Rm;
 });
-var Ws = w(function (jg, Vs) {
+var Ws = commonJS(function (jg, Vs) {
   function Om(e) {
     let n = { className: "string", begin: "\\$.{1}" },
       a = { className: "symbol", begin: "#" + e.UNDERSCORE_IDENT_RE };
@@ -22257,7 +22257,7 @@ var Ws = w(function (jg, Vs) {
   }
   Vs.exports = Om;
 });
-var Xs = w(function (eb, Ys) {
+var Xs = commonJS(function (eb, Ys) {
   function vm(e) {
     return {
       name: "SML (Standard ML)",
@@ -22292,7 +22292,7 @@ var Xs = w(function (eb, Ys) {
   }
   Ys.exports = vm;
 });
-var Qs = w(function (tb, Zs) {
+var Qs = commonJS(function (tb, Zs) {
   function Im(e) {
     let t = e.regex,
       n = e.COMMENT("--", "$"),
@@ -22887,7 +22887,7 @@ var Qs = w(function (tb, Zs) {
   }
   Zs.exports = Im;
 });
-var js = w(function (nb, Js) {
+var js = commonJS(function (nb, Js) {
   function Cm(e) {
     let t = e.regex,
       n = [
@@ -23326,7 +23326,7 @@ var js = w(function (nb, Js) {
   }
   Js.exports = Cm;
 });
-var to = w(function (ab, eo) {
+var to = commonJS(function (ab, eo) {
   function ym(e) {
     return {
       name: "Stata",
@@ -23367,7 +23367,7 @@ var to = w(function (ab, eo) {
   }
   eo.exports = ym;
 });
-var ao = w(function (rb, no) {
+var ao = commonJS(function (rb, no) {
   function hm(e) {
     return {
       name: "STEP Part 21",
@@ -23396,7 +23396,7 @@ var ao = w(function (rb, no) {
   }
   no.exports = hm;
 });
-var io = w(function (ib, ro) {
+var io = commonJS(function (ib, ro) {
   var Mm = (e) => ({
       IMPORTANT: { scope: "meta", begin: "!important" },
       BLOCK_COMMENT: e.C_BLOCK_COMMENT_MODE,
@@ -24315,7 +24315,7 @@ var io = w(function (ib, ro) {
   }
   ro.exports = Bm;
 });
-var oo = w(function (sb, so) {
+var oo = commonJS(function (sb, so) {
   function Gm(e) {
     return {
       name: "SubUnit",
@@ -24351,7 +24351,7 @@ var oo = w(function (sb, so) {
   }
   so.exports = Gm;
 });
-var bo = w(function (ob, go) {
+var bo = commonJS(function (ob, go) {
   function mo(e) {
     if (!e) return null;
     if (typeof e === "string") return e;
@@ -24906,7 +24906,7 @@ var bo = w(function (ob, go) {
   }
   go.exports = Wm;
 });
-var To = w(function (cb, fo) {
+var To = commonJS(function (cb, fo) {
   function Ym(e) {
     return {
       name: "Tagger Script",
@@ -24930,7 +24930,7 @@ var To = w(function (cb, fo) {
   }
   fo.exports = Ym;
 });
-var So = w(function (lb, No) {
+var So = commonJS(function (lb, No) {
   function Xm(e) {
     return {
       name: "Test Anything Protocol",
@@ -24955,7 +24955,7 @@ var So = w(function (lb, No) {
   }
   No.exports = Xm;
 });
-var Ro = w(function (db, Ao) {
+var Ro = commonJS(function (db, Ao) {
   function Zm(e) {
     let t = e.regex,
       n = /[a-zA-Z_][a-zA-Z0-9_]*/,
@@ -25125,7 +25125,7 @@ var Ro = w(function (db, Ao) {
   }
   Ao.exports = Zm;
 });
-var vo = w(function (pb, Oo) {
+var vo = commonJS(function (pb, Oo) {
   function Qm(e) {
     let t = ["bool", "byte", "i16", "i32", "i64", "double", "string", "binary"];
     return {
@@ -25177,7 +25177,7 @@ var vo = w(function (pb, Oo) {
   }
   Oo.exports = Qm;
 });
-var Co = w(function (mb, Io) {
+var Co = commonJS(function (mb, Io) {
   function Jm(e) {
     let t = { className: "number", begin: "[1-9][0-9]*", relevance: 0 },
       n = { className: "symbol", begin: ":[^\\]]+" },
@@ -25306,7 +25306,7 @@ var Co = w(function (mb, Io) {
   }
   Io.exports = Jm;
 });
-var ho = w(function (_b, yo) {
+var ho = commonJS(function (_b, yo) {
   function jm(e) {
     let t = e.regex,
       n = [
@@ -25509,7 +25509,7 @@ var ho = w(function (_b, yo) {
   }
   yo.exports = jm;
 });
-var Bo = w(function (ub, Uo) {
+var Bo = commonJS(function (ub, Uo) {
   var Mo = [
       "as",
       "in",
@@ -26103,7 +26103,7 @@ var Bo = w(function (ub, Uo) {
   }
   Uo.exports = t_;
 });
-var Fo = w(function (Eb, Go) {
+var Fo = commonJS(function (Eb, Go) {
   function n_(e) {
     return {
       name: "Vala",
@@ -26134,7 +26134,7 @@ var Fo = w(function (Eb, Go) {
   }
   Go.exports = n_;
 });
-var Ho = w(function (gb, qo) {
+var Ho = commonJS(function (gb, qo) {
   function a_(e) {
     let t = e.regex,
       n = { className: "string", begin: /"(""|[^/n])"C\b/ },
@@ -26219,7 +26219,7 @@ var Ho = w(function (gb, qo) {
   }
   qo.exports = a_;
 });
-var zo = w(function (bb, $o) {
+var zo = commonJS(function (bb, $o) {
   function r_(e) {
     let t = e.regex,
       n = [
@@ -26412,7 +26412,7 @@ var zo = w(function (bb, $o) {
   }
   $o.exports = r_;
 });
-var Vo = w(function (fb, Ko) {
+var Vo = commonJS(function (fb, Ko) {
   function i_(e) {
     return {
       name: "VBScript in HTML",
@@ -26422,7 +26422,7 @@ var Vo = w(function (fb, Ko) {
   }
   Ko.exports = i_;
 });
-var Yo = w(function (Tb, Wo) {
+var Yo = commonJS(function (Tb, Wo) {
   function s_(e) {
     let t = e.regex,
       n = {
@@ -26946,7 +26946,7 @@ var Yo = w(function (Tb, Wo) {
   }
   Wo.exports = s_;
 });
-var Zo = w(function (Nb, Xo) {
+var Zo = commonJS(function (Nb, Xo) {
   function o_(e) {
     let n = "[eE][-+]?\\d(_|\\d)*",
       a = "\\d(_|\\d)*(\\.\\d(_|\\d)*)?(" + n + ")?",
@@ -27136,7 +27136,7 @@ var Zo = w(function (Nb, Xo) {
   }
   Xo.exports = o_;
 });
-var Jo = w(function (Sb, Qo) {
+var Jo = commonJS(function (Sb, Qo) {
   function c_(e) {
     return {
       name: "Vim Script",
@@ -27167,7 +27167,7 @@ var Jo = w(function (Sb, Qo) {
   }
   Qo.exports = c_;
 });
-var ec = w(function (Ab, jo) {
+var ec = commonJS(function (Ab, jo) {
   function l_(e) {
     e.regex;
     let t = e.COMMENT(/\(;/, /;\)/);
@@ -27260,7 +27260,7 @@ var ec = w(function (Ab, jo) {
   }
   jo.exports = l_;
 });
-var nc = w(function (Rb, tc) {
+var nc = commonJS(function (Rb, tc) {
   function d_(e) {
     let t = e.regex,
       n = /[a-zA-Z]\w*/,
@@ -27453,7 +27453,7 @@ var nc = w(function (Rb, tc) {
   }
   tc.exports = d_;
 });
-var rc = w(function (Ob, ac) {
+var rc = commonJS(function (Ob, ac) {
   function p_(e) {
     return {
       name: "Intel x86 Assembly",
@@ -27512,7 +27512,7 @@ var rc = w(function (Ob, ac) {
   }
   ac.exports = p_;
 });
-var sc = w(function (vb, ic) {
+var sc = commonJS(function (vb, ic) {
   function m_(e) {
     let t = [
         "if",
@@ -27685,7 +27685,7 @@ var sc = w(function (vb, ic) {
   }
   ic.exports = m_;
 });
-var cc = w(function (Ib, oc) {
+var cc = commonJS(function (Ib, oc) {
   function __(e) {
     let t = e.regex,
       n = t.concat(
@@ -27826,7 +27826,7 @@ var cc = w(function (Ib, oc) {
   }
   oc.exports = __;
 });
-var dc = w(function (Cb, lc) {
+var dc = commonJS(function (Cb, lc) {
   function u_(e) {
     return {
       name: "XQuery",
@@ -28093,7 +28093,7 @@ var dc = w(function (Cb, lc) {
   }
   lc.exports = u_;
 });
-var mc = w(function (yb, pc) {
+var mc = commonJS(function (yb, pc) {
   function E_(e) {
     let a = {
         className: "attr",
@@ -28205,7 +28205,7 @@ var mc = w(function (yb, pc) {
   }
   pc.exports = E_;
 });
-var uc = w(function (hb, _c) {
+var uc = commonJS(function (hb, _c) {
   function g_(e) {
     let t = {
         className: "string",
@@ -28275,7 +28275,7 @@ var uc = w(function (hb, _c) {
   }
   _c.exports = g_;
 });
-var Bc = w(function (Db, Uc) {
+var Bc = commonJS(function (Db, Uc) {
   function Ac(e) {
     if (e instanceof Map)
       e.clear =

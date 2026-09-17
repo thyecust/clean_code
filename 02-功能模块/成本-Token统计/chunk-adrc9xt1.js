@@ -8,28 +8,28 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Aw, getMainLoopModel, isFableFamilyOrPinnedModel, cf, Hse, uRe, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { o, t, tn, n9, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { zs } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { ui, Gm, fa, $o, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { cu } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { Xw, GUn } from "../../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { Xw, useIsKeyRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import {
   V9,
   tX,
@@ -54,18 +54,18 @@ import {
   Gs,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { K8 } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
-import { Xz } from "../../03-入口与运行时/会话UI(REPL)/chunk-mmzy53cr.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import { I_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
+import { K8 } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import { ClawdMascot } from "../../03-入口与运行时/会话UI(REPL)/clawd-mascot.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import { ProgressBar } from "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { E, vr, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { stripVTControlCharacters } from "util";
 F();
 F();
@@ -205,7 +205,7 @@ function F8(wt) {
     } = Bt(Fd, Pd, Rd, Ed);
   const us = $d ? We + 1 : We;
   let Dt;
-  if (Bo[2] !== ss) ((Dt = e(Xz, { pose: ss })), (Bo[2] = ss), (Bo[3] = Dt));
+  if (Bo[2] !== ss) ((Dt = e(ClawdMascot, { pose: ss })), (Bo[2] = ss), (Bo[3] = Dt));
   else Dt = Bo[3];
   let Pt;
   if (Bo[4] !== Zn || Bo[5] !== Dt || Bo[6] !== is)
@@ -271,7 +271,7 @@ function Bt(be, ae, cs, ds) {
     ms = tn(),
     Vl;
   if (Oe[0] !== ms)
-    ((Vl = () => cu(getInitialSettings().prefersReducedMotion) || ms),
+    ((Vl = () => shouldReduceMotion(getInitialSettings().prefersReducedMotion) || ms),
       (Oe[0] = ms),
       (Oe[1] = Vl));
   else Vl = Oe[1];
@@ -292,7 +292,7 @@ function Bt(be, ae, cs, ds) {
   else Ll = Oe[7];
   let Gn = vr(Ll),
     Ul = C(!ae),
-    eo = vt(),
+    eo = useClock(),
     Kl;
   if (Oe[8] !== Gn || Oe[9] !== Ne)
     ((Kl = () => {
@@ -406,7 +406,7 @@ function xs() {
 }
 function jIt(bs) {
   let Jl = _(6),
-    { storageV5: Et } = _e(),
+    { storageV5: Et } = useStorageV5Context(),
     zl;
   if (Jl[0] !== bs)
     ((zl = () => (bs ? xs() : void 0)), (Jl[0] = bs), (Jl[1] = zl));
@@ -480,7 +480,7 @@ function Xe(Tt) {
     Rs = C(null),
     Es = C(!1),
     iu;
-  if (Nt[0] === p)
+  if (Nt[0] === MEMO_CACHE_SENTINEL)
     ((iu = () => {
       Es.current = !1;
     }),
@@ -488,7 +488,7 @@ function Xe(Tt) {
   else iu = Nt[0];
   E(iu);
   let lu;
-  if (Nt[1] === p) {
+  if (Nt[1] === MEMO_CACHE_SENTINEL) {
     let uu = (Cm, xm) => {
       let St = Cm.slice(xm.length);
       (tu(St),
@@ -520,7 +520,7 @@ function Xe(Tt) {
   } else lu = Nt[1];
   let km = lu,
     du;
-  if (Nt[2] === p)
+  if (Nt[2] === MEMO_CACHE_SENTINEL)
     ((du = (Fs) => {
       let $s = Rs.current;
       if ($s !== null) {
@@ -552,7 +552,7 @@ function WIt(Dm) {
       onPurchaseSuccess: Os,
     } = Dm,
     gu;
-  if (fu[0] === p) ((gu = { s: "loading" }), (fu[0] = gu));
+  if (fu[0] === MEMO_CACHE_SENTINEL) ((gu = { s: "loading" }), (fu[0] = gu));
   else gu = fu[0];
   let [Ns, Pm] = d(gu),
     pu;
@@ -594,8 +594,8 @@ function vl({
   onBeforePurchase: P,
   onPurchaseSuccess: v,
 }) {
-  let { storageV5: k, credentials: b } = _e(),
-    w = GUn(a.s),
+  let { storageV5: k, credentials: b } = useStorageV5Context(),
+    w = useIsKeyRecent(a.s),
     [M, B] = d(a.s),
     [T, X] = d(!1);
   if (M !== a.s) (X(sd(M)), B(a.s));
@@ -656,7 +656,7 @@ function vl({
       ) {
         if (!Be)
           return (
-            i("tengu_extra_usage_inline_dialog_fallback_browser", {
+            logEvent("tengu_extra_usage_inline_dialog_fallback_browser", {
               reason: S("no_payment_method"),
             }),
             `No card on file \u2014 add a payment method at ${z}`
@@ -677,7 +677,7 @@ function vl({
   let Q = vr(pe),
     ne = vr((m) => s(m));
   E(() => {
-    (i("tengu_extra_usage_inline_dialog_shown", {
+    (logEvent("tengu_extra_usage_inline_dialog_shown", {
       entry_reason: x ? S(x) : void 0,
     }),
       Q().then((m) => {
@@ -685,16 +685,16 @@ function vl({
       }));
   }, [x]);
   function qe(m) {
-    (i("tengu_extra_usage_inline_dialog_cancel", { from_step: fromEnum(m) }),
+    (logEvent("tengu_extra_usage_inline_dialog_cancel", { from_step: fromEnum(m) }),
       s(void 0, { display: "skip" }));
   }
   function Ro() {
-    (i("tengu_extra_usage_inline_dialog_enable_confirm", {}),
+    (logEvent("tengu_extra_usage_inline_dialog_enable_confirm", {}),
       c({
         s: "enabling",
         work: mjt(b).then(async (m) => {
           if (
-            (i("tengu_extra_usage_inline_dialog_enable_result", { success: m }),
+            (logEvent("tengu_extra_usage_inline_dialog_enable_result", { success: m }),
             !m)
           )
             return !1;
@@ -722,7 +722,7 @@ function vl({
         break;
       case "buy":
         if (!A.pm)
-          (i("tengu_extra_usage_inline_dialog_fallback_browser", {
+          (logEvent("tengu_extra_usage_inline_dialog_fallback_browser", {
             reason: S("no_payment_method"),
           }),
             s(`No card on file \u2014 add a payment method at ${z}`));
@@ -733,7 +733,7 @@ function vl({
         break;
       case "auto_reload":
         if (!A.pm)
-          (i("tengu_extra_usage_inline_dialog_fallback_browser", {
+          (logEvent("tengu_extra_usage_inline_dialog_fallback_browser", {
             reason: S("no_payment_method"),
           }),
             s(`No card on file \u2014 add a payment method at ${z}`));
@@ -745,12 +745,12 @@ function vl({
           });
         break;
       case "manage":
-        (Gr(z), s(`Opening ${z}`));
+        (tryOpenUrlInBrowser(z), s(`Opening ${z}`));
         break;
     }
   }
   function Eo(m, A, re) {
-    i("tengu_extra_usage_inline_dialog_auto_reload", {
+    logEvent("tengu_extra_usage_inline_dialog_auto_reload", {
       enabled: m,
       threshold_cents: A,
       reload_to_cents: re,
@@ -779,7 +779,7 @@ function vl({
   }
   async function Ct(m, A) {
     if (
-      (i("tengu_extra_usage_inline_dialog_buy_confirm", {
+      (logEvent("tengu_extra_usage_inline_dialog_buy_confirm", {
         amount_cents: m,
         preset: !!A,
         currency: uRe(R),
@@ -804,14 +804,14 @@ function vl({
         b,
       );
       if (oe.payment_status === "success")
-        (i("tengu_extra_usage_inline_dialog_buy_result", {
+        (logEvent("tengu_extra_usage_inline_dialog_buy_result", {
           status: S("success"),
         }),
           c({ s: "buy_success", credit: re }));
       else if (oe.payment_status === "pending_invoice" && oe.purchase_id)
         c({ s: "buy_polling", purchaseId: oe.purchase_id, credit: re });
       else if (oe.payment_status === "requires_action")
-        (i("tengu_extra_usage_inline_dialog_buy_result", {
+        (logEvent("tengu_extra_usage_inline_dialog_buy_result", {
           status: S("3ds_fallback"),
         }),
           c({
@@ -826,7 +826,7 @@ function vl({
           level: "error",
         });
       else logError(oe);
-      (i("tengu_extra_usage_inline_dialog_buy_result", { status: S("failed") }),
+      (logEvent("tengu_extra_usage_inline_dialog_buy_result", { status: S("failed") }),
         c({
           s: "error",
           msg: Ae ? `Purchase failed: ${Ae}` : "Purchase failed",
@@ -834,7 +834,7 @@ function vl({
     }
   }
   async function xt(m, A) {
-    (i("tengu_extra_usage_inline_dialog_adjust_limit", {
+    (logEvent("tengu_extra_usage_inline_dialog_adjust_limit", {
       old_cents: A ?? void 0,
       new_cents: m ?? void 0,
       unlimited: m === null,
@@ -862,13 +862,13 @@ function vl({
   if (O)
     return e(o, {
       paddingTop: 1,
-      children: e($n, { message: "Loading usage credit status\u2026" }),
+      children: e(SpinnerMessageLine, { message: "Loading usage credit status\u2026" }),
     });
   switch (a.s) {
     case "loading":
       return e(o, {
         paddingTop: 1,
-        children: e($n, { message: "Loading usage credit status\u2026" }),
+        children: e(SpinnerMessageLine, { message: "Loading usage credit status\u2026" }),
       });
     case "enabling":
       return e(ts, {
@@ -880,7 +880,7 @@ function vl({
     case "adjusting":
       return e(o, {
         paddingTop: 1,
-        children: e($n, { message: "Updating spend limit\u2026" }),
+        children: e(SpinnerMessageLine, { message: "Updating spend limit\u2026" }),
       });
     case "auto_reload_saving":
       return a.enabled
@@ -990,22 +990,22 @@ function wl(Rm) {
   if (jo[0] !== to)
     ((bu = {
       "confirm:yes": () => {
-        (Gr(z), to());
+        (tryOpenUrlInBrowser(z), to());
       },
     }),
       (jo[0] = to),
       (jo[1] = bu));
   else bu = jo[1];
   let yu;
-  if (jo[2] === p) ((yu = { context: "Confirmation" }), (jo[2] = yu));
+  if (jo[2] === MEMO_CACHE_SENTINEL) ((yu = { context: "Confirmation" }), (jo[2] = yu));
   else yu = jo[2];
-  Ze(bu, yu);
+  useKeybindings(bu, yu);
   let _u;
-  if (jo[3] === p)
-    ((_u = r(ue, {
+  if (jo[3] === MEMO_CACHE_SENTINEL)
+    ((_u = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: `open ${z}` }),
-        e(D, { chord: "escape", action: "cancel" }),
+        e(KeybindingHint, { chord: "enter", action: `open ${z}` }),
+        e(KeybindingHint, { chord: "escape", action: "cancel" }),
       ],
     })),
       (jo[3] = _u));
@@ -1110,7 +1110,7 @@ function Dl(Em) {
     Ut = o;
     Xt = "column";
     It = 1;
-    if (He[33] === p)
+    if (He[33] === MEMO_CACHE_SENTINEL)
       ((Uo = e(t, { children: "Keep using Claude when you hit a limit." })),
         (He[33] = Uo));
     else Uo = He[33];
@@ -1127,7 +1127,7 @@ function Dl(Em) {
         (He[36] = Je),
         (He[37] = Ko));
     else Ko = He[37];
-    if (He[38] === p)
+    if (He[38] === MEMO_CACHE_SENTINEL)
       ((Yo = r(t, {
         dimColor: !0,
         children: [
@@ -1139,7 +1139,7 @@ function Dl(Em) {
       })),
         (He[38] = Yo));
     else Yo = He[38];
-    Lt = En;
+    Lt = ConfirmPrompt;
     Jt = Ls.remountKey;
     zt = Lo;
     Qt = js;
@@ -1322,7 +1322,7 @@ function ad(s) {
 function Pl(Mm) {
   let J = _(61),
     { step: Am, currency: ze, onAction: Us, onCancel: lo } = Mm,
-    { columns: Bm } = Se(),
+    { columns: Bm } = useTerminalSize(),
     Ks = Math.min(Bm - 6, 50),
     { usage: le, balance: vn } = Am,
     ku;
@@ -1378,7 +1378,7 @@ function Pl(Mm) {
     ((sr = { label: qs, value: "auto_reload" }), (J[14] = qs), (J[15] = sr));
   else sr = J[15];
   let Eu;
-  if (J[16] === p) ((Eu = { label: "Buy more", value: "buy" }), (J[16] = Eu));
+  if (J[16] === MEMO_CACHE_SENTINEL) ((Eu = { label: "Buy more", value: "buy" }), (J[16] = Eu));
   else Eu = J[16];
   let ir;
   if (J[17] !== uo)
@@ -1389,7 +1389,7 @@ function Pl(Mm) {
       (J[18] = ir));
   else ir = J[18];
   let Fu, $u;
-  if (J[19] === p)
+  if (J[19] === MEMO_CACHE_SENTINEL)
     ((Fu = { label: "Adjust monthly limit", value: "adjust" }),
       ($u = { label: "Manage on claude.ai", value: "manage" }),
       (J[19] = Fu),
@@ -1431,7 +1431,7 @@ function Pl(Mm) {
   const Ws = rr / 100;
   let fr;
   if (J[31] !== Ws || J[32] !== Ks)
-    ((fr = e(I_, {
+    ((fr = e(ProgressBar, {
       ratio: Ws,
       width: Ks,
       fillColor: "rate_limit_fill",
@@ -1550,7 +1550,7 @@ function Rl(Sm) {
         ($e[4] = qo));
     else qo = $e[4];
     let Fn, Mn;
-    if ($e[5] === p)
+    if ($e[5] === MEMO_CACHE_SENTINEL)
       ((Fn = { label: "Custom amount\u2026", value: "custom" }),
         (Mn = { label: "Cancel", value: "cancel" }),
         ($e[5] = Fn),
@@ -1602,7 +1602,7 @@ function Rl(Sm) {
       ($e[19] = Dr));
   else Dr = $e[19];
   let Ou;
-  if ($e[20] === p)
+  if ($e[20] === MEMO_CACHE_SENTINEL)
     ((Ou = e(t, {
       dimColor: !0,
       children:
@@ -1682,7 +1682,7 @@ function El(Um) {
       onConfirm: ai,
       onCancel: nn,
     } = Um,
-    { credentials: Mr } = _e(),
+    { credentials: Mr } = useStorageV5Context(),
     [Km, ju] = d(!1),
     Cn = Vu ? Vu.local_credit_minor_units : Le,
     xn = Cn - Le,
@@ -1741,7 +1741,7 @@ function El(Um) {
       (q[13] = Xu));
   else Xu = q[13];
   let si = Xu,
-    { columns: qm } = Se(),
+    { columns: qm } = useTerminalSize(),
     rn = Math.max(0, Math.min(qm - 6, 44)),
     Ho = we || se ? "Tax" : (kn.tax_label ?? "Tax"),
     Br;
@@ -1754,7 +1754,7 @@ function El(Um) {
   let go = Iu;
   if (Km) {
     let po;
-    if (q[18] === p) ((po = () => ju(!1)), (q[18] = po));
+    if (q[18] === MEMO_CACHE_SENTINEL) ((po = () => ju(!1)), (q[18] = po));
     else po = q[18];
     let An;
     if (q[19] !== W || q[20] !== ai || q[21] !== on)
@@ -1875,7 +1875,7 @@ function El(Um) {
       (q[54] = jr));
   else jr = q[54];
   let qu;
-  if (q[55] === p) ((qu = e(t, { children: "Payment " })), (q[55] = qu));
+  if (q[55] === MEMO_CACHE_SENTINEL) ((qu = e(t, { children: "Payment " })), (q[55] = qu));
   else qu = q[55];
   let Lr;
   if (q[56] !== ti) ((Lr = ke(ti)), (q[56] = ti), (q[57] = Lr));
@@ -2031,7 +2031,7 @@ function Pn(Jm) {
       onConfirm: yi,
       onBack: an,
     } = Jm,
-    { columns: _i } = Se(),
+    { columns: _i } = useTerminalSize(),
     [Jr, Zu] = d(""),
     [hi, Gu] = d(0),
     [zm, Qm] = d(!1),
@@ -2042,9 +2042,9 @@ function Pn(Jm) {
   if (Ue[0] !== an) ((oc = { "confirm:no": an }), (Ue[0] = an), (Ue[1] = oc));
   else oc = Ue[1];
   let tc;
-  if (Ue[2] === p) ((tc = { context: "Settings" }), (Ue[2] = tc));
+  if (Ue[2] === MEMO_CACHE_SENTINEL) ((tc = { context: "Settings" }), (Ue[2] = tc));
   else tc = Ue[2];
-  Ze(oc, tc);
+  useKeybindings(oc, tc);
   let zr;
   if (Ue[3] !== pi || Ue[4] !== bi)
     ((zr = Gs(pi, bi)), (Ue[3] = pi), (Ue[4] = bi), (Ue[5] = zr));
@@ -2147,7 +2147,7 @@ function Pn(Jm) {
 function $l(ef) {
   let ce = _(70),
     { current: ra, currency: Bn, onConfirm: zo, onCancel: aa } = ef,
-    { columns: Qo } = Se(),
+    { columns: Qo } = useTerminalSize(),
     ac;
   if (ce[0] !== ra)
     ((ac = ra !== null ? Hn(ra) : "150"), (ce[0] = ra), (ce[1] = ac));
@@ -2156,7 +2156,7 @@ function $l(ef) {
     { value: Tn, setValue: Zo, cursor: Go, setCursor: et } = Xe(nf),
     [Me, sa] = d(0),
     sc;
-  if (ce[2] === p) ((sc = ["set", "unlimited", "cancel"]), (ce[2] = sc));
+  if (ce[2] === MEMO_CACHE_SENTINEL) ((sc = ["set", "unlimited", "cancel"]), (ce[2] = sc));
   else sc = ce[2];
   let xi = sc,
     [On, ic] = d(0),
@@ -2187,7 +2187,7 @@ function $l(ef) {
     ce[12] !== Zo ||
     ce[13] !== Tn
   ) {
-    wi = en;
+    wi = EARLY_RETURN_SENTINEL;
     bb0: {
       let Ke = yn(Tn);
       nt = !Ke.ok && (Tn.trim() !== "" || Me === 1) ? Ke.error : "";
@@ -2221,7 +2221,7 @@ function $l(ef) {
         else if (De.key === "return") (De.preventDefault(), Di());
       };
       let Nn;
-      if (ce[27] === p)
+      if (ce[27] === MEMO_CACHE_SENTINEL)
         ((Nn = {
           set: "Set limit",
           unlimited: "Set to unlimited",
@@ -2232,7 +2232,7 @@ function $l(ef) {
       ua = Nn;
       if (ki && Ke.ok) {
         let sn;
-        if (ce[28] === p) ((sn = () => lc(!1)), (ce[28] = sn));
+        if (ce[28] === MEMO_CACHE_SENTINEL) ((sn = () => lc(!1)), (ce[28] = sn));
         else sn = ce[28];
         wi = e(Pn, {
           question: "Set your monthly spend limit to",
@@ -2247,10 +2247,10 @@ function $l(ef) {
       pa = "Set monthly spend limit";
       ba = aa;
       ca = "suggestion";
-      ia = mr;
+      ia = FocusableBox;
       da = 1;
       ma = Pi;
-      if (ce[29] === p)
+      if (ce[29] === MEMO_CACHE_SENTINEL)
         ((ot = e(t, {
           children:
             "You can set a maximum amount you can spend on usage credits per month.",
@@ -2266,7 +2266,7 @@ function $l(ef) {
         ((un = e(t, { children: ln })), (ce[32] = ln), (ce[33] = un));
       else un = ce[33];
       let at, dc;
-      if (ce[34] === p)
+      if (ce[34] === MEMO_CACHE_SENTINEL)
         ((at = () => sa(1)), (dc = () => sa(1)), (ce[34] = at), (ce[35] = dc));
       else ((at = ce[34]), (dc = ce[35]));
       const Ri = Me === 0;
@@ -2359,7 +2359,7 @@ function $l(ef) {
       (ga = ce[24]),
       (pa = ce[25]),
       (ba = ce[26]));
-  if (wi !== en) return wi;
+  if (wi !== EARLY_RETURN_SENTINEL) return wi;
   let Nn;
   if (ce[48] !== nt)
     ((Nn = nt && e(t, { color: "error", children: nt })),
@@ -2367,7 +2367,7 @@ function $l(ef) {
       (ce[49] = Nn));
   else Nn = ce[49];
   let sn;
-  if (ce[50] === p)
+  if (ce[50] === MEMO_CACHE_SENTINEL)
     ((sn = e(t, {
       dimColor: !0,
       children: "This spend limit goes into effect immediately.",
@@ -2449,7 +2449,7 @@ function Ml(af) {
       onTurnOff: $i,
       onCancel: _a,
     } = af,
-    { columns: Dn } = Se(),
+    { columns: Dn } = useTerminalSize(),
     dn = cn?.enabled === !0,
     gc;
   if (j[0] !== cn)
@@ -2521,7 +2521,7 @@ function Ml(af) {
     j[23] !== st ||
     j[24] !== Vn
   ) {
-    Ai = en;
+    Ai = EARLY_RETURN_SENTINEL;
     bb0: {
       ge = yn(Vn);
       me = yn(jn);
@@ -2549,11 +2549,11 @@ function Ml(af) {
         else _a();
       };
       let Kn;
-      if (j[42] === p) ((Kn = () => Ln(ud)), (j[42] = Kn));
+      if (j[42] === MEMO_CACHE_SENTINEL) ((Kn = () => Ln(ud)), (j[42] = Kn));
       else Kn = j[42];
       let Cc = Kn;
       let Yn;
-      if (j[43] === p) ((Yn = () => Ln(cd)), (j[43] = Yn));
+      if (j[43] === MEMO_CACHE_SENTINEL) ((Yn = () => Ln(cd)), (j[43] = Yn));
       else Yn = j[43];
       let uf = Yn;
       let Xn;
@@ -2590,7 +2590,7 @@ function Ml(af) {
       Ca = In;
       if (Mi && ge.ok && me.ok) {
         let Re;
-        if (j[50] === p) ((Re = () => _c(!1)), (j[50] = Re));
+        if (j[50] === MEMO_CACHE_SENTINEL) ((Re = () => _c(!1)), (j[50] = Re));
         else Re = j[50];
         Ai = e(Pn, {
           question: "Auto-reload will top your balance up to",
@@ -2605,7 +2605,7 @@ function Ml(af) {
       ka = "Auto-reload";
       wa = _a;
       Da = "suggestion";
-      ha = mr;
+      ha = FocusableBox;
       Pa = 1;
       Ra = Oi;
       let Re;
@@ -2634,7 +2634,7 @@ function Ml(af) {
           (j[58] = ft));
       else ft = j[58];
       let pt;
-      if (j[59] === p)
+      if (j[59] === MEMO_CACHE_SENTINEL)
         ((pt = e(t, {
           dimColor: !0,
           children: "When usage credit balance falls below:",
@@ -2650,7 +2650,7 @@ function Ml(af) {
         ((Ma = e(t, { children: $a })), (j[62] = $a), (j[63] = Ma));
       else Ma = j[63];
       let xc, kc;
-      if (j[64] === p)
+      if (j[64] === MEMO_CACHE_SENTINEL)
         ((xc = () => Ln(1)), (kc = () => Ln(1)), (j[64] = xc), (j[65] = kc));
       else ((xc = j[64]), (kc = j[65]));
       const Vi = Z === 0;
@@ -2704,7 +2704,7 @@ function Ml(af) {
         children: [pt, wc, Bi && e(t, { color: "error", children: Bi })],
       });
       let Dc;
-      if (j[78] === p)
+      if (j[78] === MEMO_CACHE_SENTINEL)
         ((Dc = e(t, { dimColor: !0, children: "Reload balance to:" })),
           (j[78] = Dc));
       else Dc = j[78];
@@ -2717,7 +2717,7 @@ function Ml(af) {
         ((Ta = e(t, { children: Ba })), (j[81] = Ba), (j[82] = Ta));
       else Ta = j[82];
       let Pc, Rc, Ec;
-      if (j[83] === p)
+      if (j[83] === MEMO_CACHE_SENTINEL)
         ((Pc = () => Ln(2)),
           (Rc = () => Ln(0)),
           (Ec = () => Ln(2)),
@@ -2845,7 +2845,7 @@ function Ml(af) {
       (ft = j[39]),
       (Ea = j[40]),
       (Fa = j[41]));
-  if (Ai !== en) return Ai;
+  if (Ai !== EARLY_RETURN_SENTINEL) return Ai;
   let Kn;
   if (j[98] !== wn) ((Kn = ke(wn)), (j[98] = wn), (j[99] = Kn));
   else Kn = j[99];
@@ -2976,7 +2976,7 @@ function os(ff) {
       onSubmit: Ii,
       onCancel: _o,
     } = ff,
-    { columns: qi } = Se(),
+    { columns: qi } = useTerminalSize(),
     { value: gn, setValue: Wi, cursor: Hi, setCursor: Ji } = Xe(gf),
     [zi, pf] = d(!1),
     Tc;
@@ -3139,11 +3139,11 @@ function os(ff) {
 function Al(bf) {
   let Zi = _(11),
     { purchaseId: ho, onSuccess: yf, onError: _f } = bf,
-    { credentials: vo } = _e(),
+    { credentials: vo } = useStorageV5Context(),
     Vc = C(0),
     Qi = vr(yf),
     Co = vr(_f),
-    xo = vt(),
+    xo = useClock(),
     jc;
   if (
     Zi[0] !== xo ||
@@ -3156,7 +3156,7 @@ function Al(bf) {
       let bn = !1;
       let Lc;
       let yt = function yt(hf) {
-        i("tengu_extra_usage_inline_dialog_buy_result", { status: fromEnum(hf) });
+        logEvent("tengu_extra_usage_inline_dialog_buy_result", { status: fromEnum(hf) });
       };
       async function Ha() {
         if (bn) {
@@ -3216,7 +3216,7 @@ function Al(bf) {
   else Wa = Zi[9];
   E(jc, Wa);
   let Uc;
-  if (Zi[10] === p)
+  if (Zi[10] === MEMO_CACHE_SENTINEL)
     ((Uc = e(ht, {
       message: "Confirming payment\u2026 (may take a few seconds)",
     })),
@@ -3228,7 +3228,7 @@ function ht(vf) {
   let Kc = _(3),
     { message: nl } = vf,
     Yc;
-  if (Kc[0] === p) ((Yc = e(F8, { autoplay: !0 })), (Kc[0] = Yc));
+  if (Kc[0] === MEMO_CACHE_SENTINEL) ((Yc = e(F8, { autoplay: !0 })), (Kc[0] = Yc));
   else Yc = Kc[0];
   let Xc;
   if (Kc[1] !== nl)
@@ -3391,7 +3391,7 @@ function fit(Pf) {
   E(ed, nd);
   let od;
   if (es[8] !== ul)
-    ((od = e(o, { paddingTop: 1, children: e($n, { message: ul }) })),
+    ((od = e(o, { paddingTop: 1, children: e(SpinnerMessageLine, { message: ul }) })),
       (es[8] = ul),
       (es[9] = od));
   else od = es[9];

@@ -13,7 +13,7 @@ import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ms } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
+import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import {
   Je,
   ZMn,
@@ -1155,7 +1155,7 @@ function dt(e, o) {
 }
 function aYn(e) {
   if (
-    (wo().builtinPlugins.set(e.name, e),
+    (getHostStateStore().builtinPlugins.set(e.name, e),
     e.hooksModule !== void 0 && "shipped" in e.hooksModule)
   )
     xe.register(de(e.name), e.hooksModule.shipped);
@@ -1164,13 +1164,13 @@ function _j(e) {
   return e.endsWith(`@${$g}`);
 }
 function ASt(e) {
-  return wo().builtinPlugins.get(e);
+  return getHostStateStore().builtinPlugins.get(e);
 }
 function v8e() {
   let e = getSettings_DEPRECATED(),
     o = [],
     r = [];
-  for (let [t, n] of wo().builtinPlugins) {
+  for (let [t, n] of getHostStateStore().builtinPlugins) {
     if (n.isAvailable && !n.isAvailable()) continue;
     let i = `${t}@${$g}`,
       p = n.enabledFromTrustedSettingsOnly ? a3t(i) : e?.enabledPlugins?.[i],
@@ -1203,7 +1203,7 @@ function v8e() {
 function CSt() {
   let { enabled: e } = v8e(),
     o = [],
-    r = wo().builtinPlugins;
+    r = getHostStateStore().builtinPlugins;
   for (let t of e) {
     let n = r.get(t.name);
     if (!n?.skills) continue;
@@ -1213,12 +1213,12 @@ function CSt() {
 }
 function eyn() {
   let e = [];
-  for (let o of wo().builtinPlugins.values())
+  for (let o of getHostStateStore().builtinPlugins.values())
     for (let r of o.skills ?? []) e.push(r.name, ...(r.aliases ?? []));
   return e;
 }
 function ut(e) {
-  let o = wo().builtinPluginWiredSkills,
+  let o = getHostStateStore().builtinPluginWiredSkills,
     r = o.get(e);
   if (!r) {
     let { wireSkillFilesExtraction: p } = import.meta.require(

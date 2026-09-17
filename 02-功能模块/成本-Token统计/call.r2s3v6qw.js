@@ -11,9 +11,9 @@
 // [preload stripped] 原本在此预载 279 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Aw, getOauthAccountInfo, getSubscriptionType, getRateLimitTier, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -36,52 +36,52 @@ import { Zle, wee, xIe, orn, R4, Jx } from "../AppState-状态管理/AppState-�
 import { fWe, QR, XIt, DB, LB } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
 import { Lle, rIe, B9e, j9e, W9e } from "../限流-重试/限流-重试.4mc5yc28.js";
 import { oM, G9e, oIe, sIe, q9e, nnn, z9e } from "../用量额度-限额/chunk-n4zff40p.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-0k3bh4m8.js";
+import "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
 import "../认证-OAuth登录/chunk-9g86t9bp.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-r2ab1bp6.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-1phhhgcj.js";
+import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
+import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import "../Bedrock-Vertex/chunk-g6sqdw6w.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
 import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-hxt46tkz.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
 import "../../01-核心基础设施/设置-配置/chunk-tswdb9jt.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-85wxphev.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-csjxh2sy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
+import "../../01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js";
+import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
+import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
 import "../Bridge-RemoteControl/chunk-3b6ct3yp.js";
-import { lye } from "../../01-核心基础设施/共享小工具-未细化/chunk-g2gg68zp.js";
-import { Qae } from "../../01-核心基础设施/共享小工具-未细化/chunk-734z18w7.js";
-import "../权限系统/chunk-n5mgv42x.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
+import { startExtraUsageFlow } from "../../01-核心基础设施/共享小工具-未细化/extra-usage-flow.js";
+import { callUpgradeFromSurface } from "../../01-核心基础设施/共享小工具-未细化/upgrade-flow.js";
+import "../权限系统/permission-dialog.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../认证-OAuth登录/chunk-dtt2nn79.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-1371sqbk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import "./chunk-f1ehes3v.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-hyrh6kmc.js";
-import { ut } from "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
+import "../../01-核心基础设施/共享小工具-未细化/usage-limit-continuation.js";
+import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import "../认证-OAuth登录/chunk-5bg9xwqx.js";
 import { E, V, C, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
 function wi(Un) {
@@ -110,11 +110,11 @@ function Ge(bn) {
     [st] = cn(),
     rt = QR(),
     oi;
-  if (b[0] === p) ((oi = getSubscriptionType()), (b[0] = oi));
+  if (b[0] === MEMO_CACHE_SENTINEL) ((oi = getSubscriptionType()), (b[0] = oi));
   else oi = b[0];
   let si = oi,
     ri;
-  if (b[1] === p) {
+  if (b[1] === MEMO_CACHE_SENTINEL) {
     let Ln = si === "max" && getRateLimitTier() === "default_claude_max_20x";
     ri = !Ln && z9();
     b[1] = ri;
@@ -211,7 +211,7 @@ function Ge(bn) {
     if (Cn) {
       let wn = si === "max" ? "Max 20x" : "Max";
       let $e;
-      if (b[19] === p)
+      if (b[19] === MEMO_CACHE_SENTINEL)
         (($e = {
           id: "upgrade",
           label: `Upgrade to ${wn} for higher session limits every month`,
@@ -227,7 +227,7 @@ function Ge(bn) {
     $e;
   if (b[20] !== v || b[21] !== S)
     (($e = function Be() {
-      (i("tengu_spend_limit_nudge_cancel", {}),
+      (logEvent("tengu_spend_limit_nudge_cancel", {}),
         v.prefillRateLimitAutoQueueContinue?.(),
         S(void 0, { display: "skip" }));
     }),
@@ -274,7 +274,7 @@ function Ge(bn) {
       let It = z.disabledUntil != null ? new Date(z.disabledUntil) : null;
       let hi = It != null && (Number.isNaN(It.getTime()) || It > new Date());
       if (
-        (i("tengu_spend_limit_nudge_save", {
+        (logEvent("tengu_spend_limit_nudge_save", {
           removed: pt === null,
           reblocked: hi,
         }),
@@ -300,10 +300,10 @@ function Ge(bn) {
       if ((delete ft.overageDisabledReason, ft.status === "rejected"))
         ft.status = "allowed";
       if ((lVe(ft), pt === null))
-        S(ut("success", st)("Removed monthly spend limit"));
+        S(getThemeColor("success", st)("Removed monthly spend limit"));
       else
         S(
-          ut(
+          getThemeColor(
             "success",
             st,
           )(`Increased monthly spend limit to ${Gs(pt, j, "fit")}`),
@@ -328,9 +328,9 @@ function Ge(bn) {
       else if (we === "wait") v.prefillRateLimitAutoQueueContinue?.();
       if (we === "adjust") Ee();
       else if (we === "wait")
-        (i("tengu_spend_limit_nudge_wait", {}), S(void 0, { display: "skip" }));
+        (logEvent("tengu_spend_limit_nudge_wait", {}), S(void 0, { display: "skip" }));
       else if (we === "upgrade")
-        (i("tengu_spend_limit_nudge_upgrade", {}),
+        (logEvent("tengu_spend_limit_nudge_upgrade", {}),
           import("./upgrade-ui.4jn476kj.js")
             .then((ht) => {
               let { callUpgradeFromSurface: On } = ht;
@@ -441,7 +441,7 @@ function Ge(bn) {
   let yt;
   if (b[49] !== lt || b[50] !== J)
     ((yt = J
-      ? e($n, { message: "Updating spend limit\u2026" })
+      ? e(SpinnerMessageLine, { message: "Updating spend limit\u2026" })
       : lt
         ? e(o, { children: e(t, { color: "error", children: lt }) })
         : null),
@@ -451,7 +451,7 @@ function Ge(bn) {
   else yt = b[51];
   let bt;
   if (b[52] !== Ke || b[53] !== _t || b[54] !== yt)
-    ((bt = r(mr, { gap: 1, onKeyDown: Ke, children: [_t, yt] })),
+    ((bt = r(FocusableBox, { gap: 1, onKeyDown: Ke, children: [_t, yt] })),
       (b[52] = Ke),
       (b[53] = _t),
       (b[54] = yt),
@@ -496,13 +496,13 @@ function zt(co) {
     { onDone: h, context: g } = co,
     [Oi, xi] = d(null),
     n = QR(),
-    { storageV5: $t } = _e(),
+    { storageV5: $t } = useStorageV5Context(),
     Ti;
-  if (l[0] === p) ((Ti = getSubscriptionType()), (l[0] = Ti));
+  if (l[0] === MEMO_CACHE_SENTINEL) ((Ti = getSubscriptionType()), (l[0] = Ti));
   else Ti = l[0];
   let Bt = Ti,
     Di;
-  if (l[1] === p) ((Di = getRateLimitTier()), (l[1] = Di));
+  if (l[1] === MEMO_CACHE_SENTINEL) ((Di = getRateLimitTier()), (l[1] = Di));
   else Di = l[1];
   let fo = Di,
     ho = getOauthAccountInfo()?.hasExtraUsageEnabled === !0,
@@ -538,7 +538,7 @@ function zt(co) {
   let xe = Ni,
     [yo, bo] = d(!1),
     Ai;
-  if (l[14] === p) ((Ai = H(fWe, !1)), (l[14] = Ai));
+  if (l[14] === MEMO_CACHE_SENTINEL) ((Ai = H(fWe, !1)), (l[14] = Ai));
   else Ai = l[14];
   let Ro = Ai,
     Ii;
@@ -608,7 +608,7 @@ function zt(co) {
         if (Mo) qt = "Ask your admin for more usage";
         else qt = ho ? `Add funds to continue with ${$i}` : `Switch to ${$i}`;
         let N;
-        if (l[25] === p)
+        if (l[25] === MEMO_CACHE_SENTINEL)
           ((N = { label: qt, value: "extra-usage" }), (l[25] = N));
         else N = l[25];
         Z.push(N);
@@ -619,7 +619,7 @@ function zt(co) {
           : !_o && !Et && aAe.isEnabled()
       ) {
         let N;
-        if (l[26] === p)
+        if (l[26] === MEMO_CACHE_SENTINEL)
           ((N = { label: "Upgrade your plan", value: "upgrade" }), (l[26] = N));
         else N = l[26];
         Z.push(N);
@@ -627,7 +627,7 @@ function zt(co) {
       ((l[23] = Ye), (l[24] = Z));
     } else Z = l[24];
     let N;
-    if (l[27] === p)
+    if (l[27] === MEMO_CACHE_SENTINEL)
       ((N = {
         label: Pi ? "Stop" : "Stop and wait for limit to reset",
         value: "cancel",
@@ -656,7 +656,7 @@ function zt(co) {
       A = [];
       if (X) {
         let R;
-        if (l[37] === p)
+        if (l[37] === MEMO_CACHE_SENTINEL)
           ((R = { label: z3().label, value: "juniper-tide" }), (l[37] = R));
         else R = l[37];
         A.push(R);
@@ -672,7 +672,7 @@ function zt(co) {
       if (Ct) A.push(Ct);
       if (Re) {
         let R;
-        if (l[40] === p)
+        if (l[40] === MEMO_CACHE_SENTINEL)
           ((R = { label: LF().label, value: "low-priority" }), (l[40] = R));
         else R = l[40];
         A.push(R);
@@ -747,7 +747,7 @@ function zt(co) {
   ) {
     De = function De() {
       if (
-        (i("tengu_rate_limit_options_menu_select_auto_resume", {}),
+        (logEvent("tengu_rate_limit_options_menu_select_auto_resume", {}),
         !orn(n, Date.now(), "dialog", $t))
       ) {
         Ve();
@@ -764,7 +764,7 @@ function zt(co) {
     let ze;
     if (l[71] !== h)
       ((ze = function je() {
-        i("tengu_rate_limit_options_menu_select_low_priority", {});
+        logEvent("tengu_rate_limit_options_menu_select_low_priority", {});
         let Gi = B9e("dialog");
         if (Gi === "unavailable") {
           h(W9e());
@@ -779,7 +779,7 @@ function zt(co) {
     let M;
     if (l[73] !== g.credentials || l[74] !== h)
       ((M = function Se() {
-        (i("tengu_rate_limit_options_menu_select_juniper_tide", {}),
+        (logEvent("tengu_rate_limit_options_menu_select_juniper_tide", {}),
           bo(!0),
           z9e("dialog", g.credentials)
             .then((Oo) => {
@@ -809,7 +809,7 @@ function zt(co) {
     let Yi;
     if (l[78] !== Ne)
       ((Yi = function Pe() {
-        (i("tengu_rate_limit_options_menu_cancel_auto_resume", {}), Ne());
+        (logEvent("tengu_rate_limit_options_menu_cancel_auto_resume", {}), Ne());
       }),
         (l[78] = Ne),
         (l[79] = Yi));
@@ -817,7 +817,7 @@ function zt(co) {
     Pe = Yi;
     ke = function ke() {
       if (
-        (i("tengu_rate_limit_options_menu_cancel", {}), xIe() || Oe === "stale")
+        (logEvent("tengu_rate_limit_options_menu_cancel", {}), xIe() || Oe === "stale")
       ) {
         Ne();
         return;
@@ -825,7 +825,7 @@ function zt(co) {
       Ve();
     };
     Ue = function Ue() {
-      (i("tengu_rate_limit_options_menu_cancel", {}), Ve());
+      (logEvent("tengu_rate_limit_options_menu_cancel", {}), Ve());
     };
     function Ve() {
       (g.prefillRateLimitAutoQueueContinue?.(), h(void 0, { display: "skip" }));
@@ -861,13 +861,13 @@ function zt(co) {
     ((ze = function He(le) {
       if (Vt(le)) g.cancelRateLimitAutoQueueContinue?.();
       if (le === "upgrade")
-        (i("tengu_rate_limit_options_menu_select_upgrade", {}),
-          Qae(h, g, "rate_limit_options_menu").then((qi) => {
+        (logEvent("tengu_rate_limit_options_menu_select_upgrade", {}),
+          callUpgradeFromSurface(h, g, "rate_limit_options_menu").then((qi) => {
             if (qi) xi(qi);
           }));
       else if (le === "extra-usage")
-        (i("tengu_rate_limit_options_menu_select_extra_usage", {}),
-          lye(h, g).then((Vi) => {
+        (logEvent("tengu_rate_limit_options_menu_select_extra_usage", {}),
+          startExtraUsageFlow(h, g).then((Vi) => {
             if (Vi) xi(Vi);
           }));
       else if (le === "auto-resume") De();
@@ -891,7 +891,7 @@ function zt(co) {
   }
   if (yo) {
     let M;
-    if (l[88] === p)
+    if (l[88] === MEMO_CACHE_SENTINEL)
       ((M = e(de, {
         title: "What do you want to do?",
         onCancel: Hi,

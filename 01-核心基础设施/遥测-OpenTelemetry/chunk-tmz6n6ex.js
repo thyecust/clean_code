@@ -11,8 +11,8 @@ import { klt } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry
 import { m3e } from "../../00-第三方库/@grpc/grpc-js/grpc-js.5zkynjxh.js";
 import { tI } from "./遥测-OpenTelemetry.0xhcvej6.js";
 import "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
-import { w } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
-var i = w(function (c) {
+import { commonJS } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+var i = commonJS(function (c) {
   Object.defineProperty(c, "__esModule", { value: !0 });
   c.OTLPMetricExporter = void 0;
   var s = klt(),
@@ -33,7 +33,7 @@ var i = w(function (c) {
   }
   c.OTLPMetricExporter = o;
 });
-var n = w(function (e) {
+var n = commonJS(function (e) {
   Object.defineProperty(e, "__esModule", { value: !0 });
   e.OTLPMetricExporter = void 0;
   var l = i();

@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 24 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i8, j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, zn } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { createAbortController } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { Qu, Wc } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { be, xMn } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -19,10 +19,10 @@ import { Ls, nq, gor } from "../../02-功能模块/认证-OAuth登录/认证-OAu
 import { R, J1, x_e, ge, l, A, Jr, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Hx, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { validateUuid, writeEntriesToJsonlFile, sanitizePath, getProjectKey } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
@@ -33,11 +33,11 @@ import "../../02-功能模块/MCP客户端/chunk-98spw152.js";
 import "../../02-功能模块/MCP客户端/chunk-j8556pzt.js";
 import { Fge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { X0e } from "../../01-核心基础设施/共享小工具-未细化/chunk-7rcvat1g.js";
-import { Ytn } from "../../01-核心基础设施/共享小工具-未细化/chunk-wmwgjjnt.js";
-import { hct, krn } from "../../01-核心基础设施/共享小工具-未细化/chunk-t4xxq70d.js";
+import { parsePositiveInteger } from "../../01-核心基础设施/共享小工具-未细化/parse-positive-integer.js";
+import { pushCliArg } from "../../01-核心基础设施/共享小工具-未细化/claude-code-args.js";
+import { isJsonRpcRequest, krn } from "../../01-核心基础设施/共享小工具-未细化/chunk-t4xxq70d.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { execFile } from "child_process";
 import { randomUUID as Hs } from "crypto";
 import { createReadStream, realpathSync } from "fs";
@@ -479,7 +479,7 @@ class We {
       let Se = wt(he, je);
       for (let [v, F] of Object.entries(Se))
         if (F === null) y.push(`--${v}`);
-        else Ytn(y, v, F);
+        else pushCliArg(y, v, F);
       if (!h.CLAUDE_CODE_ENTRYPOINT) h.CLAUDE_CODE_ENTRYPOINT = "sdk-ts";
       if ((delete h.NODE_OPTIONS, Ie(h.DEBUG_CLAUDE_AGENT_SDK))) h.DEBUG = "1";
       else delete h.DEBUG;
@@ -1017,7 +1017,7 @@ class _e {
     if (this.transport.waitForExit) {
       let t = new AbortController();
       try {
-        await Promise.race([this.transport.waitForExit(), Z(2000, t.signal)]);
+        await Promise.race([this.transport.waitForExit(), sleep(2000, t.signal)]);
       } catch {
       } finally {
         t.abort();
@@ -1239,7 +1239,7 @@ class _e {
       let r = e.request,
         o = this.sdkMcpServers.get(r.server_name)?.transport;
       if (!o) throw Error(`SDK MCP server not found: ${r.server_name}`);
-      if (hct(r.message))
+      if (isJsonRpcRequest(r.message))
         return {
           mcp_response: await this.handleMcpControlRequest(r.server_name, r, o),
         };
@@ -1285,7 +1285,7 @@ class _e {
         n(
           `[Query] No onUserDialog handler for request_user_dialog (kind=${e.request.dialog_kind}) \u2014 staying silent so a capable client (or the worker's park deadline) settles it`,
         ),
-        i("tengu_request_user_dialog_response_ignored", {
+        logEvent("tengu_request_user_dialog_response_ignored", {
           shape: fromEnum("auto_cancel"),
         }),
         ue
@@ -1866,7 +1866,7 @@ class _e {
       for (let [g, h] of Object.entries(t)) {
         let w = this.sdkMcpServers.get(g);
         if (!w) this.connectSdkMcpServer(g, h);
-        else if (X0e(h.timeout) !== w.timeout)
+        else if (parsePositiveInteger(h.timeout) !== w.timeout)
           n(
             `[Query.setMcpServers] MCP server '${g}' is already registered; its timeout change is ignored until the server is removed and re-added`,
           );
@@ -1953,7 +1953,7 @@ class _e {
   }
   connectSdkMcpServer(e, t) {
     let r = new krn((o) => this.sendMcpServerMessageToCli(e, o));
-    (this.sdkMcpServers.set(e, { transport: r, timeout: X0e(t.timeout) }),
+    (this.sdkMcpServers.set(e, { transport: r, timeout: parsePositiveInteger(t.timeout) }),
       t.instance.connect(r).catch((o) => {
         if (this.sdkMcpServers.get(e)?.transport === r)
           this.sdkMcpServers.delete(e);
@@ -2120,13 +2120,13 @@ class Qe {
       p = 1;
     for (; p <= r; p++)
       try {
-        (await Dt(this.send(e, t), this.sendTimeoutMs, o), (d = void 0));
+        (await withTimeout(this.send(e, t), this.sendTimeoutMs, o), (d = void 0));
         break;
       } catch (f) {
         if (((d = ge(f)), d.message === o)) break;
         let g = this.backoffMs[p - 1];
         if (g === void 0) break;
-        await Z(g);
+        await sleep(g);
       }
     if (d) {
       n(
@@ -2143,7 +2143,7 @@ class Qe {
     }
   }
 }
-var De = pe(Ls(), 1);
+var De = toESM(Ls(), 1);
 import {
   copyFile,
   readFile as Ns,
@@ -2213,7 +2213,7 @@ var jt;
 (function (e) {
   e.Completable = "McpCompletable";
 })(jt || (jt = {}));
-var ho = m(() =>
+var ho = createLazyValue(() =>
   c({
     session_id: s(),
     ws_url: s(),
@@ -2265,7 +2265,7 @@ function er() {
 async function tr(e, t, r, o, d = 60000, p) {
   if (!validateUuid(t)) return;
   let f = Vt(r, o),
-    g = await Dt(
+    g = await withTimeout(
       e.load({ projectKey: f, sessionId: t }),
       d,
       `SessionStore.load() timed out after ${d}ms for session ${t}`,
@@ -2318,7 +2318,7 @@ async function tr(e, t, r, o, d = 60000, p) {
   }
 }
 async function sr(e, t, r, o) {
-  let d = await Dt(
+  let d = await withTimeout(
     e.listSubkeys({ projectKey: t.projectKey, sessionId: t.sessionId }),
     o,
     `SessionStore.listSubkeys() timed out after ${o}ms for session ${t.sessionId}`,
@@ -2336,7 +2336,7 @@ async function sr(e, t, r, o) {
       });
       continue;
     }
-    let g = await Dt(
+    let g = await withTimeout(
       e.load({ projectKey: t.projectKey, sessionId: t.sessionId, subpath: p }),
       o,
       `SessionStore.load() timed out after ${o}ms for session ${t.sessionId} subpath ${p}`,
@@ -2651,7 +2651,7 @@ async function Wt(e) {
       return await Ws(e, { recursive: !0, force: !0 });
     } catch (r) {
       if (t >= 4 || !rr.has(A(r) ?? "")) return;
-      await Z((t + 1) * 100);
+      await sleep((t + 1) * 100);
     }
 }
 function nr(e, t) {
@@ -2686,7 +2686,7 @@ function ir(e, t) {
     (async () => {
       if (!w)
         w = (
-          await Dt(
+          await withTimeout(
             g.listSessions(Vt(f, t.env)),
             h,
             `SessionStore.listSessions() timed out after ${h}ms`,

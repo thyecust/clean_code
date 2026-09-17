@@ -10,11 +10,11 @@
 
 // [preload stripped] 原本在此预载 185 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
   rV,
   Lmt,
@@ -45,7 +45,7 @@ import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { x, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { D1, mn, fi } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { Tx, Cke, Fr } from "../工具Bash-Shell/chunk-4pap8y5n.js";
@@ -73,11 +73,11 @@ import {
   aJt,
 } from "../Memory-CLAUDE.md/chunk-3ehd7vx0.js";
 import { ale, GZt, Z$n } from "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
-import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { CLAUDE_IN_CHROME_MCP_SERVER_NAME, eir } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
 import { s, ocr, vx, O, se, v, c, Qe, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { join as Pi } from "path";
 var Yt = 1,
   Xt = 2147483648,
@@ -102,11 +102,11 @@ var Yt = 1,
   wr = new Set(["allow", "deny", "ask"]),
   Rr = 32,
   Er = 64,
-  Jt = m(() => vx().min(0)),
-  ie = m(() => vx().min(0).default(0)),
-  vr = m(() => c({ version: vx() })),
-  Bi = m(() => c({ generation: vx().min(1).max(Xt) })),
-  kr = m(() =>
+  Jt = createLazyValue(() => vx().min(0)),
+  ie = createLazyValue(() => vx().min(0).default(0)),
+  vr = createLazyValue(() => c({ version: vx() })),
+  Bi = createLazyValue(() => c({ generation: vx().min(1).max(Xt) })),
+  kr = createLazyValue(() =>
     c({
       withheldSensitive: ie(),
       withheldReadDenied: ie(),
@@ -133,7 +133,7 @@ var Yt = 1,
       })),
     }),
   ),
-  Ar = m(() =>
+  Ar = createLazyValue(() =>
     Qe({
       path: s().min(1).max(hr),
       size: Jt(),
@@ -141,7 +141,7 @@ var Yt = 1,
       content: ocr(),
     }),
   ),
-  Hr = m(() =>
+  Hr = createLazyValue(() =>
     c({
       version: k(Yt),
       generation: vx().min(1).max(Xt),
@@ -214,7 +214,7 @@ function Pr(e) {
   return t.every((r) => br.has(r)) &&
     Vt(e.attribution, Sr) &&
     Vt(e.permissions, wr) &&
-    (!me(e.permissions) ||
+    (!isRecord(e.permissions) ||
       Object.entries(e.permissions).every(([r, o]) => Ze.has(r) || xr(o)))
     ? "none"
     : "not_portable_key";
@@ -222,7 +222,7 @@ function Pr(e) {
 function Vt(e, t) {
   return (
     e === void 0 ||
-    (me(e) && Object.keys(e).every((n) => t.has(n) || Ze.has(n)))
+    (isRecord(e) && Object.keys(e).every((n) => t.has(n) || Ze.has(n)))
   );
 }
 function xr(e) {
@@ -251,11 +251,11 @@ function Dr(e) {
   return !1;
 }
 function Mr(e) {
-  let t = me(e) ? e.files : void 0;
+  let t = isRecord(e) ? e.files : void 0;
   return Array.isArray(t) && t.length > Zt;
 }
 function Nr(e) {
-  return !me(e) || (Wr(e.settings) && zr(e.settings));
+  return !isRecord(e) || (Wr(e.settings) && zr(e.settings));
 }
 function Ir(e) {
   return Eot(e.path);
@@ -295,7 +295,7 @@ function zr(e) {
       for (let r = 0; r < n.length; r++) t.push(n[r]);
       continue;
     }
-    if (me(n)) {
+    if (isRecord(n)) {
       let r = Object.getPrototypeOf(n);
       if (r === Object.prototype || r === null) {
         for (let o of Object.values(n)) t.push(o);
@@ -315,7 +315,7 @@ function Qt(e) {
   );
 }
 function en(e) {
-  return Array.isArray(e) ? e.map(en) : me(e) ? Qt(e) : e;
+  return Array.isArray(e) ? e.map(en) : isRecord(e) ? Qt(e) : e;
 }
 var Br = [
     "language",
@@ -349,10 +349,10 @@ var Br = [
     "LS",
     ...bie.bashPrefixTools,
     Ut,
-    ia,
+    MONITOR_TOOL_NAME,
   ],
   Xr = ARTIFACT_FAMILY_TOOL_NAMES,
-  qr = [...bie.bashPrefixTools, ia],
+  qr = [...bie.bashPrefixTools, MONITOR_TOOL_NAME],
   Zr = [Bt, Mn, Wl, ...ARTIFACT_FAMILY_TOOL_NAMES, "MultiEdit", ...cn];
 function Jr(e) {
   if (e === Bt) return Zr;
@@ -380,7 +380,7 @@ function pn(e, { settingsToCloud: t = isSettingsToCloudEnabledCached, preToolUse
       reason: "flag_off",
       counts: { forwardedKeys: 0, withheldKeys: 0, rules: St() },
     };
-  if (!me(e))
+  if (!isRecord(e))
     return {
       document: null,
       reason: "settings_unreadable",
@@ -402,7 +402,7 @@ function pn(e, { settingsToCloud: t = isSettingsToCloudEnabledCached, preToolUse
     h = Object.keys(e),
     S = {
       forwardedKeys: Object.keys(_).length,
-      withheldKeys: G(h, (P) => !Object.hasOwn(_, P)),
+      withheldKeys: countMatching(h, (P) => !Object.hasOwn(_, P)),
       rules: r.counts,
     };
   if (S.forwardedKeys === 0)
@@ -437,7 +437,7 @@ function lo(e, t) {
   if (
     fn.test(e) ||
     io.test(e) ||
-    G([...e], (o) => o === "*") > so ||
+    countMatching([...e], (o) => o === "*") > so ||
     !Ske(e, t).valid
   )
     return "invalid";
@@ -786,7 +786,7 @@ function ko(e) {
   return patternWithRootFor(t, to).root !== null ? "machine" : "none";
 }
 function Ao(e, t) {
-  if (!me(e)) return { value: void 0, counts: St() };
+  if (!isRecord(e)) return { value: void 0, counts: St() };
   let n = Ur.map((_) => {
       let h = Po(he(e, _), _);
       return _ === "allow" && typeof t === "function" ? Oo(h, t) : h;
@@ -843,9 +843,9 @@ function Po(e, t) {
   let n = Array.isArray(e) ? e : [],
     r = n.slice(0, tn),
     o = r.filter((P) => typeof P === "string"),
-    d = Y(o),
+    d = dedupe(o),
     _ = new Set(d),
-    h = G(n.slice(tn), (P) => typeof P !== "string" || !_.has(P)),
+    h = countMatching(n.slice(tn), (P) => typeof P !== "string" || !_.has(P)),
     S = d.map((P) => ({ rule: P, verdict: lo(P, t) })),
     T = S.filter(({ verdict: P }) => sn(P));
   return {
@@ -877,7 +877,7 @@ function _n(e) {
   return n !== void 0 && (un.has(t) || Tx(t)) && n.trimStart().startsWith("!");
 }
 function ze(e, t) {
-  return G(e, ({ verdict: n }) => n === t);
+  return countMatching(e, ({ verdict: n }) => n === t);
 }
 function St() {
   return {
@@ -905,7 +905,7 @@ function xo(e, t) {
 }
 var Do = { commit: dn, pr: dn, sessionUrl: wt, commitTrailers: wt };
 function Mo(e) {
-  if (!me(e)) return;
+  if (!isRecord(e)) return;
   let t = Kr.reduce((n, r) => Fo(n, e, r), {});
   return Object.keys(t).length > 0 ? t : void 0;
 }
@@ -946,7 +946,7 @@ var rt = "ccr-home-seed.json",
   No = 4,
   Pe = zHt * No,
   Ke = 131072,
-  gn = m(() =>
+  gn = createLazyValue(() =>
     Qe({
       version: k(Et),
       generation: vx().min(1),
@@ -961,7 +961,7 @@ var rt = "ccr-home-seed.json",
 function vt(e) {
   if (e.length > Ke) return null;
   let t = We(e.toString("utf8"));
-  if (!me(t) || (Array.isArray(t.entries) && t.entries.length > Pe))
+  if (!isRecord(t) || (Array.isArray(t.entries) && t.entries.length > Pe))
     return null;
   let n = gn().safeParse(t);
   return n.success ? n.data : null;
@@ -1051,9 +1051,9 @@ function Wo(e, t) {
 }
 var Ht = 1,
   zo = 65536,
-  At = m(() => vx().min(0).default(0)),
-  Bo = m(() => c({ version: vx() })),
-  yn = m(() =>
+  At = createLazyValue(() => vx().min(0).default(0)),
+  Bo = createLazyValue(() => c({ version: vx() })),
+  yn = createLazyValue(() =>
     c({
       version: k(Ht),
       generation: vx().min(1),
@@ -1094,7 +1094,7 @@ var Pt = 300000,
     "Settings sync: the user's machine sent this session a copy of their Claude Code settings (their CLAUDE.md instructions, permission rules and preferences), but this session could not take it, so it runs on its default settings. If the user refers to instructions, rules or preferences from their machine that you do not see in effect, say they did not arrive here.",
   jo = /^[A-Za-z][A-Za-z0-9_*-]{0,127}(?:\([A-Za-z0-9 ._\-/:*~@+=,]{1,64}\))?$/,
   Go = 200,
-  Sn = m(() => fe(s(), se()));
+  Sn = createLazyValue(() => fe(s(), se()));
 function wn(e) {
   let t = v(se()).safeParse(e);
   return t.success ? t.data.filter((n) => typeof n === "string") : [];
@@ -1117,7 +1117,7 @@ function En(e, t, n) {
     try {
       e(t);
     } catch {
-      q("error", n, {});
+      writeDiagnosticsEvent("error", n, {});
     }
   });
 }
@@ -1172,7 +1172,7 @@ function Hn(e, t) {
     Lt = () => {
       if (!P)
         ((P = !0),
-          q("info", "home_seed_announcement_discarded", {
+          writeDiagnosticsEvent("info", "home_seed_announcement_discarded", {
             reason: o ?? "stopped",
           }));
     },
@@ -1248,7 +1248,7 @@ function Hn(e, t) {
     let p = t.now();
     er(!l, p)
       .catch((H) => {
-        (q("error", "home_seed_recovery_threw", { name: wde(H) }),
+        (writeDiagnosticsEvent("error", "home_seed_recovery_threw", { name: wde(H) }),
           ke("threw", 0, p));
       })
       .finally(() => {
@@ -1312,7 +1312,7 @@ function Hn(e, t) {
     }
     let N = yt(C.buf);
     if (!N.ok) {
-      (q("warn", "home_seed_bad_pack", { reason: N.reason }),
+      (writeDiagnosticsEvent("warn", "home_seed_bad_pack", { reason: N.reason }),
         ne("pack_unreadable", R, p, !0));
       return;
     }
@@ -1371,7 +1371,7 @@ function Hn(e, t) {
     try {
       t.afterApply(B, { beforeFirstAsk: de, applied: zt(j, B) });
     } catch {
-      q("error", "home_seed_after_apply_threw", {});
+      writeDiagnosticsEvent("error", "home_seed_after_apply_threw", {});
     }
     (Ne++,
       ft({
@@ -1391,7 +1391,7 @@ function Hn(e, t) {
       R = E(H?.deny),
       C = E(H?.ask),
       N = Sn().safeParse(p?.permissions),
-      I = (J) => (N.success ? Y(wn(N.data[J])).length : 0),
+      I = (J) => (N.success ? dedupe(wn(N.data[J])).length : 0),
       D = Math.max(0, I("deny") + I("ask") - R.length - C.length);
     return { deny: R, ask: C, dropped: D };
   }
@@ -1401,7 +1401,7 @@ function Hn(e, t) {
     if (E.permissions !== void 0 && E.permissions !== null && !R.success)
       return null;
     let C = R.success ? R.data : {},
-      N = (B, de) => Y([...wn(C[B]), ...de]),
+      N = (B, de) => dedupe([...wn(C[B]), ...de]),
       I = N("deny", p.deny),
       D = N("ask", p.ask),
       J = {
@@ -1436,7 +1436,7 @@ function Hn(e, t) {
   function ct(l) {
     let p = Tt(l);
     return (
-      q("warn", "home_seed_lane_request_failed", {
+      writeDiagnosticsEvent("warn", "home_seed_lane_request_failed", {
         outcome: p,
         kind: l.errorKind,
         status: l.status ?? 0,
@@ -1476,7 +1476,7 @@ function Hn(e, t) {
         rulesDropped: E,
       });
     } catch {
-      q("error", "home_seed_telemetry_threw", {});
+      writeDiagnosticsEvent("error", "home_seed_telemetry_threw", {});
     }
   }
   function ft(l) {
@@ -1485,7 +1485,7 @@ function Hn(e, t) {
         try {
           C(E);
         } catch {
-          q("error", R, {});
+          writeDiagnosticsEvent("error", R, {});
         }
     };
     if (l.kind === "restored" || l.kind === "not_restored")
@@ -1500,7 +1500,7 @@ function Hn(e, t) {
     ((U = !0),
       or(l)
         .catch((p) => {
-          q("error", "home_seed_run_threw", { name: wde(p) });
+          writeDiagnosticsEvent("error", "home_seed_run_threw", { name: wde(p) });
         })
         .finally(() => {
           ((U = !1), (pe = void 0), ge(), Le());
@@ -1527,7 +1527,7 @@ function Hn(e, t) {
           if (p) l.readyWritten = !0;
         })
         .catch((p) => {
-          q("error", "home_seed_run_threw", { name: wde(p) });
+          writeDiagnosticsEvent("error", "home_seed_run_threw", { name: wde(p) });
         })
         .finally(() => {
           ((U = !1), ge(), Le());
@@ -1606,7 +1606,7 @@ function Hn(e, t) {
     }
     let N = yt(R.buf);
     if (!N.ok) {
-      (q("warn", "home_seed_bad_pack", { reason: N.reason }),
+      (writeDiagnosticsEvent("warn", "home_seed_bad_pack", { reason: N.reason }),
         re("bad_pack", E, null, 0, p));
       return;
     }
@@ -1637,7 +1637,7 @@ function Hn(e, t) {
     try {
       t.afterApply(D, j);
     } catch {
-      q("error", "home_seed_after_apply_threw", {});
+      writeDiagnosticsEvent("error", "home_seed_after_apply_threw", {});
     }
     Ne++;
     let B = Te.size > 0,
@@ -1696,7 +1696,7 @@ function Hn(e, t) {
           (N(), C(I));
         });
     });
-    if (R === "unresolved") q("info", "home_seed_output_style_unresolved", {});
+    if (R === "unresolved") writeDiagnosticsEvent("info", "home_seed_output_style_unresolved", {});
     return R;
   }
   function sr(l) {
@@ -1732,7 +1732,7 @@ function Hn(e, t) {
         ...C,
       });
     } catch {
-      q("error", "home_seed_telemetry_threw", {});
+      writeDiagnosticsEvent("error", "home_seed_telemetry_threw", {});
     }
   }
   async function Kt(l) {
@@ -1746,7 +1746,7 @@ function Hn(e, t) {
       let R = Tt(E);
       if (R !== "transport" || H >= t.limits.requestAttempts)
         return (
-          q("warn", "home_seed_lane_request_failed", {
+          writeDiagnosticsEvent("warn", "home_seed_lane_request_failed", {
             outcome: R,
             kind: E.errorKind,
             status: E.status ?? 0,
@@ -1774,7 +1774,7 @@ function Hn(e, t) {
         E >= t.limits.requestAttempts
       )
         return (
-          q("warn", "home_seed_ready_put_failed", {
+          writeDiagnosticsEvent("warn", "home_seed_ready_put_failed", {
             kind: R.kind,
             ...(R.kind === "error" && {
               errorKind: R.errorKind,
@@ -1821,13 +1821,13 @@ function Hn(e, t) {
       try {
         t.notifyAgent(l === "pending" ? Uo : $o);
       } catch {
-        q("error", "home_seed_notify_threw", {});
+        writeDiagnosticsEvent("error", "home_seed_notify_threw", {});
       }
       return l;
     },
     ur = () => {
       let l = Ie ? qe("dropped") : _t() ? qe("pending") : "none";
-      if (l !== "none") q("info", "home_seed_agent_told", { kind: l });
+      if (l !== "none") writeDiagnosticsEvent("info", "home_seed_agent_told", { kind: l });
     },
     _t = () => !r && !d && (Ve()?.ordinal ?? 0) >= 1;
   function cr(l) {
@@ -1870,7 +1870,7 @@ function Hn(e, t) {
               agentNotice: mr,
             });
           } catch {
-            q("error", "home_seed_telemetry_threw", {});
+            writeDiagnosticsEvent("error", "home_seed_telemetry_threw", {});
           }
         },
         B = () => {
@@ -1951,7 +1951,7 @@ function Hn(e, t) {
       });
     });
   } catch {
-    q("error", "home_seed_verdict_subscribe_threw", {});
+    writeDiagnosticsEvent("error", "home_seed_verdict_subscribe_threw", {});
   } finally {
     Ge = !1;
   }
@@ -2222,7 +2222,7 @@ async function Gn(e) {
   return n.success ? { kind: "object", value: n.data } : { kind: "unusable" };
 }
 var hi = 1048576,
-  yi = m(() => fe(s(), se()));
+  yi = createLazyValue(() => fe(s(), se()));
 function je(e) {
   return e === "ENOENT" || e === "ENOTDIR";
 }
@@ -2247,7 +2247,7 @@ async function De(e, t) {
 }
 function Vn({ storageV5: e, configHome: t }) {
   return {
-    writeHomeFile: Fn({ storageV5: e, flagOn: M(), configHome: t }),
+    writeHomeFile: Fn({ storageV5: e, flagOn: isHoverRestEnabled(), configHome: t }),
     markInternalWrite: tRt,
     consumeInternalWrite: (n) => {
       nRt(n, Cet);
@@ -2275,7 +2275,7 @@ async function bi(e, t, n = SYNCED_FILE_ROOT) {
   if (at({ path: _, directory: d })) return { ok: !1, reason: "overlaps_repo" };
   if (await Yn(d)) return { ok: !1, reason: "inside_git_worktree" };
   if (at({ path: d, directory: _ }))
-    q("info", "home_under_cwd_no_worktree", {});
+    writeDiagnosticsEvent("info", "home_under_cwd_no_worktree", {});
   let h;
   try {
     h = await Ue(n);
@@ -2318,13 +2318,13 @@ async function Xn(e, t, n) {
     );
   if (r !== "on")
     return (
-      q("info", "home_seed_apply_flag_off", { gate: r }),
+      writeDiagnosticsEvent("info", "home_seed_apply_flag_off", { gate: r }),
       { outcome: "flag_off", generation: e.generation }
     );
   let o = await bi(t.configHome, t.repoRoot, t.syncedRoot);
   if (!o.ok)
     return (
-      q("warn", "home_seed_config_home_unsafe", { reason: o.reason }),
+      writeDiagnosticsEvent("warn", "home_seed_config_home_unsafe", { reason: o.reason }),
       {
         outcome: "config_home_unsafe",
         generation: e.generation,
@@ -2375,9 +2375,9 @@ async function Xn(e, t, n) {
       e.counts.refused.settings === "none" &&
       (S.written || (pe && !S.removeFailed)),
     L = e.writes.length + _.length + (U ? 1 : 0),
-    ye = G(_, ({ result: w }) => w === "failed"),
+    ye = countMatching(_, ({ result: w }) => w === "failed"),
     _e = T.length + (_.length - ye) + (Me ? 1 : 0),
-    le = (w) => G(h, (te) => te.result === w),
+    le = (w) => countMatching(h, (te) => te.result === w),
     He = L === 0 ? "empty" : _e === L ? "applied" : "partial",
     ve = e.restoreRecord === !0,
     be =
@@ -2396,17 +2396,17 @@ async function Xn(e, t, n) {
         ...(He !== "partial" && { packEtag: e.packEtag }),
       }));
   if (be && ce.size > Pe)
-    q("warn", "home_seed_sidecar_trimmed", { dropped: ce.size - Pe });
+    writeDiagnosticsEvent("warn", "home_seed_sidecar_trimmed", { dropped: ce.size - Pe });
   return {
     outcome: He,
     generation: e.generation,
     filesApplied: T.length,
     appliedByKind: {
-      claude_md: G(T, ({ file: w }) => w.kind === "claude_md"),
-      rule: G(T, ({ file: w }) => w.kind === "rule"),
-      output_style: G(T, ({ file: w }) => w.kind === "output_style"),
+      claude_md: countMatching(T, ({ file: w }) => w.kind === "claude_md"),
+      rule: countMatching(T, ({ file: w }) => w.kind === "rule"),
+      output_style: countMatching(T, ({ file: w }) => w.kind === "output_style"),
     },
-    filesReplacedForeign: G(T, ({ stoodForeign: w }) => w),
+    filesReplacedForeign: countMatching(T, ({ stoodForeign: w }) => w),
     filesRefused: {
       destination: e.counts.refused.destination,
       overCap: e.counts.refused.overCap,
@@ -2445,14 +2445,14 @@ async function Si(e, t, n) {
 async function wi(e, t) {
   if (e.kind !== "output_style" && !In(t.homeReal, e))
     return (
-      q("warn", "home_seed_destination_refused", { reason: "loader_reach" }),
+      writeDiagnosticsEvent("warn", "home_seed_destination_refused", { reason: "loader_reach" }),
       "loader_reach"
     );
   let n = Ae(t.configHome, e.path),
     r = await ot(t.homeReal, n);
   if (r === null || !Eot(r))
     return (
-      q("warn", "home_seed_destination_refused", {
+      writeDiagnosticsEvent("warn", "home_seed_destination_refused", {
         reason: "resolved_spelling",
       }),
       "refused"
@@ -2460,12 +2460,12 @@ async function wi(e, t) {
   let o = await vi(e.path, t);
   if (o !== "clear")
     return (
-      q("warn", "home_seed_destination_obstructed", { reason: o }),
+      writeDiagnosticsEvent("warn", "home_seed_destination_obstructed", { reason: o }),
       o === "parent_not_directory" || o === "dest_is_directory" ? o : "refused"
     );
   if (!(await Ee(t)))
     return (
-      q("warn", "home_seed_destination_refused", { reason: "home_unvetted" }),
+      writeDiagnosticsEvent("warn", "home_seed_destination_refused", { reason: "home_unvetted" }),
       "refused"
     );
   return "clear";
@@ -2483,10 +2483,10 @@ async function Ri(e, t) {
     let o = A(r) ?? "unknown";
     if (o.startsWith("WORKING_") || o.startsWith("HOME_DEST_"))
       return (
-        q("warn", "home_seed_destination_refused", { reason: o }),
+        writeDiagnosticsEvent("warn", "home_seed_destination_refused", { reason: o }),
         "refused"
       );
-    return (q("warn", "home_seed_write_failed", { code: o }), "failed");
+    return (writeDiagnosticsEvent("warn", "home_seed_write_failed", { code: o }), "failed");
   }
 }
 async function Ee(e) {
@@ -2500,8 +2500,8 @@ async function Ei(e, t) {
   let n = Ae(t.configHome, e),
     o = (await ot(t.homeReal, n)) !== e ? "resolved_spelling" : await lt(n);
   if (o !== null)
-    return (q("warn", "home_seed_write_escaped", { reason: o }), !1);
-  if (!(await Ee(t))) return (q("warn", "home_seed_write_unverified", {}), !1);
+    return (writeDiagnosticsEvent("warn", "home_seed_write_escaped", { reason: o }), !1);
+  if (!(await Ee(t))) return (writeDiagnosticsEvent("warn", "home_seed_write_unverified", {}), !1);
   return !0;
 }
 async function lt(e) {
@@ -2563,7 +2563,7 @@ async function Wn(e, t) {
           ? "resolves_elsewhere"
           : await qn(e.path, t);
   if (o !== "none")
-    return (q("warn", "home_seed_remove_obstructed", { reason: o }), "failed");
+    return (writeDiagnosticsEvent("warn", "home_seed_remove_obstructed", { reason: o }), "failed");
   let d = await De(n, Yje);
   switch (d.kind) {
     case "absent":
@@ -2572,11 +2572,11 @@ async function Wn(e, t) {
       return "not_ours";
     case "not_regular":
       return (
-        q("warn", "home_seed_remove_obstructed", { reason: "not_regular" }),
+        writeDiagnosticsEvent("warn", "home_seed_remove_obstructed", { reason: "not_regular" }),
         "failed"
       );
     case "unreadable":
-      return (q("warn", "home_seed_remove_failed", { code: d.code }), "failed");
+      return (writeDiagnosticsEvent("warn", "home_seed_remove_failed", { code: d.code }), "failed");
     case "read":
       break;
   }
@@ -2586,7 +2586,7 @@ async function Wn(e, t) {
   } catch (_) {
     let h = A(_) ?? "unknown";
     if (je(h)) return "gone";
-    return (q("warn", "home_seed_remove_failed", { code: h }), "failed");
+    return (writeDiagnosticsEvent("warn", "home_seed_remove_failed", { code: h }), "failed");
   }
 }
 async function Ai(e, t, n) {
@@ -2601,19 +2601,19 @@ async function Ai(e, t, n) {
     return r;
   if (Kn(t) !== Jje || !(await Hi(n.homeReal, t)))
     return (
-      q("warn", "home_seed_settings_path_refused", {}),
+      writeDiagnosticsEvent("warn", "home_seed_settings_path_refused", {}),
       e.settings === null ? { ...r, removeFailed: !0 } : r
     );
   let o = t;
   if (e.settings === null && !(await Ee(n)))
     return (
-      q("warn", "home_seed_settings_remove_failed", { code: "home_unvetted" }),
+      writeDiagnosticsEvent("warn", "home_seed_settings_remove_failed", { code: "home_unvetted" }),
       { ...r, removeFailed: !0 }
     );
   let d = await De(o, ht);
   if (d.kind === "not_regular" || d.kind === "unreadable")
     return (
-      q("warn", "home_seed_settings_not_replaceable", { reason: d.kind }),
+      writeDiagnosticsEvent("warn", "home_seed_settings_not_replaceable", { reason: d.kind }),
       e.settings === null ? { ...r, removeFailed: !0 } : r
     );
   let _ =
@@ -2633,14 +2633,14 @@ async function Ai(e, t, n) {
       let S = A(h) ?? "unknown";
       if (je(S)) return { ...r, replaced: _, sha256After: null };
       return (
-        q("warn", "home_seed_settings_remove_failed", { code: S }),
+        writeDiagnosticsEvent("warn", "home_seed_settings_remove_failed", { code: S }),
         { ...r, removeFailed: !0, replaced: _ }
       );
     }
   }
   if (!(await Ee(n)))
     return (
-      q("warn", "home_seed_settings_not_replaceable", {
+      writeDiagnosticsEvent("warn", "home_seed_settings_not_replaceable", {
         reason: "home_unvetted",
       }),
       { ...r, replaced: _ }
@@ -2655,7 +2655,7 @@ async function Ai(e, t, n) {
     let h = await lt(o);
     if (h !== null || !(await Ee(n)))
       return (
-        q("warn", "home_seed_write_unverified", {
+        writeDiagnosticsEvent("warn", "home_seed_write_unverified", {
           reason: h ?? "home_unvetted",
         }),
         { ...r, replaced: _, sha256After: e.settings.sha256 }
@@ -2664,7 +2664,7 @@ async function Ai(e, t, n) {
   } catch (h) {
     return (
       n.deps.consumeInternalWrite(o),
-      q("warn", "home_seed_settings_write_failed", { code: A(h) ?? "unknown" }),
+      writeDiagnosticsEvent("warn", "home_seed_settings_write_failed", { code: A(h) ?? "unknown" }),
       {
         ...r,
         replaced: _,
@@ -2683,25 +2683,25 @@ async function Hi(e, t) {
 async function Oi(e, t) {
   if (!(await Ee(e)))
     return (
-      q("warn", "home_seed_sidecar_write_failed", { code: "home_unvetted" }),
+      writeDiagnosticsEvent("warn", "home_seed_sidecar_write_failed", { code: "home_unvetted" }),
       !1
     );
   let n = xe(e.configHome, rt),
     r = await lt(n);
   if (r !== null && r !== "leaf_absent")
-    return (q("warn", "home_seed_sidecar_write_refused", { reason: r }), !1);
+    return (writeDiagnosticsEvent("warn", "home_seed_sidecar_write_refused", { reason: r }), !1);
   try {
     await e.deps.writeHomeFile(e.configHome, n, hn(t));
   } catch (d) {
     return (
-      q("warn", "home_seed_sidecar_write_failed", { code: A(d) ?? "unknown" }),
+      writeDiagnosticsEvent("warn", "home_seed_sidecar_write_failed", { code: A(d) ?? "unknown" }),
       !1
     );
   }
   let o = await lt(n);
   if (o !== null || !(await Ee(e)))
     return (
-      q("warn", "home_seed_sidecar_write_unverified", {
+      writeDiagnosticsEvent("warn", "home_seed_sidecar_write_unverified", {
         reason: o ?? "home_unvetted",
       }),
       !1
@@ -2737,7 +2737,7 @@ function Zn() {
           ? n
           : null;
       switch (
-        (i("tengu_home_seed_apply", {
+        (logEvent("tengu_home_seed_apply", {
           outcome: fromEnum(e),
           probe: fromEnum(t),
           generation: r,
@@ -2803,7 +2803,7 @@ function Zn() {
       firstAsk: r,
       agentNotice: o,
     }) => {
-      i("tengu_home_seed_hold", {
+      logEvent("tengu_home_seed_hold", {
         outcome: fromEnum(e),
         waited_ms: t,
         verdict_wait_ms: n,
@@ -2818,7 +2818,7 @@ function Zn() {
       rulesDropped: r,
     }) => {
       switch (
-        (i("tengu_home_seed_recovery", {
+        (logEvent("tengu_home_seed_recovery", {
           outcome: fromEnum(e),
           generation: t,
           duration_ms: n,
@@ -3036,7 +3036,7 @@ function startWorkerHomeSeed({
         let S = setTimeout(_, h);
         return () => clearTimeout(S);
       },
-      sleep: Z,
+      sleep: sleep,
       epochGt1: (a.CLAUDE_CODE_WORKER_EPOCH ?? 1) > 1,
       outputStyleAvailable: async (_) => Object.hasOwn(await dX(Q(), o), _),
       enabled: isSettingsToCloudEnabled,
@@ -3051,7 +3051,7 @@ function startWorkerHomeSeed({
   );
 }
 function stopHomeSeedWithoutDirSync(e) {
-  (q("warn", "home_seed_stopped_no_dir_sync", {}), e.stop());
+  (writeDiagnosticsEvent("warn", "home_seed_stopped_no_dir_sync", {}), e.stop());
 }
 export {
   formatHomeAppliedLine,

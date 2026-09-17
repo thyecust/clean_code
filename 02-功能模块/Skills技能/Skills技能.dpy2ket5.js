@@ -9,19 +9,19 @@
 // Version: 2.1.263
 import { K, sn, ke, gje, f8, Rz, vje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { tl, Hr, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { We, b, z, k_, YPn, o8, n, s8, ZPn } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { iu, x, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ZQ } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { XT, Tie, nkt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { yd, CFC_TOOL_PREFIX, detectAvailableBrowser, openInChrome } from "../ClaudeinChrome/chunk-hnp84hf6.js";
@@ -80,10 +80,10 @@ import { zo } from "../MCP客户端/chunk-3kmsshb6.js";
 import { Ys, ZY } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { im, $C, _$e, MT, eU } from "../权限系统/chunk-t3b7pg2x.js";
 import { so, getToolPermissionContext, getEffortValue, getMainLoopModel } from "../权限系统/chunk-fjrcf22x.js";
-import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
+import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { Wh } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { ZS } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
-import { GE, Es } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
+import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
+import { ENTER_PLAN_MODE_TOOL_NAME, ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import {
   Y_,
@@ -117,14 +117,14 @@ import { getJobsDir } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { K3, K8e, LYn, Lre, X8e, Fyn, $yn, iN } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { SOe } from "../Artifact发布-渲染/chunk-01jnk0v2.js";
 import { Jon, Zon, artifactLiveEditPromptGateOpen, artifactCapabilitiesPromptGateOpen, artifactCommentsPromptGateOpen, artifactRoomSurfaceOpen, artifactReadPageDataPromptGateOpen } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
-import { qjn } from "../../01-核心基础设施/共享小工具-未细化/chunk-f7n720sn.js";
+import { markWorkshopInvokeStart } from "../../01-核心基础设施/共享小工具-未细化/workshop-telemetry.js";
 import { Rjn } from "../Artifact发布-渲染/chunk-yrjr7v83.js";
 import { MBn } from "../CodeReview/chunk-rp57gfa9.js";
 import { Kw, cle } from "../后台任务-Shell管理/chunk-5jv5fvbn.js";
 import { i$n } from "../DesignSync/chunk-zyy4nsb8.js";
 import { Ujn } from "../CodeReview/chunk-cwdcyphs.js";
 import { Zst, eit } from "../../01-核心基础设施/共享小工具-未细化/chunk-me1cqqmp.js";
-import { s9 } from "../../01-核心基础设施/共享小工具-未细化/chunk-d3d1v4d6.js";
+import { getDaemonLogPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
 import { cK, uK } from "../DesignSync/chunk-5kyac4wk.js";
 import {
   pN,
@@ -142,11 +142,11 @@ import {
   W7e,
   Nbt,
 } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
-import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
 import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
 import { mt } from "../工具Task-Agent调度/chunk-1px84m19.js";
 import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
-import { Kr } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
+import { defineDialog } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { O, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
@@ -171,7 +171,7 @@ function tn(e) {
   );
 }
 function Xae() {
-  let e = wo();
+  let e = getHostStateStore();
   if (e.builtinPluginsInitialized) return;
   if (
     ((e.builtinPluginsInitialized = !0),
@@ -414,7 +414,7 @@ function Oe() {
     let p = h[r];
     if (p !== void 0) return wD(p);
     if (t.has(r)) return null;
-    let w = Fa(void 0, { timeoutMs: cn }),
+    let w = createLinkedAbortSignal(void 0, { timeoutMs: cn }),
       k = await readFrameDecl(r, w.signal, d.credentials)
         .catch(() => ({ err: "read-back threw", thrown: !0 }))
         .finally(w.cleanup);
@@ -541,7 +541,7 @@ function st() {
         !t.options?.modelScheduledOrigin &&
         t.agentId === void 0
       )
-        qjn(t.artifactRegistries.workshopTelemetry);
+        markWorkshopInvokeStart(t.artifactRegistries.workshopTelemetry);
       let { SKILL_MD: o } = await it(),
         s = SOe(["comments"]) + zo(o).content.trimStart();
       if (e.trim())
@@ -695,7 +695,7 @@ ${e}
 
 ## Phase 1: Research and Plan (Plan Mode)
 
-Call the \`${GE}\` tool now to enter plan mode, then:
+Call the \`${ENTER_PLAN_MODE_TOOL_NAME}\` tool now to enter plan mode, then:
 
 1. **Understand the scope.** Launch one or more subagents (in the foreground \u2014 you need their results) to deeply research what this instruction touches. Find all the files, patterns, and call sites that need to change. Understand the existing conventions so the migration is consistent.
 
@@ -712,7 +712,7 @@ Call the \`${GE}\` tool now to enter plan mode, then:
    - A dev-server + curl pattern (for API changes: start the server, hit the affected endpoints)
    - An existing e2e/integration test suite the worker can run
 
-   If you cannot find a concrete e2e path, use the \`${Es}\` tool to ask the user how to verify this change end-to-end. Offer 2\u20133 specific options based on what you found (e.g., "Screenshot via chrome extension", "Run \`bun run dev\` and curl the endpoint", "No e2e \u2014 unit tests are sufficient"). Do not skip this \u2014 the workers cannot ask the user themselves.
+   If you cannot find a concrete e2e path, use the \`${ASK_USER_QUESTION_TOOL_NAME}\` tool to ask the user how to verify this change end-to-end. Offer 2\u20133 specific options based on what you found (e.g., "Screenshot via chrome extension", "Run \`bun run dev\` and curl the endpoint", "No e2e \u2014 unit tests are sufficient"). Do not skip this \u2014 the workers cannot ask the user themselves.
 
    Write the recipe as a short, concrete set of steps that a worker can execute autonomously. Include any setup (start a dev server, build first) and the exact command/interaction to verify.
 
@@ -782,15 +782,15 @@ function pt() {
     },
   });
 }
-var K6e = Kr({
+var K6e = defineDialog({
   kind: "chrome_install_upsell",
-  payload: m(() => c({})),
-  result: m(() => X(["install", "not_now", "dont_ask_again", "cancelled"])),
+  payload: createLazyValue(() => c({})),
+  result: createLazyValue(() => X(["install", "not_now", "dont_ask_again", "cancelled"])),
   default: "cancelled",
 });
-var X6e = Kr({
+var X6e = defineDialog({
   kind: "chrome_install_setup",
-  payload: m(() =>
+  payload: createLazyValue(() =>
     c({
       phase: X([
         "waiting_install",
@@ -802,7 +802,7 @@ var X6e = Kr({
       installPageOpened: O(),
     }),
   ),
-  result: m(() => X(["continue", "keep_waiting", "skip", "cancelled"])),
+  result: createLazyValue(() => X(["continue", "keep_waiting", "skip", "cancelled"])),
   default: "cancelled",
   hideWhile: [],
 });
@@ -868,7 +868,7 @@ async function wt(e, t) {
     let E = Date.now();
     while (!d.signal.aborted) {
       if (await isChromeExtensionInstalled().catch(() => !1)) break;
-      await Z(Date.now() - E >= On ? Dn : yt, d.signal);
+      await sleep(Date.now() - E >= On ? Dn : yt, d.signal);
     }
     if (d.signal.aborted) return;
     if (
@@ -945,7 +945,7 @@ async function wt(e, t) {
             n(`[Claude in Chrome] Install setup reconnect nudge failed: ${fe}`),
           ));
       if (h === "connecting" && me >= Mn) w("stalled");
-      await Z(yt, d.signal);
+      await sleep(yt, d.signal);
     }
   }
   function L() {
@@ -1072,7 +1072,7 @@ async function jn(e, t) {
   try {
     let o = await Promise.race([
       GI(e, { name: "list_connected_browsers", arguments: {} }),
-      Z(Un, t).then(() => {
+      sleep(Un, t).then(() => {
         return;
       }),
     ]);
@@ -1325,10 +1325,10 @@ function _t(e, t) {
   return { rawFirstToken: s, flags: d, rest: r };
 }
 function be(e) {
-  if (e.agentContext && mc(e.agentContext) >= ZS()) return !1;
+  if (e.agentContext && mc(e.agentContext) >= getMaxSubagentSpawnDepth()) return !1;
   let t = e.options?.tools;
   if (!t) return !0;
-  return t.some((o) => Kt(o, mt));
+  return t.some((o) => matchesToolName(o, mt));
 }
 var j =
     "## Phase 0 \u2014 Gather the diff\n\nRun `git diff @{upstream}...HEAD` (or `git diff main...HEAD` / `git diff HEAD~1`\nif there's no upstream) to get the unified diff under review. If there are\nuncommitted changes, or the range diff is empty, also run `git diff HEAD` and\ninclude the working-tree changes in scope \u2014 the review often runs before the\ncommit. If a PR number, branch name, or file path was passed as an argument,\nreview that target instead. Treat this diff as the review scope.\n",
@@ -2042,7 +2042,7 @@ function Zt(e) {
   if (t === "text" || t === "json") return !1;
   return (
     Boolean(a.CLAUDE_CODE_REPORT_FINDINGS) &&
-    Boolean(e.options?.tools?.some((o) => Kt(o, bk)))
+    Boolean(e.options?.tools?.some((o) => matchesToolName(o, bk)))
   );
 }
 var fi = `
@@ -2119,7 +2119,7 @@ async function vi(e) {
   if (!GUe()) return "";
   if (!oVe(e.getProactivityLevel())) return "";
   let t = e.options?.tools;
-  if (t && !ZY() && !t.some((s) => Kt(s, so))) return "";
+  if (t && !ZY() && !t.some((s) => matchesToolName(s, so))) return "";
   return (await Jwe(sn(), e.storageV5)).some((s) => s.name === v$) ? bi : "";
 }
 var ue = im,
@@ -2241,7 +2241,7 @@ async function Pi(e, t) {
   if (!t.options?.isSkillPreload) {
     if (le) te = await Ai(T, C, d);
     let fe = s ?? v;
-    i("tengu_code_review_routed", {
+    logEvent("tengu_code_review_routed", {
       effort_level: fromEnum(C),
       effort_source: fromEnum(
         s !== void 0
@@ -2760,7 +2760,7 @@ Remember that settings are in:
   });
 }
 async function Ni(e) {
-  let t = s9(),
+  let t = getDaemonLogPath(),
     [o, s, d] = await Promise.all([
       go(Kw(), e && { backend: e, key: cle() }),
       go(Zst(), e && { backend: e, key: eit() }),
@@ -4716,7 +4716,7 @@ ${e}`);
   });
 }
 function zst() {
-  let e = wo();
+  let e = getHostStateStore();
   if (e.bundledSkillsInitialized) return;
   if (
     ((e.bundledSkillsInitialized = !0),

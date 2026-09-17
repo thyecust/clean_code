@@ -14,7 +14,7 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Rq, AQ } from "../../02-功能模块/认证-OAuth登录/chunk-7rf7w8yf.js";
-import { Kot } from "../../02-功能模块/自托管Runner/chunk-t1eaahr7.js";
+import { startGuestVitalsEmitter } from "../../02-功能模块/自托管Runner/guest-vitals-emitter.js";
 import { Wi } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 async function startHostedWorkerVitalsEmitter({ sessionId: o, sdkUrl: i }) {
   try {
@@ -23,7 +23,7 @@ async function startHostedWorkerVitalsEmitter({ sessionId: o, sdkUrl: i }) {
       n("[vitals] no session token file on this worker; guest vitals disabled");
       return;
     }
-    let r = await Kot({
+    let r = await startGuestVitalsEmitter({
       sessionId: o,
       apiBaseUrl: bQ(new URL(i)).origin,
       tokenFilePath: t,

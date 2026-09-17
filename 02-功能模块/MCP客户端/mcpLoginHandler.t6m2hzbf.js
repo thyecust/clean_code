@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 207 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -20,11 +20,11 @@ import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
 import { CF } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
 import { exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { V0 } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { Qg } from "../../01-核心基础设施/共享小工具-未细化/chunk-awxpn5er.js";
-import { zat } from "../../01-核心基础设施/共享小工具-未细化/chunk-k4m00mjj.js";
-import { sI } from "../../01-核心基础设施/共享小工具-未细化/chunk-g2fqhcwj.js";
-import { TF } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
-import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { formatHyperlink } from "../../01-核心基础设施/共享小工具-未细化/format-hyperlink.js";
+import { formatMcpServerNotFoundMessageWithPendingApproval } from "../../01-核心基础设施/共享小工具-未细化/mcp-server-not-found-message.js";
+import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
+import { hasFirstPartyDesignAuth } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
+import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { createInterface } from "readline";
 function y() {
   return import.meta.require("./mcpClientModule.4cyej0np.js");
@@ -51,7 +51,7 @@ async function v(t, e, o, u) {
   if (!p) {
     await logFeatureBadAsync(e, "not_found");
     let s = Object.keys(a).filter((n) => !r.has(n) && !i.has(n));
-    return cliErrorAfterAnalyticsFlush(zat(t, s, r.size > 0));
+    return cliErrorAfterAnalyticsFlush(formatMcpServerNotFoundMessageWithPendingApproval(t, s, r.size > 0));
   }
   if (i.has(t))
     return (
@@ -78,23 +78,23 @@ async function C(t, e) {
   if (i0(t)) return "static_auth_header";
   if (pA(t.url) && isFirstPartyProvider()) {
     let o;
-    if (M() && e !== void 0) o = (await getClaudeAIOAuthTokensAsync(e))?.accessToken;
+    if (isHoverRestEnabled() && e !== void 0) o = (await getClaudeAIOAuthTokensAsync(e))?.accessToken;
     else o = getClaudeAIOAuthTokens()?.accessToken;
     if (o) return "first_party_auth";
-    if (await TF(e)) return "first_party_design_auth";
+    if (await hasFirstPartyDesignAuth(e)) return "first_party_design_auth";
   }
   return null;
 }
 function w(t, e) {
   return `${t ? "If the browser didn't open, visit:" : "Visit this URL to authorize:"}
-  ${Qg(e, void 0, { assumeSupport: !0 })}
+  ${formatHyperlink(e, void 0, { assumeSupport: !0 })}
 
 `;
 }
 async function mcpLoginHandler(t, e, o, u) {
-  await qs("tengu_mcp_login", {});
+  await logEventAsync("tengu_mcp_login", {});
   let a = await v(t, "cli_mcp_login", o, u),
-    r = sI(t, a);
+    r = classifyMcpServerAuth(t, a);
   switch (r.kind) {
     case "claudeai-proxy": {
       let i = fY(r.config);
@@ -105,10 +105,10 @@ async function mcpLoginHandler(t, e, o, u) {
             `Couldn't build the claude.ai authorization link for "${t}". Make sure you're signed in (\`claude login\`).`,
           )
         );
-      if ((await qs("tengu_claudeai_mcp_auth_started", {}), e.browser))
+      if ((await logEventAsync("tengu_claudeai_mcp_auth_started", {}), e.browser))
         (process.stdout.write(`Opening browser to authorize "${t}"\u2026
 `),
-          await Gr(i));
+          await tryOpenUrlInBrowser(i));
       return (
         process.stdout.write(
           w(e.browser, i) +
@@ -256,16 +256,16 @@ async function mcpLoginHandler(t, e, o, u) {
   }
 }
 async function mcpLogoutHandler(t, e, o) {
-  await qs("tengu_mcp_logout", {});
+  await logEventAsync("tengu_mcp_logout", {});
   let u = await v(t, "cli_mcp_logout", e, o),
-    a = sI(t, u);
+    a = classifyMcpServerAuth(t, u);
   switch (a.kind) {
     case "claudeai-proxy":
       return (
         await logFeatureSadAsync("cli_mcp_logout", "claudeai_proxy"),
         cliOkAfterAnalyticsFlush(
           `"${t}" is a claude.ai connector \u2014 its credentials live on claude.ai, not this machine. ` +
-            `Disconnect it at ${Qg(jV())}`,
+            `Disconnect it at ${formatHyperlink(jV())}`,
         )
       );
     case "unsupported-transport":

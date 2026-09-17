@@ -11,8 +11,8 @@
 // [preload stripped] 原本在此预载 75 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { Dce } from "../../01-核心基础设施/共享小工具-未细化/chunk-kax7bdqv.js";
-import { uu } from "../../01-核心基础设施/共享小工具-未细化/chunk-bgwm3fhf.js";
+import { resolveApiBaseUrl } from "../../01-核心基础设施/共享小工具-未细化/self-hosted-runner-api.js";
+import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
 import { createPublicKey, verify } from "crypto";
 function y(t) {
   let r = { header: !1, verify: !0, checkExpiry: !0, help: !1 };
@@ -160,7 +160,7 @@ async function _(t, r, e = process.stdin, n = x) {
   if (t?.trim()) return t.trim();
   let o = r.CLAUDE_CODE_SESSION_ACCESS_TOKEN?.trim();
   if (o) return o;
-  let i = (await uu(v(e), n, "decode-token: reading token from stdin")).trim();
+  let i = (await raceWithTimeout(v(e), n, "decode-token: reading token from stdin")).trim();
   if (i) return i;
   throw Error(
     "decode-token: no token supplied. Pass it as an argument, pipe it on stdin, or set $CLAUDE_CODE_SESSION_ACCESS_TOKEN.",
@@ -227,7 +227,7 @@ async function selfHostedRunnerDecodeTokenMain(t) {
       s = u(n, "header"),
       c = u(o, "payload");
     if (r.verify) {
-      let f = `${(r.apiUrl ?? Dce()).replace(/\/+$/, "")}/v1/code/.well-known/jwks.json`,
+      let f = `${(r.apiUrl ?? resolveApiBaseUrl()).replace(/\/+$/, "")}/v1/code/.well-known/jwks.json`,
         { kid: p } = await m({
           headerB64: n,
           payloadB64: o,

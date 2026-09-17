@@ -9,14 +9,14 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 230 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { qe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -27,15 +27,15 @@ import { parseSettingsFile, getSettingsFilePathForSource, getSettingsForSource, 
 import { Fr, Er } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { gi, o, t, zb } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { supportsShiftEnter } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import {
   SandboxManager,
   ep,
@@ -56,44 +56,44 @@ import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chun
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { Oc, DG, ON, Df, jH } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { vve, Rm, Us, Qk, Oo, ZJe } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
+import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss, a0e, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import { J8 } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
+import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { Hye } from "./chunk-sx24y271.js";
 import { m7, SSe, F3e, TSe, oI } from "./chunk-4wrkmv3h.js";
-import { zle, OS, nI, f9 } from "../../03-入口与运行时/会话UI(REPL)/chunk-zds66w6y.js";
+import { openFileInEditor, resolveEditorCommand, getEditorDisplayName, editFileInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
 import { xS, Fs } from "./chunk-0hcqee2w.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
-import { _s } from "../../01-核心基础设施/共享小工具-未细化/chunk-1371sqbk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import { ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import { TitledBorderBox } from "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import { kv } from "../../01-核心基础设施/共享小工具-未细化/chunk-mnzfncps.js";
-import { ut } from "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
+import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
+import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import "../Git-Worktree/chunk-33y3h2sy.js";
 import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import { s, se, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function cd(jl, lg) {
   let { rule: ag, source: cg } = jl;
@@ -110,7 +110,7 @@ var ri = [
       empty: "No additional working directories",
     },
   ],
-  ld = m(() => {
+  ld = createLazyValue(() => {
     let i = v(s()).catch([]),
       u = c({
         source: s(),
@@ -138,7 +138,7 @@ function Xl(i) {
 }
 async function ql(i, u) {
   try {
-    let f = kv(
+    let f = parseThinClientReply(
       "get_settings",
       ld(),
       await i.sendControlRequest({ subtype: "get_settings" }, { signal: u }),
@@ -170,9 +170,9 @@ function li(eg) {
   if (fo[0] !== mn) ((Zu = () => mn()), (fo[0] = mn), (fo[1] = Zu));
   else Zu = fo[1];
   let ed;
-  if (fo[2] === p) ((ed = { context: "Settings" }), (fo[2] = ed));
+  if (fo[2] === MEMO_CACHE_SENTINEL) ((ed = { context: "Settings" }), (fo[2] = ed));
   else ed = fo[2];
-  Ne("confirm:no", Zu, ed);
+  useKeybinding("confirm:no", Zu, ed);
   let Jr;
   if (fo[3] !== mn || fo[4] !== Nl)
     ((Jr = ri.map((fn) => {
@@ -183,7 +183,7 @@ function li(eg) {
           id: Ul,
           title: tg,
           children: e(Dn, {
-            fallback: e($n, {
+            fallback: e(SpinnerMessageLine, {
               message: "Reading the cloud session's rules\u2026",
             }),
             children: e(ii, { rulesRead: Nl, kind: Ul, empty: og, onExit: mn }),
@@ -203,7 +203,7 @@ function li(eg) {
       (fo[7] = fn));
   else fn = fo[7];
   let td;
-  if (fo[8] === p)
+  if (fo[8] === MEMO_CACHE_SENTINEL)
     ((td = e(t, {
       dimColor: !0,
       wrap: "wrap-trim",
@@ -213,22 +213,22 @@ function li(eg) {
       (fo[8] = td));
   else td = fo[8];
   let od;
-  if (fo[9] === p)
-    ((od = e(D, { chord: ["up", "down"], action: "navigate" })), (fo[9] = od));
+  if (fo[9] === MEMO_CACHE_SENTINEL)
+    ((od = e(KeybindingHint, { chord: ["up", "down"], action: "navigate" })), (fo[9] = od));
   else od = fo[9];
   let nd;
-  if (fo[10] === p)
+  if (fo[10] === MEMO_CACHE_SENTINEL)
     ((nd = r(o, {
       marginTop: 1,
       flexDirection: "column",
       children: [
         td,
-        e(ci, {
-          children: r(ue, {
+        e(InputGuide, {
+          children: r(DotSeparatedList, {
             children: [
               od,
-              e(D, { chord: ["left", "right"], action: "switch" }),
-              e(D, { chord: "escape", action: "close" }),
+              e(KeybindingHint, { chord: ["left", "right"], action: "switch" }),
+              e(KeybindingHint, { chord: "escape", action: "close" }),
             ],
           }),
         }),
@@ -305,7 +305,7 @@ function si(jl) {
   let Hl = _(10),
     { rules: Wl, onExit: Vl } = jl,
     { headerFocused: Yl, focusHeader: zl } = Jd(),
-    { rows: sg } = Se(),
+    { rows: sg } = useTerminalSize(),
     oi;
   if (Hl[0] !== Wl) ((oi = Wl.map(cd)), (Hl[0] = Wl), (Hl[1] = oi));
   else oi = Hl[1];
@@ -456,7 +456,7 @@ function go(Rg) {
         }
       } else {
         let We;
-        if (Io[8] === p)
+        if (Io[8] === MEMO_CACHE_SENTINEL)
           ((We = e(t, { dimColor: !0, children: "Any Bash command" })),
             (Io[8] = We));
         else We = Io[8];
@@ -535,9 +535,9 @@ function tr(Ig) {
       initialContext: Jl,
       setToolPermissionContext: Zl,
     } = Ig,
-    { storageV5: ea } = _e(),
+    { storageV5: ea } = useStorageV5Context(),
     pd;
-  if (Gt[0] === p) ((pd = cke.map(la)), (Gt[0] = pd));
+  if (Gt[0] === MEMO_CACHE_SENTINEL) ((pd = cke.map(la)), (Gt[0] = pd));
   else pd = Gt[0];
   let Lg = pd,
     hd;
@@ -650,10 +650,10 @@ function or(ly) {
     [ca, cy] = d(""),
     [ua, uy] = d(0),
     Sd;
-  if (yo[0] === p) ((Sd = { context: "Settings" }), (yo[0] = Sd));
+  if (yo[0] === MEMO_CACHE_SENTINEL) ((Sd = { context: "Settings" }), (yo[0] = Sd));
   else Sd = yo[0];
-  Ne("confirm:no", hi, Sd);
-  let { columns: dy } = Se(),
+  useKeybinding("confirm:no", hi, Sd);
+  let { columns: dy } = useTerminalSize(),
     da = dy - 6,
     Cd;
   if (yo[1] !== aa || yo[2] !== bi)
@@ -672,27 +672,27 @@ function or(ly) {
   let ma = Cd;
   const fa = `Add ${bi} permission rule`;
   let Ed;
-  if (yo[4] === p)
-    ((Ed = r(ue, {
+  if (yo[4] === MEMO_CACHE_SENTINEL)
+    ((Ed = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "submit" }),
-        e(D, { chord: "escape", action: "cancel" }),
+        e(KeybindingHint, { chord: "enter", action: "submit" }),
+        e(KeybindingHint, { chord: "escape", action: "cancel" }),
       ],
     })),
       (yo[4] = Ed));
   else Ed = yo[4];
   let Ad;
-  if (yo[5] === p) ((Ad = e(zb, {})), (yo[5] = Ad));
+  if (yo[5] === MEMO_CACHE_SENTINEL) ((Ad = e(zb, {})), (yo[5] = Ad));
   else Ad = yo[5];
   let Pd, kd;
-  if (yo[6] === p)
+  if (yo[6] === MEMO_CACHE_SENTINEL)
     ((Pd = e(t, { bold: !0, children: Er({ toolName: WebFetchTool.name }) })),
       (kd = e(t, { bold: !1, children: " or " })),
       (yo[6] = Pd),
       (yo[7] = kd));
   else ((Pd = yo[6]), (kd = yo[7]));
   let Td;
-  if (yo[8] === p)
+  if (yo[8] === MEMO_CACHE_SENTINEL)
     ((Td = r(t, {
       children: [
         "Permission rules are a tool name, optionally followed by a specifier in parentheses.",
@@ -846,7 +846,7 @@ function ur(Ey) {
   else Ud = Je[15];
   let ha = Ud,
     Id;
-  if (Je[16] === p)
+  if (Je[16] === MEMO_CACHE_SENTINEL)
     ((Id = (Dy) => {
       ky(Number(Dy));
     }),
@@ -898,7 +898,7 @@ function ur(Ey) {
   let sr = Vd;
   if (ct.length === 0) {
     let lr;
-    if (Je[25] === p)
+    if (Je[25] === MEMO_CACHE_SENTINEL)
       ((lr = e(t, {
         dimColor: !0,
         children:
@@ -925,7 +925,7 @@ function ur(Ey) {
         return {
           label: r(t, {
             children: [
-              e(et, { status: Fy ? "success" : "error", withSpace: !0 }),
+              e(StatusIndicator, { status: Fy ? "success" : "error", withSpace: !0 }),
               ir[cr],
               e(t, { dimColor: !0, children: By }),
             ],
@@ -950,7 +950,7 @@ function ur(Ey) {
   } else lr = Je[31];
   let Ei = lr,
     ar;
-  if (Je[37] === p)
+  if (Je[37] === MEMO_CACHE_SENTINEL)
     ((ar = e(t, {
       children: "Commands recently denied by the auto mode classifier.",
     })),
@@ -1033,7 +1033,7 @@ function mr(qy) {
       (dr[6] = Pi));
   else Pi = dr[6];
   let nm;
-  if (dr[7] === p)
+  if (dr[7] === MEMO_CACHE_SENTINEL)
     ((nm = e(t, {
       children:
         "Claude Code will no longer have access to files in this directory.",
@@ -1042,7 +1042,7 @@ function mr(qy) {
   else nm = dr[7];
   let ki;
   if (dr[8] !== Ra || dr[9] !== wn)
-    ((ki = e(En, { onConfirm: Ra, onCancel: wn })),
+    ((ki = e(ConfirmPrompt, { onConfirm: Ra, onCancel: wn })),
       (dr[8] = Ra),
       (dr[9] = wn),
       (dr[10] = ki));
@@ -1085,7 +1085,7 @@ function fr(cb) {
       onHeaderFocusChange: Ti,
     } = cb,
     { headerFocused: jo, focusHeader: Aa } = Jd(),
-    Pa = Ye(gm),
+    Pa = useSession(gm),
     im,
     sm;
   if (kt[0] !== jo || kt[1] !== Ti)
@@ -1148,7 +1148,7 @@ function fr(cb) {
     ((Di = e(t, { children: Da })), (kt[16] = Da), (kt[17] = Di));
   else Di = kt[17];
   let pm;
-  if (kt[18] === p)
+  if (kt[18] === MEMO_CACHE_SENTINEL)
     ((pm = e(t, { dimColor: !0, children: "(Original working directory)" })),
       (kt[18] = pm));
   else pm = kt[18];
@@ -1601,7 +1601,7 @@ function hf(wv, Rv) {
 function qi() {
   let jb = _(1),
     Am;
-  if (jb[0] === p) {
+  if (jb[0] === MEMO_CACHE_SENTINEL) {
     let Wb = oC();
     Am = Object.fromEntries(tt.map((Pm) => [Pm, Wb[Pm]?.length ?? 0]));
     jb[0] = Am;
@@ -1728,11 +1728,11 @@ function xr(Vb) {
     } = Vb,
     pr = qi(),
     km;
-  if (dt[0] === p) ((km = oC().environment ?? []), (dt[0] = km));
+  if (dt[0] === MEMO_CACHE_SENTINEL) ((km = oC().environment ?? []), (dt[0] = km));
   else km = dt[0];
   let Yb = km,
     xn = a0e(),
-    { columns: Ya } = Se(),
+    { columns: Ya } = useTerminalSize(),
     { headerFocused: Ot, focusHeader: za, blurHeader: Yi } = Jd(),
     Tm,
     $m;
@@ -1791,7 +1791,7 @@ function xr(Vb) {
     let Um = hr.length > 0;
     let Ka = Um ? hr.map(af) : Yb.map(cf);
     let Xa = Bt.environment;
-    let Kb = Y(hr.map(uf)).map(Le).join(" and ");
+    let Kb = dedupe(hr.map(uf)).map(Le).join(" and ");
     let Xb = hr.some(df);
     let qb = hr.some(mf);
     let Gb = !qb
@@ -1818,7 +1818,7 @@ function xr(Vb) {
     let Zb =
       Tt.length > 0 && Ka.some((Jb) => Jb.text.toLowerCase().includes(Om));
     let jm = wo && (Tt ? Zb : !0);
-    let ev = zi.length + (jm ? 1 : 0) + (Tt ? 0 : 1 + G(tt, Lm));
+    let ev = zi.length + (jm ? 1 : 0) + (Tt ? 0 : 1 + countMatching(tt, Lm));
     let tv = String(ev).length + 2;
     let yr = Math.max(1, (xn ?? Ya - 4) - 4 - tv - Pe);
     let ov = ff;
@@ -1965,7 +1965,7 @@ ${" ".repeat(Pe)}\u2026 (+${Ja} more ${Ja === 1 ? "line" : "lines"})`,
   } else Bm = dt[23];
   let Ki = Bm,
     gr;
-  if (dt[31] === p)
+  if (dt[31] === MEMO_CACHE_SENTINEL)
     ((gr = e(t, {
       wrap: "wrap-trim",
       children:
@@ -2087,7 +2087,7 @@ async function vc(i, u) {
   } finally {
     await a.close();
   }
-  return { opened: zle(f), path: f };
+  return { opened: openFileInEditor(f), path: f };
 }
 function Un(rc) {
   let yf = _(5),
@@ -2106,7 +2106,7 @@ function Un(rc) {
             gf(
               Jv
                 ? `opening ${lc}`
-                : OS()
+                : resolveEditorCommand()
                   ? `wrote ${lc} \u2014 the editor could not be launched`
                   : `wrote ${lc} \u2014 no $VISUAL/$EDITOR set`,
             );
@@ -2138,10 +2138,10 @@ function Wt(Zv) {
     return null;
   }
   let vf;
-  if (Pr[0] === p)
+  if (Pr[0] === MEMO_CACHE_SENTINEL)
     ((vf = [
       {
-        label: `View the full text in editor${nI() ? ` (${nI()})` : ""}`,
+        label: `View the full text in editor${getEditorDisplayName() ? ` (${getEditorDisplayName()})` : ""}`,
         value: "editor",
       },
       { label: "Cancel", value: "cancel" },
@@ -2252,15 +2252,15 @@ function _r(ow) {
   let Z = _(78),
     { entry: j, onEdit: mc, onDelete: Bn, onCancel: he } = ow,
     Cf;
-  if (Z[0] === p) ((Cf = { context: "Confirmation" }), (Z[0] = Cf));
+  if (Z[0] === MEMO_CACHE_SENTINEL) ((Cf = { context: "Confirmation" }), (Z[0] = Cf));
   else Cf = Z[0];
-  Ne("confirm:no", he, Cf);
+  useKeybinding("confirm:no", he, Cf);
   let xf;
-  if (Z[1] === p)
+  if (Z[1] === MEMO_CACHE_SENTINEL)
     ((xf = e(o, {
       marginLeft: 3,
-      children: e(ci, {
-        children: e(D, { chord: "escape", action: "cancel" }),
+      children: e(InputGuide, {
+        children: e(KeybindingHint, { chord: "escape", action: "cancel" }),
       }),
     })),
       (Z[1] = xf));
@@ -2301,7 +2301,7 @@ function _r(ow) {
     if (Z[9] !== ke || Z[10] !== ae || Z[11] !== Me)
       ((ot = r(N, {
         children: [
-          r(_s, {
+          r(TitledBorderBox, {
             color: "permission",
             title: "Rule details",
             children: [ke, ae, Me],
@@ -2355,7 +2355,7 @@ function _r(ow) {
     if (Z[22] !== ke || Z[23] !== ae || Z[24] !== Me)
       ((ot = r(N, {
         children: [
-          r(_s, {
+          r(TitledBorderBox, {
             color: "permission",
             title: "Rule details",
             children: [ke, ae, Me],
@@ -2375,7 +2375,7 @@ function _r(ow) {
     if (Z[26] !== j) ((ke = e(He, { entry: j })), (Z[26] = j), (Z[27] = ke));
     else ke = Z[27];
     let xe;
-    if (Z[28] === p)
+    if (Z[28] === MEMO_CACHE_SENTINEL)
       ((xe = r(t, {
         italic: !0,
         children: [
@@ -2398,7 +2398,7 @@ function _r(ow) {
     if (Z[32] !== ke || Z[33] !== ae)
       ((Me = r(N, {
         children: [
-          r(_s, {
+          r(TitledBorderBox, {
             color: "permission",
             title: "Rule details",
             children: [ke, xe, ae],
@@ -2417,7 +2417,7 @@ function _r(ow) {
     if (Z[35] !== j) ((ke = e(He, { entry: j })), (Z[35] = j), (Z[36] = ke));
     else ke = Z[36];
     let xe;
-    if (Z[37] === p)
+    if (Z[37] === MEMO_CACHE_SENTINEL)
       ((xe = e(t, {
         italic: !0,
         children:
@@ -2436,7 +2436,7 @@ function _r(ow) {
     if (Z[41] !== ke || Z[42] !== ae)
       ((Me = r(N, {
         children: [
-          r(_s, {
+          r(TitledBorderBox, {
             color: "permission",
             title: "Rule details",
             children: [ke, xe, ae],
@@ -2478,7 +2478,7 @@ function _r(ow) {
         (Z[50] = ae));
     else ae = Z[50];
     let Me;
-    if (Z[51] === p)
+    if (Z[51] === MEMO_CACHE_SENTINEL)
       ((Me = [
         { label: "Delete", value: "delete" },
         { label: "Cancel", value: "cancel" },
@@ -2506,7 +2506,7 @@ function _r(ow) {
     if (Z[58] !== xe || Z[59] !== ae || Z[60] !== eo)
       ((kr = r(N, {
         children: [
-          r(_s, {
+          r(TitledBorderBox, {
             color: "permission",
             title: "Rule details",
             children: [xe, ae, eo],
@@ -2539,7 +2539,7 @@ function _r(ow) {
       (Z[65] = ae));
   else ae = Z[65];
   let Me;
-  if (Z[66] === p)
+  if (Z[66] === MEMO_CACHE_SENTINEL)
     ((Me = [
       { label: "Edit", value: "edit" },
       { label: "Delete", value: "delete" },
@@ -2570,7 +2570,7 @@ function _r(ow) {
   if (Z[74] !== xe || Z[75] !== ae || Z[76] !== eo)
     ((kr = r(N, {
       children: [
-        r(_s, {
+        r(TitledBorderBox, {
           color: "permission",
           title: "Rule details",
           children: [xe, ae, eo],
@@ -2594,9 +2594,9 @@ function Mr(rw) {
     { section: jt, state: ge, onToggle: fc, onCancel: Ho } = rw,
     pc = gi(),
     Af;
-  if (Te[0] === p) ((Af = { context: "Settings" }), (Te[0] = Af));
+  if (Te[0] === MEMO_CACHE_SENTINEL) ((Af = { context: "Settings" }), (Te[0] = Af));
   else Af = Te[0];
-  Ne("confirm:no", Ho, Af);
+  useKeybinding("confirm:no", Ho, Af);
   let [ds, hc] = Un(jt),
     ms,
     fs,
@@ -2619,13 +2619,13 @@ function Mr(rw) {
   ) {
     Ro = oC()[jt] ?? [];
     let Ko;
-    if (Te[18] === p)
-      ((Ko = e(ci, { children: e(D, { chord: "esc", action: "cancel" }) })),
+    if (Te[18] === MEMO_CACHE_SENTINEL)
+      ((Ko = e(InputGuide, { children: e(KeybindingHint, { chord: "esc", action: "cancel" }) })),
         (Te[18] = Ko));
     else Ko = Te[18];
     hs = Ko;
     ps = ge.control === "user";
-    fs = _s;
+    fs = TitledBorderBox;
     ws = "permission";
     Rs = "Built-in rules";
     let to;
@@ -2816,9 +2816,9 @@ function Mr(rw) {
       (Te[54] = Es));
   else Es = Te[54];
   let Pf, kf;
-  if (Te[55] === p)
+  if (Te[55] === MEMO_CACHE_SENTINEL)
     ((Pf = {
-      label: `View in editor${nI() ? ` (${nI()})` : ""}`,
+      label: `View in editor${getEditorDisplayName() ? ` (${getEditorDisplayName()})` : ""}`,
       value: "editor",
     }),
       (kf = { label: "Cancel", value: "cancel" }),
@@ -2898,11 +2898,11 @@ function Br(cw) {
   let no = _(19),
     { entry: Nn, isLastInSection: yc, onConfirm: bc, onCancel: Ds } = cw,
     _f;
-  if (no[0] === p) ((_f = { context: "Confirmation" }), (no[0] = _f));
+  if (no[0] === MEMO_CACHE_SENTINEL) ((_f = { context: "Confirmation" }), (no[0] = _f));
   else _f = no[0];
-  Ne("confirm:no", Ds, _f);
+  useKeybinding("confirm:no", Ds, _f);
   let Mf;
-  if (no[1] === p)
+  if (no[1] === MEMO_CACHE_SENTINEL)
     ((Mf = e(t, {
       bold: !0,
       color: "error",
@@ -2935,7 +2935,7 @@ function Br(cw) {
   else Os = no[8];
   let Ns;
   if (no[9] !== Ds || no[10] !== bc)
-    ((Ns = e(En, { focus: "cancel", onConfirm: bc, onCancel: Ds })),
+    ((Ns = e(ConfirmPrompt, { focus: "cancel", onConfirm: bc, onCancel: Ds })),
       (no[9] = Ds),
       (no[10] = bc),
       (no[11] = Ns));
@@ -2957,11 +2957,11 @@ function Br(cw) {
       (no[15] = Is));
   else Is = no[15];
   let Ff;
-  if (no[16] === p)
+  if (no[16] === MEMO_CACHE_SENTINEL)
     ((Ff = e(o, {
       marginLeft: 3,
-      children: e(ci, {
-        children: e(D, { chord: "escape", action: "cancel" }),
+      children: e(InputGuide, {
+        children: e(KeybindingHint, { chord: "escape", action: "cancel" }),
       }),
     })),
       (no[16] = Ff));
@@ -3033,7 +3033,7 @@ function Qs(i) {
       problem: `could not write the file: ${a instanceof Error ? a.message : String(a)}`,
     };
   }
-  let f = f9(u);
+  let f = editFileInExternalEditor(u);
   if (f.error !== void 0) return { content: null, problem: f.error };
   if (f.content === null)
     return {
@@ -3062,7 +3062,7 @@ function Nr(Mw) {
   let Ls = _(8),
     { onCancel: In, onPick: Rc } = Mw,
     jf;
-  if (Ls[0] === p)
+  if (Ls[0] === MEMO_CACHE_SENTINEL)
     ((jf = e(o, {
       flexDirection: "column",
       marginBottom: 1,
@@ -3071,7 +3071,7 @@ function Nr(Mw) {
       (Ls[0] = jf));
   else jf = Ls[0];
   let Wf;
-  if (Ls[1] === p) ((Wf = tt.map(ap)), (Ls[1] = Wf));
+  if (Ls[1] === MEMO_CACHE_SENTINEL) ((Wf = tt.map(ap)), (Ls[1] = Wf));
   else Wf = Ls[1];
   let js;
   if (Ls[2] !== In || Ls[3] !== Rc)
@@ -3101,10 +3101,10 @@ function Ur(Fw) {
     [Ec, Ow] = d(Ws ? Ws.length : 0),
     [Ys, Yf] = d(null),
     zf;
-  if (gt[0] === p) ((zf = { context: "Settings" }), (gt[0] = zf));
+  if (gt[0] === MEMO_CACHE_SENTINEL) ((zf = { context: "Settings" }), (gt[0] = zf));
   else zf = gt[0];
-  Ne("confirm:no", Vs, zf);
-  let { columns: Nw } = Se(),
+  useKeybinding("confirm:no", Vs, zf);
+  let { columns: Nw } = useTerminalSize(),
     Ac = Nw - 6,
     Hf;
   if (gt[1] !== Cc || gt[2] !== qo)
@@ -3135,22 +3135,22 @@ function Ur(Fw) {
   else Xf = gt[5];
   const $c = `${Iw ? "Edit" : "Add"} ${Xf} rule`;
   let qf;
-  if (gt[6] === p)
-    ((qf = e(D, { chord: "enter", action: "save" })), (gt[6] = qf));
+  if (gt[6] === MEMO_CACHE_SENTINEL)
+    ((qf = e(KeybindingHint, { chord: "enter", action: "save" })), (gt[6] = qf));
   else qf = gt[6];
   let Gf;
-  if (gt[7] === p)
-    ((Gf = r(ue, {
+  if (gt[7] === MEMO_CACHE_SENTINEL)
+    ((Gf = r(DotSeparatedList, {
       children: [
         qf,
-        e(D, { chord: supportsShiftEnter() ? "shift+enter" : "ctrl+j", action: "new line" }),
-        e(D, { chord: "escape", action: "cancel" }),
+        e(KeybindingHint, { chord: supportsShiftEnter() ? "shift+enter" : "ctrl+j", action: "new line" }),
+        e(KeybindingHint, { chord: "escape", action: "cancel" }),
       ],
     })),
       (gt[7] = Gf));
   else Gf = gt[7];
   let Qf;
-  if (gt[8] === p) ((Qf = e(zb, {})), (gt[8] = Qf));
+  if (gt[8] === MEMO_CACHE_SENTINEL) ((Qf = e(zb, {})), (gt[8] = Qf));
   else Qf = gt[8];
   let zs;
   if (gt[9] !== Tc)
@@ -3165,7 +3165,7 @@ function Ur(Fw) {
       (gt[10] = zs));
   else zs = gt[10];
   let Jf;
-  if (gt[11] === p)
+  if (gt[11] === MEMO_CACHE_SENTINEL)
     ((Jf = (Lw) => {
       (Yf(null), Bw(Lw));
     }),
@@ -3207,7 +3207,7 @@ function Ur(Fw) {
       (gt[18] = qs));
   else qs = gt[18];
   let Zf;
-  if (gt[19] === p)
+  if (gt[19] === MEMO_CACHE_SENTINEL)
     ((Zf = e(t, {
       dimColor: !0,
       children: "Saved to your user settings file",
@@ -3315,9 +3315,9 @@ function _l(FR) {
   let Xe = _(34),
     { rule: Ke, onDelete: Fc, onCancel: Js } = FR,
     pp;
-  if (Xe[0] === p) ((pp = { context: "Confirmation" }), (Xe[0] = pp));
+  if (Xe[0] === MEMO_CACHE_SENTINEL) ((pp = { context: "Confirmation" }), (Xe[0] = pp));
   else pp = Xe[0];
-  Ne("confirm:no", Js, pp);
+  useKeybinding("confirm:no", Js, pp);
   let Zs;
   if (Xe[1] !== Ke.ruleValue)
     ((Zs = xS(Er(Ke.ruleValue))), (Xe[1] = Ke.ruleValue), (Xe[2] = Zs));
@@ -3349,11 +3349,11 @@ function _l(FR) {
   else hp = Xe[12];
   let ro = hp,
     gp;
-  if (Xe[13] === p)
+  if (Xe[13] === MEMO_CACHE_SENTINEL)
     ((gp = e(o, {
       marginLeft: 3,
-      children: e(ci, {
-        children: e(D, { chord: "escape", action: "cancel" }),
+      children: e(InputGuide, {
+        children: e(KeybindingHint, { chord: "escape", action: "cancel" }),
       }),
     })),
       (Xe[13] = gp));
@@ -3361,7 +3361,7 @@ function _l(FR) {
   let Bc = gp;
   if (Ke.source === "policySettings") {
     let $t;
-    if (Xe[14] === p)
+    if (Xe[14] === MEMO_CACHE_SENTINEL)
       (($t = r(t, {
         italic: !0,
         children: [
@@ -3377,7 +3377,7 @@ function _l(FR) {
     if (Xe[15] !== ro)
       ((St = r(N, {
         children: [
-          r(_s, {
+          r(TitledBorderBox, {
             color: "permission",
             title: "Rule details",
             children: [ro, $t],
@@ -3410,7 +3410,7 @@ function _l(FR) {
     if (Xe[19] !== ro || Xe[20] !== St)
       ((Ir = r(N, {
         children: [
-          r(_s, {
+          r(TitledBorderBox, {
             color: "permission",
             title: "Rule details",
             children: [ro, St],
@@ -3439,7 +3439,7 @@ function _l(FR) {
       (Xe[25] = St));
   else St = Xe[25];
   let Ir;
-  if (Xe[26] === p)
+  if (Xe[26] === MEMO_CACHE_SENTINEL)
     ((Ir = e(t, {
       children: "Are you sure you want to delete this permission rule?",
     })),
@@ -3447,7 +3447,7 @@ function _l(FR) {
   else Ir = Xe[26];
   let nl;
   if (Xe[27] !== Js || Xe[28] !== Fc)
-    ((nl = e(En, { onConfirm: Fc, onCancel: Js })),
+    ((nl = e(ConfirmPrompt, { onConfirm: Fc, onCancel: Js })),
       (Xe[27] = Js),
       (Xe[28] = Fc),
       (Xe[29] = nl));
@@ -3598,7 +3598,7 @@ function To(Xc) {
   else ((cl = Go[1]), (ul = Go[2]), (Qo = Go[3]), (io = Go[4]));
   const qc = io === "allow" ? 0 : void 0;
   let Cp;
-  if (Go[5] === p)
+  if (Go[5] === MEMO_CACHE_SENTINEL)
     ((Cp = {
       allow: "Claude Code won't ask before using allowed tools.",
       ask: "Claude Code will always ask for confirmation before using these tools.",
@@ -3647,7 +3647,7 @@ function To(Xc) {
 function Fl(NR) {
   let R = _(224),
     { onExit: xo, initialTab: UR, onRetryDenials: Qc } = NR,
-    { storageV5: Be } = _e(),
+    { storageV5: Be } = useStorageV5Context(),
     { getDenials: Jc, removeDenial: Zc } = J8(),
     Ep;
   if (R[0] !== Jc) ((Ep = Jc()), (R[0] = Jc), (R[1] = Ep));
@@ -3656,7 +3656,7 @@ function Fl(NR) {
     Jo = UR ?? (jr ? "recent" : "allow"),
     [eu, IR] = d(Jo),
     Ap;
-  if (R[2] === p) ((Ap = []), (R[2] = Ap));
+  if (R[2] === MEMO_CACHE_SENTINEL) ((Ap = []), (R[2] = Ap));
   else Ap = R[2];
   let [hl, Ge] = d(Ap),
     re = U(vh),
@@ -3664,13 +3664,13 @@ function Fl(NR) {
     Wn = Va(),
     [tu] = cn(),
     Pp;
-  if (R[3] === p)
+  if (R[3] === MEMO_CACHE_SENTINEL)
     ((Pp = { approved: new Set(), retry: new Set(), denials: [] }),
       (R[3] = Pp));
   else Pp = R[3];
   let kp = C(Pp),
     Tp;
-  if (R[4] === p)
+  if (R[4] === MEMO_CACHE_SENTINEL)
     ((Tp = (LR) => {
       kp.current = LR;
     }),
@@ -3690,7 +3690,7 @@ function Fl(NR) {
     [bt, be] = d(null),
     [uu, VR] = d(!0),
     Dp;
-  if (R[5] === p)
+  if (R[5] === MEMO_CACHE_SENTINEL)
     ((Dp = (YR) => {
       VR(YR);
     }),
@@ -3762,7 +3762,7 @@ function Fl(NR) {
     Yn = !yt && !Eo && !Ao && !$p && !Po && !bt;
   const Vn = Yn && nt;
   let Ip;
-  if (R[18] === p)
+  if (R[18] === MEMO_CACHE_SENTINEL)
     ((Ip = () => {
       au(!1);
     }),
@@ -3828,7 +3828,7 @@ function Fl(NR) {
   else Vp = R[27];
   let vu = Vp,
     Hp;
-  if (R[28] === p)
+  if (R[28] === MEMO_CACHE_SENTINEL)
     ((Hp = () => {
       ru(null);
     }),
@@ -3836,7 +3836,7 @@ function Fl(NR) {
   else Hp = R[28];
   let tS = Hp,
     Kp;
-  if (R[29] === p)
+  if (R[29] === MEMO_CACHE_SENTINEL)
     ((Kp = (oS, nS) => {
       (iu({ ruleValue: oS, ruleBehavior: nS }), ru(null));
     }),
@@ -3856,7 +3856,7 @@ function Fl(NR) {
         let aS = xl.shadowType === "deny" ? "blocked" : "shadowed";
         Ge((cS) => [
           ...cS,
-          ut(
+          getThemeColor(
             "warning",
             tu,
           )(`${L.warning} Warning: ${xS(Er(xl.rule.ruleValue))} is ${aS}`),
@@ -3870,7 +3870,7 @@ function Fl(NR) {
   else Xp = R[31];
   let wu = Xp,
     Qp;
-  if (R[32] === p)
+  if (R[32] === MEMO_CACHE_SENTINEL)
     ((Qp = () => {
       iu(null);
     }),
@@ -3878,11 +3878,11 @@ function Fl(NR) {
   else Qp = R[32];
   let uS = Qp,
     Jp;
-  if (R[33] === p) ((Jp = () => su(!0)), (R[33] = Jp));
+  if (R[33] === MEMO_CACHE_SENTINEL) ((Jp = () => su(!0)), (R[33] = Jp));
   else Jp = R[33];
   let dS = Jp,
     Zp;
-  if (R[34] === p) ((Zp = (mS) => lu(mS)), (R[34] = Zp));
+  if (R[34] === MEMO_CACHE_SENTINEL) ((Zp = (mS) => lu(mS)), (R[34] = Zp));
   else Zp = R[34];
   let fS = Zp,
     eh;
@@ -3936,7 +3936,7 @@ function Fl(NR) {
   if (R[40] !== xu)
     ((nh = { context: "Settings", isActive: xu }), (R[40] = xu), (R[41] = nh));
   else nh = R[41];
-  Ne("confirm:no", en, nh);
+  useKeybinding("confirm:no", en, nh);
   let rh;
   if (
     R[42] !== so ||
@@ -3992,7 +3992,7 @@ function Fl(NR) {
     sh;
   if (R[48] !== Be)
     ((sh = (Kn, tn) => {
-      if (OS() === void 0) {
+      if (resolveEditorCommand() === void 0) {
         be({
           mode: "env-problem",
           problem:
@@ -4100,7 +4100,7 @@ function Fl(NR) {
   let Xn = ch;
   if (bt?.mode === "pick-section") {
     let O;
-    if (R[53] === p) ((O = () => be(null)), (R[53] = O));
+    if (R[53] === MEMO_CACHE_SENTINEL) ((O = () => be(null)), (R[53] = O));
     else O = R[53];
     let H;
     if (R[54] !== Xn)
@@ -4121,7 +4121,7 @@ function Fl(NR) {
   }
   if (bt?.mode === "env-first-confirm") {
     let O, H;
-    if (R[56] === p)
+    if (R[56] === MEMO_CACHE_SENTINEL)
       ((O = e(t, { bold: !0, children: "Replace the built-in environment?" })),
         (H = e(t, {
           wrap: "wrap-trim",
@@ -4136,7 +4136,7 @@ function Fl(NR) {
       ((Q = () => lo(oC().environment ?? [], [])), (R[58] = lo), (R[59] = Q));
     else Q = R[59];
     let pe;
-    if (R[60] === p) ((pe = () => be(null)), (R[60] = pe));
+    if (R[60] === MEMO_CACHE_SENTINEL) ((pe = () => be(null)), (R[60] = pe));
     else pe = R[60];
     let $e;
     if (R[61] !== Q)
@@ -4150,18 +4150,18 @@ function Fl(NR) {
         children: [
           O,
           H,
-          e(En, { focus: "cancel", onConfirm: Q, onCancel: pe }),
+          e(ConfirmPrompt, { focus: "cancel", onConfirm: Q, onCancel: pe }),
         ],
       })),
         (R[61] = Q),
         (R[62] = $e));
     else $e = R[62];
     let vt;
-    if (R[63] === p)
+    if (R[63] === MEMO_CACHE_SENTINEL)
       ((vt = e(o, {
         marginLeft: 3,
-        children: e(ci, {
-          children: e(D, { chord: "escape", action: "cancel" }),
+        children: e(InputGuide, {
+          children: e(KeybindingHint, { chord: "escape", action: "cancel" }),
         }),
       })),
         (R[63] = vt));
@@ -4183,13 +4183,13 @@ function Fl(NR) {
     let H;
     if (R[68] !== _u)
       ((H = _u
-        ? [{ label: `Reopen in ${nI() ?? "your editor"}`, value: "reopen" }]
+        ? [{ label: `Reopen in ${getEditorDisplayName() ?? "your editor"}`, value: "reopen" }]
         : []),
         (R[68] = _u),
         (R[69] = H));
     else H = R[69];
     let Q;
-    if (R[70] === p) ((Q = { label: "Cancel", value: "cancel" }), (R[70] = Q));
+    if (R[70] === MEMO_CACHE_SENTINEL) ((Q = { label: "Cancel", value: "cancel" }), (R[70] = Q));
     else Q = R[70];
     let pe;
     if (R[71] !== H) ((pe = [...H, Q]), (R[71] = H), (R[72] = pe));
@@ -4206,7 +4206,7 @@ function Fl(NR) {
         (R[76] = $e));
     else $e = R[76];
     let vt;
-    if (R[77] === p) ((vt = () => be(null)), (R[77] = vt));
+    if (R[77] === MEMO_CACHE_SENTINEL) ((vt = () => be(null)), (R[77] = vt));
     else vt = R[77];
     let Et;
     if (R[78] !== pe || R[79] !== $e)
@@ -4217,7 +4217,7 @@ function Fl(NR) {
     else Et = R[80];
     let ao;
     if (R[81] !== O || R[82] !== Et)
-      ((ao = r(_s, {
+      ((ao = r(TitledBorderBox, {
         color: "permission",
         title: "Edit environment",
         children: [O, Et],
@@ -4227,8 +4227,8 @@ function Fl(NR) {
         (R[83] = ao));
     else ao = R[83];
     let zr;
-    if (R[84] === p)
-      ((zr = e(ci, { children: e(D, { chord: "esc", action: "cancel" }) })),
+    if (R[84] === MEMO_CACHE_SENTINEL)
+      ((zr = e(InputGuide, { children: e(KeybindingHint, { chord: "esc", action: "cancel" }) })),
         (R[84] = zr));
     else zr = R[84];
     let nn;
@@ -4359,7 +4359,7 @@ function Fl(NR) {
         (R[104] = O));
     else O = R[104];
     let H;
-    if (R[105] === p) ((H = () => be(null)), (R[105] = H));
+    if (R[105] === MEMO_CACHE_SENTINEL) ((H = () => be(null)), (R[105] = H));
     else H = R[105];
     let Q;
     if (R[106] !== co || R[107] !== Gn || R[108] !== O)
@@ -4384,7 +4384,7 @@ function Fl(NR) {
         (R[112] = H));
     else ((O = R[111]), (H = R[112]));
     let Q;
-    if (R[113] === p) ((Q = () => be(null)), (R[113] = Q));
+    if (R[113] === MEMO_CACHE_SENTINEL) ((Q = () => be(null)), (R[113] = Q));
     else Q = R[113];
     let pe;
     if (R[114] !== ko || R[115] !== O || R[116] !== H)
@@ -4408,7 +4408,7 @@ function Fl(NR) {
     else O = R[119];
     let H;
     if (R[120] !== xt || R[121] !== O)
-      ((H = G(xt, O)), (R[120] = xt), (R[121] = O), (R[122] = H));
+      ((H = countMatching(xt, O)), (R[120] = xt), (R[121] = O), (R[122] = H));
     else H = R[122];
     const Q = H === 1;
     let pe;
@@ -4470,7 +4470,7 @@ function Fl(NR) {
   }
   if (yt) {
     let O;
-    if (R[134] === p) ((O = () => ou(void 0)), (R[134] = O));
+    if (R[134] === MEMO_CACHE_SENTINEL) ((O = () => ou(void 0)), (R[134] = O));
     else O = R[134];
     let H;
     if (R[135] !== Au || R[136] !== yt)
@@ -4552,7 +4552,7 @@ function Fl(NR) {
         (R[153] = O));
     else O = R[153];
     let H;
-    if (R[154] === p) ((H = () => su(!1)), (R[154] = H));
+    if (R[154] === MEMO_CACHE_SENTINEL) ((H = () => su(!1)), (R[154] = H));
     else H = R[154];
     let Q;
     if (R[155] !== O || R[156] !== re)
@@ -4574,7 +4574,7 @@ function Fl(NR) {
         (R[159] = O));
     else O = R[159];
     let H;
-    if (R[160] === p) ((H = () => lu(null)), (R[160] = H));
+    if (R[160] === MEMO_CACHE_SENTINEL) ((H = () => lu(null)), (R[160] = H));
     else H = R[160];
     let Q;
     if (R[161] !== Ct)
@@ -4638,7 +4638,7 @@ function Fl(NR) {
   const H = !jr,
     Q = !nt;
   let pe;
-  if (R[177] === p)
+  if (R[177] === MEMO_CACHE_SENTINEL)
     ((pe = e(
       ss,
       {
@@ -4741,7 +4741,7 @@ function Fl(NR) {
       (R[194] = ao));
   else ao = R[194];
   let zr;
-  if (R[195] === p)
+  if (R[195] === MEMO_CACHE_SENTINEL)
     ((zr = e(t, {
       wrap: "wrap-trim",
       children:
@@ -4824,7 +4824,7 @@ function Fl(NR) {
   if (R[212] !== Jo || R[213] !== jr || R[214] !== uu || R[215] !== nt)
     ((Tl = e(o, {
       marginTop: 1,
-      children: e(ci, {
+      children: e(InputGuide, {
         children: uu
           ? e(N, {
               children:

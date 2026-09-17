@@ -10,21 +10,21 @@
 
 // [preload stripped] 原本在此预载 266 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { pv } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isCCREnvironmentKind, yq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { findGitRoot, getBranch, getIsHeadOnRemote, hasUnpushedCommits, getIsClean } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { y3, _ht, PVn, RESTRICTED_SESSION_CLOUD_REFUSAL, Ht, clearBridgeSession } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
@@ -33,39 +33,39 @@ import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { getTrustedDeviceToken } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
 import { oauthHeaders } from "../Bridge-RemoteControl/chunk-mxsfy35q.js";
 import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import { tye } from "../Bridge-RemoteControl/chunk-m1vpawx6.js";
-import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
+import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import "../认证-OAuth登录/chunk-9g86t9bp.js";
 import { jlt, Wlt, Tee } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-r2ab1bp6.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-1phhhgcj.js";
+import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
+import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import "../Bedrock-Vertex/chunk-g6sqdw6w.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
 import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
-import "./chunk-eq05pssv.js";
+import "./teleport-errors.js";
 import { YB } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ps79w9dv.js";
 import { nWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-vm6pzj28.js";
 import { oWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0dk7tzf3.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
+import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import "../认证-OAuth登录/chunk-dtt2nn79.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-1371sqbk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import { ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
+import "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import "../认证-OAuth登录/chunk-5bg9xwqx.js";
@@ -185,7 +185,7 @@ async function P(s) {
           "This session isn\u2019t connected to Remote Control. Run /remote-control first, then try again.",
       }
     );
-  let h = M() && s.credentials !== void 0 ? await getBridgeAccessTokenAsync(s.credentials) : getBridgeAccessToken();
+  let h = isHoverRestEnabled() && s.credentials !== void 0 ? await getBridgeAccessTokenAsync(s.credentials) : getBridgeAccessToken();
   if (!h)
     return (
       logFeatureBad("teleport_to_cloud", "no_auth"),
@@ -265,7 +265,7 @@ async function P(s) {
       }
     );
   }
-  (i("tengu_teleport_to_cloud", { action: S("start") }),
+  (logEvent("tengu_teleport_to_cloud", { action: S("start") }),
     _ht(c),
     s.beforeMove?.(),
     await a.settleUploadsBeforeHandoff?.());
@@ -281,7 +281,7 @@ async function P(s) {
     if (v.mayHaveCommitted) logFeatureSad("teleport_to_cloud", "maybe_committed");
     else (logFeatureBad("teleport_to_cloud", "request_failed"), PVn(c));
     return (
-      i("tengu_teleport_to_cloud", {
+      logEvent("tengu_teleport_to_cloud", {
         action: S(v.mayHaveCommitted ? "maybe_committed" : "failed"),
       }),
       { kind: "server-error", failure: v, sessionId: c }
@@ -289,7 +289,7 @@ async function P(s) {
   }
   return (
     logFeatureOk("teleport_to_cloud"),
-    i("tengu_teleport_to_cloud", {
+    logEvent("tengu_teleport_to_cloud", {
       action: S("success"),
       environment_kind: isCCREnvironmentKind(v.environmentKind)
         ? fromEnum(v.environmentKind)
@@ -352,7 +352,7 @@ async function Y(s, a, c = J) {
     if (a.aborted) return null;
     let m = getReplBridgeHandle()?.bridgeSessionId;
     if (m && m !== s) return m;
-    await Z(W, a);
+    await sleep(W, a);
   }
   return null;
 }
@@ -394,7 +394,7 @@ ${x}`,
         m = A(c.success.sessionId);
       if (m.kind === "disconnect")
         return (setTimeout(H, L, s, !0), O(h, { kind: "disconnected" }));
-      (H(s), await Z(0), q(s));
+      (H(s), await sleep(0), q(s));
       let _ = await Y(m.oldSessionId, s.abortController.signal);
       return O(
         h,
@@ -406,7 +406,7 @@ ${x}`,
   }
 }
 function j(s) {
-  i("tengu_teleport_menu", { action: fromEnum(s) });
+  logEvent("tengu_teleport_menu", { action: fromEnum(s) });
 }
 function TeleportMenu({
   onExit: s,
@@ -416,7 +416,7 @@ function TeleportMenu({
   canSend: m,
 }) {
   let [_, T] = d("menu"),
-    R = Ye();
+    R = useSession();
   E(() => {
     if (!c.logged) ((c.logged = !0), j(m ? "shown" : "shown_no_bridge"));
   }, [c, m]);
@@ -490,12 +490,12 @@ function TeleportMenu({
       }),
       e(o, {
         marginTop: 1,
-        children: e(ci, {
-          children: r(ue, {
+        children: e(InputGuide, {
+          children: r(DotSeparatedList, {
             children: [
-              e(D, { chord: ["up", "down"], action: "navigate" }),
-              e(D, { chord: "enter", action: "select" }),
-              e(D, { chord: "escape", action: "cancel" }),
+              e(KeybindingHint, { chord: ["up", "down"], action: "navigate" }),
+              e(KeybindingHint, { chord: "enter", action: "select" }),
+              e(KeybindingHint, { chord: "escape", action: "cancel" }),
             ],
           }),
         }),

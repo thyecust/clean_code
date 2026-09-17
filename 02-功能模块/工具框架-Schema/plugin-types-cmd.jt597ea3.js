@@ -18,11 +18,11 @@ import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { vk, DX, sVn, ajt, tfn, MX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Je } from "../Hooks钩子/chunk-bzqqe6xh.js";
 import { Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { au } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { defineExportGetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var N = {};
-au(N, { call: () => ho, default: () => N, outputJsonSchemaOf: () => outputJsonSchemaOf });
+defineExportGetters(N, { call: () => ho, default: () => N, outputJsonSchemaOf: () => outputJsonSchemaOf });
 import { mkdir, realpath } from "fs/promises";
 import { relative, resolve as E } from "path";
 var P = ".claude/types";
@@ -72,12 +72,12 @@ var eo = 32;
 function m(o, e = "", r = 0) {
   if (o === !0 || r > eo) return "unknown";
   if (o === !1) return "never";
-  if (!me(o)) return "unknown";
+  if (!isRecord(o)) return "unknown";
   if ("const" in o) return F(o.const);
   if (Array.isArray(o.enum)) return o.enum.map(F).join(" | ") || "never";
   if (Array.isArray(o.anyOf) || Array.isArray(o.oneOf)) {
     let t = (o.anyOf ?? o.oneOf).map((a) => m(a, e, r + 1));
-    return t.length === 0 ? "unknown" : Y(t).join(" | ");
+    return t.length === 0 ? "unknown" : dedupe(t).join(" | ");
   }
   if (Array.isArray(o.allOf)) {
     let t = o.allOf.map((s) => m(s, e, r + 1));
@@ -87,7 +87,7 @@ function m(o, e = "", r = 0) {
   }
   if (Array.isArray(o.type))
     return (
-      Y(o.type.map((t) => m({ ...o, type: t }, e, r + 1))).join(" | ") ||
+      dedupe(o.type.map((t) => m({ ...o, type: t }, e, r + 1))).join(" | ") ||
       "unknown"
     );
   switch (o.type) {
@@ -110,7 +110,7 @@ function m(o, e = "", r = 0) {
     }
     case "object":
     case void 0: {
-      if (!me(o.properties)) {
+      if (!isRecord(o.properties)) {
         let l = o.type === "object",
           p = "$ref" in o;
         return l
@@ -122,7 +122,7 @@ function m(o, e = "", r = 0) {
       let t = new Set(Array.isArray(o.required) ? o.required.map(String) : []),
         a = `${e}  `,
         s = Object.entries(o.properties).map(([l, p]) => {
-          let h = me(p) ? O(p, a) : "",
+          let h = isRecord(p) ? O(p, a) : "",
             I = t.has(l) ? "" : "?",
             T = m(p, a, r + 1);
           return `${h}${a}${k(l)}${I}: ${T}`;

@@ -20,8 +20,8 @@ import { Ce } from "./chunk-qe04h4c5.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { getAgentName, getTeamName, isTeammate } from "./chunk-811z9z0t.js";
 import { gCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
-import { jG } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
-import { fs } from "./chunk-enjekn9t.js";
+import { isPathSafeToRemove } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
+import { TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
 import {
   mkdir,
   readFile,
@@ -458,7 +458,7 @@ async function q(e) {
       r = k(s, "..");
     }
   } catch {}
-  if (!(await jG(e))) {
+  if (!(await isPathSafeToRemove(e))) {
     n(`[TeammateTool] kept worktree \u2014 unremovable reparse point in ${e}`);
     return;
   }
@@ -503,7 +503,7 @@ async function J(e, t) {
   let r = await readTeamFileAsync(e, t);
   if (!r) return;
   let a = r.members.filter(
-    (m) => m.name !== fs && m.tmuxPaneId && m.backendType && vwt(m.backendType),
+    (m) => m.name !== TEAM_LEAD_AGENT_NAME && m.tmuxPaneId && m.backendType && vwt(m.backendType),
   );
   if (a.length === 0) return;
   let [

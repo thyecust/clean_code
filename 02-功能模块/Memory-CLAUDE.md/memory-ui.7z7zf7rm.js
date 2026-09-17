@@ -12,17 +12,17 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Gt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be, Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { os, x, us } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ff, isAutoMemoryEnabled, isAutoMemoryDisabledForCurrentMainLoopModel, getAutoMemPath, ee, es } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
@@ -32,13 +32,13 @@ import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chu
 import { getInitialSettings, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { eee } from "../../01-核心基础设施/共享小工具-未细化/chunk-my8s4daz.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { KeybindingScope } from "../../01-核心基础设施/共享小工具-未细化/keybinding-scope.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { Efn, Djt, Ljt, an, Na, qMe, QMe, Ny, nR } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
@@ -88,31 +88,31 @@ import {
   LFe,
 } from "./Memory-CLAUDE.md.vx19drc8.js";
 import { t5 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import { nl, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { $Z } from "../Vim模式/Vim模式.nnewe0gf.js";
-import { zle } from "../../03-入口与运行时/会话UI(REPL)/chunk-zds66w6y.js";
-import { Gp } from "../../01-核心基础设施/共享小工具-未细化/chunk-c8g7bday.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import { openFileInEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
+import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import { kv } from "../../01-核心基础设施/共享小工具-未细化/chunk-mnzfncps.js";
-import { yqe } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
+import { openPathInDefaultApp } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { Dn, jFt, kn, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import { QS } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { s, T, O, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 import { writeFile } from "fs/promises";
 F();
@@ -120,7 +120,7 @@ function qo(Zn, er) {
   return e(t, { wrap: "truncate-end", children: an(Zn) || " " }, er);
 }
 var Wo = 65536,
-  Go = m(() =>
+  Go = createLazyValue(() =>
     c({
       memoryFiles: v(
         c({ path: s(), type: s().catch(""), tokens: T().catch(0) })
@@ -129,7 +129,7 @@ var Wo = 65536,
       ).catch([]),
     }),
   ),
-  zo = m(() =>
+  zo = createLazyValue(() =>
     c({
       contents: s(),
       truncated: O()
@@ -139,7 +139,7 @@ var Wo = 65536,
   );
 async function eo(w, b) {
   try {
-    let M = kv(
+    let M = parseThinClientReply(
       "get_context_usage",
       Go(),
       await w.sendControlRequest(
@@ -174,7 +174,7 @@ async function eo(w, b) {
 }
 async function Zt(w, b, M) {
   try {
-    let k = kv(
+    let k = parseThinClientReply(
       "read_file",
       zo(),
       await w.sendControlRequest(
@@ -227,15 +227,15 @@ function _t(zn) {
   if (Me !== null) {
     const Be = `${Me.file.type} memory \xB7 read-only`;
     let Ze;
-    if (X[2] === p) ((Ze = () => Do(null)), (X[2] = Ze));
+    if (X[2] === MEMO_CACHE_SENTINEL) ((Ze = () => Do(null)), (X[2] = Ze));
     else Ze = X[2];
     let xe;
-    if (X[3] === p)
-      ((xe = e(D, { chord: "escape", action: "go back" })), (X[3] = xe));
+    if (X[3] === MEMO_CACHE_SENTINEL)
+      ((xe = e(KeybindingHint, { chord: "escape", action: "go back" })), (X[3] = xe));
     else xe = X[3];
     let je;
-    if (X[4] === p)
-      ((je = e($n, { message: "Reading\u2026", dimColor: !0 })), (X[4] = je));
+    if (X[4] === MEMO_CACHE_SENTINEL)
+      ((je = e(SpinnerMessageLine, { message: "Reading\u2026", dimColor: !0 })), (X[4] = je));
     else je = X[4];
     let $e;
     if (X[5] !== Me.read)
@@ -261,18 +261,18 @@ function _t(zn) {
     return Ee;
   }
   let Be;
-  if (X[11] === p)
-    ((Be = r(ue, {
+  if (X[11] === MEMO_CACHE_SENTINEL)
+    ((Be = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "view" }),
-        e(D, { chord: "escape", action: "close" }),
+        e(KeybindingHint, { chord: "enter", action: "view" }),
+        e(KeybindingHint, { chord: "escape", action: "close" }),
       ],
     })),
       (X[11] = Be));
   else Be = X[11];
   let Ze;
-  if (X[12] === p)
-    ((Ze = e($n, {
+  if (X[12] === MEMO_CACHE_SENTINEL)
+    ((Ze = e(SpinnerMessageLine, {
       message: "Asking the cloud session for its memory files\u2026",
       dimColor: !0,
     })),
@@ -310,7 +310,7 @@ function _t(zn) {
       (X[21] = je));
   else je = X[21];
   let $e;
-  if (X[22] === p)
+  if (X[22] === MEMO_CACHE_SENTINEL)
     (($e = e(t, {
       dimColor: !0,
       wrap: "wrap-trim",
@@ -371,8 +371,8 @@ function Rt(Vn) {
   }
   if (te.files.length === 0) {
     let re;
-    if (We[2] === p)
-      ((re = e(Rn, {
+    if (We[2] === MEMO_CACHE_SENTINEL)
+      ((re = e(EmptyStateMessage, {
         hint: "Add a CLAUDE.md to the repo, or ask Claude to write one",
         children: "No memory files loaded in the cloud session",
       })),
@@ -432,7 +432,7 @@ function Ot(Xn) {
   let tt = _(18),
     { read: Jn } = Xn,
     K = kn(Jn),
-    { rows: Qt } = Se();
+    { rows: Qt } = useTerminalSize();
   if (K.kind === "userScope") {
     let se;
     if (tt[0] !== K.hint)
@@ -525,7 +525,7 @@ async function ro(w, b) {
         j = nt();
       },
       V = b === "off" ? disconnectOrgMemory(W) : reconnectOrgMemory(W),
-      B = (await kt(V, Ko)) ?? "timeout";
+      B = (await withDeadline(V, Ko)) ?? "timeout";
     if (B !== "timeout" && B.kind === "refused")
       return (
         oo("refused", j, j, []),
@@ -676,14 +676,14 @@ async function rn(w) {
   });
 }
 function oo(w, b, M, k, R = !1) {
-  i("tengu_org_memory_project_switch", {
+  logEvent("tengu_org_memory_project_switch", {
     outcome: fromEnum(w),
     pick_dropped: R,
     stores_before: b.stores.length,
     stores_after: M.stores.length,
-    indexes_loaded: G(k, (P) => P.state === "loaded"),
-    indexes_empty: G(k, (P) => P.state === "empty"),
-    indexes_unavailable: G(k, (P) => P.state === "unavailable"),
+    indexes_loaded: countMatching(k, (P) => P.state === "loaded"),
+    indexes_empty: countMatching(k, (P) => P.state === "empty"),
+    indexes_unavailable: countMatching(k, (P) => P.state === "unavailable"),
   });
 }
 function sn(w, b, M, k, R) {
@@ -898,7 +898,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
   let R = w.project.originalCwd,
     P = $Z.of(w.host),
     j = rt.of(w),
-    { storageV5: W, credentials: V } = _e(),
+    { storageV5: W, credentials: V } = useStorageV5Context(),
     B = kn(Ny(w, !1, W, V)),
     I = isAutoMemoryEnabled() || Hr(),
     Ce = isAutoMemoryEnabled() && !Hr(),
@@ -980,7 +980,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
   let Y = Ie ?? Re.pickerData,
     Ft = Y !== null && at;
   E(() => {
-    if (Ft) i("tengu_org_memory_legacy_pick_nudged", {});
+    if (Ft) logEvent("tengu_org_memory_legacy_pick_nudged", {});
   }, [Ft]);
   let Mo = le.state === "on" && q === le.request.selection,
     At =
@@ -1108,7 +1108,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     let S = !Oe;
     (updateSettingsForSource("userSettings", { autoMemoryEnabled: S }, void 0, W),
       It(S),
-      i("tengu_auto_memory_toggled", { enabled: S }));
+      logEvent("tengu_auto_memory_toggled", { enabled: S }));
   }
   function $o() {
     if (!ye || !Oe) return;
@@ -1116,11 +1116,11 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
       H = S && getInitialSettings().autoDreamEnabled === void 0;
     (updateSettingsForSource("userSettings", { autoDreamEnabled: S }, void 0, W),
       vo(S),
-      i("tengu_auto_dream_toggled", { enabled: S, is_first_enable: H }));
+      logEvent("tengu_auto_dream_toggled", { enabled: S, is_first_enable: H }));
   }
   return (
-    is(),
-    Ne(
+    useGlobalExitKeybinding(),
+    useKeybinding(
       "confirm:no",
       () => {
         if (he) {
@@ -1131,7 +1131,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
       },
       { context: "Confirmation" },
     ),
-    Ne(
+    useKeybinding(
       "confirm:yes",
       () => {
         if (oe === 0) jo();
@@ -1140,14 +1140,14 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
       },
       { context: "Confirmation", isActive: Je },
     ),
-    Ne(
+    useKeybinding(
       "select:next",
       () => {
         gt((S) => (S !== null && S < Ht ? S + 1 : null));
       },
       { context: "Select", isActive: Je },
     ),
-    Ne(
+    useKeybinding(
       "select:previous",
       () => {
         gt((S) => (S !== null && S > 0 ? S - 1 : S));
@@ -1248,7 +1248,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
           ],
         }),
         he && Y !== null
-          ? e(eee, {
+          ? e(KeybindingScope, {
               scope: "Confirmation",
               claimFocus: !0,
               bindings: [{ action: "confirm:no", run: () => ce(!1) }],
@@ -1301,7 +1301,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
                         lt &&
                         k(() => ro(w, J === null ? "off" : "project"));
                     if (Z === "saved" && me !== void 0)
-                      i("tengu_org_memory_project_selected", {
+                      logEvent("tengu_org_memory_project_selected", {
                         is_default: me.isDefault === !0,
                         kind: fromEnum(me.kind),
                         private: me.visibility === "private",
@@ -1364,7 +1364,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
                   let H = S.slice(Ae.length);
                   mkdir(H, { recursive: !0 })
                     .catch(() => {})
-                    .then(() => yqe(H))
+                    .then(() => openPathInDefaultApp(H))
                     .catch(() => {});
                   return;
                 }
@@ -1377,7 +1377,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     })
   );
 }
-var gn = m(() =>
+var gn = createLazyValue(() =>
   c({
     generation: T().int().min(1),
     etag: s().optional(),
@@ -1413,7 +1413,7 @@ function bn({ session: w, onDone: b }) {
         } catch (I) {
           if (A(I) !== "EEXIST") throw I;
         }
-        if (!zle(R)) {
+        if (!openFileInEditor(R)) {
           b(
             `Couldn't open ${it(R)} in an editor. If no editor is configured, set $EDITOR or $VISUAL, then run /memory again.`,
             { display: "system" },
@@ -1472,10 +1472,10 @@ ${V}`,
             ],
           }),
         e(Dn, {
-          fallback: e($n, { message: "Loading\u2026", dimColor: !0 }),
+          fallback: e(SpinnerMessageLine, { message: "Loading\u2026", dimColor: !0 }),
           children: e(lo, { session: w, onSelect: M, onCancel: k }),
         }),
-        e(Gp, { url: "https://code.claude.com/docs/en/memory" }),
+        e(LearnMoreLink, { url: "https://code.claude.com/docs/en/memory" }),
       ],
     }),
   });

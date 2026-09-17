@@ -35,7 +35,7 @@ import { findCanonicalGitRoot } from "../安全文件系统(FS加固)/安全文�
 import { ea, OQ, Zet, Uge, X6 } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { Qoe } from "../核心工具-路径与平台/chunk-2f8axr19.js";
 import { id, noProxyUnion } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { ahe } from "../共享小工具-未细化/chunk-v2wxtqf7.js";
+import { getFederationCacheDir } from "../共享小工具-未细化/federation-cache-dir.js";
 import { homedir } from "os";
 import { dirname, posix } from "path";
 var o6 = "proxy-injected";
@@ -284,7 +284,7 @@ async function assertScrubSandboxAvailable() {
     home: e,
     originalCwd: t,
     claudeConfigDir: process.env.CLAUDE_CONFIG_DIR,
-    federationCacheDir: ahe() ?? void 0,
+    federationCacheDir: getFederationCacheDir() ?? void 0,
     canonicalClaudeDir: G(t),
     runnerFileCommandsDir: n,
     workspace: r,
@@ -528,7 +528,7 @@ function scrubSandboxConfig() {
         "/run/buildkit/buildkitd.sock",
         "/run/dbus",
         "/run/user",
-        e?.federationCacheDir ?? ahe(),
+        e?.federationCacheDir ?? getFederationCacheDir(),
       ].filter((c) => !!c),
       denyWrite: [
         `${t}/.bash_profile`,

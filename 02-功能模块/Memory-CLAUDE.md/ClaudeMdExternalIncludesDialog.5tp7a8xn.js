@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 146 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Lit, PPt } from "./chunk-hg0ww0g3.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { recordExternalIncludesDecision as Lit, ClaudeMdExternalIncludesDialog as PPt } from "./claude-md-external-includes-dialog.js";
+import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 export {
   PPt as ClaudeMdExternalIncludesDialog,
   Lit as recordExternalIncludesDecision,

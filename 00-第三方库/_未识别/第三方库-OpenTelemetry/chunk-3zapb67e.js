@@ -10,8 +10,8 @@
 import { pO, tI, mF } from "../../../01-核心基础设施/遥测-OpenTelemetry/遥测-OpenTelemetry.0xhcvej6.js";
 import { bee } from "./第三方库-OpenTelemetry.fy6ebeyr.js";
 import { Ls, Mc } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { w } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var a = w(function (m) {
+import { commonJS } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var a = commonJS(function (m) {
   Object.defineProperty(m, "__esModule", { value: !0 });
   m.AggregationTemporalityPreference = void 0;
   var d;
@@ -25,7 +25,7 @@ var a = w(function (m) {
       (m.AggregationTemporalityPreference = {})),
   );
 });
-var u = w(function (O) {
+var u = commonJS(function (O) {
   Object.defineProperty(O, "__esModule", { value: !0 });
   O.OTLPMetricExporterBase =
     O.LowMemoryTemporalitySelector =
@@ -114,7 +114,7 @@ var u = w(function (O) {
   }
   O.OTLPMetricExporterBase = y;
 });
-var S = w(function (M) {
+var S = commonJS(function (M) {
   Object.defineProperty(M, "__esModule", { value: !0 });
   M.OTLPMetricExporter = void 0;
   var N = u(),
@@ -135,7 +135,7 @@ var S = w(function (M) {
   }
   M.OTLPMetricExporter = L;
 });
-var x = w(function (p) {
+var x = commonJS(function (p) {
   Object.defineProperty(p, "__esModule", { value: !0 });
   p.OTLPMetricExporter = void 0;
   var G = S();
@@ -146,7 +146,7 @@ var x = w(function (p) {
     },
   });
 });
-var A = w(function (s) {
+var A = commonJS(function (s) {
   Object.defineProperty(s, "__esModule", { value: !0 });
   s.OTLPMetricExporter = void 0;
   var h = x();
@@ -157,7 +157,7 @@ var A = w(function (s) {
     },
   });
 });
-var klt = w(function (t) {
+var klt = commonJS(function (t) {
   Object.defineProperty(t, "__esModule", { value: !0 });
   t.OTLPMetricExporterBase =
     t.LowMemoryTemporalitySelector =

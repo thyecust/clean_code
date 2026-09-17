@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Xa } from "./chunk-jzy6p47z.js";
+import { createStore } from "./state-store.js";
 import { Gt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 function o() {
-  return Xa({
+  return createStore({
     value: "",
     active: !1,
     launchWarning: null,

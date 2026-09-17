@@ -9,9 +9,9 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 27 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { M } from "./chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
 import { primeFileDescriptorCredentials } from "./chunk-fpak7ean.js";
 async function primeFastPathCredentials(e) {
-  if (M() && e !== void 0) await primeFileDescriptorCredentials(e);
+  if (isHoverRestEnabled() && e !== void 0) await primeFileDescriptorCredentials(e);
 }
 export { primeFastPathCredentials };

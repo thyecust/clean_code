@@ -10,7 +10,7 @@
 import { P2e } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Dr, ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, l, A, Jr, hv, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -28,7 +28,7 @@ import { getSdkHostedBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { outsideReadBlocked, pathInAllowedWorkingPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var B = null;
 async function aK() {
   if (B) return B.default;
@@ -42,7 +42,7 @@ async function aK() {
         "Native image processor not available; no image processing will be available (sharp is stubbed in native builds)",
       );
     }
-  let e = await import("./chunk-cj3p25ae.js").then((m) => pe(m.default, 1)),
+  let e = await import("./chunk-cj3p25ae.js").then((m) => toESM(m.default, 1)),
     t = ee(e);
   return ((B = { default: t }), t);
 }
@@ -288,7 +288,7 @@ async function qpe(e, t, r, o) {
         );
       if (t > o.targetRawSize)
         return (
-          i("tengu_image_resize", {
+          logEvent("tengu_image_resize", {
             over_byte_limit: !0,
             over_dimension_limit: !1,
             original_size_bytes: t,
@@ -317,7 +317,7 @@ async function qpe(e, t, r, o) {
     let E = w > o.maxWidth || _ > o.maxHeight,
       W = p === "png";
     if (
-      (i("tengu_image_resize", {
+      (logEvent("tengu_image_resize", {
         over_byte_limit: t > o.targetRawSize,
         over_dimension_limit: E,
         original_size_bytes: t,
@@ -435,7 +435,7 @@ async function qpe(e, t, r, o) {
       c = l(s);
     if (G(m, s)) logError(s);
     else n(`Image resize failed: ${c}`, { level: "error" });
-    i("tengu_image_resize_failed", {
+    logEvent("tengu_image_resize_failed", {
       original_size_bytes: t,
       error_type: m,
       error_message_hash: V(c),
@@ -452,7 +452,7 @@ async function qpe(e, t, r, o) {
     let w = x.width > o.maxWidth || x.height > o.maxHeight;
     if (g <= o.maxBase64Size && !w)
       return (
-        i("tengu_image_resize_fallback", {
+        logEvent("tengu_image_resize_fallback", {
           original_size_bytes: t,
           base64_size_bytes: g,
           error_type: m,
@@ -498,7 +498,7 @@ async function Bg({ data: e, mediaType: t, limits: r }) {
   } catch (p) {
     if (p instanceof vH)
       return (
-        i("tengu_image_resize_degraded", {}),
+        logEvent("tengu_image_resize_degraded", {}),
         {
           block: {
             type: "text",
@@ -575,7 +575,7 @@ async function Y(e, t, r) {
     if (G(c, m)) logError(m);
     else n(`Image compression failed: ${d}`, { level: "error" });
     if (
-      (i("tengu_image_compress_failed", {
+      (logEvent("tengu_image_compress_failed", {
         original_size_bytes: e.length,
         max_bytes: t,
         error_type: c,

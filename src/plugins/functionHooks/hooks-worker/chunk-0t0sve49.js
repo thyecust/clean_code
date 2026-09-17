@@ -24,11 +24,11 @@ import {
   Nje,
 } from "./chunk-bzqqe6xh.js";
 import { iu, oe } from "./chunk-1wezmyx2.js";
-import { gy } from "./chunk-1adkzsnc.js";
-import { me } from "./chunk-6rcgxa93.js";
-import { Y } from "./chunk-d16fhdtx.js";
+import { MAX_SERIALIZED_ARRAY_ELEMENTS } from "./max-serialized-array-elements.js";
+import { isRecord } from "./is-record.js";
+import { dedupe } from "./chunk-d16fhdtx.js";
 function Gt(e, t) {
-  if (me(t)) {
+  if (isRecord(t)) {
     let r = Object.create(null);
     for (let o of Object.keys(t).toSorted())
       Object.defineProperty(r, o, { value: t[o], enumerable: !0 });
@@ -62,7 +62,7 @@ function vn(e) {
   return `a ${typeof e}`;
 }
 var pe = (e) =>
-  me(e) &&
+  isRecord(e) &&
   (Object.getPrototypeOf(e) === null ||
     Object.getPrototypeOf(Object.getPrototypeOf(e)) === null);
 function et(e, t, r) {
@@ -70,10 +70,10 @@ function et(e, t, r) {
   let o = t.get(e);
   if (o !== void 0) return o;
   if (Array.isArray(e)) {
-    if (e.length > gy) r.cut = Math.max(r.cut ?? 0, e.length);
+    if (e.length > MAX_SERIALIZED_ARRAY_ELEMENTS) r.cut = Math.max(r.cut ?? 0, e.length);
     let s = [];
     t.set(e, s);
-    for (let p of e.slice(0, gy)) s.push(et(p, t, r));
+    for (let p of e.slice(0, MAX_SERIALIZED_ARRAY_ELEMENTS)) s.push(et(p, t, r));
     return s;
   }
   if (!pe(e)) return e;
@@ -88,7 +88,7 @@ function et(e, t, r) {
     });
   return n;
 }
-var tt = (e) => `an array of ${e} items is past the ${gy} an event may carry`;
+var tt = (e) => `an array of ${e} items is past the ${MAX_SERIALIZED_ARRAY_ELEMENTS} an event may carry`;
 function we(e, t) {
   if (typeof e !== "object" || !e || t.has(e)) return;
   if ((t.add(e), Array.isArray(e))) {
@@ -100,7 +100,7 @@ function we(e, t) {
   Object.freeze(e);
 }
 function er(e, t) {
-  if (e.length > gy) throw new Je(tt(e.length));
+  if (e.length > MAX_SERIALIZED_ARRAY_ELEMENTS) throw new Je(tt(e.length));
   for (let r of e) we(r, t);
   Object.freeze(e);
 }
@@ -295,7 +295,7 @@ var qMn = (e, t) =>
     : "";
 function v_e(e) {
   let { tool: t, tool_use_id: r, consent: o, [Q]: n, ...s } = e;
-  return me(n) ? { ...s, ...n } : s;
+  return isRecord(n) ? { ...s, ...n } : s;
 }
 var Hmr = (e, t) => Oe(e, void 0, t);
 function zMn(e) {
@@ -528,8 +528,8 @@ function Zrt(e) {
             if (typeof len !== 'number' || !_isSafeInteger(len)) {
               throw capErr('array length is not a safe integer across the workflow VM boundary')
             }
-            if (len > ${gy}) {
-              throw capErr('array length ' + len + ' exceeds the maximum of ${gy} supported across the workflow VM boundary')
+            if (len > ${MAX_SERIALIZED_ARRAY_ELEMENTS}) {
+              throw capErr('array length ' + len + ' exceeds the maximum of ${MAX_SERIALIZED_ARRAY_ELEMENTS} supported across the workflow VM boundary')
             }
             const out = []; seen.set(v, out)
             for (let i = 0; i < len; i++) {
@@ -662,9 +662,9 @@ function ar(e) {
     throw sr(
       "array length is not a safe integer across the workflow VM boundary",
     );
-  if (t > gy)
+  if (t > MAX_SERIALIZED_ARRAY_ELEMENTS)
     throw sr(
-      `array length ${t} exceeds the maximum of ${gy} supported across the workflow VM boundary`,
+      `array length ${t} exceeds the maximum of ${MAX_SERIALIZED_ARRAY_ELEMENTS} supported across the workflow VM boundary`,
     );
   return t;
 }
@@ -764,8 +764,8 @@ function Mje(e) {
         if (typeof len !== 'number' || !_isSafeInteger(len)) {
           throw capErr('array length is not a safe integer across the workflow VM boundary')
         }
-        if (len > ${gy}) {
-          throw capErr('array length ' + len + ' exceeds the maximum of ${gy} supported across the workflow VM boundary')
+        if (len > ${MAX_SERIALIZED_ARRAY_ELEMENTS}) {
+          throw capErr('array length ' + len + ' exceeds the maximum of ${MAX_SERIALIZED_ARRAY_ELEMENTS} supported across the workflow VM boundary')
         }
         return len
       }
@@ -1094,7 +1094,7 @@ var kmr = {
   "turn.complete": (e) => ({ text: e.answer }),
 };
 var _ = (e) => (t, r, o) =>
-  me(t) ? e(t, r, o) : "something that is not a result object";
+  isRecord(t) ? e(t, r, o) : "something that is not a result object";
 var Ae = (e) => ({ deny: e });
 function ut(e, t, r) {
   if (e.deny === void 0) return r(e) ? void 0 : `neither ${t} nor { deny }`;
@@ -1153,7 +1153,7 @@ function br(e, t) {
     s = 0;
   for (let i = 0; i < r.length; i += 1) {
     let a = r[i];
-    if (!(Object.hasOwn(r, i) && me(a)))
+    if (!(Object.hasOwn(r, i) && isRecord(a)))
       return `a block that is not { name, text } (at ${i})`;
     let { name: c, text: m } = a;
     if (typeof c !== "string" || c === "")
@@ -1323,7 +1323,7 @@ var Ei = {
 };
 var ee = "any kind";
 function Ar(e) {
-  let t = me(e) ? e.tool_use_id : null;
+  let t = isRecord(e) ? e.tool_use_id : null;
   return t === void 0 || typeof t === "string" ? t : null;
 }
 function dt(e) {
@@ -1404,7 +1404,7 @@ function Nr(e, t) {
 }
 function Mr(e, t) {
   let r = e.props;
-  if (!me(r)) return "no { props } (an object)";
+  if (!isRecord(r)) return "no { props } (an object)";
   let o = Pr[t.component] ?? {};
   for (let [n, s] of Object.entries(o)) {
     let p = _e(r[n]);
@@ -1439,7 +1439,7 @@ var Wi = {
       ? `${gt} is drawn by the engine alone; its answer authorises an action. A plugin adds context with $.ui.notice`
       : void 0,
   check: (e) =>
-    me(e) && typeof e.type === "string"
+    isRecord(e) && typeof e.type === "string"
       ? void 0
       : "something that is not a tree element",
 };
@@ -2223,7 +2223,7 @@ var Dje = {
     "Link",
   ],
 };
-var Ne = Y([...Dje.terminal, ...Dje.desktop]);
+var Ne = dedupe([...Dje.terminal, ...Dje.desktop]);
 var Dr = (e) => ae(wt(ep, e));
 function gp(e, t, r) {
   let o = {};
@@ -2238,7 +2238,7 @@ function xp(e) {
   return Object.freeze(t);
 }
 function hp(e) {
-  if (!me(e)) return "something that is not a table of elements";
+  if (!isRecord(e)) return "something that is not a table of elements";
   for (let [t, r] of Object.entries(e))
     if (typeof r !== "function")
       return `an entry "${t}" that is not a constructor`;
@@ -2906,11 +2906,11 @@ var _a = (e) =>
         ...(r === void 0
           ? {}
           : {
-              init: me(r)
+              init: isRecord(r)
                 ? {
                     ...(r.cwd !== void 0 && { cwd: r.cwd }),
                     ...(r.env !== void 0 && {
-                      env: me(r.env) ? { ...r.env } : r.env,
+                      env: isRecord(r.env) ? { ...r.env } : r.env,
                     }),
                     ...(r.stdin !== void 0 && { stdin: r.stdin }),
                     ...(r.timeoutMs !== void 0 && { timeoutMs: r.timeoutMs }),
@@ -2922,7 +2922,7 @@ var _a = (e) =>
 var ja = (e, t) =>
   E({
     submit: (r) => {
-      let o = me(r) ? r.text : void 0;
+      let o = isRecord(r) ? r.text : void 0;
       return typeof o !== "string" || o.trim() === ""
         ? Promise.reject(
             new Je(`${e}: $.prompt.submit takes { text } (a non-empty prompt)`),
@@ -2989,7 +2989,7 @@ var bo = (e, t) => ({
   ...(e.cwd !== void 0 && { cwd: e.cwd }),
 });
 function KMn(e) {
-  let t = me(e) ? e.resolvedModel : void 0;
+  let t = isRecord(e) ? e.resolvedModel : void 0;
   return typeof t === "string" ? t : void 0;
 }
 var Ua = (e, t) =>
@@ -3015,7 +3015,7 @@ var wo = /^[a-zA-Z0-9_-]{1,64}$/;
 var Wa = (e, t) =>
   E({
     register: (r) => {
-      if (!me(r) || typeof r.name !== "string" || !wo.test(r.name))
+      if (!isRecord(r) || typeof r.name !== "string" || !wo.test(r.name))
         return Promise.reject(
           new Je(
             `${e}: $.tool.register takes { name, description, inputSchema? }; name is letters, digits, _ or - (up to 64)`,
@@ -3028,7 +3028,7 @@ var Wa = (e, t) =>
           ),
         );
       let s = r.inputSchema ?? { type: "object" };
-      return me(s)
+      return isRecord(s)
         ? t("tool.register", {
             name: r.name,
             description: r.description,
@@ -3042,7 +3042,7 @@ var Wa = (e, t) =>
     },
     list: () => t("tool.list", {}),
     call: async (r) => {
-      if (!me(r)) throw new Je(`${e}: $.tool.call: input must be an object`);
+      if (!isRecord(r)) throw new Je(`${e}: $.tool.call: input must be an object`);
       if (typeof r.tool !== "string" || r.tool.length === 0)
         throw new Je(
           `${e}: $.tool.call takes the event's input: { tool, ...args }`,
@@ -3053,7 +3053,7 @@ var Wa = (e, t) =>
 var za = (e, t) =>
   E({
     abort: (r) => {
-      let o = me(r) ? r.turnId : void 0;
+      let o = isRecord(r) ? r.turnId : void 0;
       return typeof o !== "string" || o === ""
         ? Promise.reject(
             new Je(
@@ -3743,7 +3743,7 @@ function qo(e) {
     p = Yo.runInContext(Mf, t),
     i = new Set();
   return (a) => {
-    if (!me(a)) return s(a);
+    if (!isRecord(a)) return s(a);
     let f = Object.keys(a)
         .filter(kp)
         .filter((m) => xe.nameOf(a[m]) === m),
@@ -3977,7 +3977,7 @@ function en(e) {
 }
 function tn(e, t, r) {
   let { result: o, resolver: n } = r;
-  if (!me(o)) return o;
+  if (!isRecord(o)) return o;
   let s = {},
     p = Object.entries(o);
   for (let [i, a] of p) {
@@ -4111,7 +4111,7 @@ function G(e, t) {
 }
 function mn(e, t, r) {
   let { environmentId: o, name: n, result: s } = t;
-  return me(s) && typeof s.type === "string"
+  return isRecord(s) && typeof s.type === "string"
     ? Rm({
         tree: s,
         plugin: n,

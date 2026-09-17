@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { w } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var Ne = w(function (Pr) {
+import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var Ne = commonJS(function (Pr) {
   Object.defineProperty(Pr, "__esModule", { value: !0 });
   Pr.regexpCode =
     Pr.getEsmExportName =
@@ -162,7 +162,7 @@ var Ne = w(function (Pr) {
   }
   Pr.regexpCode = Fi;
 });
-var Rt = w(function (kr) {
+var Rt = commonJS(function (kr) {
   Object.defineProperty(kr, "__esModule", { value: !0 });
   kr.ValueScope =
     kr.ValueScopeName =
@@ -304,7 +304,7 @@ var Rt = w(function (kr) {
   }
   kr.ValueScope = qr;
 });
-var $c = w(function (A) {
+var $c = commonJS(function (A) {
   Object.defineProperty(A, "__esModule", { value: !0 });
   A.or =
     A.and =
@@ -985,7 +985,7 @@ var $c = w(function (A) {
     return e instanceof P.Name ? e : P._`(${e})`;
   }
 });
-var Lp = w(function (Yr) {
+var Lp = commonJS(function (Yr) {
   Object.defineProperty(Yr, "__esModule", { value: !0 });
   Yr.checkStrictMode =
     Yr.getErrorPath =
@@ -1166,7 +1166,7 @@ var Lp = w(function (Yr) {
   }
   Yr.checkStrictMode = Xr;
 });
-var K5 = w(function (es) {
+var K5 = commonJS(function (es) {
   Object.defineProperty(es, "__esModule", { value: !0 });
   var I = $c(),
     Ua = {
@@ -1189,7 +1189,7 @@ var K5 = w(function (es) {
     };
   es.default = Ua;
 });
-var qe = w(function (ns) {
+var qe = commonJS(function (ns) {
   Object.defineProperty(ns, "__esModule", { value: !0 });
   ns.extendErrors =
     ns.resetErrorsCount =
@@ -1330,7 +1330,7 @@ var qe = w(function (ns) {
     if (u) s.push([ie.propertyName, u]);
   }
 });
-var us = w(function (as) {
+var us = commonJS(function (as) {
   Object.defineProperty(as, "__esModule", { value: !0 });
   as.boolOrEmptySchema = as.topBoolOrEmptySchema = void 0;
   var tc = qe(),
@@ -1365,7 +1365,7 @@ var us = w(function (as) {
     (0, tc.reportError)(n, nc, void 0, t);
   }
 });
-var zt = w(function (ls) {
+var zt = commonJS(function (ls) {
   Object.defineProperty(ls, "__esModule", { value: !0 });
   ls.getRules = ls.isJSONType = void 0;
   var cc = [
@@ -1399,7 +1399,7 @@ var zt = w(function (ls) {
   }
   ls.getRules = dc;
 });
-var Ut = w(function (hs) {
+var Ut = commonJS(function (hs) {
   Object.defineProperty(hs, "__esModule", { value: !0 });
   hs.shouldUseRule = hs.shouldUseGroup = hs.schemaHasRulesForType = void 0;
   function pc({ schema: e, self: t }, r) {
@@ -1422,7 +1422,7 @@ var Ut = w(function (hs) {
   }
   hs.shouldUseRule = ps;
 });
-var ke = w(function ($s) {
+var ke = commonJS(function ($s) {
   Object.defineProperty($s, "__esModule", { value: !0 });
   $s.reportTypeError =
     $s.checkDataTypes =
@@ -1622,7 +1622,7 @@ var ke = w(function ($s) {
     };
   }
 });
-var Ss = w(function (bs) {
+var Ss = commonJS(function (bs) {
   Object.defineProperty(bs, "__esModule", { value: !0 });
   bs.assignDefaults = void 0;
   var ye = $c(),
@@ -1648,7 +1648,7 @@ var Ss = w(function (bs) {
     s.if(c, ye._`${a} = ${(0, ye.stringify)(r)}`);
   }
 });
-var z = w(function (Os) {
+var z = commonJS(function (Os) {
   Object.defineProperty(Os, "__esModule", { value: !0 });
   Os.validateUnion =
     Os.validateArray =
@@ -1794,7 +1794,7 @@ var z = w(function (Os) {
   }
   Os.validateUnion = Hc;
 });
-var Is = w(function (xs) {
+var Is = commonJS(function (xs) {
   Object.defineProperty(xs, "__esModule", { value: !0 });
   xs.validateKeywordUsage =
     xs.validSchemaType =
@@ -1947,7 +1947,7 @@ var Is = w(function (xs) {
   }
   xs.validateKeywordUsage = du;
 });
-var As = w(function (Cs) {
+var As = commonJS(function (Cs) {
   Object.defineProperty(Cs, "__esModule", { value: !0 });
   Cs.extendSubschemaMode = Cs.extendSubschemaData = Cs.getSubschema = void 0;
   var W = $c(),
@@ -2037,7 +2037,7 @@ var As = w(function (Cs) {
   }
   Cs.extendSubschemaMode = _u;
 });
-var Wt = w(function (fm, Ds) {
+var Wt = commonJS(function (fm, Ds) {
   Ds.exports = function e(t, r) {
     if (t === r) return !0;
     if (t && r && typeof t == "object" && typeof r == "object") {
@@ -2067,7 +2067,7 @@ var Wt = w(function (fm, Ds) {
     return t !== t && r !== r;
   };
 });
-var zs = w(function (pm, Vs) {
+var zs = commonJS(function (pm, Vs) {
   var se = (Vs.exports = function (e, t, r) {
     if (typeof t == "function") ((r = t), (t = {}));
     r = t.cb || r;
@@ -2137,7 +2137,7 @@ var zs = w(function (pm, Vs) {
     return e.replace(/~/g, "~0").replace(/\//g, "~1");
   }
 });
-var je = w(function (Ls) {
+var je = commonJS(function (Ls) {
   Object.defineProperty(Ls, "__esModule", { value: !0 });
   Ls.getSchemaRefs =
     Ls.resolveUrl =
@@ -2265,7 +2265,7 @@ var je = w(function (Ls) {
   }
   Ls.getSchemaRefs = ju;
 });
-var int = w(function (an) {
+var int = commonJS(function (an) {
   Object.defineProperty(an, "__esModule", { value: !0 });
   an.getData = an.KeywordCxt = an.validateFunctionCode = void 0;
   var Qs = us(),
@@ -2738,7 +2738,7 @@ var int = w(function (an) {
   }
   an.getData = on;
 });
-var zkt = w(function (ln) {
+var zkt = commonJS(function (ln) {
   Object.defineProperty(ln, "__esModule", { value: !0 });
   class un extends Error {
     constructor(e) {
@@ -2748,7 +2748,7 @@ var zkt = w(function (ln) {
   }
   ln.default = un;
 });
-var ant = w(function (fn) {
+var ant = commonJS(function (fn) {
   Object.defineProperty(fn, "__esModule", { value: !0 });
   var er = je();
   class dn extends Error {
@@ -2762,7 +2762,7 @@ var ant = w(function (fn) {
   }
   fn.default = dn;
 });
-var Vkt = w(function (mn) {
+var Vkt = commonJS(function (mn) {
   Object.defineProperty(mn, "__esModule", { value: !0 });
   mn.resolveSchema =
     mn.getCompilingSchema =
@@ -2986,7 +2986,7 @@ var Vkt = w(function (mn) {
     return;
   }
 });
-var _n = w(function ($m, vl) {
+var _n = commonJS(function ($m, vl) {
   vl.exports = {
     $id: "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#",
     description:
@@ -3005,7 +3005,7 @@ var _n = w(function ($m, vl) {
     additionalProperties: !1,
   };
 });
-var or = w(function (vm, En) {
+var or = commonJS(function (vm, En) {
   var wl = RegExp.prototype.test.bind(
       /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/iu,
     ),
@@ -3260,7 +3260,7 @@ var or = w(function (vm, En) {
     stringArrayToHexStripped: nr,
   };
 });
-var qn = w(function (wm, On) {
+var qn = commonJS(function (wm, On) {
   var { isUUID: Cl } = or(),
     Ml = /([\da-z][\d\-a-z]{0,31}):((?:[\w!$'()*+,\-.:;=@]|%[\da-f]{2})+)/iu,
     Al = ["http", "https", "ws", "wss", "urn", "urn:uuid"];
@@ -3375,7 +3375,7 @@ var qn = w(function (wm, On) {
     getSchemeHandler: ar,
   };
 });
-var Tn = w(function (bm, ct) {
+var Tn = commonJS(function (bm, ct) {
   var {
       normalizeIPv6: Bl,
       removeDotSegments: Te,
@@ -3614,13 +3614,13 @@ var Tn = w(function (bm, ct) {
   ct.exports.default = cr;
   ct.exports.fastUri = cr;
 });
-var An = w(function (Mn) {
+var An = commonJS(function (Mn) {
   Object.defineProperty(Mn, "__esModule", { value: !0 });
   var Cn = Tn();
   Cn.code = 'require("ajv/dist/runtime/uri").default';
   Mn.default = Cn;
 });
-var sIn = w(function (Y) {
+var sIn = commonJS(function (Y) {
   Object.defineProperty(Y, "__esModule", { value: !0 });
   Y.CodeGen =
     Y.Name =
@@ -4240,7 +4240,7 @@ var sIn = w(function (Y) {
     return { anyOf: [e, xd] };
   }
 });
-var Gn = w(function (Hn) {
+var Gn = commonJS(function (Hn) {
   Object.defineProperty(Hn, "__esModule", { value: !0 });
   var Td = {
     keyword: "id",
@@ -4250,7 +4250,7 @@ var Gn = w(function (Hn) {
   };
   Hn.default = Td;
 });
-var y7t = w(function (Qn) {
+var y7t = commonJS(function (Qn) {
   Object.defineProperty(Qn, "__esModule", { value: !0 });
   Qn.callRef = Qn.getValidate = void 0;
   var Md = ant(),
@@ -4382,7 +4382,7 @@ var y7t = w(function (Qn) {
   Qn.callRef = ft;
   Qn.default = Ad;
 });
-var iIn = w(function (Yn) {
+var iIn = commonJS(function (Yn) {
   Object.defineProperty(Yn, "__esModule", { value: !0 });
   var zd = Gn(),
     Ud = y7t(),
@@ -4398,7 +4398,7 @@ var iIn = w(function (Yn) {
     ];
   Yn.default = Kd;
 });
-var eo = w(function (Zn) {
+var eo = commonJS(function (Zn) {
   Object.defineProperty(Zn, "__esModule", { value: !0 });
   var pt = $c(),
     ne = pt.operators,
@@ -4427,7 +4427,7 @@ var eo = w(function (Zn) {
     };
   Zn.default = Hd;
 });
-var ro = w(function (to) {
+var ro = commonJS(function (to) {
   Object.defineProperty(to, "__esModule", { value: !0 });
   var Ae = $c(),
     Jd = {
@@ -4452,7 +4452,7 @@ var ro = w(function (to) {
     };
   to.default = Wd;
 });
-var oo = w(function (no) {
+var oo = commonJS(function (no) {
   Object.defineProperty(no, "__esModule", { value: !0 });
   function so(e) {
     let t = e.length,
@@ -4468,7 +4468,7 @@ var oo = w(function (no) {
   no.default = so;
   so.code = 'require("ajv/dist/runtime/ucs2length").default';
 });
-var ao = w(function (io) {
+var ao = commonJS(function (io) {
   Object.defineProperty(io, "__esModule", { value: !0 });
   var le = $c(),
     Xd = Lp(),
@@ -4498,7 +4498,7 @@ var ao = w(function (io) {
     };
   io.default = ef;
 });
-var uo = w(function (co) {
+var uo = commonJS(function (co) {
   Object.defineProperty(co, "__esModule", { value: !0 });
   var rf = z(),
     sf = Lp(),
@@ -4536,7 +4536,7 @@ var uo = w(function (co) {
     };
   co.default = of;
 });
-var fo = w(function (lo) {
+var fo = commonJS(function (lo) {
   Object.defineProperty(lo, "__esModule", { value: !0 });
   var De = $c(),
     cf = {
@@ -4560,7 +4560,7 @@ var fo = w(function (lo) {
     };
   lo.default = uf;
 });
-var ho = w(function (po) {
+var ho = commonJS(function (po) {
   Object.defineProperty(po, "__esModule", { value: !0 });
   var Ve = z(),
     ze = $c(),
@@ -4637,7 +4637,7 @@ var ho = w(function (po) {
     };
   po.default = pf;
 });
-var yo = w(function (mo) {
+var yo = commonJS(function (mo) {
   Object.defineProperty(mo, "__esModule", { value: !0 });
   var Ue = $c(),
     mf = {
@@ -4661,13 +4661,13 @@ var yo = w(function (mo) {
     };
   mo.default = yf;
 });
-var mt = w(function (go) {
+var mt = commonJS(function (go) {
   Object.defineProperty(go, "__esModule", { value: !0 });
   var _o = Wt();
   _o.code = 'require("ajv/dist/runtime/equal").default';
   go.default = _o;
 });
-var vo = w(function ($o) {
+var vo = commonJS(function ($o) {
   Object.defineProperty($o, "__esModule", { value: !0 });
   var dr = ke(),
     R = $c(),
@@ -4746,7 +4746,7 @@ var vo = w(function ($o) {
     };
   $o.default = bf;
 });
-var bo = w(function (wo) {
+var bo = commonJS(function (wo) {
   Object.defineProperty(wo, "__esModule", { value: !0 });
   var fr = $c(),
     Sf = Lp(),
@@ -4768,7 +4768,7 @@ var bo = w(function (wo) {
     };
   wo.default = Of;
 });
-var So = w(function (Eo) {
+var So = commonJS(function (Eo) {
   Object.defineProperty(Eo, "__esModule", { value: !0 });
   var Ke = $c(),
     kf = Lp(),
@@ -4815,7 +4815,7 @@ var So = w(function (Eo) {
     };
   Eo.default = Rf;
 });
-var aIn = w(function (Po) {
+var aIn = commonJS(function (Po) {
   Object.defineProperty(Po, "__esModule", { value: !0 });
   var Tf = eo(),
     Cf = ro(),
@@ -4843,7 +4843,7 @@ var aIn = w(function (Po) {
     ];
   Po.default = Lf;
 });
-var hr = w(function (Oo) {
+var hr = commonJS(function (Oo) {
   Object.defineProperty(Oo, "__esModule", { value: !0 });
   Oo.validateAdditionalItems = void 0;
   var de = $c(),
@@ -4898,7 +4898,7 @@ var hr = w(function (Oo) {
   Oo.validateAdditionalItems = No;
   Oo.default = Jf;
 });
-var mr = w(function (xo) {
+var mr = commonJS(function (xo) {
   Object.defineProperty(xo, "__esModule", { value: !0 });
   xo.validateTuple = void 0;
   var ko = $c(),
@@ -4942,7 +4942,7 @@ var mr = w(function (xo) {
   xo.validateTuple = jo;
   xo.default = Qf;
 });
-var To = w(function (Io) {
+var To = commonJS(function (Io) {
   Object.defineProperty(Io, "__esModule", { value: !0 });
   var Yf = mr(),
     Zf = {
@@ -4954,7 +4954,7 @@ var To = w(function (Io) {
     };
   Io.default = Zf;
 });
-var Ao = w(function (Mo) {
+var Ao = commonJS(function (Mo) {
   Object.defineProperty(Mo, "__esModule", { value: !0 });
   var Co = $c(),
     tp = Lp(),
@@ -4981,7 +4981,7 @@ var Ao = w(function (Mo) {
     };
   Mo.default = op;
 });
-var Vo = w(function (Do) {
+var Vo = commonJS(function (Do) {
   Object.defineProperty(Do, "__esModule", { value: !0 });
   var U = $c(),
     _t = Lp(),
@@ -5070,7 +5070,7 @@ var Vo = w(function (Do) {
     };
   Do.default = cp;
 });
-var S7t = w(function (Ko) {
+var S7t = commonJS(function (Ko) {
   Object.defineProperty(Ko, "__esModule", { value: !0 });
   Ko.validateSchemaDeps = Ko.validatePropertyDeps = Ko.error = void 0;
   var yr = $c(),
@@ -5149,7 +5149,7 @@ var S7t = w(function (Ko) {
   Ko.validateSchemaDeps = Uo;
   Ko.default = dp;
 });
-var Jo = w(function (Go) {
+var Jo = commonJS(function (Go) {
   Object.defineProperty(Go, "__esModule", { value: !0 });
   var Ho = $c(),
     mp = Lp(),
@@ -5187,7 +5187,7 @@ var Jo = w(function (Go) {
     };
   Go.default = _p;
 });
-var _r = w(function (Wo) {
+var _r = commonJS(function (Wo) {
   Object.defineProperty(Wo, "__esModule", { value: !0 });
   var gt = z(),
     G = $c(),
@@ -5289,7 +5289,7 @@ var _r = w(function (Wo) {
     };
   Wo.default = wp;
 });
-var Yo = w(function (Xo) {
+var Yo = commonJS(function (Xo) {
   Object.defineProperty(Xo, "__esModule", { value: !0 });
   var Ep = int(),
     Bo = z(),
@@ -5340,7 +5340,7 @@ var Yo = w(function (Xo) {
     };
   Xo.default = Sp;
 });
-var si = w(function (ri) {
+var si = commonJS(function (ri) {
   Object.defineProperty(ri, "__esModule", { value: !0 });
   var Zo = z(),
     vt = $c(),
@@ -5406,7 +5406,7 @@ var si = w(function (ri) {
     };
   ri.default = Np;
 });
-var oi = w(function (ni) {
+var oi = commonJS(function (ni) {
   Object.defineProperty(ni, "__esModule", { value: !0 });
   var qp = Lp(),
     kp = {
@@ -5439,7 +5439,7 @@ var oi = w(function (ni) {
     };
   ni.default = kp;
 });
-var ai = w(function (ii) {
+var ai = commonJS(function (ii) {
   Object.defineProperty(ii, "__esModule", { value: !0 });
   var xp = z(),
     Rp = {
@@ -5451,7 +5451,7 @@ var ai = w(function (ii) {
     };
   ii.default = Rp;
 });
-var ui = w(function (ci) {
+var ui = commonJS(function (ci) {
   Object.defineProperty(ci, "__esModule", { value: !0 });
   var wt = $c(),
     Tp = Lp(),
@@ -5503,7 +5503,7 @@ var ui = w(function (ci) {
     };
   ci.default = Mp;
 });
-var di = w(function (li) {
+var di = commonJS(function (li) {
   Object.defineProperty(li, "__esModule", { value: !0 });
   var Dp = Lp(),
     Vp = {
@@ -5522,7 +5522,7 @@ var di = w(function (li) {
     };
   li.default = Vp;
 });
-var mi = w(function (hi) {
+var mi = commonJS(function (hi) {
   Object.defineProperty(hi, "__esModule", { value: !0 });
   var bt = $c(),
     pi = Lp(),
@@ -5581,7 +5581,7 @@ var mi = w(function (hi) {
   }
   hi.default = Kp;
 });
-var _i = w(function (yi) {
+var _i = commonJS(function (yi) {
   Object.defineProperty(yi, "__esModule", { value: !0 });
   var Hp = Lp(),
     Gp = {
@@ -5594,7 +5594,7 @@ var _i = w(function (yi) {
     };
   yi.default = Gp;
 });
-var lIn = w(function (gi) {
+var lIn = commonJS(function (gi) {
   Object.defineProperty(gi, "__esModule", { value: !0 });
   var Wp = hr(),
     Bp = To(),
@@ -5632,7 +5632,7 @@ var lIn = w(function (gi) {
   }
   gi.default = lh;
 });
-var vi = w(function ($i) {
+var vi = commonJS(function ($i) {
   Object.defineProperty($i, "__esModule", { value: !0 });
   var x = $c(),
     fh = {
@@ -5725,13 +5725,13 @@ var vi = w(function ($i) {
     };
   $i.default = ph;
 });
-var cIn = w(function (wi) {
+var cIn = commonJS(function (wi) {
   Object.defineProperty(wi, "__esModule", { value: !0 });
   var mh = vi(),
     yh = [mh.default];
   wi.default = yh;
 });
-var uIn = w(function (bi) {
+var uIn = commonJS(function (bi) {
   Object.defineProperty(bi, "__esModule", { value: !0 });
   bi.contentVocabulary = bi.metadataVocabulary = void 0;
   bi.metadataVocabulary = [
@@ -5749,7 +5749,7 @@ var uIn = w(function (bi) {
     "contentSchema",
   ];
 });
-var Ni = w(function (Pi) {
+var Ni = commonJS(function (Pi) {
   Object.defineProperty(Pi, "__esModule", { value: !0 });
   var $h = iIn(),
     vh = aIn(),
@@ -5766,7 +5766,7 @@ var Ni = w(function (Pi) {
     ];
   Pi.default = Eh;
 });
-var ji = w(function (qi) {
+var ji = commonJS(function (qi) {
   Object.defineProperty(qi, "__esModule", { value: !0 });
   qi.DiscrError = void 0;
   var Oi;
@@ -5774,7 +5774,7 @@ var ji = w(function (qi) {
     ((e.Tag = "tag"), (e.Mapping = "mapping"));
   })(Oi || (qi.DiscrError = Oi = {}));
 });
-var dIn = w(function (Ri) {
+var dIn = commonJS(function (Ri) {
   Object.defineProperty(Ri, "__esModule", { value: !0 });
   var be = $c(),
     $r = ji(),
@@ -5892,7 +5892,7 @@ var dIn = w(function (Ri) {
     };
   Ri.default = qh;
 });
-var Ii = w(function (yy, jh) {
+var Ii = commonJS(function (yy, jh) {
   jh.exports = {
     $schema: "http://json-schema.org/draft-07/schema#",
     $id: "http://json-schema.org/draft-07/schema#",
@@ -6003,7 +6003,7 @@ var Ii = w(function (yy, jh) {
     default: !0,
   };
 });
-var Kkt = w(function (V, vr) {
+var Kkt = commonJS(function (V, vr) {
   Object.defineProperty(V, "__esModule", { value: !0 });
   V.MissingRefError =
     V.ValidationError =

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { kt } from "../共享小工具-未细化/chunk-510m1t2d.js";
+import { withDeadline } from "../共享小工具-未细化/async-timeout-utils.js";
 import { RL, cZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -27,20 +27,20 @@ import {
   getCanonicalName,
   parseUserSpecifiedModel,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { jn, Ks } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Eo } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { aKe, UO, Jf, Ym, eg, xMe, HMe, wT } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { _Se } from "../../02-功能模块/上下文压缩-Compact/chunk-525y6trw.js";
-import { ut } from "../共享小工具-未细化/chunk-5ktz3kp7.js";
+import { applyFlagSettingsPatch } from "../../02-功能模块/上下文压缩-Compact/apply-flag-settings.js";
+import { getThemeColor } from "../共享小工具-未细化/theme-color.js";
 import { P_, Rl, rI } from "../模型目录-ModelCatalog/chunk-qgx6a5a0.js";
 import { $7 } from "../共享小工具-未细化/chunk-28p6k62j.js";
 function E4(t = !0, e = !1) {
   if (!t) return Gq;
   let o = $7(Eo("theme", "dark").value);
-  if (e) return ie.dim(ut("promptBorder", o)(Gq));
-  return ut("fastMode", o)(Gq);
+  if (e) return ie.dim(getThemeColor("promptBorder", o)(Gq));
+  return getThemeColor("fastMode", o)(Gq);
 }
 var Jnn = 8000,
   Xle = "Fast mode unchanged (cancelled)";
@@ -84,7 +84,7 @@ function x3e(t, e, o, m = !0, a, f = R3e) {
       cZ({ ...(RL() ?? {}), fastMode: e });
     },
     c = () => {
-      if ((_Se({ fastMode: e }, o), e))
+      if ((applyFlagSettingsPatch({ fastMode: e }, o), e))
         o((r) => {
           let s = A4(r);
           if (s === void 0) return r;
@@ -133,7 +133,7 @@ function x3e(t, e, o, m = !0, a, f = R3e) {
 }
 async function H3e(t, e, o, m, a, f = !0, S, c, r, s) {
   let d = await Ym(t, async () => {
-    if (c) await kt(c(), Jnn);
+    if (c) await withDeadline(c(), Jnn);
     if (r?.aborted) return { kind: "refused", refusal: Xle };
     let M = dU();
     if (M) return { kind: "refused", refusal: `Fast mode unavailable: ${M}` };
@@ -159,7 +159,7 @@ async function H3e(t, e, o, m, a, f = !0, S, c, r, s) {
   if (d.kind === "refused") return d.refusal;
   if (d.remote !== void 0) return k3e(d.remote, e);
   if (
-    (i("tengu_fast_mode_toggled", { enabled: e, source: fromEnum(a), remote: Ks() }),
+    (logEvent("tengu_fast_mode_toggled", { enabled: e, source: fromEnum(a), remote: Ks() }),
     e)
   ) {
     let M = E4(!0),

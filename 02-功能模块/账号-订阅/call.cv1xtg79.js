@@ -9,54 +9,54 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 286 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Lwe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-0k3bh4m8.js";
+import "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import "../认证-OAuth登录/chunk-9g86t9bp.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-r2ab1bp6.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-1phhhgcj.js";
+import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
+import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import "../Bedrock-Vertex/chunk-g6sqdw6w.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
 import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-hxt46tkz.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
 import "../../01-核心基础设施/设置-配置/chunk-tswdb9jt.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-85wxphev.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-csjxh2sy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
+import "../../01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js";
+import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
+import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
 import "../Bridge-RemoteControl/chunk-3b6ct3yp.js";
-import { lye } from "../../01-核心基础设施/共享小工具-未细化/chunk-g2gg68zp.js";
-import { Qae } from "../../01-核心基础设施/共享小工具-未细化/chunk-734z18w7.js";
-import "../权限系统/chunk-n5mgv42x.js";
+import { startExtraUsageFlow } from "../../01-核心基础设施/共享小工具-未细化/extra-usage-flow.js";
+import { callUpgradeFromSurface } from "../../01-核心基础设施/共享小工具-未细化/upgrade-flow.js";
+import "../权限系统/permission-dialog.js";
 import "../认证-OAuth登录/chunk-dtt2nn79.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-1371sqbk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
+import "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import "../成本-Token统计/chunk-f1ehes3v.js";
 import "../认证-OAuth登录/chunk-5bg9xwqx.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function x(M) {
   let n = _(15),
@@ -66,7 +66,7 @@ function x(M) {
     return h;
   }
   let R;
-  if (n[0] === p)
+  if (n[0] === MEMO_CACHE_SENTINEL)
     ((R = [
       ...(Lwe() ? [] : [{ label: "Upgrade to Max", value: "upgrade" }]),
       {
@@ -78,7 +78,7 @@ function x(M) {
   else R = n[0];
   let U = R,
     D;
-  if (n[1] === p)
+  if (n[1] === MEMO_CACHE_SENTINEL)
     ((D = e(o, {
       paddingX: 2,
       children: e(t, {
@@ -98,13 +98,13 @@ function x(M) {
   if (n[6] !== s || n[7] !== a)
     ((C = (O) => {
       if (
-        (i("tengu_pro_trial_expired_choice", {
+        (logEvent("tengu_pro_trial_expired_choice", {
           chose_upgrade: O === "upgrade",
         }),
         O === "upgrade")
       )
-        Qae(a, s, "pro_trial_expired_dialog").then((W) => L(W));
-      else lye(a, s).then((Y) => L(Y));
+        callUpgradeFromSurface(a, s, "pro_trial_expired_dialog").then((W) => L(W));
+      else startExtraUsageFlow(a, s).then((Y) => L(Y));
     }),
       (n[6] = s),
       (n[7] = a),

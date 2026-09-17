@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ae } from "./chunk-2c9tjhwd.js";
+import { importMetaRequire } from "./chunk-2c9tjhwd.js";
 import { userInfo } from "os";
 var t = "com.anthropic.claudecode",
   _Rt = "HKLM\\SOFTWARE\\Policies\\ClaudeCode",

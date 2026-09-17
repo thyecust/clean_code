@@ -33,15 +33,15 @@ import {
 import { yw, jg, getShareEntry, ownershipTag, shareAudienceParenthetical } from "./chunk-01ymf0ar.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { xut } from "./chunk-fx5ekm7e.js";
 import { wte, lwe, FS } from "./chunk-qpgskeea.js";
 import { ROOM_CONSENT_CLAUSE, DB_BATCH_OP, replayedPublishesRemaining, replayedPublishesResetAt, publishesRemainingLine } from "./chunk-pdd7kz7p.js";
 import { Sce, yPe, Mut, Nut, Fut, $ut, dM, artifactLivePathsSchemaOpen } from "./chunk-b6k1z7an.js";
 import "./chunk-x29r16ke.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-0ghshta0.js";
+import "../../01-核心基础设施/共享小工具-未细化/claude-browser-mcp-server.js";
 import {
   mO,
   Mee,
@@ -72,16 +72,16 @@ import {
   kut,
 } from "./chunk-pvztfdrb.js";
 import "../Teammates团队/chunk-weg7y2ya.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wm4s322b.js";
+import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js";
 import "../Bridge-RemoteControl/chunk-jpq2fv3g.js";
 import "./chunk-5gvg7p5p.js";
 import "../Teammates团队/chunk-y89mhs4a.js";
-import { QHe } from "../../01-核心基础设施/共享小工具-未细化/chunk-86zcr8cb.js";
+import { ReceivedBytesStatus } from "../../01-核心基础设施/共享小工具-未细化/webfetch-tool-messages.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function R(ee) {
   let D = _(8),
     { name: A, url: E, iconColor: q } = ee,
@@ -450,7 +450,7 @@ function renderToolUseMessage(s, m) {
   if (n.action === "pin" || n.action === "unpin") {
     let d = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
       a = n[M4],
-      c = me(a) ? a.title : void 0,
+      c = isRecord(a) ? a.title : void 0,
       f = Nee(
         (d !== null ? getShareEntry(d.slug)?.title : void 0) ||
           (typeof c === "string" ? c : ""),
@@ -472,7 +472,7 @@ function renderToolUseMessage(s, m) {
       c = m?.verbose === !0,
       f = c ? ownershipTag(a) : "",
       g = n[vut],
-      p = me(g) ? g.title : void 0,
+      p = isRecord(g) ? g.title : void 0,
       T = Nee(a?.title || (typeof p === "string" ? p : ""));
     return r(t, {
       children: [
@@ -563,7 +563,7 @@ function renderToolUseProgressMessage(s) {
     m.status === 503
       ? "Publish service temporarily unavailable"
       : "Publish service busy";
-  return e(xe, {
+  return e(ToolResultRow, {
     children: r(t, {
       dimColor: !0,
       children: [
@@ -598,7 +598,7 @@ function renderToolResultMessage(s, m, n) {
         widths: s.preview.widths.slice(0, Sce),
         themes: s.preview.themes.slice(0, 2).map((a) => oe(a, 32)),
       },
-      l = G(i.shots, (a) => a.error === void 0),
+      l = countMatching(i.shots, (a) => a.error === void 0),
       u = i.issues.length + (i.issuesDropped ?? 0),
       h = (a, c) => {
         let f = oe(a, c),
@@ -607,7 +607,7 @@ function renderToolResultMessage(s, m, n) {
       },
       v = n?.verbose === !0 ? i.issues : i.issues.slice(0, Y),
       d = i.issues.length - v.length + (i.issuesDropped ?? 0);
-    return e(xe, {
+    return e(ToolResultRow, {
       children: r(o, {
         flexDirection: "column",
         children: [
@@ -693,14 +693,14 @@ function renderToolResultMessage(s, m, n) {
     });
   }
   if ("read" in s)
-    return e(QHe, {
+    return e(ReceivedBytesStatus, {
       bytes: s.read.bytes,
       status: `${s.read.code} ${s.read.codeText}`,
     });
   if ("threads" in s) {
     let i = s.threads_dropped === !0,
       l = s.thread_filter !== void 0;
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children: l
@@ -718,7 +718,7 @@ function renderToolResultMessage(s, m, n) {
     });
   }
   if ("replied" in s)
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children: s.replied
@@ -733,7 +733,7 @@ function renderToolResultMessage(s, m, n) {
       }),
     });
   if ("thread_resolved" in s)
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children: s.thread_resolved
@@ -748,7 +748,7 @@ function renderToolResultMessage(s, m, n) {
       }),
     });
   if ("liveEdit" in s)
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children: P
@@ -757,7 +757,7 @@ function renderToolResultMessage(s, m, n) {
       }),
     });
   if ("sync" in s)
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children: P ? P.renderSyncResultText(s.sync) : "synced",
@@ -766,7 +766,7 @@ function renderToolResultMessage(s, m, n) {
   if ("versioned" in s) {
     let i = typeof s.versioned.url === "string" ? parseArtifactUrl(s.versioned.url) : null,
       l = i ? artifactViewerUrlFor(i) : void 0;
-    return e(xe, {
+    return e(ToolResultRow, {
       children: r(t, {
         dimColor: !0,
         children: [
@@ -782,7 +782,7 @@ function renderToolResultMessage(s, m, n) {
       l = i.docs?.length ?? 0,
       u = i.saved,
       h =
-        me(u) &&
+        isRecord(u) &&
         typeof u.dir === "string" &&
         Array.isArray(u.files) &&
         Array.isArray(u.skipped)
@@ -796,7 +796,7 @@ function renderToolResultMessage(s, m, n) {
         h !== void 0
           ? `saved ${h.fileCount} ${x(h.fileCount, "document")} under ${truncatePathMiddle(sweepAskCopy(h.dir) ?? "(unprintable path)", 1024)}${h.skippedCount > 0 ? ` (${h.skippedCount} skipped)` : ""}`
           : void 0;
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children:
@@ -811,7 +811,7 @@ function renderToolResultMessage(s, m, n) {
       "results" in s.db_write && Array.isArray(s.db_write.results)
         ? s.db_write.results.length
         : void 0;
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children: !s.db_write.committed
@@ -825,7 +825,7 @@ function renderToolResultMessage(s, m, n) {
   if (X(s))
     return j
       ? j.renderHandlersResult(s)
-      : e(xe, {
+      : e(ToolResultRow, {
           children: e(t, {
             dimColor: !0,
             children: "This record is unreadable in this build.",
@@ -840,7 +840,7 @@ function renderToolResultMessage(s, m, n) {
           ? `${i.peers} ${x(i.peers, "peer")}`
           : "? peers",
       u = typeof i.reason === "string" ? jg(i.reason, { max: 32 }) : void 0;
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children:
@@ -854,7 +854,7 @@ function renderToolResultMessage(s, m, n) {
   }
   if ("asset_upload" in s) {
     let i = s.asset_upload;
-    return e(xe, {
+    return e(ToolResultRow, {
       children: r(t, {
         dimColor: !0,
         children: [
@@ -869,9 +869,9 @@ function renderToolResultMessage(s, m, n) {
     });
   }
   if ("asset_list" in s) {
-    let i = me(s.asset_list) ? s.asset_list : {},
+    let i = isRecord(s.asset_list) ? s.asset_list : {},
       l = Array.isArray(i.assets) ? i.assets.length : void 0;
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children:
@@ -884,9 +884,9 @@ function renderToolResultMessage(s, m, n) {
     });
   }
   if ("file_list" in s) {
-    let i = me(s.file_list) ? s.file_list : {},
+    let i = isRecord(s.file_list) ? s.file_list : {},
       l = Array.isArray(i.files) ? i.files.length : void 0;
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children:
@@ -899,8 +899,8 @@ function renderToolResultMessage(s, m, n) {
     });
   }
   if ("file_read" in s) {
-    let i = me(s.file_read) ? s.file_read : {};
-    return e(xe, {
+    let i = isRecord(s.file_read) ? s.file_read : {};
+    return e(ToolResultRow, {
       children: r(t, {
         dimColor: !0,
         children: [
@@ -918,7 +918,7 @@ function renderToolResultMessage(s, m, n) {
   }
   if ("asset_read" in s) {
     let i = s.asset_read;
-    return e(xe, {
+    return e(ToolResultRow, {
       children: r(t, {
         dimColor: !0,
         children: [
@@ -932,7 +932,7 @@ function renderToolResultMessage(s, m, n) {
     });
   }
   if ("asset_delete" in s)
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children: s.asset_delete.deleted ? "asset deleted" : "no such asset",
@@ -940,7 +940,7 @@ function renderToolResultMessage(s, m, n) {
     });
   if ("asset_copy" in s) {
     let i = Array.isArray(s.asset_copy.assets) ? s.asset_copy.assets.length : 0;
-    return e(xe, {
+    return e(ToolResultRow, {
       children: r(t, {
         dimColor: !0,
         children: ["copied ", i, " ", x(i, "asset"), " into the artifact"],
@@ -948,7 +948,7 @@ function renderToolResultMessage(s, m, n) {
     });
   }
   if ("artifact_delete" in s)
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children:
@@ -958,14 +958,14 @@ function renderToolResultMessage(s, m, n) {
       }),
     });
   if ("pin" in s)
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children: s.pin.pinned ? "pinned to the sidebar" : "unpinned",
       }),
     });
   if ("watch" in s)
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children: s.watch.watching
@@ -978,7 +978,7 @@ function renderToolResultMessage(s, m, n) {
       }),
     });
   if ("unwatch" in s)
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children: s.unwatch.was_watching
@@ -989,14 +989,14 @@ function renderToolResultMessage(s, m, n) {
   if ("watches" in s) {
     let { watching: i, stopped: l } = splitWatchRows(s.watches),
       u = s.arms ?? [],
-      h = G(
+      h = countMatching(
         u,
         (p) =>
           p.rail === void 0 &&
           (p.state === "arming" || p.state === "backing_off"),
       ),
-      v = G(u, (p) => p.rail !== void 0 && p.state === "arming"),
-      d = G(u, (p) => p.state === "failed" || p.state === "ended"),
+      v = countMatching(u, (p) => p.rail !== void 0 && p.state === "arming"),
+      d = countMatching(u, (p) => p.state === "failed" || p.state === "ended"),
       a = [
         h > 0 ? `${h} connecting` : "",
         v > 0 ? `${v} registering` : "",
@@ -1005,12 +1005,12 @@ function renderToolResultMessage(s, m, n) {
         .filter((p) => p !== "")
         .join(", "),
       c = Array.isArray(s.rooms) ? s.rooms : [],
-      f = G(c, (p) => p?.connected !== !0),
+      f = countMatching(c, (p) => p?.connected !== !0),
       g =
         c.length > 0
           ? ` \xB7 ${c.length} artifact ${x(c.length, "room")} joined${f > 0 ? ` (${f} reconnecting)` : ""}`
           : "";
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children: `${i} artifact ${x(i, "watch", "watches")}${l > 0 ? ` \xB7 ${l} with auto-replies paused or stopped` : ""}${a !== "" ? `, ${a}` : ""}${g}`,
@@ -1018,7 +1018,7 @@ function renderToolResultMessage(s, m, n) {
     });
   }
   if ("resume_replies" in s)
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children: s.resume_replies.resumed
@@ -1031,7 +1031,7 @@ function renderToolResultMessage(s, m, n) {
       }),
     });
   if ("verify" in s)
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children:
@@ -1054,7 +1054,7 @@ function renderToolResultMessage(s, m, n) {
               .map(([u, h]) => `${u}: ${h}`)
               .join(", ")})`,
       l = ` \xB7 ${s.page_data.provenance.authorship}`;
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children: s.page_data.islandPresent
@@ -1064,7 +1064,7 @@ function renderToolResultMessage(s, m, n) {
     });
   }
   if ("artifact_types" in s)
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children:
@@ -1078,7 +1078,7 @@ function renderToolResultMessage(s, m, n) {
   if ("artifact_type" in s) {
     let i = parseArtifactUrl(s.artifact_type.type_url),
       l = i ? artifactViewerUrlFor(i) : void 0;
-    return e(xe, {
+    return e(ToolResultRow, {
       children: r(t, {
         dimColor: !0,
         children: [
@@ -1094,7 +1094,7 @@ function renderToolResultMessage(s, m, n) {
     let i = Array.isArray(s.type_instances?.instances)
       ? s.type_instances.instances.length
       : 0;
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children:
@@ -1107,7 +1107,7 @@ function renderToolResultMessage(s, m, n) {
     });
   }
   if ("artifacts" in s)
-    return e(xe, {
+    return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
         children:
@@ -1123,7 +1123,7 @@ function renderToolResultMessage(s, m, n) {
   if ("opened" in s) {
     let i = typeof s.url === "string" ? parseArtifactUrl(s.url) : null,
       l = i ? artifactViewerUrlFor(i) : void 0;
-    return e(xe, {
+    return e(ToolResultRow, {
       children: r(t, {
         dimColor: !0,
         children: [
@@ -1147,7 +1147,7 @@ function renderToolResultMessage(s, m, n) {
         ? e(R, { name: h, url: h })
         : "(unrecognized address)";
     };
-    return e(xe, {
+    return e(ToolResultRow, {
       children: r(t, {
         dimColor: !0,
         children: [
@@ -1165,7 +1165,7 @@ function renderToolResultMessage(s, m, n) {
   }
   let b = replayedPublishesRemaining(s.publishesRemaining),
     w = replayedPublishesResetAt(s.publishesResetAt);
-  return e(xe, {
+  return e(ToolResultRow, {
     children: r(o, {
       flexDirection: "column",
       children: [

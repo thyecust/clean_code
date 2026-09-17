@@ -10,7 +10,7 @@
 import { j, B, z1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { q } from "../共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
 import { createHash, randomUUID } from "crypto";
 import {
   closeSync,
@@ -66,7 +66,7 @@ function jJ(e) {
     let o = fstatSync(n);
     if (o.uid !== r) {
       if (r === 0 && a.CLAUDE_CODE_CONTAINER_ID) {
-        q("warn", "tempdir_owner_mismatch", { observed_uid: o.uid });
+        writeDiagnosticsEvent("warn", "tempdir_owner_mismatch", { observed_uid: o.uid });
         return;
       }
       throw Error(

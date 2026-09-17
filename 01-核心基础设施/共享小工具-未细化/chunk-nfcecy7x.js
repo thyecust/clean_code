@@ -18,16 +18,16 @@ import {
   unlink,
 } from "fs/promises";
 import { basename, dirname, join as u, sep as b } from "path";
-function dg(e) {
+function normalizePathForComparison(e) {
   return e
     .toLowerCase()
     .replace(/\u0131/g, "i")
     .replace(/\u017F/g, "s");
 }
-async function jG(e) {
+async function isPathSafeToRemove(e) {
   if (P() !== "windows") return !0;
   let t = await realpath(dirname(e)).catch(() => null);
-  return !(await c(e, t == null ? null : dg(u(t, basename(e)))));
+  return !(await c(e, t == null ? null : normalizePathForComparison(u(t, basename(e)))));
 }
 async function c(e, t) {
   try {
@@ -55,7 +55,7 @@ async function c(e, t) {
         )) !== "not-link" || t == null
           ? null
           : await realpath(e)
-              .then((o) => dg(o))
+              .then((o) => normalizePathForComparison(o))
               .catch(() => null);
       if (i == null || (i !== t && !i.startsWith(t + b)))
         return (
@@ -81,4 +81,4 @@ async function c(e, t) {
       a = (await c(u(e, r.name), t)) || a;
   return a;
 }
-export { dg, jG };
+export { normalizePathForComparison, isPathSafeToRemove };

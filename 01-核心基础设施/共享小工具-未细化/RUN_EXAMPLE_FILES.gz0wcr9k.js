@@ -8,15 +8,15 @@
 
 // Version: 2.1.263
 import { Ke } from "./chunk-fcskxvsh.js";
-import { Ae } from "./chunk-2c9tjhwd.js";
-var e = Ae("./cli-40vh1c3p.md");
+import { importMetaRequire } from "./chunk-2c9tjhwd.js";
+var e = importMetaRequire("./cli-40vh1c3p.md");
 var t = "./electron-8035775b.md.zst";
 var a = Ke(t, import.meta.dirname);
-var s = Ae("./library-yywvyb11.md");
-var n = Ae("./playwright-g4wwbqeh.md");
-var r = Ae("./server-z4ytjptt.md");
-var i = Ae("./tui-93b0fcsh.md");
-var o = Ae("./SKILL-9ddmsnpa.md");
+var s = importMetaRequire("./library-yywvyb11.md");
+var n = importMetaRequire("./playwright-g4wwbqeh.md");
+var r = importMetaRequire("./server-z4ytjptt.md");
+var i = importMetaRequire("./tui-93b0fcsh.md");
+var o = importMetaRequire("./SKILL-9ddmsnpa.md");
 var SKILL_MD = o,
   RUN_EXAMPLE_FILES = {
     "examples/cli.md": e,

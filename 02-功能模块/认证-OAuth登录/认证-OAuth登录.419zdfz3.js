@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { default as at, AxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Ie, po, Le, rs, zn, An, my, ku, SZ } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z, Dt, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep, withTimeout, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Iz, tl, be, Lxe, uo, Hr, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { CLAUDE_AI_INFERENCE_SCOPE, CLAUDE_AI_PROFILE_SCOPE, OAUTH_BETA_HEADER, CLAUDE_AI_OAUTH_SCOPES, ALL_OAUTH_SCOPES, preservableScopesFrom, ALLOWED_OAUTH_BASE_URLS, getOauthConfig } from "./chunk-9g2q4bjq.js";
 import {
@@ -78,8 +78,8 @@ import {
   fZ,
   ic,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { getGlobalClaudeFile, kxt, getHostPlatformForAnalytics, getShellForAnalytics, TW, env as a, antEnv, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum, fromEnumOpt, fromNumber, fromSanitizer_SANITIZER_OUTPUT_ONLY, mcpNameForAnalytics_GATE_EVALUATED, agentTypeForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
@@ -122,7 +122,7 @@ import { iu, oe, Yg, wZ, Vxe } from "../../01-核心基础设施/核心工具-�
 import { mz, St, U1, dxe, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { V2e, i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { stripProtoFields, logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   ea,
@@ -146,7 +146,7 @@ import {
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { y1, Kxn, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { sanitizePath, getProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { Jcr, wS, Bf, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { fn, execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING, execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import {
@@ -259,7 +259,7 @@ import {
   Akn,
 } from "./chunk-wk0e3dz4.js";
 import { pm, oar } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
-import { Ei } from "../Hooks钩子/chunk-9em0d4k5.js";
+import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { iir } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
 import { Zvt, aar, IU, gx, D5t, TBe, U6, Gi } from "./chunk-7rf7w8yf.js";
 import { whe } from "../Git-Worktree/chunk-bk9696gx.js";
@@ -267,7 +267,7 @@ import { dz } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { hc, IQ, getSecureStorage } from "./chunk-y7b7kf5n.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { A_, Sx, tv, wA, jar } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
-import { Y5t, J5t } from "../../01-核心基础设施/共享小工具-未细化/chunk-1bqqnyc1.js";
+import { getLegacyApiKeyPrefetchResult, clearLegacyApiKeyPrefetch } from "../../01-核心基础设施/共享小工具-未细化/keychain-prefetch.js";
 import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import { jir, ARTIFACT_TOOL_NAME } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { YRe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
@@ -280,12 +280,12 @@ import { ownPidDomain, $R } from "../../01-核心基础设施/共享小工具-�
 import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import { FR, H5 } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { isClaudeInChromeMCPServer, tir } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
-import { xp, Kr } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
+import { customSchema, defineDialog } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { IRe, isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { px } from "../上下文压缩-Compact/chunk-qbdgst52.js";
-import { cp, fs } from "../Teammates团队/chunk-enjekn9t.js";
-import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
-import { ZT, Dm } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
+import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME } from "../Teammates团队/chunk-enjekn9t.js";
+import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
+import { serializeAsyncCalls, createKeyedSerialQueue } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
 import { q5 } from "../Bedrock-Vertex/chunk-p991cddr.js";
 import {
   lW,
@@ -315,17 +315,17 @@ import {
 } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 import { cB } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { JQ } from "../../01-核心基础设施/共享小工具-未细化/chunk-q35gycf9.js";
+import { isLoopbackHostname } from "../../01-核心基础设施/共享小工具-未细化/is-loopback-hostname.js";
 import { P, rxe, Hxt, gur } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { pe, w, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var Mh = w(function (wh) {
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var Mh = commonJS(function (wh) {
   Object.defineProperty(wh, "__esModule", { value: !0 });
   wh._globalThis = void 0;
   wh._globalThis = typeof globalThis === "object" ? globalThis : global;
 });
-var Ih = w(function (Zn) {
+var Ih = commonJS(function (Zn) {
   var KG =
       (Zn && Zn.__createBinding) ||
       (Object.create
@@ -352,7 +352,7 @@ var Ih = w(function (Zn) {
   Object.defineProperty(Zn, "__esModule", { value: !0 });
   jG(Mh(), Zn);
 });
-var Dh = w(function (tr) {
+var Dh = commonJS(function (tr) {
   var WG =
       (tr && tr.__createBinding) ||
       (Object.create
@@ -379,12 +379,12 @@ var Dh = w(function (tr) {
   Object.defineProperty(tr, "__esModule", { value: !0 });
   $G(Ih(), tr);
 });
-var gu = w(function (xh) {
+var gu = commonJS(function (xh) {
   Object.defineProperty(xh, "__esModule", { value: !0 });
   xh.VERSION = void 0;
   xh.VERSION = "1.9.0";
 });
-var Bh = w(function (zh) {
+var Bh = commonJS(function (zh) {
   Object.defineProperty(zh, "__esModule", { value: !0 });
   zh.isCompatible = zh._makeCompatibilityCheck = void 0;
   var YG = gu(),
@@ -424,7 +424,7 @@ var Bh = w(function (zh) {
   zh._makeCompatibilityCheck = Uh;
   zh.isCompatible = Uh(YG.VERSION);
 });
-var nr = w(function (Hh) {
+var nr = commonJS(function (Hh) {
   Object.defineProperty(Hh, "__esModule", { value: !0 });
   Hh.unregisterGlobal = Hh.getGlobal = Hh.registerGlobal = void 0;
   var XG = Dh(),
@@ -474,7 +474,7 @@ var nr = w(function (Hh) {
   }
   Hh.unregisterGlobal = tV;
 });
-var $h = w(function (jh) {
+var $h = commonJS(function (jh) {
   Object.defineProperty(jh, "__esModule", { value: !0 });
   jh.DiagComponentLogger = void 0;
   var oV = nr();
@@ -505,7 +505,7 @@ var $h = w(function (jh) {
     return (r.unshift(t), o[e](...r));
   }
 });
-var Ds = w(function (qh) {
+var Ds = commonJS(function (qh) {
   Object.defineProperty(qh, "__esModule", { value: !0 });
   qh.DiagLogLevel = void 0;
   var iV;
@@ -519,7 +519,7 @@ var Ds = w(function (qh) {
       (e[(e.ALL = 9999)] = "ALL"));
   })((iV = qh.DiagLogLevel || (qh.DiagLogLevel = {})));
 });
-var tE = w(function (Zh) {
+var tE = commonJS(function (Zh) {
   Object.defineProperty(Zh, "__esModule", { value: !0 });
   Zh.createLogLevelDiagLogger = void 0;
   var ln = Ds();
@@ -542,7 +542,7 @@ var tE = w(function (Zh) {
   }
   Zh.createLogLevelDiagLogger = sV;
 });
-var rr = w(function (rE) {
+var rr = commonJS(function (rE) {
   Object.defineProperty(rE, "__esModule", { value: !0 });
   rE.DiagAPI = void 0;
   var aV = $h(),
@@ -609,7 +609,7 @@ var rr = w(function (rE) {
   }
   rE.DiagAPI = _u;
 });
-var aE = w(function (iE) {
+var aE = commonJS(function (iE) {
   Object.defineProperty(iE, "__esModule", { value: !0 });
   iE.BaggageImpl = void 0;
   class Ur {
@@ -643,12 +643,12 @@ var aE = w(function (iE) {
   }
   iE.BaggageImpl = Ur;
 });
-var uE = w(function (lE) {
+var uE = commonJS(function (lE) {
   Object.defineProperty(lE, "__esModule", { value: !0 });
   lE.baggageEntryMetadataSymbol = void 0;
   lE.baggageEntryMetadataSymbol = Symbol("BaggageEntryMetadata");
 });
-var hu = w(function (dE) {
+var hu = commonJS(function (dE) {
   Object.defineProperty(dE, "__esModule", { value: !0 });
   dE.baggageEntryMetadataFromString = dE.createBaggage = void 0;
   var uV = rr(),
@@ -674,7 +674,7 @@ var hu = w(function (dE) {
   }
   dE.baggageEntryMetadataFromString = mV;
 });
-var No = w(function (fE) {
+var No = commonJS(function (fE) {
   Object.defineProperty(fE, "__esModule", { value: !0 });
   fE.ROOT_CONTEXT = fE.createContextKey = void 0;
   function hV(e) {
@@ -698,7 +698,7 @@ var No = w(function (fE) {
   }
   fE.ROOT_CONTEXT = new Us();
 });
-var EE = w(function (_E) {
+var EE = commonJS(function (_E) {
   Object.defineProperty(_E, "__esModule", { value: !0 });
   _E.DiagConsoleLogger = void 0;
   var Eu = [
@@ -724,7 +724,7 @@ var EE = w(function (_E) {
   }
   _E.DiagConsoleLogger = mE;
 });
-var Pu = w(function (SE) {
+var Pu = commonJS(function (SE) {
   Object.defineProperty(SE, "__esModule", { value: !0 });
   SE.createNoopMeter =
     SE.NOOP_OBSERVABLE_UP_DOWN_COUNTER_METRIC =
@@ -815,7 +815,7 @@ var Pu = w(function (SE) {
   }
   SE.createNoopMeter = SV;
 });
-var PE = w(function (wE) {
+var PE = commonJS(function (wE) {
   Object.defineProperty(wE, "__esModule", { value: !0 });
   wE.ValueType = void 0;
   var PV;
@@ -823,7 +823,7 @@ var PE = w(function (wE) {
     ((e[(e.INT = 0)] = "INT"), (e[(e.DOUBLE = 1)] = "DOUBLE"));
   })((PV = wE.ValueType || (wE.ValueType = {})));
 });
-var Du = w(function (ME) {
+var Du = commonJS(function (ME) {
   Object.defineProperty(ME, "__esModule", { value: !0 });
   ME.defaultTextMapSetter = ME.defaultTextMapGetter = void 0;
   ME.defaultTextMapGetter = {
@@ -843,7 +843,7 @@ var Du = w(function (ME) {
     },
   };
 });
-var LE = w(function (xE) {
+var LE = commonJS(function (xE) {
   Object.defineProperty(xE, "__esModule", { value: !0 });
   xE.NoopContextManager = void 0;
   var IV = No();
@@ -866,7 +866,7 @@ var LE = w(function (xE) {
   }
   xE.NoopContextManager = DE;
 });
-var Uo = w(function (zE) {
+var Uo = commonJS(function (zE) {
   Object.defineProperty(zE, "__esModule", { value: !0 });
   zE.ContextAPI = void 0;
   var DV = LE(),
@@ -902,7 +902,7 @@ var Uo = w(function (zE) {
   }
   zE.ContextAPI = Lu;
 });
-var zu = w(function (BE) {
+var zu = commonJS(function (BE) {
   Object.defineProperty(BE, "__esModule", { value: !0 });
   BE.TraceFlags = void 0;
   var NV;
@@ -910,7 +910,7 @@ var zu = w(function (BE) {
     ((e[(e.NONE = 0)] = "NONE"), (e[(e.SAMPLED = 1)] = "SAMPLED"));
   })((NV = BE.TraceFlags || (BE.TraceFlags = {})));
 });
-var zs = w(function (HE) {
+var zs = commonJS(function (HE) {
   Object.defineProperty(HE, "__esModule", { value: !0 });
   HE.INVALID_SPAN_CONTEXT = HE.INVALID_TRACEID = HE.INVALID_SPANID = void 0;
   var LV = zu();
@@ -922,7 +922,7 @@ var zs = w(function (HE) {
     traceFlags: LV.TraceFlags.NONE,
   };
 });
-var Fs = w(function (WE) {
+var Fs = commonJS(function (WE) {
   Object.defineProperty(WE, "__esModule", { value: !0 });
   WE.NonRecordingSpan = void 0;
   var UV = zs();
@@ -962,7 +962,7 @@ var Fs = w(function (WE) {
   }
   WE.NonRecordingSpan = jE;
 });
-var Hu = w(function (qE) {
+var Hu = commonJS(function (qE) {
   Object.defineProperty(qE, "__esModule", { value: !0 });
   qE.getSpanContext =
     qE.setSpanContext =
@@ -1001,7 +1001,7 @@ var Hu = w(function (qE) {
   }
   qE.getSpanContext = KV;
 });
-var Bs = w(function (oS) {
+var Bs = commonJS(function (oS) {
   Object.defineProperty(oS, "__esModule", { value: !0 });
   oS.wrapSpanContext =
     oS.isSpanContextValid =
@@ -1029,7 +1029,7 @@ var Bs = w(function (oS) {
   }
   oS.wrapSpanContext = eK;
 });
-var Ku = w(function (uS) {
+var Ku = commonJS(function (uS) {
   Object.defineProperty(uS, "__esModule", { value: !0 });
   uS.NoopTracer = void 0;
   var oK = Uo(),
@@ -1068,7 +1068,7 @@ var Ku = w(function (uS) {
     );
   }
 });
-var $u = w(function (gS) {
+var $u = commonJS(function (gS) {
   Object.defineProperty(gS, "__esModule", { value: !0 });
   gS.ProxyTracer = void 0;
   var aK = Ku(),
@@ -1100,7 +1100,7 @@ var $u = w(function (gS) {
   }
   gS.ProxyTracer = fS;
 });
-var SS = w(function (hS) {
+var SS = commonJS(function (hS) {
   Object.defineProperty(hS, "__esModule", { value: !0 });
   hS.NoopTracerProvider = void 0;
   var cK = Ku();
@@ -1111,7 +1111,7 @@ var SS = w(function (hS) {
   }
   hS.NoopTracerProvider = _S;
 });
-var Yu = w(function (bS) {
+var Yu = commonJS(function (bS) {
   Object.defineProperty(bS, "__esModule", { value: !0 });
   bS.ProxyTracerProvider = void 0;
   var uK = $u(),
@@ -1140,7 +1140,7 @@ var Yu = w(function (bS) {
   }
   bS.ProxyTracerProvider = TS;
 });
-var RS = w(function (vS) {
+var RS = commonJS(function (vS) {
   Object.defineProperty(vS, "__esModule", { value: !0 });
   vS.SamplingDecision = void 0;
   var fK;
@@ -1150,7 +1150,7 @@ var RS = w(function (vS) {
       (e[(e.RECORD_AND_SAMPLED = 2)] = "RECORD_AND_SAMPLED"));
   })((fK = vS.SamplingDecision || (vS.SamplingDecision = {})));
 });
-var OS = w(function (CS) {
+var OS = commonJS(function (CS) {
   Object.defineProperty(CS, "__esModule", { value: !0 });
   CS.SpanKind = void 0;
   var gK;
@@ -1162,7 +1162,7 @@ var OS = w(function (CS) {
       (e[(e.CONSUMER = 4)] = "CONSUMER"));
   })((gK = CS.SpanKind || (CS.SpanKind = {})));
 });
-var PS = w(function (kS) {
+var PS = commonJS(function (kS) {
   Object.defineProperty(kS, "__esModule", { value: !0 });
   kS.SpanStatusCode = void 0;
   var mK;
@@ -1172,7 +1172,7 @@ var PS = w(function (kS) {
       (e[(e.ERROR = 2)] = "ERROR"));
   })((mK = kS.SpanStatusCode || (kS.SpanStatusCode = {})));
 });
-var DS = w(function (MS) {
+var DS = commonJS(function (MS) {
   Object.defineProperty(MS, "__esModule", { value: !0 });
   MS.validateValue = MS.validateKey = void 0;
   var Qu = "[_0-9a-z-*/]",
@@ -1190,7 +1190,7 @@ var DS = w(function (MS) {
   }
   MS.validateValue = AK;
 });
-var BS = w(function (zS) {
+var BS = commonJS(function (zS) {
   Object.defineProperty(zS, "__esModule", { value: !0 });
   zS.TraceStateImpl = void 0;
   var xS = DS(),
@@ -1252,7 +1252,7 @@ var BS = w(function (zS) {
   }
   zS.TraceStateImpl = Zu;
 });
-var VS = w(function (HS) {
+var VS = commonJS(function (HS) {
   Object.defineProperty(HS, "__esModule", { value: !0 });
   HS.createTraceState = void 0;
   var RK = BS();
@@ -1261,19 +1261,19 @@ var VS = w(function (HS) {
   }
   HS.createTraceState = CK;
 });
-var WS = w(function (KS) {
+var WS = commonJS(function (KS) {
   Object.defineProperty(KS, "__esModule", { value: !0 });
   KS.context = void 0;
   var OK = Uo();
   KS.context = OK.ContextAPI.getInstance();
 });
-var qS = w(function ($S) {
+var qS = commonJS(function ($S) {
   Object.defineProperty($S, "__esModule", { value: !0 });
   $S.diag = void 0;
   var kK = rr();
   $S.diag = kK.DiagAPI.instance();
 });
-var QS = w(function (XS) {
+var QS = commonJS(function (XS) {
   Object.defineProperty(XS, "__esModule", { value: !0 });
   XS.NOOP_METER_PROVIDER = XS.NoopMeterProvider = void 0;
   var wK = Pu();
@@ -1285,7 +1285,7 @@ var QS = w(function (XS) {
   XS.NoopMeterProvider = ed;
   XS.NOOP_METER_PROVIDER = new ed();
 });
-var nT = w(function (eT) {
+var nT = commonJS(function (eT) {
   Object.defineProperty(eT, "__esModule", { value: !0 });
   eT.MetricsAPI = void 0;
   var MK = QS(),
@@ -1313,13 +1313,13 @@ var nT = w(function (eT) {
   }
   eT.MetricsAPI = rd;
 });
-var iT = w(function (rT) {
+var iT = commonJS(function (rT) {
   Object.defineProperty(rT, "__esModule", { value: !0 });
   rT.metrics = void 0;
   var IK = nT();
   rT.metrics = IK.MetricsAPI.getInstance();
 });
-var cT = w(function (aT) {
+var cT = commonJS(function (aT) {
   Object.defineProperty(aT, "__esModule", { value: !0 });
   aT.NoopTextMapPropagator = void 0;
   class sT {
@@ -1333,7 +1333,7 @@ var cT = w(function (aT) {
   }
   aT.NoopTextMapPropagator = sT;
 });
-var fT = w(function (dT) {
+var fT = commonJS(function (dT) {
   Object.defineProperty(dT, "__esModule", { value: !0 });
   dT.deleteBaggage =
     dT.setBaggage =
@@ -1360,7 +1360,7 @@ var fT = w(function (dT) {
   }
   dT.deleteBaggage = UK;
 });
-var ET = w(function (_T) {
+var ET = commonJS(function (_T) {
   Object.defineProperty(_T, "__esModule", { value: !0 });
   _T.PropagationAPI = void 0;
   var ad = nr(),
@@ -1404,13 +1404,13 @@ var ET = w(function (_T) {
   }
   _T.PropagationAPI = dd;
 });
-var bT = w(function (ST) {
+var bT = commonJS(function (ST) {
   Object.defineProperty(ST, "__esModule", { value: !0 });
   ST.propagation = void 0;
   var KK = ET();
   ST.propagation = KK.PropagationAPI.getInstance();
 });
-var OT = w(function (RT) {
+var OT = commonJS(function (RT) {
   Object.defineProperty(RT, "__esModule", { value: !0 });
   RT.TraceAPI = void 0;
   var pd = nr(),
@@ -1457,13 +1457,13 @@ var OT = w(function (RT) {
   }
   RT.TraceAPI = gd;
 });
-var PT = w(function (kT) {
+var PT = commonJS(function (kT) {
   Object.defineProperty(kT, "__esModule", { value: !0 });
   kT.trace = void 0;
   var jK = OT();
   kT.trace = jK.TraceAPI.getInstance();
 });
-var Ls = w(function (Re) {
+var Ls = commonJS(function (Re) {
   Object.defineProperty(Re, "__esModule", { value: !0 });
   Re.trace =
     Re.propagation =
@@ -1684,7 +1684,7 @@ var Ls = w(function (Re) {
     trace: zT.trace,
   };
 });
-var zo = w(function (HT) {
+var zo = commonJS(function (HT) {
   Object.defineProperty(HT, "__esModule", { value: !0 });
   HT.isTracingSuppressed = HT.unsuppressTracing = HT.suppressTracing = void 0;
   var sj = Ls(),
@@ -1704,7 +1704,7 @@ var zo = w(function (HT) {
   }
   HT.isTracingSuppressed = cj;
 });
-var Ed = w(function (WT) {
+var Ed = commonJS(function (WT) {
   Object.defineProperty(WT, "__esModule", { value: !0 });
   WT.BAGGAGE_MAX_TOTAL_LENGTH =
     WT.BAGGAGE_MAX_PER_NAME_VALUE_PAIRS =
@@ -1722,7 +1722,7 @@ var Ed = w(function (WT) {
   WT.BAGGAGE_MAX_PER_NAME_VALUE_PAIRS = 4096;
   WT.BAGGAGE_MAX_TOTAL_LENGTH = 8192;
 });
-var Sd = w(function (eb) {
+var Sd = commonJS(function (eb) {
   Object.defineProperty(eb, "__esModule", { value: !0 });
   eb.parseKeyPairsIntoRecord =
     eb.parsePairKeyValue =
@@ -1781,7 +1781,7 @@ var Sd = w(function (eb) {
   }
   eb.parseKeyPairsIntoRecord = bj;
 });
-var ib = w(function (rb) {
+var ib = commonJS(function (rb) {
   Object.defineProperty(rb, "__esModule", { value: !0 });
   rb.W3CBaggagePropagator = void 0;
   var Td = Ls(),
@@ -1824,7 +1824,7 @@ var ib = w(function (rb) {
   }
   rb.W3CBaggagePropagator = nb;
 });
-var cb = w(function (ab) {
+var cb = commonJS(function (ab) {
   Object.defineProperty(ab, "__esModule", { value: !0 });
   ab.AnchoredClock = void 0;
   class sb {
@@ -1843,7 +1843,7 @@ var cb = w(function (ab) {
   }
   ab.AnchoredClock = sb;
 });
-var Rb = w(function (yb) {
+var Rb = commonJS(function (yb) {
   Object.defineProperty(yb, "__esModule", { value: !0 });
   yb.isAttributeValue = yb.isAttributeKey = yb.sanitizeAttributes = void 0;
   var _b = Ls();
@@ -1904,7 +1904,7 @@ var Rb = w(function (yb) {
     return !1;
   }
 });
-var yd = w(function (Cb) {
+var yd = commonJS(function (Cb) {
   Object.defineProperty(Cb, "__esModule", { value: !0 });
   Cb.loggingErrorHandler = void 0;
   var Pj = Ls();
@@ -1931,7 +1931,7 @@ var yd = w(function (Cb) {
     return t;
   }
 });
-var Db = w(function (Pb) {
+var Db = commonJS(function (Pb) {
   Object.defineProperty(Pb, "__esModule", { value: !0 });
   Pb.globalErrorHandler = Pb.setGlobalErrorHandler = void 0;
   var xj = yd(),
@@ -1947,7 +1947,7 @@ var Db = w(function (Pb) {
   }
   Pb.globalErrorHandler = Lj;
 });
-var Vb = w(function (Bb) {
+var Vb = commonJS(function (Bb) {
   Object.defineProperty(Bb, "__esModule", { value: !0 });
   Bb.getStringListFromEnv =
     Bb.getBooleanFromEnv =
@@ -1955,7 +1955,7 @@ var Vb = w(function (Bb) {
     Bb.getNumberFromEnv =
       void 0;
   var Nb = Ls(),
-    zb = Ae("util");
+    zb = importMetaRequire("util");
   function zj(e) {
     let t = process.env[e];
     if (t == null || t.trim() === "") return;
@@ -1997,17 +1997,17 @@ var Vb = w(function (Bb) {
   }
   Bb.getStringListFromEnv = Bj;
 });
-var Wb = w(function (Kb) {
+var Wb = commonJS(function (Kb) {
   Object.defineProperty(Kb, "__esModule", { value: !0 });
   Kb._globalThis = void 0;
   Kb._globalThis = globalThis;
 });
-var qb = w(function ($b) {
+var qb = commonJS(function ($b) {
   Object.defineProperty($b, "__esModule", { value: !0 });
   $b.VERSION = void 0;
   $b.VERSION = "2.7.1";
 });
-var vd = w(function (Xb) {
+var vd = commonJS(function (Xb) {
   Object.defineProperty(Xb, "__esModule", { value: !0 });
   Xb.createConstMap = void 0;
   function Kj(e) {
@@ -2021,7 +2021,7 @@ var vd = w(function (Xb) {
   }
   Xb.createConstMap = Kj;
 });
-var $O = w(function (BO) {
+var $O = commonJS(function (BO) {
   Object.defineProperty(BO, "__esModule", { value: !0 });
   BO.SEMATTRS_NET_HOST_CARRIER_ICC =
     BO.SEMATTRS_NET_HOST_CARRIER_MNC =
@@ -3071,7 +3071,7 @@ var $O = w(function (BO) {
   BO.MESSAGETYPEVALUES_RECEIVED = FO;
   BO.MessageTypeValues = (0, vt.createConstMap)([zO, FO]);
 });
-var YO = w(function (ir) {
+var YO = commonJS(function (ir) {
   var x2 =
       (ir && ir.__createBinding) ||
       (Object.create
@@ -3104,7 +3104,7 @@ var YO = w(function (ir) {
   Object.defineProperty(ir, "__esModule", { value: !0 });
   N2($O(), ir);
 });
-var qP = w(function (jP) {
+var qP = commonJS(function (jP) {
   Object.defineProperty(jP, "__esModule", { value: !0 });
   jP.SEMRESATTRS_K8S_STATEFULSET_NAME =
     jP.SEMRESATTRS_K8S_STATEFULSET_UID =
@@ -3644,7 +3644,7 @@ var qP = w(function (jP) {
     KP,
   ]);
 });
-var XP = w(function (lr) {
+var XP = commonJS(function (lr) {
   var u6 =
       (lr && lr.__createBinding) ||
       (Object.create
@@ -3677,7 +3677,7 @@ var XP = w(function (lr) {
   Object.defineProperty(lr, "__esModule", { value: !0 });
   d6(qP(), lr);
 });
-var tM = w(function (JP) {
+var tM = commonJS(function (JP) {
   Object.defineProperty(JP, "__esModule", { value: !0 });
   JP.ATTR_EXCEPTION_TYPE =
     JP.ATTR_EXCEPTION_STACKTRACE =
@@ -3959,7 +3959,7 @@ var tM = w(function (JP) {
   JP.ATTR_URL_SCHEME = "url.scheme";
   JP.ATTR_USER_AGENT_ORIGINAL = "user_agent.original";
 });
-var iM = w(function (nM) {
+var iM = commonJS(function (nM) {
   Object.defineProperty(nM, "__esModule", { value: !0 });
   nM.METRIC_SIGNALR_SERVER_ACTIVE_CONNECTIONS =
     nM.METRIC_KESTREL_UPGRADED_CONNECTIONS =
@@ -4079,12 +4079,12 @@ var iM = w(function (nM) {
   nM.METRIC_SIGNALR_SERVER_CONNECTION_DURATION =
     "signalr.server.connection.duration";
 });
-var lM = w(function (sM) {
+var lM = commonJS(function (sM) {
   Object.defineProperty(sM, "__esModule", { value: !0 });
   sM.EVENT_EXCEPTION = void 0;
   sM.EVENT_EXCEPTION = "exception";
 });
-var Ime = w(function (Ft) {
+var Ime = commonJS(function (Ft) {
   var e8 =
       (Ft && Ft.__createBinding) ||
       (Object.create
@@ -4121,12 +4121,12 @@ var Ime = w(function (Ft) {
   Fo(iM(), Ft);
   Fo(lM(), Ft);
 });
-var dM = w(function (cM) {
+var dM = commonJS(function (cM) {
   Object.defineProperty(cM, "__esModule", { value: !0 });
   cM.ATTR_PROCESS_RUNTIME_NAME = void 0;
   cM.ATTR_PROCESS_RUNTIME_NAME = "process.runtime.name";
 });
-var gM = w(function (pM) {
+var gM = commonJS(function (pM) {
   Object.defineProperty(pM, "__esModule", { value: !0 });
   pM.SDK_INFO = void 0;
   var t8 = qb(),
@@ -4139,7 +4139,7 @@ var gM = w(function (pM) {
     [Gs.ATTR_TELEMETRY_SDK_VERSION]: t8.VERSION,
   };
 });
-var _M = w(function (Pn) {
+var _M = commonJS(function (Pn) {
   Object.defineProperty(Pn, "__esModule", { value: !0 });
   Pn.otperformance =
     Pn.SDK_INFO =
@@ -4190,7 +4190,7 @@ var _M = w(function (Pn) {
   });
   Pn.otperformance = performance;
 });
-var Rd = w(function (cn) {
+var Rd = commonJS(function (cn) {
   Object.defineProperty(cn, "__esModule", { value: !0 });
   cn.getStringListFromEnv =
     cn.getNumberFromEnv =
@@ -4244,7 +4244,7 @@ var Rd = w(function (cn) {
     },
   });
 });
-var AM = w(function (TM) {
+var AM = commonJS(function (TM) {
   Object.defineProperty(TM, "__esModule", { value: !0 });
   TM.addHrTimes =
     TM.isTimeInput =
@@ -4336,7 +4336,7 @@ var AM = w(function (TM) {
   }
   TM.addHrTimes = SM;
 });
-var RM = w(function (yM) {
+var RM = commonJS(function (yM) {
   Object.defineProperty(yM, "__esModule", { value: !0 });
   yM.unrefTimer = void 0;
   function P8(e) {
@@ -4344,7 +4344,7 @@ var RM = w(function (yM) {
   }
   yM.unrefTimer = P8;
 });
-var OM = w(function (CM) {
+var OM = commonJS(function (CM) {
   Object.defineProperty(CM, "__esModule", { value: !0 });
   CM.ExportResultCode = void 0;
   var M8;
@@ -4352,7 +4352,7 @@ var OM = w(function (CM) {
     ((e[(e.SUCCESS = 0)] = "SUCCESS"), (e[(e.FAILED = 1)] = "FAILED"));
   })((M8 = CM.ExportResultCode || (CM.ExportResultCode = {})));
 });
-var IM = w(function (PM) {
+var IM = commonJS(function (PM) {
   Object.defineProperty(PM, "__esModule", { value: !0 });
   PM.CompositePropagator = void 0;
   var kM = Ls();
@@ -4396,7 +4396,7 @@ var IM = w(function (PM) {
   }
   PM.CompositePropagator = wM;
 });
-var NM = w(function (DM) {
+var NM = commonJS(function (DM) {
   Object.defineProperty(DM, "__esModule", { value: !0 });
   DM.validateValue = DM.validateKey = void 0;
   var wd = "[_0-9a-z-*/]",
@@ -4414,7 +4414,7 @@ var NM = w(function (DM) {
   }
   DM.validateValue = z8;
 });
-var Md = w(function (FM) {
+var Md = commonJS(function (FM) {
   Object.defineProperty(FM, "__esModule", { value: !0 });
   FM.TraceState = void 0;
   var Ys = NM(),
@@ -4491,7 +4491,7 @@ var Md = w(function (FM) {
   }
   FM.TraceState = Pd;
 });
-var jM = w(function (VM) {
+var jM = commonJS(function (VM) {
   Object.defineProperty(VM, "__esModule", { value: !0 });
   VM.W3CTraceContextPropagator =
     VM.parseTraceParent =
@@ -4550,7 +4550,7 @@ var jM = w(function (VM) {
   }
   VM.W3CTraceContextPropagator = GM;
 });
-var qM = w(function ($M) {
+var qM = commonJS(function ($M) {
   Object.defineProperty($M, "__esModule", { value: !0 });
   $M.getRPCMetadata =
     $M.deleteRPCMetadata =
@@ -4576,7 +4576,7 @@ var qM = w(function ($M) {
   }
   $M.getRPCMetadata = e9;
 });
-var nI = w(function (eI) {
+var nI = commonJS(function (eI) {
   Object.defineProperty(eI, "__esModule", { value: !0 });
   eI.isPlainObject = void 0;
   var r9 = "[object Object]",
@@ -4621,7 +4621,7 @@ var nI = w(function (eI) {
     return ZM.call(e);
   }
 });
-var cI = w(function (aI) {
+var cI = commonJS(function (aI) {
   Object.defineProperty(aI, "__esModule", { value: !0 });
   aI.merge = void 0;
   var rI = nI(),
@@ -4719,7 +4719,7 @@ var cI = w(function (aI) {
     return !0;
   }
 });
-var pI = w(function (uI) {
+var pI = commonJS(function (uI) {
   Object.defineProperty(uI, "__esModule", { value: !0 });
   uI.callWithTimeout = uI.TimeoutError = void 0;
   class ia extends Error {
@@ -4745,7 +4745,7 @@ var pI = w(function (uI) {
   }
   uI.callWithTimeout = h9;
 });
-var _I = w(function (gI) {
+var _I = commonJS(function (gI) {
   Object.defineProperty(gI, "__esModule", { value: !0 });
   gI.isUrlIgnored = gI.urlMatches = void 0;
   function fI(e, t) {
@@ -4760,7 +4760,7 @@ var _I = w(function (gI) {
   }
   gI.isUrlIgnored = S9;
 });
-var TI = w(function (EI) {
+var TI = commonJS(function (EI) {
   Object.defineProperty(EI, "__esModule", { value: !0 });
   EI.Deferred = void 0;
   class hI {
@@ -4784,7 +4784,7 @@ var TI = w(function (EI) {
   }
   EI.Deferred = hI;
 });
-var vI = w(function (AI) {
+var vI = commonJS(function (AI) {
   Object.defineProperty(AI, "__esModule", { value: !0 });
   AI.BindOnceFuture = void 0;
   var b9 = TI();
@@ -4819,7 +4819,7 @@ var vI = w(function (AI) {
   }
   AI.BindOnceFuture = bI;
 });
-var kI = w(function (CI) {
+var kI = commonJS(function (CI) {
   Object.defineProperty(CI, "__esModule", { value: !0 });
   CI.diagLogLevelFromString = void 0;
   var un = Ls(),
@@ -4846,7 +4846,7 @@ var kI = w(function (CI) {
   }
   CI.diagLogLevelFromString = A9;
 });
-var II = w(function (PI) {
+var II = commonJS(function (PI) {
   Object.defineProperty(PI, "__esModule", { value: !0 });
   PI._export = void 0;
   var wI = Ls(),
@@ -4860,7 +4860,7 @@ var II = w(function (PI) {
   }
   PI._export = v9;
 });
-var Mc = w(function (ue) {
+var Mc = commonJS(function (ue) {
   Object.defineProperty(ue, "__esModule", { value: !0 });
   ue.internal =
     ue.diagLogLevelFromString =
@@ -5230,7 +5230,7 @@ var Mc = w(function (ue) {
   var L9 = II();
   ue.internal = { _export: L9._export };
 });
-var Nd = w(function (zI) {
+var Nd = commonJS(function (zI) {
   Object.defineProperty(zI, "__esModule", { value: !0 });
   zI._clearDefaultServiceNameCache = zI.defaultServiceName = void 0;
   var Vo;
@@ -5250,14 +5250,14 @@ var Nd = w(function (zI) {
   }
   zI._clearDefaultServiceNameCache = z9;
 });
-var GI = w(function (BI) {
+var GI = commonJS(function (BI) {
   Object.defineProperty(BI, "__esModule", { value: !0 });
   BI.isPromiseLike = void 0;
   var B9 = (e) =>
     e !== null && typeof e === "object" && typeof e.then === "function";
   BI.isPromiseLike = B9;
 });
-var zd = w(function (KI) {
+var zd = commonJS(function (KI) {
   Object.defineProperty(KI, "__esModule", { value: !0 });
   KI.defaultResource =
     KI.emptyResource =
@@ -5400,7 +5400,7 @@ var zd = w(function (KI) {
     return;
   }
 });
-var qI = w(function ($I) {
+var qI = commonJS(function ($I) {
   Object.defineProperty($I, "__esModule", { value: !0 });
   $I.detectResources = void 0;
   var WI = Ls(),
@@ -5424,7 +5424,7 @@ var qI = w(function ($I) {
         .reduce((r, o) => r.merge(o), (0, Fd.emptyResource)());
   $I.detectResources = X9;
 });
-var eD = w(function (QI) {
+var eD = commonJS(function (QI) {
   Object.defineProperty(QI, "__esModule", { value: !0 });
   QI.envDetector = void 0;
   var J9 = Ls(),
@@ -5490,7 +5490,7 @@ var eD = w(function (QI) {
   }
   QI.envDetector = new JI();
 });
-var Yo = w(function (tD) {
+var Yo = commonJS(function (tD) {
   Object.defineProperty(tD, "__esModule", { value: !0 });
   tD.ATTR_WEBENGINE_VERSION =
     tD.ATTR_WEBENGINE_NAME =
@@ -5564,32 +5564,32 @@ var Yo = w(function (tD) {
   tD.ATTR_WEBENGINE_NAME = "webengine.name";
   tD.ATTR_WEBENGINE_VERSION = "webengine.version";
 });
-var iD = w(function (rD) {
+var iD = commonJS(function (rD) {
   Object.defineProperty(rD, "__esModule", { value: !0 });
   rD.getMachineId = void 0;
-  var FZ = Ae("process"),
+  var FZ = importMetaRequire("process"),
     gr;
   async function BZ() {
     if (!gr)
       switch (FZ.platform) {
         case "darwin":
-          gr = (await import("./chunk-1jew7nqy.js").then((m) => pe(m.default)))
+          gr = (await import("./chunk-1jew7nqy.js").then((m) => toESM(m.default)))
             .getMachineId;
           break;
         case "linux":
-          gr = (await import("./chunk-baa0f817.js").then((m) => pe(m.default)))
+          gr = (await import("./chunk-baa0f817.js").then((m) => toESM(m.default)))
             .getMachineId;
           break;
         case "freebsd":
-          gr = (await import("./chunk-7krev9gw.js").then((m) => pe(m.default)))
+          gr = (await import("./chunk-7krev9gw.js").then((m) => toESM(m.default)))
             .getMachineId;
           break;
         case "win32":
-          gr = (await import("./chunk-82dmc5nx.js").then((m) => pe(m.default)))
+          gr = (await import("./chunk-82dmc5nx.js").then((m) => toESM(m.default)))
             .getMachineId;
           break;
         default:
-          gr = (await import("./chunk-6yshtkj2.js").then((m) => pe(m.default)))
+          gr = (await import("./chunk-6yshtkj2.js").then((m) => toESM(m.default)))
             .getMachineId;
           break;
       }
@@ -5597,7 +5597,7 @@ var iD = w(function (rD) {
   }
   rD.getMachineId = BZ;
 });
-var Bd = w(function (sD) {
+var Bd = commonJS(function (sD) {
   Object.defineProperty(sD, "__esModule", { value: !0 });
   sD.normalizeType = sD.normalizeArch = void 0;
   var HZ = (e) => {
@@ -5625,11 +5625,11 @@ var Bd = w(function (sD) {
   };
   sD.normalizeType = GZ;
 });
-var pD = w(function (uD) {
+var pD = commonJS(function (uD) {
   Object.defineProperty(uD, "__esModule", { value: !0 });
   uD.hostDetector = void 0;
   var Gd = Yo(),
-    lD = Ae("os"),
+    lD = importMetaRequire("os"),
     KZ = iD(),
     jZ = Bd();
   class cD {
@@ -5645,11 +5645,11 @@ var pD = w(function (uD) {
   }
   uD.hostDetector = new cD();
 });
-var ED = w(function (_D) {
+var ED = commonJS(function (_D) {
   Object.defineProperty(_D, "__esModule", { value: !0 });
   _D.osDetector = void 0;
   var fD = Yo(),
-    gD = Ae("os"),
+    gD = importMetaRequire("os"),
     WZ = Bd();
   class mD {
     detect(e) {
@@ -5663,12 +5663,12 @@ var ED = w(function (_D) {
   }
   _D.osDetector = new mD();
 });
-var AD = w(function (TD) {
+var AD = commonJS(function (TD) {
   Object.defineProperty(TD, "__esModule", { value: !0 });
   TD.processDetector = void 0;
   var $Z = Ls(),
     dn = Yo(),
-    YZ = Ae("os");
+    YZ = importMetaRequire("os");
   class SD {
     detect(e) {
       let t = {
@@ -5696,11 +5696,11 @@ var AD = w(function (TD) {
   }
   TD.processDetector = new SD();
 });
-var CD = w(function (vD) {
+var CD = commonJS(function (vD) {
   Object.defineProperty(vD, "__esModule", { value: !0 });
   vD.serviceInstanceIdDetector = void 0;
   var qZ = Yo(),
-    XZ = Ae("crypto");
+    XZ = importMetaRequire("crypto");
   class yD {
     detect(e) {
       return {
@@ -5710,7 +5710,7 @@ var CD = w(function (vD) {
   }
   vD.serviceInstanceIdDetector = new yD();
 });
-var OD = w(function (Vr) {
+var OD = commonJS(function (Vr) {
   Object.defineProperty(Vr, "__esModule", { value: !0 });
   Vr.serviceInstanceIdDetector =
     Vr.processDetector =
@@ -5746,7 +5746,7 @@ var OD = w(function (Vr) {
     },
   });
 });
-var kD = w(function (jr) {
+var kD = commonJS(function (jr) {
   Object.defineProperty(jr, "__esModule", { value: !0 });
   jr.serviceInstanceIdDetector =
     jr.processDetector =
@@ -5779,7 +5779,7 @@ var kD = w(function (jr) {
     },
   });
 });
-var MD = w(function (wD) {
+var MD = commonJS(function (wD) {
   Object.defineProperty(wD, "__esModule", { value: !0 });
   wD.noopDetector = wD.NoopDetector = void 0;
   class Kd {
@@ -5790,7 +5790,7 @@ var MD = w(function (wD) {
   wD.NoopDetector = Kd;
   wD.noopDetector = new Kd();
 });
-var ID = w(function (Dn) {
+var ID = commonJS(function (Dn) {
   Object.defineProperty(Dn, "__esModule", { value: !0 });
   Dn.noopDetector =
     Dn.serviceInstanceIdDetector =
@@ -5839,7 +5839,7 @@ var ID = w(function (Dn) {
     },
   });
 });
-var V$e = w(function (Mt) {
+var V$e = commonJS(function (Mt) {
   Object.defineProperty(Mt, "__esModule", { value: !0 });
   Mt.defaultServiceName =
     Mt.emptyResource =
@@ -5917,7 +5917,7 @@ var V$e = w(function (Mt) {
     },
   });
 });
-var Cc = pe(q5(), 1);
+var Cc = toESM(q5(), 1);
 import { exec as B0, execFile } from "child_process";
 import { createHash as tfe } from "crypto";
 import { readFile as nfe, realpath, stat as Km } from "fs/promises";
@@ -5985,7 +5985,7 @@ function wCn() {
   let r = !!(a.AWS_REGION || a.AWS_DEFAULT_REGION);
   return { region: Lve(), source: r ? "env-invalid" : "default" };
 }
-var Ic = pe(EA(), 1);
+var Ic = toESM(EA(), 1);
 function TCn() {
   return {
     validatedModels: new Set(),
@@ -6317,7 +6317,7 @@ function mQe(e) {
   return a.ANTHROPIC_BEDROCK_REGION_PREFIX ?? Mve(e);
 }
 async function i_() {
-  let e = await import("./chunk-v3686d7w.js").then((m) => pe(m.default, 1));
+  let e = await import("./chunk-v3686d7w.js").then((m) => toESM(m.default, 1));
   return e.NoAuthSigner ?? e.default?.NoAuthSigner;
 }
 function ub(e) {
@@ -6395,7 +6395,7 @@ function gQe(e) {
   for (let [r, o] of Object.entries(t)) if (o === e) return r;
   return e;
 }
-var l_ = ZT(async () => {
+var l_ = serializeAsyncCalls(async () => {
   if (fje() !== null) return;
   try {
     let e = await bH();
@@ -9276,7 +9276,7 @@ function ux() {
   if (e.latched !== void 0) return e.latched;
   let { steer: t, source: r } = LG(e);
   if ((e.latch(t), t !== "default"))
-    i("tengu_subagent_steer_applied", { steer: fromEnum(t), source: fromEnum(r) });
+    logEvent("tengu_subagent_steer_applied", { steer: fromEnum(t), source: fromEnum(r) });
   return t;
 }
 function Nsr() {
@@ -9658,7 +9658,7 @@ class fu {
     this.storageV5 = e;
   }
   refreshOAuthToken() {
-    if (M())
+    if (isHoverRestEnabled())
       n(
         `GrowthBook: token-refresh check (credentials store: ${this.credentials === void 0 ? "none" : "handed"})`,
       );
@@ -9917,7 +9917,7 @@ class fu {
       r = !1;
     if (this.deps.hasWorkspaceTrust()) {
       try {
-        await Dt(this.refreshOAuthToken(), VG, Oh);
+        await withTimeout(this.refreshOAuthToken(), VG, Oh);
       } catch (I) {
         let D = ge(I),
           x = D.message === Oh ? "timeout" : D.name;
@@ -10185,8 +10185,8 @@ function kh(e) {
     logError(t);
   }
 }
-var $F = pe(V$e(), 1);
-var ei = pe(Ls());
+var $F = toESM(V$e(), 1);
+var ei = toESM(Ls());
 class Xo {
   emit(e) {}
 }
@@ -10278,11 +10278,11 @@ class Sa {
   }
 }
 var dVt = Sa.getInstance();
-var XD = pe(V$e()),
-  Ta = pe(Mc());
-var LD = pe(Ls());
-var Qt = pe(Ls()),
-  qr = pe(Mc());
+var XD = toESM(V$e()),
+  Ta = toESM(Mc());
+var LD = toESM(Ls());
+var Qt = toESM(Ls()),
+  qr = toESM(Mc());
 class Yd {
   hrTime;
   hrTimeObserved;
@@ -10439,7 +10439,7 @@ class qd {
     (this._sharedState.activeProcessor.onEmit(r, t), r._makeReadonly());
   }
 }
-var mr = pe(Mc());
+var mr = toESM(Mc());
 function HD() {
   return {
     forceFlushTimeoutMillis: 30000,
@@ -10476,7 +10476,7 @@ class Xd {
     return Promise.resolve();
   }
 }
-var YD = pe(Mc());
+var YD = toESM(Mc());
 class Jd {
   processors;
   forceFlushTimeoutMillis;
@@ -10577,8 +10577,8 @@ class K$e {
     return this._sharedState.activeProcessor.shutdown();
   }
 }
-var JD = pe(Ls()),
-  je = pe(Mc());
+var JD = toESM(Ls()),
+  je = toESM(Mc());
 class Zd {
   _exporter;
   _maxExportBatchSize;
@@ -10715,9 +10715,9 @@ class Zd {
 class Pme extends Zd {
   onShutdown() {}
 }
-var Kl = pe(Ime(), 1);
+var Kl = toESM(Ime(), 1);
 import { randomUUID as YF } from "crypto";
-var ep = pe(Mc(), 1);
+var ep = toESM(Mc(), 1);
 var ND = "[Anthropic telemetry]";
 class HAt {
   pipeline;
@@ -10787,7 +10787,7 @@ function Zk() {
   if (cU()) return !1;
   return U1();
 }
-var Bn = pe(Mc(), 1);
+var Bn = toESM(Mc(), 1);
 import { createHash as xue, randomUUID as Nue } from "crypto";
 import {
   appendFile,
@@ -12468,7 +12468,7 @@ function db(e, t) {
 }
 function pb(e, t) {
   if (!!e === t) return;
-  i("tengu_fast_mode_toggled", {
+  logEvent("tengu_fast_mode_toggled", {
     enabled: t,
     source: fromEnum(t ? "model_switch_restore" : "model_switch_downgrade"),
     remote: Ks(),
@@ -12548,7 +12548,7 @@ function vrr(e, t) {
   Nc.enterCooldown(e, t);
   let r = e - Date.now();
   (n(`Fast mode cooldown triggered (${t}), duration ${Math.round(r / 1000)}s`),
-    i("tengu_fast_mode_fallback_triggered", {
+    logEvent("tengu_fast_mode_fallback_triggered", {
       cooldown_duration_ms: r,
       cooldown_reason: fromEnum(t),
     }),
@@ -12619,7 +12619,7 @@ function xrr(e, t) {
   let r = gee(e);
   if (
     (n(`Fast mode overage rejection: ${e ?? "unknown"} \u2014 ${r}`),
-    i("tengu_fast_mode_overage_rejected", {
+    logEvent("tengu_fast_mode_overage_rejected", {
       overage_disabled_reason: Ub(e ?? "unknown"),
     }),
     FAt(e))
@@ -12820,7 +12820,7 @@ async function bse(e, t) {
       (n(`Failed to fetch org fast mode status, standing on ${D}: ${E}`, {
         level: "error",
       }),
-        i("tengu_org_penguin_mode_fetch_failed", {}));
+        logEvent("tengu_org_penguin_mode_fetch_failed", {}));
     }
   }
   let _ = p();
@@ -12949,7 +12949,7 @@ function Kx(e, t) {
   let r = Ree(e, t);
   return r !== void 0 && Cee().safeParse(r).success ? r : void 0;
 }
-var Cee = m(() => {
+var Cee = createLazyValue(() => {
   let e = T().nonnegative();
   return c({
     inputTokens: e,
@@ -12980,7 +12980,7 @@ function EVt(e, t) {
   return (Oee(e, r), wse[getCanonicalName(getDefaultMainLoopModel())] ?? eUe);
 }
 function Oee(e, t) {
-  (i("tengu_unknown_model_cost", { model: bt(e), shortName: bt(t) }), POn());
+  (logEvent("tengu_unknown_model_cost", { model: bt(e), shortName: bt(t) }), POn());
 }
 function za() {
   let e = !1;
@@ -13736,7 +13736,7 @@ var mN = [
   one = String.raw`(?:"{1,2}|[,;'\`(){}]+)`,
   Ha = String.raw`(?!\b(?:${_N}|${Ga}))`,
   ine = String.raw`(?![,;'\`(){}]*${bp})`,
-  hN = Y([...mN.map((e) => e.charAt(0)), "E"]).join(""),
+  hN = dedupe([...mN.map((e) => e.charAt(0)), "E"]).join(""),
   tN = String.raw`[^${Cp}${hN}]*`,
   EN = String.raw`${tN}(?:(?:${Ha}[${hN}]+|${ine}${one}${Ha}[^${Cp}])${tN})*`,
   sne = String.raw`${Ha}(?![A-Za-z]:[\\/]|\.{1,2}[\\/])[^${Cp}/~]${EN}`,
@@ -13849,7 +13849,7 @@ function fU(e) {
   return Hte(vne(Fte(cte(ete(dte(G))))));
 }
 var One = 3000,
-  AN = m(() =>
+  AN = createLazyValue(() =>
     c({
       id: s(),
       display_name: s().optional(),
@@ -13857,7 +13857,7 @@ var One = 3000,
     }).strip(),
   ),
   kne = 100,
-  wne = m(() => c({ baseUrl: s(), fetchedAt: T(), models: v(AN()) }));
+  wne = createLazyValue(() => c({ baseUrl: s(), fetchedAt: T(), models: v(AN()) }));
 function Pp() {
   if (!a.CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY) return !1;
   if (getAPIProvider() !== "firstParty") return !1;
@@ -14017,7 +14017,7 @@ async function Frr(e) {
       return;
     }
     let F = Mp();
-    if (M() && e !== void 0) {
+    if (isHoverRestEnabled() && e !== void 0) {
       let te = await e.read([wp()]),
         re =
           te.ok && te.value.items[0]?.found
@@ -14418,7 +14418,7 @@ function ja(e) {
 function xne(e, t) {
   return e.date === void 0 || t.has(e.date);
 }
-var Nne = m(() =>
+var Nne = createLazyValue(() =>
   qvt().models.flatMap((e) => {
     let t = g1(e.id);
     if (!F6(t)) return [];
@@ -16531,14 +16531,14 @@ function strip1mTag(e) {
 import { readFileSync as wre } from "fs";
 import { mkdir as HL, writeFile as Pre } from "fs/promises";
 import { join as GL } from "path";
-var VL = m(() =>
+var VL = createLazyValue(() =>
     c({
       id: s(),
       max_input_tokens: T().optional(),
       max_tokens: T().optional(),
     }).strip(),
   ),
-  Mre = m(() => c({ models: v(VL()), timestamp: T() }));
+  Mre = createLazyValue(() => c({ models: v(VL()), timestamp: T() }));
 function eor(e) {
   let t = VL().safeParse(e);
   return t.success ? t.data : void 0;
@@ -16610,7 +16610,7 @@ function jL(e) {
 async function nor(e, t) {
   let r = qp(),
     o = Ire(e);
-  if (M() && t !== void 0) {
+  if (isHoverRestEnabled() && t !== void 0) {
     let d = await t.read([Yp()]),
       p =
         d.ok && d.value.items[0]?.found
@@ -17528,7 +17528,7 @@ var wvn = "masked-ids.json",
   eU = 131072,
   iU = "masked-ids.unparseable.json",
   Qre = 3,
-  Zre = m(() => c({ version: k(oU), ids: v(se()) }));
+  Zre = createLazyValue(() => c({ version: k(oU), ids: v(se()) }));
 function QN() {
   return Qp(be(), "cache", "model-catalog");
 }
@@ -17605,7 +17605,7 @@ async function Jp() {
   );
 }
 function tU(e) {
-  let t = Y(
+  let t = dedupe(
     e.filter((r) => typeof r === "string" && rU.test(r) && !oo(r)),
   ).slice(0, nU);
   if (t.length < e.length)
@@ -17615,7 +17615,7 @@ function tU(e) {
   return t;
 }
 function nKt(e) {
-  let t = Y([...e].map(ec).filter((p) => p.length > 0 && !oo(p)));
+  let t = dedupe([...e].map(ec).filter((p) => p.length > 0 && !oo(p)));
   if (t.length === 0) return Promise.resolve();
   hr(t);
   let r = t.filter((p) => rU.test(p)).slice(0, Xre);
@@ -17649,7 +17649,7 @@ async function noe(e) {
         return;
       }
       if ((hr(_.ids), _.status === "foreign")) await roe(_.bytes);
-      let E = Y([...e, ..._.ids, ...o]).slice(0, nU);
+      let E = dedupe([...e, ..._.ids, ...o]).slice(0, nU);
       (await d.mkdir(QN()),
         await d.atomicWrite(sU(), b({ version: oU, ids: E }), 384));
       let C = await Jp();
@@ -17843,7 +17843,7 @@ function Ise(e) {
 }
 function foe(e, t) {
   if (
-    (i("tengu_client_event_signed", {
+    (logEvent("tengu_client_event_signed", {
       ok: !1,
       error: t instanceof RangeError ? S("RangeError") : S("other"),
     }),
@@ -17943,7 +17943,7 @@ var NU = [
   "interrupted",
   "cancelled",
 ];
-var gl = m(() =>
+var gl = createLazyValue(() =>
     c({
       inputTokens: T().int(),
       outputTokens: T().int(),
@@ -17976,11 +17976,11 @@ var gl = m(() =>
         ),
     }),
   ),
-  _oe = m(() => k("json_schema")),
-  ewe = m(() => c({ type: _oe() })),
-  hoe = m(() => c({ type: k("json_schema"), schema: fe(s(), se()) })),
-  twe = m(() => hoe()),
-  Eoe = m(() =>
+  _oe = createLazyValue(() => k("json_schema")),
+  ewe = createLazyValue(() => c({ type: _oe() })),
+  hoe = createLazyValue(() => c({ type: k("json_schema"), schema: fe(s(), se()) })),
+  twe = createLazyValue(() => hoe()),
+  Eoe = createLazyValue(() =>
     X([
       "ANTHROPIC_API_KEY",
       "apiKeyHelper",
@@ -17995,30 +17995,30 @@ var gl = m(() =>
       "Where the credential used for API requests came from: 'ANTHROPIC_API_KEY' (environment variable), 'apiKeyHelper' (the configured helper command), '/login managed key' (an API key created and stored by /login with an Anthropic Console account), or 'none' (no API key in use - e.g. claude.ai OAuth login, a bearer token, or a third-party cloud provider). 'user' | 'project' | 'org' | 'temporary' | 'oauth' are legacy members that current CLIs never emit; they remain only so the type stays backward compatible.",
     ),
   ),
-  nwe = m(() =>
+  nwe = createLazyValue(() =>
     X(["local", "user", "project"]).describe("Config scope for settings."),
   ),
-  rwe = m(() => k("context-1m-2025-08-07")),
-  Soe = m(() =>
+  rwe = createLazyValue(() => k("context-1m-2025-08-07")),
+  Soe = createLazyValue(() =>
     c({
       type: k("adaptive"),
       display: X(["summarized", "omitted"]).optional(),
     }).describe("Claude decides when and how much to think (Opus 4.6+)."),
   ),
-  Toe = m(() =>
+  Toe = createLazyValue(() =>
     c({
       type: k("enabled"),
       budgetTokens: T().optional(),
       display: X(["summarized", "omitted"]).optional(),
     }).describe("Fixed thinking token budget (older models)"),
   ),
-  boe = m(() => c({ type: k("disabled") }).describe("No extended thinking")),
-  owe = m(() =>
+  boe = createLazyValue(() => c({ type: k("disabled") }).describe("No extended thinking")),
+  owe = createLazyValue(() =>
     $e([Soe(), Toe(), boe()]).describe(
       "Controls Claude's thinking/reasoning behavior. When set, takes precedence over the deprecated maxThinkingTokens.",
     ),
   ),
-  rf = m(() =>
+  rf = createLazyValue(() =>
     k("comms")
       .optional()
       .catch(void 0)
@@ -18028,8 +18028,8 @@ var gl = m(() =>
   ),
   UU =
     "Per-server tool-call timeout in milliseconds. Overrides the MCP_TOOL_TIMEOUT environment variable for this server. Hard wall-clock limit per call; progress notifications do not extend it. Values below 1000ms are ignored (falls through to MCP_TOOL_TIMEOUT or the default).",
-  Si = m(() => T().int().positive().optional().describe(UU)),
-  zU = m(() =>
+  Si = createLazyValue(() => T().int().positive().optional().describe(UU)),
+  zU = createLazyValue(() =>
     T()
       .int()
       .positive()
@@ -18038,7 +18038,7 @@ var gl = m(() =>
         "Per-server HTTP request timeout in milliseconds, set by the host on the mcp_set_servers control event. Raises the per-request fetch first-byte budget and the tool-call watchdog for this server. Capped at 5 minutes. Ignored when `timeout` is also set.\n@internal",
       ),
   ),
-  Aoe = m(() =>
+  Aoe = createLazyValue(() =>
     c({
       type: k("stdio").optional(),
       command: s(),
@@ -18053,7 +18053,7 @@ var gl = m(() =>
       role: rf(),
     }),
   ),
-  FU = m(() =>
+  FU = createLazyValue(() =>
     c({
       name: s(),
       permission_policy: X([
@@ -18070,7 +18070,7 @@ var gl = m(() =>
       "Per-tool permission policy carried on mcp_set_servers for remote servers.",
     ),
   ),
-  yoe = m(() =>
+  yoe = createLazyValue(() =>
     c({
       type: k("sse"),
       url: s(),
@@ -18086,7 +18086,7 @@ var gl = m(() =>
       role: rf(),
     }),
   ),
-  voe = m(() =>
+  voe = createLazyValue(() =>
     c({
       type: k("http"),
       url: s(),
@@ -18102,7 +18102,7 @@ var gl = m(() =>
       role: rf(),
     }),
   ),
-  of = m(() =>
+  of = createLazyValue(() =>
     c({
       type: k("sdk"),
       name: s(),
@@ -18113,12 +18113,12 @@ var gl = m(() =>
         ),
     }),
   ),
-  ml = m(() => $e([Aoe(), yoe(), voe(), of()])),
-  Roe = m(() =>
+  ml = createLazyValue(() => $e([Aoe(), yoe(), voe(), of()])),
+  Roe = createLazyValue(() =>
     c({ type: k("claudeai-proxy"), url: s(), id: s(), timeout: Si() }),
   ),
-  Coe = m(() => $e([ml(), Roe()])),
-  sf = m(() =>
+  Coe = createLazyValue(() => $e([ml(), Roe()])),
+  sf = createLazyValue(() =>
     c({
       name: s().describe("Server name as configured"),
       status: X([
@@ -18162,7 +18162,7 @@ var gl = m(() =>
         ),
     }).describe("Status information for an MCP server connection."),
   ),
-  iwe = m(() =>
+  iwe = createLazyValue(() =>
     c({
       added: v(s()).describe("Names of servers that were added"),
       removed: v(s()).describe("Names of servers that were removed"),
@@ -18171,7 +18171,7 @@ var gl = m(() =>
       ),
     }).describe("Result of a setMcpServers operation."),
   ),
-  lo = m(() =>
+  lo = createLazyValue(() =>
     X([
       "userSettings",
       "projectSettings",
@@ -18180,10 +18180,10 @@ var gl = m(() =>
       "cliArg",
     ]),
   ),
-  tf = m(() => X(["allow", "deny", "ask"])),
-  Ooe = m(() => X(["allow", "deny", "ask", "defer"])),
-  nf = m(() => c({ toolName: s(), ruleContent: s().optional() })),
-  Ti = m(() =>
+  tf = createLazyValue(() => X(["allow", "deny", "ask"])),
+  Ooe = createLazyValue(() => X(["allow", "deny", "ask", "defer"])),
+  nf = createLazyValue(() => c({ toolName: s(), ruleContent: s().optional() })),
+  Ti = createLazyValue(() =>
     Ko("type", [
       c({
         type: k("addRules"),
@@ -18212,12 +18212,12 @@ var gl = m(() =>
       }),
     ]),
   ),
-  LU = m(() =>
+  LU = createLazyValue(() =>
     X(["user_temporary", "user_permanent", "user_reject"]).describe(
       "Classification of this permission decision for telemetry. SDK hosts that prompt users (desktop apps, IDEs) should set this to reflect what actually happened: user_temporary for allow-once, user_permanent for always-allow (both the click and later cache hits), user_reject for deny. If unset, the CLI infers conservatively (temporary for allow, reject for deny). The vocabulary matches tool_decision OTel events (monitoring-usage docs).",
     ),
   ),
-  BU = m(() =>
+  BU = createLazyValue(() =>
     $e([
       c({
         behavior: k("allow"),
@@ -18235,7 +18235,7 @@ var gl = m(() =>
       }),
     ]),
   ),
-  Ht = m(() =>
+  Ht = createLazyValue(() =>
     ai(
       normalizePermissionModeAlias,
       X([
@@ -18285,8 +18285,8 @@ var gl = m(() =>
     "DirectoryAdded",
     "MessageDisplay",
   ],
-  HU = m(() => X(koe));
-var Se = m(() =>
+  HU = createLazyValue(() => X(koe));
+var Se = createLazyValue(() =>
     c({
       session_id: s(),
       transcript_path: s(),
@@ -18318,7 +18318,7 @@ var Se = m(() =>
         ),
     }),
   ),
-  woe = m(() =>
+  woe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("PreToolUse"),
@@ -18328,7 +18328,7 @@ var Se = m(() =>
       }),
     ),
   ),
-  Poe = m(() =>
+  Poe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("PermissionRequest"),
@@ -18338,7 +18338,7 @@ var Se = m(() =>
       }),
     ),
   ),
-  Moe = m(() =>
+  Moe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("PostToolUse"),
@@ -18354,7 +18354,7 @@ var Se = m(() =>
       }),
     ),
   ),
-  Ioe = m(() =>
+  Ioe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("PostToolUseFailure"),
@@ -18371,7 +18371,7 @@ var Se = m(() =>
       }),
     ),
   ),
-  Doe = m(() =>
+  Doe = createLazyValue(() =>
     c({
       tool_name: s(),
       tool_input: se(),
@@ -18379,14 +18379,14 @@ var Se = m(() =>
       tool_response: se().optional(),
     }),
   ),
-  xoe = m(() =>
+  xoe = createLazyValue(() =>
     Se()
       .and(c({ hook_event_name: k("PostToolBatch"), tool_calls: v(Doe()) }))
       .describe(
         "Hook input for the PostToolBatch event. Fired once after every tool call in a batch has resolved, before the next model request. PostToolUse fires per-tool and may run concurrently for parallel tool calls; PostToolBatch fires exactly once with the full batch.",
       ),
   ),
-  Noe = m(() =>
+  Noe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("PermissionDenied"),
@@ -18397,7 +18397,7 @@ var Se = m(() =>
       }),
     ),
   ),
-  Loe = m(() =>
+  Loe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("Notification"),
@@ -18407,7 +18407,7 @@ var Se = m(() =>
       }),
     ),
   ),
-  Uoe = m(() =>
+  Uoe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("UserPromptSubmit"),
@@ -18428,7 +18428,7 @@ var Se = m(() =>
       }),
     ),
   ),
-  zoe = m(() =>
+  zoe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("UserPromptExpansion"),
@@ -18440,7 +18440,7 @@ var Se = m(() =>
       }),
     ),
   ),
-  Foe = m(() =>
+  Foe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("SessionStart"),
@@ -18471,12 +18471,12 @@ var Se = m(() =>
       }),
     ),
   ),
-  Boe = m(() =>
+  Boe = createLazyValue(() =>
     Se().and(
       c({ hook_event_name: k("Setup"), trigger: X(["init", "maintenance"]) }),
     ),
   ),
-  GU = m(() =>
+  GU = createLazyValue(() =>
     c({
       id: s(),
       type: s().describe(
@@ -18511,7 +18511,7 @@ var Se = m(() =>
         .describe("Workflow name. Only present for 'workflow' tasks."),
     }),
   ),
-  VU = m(() =>
+  VU = createLazyValue(() =>
     c({
       id: s(),
       schedule: s().describe('Cron expression, e.g. "0 9 * * 1-5".'),
@@ -18524,7 +18524,7 @@ var Se = m(() =>
       ),
     }),
   ),
-  Hoe = m(() =>
+  Hoe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("Stop"),
@@ -18547,7 +18547,7 @@ var Se = m(() =>
       }),
     ),
   ),
-  Goe = m(() =>
+  Goe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("StopFailure"),
@@ -18557,7 +18557,7 @@ var Se = m(() =>
       }),
     ),
   ),
-  Voe = m(() =>
+  Voe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("SubagentStart"),
@@ -18566,7 +18566,7 @@ var Se = m(() =>
       }),
     ),
   ),
-  Koe = m(() =>
+  Koe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("SubagentStop"),
@@ -18592,7 +18592,7 @@ var Se = m(() =>
       }),
     ),
   ),
-  joe = m(() =>
+  joe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("PreCompact"),
@@ -18601,7 +18601,7 @@ var Se = m(() =>
       }),
     ),
   ),
-  Woe = m(() =>
+  Woe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("PostCompact"),
@@ -18649,17 +18649,17 @@ function KU(e) {
     ),
   });
 }
-var Yoe = m(() =>
+var Yoe = createLazyValue(() =>
     Se()
       .and(c({ hook_event_name: k("PreModelSwitch") }))
       .and(KU(["command", "picker", "sdk"])),
   ),
-  qoe = m(() =>
+  qoe = createLazyValue(() =>
     Se()
       .and(c({ hook_event_name: k("PostModelSwitch") }))
       .and(KU(["command", "picker", "sdk", "auto", "resume"])),
   ),
-  Xoe = m(() =>
+  Xoe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("TeammateIdle"),
@@ -18670,7 +18670,7 @@ var Yoe = m(() =>
       }),
     ),
   ),
-  Joe = m(() =>
+  Joe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("TaskCreated"),
@@ -18686,7 +18686,7 @@ var Yoe = m(() =>
       }),
     ),
   ),
-  Qoe = m(() =>
+  Qoe = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("TaskCompleted"),
@@ -18702,7 +18702,7 @@ var Yoe = m(() =>
       }),
     ),
   ),
-  Zoe = m(() =>
+  Zoe = createLazyValue(() =>
     Se()
       .and(
         c({
@@ -18719,7 +18719,7 @@ var Yoe = m(() =>
         "Hook input for the Elicitation event. Fired when an MCP server requests user input. Hooks can auto-respond (accept/decline) instead of showing the dialog.",
       ),
   ),
-  eie = m(() =>
+  eie = createLazyValue(() =>
     Se()
       .and(
         c({
@@ -18742,7 +18742,7 @@ var Yoe = m(() =>
     "policy_settings",
     "skills",
   ],
-  nie = m(() =>
+  nie = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("ConfigChange"),
@@ -18759,7 +18759,7 @@ var Yoe = m(() =>
     "compact",
   ],
   oie = ["User", "Project", "Local", "Managed"],
-  iie = m(() =>
+  iie = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("InstructionsLoaded"),
@@ -18772,18 +18772,18 @@ var Yoe = m(() =>
       }),
     ),
   ),
-  sie = m(() =>
+  sie = createLazyValue(() =>
     Se().and(c({ hook_event_name: k("WorktreeCreate"), name: s() })),
   ),
-  aie = m(() =>
+  aie = createLazyValue(() =>
     Se().and(c({ hook_event_name: k("WorktreeRemove"), worktree_path: s() })),
   ),
-  uie = m(() =>
+  uie = createLazyValue(() =>
     Se().and(
       c({ hook_event_name: k("CwdChanged"), old_cwd: s(), new_cwd: s() }),
     ),
   ),
-  die = m(() =>
+  die = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("FileChanged"),
@@ -18792,7 +18792,7 @@ var Yoe = m(() =>
       }),
     ),
   ),
-  pie = m(() =>
+  pie = createLazyValue(() =>
     Se().and(
       c({
         hook_event_name: k("DirectoryAdded"),
@@ -18805,7 +18805,7 @@ var Yoe = m(() =>
       }),
     ),
   ),
-  gie = m(() =>
+  gie = createLazyValue(() =>
     Se()
       .and(
         c({
@@ -18833,11 +18833,11 @@ var Yoe = m(() =>
       ),
   ),
   mie = ["clear", "resume", "logout", "prompt_input_exit", "other"],
-  _ie = m(() => X(mie)),
-  hie = m(() =>
+  _ie = createLazyValue(() => X(mie)),
+  hie = createLazyValue(() =>
     Se().and(c({ hook_event_name: k("SessionEnd"), reason: _ie() })),
   ),
-  sKt = m(() =>
+  sKt = createLazyValue(() =>
     $e([
       woe(),
       Moe(),
@@ -18874,8 +18874,8 @@ var Yoe = m(() =>
       gie(),
     ]),
   ),
-  Eie = m(() => c({ async: k(!0), asyncTimeout: T().optional() })),
-  Sie = m(() =>
+  Eie = createLazyValue(() => c({ async: k(!0), asyncTimeout: T().optional() })),
+  Sie = createLazyValue(() =>
     c({
       hookEventName: k("PreToolUse"),
       permissionDecision: Ooe().optional(),
@@ -18884,7 +18884,7 @@ var Yoe = m(() =>
       additionalContext: s().optional(),
     }),
   ),
-  Tie = m(() =>
+  Tie = createLazyValue(() =>
     c({
       hookEventName: k("UserPromptSubmit"),
       additionalContext: s().optional(),
@@ -18896,7 +18896,7 @@ var Yoe = m(() =>
         ),
     }),
   ),
-  bie = m(() =>
+  bie = createLazyValue(() =>
     c({
       hookEventName: k("UserPromptExpansion"),
       additionalContext: s().optional(),
@@ -18907,7 +18907,7 @@ var Yoe = m(() =>
         ),
     }),
   ),
-  Aie = m(() =>
+  Aie = createLazyValue(() =>
     c({
       hookEventName: k("SessionStart"),
       additionalContext: s().optional(),
@@ -18921,10 +18921,10 @@ var Yoe = m(() =>
         ),
     }),
   ),
-  yie = m(() =>
+  yie = createLazyValue(() =>
     c({ hookEventName: k("Setup"), additionalContext: s().optional() }),
   ),
-  vie = m(() =>
+  vie = createLazyValue(() =>
     c({
       hookEventName: k("PreModelSwitch"),
       permissionDecision: X(["allow", "deny", "ask"])
@@ -18935,7 +18935,7 @@ var Yoe = m(() =>
       permissionDecisionReason: s().optional(),
     }),
   ),
-  Rie = m(() =>
+  Rie = createLazyValue(() =>
     c({
       hookEventName: k("PostModelSwitch"),
       additionalContext: s()
@@ -18945,10 +18945,10 @@ var Yoe = m(() =>
         ),
     }),
   ),
-  Cie = m(() =>
+  Cie = createLazyValue(() =>
     c({ hookEventName: k("SubagentStart"), additionalContext: s().optional() }),
   ),
-  Oie = m(() =>
+  Oie = createLazyValue(() =>
     c({
       hookEventName: k("PostToolUse"),
       additionalContext: s().optional(),
@@ -18967,21 +18967,21 @@ var Yoe = m(() =>
         ),
     }),
   ),
-  kie = m(() =>
+  kie = createLazyValue(() =>
     c({ hookEventName: k("PostToolBatch"), additionalContext: s().optional() }),
   ),
-  wie = m(() =>
+  wie = createLazyValue(() =>
     c({
       hookEventName: k("PostToolUseFailure"),
       additionalContext: s().optional(),
     }),
   ),
-  Pie = m(() =>
+  Pie = createLazyValue(() =>
     c({ hookEventName: k("Stop"), additionalContext: s().optional() }).describe(
       "Hook-specific output for the Stop event. additionalContext is non-error feedback delivered to the model; the conversation continues so the model can act on it.",
     ),
   ),
-  Mie = m(() =>
+  Mie = createLazyValue(() =>
     c({
       hookEventName: k("SubagentStop"),
       additionalContext: s().optional(),
@@ -18989,13 +18989,13 @@ var Yoe = m(() =>
       "Hook-specific output for the SubagentStop event. additionalContext is non-error feedback delivered to the subagent; the subagent continues so it can act on it.",
     ),
   ),
-  Iie = m(() =>
+  Iie = createLazyValue(() =>
     c({ hookEventName: k("PermissionDenied"), retry: O().optional() }),
   ),
-  xie = m(() =>
+  xie = createLazyValue(() =>
     c({ hookEventName: k("Notification"), additionalContext: s().optional() }),
   ),
-  Nie = m(() =>
+  Nie = createLazyValue(() =>
     c({
       hookEventName: k("PermissionRequest"),
       decision: $e([
@@ -19012,13 +19012,13 @@ var Yoe = m(() =>
       ]),
     }),
   ),
-  Lie = m(() =>
+  Lie = createLazyValue(() =>
     c({ hookEventName: k("CwdChanged"), watchPaths: v(s()).optional() }),
   ),
-  Uie = m(() =>
+  Uie = createLazyValue(() =>
     c({ hookEventName: k("FileChanged"), watchPaths: v(s()).optional() }),
   ),
-  zie = m(() =>
+  zie = createLazyValue(() =>
     c({
       hookEventName: k("MessageDisplay"),
       displayContent: s()
@@ -19030,7 +19030,7 @@ var Yoe = m(() =>
       "Hook-specific output for the MessageDisplay event. Display-only: replaces the delta on screen without changing the stored message.",
     ),
   ),
-  Fie = m(() =>
+  Fie = createLazyValue(() =>
     c({
       continue: O().optional(),
       suppressOutput: O().optional(),
@@ -19069,7 +19069,7 @@ var Yoe = m(() =>
       ]).optional(),
     }),
   ),
-  Bie = m(() =>
+  Bie = createLazyValue(() =>
     c({
       hookEventName: k("Elicitation"),
       action: X(["accept", "decline", "cancel"]).optional(),
@@ -19078,7 +19078,7 @@ var Yoe = m(() =>
       "Hook-specific output for the Elicitation event. Return this to programmatically accept or decline an MCP elicitation request.",
     ),
   ),
-  Hie = m(() =>
+  Hie = createLazyValue(() =>
     c({
       hookEventName: k("ElicitationResult"),
       action: X(["accept", "decline", "cancel"]).optional(),
@@ -19087,13 +19087,13 @@ var Yoe = m(() =>
       "Hook-specific output for the ElicitationResult event. Return this to override the action or content before the response is sent to the MCP server.",
     ),
   ),
-  Gie = m(() =>
+  Gie = createLazyValue(() =>
     c({ hookEventName: k("WorktreeCreate"), worktreePath: s() }).describe(
       "Hook-specific output for the WorktreeCreate event. Provides the absolute path to the created worktree directory. Command hooks print the path on stdout instead.",
     ),
   ),
-  jU = m(() => $e([Eie(), Fie()])),
-  Ai = m(() =>
+  jU = createLazyValue(() => $e([Eie(), Fie()])),
+  Ai = createLazyValue(() =>
     c({
       name: s().describe("Skill name (without the leading slash)"),
       description: s().describe("Description of what the skill does"),
@@ -19107,7 +19107,7 @@ var Yoe = m(() =>
       "Information about an available skill (invoked via /command syntax).",
     ),
   ),
-  pf = m(() =>
+  pf = createLazyValue(() =>
     c({
       name: s().describe('Agent type identifier (e.g., "Explore")'),
       description: s().describe("Description of when to use this agent"),
@@ -19120,7 +19120,7 @@ var Yoe = m(() =>
       "Information about an available subagent that can be invoked via the Task tool.",
     ),
   ),
-  _l = m(() =>
+  _l = createLazyValue(() =>
     c({
       value: s().describe("Model identifier to use in API calls"),
       resolvedModel: s()
@@ -19159,7 +19159,7 @@ var Yoe = m(() =>
         ),
     }).describe("Information about an available model."),
   ),
-  WU = m(() =>
+  WU = createLazyValue(() =>
     c({
       email: s().optional(),
       organization: s().optional(),
@@ -19182,8 +19182,8 @@ var Yoe = m(() =>
         ),
     }).describe("Information about the logged in user's account."),
   ),
-  Vie = m(() => $e([s(), fe(s(), ml())])),
-  $U = m(() =>
+  Vie = createLazyValue(() => $e([s(), fe(s(), ml())])),
+  $U = createLazyValue(() =>
     c({
       description: s().describe(
         "Natural language description of when to use this agent",
@@ -19257,12 +19257,12 @@ var Yoe = m(() =>
       "Definition for a custom subagent that can be invoked via the Agent tool.",
     ),
   ),
-  swe = m(() =>
+  swe = createLazyValue(() =>
     X(["user", "project", "local"]).describe(
       "Source for loading filesystem-based settings. 'user' - Global user settings (~/.claude/settings.json). 'project' - Project settings (.claude/settings.json). 'local' - Local settings (.claude/settings.local.json).",
     ),
   ),
-  yCt = m(() =>
+  yCt = createLazyValue(() =>
     c({
       type: k("local").describe(
         "Plugin type. Currently only 'local' is supported",
@@ -19277,7 +19277,7 @@ var Yoe = m(() =>
   ),
   ff =
     "Count of tracked files NOT restored or deleted because a symlink, hard link, or other non-regular file was detected at the tracked path, its parent directory no longer resolves to where it pointed when the checkpoint was taken, or its backup could not be safely read. Only populated by a real (non-dryRun) rewind \u2014 on a dryRun response the field is never set and the preview counts do not reflect link-safety refusals. Absent or 0 on a real rewind means no link-safety refusals occurred; other per-file failures (for example a missing backup file) are not counted here; they are reported in telemetry, and when every differing file fails to restore the rewind itself fails (canRewind: false).",
-  awe = m(() =>
+  awe = createLazyValue(() =>
     c({
       canRewind: O(),
       error: s().optional(),
@@ -19287,28 +19287,28 @@ var Yoe = m(() =>
       skippedLinks: T().optional().describe(ff),
     }).describe("Result of a rewindFiles operation."),
   ),
-  Kie = m(() =>
+  Kie = createLazyValue(() =>
     se().describe(
       'An Anthropic Messages API user message: a MessageParam with role "user" whose content is a string or an array of content blocks (text, image, document, tool_result, ...). See the Messages API reference for the block types.',
     ),
   ),
-  jie = m(() =>
+  jie = createLazyValue(() =>
     se().describe(
       'Shaped like an Anthropic Messages API Message object (role "assistant"): id, model, content blocks (text, thinking, tool_use, ...), stop_reason and usage. When streamed, content typically holds the single block this message delivers and stop_reason is still null \u2014 see SDKAssistantMessage. See the Messages API reference for the block types.',
     ),
   ),
-  Wie = m(() =>
+  Wie = createLazyValue(() =>
     se().describe(
       "One Anthropic Messages API streaming event (message_start, content_block_start, content_block_delta, content_block_stop, message_delta, message_stop) as defined for the streaming Messages API.",
     ),
   ),
-  J = m(() => s()),
-  YU = m(() =>
+  J = createLazyValue(() => s()),
+  YU = createLazyValue(() =>
     se().describe(
       "MAIN AGENT LOOP ONLY \u2014 excludes Task subagent, sidechain, and auxiliary model calls, and is per-turn in streaming-input sessions. Prefer modelUsage for token/cost accounting.",
     ),
   ),
-  _f = m(() =>
+  _f = createLazyValue(() =>
     X([
       "authentication_failed",
       "oauth_org_not_allowed",
@@ -19323,8 +19323,8 @@ var Yoe = m(() =>
       "max_output_tokens",
     ]),
   ),
-  $ie = m(() => $e([k("compacting"), k("requesting"), Uf()])),
-  qU = m(() =>
+  $ie = createLazyValue(() => $e([k("compacting"), k("requesting"), Uf()])),
+  qU = createLazyValue(() =>
     c({
       uri: s(),
       name: s(),
@@ -19335,7 +19335,7 @@ var Yoe = m(() =>
       annotations: fe(s(), se()).optional(),
     }),
   ),
-  hf = m(() =>
+  hf = createLazyValue(() =>
     Ko("kind", [
       c({ kind: k("human") }),
       c({ kind: k("channel"), server: s() }),
@@ -19401,7 +19401,7 @@ var Yoe = m(() =>
       "Provenance of a user-role message (peer session, team lead, channel). A host wrapping keyboard input must stamp {kind:'human'} explicitly \u2014 absent origin is treated as unattributed and fails closed at strict isHuman() trust gates.",
     ),
   ),
-  XU = m(() =>
+  XU = createLazyValue(() =>
     c({
       type: k("user"),
       message: Kie(),
@@ -19527,7 +19527,7 @@ var Yoe = m(() =>
         ),
     }),
   ),
-  Ef = m(() =>
+  Ef = createLazyValue(() =>
     XU()
       .extend({
         uuid: J().optional(),
@@ -19545,7 +19545,7 @@ var Yoe = m(() =>
         "A user-role message. A client writes one to the CLI to submit a prompt (this starts a turn); the CLI emits them for user-role content it adds to the conversation itself, chiefly the tool_result blocks answering the assistant's tool_use blocks.",
       ),
   ),
-  Yie = m(() =>
+  Yie = createLazyValue(() =>
     XU().extend({
       uuid: J(),
       session_id: s(),
@@ -19553,7 +19553,7 @@ var Yoe = m(() =>
       file_attachments: v(se()).optional(),
     }),
   ),
-  JU = m(() =>
+  JU = createLazyValue(() =>
     c({
       type: k("bash_command"),
       command: s().describe(
@@ -19570,7 +19570,7 @@ var Yoe = m(() =>
       "@internal A user-initiated shell command dispatched to a one-shot shell subprocess with no model turn. Input-only \u2014 sent by CCR clients that surface a dedicated terminal UI; never emitted on stdout.",
     ),
   ),
-  qie = m(() =>
+  qie = createLazyValue(() =>
     c({
       status: X(["allowed", "allowed_warning", "rejected"]),
       resetsAt: T().int().optional(),
@@ -19637,7 +19637,7 @@ var Yoe = m(() =>
       hasChargeableSavedPaymentMethod: O().optional(),
     }).describe("Rate limit information for claude.ai subscription users."),
   ),
-  Xie = m(() =>
+  Xie = createLazyValue(() =>
     c({
       name: s().describe(
         'Display name of the row as the CLI renders it, e.g. "Messages" or "MCP tools (deferred)". Use `kind` (not this name) to classify the row.',
@@ -19650,7 +19650,7 @@ var Yoe = m(() =>
       "One row of the /context usage-by-category breakdown. Rows may carry zero tokens; renderers typically hide those.",
     ),
   ),
-  Jie = m(() =>
+  Jie = createLazyValue(() =>
     c({
       model: s().describe("Main-loop model the usage was computed for."),
       total_tokens: T()
@@ -19716,7 +19716,7 @@ var Yoe = m(() =>
       "Structured twin of the /context report \u2014 the data a client needs to render the context-usage card without parsing the markdown table. Evolves additively (new optional fields); a breaking reshape would ship as a sibling field, so consumers can trust the fields they know.",
     ),
   ),
-  Qie = m(() =>
+  Qie = createLazyValue(() =>
     c({
       type: k("assistant"),
       message: jie(),
@@ -19861,7 +19861,7 @@ var Yoe = m(() =>
       "An assistant message. While a response streams the CLI emits one assistant message per completed content block, so several consecutive assistant messages can share message.id and each carries just that block in message.content; on those, message.stop_reason is null and message.usage is not final \u2014 the turn's stop reason and total usage arrive on the result message. parent_tool_use_id is non-null when the message was produced inside a subagent started by that tool_use.",
     ),
   ),
-  Zie = m(() =>
+  Zie = createLazyValue(() =>
     c({
       type: k("rate_limit_event"),
       rate_limit_info: qie(),
@@ -19869,16 +19869,16 @@ var Yoe = m(() =>
       session_id: s(),
     }).describe("Rate limit event emitted when rate limit info changes."),
   ),
-  QU = m(() =>
+  QU = createLazyValue(() =>
     c({ tool_name: s(), tool_use_id: s(), tool_input: fe(s(), se()) }),
   ),
-  ese = m(() => c({ id: s(), name: s(), input: fe(s(), se()) })),
-  ez = m(() =>
+  ese = createLazyValue(() => c({ id: s(), name: s(), input: fe(s(), se()) })),
+  ez = createLazyValue(() =>
     X(xU).describe(
       "Why the query loop terminated. Unset when the loop was bypassed (local slash command).",
     ),
   ),
-  tz = m(() =>
+  tz = createLazyValue(() =>
     c({
       spawned: T()
         .int()
@@ -19934,7 +19934,7 @@ var Yoe = m(() =>
     "User-initiated sends still waiting in the command queue when this result was produced. Greater than 0 means at least one more user turn (and result) follows without further input, barring cancellation; 0 means none is pending, or the session is ending (end_session or a shutdown latched mid-turn discards the backlog). Queued sends may coalesce into fewer turns, so this counts pending sends, not remaining results. System-generated queue entries are not counted. Absent on fatal startup results and on surfaces without a command queue.",
   iz =
     "Cumulative estimated cost in USD for this query() call, covering the same query-pipeline calls as modelUsage and sharing its lifecycle: cumulative across turns in streaming-input sessions \u2014 each result carries the running total so far, so read the latest result rather than summing across results. Crash/startup-error results may carry zeroed values, resumed sessions start fresh, and a mid-session /clear resets the running total. An estimate, not a billing statement.",
-  tse = m(() =>
+  tse = createLazyValue(() =>
     c({
       type: k("result"),
       subtype: k("success"),
@@ -19974,7 +19974,7 @@ var Yoe = m(() =>
       session_id: s(),
     }),
   ),
-  nse = m(() =>
+  nse = createLazyValue(() =>
     c({
       type: k("result"),
       subtype: X([
@@ -20013,12 +20013,12 @@ var Yoe = m(() =>
       session_id: s(),
     }),
   ),
-  rse = m(() =>
+  rse = createLazyValue(() =>
     $e([tse(), nse()]).describe(
       `The outcome of a turn. The CLI emits exactly one result message per turn, after that turn's assistant, user and stream_event messages; treat it as the turn-complete signal (informational system messages such as task notifications, session state changes or prompt suggestions may still follow it). subtype "success" carries the final assistant text in result \u2014 or, with is_error true, the error text when the turn ended on an API error; the error subtypes say why the turn stopped early. In single-prompt (non-streaming-input) mode the process exits after the turn.`,
     ),
   ),
-  sz = m(() =>
+  sz = createLazyValue(() =>
     c({
       file: s()
         .optional()
@@ -20107,7 +20107,7 @@ function az() {
     }).optional(),
   });
 }
-var ose = m(() =>
+var ose = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("init"),
@@ -20212,7 +20212,7 @@ var ose = m(() =>
       "Session metadata the CLI emits at the start of each turn, normally ahead of every other message of that turn: session_id, model, working directory, tools, MCP servers, slash commands, permission mode, and the capabilities list for feature detection.",
     ),
   ),
-  ise = m(() =>
+  ise = createLazyValue(() =>
     c({
       type: k("stream_event"),
       event: Wie(),
@@ -20234,7 +20234,7 @@ var ose = m(() =>
       "An incremental streaming event for the assistant message being generated, emitted only when partial messages are requested (--include-partial-messages). The complete assistant message still follows as its own message.",
     ),
   ),
-  sse = m(() =>
+  sse = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("compact_boundary"),
@@ -20304,7 +20304,7 @@ var ose = m(() =>
       session_id: s(),
     }),
   ),
-  ase = m(() =>
+  ase = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("status"),
@@ -20316,7 +20316,7 @@ var ose = m(() =>
       session_id: s(),
     }),
   ),
-  Tf = m(() =>
+  Tf = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("post_turn_summary"),
@@ -20330,7 +20330,7 @@ var ose = m(() =>
       "@internal Background post-turn summary emitted after each assistant turn. summarizes_uuid points to the assistant message this summarizes.",
     ),
   ),
-  bf = m(() =>
+  bf = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("task_summary"),
@@ -20341,7 +20341,7 @@ var ose = m(() =>
       "@internal Mid-turn progress line from the debounced classifier. Mirrors external_metadata.task_summary so non-CCR consumers (desktop LocalSessionManager) see the same live phrase. detail is null on the idle clear.",
     ),
   ),
-  lse = m(() =>
+  lse = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("informational"),
@@ -20363,7 +20363,7 @@ var ose = m(() =>
       "Generic text banner emitted by the loop \u2014 non-error status lines, hook feedback (e.g. a UserPromptSubmit hook's block reason), slash-command output. Hosts render `content` as plaintext at the given level.",
     ),
   ),
-  lwe = m(() =>
+  lwe = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("permission_retry"),
@@ -20377,7 +20377,7 @@ var ose = m(() =>
       "@internal Emitted when tool execution retries after a permission-mode change allowed previously-denied commands. REPL renders a 'retrying with <commands>' banner. From internal SystemMessage 'permission_retry'.",
     ),
   ),
-  cwe = m(() =>
+  cwe = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("stop_hook_summary"),
@@ -20408,7 +20408,7 @@ var ose = m(() =>
       "@internal Summary of Stop/SubagentStop hook execution at turn end \u2014 which hooks ran, their output, and whether any prevented continuation. From internal SystemMessage 'stop_hook_summary'.",
     ),
   ),
-  uwe = m(() =>
+  uwe = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("memory_saved"),
@@ -20423,7 +20423,7 @@ var ose = m(() =>
       "@internal Confirmation that the memory subsystem wrote to the listed paths. REPL renders a '<verb> N memories' banner. From internal SystemMessage 'memory_saved'.",
     ),
   ),
-  dwe = m(() =>
+  dwe = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("agents_killed"),
@@ -20433,7 +20433,7 @@ var ose = m(() =>
       "@internal Emitted when background agents are terminated (e.g. on interrupt). REPL renders an 'agents killed' banner. From internal SystemMessage 'agents_killed'.",
     ),
   ),
-  pwe = m(() =>
+  pwe = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("away_summary"),
@@ -20444,7 +20444,7 @@ var ose = m(() =>
       "@internal Summary of what happened while the user was away (background tasks completed, notifications accumulated). From internal SystemMessage 'away_summary'.",
     ),
   ),
-  fwe = m(() =>
+  fwe = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("thinking"),
@@ -20455,7 +20455,7 @@ var ose = m(() =>
       "@internal Rendered thinking content (the text itself, not the running token estimate \u2014 that is SDKThinkingTokensMessage). From internal SystemMessage 'thinking'.",
     ),
   ),
-  Af = m(() =>
+  Af = createLazyValue(() =>
     c({
       type: k("transcript_mirror"),
       filePath: s(),
@@ -20464,7 +20464,7 @@ var ose = m(() =>
       "@internal Emitted after each successful local transcript write. The parent peels these off the stdout stream and batches them to the SessionStore adapter. Not exposed to public SDK consumers.",
     ),
   ),
-  cse = m(() =>
+  cse = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("mirror_error"),
@@ -20476,7 +20476,7 @@ var ose = m(() =>
       "Emitted when SessionStore.append() rejects or times out for a transcript-mirror batch after bounded retry (3 attempts with short backoff; timeouts are not retried). The batch is then dropped; this surfaces the failure so consumers are not silent on data loss.",
     ),
   ),
-  use = m(() =>
+  use = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("api_retry"),
@@ -20496,7 +20496,7 @@ var ose = m(() =>
       "Emitted when an API request fails with a retryable error and will be retried after a delay. error_status is null for connection errors (e.g. timeouts) that had no HTTP response.",
     ),
   ),
-  dse = m(() =>
+  dse = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("control_request_progress"),
@@ -20514,7 +20514,7 @@ var ose = m(() =>
       "Progress for a long-running client-originated control_request (currently only side_question), correlated by request_id. status 'started' means the worker accepted the request and launched the work; 'api_retry' carries the same retry counters as SDKAPIRetryMessage and is present only for that status.",
     ),
   ),
-  pse = m(() =>
+  pse = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("model_refusal_fallback"),
@@ -20563,7 +20563,7 @@ var ose = m(() =>
       'Emitted when the primary model ends the stream with stop_reason "refusal" and the turn is retried once on a fallback model (direction: "retry"). When `scope` is "session" (or absent \u2014 older CLIs), the swap is made persistent for the session; when `scope` is "local", only that subagent/side-question response came from the fallback model and the session model is unchanged. "revert" and "sticky" are retained in the enum for SDK-consumer compat and are no longer emitted.',
     ),
   ),
-  fse = m(() =>
+  fse = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("model_refusal_no_fallback"),
@@ -20579,7 +20579,7 @@ var ose = m(() =>
       'Emitted when the model ends the stream with stop_reason "refusal" and no retry runs: no fallback model is configured, or per-category routing declined the retry (the mapped fallback target is unresolvable, or CLAUDE_CODE_REFUSAL_FALLBACK_CATCH_ALL is explicitly disabled and the refusal category has no fallback map entry). The structured counterpart to detecting stop_reason "refusal" on the assistant error frame. Not emitted when the retry ran or the user declined the retry dialog (model_refusal_fallback covers the retry case). Absent from older CLIs.',
     ),
   ),
-  gwe = m(() =>
+  gwe = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("model_fallback"),
@@ -20600,7 +20600,7 @@ var ose = m(() =>
       '@internal Emitted when the current turn is switched to the configured fallback model because the primary model failed (trigger "model_not_found": model retired/unknown; "permission_denied": org lacks access; "overloaded": repeated 529s; "server_error": retryable 5xx pivot; "last_resort": non-retryable error on the primary; "model_blocked": primary disabled by the per-model kill switch). Turn-scoped \u2014 the primary is re-tried on the next user turn. Not yet in the public SDKMessage union.',
     ),
   ),
-  mwe = m(() =>
+  mwe = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("model_consent_fallback"),
@@ -20624,7 +20624,7 @@ var ose = m(() =>
       "@internal Emitted when a pre-send model consent gate swaps the session off the requested model (consent declined, dismissed, or given without the required entitlement ending up provisioned). Currently emitted by the Fable 5 usage-credit gate (`fable_overage_consent_prompt`). Session-scoped \u2014 the swap persists for the session, and additionally as the saved default when persisted_as_default is true. Absence of this message after the consent dialog resolves means the session stayed on the requested model. Not yet in the public SDKMessage union.",
     ),
   ),
-  _we = m(() =>
+  _we = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("file_snapshot"),
@@ -20644,7 +20644,7 @@ var ose = m(() =>
       "@internal Snapshot of session files (plan, todo) captured for rewind. From internal SystemMessage 'file_snapshot'.",
     ),
   ),
-  hwe = m(() =>
+  hwe = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("scheduled_task_fire"),
@@ -20655,7 +20655,7 @@ var ose = m(() =>
       "@internal Emitted when a scheduled task (cron) fires. content is the render text. From internal SystemMessage 'scheduled_task_fire'.",
     ),
   ),
-  Ewe = m(() =>
+  Ewe = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("turn_duration"),
@@ -20691,7 +20691,7 @@ var ose = m(() =>
       "@internal Per-turn wall-clock duration plus budget and pending-background-work counts. REPL renders the 'Done in Ns' / 'Waiting for N agents' line. From internal SystemMessage 'turn_duration'.",
     ),
   ),
-  Swe = m(() =>
+  Swe = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("api_error"),
@@ -20726,7 +20726,7 @@ var ose = m(() =>
       "@internal Retryable-API-error frame carrying the plain-data error snapshot and retry counters. REPL renders the retry banner from this. Wire twin is SDKAPIRetryMessage ('api_retry'). From internal SystemMessage 'api_error'.",
     ),
   ),
-  mse = m(() =>
+  mse = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("local_command_output"),
@@ -20737,7 +20737,7 @@ var ose = m(() =>
       "Output from a local slash command (e.g. /voice, /usage). Displayed as assistant-style text in the transcript.",
     ),
   ),
-  zse = m(() =>
+  zse = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("hook_started"),
@@ -20748,7 +20748,7 @@ var ose = m(() =>
       session_id: s(),
     }),
   ),
-  Vse = m(() =>
+  Vse = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("hook_progress"),
@@ -20762,7 +20762,7 @@ var ose = m(() =>
       session_id: s(),
     }),
   ),
-  Kse = m(() =>
+  Kse = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("hook_response"),
@@ -20778,7 +20778,7 @@ var ose = m(() =>
       session_id: s(),
     }),
   ),
-  Yse = m(() =>
+  Yse = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("plugin_install"),
@@ -20791,7 +20791,7 @@ var ose = m(() =>
       "Headless plugin installation progress (CLAUDE_CODE_SYNC_PLUGIN_INSTALL). started/completed bracket the whole install; installed/failed carry a per-marketplace name.",
     ),
   ),
-  qse = m(() =>
+  qse = createLazyValue(() =>
     c({
       type: k("tool_progress"),
       tool_use_id: s(),
@@ -20813,7 +20813,7 @@ var ose = m(() =>
       }).optional(),
     }),
   ),
-  Xse = m(() =>
+  Xse = createLazyValue(() =>
     c({
       type: k("auth_status"),
       isAuthenticating: O(),
@@ -20823,7 +20823,7 @@ var ose = m(() =>
       session_id: s(),
     }),
   ),
-  Jse = m(() =>
+  Jse = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("files_persisted"),
@@ -20836,7 +20836,7 @@ var ose = m(() =>
   ),
   yf =
     "True for tasks that are not activity (every skip_transcript task, plus every live-update watcher, requested or auto-started); hosts should exclude them from activity indicators.",
-  Qse = m(() =>
+  Qse = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("task_notification"),
@@ -20861,7 +20861,7 @@ var ose = m(() =>
       session_id: s(),
     }),
   ),
-  Zse = m(() =>
+  Zse = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("task_started"),
@@ -20899,7 +20899,7 @@ var ose = m(() =>
       session_id: s(),
     }),
   ),
-  eae = m(() =>
+  eae = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("task_updated"),
@@ -20925,7 +20925,7 @@ var ose = m(() =>
       session_id: s(),
     }),
   ),
-  tae = m(() =>
+  tae = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("background_tasks_changed"),
@@ -20945,7 +20945,7 @@ var ose = m(() =>
       "The full set of live background tasks, emitted whenever membership changes (start, completion, kill, a foreground agent being backgrounded) or an entry's `ambient` flag flips. A level signal, unlike the task_started/task_notification edge bookends: consumers that only need 'is background work running' should replace their set with each payload rather than pairing edges, so a missed bookend cannot wedge a stale running indicator. Ordering relative to the bookends for the same transition is unspecified (in practice the level precedes them) and the payload carries ids only, so do not correlate it with the edge stream. The level is per-process: nothing is emitted at startup, so consumers must reset to the empty set whenever the session's CLI process (re)starts and let the next membership change repopulate it. A host that re-initializes an already-running process (a repeated `initialize` control request, e.g. after reconnecting) is sent a snapshot of the current set right behind the success response to that request, even when it is empty, so it need not wait for a change; CLIs that predate this send nothing there.",
     ),
   ),
-  rae = m(() =>
+  rae = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("feedback_draft_queued"),
@@ -20965,7 +20965,7 @@ var ose = m(() =>
       "@internal Emitted by the SendFeedback tool after it writes a local draft to ~/.claude/feedback/drafts/, so a connected host UI can surface a review card without polling the filesystem. Carries only the card's display fields; nothing is sent anywhere without the user's explicit action on the review form.",
     ),
   ),
-  oae = m(() =>
+  oae = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("session_state_changed"),
@@ -20976,7 +20976,7 @@ var ose = m(() =>
       "Mirrors notifySessionStateChanged. 'idle' fires after heldBackResult flushes and the bg-agent do-while exits \u2014 authoritative turn-over signal.",
     ),
   ),
-  iae = m(() =>
+  iae = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("worker_shutting_down"),
@@ -20989,7 +20989,7 @@ var ose = m(() =>
       "Emitted by the bridge on opt-in graceful worker teardown (only when the teardown caller supplied a reason), before the heartbeat stops, so remote clients can show why the worker went away instead of waiting for heartbeat timeout. Absence is NOT a dead-host signal: handoffs (/update, /teleport, respawn), auto-disable, mode transitions, and internal fatal-error paths emit nothing by design. A dead host (battery, OOM, kill -9) never reaches teardown and never sends this either. NOTE: this event lands in the durable per-session event stream \u2014 a session that is later resumed may carry historical instances mid-stream. Clients MUST treat it as a live-tail signal only (honored when no further activity follows), not a one-shot session-lifetime fact.",
     ),
   ),
-  sae = m(() =>
+  sae = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("commands_changed"),
@@ -21000,7 +21000,7 @@ var ose = m(() =>
       "Fire-and-forget push of the full slash-command list after a mid-session change (e.g. skills discovered dynamically as the agent works in a subdirectory). Clients should REPLACE their cached command list with this payload; supportedCommands() tracks the latest push, so a re-fetch returns the same fresh list.",
     ),
   ),
-  aae = m(() =>
+  aae = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("notification"),
@@ -21015,7 +21015,7 @@ var ose = m(() =>
       "Loop-side text notification. Mirrors the interactive REPL notification queue (key/priority/timeout). JSX notifications are not emitted on this channel.",
     ),
   ),
-  lae = m(() =>
+  lae = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("task_progress"),
@@ -21040,7 +21040,7 @@ var ose = m(() =>
       session_id: s(),
     }),
   ),
-  cae = m(() =>
+  cae = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("thinking_tokens"),
@@ -21057,7 +21057,7 @@ var ose = m(() =>
       "Live thinking-token estimate, digested from thinking_delta.estimated_tokens during the redacted-thinking phase (where the API otherwise streams only pings). estimated_tokens is the running total for the current thinking block; estimated_tokens_delta is the increment carried by this frame. Approximate progress for spinners/pills, not the authoritative billed output_tokens.",
     ),
   ),
-  uae = m(() =>
+  uae = createLazyValue(() =>
     c({
       type: k("tool_use_summary"),
       summary: s(),
@@ -21071,7 +21071,7 @@ var ose = m(() =>
         ),
     }),
   ),
-  dae = m(() =>
+  dae = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("memory_recall"),
@@ -21097,7 +21097,7 @@ var ose = m(() =>
       'Emitted when the memory recall supervisor surfaces relevant memories into the turn. Mirrors the CLI relevant_memories attachment so SDK renderers can show "Recalled from memory" inline.',
     ),
   ),
-  pae = m(() =>
+  pae = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("elicitation_complete"),
@@ -21109,7 +21109,7 @@ var ose = m(() =>
       "Emitted when an MCP server confirms that a URL-mode elicitation is complete.",
     ),
   ),
-  fae = m(() =>
+  fae = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("permission_denied"),
@@ -21139,7 +21139,7 @@ var ose = m(() =>
       "Emitted when a tool call is auto-denied without an interactive permission prompt (e.g. auto-mode classifier, dontAsk mode, headless-agent auto-deny, or a deny rule). With a permission prompt surface (stdio/SDK canUseTool), the 'ask' path surfaces via a can_use_tool control_request and this event covers the 'deny' short-circuit. Without one (bare -p / SDK query() with no canUseTool), 'ask' decisions are terminal, so this event also covers those implicit denials. Best-effort advisory: in rare races a denial can book without a frame or a frame can lack a booking twin \u2014 result.permission_denials is the authoritative record. Denials that resolve before canUseTool runs \u2014 PreToolUse hook denies, and deny-rule overrides of hook allow/ask decisions \u2014 are not covered here, and neither is the MCP --permission-prompt-tool surface (the prompt tool is the host there).",
     ),
   ),
-  gae = m(() =>
+  gae = createLazyValue(() =>
     c({
       type: k("prompt_suggestion"),
       suggestion: s(),
@@ -21149,7 +21149,7 @@ var ose = m(() =>
       "Predicted next user prompt, emitted after each turn when promptSuggestions is enabled.",
     ),
   ),
-  Twe = m(() =>
+  Twe = createLazyValue(() =>
     c({
       type: k("attachment"),
       attachment: se().describe(
@@ -21162,7 +21162,7 @@ var ose = m(() =>
       "@internal Emitted when the engine yields an AttachmentMessage into the turn stream. Carries user-attached content (at-mentioned files, IDE selections, pasted media) and loop-attached data (structured output, deferred tool-use payloads). SDKResultMessage.structured_output and .deferred_tool_use are derived from these frames. From internal QueryEvent 'attachment'.",
     ),
   ),
-  bwe = m(() =>
+  bwe = createLazyValue(() =>
     c({
       type: k("tombstone"),
       message: se().describe(
@@ -21174,7 +21174,7 @@ var ose = m(() =>
       "@internal Emitted when a previously-yielded message is superseded or removed from the transcript (e.g., streaming\u2192non-streaming fallback removes a partial orphan). Consumers that render or persist the stream should remove the referenced message. From internal QueryEvent 'tombstone'.",
     ),
   ),
-  mae = m(() =>
+  mae = createLazyValue(() =>
     c({
       type: k("conversation_reset"),
       new_conversation_id: J(),
@@ -21184,7 +21184,7 @@ var ose = m(() =>
       "Emitted by /clear, plan-mode exit, and fresh-session flows. The surface should mount a fresh transcript under new_conversation_id and reset any cached session title. From internal QueryEvent 'conversation_reset'.",
     ),
   ),
-  Awe = m(() =>
+  Awe = createLazyValue(() =>
     c({
       type: k("api_metrics"),
       event: Ko("type", [
@@ -21215,7 +21215,7 @@ var ose = m(() =>
       "@internal Emitted when a subagent's API call reports TTFT or output_tokens for OTPS (output-tokens-per-second) metering. From internal QueryEvent 'api_metrics' (ApiMetricsLifecycleEvent).",
     ),
   ),
-  ywe = m(() =>
+  ywe = createLazyValue(() =>
     c({
       type: k("os_notification"),
       message: s(),
@@ -21226,7 +21226,7 @@ var ose = m(() =>
       "@internal Emitted when a tool (PushNotificationTool, the Computer Use wrapper) or turn-end cleanup requests a native OS notification. The surface dispatches to its platform notification channel (iTerm2/Kitty/Ghostty/bell in the terminal; native IPC for desktop/IDE). From internal QueryEvent 'os_notification'.",
     ),
   ),
-  vwe = m(() =>
+  vwe = createLazyValue(() =>
     c({
       type: k("apply_flag_settings"),
       settings: fe(s(), se()).describe(
@@ -21238,7 +21238,7 @@ var ose = m(() =>
       "@internal Output-direction counterpart to SDKControlApplyFlagSettingsRequest. Emitted when slash commands that toggle flag settings request a batched write that the surface applies to its AppState. From internal QueryEvent 'apply_flag_settings'.",
     ),
   ),
-  _ae = m(() =>
+  _ae = createLazyValue(() =>
     c({
       type: k("command_lifecycle"),
       command_uuid: s().describe(
@@ -21258,7 +21258,7 @@ var ose = m(() =>
       "@internal Fate of a queued command (slash command or queued user prompt). 'queued' when the inbound message enters the command queue; 'started' when it drains into a turn; then exactly one terminal state: 'completed' \u2014 the turn that consumed it ended cleanly; 'cancelled' \u2014 removed by cancel_async_message, swept by an interrupt with cancel_queued:true, caught by a pending cancel just before dispatch, or consumed into a turn that was aborted (interrupt) or died on a hard failure (model_error, prompt_too_long, ...) \u2014 cancelled-over-completed is deliberate dup-over-loss for exactly-once resenders, so a fold answered earlier in a failed turn may be re-sent (a per-fold ledger refinement is tracked separately) \u2014 but resenders must not blindly resend on 'cancelled': user-requested removals arrive as the same state, so correlate against your own cancel_async_message responses AND against any interrupt receipt's `cancelled` list (interrupt_cancel_queued_v1) and resend only cancels neither source accounts for; 'discarded' \u2014 the session ended (end_session) with the command still queued, or with a peer message still held by the receive-side policy (not preceded by 'queued' then); 'refused' \u2014 declined by the session's receive-side policy before entering the queue (outright, or after being held): not preceded by 'queued', and it will not run in this session. Known gap: folds consumed by turns ending via max_turns / hook_stopped / tool_deferred / background_requested report 'completed' even though their content may only be answered on continuation/resume. 'completed' means the consuming turn ended, not that the result frame was delivered. Ordering relative to the result frame is per-path: a command that starts a fresh turn emits 'completed' AFTER that turn's result frame (later still when the result is held back for background tasks); a command folded into an already-in-flight turn emits 'completed' BEFORE that turn's result frame. Not a strict pairing: a terminal state may arrive for a command_uuid that never emitted 'started' (control-request ACKs, duplicate deliveries); internally-enqueued commands (cron triggers, teammate shutdown prompts, deferred-turn resume) mint a fresh uuid at enqueue and emit started/terminal without 'queued'; a turn that fails by throwing can leave 'started' without a terminal state; and a peer message the queue's own admission guard drops after acceptance (rate limit, duplicate collapse, loop guard, queued-peer cap) currently leaves 'queued' without a terminal state \u2014 on process exit a wrapper should synthesize 'discarded' for uuids it has not seen reach a terminal state. The exactly-one-terminal guarantee is per worker process, not per uuid lifetime: after CCR redelivery a 'discarded' uuid legitimately re-emits queued\u2192\u2026\u2192terminal on the next worker. Emitted on the stdout stream in -p/SDK sessions; remote transports (mobile/desktop bridge) receive the equivalent signal via delivery ACKs instead. A host driving a cloud-hosted session through the headless `--cloud` client also receives 'cancelled' (and only that state) after its interrupt with cancel_queued:true, synthesized from the session's receipt: for a uuid the host sent and did not cancel itself it means the cloud session dropped that command \u2014 it will not run; do not resend it; the frames follow the interrupt's success response, are not ordered against the interrupted turn's result, and unknown uuids (another client's prompt) may appear. From internal QueryEvent 'command_lifecycle'.",
     ),
   ),
-  hae = m(() =>
+  hae = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("code_change_published"),
@@ -21304,7 +21304,7 @@ var ose = m(() =>
       "@internal A code change from this session went out for review (a pull/merge request, or another provider's change in internal builds). Fires when the harness sees the change published or links the session to a PR \u2014 on creation, and also when the session contributes to an existing one (gh pr edit/close/ready, gh pr checkout, a push to a branch that has an open PR) \u2014 so bind on every event, not just the first; re-emission for the same URL is possible and idempotent. Provenance: values are scraped from the command's captured output (the last PR-shaped URL printed) or a gh pr view lookup. Captured output is not only the forge CLI's own text \u2014 hook output or files printed by the same command can contribute \u2014 so treat the fields as a binding hint: display them, but verify against the forge with your own credential-scoped lookup before routing authenticated requests or trusting the host. Best-effort, not exhaustive: a crash before the link, gh printing no URL to a piped capture (gh pr merge), or an unrecognized forge means no event \u2014 keep your provider-API lookup as the source of truth and treat this as the trigger.",
     ),
   ),
-  Eae = m(() =>
+  Eae = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("vcs_state_changed"),
@@ -21325,7 +21325,7 @@ var ose = m(() =>
       "@internal A harness-observed shell command mutated repository state (git commit/cherry-pick, push, merge, rebase \u2014 dry runs excluded). A cache-invalidation signal with a deliberately minimal payload: beyond classification it carries the branch acted on and the directory the shell finished in, both hints about where to look, so consumers still re-read state (head, PR status) from the repository instead of decoding the event. Derived from the same detection as the tool result's structured gitOperation data, so the two agree on what happened; only a push's `branch` is attributed more strictly here (from the push's own output section) than in that data. A compound command can emit more than one kind (a merge and a rebase in one command collapse to the latter), and a push of several branches emits one push event per branch; coalesce freely. Best-effort, not exhaustive: only foreground mutations run through the Bash/PowerShell tools are observed \u2014 a backgrounded command whose confirming output had not printed at capture time emits nothing. A foreground push whose ref lines were redirected or silenced still emits, on the invoking command's zero exit code alone (so a compound that swallows a failed push's code also emits; the event is a prompt to look, never a claim).",
     ),
   ),
-  Sae = m(() =>
+  Sae = createLazyValue(() =>
     c({
       type: k("system"),
       subtype: k("cloud_session_delta"),
@@ -21347,7 +21347,7 @@ var ose = m(() =>
       "@internal Written by the headless stream-json client of a cloud-hosted session (the same client that puts `cloud_session` on its init frames), and by nothing else: the session's status changed between two inits \u2014 this machine's serving word or its reason, its stream to the session (`connection`), a call it serves starting, waiting on the session's approval or ending (`calls`), its directory sync. Only after the first init; at most a few per second (changes within a quarter second are written as one frame carrying the latest block); none when nothing differs. An init is always a complete snapshot, so a host that (re)attaches resynchronises from the first init it reads and applies these on top. Display-only; ignore it if you do not draw session status.",
     ),
   ),
-  Rwe = m(() =>
+  Rwe = createLazyValue(() =>
     c({
       type: k("set_expanded_view"),
       expanded_view: X(["none", "tasks", "teammates"]),
@@ -21357,7 +21357,7 @@ var ose = m(() =>
       "@internal Hint to expand a side panel. Enum is a superset of AppState.expandedView for back-compat; do not narrow.",
     ),
   ),
-  vf = m(() =>
+  vf = createLazyValue(() =>
     c({
       type: k("active_goal"),
       value: c({
@@ -21373,7 +21373,7 @@ var ose = m(() =>
       "Emitted when the user's /goal Stop hook reports met (clears) or not-yet-met (bumps iterations + last_reason). Any surface with a goal indicator re-renders from this. value is null when the goal is cleared. From internal QueryEvent 'active_goal'.",
     ),
   ),
-  Rf = m(() =>
+  Rf = createLazyValue(() =>
     c({
       type: k("autocompact_state"),
       value: c({
@@ -21411,7 +21411,7 @@ var ose = m(() =>
       `@internal Worker-resolved auto-compact state, emitted by CCR workers at boot, whenever the resolved state changes (/autocompact, model switch, settings change), re-checked at each turn start, and re-emitted after a conversation reset. Thin clients adopt it so the "% until auto-compact" indicator counts down to the worker's real compaction trigger instead of re-resolving against client-local state. Turn-scoped divergence is accepted: a turn running under a skill/command frontmatter model override compacts against that model's window while the frame keeps the resting model's (the local indicator shares this limitation). From sessionState.onAutocompactInputsChanged.`,
     ),
   ),
-  Cwe = m(() =>
+  Cwe = createLazyValue(() =>
     c({
       type: k("set_in_progress_tool_use_ids"),
       op: c({ action: X(["add", "remove"]), ids: v(s()) }),
@@ -21421,7 +21421,7 @@ var ose = m(() =>
       "@internal Emitted when tool execution adds/removes tool_use ids from the mid-execution set (after permission grant, before result). Surfaces use this to show which tools are running. From internal QueryEvent 'set_in_progress_tool_use_ids'.",
     ),
   ),
-  Owe = m(() =>
+  Owe = createLazyValue(() =>
     c({
       type: k("hint_clears"),
       ids: v(s()),
@@ -21432,7 +21432,7 @@ var ose = m(() =>
       "@internal Emitted when the server-side context-hint reject path reports cleared tool_use ids after a retry/fallback. The surface re-runs clearToolResultsById on its message list so subsequent turns match the API's view. From internal QueryEvent 'hint_clears'.",
     ),
   ),
-  kwe = m(() =>
+  kwe = createLazyValue(() =>
     c({
       type: k("open_message_selector"),
       uuid: J(),
@@ -21441,7 +21441,7 @@ var ose = m(() =>
       "@internal Emitted by /rewind to open the message-selector overlay. Fire-and-forget \u2014 the user's selection returns through a separate channel. From internal QueryEvent 'open_message_selector'.",
     ),
   ),
-  wwe = m(() =>
+  wwe = createLazyValue(() =>
     c({
       type: k("compact_progress"),
       event: Ko("type", [
@@ -21458,7 +21458,7 @@ var ose = m(() =>
       "@internal Emitted while compaction is running (hook phase, compact start, compact end). Distinct from system/compact_boundary, which reports the post-compaction transcript boundary after completion. From internal QueryEvent 'compact_progress' (CompactEvent Delta-track arm).",
     ),
   ),
-  Pwe = m(() =>
+  Pwe = createLazyValue(() =>
     c({
       type: k("stream_mode"),
       mode: X([
@@ -21474,7 +21474,7 @@ var ose = m(() =>
       "@internal Emitted when the engine's spinner phase changes during compaction. From internal QueryEvent 'stream_mode' (CompactEvent Delta-track arm).",
     ),
   ),
-  Mwe = m(() =>
+  Mwe = createLazyValue(() =>
     Ko("op", [
       c({
         type: k("response_length"),
@@ -21493,7 +21493,7 @@ var ose = m(() =>
       "@internal Emitted to drive the streaming-output character counter in the spinner ('add' accumulates, 'reset' zeroes on compaction-boundary swap). From internal QueryEvent 'response_length' (Delta-track).",
     ),
   ),
-  Iwe = m(() =>
+  Iwe = createLazyValue(() =>
     Ko("phase", [
       c({
         type: k("refusal_continuation"),
@@ -21512,7 +21512,7 @@ var ose = m(() =>
       "@internal Emitted when a silent refusal-continuation retry begins ('begin' with salvage_text to keep visible in the streaming preview) or ends ('end'). From internal QueryEvent 'refusal_continuation'.",
     ),
   ),
-  Dwe = m(() =>
+  Dwe = createLazyValue(() =>
     c({
       sessionId: s().describe("Unique session identifier (UUID)."),
       summary: s().describe(
@@ -21548,7 +21548,7 @@ var ose = m(() =>
       "Session metadata returned by listSessions and getSessionInfo.",
     ),
   ),
-  Cf = m(() =>
+  Cf = createLazyValue(() =>
     $e([
       Qie(),
       Ef(),
@@ -21598,12 +21598,12 @@ var ose = m(() =>
       "Every conversational and informational message the CLI emits on its output stream, discriminated by type (and subtype for system/result messages). Consumers should ignore types and subtypes they do not recognize: the set grows over time.",
     ),
   ),
-  yi = m(() =>
+  yi = createLazyValue(() =>
     X(["off", "cooldown", "on"]).describe(
       "Fast mode state: off, in cooldown after rate limit, or actively enabled.",
     ),
   ),
-  vi = m(() =>
+  vi = createLazyValue(() =>
     X([
       "free",
       "preference",
@@ -21619,7 +21619,7 @@ var ose = m(() =>
       "Why fast mode can't serve right now. Absent when nothing blocks it (a request may still choose standard speed). A paused-after-rate-limit run is not here; it rides fast_mode_state as 'cooldown'.",
     ),
   ),
-  Of = m(() =>
+  Of = createLazyValue(() =>
     c({
       text: s().describe(
         "The label to show \u2014 already sanitized to a single line of plain text and capped at 6 columns, exactly as the terminal footer renders it after its \u25C6 glyph.",
@@ -21628,12 +21628,12 @@ var ose = m(() =>
       '@internal The server-configured session indicator (bootstrap client_data.footer_indicator) that the terminal renders as a "\u25C6 <text>" pill in the prompt footer \u2014 an opaque status note operators set per cohort (e.g. to prove a test config reached the session). Carried on `system/init` and the `initialize` response so a host UI (Claude Desktop, IDE webviews) can render the same pill. Absent when nothing is configured; hosts should then render nothing. Read from the CLI\'s cached bootstrap data, so a label configured after that cache was last written first appears on a later `system/init`.',
     ),
   );
-var _z = m(() =>
+var _z = createLazyValue(() =>
     se().describe(
       "A JSON-RPC 2.0 message as defined by the Model Context Protocol (request, notification, or response object).",
     ),
   ),
-  Tae = m(() =>
+  Tae = createLazyValue(() =>
     c({
       matcher: s().optional(),
       hookCallbackIds: v(s()).describe(
@@ -21642,7 +21642,7 @@ var _z = m(() =>
       timeout: T().optional(),
     }).describe("Configuration for matching and routing hook callbacks."),
   ),
-  SCt = m(() =>
+  SCt = createLazyValue(() =>
     c({
       subtype: k("initialize"),
       hooks: fe(HU(), v(Tae())).optional(),
@@ -21718,7 +21718,7 @@ var _z = m(() =>
       "Initializes the SDK session with hooks, MCP servers, and agent configuration.",
     ),
   ),
-  Aae = m(() =>
+  Aae = createLazyValue(() =>
     c({
       minTimeBeforeFeedbackMs: T(),
       minTimeBetweenFeedbackMs: T(),
@@ -21733,7 +21733,7 @@ var _z = m(() =>
       "@internal Session feedback-survey configuration for host UIs (VS Code webview, Claude Desktop) that run the survey trigger logic themselves: the same GrowthBook-driven pacing/probability values the terminal survey uses, plus the cross-surface last-shown time the host can't read. Survey responses are proxied back as tengu_feedback_survey_event log_event notifications.",
     ),
   ),
-  yae = m(() =>
+  yae = createLazyValue(() =>
     c({
       commands: v(Ai()),
       agents: v(pf()),
@@ -21825,7 +21825,7 @@ var _z = m(() =>
       "Response from session initialization with available commands, models, and account info.",
     ),
   ),
-  wf = m(() =>
+  wf = createLazyValue(() =>
     c({
       subtype: k("interrupt"),
       reason: s()
@@ -21840,7 +21840,7 @@ var _z = m(() =>
         ),
     }).describe("Interrupts the currently running conversation turn."),
   ),
-  vae = m(() =>
+  vae = createLazyValue(() =>
     c({
       still_queued: v(s()).describe(
         'Uuids of async user messages that survive this interrupt: commands still in the queue, plus any batch already dequeued for the imminent turn but not yet reachable by the abort. An interrupt \u2014 plain or cancel_queued:true \u2014 that lands during the FIRST-command prewait window (before the first turn of the session has armed a controller) is additionally LATCHED, scoped to the user-intent work pending at that instant \u2014 the batch already dequeued and parked for the imminent turn, plus the user-intent main-thread commands then in the queue (the work this list enumerates): the first turn to arm that carries any of that doomed work starts already aborted, exactly once, so the listed prewait batch is delivered into an immediately-aborted turn, its frames and result flowing through the normal abort path, instead of running to completion. A turn carrying none of it arms live and leaves the latch waiting: a system delivery turn (for example a replayed host event), or a prompt enqueued after the interrupt \u2014 post-interrupt work is never coalesced with the doomed work and never dies to the latch, so the Stop kills exactly what this receipt listed. The latch is released when the doomed work is retired without arming: if a parked prewait batch is entirely cancelled, the latch is released even when other queued commands remain (those arm and run normally); with nothing parked, it is released once none of the doomed commands remains queued \u2014 work enqueued after the interrupt neither holds it up nor is aborted by it. Survivors that ride any later turn run normally. These WILL run (subject to that latch) unless cancelled first (or unless the request set cancel_queued:true, in which case every uuid-stamped survivor this process holds is removed, emitted a terminal `cancelled` synchronously, and listed under `cancelled` instead \u2014 leaving here only what a client driving a hosted session can no longer recall: a send already in flight to that session, or the first prompt the session was created with; a send that client still holds on its own machine behind a send gate (today: waiting for the session to take the initial upload from that machine) has not gone out, so it is withdrawn and listed under `cancelled` like a queued one, and cancel_async_message can withdraw it too, while a plain interrupt leaves it held and lists it here). Cancellation granularity: uuids still in the queue are individually cancellable via cancel_async_message; once a batch is dequeued and coalesced into one turn, cancelling a NON-representative member uuid is a no-op (its content still runs), while cancelling the batch-representative uuid drops the WHOLE coalesced batch \u2014 in both cases the cancel response reports cancelled:false because the message was no longer in the queue. Coverage caveats: only uuid-STAMPED messages appear (a message enqueued without a uuid still runs but is never listed, so [] does not mean "nothing will run"); only main-thread messages are listed (subagent-addressed messages are out of scope); and the list may include internally-enqueued uuids the client never sent (cron triggers, auto-resume continuations) \u2014 ignore unknown uuids rather than treating them as an error. Ordering: on a clean interrupt this receipt is written before the interrupted turn result; a turn that crashes during interrupt handling emits its error result on a direct-write path that may precede the receipt. Snapshot is taken synchronously with abort processing \u2014 probing the queue after the interrupted result instead always loses the race against the drain loop, which starts the next queued turn immediately.',
@@ -21854,7 +21854,7 @@ var _z = m(() =>
       "Result of an interrupt operation. Advertised by the interrupt_receipt_v1 capability on system/init; older CLIs send an empty success response with no still_queued field.",
     ),
   ),
-  Pf = m(() =>
+  Pf = createLazyValue(() =>
     c({
       subtype: k("can_use_tool"),
       tool_name: s(),
@@ -21907,7 +21907,7 @@ var _z = m(() =>
         ),
     }).describe("Requests permission to use a tool with the given input."),
   ),
-  If = m(() =>
+  If = createLazyValue(() =>
     c({
       subtype: k("set_permission_mode"),
       mode: Ht(),
@@ -21916,7 +21916,7 @@ var _z = m(() =>
         .describe("@internal CCR ultraplan session marker."),
     }).describe("Sets the permission mode for tool execution handling."),
   ),
-  Rae = m(() =>
+  Rae = createLazyValue(() =>
     c({
       mode: Ht()
         .optional()
@@ -21925,7 +21925,7 @@ var _z = m(() =>
         ),
     }).describe("Success payload answering set_permission_mode."),
   ),
-  Df = m(() =>
+  Df = createLazyValue(() =>
     c({
       subtype: k("set_model"),
       model: s()
@@ -21942,7 +21942,7 @@ var _z = m(() =>
         ),
     }).describe("Sets the model to use for subsequent conversation turns."),
   ),
-  xf = m(() =>
+  xf = createLazyValue(() =>
     c({
       subtype: k("set_max_thinking_tokens"),
       max_thinking_tokens: T().int().nullable().optional(),
@@ -21951,37 +21951,37 @@ var _z = m(() =>
       "Sets the maximum number of thinking tokens for extended thinking. When max_thinking_tokens is omitted or null, thinking resets to the session default: any mid-session budget override is cleared (back to the spawn-time budget, if one was set), and thinking stays off for sessions that have it disabled. thinking_display optionally sets the thinking display mode for the rest of the session: a value replaces the session display mode, null clears that override so Claude Code's default display handling applies again, and when omitted the display mode from session start (--thinking-display) is kept.",
     ),
   ),
-  Lf = m(() =>
+  Lf = createLazyValue(() =>
     c({ subtype: k("rename_session"), title: s() }).describe(
       "Sets the user-facing title for the current session.",
     ),
   ),
-  zf = m(() =>
+  zf = createLazyValue(() =>
     c({ subtype: k("set_color"), color: s() }).describe(
       'Sets the session accent color. Accepts an agent color name or "default" to reset.',
     ),
   ),
-  Hf = m(() =>
+  Hf = createLazyValue(() =>
     c({ subtype: k("mcp_status") }).describe(
       "Requests the current status of all MCP server connections.",
     ),
   ),
-  Cae = m(() =>
+  Cae = createLazyValue(() =>
     c({ mcpServers: v(sf()) }).describe(
       "Response containing the current status of all MCP server connections.",
     ),
   ),
-  Vf = m(() =>
+  Vf = createLazyValue(() =>
     c({ subtype: k("file_suggestions"), query: s() }).describe(
       "Requests at-mention file autocomplete suggestions for a partial path prefix. Returns the same fuzzy-matched results the TUI shows.",
     ),
   ),
-  Oae = m(() =>
+  Oae = createLazyValue(() =>
     c({ suggestions: v(c({ path: s(), score: T().optional() })) }).describe(
       "Response containing fuzzy-ranked file path suggestions (capped at the same limit as the TUI typeahead).",
     ),
   ),
-  Kf = m(() =>
+  Kf = createLazyValue(() =>
     c({
       subtype: k("get_context_usage"),
       detail: X(["summary", "full"])
@@ -21993,25 +21993,25 @@ var _z = m(() =>
       "Requests a breakdown of current context window usage by category.",
     ),
   ),
-  jf = m(() =>
+  jf = createLazyValue(() =>
     c({ subtype: k("get_session_cost") }).describe(
       "Requests the formatted session cost summary (the same text /usage prints in non-interactive mode). Used by the thin-client /usage dialog to show the remote container cost instead of the local $0.00.",
     ),
   ),
-  kae = m(() =>
+  kae = createLazyValue(() =>
     c({ text: s() }).describe("Formatted session cost text, ANSI-stripped."),
   ),
-  Wf = m(() =>
+  Wf = createLazyValue(() =>
     c({ subtype: k("list_models") }).describe(
       "Requests the worker's selectable model catalog. Fulfills the caps.modelCatalog capability: in a remote thin-client session the worker's provider, settings cascade, and enforcement policy decide which models the session can run, so the thin client must ask rather than read its own getModelOptions().",
     ),
   ),
-  wae = m(() =>
+  wae = createLazyValue(() =>
     c({ models: v(_l()) }).describe(
       "The worker's model options serialized via toModelInfos() \u2014 the same ModelInfo shape the initialize response carries. Includes disabled rows (visible but not selectable) so the thin-client picker renders them greyed-out like the local one.",
     ),
   ),
-  Yf = m(() =>
+  Yf = createLazyValue(() =>
     c({
       subtype: k("get_usage"),
       skip_behaviors: O()
@@ -22023,7 +22023,7 @@ var _z = m(() =>
       "Requests the structured /usage data: session cost/usage totals plus claude.ai plan rate-limit utilization when available. Experimental \u2014 the response shape may change.",
     ),
   ),
-  Ri = m(() =>
+  Ri = createLazyValue(() =>
     c({
       utilization: T()
         .nullable()
@@ -22033,7 +22033,7 @@ var _z = m(() =>
         .describe("ISO 8601 timestamp when the window resets."),
     }),
   ),
-  hl = m(() =>
+  hl = createLazyValue(() =>
     c({
       name: s(),
       pct: T().describe(
@@ -22041,7 +22041,7 @@ var _z = m(() =>
       ),
     }),
   ),
-  lz = m(() =>
+  lz = createLazyValue(() =>
     c({
       request_count: T().describe(
         "API requests found in local transcripts for this window.",
@@ -22072,7 +22072,7 @@ var _z = m(() =>
       mcp_servers: v(hl()),
     }),
   ),
-  Pae = m(() =>
+  Pae = createLazyValue(() =>
     c({
       session: c({
         total_cost_usd: T(),
@@ -22135,16 +22135,16 @@ var _z = m(() =>
       "Structured /usage data: session cost/usage totals plus claude.ai plan rate-limit utilization. Experimental \u2014 the shape may change.",
     ),
   ),
-  qf = m(() =>
+  qf = createLazyValue(() =>
     c({ subtype: k("get_binary_version") }).describe(
       "Requests the responder's CLI binary version. Used by /version in --remote mode so the thin client can show both its own and the remote container's version.",
     ),
   ),
-  Mae = m(() => c({ version: s(), buildTime: s().optional() })),
-  Iae = m(() =>
+  Mae = createLazyValue(() => c({ version: s(), buildTime: s().optional() })),
+  Iae = createLazyValue(() =>
     c({ name: s(), tokens: T().int(), color: s(), isDeferred: O().optional() }),
   ),
-  Dae = m(() =>
+  Dae = createLazyValue(() =>
     c({
       color: s(),
       isFilled: O(),
@@ -22154,7 +22154,7 @@ var _z = m(() =>
       squareFullness: T(),
     }),
   ),
-  xae = m(() =>
+  xae = createLazyValue(() =>
     c({
       categories: v(Iae()),
       totalTokens: T().int(),
@@ -22214,7 +22214,7 @@ var _z = m(() =>
       "Breakdown of current context window usage by category (system prompt, tools, messages, etc.).",
     ),
   ),
-  bCt = m(() =>
+  bCt = createLazyValue(() =>
     c({
       subtype: k("mcp_call"),
       tool: s().describe(
@@ -22281,7 +22281,7 @@ var _z = m(() =>
         'STAGED calls (input_files/output_files declared) additionally stage lane rows in/out around the call \u2014 see the input_files describe. Staged failures come back as a success-subtype response whose staging field carries a typed error_code; subtype:error is emitted only when the call could not be attempted at all (server not connected, kill switch, dispatch failure) and means nothing ran. A target server that is not yet connected is brought up on demand: dispatch runs the deferred plugin/MCP startup resolution (the work a first model turn would have done) and waits up to 30s \u2014 shortened by expires_at when that is sooner \u2014 for the server to connect before answering "MCP server not connected", so a dispatch that races plugin startup (e.g. after an idle-wake reattach) succeeds instead of failing until a turn runs. Standard RPC semantics: a redelivered request_id supersedes the in-flight run (it is aborted and its response suppressed \u2014 exactly one response per request_id); conversion is idempotent, so re-running is safe. Cancellable via control_cancel_request.',
     ),
   ),
-  Nae = m(() =>
+  Nae = createLazyValue(() =>
     c({
       content: se(),
       structuredContent: fe(s(), se()).optional(),
@@ -22331,14 +22331,14 @@ var _z = m(() =>
         "from CallToolResult. Content passes through the same processing as model-turn MCP calls (large results may be truncated or redirected to a file). Caller interprets. Staged calls additionally carry a `staging` result.",
     ),
   ),
-  Xf = m(() =>
+  Xf = createLazyValue(() =>
     c({
       subtype: k("rewind_files"),
       user_message_id: s(),
       dry_run: O().optional(),
     }).describe("Rewinds file changes made since a specific user message."),
   ),
-  Lae = m(() =>
+  Lae = createLazyValue(() =>
     c({
       canRewind: O(),
       error: s().optional(),
@@ -22348,17 +22348,17 @@ var _z = m(() =>
       skippedLinks: T().optional().describe(ff),
     }).describe("Result of a rewindFiles operation."),
   ),
-  Jf = m(() =>
+  Jf = createLazyValue(() =>
     c({ subtype: k("cancel_async_message"), message_uuid: s() }).describe(
       "Drops a pending async user message from the command queue by uuid. No-op if already dequeued for execution.",
     ),
   ),
-  Uae = m(() =>
+  Uae = createLazyValue(() =>
     c({ cancelled: O() }).describe(
       "Result of a cancel_async_message operation. cancelled=false means the message was not in the queue (already dequeued or never enqueued).",
     ),
   ),
-  Qf = m(() =>
+  Qf = createLazyValue(() =>
     c({
       subtype: k("read_file"),
       path: s(),
@@ -22372,7 +22372,7 @@ var _z = m(() =>
       "Read a file from the session filesystem for the remote sidebar viewer. Path is resolved against cwd and gated by the same read-permission rules as the Read tool.",
     ),
   ),
-  zae = m(() =>
+  zae = createLazyValue(() =>
     c({
       contents: s(),
       absPath: s(),
@@ -22384,7 +22384,7 @@ var _z = m(() =>
         ),
     }).describe("File contents for the remote sidebar viewer."),
   ),
-  Fae = m(() =>
+  Fae = createLazyValue(() =>
     c({
       oldStart: T().int(),
       oldLines: T().int(),
@@ -22395,12 +22395,12 @@ var _z = m(() =>
       "@internal One unified-diff hunk of the get_workspace_diff response.",
     ),
   ),
-  Zf = m(() =>
+  Zf = createLazyValue(() =>
     c({ subtype: k("get_workspace_diff") }).describe(
       "@internal Requests the workspace git diff for the thin-client /diff dialog. The worker resolves one base ref for both stats and hunks (working tree vs HEAD, falling back to branch-vs-default-merge-base when the tree is clean) and applies the standard caps (5s git timeout, 50 files, 1MB/file).",
     ),
   ),
-  Bae = m(() =>
+  Bae = createLazyValue(() =>
     c({
       diff: c({
         stats: c({
@@ -22433,12 +22433,12 @@ var _z = m(() =>
       "@internal Workspace git diff for the thin-client /diff dialog. diff is null when the workspace is not a git repo or is in a transient git state (merge/rebase/cherry-pick). Paths in skippedLarge carry no hunks entry at all \u2014 membership alone marks them as too large. An entirely empty hunks array with non-empty perFileStats is not by itself a failure signal: it is the normal shape when all changes are untracked (stats only \u2014 git diff emits no hunks for untracked files) or every file was withheld, and can also occur when the hunks fetch transiently failed and only stats are available.",
     ),
   ),
-  eg = m(() =>
+  eg = createLazyValue(() =>
     c({ subtype: k("get_plan") }).describe(
       "@internal Read the session's current plan-mode plan. Unlike read_file, the caller does not need to know the plan file's path \u2014 the worker resolves its own plan slug. Never creates a plan slug or file.",
     ),
   ),
-  Hae = m(() =>
+  Hae = createLazyValue(() =>
     c({
       exists: O(),
       content: s()
@@ -22453,12 +22453,12 @@ var _z = m(() =>
       "@internal The current plan, or exists:false when none has been written.",
     ),
   ),
-  tg = m(() =>
+  tg = createLazyValue(() =>
     c({ subtype: k("seed_read_state"), path: s(), mtime: T() }).describe(
       "Seeds the readFileState cache with a path+mtime entry. Use when a prior Read was removed from context so Edit validation would fail despite the client having observed the Read. The mtime lets the CLI detect if the file changed since the seeded Read \u2014 same staleness check as the normal path.",
     ),
   ),
-  ng = m(() =>
+  ng = createLazyValue(() =>
     c({
       subtype: k("hook_callback"),
       callback_id: s(),
@@ -22489,7 +22489,7 @@ var _z = m(() =>
   vvn = /^[A-Za-z0-9+/]*={0,2}$/,
   Gae = /^[^\p{Cc}\p{Cf}\u2028\u2029]+$/u,
   cz = 4096,
-  Vae = m(() =>
+  Vae = createLazyValue(() =>
     c({
       id: s()
         .regex(kf)
@@ -22539,7 +22539,7 @@ var _z = m(() =>
       "@internal One forwarded device hook: identity and routing data only \u2014 never a command line, URL, path, header or condition text.",
     ),
   ),
-  Kae = m(() =>
+  Kae = createLazyValue(() =>
     c({
       template: s()
         .regex(tn)
@@ -22569,7 +22569,7 @@ var _z = m(() =>
       "@internal A vetted template the device has enabled, to run IN the container. Carries nothing executable: the worker derives the file and the command line from its own table.",
     ),
   ),
-  jae = m(() =>
+  jae = createLazyValue(() =>
     c({
       after_edit: T()
         .int()
@@ -22610,7 +22610,7 @@ var _z = m(() =>
       "@internal Counts of this device's hooks that were not forwarded, for the session line. Each such hook is counted in exactly one field, the first that applies in this order: plugin or managed (by its source); other, when its event is not forwarded at all; kind_unsupported; after_edit; other again for anything else, such as a duplicate or an entry beyond a cap. Absent fields mean zero.",
     ),
   ),
-  wCt = m(() =>
+  wCt = createLazyValue(() =>
     c({
       subtype: k("register_device_hooks"),
       instance_id: s()
@@ -22660,7 +22660,7 @@ var _z = m(() =>
       "@internal Registers this device's hooks with the worker \u2014 unrelated to device registration or bind. Sent by a claude --cloud device client after it attaches to a cloud session (never as an initial event of the create): names, by opaque id, which of the user's own hooks the worker should ask this device to run over hook_callback, and which vetted templates to run in the container. The worker rejects requests over 64 KiB with invalid_registration. Error replies use the standard error response with a message that starts with a code token and a colon: hook_forwarding_disabled (off for this session; not retryable, nothing stored), hook_forwarding_not_ready (retry after a short backoff), invalid_registration, or stale_worker_epoch (re-read the worker epoch and re-send). A worker that predates the request answers with the usual unsupported-subtype error.",
     ),
   ),
-  uz = m(() =>
+  uz = createLazyValue(() =>
     c({
       template: s().regex(tn),
       status: X([
@@ -22677,7 +22677,7 @@ var _z = m(() =>
   ),
   pz = String.raw`(?!\.\.?(?:\/|$))[^/\\\p{Cc}\p{Cf}\u2028\u2029]+`,
   fz = new RegExp(`^\\/(?:${pz}(?:\\/${pz})*\\/?)?$`, "u"),
-  gz = m(() => ({
+  gz = createLazyValue(() => ({
     project_dir: s()
       .max(cz)
       .regex(fz)
@@ -22695,7 +22695,7 @@ var _z = m(() =>
       .min(1)
       .describe("@internal The worker life that answered."),
   })),
-  eRe = m(() =>
+  eRe = createLazyValue(() =>
     Ko("status", [
       c({
         status: k("registered"),
@@ -22753,7 +22753,7 @@ var _z = m(() =>
       "@internal Success payload answering register_device_hooks: 'registered' while this instance holds entries and a lease; 'unregistered' when an empty inventory removed them, or when nothing it sent could be held (every entry ignored, no template stored or installed) \u2014 then ignored_ids and templates say why.",
     ),
   ),
-  TCt = m(() =>
+  TCt = createLazyValue(() =>
     c({
       subtype: k("upload_device_hook_template"),
       template: s().regex(tn).describe("@internal Built-in template id."),
@@ -22779,7 +22779,7 @@ var _z = m(() =>
       "@internal Sent by a claude --cloud device client BEFORE register_device_hooks for each vetted template it wants run in the container; a register that arrives first reports awaiting_upload and the device registers again after uploading. The worker keeps the bytes for its own life only after hashing them against its own table; nothing executable is taken from the wire. Idempotent. Errors: hook_forwarding_disabled | hook_forwarding_not_ready (retryable) | stale_worker_epoch | invalid_upload | template_refused: unknown_template, version_mismatch, too_large or digest_mismatch.",
     ),
   ),
-  Wae = m(() =>
+  Wae = createLazyValue(() =>
     c({
       template: s().regex(tn),
       digest: s().regex(rg),
@@ -22788,7 +22788,7 @@ var _z = m(() =>
       "@internal Success payload answering upload_device_hook_template.",
     ),
   ),
-  ECt = m(() =>
+  ECt = createLazyValue(() =>
     c({
       subtype: k("remote_tools_announce"),
       instance_id: s()
@@ -22825,7 +22825,7 @@ var _z = m(() =>
       "@internal Sent by a claude --cloud client that serves tools for this session: which machine it is and which tools it serves, replacing the device-bridge tools/list announcement. Re-sent on reconnect, on worker init and when what it serves changes; all three lists empty withdraws the machine (the keys are required so an omission is a parse error, not a withdrawal) \u2014 and from an instance the worker has not heard of, says the machine serves nothing. A first-party cloud worker acts on it only when the session service stamped the event as coming from a verified device of the account (device_attestation_status VERIFIED_BY_GATE or better); an announce below that floor is dropped unanswered. Errors (message starts with the code and a colon): remote_tools_disabled, remote_tools_not_ready (retryable), stale_worker_epoch, invalid_announce.",
     ),
   ),
-  $ae = m(() =>
+  $ae = createLazyValue(() =>
     c({
       status: X(["announced", "withdrawn"]),
       worker_epoch: T().int().min(1).optional(),
@@ -22843,7 +22843,7 @@ var _z = m(() =>
         ),
     }).describe("@internal Success payload answering remote_tools_announce."),
   ),
-  Tz = m(() =>
+  Tz = createLazyValue(() =>
     it({
       content: v(se()),
       isError: O().optional(),
@@ -22851,7 +22851,7 @@ var _z = m(() =>
       _meta: fe(s(), se()).optional(),
     }),
   ),
-  og = m(() =>
+  og = createLazyValue(() =>
     c({
       subtype: k("remote_tool_call"),
       instance_id: s()
@@ -22891,7 +22891,7 @@ var _z = m(() =>
       "@internal One leg of a tool call this session forwards to the attached machine that announced it serves the tool: the first leg, the approval leg (envelope.approval), a detached decline, or an outcome query (envelope.op = 'outcome_of'). Answered with a control_response whose success payload is the served CallToolResult; cancelled with control_cancel_request. An error-shaped control_response is not an answer (an older attached client error-replies subtypes it does not know); the worker keeps waiting.",
     ),
   ),
-  Yae = m(() =>
+  Yae = createLazyValue(() =>
     c({
       result: Tz().describe(
         "@internal The served CallToolResult for this leg, verbatim as the machine's serving code produced it; structuredContent['anthropic/remoteToolExecution'] is the remote-tool protocol's ResultEnvelope (completed, refused, failed, needs_approval, acknowledged, in_progress), parsed by the worker with that protocol.",
@@ -22900,7 +22900,7 @@ var _z = m(() =>
       "@internal Success payload answering remote_tool_call: the result under one fixed key, never spread at the top level.",
     ),
   ),
-  ig = m(() =>
+  ig = createLazyValue(() =>
     c({
       subtype: k("remote_plumbing_call"),
       instance_id: s()
@@ -22926,14 +22926,14 @@ var _z = m(() =>
       "@internal One call of a plumbing tool on the attached machine, made by this session's own machinery (directory sync) rather than the model: no envelope and no tool_use id. Answered with a control_response whose success payload carries that tool's CallToolResult; cancelled with control_cancel_request.",
     ),
   ),
-  qae = m(() =>
+  qae = createLazyValue(() =>
     c({
       result: Tz().describe(
         "@internal The plumbing tool's CallToolResult, verbatim.",
       ),
     }).describe("@internal Success payload answering remote_plumbing_call."),
   ),
-  sg = m(() =>
+  sg = createLazyValue(() =>
     c({
       subtype: k("remote_tools_probe"),
       instance_id: s()
@@ -22947,7 +22947,7 @@ var _z = m(() =>
       "@internal The worker's liveness check for an announced machine, sent only inside a live turn after minutes without hearing from it; a miss within deadline_ms marks the machine offline until it announces again or answers anything.",
     ),
   ),
-  Xae = m(() =>
+  Xae = createLazyValue(() =>
     c({
       result: c({
         epoch: s().describe(
@@ -22956,12 +22956,12 @@ var _z = m(() =>
       }),
     }).describe("@internal Success payload answering remote_tools_probe."),
   ),
-  ag = m(() =>
+  ag = createLazyValue(() =>
     c({ subtype: k("mcp_message"), server_name: s(), message: _z() }).describe(
       "Carries one MCP JSON-RPC message for an SDK-hosted MCP server (one named in initialize.sdkMcpServers or added later with mcp_set_servers). Flows in both directions: the CLI sends it to the client to reach the in-process server, and the client sends it to the CLI to deliver that server's own messages. When the client answers, the success response carries the server's JSON-RPC reply under mcp_response; the CLI acknowledges a client-sent one with an empty success.",
     ),
   ),
-  Jae = m(() =>
+  Jae = createLazyValue(() =>
     c({
       mcp_response: _z()
         .optional()
@@ -22970,22 +22970,22 @@ var _z = m(() =>
         ),
     }).describe("Success payload answering an mcp_message request."),
   ),
-  lg = m(() =>
+  lg = createLazyValue(() =>
     c({ subtype: k("mcp_set_servers"), servers: fe(s(), ml()) }).describe(
       "Replaces the set of dynamically managed MCP servers.",
     ),
   ),
-  Qae = m(() =>
+  Qae = createLazyValue(() =>
     c({ added: v(s()), removed: v(s()), errors: fe(s(), s()) }).describe(
       "Result of replacing the set of dynamically managed MCP servers.",
     ),
   ),
-  cg = m(() =>
+  cg = createLazyValue(() =>
     c({ subtype: k("reload_plugins") }).describe(
       "Reloads plugins from disk and returns the refreshed session components.",
     ),
   ),
-  Zae = m(() =>
+  Zae = createLazyValue(() =>
     c({
       commands: v(Ai()),
       agents: v(pf()),
@@ -23003,25 +23003,25 @@ var _z = m(() =>
       "Refreshed commands, agents, plugins, and MCP server status after reload.",
     ),
   ),
-  ug = m(() =>
+  ug = createLazyValue(() =>
     c({ subtype: k("reload_skills") }).describe(
       "Reloads skills from disk and returns the refreshed skill list.",
     ),
   ),
-  ele = m(() =>
+  ele = createLazyValue(() =>
     c({ skills: v(Ai()) }).describe("Refreshed skill commands after reload."),
   ),
-  dg = m(() =>
+  dg = createLazyValue(() =>
     c({ subtype: k("reload_output_styles") }).describe(
       "Re-reads the output-style directories from disk (a style file written mid-session is otherwise invisible until the next session) and returns the refreshed style names. Also drops the shared markdown-file scan cache, so agents, skills and routines re-read their directories on their next use.",
     ),
   ),
-  tle = m(() =>
+  tle = createLazyValue(() =>
     c({ available_output_styles: v(s()) }).describe(
       "Refreshed output style names after reload, built-in and custom, in the order the initialize response lists them.",
     ),
   ),
-  pg = m(() =>
+  pg = createLazyValue(() =>
     c({
       subtype: k("register_repo_root"),
       directory: s(),
@@ -23032,14 +23032,14 @@ var _z = m(() =>
       "Add a directory as a working-directory root and optionally reload CLAUDE.md, skills, and plugins. The directory must resolve to a strict subdirectory of cwd, or of a directory passed at launch via --add-dir / the SDK additionalDirectories option. A directory that is already a registered working directory (including a duplicate of an earlier request) is denied with an error; the registration pipeline and DirectoryAdded hooks do not re-run.",
     ),
   ),
-  nle = m(() =>
+  nle = createLazyValue(() =>
     c({
       directory: s().describe(
         "The registered root. A resolved absolute path \u2014 except on connections that persist frames server-side (the local bridge-worker lane echoes the request directory verbatim; the registration is still keyed on the resolved path locally).",
       ),
     }).describe("Success payload answering register_repo_root."),
   ),
-  fg = m(() =>
+  fg = createLazyValue(() =>
     c({
       subtype: k("set_cwd"),
       path: s().describe(
@@ -23059,7 +23059,7 @@ var _z = m(() =>
       "@internal Moves the session to a new working directory \u2014 the headless twin of /cd, for SDK hosts like Claude Desktop. Runs the same validation, Cd(...) permission rules, and relocation path as the interactive command, with the trust prompt delegated to the host via the needs_trust response arm. Rejected while a turn is in flight.",
     ),
   ),
-  rle = m(() =>
+  rle = createLazyValue(() =>
     Ko("status", [
       c({
         status: k("ok"),
@@ -23101,17 +23101,17 @@ var _z = m(() =>
       "@internal Result of a set_cwd request. Every non-ok outcome leaves the working directory unchanged \u2014 but trust may already have been durably recorded when the request carried a valid attestation (a busy rejection or relocation failure after the latch does not unlatch it; the consent was for the directory, not the attempt). Internal failures (e.g. the transcript move failed and was rolled back) arrive as a control_response error instead.",
     ),
   ),
-  Tg = m(() =>
+  Tg = createLazyValue(() =>
     c({ subtype: k("mcp_reconnect"), serverName: s() }).describe(
       "Reconnects a disconnected or failed MCP server.",
     ),
   ),
-  Ag = m(() =>
+  Ag = createLazyValue(() =>
     c({ subtype: k("mcp_toggle"), serverName: s(), enabled: O() }).describe(
       "Enables or disables an MCP server.",
     ),
   ),
-  vg = m(() =>
+  vg = createLazyValue(() =>
     c({
       subtype: k("set_mcp_permission_mode_override"),
       serverName: s(),
@@ -23120,12 +23120,12 @@ var _z = m(() =>
       "@internal Pin (or clear, with mode:null) an MCP server's per-tool permission-mode override. Tighten-only over this channel: only 'default', 'auto', or null are accepted (clampControlChannelOverride); any other mode is rejected without changing state. The override substitutes for the session mode at every per-tool engine decision (effectiveModeForTool) \u2014 and only when the session mode would already auto-allow \u2014 so e.g. a server can be held at 'default' or routed through the auto-mode classifier under global bypassPermissions.",
     ),
   ),
-  Rg = m(() =>
+  Rg = createLazyValue(() =>
     c({ subtype: k("stop_task"), task_id: s() }).describe(
       "Stops a running task.",
     ),
   ),
-  Og = m(() =>
+  Og = createLazyValue(() =>
     c({
       subtype: k("background_tasks"),
       tool_use_id: s()
@@ -23137,7 +23137,7 @@ var _z = m(() =>
       'Backgrounds in-flight foreground tasks (Bash commands and subagents). With tool_use_id, targets the single task started by that tool_use block; without it, backgrounds all foreground tasks \u2014 the control-request equivalent of pressing Ctrl+B in the terminal. Each blocking tool call returns immediately with a "running in the background" tool_result and the turn continues; the task keeps running and emits a task_notification when it settles.',
     ),
   ),
-  ole = m(() =>
+  ole = createLazyValue(() =>
     c({
       backgrounded: O()
         .optional()
@@ -23146,17 +23146,17 @@ var _z = m(() =>
         ),
     }).describe("Success payload answering background_tasks."),
   ),
-  kg = m(() =>
+  kg = createLazyValue(() =>
     c({ subtype: k("apply_flag_settings"), settings: fe(s(), se()) }).describe(
       "Merges the provided settings into the flag settings layer, updating the active configuration.",
     ),
   ),
-  Pg = m(() =>
+  Pg = createLazyValue(() =>
     c({ subtype: k("get_settings") }).describe(
       "Returns the effective merged settings and the raw per-source settings.",
     ),
   ),
-  Mg = m(() =>
+  Mg = createLazyValue(() =>
     c({
       subtype: k("update_settings"),
       source: X(["localSettings"]).describe(
@@ -23167,7 +23167,7 @@ var _z = m(() =>
       "Merges the provided settings into a settings file through the CLI's own writer (canonical store root, gitignore upkeep, hardened write) and live-applies them \u2014 the same path /config uses. Unlike apply_flag_settings, which only touches the session-scoped flag layer. The handler accepts an explicit key allowlist only (currently just outputStyle \u2014 the file feeds hook and permission-rule loading, so each key is a security decision), requires string values (key deletion is not supported), and refuses remote transports and sessions whose --setting-sources exclude the target source.",
     ),
   ),
-  ile = m(() =>
+  ile = createLazyValue(() =>
     c({
       effective: fe(s(), se()),
       sources: v(
@@ -23212,7 +23212,7 @@ var _z = m(() =>
       "Effective merged settings plus raw per-source settings in merge order.",
     ),
   ),
-  Ig = m(() =>
+  Ig = createLazyValue(() =>
     c({
       subtype: k("elicitation"),
       mcp_server_name: s(),
@@ -23240,13 +23240,13 @@ var _z = m(() =>
       "Requests the SDK consumer to handle an MCP elicitation (user input request).",
     ),
   ),
-  Rvn = m(() =>
+  Rvn = createLazyValue(() =>
     c({
       action: X(["accept", "decline", "cancel"]),
       content: fe(s(), se()).optional(),
     }).describe("Response from the SDK consumer for an elicitation request."),
   ),
-  Dg = m(() =>
+  Dg = createLazyValue(() =>
     c({
       subtype: k("request_user_dialog"),
       dialog_kind: s().describe(
@@ -23260,7 +23260,7 @@ var _z = m(() =>
       "Requests the SDK consumer to render a tool-driven blocking dialog and return the user choice. Used by tools that previously rendered Ink JSX via setToolJSX with an onDone callback.",
     ),
   ),
-  $Qe = m(() =>
+  $Qe = createLazyValue(() =>
     c({
       behavior: X(["completed", "cancelled"]),
       result: se()
@@ -23272,7 +23272,7 @@ var _z = m(() =>
       "Response from the SDK consumer for a request_user_dialog request.",
     ),
   ),
-  Ng = m(() =>
+  Ng = createLazyValue(() =>
     c({
       subtype: k("submit_feedback"),
       description: s(),
@@ -23298,7 +23298,7 @@ var _z = m(() =>
       "@internal Submits a /feedback report (description + current session transcript + sanitized error log) to api.anthropic.com/api/claude_cli_feedback using the CLI's auth and redaction. Runs the same getFeedbackUnavailableReason() policy checks as the terminal /feedback command \u2014 when feedback is disabled (3P provider, org policy, env kill-switch) the response carries unavailable_reason instead of an error.",
     ),
   ),
-  sle = m(() =>
+  sle = createLazyValue(() =>
     c({
       feedback_id: s().nullable(),
       unavailable_reason: s()
@@ -23318,7 +23318,7 @@ var _z = m(() =>
       "@internal Result of a submit_feedback request. feedback_id is set on success; otherwise one of unavailable_reason / failure_reason explains why.",
     ),
   ),
-  Lg = m(() =>
+  Lg = createLazyValue(() =>
     c({
       subtype: k("remote_control_work_secret"),
       session_id: s().describe(
@@ -23328,17 +23328,17 @@ var _z = m(() =>
       "@internal Request from the CLI subprocess to the SDK host for the session's re-dispatched work secret, sent when a bridge attached with `remote_control {work_secret}` needs a fresh worker token (before expiry, or during auth recovery). The host re-queues the session on its bridge environment and answers with the secret its next work poll delivers, or null when it has none yet \u2014 the CLI asks again on its own retry cadence.",
     ),
   ),
-  kvn = m(() =>
+  kvn = createLazyValue(() =>
     c({ work_secret: s().nullable() }).describe(
       "@internal The re-dispatched base64url work secret for the requested session, or null when the host has none available yet.",
     ),
   ),
-  Ug = m(() =>
+  Ug = createLazyValue(() =>
     c({ subtype: k("oauth_token_refresh") }).describe(
       "@internal Request from the CLI subprocess to the SDK host for a fresh OAuth access token after a 401 with no local refresh token.",
     ),
   ),
-  xvn = m(() =>
+  xvn = createLazyValue(() =>
     c({
       accessToken: s().nullable(),
       reason: X(Zp)
@@ -23351,12 +23351,12 @@ var _z = m(() =>
       "@internal Fresh OAuth access token returned by the SDK host getOAuthToken callback, or null when the host has no token available.",
     ),
   ),
-  Fg = m(() =>
+  Fg = createLazyValue(() =>
     c({ subtype: k("host_auth_token_refresh") }).describe(
       "@internal Request from the CLI subprocess to the SDK host for a fresh provider credential after a 401 or AWS credential-expiry error when the host owns the credential (Cowork 3P).",
     ),
   ),
-  Hvn = m(() =>
+  Hvn = createLazyValue(() =>
     c({
       authToken: s().nullable(),
       materialUnchanged: O().optional(),
@@ -23364,7 +23364,7 @@ var _z = m(() =>
       "@internal Fresh provider bearer token returned by the SDK host getHostAuthToken callback, or null if the credential was refreshed out-of-band. materialUnchanged is only consulted when authToken is null (out-of-band delivery) \u2014 true tells the CLI to fast-fail instead of backing off.",
     ),
   ),
-  ACt = m(() =>
+  ACt = createLazyValue(() =>
     c({
       subtype: k("message_rated"),
       messageUuid: s().describe("UUID of the assistant message being rated."),
@@ -23385,8 +23385,8 @@ var _z = m(() =>
       "@internal Records a per-message thumbs up/down rating. Logs tengu_message_rated with the same shape as the in-conversation rating controls so Desktop / IDE callers can surface their own native thumbs UI.",
     ),
   ),
-  ale = m(() => c({}).describe("@internal Empty response for message_rated.")),
-  Bwe = m(() =>
+  ale = createLazyValue(() => c({}).describe("@internal Empty response for message_rated.")),
+  Bwe = createLazyValue(() =>
     $e([
       Pf(),
       ng(),
@@ -23403,7 +23403,7 @@ var _z = m(() =>
       "Control requests the agent loop originates and needs a reply to \u2014 the loop\u2192client RPC slice of SDKControlRequestInner. The remaining members are client\u2192loop commands (set/get/mcp/auth/etc).",
     ),
   ),
-  Hwe = m(() =>
+  Hwe = createLazyValue(() =>
     $e([
       wf(),
       SCt(),
@@ -23449,7 +23449,7 @@ var _z = m(() =>
       "Control requests a client sends to drive the loop \u2014 the client\u2192loop command slice of SDKControlRequestInner. The remaining members are loop\u2192client RPCs that block on a reply (see AgentOriginatedControlRequest).",
     ),
   ),
-  lle = m(() =>
+  lle = createLazyValue(() =>
     $e([
       wf(),
       Pf(),
@@ -23507,7 +23507,7 @@ var _z = m(() =>
 function de(e, t, r) {
   return { request: e, originator: t, response: r };
 }
-var Gwe = m(() => [
+var Gwe = createLazyValue(() => [
     de(wf(), "client", vae()),
     de(Pf(), "agent", BU()),
     de(SCt(), "client", yae()),
@@ -23560,7 +23560,7 @@ var Gwe = m(() => [
     de(sg(), "agent", Xae()),
     de(Lg(), "agent", kvn()),
   ]),
-  El = m(() =>
+  El = createLazyValue(() =>
     c({
       type: k("control_request"),
       request_id: s().describe(
@@ -23571,21 +23571,21 @@ var Gwe = m(() => [
       "Envelope for a control-protocol request, sent by either side on the same stream as the messages. The receiver normally answers with exactly one control_response carrying the same request_id (a few request types document when no answer is sent), and a requester ignores responses for request_ids it is not waiting on. Each request type's own documentation says which side sends it and what its success response carries.",
     ),
   ),
-  bz = m(() =>
+  bz = createLazyValue(() =>
     v(Hb(() => El()))
       .optional()
       .describe(
         "Permission requests still awaiting a response. Sent on the `initialize` response so a client joining an already-initialized session learns about in-flight prompts.",
       ),
   ),
-  Az = m(() =>
+  Az = createLazyValue(() =>
     v(Hb(() => El()))
       .optional()
       .describe(
         "request_user_dialog requests still awaiting a response. Sent on the `initialize` response (sibling of pending_permission_requests) so a client joining an already-initialized session can re-arm in-flight dialogs. Receivers must tolerate the same request_id also arriving as a live or replayed control_request frame and render it once.",
       ),
   ),
-  cle = m(() =>
+  cle = createLazyValue(() =>
     c({
       subtype: k("success"),
       request_id: s().describe(
@@ -23600,7 +23600,7 @@ var Gwe = m(() => [
       pending_user_dialog_requests: Az(),
     }).describe("The request was handled."),
   ),
-  ule = m(() =>
+  ule = createLazyValue(() =>
     c({
       subtype: k("error"),
       request_id: s().describe(
@@ -23613,12 +23613,12 @@ var Gwe = m(() => [
       "The request failed or was rejected (unknown subtype, invalid arguments, or an error while handling it).",
     ),
   ),
-  Sl = m(() =>
+  Sl = createLazyValue(() =>
     c({ type: k("control_response"), response: $e([cle(), ule()]) }).describe(
       "Envelope for the single reply to a control_request, sent by whichever side received the request.",
     ),
   ),
-  bl = m(() =>
+  bl = createLazyValue(() =>
     c({
       type: k("control_cancel_request"),
       request_id: s().describe(
@@ -23628,19 +23628,19 @@ var Gwe = m(() => [
       "Tells the other side that the sender no longer needs the answer to one of its own in-flight control_requests (for example a pending can_use_tool prompt after the turn was interrupted, or one that another client already answered). Either side may send it for a request it originated. The sender stops waiting at once and ignores any control_response that still arrives for that request_id; a receiver that can abort the work does so and may still reply (typically with an error), otherwise it simply completes the request. There is no reply to the cancel itself.",
     ),
   ),
-  yz = m(() =>
+  yz = createLazyValue(() =>
     c({ type: k("keep_alive") }).describe(
       "Liveness heartbeat with no payload. Either side may send it at any time (the CLI emits it periodically, for example while a long-running control request is in progress); receivers must ignore it.",
     ),
   ),
-  dle = m(() =>
+  dle = createLazyValue(() =>
     c({
       type: k("update_environment_variables"),
       variables: fe(s(), s()),
       request_id: s().optional(),
     }).describe("Updates environment variables at runtime."),
   ),
-  ple = m(() =>
+  ple = createLazyValue(() =>
     c({
       type: k("session_notice"),
       uuid: s(),
@@ -23660,7 +23660,7 @@ var Gwe = m(() => [
       "@internal Backend\u2192CLI: a server-composed coordination notice for a sealed helper session, delivered to the model over the Poll event channel as a provenance-attributed <event> envelope (never a user turn, never a synthetic message). The CLI acks processed only when the Poll delivery settles into the transcript; undelivered notices redeliver.",
     ),
   ),
-  fle = m(() =>
+  fle = createLazyValue(() =>
     c({
       type: k("queued_notification"),
       notification: c({
@@ -23684,17 +23684,17 @@ var Gwe = m(() => [
       "@internal Backend\u2192CLI: a trigger delivery (webhook activity, scheduled trigger, agent message) queued server-side instead of injected as a user turn. The CLI buffers it, nudges the model to call the ReadNotifications tool, and acks the event processed only when drained \u2014 an undrained event redelivers on resume.",
     ),
   ),
-  Vwe = m(() =>
+  Vwe = createLazyValue(() =>
     $e([Cf(), Tf(), bf(), Af(), vf(), Rf()]).describe(
       "Observational messages the agent loop emits \u2014 fire-and-forget, no reply expected. The remaining StdoutMessage members are control-protocol traffic (requests the loop originates and needs a reply to, responses to client-originated requests, keep-alives). This sub-union is the target for QueryEvent convergence so a Transport-shaped REPL can consume events without filtering control noise.",
     ),
   ),
-  Sor = m(() =>
+  Sor = createLazyValue(() =>
     $e([Cf(), Tf(), bf(), Af(), vf(), Sl(), El(), bl(), yz(), Rf()]).describe(
       "Everything the CLI writes to its output stream (stdout in stream-json mode): exactly one StdoutMessage per line, as a single JSON object. Besides the SDKMessage members this includes the control protocol - control requests the CLI originates, control responses to the client's requests, cancellations and keep-alives.",
     ),
   ),
-  Kwe = m(() =>
+  Kwe = createLazyValue(() =>
     $e([Ef(), JU(), El(), Sl(), bl(), yz(), dle(), fle(), ple()]).describe(
       "Everything a client may write to the CLI's input stream (stdin in stream-json input mode): exactly one StdinMessage per line, as a single JSON object - user messages that start turns, control requests the client originates, control responses answering the CLI's requests, cancellations and keep-alives. initialize is optional and normally the first line; the first user message initializes with defaults. An initialize that arrives later (e.g. from a client joining the session) is answered with the current state: the one-time session setup (e.g. system prompt, agents, skills, supportedDialogKinds) is not re-applied, but title, sdkMcpServers and agentProgressSummaries are still processed on every initialize, and hooks sent by the process that owns this stream replace the earlier set (see hooks_applied on the response). Closing the stream tells the CLI to finish the current turn and exit.",
     ),
@@ -23761,7 +23761,7 @@ async function axiosGetWithRetry(e, t) {
       (n(
         `Teleport request failed (attempt ${o + 1}/${Bg + 1}), retrying in ${p}ms: ${l(d)}`,
       ),
-        await Z(p));
+        await sleep(p));
     }
   throw r;
 }
@@ -23824,7 +23824,7 @@ function Ele(e, t = {}) {
     startup_failure: hle(e, t.serverNow ?? Date.now()),
   };
 }
-var bPe = m(() =>
+var bPe = createLazyValue(() =>
   c({
     id: s(),
     title: s(),
@@ -24134,7 +24134,7 @@ async function markSessionRead(e, t) {
     n(`[markSessionRead] Error: ${l(r)}`);
   }
 }
-var ble = m(() =>
+var ble = createLazyValue(() =>
     it({
       subtype: k("can_use_tool"),
       tool_name: s(),
@@ -24146,7 +24146,7 @@ var ble = m(() =>
       matched_ask_rule: se().optional(),
     }),
   ),
-  Ale = m(() =>
+  Ale = createLazyValue(() =>
     Ko("type", [
       c({ type: k("control_request"), request_id: s(), request: ble() }),
       Sl(),
@@ -24698,7 +24698,7 @@ async function Por() {
   if (r.length === 0) {
     ((jt().officialUrls = new Set()),
       logFeatureOk("mcp_registry_fetch"),
-      i("tengu_mcp_registry_fetch", {
+      logEvent("tengu_mcp_registry_fetch", {
         source: t,
         success: !0,
         url_count: 0,
@@ -24715,7 +24715,7 @@ async function Por() {
         `[mcp-registry] Loaded ${d.size} official MCP URLs (${e ? "bff" : "legacy"})`,
       ),
       logFeatureOk("mcp_registry_fetch"),
-      i("tengu_mcp_registry_fetch", {
+      logEvent("tengu_mcp_registry_fetch", {
         source: t,
         success: !0,
         url_count: d.size,
@@ -24724,7 +24724,7 @@ async function Por() {
   } catch (d) {
     (n(`Failed to fetch MCP registry: ${l(d)}`, { level: "error" }),
       logFeatureSad("mcp_registry_fetch", "fetch_failed"),
-      i("tengu_mcp_registry_fetch", {
+      logEvent("tengu_mcp_registry_fetch", {
         source: t,
         success: !1,
         url_count: 0,
@@ -24819,7 +24819,7 @@ var UCt = {
   saveToDisk: !1,
 };
 function lq(e) {
-  return rn(e) === s0;
+  return normalizeMcpName(e) === s0;
 }
 var Hz = [
   "request_access",
@@ -24986,7 +24986,7 @@ var CUe = new Set(["Claude Preview", "Claude Browser"]),
   For = [...jz, ...Wz];
 function $z(e, t) {
   if (e?.serverName !== Yle) return !1;
-  let r = rn(e.toolName);
+  let r = normalizeMcpName(e.toolName);
   return t.some((o) => r.startsWith(o));
 }
 function qle(e) {
@@ -25095,8 +25095,8 @@ function ZN(e) {
 function Xz(e, t) {
   return ZN(t) && (isClaudeInChromeMCPServer(e) || lq(e));
 }
-var oce = new Set(tir.map((e) => rn(e))),
-  ice = new Set(Hz.map((e) => rn(e))),
+var oce = new Set(tir.map((e) => normalizeMcpName(e))),
+  ice = new Set(Hz.map((e) => normalizeMcpName(e))),
   sce = [
     "list_devices",
     "get_device_info",
@@ -25119,7 +25119,7 @@ var oce = new Set(tir.map((e) => rn(e))),
     "project_memory_read",
     "project_memory_write",
   ],
-  ace = new Set(sce.map((e) => rn(e))),
+  ace = new Set(sce.map((e) => normalizeMcpName(e))),
   lce = new Set([
     "remote_cowork",
     "remote_cowork_trigger",
@@ -25506,20 +25506,20 @@ function tge(e) {
   return typeof e !== "string" || l0(e);
 }
 function iRe(e, t) {
-  return e.name === fs && t !== void 0 && e.agentId === t;
+  return e.name === TEAM_LEAD_AGENT_NAME && t !== void 0 && e.agentId === t;
 }
 function SU(e) {
   let t = e.teamContext;
   if (t?.leadAgentId && t.isLeader !== !1) return t.leadAgentId;
   let r = getTeamName(t);
-  return r ? ix(fs, r) : void 0;
+  return r ? ix(TEAM_LEAD_AGENT_NAME, r) : void 0;
 }
 function nge(e, t) {
   return e.members.filter((r) => iRe(r, t) || !tge(r.name));
 }
 function l0(e) {
   let t = slugify(e);
-  return t === cp || t === fs || parseShortId(t) !== null;
+  return t === MAIN_CONVERSATION_NAME || t === TEAM_LEAD_AGENT_NAME || parseShortId(t) !== null;
 }
 var Ml = 6,
   Zvn = 12,
@@ -25532,7 +25532,7 @@ function jD(e) {
 function bP(e, t) {
   let r = [];
   r.push({
-    name: cp,
+    name: MAIN_CONVERSATION_NAME,
     id: ze(),
     kind: "main",
     where: "in-process",
@@ -25641,7 +25641,7 @@ function bP(e, t) {
           (L.kind === "session" ||
             L.kind === "cloud-session" ||
             L.kind === "bridge-session") &&
-          slugify(U) === cp;
+          slugify(U) === MAIN_CONVERSATION_NAME;
       return F || V || !tge(U) ? [{ ...L, name: U }] : [];
     }),
     D = new Set(),
@@ -25750,7 +25750,7 @@ function Ice(e) {
   let t = e.map((_) => Pl(_.kind, _.id)),
     r = udsEnv.CLAUDE_CODE_MESSAGING_SOCKET,
     o = r === void 0 ? [] : [Pl("session", r)],
-    d = Y([...t, ...o]).sort(),
+    d = dedupe([...t, ...o]).sort(),
     p = new Map();
   for (let _ = 0; _ < d.length; _++) {
     let E = d[_],
@@ -25867,7 +25867,7 @@ var mF = "auth",
   Zg = 16,
   Kce = /^[0-9a-f]{32}$/,
   Dl = 4096,
-  _F = m(() =>
+  _F = createLazyValue(() =>
     c({
       peerToken: s().regex(Kce),
       procStart: s().optional(),
@@ -25907,7 +25907,7 @@ function EF(e, t) {
   return `${e}.${r}.key`;
 }
 async function Gor(e, t, r, { sweepPermitted: o }) {
-  if (M() && r !== void 0) return jce(r, e, t);
+  if (isHoverRestEnabled() && r !== void 0) return jce(r, e, t);
   let d = e1();
   (await Bce(d, { recursive: !0, mode: 448 }), await Wce(d, o));
   let p = go(d, EF(process.pid, e));
@@ -25978,7 +25978,7 @@ async function Wce(e, t) {
   );
 }
 async function qor(e, t) {
-  if (M() && t !== void 0) {
+  if (isHoverRestEnabled() && t !== void 0) {
     try {
       await t.delete(Ce.session(Hce(e)));
     } catch {}
@@ -25991,7 +25991,7 @@ async function qor(e, t) {
 async function zor(e, t, r) {
   let o = e1(),
     d;
-  if (M() && t !== void 0) {
+  if (isHoverRestEnabled() && t !== void 0) {
     let D = await Il(t, { partialOnCap: !1 });
     if (D === void 0) return { kind: "unusable" };
     d = D;
@@ -26013,7 +26013,7 @@ async function zor(e, t, r) {
       .filter((D) => D !== void 0);
   if (E.length === 0) return { kind: "no-key" };
   let C = async (D) => {
-    let x = M() && t !== void 0 ? await $ce(t, D) : await Wi(go(o, D), Dl);
+    let x = isHoverRestEnabled() && t !== void 0 ? await $ce(t, D) : await Wi(go(o, D), Dl);
     if (x === null) return;
     try {
       let N = _F().safeParse(Is(x));
@@ -26179,7 +26179,7 @@ function iue() {
 function sue() {
   return [NOTIFY_IDLE_PEER_FEATURE, ...(iue() ? [Jg] : []), ARTIFACT_YIELD_PEER_FEATURE];
 }
-var tm = m(() =>
+var tm = createLazyValue(() =>
   nt({
     pid: Zt(),
     sessionId: le(),
@@ -26588,7 +26588,7 @@ async function uue(e) {
 async function MF(e) {
   let t = getBgJobDir();
   if (!t) return !1;
-  if (M() && e !== void 0) {
+  if (isHoverRestEnabled() && e !== void 0) {
     let r = SKt(t, ["state.json"]);
     if (r !== void 0)
       try {
@@ -26660,7 +26660,7 @@ function gue(e) {
   return P() === "windows" && e !== void 0 && e.startsWith("/");
 }
 async function reapKeysOfReapedRecord(e, t, r, o) {
-  if (M() && o !== void 0) {
+  if (isHoverRestEnabled() && o !== void 0) {
     let p = await IF(o);
     if (p === void 0) return;
     await vF(p, e, t, r, (_) =>
@@ -26762,7 +26762,7 @@ async function countConcurrentSessions(e) {
             .catch(() => null),
       L = G?.success ? G.data : null;
     if (L === null) {
-      await Z(EKt);
+      await sleep(EKt);
       let V = e
         ? await AF(e, D)
         : await Wi(N, IRe)
@@ -26799,7 +26799,7 @@ async function countConcurrentSessions(e) {
       (n(
         `Prior session exited uncleanly: ${L.sessionId} (v${L.version ?? "?"})`,
       ),
-        i("tengu_unclean_exit", {
+        logEvent("tengu_unclean_exit", {
           session_age_sec: Math.round((Date.now() - L.startedAt) / 1000),
           prior_version: Ms(L.version),
           on_current_version:
@@ -26864,10 +26864,10 @@ function rx(e) {
 function y5(e) {
   return e?.type === "remote-agent" || e?.type === "plugin";
 }
-var iQ = Kr({
+var iQ = defineDialog({
   kind: "permission_prompt",
-  payload: m(() =>
-    xp(
+  payload: createLazyValue(() =>
+    customSchema(
       (e) =>
         typeof e === "object" &&
         e !== null &&
@@ -26876,8 +26876,8 @@ var iQ = Kr({
         "permissionResult" in e,
     ),
   ),
-  result: m(() =>
-    xp((e) => typeof e === "object" && e !== null && "behavior" in e),
+  result: createLazyValue(() =>
+    customSchema((e) => typeof e === "object" && e !== null && "behavior" in e),
   ),
   default: { behavior: "cancelled" },
 });
@@ -27071,7 +27071,7 @@ function oy(e, t) {
     return xF(void 0, void 0);
   }
   if (Xz(e, t)) return !0;
-  if ("url" in t && VZe(t.url) && rn(e) === Rp) return !0;
+  if ("url" in t && VZe(t.url) && normalizeMcpName(e) === Rp) return !0;
   return xF(t.type, DRe(t));
 }
 function A6(e, t) {
@@ -27087,7 +27087,7 @@ function uQ(e, t, r) {
   if (!r) return;
   let o = QQe(e);
   if (o === void 0) return fromSanitizer_SANITIZER_OUTPUT_ONLY(t);
-  let d = rn(t);
+  let d = normalizeMcpName(t);
   return o.has(d) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(d) : void 0;
 }
 function cRe(e) {
@@ -27281,7 +27281,7 @@ function PKt(e) {
 }
 var Oue = "mcp__cowork__present_files";
 function Ii(e) {
-  i("tengu_file_activity", {
+  logEvent("tengu_file_activity", {
     messageID: e.messageID,
     activity: fromEnum(e.activity),
     fileExtension: e.fileExtension,
@@ -27824,7 +27824,7 @@ class gm {
     }
   }
   currentBatch() {
-    return M() && this.storageV5 !== void 0
+    return isHoverRestEnabled() && this.storageV5 !== void 0
       ? {
           kind: "stream",
           storageV5: this.storageV5,
@@ -27939,7 +27939,7 @@ class gm {
       );
   }
   async retryPreviousBatches() {
-    if (M() && this.storageV5 !== void 0)
+    if (isHoverRestEnabled() && this.storageV5 !== void 0)
       try {
         return await this.retryPreviousBatchesV5(this.storageV5);
       } catch (e) {
@@ -28158,7 +28158,7 @@ class gm {
         for (let C = p; C < r.length; C++) o.push(...r[C]);
         break;
       }
-      if (p < r.length - 1 && this.batchDelayMs > 0) await Z(this.batchDelayMs);
+      if (p < r.length - 1 && this.batchDelayMs > 0) await sleep(this.batchDelayMs);
     }
     if (o.length > 0 && d) this.lastExportErrorContext = d;
     return o;
@@ -28259,7 +28259,7 @@ class gm {
     if (!e || !isOAuthTokenExpired(e.expiresAt)) return;
     if (this.refreshAttemptedFor === e.accessToken) {
       if (this.inflightRefresh)
-        await kt(this.inflightRefresh, this.oauthRefreshTimeoutMs);
+        await withDeadline(this.inflightRefresh, this.oauthRefreshTimeoutMs);
       return;
     }
     this.refreshAttemptedFor = e.accessToken;
@@ -28276,7 +28276,7 @@ class gm {
       .finally(() => {
         if (this.inflightRefresh === t) this.inflightRefresh = null;
       });
-    ((this.inflightRefresh = t), await kt(t, this.oauthRefreshTimeoutMs));
+    ((this.inflightRefresh = t), await withDeadline(t, this.oauthRefreshTimeoutMs));
   }
   shouldSkipAuthForSend(e) {
     if (this.skipAuth || !e) return !0;
@@ -28342,7 +28342,7 @@ class gm {
     if (!d && !this.isShutdown && !this.finalFlush && isActualFirstPartyAnthropicBaseUrl() && !isClaudeAISubscriber() && isApiKeyHelperTheActiveCredential()) {
       let x = getColdApiKeyHelperRun();
       if (x)
-        await kt(
+        await withDeadline(
           Promise.race([x.catch(() => null), this.finalFlushSignal]),
           this.keyHelperJoinTimeoutMs,
         );
@@ -28445,7 +28445,7 @@ class gm {
           _PROTO_git_remote_url: ce,
           ..._e
         } = N.additional,
-        Be = V2e(_e);
+        Be = stripProtoFields(_e);
       if (r) Be = sp(Be, C);
       d({
         event_id: E.event_id,
@@ -28486,7 +28486,7 @@ class gm {
       this.signalFinalFlush(),
       this.inflightRefresh && e > 0)
     )
-      await kt(this.inflightRefresh, e);
+      await withDeadline(this.inflightRefresh, e);
   }
   async shutdown() {
     ((this.isShutdown = !0), this.resetBackoff(), await this.forceFlush());
@@ -28815,7 +28815,7 @@ function ft() {
       logExposure: (t) => csr(t),
       fetchRemoteEvalFromSdk: ede,
       getRefreshCadence: () => ide(),
-      sleep: (t, r, o) => Z(t, r, o),
+      sleep: (t, r, o) => sleep(t, r, o),
     });
   return e.client;
 }
@@ -28933,7 +28933,7 @@ function H(e, t) {
   return $f(e, t).value;
 }
 function vU(e, t) {
-  let r = (Ei().pinnedFeatureValues ??= new Map());
+  let r = (getSessionFeatureCache().pinnedFeatureValues ??= new Map());
   if (!r.has(e)) r.set(e, H(e, t));
   return r.get(e);
 }
@@ -29022,7 +29022,7 @@ bh(() => H(Sh, !1));
 function HZe(e) {
   return null;
 }
-var kze = m(() => c({ root: s(), primary: s().nullish() }));
+var kze = createLazyValue(() => c({ root: s(), primary: s().nullish() }));
 async function oB(e) {
   return null;
 }
@@ -29331,7 +29331,7 @@ class Em {
   enablePromise = null;
   reloadThroughStorageOwed = !1;
   reloadThroughStoragePromise = null;
-  writeQueues = Dm();
+  writeQueues = createKeyedSerialQueue();
   pendingWriteCounts = new Map();
   pendingExternalRefresh = null;
   freshnessWatcherStarted = !1;
@@ -29911,7 +29911,7 @@ function wde(e) {
     if (!W(r)) return "tracked";
   }
   try {
-    let r = Ae("child_process"),
+    let r = importMetaRequire("child_process"),
       d = import.meta
         .require("../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js")
         .resolveExecutableSafely("git");
@@ -30131,7 +30131,7 @@ async function Nde(e) {
 }
 async function zi(e, t) {
   let r = Q(),
-    o = M() && t !== void 0 ? await Nde(t) : await Om(getGlobalClaudeFile(), Ye),
+    o = isHoverRestEnabled() && t !== void 0 ? await Nde(t) : await Om(getGlobalClaudeFile(), Ye),
     d = r.lastGetConfigOutcome === "read-error";
   if (
     r.lastGetConfigOutcome === "parse-error" ||
@@ -30185,7 +30185,7 @@ function uc(e) {
   return r;
 }
 function dc(e, t) {
-  if (!(M() && Q().unhandedWritesInMemory) || e !== void 0) return !1;
+  if (!(isHoverRestEnabled() && Q().unhandedWritesInMemory) || e !== void 0) return !1;
   return (
     logFeatureSad("storage_v5_backend", "unhanded_config_writer"),
     n(
@@ -30272,7 +30272,7 @@ async function Lde(e, t, r, o) {
             "saveGlobalConfig fallback: re-read config is missing auth that cache has; refusing to write. See GH #3117.",
             { level: "error" },
           ),
-          i("tengu_config_auth_loss_prevented", {}),
+          logEvent("tengu_config_auth_loss_prevented", {}),
           !1
         );
     }
@@ -30283,7 +30283,7 @@ function Ude() {
   let { hits: e, misses: t } = Q().takeCacheStats(),
     r = e + t;
   if (r > 0)
-    i("tengu_config_cache_stats", {
+    logEvent("tengu_config_cache_stats", {
       cache_hits: e,
       cache_misses: t,
       hit_rate: e / r,
@@ -30398,14 +30398,14 @@ function OB() {
     }));
 }
 function _o() {
-  return M() && !Q().fileWatchFallback;
+  return isHoverRestEnabled() && !Q().fileWatchFallback;
 }
 function zde() {
   (n(
     "Not watching ~/.claude.json for other processes: the fs.watchFile fallback is off for this process",
     { level: "warn" },
   ),
-    q("warn", "global_config_unwatched"));
+    writeDiagnosticsEvent("warn", "global_config_unwatched"));
 }
 async function Cm(e) {
   let t = Q(),
@@ -30416,7 +30416,7 @@ async function Cm(e) {
   } catch {
     return;
   }
-  if (M() && t.freshnessBackend !== void 0 && !t.freshnessWatcherStarted)
+  if (isHoverRestEnabled() && t.freshnessBackend !== void 0 && !t.freshnessWatcherStarted)
     return;
   kB(r, o, e, e);
 }
@@ -30434,7 +30434,7 @@ function kB(e, t, r, o) {
 async function wB() {
   let e = getGlobalClaudeFile(),
     t = Q().freshnessBackend;
-  if (M() && t !== void 0) {
+  if (isHoverRestEnabled() && t !== void 0) {
     let o = await t.readText([Ce.globalConfig()]);
     if (!o.ok) return;
     let d = o.value.items[0];
@@ -30461,7 +30461,7 @@ async function NR(e) {
     if (t.freshnessBackend !== void 0) Fde();
     return;
   }
-  if (M() && t.freshnessBackend === void 0 && t.freshnessWatcherStarted) {
+  if (isHoverRestEnabled() && t.freshnessBackend === void 0 && t.freshnessWatcherStarted) {
     t.setFreshnessBackend(e);
     let r = await pc(e);
     if (t.freshnessBackend !== e) {
@@ -30524,7 +30524,7 @@ function oc() {
 function PB(e) {
   let t = Q(),
     r = t.freshnessBackend;
-  if (!M() || r === void 0) return;
+  if (!isHoverRestEnabled() || r === void 0) return;
   if (!e.ok) {
     if (Yhe()) return;
     if (
@@ -30589,7 +30589,7 @@ async function sy(e) {
   if (En()) return Q().testGlobalConfig.oauthAccount;
   try {
     let t;
-    if (M() && e !== void 0) {
+    if (isHoverRestEnabled() && e !== void 0) {
       let d = await e.readText([Ce.globalConfig()]),
         p = d.ok ? d.value.items[0] : void 0;
       if (!p?.found) return;
@@ -30681,7 +30681,7 @@ async function Om(e, t, r) {
     p = o.lastGetConfigOutcome;
   for (let _ of nmr) {
     if (p !== "read-error") break;
-    (await Z(_), (d = await Tm(e, t, r)), (p = o.lastGetConfigOutcome));
+    (await sleep(_), (d = await Tm(e, t, r)), (p = o.lastGetConfigOutcome));
   }
   return d;
 }
@@ -30694,7 +30694,7 @@ function fc(e, t = !1) {
     `Config lock still held by a live process after retries; skipping the unlocked fallback write (${e}) to avoid clobbering the lock holder${t ? " and re-enqueueing it through the locked path" : ""}. See gh-73364.`,
     { level: "error" },
   ),
-    i("tengu_config_fallback_skipped_contention", {
+    logEvent("tengu_config_fallback_skipped_contention", {
       caller: fromEnum(e),
       reenqueued: t,
     }));
@@ -30704,14 +30704,14 @@ function gc(e) {
     `Config re-read was rejected (disk unreadable); suppressing the unlocked fallback write (${e}) \u2014 a memory-derived base may not be written without the lock. See the decision table at GetConfigOutcome.`,
     { level: "error" },
   ),
-    i("tengu_config_fallback_suppressed_unreadable", { caller: fromEnum(e) }));
+    logEvent("tengu_config_fallback_suppressed_unreadable", { caller: fromEnum(e) }));
 }
 async function _c(e, t, r) {
   Bi(e);
   let o = !1;
   try {
     let d = ea(e, (p, _) => b(p) !== b(VD[_]));
-    if (M() && r !== void 0) {
+    if (isHoverRestEnabled() && r !== void 0) {
       await ae().mkdir(Ql(getGlobalClaudeFile()));
       let p = await r.write(Ce.globalConfig(), b(d, null, 2), {
         publishDiscipline: "followAtomic",
@@ -30738,12 +30738,12 @@ async function _c(e, t, r) {
       { level: "error" },
     );
   }
-  return (i("tengu_config_fallback_write", { caller: fromEnum(t), disk_ok: o }), o);
+  return (logEvent("tengu_config_fallback_write", { caller: fromEnum(t), disk_ok: o }), o);
 }
 var MB = 60000,
   IB = 5;
 async function Sc(e, t, r) {
-  if (M() && r !== void 0) {
+  if (isHoverRestEnabled() && r !== void 0) {
     let d = await Vde(r.backend, r.replaced, t).catch((p) => String(p));
     if (d !== void 0) n(`Failed to backup config: ${d}`, { level: "error" });
     return;
@@ -30842,7 +30842,7 @@ async function NB(e) {
 }
 async function Hi(e, t, r, o, d, p) {
   let _ = Q();
-  if (M() && p !== void 0 && e === getGlobalClaudeFile()) return $de(p, e, t, r, o);
+  if (isHoverRestEnabled() && p !== void 0 && e === getGlobalClaudeFile()) return $de(p, e, t, r, o);
   let E = t(),
     C = Ql(e),
     I = ae();
@@ -30864,14 +30864,14 @@ async function Hi(e, t, r, o, d, p) {
       } catch (ce) {
         let _e = d?.lockRetrySignal;
         if (!Gn(ce) || re >= Ysr.length || _e?.aborted) throw ce;
-        await Z(Ysr[re] * (1 + Math.random()), _e);
+        await sleep(Ysr[re] * (1 + Math.random()), _e);
       }
     let G = Date.now() - N;
     if (G > 100)
       (n(
         "Lock acquisition took longer than expected - another Claude instance may be running",
       ),
-        i("tengu_config_lock_contention", { lock_time_ms: G }));
+        logEvent("tengu_config_lock_contention", { lock_time_ms: G }));
     if (_.lastReadFileStats && e === getGlobalClaudeFile())
       try {
         let re = await I.stat(e);
@@ -30879,7 +30879,7 @@ async function Hi(e, t, r, o, d, p) {
           re.mtimeMs !== _.lastReadFileStats.mtime ||
           re.size !== _.lastReadFileStats.size
         )
-          i("tengu_config_stale_write", {
+          logEvent("tengu_config_stale_write", {
             read_mtime: _.lastReadFileStats.mtime,
             write_mtime: re.mtimeMs,
             read_size: _.lastReadFileStats.size,
@@ -30903,7 +30903,7 @@ async function Hi(e, t, r, o, d, p) {
           "saveConfigWithLock: re-read hit a parse error; auto-repairing from cached config under lock. See GH #3117.",
           { level: "error" },
         ),
-          i("tengu_config_auto_repaired", {
+          logEvent("tengu_config_auto_repaired", {
             file_size_before: _e,
             had_cached_auth:
               _.cache.config?.oauthAccount !== void 0 ||
@@ -30933,7 +30933,7 @@ async function Hi(e, t, r, o, d, p) {
               "saveConfigWithLock: under-lock re-read was rejected and no re-base exists; refusing to write. See GH #3117.",
               { level: "error" },
             ),
-            i("tengu_config_auth_loss_prevented", {}),
+            logEvent("tengu_config_auth_loss_prevented", {}),
             !1
           );
         (n(
@@ -30947,7 +30947,7 @@ async function Hi(e, t, r, o, d, p) {
             "saveConfigWithLock: re-read config is missing auth that cache has; refusing to write to avoid wiping ~/.claude.json. See GH #3117.",
             { level: "error" },
           ),
-          i("tengu_config_auth_loss_prevented", {}),
+          logEvent("tengu_config_auth_loss_prevented", {}),
           !1
         );
     }
@@ -31028,7 +31028,7 @@ async function km(e, t, r, o = !1) {
         setImmediate(
           (_, E) => {
             try {
-              i("tengu_config_parse_error", {
+              logEvent("tengu_config_parse_error", {
                 file_size: _,
                 had_cached_auth: !1,
                 has_timestamped_backup: E,
@@ -31044,7 +31044,7 @@ async function km(e, t, r, o = !1) {
       d.setInsideParseErrorTelemetry(!0);
       try {
         let _ = d.cache.config;
-        i("tengu_config_parse_error", {
+        logEvent("tengu_config_parse_error", {
           file_size: r.text.length,
           had_cached_auth:
             _?.oauthAccount !== void 0 || _?.hasCompletedOnboarding === !0,
@@ -31078,7 +31078,7 @@ async function $de(e, t, r, o, d) {
               Ze = U.value.byteLength;
             if (U.mtimeMs !== xe.mtime || Ze !== xe.size)
               F.push(() =>
-                i("tengu_config_stale_write", {
+                logEvent("tengu_config_stale_write", {
                   read_mtime: xe.mtime,
                   write_mtime: U.mtimeMs,
                   read_size: xe.size,
@@ -31120,7 +31120,7 @@ async function $de(e, t, r, o, d) {
                 "saveConfigWithLock: re-read hit a parse error; auto-repairing from cached config under lock. See GH #3117.",
                 { level: "error" },
               ),
-                i("tengu_config_auto_repaired", {
+                logEvent("tengu_config_auto_repaired", {
                   file_size_before: xe,
                   had_cached_auth:
                     p.cache.config?.oauthAccount !== void 0 ||
@@ -31172,7 +31172,7 @@ async function $de(e, t, r, o, d) {
                     "saveConfigWithLock: re-read config is missing auth that cache has; refusing to write to avoid wiping ~/.claude.json. See GH #3117.",
                     { level: "error" },
                   ),
-                    i("tengu_config_auth_loss_prevented", {}));
+                    logEvent("tengu_config_auth_loss_prevented", {}));
                 }),
                 {
                   skip: !0,
@@ -31216,7 +31216,7 @@ async function $de(e, t, r, o, d) {
       (D.error.telemetryCode === "LockContended" ||
         D.error.telemetryCode === "LockSuspect")
     )
-      i("tengu_config_lock_contention", { lock_time_ms: x });
+      logEvent("tengu_config_lock_contention", { lock_time_ms: x });
     throw Error("Config update through storage failed", { cause: We(D.error) });
   }
   let N = D.value.result;
@@ -31291,7 +31291,7 @@ function ac(e) {
 function ARe(e, t) {
   let r = Q(),
     o = r.enable(() => qde(e, t));
-  if (!M() || e === void 0) return o;
+  if (!isHoverRestEnabled() || e === void 0) return o;
   return o.then(() => r.reloadThroughStorageOnce(() => Yde(e)));
 }
 function Yde(e) {
@@ -31338,16 +31338,16 @@ async function qde(e, t) {
   let r = Q(),
     o = Date.now();
   if (
-    (q("info", "enable_configs_started"),
+    (writeDiagnosticsEvent("info", "enable_configs_started"),
     e !== void 0 && t?.fileWatchFallback === !1)
   )
     r.setFileWatchFallback(!1);
-  if (M() && e !== void 0 && t?.writersWithoutBackend === "memory")
+  if (isHoverRestEnabled() && e !== void 0 && t?.writersWithoutBackend === "memory")
     r.setUnhandedWritesInMemory(!0);
   let d = getGlobalClaudeFile();
   r.allowReading();
   try {
-    let p = M() && e !== void 0 ? await wm(e, d) : null;
+    let p = isHoverRestEnabled() && e !== void 0 ? await wm(e, d) : null;
     if (p && e !== void 0) {
       let _ = Ui(p.config);
       (r.installDiskRead(_, p.stats), r.setLoadedVersion(p.version), ac(e));
@@ -31366,7 +31366,7 @@ async function qde(e, t) {
   } finally {
     r.markEnableSettled();
   }
-  q("info", "enable_configs_completed", { duration_ms: Date.now() - o });
+  writeDiagnosticsEvent("info", "enable_configs_completed", { duration_ms: Date.now() - o });
 }
 function Tc() {
   return Ve(be(), "backups");
@@ -31407,7 +31407,7 @@ async function mo(e, t) {
   let r = ae(),
     o = lc(e),
     d = Tc();
-  if (M() && t !== void 0) {
+  if (isHoverRestEnabled() && t !== void 0) {
     let _ = await NB(t).catch(() => {
         return;
       }),
@@ -31515,7 +31515,7 @@ async function Tm(e, t, r) {
           setImmediate(
             (I, D) => {
               try {
-                i("tengu_config_parse_error", {
+                logEvent("tengu_config_parse_error", {
                   file_size: I,
                   had_cached_auth: !1,
                   has_timestamped_backup: D,
@@ -31531,7 +31531,7 @@ async function Tm(e, t, r) {
         o.setInsideParseErrorTelemetry(!0);
         try {
           let I = e === getGlobalClaudeFile() ? o.cache.config : null;
-          i("tengu_config_parse_error", {
+          logEvent("tengu_config_parse_error", {
             file_size: E,
             had_cached_auth:
               I?.oauthAccount !== void 0 || I?.hasCompletedOnboarding === !0,
@@ -31630,7 +31630,7 @@ async function GB(e, t, r, o, d) {
       if (vB(N, G)) {
         let L = Dde(N, G) ? emr[d] : void 0;
         if ((fc("save_project", L !== void 0), L !== void 0))
-          Z(L, void 0, { unref: !0 })
+          sleep(L, void 0, { unref: !0 })
             .then(() => {
               if (p.gracefulExitStampedProjects.has(t)) return;
               let U = p.cache.config;
@@ -31660,7 +31660,7 @@ async function GB(e, t, r, o, d) {
           "saveCurrentProjectConfig fallback: re-read config is missing auth that cache has; refusing to write. See GH #3117.",
           { level: "error" },
         ),
-          i("tengu_config_auth_loss_prevented", {}));
+          logEvent("tengu_config_auth_loss_prevented", {}));
         return;
       }
     }
@@ -31678,7 +31678,7 @@ function QUe(e) {
     if (r !== t.testProjectConfig) t.overwriteTestProjectConfig(r);
     return;
   }
-  if (M() && t.unhandedWritesInMemory) return;
+  if (isHoverRestEnabled() && t.unhandedWritesInMemory) return;
   try {
     let r = getGlobalClaudeFile(),
       o = JUe(),
@@ -31706,7 +31706,7 @@ function NZe(e) {
     if (r !== t.testGlobalConfig) t.overwriteTestGlobalConfig(r);
     return;
   }
-  if (M() && t.unhandedWritesInMemory) return;
+  if (isHoverRestEnabled() && t.unhandedWritesInMemory) return;
   try {
     let r = getGlobalClaudeFile(),
       o = null;
@@ -31778,7 +31778,7 @@ async function Xde(e, t, r) {
             "deleteProjectConfig fallback: re-read config is missing auth that cache has; refusing to write. See GH #3117.",
             { level: "error" },
           ),
-          i("tengu_config_auth_loss_prevented", {}),
+          logEvent("tengu_config_auth_loss_prevented", {}),
           !1
         );
     if (!C.projects?.[e]) return !0;
@@ -31856,7 +31856,7 @@ async function KB(e, t) {
             "deleteCurrentProjectConfigFields fallback: re-read config is missing auth that cache has; refusing to write. See GH #3117.",
             { level: "error" },
           ),
-          i("tengu_config_auth_loss_prevented", {}),
+          logEvent("tengu_config_auth_loss_prevented", {}),
           !1
         );
     let x = D.projects?.[o];
@@ -32721,7 +32721,7 @@ function usr(e, t) {
   let o = t?.componentStack;
   (async () => {
     try {
-      (await qs("tengu_uncaught_exception", {
+      (await logEventAsync("tengu_uncaught_exception", {
         error_name: r,
         ...lm(e),
         source: S("react_render"),
@@ -32731,7 +32731,7 @@ function usr(e, t) {
     } catch {}
   })();
 }
-var ype = m(() =>
+var ype = createLazyValue(() =>
   nt({
     account: nt({ uuid: le(), email: le() }).passthrough(),
     organization: nt({ uuid: le() }).passthrough(),
@@ -32911,7 +32911,7 @@ async function exchangeCodeForTokens(
       )
     );
   return (
-    i("tengu_oauth_token_exchange_success", {}),
+    logEvent("tengu_oauth_token_exchange_success", {}),
     logFeatureOk("oauth_token_exchange"),
     C.data
   );
@@ -32947,7 +32947,7 @@ async function refreshOAuthToken(
       L = Date.now() + G * 1000,
       U = resolveRefreshTokenExpiresAt(D.refresh_token_expires_in, !1),
       F = parseScopes(D.scope);
-    (i("tengu_oauth_token_refresh_success", {}), logFeatureOk("oauth_token_refresh"));
+    (logEvent("tengu_oauth_token_refresh_success", {}), logFeatureOk("oauth_token_refresh"));
     let V = ee(),
       te = d ? null : getClaudeAIOAuthTokens(),
       re =
@@ -33006,7 +33006,7 @@ async function refreshOAuthToken(
     };
   } catch (I) {
     if (
-      (i("tengu_oauth_token_refresh_failure", {
+      (logEvent("tengu_oauth_token_refresh_failure", {
         ...lm(I),
         ...extractOAuthErrorFields(I),
         ...(_ && { context: fromEnum(_) }),
@@ -33069,7 +33069,7 @@ async function fetchAndStoreUserRoles(e, t) {
     }),
     t,
   ),
-    i("tengu_oauth_roles_stored", {
+    logEvent("tengu_oauth_roles_stored", {
       org_role: o.organization_role == null ? void 0 : Ub(o.organization_role),
     }),
     logFeatureOk("oauth_fetch_roles"));
@@ -33083,7 +33083,7 @@ async function createAndStoreApiKey(e, t) {
     if (o)
       return (
         await saveApiKey(o, t),
-        i("tengu_oauth_api_key", {
+        logEvent("tengu_oauth_api_key", {
           status: S("success"),
           statusCode: r.status,
         }),
@@ -33093,7 +33093,7 @@ async function createAndStoreApiKey(e, t) {
     return (logFeatureBad("oauth_create_api_key", "oauth_api_key_empty_response"), null);
   } catch (r) {
     throw (
-      i("tengu_oauth_api_key", { status: S("failure"), ...lm(r) }),
+      logEvent("tengu_oauth_api_key", { status: S("failure"), ...lm(r) }),
       logFeatureBad("oauth_create_api_key", "oauth_api_key_request_failed"),
       r
     );
@@ -33129,7 +33129,7 @@ async function fetchProfileInfo(e) {
   if (t?.account?.created_at) d.accountCreatedAt = t.account.created_at;
   if (t?.organization?.subscription_created_at)
     d.subscriptionCreatedAt = t.organization.subscription_created_at;
-  return (i("tengu_oauth_profile_fetch_success", {}), { ...d, rawProfile: t });
+  return (logEvent("tengu_oauth_profile_fetch_success", {}), { ...d, rawProfile: t });
 }
 async function getOrganizationUUID() {
   let e = a.CLAUDE_CODE_ORGANIZATION_UUID;
@@ -33426,7 +33426,7 @@ async function h0() {
       region: r,
       ...(await getAWSClientProxyConfig({ url: resolveStsEndpointForProxyUrl(r), region: r, requestTimeoutMs: g0 })),
     });
-  await Dt(o.send(new t({})), HCt(), "AWS STS");
+  await withTimeout(o.send(new t({})), HCt(), "AWS STS");
 }
 async function E0() {
   try {
@@ -33443,7 +33443,7 @@ async function E0() {
           parentClientConfig: { requestHandler: r, region: t },
         }),
       });
-    (await Dt(o(), HCt(), "AWS ini cache refresh"),
+    (await withTimeout(o(), HCt(), "AWS ini cache refresh"),
       n("AWS credential provider cache refreshed"));
   } catch (e) {
     n(`Failed to refresh AWS credential cache: ${l(e)}`);
@@ -33550,7 +33550,7 @@ async function gsr(e) {
       C =
         isIPv4(E) || isIPv6(E)
           ? [E]
-          : (await Dt(lookup(E, { all: !0 }), 1e4, "DNS resolution timed out")).map(
+          : (await withTimeout(lookup(E, { all: !0 }), 1e4, "DNS resolution timed out")).map(
               (x) => x.address,
             );
     } catch {
@@ -33573,7 +33573,7 @@ async function gsr(e) {
   if (o) p = [r];
   else
     try {
-      p = (await Dt(lookup(r, { all: !0 }), 1e4, "DNS resolution timed out")).map(
+      p = (await withTimeout(lookup(r, { all: !0 }), 1e4, "DNS resolution timed out")).map(
         (E) => E.address,
       );
     } catch {
@@ -33685,7 +33685,7 @@ async function mRe(e, t) {
   let r = await getSecureStorage().readAsync(t),
     o = r?.gatewayTrust?.[e];
   if (o !== void 0) return o;
-  if ((!r || Object.keys(r).length === 0) && M() && t !== void 0) {
+  if ((!r || Object.keys(r).length === 0) && isHoverRestEnabled() && t !== void 0) {
     let p = await t.readCredentialsStrict();
     switch (p.state) {
       case "present":
@@ -33766,7 +33766,7 @@ async function hsr(e, t, r) {
     );
 }
 var Vpe = 300000,
-  mRn = m(() =>
+  mRn = createLazyValue(() =>
     nt({ access_token: le(), expires_in: Zt(), refresh_token: le().nullish() }),
   );
 function C6(e, { force: t = !1 } = {}) {
@@ -34119,13 +34119,13 @@ function afe() {
   } = V0();
   return Boolean((e && t) || r || o);
 }
-var lfe = m(() => nt({ accessToken: le().min(1), expiresAt: le() })),
+var lfe = createLazyValue(() => nt({ accessToken: le().min(1), expiresAt: le() })),
   cfe = /^[a-z0-9-]{1,32}$/,
   ufe = 128;
 class K0 {
   ssoProfile = cB(async (e, t, r) => {
     let { loadSharedConfigFiles: o } = await import("./chunk-j6921052.js").then(
-        (m) => pe(m.default, 1),
+        (m) => toESM(m.default, 1),
       ),
       { configFile: d, credentialsFile: p } = await o({
         configFilepath: e,
@@ -34290,7 +34290,7 @@ function pfe(e) {
     { level: "warn" },
   ),
     queueMicrotask(() =>
-      i("tengu_wif_implicit_profile_skipped_stored_login", {}),
+      logEvent("tengu_wif_implicit_profile_skipped_stored_login", {}),
     ),
     (e.implicitProfileSkippedLogged = !0));
 }
@@ -34759,7 +34759,7 @@ async function _fe(e) {
       );
       return (
         AW("apiKeyHelper invoked before trust check", _),
-        i("tengu_apiKeyHelper_missing_trust11", {}),
+        logEvent("tengu_apiKeyHelper_missing_trust11", {}),
         null
       );
     }
@@ -34822,7 +34822,7 @@ async function Tfe() {
       );
       return (
         AW("awsAuthRefresh invoked before trust check", d),
-        i("tengu_awsAuthRefresh_missing_trust", {}),
+        logEvent("tengu_awsAuthRefresh_missing_trust", {}),
         !1
       );
     }
@@ -34930,7 +34930,7 @@ async function bfe() {
       );
       return (
         AW("awsCredentialExport invoked before trust check", r),
-        i("tengu_awsCredentialExport_missing_trust", {}),
+        logEvent("tengu_awsCredentialExport_missing_trust", {}),
         null
       );
     }
@@ -35102,7 +35102,7 @@ async function checkGcpCredentialsValid() {
   let e = Date.now();
   try {
     let { GoogleAuth: t } = await import("./GoogleAuth.nmzn09n1.js").then((m) =>
-        pe(m.default, 1),
+        toESM(m.default, 1),
       ),
       r = getConfiguredVertexProjectId() || a.ANTHROPIC_GOOGLE_CLOUD_PROJECT,
       o = new t({
@@ -35112,7 +35112,7 @@ async function checkGcpCredentialsValid() {
       d = (async () => {
         await (await o.getClient()).getAccessToken();
       })(),
-      p = Z(Rfe).then(() => {
+      p = sleep(Rfe).then(() => {
         throw new Vm("GCP credentials check timed out");
       });
     return (await Promise.race([d, p]), "valid");
@@ -35143,7 +35143,7 @@ async function Ofe() {
       );
       return (
         AW("gcpAuthRefresh invoked before trust check", p),
-        i("tengu_gcpAuthRefresh_missing_trust", {}),
+        logEvent("tengu_gcpAuthRefresh_missing_trust", {}),
         !1
       );
     }
@@ -35238,7 +35238,7 @@ function prefetchAwsCredentialsAndBedRockInfoIfSafe() {
 function wfe() {
   if (uo() || isHostManagedProviderAuth()) return null;
   {
-    let t = Y5t();
+    let t = getLegacyApiKeyPrefetchResult();
     if (t) {
       if (t.stdout) return { key: t.stdout, source: "/login managed key" };
     } else {
@@ -35295,7 +35295,7 @@ async function saveApiKey(e, t) {
     if (I.exitCode !== 0) {
       let D = (I.stderr || I.stdout || "").trim().replace(/\s*\n\s*/g, "; ");
       throw (
-        i("tengu_api_key_keychain_error", {
+        logEvent("tengu_api_key_keychain_error", {
           error_class: fromEnum(jar(D)),
           error_hash: Tn(dRe(D)),
           exit_code: I.exitCode ?? -1,
@@ -35305,8 +35305,8 @@ async function saveApiKey(e, t) {
         )
       );
     }
-    i("tengu_api_key_saved_to_keychain", {});
-  } else i("tengu_api_key_saved_to_config", {});
+    logEvent("tengu_api_key_saved_to_keychain", {});
+  } else logEvent("tengu_api_key_saved_to_config", {});
   let d = fq(e);
   (await Te((p) => {
     let _ = p.customApiKeyResponses?.approved ?? [];
@@ -35321,14 +35321,14 @@ async function saveApiKey(e, t) {
     };
   }, t),
     r.clear(),
-    J5t());
+    clearLegacyApiKeyPrefetch());
 }
 async function removeApiKey(e) {
   let t = $i();
   (await X0(),
     await Te((r) => ({ ...r, primaryApiKey: void 0 }), e),
     t.clear(),
-    J5t());
+    clearLegacyApiKeyPrefetch());
 }
 async function X0() {
   try {
@@ -35359,7 +35359,7 @@ async function saveRefreshedOAuthTokensRespectingLock({
 }) {
   if (shouldUseClaudeAIAuth(r.scopes) && r.refreshToken && r.expiresAt) {
     let p = e();
-    if (p) i("tengu_oauth_token_refresh_lock_compromised_post_post", {});
+    if (p) logEvent("tengu_oauth_token_refresh_lock_compromised_post_post", {});
     let _ = {
         accessToken: r.accessToken,
         refreshToken: r.refreshToken,
@@ -35376,7 +35376,7 @@ async function saveRefreshedOAuthTokensRespectingLock({
       D = !1,
       x;
     for (let N = 0; N < 3; N++) {
-      if (N > 0) await Z(100 * N);
+      if (N > 0) await sleep(100 * N);
       ((E = !1), (D = !1));
       try {
         I = await getSecureStorage().mutate((G) => {
@@ -35400,27 +35400,27 @@ async function saveRefreshedOAuthTokensRespectingLock({
     }
     if (D) clearOAuthTokenCache();
     else {
-      let N = M() && o !== void 0 ? o : void 0,
+      let N = isHoverRestEnabled() && o !== void 0 ? o : void 0,
         G = N && oauthTokenReadMemos.of(B().host).promise;
       if ((iH(), N !== void 0)) await primeStoredLogin(N, G);
     }
     if (D)
-      i("tengu_oauth_tokens_save_exception", { storageBackend: C, ...lm(x) });
+      logEvent("tengu_oauth_tokens_save_exception", { storageBackend: C, ...lm(x) });
     if (!E && !D)
-      i(
+      logEvent(
         I.success
           ? "tengu_oauth_tokens_saved"
           : "tengu_oauth_tokens_save_failed",
         { storageBackend: C },
       );
     if (p)
-      i(
+      logEvent(
         E
           ? "tengu_oauth_refresh_compromised_cas_adopted_sibling"
           : "tengu_oauth_refresh_compromised_cas_saved",
         {},
       );
-    else if (E) i("tengu_oauth_refresh_save_adopted_newer_write", {});
+    else if (E) logEvent("tengu_oauth_refresh_save_adopted_newer_write", {});
     if (E) return (Rn(), "adopted_sibling");
     return I.success ? "saved" : "save_failed";
   }
@@ -35432,9 +35432,9 @@ function Q0() {
 }
 async function saveOAuthTokensIfNeeded(e, t) {
   if (!shouldUseClaudeAIAuth(e.scopes))
-    return (i("tengu_oauth_tokens_not_claude_ai", {}), { success: !0 });
+    return (logEvent("tengu_oauth_tokens_not_claude_ai", {}), { success: !0 });
   if (!e.refreshToken || !e.expiresAt)
-    return (i("tengu_oauth_tokens_inference_only", {}), { success: !0 });
+    return (logEvent("tengu_oauth_tokens_inference_only", {}), { success: !0 });
   let {
       accessToken: r,
       refreshToken: o,
@@ -35462,16 +35462,16 @@ async function saveOAuthTokensIfNeeded(e, t) {
       }),
       t,
     );
-    if (D.success) i("tengu_oauth_tokens_saved", { storageBackend: I });
-    else i("tengu_oauth_tokens_save_failed", { storageBackend: I });
-    let x = M() && t !== void 0 ? t : void 0,
+    if (D.success) logEvent("tengu_oauth_tokens_saved", { storageBackend: I });
+    else logEvent("tengu_oauth_tokens_save_failed", { storageBackend: I });
+    let x = isHoverRestEnabled() && t !== void 0 ? t : void 0,
       N = x && oauthTokenReadMemos.of(B().host).promise;
     if ((clearOAuthTokenMemos(), $m(), x !== void 0)) await primeStoredLogin(x, N);
     return D;
   } catch (D) {
     return (
       n(`Failed to save OAuth tokens: ${l(D)}`, { level: "error" }),
-      i("tengu_oauth_tokens_save_exception", { storageBackend: I, ...lm(D) }),
+      logEvent("tengu_oauth_tokens_save_exception", { storageBackend: I, ...lm(D) }),
       { success: !1, warning: "Failed to save OAuth tokens" }
     );
   }
@@ -35500,7 +35500,7 @@ function __resetKnownDeadRefreshTokensForTest() {
   (Ki.clear(), Eo.clear(), Vi.clear());
 }
 async function markRefreshTokenDeadAfterInvalidGrant(e, t) {
-  (Ki.add(e), i("tengu_oauth_refresh_token_marked_dead_invalid_grant", {}));
+  (Ki.add(e), logEvent("tengu_oauth_refresh_token_marked_dead_invalid_grant", {}));
   try {
     let r = !1,
       o = await getSecureStorage().mutate((d) => {
@@ -35519,7 +35519,7 @@ async function markRefreshTokenDeadAfterInvalidGrant(e, t) {
           }
         );
       }, t);
-    if (r && o.success) i("tengu_oauth_refresh_token_cleared_on_disk", {});
+    if (r && o.success) logEvent("tengu_oauth_refresh_token_cleared_on_disk", {});
     else if (r)
       n("OAuth dead-token disk clear: backend write failed", {
         level: "error",
@@ -35646,7 +35646,7 @@ function rH({ bearer: e, fdToken: t }, r) {
   return "none";
 }
 function oH() {
-  if ((clearOAuthTokenMemos(), wA(), M())) IQ();
+  if ((clearOAuthTokenMemos(), wA(), isHoverRestEnabled())) IQ();
 }
 function $m() {
   (gU(), C0());
@@ -35655,10 +35655,10 @@ function iH() {
   (clearOAuthTokenMemos(), wA(), $m());
 }
 function clearOAuthTokenCache() {
-  if ((iH(), M())) IQ();
+  if ((iH(), isHoverRestEnabled())) IQ();
 }
 function resetEnvDerivedAuthCaches() {
-  if ((clearOAuthTokenMemos(), $i().clear(), clearApiKeyHelperCache(), clearAwsCredentialsCache(), resetAwsAuthRefreshCooldown(), clearGcpCredentialsCache(), gU(), T5(), M())) IQ();
+  if ((clearOAuthTokenMemos(), $i().clear(), clearApiKeyHelperCache(), clearAwsCredentialsCache(), resetAwsAuthRefreshCooldown(), clearGcpCredentialsCache(), gU(), T5(), isHoverRestEnabled())) IQ();
 }
 function _resetCredentialsChangeCheckForTesting() {
   oauthTokenReadMemos.of(B().host).resetChangeCheck();
@@ -35702,7 +35702,7 @@ async function xfe(e) {
   }
 }
 async function Nfe(e, t) {
-  if (M() && t !== void 0) {
+  if (isHoverRestEnabled() && t !== void 0) {
     let r = await t.probeCredentials();
     if (r.state !== "present") return L0(e, t);
     if (r.version !== e.lastCredentialsVersion)
@@ -35717,7 +35717,7 @@ async function Nfe(e, t) {
   }
 }
 async function L0(e, t) {
-  if ((e.clear(), M())) IQ();
+  if ((e.clear(), isHoverRestEnabled())) IQ();
   let o = (await getClaudeAIOAuthTokensAsync(t))?.accessToken ?? null;
   if (o !== e.lastKeychainAccessToken) ((e.lastKeychainAccessToken = o), $m());
 }
@@ -35726,7 +35726,7 @@ function U0(e, t) {
   return `${e}|${t}`;
 }
 function sH(e, t) {
-  if (!(M() && e !== void 0) || uo() || a.CLAUDE_CODE_OAUTH_TOKEN)
+  if (!(isHoverRestEnabled() && e !== void 0) || uo() || a.CLAUDE_CODE_OAUTH_TOKEN)
     return "bare";
   if (gx() && (!dZ() || isHostManagedProviderAuth())) return "bare";
   return t !== void 0 ? "backend" : "store";
@@ -35763,7 +35763,7 @@ function handleOAuth401Error(e, t, r) {
 async function waitForRotatedEnvToken(e) {
   let t = e.pollMs ?? 2000,
     r = e.readToken ?? (() => a.CLAUDE_CODE_OAUTH_TOKEN ?? gx() ?? void 0),
-    o = e.sleeper ?? ((_) => Z(_)),
+    o = e.sleeper ?? ((_) => sleep(_)),
     d = Date.now() + e.timeoutMs;
   while (Date.now() < d) {
     let _ = r();
@@ -35816,7 +35816,7 @@ async function Ufe(e, t, r) {
             (process.env.CLAUDE_CODE_OAUTH_TOKEN = E),
             clearOAuthTokenCache(),
             Rn(),
-            i("tengu_oauth_401_sdk_callback_refreshed", {}),
+            logEvent("tengu_oauth_401_sdk_callback_refreshed", {}),
             logFeatureOk("oauth_401_recovery"),
             noteAuthRecoveryOutcome({ recovered: !0 }),
             !0
@@ -35853,12 +35853,12 @@ async function Ufe(e, t, r) {
           if (E?.accessToken && E.accessToken !== e && !isOAuthTokenExpired(E.expiresAt)) {
             if (a.CLAUDE_CODE_OAUTH_TOKEN)
               process.env.CLAUDE_CODE_OAUTH_TOKEN = E.accessToken;
-            if (M() && t !== void 0 ? await D5t(t) : gx())
+            if (isHoverRestEnabled() && t !== void 0 ? await D5t(t) : gx())
               (N0(E.accessToken), Sje(E.scopes));
             return (
               clearOAuthTokenCache(),
               Rn(),
-              i("tengu_oauth_401_recovered_from_disk", {}),
+              logEvent("tengu_oauth_401_recovered_from_disk", {}),
               logFeatureOk("oauth_401_recovery"),
               noteAuthRecoveryOutcome({ recovered: !0 }),
               !0
@@ -35878,14 +35878,14 @@ async function Ufe(e, t, r) {
           ),
           await waitForRotatedEnvToken({ failedAccessToken: e, timeoutMs: E }))
         ) {
-          if (M() && t !== void 0 ? await D5t(t) : gx()) {
+          if (isHoverRestEnabled() && t !== void 0 ? await D5t(t) : gx()) {
             let C = a.CLAUDE_CODE_OAUTH_TOKEN;
             if (C) N0(C);
           }
           return (
             clearOAuthTokenCache(),
             Rn(),
-            i("tengu_oauth_401_recovered_from_rotation", {}),
+            logEvent("tengu_oauth_401_recovered_from_rotation", {}),
             logFeatureOk("oauth_401_recovery"),
             noteAuthRecoveryOutcome({ recovered: !0 }),
             !0
@@ -35904,7 +35904,7 @@ async function Ufe(e, t, r) {
       ),
       noteAuthRecoveryOutcome({ recovered: !1 }) === "exit")
     )
-      (i("tengu_oauth_401_zombie_exit", {}),
+      (logEvent("tengu_oauth_401_zombie_exit", {}),
         n(
           "OAuth 401 unrecovered past CLAUDE_CODE_AUTH_FAIL_EXIT_MS \u2014 exiting so the runner recycles this session with fresh credentials",
           { level: "error" },
@@ -35915,7 +35915,7 @@ async function Ufe(e, t, r) {
   if (o.accessToken !== e)
     return (
       Rn(),
-      i("tengu_oauth_401_recovered_from_keychain", {}),
+      logEvent("tengu_oauth_401_recovered_from_keychain", {}),
       logFeatureOk("oauth_401_recovery"),
       noteAuthRecoveryOutcome({ recovered: !0 }),
       !0
@@ -35937,7 +35937,7 @@ function getClaudeAIOAuthTokensAsync(e) {
 async function zfe(e) {
   if (uo()) return null;
   if (a.CLAUDE_CODE_OAUTH_TOKEN) return getClaudeAIOAuthTokens();
-  let t = M() && e !== void 0 ? await D5t(e) : gx();
+  let t = isHoverRestEnabled() && e !== void 0 ? await D5t(e) : gx();
   if (t && (!dZ() || isHostManagedProviderAuth())) return getClaudeAIOAuthTokens();
   if (isHostManagedProviderAuth()) return null;
   try {
@@ -36054,7 +36054,7 @@ async function acquireOAuthRefreshLock(e) {
   } catch (C) {
     if (C.code === "ELOCKED")
       throw (
-        i("tengu_oauth_refresh_legacy_lock_contended", {}),
+        logEvent("tengu_oauth_refresh_legacy_lock_contended", {}),
         await d().catch((I) =>
           Rt(I) || t ? n(`OAuth refresh new-lock release failed: ${I}`) : logError(I),
         ),
@@ -36090,7 +36090,7 @@ async function withOAuthRefreshLock(e, t) {
     } catch (p) {
       if (p.code === "ELOCKED") {
         if (d < Ffe) {
-          await Z(1000 + Math.random() * 1000);
+          await sleep(1000 + Math.random() * 1000);
           continue;
         }
         throw new OAuthRefreshLockContendedError(d);
@@ -36172,7 +36172,7 @@ async function Gm(e, t, r, o, d, p, _, E) {
   if (x.accessToken !== D)
     return (
       Rn(),
-      i("tengu_oauth_token_refresh_race_resolved", {}),
+      logEvent("tengu_oauth_token_refresh_race_resolved", {}),
       "refreshed"
     );
   if (!d && !isOAuthTokenExpired(x.expiresAt)) return "not_needed";
@@ -36180,24 +36180,24 @@ async function Gm(e, t, r, o, d, p, _, E) {
   await ae().mkdir(N);
   let G;
   try {
-    (i("tengu_oauth_token_refresh_lock_acquiring", {}),
+    (logEvent("tengu_oauth_token_refresh_lock_acquiring", {}),
       (G = await acquireOAuthRefreshLock(N)),
-      i("tengu_oauth_token_refresh_lock_acquired", {}));
+      logEvent("tengu_oauth_token_refresh_lock_acquired", {}));
   } catch (F) {
     if (F.code === "ELOCKED") {
       let V = o ?? (await Fm(F, N));
       if (t < 5) {
-        i("tengu_oauth_token_refresh_lock_retry", { retryCount: t + 1 });
+        logEvent("tengu_oauth_token_refresh_lock_retry", { retryCount: t + 1 });
         let ut = 1000 + Math.random() * 1000;
-        return (await Z(ut), Gm(e, t + 1, r + ut, V, d, D, _, E));
+        return (await sleep(ut), Gm(e, t + 1, r + ut, V, d, D, _, E));
       }
       let te = x.expiresAt !== null && Date.now() >= x.expiresAt,
         re = await Fm(F, N);
-      if (F0(V, re) && r < z0) (await Z(z0 - r), (re = await Fm(F, N)));
+      if (F0(V, re) && r < z0) (await sleep(z0 - r), (re = await Fm(F, N)));
       let { contendedLock: ce, lockAgeMs: _e } = re,
         Be = !F0(V, re);
       return (
-        i("tengu_oauth_token_refresh_lock_retry_limit_reached", {
+        logEvent("tengu_oauth_token_refresh_lock_retry_limit_reached", {
           maxRetries: 5,
           tokenPastExpiry: te,
           contendedLock: ce,
@@ -36215,7 +36215,7 @@ async function Gm(e, t, r, o, d, p, _, E) {
     }
     return (
       logError(F),
-      i("tengu_oauth_token_refresh_lock_error", { ...lm(F) }),
+      logEvent("tengu_oauth_token_refresh_lock_error", { ...lm(F) }),
       logFeatureBad("oauth_token_refresh", "oauth_refresh_lock_error"),
       "lock_error"
     );
@@ -36225,7 +36225,7 @@ async function Gm(e, t, r, o, d, p, _, E) {
   try {
     if ((clearOAuthTokenCache(), (await getSecureStorage().readAsyncStrict?.(_)) === hc))
       return (
-        i("tengu_oauth_token_refresh_locked_read_failed", {}),
+        logEvent("tengu_oauth_token_refresh_locked_read_failed", {}),
         logFeatureSad("oauth_token_refresh", "oauth_refresh_locked_read_failed"),
         "lock_error"
       );
@@ -36234,7 +36234,7 @@ async function Gm(e, t, r, o, d, p, _, E) {
     if (((L = V.refreshToken), V.accessToken !== D))
       return (
         Rn(),
-        i("tengu_oauth_token_refresh_race_resolved", {}),
+        logEvent("tengu_oauth_token_refresh_race_resolved", {}),
         "refreshed"
       );
     if (!d && !isOAuthTokenExpired(V.expiresAt)) return "not_needed";
@@ -36242,13 +36242,13 @@ async function Gm(e, t, r, o, d, p, _, E) {
     if (Vi.has(V.refreshToken)) return "account_on_hold";
     if (G.isCompromised())
       return (
-        i("tengu_oauth_token_refresh_lock_compromised_pre_post", {}),
+        logEvent("tengu_oauth_token_refresh_lock_compromised_pre_post", {}),
         logFeatureSad("oauth_token_refresh", "oauth_refresh_lock_compromised"),
         "lock_compromised"
       );
-    (i("tengu_oauth_token_refresh_starting", {}),
+    (logEvent("tengu_oauth_token_refresh_starting", {}),
       (U = Boolean((shouldUseClaudeAIAuth(V.scopes) || V.subscriptionType) && !V.clientId)));
-    let te = U ? Y([...CLAUDE_AI_OAUTH_SCOPES, ...preservableScopesFrom(V.scopes)]) : V.scopes,
+    let te = U ? dedupe([...CLAUDE_AI_OAUTH_SCOPES, ...preservableScopesFrom(V.scopes)]) : V.scopes,
       re;
     try {
       re = await refreshOAuthToken(V.refreshToken, {
@@ -36266,7 +36266,7 @@ async function Gm(e, t, r, o, d, p, _, E) {
         !shouldUseClaudeAIAuth(V.scopes)
       )
         throw ce;
-      (i("tengu_oauth_refresh_invalid_scope_fallback", {}),
+      (logEvent("tengu_oauth_refresh_invalid_scope_fallback", {}),
         (re = await refreshOAuthToken(V.refreshToken, {
           scopes: V.scopes,
           clientId: V.clientId,
@@ -36288,13 +36288,13 @@ async function Gm(e, t, r, o, d, p, _, E) {
       (n(`OAuth refresh failed while lock compromised: ${l(F)}`, {
         level: "error",
       }),
-        i("tengu_oauth_token_refresh_lock_compromised_in_catch", {}),
+        logEvent("tengu_oauth_token_refresh_lock_compromised_in_catch", {}),
         clearOAuthTokenCache());
       let te = await getClaudeAIOAuthTokensAsync(_);
       if (te && te.accessToken !== D)
         return (
           Rn(),
-          i("tengu_oauth_token_refresh_race_recovered", {}),
+          logEvent("tengu_oauth_token_refresh_race_recovered", {}),
           "refreshed"
         );
       return (
@@ -36310,24 +36310,24 @@ async function Gm(e, t, r, o, d, p, _, E) {
     if (V && V.accessToken !== D)
       return (
         Rn(),
-        i("tengu_oauth_token_refresh_race_recovered", {}),
+        logEvent("tengu_oauth_token_refresh_race_recovered", {}),
         "refreshed"
       );
     if (isInvalidGrantError(F) && L) await markRefreshTokenDeadAfterInvalidGrant(L, _);
     if (isAccountOnHoldError(F) && L)
       return (
         Vi.set(L, getAccountOnHoldErrorUrl(F)),
-        i("tengu_oauth_refresh_token_account_on_hold", {}),
+        logEvent("tengu_oauth_refresh_token_account_on_hold", {}),
         "account_on_hold"
       );
     return isInvalidGrantError(F) ? "known_dead_refresh_token" : "refresh_failed";
   } finally {
-    i("tengu_oauth_token_refresh_lock_releasing", {});
+    logEvent("tengu_oauth_token_refresh_lock_releasing", {});
     try {
-      (await G.release(), i("tengu_oauth_token_refresh_lock_released", {}));
+      (await G.release(), logEvent("tengu_oauth_token_refresh_lock_released", {}));
     } catch (F) {
       (n(`OAuth refresh lock release failed: ${F}`, { level: "error" }),
-        i("tengu_oauth_token_refresh_lock_release_error", {}));
+        logEvent("tengu_oauth_token_refresh_lock_release_error", {}));
     }
   }
 }
@@ -36679,7 +36679,7 @@ function getApiKeyFromConfigOrMacOSKeychainAsync() {
 async function Gfe() {
   if (uo() || isHostManagedProviderAuth()) return null;
   {
-    let t = Y5t();
+    let t = getLegacyApiKeyPrefetchResult();
     if (t) {
       if (t.stdout) return { key: t.stdout, source: "/login managed key" };
     } else {

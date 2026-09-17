@@ -10,12 +10,12 @@
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
 import { A1 } from "../MCP客户端/chunk-j8556pzt.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { ac, li, jf, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { b, z, n8, hxe, Sh } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ghe } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { Vtt } from "../../01-核心基础设施/共享小工具-未细化/chunk-fpr1vv1t.js";
+import { BufferCoercingStdioServerTransport } from "../../01-核心基础设施/共享小工具-未细化/buffer-coercing-stdio-transport.js";
 import { s, O, se, v, c, $e, Ko, fe, X, k, Hb } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { createHash } from "crypto";
@@ -366,7 +366,7 @@ function q(e) {
 import { createConnection } from "net";
 var ztt = "eval aborted by mock",
   jQ = "mock agent responder failed";
-var pe = m(() =>
+var pe = createLazyValue(() =>
     c({
       verdict: X(["ok", "tool_error", "abort"]),
       text: s(),
@@ -428,7 +428,7 @@ function me(e, t, r) {
       ));
   });
 }
-var he = m(() => {
+var he = createLazyValue(() => {
     let e = Hb(() => $e([s(), v(s()), fe(s(), e)])),
       t = fe(s(), e).nullable(),
       r = Ko("kind", [
@@ -472,7 +472,7 @@ async function mbr(e, t) {
     );
   let o = Se(r),
     n = be(o),
-    i = new Vtt();
+    i = new BufferCoercingStdioServerTransport();
   if (!(await Z(o.callLogPath, b({ ready: o.nonce, server: o.server }))))
     throw Error(
       "could not write the identity line to the run call log \u2014 refusing to serve unidentified",

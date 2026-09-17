@@ -9,27 +9,27 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 106 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Dt } from "../共享小工具-未细化/chunk-510m1t2d.js";
+import { withTimeout } from "../共享小工具-未细化/async-timeout-utils.js";
 import { oa, Dat, aee, Ttn } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { PPn, env as a } from "./chunk-zqr5ctyf.js";
 import { os, x } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Av, iDt, j0e } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../共享小工具-未细化/storage-v5-context.js";
 import { Ms } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { Gu } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsFilePathForSource, updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { readVSCodeScrollSensitivity } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { mr } from "../共享小工具-未细化/chunk-e6f86vzh.js";
+import { FocusableBox } from "../共享小工具-未细化/focusable-box.js";
 import { a9e } from "../../02-功能模块/通知(Notifications)/通知(Notifications).g4xng0pg.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { tZ } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
-import { p } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function ut() {
   return process.env[y];
@@ -48,11 +48,11 @@ function ae(Rt) {
     { onDone: k, showDemoRuler: Fe, editorSensitivity: Je } = Rt,
     H = Fe === void 0 ? !0 : Fe,
     A = Je === void 0 ? null : Je,
-    { storageV5: Se } = _e(),
+    { storageV5: Se } = useStorageV5Context(),
     [K] = d(ut),
     f,
     Ke;
-  if (m[0] === p)
+  if (m[0] === MEMO_CACHE_SENTINEL)
     ((f = Av()),
       (Ke = iDt(f.xtermJs, f.wheelFlood, f.wtSession)),
       (m[0] = f),
@@ -61,7 +61,7 @@ function ae(Rt) {
   let R = Ke,
     Ce = f.useDecayCurve ? me : Pe,
     Ge;
-  if (m[2] === p) ((Ge = () => P(f.base, Ce)), (m[2] = Ge));
+  if (m[2] === MEMO_CACHE_SENTINEL) ((Ge = () => P(f.base, Ce)), (m[2] = Ge));
   else Ge = m[2];
   let [c, Ie] = d(Ge),
     [Q, Xe] = d(K !== void 0),
@@ -109,7 +109,7 @@ function ae(Rt) {
   else Ye = m[7];
   let j = Ye,
     Ze;
-  if (m[8] === p)
+  if (m[8] === MEMO_CACHE_SENTINEL)
     ((Ze = function be() {
       (delete process.env[y], j0e(), Ie(P(R, Ce)), Xe(!1));
     }),
@@ -161,7 +161,7 @@ function ae(Rt) {
         (logError($e), D(), k(`Couldn't save scroll speed: ${$e.message}`));
         return;
       }
-      i("tengu_scroll_speed_set", {
+      logEvent("tengu_scroll_speed_set", {
         scroll_speed: Z ? R : c,
         scroll_speed_auto: R,
         reset_to_auto: Z,
@@ -213,7 +213,7 @@ function ae(Rt) {
     V = !Q,
     rt,
     ot;
-  if (m[25] === p)
+  if (m[25] === MEMO_CACHE_SENTINEL)
     ((rt = e(t, { bold: !0, children: "Scroll speed" })),
       (ot = e(o, { height: 1 })),
       (m[25] = rt),
@@ -260,10 +260,10 @@ function ae(Rt) {
       (m[44] = oe));
   else oe = m[44];
   let nt;
-  if (m[45] === p) ((nt = e(o, { height: 1 })), (m[45] = nt));
+  if (m[45] === MEMO_CACHE_SENTINEL) ((nt = e(o, { height: 1 })), (m[45] = nt));
   else nt = m[45];
   let st;
-  if (m[46] === p)
+  if (m[46] === MEMO_CACHE_SENTINEL)
     ((st = e(W, { label: "Terminal", value: xe(f) })), (m[46] = st));
   else st = m[46];
   let ne;
@@ -273,7 +273,7 @@ function ae(Rt) {
       (m[48] = ne));
   else ne = m[48];
   let it, lt;
-  if (m[49] === p)
+  if (m[49] === MEMO_CACHE_SENTINEL)
     ((it = e(o, { height: 1 })),
       (lt = e(t, {
         dimColor: !0,
@@ -298,7 +298,7 @@ function ae(Rt) {
   else se = m[53];
   let mt;
   if (m[54] !== X || m[55] !== se)
-    ((mt = e(mr, { onKeyDown: X, children: se })),
+    ((mt = e(FocusableBox, { onKeyDown: X, children: se })),
       (m[54] = X),
       (m[55] = se),
       (m[56] = mt));
@@ -376,7 +376,7 @@ function Ee(n) {
 var dt = 20,
   zt = async (n, s) => {
     let w = s.messages.length < dt,
-      U = await Dt(
+      U = await withTimeout(
         readVSCodeScrollSensitivity(s.session.host),
         250,
         "VS Code settings read timed out",

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Tkt, Ekt } from "../../../01-核心基础设施/共享小工具-未细化/chunk-8549txjj.js";
-import { S2e, Wtt } from "../../../01-核心基础设施/共享小工具-未细化/chunk-29sq3mjv.js";
+import { toUint8Array, isEmptyData } from "../../../01-核心基础设施/共享小工具-未细化/byte-array-conversion.js";
 var s = 64,
   y = 32,
   m = new Uint32Array([
@@ -150,9 +150,9 @@ var FOe = (function () {
   }
   return (
     (h.prototype.update = function (r) {
-      if (Wtt(r) || this.error) return;
+      if (isEmptyData(r) || this.error) return;
       try {
-        this.hash.update(S2e(r));
+        this.hash.update(toUint8Array(r));
       } catch (a) {
         this.error = a;
       }
@@ -187,7 +187,7 @@ var FOe = (function () {
   );
 })();
 function _(h) {
-  var r = S2e(h);
+  var r = toUint8Array(h);
   if (r.byteLength > s) {
     var a = new c();
     (a.update(r), (r = a.digest()));

@@ -9,20 +9,20 @@
 // Version: 2.1.263
 import { lxe } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { go, HU } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-var cp = "main";
-function wge(t, r) {
+var MAIN_CONVERSATION_NAME = "main";
+function formatAgentMessage(t, r) {
   return `<${lxe} from="${go(t)}">
 ${HU(lxe, r)}
 </${lxe}>`;
 }
-var fs = "team-lead",
-  Kir = /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/,
-  M6 = "claude-swarm",
-  wet = "swarm-view",
-  N6 = "tmux",
-  Tge = "cat";
-function Tet() {
+var TEAM_LEAD_AGENT_NAME = "team-lead",
+  TEAMMATE_NAME_PATTERN = /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/,
+  SWARM_TMUX_SESSION_NAME = "claude-swarm",
+  SWARM_TMUX_WINDOW_NAME = "swarm-view",
+  TMUX_BINARY = "tmux",
+  PANE_PLACEHOLDER_COMMAND = "cat";
+function getSwarmTmuxSocketName() {
   return `claude-swarm-${process.pid}`;
 }
-var Xir = "CLAUDE_CODE_TEAMMATE_COMMAND";
-export { cp, wge, fs, Kir, M6, wet, N6, Tge, Tet, Xir };
+var TEAMMATE_COMMAND_ENV_VAR = "CLAUDE_CODE_TEAMMATE_COMMAND";
+export { MAIN_CONVERSATION_NAME, formatAgentMessage, TEAM_LEAD_AGENT_NAME, TEAMMATE_NAME_PATTERN, SWARM_TMUX_SESSION_NAME, SWARM_TMUX_WINDOW_NAME, TMUX_BINARY, PANE_PLACEHOLDER_COMMAND, getSwarmTmuxSocketName, TEAMMATE_COMMAND_ENV_VAR };

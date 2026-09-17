@@ -10,7 +10,7 @@
 import { R, mi } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { Cz, lZ, ML, mv } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import {
   bt,
   Mr,
@@ -34,7 +34,7 @@ import {
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { xg } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "./chunk-zqr5ctyf.js";
-import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Nr, XBe } from "./设置-配置.aqbb35ee.js";
 import { Pt } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -68,7 +68,7 @@ import { isCustomizationDisabled } from "../../02-功能模块/状态栏-主题/
 import { isSettingsToCloudEnabledCached } from "../共享小工具-未细化/chunk-97crm80y.js";
 import { Qn } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { isRemoteControlHardDisabled, isBridgeEnabled, getRemoteControlPolicyLockReason, applyRemoteControlToAppState } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
-import { Qbt } from "../../02-功能模块/Bridge-RemoteControl/chunk-3j7ezsr7.js";
+import { isInputNeededPushEnabled } from "../../02-功能模块/Bridge-RemoteControl/push-notification-tool.js";
 import { resolveArtifactEnableSetting, getArtifactDefaultOn } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { zs } from "../共享小工具-未细化/chunk-k2rb4dgd.js";
 import { zr } from "../../02-功能模块/Teammates团队/chunk-3k2smxfn.js";
@@ -76,7 +76,7 @@ import { ny } from "../共享小工具-未细化/chunk-6smvq03f.js";
 import { JDt, writeUnattendedServingConsent, unattendedServingConsentView, managedSettingsForbidUnattendedServing, unattendedServingForbiddenBy, unattendedServingConsentMayHoldYes } from "../../02-功能模块/AutoMode-自动模式/chunk-15n5gf3t.js";
 import { Zb } from "../../02-功能模块/状态栏-主题/chunk-q7ekqy5h.js";
 import { Ult } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { Vnn } from "../../02-功能模块/推送通知(Push)/推送通知(Push).8ab67cqd.js";
+import { syncPushPreferencesToServer } from "../../02-功能模块/推送通知(Push)/推送通知(Push).8ab67cqd.js";
 import { DEFAULT_TEAMMATE_MODE, getCliTeammateModeOverride, clearCliTeammateModeOverride } from "../../02-功能模块/Teammates团队/chunk-88ybhavr.js";
 import { c4e } from "../../02-功能模块/Teammates团队/chunk-qy9488g9.js";
 import { Xnn } from "../核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
@@ -251,27 +251,27 @@ function gSe(l) {
     storageV5: v,
   } = l;
   function h(e) {
-    return M() && v !== void 0
+    return isHoverRestEnabled() && v !== void 0
       ? updateSettingsForSource("userSettings", e, void 0, v)
       : updateSettingsForSource("userSettings", e);
   }
   function L(e) {
-    return M() && v !== void 0
+    return isHoverRestEnabled() && v !== void 0
       ? updateSettingsForSource("localSettings", e, void 0, v)
       : updateSettingsForSource("localSettings", e);
   }
   function k(e, o) {
-    if (M() && v !== void 0) XH(e, o, v);
+    if (isHoverRestEnabled() && v !== void 0) XH(e, o, v);
     else XH(e, o);
   }
   function E(e) {
-    if (M() && v !== void 0) Te(e, v);
+    if (isHoverRestEnabled() && v !== void 0) Te(e, v);
     else Te(e);
   }
   async function z(e, o) {
     let t = ge,
       s = Qle(e, o);
-    i("tengu_config_model_changed", { from_model: bt(t), to_model: bt(e) });
+    logEvent("tengu_config_model_changed", { from_model: bt(t), to_model: bt(e) });
     let d = n2(e),
       c = "";
     if (C) {
@@ -360,8 +360,8 @@ function gSe(l) {
   function Q(e) {
     (k("inputNeededNotifEnabled", e),
       p((o) => ({ ...o, inputNeededNotifEnabled: e })),
-      Vnn(),
-      i("tengu_push_notif_pref_changed", {
+      syncPushPreferencesToServer(),
+      logEvent("tengu_push_notif_pref_changed", {
         key: S("inputNeededNotifEnabled"),
         value: e,
       }));
@@ -369,8 +369,8 @@ function gSe(l) {
   function q(e) {
     (k("agentPushNotifEnabled", e),
       p((o) => ({ ...o, agentPushNotifEnabled: e })),
-      Vnn(),
-      i("tengu_push_notif_pref_changed", {
+      syncPushPreferencesToServer(),
+      logEvent("tengu_push_notif_pref_changed", {
         key: S("agentPushNotifEnabled"),
         value: e,
       }));
@@ -444,7 +444,7 @@ function gSe(l) {
       onChange(e) {
         (k("autoCompactEnabled", e),
           p((o) => ({ ...o, autoCompactEnabled: e })),
-          i("tengu_auto_compact_setting_changed", { enabled: e }));
+          logEvent("tengu_auto_compact_setting_changed", { enabled: e }));
       },
     },
     ...(Ee
@@ -465,7 +465,7 @@ function gSe(l) {
                   { error: o.error }
                 );
               }
-              i("tengu_quota_auto_resume_setting_changed", { enabled: e });
+              logEvent("tengu_quota_auto_resume_setting_changed", { enabled: e });
             },
           },
         ]
@@ -490,7 +490,7 @@ function gSe(l) {
                 t = r.remoteHomeSettingsMode;
               return (
                 p((s) => ({ ...s, remoteHomeSettingsMode: o })),
-                Qht(o, M() ? v : void 0).then((s) => {
+                Qht(o, isHoverRestEnabled() ? v : void 0).then((s) => {
                   switch (s) {
                     case "written":
                       return;
@@ -549,7 +549,7 @@ function gSe(l) {
                       "The answer could not be saved; nothing was changed",
                     ),
                   };
-                i("tengu_served_unattended_consent", {
+                logEvent("tengu_served_unattended_consent", {
                   action: fromEnum(t),
                   surface: S("cli"),
                 });
@@ -569,7 +569,7 @@ function gSe(l) {
             onChange(e) {
               (h({ switchModelsOnFlag: e }),
                 m((o) => ({ ...o, switchModelsOnFlag: e })),
-                i("tengu_refusal_fallback_setting_changed", { enabled: e }));
+                logEvent("tengu_refusal_fallback_setting_changed", { enabled: e }));
             },
           },
         ]
@@ -583,7 +583,7 @@ function gSe(l) {
       onChange(e) {
         (L({ spinnerTipsEnabled: e }),
           m((o) => ({ ...o, spinnerTipsEnabled: e })),
-          i("tengu_tips_setting_changed", { enabled: e }));
+          logEvent("tengu_tips_setting_changed", { enabled: e }));
       },
     },
     ...(rgn()
@@ -614,7 +614,7 @@ function gSe(l) {
             ...o,
             settings: { ...o.settings, prefersReducedMotion: e },
           })),
-          i("tengu_reduce_motion_setting_changed", { enabled: e }));
+          logEvent("tengu_reduce_motion_setting_changed", { enabled: e }));
       },
     },
     {
@@ -625,7 +625,7 @@ function gSe(l) {
       onChange(e) {
         (A((o) => ({ ...o, thinkingEnabled: e })),
           h({ alwaysThinkingEnabled: e ? void 0 : !1 }),
-          i("tengu_thinking_toggled", { enabled: e }),
+          logEvent("tengu_thinking_toggled", { enabled: e }),
           logFeatureOk("thinking_toggle"));
       },
     },
@@ -768,7 +768,7 @@ function gSe(l) {
             onChange(e) {
               (k("fileCheckpointingEnabled", e),
                 p((o) => ({ ...o, fileCheckpointingEnabled: e })),
-                i("tengu_file_history_snapshots_setting_changed", {
+                logEvent("tengu_file_history_snapshots_setting_changed", {
                   enabled: e,
                 }));
             },
@@ -901,7 +901,7 @@ function gSe(l) {
       onChange(e) {
         (k("terminalProgressBarEnabled", e),
           p((o) => ({ ...o, terminalProgressBarEnabled: e })),
-          i("tengu_terminal_progress_bar_setting_changed", { enabled: e }));
+          logEvent("tengu_terminal_progress_bar_setting_changed", { enabled: e }));
       },
     },
     ...(H("tengu_terminal_sidebar", !1)
@@ -914,7 +914,7 @@ function gSe(l) {
             onChange(e) {
               (E((o) => ({ ...o, showStatusInTerminalTab: e })),
                 p((o) => ({ ...o, showStatusInTerminalTab: e })),
-                i("tengu_terminal_tab_status_setting_changed", { enabled: e }));
+                logEvent("tengu_terminal_tab_status_setting_changed", { enabled: e }));
             },
           },
         ]
@@ -927,7 +927,7 @@ function gSe(l) {
       onChange(e) {
         (k("showTurnDuration", e),
           p((o) => ({ ...o, showTurnDuration: e })),
-          i("tengu_show_turn_duration_setting_changed", { enabled: e }));
+          logEvent("tengu_show_turn_duration_setting_changed", { enabled: e }));
       },
     },
     ...(H("tengu_sepia_moth", !1)
@@ -940,7 +940,7 @@ function gSe(l) {
             onChange(e) {
               (h({ precomputeCompactionEnabled: e }),
                 m((o) => ({ ...o, precomputeCompactionEnabled: e })),
-                i("tengu_precompute_compaction_setting_changed", {
+                logEvent("tengu_precompute_compaction_setting_changed", {
                   enabled: e,
                 }));
             },
@@ -958,7 +958,7 @@ function gSe(l) {
               (k("showMessageTimestamps", e),
                 p((o) => ({ ...o, showMessageTimestamps: e })),
                 A((o) => ({ ...o, showMessageTimestamps: e })),
-                i("tengu_show_message_timestamps_setting_changed", {
+                logEvent("tengu_show_message_timestamps_setting_changed", {
                   enabled: e,
                 }));
             },
@@ -978,7 +978,7 @@ function gSe(l) {
         (h({ timeFormat: o }),
           m((t) => ({ ...t, timeFormat: o })),
           w((t) => ({ ...t, timeFormat: o })),
-          i("tengu_time_format_setting_changed", { value: fromEnum(o) }));
+          logEvent("tengu_time_format_setting_changed", { value: fromEnum(o) }));
       },
     },
     {
@@ -1071,7 +1071,7 @@ function gSe(l) {
       onChange(e) {
         (E((o) => ({ ...o, respectGitignore: e })),
           p((o) => ({ ...o, respectGitignore: e })),
-          i("tengu_respect_gitignore_setting_changed", { enabled: e }));
+          logEvent("tengu_respect_gitignore_setting_changed", { enabled: e }));
       },
     },
     {
@@ -1204,7 +1204,7 @@ function gSe(l) {
           },
           ...(Se
             ? [
-                ...(Qbt()
+                ...(isInputNeededPushEnabled()
                   ? [
                       {
                         id: "inputNeededNotifEnabled",
@@ -1262,7 +1262,7 @@ function gSe(l) {
                   return { ...s, isBriefOnly: t };
                 }),
                 w((s) => ({ ...s, "Default view": e })),
-                i("tengu_default_view_setting_changed", {
+                logEvent("tengu_default_view_setting_changed", {
                   value: fromEnum(o ?? "unset"),
                 }));
             },
@@ -1294,7 +1294,7 @@ function gSe(l) {
         let o = e;
         (k("editorMode", o),
           p((t) => ({ ...t, editorMode: o })),
-          i("tengu_editor_mode_changed", {
+          logEvent("tengu_editor_mode_changed", {
             mode: fromEnum(o),
             source: S("config_panel"),
           }));
@@ -1321,7 +1321,7 @@ function gSe(l) {
                   m((d) => ({ ...d, askUserQuestionTimeout: t })),
                   { error: s.error }
                 );
-              i("tengu_ask_user_question_timeout_changed", {
+              logEvent("tengu_ask_user_question_timeout_changed", {
                 value: fromEnum(o),
                 source: S("config_panel"),
               });
@@ -1343,7 +1343,7 @@ function gSe(l) {
               m((s) => ({ ...s, modelProposedGoals: o }));
               let t = await h({ modelProposedGoals: o });
               if (t?.error) return { error: t.error };
-              i("tengu_model_proposed_goals_changed", {
+              logEvent("tengu_model_proposed_goals_changed", {
                 value: fromEnum(o),
                 source: S("config_panel"),
               });
@@ -1362,7 +1362,7 @@ function gSe(l) {
       onChange(e) {
         (E((o) => ({ ...o, externalEditorContext: e })),
           p((o) => ({ ...o, externalEditorContext: e })),
-          i("tengu_external_editor_context_changed", { enabled: e }));
+          logEvent("tengu_external_editor_context_changed", { enabled: e }));
       },
     },
     {
@@ -1376,7 +1376,7 @@ function gSe(l) {
           return { ...o, prStatusFooterEnabled: e };
         }),
           p((o) => ({ ...o, prStatusFooterEnabled: e })),
-          i("tengu_pr_status_footer_setting_changed", { enabled: e }));
+          logEvent("tengu_pr_status_footer_setting_changed", { enabled: e }));
       },
     },
     {
@@ -1412,7 +1412,7 @@ function gSe(l) {
               let o = e;
               (E((t) => ({ ...t, diffTool: o })),
                 p((t) => ({ ...t, diffTool: o })),
-                i("tengu_diff_tool_changed", {
+                logEvent("tengu_diff_tool_changed", {
                   tool: fromEnum(o),
                   source: S("config_panel"),
                 }));
@@ -1430,7 +1430,7 @@ function gSe(l) {
             onChange(e) {
               (E((o) => ({ ...o, autoConnectIde: e })),
                 p((o) => ({ ...o, autoConnectIde: e })),
-                i("tengu_auto_connect_ide_changed", {
+                logEvent("tengu_auto_connect_ide_changed", {
                   enabled: e,
                   source: S("config_panel"),
                 }));
@@ -1448,7 +1448,7 @@ function gSe(l) {
             onChange(e) {
               (E((o) => ({ ...o, autoInstallIdeExtension: e })),
                 p((o) => ({ ...o, autoInstallIdeExtension: e })),
-                i("tengu_auto_install_ide_extension_changed", {
+                logEvent("tengu_auto_install_ide_extension_changed", {
                   enabled: e,
                   source: S("config_panel"),
                 }));
@@ -1464,7 +1464,7 @@ function gSe(l) {
       onChange(e) {
         (E((o) => ({ ...o, claudeInChromeDefaultEnabled: e })),
           p((o) => ({ ...o, claudeInChromeDefaultEnabled: e })),
-          i("tengu_claude_in_chrome_setting_changed", { enabled: e }));
+          logEvent("tengu_claude_in_chrome_setting_changed", { enabled: e }));
       },
     },
     ...(zr()
@@ -1489,7 +1489,7 @@ function gSe(l) {
                   c4e(),
                   k("teammateMode", t),
                   p((s) => ({ ...s, teammateMode: t })),
-                  i("tengu_teammate_mode_changed", { mode: fromEnum(t) }));
+                  logEvent("tengu_teammate_mode_changed", { mode: fromEnum(t) }));
               },
             },
           ];
@@ -1518,7 +1518,7 @@ function gSe(l) {
                   m((c) => ({ ...c, dialogExpiry: s })),
                   { error: d.error }
                 );
-              i("tengu_dialog_expiry_changed", {
+              logEvent("tengu_dialog_expiry_changed", {
                 value: fromEnum(o),
                 source: S("config_panel"),
               });
@@ -1547,7 +1547,7 @@ function gSe(l) {
                   m((c) => ({ ...c, crossSessionInbound: s })),
                   { error: d.error }
                 );
-              i("tengu_cross_session_inbound_changed", {
+              logEvent("tengu_cross_session_inbound_changed", {
                 value: fromEnum(o),
                 source: S("config_panel"),
               });

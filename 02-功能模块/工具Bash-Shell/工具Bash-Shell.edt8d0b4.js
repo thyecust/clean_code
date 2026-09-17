@@ -12,11 +12,11 @@
 import { unwrapAbortReason, isUserInitiatedAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Fx } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { dur } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, yt, G0, R, dt, ge, l, Ub, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Ro, D0, Tr, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -29,7 +29,7 @@ import { truncate } from "../../01-核心基础设施/核心工具-字符串与�
 import { nL, Iq } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { INLINE_CODE_FLAGS, isOutsideReadsBlockedAsk, outsideReadsRuntimePathAsk, outsideReadsTooComplexAsk, BASH_COMMAND_CLAMP_DENY_REASON, BASH_COMMAND_CLAMP_CRASH_REASON } from "../权限系统/chunk-e4pfvp7x.js";
 import { hge, Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { i5, Dl } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
+import { getHostCapabilityState, areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import {
   Q_,
   rme,
@@ -45,7 +45,7 @@ import {
 import { Ys, jE } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   Uft,
   LGn,
@@ -149,8 +149,8 @@ import {
   tun,
   nun,
 } from "./chunk-8sjdj5bm.js";
-import { NE } from "../../01-核心基础设施/共享小工具-未细化/chunk-1md6qpsy.js";
-import { QI } from "../工具Monitor/chunk-kxk3njnj.js";
+import { buildBooleanFromStringSchema } from "../../01-核心基础设施/共享小工具-未细化/boolean-from-string-schema.js";
+import { isMonitorToolEnabled } from "../工具Monitor/monitor-tool-description.js";
 import { s, T, O, c, Qe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { basename as Ds, dirname as $s } from "path";
@@ -4168,11 +4168,11 @@ function Be() {
   return x4e();
 }
 function Ls() {
-  if (Dl()) return null;
+  if (areBackgroundTasksDisabled()) return null;
   return "  - You can use the `run_in_background` parameter to run the command in the background. Only use this if you don't need the result immediately and are OK being notified when the command completes later. You do not need to check the output right away - you'll be notified when it finishes.";
 }
 function Ms() {
-  if (Dl()) return null;
+  if (areBackgroundTasksDisabled()) return null;
   return "  - Avoid unnecessary `Start-Sleep` commands:\n    - Do not sleep between commands that can run immediately \u2014 just run them.\n    - If your command is long running and you would like to be notified when it finishes \u2014 simply run your command using `run_in_background`. There is no need to sleep in this case.\n    - Do not retry failing commands in a sleep loop \u2014 diagnose the root cause or consider an alternative approach.\n    - If waiting for a background task you started with `run_in_background`, you will be notified when it completes \u2014 do not poll.\n    - If you must poll an external process, use a check command rather than sleeping first.\n    - If you must sleep, keep the duration short to avoid blocking the user.";
 }
 function Ns(e) {
@@ -4379,7 +4379,7 @@ function Qt(e, t, o) {
   )
     return null;
   if (!fzn(t)) return Hs;
-  return i5().unsandboxedCommandsDisabled ? Gs : null;
+  return getHostCapabilityState().unsandboxedCommandsDisabled ? Gs : null;
 }
 function Ze(e, t) {
   return jS(
@@ -4393,7 +4393,7 @@ function Ze(e, t) {
 }
 var Ks =
     "command contains control characters that would be hidden in the approval dialog",
-  Jt = m(() =>
+  Jt = createLazyValue(() =>
     Qe({
       command: s().refine(rU, Ks).describe("The PowerShell command to execute"),
       timeout: DM(T().optional()).describe(
@@ -4404,16 +4404,16 @@ var Ks =
         .describe(
           "Clear, concise description of what this command does in active voice.",
         ),
-      run_in_background: NE(O().optional()).describe(
+      run_in_background: buildBooleanFromStringSchema(O().optional()).describe(
         "Set to true to run this command in the background.",
       ),
-      dangerouslyDisableSandbox: NE(O().optional()).describe(
+      dangerouslyDisableSandbox: buildBooleanFromStringSchema(O().optional()).describe(
         "Set this to true to dangerously override sandbox mode and run commands without sandboxing.",
       ),
     }),
   ),
-  Zs = m(() => (Dl() ? Jt().omit({ run_in_background: !0 }) : Jt())),
-  Xs = m(() =>
+  Zs = createLazyValue(() => (areBackgroundTasksDisabled() ? Jt().omit({ run_in_background: !0 }) : Jt())),
+  Xs = createLazyValue(() =>
     c({
       stdout: s().describe("The standard output of the command"),
       stderr: s().describe("The standard error output of the command"),
@@ -4469,7 +4469,7 @@ var Ks =
         ),
     }),
   ),
-  PowerShellTool = Tt({
+  PowerShellTool = buildTool({
     name: Ut,
     ruleContentField: "command",
     searchHint: "execute Windows PowerShell commands",
@@ -4549,7 +4549,7 @@ var Ks =
           logFeatureSad("sandbox_exec", "windows_policy_refusal"),
           { result: !1, message: t, errorCode: 11 }
         );
-      if (QI() && Ys() && !Dl() && !e.run_in_background) {
+      if (isMonitorToolEnabled() && Ys() && !areBackgroundTasksDisabled() && !e.run_in_background) {
         let o = Us(e.command);
         if (o !== null)
           return {
@@ -4729,7 +4729,7 @@ var Ks =
             surface: "shell",
           });
           if (jE())
-            i("tengu_bash_task_ack", {
+            logEvent("tengu_bash_task_ack", {
               trigger: w.backgroundedByUser
                 ? S("user")
                 : w.backgroundedByTurnAbort
@@ -4779,7 +4779,7 @@ var Ks =
           let Y = J.length <= 8192 ? J : J.slice(0, 4096) + J.slice(-4096),
             le = gt(Y, w.code);
           throw (
-            i("tengu_powershell_tool_command_failed", {
+            logEvent("tengu_powershell_tool_command_failed", {
               command_type: fromEnum(Ie(e.command)),
               exit_code: w.code,
               stdout_length: J.length,
@@ -4813,9 +4813,9 @@ var Ks =
             let Y = yS(t.session);
             await _L(Y, t.storageV5);
             let le = g7e(Y, w.outputTaskId, !1),
-              te = M() && t.storageV5 !== void 0 ? hL($s(le), Ds(le)) : void 0,
+              te = isHoverRestEnabled() && t.storageV5 !== void 0 ? hL($s(le), Ds(le)) : void 0,
               Te = !0;
-            if (M() && t.storageV5 !== void 0 && te !== void 0) {
+            if (isHoverRestEnabled() && t.storageV5 !== void 0 && te !== void 0) {
               let ve = await _Wt(t.storageV5, te, w.outputFilePath, MAX_PERSISTED_OUTPUT_BYTES, getTaskOutputRootDir());
               if (((Te = ve === "today"), typeof ve === "number"))
                 ((oe = le), (fe = ve));
@@ -4843,7 +4843,7 @@ var Ks =
           p2t(Y, A, { command: e.command, exitCode: w.code, cwd: B });
         }
         return (
-          i("tengu_powershell_tool_command_executed", {
+          logEvent("tengu_powershell_tool_command_executed", {
             command_type: fromEnum(Ie(e.command)),
             stdout_length: re.length,
             stderr_length: de.length,
@@ -4916,7 +4916,7 @@ async function* Qs({
     let D = oe;
     if (D) ((oe = null), D());
   });
-  let re = Dl(),
+  let re = areBackgroundTasksDisabled(),
     de = !re && (await qs(C)),
     pe = !re,
     Y = kUt({
@@ -5002,14 +5002,14 @@ async function* Qs({
   function N(D, Z) {
     if (U) {
       if (!I_t(U, te, A || C, r, p)) return;
-      ((G = U), i(D, { command_type: fromEnum(Ie(C)) }), Z?.(U));
+      ((G = U), logEvent(D, { command_type: fromEnum(Ie(C)) }), Z?.(U));
       return;
     }
     v().then((ue) => {
       G = ue;
       let X = oe;
       if (X) ((oe = null), X());
-      if ((i(D, { command_type: fromEnum(Ie(C)) }), Z)) Z(ue);
+      if ((logEvent(D, { command_type: fromEnum(Ie(C)) }), Z)) Z(ue);
     });
   }
   if (te.onTimeout && de)
@@ -5023,7 +5023,7 @@ async function* Qs({
     }
     let D = await v();
     return (
-      i("tengu_powershell_command_explicitly_backgrounded", {
+      logEvent("tengu_powershell_command_explicitly_backgrounded", {
         command_type: fromEnum(Ie(C)),
       }),
       { stdout: "", stderr: "", code: 0, interrupted: !1, backgroundTaskId: D }

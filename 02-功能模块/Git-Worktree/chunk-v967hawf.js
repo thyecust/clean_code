@@ -27,16 +27,16 @@ import {
   kKe,
   qO,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Ypt } from "../../01-核心基础设施/共享小工具-未细化/chunk-ca2zxbyk.js";
+import { toInteger } from "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
 import { Ha, XXe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { spawn } from "child_process";
 import { constants } from "fs";
 import { lstat as Q, open as fe } from "fs/promises";
 var { ceil: Le, max: Ue } = Math;
 function ze(e, t, r) {
   if (r ? Z5t(e, t, r) : t === void 0) t = 1;
-  else t = Ue(Ypt(t), 0);
+  else t = Ue(toInteger(t), 0);
   var i = e == null ? 0 : e.length;
   if (!i || t < 1) return [];
   var s = 0,
@@ -637,7 +637,7 @@ var ot = /^hook\.(.*)\.(?:command|event|enabled)$/s,
 async function ke(e) {
   let t = await me(e, ["config", "-z", "--list", "--name-only"], {}, {});
   if (t.exitCode !== 0) return { kind: "unlisted", detail: Mv("config", t) };
-  let r = Y(
+  let r = dedupe(
     t.stdout.split("\x00").flatMap((s) => {
       let o = ot.exec(s)?.[1];
       return o === void 0 ? [] : [o];
@@ -1097,7 +1097,7 @@ async function St({
   if (f.floorBytes !== null && f.floorBytes > Se * i)
     return { ok: !1, reason: "too_large", sizeBytes: f.floorBytes };
   let p = d.commits,
-    m = s ? Y([...r, ...d.forkPoints]) : [...r],
+    m = s ? dedupe([...r, ...d.forkPoints]) : [...r],
     R = m.length <= Ee ? m : [...r],
     b = p.size,
     w = c.filter((k) => p.has(k.id)),
@@ -1237,7 +1237,7 @@ async function Tt(e, t, r) {
 `);
   if (i.exitCode !== 0 || s.length < t.length)
     return { missingCount: await re(e, t), floorBytes: null };
-  let o = G(s.slice(0, t.length), (u) => !/^\d+ commit/.test(u)),
+  let o = countMatching(s.slice(0, t.length), (u) => !/^\d+ commit/.test(u)),
     a = s.slice(t.length).flatMap((u) => {
       let d = /^(\d+) (commit|tag|tree|blob) ?(.*)$/.exec(u);
       if (d === null) return [];
@@ -1424,7 +1424,7 @@ async function Ft({
     return Ct(e.signal)
       ? u
       : l(E("tips", "could not read the received pack index"));
-  let m = Y(t.refs.map((g) => g.id));
+  let m = dedupe(t.refs.map((g) => g.id));
   if (!m.every((g) => p.has(g)))
     return (
       n("dir-sync: a tip the header names is not an object the pack delivered"),
@@ -1496,8 +1496,8 @@ async function Ft({
       l({ ok: !1, reason: "unpack_failed", detail: I })
     );
   let _ = v(x.stdout),
-    A = G([...p], (g) => !_.has(g)),
-    k = G([..._], (g) => !p.has(g));
+    A = countMatching([...p], (g) => !_.has(g)),
+    k = countMatching([..._], (g) => !p.has(g));
   if (A === 0 && k > 0) {
     let g = await B("--objects-edge-aggressive");
     if (Ct(e.signal)) return u;
@@ -1507,7 +1507,7 @@ async function Ft({
         n(`dir-sync: ${Mv("rev-list", g)}`),
         l({ ok: !1, reason: "unpack_failed", detail: I })
       );
-    k = G([...v(g.stdout)], (P) => !p.has(P));
+    k = countMatching([...v(g.stdout)], (P) => !p.has(P));
   }
   if (A > 0 || k > 0)
     return (
@@ -1755,7 +1755,7 @@ function Lt(e) {
 var Te = 1024,
   Ge = 20000;
 async function Me(e, t, r, i = {}) {
-  let s = Y(t);
+  let s = dedupe(t);
   if (s.length === 0) return [];
   let o = await on(
     e,
@@ -1837,7 +1837,7 @@ async function Ut(e, t, r, i) {
         .flatMap((y) => y.split(" ").slice(1)),
     );
   }
-  let u = Y(l.filter((d) => nn.test(d) && !t.has(d)));
+  let u = dedupe(l.filter((d) => nn.test(d) && !t.has(d)));
   return (await Me(e, u, r, i))?.length ?? null;
 }
 async function dOe(e, t) {

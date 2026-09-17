@@ -12,7 +12,7 @@ import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工�
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Mw, pnt, I2e, Pb } from "../Git-Worktree/chunk-bk9696gx.js";
 import { findGitRoot, getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -39,8 +39,8 @@ import {
 import { vze, Rze, pI } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import { Oan, Dan, dFt, _ze, Jb, pFt, Lan, Kce } from "../Git-Worktree/chunk-7jshw9s9.js";
 import { Xbe } from "../Git-Worktree/chunk-v967hawf.js";
-import { Pan } from "../云会话-Teleport/chunk-8scrd4ba.js";
-import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
+import { MAX_OVERLAY_BUNDLE_BYTES } from "../云会话-Teleport/overlay-bundle.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { lstat } from "fs/promises";
 import { join as R } from "path";
@@ -113,7 +113,7 @@ async function T({
     m;
   try {
     let f = q2(o ?? LM().id);
-    m = Fa(t, { timeoutMs: r, refTimer: !0 });
+    m = createLinkedAbortSignal(t, { timeoutMs: r, refTimer: !0 });
     let p = m,
       c = await Kce(
         G(
@@ -287,7 +287,7 @@ async function N(e, o, t, s) {
       input: `HEAD
 ^${r.remote.commit}
 `,
-      limitBytes: Pan - E,
+      limitBytes: MAX_OVERLAY_BUNDLE_BYTES - E,
     },
   );
   return l.overLimit || l.exitCode !== 0
@@ -594,7 +594,7 @@ function W(e, o, t) {
     r = "seed" in e ? e.seed : null,
     l = "untracked" in e ? e.untracked : null;
   if (
-    (i("tengu_dir_sync_offer_probe", {
+    (logEvent("tengu_dir_sync_offer_probe", {
       outcome: fromEnum(e.reason),
       forecast: fromEnumOpt(o.forecast?.kind),
       deferral: e.reason === "deferred" ? fromEnum(e.deferral) : void 0,

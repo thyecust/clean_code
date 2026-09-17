@@ -12,32 +12,32 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { b, Tc, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Lhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { yi, ms, Ow, B5, SHn, gke, wx, XT, NQ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
+import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import { uD } from "../Hooks钩子/chunk-z3433nr6.js";
 import { YC } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { toe, ig } from "../插件系统/chunk-ajtn749s.js";
 import { bK, T1e, Hc } from "../插件系统/chunk-hh8f1qrw.js";
 import { iH, isRemoteToolServingMuted, onServingMuteRecheck, pT, an, wEe, Ql, pY, tD, nD } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Qz, SWe } from "../插件系统/chunk-55xj4ev5.js";
+import { CLOUD_PLUGINS_FORWARDED_SETTING_KEY, PLUGIN_FORWARDING_DISABLED_MESSAGE } from "../插件系统/plugin-forwarding.js";
 import { ale, eUn } from "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import { np, Xc, $g, Lu } from "../插件系统/chunk-33bdfgmx.js";
 import { s, T, v, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { hostname } from "os";
 import { dirname, join as hn } from "path";
-var mn = m(() =>
+var mn = createLazyValue(() =>
     c({
       version: k(1),
       choice: X(["accepted", "declined"]),
@@ -265,7 +265,7 @@ function yWe(e) {
     },
     E = {
       forwarded: S.length,
-      forwardedDisabled: G(S, ({ value: A }) => !A),
+      forwardedDisabled: countMatching(S, ({ value: A }) => !A),
       marketplacesDeclared: Object.keys(a.extraKnownMarketplaces).length,
       dropped: t,
     };
@@ -306,7 +306,7 @@ function $e(e) {
   };
 }
 function zn(e, t) {
-  if (!me(t)) return { kind: "drop", reason: "invalid_marketplace" };
+  if (!isRecord(t)) return { kind: "drop", reason: "invalid_marketplace" };
   switch (Q(t, "source")) {
     case "github":
       return nt(e, t);
@@ -328,7 +328,7 @@ function Yn(e, t) {
     r = new Set();
   for (let d of Ue) {
     let w = e.enabledPluginsByTier[d];
-    if (!me(w)) continue;
+    if (!isRecord(w)) continue;
     let O = kn.has(d) || (d === "localSettings" && e.localSettingsAreOwnChoice),
       S = Object.keys(w);
     t.over_cap += Math.max(0, S.length - ve);
@@ -356,7 +356,7 @@ function Yn(e, t) {
 function Vn(e) {
   return Ue.some((t) => {
     let o = e.enabledPluginsByTier[t];
-    return me(o) && Object.keys(o).length > ve;
+    return isRecord(o) && Object.keys(o).length > ve;
   });
 }
 function Zn(e) {
@@ -388,7 +388,7 @@ function qn(
 function Xn({ enabledPluginsByTier: e }) {
   let t = e.policySettings;
   return new Set(
-    me(t)
+    isRecord(t)
       ? Object.keys(t)
           .filter((o) => t[o] === !1)
           .map((o) => o.toLowerCase())
@@ -420,14 +420,14 @@ function Ie(e, t) {
   return et(e, t) ? "untrusted_for_folder" : "unknown_marketplace";
 }
 function Qn(e, t) {
-  let o = me(t.registeredMarketplaces)
+  let o = isRecord(t.registeredMarketplaces)
     ? Q(t.registeredMarketplaces, e)
     : void 0;
-  if (o !== void 0) return me(o) ? (Q(o, "source") ?? null) : null;
+  if (o !== void 0) return isRecord(o) ? (Q(o, "source") ?? null) : null;
   for (let r of Sn) {
     if (Ow.has(r) && !t.folderTrustedForProjectPlugins) continue;
     let d = Be(t, r, e);
-    if (d !== void 0) return me(d) ? (Q(d, "source") ?? null) : null;
+    if (d !== void 0) return isRecord(d) ? (Q(d, "source") ?? null) : null;
   }
   return;
 }
@@ -439,7 +439,7 @@ function et(e, t) {
 }
 function Be(e, t, o) {
   let r = e.declaredMarketplacesByTier[t];
-  return me(r) ? Q(r, o) : void 0;
+  return isRecord(r) ? Q(r, o) : void 0;
 }
 function nt(e, t) {
   let o = Q(t, "repo");
@@ -472,7 +472,7 @@ function ot(e, t) {
   let r = Q(t, "headers");
   if (
     Q(t, "headersHelper") !== void 0 ||
-    (r !== void 0 && !(me(r) && Object.keys(r).length === 0))
+    (r !== void 0 && !(isRecord(r) && Object.keys(r).length === 0))
   )
     return { kind: "drop", reason: "needs_credentials" };
   let d = Ye(o, Mn);
@@ -617,13 +617,13 @@ function lt(e, t, o) {
 }
 function ut(e) {
   let t = e.filter(({ declaration: d }) => d !== void 0),
-    o = Y(
+    o = dedupe(
       t.filter(({ ownMention: d }) => d).map(({ marketplace: d }) => d),
     ).sort(),
     r = new Set(o);
   return [
     ...o,
-    ...Y(t.map(({ marketplace: d }) => d))
+    ...dedupe(t.map(({ marketplace: d }) => d))
       .filter((d) => !r.has(d))
       .sort(),
   ];
@@ -682,14 +682,14 @@ async function rPt(e) {
     registeredMarketplaces: o,
     folderTrustedForProjectPlugins: d,
     localSettingsAreOwnChoice:
-      !(me(S) && Object.keys(S).length > 0) ||
+      !(isRecord(S) && Object.keys(S).length > 0) ||
       !YC({ onIndeterminate: "tracked" }),
     directoryPluginsAllowedByPolicy: bK(),
     builtinPluginIds: new Set(
-      [...wo().builtinPlugins.keys()].map((a) => `${a}@${$g}`),
+      [...getHostStateStore().builtinPlugins.keys()].map((a) => `${a}@${$g}`),
     ),
     trustedOnlyBuiltinIds: new Set(
-      [...wo().builtinPlugins.keys()]
+      [...getHostStateStore().builtinPlugins.keys()]
         .map((a) => `${a}@${$g}`)
         .filter(iH)
         .map((a) => a.toLowerCase()),
@@ -743,7 +743,7 @@ function Ze({
       logFeatureBad("ccr_cloud_plugins_forward", P, a);
     ((H = P),
       A("skipped"),
-      i("tengu_cloud_plugins_skipped", {
+      logEvent("tengu_cloud_plugins_skipped", {
         reason: fromEnum(P),
         ...a,
         reattach: p.reattach,
@@ -778,7 +778,7 @@ function Ze({
   }
   function ne(p, P, C, j) {
     Z = !0;
-    let B = oe({ subtype: "apply_flag_settings", settings: { [Qz]: P.patch } }),
+    let B = oe({ subtype: "apply_flag_settings", settings: { [CLOUD_PLUGINS_FORWARDED_SETTING_KEY]: P.patch } }),
       se = () => Ae(p, j) === "current";
     return (
       B.response.then(
@@ -788,7 +788,7 @@ function Ze({
         (_e) => {
           let te = gt(_e);
           if (
-            (i("tengu_cloud_plugins_apply_unconfirmed", {
+            (logEvent("tengu_cloud_plugins_apply_unconfirmed", {
               at: fromEnum(C),
               ...a,
               standing: fromEnum(Ae(p, j)),
@@ -805,7 +805,7 @@ function Ze({
   function he(p, P) {
     let C = yWe(P);
     if (
-      (i("tengu_cloud_plugins_forwarded", {
+      (logEvent("tengu_cloud_plugins_forwarded", {
         ...$e(C.counts),
         refused_whole: C.refusedWhole !== void 0,
         ...a,
@@ -871,7 +871,7 @@ function Ze({
       (ie = !1));
     let se = () => Ae(p, C),
       _e = (q) => {
-        i("tengu_cloud_plugins_reload", {
+        logEvent("tengu_cloud_plugins_reload", {
           early_apply: fromEnum(p.earlyApply),
           generation_changed: B,
           install_frames_seen: p.installFrames,
@@ -1060,8 +1060,8 @@ var ft = [
 ];
 function gt(e) {
   let t = e instanceof Error ? e.message : typeof e === "string" ? e : "";
-  if (t === SWe) return "other";
-  let o = `${SWe}: `;
+  if (t === PLUGIN_FORWARDING_DISABLED_MESSAGE) return "other";
+  let o = `${PLUGIN_FORWARDING_DISABLED_MESSAGE}: `;
   if (!t.startsWith(o)) return null;
   let r = t.slice(o.length).trim();
   return ft.find((d) => d === r) ?? "other";
@@ -1073,7 +1073,7 @@ function ht(e) {
 function Fe(e) {
   return e.posted.catch(() => "failed");
 }
-var mt = m(() =>
+var mt = createLazyValue(() =>
   c({ plugins: v(c({ source: s().optional() })), error_count: T().int() }),
 );
 function _t(e, t) {
@@ -1209,7 +1209,7 @@ function _it(e) {
         (U = void 0),
         M.disconnected(),
         p(),
-        i("tengu_cloud_plugins_admission", {
+        logEvent("tengu_cloud_plugins_admission", {
           admission: fromEnum("flag_off"),
           source: fromEnum("muted"),
           reattach: o,
@@ -1241,7 +1241,7 @@ function _it(e) {
         (ie = D),
         (U = void 0),
         K(),
-        i("tengu_cloud_plugins_admission", {
+        logEvent("tengu_cloud_plugins_admission", {
           admission: fromEnum(I),
           source: fromEnum(D),
           reattach: o,
@@ -1301,7 +1301,7 @@ function _it(e) {
     )
     .then((_) => {
       if (
-        (i("tengu_cloud_plugins_admission", {
+        (logEvent("tengu_cloud_plugins_admission", {
           admission: fromEnum(_.admission),
           source: fromEnum(_.source),
           reattach: o,

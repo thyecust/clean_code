@@ -10,7 +10,7 @@
 import { fromSanitizer_SANITIZER_OUTPUT_ONLY } from "./analytics-fields.js";
 import { _n } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { M } from "./chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
 import { ou, We } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getJobDir } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 var a = new Set([
@@ -29,25 +29,25 @@ var a = new Set([
   "idle",
   "waiting",
 ]);
-function fI(e) {
+function fromJobState(e) {
   if (e === void 0) return;
   return fromSanitizer_SANITIZER_OUTPUT_ONLY(a.has(e) ? e : "other");
 }
 var d = new Set(["cold", "spare", "adopted"]);
-function Ize(e) {
+function parseAttachVia(e) {
   return typeof e === "string" && d.has(e) ? e : void 0;
 }
 import { mkdir } from "fs/promises";
 import { join as c } from "path";
-async function sft(e, r) {
-  if (M() && r !== void 0 && _n(e)) {
+async function ensureJobDir(e, r) {
+  if (isHoverRestEnabled() && r !== void 0 && _n(e)) {
     await i(r, { namespace: "job", jobId: e });
     return;
   }
   await mkdir(getJobDir(e), { recursive: !0 });
 }
-async function eue(e, r) {
-  if (M() && r !== void 0 && _n(e)) {
+async function ensureJobTmpDir(e, r) {
+  if (isHoverRestEnabled() && r !== void 0 && _n(e)) {
     await i(r, s(e));
     return;
   }
@@ -66,4 +66,4 @@ async function i(e, r) {
     );
   }
 }
-export { fI, Ize, sft, eue };
+export { fromJobState, parseAttachVia, ensureJobDir, ensureJobTmpDir };

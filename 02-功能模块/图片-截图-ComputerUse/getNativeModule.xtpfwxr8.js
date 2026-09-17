@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { DMn } from "./chunk-n9d7c592.js";
+import { getImageProcessorNativeModule } from "./image-processor-native.js";
 var a = null,
   u = !1;
 function getNativeModule() {
   if (u) return a;
   u = !0;
   try {
-    a = DMn();
+    a = getImageProcessorNativeModule();
   } catch {
     a = null;
   }

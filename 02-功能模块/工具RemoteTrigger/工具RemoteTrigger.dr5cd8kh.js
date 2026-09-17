@@ -12,11 +12,11 @@
 import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { wa, E$, SJn, bJn, m7e, Xpe, CJn } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, cd, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ht, isClaudeAISubscriber } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -24,13 +24,13 @@ import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqs
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { gM } from "../../01-核心基础设施/共享小工具-未细化/chunk-febx58tg.js";
 import { jh } from "../../01-核心基础设施/共享小工具-未细化/chunk-1w1x0pyk.js";
 import { oHn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js";
 import { s, T, O, se, v, c, Qe, $e, fe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-var q = m(() => c({ data: v(se()), next_cursor: s().nullish() })),
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+var q = createLazyValue(() => c({ data: v(se()), next_cursor: s().nullish() })),
   Y = 800,
   K = 4000,
   U = 6,
@@ -57,7 +57,7 @@ var q = m(() => c({ data: v(se()), next_cursor: s().nullish() })),
 function C(e) {
   return s().transform((r) => w(r, e));
 }
-var Q = m(() =>
+var Q = createLazyValue(() =>
     c({
       created_at: C(40)
         .optional()
@@ -65,7 +65,7 @@ var Q = m(() =>
       payload: se().optional(),
     }),
   ),
-  M = m(() =>
+  M = createLazyValue(() =>
     c({
       type: C(40).optional(),
       text: s().optional(),
@@ -75,10 +75,10 @@ var Q = m(() =>
       content: se().optional(),
     }),
   ),
-  W = m(() =>
+  W = createLazyValue(() =>
     c({ message: c({ content: $e([s(), v(se())]).optional() }).optional() }),
   ),
-  J = m(() =>
+  J = createLazyValue(() =>
     c({
       is_error: O().optional(),
       num_turns: T().optional(),
@@ -96,7 +96,7 @@ function w(e, r) {
   return `${t}\u2026 [+${e.length - t.length} chars]`;
 }
 function z(e) {
-  return me(e) ? e : void 0;
+  return isRecord(e) ? e : void 0;
 }
 function p(e, r, n) {
   let t = e?.[r];
@@ -299,7 +299,7 @@ function ue(e) {
   if (n.length > U) t.push(`${n.length - U} other kind(s)`);
   return `(${r} non-transcript event(s) on this page skipped: ${t.join(", ")})`;
 }
-var ce = m(() =>
+var ce = createLazyValue(() =>
   c({
     type: C(60),
     subtype: C(60)
@@ -368,7 +368,7 @@ function F(e, r) {
   if (_.length > r) _ = `${oe(_, Math.max(0, r - 20))}\u2026[truncated]`;
   return { text: _, eventsFetched: e.data.length, eventsShown: t.length };
 }
-var de = m(() =>
+var de = createLazyValue(() =>
     Qe({
       action: X([
         "list",
@@ -399,8 +399,8 @@ var de = m(() =>
         .describe("Required for create and update; optional for run"),
     }),
   ),
-  le = m(() => c({ status: T(), json: s(), summary: s().optional() })),
-  ge = m(() => {
+  le = createLazyValue(() => c({ status: T(), json: s(), summary: s().optional() })),
+  ge = createLazyValue(() => {
     let e = s().transform((r) => r || void 0);
     return c({
       id: oHn(),
@@ -445,7 +445,7 @@ var G = 1e5,
   _e = 10,
   he = 200,
   ye = 200,
-  be = m(() => {
+  be = createLazyValue(() => {
     let e = s()
       .nullish()
       .catch(void 0);
@@ -541,7 +541,7 @@ function H(e) {
   if (!d) return e;
   return { ...e, job_config: { ...r, ccr: { ...n, events: o } } };
 }
-var RemoteTriggerTool = Tt({
+var RemoteTriggerTool = buildTool({
   name: E$,
   searchHint:
     "manage scheduled cloud agent routines; inspect their run history and logs",
@@ -677,7 +677,7 @@ var RemoteTriggerTool = Tt({
         ) {
           let x = S ? ge().safeParse(k.data) : void 0;
           if (
-            (i("tengu_remote_trigger", {
+            (logEvent("tengu_remote_trigger", {
               action: fromEnum(o),
               has_run_once_at:
                 typeof _?.run_once_at === "string" && _.run_once_at !== "",

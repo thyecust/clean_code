@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Me } from "./chunk-0dh9gct8.js";
+import { useStoreSelector } from "./use-store-selector.js";
 import { Qt, De, V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { NEt } from "./chunk-jzy6p47z.js";
+import { createPartialStateUpdater } from "./state-store.js";
 F();
 var rO = Qt(null),
   qOt = Qt(null),
@@ -49,19 +49,19 @@ function t() {
 }
 function U(e) {
   let n = t();
-  return Me(n, e);
+  return useStoreSelector(n, e);
 }
 function It() {
   return t().setState;
 }
 function gtn() {
   let e = t();
-  return V(() => NEt(e.setState), [e]);
+  return V(() => createPartialStateUpdater(e.setState), [e]);
 }
 function Yn() {
   return t();
 }
 function Os(e) {
-  return Me(De(rO), e);
+  return useStoreSelector(De(rO), e);
 }
 export { rO, qOt, zOt, b9e, VOt, l4, d_, U, It, gtn, Yn, Os };

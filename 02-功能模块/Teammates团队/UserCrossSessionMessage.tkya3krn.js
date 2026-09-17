@@ -11,22 +11,22 @@
 // [preload stripped] 原本在此预载 240 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { uCe, NGt, Ij } from "./chunk-g6nvp9mm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { GB } from "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import { shouldExpandContent } from "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import { FT, uf } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nvfdjg8e.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import { js } from "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
-import { Bb, NB } from "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
+import { resolveAgentColor, CollapsedMessagesHint } from "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import { UA } from "../工具UI渲染/chunk-g4k5jjwt.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import { L } from "./chunk-mrfx53ye.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var g = "</cross-session-message>",
   B = "peer";
 function v(s) {
@@ -54,7 +54,7 @@ function UserCrossSessionMessage(se) {
     } = se,
     { text: u } = re,
     ae = z === void 0 ? !1 : z,
-    ie = GB(te, ne),
+    ie = shouldExpandContent(te, ne),
     f,
     F;
   if (i[0] !== W || i[1] !== u) {
@@ -71,7 +71,7 @@ function UserCrossSessionMessage(se) {
       if (uCe.includes(q) || (W === !0 && NGt.includes(q))) d = d.slice(0, j);
     }
     let x;
-    if (i[6] === p) ((x = /\n<\/cross-session-message>$/), (i[6] = x));
+    if (i[6] === MEMO_CACHE_SENTINEL) ((x = /\n<\/cross-session-message>$/), (i[6] = x));
     else x = i[6];
     F = d.replace(/^<cross-session-message[^>]*>\n/, "").replace(x, "");
     ((i[0] = W), (i[1] = u), (i[2] = f), (i[3] = F));
@@ -86,7 +86,7 @@ function UserCrossSessionMessage(se) {
   if (!ie) {
     let n;
     if (i[9] !== M || i[10] !== f || i[11] !== m)
-      ((n = e(NB, { displayName: f, addMargin: M, fallbackLabel: B, body: m })),
+      ((n = e(CollapsedMessagesHint, { displayName: f, addMargin: M, fallbackLabel: B, body: m })),
         (i[9] = M),
         (i[10] = f),
         (i[11] = m),
@@ -96,10 +96,10 @@ function UserCrossSessionMessage(se) {
   }
   const n = M ? 1 : 0;
   let x;
-  if (i[13] === p) ((x = Bb(void 0)), (i[13] = x));
+  if (i[13] === MEMO_CACHE_SENTINEL) ((x = resolveAgentColor(void 0)), (i[13] = x));
   else x = i[13];
   let H;
-  if (i[14] === p)
+  if (i[14] === MEMO_CACHE_SENTINEL)
     ((H = e(t, { "aria-hidden": !0, children: L.pointer })), (i[14] = H));
   else H = i[14];
   let T;

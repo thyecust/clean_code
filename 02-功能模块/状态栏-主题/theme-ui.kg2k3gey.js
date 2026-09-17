@@ -15,28 +15,28 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Nk, Tj } from "./chunk-jz6b76hr.js";
 import { cn, c4, u4 } from "./chunk-w5jaj6kg.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { isCustomizationDisabled } from "./chunk-dqyc6kge.js";
 import { twe, D9, Zb, $ze, wln } from "./chunk-q7ekqy5h.js";
 import { zl } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { S0n } from "../权限系统/chunk-e4pfvp7x.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { jx, S6e } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import "../Diff引擎/chunk-p2gj9dsf.js";
 import { KZ } from "./chunk-rhjpq9s2.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-vwjqzjhr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, V, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
 import { sep as lo } from "path";
@@ -59,7 +59,7 @@ function U(Mr) {
 function Ee(Br) {
   let s = _(152),
     { initial: k, defaultBase: Ve, onDone: We, onCancel: ae } = Br,
-    { storageV5: de } = _e(),
+    { storageV5: de } = useStorageV5Context(),
     [, Ze] = cn(),
     { customThemes: He, reloadCustomThemes: Se, setPreviewOverrides: u } = u4(),
     eo = k !== void 0 && k.source !== "user",
@@ -233,7 +233,7 @@ function Ee(Br) {
   if (s[53] !== mo)
     ((sr = { context: "Settings", isActive: mo }), (s[53] = mo), (s[54] = sr));
   else sr = s[54];
-  if ((Ne("confirm:no", rr, sr), Lo === "name")) {
+  if ((useKeybinding("confirm:no", rr, sr), Lo === "name")) {
     let K;
     if (s[55] !== l) ((K = l.trim()), (s[55] = l), (s[56] = K));
     else K = s[56];
@@ -247,7 +247,7 @@ function Ee(Br) {
         (s[58] = N));
     else N = s[58];
     let L;
-    if (s[59] === p) ((L = e(t, { children: "Name: " })), (s[59] = L));
+    if (s[59] === MEMO_CACHE_SENTINEL) ((L = e(t, { children: "Name: " })), (s[59] = L));
     else L = s[59];
     let w;
     if (
@@ -314,7 +314,7 @@ function Ee(Br) {
         (s[73] = y));
     else y = s[73];
     let A;
-    if (s[74] === p) ((A = twe()), (s[74] = A));
+    if (s[74] === MEMO_CACHE_SENTINEL) ((A = twe()), (s[74] = A));
     else A = s[74];
     let oe;
     if (s[75] !== h || s[76] !== z)
@@ -335,17 +335,17 @@ function Ee(Br) {
     else Y = s[80];
     let G;
     if (s[81] !== pe)
-      ((G = pe && e(D, { chord: "enter", action: "continue" })),
+      ((G = pe && e(KeybindingHint, { chord: "enter", action: "continue" })),
         (s[81] = pe),
         (s[82] = G));
     else G = s[82];
     let Pe;
-    if (s[83] === p)
-      ((Pe = e(D, { chord: "escape", action: "cancel" })), (s[83] = Pe));
+    if (s[83] === MEMO_CACHE_SENTINEL)
+      ((Pe = e(KeybindingHint, { chord: "escape", action: "cancel" })), (s[83] = Pe));
     else Pe = s[83];
     let I;
     if (s[84] !== G)
-      ((I = e(t, { dimColor: !0, children: r(ue, { children: [G, Pe] }) })),
+      ((I = e(t, { dimColor: !0, children: r(DotSeparatedList, { children: [G, Pe] }) })),
         (s[84] = G),
         (s[85] = I));
     else I = s[85];
@@ -382,7 +382,7 @@ function Ee(Br) {
     if (s[94] !== N) ((L = e(U, { value: N })), (s[94] = N), (s[95] = L));
     else L = s[95];
     let w;
-    if (s[96] === p) ((w = e(t, { children: " " })), (s[96] = w));
+    if (s[96] === MEMO_CACHE_SENTINEL) ((w = e(t, { children: " " })), (s[96] = w));
     else w = s[96];
     let y;
     if (s[97] !== a)
@@ -410,7 +410,7 @@ function Ee(Br) {
         (s[106] = G));
     else G = s[106];
     let Pe;
-    if (s[107] === p) ((Pe = e(t, { children: "Value: " })), (s[107] = Pe));
+    if (s[107] === MEMO_CACHE_SENTINEL) ((Pe = e(t, { children: "Value: " })), (s[107] = Pe));
     else Pe = s[107];
     let I;
     if (
@@ -449,10 +449,10 @@ function Ee(Br) {
     let ie;
     if (s[114] !== Fe)
       ((ie = Fe
-        ? r(ue, {
+        ? r(DotSeparatedList, {
             children: [
-              e(D, { chord: "enter", action: "save" }),
-              e(D, { chord: "escape", action: "cancel" }),
+              e(KeybindingHint, { chord: "enter", action: "save" }),
+              e(KeybindingHint, { chord: "escape", action: "cancel" }),
             ],
           })
         : "Accepts rgb(r,g,b), #rrggbb, ansi256(n), or ansi:name"),
@@ -618,11 +618,11 @@ function go(ls) {
     [fo, he] = cn(),
     { customThemes: po } = u4(),
     cr;
-  if (M[0] === p) ((cr = { kind: "picker" }), (M[0] = cr));
+  if (M[0] === MEMO_CACHE_SENTINEL) ((cr = { kind: "picker" }), (M[0] = cr));
   else cr = M[0];
   let [Qe, lr] = d(cr),
     ar;
-  if (M[1] === p) ((ar = isCustomizationDisabled("themes")), (M[1] = ar));
+  if (M[1] === MEMO_CACHE_SENTINEL) ((ar = isCustomizationDisabled("themes")), (M[1] = ar));
   else ar = M[1];
   let dr = ar,
     ho = c4(),
@@ -641,7 +641,7 @@ function go(ls) {
         (M[6] = Z));
     else Z = M[6];
     let Re;
-    if (M[7] === p) ((Re = () => lr({ kind: "picker" })), (M[7] = Re));
+    if (M[7] === MEMO_CACHE_SENTINEL) ((Re = () => lr({ kind: "picker" })), (M[7] = Re));
     else Re = M[7];
     let me;
     if (M[8] !== fo || M[9] !== Qe.initial || M[10] !== Z)
@@ -674,7 +674,7 @@ function go(ls) {
       (M[15] = Z));
   else Z = M[15];
   let Re;
-  if (M[16] === p)
+  if (M[16] === MEMO_CACHE_SENTINEL)
     ((Re = dr ? void 0 : (ds) => lr({ kind: "editor", initial: ds })),
       (M[16] = Re));
   else Re = M[16];

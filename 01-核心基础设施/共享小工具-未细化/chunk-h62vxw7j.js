@@ -12,7 +12,7 @@ import { cwd as c } from "process";
 function o(n) {
   return n.normalize("NFC");
 }
-function OMn() {
+function getNormalizedRealCwd() {
   let n = "";
   if (
     typeof process < "u" &&
@@ -29,8 +29,8 @@ function OMn() {
     } catch {}
   return n;
 }
-var idr = OMn(),
-  adr = (() => {
+var STARTUP_REAL_CWD = getNormalizedRealCwd(),
+  STARTUP_CWD = (() => {
     if (typeof process > "u" || typeof process.cwd !== "function") return null;
     try {
       return process.cwd();
@@ -39,12 +39,12 @@ var idr = OMn(),
     }
   })();
 var t;
-function M() {
+function isHoverRestEnabled() {
   return t === !0;
 }
-function ldr(n) {
+function pinHoverRestFlag(n) {
   let e = n === !0;
   if (t === void 0) return ((t = e), "pinned");
   return t === e ? "unchanged" : "conflict";
 }
-export { OMn, idr, adr, M, ldr };
+export { getNormalizedRealCwd, STARTUP_REAL_CWD, STARTUP_CWD, isHoverRestEnabled, pinHoverRestFlag };

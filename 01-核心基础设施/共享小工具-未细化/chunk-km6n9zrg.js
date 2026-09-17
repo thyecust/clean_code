@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { On } from "../安全文件系统(FS加固)/chunk-h64ek850.js";
-import { dy } from "./chunk-862jyk0r.js";
+import { O_NOFOLLOW_NONBLOCK_FLAGS } from "./open-flags.js";
 import { AsyncLocalStorage } from "async_hooks";
 import { constants } from "fs";
 import {
@@ -98,7 +98,7 @@ class z7t {
   }
   async readTail(r, e, t) {
     a("readTail", "maxBytes", e);
-    let n = t?.noFollow ? constants.O_RDONLY | dy : "r",
+    let n = t?.noFollow ? constants.O_RDONLY | O_NOFOLLOW_NONBLOCK_FLAGS : "r",
       i = await u(r, n);
     try {
       let s = await i.stat();

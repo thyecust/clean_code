@@ -11,8 +11,8 @@
 // [preload stripped] 原本在此预载 69 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -92,7 +92,7 @@ function j(e) {
   if (e >= 400) return "http_4xx";
   return "http_other";
 }
-var R = m(() => c({ file_uuid: s() }));
+var R = createLazyValue(() => c({ file_uuid: s() }));
 async function uploadBytesToBridgeStore(e, r, d, l, i, A) {
   let f = E(i);
   if (f) return (o(`skip ${r}: policy/provider gate denied`), f);
@@ -102,7 +102,7 @@ async function uploadBytesToBridgeStore(e, r, d, l, i, A) {
       logFeatureSad("bridge_attachment_upload", "too_large", i),
       { error: `${x(e.length)} exceeds the ${k} MiB upload limit` }
     );
-  let _ = M() && A !== void 0 ? await getBridgeAccessTokenAsync(A) : getBridgeAccessToken();
+  let _ = isHoverRestEnabled() && A !== void 0 ? await getBridgeAccessTokenAsync(A) : getBridgeAccessToken();
   if (!_)
     return (
       o("skip: no oauth token"),
@@ -170,7 +170,7 @@ async function uploadBriefAttachment(e, r, d) {
   let l = { upload_lane: fromEnum(d.lane) },
     i = E(l);
   if (i) return (o(`skip ${e}: policy/provider gate denied`), i);
-  if (!(M() && d.credentials !== void 0 ? await getBridgeAccessTokenAsync(d.credentials) : getBridgeAccessToken()))
+  if (!(isHoverRestEnabled() && d.credentials !== void 0 ? await getBridgeAccessTokenAsync(d.credentials) : getBridgeAccessToken()))
     return (
       o("skip: no oauth token"),
       logFeatureSad("bridge_attachment_upload", "no_token", l),

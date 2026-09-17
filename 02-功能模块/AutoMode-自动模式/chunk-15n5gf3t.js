@@ -12,7 +12,7 @@ import { M4t } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { getSettingsForSource, getAllPolicyTierSettings, getDurablePolicyTierSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { H, od } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isViolinWoodEnabled, isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
@@ -49,7 +49,7 @@ function JDt() {
 var UNATTENDED_SERVING_CONSENT_VERSION = 1,
   UNATTENDED_SERVING_CONSENT_TERMS = "unattended-serving:v1:auto-arm-classifier",
   E = "unattended-serving-consent.json",
-  _ = m(() =>
+  _ = createLazyValue(() =>
     c({
       version: k(UNATTENDED_SERVING_CONSENT_VERSION),
       choice: X(["accepted", "declined"]),

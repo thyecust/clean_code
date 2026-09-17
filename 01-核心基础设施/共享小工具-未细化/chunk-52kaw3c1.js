@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { m0 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { m } from "./chunk-78nzsrc6.js";
+import { createLazyValue } from "./lazy-value.js";
 import { mN } from "../../02-功能模块/后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var o = 60000,
   r = 1800000,
   t = 2592000000,
-  i = m(() =>
+  i = createLazyValue(() =>
     c({
       recurringFrac: T().min(0).max(1),
       recurringCapMs: T().int().min(0).max(r),

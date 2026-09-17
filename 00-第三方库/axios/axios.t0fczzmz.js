@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { pe, w, au, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var hn = w(function (Al, dn) {
-  var pn = Ae("stream").Stream,
-    Aa = Ae("util");
+import { toESM, commonJS, defineExportGetters, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var hn = commonJS(function (Al, dn) {
+  var pn = importMetaRequire("stream").Stream,
+    Aa = importMetaRequire("util");
   dn.exports = oe;
   function oe() {
     ((this.source = null),
@@ -86,9 +86,9 @@ var hn = w(function (Al, dn) {
     this.emit("error", Error(e));
   };
 });
-var gn = w(function (Ol, bn) {
-  var Oa = Ae("util"),
-    yn = Ae("stream").Stream,
+var gn = commonJS(function (Ol, bn) {
+  var Oa = importMetaRequire("util"),
+    yn = importMetaRequire("stream").Stream,
     mn = hn();
   bn.exports = L;
   function L() {
@@ -240,7 +240,7 @@ var gn = w(function (Ol, bn) {
     (this._reset(), this.emit("error", e));
   };
 });
-var Rn = w(function (Cl, En) {
+var Rn = commonJS(function (Cl, En) {
   var Qe = (e) => () => {
     throw Error(
       "mime-types." +
@@ -258,7 +258,7 @@ var Rn = w(function (Cl, En) {
     charsets: { lookup: Qe("charsets.lookup") },
   };
 });
-var xn = w(function (vl, wn) {
+var xn = commonJS(function (vl, wn) {
   wn.exports = Ca;
   function Ca(e) {
     var t =
@@ -271,7 +271,7 @@ var xn = w(function (vl, wn) {
     else setTimeout(e, 0);
   }
 });
-var Gt = w(function (Tl, Sn) {
+var Gt = commonJS(function (Tl, Sn) {
   var _n = xn();
   Sn.exports = va;
   function va(e) {
@@ -290,7 +290,7 @@ var Gt = w(function (Tl, Sn) {
     );
   }
 });
-var Jt = w(function (Pl, An) {
+var Jt = commonJS(function (Pl, An) {
   An.exports = Ta;
   function Ta(e) {
     (Object.keys(e.jobs).forEach(Pa.bind(e)), (e.jobs = {}));
@@ -299,7 +299,7 @@ var Jt = w(function (Pl, An) {
     if (typeof this.jobs[e] == "function") this.jobs[e]();
   }
 });
-var Kt = w(function (Fl, Cn) {
+var Kt = commonJS(function (Fl, Cn) {
   var On = Gt(),
     Fa = Jt();
   Cn.exports = La;
@@ -319,7 +319,7 @@ var Kt = w(function (Fl, Cn) {
     return o;
   }
 });
-var Xt = w(function (Ll, vn) {
+var Xt = commonJS(function (Ll, vn) {
   vn.exports = Na;
   function Na(e, t) {
     var r = !Array.isArray(e),
@@ -341,7 +341,7 @@ var Xt = w(function (Ll, vn) {
     return n;
   }
 });
-var Yt = w(function (Bl, Tn) {
+var Yt = commonJS(function (Bl, Tn) {
   var Da = Jt(),
     Ua = Gt();
   Tn.exports = qa;
@@ -350,7 +350,7 @@ var Yt = w(function (Bl, Tn) {
     ((this.index = this.size), Da(this), Ua(e)(null, this.results));
   }
 });
-var Fn = w(function (Nl, Pn) {
+var Fn = commonJS(function (Nl, Pn) {
   var Ia = Kt(),
     ka = Xt(),
     ja = Yt();
@@ -372,7 +372,7 @@ var Fn = w(function (Nl, Pn) {
     return ja.bind(n, r);
   }
 });
-var Qt = w(function (Dl, xt) {
+var Qt = commonJS(function (Dl, xt) {
   var Ln = Kt(),
     Ha = Xt(),
     za = Yt();
@@ -403,76 +403,76 @@ var Qt = w(function (Dl, xt) {
     return -1 * Bn(e, t);
   }
 });
-var Dn = w(function (Ul, Nn) {
+var Dn = commonJS(function (Ul, Nn) {
   var Wa = Qt();
   Nn.exports = Ga;
   function Ga(e, t, r) {
     return Wa(e, t, null, r);
   }
 });
-var qn = w(function (ql, Un) {
+var qn = commonJS(function (ql, Un) {
   Un.exports = { parallel: Fn(), serial: Dn(), serialOrdered: Qt() };
 });
-var Zt = w(function (Il, In) {
+var Zt = commonJS(function (Il, In) {
   In.exports = Object;
 });
-var jn = w(function (kl, kn) {
+var jn = commonJS(function (kl, kn) {
   kn.exports = Error;
 });
-var Hn = w(function (jl, Mn) {
+var Hn = commonJS(function (jl, Mn) {
   Mn.exports = EvalError;
 });
-var $n = w(function (Ml, zn) {
+var $n = commonJS(function (Ml, zn) {
   zn.exports = RangeError;
 });
-var Wn = w(function (Hl, Vn) {
+var Wn = commonJS(function (Hl, Vn) {
   Vn.exports = ReferenceError;
 });
-var Jn = w(function (zl, Gn) {
+var Jn = commonJS(function (zl, Gn) {
   Gn.exports = SyntaxError;
 });
-var _t = w(function ($l, Kn) {
+var _t = commonJS(function ($l, Kn) {
   Kn.exports = TypeError;
 });
-var Yn = w(function (Vl, Xn) {
+var Yn = commonJS(function (Vl, Xn) {
   Xn.exports = URIError;
 });
-var Zn = w(function (Wl, Qn) {
+var Zn = commonJS(function (Wl, Qn) {
   Qn.exports = Math.abs;
 });
-var to = w(function (Gl, eo) {
+var to = commonJS(function (Gl, eo) {
   eo.exports = Math.floor;
 });
-var no = w(function (Jl, ro) {
+var no = commonJS(function (Jl, ro) {
   ro.exports = Math.max;
 });
-var so = w(function (Kl, oo) {
+var so = commonJS(function (Kl, oo) {
   oo.exports = Math.min;
 });
-var ao = w(function (Xl, io) {
+var ao = commonJS(function (Xl, io) {
   io.exports = Math.pow;
 });
-var co = w(function (Yl, uo) {
+var co = commonJS(function (Yl, uo) {
   uo.exports = Math.round;
 });
-var lo = w(function (Ql, fo) {
+var lo = commonJS(function (Ql, fo) {
   fo.exports =
     Number.isNaN ||
     function (t) {
       return t !== t;
     };
 });
-var ho = w(function (Zl, po) {
+var ho = commonJS(function (Zl, po) {
   var Ja = lo();
   po.exports = function (t) {
     if (Ja(t) || t === 0) return t;
     return t < 0 ? -1 : 1;
   };
 });
-var yo = w(function (ep, mo) {
+var yo = commonJS(function (ep, mo) {
   mo.exports = Object.getOwnPropertyDescriptor;
 });
-var er = w(function (tp, bo) {
+var er = commonJS(function (tp, bo) {
   var St = yo();
   if (St)
     try {
@@ -482,7 +482,7 @@ var er = w(function (tp, bo) {
     }
   bo.exports = St;
 });
-var Eo = w(function (rp, go) {
+var Eo = commonJS(function (rp, go) {
   var At = Object.defineProperty || !1;
   if (At)
     try {
@@ -492,7 +492,7 @@ var Eo = w(function (rp, go) {
     }
   go.exports = At;
 });
-var tr = w(function (np, Ro) {
+var tr = commonJS(function (np, Ro) {
   Ro.exports = function () {
     if (
       typeof Symbol !== "function" ||
@@ -526,7 +526,7 @@ var tr = w(function (np, Ro) {
     return !0;
   };
 });
-var _o = w(function (op, xo) {
+var _o = commonJS(function (op, xo) {
   var wo = typeof Symbol < "u" && Symbol,
     Ka = tr();
   xo.exports = function () {
@@ -537,14 +537,14 @@ var _o = w(function (op, xo) {
     return Ka();
   };
 });
-var rr = w(function (sp, So) {
+var rr = commonJS(function (sp, So) {
   So.exports = (typeof Reflect < "u" && Reflect.getPrototypeOf) || null;
 });
-var nr = w(function (ip, Ao) {
+var nr = commonJS(function (ip, Ao) {
   var Xa = Zt();
   Ao.exports = Xa.getPrototypeOf || null;
 });
-var vo = w(function (ap, Co) {
+var vo = commonJS(function (ap, Co) {
   var Ya = "Function.prototype.bind called on incompatible ",
     Qa = Object.prototype.toString,
     Za = Math.max,
@@ -599,27 +599,27 @@ var vo = w(function (ap, Co) {
     return o;
   };
 });
-var Ee = w(function (up, To) {
+var Ee = commonJS(function (up, To) {
   var nu = vo();
   To.exports = Function.prototype.bind || nu;
 });
-var Ot = w(function (cp, Po) {
+var Ot = commonJS(function (cp, Po) {
   Po.exports = Function.prototype.call;
 });
-var or = w(function (fp, Fo) {
+var or = commonJS(function (fp, Fo) {
   Fo.exports = Function.prototype.apply;
 });
-var Bo = w(function (lp, Lo) {
+var Bo = commonJS(function (lp, Lo) {
   Lo.exports = typeof Reflect < "u" && Reflect && Reflect.apply;
 });
-var Do = w(function (pp, No) {
+var Do = commonJS(function (pp, No) {
   var ou = Ee(),
     su = or(),
     iu = Ot(),
     uu = Bo();
   No.exports = uu || ou.call(iu, su);
 });
-var qo = w(function (dp, Uo) {
+var qo = commonJS(function (dp, Uo) {
   var cu = Ee(),
     fu = _t(),
     lu = Ot(),
@@ -630,7 +630,7 @@ var qo = w(function (dp, Uo) {
     return pu(cu, lu, t);
   };
 });
-var zo = w(function (hp, Ho) {
+var zo = commonJS(function (hp, Ho) {
   var du = qo(),
     Io = er(),
     jo;
@@ -657,7 +657,7 @@ var zo = w(function (hp, Ho) {
           }
         : !1;
 });
-var Jo = w(function (mp, Go) {
+var Jo = commonJS(function (mp, Go) {
   var $o = rr(),
     Vo = nr(),
     Wo = zo();
@@ -677,13 +677,13 @@ var Jo = w(function (mp, Go) {
           }
         : null;
 });
-var Xo = w(function (yp, Ko) {
+var Xo = commonJS(function (yp, Ko) {
   var hu = Function.prototype.call,
     mu = Object.prototype.hasOwnProperty,
     yu = Ee();
   Ko.exports = yu.call(hu, mu);
 });
-var rs = w(function (bp, ts) {
+var rs = commonJS(function (bp, ts) {
   var S,
     bu = Zt(),
     gu = jn(),
@@ -996,19 +996,19 @@ var rs = w(function (bp, ts) {
     return a;
   };
 });
-var os = w(function (gp, ns) {
+var os = commonJS(function (gp, ns) {
   var zu = tr();
   ns.exports = function () {
     return zu() && !!Symbol.toStringTag;
   };
 });
-var is = w(function (Ep, ss) {
+var is = commonJS(function (Ep, ss) {
   var $u = Function.prototype.call,
     Vu = Object.prototype.hasOwnProperty,
     Wu = Ee();
   ss.exports = Wu.call($u, Vu);
 });
-var cs = w(function (Rp, us) {
+var cs = commonJS(function (Rp, us) {
   var Gu = rs(),
     as = Gu("%Object.defineProperty%", !0),
     Ju = os()(),
@@ -1032,13 +1032,13 @@ var cs = w(function (Rp, us) {
       else t[Tt] = r;
   };
 });
-var ls = w(function (wp, fs) {
+var ls = commonJS(function (wp, fs) {
   var Yu = Function.prototype.call,
     Qu = Object.prototype.hasOwnProperty,
     Zu = Ee();
   fs.exports = Zu.call(Yu, Qu);
 });
-var ds = w(function (xp, ps) {
+var ds = commonJS(function (xp, ps) {
   ps.exports = function (e, t) {
     return (
       Object.keys(t).forEach(function (r) {
@@ -1048,16 +1048,16 @@ var ds = w(function (xp, ps) {
     );
   };
 });
-var ys = w(function (_p, ms) {
+var ys = commonJS(function (_p, ms) {
   var pr = gn(),
-    ec = Ae("util"),
-    cr = Ae("path"),
-    tc = Ae("http"),
-    rc = Ae("https"),
-    nc = Ae("url").parse,
-    oc = Ae("fs"),
-    sc = Ae("stream").Stream,
-    ic = Ae("crypto"),
+    ec = importMetaRequire("util"),
+    cr = importMetaRequire("path"),
+    tc = importMetaRequire("http"),
+    rc = importMetaRequire("https"),
+    nc = importMetaRequire("url").parse,
+    oc = importMetaRequire("fs"),
+    sc = importMetaRequire("stream").Stream,
+    ic = importMetaRequire("crypto"),
     fr = Rn(),
     ac = qn(),
     uc = cs(),
@@ -1304,7 +1304,7 @@ var ys = w(function (_p, ms) {
   uc(A.prototype, "FormData");
   ms.exports = A;
 });
-var APn = w(function (Od, Ls) {
+var APn = commonJS(function (Od, Ls) {
   var He = 1000,
     ze = He * 60,
     $e = ze * 60,
@@ -1394,7 +1394,7 @@ var APn = w(function (Od, Ls) {
     return Math.round(e / r) + " " + n + (o ? "s" : "");
   }
 });
-var Or = w(function (Cd, Bs) {
+var Or = commonJS(function (Cd, Bs) {
   function kc(e) {
     ((r.debug = r),
       (r.default = r),
@@ -1524,7 +1524,7 @@ var Or = w(function (Cd, Bs) {
   }
   Bs.exports = kc;
 });
-var Ds = w(function (Ns, Dt) {
+var Ds = commonJS(function (Ns, Dt) {
   Ns.formatArgs = Mc;
   Ns.save = Hc;
   Ns.load = zc;
@@ -1703,7 +1703,7 @@ var Ds = w(function (Ns, Dt) {
     }
   };
 });
-var oXt = w(function (Td, Us) {
+var oXt = commonJS(function (Td, Us) {
   Us.exports = (e, t = process.argv) => {
     let r = e.startsWith("-") ? "" : e.length === 1 ? "-" : "--",
       n = t.indexOf(r + e),
@@ -1711,9 +1711,9 @@ var oXt = w(function (Td, Us) {
     return n !== -1 && (o === -1 || n < o);
   };
 });
-var ks = w(function (Fd, Is) {
-  var Pd = Ae("os"),
-    qs = Ae("tty"),
+var ks = commonJS(function (Fd, Is) {
+  var Pd = importMetaRequire("os"),
+    qs = importMetaRequire("tty"),
     ee = oXt(),
     { env: H } = process,
     Ut;
@@ -1803,9 +1803,9 @@ var ks = w(function (Fd, Is) {
     stderr: Cr({ isTTY: qs.isatty(2) }),
   };
 });
-var zs = w(function (Ms, It) {
-  var rf = Ae("tty"),
-    qt = Ae("util");
+var zs = commonJS(function (Ms, It) {
+  var rf = importMetaRequire("tty"),
+    qt = importMetaRequire("util");
   Ms.init = ff;
   Ms.log = af;
   Ms.formatArgs = of;
@@ -1913,7 +1913,7 @@ var zs = w(function (Ms, It) {
     );
   };
 });
-var Mnt = w(function (Bd, vr) {
+var Mnt = commonJS(function (Bd, vr) {
   if (
     typeof process > "u" ||
     process.type === "renderer" ||
@@ -1923,7 +1923,7 @@ var Mnt = w(function (Bd, vr) {
     vr.exports = Ds();
   else vr.exports = zs();
 });
-var Vs = w(function (Nd, $s) {
+var Vs = commonJS(function (Nd, $s) {
   var it;
   $s.exports = function () {
     if (!it) {
@@ -1935,13 +1935,13 @@ var Vs = w(function (Nd, $s) {
     it.apply(null, arguments);
   };
 });
-var Xs = w(function (Dd, jr) {
-  var ct = Ae("url"),
+var Xs = commonJS(function (Dd, jr) {
+  var ct = importMetaRequire("url"),
     ut = ct.URL,
-    gf = Ae("http"),
-    Ef = Ae("https"),
-    Br = Ae("stream").Writable,
-    Nr = Ae("assert"),
+    gf = importMetaRequire("http"),
+    Ef = importMetaRequire("https"),
+    Br = importMetaRequire("stream").Writable,
+    Nr = importMetaRequire("assert"),
     Ws = Vs();
   (function () {
     var t = typeof process < "u",
@@ -2780,7 +2780,7 @@ W.ERR_NOT_SUPPORT = "ERR_NOT_SUPPORT";
 W.ERR_INVALID_URL = "ERR_INVALID_URL";
 W.ERR_FORM_DATA_DEPTH_EXCEEDED = "ERR_FORM_DATA_DEPTH_EXCEEDED";
 var y = W;
-var bs = pe(ys(), 1),
+var bs = toESM(ys(), 1),
   Pt = bs.default;
 function hr(e) {
   return u.isPlainObject(e) || u.isArray(e);
@@ -3002,7 +3002,7 @@ var yr = "abcdefghijklmnopqrstuvwxyz",
     protocols: ["http", "https", "file", "data"],
   };
 var Er = {};
-au(Er, {
+defineExportGetters(Er, {
   hasBrowserEnv: () => gr,
   hasStandardBrowserEnv: () => yc,
   hasStandardBrowserWebWorkerEnv: () => bc,
@@ -3523,7 +3523,7 @@ function Bc(e, t) {
 function Ar(e) {
   return process.env[e.toLowerCase()] || process.env[e.toUpperCase()] || "";
 }
-var gi = pe(Xs(), 1);
+var gi = toESM(Xs(), 1);
 import Kf from "http";
 import Xf from "https";
 import yi from "http2";

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { gL, cy } from "./chunk-dm9sg03f.js";
 import { Lm } from "./chunk-w3axq133.js";
-import { nE } from "../../../01-核心基础设施/共享小工具-未细化/chunk-p71zdaw2.js";
+import { getNodeConfigProviderModule } from "../../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
 import { nu, EA } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import {
   Q6,
@@ -32,22 +32,22 @@ import {
 import { ta } from "./chunk-mwf4pmq2.js";
 import { Rb } from "../第三方库-其他/chunk-jtb5q5xr.js";
 import { s_, hS } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
-import { Ib } from "../../../01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js";
-import { H0 } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6rswwsrr.js";
-import { pe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var A = pe(Q6()),
-  ge = pe(Z6()),
-  Re = pe(eW()),
-  w = pe(YU()),
-  ye = pe(cy()),
-  d = pe(Lm()),
-  Se = pe(Rb()),
-  ve = pe(tW()),
-  xe = pe(Ax()),
-  P = pe(WR()),
-  Ee = pe(ta());
-var k = pe(R_()),
-  l = pe(Ib()),
+import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
+import { getUrlParserModule } from "../../../01-核心基础设施/共享小工具-未细化/url-parser.js";
+import { toESM } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var A = toESM(Q6()),
+  ge = toESM(Z6()),
+  Re = toESM(eW()),
+  w = toESM(YU()),
+  ye = toESM(cy()),
+  d = toESM(Lm()),
+  Se = toESM(Rb()),
+  ve = toESM(tW()),
+  xe = toESM(Ax()),
+  P = toESM(WR()),
+  Ee = toESM(ta());
+var k = toESM(R_()),
+  l = toESM(smithyContextModule()),
   L = async (e, t, o) => ({
     operation: l.getSmithyContext(t).operation,
     region:
@@ -199,24 +199,24 @@ var U = {
     directory: "clients/client-sso",
   },
 };
-var g = pe(R_()),
-  R = pe(nW()),
-  c = pe(cy()),
-  ie = pe(rW()),
-  y = pe(WR()),
-  a = pe(nE()),
-  S = pe(EA()),
-  ae = pe(oW()),
-  ce = pe(JU());
-var ee = pe(R_()),
-  te = pe(sW()),
-  oe = pe(Lm()),
-  se = pe(ta()),
-  re = pe(H0()),
-  _ = pe(hS()),
-  f = pe(s_());
-var X = pe(XU()),
-  p = pe(gL());
+var g = toESM(R_()),
+  R = toESM(nW()),
+  c = toESM(cy()),
+  ie = toESM(rW()),
+  y = toESM(WR()),
+  a = toESM(getNodeConfigProviderModule()),
+  S = toESM(EA()),
+  ae = toESM(oW()),
+  ce = toESM(JU());
+var ee = toESM(R_()),
+  te = toESM(sW()),
+  oe = toESM(Lm()),
+  se = toESM(ta()),
+  re = toESM(getUrlParserModule()),
+  _ = toESM(hS()),
+  f = toESM(s_());
+var X = toESM(XU()),
+  p = toESM(gL());
 var G = { ["required"]: !1, type: "string" },
   q = { ["required"]: !0, default: !1, type: "boolean" },
   j = { ["ref"]: "Endpoint" },
@@ -424,9 +424,9 @@ var ne = (e) => ({
   utf8Decoder: e?.utf8Decoder ?? f.fromUtf8,
   utf8Encoder: e?.utf8Encoder ?? f.toUtf8,
 });
-var de = pe(ta()),
-  ue = pe(iW()),
-  le = pe(ta()),
+var de = toESM(ta()),
+  ue = toESM(iW()),
+  le = toESM(ta()),
   me = (e) => {
     le.emitWarningIfUnsupportedVersion(process.version);
     let t = ue.resolveDefaultsModeConfig(e),
@@ -479,9 +479,9 @@ var de = pe(ta()),
         e?.userAgentAppId ?? a.loadConfig(R.NODE_APP_ID_CONFIG_OPTIONS, s),
     };
   };
-var v = pe(QU()),
-  x = pe(nu()),
-  E = pe(ta());
+var v = toESM(QU()),
+  x = toESM(nu()),
+  E = toESM(ta());
 var he = (e) => {
     let { httpAuthSchemes: t, httpAuthSchemeProvider: o, credentials: n } = e;
     return {
@@ -567,10 +567,10 @@ class j0n extends Ee.Client {
     super.destroy();
   }
 }
-var Pe = pe(Ax()),
-  Ce = pe(ta());
-var u = pe(Rb());
-var Ae = pe(ta());
+var Pe = toESM(Ax()),
+  Ce = toESM(ta());
+var u = toESM(Rb());
+var Ae = toESM(ta());
 class i extends Ae.ServiceException {
   constructor(e) {
     super(e);

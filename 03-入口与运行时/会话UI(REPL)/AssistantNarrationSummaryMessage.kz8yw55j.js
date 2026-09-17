@@ -11,17 +11,17 @@
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Ar } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { getCanonicalName, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { eO } from "../../01-核心基础设施/共享小工具-未细化/chunk-csjxh2sy.js";
+import { useFeatureFlagValue } from "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, pd } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { xte } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-kk3mqttk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nvfdjg8e.js";
+import "../../01-核心基础设施/共享小工具-未细化/protobuf-decoding.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../../02-功能模块/语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import { js } from "../../02-功能模块/语法高亮-Markdown渲染/chunk-wj93jy9j.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { run } from "../../01-核心基础设施/共享小工具-未细化/chunk-se27pkgx.js";
 function AssistantNarrationSummaryMessage(N) {
@@ -36,7 +36,7 @@ function AssistantNarrationSummaryMessage(N) {
       (n[0] = i),
       (n[1] = x));
   else x = n[1];
-  let G = eO(x);
+  let G = useFeatureFlagValue(x);
   const d = E ? 1 : 0;
   let m;
   if (n[2] !== c)

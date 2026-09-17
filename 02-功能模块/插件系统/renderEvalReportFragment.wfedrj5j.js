@@ -16,7 +16,7 @@ import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { go, I5t } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { h0e } from "../成本-Token统计/chunk-rnndxh1m.js";
 import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { relative } from "path";
 var Z = /&(?!(?:#\d{1,7}|#[Xx][0-9a-fA-F]{1,6}|\w+);)/g,
   J = /^<input (?:checked="" )?disabled="" type="checkbox"> ?/;
@@ -228,11 +228,11 @@ ${e.graders.map((o) => pe(o, a)).join(`
 <summary>Results</summary>
 ${i ? j("With plugin", "m-accent", e.aggregates.score, e.aggregates.passRate, e.arms.with) + j("Baseline (no plugin)", "m-base", e.aggregates.scoreWithout, e.aggregates.passRateWithout, e.arms.without ?? []) : j("Runs", "m-accent", e.aggregates.score, e.aggregates.passRate, e.arms.with)}
 </details>`,
-    f = G(e.arms.with, (o) => o.error !== null),
-    u = G(e.arms.with, (o) => o.skippedPaidGraders && o.error === null),
+    f = countMatching(e.arms.with, (o) => o.error !== null),
+    u = countMatching(e.arms.with, (o) => o.skippedPaidGraders && o.error === null),
     y = e.aggregates.delta !== void 0 ? (e.arms.without ?? []) : [],
-    v = f + G(y, (o) => o.error !== null),
-    m = u + G(y, (o) => o.skippedPaidGraders && o.error === null),
+    v = f + countMatching(y, (o) => o.error !== null),
+    m = u + countMatching(y, (o) => o.skippedPaidGraders && o.error === null),
     w = [
       v > 0
         ? `<span class="flag">\u26A0 ${v} ${x(v, "run")} errored</span>`
@@ -436,14 +436,14 @@ function renderEvalReportFragment(e) {
     u = n.meanDelta,
     y = i.ablation === "with-without",
     v = a.flatMap((t) => t.arms.with),
-    m = G(v, (t) => t.error !== null),
-    w = G(v, (t) => t.skippedPaidGraders && t.error === null),
+    m = countMatching(v, (t) => t.error !== null),
+    w = countMatching(v, (t) => t.skippedPaidGraders && t.error === null),
     R = m + w > 0,
     o = a
       .filter((t) => t.aggregates.delta !== void 0)
       .flatMap((t) => t.arms.without ?? []),
-    E = m + G(o, (t) => t.error !== null),
-    M = w + G(o, (t) => t.skippedPaidGraders && t.error === null),
+    E = m + countMatching(o, (t) => t.error !== null),
+    M = w + countMatching(o, (t) => t.skippedPaidGraders && t.error === null),
     U =
       E + M > 0
         ? `<div class="banner"><span class="chip-warn">\u26A0 Averages include non-judgments</span><span>${[E > 0 ? `${E} ${x(E, "run")} errored` : "", M > 0 ? `${M} ${x(M, "run")} force-failed at the cost ceiling` : ""].filter(Boolean).join("; ")} \u2014 their scores count toward the averages shown without a complete judgment.</span></div>`
@@ -453,8 +453,8 @@ function renderEvalReportFragment(e) {
       u !== void 0 && h.length > 0
         ? (() => {
             let { cls: t, arrow: g, sign: S } = z(u),
-              I = G(h, (_) => (_.aggregates.delta ?? 0) > 0),
-              L = G(h, (_) => (_.aggregates.delta ?? 0) < 0),
+              I = countMatching(h, (_) => (_.aggregates.delta ?? 0) > 0),
+              L = countMatching(h, (_) => (_.aggregates.delta ?? 0) < 0),
               X = h.length - I - L;
             return `<p class="verdict">Plugin effect: <span class="delta ${t}">${g} ${S}${(u * 100).toFixed(1)} pts</span> vs baseline \u2014 improved ${I} \xB7 flat ${X} \xB7 regressed ${L} of ${h.length} ${x(h.length, "case")}.</p>`;
           })()

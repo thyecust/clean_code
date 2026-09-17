@@ -8,22 +8,22 @@
 
 // Version: 2.1.263
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { PERMISSION_MODE_MANUAL_ALIAS } from "./chunk-e4pfvp7x.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { isSameProcessAsync, ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { JI, mN, eXe } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { Pc } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
-import { rd } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { g6 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import { Vb } from "../../01-核心基础设施/共享小工具-未细化/chunk-d3d1v4d6.js";
+import { getDaemonJsonPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
 import { s, T, O, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var kle = 1048576;
 async function Y0e(o) {
@@ -54,9 +54,9 @@ import { join as oe } from "path";
 import { readFile as Y, stat as Z } from "fs/promises";
 import { dirname } from "path";
 async function D(o, t) {
-  let e = o ?? Vb(),
+  let e = o ?? getDaemonJsonPath(),
     r;
-  if (M() && t !== void 0 && e === Vb()) r = await te(t, e);
+  if (isHoverRestEnabled() && t !== void 0 && e === getDaemonJsonPath()) r = await te(t, e);
   else
     try {
       let u = await Z(e);
@@ -102,10 +102,10 @@ async function te(o, t) {
   }
 }
 async function M9e(o, t, e) {
-  let r = t ?? Vb(),
+  let r = t ?? getDaemonJsonPath(),
     a = await D(r, e);
   if ((await o(a)) === !1) return;
-  if (M() && e !== void 0 && r === Vb()) {
+  if (isHoverRestEnabled() && e !== void 0 && r === getDaemonJsonPath()) {
     let f = await e.write(
       Ce.state("daemon-config"),
       b(a, null, 2) +
@@ -147,7 +147,7 @@ var ne = 1000,
     "plan",
     "bypassPermissions",
   ],
-  j = m(() =>
+  j = createLazyValue(() =>
     c({
       id: s().min(1),
       cron: s().refine((o) => JI(o) !== null, {
@@ -164,7 +164,7 @@ var ne = 1000,
       maxQueued: T().int().positive().default(1),
     }).strict(),
   ),
-  Utn = m(() =>
+  Utn = createLazyValue(() =>
     c({
       tasks: v(j())
         .default([])
@@ -187,7 +187,7 @@ async function se(o, t) {
     writtenAt: Date.now(),
     tasks: o,
   };
-  if (M() && t) {
+  if (isHoverRestEnabled() && t) {
     try {
       let r = await t.write(N(), b(e), { mode: 438 & ~process.umask() });
       if (!r.ok) n(`writeScheduledStatus: ${r.error.code}`);
@@ -202,7 +202,7 @@ async function se(o, t) {
 }
 async function dBn(o) {
   let t;
-  if (M() && o !== void 0) {
+  if (isHoverRestEnabled() && o !== void 0) {
     let a;
     try {
       a = await o.readText([N()]);
@@ -326,7 +326,7 @@ var pBn = async (o, t, e, r, a) => {
       k,
     );
     e(`task=${i.id} start cron='${i.cron}' dir='${i.directory}'`);
-    let S = rd({ pinToCurrentBinary: !0 });
+    let S = resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 });
     try {
       let w = Q({
         prompt: i.prompt,

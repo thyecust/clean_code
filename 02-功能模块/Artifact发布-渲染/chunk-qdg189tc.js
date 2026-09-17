@@ -10,7 +10,7 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isProcessProvablyGone, provenSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
@@ -22,7 +22,7 @@ function P7() {
 var A = 4000,
   aze = 16,
   x = 64,
-  l9n = m(() =>
+  l9n = createLazyValue(() =>
     c({
       action: k("yield_artifact_replies"),
       from: s().max(512),
@@ -35,7 +35,7 @@ var A = 4000,
       requester: c({ cwd: se().optional(), tmux: se().optional() }).optional(),
     }),
   ),
-  c9n = m(() =>
+  c9n = createLazyValue(() =>
     c({
       action: k("artifact_replies_yielded"),
       orig_msg_id: s().max(128),
@@ -44,7 +44,7 @@ var A = 4000,
       refused: se().optional(),
     }),
   ),
-  u9n = m(() =>
+  u9n = createLazyValue(() =>
     c({
       action: k("unyield_artifact_replies"),
       orig_msg_id: s().max(128),

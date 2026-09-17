@@ -9,13 +9,13 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 207 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { x } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { CXn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { fO, Qw, b3e, Ilt } from "./chunk-ncbnx9cz.js";
 import { wIe, qle } from "../共享小工具-未细化/chunk-tfx2a5vd.js";
-import { G } from "../共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../共享小工具-未细化/chunk-d16fhdtx.js";
 import { createHash } from "crypto";
 function scanDigest(d) {
   let p = createHash("sha256");
@@ -148,8 +148,8 @@ async function S(d, p, u, r) {
   let t = d.flatMap((a) => a.result.items),
     n = d.flatMap((a) => a.result.unmappable),
     g = t.filter(wIe),
-    m = G(t, (a) => qle(a) === "project"),
-    h = G(t, (a) => qle(a) === "warned"),
+    m = countMatching(t, (a) => qle(a) === "project"),
+    h = countMatching(t, (a) => qle(a) === "warned"),
     c = [],
     s = 0;
   for (let a of g)
@@ -176,7 +176,7 @@ async function S(d, p, u, r) {
     } catch (a) {
       c.push(`  \u2717 fallback skill: ${Qw(l(a))}`);
     }
-  i("tengu_import_apply", { imported: s, dry_run: p ? 1 : 0 });
+  logEvent("tengu_import_apply", { imported: s, dry_run: p ? 1 : 0 });
   let e = p
       ? `Dry run \u2014 would import ${s} ${x(s, "item")}:`
       : `Imported ${s} ${x(s, "item")}:`,

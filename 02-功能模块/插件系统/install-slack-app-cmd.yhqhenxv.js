@@ -9,13 +9,13 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 76 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 var o = "https://slack.com/marketplace/A08SF47R6P4-claude";
 async function p(e, a) {
   if (
-    (i("tengu_install_slack_app_clicked", {}),
+    (logEvent("tengu_install_slack_app_clicked", {}),
     await Te(
       (t) => ({
         ...t,
@@ -23,7 +23,7 @@ async function p(e, a) {
       }),
       a.storageV5,
     ),
-    await Gr(o))
+    await tryOpenUrlInBrowser(o))
   )
     return {
       type: "text",

@@ -25,7 +25,7 @@ import {
   yHt,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, my, gp, pl, li, $m, jf, Xo, FW } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import {
   QJ,
   isModelAllowed,
@@ -44,7 +44,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Bur, WP, iae, Xg, Sh, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { reanchorGitFileWatcher, clearIsGitMemo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -53,7 +53,7 @@ import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { parsePermissionMode } from "../权限系统/chunk-e4pfvp7x.js";
 import { er, tar, usesFirstPartyModelIds } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Pl, lP } from "../Teammates团队/chunk-thxapyam.js";
-import { oF } from "../../01-核心基础设施/共享小工具-未细化/chunk-vz37aa8z.js";
+import { worktreeStateStore } from "../../01-核心基础设施/共享小工具-未细化/worktree-state-store.js";
 import {
   rV,
   T2,
@@ -98,11 +98,11 @@ import { Doe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { X_ } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { XS } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { primePlanSlugCollisions, getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
+import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import { Vre } from "../后台任务-Shell管理/chunk-x3txegas.js";
 import { reclaimSessionNameOnResume } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
 import { CLAUDE_AGENT } from "../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import {
   appendFile,
   readdir,
@@ -145,7 +145,7 @@ async function renameRecordingForSession(e, o) {
   let s = getProjectDir(he()),
     d = t.key,
     l = lP(s);
-  if (M() && o !== void 0 && d !== void 0 && l !== void 0) {
+  if (isHoverRestEnabled() && o !== void 0 && d !== void 0 && l !== void 0) {
     if (t.failed) return;
     let k = K(),
       y = E(s, k, `${t.timestamp}.cast`);
@@ -392,7 +392,7 @@ function IZ(e, o, t, r = (s) => s()) {
   if (s.kind === "none") return;
   if (s.kind === "mode_dependent_setting") {
     r(() =>
-      i("tengu_resume_model_restore", {
+      logEvent("tengu_resume_model_restore", {
         outcome: fromEnum("skipped_mode_dependent_setting"),
         is_eap: !1,
       }),
@@ -401,7 +401,7 @@ function IZ(e, o, t, r = (s) => s()) {
   }
   if (s.kind === "declined")
     r(() =>
-      i("tengu_resume_model_restore", {
+      logEvent("tengu_resume_model_restore", {
         outcome: fromEnum("declined"),
         decline_reason: fromEnumOpt(s.reason),
         is_eap: Doe(s.model),
@@ -489,7 +489,7 @@ function ye(e) {
     : void 0;
 }
 function T(e, o) {
-  i("tengu_resume_model_restore", { outcome: fromEnum(e), is_eap: Doe(o) });
+  logEvent("tengu_resume_model_restore", { outcome: fromEnum(e), is_eap: Doe(o) });
 }
 function V(e, o) {
   import("../上下文压缩-Compact/chunk-npckj9cm.js").then((t) => t.fetchBootstrapData(e, o));
@@ -497,7 +497,7 @@ function V(e, o) {
 function PZ(e, o, t, r, s) {
   if (!ge(e, o)) return (ad(o), V(r, s), T("restored", o), o);
   if (t) {
-    (i("tengu_refusal_fallback_resume_latch", {
+    (logEvent("tengu_refusal_fallback_resume_latch", {
       action: fromEnum("fork_skip_restore"),
     }),
       T("skipped_fork_fallback", o));
@@ -505,7 +505,7 @@ function PZ(e, o, t, r, s) {
   }
   let d = ye(e);
   if (d && er(d.fallbackModel) === er(o)) {
-    (i("tengu_refusal_fallback_resume_latch", {
+    (logEvent("tengu_refusal_fallback_resume_latch", {
       action: fromEnum("fork_neutralized_skip"),
     }),
       T("skipped_fork_neutralized", o));
@@ -521,7 +521,7 @@ function PZ(e, o, t, r, s) {
       previousModelForSession: null,
     }),
     T("restored", o),
-    i("tengu_refusal_fallback_resume_latch", { action: fromEnum("model_latch_only") }),
+    logEvent("tengu_refusal_fallback_resume_latch", { action: fromEnum("model_latch_only") }),
     o
   );
 }
@@ -540,7 +540,7 @@ function OZ(e, o) {
       t.find((r) => r.apiRefusalCategory === "cyber" && r.requestId != null)
         ?.requestId ?? void 0,
     ),
-      i("tengu_refusal_fallback_resume_latch", {
+      logEvent("tengu_refusal_fallback_resume_latch", {
         action: fromEnum("header_rearmed"),
       }));
 }
@@ -549,7 +549,7 @@ async function ke(e, o, t, r, s) {
   return O8(o, t, s);
 }
 async function O8(e, o, t) {
-  wo().agentDefinitions.clear();
+  getHostStateStore().agentDefinitions.clear();
   let r = await getAgentDefinitionsWithOverrides(e, t);
   return rebuildAgentDefinitions(r, [...r.allAgents, ...o]);
 }
@@ -628,7 +628,7 @@ function Se(e, o, t) {
   if (!e) {
     if (e === null)
       return (
-        i("tengu_worktree_resume_root_rejected", {
+        logEvent("tengu_worktree_resume_root_rejected", {
           reason: S("worktree-exited-resume"),
           poisoned: S("false"),
         }),
@@ -676,7 +676,7 @@ function Se(e, o, t) {
   ) {
     if (!s) saveWorktreeState(null);
     return (
-      i("tengu_worktree_resume_root_rejected", {
+      logEvent("tengu_worktree_resume_root_rejected", {
         reason: S("network-spelled-pin"),
         poisoned: S("true"),
       }),
@@ -693,7 +693,7 @@ function Se(e, o, t) {
   if (d === "gone") {
     if (!s) saveWorktreeState(null);
     return (
-      i("tengu_worktree_resume_root_rejected", {
+      logEvent("tengu_worktree_resume_root_rejected", {
         reason: S("worktree-gone"),
         poisoned: S("true"),
       }),
@@ -711,7 +711,7 @@ function Se(e, o, t) {
         `[worktree] could not examine ${e.worktreePath} on resume; keeping the binding`,
         { level: "error" },
       ),
-      i("tengu_worktree_resume_root_rejected", {
+      logEvent("tengu_worktree_resume_root_rejected", {
         reason: S("unverifiable"),
         poisoned: S("false"),
       }),
@@ -727,7 +727,7 @@ function Se(e, o, t) {
     m = jKn(
       e.worktreePath,
       uw(e.originalCwd),
-      Y([G(l), ...uw(l), G(iY), ...uw(iY)]),
+      dedupe([G(l), ...uw(l), G(iY), ...uw(iY)]),
       { declineSelfOwningPinUnderLiveRoot: !0 },
     );
   if (!m.ok) {
@@ -738,7 +738,7 @@ function Se(e, o, t) {
         `[worktree] declining to resume into ${e.worktreePath} (${m.reason}): ${m.message}`,
         { level: "error" },
       ),
-      i("tengu_worktree_resume_root_rejected", {
+      logEvent("tengu_worktree_resume_root_rejected", {
         reason: fromEnum(m.reason),
         poisoned: S(h ? "true" : "false"),
       }),
@@ -786,7 +786,7 @@ function Se(e, o, t) {
     if (k === "ENOENT" || k === "ENOTDIR") {
       if (!s) saveWorktreeState(null);
       return (
-        i("tengu_worktree_resume_root_rejected", {
+        logEvent("tengu_worktree_resume_root_rejected", {
           reason: S("worktree-gone"),
           poisoned: S("true"),
         }),
@@ -799,7 +799,7 @@ function Se(e, o, t) {
       );
     }
     return (
-      i("tengu_worktree_resume_root_rejected", {
+      logEvent("tengu_worktree_resume_root_rejected", {
         reason: S("unverifiable"),
         poisoned: S("false"),
       }),
@@ -884,11 +884,11 @@ async function $st(e, o, t) {
       await recordContentReplacement(e.contentReplacements, void 0, t.storageV5);
   } else restoreSessionMetadata(e, { storageV5: t.storageV5 });
   if ((jwe(e), !d)) {
-    let f = DZ(oF.of(t.session.host), e.worktreeSession, void 0, {
+    let f = DZ(worktreeStateStore.of(t.session.host), e.worktreeSession, void 0, {
       storageV5: t.storageV5,
     });
     if (f) e.messages.push(Ht(RHe(f), "warning"));
-    if (M() && t.storageV5 !== void 0) await adoptResumedSessionFileAsync(t.storageV5);
+    if (isHoverRestEnabled() && t.storageV5 !== void 0) await adoptResumedSessionFileAsync(t.storageV5);
     else adoptResumedSessionFile();
   }
   let l = await HZ(e.projectPath, t.storageV5),

@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { pO, tI, mF } from "./遥测-OpenTelemetry.0xhcvej6.js";
 import "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
-import { pe } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
-var t = pe(pO()),
-  o = pe(tI()),
-  r = pe(mF());
+import { toESM } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+var t = toESM(pO()),
+  o = toESM(tI()),
+  r = toESM(mF());
 class e extends t.OTLPExporterBase {
   constructor(p = {}) {
     super(

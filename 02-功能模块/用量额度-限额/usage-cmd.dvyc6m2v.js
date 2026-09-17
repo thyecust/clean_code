@@ -12,7 +12,7 @@
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { isClaudeAISubscriber, hasProfileScope, getSubscriptionType, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatResetTime, formatResetText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
@@ -74,7 +74,7 @@ var g = "What's contributing to your limits usage?",
       let r = ke(),
         o = Ble(),
         a = await o3e({
-          includeBehaviors: r && !lo(e.session) && o.allowed,
+          includeBehaviors: r && !mayHaveRemoteClient(e.session) && o.allowed,
           storageV5: e.storageV5,
           credentials: e.credentials,
         }),
@@ -83,12 +83,12 @@ var g = "What's contributing to your limits usage?",
         s += `
 
 ${l}`;
-      let c = a.behaviors && !lo(e.session) ? formatBehaviors(a) : null;
+      let c = a.behaviors && !mayHaveRemoteClient(e.session) ? formatBehaviors(a) : null;
       if (c)
         s += `
 
 ${c}`;
-      else if (r && !lo(e.session) && !o.allowed && isClaudeAISubscriber())
+      else if (r && !mayHaveRemoteClient(e.session) && !o.allowed && isClaudeAISubscriber())
         s += `
 
 ${g}

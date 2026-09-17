@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ne, HCe, vTn, ker, PCe } from "./chunk-rr78st95.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { ARTIFACT_TOOL_NAME, PR_REVIEW_SECURITY_WALL, ArtifactInputError, ARTIFACT_VERSION_SAFE_RE, ARTIFACT_DELETED_NOTE_TAG, ARTIFACT_DELETED_NOTE_RE, uuidSlugFromUrl, canonicalArtifactTargetFor, sanitizeArtifactTitle } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { runBundledSkillSessionResets } from "../Skills技能/chunk-1zy5c8mf.js";
 import { Tn, tt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -38,7 +38,7 @@ function S(e, r, t) {
     s = n.get(a),
     l = s !== void 0 && s.reason === r && s.fingerprint === t ? s.count + 1 : 1;
   if ((n.set(a, { count: l, reason: r, fingerprint: t }), l === E))
-    i("tengu_artifact_reject_breaker", { reason: Ub(r) });
+    logEvent("tengu_artifact_reject_breaker", { reason: Ub(r) });
   return l >= E;
 }
 var T = `IMPORTANT: Artifact calls for this target have now been rejected ${E} or more times in this session for the same reason.`,

@@ -12,8 +12,8 @@ import { H0n, Hke } from "../../https-proxy-agent/https-proxy-agent + undici.1t3
 import { E$e } from "../../_未识别/第三方库-加密库/第三方库-加密库.z54vzq0y.js";
 import { pg } from "../../_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { APn, Mnt } from "../../axios/axios.t0fczzmz.js";
-import { pe, w, Ae } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var Ol = w(function (ze) {
+import { toESM, commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var Ol = commonJS(function (ze) {
   var Qm =
       (ze && ze.__createBinding) ||
       (Object.create
@@ -64,12 +64,12 @@ var Ol = w(function (ze) {
       };
   Object.defineProperty(ze, "__esModule", { value: !0 });
   ze.HttpProxyAgent = void 0;
-  var Zm = Pl(Ae("net")),
-    ep = Pl(Ae("tls")),
+  var Zm = Pl(importMetaRequire("net")),
+    ep = Pl(importMetaRequire("tls")),
     tp = Xm(Mnt()),
-    rp = Ae("events"),
+    rp = importMetaRequire("events"),
     np = H0n(),
-    bl = Ae("url"),
+    bl = importMetaRequire("url"),
     Gr = (0, tp.default)("http-proxy-agent");
   class aa extends np.Agent {
     constructor(e, t) {
@@ -147,17 +147,17 @@ var Ol = w(function (ze) {
     return r;
   }
 });
-var ld = w(function (ad) {
+var ld = commonJS(function (ad) {
   Object.defineProperty(ad, "__esModule", { value: !0 });
   ad.state = void 0;
   ad.state = { instrumenterImplementation: void 0 };
 });
-var Cd = w(function (Td) {
+var Cd = commonJS(function (Td) {
   Object.defineProperty(Td, "__esModule", { value: !0 });
   Td.state = void 0;
   Td.state = { operationRequestMap: new WeakMap() };
 });
-var nc = w(function (X0, Oh) {
+var nc = commonJS(function (X0, Oh) {
   var dy = E$e();
   Oh.exports = function (e, t) {
     t = t || {};
@@ -174,7 +174,7 @@ var nc = w(function (X0, Oh) {
     return n;
   };
 });
-var vo = w(function (Z0, Nh) {
+var vo = commonJS(function (Z0, Nh) {
   var as = function (e, t) {
     if ((Error.call(this, e), Error.captureStackTrace))
       Error.captureStackTrace(this, this.constructor);
@@ -185,7 +185,7 @@ var vo = w(function (Z0, Nh) {
   as.prototype.constructor = as;
   Nh.exports = as;
 });
-var oc = w(function (eL, Mh) {
+var oc = commonJS(function (eL, Mh) {
   var xh = vo(),
     cs = function (e, t) {
       (xh.call(this, e), (this.name = "NotBeforeError"), (this.date = t));
@@ -194,7 +194,7 @@ var oc = w(function (eL, Mh) {
   cs.prototype.constructor = cs;
   Mh.exports = cs;
 });
-var ic = w(function (tL, Uh) {
+var ic = commonJS(function (tL, Uh) {
   var Dh = vo(),
     ls = function (e, t) {
       (Dh.call(this, e),
@@ -205,7 +205,7 @@ var ic = w(function (tL, Uh) {
   ls.prototype.constructor = ls;
   Uh.exports = ls;
 });
-var sc = w(function (rL, Lh) {
+var sc = commonJS(function (rL, Lh) {
   var uy = APn();
   Lh.exports = function (e, t) {
     var r = t || Math.floor(Date.now() / 1000);
@@ -217,15 +217,15 @@ var sc = w(function (rL, Lh) {
     else return;
   };
 });
-var Fh = w(function (nL, Hh) {
+var Fh = commonJS(function (nL, Hh) {
   var hy = pg();
   Hh.exports = hy.satisfies(process.version, ">=15.7.0");
 });
-var Bh = w(function (oL, $h) {
+var Bh = commonJS(function (oL, $h) {
   var fy = pg();
   $h.exports = fy.satisfies(process.version, ">=16.9.0");
 });
-var ac = w(function (iL, zh) {
+var ac = commonJS(function (iL, zh) {
   var my = Fh(),
     py = Bh(),
     gy = {
@@ -273,11 +273,11 @@ var ac = w(function (iL, zh) {
       }
   };
 });
-var cc = w(function (sL, Gh) {
+var cc = commonJS(function (sL, Gh) {
   var Ty = pg();
   Gh.exports = Ty.satisfies(process.version, "^6.12.0 || >=8.0.0");
 });
-var Vh = w(function (aL, Kh) {
+var Vh = commonJS(function (aL, Kh) {
   var W = vo(),
     Ey = oc(),
     qh = ic(),
@@ -286,7 +286,7 @@ var Vh = w(function (aL, Kh) {
     Iy = ac(),
     _y = cc(),
     Sy = E$e(),
-    { KeyObject: Ry, createSecretKey: wy, createPublicKey: vy } = Ae("crypto"),
+    { KeyObject: Ry, createSecretKey: wy, createPublicKey: vy } = importMetaRequire("crypto"),
     lc = ["RS256", "RS384", "RS512"],
     ky = ["ES256", "ES384", "ES512"],
     dc = ["RS256", "RS384", "RS512"],
@@ -460,7 +460,7 @@ var Vh = w(function (aL, Kh) {
     });
   };
 });
-var Xh = w(function (cL, Jh) {
+var Xh = commonJS(function (cL, Jh) {
   var jh = 1 / 0,
     Wh = 9007199254740991,
     Py = 179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
@@ -622,7 +622,7 @@ var Xh = w(function (cL, Jh) {
   }
   Jh.exports = rT;
 });
-var ef = w(function (lL, Zh) {
+var ef = commonJS(function (lL, Zh) {
   var mT = "[object Boolean]",
     pT = Object.prototype,
     gT = pT.toString;
@@ -634,7 +634,7 @@ var ef = w(function (lL, Zh) {
   }
   Zh.exports = yT;
 });
-var sf = w(function (dL, of) {
+var sf = commonJS(function (dL, of) {
   var tf = 1 / 0,
     ET = 179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
     rf = NaN,
@@ -686,7 +686,7 @@ var sf = w(function (dL, of) {
   }
   of.exports = kT;
 });
-var cf = w(function (uL, af) {
+var cf = commonJS(function (uL, af) {
   var MT = "[object Number]",
     DT = Object.prototype,
     UT = DT.toString;
@@ -698,7 +698,7 @@ var cf = w(function (uL, af) {
   }
   af.exports = HT;
 });
-var hf = w(function (hL, uf) {
+var hf = commonJS(function (hL, uf) {
   var FT = "[object Object]";
   function $T(e) {
     var t = !1;
@@ -732,7 +732,7 @@ var hf = w(function (hL, uf) {
   }
   uf.exports = YT;
 });
-var mf = w(function (fL, ff) {
+var mf = commonJS(function (fL, ff) {
   var WT = "[object String]",
     QT = Object.prototype,
     JT = QT.toString,
@@ -745,7 +745,7 @@ var mf = w(function (fL, ff) {
   }
   ff.exports = eE;
 });
-var Ef = w(function (mL, Tf) {
+var Ef = commonJS(function (mL, Tf) {
   var tE = "Expected a function",
     pf = 1 / 0,
     rE = 179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
@@ -810,7 +810,7 @@ var Ef = w(function (mL, Tf) {
   }
   Tf.exports = hE;
 });
-var kf = w(function (pL, vf) {
+var kf = commonJS(function (pL, vf) {
   var Cf = sc(),
     TE = cc(),
     EE = ac(),
@@ -822,7 +822,7 @@ var kf = w(function (pL, vf) {
     Sf = hf(),
     Qt = mf(),
     AE = Ef(),
-    { KeyObject: IE, createSecretKey: _E, createPrivateKey: SE } = Ae("crypto"),
+    { KeyObject: IE, createSecretKey: _E, createPrivateKey: SE } = importMetaRequire("crypto"),
     Rf = [
       "RS256",
       "RS384",
@@ -1079,7 +1079,7 @@ var kf = w(function (pL, vf) {
     }
   };
 });
-var Pf = w(function (gL, bf) {
+var Pf = commonJS(function (gL, bf) {
   bf.exports = {
     decode: nc(),
     verify: Vh(),
@@ -2680,8 +2680,8 @@ function sa() {
     },
   };
 }
-var Dl = pe(Hke(), 1),
-  Ul = pe(Ol(), 1);
+var Dl = toESM(Hke(), 1),
+  Ul = toESM(Ol(), 1);
 var ip = "HTTPS_PROXY",
   sp = "HTTP_PROXY",
   ap = "ALL_PROXY",
@@ -3027,7 +3027,7 @@ class Wn {
     return (t._contextMap.delete(e), t);
   }
 }
-var dd = pe(ld(), 1),
+var dd = toESM(ld(), 1),
   Qo = dd.state;
 function Sp() {
   return {
@@ -3633,7 +3633,7 @@ var ht = {
   TimeSpan: "TimeSpan",
   UnixTime: "UnixTime",
 };
-var Ad = pe(Cd(), 1),
+var Ad = toESM(Cd(), 1),
   Ca = Ad.state;
 function Nt(e, t, r) {
   let { parameterPath: n, mapper: o } = t,
@@ -10933,7 +10933,7 @@ class ss {
     );
   }
 }
-var Of = pe(Pf(), 1);
+var Of = toESM(Pf(), 1);
 /*! @azure/msal-node v3.8.1 2025-10-29 */ class ct {
   static fromAssertion(e) {
     let t = new ct();

@@ -11,10 +11,10 @@
 // [preload stripped] 原本在此预载 209 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Dc, vnr } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
-import "./chunk-cd542wve.js";
-import { nte } from "../../01-核心基础设施/共享小工具-未细化/chunk-pcsvt5cv.js";
+import "./workflow-script.js";
+import { isWorkflowAuthoringSkillAvailable } from "../../01-核心基础设施/共享小工具-未细化/is-workflow-authoring-skill-available.js";
 import { rte, v1t } from "./chunk-pqyn1fh3.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g00x7t7w.js";
+import "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
 import { $E } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
 async function warmWorkflows(o, n) {
   if (vnr()) return;
@@ -64,7 +64,7 @@ Phases:
         e = n.trim(),
         i = b(o.name),
         a = e ? `{ name: ${i}, args: ${b(e)} }` : `{ name: ${i} }`,
-        l = nte(t?.options?.tools)
+        l = isWorkflowAuthoringSkillAvailable(t?.options?.tools)
           ? `
 
 If the user asks you to modify this workflow or write a new script, load the \`${$E}\` skill first.`

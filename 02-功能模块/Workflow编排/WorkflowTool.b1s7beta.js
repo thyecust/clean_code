@@ -10,12 +10,12 @@
 
 // [preload stripped] 原本在此预载 184 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Gt, K, sc, fy, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, t8, z, Is, Ru, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, ln, B0 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -29,7 +29,7 @@ import { READ_ONLY_AUTO_ALLOW_REASON, A0 } from "../权限系统/chunk-e4pfvp7x.
 import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { yve, Dc, Rnr } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { nH, eh, Jl, RDe, Epe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Uh, NTt, ah } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { isServerFallbackDiscard } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
@@ -54,17 +54,17 @@ import {
   $dt,
   Rqe,
 } from "./chunk-bkcg0nbj.js";
-import { Mdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-1n8w0wz0.js";
-import { Vf } from "./chunk-cd542wve.js";
+import { usesNondeterministicApi } from "../../01-核心基础设施/共享小工具-未细化/nondeterminism-check.js";
+import { parseWorkflowScript } from "./workflow-script.js";
 import { fin } from "./chunk-w0pgmfvw.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kaxe7rw8.js";
-import { nte } from "../../01-核心基础设施/共享小工具-未细化/chunk-pcsvt5cv.js";
+import { isWorkflowAuthoringSkillAvailable } from "../../01-核心基础设施/共享小工具-未细化/is-workflow-authoring-skill-available.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-gkztysec.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-56wrzxpk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7wprkdaj.js";
-import { eH } from "./chunk-hdhsmge4.js";
+import "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
+import "../../01-核心基础设施/共享小工具-未细化/fd-real-path.js";
+import { getWorkflowTranscriptDir } from "./workflow-snapshots.js";
 import { Y6n, _be, rte, kqe } from "./chunk-pqyn1fh3.js";
-import { xqe } from "../../01-核心基础设施/共享小工具-未细化/chunk-g00x7t7w.js";
+import { getBundledWorkflows } from "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
 import { Dh, Q_n } from "../Teammates团队/chunk-mrfx53ye.js";
 import { $E } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
 import { sg } from "../Teammates团队/chunk-z2t8b9yc.js";
@@ -86,8 +86,8 @@ import {
   k,
   Hb,
 } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
 import { basename as st, resolve } from "path";
 var yt = [
@@ -102,7 +102,7 @@ function Cr(e) {
   return yt.find((r) => r === e);
 }
 function xr(e, { apply: r }) {
-  if (!me(e)) return null;
+  if (!isRecord(e)) return null;
   let t = e.args;
   if (typeof t !== "string") return null;
   let o = t.trimStart()[0];
@@ -226,13 +226,13 @@ function ur(e, r) {
   if (!Pt(e) && !Rt.has(r.status)) return;
   return rr(e, Nr(r));
 }
-var fr = m(() =>
+var fr = createLazyValue(() =>
     it({ topic: s().min(1) }).refine(
       (e) => !Object.keys(e).some((r) => Lr.has(r)),
       { message: "a fact may not carry a reserved key" },
     ),
   ),
-  Wt = m(() => {
+  Wt = createLazyValue(() => {
     let e = Hb(() => $e([s(), T(), O(), Uf(), v(e), fe(s(), e)]));
     return fe(s(), e);
   });
@@ -1444,7 +1444,7 @@ class sr {
           at: Date.now(),
           reason: e,
           ...r,
-          rules: G(
+          rules: countMatching(
             this.world.read({ topic: "sub" }, { in: this.scope }),
             (o) => o.kind === "sub",
           ),
@@ -1650,10 +1650,10 @@ class sr {
     return (
       this.logSettlement({
         result: we,
-        errorResults: G(be, At),
+        errorResults: countMatching(be, At),
         scriptError: w === void 0 ? void 0 : _ ? "runaway" : "script_failed",
         errors:
-          G(this.world.read({ topic: "error" }, I), x) + U.length + j.length,
+          countMatching(this.world.read({ topic: "error" }, I), x) + U.length + j.length,
         agentCount: ie,
         durationMs: D,
       }),
@@ -1807,7 +1807,7 @@ class sr {
     return ((this.steered = !0), { addr: t });
   }
   async awaitScript(e) {
-    await Promise.race([this.world.settled(e), Z($t)]);
+    await Promise.race([this.world.settled(e), sleep($t)]);
     let r = this.world.rows[e];
     return r.status === "failed" ? { error: r.error } : {};
   }
@@ -2037,7 +2037,7 @@ function qe(e) {
       e.script !== "" && { script: e.script }),
   };
 }
-var Ao = m(() =>
+var Ao = createLazyValue(() =>
   c({
     verb: X(["put", "retract", "read", "script"]),
     addr: T().optional(),
@@ -2067,7 +2067,7 @@ function br(e) {
 }
 import { appendFile, mkdir, readFile } from "fs/promises";
 import { basename as qr, dirname, join as Vt } from "path";
-var Bt = m(() => {
+var Bt = createLazyValue(() => {
     let e = vx().nonnegative();
     return Ko("k", [
       c({
@@ -2114,7 +2114,7 @@ function Qr(e, r, t) {
       p = p
         .then(async () => {
           if (a) return;
-          if (M() && t !== void 0 && d !== void 0) {
+          if (isHoverRestEnabled() && t !== void 0 && d !== void 0) {
             let x = await t.append(d, [{ data: t8(I) }]);
             if (!x.ok)
               throw (
@@ -2172,7 +2172,7 @@ function Qr(e, r, t) {
 }
 async function et(e, r) {
   let t = Zr(e);
-  if (M() && r !== void 0 && t !== void 0) {
+  if (isHoverRestEnabled() && r !== void 0 && t !== void 0) {
     let w = await Kt(r, t);
     if (w === void 0) return { lines: [], skipped: 0 };
     let _ = Yr(w),
@@ -2396,7 +2396,7 @@ function ke() {
 function Ir(e, r) {
   return e.name === void 0 &&
     (e.script !== void 0 || e.scriptPath !== void 0) &&
-    nte(r)
+    isWorkflowAuthoringSkillAvailable(r)
     ? `
 Load the \`${$E}\` skill for the script reference if you have not, fix the script, and retry.`
     : "";
@@ -2406,7 +2406,7 @@ function lt() {
 }
 var Yt =
     "script contains control characters that would be hidden in the approval dialog",
-  Xt = m(() =>
+  Xt = createLazyValue(() =>
     Qe({
       script: s()
         .max(Uh)
@@ -2463,7 +2463,7 @@ var Yt =
       message: "Must provide script, name, scriptPath, or runId",
     }),
   ),
-  Zt = m(() =>
+  Zt = createLazyValue(() =>
     c({
       status: X([
         "async_launched",
@@ -2524,7 +2524,7 @@ async function dt(e, r, t) {
       if ("error" in a) return a;
       ((d = a.script), (o = a.path));
     }
-    if (xqe().some((a) => a.script === d || a.v2Script === d))
+    if (getBundledWorkflows().some((a) => a.script === d || a.v2Script === d))
       return {
         script: d,
         resolvedScriptPath: o,
@@ -2556,7 +2556,7 @@ var ut = {
       "Tool dispatch was retracted by a server fallback; the input may be truncated.",
     errorCode: 7,
   },
-  WorkflowTool = Tt({
+  WorkflowTool = buildTool({
     name: WORKFLOW_TOOL_NAME,
     aliases: ["RunWorkflow"],
     searchHint: "orchestrate subagents with deterministic JavaScript workflow",
@@ -2564,10 +2564,10 @@ var ut = {
     maxResultSizeChars: 1e5,
     isEnabled: () => Dc(),
     async prompt(e) {
-      return fin(nte(e?.tools)) + Q_n(ee().workflowSizeGuideline) + lt();
+      return fin(isWorkflowAuthoringSkillAvailable(e?.tools)) + Q_n(ee().workflowSizeGuideline) + lt();
     },
     async description(e, r) {
-      return fin(nte(r?.tools)) + Q_n(ee().workflowSizeGuideline) + lt();
+      return fin(isWorkflowAuthoringSkillAvailable(r?.tools)) + Q_n(ee().workflowSizeGuideline) + lt();
     },
     get inputSchema() {
       return Xt();
@@ -2642,14 +2642,14 @@ name: ${e.name}`;
         return { result: !1, message: t.error, errorCode: 1 };
       }
       if (e.name && !e.scriptPath) logFeatureOk("workflow_resolve");
-      let d = Vf(t.script);
+      let d = parseWorkflowScript(t.script);
       if ("error" in d)
         return {
           result: !1,
           message: `Invalid workflow script: ${d.error}${Ir(e, r.options.tools)}`,
           errorCode: 2,
         };
-      if (e.script && Mdt(d.scriptBody))
+      if (e.script && usesNondeterministicApi(d.scriptBody))
         return {
           result: !1,
           message: `Workflow scripts must be deterministic: Date.now()/Math.random()/new Date() are unavailable (breaks resume). Stamp results after the workflow returns, or pass timestamps via args.${Ir(e, r.options.tools)}`,
@@ -2776,7 +2776,7 @@ name: ${e.name}`;
       if ("error" in a) throw new De(a.error);
       let { script: p, source: w, resolvedScriptPath: _ } = a,
         I = w === "built-in" && a.scriptMatchesDefinition === !0,
-        x = Vf(p);
+        x = parseWorkflowScript(p);
       if ("error" in x) throw new De(`Invalid workflow script: ${x.error}`);
       let F = e.resumeFromRunId ?? `wf_${randomUUID().slice(0, 12)}`,
         B = Dh("local_workflow"),
@@ -2798,14 +2798,14 @@ name: ${e.name}`;
             },
           }
         );
-      let N = eH(F),
+      let N = getWorkflowTranscriptDir(F),
         ne = _ ?? NTt(j, F, p, r.storageV5),
         q = e.scriptPath ? void 0 : w,
         Y = e.scriptPath ? "scriptPath" : (w ?? "inline"),
         be = Fdt(j, q, I),
         we = $dt(x.meta.description, q, I);
       if (
-        (i("tengu_workflow_launched", {
+        (logEvent("tengu_workflow_launched", {
           invocation_mode: S(
             e.scriptPath ? "scriptPath" : e.name ? "named" : "inline",
           ),
@@ -2954,7 +2954,7 @@ You will be notified when it completes. Use /workflows to watch live progress.`;
     },
   });
 function Le(e) {
-  let r = Vf(e);
+  let r = parseWorkflowScript(e);
   if (!("error" in r)) return B0(r.meta.description);
   let t =
       e

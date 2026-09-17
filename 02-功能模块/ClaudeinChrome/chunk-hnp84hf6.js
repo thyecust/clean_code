@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -84,7 +84,7 @@ async function x(e, s = L) {
     try {
       let m = lstat(p);
       m.catch(() => {});
-      let d = await kt(m, s);
+      let d = await withDeadline(m, s);
       if (d === void 0) {
         n(
           `[Claude in Chrome] Skipping ${t} App Paths candidate for ${e}: existence check exceeded ${s}ms`,

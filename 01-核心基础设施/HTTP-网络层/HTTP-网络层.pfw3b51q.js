@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z, Dt } from "../共享小工具-未细化/chunk-510m1t2d.js";
-import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
+import { sleep, withTimeout } from "../共享小工具-未细化/async-timeout-utils.js";
+import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { On } from "../安全文件系统(FS加固)/chunk-h64ek850.js";
@@ -28,9 +28,9 @@ import { Gi } from "../../02-功能模块/认证-OAuth登录/chunk-7rf7w8yf.js";
 import { o6 } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { eqt, Swn } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { nU } from "../核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
-import { Gdt, qdt, ote, R7 } from "../共享小工具-未细化/chunk-v599v9yt.js";
-import { oun } from "../共享小工具-未细化/chunk-kk3mqttk.js";
-import { Tfe } from "../共享小工具-未细化/chunk-cyyrj58q.js";
+import { Gdt, qdt, CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../共享小工具-未细化/ca-trust-env-vars.js";
+import { decodeProtoFields } from "../共享小工具-未细化/protobuf-decoding.js";
+import { getXdgDataHome } from "../共享小工具-未细化/user-directories.js";
 import { execFile } from "child_process";
 import { constants, statSync } from "fs";
 import {
@@ -92,7 +92,7 @@ function ce(t, e = 0) {
 }
 function $t(t) {
   let e = { data: t.subarray(0, 0), control: Ue, version: 0 };
-  return oun(t, {
+  return decodeProtoFields(t, {
     onVarint(r, s) {
       if (r === 2) e.control = s;
       else if (r === 3) e.version = s;
@@ -381,7 +381,7 @@ function Ft(t, e, o, r) {
         await s();
         return;
       } catch (u) {
-        if (((p = u), c + 1 < r)) await Z(Math.min(200 * 2 ** c, 2000));
+        if (((p = u), c + 1 < r)) await sleep(Math.min(200 * 2 ** c, 2000));
       }
     throw p;
   })();
@@ -523,7 +523,7 @@ function Me(t) {
     t.writeBufPeakBytes > t.limits.receiveHighWater ||
       t.writeBufPeakBytes >= t.limits.downloadQueuedReportBytes)
   )
-    i("tengu_agent_proxy_download_queue", {
+    logEvent("tengu_agent_proxy_download_queue", {
       download_queued_peak_bytes: t.writeBufPeakBytes,
     });
   if (
@@ -531,7 +531,7 @@ function Me(t) {
     t.uploadPauses > 0 ||
       t.pendingPeakBytes >= t.limits.uploadQueuedReportBytes)
   )
-    i("tengu_agent_proxy_upload_queue", {
+    logEvent("tengu_agent_proxy_upload_queue", {
       upload_queued_peak_bytes: t.pendingPeakBytes,
       upload_pauses: t.uploadPauses,
       upload_aborted: t.uploadAborted,
@@ -1560,7 +1560,7 @@ async function st(t) {
         }
         await yn(
           r,
-          t.nssDbDirs ?? [U(tt(), ".pki", "nssdb"), U(Tfe(), "pki", "nssdb")],
+          t.nssDbDirs ?? [U(tt(), ".pki", "nssdb"), U(getXdgDataHome(), "pki", "nssdb")],
           p,
           e,
         );
@@ -1771,7 +1771,7 @@ async function _n(t, e, o) {
     `if [ -r ${ut(t.caBundlePath)} ]; then`,
   ];
   for (let p of [...Gdt, ...qdt]) r.push("  " + ot(p, t.caBundlePath));
-  for (let [p, c] of Object.entries(R7)) r.push("  " + ot(p, c));
+  for (let [p, c] of Object.entries(SYSTEM_CA_TRUST_ENV_DEFAULTS)) r.push("  " + ot(p, c));
   r.push("fi");
   let s =
     r.join(`
@@ -2013,7 +2013,7 @@ async function $n(t, e) {
     (n(`[agent-proxy] ${e.detail}; attempt ${d} in ${(m / 1000).toFixed(1)}s`, {
       level: "warn",
     }),
-      await Z(m, void 0, { unref: !0 }));
+      await sleep(m, void 0, { unref: !0 }));
     let h = bt(o, r);
     if (h === "exit") return;
     if (h === "defer") continue;
@@ -2261,8 +2261,8 @@ function ygr() {
         "https_proxy",
         "NO_PROXY",
         "no_proxy",
-        ...ote,
-        ...Object.keys(R7),
+        ...CA_BUNDLE_ENV_VARS,
+        ...Object.keys(SYSTEM_CA_TRUST_ENV_DEFAULTS),
         ...qit,
       ])
         if (process.env[s]) r[s] = process.env[s];
@@ -2288,7 +2288,7 @@ function ygr() {
   for (let r of Gdt) o[r] = t.caBundlePath;
   if (t.hasSystemCa) {
     for (let r of qdt) o[r] = t.caBundlePath;
-    for (let [r, s] of Object.entries(R7))
+    for (let [r, s] of Object.entries(SYSTEM_CA_TRUST_ENV_DEFAULTS))
       if (process.env[r] === void 0) o[r] = s;
   }
   if (t.javaTrustStorePath)
@@ -2394,7 +2394,7 @@ async function Nn(t, e) {
 async function Dn() {
   let t = new Set();
   try {
-    await Dt($nt(dt, t), xt, "installed-CLI PATH sweep timed out");
+    await withTimeout($nt(dt, t), xt, "installed-CLI PATH sweep timed out");
   } catch (e) {
     (n(`[agent-proxy] ${l(e)}; naming only the CLIs resolved so far`, {
       level: "warn",
@@ -2405,7 +2405,7 @@ async function Dn() {
 }
 async function In(t, e) {
   let o = I(e, "..", "bin"),
-    r = await Dt(Nn("gh", o), xt, "gh PATH probe timed out");
+    r = await withTimeout(Nn("gh", o), xt, "gh PATH probe timed out");
   if (!r) {
     n("[agent-proxy] governed git: gh not found on PATH; skipping gh shim");
     return;
@@ -2692,7 +2692,7 @@ async function Yn(t, e) {
   let o = new Set(),
     r = [],
     s = t;
-  for (let p of ote) {
+  for (let p of CA_BUNDLE_ENV_VARS) {
     let c = process.env[p]?.trim();
     if (!c || c === e || o.has(c) || ht.includes(c)) continue;
     o.add(c);

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Z } from "../共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../共享小工具-未细化/async-timeout-utils.js";
 import { randomBytes } from "crypto";
 import {
   closeSync,
@@ -68,7 +68,7 @@ async function pPn(t, n) {
     } catch (i) {
       if (V(i, r)) {
         if (r === 0 && n !== void 0 && (await ft(n))) throw i;
-        ((e = !0), await Z(X));
+        ((e = !0), await sleep(X));
         continue;
       }
       throw i;

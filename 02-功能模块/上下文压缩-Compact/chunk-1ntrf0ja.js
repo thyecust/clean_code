@@ -7,32 +7,32 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { zjn } from "../../01-核心基础设施/共享小工具-未细化/chunk-f7n720sn.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { clearWorkshopInvokeStart } from "../../01-核心基础设施/共享小工具-未细化/workshop-telemetry.js";
 import { getDefaultWebBrowserState } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import {
-  jut,
-  Wut,
-  Gut,
-  qut,
-  zut,
-  Vut,
-  Kut,
-  Xut,
-  Yut,
-  Jut,
-  Qut,
-  Zut,
-  rbe,
-} from "../../01-核心基础设施/共享小工具-未细化/chunk-cj5z5g82.js";
-import { Kr } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
+  EMPTY_ARTIFACT_PLAN_PUBLISH_CONSENT_PATHS,
+  EMPTY_ARTIFACT_DB_READ_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_DB_READ_HUMAN_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_READ_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_ASSET_READ_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_ASSET_READ_HUMAN_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_ASSET_UPLOAD_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_ASSET_UPLOAD_HUMAN_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_HANDLERS_READ_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_HANDLERS_READ_HUMAN_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_HANDLERS_WRITE_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_HANDLERS_WRITE_HUMAN_CONSENT_SLUGS,
+  EMPTY_ARTIFACT_ROOM_JOIN_CONSENT_SLUGS,
+} from "../../01-核心基础设施/共享小工具-未细化/empty-artifact-consent-slugs.js";
+import { defineDialog } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { s, O, Uf, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var yp = Kr({
+var localJsxDialog = defineDialog({
   kind: "local_jsx",
-  payload: m(() =>
+  payload: createLazyValue(() =>
     c({ nodeId: s(), commandName: s(), immediate: O(), hidesPrompt: O() }),
   ),
-  result: m(() => Uf()),
+  result: createLazyValue(() => Uf()),
   default: null,
   userInvoked: !0,
   hideWhile: [],
@@ -53,35 +53,35 @@ var S = Object.freeze({}),
     artifactWatchApproved: !1,
     artifactDbWriteApproved: !1,
     artifactDbWriteHumanApproved: !1,
-    artifactDbReadConsentSlugs: Wut,
-    artifactDbReadHumanConsentSlugs: Gut,
-    artifactReadConsentSlugs: qut,
-    artifactAssetUploadConsentSlugs: Kut,
-    artifactAssetUploadHumanConsentSlugs: Xut,
-    artifactAssetReadConsentSlugs: zut,
-    artifactAssetReadHumanConsentSlugs: Vut,
-    artifactHandlersReadConsentSlugs: Yut,
-    artifactHandlersReadHumanConsentSlugs: Jut,
-    artifactHandlersWriteConsentSlugs: Qut,
-    artifactHandlersWriteHumanConsentSlugs: Zut,
-    artifactRoomJoinConsentSlugs: rbe,
+    artifactDbReadConsentSlugs: EMPTY_ARTIFACT_DB_READ_CONSENT_SLUGS,
+    artifactDbReadHumanConsentSlugs: EMPTY_ARTIFACT_DB_READ_HUMAN_CONSENT_SLUGS,
+    artifactReadConsentSlugs: EMPTY_ARTIFACT_READ_CONSENT_SLUGS,
+    artifactAssetUploadConsentSlugs: EMPTY_ARTIFACT_ASSET_UPLOAD_CONSENT_SLUGS,
+    artifactAssetUploadHumanConsentSlugs: EMPTY_ARTIFACT_ASSET_UPLOAD_HUMAN_CONSENT_SLUGS,
+    artifactAssetReadConsentSlugs: EMPTY_ARTIFACT_ASSET_READ_CONSENT_SLUGS,
+    artifactAssetReadHumanConsentSlugs: EMPTY_ARTIFACT_ASSET_READ_HUMAN_CONSENT_SLUGS,
+    artifactHandlersReadConsentSlugs: EMPTY_ARTIFACT_HANDLERS_READ_CONSENT_SLUGS,
+    artifactHandlersReadHumanConsentSlugs: EMPTY_ARTIFACT_HANDLERS_READ_HUMAN_CONSENT_SLUGS,
+    artifactHandlersWriteConsentSlugs: EMPTY_ARTIFACT_HANDLERS_WRITE_CONSENT_SLUGS,
+    artifactHandlersWriteHumanConsentSlugs: EMPTY_ARTIFACT_HANDLERS_WRITE_HUMAN_CONSENT_SLUGS,
+    artifactRoomJoinConsentSlugs: EMPTY_ARTIFACT_ROOM_JOIN_CONSENT_SLUGS,
     artifactReadPageDataApproved: !1,
     artifactReadPageDataHumanApproved: !1,
-    artifactPlanPublishConsentPaths: jut,
+    artifactPlanPublishConsentPaths: EMPTY_ARTIFACT_PLAN_PUBLISH_CONSENT_PATHS,
     prResolvedThisSession: !1,
     ultrareviewOverageConfirmed: !1,
     artifactReadVersions: S,
     artifactReadObservers: l,
   },
   _ = Object.keys(r);
-function Qlt(e) {
+function resetTransientSessionState(e) {
   let t = e.webBrowser,
     o =
       t.view === void 0 &&
       t.logs.length === 0 &&
       t.unreadErrors === 0 &&
       t.unreadWarnings === 0,
-    n = zjn(e.workshopTelemetry),
+    n = clearWorkshopInvokeStart(e.workshopTelemetry),
     i =
       Object.keys(e.artifactReadVersions ?? {}).length === 0 &&
       Object.keys(e.artifactReadObservers ?? {}).length === 0;
@@ -104,9 +104,9 @@ function Qlt(e) {
     webBrowser: o ? t : { ...getDefaultWebBrowserState(), cleanupRegistered: t.cleanupRegistered },
   };
 }
-function Zlt(e) {
+function closeAllWebViews(e) {
   if (e().webBrowser.view && typeof Bun < "u" && "WebView" in Bun)
     return (Bun.WebView.closeAll(), !0);
   return !1;
 }
-export { yp, Qlt, Zlt };
+export { localJsxDialog, resetTransientSessionState, closeAllWebViews };

@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { RS } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { j, B, K, sc, ke, g8, _8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, Yhe, Xg, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -123,7 +123,7 @@ class X {
   activatePlanFileCache(t) {
     if (
       ((this.planFileCache ??= new Map()),
-      M() && t !== void 0 && this.planFileBackend === null)
+      isHoverRestEnabled() && t !== void 0 && this.planFileBackend === null)
     ) {
       ((this.planFileBackend = t),
         (this.stopReleasingOnSwitch = sc(() => this.releaseStaleWatches())));
@@ -132,7 +132,7 @@ class X {
     }
   }
   noteEarly(t, e) {
-    if (!M()) return;
+    if (!isHoverRestEnabled()) return;
     let i = resolve(t);
     if (dirname(i) !== P()) return;
     if ((this.earlyGeneration++, e === void 0)) this.earlyObserved.delete(basename(i));
@@ -193,7 +193,7 @@ class X {
       else this.refreshPlanFile(t, r);
     else if (
       this.planFileBackend === null &&
-      M() &&
+      isHoverRestEnabled() &&
       i.watch === void 0 &&
       this.earlyGeneration === i.generation
     )
@@ -507,7 +507,7 @@ async function x(t, e) {
         .finally(() => {
           ((r = !0), i.abort());
         }),
-      Z(e, i.signal),
+      sleep(e, i.signal),
     ]),
     r
   );
@@ -754,7 +754,7 @@ async function planExistsAsync(t, e) {
 }
 async function readPlanFileFresh(t) {
   let e = getPlanFilePath();
-  if (M() && t !== void 0 && g()) {
+  if (isHoverRestEnabled() && t !== void 0 && g()) {
     let i = basename(e),
       r = planFiles(),
       s = r.planFileWatches.get(i);

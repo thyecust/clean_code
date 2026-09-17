@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS, CLAUDE_AI_INFERENCE_SCOPE } from "./chunk-9g2q4bjq.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -42,7 +42,7 @@ import {
   Bo,
   Te,
 } from "./认证-OAuth登录.419zdfz3.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -62,29 +62,29 @@ import { uIe, UBn, BBn, jBn, ODt, WBn, GBn } from "./chunk-9g86t9bp.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Ma } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
 import { qA } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { o, t, ct, uE, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { e9, YL, JL } from "../../01-核心基础设施/共享小工具-未细化/chunk-r2ab1bp6.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { useCopyToClipboard, CopyFeedbackHint, CopyFallbackNotice } from "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { Os } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { Dye } from "../../01-核心基础设施/共享小工具-未细化/chunk-1phhhgcj.js";
+import { AuthenticationStatusBox } from "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { Sv } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { _0e } from "../Bedrock-Vertex/chunk-g6sqdw6w.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
 import { y0e } from "../Bedrock-Vertex/chunk-yvs1a1sd.js";
 import { ple, _en, yen } from "./chunk-dtt2nn79.js";
 import { yv } from "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { ck } from "./chunk-5bg9xwqx.js";
-import { fM, Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { isHeadlessEnvironment, tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 class ye extends Error {
   fallbackCures;
@@ -236,7 +236,7 @@ function mo(s) {
     "`env.NODE_EXTRA_CA_CERTS` in your user settings (~/.claude/settings.json)."
   );
 }
-var po = m(() =>
+var po = createLazyValue(() =>
   nt({
     device_authorization_endpoint: le().optional(),
     token_endpoint: le().optional(),
@@ -253,7 +253,7 @@ function ht(s, c, M) {
   }
   return `${s}${M}`;
 }
-var ho = m(() =>
+var ho = createLazyValue(() =>
   nt({
     device_code: le(),
     user_code: le(),
@@ -264,7 +264,7 @@ var ho = m(() =>
   }),
 );
 function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
-  let { credentials: D } = _e(),
+  let { credentials: D } = useStorageV5Context(),
     [T, z] = d({ state: "url_input" }),
     ee = M ?? void 0,
     R = C(0);
@@ -348,7 +348,7 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
           "gateway device authorization endpoint returned malformed response",
         );
       let V = K.data;
-      (Gr(V.verification_uri_complete ?? V.verification_uri),
+      (tryOpenUrlInBrowser(V.verification_uri_complete ?? V.verification_uri),
         z({
           state: "polling",
           url: j,
@@ -364,7 +364,7 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
   async function de(j, G, v, Y, P, oe) {
     let K = Math.max(1, Y);
     while (P === R.current) {
-      if ((await Z(K * 1000), P !== R.current)) return;
+      if ((await sleep(K * 1000), P !== R.current)) return;
       try {
         let V = gRe(oe, G),
           { data: w } = await externalHttp.post(
@@ -443,14 +443,14 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
   }
   let I = T.state === "url_input";
   switch (
-    (Ne(
+    (useKeybinding(
       "confirm:yes",
       () => {
         if (ee) se(ee);
       },
       { context: "Confirmation", isActive: I },
     ),
-    Ne("confirm:no", H ? () => {} : c, {
+    useKeybinding("confirm:no", H ? () => {} : c, {
       context: "Confirmation",
       isActive: I,
     }),
@@ -533,7 +533,7 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
               "\u2026",
             ],
           }),
-          e(En, {
+          e(ConfirmPrompt, {
             hideIndexes: !0,
             confirmLabel: "Yes, trust this gateway",
             cancelLabel: H ? "No, go back" : "No, cancel login",
@@ -562,11 +562,11 @@ function yt(or) {
   let we = _(13),
     { userCode: ft, verificationUri: gt, onCancel: rr } = or,
     Kt;
-  if (we[0] === p) ((Kt = { context: "Confirmation" }), (we[0] = Kt));
+  if (we[0] === MEMO_CACHE_SENTINEL) ((Kt = { context: "Confirmation" }), (we[0] = Kt));
   else Kt = we[0];
-  Ne("confirm:no", rr, Kt);
+  useKeybinding("confirm:no", rr, Kt);
   let qt, Jt;
-  if (we[1] === p)
+  if (we[1] === MEMO_CACHE_SENTINEL)
     ((qt = e(t, { bold: !0, children: "Cloud gateway \xB7 sign in" })),
       (Jt = e(t, {
         children:
@@ -587,7 +587,7 @@ function yt(or) {
       (we[4] = ze));
   else ze = we[4];
   let Qt;
-  if (we[5] === p)
+  if (we[5] === MEMO_CACHE_SENTINEL)
     ((Qt = e(t, { dimColor: !0, children: "Browser didn't open? Visit:" })),
       (we[5] = Qt));
   else Qt = we[5];
@@ -601,7 +601,7 @@ function yt(or) {
       (we[7] = Be));
   else Be = we[7];
   let eo, to;
-  if (we[8] === p)
+  if (we[8] === MEMO_CACHE_SENTINEL)
     ((eo = r(o, {
       gap: 1,
       children: [
@@ -633,11 +633,11 @@ function wt(nr) {
   let Ee = _(7),
     { label: mt, onCancel: ir } = nr,
     ro;
-  if (Ee[0] === p) ((ro = { context: "Confirmation" }), (Ee[0] = ro));
+  if (Ee[0] === MEMO_CACHE_SENTINEL) ((ro = { context: "Confirmation" }), (Ee[0] = ro));
   else ro = Ee[0];
-  Ne("confirm:no", ir, ro);
+  useKeybinding("confirm:no", ir, ro);
   let no;
-  if (Ee[1] === p) ((no = e(yo, {})), (Ee[1] = no));
+  if (Ee[1] === MEMO_CACHE_SENTINEL) ((no = e(yo, {})), (Ee[1] = no));
   else no = Ee[1];
   let He;
   if (Ee[2] !== mt)
@@ -646,7 +646,7 @@ function wt(nr) {
       (Ee[3] = He));
   else He = Ee[3];
   let io;
-  if (Ee[4] === p)
+  if (Ee[4] === MEMO_CACHE_SENTINEL)
     ((io = e(t, { dimColor: !0, children: "Press Esc to cancel" })),
       (Ee[4] = io));
   else io = Ee[4];
@@ -662,9 +662,9 @@ function Ct(ar) {
   let Oe = _(9),
     { message: pt, detail: Ye, onCancel: sr } = ar,
     so;
-  if (Oe[0] === p) ((so = { context: "Confirmation" }), (Oe[0] = so));
+  if (Oe[0] === MEMO_CACHE_SENTINEL) ((so = { context: "Confirmation" }), (Oe[0] = so));
   else so = Oe[0];
-  Ne("confirm:no", sr, so);
+  useKeybinding("confirm:no", sr, so);
   let $e;
   if (Oe[1] !== pt)
     (($e = r(t, { color: "error", children: ["Error: ", pt] })),
@@ -678,7 +678,7 @@ function Ct(ar) {
       (Oe[4] = We));
   else We = Oe[4];
   let co;
-  if (Oe[5] === p)
+  if (Oe[5] === MEMO_CACHE_SENTINEL)
     ((co = e(t, { dimColor: !0, children: "Press Esc to go back" })),
       (Oe[5] = co));
   else co = Oe[5];
@@ -710,7 +710,7 @@ function V8({
   urlOutdent: ee = 0,
 }) {
   let R = Ma(),
-    { storageV5: U, credentials: Q } = _e(),
+    { storageV5: U, credentials: Q } = useStorageV5Context(),
     se = Os((q) => q.proactivityLevel),
     fe = Os((q) => q.toolPermissionContext),
     de = (R ? Sv : 0) + ee,
@@ -728,7 +728,7 @@ function V8({
           : null,
     oe = null,
     K = qA(),
-    V = vt(),
+    V = useClock(),
     [w, B] = d(() => {
       if (D === "setup-token") return { state: "ready_to_start" };
       if (v === "claudeai" || v === "console")
@@ -760,14 +760,14 @@ function V8({
       copiedVia: ot,
       copy: rt,
       reset: it,
-    } = e9(w.state === "waiting_for_login" ? w.url : null),
-    Bt = Se().columns - qe.length - 1,
+    } = useCopyToClipboard(w.state === "waiting_for_login" ? w.url : null),
+    Bt = useTerminalSize().columns - qe.length - 1,
     [Ht] = d(() => h_() && xH() !== "off");
   (E(() => {
-    if (v === "claudeai") i("tengu_oauth_claudeai_forced", {});
-    else if (v === "console") i("tengu_oauth_console_forced", {});
+    if (v === "claudeai") logEvent("tengu_oauth_claudeai_forced", {});
+    else if (v === "console") logEvent("tengu_oauth_console_forced", {});
     else if (Y && !0 && D !== "setup-token")
-      i("tengu_oauth_gateway_forced", {});
+      logEvent("tengu_oauth_gateway_forced", {});
   }, [v, Y, D]),
     Un(
       () => {
@@ -776,10 +776,10 @@ function V8({
       w.state === "about_to_retry" ? 1000 : null,
       [w],
     ),
-    Ne(
+    useKeybinding(
       "confirm:yes",
       () => {
-        (i(
+        (logEvent(
           w.state === "gateway_done"
             ? "tengu_oauth_gateway_done"
             : "tengu_oauth_success",
@@ -796,7 +796,7 @@ function V8({
     ));
   let Yt = uE(),
     at = C(!1);
-  (Ne(
+  (useKeybinding(
     "confirm:yes",
     () => {
       if (at.current) return;
@@ -837,11 +837,11 @@ function V8({
       isActive: w.state === "bedrock_done" || w.state === "vertex_done",
     },
   ),
-    Ne("confirm:yes", () => B({ state: "platform_setup" }), {
+    useKeybinding("confirm:yes", () => B({ state: "platform_setup" }), {
       context: "Confirmation",
       isActive: w.state === "aws_refresh_done",
     }),
-    Ne(
+    useKeybinding(
       "confirm:yes",
       () => {
         if (w.state === "error" && w.toRetry)
@@ -849,7 +849,7 @@ function V8({
       },
       { context: "Confirmation", isActive: w.state === "error" && !!w.toRetry },
     ),
-    Ne("confirm:yes", () => B({ state: "idle" }), {
+    useKeybinding("confirm:yes", () => B({ state: "idle" }), {
       context: "Confirmation",
       isActive: w.state === "account_on_hold" && D !== "setup-token",
     }),
@@ -872,7 +872,7 @@ function V8({
         });
         return;
       }
-      (i("tengu_oauth_manual_entry", {}),
+      (logEvent("tengu_oauth_manual_entry", {}),
         he.handleManualAuthCodeInput({ authorizationCode: L, state: ne }));
     } catch (L) {
       (logError(L),
@@ -885,14 +885,14 @@ function V8({
   }
   let st = re(async () => {
       let q = (X) => {
-        if ((it(), Fe(!1), B({ state: "waiting_for_login", url: X }), fM()))
+        if ((it(), Fe(!1), B({ state: "waiting_for_login", url: X }), isHeadlessEnvironment()))
           Fe(!0);
         else V.setTimeout(() => Fe(!0), 3000);
       };
       tt(null);
       try {
         if (
-          (i("tengu_oauth_flow_start", { loginWithClaudeAi: ge }),
+          (logEvent("tengu_oauth_flow_start", { loginWithClaudeAi: ge }),
           et && D !== "setup-token")
         ) {
           if (!Ie)
@@ -949,7 +949,7 @@ function V8({
                     ? { state: "ready_to_start" }
                     : { state: "idle" },
               }),
-              i("tengu_oauth_token_exchange_error", {
+              logEvent("tengu_oauth_token_exchange_error", {
                 ...lm(L),
                 ssl_error: lt !== null,
               }),
@@ -981,7 +981,7 @@ function V8({
       } catch (X) {
         if (Evt(X)) {
           (B({ state: "account_on_hold", message: Tvt(Yse(X.errorUri)) }),
-            i("tengu_oauth_error", { account_on_hold: !0 }));
+            logEvent("tengu_oauth_error", { account_on_hold: !0 }));
           return;
         }
         let L = X instanceof c1 ? X.displayMessage : l(X),
@@ -991,7 +991,7 @@ function V8({
           message: ne ?? L,
           toRetry: { state: D === "setup-token" ? "ready_to_start" : "idle" },
         }),
-          i("tengu_oauth_error", { ...lm(X), ssl_error: ne !== null }));
+          logEvent("tengu_oauth_error", { ...lm(X), ssl_error: ne !== null }));
       }
     }, [he, ge, et, Ie, D, T, Me, K, V, c, U, Q, it]),
     Ge = C(!1);
@@ -1011,7 +1011,7 @@ function V8({
     }, [w.state, st]),
     Un(
       () => {
-        (i("tengu_oauth_success", { loginWithClaudeAi: ge }), s());
+        (logEvent("tengu_oauth_success", { loginWithClaudeAi: ge }), s());
       },
       D === "setup-token" && w.state === "success" ? 500 : null,
       [D, w, ge, s],
@@ -1054,10 +1054,10 @@ function V8({
                             " ",
                           ],
                         }),
-                        e(YL, { via: ot }),
+                        e(CopyFeedbackHint, { via: ot }),
                       ],
                     }),
-                    e(JL, { via: ot }),
+                    e(CopyFallbackNotice, { via: ot }),
                   ],
                 }),
                 e(o, {
@@ -1192,11 +1192,11 @@ function Je(tn) {
       (bt[1] = _o));
   else _o = bt[1];
   let bo;
-  if (bt[2] === p) ((bo = []), (bt[2] = bo));
+  if (bt[2] === MEMO_CACHE_SENTINEL) ((bo = []), (bt[2] = bo));
   else bo = bt[2];
   E(_o, bo);
   let ko;
-  if (bt[3] === p)
+  if (bt[3] === MEMO_CACHE_SENTINEL)
     ((ko = r(o, {
       flexDirection: "column",
       gap: 1,
@@ -1207,7 +1207,7 @@ function Je(tn) {
             e(t, { children: "Running awsAuthRefresh\u2026" }),
           ],
         }),
-        e(Dye, {}),
+        e(AuthenticationStatusBox, {}),
       ],
     })),
       (bt[3] = ko));
@@ -1254,11 +1254,11 @@ function Ut(on) {
           (u[3] = O));
       else O = u[3];
       let J;
-      if (u[4] === p)
+      if (u[4] === MEMO_CACHE_SENTINEL)
         ((J = e(t, { children: "Select login method:" })), (u[4] = J));
       else J = u[4];
       let ae;
-      if (u[5] === p)
+      if (u[5] === MEMO_CACHE_SENTINEL)
         ((ae = {
           label: r(t, {
             children: [
@@ -1273,7 +1273,7 @@ function Ut(on) {
           (u[5] = ae));
       else ae = u[5];
       let ce;
-      if (u[6] === p)
+      if (u[6] === MEMO_CACHE_SENTINEL)
         ((ce = {
           label: r(t, {
             children: [
@@ -1287,7 +1287,7 @@ function Ut(on) {
           (u[6] = ce));
       else ce = u[6];
       let ie;
-      if (u[7] === p)
+      if (u[7] === MEMO_CACHE_SENTINEL)
         ((ie = [
           ae,
           ce,
@@ -1314,18 +1314,18 @@ function Ut(on) {
             options: ie,
             onChange: (Ao) => {
               if (Ao === "platform")
-                (i("tengu_oauth_platform_selected", {}),
+                (logEvent("tengu_oauth_platform_selected", {}),
                   k({ state: "platform_setup" }));
               else if (Ao === "claudeai")
-                (i("tengu_oauth_claudeai_selected", {}),
+                (logEvent("tengu_oauth_claudeai_selected", {}),
                   Ce(!0),
                   pe(!1),
                   k({ state: "ready_to_start" }));
               else if (Dt)
-                (i("tengu_oauth_console_selected", {}),
+                (logEvent("tengu_oauth_console_selected", {}),
                   k({ state: "console_method" }));
               else
-                (i("tengu_oauth_console_selected", {}),
+                (logEvent("tengu_oauth_console_selected", {}),
                   Ce(!1),
                   pe(!1),
                   k({ state: "ready_to_start" }));
@@ -1384,7 +1384,7 @@ function Ut(on) {
     }
     case "gateway_done": {
       let a;
-      if (u[27] === p)
+      if (u[27] === MEMO_CACHE_SENTINEL)
         ((a = e(t, {
           color: "success",
           children: "Connected to Cloud gateway.",
@@ -1392,7 +1392,7 @@ function Ut(on) {
           (u[27] = a));
       else a = u[27];
       let b;
-      if (u[28] === p)
+      if (u[28] === MEMO_CACHE_SENTINEL)
         ((b = r(o, {
           flexDirection: "column",
           gap: 1,
@@ -1415,14 +1415,14 @@ function Ut(on) {
     }
     case "console_method": {
       let a, b;
-      if (u[29] === p)
+      if (u[29] === MEMO_CACHE_SENTINEL)
         ((a = e(t, { bold: !0, children: "Anthropic Console account" })),
           (b = e(t, { children: "How do you want to sign in?" })),
           (u[29] = a),
           (u[30] = b));
       else ((a = u[29]), (b = u[30]));
       let O;
-      if (u[31] === p)
+      if (u[31] === MEMO_CACHE_SENTINEL)
         ((O = {
           label: r(t, {
             children: [
@@ -1436,11 +1436,11 @@ function Ut(on) {
           (u[31] = O));
       else O = u[31];
       let J;
-      if (u[32] === p)
+      if (u[32] === MEMO_CACHE_SENTINEL)
         ((J = e(t, { dimColor: !0, children: "(legacy)" })), (u[32] = J));
       else J = u[32];
       let ae;
-      if (u[33] === p)
+      if (u[33] === MEMO_CACHE_SENTINEL)
         ((ae = [
           O,
           {
@@ -1474,8 +1474,8 @@ function Ut(on) {
             return;
           }
           if ((Ce(!1), xo === "wif"))
-            (i("tengu_oauth_console_token_selected", {}), pe(!0));
-          else (i("tengu_oauth_console_api_key_selected", {}), pe(!1));
+            (logEvent("tengu_oauth_console_token_selected", {}), pe(!0));
+          else (logEvent("tengu_oauth_console_api_key_selected", {}), pe(!1));
           k({ state: "ready_to_start" });
         }),
           (u[36] = pe),
@@ -1504,16 +1504,16 @@ function Ut(on) {
     }
     case "platform_setup": {
       let a;
-      if (u[43] === p) ((a = getConfiguredAwsAuthRefresh()), (u[43] = a));
+      if (u[43] === MEMO_CACHE_SENTINEL) ((a = getConfiguredAwsAuthRefresh()), (u[43] = a));
       else a = u[43];
       let rn = a;
       let b;
-      if (u[44] === p)
+      if (u[44] === MEMO_CACHE_SENTINEL)
         ((b = e(t, { bold: !0, children: "Using 3rd-party platforms" })),
           (u[44] = b));
       else b = u[44];
       let O, J;
-      if (u[45] === p)
+      if (u[45] === MEMO_CACHE_SENTINEL)
         ((O = {
           label: r(t, {
             children: [
@@ -1541,7 +1541,7 @@ function Ut(on) {
           (u[46] = J));
       else ((O = u[45]), (J = u[46]));
       let ae;
-      if (u[47] === p)
+      if (u[47] === MEMO_CACHE_SENTINEL)
         ((ae = {
           label: r(t, {
             children: [
@@ -1554,7 +1554,7 @@ function Ut(on) {
           (u[47] = ae));
       else ae = u[47];
       let ce;
-      if (u[48] === p)
+      if (u[48] === MEMO_CACHE_SENTINEL)
         ((ce = [
           O,
           ...J,
@@ -1579,25 +1579,25 @@ function Ut(on) {
           onChange: (nn) => {
             bb97: switch (nn) {
               case "bedrock": {
-                (i("tengu_oauth_bedrock_wizard_launched", {}),
+                (logEvent("tengu_oauth_bedrock_wizard_launched", {}),
                   k({ state: "bedrock_wizard" }));
                 break bb97;
               }
               case "aws_refresh": {
-                (i("tengu_oauth_aws_refresh_launched", {}),
+                (logEvent("tengu_oauth_aws_refresh_launched", {}),
                   k({ state: "aws_refresh_running" }));
                 break bb97;
               }
               case "foundry": {
-                (i("tengu_oauth_platform_docs_opened", {
+                (logEvent("tengu_oauth_platform_docs_opened", {
                   platform: S("foundry"),
                 }),
-                  Gr("https://code.claude.com/docs/en/microsoft-foundry"),
+                  tryOpenUrlInBrowser("https://code.claude.com/docs/en/microsoft-foundry"),
                   k({ state: "idle" }));
                 break bb97;
               }
               case "vertex": {
-                (i("tengu_oauth_vertex_wizard_launched", {}),
+                (logEvent("tengu_oauth_vertex_wizard_launched", {}),
                   k({ state: "vertex_wizard" }));
                 break bb97;
               }
@@ -1612,7 +1612,7 @@ function Ut(on) {
           (u[50] = ie));
       else ie = u[50];
       let ue;
-      if (u[51] === p)
+      if (u[51] === MEMO_CACHE_SENTINEL)
         ((ue = r(t, {
           dimColor: !0,
           children: [
@@ -1662,7 +1662,7 @@ function Ut(on) {
           (u[57] = a));
       else a = u[57];
       let b;
-      if (u[58] === p)
+      if (u[58] === MEMO_CACHE_SENTINEL)
         ((b = r(t, {
           dimColor: !0,
           children: [
@@ -1702,7 +1702,7 @@ function Ut(on) {
           (u[64] = a));
       else a = u[64];
       let b;
-      if (u[65] === p)
+      if (u[65] === MEMO_CACHE_SENTINEL)
         ((b = r(t, {
           dimColor: !0,
           children: [
@@ -1820,7 +1820,7 @@ function Ut(on) {
     }
     case "creating_api_key": {
       let a;
-      if (u[90] === p)
+      if (u[90] === MEMO_CACHE_SENTINEL)
         ((a = e(o, {
           flexDirection: "column",
           gap: 1,
@@ -1837,7 +1837,7 @@ function Ut(on) {
     }
     case "about_to_retry": {
       let a;
-      if (u[91] === p)
+      if (u[91] === MEMO_CACHE_SENTINEL)
         ((a = e(o, {
           flexDirection: "column",
           gap: 1,

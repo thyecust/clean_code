@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 4 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { V2e, HPn, i, qs } from "./chunk-an83zrbx.js";
+import { stripProtoFields as V2e, attachAnalyticsSink as HPn, logEvent as i, logEventAsync as qs } from "./analytics-event-queue.js";
 export {
   HPn as attachAnalyticsSink,
   i as logEvent,

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import {
   lstatSync,
   readFileSync,
@@ -185,7 +185,7 @@ async function sje(e = 2000, { scaleBudgetToQueue: t = !0 } = {}) {
   let n = o.endStdoutOnce();
   if (n === void 0) return;
   let r = Promise.all([n, o.fullyFlushed()]);
-  await Dt(
+  await withTimeout(
     t ? Promise.race([r, k(e)]) : r,
     t ? wXt(e) : e,
     "stdout drain timeout (exit)",
@@ -198,7 +198,7 @@ function rOn() {
   return o.isExternallyClocked();
 }
 function k(e) {
-  return o.ensureExternallyClockedPromise().then(() => Z(e));
+  return o.ensureExternallyClockedPromise().then(() => sleep(e));
 }
 var _ = 262144,
   w = 30000;

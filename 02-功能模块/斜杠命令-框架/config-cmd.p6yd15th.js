@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 215 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { DA, EW } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import "../AutoMode-自动模式/chunk-15n5gf3t.js";
 import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
@@ -38,7 +38,7 @@ ${A3e(o)}`,
       value: `Expected key=value, got "${Qn(t)}". Run /config to see what's available.`,
     };
   let s = await TIe(a, o),
-    r = lo(o.session);
+    r = mayHaveRemoteClient(o.session);
   return {
     type: "text",
     value: s.map((i) => EIe(i, r)).join(`

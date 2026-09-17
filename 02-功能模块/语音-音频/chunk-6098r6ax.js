@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -81,7 +81,7 @@ function W(e) {
 }
 async function connectVoiceStream(e, s, d) {
   let u;
-  if (M() && d !== void 0) (await checkAndRefreshOAuthTokenIfNeeded({ credentials: d }), (u = await getClaudeAIOAuthTokensAsync(d)));
+  if (isHoverRestEnabled() && d !== void 0) (await checkAndRefreshOAuthTokenIfNeeded({ credentials: d }), (u = await getClaudeAIOAuthTokensAsync(d)));
   else (await checkAndRefreshOAuthTokenIfNeeded(), (u = getClaudeAIOAuthTokens()));
   if (!u?.accessToken)
     return (n("[voice_stream] No OAuth token available"), null);

@@ -10,8 +10,8 @@
 import { m3e } from "../../00-第三方库/@grpc/grpc-js/grpc-js.5zkynjxh.js";
 import { pO, tI } from "./遥测-OpenTelemetry.0xhcvej6.js";
 import "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
-import { w } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
-var p = w(function (o) {
+import { commonJS } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+var p = commonJS(function (o) {
   Object.defineProperty(o, "__esModule", { value: !0 });
   o.OTLPTraceExporter = void 0;
   var r = m3e(),
@@ -31,7 +31,7 @@ var p = w(function (o) {
   }
   o.OTLPTraceExporter = t;
 });
-var l = w(function (e) {
+var l = commonJS(function (e) {
   Object.defineProperty(e, "__esModule", { value: !0 });
   e.OTLPTraceExporter = void 0;
   var i = p();

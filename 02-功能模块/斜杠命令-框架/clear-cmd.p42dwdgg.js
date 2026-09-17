@@ -10,21 +10,21 @@
 
 // [preload stripped] 原本在此预载 210 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { yp } from "../上下文压缩-Compact/chunk-1ntrf0ja.js";
+import { localJsxDialog } from "../上下文压缩-Compact/chunk-1ntrf0ja.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { AR } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-6k8nm416.js";
+import "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-c9wxfdax.js";
+import "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
 import "../工具Glob-Grep-搜索/chunk-57axeagj.js";
 import "../工具WebFetch-WebSearch/chunk-1mxgbqzj.js";
 import { yrn, Srn } from "../工具WebFetch-WebSearch/chunk-rj210cds.js";
-import "../Teammates团队/chunk-c8267s4e.js";
+import "../Teammates团队/agent-lifecycle.js";
 import "../权限系统/chunk-n4x6jsp3.js";
 var c = async (r, o) => {
   let i = r.trim() || void 0,
     e = K();
-  o.dialogStore?.dismissKind(yp.kind);
+  o.dialogStore?.dismissKind(localJsxDialog.kind);
   for await (let s of yrn({ ...o, clearedSessionTitle: i }))
     o.onQueryEvent?.(s);
   let a = AR(o.submissionOrigin) && !Srn(o.taskRegistry.all());

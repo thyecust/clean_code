@@ -17,7 +17,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { jn, Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getSettingsFilePathForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import {
   checkWindowsSandboxStatusAsync,
   r3,
@@ -32,19 +32,19 @@ import {
   SandboxManager,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
+import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import { nit } from "./chunk-ky2g1mjv.js";
 import { Sf } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { Gp } from "../../01-核心基础设施/共享小工具-未细化/chunk-c8g7bday.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
-import { ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
+import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
+import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { ut } from "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
+import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import { Dn, kn, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { relative } from "path";
 function ce(Un, Fn) {
   return e(t, { dimColor: !0, children: Un }, Fn);
@@ -53,7 +53,7 @@ function G() {
   let Ao = _(3),
     Bn = SandboxManager.isSandboxingEnabled(),
     ie;
-  if (Ao[0] === p) {
+  if (Ao[0] === MEMO_CACHE_SENTINEL) {
     let le = SandboxManager.checkDependencies();
     ie =
       le.warnings.length > 0
@@ -68,7 +68,7 @@ function G() {
   let ae = ie;
   if (!Bn) {
     let j;
-    if (Ao[1] === p)
+    if (Ao[1] === MEMO_CACHE_SENTINEL)
       ((j = r(o, {
         flexDirection: "column",
         children: [
@@ -81,7 +81,7 @@ function G() {
     return j;
   }
   let j;
-  if (Ao[2] === p) {
+  if (Ao[2] === MEMO_CACHE_SENTINEL) {
     let M = SandboxManager.getFsReadConfig();
     let Z = SandboxManager.getFsWriteConfig();
     let S = SandboxManager.getNetworkRestrictionConfig();
@@ -274,7 +274,7 @@ function E(_n) {
   let k = _(26),
     { depCheck: h } = _n,
     me;
-  if (k[0] === p) ((me = P()), (k[0] = me));
+  if (k[0] === MEMO_CACHE_SENTINEL) ((me = P()), (k[0] = me));
   else me = k[0];
   let ue = me,
     No = ue === "macos";
@@ -311,7 +311,7 @@ function E(_n) {
     let zn = h.errors.filter(Ne);
     let Jn = No ? "brew install ripgrep" : "apt install ripgrep";
     let ge;
-    if (k[15] === p)
+    if (k[15] === MEMO_CACHE_SENTINEL)
       ((ge =
         No &&
         e(o, {
@@ -464,7 +464,7 @@ function ao(Zn) {
     { depCheck: Uo } = Zn,
     [Fo] = d(Ue),
     Ce;
-  if (ye[0] === p)
+  if (ye[0] === MEMO_CACHE_SENTINEL)
     ((Ce = e(t, {
       dimColor: !0,
       children: "Checking Windows sandbox status\u2026",
@@ -600,7 +600,7 @@ function K(gt) {
     je = SandboxManager.areUnsandboxedCommandsAllowed();
   if (!xt) {
     let W;
-    if (mo[0] === p)
+    if (mo[0] === MEMO_CACHE_SENTINEL)
       ((W = e(o, {
         flexDirection: "column",
         children: e(t, {
@@ -615,7 +615,7 @@ function K(gt) {
   }
   if (ht) {
     let W;
-    if (mo[1] === p)
+    if (mo[1] === MEMO_CACHE_SENTINEL)
       ((W = e(t, {
         color: "subtle",
         children:
@@ -624,7 +624,7 @@ function K(gt) {
         (mo[1] = W));
     else W = mo[1];
     let Me;
-    if (mo[2] === p)
+    if (mo[2] === MEMO_CACHE_SENTINEL)
       ((Me = r(o, {
         flexDirection: "column",
         children: [
@@ -661,7 +661,7 @@ function go(wt) {
     { headerFocused: Lo, focusHeader: jo } = Jd(),
     Ge;
   if (C[0] !== Oo)
-    ((Ge = ut("success", Oo)("(current)")), (C[0] = Oo), (C[1] = Ge));
+    ((Ge = getThemeColor("success", Oo)("(current)")), (C[0] = Oo), (C[1] = Ge));
   else Ge = C[1];
   let qe = Ge;
   const Mo =
@@ -699,7 +699,7 @@ function go(wt) {
   else Ke = C[10];
   let V = Ke,
     ze;
-  if (C[11] === p)
+  if (C[11] === MEMO_CACHE_SENTINEL)
     ((ze = e(o, {
       marginBottom: 1,
       children: e(t, { bold: !0, children: "Configure overrides" }),
@@ -733,7 +733,7 @@ function go(wt) {
       (C[19] = fo));
   else fo = C[19];
   let Je;
-  if (C[20] === p)
+  if (C[20] === MEMO_CACHE_SENTINEL)
     ((Je = r(t, {
       dimColor: !0,
       wrap: "wrap-trim",
@@ -750,7 +750,7 @@ function go(wt) {
       (C[20] = Je));
   else Je = C[20];
   let Qe;
-  if (C[21] === p)
+  if (C[21] === MEMO_CACHE_SENTINEL)
     ((Qe = r(o, {
       flexDirection: "column",
       marginTop: 1,
@@ -766,7 +766,7 @@ function go(wt) {
             "All bash commands invoked by the model must run in the sandbox unless they are explicitly listed in excludedCommands.",
           ],
         }),
-        e(Gp, {
+        e(LearnMoreLink, {
           url: "https://code.claude.com/docs/en/sandboxing#configure-sandboxing",
         }),
       ],
@@ -788,21 +788,21 @@ function vo(Mt) {
   let x = _(32),
     { onComplete: y, depCheck: O } = Mt,
     Ye;
-  if (x[0] === p) ((Ye = SandboxManager.isSandboxingEnabled()), (x[0] = Ye));
+  if (x[0] === MEMO_CACHE_SENTINEL) ((Ye = SandboxManager.isSandboxingEnabled()), (x[0] = Ye));
   else Ye = x[0];
   let $t = Ye,
     on;
-  if (x[1] === p) ((on = SandboxManager.isAutoAllowBashIfSandboxedEnabled()), (x[1] = on));
+  if (x[1] === MEMO_CACHE_SENTINEL) ((on = SandboxManager.isAutoAllowBashIfSandboxedEnabled()), (x[1] = on));
   else on = x[1];
   let Gt = on,
     xo = O.warnings.length > 0,
     en;
-  if (x[2] === p) ((en = getSettings_DEPRECATED()), (x[2] = en));
+  if (x[2] === MEMO_CACHE_SENTINEL) ((en = getSettings_DEPRECATED()), (x[2] = en));
   else en = x[2];
   let qt = en.sandbox?.network?.allowAllUnixSockets,
     qo = xo && !qt,
     nn;
-  if (x[3] === p)
+  if (x[3] === MEMO_CACHE_SENTINEL)
     ((nn = () => {
       if (!$t) {
         return "disabled";
@@ -816,24 +816,24 @@ function vo(Mt) {
   else nn = x[3];
   let Vt = nn,
     tn;
-  if (x[4] === p) ((tn = shouldForceSandboxOn()), (x[4] = tn));
+  if (x[4] === MEMO_CACHE_SENTINEL) ((tn = shouldForceSandboxOn()), (x[4] = tn));
   else tn = x[4];
   let sn = tn,
     rn = Vt(),
     Kt = sn && rn === "disabled" ? "regular" : rn,
     ln;
-  if (x[5] === p) ((ln = SandboxManager.isAutoAllowSupported()), (x[5] = ln));
+  if (x[5] === MEMO_CACHE_SENTINEL) ((ln = SandboxManager.isAutoAllowSupported()), (x[5] = ln));
   else ln = x[5];
   let z = ln,
     an;
-  if (x[6] === p)
+  if (x[6] === MEMO_CACHE_SENTINEL)
     ((an = z
       ? [{ label: "Sandbox BashTool, with auto-allow", value: "auto-allow" }]
       : []),
       (x[6] = an));
   else an = x[6];
   let dn;
-  if (x[7] === p)
+  if (x[7] === MEMO_CACHE_SENTINEL)
     ((dn = [
       ...an,
       {
@@ -892,9 +892,9 @@ function vo(Mt) {
       (x[11] = un));
   else un = x[11];
   let pn;
-  if (x[12] === p) ((pn = { context: "Settings" }), (x[12] = pn));
+  if (x[12] === MEMO_CACHE_SENTINEL) ((pn = { context: "Settings" }), (x[12] = pn));
   else pn = x[12];
-  Ze(un, pn);
+  useKeybindings(un, pn);
   let fn;
   if (x[13] !== J || x[14] !== y || x[15] !== qo)
     ((fn = e(
@@ -930,7 +930,7 @@ function vo(Mt) {
   else gn = x[18];
   let Ko = gn,
     xn;
-  if (x[19] === p)
+  if (x[19] === MEMO_CACHE_SENTINEL)
     ((xn = e(ss, { title: "Config", children: e(G, {}) }, "config")),
       (x[19] = xn));
   else xn = x[19];
@@ -975,7 +975,7 @@ function vo(Mt) {
   else hn = x[25];
   let zo = hn,
     wn;
-  if (x[26] === p)
+  if (x[26] === MEMO_CACHE_SENTINEL)
     ((wn = Pt()
       ? e(o, {
           marginTop: 1,
@@ -1004,10 +1004,10 @@ function vo(Mt) {
       (x[28] = wo));
   else wo = x[28];
   let yn;
-  if (x[29] === p)
+  if (x[29] === MEMO_CACHE_SENTINEL)
     ((yn = e(o, {
       marginTop: 1,
-      children: e(ci, {
+      children: e(InputGuide, {
         children:
           "\u2190/\u2192 to switch \xB7 \u2191/\u2193 to navigate \xB7 Enter to select \xB7 Esc to close",
       }),
@@ -1048,7 +1048,7 @@ function Wo(Xt) {
       (D[1] = So));
   else So = D[1];
   let Sn;
-  if (D[2] === p)
+  if (D[2] === MEMO_CACHE_SENTINEL)
     ((Sn = e(o, {
       marginBottom: 1,
       children: e(t, { bold: !0, children: "Configure mode" }),
@@ -1109,8 +1109,8 @@ function Wo(Xt) {
       (D[15] = To));
   else To = D[15];
   let Rn;
-  if (D[16] === p)
-    ((Rn = e(Gp, { url: "https://code.claude.com/docs/en/sandboxing" })),
+  if (D[16] === MEMO_CACHE_SENTINEL)
+    ((Rn = e(LearnMoreLink, { url: "https://code.claude.com/docs/en/sandboxing" })),
       (D[16] = Rn));
   else Rn = D[16];
   let Po;
@@ -1143,11 +1143,11 @@ async function ps(s, u, n) {
         b === "wsl"
           ? "Error: Sandboxing requires WSL2. WSL1 is not supported."
           : "Error: Sandboxing is currently only supported on macOS, Linux, and WSL2.",
-      m = ut("error", c)(a);
+      m = getThemeColor("error", c)(a);
     return (s(m), null);
   }
   if (!SandboxManager.isPlatformInEnabledList()) {
-    let a = ut(
+    let a = getThemeColor(
       "error",
       c,
     )(
@@ -1156,7 +1156,7 @@ async function ps(s, u, n) {
     return (s(a), null);
   }
   if (SandboxManager.areSandboxSettingsLockedByPolicy()) {
-    let a = ut(
+    let a = getThemeColor(
       "error",
       c,
     )(
@@ -1170,7 +1170,7 @@ async function ps(s, u, n) {
     if (g !== "install")
       return (
         s(
-          ut(
+          getThemeColor(
             "error",
             c,
           )("install takes no arguments. Run /sandbox install by itself."),
@@ -1180,7 +1180,7 @@ async function ps(s, u, n) {
     let a = await nit(u.session.host);
     return (
       s(
-        ut(
+        getThemeColor(
           {
             ok: "success",
             cancelled: "warning",
@@ -1201,7 +1201,7 @@ async function ps(s, u, n) {
     if (w === "exclude") {
       let a = g.slice(8).trim();
       if (!a) {
-        let Y = ut(
+        let Y = getThemeColor(
           "error",
           c,
         )(
@@ -1214,10 +1214,10 @@ async function ps(s, u, n) {
         v = getSettingsFilePathForSource(T),
         R = v ? relative(Bw(), v) : ".claude/settings.local.json",
         Q = v && R.startsWith("..") ? v : R,
-        X = ut("success", c)(`Added "${m}" to excluded commands in ${Q}`);
+        X = getThemeColor("success", c)(`Added "${m}" to excluded commands in ${Q}`);
       return (s(X), null);
     } else {
-      let a = ut(
+      let a = getThemeColor(
         "error",
         c,
       )(

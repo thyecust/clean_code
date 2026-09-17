@@ -12,9 +12,9 @@
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { B2e, getProjectsDir, getProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { isSafeBridgeId } from "../权限系统/chunk-ynkf3yy4.js";
 import { s, T, v, c, $e, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -28,8 +28,8 @@ function isPersistedStampFresh(e, r, t) {
   return r - e <= t && e - r <= j;
 }
 var MAX_POINTER_ACTIVE_SESSION_IDS = 64,
-  p = m(() => s().max(256).refine(isSafeBridgeId)),
-  N = m(() =>
+  p = createLazyValue(() => s().max(256).refine(isSafeBridgeId)),
+  N = createLazyValue(() =>
     c({
       sessionId: $e([k(""), p()]),
       environmentId: p(),
@@ -53,8 +53,8 @@ function P(e) {
 }
 async function writeBridgePointer(e, r, t) {
   let i = g(e),
-    o = M() && t !== void 0 ? P(e) : null;
-  if (M() && t !== void 0 && o) {
+    o = isHoverRestEnabled() && t !== void 0 ? P(e) : null;
+  if (isHoverRestEnabled() && t !== void 0 && o) {
     let l = await t.write(o, b(r), { mode: 438 & ~process.umask() });
     if (!l.ok)
       return (

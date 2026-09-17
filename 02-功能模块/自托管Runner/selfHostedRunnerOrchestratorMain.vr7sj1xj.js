@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 23 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { CS } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { tl } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -32,9 +32,9 @@ import {
   _ot,
 } from "./chunk-cgmv5fe7.js";
 import { $3e } from "../Git-Worktree/chunk-33y3h2sy.js";
-import { uu } from "../../01-核心基础设施/共享小工具-未细化/chunk-bgwm3fhf.js";
-import { ml } from "../../01-核心基础设施/共享小工具-未细化/chunk-vdg9aytt.js";
-import { Uy } from "../../01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js";
+import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
+import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
+import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
 import { AP, Svt } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { randomUUID } from "crypto";
 import { constants } from "fs";
@@ -205,10 +205,10 @@ async function ne(e) {
               ),
               f !== void 0)
             )
-              Uy(f, "SIGTERM");
+              killProcessTree(f, "SIGTERM");
             N = setTimeout(
               (U, G, m, i, T) => {
-                if (U !== void 0) Uy(U, "SIGKILL");
+                if (U !== void 0) killProcessTree(U, "SIGKILL");
                 _ = setTimeout(
                   (M, K, B, D) => {
                     (K(
@@ -249,7 +249,7 @@ async function ne(e) {
 `),
             x = O.pop() ?? "";
           for (let A of O) {
-            let L = ml(A).replace(/[\x00-\x08\x0b-\x1f\x7f]/g, "");
+            let L = redactSecrets(A).replace(/[\x00-\x08\x0b-\x1f\x7f]/g, "");
             if ((e.onStatus(`[runner:hook:spawn-runner] ${L}`), S))
               n = (
                 n +
@@ -290,8 +290,8 @@ async function ne(e) {
             ),
             a.pid !== void 0)
           )
-            (Uy(a.pid, "SIGTERM"),
-              (y = setTimeout((f) => void Uy(f, "SIGKILL"), P, a.pid)),
+            (killProcessTree(a.pid, "SIGTERM"),
+              (y = setTimeout((f) => void killProcessTree(f, "SIGKILL"), P, a.pid)),
               y.unref());
         }),
         e.signal?.addEventListener("abort", u, { once: !0 }),
@@ -448,7 +448,7 @@ function le(e, t, r, o) {
     k = e.caFile === void 0,
     R = new Map(),
     g = (m) => {
-      t.last_error = ml(m);
+      t.last_error = redactSecrets(m);
     },
     E = (m) => r.onStatus(`[runner:scm-connector] ${m}`),
     h = (m) => r.onDebug(`[runner:scm-connector] ${m}`);
@@ -646,7 +646,7 @@ function le(e, t, r, o) {
   function U() {
     if (w) return;
     if (((a = null), !k))
-      uu(
+      raceWithTimeout(
         Oe(e.caFile, "utf8"),
         Ue,
         `--scm-connector-ca-file read from ${e.caFile}`,
@@ -937,7 +937,7 @@ async function ut(e) {
   let t = Je(e, "spawn-runner"),
     r;
   try {
-    r = await uu(Qe(t), 5000, `stat ${t}`);
+    r = await raceWithTimeout(Qe(t), 5000, `stat ${t}`);
   } catch (o) {
     throw Error(
       `spawn-runner hook not found at ${t} \u2014 the orchestrator cannot start without it (${l(o)})`,
@@ -946,7 +946,7 @@ async function ut(e) {
   if (!r.isFile())
     throw Error(`spawn-runner hook at ${t} is not a regular file`);
   try {
-    await uu(access(t, constants.X_OK), 5000, `access ${t}`);
+    await raceWithTimeout(access(t, constants.X_OK), 5000, `access ${t}`);
   } catch {
     throw Error(`spawn-runner hook at ${t} is not executable (chmod +x ${t})`);
   }
@@ -1274,7 +1274,7 @@ async function gt(e, t) {
       if (t.aborted) break;
       o.pollErrors[Kje(h)]++;
       let f = P_e(h),
-        S = ml(l(h));
+        S = redactSecrets(l(h));
       if (f !== void 0 && ot.has(f))
         ((o.connected = !1),
           (o.last_error = S),
@@ -1288,7 +1288,7 @@ async function gt(e, t) {
         d(
           `[runner:orchestrator] poll failed${f ? ` (HTTP ${f})` : ""}: ${S} \u2014 retrying in ${Math.round(u / 1000)}s`,
         ),
-        await Z(u, t),
+        await sleep(u, t),
         (u = Math.min(u * 2, nt)));
       continue;
     }
@@ -1353,7 +1353,7 @@ async function gt(e, t) {
         ...k.map((h) => y(h, _.server_date, !1)),
         ...E.map((h) => y(h, _.server_date, !0)),
       ]);
-    await Z(a, t);
+    await sleep(a, t);
   }
   function N(_) {
     let k = mt(_);
@@ -1398,7 +1398,7 @@ async function gt(e, t) {
       );
       return;
     }
-    let h = ml(
+    let h = redactSecrets(
         g.stderrTail ||
           (g.exitCode === null
             ? "hook killed by external signal (no stderr)"
@@ -1442,7 +1442,7 @@ async function gt(e, t) {
 }
 function wt(e) {
   (console.error(
-    `${new Date().toISOString()} [self-hosted-runner] [runner:fatal] ${ml(e)}`,
+    `${new Date().toISOString()} [self-hosted-runner] [runner:fatal] ${redactSecrets(e)}`,
   ),
     process.exit(1));
 }
@@ -1507,13 +1507,13 @@ Debug:
   try {
     (_ot("orchestrator mode"), ANn(e), (t = ct(e)));
   } catch (h) {
-    (console.error(`error: ${ml(l(h))}
+    (console.error(`error: ${redactSecrets(l(h))}
 Run 'claude self-hosted-runner orchestrator --help' for usage.`),
       process.exit(2));
   }
   let r = t.logLevel === "debug",
     o = () => new Date().toISOString(),
-    d = (h) => ml(h).replace(/[\x00-\x08\x0b-\x1f\x7f]/g, ""),
+    d = (h) => redactSecrets(h).replace(/[\x00-\x08\x0b-\x1f\x7f]/g, ""),
     n = (h) => {
       if (r) console.error(`${o()} [DEBUG] ${d(h)}`);
     },
@@ -1616,7 +1616,7 @@ Run 'claude self-hosted-runner orchestrator --help' for usage.`),
 async function Et(e) {
   if (e.poolSecretFile)
     return (
-      await uu(
+      await raceWithTimeout(
         ze(e.poolSecretFile, { encoding: "utf-8" }),
         Ze,
         `environment-secret read from ${e.poolSecretFile}`,

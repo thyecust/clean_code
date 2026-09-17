@@ -11,10 +11,10 @@ import { Kx } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { formatDuration } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t, see } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { UB } from "./chunk-7f3kwdxn.js";
+import { VirtualScrollViewportContext } from "./virtual-scroll-viewport-context.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { De, dn, pk, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-function JW(w) {
+function ElapsedTimeoutText(w) {
   let a = _(10),
     { elapsedTimeSeconds: b, timeoutMs: l } = w;
   if (b === void 0 && !l) {
@@ -57,12 +57,12 @@ function JW(w) {
 }
 F();
 function y() {
-  let r = De(UB),
+  let r = De(VirtualScrollViewportContext),
     [n, i, s, f] = see(),
     c = f() ?? i.isVisible;
   return [n, c || r, s];
 }
-function yy({ children: r }) {
+function OffscreenFrozenContent({ children: r }) {
   let n = De(Kx),
     [i, s, f] = y(),
     c = C(r),
@@ -78,10 +78,10 @@ function yy({ children: r }) {
     e(o, { ref: i, children: c.current })
   );
 }
-function EWe(r) {
+function useOffscreenFrozenValue(r) {
   let [n, i] = y(),
     s = C(r);
   if (i) s.current = r;
   return [n, s.current];
 }
-export { yy, EWe, JW };
+export { OffscreenFrozenContent, useOffscreenFrozenValue, ElapsedTimeoutText };

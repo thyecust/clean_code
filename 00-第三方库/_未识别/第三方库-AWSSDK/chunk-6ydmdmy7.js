@@ -9,16 +9,16 @@
 // Version: 2.1.263
 import { HA } from "./chunk-z7ktsccq.js";
 import { nu } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { kb } from "../../../01-核心基础设施/共享小工具-未细化/chunk-pf84p45h.js";
-import { zd } from "../../../02-功能模块/Bedrock-Vertex/chunk-yjjbkvm4.js";
-import { pe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var k = pe(HA());
-var ne = pe(zd());
-var I = pe(kb()),
-  P = pe(zd()),
-  N = pe(HA());
-var L = pe(kb()),
-  _ = pe(zd()),
+import { awsSdkCoreClientModule } from "../../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
+import { getPropertyProviderModule } from "../../../02-功能模块/Bedrock-Vertex/smithy-property-provider.js";
+import { toESM } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var k = toESM(HA());
+var ne = toESM(getPropertyProviderModule());
+var I = toESM(awsSdkCoreClientModule()),
+  P = toESM(getPropertyProviderModule()),
+  N = toESM(HA());
+var L = toESM(awsSdkCoreClientModule()),
+  _ = toESM(getPropertyProviderModule()),
   O = (e, r, t) => {
     let o = {
       EcsContainer: async (s) => {
@@ -89,7 +89,7 @@ var K = (e, { profile: r = "default", logger: t } = {}) =>
       { source_profile: i, region: u } = n;
     if (!t.roleAssumer) {
       let { getDefaultRoleAssumer: l } =
-        await import("./chunk-mkw5nmp8.js").then((m) => pe(m.default));
+        await import("./chunk-mkw5nmp8.js").then((m) => toESM(m.default));
       t.roleAssumer = l(
         {
           ...t.clientConfig,
@@ -143,13 +143,13 @@ var K = (e, { profile: r = "default", logger: t } = {}) =>
     }
   },
   F = (e) => !e.role_arn && !!e.credential_source;
-var G = pe(kb());
-var q = pe(kb()),
-  M = pe(zd()),
-  C = pe(HA());
-var f = pe(zd()),
-  j = pe(nu()),
-  W = pe(HA());
+var G = toESM(awsSdkCoreClientModule());
+var q = toESM(awsSdkCoreClientModule()),
+  M = toESM(getPropertyProviderModule()),
+  C = toESM(HA());
+var f = toESM(getPropertyProviderModule()),
+  j = toESM(nu()),
+  W = toESM(HA());
 import {
   createHash,
   createPrivateKey,
@@ -194,7 +194,7 @@ class w {
   }
   async refresh(e) {
     let { SigninClient: r, CreateOAuth2TokenCommand: t } =
-        await import("./CreateOAuth2TokenCommand.a99y1qer.js").then((m) => pe(m.default)),
+        await import("./CreateOAuth2TokenCommand.a99y1qer.js").then((m) => toESM(m.default)),
       { logger: o, userAgentAppId: s } = this.callerClientConfig ?? {},
       i = ((a) => a?.metadata?.handlerProtocol === "h2")(
         this.callerClientConfig?.requestHandler,
@@ -422,7 +422,7 @@ var J = (e) => Boolean(e && e.login_session),
     let t = await U({ ...r, profile: e })();
     return G.setCredentialFeature(t, "CREDENTIALS_PROFILE_LOGIN", "AC");
   };
-var z = pe(kb()),
+var z = toESM(awsSdkCoreClientModule()),
   V = (e) =>
     Boolean(e) &&
     typeof e === "object" &&
@@ -433,7 +433,7 @@ var z = pe(kb()),
         z.setCredentialFeature(o, "CREDENTIALS_PROFILE_PROCESS", "v"),
       ),
     );
-var v = pe(kb()),
+var v = toESM(awsSdkCoreClientModule()),
   Q = async (e, r, t = {}) => {
     let { fromSSO: o } = await import("../../../02-功能模块/Bedrock-Vertex/fromSSO.hsr720kb.js");
     return o({
@@ -455,7 +455,7 @@ var v = pe(kb()),
       typeof e.sso_session === "string" ||
       typeof e.sso_region === "string" ||
       typeof e.sso_role_name === "string");
-var ee = pe(kb()),
+var ee = toESM(awsSdkCoreClientModule()),
   x = (e) =>
     Boolean(e) &&
     typeof e === "object" &&
@@ -478,7 +478,7 @@ var ee = pe(kb()),
     };
     return ee.setCredentialFeature(t, "CREDENTIALS_PROFILE", "n");
   };
-var te = pe(kb()),
+var te = toESM(awsSdkCoreClientModule()),
   re = (e) =>
     Boolean(e) &&
     typeof e === "object" &&

@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { Dr, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Ve, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, Tr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, Io, cr, nt, Cu } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -57,7 +57,7 @@ import {
   IC,
   _Fe,
 } from "./chunk-01ymf0ar.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import {
   closeSync,
   constants,
@@ -97,7 +97,7 @@ var B = new Map([
     [".json", "application/json"],
     [".txt", "text/plain"],
   ]),
-  q3n = Y(B.values()).flatMap((e) => S$t(e) ?? []),
+  q3n = dedupe(B.values()).flatMap((e) => S$t(e) ?? []),
   g$t = [...B.keys()].map((e) => e.slice(1)).join(", ");
 function r4e(e) {
   return B.get(extname(e).toLowerCase());
@@ -303,7 +303,7 @@ var mI = /^[0-9a-f]{64}$/,
   Icn = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,9})?(Z|[+-]\d{2}:\d{2})$/,
   Nv = /^[a-z0-9]{1,24}\/[a-z0-9.+-]{1,80}$/,
   F9 = 10,
-  te = m(() =>
+  te = createLazyValue(() =>
     nt({
       opaque_id: le().regex(ASSET_ID_RE),
       url: le()
@@ -314,7 +314,7 @@ var mI = /^[0-9a-f]{64}$/,
       sha256: le().regex(mI).optional(),
     }),
   ),
-  ge = m(() =>
+  ge = createLazyValue(() =>
     nt({
       assets: cr(
         nt({
@@ -344,9 +344,9 @@ var mI = /^[0-9a-f]{64}$/,
         .catch(void 0),
     }),
   ),
-  ye = m(() => nt({ deleted: Io() })),
-  be = m(() => nt({ error: nt({ code: le(), message: le().optional() }) })),
-  Ae = m(() => nt({ error: le(), reason: le() })),
+  ye = createLazyValue(() => nt({ deleted: Io() })),
+  be = createLazyValue(() => nt({ error: nt({ code: le(), message: le().optional() }) })),
+  Ae = createLazyValue(() => nt({ error: le(), reason: le() })),
   Se = 20000,
   G = 30000,
   we = 90000;
@@ -591,7 +591,7 @@ async function N(e, r) {
       let k = _.response.headers?.["retry-after"],
         R = parseRetryAfterHeader(typeof k === "string" ? k : void 0);
       if (R !== void 0 && R <= Se) {
-        if ((await Z(R, r), r.aborted)) throw new Ve();
+        if ((await sleep(R, r), r.aborted)) throw new Ve();
         if (((c.retried = !0), (_ = await p()), h(_))) return g();
       }
     }
@@ -809,7 +809,7 @@ async function X3n(e, r) {
     { kind: "ok", deleted: i.data.deleted }
   );
 }
-var Te = m(() =>
+var Te = createLazyValue(() =>
     nt({ assets: cr(te().extend({ from_id: le().regex(ASSET_ID_RE) })).max(F9) }),
   ),
   Fe = 120000;

@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { Ke } from "./chunk-fcskxvsh.js";
-import { Ae } from "./chunk-2c9tjhwd.js";
-var t = Ae("./SKILL-e1sgkfee.md");
+import { importMetaRequire } from "./chunk-2c9tjhwd.js";
+var t = importMetaRequire("./SKILL-e1sgkfee.md");
 var a = "./artifact-plan.html-1506d178.txt.zst";
 var e = Ke(a, import.meta.dirname);
 var SKILL_MD = t,

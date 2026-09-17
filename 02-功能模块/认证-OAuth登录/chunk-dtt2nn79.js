@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { uZ, N0, yje, p8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   ht,
@@ -80,8 +80,8 @@ async function ple(e, { storageV5: o, credentials: t } = {}) {
     if (r.success) delete process.env.CLAUDE_CODE_OAUTH_TOKEN;
     else process.env.CLAUDE_CODE_OAUTH_TOKEN = e.accessToken;
   if (uZ()) (N0(r.success ? null : e.accessToken), yje(!1));
-  if (M() && t !== void 0) await _(t);
-  if (r.warning) i("tengu_oauth_storage_warning", { warning: r.warning });
+  if (isHoverRestEnabled() && t !== void 0) await _(t);
+  if (r.warning) logEvent("tengu_oauth_storage_warning", { warning: r.warning });
   if (
     (await fetchAndStoreUserRoles(e.accessToken, o).catch((c) => n(String(c), { level: "error" })),
     shouldUseClaudeAIAuth(e.scopes))
@@ -166,7 +166,7 @@ async function yen({
       artifactAccount: "same_account",
       incomingIdentity: s,
     }),
-    M() && o !== void 0)
+    isHoverRestEnabled() && o !== void 0)
   )
     await _(o);
   await fetchBootstrapData(e, o);

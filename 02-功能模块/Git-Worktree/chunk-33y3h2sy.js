@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { CS } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -16,9 +16,9 @@ import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { oe, Qu } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { aB } from "./chunk-9ys1bnqr.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { uu } from "../../01-核心基础设施/共享小工具-未细化/chunk-bgwm3fhf.js";
-import { ml } from "../../01-核心基础设施/共享小工具-未细化/chunk-vdg9aytt.js";
-import { jG } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
+import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
+import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
+import { isPathSafeToRemove } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
 import { spawn } from "child_process";
 import {
   lstat,
@@ -318,7 +318,7 @@ async function ht(e) {
       (e.onDebug(
         `[byoc:git] Validation retry ${r + 1}/${ue}, backing off ${Math.round(i)}ms`,
       ),
-        await Z(i, e.signal, { throwOnAbort: !0 }));
+        await sleep(i, e.signal, { throwOnAbort: !0 }));
     }
     try {
       if ((await p(e, "", ["ls-remote", "--heads", e.authURL, "HEAD"]), r > 0))
@@ -357,7 +357,7 @@ async function mt(e, t) {
   } catch {}
   return (
     e.onDebug(`[byoc:git] No prefetched repo, fresh init at ${e.repoPath}`),
-    await uu(
+    await raceWithTimeout(
       mkdir(t, { recursive: !0 }),
       st,
       `[runner:stuck] mkdir ${t} (check NFS/CSI mount health)`,
@@ -714,7 +714,7 @@ async function Oe(e, t, n, r = !1, i = Tt) {
       (e.onDebug(
         `[byoc:git] Fetch retry ${o + 1}/${V}, backing off ${Math.round(R)}ms`,
       ),
-        await Z(R, e.signal, { throwOnAbort: !0 }));
+        await sleep(R, e.signal, { throwOnAbort: !0 }));
     }
     let l = [
         "-c",
@@ -745,7 +745,7 @@ async function Oe(e, t, n, r = !1, i = Tt) {
       T = R;
       let D = L(R);
       (e.onDebug(`[byoc:git] Fetch attempt ${o + 1} failed: ${D}`),
-        h.push(S(ml(D))));
+        h.push(S(redactSecrets(D))));
       let F = r && o < Ce && dt(D);
       if (k.killReason !== void 0) d++;
       else if (F) g++;
@@ -1249,7 +1249,7 @@ async function L2n(e) {
       ? `[byoc:git] Worktree ${n} at wrong commit ${w.slice(0, 12)}, clearing before re-add`
       : `[byoc:git] Clearing ${n} before worktree add`,
   ),
-    await uu(
+    await raceWithTimeout(
       Be(n, { recursive: !0, force: !0 }),
       cLt,
       `[runner:stuck] rm ${n} (check NFS/CSI mount health)`,
@@ -1275,7 +1275,7 @@ async function M2n(e) {
     i.add(s);
     let c = { repoPath: s, gitURL: "", authURL: "", onDebug: n, signal: r };
     try {
-      if (!(await jG(u))) {
+      if (!(await isPathSafeToRemove(u))) {
         n(`[byoc:git] kept worktree ${u} \u2014 unremovable reparse point`);
         continue;
       }

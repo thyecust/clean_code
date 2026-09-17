@@ -32,7 +32,7 @@ import { loadExtraCACerts, clearCACertsCache, loadMTLSClientMaterial, getLoadedM
 import { LRe } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { eb } from "../核心工具-进程与信号/chunk-w78brv7j.js";
 import { setSettingsColorEnv } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
-import { XE } from "../共享小工具-未细化/chunk-6eskfcpn.js";
+import { isRemoteSettingsEligible } from "../共享小工具-未细化/remote-settings-eligibility.js";
 import { lz } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 var M = new Set([
   "ANTHROPIC_UNIX_SOCKET",
@@ -563,7 +563,7 @@ class y {
       if (!Nr(e)) continue;
       Object.assign(process.env, this.filterSettingsEnv(getSettingsForSource(e)?.env, e));
     }
-    (XE(),
+    (isRemoteSettingsEligible(),
       Object.assign(
         process.env,
         this.filterSettingsEnv(getSettingsForSource("policySettings")?.env, "policySettings"),

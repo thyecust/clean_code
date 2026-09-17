@@ -14,14 +14,14 @@ import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { zit } from "../../01-核心基础设施/共享小工具-未细化/chunk-ksg0m9bg.js";
-import { Iye } from "../../01-核心基础设施/共享小工具-未细化/chunk-8w004g4b.js";
+import { getDefaultShell } from "../../01-核心基础设施/共享小工具-未细化/get-default-shell.js";
+import { getBashSpawnFailureDetail } from "../../01-核心基础设施/共享小工具-未细化/bash-spawn-failure-detail.js";
 import { randomUUID } from "crypto";
 async function runHeadlessBashCommand(e) {
   let { command: s } = e,
     i = e.cwd ?? Q(),
     { file: a, args: n } =
-      zit() === "powershell"
+      getDefaultShell() === "powershell"
         ? { file: "pwsh", args: ["-NoProfile", "-Command", s] }
         : { file: "/bin/sh", args: ["-c", s] },
     {
@@ -37,7 +37,7 @@ async function runHeadlessBashCommand(e) {
     t = r && !r.startsWith(`Command failed with exit code ${o}`) ? r : "";
   if (t) logFeatureBad("input_remote_bash", "spawn_failed");
   else logFeatureOk("input_remote_bash");
-  let l = t ? Iye(t, e.session) : "";
+  let l = t ? getBashSpawnFailureDetail(t, e.session) : "";
   return {
     outputUuid: randomUUID(),
     outputText: `<${fz}>${Nt(m)}</${fz}><${I0}>${Nt(d || l)}</${I0}><${hXt}>${o}</${hXt}>`,

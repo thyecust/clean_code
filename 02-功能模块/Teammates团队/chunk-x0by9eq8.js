@@ -13,9 +13,9 @@ import { tur } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { isInsideTmux, getLeaderPaneId, getUserTmuxSocket, isTmuxAvailable } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
 import { jk, cCe } from "./chunk-6b13bhw1.js";
-import { M6, wet, N6, Tge, Tet } from "./chunk-enjekn9t.js";
-import { Ike } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { SWARM_TMUX_SESSION_NAME, SWARM_TMUX_WINDOW_NAME, TMUX_BINARY, PANE_PLACEHOLDER_COMMAND, getSwarmTmuxSocketName } from "./chunk-enjekn9t.js";
+import { createMutex } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function h(e) {
   let t = `Failed to create teammate pane: ${e}`,
     a = e.toLowerCase();
@@ -38,14 +38,14 @@ function T(e) {
 function d(e) {
   let t = getUserTmuxSocket(),
     a = t ? ["-S", t, ...e] : e;
-  return execFileNoThrow(N6, a);
+  return execFileNoThrow(TMUX_BINARY, a);
 }
 function l(e, t) {
-  return execFileNoThrow(N6, ["-L", Tet(), ...e], t);
+  return execFileNoThrow(TMUX_BINARY, ["-L", getSwarmTmuxSocketName(), ...e], t);
 }
 async function respawnPaneWithCommand(e, t, a) {
-  await execFileNoThrow(N6, [...e, "set-option", "-p", "-t", t, "remain-on-exit", "failed"]);
-  let r = await execFileNoThrow(N6, [
+  await execFileNoThrow(TMUX_BINARY, [...e, "set-option", "-p", "-t", t, "remain-on-exit", "failed"]);
+  let r = await execFileNoThrow(TMUX_BINARY, [
     ...e,
     "respawn-pane",
     "-k",
@@ -62,7 +62,7 @@ class TmuxBackend {
   displayName = "tmux";
   cachedLeaderWindowTarget = null;
   firstPaneUsedForExternal = !1;
-  paneCreationLock = Ike();
+  paneCreationLock = createMutex();
   async isAvailable() {
     return isTmuxAvailable();
   }
@@ -86,7 +86,7 @@ class TmuxBackend {
       throw (logFeatureBad("swarm_pane_spawn", "swarm_pane_command_control_chars"), o);
     }
     let r = getUserTmuxSocket(),
-      s = a ? ["-L", Tet()] : r ? ["-S", r] : [];
+      s = a ? ["-L", getSwarmTmuxSocketName()] : r ? ["-S", r] : [];
     await respawnPaneWithCommand(s, e, t);
   }
   async setPaneBorderColor(e, t, a = !1) {
@@ -186,7 +186,7 @@ class TmuxBackend {
         this.cachedLeaderWindowTarget = null;
       return null;
     }
-    return G(
+    return countMatching(
       s.stdout.trim().split(`
 `),
       Boolean,
@@ -196,20 +196,20 @@ class TmuxBackend {
     return (await l(["has-session", "-t", e])).code === 0;
   }
   async createExternalSwarmSession() {
-    if (!(await this.hasSessionInSwarm(M6))) {
+    if (!(await this.hasSessionInSwarm(SWARM_TMUX_SESSION_NAME))) {
       let o = await l(
         [
           "new-session",
           "-d",
           "-s",
-          M6,
+          SWARM_TMUX_SESSION_NAME,
           "-n",
-          wet,
+          SWARM_TMUX_WINDOW_NAME,
           "-P",
           "-F",
           "#{pane_id}",
           "--",
-          Tge,
+          PANE_PLACEHOLDER_COMMAND,
         ],
         { useCwd: !0, toolCgroupClass: "agent" },
       );
@@ -218,7 +218,7 @@ class TmuxBackend {
           `Failed to create swarm session: ${o.stderr || "Unknown error"}`,
         );
       let i = o.stdout.trim(),
-        u = `${M6}:${wet}`;
+        u = `${SWARM_TMUX_SESSION_NAME}:${SWARM_TMUX_WINDOW_NAME}`;
       return (
         n(
           `[TmuxBackend] Created external swarm session with window ${u}, pane ${i}`,
@@ -227,15 +227,15 @@ class TmuxBackend {
         { windowTarget: u, paneId: i }
       );
     }
-    let a = (await l(["list-windows", "-t", M6, "-F", "#{window_name}"])).stdout
+    let a = (await l(["list-windows", "-t", SWARM_TMUX_SESSION_NAME, "-F", "#{window_name}"])).stdout
         .trim()
         .split(
           `
 `,
         )
         .filter(Boolean),
-      r = `${M6}:${wet}`;
-    if (a.includes(wet)) {
+      r = `${SWARM_TMUX_SESSION_NAME}:${SWARM_TMUX_WINDOW_NAME}`;
+    if (a.includes(SWARM_TMUX_WINDOW_NAME)) {
       let i = (await l(["list-panes", "-t", r, "-F", "#{pane_id}"])).stdout
         .trim()
         .split(
@@ -248,14 +248,14 @@ class TmuxBackend {
     let s = await l([
       "new-window",
       "-t",
-      M6,
+      SWARM_TMUX_SESSION_NAME,
       "-n",
-      wet,
+      SWARM_TMUX_WINDOW_NAME,
       "-P",
       "-F",
       "#{pane_id}",
       "--",
-      Tge,
+      PANE_PLACEHOLDER_COMMAND,
     ]);
     if (s.code !== 0)
       throw new jk(
@@ -288,7 +288,7 @@ class TmuxBackend {
         "-F",
         "#{pane_id}",
         "--",
-        Tge,
+        PANE_PLACEHOLDER_COMMAND,
       ]);
     else {
       let c = (await d(["list-panes", "-t", r, "-F", "#{pane_id}"])).stdout
@@ -313,7 +313,7 @@ class TmuxBackend {
         "-F",
         "#{pane_id}",
         "--",
-        Tge,
+        PANE_PLACEHOLDER_COMMAND,
       ]);
     }
     if (i.code !== 0) throw new jk(h(i.stderr));
@@ -361,7 +361,7 @@ class TmuxBackend {
           "-F",
           "#{pane_id}",
           "--",
-          Tge,
+          PANE_PLACEHOLDER_COMMAND,
         ]);
       if (m.code !== 0) throw new jk(h(m.stderr));
       ((i = m.stdout.trim()),

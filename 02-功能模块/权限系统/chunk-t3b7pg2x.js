@@ -41,7 +41,7 @@ import { MXt, Xxt, jc, drt, ke, gae, bHt } from "../../00-第三方库/lodash/lo
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ms, Nr } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Cxt, PA } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
@@ -597,7 +597,7 @@ function fAn(e) {
         `agent frontmatter permissionMode "${p}" ignored \u2014 it would widen the agent view's inherited mode (effective "${b}"), and the dispatched agent name is repo-controllable (settings \`agent\`)`,
         { level: "warn" },
       ),
-        i("tengu_agent_frontmatter_mode_widening_carry_ignored", {}));
+        logEvent("tengu_agent_frontmatter_mode_widening_carry_ignored", {}));
     else c.push(p);
   if (PA()) {
     let f = !GEt()
@@ -613,7 +613,7 @@ function fAn(e) {
         ),
         c.length === 0)
       )
-        (i("tengu_ccr_unsupported_default_mode_ignored", { mode_hash: Tn(f) }),
+        (logEvent("tengu_ccr_unsupported_default_mode_ignored", { mode_hash: Tn(f) }),
           c.push("default"));
     } else if (f === "bypassPermissions") {
       if (l || t.allowDangerouslySkipPermissions) c.push(f);
@@ -624,7 +624,7 @@ function fAn(e) {
             'settings defaultMode "bypassPermissions" ignored for a VS Code-owned session without the allow-bypass setting',
             { level: "warn" },
           ),
-          i("tengu_settings_bypass_unconsented_noninteractive_ignored", {}),
+          logEvent("tengu_settings_bypass_unconsented_noninteractive_ignored", {}),
           process.stderr.write(`\u26A0 ${y}
 `),
           c.push("default"));
@@ -643,7 +643,7 @@ function fAn(e) {
         `settings defaultMode "${f}" is not supported in CLAUDE_CODE_REMOTE \u2014 only acceptEdits, plan, default, and auto are allowed`,
         { level: "warn" },
       ),
-        i("tengu_ccr_unsupported_default_mode_ignored", { mode_hash: Tn(f) }));
+        logEvent("tengu_ccr_unsupported_default_mode_ignored", { mode_hash: Tn(f) }));
     else if (f === "bypassPermissions")
       if (!C("bypassPermissions")) {
         if (
@@ -651,7 +651,7 @@ function fAn(e) {
             'settings defaultMode "bypassPermissions" ignored \u2014 only policy/user/flag settings may grant bypass mode (projectSettings and localSettings are repo-controllable)',
             { level: "warn" },
           ),
-          i("tengu_settings_bypass_mode_untrusted_source_ignored", {}),
+          logEvent("tengu_settings_bypass_mode_untrusted_source_ignored", {}),
           !s)
         )
           c.push("default");
@@ -665,14 +665,14 @@ function fAn(e) {
           `settings defaultMode "${f}" ignored \u2014 it would widen the agent view's inherited mode (effective "${b}"), and only policy/user/flag settings may do that (projectSettings and localSettings are repo-controllable)`,
           { level: "warn" },
         ),
-          i("tengu_settings_mode_widening_carry_ignored", {}));
+          logEvent("tengu_settings_mode_widening_carry_ignored", {}));
       else c.push(f);
     else if (!C("auto"))
       (n(
         'settings defaultMode "auto" ignored \u2014 only policy/user/flag settings may grant auto mode (projectSettings and localSettings are repo-controllable)',
         { level: "warn" },
       ),
-        i("tengu_settings_auto_mode_untrusted_source_ignored", {}));
+        logEvent("tengu_settings_auto_mode_untrusted_source_ignored", {}));
     else if (g)
       n(
         "auto mode killswitch active (override- or payload-served) \u2014 falling back to default",

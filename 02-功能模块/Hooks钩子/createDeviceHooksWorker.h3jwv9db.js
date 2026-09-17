@@ -11,12 +11,12 @@
 // [preload stripped] 原本在此预载 10 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { wCt, eRe, TCt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { z1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { io, hhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { ZM, dpe, eK } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { uit } from "./chunk-y7gz94r8.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var ee = 65536,
   te = 600,
   J = 200,
@@ -66,7 +66,7 @@ function createDeviceHooksWorker(t) {
         c = Math.max(0, t.flagWaitCapMs - (r - s.startedAt));
       return {
         state:
-          (await kt(
+          (await withDeadline(
             s.promise.then(
               (i) => (i ? "on" : "off"),
               () => "pending",
@@ -314,7 +314,7 @@ function createDeviceHooksWorker(t) {
         let q;
         try {
           if (
-            ((q = await kt(t.templateRunner.prepare(a, e.digest, T, W), oe)),
+            ((q = await withDeadline(t.templateRunner.prepare(a, e.digest, T, W), oe)),
             q === void 0)
           )
             throw Error("template prepare timed out");
@@ -402,8 +402,8 @@ function createDeviceHooksWorker(t) {
       let X = _.get(k.instanceId) ?? new Set();
       for (let e of f.values()) if (e.status === "installed") X.add(e.template);
       _.set(k.instanceId, X);
-      let V = G(M, (e) => e.status === "awaiting_upload"),
-        Y = G(M, (e) => e.status === "installed");
+      let V = countMatching(M, (e) => e.status === "awaiting_upload"),
+        Y = countMatching(M, (e) => e.status === "installed");
       return (
         t.telemetry.register({
           outcome: "accepted",

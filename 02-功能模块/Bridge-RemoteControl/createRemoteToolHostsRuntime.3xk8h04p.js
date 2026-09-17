@@ -10,12 +10,12 @@
 
 // [preload stripped] 原本在此预载 184 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Si, K, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z, Xrt, gv } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep, fullJitterBackoffMs, raceWithAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Ve, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { zl, Oa, rc, fS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -28,7 +28,7 @@ import { Tn, Rp, qe, Bt, tt, Mn, co, ro, Hn } from "../认证-OAuth登录/认证
 import { gc, _b, oS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isModelDrivenSession } from "../Teammates团队/chunk-811z9z0t.js";
 import { getToolPermissionContext, getMainLoopModel, applyContextLayers } from "../权限系统/chunk-fjrcf22x.js";
-import { Kt, ID } from "../权限系统/chunk-qdy0h5k2.js";
+import { matchesToolName, getToolRemoteExecution } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   vo,
   Wtr,
@@ -94,7 +94,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { V_ } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { PromptScopedAbortController, unwrapAbortReason, shutdownInterruptStamp } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { no, sf } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
+import { isExiting, getNeverResolvingPromise } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { Fy } from "../会话-历史-恢复/chunk-m1xj4s02.js";
 import { h7e } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import {
@@ -172,14 +172,14 @@ import {
 import "../AutoMode-自动模式/chunk-15n5gf3t.js";
 import { j6e } from "./chunk-etbwf1s8.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-c6fa1myp.js";
-import { $A } from "./chunk-x4nk7xx6.js";
-import { u9 } from "./chunk-h5053szy.js";
+import { REMOTE_APPROVAL_MESSAGES } from "./remote-approval-messages.js";
+import { RemoteSessionHostRegistry } from "./remote-session-host-registry.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-d1t6d4k8.js";
-import { Ay } from "../../01-核心基础设施/共享小工具-未细化/chunk-txc6d085.js";
-import { kin } from "../../01-核心基础设施/共享小工具-未细化/chunk-mnvjcy8y.js";
-import { M7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-j3qyvdwg.js";
+import { logRemoteToolsEvent } from "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
+import { isLocalDisplayOnlyDenialReason } from "../../01-核心基础设施/共享小工具-未细化/local-display-only-denial.js";
+import { toNumber } from "../../01-核心基础设施/共享小工具-未细化/lodash-to-number.js";
 import { tZ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { Y, lc } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe, asStringArray } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { isDeepStrictEqual as go } from "util";
 var hn =
     "The user's downloads, local toolchains and anything not in the repository live here; its own Claude Code decides what may run there and may ask the user first",
@@ -258,7 +258,7 @@ async function An(e, o, t) {
   if (t === "attachment_scan")
     await Promise.race([
       a,
-      Z(Vo, AbortSignal.any([e.abortController.signal, s.signal])),
+      sleep(Vo, AbortSignal.any([e.abortController.signal, s.signal])),
     ]);
   let d = r.hosts(),
     c = qo(d, {
@@ -274,7 +274,7 @@ async function An(e, o, t) {
   let m = Zo(c, o);
   if (m === null) return [];
   return (
-    i("tengu_remote_tool_targets", {
+    logEvent("tengu_remote_tool_targets", {
       event: S("notice_emitted"),
       trigger: fromEnum(t),
       target_count: d.length - 1,
@@ -477,7 +477,7 @@ function Zo(e, o) {
     ),
     r =
       t?.type === "attachment" && t.attachment.type === "tool_hosts_notice"
-        ? lc(t.attachment.lines)
+        ? asStringArray(t.attachment.lines)
         : [],
     s =
       e ??
@@ -551,9 +551,9 @@ function rt(e, o, t) {
 var In = rt;
 function st(e, o, t) {
   if (t === void 0) ((t = o), (o = void 0));
-  if (t !== void 0) ((t = M7(t)), (t = t === t ? t : 0));
-  if (o !== void 0) ((o = M7(o)), (o = o === o ? o : 0));
-  return In(M7(e), o, t);
+  if (t !== void 0) ((t = toNumber(t)), (t = t === t ? t : 0));
+  if (o !== void 0) ((o = toNumber(o)), (o = o === o ? o : 0));
+  return In(toNumber(e), o, t);
 }
 var $n = st;
 var it = "progress_checks",
@@ -589,7 +589,7 @@ async function je({
   timing: d,
   ranBefore: c = !1,
   onAttempt: m,
-  sleep: k = Z,
+  sleep: k = sleep,
   now: p = Date.now,
 }) {
   let P = a2n(s),
@@ -612,7 +612,7 @@ async function je({
     else ((T = x), j());
   });
   let W = (x) => (
-      Ay(s, "check-in ended", {
+      logRemoteToolsEvent(s, "check-in ended", {
         verdict: x.kind,
         attempts: R,
         misses: w,
@@ -621,7 +621,7 @@ async function je({
       { verdict: x, attempts: R, misses: w, epochChanged: v }
     ),
     Q = () =>
-      Xrt({
+      fullJitterBackoffMs({
         baseMs: d.intervalMs,
         capMs: d.intervalMs,
         floorMs: Math.ceil(d.intervalMs / 2),
@@ -634,7 +634,7 @@ async function je({
   while (!a.aborted) {
     if (T !== void 0)
       return (
-        Ay(s, "late answer taken on the standing request", {
+        logRemoteToolsEvent(s, "late answer taken on the standing request", {
           heard: T.kind,
           after_misses: w,
         }),
@@ -702,7 +702,7 @@ async function je({
         break;
     }
     if (
-      (Ay(s, "check-in answered", { attempt: R, heard: x.kind, misses: w }),
+      (logRemoteToolsEvent(s, "check-in answered", { attempt: R, heard: x.kind, misses: w }),
       w >= d.misses)
     )
       return W(
@@ -781,7 +781,7 @@ import { randomUUID } from "crypto";
 var kt = new Set([tt, co, ro]);
 function wt(e, o) {
   let t = DVe.has(e.name);
-  return Y([
+  return dedupe([
     e.name,
     ...(t ? [Bt] : []),
     ...(kt.has(e.name) || (t && o === "deny") ? [tt] : []),
@@ -872,7 +872,7 @@ async function Ue({
             ? b.mode === "dontAsk"
               ? gY(e.name)
               : VWt(w.message)
-            : $A["ask_first.host_rule.cannot_ask"]({ name: s.name, rules: O }),
+            : REMOTE_APPROVAL_MESSAGES["ask_first.host_rule.cannot_ask"]({ name: s.name, rules: O }),
         }),
       };
     let U = [
@@ -884,7 +884,7 @@ async function Ue({
       kind: "ask_first",
       message: T
         ? w.message
-        : $A["ask_first.host_rule"]({ name: s.name, rules: O }),
+        : REMOTE_APPROVAL_MESSAGES["ask_first.host_rule"]({ name: s.name, rules: O }),
       rule: U.length > 0 ? Kn(U) : `unnamed:${randomUUID()}`,
     };
   }
@@ -958,7 +958,7 @@ function Ae(e) {
 }
 function Kn(e) {
   return JSON.stringify(
-    Y([...e])
+    dedupe([...e])
       .sort()
       .map((o) => JSON.parse(o)),
   );
@@ -1085,7 +1085,7 @@ function Xn(e, o, t, r, s) {
         : a.code === "transport_error" && a.unreadableResult === !0
           ? "unreadable_result"
           : a.code;
-  (i("tengu_remote_tool_forward", {
+  (logEvent("tengu_remote_tool_forward", {
     tool: Qn(e),
     transport: fromEnum(o.transport.kind),
     entry: fromEnum(t),
@@ -1153,7 +1153,7 @@ function Jn(e) {
   }
 }
 function Ge(e, o, t, r) {
-  (i("tengu_remote_tool_forward", {
+  (logEvent("tengu_remote_tool_forward", {
     tool: Qn(e),
     entry: fromEnum(o),
     outcome: fromEnum(t),
@@ -1202,7 +1202,7 @@ async function so({
       dispatchEpoch: o.host.description?.epoch,
       onAskEnded: (v) =>
         k?.(
-          $A["ask_ended.notice"]({
+          REMOTE_APPROVAL_MESSAGES["ask_ended.notice"]({
             name: o.host.name,
             toolName: e.name,
             reason: v,
@@ -1275,7 +1275,7 @@ async function Mt(e, o) {
       timing: p,
       onAttempt: (_) =>
         e.onStatus?.(
-          _ ? $A["in_progress.checkin"](r.name) : xQt(r.name),
+          _ ? REMOTE_APPROVAL_MESSAGES["in_progress.checkin"](r.name) : xQt(r.name),
           2 * p.intervalMs,
         ),
     }),
@@ -1314,7 +1314,7 @@ async function Mt(e, o) {
         r.transport.markUnresponsive?.(),
         m(
           "host_unresponsive",
-          $A.host_unresponsive({
+          REMOTE_APPROVAL_MESSAGES.host_unresponsive({
             name: r.name,
             checks: R.misses,
             intervalMs: p.intervalMs,
@@ -1329,7 +1329,7 @@ async function Mt(e, o) {
         r.transport.markUnresponsive?.(),
         m(
           "host_unresponsive",
-          $A["unverified_refusal.call_phase"]({
+          REMOTE_APPROVAL_MESSAGES["unverified_refusal.call_phase"]({
             name: r.name,
             whileRunning: R.whileRunning,
           }),
@@ -1350,7 +1350,7 @@ async function It(e, o, t, r, s) {
     k = z6e(d),
     p = { host: o.host },
     P = d.transport.limits.defaultDeadlineMs,
-    R = await gv(
+    R = await raceWithAbortSignal(
       d.transport
         .call(
           t,
@@ -1455,7 +1455,7 @@ async function $t(e) {
             onAddressed: () => d(e.call.sentUnderEpoch),
           });
   } finally {
-    if (!no()) t.remove(e.call.callId);
+    if (!isExiting()) t.remove(e.call.callId);
   }
   if (c.outcome.kind !== "completed" || !w4(c.outcome.disposition)) return c;
   let m =
@@ -1655,7 +1655,7 @@ async function Nt({
           return;
         }),
     Eo = (E) =>
-      gv(So(E), d, () => new Ve()).catch(() => {
+      raceWithAbortSignal(So(E), d, () => new Ve()).catch(() => {
         return;
       }),
     ln = s.toolState.get(Ke),
@@ -1786,7 +1786,7 @@ async function Nt({
   async function Co() {
     let E = a.beginQueuedWait();
     return ze(ln, o.name, cn, d, async () => {
-      if ((E(), no() && !d.aborted)) await sf();
+      if ((E(), isExiting() && !d.aborted)) await getNeverResolvingPromise();
       let C = !1;
       try {
         C = e.isReadOnly(b);
@@ -1825,13 +1825,13 @@ async function Nt({
               outcome: {
                 kind: "error",
                 code: "approval_no_longer_covers",
-                message: $A.approval_no_longer_covers(o.name),
+                message: REMOTE_APPROVAL_MESSAGES.approval_no_longer_covers(o.name),
                 host: _,
               },
               requestBytes: D,
             };
       if (d.aborted) return { outcome: V6e(_), requestBytes: D };
-      if (no()) await sf();
+      if (isExiting()) await getNeverResolvingPromise();
       return (R?.(), an(ne()));
     }).then((C) => {
       if (C === void 0) E();
@@ -2060,7 +2060,7 @@ async function Nt({
       Io = () => {
         let L = a.beginQueuedWait();
         return ze(ln, o.name, cn, d, async () => {
-          if ((L(), no() && !d.aborted)) await sf();
+          if ((L(), isExiting() && !d.aborted)) await getNeverResolvingPromise();
           let B = await de(x(fn), z);
           if (B.kind === "refuse") return { kind: "late_refusal", verdict: B };
           if (
@@ -2086,12 +2086,12 @@ async function Nt({
                 kind: "late_refusal",
                 verdict: {
                   code: "denied_by_session_rule",
-                  message: $A["plan_mode.entered_while_asking"](e.name),
+                  message: REMOTE_APPROVAL_MESSAGES["plan_mode.entered_while_asking"](e.name),
                 },
               };
           }
           if (d.aborted) return { kind: "cancelled" };
-          if (no()) await sf();
+          if (isExiting()) await getNeverResolvingPromise();
           return an(ne(Ne), un);
         }).then(
           (B) => {
@@ -2308,7 +2308,7 @@ async function Lt({
     _ = e.kind === "timed_out" ? t.held : void 0,
     A = (U) => {
       if (_ === void 0) return;
-      (Ay(a, "standing request withdrawn", { leg: p, why: U }), _.withdraw());
+      (logRemoteToolsEvent(a, "standing request withdrawn", { leg: p, why: U }), _.withdraw());
     };
   if (w === void 0)
     return (A("no_epoch"), { kind: "as_is", transported: e, trace: void 0 });
@@ -2327,7 +2327,7 @@ async function Lt({
         m?.(
           _ === void 0 && P === void 0 && !U
             ? xQt(o.name)
-            : $A["in_progress.checkin"](o.name),
+            : REMOTE_APPROVAL_MESSAGES["in_progress.checkin"](o.name),
           2 * c.intervalMs,
         ),
     }),
@@ -2415,7 +2415,7 @@ async function Lt({
           outcome: {
             kind: "error",
             code: "host_unresponsive",
-            message: $A["unverified_refusal.call_phase"]({
+            message: REMOTE_APPROVAL_MESSAGES["unverified_refusal.call_phase"]({
               name: o.name,
               whileRunning: O.whileRunning,
             }),
@@ -2432,7 +2432,7 @@ async function Lt({
           outcome: {
             kind: "error",
             code: "host_unresponsive",
-            message: $A.host_unresponsive({
+            message: REMOTE_APPROVAL_MESSAGES.host_unresponsive({
               name: o.name,
               checks: O.misses,
               intervalMs: c.intervalMs,
@@ -2450,7 +2450,7 @@ async function Lt({
     case "unknown":
       if (_?.takeBack() === !0)
         return (
-          Ay(a, "standing request taken back unsent", { leg: p }),
+          logRemoteToolsEvent(a, "standing request taken back unsent", { leg: p }),
           {
             kind: "as_is",
             transported: {
@@ -2507,13 +2507,13 @@ function oo(e, o, t, r) {
         ? {
             kind: "error",
             code: "no_answer",
-            message: $A.no_answer({ name: e, afterMs: r }),
+            message: REMOTE_APPROVAL_MESSAGES.no_answer({ name: e, afterMs: r }),
             host: o,
           }
         : {
             kind: "error",
             code: "withdrawn",
-            message: $A.withdrawn({ name: e, reason: t }),
+            message: REMOTE_APPROVAL_MESSAGES.withdrawn({ name: e, reason: t }),
             host: o,
           },
   };
@@ -2707,7 +2707,7 @@ function Vt(e, o) {
 }
 async function mo(e, o, t, r) {
   if (on(e)) return zt(e, o, t, r);
-  if (!ID(e).supported || !isRemoteToolForwardingSwitchOn()) return { kind: "local", input: o };
+  if (!getToolRemoteExecution(e).supported || !isRemoteToolForwardingSwitchOn()) return { kind: "local", input: o };
   let { requested: s, input: a } = DJ(o);
   return s === void 0 ? { kind: "local", input: a } : qt(e, s, a, t, r);
 }
@@ -2888,7 +2888,7 @@ async function zt(e, o, t, r) {
 }
 function Gt(e, o) {
   return e.toolState
-    .get(u9)
+    .get(RemoteSessionHostRegistry)
     .entries()
     .some((t) => t.name === o && t.status === "offline");
 }
@@ -2951,7 +2951,7 @@ function er(e, o, t, r) {
   }
 }
 async function ue(e, o, t) {
-  await gv(e.refresh(o, t), o.abortController.signal, () => new Ve()).catch(
+  await raceWithAbortSignal(e.refresh(o, t), o.abortController.signal, () => new Ve()).catch(
     (r) => {
       if (!(r instanceof Ve)) throw r;
     },
@@ -2982,7 +2982,7 @@ function tr(e, o) {
 function po(e) {
   return {
     decision: "unanswerable",
-    message: $A.withdrawn({
+    message: REMOTE_APPROVAL_MESSAGES.withdrawn({
       name: e.host.name,
       reason: _Ie(String(e.ended.reason)),
     }),
@@ -2990,7 +2990,7 @@ function po(e) {
 }
 function createRemoteToolHostsRuntime() {
   return {
-    applies: (e) => (ID(e).supported || on(e)) && isRemoteToolForwardingSwitchOn(),
+    applies: (e) => (getToolRemoteExecution(e).supported || on(e)) && isRemoteToolForwardingSwitchOn(),
     route: (e, o, t) => mo(e, o, t, rr(t)),
     runToolUse: mr,
     runReplCall: hr,
@@ -3232,7 +3232,7 @@ ${k}`,
       r,
     ),
     P = [...t.messages, ...(t.sameTurnToolUses ?? [])],
-    R = t.options.tools.some((v) => Kt(v, e.name))
+    R = t.options.tools.some((v) => matchesToolName(v, e.name))
       ? t.options.tools
       : [...t.options.tools, e],
     w = Date.now(),
@@ -3292,7 +3292,7 @@ ${k}`,
                     ? "chain_on_allow"
                     : "verdict";
     if (
-      (i("tengu_remote_tool_classifier", {
+      (logEvent("tengu_remote_tool_classifier", {
         decision: fromEnum(b),
         cause: fromEnum(U),
         headless: T.shouldAvoidPermissionPrompts === !0,
@@ -3351,7 +3351,7 @@ ${k}`,
     if (v instanceof Ve || t.abortController.signal.aborted) throw v;
     return (
       logError(v),
-      i("tengu_remote_tool_classifier", {
+      logEvent("tengu_remote_tool_classifier", {
         decision: fromEnum("no_verdict"),
         cause: fromEnum("crashed"),
         headless: getToolPermissionContext(t).shouldAvoidPermissionPrompts === !0,
@@ -3373,7 +3373,7 @@ function lr(e) {
     : void 0;
 }
 function cr(e) {
-  return e === CAN_USE_TOOL_STREAM_CLOSED_REASON || e === CAN_USE_TOOL_INVALID_RESULT_REASON || e === CAN_USE_TOOL_REQUEST_FAILED_REASON || kin(e);
+  return e === CAN_USE_TOOL_STREAM_CLOSED_REASON || e === CAN_USE_TOOL_INVALID_RESULT_REASON || e === CAN_USE_TOOL_REQUEST_FAILED_REASON || isLocalDisplayOnlyDenialReason(e);
 }
 function tn(e) {
   let o = e?.trim() ?? "";
@@ -3396,7 +3396,7 @@ async function* mr({
     if (m !== void 0)
       (c.takeAdopted(o.id),
         c.remove(o.id),
-        i("tengu_remote_tool_restart_adoption_unroutable", {
+        logEvent("tengu_remote_tool_restart_adoption_unroutable", {
           where: S("route_error"),
           route_code: fromEnum(t.code),
           parked_at_restart: m.parkedAtRestart === !0,
@@ -3705,7 +3705,7 @@ function wr(e) {
   return o.length < e.length ? `${o}\u2026` : o;
 }
 function bo(e) {
-  let o = ID(e);
+  let o = getToolRemoteExecution(e);
   return (o.supported ? (o.refusedInputFields ?? []) : []).filter(
     (r) => !Fn.has(r),
   );

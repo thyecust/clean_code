@@ -7,6 +7,6 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { nE } from "../../01-核心基础设施/共享小工具-未细化/chunk-p71zdaw2.js";
+import { getNodeConfigProviderModule } from "../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
 import "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js";
-export default nE();
+export default getNodeConfigProviderModule();

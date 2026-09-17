@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { oo, Xn, bh, LA, Gt, B, K, _B, fae, ke, pa } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Nxt, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { yt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Et, b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, us, oe, Qu, Wc } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
   Vo,
@@ -118,7 +118,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { TOOL_SEARCH_TOOL_NAME, Df, jH, ime, ni, sm, PT, ah } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { rf, ar } from "../权限系统/chunk-qdy0h5k2.js";
+import { createDefaultToolPermissionContext, findToolByName } from "../权限系统/chunk-qdy0h5k2.js";
 import { createChildAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
   Bwt,
@@ -140,7 +140,7 @@ import {
   wer,
   isWorkshopEnabled,
 } from "./chunk-01ymf0ar.js";
-import { ZS } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
+import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
 import { syncRespawnFlag } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import {
   gI,
@@ -181,9 +181,9 @@ import { P7, h9n } from "./chunk-qdg189tc.js";
 import { artifactUrlRule, artifactUrlInputRule } from "../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js";
 import { i9n } from "./chunk-5gz5xvw9.js";
 import { j4, dan } from "../../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js";
-import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
+import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
 import { s, T, O, se, v, c, Qe, uW, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function Dn() {
   return FS() ? ARTIFACT_COMMENTS_TOOL_NAME : ARTIFACT_TOOL_NAME;
 }
@@ -212,7 +212,7 @@ var Lr = 86400000,
   Dt = 500,
   Ln = 128,
   qn = 600,
-  Gn = m(() => {
+  Gn = createLazyValue(() => {
     let e = s()
         .max(Ln)
         .refine((d) => M_(d) !== null),
@@ -1144,7 +1144,7 @@ async function ho(e, t, n, o) {
   while (Date.now() < i) {
     if (o.aborted) return !1;
     if (qt(e, t, n)) return !0;
-    await Z(Math.min(ri, Math.max(1, i - Date.now())), o);
+    await sleep(Math.min(ri, Math.max(1, i - Date.now())), o);
   }
   return qt(e, t, n);
 }
@@ -1506,7 +1506,7 @@ async function Zin(e, t, n) {
     d = r.get(o);
   if (d !== void 0 && n.toolUseId !== void 0 && d.toolUseId === n.toolUseId)
     return d.target;
-  let { signal: l, cleanup: p } = Fa(n.abortController.signal, {
+  let { signal: l, cleanup: p } = createLinkedAbortSignal(n.abortController.signal, {
     timeoutMs: Ti,
     refTimer: !0,
   });
@@ -1710,7 +1710,7 @@ async function Qt(e, t, n) {
   let o = new Map();
   if (e.length > Ui) return o;
   let r = new Map();
-  for (let i of Y(t).slice(0, Io)) {
+  for (let i of dedupe(t).slice(0, Io)) {
     let d = Ki(i);
     if (d === void 0) continue;
     let l = d.at(-1),
@@ -1753,7 +1753,7 @@ async function Qt(e, t, n) {
       }
     }
     let _ = Gi;
-    for (let A of Y([...(n?.keys() ?? []), ...S.keys()])) {
+    for (let A of dedupe([...(n?.keys() ?? []), ...S.keys()])) {
       let L = S.get(A);
       if (L === void 0 || L.length !== 1) continue;
       let N = ji(L[0], n?.get(A), _);
@@ -1767,7 +1767,7 @@ function ji(e, t, n) {
   if (t === void 0 || t.length === 0) return;
   let o = (e.childNodes ?? []).filter(ze),
     r = new Map();
-  for (let i of Y(t).slice(0, Math.max(0, n))) {
+  for (let i of dedupe(t).slice(0, Math.max(0, n))) {
     let d = o[i];
     r.set(i, d === void 0 ? null : Do(d));
   }
@@ -1839,7 +1839,7 @@ async function X1t(e) {
       ).catch(() => {
         return;
       }),
-      i = await kt(r, Eo + 250);
+      i = await withDeadline(r, Eo + 250);
     if (i === void 0 || i.err !== null) return;
     if ("contentType" in i && i.contentType !== "text/html") return;
     return i.html;
@@ -2019,14 +2019,14 @@ function Wo() {
     e.responderDispatchOptIn
   );
 }
-var Xi = m(() => c({ lane: X(["act", "pipeline"]) })),
+var Xi = createLazyValue(() => c({ lane: X(["act", "pipeline"]) })),
   Ji = 16000,
   Qi = 2000,
   Zi =
     'You classify artifact comment threads for dispatch. Output ONLY a JSON object of the shape {"lane":"act"} or {"lane":"pipeline"} \u2014 no prose, no code fences.';
 async function Bo(e) {
   if (ke()) return "pipeline";
-  if (mc(e.context.agentContext) >= ZS()) return "pipeline";
+  if (mc(e.context.agentContext) >= getMaxSubagentSpawnDepth()) return "pipeline";
   let t = zi().slice(0, 8),
     n = Ji,
     o = [];
@@ -2069,7 +2069,7 @@ Output the JSON verdict only.`;
         proactivityLevel: FO(e.context),
         agentContext: aa(),
         async getToolPermissionContext() {
-          return rf();
+          return createDefaultToolPermissionContext();
         },
       },
     });
@@ -2158,7 +2158,7 @@ var Ho = 4000,
 async function qo(e) {
   let { context: t, url: n, slug: o, thread: r } = e;
   if (ke()) return null;
-  if (mc(t.agentContext) >= ZS())
+  if (mc(t.agentContext) >= getMaxSubagentSpawnDepth())
     return (logFeatureSad("artifact_comments_autoreact", "analyst_depth_refused"), null);
   let i = bh("comment-thread-analyst"),
     d = mc(t.agentContext) + 1,
@@ -2477,7 +2477,7 @@ function Ba(e) {
     return Promise.resolve();
   let o = ne().autoReact;
   return (
-    (o.fastAckFlagRefresh ??= kt(
+    (o.fastAckFlagRefresh ??= withDeadline(
       xZe().catch(() => {}),
       o.fastAckFlagRefreshDeadlineMsOverride ?? Wa,
     )),
@@ -3461,7 +3461,7 @@ async function rs(e) {
       notify: d,
       artifactState: l,
     } = e,
-    p = ar(i.options.tools ?? [], Dn()),
+    p = findToolByName(i.options.tools ?? [], Dn()),
     S = (p?.mcpInfo === void 0 ? p : void 0) ?? (FS() ? void 0 : e.tool),
     R,
     w = () => (e.threadsDropped, []);
@@ -4713,11 +4713,11 @@ Write the reply you would post to this thread: directly useful, brief, no preamb
           proactivityLevel: FO(t),
           agentContext: aa(),
           async getToolPermissionContext() {
-            return rf();
+            return createDefaultToolPermissionContext();
           },
         },
       }),
-      A = await kt(_, ne().autoReact.composeDeadlineMsOverride ?? wr);
+      A = await withDeadline(_, ne().autoReact.composeDeadlineMsOverride ?? wr);
     if (A === void 0)
       return (
         S.abort(),
@@ -4780,7 +4780,7 @@ You are about to start working on the newest comment sent to you in this thread;
           proactivityLevel: FO(e.context),
           agentContext: aa(),
           async getToolPermissionContext() {
-            return rf();
+            return createDefaultToolPermissionContext();
           },
         },
       });
@@ -4841,7 +4841,7 @@ ${R}`,
             proactivityLevel: FO(e.context),
             agentContext: aa(),
             async getToolPermissionContext() {
-              return rf();
+              return createDefaultToolPermissionContext();
             },
           },
         });
@@ -4861,7 +4861,7 @@ ${R}`,
       if (!o) logFeatureSad("artifact_comments_autoreact", "fast_ack_select_threw");
       return 0;
     }),
-    d = await kt(i, ne().autoReact.fastAckSelectDeadlineMsOverride ?? Ga);
+    d = await withDeadline(i, ne().autoReact.fastAckSelectDeadlineMsOverride ?? Ga);
   if (d === void 0)
     ((o = !0),
       n.abort(),
@@ -5005,7 +5005,7 @@ async function Rs(e, t) {
         });
       return null;
     }),
-    d = await kt(i, ne().autoReact.composeDeadlineMsOverride ?? wr);
+    d = await withDeadline(i, ne().autoReact.composeDeadlineMsOverride ?? wr);
   if (d !== void 0) return d;
   return (
     n.abort(),
@@ -5119,7 +5119,7 @@ Rules for an edit: change only what the thread asked for and preserve everything
             proactivityLevel: FO(i),
             agentContext: aa(),
             async getToolPermissionContext() {
-              return rf();
+              return createDefaultToolPermissionContext();
             },
           },
         });

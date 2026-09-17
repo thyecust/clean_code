@@ -7,32 +7,32 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { o, t, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { fromNumber } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { up, Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { an, KTe, Z6t, mEe, d5e, p5e, aWt, I3, R8n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { supportsShiftEnter } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { m6e } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { xye, YWe } from "./chunk-rmpn4ety.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import { Ur } from "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { re, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 var De = ["bug", "idea", "missing_capability"],
   tt = { bug: "bug", idea: "idea", missing_capability: "missing capability" },
@@ -66,29 +66,29 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
     Be = C(-1 / 0),
     [st, B] = d(null),
     [ot, Ft] = d(null),
-    Ae = Se().columns - 6,
-    v = vt(),
+    Ae = useTerminalSize().columns - 6,
+    v = useClock(),
     oe = C(0),
     ae = C(!1),
     le = C(0),
     Le = C(!1),
-    { storageV5: K, credentials: at } = _e(),
-    U = Ye((n) => n.id),
+    { storageV5: K, credentials: at } = useStorageV5Context(),
+    U = useSession((n) => n.id),
     ce = b !== void 0,
     X = re(async () => {
       let { queued: n } = await I3(void 0, K).catch(() => ({
         queued: [],
         expired: [],
       }));
-      (R8n(G(n, (l) => l.source_session_id === U)), k(n));
+      (R8n(countMatching(n, (l) => l.source_session_id === U)), k(n));
       let a = n.length - (ce ? 0 : 1);
       return (z((l) => Math.min(l, Math.max(0, a))), n);
     }, [U, ce, K]);
   E(() => {
     X().then((n) => {
-      i("tengu_feedback_queue_opened", {
+      logEvent("tengu_feedback_queue_opened", {
         queued_count: fromNumber(n.length),
-        this_session_count: fromNumber(G(n, (a) => a.source_session_id === U)),
+        this_session_count: fromNumber(countMatching(n, (a) => a.source_session_id === U)),
       });
     });
   }, [X, U]);
@@ -366,41 +366,41 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
     }, [h, ct, Z]),
     Bt =
       h === "list"
-        ? r(ue, {
+        ? r(DotSeparatedList, {
             children: [
               Oe > 0 &&
-                e(D, {
+                e(KeybindingHint, {
                   chord: "enter",
                   action: me ? "write new feedback" : "review",
                 }),
-              Q !== void 0 && e(D, { chord: "d", action: "discard" }),
-              e(D, { chord: "esc", action: "close" }),
+              Q !== void 0 && e(KeybindingHint, { chord: "d", action: "discard" }),
+              e(KeybindingHint, { chord: "esc", action: "close" }),
             ],
           })
         : h === "review"
-          ? r(ue, {
+          ? r(DotSeparatedList, {
               children: [
-                e(D, { chord: ["up", "down"], action: "move" }),
+                e(KeybindingHint, { chord: ["up", "down"], action: "move" }),
                 (c === "type" ||
                   c === "failure_mode" ||
                   c === "task_category" ||
                   c === "transcript") &&
-                  e(D, { chord: ["left", "right"], action: "change" }),
-                e(D, {
+                  e(KeybindingHint, { chord: ["left", "right"], action: "change" }),
+                e(KeybindingHint, {
                   chord: "enter",
                   action: c === "send" ? "send" : "next",
                 }),
                 c === "details" &&
-                  e(D, {
+                  e(KeybindingHint, {
                     chord: supportsShiftEnter() ? "shift+enter" : "ctrl+j",
                     action: "new line",
                   }),
-                !W && e(D, { chord: "d", action: "discard" }),
-                e(D, { chord: "esc", action: W ? "cancel edit" : "later" }),
+                !W && e(KeybindingHint, { chord: "d", action: "discard" }),
+                e(KeybindingHint, { chord: "esc", action: W ? "cancel edit" : "later" }),
               ],
             })
           : null;
-  return e(mr, {
+  return e(FocusableBox, {
     onKeyDown: Mt,
     children: r(de, {
       title: "Feedback drafts",
@@ -675,7 +675,7 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
                   }),
                 ],
               }),
-              st && e(o, { marginTop: 1, children: e(Ur, { error: st }) }),
+              st && e(o, { marginTop: 1, children: e(ErrorMessage, { error: st }) }),
               r(o, {
                 marginTop: 1,
                 children: [
@@ -702,7 +702,7 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
               r(t, {
                 color: "success",
                 children: [
-                  e(et, { status: "success", withSpace: !0 }),
+                  e(StatusIndicator, { status: "success", withSpace: !0 }),
                   "Feedback sent (receipt ",
                   ot,
                   "). Thanks!",
@@ -768,12 +768,12 @@ function se(kn) {
     return ye;
   }
   let ye;
-  if (Pe[2] === p)
+  if (Pe[2] === MEMO_CACHE_SENTINEL)
     ((ye = r(t, { dimColor: !0, children: [L.triangleLeft, " "] })),
       (Pe[2] = ye));
   else ye = Pe[2];
   let It;
-  if (Pe[3] === p)
+  if (Pe[3] === MEMO_CACHE_SENTINEL)
     ((It = r(t, { dimColor: !0, children: [" ", L.triangleRight] })),
       (Pe[3] = It));
   else It = Pe[3];

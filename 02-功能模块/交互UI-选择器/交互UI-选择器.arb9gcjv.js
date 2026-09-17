@@ -12,36 +12,36 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { us, Ux, WL } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getMainLoopModel, fvt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { te, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t, ct, jr, tn, zye, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { v9e } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { Xw, ma } from "../../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { Xw, isRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { Os } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
 import { dd, _p } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { Ne, Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { Ka } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { tO } from "../../01-核心基础设施/共享小工具-未细化/chunk-37xdmryq.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import { toLocalFileUrl } from "../../01-核心基础设施/共享小工具-未细化/to-local-file-url.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { L_, re, E, vr, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import { Z3 } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function ui(l = Xw) {
   let s = C(Date.now());
-  return re(() => ma(s.current, l), [l]);
+  return re(() => isRecent(s.current, l), [l]);
 }
 function Gm() {
   return C(Date.now()).current;
@@ -58,7 +58,7 @@ function c9e() {
 function $o() {
   let l = C(null),
     { epoch: s, noteAttempt: a } = c9e(),
-    u = re((v = Xw) => l.current !== null && ma(l.current, v), []),
+    u = re((v = Xw) => l.current !== null && isRecent(l.current, v), []),
     c = re(() => {
       ((l.current = Date.now()), a());
     }, [a]);
@@ -214,7 +214,7 @@ function dn(As) {
     [ki, yf] = d(As),
     Po = C(As),
     Es;
-  if (Fs[0] === p)
+  if (Fs[0] === MEMO_CACHE_SENTINEL)
     ((Es = (Of) => {
       ((Po.current = Of(Po.current)), yf(Po.current));
     }),
@@ -251,7 +251,7 @@ function wr(No, Ns) {
     Mi = ui(kn),
     Ws;
   if (Wo[0] !== No || Wo[1] !== Mi || Wo[2] !== kn)
-    ((Ws = No === void 0 ? Mi : () => ma(No, kn)),
+    ((Ws = No === void 0 ? Mi : () => isRecent(No, kn)),
       (Wo[0] = No),
       (Wo[1] = Mi),
       (Wo[2] = kn),
@@ -315,7 +315,7 @@ function X8(wf) {
     [Uo, Dt, Ke] = qn(),
     [_o, io] = d(null),
     Bs;
-  if (mn[0] === p) ((Bs = fvt()), (mn[0] = Bs));
+  if (mn[0] === MEMO_CACHE_SENTINEL) ((Bs = fvt()), (mn[0] = Bs));
   else Bs = mn[0];
   let Ai = Bs,
     [Vt, lo, Fn] = dn(null),
@@ -631,7 +631,7 @@ function fOt(Df) {
     [Xo, Et, Me] = qn(),
     [Yo, Mn] = d(null),
     au;
-  if (ke[2] === p) ((au = fvt()), (ke[2] = au));
+  if (ke[2] === MEMO_CACHE_SENTINEL) ((au = fvt()), (ke[2] = au));
   else au = ke[2];
   let so = au,
     [Pt, uo, xn] = dn(null),
@@ -1464,14 +1464,14 @@ function Pr(cp) {
     } = cp;
   if (dp) {
     let Le;
-    if (Ht[0] === p)
+    if (Ht[0] === MEMO_CACHE_SENTINEL)
       ((Le = e(t, { "aria-hidden": !0, children: " " })), (Ht[0] = Le));
     else Le = Ht[0];
     return Le;
   }
   if (fp) {
     let Le;
-    if (Ht[1] === p)
+    if (Ht[1] === MEMO_CACHE_SENTINEL)
       ((Le = e(t, {
         "aria-hidden": !0,
         color: "suggestion",
@@ -1483,7 +1483,7 @@ function Pr(cp) {
   }
   if (mp) {
     let Le;
-    if (Ht[2] === p)
+    if (Ht[2] === MEMO_CACHE_SENTINEL)
       ((Le = e(t, {
         "aria-label": "(more below)",
         dimColor: !0,
@@ -1495,7 +1495,7 @@ function Pr(cp) {
   }
   if (pp) {
     let Le;
-    if (Ht[3] === p)
+    if (Ht[3] === MEMO_CACHE_SENTINEL)
       ((Le = e(t, {
         "aria-label": "(more above)",
         dimColor: !0,
@@ -1507,14 +1507,14 @@ function Pr(cp) {
   }
   if (vp) {
     let Le;
-    if (Ht[4] === p)
+    if (Ht[4] === MEMO_CACHE_SENTINEL)
       ((Le = e(t, { "aria-hidden": !0, dimColor: !0, children: L.pointer })),
         (Ht[4] = Le));
     else Le = Ht[4];
     return Le;
   }
   let Le;
-  if (Ht[5] === p)
+  if (Ht[5] === MEMO_CACHE_SENTINEL)
     ((Le = e(t, { "aria-hidden": !0, children: " " })), (Ht[5] = Le));
   else Le = Ht[5];
   return Le;
@@ -1529,7 +1529,7 @@ function vo(Ip) {
     yt = `[Image #${oc}]`,
     ic;
   if (Wr[0] !== Nr)
-    ((ic = Nr && Tf() ? tO(Nr) : null), (Wr[0] = Nr), (Wr[1] = ic));
+    ((ic = Nr && Tf() ? toLocalFileUrl(Nr) : null), (Wr[0] = Nr), (Wr[1] = ic));
   else ic = Wr[1];
   let $r = ic;
   if ($r) {
@@ -1702,7 +1702,7 @@ function Y8(Qp) {
   if (me[14] !== Ul)
     ((xc = { context: "Chat", isActive: Ul }), (me[14] = Ul), (me[15] = xc));
   else xc = me[15];
-  Ne("chat:externalEditor", bc, xc);
+  useKeybinding("chat:externalEditor", bc, xc);
   let hc;
   if (me[16] !== Nl || me[17] !== Wn)
     ((hc = () => {
@@ -1726,7 +1726,7 @@ function Y8(Qp) {
   if (me[19] !== _l)
     ((gc = { context: "Chat", isActive: _l }), (me[19] = _l), (me[20] = gc));
   else gc = me[20];
-  Ne("chat:imagePaste", hc, gc);
+  useKeybinding("chat:imagePaste", hc, gc);
   let yc;
   if (me[21] !== Oe || me[22] !== $n)
     ((yc = () => {
@@ -1743,7 +1743,7 @@ function Y8(Qp) {
       (me[24] = jl),
       (me[25] = Tc));
   else Tc = me[25];
-  Ne("attachments:remove", yc, Tc);
+  useKeybinding("attachments:remove", yc, Tc);
   let Hr, qr;
   if (me[26] !== Oe.length || me[27] !== Ot || me[28] !== yn)
     ((Hr = () => {
@@ -1812,7 +1812,7 @@ function Y8(Qp) {
       (me[44] = Bl),
       (me[45] = wc));
   else wc = me[45];
-  Ze(Sc, wc);
+  useKeybindings(Sc, wc);
   let Ic, Cc;
   if (me[46] !== fn || me[47] !== se || me[48] !== Vn)
     ((Ic = () => {
@@ -1827,7 +1827,7 @@ function Y8(Qp) {
   else ((Ic = me[49]), (Cc = me[50]));
   E(Ic, Cc);
   let Yt = bo === "expanded" ? Xn + 3 : Xn + 4,
-    { columns: Kl } = ks(Se()),
+    { columns: Kl } = ks(useTerminalSize()),
     zl =
       zr && typeof le.label === "string"
         ? te(le.label) + te(le.labelValueSeparator ?? ", ")
@@ -2052,18 +2052,18 @@ function Y8(Qp) {
             children: e(t, {
               dimColor: !0,
               children: fn
-                ? r(ue, {
+                ? r(DotSeparatedList, {
                     children: [
                       Oe.length > 1 &&
                         r(N, {
                           children: [
-                            e(je, {
+                            e(ActionKeybindingHint, {
                               action: "attachments:next",
                               context: "Attachments",
                               fallback: "\u2192",
                               description: "next",
                             }),
-                            e(je, {
+                            e(ActionKeybindingHint, {
                               action: "attachments:previous",
                               context: "Attachments",
                               fallback: "\u2190",
@@ -2071,13 +2071,13 @@ function Y8(Qp) {
                             }),
                           ],
                         }),
-                      e(je, {
+                      e(ActionKeybindingHint, {
                         action: "attachments:remove",
                         context: "Attachments",
                         fallback: "backspace",
                         description: "remove",
                       }),
-                      e(je, {
+                      e(ActionKeybindingHint, {
                         action: "attachments:exit",
                         context: "Attachments",
                         fallback: "esc",
@@ -2086,7 +2086,7 @@ function Y8(Qp) {
                     ],
                   })
                 : se
-                  ? e(D, { chord: "down", action: "select", parens: !0 })
+                  ? e(KeybindingHint, { chord: "down", action: "select", parens: !0 })
                   : null,
             }),
           }),
@@ -2181,7 +2181,7 @@ var ii = ({
       return y;
     }, [u, a, h, v, ee, s, K]);
   return (
-    Ze(xe, { context: "Select", isActive: !l && !0 }),
+    useKeybindings(xe, { context: "Select", isActive: !l && !0 }),
     {
       handleKeyDown: (y) => {
         if (l) return;
@@ -2620,7 +2620,7 @@ function Bc(l, s, a) {
   return l.isWindowActivation || a - s < v9e;
 }
 function u9e() {
-  let l = vt(),
+  let l = useClock(),
     [s] = d(() => l.now());
   return re(
     (a) => {
@@ -2631,7 +2631,7 @@ function u9e() {
         n(
           `Select: dropped stray click (${a.isWindowActivation ? "window-activation click" : `${u - s}ms after mount`})`,
         ),
-        i("tengu_select_stray_click_dropped", { reason: c }),
+        logEvent("tengu_select_stray_click_dropped", { reason: c }),
         a.dropAsStray(),
         !0
       );
@@ -2768,7 +2768,7 @@ function Ii(Qm) {
   else Zc = Ue[1];
   let [on, fi] = d(Zc),
     nd;
-  if (Ue[2] === p) ((nd = new Map()), (Ue[2] = nd));
+  if (Ue[2] === MEMO_CACHE_SENTINEL) ((nd = new Map()), (Ue[2] = nd));
   else nd = Ue[2];
   let td = C(nd),
     od,
@@ -2797,7 +2797,7 @@ function Ii(Qm) {
   else ((od = Ue[5]), (rd = Ue[6]));
   E(od, rd);
   let tv = Zt === "compact" && !Ln && !Z.some(zd) && Z.some(Gd),
-    { columns: Co } = ks(Se());
+    { columns: Co } = ks(useTerminalSize());
   const rs = d9e(Zm, tv ? "compact-vertical" : Zt);
   let sd;
   if (
@@ -2857,7 +2857,7 @@ function Ii(Qm) {
   if (Ue[21] !== ze)
     ((mi = () => {
       if (ze && Object.values(ze).some(Hd)) {
-        let rv = G(Object.values(ze), qd);
+        let rv = countMatching(Object.values(ze), qd);
         return (wo(!0), ci(rv - 1), !0);
       }
       return !1;
@@ -2866,7 +2866,7 @@ function Ii(Qm) {
       (Ue[22] = mi));
   else mi = Ue[22];
   let cd;
-  if (Ue[23] === p)
+  if (Ue[23] === MEMO_CACHE_SENTINEL)
     ((cd = () => {
       wo(!1);
     }),
@@ -2946,7 +2946,7 @@ function Ii(Qm) {
     Ue[60] !== b.visibleOptions ||
     Ue[61] !== b.visibleToIndex
   ) {
-    ko = en;
+    ko = EARLY_RETURN_SENTINEL;
     bb0: {
       let nt = {
         container: () => ({
@@ -3333,7 +3333,7 @@ function Ii(Qm) {
                         ],
                       }),
                       ye.isSelected &&
-                        r(t, { children: [" ", e(et, { status: "success" })] }),
+                        r(t, { children: [" ", e(StatusIndicator, { status: "success" })] }),
                       Pd > 0 && e(t, { children: " ".repeat(Pd) }),
                     ],
                   }),
@@ -3538,7 +3538,7 @@ function Ii(Qm) {
       (Ue[64] = xi),
       (Ue[65] = ko));
   } else ((vi = Ue[62]), (bi = Ue[63]), (xi = Ue[64]), (ko = Ue[65]));
-  if (ko !== en) return ko;
+  if (ko !== EARLY_RETURN_SENTINEL) return ko;
   let Sn;
   if (Ue[94] !== vi || Ue[95] !== bi || Ue[96] !== xi)
     ((Sn = e(vi, { ...bi, children: xi })),
@@ -3553,7 +3553,7 @@ var Ds = 8,
   Vs = 0.6;
 function d9e(ob, Ud) {
   let _d = Ud === void 0 ? "compact" : Ud,
-    { rows: rb } = ks(Se()),
+    { rows: rb } = ks(useTerminalSize()),
     ib = _d === "expanded" ? 3 : _d === "compact" ? 1 : 2,
     lb = Math.max(1, Math.floor((rb - Ds) / ib));
   return Math.min(ob, lb);

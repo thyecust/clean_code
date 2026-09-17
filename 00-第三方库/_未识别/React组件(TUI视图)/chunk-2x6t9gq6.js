@@ -10,16 +10,16 @@
 import { _ } from "../../react/react.zhnvc798.js";
 import { te } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ne, Ze } from "../../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { ue } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useKeybinding, useKeybindings } from "../../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { DotSeparatedList } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { hn } from "./chunk-tp42fv8j.js";
 import { de } from "./chunk-92g8hxqw.js";
-import { D } from "../../../02-功能模块/键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { Ur } from "../../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
+import { KeybindingHint } from "../../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
+import { ErrorMessage } from "../../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import { e, r } from "../../react/react.kwtapczy.js";
 import { V, d, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
-import { p } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Be(lo) {
   return te(lo.label);
@@ -170,11 +170,11 @@ function XL(Ye) {
   if (n[36] !== Nt)
     ((fe = { context: "Select", isActive: Nt }), (n[36] = Nt), (n[37] = fe));
   else fe = n[37];
-  Ze(ve, fe);
+  useKeybindings(ve, fe);
   let Ce;
-  if (n[38] === p) ((Ce = { context: "Settings" }), (n[38] = Ce));
+  if (n[38] === MEMO_CACHE_SENTINEL) ((Ce = { context: "Settings" }), (n[38] = Ce));
   else Ce = n[38];
-  Ne("confirm:no", C, Ce);
+  useKeybinding("confirm:no", C, Ce);
   let ke;
   if (n[39] !== G)
     ((ke = { "tabs:previous": () => G(-1), "tabs:next": () => G(1) }),
@@ -186,7 +186,7 @@ function XL(Ye) {
   if (n[41] !== Ot)
     ((Fe = { context: "Tabs", isActive: Ot }), (n[41] = Ot), (n[42] = Fe));
   else Fe = n[42];
-  Ze(ke, Fe);
+  useKeybindings(ke, Fe);
   let H = a ? (s[a.key] ?? "") : "",
     Re;
   if (n[43] !== a || n[44] !== H || n[45] !== s)
@@ -320,7 +320,7 @@ function XL(Ye) {
       marginTop: 1,
       minHeight: 1,
       children: B
-        ? e(Ur, { error: B })
+        ? e(ErrorMessage, { error: B })
         : ht
           ? e(t, { dimColor: !0, children: ht })
           : e(t, { children: " " }),
@@ -330,21 +330,21 @@ function XL(Ye) {
       (n[89] = kt));
   else kt = n[89];
   let we;
-  if (n[90] === p)
-    ((we = e(D, { chord: ["up", "down"], action: "move" })), (n[90] = we));
+  if (n[90] === MEMO_CACHE_SENTINEL)
+    ((we = e(KeybindingHint, { chord: ["up", "down"], action: "move" })), (n[90] = we));
   else we = n[90];
   let Ft;
   if (n[91] !== a?.type)
     ((Ft =
       a?.type === "select" &&
-      e(D, { chord: ["left", "right"], action: "change" })),
+      e(KeybindingHint, { chord: ["left", "right"], action: "change" })),
       (n[91] = a?.type),
       (n[92] = Ft));
   else Ft = n[92];
   let De, Ee;
-  if (n[93] === p)
-    ((De = e(D, { chord: "enter", action: "continue" })),
-      (Ee = e(D, { chord: "escape", action: "cancel" })),
+  if (n[93] === MEMO_CACHE_SENTINEL)
+    ((De = e(KeybindingHint, { chord: "enter", action: "continue" })),
+      (Ee = e(KeybindingHint, { chord: "escape", action: "cancel" })),
       (n[93] = De),
       (n[94] = Ee));
   else ((De = n[93]), (Ee = n[94]));
@@ -354,7 +354,7 @@ function XL(Ye) {
       marginTop: 1,
       children: e(t, {
         dimColor: !0,
-        children: r(ue, { children: [we, Ft, De, Ee] }),
+        children: r(DotSeparatedList, { children: [we, Ft, De, Ee] }),
       }),
     })),
       (n[95] = Ft),

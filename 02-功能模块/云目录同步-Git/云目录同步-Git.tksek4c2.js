@@ -8,15 +8,15 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { toCompatSessionId, toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { Ve, yt, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { lv, Ri } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, us, kr, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Sn, io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
@@ -175,11 +175,11 @@ import {
 import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { qbe } from "../文件同步-Sync/chunk-eg4wmaq4.js";
 import { K9n, ed, oOe, dI, zpt } from "../目录同步(dir-sync)/chunk-1vkmxx3s.js";
-import { V4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-nbvmqw0g.js";
-import { Y4, nft, Qce } from "../../01-核心基础设施/共享小工具-未细化/chunk-vcb9z55e.js";
+import { truncateWithEllipsis } from "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
+import { sanitizePathSegment, getDirSyncRecordPath, resolveDirSyncRecordLocation } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
 import { If } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import {
   lstat as al,
   mkdtemp,
@@ -420,9 +420,9 @@ async function Jl(e, t, r) {
         st(vt.stderr) || "could not list the index against the base",
       );
     let wt = await hd(s.workTree),
-      Wt = Y(e.scopePaths.filter((I) => I.endsWith("/"))),
-      tt = Y(e.scopePaths.filter((I) => !I.endsWith("/"))),
-      Q = Y([...tt, ...Xe.map(({ path: I }) => I)]),
+      Wt = dedupe(e.scopePaths.filter((I) => I.endsWith("/"))),
+      tt = dedupe(e.scopePaths.filter((I) => !I.endsWith("/"))),
+      Q = dedupe([...tt, ...Xe.map(({ path: I }) => I)]),
       ze = Q.filter((I) => !JTe(I) || NLe(I) || Ji(I, wt) || Qi(I, wt));
     if (ze.length > 0) return se("forged_paths", ze.slice(0, 10).join(", "));
     let bt = Q.filter(
@@ -444,7 +444,7 @@ async function Jl(e, t, r) {
         r,
       ),
       _t = Q.filter((I) => !Ut.has(I) && !GO(I)),
-      jt = Y([
+      jt = dedupe([
         ...HKe(_t),
         ..._t.filter((I) => I.split("/").at(-1) === ".gitattributes"),
       ]);
@@ -465,7 +465,7 @@ async function Jl(e, t, r) {
         "info_attributes",
         ".git/info/attributes sets or unsets filter attributes, or is not a plain file",
       );
-    let Rt = Y([at, p]),
+    let Rt = dedupe([at, p]),
       mt = P(),
       lt = {
         caseBlind: wt || mt === "macos" || mt === "windows",
@@ -506,7 +506,7 @@ async function Jl(e, t, r) {
         "momentary",
         ".git/info/attributes changed while the attributes were read",
       );
-    let Ft = Y(Je.flat()).sort(),
+    let Ft = dedupe(Je.flat()).sort(),
       St = new Set([...ft, ...Ft]),
       ne = async (I, he) => {
         let Qe = await ds(Lt, p, I);
@@ -682,7 +682,7 @@ async function Jl(e, t, r) {
     let dt = await te(["write-tree", "--missing-ok"]);
     if (dt.code !== 0) return se("git_error", st(dt.stderr || dt.stdout));
     let Bt = dt.stdout.trim();
-    for (let I of Y([Bt, ae])) {
+    for (let I of dedupe([Bt, ae])) {
       let he = await re(["diff-tree", "-r", "-z", "--no-renames", Ge, I]),
         Qe = he.code === 0 ? PKe(he.stdout) : null;
       if (Qe === null)
@@ -1311,9 +1311,9 @@ async function Zi(e, t, r, o) {
   if (t.length === 0) return [];
   let s = (y) =>
       o.normalizationBlind
-        ? Y([y, y.normalize("NFC"), y.normalize("NFD")])
+        ? dedupe([y, y.normalize("NFC"), y.normalize("NFD")])
         : [y],
-    a = Y(t.flatMap(s));
+    a = dedupe(t.flatMap(s));
   if (r !== null) {
     if (
       (
@@ -1388,7 +1388,7 @@ async function Zi(e, t, r, o) {
   return t.filter((y) => s(y).some((w) => p.has(w)));
 }
 async function gd(e, t, r, o) {
-  let s = Y([
+  let s = dedupe([
       ...HKe(o),
       ...o.filter((E) => E.split("/").at(-1) === ".gitattributes"),
     ]),
@@ -1577,7 +1577,7 @@ function Rd(e, t, r = !1) {
     : { kind: "lost", reason: e };
 }
 function fs(e, t) {
-  return Sd(cs(e), Ed, `${Y4(t)}.writer`);
+  return Sd(cs(e), Ed, `${sanitizePathSegment(t)}.writer`);
 }
 async function mFt({ recordPath: e, lockPath: t, onLost: r, staleMs: o = Ir }) {
   let s,
@@ -1691,7 +1691,7 @@ async function gs(e, t) {
     .map((w) => ps.exec(w));
   if (a.some((w) => w === null)) return null;
   let d = (w) =>
-      Y(
+      dedupe(
         a.flatMap((k) =>
           k !== null && k[1].toLowerCase() === w ? [k[2]] : [],
         ),
@@ -1961,7 +1961,7 @@ async function Md(e, t) {
 }
 async function hs(e) {
   for (let t of [0, 50, 100, 200]) {
-    await Z(t);
+    await sleep(t);
     try {
       return (await ar(e), !0);
     } catch (r) {
@@ -2049,7 +2049,7 @@ async function jd(e, t) {
     .filter((a) => a !== "")
     .map((a) => ps.exec(a));
   if (o.some((a) => a === null)) return null;
-  let s = Y(
+  let s = dedupe(
     o.flatMap((a) =>
       a !== null && a[1].toLowerCase() === "hook" ? [a[2]] : [],
     ),
@@ -2075,7 +2075,7 @@ async function zd(e, t) {
       .split("\x00")
       .filter((a) => a !== "")
       .map((a) => Bd.exec(a)),
-    s = Y(o.flatMap((a) => a?.[1] ?? []));
+    s = dedupe(o.flatMap((a) => a?.[1] ?? []));
   if (s.some((a) => /[=]/.test(a) || Io.test(a))) return null;
   return s.flatMap((a) => [
     "-c",
@@ -2298,7 +2298,7 @@ async function xs(e, t, r) {
   });
 }
 async function Do(e, t, r, o) {
-  let s = G(t, (J) => !pI(J.path) || J.path.includes("\uFFFD"));
+  let s = countMatching(t, (J) => !pI(J.path) || J.path.includes("\uFFFD"));
   if (s > 0) return s;
   let a = t.filter((J) => J.kind === "file"),
     f = (
@@ -2343,7 +2343,7 @@ async function Do(e, t, r, o) {
         );
       }),
     ),
-    E = G(_, (J) => !J);
+    E = countMatching(_, (J) => !J);
   if (E > 0 || a.length === 0) return E;
   let R = await Xd(e).catch(() => null);
   if (R === null) return null;
@@ -2389,7 +2389,7 @@ async function Do(e, t, r, o) {
       a.map((J, fe) => (D[fe]?.id === J.blobId ? null : ge(J))),
     );
   if (C.aborted) return null;
-  return G(
+  return countMatching(
     a.map(
       (J, fe) => (D[fe]?.id === J.blobId || le[fe] === J.blobId) && pe(J, fe),
     ),
@@ -2490,7 +2490,7 @@ async function Is(e, t, r) {
       }
       return d;
     }, new Map());
-  return G(t, (d) => {
+  return countMatching(t, (d) => {
     let f = a.get(d.path) ?? [];
     if (f.length === 0) return !(d.old === null || d.kind === "removed");
     if (f.length > 1 || f[0].stage !== "0") return !0;
@@ -2531,7 +2531,7 @@ async function Ns(e, t, r) {
       s.set(f.slice(p + 1), { mode: y, type: w, id: k });
     }
   }
-  return G(t, (a) => {
+  return countMatching(t, (a) => {
     let d = s.get(a.path);
     return a.kind === "removed"
       ? d !== void 0 && d.type !== "tree"
@@ -2875,10 +2875,10 @@ async function fu({
   if (ht.length > 0)
     return V(
       "unsupported_entry",
-      `Claude's commits carry a symbolic link or submodule at ${cn(Y(ht.map((q) => q.path)))}`,
+      `Claude's commits carry a symbolic link or submodule at ${cn(dedupe(ht.map((q) => q.path)))}`,
     );
-  let Rt = Y(sn.filter((q) => !q.deleted).map((q) => q.path)),
-    mt = Y(
+  let Rt = dedupe(sn.filter((q) => !q.deleted).map((q) => q.path)),
+    mt = dedupe(
       sn
         .filter((q) => q.deleted)
         .map((q) => q.path)
@@ -3147,7 +3147,7 @@ async function mu(e, t, r, o) {
       { ...r, ...Lo },
     );
     if (d.code !== 0) return null;
-    s += G(d.stdout.split("\x00"), (f) => f !== "");
+    s += countMatching(d.stdout.split("\x00"), (f) => f !== "");
   }
   return s;
 }
@@ -3299,7 +3299,7 @@ function Mo(e, t) {
 var Au = 4;
 async function Go(e, t, r) {
   let o = Q9n(t, r),
-    s = Y(o.colliding.map((w) => w.collidesWith)),
+    s = dedupe(o.colliding.map((w) => w.collidesWith)),
     a = Tu(e),
     d = Ds(Au, async (w) => ({ spelling: w, present: await a(w) })),
     p = (await Promise.all(s.map(d))).flatMap((w) =>
@@ -3443,7 +3443,7 @@ function gFt({
           ...(k === null ? [] : [[0, k.worktreeCommit]]),
           ...y.sent.map((O) => [O.generation, O.worktreeCommit]),
         ]),
-        heldBases: Y([
+        heldBases: dedupe([
           ...y.sent.map((O) => O.worktreeCommit),
           ...y.received.map((O) => O.worktreeCommit),
           ...xFt(y.start),
@@ -3677,7 +3677,7 @@ async function Qu({
       roundSkipped: null,
       installsWithdrawn: [...Xe.keys()].toSorted(),
       keptFromEarlierLife: jt,
-      installsWithdrawnAhead: G([...Xe.values()], (m) => vt(m.turn)),
+      installsWithdrawnAhead: countMatching([...Xe.values()], (m) => vt(m.turn)),
     },
     ae = [...mt, ...[...Xe.keys()].filter((m) => ze.has(m))];
   for (let m of mt) ne.refused.push({ path: m, reason: "name_refused" });
@@ -3701,7 +3701,7 @@ async function Qu({
     q = new Set(Tt),
     Ne = new Set(D ? Tt : [...ve, ...[...nt].filter((m) => q.has(m))]);
   ((ne.deletesHeldBack = Ne.size),
-    (ne.deletesHeldRemembered = G([...Ne], (m) => !ve.has(m))),
+    (ne.deletesHeldRemembered = countMatching([...Ne], (m) => !ve.has(m))),
     (ne.parkedOverflow = D),
     (ne.heldRemovals = [...Ne].toSorted().slice(0, Gu)),
     (ne.parkedRemovals = [...Ne]));
@@ -3917,7 +3917,7 @@ async function Qu({
     ]),
     Xt = await dc(
       e,
-      Y(hn.map(({ entry: m }) => m.blobId).filter((m) => !Wr.has(m))),
+      dedupe(hn.map(({ entry: m }) => m.blobId).filter((m) => !Wr.has(m))),
       f.worktreeCommit,
       fe,
       w,
@@ -3936,7 +3936,7 @@ async function Qu({
             await Go(
               o,
               hn.map(({ path: m }) => m),
-              Y([
+              dedupe([
                 ...Bt,
                 ...[...pe].filter(([, m]) => m.blobId !== null).map(([m]) => m),
               ]).filter((m) => !gt.has(m)),
@@ -4398,7 +4398,7 @@ async function ac(e, t, r, o, s = null) {
       for (let D of O) if (d.has(D)) f.add(D);
     }
   }
-  if (G(r, (y) => !f.has(y)) > o) return new Set(r);
+  if (countMatching(r, (y) => !f.has(y)) > o) return new Set(r);
   return f;
 }
 async function lc({
@@ -4514,14 +4514,14 @@ async function cc(e, t, r) {
   ]);
   if (typeof o === "string" || typeof s === "string") return null;
   return e.blobIdsOfTrees(
-    Y([...o.slice(0, 2), ...(r === t ? [] : [r, ...s.slice(0, 2)])]),
+    dedupe([...o.slice(0, 2), ...(r === t ? [] : [r, ...s.slice(0, 2)])]),
   );
 }
 async function fc(e, t) {
   if (t.length === 0) return new Set();
   let r = await on(e, ["rev-parse", ...t.map((a) => `${a}^{tree}`)]);
   if (r.exitCode !== 0) return null;
-  let o = Y(
+  let o = dedupe(
       r.stdout
         .split(
           `
@@ -4619,7 +4619,7 @@ async function pc(e, t) {
       }
     },
     o = new Map(),
-    s = Y(t.flatMap(Eze)),
+    s = dedupe(t.flatMap(Eze)),
     a = (p) => ln(p, "/"),
     d = s.reduce((p, y) => Math.max(p, a(y)), -1);
   for (let p = 0; p <= d; p++) {
@@ -4767,7 +4767,7 @@ function _c(e, t) {
 function ia(e, t) {
   if (t === null) return null;
   if (t === "place") return "outside_checkout";
-  let r = Y([e, E3(e)]).map((o) => o.split("/"));
+  let r = dedupe([e, E3(e)]).map((o) => o.split("/"));
   return r.some((o) => aOe(o, "file"))
     ? "protected_name"
     : r.some((o) => o.some((s) => s.startsWith(".")))
@@ -4778,7 +4778,7 @@ function sa(e) {
   return `withheld_${e}`;
 }
 function kc(e) {
-  return Y(e.flatMap(Eze)).toSorted(
+  return dedupe(e.flatMap(Eze)).toSorted(
     (t, r) => ln(r, "/") - ln(t, "/") || (t < r ? -1 : 1),
   );
 }
@@ -5486,7 +5486,7 @@ async function co(e, t) {
     d = t.received.map((R) => R.worktreeCommit),
     f = t.sent[0]?.worktreeCommit ?? null,
     p = await e.presentCommits(
-      Y([...d, ...a, ...s, ...(f === null ? [] : [f])]).filter((R) =>
+      dedupe([...d, ...a, ...s, ...(f === null ? [] : [f])]).filter((R) =>
         nn.test(R),
       ),
     );
@@ -5514,7 +5514,7 @@ async function co(e, t) {
     basis: k,
     alsoParents: k !== null && _ !== null ? [_] : [],
     lastSentHeld: f !== null && p.has(f),
-    prerequisites: Y([
+    prerequisites: dedupe([
       ...(k === null ? [] : [k]),
       ...a.filter((R) => p.has(R)),
       ...s.filter((R) => p.has(R)),
@@ -5763,7 +5763,7 @@ async function Na(e, t) {
 async function La(e, t) {
   let r = await xl(e, ["ls-files", "-u", "-z"], t);
   if (r.code !== 0) return null;
-  return Y(
+  return dedupe(
     r.stdout
       .split("\x00")
       .filter((o) => o !== "")
@@ -5775,7 +5775,7 @@ function Oe(e) {
   return io(e, { maxCodeUnits: xKe }).trim();
 }
 function Da(e, t, r, o, s = !1) {
-  i("tengu_dir_sync_push", {
+  logEvent("tengu_dir_sync_push", {
     engine: fromEnum("git"),
     trigger: fromEnum(o),
     outcome: fromEnum(e.kind),
@@ -5821,7 +5821,7 @@ function Da(e, t, r, o, s = !1) {
   });
 }
 function ri(e, { covered: t, outcome: r, counts: o }, s, a) {
-  i("tengu_dir_sync_pull", {
+  logEvent("tengu_dir_sync_pull", {
     engine: fromEnum("git"),
     trigger: fromEnum(e),
     outcome: fromEnum(r),
@@ -5867,7 +5867,7 @@ function $a(e, t, r) {
 var Jo = 3;
 function Ma(e, t) {
   let r = [],
-    o = G(e.installed, (w) => w.blobId !== null);
+    o = countMatching(e.installed, (w) => w.blobId !== null);
   if (o > 0) r.push({ line: Gc(o), level: "debug" });
   if (t)
     for (let w of e.reportLines.map(Oe).filter(Boolean))
@@ -6089,7 +6089,7 @@ function Zc(e) {
 }
 function ef(e, t, r) {
   let o = e.sent.findIndex((s) => e.acked.includes(s.worktreeCommit));
-  return G(
+  return countMatching(
     e.sent.slice(0, o === -1 ? e.sent.length : o),
     (s) => r - (t.get(s.worktreeCommit) ?? r) >= 2,
   );
@@ -6483,7 +6483,7 @@ function hFt({
       ((pt = L),
       (xe = { reason: c, line: c === "offline" ? b : wKn(bKn(Oe(b))) }),
       Ie(xe.line, "warning"),
-      i("tengu_dir_sync_git_ended", {
+      logEvent("tengu_dir_sync_git_ended", {
         reason: fromEnum(c),
         first_upload_landed: qe || Pe,
         created_here: w === "send",
@@ -6516,7 +6516,7 @@ function hFt({
       .then(
         ({ acknowledged: T }) => {
           if (
-            (i("tengu_dir_sync_git_offline_continued", {
+            (logEvent("tengu_dir_sync_git_offline_continued", {
               asked: !0,
               acknowledged: T,
               waited_ms: Q() - b,
@@ -6551,7 +6551,7 @@ function hFt({
   function Ti(c, b, T) {
     if (he !== null || Be()) return;
     let v = Q();
-    (i("tengu_dir_sync_git_offline", {
+    (logEvent("tengu_dir_sync_git_offline", {
       tries: c,
       first_upload_landed: qe || Pe,
       created_here: w === "send",
@@ -6559,7 +6559,7 @@ function hFt({
       Ie(Of(c, m > 0), "warning"),
       $t.abort(),
       T());
-    let L = V4(Ce ?? "");
+    let L = truncateWithEllipsis(Ce ?? "");
     he = Promise.resolve()
       .then(() =>
         ve
@@ -6579,7 +6579,7 @@ function hFt({
       })
       .then((be) => {
         if (
-          (i("tengu_dir_sync_git_offline_continued", {
+          (logEvent("tengu_dir_sync_git_offline_continued", {
             acknowledged: be?.acknowledged === !0,
             waited_ms: Q() - v,
             closed: ve,
@@ -6606,7 +6606,7 @@ function hFt({
       So(),
       (async () => {
         while (Rn?.landed === !1 && !ve && !Qe && !dt) {
-          if ((await Z(O, qt.signal, { unref: !0 }), ve || Qe)) return;
+          if ((await sleep(O, qt.signal, { unref: !0 }), ve || Qe)) return;
           await So();
         }
       })().catch(Te));
@@ -6624,7 +6624,7 @@ function hFt({
         (T) => {
           if (((c.inFlight = null), T && !c.landed)) {
             if (((c.landed = !0), c.offers > 1 || c.resumed))
-              (i("tengu_dir_sync_git_end_published_late", {
+              (logEvent("tengu_dir_sync_git_end_published_late", {
                 tries: c.offers,
                 after_ms: Q() - c.sinceMs,
                 resumed: c.resumed,
@@ -6997,7 +6997,7 @@ function hFt({
       return;
     }
     (Gt("peer_silent", J, "warning"),
-      i("tengu_dir_sync_git_peer_silent", {
+      logEvent("tengu_dir_sync_git_peer_silent", {
         uploads: c.sent.length,
         results: Rt,
       }));
@@ -7473,12 +7473,12 @@ function hFt({
           let it = oe.refused.filter(Zc).map((Ht) => Ht.path),
             Nt = new Set(it),
             Cr = oe.parkedRemovals ?? [],
-            Wn = Y([
+            Wn = dedupe([
               ...oe.refused.filter((Ht) => Kc(Ht.reason)).map((Ht) => Ht.path),
               ...Cr.filter(qc),
             ]).filter((Ht) => !Nt.has(Ht)),
             gn = new Set(Wn),
-            Hl = Y([
+            Hl = dedupe([
               ...oe.refused.filter((Ht) => Jc(Ht.reason)).map((Ht) => Ht.path),
               ...Cr,
             ]).filter((Ht) => !Nt.has(Ht) && !gn.has(Ht));
@@ -7570,7 +7570,7 @@ function hFt({
       if (ue.kind === "waiting" && ue.reason === "not_vouched") {
         if (H === ft)
           Bi(c, b, T, v, L, z.last !== null && af.has(z.last.reason));
-        i("tengu_dir_sync_git_fast_forward", {
+        logEvent("tengu_dir_sync_git_fast_forward", {
           outcome: fromEnum("no_snapshot"),
           reason: fromEnumOpt(z.last?.reason),
           ms: Q() - Se,
@@ -7580,7 +7580,7 @@ function hFt({
     } catch (We) {
       if (
         ((ct = null),
-        i("tengu_dir_sync_git_fast_forward", {
+        logEvent("tengu_dir_sync_git_fast_forward", {
           outcome: S(yt(We) ? "aborted" : "error"),
           ms: Q() - Se,
         }),
@@ -7591,7 +7591,7 @@ function hFt({
     }
     if (H === ft) Bi(c, b, T, v, L, ue.kind === "waiting" && lf.has(ue.reason));
     switch (
-      (i("tengu_dir_sync_git_fast_forward", {
+      (logEvent("tengu_dir_sync_git_fast_forward", {
         outcome: fromEnum(ue.kind),
         reason: fromEnumOpt(ue.kind === "waiting" ? ue.reason : void 0),
         paths: ue.kind === "fast_forwarded" ? ue.paths : void 0,
@@ -8130,7 +8130,7 @@ function hFt({
       else
         ((Pt = Me),
           Ie(Ia, "debug"),
-          i("tengu_dir_sync_git_uploads_not_taken", { overdue: Me }),
+          logEvent("tengu_dir_sync_git_uploads_not_taken", { overdue: Me }),
           Fe(
             `not-taken:${Mn}`,
             `Your ${Me === 1 ? "earlier synced change has" : `${Me} earlier synced changes have`} not been picked up by the cloud session although its turns since should have taken ${Me === 1 ? "it" : "them"} \u2014 uploaded and not lost, and its side of sync retries at each turn; if this keeps up, that side may be having trouble`,
@@ -8165,7 +8165,7 @@ function hFt({
       if (ie !== null) Ie(ie, "info");
     } else if (!un)
       ((un = !0),
-        i("tengu_dir_sync_git_unreachable", { undelivered: dn }),
+        logEvent("tengu_dir_sync_git_unreachable", { undelivered: dn }),
         Ie(
           Ya.has(T)
             ? "File sync cannot reach the cloud session from here just now (several uploads in a row did not go through); it keeps trying at each sync point \u2014 nothing is lost, and sync has not stopped"
@@ -8176,7 +8176,7 @@ function hFt({
   function Il(c) {
     if (un)
       ((un = !1),
-        i("tengu_dir_sync_git_reachable_again", { undelivered: dn }),
+        logEvent("tengu_dir_sync_git_reachable_again", { undelivered: dn }),
         Ie(
           c
             ? "File sync reached the cloud session again; your changes are going up as before"
@@ -8192,7 +8192,7 @@ function hFt({
       v = [0, ...yf];
     for (let L = 0; L < v.length; L += 1) {
       let ie = v[L] ?? 0;
-      if (ie > 0) await Z(ie, b);
+      if (ie > 0) await sleep(ie, b);
       if (b?.aborted === !0) return { kind: "failed", reason: "aborted" };
       if (Be()) return { kind: "not_running" };
       let be = null;
@@ -8385,7 +8385,7 @@ function hFt({
             si
           );
         }
-        if (c === "result" && vt > 0) await Z(vt, b);
+        if (c === "result" && vt > 0) await sleep(vt, b);
         if (!Ga.has(c)) lt = fo;
         await to(b, c);
       })),
@@ -8425,7 +8425,7 @@ function hFt({
     let T = () => ht !== b.settled && ht !== b.read;
     for (let v = 1; v <= ti; v += 1) {
       if (c !== Zt || Be() || T()) return;
-      if ((await Z(Ae * v, void 0, { unref: !0 }), c !== Zt || Be() || T()))
+      if ((await sleep(Ae * v, void 0, { unref: !0 }), c !== Zt || Be() || T()))
         return;
       await Hn("arrival");
     }
@@ -8437,7 +8437,7 @@ function hFt({
       if (c !== Zt || Qt === null || It()) return;
       let ie = Math.min(Ae * L, T - Q());
       if (ie <= 0) break;
-      if ((await Z(ie, void 0, { unref: !0 }), c !== Zt || It())) return;
+      if ((await sleep(ie, void 0, { unref: !0 }), c !== Zt || It())) return;
       await Hn("poll");
     }
     if (
@@ -8482,7 +8482,7 @@ function hFt({
   async function zi(c, b) {
     do
       if (
-        !(await Z(N, b).then(
+        !(await sleep(N, b).then(
           () => !0,
           () => !1,
         )) ||
@@ -8567,7 +8567,7 @@ function hFt({
               Ti(b, Se, Zr);
               return;
             }
-            (i("tengu_dir_sync_git_first_upload_gave_up", { tries: b }),
+            (logEvent("tengu_dir_sync_git_first_upload_gave_up", { tries: b }),
               Zr(),
               Gt("seed_incomplete", ja(C, b, Ce, On())));
           }
@@ -8578,7 +8578,7 @@ function hFt({
         let ie = new AbortController(),
           be = er(() => ie.abort());
         if (
-          (await Z(L, AbortSignal.any([Mt.signal, $t.signal, ie.signal])).catch(
+          (await sleep(L, AbortSignal.any([Mt.signal, $t.signal, ie.signal])).catch(
             () => {},
           ),
           be(),
@@ -8653,7 +8653,7 @@ function hFt({
                 ),
                 b.then(() => "released"),
                 T.then(() => "withdrawn"),
-                Z(be || !L ? _ : 0, X.signal).then(() => "tick"),
+                sleep(be || !L ? _ : 0, X.signal).then(() => "tick"),
               ]);
             if ((X.abort(), ke !== "tick" || ve))
               return ke === "released" || ke === "withdrawn" ? ke : "settled";
@@ -8670,7 +8670,7 @@ function hFt({
                 ));
             else if (!Se && Re > k)
               ((Se = !0),
-                i("tengu_dir_sync_git_first_send_wait", {
+                logEvent("tengu_dir_sync_git_first_send_wait", {
                   waited_ms: Re,
                   wedged: !0,
                 }),
@@ -8693,7 +8693,7 @@ function hFt({
         },
         z = () => (
           Qr("the message that carried it was withdrawn"),
-          i("tengu_dir_sync_git_first_send_wait", {
+          logEvent("tengu_dir_sync_git_first_send_wait", {
             waited_ms: Q() - v,
             withdrawn: !0,
           }),
@@ -8715,7 +8715,7 @@ function hFt({
                       : "That message was not sent; your changes are still syncing, and your next message waits for them too.",
               "info",
             ),
-            i("tengu_dir_sync_git_first_send_wait", {
+            logEvent("tengu_dir_sync_git_first_send_wait", {
               waited_ms: Q() - v,
               released: !0,
             }),
@@ -8744,7 +8744,7 @@ function hFt({
                 () => "tried",
                 () => "tried",
               ),
-              Z(Ff, Mt.signal).then(
+              sleep(Ff, Mt.signal).then(
                 () => "waited",
                 () => "waited",
               ),
@@ -8753,7 +8753,7 @@ function hFt({
             ]);
             if (X === "released" || X === "withdrawn")
               return X === "released" ? ot() : z();
-            i("tengu_dir_sync_git_first_send_wait", {
+            logEvent("tengu_dir_sync_git_first_send_wait", {
               waited_ms: Q() - v,
               ended: !0,
               offline: !0,
@@ -8773,7 +8773,7 @@ function hFt({
             if (ke === "released" || ke === "withdrawn")
               return ke === "released" ? ot() : z();
             if (ke === "published" || pt === null || ve || dt) {
-              i("tengu_dir_sync_git_first_send_wait", {
+              logEvent("tengu_dir_sync_git_first_send_wait", {
                 waited_ms: Q() - v,
                 ended: pt !== null,
               });
@@ -8789,7 +8789,7 @@ function hFt({
             let Re = E[X - 1];
             if (Re === void 0) {
               ((Pn = !0),
-                i("tengu_dir_sync_git_first_send_wait", {
+                logEvent("tengu_dir_sync_git_first_send_wait", {
                   waited_ms: Q() - v,
                   ended: !0,
                   told: !1,
@@ -8797,7 +8797,7 @@ function hFt({
               return;
             }
             let oe = await Promise.race([
-              Z(Re, Mt.signal).then(() => "waited"),
+              sleep(Re, Mt.signal).then(() => "waited"),
               b.then(() => "released"),
               T.then(() => "withdrawn"),
             ]);
@@ -8826,7 +8826,7 @@ function hFt({
           if (ke !== "settled") return ke === "released" ? ot() : z();
           if (xe?.reason === "seed_incomplete" && !qe && !Pe)
             return (
-              i("tengu_dir_sync_git_first_send_wait", {
+              logEvent("tengu_dir_sync_git_first_send_wait", {
                 waited_ms: Q() - v,
                 landed: !1,
               }),
@@ -8875,8 +8875,8 @@ function hFt({
                 await tn()
               );
             let gn = L && !qe;
-            if (gn) i("tengu_dir_sync_git_first_upload_gave_up", { tries: ke });
-            else i("tengu_dir_sync_git_send_gave_up", { tries: ke, first: L });
+            if (gn) logEvent("tengu_dir_sync_git_first_upload_gave_up", { tries: ke });
+            else logEvent("tengu_dir_sync_git_send_gave_up", { tries: ke, first: L });
             if (gn) Zr();
             else Qr("its upload was given up");
             if (
@@ -8884,7 +8884,7 @@ function hFt({
                 gn ? "seed_incomplete" : "gave_up",
                 gn ? ja(C, ke, Ce, On()) : Ef(ke, Ce, Hr),
               ),
-              i("tengu_dir_sync_git_first_send_wait", {
+              logEvent("tengu_dir_sync_git_first_send_wait", {
                 waited_ms: Q() - v,
                 landed: !1,
               }),
@@ -8902,14 +8902,14 @@ function hFt({
           let it = new AbortController(),
             Nt = er(() => it.abort()),
             Cr = await ue(
-              Z(de, AbortSignal.any([Mt.signal, $t.signal, it.signal])),
+              sleep(de, AbortSignal.any([Mt.signal, $t.signal, it.signal])),
             ).finally(Nt);
           if (Cr !== "settled") return Cr === "released" ? ot() : z();
           if (ve) return { go: !1, reason: $r };
           if (he !== null) return await tn();
           ((X = Fn()), (ke += 1));
         }
-        i("tengu_dir_sync_git_first_send_wait", {
+        logEvent("tengu_dir_sync_git_first_send_wait", {
           waited_ms: Q() - v,
           landed: !0,
         });
@@ -9024,7 +9024,7 @@ function hFt({
           Fn("capture").catch(Te);
         if (z.kind === "shipping") Fn("capture").catch(Te);
         return (
-          i("tengu_dir_sync_git_capture_point", {
+          logEvent("tengu_dir_sync_git_capture_point", {
             outcome: fromEnum(z.kind),
             probe: S(ue ? "captured" : "refused"),
             matched: S(ot),
@@ -9074,7 +9074,7 @@ function hFt({
         v;
       do
         ((v = Je),
-          (T = await kt(
+          (T = await withDeadline(
             Promise.all([v, De]).then(() => !0),
             Math.max(0, b - Q()),
           )));
@@ -9094,7 +9094,7 @@ function hFt({
           v;
         do
           ((v = Je),
-            (T = await kt(
+            (T = await withDeadline(
               v.then(() => !0),
               Math.max(0, b - Q()),
             )));
@@ -9531,9 +9531,9 @@ async function Yhr({
   storageV5: d,
 }) {
   let f = toInfraSessionId(e),
-    { path: p, v5: y } = await Qce(t, f, d),
+    { path: p, v5: y } = await resolveDirSyncRecordLocation(t, f, d),
     w = Zpt({ sessionId: f, armedAtMs: a(), start: r, uploadOnly: o });
-  if (M() && d !== void 0 && y !== void 0) {
+  if (isHoverRestEnabled() && d !== void 0 && y !== void 0) {
     if (s === void 0) await Ybe(p, w, y);
     else await m3n(w, s, y);
     return { recordPath: p, record: w };
@@ -9576,11 +9576,11 @@ async function Jhr({
   storageV5: y,
 }) {
   let w = qVn();
-  i("tengu_dir_sync_git_open", { branch_rule: w, upload_at_open: f });
+  logEvent("tengu_dir_sync_git_open", { branch_rule: w, upload_at_open: f });
   let k = await canonicalizePath(t, If(y)),
     _ = K9n(getProjectDir(k)),
     E = { gitDir: _, timeoutMs: Aze },
-    R = await nft(t, e, y),
+    R = await getDirSyncRecordPath(t, e, y),
     N = await lh(t),
     C = jht({ sessionId: e, credentials: a });
   return hFt({
@@ -9779,7 +9779,7 @@ async function Rh(e, t, r) {
   if (o.kind !== "read" || !SKe(o.layout.checkout))
     throw Error("the checkout has no plain, readable git directory");
   let s = yi(e, o.layout.commonDir),
-    a = Gr(s, mh, Y4(t)),
+    a = Gr(s, mh, sanitizePathSegment(t)),
     d = fh(s, a);
   if (d.startsWith("..") || dl(d))
     throw Error("the session trash would leave the git directory");
@@ -10001,7 +10001,7 @@ function Ah({
           indexCommit: ye.indexCommit,
           worktreeCommit: ye.worktreeCommit,
           withheld: {
-            credentialNamed: Y([
+            credentialNamed: dedupe([
               ...ye.withheld.credentialNamed,
               ...O.withheld.credentialNamed,
             ]),
@@ -10064,7 +10064,7 @@ async function xh(e, t) {
       (_) => _,
       (_) => t(_, !1),
     ),
-    p = Y(s(r.stdout)),
+    p = dedupe(s(r.stdout)),
     w = [
       ...p.flatMap((_) => {
         let E = t(_, !0);
@@ -10074,7 +10074,7 @@ async function xh(e, t) {
     ],
     k = new Set(w.map((_) => _.item));
   return {
-    paths: Y([...p.filter((_) => !k.has(_)), ...f.eligible]),
+    paths: dedupe([...p.filter((_) => !k.has(_)), ...f.eligible]),
     nestedRepositories: d,
     withheld: {
       credentialNamed: w.filter((_) => !wi(_.reason)).map((_) => _.item),
@@ -10138,7 +10138,7 @@ async function sl(e, t, r, o, s) {
     d = await Dh(e, a, s);
   if (d === null) return null;
   return {
-    denied: G(d, (f) => cl(f, r(f, !0))),
+    denied: countMatching(d, (f) => cl(f, r(f, !0))),
     credentialNamed: d.filter((f) => $h(r(f, !0)) && fl(f)),
   };
 }
@@ -10160,7 +10160,7 @@ async function Dh(e, t, r) {
     r,
   );
   if (o.code !== 0) return null;
-  return Y(o.stdout.split("\x00")).filter((s) => s !== "");
+  return dedupe(o.stdout.split("\x00")).filter((s) => s !== "");
 }
 function $h(e) {
   return e === "sensitive" || e === "sensitive_tracked";
@@ -10187,7 +10187,7 @@ async function gi(e, t, r) {
         : ["diff-tree", "-r", "--name-only", "-z", ...o, r[0], r[1]],
     );
   if (s.code !== 0) return null;
-  return G(s.stdout.split("\x00"), (a) => {
+  return countMatching(s.stdout.split("\x00"), (a) => {
     if (a === "") return !1;
     return cl(a, t(a, !0));
   });

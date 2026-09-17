@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
-import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var e = "./SKILL-e3d212e9.md.zst";
 var t = Ke(e, import.meta.dirname);
-var a = Ae("./template-eg8004mh.md");
+var a = importMetaRequire("./template-eg8004mh.md");
 var SKILL_MD = t,
   TEMPLATE_MD = a;
 export { SKILL_MD, TEMPLATE_MD };

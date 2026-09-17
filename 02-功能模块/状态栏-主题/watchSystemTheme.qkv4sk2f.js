@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 81 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { $I, V3 } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
 import { aft } from "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -37,7 +37,7 @@ function watchSystemTheme(e, d, p) {
         if (
           ((t = await Promise.race([
             e.send(l),
-            Z(y, void 0, { unref: !0 }).then(() => {
+            sleep(y, void 0, { unref: !0 }).then(() => {
               return;
             }),
           ])),

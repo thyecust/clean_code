@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Cje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Iu, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -20,21 +20,21 @@ import { She } from "../Git-Worktree/chunk-bk9696gx.js";
 import { teleportResumeCodeSession } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { Zr } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js";
+import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
-import { tit } from "../云会话-Teleport/chunk-eq05pssv.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
-import { kh } from "../../01-核心基础设施/共享小工具-未细化/chunk-tw8akhx1.js";
+import { TeleportError } from "../云会话-Teleport/teleport-errors.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
+import { isKbCohesionFixesEnabled } from "../../01-核心基础设施/共享小工具-未细化/kb-cohesion-fixes.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { re, E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
 function G(de) {
@@ -48,7 +48,7 @@ function G(de) {
       (pe(!0),
         ge(null),
         xo(Q),
-        i("tengu_teleport_resume_session", {
+        logEvent("tengu_teleport_resume_session", {
           source: fromEnum(de),
           session_id: Ee(Q.id),
         }));
@@ -70,7 +70,7 @@ function G(de) {
   else He = Te[1];
   let Ce = He,
     X;
-  if (Te[2] === p)
+  if (Te[2] === MEMO_CACHE_SENTINEL)
     ((X = () => {
       ge(null);
     }),
@@ -101,7 +101,7 @@ var he = "Updated",
   Z = Math.max(ye.length, Re.length),
   L = "  ";
 function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
-  let { rows: I, columns: y } = ks(Se()),
+  let { rows: I, columns: y } = ks(useTerminalSize()),
     [g, O] = d([]),
     [m, k] = d(null),
     [R, c] = d(!0),
@@ -109,7 +109,7 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
     [ke, ne] = d(!1),
     [Le, ie] = d(!1),
     [Me, Fe] = d(1),
-    se = Zr("confirm:no", "Confirmation", "Esc"),
+    se = useKeybindingDisplayText("confirm:no", "Confirmation", "Esc"),
     W = re(async () => {
       try {
         (c(!0), P(null));
@@ -140,7 +140,7 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
     Oe = () => {
       (ne(!0), W());
     };
-  Ne("confirm:no", a, { context: "Confirmation" });
+  useKeybinding("confirm:no", a, { context: "Confirmation" });
   function A(s) {
     if (s.ctrl && s.key === "c") {
       (s.preventDefault(), a());
@@ -158,7 +158,7 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
   let Pe = re(() => {
     (ie(!0), W());
   }, [ie, W]);
-  if (!Le) return e(tit, { onComplete: Pe });
+  if (!Le) return e(TeleportError, { onComplete: Pe });
   if (R)
     return e(o, {
       flexDirection: "column",
@@ -166,7 +166,7 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
       tabIndex: 0,
       autoFocus: !0,
       onKeyDown: A,
-      children: e($n, {
+      children: e(SpinnerMessageLine, {
         message: "Loading Claude Code sessions\u2026",
         bold: !0,
         subtitle: ke
@@ -321,11 +321,11 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
         flexDirection: "row",
         children: e(t, {
           dimColor: !0,
-          children: r(ue, {
+          children: r(DotSeparatedList, {
             children: [
-              e(D, { chord: ["up", "down"], action: "select" }),
-              e(D, { chord: "enter", action: "confirm" }),
-              e(je, {
+              e(KeybindingHint, { chord: ["up", "down"], action: "select" }),
+              e(KeybindingHint, { chord: "enter", action: "confirm" }),
+              e(ActionKeybindingHint, {
                 action: "confirm:no",
                 context: "Confirmation",
                 fallback: "Esc",
@@ -427,7 +427,7 @@ function tye(et) {
     Je;
   if (T[0] !== q)
     ((Ve = () => {
-      i("tengu_teleport_started", { source: fromEnum(q) });
+      logEvent("tengu_teleport_started", { source: fromEnum(q) });
     }),
       (Je = [q]),
       (T[0] = q),
@@ -454,7 +454,7 @@ function tye(et) {
     eo;
   if (T[8] !== De)
     ((eo = () => {
-      (i("tengu_teleport_cancelled", {}), De());
+      (logEvent("tengu_teleport_cancelled", {}), De());
     }),
       (T[8] = De),
       (T[9] = eo));
@@ -465,10 +465,10 @@ function tye(et) {
   if (T[10] !== Ie)
     ((oo = { context: "Global", isActive: Ie }), (T[10] = Ie), (T[11] = oo));
   else oo = T[11];
-  Ne("app:interrupt", H, oo);
+  useKeybinding("app:interrupt", H, oo);
   let te;
   if (T[12] !== x || T[13] !== w)
-    ((te = !!x && !w && kh()), (T[12] = x), (T[13] = w), (T[14] = te));
+    ((te = !!x && !w && isKbCohesionFixesEnabled()), (T[12] = x), (T[13] = w), (T[14] = te));
   else te = T[14];
   let to;
   if (T[15] !== te)
@@ -476,9 +476,9 @@ function tye(et) {
       (T[15] = te),
       (T[16] = to));
   else to = T[16];
-  if ((Ne("confirm:no", H, to), ot && oe)) {
+  if ((useKeybinding("confirm:no", H, to), ot && oe)) {
     let B;
-    if (T[17] === p)
+    if (T[17] === MEMO_CACHE_SENTINEL)
       ((B = r(o, {
         flexDirection: "row",
         children: [
@@ -505,7 +505,7 @@ function tye(et) {
   }
   if (x && !w) {
     let B;
-    if (T[20] === p)
+    if (T[20] === MEMO_CACHE_SENTINEL)
       ((B = e(t, {
         bold: !0,
         color: "error",
@@ -520,13 +520,13 @@ function tye(et) {
         (T[22] = M));
     else M = T[22];
     let ro;
-    if (T[23] === p)
+    if (T[23] === MEMO_CACHE_SENTINEL)
       ((ro = e(o, {
         marginTop: 1,
         children: e(t, {
           dimColor: !0,
           italic: !0,
-          children: e(D, { chord: "escape", action: "cancel" }),
+          children: e(KeybindingHint, { chord: "escape", action: "cancel" }),
         }),
       })),
         (T[23] = ro));

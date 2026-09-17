@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 99 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Gmr, QYt, ZYt, eJt } from "../../02-功能模块/后台任务-Shell管理/chunk-9mmyv6hf.js";
-import "./chunk-6y25h56s.js";
+import "./spare-session-claim.js";
 import "./chunk-ezjdm9sg.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-gnmy62vg.js";
 import "./chunk-yrv8wzwe.js";

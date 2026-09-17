@@ -12,7 +12,7 @@ import { _ } from "../../react/react.zhnvc798.js";
 import { o, t, pd } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../react/react.kwtapczy.js";
 import { ew, Qt, L_, De, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function ie(ue, fe) {
   return e(
@@ -67,7 +67,7 @@ function W(xe) {
     { children: O, variant: oe } = xe,
     j = oe === void 0 ? "outline" : oe,
     te;
-  if (f[0] === p) ((te = []), (f[0] = te));
+  if (f[0] === MEMO_CACHE_SENTINEL) ((te = []), (f[0] = te));
   else te = f[0];
   let C;
   if (f[1] !== j) ((C = { variant: j, ancestors: te }), (f[1] = j), (f[2] = C));

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { _n, Uw, Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
-import { M } from "./chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
 import { wc } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getProjectsDir } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import { kd } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -24,7 +24,7 @@ function ENe(e) {
     });
 }
 function If(e) {
-  return e === void 0 ? void 0 : { hoverRestOn: M(), realPath: ENe(e) };
+  return e === void 0 ? void 0 : { hoverRestOn: isHoverRestEnabled(), realPath: ENe(e) };
 }
 import {
   basename,
@@ -35,7 +35,7 @@ import {
   sep as f,
 } from "path";
 function hu(e, n) {
-  if (!M() || n === void 0) return;
+  if (!isHoverRestEnabled() || n === void 0) return;
   if (!e.endsWith(".jsonl")) return;
   let t = dirname(e);
   if (dirname(t) !== getProjectsDir()) return;
@@ -46,7 +46,7 @@ function hu(e, n) {
   return kd(i) === void 0 ? { backend: n, key: i } : void 0;
 }
 function wYn(e, n) {
-  if (!M() || n === void 0) return;
+  if (!isHoverRestEnabled() || n === void 0) return;
   let t = relative(getProjectsDir(), e);
   if (t === "" || t === ".." || t.startsWith(`..${f}`) || S(t)) return;
   let r = t.split(f);
@@ -67,7 +67,7 @@ function wYn(e, n) {
   return kd(s) === void 0 ? { backend: n, key: s } : void 0;
 }
 function sN(e) {
-  if (!M() || e === void 0) return;
+  if (!isHoverRestEnabled() || e === void 0) return;
   return {
     backend: e,
     transcriptKey: Ce.transcript,
@@ -76,6 +76,6 @@ function sN(e) {
   };
 }
 function Mh(e) {
-  return e === void 0 ? void 0 : { source: e, hoverRestOn: M() };
+  return e === void 0 ? void 0 : { source: e, hoverRestOn: isHoverRestEnabled() };
 }
 export { ENe, If, hu, wYn, sN, Mh };

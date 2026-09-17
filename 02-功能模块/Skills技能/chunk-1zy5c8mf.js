@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
+import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getBundledSkillsRoot } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Sfe, Fwt } from "../../01-核心基础设施/共享小工具-未细化/chunk-smrdr8gc.js";
-import { jy } from "../../01-核心基础设施/共享小工具-未细化/chunk-vp8yvx5r.js";
+import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
 import { join as P } from "path";
 import { constants } from "fs";
 import { lstat, mkdir, open as b } from "fs/promises";
@@ -84,10 +84,10 @@ async function Nwt(e, o, r) {
   );
 }
 function registerBundledSkillSessionReset(e) {
-  wo().bundledSkillSessionResetHooks.push(e);
+  getHostStateStore().bundledSkillSessionResetHooks.push(e);
 }
 function runBundledSkillSessionResets() {
-  for (let e of wo().bundledSkillSessionResetHooks)
+  for (let e of getHostStateStore().bundledSkillSessionResetHooks)
     try {
       e();
     } catch (o) {
@@ -176,20 +176,20 @@ function registerBundledSkill(e) {
     Sfe(t, "argumentHint", e.argumentHint),
     Sfe(t, "whenToUse", e.whenToUse),
     Fwt(t, "disableModelInvocation", e.disableModelInvocation));
-  let l = wo();
+  let l = getHostStateStore();
   if (e.survivesBundledKillSwitch) l.bundledSkillKillSwitchSurvivors.add(t);
   l.bundledSkills.push(t);
 }
 function getBundledSkills() {
-  let e = wo();
-  if (jy())
+  let e = getHostStateStore();
+  if (areBundledSkillsDisabled())
     return e.bundledSkills.filter((o) =>
       e.bundledSkillKillSwitchSurvivors.has(o),
     );
   return [...e.bundledSkills];
 }
 function getRegisteredBundledSkillsIgnoringKillSwitch() {
-  return [...wo().bundledSkills];
+  return [...getHostStateStore().bundledSkills];
 }
 function getBundledSkillExtractDir(e) {
   return P(getBundledSkillsRoot(), e);

@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 254 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { cf } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -19,7 +19,7 @@ import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chun
 import { t$n, YQt, tWe, Qst } from "../发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function q(L) {
   let [P, U] = L;
@@ -51,7 +51,7 @@ function y(s, n, i) {
 }
 var ee = async (s, n) => {
   try {
-    await Dt(YQt(n.storageV5), 500, "Timeout");
+    await withTimeout(YQt(n.storageV5), 500, "Timeout");
   } catch {}
   let i = await tWe(n.storageV5),
     g = Qst(i)
@@ -113,7 +113,7 @@ function ReleaseNotesPicker(L) {
   else v = f[10];
   let m = v,
     G;
-  if (f[11] === p)
+  if (f[11] === MEMO_CACHE_SENTINEL)
     ((G = e(o, {
       flexDirection: "column",
       marginBottom: 1,

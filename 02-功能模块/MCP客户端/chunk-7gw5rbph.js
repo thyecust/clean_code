@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { a2, h9 } from "../../01-核心基础设施/共享小工具-未细化/chunk-jq60dfkn.js";
+import { MCP_ELICITATION_DIALOG, MCP_ELICITATION_WAITING_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/mcp-elicitation-dialogs.js";
 import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 class g {
   urlFlows = new Map();
@@ -33,13 +33,13 @@ class g {
     logMCPDebug(r, `Received elicitation request: ${b(e)}`);
     let { params: a } = e,
       c = w(a);
-    i("tengu_mcp_elicitation_shown", { mode: fromEnum(c) });
+    logEvent("tengu_mcp_elicitation_shown", { mode: fromEnum(c) });
     try {
       let n = await this.deps.runElicitationHooks(r, a, o);
       if (n)
         return (
           logMCPDebug(r, `Elicitation resolved by hook: ${b(n)}`),
-          i("tengu_mcp_elicitation_response", {
+          logEvent("tengu_mcp_elicitation_response", {
             mode: fromEnum(c),
             action: fromEnum(n.action),
           }),
@@ -84,12 +84,12 @@ class g {
       else this.urlFlows.set(r, new Set([n]));
     }
     let l = await c(
-      a2,
+      MCP_ELICITATION_DIALOG,
       { serverName: a, params: e },
       { place: "under", signal: t },
     );
     if (!t.aborted)
-      i("tengu_mcp_elicitation_response", { mode: fromEnum(o), action: fromEnum(l.action) });
+      logEvent("tengu_mcp_elicitation_response", { mode: fromEnum(o), action: fromEnum(l.action) });
     if (e.mode === "url" && l.action === "accept")
       if (n?.completed) this.forget(r, n);
       else this.showWaiting(e, r, n, t, s);
@@ -102,7 +102,7 @@ class g {
     if (s) s.pendingElicitations++;
     try {
       await this.deps.requestDialog(
-        h9,
+        MCP_ELICITATION_WAITING_DIALOG,
         {
           serverName: this.deps.serverName,
           params: e,

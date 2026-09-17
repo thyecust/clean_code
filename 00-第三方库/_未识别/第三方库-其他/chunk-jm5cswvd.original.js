@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { w } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var v = w(function (Wi, fe) {
+import { commonJS } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var v = commonJS(function (Wi, fe) {
   var tt = Number.MAX_SAFE_INTEGER || 9007199254740991,
     st = [
       "major",
@@ -30,7 +30,7 @@ var v = w(function (Wi, fe) {
     FLAG_LOOSE: 2,
   };
 });
-var C = w(function (zi, he) {
+var C = commonJS(function (zi, he) {
   var it =
     typeof process === "object" &&
     process.env &&
@@ -40,7 +40,7 @@ var C = w(function (zi, he) {
       : () => {};
   he.exports = it;
 });
-var P = w(function (q, pe) {
+var P = commonJS(function (q, pe) {
   var {
       MAX_SAFE_COMPONENT_LENGTH: Z,
       MAX_SAFE_BUILD_LENGTH: nt,
@@ -169,7 +169,7 @@ var P = w(function (q, pe) {
   p("GTE0", "^\\s*>=\\s*0\\.0\\.0\\s*$");
   p("GTE0PRE", "^\\s*>=\\s*0\\.0\\.0-0\\s*$");
 });
-var _ = w(function (Ki, Re) {
+var _ = commonJS(function (Ki, Re) {
   var pt = Object.freeze({ loose: !0 }),
     Rt = Object.freeze({}),
     $t = (e) => {
@@ -179,7 +179,7 @@ var _ = w(function (Ki, Re) {
     };
   Re.exports = $t;
 });
-var Q = w(function (Zi, Ie) {
+var Q = commonJS(function (Zi, Ie) {
   var $e = /^[0-9]+$/,
     me = (e, r) => {
       if (typeof e === "number" && typeof r === "number")
@@ -192,7 +192,7 @@ var Q = w(function (Zi, Ie) {
     mt = (e, r) => me(r, e);
   Ie.exports = { compareIdentifiers: me, rcompareIdentifiers: mt };
 });
-var L = w(function (Ji, Ne) {
+var L = commonJS(function (Ji, Ne) {
   var X = C(),
     { MAX_LENGTH: Le, MAX_SAFE_INTEGER: U } = v(),
     { safeRe: V, t: H } = P(),
@@ -395,7 +395,7 @@ var L = w(function (Ji, Ne) {
   }
   Ne.exports = S;
 });
-var g = w(function (Qi, Ae) {
+var g = commonJS(function (Qi, Ae) {
   var Oe = L(),
     Lt = (e, r, t = !1) => {
       if (e instanceof Oe) return e;
@@ -408,7 +408,7 @@ var g = w(function (Qi, Ae) {
     };
   Ae.exports = Lt;
 });
-var Te = w(function (en, de) {
+var Te = commonJS(function (en, de) {
   var Nt = g(),
     Ot = (e, r) => {
       let t = Nt(e, r);
@@ -416,7 +416,7 @@ var Te = w(function (en, de) {
     };
   de.exports = Ot;
 });
-var qe = w(function (rn, Se) {
+var qe = commonJS(function (rn, Se) {
   var At = g(),
     dt = (e, r) => {
       let t = At(e.trim().replace(/^[=v]+/, ""), r);
@@ -424,7 +424,7 @@ var qe = w(function (rn, Se) {
     };
   Se.exports = dt;
 });
-var Pe = w(function (tn, ge) {
+var Pe = commonJS(function (tn, ge) {
   var we = L(),
     Tt = (e, r, t, s, i) => {
       if (typeof t === "string") ((i = s), (s = t), (t = void 0));
@@ -436,7 +436,7 @@ var Pe = w(function (tn, ge) {
     };
   ge.exports = Tt;
 });
-var xe = w(function (sn, Ce) {
+var xe = commonJS(function (sn, Ce) {
   var ve = g(),
     St = (e, r) => {
       let t = ve(e, null, !0),
@@ -462,22 +462,22 @@ var xe = w(function (sn, Ce) {
     };
   Ce.exports = St;
 });
-var Ge = w(function (nn, De) {
+var Ge = commonJS(function (nn, De) {
   var qt = L(),
     wt = (e, r) => new qt(e, r).major;
   De.exports = wt;
 });
-var Fe = w(function (on, ye) {
+var Fe = commonJS(function (on, ye) {
   var gt = L(),
     Pt = (e, r) => new gt(e, r).minor;
   ye.exports = Pt;
 });
-var _e = w(function (cn, je) {
+var _e = commonJS(function (cn, je) {
   var vt = L(),
     Ct = (e, r) => new vt(e, r).patch;
   je.exports = Ct;
 });
-var Ue = w(function (ln, Xe) {
+var Ue = commonJS(function (ln, Xe) {
   var xt = g(),
     Dt = (e, r) => {
       let t = xt(e, r);
@@ -485,22 +485,22 @@ var Ue = w(function (ln, Xe) {
     };
   Xe.exports = Dt;
 });
-var d = w(function (an, He) {
+var d = commonJS(function (an, He) {
   var Ve = L(),
     Gt = (e, r, t) => new Ve(e, t).compare(new Ve(r, t));
   He.exports = Gt;
 });
-var Me = w(function (un, be) {
+var Me = commonJS(function (un, be) {
   var yt = d(),
     Ft = (e, r, t) => yt(r, e, t);
   be.exports = Ft;
 });
-var Be = w(function (En, ke) {
+var Be = commonJS(function (En, ke) {
   var jt = d(),
     _t = (e, r) => jt(e, r, !0);
   ke.exports = _t;
 });
-var b = w(function (fn, We) {
+var b = commonJS(function (fn, We) {
   var Ye = L(),
     Xt = (e, r, t) => {
       let s = new Ye(e, t),
@@ -509,47 +509,47 @@ var b = w(function (fn, We) {
     };
   We.exports = Xt;
 });
-var Ke = w(function (hn, ze) {
+var Ke = commonJS(function (hn, ze) {
   var Ut = b(),
     Vt = (e, r) => e.sort((t, s) => Ut(t, s, r));
   ze.exports = Vt;
 });
-var Je = w(function (pn, Ze) {
+var Je = commonJS(function (pn, Ze) {
   var Ht = b(),
     bt = (e, r) => e.sort((t, s) => Ht(s, t, r));
   Ze.exports = bt;
 });
-var x = w(function (Rn, Qe) {
+var x = commonJS(function (Rn, Qe) {
   var Mt = d(),
     kt = (e, r, t) => Mt(e, r, t) > 0;
   Qe.exports = kt;
 });
-var M = w(function ($n, er) {
+var M = commonJS(function ($n, er) {
   var Bt = d(),
     Yt = (e, r, t) => Bt(e, r, t) < 0;
   er.exports = Yt;
 });
-var re = w(function (mn, rr) {
+var re = commonJS(function (mn, rr) {
   var Wt = d(),
     zt = (e, r, t) => Wt(e, r, t) === 0;
   rr.exports = zt;
 });
-var te = w(function (In, tr) {
+var te = commonJS(function (In, tr) {
   var Kt = d(),
     Zt = (e, r, t) => Kt(e, r, t) !== 0;
   tr.exports = Zt;
 });
-var k = w(function (Ln, sr) {
+var k = commonJS(function (Ln, sr) {
   var Jt = d(),
     Qt = (e, r, t) => Jt(e, r, t) >= 0;
   sr.exports = Qt;
 });
-var B = w(function (Nn, ir) {
+var B = commonJS(function (Nn, ir) {
   var es = d(),
     rs = (e, r, t) => es(e, r, t) <= 0;
   ir.exports = rs;
 });
-var se = w(function (On, nr) {
+var se = commonJS(function (On, nr) {
   var ts = re(),
     ss = te(),
     is = x(),
@@ -586,7 +586,7 @@ var se = w(function (On, nr) {
     };
   nr.exports = ls;
 });
-var cr = w(function (An, or) {
+var cr = commonJS(function (An, or) {
   var as = L(),
     us = g(),
     { safeRe: Y, t: W } = P(),
@@ -617,7 +617,7 @@ var cr = w(function (An, or) {
     };
   or.exports = Es;
 });
-var ur = w(function (dn, ar) {
+var ur = commonJS(function (dn, ar) {
   class lr {
     constructor() {
       ((this.max = 1000), (this.map = new Map()));
@@ -643,7 +643,7 @@ var ur = w(function (dn, ar) {
   }
   ar.exports = lr;
 });
-var T = w(function (Tn, pr) {
+var T = commonJS(function (Tn, pr) {
   var fs = /\s+/g;
   class D {
     constructor(e, r) {
@@ -940,7 +940,7 @@ var T = w(function (Tn, pr) {
       return !0;
     };
 });
-var G = w(function (Sn, Nr) {
+var G = commonJS(function (Sn, Nr) {
   var y = Symbol("SemVer ANY");
   class z {
     static get ANY() {
@@ -1043,7 +1043,7 @@ var G = w(function (Sn, Nr) {
     Ir = L(),
     Lr = T();
 });
-var F = w(function (qn, Or) {
+var F = commonJS(function (qn, Or) {
   var Ds = T(),
     Gs = (e, r, t) => {
       try {
@@ -1055,7 +1055,7 @@ var F = w(function (qn, Or) {
     };
   Or.exports = Gs;
 });
-var dr = w(function (wn, Ar) {
+var dr = commonJS(function (wn, Ar) {
   var ys = T(),
     Fs = (e, r) =>
       new ys(e, r).set.map((t) =>
@@ -1067,7 +1067,7 @@ var dr = w(function (wn, Ar) {
       );
   Ar.exports = Fs;
 });
-var Sr = w(function (gn, Tr) {
+var Sr = commonJS(function (gn, Tr) {
   var js = L(),
     _s = T(),
     Xs = (e, r, t) => {
@@ -1090,7 +1090,7 @@ var Sr = w(function (gn, Tr) {
     };
   Tr.exports = Xs;
 });
-var wr = w(function (Pn, qr) {
+var wr = commonJS(function (Pn, qr) {
   var Us = L(),
     Vs = T(),
     Hs = (e, r, t) => {
@@ -1113,7 +1113,7 @@ var wr = w(function (Pn, qr) {
     };
   qr.exports = Hs;
 });
-var vr = w(function (vn, Pr) {
+var vr = commonJS(function (vn, Pr) {
   var ce = L(),
     bs = T(),
     gr = x(),
@@ -1154,7 +1154,7 @@ var vr = w(function (vn, Pr) {
     };
   Pr.exports = Ms;
 });
-var xr = w(function (Cn, Cr) {
+var xr = commonJS(function (Cn, Cr) {
   var ks = T(),
     Bs = (e, r) => {
       try {
@@ -1165,7 +1165,7 @@ var xr = w(function (Cn, Cr) {
     };
   Cr.exports = Bs;
 });
-var K = w(function (xn, Fr) {
+var K = commonJS(function (xn, Fr) {
   var Ys = L(),
     yr = G(),
     { ANY: Ws } = yr,
@@ -1209,17 +1209,17 @@ var K = w(function (xn, Fr) {
     };
   Fr.exports = Qs;
 });
-var _r = w(function (Dn, jr) {
+var _r = commonJS(function (Dn, jr) {
   var ei = K(),
     ri = (e, r, t) => ei(e, r, ">", t);
   jr.exports = ri;
 });
-var Ur = w(function (Gn, Xr) {
+var Ur = commonJS(function (Gn, Xr) {
   var ti = K(),
     si = (e, r, t) => ti(e, r, "<", t);
   Xr.exports = si;
 });
-var br = w(function (yn, Hr) {
+var br = commonJS(function (yn, Hr) {
   var Vr = T(),
     ii = (e, r, t) => (
       (e = new Vr(e, t)),
@@ -1228,7 +1228,7 @@ var br = w(function (yn, Hr) {
     );
   Hr.exports = ii;
 });
-var kr = w(function (Fn, Mr) {
+var kr = commonJS(function (Fn, Mr) {
   var ni = F(),
     oi = d();
   Mr.exports = (e, r, t) => {
@@ -1256,7 +1256,7 @@ var kr = w(function (Fn, Mr) {
     return u.length < h.length ? u : r;
   };
 });
-var Zr = w(function (jn, Kr) {
+var Zr = commonJS(function (jn, Kr) {
   var Br = T(),
     ae = G(),
     { ANY: le } = ae,
@@ -1393,7 +1393,7 @@ var Zr = w(function (jn, Kr) {
     };
   Kr.exports = ci;
 });
-var pg = w(function (_n, et) {
+var pg = commonJS(function (_n, et) {
   var Ee = P(),
     Jr = v(),
     ui = L(),

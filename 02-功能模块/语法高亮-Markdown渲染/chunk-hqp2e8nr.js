@@ -14,7 +14,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { Npn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { jit, BB } from "./语法高亮-Markdown渲染.jhbtay9y.js";
-import { Ol } from "../../01-核心基础设施/共享小工具-未细化/chunk-7xabjzfw.js";
+import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
 import { basename, extname } from "path";
@@ -405,7 +405,7 @@ function Y(e, n, t) {
     return [[D(t), s]];
   }
   if (!be(r._emitter)) {
-    if (Ol().claim("color_diff_hljs_emitter_shape_error"))
+    if (getClaimRegistry().claim("color_diff_hljs_emitter_shape_error"))
       logError(
         Error(
           `color-diff: hljs emitter shape mismatch (keys: ${Object.keys(r._emitter).join(",")}). Syntax highlighting disabled.`,

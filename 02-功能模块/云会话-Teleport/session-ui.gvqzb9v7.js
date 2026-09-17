@@ -13,15 +13,15 @@ import { eI } from "../../00-第三方库/_未识别/第三方库-其他/chunk-x
 import { o, t, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { Pt, eE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
+import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dn, kn, V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function x(ro) {
   return ro.remoteSessionUrl;
@@ -60,11 +60,11 @@ function P(oo) {
   else L = i[1];
   let h = L,
     k;
-  if (i[2] === p) ((k = { context: "Confirmation" }), (i[2] = k));
+  if (i[2] === MEMO_CACHE_SENTINEL) ((k = { context: "Confirmation" }), (i[2] = k));
   else k = i[2];
-  if ((Ne("confirm:no", eo, k), !m)) {
+  if ((useKeybinding("confirm:no", eo, k), !m)) {
     let f, u;
-    if (i[3] === p)
+    if (i[3] === MEMO_CACHE_SENTINEL)
       ((f = e(o, {
         marginBottom: 1,
         children: e(t, { bold: !0, children: "Cloud session" }),
@@ -84,15 +84,15 @@ function P(oo) {
         (i[4] = u));
     else ((f = i[3]), (u = i[4]));
     let a;
-    if (i[5] === p)
+    if (i[5] === MEMO_CACHE_SENTINEL)
       ((a = r(Qr, {
         children: [
           f,
           u,
           e(o, {
             marginTop: 1,
-            children: e(ci, {
-              children: e(D, { chord: "escape", action: "close" }),
+            children: e(InputGuide, {
+              children: e(KeybindingHint, { chord: "escape", action: "close" }),
             }),
           }),
         ],
@@ -102,7 +102,7 @@ function P(oo) {
     return a;
   }
   let f;
-  if (i[6] === p)
+  if (i[6] === MEMO_CACHE_SENTINEL)
     ((f = e(o, {
       marginBottom: 1,
       children: e(t, { bold: !0, children: "Cloud session" }),
@@ -110,7 +110,7 @@ function P(oo) {
       (i[6] = f));
   else f = i[6];
   let u;
-  if (i[7] === p)
+  if (i[7] === MEMO_CACHE_SENTINEL)
     ((u = e(t, { dimColor: !0, children: "Open in browser: " })), (i[7] = u));
   else u = i[7];
   let a;
@@ -120,11 +120,11 @@ function P(oo) {
       (i[9] = a));
   else a = i[9];
   let v;
-  if (i[10] === p)
+  if (i[10] === MEMO_CACHE_SENTINEL)
     ((v = e(o, {
       marginBottom: 1,
-      children: e(ci, {
-        children: e(D, { chord: "escape", action: "cancel", parens: !0 }),
+      children: e(InputGuide, {
+        children: e(KeybindingHint, { chord: "escape", action: "cancel", parens: !0 }),
       }),
     })),
       (i[10] = v));

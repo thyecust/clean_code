@@ -8,16 +8,16 @@
 
 // Version: 2.1.263
 import { nu, E0n } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { T2e } from "../../../01-核心基础设施/共享小工具-未细化/chunk-kzf7s1er.js";
+import { hexEncodingModule } from "../../../01-核心基础设施/共享小工具-未细化/hex-encoding-module.js";
 import { V0n, s_ } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
-import { Ib } from "../../../01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js";
-import { w } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var lhe = w(function (Re) {
-  var f = T2e(),
+import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
+import { commonJS } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var lhe = commonJS(function (Re) {
+  var f = hexEncodingModule(),
     d = s_(),
     ue = V0n(),
     Y = nu(),
-    M = Ib(),
+    M = smithyContextModule(),
     R = E0n(),
     K = "X-Amz-Algorithm",
     j = "X-Amz-Credential",

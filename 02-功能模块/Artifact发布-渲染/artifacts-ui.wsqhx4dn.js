@@ -17,7 +17,7 @@ import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { x, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, Io, Xu, cr, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { te, formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -38,45 +38,45 @@ import {
 } from "./chunk-01ymf0ar.js";
 import { Re } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { subscribeFrameLiveOnAttach } from "./chunk-kshc4v5t.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { oa } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { M0t, N0t, KW, u6e } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
+import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { JWe } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
-import { ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import { gPe, Dut, _Pe, Kon } from "./chunk-b6k1z7an.js";
 import { Wjn, Tce, SPe, $ee, Dv } from "../../01-核心基础设施/共享小工具-未细化/chunk-1rpyafm2.js";
-import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { re, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 F();
 F();
-var Mr = m(() =>
+var Mr = createLazyValue(() =>
     nt({
       frames: cr(Xu()).nullable(),
       starsEnabled: Io()
@@ -85,7 +85,7 @@ var Mr = m(() =>
     }),
   ),
   Qe = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/,
-  Ur = m(() =>
+  Ur = createLazyValue(() =>
     nt({
       slug: le(),
       title: le()
@@ -234,7 +234,7 @@ async function Bt(i, l) {
   return { err: null, frames: u, starsEnabled: h.data.starsEnabled === !0 };
 }
 var Nr = 65536,
-  Br = m(() =>
+  Br = createLazyValue(() =>
     nt({
       title: le()
         .optional()
@@ -318,8 +318,8 @@ function bt({
   onDeleted: S,
 }) {
   Rs("artifacts-dialog");
-  let { credentials: R } = _e(),
-    { rows: v, columns: w } = ks(Se()),
+  let { credentials: R } = useStorageV5Context(),
+    { rows: v, columns: w } = ks(useTerminalSize()),
     O = Va(),
     [P, B] = d([]),
     [se, Ve] = d(!1),
@@ -416,7 +416,7 @@ function bt({
             (b.ownerEmail ?? "").toLowerCase().includes(c),
         );
       }
-      let s = G(n, (c) => c.rel === "mine");
+      let s = countMatching(n, (c) => c.rel === "mine");
       return {
         list:
           X === "all"
@@ -426,7 +426,7 @@ function bt({
               : n.filter((c) => c.rel === X),
         mineCount: s,
         sharedCount: n.length - s,
-        pinnedCount: G(n, (c) => c.starred === !0),
+        pinnedCount: countMatching(n, (c) => c.starred === !0),
       };
     }, [$e, W, X]);
   E(() => {
@@ -447,7 +447,7 @@ function bt({
     E(() => {
       ((K.current = !1), (qe.current = !1));
     }));
-  let wr = V(() => G($e, (n) => n.starred === !0), [$e]),
+  let wr = V(() => countMatching($e, (n) => n.starred === !0), [$e]),
     Tt = se && (wr > 0 || X === "pinned"),
     T = N[ge],
     ze = T?.rel === "mine",
@@ -455,7 +455,7 @@ function bt({
     Dt = T !== void 0 && h.has(T.slug),
     br = re((n) => {
       let s = artifactViewerUrl(n);
-      Gr(s).then((c) => {
+      tryOpenUrlInBrowser(s).then((c) => {
         k(
           c
             ? `Opened ${s}`
@@ -596,7 +596,7 @@ function bt({
       if (J.current.mode !== "list") return;
       (k(null), (Fe.current = !0), vt(!0));
     }, []);
-  Ze(
+  useKeybindings(
     {
       "confirm:previous": () => {
         if ((k(null), (K.current = !0), ge === 0)) Ye();
@@ -634,8 +634,8 @@ function bt({
     }
     i("Artifacts panel closed", { display: "system" });
   }, [z, i, p]);
-  (Ze({ "confirm:no": Pt }, { context: "Settings", isActive: !ee }),
-    Ze(
+  (useKeybindings({ "confirm:no": Pt }, { context: "Settings", isActive: !ee }),
+    useKeybindings(
       { "settings:search": Ye },
       {
         context: "Settings",
@@ -810,70 +810,70 @@ function bt({
       onCancel: Pt,
       color: "background",
       isCancelActive: !1,
-      inputGuide: e(ci, {
+      inputGuide: e(InputGuide, {
         exitActive: M.mode !== "rename",
         onInterrupt: Ar,
         children:
           M.mode === "confirm-delete"
-            ? r(ue, {
+            ? r(DotSeparatedList, {
                 children: [
-                  e(D, { chord: "y", action: "delete" }),
-                  e(D, { chord: "n", action: "keep" }),
+                  e(KeybindingHint, { chord: "y", action: "delete" }),
+                  e(KeybindingHint, { chord: "n", action: "keep" }),
                 ],
               })
             : M.mode === "rename"
-              ? r(ue, {
+              ? r(DotSeparatedList, {
                   children: [
-                    e(D, { chord: "enter", action: "save" }),
-                    e(D, { chord: "escape", action: "cancel" }),
+                    e(KeybindingHint, { chord: "enter", action: "save" }),
+                    e(KeybindingHint, { chord: "escape", action: "cancel" }),
                   ],
                 })
               : ee
-                ? r(ue, {
+                ? r(DotSeparatedList, {
                     children: [
                       e(t, { children: "Type to filter" }),
-                      e(D, { chord: ["enter", "down"], action: "list" }),
-                      e(D, { chord: "escape", action: "clear" }),
+                      e(KeybindingHint, { chord: ["enter", "down"], action: "list" }),
+                      e(KeybindingHint, { chord: "escape", action: "clear" }),
                     ],
                   })
-                : r(ue, {
+                : r(DotSeparatedList, {
                     children: [
                       ie &&
                         N.length > 0 &&
-                        e(D, { chord: "enter", action: "attach" }),
-                      ie && Dt && e(D, { chord: "x", action: "dismiss" }),
+                        e(KeybindingHint, { chord: "enter", action: "attach" }),
+                      ie && Dt && e(KeybindingHint, { chord: "x", action: "dismiss" }),
                       ie &&
                         N.length > 0 &&
-                        e(D, { chord: "c", action: "copy url" }),
+                        e(KeybindingHint, { chord: "c", action: "copy url" }),
                       ie &&
                         ze &&
-                        e(D, {
+                        e(KeybindingHint, {
                           chord: "ctrl+r",
                           action: "rename",
                           format: { modCase: "title", charCase: "upper" },
                         }),
-                      ie && Et && e(D, { chord: "d", action: "delete" }),
+                      ie && Et && e(KeybindingHint, { chord: "d", action: "delete" }),
                       ie &&
                         se &&
                         T !== void 0 &&
-                        e(D, {
+                        e(KeybindingHint, {
                           chord: "p",
                           action: T.starred === !0 ? "unpin" : "pin",
                         }),
-                      ie && e(D, { chord: "/", action: "search" }),
-                      !me && e(D, { chord: "r", action: "refresh" }),
+                      ie && e(KeybindingHint, { chord: "/", action: "search" }),
+                      !me && e(KeybindingHint, { chord: "r", action: "refresh" }),
                     ],
                   }),
       }),
       children: me
-        ? e($n, { message: "Loading artifacts\u2026", dimColor: !0 })
+        ? e(SpinnerMessageLine, { message: "Loading artifacts\u2026", dimColor: !0 })
         : fe !== null
-          ? e(Rn, { children: fe })
+          ? e(EmptyStateMessage, { children: fe })
           : P.length === 0
             ? r(o, {
                 flexDirection: "column",
                 children: [
-                  e(Rn, {
+                  e(EmptyStateMessage, {
                     children:
                       "No artifacts yet. Publish one with the Artifact tool.",
                   }),

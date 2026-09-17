@@ -9,43 +9,43 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 134 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { ui, Gm, fa, $o } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function no() {
-  i("tengu_chrome_auto_enable_prompt_shown", {});
+  logEvent("tengu_chrome_auto_enable_prompt_shown", {});
 }
 function ChromeAutoEnableDialog(Co) {
   let n = _(29),
     { onDone: v, isDontAskMode: Q, isAutoMode: U } = Co,
     ko = Q === void 0 ? !1 : Q,
     vo = U === void 0 ? !1 : U,
-    { storageV5: x } = _e(),
+    { storageV5: x } = useStorageV5Context(),
     X;
-  if (n[0] === p) ((X = []), (n[0] = X));
+  if (n[0] === MEMO_CACHE_SENTINEL) ((X = []), (n[0] = X));
   else X = n[0];
   E(no, X);
   let Z = C(!1),
-    I = ui(mo),
+    I = ui(REFUSE_INPUT_WINDOW_MS),
     { refusedWithin: A, noteRefused: B, epoch: xo } = $o(),
     G;
   if (n[1] !== I || n[2] !== B || n[3] !== A)
     ((G = function a() {
-      if (I() || A(mo)) {
+      if (I() || A(REFUSE_INPUT_WINDOW_MS)) {
         return (B(), !0);
       }
       return !1;
@@ -57,7 +57,7 @@ function ChromeAutoEnableDialog(Co) {
   else G = n[4];
   let a = G,
     O = Gm(),
-    L = fa(xo, mo),
+    L = fa(xo, REFUSE_INPUT_WINDOW_MS),
     R;
   if (n[5] !== v || n[6] !== a || n[7] !== x)
     ((R = function s(m) {
@@ -93,11 +93,11 @@ function ChromeAutoEnableDialog(Co) {
   if (n[9] !== s) ((u = () => s(!1)), (n[9] = s), (n[10] = u));
   else u = n[10];
   let M;
-  if (n[11] === p)
-    ((M = r(ue, {
+  if (n[11] === MEMO_CACHE_SENTINEL)
+    ((M = r(DotSeparatedList, {
       children: [
-        e(D, { chord: "enter", action: "confirm" }),
-        e(je, {
+        e(KeybindingHint, { chord: "enter", action: "confirm" }),
+        e(ActionKeybindingHint, {
           action: "confirm:no",
           context: "Confirmation",
           fallback: "Esc",
@@ -108,7 +108,7 @@ function ChromeAutoEnableDialog(Co) {
       (n[11] = M));
   else M = n[11];
   let S;
-  if (n[12] === p)
+  if (n[12] === MEMO_CACHE_SENTINEL)
     ((S = e(t, {
       children:
         "Claude will use your Chrome browser by default \u2014 navigating sites, filling forms, and capturing screenshots in your existing session.",
@@ -121,7 +121,7 @@ function ChromeAutoEnableDialog(Co) {
       ? "This session is in Auto mode, so an AI classifier approves routine browser actions \u2014 you are only prompted when it is unsure."
       : "Browser actions still go through Claude's regular permission prompts before they run.";
   let oo;
-  if (n[13] === p)
+  if (n[13] === MEMO_CACHE_SENTINEL)
     ((oo = e(t, { bold: !0, color: "permission", children: "/chrome" })),
       (n[13] = oo));
   else oo = n[13];
@@ -165,7 +165,7 @@ function ChromeAutoEnableDialog(Co) {
     n[23] !== h
   )
     ((b = e(
-      En,
+      ConfirmPrompt,
       {
         refuseInput: a,
         openedAt: O,

@@ -13,7 +13,7 @@ import { Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { K3, X8e, PNe, iN, Y8e, Uyn } from "./键位绑定(Keybindings).sanfja6a.js";
-import { f9 } from "../../03-入口与运行时/会话UI(REPL)/chunk-zds66w6y.js";
+import { editFileInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
 import { writeFile } from "fs/promises";
 import { dirname } from "path";
 function m(s) {
@@ -66,7 +66,7 @@ async function _(s, n) {
       else throw i;
     }
   }
-  let o = await f9(e);
+  let o = await editFileInExternalEditor(e);
   if (o.error)
     return {
       type: "text",

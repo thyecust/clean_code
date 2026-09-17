@@ -12,10 +12,10 @@
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { trackClaudeInChromeTabId } from "./chunk-hnp84hf6.js";
 import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
-import "./chunk-317fgfn3.js";
+import "./chrome-tool-error-classifier.js";
 import "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import { uon } from "./chunk-v8138qz5.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-kdfkgcfn.js";
+import "../../01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js";
 function c(e, o, s) {
   let a = e.tabId;
   if (typeof a === "number") trackClaudeInChromeTabId(a);

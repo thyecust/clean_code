@@ -9,28 +9,28 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 228 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { o, t, Un, J0 } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { rT, Bce, jce, Can, van } from "./chunk-2g5h49pk.js";
 import "./chunk-brx72pf1.js";
-import { lu } from "../../01-核心基础设施/共享小工具-未细化/chunk-qck6h2yw.js";
-import { oO } from "./chunk-dv82rn71.js";
+import { BulletItem } from "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
+import { getAutoUpdatesChannel } from "./auto-updates-channel.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 import { homedir } from "os";
 import { join as L } from "path";
 function H(ce, pe) {
-  return e(lu, { children: e(t, { dimColor: !0, children: ce }) }, pe);
+  return e(BulletItem, { children: e(t, { dimColor: !0, children: ce }) }, pe);
 }
 function N() {
   let y = a.platform === "win32",
@@ -45,11 +45,11 @@ function k(ie) {
     return null;
   }
   let P;
-  if (b[0] === p)
+  if (b[0] === MEMO_CACHE_SENTINEL)
     ((P = e(o, {
       children: r(t, {
         color: "warning",
-        children: [e(et, { status: "warning", withSpace: !0 }), "Setup notes:"],
+        children: [e(StatusIndicator, { status: "warning", withSpace: !0 }), "Setup notes:"],
       }),
     })),
       (b[0] = P));
@@ -75,13 +75,13 @@ function k(ie) {
 }
 function j({ onDone: y, force: m, target: c, storageV5: v }) {
   let [s, h] = d({ type: "checking" }),
-    w = vt();
+    w = useClock();
   return (
     E(() => {
       async function C() {
         try {
           n(`Install: Starting installation process (force=${m}, target=${c})`);
-          let f = c || oO();
+          let f = c || getAutoUpdatesChannel();
           (h({ type: "installing", version: f }),
             n(
               `Install: Calling installLatest(channelOrVersion=${f}, forceReinstall=${m})`,
@@ -140,7 +140,7 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
           let I = await Can();
           if (I.length > 0)
             n(`Shell alias cleanup: ${I.map((g) => g.message).join("; ")}`);
-          i("tengu_claude_install_command", {
+          logEvent("tengu_claude_install_command", {
             has_version: u.latestVersion ? 1 : 0,
             forced: m ? 1 : 0,
           });
@@ -221,7 +221,7 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
             children: [
               r(o, {
                 children: [
-                  e(et, { status: "success", withSpace: !0 }),
+                  e(StatusIndicator, { status: "success", withSpace: !0 }),
                   e(t, {
                     color: "success",
                     bold: !0,
@@ -276,7 +276,7 @@ function j({ onDone: y, force: m, target: c, storageV5: v }) {
             children: [
               r(o, {
                 children: [
-                  e(et, { status: "error", withSpace: !0 }),
+                  e(StatusIndicator, { status: "error", withSpace: !0 }),
                   e(t, { color: "error", children: "Installation failed" }),
                 ],
               }),

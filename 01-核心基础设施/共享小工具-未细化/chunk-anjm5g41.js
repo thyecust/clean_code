@@ -7,16 +7,16 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Se } from "./chunk-mb654mj6.js";
+import { useTerminalSize } from "./use-terminal-size.js";
 import { b, z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Vye } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { cn } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { t, jr } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { xe } from "./chunk-cwpbthvg.js";
-import { UB } from "./chunk-7f3kwdxn.js";
+import { ToolResultRow } from "./tool-result-row.js";
+import { VirtualScrollViewportContext } from "./virtual-scroll-viewport-context.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Qg } from "./chunk-awxpn5er.js";
+import { formatHyperlink } from "./format-hyperlink.js";
 import { Qt, De, V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { cdn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 F();
@@ -62,7 +62,7 @@ var X = /https?:\/\/[^\s"'<>\\\x00-\x1f]+/g,
   k = 1e5;
 function SPt(r, i) {
   if (r.length > k) return r;
-  let s = (o) => o.replace(X, (m) => Qg(m, void 0, { themeName: i }));
+  let s = (o) => o.replace(X, (m) => formatHyperlink(m, void 0, { themeName: i }));
   if (!r.includes(Vye)) return s(r);
   return r
     .split(
@@ -75,10 +75,10 @@ function SPt(r, i) {
 function l_(mr) {
   let p = _(14),
     { content: N, verbose: ar, isError: cr, isWarning: fr } = mr,
-    { columns: x } = Se(),
+    { columns: x } = useTerminalSize(),
     [T] = cn(),
     pr = f(),
-    y = De(UB),
+    y = De(VirtualScrollViewportContext),
     ur = ar || pr,
     I;
   if (p[0] !== N || p[1] !== T)
@@ -107,7 +107,7 @@ function l_(mr) {
   else n = p[10];
   let j;
   if (p[11] !== S || p[12] !== n)
-    ((j = e(xe, { children: e(t, { color: S, children: n }) })),
+    ((j = e(ToolResultRow, { children: e(t, { color: S, children: n }) })),
       (p[11] = S),
       (p[12] = n),
       (p[13] = j));

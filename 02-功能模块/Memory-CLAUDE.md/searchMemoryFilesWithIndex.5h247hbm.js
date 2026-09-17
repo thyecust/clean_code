@@ -15,7 +15,7 @@ import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { xA, lz, Ycr } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { lstat as Bn, realpath as me } from "fs/promises";
 import { resolve, sep as _e } from "path";
 var re = (e) => e === "a" || e === "e" || e === "i" || e === "o" || e === "u",
@@ -536,7 +536,7 @@ var S = x.length,
     let o = e.nextDocId++;
     for (let [r, i] of un(t)) Ee(e, r, o, i);
     let s = Object.fromEntries(
-      x.map((r) => [r, G(t.fields[r], (i) => i !== "")]),
+      x.map((r) => [r, countMatching(t.fields[r], (i) => i !== "")]),
     );
     for (let r of x)
       if (((e.fieldLengthTotals[r] += s[r]), s[r] > 0)) e.fieldDocCounts[r]++;
@@ -653,7 +653,7 @@ var Re = {
             .flatMap((o) => rt(o[1] ?? ""))
             .filter((o) => o.length > 1 && o.every((s) => s.length > 1))
         : [];
-    return { terms: Y(Q(e)), phrases: n, boostPhrases: [] };
+    return { terms: dedupe(Q(e)), phrases: n, boostPhrases: [] };
   },
   ve = (e, t) => {
     let n = Math.log((e - t + 0.5) / (t + 0.5));
@@ -734,7 +734,7 @@ var Re = {
   },
   ct = (e, t) => {
     let n = e.flatMap((a) => rt(a)),
-      o = Y([...e.flatMap((a) => Q(a)), ...t.flatMap((a) => Q(a))]),
+      o = dedupe([...e.flatMap((a) => Q(a)), ...t.flatMap((a) => Q(a))]),
       s = n.filter((a) => a.length > 1),
       r = new Set(),
       i = s.filter((a) => {
@@ -1601,7 +1601,7 @@ var Mt = new Gt(() => new Dt()),
       g = (F, M = [], O = 0) => {
         let L = M[0]?.score ?? 0,
           U = m(),
-          ge = G(M, (Z) => Z.score < U);
+          ge = countMatching(M, (Z) => Z.score < U);
         return {
           docCount: u.index.docs.size,
           termCount: u.index.terms.size,

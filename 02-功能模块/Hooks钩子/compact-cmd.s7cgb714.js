@@ -34,8 +34,8 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hA } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { zpe } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
-import { Plt } from "../权限系统/chunk-3bdrfpdv.js";
-import { T4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-nkg0z9p5.js";
+import { buildCacheSafeParams } from "../权限系统/cache-safe-params.js";
+import { get1MContextSuggestion } from "../../01-核心基础设施/共享小工具-未细化/model-1m-context-suggestion.js";
 import { Mk } from "../../01-核心基础设施/共享小工具-未细化/chunk-rrrsz7e6.js";
 var H = async (s, e) => {
   let { abortController: n } = e,
@@ -86,7 +86,7 @@ async function E(s, e, n) {
         e,
         e.abortController.signal,
       ),
-      Plt({
+      buildCacheSafeParams({
         toolUseContext: e,
         forkContextMessages: s,
         mainThreadAgentDefinition: void 0,
@@ -244,7 +244,7 @@ async function _(s, e, n, o, m, r) {
   );
 }
 function w(s, e) {
-  let n = T4("tip"),
+  let n = get1MContextSuggestion("tip"),
     o = p_("app:toggleTranscript", "Global", "ctrl+o"),
     m = [
       ...(s.options.verbose ? [] : [`(${o} to see full summary)`]),

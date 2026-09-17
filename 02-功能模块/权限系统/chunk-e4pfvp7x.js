@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { X, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 var EXTERNAL_PERMISSION_MODES = [
@@ -245,8 +245,8 @@ var Tg = {
     teeDown: "\u252C",
     teeUp: "\u2534",
   };
-var Blr = m(() => ai(normalizePermissionModeAlias, X(PERMISSION_MODES))),
-  hkt = m(() => ai(normalizePermissionModeAlias, X(EXTERNAL_PERMISSION_MODES))),
+var Blr = createLazyValue(() => ai(normalizePermissionModeAlias, X(PERMISSION_MODES))),
+  hkt = createLazyValue(() => ai(normalizePermissionModeAlias, X(EXTERNAL_PERMISSION_MODES))),
   r = {
     plan: 0,
     bubble: 1,

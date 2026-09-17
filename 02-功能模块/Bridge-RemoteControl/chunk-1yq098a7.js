@@ -9,12 +9,12 @@
 // Version: 2.1.263
 import { Gt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
+import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { ju, ege, dq, RUe, nZe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -114,7 +114,7 @@ class s7e {
     if (this.nestedBlockedChainCount - this.mainLoopRefcount > 0) {
       if (!this.chainExcessLogged)
         ((this.chainExcessLogged = !0),
-          q("warn", "nested_chain_count_exceeds_refcount", {
+          writeDiagnosticsEvent("warn", "nested_chain_count_exceeds_refcount", {
             nested_blocked_chain_count: this.nestedBlockedChainCount,
             main_loop_refcount: this.mainLoopRefcount,
             session_state: this.currentState,
@@ -458,7 +458,7 @@ async function jpe(e, t) {
       };
     let c = s.inFlight,
       g = c !== void 0 && c.credential === o ? c.promise : A(s, r, o, t),
-      f = await kt(g, P);
+      f = await withDeadline(g, P);
     if (f === void 0)
       return (
         n(

@@ -11,7 +11,7 @@ import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { CA } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { aoe } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { We, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -36,7 +36,7 @@ var z = {
   "image/webp": "webp",
 };
 async function D(e, s, l, m, p) {
-  let i = M() && p !== void 0 ? await getBridgeAccessTokenAsync(p) : getBridgeAccessToken();
+  let i = isHoverRestEnabled() && p !== void 0 ? await getBridgeAccessTokenAsync(p) : getBridgeAccessToken();
   if (!i) return (a("skip: no oauth token"), { failure: "download" });
   let r;
   try {
@@ -86,7 +86,7 @@ async function D(e, s, l, m, p) {
     _ = Vzn(h, d),
     c = L(k, _),
     B = K();
-  if (M() && m !== void 0 && _n(B) && _n(_)) {
+  if (isHoverRestEnabled() && m !== void 0 && _n(B) && _n(_)) {
     let o = await m.write(Ce.userConfigDir("uploads", [B, _]), r, {
       mode: 384,
     });
@@ -126,7 +126,7 @@ async function H(e, s, l, m, p) {
     return { prefix: "", imageBlocks: [], inlinedImagePaths: [] };
   a(`resolving ${e.length} attachment(s)`);
   let i = e.filter((t) => typeof t.sha256 === "string");
-  if (!(M() && p !== void 0 ? await getBridgeAccessTokenAsync(p) : getBridgeAccessToken())) {
+  if (!(isHoverRestEnabled() && p !== void 0 ? await getBridgeAccessTokenAsync(p) : getBridgeAccessToken())) {
     if (
       (a("skip: no oauth token"),
       logFeatureSad("bridge_attachment_resolve", "no_token"),

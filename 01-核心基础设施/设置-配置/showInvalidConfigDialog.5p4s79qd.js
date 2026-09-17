@@ -13,12 +13,12 @@ import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { b, Jhe } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, J0 } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { wv } from "../共享小工具-未细化/chunk-ajpjkvdj.js";
+import { getBaseRenderOptions } from "../共享小工具-未细化/base-render-options.js";
 import { AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import { ve } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { p } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 function C(K) {
   let n = _(19),
     { filePath: R, errorDescription: h, onExit: i, onReset: u } = K,
@@ -56,11 +56,11 @@ function C(K) {
       (n[9] = c));
   else c = n[9];
   let x;
-  if (n[10] === p)
+  if (n[10] === MEMO_CACHE_SENTINEL)
     ((x = e(t, { bold: !0, children: "Choose an option:" })), (n[10] = x));
   else x = n[10];
   let y;
-  if (n[11] === p)
+  if (n[11] === MEMO_CACHE_SENTINEL)
     ((y = [
       { label: "Exit and fix manually", value: "exit" },
       { label: "Reset with default configuration", value: "reset" },
@@ -94,7 +94,7 @@ function C(K) {
 }
 var D = "dark";
 async function showInvalidConfigDialog({ error: a }) {
-  let f = { ...wv(!1), theme: D };
+  let f = { ...getBaseRenderOptions(!1), theme: D };
   await new Promise(async (s) => {
     let { unmount: l } = await J0(
       e(AppRoot, {

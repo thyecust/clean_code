@@ -14,7 +14,7 @@ import { mi } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Wf, x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
+import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { gHn, ts } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { isUnattendedBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { sv, Lw } from "../权限系统/chunk-e4pfvp7x.js";
@@ -25,67 +25,67 @@ import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { d_, U, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { oa } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { Ne, Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-r2ab1bp6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
+import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-3eztvm1y.js";
 import "../认证-OAuth登录/chunk-7jz937t3.js";
-import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
+import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import "../插件系统/chunk-rbjz1q03.js";
-import "../插件系统/chunk-4k4dssd9.js";
+import "../插件系统/channel-gate.js";
 import { Vi, jx, Bae, P8 } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { _p } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { qm, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { Ma, ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import { oye, MIt, sye, sit, sWe, iWe } from "../插件系统/chunk-jwm9gdkd.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import { i9e } from "../MCP客户端/chunk-rxp6fm7a.js";
 import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
-import { aye } from "../../01-核心基础设施/共享小工具-未细化/chunk-ttwbb0b4.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
+import { parkCommandUntilAttended } from "../../01-核心基础设施/共享小工具-未细化/command-park.js";
+import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import "../插件系统/chunk-akd9b588.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import "../MCP客户端/chunk-4xr0rjb4.js";
 import "../成本-Token统计/chunk-3nwwgatc.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-4bdjksjf.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
+import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { YZ } from "../MCP客户端/chunk-35zjqw7h.js";
-import { Ur } from "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import { $n } from "../../01-核心基础设施/共享小工具-未细化/chunk-dz9yaz9k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qck6h2yw.js";
+import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
+import "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import "../MCP客户端/chunk-49ds54j4.js";
+import "../MCP客户端/plugin-reload-cache-impact.js";
 import "../MCP客户端/chunk-d7zajrh1.js";
 import { Gle } from "../../01-核心基础设施/共享小工具-未细化/chunk-ey89qg3e.js";
-import { ut } from "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
-import { sI } from "../../01-核心基础设施/共享小工具-未细化/chunk-g2fqhcwj.js";
+import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
+import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
 import { I4, MIe, Cee, s2, j3e, CSe, W3e } from "../MCP客户端/chunk-k2gczbnj.js";
 import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 import { Nl, re, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
 F();
@@ -103,7 +103,7 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
   let oe = re(() => {
     if (m) (I.current?.abort(), (I.current = null), w(!1), j(null));
   }, [m]);
-  Ne("confirm:no", oe, { context: "Confirmation", isActive: m });
+  useKeybinding("confirm:no", oe, { context: "Confirmation", isActive: m });
   let c = re(async () => {
       if (isUnattendedBgSession()) {
         J(MIt);
@@ -115,7 +115,7 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
         (s.transport !== "http" && s.transport !== "sse")
       )
         return;
-      let S = sI(s.name, { type: s.transport, url: s.url });
+      let S = classifyMcpServerAuth(s.name, { type: s.transport, url: s.url });
       if (S.kind === "anthropic-hosted") {
         J(S.message);
         return;
@@ -177,7 +177,7 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
             children: [
               "Return here after authenticating in your browser.",
               " ",
-              e(je, {
+              e(ActionKeybindingHint, {
                 action: "confirm:no",
                 context: "Confirmation",
                 fallback: "Esc",
@@ -196,11 +196,11 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
       title: `${v} MCP Server`,
       subtitle: "agent-only",
       onCancel: i,
-      inputGuide: r(ue, {
+      inputGuide: r(DotSeparatedList, {
         children: [
-          e(D, { chord: ["up", "down"], action: "navigate" }),
-          e(D, { chord: "enter", action: "confirm" }),
-          e(je, {
+          e(KeybindingHint, { chord: ["up", "down"], action: "navigate" }),
+          e(KeybindingHint, { chord: "enter", action: "confirm" }),
+          e(ActionKeybindingHint, {
             action: "confirm:no",
             context: "Confirmation",
             fallback: "Esc",
@@ -249,7 +249,7 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
                   e(N, { children: "Status:" }),
                   r(t, {
                     children: [
-                      ut("inactive", u)(L.radioOff),
+                      getThemeColor("inactive", u)(L.radioOff),
                       " not connected (agent-only)",
                     ],
                   }),
@@ -261,7 +261,7 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
                     e(N, { children: "Auth:" }),
                     r(t, {
                       children: [
-                        ut("warning", u)(L.triangleUpOutline),
+                        getThemeColor("warning", u)(L.triangleUpOutline),
                         " may need authentication",
                       ],
                     }),
@@ -276,7 +276,7 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
             children: "This server connects only when running the agent.",
           }),
         }),
-        b && e(o, { children: e(Ur, { error: b }) }),
+        b && e(o, { children: e(ErrorMessage, { error: b }) }),
         e(o, {
           children: e(ve, {
             options: k,
@@ -333,7 +333,7 @@ function Ro(Gr) {
     { s: me } = Gr;
   if (me.duplicateOf.startsWith("plugin:")) {
     let se;
-    if (Pe[0] === p)
+    if (Pe[0] === MEMO_CACHE_SENTINEL)
       ((se = e(t, {
         dimColor: !0,
         children:
@@ -381,7 +381,7 @@ function Ro(Gr) {
     }
     case "dynamic": {
       let se;
-      if (Pe[9] === p)
+      if (Pe[9] === MEMO_CACHE_SENTINEL)
         ((se = e(t, {
           dimColor: !0,
           children:
@@ -394,7 +394,7 @@ function Ro(Gr) {
     case "enterprise":
     case "managed": {
       let se;
-      if (Pe[10] === p)
+      if (Pe[10] === MEMO_CACHE_SENTINEL)
         ((se = e(t, {
           dimColor: !0,
           children: "An admin-managed server takes precedence here",
@@ -405,7 +405,7 @@ function Ro(Gr) {
     }
     default: {
       let se;
-      if (Pe[11] === p)
+      if (Pe[11] === MEMO_CACHE_SENTINEL)
         ((se = e(t, {
           dimColor: !0,
           children:
@@ -463,7 +463,7 @@ function wt({
   onToggleUnusedConnectors: J,
 }) {
   let [X, j, I] = qm(0),
-    { rows: oe } = ks(Se()),
+    { rows: oe } = ks(useTerminalSize()),
     c = Ma(),
     v = V(() => {
       let a = new Set(s.filter((M) => M.scope === "agent").map((M) => M.name));
@@ -523,7 +523,7 @@ function wt({
       else if (a.type === "agent-server") m(a.agentServer);
       else if (a.type === "unused-connectors-fold") J();
     }, [Me, I, u, m, J]);
-  (Ze(
+  (useKeybindings(
     {
       "confirm:previous": () => j((a) => (a === 0 ? Me.length - 1 : a - 1)),
       "confirm:next": () => j((a) => (a === Me.length - 1 ? 0 : a + 1)),
@@ -623,7 +623,7 @@ function wt({
           node: e(Le, { label: "Agent MCPs" }),
         });
         let g = M;
-        for (let H of Y(v.flatMap((ae) => ae.sourceAgents))) {
+        for (let H of dedupe(v.flatMap((ae) => ae.sourceAgents))) {
           (a.push({ key: `spacer-agent-${H}`, node: e(t, { children: " " }) }),
             a.push({
               key: `subheading-agent-${H}`,
@@ -730,11 +730,11 @@ function wt({
         children: e(t, {
           dimColor: !0,
           italic: !0,
-          children: r(ue, {
+          children: r(DotSeparatedList, {
             children: [
-              e(D, { chord: ["up", "down"], action: "navigate" }),
-              e(D, { chord: "enter", action: "confirm" }),
-              e(je, {
+              e(KeybindingHint, { chord: ["up", "down"], action: "navigate" }),
+              e(KeybindingHint, { chord: "enter", action: "confirm" }),
+              e(ActionKeybindingHint, {
                 action: "confirm:no",
                 context: "Confirmation",
                 fallback: "Esc",
@@ -798,7 +798,7 @@ function To(Nr) {
     P;
   if (A.client.type === "disabled") {
     if (q[2] !== R)
-      ((O = ut("inactive", R)(L.radioOff)),
+      ((O = getThemeColor("inactive", R)(L.radioOff)),
         (P = "disabled"),
         (q[2] = R),
         (q[3] = O),
@@ -808,7 +808,7 @@ function To(Nr) {
     let Yo = !!A.client.capabilities?.tools;
     if (A.client.discoveryBearerRejected) {
       if (q[5] !== R)
-        ((O = ut("warning", R)(L.triangleUpOutline)),
+        ((O = getThemeColor("warning", R)(L.triangleUpOutline)),
           (P = "connected \xB7 session token rejected"),
           (q[5] = R),
           (q[6] = O),
@@ -816,7 +816,7 @@ function To(Nr) {
       else ((O = q[6]), (P = q[7]));
     } else if (A.client.toolsListError) {
       if (q[8] !== R)
-        ((O = ut("warning", R)(L.triangleUpOutline)),
+        ((O = getThemeColor("warning", R)(L.triangleUpOutline)),
           (P = "connected \xB7 tools fetch failed"),
           (q[8] = R),
           (q[9] = O),
@@ -824,7 +824,7 @@ function To(Nr) {
       else ((O = q[9]), (P = q[10]));
     } else if (Yo && be === 0) {
       if (q[11] !== R)
-        ((O = ut("warning", R)(L.triangleUpOutline)),
+        ((O = getThemeColor("warning", R)(L.triangleUpOutline)),
           (P = "connected \xB7 no tools"),
           (q[11] = R),
           (q[12] = O),
@@ -832,7 +832,7 @@ function To(Nr) {
       else ((O = q[12]), (P = q[13]));
     } else if (Yo && be !== void 0) {
       if (q[14] !== R || q[15] !== be)
-        ((O = ut("success", R)(L.tick)),
+        ((O = getThemeColor("success", R)(L.tick)),
           (P = `connected \xB7 ${be} ${x(be, "tool")}`),
           (q[14] = R),
           (q[15] = be),
@@ -840,7 +840,7 @@ function To(Nr) {
           (q[17] = P));
       else ((O = q[16]), (P = q[17]));
     } else if (q[18] !== R)
-      ((O = ut("success", R)(L.tick)),
+      ((O = getThemeColor("success", R)(L.tick)),
         (P = "connected"),
         (q[18] = R),
         (q[19] = O),
@@ -849,7 +849,7 @@ function To(Nr) {
   } else if (A.client.type === "cached") {
     if (q[21] !== A.client.cacheSavedAt || q[22] !== R || q[23] !== be) {
       let io = oye(A.client.cacheSavedAt, be);
-      ((O = ut(io.tone, R)(io.glyph)), (P = io.statusText));
+      ((O = getThemeColor(io.tone, R)(io.glyph)), (P = io.statusText));
       ((q[21] = A.client.cacheSavedAt),
         (q[22] = R),
         (q[23] = be),
@@ -859,7 +859,7 @@ function To(Nr) {
   } else if (A.client.type === "pending") {
     let Be;
     if (q[26] !== R)
-      ((Be = ut("inactive", R)(L.radioOff)), (q[26] = R), (q[27] = Be));
+      ((Be = getThemeColor("inactive", R)(L.radioOff)), (q[26] = R), (q[27] = Be));
     else Be = q[27];
     O = Be;
     let { reconnectAttempt: Qo, maxReconnectAttempts: Zo } = A.client;
@@ -867,7 +867,7 @@ function To(Nr) {
     else P = "connecting\u2026";
   } else if (A.client.type === "needs-auth") {
     if (q[28] !== R)
-      ((O = ut("warning", R)(L.triangleUpOutline)),
+      ((O = getThemeColor("warning", R)(L.triangleUpOutline)),
         (P = "needs authentication"),
         (q[28] = R),
         (q[29] = O),
@@ -875,14 +875,14 @@ function To(Nr) {
     else ((O = q[29]), (P = q[30]));
   } else if (A.client.errorCode === "UNCONFIGURED") {
     if (q[31] !== R)
-      ((O = ut("inactive", R)(L.radioOff)),
+      ((O = getThemeColor("inactive", R)(L.radioOff)),
         (P = "not configured"),
         (q[31] = R),
         (q[32] = O),
         (q[33] = P));
     else ((O = q[32]), (P = q[33]));
   } else if (q[34] !== A.client.errorCode || q[35] !== R)
-    ((O = ut("error", R)(L.cross)),
+    ((O = getThemeColor("error", R)(L.cross)),
       (P = A.client.errorCode === "INVALID_CONFIG" ? "config issue" : "failed"),
       (q[34] = A.client.errorCode),
       (q[35] = R),
@@ -972,8 +972,8 @@ function Ao(Yr) {
     on;
   if (ke[2] !== Ie.needsAuth || ke[3] !== bt)
     ((on = Ie.needsAuth
-      ? ut("warning", bt)(L.triangleUpOutline)
-      : ut("inactive", bt)(L.radioOff)),
+      ? getThemeColor("warning", bt)(L.triangleUpOutline)
+      : getThemeColor("inactive", bt)(L.radioOff)),
       (ke[2] = Ie.needsAuth),
       (ke[3] = bt),
       (ke[4] = on));
@@ -1054,11 +1054,11 @@ function He(fs) {
     Po = U(xn),
     Io = Q.clients,
     pn;
-  if (B[0] === p) ((pn = { type: "list" }), (B[0] = pn));
+  if (B[0] === MEMO_CACHE_SENTINEL) ((pn = { type: "list" }), (B[0] = pn));
   else pn = B[0];
   let [y, Ce] = d(pn),
     mn;
-  if (B[1] === p) ((mn = []), (B[1] = mn));
+  if (B[1] === MEMO_CACHE_SENTINEL) ((mn = []), (B[1] = mn));
   else mn = B[1];
   let [ye, gs] = d(mn),
     [ko, hs] = d(!1),
@@ -1194,14 +1194,14 @@ function He(fs) {
   switch ((E(yn, vn), y.type)) {
     case "list": {
       let Z, z;
-      if (B[25] === p)
+      if (B[25] === MEMO_CACHE_SENTINEL)
         ((Z = (Ms) => Ce({ type: "server-menu", server: Ms })),
           (z = (Rs) => Ce({ type: "agent-server-menu", agentServer: Rs })),
           (B[25] = Z),
           (B[26] = z));
       else ((Z = B[25]), (z = B[26]));
       let ne;
-      if (B[27] === p) ((ne = () => hs(wn)), (B[27] = ne));
+      if (B[27] === MEMO_CACHE_SENTINEL) ((ne = () => hs(wn)), (B[27] = ne));
       else ne = B[27];
       let Te;
       if (
@@ -1360,7 +1360,7 @@ function He(fs) {
     }
     case "agent-server-menu": {
       let Z;
-      if (B[72] === p)
+      if (B[72] === MEMO_CACHE_SENTINEL)
         ((Z = () => Ce({ type: "list", defaultTab: "Agents" })), (B[72] = Z));
       else Z = B[72];
       let z;
@@ -1395,8 +1395,8 @@ function Ft(oi) {
     [Uo] = cn(),
     kt = Yn(),
     $t = Bae(),
-    { storageV5: Dt } = _e(),
-    { host: Ot } = Ye(),
+    { storageV5: Dt } = useStorageV5Context(),
+    { host: Ot } = useSession(),
     Et = d_(),
     [ri, ze] = d(!0),
     [Bt, Je] = d(null),
@@ -1434,7 +1434,7 @@ function Ft(oi) {
             }
             case "needs-auth": {
               if ((Je(`${gr(W)} requires authentication`), ze(!1), isUnattendedBgSession())) {
-                let ai = await aye(
+                let ai = await parkCommandUntilAttended(
                   Ot,
                   Y2(
                     `authenticate ${gr(W)} \u2014 open this session and run /mcp`,
@@ -1467,7 +1467,7 @@ function Ft(oi) {
           let Lt = he;
           let Ut = Lt instanceof Error ? Lt.message : String(Lt);
           if ((Je(Ut), ze(!1), Lt instanceof mi)) le(ka(Ut));
-          else if (lo(Et))
+          else if (mayHaveRemoteClient(Et))
             (n(`mcp reconnect (typed) error for ${Qn(W)}: ${Ut}`, {
               level: "error",
             }),
@@ -1501,8 +1501,8 @@ function Ft(oi) {
         (ge[12] = he));
     else he = ge[12];
     let $e;
-    if (ge[13] === p)
-      (($e = e($n, { message: "Establishing connection to MCP server" })),
+    if (ge[13] === MEMO_CACHE_SENTINEL)
+      (($e = e(SpinnerMessageLine, { message: "Establishing connection to MCP server" })),
         (ge[13] = $e));
     else $e = ge[13];
     let De;
@@ -1521,7 +1521,7 @@ function Ft(oi) {
   if (Bt) {
     let he;
     if (ge[16] !== Uo)
-      ((he = ut("error", Uo)(L.cross)), (ge[16] = Uo), (ge[17] = he));
+      ((he = getThemeColor("error", Uo)(L.cross)), (ge[16] = Uo), (ge[17] = he));
     else he = ge[17];
     let $e;
     if (ge[18] !== he)
@@ -1633,7 +1633,7 @@ function Wo(Li) {
         Promise.all(Fo.map((ji) => Ke(ji.name)))
           .then(
             () => Oe(`MCP server "${gr(ee)}" ${Ae ? "enabled" : "disabled"}`),
-            (Fi) => Oe(YZ(Fi, ee, qe, { persistsOffBox: lo(zt) })),
+            (Fi) => Oe(YZ(Fi, ee, qe, { persistsOffBox: mayHaveRemoteClient(zt) })),
           )
           .catch(logError);
         return;
@@ -1643,7 +1643,7 @@ function Wo(Li) {
           for (const Un of zo) {
             if (Un.status === "rejected") logError(Un.reason);
           }
-          let _n = G(zo, Gn);
+          let _n = countMatching(zo, Gn);
           let jn = zo.length - _n;
           Oe(
             `${Ae ? "Enabled" : "Disabled"} ${_n} MCP server(s)` +
@@ -1673,7 +1673,7 @@ var Fn = "open this session to manage MCP servers",
   zn =
     'Can\'t open MCP settings while no terminal is attached to this background session. This session now shows "needs input" in agent view \u2014 open it and run /mcp to manage servers, or use `/mcp enable|disable|reconnect <server>` to steer without the panel.';
 async function Vo(s, i) {
-  let l = await aye(i.session.host, Fn, "MCP settings requested", i.storageV5);
+  let l = await parkCommandUntilAttended(i.session.host, Fn, "MCP settings requested", i.storageV5);
   s(l ? zn : Hn, { display: "system" });
 }
 function Qe(s) {

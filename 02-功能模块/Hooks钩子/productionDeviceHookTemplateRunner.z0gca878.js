@@ -14,7 +14,7 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _4e, O3, v9t, R9t, s_n, GMe, ng } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { jJ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
 import { $d } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
@@ -377,7 +377,7 @@ function productionDeviceHookTemplateRunner(o) {
         { id: a.id, event: a.event, failClosed: w },
         (g) => {
           if (
-            (i("tengu_device_hook_template_run", {
+            (logEvent("tengu_device_hook_template_run", {
               template: fromEnum(telemetryTemplateId(a.id)),
               outcome: fromEnum(g.outcome),
               duration_ms: g.durationMs,

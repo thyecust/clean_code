@@ -7,25 +7,25 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { mo } from "../共享小工具-未细化/chunk-vzqtx1mx.js";
-import { Ah } from "../共享小工具-未细化/chunk-hxt46tkz.js";
+import { REFUSE_INPUT_WINDOW_MS } from "../共享小工具-未细化/recent-window.js";
+import { useAnswerRefusalState } from "../共享小工具-未细化/use-answer-refusal-state.js";
 import { x, ln } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { jU, j5, DHn, LHn, NHn } from "./设置-配置.aqbb35ee.js";
 import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Vm } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { Ne } from "../共享小工具-未细化/chunk-eebsvd7r.js";
-import { ue } from "../共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useKeybinding } from "../共享小工具-未细化/keybinding-hooks.js";
+import { DotSeparatedList } from "../共享小工具-未细化/chunk-ff1hq6qq.js";
 import { ui, Gm, fa, $o } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { Se } from "../共享小工具-未细化/chunk-mb654mj6.js";
-import { D } from "../../02-功能模块/键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { En } from "../共享小工具-未细化/chunk-979tv7jj.js";
-import { gs } from "../../02-功能模块/权限系统/chunk-n5mgv42x.js";
-import { ci } from "../共享小工具-未细化/chunk-bg4saywz.js";
+import { useTerminalSize } from "../共享小工具-未细化/use-terminal-size.js";
+import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
+import { ConfirmPrompt } from "../共享小工具-未细化/confirm-prompt.js";
+import { PermissionDialogFrame } from "../../02-功能模块/权限系统/permission-dialog.js";
+import { InputGuide } from "../共享小工具-未细化/input-guide.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, V, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { G } from "../共享小工具-未细化/chunk-d16fhdtx.js";
-import { p } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Qt(An) {
   return An + 1;
@@ -107,7 +107,7 @@ function ut(n, a, l) {
   return { head: n.slice(0, h), tail: n.slice(m), elided: m - h };
 }
 function ht(n) {
-  let a = G(Object.values(n.shellSettings), (g) => g !== void 0),
+  let a = countMatching(Object.values(n.shellSettings), (g) => g !== void 0),
     l = Object.keys(n.envVars).length,
     s = [];
   if (a > 0) s.push(`${x(a, "command setting")} \xD7${a}`);
@@ -133,7 +133,7 @@ var mt = {
       "Only accept if you recognize this as your organization's telemetry collector.",
     risk: "this redirects where telemetry from this machine is sent.",
   },
-  L = mo;
+  L = REFUSE_INPUT_WINDOW_MS;
 function cWe(ce) {
   let bn = _(2),
     Ot;
@@ -153,7 +153,7 @@ function Oe(wn) {
       wouldTakeAnswer: Xe,
     } = wn,
     y = vn === "login_handoff",
-    { columns: de, rows: Be } = Se(),
+    { columns: de, rows: Be } = useTerminalSize(),
     B,
     I,
     A,
@@ -274,13 +274,13 @@ function Oe(wn) {
       (i[23] = Ye),
       (i[24] = he));
   else he = i[24];
-  let z = Ah(he),
+  let z = useAnswerRefusalState(he),
     nt = ui(L),
     { refusedWithin: ot, noteRefused: rt, epoch: Rn } = $o(),
     it = Gm(),
     [Tn, In] = d(0),
     me;
-  if (i[25] === p)
+  if (i[25] === MEMO_CACHE_SENTINEL)
     ((me = () => {
       In(Qt);
     }),
@@ -339,9 +339,9 @@ function Oe(wn) {
   if (i[39] !== C) ((Gt = () => C("cancel")), (i[39] = C), (i[40] = Gt));
   else Gt = i[40];
   let Jt;
-  if (i[41] === p) ((Jt = { context: "Confirmation" }), (i[41] = Jt));
+  if (i[41] === MEMO_CACHE_SENTINEL) ((Jt = { context: "Confirmation" }), (i[41] = Jt));
   else Jt = i[41];
-  Ne("confirm:no", Gt, Jt);
+  useKeybinding("confirm:no", Gt, Jt);
   let ye;
   if (i[42] !== v.intro)
     ((ye = e(t, { children: v.intro })), (i[42] = v.intro), (i[43] = ye));
@@ -458,7 +458,7 @@ function Oe(wn) {
     i[81] !== Ie
   )
     ((Ee = e(
-      En,
+      ConfirmPrompt,
       {
         openedAt: it,
         windowMs: at,
@@ -486,15 +486,15 @@ function Oe(wn) {
   const dt = y ? "select" : "confirm";
   let Me;
   if (i[83] !== dt)
-    ((Me = e(D, { chord: "enter", action: dt })), (i[83] = dt), (i[84] = Me));
+    ((Me = e(KeybindingHint, { chord: "enter", action: dt })), (i[83] = dt), (i[84] = Me));
   else Me = i[84];
   let Wt;
-  if (i[85] === p)
-    ((Wt = e(D, { chord: "escape", action: "exit" })), (i[85] = Wt));
+  if (i[85] === MEMO_CACHE_SENTINEL)
+    ((Wt = e(KeybindingHint, { chord: "escape", action: "exit" })), (i[85] = Wt));
   else Wt = i[85];
   let Ae;
   if (i[86] !== Me)
-    ((Ae = e(ci, { children: r(ue, { children: [Me, Wt] }) })),
+    ((Ae = e(InputGuide, { children: r(DotSeparatedList, { children: [Me, Wt] }) })),
       (i[86] = Me),
       (i[87] = Ae));
   else Ae = i[87];
@@ -507,7 +507,7 @@ function Oe(wn) {
     i[92] !== Ee ||
     i[93] !== Ae
   )
-    ((Yt = e(gs, {
+    ((Yt = e(PermissionDialogFrame, {
       color: "warning",
       titleColor: "warning",
       title: "Managed settings require approval",

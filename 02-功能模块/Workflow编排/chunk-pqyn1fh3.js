@@ -11,17 +11,17 @@ import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { r8, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { H$, wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
+import { getOrCompute, getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import { Nr } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
-import { Vf, J6n } from "./chunk-cd542wve.js";
+import { parseWorkflowScript, isValidWorkflowScript } from "./workflow-script.js";
 import { vm, $t, MEt } from "../插件系统/chunk-7s6mt1vg.js";
 import { ax } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { gV, ei } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Uh } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { xqe } from "../../01-核心基础设施/共享小工具-未细化/chunk-g00x7t7w.js";
-import { jy } from "../../01-核心基础设施/共享小工具-未细化/chunk-vp8yvx5r.js";
+import { getBundledWorkflows } from "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
+import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
 import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 var X6n = "CLAUDE_REMOTE_WORKFLOW_SCRIPT",
   Ein = "CLAUDE_REMOTE_WORKFLOW_ARGS",
@@ -61,7 +61,7 @@ async function v(o, s, t, i, d) {
         ),
         null
       );
-    let r = Vf(e, { validateBody: !1 });
+    let r = parseWorkflowScript(e, { validateBody: !1 });
     if ("error" in r)
       return (
         n(`Plugin workflow ${o} has invalid meta: ${r.error} \u2014 skipping`, {
@@ -152,7 +152,7 @@ function P(o) {
 }
 import { join as h } from "path";
 function W(o, s) {
-  if (!s || J6n(o.script)) return !0;
+  if (!s || isValidWorkflowScript(o.script)) return !0;
   return (
     n(
       `Workflow ${o.filePath ?? o.name} (${o.source}) would override ${o.name} but does not parse \u2014 keeping the ${s.source} copy`,
@@ -221,7 +221,7 @@ async function D(o, s, t, i) {
             null
           );
         let m = u.toString("utf-8"),
-          p = Vf(m, { validateBody: !1 });
+          p = parseWorkflowScript(m, { validateBody: !1 });
         if ("error" in p)
           return (
             n(`Workflow ${l} has invalid meta: ${p.error} \u2014 skipping`, {
@@ -306,7 +306,7 @@ async function M(o, s, t) {
             null
           );
         let p = Buffer.from(u.value).toString("utf-8"),
-          w = Vf(p, { validateBody: !1 });
+          w = parseWorkflowScript(p, { validateBody: !1 });
         if ("error" in w)
           return (
             n(`Workflow ${m} has invalid meta: ${w.error} \u2014 skipping`, {
@@ -384,13 +384,13 @@ async function b(o, s) {
   return [...r.values()].sort((m, p) => m.name.localeCompare(p.name));
 }
 function rte(o, s) {
-  return H$(wo().allWorkflows, `${jy()}:${_be()}:${o}`, () => j(o, s));
+  return getOrCompute(getHostStateStore().allWorkflows, `${areBundledSkillsDisabled()}:${_be()}:${o}`, () => j(o, s));
 }
 async function j(o, s) {
-  if (isCustomizationDisabled("workflows") || _be()) return [...xqe()];
+  if (isCustomizationDisabled("workflows") || _be()) return [...getBundledWorkflows()];
   let [t, i] = await Promise.all([b(o, s), P(s)]),
     d = S(i),
-    c = xqe(),
+    c = getBundledWorkflows(),
     e = new Map(c.map((k) => [k.name, k])),
     r = O(d, e);
   for (let k of r) e.set(k.name, k);
@@ -407,6 +407,6 @@ async function kqe(o, s, t) {
   return (await rte(s, t)).find((d) => d.name === o);
 }
 function v1t() {
-  (wo().allWorkflows.clear(), MEt());
+  (getHostStateStore().allWorkflows.clear(), MEt());
 }
 export { X6n, Ein, Y6n, _be, jPe, rte, kqe, v1t };

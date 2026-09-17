@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 12 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { x0 } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Nx } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { setBgExitCause } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
@@ -27,8 +27,8 @@ import {
   TC,
   Abt,
 } from "../后台任务-Shell管理/chunk-djserjj5.js";
-import { llt } from "../../01-核心基础设施/共享小工具-未细化/chunk-p1a5wztj.js";
-import { Tfe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cyyrj58q.js";
+import { copyEnvWithoutUndefined } from "../../01-核心基础设施/共享小工具-未细化/copy-env-without-undefined.js";
+import { getXdgDataHome } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import {
   appendFileSync,
@@ -53,7 +53,7 @@ import {
 } from "fs/promises";
 import { join as v, sep as te } from "path";
 async function ne() {
-  let r = v(Tfe(), "claude");
+  let r = v(getXdgDataHome(), "claude");
   if (!process.execPath.startsWith(v(r, "versions") + te)) return null;
   let n = v(r, "ClaudeCode.app", "Contents", "MacOS"),
     t = v(n, "claude");
@@ -84,7 +84,7 @@ async function z() {
   }
   let r = (await ne()) ?? process.execPath,
     t = [...(bc() ? [r] : [r, process.argv[1]]), ...process.argv.slice(2)],
-    o = llt(process.env);
+    o = copyEnvWithoutUndefined(process.env);
   o.CLAUDE_BG_TCC_DISCLAIMED = "1";
   try {
     process.execve(r, t, o, { macDisclaimResponsibility: !0 });
@@ -371,7 +371,7 @@ async function runPtyHost(r) {
   T = await d.exited;
   let W = 0;
   for (let e = 0; e < 20; e++)
-    if (((R = !1), await Z(5), R)) W = 0;
+    if (((R = !1), await sleep(5), R)) W = 0;
     else if (++W >= 2) break;
   let U = d.signalCode ?? void 0;
   if (((y = !0), c))
@@ -398,7 +398,7 @@ async function runPtyHost(r) {
   if (
     (await Promise.race([
       new Promise((e) => C.close(() => e())),
-      Z(2000, void 0, { unref: !0 }),
+      sleep(2000, void 0, { unref: !0 }),
     ]),
     P() !== "windows")
   )
@@ -407,7 +407,7 @@ async function runPtyHost(r) {
 }
 async function pe(r, n, t = 5000) {
   let o = new Promise((f) => r.once("connection", () => f())),
-    l = (n ? n().catch(() => {}) : Promise.resolve()).then(() => Z(t));
+    l = (n ? n().catch(() => {}) : Promise.resolve()).then(() => sleep(t));
   await Promise.race([o, l]);
 }
 function me(r, n, t) {

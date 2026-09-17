@@ -12,32 +12,32 @@
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { Hn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import { an } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { Ch } from "../语法高亮-Markdown渲染/chunk-mnn6q099.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import { ps, _i, Rm, aA, Us, OD, km, Jk, Oo } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Fs, Hg, qw, Ig, XW, Wst } from "../权限系统/chunk-0hcqee2w.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
-import { Vf } from "./chunk-cd542wve.js";
-import { Yx } from "../../03-入口与运行时/会话UI(REPL)/chunk-zds66w6y.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7m5aewa3.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-hxt46tkz.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
+import { parseWorkflowScript } from "./workflow-script.js";
+import { editTextInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nvfdjg8e.js";
-import { gs } from "../权限系统/chunk-n5mgv42x.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
+import { PermissionDialogFrame } from "../权限系统/permission-dialog.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js";
 import { Nl, V, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
 var Ve = 100,
@@ -389,7 +389,7 @@ function WorkflowPermissionDialog(it) {
       break bb0;
     }
     let ie;
-    if (g[6] !== x) ((ie = Vf(x)), (g[6] = x), (g[7] = ie));
+    if (g[6] !== x) ((ie = parseWorkflowScript(x)), (g[6] = x), (g[7] = ie));
     else ie = g[7];
     let cn = ie;
     $e = "error" in cn ? null : cn;
@@ -450,7 +450,7 @@ function WorkflowPermissionDialog(it) {
         if ((Ye.preventDefault(), !Q())) {
           return;
         }
-        let ze = Yx(x);
+        let ze = editTextInExternalEditor(x);
         if (ze.content !== null && ze.content !== x) (rt(ze.content), yn(!1));
       }
     }),
@@ -548,7 +548,7 @@ function WorkflowPermissionDialog(it) {
       let ue = [];
       if (!S) {
         let C;
-        if (g[64] === p)
+        if (g[64] === MEMO_CACHE_SENTINEL)
           ((C = {
             label: "Yes, run it",
             value: "yes",
@@ -597,7 +597,7 @@ function WorkflowPermissionDialog(it) {
         (g[73] = q));
     else q = g[73];
     je = q;
-    be = gs;
+    be = PermissionDialogFrame;
     Me = "permission";
     Ne = "Run a dynamic workflow?";
     _e = m.requestSource;
@@ -767,7 +767,7 @@ function WorkflowPermissionDialog(it) {
       (g[94] = q));
   else q = g[94];
   let Cn;
-  if (g[95] === p)
+  if (g[95] === MEMO_CACHE_SENTINEL)
     ((Cn = e(o, {
       marginBottom: 1,
       children: e(t, { color: "warning", children: en }),
@@ -790,10 +790,10 @@ function WorkflowPermissionDialog(it) {
       (g[100] = qe));
   else qe = g[100];
   let Dn;
-  if (g[101] === p)
+  if (g[101] === MEMO_CACHE_SENTINEL)
     ((Dn = e(t, {
       dimColor: !0,
-      children: e(D, { chord: "ctrl+g", action: "edit script in $EDITOR" }),
+      children: e(KeybindingHint, { chord: "ctrl+g", action: "edit script in $EDITOR" }),
     })),
       (g[101] = Dn));
   else Dn = g[101];

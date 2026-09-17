@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { j, B, RMn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z } from "../共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../共享小工具-未细化/async-timeout-utils.js";
 import { Et, b, z, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { q } from "../共享小工具-未细化/chunk-7beprh8k.js";
-import { dy } from "../共享小工具-未细化/chunk-862jyk0r.js";
+import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
+import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../共享小工具-未细化/open-flags.js";
 import { On } from "../安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { s, T, v, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -86,7 +86,7 @@ function G(e) {
     (e.heartbeatTimer = setInterval(
       (t) => {
         if (
-          (q("debug", "session_keepalive_heartbeat", { refcount: t.refcount }),
+          (writeDiagnosticsEvent("debug", "session_keepalive_heartbeat", { refcount: t.refcount }),
           a.CLAUDE_CODE_REMOTE_SEND_KEEPALIVES)
         )
           t.activityCallback?.();
@@ -99,7 +99,7 @@ function de(e) {
   if ((I(e), e.activityCallback === null)) return;
   e.idleTimer = setTimeout(
     (t) => {
-      (q("info", "session_idle_30s"), (t.idleTimer = null));
+      (writeDiagnosticsEvent("info", "session_idle_30s"), (t.idleTimer = null));
     },
     H,
     e,
@@ -159,7 +159,7 @@ function H$e(e, t) {
   if (i.cleanupHandle === null) {
     let o = r.activityKey();
     i.cleanupHandle = Et(async () => {
-      q("info", "session_activity_at_shutdown", {
+      writeDiagnosticsEvent("info", "session_activity_at_shutdown", {
         owner_key: o,
         refcount: i.refcount,
         active: Object.fromEntries(i.activeReasons),
@@ -179,7 +179,7 @@ function I$e(e, t) {
   if (t === void 0)
     if (i.mainLoopRefcount > 0)
       (i.mainLoopRefcount--, r.mainLoopActivityListener?.(i.mainLoopRefcount));
-    else q("warn", "session_activity_main_loop_underflow", { reason: e });
+    else writeDiagnosticsEvent("warn", "session_activity_main_loop_underflow", { reason: e });
   let o = (i.activeReasons.get(e) ?? 0) - 1;
   if (o > 0) i.activeReasons.set(e, o);
   else i.activeReasons.delete(e);
@@ -207,7 +207,7 @@ var ye = { "managed-settings": 86400, "policy-limits": 86400 },
   he = 86400000,
   _e = /^[A-Za-z0-9_-]+$/,
   be = /^[A-Za-z0-9+/]+={0,2}$/,
-  Ae = m(() =>
+  Ae = createLazyValue(() =>
     c({
       alg: k("ES256"),
       typ: k("cc-signed-cache+jws"),
@@ -215,7 +215,7 @@ var ye = { "managed-settings": 86400, "policy-limits": 86400 },
       x5c: v(s().regex(be)).min(1).max(ve),
     }),
   ),
-  Ee = m(() =>
+  Ee = createLazyValue(() =>
     c({
       v: k(1),
       typ: s(),
@@ -374,8 +374,8 @@ var Q = "x-claude-code-signature",
     retries: { retries: 6, factor: 2, minTimeout: 20, maxTimeout: 320 },
     stale: 1e4,
   },
-  Ne = m(() => c({ jws: s().min(1), receivedAt: T() })),
-  Oe = m(() =>
+  Ne = createLazyValue(() => c({ jws: s().min(1), receivedAt: T() })),
+  Oe = createLazyValue(() =>
     c({
       typ: s(),
       aud: s().optional(),
@@ -426,7 +426,7 @@ async function ee(e, t, r) {
   let i = Oe(),
     o = await w(e, i);
   for (let d = 0; o.kind === "unparsable" && d < ke; d++)
-    (await Z(Le), (o = await w(e, i)));
+    (await sleep(Le), (o = await w(e, i)));
   if (o.kind === "unparsable" && !r) {
     let d = await te(e);
     try {
@@ -480,8 +480,8 @@ async function Me(e, t) {
 }
 async function Pe(e, t) {
   try {
-    if (dy === 0 && (await Be(e))) return;
-    let r = await Re(e, constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | dy, 384);
+    if (O_NOFOLLOW_NONBLOCK_FLAGS === 0 && (await Be(e))) return;
+    let r = await Re(e, constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | O_NOFOLLOW_NONBLOCK_FLAGS, 384);
     try {
       await r.writeFile(b(t), { encoding: "utf-8" });
     } finally {

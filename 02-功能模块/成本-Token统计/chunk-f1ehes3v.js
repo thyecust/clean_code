@@ -14,7 +14,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Km, Xmt, kO } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
+import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 async function d(t, r) {
   return withFeatureTelemetry("api_admin_request_create", async () => {
     let e = await ht.post(
@@ -183,7 +183,7 @@ async function aSe(t, r) {
   if (!t.openInBrowser || isBgSession())
     return { type: "browser-opened", url: a, opened: !1 };
   try {
-    let s = await Gr(a);
+    let s = await tryOpenUrlInBrowser(a);
     return { type: "browser-opened", url: a, opened: s };
   } catch (s) {
     return (

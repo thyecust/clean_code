@@ -29,10 +29,10 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { clearResolveGitDirCache, clearIsGitMemoFor } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { bIn } from "../Git-Worktree/chunk-bk9696gx.js";
-import { Ei } from "../Hooks钩子/chunk-9em0d4k5.js";
+import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { YSn } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { globalFileIndexCache, resetFileIndexCache } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
-import { LPe } from "../../01-核心基础设施/共享小工具-未细化/chunk-16992wzt.js";
+import { GoalProposalState } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-state.js";
 import { lWn } from "../权限系统/chunk-n4x6jsp3.js";
 function brn(t, r = new Set(), i, o, l, m = !1) {
   let a = r.size > 0;
@@ -74,7 +74,7 @@ function brn(t, r = new Set(), i, o, l, m = !1) {
     lWn();
   if ((bIn(), !a)) kVn();
   if ((eMn(r), clearResolveGitDirCache(), U8n(), Q_t().catch(() => {}), C4n(t), o))
-    (o.get(LPe).clear(),
+    (o.get(GoalProposalState).clear(),
       import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then(({ WebFetchCache: e }) =>
         o.get(e).clear(),
       ),
@@ -86,7 +86,7 @@ function brn(t, r = new Set(), i, o, l, m = !1) {
   );
 }
 function pLt() {
-  let t = Ei();
+  let t = getSessionFeatureCache();
   ((t.bashPromptSkillCommands = void 0),
     (t.workflowAuthoringSkillAvailable = void 0),
     T5());

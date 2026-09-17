@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 83 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { updateSettingsForSource, hasSkipWorkflowUsageWarning } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -40,7 +40,7 @@ async function recordWorkflowUsageConsent(e, o) {
     });
     return;
   }
-  i("tengu_workflow_usage_warning_accepted", {});
+  logEvent("tengu_workflow_usage_warning_accepted", {});
 }
 export {
   recordWorkflowUsageConsent,

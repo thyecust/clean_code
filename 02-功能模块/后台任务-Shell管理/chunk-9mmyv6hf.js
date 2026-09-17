@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { Ie, Le, Fb } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureBad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, A, Jr, Gw, lNn, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -34,7 +34,7 @@ import {
   dke,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { eb, bfe, Il, Pc, YE } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
-import { rd } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { Bs, eur } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { Wi, Ms, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jke, xhe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -89,10 +89,10 @@ import {
   Abt,
 } from "./chunk-djserjj5.js";
 import { Aye, JHe, DZt, NWe, W8, sle, xit } from "./chunk-gnmy62vg.js";
-import { Sot, bot } from "../../01-核心基础设施/共享小工具-未细化/chunk-6y25h56s.js";
+import { receiveSpareClaim, bootClaimedSpare } from "../../01-核心基础设施/共享小工具-未细化/spare-session-claim.js";
 import { vye } from "../../03-入口与运行时/Headless-SDK模式/chunk-9r4nh249.js";
-import { Pit } from "../../01-核心基础设施/共享小工具-未细化/chunk-k76a6y9v.js";
-import { fI, eue } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
+import { readStreamLines } from "../../01-核心基础设施/共享小工具-未细化/read-stream-lines.js";
+import { fromJobState, ensureJobTmpDir } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { sN, Mh } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { Mhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-h1jrnver.js";
@@ -281,7 +281,7 @@ function ae(e, t, r) {
       let Y = [...V.matchAll(/\bE[A-Z]{2,14}\b/g)].find(
         (_e) => !"/\\".includes(V[_e.index - 1] ?? "."),
       )?.[0];
-      i("tengu_bg_ptyhost_crash", {
+      logEvent("tengu_bg_ptyhost_crash", {
         hadBreadcrumb: V.length > 0,
         hadHello: G,
         via: fromEnum(E),
@@ -439,7 +439,7 @@ ${Y}`,
         `[bg-pty] ${e}: ENOENT on adopt \u2014 sock file externally deleted; respawning`,
         { level: "warn" },
       ),
-        i("tengu_bg_adopt_sock_unlinked", {}),
+        logEvent("tengu_bg_adopt_sock_unlinked", {}),
         (D = Ne));
     if (D >= Ne) {
       n(`[bg-pty] ${e}: ${D} connect attempts failed; treating host as dead`, {
@@ -629,7 +629,7 @@ function He(e, t, r, s, p) {
 `,
           ),
           s?.(),
-          Pit(_, (y) => {
+          readStreamLines(_, (y) => {
             let D;
             try {
               D = z(y);
@@ -649,7 +649,7 @@ function He(e, t, r, s, p) {
           `[bg-rv] ${e}: ${c} connect attempts failed \u2014 giving up (pid-poll is liveness backstop)`,
           { level: "warn" },
         ),
-        i("tengu_bg_rv_connect_exhausted", { attempts: c }));
+        logEvent("tengu_bg_rv_connect_exhausted", { attempts: c }));
       return;
     }
     let _ = Ve[Math.min(c, Ve.length - 1)];
@@ -717,7 +717,7 @@ var ke = 5000,
   je = 4096;
 function JYt() {
   return (e, t, r) => {
-    let { cmd: s, prefixArgs: p } = rd({ pinToCurrentBinary: !0 }),
+    let { cmd: s, prefixArgs: p } = resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 }),
       d = [
         s,
         ...p,
@@ -783,7 +783,7 @@ function Xe(e, t, r, s, p) {
   let o = {
       ...d,
       ...(r && { CLAUDE_BG_AUTH_SNAPSHOT_PATH: r }),
-      ...(M() && H("tengu_hover_rest", !1) && { CLAUDE_CODE_HOVER_REST: "1" }),
+      ...(isHoverRestEnabled() && H("tengu_hover_rest", !1) && { CLAUDE_CODE_HOVER_REST: "1" }),
       ...(P() === "windows" && { CLAUDE_CODE_ALT_SCREEN_FULL_REPAINT: "1" }),
       ...e.env,
       CLAUDE_CODE_SESSION_KIND: "bg",
@@ -1114,7 +1114,7 @@ class qW {
           `[bg] illegal worker-phase transition ${Qe(this.phase)} \u2192 ${Qe(e)} for ${this.record.short}`,
           { level: "warn" },
         ),
-        i("tengu_bg_phase_illegal", {}),
+        logEvent("tengu_bg_phase_illegal", {}),
         !1
       );
     return ((this.phase = e), !0);
@@ -1141,7 +1141,7 @@ class qW {
   noteDowngradeRefused(e) {
     if (this.downgradeRefusalLogged || !this.record.cliVersion) return;
     ((this.downgradeRefusalLogged = !0),
-      i("tengu_bg_respawn_downgrade_refused", {
+      logEvent("tengu_bg_respawn_downgrade_refused", {
         short: bgShort(this.dispatch.short),
         trigger: fromEnum(e),
         worker_cli_version: Ms(this.record.cliVersion),
@@ -1230,7 +1230,7 @@ class qW {
       return { respawned: !1, reason: "in-progress" };
     return (
       this.onState.emit({ pid: this.record.pid }),
-      i("tengu_bg_respawn_stale", {
+      logEvent("tengu_bg_respawn_stale", {
         short: bgShort(this.dispatch.short),
         rvSent: this.shutdownWorker(),
         trigger: fromEnum(t),
@@ -1289,7 +1289,7 @@ class qW {
           return { retired: !1, reason: "in-progress" };
         let T = Date.now() - this.dispatch.createdAt;
         return (
-          i("tengu_bg_retired", {
+          logEvent("tengu_bg_retired", {
             short: bgShort(this.dispatch.short),
             rvSent: this.shutdownWorker(),
             settledForMs: T,
@@ -1320,7 +1320,7 @@ class qW {
         return { retired: !1, reason: "in-progress" };
       return (
         (this.deleteJobDirOnSettle = !0),
-        i("tengu_bg_retired", {
+        logEvent("tengu_bg_retired", {
           short: bgShort(this.dispatch.short),
           rvSent: this.shutdownWorker(),
           settledForMs: N,
@@ -1428,13 +1428,13 @@ class qW {
     let D = s.inFlight?.tasks !== void 0 && s.inFlight.queued !== void 0,
       B = !d || !D ? "abandoned-stale" : isSettled(s) ? "settled" : "idle-prompt";
     return (
-      i("tengu_bg_retired", {
+      logEvent("tengu_bg_retired", {
         short: bgShort(this.dispatch.short),
         rvSent: this.shutdownWorker(),
         settledForMs: y,
         bridged: !!s.bridgeSessionId,
         detritusOnly: k,
-        state: fI(s.state),
+        state: fromJobState(s.state),
         cause: fromEnum(B),
         worker_cli_version: Ms(this.record.cliVersion),
       }),
@@ -1448,7 +1448,7 @@ class qW {
   }
   onPtyAuthRequired() {
     let e = this.dispatch.launch.mode;
-    if ((i("tengu_bg_pty_auth_mismatch", { mode: fromEnum(e) }), e === "exec")) {
+    if ((logEvent("tengu_bg_pty_auth_mismatch", { mode: fromEnum(e) }), e === "exec")) {
       n(
         `[bg] exec worker ${this.dispatch.short}: ptyHost rejected auth token \u2014 roster ptyAuth poisoned; input is dead until re-dispatch (exec workers are never auto-respawned)`,
         { level: "warn" },
@@ -1477,7 +1477,7 @@ class qW {
         let r = Ze(t, e);
         if (r === "settled") {
           ((this.authRekeyFired = !1),
-            i("tengu_bg_adopt_token_lost_respawn", {
+            logEvent("tengu_bg_adopt_token_lost_respawn", {
               source: fromEnum(e),
               deferred: !1,
               skipped: S("settled"),
@@ -1489,7 +1489,7 @@ class qW {
           return;
         }
         if (r !== null) {
-          (i("tengu_bg_adopt_token_lost_respawn", {
+          (logEvent("tengu_bg_adopt_token_lost_respawn", {
             source: fromEnum(e),
             deferred: !0,
             reason: fromEnum(r),
@@ -1505,7 +1505,7 @@ class qW {
             (this.pendingAuthRekey = e));
           return;
         }
-        (i("tengu_bg_adopt_token_lost_respawn", { source: fromEnum(e), deferred: !1 }),
+        (logEvent("tengu_bg_adopt_token_lost_respawn", { source: fromEnum(e), deferred: !1 }),
           n(
             `[bg] worker ${this.dispatch.short}: auth mismatch (${e}) \u2014 respawning to re-key (--resume preserves the session)`,
             { level: "warn" },
@@ -1830,7 +1830,7 @@ class qW {
         p,
       )),
       p.pidPoll.unref(),
-      i("tengu_bg_adopt_unverified", { short: bgShort(e) }),
+      logEvent("tengu_bg_adopt_unverified", { short: bgShort(e) }),
       p
     );
   }
@@ -2077,10 +2077,10 @@ class qW {
       (this.lastExitExternalStop = !1));
     let r = this.dispatch,
       s = getJobDir(r.short);
-    await eue(r.short, this.storageV5).catch(() => {});
+    await ensureJobTmpDir(r.short, this.storageV5).catch(() => {});
     let p = Pc();
     if (p) {
-      (i("tengu_bg_launcher_worker_refused", { attempt: this.attempt }),
+      (logEvent("tengu_bg_launcher_worker_refused", { attempt: this.attempt }),
         logFeatureBad("agent_launcher", "worker_refused"),
         this.patch({ state: "crashed", detail: p }));
       let R = this.dimNotice(p);
@@ -2181,7 +2181,7 @@ class qW {
           state: "crashed",
           detail: "Bun.Terminal unavailable (running under Node?)",
         }),
-        i("tengu_bg_pty_unavailable", { short: bgShort(this.dispatch.short) }),
+        logEvent("tengu_bg_pty_unavailable", { short: bgShort(this.dispatch.short) }),
         this.settle("crashed")
       );
     let D = Ye(r, this.attempt, g, k, v, _);
@@ -2212,7 +2212,7 @@ class qW {
       let { cmd: R, prefixArgs: C } =
         r.launch.mode === "exec"
           ? { cmd: Fb(r.launch.cmd), prefixArgs: [] }
-          : rd({ pinToCurrentBinary: !0 });
+          : resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 });
       N = this.spawnPty(R, [...C, ...D], {
         cols: T,
         rows: U,
@@ -2238,10 +2238,10 @@ class qW {
             ? `${r.launch.cmd}: command not found`
             : "daemon binary was deleted (upgrade in progress) \u2014 run your command again to use the new version";
         if (F)
-          (i("tengu_bg_launcher_worker_refused", { attempt: this.attempt }),
+          (logEvent("tengu_bg_launcher_worker_refused", { attempt: this.attempt }),
             logFeatureBad("agent_launcher", "worker_launcher_enoent"));
         else
-          i("tengu_bg_spawn_binary_gone", {
+          logEvent("tengu_bg_spawn_binary_gone", {
             short: bgShort(this.dispatch.short),
             attempt: this.attempt,
           });
@@ -2256,7 +2256,7 @@ class qW {
       if (F && (C === "EACCES" || C === "EPERM")) {
         if (this.record.outcome) return;
         let K = `launcher \`${F}\` could not be executed (${C})`;
-        (i("tengu_bg_launcher_worker_refused", { attempt: this.attempt }),
+        (logEvent("tengu_bg_launcher_worker_refused", { attempt: this.attempt }),
           logFeatureBad(
             "agent_launcher",
             C === "EACCES" ? "worker_launcher_eacces" : "worker_launcher_eperm",
@@ -2301,7 +2301,7 @@ class qW {
           DD_SOURCEMAP_GROUP: "darwin",
         }.VERSION,
       }),
-      i("tengu_bg_worker_spawn", {
+      logEvent("tengu_bg_worker_spawn", {
         short: bgShort(this.dispatch.short),
         attempt: this.attempt,
         source: fromEnum(this.dispatch.source),
@@ -2458,7 +2458,7 @@ class qW {
     )
       K = "crashed";
     if (
-      (i("tengu_bg_worker_exit", {
+      (logEvent("tengu_bg_worker_exit", {
         short: bgShort(this.dispatch.short),
         code: e ?? void 0,
         signal: fromEnumOpt(t),
@@ -2491,7 +2491,7 @@ class qW {
     if (_) {
       let G = `the launcher exited before Claude Code started \u2014 \`${m}\` must exec, not daemonize${v ? ` \u2014 ${v}` : ""}`;
       return (
-        i("tengu_bg_launcher_fork_and_exit", { attempt: this.attempt }),
+        logEvent("tengu_bg_launcher_fork_and_exit", { attempt: this.attempt }),
         logFeatureBad("agent_launcher", "worker_fork_and_exit"),
         this.patch({ state: "crashed", detail: G }),
         this.settle("crashed")
@@ -2500,7 +2500,7 @@ class qW {
     if (e === 0) {
       if (this.dispatch.launch.mode === "exec") {
         if (!this.execLastLine && this.ringBytes > 0)
-          i("tengu_bg_exec_no_lastline", { ring_bytes: this.ringBytes });
+          logEvent("tengu_bg_exec_no_lastline", { ring_bytes: this.ringBytes });
         this.patch({ detail: this.execLastLine || "(no output)" });
       }
       return this.settle("done");
@@ -2518,7 +2518,7 @@ class qW {
     }
     if (U) {
       ((this.sessionIdTakenLatch = !0),
-        i("tengu_bg_session_id_taken", {
+        logEvent("tengu_bg_session_id_taken", {
           short: bgShort(this.dispatch.short),
           attempt: this.attempt,
           via: fromEnum(this.via),
@@ -2572,7 +2572,7 @@ class qW {
     )
       return;
     if (e && isSettled(e) && !e.queuedPrompt) {
-      i("tengu_bg_respawn_suppressed", {
+      logEvent("tengu_bg_respawn_suppressed", {
         short: bgShort(this.dispatch.short),
         reason: S("settled_on_disk"),
       });
@@ -2583,7 +2583,7 @@ class qW {
     }
     if (e?.interactiveLineage && this.lastExitExternalStop)
       return (
-        i("tengu_bg_respawn_suppressed", {
+        logEvent("tengu_bg_respawn_suppressed", {
           short: bgShort(this.dispatch.short),
           reason: S("no_task_contract"),
         }),
@@ -2597,7 +2597,7 @@ class qW {
   }
   settleCwdGone(e, t = this.dispatch.cwd) {
     let r = YYt(t);
-    (i("tengu_bg_spawn_cwd_gone", {
+    (logEvent("tengu_bg_spawn_cwd_gone", {
       short: bgShort(this.dispatch.short),
       attempt: this.attempt,
       via: fromEnum(e),
@@ -2624,7 +2624,7 @@ class qW {
   scheduleRespawn(e) {
     if (this.attempt >= Fe)
       return (
-        i("tengu_bg_respawn_exhausted", {
+        logEvent("tengu_bg_respawn_exhausted", {
           short: bgShort(this.dispatch.short),
           attempts: this.attempt,
         }),
@@ -2648,7 +2648,7 @@ class qW {
   }
   settle(e) {
     if (this.record.outcome) return;
-    (i("tengu_bg_settle", {
+    (logEvent("tengu_bg_settle", {
       short: bgShort(this.dispatch.short),
       outcome: fromEnum(e),
       uptimeMs: Date.now() - this.record.startedAt,
@@ -2672,7 +2672,7 @@ class qW {
       (e) => {
         if (e.type === "heartbeat") this.lastRvHeartbeat = Date.now();
         else if (e.type === "auth-rejected" || e.type === "reply-rejected")
-          (i(
+          (logEvent(
             e.type === "auth-rejected"
               ? "tengu_bg_rv_auth_mismatch"
               : "tengu_bg_rv_reply_rejected",
@@ -2700,7 +2700,7 @@ class qW {
               `[bg ${this.record.short}] dropped malformed rv interactive-mark frame`,
               { level: "warn" },
             ),
-              i("tengu_bg_imark_malformed", {}));
+              logEvent("tengu_bg_imark_malformed", {}));
             return;
           }
           if (
@@ -2761,7 +2761,7 @@ class qW {
         `bg: ${this.dispatch.short} pty host pid=${t} has exited but is unreaped (state ${r}) via=${e} \u2014 reaping it and marking the session failed`,
         { level: "warn" },
       ),
-      i("tengu_bg_ptyhost_zombie", {
+      logEvent("tengu_bg_ptyhost_zombie", {
         short: bgShort(this.dispatch.short),
         via: fromEnum(e),
         state: fromEnum(r === "Z" ? "Z" : "X"),
@@ -2799,7 +2799,7 @@ class qW {
       let p = await readJobState(getJobDir(this.dispatch.short), this.storageV5);
       if (!this.stalledLogged && (p?.tempo ?? this.record.tempo) === "active")
         ((this.stalledLogged = !0),
-          i("tengu_bg_worker_stalled", {
+          logEvent("tengu_bg_worker_stalled", {
             short: bgShort(this.dispatch.short),
             sinceMs: Date.now() - s,
           }));
@@ -2817,7 +2817,7 @@ class qW {
   }
   logVanished(e, t) {
     if (this.isKilling) return;
-    i("tengu_bg_worker_vanished", {
+    logEvent("tengu_bg_worker_vanished", {
       short: bgShort(this.dispatch.short),
       recycled: e,
       fromPoll: t,
@@ -2876,7 +2876,7 @@ async function Gmr(e) {
     },
     k;
   try {
-    k = await Sot(t, void 0, r);
+    k = await receiveSpareClaim(t, void 0, r);
   } catch (v) {
     (p(),
       process.stderr.write(`[bg-spare] claim recv failed: ${l(v)}
@@ -2886,7 +2886,7 @@ async function Gmr(e) {
   }
   m();
   try {
-    (await s, await bot(k, s));
+    (await s, await bootClaimedSpare(k, s));
   } catch (v) {
     let _ = Jr(v) ?? Gw(v) ?? "Error";
     throw (
@@ -2934,7 +2934,7 @@ async function QYt(e) {
       await Pt(Aj(), { recursive: !0, mode: 448 }).catch(() => {});
       let o = await Ae(`spare-${t}`, { ptyAuth: p, claimAuth: d });
       (await X(r).catch(() => {}), await X(s).catch(() => {}));
-      let { cmd: c, prefixArgs: g } = rd({ pinToCurrentBinary: !0 }),
+      let { cmd: c, prefixArgs: g } = resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 }),
         m = await Ot(Nh(r), "w").catch(() => null),
         k = eur("agent"),
         v = k?.(),
@@ -2967,7 +2967,7 @@ async function QYt(e) {
           _.unref());
       } catch (D) {
         if (o)
-          if (M() && e.credentials !== void 0)
+          if (isHoverRestEnabled() && e.credentials !== void 0)
             e.credentials.discardSpentCredentialFile(o).catch(() => {});
           else X(o).catch(() => {});
         throw D;
@@ -3010,7 +3010,7 @@ async function QYt(e) {
             T = k?.(),
             U = D !== 0 && v !== void 0 && T !== void 0 && T > v;
           if ((X(r).catch(() => {}), X(s).catch(() => {}), o))
-            if (M() && e.credentials !== void 0)
+            if (isHoverRestEnabled() && e.credentials !== void 0)
               e.credentials.discardSpentCredentialFile(o).catch(() => {});
             else X(o).catch(() => {});
           let N = ((await Wi(Nh(r), 1048576)) ?? "").slice(0, 2000).trim();
@@ -3091,7 +3091,7 @@ function ZYt(e, t, r, s, p, d) {
     Ee(e.short, E8(e) ? void 0 : s?.())
       .then((c) => Bt(t.claimSock, Vt(e, c, o.socketAuth(), t.claimAuth)))
       .catch((c) => {
-        (i("tengu_bg_sendclaim_failed", {
+        (logEvent("tengu_bg_sendclaim_failed", {
           short: e.short,
           errno: Jr(c),
           error: l(c).slice(0, 100),
@@ -3122,7 +3122,7 @@ async function Bt(e, t) {
     } catch (d) {
       let o = A(d);
       if (!(o === "ENOENT" || o === "ECONNREFUSED") || p >= it.length) throw d;
-      await Z(it[p] ?? 500);
+      await sleep(it[p] ?? 500);
     }
   }
 }

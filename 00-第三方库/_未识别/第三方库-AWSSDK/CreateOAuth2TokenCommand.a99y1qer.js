@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { gL, cy } from "./chunk-dm9sg03f.js";
 import { Lm } from "./chunk-w3axq133.js";
-import { nE } from "../../../01-核心基础设施/共享小工具-未细化/chunk-p71zdaw2.js";
+import { getNodeConfigProviderModule } from "../../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
 import { nu, EA } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { qtt } from "../../@aws-sdk/nested-clients/nested-clients.5meg3znc.js";
 import {
@@ -35,18 +35,18 @@ import { ta } from "./chunk-mwf4pmq2.js";
 import { Rb } from "../第三方库-其他/chunk-jtb5q5xr.js";
 import { Mie } from "../第三方库-其他/chunk-cpfawwsx.js";
 import { s_, hS } from "../../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
-import { Ib } from "../../../01-核心基础设施/共享小工具-未细化/chunk-qdjsm4tr.js";
-import { H0 } from "../../../01-核心基础设施/共享小工具-未细化/chunk-6rswwsrr.js";
+import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
+import { getUrlParserModule } from "../../../01-核心基础设施/共享小工具-未细化/url-parser.js";
 import "./chunk-z7ktsccq.js";
-import { w } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var T = w(function (G) {
+import { commonJS } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var T = commonJS(function (G) {
   Object.defineProperty(G, "__esModule", { value: !0 });
   G.resolveHttpAuthSchemeConfig =
     G.defaultSigninHttpAuthSchemeProvider =
     G.defaultSigninHttpAuthSchemeParametersProvider =
       void 0;
   var Ke = R_(),
-    x = Ib(),
+    x = smithyContextModule(),
     Xe = async (e, t, r) => ({
       operation: (0, x.getSmithyContext)(t).operation,
       region:
@@ -93,7 +93,7 @@ var T = w(function (G) {
   };
   G.resolveHttpAuthSchemeConfig = Je;
 });
-var ne = w(function (te) {
+var ne = commonJS(function (te) {
   Object.defineProperty(te, "__esModule", { value: !0 });
   te.ruleSet = void 0;
   var ee = "required",
@@ -283,7 +283,7 @@ var ne = w(function (te) {
     };
   te.ruleSet = tt;
 });
-var ie = w(function (oe) {
+var ie = commonJS(function (oe) {
   Object.defineProperty(oe, "__esModule", { value: !0 });
   oe.defaultEndpointResolver = void 0;
   var rt = XU(),
@@ -303,14 +303,14 @@ var ie = w(function (oe) {
   oe.defaultEndpointResolver = st;
   b.customEndpointFunctions.aws = rt.awsEndpointFunctions;
 });
-var pe = w(function (ce) {
+var pe = commonJS(function (ce) {
   Object.defineProperty(ce, "__esModule", { value: !0 });
   ce.getRuntimeConfig = void 0;
   var it = R_(),
     at = sW(),
     ut = Lm(),
     ct = ta(),
-    dt = H0(),
+    dt = getUrlParserModule(),
     ae = hS(),
     ue = s_(),
     pt = T(),
@@ -350,7 +350,7 @@ var pe = w(function (ce) {
     });
   ce.getRuntimeConfig = ht;
 });
-var Se = w(function (me) {
+var Se = commonJS(function (me) {
   Object.defineProperty(me, "__esModule", { value: !0 });
   me.getRuntimeConfig = void 0;
   var gt = Mie(),
@@ -360,7 +360,7 @@ var Se = w(function (me) {
     C = cy(),
     mt = rW(),
     ge = WR(),
-    m = nE(),
+    m = getNodeConfigProviderModule(),
     _e = EA(),
     Et = oW(),
     St = JU(),
@@ -425,7 +425,7 @@ var Se = w(function (me) {
     };
   me.getRuntimeConfig = yt;
 });
-var Sr = w(function (L) {
+var Sr = commonJS(function (L) {
   var fe = Q6(),
     Ct = Z6(),
     Rt = eW(),

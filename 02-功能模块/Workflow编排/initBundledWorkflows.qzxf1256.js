@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 78 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Q6n } from "../../01-核心基础设施/共享小工具-未细化/chunk-g00x7t7w.js";
+import { registerBundledWorkflow } from "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
 var i = "deep-research",
   e = i,
   t =
@@ -43,7 +43,7 @@ function l() {
   return !0;
 }
 function a() {
-  Q6n(
+  registerBundledWorkflow(
     `export const meta = {
   name: '${e}',
   description: '${t}',

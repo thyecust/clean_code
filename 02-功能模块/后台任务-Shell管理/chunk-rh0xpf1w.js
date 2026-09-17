@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { j, B, ze, dl, PDn, yrt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, gxe, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -27,7 +27,7 @@ import { _M, tue } from "../../01-核心基础设施/共享小工具-未细化/c
 import { writeStateAtomic, logJobWriteError, readJobState, withOwnJobStateWrite, SEED_DETAIL, IDLE_NEEDS, isOverlayNeeds, PRE_BOOT_STATES } from "./chunk-7wsy8vxb.js";
 import { Du, BS, tVn, Jgt, zS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ln, Mze } from "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
-import { ws } from "../../01-核心基础设施/共享小工具-未细化/chunk-0a6nmdka.js";
+import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
 import { Dze, Lze } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
 import { Og, Qb } from "../../01-核心基础设施/共享小工具-未细化/chunk-zdf7z1m1.js";
 import { cft } from "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
@@ -54,7 +54,7 @@ import { join as L } from "path";
 var U = ".prompt-stash",
   M = 262144,
   N = 256,
-  ee = m(() =>
+  ee = createLazyValue(() =>
     c({
       text: s(),
       cursorOffset: T().int().nonnegative(),
@@ -359,9 +359,9 @@ class H {
     if (e.caps?.systemTheme) cft(e.caps.systemTheme);
   }
   async waitForInkMount(e) {
-    for (let t = 0; !ws().has(process.stdout); t++) {
+    for (let t = 0; !getInkInstanceRegistry().has(process.stdout); t++) {
       if (t >= 60 || this.current !== e) return !1;
-      await Z(500);
+      await sleep(500);
     }
     return !0;
   }
@@ -540,13 +540,13 @@ function pe(e, t) {
     if (p && d > 0) o.push(fe(p, d, t).catch(() => {}));
   }
   (o.push(gxe()),
-    Promise.race([Promise.all(o), Z(5000)]).finally(() => {
+    Promise.race([Promise.all(o), sleep(5000)]).finally(() => {
       process.exit(0);
     }));
 }
 function ce() {
   if (dl() !== null) _ln(Date.now());
-  if (!ws().get(process.stdout)?.forceRedraw({ flushReact: !0 }))
+  if (!getInkInstanceRegistry().get(process.stdout)?.forceRedraw({ flushReact: !0 }))
     process.stdout.write(
       i_ +
         gm +

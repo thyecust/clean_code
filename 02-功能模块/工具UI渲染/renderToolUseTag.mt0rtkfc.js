@@ -9,64 +9,64 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 253 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { l_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
-import { Zr } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js";
+import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nvfdjg8e.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import { hye, _We } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-csjxh2sy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
+import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
+import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nj1exzcd.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-s3mpt973.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import "../Diff引擎/chunk-p2gj9dsf.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wqaxtswb.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-7m5aewa3.js";
+import "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-0mg59v9m.js";
 import "../GitHub集成/chunk-bfz9rjjm.js";
 import "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
-import { Zz } from "../工具Bash-Shell/chunk-qnax4jt7.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-bhcz98rd.js";
+import { BashToolOutputView } from "../工具Bash-Shell/bash-output-view.js";
+import "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
 import "./chunk-g4k5jjwt.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-86zcr8cb.js";
+import "../../01-核心基础设施/共享小工具-未细化/webfetch-tool-messages.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-vwjqzjhr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
+import "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-1371sqbk.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nkg0z9p5.js";
+import "../../01-核心基础设施/共享小工具-未细化/model-1m-context-suggestion.js";
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-xvyb4e66.js";
+import "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function renderToolUseTag(l) {
   if (!l.task_id) return null;
   return r(t, { dimColor: !0, children: [" ", l.task_id] });
@@ -83,7 +83,7 @@ function renderToolUseProgressMessage(l) {
           " ",
           e(t, {
             dimColor: !0,
-            children: e(D, {
+            children: e(KeybindingHint, {
               chord: "escape",
               action: "give additional instructions",
               parens: !0,
@@ -95,7 +95,7 @@ function renderToolUseProgressMessage(l) {
     ],
   });
 }
-var N = m(() =>
+var N = createLazyValue(() =>
   c({
     retrieval_status: s().optional(),
     task: c({
@@ -119,11 +119,11 @@ function O(V) {
   let b = _(15),
     { content: d, verbose: P, theme: C } = V,
     f = P === void 0 ? !1 : P,
-    x = Zr("app:toggleTranscript", "Global", "ctrl+o"),
+    x = useKeybindingDisplayText("app:toggleTranscript", "Global", "ctrl+o"),
     R,
     u;
   if (b[0] !== d || b[1] !== x || b[2] !== C || b[3] !== f) {
-    u = en;
+    u = EARLY_RETURN_SENTINEL;
     bb0: {
       let S = N().safeParse(typeof d === "string" ? xt(d, !1) : d);
       if (!S.success) {
@@ -132,8 +132,8 @@ function O(V) {
           ((i =
             typeof d === "string"
               ? e(l_, { content: pt(d), verbose: f })
-              : e(xe, {
-                  children: e(Rn, { children: "No task output available" }),
+              : e(ToolResultRow, {
+                  children: e(EmptyStateMessage, { children: "No task output available" }),
                 })),
             (b[6] = d),
             (b[7] = f),
@@ -145,9 +145,9 @@ function O(V) {
       let h = S.data;
       if (!h.task) {
         let i;
-        if (b[9] === p)
-          ((i = e(xe, {
-            children: e(Rn, { children: "No task output available" }),
+        if (b[9] === MEMO_CACHE_SENTINEL)
+          ((i = e(ToolResultRow, {
+            children: e(EmptyStateMessage, { children: "No task output available" }),
           })),
             (b[9] = i));
         else i = b[9];
@@ -163,7 +163,7 @@ function O(V) {
           dangerouslyDisableSandbox: !0,
           returnCodeInterpretation: a.error,
         };
-        u = e(Zz, { content: X, verbose: f });
+        u = e(BashToolOutputView, { content: X, verbose: f });
         break bb0;
       }
       if (a.task_type === "local_agent") {
@@ -229,7 +229,7 @@ function O(V) {
           }
           let i;
           if (b[10] !== x)
-            ((i = e(xe, {
+            ((i = e(ToolResultRow, {
               children: r(t, {
                 dimColor: !0,
                 children: ["Read output (", x, " to expand)"],
@@ -243,8 +243,8 @@ function O(V) {
         }
         if (h.retrieval_status === "timeout" || a.status === "running") {
           let i;
-          if (b[12] === p)
-            ((i = e(xe, {
+          if (b[12] === MEMO_CACHE_SENTINEL)
+            ((i = e(ToolResultRow, {
               children: e(t, {
                 dimColor: !0,
                 children: "Task is still running\u2026",
@@ -257,8 +257,8 @@ function O(V) {
         }
         if (h.retrieval_status === "not_ready") {
           let i;
-          if (b[13] === p)
-            ((i = e(xe, {
+          if (b[13] === MEMO_CACHE_SENTINEL)
+            ((i = e(ToolResultRow, {
               children: e(t, {
                 dimColor: !0,
                 children: "Task is still running\u2026",
@@ -270,8 +270,8 @@ function O(V) {
           break bb0;
         }
         let i;
-        if (b[14] === p)
-          ((i = e(xe, {
+        if (b[14] === MEMO_CACHE_SENTINEL)
+          ((i = e(ToolResultRow, {
             children: e(t, { dimColor: !0, children: "Task not ready" }),
           })),
             (b[14] = i));
@@ -317,7 +317,7 @@ function O(V) {
     }
     ((b[0] = d), (b[1] = x), (b[2] = C), (b[3] = f), (b[4] = R), (b[5] = u));
   } else ((R = b[4]), (u = b[5]));
-  if (u !== en) return u;
+  if (u !== EARLY_RETURN_SENTINEL) return u;
   return R;
 }
 export {

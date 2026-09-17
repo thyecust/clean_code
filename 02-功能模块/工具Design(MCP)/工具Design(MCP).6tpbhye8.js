@@ -9,19 +9,19 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 200 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Ve, R, l, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { j, B, dZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Tn, ht, isHostManagedProviderAuth, getAuthTokenSource, getClaudeAIOAuthTokens, handleOAuth401Error, getClaudeAIOAuthTokensAsync, getAuthTokenSourceAsync } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isFirstPartyAnthropicHost } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { NV, lj, agn, hasHookForEvent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   YA,
@@ -260,7 +260,7 @@ function le(e, t) {
 function K(e) {
   return Object.hasOwn(W, e) ? W[e] : void 0;
 }
-var Ce = m(() =>
+var Ce = createLazyValue(() =>
   it({
     name: s(),
     description: s().optional(),
@@ -385,7 +385,7 @@ function De(e) {
       return e ?? "";
   }
 }
-var Re = m(() =>
+var Re = createLazyValue(() =>
     Qe({
       operation: s()
         .regex(/^[\w.-]{1,64}$/)
@@ -399,7 +399,7 @@ var Re = m(() =>
         ),
     }),
   ),
-  Ie = m(() =>
+  Ie = createLazyValue(() =>
     c({ operation: s(), content: v(fe(s(), se())), isError: O().optional() }),
   );
 function re(e) {
@@ -509,7 +509,7 @@ async function Te(e, t, n, r) {
     return null;
   }
 }
-var DesignTool = Tt({
+var DesignTool = buildTool({
     name: NV,
     searchHint: "work with Claude Design (claude.ai/design) projects",
     maxResultSizeChars: 1e5,
@@ -1523,15 +1523,15 @@ class ie extends R {
 var be = 5000;
 async function Ge(e, t, n) {
   let r;
-  if (M() && n !== void 0) r = await getClaudeAIOAuthTokensAsync(n);
+  if (isHoverRestEnabled() && n !== void 0) r = await getClaudeAIOAuthTokensAsync(n);
   else r = getClaudeAIOAuthTokens();
   if (e === r?.accessToken && Boolean(r?.refreshToken)) {
-    if ((await Promise.race([handleOAuth401Error(e, n).catch(() => !1), Z(be, t)]), t.aborted))
+    if ((await Promise.race([handleOAuth401Error(e, n).catch(() => !1), sleep(be, t)]), t.aborted))
       return null;
   }
   let d = await Promise.race([
     NPe(n).catch(() => null),
-    Z(be, t).then(() => null),
+    sleep(be, t).then(() => null),
   ]);
   return d?.ok === !0 && d.accessToken !== e ? d.accessToken : null;
 }
@@ -1542,7 +1542,7 @@ async function We(e, t) {
         ? "Claude Design authentication failed (HTTP 401): a freshly refreshed credential was also rejected \u2014 likely a server-side access problem with this account or credential rather than simple expiry."
         : "Claude Design authentication failed (HTTP 401): the credential was rejected and an automatic refresh did not produce a new one.",
     d;
-  if (M() && e !== void 0) d = await getClaudeAIOAuthTokensAsync(e);
+  if (isHoverRestEnabled() && e !== void 0) d = await getClaudeAIOAuthTokensAsync(e);
   else d = getClaudeAIOAuthTokens();
   let o =
     !!d?.accessToken &&
@@ -1551,7 +1551,7 @@ async function We(e, t) {
   if (!o && (await b6n(e)))
     return `${r} The design credential (from /design login) is expired or revoked${n ? ", and /design login requires an interactive terminal \u2014 re-authenticate outside this session" : " \u2014 run /design login to re-authenticate"}.`;
   if (!o && d?.accessToken && !d.refreshToken) {
-    let { source: p } = M() && e !== void 0 ? await getAuthTokenSourceAsync(e) : getAuthTokenSource();
+    let { source: p } = isHoverRestEnabled() && e !== void 0 ? await getAuthTokenSourceAsync(e) : getAuthTokenSource();
     if (a.CLAUDE_CODE_REMOTE_SESSION_ID)
       return `${r} This remote session's credential is injected and rotated by the session host \u2014 it usually self-heals within minutes. Retry shortly; if this persists, the host session needs attention.`;
     if (

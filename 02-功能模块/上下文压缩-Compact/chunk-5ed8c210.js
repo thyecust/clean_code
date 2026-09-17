@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { getInitialSettings, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -59,7 +59,7 @@ async function applyAutoCompactWindow(r, e) {
       type: "apply_flag_settings",
       settings: { autoCompactWindow: f ?? null },
     }),
-    i("tengu_autocompact_command", {
+    logEvent("tengu_autocompact_command", {
       action: S(t === "auto" ? "auto" : "set"),
       ...(u !== void 0 && { tokens: u }),
     }),

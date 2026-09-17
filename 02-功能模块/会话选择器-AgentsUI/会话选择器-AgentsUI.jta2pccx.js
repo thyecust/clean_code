@@ -10,17 +10,17 @@
 import { cz } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { B, he, AOn, HOn, Nm, pv } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le, my, jf, Xo, Ju } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
-import { Me } from "../../01-核心基础设施/共享小工具-未细化/chunk-0dh9gct8.js";
+import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { Pre } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
 import { Va, cF } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { Ir } from "../../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Et, dv, z, hxe, Sh, k_, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
   getMainLoopModel,
@@ -43,7 +43,7 @@ import { os, x, ft, kr, ln, jW, U0, To } from "../../01-核心基础设施/核�
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getLogDisplayTitle, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -64,10 +64,10 @@ import { rk } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { XAe } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { o, t, ct, bs, ko, e7, aO, n7, Un, w9e } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Jp, _d } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
-import { ws } from "../../01-核心基础设施/共享小工具-未细化/chunk-0a6nmdka.js";
-import { sl } from "../键位绑定(Keybindings)/chunk-qy43nqgh.js";
+import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
+import { useKeybindingContext } from "../键位绑定(Keybindings)/keybinding-context.js";
 import { K3, Dre, HAe, w$, Wyn, R3t } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
-import { Es } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
+import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import {
   isCommandEnabled,
   findCommand,
@@ -110,7 +110,7 @@ import { KEt } from "../权限系统/chunk-t3b7pg2x.js";
 import { Wh } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { sendControlToUdsSocket, listAllLiveSessions } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { KE, LH } from "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
+import { AGENT_COLOR_THEME_KEYS, isAgentColorName } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { zr } from "../Teammates团队/chunk-3k2smxfn.js";
 import {
   UNGROUPED,
@@ -145,7 +145,7 @@ import {
   al,
 } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { FJe, sAt } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
-import { Qd, nee } from "../../01-核心基础设施/共享小工具-未细化/chunk-ejtvp07p.js";
+import { useVoiceSelector, useVoiceGetState } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import { openDaemonLease } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
 import {
@@ -187,13 +187,13 @@ import { y4 } from "../../01-核心基础设施/核心工具-进程与信号/chu
 import { dze, eFt, San, ban, H9n, Apt } from "../../01-核心基础设施/共享小工具-未细化/chunk-5pc36v8n.js";
 import { CCR_LIST_TARGET_VISIBLE } from "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js";
 import { Xae, zst } from "../Skills技能/Skills技能.dpy2ket5.js";
-import { wv } from "../../01-核心基础设施/共享小工具-未细化/chunk-ajpjkvdj.js";
+import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工具-未细化/base-render-options.js";
 import { hasTeammateModeSnapshot, captureTeammateModeSnapshot } from "../Teammates团队/chunk-88ybhavr.js";
 import { createFleetViewHost, useAttachFleetOwners } from "../../01-核心基础设施/共享小工具-未细化/chunk-6nr84z8c.js";
-import { ue, Y0 } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList, useDoublePressConfirm } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { kIt } from "../../01-核心基础设施/共享小工具-未细化/chunk-sxbs7q5c.js";
 import { dd, iat, _le, Fye } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import {
   M8,
   jp,
@@ -216,22 +216,22 @@ import {
   J_e,
   Q_e,
 } from "../Vim模式/Vim模式.nnewe0gf.js";
-import { IS } from "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
+import { ScrollBox } from "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { Wm, MB } from "../GitHub集成/chunk-bfz9rjjm.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { cu } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { Yx } from "../../03-入口与运行时/会话UI(REPL)/chunk-zds66w6y.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { editTextInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
 import { slt } from "../Teammates团队/chunk-6878k9n1.js";
-import { Xz } from "../../03-入口与运行时/会话UI(REPL)/chunk-mmzy53cr.js";
-import { $We } from "../../01-核心基础设施/共享小工具-未细化/chunk-azh5vchz.js";
-import { Gc } from "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
+import { ClawdMascot } from "../../03-入口与运行时/会话UI(REPL)/clawd-mascot.js";
+import { SESSION_LIVE_ELSEWHERE_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/session-live-elsewhere.js";
+import { BackgroundText } from "../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import { yv } from "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
-import { ZL } from "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import { tO } from "../../01-核心基础设施/共享小工具-未细化/chunk-37xdmryq.js";
+import { LinkifiedText } from "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import { toLocalFileUrl } from "../../01-核心基础设施/共享小工具-未细化/to-local-file-url.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Jw } from "../../01-核心基础设施/共享小工具-未细化/chunk-j4vveza5.js";
-import { Sqe } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
-import { fI } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
+import { trySetRawMode } from "../../01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js";
+import { openHyperlink } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
+import { fromJobState } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { nue, Og, Qb, mOe } from "../../01-核心基础设施/共享小工具-未细化/chunk-zdf7z1m1.js";
 import { Nl, re, E, dn, V, pk, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
@@ -240,8 +240,8 @@ import { lK, Z3 } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { isBypassPermissionsModeDisabled } from "../权限系统/chunk-pcxn6gwz.js";
 import { Xs, iB, oz } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { randomUUID as pu } from "crypto";
 import { resolve } from "path";
 function qu() {
@@ -260,7 +260,7 @@ function Yu(s) {
         : void 0,
     v =
       s.worker_status === "requires_action"
-        ? w?.tool_name === Es
+        ? w?.tool_name === ASK_USER_QUESTION_TOOL_NAME
           ? yht(w.input).text
           : w?.tool_name === Wh
             ? "approve plan"
@@ -453,7 +453,7 @@ function Fi(vS) {
     Sr[14] !== ha ||
     Sr[15] !== ba
   )
-    ((Ih = r(ue, { children: [fa, ma, ga, ha, ba] })),
+    ((Ih = r(DotSeparatedList, { children: [fa, ma, ga, ha, ba] })),
       (Sr[11] = fa),
       (Sr[12] = ma),
       (Sr[13] = ga),
@@ -470,7 +470,7 @@ function oc(s, c) {
   let m = c ?? "unknown";
   ((s.entryChannel = fromEnum(m)), (s.openFinished = null));
 }
-function nc(s, c, m = i) {
+function nc(s, c, m = logEvent) {
   let b = c.now ?? Date.now();
   if (s.openFinished === null)
     s.openFinished = new Set(c.allFinished.map((w) => w.id));
@@ -989,7 +989,7 @@ function hc({
       let j = J.modified.getTime();
       return O.findIndex((ne) => j > ne);
     }),
-    A = (J) => G(W, (j) => j !== -1 && j <= J),
+    A = (J) => countMatching(W, (j) => j !== -1 && j <= J),
     I = Math.max(R, m),
     q = Math.max(
       s.findIndex((J) => J.id === b),
@@ -1404,7 +1404,7 @@ class kc {
         });
       }
     }
-    let R = Y(
+    let R = dedupe(
         b.flatMap((I) =>
           Uo(I.state.children)
             .filter((q) => q.kind !== "frame")
@@ -1627,7 +1627,7 @@ class kc {
       if (!(await this.#e.interruptRemoteSession(c)))
         throw Error("interrupt rejected");
       (logFeatureOk("fleet_view_stop_session"),
-        i("tengu_bg_agent_action", {
+        logEvent("tengu_bg_agent_action", {
           action: S("stop"),
           source: S("fleet"),
           jobSessionId: Ee(c),
@@ -1650,7 +1650,7 @@ class kc {
       if (!(await this.#e.archiveRemoteSession(c)))
         throw Error("archive rejected");
       (logFeatureOk("fleet_view_archive_session"),
-        i("tengu_bg_agent_action", {
+        logEvent("tengu_bg_agent_action", {
           action: S("archive"),
           source: S("fleet"),
           jobSessionId: Ee(c),
@@ -2133,7 +2133,7 @@ function Ac(
   }
   let R = new Set();
   for (let A of [m, b, k, w]) for (let I of A) R.add(I.id);
-  let O = G(w, (A) => !A.id.startsWith("remote-pending-")),
+  let O = countMatching(w, (A) => !A.id.startsWith("remote-pending-")),
     W = !v || O === 0 || O >= CCR_LIST_TARGET_VISIBLE;
   s.sweepReplyDrafts({
     now: Date.now(),
@@ -2436,7 +2436,7 @@ function xa(s) {
   if (/\s/.test(c)) return null;
   if (/^https?:\/\//.test(c)) return U0.test(c) ? null : c;
   let m = Ju(c);
-  return tb(m) ? tO(m) : null;
+  return tb(m) ? toLocalFileUrl(m) : null;
 }
 function Fc(s) {
   let c = [];
@@ -2835,7 +2835,7 @@ function Uc(s, c) {
             isBundled: !1,
             isOfficial: !1,
           });
-          (i("tengu_slash_command_unavailable", {
+          (logEvent("tengu_slash_command_unavailable", {
             command_name: Lt,
             ...mt,
             surface:
@@ -3041,7 +3041,7 @@ function Uc(s, c) {
       ((k.followOrigin = null),
         (k.followId = null),
         k.expandCap(tt.group),
-        i("tengu_fleetview_fold_expand", {
+        logEvent("tengu_fleetview_fold_expand", {
           hidden_count: tt.hidden,
           ms_since_mount: Date.now() - nt,
         }));
@@ -3285,7 +3285,7 @@ function So(s, c = !1, m = !1) {
 }
 function ss(yo, yn) {
   let $c = _(12),
-    ns = vt(),
+    ns = useClock(),
     ab;
   if ($c[0] !== yo || $c[1] !== yn)
     ((ab = { label: yo, hasName: yn, fired: !1 }),
@@ -3536,7 +3536,7 @@ function kn() {
   let $R = _(1),
     [, KR] = bs(120),
     hb;
-  if ($R[0] === p) ((hb = Xc()), ($R[0] = hb));
+  if ($R[0] === MEMO_CACHE_SENTINEL) ((hb = Xc()), ($R[0] = hb));
   else hb = $R[0];
   let bb = hb;
   return bb[Math.floor(KR / 120) % bb.length];
@@ -3630,11 +3630,11 @@ function lp(
       (A + I === 0 ? Fb : 0) +
       (W.length > 0 ? 1 + Mb : 0),
     se = Jb(w, ne),
-    oe = G(W, (ge) => m - Ha(ge.state) > Ib),
+    oe = countMatching(W, (ge) => m - Ha(ge.state) > Ib),
     X = Math.max(0, W.length - oe - se),
     de = k ? 0 : oe + X,
     ce = de >= Db ? de : 0,
-    Ie = G(W.slice(W.length - ce), (ge) => terminalOutcome(ge.state.state) === "failure");
+    Ie = countMatching(W.slice(W.length - ce), (ge) => terminalOutcome(ge.state.state) === "failure");
   if ((J(Kn.done, W.slice(0, W.length - ce)), ce > 0))
     K.push({ kind: "fold", origin: b, group: Zo, hidden: ce });
   return {
@@ -3653,10 +3653,10 @@ function lp(
 function Bb(s) {
   let c = s.fan ?? [],
     m = c.filter((k) => k.kind === "todo");
-  if (m.length > 0) return `${G(m, (k) => k.doneAt !== void 0)}/${m.length}`;
+  if (m.length > 0) return `${countMatching(m, (k) => k.doneAt !== void 0)}/${m.length}`;
   let b = c.filter((k) => k.kind === "agent" || k.kind === "workflow");
   if (b.length > 0)
-    return `${G(b, (k) => k.doneAt !== void 0)}/${b.length} agents`;
+    return `${countMatching(b, (k) => k.doneAt !== void 0)}/${b.length} agents`;
   return;
 }
 function Nb(s, c) {
@@ -3895,9 +3895,9 @@ function dp({
       Dt = at.length >= ut + Hi ? ut : 1 / 0;
   }
   let Xt = {
-      blocked: G(He, (me) => lo(me.state, w(me)) === "blocked"),
-      active: G(He, (me) => lo(me.state, w(me)) === "active"),
-      completed: G(He, (me) => lo(me.state, w(me)) === "completed"),
+      blocked: countMatching(He, (me) => lo(me.state, w(me)) === "blocked"),
+      active: countMatching(He, (me) => lo(me.state, w(me)) === "active"),
+      completed: countMatching(He, (me) => lo(me.state, w(me)) === "completed"),
     },
     jt = dt.every((me) => me.id === ge),
     Jt = !ke && Je && !j && jt && !dt[0]?.state.pinned,
@@ -3986,7 +3986,7 @@ function dp({
     Zt = !nt && se?.cwd !== void 0,
     Re = !!fe && b.some((me) => me.id === fe.id),
     kt = !!fe && fe.id === ge,
-    Ke = G(Ce ? [...xt, ...m] : xt, (me) => {
+    Ke = countMatching(Ce ? [...xt, ...m] : xt, (me) => {
       let ht = Bi(me, k, w(me));
       return ht === "blocked" || ht === "working";
     }),
@@ -4109,7 +4109,7 @@ async function mp(s, c, m) {
   if (q !== null && c.sessionId !== q && R.isPromoting(q)) return;
   (R.beginPromote(c.sessionId),
     v.closeResumePicker(),
-    i("tengu_fleetview_earlier_open", {
+    logEvent("tengu_fleetview_earlier_open", {
       ms_since_mount: Date.now() - W,
       via: fromEnum(m),
     }));
@@ -4125,7 +4125,7 @@ async function mp(s, c, m) {
     j;
   try {
     if ((await listAllLiveSessions(O)).some((ce) => ce.sessionId === c.sessionId)) {
-      J("sad", "session_live_elsewhere", $We);
+      J("sad", "session_live_elsewhere", SESSION_LIVE_ELSEWHERE_MESSAGE);
       return;
     }
     if (k.isDeleting(K) || k.isDeletingSession(c.sessionId)) {
@@ -4265,7 +4265,7 @@ function cs(s, c) {
     return;
   }
   if (b.terminalHolderOf(c) !== void 0) {
-    (A($We), logFeatureOk("fleet_view_open"));
+    (A(SESSION_LIVE_ELSEWHERE_MESSAGE), logFeatureOk("fleet_view_open"));
     return;
   }
   if (
@@ -4288,7 +4288,7 @@ function cs(s, c) {
         (w.restartOfferedJobId = null),
         (w.deadEpochOfferedJobId = c.id),
         A(za),
-        i("tengu_fleetview_dead_epoch_offer", {}),
+        logEvent("tengu_fleetview_dead_epoch_offer", {}),
         logFeatureOk("fleet_view_open"));
       return;
     }
@@ -4395,7 +4395,7 @@ function gp(s, c) {
         let I = Date.now() + jb,
           q = b.jobs?.find((K) => K.id === A.short);
         while (!q && Date.now() < I && W())
-          (await Z(100), (q = b.jobs?.find((K) => K.id === A.short)));
+          (await sleep(100), (q = b.jobs?.find((K) => K.id === A.short)));
         if (!W()) return;
         if ((k.endNewSession(), !q)) {
           (logFeatureSad("fleet_view_new_session", "row_pending"),
@@ -4421,12 +4421,12 @@ function gp(s, c) {
   );
 }
 function Tr(s, c, m) {
-  i("tengu_bg_agent_action", {
+  logEvent("tengu_bg_agent_action", {
     action: fromEnum(s),
     source: S("fleet"),
     jobSessionId: Ee(c.sessionId),
     agent: c.template,
-    jobState: fI(c.state),
+    jobState: fromJobState(c.state),
     tempo: fromEnum(c.tempo),
     ...m,
     ...!1,
@@ -4476,7 +4476,7 @@ function hp(s, c, m, b, k, w) {
               logFeatureBad("fleet_view_stop_job", "kill_unconfirmed"),
               new Or(W.error ?? "worker may still be running")
             );
-          (i("tengu_bg_agent_action", {
+          (logEvent("tengu_bg_agent_action", {
             action: S("stop"),
             source: S("fleet"),
             jobSessionId: Ee(v.state.sessionId),
@@ -4569,7 +4569,7 @@ function hp(s, c, m, b, k, w) {
         else logFeatureOk("fleet_view_delete_job");
         if (v.state.pinned) writeJobPinned(v.id, !1, w).catch(() => {});
         if (
-          (i("tengu_bg_agent_action", {
+          (logEvent("tengu_bg_agent_action", {
             action: S("delete"),
             source: S("fleet"),
             jobSessionId: Ee(v.state.sessionId),
@@ -4636,8 +4636,8 @@ function rl(yC) {
       canonicalLauncherCwd: Sp,
       originJobId: kp,
     } = yC,
-    { columns: Dr } = Se(),
-    Xa = Me(SC, Zb),
+    { columns: Dr } = useTerminalSize(),
+    Xa = useStoreSelector(SC, Zb),
     {
       compactHeader: Fr,
       simpleBuilt: vo,
@@ -4675,7 +4675,7 @@ function rl(yC) {
   let Jr = zb,
     Lr;
   if (vn[10] !== Dr || vn[11] !== Fr)
-    ((Lr = !Fr && Dr >= 70 && e(Xz, {})),
+    ((Lr = !Fr && Dr >= 70 && e(ClawdMascot, {})),
       (vn[10] = Dr),
       (vn[11] = Fr),
       (vn[12] = Lr));
@@ -4744,7 +4744,7 @@ function rl(yC) {
       ? e(t, {
           dimColor: !0,
           wrap: "truncate",
-          children: r(ue, {
+          children: r(DotSeparatedList, {
             children: [
               vo.needsCount > 0 && `${vo.needsCount} needs you`,
               vo.workingCount > 0 && `${vo.workingCount} working`,
@@ -4756,7 +4756,7 @@ function rl(yC) {
         })
       : e(t, {
           dimColor: !0,
-          children: r(ue, {
+          children: r(DotSeparatedList, {
             children: [
               `${fs.blocked} awaiting input`,
               `${fs.active} working`,
@@ -4937,7 +4937,7 @@ function ks(HC) {
     ((nw = So(wt.state, po)), (ro[4] = po), (ro[5] = wt.state), (ro[6] = nw));
   else nw = ro[6];
   let Qn = nw,
-    pl = LH(wt.state.color) ? KE[wt.state.color] : void 0,
+    pl = isAgentColorName(wt.state.color) ? AGENT_COLOR_THEME_KEYS[wt.state.color] : void 0,
     Xn = ss(Qn, !!wt.state.name),
     Pp = Cp.filter(Wo),
     ys = Cp.filter(iw),
@@ -4979,7 +4979,7 @@ function ks(HC) {
   )
     ((gl =
       pl && !Br
-        ? e(Gc, {
+        ? e(BackgroundText, {
             color: pl,
             bold: co,
             children: Yn ? e(ct, { url: Yn, children: Qn }) : Qn,
@@ -5110,7 +5110,7 @@ function ks(HC) {
               : Nr
                 ? e(t, {
                     wrap: "truncate",
-                    children: r(ue, {
+                    children: r(DotSeparatedList, {
                       children: [
                         e(t, {
                           color: "suggestion",
@@ -5123,7 +5123,7 @@ function ks(HC) {
                 : Rp
                   ? e(t, {
                       wrap: "truncate",
-                      children: r(ue, {
+                      children: r(DotSeparatedList, {
                         children: [
                           e(t, {
                             color: Gr.color,
@@ -5349,7 +5349,7 @@ function xs(tE) {
         children: e(t, {
           dimColor: !0,
           wrap: "truncate",
-          children: r(ue, {
+          children: r(DotSeparatedList, {
             children: [
               Kp,
               $p,
@@ -5417,8 +5417,8 @@ function od(CE) {
       deleteConfirm: FE,
       earlier: ME,
     } = EE,
-    { columns: Cn, rows: nf } = Se(),
-    { focusedIdx: Po, hoverFocusIdx: rf, collapsed: sf } = Me(tn),
+    { columns: Cn, rows: nf } = useTerminalSize(),
+    { focusedIdx: Po, hoverFocusIdx: rf, collapsed: sf } = useStoreSelector(tn),
     {
       groupMode: Wr,
       activeTab: Kr,
@@ -5427,17 +5427,17 @@ function od(CE) {
       groupPristine: on,
       renaming: LE,
       previewOpen: nn,
-    } = Me(TE),
-    { attachingJobId: af, warmingJobIds: lf, newSessionOpening: df } = Me(DE),
+    } = useStoreSelector(TE),
+    { attachingJobId: af, warmingJobIds: lf, newSessionOpening: df } = useStoreSelector(DE),
     {
       prStatuses: uf,
       loopKicks: Is,
       logTails: cf,
       deleteRefusals: Dl,
-    } = Me(er),
-    Ao = Me(lw, xw),
-    { pending: tr } = Me(FE),
-    jr = Me(ME, Iw),
+    } = useStoreSelector(er),
+    Ao = useStoreSelector(lw, xw),
+    { pending: tr } = useStoreSelector(FE),
+    jr = useStoreSelector(ME, Iw),
     {
       rows: Oo,
       filtered: pf,
@@ -5785,7 +5785,7 @@ function od(CE) {
             onClick: () => {
               (ri(),
                 tn.expandCap(Ze.group),
-                i("tengu_fleetview_fold_expand", {
+                logEvent("tengu_fleetview_fold_expand", {
                   hidden_count: Ze.hidden,
                   ms_since_mount: Date.now() - of,
                   via_click: !0,
@@ -6204,7 +6204,7 @@ function od(CE) {
     ho[103] !== ed ||
     ho[104] !== td
   )
-    ((Ew = r(IS, {
+    ((Ew = r(ScrollBox, {
       ref: qo,
       flexGrow: 1,
       flexDirection: "column",
@@ -6244,8 +6244,8 @@ function fd(hx) {
       suggestionsOpen: nd,
     } = hx,
     { selection: Sx, view: kx, editor: vx, deleteConfirm: Rx } = bx,
-    { columns: ir } = Se(),
-    Of = Me(Sx, Dw),
+    { columns: ir } = useTerminalSize(),
+    Of = useStoreSelector(Sx, Dw),
     {
       groupMode: Tf,
       groupEdit: si,
@@ -6253,13 +6253,13 @@ function fd(hx) {
       renaming: _x,
       previewOpen: Ff,
       exitPending: Mf,
-    } = Me(kx),
-    { query: Fo, error: rd, hint: id, expandHintPasteId: Lf } = Me(vx),
-    { pending: sd } = Me(Rx),
+    } = useStoreSelector(kx),
+    { query: Fo, error: rd, hint: id, expandHintPasteId: Lf } = useStoreSelector(vx),
+    { pending: sd } = useStoreSelector(Rx),
     Ds = JR(),
     Jf = U(Fw),
-    ad = Qd(Mw),
-    Bf = Qd(Lw),
+    ad = useVoiceSelector(Mw),
+    Bf = useVoiceSelector(Lw),
     {
       focusedRow: zo,
       focused: sn,
@@ -6331,9 +6331,9 @@ function fd(hx) {
       : $f !== null || si !== null
         ? e(t, {
             dimColor: !0,
-            children: r(ue, {
+            children: r(DotSeparatedList, {
               children: [
-                e(D, {
+                e(KeybindingHint, {
                   chord: "enter",
                   action: "save",
                   format: { keyCase: "lower" },
@@ -6342,19 +6342,19 @@ function fd(hx) {
                   cd.trim() !== "" &&
                   cd.trim() !== si.cur &&
                   Kf.length > 0 &&
-                  e(D, {
+                  e(KeybindingHint, {
                     chord: "tab",
                     action: "complete",
                     format: { keyCase: "lower" },
                   }),
                 si?.kind === "assign" &&
                   Df >= 0 &&
-                  e(D, {
+                  e(KeybindingHint, {
                     chord: L.arrowLeft,
                     action: "deselect",
                     format: { keyCase: "lower" },
                   }),
-                e(D, {
+                e(KeybindingHint, {
                   chord: "escape",
                   action: "cancel",
                   format: { keyCase: "lower" },
@@ -6371,7 +6371,7 @@ function fd(hx) {
                       ? "stopped \xB7 ctrl+x again to delete \xB7 esc to keep"
                       : "ctrl+x again to delete \xB7 esc to keep",
                   })
-                : e(D, { chord: "ctrl+x", action: "confirm" }),
+                : e(KeybindingHint, { chord: "ctrl+x", action: "confirm" }),
             })
           : rd
             ? e(t, { color: "error", wrap: "truncate-end", children: rd })
@@ -6385,7 +6385,7 @@ function fd(hx) {
                     ? e(t, {
                         dimColor: !0,
                         wrap: "truncate-end",
-                        children: r(ue, {
+                        children: r(DotSeparatedList, {
                           children: [
                             e(t, {
                               children:
@@ -6409,13 +6409,13 @@ function fd(hx) {
                       ? e(t, {
                           dimColor: !0,
                           wrap: "truncate-end",
-                          children: r(ue, {
+                          children: r(DotSeparatedList, {
                             children: [
                               Ts && wa(Ts) && e(Fi, { defaults: Ts }),
                               ((sn && !ai) || Nf) &&
                                 !Gf &&
                                 !li &&
-                                e(D, {
+                                e(KeybindingHint, {
                                   chord: "enter",
                                   action: Vf,
                                   format: { keyCase: "lower" },
@@ -6430,7 +6430,7 @@ function fd(hx) {
                               zo?.kind === "header" &&
                                 Fo === "" &&
                                 !Uf &&
-                                e(D, {
+                                e(KeybindingHint, {
                                   chord: "enter",
                                   action: Of.has(zf(zo.group))
                                     ? "expand"
@@ -6439,7 +6439,7 @@ function fd(hx) {
                                 }),
                               zo?.kind === "fold" &&
                                 Fo === "" &&
-                                e(D, {
+                                e(KeybindingHint, {
                                   chord: "enter",
                                   action: "show all",
                                   format: { keyCase: "lower" },
@@ -6448,7 +6448,7 @@ function fd(hx) {
                                 Fo === "" &&
                                 !li &&
                                 ir >= 55 &&
-                                e(D, {
+                                e(KeybindingHint, {
                                   chord: " ",
                                   action: "reply",
                                   format: { keyCase: "lower" },
@@ -6458,18 +6458,18 @@ function fd(hx) {
                                 : null,
                               ir >= 80 &&
                                 (sn && !ai && Fo === ""
-                                  ? e(D, { chord: "ctrl+x", action: "delete" })
+                                  ? e(KeybindingHint, { chord: "ctrl+x", action: "delete" })
                                   : !ld && ud && zo?.kind === "header"
                                     ? zo.group !== "pinned" &&
                                       zo.group !== UNGROUPED &&
                                       zo.group !== EARLIER
-                                      ? e(D, {
+                                      ? e(KeybindingHint, {
                                           chord: "ctrl+x",
                                           action: "ungroup",
                                         })
                                       : null
                                     : !ld && Wf.length > 0
-                                      ? e(D, {
+                                      ? e(KeybindingHint, {
                                           chord: "ctrl+x",
                                           action: "delete all",
                                         })
@@ -6480,7 +6480,7 @@ function fd(hx) {
                                     children: "! for shell mode",
                                   })
                                 : Fo !== ""
-                                  ? e(D, {
+                                  ? e(KeybindingHint, {
                                       chord: "escape",
                                       action: "clear",
                                       format: { keyCase: "lower" },
@@ -6493,7 +6493,7 @@ function fd(hx) {
                                 !ai &&
                                 sn.state.backend === "daemon" &&
                                 ir >= 111 &&
-                                e(D, {
+                                e(KeybindingHint, {
                                   chord: "ctrl+e",
                                   action: "group",
                                   format: { keyCase: "lower" },
@@ -6600,7 +6600,7 @@ function Ls(qx) {
       canDelete: hd,
       canGoBack: im,
     } = qx,
-    ui = sl()?.bindings ?? HAe(K3),
+    ui = useKeybindingContext()?.bindings ?? HAe(K3),
     Hw;
   if (sm[0] !== ui)
     ((Hw = di("agents:switchView", ui)), (sm[0] = ui), (sm[1] = Hw));
@@ -6682,11 +6682,11 @@ function Js(Zx) {
   let $w = Kw,
     [jw, eI] = d(sy),
     qw;
-  if (qt[2] === p) ((qw = () => eI(Date.now())), (qt[2] = qw));
+  if (qt[2] === MEMO_CACHE_SENTINEL) ((qw = () => eI(Date.now())), (qt[2] = qw));
   else qw = qt[2];
   if ((ko(qw, !bo ? null : jw - $w < 60000 ? 1000 : 30000), !bo)) {
     let pi;
-    if (qt[3] === p)
+    if (qt[3] === MEMO_CACHE_SENTINEL)
       ((pi = e(o, {
         flexShrink: 0,
         paddingX: 2,
@@ -6704,7 +6704,7 @@ function Js(Zx) {
   else zw = qt[5];
   let am = zw,
     Yw;
-  if (qt[6] === p)
+  if (qt[6] === MEMO_CACHE_SENTINEL)
     ((Yw = e(t, { dimColor: !0, children: "backend " })), (qt[6] = Yw));
   else Yw = qt[6];
   let yd;
@@ -6714,7 +6714,7 @@ function Js(Zx) {
       (qt[8] = yd));
   else yd = qt[8];
   let Qw;
-  if (qt[9] === p)
+  if (qt[9] === MEMO_CACHE_SENTINEL)
     ((Qw = e(t, { dimColor: !0, children: "dir " })), (qt[9] = Qw));
   else Qw = qt[9];
   let Sd;
@@ -6725,7 +6725,7 @@ function Js(Zx) {
     ((kd = r(t, { children: [Qw, Sd] })), (qt[12] = Sd), (qt[13] = kd));
   else kd = qt[13];
   let Xw;
-  if (qt[14] === p)
+  if (qt[14] === MEMO_CACHE_SENTINEL)
     ((Xw = e(t, { dimColor: !0, children: "cwd " })), (qt[14] = Xw));
   else Xw = qt[14];
   const lm = to.worktreePath ?? to.cwd;
@@ -6758,7 +6758,7 @@ function Js(Zx) {
       (qt[23] = Cd));
   else Cd = qt[23];
   let Zw;
-  if (qt[24] === p)
+  if (qt[24] === MEMO_CACHE_SENTINEL)
     ((Zw = e(t, { dimColor: !0, children: "session " })), (qt[24] = Zw));
   else Zw = qt[24];
   let Ed;
@@ -6768,7 +6768,7 @@ function Js(Zx) {
       (qt[26] = Ed));
   else Ed = qt[26];
   let ty;
-  if (qt[27] === p)
+  if (qt[27] === MEMO_CACHE_SENTINEL)
     ((ty = e(t, { dimColor: !0, children: "version " })), (qt[27] = ty));
   else ty = qt[27];
   let xd;
@@ -6825,7 +6825,7 @@ function Js(Zx) {
     ((Id = r(t, { children: [ty, xd] })), (qt[30] = xd), (qt[31] = Id));
   else Id = qt[31];
   let oy;
-  if (qt[32] === p)
+  if (qt[32] === MEMO_CACHE_SENTINEL)
     ((oy = e(t, { dimColor: !0, children: "updated " })), (qt[32] = oy));
   else oy = qt[32];
   let Pd;
@@ -6971,7 +6971,7 @@ function Nd({
   let q = (ae) => W.setReplyError(s.id, ae);
   E(() => Tr("peek", s.state), []);
   let K = Date.parse(s.state.updatedAt),
-    { storageV5: J } = _e(),
+    { storageV5: J } = useStorageV5Context(),
     [j, ne] = d(() => Date.now()),
     se =
       terminalOutcome(s.state.state) === null ? Nt(s.state.needs ?? "") || void 0 : void 0,
@@ -7012,9 +7012,9 @@ function Nd({
         : void 0,
     xe = JR(),
     nt = U((ae) => ae.settings.voice?.mode ?? "hold"),
-    tt = vt(),
+    tt = useClock(),
     ye = C(null),
-    $e = nee();
+    $e = useVoiceGetState();
   E(
     () => () => {
       (ye.current?.(), (ye.current = null));
@@ -7112,7 +7112,7 @@ function Nd({
       ve && !qe
         ? () => {
             (ze(ve),
-              i("tengu_prompt_suggestion", {
+              logEvent("tengu_prompt_suggestion", {
                 outcome: S("accepted"),
                 source: S("fleetview_peek"),
               }));
@@ -7156,12 +7156,12 @@ function Nd({
       },
     })),
     Ve = Y_e({ composer: Je }),
-    Ye = Qd((ae) => ae.voiceState),
-    lt = Qd((ae) => ae.voiceWarmingUp);
+    Ye = useVoiceSelector((ae) => ae.voiceState),
+    lt = useVoiceSelector((ae) => ae.voiceWarmingUp);
   E(() => {
     if (Ye !== "idle" && ye.current) (ye.current(), (ye.current = null));
   }, [Ye]);
-  let dt = U((ae) => cu(ae.settings.prefersReducedMotion)),
+  let dt = U((ae) => shouldReduceMotion(ae.settings.prefersReducedMotion)),
     Dt = U((ae) => ae.settings?.prUrlTemplate),
     ut = Ye === "recording" && !dt,
     { handleKeyDown: Lt } = Yae({
@@ -7177,7 +7177,7 @@ function Nd({
       ? `${formatTokens(s.state.budget.spent)}/${formatTokens(s.state.budget.target)} tokens`
       : "",
     at = ke || Gt ? 1 : 0,
-    { rows: Xt, columns: jt } = Se(),
+    { rows: Xt, columns: jt } = useTerminalSize(),
     Jt = 8,
     st = ot
       ? ln(
@@ -7320,7 +7320,7 @@ function Nd({
                     overflowY: "hidden",
                     children: e(t, {
                       wrap: "wrap",
-                      children: e(ZL, { children: Nt(s.state.detail) }),
+                      children: e(LinkifiedText, { children: Nt(s.state.detail) }),
                     }),
                   }),
           Ft.length > 0 &&
@@ -7427,7 +7427,7 @@ function Nd({
               paddingLeft: 2,
               children: e(t, {
                 wrap: "truncate",
-                children: r(ue, {
+                children: r(DotSeparatedList, {
                   children: [
                     ke && r(t, { color: et, children: ["waiting ", Ce] }),
                     Gt !== "" && e(t, { dimColor: !0, children: Gt }),
@@ -7483,21 +7483,21 @@ function Nd({
               : e(t, {
                   dimColor: !0,
                   children: I
-                    ? r(ue, {
+                    ? r(DotSeparatedList, {
                         children: [
-                          e(D, {
+                          e(KeybindingHint, {
                             chord: "enter",
                             action: "save",
                             format: { keyCase: "lower" },
                           }),
-                          e(D, {
+                          e(KeybindingHint, {
                             chord: "escape",
                             action: "cancel",
                             format: { keyCase: "lower" },
                           }),
                         ],
                       })
-                    : r(ue, {
+                    : r(DotSeparatedList, {
                         children: [
                           qe &&
                             e(t, {
@@ -7505,7 +7505,7 @@ function Nd({
                               children: "! for shell mode",
                             }),
                           (ot.trim() || (!qe && !m)) &&
-                            e(D, {
+                            e(KeybindingHint, {
                               chord: "enter",
                               action: ot.trim()
                                 ? "send"
@@ -7514,7 +7514,7 @@ function Nd({
                                   : "open",
                               format: { keyCase: "lower" },
                             }),
-                          e(D, {
+                          e(KeybindingHint, {
                             chord: ot.trim() || qe ? "escape" : " ",
                             action: "close",
                             format: { keyCase: "lower" },
@@ -7522,7 +7522,7 @@ function Nd({
                           xe && nt !== "tap" && !qe && !ot.trim()
                             ? e(t, { children: "hold space to speak" })
                             : null,
-                          e(D, {
+                          e(KeybindingHint, {
                             chord: "ctrl+x",
                             action: b ? "confirm" : "delete",
                           }),
@@ -7567,10 +7567,10 @@ function qd(SP) {
       resumePicker: dr,
       resumePickerIdx: Hd,
       activeTab: Rm,
-    } = Me(Ns),
-    Gd = Me(Gs, wy),
-    _m = Me(ar, yy),
-    { pending: Vd } = Me(_P),
+    } = useStoreSelector(Ns),
+    Gd = useStoreSelector(Gs, wy),
+    _m = useStoreSelector(ar, yy),
+    { pending: Vd } = useStoreSelector(_P),
     [Cm, EP] = d(!1),
     {
       rows: Ud,
@@ -7726,7 +7726,7 @@ function qd(SP) {
             canReorder:
               !!At &&
               (mi
-                ? (At.state.pinned ?? !1) && G(Ud, Sy) > 1
+                ? (At.state.pinned ?? !1) && countMatching(Ud, Sy) > 1
                 : (!Em && !Wd) || (At.state.pinned ?? !1)),
             canRename:
               (Wd &&
@@ -7745,7 +7745,7 @@ function qd(SP) {
             canDispatchAndOpen: Rm === "local" && cDt(),
             altOpenCount: Math.min(
               9,
-              G(Ud, (gy) => gy.kind === "job" && gy.origin === xm),
+              countMatching(Ud, (gy) => gy.kind === "job" && gy.origin === xm),
             ),
             canDelete: At && !an ? (isSettled(At.state) ? "delete" : "stop") : void 0,
             canGoBack: !1,
@@ -7896,18 +7896,18 @@ function ou(oA) {
       suggestionList: Gm,
     } = oA,
     { view: iA, editor: sA } = nA,
-    { columns: Vm } = Se(),
-    { query: cn, cursorOffset: Um, mode: Km } = Me(sA),
+    { columns: Vm } = useTerminalSize(),
+    { query: cn, cursorOffset: Um, mode: Km } = useStoreSelector(sA),
     {
       activeTab: $m,
       groupEdit: jm,
       renaming: aA,
       previewOpen: qm,
       resumePicker: Ym,
-    } = Me(iA),
+    } = useStoreSelector(iA),
     Qm = JR(),
-    Xm = Qd(By),
-    Zm = Qd(Ny),
+    Xm = useVoiceSelector(By),
+    Zm = useVoiceSelector(Ny),
     {
       onlyOrigin: eg,
       byGroup: tg,
@@ -7918,7 +7918,7 @@ function ou(oA) {
     } = rA,
     ig = aA?.jobId ?? null,
     ky;
-  if (fr[0] === p)
+  if (fr[0] === MEMO_CACHE_SENTINEL)
     ((ky = e(t, {
       dimColor: !0,
       children:
@@ -7954,7 +7954,7 @@ function ou(oA) {
   else vy = fr[7];
   let zd = vy,
     Ry;
-  if (fr[8] === p)
+  if (fr[8] === MEMO_CACHE_SENTINEL)
     ((Ry = e(o, {
       position: "absolute",
       marginTop: -1,
@@ -8125,7 +8125,7 @@ function nu(cA) {
     Oy;
   if (tu[11] !== so || tu[12] !== Lo || tu[13] !== Jo || tu[14] !== _o)
     ((Ay = () =>
-      M() && _o !== void 0
+      isHoverRestEnabled() && _o !== void 0
         ? dv(async () => {
             let Ty = Lo.draftForDisk();
             let Dy = [...Jo.getSnapshot().collapsed];
@@ -9054,7 +9054,7 @@ function wg(s, c) {
   }
   if (Ft === "chat:externalEditor" && !We && !Ue) {
     Qe();
-    let fe = Yx(m.getSnapshot().query);
+    let fe = editTextInExternalEditor(m.getSnapshot().query);
     if (fe.content !== null && fe.content !== m.getSnapshot().query)
       Wt(fe.content);
     if (fe.error) st(fe.error);
@@ -9311,7 +9311,7 @@ function wg(s, c) {
     let fe = w.getSnapshot().helpOpen;
     if (!fe) St();
     (w.setHelpOpen(!fe),
-      i("tengu_bg_agent_action", { action: S("help_toggled") }));
+      logEvent("tengu_bg_agent_action", { action: S("help_toggled") }));
     return;
   }
   if (Xi(c) && !Ue) {
@@ -9353,7 +9353,7 @@ var Us = 3600000,
   yg = 21600000,
   au = "CLAUDE_AGENTS_AUTO_RELAUNCHED_AT";
 function Sg(s, { cwdFilter: c, onError: m }) {
-  (i("tengu_bg_agent_action", { action: fromEnum(`fleetview_update_${s}`) }),
+  (logEvent("tengu_bg_agent_action", { action: fromEnum(`fleetview_update_${s}`) }),
     slt()
       .then((b) => {
         if (s === "auto" && Date.now() - Nm() < Us) return;
@@ -9500,7 +9500,7 @@ function $y(s, c) {
 }
 function _g(s, c) {
   let m = qA(),
-    { storageV5: b, credentials: k } = _e(),
+    { storageV5: b, credentials: k } = useStorageV5Context(),
     w = C(new Map());
   E(() => {
     let { next: v, notifications: R, notified: O } = $y(w.current, s);
@@ -9509,7 +9509,7 @@ function _g(s, c) {
     let W = Date.now();
     for (let A of O)
       if (Zu(c, A.sessionId, A.kind, W))
-        i("tengu_bg_agent_notification", {
+        logEvent("tengu_bg_agent_notification", {
           kind: fromEnum(A.kind),
           jobSessionId: Ee(A.sessionId),
         });
@@ -9529,17 +9529,17 @@ function Cg({
   host: W,
   storageV5: A,
 }) {
-  let I = vt(),
+  let I = useClock(),
     { stdin: q, isRawModeSupported: K } = rk(),
-    { credentials: J } = _e(),
-    j = sl()?.bindings,
+    { credentials: J } = useStorageV5Context(),
+    j = useKeybindingContext()?.bindings,
     ne = a.CLAUDE_CODE_FLEETVIEW_SIMPLE || H("tengu_fleetview_simple", !1),
     se = !ne || !!c?.startsWith("remote-");
   Un(
     () => {
       if (!K) return;
       let T = q.listenerCount("readable");
-      if (T > 1) i("tengu_fleetview_stdin_contention", { listeners: T });
+      if (T > 1) logEvent("tengu_fleetview_stdin_contention", { listeners: T });
     },
     1500,
     [],
@@ -9556,14 +9556,14 @@ function Cg({
       prStatuses: be,
       loopKicks: le,
       overlaidLoadLanded: Fe,
-    } = Me(de),
+    } = useStoreSelector(de),
     [pe] = d(() => Wi(X, de, A)),
     {
       focusedIdx: je,
       hoverFocusIdx: We,
       collapsed: yt,
       capExpanded: qe,
-    } = Me(pe),
+    } = useStoreSelector(pe),
     ve = !1,
     [xe] = d(() => fg(X, ve)),
     {
@@ -9575,13 +9575,13 @@ function Cg({
       previewOpen: Ue,
       helpOpen: ze,
       debugOpen: Ht,
-    } = Me(xe),
+    } = useStoreSelector(xe),
     [bt] = d(() => Ki(X)),
-    { attachingJobId: xt, autoOpened: Ut } = Me(bt),
+    { attachingJobId: xt, autoOpened: Ut } = useStoreSelector(bt),
     [He] = d(() => ji(X)),
-    { mode: Tt, expandHintPasteId: zt } = Me(He),
+    { mode: Tt, expandHintPasteId: zt } = useStoreSelector(He),
     [Wt] = d(() => ug(X, { onArm: () => Ar(bt, He) })),
-    { pending: Je } = Me(Wt);
+    { pending: Je } = useStoreSelector(Wt);
   Un(() => Wt.disarm(), Je ? 2000 : null, [Je]);
   let [Ve] = d(() => ({
       roster: de,
@@ -9622,13 +9622,13 @@ function Cg({
       routines: St,
       childRepos: Qe,
       repoWorktrees: mo,
-    } = Me(Jt);
+    } = useStoreSelector(Jt);
   E(() => {
     Jt.loadLauncher(ut);
   }, [Jt, ut]);
   let no = Qe.get(ut) ?? lu,
     Ft = mo.get(ut) ?? du,
-    fe = Y([...(ce ?? []), ...Ie].map((T) => spawnOrigin(T.state)))
+    fe = dedupe([...(ce ?? []), ...Ie].map((T) => spawnOrigin(T.state)))
       .sort()
       .join("\x00"),
     { allRepos: Ae, worktreeBranches: Be } = V(() => {
@@ -9645,7 +9645,7 @@ function Cg({
       return { allRepos: T, worktreeBranches: Oe };
     }, [no, fe, Ft]),
     et = () => s({ type: "done" }),
-    ae = Y0((T) => {
+    ae = useDoublePressConfirm((T) => {
       if (T) bu();
       xe.setExitPending(T);
     }, et),
@@ -9654,7 +9654,7 @@ function Cg({
     },
     It = (T, Oe) => Ko(Oe ?? xe.getSnapshot().groupMode, T),
     Zt = (T) => `header:${xe.getSnapshot().groupMode}:${T}`,
-    Re = Me(X.earlier, (T) => T.entries);
+    Re = useStoreSelector(X.earlier, (T) => T.entries);
   E(() => {
     if (k || !qi()) {
       if (!k) X.earlier.clear();
@@ -9679,7 +9679,7 @@ function Cg({
             pe.restoreAttempts = 2;
           if (De === null) return;
           if ((X.earlier.setEntries(De), !T && De.length > 0))
-            i("tengu_fleetview_earlier_loaded", { count: De.length });
+            logEvent("tengu_fleetview_earlier_loaded", { count: De.length });
         }),
       () => {
         T = !0;
@@ -9696,14 +9696,14 @@ function Cg({
     if (Ke) de.resetPrFetchGate();
   }, [de, Ke]);
   let oo = U((T) => T.autoUpdaterResult?.status === "success"),
-    { columns: Bo, rows: me } = Se(),
+    { columns: Bo, rows: me } = useTerminalSize(),
     [ht] = d(() => Date.now()),
     Ct = C(null),
     $t = C(null);
   dd($t, ce !== null && !Ue);
   let Vt = JR(),
     Ne = U((T) => T.settings.voice?.mode ?? "hold"),
-    No = nee(),
+    No = useVoiceGetState(),
     wi = () => {
       let T = pe.focusedRow(),
         Oe = T?.kind === "job" ? T.job : void 0;
@@ -9764,7 +9764,7 @@ function Cg({
       setValueWithCursor: (T, Oe) => He.setQueryAndCursor(T, Oe),
     })),
     mr = Y_e({ composer: gu, isActive: Mt }),
-    Ks = Qd((T) => T.voiceState);
+    Ks = useVoiceSelector((T) => T.voiceState);
   E(() => {
     if (Ks !== "idle") xe.cancelPeekTap();
   }, [xe, Ks]);
@@ -9776,7 +9776,7 @@ function Cg({
       isActive: (Ne !== "tap" || Bt.trim().length > 0) && Tt !== "bash" && Mt,
       composer: gu,
     }),
-    Ig = U((T) => cu(T.settings.prefersReducedMotion)),
+    Ig = U((T) => shouldReduceMotion(T.settings.prefersReducedMotion)),
     Pg = Ks === "recording" && !Ig;
   (nu({
     editor: He,
@@ -9988,17 +9988,17 @@ function Cg({
         }));
     }, [X, A]),
     E(() => Jt.loadTarget(mn, A), [Jt, mn, A]));
-  let { addNotification: rh } = Ir(),
+  let { addNotification: rh } = useNotificationQueue(),
     Ri = aO();
   (Yst(Ri, !0, (T) => rh(Xst(T))), Jst(Ri));
   let Au = ZFn(Ri, ee().copyOnSelect ?? !0);
   (Kst(Ri),
     dn(() => {
-      let T = ws().get(process.stdout);
+      let T = getInkInstanceRegistry().get(process.stdout);
       if (!T) return;
       return (
         (T.onHyperlinkClick = (Oe) => {
-          Sqe(Oe);
+          openHyperlink(Oe);
         }),
         () => {
           T.onHyperlinkClick = void 0;
@@ -10072,7 +10072,7 @@ function Cg({
   if ((bt.releasePromoted(Fu), ne && xe.firstImpression("simple")))
     logFeatureOk("fleet_view_simple");
   if (_i.doneFoldHidden > 0 && xe.firstImpression("fold"))
-    i("tengu_fleetview_fold_shown", {
+    logEvent("tengu_fleetview_fold_shown", {
       done_count: _i.doneCount,
       hidden_count: _i.doneFoldHidden,
       k: uh?.doneCap ?? dh,
@@ -10092,7 +10092,7 @@ function Cg({
     });
   }, [X, de, ao, ce, m, Fe]);
   let gh = V(() => a.CLAUDE_CODE_DISABLE_TERMINAL_TITLE, []);
-  (n7(gh ? null : pc(G(ah, (T) => lo(T.state, Iu(T)) === "blocked"))),
+  (n7(gh ? null : pc(countMatching(ah, (T) => lo(T.state, Iu(T)) === "blocked"))),
     _g(
       sh
         .filter((T) => isLocalDaemonAgent(T.state))
@@ -10265,7 +10265,7 @@ function Cg({
     $u = Tu.some((T) => T.id === c);
   E(() => {
     if (!Ku || !xe.firstImpression("empty")) return;
-    i("tengu_fleetview_empty_state_shown", { skeleton: aa, has_origin: $u });
+    logEvent("tengu_fleetview_empty_state_shown", { skeleton: aa, has_origin: $u });
   }, [Ku, aa, $u]);
   let ua = () => ({
       submit: {
@@ -10560,7 +10560,7 @@ async function BQt(s, c) {
   )
     captureTeammateModeSnapshot();
   (B$n(c?.dispatchExtraArgs ?? []),
-    i("tengu_bg_agent_action", {
+    logEvent("tengu_bg_agent_action", {
       action: S("list_open"),
       mode: fromEnum(ee().fleetViewGroupMode ?? "state"),
     }));
@@ -10581,7 +10581,7 @@ async function BQt(s, c) {
   process.stdin.on("readable", R);
   let O = c?.cwdFilter ? await canonicalizePath(resolve(c.cwdFilter), If(c?.storageV5)) : void 0,
     W = ec(c?.dispatchDefaults),
-    A = M() ? c?.storageV5 : void 0;
+    A = isHoverRestEnabled() ? c?.storageV5 : void 0;
   (Et(A ? () => CPt(A) : CPt), Et(openDaemonLease("claude agents")));
   let I = s,
     q = a.CLAUDE_AGENTS_SELECT,
@@ -10711,14 +10711,14 @@ async function BQt(s, c) {
       }
       continue;
     }
-    let pe = ws().get(process.stdout);
+    let pe = getInkInstanceRegistry().get(process.stdout);
     if (Fe && le.type === "open") pe?.handoffAltScreen();
     if (P() === "windows" && le.type === "open") pe?.handoffRawMode();
     let je = pe?.lastFrameFillsCurrentViewport ?? !1;
     if (!Fe) I.render(null);
     if ((I.unmount(), le.type === "done")) break;
     if (P() === "windows" && process.stdin.isTTY)
-      (Jw(process.stdin, !0), process.stdin.ref());
+      (trySetRawMode(process.stdin, !0), process.stdin.ref());
     let We = Fe ? cz(() => void process.stdout.write(uF())) : () => {};
     if (((q = le.job.id), !le.keepQuery)) ge.dropDraft();
     w.agentLastUsedMigrationDone = !0;
@@ -10807,7 +10807,7 @@ async function BQt(s, c) {
         logFeatureSad("fleet_view_open", "fork_transcript_never_materialized");
       else logFeatureBad("fleet_view_open", "respawn_failed");
     }
-    if ((HOn(), (I = await w9e(wv(!1))), J)) {
+    if ((HOn(), (I = await w9e(getBaseRenderOptions(!1))), J)) {
       if (!Fe) process.stdout.write(YFn(Fe, je, m));
       return ((J = !1), We(), { back: !0, root: I });
     }

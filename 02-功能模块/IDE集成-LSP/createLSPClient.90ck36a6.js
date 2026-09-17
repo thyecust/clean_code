@@ -9,16 +9,16 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 49 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Qcr, Bs, exe, SPn, Zcr, SW } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { kRe, sir } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
-import { fN } from "../../01-核心基础设施/共享小工具-未细化/chunk-k1vb7vky.js";
-import { Uy } from "../../01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js";
-import { pe, w, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var me = w(function (zt) {
+import { logErrorWithTelemetryMessage } from "../../01-核心基础设施/共享小工具-未细化/log-error-with-telemetry-message.js";
+import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
+import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var me = commonJS(function (zt) {
   Object.defineProperty(zt, "__esModule", { value: !0 });
   zt.stringArray =
     zt.array =
@@ -57,7 +57,7 @@ var me = w(function (zt) {
   }
   zt.stringArray = Yn;
 });
-var et = w(function (fr) {
+var et = commonJS(function (fr) {
   Object.defineProperty(fr, "__esModule", { value: !0 });
   fr.Message =
     fr.NotificationType9 =
@@ -315,7 +315,7 @@ var et = w(function (fr) {
     e.isResponse = s;
   })(Ft || (fr.Message = Ft = {}));
 });
-var rt = w(function (gr) {
+var rt = commonJS(function (gr) {
   var pr;
   Object.defineProperty(gr, "__esModule", { value: !0 });
   gr.LRUCache = gr.LinkedMap = gr.Touch = void 0;
@@ -583,7 +583,7 @@ var rt = w(function (gr) {
   }
   gr.LRUCache = mr;
 });
-var wr = w(function (vr) {
+var wr = commonJS(function (vr) {
   Object.defineProperty(vr, "__esModule", { value: !0 });
   vr.Disposable = void 0;
   var br;
@@ -594,7 +594,7 @@ var wr = w(function (vr) {
     e.create = t;
   })(br || (vr.Disposable = br = {}));
 });
-var ie = w(function (Sr) {
+var ie = commonJS(function (Sr) {
   Object.defineProperty(Sr, "__esModule", { value: !0 });
   var nt;
   function it() {
@@ -610,7 +610,7 @@ var ie = w(function (Sr) {
   })(it || (it = {}));
   Sr.default = it;
 });
-var ge = w(function (Tr) {
+var ge = commonJS(function (Tr) {
   Object.defineProperty(Tr, "__esModule", { value: !0 });
   Tr.Emitter = Tr.Event = void 0;
   var Mi = ie(),
@@ -705,7 +705,7 @@ var ge = w(function (Tr) {
   Tr.Emitter = qe;
   qe._noop = function () {};
 });
-var De = w(function (xr) {
+var De = commonJS(function (xr) {
   Object.defineProperty(xr, "__esModule", { value: !0 });
   xr.CancellationTokenSource = xr.CancellationToken = void 0;
   var $i = ie(),
@@ -779,7 +779,7 @@ var De = w(function (xr) {
   }
   xr.CancellationTokenSource = Cr;
 });
-var qr = w(function (jr) {
+var qr = commonJS(function (jr) {
   Object.defineProperty(jr, "__esModule", { value: !0 });
   jr.SharedArrayReceiverStrategy = jr.SharedArraySenderStrategy = void 0;
   var Bi = De(),
@@ -845,7 +845,7 @@ var qr = w(function (jr) {
   }
   jr.SharedArrayReceiverStrategy = Mr;
 });
-var at = w(function (Dr) {
+var at = commonJS(function (Dr) {
   Object.defineProperty(Dr, "__esModule", { value: !0 });
   Dr.Semaphore = void 0;
   var zi = ie();
@@ -891,7 +891,7 @@ var at = w(function (Dr) {
   }
   Dr.Semaphore = Ir;
 });
-var Hr = w(function (Wr) {
+var Hr = commonJS(function (Wr) {
   Object.defineProperty(Wr, "__esModule", { value: !0 });
   Wr.ReadableStreamMessageReader =
     Wr.AbstractMessageReader =
@@ -1090,7 +1090,7 @@ ${JSON.stringify(Object.fromEntries(r))}`),
   }
   Wr.ReadableStreamMessageReader = zr;
 });
-var Xr = w(function (Gr) {
+var Xr = commonJS(function (Gr) {
   Object.defineProperty(Gr, "__esModule", { value: !0 });
   Gr.WriteableStreamMessageWriter =
     Gr.AbstractMessageWriter =
@@ -1217,7 +1217,7 @@ var Xr = w(function (Gr) {
   }
   Gr.WriteableStreamMessageWriter = Qr;
 });
-var rn = w(function (en) {
+var rn = commonJS(function (en) {
   Object.defineProperty(en, "__esModule", { value: !0 });
   en.AbstractMessageBuffer = void 0;
   var Gi = 13,
@@ -1341,7 +1341,7 @@ ${M}`);
   }
   en.AbstractMessageBuffer = Zr;
 });
-var pn = w(function (un) {
+var pn = commonJS(function (un) {
   Object.defineProperty(un, "__esModule", { value: !0 });
   un.createMessageConnection =
     un.ConnectionOptions =
@@ -2373,7 +2373,7 @@ ${JSON.stringify(i, null, 4)}`);
   }
   un.createMessageConnection = Zi;
 });
-var Ve = w(function (u) {
+var Ve = commonJS(function (u) {
   Object.defineProperty(u, "__esModule", { value: !0 });
   u.ProgressType =
     u.ProgressToken =
@@ -2811,9 +2811,9 @@ var Ve = w(function (u) {
   var ys = ie();
   u.RAL = ys.default;
 });
-var Rn = w(function (Sn) {
+var Rn = commonJS(function (Sn) {
   Object.defineProperty(Sn, "__esModule", { value: !0 });
-  var bn = Ae("util"),
+  var bn = importMetaRequire("util"),
     re = Ve();
   class Je extends re.AbstractMessageBuffer {
     constructor(e = "utf-8") {
@@ -2965,7 +2965,7 @@ var Rn = w(function (Sn) {
   })(Pt || (Pt = {}));
   Sn.default = Pt;
 });
-var Ct = w(function (y) {
+var Ct = commonJS(function (y) {
   var Ss =
       (y && y.__createBinding) ||
       (Object.create
@@ -3013,10 +3013,10 @@ var Ct = w(function (y) {
       void 0;
   var ve = Rn();
   ve.default.install();
-  var Pn = Ae("path"),
-    Ps = Ae("os"),
-    Ts = Ae("crypto"),
-    Ke = Ae("net"),
+  var Pn = importMetaRequire("path"),
+    Ps = importMetaRequire("os"),
+    Ts = importMetaRequire("crypto"),
+    Ke = importMetaRequire("net"),
     Q = Ve();
   Rs(Ve(), y);
   class En extends Q.AbstractMessageReader {
@@ -3202,8 +3202,8 @@ var Ct = w(function (y) {
   }
   y.createMessageConnection = js;
 });
-var Se = pe(Ct(), 1);
-var Qe = pe(Ct(), 1);
+var Se = toESM(Ct(), 1);
+var Qe = toESM(Ct(), 1);
 var $s = 65536,
   qs = 33554432,
   xt = Buffer.from(`\r
@@ -3413,7 +3413,7 @@ function createLSPClient(e, t) {
       return;
     try {
       if ((p || globalThis.process.platform === "win32") && m.pid !== void 0)
-        Uy(m.pid);
+        killProcessTree(m.pid);
       else m.kill();
     } catch (x) {
       n(`Process kill failed for ${e} (may already be dead): ${l(x)}`);
@@ -3570,7 +3570,7 @@ function createLSPClient(e, t) {
         if (Rt(x))
           n(`LSP server ${e} failed to start: ${l(x)}`, { level: "error" });
         else
-          fN(
+          logErrorWithTelemetryMessage(
             Error(`LSP server ${e} failed to start: ${l(x)}`),
             "LSP server failed to start",
           );
@@ -3649,7 +3649,7 @@ function createLSPClient(e, t) {
                 await E.sendNotification("exit", {}));
             })();
           if ((v.catch(() => {}), m !== void 0))
-            await Dt(
+            await withTimeout(
               v,
               m,
               `LSP server '${e}' timed out after ${m}ms during shutdown`,

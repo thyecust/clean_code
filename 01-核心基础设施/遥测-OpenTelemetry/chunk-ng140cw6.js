@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { bee } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
 import { Ls, Ime, Mc } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { w, Ae } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
-var g = w(function (R) {
+import { commonJS, importMetaRequire } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+var g = commonJS(function (R) {
   Object.defineProperty(R, "__esModule", { value: !0 });
   R.PrometheusSerializer = void 0;
   var z = Ls(),
@@ -205,15 +205,15 @@ ${s}
   }
   R.PrometheusSerializer = I;
 });
-var M = w(function (U) {
+var M = commonJS(function (U) {
   Object.defineProperty(U, "__esModule", { value: !0 });
   U.PrometheusExporter = void 0;
   var h = Ls(),
     j = Mc(),
     b = bee(),
-    k = Ae("http"),
+    k = importMetaRequire("http"),
     G = g(),
-    V = Ae("url");
+    V = importMetaRequire("url");
   class _ extends b.MetricReader {
     static DEFAULT_OPTIONS = {
       host: void 0,
@@ -354,7 +354,7 @@ var M = w(function (U) {
   }
   U.PrometheusExporter = _;
 });
-var J = w(function (S) {
+var J = commonJS(function (S) {
   Object.defineProperty(S, "__esModule", { value: !0 });
   S.PrometheusSerializer = S.PrometheusExporter = void 0;
   var B = M();

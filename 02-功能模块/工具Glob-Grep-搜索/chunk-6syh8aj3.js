@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS, SETUP_TOKEN_DEFAULT_EXPIRY_DAYS } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
@@ -15,7 +15,7 @@ import { Kn } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { h5, isAnthropicAuthEnabled, validateForceLoginMethod } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { getBridgeDoctorInfo } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
@@ -25,11 +25,11 @@ import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { Hte, Uun, rUt, tgn, c5e } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Oae, M_e } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { Mbe } from "../自动更新-安装/chunk-brx72pf1.js";
-import { wv } from "../../01-核心基础设施/共享小工具-未细化/chunk-ajpjkvdj.js";
+import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工具-未细化/base-render-options.js";
 import { zB } from "../../03-入口与运行时/CLI入口-Commander/chunk-nhpr06js.js";
-import { pat, fat } from "../Bridge-RemoteControl/chunk-k2f69v5t.js";
+import { getPolicyLimitsStatus, formatPolicyLimitsStatus } from "../Bridge-RemoteControl/policy-limits-status.js";
 import { Sle, MUn, mat } from "../../01-核心基础设施/共享小工具-未细化/chunk-ga0qgvpz.js";
-import { oO } from "../自动更新-安装/chunk-dv82rn71.js";
+import { getAutoUpdatesChannel } from "../自动更新-安装/auto-updates-channel.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { W4 } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { cwd as k } from "process";
@@ -51,13 +51,13 @@ function C0e(c, d = process.stdin) {
   );
 }
 function Agr() {
-  return w9e({ ...wv(!1), patchConsole: !1 });
+  return w9e({ ...getBaseRenderOptions(!1), patchConsole: !1 });
 }
 function E(c) {
   return { ok: !0, days: SETUP_TOKEN_DEFAULT_EXPIRY_DAYS, seconds: LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS };
 }
 async function Cgr(c, d) {
-  i("tengu_setup_token_command", {});
+  logEvent("tengu_setup_token_command", {});
   let n = E(d?.expiresInDays);
   if (!n.ok) {
     (c.unmount(),
@@ -146,11 +146,11 @@ setup-token creates a long-lived Claude.ai subscription token, which this policy
   (await logFeatureOkAsync("cli_setup_token"), await exitAfterAnalyticsFlush(0));
 }
 async function vgr(c) {
-  i("tengu_doctor_command", {});
+  logEvent("tengu_doctor_command", {});
   let d;
   try {
     let n = await Mbe({ probeKeychain: !0, storageV5: c }),
-      f = oO(),
+      f = getAutoUpdatesChannel(),
       l = [
         "Claude Code doctor",
         "",
@@ -204,7 +204,7 @@ async function vgr(c) {
         }),
         S = Date.now() + h;
       while (!T && w() === null && Date.now() < S)
-        await Promise.race([A, Z(200)]);
+        await Promise.race([A, sleep(200)]);
     }
     let p = l.push("Organization policy: \u2026") - 1,
       { statusNotices: g, invalidEntries: _ } = M_e(W4().errors);
@@ -267,7 +267,7 @@ async function vgr(c) {
       await logFeatureSadAsync("cli_doctor", "bridge_info_unavailable");
     }
     if (
-      ((l[p] = `Organization policy: ${u(fat(pat()))}`), n.warnings.length > 0)
+      ((l[p] = `Organization policy: ${u(formatPolicyLimitsStatus(getPolicyLimitsStatus()))}`), n.warnings.length > 0)
     ) {
       l.push(
         "",

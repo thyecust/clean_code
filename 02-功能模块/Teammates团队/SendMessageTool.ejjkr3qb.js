@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 175 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { oo, parseShortId, ze, Dxe } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, yt, R, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -53,7 +53,7 @@ import { getAgentId, getAgentName, getTeamName, isTeammate, getTeammateColor, is
 import { qNe, $re, abt } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
 import { ps, t5 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { Kt, ar, Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { matchesToolName, findToolByName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { ewt } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { $i } from "./chunk-t899nada.js";
 import {
@@ -87,7 +87,7 @@ import { isCrossSessionMessagingEnabled, CROSS_SESSION_MESSAGING_DISABLED_MESSAG
 import { Sbt, $Ae, UAe, V3t, dK, BAe, bbt, uN } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { FGt, $Gt, writeToMailbox, createShutdownRequestMessage, createShutdownApprovedMessage, createShutdownRejectedMessage, isStructuredProtocolMessage, markMessagesAsReadByPredicate } from "./chunk-g6nvp9mm.js";
 import { zr } from "./chunk-3k2smxfn.js";
-import { ZS } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
+import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
 import { primePeerIdentityOwner, getPeerBridgeIdentity } from "../权限系统/chunk-1y2g140m.js";
 import { readTeamFileAsync, updateTeamFile } from "./chunk-6b13bhw1.js";
 import { _bt } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
@@ -109,8 +109,8 @@ import {
 import { ajn } from "../../01-核心基础设施/共享小工具-未细化/chunk-mybtnk9f.js";
 import { kPe, HPe } from "../权限系统/chunk-4tar9p3n.js";
 import { Ton, Ou, uM, y9, Dee, Eon } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
-import { cjn, ujn, yon, djn } from "../../01-核心基础设施/共享小工具-未细化/chunk-wqaxtswb.js";
-import { wut } from "../../01-核心基础设施/共享小工具-未细化/chunk-zh4679df.js";
+import { RESUMED_AGENT_REPORT_OMITTED_MESSAGE, RESUMED_AGENT_REPORT_FOLLOWS_JSON_MESSAGE, formatResumedAgentResult, parseHandbackDisplayText } from "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
+import { getPlanApprovalPermissionMode } from "../../01-核心基础设施/共享小工具-未细化/plan-approval-permission-mode.js";
 import {
   IGe,
   XSe,
@@ -128,20 +128,20 @@ import {
   Ron,
   OGe,
 } from "./chunk-wsyjx2r0.js";
-import { Nin } from "./chunk-4ma81w0c.js";
-import { NE, jre } from "../../01-核心基础设施/共享小工具-未细化/chunk-1md6qpsy.js";
-import { pK } from "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
-import { Vr, _Ce } from "../../01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js";
+import { wakeTeammateTask } from "./teammate-task-messages.js";
+import { buildBooleanFromStringSchema, parseStringBoolean } from "../../01-核心基础设施/共享小工具-未细化/boolean-from-string-schema.js";
+import { getRemoteSessionCompatId } from "../../01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js";
+import { SEND_MESSAGE_TOOL_NAME, SEND_MESSAGE_SUMMARY_MAX_LENGTH } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 import { mt } from "../工具Task-Agent调度/chunk-1px84m19.js";
-import { cp, wge, fs } from "./chunk-enjekn9t.js";
-import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
+import { MAIN_CONVERSATION_NAME, formatAgentMessage, TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
+import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
 import { s, O, c, $e, Ko, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { iB, oz } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 var Be = /^local_[0-9a-f-]{8,}$/,
   xe = "ccd_session_mgmt",
   Le = "send_message",
-  nt = `mcp__${rn(xe)}__${rn(Le)}`,
+  nt = `mcp__${normalizeMcpName(xe)}__${normalizeMcpName(Le)}`,
   Cs = 1000;
 function Es(e) {
   let { tools: t, toolAliases: p } = e.options,
@@ -152,7 +152,7 @@ function Es(e) {
         _.mcpInfo.serverType === "sdk",
     ),
     d = r.length === 1 ? r[0] : void 0;
-  if (!d || ar(t, d.name, p) !== d) return;
+  if (!d || findToolByName(t, d.name, p) !== d) return;
   return d;
 }
 class qe {
@@ -534,7 +534,7 @@ var ys =
     "clear, self-contained sentence saying what this is about \u2014 not a greeting, " +
     "preamble, or bare @-mention.",
   bs = "",
-  Ds = m(() =>
+  Ds = createLazyValue(() =>
     Ko("type", [
       c({ type: k("shutdown_request"), reason: s().optional() }),
       c({
@@ -546,7 +546,7 @@ var ys =
             Ye,
             `request id longer than any real one (max ${ke} characters)`,
           ),
-        approve: NE(),
+        approve: buildBooleanFromStringSchema(),
         reason: s().optional(),
       }),
       c({
@@ -558,7 +558,7 @@ var ys =
             Ye,
             `request id longer than any real one (max ${ke} characters)`,
           ),
-        approve: NE(),
+        approve: buildBooleanFromStringSchema(),
         feedback: s().optional(),
       }),
     ]),
@@ -577,25 +577,25 @@ function _s(e) {
           : "Recipient: teammate name",
       ),
     summary: s()
-      .max(_Ce)
+      .max(SEND_MESSAGE_SUMMARY_MAX_LENGTH)
       .optional()
       .describe(
         e
-          ? `A 5-10 word label for your own transcript row (not transmitted \u2014 the recipient previews the first line of \`message\`). Truncated to ${_Ce} characters rather than rejected.`
-          : `A 5-10 word summary shown as a one-line preview in the UI. Defaults to the first line of a plain-text message; longer summaries are truncated to ${_Ce} characters rather than rejected.`,
+          ? `A 5-10 word label for your own transcript row (not transmitted \u2014 the recipient previews the first line of \`message\`). Truncated to ${SEND_MESSAGE_SUMMARY_MAX_LENGTH} characters rather than rejected.`
+          : `A 5-10 word summary shown as a one-line preview in the UI. Defaults to the first line of a plain-text message; longer summaries are truncated to ${SEND_MESSAGE_SUMMARY_MAX_LENGTH} characters rather than rejected.`,
       ),
     message: e ? Ke(ys).default(bs) : Ke(),
     ...(e && {
-      notify_when_idle: NE(O().optional()).describe(
+      notify_when_idle: buildBooleanFromStringSchema(O().optional()).describe(
         "Ask a session ON THIS MACHINE to send you ONE notice when it next goes idle (finishes its turn with nothing queued) or exits \u2014 opt-in, one-shot, no polling. With a message: deliver it now AND subscribe. Without a message (omit it): a pure subscription that costs the other session nothing.",
       ),
     }),
   });
 }
-var ws = m(() => _s(!1)),
-  Ss = m(() => _s(!0)),
-  Ps = m(() => ws().extend({ message: Re() })),
-  Us = m(() => Ss().extend({ message: Re(ys).default(bs) }));
+var ws = createLazyValue(() => _s(!1)),
+  Ss = createLazyValue(() => _s(!0)),
+  Ps = createLazyValue(() => ws().extend({ message: Re() })),
+  Us = createLazyValue(() => Ss().extend({ message: Re(ys).default(bs) }));
 function Se() {
   if (isCrossSessionMessagingEnabled()) return zr() ? Ss() : Us();
   return zr() ? ws() : Ps();
@@ -660,7 +660,7 @@ function Is(e, t, p) {
   return (typeof r === "string" && r.trim().length > 0) || ye(e, t, p);
 }
 function ye(e, t, p) {
-  return !ne(e) && jre(ks(t, p)?.notify_when_idle) === !0;
+  return !ne(e) && parseStringBoolean(ks(t, p)?.notify_when_idle) === !0;
 }
 function Bs(e, t, p) {
   return ne(e) || ye(e, t, p);
@@ -672,7 +672,7 @@ function ks(e, t) {
   let r = p.input;
   if (typeof r !== "object" || r === null) return;
   let d = $Gt(r, { applySplit: Ts() }),
-    _ = d !== null && me(d.input) ? d.input : r;
+    _ = d !== null && isRecord(d.input) ? d.input : r;
   return {
     message: "message" in _ ? _.message : void 0,
     notify_when_idle: "notify_when_idle" in _ ? _.notify_when_idle : void 0,
@@ -683,7 +683,7 @@ function xs(e) {
 }
 function ne(e) {
   if (!("notify_when_idle" in e)) return !1;
-  return jre(e.notify_when_idle) === !0;
+  return parseStringBoolean(e.notify_when_idle) === !0;
 }
 var fe =
     "notify_when_idle is only supported for Claude sessions on this machine in this release (not teammates, subagents, Remote Control or cloud sessions).",
@@ -778,7 +778,7 @@ var Ie = {
 };
 function Me(e) {
   if (e.agentId) return Ee(e, e.agentId).from;
-  return getAgentName() || (isTeammate() ? "teammate" : fs);
+  return getAgentName() || (isTeammate() ? "teammate" : TEAM_LEAD_AGENT_NAME);
 }
 async function Gs(e, t, p, r, d, _) {
   let i = r.getAppState(),
@@ -792,7 +792,7 @@ async function Gs(e, t, p, r, d, _) {
       errorClass: "not_reachable",
     };
   let q = e;
-  if (e !== fs || d !== void 0) {
+  if (e !== TEAM_LEAD_AGENT_NAME || d !== void 0) {
     let o = i.teamContext?.teammates ?? {},
       X =
         d !== void 0 && _ === "team-context" && Object.hasOwn(o, d)
@@ -837,7 +837,7 @@ async function Gs(e, t, p, r, d, _) {
             data: {
               success: !1,
               message:
-                mc(r.agentContext) < ZS()
+                mc(r.agentContext) < getMaxSubagentSpawnDepth()
                   ? `No teammate named '${e}' is currently on team '${w}'. Spawn one with ${mt}({name: '${e}'}) \u2014 or message the lead to do so.`
                   : `No teammate named '${e}' is currently on team '${w}'. Message the lead to spawn one.`,
             },
@@ -877,7 +877,7 @@ async function Gs(e, t, p, r, d, _) {
       },
       errorClass: "mailbox_write_failed",
     };
-  Nin(r.getAppState().tasks, q, w);
+  wakeTeammateTask(r.getAppState().tasks, q, w);
   let W = Vs(i, q);
   return {
     data: {
@@ -938,7 +938,7 @@ function Ae(e) {
 }
 function os(e, t) {
   return {
-    message: cjn,
+    message: RESUMED_AGENT_REPORT_OMITTED_MESSAGE,
     inlineHandback: {
       displayName: Ae(e),
       content: t.content,
@@ -970,7 +970,7 @@ async function Ys(e, t, p, r) {
         target: t,
       },
     };
-  if (_) Nin(r.getAppState().tasks, e, _);
+  if (_) wakeTeammateTask(r.getAppState().tasks, e, _);
   return {
     data: {
       success: !0,
@@ -997,7 +997,7 @@ async function zs(e, t) {
   }
   let w = createShutdownApprovedMessage({ requestId: e, from: d, paneId: _, backendType: i }),
     q = await writeToMailbox(
-      fs,
+      TEAM_LEAD_AGENT_NAME,
       { from: d, text: b(w), timestamp: new Date().toISOString(), color: getTeammateColor() },
       p,
       t.storageV5,
@@ -1065,7 +1065,7 @@ async function Ks(e, t, p) {
     _ = createShutdownRejectedMessage({ requestId: e, from: d, reason: t });
   if (
     (await writeToMailbox(
-      fs,
+      TEAM_LEAD_AGENT_NAME,
       { from: d, text: b(_), timestamp: new Date().toISOString(), color: getTeammateColor() },
       r,
       p.storageV5,
@@ -1100,7 +1100,7 @@ async function Js(e, t, p, r, d) {
     throw new De(
       "Only the team lead can approve plans. Teammates cannot approve their own or other plans.",
     );
-  let w = wut({
+  let w = getPlanApprovalPermissionMode({
       recipientName: e,
       leaderMode: getToolPermissionContext(d).mode,
       proactivityLevel: _.proactivityLevel,
@@ -1117,7 +1117,7 @@ async function Js(e, t, p, r, d) {
   if (
     (await writeToMailbox(
       e,
-      { from: fs, text: b(q), timestamp: new Date().toISOString() },
+      { from: TEAM_LEAD_AGENT_NAME, text: b(q), timestamp: new Date().toISOString() },
       i,
       d.storageV5,
     )) === void 0
@@ -1154,7 +1154,7 @@ async function Qs(e, t, p, r, d) {
   if (
     (await writeToMailbox(
       e,
-      { from: fs, text: b(w), timestamp: new Date().toISOString() },
+      { from: TEAM_LEAD_AGENT_NAME, text: b(w), timestamp: new Date().toISOString() },
       i,
       d.storageV5,
     )) === void 0
@@ -1182,7 +1182,7 @@ function is() {
 function ds() {
   if (getPeerBridgeIdentity()?.live) return;
   if (a.CLAUDE_CODE_REMOTE === !0)
-    return pK() === void 0 ? "no-container-address" : void 0;
+    return getRemoteSessionCompatId() === void 0 ? "no-container-address" : void 0;
   return "rc-disconnected";
 }
 function ls(e) {
@@ -1191,15 +1191,15 @@ function ls(e) {
     : "this session has no reply address";
 }
 function ms(e) {
-  return a.CLAUDE_CODE_REMOTE === !0 && !e && pK() !== void 0
+  return a.CLAUDE_CODE_REMOTE === !0 && !e && getRemoteSessionCompatId() !== void 0
     ? "; note: this session has no name yet, so the receiver can answer only by the address on the message, not by name"
     : "";
 }
 function Ts() {
   return H("tengu_deep_feather", !0);
 }
-var SendMessageTool = Tt({
-  name: Vr,
+var SendMessageTool = buildTool({
+  name: SEND_MESSAGE_TOOL_NAME,
   searchHint: "send messages to agent teammates",
   maxResultSizeChars: 1e5,
   userFacingName() {
@@ -1232,7 +1232,7 @@ var SendMessageTool = Tt({
   toAutoClassifierInput(e) {
     let t = (w, q) => (q ? ` [${w}: ${q}]` : ""),
       p = $Gt(e),
-      r = p !== null && me(p.input) ? p.input : void 0,
+      r = p !== null && isRecord(p.input) ? p.input : void 0,
       d = t(
         "summary",
         r === void 0
@@ -1567,10 +1567,10 @@ var SendMessageTool = Tt({
           "structured messages cannot be sent cross-session \u2014 only plain text",
         errorCode: 9,
       };
-    if (e.message.type === "shutdown_response" && e.to !== fs)
+    if (e.message.type === "shutdown_response" && e.to !== TEAM_LEAD_AGENT_NAME)
       return {
         result: !1,
-        message: `shutdown_response must be sent to "${fs}"`,
+        message: `shutdown_response must be sent to "${TEAM_LEAD_AGENT_NAME}"`,
         errorCode: 9,
       };
     if (
@@ -1626,7 +1626,7 @@ var SendMessageTool = Tt({
           content: [
             {
               type: "text",
-              text: `${i(ujn)}
+              text: `${i(RESUMED_AGENT_REPORT_FOLLOWS_JSON_MESSAGE)}
 ${w[0].text}`,
             },
           ],
@@ -1635,7 +1635,7 @@ ${w[0].text}`,
       return {
         tool_use_id: t,
         type: "tool_result",
-        content: [{ type: "text", text: b({ ..._, message: yon(d) }) }],
+        content: [{ type: "text", text: b({ ..._, message: formatResumedAgentResult(d) }) }],
       };
     }
     return {
@@ -1726,7 +1726,7 @@ ${w[0].text}`,
             );
         }
       let D = d ? Ee(t, d).from : void 0,
-        M = d !== void 0 && D !== void 0 ? wge(D, e.message) : e.message,
+        M = d !== void 0 && D !== void 0 ? formatAgentMessage(D, e.message) : e.message,
         E = PGe(d, D, { oneWay: !1 }),
         S = await Fe({
           tool: I.tool,
@@ -1829,7 +1829,7 @@ ${w[0].text}`,
           C = typeof x.message === "string" ? x.message : e.message,
           V = es(C, () => i("bridge", "handler_rewrite", { via: "address" }));
         if (V !== void 0) return V;
-        let ee = d !== void 0 && N !== void 0 ? wge(N, C) : C,
+        let ee = d !== void 0 && N !== void 0 ? formatAgentMessage(N, C) : C,
           j = ds(),
           L = PGe(d, N, { oneWay: j !== void 0 }),
           J = Aon(abt(t.session, h.target)),
@@ -1906,7 +1906,7 @@ ${w[0].text}`,
           });
         if (C !== void 0) return C;
         if (v) Ce();
-        let V = d !== void 0 && N !== void 0 ? wge(N, e.message) : e.message,
+        let V = d !== void 0 && N !== void 0 ? formatAgentMessage(N, e.message) : e.message,
           ee = PGe(d, N, { oneWay: E() === void 0 });
         try {
           let j = x
@@ -2017,7 +2017,7 @@ ${w[0].text}`,
         }
       );
     }
-    let X = t.options.tools.some((h) => Kt(h, $i)),
+    let X = t.options.tools.some((h) => matchesToolName(h, $i)),
       se = X ? ` (${$i} lists them)` : "";
     if (
       o.kind === "agent-live" ||
@@ -2339,7 +2339,7 @@ ${M}`,
         { data: M.data }
       );
     }
-    let Z = d !== void 0 && N !== void 0 ? wge(N, e.message) : e.message,
+    let Z = d !== void 0 && N !== void 0 ? formatAgentMessage(N, e.message) : e.message,
       ie = q ? FT(q.displayName) : "",
       le =
         d !== void 0 && N !== void 0
@@ -2359,7 +2359,7 @@ ${M}`,
             {
               data: {
                 success: !1,
-                message: `You are the main conversation \u2014 "${cp}" addresses you. Send to a named agent instead.`,
+                message: `You are the main conversation \u2014 "${MAIN_CONVERSATION_NAME}" addresses you. Send to a named agent instead.`,
               },
             }
           );
@@ -2569,7 +2569,7 @@ ${M}`,
                       : S instanceof Ou &&
                           S.transcriptMissing &&
                           parseShortId(o.agentName) !== null
-                        ? `Agent "${o.agentName}" could not be resumed: ${l(S)}. If you read this id in a message from another Claude Code process (e.g. the lead's subagent, seen from a teammate pane), it never ran in this session \u2014 reply through "${fs}" or the session that sent it instead of the raw id.`
+                        ? `Agent "${o.agentName}" could not be resumed: ${l(S)}. If you read this id in a message from another Claude Code process (e.g. the lead's subagent, seen from a teammate pane), it never ran in this session \u2014 reply through "${TEAM_LEAD_AGENT_NAME}" or the session that sent it instead of the raw id.`
                         : S instanceof Ou
                           ? `Agent "${o.agentName}" could not be resumed: ${l(S)}`
                           : `Agent "${o.agentName}" was resumed but ${S instanceof Error && S.name === "AbortError" ? "was interrupted" : "failed while running"}: ${l(S)}`,
@@ -2740,7 +2740,7 @@ ${V.display}`
           C = typeof x.message === "string" ? x.message : e.message,
           V = es(C, () => i("bridge", "handler_rewrite", { via: I }));
         if (V !== void 0) return V;
-        let ee = x === e ? Z : d !== void 0 && N !== void 0 ? wge(N, C) : C,
+        let ee = x === e ? Z : d !== void 0 && N !== void 0 ? formatAgentMessage(N, C) : C,
           j = getCurrentSessionOffBoxPeerName(),
           L = await D(
             o.sessionId,
@@ -2811,7 +2811,7 @@ ${V.display}`
     }
   },
   extractSearchText(e) {
-    return djn(e);
+    return parseHandbackDisplayText(e);
   },
   renderToolUseMessage(e) {
     if (

@@ -19,13 +19,13 @@ import { P6, XUe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { findCanonicalGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te, truncateStartToWidth, formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { nl, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
+import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import { readRoster } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { Rh } from "../后台任务-Shell管理/chunk-5jv5fvbn.js";
@@ -33,22 +33,22 @@ import { JI, f1e, K_ } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { dBn } from "../权限系统/chunk-3kjwvb3e.js";
 import { NF } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Lc } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { XL } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import { D9e, L9e } from "../认证-OAuth登录/chunk-n76cf9e6.js";
 import { Jae } from "../../01-核心基础设施/设置-配置/chunk-bmk73cc4.js";
 import { l$n, eZt, tZt } from "../权限系统/chunk-0w8vky7d.js";
 import { d$n } from "../../01-核心基础设施/共享小工具-未细化/chunk-me1cqqmp.js";
 import { ole, XHe, DWe, tF } from "../后台任务-Shell管理/chunk-jfk5mpe1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-x93xfjz0.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
+import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Vb } from "../../01-核心基础设施/共享小工具-未细化/chunk-d3d1v4d6.js";
+import { getDaemonJsonPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
 import { E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
 import { basename, resolve } from "path";
@@ -58,7 +58,7 @@ function po(mn) {
     : "All sessions share the directory.";
 }
 async function Nt(n, s) {
-  let i = await Jae(Vb(), s);
+  let i = await Jae(getDaemonJsonPath(), s);
   if (!i.ok) return [];
   return (i.config.remoteControl ?? []).map((f) => ({
     dir: f.dir,
@@ -113,21 +113,21 @@ function _e(Zo) {
   if (en) {
     const Ce = K.dir;
     let ge;
-    if (J[6] === p) ((ge = Lc()), (J[6] = ge));
+    if (J[6] === MEMO_CACHE_SENTINEL) ((ge = Lc()), (J[6] = ge));
     else ge = J[6];
     const ae = `Stop serving ${Ce} to claude.ai. The ${ge} will stop the worker on its next reconcile.`;
     let Re;
-    if (J[7] === p) ((Re = () => Ct(!1)), (J[7] = Re));
+    if (J[7] === MEMO_CACHE_SENTINEL) ((Re = () => Ct(!1)), (J[7] = Re));
     else Re = J[7];
     let ne;
     if (J[8] !== se) ((ne = () => void se("remove")), (J[8] = se), (J[9] = ne));
     else ne = J[9];
     let De;
-    if (J[10] === p) ((De = () => Ct(!1)), (J[10] = De));
+    if (J[10] === MEMO_CACHE_SENTINEL) ((De = () => Ct(!1)), (J[10] = De));
     else De = J[10];
     let re;
     if (J[11] !== ne)
-      ((re = e(En, {
+      ((re = e(ConfirmPrompt, {
         hideIndexes: !0,
         cancelFirst: !0,
         focus: "cancel",
@@ -155,7 +155,7 @@ function _e(Zo) {
     return be;
   }
   let Ce;
-  if (J[16] === p)
+  if (J[16] === MEMO_CACHE_SENTINEL)
     ((Ce = [
       { label: `Restart ${Lc()}`, value: "restart" },
       { label: "Remove", value: "remove" },
@@ -179,7 +179,7 @@ function _e(Zo) {
   const Re = K.isRunning ? "success" : "pending";
   let ne;
   if (J[21] !== Re)
-    ((ne = e(et, { status: Re, withSpace: !0 })), (J[21] = Re), (J[22] = ne));
+    ((ne = e(StatusIndicator, { status: Re, withSpace: !0 })), (J[21] = Re), (J[22] = ne));
   else ne = J[22];
   const De = K.isRunning ? "running" : "not running";
   let re;
@@ -318,7 +318,7 @@ function tt(nn) {
       (P[17] = Ye));
   else Ye = P[17];
   let ao;
-  if (P[18] === p)
+  if (P[18] === MEMO_CACHE_SENTINEL)
     ((ao = {
       type: "select",
       key: "spawnMode",
@@ -389,7 +389,7 @@ function tt(nn) {
         : "";
     const ye = `${Z.dir} hasn't been trusted yet.${un} Trusting allows Claude to read and execute files there.`;
     let Le;
-    if (P[32] === p) ((Le = () => Xe(null)), (P[32] = Le));
+    if (P[32] === MEMO_CACHE_SENTINEL) ((Le = () => Xe(null)), (P[32] = Le));
     else Le = P[32];
     let Ue;
     if (P[33] !== le || P[34] !== Z.dir || P[35] !== Te)
@@ -402,11 +402,11 @@ function tt(nn) {
         (P[36] = Ue));
     else Ue = P[36];
     let uo;
-    if (P[37] === p) ((uo = () => Xe(null)), (P[37] = uo));
+    if (P[37] === MEMO_CACHE_SENTINEL) ((uo = () => Xe(null)), (P[37] = uo));
     else uo = P[37];
     let Qe;
     if (P[38] !== Ue)
-      ((Qe = e(En, {
+      ((Qe = e(ConfirmPrompt, {
         hideIndexes: !0,
         cancelFirst: !0,
         focus: "cancel",
@@ -504,7 +504,7 @@ async function Jn(n, s) {
 }
 function DaemonHub({ initialData: n, modelOptions: s, onDone: i, storageV5: k }) {
   let [f, H] = d(n),
-    R = vt(),
+    R = useClock(),
     [T] = d(() => ({ wall: Date.now(), clock: R.now() })),
     [m, b] = d(T.wall),
     [A, u] = d({ type: "hub" }),
@@ -700,7 +700,7 @@ function ht(Wn) {
   if (O[10] !== Ot)
     ((yo = { context: "Select", isActive: Ot }), (O[10] = Ot), (O[11] = yo));
   else yo = O[11];
-  Ze(
+  useKeybindings(
     {
       "select:previous": vo,
       "select:next": bo,
@@ -735,7 +735,7 @@ function ht(Wn) {
   else ot = O[18];
   let nt;
   if (O[19] !== q.length || O[20] !== me)
-    ((nt = q.length === 0 && e(Rn, { children: `  (no ${He[me]}s)` })),
+    ((nt = q.length === 0 && e(EmptyStateMessage, { children: `  (no ${He[me]}s)` })),
       (O[19] = q.length),
       (O[20] = me),
       (O[21] = nt));
@@ -802,7 +802,7 @@ function ht(Wn) {
     nr = !1,
     rr = !0;
   let So, Co;
-  if (O[36] === p)
+  if (O[36] === MEMO_CACHE_SENTINEL)
     ((So = e(t, { bold: !0, children: "Daemon service" })),
       (Co = e(t, { dimColor: !0, children: " \xB7 " })),
       (O[36] = So),
@@ -852,21 +852,21 @@ function ht(Wn) {
       (O[48] = lt));
   else lt = O[48];
   let Do;
-  if (O[49] === p)
-    ((Do = e(D, { chord: ["left", "right"], action: "tabs" })), (O[49] = Do));
+  if (O[49] === MEMO_CACHE_SENTINEL)
+    ((Do = e(KeybindingHint, { chord: ["left", "right"], action: "tabs" })), (O[49] = Do));
   else Do = O[49];
   let xo;
-  if (O[50] === p)
+  if (O[50] === MEMO_CACHE_SENTINEL)
     ((xo = e(o, {
       marginTop: 1,
       children: e(t, {
         dimColor: !0,
-        children: r(ue, {
+        children: r(DotSeparatedList, {
           children: [
             Do,
-            e(D, { chord: ["up", "down"], action: "move" }),
-            e(D, { chord: "enter", action: "select" }),
-            e(D, { chord: "escape", action: "close" }),
+            e(KeybindingHint, { chord: ["up", "down"], action: "move" }),
+            e(KeybindingHint, { chord: "enter", action: "select" }),
+            e(KeybindingHint, { chord: "escape", action: "close" }),
           ],
         }),
       }),
@@ -1010,7 +1010,7 @@ function bt(lr) {
   }
   if (!S.serviceSupported) {
     let U;
-    if (Q[2] === p)
+    if (Q[2] === MEMO_CACHE_SENTINEL)
       ((U = e(t, {
         dimColor: !0,
         children:
@@ -1054,7 +1054,7 @@ function bt(lr) {
   else U = Q[7];
   let qt = U,
     Ve;
-  if (Q[8] === p)
+  if (Q[8] === MEMO_CACHE_SENTINEL)
     ((Ve = e(t, { color: "success", children: "running" })), (Q[8] = Ve));
   else Ve = Q[8];
   let ut;
@@ -1100,7 +1100,7 @@ function bt(lr) {
   )
     ((No = e(t, {
       dimColor: !0,
-      children: r(ue, { children: [Ve, ut, mt, pt, ft, gt] }),
+      children: r(DotSeparatedList, { children: [Ve, ut, mt, pt, ft, gt] }),
     })),
       (Q[19] = ut),
       (Q[20] = mt),

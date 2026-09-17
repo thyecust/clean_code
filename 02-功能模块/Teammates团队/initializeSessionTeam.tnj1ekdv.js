@@ -10,11 +10,11 @@
 
 // [preload stripped] 原本在此预载 38 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K, he, TYt, QLn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { ef } from "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
+import { AGENT_COLOR_NAMES } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { TZn, Wk, CXe } from "./chunk-g6nvp9mm.js";
 import { getTeamFilePath, readTeamFileAsync, logTeamFileWriteFailure, writeTeamFileAsync, registerTeamForSessionCleanup } from "./chunk-6b13bhw1.js";
 import { ix } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { fs } from "./chunk-enjekn9t.js";
+import { TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
 import { rename } from "fs/promises";
 var l = "session";
 function c(t) {
@@ -30,7 +30,7 @@ function p() {
 async function initializeSessionTeam(t, n) {
   let i = t?.existingTeamName || p(),
     e = i ?? c(K()),
-    a = ix(fs, e),
+    a = ix(TEAM_LEAD_AGENT_NAME, e),
     m = getTeamFilePath(e);
   if (!(i ? await readTeamFileAsync(e, n) : null)) {
     let r = {
@@ -41,8 +41,8 @@ async function initializeSessionTeam(t, n) {
       members: [
         {
           agentId: a,
-          name: fs,
-          agentType: fs,
+          name: TEAM_LEAD_AGENT_NAME,
+          agentType: TEAM_LEAD_AGENT_NAME,
           joinedAt: Date.now(),
           tmuxPaneId: "leader",
           cwd: he(),
@@ -57,7 +57,7 @@ async function initializeSessionTeam(t, n) {
   let o = K();
   if (e !== o) await rename(Wk(o), Wk(e)).catch(() => {});
   (await CXe(e, n), registerTeamForSessionCleanup(e));
-  let s = ef[0];
+  let s = AGENT_COLOR_NAMES[0];
   return {
     teamContext: {
       teamName: e,
@@ -65,8 +65,8 @@ async function initializeSessionTeam(t, n) {
       leadAgentId: a,
       teammates: {
         [a]: {
-          name: fs,
-          agentType: fs,
+          name: TEAM_LEAD_AGENT_NAME,
+          agentType: TEAM_LEAD_AGENT_NAME,
           color: s,
           tmuxSessionName: "in-process",
           tmuxPaneId: "leader",

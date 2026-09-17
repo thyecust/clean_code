@@ -13,7 +13,7 @@ import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { Jbe } from "../共享小工具-未细化/chunk-37w8v4sh.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
-import { Ae } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { importMetaRequire } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 import { lstat } from "fs/promises";
 import { join as ae } from "path";
 var vze = 1e5,
@@ -469,7 +469,7 @@ function T(e) {
 function ve() {
   if (H !== void 0) return H;
   try {
-    let e = Ae("bun:ffi"),
+    let e = importMetaRequire("bun:ffi"),
       s = e.dlopen("/usr/lib/libSystem.B.dylib", {
         openat: { args: ["i32", "ptr", "i32"], returns: "i32" },
         mkdirat: { args: ["i32", "ptr", "u32"], returns: "i32" },

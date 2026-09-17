@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { K, jc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "./chunk-an83zrbx.js";
+import { logEvent } from "./analytics-event-queue.js";
 import { lit as S, fromEnum } from "./analytics-fields.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q$, AJe } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
@@ -62,8 +62,8 @@ function restoreGoalFromTranscript(l, n, e) {
     r !== void 0)
   )
     Q$(r, "resume_swap");
-  (i("tengu_goal_restored_on_resume", { promptLength: t.length }),
-    i("tengu_stop_hook_added", {
+  (logEvent("tengu_goal_restored_on_resume", { promptLength: t.length }),
+    logEvent("tengu_stop_hook_added", {
       promptLength: t.length,
       via: S("goal"),
       origin: fromEnum("restored"),

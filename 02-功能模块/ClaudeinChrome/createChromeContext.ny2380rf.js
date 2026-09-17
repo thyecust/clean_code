@@ -9,34 +9,34 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 200 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import "./chunk-317fgfn3.js";
+import "./chrome-tool-error-classifier.js";
 import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/chunk-98spw152.js";
 import "../MCP客户端/chunk-j8556pzt.js";
 import "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import { aNt } from "../Bridge-RemoteControl/chunk-hbndb8am.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { w5, PUe, getClaudeAIOAuthTokens, checkAndRefreshOAuthTokenIfNeeded, Te, NR, ee, EP, x5 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { zR, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fileSuffixForOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureBad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { getAPIProvider, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { _F } from "../../01-核心基础设施/共享小工具-未细化/chunk-hxq0hkxe.js";
-import { Es } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
-import { Iv } from "../../01-核心基础设施/共享小工具-未细化/chunk-bfth4n1b.js";
+import { initializeAnalyticsSink } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
+import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
+import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
 import { SGe } from "../../01-核心基础设施/设置-配置/chunk-6rz5fqzm.js";
 import { isPolicyAllowedInResponse } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { jAn } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
-import { Tw } from "../认证-OAuth登录/chunk-s51acx6w.js";
+import { credentialsStoreFor } from "../认证-OAuth登录/credentials-store.js";
 import { HI } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSecureSocketPath, getAllSocketPaths } from "./chunk-hnp84hf6.js";
-import { Z2n, ejn, tjn } from "../Hooks钩子/chunk-rwdpktga.js";
-import { che } from "../../01-核心基础设施/共享小工具-未细化/chunk-36nx9gcx.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-c0wtcn4y.js";
+import { logChromeBridgeConnected, logChromeExtensionConnected, logChromeToolCallDisconnected } from "../Hooks钩子/chrome-telemetry-events.js";
+import { StdioServerTransport } from "../../01-核心基础设施/共享小工具-未细化/stdio-server-transport.js";
+import "../../01-核心基础设施/共享小工具-未细化/stdio-message-framing.js";
 import { format } from "util";
 var P =
     "https://github.com/anthropics/claude-code/issues/new?labels=bug,claude-in-chrome",
@@ -89,13 +89,13 @@ function createChromeContext(e, r) {
       );
     },
     onToolCallDisconnected: () => {
-      if (o) tjn(p);
+      if (o) logChromeToolCallDisconnected(p);
       if (p)
         return `Browser extension is not connected: the OAuth token Claude Code is using belongs to a different claude.ai account than the one Claude Code is logged in as. If CLAUDE_CODE_OAUTH_TOKEN is set in your shell or CI profile, unset it (or re-mint it for this account), then run /logout and /login in Claude Code and make sure the browser extension is signed into the same claude.ai account. If you continue to experience issues, please report a bug: ${P}`;
       return `Browser extension is not connected. Please ensure the Claude browser extension is installed and running (${HI}), and that you are logged into claude.ai with the same account as Claude Code. If this is your first time connecting to Chrome, you may need to restart Chrome for the installation to take effect. If you continue to experience issues, please report a bug: ${P}`;
     },
     onExtensionPaired: (t, s) => {
-      if (o) ejn();
+      if (o) logChromeExtensionConnected();
       (Te((d) => {
         if (
           d.chromeExtension?.pairedDeviceId === t &&
@@ -110,7 +110,7 @@ function createChromeContext(e, r) {
         m.info(`Paired with "${s}" (${t.slice(0, 8)})`));
     },
     getPersistedDeviceId: () => ee().chromeExtension?.pairedDeviceId,
-    askUserToolName: Es,
+    askUserToolName: ASK_USER_QUESTION_TOOL_NAME,
     ...(h !== void 0 && { getScreenshotSaveDir: () => h }),
     bridgeConfig: {
       url: _,
@@ -132,7 +132,7 @@ function createChromeContext(e, r) {
         let d = C.accountUuid,
           l = t !== void 0 && t.toLowerCase() !== d;
         if (l && !p)
-          (i("tengu_chrome_bridge_account_mismatch", {
+          (logEvent("tengu_chrome_bridge_account_mismatch", {
             has_env_token: Boolean(a.CLAUDE_CODE_OAUTH_TOKEN),
             persisted_from_config: Boolean(ee().oauthAccount?.accountUuid),
           }),
@@ -160,7 +160,7 @@ function createChromeContext(e, r) {
     trackEvent: (t, s) => {
       if (o && t === "chrome_bridge_connection_succeeded") {
         let l = s?.status;
-        Z2n(l === "paired" || l === "waiting" ? l : void 0);
+        logChromeBridgeConnected(l === "paired" || l === "waiting" ? l : void 0);
       }
       let d = {};
       if (s)
@@ -169,7 +169,7 @@ function createChromeContext(e, r) {
           if (typeof g === "boolean" || typeof g === "number") d[S] = g;
           else if (typeof g === "string" && U.has(S)) d[S] = g;
         }
-      i(t, d);
+      logEvent(t, d);
     },
   };
 }
@@ -237,10 +237,10 @@ async function runClaudeInChromeMcpServer(e) {
     if (r)
       process.stderr.write(`${r}
 `);
-    _F();
-    let o = Iv(e),
-      c = Tw(o);
-    if (M() && o !== void 0) {
+    initializeAnalyticsSink();
+    let o = pinStorageV5(e),
+      c = credentialsStoreFor(o);
+    if (isHoverRestEnabled() && o !== void 0) {
       (zR({ storageV5: o }), NR(o));
       let { primeFastPathCredentials: C } = await import("../../01-核心基础设施/共享小工具-未细化/primeFastPathCredentials.eb5w3wem.js");
       (await C(c), await EP(o));
@@ -262,7 +262,7 @@ async function runClaudeInChromeMcpServer(e) {
         bearerGate: V(u.verified),
       }),
       m = aNt(v),
-      I = new che(),
+      I = new StdioServerTransport(),
       h = !1,
       _ = async () => {
         if (h) return;

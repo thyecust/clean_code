@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { Ls } from "./认证-OAuth登录.419zdfz3.js";
-import { w } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var i = w(function (e) {
+import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var i = commonJS(function (e) {
   Object.defineProperty(e, "__esModule", { value: !0 });
   e.getMachineId = void 0;
   var d = Ls();

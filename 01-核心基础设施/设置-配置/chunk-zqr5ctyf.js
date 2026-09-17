@@ -11,14 +11,14 @@ import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../共享小工具-未细化/analytics-fields.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, my, _Z, AHt, Tae } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Dt } from "../共享小工具-未细化/chunk-510m1t2d.js";
+import { withTimeout } from "../共享小工具-未细化/async-timeout-utils.js";
 import { iae, ae } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { fileSuffixForOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { hur, I } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
-import { Y } from "../共享小工具-未细化/chunk-d16fhdtx.js";
-import { au } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { dedupe } from "../共享小工具-未细化/chunk-d16fhdtx.js";
+import { defineExportGetters } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 function Hx() {
   return !0;
 }
@@ -335,7 +335,7 @@ async function $nt(t, o) {
           .split(";")
           .filter(Boolean)
       : [],
-    s = Y(
+    s = dedupe(
       (process.env.PATH ?? "")
         .split(Lt)
         .map((e) => e.replace(/^"|"$/g, ""))
@@ -380,7 +380,7 @@ async function $nt(t, o) {
 async function Nt() {
   let t = new Set();
   try {
-    await Dt($nt(pXt, t), Ut, "build tool PATH scan timed out");
+    await withTimeout($nt(pXt, t), Ut, "build tool PATH scan timed out");
   } catch {}
   return pXt.filter((o) => t.has(o));
 }
@@ -687,7 +687,7 @@ function getShellForAnalytics() {
 var TW = ["us", "eu", "apac", "jp", "au", "us-gov", "global"],
   z = ["us", "eu", "apac", "jp", "au", "global"];
 var l = {};
-au(l, {
+defineExportGetters(l, {
   AGENT_PROXY_AUTH_TOKEN: () => ht,
   ANTHROPIC_API_KEY: () => bt,
   ANTHROPIC_AUTH_TOKEN: () => mt,
@@ -816,7 +816,7 @@ var bt = I.str(),
   vo = I.str(),
   Wo = I.str();
 var M = {};
-au(M, {
+defineExportGetters(M, {
   ANT_CLAUDE_CODE_METRICS_ENDPOINT: () => ZE,
   ANT_OTEL_EXPORTER_OTLP_ENDPOINT: () => yE,
   ANT_OTEL_EXPORTER_OTLP_HEADERS: () => YE,
@@ -947,7 +947,7 @@ var go = I.bool(),
   ZE = I.str(),
   jE = I.str();
 var u = {};
-au(u, {
+defineExportGetters(u, {
   CLAUDE_AX_PREPARK_MS: () => QE,
   CLAUDE_AX_SCREEN_READER: () => JE,
   CLAUDE_AX_STARTUP_QUIET_MS: () => zE,
@@ -1469,7 +1469,7 @@ var JE = I.triBool(),
   hn = I.triBool(),
   wn = I.triBool();
 var b = {};
-au(b, {
+defineExportGetters(b, {
   ALACRITTY_LOG: () => iO,
   ANDROID_HOME: () => zC,
   ANDROID_SDK_ROOT: () => QC,
@@ -1854,7 +1854,7 @@ var Vn = I.str(),
   SD = I.str(),
   iD = I.str();
 var m = {};
-au(m, {
+defineExportGetters(m, {
   AI_AGENT: () => nL,
   ALLOW_ANT_COMPUTER_USE_MCP: () => CL,
   ANTHROPIC_CONFIG_DIR: () => ID,
@@ -2413,7 +2413,7 @@ var ID = I.str(),
   MR = I.int({ min: 1 }),
   uR = I.int();
 var G = {};
-au(G, {
+defineExportGetters(G, {
   ANTHROPIC_CUSTOM_MODEL_OPTION: () => XR,
   ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION: () => ZR,
   ANTHROPIC_CUSTOM_MODEL_OPTION_NAME: () => kR,
@@ -2494,7 +2494,7 @@ var BR = I.str(),
   cS = I.str(),
   TS = I.str();
 var H = {};
-au(H, {
+defineExportGetters(H, {
   ALL_PROXY: () => US,
   ANTHROPIC_BETAS: () => uS,
   ANTHROPIC_CUSTOM_HEADERS: () => BS,
@@ -2585,7 +2585,7 @@ var LS = I.str(),
   Ei = I.int(),
   _i = I.int({ min: 0 });
 var d = {};
-au(d, {
+defineExportGetters(d, {
   AGENT_PROXY_URL: () => nI,
   ANTHROPIC_AWS_BASE_URL: () => Si,
   ANTHROPIC_AWS_WORKSPACE_ID: () => ii,

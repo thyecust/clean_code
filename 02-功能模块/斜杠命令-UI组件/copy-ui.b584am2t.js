@@ -12,25 +12,25 @@
 import { _u } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { os, kr, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { USt, z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { rre, xr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Td } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import { ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-bg4saywz.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { mkdir } from "fs/promises";
 F();
 import { join as we } from "path";
@@ -184,7 +184,7 @@ function ne(He) {
   let h = _(36),
     { fullText: R, codeBlocks: k, messageAge: P, onDone: b } = He,
     se = C("full"),
-    { storageV5: U } = _e();
+    { storageV5: U } = useStorageV5Context();
   const E = `${R.length} chars, ${
     ln(
       R,
@@ -201,7 +201,7 @@ function ne(He) {
   let ie;
   if (h[2] !== k || h[3] !== B) {
     let A;
-    if (h[5] === p)
+    if (h[5] === MEMO_CACHE_SENTINEL)
       ((A = {
         label: "Always copy full response",
         value: "always",
@@ -239,13 +239,13 @@ function ne(He) {
       let M = x(le);
       if (le === "always") {
         if (!ee().copyFullResponse) await Te(Ae, U);
-        i("tengu_copy", { block_count: k.length, always: !0, message_age: P });
+        logEvent("tengu_copy", { block_count: k.length, always: !0, message_age: P });
         let et = await v(M.text, M.filename);
         b(`${et}
 Preference saved. Use /config to change copyFullResponse`);
         return;
       }
-      i("tengu_copy", {
+      logEvent("tengu_copy", {
         selected_block: M.blockIndex,
         block_count: k.length,
         message_age: P,
@@ -265,7 +265,7 @@ Preference saved. Use /config to change copyFullResponse`);
   if (h[15] !== k.length || h[16] !== x || h[17] !== P || h[18] !== b) {
     let Z = async function Z(nt) {
       let J = x(nt);
-      i("tengu_copy", {
+      logEvent("tengu_copy", {
         selected_block: J.blockIndex,
         block_count: k.length,
         message_age: P,
@@ -287,12 +287,12 @@ Preference saved. Use /config to change copyFullResponse`);
   } else pe = h[19];
   let j = pe,
     I;
-  if (h[20] === p)
+  if (h[20] === MEMO_CACHE_SENTINEL)
     ((I = e(t, { dimColor: !0, children: "Select content to copy:" })),
       (h[20] = I));
   else I = h[20];
   let me;
-  if (h[21] === p)
+  if (h[21] === MEMO_CACHE_SENTINEL)
     ((me = (rt) => {
       se.current = rt;
     }),
@@ -329,24 +329,24 @@ Preference saved. Use /config to change copyFullResponse`);
       (h[29] = K));
   else K = h[29];
   let fe, ge;
-  if (h[30] === p)
-    ((fe = e(D, {
+  if (h[30] === MEMO_CACHE_SENTINEL)
+    ((fe = e(KeybindingHint, {
       chord: "enter",
       action: "copy",
       format: { keyCase: "lower" },
     })),
-      (ge = e(D, { chord: "w", action: "write to file" })),
+      (ge = e(KeybindingHint, { chord: "w", action: "write to file" })),
       (h[30] = fe),
       (h[31] = ge));
   else ((fe = h[30]), (ge = h[31]));
   let de;
-  if (h[32] === p)
-    ((de = e(ci, {
-      children: r(ue, {
+  if (h[32] === MEMO_CACHE_SENTINEL)
+    ((de = e(InputGuide, {
+      children: r(DotSeparatedList, {
         children: [
           fe,
           ge,
-          e(D, {
+          e(KeybindingHint, {
             chord: "escape",
             action: "cancel",
             format: { keyCase: "lower" },
@@ -359,7 +359,7 @@ Preference saved. Use /config to change copyFullResponse`);
   let ye;
   if (h[33] !== j || h[34] !== K)
     ((ye = e(Qr, {
-      children: r(mr, { gap: 1, onKeyDown: j, children: [I, K, de] }),
+      children: r(FocusableBox, { gap: 1, onKeyDown: j, children: [I, K, de] }),
     })),
       (h[33] = j),
       (h[34] = K),
@@ -392,7 +392,7 @@ var Qe = async (n, o, a) => {
     d = Ce(f),
     m = ee();
   if (d.length === 0 || m.copyFullResponse) {
-    i("tengu_copy", {
+    logEvent("tengu_copy", {
       always: m.copyFullResponse,
       block_count: d.length,
       message_age: c,

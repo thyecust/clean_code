@@ -11,6 +11,10 @@
 先在会话 UI 那个文件试点，再铺到全树 812 个文件，见
 [全树别名去混淆](#全树别名去混淆)。
 
+**导出名恢复**（2026-09-17）处理剩下那一层：导出名在文件内没有任何证据的模块，
+靠读代码与调用点恢复 —— 284 个模块、684 条导出名、255 个文件改名，见
+[为模块恢复可读导出名](#为模块恢复可读导出名)。
+
 ## 结构
 
 ```
@@ -24,10 +28,10 @@ _index/
 cli.js              真入口（23 KB）
 ```
 
-- **1410 个文件**，158 个目录，共 40.2 MB
-- 文件名：**591 个恢复了真实名字**（来自调用方实际使用的名字、斜杠命令注册表、导出别名），
-  其余 818 个保留 `chunk-<id>.js`。
-  一律带 chunk id 后缀（`permissions-ui.0a82g62e.js`），便于与原始 chunk 对照。
+- **1430 个文件**，159 个目录，共 41.1 MB
+- 文件名：**853 个是可读名字**（来自调用方实际使用的名字、斜杠命令注册表、导出别名，
+  以及 2026-09-17 的导出名恢复），其余 577 个保留 `chunk-<id>.js`。
+  除恢复导出的那批外，一律带 chunk id 后缀（`permissions-ui.0a82g62e.js`），便于与原始 chunk 对照。
 
 ## 完整性
 
@@ -210,6 +214,98 @@ B 层是这次查冲突时冒出来的：`export { He as BedrockClient }` 声明
 
 两个坑都只在反向验证里，正向改造从第一次跑就是对的 —— 但如果不做往返验证，第 2 个坑会以
 「267 个文件没验过」的形式蒙混过去。
+
+## 为模块恢复可读导出名
+
+前几轮恢复的名字在文件里**都有证据**：`import { 真名 as X }`、`export { X as 真名 }`。
+这一轮处理剩下那一层 —— 模块导出的混淆名在文件内**没有任何证据**，名字只能靠读代码与调用点推断。
+做法与两个示范提交一致（`01-核心基础设施/共享小工具-未细化/build-ref-name.js` 的
+`getBuildRefName`、同目录 `user-agent.js` 的 `getClientUserAgent`）：
+
+```
+- 01-…/chunk-1adkzsnc.js                              + 01-…/max-serialized-array-elements.js
+- var gy = 4096;                                      + var MAX_SERIALIZED_ARRAY_ELEMENTS = 4096;
+- export { gy };                                      + export { MAX_SERIALIZED_ARRAY_ELEMENTS };
+- import { gy } from "…/chunk-1adkzsnc.js";           + import { MAX_SERIALIZED_ARRAY_ELEMENTS } from "…/max-serialized-array-elements.js";
+```
+
+规模：**284 个模块、684 条导出名、255 个文件改名，改动 1,056 个文件**。
+名字不是猜的 —— 多数有硬证据：仓库自己的 barrel/shim 文件里写着的别名
+（`export { Eee as isClaudeAiBearerRejectedError }`）、源码自带的错误串
+（`useSession cannot be called outside of a <SessionProvider />` ⇒ `SessionProvider` / `useSession`）、
+或用 `var ia = "Monitor"` + 调用点 `{ [ia]: { renderToolResultMessage } }` 这种字面量与用法互相印证。
+
+### 流程：判定交给人读，改写交给脚本
+
+| 步 | 谁做 | 产物 |
+|---|---|---|
+| 1 候选 | 脚本 | 非第三方、导出名仍混淆的模块，按体积分档 |
+| 2 证据包 | 脚本 | 每个模块一份 dossier：完整源码 + 每个引用方的 import 行 + 该导出名的真实调用点（带行号上下文） |
+| 3 命名 | 子代理 | 改名计划 JSON `{module, newFileName, renames, why}` —— **不碰仓库** |
+| 4 落盘 | 集中式脚本 | 作用域感知改名 + 路径重写 + 同步 `_index/` |
+| 5 验证 | 独立脚本 | 见下 |
+
+3 与 4 必须分开：判定要读代码，改写要跨文件，而多个子代理同时改
+`核心应用-Agent循环.wmzgeczq.js` 会互相覆盖。子代理只产出计划，改写集中做一次。
+
+**只在证据充分时才改名**是硬规则。看不懂、或调用点语义有歧义就跳过 ——
+本仓库的原则是*一个看起来合理但错的名字比混淆名更糟*。实际跳过的包括：
+两个导出函数体逐字节相同（无法区分语义）、`return e` 的恒等函数、
+`async function EDt(r,o){return 0}` 空桩，以及一个同时被当默认窗口和重试间隔用的常量 `Xw`。
+
+### 机械改写要覆盖的形态
+
+| 形态 | 例 |
+|---|---|
+| 具名 import | `import { gy } from "…"` |
+| 带别名 import | `import { gy as q } from "…"` |
+| 再导出 | `export { gy } from "…"` |
+| 纯路径（副作用导入） | `import "…"` |
+| 动态导入 / 懒加载 | `import("…")`、`import.meta.require("…")` |
+| 动态导入解构 | `let { gy: f } = await import("…")` |
+| 命名空间绑定 | `var M = await import("…"); M.gy()` |
+| 表达式取属性 | `(await import("…")).gy` |
+
+后三类静态 import 检查**看不见**：改不到就是运行时 `undefined`，不报错。
+它们由 AST 精确识别，不靠正则。
+
+两个已踩的坑：
+
+1. **混淆名同时是普通局部变量名。** `ia`/`gy`/`Aet`/`G8` 各自只从某一个模块导出，
+   但作为函数内局部名散落在几十个别的文件里（`核心应用-Agent循环` 里就有一个无关的
+   `function Aet(e,t,r)`）。所以必须解析到绑定（eslint-scope），不能文本替换。
+2. **类名在类体内是另一个作用域。** `class zz { static create(){ return new zz() } }`
+   里 `zz` 在 eslint-scope 模型中是两个变量（外层 + 类体），类体内的引用解析到**内层**那个。
+   只改外层声明的引用，`new zz()` 就变成 `ReferenceError`。第一遍跑就中了这一条
+   （`plugin-state-store.js` 的 `new QB()`），现在按「同一个声明节点」把所有同名变量一起收集。
+
+### 验证
+
+- **逐编辑往返**：记录每一处编辑的 `(start, end, text, 原文本)`，反向逐条还原，
+  每个被改文件必须与改动前**逐字节相同**。这证明改动只有「改名 / 路径重写」两种形状。
+- **导出面**：全树每个文件的导出名集合与计划逐条比对（改名的模块按映射，其余不变）。
+- **未定义标识符**：全树前后各解析一遍，新增自由引用必须为 0 处。
+  这条抓的是「只改了一半」的悬空引用，静态 import 检查抓不到 —— 上面那个类体内的
+  `new QB()` 就是它抓出来的。
+- **完整性**：往返证明「没有多改」，但证明不了「没有漏改」（漏掉的位置在反向时同样漏掉，
+  正好抵消）。所以另查一遍结果树：没有任何旧名留在会读它的位置上。
+- **编译期**：`bun .analysis/check-imports.mjs --runtime` 四类全过。
+- **单独加载**：282 个改名模块逐个 `import`，导出面须与计划完全对应（本轮 226/227 成功，
+  1 个因引用树外 `_source/` 而跳过，与改动无关）。
+- **运行时**：`bun cli --help` md5 与改动前相同（`9b491334…`，258 行）；`--version`、`-v`、
+  未知参数一致；沙箱 HOME 里 `bun cli < /dev/null` 的退出耗时与改动前同量级（无死锁）。
+
+### 顺带修掉的一个真 bug
+
+`user-agent.js` 的 `ensureClientAgentEnv()` 调的是 `getUserAgentWithSuffix("harness")`，
+但上一次改名只改了声明、没改这一个调用点，于是全树在**启动第一行**就是
+`ReferenceError: getUserAgentWithSuffix is not defined`（`cli.js:31`）。
+
+CI 没拦住：`check-imports.mjs` 查的是解析 / 依赖边 / 具名 import 的导出面，
+悬空的自由标识符不属于其中任何一类。上面那条「未定义标识符新增 0 处」正是为此加的。
+
+（`AI_AGENT` 已被设成 `claude-code_*` 时这个分支被 `||` 短路，bug 不显形 ——
+本地跑 CLI 要 `env -u AI_AGENT` 才看得到。）
 
 ## 怎么读
 

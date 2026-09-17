@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { s_ } from "./chunk-p991cddr.js";
-import { Wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { initESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 class x {
   marshaller;
   serializer;
@@ -192,7 +192,7 @@ class x {
   }
 }
 var z, EventStreamSerde;
-var M = Wo(() => {
+var M = initESM(() => {
   z = s_();
   EventStreamSerde = x;
 });

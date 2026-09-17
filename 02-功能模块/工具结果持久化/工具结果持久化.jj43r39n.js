@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { ht, Hn, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { ge, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ou, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { hL, _L, PIn, OIn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { u1, Mvt, Oir, Dir } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
@@ -77,8 +77,8 @@ async function tG(t, e, r, s) {
   await _L(r, s);
   let o = g7e(r, e, a),
     l = a ? b(t, null, 2) : t,
-    p = M() && s !== void 0 ? hL(dirname(o), basename(o)) : void 0;
-  if (M() && s !== void 0 && p !== void 0) {
+    p = isHoverRestEnabled() && s !== void 0 ? hL(dirname(o), basename(o)) : void 0;
+  if (isHoverRestEnabled() && s !== void 0 && p !== void 0) {
     let d = await s.write(p, l, {
       precondition: { type: "ifAbsent" },
       mode: 438 & ~process.umask(),
@@ -188,7 +188,7 @@ async function J(t, e, r, s, a) {
   let o = t.content;
   if (j(o))
     return (
-      i("tengu_tool_empty_result", { toolName: Hn(e) }),
+      logEvent("tengu_tool_empty_result", { toolName: Hn(e) }),
       { ...t, content: `(${e} completed with no output)` }
     );
   if (!o) return t;
@@ -200,7 +200,7 @@ async function J(t, e, r, s, a) {
   if (nG(h)) return t;
   let f = Vpe(h);
   return (
-    i("tengu_tool_result_persisted", {
+    logEvent("tengu_tool_result_persisted", {
       toolName: Hn(e),
       originalSizeBytes: h.originalSize,
       persistedSizeBytes: f.length,
@@ -392,7 +392,7 @@ async function V(t, e, r, s, a = new Set()) {
         toolUseId: c.toolUseId,
         replacement: m.content,
       }),
-      i("tengu_tool_result_persisted_message_budget", {
+      logEvent("tengu_tool_result_persisted_message_budget", {
         originalSizeBytes: m.originalSize,
         persistedSizeBytes: m.content.length,
         estimatedOriginalTokens: Math.ceil(m.originalSize / Mvt),
@@ -404,7 +404,7 @@ async function V(t, e, r, s, a = new Set()) {
     (n(
       `Per-message budget: persisted ${_.length} tool results across ${R} over-budget message(s), shed ~${formatFileSize(y)}, ${g} re-applied`,
     ),
-      i("tengu_message_level_tool_result_budget_enforced", {
+      logEvent("tengu_message_level_tool_result_budget_enforced", {
         resultsPersisted: _.length,
         messagesOverBudget: R,
         replacedSizeBytes: y,

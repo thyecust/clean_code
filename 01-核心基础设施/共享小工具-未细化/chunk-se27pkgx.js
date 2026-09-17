@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { O$t, SGn } from "./chunk-kk3mqttk.js";
+import { readProtoFieldBytes, readProtoStringField } from "./protobuf-decoding.js";
 var o = 2,
   A = 1,
   a = 8,
@@ -22,10 +22,10 @@ function yGn(d) {
   }
   let e = new Uint8Array(n.length);
   for (let t = 0; t < n.length; t++) e[t] = n.charCodeAt(t);
-  let r = O$t(e, o);
+  let r = readProtoFieldBytes(e, o);
   if (r === void 0) return;
-  let i = O$t(r, A);
+  let i = readProtoFieldBytes(r, A);
   if (i === void 0) return;
-  return SGn(i, a);
+  return readProtoStringField(i, a);
 }
 export { _Gn, run, yGn };

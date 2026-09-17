@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { R, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, us, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
   Tn,
@@ -49,11 +49,11 @@ import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isProcessProvablyGone, getProcessStartTokenLinuxSync, isSameProcessAsync, provenSameProcessAsync, getProcessCreationTimeMsAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { ownPidDomain } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import { SD, ds } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
-import { pK } from "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
+import { getRemoteSessionCompatId } from "../../01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js";
 import { IRe, lir, isSaneEpochMs, jZe, cir, isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { Y, lc } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe, asStringArray } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function B(e) {
   if (P() === "windows") return null;
   let t = q(e);
@@ -236,7 +236,7 @@ function RSn() {
   if (e) r.add(e);
   let d = t?.();
   if (d) r.add(FAe(d));
-  let s = pK();
+  let s = getRemoteSessionCompatId();
   if (s) r.add(FAe(tRe(s)));
   return r;
 }
@@ -358,7 +358,7 @@ function kSn({ trailMs: e = Ie } = {}) {
       if (_.pending > 0) w.push(G(_, s));
       else if (_.timer !== void 0) (clearTimeout(_.timer), (_.timer = void 0));
     if (w.length === 0) return;
-    await Promise.race([Promise.allSettled(w), Z(S, void 0, { unref: !0 })]);
+    await Promise.race([Promise.allSettled(w), sleep(S, void 0, { unref: !0 })]);
   }
   function h() {
     for (let S of t.values()) if (S.timer !== void 0) clearTimeout(S.timer);
@@ -374,7 +374,7 @@ function kSn({ trailMs: e = Ie } = {}) {
 var ve = 50,
   K = { ...Sbt, maxQueuedPeerMessages: ve },
   D = K,
-  De = m(() =>
+  De = createLazyValue(() =>
     c({
       bucketCapacity: T().min(5).max(500).catch(D.bucketCapacity),
       refillPerSecond: T().min(0.05).max(50).catch(D.refillPerSecond),
@@ -709,7 +709,7 @@ async function registeredLivePeerForSocket(e) {
   return;
 }
 async function registeredInboxesOfPids(e) {
-  let t = Y(e),
+  let t = dedupe(e),
     r = new Map();
   if (t.length === 0) return r;
   let d = e1(),
@@ -1000,7 +1000,7 @@ async function V(e, t, r) {
     };
   } catch {
     if (r?.rejectTornLiveRecord && d && s !== void 0 && isProcessRunning(s)) {
-      if (!r.isReread) return (await Z(EKt), V(e, t, { ...r, isReread: !0 }));
+      if (!r.isReread) return (await sleep(EKt), V(e, t, { ...r, isReread: !0 }));
       let [f, u] = await Promise.all([
         Ue(l).then(
           (i) => i.mtimeMs,
@@ -1021,7 +1021,7 @@ async function listRegisteredSessionRecords() {
   return (await L({ rejectUnreadable: !0 })).map(({ file: e, ...t }) => t);
 }
 function be(e, t, r, d) {
-  if (M() && d !== void 0) {
+  if (isHoverRestEnabled() && d !== void 0) {
     d.delete(Ce.session(basename(e)))
       .then((s) => (s.ok && s.value.existed ? reapKeysOfReapedRecord(dirname(e), t, r, d) : void 0))
       .catch(() => {});
@@ -1097,7 +1097,7 @@ function ye(e) {
   return e.spare === !0 || e.parkedJobId !== void 0;
 }
 function qe(e) {
-  return lc(e)
+  return asStringArray(e)
     .filter((t) => /^[a-z0-9_]{1,32}$/.test(t))
     .slice(0, 16);
 }

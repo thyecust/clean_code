@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { fileSuffixForOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum, fromEnumOpt, fromNumber, fromNumberOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { qe, Ff } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -47,10 +47,10 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { pE, sM, vlt } from "../远程工具执行/chunk-66axrkvh.js";
 import { pSe, ylt } from "../../01-核心基础设施/共享小工具-未细化/chunk-33vqsej8.js";
-import { qz } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
-import { cte, O7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
+import { NOT_HELD_STATE } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
+import { resolveAccountIdentity, isEgressAllowed } from "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
 import { s, T, Jq, c, $e, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { hostname } from "os";
 class se {
   transport;
@@ -846,7 +846,7 @@ function Ve() {
 function Je(e) {
   return "id" in e && e.id === Se && ("result" in e || "error" in e);
 }
-var Ye = m(() =>
+var Ye = createLazyValue(() =>
   c({
     jsonrpc: k("2.0"),
     id: $e([s(), T()]),
@@ -1087,7 +1087,7 @@ function c6e(e) {
           (d === "channel_acknowledged" || d === "channel_adopted_mcp") && !o,
       });
       if (((x = R), (V = w), await R, x === R)) ((x = void 0), (V = void 0));
-      if (S) i("tengu_device_bridge_stopped", { reason: fromEnum(d) });
+      if (S) logEvent("tengu_device_bridge_stopped", { reason: fromEnum(d) });
     },
     I = () => {
       if (o || E !== void 0 || B !== void 0 || F === void 0) return;
@@ -1102,7 +1102,7 @@ function c6e(e) {
             return;
           }
           ((E = R),
-            i("tengu_device_bridge_started", {
+            logEvent("tengu_device_bridge_started", {
               account_source: J,
               transport: fromEnum(t),
               redial: !0,
@@ -1119,7 +1119,7 @@ function c6e(e) {
     D = async () => {
       let w = await (e.isEnabled ?? isViolinWoodEnabled)();
       if (((C = !0), !w)) return !1;
-      let R = e.isEgressAllowed ?? O7;
+      let R = e.isEgressAllowed ?? isEgressAllowed;
       if (!R())
         return (
           n(
@@ -1128,11 +1128,11 @@ function c6e(e) {
           !1
         );
       if (o) return !1;
-      let N = await (e.getAccount ?? cte)(),
+      let N = await (e.getAccount ?? resolveAccountIdentity)(),
         ee = e.orgUuid;
       if (!ee || N.status !== "resolved")
         return (
-          i("tengu_device_bridge_skipped", {
+          logEvent("tengu_device_bridge_skipped", {
             missing_org: ee === void 0,
             missing_account: N.status === "missing",
             account_mismatch: N.status === "mismatch",
@@ -1202,7 +1202,7 @@ function c6e(e) {
               n(
                 `[deviceBridge] serving ${U ? "muted" : "unmuted"} by the emergency switch`,
               ),
-              i("tengu_device_bridge_muted", { muted: U }));
+              logEvent("tengu_device_bridge_muted", { muted: U }));
           re.withholdAllExcept([X], U);
         },
         je = (e.onMuteRecheck ?? onServingMuteRecheck)(be);
@@ -1218,7 +1218,7 @@ function c6e(e) {
         return !1;
       if (
         ((S = !0),
-        i("tengu_device_bridge_started", {
+        logEvent("tengu_device_bridge_started", {
           account_source: fromEnum(N.source),
           transport: fromEnum(t),
           redial: !1,
@@ -1293,7 +1293,7 @@ function c6e(e) {
   let Q = D().catch((d) => {
       if (
         (n(`[deviceBridge] registration failed: ${ge(d).message}`),
-        i("tengu_device_bridge_start_failed", {}),
+        logEvent("tengu_device_bridge_start_failed", {}),
         !_)
       )
         ((_ = !0), logFeatureBad("device_bridge_register", "start_failed"));
@@ -1315,7 +1315,7 @@ function c6e(e) {
       serving: Be,
       stop: () => H("attach_ended"),
       heldServedCall: (d) =>
-        o || O.current === void 0 ? qz : O.current.kit.heldServedCall(d),
+        o || O.current === void 0 ? NOT_HELD_STATE : O.current.kit.heldServedCall(d),
     }
   );
 }
@@ -1411,7 +1411,7 @@ async function ln({
       if (!D) Y();
       return (
         (I ??= (async () => {
-          if ((H(), D && W() > 0)) await kt(Promise.race([J(), oe]), un);
+          if ((H(), D && W() > 0)) await withDeadline(Promise.race([J(), oe]), un);
           (P(), await Promise.allSettled([O.stop(), j.close()]));
         })()),
         I
@@ -1437,7 +1437,7 @@ function hn(e) {
 function Oe(e) {
   switch (e.kind) {
     case "authenticated":
-      i("tengu_device_bridge_connected", {
+      logEvent("tengu_device_bridge_connected", {
         protocol_version: e.protocolVersion,
         hb_interval_ms: e.timings.hbIntervalMs,
         staleness_ms: e.timings.stalenessMs,
@@ -1445,7 +1445,7 @@ function Oe(e) {
       });
       return;
     case "rejected":
-      i("tengu_device_bridge_rejected", {
+      logEvent("tengu_device_bridge_rejected", {
         phase: fromEnum(e.phase),
         reason: fromEnumOpt(e.reason),
         status: fromNumberOpt(e.status),
@@ -1453,7 +1453,7 @@ function Oe(e) {
       });
       return;
     case "closed":
-      i("tengu_device_bridge_closed", {
+      logEvent("tengu_device_bridge_closed", {
         phase: fromEnum(e.phase),
         code: fromNumberOpt(e.code),
         superseded: e.superseded,
@@ -1462,10 +1462,10 @@ function Oe(e) {
     case "token_unavailable":
     case "handshake_timeout":
     case "socket_error":
-      i("tengu_device_bridge_connect_failed", { cause: fromEnum(e.kind) });
+      logEvent("tengu_device_bridge_connect_failed", { cause: fromEnum(e.kind) });
       return;
     case "dial_failed":
-      i("tengu_device_bridge_connect_failed", { cause: fromEnum("dial_failed") });
+      logEvent("tengu_device_bridge_connect_failed", { cause: fromEnum("dial_failed") });
       return;
     default:
       return;
@@ -1474,18 +1474,18 @@ function Oe(e) {
 function pn(e) {
   switch (e.kind) {
     case "pong_timeout":
-      i("tengu_device_bridge_pong_timeout", { consecutive: e.consecutive });
+      logEvent("tengu_device_bridge_pong_timeout", { consecutive: e.consecutive });
       return;
     case "reconnect_exhausted":
-      i("tengu_device_bridge_reconnect_exhausted", {});
+      logEvent("tengu_device_bridge_reconnect_exhausted", {});
       return;
     case "heartbeat_unsupported":
-      i("tengu_device_bridge_heartbeat_unsupported", {
+      logEvent("tengu_device_bridge_heartbeat_unsupported", {
         protocol_version: fromNumber(e.protocolVersion),
       });
       return;
     case "reannounce":
-      i("tengu_device_bridge_reannounce", {
+      logEvent("tengu_device_bridge_reannounce", {
         reason: fromEnum(e.reason),
         outcome: fromEnum(e.outcome),
         inflight_at_start: e.inFlightAtStart,
@@ -1494,7 +1494,7 @@ function pn(e) {
       });
       return;
     case "reannounce_contended":
-      i("tengu_device_bridge_reannounce_contended", { reason: fromEnum(e.reason) });
+      logEvent("tengu_device_bridge_reannounce_contended", { reason: fromEnum(e.reason) });
       return;
     default:
       return;
@@ -1530,10 +1530,10 @@ function gn(e) {
     n(
       `[deviceBridge] connect frame announces ${o.length} tools: ${r.slice(0, 12).join(", ")}${r.length > 12 ? ", \u2026" : ""}`,
     ),
-    i("tengu_device_bridge_connect_frame", {
+    logEvent("tengu_device_bridge_connect_frame", {
       tool_count: o.length,
       serves_bash: r.includes(qe),
-      mcp_tool_count: G(r, (a) => a.includes("__")),
+      mcp_tool_count: countMatching(r, (a) => a.includes("__")),
     }),
     o
   );

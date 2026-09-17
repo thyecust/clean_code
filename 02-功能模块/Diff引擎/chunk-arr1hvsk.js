@@ -7,17 +7,17 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Ac, vh } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
 import { Ch } from "../语法高亮-Markdown渲染/chunk-mnn6q099.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
-import { GZ } from "../../01-核心基础设施/共享小工具-未细化/chunk-bhcz98rd.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
+import { DiffHunks } from "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { relative } from "path";
 var T = 10;
 function FB(Dt) {
@@ -32,7 +32,7 @@ function FB(Dt) {
       style: St,
       verbose: m,
     } = Dt,
-    { columns: lt } = Se(),
+    { columns: lt } = useTerminalSize(),
     F;
   if (i[0] !== z)
     ((F = r(t, { color: "subtle", children: ["User rejected ", z, " to "] })),
@@ -59,7 +59,7 @@ function FB(Dt) {
   let s = ft;
   if (St === "condensed" && !m) {
     let l;
-    if (i[10] !== s) ((l = e(xe, { children: s })), (i[10] = s), (i[11] = l));
+    if (i[10] !== s) ((l = e(ToolResultRow, { children: s })), (i[10] = s), (i[11] = l));
     else l = i[11];
     return l;
   }
@@ -92,7 +92,7 @@ function FB(Dt) {
     else Z = i[22];
     let ct;
     if (i[23] !== Y || i[24] !== Z || i[25] !== s)
-      ((ct = e(xe, {
+      ((ct = e(ToolResultRow, {
         children: r(o, { flexDirection: "column", children: [s, Y, Z] }),
       })),
         (i[23] = Y),
@@ -104,14 +104,14 @@ function FB(Dt) {
   }
   if (!A || A.length === 0) {
     let l;
-    if (i[27] !== s) ((l = e(xe, { children: s })), (i[27] = s), (i[28] = l));
+    if (i[27] !== s) ((l = e(ToolResultRow, { children: s })), (i[27] = s), (i[28] = l));
     else l = i[28];
     return l;
   }
   const l = lt - 12;
   let g;
   if (i[29] !== tt || i[30] !== f || i[31] !== E || i[32] !== A || i[33] !== l)
-    ((g = e(GZ, {
+    ((g = e(DiffHunks, {
       hunks: A,
       dim: !0,
       width: l,
@@ -128,7 +128,7 @@ function FB(Dt) {
   else g = i[34];
   let b;
   if (i[35] !== g || i[36] !== s)
-    ((b = e(xe, {
+    ((b = e(ToolResultRow, {
       children: r(o, { flexDirection: "column", children: [s, g] }),
     })),
       (i[35] = g),
@@ -141,13 +141,13 @@ function gt(Kt) {
   return Kt.startsWith("+");
 }
 function at(Qt, Vt) {
-  return Qt + G(Vt.lines, gt);
+  return Qt + countMatching(Vt.lines, gt);
 }
 function Pt(Yt) {
   return Yt.startsWith("-");
 }
 function ht(Zt, $t) {
-  return Zt + G($t.lines, Pt);
+  return Zt + countMatching($t.lines, Pt);
 }
 function wWe(Ft) {
   let a = _(25),
@@ -161,7 +161,7 @@ function wWe(Ft) {
       previewHint: v,
       collapsed: Gt,
     } = Ft,
-    { columns: Jt } = Se(),
+    { columns: Jt } = useTerminalSize(),
     c = U.reduce(at, 0),
     y = U.reduce(ht, 0),
     I;
@@ -212,7 +212,7 @@ function wWe(Ft) {
     if (dt !== "condensed" && !it) {
       let d;
       if (a[9] !== v)
-        ((d = e(xe, { children: e(t, { dimColor: !0, children: v }) })),
+        ((d = e(ToolResultRow, { children: e(t, { dimColor: !0, children: v }) })),
           (a[9] = v),
           (a[10] = d));
       else d = a[10];
@@ -222,11 +222,11 @@ function wWe(Ft) {
     return k;
   } else if (Gt && !it && c + y > 0) {
     let d;
-    if (a[11] === p) ((d = e(Ac, {})), (a[11] = d));
+    if (a[11] === MEMO_CACHE_SENTINEL) ((d = e(Ac, {})), (a[11] = d));
     else d = a[11];
     let H;
     if (a[12] !== k)
-      ((H = e(xe, { children: r(t, { children: [k, " ", d] }) })),
+      ((H = e(ToolResultRow, { children: r(t, { children: [k, " ", d] }) })),
         (a[12] = k),
         (a[13] = H));
     else H = a[13];
@@ -244,7 +244,7 @@ function wWe(Ft) {
     a[19] !== U ||
     a[20] !== H
   )
-    ((X = e(GZ, {
+    ((X = e(DiffHunks, {
       hunks: U,
       dim: !1,
       width: H,
@@ -261,7 +261,7 @@ function wWe(Ft) {
   else X = a[21];
   let pt;
   if (a[22] !== d || a[23] !== X)
-    ((pt = e(xe, {
+    ((pt = e(ToolResultRow, {
       children: r(o, { flexDirection: "column", children: [d, X] }),
     })),
       (a[22] = d),

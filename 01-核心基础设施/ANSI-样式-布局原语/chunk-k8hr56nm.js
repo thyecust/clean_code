@@ -15,16 +15,16 @@ import { w3t } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import { Zd, m4, uF, ga, Kx, Z0 } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { xat, Ty, $0e } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { K0e } from "../共享小工具-未细化/chunk-gd42wcxf.js";
+import { StorageV5ContextProvider } from "../共享小工具-未细化/storage-v5-context.js";
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { te, X5, _h, Ccr, vcr, ePn, sB } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
 import { pt } from "../共享小工具-未细化/chunk-jjr7hzzf.js";
 import { Ta } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
-import { wve } from "../../02-功能模块/认证-OAuth登录/chunk-s51acx6w.js";
+import { sessionServicesFor } from "../../02-功能模块/认证-OAuth登录/credentials-store.js";
 import { Pyn, Jp, mw, _d, CYn, vYn, jSt, z8e, RYn } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
-import { ws } from "../共享小工具-未细化/chunk-0a6nmdka.js";
+import { getInkInstanceRegistry } from "../共享小工具-未细化/ink-instance-registry.js";
 import {
   KB,
   d4,
@@ -40,11 +40,11 @@ import {
 import { zf, s7 } from "../共享小工具-未细化/chunk-z3y2y7w9.js";
 import { Ev, vle, cF, Rle, sDt, ok } from "../共享小工具-未细化/chunk-k0wct4tn.js";
 import { uee, Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
-import { vt } from "../共享小工具-未细化/chunk-tmxdrqem.js";
+import { useClock } from "../共享小工具-未细化/use-clock.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, Ry, Yl, re, De, E, dn, V, C, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { Xs } from "../共享小工具-未细化/chunk-xcc43dkx.js";
-import { p, en } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
 function ao() {
@@ -106,7 +106,7 @@ function co() {
   if (!process.stdout.isTTY) return;
   try {
     (QOt(), writeSync(1, s7));
-    let r = ws().get(process.stdout);
+    let r = getInkInstanceRegistry().get(process.stdout);
     if (r?.isAltScreenActive)
       try {
         r.unmount();
@@ -123,7 +123,7 @@ function co() {
   } catch {}
 }
 function po() {
-  ws().get(process.stdout)?.drainStdin();
+  getInkInstanceRegistry().get(process.stdout)?.drainStdin();
 }
 var ye = { cleanupTerminalModes: co, drainStdin: po };
 var mo = (r, s) => {
@@ -145,12 +145,12 @@ var mo = (r, s) => {
           f.unmount();
         },
         waitUntilExit: f.waitUntilExit,
-        cleanup: () => ws().delete(c.stdout),
+        cleanup: () => getInkInstanceRegistry().delete(c.stdout),
       }
     );
   },
   yo = async (r, s) => {
-    let l = ws();
+    let l = getInkInstanceRegistry();
     while (l.pendingStandaloneRender) await l.pendingStandaloneRender;
     await Promise.resolve();
     let c = mo(r, s);
@@ -174,7 +174,7 @@ async function $e({
   atlasRecorder: S,
 } = {}) {
   await Promise.resolve();
-  let x = ws();
+  let x = getInkInstanceRegistry();
   while (x.pendingStandaloneRender) await x.pendingStandaloneRender;
   Pyn(ye);
   let R = new Yye({
@@ -202,13 +202,13 @@ var ho = (r = {}) => {
     return r;
   },
   bo = (r, s) => {
-    let l = ws(),
+    let l = getInkInstanceRegistry(),
       c = l.get(r);
     if (!c) (Pyn(ye), (c = s()), l.set(r, c));
     return c;
   };
 function zUn() {
-  let r = ws().get(process.stdout);
+  let r = getInkInstanceRegistry().get(process.stdout);
   if (!r) return;
   go(r.getStylePool());
 }
@@ -227,7 +227,7 @@ function go(r) {
   s.recording = !0;
   let c = s.proactiveResetStats;
   if (
-    (i("tengu_render_glyph_cardinality", {
+    (logEvent("tengu_render_glyph_cardinality", {
       stylepool_styles: r.size,
       stylepool_overflowed: r.overflowed,
       atlas_glyph_keys: s.size,
@@ -1050,7 +1050,7 @@ var jr = Yl(function (ti) {
   }
   let ne, K;
   if (_e[5] !== oe || _e[6] !== j || _e[7] !== G || _e[8] !== U) {
-    K = en;
+    K = EARLY_RETURN_SENTINEL;
     bb0: {
       let se = kt(oe);
       if (se.length === 0) {
@@ -1103,7 +1103,7 @@ var jr = Yl(function (ti) {
       (_e[9] = ne),
       (_e[10] = K));
   } else ((ne = _e[9]), (K = _e[10]));
-  if (K !== en) return K;
+  if (K !== EARLY_RETURN_SENTINEL) return K;
   let St = ne;
   const I = !!j,
     ie = !!G;
@@ -1292,7 +1292,7 @@ function Ht(Et) {
     [Ot, Go] = d(!1),
     [Mt, Ko] = d(!1),
     [It, zo] = d(!1),
-    W = vt(),
+    W = useClock(),
     Lt = C(null),
     Yo;
   if (M[8] !== W) ((Yo = () => W.now()), (M[8] = W), (M[9] = Yo));
@@ -1300,7 +1300,7 @@ function Ht(Et) {
   let [Bt] = d(Yo),
     Jo,
     $o;
-  if (M[10] === p)
+  if (M[10] === MEMO_CACHE_SENTINEL)
     ((Jo = () => () => {
       Lt.current?.();
     }),
@@ -1341,19 +1341,19 @@ function Ht(Et) {
   else Xo = M[19];
   let Ut = Xo,
     Zo;
-  if (M[20] === p) ((Zo = (_e) => Go(!0)), (M[20] = Zo));
+  if (M[20] === MEMO_CACHE_SENTINEL) ((Zo = (_e) => Go(!0)), (M[20] = Zo));
   else Zo = M[20];
   let ci = Zo,
     er;
-  if (M[21] === p) ((er = (_e_0) => Go(!1)), (M[21] = er));
+  if (M[21] === MEMO_CACHE_SENTINEL) ((er = (_e_0) => Go(!1)), (M[21] = er));
   else er = M[21];
   let pi = er,
     tr;
-  if (M[22] === p) ((tr = () => Ko(!0)), (M[22] = tr));
+  if (M[22] === MEMO_CACHE_SENTINEL) ((tr = () => Ko(!0)), (M[22] = tr));
   else tr = M[22];
   let di = tr,
     or;
-  if (M[23] === p) ((or = () => Ko(!1)), (M[23] = or));
+  if (M[23] === MEMO_CACHE_SENTINEL) ((or = () => Ko(!1)), (M[23] = or));
   else or = M[23];
   let fi = or,
     rr;
@@ -1672,7 +1672,7 @@ function t7(r) {
 F();
 function aO() {
   De(m4);
-  let r = ws().get(process.stdout);
+  let r = getInkInstanceRegistry().get(process.stdout);
   return V(() => {
     if (!r)
       return {
@@ -1703,7 +1703,7 @@ var yr = () => () => {},
   hr = () => !1;
 function VUn() {
   De(m4);
-  let r = ws().get(process.stdout);
+  let r = getInkInstanceRegistry().get(process.stdout);
   return At(r ? r.subscribeToSelectionChange : yr, r ? r.hasTextSelection : hr);
 }
 F();
@@ -1783,27 +1783,27 @@ var xr = (r) => ({
   Od = xr;
 function je(r, s) {
   let l = Ry(fe, null, Ry(xat, null, Ry($0e, null, Ry(Je, null, r))));
-  return s !== void 0 ? Ry(K0e, { ...s, children: l }) : l;
+  return s !== void 0 ? Ry(StorageV5ContextProvider, { ...s, children: l }) : l;
 }
 function qt() {
   return { nativeCursor: lF(), atlasRecorder: qe() };
 }
 async function J0(r, s, l) {
-  let c = l?.storageV5 !== void 0 ? wve(l.storageV5) : void 0;
+  let c = l?.storageV5 !== void 0 ? sessionServicesFor(l.storageV5) : void 0;
   if (s !== void 0 && "write" in s) return he(je(r, c), s);
   return he(je(r, c), { ...qt(), ...s });
 }
 var Xt = new WeakMap();
 async function w9e(r, s) {
   let l = await $e({ ...qt(), ...r }),
-    c = s?.storageV5 !== void 0 ? wve(s.storageV5) : void 0,
+    c = s?.storageV5 !== void 0 ? sessionServicesFor(s.storageV5) : void 0,
     f = { ...l, render: (m) => l.render(je(m, c)) },
-    h = ws().get(r?.stdout ?? process.stdout);
+    h = getInkInstanceRegistry().get(r?.stdout ?? process.stdout);
   if (h) Xt.set(h, f);
   return f;
 }
 function _tn(r = process.stdout) {
-  let s = ws().get(r);
+  let s = getInkInstanceRegistry().get(r);
   return s && Xt.get(s);
 }
 export {

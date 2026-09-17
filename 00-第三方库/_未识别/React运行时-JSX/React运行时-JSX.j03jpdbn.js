@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Wo } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { initESM } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function U(t) {
   if (t === null || typeof t !== "object") return null;
   return (
@@ -300,7 +300,7 @@ var v,
   WFt = function () {
     return s.H.useTransition();
   };
-var F = Wo(() => {
+var F = initESM(() => {
   ((v = Symbol.for("react.transitional.element")),
     (j = Symbol.for("react.portal")),
     (N = Symbol.for("react.fragment")),

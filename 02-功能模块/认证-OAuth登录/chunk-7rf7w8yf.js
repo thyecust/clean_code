@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
   _je,
@@ -26,7 +26,7 @@ import {
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Lge, Nar, z5t } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Aet } from "../../01-核心基础设施/共享小工具-未细化/chunk-eganxf2z.js";
+import { MAX_CREDENTIAL_FILE_BYTES } from "../../01-核心基础设施/共享小工具-未细化/max-credential-file-bytes.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 function $6() {
   return a.CLAUDE_CODE_REMOTE_SESSION_ORIGIN === "review";
@@ -37,7 +37,7 @@ var y = "/home/claude/.claude/remote",
   bBe = `${y}/.oauth_token`,
   O5t = `${y}/.api_key`,
   Rq = `${y}/.session_ingress_token`,
-  AQ = Aet;
+  AQ = MAX_CREDENTIAL_FILE_BYTES;
 function F(e, t, r, { skipInReviewOrigin: o = !1 } = {}) {
   if (!a.CLAUDE_CODE_REMOTE) return;
   if (o && $6()) {
@@ -275,7 +275,7 @@ function Zvt() {
   return Boolean(process.env.CLAUDE_BG_AUTH_SNAPSHOT_PATH);
 }
 async function aar({ attempts: e = 10, delayMs: t = 100 } = {}) {
-  for (let r = 0; r < e && Zvt(); r++) (await Z(t), I());
+  for (let r = 0; r < e && Zvt(); r++) (await sleep(t), I());
   return !Zvt();
 }
 function I() {

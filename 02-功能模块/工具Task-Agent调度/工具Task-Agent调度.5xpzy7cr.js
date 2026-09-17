@@ -13,14 +13,14 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { sr, kw, mc, o0, Ia, nRn, Qor } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, yt, l, A, Rt, FA, CB } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { WP, Xg, Sh, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Q5, Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { Y6 } from "../权限系统/chunk-e4pfvp7x.js";
 import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { getParentSessionId } from "../Teammates团队/chunk-811z9z0t.js";
 import { WEt, getToolPermissionContext, getMainLoopModel } from "../权限系统/chunk-fjrcf22x.js";
-import { Kt, Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { matchesToolName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   nH,
   eh,
@@ -95,7 +95,7 @@ import {
   VS,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getTaskOutputPath } from "../后台任务-Shell管理/chunk-x3txegas.js";
-import { Dl } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
+import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { isCoordinatorMode } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { ewt } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
@@ -106,18 +106,18 @@ import { cPe, Eut } from "../后台任务-Shell管理/chunk-531ast3t.js";
 import { xs } from "../Teammates团队/chunk-mrfx53ye.js";
 import { og } from "../插件系统/chunk-33bdfgmx.js";
 import { Xi, sg } from "../Teammates团队/chunk-z2t8b9yc.js";
-import { Vr } from "../../01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js";
-import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
+import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { mt, Vh } from "./chunk-1px84m19.js";
-import { wge } from "../Teammates团队/chunk-enjekn9t.js";
+import { formatAgentMessage } from "../Teammates团队/chunk-enjekn9t.js";
 import { s, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var re = "ObserverReport";
 var Ge =
     "Send a report to your report target \u2014 the agent you observe, or the coordinating agent that spawned the worker you observe. The target is resolved from your observer pairing \u2014 there is no recipient to name. Use this only when you have something genuinely useful: a mistake about to compound, a missed constraint, prior art the observed agent should see. The expected steady state is silence \u2014 if nothing warrants action, end your turn without calling this.",
   xe =
     "Send a report to your report target \u2014 the agent you observe, or the coordinating agent that spawned the worker you observe. The target is resolved from your observer pairing \u2014 there is no recipient to name. Use this only when you have something genuinely useful: a mistake about to compound, a missed constraint, prior art the observed agent should see. The expected steady state is silence \u2014 if nothing warrants action, end your turn without calling this.";
-var bt = m(() =>
+var bt = createLazyValue(() =>
     Qe({
       report: s()
         .min(1)
@@ -126,7 +126,7 @@ var bt = m(() =>
         ),
     }),
   ),
-  qe = Tt({
+  qe = buildTool({
     name: re,
     maxResultSizeChars: 1000,
     async description() {
@@ -193,7 +193,7 @@ var bt = m(() =>
               w.observedTaskId === void 0
                 ? `"${R}"`
                 : `"${R}" [${w.observedTaskId}]`,
-            F = wge(
+            F = formatAgentMessage(
               H,
               R === void 0
                 ? p.report
@@ -234,9 +234,9 @@ ${p.report}`,
       return `report: ${e.report}`;
     },
   });
-var At = [Vr, re, mt, WORKFLOW_TOOL_NAME, Xi, ia, CRON_CREATE_TOOL_NAME];
+var At = [SEND_MESSAGE_TOOL_NAME, re, mt, WORKFLOW_TOOL_NAME, Xi, MONITOR_TOOL_NAME, CRON_CREATE_TOOL_NAME];
 function gNt(e) {
-  return [...e.filter((p) => At.every((c) => !Kt(p, c))), qe];
+  return [...e.filter((p) => At.every((c) => !matchesToolName(p, c))), qe];
 }
 import { promises } from "fs";
 function won(e) {
@@ -638,7 +638,7 @@ async function _t(
       u(),
       new Ou(`Agent type '${D.agentType}' is not offered in this session.`)
     );
-  let Z = oe === "inline" || (oe === "reply" && (Dl() || sw(D))),
+  let Z = oe === "inline" || (oe === "reply" && (areBackgroundTasksDisabled() || sw(D))),
     U = (t, i) => {
       let a = Ia(),
         _ = o?.cwd && !WP(o.cwd) ? o.cwd : Q(),
@@ -726,7 +726,7 @@ async function _t(
   if (B) {
     let t = he(),
       i = await promises.realpath(t).catch(() => t),
-      a = await zX(B, uw(t), Y([i, iY, ...uw(iY)]), {
+      a = await zX(B, uw(t), dedupe([i, iY, ...uw(iY)]), {
         requireWitnessForSelfOwningPins: !0,
         declineSelfOwningPinUnderLiveRoot: !0,
       });

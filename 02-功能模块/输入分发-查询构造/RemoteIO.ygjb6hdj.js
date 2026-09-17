@@ -12,7 +12,7 @@
 import { Uz, FJt, zmr } from "../远程工具执行/chunk-31b8kd0f.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ezjdm9sg.js";
 import "../../03-入口与运行时/Headless-SDK模式/chunk-e4xwwtsb.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-sfq8xeqw.js";
+import "../../01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-d1t6d4k8.js";
 import "../远程工具执行/chunk-66axrkvh.js";
 import "../Bridge-RemoteControl/chunk-znhfst8k.js";

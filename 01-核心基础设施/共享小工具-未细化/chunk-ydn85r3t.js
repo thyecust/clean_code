@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-var nln = 2147483647;
-function T3n(e, n) {
+var INT32_MAX = 2147483647;
+function hasMutualTakeAgreement(e, n) {
   return (
     e.takes &&
     n.takes &&
@@ -20,5 +20,5 @@ function T3n(e, n) {
     e.taken === n.gen
   );
 }
-var rln = { quietMs: 750, maxWaitMs: 4000, minGapMs: 2000 };
-export { nln, T3n, rln };
+var STREAMING_TIMING_DEFAULTS = { quietMs: 750, maxWaitMs: 4000, minGapMs: 2000 };
+export { INT32_MAX, hasMutualTakeAgreement, STREAMING_TIMING_DEFAULTS };

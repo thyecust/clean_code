@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { RL, cZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { i } from "./chunk-an83zrbx.js";
+import { logEvent } from "./analytics-event-queue.js";
 import { lit as S } from "./analytics-fields.js";
 import { bt, renderDefaultModelSetting } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -25,7 +25,7 @@ function cSe(t, n, a, l, s = !0, g = !1) {
     e = t === "off" ? void 0 : er(t),
     f = e === void 0 || tDe(e);
   if (
-    (i("tengu_advisor_command", {
+    (logEvent("tengu_advisor_command", {
       advisor:
         e === void 0
           ? S("off")

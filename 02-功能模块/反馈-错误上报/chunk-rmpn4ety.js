@@ -34,7 +34,7 @@ import {
   V_t,
   yT,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 import { C8, eHe, tHe, v8, ZHt, n0t, n6e } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
@@ -296,12 +296,12 @@ async function xye({
         `feedbackDrafts: post-submit draft delete failed: ${_ instanceof Error ? _.name : "unknown"}`,
         { level: "error" },
       ),
-        i("tengu_feedback_draft_delete_failed", { phase: S("post_submit") }));
+        logEvent("tengu_feedback_draft_delete_failed", { phase: S("post_submit") }));
     }
     if (m) V_t();
     if (t !== "card_send_as_is") uMe(e.draft_id);
     return (
-      i("tengu_feedback_draft_submitted", {
+      logEvent("tengu_feedback_draft_submitted", {
         type: fromEnum(e.type),
         trigger: fromEnum(e.trigger),
         failure_mode: fromEnumOpt(e.failure_mode),
@@ -352,7 +352,7 @@ async function YWe(e, s, k) {
   let c = await q_t(e.draft_id, k);
   if ((uMe(e.draft_id), !c)) return;
   if (e.source_session_id === K()) V_t();
-  i("tengu_feedback_draft_discarded", {
+  logEvent("tengu_feedback_draft_discarded", {
     type: fromEnum(e.type),
     trigger: fromEnum(e.trigger),
     discarded_via: fromEnum(s),

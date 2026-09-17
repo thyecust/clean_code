@@ -7,15 +7,15 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Ve } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnumArr } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Wc } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Io, Xu, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Zse, ASSET_ID_RE, ARTIFACT_SLUG_RE, INVISIBLE_BLANKS, isDecisionSurfaceControl, INVISIBLE_BLANK_CODE_POINT, scrubArtifactEnvelopeTags, scrubServerLine } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { $f, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
@@ -211,7 +211,7 @@ function uwe() {
   return new Set(e.keys());
 }
 var ee = "relay",
-  Re = m(() => s().regex(K));
+  Re = createLazyValue(() => s().regex(K));
 async function te(t) {
   return (
     await BZn(t),
@@ -951,7 +951,7 @@ function pe(t, e = {}) {
 async function rt(t, e, n, r) {
   let o = await ie(t, e, n, r);
   if (o.kind === "done") return o.result;
-  if ((await Z(et(), e), e.aborted)) throw new Ve();
+  if ((await sleep(et(), e), e.aborted)) throw new Ve();
   let c = await ie(t, e, n, r);
   if (c.kind === "done") {
     if (c.result.err === null) logFeatureSad(n, "server_read_retried", o.miss);
@@ -1012,7 +1012,7 @@ var Y = "not activated on this thread",
   ye = 524288,
   st =
     "comment reply not sent (this session's comment connection did not carry it on this attempt, so nothing was posted) \u2014 retry the reply once; if it fails again, tell the user you could not post the reply from this session",
-  it = m(() => nt({ thread_id: le(), comment_id: le() }));
+  it = createLazyValue(() => nt({ thread_id: le(), comment_id: le() }));
 function Ae(t) {
   if (!t || typeof t !== "object") return {};
   return {
@@ -1023,7 +1023,7 @@ function Ae(t) {
 function M(t) {
   return Ae(t).reason ?? null;
 }
-var dt = m(() => nt({ standing_reply: nt({ id: le(), own: Io() }) }));
+var dt = createLazyValue(() => nt({ standing_reply: nt({ id: le(), own: Io() }) }));
 function ut(t) {
   let e = dt().safeParse(t);
   if (!e.success || !ARTIFACT_SLUG_RE.test(e.data.standing_reply.id)) return;
@@ -1466,7 +1466,7 @@ function FS() {
     ((t.toolsetLatch =
       a.CLAUDE_CODE_ARTIFACT_TOOLSET ??
       H("tengu_cobalt_plinth_damson", !1) === !0),
-      i("tengu_artifact_toolset", { on: t.toolsetLatch }));
+      logEvent("tengu_artifact_toolset", { on: t.toolsetLatch }));
   return t.toolsetLatch;
 }
 export {

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-function hct(s) {
+function isJsonRpcRequest(s) {
   return "method" in s && "id" in s && s.id !== null;
 }
 class B3e {
@@ -51,4 +51,4 @@ class krn {
     ((this.isClosed = !0), this.onclose?.());
   }
 }
-export { hct, B3e, krn };
+export { isJsonRpcRequest, B3e, krn };

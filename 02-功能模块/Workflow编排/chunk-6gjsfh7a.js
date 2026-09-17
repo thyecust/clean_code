@@ -15,22 +15,22 @@ import { x } from "../../01-核心基础设施/核心工具-字符串与文本/c
 import { Ar, Dlr, sv, Lw, kke, LP, Tg, Ulr, v_ } from "../权限系统/chunk-e4pfvp7x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Gu, nke, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te, truncateToWidth, cxt, formatDuration, formatBarElapsed, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { ake } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ne, Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { zj } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { gV, Rf, isTranscriptMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ti } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { buildResumePrompt } from "./chunk-va9cgbfs.js";
-import { Vf } from "./chunk-cd542wve.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { parseWorkflowScript } from "./workflow-script.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import {
   uye,
   qIt,
@@ -42,26 +42,26 @@ import {
   uZt,
   dZt,
 } from "./chunk-dyq13fbm.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { mr } from "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import { Rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p07dva25.js";
-import { Ur } from "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
+import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
+import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Bdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-56wrzxpk.js";
-import { eH } from "./chunk-hdhsmge4.js";
+import { summarizeToolInput } from "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
+import { getWorkflowTranscriptDir } from "./workflow-snapshots.js";
 import { jPe, v1t } from "./chunk-pqyn1fh3.js";
 import { E, V, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { Hve } from "../../01-核心基础设施/共享小工具-未细化/chunk-w4swsde7.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { expandTabs } from "../../01-核心基础设施/共享小工具-未细化/expand-tabs.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 import { join as nl } from "path";
 async function Wn(s, a) {
-  let l = nl(eH(s), `agent-${a}.jsonl`),
+  let l = nl(getWorkflowTranscriptDir(s), `agent-${a}.jsonl`),
     c;
   try {
     c = await ake(l);
@@ -90,7 +90,7 @@ async function Wn(s, a) {
     for (let I of k.message.content)
       if (I.type === "tool_use") {
         if (
-          (C.push({ name: I.name, summary: Bdt(I.input) }),
+          (C.push({ name: I.name, summary: summarizeToolInput(I.input) }),
           I.name === ti && I.input !== void 0)
         )
           try {
@@ -199,7 +199,7 @@ function li(s, a, l, c, m, w) {
       a
         .replace(/(?:\r?\n)+$/, "")
         .split(/\r?\n/)
-        .map((T) => Hve(ai(T))),
+        .map((T) => expandTabs(ai(T))),
       w,
       void 0,
     );
@@ -269,7 +269,7 @@ async function ci(s, a, l) {
     c(),
     m(),
     logFeatureOk("workflow_save"),
-    i("tengu_workflow_saved", {
+    logEvent("tengu_workflow_saved", {
       scope: fromEnum(l.scope),
       overwrite: l.overwrite,
       script_size_chars: l.script.length,
@@ -313,9 +313,9 @@ function Rl(tm) {
 function DHe(Vu) {
   let st = _(54),
     { script: ui, defaultName: ul, onDone: Ue } = Vu,
-    { storageV5: mi } = _e(),
-    { columns: fi } = Se(),
-    pi = Ye(Pl),
+    { storageV5: mi } = useStorageV5Context(),
+    { columns: fi } = useTerminalSize(),
+    pi = useSession(Pl),
     [zt, zu] = d(ul),
     [di, Bu] = d(ul.length),
     [Te, Yu] = d("project"),
@@ -323,7 +323,7 @@ function DHe(Vu) {
     [ie, fl] = d(null),
     [Fn, gi] = d(null),
     pl;
-  if (st[0] === p)
+  if (st[0] === MEMO_CACHE_SENTINEL)
     ((pl = () => {
       (fl(null), gi(null));
     }),
@@ -331,7 +331,7 @@ function DHe(Vu) {
   else pl = st[0];
   let dl = pl,
     gl;
-  if (st[1] === p)
+  if (st[1] === MEMO_CACHE_SENTINEL)
     ((gl = (Qu) => {
       (zu(Qu), dl());
     }),
@@ -393,12 +393,12 @@ function DHe(Vu) {
   else bl = st[12];
   let qn = bl,
     yl;
-  if (st[13] === p)
+  if (st[13] === MEMO_CACHE_SENTINEL)
     ((yl = { context: "Settings", isActive: !0 }), (st[13] = yl));
   else yl = st[13];
-  Ne("confirm:no", qn, yl);
+  useKeybinding("confirm:no", qn, yl);
   let wl;
-  if (st[14] === p)
+  if (st[14] === MEMO_CACHE_SENTINEL)
     ((wl = (kl) => {
       if (kl.key === "tab") (kl.preventDefault(), Yu(Rl), dl());
     }),
@@ -432,24 +432,24 @@ function DHe(Vu) {
   const Ci = ie ? "overwrite" : "save";
   let Gn;
   if (st[23] !== Ci)
-    ((Gn = e(D, { chord: "enter", action: Ci })), (st[23] = Ci), (st[24] = Gn));
+    ((Gn = e(KeybindingHint, { chord: "enter", action: Ci })), (st[23] = Ci), (st[24] = Gn));
   else Gn = st[24];
   let $l, Ml;
-  if (st[25] === p)
-    (($l = e(D, { chord: "tab", action: "toggle scope" })),
-      (Ml = e(D, { chord: "escape", action: "cancel" })),
+  if (st[25] === MEMO_CACHE_SENTINEL)
+    (($l = e(KeybindingHint, { chord: "tab", action: "toggle scope" })),
+      (Ml = e(KeybindingHint, { chord: "escape", action: "cancel" })),
       (st[25] = $l),
       (st[26] = Ml));
   else (($l = st[25]), (Ml = st[26]));
   let Hn;
   if (st[27] !== Gn)
-    ((Hn = r(ue, { children: [Gn, $l, Ml] })), (st[27] = Gn), (st[28] = Hn));
+    ((Hn = r(DotSeparatedList, { children: [Gn, $l, Ml] })), (st[27] = Gn), (st[28] = Hn));
   else Hn = st[28];
   let vl;
-  if (st[29] === p) ((vl = e(t, { children: "Save as:" })), (st[29] = vl));
+  if (st[29] === MEMO_CACHE_SENTINEL) ((vl = e(t, { children: "Save as:" })), (st[29] = vl));
   else vl = st[29];
   let Al;
-  if (st[30] === p) ((Al = e(t, { children: ">" })), (st[30] = Al));
+  if (st[30] === MEMO_CACHE_SENTINEL) ((Al = e(t, { children: ">" })), (st[30] = Al));
   else Al = st[30];
   const Si = !se,
     $i = !se;
@@ -507,7 +507,7 @@ function DHe(Vu) {
   else zn = st[39];
   let Bn;
   if (st[40] !== Fn)
-    ((Bn = Fn && e(o, { marginTop: 1, children: e(Ur, { error: Fn }) })),
+    ((Bn = Fn && e(o, { marginTop: 1, children: e(ErrorMessage, { error: Fn }) })),
       (st[40] = Fn),
       (st[41] = Bn));
   else Bn = st[41];
@@ -533,7 +533,7 @@ function DHe(Vu) {
   else Qn = st[48];
   let Tl;
   if (st[49] !== qn || st[50] !== Kn || st[51] !== Hn || st[52] !== Qn)
-    ((Tl = e(mr, {
+    ((Tl = e(FocusableBox, {
       onKeyDown: Zu,
       children: e(de, {
         title: "Save dynamic workflow",
@@ -721,7 +721,7 @@ function rt(Dm) {
   let er = _(7),
     { segs: Ti, contentWidth: Pi } = Dm,
     Nl;
-  if (er[0] === p)
+  if (er[0] === MEMO_CACHE_SENTINEL)
     ((Nl = r(t, { color: "text", children: [" ", v_.pipe, " "] })),
       (er[0] = Nl));
   else Nl = er[0];
@@ -733,7 +733,7 @@ function rt(Dm) {
       (er[3] = or));
   else or = er[3];
   let jl;
-  if (er[4] === p)
+  if (er[4] === MEMO_CACHE_SENTINEL)
     ((jl = r(t, { color: "text", children: [" ", v_.pipe] })), (er[4] = jl));
   else jl = er[4];
   let Il;
@@ -923,7 +923,7 @@ function Ns(Nm) {
           (lt[40] = At));
       else At = lt[40];
       let Pe;
-      if (lt[41] === p)
+      if (lt[41] === MEMO_CACHE_SENTINEL)
         ((Pe = e(t, { color: "text", children: Tg.bottomRight })),
           (lt[41] = Pe));
       else Pe = lt[41];
@@ -985,7 +985,7 @@ function bo(qm) {
   let eo = _(12),
     { left: qi, right: Ji, leftWidth: Ki, rightWidth: Gi } = qm,
     Kl;
-  if (eo[0] === p)
+  if (eo[0] === MEMO_CACHE_SENTINEL)
     ((Kl = r(t, { color: "text", children: [" ", v_.pipe, " "] })),
       (eo[0] = Kl));
   else Kl = eo[0];
@@ -997,7 +997,7 @@ function bo(qm) {
       (eo[3] = cr));
   else cr = eo[3];
   let Gl;
-  if (eo[4] === p)
+  if (eo[4] === MEMO_CACHE_SENTINEL)
     ((Gl = r(t, { color: "text", children: [" ", v_.pipe, " "] })),
       (eo[4] = Gl));
   else Gl = eo[4];
@@ -1009,7 +1009,7 @@ function bo(qm) {
       (eo[7] = ur));
   else ur = eo[7];
   let Hl;
-  if (eo[8] === p)
+  if (eo[8] === MEMO_CACHE_SENTINEL)
     ((Hl = r(t, { color: "text", children: [" ", v_.pipe] })), (eo[8] = Hl));
   else Hl = eo[8];
   let Vl;
@@ -1825,7 +1825,7 @@ function Es(Xm) {
           (gt[30] = Xr));
       else Xr = gt[30];
       let nc;
-      if (gt[31] === p)
+      if (gt[31] === MEMO_CACHE_SENTINEL)
         ((nc = e(t, { color: "text", children: Tg.bottomRight })),
           (gt[31] = nc));
       else nc = gt[31];
@@ -1918,7 +1918,7 @@ function eye({
     wo = s.script.length > 0,
     qa = V(() => {
       if (!wo) return "";
-      let M = Vf(s.script);
+      let M = parseWorkflowScript(s.script);
       if (!("error" in M)) return M.meta.name;
       return zj(s.summary ?? s.description);
     }, [wo, s.script, s.summary, s.description]),
@@ -2031,7 +2031,7 @@ function eye({
   function Oa() {
     if (O && St(O) && O.agentId) w?.(O.agentId);
   }
-  Ze(
+  useKeybindings(
     { "confirm:previous": () => Co(-1), "confirm:next": () => Co(1) },
     { context: "Confirmation" },
   );
@@ -2121,7 +2121,7 @@ function eye({
   if (Y === "agents" && Ao) xt.push(Be ? `f filter: ${Be}` : "f filter");
   if ((xt.push("esc back"), wo)) xt.push("s save");
   let ol = xt.join(" \xB7 ");
-  return e(mr, {
+  return e(FocusableBox, {
     onKeyDown: Za,
     children: e(de, {
       title: null,
@@ -2139,7 +2139,7 @@ function eye({
           !Ao
             ? r(N, {
                 children: [
-                  e(Rn, { children: "No agents yet." }),
+                  e(EmptyStateMessage, { children: "No agents yet." }),
                   e(o, { flexGrow: 1 }),
                 ],
               })

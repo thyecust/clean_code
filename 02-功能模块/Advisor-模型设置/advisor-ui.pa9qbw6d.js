@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 252 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { parseUserSpecifiedModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { er } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -19,15 +19,15 @@ import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { K9, tDe, X9, Mte, DF } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-csjxh2sy.js";
-import { qa } from "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
-import { Gp } from "../../01-核心基础设施/共享小工具-未细化/chunk-c8g7bday.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
+import { useMainLoopModel } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
+import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { snn, cSe } from "../../01-核心基础设施/共享小工具-未细化/chunk-xkt71qzj.js";
 import { Yle, Zg } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
 import { E, vr, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function lo(Do) {
   return Do.advisorModel;
@@ -36,14 +36,14 @@ function mo(ao) {
   return { label: Zg(ao), value: ao };
 }
 function co() {
-  i("tengu_advisor_dialog_shown", {});
+  logEvent("tengu_advisor_dialog_shown", {});
 }
 var H = "https://claude.com/blog/the-advisor-strategy";
 function K(Lo) {
   let a = _(37),
     { onDone: f, storageV5: j } = Lo,
     l = U(lo),
-    h = qa(),
+    h = useMainLoopModel(),
     A = It(),
     g,
     w,
@@ -57,7 +57,7 @@ function K(Lo) {
     if (a[4] !== g) ((k = g ? [g] : []), (a[4] = g), (a[5] = k));
     else k = a[5];
     let y;
-    if (a[6] === p) ((y = { label: "No advisor", value: "off" }), (a[6] = y));
+    if (a[6] === MEMO_CACHE_SENTINEL) ((y = { label: "No advisor", value: "off" }), (a[6] = y));
     else y = a[6];
     Q = [...Y.map(mo), ...k, y];
     ((a[0] = l), (a[1] = g), (a[2] = w), (a[3] = Q));
@@ -73,7 +73,7 @@ function K(Lo) {
   else k = a[10];
   let S = k,
     y;
-  if (a[11] === p) ((y = []), (a[11] = y));
+  if (a[11] === MEMO_CACHE_SENTINEL) ((y = []), (a[11] = y));
   else y = a[11];
   E(co, y);
   let b;
@@ -81,7 +81,7 @@ function K(Lo) {
     ((b = () => f(void 0, { display: "skip" })), (a[12] = f), (a[13] = b));
   else b = a[13];
   let oo;
-  if (a[14] === p)
+  if (a[14] === MEMO_CACHE_SENTINEL)
     ((oo = e(t, {
       children:
         "When Claude needs stronger judgment \u2014 a complex decision, an ambiguous failure, a problem it's circling without progress \u2014 it escalates to the advisor model for guidance, then resumes. The advisor runs server-side and uses additional tokens.",
@@ -132,7 +132,7 @@ function K(Lo) {
       (a[28] = J));
   else J = a[28];
   let eo, to;
-  if (a[29] === p)
+  if (a[29] === MEMO_CACHE_SENTINEL)
     ((eo = r(t, {
       children: [
         e(t, { color: "suggestion", children: "Recommended setup: " }),
@@ -142,7 +142,7 @@ function K(Lo) {
         }),
       ],
     })),
-      (to = e(Gp, { url: H })),
+      (to = e(LearnMoreLink, { url: H })),
       (a[29] = eo),
       (a[30] = to));
   else ((eo = a[29]), (to = a[30]));
@@ -174,7 +174,7 @@ function T(jo) {
   let z = _(9),
     { choice: x, onDone: I, storageV5: M } = jo,
     W = It(),
-    q = qa(),
+    q = useMainLoopModel(),
     no;
   if (z[0] !== q || z[1] !== x || z[2] !== I || z[3] !== W || z[4] !== M)
     ((no = () => {
@@ -198,7 +198,7 @@ function T(jo) {
       (z[7] = so));
   else so = z[7];
   let io;
-  if (z[8] === p) ((io = []), (z[8] = io));
+  if (z[8] === MEMO_CACHE_SENTINEL) ((io = []), (z[8] = io));
   else io = z[8];
   return (E(so, io), null);
 }

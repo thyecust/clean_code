@@ -10,7 +10,7 @@
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { us, Wc, Yg } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
   xht,
   qfn,
@@ -46,7 +46,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, T, O, se, v, c, $e, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var h = 1,
   F7 = 2,
   PFt = qfn - zfn,
@@ -87,7 +87,7 @@ function f(e) {
 function aln(e) {
   return f(us(e, E));
 }
-var H = m(() =>
+var H = createLazyValue(() =>
     c({
       path: s().refine((e) => r$(e) === null),
       sha256: s().regex(xze),
@@ -97,13 +97,13 @@ var H = m(() =>
       gen: T().int().nonnegative().optional(),
     }),
   ),
-  OFt = m(() =>
+  OFt = createLazyValue(() =>
     Ko("kind", [
       c({ kind: k("sha256"), sha256: s().regex(xze) }),
       c({ kind: k("git_blob"), blobId: s().regex(Wht) }),
     ]),
   ),
-  U = m(() =>
+  U = createLazyValue(() =>
     c({
       path: s().refine((e) => r$(e) === null),
       agreed: OFt(),
@@ -111,13 +111,13 @@ var H = m(() =>
       peerSeen: T().int().nonnegative().optional(),
     }),
   ),
-  u = m(() => s().regex(nn).refine(Mne)),
-  x = m(() =>
+  u = createLazyValue(() => s().regex(nn).refine(Mne)),
+  x = createLazyValue(() =>
     v(u())
       .max($_)
       .refine((e) => new Set(e).size === e.length),
   ),
-  R = m(() =>
+  R = createLazyValue(() =>
     s()
       .max(Ade)
       .refine(smn)
@@ -127,7 +127,7 @@ var H = m(() =>
   B = /^[A-Za-z0-9_-]+$/,
   F = 104857600,
   z = { row: MAX_WORKING_FILE_BYTES, file: F, direct: xht },
-  rft = m(() =>
+  rft = createLazyValue(() =>
     c({
       via: s().min(1).max(32),
       fileId: s().max(kKn).regex(B).optional(),
@@ -147,7 +147,7 @@ var H = m(() =>
             },
       ),
   ),
-  oft = m(() => rft().refine((e) => e.via !== "unknown")),
+  oft = createLazyValue(() => rft().refine((e) => e.via !== "unknown")),
   g = 128,
   W = /[\p{Cc}\\]|^[A-Za-z]:/u;
 function Zbe(e) {
@@ -164,8 +164,8 @@ function G(e) {
   let n = nc(e);
   return n === ".git" || /^git~\d+$/.test(n);
 }
-var V = m(() => v(s().refine(Zbe)).max(lC)),
-  K = m(() =>
+var V = createLazyValue(() => v(s().refine(Zbe)).max(lC)),
+  K = createLazyValue(() =>
     s()
       .refine((e) => Array.from(e).length <= xKe)
       .transform(f),
@@ -180,7 +180,7 @@ var V = m(() => v(s().refine(Zbe)).max(lC)),
     bundle: rft().nullable(),
     holds: x(),
   }),
-  L = m(() =>
+  L = createLazyValue(() =>
     c({
       ...I(),
       downApplied: v(
@@ -215,13 +215,13 @@ var V = m(() => v(s().refine(Zbe)).max(lC)),
         .catch(void 0),
     }),
   ),
-  lln = m(() =>
+  lln = createLazyValue(() =>
     s()
       .max(64)
       .transform((e) => (omn.includes(e) ? e : "other")),
   ),
-  q = m(() => v(c({ path: s().refine(Zbe), reason: lln() })).max(lC)),
-  C = m(() =>
+  q = createLazyValue(() => v(c({ path: s().refine(Zbe), reason: lln() })).max(lC)),
+  C = createLazyValue(() =>
     c({
       ...I(),
       bundle: rft()
@@ -244,7 +244,7 @@ var V = m(() => v(s().refine(Zbe)).max(lC)),
       .refine((e) => e.basedOn !== null || e.appliedGeneration === 0)
       .refine((e) => e.basedOn !== null || e.agentHeadContainsBasis === null),
   ),
-  Z = m(() =>
+  Z = createLazyValue(() =>
     c({
       version: $e([k(h), k(F7)]),
       side: X(["laptop", "worker"]),
@@ -312,12 +312,12 @@ var V = m(() => v(s().refine(Zbe)).max(lC)),
       note: se().optional(),
     }),
   ),
-  Q = m(() => c({ version: T().int() }));
+  Q = createLazyValue(() => c({ version: T().int() }));
 function j(e) {
   let n = Q().safeParse(e);
   return n.success ? n.data.version : null;
 }
-var cln = m(() =>
+var cln = createLazyValue(() =>
   c({
     credentialNamed: T().int().nonnegative(),
     filterAttributed: T().int().nonnegative(),
@@ -442,14 +442,14 @@ function O9(e, n) {
 function te(e) {
   let n = (o) => us(o, xKe),
     t = {
-      holds: Y(e.holds).slice(0, $_),
+      holds: dedupe(e.holds).slice(0, $_),
       branch: R().safeParse(e.branch).data ?? null,
       bundle:
         e.bundle === null
           ? null
           : {
               ...e.bundle,
-              prerequisites: Y(e.bundle.prerequisites).slice(0, $_),
+              prerequisites: dedupe(e.bundle.prerequisites).slice(0, $_),
             },
     },
     i = (o, a, r = g) => {
@@ -490,7 +490,7 @@ function te(e) {
     ...e,
     ...t,
     downApplied: p.turns,
-    fastForwardedTo: Y([...e.fastForwardedTo].reverse())
+    fastForwardedTo: dedupe([...e.fastForwardedTo].reverse())
       .reverse()
       .slice(-GX),
   };

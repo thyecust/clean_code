@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 228 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ze, VP } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -22,10 +22,10 @@ import { mS } from "../权限系统/chunk-e4pfvp7x.js";
 import { o, t, ko, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { yln } from "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nvfdjg8e.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import {
   Nue,
@@ -40,35 +40,35 @@ import {
   hC,
   VS,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { Td } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
-import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
+import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { js } from "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import { $8 } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
 import { j_e, HB } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { oat, sat, EOt, AOt, COt, vOt, ROt } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
-import { IS } from "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
+import { ScrollBox } from "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { runSideQuestion } from "../权限系统/chunk-qjqc5vxm.js";
-import { Ur } from "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
+import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import { o4 } from "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { kv } from "../../01-核心基础设施/共享小工具-未细化/chunk-mnzfncps.js";
+import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
 import { s, se, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 var wt = 5,
   bt = 6,
   qe = 3,
   $e = 5,
-  kt = m(() =>
+  kt = createLazyValue(() =>
     c({
       response: s().nullable(),
       synthetic: se()
@@ -126,7 +126,7 @@ function ve({
       ((P.current = null), Pe(null), V.current?.scrollTo(0));
     },
     [ge, Ee] = d(0),
-    { rows: at, columns: lt } = ks(Se()),
+    { rows: at, columns: lt } = ks(useTerminalSize()),
     ye = jn(),
     J = isBgSession() && !ye;
   (ko(() => st((a) => a + 1), T || ne ? null : 80),
@@ -336,7 +336,7 @@ ${T}`
             : "This remote connection doesn't support side questions",
         };
       let v = y
-        ? kv(
+        ? parseThinClientReply(
             "side_question",
             kt(),
             await y.sendControlRequest(
@@ -480,7 +480,7 @@ ${T}`
         marginTop: 1,
         marginLeft: 2,
         maxHeight: ft,
-        children: e(IS, {
+        children: e(ScrollBox, {
           ref: V,
           flexDirection: "column",
           flexGrow: 1,
@@ -493,7 +493,7 @@ ${T}`
                 ],
               })
             : ne
-              ? e(Ur, { error: ne })
+              ? e(ErrorMessage, { error: ne })
               : T
                 ? r(N, {
                     children: [
@@ -514,10 +514,10 @@ ${T}`
               : r(t, {
                   dimColor: !0,
                   children: [
-                    r(ue, {
+                    r(DotSeparatedList, {
                       children: [
                         U.length > 0
-                          ? e(D, {
+                          ? e(KeybindingHint, {
                               chord: ["shift+left", "shift+right"],
                               format: {
                                 modCase: "glyph",
@@ -527,22 +527,22 @@ ${T}`
                               action: "browse",
                             })
                           : (M || T || ne) &&
-                            e(D, { chord: ["up", "down"], action: "scroll" }),
+                            e(KeybindingHint, { chord: ["up", "down"], action: "scroll" }),
                         (M || T) &&
                           (ge > 0
                             ? e(t, {
                                 color: "success",
                                 children: "Copied to clipboard",
                               })
-                            : e(D, { chord: "c", action: "copy" })),
+                            : e(KeybindingHint, { chord: "c", action: "copy" })),
                         T &&
                           !Fe &&
                           !ye &&
                           Q === null &&
-                          e(D, { chord: "f", action: "fork" }),
+                          e(KeybindingHint, { chord: "f", action: "fork" }),
                         U.length > 0 &&
-                          e(D, { chord: "x", action: "clear history" }),
-                        e(D, { chord: "escape", action: "close" }),
+                          e(KeybindingHint, { chord: "x", action: "clear history" }),
+                        e(KeybindingHint, { chord: "escape", action: "close" }),
                       ],
                     }),
                     J && " \xB7 ",
@@ -615,11 +615,11 @@ function Ae(pr) {
   let mt = _(3),
     { notice: Ue } = pr,
     pt;
-  if (mt[0] === p)
+  if (mt[0] === MEMO_CACHE_SENTINEL)
     ((pt = e(t, {
       color: "warning",
       bold: !0,
-      children: e(et, { status: "warning", withSpace: !0 }),
+      children: e(StatusIndicator, { status: "warning", withSpace: !0 }),
     })),
       (mt[0] = pt));
   else pt = mt[0];
@@ -664,7 +664,7 @@ function Ve(gr) {
         (O[1] = H));
     else H = O[1];
     let W;
-    if (O[2] === p)
+    if (O[2] === MEMO_CACHE_SENTINEL)
       ((W = e(t, { color: "warning", children: "Answering\u2026" })),
         (O[2] = W));
     else W = O[2];

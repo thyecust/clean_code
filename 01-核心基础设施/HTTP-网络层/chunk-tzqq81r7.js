@@ -36,7 +36,7 @@ import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { Mrr, fU, getMainLoopModel, getCanonicalName, envSessionKind, kZe, NRn, dx, CRe } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vd, UP } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { Xt } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { Vnr } from "../共享小工具-未细化/chunk-1945b2ak.js";
+import { shouldReportErrors } from "../共享小工具-未细化/error-reporting-eligibility.js";
 import { errorTrackingClient, isErrorTrackingCapReached, enqueueErrorLog } from "../共享小工具-未细化/chunk-6kad94y1.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 import { createHash } from "crypto";
@@ -519,7 +519,7 @@ function Ie(e) {
   return n ? `${n[1]}.${n[2]}` : "unknown";
 }
 function Ore(e, n = "logError") {
-  if (!Vnr()) return;
+  if (!shouldReportErrors()) return;
   try {
     let t = ge(e),
       r = pe(t);

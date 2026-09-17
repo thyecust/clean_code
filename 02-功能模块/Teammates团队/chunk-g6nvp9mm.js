@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { Px, mz, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, l, A, Po, Bp, vB, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
@@ -19,20 +19,20 @@ import { ou, We, b, z, ae, n } from "../../01-核心基础设施/核心工具-�
 import { be, T_e } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { oe, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { go, HU } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { LH } from "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { isAgentColorName } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { SD, ds } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
 import { hkt } from "../权限系统/chunk-e4pfvp7x.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getTeammateContext, getTeamName } from "./chunk-811z9z0t.js";
 import { gCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
-import { Vr, _Ce } from "../../01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js";
-import { cp, fs } from "./chunk-enjekn9t.js";
+import { SEND_MESSAGE_TOOL_NAME, SEND_MESSAGE_SUMMARY_MAX_LENGTH } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
+import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
 import { s, O, se, v, c, it, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { join as Re } from "path";
 var dJ = "Another Claude session sent a message",
   pe = `${dJ} while you were working:`,
@@ -192,7 +192,7 @@ function FGt(e) {
   return t !== void 0 && t.unrepaired === void 0 ? t.split : void 0;
 }
 function Le(e) {
-  if (!me(e)) return;
+  if (!isRecord(e)) return;
   let { message: t, summary: r } = e;
   if (
     typeof e.to !== "string" ||
@@ -224,7 +224,7 @@ function Le(e) {
   return;
 }
 function $Gt(e, { applySplit: t = !0 } = {}) {
-  if (!me(e)) return null;
+  if (!isRecord(e)) return null;
   let { message: r, summary: o } = e,
     i = [],
     d = Le(e),
@@ -240,8 +240,8 @@ function $Gt(e, { applySplit: t = !0 } = {}) {
     let T = kr(r.trim()).trim();
     if (T.length > 0) ((o = T), i.push("derive_summary"));
   }
-  if (typeof o === "string" && o.length > _Ce)
-    ((o = oe(o, _Ce - 1) + "\u2026"), i.push("truncate_summary"));
+  if (typeof o === "string" && o.length > SEND_MESSAGE_SUMMARY_MAX_LENGTH)
+    ((o = oe(o, SEND_MESSAGE_SUMMARY_MAX_LENGTH - 1) + "\u2026"), i.push("truncate_summary"));
   let [_] = i,
     p =
       d?.unrepaired !== void 0
@@ -284,8 +284,8 @@ function L() {
     ds().taskList.updated.emit();
   } catch {}
 }
-var k1e = m(() => X(["pending", "in_progress", "completed"])),
-  Ye = m(() =>
+var k1e = createLazyValue(() => X(["pending", "in_progress", "completed"])),
+  Ye = createLazyValue(() =>
     c({
       id: s(),
       subject: s(),
@@ -514,13 +514,13 @@ async function Ze(e, t) {
     .sort((u, _) => Number(u.id) - Number(_.id));
 }
 async function CZn(e, t) {
-  if (M() && t !== void 0) return Ze(t, e);
+  if (isHoverRestEnabled() && t !== void 0) return Ze(t, e);
   return RC(e);
 }
 async function CXe(e, t) {
   let r = Wk(e);
   try {
-    if (M() && t !== void 0) {
+    if (isHoverRestEnabled() && t !== void 0) {
       await t.ensureScope({ namespace: "task", listId: VE(e) });
       return;
     }
@@ -697,7 +697,7 @@ async function ke(e, t, r, o) {
           "[Tasks] v5 task update write failed",
         )
       );
-    await (u.error.retryAfterMs !== void 0 ? Z(u.error.retryAfterMs) : vt(d));
+    await (u.error.retryAfterMs !== void 0 ? sleep(u.error.retryAfterMs) : vt(d));
   }
 }
 function nt(e, t, r) {
@@ -926,7 +926,7 @@ var U = {
     retries: { retries: 10, minTimeout: 5, maxTimeout: 100 },
     onCompromised: (e) => logError(e),
   },
-  ot = m(() =>
+  ot = createLazyValue(() =>
     it({
       type: s().optional(),
       from: s(),
@@ -1038,7 +1038,7 @@ function Nt(e, t, r) {
   o.set(e, i);
 }
 async function pruneInvalidMailboxEntries(e, t, r) {
-  if (M() && t !== void 0 && r !== void 0) {
+  if (isHoverRestEnabled() && t !== void 0 && r !== void 0) {
     try {
       let d = await H(
         t,
@@ -1140,10 +1140,10 @@ async function H(e, t, r, o, i = !0) {
 async function readMailbox(e, t, r, o) {
   let i = getInboxPath(e, t);
   n(`[TeammateMailbox] readMailbox: path=${i}`);
-  let d = M() && r !== void 0 ? W(e, t) : void 0;
+  let d = isHoverRestEnabled() && r !== void 0 ? W(e, t) : void 0;
   try {
     let u;
-    if (M() && r !== void 0 && d !== void 0) {
+    if (isHoverRestEnabled() && r !== void 0 && d !== void 0) {
       let T = await r.readText([d]);
       if (!T.ok)
         throw (
@@ -1209,8 +1209,8 @@ async function writeToMailbox(e, t, r, o) {
       ));
     return;
   }
-  let d = M() && o !== void 0 ? W(e, r) : void 0;
-  if (M() && o !== void 0 && d !== void 0) {
+  let d = isHoverRestEnabled() && o !== void 0 ? W(e, r) : void 0;
+  if (isHoverRestEnabled() && o !== void 0 && d !== void 0) {
     let T = { ...t, ...SD(), type: "message", read: !1 };
     try {
       return (
@@ -1294,8 +1294,8 @@ async function markSingleMessageAsRead(e, t, r, o) {
   n(
     `[TeammateMailbox] markSingleMessageAsRead called: agentName=${e}, teamName=${t}, target=${r.from}@${r.timestamp}, path=${i}`,
   );
-  let d = M() && o !== void 0 ? W(e, t) : void 0;
-  if (M() && o !== void 0 && d !== void 0) {
+  let d = isHoverRestEnabled() && o !== void 0 ? W(e, t) : void 0;
+  if (isHoverRestEnabled() && o !== void 0 && d !== void 0) {
     try {
       let p = await H(o, d, i, (T) => {
         if (!T.found) return { skip: !0, result: "absent" };
@@ -1353,8 +1353,8 @@ async function markMessagesAsRead(e, t, r, o) {
   n(
     `[TeammateMailbox] markMessagesAsRead called: agentName=${e}, teamName=${t}, path=${i}`,
   );
-  let d = M() && o !== void 0 ? W(e, t) : void 0;
-  if (M() && o !== void 0 && d !== void 0) {
+  let d = isHoverRestEnabled() && o !== void 0 ? W(e, t) : void 0;
+  if (isHoverRestEnabled() && o !== void 0 && d !== void 0) {
     let p = r === void 0 ? null : new Set(r.map(messageIdentityKey));
     try {
       let T = await H(o, d, i, (w) => {
@@ -1401,7 +1401,7 @@ async function markMessagesAsRead(e, t, r, o) {
         n("[TeammateMailbox] markMessagesAsRead: no messages to mark"),
         !0
       );
-    let T = G(p, (E) => !E.read);
+    let T = countMatching(p, (E) => !E.read);
     n(`[TeammateMailbox] markMessagesAsRead: ${T} unread of ${p.length} total`);
     let w = r === void 0 ? null : new Set(r.map(messageIdentityKey)),
       x = p.filter((E) => !E.read && w !== null && !w.has(messageIdentityKey(E)));
@@ -1429,8 +1429,8 @@ async function markMessagesAsRead(e, t, r, o) {
 }
 async function clearMailbox(e, t, r) {
   let o = getInboxPath(e, t),
-    i = M() && r !== void 0 ? W(e, t) : void 0;
-  if (M() && r !== void 0 && i !== void 0) {
+    i = isHoverRestEnabled() && r !== void 0 ? W(e, t) : void 0;
+  if (isHoverRestEnabled() && r !== void 0 && i !== void 0) {
     try {
       if (
         await H(r, i, o, (p) =>
@@ -1457,7 +1457,7 @@ async function clearMailbox(e, t, r) {
   }
 }
 function formatTeammateMessage(e) {
-  let t = LH(e.color) ? ` color="${e.color}"` : "",
+  let t = isAgentColorName(e.color) ? ` color="${e.color}"` : "",
     r = capFrameFieldForDisplay(e.summary),
     o = r ? ` summary="${go(r)}"` : "",
     i = capIdFrameField(e.from, IDLE_ID_FIELD_RECEIVE_BOUND) || UNKNOWN_SENDER,
@@ -1474,7 +1474,7 @@ function formatTeammateMessages(e, t) {
 `);
   return t.recipientIsLead ? R1e(o, { midTurn: !1 }) : o;
 }
-var IdleNotificationMessageSchema = m(() =>
+var IdleNotificationMessageSchema = createLazyValue(() =>
     c({
       type: k("idle_notification"),
       from: s(),
@@ -1516,7 +1516,7 @@ function capIdleResult(e, t = !0) {
   let i = stripFrameControlChars(o);
   return t
     ? `${i}
-[result truncated \u2014 ask the agent for the rest via ${Vr}]`
+[result truncated \u2014 ask the agent for the rest via ${SEND_MESSAGE_TOOL_NAME}]`
     : `${i}
 [result truncated]`;
 }
@@ -1541,7 +1541,7 @@ function capReceivedIdleResult(e, t) {
   let i = stripFrameControlChars(oe(r, IDLE_RESULT_MAX_LENGTH));
   return t
     ? `${i}
-[result truncated \u2014 ask the agent for the rest via ${Vr}]`
+[result truncated \u2014 ask the agent for the rest via ${SEND_MESSAGE_TOOL_NAME}]`
     : `${i}
 [result truncated]`;
 }
@@ -1751,7 +1751,7 @@ function sanitizeReceivedStructuredFrame(e, t) {
   } catch {
     return null;
   }
-  if (!me(r)) return null;
+  if (!isRecord(r)) return null;
   let o = r,
     i = o.type,
     d = typeof i === "string" ? STRUCTURED_FRAME_RECEIVE_SPECS.get(i) : void 0;
@@ -1852,7 +1852,7 @@ function applyAggregateIdleResultBudget(e) {
       i -= p.text.length;
       continue;
     }
-    let T = _.idleReason === "failed" ? "" : `; ask the agent for it via ${Vr}`,
+    let T = _.idleReason === "failed" ? "" : `; ask the agent for it via ${SEND_MESSAGE_TOOL_NAME}`,
       w = {
         type: "idle_notification",
         from: _.from,
@@ -1956,8 +1956,8 @@ function isIdleNotification(e) {
   } catch {}
   return null;
 }
-var ApprovedPermissionRequestSchema = m(() => c({ tool_use_id: s(), tool_name: s(), input_digest: s() })),
-  PermissionResponseMessageSchema = m(() =>
+var ApprovedPermissionRequestSchema = createLazyValue(() => c({ tool_use_id: s(), tool_name: s(), input_digest: s() })),
+  PermissionResponseMessageSchema = createLazyValue(() =>
     Ko("subtype", [
       c({
         type: k("permission_response"),
@@ -2079,7 +2079,7 @@ function isSandboxPermissionResponse(e) {
   } catch {}
   return null;
 }
-var PlanApprovalRequestMessageSchema = m(() =>
+var PlanApprovalRequestMessageSchema = createLazyValue(() =>
     c({
       type: k("plan_approval_request"),
       from: s(),
@@ -2089,7 +2089,7 @@ var PlanApprovalRequestMessageSchema = m(() =>
       requestId: s(),
     }),
   ),
-  PlanApprovalResponseMessageSchema = m(() =>
+  PlanApprovalResponseMessageSchema = createLazyValue(() =>
     c({
       type: k("plan_approval_response"),
       requestId: s(),
@@ -2099,7 +2099,7 @@ var PlanApprovalRequestMessageSchema = m(() =>
       permissionMode: hkt().optional(),
     }),
   ),
-  ShutdownRequestMessageSchema = m(() =>
+  ShutdownRequestMessageSchema = createLazyValue(() =>
     c({
       type: k("shutdown_request"),
       requestId: s(),
@@ -2108,7 +2108,7 @@ var PlanApprovalRequestMessageSchema = m(() =>
       timestamp: s(),
     }),
   ),
-  ShutdownApprovedMessageSchema = m(() =>
+  ShutdownApprovedMessageSchema = createLazyValue(() =>
     c({
       type: k("shutdown_approved"),
       requestId: s(),
@@ -2118,7 +2118,7 @@ var PlanApprovalRequestMessageSchema = m(() =>
       backendType: s().optional(),
     }),
   ),
-  ShutdownRejectedMessageSchema = m(() =>
+  ShutdownRejectedMessageSchema = createLazyValue(() =>
     c({
       type: k("shutdown_rejected"),
       requestId: s(),
@@ -2199,7 +2199,7 @@ function isPlanApprovalResponse(e) {
   } catch {}
   return null;
 }
-var an = m(() =>
+var an = createLazyValue(() =>
   c({
     type: k("task_assignment"),
     taskId: s(),
@@ -2212,7 +2212,7 @@ var an = m(() =>
 function isTaskAssignment(e) {
   return parseFrameForDisplay(an(), e);
 }
-var TaskCompletedMessageSchema = m(() =>
+var TaskCompletedMessageSchema = createLazyValue(() =>
     c({
       type: k("task_completed"),
       from: s().optional(),
@@ -2221,7 +2221,7 @@ var TaskCompletedMessageSchema = m(() =>
       timestamp: s().optional(),
     }),
   ),
-  TeammateTerminatedMessageSchema = m(() => c({ type: k("teammate_terminated"), message: s() }));
+  TeammateTerminatedMessageSchema = createLazyValue(() => c({ type: k("teammate_terminated"), message: s() }));
 function parseFrameForDisplay(e, t) {
   try {
     let r = e.strict().safeParse(z(t));
@@ -2282,17 +2282,17 @@ var un = /^shutdown-[0-9]{1,20}@[\w.-]{1,64}$/,
 function shutdownRequestReplyInstructions(e) {
   let t = un.test(e),
     r = b({
-      to: fs,
+      to: TEAM_LEAD_AGENT_NAME,
       message: {
         type: "shutdown_response",
         request_id: t ? e : ln,
         approve: !0,
       },
     });
-  return `To approve it, call ${Vr} with exactly this input, where "message" is a JSON object rather than a string${t ? "" : " and request_id is the request's requestId value, copied verbatim"}: ${r}. Approving ends your process; a plain-text acknowledgment does not shut you down. To decline, for example because you're mid-task, send the same input with "approve": false and a "reason".`;
+  return `To approve it, call ${SEND_MESSAGE_TOOL_NAME} with exactly this input, where "message" is a JSON object rather than a string${t ? "" : " and request_id is the request's requestId value, copied verbatim"}: ${r}. Approving ends your process; a plain-text acknowledgment does not shut you down. To decline, for example because you're mid-task, send the same input with "approve": false and a "reason".`;
 }
 function withShutdownReplyInstructions(e, t) {
-  if (t !== fs || !e.includes('"shutdown_request"')) return e;
+  if (t !== TEAM_LEAD_AGENT_NAME || !e.includes('"shutdown_request"')) return e;
   let r = isShutdownRequest(e);
   return r
     ? `${e}
@@ -2305,8 +2305,8 @@ function isHeadlessLeadDisplayableMessage(e) {
 }
 async function markMessagesAsReadByPredicate(e, t, r, o) {
   let i = getInboxPath(e, r),
-    d = M() && o !== void 0 ? W(e, r) : void 0;
-  if (M() && o !== void 0 && d !== void 0)
+    d = isHoverRestEnabled() && o !== void 0 ? W(e, r) : void 0;
+  if (isHoverRestEnabled() && o !== void 0 && d !== void 0)
     try {
       return (
         await H(o, d, i, (p) =>
@@ -2355,14 +2355,14 @@ function getLastPeerDmSummary(e) {
     for (let o of r.message.content)
       if (
         o.type === "tool_use" &&
-        o.name === Vr &&
+        o.name === SEND_MESSAGE_TOOL_NAME &&
         typeof o.input === "object" &&
         o.input !== null &&
         "to" in o.input &&
         typeof o.input.to === "string" &&
         o.input.to !== "*" &&
-        o.input.to !== fs &&
-        o.input.to !== cp
+        o.input.to !== TEAM_LEAD_AGENT_NAME &&
+        o.input.to !== MAIN_CONVERSATION_NAME
       ) {
         let i = "message" in o.input ? o.input.message : void 0,
           d =

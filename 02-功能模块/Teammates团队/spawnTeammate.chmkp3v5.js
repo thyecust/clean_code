@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 191 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K, Ec, q1, MA, kL, xL, hae, S_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { GPe } from "../../01-核心基础设施/共享小工具-未细化/chunk-t0dp6656.js";
+import { it2SetupDialog } from "../../01-核心基础设施/共享小工具-未细化/it2-setup-dialog.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { bt, ZJ, isModelAllowed, getMainLoopModel, stepDownRestrictedFamilyAliasPick, getCanonicalName, parseUserSpecifiedModel, ix, l0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -32,31 +32,31 @@ import { writeToMailbox, clearMailbox, PROTOCOL_FRAME_PROMPT_ERROR, isStructured
 import { Pc } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
 import { jk, bZn, cCe, vwt, sanitizeName, sanitizeAgentName, updateTeamFile, removeTeamMember } from "./chunk-6b13bhw1.js";
 import { bj, dYn } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { rd, pD } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import { resolveWrappedClaudeInvocation, applyProcessWrapper } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import "../权限系统/chunk-jsd70b22.js";
 import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import "../插件系统/chunk-rbjz1q03.js";
-import "../插件系统/chunk-4k4dssd9.js";
+import "../插件系统/channel-gate.js";
 import "./chunk-5nnwwahg.js";
 import { Cin } from "./chunk-8jtd54px.js";
 import { spawnInProcessTeammate } from "./chunk-sjd69zy5.js";
-import { ote, R7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-v599v9yt.js";
+import { CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../../01-核心基础设施/共享小工具-未细化/ca-trust-env-vars.js";
 import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 import "../权限系统/chunk-n4x6jsp3.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-kdfkgcfn.js";
-import "./chunk-4ma81w0c.js";
+import "../../01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js";
+import "./teammate-task-messages.js";
 import { Dh, Md } from "./chunk-mrfx53ye.js";
-import { cp, fs, M6, N6, Tge, Xir } from "./chunk-enjekn9t.js";
+import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME, SWARM_TMUX_SESSION_NAME, TMUX_BINARY, PANE_PLACEHOLDER_COMMAND, TEAMMATE_COMMAND_ENV_VAR } from "./chunk-enjekn9t.js";
 function V() {
   let t = Pc();
   if (t)
     throw new jk(
       `${t} \u2014 the teammate is not started unwrapped; fix the launcher setting, then retry`,
     );
-  let e = process.env[Xir],
+  let e = process.env[TEAMMATE_COMMAND_ENV_VAR],
     { cmd: o, prefixArgs: i } = e
-      ? pD({ cmd: e, prefixArgs: [], target: e })
-      : rd({ pinToCurrentBinary: !0 });
+      ? applyProcessWrapper({ cmd: e, prefixArgs: [], target: e })
+      : resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 });
   return [o, ...i];
 }
 function J({ planModeRequired: t, permissionMode: e, proactivityLevel: o }) {
@@ -120,8 +120,8 @@ var oe = [
   "http_proxy",
   "NO_PROXY",
   "no_proxy",
-  ...ote,
-  ...Object.keys(R7),
+  ...CA_BUNDLE_ENV_VARS,
+  ...Object.keys(SYSTEM_CA_TRUST_ENV_DEFAULTS),
   "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC",
   "CLAUDE_CODE_HOST_CREDS_FILE",
   "CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST",
@@ -221,11 +221,11 @@ function ie(t, e) {
   );
 }
 async function me(t) {
-  return (await execFileNoThrow(N6, ["has-session", "-t", t])).code === 0;
+  return (await execFileNoThrow(TMUX_BINARY, ["has-session", "-t", t])).code === 0;
 }
 async function de(t) {
   if (!(await me(t))) {
-    let o = await execFileNoThrow(N6, ["new-session", "-d", "-s", t], {
+    let o = await execFileNoThrow(TMUX_BINARY, ["new-session", "-d", "-s", t], {
       useCwd: !0,
       useToolMemoryCgroup: !1,
     });
@@ -348,7 +348,7 @@ async function j(t, e, o, i) {
 }
 function le(t, e) {
   let o = sanitizeAgentName(t);
-  if (o === cp)
+  if (o === MAIN_CONVERSATION_NAME)
     throw Error(
       '"main" is a reserved recipient name (SendMessage routes it to the main conversation) \u2014 choose another teammate name.',
     );
@@ -390,7 +390,7 @@ async function pe(t, e) {
       let I = await Ift();
       if (I.needsIt2Setup && e.requestDialog) {
         let x = await isTmuxAvailable(),
-          q = await e.requestDialog(GPe, { tmuxAvailable: x });
+          q = await e.requestDialog(it2SetupDialog, { tmuxAvailable: x });
         if (q === "cancelled")
           throw (
             logFeatureBad("subagent_launch", "subagent_teammate_iterm_cancelled"),
@@ -439,7 +439,7 @@ async function pe(t, e) {
         (await clearMailbox(w, s, e.storageV5),
         (await writeToMailbox(
           w,
-          { from: fs, text: m, timestamp: new Date().toISOString() },
+          { from: TEAM_LEAD_AGENT_NAME, text: m, timestamp: new Date().toISOString() },
           s,
           e.storageV5,
         )) === void 0)
@@ -452,7 +452,7 @@ async function pe(t, e) {
           )
         );
       (await I.backend.sendCommandToPane(A, Y, !P), logFeatureOk("swarm_pane_spawn"), k());
-      let X = P ? "current" : M6,
+      let X = P ? "current" : SWARM_TMUX_SESSION_NAME,
         ae = P ? "current" : "swarm-view";
       return (
         o((x) => ({
@@ -536,18 +536,18 @@ async function ue(t, e) {
     e.teammateColors,
     async ({ sanitizedName: w, teammateId: C, teammateColor: h }, k, D) => {
       let I = `teammate-${sanitizeName(w)}`;
-      await de(M6);
-      let P = await execFileNoThrow(N6, [
+      await de(SWARM_TMUX_SESSION_NAME);
+      let P = await execFileNoThrow(TMUX_BINARY, [
         "new-window",
         "-t",
-        M6,
+        SWARM_TMUX_SESSION_NAME,
         "-n",
         I,
         "-P",
         "-F",
         "#{pane_id}",
         "--",
-        Tge,
+        PANE_PLACEHOLDER_COMMAND,
       ]);
       if (P.code !== 0)
         throw (
@@ -555,7 +555,7 @@ async function ue(t, e) {
           Error(`Failed to create tmux window: ${P.stderr}`)
         );
       let A = P.stdout.trim();
-      (D(() => execFileNoThrow(N6, ["kill-pane", "-t", A])),
+      (D(() => execFileNoThrow(TMUX_BINARY, ["kill-pane", "-t", A])),
         await j(s, C, { tmuxPaneId: A, backendType: "tmux" }, e.storageV5));
       let U = V(),
         M = [
@@ -584,7 +584,7 @@ async function ue(t, e) {
         (await clearMailbox(w, s, e.storageV5),
         (await writeToMailbox(
           w,
-          { from: fs, text: m, timestamp: new Date().toISOString() },
+          { from: TEAM_LEAD_AGENT_NAME, text: m, timestamp: new Date().toISOString() },
           s,
           e.storageV5,
         )) === void 0)
@@ -624,7 +624,7 @@ async function ue(t, e) {
                 name: w,
                 agentType: r,
                 color: h,
-                tmuxSessionName: M6,
+                tmuxSessionName: SWARM_TMUX_SESSION_NAME,
                 tmuxPaneId: A,
                 cwd: E,
                 spawnedAt: Date.now(),
@@ -653,7 +653,7 @@ async function ue(t, e) {
             model: p,
             name: w,
             color: h,
-            tmux_session_name: M6,
+            tmux_session_name: SWARM_TMUX_SESSION_NAME,
             tmux_window_name: I,
             tmux_pane_id: A,
             team_name: s,
@@ -788,7 +788,7 @@ async function z(t, e) {
         n(`[handleSpawnInProcess] Started agent execution for ${E}`));
       let I = i().teamContext?.leadAgentId,
         P = !I,
-        A = I ?? ix(fs, d),
+        A = I ?? ix(TEAM_LEAD_AGENT_NAME, d),
         U = P ? e.teammateColors.assign(A) : void 0;
       return (
         o((M) => {
@@ -796,8 +796,8 @@ async function z(t, e) {
             v = P
               ? {
                   [A]: {
-                    name: fs,
-                    agentType: fs,
+                    name: TEAM_LEAD_AGENT_NAME,
+                    agentType: TEAM_LEAD_AGENT_NAME,
                     color: U,
                     tmuxSessionName: "in-process",
                     tmuxPaneId: "leader",

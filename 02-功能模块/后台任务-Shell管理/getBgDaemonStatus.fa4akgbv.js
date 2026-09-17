@@ -18,13 +18,13 @@ import { BG_PROTO, rosterKey, readRoster } from "./chunk-7wsy8vxb.js";
 import { controlRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import { tF } from "./chunk-jfk5mpe1.js";
 import { kle, Y0e } from "../权限系统/chunk-3kjwvb3e.js";
-import { Vb, s9 } from "../../01-核心基础设施/共享小工具-未细化/chunk-d3d1v4d6.js";
+import { getDaemonJsonPath, getDaemonLogPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { readFile, stat as f } from "fs/promises";
 async function getBgDaemonStatus(e) {
   let r = await Rh(1, e).catch(() => null),
-    t = r?.logPath ?? s9(),
+    t = r?.logPath ?? getDaemonLogPath(),
     [n, i, o, a, k, b] = await Promise.all([
       controlRequest({ op: "ping", proto: BG_PROTO }, { timeoutMs: 1000 }).catch((l) => ({
         ok: !1,
@@ -35,7 +35,7 @@ async function getBgDaemonStatus(e) {
       S(e),
       v(t, e),
       tF().catch(() => !1),
-      y(Vb(), e),
+      y(getDaemonJsonPath(), e),
     ]),
     u;
   try {
@@ -53,7 +53,7 @@ async function getBgDaemonStatus(e) {
         controlRequest({ op: "leases", proto: BG_PROTO }, { timeoutMs: 1000 }).catch(() => l),
       ]);
     if (c.ok && "jobs" in c) {
-      d = G(c.jobs, (s) => !s.outcome);
+      d = countMatching(c.jobs, (s) => !s.outcome);
       let w =
         r?.version ??
         {
@@ -69,7 +69,7 @@ async function getBgDaemonStatus(e) {
             "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
           DD_SOURCEMAP_GROUP: "darwin",
         }.VERSION;
-      g = G(
+      g = countMatching(
         c.jobs,
         (s) => !s.outcome && s.cliVersion !== void 0 && s.cliVersion !== w,
       );
@@ -110,7 +110,7 @@ async function S(e) {
   return f(zI()).catch(() => null);
 }
 async function v(e, r) {
-  if (r && e === s9()) {
+  if (r && e === getDaemonLogPath()) {
     let t = await r.statMeta(Ce.state("daemon-log")).catch(() => {
       return;
     });
@@ -120,7 +120,7 @@ async function v(e, r) {
 }
 async function y(e, r) {
   let t;
-  if (r && e === Vb()) {
+  if (r && e === getDaemonJsonPath()) {
     let o = await Y0e(r);
     if (o.kind !== "text") return 0;
     t = o.text;

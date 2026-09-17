@@ -13,25 +13,25 @@ import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { getProTrialDurationDays, startProTrial } from "../../01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
+import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { zB } from "../../03-入口与运行时/CLI入口-Commander/chunk-nhpr06js.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function ProTrialStartScreen(L) {
   let s = _(11),
@@ -49,16 +49,16 @@ function ProTrialStartScreen(L) {
           return;
         }
         (B("starting"),
-          i("tengu_pro_trial_start_pressed", {}),
+          logEvent("tengu_pro_trial_start_pressed", {}),
           startProTrial(C, P)
             .then(() => {
-              (i("tengu_pro_trial_start_ok", {}), u());
+              (logEvent("tengu_pro_trial_start_ok", {}), u());
             })
             .catch((S) => {
               if (cc(S))
                 n(`Failed to start pro trial: ${l(S)}`, { level: "error" });
               else logError(S);
-              (i("tengu_pro_trial_start_error", {}), B("error"));
+              (logEvent("tengu_pro_trial_start_error", {}), B("error"));
             }));
       },
     }),
@@ -69,18 +69,18 @@ function ProTrialStartScreen(L) {
       (s[4] = H));
   else H = s[4];
   let R;
-  if (s[5] === p) ((R = { context: "Confirmation" }), (s[5] = R));
+  if (s[5] === MEMO_CACHE_SENTINEL) ((R = { context: "Confirmation" }), (s[5] = R));
   else R = s[5];
-  Ze(H, R);
+  useKeybindings(H, R);
   let D;
-  if (s[6] === p) ((D = getProTrialDurationDays()), (s[6] = D));
+  if (s[6] === MEMO_CACHE_SENTINEL) ((D = getProTrialDurationDays()), (s[6] = D));
   else D = s[6];
   let Y = D,
     b;
-  if (s[7] === p) ((b = e(zB, {})), (s[7] = b));
+  if (s[7] === MEMO_CACHE_SENTINEL) ((b = e(zB, {})), (s[7] = b));
   else b = s[7];
   let j;
-  if (s[8] === p)
+  if (s[8] === MEMO_CACHE_SENTINEL)
     ((j = e(t, {
       children:
         Y !== null

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { JQ } from "./chunk-q35gycf9.js";
+import { isLoopbackHostname } from "./is-loopback-hostname.js";
 import h from "ws";
 class i extends Error {
   name = "TestEgressBlockedError";
@@ -32,7 +32,7 @@ function u(e, t) {
 function c(e) {
   let t;
   try {
-    t = JQ(new URL(e).hostname);
+    t = isLoopbackHostname(new URL(e).hostname);
   } catch {
     t = !1;
   }

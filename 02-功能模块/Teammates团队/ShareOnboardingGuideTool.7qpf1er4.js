@@ -10,15 +10,15 @@
 
 // [preload stripped] 原本在此预载 82 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
-import { EGe, don } from "./chunk-hcszd97x.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
+import { SHARE_ONBOARDING_GUIDE_TOOL_NAME, SHARE_ONBOARDING_GUIDE_TOOL_DESCRIPTION } from "./share-onboarding-guide-tool.js";
 import { zSe, rjn, pon, ojn, fon } from "./chunk-w2g8t42p.js";
 import { s, c, Qe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { readFile, stat as b } from "fs/promises";
 import { join as O } from "path";
-var k = m(() =>
+var k = createLazyValue(() =>
     Qe({
       mode: X(["check", "update", "create", "delete"])
         .default("check")
@@ -33,7 +33,7 @@ var k = m(() =>
         ),
     }),
   ),
-  z = m(() =>
+  z = createLazyValue(() =>
     c({
       status: X([
         "created",
@@ -49,12 +49,12 @@ var k = m(() =>
   ),
   u = "ONBOARDING.md",
   h = 65536,
-  ShareOnboardingGuideTool = Tt({
-    name: EGe,
+  ShareOnboardingGuideTool = buildTool({
+    name: SHARE_ONBOARDING_GUIDE_TOOL_NAME,
     searchHint: "upload ONBOARDING.md and get a team share link",
     maxResultSizeChars: 1000,
     async description() {
-      return don;
+      return SHARE_ONBOARDING_GUIDE_TOOL_DESCRIPTION;
     },
     isEnabled() {
       return zSe();
@@ -72,7 +72,7 @@ var k = m(() =>
       return z();
     },
     async prompt() {
-      return don;
+      return SHARE_ONBOARDING_GUIDE_TOOL_DESCRIPTION;
     },
     toAutoClassifierInput(t) {
       return `share onboarding guide (mode: ${t.mode ?? "check"})`;

@@ -9,25 +9,25 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 198 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { x, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { sn, Nb } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { findCommand, j2, L_t, getCommands } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ot, bA } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { ZQ } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { eJ, yQn, SQn } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { NG, qH, qy } from "../MCP客户端/chunk-3kmsshb6.js";
-import { MPe, zee } from "../../01-核心基础设施/共享小工具-未细化/chunk-s5e85mz9.js";
+import { collapseNewlines, truncateForDisplay } from "../../01-核心基础设施/共享小工具-未细化/text-truncation.js";
 import { s, T, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { join as L } from "path";
 var S = 1024,
-  _ = m(() =>
+  _ = createLazyValue(() =>
     c({
       proposals: v(
         c({
@@ -60,14 +60,14 @@ var S = 1024,
         .max(3),
     }),
   ),
-  w = m(() =>
+  w = createLazyValue(() =>
     c({
       proposalCount: T().describe(
         "Number of proposals shown on the review card",
       ),
     }),
   ),
-  ProposeSkillsTool = Tt({
+  ProposeSkillsTool = buildTool({
     name: eJ,
     maxResultSizeChars: 1000,
     searchHint:
@@ -114,9 +114,9 @@ var S = 1024,
       let e = (t.proposals ?? []).filter((r) => r?.name).slice(0, 3);
       if (e.length === 0) return "";
       let u = e.map((r) => {
-        let d = zee(MPe(r.name ?? ""), 80);
+        let d = truncateForDisplay(collapseNewlines(r.name ?? ""), 80);
         return r.kind === "improvement" && r.target
-          ? `${d} (improves ${zee(MPe(r.target), 80)})`
+          ? `${d} (improves ${truncateForDisplay(collapseNewlines(r.target), 80)})`
           : d;
       });
       return `Propose ${e.length} ${x(e.length, "skill")}: ${u.join(", ")}`;
@@ -172,9 +172,9 @@ var S = 1024,
     },
     async call({ proposals: t }, e) {
       return (
-        i("tengu_propose_skills", {
+        logEvent("tengu_propose_skills", {
           proposal_count: t.length,
-          improvement_count: G(t, (u) => u.kind === "improvement"),
+          improvement_count: countMatching(t, (u) => u.kind === "improvement"),
         }),
         { data: { proposalCount: t.length } }
       );

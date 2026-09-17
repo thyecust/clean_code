@@ -13,21 +13,21 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { P6 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { parseSettingsFileUncached, X6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { findCanonicalGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { mo, ma } from "../../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js";
-import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { REFUSE_INPUT_WINDOW_MS, isRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
+import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { an } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
+import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { Aot, Cot, vot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
+import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { Szt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 import { recordDirectoryTrust, validateCdTarget, cdRuleRefusalMessage, relocateSession, reapplyProjectSettingsAfterTrustChange, withGatedGrantsApplied } from "../Memory-CLAUDE.md/chunk-br7dq41d.js";
@@ -42,12 +42,12 @@ import {
   zPt,
   VPt,
 } from "../状态栏-主题/chunk-67rzccvb.js";
-import { gs } from "./chunk-n5mgv42x.js";
+import { PermissionDialogFrame } from "./permission-dialog.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dbe } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { resolve as so } from "path";
 F();
 import { join as le, resolve as ao } from "path";
@@ -138,7 +138,7 @@ function E(pt) {
   else pe = Le[1];
   let me;
   if (Le[2] !== Fe)
-    ((me = e(xe, { children: e(t, { children: Fe }) })),
+    ((me = e(ToolResultRow, { children: e(t, { children: Fe }) })),
       (Le[2] = Fe),
       (Le[3] = me));
   else me = Le[3];
@@ -164,13 +164,13 @@ function CdTrustPrompt(ft) {
     k = lo === void 0 ? !1 : lo,
     uo = C(!1),
     go;
-  if (R[0] === p) ((go = Date.now()), (R[0] = go));
+  if (R[0] === MEMO_CACHE_SENTINEL) ((go = Date.now()), (R[0] = go));
   else go = R[0];
   let ht = C(go),
     po;
-  if (R[1] === p)
+  if (R[1] === MEMO_CACHE_SENTINEL)
     ((po = (yt) => {
-      if (uo.current || ma(ht.current, mo)) {
+      if (uo.current || isRecent(ht.current, REFUSE_INPUT_WINDOW_MS)) {
         return;
       }
       ((uo.current = !0), yt());
@@ -240,7 +240,7 @@ function CdTrustPrompt(ft) {
       (R[12] = Se));
   else Se = R[12];
   let ho;
-  if (R[13] === p)
+  if (R[13] === MEMO_CACHE_SENTINEL)
     ((ho = e(t, {
       dimColor: !0,
       children: e(ct, {
@@ -260,7 +260,7 @@ function CdTrustPrompt(ft) {
   else je = R[17];
   let Re;
   if (R[18] !== Ue || R[19] !== Ee || R[20] !== we || R[21] !== je)
-    ((Re = e(En, {
+    ((Re = e(ConfirmPrompt, {
       hideIndexes: !0,
       cancelFirst: !0,
       focus: "cancel",
@@ -268,7 +268,7 @@ function CdTrustPrompt(ft) {
       cancelLabel: Ee,
       onConfirm: we,
       onCancel: je,
-      windowMs: mo,
+      windowMs: REFUSE_INPUT_WINDOW_MS,
     })),
       (R[18] = Ue),
       (R[19] = Ee),
@@ -277,13 +277,13 @@ function CdTrustPrompt(ft) {
       (R[22] = Re));
   else Re = R[22];
   let yo;
-  if (R[23] === p)
+  if (R[23] === MEMO_CACHE_SENTINEL)
     ((yo = e(t, {
       dimColor: !0,
-      children: r(ue, {
+      children: r(DotSeparatedList, {
         children: [
-          e(D, { chord: "enter", action: "confirm" }),
-          e(D, { chord: "escape", action: "cancel" }),
+          e(KeybindingHint, { chord: "enter", action: "confirm" }),
+          e(KeybindingHint, { chord: "escape", action: "cancel" }),
         ],
       }),
     })),
@@ -312,7 +312,7 @@ function CdTrustPrompt(ft) {
   else Me = R[29];
   let vo;
   if (R[30] !== Me || R[31] !== Be)
-    ((vo = e(gs, {
+    ((vo = e(PermissionDialogFrame, {
       color: "warning",
       titleColor: "warning",
       title: Be,
@@ -341,7 +341,7 @@ function Je(vt) {
         bold: !0,
         color: "warning",
         children: [
-          e(et, { status: "warning", withSpace: !0 }),
+          e(StatusIndicator, { status: "warning", withSpace: !0 }),
           "This directory pre-approves ",
           b.rawCount,
           " ",
@@ -367,7 +367,7 @@ function Je(vt) {
         bold: !0,
         color: "warning",
         children: [
-          e(et, { status: "warning", withSpace: !0 }),
+          e(StatusIndicator, { status: "warning", withSpace: !0 }),
           "This directory grants access to ",
           P.rawCount,
           " ",
@@ -396,7 +396,7 @@ function Je(vt) {
         bold: !0,
         color: "warning",
         children: [
-          e(et, { status: "warning", withSpace: !0 }),
+          e(StatusIndicator, { status: "warning", withSpace: !0 }),
           "This directory configures hooks that run commands, declared in",
           " ",
           jb(be),
@@ -415,7 +415,7 @@ function Je(vt) {
         bold: !0,
         color: "warning",
         children: [
-          e(et, { status: "warning", withSpace: !0 }),
+          e(StatusIndicator, { status: "warning", withSpace: !0 }),
           "This directory runs commands on the session",
           "'",
           "s behalf (auth / header helpers), declared in",
@@ -715,7 +715,7 @@ function CdUntrustedMoveFlow(jt) {
 function ne(We) {
   let B = _(25),
     { outcome: j, onComplete: K } = We,
-    { storageV5: eo } = _e(),
+    { storageV5: eo } = useStorageV5Context(),
     [oo, bt] = d(j.modelMessage),
     [Pt, Dt] = d(!j.projectGrantsGated),
     [O] = d(Q),

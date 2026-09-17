@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -17,9 +17,9 @@ import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { yve, JEt } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
 import { hasPermissionsToUseTool } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { v9, Fdt, $dt, Rqe } from "./chunk-bkcg0nbj.js";
-import { Mdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-1n8w0wz0.js";
-import { Vf } from "./chunk-cd542wve.js";
-import { eH } from "./chunk-hdhsmge4.js";
+import { usesNondeterministicApi } from "../../01-核心基础设施/共享小工具-未细化/nondeterminism-check.js";
+import { parseWorkflowScript } from "./workflow-script.js";
+import { getWorkflowTranscriptDir } from "./workflow-snapshots.js";
 import { Dh } from "../Teammates团队/chunk-mrfx53ye.js";
 import { randomUUID } from "crypto";
 var a = 1e5,
@@ -69,10 +69,10 @@ async function clt({
       "control-chars",
       "workflow script contains disallowed control characters.",
     );
-  let n = Vf(t, { maxBytes: w });
+  let n = parseWorkflowScript(t, { maxBytes: w });
   if ("error" in n)
     return s("meta-parse", `invalid workflow script: ${n.error}`);
-  if (Mdt(n.scriptBody))
+  if (usesNondeterministicApi(n.scriptBody))
     return s(
       "nondeterminism",
       "workflow scripts must be deterministic: Date.now()/Math.random()/new Date() are unavailable (breaks resume). Stamp results after the workflow returns, or pass timestamps via args.",
@@ -84,7 +84,7 @@ async function clt({
     x = NTt(n.meta.name, f, t, p.storageV5),
     C = Fdt(n.meta.name, void 0, !1),
     R = $dt(n.meta.description, void 0, !1);
-  i("tengu_workflow_launched", {
+  logEvent("tengu_workflow_launched", {
     invocation_mode: fromEnum(d),
     workflow_source: fromEnum(d),
     phase_count: n.meta.phases?.length ?? 0,
@@ -105,7 +105,7 @@ async function clt({
       toolUseContext: p,
       canUseTool: p.canUseTool ?? hasPermissionsToUseTool,
       toolUseId: void 0,
-      transcriptDir: eH(f),
+      transcriptDir: getWorkflowTranscriptDir(f),
       telemetry: {
         source: d,
         name: C,

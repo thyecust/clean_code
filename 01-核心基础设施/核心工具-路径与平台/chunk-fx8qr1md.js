@@ -18,7 +18,7 @@ import { Q } from "../共享小工具-未细化/chunk-rsr7cnyv.js";
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { lv, Ri, fPn, Xie } from "../安全文件系统(FS加固)/chunk-h64ek850.js";
 import { B8t } from "../共享小工具-未细化/chunk-a7cfts2d.js";
-import { Dm } from "../共享小工具-未细化/chunk-17typpec.js";
+import { createKeyedSerialQueue } from "../共享小工具-未细化/async-serialization.js";
 import { xA } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { P } from "./chunk-13kdp2ag.js";
 import * as x from "path/win32";
@@ -480,7 +480,7 @@ var Fet =
 function $et(e) {
   return Vxn() && (e & 128) === 0;
 }
-var Le = Dm();
+var Le = createKeyedSerialQueue();
 function j6(e, t) {
   return Le.run(e, t);
 }

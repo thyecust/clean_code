@@ -8,16 +8,16 @@
 
 // Version: 2.1.263
 import { Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
-import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var e = Ae("./SKILL-8cc0kwr3.md");
+import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var e = importMetaRequire("./SKILL-8cc0kwr3.md");
 var t = "./template.html-cfc12d66.txt.zst";
 var a = Ke(t, import.meta.dirname);
-var r = Ae("./SKILL-5vqnvygj.md");
+var r = importMetaRequire("./SKILL-5vqnvygj.md");
 var o = "./template.html-cad26093.txt.zst";
 var s = Ke(o, import.meta.dirname);
-var i = Ae("./SKILL-sq87gt02.md");
-var n = Ae("./template.html-j5g90adz.txt");
-var l = Ae("./SKILL-z3x847gz.md");
+var i = importMetaRequire("./SKILL-sq87gt02.md");
+var n = importMetaRequire("./template.html-j5g90adz.txt");
+var l = importMetaRequire("./SKILL-z3x847gz.md");
 var h = "./template.html-4414d93a.txt.zst";
 var d = Ke(h, import.meta.dirname);
 var SKILL_MD = { dashboard: e, report: l, "data-table": r, explainer: i },

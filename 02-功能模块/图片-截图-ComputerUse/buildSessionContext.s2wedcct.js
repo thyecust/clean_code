@@ -16,13 +16,13 @@ import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { oPe } from "./chunk-1c6fx285.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { UYn, BYn, VSt, jYn, J8e } from "./chunk-b8jsase9.js";
-import { Zp, JJn } from "./chunk-bvxymt09.js";
+import { getComputerUseSession, registerComputerUseEscapeHotkey } from "./computer-use-session.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import "./chunk-w5bhde2m.js";
 import { con, put } from "./chunk-v76f8dbx.js";
 import { GSe } from "../../01-核心基础设施/共享小工具-未细化/chunk-4p4f6hsz.js";
 import { hF } from "../../01-核心基础设施/共享小工具-未细化/chunk-j66gwpg8.js";
-import "./chunk-jeefwg1w.js";
+import "./computer-use-input-native.js";
 function c(t) {
   return t ? `(${t[0]}, ${t[1]})` : "";
 }
@@ -97,7 +97,7 @@ function C(t) {
   };
 }
 function p() {
-  return Zp().currentToolUseContext;
+  return getComputerUseSession().currentToolUseContext;
 }
 function l() {
   return J8e(p().session)?.get();
@@ -201,7 +201,7 @@ function buildSessionContext() {
           : { ...e, lastScreenshotDims: t };
       }),
     checkCuLock: async () => {
-      let t = await UYn(Zp().currentToolUseContext?.storageV5);
+      let t = await UYn(getComputerUseSession().currentToolUseContext?.storageV5);
       switch (t.kind) {
         case "free":
           return { holder: void 0, isSelf: !1 };
@@ -213,18 +213,18 @@ function buildSessionContext() {
       }
     },
     acquireCuLock: async () => {
-      let t = await BYn(Zp().currentToolUseContext?.storageV5);
+      let t = await BYn(getComputerUseSession().currentToolUseContext?.storageV5);
       if (t.kind === "blocked") throw Error(h(t.by));
       if (jYn()) {
-        let e = JJn(() => {
-          if (Zp().callsInFlight === 0) {
+        let e = registerComputerUseEscapeHotkey(() => {
+          if (getComputerUseSession().callsInFlight === 0) {
             n("[cu-esc] user escape with no CU call in flight; consumed only");
             return;
           }
           (n("[cu-esc] user escape, aborting turn"),
             p().abortController.abort());
         });
-        Zp().currentOnProgress?.({
+        getComputerUseSession().currentOnProgress?.({
           type: "os_notification",
           message: e
             ? "Claude is using your computer \xB7 press Esc to stop"
@@ -237,14 +237,14 @@ function buildSessionContext() {
   };
 }
 function _() {
-  let t = Zp();
+  let t = getComputerUseSession();
   if (t.binding) return t.binding;
   let e = buildSessionContext();
   return ((t.binding = { ctx: e, dispatch: con(put(), GSe(), e) }), t.binding);
 }
 function getComputerUseMCPToolOverrides(t) {
   let e = async (r, o, s, y, g) => {
-    let a = Zp();
+    let a = getComputerUseSession();
     ((a.currentToolUseContext = o),
       (a.currentOnProgress = g),
       a.callsInFlight++);

@@ -12,14 +12,14 @@
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { B1, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oy, ee, es, FZe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, l, A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, mcpNameForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Kn } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOkAsync, logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Lq, qge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -50,27 +50,27 @@ import {
 import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
 import { isRestrictedToPluginOnly } from "../Skills技能/chunk-sapykxw7.js";
 import { QSt } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import { i9e } from "./chunk-rxp6fm7a.js";
 import { flushAnalyticsSinks } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import { V0, Fz, cJt } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { Gb, bv } from "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
+import { RenderOnceAndExit, renderAndWaitForExit } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import { printCliError, cliError, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { HUn } from "./chunk-35zjqw7h.js";
-import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
+import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Mtn, zat } from "../../01-核心基础设施/共享小工具-未细化/chunk-k4m00mjj.js";
-import { ut } from "../../01-核心基础设施/共享小工具-未细化/chunk-5ktz3kp7.js";
+import { formatMcpServerNotFoundMessage, formatMcpServerNotFoundMessageWithPendingApproval } from "../../01-核心基础设施/共享小工具-未细化/mcp-server-not-found-message.js";
+import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import { uze, Dbe } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { Dn, kn, E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { stat as it } from "fs/promises";
 F();
 import { cwd as ct } from "process";
@@ -91,11 +91,11 @@ function he(kt) {
   else qe = T[1];
   let I = qe,
     Ge;
-  if (T[2] === p) ((Ge = {}), (T[2] = Ge));
+  if (T[2] === MEMO_CACHE_SENTINEL) ((Ge = {}), (T[2] = Ge));
   else Ge = T[2];
   let [z, At] = d(Ge),
     [re] = cn(),
-    { storageV5: G } = _e(),
+    { storageV5: G } = useStorageV5Context(),
     Je,
     Ve;
   if (T[3] !== G)
@@ -175,7 +175,7 @@ function he(kt) {
     X = function X(Lt) {
       Re(Lt).catch((Ut) => {
         (Kn(`
-${ut("error", re)(l(Ut))}
+${getThemeColor("error", re)(l(Ut))}
 `),
           ce(),
           xn());
@@ -185,7 +185,7 @@ ${ut("error", re)(l(Ut))}
       let { importedCount: ke, failures: zt } = Ee;
       if (ke > 0)
         Kn(`
-${ut("success", re)(`Successfully imported ${ke} MCP ${x(ke, "server")} to ${W} config.`)}
+${getThemeColor("success", re)(`Successfully imported ${ke} MCP ${x(ke, "server")} to ${W} config.`)}
 `);
       else
         Kn(`
@@ -193,7 +193,7 @@ No servers were imported.`);
       (zt.forEach((pe) => {
         let { serverName: qt, reason: Gt } = pe;
         Kn(`
-${ut("error", re)(`Could not import ${qt}: ${Gt}`)}
+${getThemeColor("error", re)(`Could not import ${qt}: ${Gt}`)}
 `);
       }),
         ce(),
@@ -235,7 +235,7 @@ ${ut("error", re)(`Could not import ${qt}: ${Gt}`)}
       (T[29] = fe));
   else fe = T[29];
   let et;
-  if (T[30] === p)
+  if (T[30] === MEMO_CACHE_SENTINEL)
     ((et = e(t, { children: "Please select the servers you want to import:" })),
       (T[30] = et));
   else et = T[30];
@@ -283,17 +283,17 @@ ${ut("error", re)(`Could not import ${qt}: ${Gt}`)}
       (T[46] = ve));
   else ve = T[46];
   let tt;
-  if (T[47] === p)
+  if (T[47] === MEMO_CACHE_SENTINEL)
     ((tt = e(o, {
       paddingX: 1,
       children: e(t, {
         dimColor: !0,
         italic: !0,
-        children: r(ue, {
+        children: r(DotSeparatedList, {
           children: [
-            e(D, { chord: "space", action: "select" }),
-            e(D, { chord: "enter", action: "confirm" }),
-            e(je, {
+            e(KeybindingHint, { chord: "space", action: "select" }),
+            e(KeybindingHint, { chord: "enter", action: "confirm" }),
+            e(ActionKeybindingHint, {
               action: "confirm:no",
               context: "Confirmation",
               fallback: "Esc",
@@ -377,7 +377,7 @@ async function mcpServeHandler(
   let y = ct(),
     i = "stdio",
     k = "raw";
-  await qs("tengu_mcp_start", { transport: fromEnum("stdio") });
+  await logEventAsync("tengu_mcp_start", { transport: fromEnum("stdio") });
   let M = 0;
   try {
     await it(y);
@@ -455,7 +455,7 @@ async function mcpRemoveHandler(h, s, v, a) {
     let M = oy(s, getSettingsMcpConfigByName(s) ?? void 0);
     if (v.scope) {
       let g = zLe(v.scope);
-      (await qs("tengu_mcp_delete", { name: mcpNameForAnalytics_GATE_EVALUATED(s, M), scope: fromEnum(g) }),
+      (await logEventAsync("tengu_mcp_delete", { name: mcpNameForAnalytics_GATE_EVALUATED(s, M), scope: fromEnum(g) }),
         m(g),
         await removeMcpConfig(s, g, a),
         await y(),
@@ -486,11 +486,11 @@ async function mcpRemoveHandler(h, s, v, a) {
         ];
         return (
           await logFeatureBadAsync("cli_mcp_remove", "cli_mcp_remove_not_found"),
-          cliErrorAfterAnalyticsFlush(Mtn(s, Y(w)))
+          cliErrorAfterAnalyticsFlush(formatMcpServerNotFoundMessage(s, dedupe(w)))
         );
       } else if (b.length === 1) {
         let c = b[0];
-        (await qs("tengu_mcp_delete", { name: mcpNameForAnalytics_GATE_EVALUATED(s, M), scope: fromEnum(c) }),
+        (await logEventAsync("tengu_mcp_delete", { name: mcpNameForAnalytics_GATE_EVALUATED(s, M), scope: fromEnum(c) }),
           m(c),
           await removeMcpConfig(s, c, a),
           await y(),
@@ -528,7 +528,7 @@ Specify a scope with -s to remove from a specific one.
   }
   await logFeatureOkAsync("cli_mcp_remove");
   let k = v.scope ? s : `"${s}"`;
-  await bv(
+  await renderAndWaitForExit(
     h,
     r(o, {
       flexDirection: "column",
@@ -583,7 +583,7 @@ function He(Vr) {
     be;
   if (Fe[0] !== Te) {
     let Kr = Te.map(Ne).filter(dt);
-    Ce = Gb;
+    Ce = RenderOnceAndExit;
     we = t;
     be = Kr.join(`
 `);
@@ -603,7 +603,7 @@ var Le = "\u23F8 Pending approval (run `claude` to approve)",
   pt = `${L.cross} Rejected (see disabledMcpjsonServers in settings)`,
   Ue = "\u2298 Disabled for this project (re-enable via /mcp)";
 async function mcpListHandler(h, s, v) {
-  (await qs("tengu_mcp_list", {}), await V0({ hasDynamicMcpConfig: !1 }));
+  (await logEventAsync("tengu_mcp_list", {}), await V0({ hasDynamicMcpConfig: !1 }));
   let { servers: a, pendingProjectServers: f } = await getAllMcpConfigs({
     includePendingProjectServers: !0,
     storageV5: s,
@@ -612,7 +612,7 @@ async function mcpListHandler(h, s, v) {
   await logFeatureOkAsync("cli_mcp_list");
   let m = e(i9e, {});
   if (Object.keys(a).length === 0) {
-    (await bv(
+    (await renderAndWaitForExit(
       h,
       r(o, {
         flexDirection: "column",
@@ -666,7 +666,7 @@ async function mcpListHandler(h, s, v) {
     await xn(0));
 }
 async function mcpGetHandler(h, s, v, a) {
-  (await qs("tengu_mcp_get", { name: mcpNameForAnalytics_GATE_EVALUATED(s, oy(s, getSettingsMcpConfigByName(s) ?? void 0)) }),
+  (await logEventAsync("tengu_mcp_get", { name: mcpNameForAnalytics_GATE_EVALUATED(s, oy(s, getSettingsMcpConfigByName(s) ?? void 0)) }),
     await V0({ hasDynamicMcpConfig: !1 }));
   let {
       servers: f,
@@ -683,7 +683,7 @@ async function mcpGetHandler(h, s, v, a) {
   if (!i) {
     await logFeatureBadAsync("cli_mcp_get", "cli_mcp_get_not_found");
     let c = Object.keys(f).filter((w) => !m.has(w) && !y.has(w));
-    return cliErrorAfterAnalyticsFlush(zat(s, c, m.size > 0));
+    return cliErrorAfterAnalyticsFlush(formatMcpServerNotFoundMessageWithPendingApproval(s, c, m.size > 0));
   }
   let M =
       k === "pending"
@@ -750,7 +750,7 @@ async function mcpGetHandler(h, s, v, a) {
       "This server is provided by your organization's managed settings and cannot be removed locally.";
   if (b) (C.push(""), C.push(b));
   (await logFeatureOkAsync("cli_mcp_get"),
-    await bv(
+    await renderAndWaitForExit(
       h,
       e(t, {
         children: C.join(`
@@ -808,12 +808,12 @@ async function mcpAddJsonHandler(h, s, v, a, f) {
     }
     let C = m,
       O = y;
-    await qs("tengu_mcp_add", { scope: fromEnum(C), source: S("json"), type: fromEnum(O) });
+    await logEventAsync("tengu_mcp_add", { scope: fromEnum(C), source: S("json"), type: fromEnum(O) });
   } catch (i) {
     return (await logFeatureBadAsync("cli_mcp_add_json", "cli_mcp_add_json_failed"), cliErrorAfterAnalyticsFlush(l(i)));
   }
   (await logFeatureOkAsync("cli_mcp_add_json"),
-    await bv(
+    await renderAndWaitForExit(
       h,
       r(t, {
         children: ["Added ", y, " MCP server ", s, " to ", m, " config"],
@@ -824,7 +824,7 @@ async function mcpAddFromDesktopHandler(h, s) {
   try {
     let v = zLe(h.scope),
       a = P();
-    await qs("tengu_mcp_add", {
+    await logEventAsync("tengu_mcp_add", {
       scope: fromEnum(v),
       platform: fromEnum(a),
       source: S("desktop"),
@@ -863,7 +863,7 @@ async function mcpAddFromDesktopHandler(h, s) {
 }
 async function mcpResetChoicesHandler(h, s) {
   if (
-    (await qs("tengu_mcp_reset_mcpjson_choices", {}),
+    (await logEventAsync("tengu_mcp_reset_mcpjson_choices", {}),
     !(await FZe(
       [
         "enabledMcpjsonServers",
@@ -967,7 +967,7 @@ async function mcpResetChoicesHandler(h, s) {
       (m = null));
   }
   (h.render(
-    e(Gb, {
+    e(RenderOnceAndExit, {
       children: r(o, {
         flexDirection: "column",
         children: [

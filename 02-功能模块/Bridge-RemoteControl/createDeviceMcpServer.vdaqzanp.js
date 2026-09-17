@@ -13,7 +13,7 @@ import { JSONRPCMessageSchema as GR, ListToolsRequestSchema, CallToolRequestSche
 import "../MCP客户端/chunk-98spw152.js";
 import { A1 } from "../MCP客户端/chunk-j8556pzt.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -97,7 +97,7 @@ function h(e, t, o) {
     n(
       `[deviceBridge] refused ${s}: call asserted for session ${b(t.slice(0, 48))}, this device serves ${o}`,
     ),
-    i("tengu_device_tool_refused", {
+    logEvent("tengu_device_tool_refused", {
       tool: e.analyticsName,
       reason: S("session_mismatch"),
     }),

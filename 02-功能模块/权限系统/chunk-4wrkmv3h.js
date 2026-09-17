@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { An, ac, li, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js";
@@ -36,7 +36,7 @@ import { Pl, ll } from "../Teammates团队/chunk-thxapyam.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { gF } from "../Git-Worktree/chunk-33y3h2sy.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import * as Be from "fs/promises";
 import { homedir } from "os";
 import {
@@ -207,7 +207,7 @@ async function Lt(e) {
   try {
     await Promise.race([
       _(),
-      Z(m, h.signal).then(() => {
+      sleep(m, h.signal).then(() => {
         if (!h.signal.aborted) ((u = !0), (p = "timeout"));
       }),
     ]);
@@ -1110,7 +1110,7 @@ async function Cr(e, t, r) {
 async function gn(e, t, r) {
   let o = r ? Cr(r.backend, r.key, t) : qt().readRange(e, 0, t + 1);
   o.catch(() => {});
-  let s = await Dt(o, $e, "config read timed out"),
+  let s = await withTimeout(o, $e, "config read timed out"),
     l = s.length > t,
     i = (l ? s.subarray(0, t) : s).toString("utf8");
   return l
@@ -1131,7 +1131,7 @@ async function xe(e, t, r = ye) {
 }
 var Et = 256;
 function hn(e, t = B) {
-  return Y(e.filter((r) => r.length <= Et))
+  return dedupe(e.filter((r) => r.length <= Et))
     .sort()
     .slice(0, t);
 }
@@ -1646,7 +1646,7 @@ async function Mr(e, t = getSettingsFilePathForSource("userSettings") ?? L(be(),
           let { toolName: C, ruleContent: N } = Fr(R);
           return Bt(C, N);
         });
-      m = G(v, (R) => !Te(R)) + G(O, (R) => !Te(R));
+      m = countMatching(v, (R) => !Te(R)) + countMatching(O, (R) => !Te(R));
       let D = v.filter(Te),
         I = O.filter(Te);
       ((i = Math.max(0, D.length - B)),
@@ -1862,7 +1862,7 @@ async function on(e, t, r) {
   try {
     i = await Promise.race([
       Kr(s, t, l.signal),
-      Z(_t(s.platform), l.signal).then(() => ce),
+      sleep(_t(s.platform), l.signal).then(() => ce),
     ]);
   } finally {
     l.abort();
@@ -2152,7 +2152,7 @@ async function an(
     })(),
     E;
   try {
-    E = await Dt(w, o.deadlineMs, "enumeration timed out");
+    E = await withTimeout(w, o.deadlineMs, "enumeration timed out");
   } catch {
     return k(
       ke,
@@ -2177,7 +2177,7 @@ async function an(
     Ne = !1,
     _e = !1,
     At = new AbortController(),
-    ot = Z(Math.max(0, c - Date.now()), At.signal).then(() => ce),
+    ot = sleep(Math.max(0, c - Date.now()), At.signal).then(() => ce),
     st = await Promise.race([p, ot]),
     Ve = st === ce ? o.projectsDir : st;
   if (st === ce) ((_e = !0), (j = R.length));

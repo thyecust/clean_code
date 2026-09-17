@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, bi } from "../lodash/lodash.2x3q7cfh.js";
 import { po } from "../lodash/lodash.207999qb.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad } from "../lodash/lodash.0vqzb8ad.js";
 import { R, A, Jr } from "../@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -18,11 +18,11 @@ import { qR, env as a } from "../../01-核心基础设施/设置-配置/chunk-zq
 import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import { Zie, wxt } from "../../01-核心基础设施/共享小工具-未细化/chunk-h1jrnver.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { pe, w, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var it = w(function (gi, ot) {
+import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var it = commonJS(function (gi, ot) {
   ot.exports = rt;
   rt.sync = Hn;
-  var tt = Ae("fs");
+  var tt = importMetaRequire("fs");
   function qn(e, t) {
     var r = t.pathExt !== void 0 ? t.pathExt : process.env.PATHEXT;
     if (!r) return !0;
@@ -46,10 +46,10 @@ var it = w(function (gi, ot) {
     return nt(tt.statSync(e), e, t);
   }
 });
-var dt = w(function (hi, ct) {
+var dt = commonJS(function (hi, ct) {
   ct.exports = at;
   at.sync = Vn;
-  var st = Ae("fs");
+  var st = importMetaRequire("fs");
   function at(e, t, r) {
     st.stat(e, function (o, s) {
       r(o, o ? !1 : ut(s, t));
@@ -74,8 +74,8 @@ var dt = w(function (hi, ct) {
     return x;
   }
 });
-var ft = w(function (Si, lt) {
-  var yi = Ae("fs"),
+var ft = commonJS(function (Si, lt) {
+  var yi = importMetaRequire("fs"),
     X;
   if (global.TESTING_WINDOWS) X = it();
   else X = dt();
@@ -110,9 +110,9 @@ var ft = w(function (Si, lt) {
     }
   }
 });
-var xt = w(function (xi, St) {
+var xt = commonJS(function (xi, St) {
   var _ = process.env.OSTYPE === "cygwin" || process.env.OSTYPE === "msys",
-    pt = Ae("path"),
+    pt = importMetaRequire("path"),
     Zn = _ ? ";" : ":",
     mt = ft(),
     gt = (e) => Object.assign(Error(`not found: ${e}`), { code: "ENOENT" }),
@@ -184,7 +184,7 @@ var xt = w(function (xi, St) {
   St.exports = yt;
   yt.sync = Qn;
 });
-var Ct = w(function (Ci, me) {
+var Ct = commonJS(function (Ci, me) {
   var bt = (e = {}) => {
     let t = e.env || process.env;
     if ((e.platform || "darwin") !== "win32") return "PATH";
@@ -197,8 +197,8 @@ var Ct = w(function (Ci, me) {
   me.exports = bt;
   me.exports.default = bt;
 });
-var Pt = w(function (Ei, Tt) {
-  var Et = Ae("path"),
+var Pt = commonJS(function (Ei, Tt) {
+  var Et = importMetaRequire("path"),
     Jn = xt(),
     er = Ct();
   function wt(e, t) {
@@ -242,7 +242,7 @@ var Pt = w(function (Ei, Tt) {
   }
   Tt.exports = tr;
 });
-var vt = w(function (or, he) {
+var vt = commonJS(function (or, he) {
   var ge = /([()\][%!^"`<>&|;, *?])/g;
   function nr(e) {
     return ((e = e.replace(ge, "^$1")), e);
@@ -262,10 +262,10 @@ var vt = w(function (or, he) {
   or.command = nr;
   or.argument = rr;
 });
-var Ot = w(function (wi, It) {
+var Ot = commonJS(function (wi, It) {
   It.exports = /^#!(.*)/;
 });
-var $t = w(function (Ti, At) {
+var $t = commonJS(function (Ti, At) {
   var ar = Ot();
   At.exports = (e = "") => {
     let t = e.match(ar);
@@ -276,8 +276,8 @@ var $t = w(function (Ti, At) {
     return o ? `${s} ${o}` : s;
   };
 });
-var _t = w(function (Pi, Rt) {
-  var ye = Ae("fs"),
+var _t = commonJS(function (Pi, Rt) {
+  var ye = importMetaRequire("fs"),
     ur = $t();
   function cr(e) {
     let r = Buffer.alloc(150),
@@ -291,8 +291,8 @@ var _t = w(function (Pi, Rt) {
   }
   Rt.exports = cr;
 });
-var Lt = w(function (vi, Gt) {
-  var dr = Ae("path"),
+var Lt = commonJS(function (vi, Gt) {
+  var dr = importMetaRequire("path"),
     kt = Pt(),
     Ft = vt(),
     lr = _t(),
@@ -321,7 +321,7 @@ var Lt = w(function (vi, Gt) {
   }
   Gt.exports = hr;
 });
-var Mt = w(function (Ii, jt) {
+var Mt = commonJS(function (Ii, jt) {
   function yr(e, t) {
     return Object.assign(Error(`${t} ${e.command} ENOENT`), {
       code: "ENOENT",
@@ -347,8 +347,8 @@ var Mt = w(function (Ii, jt) {
     notFoundError: yr,
   };
 });
-var _xt = w(function (Oi, k) {
-  var Dt = Ae("child_process"),
+var _xt = commonJS(function (Oi, k) {
+  var Dt = importMetaRequire("child_process"),
     Se = Lt(),
     xe = Mt();
   function Ut(e, t, r) {
@@ -367,8 +367,8 @@ var _xt = w(function (Oi, k) {
   k.exports._parse = Se;
   k.exports._enoent = xe;
 });
-var mn = w(function (Os, pn) {
-  var { PassThrough: xo } = Ae("stream");
+var mn = commonJS(function (Os, pn) {
+  var { PassThrough: xo } = importMetaRequire("stream");
   pn.exports = function () {
     var e = [],
       t = new xo({ objectMode: !0 });
@@ -568,7 +568,7 @@ class et extends le {
 }
 var de = globalThis.process,
   { onExit: cz, load: fi, unload: pi } = Wn(V(de) ? new et(de) : new Je());
-var In = pe(_xt(), 1);
+var In = toESM(_xt(), 1);
 import { Buffer as No } from "buffer";
 import Mo from "path";
 import De from "child_process";
@@ -1444,7 +1444,7 @@ var mo = () => ({ contents: "", textDecoder: new TextDecoder() }),
     getFinalChunk: yo,
     finalize: $e,
   };
-var gn = pe(mn(), 1),
+var gn = toESM(mn(), 1),
   hn = (e) => {
     if (e !== void 0)
       throw TypeError(
@@ -1872,7 +1872,7 @@ function ze() {
     if (c === void 0) {
       ((e.dir = null),
         n("tool cgroup: disabled (host too small for the default cap)"),
-        i("tengu_tool_cgroup", { status: S("host_too_small") }));
+        logEvent("tengu_tool_cgroup", { status: S("host_too_small") }));
       return;
     }
     (Dn(s, c),
@@ -1883,7 +1883,7 @@ function ze() {
         `tool cgroup: ${s.dir} ${s.reuse ? "(nested: already capped, reusing our own)" : `limit=${c}`}`,
       ),
       logFeatureOk("shell_memory_cgroup"),
-      i(
+      logEvent(
         "tengu_tool_cgroup",
         s.reuse
           ? { status: S("nested") }
@@ -1893,7 +1893,7 @@ function ze() {
     ((e.dir = null),
       n(`tool cgroup: disabled (${A(s) ?? s})`),
       logFeatureBad("shell_memory_cgroup", Jr(s) ?? "no_hierarchy"),
-      i("tengu_tool_cgroup", { status: S("disabled") }));
+      logEvent("tengu_tool_cgroup", { status: S("disabled") }));
   }
   return e.dir ?? void 0;
 }
@@ -1905,7 +1905,7 @@ function B(e) {
   if (r === void 0) return;
   if ((jn(t), !t.activatedClasses.has(e)))
     (t.activatedClasses.add(e),
-      i("tengu_tool_cgroup", { status: S("class_enabled"), class: fromEnum(e) }));
+      logEvent("tengu_tool_cgroup", { status: S("class_enabled"), class: fromEnum(e) }));
   return r;
 }
 function Qcr(e) {
@@ -1923,13 +1923,13 @@ function Ho(
     return (
       Dn(e.layout, e.limit, t),
       n(`tool cgroup: ${e.dir} vanished; re-created`),
-      i("tengu_tool_cgroup", { status: S("recreated") }),
+      logEvent("tengu_tool_cgroup", { status: S("recreated") }),
       e.dir
     );
   } catch (r) {
     ((e.dir = null),
       n(`tool cgroup: disabled (dir vanished: ${A(r) ?? r})`),
-      i("tengu_tool_cgroup", { status: S("vanished") }));
+      logEvent("tengu_tool_cgroup", { status: S("vanished") }));
     return;
   }
 }
@@ -2126,7 +2126,7 @@ function jn(e, t = K, r) {
     (n(
       `tool cgroup: OOM killer fired ${s - c} time(s) in ${o.dir} since last check`,
     ),
-      i("tengu_tool_cgroup", {
+      logEvent("tengu_tool_cgroup", {
         status: S("oom_kill"),
         oom_kills: s - c,
         cgroup_v2: o.v2,
@@ -2168,7 +2168,7 @@ function bxt(e, t, r = Sxt) {
       n(
         `tool cgroup: released pid ${e} (${d} process${d === 1 ? "" : "es"}) to ${s.selfDir}`,
       ),
-      i("tengu_tool_cgroup", { status: S("released"), released_count: d }),
+      logEvent("tengu_tool_cgroup", { status: S("released"), released_count: d }),
       !0
     );
   } catch (o) {

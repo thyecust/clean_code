@@ -9,27 +9,27 @@
 // Version: 2.1.263
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
+import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ar, Ptt, pkt, xke, Dp, r_ } from "../权限系统/chunk-e4pfvp7x.js";
 import { o, t, bs, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Zr } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
+import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { et, cu } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { I_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-g3h141c1.js";
-import { Ai } from "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import { StatusIndicator, shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
+import { ProgressBar } from "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
+import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { Tv } from "../Hooks钩子/chunk-22aft7vr.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { eIe } from "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
 import { V, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Go(Wt) {
   return Wt.split(
@@ -146,7 +146,7 @@ function v(jt) {
   let Qt = _(4),
     { frames: $t } = jt,
     Mo = $t.map(Go),
-    Ft = cu(Ai().prefersReducedMotion),
+    Ft = shouldReduceMotion(useSettings().prefersReducedMotion),
     [Ge, Jt] = bs(Ft ? null : G),
     Xt = Math.floor(Jt / G) % Mo.length,
     Gt = Mo[Xt];
@@ -192,10 +192,10 @@ function H(Ht) {
   let Oe = _(6),
     { onDone: pe } = Ht,
     _o;
-  if (Oe[0] === p) ((_o = fo(40)), (Oe[0] = _o));
+  if (Oe[0] === MEMO_CACHE_SENTINEL) ((_o = fo(40)), (Oe[0] = _o));
   else _o = Oe[0];
   let St = _o,
-    en = cu(Ai().prefersReducedMotion),
+    en = shouldReduceMotion(useSettings().prefersReducedMotion),
     [He, qo] = bs(en ? null : po),
     [on] = d(qo),
     Se = qo - on,
@@ -229,7 +229,7 @@ function S(un) {
   let X = _(14),
     { text: fe } = un,
     mn = te(fe),
-    pn = cu(Ai().prefersReducedMotion),
+    pn = shouldReduceMotion(useSettings().prefersReducedMotion),
     [so, hn] = bs(pn ? null : Z),
     fn = mn + 20,
     ro = (Math.floor(hn / Z) % fn) - 10,
@@ -271,16 +271,16 @@ function oe() {
   let xe = _(11),
     [gn, yn] = d(0),
     I = W[gn],
-    lo = Zr("confirm:cycleMode", "Confirmation", "shift+tab"),
+    lo = useKeybindingDisplayText("confirm:cycleMode", "Confirmation", "shift+tab"),
     Yo,
     jo;
-  if (xe[0] === p)
+  if (xe[0] === MEMO_CACHE_SENTINEL)
     ((Yo = { "confirm:cycleMode": () => yn(So) }),
       (jo = { context: "Confirmation" }),
       (xe[0] = Yo),
       (xe[1] = jo));
   else ((Yo = xe[0]), (jo = xe[1]));
-  Ze(Yo, jo);
+  useKeybindings(Yo, jo);
   let we;
   if (xe[2] !== lo)
     ((we = r(t, {
@@ -756,15 +756,15 @@ see this session at
 function ne() {
   let jn = _(1),
     nt;
-  if (jn[0] === p)
+  if (jn[0] === MEMO_CACHE_SENTINEL)
     ((nt = e(t, {
       dimColor: !0,
       italic: !0,
-      children: r(ue, {
+      children: r(DotSeparatedList, {
         children: [
-          e(D, { chord: ["up", "down"], action: "select" }),
-          e(D, { chord: "enter", action: "open" }),
-          e(D, { chord: "escape", action: "close" }),
+          e(KeybindingHint, { chord: ["up", "down"], action: "select" }),
+          e(KeybindingHint, { chord: "enter", action: "open" }),
+          e(KeybindingHint, { chord: "escape", action: "close" }),
         ],
       }),
     })),
@@ -775,14 +775,14 @@ function ne() {
 function se() {
   let $n = _(1),
     st;
-  if ($n[0] === p)
+  if ($n[0] === MEMO_CACHE_SENTINEL)
     ((st = e(t, {
       dimColor: !0,
       italic: !0,
-      children: r(ue, {
+      children: r(DotSeparatedList, {
         children: [
-          e(D, { chord: "enter", action: "mark done" }),
-          e(D, { chord: "escape", action: "back" }),
+          e(KeybindingHint, { chord: "enter", action: "mark done" }),
+          e(KeybindingHint, { chord: "escape", action: "back" }),
         ],
       }),
     })),
@@ -794,7 +794,7 @@ function bo() {
   let N = _(9),
     rt,
     it;
-  if (N[0] === p)
+  if (N[0] === MEMO_CACHE_SENTINEL)
     ((rt = r(t, {
       children: [
         "Press ",
@@ -807,7 +807,7 @@ function bo() {
       (N[1] = it));
   else ((rt = N[0]), (it = N[1]));
   let at;
-  if (N[2] === p)
+  if (N[2] === MEMO_CACHE_SENTINEL)
     ((at = r(t, {
       children: [
         e(t, { color: "success", children: "default" }),
@@ -817,7 +817,7 @@ function bo() {
       (N[2] = at));
   else at = N[2];
   let ct;
-  if (N[3] === p)
+  if (N[3] === MEMO_CACHE_SENTINEL)
     ((ct = r(t, {
       children: [
         e(t, { color: "autoAccept", children: "accept edits" }),
@@ -827,7 +827,7 @@ function bo() {
       (N[3] = ct));
   else ct = N[3];
   let lt;
-  if (N[4] === p)
+  if (N[4] === MEMO_CACHE_SENTINEL)
     ((lt = r(t, {
       children: [
         e(t, { color: "planMode", children: "plan" }),
@@ -837,7 +837,7 @@ function bo() {
       (N[4] = lt));
   else lt = N[4];
   let dt;
-  if (N[5] === p)
+  if (N[5] === MEMO_CACHE_SENTINEL)
     ((dt = r(o, {
       flexDirection: "column",
       paddingLeft: 2,
@@ -856,15 +856,15 @@ function bo() {
       (N[5] = dt));
   else dt = N[5];
   let ut;
-  if (N[6] === p)
+  if (N[6] === MEMO_CACHE_SENTINEL)
     ((ut = e(t, { color: "planMode", children: "plan" })), (N[6] = ut));
   else ut = N[6];
   let mt;
-  if (N[7] === p)
+  if (N[7] === MEMO_CACHE_SENTINEL)
     ((mt = e(t, { color: "warning", children: "auto" })), (N[7] = mt));
   else mt = N[7];
   let pt;
-  if (N[8] === p)
+  if (N[8] === MEMO_CACHE_SENTINEL)
     ((pt = r(o, {
       flexDirection: "column",
       gap: 1,
@@ -901,13 +901,13 @@ function Dt() {
 function LHe(cs) {
   let f = _(48),
     { onExit: xo } = cs,
-    { storageV5: wo } = _e(),
+    { storageV5: wo } = useStorageV5Context(),
     [h, ls] = d(Dt),
     [R, Co] = d(null),
     [ko, ds] = d(Vw[0].id),
     [vo, ht] = d(!1),
     ft;
-  if (f[0] === p) ((ft = () => ht(!1)), (f[0] = ft));
+  if (f[0] === MEMO_CACHE_SENTINEL) ((ft = () => ht(!1)), (f[0] = ft));
   else ft = f[0];
   let us = ft,
     gt;
@@ -915,7 +915,7 @@ function LHe(cs) {
     ((gt = function re(Re) {
       (ds(Re.id),
         Co(Re),
-        i("tengu_powerup_lesson_opened", {
+        logEvent("tengu_powerup_lesson_opened", {
           lesson_id: fromEnum(Re.id),
           was_already_unlocked: h.has(Re.id),
           unlocked_count: h.size,
@@ -935,7 +935,7 @@ function LHe(cs) {
       if (
         (ls(ie),
         Te((ms) => ({ ...ms, powerupsUnlocked: [...ie] }), wo),
-        i("tengu_powerup_lesson_completed", {
+        logEvent("tengu_powerup_lesson_completed", {
           lesson_id: fromEnum(Ro),
           unlocked_count: ie.size,
           all_unlocked: ie.size === Vw.length,
@@ -979,7 +979,7 @@ function LHe(cs) {
         (f[13] = M));
     else M = f[13];
     let j;
-    if (f[14] === p) ((j = () => Co(null)), (f[14] = j));
+    if (f[14] === MEMO_CACHE_SENTINEL) ((j = () => Co(null)), (f[14] = j));
     else j = f[14];
     let z;
     if (f[15] !== A || f[16] !== M || f[17] !== R)
@@ -1012,7 +1012,7 @@ function LHe(cs) {
   const j = h.size / Vw.length;
   let z;
   if (f[23] !== j)
-    ((z = e(I_, {
+    ((z = e(ProgressBar, {
       ratio: j,
       width: 16,
       fillColor: "claude",
@@ -1071,7 +1071,7 @@ function LHe(cs) {
       (f[39] = Ue));
   else Ue = f[39];
   let kt;
-  if (f[40] === p)
+  if (f[40] === MEMO_CACHE_SENTINEL)
     ((kt = e(o, { marginTop: 1, children: e(ne, {}) })), (f[40] = kt));
   else kt = f[40];
   let Ie;
@@ -1106,13 +1106,13 @@ function ze(xs) {
       (K[2] = Rt));
   else Rt = K[2];
   let Tt;
-  if (K[3] === p) ((Tt = { context: "Confirmation" }), (K[3] = Tt));
+  if (K[3] === MEMO_CACHE_SENTINEL) ((Tt = { context: "Confirmation" }), (K[3] = Tt));
   else Tt = K[3];
-  Ze(Rt, Tt);
+  useKeybindings(Rt, Tt);
   const Bo = ws ? "success" : "pending";
   let Ne;
   if (K[4] !== Bo)
-    ((Ne = e(et, { status: Bo, withSpace: !0 })), (K[4] = Bo), (K[5] = Ne));
+    ((Ne = e(StatusIndicator, { status: Bo, withSpace: !0 })), (K[4] = Bo), (K[5] = Ne));
   else Ne = K[5];
   let qe;
   if (K[6] !== J.title)
@@ -1128,7 +1128,7 @@ function ze(xs) {
       (K[10] = Ee));
   else Ee = K[10];
   let Pt;
-  if (K[11] === p) ((Pt = e(se, {})), (K[11] = Pt));
+  if (K[11] === MEMO_CACHE_SENTINEL) ((Pt = e(se, {})), (K[11] = Pt));
   else Pt = K[11];
   let Lt;
   if (K[12] !== J.body || K[13] !== Ee)

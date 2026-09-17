@@ -12,13 +12,13 @@
 import { tYt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
+import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { tm, WNe } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import { _G, m1e, ZQn, Tbn, Rj, rCe, ofe, oCe, h1e } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { s, T, v, c, Qe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var d = m(() => Qe({})),
-  f = m(() =>
+var d = createLazyValue(() => Qe({})),
+  f = createLazyValue(() =>
     c({
       content: s().describe(`Rendered event envelopes, or "${m1e}"`),
       eventCount: T()
@@ -38,7 +38,7 @@ var d = m(() => Qe({})),
       ).optional(),
     }),
   ),
-  PollTool = Tt({
+  PollTool = buildTool({
     name: _G,
     searchHint: "wait for and receive queued harness events",
     maxResultSizeChars: 1e5,

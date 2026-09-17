@@ -13,9 +13,9 @@ import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { x, us } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Gur, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { yW } from "../共享小工具-未细化/chunk-rsr7cnyv.js";
-import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { wb } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { qe, Ut } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ike } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -26,7 +26,7 @@ import { o$e } from "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import { Fk } from "../共享小工具-未细化/chunk-7wm8t84g.js";
 import { s, T, O, se, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
-import { G } from "../共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../共享小工具-未细化/chunk-d16fhdtx.js";
 import { join as Ae } from "path";
 import {
   copyFile,
@@ -397,7 +397,7 @@ async function ge(e) {
   }
   return Qe(t);
 }
-var nt = m(() =>
+var nt = createLazyValue(() =>
     c({
       command: s().optional(),
       args: v(s()).optional(),
@@ -407,15 +407,15 @@ var nt = m(() =>
       bearer_token_env_var: s().optional(),
     }).loose(),
   ),
-  rt = m(() =>
+  rt = createLazyValue(() =>
     c({
       description: s().optional(),
       instructions: s().optional(),
       tools: v(s()).optional(),
     }).loose(),
   ),
-  ot = m(() => c({ path: s() }).loose()),
-  it = m(() =>
+  ot = createLazyValue(() => c({ path: s() }).loose()),
+  it = createLazyValue(() =>
     c({
       model: s()
         .optional()
@@ -788,7 +788,7 @@ ${w.instructions ?? ""}
           return {
             skipped: `${g}: skill directory contains ${xe.map((q) => `\`${q}/\``).join(", ")} which Claude Code would adopt as a plugin (lifecycle hooks, monitors, MCP servers) \u2014 copy it manually after reviewing those`,
           };
-        if (G(ye, (q) => Ce(q) === "skill.md") > 1)
+        if (countMatching(ye, (q) => Ce(q) === "skill.md") > 1)
           return {
             skipped: `${g}: skill directory has multiple SKILL.md case/encoding variants \u2014 copy the skill manually`,
           };
@@ -1037,7 +1037,7 @@ var Me = {
 };
 import { homedir as mt } from "os";
 import { basename as pt, join as E } from "path";
-var ft = m(() =>
+var ft = createLazyValue(() =>
   c({
     httpUrl: s().optional(),
     url: s().optional(),
@@ -1058,7 +1058,7 @@ function gt(e) {
   if (e.url) return { type: "sse", url: e.url, headers: e.headers, ...t };
   return { type: "stdio", command: e.command, args: e.args, env: e.env, ...t };
 }
-var ht = m(() =>
+var ht = createLazyValue(() =>
     c({
       mcpServers: se().optional(),
       contextFileName: s()
@@ -1066,7 +1066,7 @@ var ht = m(() =>
         .catch(void 0),
     }).loose(),
   ),
-  yt = m(() => c({ prompt: s(), description: s().optional() }));
+  yt = createLazyValue(() => c({ prompt: s(), description: s().optional() }));
 function Re(e) {
   return e.homeDir ?? E(mt(), ".gemini");
 }
@@ -1488,7 +1488,7 @@ async function Ilt(e) {
       a.push({ sourceId: u.id, displayName: u.displayName, result: d });
   }
   if (
-    (i("tengu_import_scan", {
+    (logEvent("tengu_import_scan", {
       source_count: a.length,
       codex: a.some((u) => u.sourceId === "codex"),
       gemini: a.some((u) => u.sourceId === "gemini"),

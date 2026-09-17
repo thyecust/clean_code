@@ -13,7 +13,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getAgentId, getAgentName, getTeamName, getTeammateColor } from "./chunk-811z9z0t.js";
 import { writeToMailbox, createPermissionRequestMessage, createPermissionResponseMessage, createSandboxPermissionRequestMessage, createSandboxPermissionResponseMessage } from "./chunk-g6nvp9mm.js";
 import { readTeamFileAsync } from "./chunk-6b13bhw1.js";
-import { fs } from "./chunk-enjekn9t.js";
+import { TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
 import { createHash } from "crypto";
 var x = 32;
 function PGt(e, r) {
@@ -78,7 +78,7 @@ async function l(e, r) {
   if (!o) return null;
   if (!(await readTeamFileAsync(o, r)))
     return (n(`[PermissionSync] Team file not found for team: ${o}`), null);
-  return fs;
+  return TEAM_LEAD_AGENT_NAME;
 }
 async function p(e, r, o, s, i) {
   if ((await writeToMailbox(e, r, o, i)) === void 0)
@@ -148,7 +148,7 @@ async function Ubn(e, r, o, s, i, a) {
     });
     return await p(
       e,
-      { from: fs, text: b(t), timestamp: new Date().toISOString() },
+      { from: TEAM_LEAD_AGENT_NAME, text: b(t), timestamp: new Date().toISOString() },
       m,
       `permission response for ${b(o)} to worker ${b(e)} via mailbox`,
       i,
@@ -238,7 +238,7 @@ async function OGt(e, r, o, s, i, a) {
     let t = createSandboxPermissionResponseMessage({ requestId: r, host: o, allow: s });
     return await p(
       e,
-      { from: fs, text: b(t), timestamp: new Date().toISOString() },
+      { from: TEAM_LEAD_AGENT_NAME, text: b(t), timestamp: new Date().toISOString() },
       m,
       `sandbox permission response for ${b(r)} (host: ${b(o)}, allow: ${b(s)}) to worker ${b(e)} via mailbox`,
       a,

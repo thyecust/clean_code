@@ -13,7 +13,7 @@ import { x } from "../../01-核心基础设施/核心工具-字符串与文本/c
 import { Hr } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { z7, J$t, d3, Rk, resetSentSkillNames, clearCommandsCache, getSkillToolCommands } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var M = async (C, m) => {
   let t = Q(),
     d = J$t(m.getMcp().commands),
@@ -24,8 +24,8 @@ var M = async (C, m) => {
   let e = s(await getSkillToolCommands(t, m.storageV5)),
     c = new Set(e.map((o) => o.name));
   Rk.emit();
-  let l = G(e, (o) => !i.has(o.name)),
-    r = G(n, (o) => !c.has(o.name)),
+  let l = countMatching(e, (o) => !i.has(o.name)),
+    r = countMatching(n, (o) => !c.has(o.name)),
     a = [];
   if (l > 0) a.push(`${l} added`);
   if (r > 0) a.push(`${r} removed`);

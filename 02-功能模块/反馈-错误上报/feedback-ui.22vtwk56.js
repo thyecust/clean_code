@@ -12,14 +12,14 @@
 import { jdr, LPt, ggr } from "../斜杠命令-UI组件/chunk-kyfaptqk.js";
 import "./反馈-错误上报.grgh562d.js";
 import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-nvfdjg8e.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
+import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "./chunk-rmpn4ety.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
+import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
+import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
+import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 export {
   ggr as call,
   LPt as callLegacyFeedbackDialog,

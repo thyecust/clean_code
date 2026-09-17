@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { ke, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { We, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { jt, wQ } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
@@ -33,14 +33,14 @@ import {
   isMcpServerDisabled,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { tfe, IH } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { sI } from "../../01-核心基础设施/共享小工具-未细化/chunk-g2fqhcwj.js";
+import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
 import { yLt, SLt } from "./chunk-k2gczbnj.js";
 import { ir } from "./chunk-g4gdwpa0.js";
-import { Kr } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
+import { defineDialog } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { s, c, qd } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var r2 = Kr({
+var r2 = defineDialog({
   kind: "mcp_url_elicitation",
-  payload: m(() =>
+  payload: createLazyValue(() =>
     qd(
       (t) =>
         typeof t === "object" &&
@@ -49,7 +49,7 @@ var r2 = Kr({
         "params" in t,
     ),
   ),
-  result: m(() => qd((t) => typeof t === "object" && t !== null)),
+  result: createLazyValue(() => qd((t) => typeof t === "object" && t !== null)),
   default: { action: "cancel" },
 });
 import { join as L } from "path";
@@ -63,7 +63,7 @@ function oce(t) {
   let e = jt();
   if (!e.authCacheRead)
     e.authCacheRead =
-      M() && t !== void 0
+      isHoverRestEnabled() && t !== void 0
         ? U(t)
         : qt()
             .read(rce())
@@ -86,7 +86,7 @@ function LIe() {
   jt().authCacheRead = null;
 }
 function Aee(t) {
-  if (((jt().authCacheRead = null), M() && t !== void 0)) {
+  if (((jt().authCacheRead = null), isHoverRestEnabled() && t !== void 0)) {
     t.delete(DIe())
       .then((e) => {
         if (!e.ok)
@@ -110,8 +110,8 @@ function b() {
 function w() {
   return T().mcpClientModule();
 }
-var D = m(() => c({})),
-  v = m(() =>
+var D = createLazyValue(() => c({})),
+  v = createLazyValue(() =>
     c({
       callback_url: s().describe(
         "The full callback URL from the browser address bar after authorizing, e.g. http://localhost:<port>/callback?code=...&state=...",
@@ -196,7 +196,7 @@ function j(t, e) {
             message: `${SLt(t)}. Ask the user to approve it; do not retry until they have.`,
           },
         };
-      let d = sI(t, e);
+      let d = classifyMcpServerAuth(t, e);
       if (d.kind === "claudeai-proxy")
         return {
           data: {

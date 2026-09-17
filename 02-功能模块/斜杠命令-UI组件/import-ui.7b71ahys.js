@@ -11,19 +11,19 @@
 // [preload stripped] 原本在此预载 253 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fO, Qw, b3e, Ilt } from "../../01-核心基础设施/设置-配置/chunk-ncbnx9cz.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
+import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
+import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { wIe, qle, znn } from "../../01-核心基础设施/共享小工具-未细化/chunk-tfx2a5vd.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function pt(mt) {
   return mt.result.items.map((Qt) => ({ item: Qt, source: mt.displayName }));
@@ -91,7 +91,7 @@ function ke(Xt) {
   let A = Qe,
     [Ze, He] = d("items"),
     Ye;
-  if (s[6] === p) ((Ye = []), (s[6] = Ye));
+  if (s[6] === MEMO_CACHE_SENTINEL) ((Ye = []), (s[6] = Ye));
   else Ye = s[6];
   let [De, Jt] = d(Ye),
     Ve = C(!1),
@@ -169,7 +169,7 @@ function ke(Xt) {
           q.push(`  \u2717 fallback skill: ${Qw(l(Ot))}`);
         }
       }
-      i("tengu_import_apply", { imported: K, dry_run: R ? 1 : 0 });
+      logEvent("tengu_import_apply", { imported: K, dry_run: R ? 1 : 0 });
       let Mt = R
         ? `Dry run \u2014 would import ${K} ${x(K, "item")}:`
         : `Imported ${K} ${x(K, "item")}:`;
@@ -190,8 +190,8 @@ function ke(Xt) {
           `${a.length} unmapped ${x(a.length, "item")} were skipped (re-run /import to generate the helper skill).`,
         );
       if (U) {
-        let Fe = G(g, gt);
-        let Ge = G(g, ht);
+        let Fe = countMatching(g, gt);
+        let Ge = countMatching(g, ht);
         if (Fe > 0)
           B.push(
             `  \u26A0 ${Fe} warning-flagged ${x(Fe, "item")} held back \u2014 re-run without --yes to review.`,
@@ -226,7 +226,7 @@ function ke(Xt) {
       (s[24] = be));
   else be = s[24];
   let $e;
-  if (s[25] === p) (($e = []), (s[25] = $e));
+  if (s[25] === MEMO_CACHE_SENTINEL) (($e = []), (s[25] = $e));
   else $e = s[25];
   E(be, $e);
   let et;
@@ -261,16 +261,16 @@ function ke(Xt) {
   else nt = s[33];
   let it = nt,
     rt;
-  if (s[34] === p)
+  if (s[34] === MEMO_CACHE_SENTINEL)
     ((rt = e(o, {
       paddingX: 1,
       children: e(t, {
         dimColor: !0,
         italic: !0,
-        children: r(ue, {
+        children: r(DotSeparatedList, {
           children: [
-            e(D, { chord: "space", action: "select" }),
-            e(D, { chord: "enter", action: "confirm" }),
+            e(KeybindingHint, { chord: "space", action: "select" }),
+            e(KeybindingHint, { chord: "enter", action: "confirm" }),
           ],
         }),
       }),
@@ -295,7 +295,7 @@ function ke(Xt) {
         (s[40] = M));
     else M = s[40];
     let ae, Q;
-    if (s[41] === p)
+    if (s[41] === MEMO_CACHE_SENTINEL)
       ((ae = [
         {
           label:
@@ -345,13 +345,13 @@ function ke(Xt) {
     return at;
   }
   let Ie;
-  if (s[51] === p) ((Ie = { user: "global", project: "local" }), (s[51] = Ie));
+  if (s[51] === MEMO_CACHE_SENTINEL) ((Ie = { user: "global", project: "local" }), (s[51] = Ie));
   else Ie = s[51];
   let qt = Ie,
     se;
   if (s[52] !== g) {
     let O;
-    if (s[54] === p)
+    if (s[54] === MEMO_CACHE_SENTINEL)
       ((O = (V) => {
         let { item: z, source: Et } = V;
         return {
@@ -373,7 +373,7 @@ function ke(Xt) {
   else V = s[56];
   const M = `Found ${O} importable ${V} from ${it}.`;
   let ae;
-  if (s[57] === p)
+  if (s[57] === MEMO_CACHE_SENTINEL)
     ((ae = e(t, { children: "Select what to import:" })), (s[57] = ae));
   else ae = s[57];
   let Q;

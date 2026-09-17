@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { zi, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { sM, fSe, Tlt, Lnn, f2n, g2n, d9, u7, e2 } from "../远程工具执行/chunk-66axrkvh.js";
 import { MV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { d3e, p3e, f3e } from "../../01-核心基础设施/共享小工具-未细化/chunk-d1t6d4k8.js";
-import { Ay } from "../../01-核心基础设施/共享小工具-未细化/chunk-txc6d085.js";
+import { logRemoteToolsEvent } from "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
 function R(e) {
   return typeof e === "object" && e !== null && !Array.isArray(e);
 }
@@ -235,7 +235,7 @@ async function N(e, t, d, a, u, i, o) {
       kind: "unreachable",
       detail: "this session's event stream is closed; nothing was sent",
     };
-  (Ay(i.call_id, "sent", {
+  (logRemoteToolsEvent(i.call_id, "sent", {
     leg: "op" in i ? i.op : i.approval ? 2 : 1,
     host_inst: s.instanceId,
     host_epoch: b,
@@ -294,7 +294,7 @@ function L(
   let b = () => {
     let c = y();
     if (c === void 0) return;
-    Ay(o, "query deadline; taking the below-floor answer held for it", {
+    logRemoteToolsEvent(o, "query deadline; taking the below-floor answer held for it", {
       deadline_ms: r,
       host_inst: a.instanceId,
     });
@@ -312,7 +312,7 @@ function L(
       if (c !== void 0) return c;
       if (s)
         return (
-          Ay(
+          logRemoteToolsEvent(
             o,
             "no answer by the deadline; request left standing, checking on it",
             { deadline_ms: r, host_inst: a.instanceId },
@@ -320,7 +320,7 @@ function L(
           { kind: "timed_out", capMs: r, ...f }
         );
       if (
-        (Ay(o, "no answer by the deadline; request withdrawn", {
+        (logRemoteToolsEvent(o, "no answer by the deadline; request withdrawn", {
           deadline_ms: r,
           host_inst: a.instanceId,
           error_replies_ignored: u.errorRepliesIgnored(),
@@ -332,7 +332,7 @@ function L(
     }
     case "stalled":
       return (
-        Ay(
+        logRemoteToolsEvent(
           o,
           e.takenBack
             ? "still queued here at the deadline; taken back before any write carried it"
@@ -345,7 +345,7 @@ function L(
       let c = b();
       if (c !== void 0) return c;
       return (
-        Ay(
+        logRemoteToolsEvent(
           o,
           "deadline reached with the write carrying the request unresolved; withdrawn, delivery unknown",
           { deadline_ms: r, host_inst: a.instanceId, delivery: e.delivery },
@@ -402,7 +402,7 @@ async function I(e, t, d, { holdAtDeadline: a, withdrawable: u }) {
         return { kind: "failed", detail: l(s) };
       },
     ),
-    o = await kt(i, t);
+    o = await withDeadline(i, t);
   if (o !== void 0) return { settled: o, late: void 0 };
   let r = e.delivery();
   if (r === "queued") {

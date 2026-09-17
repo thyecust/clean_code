@@ -8,16 +8,16 @@
 
 // Version: 2.1.263
 import { nu, A0n } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { w, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var V0n = w(function (M) {
+import { commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
+var V0n = commonJS(function (M) {
   var D = (e) =>
     (typeof ArrayBuffer === "function" && e instanceof ArrayBuffer) ||
     Object.prototype.toString.call(e) === "[object ArrayBuffer]";
   M.isArrayBuffer = D;
 });
-var E2e = w(function (z) {
+var E2e = commonJS(function (z) {
   var G = V0n(),
-    g = Ae("buffer"),
+    g = importMetaRequire("buffer"),
     N = (e, r = 0, t = e.byteLength - r) => {
       if (!G.isArrayBuffer(e))
         throw TypeError(
@@ -35,7 +35,7 @@ var E2e = w(function (z) {
   z.fromArrayBuffer = N;
   z.fromString = Y;
 });
-var s_ = w(function (J) {
+var s_ = commonJS(function (J) {
   var R = E2e(),
     T = (e) => {
       let r = R.fromString(e, "utf8");
@@ -73,7 +73,7 @@ var s_ = w(function (J) {
   J.toUint8Array = X;
   J.toUtf8 = Z;
 });
-var O = w(function (U) {
+var O = commonJS(function (U) {
   Object.defineProperty(U, "__esModule", { value: !0 });
   U.fromBase64 = void 0;
   var re = E2e(),
@@ -87,7 +87,7 @@ var O = w(function (U) {
     };
   U.fromBase64 = oe;
 });
-var _ = w(function (q) {
+var _ = commonJS(function (q) {
   Object.defineProperty(q, "__esModule", { value: !0 });
   q.toBase64 = void 0;
   var ne = E2e(),
@@ -112,7 +112,7 @@ var _ = w(function (q) {
     };
   q.toBase64 = se;
 });
-var hS = w(function (h) {
+var hS = commonJS(function (h) {
   var S = O(),
     j = _();
   Object.keys(S).forEach(function (e) {
@@ -134,7 +134,7 @@ var hS = w(function (h) {
       });
   });
 });
-var q5 = w(function (he) {
+var q5 = commonJS(function (he) {
   var H = nu(),
     ie = A0n(),
     ae = hS();

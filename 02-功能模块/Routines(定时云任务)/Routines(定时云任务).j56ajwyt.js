@@ -26,12 +26,12 @@ import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { MM, hne, Q4n, jgn, getMcpServerSignature, shouldSkipClaudeAiFetchForEnterpriseLockdown } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getSuppressedClaudeAiConnectors } from "../权限系统/chunk-fjrcf22x.js";
-import { Es } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
+import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { registerBundledSkill } from "../Skills技能/chunk-1zy5c8mf.js";
 import { E$ } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { gM } from "../../01-核心基础设施/共享小工具-未细化/chunk-febx58tg.js";
 import { YJn } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function M() {
   return !St() && isPolicyAllowed("allow_quick_web_setup");
 }
@@ -208,7 +208,7 @@ You are helping the user schedule, update, list, or run **cloud** Claude Code ag
 ${
   m
     ? "The user has already told you what they want (see User Request at the bottom). Skip the initial question and go directly to the matching workflow."
-    : `Your FIRST action must be a single ${Es} tool call (no preamble). Use this EXACT string for the \`question\` field \u2014 do not paraphrase or shorten it:
+    : `Your FIRST action must be a single ${ASK_USER_QUESTION_TOOL_NAME} tool call (no preamble). Use this EXACT string for the \`question\` field \u2014 do not paraphrase or shorten it:
 
 ${b(o)}
 
@@ -408,7 +408,7 @@ function registerScheduleRemoteAgentsSkill() {
       !a.CLAUDE_CODE_REMOTE &&
       isPolicyAllowed("allow_remote_sessions") &&
       isPolicyAllowed(gM),
-    allowedTools: [E$, Es, "Bash(date *)"],
+    allowedTools: [E$, ASK_USER_QUESTION_TOOL_NAME, "Bash(date *)"],
     async getPromptForCommand(s, t) {
       if (!hasStoredOAuthToken())
         return [
@@ -514,7 +514,7 @@ function registerScheduleRemoteAgentsSkill() {
             })
             .map((e) => e.name),
         ).size,
-        d = Y(
+        d = dedupe(
           u
             .map((e) => k(e.name.replace(/^claude[.\s-]ai[.\s-]/i, "")))
             .filter((e) => e.length > 0),

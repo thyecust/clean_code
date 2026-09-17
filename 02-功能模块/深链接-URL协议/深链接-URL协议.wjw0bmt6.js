@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -15,10 +15,10 @@ import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { ja } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { Upe } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
+import { getInstalledClaudePath } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { WB } from "../插件系统/chunk-q8w2zntw.js";
-import { Tfe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cyyrj58q.js";
+import { getXdgDataHome } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
 import { promises } from "fs";
 import * as g from "os";
 import * as o from "path";
@@ -29,7 +29,7 @@ var pQt = "com.anthropic.claude-code-url-handler",
   c = o.join(g.homedir(), "Applications", P),
   l = o.join(c, "Contents", "MacOS", "claude");
 function d() {
-  return o.join(Tfe(), "applications", w);
+  return o.join(getXdgDataHome(), "applications", w);
 }
 var u = `HKEY_CURRENT_USER\\Software\\Classes\\${WB}`,
   h = `${u}\\shell\\open\\command`,
@@ -140,7 +140,7 @@ async function L(e) {
   }
 }
 async function E() {
-  let e = Upe();
+  let e = getInstalledClaudePath();
   try {
     return (await promises.realpath(e), e);
   } catch {
@@ -173,7 +173,7 @@ async function RFn(e) {
   let t = await E();
   if (await S(t)) return;
   let r = o.join(be(), ".deep-link-register-failed");
-  if (M() && e !== void 0) {
+  if (isHoverRestEnabled() && e !== void 0) {
     let i = await e.stat(Ce.state("deep-link-register-failed"));
     if (i.ok && Date.now() - i.value.mtimeMs < m) return;
   } else
@@ -186,7 +186,7 @@ async function RFn(e) {
       (await L(t),
       logFeatureOk("deep_link_register"),
       n("Auto-registered claude-cli:// deep link protocol handler"),
-      M() && e !== void 0)
+      isHoverRestEnabled() && e !== void 0)
     )
       await e.delete(Ce.state("deep-link-register-failed"));
     else await promises.rm(r, { force: !0 }).catch(() => {});
@@ -200,7 +200,7 @@ async function RFn(e) {
       ),
       s === "EACCES" || s === "ENOSPC")
     )
-      if (M() && e !== void 0)
+      if (isHoverRestEnabled() && e !== void 0)
         await e.write(Ce.state("deep-link-register-failed"), "", {
           publishDiscipline: "inPlace",
         });

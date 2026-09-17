@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { Xn, j, B, he, pv } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, zn, An, pl, ac, li, BL } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
+import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
+import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Wi, si, ownStoredLoginPlanAttributes, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { DW } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
+import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
@@ -22,7 +22,7 @@ import { We, b, z, n8, D0, ae, qr, n } from "../../01-核心基础设施/核心�
 import { oje, Knt } from "./chunk-z5vtnzjg.js";
 import { x, oe, Qu, ft, To, Lz } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
+import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { fn, Fo, execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
@@ -149,19 +149,19 @@ import { y4 } from "../../01-核心基础设施/核心工具-进程与信号/chu
 import { writeStdoutAndDrain, exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { CLAUDE_AGENT } from "../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js";
 import { BZt, jZt, vye } from "../../03-入口与运行时/Headless-SDK模式/chunk-9r4nh249.js";
-import { $We, Iit } from "../../01-核心基础设施/共享小工具-未细化/chunk-azh5vchz.js";
-import { Vb, s9 } from "../../01-核心基础设施/共享小工具-未细化/chunk-d3d1v4d6.js";
-import { Jw } from "../../01-核心基础设施/共享小工具-未细化/chunk-j4vveza5.js";
+import { SESSION_LIVE_ELSEWHERE_MESSAGE, listLiveSessionHolders } from "../../01-核心基础设施/共享小工具-未细化/session-live-elsewhere.js";
+import { getDaemonJsonPath, getDaemonLogPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
+import { trySetRawMode } from "../../01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js";
 import { gM, $6n } from "../../01-核心基础设施/共享小工具-未细化/chunk-febx58tg.js";
-import { fI, Ize, sft, eue } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
+import { fromJobState, parseAttachVia, ensureJobDir, ensureJobTmpDir } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { Og } from "../../01-核心基础设施/共享小工具-未细化/chunk-zdf7z1m1.js";
 import { H3n } from "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
 import { If, sN, Mh } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
-import { dg } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
+import { normalizePathForComparison } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
-import { Dm } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
+import { createKeyedSerialQueue } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
+import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID as Hi } from "crypto";
 import {
   lstat as Wr,
@@ -182,7 +182,7 @@ import { join as io } from "path";
 var so = 250,
   ao = 604800000,
   co = 256,
-  lo = m(() =>
+  lo = createLazyValue(() =>
     nt({
       writtenAtMs: Zt().optional(),
       shells: cr(
@@ -207,7 +207,7 @@ async function Fn(e, t = {}) {
         if (!W(c)) n(`[adopt] reap claim failed: ${c}`, { level: "warn" });
         return { found: !1, reaped: 0 };
       }
-      await Z(so);
+      await sleep(so);
     }
   try {
     let c = lo().safeParse(z(await readFile(r, "utf-8")));
@@ -228,7 +228,7 @@ async function Fn(e, t = {}) {
       ),
       _.length > 0)
     )
-      i("tengu_adopt_exit_reap", { reaped_shells: _.length });
+      logEvent("tengu_adopt_exit_reap", { reaped_shells: _.length });
     return { found: !0, reaped: _.length };
   } catch (c) {
     return (
@@ -265,7 +265,7 @@ function Tt(e) {
 function on(e) {
   return Tt(`${e}.json`);
 }
-var Wn = Dm();
+var Wn = createKeyedSerialQueue();
 function Jt(e, t) {
   return Wn.run("g:" + e, t).catch(() => {});
 }
@@ -352,7 +352,7 @@ async function zx(e, t) {
             ((r = d !== void 0 && q2e.has(d)),
             r && P() === "windows" && s < Mn - 1)
           ) {
-            await Z(Ln);
+            await sleep(Ln);
             continue;
           }
           break;
@@ -371,7 +371,7 @@ async function zx(e, t) {
           let c = A(s);
           if (c === "ENOENT") return;
           if (P() === "windows" && c !== void 0 && q2e.has(c) && r < Mn - 1) {
-            await Z(Ln);
+            await sleep(Ln);
             continue;
           }
           break;
@@ -502,7 +502,7 @@ function qn(e) {
       e.attachMs < 86400000
         ? Math.round(e.attachMs)
         : void 0;
-  i("tengu_bg_attach_outcome", {
+  logEvent("tengu_bg_attach_outcome", {
     outcome: fromEnum(t || o ? "detached" : "error"),
     got_ack: t || typeof e.marksExpected === "boolean",
     got_first_frame: t ? !0 : o ? void 0 : !1,
@@ -531,7 +531,7 @@ function qn(e) {
     daemon_booted:
       typeof e.daemonBooted === "boolean" ? e.daemonBooted : void 0,
     attach_cold: typeof e.attachCold === "boolean" ? e.attachCold : void 0,
-    via: fromEnumOpt(Ize(e.via)),
+    via: fromEnumOpt(parseAttachVia(e.via)),
     msgs_loaded: t ? boundedMarkCountOrUndefined(e.msgsLoaded) : void 0,
     msgs_in_jsonl: t ? boundedMarkCountOrUndefined(e.msgsInJsonl) : void 0,
     msgs_rendered_at_first_paint: t ? boundedMarkCountOrUndefined(e.msgsRenderedAtFirstPaint) : void 0,
@@ -632,7 +632,7 @@ function xe(e, t, o) {
     s = t === "detached" ? e.interactive?.marksExpected : void 0,
     c = t === "detached" && r === void 0 && s === !0,
     d = c && e.t0 !== void 0 ? Math.round(performance.now() - e.t0) : void 0;
-  i("tengu_bg_attach_outcome", {
+  logEvent("tengu_bg_attach_outcome", {
     outcome: fromEnum(t),
     got_ack: !1,
     got_first_frame: !1,
@@ -822,7 +822,7 @@ async function rt(e, t = {}) {
     if (Pe) return;
     ((Pe = !0),
       (ve = !U),
-      i("tengu_bg_attach_first_frame", {
+      logEvent("tengu_bg_attach_first_frame", {
         ms: L,
         meaningful_ms: Oe,
         ack_ms: je,
@@ -831,7 +831,7 @@ async function rt(e, t = {}) {
         via: fromEnumOpt(de),
         tempo: fromEnumOpt(De),
         stale: He,
-        state: fI(ge),
+        state: fromJobState(ge),
         cached: ze,
       }));
   }
@@ -889,7 +889,7 @@ async function rt(e, t = {}) {
           ? t.telemetry.interactive.marksExpected
           : void 0;
     return (
-      i("tengu_bg_attach_outcome", {
+      logEvent("tengu_bg_attach_outcome", {
         outcome: fromEnum("error"),
         got_ack: !1,
         got_first_frame: !1,
@@ -950,7 +950,7 @@ async function rt(e, t = {}) {
                 : "unknown"
               : void 0;
     if (
-      (i("tengu_bg_attach_outcome", {
+      (logEvent("tengu_bg_attach_outcome", {
         outcome: fromEnum(U),
         got_ack: Le,
         got_first_frame: Pe,
@@ -961,7 +961,7 @@ async function rt(e, t = {}) {
         tempo: fromEnumOpt(De),
         apc_detach: H === !0,
         failure_class: fromEnumOpt(I),
-        state: fI(ge),
+        state: fromJobState(ge),
         cached: ze,
         meaningful_ms: Oe,
         input_accepted_ms: Ft,
@@ -1014,7 +1014,7 @@ async function rt(e, t = {}) {
           (no ? "" : uF()),
       );
     }
-    if (!bt) Jw(o, !1);
+    if (!bt) trySetRawMode(o, !1);
     if (
       (o.removeListener("readable", nn),
       o.removeListener("end", Dn),
@@ -1353,7 +1353,7 @@ async function rt(e, t = {}) {
         qe = setTimeout(Zr, yo);
       if (
         ((je = Date.now() - E),
-        (de = I.op === "attach" ? Ize(I.via) : void 0),
+        (de = I.op === "attach" ? parseAttachVia(I.via) : void 0),
         (Re =
           I.op === "attach" && typeof I.booting === "boolean"
             ? I.booting
@@ -1400,7 +1400,7 @@ async function rt(e, t = {}) {
         .map(cO)
         .join("");
       if ((re.feed(q), "ref" in o)) o.ref();
-      Jw(o, !0);
+      trySetRawMode(o, !0);
       let G =
         Ue !==
         {
@@ -1582,7 +1582,7 @@ Installing it as a service keeps the background daemon running across reboot so 
     "Install as a service now? [y/N/never, or 'once' just for now] ",
   );
   switch (
-    (i("tengu_bg_daemon_cold_start_ask_answer", {
+    (logEvent("tengu_bg_daemon_cold_start_ask_answer", {
       answer_yes: s === "yes",
       answer_once: s === "once",
       answer_never: s === "never",
@@ -1630,7 +1630,7 @@ Installing it as a service keeps the background daemon running across reboot so 
           KL({ forceTransient: !0, onStarting: o, spawnIntent: !0 }, t)
         );
       }
-      let _ = await OWe({ jsonPath: Vb(), logPath: s9() });
+      let _ = await OWe({ jsonPath: getDaemonJsonPath(), logPath: getDaemonLogPath() });
       if (!_.ok)
         return (
           process.stderr
@@ -1827,7 +1827,7 @@ async function pn(e, t = !1, o = Date.now(), r) {
       }
       try {
         let T = b({ ...e, nonce: w });
-        if (M() && r !== void 0) {
+        if (isHoverRestEnabled() && r !== void 0) {
           let D = await r.write(v, T, { mode: 384 });
           if (!D.ok) {
             ((E = "dispatch-write"), (k = Xo(D.error)));
@@ -1853,7 +1853,7 @@ async function pn(e, t = !1, o = Date.now(), r) {
         { timeoutMs: 6000 },
       );
       for (let T = 0; !C.ok && C.code === "ESTARTING" && T < 40; T++)
-        (await Z(200),
+        (await sleep(200),
           (C = await controlRequest(
             {
               proto: BG_PROTO,
@@ -1866,7 +1866,7 @@ async function pn(e, t = !1, o = Date.now(), r) {
           )));
       if (C.ok && C.op === "await-ack")
         return hr(e, C.pid, C.messagingSock, o, C.via);
-      if (M() && r !== void 0) await r.delete(v).catch(() => {});
+      if (isHoverRestEnabled() && r !== void 0) await r.delete(v).catch(() => {});
       else await Yo(p).catch(() => {});
       let N = "code" in C ? C.code : void 0;
       if (N === "ECWDGONE" && "error" in C) return _r(C.error, e.source, o, w);
@@ -1900,7 +1900,7 @@ async function pn(e, t = !1, o = Date.now(), r) {
 function hr(e, t, o, r, s) {
   return (
     (_v().daemonConfirmedUp = !0),
-    i("tengu_bg_dispatch", {
+    logEvent("tengu_bg_dispatch", {
       backend_daemon: !0,
       source_shell: e.source === "shell",
       source_slash: e.source === "slash",
@@ -1910,7 +1910,7 @@ function hr(e, t, o, r, s) {
       has_worktree: e.worktree !== void 0,
       has_agent: e.agent !== void 0,
       ms: Date.now() - r,
-      via: fromEnumOpt(Ize(s)),
+      via: fromEnumOpt(parseAttachVia(s)),
     }),
     { ok: !0, pid: t, messagingSock: o }
   );
@@ -1935,7 +1935,7 @@ function Yt(e, t, o, r) {
           : /[\\/]/.test(t)
             ? "<path-bearing>"
             : t.slice(0, 80);
-  i("tengu_bg_dispatch_fallback", {
+  logEvent("tengu_bg_dispatch_fallback", {
     ms: Date.now() - r,
     reason_unreachable: e === "daemon-unreachable",
     reason_ack_timeout: e === "ack-timeout",
@@ -2007,7 +2007,7 @@ function ci(e) {
 async function IWe(e, t, o) {
   let r = e.slice(0, 8),
     s = getJobDir(r);
-  await eue(r, o);
+  await ensureJobTmpDir(r, o);
   let c = t.intent ?? "",
     d = makeInitialState({
       template: { name: "bg", description: "" },
@@ -2034,7 +2034,7 @@ async function IWe(e, t, o) {
       respawnFlags: t.respawnFlags,
     });
   if ((await writeStateAtomic(s, d, o), a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST))
-    if (M() && o !== void 0 && _n(r)) (await Rit(o), await kit(o, r));
+    if (isHoverRestEnabled() && o !== void 0 && _n(r)) (await Rit(o), await kit(o, r));
     else (await oi(k7e(), { recursive: !0, mode: 448 }), await ii(XY(r), ""));
   return { short: r, jobDir: s, state: d };
 }
@@ -2049,7 +2049,7 @@ async function eF(e, t, o = "shell", r, s, c, d, _) {
     (async () => {
       try {
         return (
-          await eue(E, _),
+          await ensureJobTmpDir(E, _),
           await di(
             e,
             o,
@@ -2289,7 +2289,7 @@ async function di(e, t, o, r, s, c, d) {
         n(`bg: daemon dispatch ${ne.reason} but worker is live`, {
           level: "warn",
         }),
-        await qs("tengu_bg_dispatch_rescued", {
+        await logEventAsync("tengu_bg_dispatch_rescued", {
           reason_ack_timeout: ne.reason === "ack-timeout",
           reason_enoconn: ne.reason === "enoconn",
           reason_estarting: ne.reason === "estarting",
@@ -2317,7 +2317,7 @@ async function di(e, t, o, r, s, c, d) {
           n(`bg: ack-timeout recovered via redispatch (${p})`, {
             level: "warn",
           }),
-          await qs("tengu_bg_dispatch_rescued", {
+          await logEventAsync("tengu_bg_dispatch_rescued", {
             reason_ack_timeout: !0,
             reason_enoconn: !1,
             reason_estarting: !1,
@@ -2414,7 +2414,7 @@ async function ui(e, t) {
 async function br(e) {
   let t;
   try {
-    t = await Iit(e, { rejectUnreadable: !0 });
+    t = await listLiveSessionHolders(e, { rejectUnreadable: !0 });
   } catch {
     return "unverified";
   }
@@ -2610,7 +2610,7 @@ async function pi({ jobId: e, state: t, prompt: o }, r, s, c) {
   }
   await logFeatureOkAsync("cli_bg_dispatch");
   let v = Se(t.respawnFlags),
-    E = Y(
+    E = dedupe(
       t.respawnFlags
         .map((k, w) =>
           v.has(w)
@@ -2651,7 +2651,7 @@ async function gi(e = process.stdin) {
     if ((e.off("data", r), !oje(c))) throw c;
     return (
       n(`readBgStdin: stdin unreadable: ${l(c)}`, { level: "error" }),
-      await qs("tengu_bg_stdin_unreadable", { error_code: Jg(c) ?? S("none") }),
+      await logEventAsync("tengu_bg_stdin_unreadable", { error_code: Jg(c) ?? S("none") }),
       process.stderr
         .write(`warning: stdin is unreadable (${A(c)}), proceeding without piped input
 `),
@@ -2974,7 +2974,7 @@ async function hn(e, t = {}, o) {
       }
       let N = Math.min(2000, 250 * 2 ** k);
       if (w.includes(RESPAWNING_ATTACH_CODE) || E + N > Si) _(Ei(w), E);
-      if ((await Z(N), (E += N), t.abortOnDetachKey)) {
+      if ((await sleep(N), (E += N), t.abortOnDetachKey)) {
         let T = B0e();
         if (T && $t(T)) return { r: v, waitedMs: E, detachKeyAborted: !0 };
       }
@@ -3014,7 +3014,7 @@ async function dgr(e, t) {
   let p = () => (c > 0 ? { waited_transient_ms: c } : void 0),
     v = async (C, N) => (
       xe(_, "error"),
-      await Promise.race([zx(_.gestureId, t).catch(() => {}), Z(750)]),
+      await Promise.race([zx(_.gestureId, t).catch(() => {}), sleep(750)]),
       await logFeatureBadAsync("cli_bg_attach", "daemon_unavailable", p()),
       process.stderr
         .write(`${C} \u2014 ${Lc()} is unavailable (${N})${zJ("status")}
@@ -3056,11 +3056,11 @@ async function dgr(e, t) {
           .write(`Session ${s} can't start \u2014 ${Er(C.detail) || "it crashed repeatedly"}
 `),
         xe(_, "error", "worker_crash_loop"),
-        await Promise.race([zx(_.gestureId, t).catch(() => {}), Z(750)]),
+        await Promise.race([zx(_.gestureId, t).catch(() => {}), sleep(750)]),
         exitAfterAnalyticsFlush(1)
       );
     if (N)
-      (await qs("tengu_bg_attach_wake_after_reap", J),
+      (await logEventAsync("tengu_bg_attach_wake_after_reap", J),
         process.stderr
           .write(`Session ${s} was interrupted while unattended \u2014 resuming it\u2026
 `));
@@ -3101,7 +3101,7 @@ async function dgr(e, t) {
         process.stderr.write(`${te.error}
 `),
         xe(_, "error", "respawn_failed"),
-        await Promise.race([zx(_.gestureId, t).catch(() => {}), Z(750)]),
+        await Promise.race([zx(_.gestureId, t).catch(() => {}), sleep(750)]),
         exitAfterAnalyticsFlush(1)
       );
     else
@@ -3119,12 +3119,12 @@ async function dgr(e, t) {
 `,
         ),
         xe(_, "error", "respawn_failed"),
-        await Promise.race([zx(_.gestureId, t).catch(() => {}), Z(750)]),
+        await Promise.race([zx(_.gestureId, t).catch(() => {}), sleep(750)]),
         exitAfterAnalyticsFlush(1)
       );
   }
   let w = () => {
-      if (P() === "windows" && process.stdin.isTTY) Jw(process.stdin, !1);
+      if (P() === "windows" && process.stdin.isTTY) trySetRawMode(process.stdin, !1);
     },
     O = async () => {
       let C = await readJobStateAfterSettle(getJobDir(s), t);
@@ -3156,7 +3156,7 @@ async function dgr(e, t) {
 `),
       P() === "windows" && process.stdin.isTTY)
     )
-      (Jw(process.stdin, !0), process.stdin.ref());
+      (trySetRawMode(process.stdin, !0), process.stdin.ref());
     let N = B0e();
     if (N && $t(N)) {
       (w(), xe(_, "detached"), (k = { outcome: "detached" }));
@@ -3175,7 +3175,7 @@ async function dgr(e, t) {
     }
   }
   if (
-    (await Promise.race([zx(_.gestureId, t).catch(() => {}), Z(750)]),
+    (await Promise.race([zx(_.gestureId, t).catch(() => {}), sleep(750)]),
     k.outcome === "detached" && k.msg && (FATAL_ATTACH_CODE.test(k.msg) || TRANSIENT_ATTACH_CODE.test(k.msg)))
   )
     return (
@@ -3393,7 +3393,7 @@ async function fgr(e, t) {
     );
   }
   if (
-    (await qs("tengu_bg_agent_action", {
+    (await logEventAsync("tengu_bg_agent_action", {
       action: S("stop"),
       source: S("cli"),
       jobSessionId: Ee(_?.sessionId) ?? S(""),
@@ -3528,7 +3528,7 @@ async function mgr(e, t, o = Tr(process.argv.slice(2))) {
       (process.exitCode = 1));
     return;
   }
-  await qs("tengu_bg_agent_action", {
+  await logEventAsync("tengu_bg_agent_action", {
     action: S("delete"),
     source: S("cli"),
     jobSessionId: Ee(w?.sessionId) ?? S(""),
@@ -3983,8 +3983,8 @@ async function EPt(e, t, o, r) {
       let E = (t[v.id].mediaType ?? "image/png").split("/")[1] || "png";
       return `pasted-${v.id}.${E}`;
     },
-    _ = M() && r !== void 0 && _n(o) && s.every((v) => _n(d(v)));
-  await sft(o, _ ? r : void 0);
+    _ = isHoverRestEnabled() && r !== void 0 && _n(o) && s.every((v) => _n(d(v)));
+  await ensureJobDir(o, _ ? r : void 0);
   let p = e;
   for (let v = s.length - 1; v >= 0; v--) {
     let E = s[v],
@@ -4061,7 +4061,7 @@ async function Li(e, t, o, r) {
     w = [...Qe().extraArgs, ...k, ...Eit(_)],
     O = getJobDir(v);
   try {
-    (await eue(v, r),
+    (await ensureJobTmpDir(v, r),
       await writeStateAtomic(
         O,
         makeInitialState({
@@ -4100,7 +4100,7 @@ async function Li(e, t, o, r) {
     (n(`bg: dispatch fast-failed (${Date.now() - N}ms) \u2014 retrying once`, {
       level: "warn",
     }),
-      await Z(500),
+      await sleep(500),
       (T = await eF(C, s, "fleet", E, void 0, void 0, void 0, r)));
   if (!T.ok) {
     if (T.alive)
@@ -4134,7 +4134,7 @@ function W$n(e, t, o, r) {
     c,
     (async () => {
       try {
-        (await eue(c, r),
+        (await ensureJobTmpDir(c, r),
           await writeStateAtomic(
             _,
             makeInitialState({
@@ -4316,7 +4316,7 @@ async function q$n(e, t, o) {
     c = async (_, p) => {
       if (
         (n(`[bg-spare] claim miss (${_})${p ? `: ${p}` : ""}`),
-        i("tengu_bg_spare_claim_fail", { reason: fromEnum(_) }),
+        logEvent("tengu_bg_spare_claim_fail", { reason: fromEnum(_) }),
         r)
       ) {
         let v = await e4(
@@ -4488,7 +4488,7 @@ async function KHe(e, t, o) {
     let X = await VZ(O, d, void 0, o);
     if (((te = Date.now() - J), k && !X.confirmed))
       return (
-        i("tengu_bg_respawn_unconfirmed_bail", {}),
+        logEvent("tengu_bg_respawn_unconfirmed_bail", {}),
         logFeatureSad("job_respawn", "job_respawn_kill_unconfirmed"),
         {
           ok: !1,
@@ -4505,7 +4505,7 @@ async function KHe(e, t, o) {
       fe = ue + 3000;
     while (Date.now() < fe) {
       if (!(await F$n(O))) break;
-      await Z(100);
+      await sleep(100);
     }
     K = Date.now() - ue;
   }
@@ -4520,7 +4520,7 @@ async function KHe(e, t, o) {
   }
   let De = de.hasMessages;
   if (de.via === "projectsScan")
-    i("tengu_bg_respawn_probe_rescue", { via: fromEnum(de.via) });
+    logEvent("tengu_bg_respawn_probe_rescue", { via: fromEnum(de.via) });
   if (!De) {
     if (
       w.bgIsolation === "none" &&
@@ -4532,7 +4532,7 @@ async function KHe(e, t, o) {
         `bg: respawn of ${e} refused \u2014 fork handoff whose own transcript never materialized`,
         { level: "warn" },
       ),
-        i("tengu_bg_respawn_no_transcript", {
+        logEvent("tengu_bg_respawn_no_transcript", {
           via: fromEnum(de.via),
           had_link_scan_path: w.linkScanPath !== void 0,
           quarantined: !1,
@@ -4557,7 +4557,7 @@ async function KHe(e, t, o) {
           `bg: respawn of ${e} refused \u2014 dead-epoch row whose transcript is gone`,
           { level: "warn" },
         ),
-        i("tengu_bg_respawn_no_transcript", {
+        logEvent("tengu_bg_respawn_no_transcript", {
           via: fromEnum(de.via),
           had_link_scan_path: w.linkScanPath !== void 0,
           quarantined: !1,
@@ -4573,7 +4573,7 @@ async function KHe(e, t, o) {
         }
       );
     let X = await quarantineJobTranscript(de.path, be);
-    i("tengu_bg_respawn_no_transcript", {
+    logEvent("tengu_bg_respawn_no_transcript", {
       via: fromEnum(de.via),
       had_link_scan_path: w.linkScanPath !== void 0,
       quarantined: X,
@@ -4588,13 +4588,13 @@ async function KHe(e, t, o) {
         : void 0,
     Ue = De && !ge;
   if (Ue) {
-    let X = (await Iit(D)).filter(
+    let X = (await listLiveSessionHolders(D)).filter(
         (fe) => !(fe.jobId !== void 0 && (fe.jobId === e || fe.jobId === O)),
       ),
       ue = X.find((fe) => fe.kind === "interactive") ?? X[0];
     if (ue)
       return (
-        i("tengu_bg_respawn_resume_conflict", { holder_kind: fromEnum(ue.kind) }),
+        logEvent("tengu_bg_respawn_resume_conflict", { holder_kind: fromEnum(ue.kind) }),
         logFeatureSad("job_respawn", "resume_session_live_elsewhere"),
         {
           ok: !1,
@@ -4605,7 +4605,7 @@ async function KHe(e, t, o) {
             (await ot(r, w, t.initialPrompt, o, t.keepQueuedPrompt)),
           error:
             ue.kind === "interactive"
-              ? $We
+              ? SESSION_LIVE_ELSEWHERE_MESSAGE
               : "This conversation is already open in another running Claude session \u2014 use that one, or close it and try again",
           errorCode: "resume_session_live_elsewhere",
         }
@@ -4654,7 +4654,7 @@ ${t.initialPrompt}`
     t?.initialPrompt === void 0 &&
     w.queuedPrompt === void 0
   )
-    i("tengu_resume_interrupted_turn", {
+    logEvent("tengu_resume_interrupted_turn", {
       surface: S("respawn_job"),
       kind: S("intent_replay"),
     });
@@ -4739,7 +4739,7 @@ ${t.initialPrompt}`
       `bg: respawn dispatch fast-failed (${Date.now() - qe}ms) \u2014 retrying once`,
       { level: "warn" },
     ),
-      await Z(500),
+      await sleep(500),
       (_e = await eF(Ne, D, "fleet", w.cwd, re, Le, e, o)));
   let wt = Date.now() - qe,
     bt = Date.now() - p;
@@ -4747,7 +4747,7 @@ ${t.initialPrompt}`
     (n(
       `[PERF:respawn] ${e}: total=${bt}ms probe=${E}ms kill=${te}ms${ve ? " (ceremony skipped)" : ""} wait=${K}ms transcript=${Re}ms dispatch=${wt}ms ok=${_e.ok}`,
     ),
-    i("tengu_bg_respawn", {
+    logEvent("tengu_bg_respawn", {
       total_ms: bt,
       probe_ms: E,
       kill_ms: te,
@@ -4781,7 +4781,7 @@ ${t.initialPrompt}`
       queued: X,
     };
   }
-  (i("tengu_bg_agent_action", {
+  (logEvent("tengu_bg_agent_action", {
     action: S("respawn"),
     agent: d.template,
     wasSettled: isSettled(d),
@@ -4856,7 +4856,7 @@ function Nr(e) {
 }
 var vWe = "recap.trigger";
 function Xi(e, t) {
-  if (M() && t !== void 0) {
+  if (isHoverRestEnabled() && t !== void 0) {
     let o = Ce.job(e, [vWe]);
     if (kd(o) === void 0) {
       t.write(o, "", { publishDiscipline: "inPlace" }).catch(() => {});
@@ -4873,7 +4873,7 @@ async function VZ(e, t, o, r) {
       ? { ok: !1, code: "ENOJOB", error: "job already gone (caller-verified)" }
       : await controlRequest({ proto: BG_PROTO, op: "kill", short: e, handoff: s, evict: c });
   for (let _ = 0; !d.ok && d.code === "ESTARTING" && _ < 10; _++)
-    (await Z(200),
+    (await sleep(200),
       (d = await controlRequest({
         proto: BG_PROTO,
         op: "kill",
@@ -4943,15 +4943,15 @@ async function RZt(e, t) {
       let p = Date.now() + 3000,
         v = !0;
       while ((v = await M8e(_.pid, _.procStart)) && Date.now() < p)
-        await Z(100);
+        await sleep(100);
       if (v) {
-        i("tengu_bg_killjob_ctrl_fallback", { ctrlSent: o });
+        logEvent("tengu_bg_killjob_ctrl_fallback", { ctrlSent: o });
         try {
           process.kill(_.pid, "SIGTERM");
         } catch {}
         let E = Date.now() + 500;
         while ((v = await M8e(_.pid, _.procStart)) && Date.now() < E)
-          await Z(100);
+          await sleep(100);
       }
       if (v) s = !1;
     }
@@ -5018,7 +5018,7 @@ async function Mr(e, t, o) {
 async function VHe(e, t, o, r, s, c) {
   let d = Date.now(),
     _ = (T, D) => {
-      i("tengu_bg_reply_outcome", {
+      logEvent("tengu_bg_reply_outcome", {
         ms: Date.now() - d,
         outcome: fromEnum(T),
         error_code: fromEnumOpt(D),
@@ -5052,7 +5052,7 @@ async function VHe(e, t, o, r, s, c) {
     T++
   ) {
     if (w.code === "ERESPAWNING") O = 60;
-    (await Z(200), (w = await k()));
+    (await sleep(200), (w = await k()));
   }
   if (!w.ok && w.code === "EAUTH") {
     let T = await zre();
@@ -5068,7 +5068,7 @@ async function VHe(e, t, o, r, s, c) {
         !w.ok && (w.code === "ESTARTING" || w.code === "ENOREPLY") && D < 10;
         D++
       )
-        (await Z(200), (w = await k()));
+        (await sleep(200), (w = await k()));
     }
   }
   if (w.ok) {
@@ -5080,7 +5080,7 @@ async function VHe(e, t, o, r, s, c) {
       writeStateAtomic(p, D, c).catch(logJobWriteError);
     }
     if (!r)
-      (i("tengu_bg_agent_action", {
+      (logEvent("tengu_bg_agent_action", {
         action: S("reply"),
         agent: v?.template ?? "unknown",
         wasTerminal: v ? isTerminal(v.state) : !1,
@@ -5221,7 +5221,7 @@ async function xZt(e, t = {}) {
       });
   }
   for (let k = 0; p.msg && r.test(p.msg) && k < 20; k++)
-    (await Z(500),
+    (await sleep(500),
       (p = await rt(e, {
         ...s,
         telemetry: {
@@ -5255,7 +5255,7 @@ async function xZt(e, t = {}) {
     let O;
     if (process.stdin.isTTY) {
       let T = "isRaw" in process.stdin ? Boolean(process.stdin.isRaw) : !1;
-      if (!T) Jw(process.stdin, !0);
+      if (!T) trySetRawMode(process.stdin, !0);
       let D = dr(process.stdin);
       try {
         O = await Promise.race([
@@ -5263,7 +5263,7 @@ async function xZt(e, t = {}) {
           D.promise.then(() => "detach"),
         ]);
       } finally {
-        if ((D.cancel(), !T)) Jw(process.stdin, !1);
+        if ((D.cancel(), !T)) trySetRawMode(process.stdin, !1);
       }
     } else O = await KL({ forceTransient: !0 }, t.storageV5);
     if (O === "detach") {
@@ -5317,7 +5317,7 @@ async function xZt(e, t = {}) {
       },
     });
     for (let T = 0; p.msg && r.test(p.msg) && T < 10; T++)
-      (await Z(200),
+      (await sleep(200),
         (p = await rt(e, {
           ...c,
           telemetry: {
@@ -5645,7 +5645,7 @@ async function e4(e, t = {}, o) {
       errorCode: "jobdir_rm_failed",
     };
   }
-  if (M() && o !== void 0 && kd(xPt(e)) === void 0) await LWe(o, e);
+  if (isHoverRestEnabled() && o !== void 0 && kd(xPt(e)) === void 0) await LWe(o, e);
   else await Ki(XY(e)).catch(() => {});
   if ((invalidateJobStateCache(getJobDir(e)), !t.internal))
     if (_)
@@ -5682,7 +5682,7 @@ function vt(e, t) {
   return Vt(e) === Vt(t);
 }
 function Vt(e) {
-  return dg(zn(e));
+  return normalizePathForComparison(zn(e));
 }
 function jr(e, t) {
   let o = relative(Vt(t), Vt(e));

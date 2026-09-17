@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
+import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 class Je extends Error {
   name = "HooksError";
 }
@@ -22,7 +22,7 @@ function NHt(r, o = "aborted") {
   return e instanceof Error ? e.message : e === void 0 ? o : String(e);
 }
 function pdr(r, o) {
-  if (!me(r))
+  if (!isRecord(r))
     throw new Je(
       `${o}: next() takes the event's argument: next(e) passes it on, next({ ...e, x }) rewrites it`,
     );
