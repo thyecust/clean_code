@@ -17,15 +17,15 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getPublicModelDisplayName, BASH_TOOL_NAME, READ_TOOL_NAME, GREP_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { S1, xRt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { CLAUDE_AI_SYNC_LABEL, getSettingsSourceDisplayName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { jn, nxt, eE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getRemoteTransport, REMOTE_WAIT_STOPPED_MESSAGE, hasRemoteCapability } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { fl } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import { analyzeContextUsage, sliceFromLastCompactBoundary } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Cr } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { WEB_FETCH_TOOL_NAME } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { renderToAnsiText } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
@@ -107,7 +107,7 @@ function Fo(d, i, g) {
           "Add more specific patterns or use the glob or type parameter to narrow file types. Consider Glob for file discovery instead of Grep.",
         savingsTokens: Math.floor(i * 0.3),
       };
-    case Cr:
+    case WEB_FETCH_TOOL_NAME:
       return {
         severity: "info",
         title: `WebFetch results using ${u} tokens (${g.toFixed(0)}%)`,
@@ -409,11 +409,11 @@ var X = "Autocompact buffer";
 function Bo() {
   return null;
 }
-var dt = ["Project", "User", S1, "Managed", "Plugin", "MCP", "Built-in"];
+var dt = ["Project", "User", CLAUDE_AI_SYNC_LABEL, "Managed", "Plugin", "MCP", "Built-in"];
 function _e(d) {
   let i = new Map();
   for (let u of d) {
-    let f = xRt(u.source) + (u.pluginName ? ` (${u.pluginName})` : ""),
+    let f = getSettingsSourceDisplayName(u.source) + (u.pluginName ? ` (${u.pluginName})` : ""),
       C = i.get(f) || [];
     (C.push(u), i.set(f, C));
   }
@@ -1144,9 +1144,9 @@ function Pt(d, i = []) {
 }
 async function xs(d, i, g) {
   let u = i.presentation === "fullscreen" && g.trim().toLowerCase() !== "all",
-    f = jn();
+    f = getRemoteTransport();
   if (f) {
-    if (!eE("controlChannel"))
+    if (!hasRemoteCapability("controlChannel"))
       return (
         d("Context usage isn't available over this remote connection"),
         null
@@ -1185,7 +1185,7 @@ async function xs(d, i, g) {
         metaMessages: [formatContextUsageReport(q, { skipCollapseStatus: !0 })],
       });
     } catch (S) {
-      if (yt(S)) return (d(nxt), null);
+      if (yt(S)) return (d(REMOTE_WAIT_STOPPED_MESSAGE), null);
       let w = mayHaveRemoteClient(i.session);
       if (w) n(`/context remote fetch failed: ${l(S)}`, { level: "error" });
       d(

@@ -11,7 +11,7 @@ import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Z5t, OBe, tu } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { isIterateeCall, sliceArrayRange, omitBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "./git-exec-hardening.js";
@@ -28,21 +28,21 @@ import {
   isClaudeSessionRef,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { toInteger } from "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
-import { Ha, XXe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { getSafeReadOpenFlags, getNoFollowOpenFlags } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { spawn } from "child_process";
 import { constants } from "fs";
 import { lstat as Q, open as fe } from "fs/promises";
 var { ceil: Le, max: Ue } = Math;
 function ze(e, t, r) {
-  if (r ? Z5t(e, t, r) : t === void 0) t = 1;
+  if (r ? isIterateeCall(e, t, r) : t === void 0) t = 1;
   else t = Ue(toInteger(t), 0);
   var i = e == null ? 0 : e.length;
   if (!i || t < 1) return [];
   var s = 0,
     o = 0,
     a = Array(Le(i / t));
-  while (s < i) a[o++] = OBe(e, s, (s += t));
+  while (s < i) a[o++] = sliceArrayRange(e, s, (s += t));
   return a;
 }
 var q = ze;
@@ -304,7 +304,7 @@ async function CFt(e, t, r) {
     return !1;
   let o;
   try {
-    o = await fe(r, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | XXe(), 384);
+    o = await fe(r, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | getNoFollowOpenFlags(), 384);
   } catch {
     return !1;
   }
@@ -618,7 +618,7 @@ function J(e) {
 function st(e) {
   let t = J(e).filter(([r]) => !r.toLowerCase().startsWith("hook."));
   return vFt(
-    tu(e, (r, i) => ye.test(i)),
+    omitBy(e, (r, i) => ye.test(i)),
     t.length === 0
       ? {}
       : {
@@ -693,7 +693,7 @@ async function Kbe(e, { firstBytes: t } = {}) {
   }
   let r;
   try {
-    r = await fe(e, Ha());
+    r = await fe(e, getSafeReadOpenFlags());
   } catch (i) {
     return W(i) ? { kind: "absent" } : { kind: "unreadable" };
   }
@@ -1842,7 +1842,7 @@ async function Ut(e, t, r, i) {
 }
 async function dOe(e, t) {
   if (!(await ie(e)).isFile()) throw Error("not a regular file");
-  let r = await pt(e, Ha());
+  let r = await pt(e, getSafeReadOpenFlags());
   try {
     let i = await r.stat();
     if (!i.isFile()) throw Error("not a regular file");

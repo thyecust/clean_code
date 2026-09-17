@@ -17,8 +17,8 @@ import { COMMAND_NAME_TAG, COMMAND_MESSAGE_TAG, logError } from "../Bedrock-Vert
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { cmdFeature, logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { redactSecretsInText, inlineSkillModelOverride, getAgentDepth, getWorkflowRunMetadata, isBgSession, isToolDetailsLoggingEnabled, getVersionForAnalytics } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { C_ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { nxt, Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { HOOK_EVENT_NAMES } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { REMOTE_WAIT_STOPPED_MESSAGE, isRemoteActive } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { Rir, kir, TQ } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
@@ -124,7 +124,7 @@ import { isModelInvocable } from "../../01-核心基础设施/共享小工具-�
 import { randomUUID } from "crypto";
 function Me(e, o, t, m, l) {
   let c = 0;
-  for (let _ of C_) {
+  for (let _ of HOOK_EVENT_NAMES) {
     let v = t[_];
     if (!v) continue;
     for (let T of v)
@@ -1215,7 +1215,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
             content: prependPrecedingInputBlocks({ inputString: ie(s, o), precedingInputBlocks: m }),
             uuid: v,
           }),
-          A = Pt() && deriveRequires(s).workspace;
+          A = isRemoteActive() && deriveRequires(s).workspace;
         if (A) t.applyMessageOp({ type: "append", messages: [p] });
         try {
           let M = createLocalCommandCaveatMessage(),
@@ -1299,7 +1299,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
           if (I && t.abortController.signal.aborted) logFeatureSad(d, "cmd_local_aborted");
           else logFeatureBad(d, I ? "cmd_local_aborted" : "cmd_local_threw");
           let b = I ? "local-command-stdout" : "local-command-stderr",
-            r = A ? nxt : "Interrupted",
+            r = A ? REMOTE_WAIT_STOPPED_MESSAGE : "Interrupted",
             k = I
               ? mayHaveRemoteClient(t.session)
                 ? r

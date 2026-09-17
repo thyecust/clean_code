@@ -13,7 +13,7 @@ import { repeatString, truncateToCodeUnits, beforeFirst } from "../../01-核心�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { diffArrays } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { jit, BB } from "./语法高亮-Markdown渲染.jhbtay9y.js";
+import { getHighlightCore, resolveHighlightLanguageId } from "./语法高亮-Markdown渲染.jhbtay9y.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
@@ -29,7 +29,7 @@ function lle(e) {
   return ` \u2026 [+${e} chars]`;
 }
 function le() {
-  return jit();
+  return getHighlightCore();
 }
 var E = "\x1B[0m",
   A = "\x1B[2m",
@@ -347,24 +347,24 @@ function X(e, n) {
     r = beforeFirst(t, "."),
     i = P.get(t) ?? P.get(r);
   if (i) {
-    let o = BB(i);
+    let o = resolveHighlightLanguageId(i);
     if (o) return o;
   }
   if (s) {
-    let o = BB(s);
+    let o = resolveHighlightLanguageId(s);
     if (o) return o;
   }
   if (n) {
     let o = n.startsWith("\uFEFF") ? n.slice(1) : n;
     if (o.startsWith("#!")) {
-      if (o.includes("bash") || o.includes("/sh")) return BB("bash");
-      if (o.includes("python")) return BB("python");
-      if (o.includes("node")) return BB("javascript");
-      if (o.includes("ruby")) return BB("ruby");
-      if (o.includes("perl")) return BB("perl");
+      if (o.includes("bash") || o.includes("/sh")) return resolveHighlightLanguageId("bash");
+      if (o.includes("python")) return resolveHighlightLanguageId("python");
+      if (o.includes("node")) return resolveHighlightLanguageId("javascript");
+      if (o.includes("ruby")) return resolveHighlightLanguageId("ruby");
+      if (o.includes("perl")) return resolveHighlightLanguageId("perl");
     }
-    if (o.startsWith("<?php")) return BB("php");
-    if (o.startsWith("<?xml")) return BB("xml");
+    if (o.startsWith("<?php")) return resolveHighlightLanguageId("php");
+    if (o.startsWith("<?xml")) return resolveHighlightLanguageId("xml");
   }
   return null;
 }

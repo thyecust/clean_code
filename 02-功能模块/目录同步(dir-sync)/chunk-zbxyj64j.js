@@ -35,7 +35,7 @@ import {
 import { MAX_ETAG_LENGTH, HALT_REASONS, getResolvedBundleSchema, isSyncableRelativePath, getWithheldCountsSchema } from "../文件同步-Sync/sync-journal.js";
 import { parseSessionSyncState, parseSessionSeedNote } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
 import { STREAMING_TIMING_DEFAULTS } from "../../01-核心基础设施/共享小工具-未细化/chunk-ydn85r3t.js";
-import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { getSafeReadOpenFlags } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { s, T, O, v, c, it, $e, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -776,7 +776,7 @@ async function Oe(e, t) {
   try {
     let r = await lstat(e, { bigint: !0 });
     if (!r.isFile()) return { kind: "unreadable" };
-    let a = await dn(e, Ha());
+    let a = await dn(e, getSafeReadOpenFlags());
     try {
       let p = await a.stat({ bigint: !0 });
       if (p.dev !== r.dev || p.ino !== r.ino || !p.isFile() || p.size > j)

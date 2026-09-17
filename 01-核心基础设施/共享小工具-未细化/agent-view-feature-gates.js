@@ -11,14 +11,14 @@ import { initializeGrowthBook, getFeatureValue_CACHED_MAY_BE_STALE } from "../..
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a, antEnv } from "../设置-配置/chunk-zqr5ctyf.js";
 import { capitalize } from "../核心工具-字符串与文本/string-utils.js";
-import { Pw } from "../设置-配置/设置-配置.aqbb35ee.js";
+import { getMergedSettings } from "../设置-配置/设置-配置.aqbb35ee.js";
 function isAgentViewDisabled() {
   return r() !== null;
 }
 function r() {
   if (a.CLAUDE_CODE_DISABLE_AGENT_VIEW)
     return "is disabled by CLAUDE_CODE_DISABLE_AGENT_VIEW";
-  if (Pw()?.settings.disableAgentView === !0)
+  if (getMergedSettings()?.settings.disableAgentView === !0)
     return "is disabled by the 'disableAgentView' setting";
   return null;
 }
@@ -26,7 +26,7 @@ function isAgentsFleetEnabled() {
   return !isAgentViewDisabled();
 }
 async function ensureFleetGateHydrated(e = {}) {
-  if (Pw() === null) {
+  if (getMergedSettings() === null) {
     let { getSettingsWithErrors: t } = await import("../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js");
     t();
   }

@@ -33,7 +33,7 @@ import {
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getTelemetryDisabledEnvVar } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Pw } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { getMergedSettings } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSessionRuntimeState } from "../权限系统/chunk-ynkf3yy4.js";
 import { getComplianceTaints } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { THIRD_PARTY_PROVIDER_LABELS, THIRD_PARTY_PROVIDER_ENV_VARS, getAPIProvider, isFirstPartyProvider, getSecondaryProvider, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -58,7 +58,7 @@ function u() {
   return !1;
 }
 function isRemoteControlHardDisabled() {
-  return Pw()?.settings.disableRemoteControl === !0;
+  return getMergedSettings()?.settings.disableRemoteControl === !0;
 }
 function isBridgeEnabled() {
   if (u()) return !0;

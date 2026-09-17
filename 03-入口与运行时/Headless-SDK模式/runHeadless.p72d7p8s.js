@@ -555,24 +555,24 @@ import {
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isDesktopHostEntrypoint, isClaudeDesktopAppSession, isDesktopHostSession, isVsCodeExtensionSession, isClaudecodeEnv } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import {
-  Nr,
-  zl,
-  DBe,
-  tu,
-  Dq,
-  l8t,
-  pke,
-  ts,
-  yke,
-  Js,
-  Oa,
-  ctt,
-  zge,
+  isSettingsSourceEnabled,
+  omitObjectKeys,
+  pickObjectKeys,
+  omitBy,
+  normalizeSettingsAliases,
+  normalizeMcpServerTimeout,
+  hasPluginSource,
+  isConnectedMcpServer,
+  getKnownMarketplacesSchema,
+  parseMcpToolName,
+  getMcpToolPrefix,
+  collectMcpToolPermissionRules,
+  isSameMcpServerName,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { writeDiagnosticsEvent, runTimedDiagnosticStep } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import { CA } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { DEFAULT_IMAGE_LIMITS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { sanitizeAnalyticsId, startHeadlessTurn, markHeadlessCheckpoint, reportHeadlessTurnMetrics, addStartupContext, profileCheckpoint } from "../CLI入口-Commander/startup-profiler.js";
 import { getInitialSettings, getSettings_DEPRECATED, getSettingsWithSources, getSettingsWithErrors, surfaceManagedSettingsErrorsHeadless, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -620,14 +620,14 @@ import {
 import { SKILL_TOOL_NAME, SKILL_TOOL_NAME_PREFIX, getToolPermissionContext } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, findToolByName } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import {
-  HYe,
+  clearFocusModeSections,
   TOOL_SEARCH_TOOL_NAME,
-  OK,
-  jYe,
-  Ni,
-  Oc,
-  bR,
-  ni,
+  getModelForPrompt,
+  buildMemorySystemPrompt,
+  REPL_TOOL_NAME,
+  applyPermissionUpdate,
+  getCurrentProjectTempDir,
+  findMatchingDenyRule,
   isScratchpadEnabled,
   getScratchpadDir,
   pathInWorkingPath,
@@ -676,7 +676,7 @@ import { Nu, b7e } from "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwh
 import { AsyncQueue, formatContinuedInMessage } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
 import { recordStartupPhase, getRecordedStartupPhase, markResumeHydratePrefetch, recordFirstMessageReadFromSpawn, recordInputReadyFromSpawn, consumeApiRequestSentFromSpawn } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { areBackgroundTasksDisabled, BACKGROUND_TASKS_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
-import { mQn, ZAe, ti, eCe } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { isAsyncReplRequested, formatUnsatisfiableSchemaReason, STRUCTURED_OUTPUT_TOOL_NAME, buildStructuredOutputToolFromSchema } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import {
   ER,
   fc,
@@ -722,50 +722,50 @@ import {
 } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import { GY, oJn } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
 import {
-  V0,
-  Fz,
-  D_e,
-  HNn,
-  INn,
-  YHt,
-  PNn,
-  ONn,
-  uJt,
-  Zje,
-  LNn,
-  MNn,
-  dJt,
-  e6e,
-  A8,
-  kot,
-  zW,
-  e0t,
-  N_e,
-  r0t,
-  o0t,
-  xot,
-  XNn,
-  hJt,
-  Hot,
-  Iot,
-  nHe,
-  Pot,
-  s0t,
-  rHe,
-  R8,
-  $z,
-  oHe,
-  Mot,
-  vJt,
-  x8,
-  VW,
-  k1n,
-  C0t,
-  PJt,
-  v0t,
-  OJt,
-  qot,
-  L1n,
+  awaitMcpPolicyColdStart,
+  redactManagedMcpConfig,
+  normalizeMcpServerStatus,
+  getSkillsSyncWaitTimeoutMs,
+  getSkillsSyncInstallTimeoutMs,
+  startSkillsSyncInBackground,
+  waitForFirstSkillsSync,
+  resyncSkillsNow,
+  shouldForwardStatusUpdate,
+  redactCompactError,
+  applyExternalMetadata,
+  applySessionAllowRules,
+  serializeActiveGoal,
+  emitBackgroundTasksChanged,
+  getCloudSessionsUnavailableReason,
+  applyUsageToResultMessage,
+  buildResultMessage,
+  getFeedbackUnavailableReason,
+  submitFeedbackPayload,
+  getTerminalLifecycleState,
+  getFooterIndicator,
+  getReportedToolName,
+  DEFAULT_ENGINE_CAPABILITIES,
+  serializePluginInfo,
+  collectAmbientContext,
+  collectMinimalAmbientContext,
+  buildSystemInitMessage,
+  attachStartupTiming,
+  getLastTextBlockText,
+  processUserInput,
+  validateUntrustedPath,
+  getUntrustedPathReason,
+  createSdkEngine,
+  recordRemoteControlSurfaceSeen,
+  areInitializePluginsApplied,
+  runLifecycleHooks,
+  isHermeticModeEnabled,
+  getSkippedDynamicMcpServers,
+  MCP_CONFIG_FETCH_DEADLINE_MS,
+  MCP_RETRY_BACKOFF_MS,
+  applyMcpConnectionResult,
+  getRetryableMcpFailures,
+  retryFailedMcpConnections,
+  remountClaudeAiConnectors,
 } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { b_ } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { _ee } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
@@ -803,59 +803,59 @@ import "../../01-核心基础设施/共享小工具-未细化/reply-degraded-sta
 import { withoutStaticMcpShadows, mergeAndFilterTools, stripSoleNonDeniableTool } from "../../01-核心基础设施/共享小工具-未细化/chunk-1m91n7yv.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
 import {
-  nFn,
-  E6e,
-  hHe,
-  G_e,
-  lst,
-  cst,
-  XJt,
-  lFn,
-  cFn,
-  dFn,
-  _He,
-  yHe,
-  A6e,
-  ust,
-  dst,
-  pst,
-  SHe,
-  hFn,
-  fst,
-  _Fn,
-  mst,
-  gst,
-  ZJt,
-  Hdr,
-  nQt,
-  bHe,
-  yFn,
-  tIt,
-  R6e,
-  hst,
-  q_e,
-  _st,
-  k6e,
-  x6e,
-  H6e,
-  I6e,
-  SFn,
-  yst,
-  Sst,
-  oQt,
-  bFn,
-  sQt,
-  bst,
-  wFn,
-  wst,
-  Tst,
+  serializeStartupAnnouncement,
+  mergeSyncedSkillsWithCommands,
+  getTranscriptWatermark,
+  SandboxClassifierVerdictCache,
+  reconcileDeclaredMarketplaces,
+  enforceDelistedPlugins,
+  raiseSessionStartOnce,
+  getTranscriptFileInfo,
+  rearmArtifactLiveInHeadlessHost,
+  applyMessageDisplayHooks,
+  restoreTaskRegistryFromTranscript,
+  waitForStoreCondition,
+  collectPendingAgentNotifications,
+  DEFAULT_FEEDBACK_SURVEY_CONFIG,
+  isDisplayableAssistantMessage,
+  messageSupersedes,
+  TEXT_TOOL_NAMES,
+  isNonBlankTextDelta,
+  hasRenderableAssistantText,
+  createTurnFirstTextObserver,
+  markVerifiedSlackHumanTurn,
+  resolveMessageUuid,
+  completeTurn,
+  createTurnEventHub,
+  beginTurn,
+  buildRateLimitEventMessage,
+  createRateLimitReemitThrottle,
+  buildRateLimitMirrorMetadata,
+  forwardRateLimitEventToBridge,
+  handleBridgeTransportRebuilt,
+  forwardCurrentRateLimitsToBridge,
+  buildSdkInitMessage,
+  isSlashCommandInput,
+  resolveCommandPriority,
+  hasPendingDeferredSlackTurn,
+  hasPendingVerifiedSlackTurn,
+  dequeueCommandPreferringSlackTurn,
+  getBridgeInitializeCommands,
+  recordDeclaredDialogKinds,
+  parseAllowedUserModel,
+  getConversationModel,
+  shouldInjectModelSwitchMessages,
+  rejectUnrecognizedModel,
+  handleSetModelRequest,
+  consumeRecentTimestamp,
+  applyMessageOp,
 } from "../../02-功能模块/后台任务-Shell管理/chunk-n6g2zfwn.js";
 import { Ou, d2, KSe, uM, y9, S9 } from "../../02-功能模块/工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
 import { isChannelsEnabled, isChannelAllowlisted } from "../../02-功能模块/插件系统/chunk-rbjz1q03.js";
 import { ChannelMessageNotificationSchema, wrapChannelMessage, findChannelEntry, gateChannelServer } from "../../02-功能模块/插件系统/channel-gate.js";
 import { MCP_URL_ELICITATION_DIALOG, clearMcpNeedsAuthCache, createMcpAuthStubTools, initMcpDiscoveryCacheKillSwitch } from "../../02-功能模块/MCP客户端/mcp-auth-cache.js";
 import { collectContextData } from "../../02-功能模块/上下文压缩-Compact/context-usage.js";
-import { Qqe, tze, ran, MWn, UWn } from "../../02-功能模块/Artifact发布-渲染/chunk-p1dkvpxj.js";
+import { registerHeldReplyCanUseTool, setSessionUserBusy, isArtifactCommentEnvelopeText, claimSeededSummonFromMessage, isLocallyDeclaredSummon } from "../../02-功能模块/Artifact发布-渲染/chunk-p1dkvpxj.js";
 import { killAutoReactSubscriptions } from "../../02-功能模块/Artifact发布-渲染/chunk-kshc4v5t.js";
 import { isSessionTitleGenerationDisabled, syncTitleToRemoteSession, generateSessionTitle } from "../../02-功能模块/会话-历史-恢复/session-title.js";
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
@@ -869,16 +869,16 @@ import { resolveAndPrepend } from "../../02-功能模块/图片-截图-ComputerU
 import { runSideQuestion } from "../../02-功能模块/权限系统/chunk-qjqc5vxm.js";
 import { runUltrareviewHeadless } from "../../02-功能模块/CodeReview/CodeReview.ddrd6y06.js";
 import {
-  nO,
-  IOt,
-  FUn,
-  gat,
-  $Un,
-  v0e,
-  WUn,
-  Eat,
-  Aat,
-  Cat,
+  filterCollection,
+  adoptMcpServer,
+  replaceServerToolsInState,
+  replaceServerToolsInMcpState,
+  reconcileDynamicMcpState,
+  McpConnectionsStore,
+  subscribeToRefusalFallbackRestore,
+  applySettingsChange,
+  runIfPolicySettingsNotified,
+  retireDepartedAdditionalDirectories,
 } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import { shouldShowAutoDefaultNudge, handleAutoDefaultNudgeEventFromHost } from "../../01-核心基础设施/设置-配置/chunk-wdr27rwr.js";
 import { shouldShowGroveNotice, printGroveNotice } from "../../02-功能模块/Grove-隐私设置/chunk-a4mdm49v.js";
@@ -964,7 +964,7 @@ import { reloadSkills } from "../../01-核心基础设施/共享小工具-未细
 import { createAgentLifecycle } from "../../02-功能模块/Teammates团队/agent-lifecycle.js";
 import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
 import { formatServerDisabledBeforeAction, formatServerNotApprovedBeforeAction, getBlockedServerErrorFields } from "../../02-功能模块/MCP客户端/mcp-server-state-messages.js";
-import { Hjn } from "../../02-功能模块/Artifact发布-渲染/chunk-b6k1z7an.js";
+import { restoreDurableWatchesFromWorkerState } from "../../02-功能模块/Artifact发布-渲染/chunk-b6k1z7an.js";
 import "./chunk-yb7jadvp.js";
 import { getEffectiveEffortLevel, applyBridgeFlagSettings, reportSessionEffort } from "../../02-功能模块/Bridge-RemoteControl/bridge-effort-sync.js";
 import { OAuthLoginFlow } from "../../02-功能模块/认证-OAuth登录/oauth-login-flow.js";
@@ -1844,7 +1844,7 @@ function yl(e, t, { forkSession: o, transcript: d } = {}) {
         !gi() ||
         o ||
         !exitPlanModeTool.isEnabled() ||
-        ni(_.toolPermissionContext, exitPlanModeTool))
+        findMatchingDenyRule(_.toolPermissionContext, exitPlanModeTool))
     )
       return _;
     return (
@@ -1875,7 +1875,7 @@ function Sl(e, t, o, d) {
       ((t.trustedMode ??= E.toolPermissionContext.mode),
       !_ ||
         E.toolPermissionContext.mode === "plan" ||
-        ni(E.toolPermissionContext, exitPlanModeTool))
+        findMatchingDenyRule(E.toolPermissionContext, exitPlanModeTool))
     )
       return E;
     return (
@@ -2239,7 +2239,7 @@ function qp(e) {
 function Bs(e) {
   if (e.type === "http" || e.type === "sse") {
     let { tools: t, ...o } = e,
-      d = l8t(o),
+      d = normalizeMcpServerTimeout(o),
       _ = qp(t);
     return { ...d, ...(_ && { toolPermissions: _ }), scope: "dynamic" };
   }
@@ -2504,7 +2504,7 @@ function du(e) {
   let t = [];
   function o(d, _, E) {
     if (t.some((I) => I.tool_use_id === _)) return;
-    t.push({ tool_name: xot(d.name), tool_use_id: _, tool_input: E });
+    t.push({ tool_name: getReportedToolName(d.name), tool_use_id: _, tool_input: E });
   }
   return {
     permissionDenials: t,
@@ -2715,7 +2715,7 @@ async function* ku({
           "Orphaned permission could not be applied and the turn has no prompt: ending the turn without a model call",
         ),
         logEvent("tengu_orphaned_permission_unapplied_turn_end", X),
-        yield zW({
+        yield buildResultMessage({
           startedAt: v.startedAt,
           common: {
             is_error: !1,
@@ -2741,7 +2741,7 @@ async function* ku({
   if (!t) return !1;
   (clearCcrTurnId(), clearTurnAttributionKey());
   let C = (B, w) =>
-    zW({
+    buildResultMessage({
       startedAt: v.startedAt,
       common: {
         is_error: w,
@@ -2855,7 +2855,7 @@ async function Tl({
   (recordStartupPhase("qe_system_prompt_ms", performance.now() - B, B),
     markHeadlessCheckpoint("after_getSystemPrompt"));
   let ye = { ...X, ...Gp(v, isScratchpadEnabled() ? (getScratchpadDir() ?? void 0) : void 0) },
-    N = _ !== void 0 && hasAutoMemPathOverride() ? await jYe(OK(o)) : null,
+    N = _ !== void 0 && hasAutoMemPathOverride() ? await buildMemorySystemPrompt(getModelForPrompt(o)) : null,
     fe = getSkillsPersistencePrompt(t);
   return {
     systemPrompt: asSystemPrompt([
@@ -2885,8 +2885,8 @@ async function Pu({
   if ((await getAutoMemPathState().warmCanonicalWcRoot(), getCurrentPlatform() === "windows")) await getPowerShellPath();
   let w = performance.now(),
     X = isRemoteTransportPersistent(e),
-    te = nHe({
-      ...(X ? Iot() : Hot()),
+    te = buildSystemInitMessage({
+      ...(X ? collectMinimalAmbientContext() : collectAmbientContext()),
       tools: t,
       mcpClients: o,
       model: d,
@@ -2905,7 +2905,7 @@ async function Pu({
               type: ye.type,
               message: vm(ye),
             })),
-      mcpServerErrors: X ? [] : k1n(),
+      mcpServerErrors: X ? [] : getSkippedDynamicMcpServers(),
       pluginWarnings: X
         ? []
         : v.warnings
@@ -2918,12 +2918,12 @@ async function Pu({
       fastModeState: getFastModeStatus(d, C),
       fastModeDisabledReason: getFastModeUnavailableReason() ?? void 0,
       capabilities: B ?? [
-        ...XNn,
+        ...DEFAULT_ENGINE_CAPABILITIES,
         ...(shouldAdvertiseQueuedNotifications(t, e) ? [QUEUED_NOTIFICATIONS_CAPABILITY] : []),
         ...(Nc(e, _) ? [Fc] : []),
       ],
     });
-  return (Pot(te, w), te);
+  return (attachStartupTiming(te, w), te);
 }
 function la(e, t) {
   let { getAppState: o, setAppState: d, setSDKStatus: _, tools: E } = e,
@@ -3281,7 +3281,7 @@ function Lu(e) {
     return ((le = void 0), _t);
   }
   let U = new AsyncQueue(),
-    ve = oHe({
+    ve = createSdkEngine({
       run: runAgentTurn,
       queryParams: async () => {
         if (fe === null)
@@ -3304,7 +3304,7 @@ function Lu(e) {
   let je = X.signal,
     ut = [],
     Tt = [],
-    en = Hdr(
+    en = createTurnEventHub(
       (_t) => {
         ut.push(..._t);
       },
@@ -3452,7 +3452,7 @@ function Lu(e) {
         maxBudgetUsd: e.maxBudgetUsd,
         messageClientPlatform: Qe?.clientPlatform,
         forwardSubagentText: jn,
-        requiresStructuredOutput: _r !== void 0 && Xt.some((De) => matchesToolName(De, ti)),
+        requiresStructuredOutput: _r !== void 0 && Xt.some((De) => matchesToolName(De, STRUCTURED_OUTPUT_TOOL_NAME)),
         renderedSystemPrompt: vr,
         onPermissionDenial: Xr,
         requestDialog: e.requestDialog,
@@ -3482,7 +3482,7 @@ function Lu(e) {
           if (jr !== d) ((d.length = 0), d.push(...jr));
         },
         applyMessageOp: (De) => {
-          let jr = Tst(d, De);
+          let jr = applyMessageOp(d, De);
           if (jr !== d) ((d.length = 0), d.push(...jr));
         },
         persistSession: nn,
@@ -3517,7 +3517,7 @@ function Lu(e) {
         Qe?.hearthRelayMessageIds !== void 0 ||
         Qe?.hearthRelayRows !== void 0 ||
         Qe?.hearthRelayThreadTs !== void 0,
-      lr = gst(Qe?.uuid, Qe?.verifiedSlackHumanTurn || Zt),
+      lr = resolveMessageUuid(Qe?.uuid, Qe?.verifiedSlackHumanTurn || Zt),
       {
         messages: eo,
         shouldQuery: Or,
@@ -3525,7 +3525,7 @@ function Lu(e) {
         model: Oe,
         effort: fn,
         resultText: Vt,
-      } = await rHe({
+      } = await processUserInput({
         input: _t,
         mode: "prompt",
         context: { ...Zr, messages: d },
@@ -3557,7 +3557,7 @@ function Lu(e) {
     if (Qe?.origin) setUserMessagesOrigin(Rn, Qe.origin);
     if (Qe?.skipAttachments === !0) markUserMessagesSkipAttachments(Rn);
     if (Qe?.taskDelivery) attachTaskDeliveryToUserMessage(Rn, Qe.taskDelivery, lr);
-    if (Qe?.verifiedSlackHumanTurn && lr) mst(Rn, lr);
+    if (Qe?.verifiedSlackHumanTurn && lr) markVerifiedSlackHumanTurn(Rn, lr);
     if (Zt && lr)
       JQn(Rn, lr, {
         messageIds: Qe?.hearthRelayMessageIds,
@@ -3647,7 +3647,7 @@ function Lu(e) {
         if ((await hn.record(), yr)) await flushSessionStorage();
       }
       (yield* fu(os, Qe),
-        yield zW({
+        yield buildResultMessage({
           startedAt: dn,
           common: {
             is_error: !1,
@@ -3672,7 +3672,7 @@ function Lu(e) {
       Rn.filter(isDirectUserMessage).forEach((De) => {
         fileHistoryMakeSnapshot(ys.getFileHistoryState, ys.applyFileHistoryOp, De.uuid);
       });
-    let _o = _Fn({ toolUseContext: ys, sessionState: e.sessionState });
+    let _o = createTurnFirstTextObserver({ toolUseContext: ys, sessionState: e.sessionState });
     ((fe = {
       messages: mr,
       systemPrompt: vr,
@@ -3694,7 +3694,7 @@ function Lu(e) {
     let Ss = pn(
       "turn.start",
       () => {
-        let De = nQt({
+        let De = beginTurn({
           turnEvents: en,
           newMessages: Rn,
           input: typeof _t === "string" ? _t : void 0,
@@ -3721,7 +3721,7 @@ function Lu(e) {
       ks = iu(),
       yo = (De) => bl(ks.settle(De), K()),
       is = au(ss),
-      Ia = _r ? countToolUseCalls(d, ti) : 0,
+      Ia = _r ? countToolUseCalls(d, STRUCTURED_OUTPUT_TOOL_NAME) : 0,
       Ri = d.at(-1),
       ct = [],
       Ko = 0,
@@ -3774,7 +3774,7 @@ function Lu(e) {
             (d.push($e),
               pn("turn.step", () => en.note($e), void 0),
               yield* Io());
-            let $n = await dFn(
+            let $n = await applyMessageDisplayHooks(
               e.session,
               $e,
               Ei,
@@ -3830,7 +3830,7 @@ function Lu(e) {
                   : void 0,
               $n = Array.isArray($e)
                 ? $e.flatMap(($r) =>
-                    $r.type === "tool_use" && $r.name === ti ? [$r.id] : [],
+                    $r.type === "tool_use" && $r.name === STRUCTURED_OUTPUT_TOOL_NAME ? [$r.id] : [],
                   )
                 : [];
             if ($n.length > 0) {
@@ -3940,7 +3940,7 @@ function Lu(e) {
                 tombstoned_calls: Ko,
                 num_turns: De.num_turns,
               }),
-                yield zW({
+                yield buildResultMessage({
                   startedAt: dn,
                   common: {
                     is_error: !0,
@@ -4030,13 +4030,13 @@ function Lu(e) {
             if (
               $e.type === "stream_event" &&
               $e.parent_tool_use_id == null &&
-              hFn($e.event)
+              isNonBlankTextDelta($e.event)
             )
               _o.markFirstTextPainted("stream_event");
             else if (
               $e.type === "assistant" &&
               $e.parent_tool_use_id == null &&
-              fst($e, SHe)
+              hasRenderableAssistantText($e, TEXT_TOOL_NAMES)
             )
               _o.markFirstTextPainted("message", $e.message.id);
             if (
@@ -4068,14 +4068,14 @@ function Lu(e) {
         if (br) return;
         if (De.type === "user" && _r !== void 0 && !hasReachedMaxBudget(e.maxBudgetUsd)) {
           let $e = a.MAX_STRUCTURED_OUTPUT_RETRIES ?? DEFAULT_MAX_STRUCTURED_OUTPUT_RETRIES;
-          if (countToolUseCalls(d, ti) + Ko - Ia >= $e && ct.length === 0) {
+          if (countToolUseCalls(d, STRUCTURED_OUTPUT_TOOL_NAME) + Ko - Ia >= $e && ct.length === 0) {
             if (((co = !0), await vt(Wt, Ut), (br = !0), Ft(hn, Xt), nn)) {
               if ((await hn.record(!0), yr)) await flushSessionStorage();
             }
             (_o.end("structured_output_retry_exhausted"),
               yield* is.takePendingClose(),
               yield* yo("turn_end"),
-              yield zW({
+              yield buildResultMessage({
                 startedAt: dn,
                 common: {
                   is_error: !0,
@@ -4110,7 +4110,7 @@ function Lu(e) {
         pn(
           "turn.complete",
           () =>
-            ZJt({
+            completeTurn({
               turnEvents: en,
               turnId: Ss,
               transcript: { getSnapshot: () => d },
@@ -4275,7 +4275,7 @@ function Al(e, { abortController: t, userSpecifiedModel: o }) {
       maxBudgetUsd: e.maxBudgetUsd,
       messageClientPlatform: void 0,
       forwardSubagentText: wn(e.forwardSubagentText) ?? !1,
-      requiresStructuredOutput: O !== void 0 && E.some((B) => matchesToolName(B, ti)),
+      requiresStructuredOutput: O !== void 0 && E.some((B) => matchesToolName(B, STRUCTURED_OUTPUT_TOOL_NAME)),
       onPermissionDenial: () => {},
       requestDialog: e.requestDialog,
       sessionState: e.sessionState,
@@ -4331,7 +4331,7 @@ function Il() {
   return eg.getStore() ?? tg;
 }
 function Ol() {
-  return Zp(bR(), K());
+  return Zp(getCurrentProjectTempDir(), K());
 }
 function Hu(e) {
   let t = a.CLAUDE_CODE_EXIT_AFTER_STOP_DELAY,
@@ -4391,7 +4391,7 @@ function ua(e) {
 }
 import { randomUUID as ng } from "crypto";
 function qu(e, t, o, d, _, E) {
-  let I = new G_e(),
+  let I = new SandboxClassifierVerdictCache(),
     O;
   return async (v) => {
     let C = t();
@@ -4403,7 +4403,7 @@ function qu(e, t, o, d, _, E) {
         return !1;
       case "classify": {
         let B = o();
-        return I.getOrClassify(v.host, v.port, hHe(B), () =>
+        return I.getOrClassify(v.host, v.port, getTranscriptWatermark(B), () =>
           classifySandboxNetworkAccess(v.host, v.port, B, d(), C, new AbortController().signal, {
             isSubagentLoop: isModelDrivenSession(void 0),
             recordPresumed: !0,
@@ -4578,7 +4578,7 @@ function Mg({
   if (o || d || _ === null) return null;
   if (Array.isArray(t) && t.some((te) => te.type !== "text")) return null;
   let v = getMessageContentText(t)?.trim();
-  if (!v || v.length > sg || k6e(t) || v.startsWith("!")) return null;
+  if (!v || v.length > sg || isSlashCommandInput(t) || v.startsWith("!")) return null;
   let C,
     re = 0;
   for (let [te, ye] of ne().coordinatorEditors)
@@ -4989,7 +4989,7 @@ function ha(e, t, o) {
   }
   if (
     (_((N) => {
-      let fe = IOt(N, t, w, { appendIfAbsent: w.client.config.type !== "sdk" }),
+      let fe = adoptMcpServer(N, t, w, { appendIfAbsent: w.client.config.type !== "sdk" }),
         le = !!w.resources && w.resources.length > 0,
         xe = !!w.resourceTemplates && w.resourceTemplates.length > 0;
       return le && xe
@@ -4998,17 +4998,17 @@ function ha(e, t, o) {
             ...fe,
             mcp: {
               ...fe.mcp,
-              resources: le ? fe.mcp.resources : zl(fe.mcp.resources, t),
+              resources: le ? fe.mcp.resources : omitObjectKeys(fe.mcp.resources, t),
               resourceTemplates: xe
                 ? fe.mcp.resourceTemplates
-                : zl(fe.mcp.resourceTemplates, t),
+                : omitObjectKeys(fe.mcp.resourceTemplates, t),
             },
           };
     }),
     !C)
   )
     return X;
-  let te = Oa(t),
+  let te = getMcpToolPrefix(t),
     ye = E();
   return (
     I({
@@ -5087,7 +5087,7 @@ function wi(e) {
   }
   let je = [...te, ...ye];
   if (je.length > 0) {
-    let Ne = je.map((nt) => [nt, Oa(nt)]),
+    let Ne = je.map((nt) => [nt, getMcpToolPrefix(nt)]),
       gt = (nt) => Ne.some(([Ot, un]) => isToolFromMcpServer(nt, Ot, un)),
       pn = (nt) =>
         ye.has(nt.name)
@@ -5108,10 +5108,10 @@ function wi(e) {
       mcp: {
         ...nt.mcp,
         clients: nt.mcp.clients.flatMap(pn),
-        tools: nO(nt.mcp.tools, gt),
-        commands: nO(nt.mcp.commands, (Ot) => je.some((un) => isMcpServerScopedName(Ot, un))),
-        resources: zl(nt.mcp.resources, je),
-        resourceTemplates: zl(nt.mcp.resourceTemplates, je),
+        tools: filterCollection(nt.mcp.tools, gt),
+        commands: filterCollection(nt.mcp.commands, (Ot) => je.some((un) => isMcpServerScopedName(Ot, un))),
+        resources: omitObjectKeys(nt.mcp.resources, je),
+        resourceTemplates: omitObjectKeys(nt.mcp.resourceTemplates, je),
       },
     })),
       _({
@@ -5122,7 +5122,7 @@ function wi(e) {
   }
   let ut;
   if (headlessSyncsClaudeAiConnectors() && B) {
-    let gt = L1n(
+    let gt = remountClaudeAiConnectors(
       {
         getClients: () => t().mcp.clients,
         getSuppressedPluginServers: () =>
@@ -5147,7 +5147,7 @@ function wi(e) {
             return;
           let un = d();
           if (!un.clients.some((vt) => Ot.has(vt.name))) return;
-          let Bn = [...Ot].map((vt) => [vt, Oa(vt)]);
+          let Bn = [...Ot].map((vt) => [vt, getMcpToolPrefix(vt)]);
           _({
             ...un,
             clients: un.clients.filter((vt) => !Ot.has(vt.name)),
@@ -5193,7 +5193,7 @@ function wi(e) {
         }),
       )
       .finally(() => {
-        qot(le, en, E, Tt).catch((Ne) =>
+        retryFailedMcpConnections(le, en, E, Tt).catch((Ne) =>
           n(`MCP re-dial retry after account switch failed: ${l(Ne)}`, {
             level: "warn",
           }),
@@ -5253,7 +5253,7 @@ async function Lg(e, t, o) {
     if (U > 1) await re(getMcpReconnectDelayMs(U - 1));
     if (te() || !fe()) return;
     let ve = ir(),
-      je = Oa(B),
+      je = getMcpToolPrefix(B),
       ut = d().mcp,
       Tt = {
         name: B,
@@ -5386,7 +5386,7 @@ function mm() {
   if (a.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY) return;
   if (shouldSuppressFeedbackSurvey()) return;
   if (!isPolicyAllowed("allow_product_feedback")) return;
-  let t = getFeatureValue_CACHED_MAY_BE_STALE("tengu_feedback_survey_config", ust);
+  let t = getFeatureValue_CACHED_MAY_BE_STALE("tengu_feedback_survey_config", DEFAULT_FEEDBACK_SURVEY_CONFIG);
   return {
     ...t,
     probability: getInitialSettings().feedbackSurveyRate ?? t.probability,
@@ -5589,7 +5589,7 @@ import { join as Gl } from "path";
 async function Yg() {
   try {
     let e = await readFile(getPluginZipCacheMarketplacesFile(), "utf-8"),
-      t = yke().safeParse(z(e));
+      t = getKnownMarketplacesSchema().safeParse(z(e));
     if (!t.success)
       return (
         n(`Invalid known_marketplaces.json in zip cache: ${t.error.message}`, {
@@ -5675,7 +5675,7 @@ async function e_(e, t, o) {
       let B = await runTimedDiagnosticStep(
         "headless_marketplace_reconcile",
         () =>
-          lst({
+          reconcileDeclaredMarketplaces({
             skip: d ? (X, te) => !isMarketplaceSourceInstallable(te) : void 0,
             onProgress: (X) => {
               if (X.type === "installed")
@@ -5711,7 +5711,7 @@ async function e_(e, t, o) {
       v.marketplaces_installed = w;
     }
     if (d) ((E = void 0), await wm(t));
-    let re = await cst(t);
+    let re = await enforceDelistedPlugins(t);
     if (((v.delisted_count = re.length), re.length > 0))
       ((C = !0), (E = void 0));
     if (C && !I())
@@ -6281,7 +6281,7 @@ function Km() {
       let o = e;
       return (
         (e = new Set()),
-        Object.keys(t).some((d) => o.has(d)) ? tu(t, (d, _) => o.has(_)) : null
+        Object.keys(t).some((d) => o.has(d)) ? omitBy(t, (d, _) => o.has(_)) : null
       );
     },
   };
@@ -6621,8 +6621,8 @@ function x_(e, t) {
     !!t.skipSlashCommands === !!e.skipSlashCommands &&
     e.seededSummon !== !0 &&
     t.seededSummon !== !0 &&
-    !ran(e.value) &&
-    !ran(t.value) &&
+    !isArtifactCommentEnvelopeText(e.value) &&
+    !isArtifactCommentEnvelopeText(t.value) &&
     e.hearthRelayRows === void 0 &&
     t.hearthRelayRows === void 0 &&
     e.hearthRelayThreadTs === void 0 &&
@@ -6634,8 +6634,8 @@ function x_(e, t) {
     !t.inlinedImagePaths?.length &&
     !e.taskDelivery &&
     !t.taskDelivery &&
-    !k6e(e.value) &&
-    !k6e(t.value)
+    !isSlashCommandInput(e.value) &&
+    !isSlashCommandInput(t.value)
   );
 }
 function hf(e) {
@@ -6912,10 +6912,10 @@ function ny(e) {
   (setSdkQueueEnqueueListener(t), t());
 }
 async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
-  if ((surfaceManagedSettingsErrorsHeadless(), shouldSyncSkills(e))) YHt(e, C.storageV5, C.credentials);
+  if ((surfaceManagedSettingsErrorsHeadless(), shouldSyncSkills(e))) startSkillsSyncInBackground(e, C.storageV5, C.credentials);
   if (isPluginSyncAvailable(e)) startPluginSyncIfNeeded(e, C.credentials);
   function re(Oe) {
-    if ((Eat(e, Oe, d, C.storageV5), isFastModeEnabled()))
+    if ((applySettingsChange(e, Oe, d, C.storageV5), isFastModeEnabled()))
       d((Rn) => {
         let Ur = isFastModeEnabledInSettings(Rn.settings);
         return Rn.fastMode === Ur ? Rn : { ...Rn, fastMode: Ur };
@@ -6936,7 +6936,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
     settingsChangeDetector.subscribe(() => {
       reapplyInboundPolicy("policy-accepts");
     }),
-    Aat(() => re("policySettings")),
+    runIfPolicySettingsNotified(() => re("policySettings")),
     startHeadlessTurn(),
     markHeadlessCheckpoint("runHeadless_entry"),
     logEvent("tengu_timer", {
@@ -6984,7 +6984,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
   let X = NDn({
     hasStreamingInput: w,
     sdkUrl: C.sdkUrl,
-    asyncReplRequested: mQn(),
+    asyncReplRequested: isAsyncReplRequested(),
   });
   if (X !== "none") XDn(X);
   FDn(MDn({ hasStreamingInput: w, sdkUrl: C.sdkUrl }));
@@ -7038,7 +7038,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
     je = sf({
       managedCloudWorker: xe,
       dirSyncStarts: U.start,
-      hermetic: VW(),
+      hermetic: isHermeticModeEnabled(),
       spawnEnv: CK,
       accountHome: rf,
       currentConfigHome: lf,
@@ -7069,7 +7069,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
     environmentKind: a.CLAUDE_CODE_ENVIRONMENT_KIND,
     entrypoint: a.CLAUDE_CODE_ENTRYPOINT,
     disabled: a.CLAUDE_CODE_DISABLE_PLUGIN_FORWARDING,
-    hermetic: VW(),
+    hermetic: isHermeticModeEnabled(),
   });
   if (!en.admitted && en.reason === "disabled")
     writeDiagnosticsEvent("info", "plugin_forwarding_worker_disabled", {});
@@ -7079,7 +7079,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
       environmentKind: a.CLAUDE_CODE_ENVIRONMENT_KIND,
       entrypoint: a.CLAUDE_CODE_ENTRYPOINT,
       disabled: a.CLAUDE_CODE_DISABLE_HOOK_FORWARDING,
-      hermetic: VW(),
+      hermetic: isHermeticModeEnabled(),
     }),
     gt = nf({
       sdkUrl: Boolean(C.sdkUrl),
@@ -7087,7 +7087,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
       environmentKind: a.CLAUDE_CODE_ENVIRONMENT_KIND,
       entrypoint: a.CLAUDE_CODE_ENTRYPOINT,
       channelOff: isSessionChannelDisabled(),
-      hermetic: VW(),
+      hermetic: isHermeticModeEnabled(),
     });
   if (
     a.CLAUDE_CODE_SDK_HAS_OAUTH_REFRESH &&
@@ -7188,7 +7188,7 @@ Error: sandbox required but unavailable: ${Bn}
   let vt = C.outputFormat === "stream-json" && Boolean(C.verbose);
   if (vt) ny(le);
   if (C.setupTrigger)
-    await x8(e, {
+    await runLifecycleHooks(e, {
       kind: "setup",
       trigger: C.setupTrigger,
       storageV5: C.storageV5,
@@ -7351,7 +7351,7 @@ Error: sandbox required but unavailable: ${Bn}
   let jn = filterToolsByDenyRules(Ft.mcp.tools, Ft.toolPermissionContext),
     an = ensurePollToolAvailable([...I, ...jn], Ft.toolPermissionContext);
   nt.current = an;
-  let nn = Ot ? Js(Ot)?.serverName : void 0,
+  let nn = Ot ? parseMcpToolName(Ot)?.serverName : void 0,
     dn = (Oe) => {
       (le.sessionState.notifyStateChanged("requires_action", Oe),
         cf?.runClassifierSummaryForBlocked(Oe, le.sessionState));
@@ -7441,7 +7441,7 @@ Error: sandbox required but unavailable: ${Bn}
     Ut(createTaskRegistry(o, d));
   } else if (sn.length > 0) {
     let Oe = createTaskRegistry(o, d);
-    (await _He(sn, Oe, void 0, void 0, C.storageV5),
+    (await restoreTaskRegistryFromTranscript(sn, Oe, void 0, void 0, C.storageV5),
       restoreRemoteAgentTasks({
         abortController: new AbortController(),
         taskRegistry: Oe,
@@ -7456,7 +7456,7 @@ Error: sandbox required but unavailable: ${Bn}
     await j_(Fn, C),
     $_(Fn, { getAppState: o, sessionState: le.sessionState }));
   try {
-    Hjn(Fn, {
+    restoreDurableWatchesFromWorkerState(Fn, {
       sink: (Oe) => le.sessionState.notifyInternalMetadataChanged(Oe),
       storageV5: C.storageV5,
       reread: () => le.rereadWorkerState(),
@@ -7680,7 +7680,7 @@ ${zn.result}`;
   (sessionTransportRegistry.of(e).setActive(void 0),
     gracefulShutdownSync((zn?.type === "result" && zn?.is_error) || dr ? 1 : 0));
 }
-var ry = new Set([AGENT_TOOL_NAME, TASK_TOOL_NAME, SKILL_TOOL_NAME, Ni]);
+var ry = new Set([AGENT_TOOL_NAME, TASK_TOOL_NAME, SKILL_TOOL_NAME, REPL_TOOL_NAME]);
 function oy(e) {
   return typeof e === "string" && (ry.has(e) || e.startsWith(SKILL_TOOL_NAME_PREFIX));
 }
@@ -7867,7 +7867,7 @@ function gy(e, t) {
 function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   let U = w.messageQueue,
     ve = { getState: v, setState: C },
-    je = v0e.over(ve),
+    je = McpConnectionsStore.over(ve),
     ut = PluginStateStore.over(ve);
   if (
     (e.mcpSessionWiring.registerConnections(je),
@@ -8052,8 +8052,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               V = void 0;
               break;
             }
-            if (!dst(W)) continue;
-            if (V === void 0 || pst(W, V)) V = W;
+            if (!isDisplayableAssistantMessage(W)) continue;
+            if (V === void 0 || messageSupersedes(W, V)) V = W;
           }
           if (V !== void 0 && T.includes(V))
             Zt.stampReply({ assistantUuid: V.uuid, userMessageUuid: L });
@@ -8077,7 +8077,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         let T = p
           .filter(yAt)
           .filter((x) => x.type !== "conversation_reset" || isBridgeStateFramesEnabled())
-          .map(Zje);
+          .map(redactCompactError);
         if (T.length > 0) Zt.writeSdkMessages(T);
       } catch (T) {
         n(`[bridge:sdk] task-event forward failed: ${ge(T).message}`, {
@@ -8100,10 +8100,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       if (p.type !== "system") return;
       if (!(
         p.subtype === "thinking_tokens" ||
-        (p.subtype === "status" && uJt(p.status))
+        (p.subtype === "status" && shouldForwardStatusUpdate(p.status))
       ))
         return;
-      Zt.writeSdkMessages([Zje(p)]);
+      Zt.writeSdkMessages([redactCompactError(p)]);
     } catch (T) {
       n(
         `[bridge:sdk] ${"subtype" in p ? p.subtype : p.type} forward failed: ${ge(T).message}`,
@@ -8292,7 +8292,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     let p = (r) => {
       Ct.enqueue({
         type: "active_goal",
-        value: r ? dJt(r) : null,
+        value: r ? serializeActiveGoal(r) : null,
         uuid: tr(),
         session_id: K(),
       });
@@ -8351,11 +8351,11 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     });
   let ks = (p) => {
       try {
-        let T = bHe(p);
+        let T = buildRateLimitEventMessage(p);
         if (!T) return;
-        if ((Ct.enqueue(T), Zt)) R6e(Zt, T);
+        if ((Ct.enqueue(T), Zt)) forwardRateLimitEventToBridge(Zt, T);
         else {
-          let x = tIt(t.sessionState, T);
+          let x = buildRateLimitMirrorMetadata(t.sessionState, T);
           if (x) t.sessionState.notifyMetadataChanged(x);
         }
       } catch (T) {
@@ -8363,7 +8363,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       }
     },
     yo = subscribeToLimitStatusChanges(ks),
-    is = yFn(),
+    is = createRateLimitReemitThrottle(),
     Ia = subscribeToQuotaRejected((p) => {
       if (isQuotaRejectedReemitEnabled() && is(p)) ks(p);
     }),
@@ -8403,7 +8403,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       (rehydrateArtifactFrameState(C, collectArtifactStateFromMessages(E), { legacyConflict: isArtifactConflictLegacy() }),
       E.some((p) => p.type !== "system"))
     )
-      cFn({
+      rearmArtifactLiveInHeadlessHost({
         initialMessages: E,
         hostInitialized: ho.promise,
         getAppState: v,
@@ -8646,11 +8646,11 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       };
     }),
     An = w.userSpecifiedModel;
-  WUn(() => {
+  subscribeToRefusalFallbackRestore(() => {
     An = void 0;
   });
   function Cr() {
-    return oQt(An);
+    return parseAllowedUserModel(An);
   }
   let vo = a.CLAUDE_CODE_REMOTE
     ? Hc(t.sessionState, () => ({
@@ -8668,7 +8668,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     yd = w.thinkingConfigExplicit ? w.thinkingConfig : void 0;
   function hd(p) {
     try {
-      return bFn({
+      return getConversationModel({
         messages: ct,
         queriedInProcess: e.requestJournal.mainThreadRequestedInProcess(),
         activeModel: p,
@@ -8871,7 +8871,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         let L = await refreshServerTools(
           T,
           (W, Se) => {
-            if (!Frt(W, Se)) C((Ce) => gat(Ce, W, Se));
+            if (!Frt(W, Se)) C((Ce) => replaceServerToolsInMcpState(Ce, W, Se));
           },
           w.storageV5,
         );
@@ -9095,7 +9095,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           if ((await L.peekSettledConnection(p, T)) !== W) return;
           if (v().mcp.clients.find((Sn) => Sn.name === p)?.type !== "cached")
             return;
-          let Wn = Oa(p),
+          let Wn = getMcpToolPrefix(p),
             gr = v().mcp,
             Lr = L.getDiscoveryFetchError(Ye)
               ? gr.commands.filter((Sn) => isMcpServerScopedName(Sn, p) && Sn.loadedFrom !== "mcp")
@@ -9129,7 +9129,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     },
     np = async (p, T) => {
       let x = ir();
-      for (let r of PJt) {
+      for (let r of MCP_RETRY_BACKOFF_MS) {
         await sleep(r);
         let L = v().mcp.clients.find((Ye) => Ye.name === p);
         if (ir() !== x || L?.type !== "failed" || isMcpServerDisabled(p)) return;
@@ -9296,7 +9296,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       );
       ((kn = L.clients), (Oo = L.tools), (Xs = L.commands));
       let de = dedupe([...r, ...x]),
-        V = de.map((W) => [W, Oa(W)]);
+        V = de.map((W) => [W, getMcpToolPrefix(W)]);
       (C((W) => ({
         ...W,
         mcp: {
@@ -9319,7 +9319,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           refusalFallbackSettingToggleVisible: isRefusalFallbackSettingVisible() ? !0 : !1,
           refusalFallbackLaneEnabled: isRefusalFallbackEnabled(),
           fable5LaunchShow: !1,
-          startupAnnouncement: nFn(),
+          startupAnnouncement: serializeStartupAnnouncement(),
           autoDefaultLaunchEnabled: GEt(),
           onAutoDefaultNudgeEvent: (W, Se) => handleAutoDefaultNudgeEventFromHost(W, Se, w.storageV5),
         }),
@@ -9345,10 +9345,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     BLn((p, T) => {
       let x = !1;
       C((L) => {
-        let de = gat(L, p, T);
+        let de = replaceServerToolsInMcpState(L, p, T);
         return ((x = de !== L), de);
       });
-      let r = FUn(At, p, T);
+      let r = replaceServerToolsInState(At, p, T);
       if (r !== At) ((At = r), (x = !0));
       return x;
     }));
@@ -9363,7 +9363,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           recordStartupPhase("commands_deferred_join_ms", performance.now() - p, p);
         })();
   function ps(p = v().mcp.commands) {
-    return E6e(Rs, p, getMemoryStoreSkillCommands());
+    return mergeSyncedSkillsWithCommands(Rs, p, getMemoryStoreSkillCommands());
   }
   function Pd(p = v().mcp.commands) {
     return ps(p).filter((T) => T.terminalOriented !== !0);
@@ -9414,7 +9414,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         }
         let de = v();
         (x.writeSdkMessages([
-          _st({
+          buildSdkInitMessage({
             model: getMainLoopModel(),
             permissionMode: de.toolPermissionContext.mode,
             commands: Pd(de.mcp.commands),
@@ -9537,12 +9537,12 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       if (w.permissionPromptToolName)
         Ce = Ce.filter((Je) => !matchesToolName(Je, w.permissionPromptToolName));
       if (x && !w.jsonSchema) {
-        let Je = eCe(x);
+        let Je = buildStructuredOutputToolFromSchema(x);
         if ("tool" in Je) {
           if (Je.unsatisfiable && !qi)
             ((qi = !0),
               n(
-                `Init JSON schema: ${ZAe(Je.unsatisfiable)}: ${Je.unsatisfiable.message}`,
+                `Init JSON schema: ${formatUnsatisfiableSchemaReason(Je.unsatisfiable)}: ${Je.unsatisfiable.message}`,
                 { level: "warn" },
               ));
           Ce = [...Ce, Je.tool];
@@ -9687,7 +9687,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           Es = Object.fromEntries(
             Object.entries(Qf(p))
               .filter(
-                ([ht]) => at.has(ht) && !pke(Ce.newDynamicState.configs[ht]),
+                ([ht]) => at.has(ht) && !hasPluginSource(Ce.newDynamicState.configs[ht]),
               )
               .map(([ht, Hn]) => [ht, { ...Hn, scope: "dynamic" }]),
           );
@@ -9707,7 +9707,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           ((kn = Ye.state.clients),
           (Oo = Ye.state.tools),
           (Xs = Ye.state.commands),
-          (At = $Un(isDiscoveryCacheEnabled() ? V : At, At, Ce.newDynamicState)),
+          (At = reconcileDynamicMcpState(isDiscoveryCacheEnabled() ? V : At, At, Ce.newDynamicState)),
           Ce.deferredSettle)
         )
           Ce.deferredSettle.then((at) => {
@@ -9717,7 +9717,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         if (Ce.sdkServersChanged) {
           let at = new Set(kn.map((Wn) => Wn.name)),
             ht = dedupe([...Je, ...at]),
-            Hn = ht.map((Wn) => [Wn, Oa(Wn)]);
+            Hn = ht.map((Wn) => [Wn, getMcpToolPrefix(Wn)]);
           C((Wn) => ({
             ...Wn,
             mcp: {
@@ -9815,7 +9815,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     refreshContext: () => invalidateUserContext(e, "hooks_invalidate"),
   };
   bindHookContext(za);
-  let sp = XJt({
+  let sp = raiseSessionStartOnce({
     loaded: $t().hookRegistrationInFlight,
     surface: null,
     interactive: !1,
@@ -9829,7 +9829,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       (L) => {
         let de;
         if (L.config.type === "sse" || L.config.type === "http")
-          de = Fz(
+          de = redactManagedMcpConfig(
             {
               type: L.config.type,
               url: L.config.url,
@@ -9846,7 +9846,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             command: L.config.command,
             args: L.config.args,
           };
-        let V = ts(L)
+        let V = isConnectedMcpServer(L)
             ? getMcpServerTools(x, L.name).map((Se) => ({
                 name: Se.mcpInfo?.toolName ?? Se.name,
                 annotations: {
@@ -9857,7 +9857,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               }))
             : void 0,
           W;
-        if (ts(L) && L.capabilities.experimental) {
+        if (isConnectedMcpServer(L) && L.capabilities.experimental) {
           let Se = { ...L.capabilities.experimental };
           if (
             "claude/channel" in Se &&
@@ -9871,8 +9871,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         }
         return {
           name: L.name,
-          status: D_e(L.type),
-          serverInfo: ts(L) ? L.serverInfo : void 0,
+          status: normalizeMcpServerStatus(L.type),
+          serverInfo: isConnectedMcpServer(L) ? L.serverInfo : void 0,
           error: L.type === "failed" ? L.error : void 0,
           config: de,
           scope: L.config.scope,
@@ -9919,7 +9919,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     wo,
     ap = performance.now(),
     jd = isSkillsSyncEnabled(e) && isSkillsSyncTierInPlay(),
-    Qa = jd ? PNn(e, w.storageV5, w.credentials) : null,
+    Qa = jd ? waitForFirstSkillsSync(e, w.storageV5, w.credentials) : null,
     $d = !jd && shouldSyncSkills(e),
     Wd = performance.now(),
     Os = shouldStartPluginSync(e) ? getOrStartPluginSync(e, w.credentials) : null,
@@ -10037,7 +10037,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         : { ...W, mcp: { ...W.mcp, suppressedPluginMcpServers: Ce } };
     }),
       addStartupContext({ mcp_server_count: Object.keys(x).length }));
-    let r = VW(),
+    let r = isHermeticModeEnabled(),
       L = Object.create(null);
     for (let [W, Se] of Object.entries(x)) {
       if (r && (Se.scope === "project" || Se.scope === "local")) continue;
@@ -10464,7 +10464,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           Qa)
         ) {
           let W = performance.now(),
-            Se = HNn() - (W - ap),
+            Se = getSkillsSyncWaitTimeoutMs() - (W - ap),
             Ce = sleep(Math.max(0, Se)).then(() => "timeout");
           if ((await Promise.race([Qa, Ce])) === "timeout")
             logEvent("tengu_skills_sync_wait_timeout", {});
@@ -10517,7 +10517,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 ),
                 In
               );
-            return SFn(U, isCurrentAgentCommand);
+            return dequeueCommandPreferringSlackTurn(U, isCurrentAgentCommand);
           },
           gr = async () => {
             let In = !1,
@@ -10756,7 +10756,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       et = oE(),
                       Ze = ct.length,
                       We = Ec(),
-                      ft = s0t(St),
+                      ft = getLastTextBlockText(St),
                       Ke =
                         ft !== null &&
                         ft.startsWith("/") &&
@@ -10767,7 +10767,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     ((Tr = Date.now()),
                       (_r = Kr),
                       activeTimeTracker.startCLIActivity("print-ask"),
-                      tze(!0),
+                      setSessionUserBusy(!0),
                       U.setInFlightDrainBatch(cn));
                     try {
                       let Qt = {
@@ -10916,7 +10916,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                               holdBackActive: !1,
                               emit: (Un) =>
                                 Ct.enqueue(
-                                  kot(Un, {
+                                  applyUsageToResultMessage(Un, {
                                     totalCostUsd: su(),
                                     durationApiMs: oE(),
                                     modelUsage: jw(),
@@ -10933,7 +10933,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         }
                       }
                     } finally {
-                      (tze(!1), U.clearInFlightDrainBatch(cn), Ai());
+                      (setSessionUserBusy(!1), U.clearInFlightDrainBatch(cn), Ai());
                       let Qt = py({
                         activeUserSpecifiedModel: An,
                         overrideAtTurnStart: We,
@@ -10966,7 +10966,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   }),
                 ),
               );
-              let Le = r0t(ue, F ?? Ut.signal.aborted);
+              let Le = getTerminalLifecycleState(ue, F ?? Ut.signal.aborted);
               for (let pe of Nn)
                 (U.consumeCancelPending(pe),
                   t.onCommandLifecycle?.(
@@ -11194,7 +11194,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             (id(rr, (Sn) =>
               Ct.enqueue(
                 Vm(
-                  kot(Sn, {
+                  applyUsageToResultMessage(Sn, {
                     totalCostUsd: su(),
                     durationApiMs: oE(),
                     modelUsage: jw(),
@@ -11476,7 +11476,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           sl.unref?.());
       let T = getLastCacheSafeParams();
       if (!T) return;
-      for (let x of A6e(p, v().tasks)) {
+      for (let x of collectPendingAgentNotifications(p, v().tasks)) {
         if (rl.has(x.agentId)) continue;
         rl.add(x.agentId);
         let r = !1;
@@ -11751,7 +11751,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           "register_repo_root: path expansion failed",
         );
       }
-      let de = R8(
+      let de = validateUntrustedPath(
         T.directory,
         r,
         v().toolPermissionContext.trustedNetworkDirectories,
@@ -11769,7 +11769,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           "register_repo_root: path resolution failed",
         );
       }
-      if ($z(L, v().toolPermissionContext.trustedNetworkDirectories) !== void 0)
+      if (getUntrustedPathReason(L, v().toolPermissionContext.trustedNetworkDirectories) !== void 0)
         throw new R(
           "register_repo_root: target is a network path or an obfuscated spelling, which cannot be registered",
           "register_repo_root: resolved path rejected by the spelling screen",
@@ -11807,7 +11807,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         );
       C((Ye) => ({
         ...Ye,
-        toolPermissionContext: Oc(Ye.toolPermissionContext, {
+        toolPermissionContext: applyPermissionUpdate(Ye.toolPermissionContext, {
           type: "addDirectories",
           directories: [L],
           destination: "session",
@@ -12504,7 +12504,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               let D = r.request,
                 F = async () => {
                   try {
-                    let ue = await wFn(D, Xf);
+                    let ue = await handleSetModelRequest(D, Xf);
                     if (ue.ok) {
                       for (let ie of ue.notices ?? []) Ua(ie);
                       Xe(r);
@@ -12550,7 +12550,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     toolPermissionContext: getToolPermissionContext({ getAppState: v }),
                     retireDepartedAdditionalDirectories: (ie) => {
                       C((Me) => {
-                        let Ae = Cat(Me.toolPermissionContext, ie);
+                        let Ae = retireDepartedAdditionalDirectories(Me.toolPermissionContext, ie);
                         return Ae === Me.toolPermissionContext
                           ? Me
                           : { ...Me, toolPermissionContext: Ae };
@@ -12589,10 +12589,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         if (
                           w.permissionPromptToolServerName !== void 0 &&
                           w.permissionPromptToolBinding !== void 0 &&
-                          zge(w.permissionPromptToolServerName, He.name)
+                          isSameMcpServerName(w.permissionPromptToolServerName, He.name)
                         )
                           w.permissionPromptToolBinding.swept = !0;
-                        if (ts(He))
+                        if (isConnectedMcpServer(He))
                           await Yt()
                             .clearServerCache(He.name, He.config)
                             .catch(() => {});
@@ -13298,7 +13298,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             else if (r.request.subtype === "seed_read_state") {
               try {
                 let D = ot(r.request.path),
-                  F = R8(
+                  F = validateUntrustedPath(
                     r.request.path,
                     D,
                     v().toolPermissionContext.trustedNetworkDirectories,
@@ -13339,7 +13339,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         Ze.overLimit ||
                         ft === void 0 ||
                         !Pn ||
-                        $z(
+                        getUntrustedPathReason(
                           ft,
                           v().toolPermissionContext.trustedNetworkDirectories,
                         ) !== void 0 ||
@@ -13437,7 +13437,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     { level: "error" },
                   );
                 if (Ae.status === "fulfilled")
-                  ue = hidePluginsIfRemote(e, Ae.value.enabled.map(hJt));
+                  ue = hidePluginsIfRemote(e, Ae.value.enabled.map(serializePluginInfo));
                 else
                   logError(dt(ge(Ae.reason), "reload_plugins: loadAllPlugins failed"));
                 (Ji(),
@@ -13459,8 +13459,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               try {
                 if (shouldSyncSkills(e))
                   await Promise.race([
-                    Promise.allSettled([ONn(e, w.storageV5, w.credentials)]),
-                    sleep(INn()),
+                    Promise.allSettled([resyncSkillsNow(e, w.storageV5, w.credentials)]),
+                    sleep(getSkillsSyncInstallTimeoutMs()),
                   ]);
                 (refreshSkillsSyncVetoed(), resetSentSkillNames(), await Zi());
                 let D = mergeSkillCommands(await getSkillToolCommands(he(), w.storageV5), v().mcp.commands).map(
@@ -13502,7 +13502,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     D.mcp.clients.find((pe) => pe.name === F) ??
                     At.clients.find((pe) => pe.name === F),
                   Ae =
-                    !wst(Ba, F) &&
+                    !consumeRecentTimestamp(Ba, F) &&
                     Me !== void 0 &&
                     Me.type !== "cached" &&
                     Me.type !== "pending";
@@ -13520,7 +13520,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 Be(r, "mcp_call: tool must be a string");
                 continue;
               }
-              let ie = Js(D);
+              let ie = parseMcpToolName(D);
               if (!ie || !ie.toolName)
                 Be(r, `Not a fully-qualified MCP tool name: ${Qn(D)}`);
               else {
@@ -13586,7 +13586,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                   clientConnection: Ze,
                                   tool: We,
                                   args: Qt,
-                                  imageLimits: CA,
+                                  imageLimits: DEFAULT_IMAGE_LIMITS,
                                   signal: qe,
                                   requestDialog: void 0,
                                   storageV5: w.storageV5,
@@ -13646,7 +13646,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       clientConnection: Ze,
                       tool: We,
                       args: F ?? {},
-                      imageLimits: CA,
+                      imageLimits: DEFAULT_IMAGE_LIMITS,
                       signal: _e.signal,
                       requestDialog: void 0,
                       storageV5: w.storageV5,
@@ -13747,7 +13747,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     await Yt().clearServerCache(F, _e.config);
                   await i2(Yt().dropDiscoveryEntry(F, _e?.config ?? Me));
                 }
-                let pe = Oa(F);
+                let pe = getMcpToolPrefix(F);
                 (C((_e) => ({
                   ..._e,
                   mcp: {
@@ -13757,10 +13757,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         ? { name: F, type: "disabled", config: Me }
                         : He,
                     ),
-                    tools: nO(_e.mcp.tools, (He) => isToolFromMcpServer(He, F, pe)),
-                    commands: nO(_e.mcp.commands, (He) => isMcpServerScopedName(He, F)),
-                    resources: zl(_e.mcp.resources, F),
-                    resourceTemplates: zl(_e.mcp.resourceTemplates, F),
+                    tools: filterCollection(_e.mcp.tools, (He) => isToolFromMcpServer(He, F, pe)),
+                    commands: filterCollection(_e.mcp.commands, (He) => isMcpServerScopedName(He, F)),
+                    resources: omitObjectKeys(_e.mcp.resources, F),
+                    resourceTemplates: omitObjectKeys(_e.mcp.resourceTemplates, F),
                   },
                 })),
                   Xe(r));
@@ -13807,7 +13807,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 let Me = ie.override;
                 C((Le) => {
                   let pe = Le.toolPermissionContext.mcpPermissionModeOverrides,
-                    _e = Me === void 0 ? zl(pe, D) : { ...pe, [D]: Me };
+                    _e = Me === void 0 ? omitObjectKeys(pe, D) : { ...pe, [D]: Me };
                   return {
                     ...Le,
                     toolPermissionContext: {
@@ -14124,7 +14124,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       logEvent("tengu_oauth_success", { loginWithClaudeAi: D ?? !0 }),
                       ft)
                     )
-                      await withDeadline(ft, C0t);
+                      await withDeadline(ft, MCP_CONFIG_FETCH_DEADLINE_MS);
                   })
                   .finally(() => {
                     if ((ie.cleanup(), _s?.service === ie)) _s = null;
@@ -14382,7 +14382,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     C((Hr) => (Hr.agent === Qr ? Hr : { ...Hr, agent: Qr }));
                   }
                   let tt = { ...We };
-                  for (let lt of Dq(tt, "apply_flag_settings"))
+                  for (let lt of normalizeSettingsAliases(tt, "apply_flag_settings"))
                     n(`apply_flag_settings: ${lt.message}`, { level: "warn" });
                   let qe = { ...(RL() ?? {}), ...tt };
                   for (let lt of Object.keys(qe))
@@ -14392,7 +14392,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     if (!ft.alone) Qm(ft);
                   }
                   if ((settingsChangeDetector.notifyChange("flagSettings"), "viewMode" in We))
-                    HYe();
+                    clearFocusModeSections();
                   let ln =
                       "model" in We && We.model != null
                         ? et?.raw === String(We.model)
@@ -14453,7 +14453,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                           : zr;
                     if (
                       (t.sessionState.notifyMetadataChanged({ model: zr }),
-                      sQt({
+                      shouldInjectModelSwitchMessages({
                         appliedModel: Pt,
                         previousModel: Ke ?? Pn,
                         conversationModel: hd(Pn),
@@ -14591,7 +14591,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             } else if (r.request.subtype === "update_settings") {
               let D = __(
                 t.isRemoteTransport(),
-                Nr("localSettings"),
+                isSettingsSourceEnabled("localSettings"),
                 r.request.source,
                 r.request.settings,
               );
@@ -14688,7 +14688,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               } = r.request;
               gn(async () => {
                 try {
-                  let pe = e0t();
+                  let pe = getFeedbackUnavailableReason();
                   if (pe) {
                     Xe(r, { feedback_id: null, unavailable_reason: pe });
                     return;
@@ -14713,7 +14713,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     );
                     return;
                   }
-                  let _e = await N_e({
+                  let _e = await submitFeedbackPayload({
                     messages: ct,
                     description: D,
                     surface: F ?? "sdk",
@@ -14940,7 +14940,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                           : await He({
                               recordAtEnable: _e,
                               onDialogKindsDeclared(Ke, tt) {
-                                Sst(pe, Ke, tt, () => {
+                                recordDeclaredDialogKinds(pe, Ke, tt, () => {
                                   if (Zt) dr.persist(Zt);
                                 });
                               },
@@ -14948,7 +14948,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                               enableSessionPersistence: isPersistentRemoteSessionEnabled() || isRemoteControlInternalEventsEnabled(),
                               storageV5: w.storageV5,
                               credentials: w.credentials,
-                              onTransportRebuilt: hst,
+                              onTransportRebuilt: handleBridgeTransportRebuilt,
                               getTools: () => li(v()),
                               getToolPermissionContext: () =>
                                 v().toolPermissionContext,
@@ -14960,7 +14960,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                   v().toolPermissionContext.mode,
                                 ),
                               }),
-                              getCommands: () => yst(Pd()),
+                              getCommands: () => getBridgeInitializeCommands(Pd()),
                               onClientInitialize: () =>
                                 Lo("client_initialize", { force: !0 }),
                               async onInboundMessage(Ke) {
@@ -14973,7 +14973,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                   let qe = parseInboundUserEvent(Ke);
                                   if (!qe) return;
                                   let { uuid: ln } = qe;
-                                  Mot(qe.clientPlatform, w.storageV5);
+                                  recordRemoteControlSurfaceSeen(qe.clientPlatform, w.storageV5);
                                   let _n = classifyInboundOrigin(
                                       qe.content,
                                       qe.clientPlatform,
@@ -15036,7 +15036,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                             origin: dropOriginBodyIfValueChanged(_n, zr, qe.content),
                                             isMeta: !0,
                                             skipAttachments: !0,
-                                            ...(I6e(U) && {
+                                            ...(hasPendingVerifiedSlackTurn(U) && {
                                               priority: "later",
                                             }),
                                           }
@@ -15058,10 +15058,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                               qe.clientPlatform,
                                               qe.inboundOrigin,
                                             ) && {
-                                              priority: x6e(
+                                              priority: resolveCommandPriority(
                                                 void 0,
                                                 qe.content,
-                                                H6e(U),
+                                                hasPendingDeferredSlackTurn(U),
                                               ),
                                               verifiedSlackHumanTurn: !0,
                                             }),
@@ -15128,7 +15128,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                     Ke.trim().toLowerCase() === "default",
                                   Qt = tt ? getDefaultMainLoopModel() : Ke;
                                 if (!tt) {
-                                  let Dn = bst(Qt, S("bridge_print"));
+                                  let Dn = rejectUnrecognizedModel(Qt, S("bridge_print"));
                                   if (Dn) return Dn;
                                 }
                                 let qe = !tt && !isExemptDefaultResolvingPick(Qt) && !(isModelAllowedUnderActiveEnforcement(Qt) ?? isModelAllowed(Qt)),
@@ -15245,7 +15245,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                   if (((lr = !1), Zt)) {
                                     if ((wae(!0), Ke === "connected" && Qt)) {
                                       if (
-                                        (q_e(Zt),
+                                        (forwardCurrentRateLimitsToBridge(Zt),
                                         Lo("reconnected", { force: !0 }),
                                         Vo(),
                                         Ze && Or)
@@ -15340,8 +15340,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                           (t.setOnControlRequestResolved((tt) => {
                             ft.sendControlCancelRequest(tt);
                           }),
-                            e6e(v()),
-                            q_e(ft),
+                            emitBackgroundTasksChanged(v()),
+                            forwardCurrentRateLimitsToBridge(ft),
                             Lo("attach", { force: !0 }),
                             Vo(),
                             Xe(r, Oe(ft, Me)));
@@ -15698,7 +15698,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 ? at
                 : void 0
             : (at ?? (V ? getClaudeCodeHumanOrigin(Ce, r.inbound_origin) : fCn(r.origin, !1))),
-          Lr = UWn({
+          Lr = isLocallyDeclaredSummon({
             declared: r.seeded_summon,
             isRemoteIO: V,
             isSynthetic: r.isSynthetic,
@@ -15739,11 +15739,11 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             }),
           }),
           cn = Ye
-            ? resolvePeerTriggerPriority(r.priority, I6e(U))
+            ? resolvePeerTriggerPriority(r.priority, hasPendingVerifiedSlackTurn(U))
             : at?.kind === "task-notification"
               ? resolveTriggerPriority(r.priority, Ce, r.inbound_origin)
               : In
-                ? x6e(r.priority, Se, H6e(U))
+                ? resolveCommandPriority(r.priority, Se, hasPendingDeferredSlackTurn(U))
                 : r.priority,
           Nn = Ye !== void 0 && !V,
           to =
@@ -15849,7 +15849,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 ccrTurnId: wr,
                 copyUuid: typeof r.uuid === "string" ? r.uuid : void 0,
               });
-            if ((MWn(Kr), r.uuid !== void 0))
+            if ((claimSeededSummonFromMessage(Kr), r.uuid !== void 0))
               t.onCommandLifecycle?.(r.uuid, "queued");
             (writeDiagnosticsEvent("info", "cli_user_message_enqueued", {
               has_uuid: r.uuid !== void 0,
@@ -15971,11 +15971,11 @@ async function bf(e, t, o = 2000, d = {}) {
     xe = 0,
     U = Date.now();
   if (ye > 0)
-    (await yHe(le, (ut) => !ut.mcp.clients.some(w), { timeoutMs: o }),
+    (await waitForStoreCondition(le, (ut) => !ut.mcp.clients.some(w), { timeoutMs: o }),
       (xe = Date.now() - U));
   let ve = 0;
   if (N)
-    (await yHe(le, (ut) => !ut.mcp.clients.some(B), {
+    (await waitForStoreCondition(le, (ut) => !ut.mcp.clients.some(B), {
       timeoutMs: Math.max(0, U + getMcpTimeoutMs() - Date.now()),
     }),
       (ve = Date.now() - U - xe));
@@ -16089,7 +16089,7 @@ function wy(e, t, o, d, _, E) {
   let I = isPermissionPromptsDisabled(E);
   if (!I && e === "stdio") {
     let v = t.createCanUseTool(d);
-    return isVsCodeExtensionSession() || (isClaudeDesktopAppSession() && !isClaudecodeEnv()) ? Qqe(v) : v;
+    return isVsCodeExtensionSession() || (isClaudeDesktopAppSession() && !isClaudecodeEnv()) ? registerHeldReplyCanUseTool(v) : v;
   }
   if (I || !e)
     return async (v, C, re, B, w, X) => {
@@ -16168,14 +16168,14 @@ async function Cy(e, t, o, d, _, E, I, O, v, C, re, B, w, X) {
             X(),
             () => O.sessionState.getState(),
             e.hooks ? le !== void 0 : void 0,
-            vJt(e.plugins),
+            areInitializePluginsApplied(e.plugins),
             C.storageV5,
           ),
           pending_permission_requests: U,
           pending_user_dialog_requests: ve,
         },
       }),
-      e6e(B()),
+      emitBackgroundTasksChanged(B()),
       {}
     );
   }
@@ -16248,7 +16248,7 @@ async function Cy(e, t, o, d, _, E, I, O, v, C, re, B, w, X) {
         X(),
         () => O.sessionState.getState(),
         e.hooks ? !0 : void 0,
-        vJt(e.plugins),
+        areInitializePluginsApplied(e.plugins),
         C.storageV5,
       ),
     },
@@ -16316,7 +16316,7 @@ async function Pf(e, t, o, d, _, E, I, O, v, C) {
       feedback_survey_config: mm(),
       analytics_disabled: isAnalyticsDisabled(),
       proactivity: ia(_()),
-      footer_indicator: o0t(),
+      footer_indicator: getFooterIndicator(),
     },
     fe = getExplicitRemoteControlAtStartup(),
     le = !isRunningInRemoteEnvironment() && (fe ?? getCcrAutoConnectDefault());
@@ -16702,7 +16702,7 @@ async function Ay(e, t, o, d) {
   if (d.teleport)
     try {
       await b_();
-      let E = A8();
+      let E = getCloudSessionsUnavailableReason();
       if (E) throw Error(E);
       if ((logEvent("tengu_teleport_print", {}), typeof d.teleport !== "string"))
         throw Error("No session ID provided for teleport");
@@ -16798,7 +16798,7 @@ ${le}`,
           le?.external || le?.internal)
         ) {
           if (
-            (t((xe) => LNn(le.external ?? {})(MNn(le.internal ?? {})(xe))),
+            (t((xe) => applyExternalMetadata(le.external ?? {})(applySessionAllowRules(le.internal ?? {})(xe))),
             typeof le.external?.model === "string")
           ) {
             let xe =
@@ -16823,7 +16823,7 @@ ${le}`,
             { messages: [] }
           );
       }
-      let w = !v.jsonlFile ? await lFn(v.sessionId) : void 0,
+      let w = !v.jsonlFile ? await getTranscriptFileInfo(v.sessionId) : void 0,
         X = performance.now(),
         te = await loadConversationForResume(v.sessionId, v.jsonlFile || void 0, {
           forkSession: !!d.forkSession,
@@ -16869,7 +16869,7 @@ ${le}`,
           }
           let le = performance.now(),
             xe = await (d.sessionStartHooksPromise ??
-              x8(e, {
+              runLifecycleHooks(e, {
                 kind: "session-start",
                 source: "startup",
                 storageV5: d.storageV5,
@@ -17060,7 +17060,7 @@ ${le}`,
   }
   return {
     messages: await (d.sessionStartHooksPromise ??
-      x8(e, {
+      runLifecycleHooks(e, {
         kind: "session-start",
         source: "startup",
         storageV5: d.storageV5,
@@ -17257,10 +17257,10 @@ function Hf(e, t, o) {
       return re(N, fe) ?? [];
     });
   if (O.size === 0 && v.size === 0 && C.size === 0) return e;
-  let w = [...O].map((N) => [N, Oa(N)]),
-    X = t.clients.map((N) => [N.name, Oa(N.name)]),
+  let w = [...O].map((N) => [N, getMcpToolPrefix(N)]),
+    X = t.clients.map((N) => [N.name, getMcpToolPrefix(N.name)]),
     te = (N, fe) => fe.some(([le, xe]) => isToolFromMcpServer(N, le, xe)),
-    ye = [...C].map((N) => [N, Oa(N)]);
+    ye = [...C].map((N) => [N, getMcpToolPrefix(N)]);
   return {
     ...e,
     clients: B,
@@ -17322,7 +17322,7 @@ function By(e, t) {
 }
 function Qf(e) {
   return Si(e, (t) =>
-    zl(t, [
+    omitObjectKeys(t, [
       "scope",
       "pluginSource",
       "pluginPath",
@@ -17347,7 +17347,7 @@ async function Hy(e, t, o, d, _, E, I = !1, O = !1, v, C, re) {
     if (w.has(vt)) X[vt] = qf;
     else te[vt] = Ft;
   if (Object.values(te).some((vt) => vt.type !== "sdk"))
-    await V0({ hasDynamicMcpConfig: !0 });
+    await awaitMcpPolicyColdStart({ hasDynamicMcpConfig: !0 });
   let { allowed: ye, blocked: N } = filterMcpServersByPolicy(te),
     fe = Object.create(null);
   for (let vt of N) fe[vt] = _d;
@@ -17361,7 +17361,7 @@ async function Hy(e, t, o, d, _, E, I = !1, O = !1, v, C, re) {
     U = new Set(),
     ve = le
       ? void 0
-      : VW()
+      : isHermeticModeEnabled()
         ? jf
         : a.CLAUDE_CODE_REMOTE && doesEnterpriseMcpConfigExist()
           ? Wf
@@ -17401,7 +17401,7 @@ async function Hy(e, t, o, d, _, E, I = !1, O = !1, v, C, re) {
         let On = nt.find((Cn) => Cn.name === Ft);
         if (On && On.type === "connected") await On.cleanup();
         nt = nt.filter((Cn) => Cn.name !== Ft);
-        let sn = Oa(Ft);
+        let sn = getMcpToolPrefix(Ft);
         ((Ot = Ot.filter((Cn) => !isToolFromMcpServer(Cn, Ft, sn))),
           (un = un.filter((Cn) => !isMcpServerScopedName(Cn, Ft))),
           delete pn[Ft],
@@ -17449,10 +17449,10 @@ async function Yf(e, t, o, d, _ = "unknown", E = !1, I = !1, O, v, C, re) {
   let B = new Set(Object.keys(t.configs)),
     w = new Set(Object.keys(e)),
     X = I
-      ? [...B].filter((Fe) => !w.has(Fe) && !O?.has(Fe) && pke(t.configs[Fe]))
+      ? [...B].filter((Fe) => !w.has(Fe) && !O?.has(Fe) && hasPluginSource(t.configs[Fe]))
       : [],
     te = new Set(
-      X.length > 0 ? Object.keys(filterMcpServersByPolicy(DBe(t.configs, X)).allowed) : [],
+      X.length > 0 ? Object.keys(filterMcpServersByPolicy(pickObjectKeys(t.configs, X)).allowed) : [],
     ),
     ye = [...B].filter((Fe) => !w.has(Fe) && !te.has(Fe)),
     N = [...w].filter((Fe) => !B.has(Fe)),
@@ -17503,7 +17503,7 @@ async function Yf(e, t, o, d, _ = "unknown", E = !1, I = !1, O, v, C, re) {
       }
       await Yt().clearServerCache(Fe, Ve);
     }
-    let tn = Oa(Fe);
+    let tn = getMcpToolPrefix(Fe);
     if (
       ((ut = ut.filter((qt) => !isToolFromMcpServer(qt, Fe, tn))),
       (je = je.filter((qt) => qt.name !== Fe)),
@@ -17608,7 +17608,7 @@ async function Yf(e, t, o, d, _ = "unknown", E = !1, I = !1, O, v, C, re) {
     if (it) {
       let Ve = Bs(it),
         tn = t.configs[Fe];
-      if (I && tn !== void 0 && pke(tn)) {
+      if (I && tn !== void 0 && hasPluginSource(tn)) {
         if (((Ve.pluginSource = tn.pluginSource), tn.pluginPath !== void 0))
           Ve.pluginPath = tn.pluginPath;
       }
@@ -17623,10 +17623,10 @@ async function Yf(e, t, o, d, _ = "unknown", E = !1, I = !1, O, v, C, re) {
       allow: vt,
       deny: Ft,
       ask: On,
-    } = I ? ctt(e) : { allow: [], deny: [], ask: [] },
+    } = I ? collectMcpToolPermissionRules(e) : { allow: [], deny: [], ask: [] },
     sn = { clients: je, tools: ut, configs: Bn },
     Cn = new Set([...ye, ...le, ...Tt]),
-    _t = [...Cn].map((Fe) => [Fe, Oa(Fe)]);
+    _t = [...Cn].map((Fe) => [Fe, getMcpToolPrefix(Fe)]);
   if (
     (o((Fe) => {
       let it = Fe.mcp.tools.filter(
@@ -17670,8 +17670,8 @@ async function Yf(e, t, o, d, _ = "unknown", E = !1, I = !1, O, v, C, re) {
           tools: it,
           clients: [...Ve, ...un],
           commands: tn,
-          resources: zl(Fe.mcp.resources, [...Cn]),
-          resourceTemplates: zl(Fe.mcp.resourceTemplates, [...Cn]),
+          resources: omitObjectKeys(Fe.mcp.resources, [...Cn]),
+          resourceTemplates: omitObjectKeys(Fe.mcp.resourceTemplates, [...Cn]),
         },
         toolPermissionContext: rr,
       };
@@ -17709,7 +17709,7 @@ async function Yf(e, t, o, d, _ = "unknown", E = !1, I = !1, O, v, C, re) {
         },
         jn;
       try {
-        jn = v0t(Sr, {
+        jn = applyMcpConnectionResult(Sr, {
           client: qt,
           tools: Ve?.tools ?? [],
           commands: Ve?.fetched?.cmds ?? [],
@@ -17779,9 +17779,9 @@ async function Yf(e, t, o, d, _ = "unknown", E = !1, I = !1, O, v, C, re) {
         .finally(() => {
           if (
             (Qe({ names: [...en], clients: mn, tools: Xt, dialEpochs: Gn }),
-            OJt(Ot, Sr).length > 0)
+            getRetryableMcpFailures(Ot, Sr).length > 0)
           )
-            qot(Ot, Sr, v).catch((Fe) => logError(Fe));
+            retryFailedMcpConnections(Ot, Sr, v).catch((Fe) => logError(Fe));
         });
     };
   if (E)
@@ -17833,12 +17833,12 @@ async function $y(e, t, o, d, _, E, I) {
   let O = Object.create(null),
     v = Object.create(null);
   if (t !== void 0) {
-    await V0({ hasDynamicMcpConfig: !0 });
+    await awaitMcpPolicyColdStart({ hasDynamicMcpConfig: !0 });
     let te = Object.create(null);
     if (((te[e] = t), Object.hasOwn(filterMcpServersByPolicy(te).allowed, e))) O[e] = t;
     else v[e] = _d;
   }
-  let C = Oa(e),
+  let C = getMcpToolPrefix(e),
     re = (te) => isToolFromMcpServer(te, e, C),
     B = (te) => {
       let ye = emptyServerMap(),

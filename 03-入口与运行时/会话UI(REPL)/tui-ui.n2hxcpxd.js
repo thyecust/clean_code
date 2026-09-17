@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 262 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { rst, ost, kdr, Z1n, xdr, Xmr } from "./会话UI(REPL).qs63rzfp.js";
+import { relaunchInto as rst, relaunchFailedMessage as ost, cannotSwitchRendererMessage as kdr, savedWithoutRestartMessage as Z1n, savedWithoutRestartForTasksMessage as xdr, runTuiCommand as Xmr } from "./会话UI(REPL).qs63rzfp.js";
 import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 export {
   Xmr as call,

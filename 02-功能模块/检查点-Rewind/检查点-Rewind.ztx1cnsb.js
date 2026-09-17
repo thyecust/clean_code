@@ -20,7 +20,7 @@ import { GIT_HARDENED_ARGS, sanitizeGitEnv, execFileNoThrowWithCwd } from "../Gi
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { nke, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Pt, findGitRoot, gitExe, getGitDir, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isRemoteActive, findGitRoot, gitExe, getGitDir, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { X_, zE, RC } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { publishRateLimitCheckpointResult, getInFlightRateLimitCheckpoint, setInFlightRateLimitCheckpoint } from "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
@@ -85,7 +85,7 @@ function S(o, e) {
 }
 async function kt(o) {
   if (ke()) return { committed: !1, skipReason: "non_interactive" };
-  if (Pt()) return { committed: !1, skipReason: "remote_workspace" };
+  if (isRemoteActive()) return { committed: !1, skipReason: "remote_workspace" };
   if (!isPolicyAllowed("allow_local_checkpoint_commit"))
     return { committed: !1, skipReason: "policy" };
   let e = findGitRoot(getCwd());

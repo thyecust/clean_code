@@ -19,7 +19,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { HELP_FLAGS, INFO_SUBCOMMAND_ALIASES } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { ts, Js, Oa } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { isConnectedMcpServer, parseMcpToolName, getMcpToolPrefix } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { REMOTE_DEVICES_MCP_SERVER_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { V$ } from "../插件系统/chunk-7s6mt1vg.js";
@@ -43,7 +43,7 @@ function U(t) {
     let S = r.rejectedPassthroughTools?.size ?? 0;
     if (S > 0) g.set(r.name, S);
     for (let w of r.passthroughTools?.values() ?? []) {
-      let C = Js(w.localName);
+      let C = parseMcpToolName(w.localName);
       if (C === null) continue;
       let e = `${r.name}\x00${C.serverName}`,
         d = c.get(e);
@@ -236,7 +236,7 @@ ${j}`),
   );
   if (A.length === 0) {
     if (f && e !== "all" && b(e)) {
-      if (d.some(ts)) return s(formatStaleDisableMessage(e));
+      if (d.some(isConnectedMcpServer)) return s(formatStaleDisableMessage(e));
       return s(formatDisabledElsewhereMessage(e));
     }
     if (!f && e !== "all" && !b(e)) return s(formatDisableNotPersistedMessage(e));
@@ -323,7 +323,7 @@ function ne(t, c, g) {
         : [...t]
             .sort((p, N) => p.name.localeCompare(N.name))
             .map((p) => {
-              let N = Oa(p.name),
+              let N = getMcpToolPrefix(p.name),
                 b = countMatching(c, (A) => A.name.startsWith(N)),
                 f = isUnconfiguredMcpServer(p) ? "not configured" : B[getMcpServerType(p)];
               return `  ${_(m(p.name))}  ${_(f)}  ${p.config.type ?? "stdio"}${X(b)}`;

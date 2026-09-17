@@ -8,18 +8,18 @@
 
 // Version: 2.1.263
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { $Be } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { shouldForwardEnvVar } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { BASH_TOOL_NAME, isLocalSettingsGitTracked } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { oEt, qCe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getSettingsTrustGates, getPermissionRulesForSource } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { isAbsolute } from "path";
 function S() {
-  return { sources: m(), read: getSettingsForSource, rules: qCe };
+  return { sources: m(), read: getSettingsForSource, rules: getPermissionRulesForSource };
 }
 var m = () => {
-  let { gateProject: t } = oEt(),
+  let { gateProject: t } = getSettingsTrustGates(),
     e = isLocalSettingsGitTracked({ onIndeterminate: "tracked" });
   return [
     ...(t ? [["projectSettings", ".claude/settings.json"]] : []),
@@ -42,7 +42,7 @@ function getHookSettingsSourceFiles(
       ["localSettings", ".claude/settings.local.json"],
     ],
     read: getSettingsForSource,
-    rules: qCe,
+    rules: getPermissionRulesForSource,
   },
 ) {
   let e = [];
@@ -120,9 +120,9 @@ function collectAdditionalDirectories(t = S()) {
 }
 function getBashExecutionSourceFiles() {
   let t = [],
-    e = qCe("projectSettings");
+    e = getPermissionRulesForSource("projectSettings");
   if (l(e)) t.push(".claude/settings.json");
-  let s = qCe("localSettings");
+  let s = getPermissionRulesForSource("localSettings");
   if (l(s)) t.push(".claude/settings.local.json");
   return t;
 }
@@ -205,7 +205,7 @@ function getProxyAuthHelperSourceFiles() {
 }
 function f(t) {
   if (!t?.env) return !1;
-  return Object.entries(t.env).some(([e, s]) => !$Be(e, s));
+  return Object.entries(t.env).some(([e, s]) => !shouldForwardEnvVar(e, s));
 }
 function getDangerousEnvVarSourceFiles() {
   let t = [],

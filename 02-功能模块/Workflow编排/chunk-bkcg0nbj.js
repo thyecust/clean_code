@@ -16,11 +16,11 @@ import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../0
 import { We, b, t8, z, Is, Ru, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Js, fS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { parseMcpToolName, getFullToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { kd, getBranch, isBranchOnOrigin } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { validateStorageKey, getBranch, isBranchOnOrigin } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { LOG_BULLET_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
@@ -30,7 +30,7 @@ import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未
 import { getParentSessionId, isModelDrivenSession } from "../Teammates团队/teammate-context.js";
 import { Xk } from "../权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME, getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
-import { Uh, Rtr, gEn, Ni, UK, readAutoAllowedForMutation } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { MAX_WORKFLOW_SCRIPT_BYTES, readWorkflowScriptFile, getWorkflowScriptPathError, REPL_TOOL_NAME, findExactDenyRule, readAutoAllowedForMutation } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { unwrapAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
@@ -97,27 +97,27 @@ import {
   joinTextBlocks,
   isMessageFromDifferentModel,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ZAe, ti, eCe } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { formatUnsatisfiableSchemaReason, STRUCTURED_OUTPUT_TOOL_NAME, buildStructuredOutputToolFromSchema } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { of, kme } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { Cr } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { WEB_FETCH_TOOL_NAME } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import {
-  S8,
-  Cae,
-  qxe,
-  Qrt,
-  bZ,
-  Zrt,
-  eot,
-  Y1,
-  DHt,
-  tot,
-  NA,
-  vae,
-  LHt,
-  $Yt,
-  UYt,
-  Mje,
-  not,
+  withVmTimeout,
+  hardenVmIntrinsics,
+  makeVmAwait,
+  makeVmApply,
+  makeVmErrorExtractor,
+  makeVmClone,
+  makeAsyncWrapper,
+  makePlainError,
+  getVmErrorInfo,
+  formatConsoleArg,
+  wrapSyncHostFunction,
+  wrapAsyncHostFunction,
+  cloneValueAcrossBoundary,
+  snapshotArray,
+  makeVmStringUtils,
+  makeVmSanitizers,
+  toDisplayString,
 } from "./chunk-0t0sve49.js";
 import { mbt } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
 import { excludeCoordinatorCommsMcpTools } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
@@ -568,13 +568,13 @@ function Dt(t) {
 }
 function min(t, l) {
   let s = resolve(getCwd(), t),
-    m = gEn(t, s);
+    m = getWorkflowScriptPathError(t, s);
   if (m !== null) return m;
   return Nn(s, l) ? null : Dt(t);
 }
 function Nn(t, l) {
   let s = l.options.tools ?? [];
-  if (s.length > 0 && !s.some((m) => matchesToolName(m, READ_TOOL_NAME)) && !s.some((m) => matchesToolName(m, Ni)))
+  if (s.length > 0 && !s.some((m) => matchesToolName(m, READ_TOOL_NAME)) && !s.some((m) => matchesToolName(m, REPL_TOOL_NAME)))
     return !1;
   return readAutoAllowedForMutation(WORKFLOW_TOOL_NAME, t, l, getToolPermissionContext(l));
 }
@@ -613,8 +613,8 @@ async function Ndt(t, l) {
     if (!Nn(E, l)) return { error: Dt(t) };
     if (!C.isFile())
       return { error: `Workflow script file ${t} is not a regular file` };
-    if (C.size > BigInt(Uh))
-      return { error: `Workflow script file ${t} exceeds ${Uh} bytes` };
+    if (C.size > BigInt(MAX_WORKFLOW_SCRIPT_BYTES))
+      return { error: `Workflow script file ${t} exceeds ${MAX_WORKFLOW_SCRIPT_BYTES} bytes` };
     let fe = Buffer.alloc(Number(C.size)),
       O = 0;
     while (O < fe.length) {
@@ -680,7 +680,7 @@ function E1t(t) {
     t?.addEventListener("abort", m, { once: !0 }),
     {
       clear: m,
-      setTimeout: NA((p, k) => {
+      setTimeout: wrapSyncHostFunction((p, k) => {
         if (t?.aborted) return 0;
         let C = typeof k === "number" ? k : typeof k === "string" ? +k || 0 : 0,
           I = Number(
@@ -692,7 +692,7 @@ function E1t(t) {
           );
         return (l.add(I), I);
       }),
-      clearTimeout: NA((p) => {
+      clearTimeout: wrapSyncHostFunction((p) => {
         if (typeof p === "number" || typeof p === "string") {
           let k = typeof p === "number" ? p : +p;
           if (l.has(k)) (l.delete(k), clearTimeout(k));
@@ -814,7 +814,7 @@ ${s}
       C = new Lt.Script(k, {
         filename: "workflow.js",
         importModuleDynamically: () => {
-          throw Y1("import() is not available in workflow scripts.");
+          throw makePlainError("import() is not available in workflow scripts.");
         },
       });
     return (logFeatureOk("workflow_compile"), { ok: !0, vmScript: C });
@@ -836,7 +836,7 @@ function pn(
   l = {
     sanitize: (s) =>
       s === null || (typeof s !== "object" && typeof s !== "function") ? s : {},
-    toStr: (s) => not(s),
+    toStr: (s) => toDisplayString(s),
   },
 ) {
   function s(p) {
@@ -869,7 +869,7 @@ function pn(
       })
       .join(" ");
   }
-  let m = (p) => NA((...k) => t(p + s(k)));
+  let m = (p) => wrapSyncHostFunction((...k) => t(p + s(k)));
   return {
     __proto__: null,
     log: m(""),
@@ -928,25 +928,25 @@ function yin(t, l, s, m = t.timers) {
         e === null || (typeof e !== "object" && typeof e !== "function")
           ? e
           : {},
-      toStr: (e) => not(e),
+      toStr: (e) => toDisplayString(e),
     },
     C = {
       __proto__: null,
       budget: t.budget,
       setTimeout: m.setTimeout,
       clearTimeout: m.clearTimeout,
-      phase: NA((e) => {}),
-      log: NA((e) => t.hooks.log(p + not(e))),
+      phase: wrapSyncHostFunction((e) => {}),
+      log: wrapSyncHostFunction((e) => t.hooks.log(p + toDisplayString(e))),
       console: pn((e) => t.hooks.log(p + e), k),
     },
     I = Qt.createContext(C, { codeGeneration: { strings: !1, wasm: !1 } });
-  (Yt(I), Cae(I), Xt(I));
-  let E = bZ(I),
-    fe = qxe(I),
-    O = Zrt(I),
-    J = Qrt(I),
-    N = Mje(I),
-    { vmToStr: ue, vmOwnString: pe, vmStringify: ee } = UYt(I);
+  (Yt(I), hardenVmIntrinsics(I), Xt(I));
+  let E = makeVmErrorExtractor(I),
+    fe = makeVmAwait(I),
+    O = makeVmClone(I),
+    J = makeVmApply(I),
+    N = makeVmSanitizers(I),
+    { vmToStr: ue, vmOwnString: pe, vmStringify: ee } = makeVmStringUtils(I);
   ((k.sanitize = N.sanitize), (k.toStr = ue));
   let d = Qt.runInContext(
       '(o => { try { const s = o && typeof o === "object" ? o.schema : undefined; return s && typeof s === "object" ? s : undefined } catch { return undefined } })',
@@ -973,7 +973,7 @@ function yin(t, l, s, m = t.timers) {
     toStr: ue,
     ownString: pe,
     stringify: ee,
-    asyncWrap: eot(I),
+    asyncWrap: makeAsyncWrapper(I),
     agent: r,
   };
 }
@@ -1014,7 +1014,7 @@ function Bn(t) {
       };
       for (let [ee, d] of Object.entries(N))
         Object.defineProperty(J.childCtx, ee, {
-          value: J.asyncWrap(vae(d)),
+          value: J.asyncWrap(wrapAsyncHostFunction(d)),
           writable: !0,
           enumerable: !0,
           configurable: !0,
@@ -1025,7 +1025,7 @@ function Bn(t) {
         enumerable: !0,
         configurable: !0,
       });
-      let ue = await J.settle(E.vmScript.runInContext(J.childCtx, S8(Aqe))),
+      let ue = await J.settle(E.vmScript.runInContext(J.childCtx, withVmTimeout(Aqe))),
         pe = J.clone(ue.v);
       return (t.hooks.log(`${LOG_BULLET_GLYPH} ${C} done`), pe);
     } catch (J) {
@@ -1039,7 +1039,7 @@ function Bn(t) {
       throw (
         t.hooks.recordFailure(`${fe}: ${ee}`),
         t.hooks.log(`${LOG_BULLET_GLYPH} ${C} failed: ${ee}`),
-        Y1(truncateMiddleWithMarker(ue), N, ee)
+        makePlainError(truncateMiddleWithMarker(ue), N, ee)
       );
     }
   });
@@ -1201,7 +1201,7 @@ function No(t) {
   let l = getCurrentProjectKey();
   if (l === void 0) return;
   let s = STORAGE_KEYS.journal(l, K(), ["workflows", t]);
-  return kd(s) === void 0 ? s : void 0;
+  return validateStorageKey(s) === void 0 ? s : void 0;
 }
 class en {
   path;
@@ -1408,14 +1408,14 @@ NOTE: You are running inside a workflow script. Your final text response is retu
 
 ---
 
-NOTE: You are running inside a workflow script. You MUST return your final answer by calling the ${ti} tool exactly once \u2014 the tool's input schema defines the required shape. Do your work, then call ${ti}; do NOT put your answer in a text response (the script reads ONLY the tool call). If validation fails, read the error and call ${ti} again with a corrected shape.`,
+NOTE: You are running inside a workflow script. You MUST return your final answer by calling the ${STRUCTURED_OUTPUT_TOOL_NAME} tool exactly once \u2014 the tool's input schema defines the required shape. Do your work, then call ${STRUCTURED_OUTPUT_TOOL_NAME}; do NOT put your answer in a text response (the script reads ONLY the tool call). If validation fails, read the error and call ${STRUCTURED_OUTPUT_TOOL_NAME} again with a corrected shape.`,
   Zo = `You are a subagent spawned by a workflow orchestration script. Use the tools available to complete the task.
 
-CRITICAL: You MUST call the ${ti} tool exactly once to return your final answer. The tool's input schema defines the required shape.
-- Do your work (Read files, run commands, etc.), then call ${ti} with your answer.
-- Do NOT put your answer in a text response. The script reads ONLY the ${ti} tool call.
-- If the schema validation fails, read the error and call ${ti} again with a corrected shape.
-- After calling ${ti} successfully, end your turn. No acknowledgment needed.`,
+CRITICAL: You MUST call the ${STRUCTURED_OUTPUT_TOOL_NAME} tool exactly once to return your final answer. The tool's input schema defines the required shape.
+- Do your work (Read files, run commands, etc.), then call ${STRUCTURED_OUTPUT_TOOL_NAME} with your answer.
+- Do NOT put your answer in a text response. The script reads ONLY the ${STRUCTURED_OUTPUT_TOOL_NAME} tool call.
+- If the schema validation fails, read the error and call ${STRUCTURED_OUTPUT_TOOL_NAME} again with a corrected shape.
+- After calling ${STRUCTURED_OUTPUT_TOOL_NAME} successfully, end your turn. No acknowledgment needed.`,
   bn = {
     agentType: "workflow-subagent",
     whenToUse: "Internal subagent for workflow script orchestration.",
@@ -1555,7 +1555,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
   }
   for (let A of k ?? []) ct(A);
   let tn = _t((A) => {
-      ((Xe = tot(A)), ct(Xe));
+      ((Xe = formatConsoleArg(A)), ct(Xe));
     }),
     Bt = createConcurrencyLimiter(Ko, io),
     Vt = createConcurrencyLimiter(Go, uo);
@@ -1651,10 +1651,10 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
           _e = q && "value" in q ? q.value : void 0;
         if (_e !== null && typeof _e === "object") Se = _e;
       }
-      let L = LHt(d(F));
+      let L = cloneValueAcrossBoundary(d(F));
       if (L && Se !== void 0) {
         let q = Tn.get(Se);
-        if (q === void 0) ((q = LHt(d(Se))), Tn.set(Se, q));
+        if (q === void 0) ((q = cloneValueAcrossBoundary(d(Se))), Tn.set(Se, q));
         L.schema = q;
       }
       if (L?.model !== void 0 && a.CLAUDE_CODE_SUBAGENT_MODEL_FORCE)
@@ -1721,7 +1721,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         throw (await sleep(0), q);
       }
       let je = ++N,
-        ze = tot(A),
+        ze = formatConsoleArg(A),
         he =
           L?.label != null
             ? String(L.label).replace(/\s+/g, " ").trim()
@@ -1881,7 +1881,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         U = Ee.find((le) => le.agentType === v);
       if (!U) {
         let le = $e.find((nt) => nt.agentType === v),
-          Je = le ? UK(ie, AGENT_TOOL_NAME, v) : null;
+          Je = le ? findExactDenyRule(ie, AGENT_TOOL_NAME, v) : null;
         if (Je)
           throw Error(
             `agent({agentType}): '${v}' is denied by permission rule '${AGENT_TOOL_NAME}(${v})' from ${Je.source}.`,
@@ -1897,7 +1897,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
       }
       let Ve = [...(U.disallowedTools ?? []), ...(bn.disallowedTools ?? [])],
         ae = be.schema ? Qo : Xo,
-        Te = be.schema && !getAllowedAgentTypesFromToolList(U.tools) ? [...(U.tools ?? []), ti] : U.tools;
+        Te = be.schema && !getAllowedAgentTypesFromToolList(U.tools) ? [...(U.tools ?? []), STRUCTURED_OUTPUT_TOOL_NAME] : U.tools;
       ze = isBuiltInAgent(U)
         ? {
             ...U,
@@ -1914,7 +1914,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
     }
     let he;
     if (be?.schema) {
-      let v = eCe(be.schema);
+      let v = buildStructuredOutputToolFromSchema(be.schema);
       if ("error" in v || v.unsatisfiable) await sleep(0);
       if ("error" in v)
         throw new R(
@@ -1922,7 +1922,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
           "Workflow agent({schema}) invalid JSON Schema",
         );
       if (v.unsatisfiable) {
-        let $e = `agent({schema}) received an unusable JSON Schema \u2014 ${ZAe(v.unsatisfiable)}`,
+        let $e = `agent({schema}) received an unusable JSON Schema \u2014 ${formatUnsatisfiableSchemaReason(v.unsatisfiable)}`,
           { message: ie } = v.unsatisfiable;
         if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_workflow_schema_lint_enforce", !0))
           throw new R(
@@ -1954,7 +1954,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
               disallowedTools: [
                 ...(Ke.disallowedTools ?? []),
                 ...(Le ?? []),
-                Ni,
+                REPL_TOOL_NAME,
                 ...(ye !== void 0 && ye.length > 0 ? ["mcp__*", POWERSHELL_TOOL_NAME] : []),
               ],
             }
@@ -2007,7 +2007,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
             )
           );
         {
-          let le = /^mcp__/i.test(U) ? Js(`mcp__${U.slice(5)}`) : null;
+          let le = /^mcp__/i.test(U) ? parseMcpToolName(`mcp__${U.slice(5)}`) : null;
           if (/^mcp__/i.test(U) && le === null)
             throw (
               await sleep(0),
@@ -2058,7 +2058,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
             );
           }
         }
-        if (U.includes("*") && Js(U) === null && !/^mcp__/i.test(U))
+        if (U.includes("*") && parseMcpToolName(U) === null && !/^mcp__/i.test(U))
           throw (
             await sleep(0),
             new R(
@@ -2073,21 +2073,21 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
             )
           );
         if (U === SKILL_TOOL_NAME) continue;
-        if (he !== void 0 && U === ti) continue;
+        if (he !== void 0 && U === STRUCTURED_OUTPUT_TOOL_NAME) continue;
         let Ve = U.toLowerCase(),
           ae =
-            De.flatMap((le) => [le.name, fS(le)]).find(
+            De.flatMap((le) => [le.name, getFullToolName(le)]).find(
               (le) => le.toLowerCase() === Ve,
             ) ??
             (Ve === SKILL_TOOL_NAME.toLowerCase() ? SKILL_TOOL_NAME : void 0) ??
-            (he !== void 0 && Ve === ti.toLowerCase() ? ti : void 0),
+            (he !== void 0 && Ve === STRUCTURED_OUTPUT_TOOL_NAME.toLowerCase() ? STRUCTURED_OUTPUT_TOOL_NAME : void 0),
           Te = classifyMcpToolRule(U, De, v);
         if (Te?.kind === "declared-server") {
-          let le = Js(U);
+          let le = parseMcpToolName(U);
           if (!(
             !Te.verifiable &&
             ae !== void 0 &&
-            Js(ae)?.serverName === le?.serverName
+            parseMcpToolName(ae)?.serverName === le?.serverName
           )) {
             n(
               `workflow agent(): disallowedTools mcp entry '${U}' covers this agent's declared frontmatter MCP server '${Te.declaredSpelling}' \u2014 those tools connect at ` +
@@ -2140,7 +2140,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
       throw (
         await sleep(0),
         new R(
-          `agent() schema mode needs the ${ti} tool, ` +
+          `agent() schema mode needs the ${STRUCTURED_OUTPUT_TOOL_NAME} tool, ` +
             "but the spawn's merged disallowedTools deny it \u2014 refusing the " +
             "spawn instead of running an agent that cannot return its structured output.",
           "agent() schema mode with StructuredOutput denied \u2014 spawn refused",
@@ -2179,7 +2179,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         )
       );
     let ot = De,
-      at = he ? [...ot.filter((v) => !matchesToolName(v, ti)), he] : ot,
+      at = he ? [...ot.filter((v) => !matchesToolName(v, STRUCTURED_OUTPUT_TOOL_NAME)), he] : ot,
       Ze = resolveSubagentModel(
         resolveExploreAgentModel(Ue, D.options.mainLoopModel),
         D.options.mainLoopModel,
@@ -2412,7 +2412,7 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
                     Ft.add(Fe.id),
                     (le = Fe.name),
                     (Je = summarizeToolInput(Fe.input) || void 0),
-                    Fe.name === ti)
+                    Fe.name === STRUCTURED_OUTPUT_TOOL_NAME)
                   ) {
                     if (
                       (Rt++,
@@ -2764,7 +2764,7 @@ ${v.text}`),
             toolUseID: "workflow_log",
             data: {
               type: "workflow_log",
-              message: `[${re}] Dropped a "webFetchSavedFiles" key the agent put in its structured output \u2014 that key is reserved for the harness's own record of files ${Cr} saved, and the agent cannot supply it.`,
+              message: `[${re}] Dropped a "webFetchSavedFiles" key the agent put in its structured output \u2014 that key is reserved for the harness's own record of files ${WEB_FETCH_TOOL_NAME} saved, and the agent cannot supply it.`,
             },
           });
         if (U.reportable.length > 0)
@@ -3011,7 +3011,7 @@ ${at}`;
       if (D.abortController?.signal.aborted) return new Promise(() => {});
       if ((await sleep(0), !Array.isArray(A)))
         throw TypeError("parallel() expects an array of functions");
-      let F = $Yt(o(A));
+      let F = snapshotArray(o(A));
       if (F.length === 0) return ee([]);
       (dt(), Ye());
       for (let se of F)
@@ -3031,7 +3031,7 @@ ${at}`;
         Ae = 0,
         Qe = re.map((se, be) => {
           if (se.status === "fulfilled") return se.value.v;
-          let { name: Ne, msg: He } = DHt(se.reason);
+          let { name: Ne, msg: He } = getVmErrorInfo(se.reason);
           if (Ne === "WorkflowBudgetExceededError") return (Ae++, null);
           let Se = `parallel[${be}] failed: ${He}`;
           return (G(Se, { log: !0 }), null);
@@ -3046,8 +3046,8 @@ ${at}`;
       if (D.abortController?.signal.aborted) return new Promise(() => {});
       if ((await sleep(0), !Array.isArray(A)))
         throw TypeError("pipeline() expects an array as the first argument");
-      let re = $Yt(o(A)),
-        Ae = $Yt(F);
+      let re = snapshotArray(o(A)),
+        Ae = snapshotArray(F);
       if (re.length === 0) return ee([]);
       (dt(), Ye());
       for (let Ne of Ae)
@@ -3068,7 +3068,7 @@ ${at}`;
         se = 0,
         be = Qe.map((Ne, He) => {
           if (Ne.status === "fulfilled") return Ne.value.v;
-          let { name: Se, msg: L } = DHt(Ne.reason);
+          let { name: Se, msg: L } = getVmErrorInfo(Ne.reason);
           if (Se === "WorkflowBudgetExceededError") return (se++, null);
           let je = `pipeline[${He}] failed: ${L}`;
           return (G(je, { log: !0 }), null);
@@ -3083,7 +3083,7 @@ ${at}`;
       s({
         type: "progress",
         toolUseID: "workflow_log",
-        data: { type: "workflow_log", message: tot(A) },
+        data: { type: "workflow_log", message: formatConsoleArg(A) },
       });
     });
   return {
@@ -3132,7 +3132,7 @@ function A1t(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
         ve === null || (typeof ve !== "object" && typeof ve !== "function")
           ? ve
           : {},
-      toStr: (ve) => not(ve),
+      toStr: (ve) => toDisplayString(ve),
     },
     d = pn(
       (ve) =>
@@ -3146,8 +3146,8 @@ function A1t(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
     o = Object.freeze({
       __proto__: null,
       total: I?.total ?? null,
-      spent: NA(() => I?.getTurnSpent() ?? 0),
-      remaining: NA(() =>
+      spent: wrapSyncHostFunction(() => I?.getTurnSpent() ?? 0),
+      remaining: wrapSyncHostFunction(() =>
         I?.total == null ? 1 / 0 : Math.max(0, I.total - I.getTurnSpent()),
       ),
     }),
@@ -3156,8 +3156,8 @@ function A1t(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
     c = jt.createContext(
       {
         __proto__: null,
-        log: NA(pe.log),
-        phase: NA(pe.phase),
+        log: wrapSyncHostFunction(pe.log),
+        phase: wrapSyncHostFunction(pe.phase),
         console: d,
         budget: o,
         setTimeout: e.setTimeout,
@@ -3165,12 +3165,12 @@ function A1t(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
       },
       { codeGeneration: { strings: !1, wasm: !1 } },
     );
-  (Yt(c), Cae(c), Xt(c));
-  let { vmToStr: _, vmStringify: T, vmOwnString: V } = UYt(c);
+  (Yt(c), hardenVmIntrinsics(c), Xt(c));
+  let { vmToStr: _, vmStringify: T, vmOwnString: V } = makeVmStringUtils(c);
   e.bindVMInvoke(jt.runInContext("(fn => { fn() })", c));
-  let M = Zrt(c),
-    G = qxe(c),
-    te = Qrt(c),
+  let M = makeVmClone(c),
+    G = makeVmAwait(c),
+    te = makeVmApply(c),
     de = {},
     Oe = {
       hooks: pe,
@@ -3184,7 +3184,7 @@ function A1t(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
       childSpawnMemo: () => de.get?.(),
     },
     ut = Bn(Oe),
-    ne = eot(c),
+    ne = makeAsyncWrapper(c),
     dt = (ve, Xe) => pe.agent(ve, Xe);
   for (let [ve, Xe] of [
     ["agent", dt],
@@ -3193,7 +3193,7 @@ function A1t(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
     ["workflow", ut],
   ])
     Object.defineProperty(c, ve, {
-      value: ne(vae(Xe)),
+      value: ne(wrapAsyncHostFunction(Xe)),
       writable: !0,
       enumerable: !0,
       configurable: !0,
@@ -3210,7 +3210,7 @@ function A1t(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
       configurable: !0,
     });
   }
-  let Ye = Mje(c);
+  let Ye = makeVmSanitizers(c);
   return (
     (ee.sanitize = Ye.sanitize),
     (ee.toStr = _),
@@ -3270,12 +3270,12 @@ async function no(t, l, s, m = {}) {
       m.invokingRequestId,
       m.parentPromptId,
     ),
-    fe = bZ(E.vmContext),
+    fe = makeVmErrorExtractor(E.vmContext),
     O = l.abortController?.signal,
     J;
   try {
-    let N = t.runInContext(E.vmContext, S8(Aqe, m.syncTimeoutMs)),
-      ue = qxe(E.vmContext)(N);
+    let N = t.runInContext(E.vmContext, withVmTimeout(Aqe, m.syncTimeoutMs)),
+      ue = makeVmAwait(E.vmContext)(N);
     ue.catch(() => {});
     let ee = (
       O
@@ -3753,7 +3753,7 @@ async function G6n(t) {
       argsJson: p,
       startTime: k,
     } = t,
-    C = await Rtr(m);
+    C = await readWorkflowScriptFile(m);
   if ("error" in C) throw new R(C.error, "adopted workflow script read failed");
   let I = C.script;
   if (t.scriptSha256 === void 0)

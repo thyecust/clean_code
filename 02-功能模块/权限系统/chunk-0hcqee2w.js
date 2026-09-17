@@ -18,7 +18,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { isRemoteOrPluginRequestSource, READ_TOOL_NAME, getSanitizedToolName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { Js } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { parseMcpToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { te, dp, truncateToWidth, uxt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { oL } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -55,7 +55,7 @@ import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { KeybindingScope } from "../../01-核心基础设施/共享小工具-未细化/keybinding-scope.js";
-import { tEt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isPermissionRuleCanonical } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { renderToolUseMessageByToolName } from "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
 import { useAnswerRefusalState } from "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
 import { linkifyUrls } from "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
@@ -73,7 +73,7 @@ import { qd } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { splitGraphemes } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-function Fs(zr) {
+function MultilineBorderBox(zr) {
   let Qr = _(2),
     { multiline: Zr, children: Uu } = zr;
   if (!Zr) {
@@ -97,7 +97,7 @@ function Fs(zr) {
   return UD;
 }
 function $u(u) {
-  return tEt(u);
+  return isPermissionRuleCanonical(u);
 }
 function $D(u) {
   let s = [];
@@ -122,9 +122,9 @@ function $D(u) {
   }
   return s;
 }
-var LZ = 8,
-  D8 = 64,
-  K_e = 160,
+var MAX_PERMISSION_RULE_ENTRIES = 8,
+  MAX_PERMISSION_UPDATES = 64,
+  MAX_CONSENT_LABEL_WIDTH = 160,
   jD = new Set(["localSettings", "session"]);
 function Dn(u, s, n) {
   let a = $D(u).filter((c) => {
@@ -167,8 +167,8 @@ function Dn(u, s, n) {
   }
   return l;
 }
-var pIt = new Set(["addRules", "addDirectories"]),
-  kFn = new Set(["addRules"]);
+var RULES_AND_DIRECTORIES_UPDATE_TYPES = new Set(["addRules", "addDirectories"]),
+  RULES_ONLY_UPDATE_TYPES = new Set(["addRules"]);
 function vD(u) {
   return (
     u.trim() !== u ||
@@ -185,7 +185,7 @@ function Ue(u) {
   let s = parsePermissionRule(formatPermissionRule({ toolName: u }));
   if (s.toolName !== u || s.ruleContent !== void 0) return !1;
   if (containsWildcard(u)) return !1;
-  let n = Js(u);
+  let n = parseMcpToolName(u);
   if (n !== null && !n.toolName) return !1;
   return !0;
 }
@@ -219,7 +219,7 @@ function ju(u) {
       });
   }
 }
-function Kae(u) {
+function formatListWithAnd(u) {
   if (u.length === 0) return "";
   if (u.length === 1) return e(t, { bold: !0, children: u[0] });
   if (u.length === 2)
@@ -242,7 +242,7 @@ function Kae(u) {
     ],
   });
 }
-function F6e(u) {
+function normalizeRulePathPattern(u) {
   return unescapeGlobSpecials(
     (u?.replace(/\/\*\*$/, "") || "")
       .replace(/^\.\//, "")
@@ -253,26 +253,26 @@ function vu(u) {
   if (!u) return "";
   return u.endsWith(":*") || u.endsWith(" *") ? u.slice(0, -2) : u;
 }
-function $6e(u, s, n) {
+function hasAllowRuleForTool(u, s, n) {
   if (u.toolName === s) {
     let a = vu(u.ruleContent);
     if (!a) return !1;
     return Boolean(n ? n(a) : a);
   }
-  if (u.toolName === READ_TOOL_NAME) return Boolean(F6e(u.ruleContent));
+  if (u.toolName === READ_TOOL_NAME) return Boolean(normalizeRulePathPattern(u.ruleContent));
   return !1;
 }
-function OB(u) {
+function sanitizeCommandPrefix(u) {
   return u !== void 0 && ps(u) === u && !/[\t\n\u2028\u2029]/.test(u) && !oU(u)
     ? nir(u)
     : void 0;
 }
-function xS(u) {
+function formatRuleContentForDisplay(u) {
   return N4t(u);
 }
-function fIt(u, s, n, a) {
+function renderSessionConsentLabel(u, s, n, a) {
   if (!Array.isArray(u)) return null;
-  if (u.length > D8) return null;
+  if (u.length > MAX_PERMISSION_UPDATES) return null;
   if (u.some((g) => g === null || typeof g !== "object")) return null;
   let l = u.filter((g) => g.type === "addRules").flatMap((g) => g.rules || []),
     c = u
@@ -288,7 +288,7 @@ function fIt(u, s, n, a) {
     )
   )
     return null;
-  if (l.length + c.length > LZ) return null;
+  if (l.length + c.length > MAX_PERMISSION_RULE_ENTRIES) return null;
   let A = l.filter((g) => g.toolName === READ_TOOL_NAME),
     f = l.filter((g) => g.toolName === s);
   if (
@@ -300,7 +300,7 @@ function fIt(u, s, n, a) {
   let T = dedupe(c),
     B = dedupe(
       A.flatMap((g) =>
-        g.ruleContent && F6e(g.ruleContent) ? g.ruleContent : [],
+        g.ruleContent && normalizeRulePathPattern(g.ruleContent) ? g.ruleContent : [],
       ),
     );
   if (B.some((g) => !n5(g))) return null;
@@ -313,24 +313,24 @@ function fIt(u, s, n, a) {
   if (y.some((g) => !n5(g))) return null;
   let w = D$e(y, (g) => {
       let j = vu(g) || g;
-      return xS(n ? n(j) : j);
+      return formatRuleContentForDisplay(n ? n(j) : j);
     }),
-    L = D$e([...B, ...T], (g) => (B.includes(g) ? xS(F6e(g)) : xS(g))),
+    L = D$e([...B, ...T], (g) => (B.includes(g) ? formatRuleContentForDisplay(normalizeRulePathPattern(g)) : formatRuleContentForDisplay(g))),
     k = L.slice(0, B.length),
     M = L.slice(B.length);
-  if (te([...w, ...k, ...M].join(" and ")) > K_e) return null;
+  if (te([...w, ...k, ...M].join(" and ")) > MAX_CONSENT_LABEL_WIDTH) return null;
   let v = T.length > 0,
     G = k.length > 0,
     K = w.length > 0;
   if (G && !v && !K)
     return r(t, {
-      children: ["Yes, allow reading from ", Kae(k), " from this project"],
+      children: ["Yes, allow reading from ", formatListWithAnd(k), " from this project"],
     });
   if (v && !G && !K)
     return r(t, {
       children: [
         "Yes, and always allow access to ",
-        Kae(M),
+        formatListWithAnd(M),
         " from this project",
       ],
     });
@@ -353,7 +353,7 @@ function fIt(u, s, n, a) {
     return r(t, {
       children: [
         "Yes, and always allow access to ",
-        Kae(g),
+        formatListWithAnd(g),
         " from this project",
       ],
     });
@@ -364,7 +364,7 @@ function fIt(u, s, n, a) {
       return r(t, {
         children: [
           "Yes, and allow access to ",
-          Kae(g),
+          formatListWithAnd(g),
           " and",
           " ",
           ju(w),
@@ -374,7 +374,7 @@ function fIt(u, s, n, a) {
     return r(t, {
       children: [
         "Yes, and allow ",
-        Kae(g),
+        formatListWithAnd(g),
         " access and",
         " ",
         ju(w),
@@ -400,10 +400,10 @@ class le {
     return typeof u === "object" && u !== null && #e in u;
   }
 }
-var Hg = le.is,
-  xFn = createLazyValue(() => qd(Hg));
+var isConsentRow = le.is,
+  consentRowSchema = createLazyValue(() => qd(isConsentRow));
 function $e(u) {
-  if (u.length > D8) return null;
+  if (u.length > MAX_PERMISSION_UPDATES) return null;
   let s = [];
   for (let n of u) {
     let a;
@@ -417,7 +417,7 @@ function $e(u) {
   }
   return mintDisplayedUpdates(s);
 }
-function qw(u, s) {
+function mintConsentRowFromUpdates(u, s) {
   if (!Array.isArray(u)) return null;
   let n;
   try {
@@ -425,7 +425,7 @@ function qw(u, s) {
   } catch {
     return null;
   }
-  if (typeof n !== "number" || !Number.isSafeInteger(n) || n < 0 || n > D8)
+  if (typeof n !== "number" || !Number.isSafeInteger(n) || n < 0 || n > MAX_PERMISSION_UPDATES)
     return null;
   let a = 0,
     l = [];
@@ -444,7 +444,7 @@ function qw(u, s) {
             L = !0;
             break;
           }
-          if (((a += v), a > D8 * LZ)) return null;
+          if (((a += v), a > MAX_PERMISSION_UPDATES * MAX_PERMISSION_RULE_ENTRIES)) return null;
           let G = [];
           for (let K = 0; K < v; K++) G.push(P[K]);
           k[M] = G;
@@ -480,7 +480,7 @@ var YD = {
   plan: "plan mode (research and propose changes without making them)",
   bypassPermissions: "BYPASS PERMISSIONS (no further prompts)",
 };
-function L8(u, s) {
+function createSetModeRow(u, s) {
   if (u === "bypassPermissions" && s?.isBypassPermissionsModeAvailable === !1)
     return null;
   let n = $e([{ type: "setMode", destination: "session", mode: u }]);
@@ -507,7 +507,7 @@ function L8(u, s) {
     n,
   );
 }
-function mIt(u) {
+function createAddDirectoriesRow(u) {
   if (!Array.isArray(u)) return null;
   let s;
   try {
@@ -515,7 +515,7 @@ function mIt(u) {
   } catch {
     return null;
   }
-  if (typeof s !== "number" || !Number.isSafeInteger(s) || s < 0 || s > D8)
+  if (typeof s !== "number" || !Number.isSafeInteger(s) || s < 0 || s > MAX_PERMISSION_UPDATES)
     return null;
   let n = [];
   for (let A = 0; A < s; A++)
@@ -526,9 +526,9 @@ function mIt(u) {
     } catch {}
   let a = dedupe(n);
   if (a.length === 0) return null;
-  if (a.length > LZ) return null;
+  if (a.length > MAX_PERMISSION_RULE_ENTRIES) return null;
   let l = Qk(a, (A) => N4t(A));
-  if (te(l.join(", ")) > K_e) return null;
+  if (te(l.join(", ")) > MAX_CONSENT_LABEL_WIDTH) return null;
   let c = $e([
     { type: "addDirectories", destination: "session", directories: a },
   ]);
@@ -545,11 +545,11 @@ function mIt(u) {
     c,
   );
 }
-function gIt(u, s, n) {
-  if (typeof u !== "string" || OB(u) !== u) return null;
+function createRuleConsentRow(u, s, n) {
+  if (typeof u !== "string" || sanitizeCommandPrefix(u) !== u) return null;
   if (typeof s !== "string") return null;
   let a = s.trim();
-  if (a === "" || OB(a) !== a) return null;
+  if (a === "" || sanitizeCommandPrefix(a) !== a) return null;
   if (a === "*") {
     if (!Ue(n)) return null;
     let c = $e([
@@ -575,7 +575,7 @@ function gIt(u, s, n) {
   if (l === null) return null;
   return new le(de, `Yes, and don\u2019t ask again for: ${a}`, l);
 }
-var TQt = {
+var AUTO_MODE_ROW_LABELS = {
     workflow: "Yes, and switch to auto mode",
     "exit-plan-resume": "Yes, and use auto mode",
   },
@@ -584,16 +584,16 @@ var TQt = {
     if (u === null) throw Error("NO_DISPLAYED_UPDATES: empty intake rejected");
     return u;
   })();
-function Bst(u) {
-  return new le(de, TQt[u], HD);
+function createAutoModeRow(u) {
+  return new le(de, AUTO_MODE_ROW_LABELS[u], HD);
 }
-function hIt(u, ...s) {
+function combineConsentRows(u, ...s) {
   let n = [u, ...s];
   for (let c of n)
-    if (!Hg(c))
+    if (!isConsentRow(c))
       throw Error("combineRows accepts only constructor-produced ConsentRows");
   let a = n.flatMap((c) => [...c.applies]);
-  if (a.length > D8)
+  if (a.length > MAX_PERMISSION_UPDATES)
     throw Error("combineRows: combined updates exceed the display intake cap");
   let l = $e(a);
   if (l === null)
@@ -870,7 +870,7 @@ function bo(Ps) {
   return Ps.toolPermissionContext.mode;
 }
 function Ao(Ms, Ns) {
-  return e(Fs, { multiline: aA(Ms), children: Ns });
+  return e(MultilineBorderBox, { multiline: aA(Ms), children: Ns });
 }
 function Bo(u) {
   if (u?.startsWith("plugin")) return "plugin hooks.json";
@@ -957,7 +957,7 @@ ${a(u.reason)}`
       return null;
   }
 }
-function Ig(Rs) {
+function PermissionReasonPanel(Rs) {
   let Ne = _(27),
     { permissionResult: ce, toolType: pn } = Rs,
     Xu = useAppStateSelector(bo),
@@ -1144,10 +1144,10 @@ function jo(Pn) {
     },
   };
 }
-function B6e(u) {
+function getFeedbackTypeForAnswer(u) {
   return u === "yes" ? "accept" : u === "no" ? "reject" : void 0;
 }
-function MZ(Ks) {
+function useConsentFeedbackState(Ks) {
   let Ye = _(35),
     {
       feedbackTypeOf: Te,
@@ -1298,7 +1298,7 @@ var uD = {
   accept: "tell Claude what to do next",
   reject: "tell Claude what to do differently",
 };
-function XW({
+function ConfirmationPrompt({
   options: u,
   onSelect: s,
   onCancel: n,
@@ -1324,7 +1324,7 @@ function XW({
       logSubmitted: K,
       logEscape: g,
       hintNode: j,
-    } = MZ({ feedbackTypeOf: B, toolName: l?.toolName, isMcp: l?.isMcp ?? !1 }),
+    } = useConsentFeedbackState({ feedbackTypeOf: B, toolName: l?.toolName, isMcp: l?.isMcp ?? !1 }),
     J = V(
       () =>
         u.map((W) => {
@@ -1410,8 +1410,8 @@ F();
 function rr(_a) {
   return _a.toolPermissionContext;
 }
-var jst = "\xB7 workflows run best with it on";
-function U6e(Ra) {
+var ENABLE_AUTO_MODE_DESCRIPTION = "\xB7 workflows run best with it on";
+function useAutoModeOffer(Ra) {
   let DD = _(10),
     Ie = useAppStateSelector(rr),
     tD = useSetAppState(),
@@ -2077,7 +2077,7 @@ function wD(u, s, n, a) {
         ...(a && { feedback: a }),
       };
     case "yes-dont-ask-again": {
-      if (n === null || !Hg(n))
+      if (n === null || !isConsentRow(n))
         return { behavior: "allow", updatedInput: s.input };
       return {
         behavior: "allow",
@@ -2090,7 +2090,7 @@ function wD(u, s, n, a) {
   }
 }
 function _D(u, s) {
-  return qw(
+  return mintConsentRowFromUpdates(
     [
       {
         type: "addRules",
@@ -2144,11 +2144,11 @@ function nn(u) {
     isRemoteOrPluginRequestSource(u.requestSource)
   );
 }
-function Wst(u) {
+function shouldOfferAlwaysAllow(u) {
   return u.showAlwaysAllow && !nn(u) && Ue(u.toolName);
 }
 var PD = 2;
-function EQt(Sl) {
+function ToolPermissionDialog(Sl) {
   let O = _(120),
     { payload: S, answer: su, wouldTakeAnswer: fD } = Sl,
     pD = C(null),
@@ -2265,10 +2265,10 @@ function EQt(Sl) {
   else ge = O[27];
   let au = ge,
     Pu;
-  if (O[28] !== S) ((Pu = Wst(S)), (O[28] = S), (O[29] = Pu));
+  if (O[28] !== S) ((Pu = shouldOfferAlwaysAllow(S)), (O[28] = S), (O[29] = Pu));
   else Pu = O[29];
   let ED = Pu,
-    { offered: gD, enableAutoMode: hD } = U6e(S.requestSource),
+    { offered: gD, enableAutoMode: hD } = useAutoModeOffer(S.requestSource),
     kr;
   if (O[30] === MEMO_CACHE_SENTINEL) ((kr = he()), (O[30] = kr));
   else kr = O[30];
@@ -2289,7 +2289,7 @@ function EQt(Sl) {
   let yD = Rr,
     Tr;
   if (O[38] !== gD || O[39] !== au || O[40] !== yD)
-    ((Tr = gD && !au && !yD ? Bst("workflow") : null),
+    ((Tr = gD && !au && !yD ? createAutoModeRow("workflow") : null),
       (O[38] = gD),
       (O[39] = au),
       (O[40] = yD),
@@ -2434,7 +2434,7 @@ function EQt(Sl) {
         if (O[71] !== Ve.node)
           ((Be = {
             label: Ve.node,
-            description: jst,
+            description: ENABLE_AUTO_MODE_DESCRIPTION,
             value: "yes-enable-auto-mode",
           }),
             (O[71] = Ve.node),
@@ -2593,7 +2593,7 @@ function EQt(Sl) {
   else zt = O[99];
   let Zt;
   if (O[100] !== S.permissionResult)
-    ((Zt = e(Ig, { permissionResult: S.permissionResult, toolType: "tool" })),
+    ((Zt = e(PermissionReasonPanel, { permissionResult: S.permissionResult, toolType: "tool" })),
       (O[100] = S.permissionResult),
       (O[101] = Zt));
   else Zt = O[101];
@@ -2608,7 +2608,7 @@ function EQt(Sl) {
     O[108] !== TD
   )
     ((Qt = e(
-      XW,
+      ConfirmationPrompt,
       {
         options: RD,
         defaultFocusValue: AD,
@@ -2662,33 +2662,33 @@ function EQt(Sl) {
   return Hr;
 }
 export {
-  LZ,
-  D8,
-  K_e,
-  pIt,
-  kFn,
-  Kae,
-  F6e,
-  $6e,
-  OB,
-  xS,
-  fIt,
-  Fs,
-  Hg,
-  xFn,
-  qw,
-  L8,
-  mIt,
-  gIt,
-  TQt,
-  Bst,
-  hIt,
-  Ig,
-  jst,
-  U6e,
-  B6e,
-  MZ,
-  XW,
-  Wst,
-  EQt,
+  MAX_PERMISSION_RULE_ENTRIES,
+  MAX_PERMISSION_UPDATES,
+  MAX_CONSENT_LABEL_WIDTH,
+  RULES_AND_DIRECTORIES_UPDATE_TYPES,
+  RULES_ONLY_UPDATE_TYPES,
+  formatListWithAnd,
+  normalizeRulePathPattern,
+  hasAllowRuleForTool,
+  sanitizeCommandPrefix,
+  formatRuleContentForDisplay,
+  renderSessionConsentLabel,
+  MultilineBorderBox,
+  isConsentRow,
+  consentRowSchema,
+  mintConsentRowFromUpdates,
+  createSetModeRow,
+  createAddDirectoriesRow,
+  createRuleConsentRow,
+  AUTO_MODE_ROW_LABELS,
+  createAutoModeRow,
+  combineConsentRows,
+  PermissionReasonPanel,
+  ENABLE_AUTO_MODE_DESCRIPTION,
+  useAutoModeOffer,
+  getFeedbackTypeForAnswer,
+  useConsentFeedbackState,
+  ConfirmationPrompt,
+  shouldOfferAlwaysAllow,
+  ToolPermissionDialog,
 };

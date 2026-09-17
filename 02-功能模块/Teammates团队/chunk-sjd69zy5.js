@@ -16,7 +16,7 @@ import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { hasPerfettoRecorder, registerPerfettoAgent, isInProcessTeammateTask, isLocalAgentTask } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { WE } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { TASK_UPDATE_TOOL_NAME } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { X_ } from "./chunk-g6nvp9mm.js";
 import { generateTaskId, createPendingTask } from "./chunk-mrfx53ye.js";
 function M(t, o) {
@@ -58,7 +58,7 @@ async function spawnInProcessTeammate(t, o) {
         planModeRequired: l,
         parentSessionId: a,
         hasTaskListTools:
-          X_() && o.rootToolSurface.tools.some((m) => matchesToolName(m, WE)),
+          X_() && o.rootToolSurface.tools.some((m) => matchesToolName(m, TASK_UPDATE_TOOL_NAME)),
         abortController: r,
       });
     if (hasPerfettoRecorder()) registerPerfettoAgent(s, e, a);

@@ -12,7 +12,7 @@ import { isValidPathSegment } from "../Teammates团队/storage-keys.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { LITE_READ_BUF_SIZE, validateUuid, readSessionLite } from "./chunk-mkmy4cx2.js";
-import { tE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getSidecarKeyForPath } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getProjectKeyFromDir } from "../Teammates团队/transcript-paths.js";
 import { resolveTranscriptLocator, createTranscriptSource } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { sanitizeSessionName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -93,7 +93,7 @@ async function readSessionCustomTitle(e, t, i) {
 async function N(e, t) {
   if (isHoverRestEnabled() && t !== void 0)
     try {
-      let i = tE(e);
+      let i = getSidecarKeyForPath(e);
       if (i !== void 0) {
         let n = await t.readText([i]);
         if (!n.ok) return;

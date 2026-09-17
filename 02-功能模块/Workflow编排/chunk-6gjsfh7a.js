@@ -25,9 +25,9 @@ import { te, truncateToWidth, cxt, formatDuration, formatBarElapsed, formatToken
 import { ake } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { zj } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { slugifyWorkflowName } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getProjectDirsUpToHome, getUserMessageText, isTranscriptMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ti } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { STRUCTURED_OUTPUT_TOOL_NAME } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { buildResumePrompt } from "./chunk-va9cgbfs.js";
 import { parseWorkflowScript } from "./workflow-script.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
@@ -91,7 +91,7 @@ async function Wn(s, a) {
       if (I.type === "tool_use") {
         if (
           (C.push({ name: I.name, summary: summarizeToolInput(I.input) }),
-          I.name === ti && I.input !== void 0)
+          I.name === STRUCTURED_OUTPUT_TOOL_NAME && I.input !== void 0)
         )
           try {
             S = b(I.input, null, 2);
@@ -232,7 +232,7 @@ async function ll(s, a) {
   return En(l, ".claude", "workflows");
 }
 async function _n(s, a) {
-  let l = zj(s.name),
+  let l = slugifyWorkflowName(s.name),
     c = await ll(s.scope, s.cwd),
     m = En(c, `${l}.js`);
   if (a !== void 0 && s.scope === "user") return cl(a, l, m, s);
@@ -407,7 +407,7 @@ function DHe(Vu) {
   let Zu = wl,
     Cl;
   if (st[15] !== zt)
-    ((Cl = zj(zt.trim() || "workflow")), (st[15] = zt), (st[16] = Cl));
+    ((Cl = slugifyWorkflowName(zt.trim() || "workflow")), (st[15] = zt), (st[16] = Cl));
   else Cl = st[16];
   let Jn = Cl,
     Sl;
@@ -1920,7 +1920,7 @@ function eye({
       if (!wo) return "";
       let M = parseWorkflowScript(s.script);
       if (!("error" in M)) return M.meta.name;
-      return zj(s.summary ?? s.description);
+      return slugifyWorkflowName(s.summary ?? s.description);
     }, [wo, s.script, s.summary, s.description]),
     Ja = V(() => uZt(s), [s.script, s.description, s.summary]),
     { name: kn, subtext: Cn, stats: Sn } = dZt(s, Ja, P, j);

@@ -18,7 +18,7 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { isSuspiciousUrl } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { yi, ms, Ow, B5, SHn, gke, wx, XT, NQ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { SETTINGS_SOURCE_ORDER, getEnabledSettingsSources, PROJECT_SCOPED_SETTINGS_SOURCE_SET, RESERVED_MARKETPLACE_NAMES, looksLikeOfficialMarketplaceName, getReservedMarketplaceNameError as gke, getPluginIdSchema, getSettingsSchema, sortObjectKeysDeep } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -179,7 +179,7 @@ function Pn(e) {
 }
 var Ue = ["userSettings", "projectSettings", "localSettings", "flagSettings"],
   kn = new Set(["userSettings", "flagSettings"]),
-  Sn = yi.toReversed(),
+  Sn = SETTINGS_SOURCE_ORDER.toReversed(),
   bn = 200,
   Rn = 32,
   ve = 2000,
@@ -272,7 +272,7 @@ function yWe(e) {
   o.sort((A, R) => we(A.id, R.id));
   let H = Vn(e)
     ? "over_read_cap"
-    : !XT().safeParse(a).success
+    : !getSettingsSchema().safeParse(a).success
       ? "schema_rejected"
       : Buffer.byteLength(Gn(a), "utf8") > Dn
         ? "too_large"
@@ -295,7 +295,7 @@ function yWe(e) {
   return { patch: a, dropped: o, counts: E };
 }
 function Gn(e) {
-  return b(NQ(e));
+  return b(sortObjectKeysDeep(e));
 }
 function $e(e) {
   return {
@@ -360,7 +360,7 @@ function Vn(e) {
   });
 }
 function Zn(e) {
-  return e.length <= Cn && wx().safeParse(e).success;
+  return e.length <= Cn && getPluginIdSchema().safeParse(e).success;
 }
 function qn(
   e,
@@ -403,7 +403,7 @@ function Jn(e, t, o) {
   if (r === BUILTIN_PLUGIN_SOURCE || r === SKILLS_DIR_PLUGIN_SOURCE) return { kind: "reserved" };
   if (o.byPolicy.has(r)) return { kind: "drop", reason: "blocked_by_policy" };
   let d = Qn(e, t),
-    w = B5.has(r);
+    w = RESERVED_MARKETPLACE_NAMES.has(r);
   if (d === void 0 && t.marketplaceRestrictionPolicyActive && r !== ig)
     return { kind: "drop", reason: w ? "blocked_by_policy" : Ie(e, t) };
   if (w)
@@ -412,7 +412,7 @@ function Jn(e, t, o) {
       : xn.has(r)
         ? { kind: "reserved" }
         : { kind: "drop", reason: "not_provided_by_container" };
-  if (SHn(e)) return { kind: "drop", reason: "reserved_name_conflict" };
+  if (looksLikeOfficialMarketplaceName(e)) return { kind: "drop", reason: "reserved_name_conflict" };
   if (d === void 0) return { kind: "drop", reason: Ie(e, t) };
   return zn(e, d);
 }
@@ -425,7 +425,7 @@ function Qn(e, t) {
     : void 0;
   if (o !== void 0) return isRecord(o) ? (Q(o, "source") ?? null) : null;
   for (let r of Sn) {
-    if (Ow.has(r) && !t.folderTrustedForProjectPlugins) continue;
+    if (PROJECT_SCOPED_SETTINGS_SOURCE_SET.has(r) && !t.folderTrustedForProjectPlugins) continue;
     let d = Be(t, r, e);
     if (d !== void 0) return isRecord(d) ? (Q(d, "source") ?? null) : null;
   }
@@ -434,7 +434,7 @@ function Qn(e, t) {
 function et(e, t) {
   return (
     !t.folderTrustedForProjectPlugins &&
-    [...Ow].some((o) => Be(t, o, e) !== void 0)
+    [...PROJECT_SCOPED_SETTINGS_SOURCE_SET].some((o) => Be(t, o, e) !== void 0)
   );
 }
 function Be(e, t, o) {
@@ -531,7 +531,7 @@ function ze(e) {
   return e === "." || e === "..";
 }
 function Ee(e, t) {
-  return XT().shape.extraKnownMarketplaces.safeParse({ [e]: { source: t } })
+  return getSettingsSchema().shape.extraKnownMarketplaces.safeParse({ [e]: { source: t } })
     .success
     ? { kind: "declare", source: t }
     : { kind: "drop", reason: "invalid_marketplace" };
@@ -586,7 +586,7 @@ function dt(e, t, o) {
     if (w !== void 0) {
       let O = d.toLowerCase(),
         S = r.get(O) ?? new Set();
-      (S.add(Tc(NQ(w))), r.set(O, S));
+      (S.add(Tc(sortObjectKeysDeep(w))), r.set(O, S));
     }
   return e.filter(({ id: d, marketplace: w, declaration: O }) => {
     if (O === void 0 || (r.get(w.toLowerCase())?.size ?? 0) <= 1) return !0;
@@ -656,11 +656,11 @@ function Q(e, t) {
   return Object.hasOwn(e, t) ? e[t] : void 0;
 }
 async function rPt(e) {
-  let t = ms().map((a) => [a, getSettingsForSource(a)]),
+  let t = getEnabledSettingsSources().map((a) => [a, getSettingsForSource(a)]),
     [o, r] = await Promise.all([getKnownMarketplacesOrEmpty(e), getInstalledPluginsViaStorage(e)]),
     d = isPersistedWorkspaceTrusted(),
     w = t
-      .filter(([a]) => d || !Ow.has(a))
+      .filter(([a]) => d || !PROJECT_SCOPED_SETTINGS_SOURCE_SET.has(a))
       .flatMap(([, a]) =>
         Object.entries(a?.extraKnownMarketplaces ?? {}).map(
           ([E, { source: H }]) => [E, H],

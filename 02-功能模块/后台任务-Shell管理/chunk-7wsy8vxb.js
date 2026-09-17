@@ -14,7 +14,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { R, dt, ge, l, A, Jr, Jg, WW, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt, fromEnumArr, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { ou, We, b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { $U, PRt, ORt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { PROVIDER_CONFIG_ENV_VARS, MODEL_ENV_VARS, CUSTOM_MODEL_OPTION_ENV_VARS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { normalizeComparableText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
@@ -126,12 +126,12 @@ var Are = new Set([
     "--rc",
   ]),
   c3t = new Set(["CLAUDE_CODE_SUBAGENT_MODEL_FORCE"]),
-  nyn = [...PRt, ...ORt, ...c3t],
+  nyn = [...MODEL_ENV_VARS, ...CUSTOM_MODEL_OPTION_ENV_VARS, ...c3t],
   ryn = new Set([
     "CLAUDE_CONFIG_DIR",
     "CLAUDE_INTERNAL_FC_OVERRIDES",
     ...nyn,
-    ...$U,
+    ...PROVIDER_CONFIG_ENV_VARS,
     "AWS_REGION",
     "AWS_DEFAULT_REGION",
     "ANTHROPIC_BEDROCK_REGION_PREFIX",

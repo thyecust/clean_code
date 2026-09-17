@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { getInitialSettings } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { Bk, Ys } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { isPowerShellToolEnabled, isBashToolAvailable } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 function getDefaultShell() {
   let e = getInitialSettings().defaultShell;
-  if (e === "bash" && !Ys()) return "powershell";
-  if (e === "powershell" && !Bk()) return "bash";
-  return e ?? (Ys() ? "bash" : "powershell");
+  if (e === "bash" && !isBashToolAvailable()) return "powershell";
+  if (e === "powershell" && !isPowerShellToolEnabled()) return "bash";
+  return e ?? (isBashToolAvailable() ? "bash" : "powershell");
 }
 export { getDefaultShell };

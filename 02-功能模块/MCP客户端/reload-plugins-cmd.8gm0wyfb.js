@@ -11,8 +11,8 @@
 // [preload stripped] 原本在此预载 206 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { wr } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { sanitizeForDisplay } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { getRemoteTransport, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { formatDependencyCountSuffix } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { refreshActivePlugins, getPluginReloadCacheImpact, logPluginReloadCacheImpact } from "./plugin-reload-cache-impact.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
@@ -36,11 +36,11 @@ var S = createLazyValue(() => {
   HEADLESS_MCP_PENDING_NOTE = "Plugin MCP server changes take effect in your next session.",
   j = async (n, e) => {
     if (!P(e)) return { type: "text", value: REMOTE_INPUT_DECLINE };
-    if (Ks()) {
+    if (hasRemoteControlChannel()) {
       let o = parseThinClientReply(
         "reload_plugins",
         S(),
-        await jn().sendControlRequest(
+        await getRemoteTransport().sendControlRequest(
           { subtype: "reload_plugins" },
           { signal: e.abortController.signal },
         ),
@@ -138,7 +138,7 @@ function formatCacheWarningText(n) {
     [t] = e,
     s =
       e.length === 1 && t !== void 0
-        ? wr(t.split(":").slice(2).join(":") || t)
+        ? sanitizeForDisplay(t.split(":").slice(2).join(":") || t)
         : `${e.length} MCP servers`,
     l = [];
   if (e.length > 0) l.push(`changes MCP tools (${s})`);

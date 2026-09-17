@@ -20,8 +20,8 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { BASH_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { yi, ay, cke, getRelativeSettingsFilePathForSource } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { jn, Pt, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { SETTINGS_SOURCE_ORDER, describeSettingsSourceShort, HOOK_SETTINGS_SOURCE_ORDER, getRelativeSettingsFilePathForSource } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { parseSettingsFile, getSettingsFilePathForSource, getSettingsForSource, updateSettingsForSourceWithTransform, autoModeConfigSchema, AUTO_MODE_TRUSTED_SOURCES } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { parsePermissionRule, formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
@@ -54,7 +54,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import { Oc, DG, ON, Df, jH } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { applyPermissionUpdate, persistPermissionUpdate, getAlwaysAllowRules, getAlwaysDenyRules, getAlwaysAskRules } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { vve, Rm, Us, Qk, Oo, ZJe } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
@@ -64,7 +64,7 @@ import "../../01-核心基础设施/共享小工具-未细化/expanded-content-c
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss, a0e, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
-import { J8 } from "../后台任务-Shell管理/chunk-c7mzes79.js";
+import { useAutoModeDenials } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -72,7 +72,7 @@ import { useSession } from "../../01-核心基础设施/共享小工具-未细�
 import { AddDirectoryToWorkspaceDialog } from "./add-directory-to-workspace.js";
 import { m7, SSe, F3e, TSe, oI } from "./chunk-4wrkmv3h.js";
 import { openFileInEditor, resolveEditorCommand, getEditorDisplayName, editFileInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
-import { xS, Fs } from "./chunk-0hcqee2w.js";
+import { formatRuleContentForDisplay, MultilineBorderBox } from "./chunk-0hcqee2w.js";
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
@@ -152,8 +152,8 @@ async function ql(i, u) {
     for (let g of f.sources) {
       if (g === null) continue;
       let { source: w, settings: S } = g,
-        P = yi.find((I) => I === w),
-        B = P ? ay(P) : Xl(truncateToCodeUnits(w, 40)) + (w.length > 40 ? "\u2026" : "");
+        P = SETTINGS_SOURCE_ORDER.find((I) => I === w),
+        B = P ? describeSettingsSourceShort(P) : Xl(truncateToCodeUnits(w, 40)) + (w.length > 40 ? "\u2026" : "");
       for (let { kind: I } of ri)
         for (let W of S.permissions?.[I] ?? [])
           a[I].push({ rule: Xl(W), source: B });
@@ -377,9 +377,9 @@ function fd(i, u) {
 }
 function ai(i, u) {
   let f = [],
-    a = ON(i),
-    g = jH(i),
-    w = Df(i);
+    a = getAlwaysAllowRules(i),
+    g = getAlwaysAskRules(i),
+    w = getAlwaysDenyRules(i);
   for (let S of a) {
     let P = fd(S, w);
     if (P.shadowed) {
@@ -416,7 +416,7 @@ function go(Rg) {
         if (at.ruleContent.endsWith(":*") || at.ruleContent.endsWith(" *")) {
           let We;
           if (Io[0] !== at.ruleContent)
-            ((We = xS(at.ruleContent.slice(0, -2))),
+            ((We = formatRuleContentForDisplay(at.ruleContent.slice(0, -2))),
               (Io[0] = at.ruleContent),
               (Io[1] = We));
           else We = Io[1];
@@ -437,7 +437,7 @@ function go(Rg) {
         } else {
           let We;
           if (Io[4] !== at.ruleContent)
-            ((We = xS(at.ruleContent)), (Io[4] = at.ruleContent), (Io[5] = We));
+            ((We = formatRuleContentForDisplay(at.ruleContent)), (Io[4] = at.ruleContent), (Io[5] = We));
           else We = Io[5];
           let po;
           if (Io[6] !== We)
@@ -467,7 +467,7 @@ function go(Rg) {
       if (!at.ruleContent) {
         let We;
         if (Io[9] !== at.toolName)
-          ((We = xS(at.toolName)), (Io[9] = at.toolName), (Io[10] = We));
+          ((We = formatRuleContentForDisplay(at.toolName)), (Io[9] = at.toolName), (Io[10] = We));
         else We = Io[10];
         let po;
         if (Io[11] !== We)
@@ -537,7 +537,7 @@ function tr(Ig) {
     } = Ig,
     { storageV5: ea } = useStorageV5Context(),
     pd;
-  if (Gt[0] === MEMO_CACHE_SENTINEL) ((pd = cke.map(la)), (Gt[0] = pd));
+  if (Gt[0] === MEMO_CACHE_SENTINEL) ((pd = HOOK_SETTINGS_SOURCE_ORDER.map(la)), (Gt[0] = pd));
   else pd = Gt[0];
   let Lg = pd,
     hd;
@@ -554,15 +554,15 @@ function tr(Ig) {
       if (ta === "cancel") {
         pn();
         return;
-      } else if (cke.includes(ta)) {
+      } else if (HOOK_SETTINGS_SOURCE_ORDER.includes(ta)) {
         let oa = ta;
-        let gd = Oc(Jl, {
+        let gd = applyPermissionUpdate(Jl, {
           type: "addRules",
           rules: pt,
           behavior: gn,
           destination: oa,
         });
-        (DG(
+        (persistPermissionUpdate(
           { type: "addRules", rules: pt, behavior: gn, destination: oa },
           ea,
         ).catch(logError),
@@ -797,7 +797,7 @@ function ur(Ey) {
       (Je[3] = _d));
   else ((Dd = Je[2]), (_d = Je[3]));
   E(Dd, _d);
-  let { getDenials: Ay } = J8(),
+  let { getDenials: Ay } = useAutoModeDenials(),
     [ct] = d(Ay),
     [Qt, Md] = d(Kd),
     [Jt, Py] = d(qd),
@@ -1008,7 +1008,7 @@ function mr(qy) {
     om;
   if (dr[0] !== vn || dr[1] !== ba || dr[2] !== va || dr[3] !== wa)
     ((om = () => {
-      let Gy = Oc(va, {
+      let Gy = applyPermissionUpdate(va, {
         type: "removeDirectories",
         directories: [vn],
         destination: "session",
@@ -2197,7 +2197,7 @@ function He(tw) {
   else ts = Lt[3];
   let os;
   if (Lt[4] !== Fn.needsGutter || Lt[5] !== ts)
-    ((os = e(Fs, { multiline: Fn.needsGutter, children: ts })),
+    ((os = e(MultilineBorderBox, { multiline: Fn.needsGutter, children: ts })),
       (Lt[4] = Fn.needsGutter),
       (Lt[5] = ts),
       (Lt[6] = os));
@@ -3258,7 +3258,7 @@ function Ch(ZS) {
   return ZS.ruleString;
 }
 function xh(eC) {
-  return xS(eC);
+  return formatRuleContentForDisplay(eC);
 }
 function Eh(tC) {
   return tC !== void 0;
@@ -3320,7 +3320,7 @@ function _l(FR) {
   useKeybinding("confirm:no", Js, pp);
   let Zs;
   if (Xe[1] !== Ke.ruleValue)
-    ((Zs = xS(formatPermissionRule(Ke.ruleValue))), (Xe[1] = Ke.ruleValue), (Xe[2] = Zs));
+    ((Zs = formatRuleContentForDisplay(formatPermissionRule(Ke.ruleValue))), (Xe[1] = Ke.ruleValue), (Xe[2] = Zs));
   else Zs = Xe[2];
   let el;
   if (Xe[3] !== Zs)
@@ -3648,7 +3648,7 @@ function Fl(NR) {
   let R = _(224),
     { onExit: xo, initialTab: UR, onRetryDenials: Qc } = NR,
     { storageV5: Be } = useStorageV5Context(),
-    { getDenials: Jc, removeDenial: Zc } = J8(),
+    { getDenials: Jc, removeDenial: Zc } = useAutoModeDenials(),
     Ep;
   if (R[0] !== Jc) ((Ep = Jc()), (R[0] = Jc), (R[1] = Ep));
   else Ep = R[1];
@@ -3699,13 +3699,13 @@ function Fl(NR) {
   let vl = Dp,
     du = Sh,
     wl;
-  if (R[6] !== re) ((wl = du(ON(re))), (R[6] = re), (R[7] = wl));
+  if (R[6] !== re) ((wl = du(getAlwaysAllowRules(re))), (R[6] = re), (R[7] = wl));
   else wl = R[7];
   let Rl;
-  if (R[8] !== re) ((Rl = du(Df(re))), (R[8] = re), (R[9] = Rl));
+  if (R[8] !== re) ((Rl = du(getAlwaysDenyRules(re))), (R[8] = re), (R[9] = Rl));
   else Rl = R[9];
   let Sl;
-  if (R[10] !== re) ((Sl = du(jH(re))), (R[10] = re), (R[11] = Sl));
+  if (R[10] !== re) ((Sl = du(getAlwaysAskRules(re))), (R[10] = re), (R[11] = Sl));
   else Sl = R[11];
   let _p;
   if (R[12] !== wl || R[13] !== Rl || R[14] !== Sl)
@@ -3850,7 +3850,7 @@ function Fl(NR) {
       for (const Gp of iS)
         Ge((lS) => [
           ...lS,
-          `Added ${Gp.ruleBehavior} rule ${chalk.bold(xS(formatPermissionRule(Gp.ruleValue)))}`,
+          `Added ${Gp.ruleBehavior} rule ${chalk.bold(formatRuleContentForDisplay(formatPermissionRule(Gp.ruleValue)))}`,
         ]);
       for (const xl of sS) {
         let aS = xl.shadowType === "deny" ? "blocked" : "shadowed";
@@ -3859,7 +3859,7 @@ function Fl(NR) {
           getThemeColor(
             "warning",
             tu,
-          )(`${figures.warning} Warning: ${xS(formatPermissionRule(xl.rule.ruleValue))} is ${aS}`),
+          )(`${figures.warning} Warning: ${formatRuleContentForDisplay(formatPermissionRule(xl.rule.ruleValue))} is ${aS}`),
           chalk.dim(`  ${xl.reason}`),
           chalk.dim(`  Fix: ${xl.fix}`),
         ]);
@@ -3959,7 +3959,7 @@ function Fl(NR) {
         else if (Yr > 0) Eu = El[Yr - 1];
       }
       WR(Eu);
-      let ih = xS(formatPermissionRule(yt.ruleValue));
+      let ih = formatRuleContentForDisplay(formatPermissionRule(yt.ruleValue));
       let RS = yt.ruleBehavior;
       (deletePermissionRule({
         rule: yt,
@@ -4537,9 +4537,9 @@ function Fl(NR) {
           directories: [fh],
           destination: Lu ? "localSettings" : "session",
         };
-        let zS = Oc(re, ph);
+        let zS = applyPermissionUpdate(re, ph);
         if ((Ct((HS) => ({ ...HS, toolPermissionContext: zS })), Lu))
-          DG(ph, Be).catch(logError);
+          persistPermissionUpdate(ph, Be).catch(logError);
         (Ge((KS) => [
           ...KS,
           `Added directory ${chalk.bold(sanitizeForDisplay(fh))} to workspace${Lu ? " and saved to local settings" : " for this session"}`,
@@ -4875,9 +4875,9 @@ function Fl(NR) {
   return yh;
 }
 var bC = async (i, u) => {
-  if (Pt()) {
-    let f = jn();
-    if (!f || !Ks())
+  if (isRemoteActive()) {
+    let f = getRemoteTransport();
+    if (!f || !hasRemoteControlChannel())
       return (
         i("Permission rules aren't available over this remote connection"),
         null

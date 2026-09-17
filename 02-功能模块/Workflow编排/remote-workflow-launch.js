@@ -12,7 +12,7 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isReviewOriginSession } from "../认证-OAuth登录/credential-file-descriptors.js";
-import { Uh, MTt, NTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { MAX_WORKFLOW_SCRIPT_BYTES, MAX_SERVER_AUTHORED_WORKFLOW_SCRIPT_BYTES, persistWorkflowScript } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { areWorkflowsDisabledBySettings, isWorkflowsAllowedByPolicy } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import { hasPermissionsToUseTool } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -61,7 +61,7 @@ async function launchWorkflow({
   let s = (l, e) => ({ ok: !1, layer: l, line: formatWorkflowErrorLine(l, e) }),
     _ = getWorkflowDisabledReason({ serverAuthoredCarrier: h });
   if (_) return s("policy-gate", _);
-  let w = h ? MTt : Uh;
+  let w = h ? MAX_SERVER_AUTHORED_WORKFLOW_SCRIPT_BYTES : MAX_WORKFLOW_SCRIPT_BYTES;
   if (t.length > w)
     return s("script-too-large", `workflow script exceeds ${w} bytes.`);
   if (!rU(t))
@@ -81,7 +81,7 @@ async function launchWorkflow({
   if (!k.ok) return s("compile", `workflow script compile failed: ${k.error}`);
   let f = `wf_${randomUUID().slice(0, 12)}`,
     y = generateTaskId("local_workflow"),
-    x = NTt(n.meta.name, f, t, p.storageV5),
+    x = persistWorkflowScript(n.meta.name, f, t, p.storageV5),
     C = Fdt(n.meta.name, void 0, !1),
     R = $dt(n.meta.description, void 0, !1);
   logEvent("tengu_workflow_launched", {

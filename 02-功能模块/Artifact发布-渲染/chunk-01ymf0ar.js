@@ -45,7 +45,7 @@ import {
   getFeatureValue_CACHED_MAY_BE_STALE,
   hasReservedPathSegment,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { ea, Pw, Nr, Vn, hke, $q } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { pickBy, getMergedSettings, isSettingsSourceEnabled, formatDisplayText, BINARIES_BASENAME_PATTERN, MAX_PLUGIN_FILE_BYTES } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -219,12 +219,12 @@ function clearPublishInFlight(e, t) {
 function isPublishInFlight(e, t) {
   return (e.get().inFlight[t] ?? 0) > 0;
 }
-function SCe(e) {
+function formatNoGatewayCredentialMessage(e) {
   return e
     ? `this session holds no gateway credential (${e})`
     : "this session holds no gateway credential";
 }
-function M1e() {
+function hasGatewayCredential() {
   return isClaudeAISubscriber() || os();
 }
 function os() {
@@ -238,27 +238,27 @@ function os() {
 function dn() {
   return !isClaudeAISubscriber() && os();
 }
-function Bwt() {
-  let { info: e, storeBearerOnly: t } = N1e();
+function getStoreBearerOauthAccountInfo() {
+  let { info: e, storeBearerOnly: t } = resolveOauthAccountInfo();
   if (!t || e === void 0) return e;
   return getClaudeAIOAuthTokenOrigin() === "store" ? e : void 0;
 }
-function N1e() {
+function resolveOauthAccountInfo() {
   let e = getOauthAccountInfo();
   if (e !== void 0) return { info: e, storeBearerOnly: !1 };
   return dn()
     ? { info: getStoredOauthAccountInfo(), storeBearerOnly: !0 }
     : { info: void 0, storeBearerOnly: !1 };
 }
-async function bCe(e) {
-  let { info: t, storeBearerOnly: r } = N1e();
+async function getStoreBearerOauthAccountInfoAsync(e) {
+  let { info: t, storeBearerOnly: r } = resolveOauthAccountInfo();
   if (!r || t === void 0) return t;
   return (await getClaudeAIOAuthTokenOriginAsync(e)) === "store" ? t : void 0;
 }
-function Am(e) {
+function formatNotAuthenticatedMessage(e) {
   return `Not authenticated \u2014 run /login (${e})`;
 }
-function MXe(e) {
+function isWellFormedHtmlComment(e) {
   let t = e.trimEnd();
   if (!t.startsWith("<!--") || !t.endsWith("-->") || t.length < 7) return !1;
   let r = t.slice(4, -3);
@@ -446,7 +446,7 @@ async function $r() {
   if (!ds(t)) return (logFeatureSad("artifact_publish", "chart_block_unstrippable"), null);
   return CHART_RUNTIME_BEGIN + t + CHART_RUNTIME_END;
 }
-var G1e = {
+var HLJS_LANGUAGE_DISPLAY_NAMES = {
     abnf: "Augmented Backus-Naur Form",
     accesslog: "Apache Access Log",
     actionscript: "ActionScript",
@@ -634,7 +634,7 @@ var G1e = {
     yaml: "YAML",
     zephir: "Zephir",
   },
-  q1e = {
+  HLJS_LANGUAGE_ALIASES = {
     as: "actionscript",
     asc: "angelscript",
     apacheconf: "apache",
@@ -825,7 +825,7 @@ var G1e = {
     php7: "php",
     php8: "php",
   },
-  $Zn = {
+  HLJS_SUBLANGUAGE_TABLE = {
     asciidoc: ["xml"],
     "clojure-repl": ["clojure"],
     coffeescript: ["javascript"],
@@ -926,8 +926,8 @@ function ms(e) {
     for (let w of _.matchAll(/language-([\w.+#-]+)/g)) {
       let E = w[1];
       if (
-        Object.prototype.hasOwnProperty.call(G1e, E) ||
-        Object.prototype.hasOwnProperty.call(q1e, E)
+        Object.prototype.hasOwnProperty.call(HLJS_LANGUAGE_DISPLAY_NAMES, E) ||
+        Object.prototype.hasOwnProperty.call(HLJS_LANGUAGE_ALIASES, E)
       )
         return !0;
     }
@@ -1199,7 +1199,7 @@ function Ec(e) {
   }
   return !1;
 }
-function Wwt() {
+function buildMermaidRuntimeBlock() {
   let e = wc();
   if (findBundleSafetyIssue(e) !== null)
     return (logFeatureSad("artifact_publish", "mermaid_init_unsafe"), null);
@@ -1442,7 +1442,7 @@ async function As(e) {
     );
   }
 }
-function B1e() {
+function hasSessionAccessToken() {
   return aBe().status === "ok" && getSessionAccessToken() !== null;
 }
 function Dn() {
@@ -1495,7 +1495,7 @@ function Ps() {
       r(e["ccr:child_owner_account_uuid"]);
   return t && !o && !d;
 }
-var eqt = "/v1/code/agent-proxy",
+var AGENT_PROXY_PATH = "/v1/code/agent-proxy",
   Hc = /^\/v1\/code\/sessions\/([^/]+)\/?$/;
 function Cs() {
   if (isByocEnvironment()) {
@@ -1505,22 +1505,22 @@ function Cs() {
       if (t !== void 0) return `/v1/code/sessions/${t}/agent-proxy`;
     }
   }
-  return eqt;
+  return AGENT_PROXY_PATH;
 }
 function Os(e) {
   let t = e.startsWith("/api/frame/") ? e.slice(10) : e;
   return `${Cs()}/frame${t}`;
 }
-var _w = "artifact_mount";
-function j1e(e, t) {
+var ARTIFACT_MOUNT_FAMILY = "artifact_mount";
+function buildArtifactFramePath(e, t) {
   return `${Cs()}/artifact/${encodeURIComponent(e)}${t}`;
 }
-function W1e(e) {
+function buildFrameAssetTokenHeader(e) {
   return { "x-frame-asset-token": e };
 }
-var Cr = "WebFetch",
-  tqt = "Fetch",
-  wCe = "allow_web_fetch";
+var WEB_FETCH_TOOL_NAME = "WebFetch",
+  FETCH_TOOL_DISPLAY_NAME = "Fetch",
+  ALLOW_WEB_FETCH_POLICY = "allow_web_fetch";
 function Bn(e) {
   return `This cloud session's network access follows the "Allow network egress" setting for Cowork in claude.ai, not an environment allowlist. To allow direct artifact reads here, an organization admin (or the user, on an individual plan) can turn that setting on and either allow all domains or add ${e} to its additional allowed domains.`;
 }
@@ -1534,7 +1534,7 @@ var Uc = new j(() => new $s());
 function Ls() {
   return Uc.of(B().host);
 }
-function Swn(e) {
+function setAgentProxyEndpoint(e) {
   Ls().set(e);
 }
 function Fs() {
@@ -1610,8 +1610,8 @@ function Is() {
   return { host: r, agent: t.agentFor(o) };
 }
 var Kc = "x-ccr-relay-upstream",
-  TG = "forbidden: CCR agent tokens";
-function hoe(e) {
+  CCR_AGENT_TOKEN_FORBIDDEN_MESSAGE = "forbidden: CCR agent tokens";
+function isNotFoundResponseBody(e) {
   if (typeof e === "string") return e.trim() === "not found";
   return typeof e === "object" && e !== null && e.error === "not_found";
 }
@@ -1626,7 +1626,7 @@ var qc = new Set([401, 403, 404, 413]),
 function Jc(e) {
   return (
     e.ok &&
-    !hJ(e) &&
+    !isRelayedUpstreamResponse(e) &&
     e.status === 403 &&
     typeof e.data === "string" &&
     Xc.has(e.data.trim())
@@ -1636,9 +1636,9 @@ var Zc = new Set([
     "organization network policy denies artifact reads for this session",
     "organization network policy could not be determined for this session",
   ]),
-  z1e =
+  ARTIFACT_NETWORK_OFF_MESSAGE =
     "this cloud session's network access is turned off for the organization, or could not be confirmed, so the session gateway does not serve artifact pages or files to it";
-function V1e(e, t) {
+function isArtifactNetworkOffResponse(e, t) {
   return (
     e === 403 &&
     t !== void 0 &&
@@ -1653,25 +1653,25 @@ var Ur = 300000,
   tu = /^x-frame-[a-z0-9-]+$/i;
 function nu(e) {
   if (!e) return e;
-  return ea(e, (t, r) => tu.test(r));
+  return pickBy(e, (t, r) => tu.test(r));
 }
-var nqt = S("boot"),
-  wN = S("blobs"),
-  NXe = S("comments"),
-  rqt = S("subscriptions"),
+var FRAME_FAMILY_BOOT = S("boot"),
+  FRAME_FAMILY_BLOBS = S("blobs"),
+  FRAME_FAMILY_COMMENTS = S("comments"),
+  FRAME_FAMILY_SUBSCRIPTIONS = S("subscriptions"),
   zs = S("types"),
-  oqt = S("type_create"),
+  FRAME_FAMILY_TYPE_CREATE = S("type_create"),
   Vs = S("db"),
   ru = new Map([
-    [NXe, "tengu_cobalt_plinth_burnet"],
-    [rqt, "tengu_cobalt_plinth_burnet"],
-    [nqt, "tengu_cobalt_plinth_mallow"],
+    [FRAME_FAMILY_COMMENTS, "tengu_cobalt_plinth_burnet"],
+    [FRAME_FAMILY_SUBSCRIPTIONS, "tengu_cobalt_plinth_burnet"],
+    [FRAME_FAMILY_BOOT, "tengu_cobalt_plinth_mallow"],
     [zs, "tengu_cobalt_plinth_mallow"],
-    [oqt, "tengu_cobalt_plinth_mallow"],
+    [FRAME_FAMILY_TYPE_CREATE, "tengu_cobalt_plinth_mallow"],
     [Vs, "tengu_cobalt_plinth_gentian"],
   ]),
   su = [
-    ...bt(nqt, [
+    ...bt(FRAME_FAMILY_BOOT, [
       "GET /{slug}",
       "GET /versions/{slug}",
       "GET /frames",
@@ -1687,7 +1687,7 @@ var nqt = S("boot"),
       "GET /contract/{v}/prompt",
       "GET /read/{slug}",
     ]),
-    ...bt(NXe, [
+    ...bt(FRAME_FAMILY_COMMENTS, [
       "GET /comments/{slug}",
       "POST /comments/{slug}/{thread}",
       "POST /comments/{slug}/{thread}/resolve",
@@ -1695,9 +1695,9 @@ var nqt = S("boot"),
     ]),
     ...bt(Vs, ["POST /db/agent"]),
     ...bt(zs, ["GET /types", "GET /types/{slug}"]),
-    ...bt(oqt, ["POST /types/{slug}/create"]),
+    ...bt(FRAME_FAMILY_TYPE_CREATE, ["POST /types/{slug}/create"]),
     ...bt(S("type_instances"), ["GET /types/{slug}/instances"]),
-    ...bt(rqt, ["POST /subscribe/{slug}", "POST /unsubscribe/{slug}"]),
+    ...bt(FRAME_FAMILY_SUBSCRIPTIONS, ["POST /subscribe/{slug}", "POST /unsubscribe/{slug}"]),
     ...bt(S("delete"), ["DELETE /{slug}"]),
     ...bt(S("favorites"), ["POST /favorite/{slug}", "DELETE /favorite/{slug}"]),
     ...[],
@@ -1711,7 +1711,7 @@ function bt(e, t) {
 function Ds(e) {
   return countMatching(e.pattern, (t) => t.startsWith("{"));
 }
-function sqt(e, t) {
+function resolveFrameRouteFamily(e, t) {
   let r = t
     .slice(10)
     .replace(/[?#].*$/s, "")
@@ -1727,85 +1727,85 @@ function sqt(e, t) {
     )?.family ?? null
   );
 }
-function RK() {
+function isFrameRelayEnabled() {
   if (!isAnthropicHostedEnvironment() && !isByocEnvironment()) return !1;
   if (getFrameBaseUrlOverride() !== void 0) return !1;
   if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_sorrel", !0)) return !1;
   if (!isAnthropicHostedEnvironment() && !getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_madder", !0)) return !1;
-  return B1e();
+  return hasSessionAccessToken();
 }
-function MH(e = null) {
-  return RK() && !Ws(e);
+function canRelayFrameFamily(e = null) {
+  return isFrameRelayEnabled() && !Ws(e);
 }
 function Ws(e) {
   if (!Ir() && !Gs()) return !1;
-  if (e !== null && iqt(e)) return !1;
+  if (e !== null && isFrameFamilyRelayGated(e)) return !1;
   let t = ne().frameRelay;
   if (!t.botContextNoted)
     ((t.botContextNoted = !0),
       logFeatureSad("artifact_frame_relay", "bot_context_not_served", { hosted: isAnthropicHostedEnvironment() }));
   return !0;
 }
-function _oe() {
-  return isAnthropicHostedEnvironment() && RK();
+function isHostedFrameRelayEnabled() {
+  return isAnthropicHostedEnvironment() && isFrameRelayEnabled();
 }
 var ou = "tengu_cobalt_plinth_medlar";
 function Gs() {
   return isByocEnvironment() && getFeatureValue_CACHED_MAY_BE_STALE(ou, !1) && Ts();
 }
-function bwn() {
+function hasAgentServiceClaims() {
   if (isAnthropicHostedEnvironment()) return Ir() && Rs();
   return Gs();
 }
-function FXe() {
-  return (isAnthropicHostedEnvironment() || isByocEnvironment()) && getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_fennel", !1) && bwn();
+function isArtifactAgentDirectEnabled() {
+  return (isAnthropicHostedEnvironment() || isByocEnvironment()) && getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_fennel", !1) && hasAgentServiceClaims();
 }
 var au = "tengu_cobalt_plinth_comfrey";
-function UZn() {
-  return isByocEnvironment() && getFeatureValue_CACHED_MAY_BE_STALE(au, !1) && FXe();
+function isByocAgentDirectEnabled() {
+  return isByocEnvironment() && getFeatureValue_CACHED_MAY_BE_STALE(au, !1) && isArtifactAgentDirectEnabled();
 }
-function iqt(e) {
+function isFrameFamilyRelayGated(e) {
   let t = ru.get(e);
   return t !== void 0 && isAnthropicHostedEnvironment() && getFeatureValue_CACHED_MAY_BE_STALE(t, !1) && Ps();
 }
-function TN(e) {
+function isFrameFamilyDeclined(e) {
   return (ne().frameRelay.declinedUntil.get(e) ?? 0) > Date.now();
 }
-function Lj(e, t = !1) {
+function declineFrameFamily(e, t = !1) {
   let r = ne().frameRelay,
     o = Date.now() + Ur;
   if ((r.declinedUntil.set(e, o), t)) r.hopFailedUntil.set(e, o);
   else r.hopFailedUntil.delete(e);
 }
-function wwn(e) {
+function isFrameFamilyHopFailed(e) {
   return (ne().frameRelay.hopFailedUntil.get(e) ?? 0) > Date.now();
 }
 function jn(e) {
   return (ne().frameRelay.servedUntil.get(e) ?? 0) > Date.now();
 }
-function EG(e) {
+function markFrameFamilyServed(e) {
   let t = ne().frameRelay;
   (t.declinedUntil.delete(e),
     t.servedUntil.set(e, Date.now() + Ur),
     t.vouched.add(e));
 }
-function TCe(e) {
+function isFrameFamilyVouched(e) {
   return ne().frameRelay.vouched.has(e);
 }
-function Twn(e) {
+function unvouchFrameFamily(e) {
   ne().frameRelay.vouched.delete(e);
 }
-function K1e(e) {
-  if (_oe() || !(e === 401 || e === 403 || e === 404)) return !1;
-  if (TCe(_w)) {
-    if (e !== 404) Twn(_w);
+function shouldAbandonFrameRelay(e) {
+  if (isHostedFrameRelayEnabled() || !(e === 401 || e === 403 || e === 404)) return !1;
+  if (isFrameFamilyVouched(ARTIFACT_MOUNT_FAMILY)) {
+    if (e !== 404) unvouchFrameFamily(ARTIFACT_MOUNT_FAMILY);
     return !1;
   }
-  return (Lj(_w), !0);
+  return (declineFrameFamily(ARTIFACT_MOUNT_FAMILY), !0);
 }
-function yoe(e) {
-  if (_oe() || TCe(_w)) return;
-  if (e === void 0 || e >= 500 || e === 499) Lj(_w, !0);
+function markArtifactRelayHopFailed(e) {
+  if (isHostedFrameRelayEnabled() || isFrameFamilyVouched(ARTIFACT_MOUNT_FAMILY)) return;
+  if (e === void 0 || e >= 500 || e === 499) declineFrameFamily(ARTIFACT_MOUNT_FAMILY, !0);
 }
 var Ys = () => !0;
 function Br(e, t, r) {
@@ -1820,7 +1820,7 @@ var Ks = new WeakSet();
 function Bs(e) {
   return typeof e === "object" && e !== null && Ks.has(e);
 }
-async function aqt(e, t, r, o, d) {
+async function requestViaFrameTunnel(e, t, r, o, d) {
   let _ =
     (ne().frameRelay.tunnelDeclinedUntil.get(d) ?? 0) > Date.now()
       ? void 0
@@ -1835,7 +1835,7 @@ async function aqt(e, t, r, o, d) {
         frameTunnel: _,
         maxRedirects: 0,
       });
-      if (!R.ok || hJ(R)) return { res: R, tunnelled: !0 };
+      if (!R.ok || isRelayedUpstreamResponse(R)) return { res: R, tunnelled: !0 };
       if (((E = R.status), E >= 500 || E === 499))
         return (Br(d, "hop_failed", E), { res: R, tunnelled: !0 });
     } catch (R) {
@@ -1879,33 +1879,33 @@ function js(e, t, r, o) {
 function lu() {
   return getFrameBaseUrlOverride() !== void 0 ? a.CLAUDE_CODE_ARTIFACTS_API_TOKEN : void 0;
 }
-function lqt() {
+function getPrincipalTokenFingerprint() {
   let e = lu();
   if (e) return hashSha256Hex(`Bearer ${e}`);
   return getClaudeAiTokenFingerprint();
 }
-async function BZn(e) {
+async function refreshOauthTokenIfAllowed(e) {
   if (!isNonEssentialTrafficAllowed()) return;
   try {
     await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });
   } catch {}
 }
-function hJ(e) {
+function isRelayedUpstreamResponse(e) {
   return e.ok && e.response.headers?.[Kc] !== void 0;
 }
 function Hr(e) {
-  return e.ok && !hJ(e) && qc.has(e.status);
+  return e.ok && !isRelayedUpstreamResponse(e) && qc.has(e.status);
 }
-function Ewn(e) {
-  return { refused: Hr(e), vouched: hJ(e) || (e.ok && e.status < 300) };
+function classifyFrameRelayResponse(e) {
+  return { refused: Hr(e), vouched: isRelayedUpstreamResponse(e) || (e.ok && e.status < 300) };
 }
-function $Xe() {
-  return RK() && !isAnthropicHostedEnvironment();
+function isByocFrameRelayEnabled() {
+  return isFrameRelayEnabled() && !isAnthropicHostedEnvironment();
 }
 function qs(e, t, r) {
   let o = r !== "fallback",
-    d = RK(),
-    p = d ? sqt(e, t) : null;
+    d = isFrameRelayEnabled(),
+    p = d ? resolveFrameRouteFamily(e, t) : null;
   if (d && Ws(p))
     return r === "only" && isAnthropicHostedEnvironment()
       ? { leg: "not-served", relaying: !1, family: null }
@@ -1918,20 +1918,20 @@ function qs(e, t, r) {
       family: p,
     };
   if (
-    TN(p) &&
-    (r === "fallback" || (r === "bound" && !Xs(p)) || (!isAnthropicHostedEnvironment() && wwn(p)))
+    isFrameFamilyDeclined(p) &&
+    (r === "fallback" || (r === "bound" && !Xs(p)) || (!isAnthropicHostedEnvironment() && isFrameFamilyHopFailed(p)))
   )
     return { leg: "direct", relaying: _, family: p };
   return { leg: "relay", relaying: !0, family: p };
 }
 function Xs(e) {
-  return isAnthropicHostedEnvironment() && (e === null || !iqt(e));
+  return isAnthropicHostedEnvironment() && (e === null || !isFrameFamilyRelayGated(e));
 }
-function jZn(e, t) {
+function getFrameRoute(e, t) {
   return qs(e, t, "fallback").leg === "relay" ? "relay" : "direct";
 }
 async function Ut(e, t, r, o, d = "fallback") {
-  let p = d === "only" ? isAnthropicHostedEnvironment() : d === "bound" && Xs(sqt(e, t)),
+  let p = d === "only" ? isAnthropicHostedEnvironment() : d === "bound" && Xs(resolveFrameRouteFamily(e, t)),
     { relayProbe: _, ...w } = o,
     E = async () => ({
       ...(await js(e, t, r, w)),
@@ -1968,7 +1968,7 @@ async function Ut(e, t, r, o, d = "fallback") {
     I = () => ({ ...(C && { runner: !0 }), ...(F && { tunnel: !0 }) }),
     { refreshOAuth: N, isBackground: ae, credentials: ue, ...V } = w,
     J = async (q, ge, pe, Le) => {
-      let Ge = await aqt(
+      let Ge = await requestViaFrameTunnel(
         q,
         ge,
         pe,
@@ -1978,7 +1978,7 @@ async function Ut(e, t, r, o, d = "fallback") {
       return ((F = Ge.tunnelled), Ge.res);
     },
     U = async (q, ge) => {
-      if ((Lj(D, q === 0 || q >= 500), p)) return M(q, ge);
+      if ((declineFrameFamily(D, q === 0 || q >= 500), p)) return M(q, ge);
       let pe;
       try {
         let Le = await js(e, t, r, w);
@@ -2009,10 +2009,10 @@ async function Ut(e, t, r, o, d = "fallback") {
       return ((F = Bs(ge)), U(0, !0));
     }
     if (!q.ok) return p ? M(0, !0) : E();
-    if (Hr(q) || (!hJ(q) && (q.status >= 500 || q.status === 499)))
+    if (Hr(q) || (!isRelayedUpstreamResponse(q) && (q.status >= 500 || q.status === 499)))
       return U(q.status, !0);
-    if (!hJ(q) && q.status >= 300) return p ? M(q.status, !0) : E();
-    EG(D);
+    if (!isRelayedUpstreamResponse(q) && q.status >= 300) return p ? M(q.status, !0) : E();
+    markFrameFamilyServed(D);
   }
   let te;
   try {
@@ -2021,7 +2021,7 @@ async function Ut(e, t, r, o, d = "fallback") {
     if (!isCancel(q)) {
       if (((F = Bs(q)), KU(q) !== void 0)) return U(0, !1);
       if (
-        (Lj(D, !0),
+        (declineFrameFamily(D, !0),
         logFeatureBad("artifact_frame_relay", "request_error", { family: D, ...I() }),
         typeof q === "object" && q !== null)
       )
@@ -2032,7 +2032,7 @@ async function Ut(e, t, r, o, d = "fallback") {
   if (!te.ok) return p ? M(0, !1) : E();
   if (Jc(te))
     return (
-      EG(D),
+      markFrameFamilyServed(D),
       logFeatureSad("artifact_frame_relay", "relay_policy_refused", {
         family: D,
         status: te.status,
@@ -2041,10 +2041,10 @@ async function Ut(e, t, r, o, d = "fallback") {
       { ...te, route: "relay", fromFrame: !1, gatewayPolicy: "network-off" }
     );
   if (Hr(te)) return U(te.status, !1);
-  let re = hJ(te),
+  let re = isRelayedUpstreamResponse(te),
     ce = re || te.status < 300;
   if (ce)
-    (EG(D),
+    (markFrameFamilyServed(D),
       logFeatureOk("artifact_frame_relay", {
         family: D,
         status: te.status,
@@ -2052,7 +2052,7 @@ async function Ut(e, t, r, o, d = "fallback") {
         ...I(),
       }));
   else if (te.status >= 500 || te.status === 499)
-    (Lj(D, !0),
+    (declineFrameFamily(D, !0),
       logFeatureBad("artifact_frame_relay", "relay_error", {
         family: D,
         status: te.status,
@@ -2066,15 +2066,15 @@ async function Ut(e, t, r, o, d = "fallback") {
     });
   return { ...te, route: "relay", fromFrame: ce };
 }
-function nP(e) {
+function isFrameRelayAttemptError(e) {
   return typeof e === "object" && e !== null && Us.has(e);
 }
-function UXe(e) {
+function isMaxContentLengthError(e) {
   return (
     e instanceof Error && /maxContentLength size of .* exceeded/.test(e.message)
   );
 }
-var Nd = {
+var artifactFrameHttpClient = {
   get(e, t) {
     return Ut("GET", e, void 0, t);
   },
@@ -2107,31 +2107,31 @@ class Vr {
   }
 }
 var Js = new Vr();
-function WZn(e) {
+function registerArtifactReadAvailability(e) {
   Js.register(e);
 }
-function Gwt() {
+function isArtifactReadAvailable() {
   return Js.isAvailable();
 }
 var Zs = new Vr();
-function GZn(e) {
+function registerArtifactToolAvailability(e) {
   Zs.register(e);
 }
 function zr() {
   return Zs.isAvailable()
     ? `read it with the ${ARTIFACT_TOOL_NAME} tool (action: "read", url)`
-    : `${Cr} the url`;
+    : `${WEB_FETCH_TOOL_NAME} the url`;
 }
-function qwt() {
-  return Gwt()
+function getArtifactReadInstruction() {
+  return isArtifactReadAvailable()
     ? `for a workshop page use the ${ARTIFACT_TOOL_NAME} tool's read_page_data action with schema "workshop-decisions" \u2014 the workshop skill forbids a content read there; otherwise ${zr()}`
     : zr();
 }
-function Efe(e) {
-  let t = e !== "plain" && Gwt(),
+function buildArtifactReadGuidance(e) {
+  let t = e !== "plain" && isArtifactReadAvailable(),
     r = zr(),
     o = Vo(),
-    d = ne().contentHostEgressDenied.has(o) && !(RK() && !TN(_w)),
+    d = ne().contentHostEgressDenied.has(o) && !(isFrameRelayEnabled() && !isFrameFamilyDeclined(ARTIFACT_MOUNT_FAMILY)),
     p =
       o === "staging"
         ? "*.frame.staging.claudeusercontent.com"
@@ -2150,7 +2150,7 @@ function Efe(e) {
       : null,
   };
 }
-function X1e() {
+function getPrReviewTemplateChrome() {
   let e = ne().prReviewTemplate;
   return (
     (e.chrome ??= import("../../01-核心基础设施/共享小工具-未细化/SKILL_COMPOSED_MD.93smkgn7.js").then((t) =>
@@ -2159,7 +2159,7 @@ function X1e() {
     e.chrome
   );
 }
-function cqt(e, t) {
+function extractBalancedDiv(e, t) {
   let r = e.indexOf(t);
   if (r === -1) return "";
   let o = /<div\b|<\/div>/g;
@@ -2180,12 +2180,12 @@ function cu(e) {
       },
       {
         label: "stale-banner",
-        bytes: cqt(e, '<div class="stale-banner"'),
+        bytes: extractBalancedDiv(e, '<div class="stale-banner"'),
         terminal: "</div>",
       },
       {
         label: "stamp-control",
-        bytes: cqt(e, '<div class="stamp"'),
+        bytes: extractBalancedDiv(e, '<div class="stamp"'),
         terminal: "</div>",
       },
     ],
@@ -2200,17 +2200,17 @@ function cu(e) {
   };
 }
 var eo = /\bstale-banner\b|\bstamp(-[a-z]+)?\b/i,
-  Awn = "80cb1876b48d73daa3ee6df8dd1124eaa6d07e79d223bd7efec01e98714c4cec";
-function Y1e(e, t, r) {
+  STALENESS_SCRIPT_SHA256 = "80cb1876b48d73daa3ee6df8dd1124eaa6d07e79d223bd7efec01e98714c4cec";
+function buildGitHubPullUrl(e, t, r) {
   return `https://github.com/${e}/${t}/pull/${r}`;
 }
-var BXe = "prr-anchor";
-function uqt(e) {
+var PRR_ANCHOR_ISLAND_ID = "prr-anchor";
+function stripInjectedDataIdAttribute(e) {
   let t = findTagEnd(e, 7),
     r = t - 1 - DATA_ID_ATTRIBUTE_LENGTH;
   return t > 0 && r > 0 && matchDataIdAttribute(e, r) !== 0 ? e.slice(0, r) + e.slice(t - 1) : e;
 }
-function jXe(e) {
+function extractScriptBlocks(e) {
   let t = [],
     r = /<script/gi,
     o = /<\/script/gi,
@@ -2249,14 +2249,14 @@ function jXe(e) {
   }
   return t;
 }
-var WXe = /^[A-Za-z0-9-]{1,39}$/,
-  GXe = /^(?!\.\.?$)[A-Za-z0-9._-]{1,100}$/,
-  qXe = /^[0-9a-f]{40}$/,
-  Cwn = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/,
-  zXe = /^[A-Za-z0-9_.-]{1,64}$/,
-  Afe = /^[A-Za-z0-9_]{1,48}$/,
-  zwt = /^[A-Za-z0-9_.-]{1,64}$/,
-  ECe = /^method$/i,
+var GITHUB_OWNER_PATTERN = /^[A-Za-z0-9-]{1,39}$/,
+  GITHUB_REPO_PATTERN = /^(?!\.\.?$)[A-Za-z0-9._-]{1,100}$/,
+  GIT_COMMIT_SHA_PATTERN = /^[0-9a-f]{40}$/,
+  UTC_ISO_TIMESTAMP_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/,
+  TOOL_NAME_PATTERN = /^[A-Za-z0-9_.-]{1,64}$/,
+  IDENTIFIER_PATTERN = /^[A-Za-z0-9_]{1,48}$/,
+  TOOL_INPUT_VALUE_PATTERN = /^[A-Za-z0-9_.-]{1,64}$/,
+  METHOD_KEY_PATTERN = /^method$/i,
   pn = {
     owner: "owner",
     repo: "repo",
@@ -2280,15 +2280,15 @@ function fu(e) {
   for (let t of Object.keys(e))
     if (!uu.has(t)) return "anchor carries an unexpected key";
   if (e.kind !== "pr") return 'anchor.kind is not "pr"';
-  if (typeof e.owner !== "string" || !WXe.test(e.owner))
+  if (typeof e.owner !== "string" || !GITHUB_OWNER_PATTERN.test(e.owner))
     return "anchor.owner is not a valid owner";
-  if (typeof e.repo !== "string" || !GXe.test(e.repo))
+  if (typeof e.repo !== "string" || !GITHUB_REPO_PATTERN.test(e.repo))
     return "anchor.repo is not a valid repository name";
   if (!Number.isSafeInteger(e.number) || e.number < 1)
     return "anchor.number is not a positive integer";
-  if (typeof e.headSha !== "string" || !qXe.test(e.headSha))
+  if (typeof e.headSha !== "string" || !GIT_COMMIT_SHA_PATTERN.test(e.headSha))
     return "anchor.headSha is not 40 lowercase hex";
-  if (typeof e.publishedAt !== "string" || !Cwn.test(e.publishedAt))
+  if (typeof e.publishedAt !== "string" || !UTC_ISO_TIMESTAMP_PATTERN.test(e.publishedAt))
     return "anchor.publishedAt is not a UTC ISO-8601 timestamp";
   return null;
 }
@@ -2297,18 +2297,18 @@ function pu(e) {
   if (!isRecord(e)) return "live is neither null nor an object";
   for (let o of Object.keys(e))
     if (!du.has(o)) return "live carries an unexpected key";
-  if (typeof e.tool !== "string" || !zXe.test(e.tool))
+  if (typeof e.tool !== "string" || !TOOL_NAME_PATTERN.test(e.tool))
     return "live.tool is not a tool identifier";
   if (!isRecord(e.input)) return "live.input is not an object";
   let t = Object.keys(e.input);
   if (t.length > 8) return "live.input has too many keys";
   for (let o of t) {
-    if (!Afe.test(o)) return "live.input has a non-identifier key";
+    if (!IDENTIFIER_PATTERN.test(o)) return "live.input has a non-identifier key";
     let d = e.input[o];
-    if (ECe.test(o) && typeof d !== "string")
+    if (METHOD_KEY_PATTERN.test(o) && typeof d !== "string")
       return "live.input carries a non-string value under the method key \u2014 an operation selector is a word";
     if (typeof d === "string") {
-      if (!zwt.test(d))
+      if (!TOOL_INPUT_VALUE_PATTERN.test(d))
         return "live.input carries a non-identifier string value";
     } else if (typeof d === "number") {
       if (!Number.isSafeInteger(d))
@@ -2319,7 +2319,7 @@ function pu(e) {
   if (!Array.isArray(r) || r.length === 0 || r.length > 6)
     return "live.shaPath is not a 1-6 element array";
   for (let o of r)
-    if (typeof o !== "string" || !Afe.test(o))
+    if (typeof o !== "string" || !IDENTIFIER_PATTERN.test(o))
       return "live.shaPath carries a non-identifier segment";
   return null;
 }
@@ -2330,7 +2330,7 @@ function hu(e) {
   if (r) return r;
   return pu(e.live === void 0 ? null : e.live);
 }
-function qZn(e) {
+function readAnchorIslandToolName(e) {
   let t = e.match(
     /<script type="application\/json" id="prr-anchor">([^<]{2,65536})<\/script>/,
   );
@@ -2343,11 +2343,11 @@ function qZn(e) {
   }
   if (!isRecord(r) || !isRecord(r.live)) return null;
   let o = r.live.tool;
-  return typeof o === "string" && zXe.test(o) ? o : null;
+  return typeof o === "string" && TOOL_NAME_PATTERN.test(o) ? o : null;
 }
-var dqt = "prr-decisions",
-  vwn = "a38faf05e263c3da27c3750139ed41a14d47344b2ca96191b4e9c0440632c8c0",
-  Vwt = /^[a-z0-9-]{1,24}$/,
+var PRR_DECISIONS_ISLAND_ID = "prr-decisions",
+  DECISIONS_SCRIPT_SHA256 = "a38faf05e263c3da27c3750139ed41a14d47344b2ca96191b4e9c0440632c8c0",
+  DECISION_TOKEN_PATTERN = /^[a-z0-9-]{1,24}$/,
   Qs = new Set(["id", "opts", "state", "choice"]),
   gu = new Set(["open", "resolved", "acted"]);
 function mu(e) {
@@ -2361,7 +2361,7 @@ function mu(e) {
     let p = Object.keys(d);
     if (p.length !== Qs.size || p.some((w) => !Qs.has(w)))
       return "a decisions item carries an unexpected or missing key";
-    if (typeof d.id !== "string" || !Vwt.test(d.id))
+    if (typeof d.id !== "string" || !DECISION_TOKEN_PATTERN.test(d.id))
       return "a decisions item id is not a valid token";
     if (o.has(d.id)) return "decisions item ids are not unique";
     if ((o.add(d.id), typeof d.state !== "string" || !gu.has(d.state)))
@@ -2370,10 +2370,10 @@ function mu(e) {
     if (!Array.isArray(_) || _.length < 1 || _.length > 8)
       return "a decisions item opts is not an array of 1 to 8 tokens";
     for (let w of _)
-      if (typeof w !== "string" || !Vwt.test(w))
+      if (typeof w !== "string" || !DECISION_TOKEN_PATTERN.test(w))
         return "a decisions option is not a valid token";
     if (d.choice !== null) {
-      if (typeof d.choice !== "string" || !Vwt.test(d.choice))
+      if (typeof d.choice !== "string" || !DECISION_TOKEN_PATTERN.test(d.choice))
         return "a decisions choice is not null or a valid token";
       if (!_.includes(d.choice))
         return "a decisions choice is not among its opts";
@@ -2381,24 +2381,24 @@ function mu(e) {
   }
   return null;
 }
-var J1e = "prr-stamp",
-  Kwt = "a8b6abcc8650343e067901dc560ace5e9095b4ffd106118e718d7566566dfd22",
+var PRR_STAMP_ISLAND_ID = "prr-stamp",
+  APPROVE_SCRIPT_SHA256 = "a8b6abcc8650343e067901dc560ace5e9095b4ffd106118e718d7566566dfd22",
   bu = new Set(["tool", "input", "statePath"]);
 function yu(e) {
   if (e === null) return null;
   if (!isRecord(e)) return "stamp is neither null nor an object";
   for (let o of Object.keys(e))
     if (!bu.has(o)) return "stamp carries an unexpected key";
-  if (typeof e.tool !== "string" || !zXe.test(e.tool))
+  if (typeof e.tool !== "string" || !TOOL_NAME_PATTERN.test(e.tool))
     return "stamp.tool is not a tool identifier";
   if (!isRecord(e.input)) return "stamp.input is not an object";
   let t = Object.keys(e.input);
   if (t.length > 8) return "stamp.input has too many keys";
   for (let o of t) {
-    if (!Afe.test(o)) return "stamp.input has a non-identifier key";
+    if (!IDENTIFIER_PATTERN.test(o)) return "stamp.input has a non-identifier key";
     let d = e.input[o];
     if (typeof d === "string") {
-      if (!zwt.test(d))
+      if (!TOOL_INPUT_VALUE_PATTERN.test(d))
         return "stamp.input carries a non-identifier string value";
     } else if (typeof d === "number") {
       if (!Number.isSafeInteger(d))
@@ -2409,7 +2409,7 @@ function yu(e) {
   if (!Array.isArray(r) || r.length === 0 || r.length > 6)
     return "stamp.statePath is not a 1-6 element array";
   for (let o of r)
-    if (typeof o !== "string" || !Afe.test(o))
+    if (typeof o !== "string" || !IDENTIFIER_PATTERN.test(o))
       return "stamp.statePath carries a non-identifier segment";
   return null;
 }
@@ -2418,15 +2418,15 @@ function wu(e) {
     return "the prr-stamp island is not {stamp: ...}";
   return yu(e.stamp);
 }
-var Cfe = [
-    { id: BXe, validate: hu },
-    { id: dqt, validate: mu },
-    { id: J1e, validate: wu },
+var PRR_ISLAND_VALIDATORS = [
+    { id: PRR_ANCHOR_ISLAND_ID, validate: hu },
+    { id: PRR_DECISIONS_ISLAND_ID, validate: mu },
+    { id: PRR_STAMP_ISLAND_ID, validate: wu },
   ],
-  VXe = [
-    { label: "staleness", sha256: Awn },
-    { label: "decisions", sha256: vwn },
-    { label: "approve", sha256: Kwt },
+  PRR_PINNED_SCRIPTS = [
+    { label: "staleness", sha256: STALENESS_SCRIPT_SHA256 },
+    { label: "decisions", sha256: DECISIONS_SCRIPT_SHA256 },
+    { label: "approve", sha256: APPROVE_SCRIPT_SHA256 },
   ];
 function ku(e) {
   return new RegExp(
@@ -2463,7 +2463,7 @@ function Au(e) {
     let d = o[1] ?? o[2] ?? o[3] ?? "";
     if (!d.includes("&#")) continue;
     let p = Su(d).toLowerCase();
-    if (Cfe.some((_) => p.startsWith(_.id))) return !0;
+    if (PRR_ISLAND_VALIDATORS.some((_) => p.startsWith(_.id))) return !0;
   }
   return !1;
 }
@@ -2605,26 +2605,26 @@ function Eu(e, t, r, o) {
 }
 var no = 524288,
   Un = 2048;
-function _J(e, { parsedAsMarkup: t } = { parsedAsMarkup: !0 }) {
-  if (Cfe.some((d) => Wr(d.id).test(e)) || (t && Au(e))) return !0;
+function isPrReviewPage(e, { parsedAsMarkup: t } = { parsedAsMarkup: !0 }) {
+  if (PRR_ISLAND_VALIDATORS.some((d) => Wr(d.id).test(e)) || (t && Au(e))) return !0;
   if (e.length > no) return !1;
-  let o = new Set(VXe.map((d) => d.sha256));
-  return jXe(e).some((d) => o.has(hashSha256(uqt(d))));
+  let o = new Set(PRR_PINNED_SCRIPTS.map((d) => d.sha256));
+  return extractScriptBlocks(e).some((d) => o.has(hashSha256(stripInjectedDataIdAttribute(d))));
 }
 function ro(e, t, r = {}) {
   let o = r.crUrlRe ?? null;
-  if (!_J(e)) return { applies: !1 };
+  if (!isPrReviewPage(e)) return { applies: !1 };
   if (e.length > no)
     return {
       applies: !0,
       ok: !1,
       reason: "the page is too large for a review page",
     };
-  let d = jXe(e),
-    p = new Map(VXe.map((U) => [U.sha256, U])),
+  let d = extractScriptBlocks(e),
+    p = new Map(PRR_PINNED_SCRIPTS.map((U) => [U.sha256, U])),
     _ = (U) => ({ applies: !0, ok: !1, reason: U }),
-    w = !Wr(J1e).test(e),
-    E = !d.some((U) => hashSha256(U) === Kwt),
+    w = !Wr(PRR_STAMP_ISLAND_ID).test(e),
+    E = !d.some((U) => hashSha256(U) === APPROVE_SCRIPT_SHA256),
     R = t.pinnedMarkup.find((U) => U.label === "stamp-control"),
     C = R !== void 0 && R.bytes !== "" && !e.includes(R.bytes);
   if (w && E && C)
@@ -2635,7 +2635,7 @@ function ro(e, t, r = {}) {
     D = null,
     F = null,
     I = null;
-  for (let U of Cfe) {
+  for (let U of PRR_ISLAND_VALIDATORS) {
     let te = [...e.matchAll(ku(U.id))];
     if (Wr(U.id).test(e) && te.length === 0) {
       if (vu(U.id).test(e))
@@ -2660,9 +2660,9 @@ function ro(e, t, r = {}) {
     if (q) return _(q);
     if (b(ce) !== re)
       return _(`the ${U.id} island is not in canonical JSON form`);
-    if (U.id === BXe)
+    if (U.id === PRR_ANCHOR_ISLAND_ID)
       ((D = ce.anchor), (F = ce.live === void 0 ? null : ce.live));
-    if (U.id === J1e) I = ce.stamp === void 0 ? null : ce.stamp;
+    if (U.id === PRR_STAMP_ISLAND_ID) I = ce.stamp === void 0 ? null : ce.stamp;
     M.add(te[0][0]);
   }
   if (I !== null && r.allowStampBinding !== !0)
@@ -2679,7 +2679,7 @@ function ro(e, t, r = {}) {
       );
     N.set(te.label, (N.get(te.label) ?? 0) + 1);
   }
-  for (let U of VXe)
+  for (let U of PRR_PINNED_SCRIPTS)
     if ((N.get(U.label) ?? 0) !== 1)
       return _(`the page must carry exactly one pinned ${U.label} script`);
   for (let U of t.pinnedMarkup) {
@@ -2698,13 +2698,13 @@ function ro(e, t, r = {}) {
     ...t.pinnedMarkup.map((te) => te.bytes),
   ])
     ae = ae.replace(U, "");
-  for (let U of Cfe)
+  for (let U of PRR_ISLAND_VALIDATORS)
     if (xu(U.id).test(ae))
       return _(
         `an element other than the registered island carries the ${U.id} id`,
       );
   let ue = new Set(t.linkPlaceholders);
-  if (D !== null) ue.add(Y1e(D.owner, D.repo, D.number));
+  if (D !== null) ue.add(buildGitHubPullUrl(D.owner, D.repo, D.number));
   let V = Eu(
     ae,
     t.inlineStyleAllowlist,
@@ -2726,7 +2726,7 @@ function ro(e, t, r = {}) {
 var io = "[a-z][a-z_-]{0,31}",
   Pt = new RegExp("^[a-z][a-z_-]{0,31}$");
 var Ru = 100;
-function Q1e(e) {
+function normalizeArtifactTitle(e) {
   return sanitizeArtifactTitle(so(e));
 }
 function so(e) {
@@ -2740,7 +2740,7 @@ function so(e) {
       " ",
     );
 }
-function ACe(e, t) {
+function formatArtifactDescription(e, t) {
   let r = Array.from(so(e), (d) => {
     let p = d.codePointAt(0) ?? 0;
     return p <= 31 || (p >= 127 && p <= 159) ? " " : d;
@@ -2756,7 +2756,7 @@ function ACe(e, t) {
 }
 var Tu =
   /[\u20DD-\u20E4\u23FA\u25C9\u25CB\u25CE\u25CF\u25EF\u26AA\u26AB\u26AC\u29BE\u29BF\u2B24\u2B55\u2B58\u{1F534}\u{1F535}\u{1F785}-\u{1F78B}\u{1F7E0}-\u{1F7E4}]/gu;
-function pqt(e) {
+function sanitizeEditableTitle(e) {
   return sanitizeArtifactTitle(oo(e.normalize("NFC"), !1));
 }
 function zZn(e) {
@@ -2815,14 +2815,14 @@ function Ou(e, t) {
   }
   return -1;
 }
-function VZn(e) {
+function sanitizeFaviconText(e) {
   let t = Array.from(e.normalize("NFC"), (r) =>
     isDecisionSurfaceControl(r.codePointAt(0) ?? 0) ? " " : r,
   ).join("");
   return sanitizeArtifactTitle(t.replace(INVISIBLE_BLANKS, " "));
 }
-function yw(e) {
-  let t = Q1e(e);
+function formatArtifactTitle(e) {
+  let t = normalizeArtifactTitle(e);
   if (t === null) return null;
   let r = truncateToCodePoints(t, Ru);
   return scrubArtifactEnvelopeTags((r === t ? t : `${r}\u2026`).replace(/:\/\//g, ":\u2215\u2215"));
@@ -2887,7 +2887,7 @@ function Yn(e) {
         .map((t) => `\\u${t.charCodeAt(0).toString(16).padStart(4, "0")}`)
         .join("");
 }
-function Xwt(e) {
+function isDeclarableServerName(e) {
   return (
     Array.from(e).length <= sn &&
     !e.startsWith(" ") &&
@@ -2903,23 +2903,23 @@ function Xwt(e) {
     Xn(e) === null
   );
 }
-function Y_(e, t) {
-  if (typeof e === "string" && Xwt(e)) return scrubArtifactEnvelopeTags(e.replace(mo, Yn));
+function formatArtifactServerDisplayName(e, t) {
+  if (typeof e === "string" && isDeclarableServerName(e)) return scrubArtifactEnvelopeTags(e.replace(mo, Yn));
   let r = t?.max ?? sn,
     o = e,
     d = !1;
   if (typeof e === "string") ({ text: o, cut: d } = Ro(e, Lu(e), r));
   let p = scrubArtifactEnvelopeTags(
-    sweepAskCopy(jg(o, { ...t, max: r }).replace(/`/g, "'"))?.replace(/^\p{M}+/u, Yn) ??
+    sweepAskCopy(sanitizeDisplayText(o, { ...t, max: r }).replace(/`/g, "'"))?.replace(/^\p{M}+/u, Yn) ??
       "?",
   );
   return d ? `${p}\u2026` : p;
 }
-function fqt(e) {
+function escapeTextForDisplay(e) {
   return scrubArtifactEnvelopeTags(truncateToCodePoints(e, sn).replace(Gu, Yn));
 }
 function zt(e) {
-  return e.declarable !== !1 && Xwt(e.server);
+  return e.declarable !== !1 && isDeclarableServerName(e.server);
 }
 var Ku = ["name", "connector", "id", "display_name"];
 function zn() {
@@ -3041,7 +3041,7 @@ function bo(e, t, r, o = {}) {
   }
   let N = [];
   if (D.size > 0) {
-    let V = rt([...D], 8, ([J, U]) => `"${jg(J)}" \u2192 "${Y_(U)}"`).join(
+    let V = rt([...D], 8, ([J, U]) => `"${sanitizeDisplayText(J)}" \u2192 "${formatArtifactServerDisplayName(U)}"`).join(
       ", ",
     );
     N.push(
@@ -3053,7 +3053,7 @@ function bo(e, t, r, o = {}) {
     let U = F[J.idx].tools.length,
       te = findCanonicalMcpServerName(Jn(V) ?? "") !== null;
     if (J.from > 1 && !te) {
-      let re = Y_(V),
+      let re = formatArtifactServerDisplayName(V),
         ce = an(V);
       N.push(
         `${J.from} manifest entries resolve to ${ce} "${re}" and were merged into one (${U} ${pluralize(U, "tool")}). A viewer with more than one ${ce} named "${re}" gets server_ambiguous on every call until the duplicates are renamed or removed.`,
@@ -3090,7 +3090,7 @@ function _o(e) {
   if (!gn(t)) return [];
   return t.servers.map(Xr).filter((r) => r !== void 0 && r.startsWith(CLAUDE_AI_MCP_SERVER_PREFIX));
 }
-function KZn(e, t, r) {
+function buildUnobservedConnectorWarnings(e, t, r) {
   let o = e.mcp;
   if (!gn(o)) return [];
   let d = dedupe(o.servers.map(Xr).filter((_) => _ !== void 0)),
@@ -3109,7 +3109,7 @@ function KZn(e, t, r) {
       );
     })
     .map((_) => {
-      let w = Y_(_);
+      let w = formatArtifactServerDisplayName(_);
       return `This page declares ${an(_)} "${w}" but no successful call to it was observed in this session, so the page is published against an unobserved interface. Verify its calls against a real response if you can safely make one, or tell the user the page's "${w}" integration is unverified.`;
     });
 }
@@ -3124,7 +3124,7 @@ function Xr(e) {
   let t = e != null && typeof e === "object" ? e.server : void 0;
   return typeof t === "string" ? t : void 0;
 }
-function yJ(e) {
+function isNonEmptyRecord(e) {
   return ko(e) && Object.keys(e).length > 0;
 }
 function ko(e) {
@@ -3142,7 +3142,7 @@ function Yt(e, t, r) {
     configurable: !0,
   });
 }
-function Rwn(e, t) {
+function mergeCapabilities(e, t) {
   let r = Kn(e ?? {}),
     o = Kn(t ?? {}),
     d = { ...r },
@@ -3153,42 +3153,42 @@ function Rwn(e, t) {
     else (Yt(d, w, E), (p = !0));
   return { capabilities: p ? d : e, widened: p, conflict: _ };
 }
-var Z1e = "0.0.0";
+var NO_PIN_VERSION_SENTINEL = "0.0.0";
 class vo {
   served = void 0;
 }
 var xo = new Gt(() => new vo());
-function XZn(e, t) {
+function setSessionHostServers(e, t) {
   xo.of(e).served = t;
 }
-function YZn(e) {
+function getSessionHostServers(e) {
   return xo.peek(e)?.served;
 }
-function JZn(e, t, r) {
+function isCapabilityFeatureEnabled(e, t, r) {
   let o = e.features;
   return o !== void 0 && Object.hasOwn(o, t) && Object.hasOwn(o[t] ?? {}, r);
 }
-var kwn = /^host:([A-Za-z0-9_-]{1,64})$/;
+var HOST_SERVER_NAME_PATTERN = /^host:([A-Za-z0-9_-]{1,64})$/;
 function Jn(e) {
-  return kwn.exec(e)?.[1];
+  return HOST_SERVER_NAME_PATTERN.exec(e)?.[1];
 }
 function an(e) {
   return Jn(e) === void 0 ? "connector" : "local server";
 }
-var Mj = /^(0|[1-9]\d{0,3})\.(0|[1-9]\d{0,4})\.(0|[1-9]\d{0,5})$/,
-  Nj = /^[a-z][a-z0-9]{0,23}$/;
-function wD(e) {
-  return typeof e === "string" && e !== Z1e && Mj.test(e) ? e : null;
+var VERSION_PATTERN = /^(0|[1-9]\d{0,3})\.(0|[1-9]\d{0,4})\.(0|[1-9]\d{0,5})$/,
+  CAPABILITY_NAME_PATTERN = /^[a-z][a-z0-9]{0,23}$/;
+function parseContractVersion(e) {
+  return typeof e === "string" && e !== NO_PIN_VERSION_SENTINEL && VERSION_PATTERN.test(e) ? e : null;
 }
 function So(e, t) {
-  if (t.version === Z1e) return [];
+  if (t.version === NO_PIN_VERSION_SENTINEL) return [];
   let r = new Set(t.capabilities);
   return Object.keys(e).filter((o) => !r.has(o));
 }
-var JE = "artifact",
-  rP = "self";
-function QZn(e) {
-  return e !== void 0 && (Object.hasOwn(e, JE) || Object.hasOwn(e, rP));
+var ARTIFACT_CAPABILITY_KEY = "artifact",
+  LEGACY_SELF_CAPABILITY_KEY = "self";
+function declaresArtifactCapability(e) {
+  return e !== void 0 && (Object.hasOwn(e, ARTIFACT_CAPABILITY_KEY) || Object.hasOwn(e, LEGACY_SELF_CAPABILITY_KEY));
 }
 function Zn(e) {
   if (Array.isArray(e)) return `[${e.map((t) => Zn(t)).join(",")}]`;
@@ -3203,26 +3203,26 @@ function Qn(e, t) {
   return Zn(e) === Zn(t);
 }
 function Jr(e) {
-  if (!Object.hasOwn(e, JE)) return e;
-  if (Object.hasOwn(e, rP)) {
-    if (!Qn(e[JE], e[rP])) return e;
+  if (!Object.hasOwn(e, ARTIFACT_CAPABILITY_KEY)) return e;
+  if (Object.hasOwn(e, LEGACY_SELF_CAPABILITY_KEY)) {
+    if (!Qn(e[ARTIFACT_CAPABILITY_KEY], e[LEGACY_SELF_CAPABILITY_KEY])) return e;
     let r = {};
-    for (let [o, d] of Object.entries(e)) if (o !== JE) Yt(r, o, d);
+    for (let [o, d] of Object.entries(e)) if (o !== ARTIFACT_CAPABILITY_KEY) Yt(r, o, d);
     return r;
   }
   let t = {};
-  for (let [r, o] of Object.entries(e)) Yt(t, r === JE ? rP : r, o);
+  for (let [r, o] of Object.entries(e)) Yt(t, r === ARTIFACT_CAPABILITY_KEY ? LEGACY_SELF_CAPABILITY_KEY : r, o);
   return t;
 }
 function Ju(e) {
   if (e === null || typeof e !== "object" || Array.isArray(e)) return e;
   let t = e;
-  if (!Object.hasOwn(t, rP)) return e;
-  if (Object.hasOwn(t, JE) && !Qn(t[JE], t[rP])) return e;
+  if (!Object.hasOwn(t, LEGACY_SELF_CAPABILITY_KEY)) return e;
+  if (Object.hasOwn(t, ARTIFACT_CAPABILITY_KEY) && !Qn(t[ARTIFACT_CAPABILITY_KEY], t[LEGACY_SELF_CAPABILITY_KEY])) return e;
   let r = {};
   for (let [o, d] of Object.entries(t)) {
-    if (o === rP) {
-      if (!Object.hasOwn(t, JE)) Yt(r, JE, d);
+    if (o === LEGACY_SELF_CAPABILITY_KEY) {
+      if (!Object.hasOwn(t, ARTIFACT_CAPABILITY_KEY)) Yt(r, ARTIFACT_CAPABILITY_KEY, d);
       continue;
     }
     Yt(r, o, d);
@@ -3230,14 +3230,14 @@ function Ju(e) {
   return r;
 }
 function Ao(e, t) {
-  let r = Object.hasOwn(e, JE),
-    o = Object.hasOwn(e, rP);
-  if ((!r && !o) || t.version === Z1e) return { caps: e };
+  let r = Object.hasOwn(e, ARTIFACT_CAPABILITY_KEY),
+    o = Object.hasOwn(e, LEGACY_SELF_CAPABILITY_KEY);
+  if ((!r && !o) || t.version === NO_PIN_VERSION_SENTINEL) return { caps: e };
   let d = new Set(t.capabilities),
-    p = d.has(JE) ? JE : d.has(rP) ? rP : null;
+    p = d.has(ARTIFACT_CAPABILITY_KEY) ? ARTIFACT_CAPABILITY_KEY : d.has(LEGACY_SELF_CAPABILITY_KEY) ? LEGACY_SELF_CAPABILITY_KEY : null;
   if (p === null) return { caps: e };
   if (r && o) {
-    if (!Qn(e[JE], e[rP]))
+    if (!Qn(e[ARTIFACT_CAPABILITY_KEY], e[LEGACY_SELF_CAPABILITY_KEY]))
       return {
         errMsg:
           "capabilities declares both `artifact` and `self` \u2014 two " +
@@ -3247,7 +3247,7 @@ function Ao(e, t) {
   }
   let _ = {};
   for (let [w, E] of Object.entries(e)) {
-    if (w === JE || w === rP) {
+    if (w === ARTIFACT_CAPABILITY_KEY || w === LEGACY_SELF_CAPABILITY_KEY) {
       if (!Object.hasOwn(_, p)) Yt(_, p, E);
       continue;
     }
@@ -3255,12 +3255,12 @@ function Ao(e, t) {
   }
   return { caps: _ };
 }
-function KXe(e) {
+function getDeclaredCapabilities(e) {
   return "capabilities" in e ? e.capabilities : void 0;
 }
 var Eo = new Set([
-    JE,
-    rP,
+    ARTIFACT_CAPABILITY_KEY,
+    LEGACY_SELF_CAPABILITY_KEY,
     "downloads",
     "comments",
     "room",
@@ -3330,11 +3330,11 @@ function nd(e) {
     r = !1;
   if (typeof e === "string") ({ text: t, cut: r } = Ro(e, td(e), sn));
   let o =
-    sweepMarkerLookalikes((sweepAskCopy(jg(t, { max: sn })) ?? "?").replace(/[;,(){}]/g, " ")).trim() ||
+    sweepMarkerLookalikes((sweepAskCopy(sanitizeDisplayText(t, { max: sn })) ?? "?").replace(/[;,(){}]/g, " ")).trim() ||
     "?";
   return r ? `${o}\u2026` : o;
 }
-function mqt(e) {
+function formatCapabilitiesSummary(e) {
   if (!e) return "";
   let t = [],
     r = [],
@@ -3349,7 +3349,7 @@ function mqt(e) {
     else if (Eo.has(C)) {
       let D = Gn(M) ? M.rules : void 0;
       r.push(Array.isArray(D) ? `${C}[${D.length} ${pluralize(D.length, "rule")}]` : C);
-    } else t.push(Nj.test(C) ? C : To);
+    } else t.push(CAPABILITY_NAME_PATTERN.test(C) ? C : To);
   let d = t.length + r.length;
   if (d === 0) return "";
   let p = [...t, ...r.slice(0, Math.max(0, 8 - t.length))],
@@ -3366,11 +3366,11 @@ function mqt(e) {
   let E = Array.from(w);
   return ` (${E.length > 400 ? E.slice(0, 400).join("") + "\u2026" : E.join("")})`;
 }
-function ZZn(e, t) {
+function diffDeclaredCapabilities(e, t) {
   let r = Kn(e ?? {}),
     o = Object.keys(Kn(t ?? {})).filter((_) => !Object.hasOwn(r, _)),
     d = (_) => (_ === "mcp" ? 0 : Eo.has(_) ? 2 : 1),
-    p = o.sort((_, w) => d(_) - d(w)).map((_) => (Nj.test(_) ? _ : To));
+    p = o.sort((_, w) => d(_) - d(w)).map((_) => (CAPABILITY_NAME_PATTERN.test(_) ? _ : To));
   if (!o.includes("mcp") && id(e?.mcp, t?.mcp)) p.unshift(rd);
   return p;
 }
@@ -3411,7 +3411,7 @@ function gn(e) {
     e.servers.length > 0
   );
 }
-function jg(e, t) {
+function sanitizeDisplayText(e, t) {
   if (typeof e !== "string") return "?";
   let r = t?.max ?? 64,
     o = Array.from(e.slice(0, 2 * r), (d) =>
@@ -3436,14 +3436,14 @@ import Xe from "path";
 import { lstat as Qr, open as od, realpath as Po } from "fs/promises";
 import * as vt from "path";
 import { constants as Zr } from "fs";
-function Ha() {
-  return Zr.O_RDONLY | XXe();
+function getSafeReadOpenFlags() {
+  return Zr.O_RDONLY | getNoFollowOpenFlags();
 }
-function XXe() {
+function getNoFollowOpenFlags() {
   if (getCurrentPlatform() === "windows") return 0;
   return Zr.O_NOFOLLOW | Zr.O_NONBLOCK;
 }
-var eer = [
+var SUPPORTED_BINARY_TARGETS = [
   "aarch64-apple-darwin",
   "x86_64-apple-darwin",
   "aarch64-unknown-linux-musl",
@@ -3463,25 +3463,25 @@ function sd(e, t) {
       return;
   }
 }
-var ter = 268435456;
-function ner() {
+var MAX_BINARY_SIZE_BYTES = 268435456;
+function getArm64TargetTriple() {
   return sd(getCurrentPlatform(), "arm64");
 }
-function YXe(e, t) {
+function stripBinaryTargetSuffix(e, t) {
   if (e.endsWith(`-${t}`)) {
     let r = e.slice(0, -(t.length + 1));
-    return hke.test(r) ? r : void 0;
+    return BINARIES_BASENAME_PATTERN.test(r) ? r : void 0;
   }
   if (e.endsWith(`-${t}.exe`)) {
     let r = e.slice(0, -(t.length + 5));
-    return hke.test(r) ? `${r}.exe` : void 0;
+    return BINARIES_BASENAME_PATTERN.test(r) ? `${r}.exe` : void 0;
   }
   return;
 }
-async function JXe(e) {
+async function isExistingDirectory(e) {
   return (await Qr(e).catch(() => null))?.isDirectory() === !0;
 }
-async function CCe(e, t) {
+async function checkContainedDirectory(e, t) {
   let r = e;
   for (let _ of vt.relative(e, t).split(vt.sep).filter(Boolean)) {
     r = vt.join(r, _);
@@ -3503,11 +3503,11 @@ async function CCe(e, t) {
   let p = vt.relative(o, d);
   return !p.startsWith("..") && !vt.isAbsolute(p) ? "ok" : "refused";
 }
-async function yqt(e) {
-  let t = await Ywt(e);
+async function readOptionalFileContent(e) {
+  let t = await readTextFileCapped(e);
   return t.kind === "ok" ? t.content : void 0;
 }
-async function Ywt(e) {
+async function readTextFileCapped(e) {
   let t = await Qr(e).catch((o) => {
     let d = A(o);
     if (d === "ENOENT" || d === "ENOTDIR") return null;
@@ -3517,16 +3517,16 @@ async function Ywt(e) {
   if (!t.isFile()) return { kind: "refused" };
   let r;
   try {
-    if (((r = await od(e, Ha())), !(await r.stat()).isFile()))
+    if (((r = await od(e, getSafeReadOpenFlags())), !(await r.stat()).isFile()))
       return { kind: "refused" };
-    let d = Buffer.alloc($q + 1),
+    let d = Buffer.alloc(MAX_PLUGIN_FILE_BYTES + 1),
       p = 0;
     while (p < d.length) {
       let { bytesRead: _ } = await r.read(d, p, d.length - p);
       if (_ === 0) break;
       p += _;
     }
-    if (p > $q) return { kind: "too-large" };
+    if (p > MAX_PLUGIN_FILE_BYTES) return { kind: "too-large" };
     return { kind: "ok", content: d.toString("utf-8", 0, p) };
   } finally {
     await r?.close().catch(() => {
@@ -3555,12 +3555,12 @@ async function $o(e, t, r) {
       version: null,
       err: "the stub publish directory is not inside a real directory",
     };
-  (await ei(e), await ei(_), await rFe(Xe.join(_, "index.html"), t));
+  (await ei(e), await ei(_), await writeFileExclusive(Xe.join(_, "index.html"), t));
   for (let [V, J] of [
     ["thumbnail.img", r.thumbnail],
     ["thumbnail_dark.img", r.thumbnailDark],
   ])
-    if (J !== void 0) await rFe(Xe.join(_, V), J);
+    if (J !== void 0) await writeFileExclusive(Xe.join(_, V), J);
     else await ti(Xe.join(_, V), { recursive: !0, force: !0 });
   let R = Xe.join(_, "files");
   await ei(R);
@@ -3619,7 +3619,7 @@ async function $o(e, t, r) {
       if (J === null) continue;
       if ((await mkdir(Xe.dirname(J), { recursive: !0 }), (await I(J)) !== !0))
         continue;
-      await rFe(J, V.content);
+      await writeFileExclusive(J, V.content);
     } catch (J) {
       n(`artifact stub: skipping supporting file ${V.path}: ${J}`, {
         level: "warn",
@@ -3659,14 +3659,14 @@ async function $o(e, t, r) {
     publishedAtMs: Date.now(),
   };
   return (
-    await rFe(Xe.join(_, "manifest.json"), b(ue, null, 2)),
+    await writeFileExclusive(Xe.join(_, "manifest.json"), b(ue, null, 2)),
     { url: p, slug: d, version: "1", err: null }
   );
 }
-async function rer(e, t) {
+async function readArtifactStubFavicon(e, t) {
   if (!ARTIFACT_SLUG_RE.test(t)) return;
   try {
-    let r = await yqt(Xe.join(e, t, "manifest.json")),
+    let r = await readOptionalFileContent(Xe.join(e, t, "manifest.json")),
       o = r === void 0 ? void 0 : z(r);
     return isRecord(o) ? o.favicon : void 0;
   } catch {
@@ -3681,13 +3681,13 @@ async function ei(e) {
   }
   await mkdir(e, { recursive: !0 });
 }
-async function rFe(e, t) {
+async function writeFileExclusive(e, t) {
   (await ti(e, { recursive: !0, force: !0 }), await writeFile(e, t, { flag: "wx" }));
 }
-var NH = "live-doc",
-  Soe = "index.html";
+var LIVE_DOC_ARTIFACT_KIND = "live-doc",
+  LIVE_DOC_INDEX_PATH = "index.html";
 var Lo = 256,
-  oer =
+  SAFE_RELATIVE_FILE_PATH_RE =
     /^(?!\/)(?!.*\/\/)(?!.*\/$)(?!(?:^|.*\/)\.\.?(?:\/|$))[^\p{Cc}\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069\u2028\u2029\\?#%:;]{1,512}$/u,
   bn =
     /^[^\p{Cc}\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069\u2028\u2029]{1,1024}$/u,
@@ -3709,17 +3709,17 @@ var Lo = 256,
   );
 function nr(e) {
   if (e.docs !== void 0)
-    return Fo().safeParse(e.docs).success ? Jwt(e) : void 0;
-  return e.files !== void 0 ? Jwt(e) : void 0;
+    return Fo().safeParse(e.docs).success ? resolveLiveDocEntries(e) : void 0;
+  return e.files !== void 0 ? resolveLiveDocEntries(e) : void 0;
 }
-function Jwt(e) {
+function resolveLiveDocEntries(e) {
   let t = e.docs === void 0 ? void 0 : Fo().safeParse(e.docs);
   if (t?.success && t.data.length > 0) return t.data;
-  if (e.artifactKind !== NH) return [];
+  if (e.artifactKind !== LIVE_DOC_ARTIFACT_KIND) return [];
   if (e.files !== void 0 && !ud(e)) return [];
   return [
     {
-      path: Soe,
+      path: LIVE_DOC_INDEX_PATH,
       ...(typeof e.headSeq === "number" &&
         Number.isSafeInteger(e.headSeq) &&
         e.headSeq >= 0 && { headSeq: e.headSeq }),
@@ -3754,11 +3754,11 @@ var dd = createLazyValue(() =>
     }),
   ).max(Lo),
 );
-function ser(e) {
+function indexArtifactFiles(e) {
   if (e.files === void 0) return;
   let t = dd().safeParse(e.files);
   if (!t.success) return;
-  let r = new Set(Jwt(e).map((d) => d.path)),
+  let r = new Set(resolveLiveDocEntries(e).map((d) => d.path)),
     o = new Map();
   for (let d of t.data)
     o.set(d.path, {
@@ -3768,8 +3768,8 @@ function ser(e) {
     });
   return o;
 }
-var qk = 20971520;
-function Fd() {
+var MAX_ARTIFACT_FILE_BYTES = 20971520;
+function buildFrameHeaders() {
   return {
     "X-Frame-CP": "go",
     "X-Frame-Surface": "code",
@@ -3795,7 +3795,7 @@ function ni() {
   let e = a.CLAUDE_CODE_REMOTE_SESSION_ID ?? getRemoteControlSessionCompatId();
   return e && fd.test(e) ? e : void 0;
 }
-var QXe = /^[A-Za-z0-9_-]{1,64}$/;
+var ARTIFACT_VERSION_RE = /^[A-Za-z0-9_-]{1,64}$/;
 import { basename } from "path";
 function ii() {
   return {
@@ -4264,7 +4264,7 @@ function Zd(e, t, r) {
     }).join(`
 `);
 }
-class oFe {
+class MarkdownTokenizer {
   options;
   rules;
   lexer;
@@ -4880,7 +4880,7 @@ ${C}`
     }
   }
 }
-class EN {
+class MarkdownLexer {
   tokens;
   options;
   state;
@@ -4890,7 +4890,7 @@ class EN {
     ((this.tokens = []),
       (this.tokens.links = Object.create(null)),
       (this.options = e || qt),
-      (this.options.tokenizer = this.options.tokenizer || new oFe()),
+      (this.options.tokenizer = this.options.tokenizer || new MarkdownTokenizer()),
       (this.tokenizer = this.options.tokenizer),
       (this.tokenizer.options = this.options),
       (this.tokenizer.lexer = this),
@@ -4908,10 +4908,10 @@ class EN {
     return { block: rr, inline: yn };
   }
   static lex(e, t) {
-    return new EN(t).lex(e);
+    return new MarkdownLexer(t).lex(e);
   }
   static lexInline(e, t) {
-    return new EN(t).inlineTokens(e);
+    return new MarkdownLexer(t).inlineTokens(e);
   }
   lex(e) {
     ((e = e.replace(
@@ -5622,13 +5622,13 @@ class kn {
     return e;
   }
   provideLexer() {
-    return this.block ? EN.lex : EN.lexInline;
+    return this.block ? MarkdownLexer.lex : MarkdownLexer.lexInline;
   }
   provideParser() {
     return this.block ? ot.parse : ot.parseInline;
   }
 }
-class AG {
+class MarkdownEngine {
   defaults = ii();
   options = this.setOptions;
   parse = this.parseMarkdown(!0);
@@ -5636,8 +5636,8 @@ class AG {
   Parser = ot;
   Renderer = xn;
   TextRenderer = ar;
-  Lexer = EN;
-  Tokenizer = oFe;
+  Lexer = MarkdownLexer;
+  Tokenizer = MarkdownTokenizer;
   Hooks = kn;
   constructor(...e) {
     this.use(...e);
@@ -5724,7 +5724,7 @@ class AG {
           o.renderer = d;
         }
         if (r.tokenizer) {
-          let d = this.defaults.tokenizer || new oFe(this.defaults);
+          let d = this.defaults.tokenizer || new MarkdownTokenizer(this.defaults);
           for (let p in r.tokenizer) {
             if (!(p in d)) throw Error(`tokenizer '${p}' does not exist`);
             if (["options", "rules", "lexer"].includes(p)) continue;
@@ -5783,7 +5783,7 @@ class AG {
     return ((this.defaults = { ...this.defaults, ...e }), this);
   }
   lexer(e, t) {
-    return EN.lex(e, t ?? this.defaults);
+    return MarkdownLexer.lex(e, t ?? this.defaults);
   }
   parser(e, t) {
     return ot.parse(e, t ?? this.defaults);
@@ -5810,7 +5810,7 @@ class AG {
           ),
         );
       if (p.hooks) ((p.hooks.options = p), (p.hooks.block = e));
-      let w = p.hooks ? p.hooks.provideLexer() : e ? EN.lex : EN.lexInline,
+      let w = p.hooks ? p.hooks.provideLexer() : e ? MarkdownLexer.lex : MarkdownLexer.lexInline,
         E = p.hooks ? p.hooks.provideParser() : e ? ot.parse : ot.parseInline;
       if (p.async)
         return Promise.resolve(p.hooks ? p.hooks.preprocess(r) : r)
@@ -5854,40 +5854,40 @@ Please report this to https://github.com/markedjs/marked.`),
     };
   }
 }
-var Kt = new AG();
-function _u(e, t) {
+var Kt = new MarkdownEngine();
+function markdownParser(e, t) {
   return Kt.parse(e, t);
 }
-_u.options = _u.setOptions = function (e) {
-  return (Kt.setOptions(e), (_u.defaults = Kt.defaults), jo(_u.defaults), _u);
+markdownParser.options = markdownParser.setOptions = function (e) {
+  return (Kt.setOptions(e), (markdownParser.defaults = Kt.defaults), jo(markdownParser.defaults), markdownParser);
 };
-_u.getDefaults = ii;
-_u.defaults = qt;
-_u.use = function (...e) {
-  return (Kt.use(...e), (_u.defaults = Kt.defaults), jo(_u.defaults), _u);
+markdownParser.getDefaults = ii;
+markdownParser.defaults = qt;
+markdownParser.use = function (...e) {
+  return (Kt.use(...e), (markdownParser.defaults = Kt.defaults), jo(markdownParser.defaults), markdownParser);
 };
-_u.walkTokens = function (e, t) {
+markdownParser.walkTokens = function (e, t) {
   return Kt.walkTokens(e, t);
 };
-_u.parseInline = Kt.parseInline;
-_u.Parser = ot;
-_u.parser = ot.parse;
-_u.Renderer = xn;
-_u.TextRenderer = ar;
-_u.Lexer = EN;
-_u.lexer = EN.lex;
-_u.Tokenizer = oFe;
-_u.Hooks = kn;
-_u.parse = _u;
+markdownParser.parseInline = Kt.parseInline;
+markdownParser.Parser = ot;
+markdownParser.parser = ot.parse;
+markdownParser.Renderer = xn;
+markdownParser.TextRenderer = ar;
+markdownParser.Lexer = MarkdownLexer;
+markdownParser.lexer = MarkdownLexer.lex;
+markdownParser.Tokenizer = MarkdownTokenizer;
+markdownParser.Hooks = kn;
+markdownParser.parse = markdownParser;
 var {
   options: wb,
   setOptions: kb,
   use: vb,
   walkTokens: xb,
   parseInline: Sb,
-} = _u;
+} = markdownParser;
 var Ab = ot.parse,
-  Eb = EN.lex;
+  Eb = MarkdownLexer.lex;
 var Qo = {
   amp: "&",
   lt: "<",
@@ -5911,7 +5911,7 @@ function Qd(e) {
     },
   );
 }
-function sFe(e) {
+function isSafeExternalUrl(e) {
   let t;
   try {
     t = Qd(e);
@@ -5954,7 +5954,7 @@ function ia(e, t) {
 function sa() {
   let e = ne().marked;
   if (e.plain) return e.plain;
-  let t = new AG({ gfm: !0 });
+  let t = new MarkdownEngine({ gfm: !0 });
   return (
     t.use({
       renderer: {
@@ -5967,13 +5967,13 @@ function sa() {
     t
   );
 }
-async function Qwt(e, t) {
+async function renderMarkdownArtifactHtml(e, t) {
   return ef + di(e, t);
 }
 function nf() {
   let e = ne().marked;
   if (e.inertHtml) return e.inertHtml;
-  let t = new AG({ gfm: !0 });
+  let t = new MarkdownEngine({ gfm: !0 });
   return (
     t.use({
       renderer: {
@@ -5982,15 +5982,15 @@ function nf() {
         },
         html({ text: r }) {
           if (Ner.test(r)) return r;
-          if (MXe(r)) return "";
+          if (isWellFormedHtmlComment(r)) return "";
           return go(r);
         },
         link(r) {
-          if (sFe(r.href)) return !1;
+          if (isSafeExternalUrl(r.href)) return !1;
           return `${this.parser.parseInline(r.tokens)} (${go(r.href)})`;
         },
         image(r) {
-          if (!sFe(r.href)) return go(r.text || r.href);
+          if (!isSafeExternalUrl(r.href)) return go(r.text || r.href);
           return (
             `<img src="${go(r.href)}" alt="${go(r.text)}"` +
             (r.title ? ` title="${go(r.title)}"` : "") +
@@ -6150,7 +6150,7 @@ async function fa(e) {
     feature: "plan",
   });
 }
-async function ier(e, t) {
+async function renderWorkshopMarkdownArtifact(e, t) {
   let r = (t.endsWith(WORKSHOP_MARKDOWN_EXTENSION) ? t.slice(0, -WORKSHOP_MARKDOWN_EXTENSION.length) : t) || t;
   return fi(e, {
     eyebrow: `Workshop \xB7 ${r}`,
@@ -6164,7 +6164,7 @@ async function ier(e, t) {
       import("../../01-核心基础设施/共享小工具-未细化/WORKSHOP_PAGE_TEMPLATE.1268b5re.js").then((o) => o.WORKSHOP_TEMPLATE),
   });
 }
-async function aer(e, t) {
+async function renderStyledMarkdownArtifact(e, t) {
   return fi(e, {
     eyebrow: `Markdown \xB7 ${t}`,
     fallbackTitle: t,
@@ -6196,7 +6196,7 @@ async function fi(e, t) {
   }
   if (!R)
     return {
-      html: await Qwt(r, { neutralizeRawHtml: t.neutralizeRawHtml }),
+      html: await renderMarkdownArtifactHtml(r, { neutralizeRawHtml: t.neutralizeRawHtml }),
       title: E,
       templated: !1,
     };
@@ -6245,7 +6245,7 @@ async function fi(e, t) {
         { level: "warn" },
       ),
       {
-        html: await Qwt(r, { neutralizeRawHtml: t.neutralizeRawHtml }),
+        html: await renderMarkdownArtifactHtml(r, { neutralizeRawHtml: t.neutralizeRawHtml }),
         title: E,
         templated: !1,
       }
@@ -6314,7 +6314,7 @@ function Sf(e) {
     rest: t.slice(0, r.offset) + t.slice(r.offset + o.raw.length),
   };
 }
-function boe(e, t) {
+function summarizeRequestError(e, t) {
   let r = AZ(tf(e)?.code) ?? Jg(e);
   return {
     transport: isTransportError(e),
@@ -6323,10 +6323,10 @@ function boe(e, t) {
   };
 }
 var Af = /^\d{1,12}-[0-9a-f]{1,32}$/;
-function iFe(e) {
+function sanitizeArtifactSlugForTelemetry(e) {
   return ARTIFACT_SLUG_RE.test(e) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(e) : S("nonconforming");
 }
-function Iwn(e) {
+function sanitizeArtifactVersionForTelemetry(e) {
   return Af.test(e) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(e) : S("nonconforming");
 }
 function pa(e) {
@@ -6346,26 +6346,26 @@ function pa(e) {
 }
 var pi = pa("prototypeArmed"),
   Ef = pa("controlPlaneArmed");
-function ler() {
+function armPrototypeLane() {
   (pi.arm(), logFeatureOk("prototype_started", {}));
 }
-function cer() {
+function takePrototypeLane() {
   return pi.take();
 }
-function ZXe() {
+function giveBackPrototypeLane() {
   pi.giveBack();
 }
 function hi(e, t) {
   ne().templateLanes.boundSlugs.set(e, t);
 }
-function uer(e) {
+function getTemplateLaneForSlug(e) {
   return ne().templateLanes.boundSlugs.get(e);
 }
-function der(e, t) {
+function recordPrototypePublish(e, t) {
   (hi(e, "prototype"),
-    logFeatureOk("prototype_publish", { artifact_slug: iFe(e), is_first_publish: t }));
+    logFeatureOk("prototype_publish", { artifact_slug: sanitizeArtifactSlugForTelemetry(e), is_first_publish: t }));
 }
-function eYe() {
+function giveBackControlPlaneLane() {
   Ef.giveBack();
 }
 var ha = null,
@@ -6423,18 +6423,18 @@ function isFrameDeclaredThumbnailEnabled() {
 }
 var Pf = createLazyValue(() =>
     c({
-      version: s().regex(Mj),
-      capabilities: v(s().regex(Nj)).max(256),
+      version: s().regex(VERSION_PATTERN),
+      capabilities: v(s().regex(CAPABILITY_NAME_PATTERN)).max(256),
       claude: O()
         .optional()
         .catch(void 0),
-      core: v(s().regex(Nj))
+      core: v(s().regex(CAPABILITY_NAME_PATTERN))
         .max(256)
         .optional()
         .catch(void 0),
       features: fe(
-        s().regex(Nj),
-        fe(s().regex(Nj), $e([fe(s(), se()), k(!0).transform(() => ({}))])),
+        s().regex(CAPABILITY_NAME_PATTERN),
+        fe(s().regex(CAPABILITY_NAME_PATTERN), $e([fe(s(), se()), k(!0).transform(() => ({}))])),
       )
         .optional()
         .catch(void 0),
@@ -6448,9 +6448,9 @@ var Pf = createLazyValue(() =>
 async function Pi(e, t, r) {
   let o;
   try {
-    o = await Nd.get(e, {
+    o = await artifactFrameHttpClient.get(e, {
       refreshOAuth: !0,
-      headers: Fd(),
+      headers: buildFrameHeaders(),
       maxContentLength: Mf,
       ...r,
       ...(t.timeoutMs !== void 0 && { timeout: t.timeoutMs }),
@@ -6483,7 +6483,7 @@ async function Pi(e, t, r) {
   };
 }
 async function resolveContract(e) {
-  if (e.version !== void 0 && !Mj.test(e.version))
+  if (e.version !== void 0 && !VERSION_PATTERN.test(e.version))
     return { err: "invalid contract version", cause: "malformed" };
   let t = await Pi(
     e.version !== void 0 ? `/api/frame/contract/${e.version}` : Cf,
@@ -6496,7 +6496,7 @@ async function resolveContract(e) {
   return r.data;
 }
 async function fetchContractDefs(e, t, r) {
-  if (!Mj.test(e) || !Nj.test(t))
+  if (!VERSION_PATTERN.test(e) || !CAPABILITY_NAME_PATTERN.test(t))
     return {
       err: "invalid contract version or capability name",
       cause: "malformed",
@@ -6511,7 +6511,7 @@ async function fetchContractDefs(e, t, r) {
   return { dts: o.body };
 }
 async function fetchContractPrompt(e, t) {
-  if (!Mj.test(e))
+  if (!VERSION_PATTERN.test(e))
     return { err: "invalid contract version", cause: "malformed" };
   let r = await Pi(`/api/frame/contract/${e}/prompt`, t, {
     responseType: "text",
@@ -6527,7 +6527,7 @@ async function fetchContractPrompt(e, t) {
           .slice(0, 4096)
           .split(",")
           .map((d) => d.trim())
-          .filter((d) => Nj.test(d));
+          .filter((d) => CAPABILITY_NAME_PATTERN.test(d));
   return { promptMd: r.body, missingCaps: o };
 }
 function derivePublishContextFrom(e) {
@@ -6686,7 +6686,7 @@ function artifactVersionObserved(e, t, r, o) {
 function makeSetArtifactContractTarget(e) {
   return (t, r, o) =>
     e((d) => {
-      let p = wD(r),
+      let p = parseContractVersion(r),
         _ = d.artifactRefs ?? [],
         w = _.find((R) => R.slug === t),
         E = p ?? w?.pin;
@@ -6865,7 +6865,7 @@ async function Hf(e) {
         page_bytes: p,
         unknown_count: D.length,
       });
-      let F = rt(D, 8, jg).join(", "),
+      let F = rt(D, 8, sanitizeDisplayText).join(", "),
         I = rt(M.capabilities, 8, (N) => N).join(", ");
       return `unknown ${pluralize(D.length, "capability", "capabilities")}: ${F} \u2014 contract ${M.version} supports: ${I || "(none)"}. Fix or drop the declaration; the control plane would reject it anyway.`;
     },
@@ -7138,7 +7138,7 @@ function isValidArtifactLang(e) {
   return e.length <= 35 && Ua.test(e);
 }
 async function za(e) {
-  if (!e.includes(In) || Buffer.byteLength(e, "utf8") > MAX_ARTIFACT_BYTES || _J(e)) return e;
+  if (!e.includes(In) || Buffer.byteLength(e, "utf8") > MAX_ARTIFACT_BYTES || isPrReviewPage(e)) return e;
   return As(e);
 }
 async function prepareArtifactBody(e, t = {}) {
@@ -7177,7 +7177,7 @@ async function prepareArtifactBody(e, t = {}) {
         (R = re));
   }
   let F = null,
-    I = ro(R, await X1e(), {
+    I = ro(R, await getPrReviewTemplateChrome(), {
       crUrlRe: F,
       allowMermaidFence: d === !0 || p === !0,
       allowStampBinding: d === !0 || p === !0,
@@ -7200,7 +7200,7 @@ async function prepareArtifactBody(e, t = {}) {
   }
   let U = !1;
   if (ue) {
-    let re = Wwt();
+    let re = buildMermaidRuntimeBlock();
     if (re !== null) ((J += re), (U = !0));
   }
   let te = !1;
@@ -7280,9 +7280,9 @@ var Wa = 2097152;
 async function readFrameDecl(e, t, r) {
   let o = performance.now();
   try {
-    let d = await Nd.get(`/api/frame/read/${encodeURIComponent(e)}`, {
+    let d = await artifactFrameHttpClient.get(`/api/frame/read/${encodeURIComponent(e)}`, {
       refreshOAuth: !0,
-      headers: Fd(),
+      headers: buildFrameHeaders(),
       timeout: 15000,
       maxContentLength: Wa,
       ...(t && { signal: t }),
@@ -7313,7 +7313,7 @@ async function readFrameDecl(e, t, r) {
   } catch (d) {
     return {
       err: d instanceof Error ? d.message : String(d),
-      request: boe(d, o),
+      request: summarizeRequestError(d, o),
     };
   }
 }
@@ -7329,12 +7329,12 @@ async function Ga(e, t, r, o) {
     E = _ !== void 0 ? { ...d, typeLock: _ } : d;
   if (
     d.stored?.capabilities !== void 0 ||
-    (!yJ(w.capabilities ?? void 0) && wD(w.contract) === null)
+    (!isNonEmptyRecord(w.capabilities ?? void 0) && parseContractVersion(w.contract) === null)
   )
     return E;
   return {
     ...E,
-    stored: { ...w, ...(yJ(w.capabilities ?? void 0) && { carried: !0 }) },
+    stored: { ...w, ...(isNonEmptyRecord(w.capabilities ?? void 0) && { carried: !0 }) },
   };
 }
 function Zf(e) {
@@ -7449,7 +7449,7 @@ function qa(e, t) {
   return (e ?? []).filter((r) => !t.has(r)).flatMap((r) => []);
 }
 function Xa(e, t) {
-  let r = jg(e, { max: t }).replace(INVISIBLE_BLANKS, " ").trim();
+  let r = sanitizeDisplayText(e, { max: t }).replace(INVISIBLE_BLANKS, " ").trim();
   return r !== "" && r !== "?" ? r : void 0;
 }
 var dp = 32,
@@ -7554,7 +7554,7 @@ async function br() {
           d = r(o.WORKSHOP_PAGE_TEMPLATE);
         for (let _ of r(o.WORKSHOP_TEMPLATE)) d.add(_);
         let p = !0;
-        for (let _ of [await $r(), Wwt(), await Lr()])
+        for (let _ of [await $r(), buildMermaidRuntimeBlock(), await Lr()])
           if (_ !== null) for (let w of r(_)) d.add(w);
           else p = !1;
         return { hashes: d, complete: p };
@@ -7662,7 +7662,7 @@ function _p(e, t) {
       o--;
     if (e.endsWith("-->", o)) {
       let p = e.lastIndexOf("<!--", o - 7);
-      if (p < t || !MXe(e.slice(p, o))) return null;
+      if (p < t || !isWellFormedHtmlComment(e.slice(p, o))) return null;
       ((r = !0), (o = p));
     } else if (!d && o - t >= 7 && e.endsWith("</html>", o))
       ((d = !0), (o -= 7));
@@ -7823,7 +7823,7 @@ function $i(e, t = "supporting file") {
         : MANIFEST_TEXT_TYPES.has(r.contentType)
           ? r.content.toString("utf8")
           : null;
-    if (o !== null && _J(o, { parsedAsMarkup: MARKUP_CONTENT_TYPES.has(normalizeContentType(r.contentType)) }))
+    if (o !== null && isPrReviewPage(o, { parsedAsMarkup: MARKUP_CONTENT_TYPES.has(normalizeContentType(r.contentType)) }))
       return (
         logFeatureBad("artifact_publish", "file_review_machinery"),
         ie(
@@ -7932,7 +7932,7 @@ async function ka(e, t) {
         t.thumbnailDark && { thumbnailDark: t.thumbnailDark }),
     };
   if ((t.files !== void 0 && t.files.length > 0) || N.length > 0) {
-    if (_J(e))
+    if (isPrReviewPage(e))
       return (
         logFeatureBad("artifact_publish", "review_single_file"),
         ie(
@@ -8117,9 +8117,9 @@ async function ka(e, t) {
       );
       let at = Dp(ee.malformed);
       if (ee.unresolved.length > 0) {
-        let ze = rt(ee.unresolved, 8, (lt) => `"${Y_(lt)}"`),
+        let ze = rt(ee.unresolved, 8, (lt) => `"${formatArtifactServerDisplayName(lt)}"`),
           jt = L.filter(zt),
-          cn = rt(dedupe(jt.map((lt) => lt.server)), 8, (lt) => `"${Y_(lt)}"`),
+          cn = rt(dedupe(jt.map((lt) => lt.server)), 8, (lt) => `"${formatArtifactServerDisplayName(lt)}"`),
           $n =
             cn.length === 0
               ? ""
@@ -8134,7 +8134,7 @@ async function ka(e, t) {
         );
       }
       if (ee.internal.length > 0) {
-        let ze = rt(dedupe(ee.internal), 8, (jt) => `"${Y_(jt)}"`);
+        let ze = rt(dedupe(ee.internal), 8, (jt) => `"${formatArtifactServerDisplayName(jt)}"`);
         at.push(
           `built-in ${pluralize(ee.internal.length, "server")} ${ze.join(", ")} ` +
             "\u2014 the Claude app's own servers, which it never exposes to " +
@@ -8143,7 +8143,7 @@ async function ka(e, t) {
       }
       for (let ze of ee.oversized)
         at.push(
-          `${an(ze.server)} "${Y_(ze.server)}" declares ${ze.toolCount} tools, counted after any same-name entries merge (max ${Yr}) \u2014 trim the tools ` +
+          `${an(ze.server)} "${formatArtifactServerDisplayName(ze.server)}" declares ${ze.toolCount} tools, counted after any same-name entries merge (max ${Yr}) \u2014 trim the tools ` +
             "list; the control plane would reject it anyway",
         );
       if (ee.serverCount !== null)
@@ -8164,7 +8164,7 @@ async function ka(e, t) {
     if (st.length > 0)
       Je = [
         ...Je,
-        `the page calls callTool/watchTool with ${pluralize(st.length, "a server name", "server names")} not in this manifest \u2014 ${rt(st, 8, (Ye) => `"${Y_(Ye)}"`).join(", ")} \u2014 and those calls fail for every viewer; the manifest declares ${rt(ee.servers, 8, (Ye) => `"${Y_(Ye)}"`).join(", ")}.`,
+        `the page calls callTool/watchTool with ${pluralize(st.length, "a server name", "server names")} not in this manifest \u2014 ${rt(st, 8, (Ye) => `"${formatArtifactServerDisplayName(Ye)}"`).join(", ")} \u2014 and those calls fail for every viewer; the manifest declares ${rt(ee.servers, 8, (Ye) => `"${formatArtifactServerDisplayName(Ye)}"`).join(", ")}.`,
       ];
   } else if (R !== void 0) {
     let L = _o(R).length;
@@ -8177,7 +8177,7 @@ async function ka(e, t) {
   if (
     t.contract !== void 0 &&
     t.contract !== "latest" &&
-    (!Mj.test(t.contract) || t.contract === Z1e)
+    (!VERSION_PATTERN.test(t.contract) || t.contract === NO_PIN_VERSION_SENTINEL)
   )
     return (
       logFeatureBad("artifact_publish", "invalid_contract", { page_bytes: pe }),
@@ -8224,9 +8224,9 @@ async function ka(e, t) {
           )
         );
     else
-      ((Ft = L === null ? null : wD(L.contract)), (wt = L?.capabilities ?? {}));
+      ((Ft = L === null ? null : parseContractVersion(L.contract)), (wt = L?.capabilities ?? {}));
   }
-  let mt = wD(Ft);
+  let mt = parseContractVersion(Ft);
   if (
     o &&
     wt === void 0 &&
@@ -8253,7 +8253,7 @@ async function ka(e, t) {
       logFeatureSad("artifact_publish", "retrofit_guard_skipped");
     } else wt = L?.capabilities ?? {};
   }
-  let Et = (L) => (L === rP ? JE : L),
+  let Et = (L) => (L === LEGACY_SELF_CAPABILITY_KEY ? ARTIFACT_CAPABILITY_KEY : L),
     tt = Object.keys(wt ?? {}).map(Et),
     Rt = Object.keys(Ue ?? {}).map(Et),
     Tt = Object.entries(wt ?? {}).filter(([L]) => !Rt.includes(Et(L)));
@@ -8264,8 +8264,8 @@ async function ka(e, t) {
     Rt.some((L) => !tt.includes(L))
   ) {
     logFeatureBad("artifact_publish", "capability_retrofit_refused");
-    let L = rt(Tt, 8, ([ee]) => jg(ee)),
-      de = jg(b({ ...Object.fromEntries(Tt), ...Ue }), { max: 600 });
+    let L = rt(Tt, 8, ([ee]) => sanitizeDisplayText(ee)),
+      de = sanitizeDisplayText(b({ ...Object.fromEntries(Tt), ...Ue }), { max: 600 });
     return ie(
       `your capabilities declaration omits the stored ${pluralize(Tt.length, "capability", "capabilities")} ${L.join(", ")} while adding new ones \u2014 a sent declaration replaces the stored one, so this publish would have silently revoked ${Tt.length === 1 ? "it" : "them"}. To keep ${Tt.length === 1 ? "it" : "them"}, republish declaring the union${de.length < 600 ? `: ${de}` : " (republish with capabilities omitted to read the stored declaration back, then resend it plus your additions)"}. To revoke on purpose, publish that union first, then republish without the revoked names (a declaration that adds no new name goes out as sent); capabilities: {} clears everything.`,
     );
@@ -8304,7 +8304,7 @@ async function ka(e, t) {
             : de;
         },
       );
-  if (t.createPath !== void 0 && _J(Le))
+  if (t.createPath !== void 0 && isPrReviewPage(Le))
     return (
       logFeatureBad("artifact_publish", "review_single_file"),
       ie(
@@ -8319,7 +8319,7 @@ async function ka(e, t) {
     Qe.length > 0 ||
     t.liveFiles !== void 0
   ) {
-    if (_J(Le))
+    if (isPrReviewPage(Le))
       return (
         logFeatureBad("artifact_publish", "review_single_file"),
         ie(
@@ -8465,7 +8465,7 @@ function surfacedViaForEntrypoint() {
 }
 async function trackFrameEvent(e, t) {
   try {
-    let r = await Nd.post(
+    let r = await artifactFrameHttpClient.post(
       "/api/frame/track",
       {
         event_name: e,
@@ -8475,7 +8475,7 @@ async function trackFrameEvent(e, t) {
       },
       {
         refreshOAuth: !0,
-        headers: Fd(),
+        headers: buildFrameHeaders(),
         timeout: 5000,
         credentials: t.credentials,
       },
@@ -8553,12 +8553,12 @@ async function ur(e) {
   }
 }
 function dl(e, t) {
-  return e instanceof Pn ? boe(e.cause, e.startedAtMs) : boe(e, t);
+  return e instanceof Pn ? summarizeRequestError(e.cause, e.startedAtMs) : summarizeRequestError(e, t);
 }
 async function vi(e, t, r, o) {
-  let d = await Nd.post(e, t, {
+  let d = await artifactFrameHttpClient.post(e, t, {
     refreshOAuth: !0,
-    headers: Fd(),
+    headers: buildFrameHeaders(),
     streamUpload: { tailFloorMs: Rp, onSettled: o },
     maxBodyLength: 2 * MAX_ARTIFACT_BYTES,
     maxContentLength: Wa,
@@ -8577,7 +8577,7 @@ async function fl(e, t, r, o, d = !1) {
         return await e();
       } catch (I) {
         let N = errBody(I instanceof Error ? I.message : String(I));
-        throw nP(I)
+        throw isFrameRelayAttemptError(I)
           ? new yr(Tn(`relay request failed: ${N}`), F, { cause: I })
           : new cl(Tn(`deploy request failed: ${N}`), F, { cause: I });
       }
@@ -8761,7 +8761,7 @@ async function xa(e, t, r, o, d, p, _, w, E, R, C, M, D) {
         (q = await ce()));
     let ge = (_e) =>
       _e.reason === "no-auth"
-        ? Am(_e.detail)
+        ? formatNotAuthenticatedMessage(_e.detail)
         : `publish unavailable: ${_e.reason}`;
     if (!q.ok) return (logFeatureBad("artifact_publish", q.reason, F), ie(ge(q)));
     if (
@@ -9517,7 +9517,7 @@ async function Ni(e, t, r, o, d, p, _) {
       let ve = He.map((et) => ({ f: et, sha: hashSha256(et.content), wire: Rn(et) })),
         Re = async (et, We) => {
           let en = () =>
-              Nd.post(
+              artifactFrameHttpClient.post(
                 "/api/frame/deploy/prepare",
                 {
                   ...(et !== void 0 && { slug: et }),
@@ -9525,7 +9525,7 @@ async function Ni(e, t, r, o, d, p, _) {
                 },
                 {
                   refreshOAuth: !0,
-                  headers: Fd(),
+                  headers: buildFrameHeaders(),
                   timeout: 30000,
                   credentials: D,
                 },
@@ -9564,13 +9564,13 @@ async function Ni(e, t, r, o, d, p, _) {
             status: 0,
             why:
               We.reason === "no-auth"
-                ? Am(We.detail)
+                ? formatNotAuthenticatedMessage(We.detail)
                 : `preflight unavailable: ${We.reason}`,
           };
           break;
         }
         if (We.status === 404) {
-          if (hoe(We.data))
+          if (isNotFoundResponseBody(We.data))
             return (
               logFeatureBad("artifact_publish", "prepare_not_found", N),
               {
@@ -9640,7 +9640,7 @@ async function Ni(e, t, r, o, d, p, _) {
               logFeatureBad("artifact_publish", Ve.reason, N),
               ie(
                 Ve.reason === "no-auth"
-                  ? Am(Ve.detail) + Ee
+                  ? formatNotAuthenticatedMessage(Ve.detail) + Ee
                   : `upload unavailable: ${Ve.reason}. The publish was NOT completed; retry publishing to slug ${L}.`,
               )
             );
@@ -9676,7 +9676,7 @@ async function Ni(e, t, r, o, d, p, _) {
               logFeatureBad("artifact_publish", be.reason, N),
               ie(
                 be.reason === "no-auth"
-                  ? Am(be.detail) + Ee
+                  ? formatNotAuthenticatedMessage(be.detail) + Ee
                   : `copying files from another artifact unavailable: ${be.reason}. The publish was NOT completed; retry publishing to slug ${L}.`,
               )
             );
@@ -9981,7 +9981,7 @@ async function Ni(e, t, r, o, d, p, _) {
         logFeatureBad("artifact_publish", ee.reason, N),
         ie(
           (ee.reason === "no-auth"
-            ? Am(ee.detail)
+            ? formatNotAuthenticatedMessage(ee.detail)
             : `publish unavailable: ${ee.reason}`) + Ee,
         )
       );
@@ -10161,11 +10161,11 @@ var Ai = createLazyValue(() =>
       .optional()
       .catch(void 0),
     contract: s()
-      .regex(Mj)
+      .regex(VERSION_PATTERN)
       .optional()
       .catch(void 0),
     preferredContract: s()
-      .regex(Mj)
+      .regex(VERSION_PATTERN)
       .optional()
       .catch(void 0),
     capabilities: fe(s().max(64), se())
@@ -10177,10 +10177,10 @@ function ml(e, t, r = !1) {
   let o = "contract" in t ? t.contract : void 0,
     d = e.contract ?? o,
     p = e.capabilities,
-    _ = yJ(p),
+    _ = isNonEmptyRecord(p),
     w = !("capabilities" in t) && _,
     E =
-      e.contract !== void 0 && (_ || wD(e.contract) !== null)
+      e.contract !== void 0 && (_ || parseContractVersion(e.contract) !== null)
         ? {
             contract: e.contract,
             ...(p !== void 0 && {
@@ -10225,9 +10225,9 @@ async function listArtifacts(e, t) {
   let _;
   for (let F = 0; ; F++) {
     try {
-      _ = await Nd.get(`/api/frame/frames?limit=${Ea}`, {
+      _ = await artifactFrameHttpClient.get(`/api/frame/frames?limit=${Ea}`, {
         refreshOAuth: !0,
-        headers: Fd(),
+        headers: buildFrameHeaders(),
         timeout: 15000,
         maxContentLength: Np,
         ...(d && { signal: d }),
@@ -10256,7 +10256,7 @@ async function listArtifacts(e, t) {
       {
         err:
           _.reason === "no-auth"
-            ? Am(_.detail)
+            ? formatNotAuthenticatedMessage(_.detail)
             : `artifact listing unavailable: ${_.reason}`,
         reason: "not_ok",
       }
@@ -10309,7 +10309,7 @@ async function listArtifacts(e, t) {
       te = vetForeignFavicon(I.data.favicon);
     if (J === !0 || !isKnownRel(ue)) continue;
     if (r !== "all" && ue !== r) continue;
-    let re = yw(ae ?? "") ?? "Untitled";
+    let re = formatArtifactTitle(ae ?? "") ?? "Untitled";
     C.push({
       title: re,
       url: artifactViewerUrl(N),
@@ -10389,7 +10389,7 @@ var PUBLISH_CONFLICT_LEAD = "conflict: nothing was published \u2014 ",
   FORCE_REFUSED_SENTENCE =
     " The server refuses force:true over a version saved from inside the page; only a publish built on that version is accepted.";
 function bl(e) {
-  let { readRemedy: t, forceAdvisory: r, contentReadsBlocked: o } = Efe();
+  let { readRemedy: t, forceAdvisory: r, contentReadsBlocked: o } = buildArtifactReadGuidance();
   return (
     `${PUBLISH_CONFLICT_LEAD}${conflictSubject(e)} is live and this publish was not built on it. ` +
     (o ?? `Re-read it (${t}), merge your edits on top, then publish again.`) +
@@ -10476,43 +10476,43 @@ function Dp(e) {
           `servers[${o.index}] has no "server" string \u2014 each entry is ${'{"server": "<connector name>", "tools": ["<tool name>", ...]}'}` +
           (o.wrongKey === null
             ? ""
-            : ` (the key is "server", not "${Y_(o.wrongKey)}")`)
+            : ` (the key is "server", not "${formatArtifactServerDisplayName(o.wrongKey)}")`)
         );
       case "tools_shape":
-        return `${an(o.server)} "${Y_(o.server)}": "tools" must be an array of tool-name strings`;
+        return `${an(o.server)} "${formatArtifactServerDisplayName(o.server)}": "tools" must be an array of tool-name strings`;
       case "no_tools": {
-        let d = Y_(o.display ?? o.server),
-          p = o.display === null ? "" : ` (declared as "${Y_(o.server)}")`,
+        let d = formatArtifactServerDisplayName(o.display ?? o.server),
+          p = o.display === null ? "" : ` (declared as "${formatArtifactServerDisplayName(o.server)}")`,
           _ =
             o.available.length === 0
               ? ""
-              : ` (available this session: ${rt([...o.available], 12, (w) => `"${Y_(w)}"`).join(", ")})`;
+              : ` (available this session: ${rt([...o.available], 12, (w) => `"${formatArtifactServerDisplayName(w)}"`).join(", ")})`;
         return `${an(o.server)} "${d}"${p} lists no tools \u2014 set "tools" to the upstream names of the "${d}" tools the page calls${_}; an empty or omitted "tools" list is refused and never means "all tools"`;
       }
       case "opaque_id":
-        return `"${Y_(o.server, { max: 70 })}" is a connector id, which no viewer can resolve \u2014 set "server" to that connector's name exactly as shown in claude.ai (Settings \u2192 Connectors) and pass the same name to callTool/watchTool in the page; if you don't know the name, ask the user, describing the connector by its tools (the user cannot see the id)`;
+        return `"${formatArtifactServerDisplayName(o.server, { max: 70 })}" is a connector id, which no viewer can resolve \u2014 set "server" to that connector's name exactly as shown in claude.ai (Settings \u2192 Connectors) and pass the same name to callTool/watchTool in the page; if you don't know the name, ask the user, describing the connector by its tools (the user cannot see the id)`;
       case "known_id": {
-        let d = Y_(o.display);
-        return `"${Y_(o.server)}" is the id of connector "${d}" \u2014 set "server" to "${d}": approval prompts and viewers know connectors by name only, and the page must call it by that name too`;
+        let d = formatArtifactServerDisplayName(o.display);
+        return `"${formatArtifactServerDisplayName(o.server)}" is the id of connector "${d}" \u2014 set "server" to "${d}": approval prompts and viewers know connectors by name only, and the page must call it by that name too`;
       }
       case "tool_name":
         return (
-          `"${Y_(o.server, { max: 70 })}" is a tool name, not a connector name \u2014 "server" takes the connector's display name` +
-          (o.display === null ? "" : `, here "${Y_(o.display)}"`) +
+          `"${formatArtifactServerDisplayName(o.server, { max: 70 })}" is a tool name, not a connector name \u2014 "server" takes the connector's display name` +
+          (o.display === null ? "" : `, here "${formatArtifactServerDisplayName(o.display)}"`) +
           ', and "tools" takes the bare upstream tool names'
         );
       case "connector_as_host": {
-        let d = Y_(o.display);
-        return `"${Y_(o.server, { max: 70 })}" names the claude.ai connector "${d}", not a local server \u2014 declare it as {"server": "${d}", "tools": [...]} and call it by that name in the page`;
+        let d = formatArtifactServerDisplayName(o.display);
+        return `"${formatArtifactServerDisplayName(o.server, { max: 70 })}" names the claude.ai connector "${d}", not a local server \u2014 declare it as {"server": "${d}", "tools": [...]} and call it by that name in the page`;
       }
       case "local_server_as_first_party": {
-        let d = Y_(o.local);
-        return `"${Y_(o.server, { max: 70 })}" would bind the Claude app's own built-in server, but this session also has an MCP server named "${d}" \u2014 the page may have been built against that server, which no viewer can reach; rename or remove "${d}" (or drop the declaration) and publish again`;
+        let d = formatArtifactServerDisplayName(o.local);
+        return `"${formatArtifactServerDisplayName(o.server, { max: 70 })}" would bind the Claude app's own built-in server, but this session also has an MCP server named "${d}" \u2014 the page may have been built against that server, which no viewer can reach; rename or remove "${d}" (or drop the declaration) and publish again`;
       }
       case "undeclarable_name":
-        return `connector "${fqt(o.name)}" cannot be declared until it is renamed in claude.ai (Settings \u2192 Connectors): a manifest "server" must be 1\u201364 characters with no control characters, line breaks, unusual spaces or text-direction controls, must not begin or end with a space or invisible character, and must not read as host: or be shaped like an id or a claude_ai_/mcp__ prefix \u2014 tell the user`;
+        return `connector "${escapeTextForDisplay(o.name)}" cannot be declared until it is renamed in claude.ai (Settings \u2192 Connectors): a manifest "server" must be 1\u201364 characters with no control characters, line breaks, unusual spaces or text-direction controls, must not begin or end with a space or invisible character, and must not read as host: or be shaped like an id or a claude_ai_/mcp__ prefix \u2014 tell the user`;
       case "host_unavailable":
-        return `"${Y_(o.server, { max: 70 })}" names a locally-configured MCP server, and host servers aren't available in this session \u2014 declare only claude.ai connectors (set "server" to the connector's display name), or ${'to publish without connector access leave "mcp" out of capabilities (pass capabilities: {} to clear a stored declaration)'}`;
+        return `"${formatArtifactServerDisplayName(o.server, { max: 70 })}" names a locally-configured MCP server, and host servers aren't available in this session \u2014 declare only claude.ai connectors (set "server" to the connector's display name), or ${'to publish without connector access leave "mcp" out of capabilities (pass capabilities: {} to clear a stored declaration)'}`;
     }
   });
 }
@@ -10626,7 +10626,7 @@ function Ti(e, t, r, o, d = !1) {
       };
     }
   }
-  if (e === 404 && r && hoe(t)) return { code: "slug_gone", msg: SLUG_GONE_MSG };
+  if (e === 404 && r && isNotFoundResponseBody(t)) return { code: "slug_gone", msg: SLUG_GONE_MSG };
   if (e === 429) {
     let _ = An(t);
     if (_)
@@ -10951,7 +10951,7 @@ function foldBootDocs(e, t, r = Date.now()) {
 function probedLivePaths(e) {
   let t = getShareEntry(e);
   if (t?.livePaths !== void 0) return t.livePaths;
-  return t?.artifactKind === NH ? [Soe] : [];
+  return t?.artifactKind === LIVE_DOC_ARTIFACT_KIND ? [LIVE_DOC_INDEX_PATH] : [];
 }
 function vl(e) {
   if (e.probeFailed) logFeatureBad("artifact_share_status", "probe_failed");
@@ -11143,7 +11143,7 @@ function Sl(e, t) {
 function Bi({ text: e, truncated: t }, r, o) {
   let d = r(e),
     p = t ? truncateToCodeUnits(d, d.length - Wp) : d,
-    _ = Vn(p, o);
+    _ = formatDisplayText(p, o);
   return _ === "" ? void 0 : _;
 }
 function ji(e) {
@@ -11171,16 +11171,16 @@ function Qp(e, t) {
     p = d >= 240 ? 4 : d >= 224 ? 3 : d >= 192 ? 2 : 1;
   return o + 1 < p ? r : t;
 }
-function bN(e, t) {
+function isProxyAllowlistBlocked(e, t) {
   return (
     e === 403 &&
     (t?.["x-proxy-error"] === "blocked-by-allowlist" ||
       t?.["x-deny-reason"] === "host_not_allowed")
   );
 }
-function F1e(e) {
+function isProxyAllowlistBlockedError(e) {
   let t = KU(e);
-  return t !== void 0 && bN(t.connectStatus, t.headers);
+  return t !== void 0 && isProxyAllowlistBlocked(t.connectStatus, t.headers);
 }
 function Hi(e, t) {
   if (e !== 403) return;
@@ -11189,7 +11189,7 @@ function Hi(e, t) {
     ? "content_scan_transient"
     : "content_scan_permanent";
 }
-function jwt({ status: e, headers: t, data: r, redact: o, label: d }) {
+function classifySandboxProxyDenial({ status: e, headers: t, data: r, redact: o, label: d }) {
   if (e !== 403) return;
   let p = Zt(t, r, o),
     _ = Hi(e, p);
@@ -11197,7 +11197,7 @@ function jwt({ status: e, headers: t, data: r, redact: o, label: d }) {
     n(`${d}: sandbox proxy denied, ${_} (${p.reason ?? "no reason"})`);
   return _;
 }
-var $1e = {
+var SANDBOX_PROXY_DENIAL_MESSAGES = {
   content_scan_transient:
     "artifact content fetch blocked: the sandbox proxy's content scan was unavailable (HTTP 403). This is transient; retry.",
   content_scan_permanent:
@@ -11205,17 +11205,17 @@ var $1e = {
   proxy_denied:
     "artifact content fetch blocked by the sandbox proxy's policy (HTTP 403); retrying will not help.",
 };
-function ZGt(e) {
+function isNonTransientHttpStatus(e) {
   return e !== void 0 && e >= 400 && e < 500 && e !== 408 && e !== 429;
 }
 function El(e, t, r) {
   let o = e?.[t];
   return typeof o === "string" && o.length <= 64 && r.test(o) ? o : void 0;
 }
-function U1e(e) {
+function getProxyErrorHeaderValue(e) {
   return El(e, "x-proxy-error", /^[a-z0-9_-]+$/);
 }
-function vK(e) {
+function getDenyReasonHeader(e) {
   return El(e, "x-deny-reason", /^[a-z0-9_]+$/);
 }
 import {
@@ -11225,7 +11225,7 @@ import {
   realpath as zi,
   stat as nh,
 } from "fs/promises";
-async function gJ(e, t) {
+async function readExactBytesFromHandle(e, t) {
   let r = Buffer.alloc(t + 1),
     o = 0;
   while (o < r.length) {
@@ -11247,9 +11247,9 @@ import {
 function Qt(e) {
   return Xo(e) || Dr(e);
 }
-var TD = 512,
-  RG = 255;
-function HC(e) {
+var MAX_PUBLISHED_PATH_LENGTH = 512,
+  MAX_PUBLISH_FILES = 255;
+function escapeUnprintableForMessage(e) {
   return JSON.stringify(e).replace(/[^\x20-\x7e]|[<>]/gu, ih);
 }
 function ih(e) {
@@ -11260,44 +11260,44 @@ function ih(e) {
 }
 function Vi(e, t) {
   if (e.length === 0) return { errMsg: `${t} may not be empty` };
-  if (e.length > TD) return { errMsg: `${t} is longer than ${TD} characters` };
+  if (e.length > MAX_PUBLISHED_PATH_LENGTH) return { errMsg: `${t} is longer than ${MAX_PUBLISHED_PATH_LENGTH} characters` };
   let r = e.normalize("NFC");
   if (/[\p{Cc}\p{Cf}\p{Co}\p{Zl}\p{Zp}]/u.test(r) || !isWellFormed(r))
     return {
-      errMsg: `${t} ${HC(e)} contains control, formatting, line-separator, or private-use characters, or a malformed one`,
+      errMsg: `${t} ${escapeUnprintableForMessage(e)} contains control, formatting, line-separator, or private-use characters, or a malformed one`,
     };
   if (r.includes("\\"))
     return {
-      errMsg: `${t} ${HC(e)} contains a backslash \u2014 published paths use forward slashes on every platform`,
+      errMsg: `${t} ${escapeUnprintableForMessage(e)} contains a backslash \u2014 published paths use forward slashes on every platform`,
     };
   if (/[?#%]/.test(r))
     return {
-      errMsg: `${t} ${HC(e)} contains characters that cannot appear in a served URL path ("?", "#", "%")`,
+      errMsg: `${t} ${escapeUnprintableForMessage(e)} contains characters that cannot appear in a served URL path ("?", "#", "%")`,
     };
   if (r.startsWith("/"))
     return {
-      errMsg: `${t} ${HC(e)} is absolute \u2014 published paths are relative to the artifact root`,
+      errMsg: `${t} ${escapeUnprintableForMessage(e)} is absolute \u2014 published paths are relative to the artifact root`,
     };
   let o = r.split("/");
   if (o.some((d) => d === ""))
-    return { errMsg: `${t} ${HC(e)} has an empty path segment` };
+    return { errMsg: `${t} ${escapeUnprintableForMessage(e)} has an empty path segment` };
   if (o.some((d) => d === "." || d === ".."))
     return {
-      errMsg: `${t} ${HC(e)} contains "." or ".." segments \u2014 pass the plain served path`,
+      errMsg: `${t} ${escapeUnprintableForMessage(e)} contains "." or ".." segments \u2014 pass the plain served path`,
     };
   if (
     o.some((d) => d === "__proto__" || d === "constructor" || d === "prototype")
   )
     return {
-      errMsg: `${t} ${HC(e)} contains a reserved name ("__proto__", "constructor", "prototype")`,
+      errMsg: `${t} ${escapeUnprintableForMessage(e)} contains a reserved name ("__proto__", "constructor", "prototype")`,
     };
   if (/[:;]/.test(r))
     return {
-      errMsg: `${t} ${HC(e)} contains ":" or ";", which no published path may`,
+      errMsg: `${t} ${escapeUnprintableForMessage(e)} contains ":" or ";", which no published path may`,
     };
   return { nfc: r };
 }
-function aTt(e, { removal: t = !1 } = {}) {
+function validatePublishedFilePath(e, { removal: t = !1 } = {}) {
   let r = Vi(e, "files: published path");
   if ("errMsg" in r) return r;
   let { nfc: o } = r;
@@ -11308,30 +11308,30 @@ function aTt(e, { removal: t = !1 } = {}) {
     };
   if (o.startsWith("_"))
     return {
-      errMsg: `files: published path ${HC(e)} starts with "_", which the artifact service reserves for its own names \u2014 rename the file or its top-level directory`,
+      errMsg: `files: published path ${escapeUnprintableForMessage(e)} starts with "_", which the artifact service reserves for its own names \u2014 rename the file or its top-level directory`,
     };
-  if (!t && Hqt(o))
+  if (!t && isServiceReservedPath(o))
     return {
-      errMsg: `files: published path ${HC(e)} is a name the artifact service answers with one of its own views, so the file could never be read back \u2014 rename it`,
+      errMsg: `files: published path ${escapeUnprintableForMessage(e)} is a name the artifact service answers with one of its own views, so the file could never be read back \u2014 rename it`,
     };
   return { key: o };
 }
-function Hqt(e) {
+function isServiceReservedPath(e) {
   return e.startsWith("_") || e === "index.html.json" || e === ".json";
 }
-function wJ(e) {
+function validateReadableFilePath(e) {
   let t = Vi(e, "path");
   if ("errMsg" in t) return t;
   let { nfc: r } = t;
-  if (Hqt(r))
+  if (isServiceReservedPath(r))
     return {
-      errMsg: `path ${HC(e)} names one of the artifact service's own views, not a published file; list_files shows the readable paths`,
+      errMsg: `path ${escapeUnprintableForMessage(e)} names one of the artifact service's own views, not a published file; list_files shows the readable paths`,
     };
   return { key: r };
 }
-var fer = 1048576,
+var MAX_THUMBNAIL_BYTES = 1048576,
   sh = /\.(?:png|jpe?g)$/i;
-function mer(e) {
+function validateThumbnailHref(e) {
   let t = Vi(e, "thumbnail href");
   if ("errMsg" in t) return t;
   if (!sh.test(t.nfc))
@@ -11340,10 +11340,10 @@ function mer(e) {
     };
   return { rel: t.nfc };
 }
-function pFe(e, t, r) {
+function isPathWithinAnyRoot(e, t, r) {
   return e === t || e.startsWith(t + pt) || e === r || e.startsWith(r + pt);
 }
-function tTn(e, t, r) {
+function replacePathRootPrefix(e, t, r) {
   let o = Sr(normalize(t));
   if (o === r) return e;
   if (e === o) return r;
@@ -11353,7 +11353,7 @@ function Sr(e) {
   let t = e.replace(/\/+$/, "");
   return t === "" ? e : t;
 }
-function lYe(e, t) {
+function resolvePathWithinBase(e, t) {
   if (Qt(e)) return null;
   if (e === "~" || e.startsWith(`~${pt}`) || e.startsWith("~/")) return null;
   if (isAbsolute(e)) {
@@ -11364,7 +11364,7 @@ function lYe(e, t) {
   if (r === ".." || r.startsWith(`..${pt}`)) return null;
   return On(t, r);
 }
-async function fFe(e) {
+async function isSymlinkChainUnsafe(e) {
   let t = Sr(e);
   for (let r = 0; r < 40; r++) {
     let o;
@@ -11393,14 +11393,14 @@ async function oh(e, t, r) {
         `root: ${JSON.stringify(t)} escapes the working directory \u2014 ` +
         "the publish base must lie within it",
     };
-  if (isAbsolute(d) && !pFe(d, e, o))
+  if (isAbsolute(d) && !isPathWithinAnyRoot(d, e, o))
     return {
       errMsg: `root: ${JSON.stringify(t)} is outside the working directory \u2014 pass a working-directory-relative path`,
     };
   let p = isAbsolute(d) ? d : On(o, d),
     _ = r?.denyPath?.(p, !1, t);
   if (_ !== void 0) return { errMsg: _ };
-  if (await fFe(p))
+  if (await isSymlinkChainUnsafe(p))
     return {
       errMsg: `root: ${JSON.stringify(t)} is a symlink whose chain cannot be safely resolved (network target, a \`..\` segment in link text, or too many links) \u2014 pass the target directory itself`,
     };
@@ -11431,7 +11431,7 @@ async function oh(e, t, r) {
   let R = Sr(isAbsolute(d) ? d : On(normalize(e), d));
   return { realCwd: o, realRoot: w, lexRoot: R };
 }
-async function nTn(e, t, r, o) {
+async function resolvePublishFileManifest(e, t, r, o) {
   let d = await oh(t, r, o);
   if ("errMsg" in d) return d;
   let { realCwd: p, realRoot: _, lexRoot: w } = d;
@@ -11446,20 +11446,20 @@ async function nTn(e, t, r, o) {
     return {
       errMsg: "files: the file map is empty \u2014 list at least one file",
     };
-  if (e.length > RG)
+  if (e.length > MAX_PUBLISH_FILES)
     return {
-      errMsg: `files: ${e.length} files + index.html exceeds the ${RG + 1}-entry manifest limit`,
+      errMsg: `files: ${e.length} files + index.html exceeds the ${MAX_PUBLISH_FILES + 1}-entry manifest limit`,
     };
   let E = [],
     R = new Set(),
     C = 0;
   for (let M of e) {
-    let D = aTt(M.to);
+    let D = validatePublishedFilePath(M.to);
     if ("errMsg" in D) return D;
     let F = D.key;
     if (R.has(F))
       return {
-        errMsg: `files: published path ${HC(F)} appears more than once`,
+        errMsg: `files: published path ${escapeUnprintableForMessage(F)} appears more than once`,
       };
     R.add(F);
     let I = M.from;
@@ -11478,10 +11478,10 @@ async function nTn(e, t, r, o) {
           `files: ${JSON.stringify(I)} escapes the publish base \u2014 ` +
           "only files under the working directory can be published",
       };
-    let ae = lYe(I, _);
+    let ae = resolvePathWithinBase(I, _);
     if (ae === null)
       return { errMsg: `files: ${JSON.stringify(I)} cannot be resolved` };
-    if (isAbsolute(I) && !pFe(ae, p, normalize(t)))
+    if (isAbsolute(I) && !isPathWithinAnyRoot(ae, p, normalize(t)))
       return {
         errMsg: `files: ${JSON.stringify(I)} is outside the working directory \u2014 pass a path under it`,
       };
@@ -11494,7 +11494,7 @@ async function nTn(e, t, r, o) {
         if (ce !== void 0) return { errMsg: ce };
       }
     }
-    if (await fFe(ae))
+    if (await isSymlinkChainUnsafe(ae))
       return {
         errMsg: `files: ${JSON.stringify(I)} is a symlink whose chain cannot be safely resolved (network target, a \`..\` segment in link text, or too many links) \u2014 list the link's target path instead`,
       };
@@ -11580,12 +11580,12 @@ async function nTn(e, t, r, o) {
       if (((te = M.contentType ?? getContentTypeForPath(F)), te === void 0))
         return {
           errMsg:
-            `files: ${HC(F)} has no known content type for its ` +
+            `files: ${escapeUnprintableForMessage(F)} has no known content type for its ` +
             "extension \u2014 pass contentType explicitly (it must be a servable " +
             'type, e.g. "application/json", "image/png")',
         };
       try {
-        let ce = await gJ(J, re.size);
+        let ce = await readExactBytesFromHandle(J, re.size);
         if (ce === null)
           return {
             errMsg: `files: ${JSON.stringify(I)} changed while it was read \u2014 retry the publish`,
@@ -11607,9 +11607,9 @@ async function nTn(e, t, r, o) {
   }
   return { files: E };
 }
-async function ger(e, t, r, o) {
+async function readThumbnailFileContent(e, t, r, o) {
   let d = /\.png$/i.test(t) ? ".png" : ".jpg",
-    p = await nTn([{ to: `thumbnail${d}`, from: t }], r, void 0, o);
+    p = await resolvePublishFileManifest([{ to: `thumbnail${d}`, from: t }], r, void 0, o);
   if ("errMsg" in p)
     return {
       errMsg: `thumbnail ${JSON.stringify(e)}: ${p.errMsg.replace(/^files: /, "")}`,
@@ -11667,10 +11667,10 @@ function rTn(e, t) {
   return "";
 }
 var hh = /[\x00-\x08\x0b-\x1f\x7f-\x9f\u2028\u2029]+/g;
-function oTn(e) {
+function wrapArtifactOriginNotes(e) {
   return scrubArtifactEnvelopeTags(vge(ARTIFACT_ORIGIN_NOTES_TAG, e.replace(hh, " ")));
 }
-var her = 524288,
+var MAX_FRAME_API_RESPONSE_BYTES = 524288,
   Ol = 3149824;
 function $l(e) {
   let t = e.length;
@@ -11707,7 +11707,7 @@ function $l(e) {
     E = E.slice(0, -1);
   return E;
 }
-function Dqt(e) {
+function deriveLiveSubscriptionTransport(e) {
   if (!isFrameLiveSubscribeEnabled()) return;
   if (e.syncClient === !0)
     return typeof e.syncToken === "string" && e.syncToken !== ""
@@ -11717,7 +11717,7 @@ function Dqt(e) {
     ? { transport: "live", token: e.subscriptionToken }
     : void 0;
 }
-function Sw(e, t = {}) {
+function parseArtifactUrlForSession(e, t = {}) {
   let r = parseArtifactUrl(e);
   if (r === null)
     return { ok: !1, message: t.notUrlMessage ?? notAnArtifactUrlMessage(e), errorCode: 4 };
@@ -11732,13 +11732,13 @@ function Sw(e, t = {}) {
   }
   return { ok: !0, parsed: r };
 }
-function AJ(e) {
+function isArtifactGoneError(e) {
   return e.gone === !0;
 }
-function _er(e) {
+function isArtifactNeverPublished(e) {
   return e.neverPublished === !0;
 }
-function RN(e) {
+function isArtifactOtherOrgError(e) {
   return e.otherOrg === !0;
 }
 function gh(e) {
@@ -11751,13 +11751,13 @@ function gh(e) {
     Xn(e.owner_org) !== null
   );
 }
-var Ife =
+var ARTIFACT_OTHER_ORG_MESSAGE =
     "this Artifact is in another of the user's organizations, not the one this session is signed in to",
-  Pfe = "the user runs /login and signs in to that organization",
-  bh = `${Ife} \u2014 it opens here only after ${Pfe}`,
+  OTHER_ORG_SIGN_IN_HINT = "the user runs /login and signs in to that organization",
+  bh = `${ARTIFACT_OTHER_ORG_MESSAGE} \u2014 it opens here only after ${OTHER_ORG_SIGN_IN_HINT}`,
   yh = createLazyValue(() => c({ request_access: O(), reason: s().optional() })),
-  Lqt = 15000;
-async function Mqt(
+  FRAME_REQUEST_TIMEOUT_MS = 15000;
+async function fetchArtifactBootResponse(
   { slug: e, env: t, sk: r, vanity: o },
   d,
   { relayOnly: p = !1, agentPeer: _ = !1, syncLive: w = !1, credentials: E },
@@ -11775,14 +11775,14 @@ async function Mqt(
     I = {
       refreshOAuth: !0,
       credentials: E,
-      headers: Fd(),
-      timeout: Lqt,
+      headers: buildFrameHeaders(),
+      timeout: FRAME_REQUEST_TIMEOUT_MS,
       signal: d,
     },
     N,
     ae = Date.now();
   try {
-    N = p ? await Nd.getRelayOnly(F, I) : await Nd.get(F, I);
+    N = p ? await artifactFrameHttpClient.getRelayOnly(F, I) : await artifactFrameHttpClient.get(F, I);
   } catch (ge) {
     if (isCancel(ge)) throw ge;
     return {
@@ -11805,7 +11805,7 @@ async function Mqt(
     return {
       err:
         N.reason === "no-auth"
-          ? Am(N.detail)
+          ? formatNotAuthenticatedMessage(N.detail)
           : `artifact read unavailable: ${N.reason}`,
       errorCode: N.reason.replace(/-/g, "_"),
     };
@@ -11827,7 +11827,7 @@ async function Mqt(
         ? "this artifact exists but nothing has been published to it yet, so there is nothing to read"
         : `artifact not found \u2014 it may have been deleted, or it has not been shared with you${ue === void 0 ? "" : `. If it is restricted to specific people, ${U}`}`,
       status: 404,
-      ...(hoe(N.data) && { gone: !0 }),
+      ...(isNotFoundResponseBody(N.data) && { gone: !0 }),
       ...(ge && { neverPublished: !0 }),
       errorCode: "boot_404",
     };
@@ -11872,7 +11872,7 @@ async function Mqt(
       err: "artifact read failed: incomplete boot response",
       errorCode: "boot_incomplete",
     };
-  if (!QXe.test(re))
+  if (!ARTIFACT_VERSION_RE.test(re))
     return {
       err: "artifact read failed: malformed boot response",
       errorCode: "boot_bad_ver",
@@ -11885,7 +11885,7 @@ async function Mqt(
     { err: null, data: te, ver: re, assetToken: ce || void 0 }
   );
 }
-async function IC(
+async function readArtifactBoot(
   e,
   t,
   r,
@@ -11899,7 +11899,7 @@ async function IC(
   },
 ) {
   let R = w ? logFeatureSad : logFeatureBad,
-    C = await Mqt(e, r, {
+    C = await fetchArtifactBootResponse(e, r, {
       relayOnly: d,
       agentPeer: p,
       syncLive: _,
@@ -11928,9 +11928,9 @@ async function IC(
     );
   return M;
 }
-async function yer(e, t, r, { syncLive: o = !1 } = {}) {
+async function readArtifactSubscription(e, t, r, { syncLive: o = !1 } = {}) {
   let d = Vo(),
-    p = await IC({ slug: e, env: d }, "artifact_live_subscribe", t, {
+    p = await readArtifactBoot({ slug: e, env: d }, "artifact_live_subscribe", t, {
       agentPeer: o,
       syncLive: o,
       credentials: r,
@@ -11940,10 +11940,10 @@ async function yer(e, t, r, { syncLive: o = !1 } = {}) {
       err: p.err,
       ...(p.status && { status: p.status }),
       ...(p.otherOrg && { otherOrg: !0 }),
-      ...(gYe(p.status) && { unavailable: !0 }),
+      ...(isTransientHttpStatus(p.status) && { unavailable: !0 }),
       ...(p.errorCode === "boot_request_error" && { noAnswer: !0 }),
     };
-  let _ = Dqt(p.data),
+  let _ = deriveLiveSubscriptionTransport(p.data),
     w = p.data.syncClient === !0;
   return {
     err: null,
@@ -11958,20 +11958,20 @@ async function yer(e, t, r, { syncLive: o = !1 } = {}) {
 function Il(e) {
   return typeof e === "number" && Number.isFinite(e) ? e : void 0;
 }
-function gYe(e) {
+function isTransientHttpStatus(e) {
   return e !== void 0 && (e >= 500 || e === 429 || e === 408);
 }
-async function Ser(e, t, r) {
+async function renewArtifactWatchToken(e, t, r) {
   let o;
   try {
-    o = await Nd.post(
+    o = await artifactFrameHttpClient.post(
       `/api/frame/watch-token/${e}`,
       {},
       {
         refreshOAuth: !0,
         credentials: r,
-        headers: Fd(),
-        timeout: Lqt,
+        headers: buildFrameHeaders(),
+        timeout: FRAME_REQUEST_TIMEOUT_MS,
         signal: t,
       },
     );
@@ -11982,9 +11982,9 @@ async function Ser(e, t, r) {
   if (!o.ok || !o.fromFrame || o.status < 200 || o.status >= 300)
     return { err: "renew_miss", ...(o.ok && { status: o.status }) };
   let d = o.data ?? {},
-    p = Dqt(d),
+    p = deriveLiveSubscriptionTransport(d),
     _ = p?.transport === "live" ? p.token : void 0;
-  if (!d.ver || !QXe.test(d.ver) || _ === void 0)
+  if (!d.ver || !ARTIFACT_VERSION_RE.test(d.ver) || _ === void 0)
     return { err: "renew_miss", status: o.status };
   return {
     err: null,
@@ -12002,8 +12002,8 @@ function _h(e) {
 function Dl(e) {
   return e === "owner" || e === "writer";
 }
-async function hYe(e, t, r) {
-  let o = await Mqt(e, t, { credentials: r });
+async function readArtifactSharingInfo(e, t, r) {
+  let o = await fetchArtifactBootResponse(e, t, { credentials: r });
   if (o.err !== null) return { err: o.err, errorCode: o.errorCode };
   let d = o.assetToken === void 0,
     p = o.data.perm?.role;
@@ -12017,7 +12017,7 @@ async function hYe(e, t, r) {
   };
 }
 var Bl = MAX_ARTIFACT_BYTES + FRAME_RUNTIME_MAX_SPAN + Ol + 65536,
-  Ofe = qk + FRAME_RUNTIME_MAX_SPAN + 1,
+  FRAME_FILE_READ_MAX_BYTES = MAX_ARTIFACT_FILE_BYTES + FRAME_RUNTIME_MAX_SPAN + 1,
   Ll = {
     relayed: !1,
     why: "the session gateway declined an artifact read a few minutes ago, so this read did not retry it",
@@ -12025,14 +12025,14 @@ var Bl = MAX_ARTIFACT_BYTES + FRAME_RUNTIME_MAX_SPAN + Ol + 65536,
   };
 async function wh(e, t) {
   let r = (_) =>
-      httpClient.get(j1e(e.slug, _), {
+      httpClient.get(buildArtifactFramePath(e.slug, _), {
         host: "ccr-gateway",
         auth: "session-jwt",
-        headers: W1e(e.token),
+        headers: buildFrameAssetTokenHeader(e.token),
         timeout: 30000,
         responseType: "arraybuffer",
         maxRedirects: 0,
-        maxContentLength: e.fileRead ? Ofe : Bl,
+        maxContentLength: e.fileRead ? FRAME_FILE_READ_MAX_BYTES : Bl,
         validateStatus: () => !0,
         signal: e.signal,
       }),
@@ -12049,7 +12049,7 @@ async function wh(e, t) {
     }
     if (_?.ok && _.status === 200)
       return (
-        EG(_w),
+        markFrameFamilyServed(ARTIFACT_MOUNT_FAMILY),
         {
           relayed: !0,
           result: t(
@@ -12065,7 +12065,7 @@ async function wh(e, t) {
       ));
   }
   let d = (_, w, E) => {
-      if (E === 404 && !e.fileRead && !jn(_w) && (_oe() || !TCe(_w))) Lj(_w);
+      if (E === 404 && !e.fileRead && !jn(ARTIFACT_MOUNT_FAMILY) && (isHostedFrameRelayEnabled() || !isFrameFamilyVouched(ARTIFACT_MOUNT_FAMILY))) declineFrameFamily(ARTIFACT_MOUNT_FAMILY);
       return {
         relayed: !1,
         why: _,
@@ -12079,15 +12079,15 @@ async function wh(e, t) {
   } catch (_) {
     if (isCancel(_)) throw _;
     return (
-      yoe(),
+      markArtifactRelayHopFailed(),
       d("the gateway request failed in transport", "request_error")
     );
   }
   if (!p.ok)
     return p.reason === "no-auth"
-      ? d(SCe(), "no_auth")
+      ? d(formatNoGatewayCredentialMessage(), "no_auth")
       : d(`the gateway request was skipped (${p.reason})`, "client_policy");
-  if (K1e(p.status))
+  if (shouldAbandonFrameRelay(p.status))
     return d(
       "artifact reads through the session gateway are not enabled for this session",
       "not_served",
@@ -12101,10 +12101,10 @@ async function wh(e, t) {
         result: {
           err: "no file is published at that path in the served version \u2014 or artifact reads through the session gateway are not enabled for this session",
           status: 404,
-          ...(jn(_w) &&
+          ...(jn(ARTIFACT_MOUNT_FAMILY) &&
             Hl(
               p.response.headers,
-              Zt(p.response.headers, p.data, (w) => _Fe(w, e.token)),
+              Zt(p.response.headers, p.data, (w) => redactFrameToken(w, e.token)),
             ) && { missingFile: !0 }),
         },
       }
@@ -12115,14 +12115,14 @@ async function wh(e, t) {
       "not_served",
       404,
     );
-  if (V1e(p.status, p.data)) return d(z1e, "network_off", 403);
+  if (isArtifactNetworkOffResponse(p.status, p.data)) return d(ARTIFACT_NETWORK_OFF_MESSAGE, "network_off", 403);
   if (p.status < 200 || p.status >= 300)
     return (
-      yoe(p.status),
+      markArtifactRelayHopFailed(p.status),
       d(`the gateway refused the relay with HTTP ${p.status}`, "http", p.status)
     );
   return (
-    EG(_w),
+    markFrameFamilyServed(ARTIFACT_MOUNT_FAMILY),
     {
       relayed: !0,
       result: t(
@@ -12143,17 +12143,17 @@ function kh(e) {
   return t.map(encodeURIComponent).join("/");
 }
 var vh = "_src";
-function cTn(e) {
+function hasStoredSource(e) {
   return e.assetToken !== void 0 && e.data.mode !== "external";
 }
-function uTn(e, t) {
+function buildStoredSourcePath(e, t) {
   return `/_f/${e}/${vh}/${t === "" ? "index.html" : t}`;
 }
-function ED(e, t, r, o = "artifact_webfetch_read") {
+function readArtifactContent(e, t, r, o = "artifact_webfetch_read") {
   return jl(e, t, o, e.file, r);
 }
-async function ber(e, t, r, o, d = "artifact_webfetch_read") {
-  let p = wJ(t);
+async function readArtifactFileByPath(e, t, r, o, d = "artifact_webfetch_read") {
+  let p = validateReadableFilePath(t);
   if ("errMsg" in p)
     return (logFeatureBad(d, "invalid_path"), { err: `artifact read failed: ${p.errMsg}` });
   return jl(e, r, d, p.key, o);
@@ -12165,7 +12165,7 @@ async function jl(e, t, r, o, d) {
       logFeatureBad(r, "invalid_file_path"),
       { err: "artifact file path is not a clean relative path" }
     );
-  let _ = await IC(e, r, t, { credentials: d });
+  let _ = await readArtifactBoot(e, r, t, { credentials: d });
   if (_.err !== null) return _;
   let { ver: w, assetToken: E } = _;
   if (o !== void 0 && E === void 0)
@@ -12177,7 +12177,7 @@ async function jl(e, t, r, o, d) {
       }
     );
   let R = `/_f/${w}/${p}`,
-    C = cTn(_) ? { path: uTn(w, p) } : void 0,
+    C = hasStoredSource(_) ? { path: buildStoredSourcePath(w, p) } : void 0,
     M = (le) =>
       le
         ? { source: !0 }
@@ -12185,7 +12185,7 @@ async function jl(e, t, r, o, d) {
           ? { source_fallback_status: C.fellBack }
           : void 0,
     { title: D, favicon: F, perm: I, cowritten: N } = _.data,
-    ae = _.data.artifactKind === NH || getShareEntry(e.slug)?.artifactKind === NH,
+    ae = _.data.artifactKind === LIVE_DOC_ARTIFACT_KIND || getShareEntry(e.slug)?.artifactKind === LIVE_DOC_ARTIFACT_KIND,
     ue = E === void 0 ? "public" : I?.mode,
     V =
       I?.role === "owner"
@@ -12245,7 +12245,7 @@ async function jl(e, t, r, o, d) {
   if (ae && o === void 0) {
     let le = await ne().liveReplicas.renderLevel?.(
       e.slug,
-      Soe,
+      LIVE_DOC_INDEX_PATH,
       _.data.headSeq,
       t,
     );
@@ -12298,8 +12298,8 @@ async function jl(e, t, r, o, d) {
   if (
     E !== void 0 &&
     ne().contentHostEgressDenied.has(e.env) &&
-    RK() &&
-    !TN(_w)
+    isFrameRelayEnabled() &&
+    !isFrameFamilyDeclined(ARTIFACT_MOUNT_FAMILY)
   ) {
     let le = await ge(E, "asset_egress_relayed");
     if (le.relayed) return le.result;
@@ -12313,10 +12313,10 @@ async function jl(e, t, r, o, d) {
         : `${Ge}${R}?__frame_t=${encodeURIComponent(E)}`,
     Me = async (le) => {
       ne().contentHostEgressDenied.add(e.env);
-      let he = RK();
+      let he = isFrameRelayEnabled();
       if (E !== void 0 && he) {
         if (pe !== void 0) return q(pe, le);
-        if (TN(_w)) return q(Ll, le);
+        if (isFrameFamilyDeclined(ARTIFACT_MOUNT_FAMILY)) return q(Ll, le);
         let Ce = await ge(E, "asset_egress_relayed");
         return Ce.relayed ? Ce.result : q(Ce, le);
       }
@@ -12338,7 +12338,7 @@ async function jl(e, t, r, o, d) {
         timeout: 30000,
         responseType: "arraybuffer",
         maxRedirects: 0,
-        maxContentLength: o === void 0 ? Bl : Ofe,
+        maxContentLength: o === void 0 ? Bl : FRAME_FILE_READ_MAX_BYTES,
         validateStatus: () => !0,
         ...(Le && { headers: { Host: `${e.slug}.frame.localhost` } }),
       });
@@ -12353,9 +12353,9 @@ async function jl(e, t, r, o, d) {
       le = await De(`${Ge}${C.path}?__frame_t=${encodeURIComponent(E)}`);
     } catch (he) {
       if (isCancel(he)) throw he;
-      if (F1e(he)) return Me(!1);
+      if (isProxyAllowlistBlockedError(he)) return Me(!1);
     }
-    if (le !== void 0 && bN(le.status, le.headers)) return Me(!0);
+    if (le !== void 0 && isProxyAllowlistBlocked(le.status, le.headers)) return Me(!0);
     if (le !== void 0 && le.status === 200)
       return U(Buffer.from(le.data), le.headers?.["content-type"], !0);
     ((C.fellBack = le?.status ?? 0),
@@ -12368,9 +12368,9 @@ async function jl(e, t, r, o, d) {
     Ne = await De(Te);
   } catch (le) {
     if (isCancel(le)) throw le;
-    if (F1e(le)) return Me(!1);
+    if (isProxyAllowlistBlockedError(le)) return Me(!1);
     let he = KU(le),
-      Ce = he === void 0 ? void 0 : (U1e(he.headers) ?? vK(he.headers)),
+      Ce = he === void 0 ? void 0 : (getProxyErrorHeaderValue(he.headers) ?? getDenyReasonHeader(he.headers)),
       Be = isTransportError(le),
       He =
         he !== void 0
@@ -12400,8 +12400,8 @@ async function jl(e, t, r, o, d) {
         }
       );
     let _e = pe;
-    if (E !== void 0 && _e === void 0 && Be && RK())
-      if (TN(_w)) _e = Ll;
+    if (E !== void 0 && _e === void 0 && Be && isFrameRelayEnabled())
+      if (isFrameFamilyDeclined(ARTIFACT_MOUNT_FAMILY)) _e = Ll;
       else {
         let je = await ge(E, "asset_unreachable_relayed");
         if (je.relayed) return je.result;
@@ -12424,12 +12424,12 @@ async function jl(e, t, r, o, d) {
       }
     );
   }
-  if (bN(Ne.status, Ne.headers)) return Me(!0);
+  if (isProxyAllowlistBlocked(Ne.status, Ne.headers)) return Me(!0);
   if (
     (ne().contentHostEgressDenied.delete(e.env),
     Ne.status < 200 || Ne.status >= 300)
   ) {
-    let le = Zt(Ne.headers, Ne.data, (Ce) => _Fe(Ce, E));
+    let le = Zt(Ne.headers, Ne.data, (Ce) => redactFrameToken(Ce, E));
     if (Ne.status === 403 && E === void 0 && Yi(Ne.headers, le))
       return (
         logFeatureBad(r, "public_asset_forbidden"),
@@ -12454,7 +12454,7 @@ async function jl(e, t, r, o, d) {
         err: `artifact content fetch failed (${xh(Ne.status, Ne.headers, le)})`,
         status: Ne.status,
         respondent: !0,
-        ...(he !== void 0 && { safeErr: $1e[he], proxyDeny: he }),
+        ...(he !== void 0 && { safeErr: SANDBOX_PROXY_DENIAL_MESSAGES[he], proxyDeny: he }),
       }
     );
   }
@@ -12465,7 +12465,7 @@ function Hl(e, t) {
     t.mediaType === "text/plain" &&
     t.reason === "not found" &&
     t.proxyError === void 0 &&
-    vK(e) === void 0
+    getDenyReasonHeader(e) === void 0
   );
 }
 function Yi(e, t) {
@@ -12473,12 +12473,12 @@ function Yi(e, t) {
     t.mediaType === "text/plain" &&
     t.reason === "forbidden" &&
     t.proxyError === void 0 &&
-    vK(e) === void 0
+    getDenyReasonHeader(e) === void 0
   );
 }
 function xh(e, t, r) {
   let o = [`HTTP ${e}`],
-    d = vK(t);
+    d = getDenyReasonHeader(t);
   if (d === void 0 && r.reason !== void 0)
     o.push(`response body: "${scrubArtifactEnvelopeTags(r.reason.replaceAll('"', "'"))}"`);
   else if (d !== void 0)
@@ -12488,13 +12488,13 @@ function xh(e, t, r) {
   if (r.requestId !== void 0) o.push(`x-request-id: ${r.requestId}`);
   return o.join("; ");
 }
-function Aoe(e) {
+function getSafeArtifactReadError(e) {
   return e.respondent
     ? (e.safeErr ??
         `artifact content fetch failed (HTTP ${e.status ?? "error"})`)
     : e.err;
 }
-function _Fe(e, t) {
+function redactFrameToken(e, t) {
   let r = e.replace(
     /(?:_|%(?:25)*5f){2}frame(?:_|%(?:25)*5f)t(?:=|%(?:25)*3d)["']?[^\s&"'<>]*/gi,
     "__frame_t=[redacted]",
@@ -12522,11 +12522,11 @@ function Nl(e, t, r) {
   }
   return p + e.slice(_);
 }
-function wer(e, t) {
+function mintStoredPageProbe(e, t) {
   let r = Object.freeze({ slug: e, html: t });
   return (ne().mintedStoredPageProbes.add(r), r);
 }
-function Ter(e) {
+function isMintedStoredPageProbe(e) {
   return (
     typeof e === "object" && e !== null && ne().mintedStoredPageProbes.has(e)
   );
@@ -12594,10 +12594,10 @@ async function Rh(e, t, r) {
     });
   } catch (R) {
     if (r.aborted) throw R;
-    if (F1e(R)) return _();
-    return p(UXe(R) ? "an answer larger than the cap" : "no answer");
+    if (isProxyAllowlistBlockedError(R)) return _();
+    return p(isMaxContentLengthError(R) ? "an answer larger than the cap" : "no answer");
   }
-  if (bN(w.status, w.headers)) return _();
+  if (isProxyAllowlistBlocked(w.status, w.headers)) return _();
   if (!(
     (w.status >= 200 && w.status < 300) ||
     (w.status === 403 &&
@@ -12641,15 +12641,15 @@ function Wl(e) {
     decidedBy: t[0]?.layer ?? r ?? "default",
     offSources: t,
     lockedAboveUser: o,
-    userControllable: !o && !d && Nr("userSettings"),
+    userControllable: !o && !d && isSettingsSourceEnabled("userSettings"),
   };
 }
 function zl(e, t) {
   if (e === "policySettings") return [...getAllPolicyTierSettings(), getSettingsForSource("policySettings")];
-  if (!Nr(e)) return [];
+  if (!isSettingsSourceEnabled(e)) return [];
   if (e === "localSettings") return [getSettingsForSource(e), getLegacyLocalSettingsOverlay()];
   let r = getSettingsForSource(e);
-  if (e === "projectSettings" && Ch(r, t) && Nr("userSettings") && projectSettingsAliasesUserSettings())
+  if (e === "projectSettings" && Ch(r, t) && isSettingsSourceEnabled("userSettings") && projectSettingsAliasesUserSettings())
     return [];
   return [r];
 }
@@ -12669,7 +12669,7 @@ function Vl(e, t, r, o) {
 function Oh(e) {
   if (a[e] || Ie(Ki(xC(), e)) || Ie(getAdminTierEnvValue(e)) || Ie(Ki(moe(), e))) return !0;
   for (let t of ["flagSettings", "userSettings"])
-    if (Nr(t) && Ie(Ki(getSettingsForSource(t)?.env, e))) return !0;
+    if (isSettingsSourceEnabled(t) && Ie(Ki(getSettingsForSource(t)?.env, e))) return !0;
   return !1;
 }
 function Ki(e, t) {
@@ -12718,7 +12718,7 @@ function isArtifactReadOnlySurface() {
   return Yl(getSessionEntrypoint()) && !isCoworkFramePublishSession();
 }
 function Mh() {
-  return M1e() && Nh();
+  return hasGatewayCredential() && Nh();
 }
 function Nh() {
   return Kl() === null;
@@ -12731,7 +12731,7 @@ function Kl() {
   return null;
 }
 function ql() {
-  return M1e() && Xi();
+  return hasGatewayCredential() && Xi();
 }
 function Xi() {
   return Xl() === null;
@@ -12764,7 +12764,7 @@ function Ql() {
 }
 function isArtifactToolEnabled() {
   if (getArtifactPublishStubDir() !== null) return isArtifactToolRegistered();
-  return M1e() && isArtifactToolRegistered() && Qi();
+  return hasGatewayCredential() && isArtifactToolRegistered() && Qi();
 }
 function isArtifactToolRegistered() {
   return artifactToolWithholdingGate() === null;
@@ -12812,7 +12812,7 @@ function Bh() {
 function maybeLogArtifactDisabledSession() {
   let e = ne();
   if (e.artifactDisabledSessionEvaluated) return;
-  if (Pw() === null) return;
+  if (getMergedSettings() === null) return;
   if (((e.artifactDisabledSessionEvaluated = !0), !Bh())) return;
   let t = Ji();
   if (t === null) return;
@@ -12835,7 +12835,7 @@ function maybeLogArtifactToolWithheld(e) {
       logEvent("tengu_artifact_tool_recovered", { withheld_reason: fromEnum(o) }));
     return;
   }
-  if (Pw() === null) return;
+  if (getMergedSettings() === null) return;
   let r = jh(e);
   if (t.artifactWithheldReasonsLogged.includes(r)) return;
   (t.artifactWithheldReasonsLogged.push(r),
@@ -12962,125 +12962,125 @@ function isResumeFrameSeedEligible() {
   return !Ar() && Xi();
 }
 export {
-  SCe,
-  M1e,
-  Bwt,
-  N1e,
-  bCe,
-  Am,
-  bN,
-  F1e,
-  jwt,
-  $1e,
-  ZGt,
-  U1e,
-  vK,
-  B1e,
-  eqt,
-  _w,
-  j1e,
-  W1e,
-  gJ,
-  MXe,
-  G1e,
-  q1e,
-  $Zn,
-  Wwt,
-  Cr,
-  tqt,
-  wCe,
-  Swn,
-  TG,
-  hoe,
-  z1e,
-  V1e,
-  nqt,
-  wN,
-  NXe,
-  rqt,
-  oqt,
-  sqt,
-  RK,
-  MH,
-  _oe,
-  bwn,
-  FXe,
-  UZn,
-  iqt,
-  TN,
-  Lj,
-  wwn,
-  EG,
-  TCe,
-  Twn,
-  K1e,
-  yoe,
-  aqt,
-  lqt,
-  BZn,
-  hJ,
-  Ewn,
-  $Xe,
-  jZn,
-  nP,
-  UXe,
-  Nd,
-  WZn,
-  Gwt,
-  GZn,
-  qwt,
-  Efe,
-  X1e,
-  cqt,
-  Awn,
-  Y1e,
-  BXe,
-  uqt,
-  jXe,
-  WXe,
-  GXe,
-  qXe,
-  Cwn,
-  zXe,
-  Afe,
-  zwt,
-  ECe,
-  qZn,
-  dqt,
-  vwn,
-  Vwt,
-  J1e,
-  Kwt,
-  Cfe,
-  VXe,
-  _J,
-  Q1e,
-  ACe,
-  pqt,
+  formatNoGatewayCredentialMessage,
+  hasGatewayCredential,
+  getStoreBearerOauthAccountInfo,
+  resolveOauthAccountInfo,
+  getStoreBearerOauthAccountInfoAsync,
+  formatNotAuthenticatedMessage,
+  isProxyAllowlistBlocked,
+  isProxyAllowlistBlockedError,
+  classifySandboxProxyDenial,
+  SANDBOX_PROXY_DENIAL_MESSAGES,
+  isNonTransientHttpStatus,
+  getProxyErrorHeaderValue,
+  getDenyReasonHeader,
+  hasSessionAccessToken,
+  AGENT_PROXY_PATH,
+  ARTIFACT_MOUNT_FAMILY,
+  buildArtifactFramePath,
+  buildFrameAssetTokenHeader,
+  readExactBytesFromHandle,
+  isWellFormedHtmlComment,
+  HLJS_LANGUAGE_DISPLAY_NAMES,
+  HLJS_LANGUAGE_ALIASES,
+  HLJS_SUBLANGUAGE_TABLE,
+  buildMermaidRuntimeBlock,
+  WEB_FETCH_TOOL_NAME,
+  FETCH_TOOL_DISPLAY_NAME,
+  ALLOW_WEB_FETCH_POLICY,
+  setAgentProxyEndpoint,
+  CCR_AGENT_TOKEN_FORBIDDEN_MESSAGE,
+  isNotFoundResponseBody,
+  ARTIFACT_NETWORK_OFF_MESSAGE,
+  isArtifactNetworkOffResponse,
+  FRAME_FAMILY_BOOT,
+  FRAME_FAMILY_BLOBS,
+  FRAME_FAMILY_COMMENTS,
+  FRAME_FAMILY_SUBSCRIPTIONS,
+  FRAME_FAMILY_TYPE_CREATE,
+  resolveFrameRouteFamily,
+  isFrameRelayEnabled,
+  canRelayFrameFamily,
+  isHostedFrameRelayEnabled,
+  hasAgentServiceClaims,
+  isArtifactAgentDirectEnabled,
+  isByocAgentDirectEnabled,
+  isFrameFamilyRelayGated,
+  isFrameFamilyDeclined,
+  declineFrameFamily,
+  isFrameFamilyHopFailed,
+  markFrameFamilyServed,
+  isFrameFamilyVouched,
+  unvouchFrameFamily,
+  shouldAbandonFrameRelay,
+  markArtifactRelayHopFailed,
+  requestViaFrameTunnel,
+  getPrincipalTokenFingerprint,
+  refreshOauthTokenIfAllowed,
+  isRelayedUpstreamResponse,
+  classifyFrameRelayResponse,
+  isByocFrameRelayEnabled,
+  getFrameRoute,
+  isFrameRelayAttemptError,
+  isMaxContentLengthError,
+  artifactFrameHttpClient,
+  registerArtifactReadAvailability,
+  isArtifactReadAvailable,
+  registerArtifactToolAvailability,
+  getArtifactReadInstruction,
+  buildArtifactReadGuidance,
+  getPrReviewTemplateChrome,
+  extractBalancedDiv,
+  STALENESS_SCRIPT_SHA256,
+  buildGitHubPullUrl,
+  PRR_ANCHOR_ISLAND_ID,
+  stripInjectedDataIdAttribute,
+  extractScriptBlocks,
+  GITHUB_OWNER_PATTERN,
+  GITHUB_REPO_PATTERN,
+  GIT_COMMIT_SHA_PATTERN,
+  UTC_ISO_TIMESTAMP_PATTERN,
+  TOOL_NAME_PATTERN,
+  IDENTIFIER_PATTERN,
+  TOOL_INPUT_VALUE_PATTERN,
+  METHOD_KEY_PATTERN,
+  readAnchorIslandToolName,
+  PRR_DECISIONS_ISLAND_ID,
+  DECISIONS_SCRIPT_SHA256,
+  DECISION_TOKEN_PATTERN,
+  PRR_STAMP_ISLAND_ID,
+  APPROVE_SCRIPT_SHA256,
+  PRR_ISLAND_VALIDATORS,
+  PRR_PINNED_SCRIPTS,
+  isPrReviewPage,
+  normalizeArtifactTitle,
+  formatArtifactDescription,
+  sanitizeEditableTitle,
   zZn,
-  VZn,
-  yw,
-  Xwt,
-  Y_,
-  fqt,
-  KZn,
-  yJ,
-  Rwn,
-  Z1e,
-  XZn,
-  YZn,
-  JZn,
-  kwn,
-  Mj,
-  Nj,
-  wD,
-  JE,
-  rP,
-  QZn,
-  KXe,
-  mqt,
-  ZZn,
-  jg,
+  sanitizeFaviconText,
+  formatArtifactTitle,
+  isDeclarableServerName,
+  formatArtifactServerDisplayName,
+  escapeTextForDisplay,
+  buildUnobservedConnectorWarnings,
+  isNonEmptyRecord,
+  mergeCapabilities,
+  NO_PIN_VERSION_SENTINEL,
+  setSessionHostServers,
+  getSessionHostServers,
+  isCapabilityFeatureEnabled,
+  HOST_SERVER_NAME_PATTERN,
+  VERSION_PATTERN,
+  CAPABILITY_NAME_PATTERN,
+  parseContractVersion,
+  ARTIFACT_CAPABILITY_KEY,
+  LEGACY_SELF_CAPABILITY_KEY,
+  declaresArtifactCapability,
+  getDeclaredCapabilities,
+  formatCapabilitiesSummary,
+  diffDeclaredCapabilities,
+  sanitizeDisplayText,
   VER_SHAPE,
   makeOwnPublishesStore,
   makeLocalOwnPublishesStore,
@@ -13091,43 +13091,43 @@ export {
   markPublishInFlight,
   clearPublishInFlight,
   isPublishInFlight,
-  Ha,
-  XXe,
-  eer,
-  ter,
-  ner,
-  YXe,
-  JXe,
-  CCe,
-  yqt,
-  Ywt,
-  rer,
-  rFe,
-  NH,
-  Soe,
-  oer,
-  Jwt,
-  ser,
-  qk,
-  Fd,
-  QXe,
-  oFe,
-  EN,
-  AG,
-  _u,
-  sFe,
-  Qwt,
-  ier,
-  aer,
-  boe,
-  iFe,
-  Iwn,
-  ler,
-  cer,
-  ZXe,
-  uer,
-  der,
-  eYe,
+  getSafeReadOpenFlags,
+  getNoFollowOpenFlags,
+  SUPPORTED_BINARY_TARGETS,
+  MAX_BINARY_SIZE_BYTES,
+  getArm64TargetTriple,
+  stripBinaryTargetSuffix,
+  isExistingDirectory,
+  checkContainedDirectory,
+  readOptionalFileContent,
+  readTextFileCapped,
+  readArtifactStubFavicon,
+  writeFileExclusive,
+  LIVE_DOC_ARTIFACT_KIND,
+  LIVE_DOC_INDEX_PATH,
+  SAFE_RELATIVE_FILE_PATH_RE,
+  resolveLiveDocEntries,
+  indexArtifactFiles,
+  MAX_ARTIFACT_FILE_BYTES,
+  buildFrameHeaders,
+  ARTIFACT_VERSION_RE,
+  MarkdownTokenizer,
+  MarkdownLexer,
+  MarkdownEngine,
+  markdownParser,
+  isSafeExternalUrl,
+  renderMarkdownArtifactHtml,
+  renderWorkshopMarkdownArtifact,
+  renderStyledMarkdownArtifact,
+  summarizeRequestError,
+  sanitizeArtifactSlugForTelemetry,
+  sanitizeArtifactVersionForTelemetry,
+  armPrototypeLane,
+  takePrototypeLane,
+  giveBackPrototypeLane,
+  getTemplateLaneForSlug,
+  recordPrototypePublish,
+  giveBackControlPlaneLane,
   MAX_ARTIFACT_BYTES,
   isFrameBaseVersionEnabled,
   isFrameStaleGuardAutoReadEnabled,
@@ -13209,23 +13209,23 @@ export {
   PUBLISH_OUTCOME_UNKNOWN_FRAME,
   TYPE_FILE_WRITE_REFUSAL,
   errBody,
-  TD,
-  RG,
-  HC,
-  aTt,
-  Hqt,
-  wJ,
-  fer,
-  mer,
-  pFe,
-  tTn,
-  lYe,
-  fFe,
-  nTn,
-  ger,
+  MAX_PUBLISHED_PATH_LENGTH,
+  MAX_PUBLISH_FILES,
+  escapeUnprintableForMessage,
+  validatePublishedFilePath,
+  isServiceReservedPath,
+  validateReadableFilePath,
+  MAX_THUMBNAIL_BYTES,
+  validateThumbnailHref,
+  isPathWithinAnyRoot,
+  replacePathRootPrefix,
+  resolvePathWithinBase,
+  isSymlinkChainUnsafe,
+  resolvePublishFileManifest,
+  readThumbnailFileContent,
   rTn,
-  oTn,
-  her,
+  wrapArtifactOriginNotes,
+  MAX_FRAME_API_RESPONSE_BYTES,
   getShareEntry,
   storedGrantObserved,
   getShareEntryForPath,
@@ -13261,29 +13261,29 @@ export {
   markAutoReactNoticePending,
   hasAutoReactNoticePending,
   clearAutoReactNoticePending,
-  Dqt,
-  Sw,
-  AJ,
-  _er,
-  RN,
-  Ife,
-  Pfe,
-  Lqt,
-  Mqt,
-  IC,
-  yer,
-  gYe,
-  Ser,
-  hYe,
-  Ofe,
-  cTn,
-  uTn,
-  ED,
-  ber,
-  Aoe,
-  _Fe,
-  wer,
-  Ter,
+  deriveLiveSubscriptionTransport,
+  parseArtifactUrlForSession,
+  isArtifactGoneError,
+  isArtifactNeverPublished,
+  isArtifactOtherOrgError,
+  ARTIFACT_OTHER_ORG_MESSAGE,
+  OTHER_ORG_SIGN_IN_HINT,
+  FRAME_REQUEST_TIMEOUT_MS,
+  fetchArtifactBootResponse,
+  readArtifactBoot,
+  readArtifactSubscription,
+  isTransientHttpStatus,
+  renewArtifactWatchToken,
+  readArtifactSharingInfo,
+  FRAME_FILE_READ_MAX_BYTES,
+  hasStoredSource,
+  buildStoredSourcePath,
+  readArtifactContent,
+  readArtifactFileByPath,
+  getSafeArtifactReadError,
+  redactFrameToken,
+  mintStoredPageProbe,
+  isMintedStoredPageProbe,
   artifactHostUnreachable,
   probeArtifactHostEgress,
   resolveArtifactEnableSetting,

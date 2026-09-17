@@ -18,7 +18,7 @@ import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱�
 import { getClaudeConfigDir, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { markStdoutDrainExternallyClocked } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits, truncateMiddle, beforeFirst, truncateWithCharCount } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { v0 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { openFileReadOnlyHardened } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { escapeUntrustedText, escapeNonPrintableAscii, replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -104,40 +104,40 @@ import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cw
 import { jo, Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { GIT_ENV_VARS_TO_CLEAR, GIT_CONFIG_ENTRY_ENV_RE, NONINTERACTIVE_GIT_ENV, execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import {
-  o8t,
-  OQ,
-  DRt,
-  Uge,
-  Vn,
-  f8t,
-  Js,
-  rc,
-  zRt,
-  KBe,
+  extractManagedSettings,
+  isMemoryApiEnvVar,
+  GCE_METADATA_ENV_VARS,
+  getHostManagedEnvVarsToStrip,
+  formatDisplayText,
+  getEvalsSchema,
+  parseMcpToolName,
+  buildMcpToolName,
+  matchesMcpToolRule,
+  getAllowRuleWildcardError,
   SETTINGS_FILENAME,
   getRemoteManagedSettingsSyncFromCache,
-  E0,
+  stripAnsiControlCharacters,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
-  JRe,
-  dar,
-  dxn,
-  sRt,
-  fxn,
-  iRt,
-  ZRe,
-  mxn,
-  gxn,
-  hxn,
-  xge,
-  aRt,
-  _xn,
-  F5t,
-  kq,
-  lRt,
-  yxn,
-  uS,
-  Sxn,
+  isRegistryIndexVar,
+  getRespelledEnvVars,
+  isConnectionStringEnvVar,
+  wordsLookLikeSecret,
+  JAVA_OPTIONS_ENV_VAR_NAMES,
+  normalizeEnvVarName,
+  splitShellWords,
+  STORE_RELOCATION_PROPERTY_PATTERN,
+  getBuildToolSettingsArgPath,
+  getSbtStoreArgPath,
+  stripJavaOptionPrefix,
+  normalizeDefineArgs,
+  isNonSecretLiteralValue,
+  isCredentialKeyName,
+  isCredentialEnvVarName,
+  isClaudeCodeEnvVarAllowlisted,
+  collectCredentialEnvVarNames,
+  looksLikeSecret,
+  PRIVATE_KEY_BLOCK_PATTERN,
   getSettingsForSource,
   getAllPolicyTierSettings,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -153,8 +153,8 @@ import { stripBom, parseYaml, FRONTMATTER_PATTERN } from "../MCP客户端/chunk-
 import { vm, lve, NC } from "./chunk-7s6mt1vg.js";
 import { SKILL_TOOL_NAME } from "../权限系统/chunk-fjrcf22x.js";
 import { o6, CJe, rAn, BG_WORKER_IDENTITY_ENV_VARS, isArtifactDevBaseUrlVar, subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
-import { gJ, Cr, XXe, rFe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { lR, Xre } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { readExactBytesFromHandle, WEB_FETCH_TOOL_NAME, getNoFollowOpenFlags, writeFileExclusive } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { ENTER_WORKTREE_TOOL_NAME, EXIT_WORKTREE_TOOL_NAME } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { Rbn, aCe } from "./chunk-ajtn749s.js";
 import { getWIFTokenCache } from "../认证-OAuth登录/wif-credentials.js";
 import { NON_INHERITED_SESSION_ENV_VARS } from "../Workflow编排/session-env-vars.js";
@@ -436,7 +436,7 @@ async function Ui(e, t) {
   try {
     let r = Tt.dirname(Tt.dirname(e));
     await mm(r, Tt.relative(r, Tt.join(e, t)), "mock replay recording");
-    let i = await v0(Tt.join(e, t));
+    let i = await openFileReadOnlyHardened(Tt.join(e, t));
     if (!i.ok) return null;
     let o = i.value;
     try {
@@ -1616,7 +1616,7 @@ function Yc(e) {
   let t = (h) => zc(e, h),
     [r, i] = t(vs);
   if (r !== void 0) {
-    let h = f8t().safeParse(r);
+    let h = getEvalsSchema().safeParse(r);
     if (!h.success) return { kind: "wrongType", raw: Y0n(r), manifestPath: i };
     let w = ws(h.data, i, !0);
     return w === void 0
@@ -1625,7 +1625,7 @@ function Yc(e) {
   }
   let [o, u] = t(Es);
   if (o === void 0) return null;
-  let d = f8t().safeParse(o),
+  let d = getEvalsSchema().safeParse(o),
     p = d.success ? ws(d.data, u, !1) : void 0;
   return p === void 0
     ? { kind: "wrongType", raw: Y0n(o), manifestPath: u, misplaced: !0 }
@@ -3649,7 +3649,7 @@ function ua(e, t) {
     E = [...t.keys()].filter((S) => !w.has(S)).map((S) => `mcp__${normalizeMcpName(S)}__`);
   for (let S of o)
     for (let C of S.loaded.tools.keys()) {
-      let L = rc(S.registeredName, C);
+      let L = buildMcpToolName(S.registeredName, C);
       if (E.find((U) => L.startsWith(U)) !== void 0)
         throw new R(
           `mocks/${S.loaded.dirName}/${C}.md would be served as ${L}, a tool name that belongs to a REAL (unmocked) server the plugins declare \u2014 rename the directory to shadow that server, or the tool`,
@@ -3682,7 +3682,7 @@ function da(e, t) {
 function kn(e) {
   let t = [];
   for (let r of e)
-    for (let i of r.loaded.tools.keys()) t.push(rc(r.registeredName, i));
+    for (let i of r.loaded.tools.keys()) t.push(buildMcpToolName(r.registeredName, i));
   return t;
 }
 var Vo = "mocks.json",
@@ -3861,7 +3861,7 @@ async function ga(e, t, r) {
         p = { ino: _.ino, dev: _.dev };
       }
     } else {
-      let _ = XXe();
+      let _ = getNoFollowOpenFlags();
       try {
         ((d = await Vr(e, Kr.O_RDWR | Kr.O_CREAT | Kr.O_EXCL | _, 420)),
           (h = !0));
@@ -4221,7 +4221,7 @@ async function Ta(e, t) {
 var Ed = createLazyValue(() => c({ ready: s(), server: s() }));
 async function Ca(e) {
   let t = { text: "", truncated: !1 },
-    r = await v0(e);
+    r = await openFileReadOnlyHardened(e);
   if (!r.ok) return t;
   let i = r.value;
   try {
@@ -4298,10 +4298,10 @@ function jn(e, t, r = {}) {
 }
 function Aa(e) {
   let { toolName: t, ruleContent: r } = parsePermissionRule(e);
-  return !/[()]/.test(t) && KBe(t) === null && (r === void 0 || Js(t) === null);
+  return !/[()]/.test(t) && getAllowRuleWildcardError(t) === null && (r === void 0 || parseMcpToolName(t) === null);
 }
 function Id(e, t) {
-  if (zRt(e.toolName, t.toolName)) return !0;
+  if (matchesMcpToolRule(e.toolName, t.toolName)) return !0;
   if (e.toolName !== t.toolName) return !1;
   return (
     e.ruleContent === void 0 ||
@@ -4686,7 +4686,7 @@ async function $d(e, t, r, i, o, u, d) {
   let p = dedupe(
       r.flatMap((I) => {
         let q = parsePermissionRule(I);
-        return q.toolName === Cr && q.ruleContent?.startsWith("domain:")
+        return q.toolName === WEB_FETCH_TOOL_NAME && q.ruleContent?.startsWith("domain:")
           ? [q.ruleContent.slice(7)]
           : [];
       }),
@@ -4847,7 +4847,7 @@ async function $d(e, t, r, i, o, u, d) {
           if (!q.isFile() || q.nlink !== 1 || q.size > Jd) continue;
           if (K.some((Oe) => dt(Oe) === dt(I) || we(Oe, I, dt))) continue;
           let ke = await ni(I, "utf8");
-          if (ke.includes("-----BEGIN CERTIFICATE-----") && !Sxn.test(ke))
+          if (ke.includes("-----BEGIN CERTIFICATE-----") && !PRIVATE_KEY_BLOCK_PATTERN.test(ke))
             ge.push(I);
         } catch {}
     })(),
@@ -5382,7 +5382,7 @@ async function $d(e, t, r, i, o, u, d) {
       },
       network: { allowedDomains: p },
       credentials: {
-        envVars: dedupe([...yxn(o), ...Vd, ...Cp(o)])
+        envVars: dedupe([...collectCredentialEnvVarNames(o), ...Vd, ...Cp(o)])
           .filter((I) => !(Object.hasOwn(S, I) && o[I] === S[I]))
           .filter((I) => !(qit.includes(I) && o[I] === o6))
           .map((I) => ({ name: I, mode: "deny" })),
@@ -5450,7 +5450,7 @@ async function Qa(e) {
   return t;
 }
 var oi = [BASH_TOOL_NAME, POWERSHELL_TOOL_NAME],
-  el = [MONITOR_TOOL_NAME, lR, Xre];
+  el = [MONITOR_TOOL_NAME, ENTER_WORKTREE_TOOL_NAME, EXIT_WORKTREE_TOOL_NAME];
 function ii(e, t) {
   return e.some((r) => parsePermissionRule(r).toolName === t);
 }
@@ -6284,7 +6284,7 @@ async function Da(e, t = "plugin eval", r = [], i) {
   return dedupe(p);
 }
 async function ir(e, t) {
-  let r = await v0(e);
+  let r = await openFileReadOnlyHardened(e);
   if (!r.ok) {
     if (r.error.kind === "absent") return null;
     throw new R(
@@ -6931,7 +6931,7 @@ var cf = [
     "GOOGLE_EXTERNAL_ACCOUNT_ALLOW_EXECUTABLES",
     "GCLOUD_PROJECT",
     "CLOUD_ML_REGION",
-    ...DRt,
+    ...GCE_METADATA_ENV_VARS,
     "IDENTITY_ENDPOINT",
     "IDENTITY_HEADER",
     "IDENTITY_SERVER_THUMBPRINT",
@@ -7023,9 +7023,9 @@ var cf = [
     "CLAUDE_CODE_RELAUNCH_",
   ];
 function yf(e) {
-  if (kq(e)) return !lRt(e);
+  if (isCredentialEnvVarName(e)) return !isClaudeCodeEnvVarAllowlisted(e);
   if (mf.test(e)) return !gf.has(e);
-  return hf.has(e) || wf.some((t) => e.startsWith(t)) || isArtifactDevBaseUrlVar(e) || OQ(e);
+  return hf.has(e) || wf.some((t) => e.startsWith(t)) || isArtifactDevBaseUrlVar(e) || isMemoryApiEnvVar(e);
 }
 var _f = new Set(["http_proxy", "https_proxy", "no_proxy", "all_proxy"]);
 function bf(e) {
@@ -7034,8 +7034,8 @@ function bf(e) {
   if (ff.has(t)) return !0;
   if (t.startsWith("CLAUDE_CODE_") && yf(t)) return !1;
   if (t.startsWith("EVAL_")) return !0;
-  if (JRe(e)) return !0;
-  if (dxn(e)) return !1;
+  if (isRegistryIndexVar(e)) return !0;
+  if (isConnectionStringEnvVar(e)) return !1;
   return pf.some((r) => t.startsWith(r));
 }
 var qr = [
@@ -7222,7 +7222,7 @@ async function Nf(e) {
       "[eval] no cached organization policy to hand the child (the managed-settings fetch has not produced one); a child that cannot fetch runs without the remote-managed tier",
       { level: "warn" },
     );
-  let r = (t && o8t(t)) ?? {},
+  let r = (t && extractManagedSettings(t)) ?? {},
     i = { ...expandMcpPolicyPredicates(r), managedSourcesBehavior: "merge" },
     o = k.join(e.configDir, fi),
     u = b(i);
@@ -7334,10 +7334,10 @@ function Mf(e, t, r, i, o = !1) {
   }
   let d = new Set(Object.keys(u).map((D) => D.toUpperCase())),
     p = { ...subprocessEnv() };
-  Object.assign(p, dar(p));
+  Object.assign(p, getRespelledEnvVars(p));
   for (let [D, U] of Object.entries(process.env))
     if (/^EVAL_/i.test(D) && U !== void 0) p[D] = U;
-  let h = new Set(Uge(Qf(process.env)).map((D) => D.toUpperCase())),
+  let h = new Set(getHostManagedEnvVarsToStrip(Qf(process.env)).map((D) => D.toUpperCase())),
     w = h.size > 0;
   for (let D of Object.keys(p)) {
     let U = D.toUpperCase();
@@ -7557,13 +7557,13 @@ var Vf = "latest",
   Ha = 2097152,
   zf = 33554432;
 async function cl(e, t) {
-  let r = await v0(e);
+  let r = await openFileReadOnlyHardened(e);
   if (!r.ok) return null;
   let i = r.value;
   try {
     let o = await i.stat({ bigint: !0 });
     if (!o.isFile() || o.nlink !== 1n || o.size > BigInt(t)) return null;
-    return await gJ(i, Number(o.size));
+    return await readExactBytesFromHandle(i, Number(o.size));
   } catch {
     return null;
   } finally {
@@ -7586,14 +7586,14 @@ async function Yf(e, t) {
     await Gt(i, { recursive: !0, force: !0 });
     return;
   }
-  await rFe(i, b(t, null, 2));
+  await writeFileExclusive(i, b(t, null, 2));
   let u = t.at(-1);
   if (u && u.env === "stub") {
     await ti(o);
     for (let d of ["index.html", "manifest.json"]) {
       let p = await cl(k.join(u.payloadDir, d), zf);
       if (p === null) continue;
-      await rFe(k.join(o, d), p);
+      await writeFileExclusive(k.join(o, d), p);
     }
   }
 }
@@ -8099,7 +8099,7 @@ function up(e) {
       return u;
     },
     i = (u) => {
-      let d = ZRe(e(u) ?? "");
+      let d = splitShellWords(e(u) ?? "");
       if (d === null)
         throw ce(
           "a JVM build tool argument variable holds an unterminated quotation",
@@ -8109,7 +8109,7 @@ function up(e) {
   for (let u of Tp) {
     let d = i(u);
     for (let p = 0; p < d.length; p++) {
-      let h = gxn(d[p]);
+      let h = getBuildToolSettingsArgPath(d[p]);
       if (h === null) continue;
       let w = h || d[p + 1];
       if (w) t.push(r(w));
@@ -8121,15 +8121,15 @@ function up(e) {
     k.join(u, "1.0", "plugins", "credentials.sbt"),
   ];
   for (let u of ml) {
-    let d = aRt(i(u).map(xge)).flatMap((p) => {
+    let d = normalizeDefineArgs(i(u).map(stripJavaOptionPrefix)).flatMap((p) => {
       let h = /^-D[^=]+=\s*(-.*)$/s.exec(p);
       if (!h) return [p];
-      let w = ZRe(h[1]);
+      let w = splitShellWords(h[1]);
       if (w === null)
         throw ce(
           "a JVM option variable nests an options line with an unterminated quotation",
         );
-      return [p, ...aRt(w.map(xge))];
+      return [p, ...normalizeDefineArgs(w.map(stripJavaOptionPrefix))];
     });
     for (let p = 0; p < d.length; p++) {
       let h = d[p];
@@ -8140,7 +8140,7 @@ function up(e) {
         getCurrentPlatform() !== "windows"
       )
         throw ce(`${u} carries a backslash escape in a store-relocating word`);
-      let w = hxn(h);
+      let w = getSbtStoreArgPath(h);
       if (w !== null) {
         let C = w || d[p + 1];
         if (C && !/^-{1,2}sbt-boot/.test(h)) {
@@ -8152,7 +8152,7 @@ function up(e) {
         continue;
       }
       let E = /^-D([^=]+)=(.+)$/s.exec(h);
-      if (!E || !mxn.test(E[1])) continue;
+      if (!E || !STORE_RELOCATION_PROPERTY_PATTERN.test(E[1])) continue;
       let _ = E[1].toLowerCase();
       if (_ === "maven.repo.local" || _ === "sbt.boot.directory") continue;
       let S = r(E[2]);
@@ -8812,7 +8812,7 @@ async function Sp(e) {
 }
 var Ya,
   Xa = /^-D[\w.-]*trust-?store-?password=changeit$/i,
-  ml = new Set(fxn),
+  ml = new Set(JAVA_OPTIONS_ENV_VAR_NAMES),
   Tp = new Set(["MAVEN_ARGS", "MAVEN_CONFIG"]),
   Ja = "\x00unterminated";
 function Cp(e) {
@@ -8820,31 +8820,31 @@ function Cp(e) {
   for (let [r, i] of Object.entries(e)) {
     let o = i === void 0 ? void 0 : String(i).trim();
     if (!o) continue;
-    let u = ml.has(iRt(r));
-    if (!u && uS(o)) {
+    let u = ml.has(normalizeEnvVarName(r));
+    if (!u && looksLikeSecret(o)) {
       t.push(r);
       continue;
     }
     if (u) {
-      let d = ZRe(o),
+      let d = splitShellWords(o),
         p =
           d === null
             ? void 0
-            : aRt(d.map(xge)).flatMap((h) => {
+            : normalizeDefineArgs(d.map(stripJavaOptionPrefix)).flatMap((h) => {
                 let w = /^-D[^=]+=\s*(-.*)$/s.exec(h);
-                return w ? [h, ...aRt((ZRe(w[1]) ?? [Ja]).map(xge))] : [h];
+                return w ? [h, ...normalizeDefineArgs((splitShellWords(w[1]) ?? [Ja]).map(stripJavaOptionPrefix))] : [h];
               });
       if (
         p === void 0 ||
-        sRt(p.filter((h) => !Xa.test(h))) ||
+        wordsLookLikeSecret(p.filter((h) => !Xa.test(h))) ||
         p.some((h) => {
           if (h === Ja) return !0;
           if (Xa.test(h)) return !1;
           let w = /^-D([^=]+)=(.*)$/s.exec(h);
           return w === null
-            ? uS(h)
-            : (F5t(w[1] ?? "") && !_xn(w[1] ?? "", w[2] ?? "")) ||
-                uS(w[2] ?? "");
+            ? looksLikeSecret(h)
+            : (isCredentialKeyName(w[1] ?? "") && !isNonSecretLiteralValue(w[1] ?? "", w[2] ?? "")) ||
+                looksLikeSecret(w[2] ?? "");
         })
       )
         t.push(r);
@@ -8921,7 +8921,7 @@ function gl(
 }
 function Np(e) {
   let t = parsePermissionRule(e).toolName;
-  return Dp.has(t) || Js(t) !== null;
+  return Dp.has(t) || parseMcpToolName(t) !== null;
 }
 function $p(e, t) {
   switch (e.type) {
@@ -9447,7 +9447,7 @@ async function Zp(e, t, r) {
         "grader focus file too large",
       );
     let _ = Number(h.size),
-      S = await gJ(p, _);
+      S = await readExactBytesFromHandle(p, _);
     if (S === null)
       throw new R(
         `focus file ${r} changed while being read (vetted at ${_} bytes); try again`,
@@ -9604,7 +9604,7 @@ async function Il(e, t, r, i) {
       kind: p.kind,
       tools: [...p.loaded.tools.keys()],
       toolFullNames: Object.fromEntries(
-        [...p.loaded.tools.keys()].map((h) => [h, rc(p.registeredName, h)]),
+        [...p.loaded.tools.keys()].map((h) => [h, buildMcpToolName(p.registeredName, h)]),
       ),
       responderKinds: Object.fromEntries(
         [...p.loaded.tools].map(([h, w]) => [h, w.kind]),
@@ -10074,7 +10074,7 @@ async function zl(e) {
     let He =
         V.problemDetail === void 0
           ? void 0
-          : Vn(V.problemDetail.replace(XRe(), " "), 300),
+          : formatDisplayText(V.problemDetail.replace(XRe(), " "), 300),
       ge = He === void 0 ? "" : ` (${He})`;
     switch (V.problem) {
       case void 0:
@@ -11270,7 +11270,7 @@ Terminated \u2014 finishing up\u2026
           xe.length > 0
             ? `Run without ${xe.length > 1 ? "the filters" : beforeFirst(xe[0], " ")} to see all cases.
 `
-            : E0(
+            : stripAnsiControlCharacters(
                 `Cases are expected in a ${sn(K.value)}/ directory under ${E ?? w} (${qm(K.value)}), each case a directory containing case.yaml or prompt.md.
 ` +
                   (E !== null && E !== w ? Ym(w, E, K.value) : "") +
@@ -11380,7 +11380,7 @@ Terminated \u2014 finishing up\u2026
     else {
       if (
         (await writeStdoutAndDrain(`
-${E0(formatEvalReportTable(ue))}
+${stripAnsiControlCharacters(formatEvalReportTable(ue))}
 `),
         Ne.length > 0)
       )
@@ -12178,7 +12178,7 @@ async function eg(e) {
   return !0;
 }
 async function tg(e, t) {
-  let r = await v0(e);
+  let r = await openFileReadOnlyHardened(e);
   if (!r.ok) return !1;
   try {
     let i = await r.value.stat(),
@@ -12209,7 +12209,7 @@ async function pn(e, t, r) {
 }
 function Ge(e) {
   process.stderr.write(
-    E0(e) +
+    stripAnsiControlCharacters(e) +
       `
 `,
   );

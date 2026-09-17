@@ -12,7 +12,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getRemoteTransport, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getMainLoopModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   s4t,
@@ -80,11 +80,11 @@ function parseEffortArgument(t, o) {
   return r ? { value: r } : null;
 }
 function g(t, o = !1) {
-  if (!jn()) return null;
-  if (!Ks())
+  if (!getRemoteTransport()) return null;
+  if (!hasRemoteControlChannel())
     return " (applied locally \u2014 this remote transport can\u2019t change server effort)";
   return (
-    jn()
+    getRemoteTransport()
       ?.sendControlRequest({
         subtype: "apply_flag_settings",
         settings: { effortLevel: t ?? null, ultracode: o },
@@ -98,7 +98,7 @@ async function x(t, o, n, r) {
     e = typeof t === "string" ? Z$(t, s) : t,
     l = e !== t,
     f = KK(e);
-  if (Ks() && f === void 0)
+  if (hasRemoteControlChannel() && f === void 0)
     return {
       message: `${e} is session-scoped and won't reach the remote process. Use low, medium, high, or xhigh instead.`,
     };
@@ -109,9 +109,9 @@ async function x(t, o, n, r) {
   if (d) return { message: `Failed to set effort level: ${d.message}` };
   logEvent("tengu_effort_command", {
     effort: typeof e === "number" ? e : fromEnum(e),
-    is_remote: jn() !== null,
+    is_remote: getRemoteTransport() !== null,
   });
-  let p = jn() ? void 0 : VH();
+  let p = getRemoteTransport() ? void 0 : VH();
   if (p !== void 0 && p !== e) {
     let y = a.CLAUDE_CODE_EFFORT_LEVEL;
     if (f === void 0)
@@ -131,7 +131,7 @@ async function x(t, o, n, r) {
     };
   let v = mAn(e),
     L =
-      f !== void 0 && o && !jn()
+      f !== void 0 && o && !getRemoteTransport()
         ? " (saved as your default for new sessions)"
         : " (this session only)";
   if (l)
@@ -150,7 +150,7 @@ function formatEffortStatus(t, o, n) {
       message:
         "Current effort level: ultracode (xhigh + dynamic workflow orchestration; this session only)",
     };
-  let r = jn() ? void 0 : VH(),
+  let r = getRemoteTransport() ? void 0 : VH(),
     s = UN(o) ? void 0 : t,
     e = r === null ? void 0 : (r ?? s);
   if (e === void 0) {
@@ -169,9 +169,9 @@ async function C(t, o, n) {
   let r = g(void 0),
     s = await zG(void 0, getMainLoopModel(), t, n);
   if (s) return { message: `Failed to set effort level: ${s.message}` };
-  logEvent("tengu_effort_command", { effort: S("auto"), is_remote: jn() !== null });
+  logEvent("tengu_effort_command", { effort: S("auto"), is_remote: getRemoteTransport() !== null });
   let e = t ? "" : " (this session only)",
-    l = jn() ? void 0 : VH();
+    l = getRemoteTransport() ? void 0 : VH();
   if (l !== void 0 && l !== null) {
     let f = a.CLAUDE_CODE_EFFORT_LEVEL;
     return {
@@ -206,9 +206,9 @@ function U(t, o, n) {
   let s = g("xhigh", !0);
   logEvent("tengu_effort_command", {
     effort: S("ultracode"),
-    is_remote: jn() !== null,
+    is_remote: getRemoteTransport() !== null,
   });
-  let e = jn() ? void 0 : VH();
+  let e = getRemoteTransport() ? void 0 : VH();
   if (e !== void 0 && e !== "xhigh")
     return {
       message: `CLAUDE_CODE_EFFORT_LEVEL=${a.CLAUDE_CODE_EFFORT_LEVEL} overrides effort this session \u2014 clear it and ultracode takes over`,

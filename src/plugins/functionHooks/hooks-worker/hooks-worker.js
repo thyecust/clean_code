@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { BMn, jMn, $0, XMn, YMn, JMn, Dz } from "./chunk-0t0sve49.js";
-import { l } from "./chunk-h4f48kbj.js";
+import { errorMessage } from "./chunk-h4f48kbj.js";
 import "./analytics-fields.js";
 import { formatAbortReason, HooksError, getErrorCauseString } from "./chunk-bzqqe6xh.js";
 import "./string-utils.js";
@@ -65,7 +65,7 @@ var T = (t, n) => (e, u) => {
     onAbort: () =>
       t.post({ type: "next_abort", id: n, nextId: c, reason: formatAbortReason(u) }),
     signal: u,
-    notPlainMessage: (d) => `next() argument is not plain data: ${l(d)}`,
+    notPlainMessage: (d) => `next() argument is not plain data: ${errorMessage(d)}`,
   });
 };
 function I(
@@ -93,7 +93,7 @@ function I(
       ? () => o.postMessage({ type: "op_abort", opId: r, reason: formatAbortReason(c) })
       : () => {},
     signal: c,
-    notPlainMessage: (i) => `${e}: arguments are not plain data: ${l(i)}`,
+    notPlainMessage: (i) => `${e}: arguments are not plain data: ${errorMessage(i)}`,
   });
 }
 function w(t) {
@@ -152,7 +152,7 @@ function R(t) {
                 e({
                   type: "load_error",
                   environmentId: r,
-                  error: l(m),
+                  error: errorMessage(m),
                   ...(s !== void 0 && { cause: s }),
                 });
               },
@@ -171,7 +171,7 @@ function R(t) {
             (a.build(r, o.table, o.suppressed),
               e({ type: "built", environmentId: r }));
           } catch (i) {
-            e({ type: "built_error", environmentId: r, error: l(i) });
+            e({ type: "built_error", environmentId: r, error: errorMessage(i) });
           }
           return;
         }
@@ -187,11 +187,11 @@ function R(t) {
                   e({
                     type: "call_error",
                     callId: r,
-                    error: `$.${f.name}.${f.method} returned a value that is not plain data: ${l(k)}`,
+                    error: `$.${f.name}.${f.method} returned a value that is not plain data: ${errorMessage(k)}`,
                   });
                 }
               },
-              (s) => e({ type: "call_error", callId: r, error: l(s) }),
+              (s) => e({ type: "call_error", callId: r, error: errorMessage(s) }),
             );
           return;
         }
@@ -215,11 +215,11 @@ function R(t) {
                     e({
                       type: "error",
                       id: r,
-                      error: `result not cloneable: ${l(b)}`,
+                      error: `result not cloneable: ${errorMessage(b)}`,
                     });
                   }
                 },
-                (y) => e({ type: "error", id: r, error: l(y) }),
+                (y) => e({ type: "error", id: r, error: errorMessage(y) }),
               )
               .finally(() => d.delete(r)));
           return;
@@ -233,7 +233,7 @@ function R(t) {
             .then(() => a.press(i, f, m))
             .then(
               () => e({ type: "press_result", pressId: r }),
-              (s) => e({ type: "press_error", pressId: r, error: l(s) }),
+              (s) => e({ type: "press_error", pressId: r, error: errorMessage(s) }),
             );
           return;
         }

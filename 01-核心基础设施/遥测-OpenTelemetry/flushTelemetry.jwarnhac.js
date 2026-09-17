@@ -66,7 +66,7 @@ import { l, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Xhe, Et, b, QPn, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isNonessentialTrafficRestricted, logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { tu } from "../设置-配置/设置-配置.aqbb35ee.js";
+import { omitBy } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { profileCheckpoint } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { getSettings_DEPRECATED } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
@@ -1441,7 +1441,7 @@ function st() {
     m = w.envDetector.detect().attributes || {},
     O = w.resourceFromAttributes(
       d
-        ? tu(m, (_, R) => R.startsWith("user.") || R.startsWith("identity."))
+        ? omitBy(m, (_, R) => R.startsWith("user.") || R.startsWith("identity."))
         : m,
     ),
     E = s.merge(o).merge(p).merge(O).merge(w.resourceFromAttributes(u));

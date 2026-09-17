@@ -16,7 +16,7 @@ import { getProjectsDir } from "../Teammates团队/transcript-paths.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getSessionStateStore, getBgTakeover } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { gh, xQ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { $d, bR, normalizeCaseForComparison } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getResolvedClaudeTempDir, getCurrentProjectTempDir, normalizeCaseForComparison } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { decodeTaggedId } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { readFileHandleWithMetadata } from "../../01-核心基础设施/共享小工具-未细化/safe-file-read.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
@@ -564,28 +564,28 @@ var lt = _.O_NOFOLLOW ?? 0,
   MAX_TASK_OUTPUT_BYTES_DISPLAY = "5GB",
   MAX_PERSISTED_OUTPUT_BYTES = 67108864;
 function getTaskOutputRootDir() {
-  return $d();
+  return getResolvedClaudeTempDir();
 }
 function getTaskOutputDir() {
   let t = getBgTakeover()?.adoptShellOutputRoot;
   if (t !== void 0) return U(t, K(), "tasks");
   let e = getSessionStateStore();
-  if (e.outputDir === void 0) e.outputDir = U(bR(), K(), "tasks");
+  if (e.outputDir === void 0) e.outputDir = U(getCurrentProjectTempDir(), K(), "tasks");
   return e.outputDir;
 }
 function taskOutputDirForSession(t) {
-  return U(bR(), t, "tasks");
+  return U(getCurrentProjectTempDir(), t, "tasks");
 }
 function peekTaskOutputDir() {
   return getBgTakeover()?.adoptShellOutputRoot !== void 0
     ? getTaskOutputDir()
-    : (getSessionStateStore().outputDir ?? U(bR(), K(), "tasks"));
+    : (getSessionStateStore().outputDir ?? U(getCurrentProjectTempDir(), K(), "tasks"));
 }
 function te() {
   let t = getSessionStateStore();
   if (t.outputDir === void 0) {
-    if (getBgTakeover() !== null) return U(bR(), K(), "tasks");
-    t.outputDir = U(bR(), K(), "tasks");
+    if (getBgTakeover() !== null) return U(getCurrentProjectTempDir(), K(), "tasks");
+    t.outputDir = U(getCurrentProjectTempDir(), K(), "tasks");
   }
   return t.outputDir;
 }
@@ -1033,7 +1033,7 @@ async function Ct(t, e, i) {
   return o;
 }
 function q(t) {
-  let e = $d();
+  let e = getResolvedClaudeTempDir();
   return t === e || t.startsWith(e.endsWith(Z) ? e : e + Z);
 }
 async function Rt(t) {
@@ -1289,7 +1289,7 @@ async function tt(t, e) {
             b(
               t,
               "tasks dir moved or linked",
-              `restart Claude Code with CLAUDE_CODE_TMPDIR set to a fresh directory; or, if ${bR().replace(/[\\/]+$/, "")} is a stray directory or a symbolic link that should not be there, remove that entry itself (not what it points to) and restart`,
+              `restart Claude Code with CLAUDE_CODE_TMPDIR set to a fresh directory; or, if ${getCurrentProjectTempDir().replace(/[\\/]+$/, "")} is a stray directory or a symbolic link that should not be there, remove that entry itself (not what it points to) and restart`,
             ));
         }
         throw N;
@@ -1353,7 +1353,7 @@ async function tt(t, e) {
 }
 var Pt;
 async function oe() {
-  let t = $d();
+  let t = getResolvedClaudeTempDir();
   if (Pt?.root === t) return Pt.ok;
   let e = await realpath(t).then(
     () => !0,

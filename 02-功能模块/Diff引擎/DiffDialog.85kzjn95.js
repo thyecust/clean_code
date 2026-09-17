@@ -12,10 +12,10 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
-import { Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isRemoteActive } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { truncateStartToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { jJt, IB, $ae } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { getWorkspaceDiffData, scrollByLines, DiffFileView } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
@@ -414,9 +414,9 @@ function DiffDialog(tr) {
   let h = _(84),
     { messages: nr, onDone: rr } = tr,
     Ct;
-  if (h[0] === MEMO_CACHE_SENTINEL) ((Ct = Pt()), (h[0] = Ct));
+  if (h[0] === MEMO_CACHE_SENTINEL) ((Ct = isRemoteActive()), (h[0] = Ct));
   else Ct = h[0];
-  let { data: qe, notice: Ft } = jJt(Ct),
+  let { data: qe, notice: Ft } = getWorkspaceDiffData(Ct),
     Je = pe(nr),
     [c, Qe] = d("list"),
     [be, Ye] = d(0),
@@ -490,19 +490,19 @@ function DiffDialog(tr) {
           break bb49;
         }
         case "pageUp": {
-          IB(q, -zt, !1);
+          scrollByLines(q, -zt, !1);
           break bb49;
         }
         case "pageDown": {
-          IB(q, zt, !1);
+          scrollByLines(q, zt, !1);
           break bb49;
         }
         case "fullPageUp": {
-          IB(q, -Et, !1);
+          scrollByLines(q, -Et, !1);
           break bb49;
         }
         case "fullPageDown": {
-          IB(q, Et, !1);
+          scrollByLines(q, Et, !1);
           break bb49;
         }
         case "top": {
@@ -719,7 +719,7 @@ function DiffDialog(tr) {
             })
           : e(o, {
               flexDirection: "column",
-              children: e($ae, {
+              children: e(DiffFileView, {
                 filePath: g?.path || "",
                 hunks: Ke,
                 isLargeFile: g?.isLargeFile,

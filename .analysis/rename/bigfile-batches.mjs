@@ -19,6 +19,13 @@ const rel = process.argv[2];
 const sliceBytes = Number(process.argv[3] || 180_000);
 const outDir = process.argv[4] || join(WORK, "bigfile");
 const maxImporters = Number(process.env.MAX_IMPORTERS || 8);
+// WINDOW>0：源码不按连续区间给，改成「每个名字的定义位置前后各 WINDOW 行」拼接。
+// 「体积大、名字稀疏」的模块（会话UI 2.5MB 只有 68 个名字、语法高亮 872KB 只有 2 个）
+// 用连续区间会切出十几片、每片 4 个名字却带 150KB 源码 —— 窗口模式把上下文集中到定义处。
+// 此时切片只按名字数切，不再按字节切。
+const WINDOW = Number(process.env.WINDOW || 0);
+const winBefore = Number(process.env.WIN_BEFORE || 30);
+const winAfter = Number(process.env.WIN_AFTER || 60);
 
 const modulePath = normalize(join(ROOT, rel));
 const src = readFileSync(modulePath, "utf8");
@@ -49,7 +56,7 @@ const maxNames = Number(process.env.MAX_NAMES || 120);
 const slices = [];
 let cur = [];
 for (const t of targets) {
-  if (cur.length && (t.off - cur[0].off > sliceBytes || cur.length >= maxNames)) {
+  if (cur.length && ((!WINDOW && t.off - cur[0].off > sliceBytes) || cur.length >= maxNames)) {
     slices.push(cur);
     cur = [];
   }
@@ -177,6 +184,22 @@ for (let si = 0; si < slices.length; si++) {
   const names = slice.map((t) => t.name);
   writeFileSync(join(outDir, `${base}.slice-${id}.json`), JSON.stringify([rel], null, 1));
   const truncated = next && slice[slice.length - 1].off > to;
+  // 窗口模式：每个名字只带定义位置附近的源码
+  let srcBlock = src.slice(from, to);
+  if (WINDOW) {
+    const lines = src.split("\n");
+    // 行号 -> 偏移，只为取窗口
+    const offToLine = (o) => src.slice(0, o).split("\n").length - 1;
+    const parts = [];
+    for (const t of slice) {
+      const ln = offToLine(t.off);
+      const a = Math.max(0, ln - winBefore), b = Math.min(lines.length, ln + winAfter);
+      parts.push(`// ───────────────── ${t.name} （第 ${ln + 1} 行起） ─────────────────`);
+      parts.push(lines.slice(a, b).join("\n"));
+      parts.push("");
+    }
+    srcBlock = parts.join("\n");
+  }
   const body = [
     `# ${rel}`,
     ``,
@@ -191,7 +214,7 @@ for (let si = 0; si < slices.length; si++) {
     `## 本切片源码`,
     ``,
     "```js",
-    src.slice(from, to),
+    srcBlock,
     "```",
     ``,
     `## 这些名字在引用方的调用点`,
@@ -206,5 +229,5 @@ for (let i = 0; i < slices.length; i++) {
   const s = slices[i];
   const from = lineStartAtOrBefore(s[0].off);
   const to = slices[i + 1] ? lineStartAtOrBefore(slices[i + 1][0].off) : src.length;
-  console.log(`  slice-${String(i + 1).padStart(2, "0")}: ${s.length} names · bytes ${from}-${to}`);
+  console.log(`  slice-${String(i + 1).padStart(2, "0")}: ${s.length} names · bytes ${from}-${to}${WINDOW ? " （窗口模式）" : ""}`);
 }

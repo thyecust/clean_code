@@ -29,7 +29,7 @@ import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { RedactedGitHubToken, importGitHubToken, canPrepareApiRequest, getGitHubAuthSource, getClaudeAiCodeBaseUrl, githubConnectionStatusStore } from "../Grove-隐私设置/chunk-a4mdm49v.js";
-import { sHe } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { checkGitHubAuthStatus } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
@@ -76,7 +76,7 @@ function at(s) {
 }
 async function tt(s) {
   if (!(await canPrepareApiRequest(s))) return { status: "not_signed_in" };
-  let a = await sHe({ allowNetworkFallbackForOldGh: !0 });
+  let a = await checkGitHubAuthStatus({ allowNetworkFallbackForOldGh: !0 });
   if (a.status === "not_installed") return { status: "gh_not_installed" };
   if (a.status === "not_authenticated")
     return { status: "gh_not_authenticated" };

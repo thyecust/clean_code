@@ -13,8 +13,8 @@ import { SandboxManager, sanitizeForDisplay, recordSessionAlias, executeDirector
 import { Ro, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../核心工具-字符串与文本/string-utils.js";
 import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
-import { Nr } from "./设置-配置.aqbb35ee.js";
-import { Oc, DG, pathInAllowedWorkingPath, pathInWorkingPath } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isSettingsSourceEnabled } from "./设置-配置.aqbb35ee.js";
+import { applyPermissionUpdate, persistPermissionUpdate, pathInAllowedWorkingPath, pathInWorkingPath } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { isCustomizationDisabled } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
 import { isRestrictedToPluginOnly } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
 import { getToolPermissionContext } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
@@ -34,7 +34,7 @@ async function addWorkingDirectory(e, o, r) {
     directories: [o],
     destination: r ? "localSettings" : "session",
   };
-  (e.setToolPermissionContext((t) => Oc(t, s)),
+  (e.setToolPermissionContext((t) => applyPermissionUpdate(t, s)),
     u(e.session, o),
     SandboxManager.refreshConfig(),
     e.storageV5 ? recordSessionAlias(o, e.storageV5) : recordSessionAlias(o),
@@ -42,7 +42,7 @@ async function addWorkingDirectory(e, o, r) {
   let d;
   if (r)
     try {
-      (await DG(s, e.storageV5),
+      (await persistPermissionUpdate(s, e.storageV5),
         (d = `Added ${chalk.bold(o)} as a working directory and saved to local settings`));
     } catch (t) {
       d = `Added ${chalk.bold(o)} as a working directory. Failed to save to local settings: ${t instanceof Error ? t.message : "Unknown error"}`;
@@ -120,7 +120,7 @@ function explainAlreadyAccessibleDirectory(e, o) {
   let a = `${l} is inside the current working directory ${chalk.bold(sanitizeForDisplay(o.workingDir))}`;
   if (
     isCustomizationDisabled("skills", { explicitlyRequested: !0 }) ||
-    !Nr("projectSettings") ||
+    !isSettingsSourceEnabled("projectSettings") ||
     isRestrictedToPluginOnly("skills")
   )
     return `${a}; skills, commands, and agents from additional directories are disabled in this session, so nothing was loaded.`;

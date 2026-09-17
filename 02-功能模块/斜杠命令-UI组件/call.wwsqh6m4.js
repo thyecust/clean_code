@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 273 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { isUnattendedBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Lot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { buildSessionContext } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
@@ -62,7 +62,7 @@ var r = async (s, o) => {
     args: "stats",
     showSkillDoctorRedirectMessage: !0,
     commands: o.options.commands,
-    getSessionContext: () => Lot(o.messages, o.readFileState),
+    getSessionContext: () => buildSessionContext(o.messages, o.readFileState),
     getSkillStatsInputs: () => buildSkillDoctorContext(o),
     getReloadCacheImpactOptions: () => ({
       model: o.options.mainLoopModel,

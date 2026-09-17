@@ -12,7 +12,7 @@
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { zj } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { slugifyWorkflowName } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { useTaskRegistry } from "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
@@ -35,7 +35,7 @@ import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
-import { KW } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { computeListWindow } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { DHe, eye } from "./chunk-6gjsfh7a.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
@@ -398,7 +398,7 @@ function Xt(We) {
         let No = parseWorkflowScript(A.task.script);
         J = !("error" in No)
           ? No.meta.name
-          : zj(A.task.summary ?? A.task.description);
+          : slugifyWorkflowName(A.task.summary ?? A.task.description);
       }
       ((a[64] = s), (a[65] = m.itemId), (a[66] = A), (a[67] = J), (a[68] = w));
     } else ((A = a[66]), (J = a[67]), (w = a[68]));
@@ -453,7 +453,7 @@ function Xt(We) {
       windowEnd: ze,
       moreAbove: Wo,
       moreBelow: Vo,
-    } = KW(ct, s.length, qe);
+    } = computeListWindow(ct, s.length, qe);
     let Ke = s.slice(Oo, ze);
     let X;
     if (a[96] !== c) ((X = () => ot(c)), (a[96] = c), (a[97] = X));

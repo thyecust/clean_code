@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 8 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { pS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { MAX_TIMER_DELAY_MS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 var y = 2;
 function createDeviceHookRegistry(i) {
   let e = null,
@@ -46,7 +46,7 @@ function createDeviceHookRegistry(i) {
               );
             }
         },
-        Math.min(pS, Math.max(0, r.leaseExpiresAt - i.now())),
+        Math.min(MAX_TIMER_DELAY_MS, Math.max(0, r.leaseExpiresAt - i.now())),
       );
     };
   return {

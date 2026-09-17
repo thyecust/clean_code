@@ -10,17 +10,17 @@
 
 // [preload stripped] 原本在此预载 283 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
-  Vmr,
-  F0t,
-  uHe,
-  Cdr,
-  X1n,
-  vdr,
-  Rdr,
-  $0t,
-  WJt,
-  U0t,
-  Uae,
+  runBackgroundCommand as Vmr,
+  COORDINATOR_FORK_REFUSAL as F0t,
+  spawnBackgroundFork as uHe,
+  snapshotParentTranscript as Cdr,
+  removeSnapshotJobDir as X1n,
+  queueRescueRow as vdr,
+  writeAdoptHandoff as Rdr,
+  forkSessionToBackground as $0t,
+  canBackgroundSession as WJt,
+  BackgroundAndExit as U0t,
+  deriveBackgroundSeed as Uae,
 } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import "./chunk-xmxjyg29.js";
 import "./chunk-jfk5mpe1.js";

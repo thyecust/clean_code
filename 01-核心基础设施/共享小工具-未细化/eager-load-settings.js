@@ -16,7 +16,7 @@ import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js"
 import { profileCheckpoint } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { recordStartupPhase } from "../遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { createTempFilePath } from "../核心工具-路径与平台/temp-directory.js";
-import { Za, elr, n_ } from "../设置-配置/设置-配置.aqbb35ee.js";
+import { invalidateAllSettings, parseSettingsSourcesArg, MAX_SETTINGS_FILE_BYTES } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { getLastFlagValue, isFlagPresent } from "../../02-功能模块/上下文压缩-Compact/cli-args.js";
 import { isNotRegularFileError, readFileSyncText } from "./safe-file-read.js";
 function loadSettingsFromFlag(e) {
@@ -37,12 +37,12 @@ function loadSettingsFromFlag(e) {
       let { resolvedPath: r } = Ro(ae(), e),
         i;
       try {
-        i = readFileSyncText(r, n_);
+        i = readFileSyncText(r, MAX_SETTINGS_FILE_BYTES);
       } catch (o) {
         if (W(o)) return cliError(`Error: Settings file not found: ${r}`);
         if (A(o) === "ERR_FILE_TOO_LARGE")
           return cliError(
-            `Error: Settings file exceeds the ${n_ / 1048576}MiB limit: ${r}`,
+            `Error: Settings file exceeds the ${MAX_SETTINGS_FILE_BYTES / 1048576}MiB limit: ${r}`,
           );
         if (isNotRegularFileError(o) || Nz(o))
           return cliError(`Error: Cannot use settings file (${l(o)}): ${r}`);
@@ -50,7 +50,7 @@ function loadSettingsFromFlag(e) {
       }
       ((s = r), oLn(i));
     }
-    (nLn(s), Za());
+    (nLn(s), invalidateAllSettings());
   } catch (t) {
     if (t instanceof Error)
       n(`Error processing --settings: ${l(t)}`, { level: "error" });
@@ -64,12 +64,12 @@ function c(e) {
       aLn(!0));
     return;
   }
-  (iLn(t), Za());
+  (iLn(t), invalidateAllSettings());
 }
 function g(e) {
   try {
-    let t = elr(e);
-    (bLn(t), Za());
+    let t = parseSettingsSourcesArg(e);
+    (bLn(t), invalidateAllSettings());
   } catch (t) {
     if (t instanceof Error)
       n(`Invalid --setting-sources flag: ${l(t)}`, { level: "error" });

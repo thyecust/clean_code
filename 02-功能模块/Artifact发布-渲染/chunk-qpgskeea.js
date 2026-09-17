@@ -21,22 +21,22 @@ import { getFeatureValueWithSource_CACHED_MAY_BE_STALE, getFeatureValue_CACHED_M
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import {
-  N1e,
-  Am,
-  NXe,
-  MH,
-  iqt,
-  TN,
-  lqt,
-  BZn,
-  nP,
-  Nd,
-  NH,
-  Fd,
-  boe,
-  her,
+  resolveOauthAccountInfo,
+  formatNotAuthenticatedMessage,
+  FRAME_FAMILY_COMMENTS,
+  canRelayFrameFamily,
+  isFrameFamilyRelayGated,
+  isFrameFamilyDeclined,
+  getPrincipalTokenFingerprint,
+  refreshOauthTokenIfAllowed,
+  isFrameRelayAttemptError,
+  artifactFrameHttpClient,
+  LIVE_DOC_ARTIFACT_KIND,
+  buildFrameHeaders,
+  summarizeRequestError,
+  MAX_FRAME_API_RESPONSE_BYTES,
   getShareEntry,
-  IC,
+  readArtifactBoot,
 } from "./chunk-01ymf0ar.js";
 import { ne, kTn } from "./chunk-rr78st95.js";
 import { s } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -198,7 +198,7 @@ function cwe(t, e) {
   return e.account !== void 0 && t.toLowerCase() === e.account;
 }
 function G() {
-  return N1e().info?.accountUuid?.toLowerCase() ?? null;
+  return resolveOauthAccountInfo().info?.accountUuid?.toLowerCase() ?? null;
 }
 var J = new Set();
 function uwe() {
@@ -206,7 +206,7 @@ function uwe() {
     e = t.ownPrincipalTokens;
   if (e.size === 0) return J;
   if (t.ownPrincipalTokenAccount !== G()) return (kTn(t), J);
-  let n = lqt();
+  let n = getPrincipalTokenFingerprint();
   for (let [r, o] of e) if (o !== ee && o !== n) e.delete(r);
   return new Set(e.keys());
 }
@@ -214,9 +214,9 @@ var ee = "relay",
   Re = createLazyValue(() => s().regex(K));
 async function te(t) {
   return (
-    await BZn(t),
+    await refreshOauthTokenIfAllowed(t),
     uwe(),
-    { epoch: ne().ownPrincipalTokenEpoch, account: G(), bearer: lqt() }
+    { epoch: ne().ownPrincipalTokenEpoch, account: G(), bearer: getPrincipalTokenFingerprint() }
   );
 }
 function re(t, e, n, r) {
@@ -225,7 +225,7 @@ function re(t, e, n, r) {
   let c =
     r === "relay"
       ? ee
-      : e.bearer !== null && lqt() === e.bearer && n === e.bearer
+      : e.bearer !== null && getPrincipalTokenFingerprint() === e.bearer && n === e.bearer
         ? e.bearer
         : void 0;
   if (c === void 0) return;
@@ -855,18 +855,18 @@ async function ie(t, e, n, r) {
     c = performance.now(),
     u;
   try {
-    u = await Nd.getRelayBound(`/api/frame/comments/${encodeURIComponent(t)}`, {
+    u = await artifactFrameHttpClient.getRelayBound(`/api/frame/comments/${encodeURIComponent(t)}`, {
       refreshOAuth: !0,
       credentials: r,
-      headers: Fd(),
+      headers: buildFrameHeaders(),
       timeout: 15000,
-      maxContentLength: her,
+      maxContentLength: MAX_FRAME_API_RESPONSE_BYTES,
       signal: e,
       reportSentAuth: !0,
     });
   } catch (d) {
     if (isCancel(d)) throw d;
-    let h = boe(d, c),
+    let h = summarizeRequestError(d, c),
       A = () => (
         logFeatureBad(n, "server_read_request_error", h),
         h.transport
@@ -897,7 +897,7 @@ async function ie(t, e, n, r) {
         result: {
           err:
             u.reason === "no-auth"
-              ? Am(u.detail)
+              ? formatNotAuthenticatedMessage(u.detail)
               : `comments read unavailable: ${u.reason}`,
         },
       }
@@ -976,7 +976,7 @@ async function j7(
     );
   let c;
   if (!o) {
-    let l = await IC(t, r, e, { credentials: n });
+    let l = await readArtifactBoot(t, r, e, { credentials: n });
     if (l.err !== null) {
       let A =
         l.errorCode === "boot_request_error" ||
@@ -991,8 +991,8 @@ async function j7(
         (Array.isArray(l.data.docs) && l.data.docs.length > 0) ||
         (d?.livePaths?.length ?? 0) > 0;
     if (
-      l.data.artifactKind !== NH &&
-      d?.artifactKind !== NH &&
+      l.data.artifactKind !== LIVE_DOC_ARTIFACT_KIND &&
+      d?.artifactKind !== LIVE_DOC_ARTIFACT_KIND &&
       l.data.headSeq === void 0 &&
       !h
     )
@@ -1037,7 +1037,7 @@ function F(t, e) {
   return {
     refreshOAuth: !0,
     credentials: e,
-    headers: Fd(),
+    headers: buildFrameHeaders(),
     timeout: 30000,
     maxContentLength: ye,
     signal: t,
@@ -1066,7 +1066,7 @@ async function Ucn(
     E = performance.now(),
     p;
   try {
-    p = await Nd.postRelayBound(
+    p = await artifactFrameHttpClient.postRelayBound(
       `/api/frame/comments/${encodeURIComponent(t)}/${encodeURIComponent(e)}`,
       {
         text: n,
@@ -1077,10 +1077,10 @@ async function Ucn(
     );
   } catch (R) {
     if (isCancel(R)) throw R;
-    if (nP(R))
+    if (isFrameRelayAttemptError(R))
       return (
         logFeatureBad("artifact_comment_reply", "relay_request_error", {
-          ...boe(R, E),
+          ...summarizeRequestError(R, E),
           ...A,
         }),
         {
@@ -1091,7 +1091,7 @@ async function Ucn(
         }
       );
     return (
-      logFeatureBad("artifact_comment_reply", "request_error", { ...boe(R, E), ...A }),
+      logFeatureBad("artifact_comment_reply", "request_error", { ...summarizeRequestError(R, E), ...A }),
       {
         kind: "error",
         message: "comment reply failed (network error)",
@@ -1114,7 +1114,7 @@ async function Ucn(
         kind: "error",
         message:
           p.reason === "no-auth"
-            ? Am(p.detail)
+            ? formatNotAuthenticatedMessage(p.detail)
             : `comment reply unavailable: ${p.reason}`,
         reason: "transport",
       }
@@ -1214,10 +1214,10 @@ async function Ucn(
 async function rGn(t, e, n) {
   let r;
   try {
-    r = await Nd.postRelayBound(
+    r = await artifactFrameHttpClient.postRelayBound(
       `/api/frame/comments/${encodeURIComponent(t)}/${encodeURIComponent(e)}/summon-status`,
       n,
-      { isBackground: !0, headers: Fd(), timeout: 5000, maxContentLength: ye },
+      { isBackground: !0, headers: buildFrameHeaders(), timeout: 5000, maxContentLength: ye },
     );
   } catch {
     return { kind: "failed", reason: "request_error" };
@@ -1261,7 +1261,7 @@ async function oGn(t) {
   let u = performance.now(),
     l;
   try {
-    l = await Nd.postRelayBound(
+    l = await artifactFrameHttpClient.postRelayBound(
       `/api/frame/comments/${encodeURIComponent(e)}/${encodeURIComponent(n)}/resolve`,
       { resolved: !0, after_version: r },
       F(o, c),
@@ -1269,7 +1269,7 @@ async function oGn(t) {
   } catch (h) {
     if (isCancel(h)) throw h;
     return (
-      logFeatureBad("artifact_comment_resolve", "request_error", boe(h, u)),
+      logFeatureBad("artifact_comment_resolve", "request_error", summarizeRequestError(h, u)),
       {
         kind: "error",
         message: "thread resolve failed (network error)",
@@ -1331,14 +1331,14 @@ async function sGn({ slug: t, threadId: e, credentials: n }, r) {
     };
   let o = (E) =>
       `/api/frame/comments/${encodeURIComponent(t)}/${encodeURIComponent(e)}/${E}`,
-    c = (E) => Nd.post(o(E), { resolved: !0 }, F(r, n)),
+    c = (E) => artifactFrameHttpClient.post(o(E), { resolved: !0 }, F(r, n)),
     u = performance.now(),
-    l = iqt(NXe),
+    l = isFrameFamilyRelayGated(FRAME_FAMILY_COMMENTS),
     d;
   try {
-    if (MH(NXe) && !(l && TN(NXe))) {
+    if (canRelayFrameFamily(FRAME_FAMILY_COMMENTS) && !(l && isFrameFamilyDeclined(FRAME_FAMILY_COMMENTS))) {
       if (
-        ((d = await Nd.postRelayOnly(o("resolve"), { resolved: !0 }, F(r, n))),
+        ((d = await artifactFrameHttpClient.postRelayOnly(o("resolve"), { resolved: !0 }, F(r, n))),
         l && !d.ok && d.reason === "relay-unavailable")
       )
         (logFeatureSad("artifact_comment_session_resolve", "relay_declined", {
@@ -1360,13 +1360,13 @@ async function sGn({ slug: t, threadId: e, credentials: n }, r) {
     }
   } catch (E) {
     if (isCancel(E)) throw E;
-    if (nP(E))
+    if (isFrameRelayAttemptError(E))
       return (
         logFeatureBad("artifact_comment_session_resolve", "relay_request_error"),
         { kind: "error", message: q, reason: "relay_request_error" }
       );
     return (
-      logFeatureBad("artifact_comment_session_resolve", "request_error", boe(E, u)),
+      logFeatureBad("artifact_comment_session_resolve", "request_error", summarizeRequestError(E, u)),
       {
         kind: "error",
         message: "thread resolve failed (network error)",
@@ -1388,7 +1388,7 @@ async function sGn({ slug: t, threadId: e, credentials: n }, r) {
         kind: "error",
         message:
           d.reason === "no-auth"
-            ? Am(d.detail)
+            ? formatNotAuthenticatedMessage(d.detail)
             : `thread resolve unavailable: ${d.reason}`,
         reason: "transport",
       }

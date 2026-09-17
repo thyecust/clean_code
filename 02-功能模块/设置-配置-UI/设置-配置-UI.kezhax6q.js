@@ -45,7 +45,7 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
-import { jn, Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getRemoteTransport, isRemoteActive } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te, formatDuration, formatNumber, formatTokens, formatRelativeTimeAgo, formatResetText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { listedProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
@@ -117,7 +117,7 @@ import { isWebSetupEnabled } from "../斜杠命令-框架/chunk-a4vej95c.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { cE, qm, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { Vi, RZ, jm } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { Table, ModelPicker, SelectableRow } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { ThemePicker } from "../状态栏-主题/theme-picker.js";
@@ -317,14 +317,14 @@ function Vf(Nb, Zu) {
   return [
     Zu > 0 &&
       r(
-        Vi.Row,
+        Table.Row,
         { children: [e(N, { children: " " }), e(N, { children: "" })] },
         `gap-${Zu}`,
       ),
     ...Nb.map((Hu, Bb) => {
       let { label: Lf, value: $b } = Hu;
       return r(
-        Vi.Row,
+        Table.Row,
         {
           children: [
             e(N, { children: Lf !== void 0 ? `${Lf}:` : "" }),
@@ -353,7 +353,7 @@ function Gf(td, Wb) {
 }
 function od({ sessionId: s, cwd: c, accountStatus: m, webSetupStatus: T }) {
   let R = a.CLAUDE_CODE_TMUX_SESSION,
-    v = jn()?.sessionId,
+    v = getRemoteTransport()?.sessionId,
     H = getCurrentSessionDisplayTitle(s) ?? e(t, { dimColor: !0, children: "/rename to add a name" }),
     B = ym(),
     Y = "";
@@ -437,7 +437,7 @@ function nd({ mainLoopModel: s, mcp: c, theme: m, context: T }) {
   return [
     { label: "Model", value: uUn(s) },
     ...nUn(),
-    ...(Pt()
+    ...(isRemoteActive()
       ? []
       : [
           ...rUn(c.clients, T.options.ideInstallationStatus, m),
@@ -449,7 +449,7 @@ function nd({ mainLoopModel: s, mcp: c, theme: m, context: T }) {
 }
 async function xr(s, c, m) {
   return (
-    await Promise.all([aUn(), cUn(c), lUn(c), Pt() ? [] : sUn(s, c, m)])
+    await Promise.all([aUn(), cUn(c), lUn(c), isRemoteActive() ? [] : sUn(s, c, m)])
   ).flat();
 }
 function Dr(vb) {
@@ -627,13 +627,13 @@ function Tr(Hu) {
     _f;
   if (Qs[9] === MEMO_CACHE_SENTINEL)
     ((_f =
-      Pt() &&
+      isRemoteActive() &&
       r(t, {
         dimColor: !0,
         children: [
           "Model and cwd are the",
           " ",
-          jn()?.sessionId ? "cloud" : "remote",
+          getRemoteTransport()?.sessionId ? "cloud" : "remote",
           " session's; the other rows describe this terminal. /mcp asks the session too.",
         ],
       })),
@@ -651,7 +651,7 @@ function Tr(Hu) {
     ((Of = r(o, {
       flexDirection: "column",
       gap: 1,
-      children: [_f, e(Vi, { columns: Pf, children: Cr })],
+      children: [_f, e(Table, { columns: Pf, children: Cr })],
     })),
       (Qs[13] = Cr),
       (Qs[14] = Of));
@@ -1110,7 +1110,7 @@ function ea(qC) {
     ((Yr = co.map((Md, JC) => {
       let qr = JC === Zn;
       return r(
-        jm,
+        SelectableRow,
         {
           active: qr,
           children: [
@@ -1420,9 +1420,9 @@ function ga({
     [nr, Lp] = d(1),
     Tu = Math.min(44, Math.max(14, ro - 16)),
     Np = R ?? Math.min(Math.floor(Fn * 0.8), 30),
-    Us = !Pt()
+    Us = !isRemoteActive()
       ? null
-      : jn()?.sessionId !== void 0
+      : getRemoteTransport()?.sessionId !== void 0
         ? "Changes here update this machine's settings and future cloud sessions, not the running one."
         : "Changes here update this machine's settings, not the running remote session.",
     Bp = Us === null ? 0 : Math.ceil((Us.length + 2) / Math.max(1, ro - 4)),
@@ -2080,7 +2080,7 @@ function ga({
         : Fe === "Model"
           ? r(N, {
               children: [
-                e(RZ, {
+                e(ModelPicker, {
                   initial: Ws,
                   sessionModel: $p,
                   skipSettingsWrite: !0,
@@ -2283,7 +2283,7 @@ function ga({
                                 children: Vn.map((k, oe) => {
                                   let ne = oe === sr;
                                   return r(
-                                    jm,
+                                    SelectableRow,
                                     {
                                       active: ne,
                                       children: [
@@ -2650,7 +2650,7 @@ function ga({
                                                                 ),
                                                               }),
                                                             }),
-                                                          r(jm, {
+                                                          r(SelectableRow, {
                                                             active: le,
                                                             children: [
                                                               e(o, {
@@ -4296,7 +4296,7 @@ function Pi() {
   else Uh = ll[0];
   let v0 = Uh,
     Wh;
-  if (ll[1] === MEMO_CACHE_SENTINEL) ((Wh = jn()), (ll[1] = Wh));
+  if (ll[1] === MEMO_CACHE_SENTINEL) ((Wh = getRemoteTransport()), (ll[1] = Wh));
   else Wh = ll[1];
   let x0 = Wh !== null,
     jh,
@@ -4440,7 +4440,7 @@ function Bl(R0) {
   return Jh;
 }
 async function Im() {
-  let s = jn();
+  let s = getRemoteTransport();
   if (!s) return "Remote cost unavailable";
   try {
     return (await s.sendControlRequest({ subtype: "get_session_cost" })).text;

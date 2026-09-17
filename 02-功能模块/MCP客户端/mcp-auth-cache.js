@@ -19,7 +19,7 @@ import { jt, wQ } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { rc } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { buildMcpToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
   sanitizeDisplayTextWithoutRedaction,
   sanitizeDisplayTextWithRedaction,
@@ -32,7 +32,7 @@ import {
   mcpDialBlockCause,
   isMcpServerDisabled,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { tfe, IH } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { isReplMcpRoutingEnabled, hasReplMcpRouting } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
 import { formatPolicyBlockedMessage, formatProjectApprovalMessage } from "./mcp-server-state-messages.js";
 import { ir } from "./chunk-g4gdwpa0.js";
@@ -133,12 +133,12 @@ function createMcpAuthStubTools(t, e) {
   return [j(t, e), B(t, e)];
 }
 function k(t) {
-  return (t !== void 0 ? IH(t) : tfe())
+  return (t !== void 0 ? hasReplMcpRouting(t) : isReplMcpRoutingEnabled())
     ? "callable inside the REPL environment (this surface routes MCP tools through the REPL rather than advertising them as top-level tools)"
     : "available automatically";
 }
 function O(t) {
-  return IH(t)
+  return hasReplMcpRouting(t)
     ? "The server's tools are now callable inside the REPL environment (this surface routes MCP tools through the REPL rather than advertising them as top-level tools)."
     : "The server's tools should now be available.";
 }
@@ -151,7 +151,7 @@ function j(t, e) {
       "Call this tool to start the OAuth flow \u2014 you'll receive an authorization URL to share with the user. " +
       `Once the user completes authorization in their browser, the server's real tools will become ${k()}.`;
   return {
-    name: rc(t, AUTHENTICATE_TOOL_NAME),
+    name: buildMcpToolName(t, AUTHENTICATE_TOOL_NAME),
     isMcp: !0,
     mcpInfo: { serverName: t, toolName: AUTHENTICATE_TOOL_NAME, serverType: r, isAuthStub: !0 },
     isEnabled: () => !0,
@@ -272,7 +272,7 @@ function j(t, e) {
       try {
         let o = await Promise.race([_, R.then(() => null)]);
         if (o) {
-          let A = rc(t, COMPLETE_AUTHENTICATION_TOOL_NAME),
+          let A = buildMcpToolName(t, COMPLETE_AUTHENTICATION_TOOL_NAME),
             S = x(o),
             C = I()
               ? `
@@ -314,13 +314,13 @@ Once they complete the flow, the server's tools will become ${k(i.options.tools)
   };
 }
 function B(t, e) {
-  let r = rc(t, AUTHENTICATE_TOOL_NAME),
+  let r = buildMcpToolName(t, AUTHENTICATE_TOOL_NAME),
     g =
       `Complete an in-progress OAuth flow for the "${sanitizeDisplayTextWithoutRedaction(t)}" MCP server by submitting the callback URL. Call \`${r}\` first to start the flow and get the authorization URL. ` +
       "After the user authorizes in their browser, the browser is redirected to a `http://localhost:<port>/callback?code=...&state=...` URL \u2014 " +
       "on remote sessions that page fails to load, but the URL in the address bar is still valid. Pass that full URL here as `callback_url`.";
   return {
-    name: rc(t, COMPLETE_AUTHENTICATION_TOOL_NAME),
+    name: buildMcpToolName(t, COMPLETE_AUTHENTICATION_TOOL_NAME),
     isMcp: !0,
     mcpInfo: {
       serverName: t,

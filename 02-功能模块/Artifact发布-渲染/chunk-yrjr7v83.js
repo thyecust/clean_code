@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ArtifactInputError, TITLE_SCAN_CHARS, extractThumbnailLinks, sweepResultLineText, scrubArtifactEnvelopeTags, sweptAskPath } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { JE, MAX_ARTIFACT_BYTES, isFrameDeclaredThumbnailEnabled, fer, mer, pFe, ger } from "./chunk-01ymf0ar.js";
+import { ARTIFACT_CAPABILITY_KEY, MAX_ARTIFACT_BYTES, isFrameDeclaredThumbnailEnabled, MAX_THUMBNAIL_BYTES, validateThumbnailHref, isPathWithinAnyRoot, readThumbnailFileContent } from "./chunk-01ymf0ar.js";
 import { FORMAT_PARAGRAPH, SKELETON_SENTENCES, TITLE_PARAGRAPH, COMMENTS_OFF_SENTENCE } from "./chunk-pdd7kz7p.js";
 import { FS } from "./chunk-qpgskeea.js";
 import { noWatchRailCollabNote } from "./chunk-b6k1z7an.js";
@@ -94,7 +94,7 @@ function $Ge(e, i) {
     let n = t[r];
     if (n === void 0) continue;
     let l = n.startsWith("./") ? n.slice(2) : n,
-      o = mer(l);
+      o = validateThumbnailHref(l);
     if ("errMsg" in o) {
       a.problems.push(o.errMsg);
       continue;
@@ -108,7 +108,7 @@ function Hut(e) {
 }
 function Ejn(e, i, t) {
   if (e.problems.length > 0) return [];
-  return [e.light, e.dark].filter((a) => a !== void 0 && pFe(a.fromAbs, i, t));
+  return [e.light, e.dark].filter((a) => a !== void 0 && isPathWithinAnyRoot(a.fromAbs, i, t));
 }
 function S(e) {
   return `${Math.ceil(e / 1000)} kB`;
@@ -123,7 +123,7 @@ function w(e, i) {
     throw h(
       `thumbnail ${t} is not a PNG or JPEG image (its bytes match neither format) \u2014 save the image as PNG or JPEG, or remove the <link rel="artifact-thumbnail"> tag`,
     );
-  if (i.length > fer)
+  if (i.length > MAX_THUMBNAIL_BYTES)
     throw h(
       `thumbnail ${t} is ${S(i.length)}, over the 1 MB thumbnail limit \u2014 export a smaller image (about 1200\xD7630)`,
     );
@@ -169,7 +169,7 @@ async function Ajn(e, i, t, a) {
       );
       continue;
     }
-    let c = await ger(n.href, n.fromAbs, t, a);
+    let c = await readThumbnailFileContent(n.href, n.fromAbs, t, a);
     if ("errMsg" in c) {
       if (c.missing)
         throw h(
@@ -199,7 +199,7 @@ function Iut(e) {
   return `**Runtime capabilities**: depending on what is enabled for this user, a published page can do more than static HTML \u2014 read the user's live or connected data, remember what people do on it (a poll, a sign-up sheet, a checklist, a document edited in place \u2014 the page saves new versions of itself), keep state shared across viewers, know who is viewing, ask Claude a question of its own, store files people add, or hand the viewer a file to save \u2014 declared via the \`capabilities\` input. **Whenever any of that would make the page more useful, you MUST load the \`${ARTIFACT_CAPABILITIES_SKILL_NAME}\` skill BEFORE writing the artifact, and always before passing \`capabilities\` or writing any \`window.claude.*\` runtime code** \u2014 it tells you what's available to this user and how to use it. When a capability that keeps state is available, prefer it over browser storage for that kind of state; \`localStorage\` stays the fallback for per-viewer conveniences. Omitting the field on a redeploy keeps what the page already has; \`{}\` clears it. A page that saves new versions of itself ${e === "none" ? "moves your local file behind it \u2014 your next publish of it then conflicts" : "reaches this session like any other republish \u2014 a republish notice on a watched artifact, or a conflict on your next publish of it \u2014 and your local file is then behind"}: re-read, merge, republish.`;
 }
 function Put() {
-  return `**Pages that keep their state**: a page this user publishes can save new versions of itself \u2014 the artifact publish capability, declared as \`${JE}\` \u2014 so a checklist, tracker, plan, or poll keeps its editors' changes for whoever opens it. If people will change things on the page itself (tick items off, edit entries), or fellow editors should fill it in, build it to save itself; load the \`${ARTIFACT_CAPABILITIES_SKILL_NAME}\` skill first for the how-to. A page only read needs none of this.`;
+  return `**Pages that keep their state**: a page this user publishes can save new versions of itself \u2014 the artifact publish capability, declared as \`${ARTIFACT_CAPABILITY_KEY}\` \u2014 so a checklist, tracker, plan, or poll keeps its editors' changes for whoever opens it. If people will change things on the page itself (tick items off, edit entries), or fellow editors should fill it in, build it to save itself; load the \`${ARTIFACT_CAPABILITIES_SKILL_NAME}\` skill first for the how-to. A page only read needs none of this.`;
 }
 function Out() {
   return ' Watching for new comments isn\'t available in this session, so none reach it on their own: read them with `action: "comments"` when the user asks, and if the user expects you to notice comments as they arrive, say so plainly.';

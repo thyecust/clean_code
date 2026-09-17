@@ -22,11 +22,11 @@ import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { NONINTERACTIVE_GIT_ENV, applyGitConfigEnv, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { GITHUB_HOST, GITHUB_SSH_URL_PREFIXES } from "../共享小工具-未细化/git-host-utils.js";
 import { setAgentProxyNote, isShuttingDown, MAX_PROXY_FAILURE_HISTORY, setAgentProxyStatusUrl, recordAgentProxyFailure } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { kIn } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isRetryableFsError } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { c2e, u2e, qlr, zlr, PEM_CERT_BLOCK_RE, getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { getSessionAccessToken } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
 import { o6 } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
-import { eqt, Swn } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import { AGENT_PROXY_PATH, setAgentProxyEndpoint } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { computeRetryDelayMs } from "../核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import { BASE_CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_BUNDLE_ENV_VARS, CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../共享小工具-未细化/ca-trust-env-vars.js";
 import { decodeProtoFields } from "../共享小工具-未细化/protobuf-decoding.js";
@@ -1876,7 +1876,7 @@ class wt {
     (this.generation++,
       (this.state = { enabled: !1, noProxy: Se }),
       setAgentProxyNote(void 0),
-      Swn(void 0),
+      setAgentProxyEndpoint(void 0),
       setAgentProxyStatusUrl(void 0),
       this.relay?.stop(),
       (this.relay = void 0));
@@ -2061,7 +2061,7 @@ async function Tt(t, e) {
   let M = N.ccrCa;
   if (!w) await Vn(O?.awsConfigPath ?? I(ve(), ".aws", "config"));
   try {
-    let G = d.replace(/^http/, "ws") + eqt + "/ws",
+    let G = d.replace(/^http/, "ws") + AGENT_PROXY_PATH + "/ws",
       X = I(m, "..", "README.md"),
       K = p ?? c ?? "",
       P = await Ke({
@@ -2112,7 +2112,7 @@ async function Tt(t, e) {
             }
       );
     if ((o.activate(H, P), !T && !s && !w))
-      Swn({ proxyUrl: $e(P.port), ca: Ct(_, M) });
+      setAgentProxyEndpoint({ proxyUrl: $e(P.port), ca: Ct(_, M) });
     if (w) {
       let C = !1,
         [ie, ae] = await Promise.all([
@@ -2775,7 +2775,7 @@ async function Kn(t, e, o, { budgetMs: r, tries: s }) {
   for (let m = 0; m < s; m++) {
     u = null;
     try {
-      let h = await fetch(`${t}${eqt}/ca-cert`, { signal: p });
+      let h = await fetch(`${t}${AGENT_PROXY_PATH}/ca-cert`, { signal: p });
       if (h.status >= 500 || h.status === 408 || h.status === 429) {
         ((c = `status ${h.status}`), (u = h.headers.get("retry-after")));
         continue;
@@ -2795,7 +2795,7 @@ async function Kn(t, e, o, { budgetMs: r, tries: s }) {
         (await Pe(I(o, ".."), { recursive: !0 }), await writeFileAtomic(o, Ct(e, _)));
       } catch (w) {
         let T = `ca-bundle write failed (${l(w)})`;
-        if (kIn(w)) return { outcome: "retry", detail: T, retryAfter: null };
+        if (isRetryableFsError(w)) return { outcome: "retry", detail: T, retryAfter: null };
         return { outcome: "fatal", code: "write_failed", detail: T };
       }
       return { outcome: "ok", ccrCa: _ };

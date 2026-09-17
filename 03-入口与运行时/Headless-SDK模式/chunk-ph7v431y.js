@@ -14,7 +14,7 @@ import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { stripAnsi, formatSingleLineText, MAX_DESCRIPTION_LENGTH, MARKDOWN_SYNTAX_CHARS } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { iy, gc } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
-import { IT } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { sanitizeMachineName } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { formatRefusalFallbackSwitchMessage, deserializeCompactMetadata, createAttachmentMessage, createAssistantMessage, createUserMessage, isExternalMessageOrigin } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { xZ, Pst } from "../../02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js";
 import { isSameRemoteAutocompactState } from "../../01-核心基础设施/共享小工具-未细化/remote-autocompact-state.js";
@@ -521,7 +521,7 @@ function kZ(e, s) {
             {
               type: "tool_host_result_lines",
               toolUseID: e.tool_use_id,
-              host: IT(typeof e.host?.name === "string" ? e.host.name : ""),
+              host: sanitizeMachineName(typeof e.host?.name === "string" ? e.host.name : ""),
               lines: t,
               ...(l !== void 0 && { label: l }),
               ...(a && { unverified: !0 }),

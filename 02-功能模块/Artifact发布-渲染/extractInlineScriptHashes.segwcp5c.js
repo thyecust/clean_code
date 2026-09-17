@@ -26,7 +26,7 @@ import {
   vYe,
 } from "./chunk-rr78st95.js";
 import { TAn } from "../../00-第三方库/_未识别/第三方库-parse5/chunk-psby6rnv.js";
-import { sFe } from "./chunk-01ymf0ar.js";
+import { isSafeExternalUrl } from "./chunk-01ymf0ar.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 var S = new RegExp(`^${Hoe}$`),
   W = "http://www.w3.org/2000/svg",
@@ -165,7 +165,7 @@ function G(e, t, h, s) {
     if (l === "srcset") {
       for (let v of n.value.split(",")) {
         let w = v.trim().split(/\s+/)[0];
-        if (w !== void 0 && w !== "" && !sFe(w))
+        if (w !== void 0 && w !== "" && !isSafeExternalUrl(w))
           a.push({
             rule: "unsafe-url",
             where: o(e, t.snippets),
@@ -176,7 +176,7 @@ function G(e, t, h, s) {
     }
     if (r && (l === "href" || l === "xlink:href")) {
       if (O.has(i)) {
-        if (!sFe(n.value))
+        if (!isSafeExternalUrl(n.value))
           a.push({
             rule: "unsafe-url",
             where: o(e, t.snippets),
@@ -190,7 +190,7 @@ function G(e, t, h, s) {
         });
       continue;
     }
-    if (T.has(l) && !sFe(n.value))
+    if (T.has(l) && !isSafeExternalUrl(n.value))
       a.push({
         rule: "unsafe-url",
         where: o(e, t.snippets),

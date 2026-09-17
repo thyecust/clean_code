@@ -11,7 +11,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { tu } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { omitBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { checkWebSocketEgress } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
@@ -39,7 +39,7 @@ import {
   isPrivateOrReservedIpAddress,
   startBackgroundShellTask,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Ys } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { isBashToolAvailable } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { formatSubprotocolSuffix, formatSubprotocolList } from "../../01-核心基础设施/共享小工具-未细化/websocket-subprotocols.js";
 import { generateTaskId, createPendingTask } from "../Teammates团队/chunk-mrfx53ye.js";
 import { getMonitorPushNotificationHint, isMonitorToolEnabled, getMonitorToolDescription, MONITOR_WS_SOURCE_HELP } from "./monitor-tool-description.js";
@@ -158,7 +158,7 @@ async function Hqe(e, t) {
     }),
     I = getWebSocketProxyUrl(M),
     D = await J(M, { proxy: I, tls: getWebSocketTLSOptions() }),
-    A = tu(e.headers ?? {}, (l, i) => i.toLowerCase() === "host"),
+    A = omitBy(e.headers ?? {}, (l, i) => i.toLowerCase() === "host"),
     g = new F(D.url, k, {
       proxy: I,
       headers: { ...A, ...D.headers },
@@ -606,7 +606,7 @@ var be = {
       return e?.description ? `Monitoring: ${e.description}` : "Monitoring";
     },
     isEnabled() {
-      return isMonitorToolEnabled() && Ys();
+      return isMonitorToolEnabled() && isBashToolAvailable();
     },
     isConcurrencySafe() {
       return !0;

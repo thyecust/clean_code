@@ -19,7 +19,7 @@ import { Bs, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
 import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
 import { decodeTaggedId } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
-var Pae = {
+var RUNNER_VERSION = {
     ISSUES_EXPLAINER:
       "report the issue at https://github.com/anthropics/claude-code/issues",
     PACKAGE_URL: "@anthropic-ai/claude-code",
@@ -33,12 +33,12 @@ var Pae = {
     DD_SOURCEMAP_GROUP: "darwin",
   }.VERSION.replace(/^v/, "").split(/[-+]/)[0],
   Ie = /^[a-zA-Z0-9_-]+$/,
-  zYt = 1e4,
+  POLL_WORK_TIMEOUT_MS = 1e4,
   Se = 256;
 function we(e) {
   return typeof e === "string" && e.length <= Se && Ie.test(e);
 }
-function qL(e, n) {
+function assertSafeIdentifier(e, n) {
   if (!we(e))
     throw Error(
       `Invalid ${n}: contains unsafe characters or exceeds ${Se} characters`,
@@ -50,7 +50,7 @@ function le(e) {
     Authorization: `Bearer ${e}`,
     "Content-Type": "application/json",
     "anthropic-version": "2023-06-01",
-    "x-self-hosted-runner-version": Pae,
+    "x-self-hosted-runner-version": RUNNER_VERSION,
   };
 }
 function Q(e) {
@@ -58,7 +58,7 @@ function Q(e) {
     Authorization: `Bearer ${e}`,
     "Content-Type": "application/json",
     "anthropic-version": "2023-06-01",
-    "x-self-hosted-runner-version": Pae,
+    "x-self-hosted-runner-version": RUNNER_VERSION,
   };
 }
 function ee(e) {
@@ -130,7 +130,7 @@ function I(e, n, o) {
       );
   }
 }
-function P_e(e) {
+function getHttpStatusFromError(e) {
   if (e !== null && typeof e === "object") {
     let n = e;
     if (typeof n.httpStatus === "number") return n.httpStatus;
@@ -138,30 +138,30 @@ function P_e(e) {
   }
   return;
 }
-function Yxe(e) {
+function shouldRetryRequest(e) {
   if (e !== null && typeof e === "object") {
     let o = e;
     if (o.name === "AbortError" || o.code === "ERR_CANCELED") return !1;
   }
-  let n = P_e(e);
+  let n = getHttpStatusFromError(e);
   return n === void 0 || n === 429 || n >= 500;
 }
-var qHt = ["transport", "timeout", "5xx", "429", "4xx"];
-function Kje(e) {
+var POLL_ERROR_KINDS = ["transport", "timeout", "5xx", "429", "4xx"];
+function classifyPollError(e) {
   if (e !== null && typeof e === "object") {
     let o = e.code;
     if (o === "ECONNABORTED" || o === "ETIMEDOUT") return "timeout";
   }
-  let n = P_e(e);
+  let n = getHttpStatusFromError(e);
   if (n === void 0) return "transport";
   if (n >= 500) return "5xx";
   if (n === 429) return "429";
   return "4xx";
 }
-function fot() {
+function createEmptyPollErrorCounts() {
   return { transport: 0, timeout: 0, "5xx": 0, 429: 0, "4xx": 0 };
 }
-function mot(e) {
+function createRunnerApiClient(e) {
   function n(r) {
     e.onDebug?.(r);
   }
@@ -170,7 +170,7 @@ function mot(e) {
   return {
     async registerRunner(r, t) {
       n("[runner:api] POST /v1/code/runners/self-hosted/runners/register");
-      let s = { runner_version: Pae };
+      let s = { runner_version: RUNNER_VERSION };
       if (r) s.client_label = r;
       if (t) s.lock_to_account_id = t;
       let a = await at.post(
@@ -184,7 +184,7 @@ function mot(e) {
       );
       return (
         I(a.status, a.data, "RegisterRunner"),
-        qL(a.data.runner_id, "runner_id"),
+        assertSafeIdentifier(a.data.runner_id, "runner_id"),
         n(
           `[runner:api] RegisterRunner -> ${a.status} runner_id=${a.data.runner_id}`,
         ),
@@ -247,7 +247,7 @@ function mot(e) {
         n(`[runner:api] NackSpawnHint -> ${a.status}`));
     },
     async pollWork(r, t, s, a, i, d) {
-      qL(t, "runnerId");
+      assertSafeIdentifier(t, "runnerId");
       let p = o;
       o = 0;
       let m = await at.post(
@@ -259,7 +259,7 @@ function mot(e) {
         },
         {
           headers: Q(r),
-          timeout: zYt,
+          timeout: POLL_WORK_TIMEOUT_MS,
           signal: a,
           validateStatus: (E) => E < 500,
         },
@@ -296,7 +296,7 @@ function mot(e) {
       };
     },
     async issueSessionToken(r, t, s) {
-      qL(t, "sessionId");
+      assertSafeIdentifier(t, "sessionId");
       let a = `/v1/code/runners/self-hosted/sessions/${encodeURIComponent(t)}/token`;
       n(`[runner:api] POST ${a}`);
       let i = await at.post(
@@ -314,7 +314,7 @@ function mot(e) {
       return (n(`[runner:api] IssueSessionToken -> ${i.status}`), i.data);
     },
     async reportSessionFailure(r, t, s, a, i) {
-      (qL(t, "sessionId"),
+      (assertSafeIdentifier(t, "sessionId"),
         n(
           `[runner:api] POST /v1/code/runners/self-hosted/sessions/${t}/report-failure reason=${s}${a ? ` kind=${a}` : ""}${i ? ` cause=${i}` : ""}`,
         ));
@@ -336,7 +336,7 @@ function mot(e) {
       );
     },
     async releaseSession(r, t) {
-      (qL(t, "sessionId"),
+      (assertSafeIdentifier(t, "sessionId"),
         n(
           `[runner:api] POST /v1/code/runners/self-hosted/sessions/${t}/release`,
         ));
@@ -374,7 +374,7 @@ function mot(e) {
       return (n(`[runner:api] RefreshToken -> ${t.status}`), t.data);
     },
     async getSessionRemoteConfig(r, t, s) {
-      (qL(r, "sessionId"), n(`[runner:api] GET /v1/code/sessions/${r}/remote`));
+      (assertSafeIdentifier(r, "sessionId"), n(`[runner:api] GET /v1/code/sessions/${r}/remote`));
       let a = await at.get(`${e.baseUrl}/v1/code/sessions/${r}/remote`, {
         headers: ee(t),
         timeout: 15000,
@@ -392,7 +392,7 @@ function mot(e) {
       };
     },
     async registerWorker(r, t, s, a) {
-      (qL(t, "sessionId"),
+      (assertSafeIdentifier(t, "sessionId"),
         n(`[runner:api] POST ${r}/v1/code/sessions/${t}/worker/register`));
       let i = await at.post(
         `${r}/v1/code/sessions/${t}/worker/register`,
@@ -416,7 +416,7 @@ function mot(e) {
       );
     },
     async postWorkerEvents(r, t, s, a, i, d) {
-      (qL(t, "sessionId"),
+      (assertSafeIdentifier(t, "sessionId"),
         n(
           `[runner:api] POST ${r}/v1/code/sessions/${t}/worker/events (${i.length} ${pluralize(i.length, "event")})`,
         ));
@@ -434,7 +434,7 @@ function mot(e) {
         n(`[runner:api] PostWorkerEvents -> ${p.status}`));
     },
     async updateSessionWorkerState(r, t, s, a, i, d) {
-      (qL(t, "sessionId"),
+      (assertSafeIdentifier(t, "sessionId"),
         n(`[runner:api] PUT ${r}/v1/code/sessions/${t}/worker`));
       let p = await at.put(
         `${r}/v1/code/sessions/${t}/worker`,
@@ -452,7 +452,7 @@ function mot(e) {
         n(`[runner:api] UpdateSessionWorkerState -> ${p.status}`));
     },
     async heartbeat(r, t, s, a, i) {
-      qL(t, "sessionId");
+      assertSafeIdentifier(t, "sessionId");
       let d = await at.post(
         `${r}/v1/code/sessions/${t}/worker/heartbeat`,
         { worker_epoch: a },
@@ -466,7 +466,7 @@ function mot(e) {
       I(d.status, d.data, "Heartbeat");
     },
     async forwardDiagnostics(r, t, s, a, i) {
-      if ((qL(t, "sessionId"), i.length === 0)) return;
+      if ((assertSafeIdentifier(t, "sessionId"), i.length === 0)) return;
       n(
         `[runner:api] POST ${r}/v1/code/sessions/${t}/worker/diagnostics (${i.length} lines)`,
       );
@@ -480,20 +480,20 @@ function mot(e) {
     },
   };
 }
-var T8 = "unknown",
-  VYt = /^[A-Za-z0-9_.-]{1,64}$/;
-function O_e(e) {
+var UNKNOWN_CLIENT_PLATFORM = "unknown",
+  CLIENT_PLATFORM_PATTERN = /^[A-Za-z0-9_.-]{1,64}$/;
+function normalizeClientPlatform(e) {
   if (
     !e ||
     e === "unknown" ||
-    !VYt.test(e) ||
+    !CLIENT_PLATFORM_PATTERN.test(e) ||
     e.startsWith("-") ||
     /^\.{1,2}$/.test(e)
   )
     return;
   return e;
 }
-function Xje(e) {
+function escapeLogValue(e) {
   return Array.from(e.slice(0, 128))
     .map((n) =>
       /[A-Za-z0-9_.-]/.test(n) ? n : `\\u{${n.codePointAt(0).toString(16)}}`,
@@ -502,14 +502,14 @@ function Xje(e) {
 }
 import { createServer as Me } from "http";
 var te = [1, 2.5, 5, 10, 20, 40, 80, 160, 320, 640, 1280];
-function _Nn() {
+function createDurationHistogram() {
   return { buckets: te.map(() => 0), count: 0, sum: 0 };
 }
-function yNn(e, n) {
+function observeDuration(e, n) {
   ((e.sum += n), (e.count += 1));
   for (let o = 0; o < te.length; o++) if (n <= te[o]) e.buckets[o]++;
 }
-function RB(e) {
+function escapePrometheusLabelValue(e) {
   return e.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n");
 }
 function Pe(e) {
@@ -518,7 +518,7 @@ function Pe(e) {
 var ke = "claude_code_self_hosted_runner";
 function Be(e, n = Date.now()) {
   let o = e.lastPollAt > 0 ? (n - e.lastPollAt) / 1000 : 0,
-    u = `runner_id="${RB(e.runnerId)}",version="${RB(e.version)}",client_label="${RB(e.clientLabel)}"`,
+    u = `runner_id="${escapePrometheusLabelValue(e.runnerId)}",version="${escapePrometheusLabelValue(e.version)}",client_label="${escapePrometheusLabelValue(e.clientLabel)}"`,
     r = ke,
     t = "";
   ((t += `# HELP ${r}_info Self-hosted runner identity (info-style gauge; value is always 1).
@@ -550,7 +550,7 @@ function Be(e, n = Date.now()) {
       (t += `# TYPE ${r}_${a} counter
 `));
     for (let [p, m] of i)
-      t += `${r}_${a}{client_platform="${RB(p)}"} ${m}
+      t += `${r}_${a}{client_platform="${escapePrometheusLabelValue(p)}"} ${m}
 `;
   }
   if (
@@ -560,7 +560,7 @@ function Be(e, n = Date.now()) {
 `),
     e.lockedAccountEmail !== null)
   )
-    t += `${r}_locked_account{email="${RB(e.lockedAccountEmail)}"} 1
+    t += `${r}_locked_account{email="${escapePrometheusLabelValue(e.lockedAccountEmail)}"} 1
 `;
   ((t += `# HELP ${r}_last_poll_age_seconds Seconds since the last successful pollWork return.
 `),
@@ -572,7 +572,7 @@ function Be(e, n = Date.now()) {
 `),
     (t += `# TYPE ${r}_poll_errors_total counter
 `));
-  for (let a of qHt)
+  for (let a of POLL_ERROR_KINDS)
     t += `${r}_poll_errors_total{error_kind="${a}"} ${e.pollErrors[a]}
 `;
   ((t += `# HELP ${r}_initializing_sessions Sessions currently in the init phase (handleSession entry to child system/init).
@@ -613,8 +613,8 @@ function Be(e, n = Date.now()) {
 `));
   for (let [a, i] of e.sessionIdle) {
     let d = i === null ? 0 : ((n - i) / 1000).toFixed(3),
-      p = e.sessionClientPlatform.get(a) ?? T8;
-    t += `${r}_session_idle_seconds{session_id="${RB(a)}",client_platform="${RB(p)}"} ${d}
+      p = e.sessionClientPlatform.get(a) ?? UNKNOWN_CLIENT_PLATFORM;
+    t += `${r}_session_idle_seconds{session_id="${escapePrometheusLabelValue(a)}",client_platform="${escapePrometheusLabelValue(p)}"} ${d}
 `;
   }
   for (let [a, i] of e.childMetrics ?? []) {
@@ -670,7 +670,7 @@ function ze(e, n) {
           }
           let k =
               T.length > 0
-                ? `{${T.map(([D, Z]) => `${D}="${RB(Z)}"`).join(",")}}`
+                ? `{${T.map(([D, Z]) => `${D}="${escapePrometheusLabelValue(Z)}"`).join(",")}}`
                 : "",
             O =
               typeof _.asDouble === "number"
@@ -685,10 +685,10 @@ function ze(e, n) {
       }
   }
 }
-function SNn(e, n) {
+function deleteSessionChildMetrics(e, n) {
   let o = e.childMetrics;
   if (o === void 0) return;
-  let u = `session_id="${RB(n)}"`;
+  let u = `session_id="${escapePrometheusLabelValue(n)}"`;
   for (let [r, t] of o) {
     for (let s of t.points.keys()) if (s.includes(u)) t.points.delete(s);
     if (t.points.size === 0) o.delete(r);
@@ -706,7 +706,7 @@ function be(e) {
   if (typeof e.boolValue === "boolean") return String(e.boolValue);
   return;
 }
-function bNn(e, n, o) {
+function startMetricsServer(e, n, o) {
   let u = Me((t, s) => {
     if (t.method === "POST" && t.url === "/v1/metrics") {
       let p = t.socket.remoteAddress;
@@ -797,8 +797,8 @@ import { resolve } from "path";
 import { createServer as We, connect as Xe } from "net";
 import { connect as Ge } from "tls";
 var ge = ["https_proxy", "HTTPS_PROXY", "http_proxy", "HTTP_PROXY"],
-  got = "SELF_HOSTED_RUNNER_PROXY_AUTHORIZATION_COMMAND",
-  hot = "SELF_HOSTED_RUNNER_PROXY_AUTHORIZATION_FILE",
+  PROXY_AUTHORIZATION_COMMAND_ENV_VAR = "SELF_HOSTED_RUNNER_PROXY_AUTHORIZATION_COMMAND",
+  PROXY_AUTHORIZATION_FILE_ENV_VAR = "SELF_HOSTED_RUNNER_PROXY_AUTHORIZATION_FILE",
   Ke = "claude-self-hosted-runner";
 class X extends Error {
   constructor(e) {
@@ -1734,12 +1734,12 @@ function gt(e = process.env) {
   for (let u of ge) if (u in n.original) o[u] = n.original[u];
   return o;
 }
-function wNn(e = process.env) {
+function buildSessionProxyEnvOverrides(e = process.env) {
   let n = _e().active;
   if (!n) return {};
   let o = {
-    [got]: void 0,
-    [hot]: void 0,
+    [PROXY_AUTHORIZATION_COMMAND_ENV_VAR]: void 0,
+    [PROXY_AUTHORIZATION_FILE_ENV_VAR]: void 0,
     NO_PROXY: e.NO_PROXY,
     no_proxy: e.no_proxy,
     CLAUDE_CODE_ENABLE_PROXY_AUTH_HELPER: void 0,
@@ -1757,8 +1757,8 @@ function _t(e, n = process.env) {
     throw Error(
       "--proxy-authorization-command / --proxy-authorization-file must not be empty",
     );
-  let o = (e.command ?? n[got])?.trim(),
-    u = (e.file ?? n[hot])?.trim(),
+  let o = (e.command ?? n[PROXY_AUTHORIZATION_COMMAND_ENV_VAR])?.trim(),
+    u = (e.file ?? n[PROXY_AUTHORIZATION_FILE_ENV_VAR])?.trim(),
     r = u ? resolve(u) : u,
     t = o !== void 0 && o !== "",
     s = r !== void 0 && r !== "";
@@ -1770,7 +1770,7 @@ function _t(e, n = process.env) {
   if (s) return { kind: "file", path: r };
   return;
 }
-function TNn(e, n = process.env) {
+function resolveProxyAuthorizationConfig(e, n = process.env) {
   let o = _t(e, n);
   if (!o) return;
   let u = getUsableProxyUrl(n),
@@ -1785,7 +1785,7 @@ function TNn(e, n = process.env) {
     );
   return { source: o, upstreamProxyUrl: u };
 }
-async function ENn(e, n) {
+async function startEgressProxy(e, n) {
   let o = _e(),
     u = getMTLSConfig(),
     r = getCACertificates(),
@@ -1830,13 +1830,13 @@ async function ENn(e, n) {
     o.handle
   );
 }
-function ANn(e, n = process.env) {
+function rejectOrchestratorProxyAuthorization(e, n = process.env) {
   let o =
     e.find(
       (u) =>
         u === "--proxy-authorization-command" ||
         u === "--proxy-authorization-file",
-    ) ?? [got, hot].find((u) => n[u]?.trim());
+    ) ?? [PROXY_AUTHORIZATION_COMMAND_ENV_VAR, PROXY_AUTHORIZATION_FILE_ENV_VAR].find((u) => n[u]?.trim());
   if (o !== void 0)
     throw new R(
       `${o} is not yet supported with the orchestrator subcommand (only worker runners mint Proxy-Authorization for their egress proxy today). Unset it for the orchestrator process; the runners it spawns can still use it.`,
@@ -1857,7 +1857,7 @@ function Ne() {
     SELF_HOSTED_RUNNER_PROXY_AUTHORIZATION_FILE: void 0,
   };
 }
-function _ot(e, n = "darwin") {
+function assertFeatureSupportedOnPlatform(e, n = "darwin") {
   if (n !== "win32") return;
   switch (e) {
     case "--hooks-dir":
@@ -1870,7 +1870,7 @@ function _ot(e, n = "darwin") {
       );
   }
 }
-async function yot(e, n) {
+async function resolveHookExecutable(e, n) {
   if (!e) return null;
   let o = Oe(e, n);
   try {
@@ -1880,14 +1880,14 @@ async function yot(e, n) {
     return null;
   }
 }
-class Jxe extends R {
+class CheckoutHookFailedError extends R {
   exitCode;
   constructor(e, n, o) {
     super(e, o);
     ((this.name = "CheckoutHookFailedError"), (this.exitCode = n));
   }
 }
-async function CNn(e) {
+async function runCheckoutHook(e) {
   let n = {
     ...Ne(),
     CLAUDE_RUNNER_SESSION_ID: e.sessionId.replace(/^cse_/, "session_"),
@@ -1897,7 +1897,7 @@ async function CNn(e) {
     CLAUDE_RUNNER_CHECKOUT_PATH: e.checkoutPath,
     CLAUDE_RUNNER_API_BASE_URL: e.apiBaseUrl,
     CLAUDE_RUNNER_GIT_MOUNT_URL: e.gitMountUrl,
-    CLAUDE_RUNNER_CLIENT_PLATFORM: O_e(e.clientPlatform),
+    CLAUDE_RUNNER_CLIENT_PLATFORM: normalizeClientPlatform(e.clientPlatform),
     CLAUDE_CODE_SESSION_ACCESS_TOKEN: e.sessionAccessToken,
   };
   e.onStatus(
@@ -1980,7 +1980,7 @@ async function CNn(e) {
           s(
             h === null
               ? new R(_, "checkout hook killed by signal")
-              : new Jxe(_, h, `exited with status ${h}`),
+              : new CheckoutHookFailedError(_, h, `exited with status ${h}`),
           );
         }
       }));
@@ -1990,7 +1990,7 @@ async function CNn(e) {
     r = await raceWithTimeout(ye(e.checkoutPath), ce, `stat ${e.checkoutPath}`);
   } catch (t) {
     if (W(t))
-      throw new Jxe(
+      throw new CheckoutHookFailedError(
         `checkout hook exited 0 but ${e.checkoutPath} does not exist`,
         0,
         "exited 0 but did not create the checkout directory",
@@ -1998,7 +1998,7 @@ async function CNn(e) {
     throw t;
   }
   if (!r.isDirectory())
-    throw new Jxe(
+    throw new CheckoutHookFailedError(
       `checkout hook exited 0 but ${e.checkoutPath} is not a directory`,
       0,
       "exited 0 but the checkout path is not a directory",
@@ -2012,7 +2012,7 @@ async function CNn(e) {
       );
     } catch (t) {
       if (W(t))
-        throw new Jxe(
+        throw new CheckoutHookFailedError(
           `checkout hook succeeded but ${e.checkoutPath}/.git is missing (for non-git SCMs, set CLAUDE_RUNNER_SKIP_GIT_VERIFY=1 in the runner's environment)`,
           0,
           "exited 0 but left no .git in the checkout directory",
@@ -2034,10 +2034,10 @@ var St = new j(() => new Ce());
 function He() {
   return St.of(B().host);
 }
-function KYt() {
+function getInFlightHookCount() {
   return He().inFlight;
 }
-async function vNn(e) {
+async function runPostSessionHook(e) {
   let n = {
     ...Ne(),
     CLAUDE_RUNNER_SESSION_ID: e.sessionId.replace(/^cse_/, "session_"),
@@ -2046,7 +2046,7 @@ async function vNn(e) {
     CLAUDE_RUNNER_DEBUG_LOG_PATH: e.debugLogPath,
     CLAUDE_RUNNER_WORKSPACE_PATHS: e.workspacePaths.join(":"),
     CLAUDE_RUNNER_API_BASE_URL: e.apiBaseUrl,
-    CLAUDE_RUNNER_CLIENT_PLATFORM: O_e(e.clientPlatform),
+    CLAUDE_RUNNER_CLIENT_PLATFORM: normalizeClientPlatform(e.clientPlatform),
     CLAUDE_CODE_SESSION_ACCESS_TOKEN: e.sessionAccessToken,
   };
   e.onStatus(
@@ -2173,34 +2173,34 @@ async function vNn(e) {
   );
 }
 export {
-  Pae,
-  zYt,
-  qL,
-  P_e,
-  Yxe,
-  qHt,
-  Kje,
-  fot,
-  mot,
-  T8,
-  VYt,
-  O_e,
-  Xje,
-  _Nn,
-  yNn,
-  RB,
-  SNn,
-  bNn,
-  got,
-  hot,
-  wNn,
-  TNn,
-  ENn,
-  ANn,
-  _ot,
-  yot,
-  Jxe,
-  CNn,
-  KYt,
-  vNn,
+  RUNNER_VERSION,
+  POLL_WORK_TIMEOUT_MS,
+  assertSafeIdentifier,
+  getHttpStatusFromError,
+  shouldRetryRequest,
+  POLL_ERROR_KINDS,
+  classifyPollError,
+  createEmptyPollErrorCounts,
+  createRunnerApiClient,
+  UNKNOWN_CLIENT_PLATFORM,
+  CLIENT_PLATFORM_PATTERN,
+  normalizeClientPlatform,
+  escapeLogValue,
+  createDurationHistogram,
+  observeDuration,
+  escapePrometheusLabelValue,
+  deleteSessionChildMetrics,
+  startMetricsServer,
+  PROXY_AUTHORIZATION_COMMAND_ENV_VAR,
+  PROXY_AUTHORIZATION_FILE_ENV_VAR,
+  buildSessionProxyEnvOverrides,
+  resolveProxyAuthorizationConfig,
+  startEgressProxy,
+  rejectOrchestratorProxyAuthorization,
+  assertFeatureSupportedOnPlatform,
+  resolveHookExecutable,
+  CheckoutHookFailedError,
+  runCheckoutHook,
+  getInFlightHookCount,
+  runPostSessionHook,
 };

@@ -16,31 +16,31 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
-  Pp,
-  Mq,
-  b1,
-  URt,
-  Kg,
-  Fq,
-  BRt,
-  hke,
-  wHn,
-  GBe,
-  m8t,
-  $q,
-  qBe,
-  Gge,
-  att,
-  _8t,
-  y8t,
-  jRt,
-  S8t,
-  THn,
-  EHn,
-  AHn,
-  _ke,
-  aL,
-  wx,
+  removeInvisibleChars,
+  isHookMatcher,
+  hasMisplacedGuardHooks,
+  EMPTY_KEY_SET,
+  UNLOADABLE_GUARD_HOOK_NOTE,
+  validateHooksConfig,
+  getHooksJsonSchema,
+  BINARIES_BASENAME_PATTERN,
+  SHA256_HEX_PATTERN,
+  MAX_FETCHED_BINARIES,
+  MAX_DECLARED_BINARIES,
+  MAX_PLUGIN_FILE_BYTES,
+  parsePluginBinaries,
+  getPluginManifestSchema,
+  isDotRelativeSourcePath,
+  getRelevanceSignalsSchema,
+  getPluginRelevanceSchema,
+  getMarketplacePluginSchema,
+  isBarePluginSourceName,
+  normalizePluginRootPath,
+  resolvePluginEntrySource,
+  resolveMarketplacePluginSources,
+  getMarketplaceManifestSchema,
+  getMarketplaceSchema,
+  getPluginIdSchema,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
@@ -54,7 +54,7 @@ import { FRONTMATTER_PATTERN, parseFrontmatterYaml } from "../MCP客户端/chunk
 import { pfr } from "../Hooks钩子/chunk-z3433nr6.js";
 import { validatePluginManifest, damerauLevenshteinDistance, buildVersionTagName, resolvePluginRenameChain } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isNonMarketplacePluginSource, hasNonMarketplacePluginSource, getNonMarketplacePluginSource, splitPluginIdOnLastAt, getPluginMarketplace, isEqualIgnoringCase } from "./chunk-33bdfgmx.js";
-import { eer, YXe, JXe, CCe, yqt, Ywt } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { SUPPORTED_BINARY_TARGETS, stripBinaryTargetSuffix, isExistingDirectory, checkContainedDirectory, readOptionalFileContent, readTextFileCapped } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { s, T, se, v, c, fe, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
@@ -554,7 +554,7 @@ async function He(e, t) {
     let u = o,
       k = i.rawCandidate ?? u;
     if (
-      (H(k, new Set(Object.keys(Gge().shape)), "", r, ct), "capabilities" in k)
+      (H(k, new Set(Object.keys(getPluginManifestSchema().shape)), "", r, ct), "capabilities" in k)
     ) {
       let C = r.findIndex((y) => y.path === "capabilities"),
         w = {
@@ -587,15 +587,15 @@ async function He(e, t) {
       });
     if ("binaries" in u)
       if (isRecord(u.binaries)) {
-        let C = qBe(u.binaries) ?? {},
+        let C = parsePluginBinaries(u.binaries) ?? {},
           w = 0;
         for (let [p, S] of Object.entries(u.binaries)) {
           if (
-            hke.test(p) &&
+            BINARIES_BASENAME_PATTERN.test(p) &&
             typeof S === "object" &&
             S !== null &&
             typeof S.sha256 === "string" &&
-            wHn.test(S.sha256)
+            SHA256_HEX_PATTERN.test(S.sha256)
           ) {
             w++;
             continue;
@@ -603,19 +603,19 @@ async function He(e, t) {
           if (!Object.hasOwn(C, p))
             r.push({
               path: `binaries.${p}`,
-              message: `Invalid binaries entry; it will be ignored at install time. The basename must match ${String(hke)} (lowercase, no leading or trailing dot) and the value must be an object with a 64-character lowercase-hex 'sha256'.`,
+              message: `Invalid binaries entry; it will be ignored at install time. The basename must match ${String(BINARIES_BASENAME_PATTERN)} (lowercase, no leading or trailing dot) and the value must be an object with a 64-character lowercase-hex 'sha256'.`,
             });
         }
-        if (w > m8t)
+        if (w > MAX_DECLARED_BINARIES)
           r.push({
             path: "binaries",
-            message: `${w} valid binaries entries declared, but the install hook processes at most ${m8t}; the rest are dropped entirely.`,
+            message: `${w} valid binaries entries declared, but the install hook processes at most ${MAX_DECLARED_BINARIES}; the rest are dropped entirely.`,
           });
         let y = Object.keys(C).length;
-        if (y > GBe)
+        if (y > MAX_FETCHED_BINARIES)
           r.push({
             path: "binaries",
-            message: `${y} valid binaries entries declared, but only the first ${GBe} are fetched at install time; the rest are ignored. Reduce the count or split across plugins.`,
+            message: `${y} valid binaries entries declared, but only the first ${MAX_FETCHED_BINARIES} are fetched at install time; the rest are ignored. Reduce the count or split across plugins.`,
           });
       } else
         r.push({
@@ -698,7 +698,7 @@ async function kt(e) {
   }
   let f = [],
     u = isRecord(i) && isRecord(i.metadata) ? i.metadata.pluginRoot : void 0,
-    k = THn(u);
+    k = normalizePluginRootPath(u);
   if (i && typeof i === "object") {
     let d = i;
     if (Array.isArray(d.plugins))
@@ -707,7 +707,7 @@ async function kt(e) {
           if (g && typeof g === "object" && "source" in g) {
             let N = g.source;
             if (typeof N === "string") we(N, `plugins[${P}].source`, t, gt(N));
-            if (S8t(N) && k === void 0)
+            if (isBarePluginSourceName(N) && k === void 0)
               t.push({
                 path: `plugins[${P}].source`,
                 message:
@@ -727,10 +727,10 @@ async function kt(e) {
           }
         }));
   }
-  let C = y8t()
+  let C = getPluginRelevanceSchema()
       .extend({
         topic: s().min(1).max(64).optional(),
-        signals: _8t()
+        signals: getRelevanceSignalsSchema()
           .extend({
             cli: v(s().min(1).max(64)).max(10).optional(),
             hosts: v(
@@ -793,7 +793,7 @@ async function kt(e) {
           ),
       })
       .optional(),
-    w = jRt()
+    w = getMarketplacePluginSchema()
       .extend({ relevance: ai((d) => (isRecord(d) ? d : void 0), C) })
       .refine(
         (d) =>
@@ -803,9 +803,9 @@ async function kt(e) {
             "source.source: 'unsupported' is a parse-time placeholder and cannot be authored",
         },
       ),
-    p = _ke()
+    p = getMarketplaceManifestSchema()
       .extend({ plugins: v(w), renames: fe(s(), s().nullable()).optional() })
-      .safeParse(AHn(i));
+      .safeParse(resolveMarketplacePluginSources(i));
   if (!p.success) t.push(...De(p.error));
   if (p.success && p.data.renames) {
     let d = new Set(p.data.plugins.map((g) => g.name));
@@ -818,7 +818,7 @@ async function kt(e) {
         });
       else if (
         P?.kind === "renamed" &&
-        !wx().safeParse(`${P.to}@placeholder`).success
+        !getPluginIdSchema().safeParse(`${P.to}@placeholder`).success
       )
         t.push({
           path: `renames.${g}`,
@@ -829,7 +829,7 @@ async function kt(e) {
   if (isRecord(i)) {
     let d = i;
     if (
-      (H(d, new Set(Object.keys(_ke().shape)), "", a),
+      (H(d, new Set(Object.keys(getMarketplaceManifestSchema().shape)), "", a),
       typeof d.name === "string" && d.name)
     ) {
       if (yt.has(d.name.toLowerCase()))
@@ -847,14 +847,14 @@ async function kt(e) {
     if (isRecord(g))
       H(
         g,
-        new Set(Object.keys(_ke().shape.metadata.unwrap().shape)),
+        new Set(Object.keys(getMarketplaceManifestSchema().shape.metadata.unwrap().shape)),
         "metadata",
         a,
       );
     if (Array.isArray(d.plugins)) {
-      let P = new Set(Object.keys(jRt().shape)),
-        N = new Set(Object.keys(y8t().shape)),
-        O = new Set(Object.keys(_8t().shape));
+      let P = new Set(Object.keys(getMarketplacePluginSchema().shape)),
+        N = new Set(Object.keys(getPluginRelevanceSchema().shape)),
+        O = new Set(Object.keys(getRelevanceSignalsSchema().shape));
       d.plugins.forEach((F, L) => {
         if (!isRecord(F)) return;
         let _ = F;
@@ -910,12 +910,12 @@ async function kt(e) {
         if (O && aJ(g) && g.strict !== !1)
           t.push({
             path: `plugins[${P}].headersHelper`,
-            message: `Plugin "${Pp(g.name)}" sets headersHelper but is not "strict": false. An entry with headersHelper must inline its full manifest (strict: false, with commands/agents/hooks/mcpServers declared in the entry) so users can review what it ships before the command runs; Claude Code refuses to run the helper otherwise.`,
+            message: `Plugin "${removeInvisibleChars(g.name)}" sets headersHelper but is not "strict": false. An entry with headersHelper must inline its full manifest (strict: false, with commands/agents/hooks/mcpServers declared in the entry) so users can review what it ships before the command runs; Claude Code refuses to run the helper otherwise.`,
           });
         if ((g.headers !== void 0 || aJ(g)) && !O)
           a.push({
             path: `plugins[${P}].${aJ(g) ? "headersHelper" : "headers"}`,
-            message: `Plugin "${Pp(g.name)}" sets headers/headersHelper, which only apply to "archive" sources; they have no effect on this entry.`,
+            message: `Plugin "${removeInvisibleChars(g.name)}" sets headers/headersHelper, which only apply to "archive" sources; they have no effect on this entry.`,
           });
         else if (
           aJ(g) &&
@@ -925,13 +925,13 @@ async function kt(e) {
         )
           a.push({
             path: `plugins[${P}].source.sha256`,
-            message: `Plugin "${Pp(g.name)}" fetches its archive with a headersHelper but sets no sha256 pin. Consider pinning the digest so the bytes users install are exactly the ones you reviewed (omit it only if you rely on digest-versioned updates).`,
+            message: `Plugin "${removeInvisibleChars(g.name)}" fetches its archive with a headersHelper but sets no sha256 pin. Consider pinning the digest so the bytes users install are exactly the ones you reviewed (omit it only if you rely on digest-versioned updates).`,
           });
         for (let F of O ? Object.keys(g.headers ?? {}) : [])
           if (Obn(F))
             a.push({
-              path: `plugins[${P}].headers.${Pp(F)}`,
-              message: `Header "${Pp(F)}" is a request-routing/identity header that catalog entries may not set; Claude Code drops it at download time.`,
+              path: `plugins[${P}].headers.${removeInvisibleChars(F)}`,
+              message: `Header "${removeInvisibleChars(F)}" is a request-routing/identity header that catalog entries may not set; Claude Code drops it at download time.`,
             });
       });
     if (!d.description && !d.metadata?.description)
@@ -941,19 +941,19 @@ async function kt(e) {
           "No marketplace description provided. Adding a description helps users understand what this marketplace offers",
       });
   }
-  let S = jRt(),
+  let S = getMarketplacePluginSchema(),
     R = h.dirname(r),
     E = h.basename(R) === ".claude-plugin" ? h.dirname(R) : R;
   for (let [d, g] of f.entries()) {
-    let P = S.safeParse(EHn(g, k));
+    let P = S.safeParse(resolvePluginEntrySource(g, k));
     if (!P.success) continue;
     let N = P.data,
       O = N.source;
-    if (!att(O) || O.includes("..")) continue;
+    if (!isDotRelativeSourcePath(O) || O.includes("..")) continue;
     let F = h.join(E, O),
       L = h.join(F, ".claude-plugin", "plugin.json"),
       _ = h.relative(E, L),
-      D = await CCe(E, h.join(F, ".claude-plugin"));
+      D = await checkContainedDirectory(E, h.join(F, ".claude-plugin"));
     if (D === "not-a-directory") {
       t.push({
         path: `plugins[${d}] plugin.json \u2192 file`,
@@ -974,7 +974,7 @@ async function kt(e) {
     if (D !== "ok") continue;
     let V;
     try {
-      V = await Ywt(L);
+      V = await readTextFileCapped(L);
     } catch (I) {
       t.push({
         path: `plugins[${d}] plugin.json \u2192 file`,
@@ -985,7 +985,7 @@ async function kt(e) {
     if (V.kind === "refused" || V.kind === "too-large") {
       a.push({
         path: `plugins[${d}].source`,
-        message: `${_} ${V.kind === "refused" ? "is a symlink or is not a regular file" : `is larger than ${$q} bytes`}, so it was not validated. Install reads it anyway. Validate it separately.`,
+        message: `${_} ${V.kind === "refused" ? "is a symlink or is not a regular file" : `is larger than ${MAX_PLUGIN_FILE_BYTES} bytes`}, so it was not validated. Install reads it anyway. Validate it separately.`,
       });
       continue;
     }
@@ -1172,18 +1172,18 @@ async function bt(e, t) {
         e,
         "hooks",
         `${E} \u2014 hooks are read without following symlinks and are capped at ` +
-          `${$q} bytes. The plugin loader has neither limit and fails the whole plugin on bad hook config, so validate the real file separately.`,
+          `${MAX_PLUGIN_FILE_BYTES} bytes. The plugin loader has neither limit and fails the whole plugin on bad hook config, so validate the real file separately.`,
       ),
       modules: [],
     }),
     o = h.dirname(e),
-    i = await CCe(h.dirname(o), o);
+    i = await checkContainedDirectory(h.dirname(o), o);
   if (i === "refused")
     return r("The hooks directory is a symlink and was not read");
   if (i !== "ok") return a;
   let f;
   try {
-    f = await Ywt(e);
+    f = await readTextFileCapped(e);
   } catch (E) {
     return {
       result: {
@@ -1224,14 +1224,14 @@ async function bt(e, t) {
       modules: [],
     };
   }
-  if (b1(k, URt) || Mq(k))
+  if (hasMisplacedGuardHooks(k, EMPTY_KEY_SET) || isHookMatcher(k))
     return {
       result: {
         success: !1,
         errors: [
           {
             path: "hooks",
-            message: `PreToolUse/PermissionRequest is declared at the top level, outside the "hooks" object \u2014 ${Kg}`,
+            message: `PreToolUse/PermissionRequest is declared at the top level, outside the "hooks" object \u2014 ${UNLOADABLE_GUARD_HOOK_NOTE}`,
           },
         ],
         warnings: [],
@@ -1242,7 +1242,7 @@ async function bt(e, t) {
     };
   let C =
       k && typeof k === "object" && "hooks" in k
-        ? Fq(k.hooks)
+        ? validateHooksConfig(k.hooks)
         : { notes: [], unloadableGuards: [] },
     w = C.notes.map((E) => ({ path: "hooks", message: `${E} at runtime` }));
   if (C.unloadableGuards.length > 0)
@@ -1251,7 +1251,7 @@ async function bt(e, t) {
         success: !1,
         errors: C.unloadableGuards.map((E) => ({
           path: "hooks",
-          message: `${E} \u2014 ${Kg}`,
+          message: `${E} \u2014 ${UNLOADABLE_GUARD_HOOK_NOTE}`,
         })),
         warnings: w,
         filePath: e,
@@ -1259,7 +1259,7 @@ async function bt(e, t) {
       },
       modules: [],
     };
-  let y = BRt().safeParse(k);
+  let y = getHooksJsonSchema().safeParse(k);
   if (!y.success)
     return {
       result: {
@@ -1326,7 +1326,7 @@ async function bt(e, t) {
 }
 async function vt(e) {
   let t = [h.join(e, "hooks", "hooks.json")];
-  if (!(await JXe(h.join(e, ".claude-plugin")))) return t;
+  if (!(await isExistingDirectory(h.join(e, ".claude-plugin")))) return t;
   let a = await oe(h.join(e, ".claude-plugin", "plugin.json")),
     r = a === void 0 ? void 0 : ie(cs(a))?.hooks,
     o = Array.isArray(r) ? r : [r];
@@ -1411,16 +1411,16 @@ function Le(e, t) {
 }
 async function be(e) {
   let t = [...Be].map(([r, o]) => [o, h.join(e, r)]),
-    a = await Promise.all(t.map(([, r]) => CCe(e, r)));
+    a = await Promise.all(t.map(([, r]) => checkContainedDirectory(e, r)));
   return {
     dirs: t.filter((r, o) => a[o] === "ok"),
     refused: t.filter((r, o) => a[o] === "refused"),
   };
 }
 async function Pt(e) {
-  if ((await CCe(e, h.join(e, ".claude-plugin"))) === "ok") return !0;
+  if ((await checkContainedDirectory(e, h.join(e, ".claude-plugin"))) === "ok") return !0;
   let t = h.join(e, "skills"),
-    a = await CCe(e, t);
+    a = await checkContainedDirectory(e, t);
   if (a === "refused") return !0;
   if (a !== "ok") return !1;
   let { files: r } = await Pe(t, !0);
@@ -1468,7 +1468,7 @@ async function re(e, t, a) {
       let E = ek(R, 256),
         d;
       try {
-        d = await Ywt(R);
+        d = await readTextFileCapped(R);
       } catch (P) {
         r.push({
           success: !1,
@@ -1518,7 +1518,7 @@ async function re(e, t, a) {
         Y(
           u,
           f,
-          `${p} ${pluralize(p, "file")} here ${pluralize(p, "is", "are")} larger than ${$q} bytes and ${pluralize(p, "was", "were")} not validated.`,
+          `${p} ${pluralize(p, "file")} here ${pluralize(p, "is", "are")} larger than ${MAX_PLUGIN_FILE_BYTES} bytes and ${pluralize(p, "was", "were")} not validated.`,
         ),
       );
   }
@@ -1532,9 +1532,9 @@ async function St(e) {
   if (t) {
     let R = h.dirname(e),
       E;
-    if (h.basename(R) === ".claude" && !(await JXe(R)))
+    if (h.basename(R) === ".claude" && !(await isExistingDirectory(R)))
       E = "The enclosing .claude directory is a symlink.";
-    else if (!(await JXe(e))) E = "This path is a symlink.";
+    else if (!(await isExistingDirectory(e))) E = "This path is a symlink.";
     if (E)
       return [
         {
@@ -1554,7 +1554,7 @@ async function St(e) {
   }
   let a = h.join(e, ".claude"),
     r = h.basename(e) === ".claude",
-    [o, i] = await Promise.all([CCe(e, a), r ? Promise.resolve(!1) : Pt(e)]),
+    [o, i] = await Promise.all([checkContainedDirectory(e, a), r ? Promise.resolve(!1) : Pt(e)]),
     f = r || i ? await be(e) : { dirs: [], refused: [] },
     u = o === "ok" ? await be(a) : { dirs: [], refused: [] },
     k = r ? "project" : "plugin",
@@ -1687,7 +1687,7 @@ async function ZWe(e) {
   return { manifest: t, contents: o, resolvedPath: a };
 }
 async function oe(e) {
-  return yqt(e).catch(() => {
+  return readOptionalFileContent(e).catch(() => {
     return;
   });
 }
@@ -1721,25 +1721,25 @@ function ke(e, t, a) {
   return r;
 }
 async function Rt(e) {
-  if (!(await JXe(h.join(e, ".claude-plugin")))) return [];
+  if (!(await isExistingDirectory(h.join(e, ".claude-plugin")))) return [];
   let t = h.join(e, ".claude-plugin", "plugin.json"),
     a = await oe(t);
   if (a === void 0) return [];
   let r = ie(cs(a)),
-    o = qBe(r?.binaries);
+    o = parsePluginBinaries(r?.binaries);
   if (!r || !o) return [];
   let i = new Set(Object.keys(o));
-  for (let d of eer) {
+  for (let d of SUPPORTED_BINARY_TARGETS) {
     let g = new Map();
     for (let P of Object.keys(o)) {
-      let N = YXe(P, d);
+      let N = stripBinaryTargetSuffix(P, d);
       if (N !== void 0) g.set(N, (g.get(N) ?? 0) + 1);
     }
     for (let [P, N] of g) if (N === 1) i.add(P);
   }
   let f = h.join(e, "bin"),
     u = new Set();
-  if (await JXe(f))
+  if (await isExistingDirectory(f))
     u = await readdir(f)
       .then((d) => new Set(d))
       .catch(() => new Set());
@@ -1772,7 +1772,7 @@ async function Rt(e) {
     if (typeof d === "string") {
       if ((E--, !d.startsWith("./") || d.includes(".."))) continue;
       let P = h.join(e, d);
-      if ((await CCe(e, h.dirname(P))) !== "ok") continue;
+      if ((await checkContainedDirectory(e, h.dirname(P))) !== "ok") continue;
       let N = await oe(P);
       if (N === void 0) continue;
       let O = ie(N);
@@ -2021,7 +2021,7 @@ async function Nt(e) {
   } catch {
     return;
   }
-  let r = aL().safeParse(a);
+  let r = getMarketplaceSchema().safeParse(a);
   return r.success ? r.data : void 0;
 }
 function xt(e, t, a, r) {

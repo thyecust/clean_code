@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { CA } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { DEFAULT_IMAGE_LIMITS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { aoe } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
@@ -74,7 +74,7 @@ async function D(e, s, l, m, p) {
     );
   let u =
       l && e.is_image === !0 && e.sha256 === void 0
-        ? await iJn(r, CA).catch(
+        ? await iJn(r, DEFAULT_IMAGE_LIMITS).catch(
             (o) => (a(`inline ${e.file_uuid} threw: ${o}`), null),
           )
         : null,

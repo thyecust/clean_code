@@ -15,7 +15,7 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { isBgSession, isUnattendedBgSession, saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getRemoteTransport, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { formatSingleLineText, MAX_DESCRIPTION_LENGTH, MARKDOWN_SYNTAX_CHARS } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { FORK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
@@ -41,14 +41,14 @@ import {
   buildDefaultSystemPrompt,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import { Td } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { stripMemoryTags } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { js } from "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import { $8 } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
-import { j_e, HB } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { FleetAgentNudge, detachToBackgroundDaemon } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { oat, sat, EOt, AOt, COt, vOt, ROt } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
 import { ScrollBox } from "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
@@ -127,7 +127,7 @@ function ve({
     },
     [ge, Ee] = d(0),
     { rows: at, columns: lt } = useVirtualScrollViewportSize(useTerminalSize()),
-    ye = jn(),
+    ye = getRemoteTransport(),
     J = isBgSession() && !ye;
   (ko(() => st((a) => a + 1), T || ne ? null : 80),
     Un(() => Ee(0), ge ? 2000 : null, [ge]),
@@ -205,7 +205,7 @@ function ve({
           S = COt(Ne, f, a.soloKeypress);
         switch ((vOt(Ne, S, f), ROt(S, f), S)) {
           case "fire":
-            (ae(), HB());
+            (ae(), detachToBackgroundDaemon());
             return;
           case "arm":
             me({ text: sat });
@@ -232,7 +232,7 @@ function ve({
     }
     if (a.key === "c" && !a.ctrl && !a.meta && A) {
       (a.preventDefault(),
-        setClipboard(Td(A)).then((f) => {
+        setClipboard(stripMemoryTags(A)).then((f) => {
           if (f) process.stdout.write(f);
         }),
         Ee((f) => f + 1));
@@ -328,8 +328,8 @@ ${T}`
       `[btw] panel mounted: ${f ? "adopting the running side question" : "asking"}`,
     );
     async function L() {
-      let y = jn();
-      if (y && !Ks())
+      let y = getRemoteTransport();
+      if (y && !hasRemoteControlChannel())
         return {
           error: y.viewerOnly
             ? "Side questions aren't available when viewing a session read-only"
@@ -548,7 +548,7 @@ ${T}`
                     J && " \xB7 ",
                   ],
                 }),
-          !Ie && !G && J && e(j_e, {}),
+          !Ie && !G && J && e(FleetAgentNudge, {}),
         ],
       }),
     ],
@@ -795,7 +795,7 @@ async function dr(i, u, h) {
   return e(ve, { question: B, context: u, onDone: i });
 }
 function Ke() {
-  return jn() === null && fe();
+  return getRemoteTransport() === null && fe();
 }
 async function vt(i, u) {
   let h = u.session.btwHistory,

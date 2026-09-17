@@ -37,7 +37,7 @@ import { createMessageEnvelope } from "../../01-核心基础设施/共享小工�
 import { Nu, qI, mD, sendControlToUdsSocket, sendStampedControlToUdsSocket, listRegisteredSessionRecords, ownMessagingSocket } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { ne } from "./chunk-rr78st95.js";
 import { isArtifactReplyYieldEnabled, MAX_YIELD_SLUGS, unrefTimers, waitForYieldAnswer, cancelOutstandingYieldWait, setReplyYieldHolder } from "./artifact-reply-yield.js";
-import { dpt, san, x9 } from "./chunk-p1dkvpxj.js";
+import { isBackgroundSessionKind, describeHolderSession, scheduleArtifactAutoReactWake } from "./chunk-p1dkvpxj.js";
 import { Ibe } from "./chunk-5gz5xvw9.js";
 import { getBootingAutoReactArmSlugs } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
@@ -95,7 +95,7 @@ async function ee(e) {
       t.sock === "" ||
       !(t.peerFeatures?.includes(ARTIFACT_YIELD_PEER_FEATURE) ?? !1) ||
       getCanonicalSocketPath(t.sock) === r ||
-      dpt(t.kind)
+      isBackgroundSessionKind(t.kind)
     ) {
       if (e.alreadyReplying) continue;
       return { ...R, kind: "holder_unreachable" };
@@ -334,7 +334,7 @@ function H(e) {
   return `${o.join(", ")}${r > 0 ? ` and ${r} more` : ""}`;
 }
 function repliesYieldedLine(e, o, r, a) {
-  let s = san(
+  let s = describeHolderSession(
       {
         kind: "interactive",
         ...(typeof r.cwd === "string" && { cwd: r.cwd }),
@@ -467,7 +467,7 @@ function re(e, o) {
     if (!isSlugStopped(s) && !E(s)) handBackTakenOverSlug(s);
     let f = getWakeState(s).lastWakeArgs;
     if (!isSlugStopped(s) && E(s) && l?.taskId !== void 0 && isMonitorSocketOpen(l.taskId) && f !== null)
-      x9({
+      scheduleArtifactAutoReactWake({
         ...f,
         seed: !1,
         confirm: void 0,

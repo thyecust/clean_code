@@ -22,7 +22,7 @@ import { truncateToCodeUnits, countOccurrences, stripInvisibleCharacters } from 
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { kd } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { validateStorageKey } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te, formatOverflowHint } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { READ_ONLY_AUTO_ALLOW_REASON, LOG_BULLET_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
@@ -31,10 +31,10 @@ import { areWorkflowsDisabledBySettings, areWorkflowsEnabled, isJadeCompassEnabl
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { isAgentStopPending, isTaskLoopSettled, truncateMiddleWithMarker, formatErrorSummary, getParentPromptId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Uh, NTt, ah } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { MAX_WORKFLOW_SCRIPT_BYTES, persistWorkflowScript, collectRulesByContent } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { isServerFallbackDiscard } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { getProjectKeyFromDir, getProjectDir } from "../Teammates团队/transcript-paths.js";
-import { S8, bZ, Y1, NA, vae } from "./chunk-0t0sve49.js";
+import { withVmTimeout, makeVmErrorExtractor, makePlainError, wrapSyncHostFunction, wrapAsyncHostFunction } from "./chunk-0t0sve49.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import {
   min,
@@ -685,7 +685,7 @@ import * as Mr from "vm";
 async function nr(e, r) {
   let t;
   try {
-    let a = e.runInContext(r.vmContext, S8(Aqe));
+    let a = e.runInContext(r.vmContext, withVmTimeout(Aqe));
     t = await r.settle(a);
   } catch (a) {
     let p = r.errorInfo(a);
@@ -774,7 +774,7 @@ function Vr(e) {
           return ne.length > 0 ? a(ne) : a(J.value);
         }
         case "failed": {
-          if (N) throw Y1(N.message, N.name, N.rendered);
+          if (N) throw makePlainError(N.message, N.name, N.rendered);
           throw new R(
             J.error ?? "child workflow failed",
             "workflow v2: awaited child workflow failed",
@@ -864,7 +864,7 @@ function Vr(e) {
             Ge = (...Ve) =>
               ie.signal.aborted ? new Promise(() => {}) : Fe(...Ve);
           Object.defineProperty(H.childCtx, Me, {
-            value: H.asyncWrap(vae(Ge)),
+            value: H.asyncWrap(wrapAsyncHostFunction(Ge)),
             writable: !0,
             enumerable: !0,
             configurable: !0,
@@ -1011,7 +1011,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
       asyncWrap: x,
     } = e.vmBoundary,
     { vmContext: F, hooks: B } = e,
-    U = bZ(F),
+    U = makeVmErrorExtractor(F),
     j = Ke.runInContext("(p => { p.then(undefined, () => {}) })", F),
     J = { by: "script", in: t, memo: "chain" },
     N = J;
@@ -1065,7 +1065,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
   }
   let ge = () => d.aborted || o?.aborted === !0,
     le = (P) => P.memo === "chain" && r.rows[t]?.status !== "pending",
-    de = NA((P) => {
+    de = wrapSyncHostFunction((P) => {
       if (ge()) return p([]);
       let C = xe(E(P) ?? {});
       return p(r.read(C, q).map(He));
@@ -1074,7 +1074,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
     return ge() || (r.isRetractedScope(P.in) && !Re(P));
   }
   function Ne(P) {
-    return NA((C, A) => {
+    return wrapSyncHostFunction((C, A) => {
       let V = P();
       if (ye(V)) return -1;
       let ae = Y(V, E(A));
@@ -1083,7 +1083,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
     });
   }
   function H(P) {
-    return NA((C, A, V) => {
+    return wrapSyncHostFunction((C, A, V) => {
       let ae = P();
       if (ye(ae)) return -1;
       let re = zr(E(C) ?? {});
@@ -1117,7 +1117,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
     return A !== void 0 && !r.isRetractedScope(A.in);
   }
   function _e(P) {
-    return NA((C) => {
+    return wrapSyncHostFunction((C) => {
       if (typeof C !== "number" || !Number.isSafeInteger(C))
         throw TypeError("retract() expects an address (a number)");
       if (ge() || C === t || !r.within(C, t)) return !1;
@@ -1145,7 +1145,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
         case "failed": {
           if (Ie.has(P)) return null;
           let A = Ye.get(P);
-          if (A) throw Y1(A.message, A.name);
+          if (A) throw makePlainError(A.message, A.name);
           throw new R(
             C.error ?? "agent failed",
             "workflow v2: awaited agent failed",
@@ -1164,13 +1164,13 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
       }
     });
   }
-  let Ae = vae(async (P) => P),
+  let Ae = wrapAsyncHostFunction(async (P) => P),
     Fe = Ke.runInContext(
       "(() => { const P = Promise; return () => new P(() => {}) })()",
       F,
     );
   function Ge(P) {
-    return NA((C, A) => {
+    return wrapSyncHostFunction((C, A) => {
       if (ge()) return w(Fe);
       let V = P();
       if (le(V)) return w(Fe);
@@ -1247,7 +1247,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
     let C = () => (N === J ? P : N);
     return be(Ne(C), de, H(C), _e(C), Ge(C), Wr(C));
   }
-  let ht = NA((P) => {
+  let ht = wrapSyncHostFunction((P) => {
       if (typeof P !== "string" || P === "")
         throw new R(
           "v(name) expects a non-empty string",
@@ -1255,7 +1255,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
         );
       return p({ $var: P });
     }),
-    gt = NA((P, C) => {
+    gt = wrapSyncHostFunction((P, C) => {
       let A = xe(E(C) ?? {});
       if (typeof P !== "number" || !Number.isSafeInteger(P) || P < 0)
         throw new R(
@@ -1272,7 +1272,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
     ["agent", mt],
     ["v", ht],
     ["atleast", gt],
-    [hin, NA(() => Pr(N))],
+    [hin, wrapSyncHostFunction(() => Pr(N))],
   ])
     Object.defineProperty(F, P, {
       value: C,
@@ -1296,7 +1296,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
           errorInfo: U,
         });
   function Wr(P) {
-    return NA((C, A) => {
+    return wrapSyncHostFunction((C, A) => {
       if (ge()) return w(Fe);
       let V = P();
       if (le(V)) return w(Fe);
@@ -1305,7 +1305,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
         return (j(Se), Se);
       }
       let ae = { in: V.in, by: V.by, spawnMemo: Ve(V) },
-        re = x(vae((Se, Te) => kt(ae, Se, Te))),
+        re = x(wrapAsyncHostFunction((Se, Te) => kt(ae, Se, Te))),
         ve = w(re, C, A);
       return (j(ve), ve);
     });
@@ -1868,7 +1868,7 @@ class sr {
         t.parentPromptId,
       );
     ((this.ctx = a),
-      (this.vmErrorInfo = bZ(a.vmContext)),
+      (this.vmErrorInfo = makeVmErrorExtractor(a.vmContext)),
       (this.priorScopes = this.world.rows
         .filter((w) => kr(w) && w.fact.runId === this.runId)
         .map((w) => w.addr)),
@@ -2103,7 +2103,7 @@ function Zr(e) {
     t = getProjectKeyFromDir(dirname(r));
   if (t === void 0 || qr(e) !== Gr) return;
   let d = STORAGE_KEYS.sessionJournal(t, qr(r), "world");
-  return kd(d) === void 0 ? d : void 0;
+  return validateStorageKey(d) === void 0 ? d : void 0;
 }
 function Qr(e, r, t) {
   let d = Zr(r),
@@ -2409,7 +2409,7 @@ var Yt =
   Xt = createLazyValue(() =>
     Qe({
       script: s()
-        .max(Uh)
+        .max(MAX_WORKFLOW_SCRIPT_BYTES)
         .refine(rU, Yt)
         .optional()
         .describe(
@@ -2665,7 +2665,7 @@ name: ${e.name}`;
       let t = getToolPermissionContext(r),
         d = qe(e) !== void 0,
         o = e.scriptPath || d ? void 0 : e.name,
-        a = (B) => (o ? ah(t, WORKFLOW_TOOL_NAME, B).get(o) : void 0),
+        a = (B) => (o ? collectRulesByContent(t, WORKFLOW_TOOL_NAME, B).get(o) : void 0),
         p = a("deny");
       if (p)
         return {
@@ -2799,7 +2799,7 @@ name: ${e.name}`;
           }
         );
       let N = getWorkflowTranscriptDir(F),
-        ne = _ ?? NTt(j, F, p, r.storageV5),
+        ne = _ ?? persistWorkflowScript(j, F, p, r.storageV5),
         q = e.scriptPath ? void 0 : w,
         Y = e.scriptPath ? "scriptPath" : (w ?? "inline"),
         be = Fdt(j, q, I),

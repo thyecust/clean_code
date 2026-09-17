@@ -25,7 +25,7 @@ import { PROCESS_WRAPPER_ENV_VAR, getProcessWrapperState, getLauncherArgv, getLa
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { removeGuiHostEntrypoint, g4, removeBgDispatcherPlanEnvVars } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
-import { $U, iL, UU, Qet, NBe, dke } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { PROVIDER_CONFIG_ENV_VARS, BASE_URL_ENV_VARS, API_KEY_ENV_VARS, TOKEN_FD_ENV_VARS, clearAwsEnvVars, getHostAuthEnvVarName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { resolveWrappedClaudeInvocation, resolveClaudeInvocation, getInstalledClaudePath, applyProcessWrapper, findInstalledVersionBinary } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { readBoundedFile, getVersionForAnalytics, getFeatureValue_CACHED_MAY_BE_STALE, getGlobalConfig, getDaemonColdStart } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -61,7 +61,7 @@ import {
 } from "./chunk-7wsy8vxb.js";
 import { controlRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import { enableTerminalMode, HIDE_CURSOR } from "../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
-import { _u } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { markdownParser } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { getPowerShellPath } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { HJn } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
@@ -773,13 +773,13 @@ function Br(t) {
     removeBgDispatcherPlanEnvVars(e),
     removeGuiHostEntrypoint(e));
   let o = new Set(
-    ["CLAUDE_BG_AUTH_SNAPSHOT_PATH", ...Qet].map((s) => s.toUpperCase()),
+    ["CLAUDE_BG_AUTH_SNAPSHOT_PATH", ...TOKEN_FD_ENV_VARS].map((s) => s.toUpperCase()),
   );
   for (let s of Object.keys(e)) if (o.has(s.toUpperCase())) delete e[s];
-  let c = dke(e);
+  let c = getHostAuthEnvVarName(e);
   if (Ie(e.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST)) {
-    for (let s of [...UU, ...iL, ...$U]) delete e[s];
-    if ((NBe(e), delete e.ANTHROPIC_CUSTOM_HEADERS, c)) delete e[c];
+    for (let s of [...API_KEY_ENV_VARS, ...BASE_URL_ENV_VARS, ...PROVIDER_CONFIG_ENV_VARS]) delete e[s];
+    if ((clearAwsEnvVars(e), delete e.ANTHROPIC_CUSTOM_HEADERS, c)) delete e[c];
     (delete e.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST,
       delete e.CLAUDE_CODE_HOST_AUTH_ENV_VAR);
   }
@@ -1231,7 +1231,7 @@ function fn(t, e) {
   return (
     o0e(),
     an(
-      _u
+      markdownParser
         .lexer(t)
         .map((o) =>
           aE(o, e, {

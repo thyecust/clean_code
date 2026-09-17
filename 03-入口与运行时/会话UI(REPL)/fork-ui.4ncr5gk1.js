@@ -39,7 +39,7 @@ import "../../01-核心基础设施/核心工具-进程与信号/session-relaunc
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
-import { F0t, uHe, Uae } from "./会话UI(REPL).qs63rzfp.js";
+import { COORDINATOR_FORK_REFUSAL, spawnBackgroundFork, deriveBackgroundSeed } from "./会话UI(REPL).qs63rzfp.js";
 import { git, mWe, fZt, ZIt } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
@@ -61,7 +61,7 @@ function re(Be) {
   return Be.toolPermissionContext.alwaysDenyRules;
 }
 var Ne = async (r, n, g) => {
-  if (isCoordinatorModeEnabled()) return (r(F0t, { display: "system" }), null);
+  if (isCoordinatorModeEnabled()) return (r(COORDINATOR_FORK_REFUSAL, { display: "system" }), null);
   if (isTranscriptPersistenceDisabled())
     return (
       r(
@@ -77,7 +77,7 @@ var Ne = async (r, n, g) => {
       null
     );
   let a = (g ?? "").trim(),
-    m = Uae(n.messages, a, "(forked)");
+    m = deriveBackgroundSeed(n.messages, a, "(forked)");
   if (m === null)
     return (r("Nothing to fork yet. Send a message first."), null);
   return e(W, { onDone: r, prompt: a, seed: m, messages: n.messages });
@@ -114,7 +114,7 @@ function W(Pe) {
       }
       ((q.current = !0),
         (async () => {
-          let s = await uHe(w, c || null, R, v, T, S, L, "fork_session", k, {
+          let s = await spawnBackgroundFork(w, c || null, R, v, T, S, L, "fork_session", k, {
             proactivityLevel: I,
             keepParent: !0,
             taskFreeInFlight: { tasks: 0, queued: 0, kinds: [] },

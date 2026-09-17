@@ -20,13 +20,13 @@ import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { We, b, z, k_, YPn, o8, n, s8, ZPn } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp, pluralize, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isRemoteCoworkEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { XT, Tie, nkt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { getSettingsSchema, toJsonSchema, stripInternalSchemaDescriptions } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { getClaudeInChromeState, CFC_TOOL_PREFIX, detectAvailableBrowser, openInChrome } from "../ClaudeinChrome/claude-in-chrome-host.js";
 import { MCP_SERVERS_BETA, getCanonicalName, getAgentDepth, isActingAsBgJob, isCommitSkillRolloutEnabled, isVerifySkillRolloutEnabled, getFeatureValue_CACHED_MAY_BE_STALE, isAutoMemoryEnabled, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Pt, gitExe, getIsGit, getDefaultBranch, getGitPushShellPatterns } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isRemoteActive, gitExe, getIsGit, getDefaultBranch, getGitPushShellPatterns } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { getSettingsFilePathForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Xt } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -75,9 +75,9 @@ import {
   GIT_CHECKOUT_FORCE_DISALLOWED_PATTERNS,
   GIT_ADD_FORCE_DISALLOWED_PATTERNS,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Wj, aEn, lEn, PFe, PTt, OC, DK, Dtr } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getOrgMemoryStores, MEMORY_TYPES_SKILL_NAME, isMemoryTypesSkillEnabled, MEMORY_TYPES_SECTIONS_WITH_SCOPE, MEMORY_TYPES_SECTIONS_NO_SCOPE, hasTeamMemoryStore, isStoneShellPromptServed, registerAvailabilityPredicate } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
-import { Ys, ZY } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { isBashToolAvailable, isSkillsAsToolsEnabled } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { im, $C, _$e, MT, eU } from "../权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME, getToolPermissionContext, getEffortValue, getMainLoopModel } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
@@ -86,12 +86,12 @@ import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小�
 import { ENTER_PLAN_MODE_TOOL_NAME, ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import {
-  Y_,
-  fqt,
-  XZn,
-  JZn,
-  wD,
-  ler,
+  formatArtifactServerDisplayName,
+  escapeTextForDisplay,
+  setSessionHostServers,
+  isCapabilityFeatureEnabled,
+  parseContractVersion,
+  armPrototypeLane,
   resolveContract,
   fetchContractDefs,
   fetchContractPrompt,
@@ -116,7 +116,7 @@ import { registerBundledSkillSessionReset, registerBundledSkill, getBundledSkill
 import { getJobsDir } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { K3, K8e, LYn, Lre, X8e, Fyn, $yn, iN } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { SOe } from "../Artifact发布-渲染/chunk-01jnk0v2.js";
-import { Jon, Zon, artifactLiveEditPromptGateOpen, artifactCapabilitiesPromptGateOpen, artifactCommentsPromptGateOpen, artifactRoomSurfaceOpen, artifactReadPageDataPromptGateOpen } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
+import { listClaudeAiConnectorServers, getArtifactConnectorHostingState, artifactLiveEditPromptGateOpen, artifactCapabilitiesPromptGateOpen, artifactCommentsPromptGateOpen, artifactRoomSurfaceOpen, artifactReadPageDataPromptGateOpen } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
 import { markWorkshopInvokeStart } from "../../01-核心基础设施/共享小工具-未细化/workshop-telemetry.js";
 import { Rjn } from "../Artifact发布-渲染/chunk-yrjr7v83.js";
 import { getUltrareviewProsePointerTip } from "../CodeReview/ultrareview-tips.js";
@@ -237,14 +237,14 @@ function xe(e, t, o) {
 function mn(e, t) {
   let o = e.named
       .slice(0, Ae)
-      .map((v) => `\`${v.toolPrefix}\` is "${Y_(v.server)}"`),
+      .map((v) => `\`${v.toolPrefix}\` is "${formatArtifactServerDisplayName(v.server)}"`),
     s = t
       ? " The Claude app has also connected claude.ai connectors under opaque ids (tools `mcp__<id>__<toolName>`)."
       : "",
     d =
       o.length === 0
         ? ""
-        : ` The ids belong to these connectors: ${o.join("; ")}${xe(e.named.length, o.length, "ask the user for their names")}. For these, set \`server\` to the connector's name exactly as written here, e.g. \`{"server": "${Y_(e.named[0]?.server ?? "")}", "tools": [...]}\` \u2014 never the id or any \`mcp__\` segment \u2014 and in the page pass that same name as the \`server\` argument of \`callTool\`/\`watchTool\`, because viewers resolve connectors by name only.`,
+        : ` The ids belong to these connectors: ${o.join("; ")}${xe(e.named.length, o.length, "ask the user for their names")}. For these, set \`server\` to the connector's name exactly as written here, e.g. \`{"server": "${formatArtifactServerDisplayName(e.named[0]?.server ?? "")}", "tools": [...]}\` \u2014 never the id or any \`mcp__\` segment \u2014 and in the page pass that same name as the \`server\` argument of \`callTool\`/\`watchTool\`, because viewers resolve connectors by name only.`,
     r = e.unnamedIds.slice(0, Ae).map((v) => `\`${v}\``),
     h = r.length === 1,
     p =
@@ -253,7 +253,7 @@ function mn(e, t) {
         : ` ${h ? "Connector" : "Connectors"} ${r.join(", ")}${xe(e.unnamedIds.length, r.length, "treat the rest the same way")} did not report ${h ? "a name" : "names"} here: ask the user for ${h ? "that connector's" : "each connector's"} name exactly as shown in claude.ai (Settings \u2192 Connectors) \u2014 describe ${h ? "it" : "each"} by the tools it provides (its \`mcp__<id>__\u2026\` tool names), since the user cannot see the id \u2014 and use that name as \`server\` and in the page's calls; the id itself is refused at publish because no viewer can resolve it.`,
     w = e.undeclarable
       .slice(0, Ae)
-      .map((v) => `\`${v.toolPrefix}\` ("${fqt(v.server)}")`),
+      .map((v) => `\`${v.toolPrefix}\` ("${escapeTextForDisplay(v.server)}")`),
     k =
       w.length === 0
         ? ""
@@ -262,7 +262,7 @@ function mn(e, t) {
 }
 function fn(e, t, o) {
   let { ccrHosted: s, metaConnector: d, hosted: r } = t,
-    h = Jon(e),
+    h = listClaudeAiConnectorServers(e),
     p =
       r === null
         ? 0
@@ -412,7 +412,7 @@ function Oe() {
     let { targetSlug: r, pins: h } = d.getArtifactContractTarget();
     if (r === void 0) return null;
     let p = h[r];
-    if (p !== void 0) return wD(p);
+    if (p !== void 0) return parseContractVersion(p);
     if (t.has(r)) return null;
     let w = createLinkedAbortSignal(void 0, { timeoutMs: cn }),
       k = await readFrameDecl(r, w.signal, d.credentials)
@@ -425,7 +425,7 @@ function Oe() {
         n(`[artifact] capability pin read-back failed: ${k.err}`),
         null
       );
-    let v = wD(k.contract);
+    let v = parseContractVersion(k.contract);
     if (v === null) t.add(r);
     else d.setArtifactContractTarget(r, v);
     return v;
@@ -474,12 +474,12 @@ function Oe() {
         promptBody: null,
         missingCaps: [],
         pinned: h !== null,
-        hostServers: JZn(p, "mcp", hn),
+        hostServers: isCapabilityFeatureEnabled(p, "mcp", hn),
         ...(h !== null && {
           pinnedSlug: r.getArtifactContractTarget().targetSlug,
         }),
       };
-      if (h === null) XZn(r.session, w.hostServers);
+      if (h === null) setSessionHostServers(r.session, w.hostServers);
       let [k = 0, v = 0, C = 0] = p.version.split(".").map(Number),
         T = { v_major: k, v_minor: v, v_patch: C };
       if (p.capabilities.length > 0) {
@@ -511,7 +511,7 @@ function Oe() {
           text: Ze(
             r.options.tools,
             w,
-            Zon(r.options.tools, r.options.mcpClients),
+            getArtifactConnectorHostingState(r.options.tools, r.options.mcpClients),
           ),
         },
       ];
@@ -521,7 +521,7 @@ function Oe() {
 function ge() {
   return isWorkshopEnabled() && artifactCapabilitiesPromptGateOpen() && artifactReadPageDataPromptGateOpen();
 }
-Dtr(() => isPlanWorkshopOfferEnabled() && ge());
+registerAvailabilityPredicate(() => isPlanWorkshopOfferEnabled() && ge());
 function it() {
   return import("../../01-核心基础设施/共享小工具-未细化/WORKSHOP_PAGE_TEMPLATE.1268b5re.js");
 }
@@ -1141,7 +1141,7 @@ function vt() {
     !isSafeMode() &&
     !Rz() &&
     getCurrentPlatform() !== "wsl" &&
-    !Pt() &&
+    !isRemoteActive() &&
     vje()?.isTeleported !== !0 &&
     !xg() &&
     !hasChromeExtensionEvidence() &&
@@ -2119,7 +2119,7 @@ async function vi(e) {
   if (!isVerifySkillRolloutEnabled()) return "";
   if (!oVe(e.getProactivityLevel())) return "";
   let t = e.options?.tools;
-  if (t && !ZY() && !t.some((s) => matchesToolName(s, SKILL_TOOL_NAME))) return "";
+  if (t && !isSkillsAsToolsEnabled() && !t.some((s) => matchesToolName(s, SKILL_TOOL_NAME))) return "";
   return (await getAllowlistedSkillCommands(sn(), e.storageV5)).some((s) => s.name === VERIFY_SKILL_NAME) ? bi : "";
 }
 var ue = im,
@@ -2544,9 +2544,9 @@ Based on the above changes, create a single git commit:
    - Ensure the message accurately reflects the changes and their purpose (i.e. "add" means a wholly new feature, "update" means an enhancement to an existing feature, "fix" means a bug fix, etc.)
    - Draft a concise (1-2 sentences) commit message that focuses on the "why" rather than the "what"${formatCommitMessageGuidance()}
 
-2. Stage the relevant files and create the commit. To ensure good formatting, ALWAYS pass the commit message via a ${Ys() ? "HEREDOC" : "here-string"}:
+2. Stage the relevant files and create the commit. To ensure good formatting, ALWAYS pass the commit message via a ${isBashToolAvailable() ? "HEREDOC" : "here-string"}:
 ${
-  Ys()
+  isBashToolAvailable()
     ? `\`\`\`
 git commit -m "$(cat <<'EOF'
 Commit message here.${
@@ -3606,17 +3606,17 @@ function Ao() {
   return;
 }
 function is() {
-  return OC() || Wj().length > 0 ? PFe : PTt;
+  return hasTeamMemoryStore() || getOrgMemoryStores().length > 0 ? MEMORY_TYPES_SECTIONS_WITH_SCOPE : MEMORY_TYPES_SECTIONS_NO_SCOPE;
 }
 function xo() {
   registerBundledSkill({
-    name: aEn,
+    name: MEMORY_TYPES_SKILL_NAME,
     description:
       "Full reference for the memory type taxonomy \u2014 what each type captures, when to save it, how to structure the body, with examples.",
     whenToUse:
       "Use before writing a memory file to choose the right `type:` frontmatter value and body structure.",
     userInvocable: !1,
-    isEnabled: () => isAutoMemoryEnabled() && !DK() && lEn(),
+    isEnabled: () => isAutoMemoryEnabled() && !isStoneShellPromptServed() && isMemoryTypesSkillEnabled(),
     async getPromptForCommand() {
       return [
         {
@@ -3785,7 +3785,7 @@ function $o() {
     isEnabled: isPrototypeEnabled,
     userInvocable: !0,
     async getPromptForCommand(e, t) {
-      if (!t.options?.isSkillPreload && !t.options?.modelScheduledOrigin) ler();
+      if (!t.options?.isSkillPreload && !t.options?.modelScheduledOrigin) armPrototypeLane();
       let { SKILL_MD: o } = await import("./whenToUse.ayfna89f.js"),
         s = parseFrontmatter(o).content.trimStart();
       if (artifactCapabilitiesPromptGateOpen()) s += fs;
@@ -3820,7 +3820,7 @@ function ws(e, t, o, s, d) {
     w = null,
     k = buildUntrustedPrTemplateBlock(),
     v =
-      k && Ys()
+      k && isBashToolAvailable()
         ? `
 ${k}`
         : "";
@@ -3858,9 +3858,9 @@ Based on the changes above, open a single pull request:
 1. Analyze ALL changes that will be included in the PR (every commit since ${t}, not just the latest), then draft a title and body:
    - Keep the title short (under 70 characters); put detail in the body${formatPrBodyGuidance(v ? "embedded_context" : null)}
 
-2. Create a new branch if currently on ${t}, push to remote with -u if needed, then create the PR. To ensure good formatting, ALWAYS pass the body via a ${Ys() ? "HEREDOC" : "here-string"}:
+2. Create a new branch if currently on ${t}, push to remote with -u if needed, then create the PR. To ensure good formatting, ALWAYS pass the body via a ${isBashToolAvailable() ? "HEREDOC" : "here-string"}:
 ${
-  Ys()
+  isBashToolAvailable()
     ? `\`\`\`
 gh pr create --title "the pr title" --body "$(cat <<'EOF'
 ## Summary
@@ -4662,8 +4662,8 @@ function Jo() {
 ${d}`;
         return [{ type: "text", text: r }];
       }
-      let t = Tie(XT(), { io: "input" });
-      nkt(t, !1);
+      let t = toJsonSchema(getSettingsSchema(), { io: "input" });
+      stripInternalSchemaDescriptions(t, !1);
       let o = b(t, null, 2),
         s = Ps;
       if (

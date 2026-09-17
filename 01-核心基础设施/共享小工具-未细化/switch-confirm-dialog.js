@@ -14,7 +14,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useSetAppState } from "./app-state-context.js";
 import { useTerminalSize } from "./use-terminal-size.js";
-import { cHe } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { truncateLinesWithOverflow } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { ConfirmPrompt } from "./confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -67,7 +67,7 @@ function ModelOrEffortSwitchDialog(oo) {
   if (f[8] !== y || f[9] !== n || f[10] !== a || f[11] !== A)
     ((u =
       n !== void 0
-        ? e(t, { children: cHe(Us(n).text, y, P + 1) })
+        ? e(t, { children: truncateLinesWithOverflow(Us(n).text, y, P + 1) })
         : r(t, {
             children: [
               "This conversation is cached for the current ",

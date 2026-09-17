@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { highlightLanguageRegistry, resolveCanonicalLanguageId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { $Zn } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { HLJS_SUBLANGUAGE_TABLE } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var Je = commonJS(function (su, Qe) {
   function Hc(e) {
@@ -29687,12 +29687,12 @@ var Gc = {
   },
   resolveId: resolveCanonicalLanguageId,
   loaders: Ec,
-  subLanguageDeps: $Zn,
+  subLanguageDeps: HLJS_SUBLANGUAGE_TABLE,
 };
-function jit() {
+function getHighlightCore() {
   return highlightLanguageRegistry.core(Gc);
 }
-function BB(e) {
+function resolveHighlightLanguageId(e) {
   return highlightLanguageRegistry.ensureLanguage(e, Gc);
 }
-export { jit, BB };
+export { getHighlightCore, resolveHighlightLanguageId };

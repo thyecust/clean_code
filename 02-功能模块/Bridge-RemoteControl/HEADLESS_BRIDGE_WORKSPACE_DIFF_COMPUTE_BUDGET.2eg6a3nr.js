@@ -38,7 +38,7 @@ import {
   readFreshOauthAccountFromDisk,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getProjectsDir, SKIP_PRECOMPACT_THRESHOLD } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { kd, snapshotGitEvidenceForBridge } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { validateStorageKey, snapshotGitEvidenceForBridge } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { isValidPathSegment, hasValidPathSegments, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { SECURE_STORAGE_READ_FAILED_SENTINEL, getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { setCseShimGate, toInfraSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
@@ -476,7 +476,7 @@ function At(d) {
   return null;
 }
 function wt(d) {
-  return kd(d) === void 0 ? d : null;
+  return validateStorageKey(d) === void 0 ? d : null;
 }
 var wn = 2100;
 function Rt(d) {

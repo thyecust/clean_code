@@ -11,7 +11,7 @@ import { getFeatureValueWithSource_CACHED_MAY_BE_STALE, getFeatureValue_CACHED_M
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { ms } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { getEnabledSettingsSources } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import {
@@ -55,7 +55,7 @@ function dfr() {
 }
 var uD = ["userSettings", "flagSettings", "policySettings"];
 function i3t(e) {
-  let o = new Set(ms()),
+  let o = new Set(getEnabledSettingsSources()),
     r = pAe(e),
     t,
     n;
@@ -80,7 +80,7 @@ function pAe(e) {
   return r !== "" && !r.includes("@") ? [r, e] : [e];
 }
 function a3t(e) {
-  let o = new Set(ms()),
+  let o = new Set(getEnabledSettingsSources()),
     r;
   for (let t of uD) {
     if (!o.has(t)) continue;

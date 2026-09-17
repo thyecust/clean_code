@@ -12,7 +12,7 @@ import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { repeatString, ANY_CONTROL_CHAR_REGEX } from "./string-utils.js";
 import { CT } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
-import { oFe, AG, _u } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import { MarkdownTokenizer, MarkdownEngine, markdownParser } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { ARTIFACT_MARKER_GLYPH, withArtifactMarker, BLOCKQUOTE_BAR_GLYPH } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
 import { isCanonicalArtifactViewerUrl, isDecisionSurfaceControl } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
@@ -153,7 +153,7 @@ class W {
     this.#e = !0;
   }
   reset() {
-    ((this.#e = !1), _u.setOptions(_u.getDefaults()));
+    ((this.#e = !1), markdownParser.setOptions(markdownParser.getDefaults()));
   }
 }
 var P = id(new W(), (e) => e.reset());
@@ -167,7 +167,7 @@ class U {
   }
 }
 var Qe = new j(() => new U()),
-  O = oFe.prototype.table,
+  O = MarkdownTokenizer.prototype.table,
   F = {
     tokenizer: {
       del(e) {
@@ -210,9 +210,9 @@ var Qe = new j(() => new U()),
   };
 function o0e() {
   if (P.configured) return;
-  (P.set(), _u.use(F));
+  (P.set(), markdownParser.use(F));
 }
-var _Un = new AG(F, {
+var _Un = new MarkdownEngine(F, {
   tokenizer: {
     emStrong(e) {
       return e.startsWith("_") ? void 0 : !1;
@@ -249,7 +249,7 @@ var _Un = new AG(F, {
 function KWe(e, t, n = null) {
   return (
     o0e(),
-    _u
+    markdownParser
       .lexer(stripAnalysisTags(e))
       .map((o) =>
         aE(o, t, {

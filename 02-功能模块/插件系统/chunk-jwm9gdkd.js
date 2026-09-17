@@ -38,28 +38,28 @@ import {
 import { truncatePathMiddle, truncateToWidth, formatTokenEstimate, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
-  S1,
-  ay,
-  ms,
-  w0,
-  wr,
-  ff,
-  ttt,
-  rlr,
-  Pp,
-  sd,
-  Bge,
-  ntt,
-  ts,
-  ott,
-  Al,
-  zt,
-  nv,
-  MQ,
-  Wge,
-  Om,
-  utt,
-  dtt,
+  CLAUDE_AI_SYNC_LABEL,
+  describeSettingsSourceShort,
+  getEnabledSettingsSources,
+  USER_PROJECT_LOCAL_SETTINGS_SOURCES,
+  sanitizeForDisplay as wr,
+  sanitizeMultilineForDisplay,
+  toHttpUrl,
+  sanitizePluginManifest,
+  removeInvisibleChars,
+  getPluginDisplayName,
+  toNonBlankString,
+  sanitizeCommandRequest,
+  isConnectedMcpServer,
+  truncateWithEllipsis,
+  toDisplayText,
+  formatQuotedDisplayText,
+  toErrorMessage,
+  shouldAutoUpdateMarketplace,
+  isReservedMarketplaceName,
+  isLocalMarketplaceSource,
+  stripMcpServerPrefix,
+  normalizeToolDisplayName,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsForSource, getSettings_DEPRECATED, updateSettingsForSource, updateSettingsForSourceWithTransform } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -215,14 +215,14 @@ import {
   Pye,
   g0e,
 } from "./chunk-q8w2zntw.js";
-import { Fz, _0t, y0t } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { redactManagedMcpConfig, normalizePluginRelevanceSignals, matchPluginRelevanceSignal } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { nl, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { BJt, Vi, jm, jx, Sf, Bae, P8 } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { useListCursor, Table, SelectableRow, DimParenthetical, StatusLine, useMcpReconnect, useMcpToggleEnabled } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { ir, xh, i2 } from "../MCP客户端/chunk-g4gdwpa0.js";
 import { useCopyToClipboard, CopyFeedbackHint, CopyFallbackNotice } from "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
-import { gHe, rFn, oFn } from "../后台任务-Shell管理/chunk-n6g2zfwn.js";
+import { getFlaggedPlugins, markFlaggedPluginsSeen, clearFlaggedPlugin } from "../后台任务-Shell管理/chunk-n6g2zfwn.js";
 import { getPluginInventory } from "../MCP客户端/chunk-4xr0rjb4.js";
-import { wle } from "../后台任务-Shell管理/chunk-c7mzes79.js";
+import { useOnSettingsChange } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { i3e } from "../成本-Token统计/chunk-3nwwgatc.js";
 import { cQt, lIt } from "./chunk-d0tph3ay.js";
 import { computeSkillUsageByPlugin } from "../../01-核心基础设施/共享小工具-未细化/skill-usage-by-plugin.js";
@@ -499,8 +499,8 @@ function Ol({
                   }),
                 ],
               }),
-            w && e(o, { marginTop: 1, children: e(ErrorMessage, { error: ff(w) }) }),
-            A && e(o, { marginTop: 1, children: e(t, { children: ff(A) }) }),
+            w && e(o, { marginTop: 1, children: e(ErrorMessage, { error: sanitizeMultilineForDisplay(w) }) }),
+            A && e(o, { marginTop: 1, children: e(t, { children: sanitizeMultilineForDisplay(A) }) }),
           ],
         }),
         e(o, {
@@ -676,7 +676,7 @@ async function $a(a, k, v, b) {
   let w = await ns(a, v, b);
   if (!w || !(await ph(w, b))) return null;
   let R;
-  for (let Q of ms()) {
+  for (let Q of getEnabledSettingsSources()) {
     let I = getSettingsForSource(Q)?.enabledPlugins?.[a];
     if (I !== void 0) R = I;
   }
@@ -787,18 +787,18 @@ function Mr(aC) {
             let Ny = Boolean(Vd);
             let gC = Sr || Ny;
             Fl(
-              `\u2713 ${Ny ? (Ca ? "Configured" : "Installed and configured") : xr} ${sd(pi)}${wa}.${await Fi(gC)}`,
+              `\u2713 ${Ny ? (Ca ? "Configured" : "Installed and configured") : xr} ${getPluginDisplayName(pi)}${wa}.${await Fi(gC)}`,
             );
             break bb50;
           }
           case "skipped": {
             let fC = Sr || Boolean(Vd);
-            Fl(`\u2713 ${xr} ${sd(pi)}${wa}.${await Fi(fC)}`);
+            Fl(`\u2713 ${xr} ${getPluginDisplayName(pi)}${wa}.${await Fi(fC)}`);
             break bb50;
           }
           case "read-error": {
             Fl(
-              `${xr} ${sd(pi)}${wa}, but its saved options could not be read (${Oy}).${await Fi(Sr)}`,
+              `${xr} ${getPluginDisplayName(pi)}${wa}, but its saved options could not be read (${Oy}).${await Fi(Sr)}`,
             );
             break bb50;
           }
@@ -845,7 +845,7 @@ function Tr(yC) {
       if (Object.keys(Uy).length > 0)
         jd.push({
           key: "top-level",
-          title: `Configure ${sd(ro)}`,
+          title: `Configure ${getPluginDisplayName(ro)}`,
           subtitle: "Plugin options",
           schema: Uy,
           load: () => loadPluginOptions(ti, Cr),
@@ -856,7 +856,7 @@ function Tr(yC) {
         jd.push({
           key: `channel:${Pr.server}`,
           title: `Configure ${Pr.displayName}`,
-          subtitle: `Plugin: ${sd(ro)}`,
+          subtitle: `Plugin: ${getPluginDisplayName(ro)}`,
           schema: Pr.configSchema,
           load: async () => (await loadMcpServerUserConfig(ti, Pr.server, Cr)) ?? void 0,
           save: (bC) => saveMcpServerUserConfig(ti, Pr.server, bC, Pr.configSchema, Vl),
@@ -1386,7 +1386,7 @@ function Lr(CP) {
   else as = jn[1];
   let ls;
   if (jn[2] !== Nt.entry)
-    ((ls = sd(Nt.entry)), (jn[2] = Nt.entry), (jn[3] = ls));
+    ((ls = getPluginDisplayName(Nt.entry)), (jn[2] = Nt.entry), (jn[3] = ls));
   else ls = jn[3];
   let us;
   if (jn[4] !== ls)
@@ -1421,7 +1421,7 @@ function Lr(CP) {
       Nt.entry.description &&
       e(o, {
         marginTop: 1,
-        children: e(t, { children: ff(Nt.entry.description) }),
+        children: e(t, { children: sanitizeMultilineForDisplay(Nt.entry.description) }),
       })),
       (jn[13] = Nt.entry.description),
       (jn[14] = fs));
@@ -1487,7 +1487,7 @@ function Lr(CP) {
   else Eh = jn[30];
   let Ss;
   if (jn[31] !== zi)
-    ((Ss = zi && e(o, { marginBottom: 1, children: e(ErrorMessage, { error: ff(zi) }) })),
+    ((Ss = zi && e(o, { marginBottom: 1, children: e(ErrorMessage, { error: sanitizeMultilineForDisplay(zi) }) })),
       (jn[31] = zi),
       (jn[32] = Ss));
   else Ss = jn[32];
@@ -1498,7 +1498,7 @@ function Lr(CP) {
       ((Wi = (fp, PP) => {
         let ws = Oa === PP;
         return r(
-          jm,
+          SelectableRow,
           {
             active: ws,
             children: [
@@ -1813,7 +1813,7 @@ function Js(_P) {
     return null;
   }
   let qh;
-  if (fi[0] !== Ns) ((qh = ntt(Ns)), (fi[0] = Ns), (fi[1] = qh));
+  if (fi[0] !== Ns) ((qh = sanitizeCommandRequest(Ns)), (fi[0] = Ns), (fi[1] = qh));
   else qh = fi[1];
   let zo = qh,
     zh;
@@ -2824,7 +2824,7 @@ function cc({
           }),
         K.map((ie, kt) =>
           r(
-            jm,
+            SelectableRow,
             {
               active: sn === kt,
               flexDirection: "column",
@@ -2994,7 +2994,7 @@ function cc({
           bt = kt === Oe.length - 1,
           te = pt?.get(ie.pluginId);
         return r(
-          jm,
+          SelectableRow,
           {
             active: Dt && !nt,
             flexDirection: "column",
@@ -3018,7 +3018,7 @@ function cc({
                             ? figures.radioOn
                             : figures.radioOff,
                       " ",
-                      sd(ie.entry),
+                      getPluginDisplayName(ie.entry),
                       ie.entry.category &&
                         r(t, {
                           dimColor: !0,
@@ -3034,7 +3034,7 @@ function cc({
                           dimColor: !0,
                           children: " [not installable on claude.ai yet]",
                         }),
-                      e(jx, { when: ie.isInstalled, children: "installed" }),
+                      e(DimParenthetical, { when: ie.isInstalled, children: "installed" }),
                       te !== void 0 &&
                         X === ig &&
                         r(t, {
@@ -3271,10 +3271,10 @@ function dc({
               let st = Ce[me.marketplaceName]?.source;
               if (!st || !isMarketplaceSourceDeclaredByPolicy(me.marketplaceName, st)) continue;
             }
-            let Ge = _0t(me.entry.name, me.entry.relevance);
+            let Ge = normalizePluginRelevanceSignals(me.entry.name, me.entry.relevance);
             if (!Ge) continue;
             if (getPluginSuggestionDiscoverShownCount(me.pluginId) > 0 && !w?.has(me.pluginId)) continue;
-            let wt = await y0t(Ge, te);
+            let wt = await matchPluginRelevanceSignal(Ge, te);
             if (wt) $t.set(me.pluginId, wt);
           }
         } catch (te) {
@@ -3462,7 +3462,7 @@ function dc({
         yn &&
           e(o, {
             marginBottom: 1,
-            children: e(Sf, { status: "warning", children: yn }),
+            children: e(StatusLine, { status: "warning", children: yn }),
           }),
         e(Zp, { reason: un }),
         e(o, {
@@ -3509,7 +3509,7 @@ function dc({
       yn &&
         e(o, {
           marginBottom: 1,
-          children: e(Sf, { status: "warning", children: yn }),
+          children: e(StatusLine, { status: "warning", children: yn }),
         }),
       pe.length === 0 &&
         at &&
@@ -3533,7 +3533,7 @@ function dc({
           $t = pt.get(Ve.pluginId),
           Dt = ne === it.length - 1;
         return r(
-          jm,
+          SelectableRow,
           {
             active: ke && !nt,
             flexDirection: "column",
@@ -3550,7 +3550,7 @@ function dc({
                     children: [
                       ie ? figures.ellipsis : Oe ? figures.radioOn : figures.radioOff,
                       " ",
-                      sd(Ve.entry),
+                      getPluginDisplayName(Ve.entry),
                       r(t, {
                         dimColor: !0,
                         children: [" ", "\xB7 ", wr(Ve.marketplaceName)],
@@ -4079,7 +4079,7 @@ function wc({
             } else v(`Marketplace not found: ${A}`);
           }
         } catch (Ce) {
-          let ke = nv(Ce);
+          let ke = toErrorMessage(Ce);
           (v(ke), ae(ke));
         } finally {
           xe(!1);
@@ -4238,7 +4238,7 @@ function wc({
           a({ type: "menu" });
         }
       } catch (Oe) {
-        let ie = nv(Oe);
+        let ie = toErrorMessage(Oe);
         if (!Wt.current) return;
         (ae(ie), v(ie));
       } finally {
@@ -4282,7 +4282,7 @@ function wc({
           ),
           Ct((ke) => (ke ? { ...ke, autoUpdate: Ce } : ke)));
       } catch (ke) {
-        ae(nv(ke));
+        ae(toErrorMessage(ke));
       }
     };
   (useKeybinding(
@@ -4420,7 +4420,7 @@ function wc({
         return;
       (fe(null), a({ type: "browse-marketplace", targetMarketplace: Ce }));
     } catch (Ce) {
-      if (Wt.current) ae(nv(Ce));
+      if (Wt.current) ae(toErrorMessage(Ce));
     } finally {
       if (Wt.current) xt(!1);
     }
@@ -4439,7 +4439,7 @@ function wc({
           marginBottom: 1,
           children: e(t, { bold: !0, children: "Manage marketplaces" }),
         }),
-        r(jm, {
+        r(SelectableRow, {
           active: !0,
           flexDirection: "row",
           gap: 1,
@@ -4533,7 +4533,7 @@ function wc({
                   children: "Adding marketplace\u2026",
                 }),
               }),
-            Je && e(o, { marginTop: 1, children: e(ErrorMessage, { error: ff(Je) }) }),
+            Je && e(o, { marginTop: 1, children: e(ErrorMessage, { error: sanitizeMultilineForDisplay(Je) }) }),
             !pt &&
               e(o, {
                 marginTop: 1,
@@ -4659,7 +4659,7 @@ function wc({
 `,
                         e(t, {
                           dimColor: !0,
-                          children: ff(ke.manifest.description ?? ""),
+                          children: sanitizeMultilineForDisplay(ke.manifest.description ?? ""),
                         }),
                       ],
                     },
@@ -4684,7 +4684,7 @@ function wc({
             marginTop: 1,
             children: e(t, { color: "claude", children: wr(Re) }),
           }),
-        !ne && Je && e(o, { marginTop: 1, children: e(ErrorMessage, { error: ff(Je) }) }),
+        !ne && Je && e(o, { marginTop: 1, children: e(ErrorMessage, { error: sanitizeMultilineForDisplay(Je) }) }),
         !ne &&
           e(o, {
             flexDirection: "column",
@@ -4755,7 +4755,7 @@ function wc({
         marginBottom: 1,
         children: e(t, { bold: !0, children: "Manage marketplaces" }),
       }),
-      r(jm, {
+      r(SelectableRow, {
         active: we === 0,
         flexDirection: "row",
         gap: 1,
@@ -4787,7 +4787,7 @@ function wc({
             if (ne.pendingUpdate) Oe.push("UPDATE");
             if (ne.pendingRemove) Oe.push("REMOVE");
             return r(
-              jm,
+              SelectableRow,
               {
                 active: ke,
                 flexDirection: "row",
@@ -4868,7 +4868,7 @@ function wc({
           B.available.map((ne, Ce) => {
             let ke = q.length + Ce + 1 === we;
             return r(
-              jm,
+              SelectableRow,
               {
                 active: ke,
                 flexDirection: "row",
@@ -4908,7 +4908,7 @@ function wc({
           B.hosted.map((ne, Ce) => {
             let ke = q.length + B.available.length + Ce + 1 === we;
             return r(
-              jm,
+              SelectableRow,
               {
                 active: ke,
                 flexDirection: "row",
@@ -4999,7 +4999,7 @@ function wc({
             children: "Processing changes\u2026",
           }),
         }),
-      Je && e(o, { marginTop: 1, children: e(ErrorMessage, { error: ff(Je) }) }),
+      Je && e(o, { marginTop: 1, children: e(ErrorMessage, { error: sanitizeMultilineForDisplay(Je) }) }),
       e(rm, { exitState: w, hasPendingActions: Ut() }),
     ],
   });
@@ -5135,7 +5135,7 @@ function im(a, k, v, b) {
         installedPlugins: j,
         pendingUpdate: !1,
         pendingRemove: !1,
-        autoUpdate: MQ(A, Q, w[A]?.autoUpdate),
+        autoUpdate: shouldAutoUpdateMarketplace(A, Q, w[A]?.autoUpdate),
       };
     })
     .sort((A, Q) => {
@@ -5190,7 +5190,7 @@ function hm(bE) {
       (Qo[4] = Cc),
       (Qo[5] = Gk));
   else Gk = Qo[5];
-  const cm = BJt(Gk);
+  const cm = useListCursor(Gk);
   let za, pn;
   if (Qo[6] !== cm)
     (({ containerRef: za, ...pn } = cm),
@@ -5558,8 +5558,8 @@ function Rm({
     },
     [],
   );
-  let zn = a.isAuthenticated || (ts(a.client) && k > 0),
-    yt = Bae(),
+  let zn = a.isAuthenticated || (isConnectedMcpServer(a.client) && k > 0),
+    yt = useMcpReconnect(),
     Yn = re(async () => {
       (ae(!1), Mt(null), pt(!0));
       try {
@@ -5660,7 +5660,7 @@ function Rm({
   }
   let Xn = capitalize(String(a.name)),
     un = getMcpServerCommands(Fe.commands, a.name).length,
-    Gt = P8(),
+    Gt = useMcpToggleEnabled(),
     Cn = re(() => {
       let te = mcpDialBlockCause(a.name, a.client.config);
       if (te === "managed-policy") return (fe(formatMcpServerBlockedMessage(a.name, te)), !0);
@@ -6074,7 +6074,7 @@ function Rm({
   let Oe = [];
   if (a.client.type === "disabled")
     Oe.push({ label: "Enable", value: "toggle-enabled" });
-  if (ts(a.client) && k > 0) Oe.push({ label: "View tools", value: "tools" });
+  if (isConnectedMcpServer(a.client) && k > 0) Oe.push({ label: "View tools", value: "tools" });
   let ie =
       (a.config.type === "sse" || a.config.type === "http") && configHasAuthorizationHeader(a.config),
     kt =
@@ -6132,16 +6132,16 @@ function Rm({
           flexDirection: "column",
           gap: 0,
           children: [
-            r(Vi, {
+            r(Table, {
               columns: [{ bold: !0 }, {}],
               children: [
-                r(Vi.Row, {
+                r(Table.Row, {
                   children: [e(N, { children: "Status:" }), ub(a.client, k, q)],
                 }),
                 (a.client.type === "failed" ||
                   a.client.type === "needs-auth") &&
                   a.client.error &&
-                  r(Vi.Row, {
+                  r(Table.Row, {
                     children: [
                       e(N, { children: "Issue:" }),
                       e(t, {
@@ -6155,7 +6155,7 @@ function Rm({
                     ],
                   }),
                 a.transport !== "claudeai-proxy" &&
-                  r(Vi.Row, {
+                  r(Table.Row, {
                     children: [
                       e(N, { children: "Auth:" }),
                       zn
@@ -6176,7 +6176,7 @@ function Rm({
                 a.client.type === "connected" &&
                   a.client.protocolEra === "modern" &&
                   a.client.negotiatedProtocolVersion &&
-                  r(Vi.Row, {
+                  r(Table.Row, {
                     children: [
                       e(N, { children: "Protocol:" }),
                       e(t, {
@@ -6188,19 +6188,19 @@ function Rm({
                 a.transport === "claudeai-proxy" &&
                   a.scope === "claudeai" &&
                   a.config.enterpriseManaged &&
-                  r(Vi.Row, {
+                  r(Table.Row, {
                     children: [
                       e(N, { children: "Managed:" }),
                       e(t, { dimColor: !0, children: "by your organization" }),
                     ],
                   }),
-                r(Vi.Row, {
+                r(Table.Row, {
                   children: [
                     e(N, { children: "URL:" }),
-                    e(t, { dimColor: !0, children: Fz(a.config, a.scope).url }),
+                    e(t, { dimColor: !0, children: redactManagedMcpConfig(a.config, a.scope).url }),
                   ],
                 }),
-                r(Vi.Row, {
+                r(Table.Row, {
                   children: [
                     e(N, { children: "Config location:" }),
                     e(t, { dimColor: !0, children: formatMcpScopeLocation(a.scope) }),
@@ -6208,13 +6208,13 @@ function Rm({
                 }),
               ],
             }),
-            ts(a.client) &&
+            isConnectedMcpServer(a.client) &&
               e(zr, {
                 serverToolsCount: k,
                 serverPromptsCount: un,
                 serverResourcesCount: Fe.resources[a.name]?.length || 0,
               }),
-            ts(a.client) &&
+            isConnectedMcpServer(a.client) &&
               k > 0 &&
               r(o, {
                 children: [
@@ -6369,8 +6369,8 @@ function sit({
     Q = useAppStateSession(),
     [I] = useTheme(),
     j = useAppStateSelector((xe) => xe.mcp),
-    q = Bae(),
-    X = P8(),
+    q = useMcpReconnect(),
+    X = useMcpToggleEnabled(),
     [B, K] = d(!1),
     se = re(async () => {
       let xe = a.client.type !== "disabled";
@@ -6434,13 +6434,13 @@ function sit({
         flexDirection: "column",
         gap: 0,
         children: [
-          r(Vi, {
+          r(Table, {
             columns: [{ bold: !0 }, {}],
             children: [
-              r(Vi.Row, {
+              r(Table.Row, {
                 children: [e(N, { children: "Status:" }), pb(a.client, k, I)],
               }),
-              r(Vi.Row, {
+              r(Table.Row, {
                 children: [
                   e(N, { children: "Command:" }),
                   e(t, { dimColor: !0, children: a.config.command }),
@@ -6449,7 +6449,7 @@ function sit({
               a.client.type === "connected" &&
                 a.client.protocolEra === "modern" &&
                 a.client.negotiatedProtocolVersion &&
-                r(Vi.Row, {
+                r(Table.Row, {
                   children: [
                     e(N, { children: "Protocol:" }),
                     e(t, {
@@ -6460,13 +6460,13 @@ function sit({
                 }),
               a.config.args &&
                 a.config.args.length > 0 &&
-                r(Vi.Row, {
+                r(Table.Row, {
                   children: [
                     e(N, { children: "Args:" }),
                     e(t, { dimColor: !0, children: a.config.args.join(" ") }),
                   ],
                 }),
-              r(Vi.Row, {
+              r(Table.Row, {
                 children: [
                   e(N, { children: "Config location:" }),
                   e(t, {
@@ -6477,13 +6477,13 @@ function sit({
               }),
             ],
           }),
-          ts(a.client) &&
+          isConnectedMcpServer(a.client) &&
             e(zr, {
               serverToolsCount: k,
               serverPromptsCount: Fe,
               serverResourcesCount: j.resources[a.name]?.length || 0,
             }),
-          ts(a.client) &&
+          isConnectedMcpServer(a.client) &&
             k > 0 &&
             r(o, {
               children: [
@@ -6536,9 +6536,9 @@ function sWe(v$) {
     gb,
     Qa;
   if (Kn[0] !== Jr.name || Kn[1] !== Ft) {
-    Qa = utt(Ft.name, Jr.name);
+    Qa = stripMcpServerPrefix(Ft.name, Jr.name);
     let w$ = Ft.userFacingName ? Ft.userFacingName({}) : Qa;
-    gb = dtt(w$);
+    gb = normalizeToolDisplayName(w$);
     ((Kn[0] = Jr.name), (Kn[1] = Ft), (Kn[2] = gb), (Kn[3] = Qa));
   } else ((gb = Kn[2]), (Qa = Kn[3]));
   let $m = gb,
@@ -6698,7 +6698,7 @@ function sWe(v$) {
                   {
                     children: [
                       _m,
-                      e(jx, { when: P$ ?? !1, children: "required" }),
+                      e(DimParenthetical, { when: P$ ?? !1, children: "required" }),
                       ":",
                       " ",
                       e(t, {
@@ -6771,7 +6771,7 @@ function iWe(q$) {
     Hm = useAppStateSelector($b),
     Km;
   bb0: {
-    if (!ts(Yo.client)) {
+    if (!isConnectedMcpServer(Yo.client)) {
       let Ci;
       if (wi[0] === MEMO_CACHE_SENTINEL) ((Ci = []), (wi[0] = Ci));
       else Ci = wi[0];
@@ -6794,9 +6794,9 @@ function iWe(q$) {
     let Ja;
     if (wi[7] !== Yo.name)
       ((Ja = (er, Pb) => {
-        let z$ = utt(er.name, Yo.name);
+        let z$ = stripMcpServerPrefix(er.name, Yo.name);
         let W$ = er.userFacingName ? er.userFacingName({}) : z$;
-        let Tb = dtt(W$);
+        let Tb = normalizeToolDisplayName(W$);
         let G$ = er.isReadOnly?.({}) ?? !1;
         let Q$ = er.isDestructive?.({}) ?? !1;
         let Y$ = er.isOpenWorld?.({}) ?? !1;
@@ -6961,7 +6961,7 @@ async function Vb(a, k) {
   let w = getPluginMarketplace(k.source);
   if (w === void 0) return !1;
   let R = (await getKnownMarketplacesOrEmpty(a))[w];
-  return R !== void 0 && Om(R.source) && findContainingSeedDir(R.installLocation) === void 0;
+  return R !== void 0 && isLocalMarketplaceSource(R.source) && findContainingSeedDir(R.installLocation) === void 0;
 }
 function Ym(a, k) {
   let v = resolve(a),
@@ -6972,7 +6972,7 @@ F();
 function Xm(a, k) {
   let [v, b] = d(a);
   return (
-    wle(() => {
+    useOnSettingsChange(() => {
       let w = a();
       b((R) => (k(R, w) ? R : w));
     }),
@@ -6985,80 +6985,80 @@ function Jo(a) {
 function jb(a) {
   switch (a.type) {
     case "path-not-found":
-      return `${zt(a.component)} path not found: ${Al(a.path)}`;
+      return `${formatQuotedDisplayText(a.component)} path not found: ${toDisplayText(a.path)}`;
     case "path-traversal":
-      return `${zt(a.component)} path escapes plugin directory: ${Al(a.path)}${a.reason ? ` \u2014 ${Al(a.reason)}` : ""}`;
+      return `${formatQuotedDisplayText(a.component)} path escapes plugin directory: ${toDisplayText(a.path)}${a.reason ? ` \u2014 ${toDisplayText(a.reason)}` : ""}`;
     case "git-auth-failed":
-      return `Git ${a.authType.toUpperCase()} authentication failed for ${Al(a.gitUrl)}`;
+      return `Git ${a.authType.toUpperCase()} authentication failed for ${toDisplayText(a.gitUrl)}`;
     case "git-timeout":
-      return `Git ${zt(a.operation)} timed out for ${Al(a.gitUrl)}`;
+      return `Git ${formatQuotedDisplayText(a.operation)} timed out for ${toDisplayText(a.gitUrl)}`;
     case "network-error":
-      return `Network error accessing ${Al(a.url)}${a.details ? `: ${zt(a.details)}` : ""}`;
+      return `Network error accessing ${toDisplayText(a.url)}${a.details ? `: ${formatQuotedDisplayText(a.details)}` : ""}`;
     case "manifest-parse-error":
-      return `Failed to parse manifest at ${Al(a.manifestPath)}: ${zt(a.parseError)}`;
+      return `Failed to parse manifest at ${toDisplayText(a.manifestPath)}: ${formatQuotedDisplayText(a.parseError)}`;
     case "manifest-validation-error":
-      return `Invalid manifest at ${Al(a.manifestPath)}: ${zt(a.validationErrors.join(", "))}`;
+      return `Invalid manifest at ${toDisplayText(a.manifestPath)}: ${formatQuotedDisplayText(a.validationErrors.join(", "))}`;
     case "plugin-not-found":
-      return `Plugin "${zt(a.pluginId)}" not found in marketplace "${zt(a.marketplace)}"`;
+      return `Plugin "${formatQuotedDisplayText(a.pluginId)}" not found in marketplace "${formatQuotedDisplayText(a.marketplace)}"`;
     case "marketplace-not-found":
       return a.registryReadFailed
-        ? `Marketplace "${zt(a.marketplace)}": the marketplace registry could not be read`
+        ? `Marketplace "${formatQuotedDisplayText(a.marketplace)}": the marketplace registry could not be read`
         : a.registrationHidden
-          ? `Marketplace "${zt(a.marketplace)}" is registered but was refused (see the debug log)`
-          : `Marketplace "${zt(a.marketplace)}" not found`;
+          ? `Marketplace "${formatQuotedDisplayText(a.marketplace)}" is registered but was refused (see the debug log)`
+          : `Marketplace "${formatQuotedDisplayText(a.marketplace)}" not found`;
     case "marketplace-load-failed":
-      return `Failed to load marketplace "${zt(a.marketplace)}": ${zt(a.reason)}`;
+      return `Failed to load marketplace "${formatQuotedDisplayText(a.marketplace)}": ${formatQuotedDisplayText(a.reason)}`;
     case "mcp-config-invalid":
-      return `Invalid MCP server config for "${zt(a.serverName)}": ${zt(a.validationError)}`;
+      return `Invalid MCP server config for "${formatQuotedDisplayText(a.serverName)}": ${formatQuotedDisplayText(a.validationError)}`;
     case "hook-load-failed":
-      return `Failed to load hooks from ${Al(a.hookPath)}: ${zt(a.reason)}`;
+      return `Failed to load hooks from ${toDisplayText(a.hookPath)}: ${formatQuotedDisplayText(a.reason)}`;
     case "component-load-failed":
-      return `Failed to load ${zt(a.component)} from ${Al(a.path)}: ${zt(a.reason)}`;
+      return `Failed to load ${formatQuotedDisplayText(a.component)} from ${toDisplayText(a.path)}: ${formatQuotedDisplayText(a.reason)}`;
     case "mcpb-download-failed":
-      return `Failed to download MCPB from ${Al(a.url)}: ${zt(a.reason)}`;
+      return `Failed to download MCPB from ${toDisplayText(a.url)}: ${formatQuotedDisplayText(a.reason)}`;
     case "mcpb-extract-failed":
-      return `Failed to extract MCPB ${Al(a.mcpbPath)}: ${zt(a.reason)}`;
+      return `Failed to extract MCPB ${toDisplayText(a.mcpbPath)}: ${formatQuotedDisplayText(a.reason)}`;
     case "mcpb-invalid-manifest":
-      return `MCPB manifest invalid at ${Al(a.mcpbPath)}: ${zt(a.validationError)}`;
+      return `MCPB manifest invalid at ${toDisplayText(a.mcpbPath)}: ${formatQuotedDisplayText(a.validationError)}`;
     case "marketplace-blocked-by-policy":
       return a.blockedByBlocklist
-        ? `Marketplace "${zt(a.marketplace)}" is blocked by enterprise policy`
-        : `Marketplace "${zt(a.marketplace)}" is not in the allowed marketplace list`;
+        ? `Marketplace "${formatQuotedDisplayText(a.marketplace)}" is blocked by enterprise policy`
+        : `Marketplace "${formatQuotedDisplayText(a.marketplace)}" is not in the allowed marketplace list`;
     case "dependency-unsatisfied":
       return a.reason === "not-enabled"
-        ? `Dependency "${zt(a.dependency)}" is disabled`
-        : `Dependency "${zt(a.dependency)}" is not installed`;
+        ? `Dependency "${formatQuotedDisplayText(a.dependency)}" is disabled`
+        : `Dependency "${formatQuotedDisplayText(a.dependency)}" is not installed`;
     case "dependency-version-unsatisfied":
-      return `Requires "${zt(a.dependency)}" ${zt(a.required)}, installed ${zt(a.installed ?? "version unknown")}`;
+      return `Requires "${formatQuotedDisplayText(a.dependency)}" ${formatQuotedDisplayText(a.required)}, installed ${formatQuotedDisplayText(a.installed ?? "version unknown")}`;
     case "lsp-config-invalid":
-      return `Invalid LSP server config for "${zt(a.serverName)}": ${zt(a.validationError)}`;
+      return `Invalid LSP server config for "${formatQuotedDisplayText(a.serverName)}": ${formatQuotedDisplayText(a.validationError)}`;
     case "lsp-server-start-failed":
-      return `LSP server "${zt(a.serverName)}" failed to start: ${zt(a.reason)}`;
+      return `LSP server "${formatQuotedDisplayText(a.serverName)}" failed to start: ${formatQuotedDisplayText(a.reason)}`;
     case "lsp-server-crashed":
       return a.signal
-        ? `LSP server "${zt(a.serverName)}" crashed with signal ${a.signal}`
-        : `LSP server "${zt(a.serverName)}" crashed with exit code ${a.exitCode ?? "unknown"}`;
+        ? `LSP server "${formatQuotedDisplayText(a.serverName)}" crashed with signal ${a.signal}`
+        : `LSP server "${formatQuotedDisplayText(a.serverName)}" crashed with exit code ${a.exitCode ?? "unknown"}`;
     case "lsp-request-timeout":
-      return `LSP server "${zt(a.serverName)}" timed out on ${zt(a.method)} after ${a.timeoutMs}ms`;
+      return `LSP server "${formatQuotedDisplayText(a.serverName)}" timed out on ${formatQuotedDisplayText(a.method)} after ${a.timeoutMs}ms`;
     case "lsp-request-failed":
-      return `LSP server "${zt(a.serverName)}" ${zt(a.method)} failed: ${zt(a.error)}`;
+      return `LSP server "${formatQuotedDisplayText(a.serverName)}" ${formatQuotedDisplayText(a.method)} failed: ${formatQuotedDisplayText(a.error)}`;
     case "plugin-cache-miss":
-      return `Plugin "${zt(a.plugin)}" not cached at ${Al(a.installPath)}`;
+      return `Plugin "${formatQuotedDisplayText(a.plugin)}" not cached at ${toDisplayText(a.installPath)}`;
     case "plugin-not-installed":
-      return `Plugin "${zt(a.plugin)}" is enabled in project settings but isn't installed here`;
+      return `Plugin "${formatQuotedDisplayText(a.plugin)}" is enabled in project settings but isn't installed here`;
     case "autoupdate-deferred-entry-helper":
     case "autoupdate-disabled-by-policy":
       return a.message;
     case "autoupdate-blocked-by-pinner": {
-      let v = a.heldAt ? ` at ${Al(a.heldAt)}` : "",
+      let v = a.heldAt ? ` at ${toDisplayText(a.heldAt)}` : "",
         b =
           a.disabledPinners.length > 0
-            ? ` (${zt(a.disabledPinners.join(", "))} ${a.disabledPinners.length === 1 ? "is" : "are"} disabled)`
+            ? ` (${formatQuotedDisplayText(a.disabledPinners.join(", "))} ${a.disabledPinners.length === 1 ? "is" : "are"} disabled)`
             : "";
-      return `Autoupdate held${v} \u2014 version constraint from ${zt(a.blockedBy.join(", "))}${b}`;
+      return `Autoupdate held${v} \u2014 version constraint from ${formatQuotedDisplayText(a.blockedBy.join(", "))}${b}`;
     }
     case "generic-error":
-      return ott(a.error);
+      return truncateWithEllipsis(a.error);
   }
   return vm(a);
 }
@@ -7086,21 +7086,21 @@ function Hb(a) {
     case "manifest-validation-error":
       return "Check manifest file follows the required schema";
     case "plugin-not-found":
-      return `Plugin may not exist in marketplace "${zt(a.marketplace)}"`;
+      return `Plugin may not exist in marketplace "${formatQuotedDisplayText(a.marketplace)}"`;
     case "marketplace-not-found":
       return a.registryReadFailed
         ? "Check known_marketplaces.json in the plugins directory, then run /reload-plugins"
         : a.registrationHidden
           ? "Remove and re-add the marketplace"
           : a.availableMarketplaces.length > 0
-            ? `Available marketplaces: ${zt(a.availableMarketplaces.join(", "))}`
+            ? `Available marketplaces: ${formatQuotedDisplayText(a.availableMarketplaces.join(", "))}`
             : "Add the marketplace first using /plugin marketplace add";
     case "mcp-config-invalid":
       return "Check MCP server configuration in .mcp.json or manifest";
     case "hook-load-failed":
       return "Check the plugin's hooks configuration and that its hooks file is readable";
     case "component-load-failed":
-      return `Check ${zt(a.component)} directory structure and file permissions`;
+      return `Check ${formatQuotedDisplayText(a.component)} directory structure and file permissions`;
     case "mcpb-download-failed":
       return "Check your internet connection and URL accessibility";
     case "mcpb-extract-failed":
@@ -7111,14 +7111,14 @@ function Hb(a) {
       if (a.blockedByBlocklist)
         return "This marketplace source is explicitly blocked by your administrator";
       return a.allowedSources.length > 0
-        ? `Allowed sources: ${zt(a.allowedSources.join(", "))}`
+        ? `Allowed sources: ${formatQuotedDisplayText(a.allowedSources.join(", "))}`
         : "Contact your administrator to configure allowed marketplace sources";
     case "dependency-unsatisfied":
       return a.reason === "not-enabled"
-        ? `Enable "${zt(a.dependency)}" or uninstall "${zt(a.plugin)}"`
-        : `Install "${zt(a.dependency)}" or uninstall "${zt(a.plugin)}"`;
+        ? `Enable "${formatQuotedDisplayText(a.dependency)}" or uninstall "${formatQuotedDisplayText(a.plugin)}"`
+        : `Install "${formatQuotedDisplayText(a.dependency)}" or uninstall "${formatQuotedDisplayText(a.plugin)}"`;
     case "dependency-version-unsatisfied":
-      return `Update "${zt(a.dependency)}" to satisfy ${zt(a.required)}, or uninstall "${zt(a.plugin)}"`;
+      return `Update "${formatQuotedDisplayText(a.dependency)}" to satisfy ${formatQuotedDisplayText(a.required)}, or uninstall "${formatQuotedDisplayText(a.plugin)}"`;
     case "lsp-config-invalid":
       return "Check LSP server configuration in the plugin manifest";
     case "lsp-server-start-failed":
@@ -7141,7 +7141,7 @@ function Hb(a) {
       let v =
         a.disabledPinners.length > 0 ? a.disabledPinners[0] : a.blockedBy[0];
       return v
-        ? `Update or uninstall "${zt(v)}" to unblock${a.disabledPinners.length > 0 ? " (it is currently disabled)" : ""}`
+        ? `Update or uninstall "${formatQuotedDisplayText(v)}" to unblock${a.disabledPinners.length > 0 ? " (it is currently disabled)" : ""}`
         : null;
     }
     case "marketplace-load-failed":
@@ -7465,7 +7465,7 @@ function Jc(lB) {
     else (($o = $e[12]), (Do = $e[13]));
     const Ln = lt ? "suggestion" : void 0;
     let mn;
-    if ($e[14] !== be) ((mn = sd(be)), ($e[14] = be), ($e[15] = mn));
+    if ($e[14] !== be) ((mn = getPluginDisplayName(be)), ($e[14] = be), ($e[15] = mn));
     else mn = $e[15];
     let on;
     if ($e[16] !== Ln || $e[17] !== mn)
@@ -8448,7 +8448,7 @@ function pu({
     X = useAppStateSelector((T) => T.mcp.tools),
     B = useAppStateSelector((T) => T.plugins.errors),
     K = useAppStateSelector((T) => T.plugins.warnings),
-    se = gHe(),
+    se = getFlaggedPlugins(),
     fe = Gm(),
     [Fe, ze] = d(!1),
     xe = () => ze(!1),
@@ -8496,7 +8496,7 @@ function pu({
     te = C(new Set()),
     Ee = C(new Set()),
     me = C(void 0),
-    Ge = P8(),
+    Ge = useMcpToggleEnabled(),
     wt = re(() => {
       if (ae === "plugin-details") (Re("plugin-list"), tn(null), ie(null));
       else if (typeof ae === "object" && ae.type === "failed-plugin-details")
@@ -8683,7 +8683,7 @@ function pu({
             name: Vn,
             description: Ke.description,
             scope: "skills",
-            source: Ke.loadedFrom === "syncedSkills" ? S1 : ay(Ke.source),
+            source: Ke.loadedFrom === "syncedSkills" ? CLAUDE_AI_SYNC_LABEL : describeSettingsSourceShort(Ke.source),
             override: hr,
             whenToUse: Ke.whenToUse,
             skillRoot: Ke.skillRoot,
@@ -8806,7 +8806,7 @@ function pu({
       [Bt],
     );
   E(() => {
-    if (xn.length > 0) rFn(xn, I);
+    if (xn.length > 0) markFlaggedPluginsSeen(xn, I);
   }, [xn, I]);
   let [si, ci] = d(() => new Set((getGlobalConfig().favoritePlugins ?? []).map(s9e))),
     io = V(
@@ -9157,7 +9157,7 @@ function pu({
                   ? "Updated"
                   : "Uninstalled",
           Qe = ce && ce.length > 0 ? ` \xB7 required by ${ce.join(", ")}` : "",
-          Ae = `${figures.tick} ${gt} ${sd(pe.plugin)}${Qe}. Run /reload-plugins to apply.`;
+          Ae = `${figures.tick} ${gt} ${getPluginDisplayName(pe.plugin)}${Qe}. Run /reload-plugins to apply.`;
         if (T === "update") (k(Ae), await v(), a({ type: "menu" }));
         else Ot(Ae);
       } catch (le) {
@@ -9361,7 +9361,7 @@ function pu({
   );
   let ly = re(() => {
     if (typeof ae !== "object" || ae.type !== "flagged-detail") return;
-    (oFn(ae.plugin.id, I), Re("plugin-list"));
+    (clearFlaggedPlugin(ae.plugin.id, I), Re("plugin-list"));
   }, [ae, I]);
   useKeybindings(
     { "select:accept": ly },
@@ -9465,9 +9465,9 @@ function pu({
       (ce.push({ label: "Update now", action: () => void xa("update") }),
         ce.push({ label: "Uninstall", action: () => void xa("uninstall") }));
     }
-    let He = ttt(pe.plugin.manifest.homepage);
+    let He = toHttpUrl(pe.plugin.manifest.homepage);
     if (He) ce.push({ label: "Open homepage", action: () => void tryOpenUrlInBrowser(He) });
-    let gt = ttt(pe.plugin.manifest.repository);
+    let gt = toHttpUrl(pe.plugin.manifest.repository);
     if (gt) ce.push({ label: "View repository", action: () => void tryOpenUrlInBrowser(gt) });
     if (isSkillDoctorEnabled()) ce.push({ label: "Usage", action: () => Re("plugin-usage") });
     return (
@@ -9507,7 +9507,7 @@ function pu({
                   : await r4(T, "user", !1, I),
                 le = oe.success;
               if (!le) {
-                for (let ce of w0)
+                for (let ce of USER_PROJECT_LOCAL_SETTINGS_SOURCES)
                   if (getSettingsForSource(ce)?.enabledPlugins?.[T] !== void 0)
                     (await updateSettingsForSourceWithTransform(
                       ce,
@@ -9557,7 +9557,7 @@ function pu({
             (refreshPluginState(I, j),
               En("disable", Z),
               Ot(
-                `${figures.tick} Disabled ${sd(pe.plugin)} in .claude/settings.local.json. Run /reload-plugins to apply.`,
+                `${figures.tick} Disabled ${getPluginDisplayName(pe.plugin)} in .claude/settings.local.json. Run /reload-plugins to apply.`,
               ));
           } catch (oe) {
             (ke(!1), ie(l(oe)));
@@ -9596,7 +9596,7 @@ function pu({
                 (ke(!1), ie(`Failed to write settings: ${He.message}`));
                 return;
               }
-              ce = `Removed ${sd(pe.plugin)} from .claude/settings.json`;
+              ce = `Removed ${getPluginDisplayName(pe.plugin)} from .claude/settings.json`;
             }
             (refreshPluginState(I, j),
               En("uninstall", Z),
@@ -9689,7 +9689,7 @@ function pu({
       plugin: pe.plugin,
       pluginId: T,
       onDone: (Z, oe, le) => {
-        let ce = sd(pe.plugin);
+        let ce = getPluginDisplayName(pe.plugin);
         switch (Z) {
           case "configured":
           case "skipped":
@@ -9720,7 +9720,7 @@ function pu({
     return e(
       Rr,
       {
-        title: `Configure ${sd(pe.plugin)}`,
+        title: `Configure ${getPluginDisplayName(pe.plugin)}`,
         subtitle: "Plugin options",
         configSchema: ae.schema,
         load: () => loadPluginOptions(T, j),
@@ -9779,8 +9779,8 @@ function pu({
       }
     }
     return e(Li, {
-      title: `Configure ${Bge(Ni.manifest.display_name) ?? Ni.manifest.name}`,
-      subtitle: `Plugin: ${sd(pe.plugin)}`,
+      title: `Configure ${toNonBlankString(Ni.manifest.display_name) ?? Ni.manifest.name}`,
+      subtitle: `Plugin: ${getPluginDisplayName(pe.plugin)}`,
       configSchema: Ni.configSchema,
       initialValues: Ni.existingConfig,
       onSave: Z,
@@ -9826,7 +9826,7 @@ function pu({
         e(o, {
           marginTop: 1,
           flexDirection: "column",
-          children: r(jm, {
+          children: r(SelectableRow, {
             active: !0,
             children: [
               r(t, { "aria-hidden": !0, children: [figures.pointer, " "] }),
@@ -9862,7 +9862,7 @@ function pu({
           bold: !0,
           color: "warning",
           children: [
-            sd(pe.plugin),
+            getPluginDisplayName(pe.plugin),
             " is enabled in .claude/settings.json (shared with your team)",
           ],
         }),
@@ -9912,7 +9912,7 @@ function pu({
         r(t, {
           bold: !0,
           children: [
-            sd(pe.plugin),
+            getPluginDisplayName(pe.plugin),
             " has",
             " ",
             ae.size.human,
@@ -9973,14 +9973,14 @@ function pu({
                 e(uu, { entries: ce, color: "warning", noun: "note" }),
               ],
             }),
-      Qe = rlr(pe.plugin.manifest);
+      Qe = sanitizePluginManifest(pe.plugin.manifest);
     return r(o, {
       flexDirection: "column",
       children: [
         e(o, {
           children: r(t, {
             bold: !0,
-            children: [sd(pe.plugin), " @", " ", wr(pe.marketplace)],
+            children: [getPluginDisplayName(pe.plugin), " @", " ", wr(pe.marketplace)],
           }),
         }),
         r(o, {
@@ -10042,7 +10042,7 @@ function pu({
           children: Sa.map((Ae, Ye) => {
             let ot = Ye === ui;
             return r(
-              jm,
+              SelectableRow,
               {
                 active: ot,
                 children: [
@@ -10127,7 +10127,7 @@ function pu({
             })
           : isNonMarketplacePluginSource(T.marketplace)
             ? null
-            : r(jm, {
+            : r(SelectableRow, {
                 active: !0,
                 marginTop: 1,
                 children: [
@@ -10589,7 +10589,7 @@ function pu({
             );
           case "disabled-header":
             return e(
-              jm,
+              SelectableRow,
               {
                 active: le,
                 paddingLeft: 2,
@@ -10825,7 +10825,7 @@ function Nx(Vg) {
     {
       children: [
         "  ",
-        e(t, { color: "warning", children: Pp(Vg.name) }),
+        e(t, { color: "warning", children: removeInvisibleChars(Vg.name) }),
         e(t, {
           dimColor: !0,
           children: `  last used ${Vg.daysSinceLastUse} days ago`,
@@ -11765,7 +11765,7 @@ function vd() {
   if (xN[0] === MEMO_CACHE_SENTINEL)
     ((hS = e(o, {
       marginTop: 1,
-      children: e(Sf, {
+      children: e(StatusLine, {
         status: "info",
         children: "Skills are now managed here under the Skills section.",
       }),
@@ -11790,7 +11790,7 @@ function wd() {
   else Qu = Gu[1];
   let Yu;
   if (Gu[2] !== Qu)
-    ((Yu = e(Sf, { status: "info", children: Qu })),
+    ((Yu = e(StatusLine, { status: "info", children: Qu })),
       (Gu[2] = Qu),
       (Gu[3] = Yu));
   else Yu = Gu[3];
@@ -11818,7 +11818,7 @@ function Cd() {
   if (wN[0] === MEMO_CACHE_SENTINEL)
     ((xS = e(o, {
       marginTop: 1,
-      children: e(Sf, {
+      children: e(StatusLine, {
         status: "info",
         children:
           "/skill-doctor moved \u2014 skill usage and context costs now live in this Stats tab.",
@@ -11865,7 +11865,7 @@ function Sv(a) {
       targetPlugin: a.name,
       ...(a.marketplace !== void 0 && { targetMarketplace: a.marketplace }),
       ...(a.marketplace !== void 0 &&
-        !Wge(a.marketplace) && { action: "uninstall" }),
+        !isReservedMarketplaceName(a.marketplace) && { action: "uninstall" }),
     },
   };
 }
@@ -12198,7 +12198,7 @@ function Td(CN) {
       let FS = Di.isAdvisory ? "warning" : "error";
       let HN = Il ? figures.pointer : Di.isAdvisory ? figures.triangleUpOutline : figures.cross;
       return r(
-        jm,
+        SelectableRow,
         {
           active: Il,
           marginLeft: 1,
@@ -12221,7 +12221,7 @@ function Td(CN) {
               children: e(t, {
                 color: FS,
                 wrap: "wrap-trim",
-                children: ff(Di.message),
+                children: sanitizeMultilineForDisplay(Di.message),
               }),
             }),
             Di.guidance &&
@@ -12231,7 +12231,7 @@ function Td(CN) {
                   dimColor: !0,
                   italic: !0,
                   wrap: "wrap-trim",
-                  children: ff(Di.guidance),
+                  children: sanitizeMultilineForDisplay(Di.guidance),
                 }),
               }),
           ],

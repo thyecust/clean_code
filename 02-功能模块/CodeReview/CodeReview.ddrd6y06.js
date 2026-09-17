@@ -59,7 +59,7 @@ import {
   teleportToRemote,
   damerauLevenshteinDistance,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { TTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isAnthropicMonorepoRemote } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { markUltrareviewRun } from "./ultrareview-tips.js";
 import { homedir } from "os";
 import { resolve } from "path";
@@ -221,7 +221,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
           error: `${t} <PR#> needs a GitHub remote so it knows which repository the PR is in. If this project is not on GitHub yet, run "gh repo create --source=. --push" to create one; if a GitHub repo already exists, run "git remote add origin REPO_URL". Or run ${t} with no argument to review your current branch instead.`,
         }
       );
-    if (TTt(c))
+    if (isAnthropicMonorepoRemote(c))
       return (
         logEvent("tengu_review_remote_precondition_failed", {
           reason: S("monorepo_blocked"),

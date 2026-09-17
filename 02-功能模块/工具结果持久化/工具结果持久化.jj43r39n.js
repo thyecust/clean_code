@@ -12,7 +12,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { ge, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ou, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { hL, _L, PIn, OIn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getSidecarKeyForToolResultFile, ensureToolResultsDirectory, assertSafeDirectoryPath, removeSymlinkAtWriteTarget } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { u1, Mvt, Oir, Dir } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
@@ -74,10 +74,10 @@ async function tG(t, e, r, s) {
         error: "Cannot persist tool results containing non-text content",
       };
   }
-  await _L(r, s);
+  await ensureToolResultsDirectory(r, s);
   let o = g7e(r, e, a),
     l = a ? b(t, null, 2) : t,
-    p = isHoverRestEnabled() && s !== void 0 ? hL(dirname(o), basename(o)) : void 0;
+    p = isHoverRestEnabled() && s !== void 0 ? getSidecarKeyForToolResultFile(dirname(o), basename(o)) : void 0;
   if (isHoverRestEnabled() && s !== void 0 && p !== void 0) {
     let d = await s.write(p, l, {
       precondition: { type: "ifAbsent" },
@@ -94,8 +94,8 @@ async function tG(t, e, r, s) {
   } else {
     let d = getFileStorage();
     try {
-      (await PIn(dirname(o), d),
-        await OIn(o, d),
+      (await assertSafeDirectoryPath(dirname(o), d),
+        await removeSymlinkAtWriteTarget(o, d),
         await d.writeExclusive(o, l),
         n(`Persisted tool result to ${o} (${formatFileSize(l.length)})`));
     } catch (g) {

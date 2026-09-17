@@ -11,16 +11,16 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { wc, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { da, Za, uHn, primeRemoteManagedSettingsCache, ZBe, Ake, Eie, jq } from "./设置-配置.aqbb35ee.js";
+import { getHostSettingsStore, invalidateAllSettings, getSystemManagedSettingsPathOverride, primeRemoteManagedSettingsCache, getManagedSettingsDirs, logBrokenSettingsSymlink, emptySettingsResult, SETTINGS_FILENAMES } from "./设置-配置.aqbb35ee.js";
 import {
-  S0,
-  B5t,
-  wxn,
-  Txn,
-  xar,
-  dRt,
-  Exn,
-  Axn,
+  getWslInheritsWindowsSettings,
+  readUserSettingsSeed,
+  reseedSettingsFileLayer,
+  createUserSettingsSeedSource,
+  listSettingsDropInFileNames,
+  describeSettingsReadResult,
+  createNamedSettingsSeedSource,
+  createPolicySettingsSeedSource,
   localSettingsStoreRootAwaitingOwnershipProbe,
   getSettingsFilePathForSource,
   getLegacyLocalSettingsFilePath,
@@ -32,7 +32,7 @@ var b = 3,
   x = 8;
 function v() {
   let t = getSettingsFilePathForSource("userSettings");
-  return t !== void 0 && basename(t) === jq.default ? t : void 0;
+  return t !== void 0 && basename(t) === SETTINGS_FILENAMES.default ? t : void 0;
 }
 async function seedUserSettings(t, e) {
   if (!isHoverRestEnabled()) return;
@@ -75,15 +75,15 @@ async function N(t, e) {
       return;
     }
     let i = e.epoch,
-      r = await B5t(t, s);
+      r = await readUserSettingsSeed(t, s);
     if (r.kind === "absent") {
-      if ((Ake(s), e.seedParsedFile(s, "userSettings", Eie(), i)))
+      if ((logBrokenSettingsSymlink(s), e.seedParsedFile(s, "userSettings", emptySettingsResult(), i)))
         n("settingsPrime: user settings absent; seeded as none");
       return;
     }
     if (r.kind !== "seeded") {
       n(
-        `settingsPrime: start-up seed skipped (${dRt(r)}); the file read serves`,
+        `settingsPrime: start-up seed skipped (${describeSettingsReadResult(r)}); the file read serves`,
       );
       return;
     }
@@ -185,7 +185,7 @@ class T {
   }
   async seedFromBackend(t, e) {
     let s = this.state,
-      i = await B5t(this.storageV5, t, s.kind === "seeded" ? s : void 0);
+      i = await readUserSettingsSeed(this.storageV5, t, s.kind === "seeded" ? s : void 0);
     if (this.store.epoch !== e || this.disposed) return !1;
     if (i.kind === "seeded") {
       if (
@@ -194,7 +194,7 @@ class T {
       )
         return !0;
     } else if (i.kind === "absent")
-      (Ake(t), this.store.seedParsedFile(t, "userSettings", Eie(), e));
+      (logBrokenSettingsSymlink(t), this.store.seedParsedFile(t, "userSettings", emptySettingsResult(), e));
     return (this.transition(i), !0);
   }
   transition(t) {
@@ -282,7 +282,7 @@ async function primeSettings(t, e) {
   (primeRemoteManagedSettingsCache(t).catch(logError), (e.primer = new T(t, e)), await e.primer.whenIdle());
 }
 async function resetSettingsCacheWithBackendRead(t) {
-  let e = da(),
+  let e = getHostSettingsStore(),
     s = e.backendReadResetTail,
     i;
   ((e.backendReadResetTail = new Promise((r) => (i = r))), await s);
@@ -297,10 +297,10 @@ async function W(t, e) {
   let s =
     e.primer === void 0
       ? []
-      : (await Promise.all([...G(t).map((i) => wxn(e, i)), X(t, e)]))
+      : (await Promise.all([...G(t).map((i) => reseedSettingsFileLayer(e, i)), X(t, e)]))
           .flat()
           .filter((i) => i !== void 0);
-  if ((Za(s.length > 0 ? { userLayer: "retain" } : void 0), s.length === 0))
+  if ((invalidateAllSettings(s.length > 0 ? { userLayer: "retain" } : void 0), s.length === 0))
     return;
   return () => {
     for (let i of s) i();
@@ -308,7 +308,7 @@ async function W(t, e) {
 }
 function G(t) {
   let e = v();
-  return [...(e === void 0 ? [] : [Txn(t, e)]), ...O(t)];
+  return [...(e === void 0 ? [] : [createUserSettingsSeedSource(t, e)]), ...O(t)];
 }
 function O(t) {
   let e = [];
@@ -317,7 +317,7 @@ function O(t) {
     let i = getSettingsFilePathForSource(s);
     if (i !== void 0)
       e.push(
-        Exn(
+        createNamedSettingsSeedSource(
           t,
           s,
           i,
@@ -327,7 +327,7 @@ function O(t) {
     if (s === "localSettings") {
       let r = getLegacyLocalSettingsFilePath();
       if (r !== void 0 && r !== i)
-        e.push(Exn(t, s, r, "legacy local settings"));
+        e.push(createNamedSettingsSeedSource(t, s, r, "legacy local settings"));
     }
   }
   return e;
@@ -342,13 +342,13 @@ async function B(t, e) {
         ));
     return;
   }
-  let i = ZBe(S0()),
+  let i = getManagedSettingsDirs(getWslInheritsWindowsSettings()),
     r = e.policyWalkCount,
     a = i.map((c) =>
-      Axn(t, f(c, "managed-settings.json"), "managed settings", e),
+      createPolicySettingsSeedSource(t, f(c, "managed-settings.json"), "managed settings", e),
     ),
     [o, g] = await Promise.all([
-      Promise.all(i.map((c) => xar(s, f(c, "managed-settings.d")))),
+      Promise.all(i.map((c) => listSettingsDropInFileNames(s, f(c, "managed-settings.d")))),
       Promise.all(a.map((c) => c.read())),
     ]),
     d = { listings: [], unlisted: [], layers: [...a], walksAtReadStart: r },
@@ -372,7 +372,7 @@ async function B(t, e) {
     }
     d.listings.push({ dir: m, names: p.names });
     for (let D of p.names)
-      u.push(Axn(t, f(m, D), "managed settings drop-in", e));
+      u.push(createPolicySettingsSeedSource(t, f(m, D), "managed settings drop-in", e));
   }
   return (
     d.layers.push(...u),
@@ -396,7 +396,7 @@ function P(t, e, s) {
     e.systemAttestationContradicted
   )
     return;
-  if (uHn() !== void 0) {
+  if (getSystemManagedSettingsPathOverride() !== void 0) {
     if (!e.systemSpaceServingLogged)
       ((e.systemSpaceServingLogged = !0),
         n(
@@ -404,7 +404,7 @@ function P(t, e, s) {
         ));
     return;
   }
-  let i = ZBe(S0()).map((r) => ({
+  let i = getManagedSettingsDirs(getWslInheritsWindowsSettings()).map((r) => ({
     dropInDir: f(r, "managed-settings.d"),
     basePath: f(r, "managed-settings.json"),
   }));
@@ -428,10 +428,10 @@ function P(t, e, s) {
       ));
   for (let { basePath: r, dropInDir: a } of i)
     if ((e.seedFolderListing(a, L, s), !e.walkRead(r)))
-      e.seedParsedFile(r, "policySettings", Eie(), s);
+      e.seedParsedFile(r, "policySettings", emptySettingsResult(), s);
   return {
     listings: i.map(({ dropInDir: r }) => ({ dir: r, names: L })),
-    layers: i.map(({ basePath: r }) => ({ path: r, parsed: Eie() })),
+    layers: i.map(({ basePath: r }) => ({ path: r, parsed: emptySettingsResult() })),
   };
 }
 async function U(t, e, s) {
@@ -450,7 +450,7 @@ function C(t, e, s, i, r) {
     let u = s[g];
     if (u.kind !== "seeded") {
       (n(
-        `settingsPrime: ${d.label} not seeded (${dRt(u)}); the file read serves`,
+        `settingsPrime: ${d.label} not seeded (${describeSettingsReadResult(u)}); the file read serves`,
       ),
         t.managedFileReads.delete(d.path),
         t.unseedParsedFile(d.path, d.source, r));
@@ -492,7 +492,7 @@ function C(t, e, s, i, r) {
 function H(t, e) {
   for (let s of [...t.managedFileReads.keys()])
     (t.managedFileReads.delete(s), t.unseedParsedFile(s, "policySettings", e));
-  for (let s of ZBe(S0())) t.clearFolderListing(f(s, "managed-settings.d"), e);
+  for (let s of getManagedSettingsDirs(getWslInheritsWindowsSettings())) t.clearFolderListing(f(s, "managed-settings.d"), e);
 }
 function I(t, e, s) {
   for (let a of e.unlisted) t.clearFolderListing(a, s);
@@ -521,7 +521,7 @@ function Q(t, e, s, i) {
         o.kind === "seeded"
           ? o.parsed
           : o.kind === "absent" && a.whenAbsent === "seedAbsence"
-            ? Eie()
+            ? emptySettingsResult()
             : void 0;
     if (g !== void 0 && t.walkReadDiffers(a.path, g))
       n(
@@ -530,10 +530,10 @@ function Q(t, e, s, i) {
     else if (o.kind === "seeded")
       t.seedParsedFile(a.path, a.source, o.parsed, i);
     else if (g !== void 0)
-      (Ake(a.path), t.seedParsedFile(a.path, a.source, g, i));
+      (logBrokenSettingsSymlink(a.path), t.seedParsedFile(a.path, a.source, g, i));
     else
       n(
-        `settingsPrime: ${a.label} not seeded (${dRt(o)}); the file read serves`,
+        `settingsPrime: ${a.label} not seeded (${describeSettingsReadResult(o)}); the file read serves`,
       );
   }
 }

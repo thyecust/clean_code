@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 259 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getRemoteTransport, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -27,7 +27,7 @@ import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-a
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
-import { y6e } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { BackgroundTasksDialog } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
@@ -99,7 +99,7 @@ function J(Oo) {
   let c = Po.filter(ao),
     [S, po] = d(null),
     mo;
-  if (i[4] === MEMO_CACHE_SENTINEL) ((mo = Ks()), (i[4] = mo));
+  if (i[4] === MEMO_CACHE_SENTINEL) ((mo = hasRemoteControlChannel()), (i[4] = mo));
   else mo = i[4];
   let co = mo,
     A = C(!1),
@@ -132,7 +132,7 @@ function J(Oo) {
         return;
       }
       let u = M ?? c[0]?.id;
-      let go = jn();
+      let go = getRemoteTransport();
       if (u === void 0 || ro.has(u) || !go) {
         return;
       }
@@ -236,8 +236,8 @@ function J(Oo) {
   return Co;
 }
 async function tt(f, g) {
-  if (jn()) return e(J, { onDone: f });
-  return e(y6e, {
+  if (getRemoteTransport()) return e(J, { onDone: f });
+  return e(BackgroundTasksDialog, {
     toolUseContext: g,
     onDone: f,
     promptVisibleBelow: g.isMidTurn === !0,

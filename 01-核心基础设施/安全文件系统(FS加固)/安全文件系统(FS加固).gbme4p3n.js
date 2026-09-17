@@ -50,8 +50,8 @@ import {
   readFile as lr,
 } from "fs/promises";
 import { basename as ur, dirname as dr, join as dt } from "path";
-var dcr = 10485760;
-var P2e = 512000;
+var FIRST_PARTY_MAX_IMAGE_BASE64_BYTES = 10485760;
+var DEFAULT_MAX_IMAGE_RAW_BYTES = 512000;
 var Ut = {
     imageMaxRawBytes: 307200,
     wholePdfMaxRawBytes: 0,
@@ -62,33 +62,33 @@ var Ut = {
     wholePdfMaxRawBytes: 2500000,
     pdfMaxPagesPerRead: 6,
   };
-function I7t(e) {
+function getAttachmentLimitsForTransport(e) {
   return e === "session" ? Wt : Ut;
 }
 var _e = 28;
-function P7t(e, t) {
+function estimateImageTokenCount(e, t) {
   if (e <= 0 || t <= 0) return 0;
   return Math.ceil(e / _e) * Math.ceil(t / _e);
 }
-var CA = {
+var DEFAULT_IMAGE_LIMITS = {
     maxWidth: 2000,
     maxHeight: 2000,
     maxBase64Size: 5242880,
     targetRawSize: 3932160,
   },
-  hnt = 33554432,
-  rxt = 20971520,
-  pcr = 100,
-  fcr = 3145728,
-  oxt = 104857600,
-  $ie = 20,
-  O7t = 10,
-  mcr = 100,
-  gcr = 600,
-  hcr = 20,
-  _cr = 78643200,
-  ycr = hnt - 8388608,
-  Scr = 10485760;
+  DEFAULT_REQUEST_BYTE_LIMIT = 33554432,
+  MAX_PDF_ATTACHMENT_BYTES = 20971520,
+  MAX_PDF_ATTACHMENT_PAGES = 100,
+  PDF_PAGE_EXTRACTION_SIZE_THRESHOLD = 3145728,
+  MAX_BINARY_CONTENT_BYTES = 104857600,
+  DEFAULT_MAX_PDF_PAGES_PER_READ = 20,
+  MAX_PDF_PAGES_FOR_WHOLE_READ = 10,
+  DEFAULT_MAX_MEDIA_BLOCKS = 100,
+  LONG_CONTEXT_MAX_MEDIA_BLOCKS = 600,
+  MEDIA_BLOCK_RESERVE_COUNT = 20,
+  MEDIA_BYTE_CAP_FOR_OTHER_PROVIDERS = 78643200,
+  MEDIA_BYTE_CAP_FOR_DEFAULT_ENDPOINT = DEFAULT_REQUEST_BYTE_LIMIT - 8388608,
+  MEDIA_BYTE_CAP_SAFETY_MARGIN = 10485760;
 import {
   basename as Jn,
   dirname as Zn,
@@ -122,10 +122,10 @@ function Xt(e) {
   let t = A(e);
   return t !== void 0 && Vt.has(t);
 }
-function C7t(e, t) {
+function isErrnoCode(e, t) {
   return A(e) === t;
 }
-function kIn(e) {
+function isRetryableFsError(e) {
   let t = A(e);
   return t !== void 0 && Yt.has(t);
 }
@@ -139,19 +139,19 @@ async function ee(e) {
     return Cg(Jt(t));
   }
 }
-var v7t = 384;
-async function Qt(e, t, r = v7t) {
+var DEFAULT_OPEN_FILE_MODE = 384;
+async function Qt(e, t, r = DEFAULT_OPEN_FILE_MODE) {
   let o = await ee(Zt(e));
   if (!o.ok && o.error.kind !== "absent") return Cg(o.error);
   if (o.ok && !o.value.isFile()) return Cg(tn(e, o.value));
   return ee(ke(e, t | O_NOFOLLOW_NONBLOCK_FLAGS, r));
 }
-async function v0(e) {
+async function openFileReadOnlyHardened(e) {
   if (O_NOFOLLOW_NONBLOCK_FLAGS === 0) return Qt(e, Ie.O_RDONLY);
   return en(e, await ee(ke(e, Ie.O_RDONLY | O_NOFOLLOW_NONBLOCK_FLAGS)));
 }
 function en(e, t) {
-  return !t.ok && t.error.kind === "fs" && C7t(t.error.error, "ELOOP")
+  return !t.ok && t.error.kind === "fs" && isErrnoCode(t.error.error, "ELOOP")
     ? Cg({ kind: "fs", error: xe(e, "ELOOP") })
     : t;
 }
@@ -189,15 +189,15 @@ class ve {
   procUnreadableLogged = !1;
 }
 var es = new j(() => new ve());
-var icr = "LinkMisdirected",
-  acr = "LinkUnverified";
+var LINK_MISDIRECTED_TELEMETRY_CODE = "LinkMisdirected",
+  LINK_UNVERIFIED_TELEMETRY_CODE = "LinkUnverified";
 function rn(e) {
   return hs(
     e,
     "expected a segment that is not empty or made only of dots and spaces, with no path separator, NUL or set-aside shape",
   );
 }
-function kd(e) {
+function validateStorageKey(e) {
   if (typeof e !== "object" || e === null)
     return hs("key", "expected a key object");
   let t = mn(e);
@@ -376,14 +376,14 @@ function bn(e) {
     ? hs("key.agentRelPath", "requires agentId or journal")
     : void 0;
 }
-var The = "cloud-snapshots",
-  lcr = "archive-sync",
-  txt = "folder-sync",
+var CLOUD_SNAPSHOTS_DIR_NAME = "cloud-snapshots",
+  ARCHIVE_SYNC_DIR_NAME = "archive-sync",
+  FOLDER_SYNC_DIR_NAME = "folder-sync",
   We = new Set([
     "memory",
     "tiny_memory",
     "bagel",
-    The,
+    CLOUD_SNAPSHOTS_DIR_NAME,
     "bridge-pointer.json",
     ".session-aliases",
   ]),
@@ -399,10 +399,10 @@ function Ye(e) {
   return (
     Array.isArray(e) &&
     typeof e[0] === "string" &&
-    getNormalizedNames(e[0]).some((t) => xIn(t) !== void 0)
+    getNormalizedNames(e[0]).some((t) => parseRecordingStampFromFileName(t) !== void 0)
   );
 }
-function xIn(e) {
+function parseRecordingStampFromFileName(e) {
   if (!e.endsWith(te)) return;
   let t = e.slice(0, -te.length);
   return Ve(t) ? t : void 0;
@@ -412,16 +412,16 @@ var Xe = [".ccr-tip.json", ".precompact.json", te],
 function qe(e) {
   return getNormalizedNames(e).some((t) => Xe.some((r) => t.endsWith(r)));
 }
-var R7t = ".dir-sync.json",
-  wn = `must not end with ${R7t}: that names a cloud session's directory-sync record at the project level`;
+var DIR_SYNC_RECORD_FILE_SUFFIX = ".dir-sync.json",
+  wn = `must not end with ${DIR_SYNC_RECORD_FILE_SUFFIX}: that names a cloud session's directory-sync record at the project level`;
 function Pn(e) {
-  return getNormalizedNames(e).some((t) => t.endsWith(R7t));
+  return getNormalizedNames(e).some((t) => t.endsWith(DIR_SYNC_RECORD_FILE_SUFFIX));
 }
 var In = `${[...We].join(", ")} are reserved: they name project-level entries, not sessions`;
 function Je(e) {
   return getNormalizedNames(e).some((t) => We.has(t));
 }
-function ccr(e) {
+function isValidSessionName(e) {
   return !Je(e) && !isJsonlFileName(e) && !qe(e);
 }
 function ne(e, t) {
@@ -671,7 +671,7 @@ function Un(e) {
   }
   return;
 }
-function HIn(e) {
+function validateStorageScope(e) {
   if (typeof e !== "object" || e === null)
     return hs("scope", "expected a scope object");
   let t = Xn(e);
@@ -935,10 +935,10 @@ function Xn(e) {
   return;
 }
 var qn = 6;
-function _nt(e) {
-  return e.endsWith(".meta.json") ? tE(e) : void 0;
+function getSidecarKeyForMetadataPath(e) {
+  return e.endsWith(".meta.json") ? getSidecarKeyForPath(e) : void 0;
 }
-function tE(e) {
+function getSidecarKeyForPath(e) {
   let t = ot(e);
   if (isJsonlFileName(t)) return;
   let r = getProjectsDir(),
@@ -953,21 +953,21 @@ function tE(e) {
   let [i, a, ...u] = o;
   if (!isValidPathSegment(i) || !isValidPathSegment(a) || u.length === 0 || !u.every(isValidPathSegment)) return;
   let m = STORAGE_KEYS.sidecar(i, a, u);
-  return kd(m) === void 0 ? m : void 0;
+  return validateStorageKey(m) === void 0 ? m : void 0;
 }
-var Ehe = "tool-results";
-function yS(e) {
-  return pe(getProjectDir(e.root.project.originalCwd), e.root.id, Ehe);
+var TOOL_RESULTS_DIR_NAME = "tool-results";
+function getToolResultsDirForSession(e) {
+  return pe(getProjectDir(e.root.project.originalCwd), e.root.id, TOOL_RESULTS_DIR_NAME);
 }
-function SS() {
-  return yS({ root: { id: K(), project: { originalCwd: he() } } });
+function getCurrentToolResultsDir() {
+  return getToolResultsDirForSession({ root: { id: K(), project: { originalCwd: he() } } });
 }
-function hL(e, t) {
-  if (Jn(e) !== Ehe || !isValidPathSegment(t)) return;
-  return tE(pe(e, t));
+function getSidecarKeyForToolResultFile(e, t) {
+  if (Jn(e) !== TOOL_RESULTS_DIR_NAME || !isValidPathSegment(t)) return;
+  return getSidecarKeyForPath(pe(e, t));
 }
 function nr(e) {
-  let t = hL(e, "probe");
+  let t = getSidecarKeyForToolResultFile(e, "probe");
   if (t === void 0 || t.namespace !== "sidecar") return;
   return {
     namespace: "sidecar",
@@ -976,7 +976,7 @@ function nr(e) {
     relPath: t.relPath.slice(0, -1),
   };
 }
-async function _L(e, t) {
+async function ensureToolResultsDirectory(e, t) {
   if (isHoverRestEnabled() && t !== void 0) {
     let s = nr(e);
     if (s !== void 0)
@@ -1011,7 +1011,7 @@ async function at(e, t) {
   }
   return;
 }
-async function PIn(e, t) {
+async function assertSafeDirectoryPath(e, t) {
   let r = await at(t, e);
   if (r !== void 0)
     throw new R(
@@ -1019,12 +1019,12 @@ async function PIn(e, t) {
       "tool-results path refused: a directory on the way is a link or not a directory",
     );
 }
-async function Ahe(e, t, r) {
+async function writeBytesExclusiveHardened(e, t, r) {
   let o = getFileStorage();
-  await PIn(Zn(e), o);
+  await assertSafeDirectoryPath(Zn(e), o);
   for (let s = 1; ; s++) {
     if (s > 1) await ct(o, e);
-    else await OIn(e, o);
+    else await removeSymlinkAtWriteTarget(e, o);
     try {
       await o.writeBytesExclusive(e, t, r);
       return;
@@ -1033,7 +1033,7 @@ async function Ahe(e, t, r) {
     }
   }
 }
-async function OIn(e, t) {
+async function removeSymlinkAtWriteTarget(e, t) {
   if ((await t.lstat(e))?.isSymbolicLink) await ct(t, e);
 }
 async function ct(e, t) {
@@ -1050,7 +1050,7 @@ function fr(e) {
   if (t === r) return `page ${t}`;
   return `pages ${t}-${r}`;
 }
-async function bcr(e) {
+async function readPdfAttachment(e) {
   try {
     let o = (await ae().stat(e)).size;
     if (o === 0)
@@ -1058,12 +1058,12 @@ async function bcr(e) {
         success: !1,
         error: { reason: "empty", message: `PDF file is empty: ${e}` },
       };
-    if (o > rxt)
+    if (o > MAX_PDF_ATTACHMENT_BYTES)
       return {
         success: !1,
         error: {
           reason: "too_large",
-          message: `PDF file exceeds maximum allowed size of ${formatFileSize(rxt)}.`,
+          message: `PDF file exceeds maximum allowed size of ${formatFileSize(MAX_PDF_ATTACHMENT_BYTES)}.`,
         },
       };
     let s = await lr(e);
@@ -1093,7 +1093,7 @@ async function bcr(e) {
     };
   }
 }
-async function D7t(e) {
+async function getPdfPageCount(e) {
   let { code: t, stdout: r } = await execFileNoThrow("pdfinfo", [e], {
     timeout: 1e4,
     useCwd: !1,
@@ -1132,7 +1132,7 @@ async function mr() {
   if (o) e.markAvailable();
   return o;
 }
-async function DIn(e, t, r) {
+async function extractPdfPageImages(e, t, r) {
   try {
     let o = await ar(e, me("darwin")),
       s = await o.stat().finally(() => o.close());
@@ -1150,12 +1150,12 @@ async function DIn(e, t, r) {
         success: !1,
         error: { reason: "empty", message: `PDF file is empty: ${e}` },
       };
-    if (i > oxt)
+    if (i > MAX_BINARY_CONTENT_BYTES)
       return {
         success: !1,
         error: {
           reason: "too_large",
-          message: `PDF file exceeds maximum allowed size for text extraction (${formatFileSize(oxt)}).`,
+          message: `PDF file exceeds maximum allowed size for text extraction (${formatFileSize(MAX_BINARY_CONTENT_BYTES)}).`,
         },
       };
     if (!(await mr()))
@@ -1168,7 +1168,7 @@ async function DIn(e, t, r) {
         },
       };
     let u = randomUUID(),
-      m = dt(SS(), `pdf-${u}`),
+      m = dt(getCurrentToolResultsDir(), `pdf-${u}`),
       b = r === void 0 ? void 0 : mt(m);
     await mkdir(m, { recursive: !0 });
     let S = dt(m, "page"),
@@ -1203,12 +1203,12 @@ async function DIn(e, t, r) {
                 "PDF reports 0 pages (empty page tree). The PDF may be invalid.",
             },
           };
-        let $t = Math.min(O, $ie);
+        let $t = Math.min(O, DEFAULT_MAX_PDF_PAGES_PER_READ);
         return {
           success: !1,
           error: {
             reason: "page_out_of_range",
-            message: `Requested ${fr(t)} is outside the document (PDF has ${O} ${pluralize(O, "page")}). Use a range within 1-${O}, maximum ${$ie} pages per request (e.g. pages: "1-${$t}").`,
+            message: `Requested ${fr(t)} is outside the document (PDF has ${O} ${pluralize(O, "page")}). Use a range within 1-${O}, maximum ${DEFAULT_MAX_PDF_PAGES_PER_READ} pages per request (e.g. pages: "1-${$t}").`,
           },
         };
       }
@@ -1252,7 +1252,7 @@ async function DIn(e, t, r) {
     }
     let E;
     if (r !== void 0) {
-      let C = await LIn(r, m, b);
+      let C = await listExtractedPdfPageNames(r, m, b);
       if (!C.ok)
         return {
           success: !1,
@@ -1325,15 +1325,15 @@ function ge(e) {
 }
 var pt = "ListCapExceeded";
 function mt(e) {
-  let t = SS();
+  let t = getCurrentToolResultsDir();
   if (dr(e) !== t)
     throw new R(
       `PDF extraction directory is outside the session tool-results store: ${e}`,
       "pdf extraction dir outside tool-results",
     );
-  return { projectKey: getProjectKey(he()), sessionId: K(), relPath: [Ehe, ur(e)] };
+  return { projectKey: getProjectKey(he()), sessionId: K(), relPath: [TOOL_RESULTS_DIR_NAME, ur(e)] };
 }
-async function LIn(e, t, r) {
+async function listExtractedPdfPageNames(e, t, r) {
   let o = r ?? mt(t),
     { projectKey: s, sessionId: i, relPath: a } = o,
     u = [],
@@ -1399,7 +1399,7 @@ async function LIn(e, t, r) {
   }
   return { ok: !0, names: u, directoryExists: b, scope: o };
 }
-async function NP(e, t, r) {
+async function readFileHardened(e, t, r) {
   let o = r?.fromTail === !0 ? "unreadable" : null,
     s;
   try {
@@ -1447,14 +1447,14 @@ async function NP(e, t, r) {
 \u2026[truncated at ${t} chars of ${a.size} bytes]`
       : S;
   } catch (i) {
-    return ynt(i) ? null : o;
+    return isNotFoundError(i) ? null : o;
   } finally {
     await s?.close().catch(() => {
       return;
     });
   }
 }
-function ynt(e) {
+function isNotFoundError(e) {
   let t = A(e);
   return t === "ENOENT" || t === "ENOTDIR";
 }
@@ -1524,23 +1524,23 @@ var yt = {
     fileRead: !1,
   },
 };
-var k7t = { isRemoteMode: !1 };
-function jn() {
+var NO_REMOTE_TRANSPORT = { isRemoteMode: !1 };
+function getRemoteTransport() {
   return Mx().remote;
 }
-var nxt =
+var REMOTE_WAIT_STOPPED_MESSAGE =
   "Stopped waiting for the remote \u2014 the command may still complete there";
-function Pt() {
-  return Nn() || jn() !== null;
+function isRemoteActive() {
+  return Nn() || getRemoteTransport() !== null;
 }
-function Ks() {
-  let e = jn();
+function hasRemoteControlChannel() {
+  let e = getRemoteTransport();
   return e?.caps?.controlChannel === !0 && !e.viewerOnly;
 }
-function eE(e) {
-  return jn()?.caps?.[e] === !0;
+function hasRemoteCapability(e) {
+  return getRemoteTransport()?.caps?.[e] === !0;
 }
-function x7t(e, t) {
+function canCancelExternalLoading(e, t) {
   return t && !(e.isRemoteMode && e.viewerOnly);
 }
 function Sr(e) {
@@ -1548,8 +1548,8 @@ function Sr(e) {
     Error(`sendControlRequest not yet wired for ${e} transport`),
   );
 }
-function H7t(e, t, r, o) {
-  if (!t.isRemoteMode) return k7t;
+function createRemoteTransport(e, t, r, o) {
+  if (!t.isRemoteMode) return NO_REMOTE_TRANSPORT;
   return {
     kind: e,
     isRemoteMode: !0,
@@ -1683,13 +1683,13 @@ var Er = new Set([
   ".dat",
   ".data",
 ]);
-function IIn(e) {
+function isBinaryFileExtension(e) {
   let t = e.slice(e.lastIndexOf(".")).toLowerCase();
   return Er.has(t);
 }
 import { open as Rr } from "fs/promises";
 import { join as wr } from "path";
-async function gnt(e, t, r, o) {
+async function readGitConfigFileValue(e, t, r, o) {
   try {
     let s = await Rr(wr(e, "config"), "r");
     try {
@@ -1739,7 +1739,7 @@ function U(e, t, r, o) {
   }
   return null;
 }
-function ucr(e) {
+function collectGitConfigIncludes(e) {
   let t = [],
     r = [],
     o = null;
@@ -1871,7 +1871,7 @@ function kr(e) {
     e === "-"
   );
 }
-var k1 = Symbol("git-repo-negative-result");
+var GIT_ROOT_NEGATIVE_RESULT = Symbol("git-repo-negative-result");
 class St {
   rootByPath = new Ku({ max: 50 });
   canonicalRootByRoot = new Ku({ max: 50 });
@@ -1906,14 +1906,14 @@ class St {
       this.reportedHookInstallSkips.clear());
   }
 }
-function Qq(e, t, r) {
+function memoizeInMap(e, t, r) {
   let o = e.get(t);
   if (o !== void 0) return o;
   let s = r(t);
   return (e.set(t, s), s);
 }
 var xr = new j(() => new St());
-function Eu() {
+function getGitRepoCache() {
   return xr.of(B().host);
 }
 function Rt(e, t) {
@@ -1968,16 +1968,16 @@ function kt(e) {
       stat_count: s,
       found: !1,
     }),
-    k1
+    GIT_ROOT_NEGATIVE_RESULT
   );
 }
 function findGitRoot(e) {
-  let t = Qq(Eu().rootByPath, e, kt);
-  return t === k1 ? null : t;
+  let t = memoizeInMap(getGitRepoCache().rootByPath, e, kt);
+  return t === GIT_ROOT_NEGATIVE_RESULT ? null : t;
 }
 function findGitRootUncached(e) {
   let t = kt(e);
-  return t === k1 ? null : t;
+  return t === GIT_ROOT_NEGATIVE_RESULT ? null : t;
 }
 async function findGitRootThroughBackendUncached(e, t) {
   let r = N(t),
@@ -1993,8 +1993,8 @@ async function findGitRootThroughBackendUncached(e, t) {
   }
 }
 function findGitRootRecheckingNegative(e) {
-  let t = Eu().rootByPath;
-  if (t.peek(e) === k1) t.delete(e);
+  let t = getGitRepoCache().rootByPath;
+  if (t.peek(e) === GIT_ROOT_NEGATIVE_RESULT) t.delete(e);
   return findGitRoot(e);
 }
 async function findGitRootVerifyingPositive(e) {
@@ -2005,7 +2005,7 @@ async function findGitRootVerifyingPositive(e) {
   } catch (r) {
     let o = r?.code;
     if (o !== "ENOENT" && o !== "ENOTDIR") return t;
-    return (Eu().rootByPath.delete(e), findGitRootRecheckingNegative(e));
+    return (getGitRepoCache().rootByPath.delete(e), findGitRootRecheckingNegative(e));
   }
 }
 function Ee(e) {
@@ -2048,7 +2048,7 @@ async function Lr(e, t) {
 function findCanonicalGitRoot(e) {
   let t = findGitRoot(e);
   if (!t) return null;
-  return Qq(Eu().canonicalRootByRoot, t, Ee);
+  return memoizeInMap(getGitRepoCache().canonicalRootByRoot, t, Ee);
 }
 function findCanonicalGitRootUncached(e) {
   let t = findGitRootUncached(e);
@@ -2057,10 +2057,10 @@ function findCanonicalGitRootUncached(e) {
 }
 async function primeGitRootMemo(e, t) {
   if (e.hostFiles.serving("workspace") !== "host") return;
-  let r = Eu(),
+  let r = getGitRepoCache(),
     o = r.rootByPath.peek(t);
   if (o !== void 0) {
-    let a = o === k1 ? null : o;
+    let a = o === GIT_ROOT_NEGATIVE_RESULT ? null : o;
     return {
       gitRoot: a,
       canonicalRoot: a === null ? null : r.canonicalRootByRoot.peek(a),
@@ -2081,8 +2081,8 @@ async function primeGitRootMemo(e, t) {
   return (seedGitRootMemo(t, i.gitRoot, i.canonicalRoot), i);
 }
 function seedGitRootMemo(e, t, r) {
-  let o = Eu(),
-    s = t ?? k1,
+  let o = getGitRepoCache(),
+    s = t ?? GIT_ROOT_NEGATIVE_RESULT,
     i = o.rootByPath.peek(e);
   if (i === void 0) o.rootByPath.set(e, s);
   else if (i !== s) {
@@ -2110,14 +2110,14 @@ function isLinkedWorktreeUncached(e) {
   return t !== null && Ee(t) !== t;
 }
 async function getGitWorktreeName(e) {
-  if (Pt()) return null;
+  if (isRemoteActive()) return null;
   let t = await resolveGitDir(e);
   if (!t || oe(t) === ".git" || oe(G(t)) !== "worktrees") return null;
   return oe(t);
 }
 var RAW_BLOB_DIFF_FLAGS = ["--no-ext-diff", "--no-textconv"];
 function gitExe() {
-  let e = Eu();
+  let e = getGitRepoCache();
   return ((e.gitExecutable ??= qR("git") || "git"), e.gitExecutable);
 }
 var Ct = new Gt(() => new Map());
@@ -2306,7 +2306,7 @@ function Kr(e) {
   return "other";
 }
 async function getGitPresenceForAnalytics() {
-  if (Pt()) return null;
+  if (isRemoteActive()) return null;
   let [e, t] = await Promise.all([getIsGit(), getRemoteUrl()]).catch(() => [!1, null]),
     r = t ? normalizeGitRemoteUrl(t) : null;
   return {
@@ -2325,16 +2325,16 @@ function Br(e) {
 }
 function Gr(e) {
   let t = Br(e);
-  if (!t) return k1;
+  if (!t) return GIT_ROOT_NEGATIVE_RESULT;
   let r = (o) => {
     let s = U(t, "remote", "origin", o);
     return s ? normalizeGitRemoteUrl(s) : null;
   };
-  return r("pushurl") ?? r("url") ?? k1;
+  return r("pushurl") ?? r("url") ?? GIT_ROOT_NEGATIVE_RESULT;
 }
 function findRepoRemoteSlug(e) {
-  let t = Qq(Eu().remoteSlugByRoot, e, Gr);
-  return t === k1 ? null : t;
+  let t = memoizeInMap(getGitRepoCache().remoteSlugByRoot, e, Gr);
+  return t === GIT_ROOT_NEGATIVE_RESULT ? null : t;
 }
 var Hr = 128000;
 function readRepoConfigText(e) {
@@ -2667,7 +2667,7 @@ function isCurrentDirectoryBareGitRepo() {
   return (logFeatureOk("git_bare_repo_gate"), !1);
 }
 import { watchFile } from "fs";
-function sxt(e, t, r) {
+function watchFileSafely(e, t, r) {
   let o = (s, i) => {
     try {
       r(s, i);
@@ -2757,11 +2757,11 @@ async function Lt(e, t) {
   }
 }
 function clearResolveGitDirCache() {
-  Eu().gitDirByCwd.clear();
+  getGitRepoCache().gitDirByCwd.clear();
 }
 async function resolveGitDir(e) {
   let t = D(e ?? getCwd()),
-    r = Eu().gitDirByCwd,
+    r = getGitRepoCache().gitDirByCwd,
     o = r.get(t);
   if (o !== void 0) return o;
   let s = findGitRoot(t);
@@ -2769,7 +2769,7 @@ async function resolveGitDir(e) {
   let i = _(s, ".git");
   try {
     if ((await Mt(i)).isFile()) {
-      let u = await NP(i, ue, { sniffEncoding: !0, withBytes: !0 });
+      let u = await readFileHardened(i, ue, { sniffEncoding: !0, withBytes: !0 });
       if (u === null || u.truncated) return (r.set(t, null), null);
       let m = u.content.trim();
       if (m.startsWith("gitdir:")) {
@@ -2907,7 +2907,7 @@ var ue = 65536;
 async function getCommonDir(e) {
   try {
     if (pointerFileIsSuspect(_(e, "commondir"), e)) return null;
-    let t = await NP(_(e, "commondir"), ue, {
+    let t = await readFileHardened(_(e, "commondir"), ue, {
       sniffEncoding: !0,
       withBytes: !0,
     });
@@ -2957,7 +2957,7 @@ class Ht {
   cleanupHandle = null;
   async start() {
     let e = this.generation;
-    if (Pt()) {
+    if (isRemoteActive()) {
       ((this.gitDir = null), (this.initialized = !0));
       return;
     }
@@ -2992,7 +2992,7 @@ class Ht {
   }
   watchPath(e, t, r) {
     if (readPositionIsUnsafe(e, t)) return;
-    let o = sxt(e, { interval: Ot }, r);
+    let o = watchFileSafely(e, { interval: Ot }, r);
     this.watchedFiles.push({ path: e, listener: o });
   }
   async watchCurrentBranchRef() {
@@ -3076,7 +3076,7 @@ class Ht {
     if (this.repoWatchers.has(e)) return;
     let r = _(t, "HEAD");
     if (readPositionIsUnsafe(r, t)) return;
-    let o = sxt(r, { interval: Ot }, () => {
+    let o = watchFileSafely(r, { interval: Ot }, () => {
       this.repoBranches.delete(e);
       for (let s of this.repoBranchListeners) s();
     });
@@ -3155,8 +3155,8 @@ async function yo() {
 async function ce(e) {
   if (readPositionIsUnsafe(_(e, "config"), e)) return null;
   return (
-    (await gnt(e, "remote", "origin", "pushurl")) ||
-    (await gnt(e, "remote", "origin", "url"))
+    (await readGitConfigFileValue(e, "remote", "origin", "pushurl")) ||
+    (await readGitConfigFileValue(e, "remote", "origin", "url"))
   );
 }
 async function bo() {
@@ -3260,7 +3260,7 @@ function getRemoteUrlForDirSync(e) {
 }
 function Eo(e) {
   let t = D(e),
-    r = Eu().gitDirByCwd.get(t);
+    r = getGitRepoCache().gitDirByCwd.get(t);
   if (r !== void 0) return r;
   let o = findGitRoot(t);
   if (!o) return null;
@@ -3346,69 +3346,69 @@ async function getWorktreeCountFromFs() {
   }
 }
 export {
-  C7t,
-  kIn,
-  v7t,
-  v0,
-  icr,
-  acr,
-  kd,
-  The,
-  lcr,
-  txt,
-  xIn,
-  R7t,
-  ccr,
-  HIn,
-  k7t,
-  jn,
-  nxt,
-  Pt,
-  Ks,
-  eE,
-  x7t,
-  H7t,
-  IIn,
-  gnt,
-  ucr,
-  dcr,
-  P2e,
-  I7t,
-  P7t,
-  CA,
-  hnt,
-  rxt,
-  pcr,
-  fcr,
-  oxt,
-  $ie,
-  O7t,
-  mcr,
-  gcr,
-  hcr,
-  _cr,
-  ycr,
-  Scr,
-  _nt,
-  tE,
-  Ehe,
-  yS,
-  SS,
-  hL,
-  _L,
-  PIn,
-  Ahe,
-  OIn,
-  bcr,
-  D7t,
-  DIn,
-  LIn,
-  NP,
-  ynt,
-  sxt,
-  k1,
-  Qq,
-  Eu,
+  isErrnoCode,
+  isRetryableFsError,
+  DEFAULT_OPEN_FILE_MODE,
+  openFileReadOnlyHardened,
+  LINK_MISDIRECTED_TELEMETRY_CODE,
+  LINK_UNVERIFIED_TELEMETRY_CODE,
+  validateStorageKey,
+  CLOUD_SNAPSHOTS_DIR_NAME,
+  ARCHIVE_SYNC_DIR_NAME,
+  FOLDER_SYNC_DIR_NAME,
+  parseRecordingStampFromFileName,
+  DIR_SYNC_RECORD_FILE_SUFFIX,
+  isValidSessionName,
+  validateStorageScope,
+  NO_REMOTE_TRANSPORT,
+  getRemoteTransport,
+  REMOTE_WAIT_STOPPED_MESSAGE,
+  isRemoteActive,
+  hasRemoteControlChannel,
+  hasRemoteCapability,
+  canCancelExternalLoading,
+  createRemoteTransport,
+  isBinaryFileExtension,
+  readGitConfigFileValue,
+  collectGitConfigIncludes,
+  FIRST_PARTY_MAX_IMAGE_BASE64_BYTES,
+  DEFAULT_MAX_IMAGE_RAW_BYTES,
+  getAttachmentLimitsForTransport,
+  estimateImageTokenCount,
+  DEFAULT_IMAGE_LIMITS,
+  DEFAULT_REQUEST_BYTE_LIMIT,
+  MAX_PDF_ATTACHMENT_BYTES,
+  MAX_PDF_ATTACHMENT_PAGES,
+  PDF_PAGE_EXTRACTION_SIZE_THRESHOLD,
+  MAX_BINARY_CONTENT_BYTES,
+  DEFAULT_MAX_PDF_PAGES_PER_READ,
+  MAX_PDF_PAGES_FOR_WHOLE_READ,
+  DEFAULT_MAX_MEDIA_BLOCKS,
+  LONG_CONTEXT_MAX_MEDIA_BLOCKS,
+  MEDIA_BLOCK_RESERVE_COUNT,
+  MEDIA_BYTE_CAP_FOR_OTHER_PROVIDERS,
+  MEDIA_BYTE_CAP_FOR_DEFAULT_ENDPOINT,
+  MEDIA_BYTE_CAP_SAFETY_MARGIN,
+  getSidecarKeyForMetadataPath,
+  getSidecarKeyForPath,
+  TOOL_RESULTS_DIR_NAME,
+  getToolResultsDirForSession,
+  getCurrentToolResultsDir,
+  getSidecarKeyForToolResultFile,
+  ensureToolResultsDirectory,
+  assertSafeDirectoryPath,
+  writeBytesExclusiveHardened,
+  removeSymlinkAtWriteTarget,
+  readPdfAttachment,
+  getPdfPageCount,
+  extractPdfPageImages,
+  listExtractedPdfPageNames,
+  readFileHardened,
+  isNotFoundError,
+  watchFileSafely,
+  GIT_ROOT_NEGATIVE_RESULT,
+  memoizeInMap,
+  getGitRepoCache,
   clearResolveGitDirCache,
   resolveGitDir,
   readLinkTextSafe,

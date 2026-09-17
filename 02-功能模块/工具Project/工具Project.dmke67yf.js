@@ -15,7 +15,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, l, A, FA } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { mxe, ou, b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { yS, hL, _L, Ahe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getToolResultsDirForSession, getSidecarKeyForToolResultFile, ensureToolResultsDirectory, writeBytesExclusiveHardened } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {
@@ -437,15 +437,15 @@ async function q(e, t, r, i, u, p) {
 }
 async function de(e, t, r, i) {
   let u = (o) => o.replace(/[^a-zA-Z0-9-]/g, "_"),
-    p = yS(r),
+    p = getToolResultsDirForSession(r),
     d = `project-doc-${u(e)}.txt`,
     n = K(p, d);
-  if ((await _L(p, i), await Y(i, p, d, t))) return n;
-  return (await Ahe(n, Buffer.from(t, "utf8"), 384), n);
+  if ((await ensureToolResultsDirectory(p, i), await Y(i, p, d, t))) return n;
+  return (await writeBytesExclusiveHardened(n, Buffer.from(t, "utf8"), 384), n);
 }
 async function Y(e, t, r, i) {
   if (isHoverRestEnabled() && e !== void 0) {
-    let u = hL(t, r);
+    let u = getSidecarKeyForToolResultFile(t, r);
     if (u !== void 0) {
       let p = await e.write(u, i, { publishDiscipline: "inPlace", mode: 384 });
       if (!p.ok)
@@ -499,11 +499,11 @@ async function pe(e, t, r, i, u) {
         .replace(/[^a-zA-Z0-9._-]/g, "_")
         .slice(-64)
         .replace(/^\.+/, "") || "file",
-    n = yS(i),
+    n = getToolResultsDirForSession(i),
     o = `project-file-${e}-${d}`,
     h = K(n, o);
-  if ((await _L(n, u), await Y(u, n, o, r))) return h;
-  return (await Ahe(h, r, 384), h);
+  if ((await ensureToolResultsDirectory(n, u), await Y(u, n, o, r))) return h;
+  return (await writeBytesExclusiveHardened(h, r, 384), h);
 }
 async function _e(e, t, r, i, u, p, d) {
   if (p) {

@@ -84,7 +84,7 @@ import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-vie
 import "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
 import "../成本-Token统计/chunk-adrc9xt1.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
-import { W0t } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { REPLScreen } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-aeg1pn1f.js";
 import "../插件系统/chunk-rbjz1q03.js";
 import "../插件系统/channel-gate.js";
@@ -95,7 +95,7 @@ import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-a
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import "../跨会话消息(UDS)/chunk-t2esphmv.js";
-import { VB } from "../后台任务-Shell管理/chunk-c7mzes79.js";
+import { useSessionHooksRegistry } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import "../上下文压缩-Compact/chunk-1ntrf0ja.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import "../Diff引擎/structured-diff.js";
@@ -127,7 +127,7 @@ import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
-import { F_e } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { mergeAgentMcpServers } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import "../斜杠命令-UI组件/effort-level.js";
 import "../权限系统/chunk-0hcqee2w.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
@@ -311,7 +311,7 @@ function ResumeConversation({
     ne = useAppStateSelector((s) => s.standaloneAgentContext),
     so = useAppStateSelector((s) => s.mainLoopModel),
     D = useSetAppState(),
-    ro = VB(),
+    ro = useSessionHooksRegistry(),
     [se, j] = d([]),
     [Me, W] = d(!0),
     [io, ao] = d(!1),
@@ -566,7 +566,7 @@ function ResumeConversation({
   if (we) return e(We, { ...we });
   if (ve) return e(Ge, { command: ve });
   if (w)
-    return e(W0t, {
+    return e(REPLScreen, {
       debug: oe,
       commands: A,
       initialTools: k,
@@ -576,7 +576,7 @@ function ResumeConversation({
       initialAgentName: w.agentName,
       initialAgentColor: w.agentColor,
       mcpClients: Z,
-      dynamicMcpConfig: F_e(ee ?? {}, w.mainThreadAgentDefinition, {
+      dynamicMcpConfig: mergeAgentMcpServers(ee ?? {}, w.mainThreadAgentDefinition, {
         strictMcpConfig: ye,
       }),
       strictMcpConfig: ye,

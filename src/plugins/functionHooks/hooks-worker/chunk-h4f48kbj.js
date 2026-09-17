@@ -619,7 +619,7 @@ var Co = commonJS(function (Oo) {
   Oo.Webhook = Bt;
   Bt.prefix = "whsec_";
 });
-function Fn(e, t, r, n, s) {
+function __classPrivateFieldSet(e, t, r, n, s) {
   if (n === "m") throw TypeError("Private method is not writable");
   if (n === "a" && !s)
     throw TypeError("Private accessor was defined without a setter");
@@ -629,7 +629,7 @@ function Fn(e, t, r, n, s) {
     );
   return (n === "a" ? s.call(e, r) : s ? (s.value = r) : t.set(e, r), r);
 }
-function He(e, t, r, n) {
+function __classPrivateFieldGet(e, t, r, n) {
   if (r === "a" && !n)
     throw TypeError("Private accessor was defined without a getter");
   if (typeof t === "function" ? e !== t || !n : !t.has(e))
@@ -674,10 +674,10 @@ var Me = (e) => {
   }
   return Error(e);
 };
-class gn extends Error {}
-class Lt extends gn {
+class AnthropicError extends Error {}
+class APIError extends AnthropicError {
   constructor(e, t, r, n, s) {
-    super(`${Lt.makeMessage(e, t, r)}`);
+    super(`${APIError.makeMessage(e, t, r)}`);
     ((this.status = e),
       (this.headers = n),
       (this.requestID = n?.get("request-id")),
@@ -698,50 +698,50 @@ class Lt extends gn {
     return "(no status code or body)";
   }
   static generate(e, t, r, n) {
-    if (!e || !n) return new xu({ message: r, cause: Me(t) });
+    if (!e || !n) return new APIConnectionError({ message: r, cause: Me(t) });
     let s = t,
       o = s?.error?.type;
-    if (e === 400) return new $je(e, s, r, n, o);
-    if (e === 401) return new xae(e, s, r, n, o);
-    if (e === 403) return new Uje(e, s, r, n, o);
-    if (e === 404) return new Hae(e, s, r, n, o);
-    if (e === 409) return new Bje(e, s, r, n, o);
-    if (e === 422) return new jje(e, s, r, n, o);
-    if (e === 429) return new Wje(e, s, r, n, o);
-    if (e >= 500) return new Gje(e, s, r, n, o);
-    return new Lt(e, s, r, n, o);
+    if (e === 400) return new BadRequestError(e, s, r, n, o);
+    if (e === 401) return new AuthenticationError(e, s, r, n, o);
+    if (e === 403) return new PermissionDeniedError(e, s, r, n, o);
+    if (e === 404) return new NotFoundError(e, s, r, n, o);
+    if (e === 409) return new ConflictError(e, s, r, n, o);
+    if (e === 422) return new UnprocessableEntityError(e, s, r, n, o);
+    if (e === 429) return new RateLimitError(e, s, r, n, o);
+    if (e >= 500) return new InternalServerError(e, s, r, n, o);
+    return new APIError(e, s, r, n, o);
   }
 }
-class Xl extends Lt {
+class APIUserAbortError extends APIError {
   constructor({ message: e } = {}) {
     super(void 0, void 0, e || "Request was aborted.", void 0);
   }
 }
-class xu extends Lt {
+class APIConnectionError extends APIError {
   constructor({ message: e, cause: t }) {
     super(void 0, void 0, e || "Connection error.", void 0);
     if (t) this.cause = t;
   }
 }
-class XP extends xu {
+class APIConnectionTimeoutError extends APIConnectionError {
   constructor({ message: e } = {}) {
     super({ message: e ?? "Request timed out." });
   }
 }
-class aot extends gn {
+class RetryableError extends AnthropicError {
   constructor(e, { cause: t } = {}) {
     super(e ?? "Retryable error.");
     if (t !== void 0) this.cause = t;
   }
 }
-class $je extends Lt {}
-class xae extends Lt {}
-class Uje extends Lt {}
-class Hae extends Lt {}
-class Bje extends Lt {}
-class jje extends Lt {}
-class Wje extends Lt {}
-class Gje extends Lt {}
+class BadRequestError extends APIError {}
+class AuthenticationError extends APIError {}
+class PermissionDeniedError extends APIError {}
+class NotFoundError extends APIError {}
+class ConflictError extends APIError {}
+class UnprocessableEntityError extends APIError {}
+class RateLimitError extends APIError {}
+class InternalServerError extends APIError {}
 var Si = /^[a-z][a-z0-9+.-]*:/i,
   Ss = (e) => Si.test(e),
   J = (e) => ((J = Array.isArray), J(e)),
@@ -760,8 +760,8 @@ function xs(e, t) {
 }
 var ks = (e, t) => {
   if (typeof t !== "number" || !Number.isInteger(t))
-    throw new gn(`${e} must be an integer`);
-  if (t < 0) throw new gn(`${e} must be a positive integer`);
+    throw new AnthropicError(`${e} must be an integer`);
+  if (t < 0) throw new AnthropicError(`${e} must be a positive integer`);
   return t;
 };
 var wt = (e) => {
@@ -1325,7 +1325,7 @@ var js = "urn:ietf:params:oauth:grant-type:jwt-bearer",
   Ce = "oauth-2025-04-20",
   qs = "oidc-federation-2026-04-01",
   Js = 120,
-  Kxe = 30,
+  MANDATORY_REFRESH_THRESHOLD_IN_SECONDS = 30,
   Ks = 5,
   Bs = 1048576;
 function vr(e) {
@@ -1334,7 +1334,7 @@ function vr(e) {
   try {
     t = new URL(e);
   } catch (n) {
-    throw new Ra(`Invalid token endpoint base URL "${e}": ${n}`);
+    throw new WorkloadIdentityError(`Invalid token endpoint base URL "${e}": ${n}`);
   }
   if (t.protocol === "https:") return;
   let r = t.hostname.toLowerCase().replace(/^\[|\]$/g, "");
@@ -1343,7 +1343,7 @@ function vr(e) {
     (r === "localhost" || r === "127.0.0.1" || r === "::1")
   )
     return;
-  throw new Ra(
+  throw new WorkloadIdentityError(
     `Refusing to send credential over non-https token endpoint "${e}"`,
   );
 }
@@ -1353,7 +1353,7 @@ async function Tr(e, t) {
   try {
     n = JSON.parse(r);
   } catch {
-    throw new Ra(
+    throw new WorkloadIdentityError(
       `Token endpoint returned non-JSON response (status ${e.status})`,
       e.status,
       V(r),
@@ -1361,14 +1361,14 @@ async function Tr(e, t) {
     );
   }
   if (!n.access_token)
-    throw new Ra(
+    throw new WorkloadIdentityError(
       `Token endpoint response missing access_token: ${JSON.stringify(V(n))}`,
       e.status,
       V(n),
       t,
     );
   if (n.token_type && n.token_type.toLowerCase() !== "bearer")
-    throw new Ra(
+    throw new WorkloadIdentityError(
       `Token endpoint response: unsupported token_type "${n.token_type}" (want Bearer)`,
       e.status,
       V(n),
@@ -1409,11 +1409,11 @@ async function Pr(e, t = (r) => console.warn(`anthropic-sdk: ${r}`)) {
   }
   let o = s.mode & 511;
   if (o & 18)
-    throw new Ra(
+    throw new WorkloadIdentityError(
       `Credentials file at ${n} is group/world-writable (mode 0o${o.toString(8)}); this allows other local users to plant tokens. Run \`chmod 600 ${n}\`.`,
     );
   if (o & 36)
-    throw new Ra(
+    throw new WorkloadIdentityError(
       `Credentials file at ${n} is group/world-readable (mode 0o${o.toString(8)}); run \`chmod 600 ${n}\` before retrying.`,
     );
   if (typeof process.getuid === "function" && s.uid !== process.getuid())
@@ -1421,7 +1421,7 @@ async function Pr(e, t = (r) => console.warn(`anthropic-sdk: ${r}`)) {
       `credentials file at ${n} is owned by uid ${s.uid} (current process uid ${process.getuid()}); verify this is intentional.`,
     );
 }
-async function Iae(e, t) {
+async function writeCredentialsFileAtomic(e, t) {
   let r = await import("fs"),
     s = (await import("path")).dirname(e);
   await r.promises.mkdir(s, { recursive: !0, mode: 448 });
@@ -1471,7 +1471,7 @@ async function Oi(e) {
   }
   return new TextDecoder("utf-8").decode(s);
 }
-class Ra extends gn {
+class WorkloadIdentityError extends AnthropicError {
   constructor(e, t = null, r = null, n = null) {
     super(e);
     ((this.statusCode = t), (this.body = r), (this.requestId = n));
@@ -1480,7 +1480,7 @@ class Ra extends gn {
 function ce() {
   return Math.floor(Date.now() / 1000);
 }
-class qje {
+class TokenCache {
   constructor(e, t) {
     ((this.cached = null),
       (this.pendingRefresh = null),
@@ -1497,7 +1497,7 @@ class qje {
     if (t.expiresAt == null) return t.token;
     let r = t.expiresAt - ce();
     if (r > Js) return t.token;
-    if (r > Kxe) return (this.backgroundRefresh(), t.token);
+    if (r > MANDATORY_REFRESH_THRESHOLD_IN_SECONDS) return (this.backgroundRefresh(), t.token);
     return (await this.refresh()).token;
   }
   invalidate() {
@@ -1585,7 +1585,7 @@ function Cn(e, t) {
   };
   return (Gs.set(e, [t, n]), n);
 }
-function Bm(e) {
+function loggerFor(e) {
   let t = e.logger,
     r = e.logLevel ?? "off";
   if (!t) return Mi;
@@ -1626,8 +1626,8 @@ var he = (e) => {
   }
   return e;
 };
-var _dr = "1.0",
-  lot = "1.0",
+var CONFIG_FILE_VERSION = "1.0",
+  CREDENTIALS_FILE_VERSION = "1.0",
   Ci = /^[A-Za-z0-9_.-]+$/;
 function Zs(e) {
   if (!e) throw Error("profile name is empty");
@@ -1640,7 +1640,7 @@ function Zs(e) {
       `profile name "${e}" contains disallowed characters (allowed: letters, digits, '_', '.', '-')`,
     );
 }
-var ydr = async (e) => (await Nn(e))?.config ?? null,
+var loadConfig = async (e) => (await Nn(e))?.config ?? null,
   Nn = async (e) => {
     var t, r;
     let n = await $n();
@@ -1713,7 +1713,7 @@ var ydr = async (e) => (await Nn(e))?.config ?? null,
     }
     return { config: p, fromFile: !0 };
   };
-var GYt = async (e, t) => {
+var getCredentialsPath = async (e, t) => {
     if (e?.authentication.credentials_path)
       return e.authentication.credentials_path;
     let r = await $n();
@@ -1759,22 +1759,22 @@ var GYt = async (e, t) => {
     }
   };
 function Hn(e) {
-  if (!e) throw new gn("Identity token file path is empty");
+  if (!e) throw new AnthropicError("Identity token file path is empty");
   return async () => {
     let t = await import("fs"),
       r;
     try {
       r = await t.promises.readFile(e, "utf-8");
     } catch (s) {
-      throw new gn(`Failed to read identity token file at ${e}: ${s}`);
+      throw new AnthropicError(`Failed to read identity token file at ${e}: ${s}`);
     }
     let n = r.trim();
-    if (!n) throw new gn(`Identity token file at ${e} is empty`);
+    if (!n) throw new AnthropicError(`Identity token file at ${e} is empty`);
     return n;
   };
 }
 function to(e) {
-  if (!e) throw new gn("Identity token value is empty");
+  if (!e) throw new AnthropicError("Identity token value is empty");
   return () => e;
 }
 function ro(e) {
@@ -1782,7 +1782,7 @@ function ro(e) {
     vr(e.baseURL);
     let t = await e.identityTokenProvider();
     if (t.length > 16384)
-      throw new Ra(
+      throw new WorkloadIdentityError(
         `Identity token is ${Math.ceil(t.length / 1024)} KiB, exceeds the 16 KiB assertion limit`,
       );
     let r = {
@@ -1808,7 +1808,7 @@ function ro(e) {
         body: JSON.stringify(r),
       });
     } catch (d) {
-      throw new Ra(`Failed to reach token endpoint ${n}: ${d}`);
+      throw new WorkloadIdentityError(`Failed to reach token endpoint ${n}: ${d}`);
     }
     let o = s.headers.get("Request-Id");
     if (!s.ok) {
@@ -1817,7 +1817,7 @@ function ro(e) {
         g = "";
       if (s.status === 401)
         g = ` Ensure your federation rule matches your identity token. ${e.workspaceId ? "" : "If your federation rule is scoped to multiple workspaces, set the ANTHROPIC_WORKSPACE_ID environment variable, the 'workspace_id' config key, or the `workspaceId` option. "}View your authentication events in the Workload identity page of Claude Console for more details.`;
-      throw new Ra(
+      throw new WorkloadIdentityError(
         `Token exchange failed with status ${s.status}${o ? ` (request-id ${o})` : ""}: ${p}${g}`,
         s.status,
         p,
@@ -1827,7 +1827,7 @@ function ro(e) {
     let a = await Tr(s, o),
       i = Number(a.expires_in);
     if (!Number.isFinite(i))
-      throw new Ra(
+      throw new WorkloadIdentityError(
         `Token endpoint response missing required fields: ${JSON.stringify(V(a))}`,
         s.status,
         V(a),
@@ -1844,27 +1844,27 @@ function no(e) {
     try {
       n = await r.promises.readFile(e.credentialsPath, "utf-8");
     } catch (x) {
-      throw new Ra(`Credentials file not found at ${e.credentialsPath}: ${x}`);
+      throw new WorkloadIdentityError(`Credentials file not found at ${e.credentialsPath}: ${x}`);
     }
     let s;
     try {
       s = JSON.parse(n);
     } catch (x) {
-      throw new Ra(
+      throw new WorkloadIdentityError(
         `Credentials file at ${e.credentialsPath} is not valid JSON: ${x}`,
       );
     }
     let o = s.access_token;
     if (!o)
-      throw new Ra(
+      throw new WorkloadIdentityError(
         `Credentials file at ${e.credentialsPath} must include 'access_token'`,
       );
     let a = s.expires_at;
-    if (!t?.forceRefresh && (a == null || ce() < a - Kxe))
+    if (!t?.forceRefresh && (a == null || ce() < a - MANDATORY_REFRESH_THRESHOLD_IN_SECONDS))
       return { token: o, expiresAt: a ?? null };
     let i = s.refresh_token;
     if (!e.clientId || !i)
-      throw new Ra(
+      throw new WorkloadIdentityError(
         `Access token at ${e.credentialsPath} has expired and no refresh is available (client_id ${e.clientId ? "set" : "empty"}, refresh_token ${i ? "set" : "empty"})`,
       );
     vr(e.baseURL);
@@ -1883,12 +1883,12 @@ function no(e) {
         body: JSON.stringify(d),
       });
     } catch (x) {
-      throw new Ra(`User OAuth refresh failed to reach token endpoint: ${x}`);
+      throw new WorkloadIdentityError(`User OAuth refresh failed to reach token endpoint: ${x}`);
     }
     let h = g.headers.get("Request-Id");
     if (!g.ok) {
       let x = await g.text().catch(() => "");
-      throw new Ra(
+      throw new WorkloadIdentityError(
         `User OAuth refresh failed (HTTP ${g.status}): ${V(x)}`,
         g.status,
         V(x),
@@ -1898,7 +1898,7 @@ function no(e) {
     let u = await Tr(g, h),
       m = Number(u.expires_in);
     if (!Number.isFinite(m))
-      throw new Ra(
+      throw new WorkloadIdentityError(
         `User OAuth refresh response missing or invalid expires_in: ${JSON.stringify(V(u))}`,
         g.status,
         V(u),
@@ -1907,9 +1907,9 @@ function no(e) {
     let b = ce() + m,
       v = u.refresh_token || i;
     return (
-      await Iae(e.credentialsPath, {
+      await writeCredentialsFileAtomic(e.credentialsPath, {
         ...s,
-        version: lot,
+        version: CREDENTIALS_FILE_VERSION,
         type: "oauth_token",
         access_token: u.access_token,
         expires_at: b,
@@ -1919,7 +1919,7 @@ function no(e) {
     );
   };
 }
-function zje(e, t) {
+function resolveCredentialsFromConfig(e, t) {
   let r = e.authentication.credentials_path ?? null,
     n = (e.base_url || t.baseURL).replace(/\/+$/, ""),
     s = $i(e, r, n, t),
@@ -1939,10 +1939,10 @@ async function so(e, t) {
             ...n,
             authentication: {
               ...n.authentication,
-              credentials_path: (await GYt(n, t)) ?? void 0,
+              credentials_path: (await getCredentialsPath(n, t)) ?? void 0,
             },
           };
-  return zje(o, e);
+  return resolveCredentialsFromConfig(o, e);
 }
 function $i(e, t, r, n) {
   switch (e.authentication.type) {
@@ -1950,15 +1950,15 @@ function $i(e, t, r, n) {
       let s = e.authentication,
         o = Fi(s);
       if (!o)
-        throw new Ra(
+        throw new WorkloadIdentityError(
           "oidc_federation config requires an identity token (set authentication.identity_token, ANTHROPIC_IDENTITY_TOKEN_FILE, or ANTHROPIC_IDENTITY_TOKEN)",
         );
       if (!s.federation_rule_id)
-        throw new Ra(
+        throw new WorkloadIdentityError(
           "oidc_federation config requires 'federation_rule_id'. Set it in authentication.federation_rule_id in your profile, or via ANTHROPIC_FEDERATION_RULE_ID (profile takes precedence).",
         );
       if (!e.organization_id)
-        throw new Ra(
+        throw new WorkloadIdentityError(
           "oidc_federation config requires organization_id (set ANTHROPIC_ORGANIZATION_ID or config.organization_id)",
         );
       let a = ro({
@@ -1976,7 +1976,7 @@ function $i(e, t, r, n) {
     }
     case "user_oauth": {
       if (!t)
-        throw new Ra(
+        throw new WorkloadIdentityError(
           "user_oauth config requires authentication.credentials_path (or load via a profile so it defaults to <config_dir>/credentials/<profile>.json)",
         );
       return no({
@@ -1990,7 +1990,7 @@ function $i(e, t, r, n) {
     }
     default: {
       let s = e.authentication.type;
-      throw new Ra(
+      throw new WorkloadIdentityError(
         `authentication.type "${s}" is not a known authentication type`,
       );
     }
@@ -2000,11 +2000,11 @@ function Fi(e) {
   if (e.identity_token) {
     let n = e.identity_token.source;
     if (n !== "file")
-      throw new Ra(
+      throw new WorkloadIdentityError(
         `identity_token.source "${n}" is not supported by this SDK version (only "file")`,
       );
     if (!e.identity_token.path)
-      throw new Ra('identity_token.source "file" requires a non-empty path');
+      throw new WorkloadIdentityError('identity_token.source "file" requires a non-empty path');
     return Hn(e.identity_token.path);
   }
   let t = T("ANTHROPIC_IDENTITY_TOKEN_FILE");
@@ -2024,7 +2024,7 @@ function Li(e, t, r, n) {
       let p = a?.access_token;
       if (p && !s?.forceRefresh) {
         let g = a?.expires_at;
-        if (g == null || ce() < g - Kxe)
+        if (g == null || ce() < g - MANDATORY_REFRESH_THRESHOLD_IN_SECONDS)
           return { token: p, expiresAt: g ?? null };
       }
     } catch (d) {
@@ -2032,9 +2032,9 @@ function Li(e, t, r, n) {
     }
     let i = await e(s);
     try {
-      await Iae(t, {
+      await writeCredentialsFileAtomic(t, {
         ...(a ?? {}),
-        version: lot,
+        version: CREDENTIALS_FILE_VERSION,
         type: "oauth_token",
         access_token: i.token,
         expires_at: i.expiresAt,
@@ -2050,8 +2050,8 @@ class ye {
   constructor() {
     (G.set(this, void 0),
       Y.set(this, void 0),
-      Fn(this, G, new Uint8Array(), "f"),
-      Fn(this, Y, null, "f"));
+      __classPrivateFieldSet(this, G, new Uint8Array(), "f"),
+      __classPrivateFieldSet(this, Y, null, "f"));
   }
   decode(e) {
     if (e == null) return [];
@@ -2061,33 +2061,33 @@ class ye {
         : typeof e === "string"
           ? ze(e)
           : e;
-    Fn(this, G, Xs([He(this, G, "f"), t]), "f");
+    __classPrivateFieldSet(this, G, Xs([__classPrivateFieldGet(this, G, "f"), t]), "f");
     let r = [],
       n;
-    while ((n = Hi(He(this, G, "f"), He(this, Y, "f"))) != null) {
-      if (n.carriage && He(this, Y, "f") == null) {
-        Fn(this, Y, n.index, "f");
+    while ((n = Hi(__classPrivateFieldGet(this, G, "f"), __classPrivateFieldGet(this, Y, "f"))) != null) {
+      if (n.carriage && __classPrivateFieldGet(this, Y, "f") == null) {
+        __classPrivateFieldSet(this, Y, n.index, "f");
         continue;
       }
       if (
-        He(this, Y, "f") != null &&
-        (n.index !== He(this, Y, "f") + 1 || n.carriage)
+        __classPrivateFieldGet(this, Y, "f") != null &&
+        (n.index !== __classPrivateFieldGet(this, Y, "f") + 1 || n.carriage)
       ) {
-        (r.push(On(He(this, G, "f").subarray(0, He(this, Y, "f") - 1))),
-          Fn(this, G, He(this, G, "f").subarray(He(this, Y, "f")), "f"),
-          Fn(this, Y, null, "f"));
+        (r.push(On(__classPrivateFieldGet(this, G, "f").subarray(0, __classPrivateFieldGet(this, Y, "f") - 1))),
+          __classPrivateFieldSet(this, G, __classPrivateFieldGet(this, G, "f").subarray(__classPrivateFieldGet(this, Y, "f")), "f"),
+          __classPrivateFieldSet(this, Y, null, "f"));
         continue;
       }
-      let s = He(this, Y, "f") !== null ? n.preceding - 1 : n.preceding,
-        o = On(He(this, G, "f").subarray(0, s));
+      let s = __classPrivateFieldGet(this, Y, "f") !== null ? n.preceding - 1 : n.preceding,
+        o = On(__classPrivateFieldGet(this, G, "f").subarray(0, s));
       (r.push(o),
-        Fn(this, G, He(this, G, "f").subarray(n.index), "f"),
-        Fn(this, Y, null, "f"));
+        __classPrivateFieldSet(this, G, __classPrivateFieldGet(this, G, "f").subarray(n.index), "f"),
+        __classPrivateFieldSet(this, Y, null, "f"));
     }
     return r;
   }
   flush() {
-    if (!He(this, G, "f").length) return [];
+    if (!__classPrivateFieldGet(this, G, "f").length) return [];
     return this.decode(`
 `);
   }
@@ -2127,17 +2127,17 @@ class K {
     ((this.iterator = e),
       At.set(this, void 0),
       (this.controller = t),
-      Fn(this, At, r, "f"));
+      __classPrivateFieldSet(this, At, r, "f"));
   }
   static rawEvents(e, t = new AbortController()) {
     return io(e, t);
   }
   static fromSSEResponse(e, t, r) {
     let n = !1,
-      s = r ? Bm(r) : console;
+      s = r ? loggerFor(r) : console;
     async function* o() {
       if (n)
-        throw new gn(
+        throw new AnthropicError(
           "Cannot iterate over a consumed stream, use `.tee()` to split the stream.",
         );
       n = !0;
@@ -2215,7 +2215,7 @@ class K {
           if (i.event === "error") {
             let d = wt(i.data) ?? i.data,
               p = d?.error?.type;
-            throw new Lt(void 0, d, void 0, e.headers, p);
+            throw new APIError(void 0, d, void 0, e.headers, p);
           }
         }
         a = !0;
@@ -2238,7 +2238,7 @@ class K {
     }
     async function* o() {
       if (n)
-        throw new gn(
+        throw new AnthropicError(
           "Cannot iterate over a consumed stream, use `.tee()` to split the stream.",
         );
       n = !0;
@@ -2275,8 +2275,8 @@ class K {
         },
       });
     return [
-      new K(() => n(e), this.controller, He(this, At, "f")),
-      new K(() => n(t), this.controller, He(this, At, "f")),
+      new K(() => n(e), this.controller, __classPrivateFieldGet(this, At, "f")),
+      new K(() => n(t), this.controller, __classPrivateFieldGet(this, At, "f")),
     ];
   }
   toReadableStream() {
@@ -2313,10 +2313,10 @@ async function* io(e, t) {
       typeof globalThis.navigator < "u" &&
         globalThis.navigator.product === "ReactNative")
     )
-      throw new gn(
+      throw new AnthropicError(
         "The default react-native fetch implementation does not support streaming. Please use expo/fetch: https://docs.expo.dev/versions/latest/sdk/expo/#expofetch-api",
       );
-    throw new gn("Attempted to iterate over a response with no body");
+    throw new AnthropicError("Attempted to iterate over a response with no body");
   }
   let r = new ao(),
     n = new ye(),
@@ -2387,7 +2387,7 @@ async function Cr(e, t) {
     a = await (async () => {
       if (t.options.stream)
         return (
-          Bm(e).debug("response", r.status, r.url, r.headers, r.body),
+          loggerFor(e).debug("response", r.status, r.url, r.headers, r.body),
           K.fromSSEResponse(r, t.controller)
         );
       if (r.status === 204) return null;
@@ -2401,7 +2401,7 @@ async function Cr(e, t) {
       return await r.text();
     })();
   return (
-    Bm(e).debug(
+    loggerFor(e).debug(
       `[${n}] response parsed`,
       he({
         retryOfRequestLogID: s,
@@ -2428,7 +2428,7 @@ function Dn(e) {
 function uo(e) {
   let t = new Set();
   while (typeof e === "object" && e !== null && !t.has(e)) {
-    if ((t.add(e), Dn(e) || re(e) || e instanceof xu || e instanceof aot))
+    if ((t.add(e), Dn(e) || re(e) || e instanceof APIConnectionError || e instanceof RetryableError))
       return !0;
     e = e.cause;
   }
@@ -2449,7 +2449,7 @@ function Un(e, t, r, n) {
         url: typeof s === "string" ? s : s instanceof URL ? s.href : s.url,
       });
     if (i.bodyUsed || i.body?.locked)
-      throw new gn(
+      throw new AnthropicError(
         "middleware consumed the response body; use response.clone() to inspect it, or return new Response(body, response) to consume and replace it",
       );
     return i;
@@ -2459,7 +2459,7 @@ function Bi(e, t) {
   let r = new WeakMap();
   return {
     options: e,
-    logger: t ? Bm(t) : Qs(),
+    logger: t ? loggerFor(t) : Qs(),
     parse(n) {
       if (e?.stream && n.ok) return co(n, e);
       let s = r.get(n);
@@ -2470,7 +2470,7 @@ function Bi(e, t) {
 }
 async function co(e, t) {
   if (e.bodyUsed || e.body?.locked)
-    throw new gn(
+    throw new AnthropicError(
       "cannot ctx.parse() a response whose body was already consumed; call ctx.parse() instead of reading the body, or read via response.clone()",
     );
   if (t?.stream && e.ok)
@@ -2510,10 +2510,10 @@ class Ne extends Promise {
     ((this.responsePromise = t),
       (this.parseResponse = r),
       Tt.set(this, void 0),
-      Fn(this, Tt, e, "f"));
+      __classPrivateFieldSet(this, Tt, e, "f"));
   }
   _thenUnwrap(e) {
-    return new Ne(He(this, Tt, "f"), this.responsePromise, async (t, r) =>
+    return new Ne(__classPrivateFieldGet(this, Tt, "f"), this.responsePromise, async (t, r) =>
       vt(e(await this.parseResponse(t, r), r), r.response),
     );
   }
@@ -2527,7 +2527,7 @@ class Ne extends Promise {
   parse() {
     if (!this.parsedPromise)
       this.parsedPromise = this.responsePromise.then((e) =>
-        this.parseResponse(He(this, Tt, "f"), e),
+        this.parseResponse(__classPrivateFieldGet(this, Tt, "f"), e),
       );
     return this.parsedPromise;
   }
@@ -2546,7 +2546,7 @@ var Nr;
 class $r {
   constructor(e, t, r, n) {
     (Nr.set(this, void 0),
-      Fn(this, Nr, e, "f"),
+      __classPrivateFieldSet(this, Nr, e, "f"),
       (this.options = n),
       (this.response = t),
       (this.body = r));
@@ -2558,10 +2558,10 @@ class $r {
   async getNextPage() {
     let e = this.nextPageRequestOptions();
     if (!e)
-      throw new gn(
+      throw new AnthropicError(
         "No next page expected; please check `.hasNextPage()` before calling `.getNextPage()`.",
       );
-    return await He(this, Nr, "f").requestAPIList(this.constructor, e);
+    return await __classPrivateFieldGet(this, Nr, "f").requestAPIList(this.constructor, e);
   }
   async *iterPages() {
     let e = this;
@@ -2918,7 +2918,7 @@ var go = Object.freeze(Object.create(null)),
               v = "^".repeat(m.length);
             return ((g = m.start + m.length), u + b + v);
           }, "");
-        throw new gn(`Path parameters result in path with invalid segments:
+        throw new AnthropicError(`Path parameters result in path with invalid segments:
 ${o.map((u) => u.error).join(`
 `)}
 ${a}
@@ -3482,11 +3482,11 @@ function Fe(e, t) {
   );
 }
 function Se(e, t) {
-  return e instanceof Lt && e.status === t;
+  return e instanceof APIError && e.status === t;
 }
 function $o(e) {
   return (
-    e instanceof Lt &&
+    e instanceof APIError &&
     typeof e.status === "number" &&
     e.status >= 400 &&
     e.status < 500
@@ -3506,7 +3506,7 @@ function Lo(e) {
 }
 function Wr(e, { authToken: t, helper: r }) {
   if (!t)
-    throw new gn(
+    throw new AnthropicError(
       `copyClientForHelper: expected a non-empty authToken but received ${JSON.stringify(t)}`,
     );
   let n = e,
@@ -3556,7 +3556,7 @@ class Le {
       (this.environmentId = e.environmentId),
       (this.environmentKey = e.environmentKey),
       (this.workerId = e.workerId ?? ka()),
-      Fn(
+      __classPrivateFieldSet(
         this,
         Ye,
         Wr(e.client, {
@@ -3565,19 +3565,19 @@ class Le {
         }),
         "f",
       ),
-      Fn(this, Vr, e.autoStop ?? !0, "f"),
-      Fn(this, zr, e.drain ?? !1, "f"),
-      Fn(this, qt, e.blockMs === void 0 ? ya : e.blockMs, "f"),
-      Fn(this, Jt, e.reclaimOlderThanMs ?? null, "f"),
-      Fn(this, Qe, e.requestOptions, "f"),
-      Fn(this, se, new AbortController(), "f"),
-      Fn(this, Kr, Fe(e.signal, He(this, se, "f")), "f"));
+      __classPrivateFieldSet(this, Vr, e.autoStop ?? !0, "f"),
+      __classPrivateFieldSet(this, zr, e.drain ?? !1, "f"),
+      __classPrivateFieldSet(this, qt, e.blockMs === void 0 ? ya : e.blockMs, "f"),
+      __classPrivateFieldSet(this, Jt, e.reclaimOlderThanMs ?? null, "f"),
+      __classPrivateFieldSet(this, Qe, e.requestOptions, "f"),
+      __classPrivateFieldSet(this, se, new AbortController(), "f"),
+      __classPrivateFieldSet(this, Kr, Fe(e.signal, __classPrivateFieldGet(this, se, "f")), "f"));
   }
   get signal() {
-    return He(this, se, "f").signal;
+    return __classPrivateFieldGet(this, se, "f").signal;
   }
   abort() {
-    He(this, se, "f").abort();
+    __classPrivateFieldGet(this, se, "f").abort();
   }
   async *[((Ye = new WeakMap()),
   (qr = new WeakMap()),
@@ -3589,37 +3589,37 @@ class Le {
   (Jt = new WeakMap()),
   (Qe = new WeakMap()),
   Symbol.asyncIterator)]() {
-    if (He(this, qr, "f"))
-      throw new gn("Cannot iterate over a consumed WorkPoller");
-    Fn(this, qr, !0, "f");
-    let e = Bm(this.client);
+    if (__classPrivateFieldGet(this, qr, "f"))
+      throw new AnthropicError("Cannot iterate over a consumed WorkPoller");
+    __classPrivateFieldSet(this, qr, !0, "f");
+    let e = loggerFor(this.client);
     e.info("poller starting", {
       component: "work-poller",
       environment_id: this.environmentId,
     });
     try {
       let t = 0;
-      while (!He(this, se, "f").signal.aborted) {
+      while (!__classPrivateFieldGet(this, se, "f").signal.aborted) {
         let r;
         try {
-          r = await He(this, Ye, "f").beta.environments.work.poll(
+          r = await __classPrivateFieldGet(this, Ye, "f").beta.environments.work.poll(
             this.environmentId,
             {
               "Anthropic-Worker-ID": this.workerId,
-              ...(He(this, qt, "f") !== null
-                ? { block_ms: He(this, qt, "f") }
+              ...(__classPrivateFieldGet(this, qt, "f") !== null
+                ? { block_ms: __classPrivateFieldGet(this, qt, "f") }
                 : {}),
-              ...(He(this, Jt, "f") !== null
-                ? { reclaim_older_than_ms: He(this, Jt, "f") }
+              ...(__classPrivateFieldGet(this, Jt, "f") !== null
+                ? { reclaim_older_than_ms: __classPrivateFieldGet(this, Jt, "f") }
                 : {}),
             },
             {
-              headers: c([He(this, Qe, "f")?.headers]),
-              signal: He(this, se, "f").signal,
+              headers: c([__classPrivateFieldGet(this, Qe, "f")?.headers]),
+              signal: __classPrivateFieldGet(this, se, "f").signal,
             },
           );
         } catch (n) {
-          if (He(this, se, "f").signal.aborted) return;
+          if (__classPrivateFieldGet(this, se, "f").signal.aborted) return;
           if (xe(n))
             throw (
               e.error("poll failed permanently, stopping poller", {
@@ -3633,12 +3633,12 @@ class Le {
             backoff_ms: s,
           }),
             t++,
-            await ae(s, He(this, se, "f").signal));
+            await ae(s, __classPrivateFieldGet(this, se, "f").signal));
           continue;
         }
         if (((t = 0), r == null)) {
-          if (He(this, zr, "f")) return;
-          await ae(Xn(1000, 3000), He(this, se, "f").signal);
+          if (__classPrivateFieldGet(this, zr, "f")) return;
+          await ae(Xn(1000, 3000), __classPrivateFieldGet(this, se, "f").signal);
           continue;
         }
         e.info("claimed work", {
@@ -3648,12 +3648,12 @@ class Le {
           work_type: r.data.type,
         });
         try {
-          await He(this, Ye, "f").beta.environments.work.ack(
+          await __classPrivateFieldGet(this, Ye, "f").beta.environments.work.ack(
             r.id,
             { environment_id: r.environment_id },
             {
-              headers: c([He(this, Qe, "f")?.headers]),
-              signal: He(this, se, "f").signal,
+              headers: c([__classPrivateFieldGet(this, Qe, "f")?.headers]),
+              signal: __classPrivateFieldGet(this, se, "f").signal,
             },
           );
         } catch (n) {
@@ -3663,12 +3663,12 @@ class Le {
         try {
           yield r;
         } finally {
-          if (He(this, Vr, "f"))
+          if (__classPrivateFieldGet(this, Vr, "f"))
             try {
-              await He(this, Ye, "f").beta.environments.work.stop(
+              await __classPrivateFieldGet(this, Ye, "f").beta.environments.work.stop(
                 r.id,
                 { environment_id: r.environment_id },
-                { headers: c([He(this, Qe, "f")?.headers]) },
+                { headers: c([__classPrivateFieldGet(this, Qe, "f")?.headers]) },
               );
             } catch (n) {
               if (!Se(n, 409))
@@ -3677,7 +3677,7 @@ class Le {
         }
       }
     } finally {
-      He(this, Kr, "f").call(this);
+      __classPrivateFieldGet(this, Kr, "f").call(this);
     }
   }
 }
@@ -3694,42 +3694,42 @@ class Gn {
     (Ze.set(this, []), ke.set(this, []), et.set(this, !1));
   }
   push(e) {
-    if (He(this, et, "f")) return !1;
-    let t = He(this, ke, "f").shift();
+    if (__classPrivateFieldGet(this, et, "f")) return !1;
+    let t = __classPrivateFieldGet(this, ke, "f").shift();
     if (t) t({ done: !1, value: e });
-    else He(this, Ze, "f").push(e);
+    else __classPrivateFieldGet(this, Ze, "f").push(e);
     return !0;
   }
   close() {
-    if (He(this, et, "f")) return;
-    Fn(this, et, !0, "f");
-    while (He(this, ke, "f").length > 0)
-      He(this, ke, "f").shift()({ done: !0, value: void 0 });
+    if (__classPrivateFieldGet(this, et, "f")) return;
+    __classPrivateFieldSet(this, et, !0, "f");
+    while (__classPrivateFieldGet(this, ke, "f").length > 0)
+      __classPrivateFieldGet(this, ke, "f").shift()({ done: !0, value: void 0 });
   }
   next(e) {
-    if (He(this, Ze, "f").length > 0)
-      return Promise.resolve({ done: !1, value: He(this, Ze, "f").shift() });
-    if (He(this, et, "f") || e?.aborted)
+    if (__classPrivateFieldGet(this, Ze, "f").length > 0)
+      return Promise.resolve({ done: !1, value: __classPrivateFieldGet(this, Ze, "f").shift() });
+    if (__classPrivateFieldGet(this, et, "f") || e?.aborted)
       return Promise.resolve({ done: !0, value: void 0 });
     return new Promise((t) => {
       let r = (s) => {
           (e?.removeEventListener("abort", n), t(s));
         },
         n = () => {
-          let s = He(this, ke, "f").indexOf(r);
-          if (s >= 0) He(this, ke, "f").splice(s, 1);
+          let s = __classPrivateFieldGet(this, ke, "f").indexOf(r);
+          if (s >= 0) __classPrivateFieldGet(this, ke, "f").splice(s, 1);
           t({ done: !0, value: void 0 });
         };
-      (He(this, ke, "f").push(r),
+      (__classPrivateFieldGet(this, ke, "f").push(r),
         e?.addEventListener("abort", n, { once: !0 }));
     });
   }
   tryShift() {
-    return He(this, Ze, "f").shift();
+    return __classPrivateFieldGet(this, Ze, "f").shift();
   }
 }
 ((Ze = new WeakMap()), (ke = new WeakMap()), (et = new WeakMap()));
-class Hu extends Error {
+class ToolError extends Error {
   constructor(e) {
     let t =
       typeof e === "string"
@@ -3748,7 +3748,7 @@ function Yn(e) {
   return "name" in e ? e.name : e.mcp_server_name;
 }
 function Ea(e) {
-  return e instanceof Hu
+  return e instanceof ToolError
     ? e.content
     : `Error: ${e instanceof Error ? e.message : String(e)}`;
 }
@@ -3808,8 +3808,8 @@ class Xo {
       tt.set(this, new Set()),
       De.set(this, !1),
       ue.set(this, void 0),
-      Fn(this, Kt, e, "f"),
-      Fn(this, en, t, "f"));
+      __classPrivateFieldSet(this, Kt, e, "f"),
+      __classPrivateFieldSet(this, en, t, "f"));
   }
   noteEvent(e) {
     if (e.type === "user.tool_confirmation") return;
@@ -3817,31 +3817,31 @@ class Xo {
     else this.disarm();
   }
   block(e) {
-    if ((He(this, tt, "f").add(e), He(this, ue, "f") !== void 0))
-      (Fn(this, De, !0, "f"),
-        clearTimeout(He(this, ue, "f")),
-        Fn(this, ue, void 0, "f"));
+    if ((__classPrivateFieldGet(this, tt, "f").add(e), __classPrivateFieldGet(this, ue, "f") !== void 0))
+      (__classPrivateFieldSet(this, De, !0, "f"),
+        clearTimeout(__classPrivateFieldGet(this, ue, "f")),
+        __classPrivateFieldSet(this, ue, void 0, "f"));
   }
   unblock(e) {
     if (
-      (He(this, tt, "f").delete(e),
-      He(this, tt, "f").size === 0 && He(this, De, "f"))
+      (__classPrivateFieldGet(this, tt, "f").delete(e),
+      __classPrivateFieldGet(this, tt, "f").size === 0 && __classPrivateFieldGet(this, De, "f"))
     )
       this.arm();
   }
   arm() {
-    if (He(this, Kt, "f") <= 0) return;
-    if (He(this, tt, "f").size > 0) {
-      Fn(this, De, !0, "f");
+    if (__classPrivateFieldGet(this, Kt, "f") <= 0) return;
+    if (__classPrivateFieldGet(this, tt, "f").size > 0) {
+      __classPrivateFieldSet(this, De, !0, "f");
       return;
     }
-    if ((Fn(this, De, !1, "f"), He(this, ue, "f") !== void 0))
-      clearTimeout(He(this, ue, "f"));
-    Fn(this, ue, setTimeout(He(this, en, "f"), He(this, Kt, "f")), "f");
+    if ((__classPrivateFieldSet(this, De, !1, "f"), __classPrivateFieldGet(this, ue, "f") !== void 0))
+      clearTimeout(__classPrivateFieldGet(this, ue, "f"));
+    __classPrivateFieldSet(this, ue, setTimeout(__classPrivateFieldGet(this, en, "f"), __classPrivateFieldGet(this, Kt, "f")), "f");
   }
   disarm() {
-    if ((Fn(this, De, !1, "f"), He(this, ue, "f") !== void 0))
-      (clearTimeout(He(this, ue, "f")), Fn(this, ue, void 0, "f"));
+    if ((__classPrivateFieldSet(this, De, !1, "f"), __classPrivateFieldGet(this, ue, "f") !== void 0))
+      (clearTimeout(__classPrivateFieldGet(this, ue, "f")), __classPrivateFieldSet(this, ue, void 0, "f"));
   }
 }
 ((Kt = new WeakMap()),
@@ -3870,30 +3870,30 @@ class Ue {
       (this.sessionId = e),
       (this.tools = t.tools),
       (this.maxIdleMs = t.maxIdleMs ?? Pa),
-      Fn(this, B, Bm(t.client), "f"),
-      Fn(this, tn, new Map(t.tools.map((r) => [Yn(r), r])), "f"),
-      Fn(this, q, new AbortController(), "f"),
-      Fn(this, Gr, Fe(t.signal, He(this, q, "f")), "f"),
-      Fn(this, Vt, t.requestOptions, "f"),
-      Fn(
+      __classPrivateFieldSet(this, B, loggerFor(t.client), "f"),
+      __classPrivateFieldSet(this, tn, new Map(t.tools.map((r) => [Yn(r), r])), "f"),
+      __classPrivateFieldSet(this, q, new AbortController(), "f"),
+      __classPrivateFieldSet(this, Gr, Fe(t.signal, __classPrivateFieldGet(this, q, "f")), "f"),
+      __classPrivateFieldSet(this, Vt, t.requestOptions, "f"),
+      __classPrivateFieldSet(
         this,
         oe,
         new Xo(this.maxIdleMs, () => {
-          (He(this, B, "f").info("session idle after end_turn; stopping", {
+          (__classPrivateFieldGet(this, B, "f").info("session idle after end_turn; stopping", {
             component: "session-tool-runner",
             session_id: this.sessionId,
             max_idle_ms: this.maxIdleMs,
           }),
-            He(this, q, "f").abort());
+            __classPrivateFieldGet(this, q, "f").abort());
         }),
         "f",
       ));
   }
   get signal() {
-    return He(this, q, "f").signal;
+    return __classPrivateFieldGet(this, q, "f").signal;
   }
   abort() {
-    He(this, q, "f").abort();
+    __classPrivateFieldGet(this, q, "f").abort();
   }
   async *[((Xr = new WeakMap()),
   (q = new WeakMap()),
@@ -3911,80 +3911,80 @@ class Ue {
   (oe = new WeakMap()),
   (N = new WeakSet()),
   Symbol.asyncIterator)]() {
-    if (He(this, Xr, "f"))
-      throw new gn("Cannot iterate over a consumed SessionToolRunner");
-    (Fn(this, Xr, !0, "f"),
-      He(this, B, "f").info("session tool runner starting", {
+    if (__classPrivateFieldGet(this, Xr, "f"))
+      throw new AnthropicError("Cannot iterate over a consumed SessionToolRunner");
+    (__classPrivateFieldSet(this, Xr, !0, "f"),
+      __classPrivateFieldGet(this, B, "f").info("session tool runner starting", {
         component: "session-tool-runner",
         session_id: this.sessionId,
       }));
-    let e = He(this, N, "m", Ko)
+    let e = __classPrivateFieldGet(this, N, "m", Ko)
       .call(this)
       .catch((t) => {
-        if (!He(this, q, "f").signal.aborted)
-          He(this, B, "f").error("stream loop failed", { error: String(t) });
-        He(this, q, "f").abort();
+        if (!__classPrivateFieldGet(this, q, "f").signal.aborted)
+          __classPrivateFieldGet(this, B, "f").error("stream loop failed", { error: String(t) });
+        __classPrivateFieldGet(this, q, "f").abort();
       });
     try {
       while (!0) {
-        let r = await He(this, rt, "f").next(He(this, q, "f").signal);
+        let r = await __classPrivateFieldGet(this, rt, "f").next(__classPrivateFieldGet(this, q, "f").signal);
         if (r.done) break;
         yield r.value;
       }
       await e;
       let t;
-      while ((t = He(this, rt, "f").tryShift()) !== void 0) yield t;
+      while ((t = __classPrivateFieldGet(this, rt, "f").tryShift()) !== void 0) yield t;
     } finally {
-      (He(this, q, "f").abort(), He(this, oe, "f").disarm(), await e);
+      (__classPrivateFieldGet(this, q, "f").abort(), __classPrivateFieldGet(this, oe, "f").disarm(), await e);
       try {
-        await He(this, N, "m", Vo).call(this);
+        await __classPrivateFieldGet(this, N, "m", Vo).call(this);
       } catch (t) {
-        He(this, B, "f").warn("drain failed", { error: String(t) });
+        __classPrivateFieldGet(this, B, "f").warn("drain failed", { error: String(t) });
       }
-      He(this, rt, "f").close();
+      __classPrivateFieldGet(this, rt, "f").close();
       for (let t of this.tools)
         try {
           await t.close?.();
         } catch (r) {
-          He(this, B, "f").warn("tool.close failed", {
+          __classPrivateFieldGet(this, B, "f").warn("tool.close failed", {
             tool: Yn(t),
             error: String(r),
           });
         }
-      He(this, Gr, "f").call(this);
+      __classPrivateFieldGet(this, Gr, "f").call(this);
     }
   }
 }
 ((Yr = function () {
   return {
-    ...He(this, Vt, "f"),
-    headers: c([$t("session-tool-runner"), He(this, Vt, "f")?.headers]),
-    signal: He(this, q, "f").signal,
+    ...__classPrivateFieldGet(this, Vt, "f"),
+    headers: c([$t("session-tool-runner"), __classPrivateFieldGet(this, Vt, "f")?.headers]),
+    signal: __classPrivateFieldGet(this, q, "f").signal,
   };
 }),
   (Ko = async function () {
-    let t = He(this, q, "f"),
+    let t = __classPrivateFieldGet(this, q, "f"),
       r = qo;
     while (!t.signal.aborted) {
       try {
         let n = await this.client.beta.sessions.events.stream(
           this.sessionId,
           {},
-          He(this, N, "m", Yr).call(this),
+          __classPrivateFieldGet(this, N, "m", Yr).call(this),
         );
-        await He(this, N, "m", Do).call(this);
+        await __classPrivateFieldGet(this, N, "m", Do).call(this);
         for await (let s of n)
-          if (((r = qo), await He(this, N, "m", Bo).call(this, s))) return;
+          if (((r = qo), await __classPrivateFieldGet(this, N, "m", Bo).call(this, s))) return;
       } catch (n) {
         if ((t.signal.throwIfAborted(), xe(n)))
           throw (
-            He(this, B, "f").error("permanent stream failure, shutting down", {
+            __classPrivateFieldGet(this, B, "f").error("permanent stream failure, shutting down", {
               error: String(n),
             }),
             t.abort(),
             n
           );
-        He(this, B, "f").warn("stream disconnected, reconnecting", {
+        __classPrivateFieldGet(this, B, "f").warn("stream disconnected, reconnecting", {
           error: String(n),
           backoff_ms: r,
         });
@@ -3995,69 +3995,69 @@ class Ue {
     }
   }),
   (Do = async function () {
-    let t = He(this, q, "f"),
+    let t = __classPrivateFieldGet(this, q, "f"),
       r = [],
       n = !1;
     try {
       for await (let a of this.client.beta.sessions.events.list(
         this.sessionId,
         { limit: 1000 },
-        He(this, N, "m", Yr).call(this),
+        __classPrivateFieldGet(this, N, "m", Yr).call(this),
       ))
-        (He(this, N, "m", Uo).call(this, a, r), (n = zo(a)));
+        (__classPrivateFieldGet(this, N, "m", Uo).call(this, a, r), (n = zo(a)));
     } catch (a) {
       (t.signal.throwIfAborted(),
-        He(this, B, "f").warn("reconcile list failed", { error: String(a) }));
-      for (let i of r) He(this, nt, "f").delete(i.id);
+        __classPrivateFieldGet(this, B, "f").warn("reconcile list failed", { error: String(a) }));
+      for (let i of r) __classPrivateFieldGet(this, nt, "f").delete(i.id);
       return;
     }
-    let s = r.filter((a) => !He(this, Z, "f").has(a.id));
-    He(this, oe, "f").disarm();
-    for (let a of s) await He(this, N, "m", Qn).call(this, a);
-    for (let a of [...He(this, Ee, "f").values()]) {
-      let i = He(this, st, "f").get(a.id);
-      if (i !== void 0) await He(this, N, "m", Qr).call(this, a, i);
+    let s = r.filter((a) => !__classPrivateFieldGet(this, Z, "f").has(a.id));
+    __classPrivateFieldGet(this, oe, "f").disarm();
+    for (let a of s) await __classPrivateFieldGet(this, N, "m", Qn).call(this, a);
+    for (let a of [...__classPrivateFieldGet(this, Ee, "f").values()]) {
+      let i = __classPrivateFieldGet(this, st, "f").get(a.id);
+      if (i !== void 0) await __classPrivateFieldGet(this, N, "m", Qr).call(this, a, i);
     }
     let o = s.filter(
-      (a) => !He(this, Z, "f").has(a.id) && !He(this, Ee, "f").has(a.id),
+      (a) => !__classPrivateFieldGet(this, Z, "f").has(a.id) && !__classPrivateFieldGet(this, Ee, "f").has(a.id),
     );
-    if (n && o.length === 0) He(this, oe, "f").arm();
-    else He(this, oe, "f").disarm();
+    if (n && o.length === 0) __classPrivateFieldGet(this, oe, "f").arm();
+    else __classPrivateFieldGet(this, oe, "f").disarm();
   }),
   (Uo = function (t, r) {
     if (t.type === "agent.tool_use" || t.type === "agent.custom_tool_use") {
-      if ((He(this, nt, "f").add(t.id), !He(this, Z, "f").has(t.id))) r.push(t);
+      if ((__classPrivateFieldGet(this, nt, "f").add(t.id), !__classPrivateFieldGet(this, Z, "f").has(t.id))) r.push(t);
     } else if (t.type === "user.tool_result")
-      He(this, Z, "f").add(t.tool_use_id);
+      __classPrivateFieldGet(this, Z, "f").add(t.tool_use_id);
     else if (t.type === "user.custom_tool_result")
-      He(this, Z, "f").add(t.custom_tool_use_id);
+      __classPrivateFieldGet(this, Z, "f").add(t.custom_tool_use_id);
     else if (t.type === "user.tool_confirmation") {
-      if (!He(this, Z, "f").has(t.tool_use_id))
-        He(this, st, "f").set(t.tool_use_id, t.result);
+      if (!__classPrivateFieldGet(this, Z, "f").has(t.tool_use_id))
+        __classPrivateFieldGet(this, st, "f").set(t.tool_use_id, t.result);
     }
   }),
   (Bo = async function (t) {
-    switch ((He(this, oe, "f").noteEvent(t), t.type)) {
+    switch ((__classPrivateFieldGet(this, oe, "f").noteEvent(t), t.type)) {
       case "agent.tool_use":
       case "agent.custom_tool_use":
-        if (!He(this, nt, "f").has(t.id))
-          (He(this, nt, "f").add(t.id),
-            await He(this, N, "m", Qn).call(this, t));
+        if (!__classPrivateFieldGet(this, nt, "f").has(t.id))
+          (__classPrivateFieldGet(this, nt, "f").add(t.id),
+            await __classPrivateFieldGet(this, N, "m", Qn).call(this, t));
         return !1;
       case "user.tool_confirmation":
-        return (await He(this, N, "m", jo).call(this, t), !1);
+        return (await __classPrivateFieldGet(this, N, "m", jo).call(this, t), !1);
       case "user.tool_result":
-        return (He(this, Z, "f").add(t.tool_use_id), !1);
+        return (__classPrivateFieldGet(this, Z, "f").add(t.tool_use_id), !1);
       case "user.custom_tool_result":
-        return (He(this, Z, "f").add(t.custom_tool_use_id), !1);
+        return (__classPrivateFieldGet(this, Z, "f").add(t.custom_tool_use_id), !1);
       case "session.status_terminated":
       case "session.deleted":
         return (
-          He(this, B, "f").info("session terminated", {
+          __classPrivateFieldGet(this, B, "f").info("session terminated", {
             component: "session-tool-runner",
             session_id: this.sessionId,
           }),
-          He(this, q, "f").abort(),
+          __classPrivateFieldGet(this, q, "f").abort(),
           !0
         );
       default:
@@ -4066,34 +4066,34 @@ class Ue {
   }),
   (Qn = async function (t) {
     let r = t.evaluated_permission,
-      n = r === "deny" ? "deny" : He(this, st, "f").get(t.id);
+      n = r === "deny" ? "deny" : __classPrivateFieldGet(this, st, "f").get(t.id);
     if (n === void 0) {
       if (r === void 0 || r === "allow")
-        await He(this, N, "m", Zn).call(this, t, void 0);
-      else if (!He(this, Ee, "f").has(t.id))
-        (He(this, B, "f").info("tool call awaiting confirmation; holding", {
+        await __classPrivateFieldGet(this, N, "m", Zn).call(this, t, void 0);
+      else if (!__classPrivateFieldGet(this, Ee, "f").has(t.id))
+        (__classPrivateFieldGet(this, B, "f").info("tool call awaiting confirmation; holding", {
           component: "session-tool-runner",
           session_id: this.sessionId,
           tool: t.name,
           tool_use_id: t.id,
         }),
-          He(this, Ee, "f").set(t.id, t),
-          He(this, oe, "f").block(t.id));
+          __classPrivateFieldGet(this, Ee, "f").set(t.id, t),
+          __classPrivateFieldGet(this, oe, "f").block(t.id));
       return;
     }
-    await He(this, N, "m", Qr).call(this, t, n);
+    await __classPrivateFieldGet(this, N, "m", Qr).call(this, t, n);
   }),
   (jo = async function (t) {
-    He(this, st, "f").set(t.tool_use_id, t.result);
-    let r = He(this, Ee, "f").get(t.tool_use_id);
+    __classPrivateFieldGet(this, st, "f").set(t.tool_use_id, t.result);
+    let r = __classPrivateFieldGet(this, Ee, "f").get(t.tool_use_id);
     if (r === void 0) return;
-    await He(this, N, "m", Qr).call(this, r, t.result);
+    await __classPrivateFieldGet(this, N, "m", Qr).call(this, r, t.result);
   }),
   (Qr = async function (t, r) {
-    let n = He(this, Ee, "f").delete(t.id);
+    let n = __classPrivateFieldGet(this, Ee, "f").delete(t.id);
     if (r === "allow") {
       if (
-        (He(this, B, "f").info("tool call confirmed", {
+        (__classPrivateFieldGet(this, B, "f").info("tool call confirmed", {
           component: "session-tool-runner",
           session_id: this.sessionId,
           tool: t.name,
@@ -4101,23 +4101,23 @@ class Ue {
         }),
         !n)
       )
-        He(this, oe, "f").block(t.id);
+        __classPrivateFieldGet(this, oe, "f").block(t.id);
       try {
-        await He(this, N, "m", Zn).call(this, t, "allow");
+        await __classPrivateFieldGet(this, N, "m", Zn).call(this, t, "allow");
       } finally {
-        He(this, oe, "f").unblock(t.id);
+        __classPrivateFieldGet(this, oe, "f").unblock(t.id);
       }
       return;
     }
-    if (n) He(this, oe, "f").unblock(t.id);
-    (He(this, Z, "f").add(t.id),
-      He(this, B, "f").info("tool call denied; not executing", {
+    if (n) __classPrivateFieldGet(this, oe, "f").unblock(t.id);
+    (__classPrivateFieldGet(this, Z, "f").add(t.id),
+      __classPrivateFieldGet(this, B, "f").info("tool call denied; not executing", {
         component: "session-tool-runner",
         session_id: this.sessionId,
         tool: t.name,
         tool_use_id: t.id,
       }),
-      He(this, N, "m", Zr).call(this, {
+      __classPrivateFieldGet(this, N, "m", Zr).call(this, {
         event: t,
         toolUseId: t.id,
         name: t.name,
@@ -4127,22 +4127,22 @@ class Ue {
       }));
   }),
   (Zr = function (t) {
-    He(this, rt, "f").push(t);
+    __classPrivateFieldGet(this, rt, "f").push(t);
   }),
   (Zn = async function (t, r) {
     var n, s;
-    if (He(this, Z, "f").has(t.id)) return;
-    (He(this, B, "f").info("executing tool", {
+    if (__classPrivateFieldGet(this, Z, "f").has(t.id)) return;
+    (__classPrivateFieldGet(this, B, "f").info("executing tool", {
       component: "session-tool-runner",
       session_id: this.sessionId,
       tool: t.name,
       tool_use_id: t.id,
     }),
-      Fn(this, _e, ((n = He(this, _e, "f")), n++, n), "f"));
+      __classPrivateFieldSet(this, _e, ((n = __classPrivateFieldGet(this, _e, "f")), n++, n), "f"));
     try {
-      let o = He(this, tn, "f").get(t.name);
+      let o = __classPrivateFieldGet(this, tn, "f").get(t.name);
       if (!o) {
-        (He(this, B, "f").info(
+        (__classPrivateFieldGet(this, B, "f").info(
           "tool not owned by this runner; leaving the tool_use_id pending for its owner",
           {
             component: "session-tool-runner",
@@ -4151,7 +4151,7 @@ class Ue {
             tool_use_id: t.id,
           },
         ),
-          He(this, N, "m", Zr).call(this, {
+          __classPrivateFieldGet(this, N, "m", Zr).call(this, {
             event: t,
             toolUseId: t.id,
             name: t.name,
@@ -4164,7 +4164,7 @@ class Ue {
       let a,
         i,
         d = new AbortController(),
-        p = Fe(He(this, q, "f").signal, d),
+        p = Fe(__classPrivateFieldGet(this, q, "f").signal, d),
         g = setTimeout(() => d.abort(), va);
       try {
         let m = await Ho(o, t.input, {
@@ -4177,8 +4177,8 @@ class Ue {
         (clearTimeout(g), p());
       }
       let h = Ia(t, i, Oa(a)),
-        u = await He(this, N, "m", Wo).call(this, h, t.id);
-      He(this, N, "m", Zr).call(this, {
+        u = await __classPrivateFieldGet(this, N, "m", Wo).call(this, h, t.id);
+      __classPrivateFieldGet(this, N, "m", Zr).call(this, {
         event: t,
         result: h,
         toolUseId: t.id,
@@ -4189,14 +4189,14 @@ class Ue {
       });
     } finally {
       if (
-        (Fn(this, _e, ((s = He(this, _e, "f")), s--, s), "f"),
-        He(this, _e, "f") === 0)
+        (__classPrivateFieldSet(this, _e, ((s = __classPrivateFieldGet(this, _e, "f")), s--, s), "f"),
+        __classPrivateFieldGet(this, _e, "f") === 0)
       )
-        He(this, zt, "f")?.call(this);
+        __classPrivateFieldGet(this, zt, "f")?.call(this);
     }
   }),
   (Wo = async function (t, r) {
-    let n = He(this, q, "f"),
+    let n = __classPrivateFieldGet(this, q, "f"),
       s;
     for (let o = 0; o < Jo; o++) {
       n.signal.throwIfAborted();
@@ -4205,9 +4205,9 @@ class Ue {
           await this.client.beta.sessions.events.send(
             this.sessionId,
             { events: [t] },
-            He(this, N, "m", Yr).call(this),
+            __classPrivateFieldGet(this, N, "m", Yr).call(this),
           ),
-          He(this, Z, "f").add(r),
+          __classPrivateFieldGet(this, Z, "f").add(r),
           !0
         );
       } catch (a) {
@@ -4216,7 +4216,7 @@ class Ue {
       }
     }
     return (
-      He(this, B, "f").error("failed to send tool result", {
+      __classPrivateFieldGet(this, B, "f").error("failed to send tool result", {
         tool_use_id: r,
         error: String(s),
       }),
@@ -4224,13 +4224,13 @@ class Ue {
     );
   }),
   (Vo = async function () {
-    if (He(this, _e, "f") === 0) return;
+    if (__classPrivateFieldGet(this, _e, "f") === 0) return;
     if (
-      (await Promise.race([new Promise((t) => Fn(this, zt, t, "f")), ae(Ta)]),
-      Fn(this, zt, null, "f"),
-      He(this, _e, "f") > 0)
+      (await Promise.race([new Promise((t) => __classPrivateFieldSet(this, zt, t, "f")), ae(Ta)]),
+      __classPrivateFieldSet(this, zt, null, "f"),
+      __classPrivateFieldGet(this, _e, "f") > 0)
     )
-      He(this, B, "f").warn("drain timeout exceeded");
+      __classPrivateFieldGet(this, B, "f").warn("drain timeout exceeded");
   }));
 function Ia(e, t, r) {
   if (e.type === "agent.custom_tool_use")
@@ -4285,15 +4285,15 @@ class Gt {
       (this.maxIdleMs = e.maxIdleMs),
       (this.workerId = e.workerId),
       (this.requestOptions = e.requestOptions),
-      Fn(this, Xt, e.signal, "f"));
+      __classPrivateFieldSet(this, Xt, e.signal, "f"));
   }
   async run(e) {
     let { environmentId: t, environmentKey: r } = this;
     if (t === void 0 || r === void 0)
-      throw new gn(
+      throw new AnthropicError(
         "EnvironmentWorker.run: environmentId and environmentKey are required to poll for work",
       );
-    let n = e ?? He(this, Xt, "f"),
+    let n = e ?? __classPrivateFieldGet(this, Xt, "f"),
       s = new Le({
         client: this.client,
         environmentId: t,
@@ -4306,7 +4306,7 @@ class Gt {
         autoStop: !1,
       });
     for await (let o of s)
-      await He(this, rn, "m", es).call(this, o, r, s.signal);
+      await __classPrivateFieldGet(this, rn, "m", es).call(this, o, r, s.signal);
   }
   async handleItem(e) {
     let t = e?.workId ?? T("ANTHROPIC_WORK_ID"),
@@ -4317,34 +4317,34 @@ class Gt {
         this.environmentKey ??
         T("ANTHROPIC_ENVIRONMENT_KEY");
     if (!t)
-      throw new gn(
+      throw new AnthropicError(
         "handleItem: workId is required \u2014 pass it or set ANTHROPIC_WORK_ID",
       );
     if (!r)
-      throw new gn(
+      throw new AnthropicError(
         "handleItem: environmentId is required \u2014 pass it or set ANTHROPIC_ENVIRONMENT_ID",
       );
     if (!n)
-      throw new gn(
+      throw new AnthropicError(
         "handleItem: sessionId is required \u2014 pass it or set ANTHROPIC_SESSION_ID",
       );
     if (!s)
-      throw new gn(
+      throw new AnthropicError(
         "handleItem: environmentKey is required \u2014 pass it, construct the worker with it, or set ANTHROPIC_ENVIRONMENT_KEY",
       );
     let o = { id: t, environment_id: r, data: { type: "session", id: n } };
-    await He(this, rn, "m", es).call(
+    await __classPrivateFieldGet(this, rn, "m", es).call(
       this,
       o,
       s,
-      e?.signal ?? He(this, Xt, "f"),
+      e?.signal ?? __classPrivateFieldGet(this, Xt, "f"),
     );
   }
 }
 ((Xt = new WeakMap()),
   (rn = new WeakSet()),
   (es = async function (t, r, n) {
-    let s = Bm(this.client),
+    let s = loggerFor(this.client),
       o = Wr(this.client, { authToken: r, helper: "environments-worker" }),
       a = t.data.id,
       i = {
@@ -4980,10 +4980,10 @@ class it {
         typeof globalThis.navigator < "u" &&
           globalThis.navigator.product === "ReactNative")
       )
-        throw new gn(
+        throw new AnthropicError(
           "The default react-native fetch implementation does not support streaming. Please use expo/fetch: https://docs.expo.dev/versions/latest/sdk/expo/#expofetch-api",
         );
-      throw new gn("Attempted to iterate over a response with no body");
+      throw new AnthropicError("Attempted to iterate over a response with no body");
     }
     return new it(xt(e.body), t);
   }
@@ -5070,7 +5070,7 @@ class Zt extends y {
   async results(e, t = {}, r) {
     let n = await this.retrieve(e);
     if (!n.results_url)
-      throw new gn(
+      throw new AnthropicError(
         `No batch \`results_url\`; Has it finished processing? ${n.processing_status} - ${n.id}`,
       );
     let { betas: s } = t ?? {};
@@ -5168,7 +5168,7 @@ function Ba(e, t) {
     if ("parse" in r) return r.parse(t);
     return JSON.parse(t);
   } catch (n) {
-    throw new gn(`Failed to parse structured output: ${n}`);
+    throw new AnthropicError(`Failed to parse structured output: ${n}`);
   }
 }
 var ja = (e) => {
@@ -5398,46 +5398,46 @@ class ar {
       dn.set(this, void 0),
       or.set(this, void 0),
       ir.set(this, (r) => {
-        if ((Fn(this, cn, !0, "f"), re(r))) r = new Xl();
-        if (r instanceof Xl)
-          return (Fn(this, ln, !0, "f"), this._emit("abort", r));
-        if (r instanceof gn) return this._emit("error", r);
+        if ((__classPrivateFieldSet(this, cn, !0, "f"), re(r))) r = new APIUserAbortError();
+        if (r instanceof APIUserAbortError)
+          return (__classPrivateFieldSet(this, ln, !0, "f"), this._emit("abort", r));
+        if (r instanceof AnthropicError) return this._emit("error", r);
         if (r instanceof Error) {
-          let n = new gn(r.message);
+          let n = new AnthropicError(r.message);
           return ((n.cause = r), this._emit("error", n));
         }
-        return this._emit("error", new gn(String(r)));
+        return this._emit("error", new AnthropicError(String(r)));
       }),
-      Fn(
+      __classPrivateFieldSet(
         this,
         er,
         new Promise((r, n) => {
-          (Fn(this, on, r, "f"), Fn(this, tr, n, "f"));
+          (__classPrivateFieldSet(this, on, r, "f"), __classPrivateFieldSet(this, tr, n, "f"));
         }),
         "f",
       ),
-      Fn(
+      __classPrivateFieldSet(
         this,
         rr,
         new Promise((r, n) => {
-          (Fn(this, an, r, "f"), Fn(this, nr, n, "f"));
+          (__classPrivateFieldSet(this, an, r, "f"), __classPrivateFieldSet(this, nr, n, "f"));
         }),
         "f",
       ),
-      He(this, er, "f").catch(() => {}),
-      He(this, rr, "f").catch(() => {}),
-      Fn(this, ct, e, "f"),
-      Fn(this, or, t?.logger ?? console, "f"));
+      __classPrivateFieldGet(this, er, "f").catch(() => {}),
+      __classPrivateFieldGet(this, rr, "f").catch(() => {}),
+      __classPrivateFieldSet(this, ct, e, "f"),
+      __classPrivateFieldSet(this, or, t?.logger ?? console, "f"));
   }
   get response() {
-    return He(this, un, "f");
+    return __classPrivateFieldGet(this, un, "f");
   }
   get request_id() {
-    return He(this, dn, "f");
+    return __classPrivateFieldGet(this, dn, "f");
   }
   async withResponse() {
-    Fn(this, We, !0, "f");
-    let e = await He(this, er, "f");
+    __classPrivateFieldSet(this, We, !0, "f");
+    let e = await __classPrivateFieldGet(this, er, "f");
     if (!e) throw Error("Could not resolve a `Response` object");
     return { data: this, response: e, request_id: e.headers.get("request-id") };
   }
@@ -5449,7 +5449,7 @@ class ar {
     let s = new ar(t, { logger: n });
     for (let o of t.messages) s._addMessageParam(o);
     return (
-      Fn(s, ct, { ...t, stream: !0 }, "f"),
+      __classPrivateFieldSet(s, ct, { ...t, stream: !0 }, "f"),
       s._run(() =>
         s._createMessage(
           e,
@@ -5465,7 +5465,7 @@ class ar {
       () => {
         (this._emitFinal(), this._emit("end"));
       },
-      He(this, ir, "f"),
+      __classPrivateFieldGet(this, ir, "f"),
     );
   }
   _addMessageParam(e) {
@@ -5483,47 +5483,47 @@ class ar {
         n.addEventListener("abort", s));
     }
     try {
-      He(this, z, "m", ss).call(this);
+      __classPrivateFieldGet(this, z, "m", ss).call(this);
       let { response: o, data: a } = await e
         .create({ ...t, stream: !0 }, { ...r, signal: this.controller.signal })
         .withResponse();
       this._connected(o);
-      for await (let i of a) He(this, z, "m", os).call(this, i);
-      if (a.controller.signal?.aborted) throw new Xl();
-      He(this, z, "m", is).call(this);
+      for await (let i of a) __classPrivateFieldGet(this, z, "m", os).call(this, i);
+      if (a.controller.signal?.aborted) throw new APIUserAbortError();
+      __classPrivateFieldGet(this, z, "m", is).call(this);
     } finally {
       if (n && s) n.removeEventListener("abort", s);
     }
   }
   _connected(e) {
     if (this.ended) return;
-    (Fn(this, un, e, "f"),
-      Fn(this, dn, e?.headers.get("request-id"), "f"),
-      He(this, on, "f").call(this, e),
+    (__classPrivateFieldSet(this, un, e, "f"),
+      __classPrivateFieldSet(this, dn, e?.headers.get("request-id"), "f"),
+      __classPrivateFieldGet(this, on, "f").call(this, e),
       this._emit("connect"));
   }
   get ended() {
-    return He(this, sr, "f");
+    return __classPrivateFieldGet(this, sr, "f");
   }
   get errored() {
-    return He(this, cn, "f");
+    return __classPrivateFieldGet(this, cn, "f");
   }
   get aborted() {
-    return He(this, ln, "f");
+    return __classPrivateFieldGet(this, ln, "f");
   }
   abort() {
     this.controller.abort();
   }
   on(e, t) {
     return (
-      (He(this, fe, "f")[e] || (He(this, fe, "f")[e] = [])).push({
+      (__classPrivateFieldGet(this, fe, "f")[e] || (__classPrivateFieldGet(this, fe, "f")[e] = [])).push({
         listener: t,
       }),
       this
     );
   }
   off(e, t) {
-    let r = He(this, fe, "f")[e];
+    let r = __classPrivateFieldGet(this, fe, "f")[e];
     if (!r) return this;
     let n = r.findIndex((s) => s.listener === t);
     if (n >= 0) r.splice(n, 1);
@@ -5531,7 +5531,7 @@ class ar {
   }
   once(e, t) {
     return (
-      (He(this, fe, "f")[e] || (He(this, fe, "f")[e] = [])).push({
+      (__classPrivateFieldGet(this, fe, "f")[e] || (__classPrivateFieldGet(this, fe, "f")[e] = [])).push({
         listener: t,
         once: !0,
       }),
@@ -5540,48 +5540,48 @@ class ar {
   }
   emitted(e) {
     return new Promise((t, r) => {
-      if ((Fn(this, We, !0, "f"), e !== "error")) this.once("error", r);
+      if ((__classPrivateFieldSet(this, We, !0, "f"), e !== "error")) this.once("error", r);
       this.once(e, t);
     });
   }
   async done() {
-    (Fn(this, We, !0, "f"), await He(this, rr, "f"));
+    (__classPrivateFieldSet(this, We, !0, "f"), await __classPrivateFieldGet(this, rr, "f"));
   }
   get currentMessage() {
-    return He(this, Re, "f");
+    return __classPrivateFieldGet(this, Re, "f");
   }
   async finalMessage() {
-    return (await this.done(), He(this, z, "m", ns).call(this));
+    return (await this.done(), __classPrivateFieldGet(this, z, "m", ns).call(this));
   }
   async finalText() {
-    return (await this.done(), He(this, z, "m", Zo).call(this));
+    return (await this.done(), __classPrivateFieldGet(this, z, "m", Zo).call(this));
   }
   _emit(e, ...t) {
-    if (He(this, sr, "f")) return;
-    if (e === "end") (Fn(this, sr, !0, "f"), He(this, an, "f").call(this));
-    let r = He(this, fe, "f")[e];
+    if (__classPrivateFieldGet(this, sr, "f")) return;
+    if (e === "end") (__classPrivateFieldSet(this, sr, !0, "f"), __classPrivateFieldGet(this, an, "f").call(this));
+    let r = __classPrivateFieldGet(this, fe, "f")[e];
     if (r)
-      ((He(this, fe, "f")[e] = r.filter((n) => !n.once)),
+      ((__classPrivateFieldGet(this, fe, "f")[e] = r.filter((n) => !n.once)),
         r.forEach(({ listener: n }) => n(...t)));
     if (e === "abort") {
       let n = t[0];
-      if (!He(this, We, "f") && !r?.length) Promise.reject(n);
-      (He(this, tr, "f").call(this, n),
-        He(this, nr, "f").call(this, n),
+      if (!__classPrivateFieldGet(this, We, "f") && !r?.length) Promise.reject(n);
+      (__classPrivateFieldGet(this, tr, "f").call(this, n),
+        __classPrivateFieldGet(this, nr, "f").call(this, n),
         this._emit("end"));
       return;
     }
     if (e === "error") {
       let n = t[0];
-      if (!He(this, We, "f") && !r?.length) Promise.reject(n);
-      (He(this, tr, "f").call(this, n),
-        He(this, nr, "f").call(this, n),
+      if (!__classPrivateFieldGet(this, We, "f") && !r?.length) Promise.reject(n);
+      (__classPrivateFieldGet(this, tr, "f").call(this, n),
+        __classPrivateFieldGet(this, nr, "f").call(this, n),
         this._emit("end"));
     }
   }
   _emitFinal() {
     if (this.receivedMessages.at(-1))
-      this._emit("finalMessage", He(this, z, "m", ns).call(this));
+      this._emit("finalMessage", __classPrivateFieldGet(this, z, "m", ns).call(this));
   }
   async _fromReadableStream(e, t) {
     let r = t?.signal,
@@ -5592,11 +5592,11 @@ class ar {
         r.addEventListener("abort", n));
     }
     try {
-      (He(this, z, "m", ss).call(this), this._connected(null));
+      (__classPrivateFieldGet(this, z, "m", ss).call(this), this._connected(null));
       let s = K.fromReadableStream(e, this.controller);
-      for await (let o of s) He(this, z, "m", os).call(this, o);
-      if (s.controller.signal?.aborted) throw new Xl();
-      He(this, z, "m", is).call(this);
+      for await (let o of s) __classPrivateFieldGet(this, z, "m", os).call(this, o);
+      if (s.controller.signal?.aborted) throw new APIUserAbortError();
+      __classPrivateFieldGet(this, z, "m", is).call(this);
     } finally {
       if (r && n) r.removeEventListener("abort", n);
     }
@@ -5621,14 +5621,14 @@ class ar {
   (z = new WeakSet()),
   (ns = function () {
     if (this.receivedMessages.length === 0)
-      throw new gn(
+      throw new AnthropicError(
         "stream ended without producing a Message with role=assistant",
       );
     return this.receivedMessages.at(-1);
   }),
   (Zo = function () {
     if (this.receivedMessages.length === 0)
-      throw new gn(
+      throw new AnthropicError(
         "stream ended without producing a Message with role=assistant",
       );
     let t = this.receivedMessages
@@ -5636,18 +5636,18 @@ class ar {
       .content.filter((r) => r.type === "text")
       .map((r) => r.text);
     if (t.length === 0)
-      throw new gn(
+      throw new AnthropicError(
         "stream ended without producing a content block with type=text",
       );
     return t.join(" ");
   }),
   (ss = function () {
     if (this.ended) return;
-    Fn(this, Re, void 0, "f");
+    __classPrivateFieldSet(this, Re, void 0, "f");
   }),
   (os = function (t) {
     if (this.ended) return;
-    let r = He(this, z, "m", ei).call(this, t);
+    let r = __classPrivateFieldGet(this, z, "m", ei).call(this, t);
     switch ((this._emit("streamEvent", t, r), t.type)) {
       case "content_block_delta": {
         let n = r.content.at(-1);
@@ -5663,14 +5663,14 @@ class ar {
             break;
           }
           case "input_json_delta": {
-            if (cs(n) && He(this, fe, "f").inputJson?.length) {
+            if (cs(n) && __classPrivateFieldGet(this, fe, "f").inputJson?.length) {
               let s;
               try {
                 s = n.input;
               } catch (o) {
-                He(this, ir, "f").call(
+                __classPrivateFieldGet(this, ir, "f").call(
                   this,
-                  He(this, z, "m", as).call(this, n, o),
+                  __classPrivateFieldGet(this, z, "m", as).call(this, n, o),
                 );
                 break;
               }
@@ -5700,7 +5700,7 @@ class ar {
       case "message_stop": {
         (this._addMessageParam(r),
           this._addMessage(
-            ts(r, He(this, ct, "f"), { logger: He(this, or, "f") }),
+            ts(r, __classPrivateFieldGet(this, ct, "f"), { logger: __classPrivateFieldGet(this, or, "f") }),
             !0,
           ));
         break;
@@ -5710,7 +5710,7 @@ class ar {
         break;
       }
       case "message_start": {
-        Fn(this, Re, r, "f");
+        __classPrivateFieldSet(this, Re, r, "f");
         break;
       }
       case "content_block_start":
@@ -5719,25 +5719,25 @@ class ar {
     }
   }),
   (is = function () {
-    if (this.ended) throw new gn("stream has ended, this shouldn't happen");
-    let t = He(this, Re, "f");
-    if (!t) throw new gn("request ended without sending any chunks");
+    if (this.ended) throw new AnthropicError("stream has ended, this shouldn't happen");
+    let t = __classPrivateFieldGet(this, Re, "f");
+    if (!t) throw new AnthropicError("request ended without sending any chunks");
     return (
-      Fn(this, Re, void 0, "f"),
-      ts(t, He(this, ct, "f"), { logger: He(this, or, "f") })
+      __classPrivateFieldSet(this, Re, void 0, "f"),
+      ts(t, __classPrivateFieldGet(this, ct, "f"), { logger: __classPrivateFieldGet(this, or, "f") })
     );
   }),
   (ei = function (t) {
-    let r = He(this, Re, "f");
+    let r = __classPrivateFieldGet(this, Re, "f");
     if (t.type === "message_start") {
       if (r)
-        throw new gn(
+        throw new AnthropicError(
           `Unexpected event order, got ${t.type} before receiving "message_stop"`,
         );
       return t.message;
     }
     if (!r)
-      throw new gn(
+      throw new AnthropicError(
         `Unexpected event order, got ${t.type} before "message_start"`,
       );
     switch (t.type) {
@@ -5833,9 +5833,9 @@ class ar {
             s = n.input;
           } catch (o) {
             ((s = {}),
-              He(this, ir, "f").call(
+              __classPrivateFieldGet(this, ir, "f").call(
                 this,
-                He(this, z, "m", as).call(this, n, o),
+                __classPrivateFieldGet(this, z, "m", as).call(this, n, o),
               ));
           }
           Object.defineProperty(n, "input", {
@@ -5851,7 +5851,7 @@ class ar {
   }),
   (as = function (t, r) {
     let n = t[Ae];
-    return new gn(
+    return new AnthropicError(
       `Unable to parse tool parameter JSON from model. Please retry your request or adjust your prompt. Error: ${r}. JSON: ${n}`,
     );
   }),
@@ -5904,7 +5904,7 @@ class ar {
   }
 }
 function ti(e) {}
-function cot() {
+function promiseWithResolvers() {
   let e, t;
   return {
     promise: new Promise((n, s) => {
@@ -5951,7 +5951,7 @@ class ur {
       be.set(this, void 0),
       ve.set(this, void 0),
       lr.set(this, 0),
-      Fn(
+      __classPrivateFieldSet(
         this,
         j,
         { params: { ...t, messages: structuredClone(t.messages) } },
@@ -5959,7 +5959,7 @@ class ur {
       ));
     let n = Kn(t.tools, t.messages);
     if (
-      (Fn(
+      (__classPrivateFieldSet(
         this,
         X,
         {
@@ -5972,7 +5972,7 @@ class ur {
         },
         "f",
       ),
-      Fn(this, ve, cot(), "f"),
+      __classPrivateFieldSet(this, ve, promiseWithResolvers(), "f"),
       t.compactionControl?.enabled)
     )
       console.warn(
@@ -5989,12 +5989,12 @@ class ur {
   (lr = new WeakMap()),
   (cr = new WeakSet()),
   (si = async function () {
-    let t = He(this, j, "f").params.compactionControl;
+    let t = __classPrivateFieldGet(this, j, "f").params.compactionControl;
     if (!t || !t.enabled) return !1;
     let r = 0;
-    if (He(this, ee, "f") !== void 0)
+    if (__classPrivateFieldGet(this, ee, "f") !== void 0)
       try {
-        let d = await He(this, ee, "f");
+        let d = await __classPrivateFieldGet(this, ee, "f");
         r =
           d.usage.input_tokens +
           (d.usage.cache_creation_input_tokens ?? 0) +
@@ -6005,9 +6005,9 @@ class ur {
       }
     let n = t.contextTokenThreshold ?? ri;
     if (r < n) return !1;
-    let s = t.model ?? He(this, j, "f").params.model,
+    let s = t.model ?? __classPrivateFieldGet(this, j, "f").params.model,
       o = t.summaryPrompt ?? ni,
-      a = He(this, j, "f").params.messages;
+      a = __classPrivateFieldGet(this, j, "f").params.messages;
     if (a[a.length - 1].role === "assistant") {
       let d = a[a.length - 1];
       if (Array.isArray(d.content)) {
@@ -6023,17 +6023,17 @@ class ur {
           ...a,
           { role: "user", content: [{ type: "text", text: o }] },
         ],
-        max_tokens: He(this, j, "f").params.max_tokens,
+        max_tokens: __classPrivateFieldGet(this, j, "f").params.max_tokens,
       },
       {
-        signal: He(this, X, "f").signal,
-        headers: c([He(this, X, "f").headers, $t("compaction")]),
+        signal: __classPrivateFieldGet(this, X, "f").signal,
+        headers: c([__classPrivateFieldGet(this, X, "f").headers, $t("compaction")]),
       },
     );
     if (i.content[0]?.type !== "text")
-      throw new gn("Expected text response for compaction");
+      throw new AnthropicError("Expected text response for compaction");
     return (
-      (He(this, j, "f").params.messages = [
+      (__classPrivateFieldGet(this, j, "f").params.messages = [
         { role: "user", content: i.content },
       ]),
       !0
@@ -6041,48 +6041,48 @@ class ur {
   }),
   Symbol.asyncIterator)]() {
     var e;
-    if (He(this, lt, "f"))
-      throw new gn("Cannot iterate over a consumed stream");
-    (Fn(this, lt, !0, "f"), Fn(this, qe, !0, "f"), Fn(this, be, void 0, "f"));
+    if (__classPrivateFieldGet(this, lt, "f"))
+      throw new AnthropicError("Cannot iterate over a consumed stream");
+    (__classPrivateFieldSet(this, lt, !0, "f"), __classPrivateFieldSet(this, qe, !0, "f"), __classPrivateFieldSet(this, be, void 0, "f"));
     try {
       while (!0) {
         let t;
         try {
           if (
-            He(this, j, "f").params.max_iterations &&
-            He(this, lr, "f") >= He(this, j, "f").params.max_iterations
+            __classPrivateFieldGet(this, j, "f").params.max_iterations &&
+            __classPrivateFieldGet(this, lr, "f") >= __classPrivateFieldGet(this, j, "f").params.max_iterations
           )
             break;
-          (Fn(this, qe, !1, "f"),
-            Fn(this, be, void 0, "f"),
-            Fn(this, lr, ((e = He(this, lr, "f")), e++, e), "f"),
-            Fn(this, ee, void 0, "f"));
+          (__classPrivateFieldSet(this, qe, !1, "f"),
+            __classPrivateFieldSet(this, be, void 0, "f"),
+            __classPrivateFieldSet(this, lr, ((e = __classPrivateFieldGet(this, lr, "f")), e++, e), "f"),
+            __classPrivateFieldSet(this, ee, void 0, "f"));
           let {
             max_iterations: r,
             compactionControl: n,
             ...s
-          } = He(this, j, "f").params;
+          } = __classPrivateFieldGet(this, j, "f").params;
           if (s.stream)
-            ((t = this.client.beta.messages.stream({ ...s }, He(this, X, "f"))),
-              Fn(this, ee, t.finalMessage(), "f"),
-              He(this, ee, "f").catch(() => {}),
+            ((t = this.client.beta.messages.stream({ ...s }, __classPrivateFieldGet(this, X, "f"))),
+              __classPrivateFieldSet(this, ee, t.finalMessage(), "f"),
+              __classPrivateFieldGet(this, ee, "f").catch(() => {}),
               yield t);
           else
-            (Fn(
+            (__classPrivateFieldSet(
               this,
               ee,
               this.client.beta.messages.create(
                 { ...s, stream: !1 },
-                He(this, X, "f"),
+                __classPrivateFieldGet(this, X, "f"),
               ),
               "f",
             ),
-              yield He(this, ee, "f"));
-          if (!(await He(this, cr, "m", si).call(this))) {
-            if (!He(this, qe, "f")) {
-              let i = await He(this, ee, "f");
+              yield __classPrivateFieldGet(this, ee, "f"));
+          if (!(await __classPrivateFieldGet(this, cr, "m", si).call(this))) {
+            if (!__classPrivateFieldGet(this, qe, "f")) {
+              let i = await __classPrivateFieldGet(this, ee, "f");
               if (
-                (He(this, j, "f").params.messages.push({
+                (__classPrivateFieldGet(this, j, "f").params.messages.push({
                   role: i.role,
                   content: i.content,
                 }),
@@ -6090,54 +6090,54 @@ class ur {
               )
                 break;
             }
-            let a = await He(this, cr, "m", ls).call(
+            let a = await __classPrivateFieldGet(this, cr, "m", ls).call(
               this,
-              He(this, j, "f").params.messages.at(-1),
+              __classPrivateFieldGet(this, j, "f").params.messages.at(-1),
             );
-            if (a) He(this, j, "f").params.messages.push(a);
-            else if (!He(this, qe, "f")) break;
+            if (a) __classPrivateFieldGet(this, j, "f").params.messages.push(a);
+            else if (!__classPrivateFieldGet(this, qe, "f")) break;
           }
         } finally {
           if (t) t.abort();
         }
       }
-      if (!He(this, ee, "f"))
-        throw new gn("ToolRunner concluded without a message from the server");
-      He(this, ve, "f").resolve(await He(this, ee, "f"));
+      if (!__classPrivateFieldGet(this, ee, "f"))
+        throw new AnthropicError("ToolRunner concluded without a message from the server");
+      __classPrivateFieldGet(this, ve, "f").resolve(await __classPrivateFieldGet(this, ee, "f"));
     } catch (t) {
       throw (
-        Fn(this, lt, !1, "f"),
-        He(this, ve, "f").promise.catch(() => {}),
-        He(this, ve, "f").reject(t),
-        Fn(this, ve, cot(), "f"),
+        __classPrivateFieldSet(this, lt, !1, "f"),
+        __classPrivateFieldGet(this, ve, "f").promise.catch(() => {}),
+        __classPrivateFieldGet(this, ve, "f").reject(t),
+        __classPrivateFieldSet(this, ve, promiseWithResolvers(), "f"),
         t
       );
     }
   }
   setMessagesParams(e) {
     if (typeof e === "function")
-      He(this, j, "f").params = e(He(this, j, "f").params);
-    else He(this, j, "f").params = e;
-    (Fn(this, qe, !0, "f"), Fn(this, be, void 0, "f"));
+      __classPrivateFieldGet(this, j, "f").params = e(__classPrivateFieldGet(this, j, "f").params);
+    else __classPrivateFieldGet(this, j, "f").params = e;
+    (__classPrivateFieldSet(this, qe, !0, "f"), __classPrivateFieldSet(this, be, void 0, "f"));
   }
   setRequestOptions(e) {
-    if (typeof e === "function") Fn(this, X, e(He(this, X, "f")), "f");
-    else Fn(this, X, { ...He(this, X, "f"), ...e }, "f");
+    if (typeof e === "function") __classPrivateFieldSet(this, X, e(__classPrivateFieldGet(this, X, "f")), "f");
+    else __classPrivateFieldSet(this, X, { ...__classPrivateFieldGet(this, X, "f"), ...e }, "f");
   }
-  async generateToolResponse(e = He(this, X, "f").signal) {
-    let t = (await He(this, ee, "f")) ?? this.params.messages.at(-1);
+  async generateToolResponse(e = __classPrivateFieldGet(this, X, "f").signal) {
+    let t = (await __classPrivateFieldGet(this, ee, "f")) ?? this.params.messages.at(-1);
     if (!t) return null;
-    return He(this, cr, "m", ls).call(this, t, e);
+    return __classPrivateFieldGet(this, cr, "m", ls).call(this, t, e);
   }
   done() {
-    return He(this, ve, "f").promise;
+    return __classPrivateFieldGet(this, ve, "f").promise;
   }
   async runUntilDone() {
-    if (!He(this, lt, "f")) for await (let e of this);
+    if (!__classPrivateFieldGet(this, lt, "f")) for await (let e of this);
     return this.done();
   }
   get params() {
-    return He(this, j, "f").params;
+    return __classPrivateFieldGet(this, j, "f").params;
   }
   pushMessages(...e) {
     this.setMessagesParams((t) => ({ ...t, messages: [...t.messages, ...e] }));
@@ -6146,16 +6146,16 @@ class ur {
     return this.runUntilDone().then(e, t);
   }
 }
-ls = async function (t, r = He(this, X, "f").signal) {
-  if (He(this, be, "f") !== void 0) return He(this, be, "f");
+ls = async function (t, r = __classPrivateFieldGet(this, X, "f").signal) {
+  if (__classPrivateFieldGet(this, be, "f") !== void 0) return __classPrivateFieldGet(this, be, "f");
   return (
-    Fn(
+    __classPrivateFieldSet(
       this,
       be,
-      Ja(He(this, j, "f").params, t, { ...He(this, X, "f"), signal: r }),
+      Ja(__classPrivateFieldGet(this, j, "f").params, t, { ...__classPrivateFieldGet(this, X, "f"), signal: r }),
       "f",
     ),
-    He(this, be, "f")
+    __classPrivateFieldGet(this, be, "f")
   );
 };
 async function Ja(e, t = e.messages.at(-1), r) {
@@ -6196,7 +6196,7 @@ async function Ja(e, t = e.messages.at(-1), r) {
             type: "tool_result",
             tool_use_id: o.id,
             content:
-              i instanceof Hu
+              i instanceof ToolError
                 ? i.content
                 : `Error: ${i instanceof Error ? i.message : String(i)}`,
             is_error: !0,
@@ -6314,7 +6314,7 @@ Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resour
 function ii(e) {
   if (!e.output_format) return e;
   if (e.output_config?.format)
-    throw new gn(
+    throw new AnthropicError(
       "Both output_format and output_config.format were provided. Please use only output_config.format (output_format is deprecated).",
     );
   let { output_format: t, ...r } = e;
@@ -6322,7 +6322,7 @@ function ii(e) {
 }
 Te.Batches = Zt;
 Te.BetaToolRunner = ur;
-Te.ToolError = Hu;
+Te.ToolError = ToolError;
 class ut extends y {
   list(e, t = {}, r) {
     let { betas: n, ...s } = t ?? {};
@@ -7158,7 +7158,7 @@ class mt extends y {
   }
 }
 mt.Credentials = mr;
-class Th extends y {
+class Beta extends y {
   constructor() {
     super(...arguments);
     ((this.models = new Ht(this._client)),
@@ -7178,22 +7178,22 @@ class Th extends y {
       (this.tunnels = new pt(this._client)));
   }
 }
-Th.Models = Ht;
-Th.Messages = Te;
-Th.Agents = Ge;
-Th.Environments = ot;
-Th.Sessions = Pe;
-Th.Deployments = Ot;
-Th.DeploymentRuns = It;
-Th.Vaults = mt;
-Th.MemoryStores = je;
-Th.Files = Ft;
-Th.Skills = ft;
-Th.Webhooks = jt;
-Th.UserProfiles = Dt;
-Th.Dreams = Mt;
-Th.Tunnels = pt;
-class Xxe extends y {
+Beta.Models = Ht;
+Beta.Messages = Te;
+Beta.Agents = Ge;
+Beta.Environments = ot;
+Beta.Sessions = Pe;
+Beta.Deployments = Ot;
+Beta.DeploymentRuns = It;
+Beta.Vaults = mt;
+Beta.MemoryStores = je;
+Beta.Files = Ft;
+Beta.Skills = ft;
+Beta.Webhooks = jt;
+Beta.UserProfiles = Dt;
+Beta.Dreams = Mt;
+Beta.Tunnels = pt;
+class Completions extends y {
   create(e, t) {
     let { betas: r, ...n } = e;
     return this._client.post("/v1/complete", {
@@ -7254,7 +7254,7 @@ function oc(e, t) {
     if ("parse" in r) return r.parse(t);
     return JSON.parse(t);
   } catch (n) {
-    throw new gn(`Failed to parse structured output: ${n}`);
+    throw new AnthropicError(`Failed to parse structured output: ${n}`);
   }
 }
 var ie,
@@ -7307,46 +7307,46 @@ class xr {
       bn.set(this, void 0),
       Sr.set(this, void 0),
       fs.set(this, (r) => {
-        if ((Fn(this, pn, !0, "f"), re(r))) r = new Xl();
-        if (r instanceof Xl)
-          return (Fn(this, mn, !0, "f"), this._emit("abort", r));
-        if (r instanceof gn) return this._emit("error", r);
+        if ((__classPrivateFieldSet(this, pn, !0, "f"), re(r))) r = new APIUserAbortError();
+        if (r instanceof APIUserAbortError)
+          return (__classPrivateFieldSet(this, mn, !0, "f"), this._emit("abort", r));
+        if (r instanceof AnthropicError) return this._emit("error", r);
         if (r instanceof Error) {
-          let n = new gn(r.message);
+          let n = new AnthropicError(r.message);
           return ((n.cause = r), this._emit("error", n));
         }
-        return this._emit("error", new gn(String(r)));
+        return this._emit("error", new AnthropicError(String(r)));
       }),
-      Fn(
+      __classPrivateFieldSet(
         this,
         gr,
         new Promise((r, n) => {
-          (Fn(this, hn, r, "f"), Fn(this, _r, n, "f"));
+          (__classPrivateFieldSet(this, hn, r, "f"), __classPrivateFieldSet(this, _r, n, "f"));
         }),
         "f",
       ),
-      Fn(
+      __classPrivateFieldSet(
         this,
         br,
         new Promise((r, n) => {
-          (Fn(this, fn, r, "f"), Fn(this, yr, n, "f"));
+          (__classPrivateFieldSet(this, fn, r, "f"), __classPrivateFieldSet(this, yr, n, "f"));
         }),
         "f",
       ),
-      He(this, gr, "f").catch(() => {}),
-      He(this, br, "f").catch(() => {}),
-      Fn(this, gt, e, "f"),
-      Fn(this, Sr, t?.logger ?? console, "f"));
+      __classPrivateFieldGet(this, gr, "f").catch(() => {}),
+      __classPrivateFieldGet(this, br, "f").catch(() => {}),
+      __classPrivateFieldSet(this, gt, e, "f"),
+      __classPrivateFieldSet(this, Sr, t?.logger ?? console, "f"));
   }
   get response() {
-    return He(this, _n, "f");
+    return __classPrivateFieldGet(this, _n, "f");
   }
   get request_id() {
-    return He(this, bn, "f");
+    return __classPrivateFieldGet(this, bn, "f");
   }
   async withResponse() {
-    Fn(this, Je, !0, "f");
-    let e = await He(this, gr, "f");
+    __classPrivateFieldSet(this, Je, !0, "f");
+    let e = await __classPrivateFieldGet(this, gr, "f");
     if (!e) throw Error("Could not resolve a `Response` object");
     return { data: this, response: e, request_id: e.headers.get("request-id") };
   }
@@ -7358,7 +7358,7 @@ class xr {
     let s = new xr(t, { logger: n });
     for (let o of t.messages) s._addMessageParam(o);
     return (
-      Fn(s, gt, { ...t, stream: !0 }, "f"),
+      __classPrivateFieldSet(s, gt, { ...t, stream: !0 }, "f"),
       s._run(() =>
         s._createMessage(
           e,
@@ -7374,7 +7374,7 @@ class xr {
       () => {
         (this._emitFinal(), this._emit("end"));
       },
-      He(this, fs, "f"),
+      __classPrivateFieldGet(this, fs, "f"),
     );
   }
   _addMessageParam(e) {
@@ -7392,47 +7392,47 @@ class xr {
         n.addEventListener("abort", s));
     }
     try {
-      He(this, ie, "m", ps).call(this);
+      __classPrivateFieldGet(this, ie, "m", ps).call(this);
       let { response: o, data: a } = await e
         .create({ ...t, stream: !0 }, { ...r, signal: this.controller.signal })
         .withResponse();
       this._connected(o);
-      for await (let i of a) He(this, ie, "m", ms).call(this, i);
-      if (a.controller.signal?.aborted) throw new Xl();
-      He(this, ie, "m", gs).call(this);
+      for await (let i of a) __classPrivateFieldGet(this, ie, "m", ms).call(this, i);
+      if (a.controller.signal?.aborted) throw new APIUserAbortError();
+      __classPrivateFieldGet(this, ie, "m", gs).call(this);
     } finally {
       if (n && s) n.removeEventListener("abort", s);
     }
   }
   _connected(e) {
     if (this.ended) return;
-    (Fn(this, _n, e, "f"),
-      Fn(this, bn, e?.headers.get("request-id"), "f"),
-      He(this, hn, "f").call(this, e),
+    (__classPrivateFieldSet(this, _n, e, "f"),
+      __classPrivateFieldSet(this, bn, e?.headers.get("request-id"), "f"),
+      __classPrivateFieldGet(this, hn, "f").call(this, e),
       this._emit("connect"));
   }
   get ended() {
-    return He(this, wr, "f");
+    return __classPrivateFieldGet(this, wr, "f");
   }
   get errored() {
-    return He(this, pn, "f");
+    return __classPrivateFieldGet(this, pn, "f");
   }
   get aborted() {
-    return He(this, mn, "f");
+    return __classPrivateFieldGet(this, mn, "f");
   }
   abort() {
     this.controller.abort();
   }
   on(e, t) {
     return (
-      (He(this, me, "f")[e] || (He(this, me, "f")[e] = [])).push({
+      (__classPrivateFieldGet(this, me, "f")[e] || (__classPrivateFieldGet(this, me, "f")[e] = [])).push({
         listener: t,
       }),
       this
     );
   }
   off(e, t) {
-    let r = He(this, me, "f")[e];
+    let r = __classPrivateFieldGet(this, me, "f")[e];
     if (!r) return this;
     let n = r.findIndex((s) => s.listener === t);
     if (n >= 0) r.splice(n, 1);
@@ -7440,7 +7440,7 @@ class xr {
   }
   once(e, t) {
     return (
-      (He(this, me, "f")[e] || (He(this, me, "f")[e] = [])).push({
+      (__classPrivateFieldGet(this, me, "f")[e] || (__classPrivateFieldGet(this, me, "f")[e] = [])).push({
         listener: t,
         once: !0,
       }),
@@ -7449,48 +7449,48 @@ class xr {
   }
   emitted(e) {
     return new Promise((t, r) => {
-      if ((Fn(this, Je, !0, "f"), e !== "error")) this.once("error", r);
+      if ((__classPrivateFieldSet(this, Je, !0, "f"), e !== "error")) this.once("error", r);
       this.once(e, t);
     });
   }
   async done() {
-    (Fn(this, Je, !0, "f"), await He(this, br, "f"));
+    (__classPrivateFieldSet(this, Je, !0, "f"), await __classPrivateFieldGet(this, br, "f"));
   }
   get currentMessage() {
-    return He(this, Ie, "f");
+    return __classPrivateFieldGet(this, Ie, "f");
   }
   async finalMessage() {
-    return (await this.done(), He(this, ie, "m", hs).call(this));
+    return (await this.done(), __classPrivateFieldGet(this, ie, "m", hs).call(this));
   }
   async finalText() {
-    return (await this.done(), He(this, ie, "m", ci).call(this));
+    return (await this.done(), __classPrivateFieldGet(this, ie, "m", ci).call(this));
   }
   _emit(e, ...t) {
-    if (He(this, wr, "f")) return;
-    if (e === "end") (Fn(this, wr, !0, "f"), He(this, fn, "f").call(this));
-    let r = He(this, me, "f")[e];
+    if (__classPrivateFieldGet(this, wr, "f")) return;
+    if (e === "end") (__classPrivateFieldSet(this, wr, !0, "f"), __classPrivateFieldGet(this, fn, "f").call(this));
+    let r = __classPrivateFieldGet(this, me, "f")[e];
     if (r)
-      ((He(this, me, "f")[e] = r.filter((n) => !n.once)),
+      ((__classPrivateFieldGet(this, me, "f")[e] = r.filter((n) => !n.once)),
         r.forEach(({ listener: n }) => n(...t)));
     if (e === "abort") {
       let n = t[0];
-      if (!He(this, Je, "f") && !r?.length) Promise.reject(n);
-      (He(this, _r, "f").call(this, n),
-        He(this, yr, "f").call(this, n),
+      if (!__classPrivateFieldGet(this, Je, "f") && !r?.length) Promise.reject(n);
+      (__classPrivateFieldGet(this, _r, "f").call(this, n),
+        __classPrivateFieldGet(this, yr, "f").call(this, n),
         this._emit("end"));
       return;
     }
     if (e === "error") {
       let n = t[0];
-      if (!He(this, Je, "f") && !r?.length) Promise.reject(n);
-      (He(this, _r, "f").call(this, n),
-        He(this, yr, "f").call(this, n),
+      if (!__classPrivateFieldGet(this, Je, "f") && !r?.length) Promise.reject(n);
+      (__classPrivateFieldGet(this, _r, "f").call(this, n),
+        __classPrivateFieldGet(this, yr, "f").call(this, n),
         this._emit("end"));
     }
   }
   _emitFinal() {
     if (this.receivedMessages.at(-1))
-      this._emit("finalMessage", He(this, ie, "m", hs).call(this));
+      this._emit("finalMessage", __classPrivateFieldGet(this, ie, "m", hs).call(this));
   }
   async _fromReadableStream(e, t) {
     let r = t?.signal,
@@ -7501,11 +7501,11 @@ class xr {
         r.addEventListener("abort", n));
     }
     try {
-      (He(this, ie, "m", ps).call(this), this._connected(null));
+      (__classPrivateFieldGet(this, ie, "m", ps).call(this), this._connected(null));
       let s = K.fromReadableStream(e, this.controller);
-      for await (let o of s) He(this, ie, "m", ms).call(this, o);
-      if (s.controller.signal?.aborted) throw new Xl();
-      He(this, ie, "m", gs).call(this);
+      for await (let o of s) __classPrivateFieldGet(this, ie, "m", ms).call(this, o);
+      if (s.controller.signal?.aborted) throw new APIUserAbortError();
+      __classPrivateFieldGet(this, ie, "m", gs).call(this);
     } finally {
       if (r && n) r.removeEventListener("abort", n);
     }
@@ -7530,14 +7530,14 @@ class xr {
   (ie = new WeakSet()),
   (hs = function () {
     if (this.receivedMessages.length === 0)
-      throw new gn(
+      throw new AnthropicError(
         "stream ended without producing a Message with role=assistant",
       );
     return this.receivedMessages.at(-1);
   }),
   (ci = function () {
     if (this.receivedMessages.length === 0)
-      throw new gn(
+      throw new AnthropicError(
         "stream ended without producing a Message with role=assistant",
       );
     let t = this.receivedMessages
@@ -7545,18 +7545,18 @@ class xr {
       .content.filter((r) => r.type === "text")
       .map((r) => r.text);
     if (t.length === 0)
-      throw new gn(
+      throw new AnthropicError(
         "stream ended without producing a content block with type=text",
       );
     return t.join(" ");
   }),
   (ps = function () {
     if (this.ended) return;
-    Fn(this, Ie, void 0, "f");
+    __classPrivateFieldSet(this, Ie, void 0, "f");
   }),
   (ms = function (t) {
     if (this.ended) return;
-    let r = He(this, ie, "m", li).call(this, t);
+    let r = __classPrivateFieldGet(this, ie, "m", li).call(this, t);
     switch ((this._emit("streamEvent", t, r), t.type)) {
       case "content_block_delta": {
         let n = r.content.at(-1);
@@ -7572,7 +7572,7 @@ class xr {
             break;
           }
           case "input_json_delta": {
-            if (_s(n) && He(this, me, "f").inputJson?.length)
+            if (_s(n) && __classPrivateFieldGet(this, me, "f").inputJson?.length)
               this._emit("inputJson", t.delta.partial_json, n.input);
             break;
           }
@@ -7593,7 +7593,7 @@ class xr {
       case "message_stop": {
         (this._addMessageParam(r),
           this._addMessage(
-            us(r, He(this, gt, "f"), { logger: He(this, Sr, "f") }),
+            us(r, __classPrivateFieldGet(this, gt, "f"), { logger: __classPrivateFieldGet(this, Sr, "f") }),
             !0,
           ));
         break;
@@ -7603,7 +7603,7 @@ class xr {
         break;
       }
       case "message_start": {
-        Fn(this, Ie, r, "f");
+        __classPrivateFieldSet(this, Ie, r, "f");
         break;
       }
       case "content_block_start":
@@ -7612,25 +7612,25 @@ class xr {
     }
   }),
   (gs = function () {
-    if (this.ended) throw new gn("stream has ended, this shouldn't happen");
-    let t = He(this, Ie, "f");
-    if (!t) throw new gn("request ended without sending any chunks");
+    if (this.ended) throw new AnthropicError("stream has ended, this shouldn't happen");
+    let t = __classPrivateFieldGet(this, Ie, "f");
+    if (!t) throw new AnthropicError("request ended without sending any chunks");
     return (
-      Fn(this, Ie, void 0, "f"),
-      us(t, He(this, gt, "f"), { logger: He(this, Sr, "f") })
+      __classPrivateFieldSet(this, Ie, void 0, "f"),
+      us(t, __classPrivateFieldGet(this, gt, "f"), { logger: __classPrivateFieldGet(this, Sr, "f") })
     );
   }),
   (li = function (t) {
-    let r = He(this, Ie, "f");
+    let r = __classPrivateFieldGet(this, Ie, "f");
     if (t.type === "message_start") {
       if (r)
-        throw new gn(
+        throw new AnthropicError(
           `Unexpected event order, got ${t.type} before receiving "message_stop"`,
         );
       return t.message;
     }
     if (!r)
-      throw new gn(
+      throw new AnthropicError(
         `Unexpected event order, got ${t.type} before "message_start"`,
       );
     switch (t.type) {
@@ -7794,7 +7794,7 @@ class kr extends y {
   async results(e, t) {
     let r = await this.retrieve(e);
     if (!r.results_url)
-      throw new gn(
+      throw new AnthropicError(
         `No batch \`results_url\`; Has it finished processing? ${r.processing_status} - ${r.id}`,
       );
     return this._client
@@ -7807,7 +7807,7 @@ class kr extends y {
       ._thenUnwrap((n, s) => it.fromResponse(s.response, s.controller));
   }
 }
-class GL extends y {
+class Messages extends y {
   constructor() {
     super(...arguments);
     this.batches = new kr(this._client);
@@ -7884,7 +7884,7 @@ var di = {
     "claude-mythos-preview": "June 30th, 2026",
   },
   ac = ["claude-mythos-preview", "claude-opus-4-6"];
-GL.Batches = kr;
+Messages.Batches = kr;
 class _t extends y {
   retrieve(e, t = {}, r) {
     let { betas: n } = t ?? {};
@@ -7922,7 +7922,7 @@ var bs,
   hi,
   fi = "\\n\\nHuman:",
   pi = "\\n\\nAssistant:";
-class Eh {
+class BaseAnthropic {
   get credentials() {
     return this._authState.provider;
   }
@@ -7954,7 +7954,7 @@ class Eh {
       baseURL: e || "https://api.anthropic.com",
     };
     if (!o.dangerouslyAllowBrowser && vs())
-      throw new gn(`It looks like you're running in a browser-like environment.
+      throw new AnthropicError(`It looks like you're running in a browser-like environment.
 
 This is disabled by default, as it risks exposing your secret API credentials to attackers.
 If you understand the risks and have appropriate mitigations in place,
@@ -7968,13 +7968,13 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
       (this.logger = o.logger ?? console),
       (this.logLevel = Et),
       (this.logLevel =
-        Mr(o.logLevel, "ClientOptions.logLevel", Bm(this)) ??
-        Mr(T("ANTHROPIC_LOG"), "process.env['ANTHROPIC_LOG']", Bm(this)) ??
+        Mr(o.logLevel, "ClientOptions.logLevel", loggerFor(this)) ??
+        Mr(T("ANTHROPIC_LOG"), "process.env['ANTHROPIC_LOG']", loggerFor(this)) ??
         Et),
       (this.fetchOptions = o.fetchOptions),
       (this.maxRetries = o.maxRetries ?? 2),
       (this.fetch = o.fetch ?? Ts()),
-      Fn(this, yn, Os, "f"),
+      __classPrivateFieldSet(this, yn, Os, "f"),
       (this.middleware = [...(o.middleware ?? [])]));
     let a = T("ANTHROPIC_CUSTOM_HEADERS");
     if (a) {
@@ -8013,7 +8013,7 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
         ((this._authState.provider = d),
           (this._authState.tokenCache = this._makeTokenCache(d)));
       else if (o.config != null) {
-        let p = zje(o.config, this._credentialResolverOptions());
+        let p = resolveCredentialsFromConfig(o.config, this._credentialResolverOptions());
         ((this._authState.provider = p.provider),
           (this._authState.tokenCache = this._makeTokenCache(p.provider)),
           (this._authState.extraHeaders = p.extraHeaders),
@@ -8035,10 +8035,10 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
       fetch: this._credentialsFetch(),
       userAgent: this.getUserAgent(),
       onCacheWriteError: (e) => {
-        Bm(this).debug("credential cache write failed (best-effort)", e);
+        loggerFor(this).debug("credential cache write failed (best-effort)", e);
       },
       onSafetyWarning: (e) => {
-        Bm(this).warn(e);
+        loggerFor(this).warn(e);
       },
     };
   }
@@ -8046,8 +8046,8 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
     return Un(this.fetch, this.middleware, void 0, this);
   }
   _makeTokenCache(e) {
-    return new qje(e, (t) => {
-      Bm(this).debug("advisory token refresh failed; serving cached token", t);
+    return new TokenCache(e, (t) => {
+      loggerFor(this).debug("advisory token refresh failed; serving cached token", t);
     });
   }
   withOptions(e) {
@@ -8083,7 +8083,7 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
           (this._authState.extraHeaders = t.extraHeaders),
           this._applyCredentialBaseURL(t.baseURL));
       else if (e != null)
-        throw new gn(
+        throw new AnthropicError(
           `Profile "${e}" could not be resolved (no <config_dir>/configs/${e}.json found).`,
         );
     } catch (t) {
@@ -8144,10 +8144,10 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
     return `stainless-node-retry-${Ke()}`;
   }
   makeStatusError(e, t, r, n) {
-    return Lt.generate(e, t, r, n);
+    return APIError.generate(e, t, r, n);
   }
   buildURL(e, t, r) {
-    let n = (!He(this, bs, "m", hi).call(this) && r) || this.baseURL,
+    let n = (!__classPrivateFieldGet(this, bs, "m", hi).call(this) && r) || this.baseURL,
       s = Ss(e)
         ? new URL(e)
         : new URL(n + (n.endsWith("/") && e.startsWith("/") ? e.slice(1) : e)),
@@ -8160,7 +8160,7 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
   }
   _calculateNonstreamingTimeout(e) {
     if ((3600 * e) / 128000 > 600)
-      throw new gn(
+      throw new AnthropicError(
         "Streaming is required for operations that may take longer than 10 minutes. See https://github.com/anthropics/anthropic-sdk-typescript#streaming-responses for more details",
       );
     return 600000;
@@ -8222,7 +8222,7 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
         "log_" + ((Math.random() * 16777216) | 0).toString(16).padStart(6, "0"),
       p = r === void 0 ? "" : `, retryOf: ${r}`,
       g = Date.now();
-    if (n.signal?.aborted) throw new Xl();
+    if (n.signal?.aborted) throw new APIUserAbortError();
     let h = new AbortController(),
       u = await this.fetchWithTimeout(a, o, i, h, n, {
         requestLogID: d,
@@ -8231,7 +8231,7 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
       m = Date.now();
     if (u instanceof globalThis.Error) {
       let x = `retrying, ${t} attempts remaining`;
-      if (n.signal?.aborted) throw new Xl();
+      if (n.signal?.aborted) throw new APIUserAbortError();
       let k =
           re(u) ||
           /timed? ?out/i.test(
@@ -8243,8 +8243,8 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
           this.backendMiddleware().length > 0;
       if (_ && !k && !uo(u))
         throw (
-          Bm(this).info(`[${d}] middleware error (not retryable)`),
-          Bm(this).debug(
+          loggerFor(this).info(`[${d}] middleware error (not retryable)`),
+          loggerFor(this).debug(
             `[${d}] middleware error (not retryable)`,
             he({
               retryOfRequestLogID: r,
@@ -8257,10 +8257,10 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
         );
       if (t)
         return (
-          Bm(this).info(
+          loggerFor(this).info(
             `[${d}] connection ${k ? "timed out" : "failed"} - ${x}`,
           ),
-          Bm(this).debug(
+          loggerFor(this).debug(
             `[${d}] connection ${k ? "timed out" : "failed"} (${x})`,
             he({
               retryOfRequestLogID: r,
@@ -8272,10 +8272,10 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
           this.retryRequest(n, t, r ?? d)
         );
       if (
-        (Bm(this).info(
+        (loggerFor(this).info(
           `[${d}] connection ${k ? "timed out" : "failed"} - error; no more retries left`,
         ),
-        Bm(this).debug(
+        loggerFor(this).debug(
           `[${d}] connection ${k ? "timed out" : "failed"} (error; no more retries left)`,
           he({
             retryOfRequestLogID: r,
@@ -8286,9 +8286,9 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
         ),
         k)
       )
-        throw new XP();
+        throw new APIConnectionTimeoutError();
       if (_ && !Dn(u)) throw u;
-      throw new xu({ cause: u });
+      throw new APIConnectionError({ cause: u });
     }
     let b = [...u.headers.entries()]
         .filter(([x]) => x === "request-id")
@@ -8301,8 +8301,8 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
         let D = `retrying, ${t} attempts remaining`;
         return (
           await Is(u.body),
-          Bm(this).info(`${v} - ${D}`),
-          Bm(this).debug(
+          loggerFor(this).info(`${v} - ${D}`),
+          loggerFor(this).debug(
             `[${d}] response error (${D})`,
             he({
               retryOfRequestLogID: r,
@@ -8316,12 +8316,12 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
         );
       }
       let k = x ? "error; no more retries left" : "error; not retryable";
-      Bm(this).info(`${v} - ${k}`);
+      loggerFor(this).info(`${v} - ${k}`);
       let _ = await u.text().catch((D) => Me(D).message),
         P = wt(_),
         I = P ? void 0 : _;
       throw (
-        Bm(this).debug(
+        loggerFor(this).debug(
           `[${d}] response error (${k})`,
           he({
             retryOfRequestLogID: r,
@@ -8336,8 +8336,8 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
       );
     }
     return (
-      Bm(this).info(v),
-      Bm(this).debug(
+      loggerFor(this).info(v),
+      loggerFor(this).debug(
         `[${d}] response start`,
         he({
           retryOfRequestLogID: r,
@@ -8409,7 +8409,7 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
                 await this.prepareRequest(P, { url: I, options: s }),
                 o)
               )
-                Bm(this).debug(
+                loggerFor(this).debug(
                   `[${o.requestLogID}] sending request`,
                   he({
                     retryOfRequestLogID: o.retryOfRequestLogID,
@@ -8478,7 +8478,7 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
   }
   calculateNonstreamingTimeout(e, t) {
     if ((3600000 * e) / 128000 > 600000 || (t != null && e > t))
-      throw new gn(
+      throw new AnthropicError(
         "Streaming is required for operations that may take longer than 10 minutes. See https://github.com/anthropics/anthropic-sdk-typescript#long-requests for more details",
       );
     return 600000;
@@ -8577,68 +8577,68 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
         bodyHeaders: { "content-type": "application/x-www-form-urlencoded" },
         body: this.stringifyQuery(e),
       };
-    else return He(this, yn, "f").call(this, { body: e, headers: r });
+    else return __classPrivateFieldGet(this, yn, "f").call(this, { body: e, headers: r });
   }
 }
-((ys = Eh),
+((ys = BaseAnthropic),
   (yn = new WeakMap()),
   (bs = new WeakSet()),
   (hi = function () {
     return this.baseURL !== "https://api.anthropic.com";
   }));
-Eh.Anthropic = ys;
-Eh.HUMAN_PROMPT = fi;
-Eh.AI_PROMPT = pi;
-Eh.DEFAULT_TIMEOUT = 600000;
-Eh.AnthropicError = gn;
-Eh.APIError = Lt;
-Eh.APIConnectionError = xu;
-Eh.APIConnectionTimeoutError = XP;
-Eh.APIUserAbortError = Xl;
-Eh.NotFoundError = Hae;
-Eh.ConflictError = Bje;
-Eh.RateLimitError = Wje;
-Eh.BadRequestError = $je;
-Eh.AuthenticationError = xae;
-Eh.InternalServerError = Gje;
-Eh.PermissionDeniedError = Uje;
-Eh.UnprocessableEntityError = jje;
-Eh.toFile = Lr;
-class Bx extends Eh {
+BaseAnthropic.Anthropic = ys;
+BaseAnthropic.HUMAN_PROMPT = fi;
+BaseAnthropic.AI_PROMPT = pi;
+BaseAnthropic.DEFAULT_TIMEOUT = 600000;
+BaseAnthropic.AnthropicError = AnthropicError;
+BaseAnthropic.APIError = APIError;
+BaseAnthropic.APIConnectionError = APIConnectionError;
+BaseAnthropic.APIConnectionTimeoutError = APIConnectionTimeoutError;
+BaseAnthropic.APIUserAbortError = APIUserAbortError;
+BaseAnthropic.NotFoundError = NotFoundError;
+BaseAnthropic.ConflictError = ConflictError;
+BaseAnthropic.RateLimitError = RateLimitError;
+BaseAnthropic.BadRequestError = BadRequestError;
+BaseAnthropic.AuthenticationError = AuthenticationError;
+BaseAnthropic.InternalServerError = InternalServerError;
+BaseAnthropic.PermissionDeniedError = PermissionDeniedError;
+BaseAnthropic.UnprocessableEntityError = UnprocessableEntityError;
+BaseAnthropic.toFile = Lr;
+class Anthropic extends BaseAnthropic {
   constructor() {
     super(...arguments);
-    ((this.completions = new Xxe(this)),
-      (this.messages = new GL(this)),
+    ((this.completions = new Completions(this)),
+      (this.messages = new Messages(this)),
       (this.models = new _t(this)),
-      (this.beta = new Th(this)));
+      (this.beta = new Beta(this)));
   }
 }
-Bx.Completions = Xxe;
-Bx.Messages = GL;
-Bx.Models = _t;
-Bx.Beta = Th;
-class TZ extends Error {
+Anthropic.Completions = Completions;
+Anthropic.Messages = Messages;
+Anthropic.Models = _t;
+Anthropic.Beta = Beta;
+class ClaudeError extends Error {
   constructor(e) {
     super(e);
     this.name = this.constructor.name;
   }
 }
-class YP extends Error {}
-class ud extends Error {
+class MalformedCommandError extends Error {}
+class CliUserError extends Error {
   name = "CliUserError";
 }
-class Ve extends Error {
+class AbortError extends Error {
   constructor(e) {
     super(e);
     this.name = "AbortError";
   }
 }
-class zi extends Ve {}
-function yt(e) {
+class StreamClosedAbortError extends AbortError {}
+function isAbortError(e) {
   try {
     return (
-      e instanceof Ve ||
-      e instanceof Xl ||
+      e instanceof AbortError ||
+      e instanceof APIUserAbortError ||
       (e instanceof Error &&
         (e.name === "AbortError" ||
           ("__CANCEL__" in e && Boolean(e.__CANCEL__))))
@@ -8647,7 +8647,7 @@ function yt(e) {
     return !1;
   }
 }
-class YR extends Error {
+class ConfigParseError extends Error {
   filePath;
   defaultConfig;
   constructor(e, t, r) {
@@ -8657,7 +8657,7 @@ class YR extends Error {
       (this.defaultConfig = r));
   }
 }
-class G0 extends Error {
+class ShellError extends Error {
   stdout;
   stderr;
   code;
@@ -8673,7 +8673,7 @@ class G0 extends Error {
       (this.hadSandboxViolation = e.hadSandboxViolation ?? !1));
   }
 }
-class Iu extends Error {
+class TeleportOperationError extends Error {
   formattedMessage;
   constructor(e, t) {
     super(e);
@@ -8681,7 +8681,7 @@ class Iu extends Error {
     this.name = "TeleportOperationError";
   }
 }
-class R extends Error {
+class TelemetrySafeError_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS extends Error {
   telemetryMessage;
   errorClass;
   constructor(e, t, r) {
@@ -8691,8 +8691,8 @@ class R extends Error {
       (this.errorClass = r));
   }
 }
-class mi extends R {}
-var dt = (e, t) => {
+class WireSafeControlError extends TelemetrySafeError_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS {}
+var withTelemetryMessage = (e, t) => {
     try {
       if (
         e !== null &&
@@ -8704,7 +8704,7 @@ var dt = (e, t) => {
     } catch {}
     return e;
   },
-  J1 = (e, t) => {
+  withTelemetryFacts = (e, t) => {
     try {
       if (e !== null && typeof e === "object" && Object.isExtensible(e)) {
         let r = e,
@@ -8714,7 +8714,7 @@ var dt = (e, t) => {
     } catch {}
     return e;
   };
-function x_e(e) {
+function getTelemetryMessage(e) {
   try {
     if (
       e !== null &&
@@ -8726,94 +8726,94 @@ function x_e(e) {
   } catch {}
   return;
 }
-function q0(e, t) {
+function hasExactErrorMessage(e, t) {
   return e instanceof Error && e.message === t;
 }
-function ge(e) {
+function toError(e) {
   return e instanceof Error ? e : Error(String(e));
 }
-function l(e) {
+function errorMessage(e) {
   return e instanceof Error ? e.message : String(e);
 }
-function A(e) {
+function getErrnoCode(e) {
   if (e && typeof e === "object" && "code" in e && typeof e.code === "string")
     return e.code;
   return;
 }
-function Jr(e) {
-  return w8(A(e));
+function sanitizeErrnoForTelemetry(e) {
+  return sanitizeErrnoTokenForTelemetry(getErrnoCode(e));
 }
-function w8(e) {
+function sanitizeErrnoTokenForTelemetry(e) {
   return e && /^[A-Z][A-Z0-9_]{0,63}$/.test(e) ? fromSanitizer(e) : void 0;
 }
-var H_e = "did not become reachable within",
-  I_e = "exited before it became reachable",
-  uot = "The socket connection was closed unexpectedly";
-function WHt(e) {
+var DAEMON_UNREACHABLE_TIMEOUT_PHRASE = "did not become reachable within",
+  DAEMON_EXITED_BEFORE_REACHABLE_PHRASE = "exited before it became reachable",
+  BUN_CONNECTION_CLOSED_MESSAGE_PREFIX = "The socket connection was closed unexpectedly";
+function extractErrnoTokens(e) {
   return [...e.matchAll(/\bE\d?[A-Z]{2,14}\b/g)]
     .filter((t) => !"/\\".includes(e[t.index - 1] ?? "."))
     .map((t) => t[0]);
 }
-function Gw(e) {
+function sanitizeErrorName(e) {
   let t = e?.name;
   return typeof t === "string" && /^[A-Z][a-zA-Z]{0,63}$/.test(t)
     ? fromSanitizer(t)
     : void 0;
 }
-function Jg(e) {
-  return Jr(e) ?? Gw(e);
+function sanitizedErrCodeForTelemetry(e) {
+  return sanitizeErrnoForTelemetry(e) ?? sanitizeErrorName(e);
 }
-function EZ(e) {
-  return fromSanitizer(Jr(e)?.toLowerCase() ?? "other");
+function sanitizedErrnoLowerForTelemetry(e) {
+  return fromSanitizer(sanitizeErrnoForTelemetry(e)?.toLowerCase() ?? "other");
 }
-function z0(e) {
-  return Gw(e);
+function sanitizedErrorNameForTelemetry(e) {
+  return sanitizeErrorName(e);
 }
-function AZ(e) {
+function sanitizedConnectionCodeForTelemetry(e) {
   return e !== void 0 && /^[A-Z][A-Za-z0-9_]{0,63}$/.test(e) ? fromSanitizer(e) : void 0;
 }
-function GHt(e) {
-  let t = AZ(e);
+function sanitizedConnectionCodeLowerForTelemetry(e) {
+  let t = sanitizedConnectionCodeForTelemetry(e);
   return t === void 0 ? void 0 : fromSanitizer(t.toLowerCase());
 }
-function hv(e) {
+function sanitizeClassName(e) {
   return typeof e === "string" && /^[A-Z][a-zA-Z]{0,63}$/.test(e)
     ? fromSanitizer(e)
     : void 0;
 }
-function dot(e) {
+function sanitizedOAuthErrorTypeForTelemetry(e) {
   return typeof e === "string" && /^[a-z][a-z_]{0,39}$/.test(e)
     ? fromSanitizer(e)
     : fromLiteral("unparseable");
 }
-function Ub(e) {
+function sanitizedMachineReasonForTelemetry(e) {
   return /^[a-z][a-z0-9_]{0,39}$/.test(e) ? fromSanitizer(e) : fromLiteral("unparseable");
 }
-function lNn(e) {
+function sanitizedBgExitCauseForTelemetry(e) {
   if (e === void 0) return;
   let t = e.indexOf(":"),
     r = t === -1 ? e : e.slice(0, t);
   if (!/^[a-z][a-z0-9_]{0,39}$/.test(r)) return fromLiteral("unparseable");
   if (t === -1) return fromSanitizer(r);
   let n = e.slice(t + 1),
-    s = w8(n) ?? hv(n) ?? (n === "string" || n === "non-error" ? n : "Error");
+    s = sanitizeErrnoTokenForTelemetry(n) ?? sanitizeClassName(n) ?? (n === "string" || n === "non-error" ? n : "Error");
   return fromSanitizer(`${r}:${s}`);
 }
-function cNn(e) {
-  return hv(e);
+function sanitizedClassNameForTelemetry(e) {
+  return sanitizeClassName(e);
 }
-function pot(e) {
+function sanitizedErrorClassNameForTelemetry(e) {
   let t = e?.constructor?.name;
   return typeof t === "string" && /^[A-Za-z][A-Za-z0-9_]{0,39}$/.test(t)
     ? fromSanitizer(t)
     : fromLiteral("unparseable");
 }
-function uNn(e) {
+function sanitizeTopFrame(e) {
   return /^[^/\\]+:\d+:\d+$/.test(e) ? fromSanitizer(e) : void 0;
 }
-var WW = new Set(["ENOSPC", "EDQUOT", "ENFILE", "EMFILE"]),
-  dNn = new Set(["EACCES", "EPERM", "EROFS"]);
-function Po(e) {
+var RESOURCE_EXHAUSTION_CODES = new Set(["ENOSPC", "EDQUOT", "ENFILE", "EMFILE"]),
+  PERMISSION_DENIED_CODES = new Set(["EACCES", "EPERM", "EROFS"]);
+function isSyscallError(e) {
   return (
     e !== null &&
     typeof e === "object" &&
@@ -8821,7 +8821,7 @@ function Po(e) {
     typeof e.errno === "number"
   );
 }
-function GW(e, t, r = 5) {
+function findInCauseChain(e, t, r = 5) {
   let n = e;
   for (let s = 0; s < r; s++) {
     if (!(n instanceof Error)) return;
@@ -8830,18 +8830,18 @@ function GW(e, t, r = 5) {
   }
   return;
 }
-function W(e) {
-  return A(e) === "ENOENT";
+function isENOENT(e) {
+  return getErrnoCode(e) === "ENOENT";
 }
-function Nz(e) {
-  return A(e) === "EISDIR";
+function isEISDIR(e) {
+  return getErrnoCode(e) === "EISDIR";
 }
-function pNn(e) {
-  return A(e) === "E2BIG";
+function isE2BIG(e) {
+  return getErrnoCode(e) === "E2BIG";
 }
-function fNn(e) {
+function isHttpServerConnReset(e) {
   try {
-    if (A(e) !== "ECONNRESET") return !1;
+    if (getErrnoCode(e) !== "ECONNRESET") return !1;
     let t = e instanceof Error ? e.stack : void 0;
     if (typeof t !== "string") return !1;
     let r = t
@@ -8855,12 +8855,12 @@ function fNn(e) {
     return !1;
   }
 }
-function mNn(e) {
+function getErrnoPath(e) {
   if (e && typeof e === "object" && "path" in e && typeof e.path === "string")
     return e.path;
   return;
 }
-function gNn(e, t = 5) {
+function shortErrorStack(e, t = 5) {
   if (!(e instanceof Error)) return String(e);
   if (!e.stack) return e.message;
   let r = e.stack.split(`
@@ -8880,22 +8880,22 @@ var gi = new Set([
   "ENAMETOOLONG",
   "EROFS",
 ]);
-function Rt(e) {
-  return FA(A(e));
+function isFsInaccessible(e) {
+  return isFsInaccessibleCode(getErrnoCode(e));
 }
-function FA(e) {
+function isFsInaccessibleCode(e) {
   return e !== void 0 && gi.has(e);
 }
-function CB(e) {
+function storageCauseErrnoCode(e) {
   let t = e instanceof Error ? e.cause : void 0;
   if (typeof t !== "object" || t === null || !("telemetryCode" in t)) return;
   return typeof t.telemetryCode === "string" ? t.telemetryCode : void 0;
 }
 var _i = new Set(["ENOSPC", "EDQUOT", "ENFILE", "EIO"]);
-function Bp(e) {
-  return qYt(A(e));
+function isEnvFsErrno(e) {
+  return isEnvFsErrnoCode(getErrnoCode(e));
 }
-function qYt(e) {
+function isEnvFsErrnoCode(e) {
   return (
     e === "EDEADLK" ||
     e === "EINTR" ||
@@ -8912,29 +8912,29 @@ function qYt(e) {
 function bi(e) {
   return e === "UNKNOWN" || e.startsWith("Unknown system error");
 }
-function vB(e) {
+function errnoShapedCode(e) {
   if (typeof e !== "string") return;
   return /^E[A-Z0-9]+$/.test(e) || bi(e) ? e : void 0;
 }
-function hNn(e) {
-  let t = A(e);
+function isSadResourceErrno(e) {
+  let t = getErrnoCode(e);
   return t !== void 0 && _i.has(t);
 }
-function Kd(e) {
-  return Vje(A(e));
+function isSadFsErrno(e) {
+  return isSadFsErrnoCode(getErrnoCode(e));
 }
-function Vje(e) {
+function isSadFsErrnoCode(e) {
   return e !== void 0 && (gi.has(e) || e === "EISDIR" || _i.has(e));
 }
-function cc(e, t) {
+function isExpectedApiError(e, t) {
   if (t?.(e)) return !0;
   if (!e || typeof e !== "object" || !("isAxiosError" in e) || !e.isAxiosError)
     return !1;
   let r = e.response?.status;
   return r === void 0 || r === 401 || r === 403 || r === 429;
 }
-function Ps(e) {
-  let t = l(e);
+function classifyAxiosError(e) {
+  let t = errorMessage(e);
   if (!e || typeof e !== "object" || !("isAxiosError" in e) || !e.isAxiosError)
     return { kind: "other", message: t };
   let r = e,
@@ -8947,95 +8947,95 @@ function Ps(e) {
   return { kind: "http", status: n, message: t };
 }
 export {
-  Fn,
-  He,
-  gn,
-  Lt,
-  Xl,
-  xu,
-  XP,
-  aot,
-  $je,
-  xae,
-  Uje,
-  Hae,
-  Bje,
-  jje,
-  Wje,
-  Gje,
-  Kxe,
-  Iae,
-  Ra,
-  qje,
-  Bm,
-  _dr,
-  lot,
-  ydr,
-  GYt,
-  zje,
-  Hu,
-  cot,
-  Th,
-  Xxe,
-  GL,
-  Eh,
-  Bx,
-  TZ,
-  YP,
-  ud,
-  Ve,
-  zi,
-  yt,
-  YR,
-  G0,
-  Iu,
-  R,
-  mi,
-  dt,
-  J1,
-  x_e,
-  q0,
-  ge,
-  l,
-  A,
-  Jr,
-  w8,
-  H_e,
-  I_e,
-  uot,
-  WHt,
-  Gw,
-  Jg,
-  EZ,
-  z0,
-  AZ,
-  GHt,
-  hv,
-  dot,
-  Ub,
-  lNn,
-  cNn,
-  pot,
-  uNn,
-  WW,
-  dNn,
-  Po,
-  GW,
-  W,
-  Nz,
-  pNn,
-  fNn,
-  mNn,
-  gNn,
-  Rt,
-  FA,
-  CB,
-  Bp,
-  qYt,
-  vB,
-  hNn,
-  Kd,
-  Vje,
-  cc,
-  Ps,
+  __classPrivateFieldSet,
+  __classPrivateFieldGet,
+  AnthropicError,
+  APIError,
+  APIUserAbortError,
+  APIConnectionError,
+  APIConnectionTimeoutError,
+  RetryableError,
+  BadRequestError,
+  AuthenticationError,
+  PermissionDeniedError,
+  NotFoundError,
+  ConflictError,
+  UnprocessableEntityError,
+  RateLimitError,
+  InternalServerError,
+  MANDATORY_REFRESH_THRESHOLD_IN_SECONDS,
+  writeCredentialsFileAtomic,
+  WorkloadIdentityError,
+  TokenCache,
+  loggerFor,
+  CONFIG_FILE_VERSION,
+  CREDENTIALS_FILE_VERSION,
+  loadConfig,
+  getCredentialsPath,
+  resolveCredentialsFromConfig,
+  ToolError,
+  promiseWithResolvers,
+  Beta,
+  Completions,
+  Messages,
+  BaseAnthropic,
+  Anthropic,
+  ClaudeError,
+  MalformedCommandError,
+  CliUserError,
+  AbortError,
+  StreamClosedAbortError,
+  isAbortError,
+  ConfigParseError,
+  ShellError,
+  TeleportOperationError,
+  TelemetrySafeError_I_VERIFIED_THIS_IS_NOT_CODE_OR_FILEPATHS,
+  WireSafeControlError,
+  withTelemetryMessage,
+  withTelemetryFacts,
+  getTelemetryMessage,
+  hasExactErrorMessage,
+  toError,
+  errorMessage,
+  getErrnoCode,
+  sanitizeErrnoForTelemetry,
+  sanitizeErrnoTokenForTelemetry,
+  DAEMON_UNREACHABLE_TIMEOUT_PHRASE,
+  DAEMON_EXITED_BEFORE_REACHABLE_PHRASE,
+  BUN_CONNECTION_CLOSED_MESSAGE_PREFIX,
+  extractErrnoTokens,
+  sanitizeErrorName,
+  sanitizedErrCodeForTelemetry,
+  sanitizedErrnoLowerForTelemetry,
+  sanitizedErrorNameForTelemetry,
+  sanitizedConnectionCodeForTelemetry,
+  sanitizedConnectionCodeLowerForTelemetry,
+  sanitizeClassName,
+  sanitizedOAuthErrorTypeForTelemetry,
+  sanitizedMachineReasonForTelemetry,
+  sanitizedBgExitCauseForTelemetry,
+  sanitizedClassNameForTelemetry,
+  sanitizedErrorClassNameForTelemetry,
+  sanitizeTopFrame,
+  RESOURCE_EXHAUSTION_CODES,
+  PERMISSION_DENIED_CODES,
+  isSyscallError,
+  findInCauseChain,
+  isENOENT,
+  isEISDIR,
+  isE2BIG,
+  isHttpServerConnReset,
+  getErrnoPath,
+  shortErrorStack,
+  isFsInaccessible,
+  isFsInaccessibleCode,
+  storageCauseErrnoCode,
+  isEnvFsErrno,
+  isEnvFsErrnoCode,
+  errnoShapedCode,
+  isSadResourceErrno,
+  isSadFsErrno,
+  isSadFsErrnoCode,
+  isExpectedApiError,
+  classifyAxiosError,
 };

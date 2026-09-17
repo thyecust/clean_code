@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { l } from "./chunk-h4f48kbj.js";
+import { errorMessage } from "./chunk-h4f48kbj.js";
 import { isRecord } from "./is-record.js";
 class HooksError extends Error {
   name = "HooksError";
@@ -134,7 +134,7 @@ async function resolveHooksModuleImport({ spelled: r, importer: o, root: e, plug
       let n = await readPluginModuleFile(u, e, p);
       return { file: u, source: n };
     } catch (n) {
-      let d = l(n);
+      let d = errorMessage(n);
       if (!(n instanceof HooksError) || !H.some((L) => d.endsWith(L)))
         throw new HooksError(`${t} ${A(p, d)}`);
       let D = n.cause === void 0;

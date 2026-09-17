@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 334 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { W0t } from "../会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { REPLScreen as W0t } from "../会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import "../Headless-SDK模式/chunk-ph7v431y.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-sdeyn1dg.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-n6g2zfwn.js";

@@ -10,18 +10,18 @@
 
 // [preload stripped] 原本在此预载 242 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
-  IWe,
-  eF,
-  cgr,
-  rle,
-  ugr,
-  dgr,
-  pgr,
-  fgr,
-  mgr,
-  PZt,
-  Cit,
-  PWe,
+  preSeedReplBgJob as IWe,
+  spawnBgSession as eF,
+  handleBgFlag as cgr,
+  formatBgHints as rle,
+  logsHandler as ugr,
+  attachHandler as dgr,
+  respawnHandler as pgr,
+  stopHandler as fgr,
+  rmHandler as mgr,
+  rewriteDispatchFlagValue as PZt,
+  stripResumeFlags as Cit,
+  callerProviderEnv as PWe,
 } from "./chunk-xmxjyg29.js";
 import "./chunk-jfk5mpe1.js";
 import "./chunk-gnmy62vg.js";

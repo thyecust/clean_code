@@ -11,7 +11,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { repeatString, pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { hashStringWithBun, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
-import { _u } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { markdownParser } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { ree, o, t, jr, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useHyperlinkSupport } from "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
@@ -597,7 +597,7 @@ function vt(s, i, l) {
     a = s?.get(u);
   if (s !== null && a) return (s.delete(u), s.set(u, a), a);
   if (!Dt.test(i)) return ut(i);
-  let f = l ? _Un : _u;
+  let f = l ? _Un : markdownParser;
   if (s === null) return Ne(f, i);
   let m = Ne(f, i);
   if (s.size >= _t) {
@@ -888,7 +888,7 @@ function XZt({ children: s, hideTrailingLine: i = !1 }) {
   }
   if (a.openFence === null) {
     let P = a.stablePrefix.length,
-      B = Ne(_u, f.substring(P)),
+      B = Ne(markdownParser, f.substring(P)),
       N = B.length - 1;
     while (N >= 0 && B[N].type === "space") N--;
     let R = 0;

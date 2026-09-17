@@ -19,7 +19,7 @@ import { getClaudeAiConnectorsUrl, buildClaudeAiMcpAuthUrl, getAllMcpConfigs, is
 import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
 import { stopCapturingEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
 import { exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
-import { V0 } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { awaitMcpPolicyColdStart } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { formatHyperlink } from "../../01-核心基础设施/共享小工具-未细化/format-hyperlink.js";
 import { formatMcpServerNotFoundMessageWithPendingApproval } from "../../01-核心基础设施/共享小工具-未细化/mcp-server-not-found-message.js";
 import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
@@ -36,7 +36,7 @@ function m() {
   return y().mcpClientModule();
 }
 async function v(t, e, o, u) {
-  await V0({ hasDynamicMcpConfig: !1 });
+  await awaitMcpPolicyColdStart({ hasDynamicMcpConfig: !1 });
   let {
       servers: a,
       pendingProjectServers: r,

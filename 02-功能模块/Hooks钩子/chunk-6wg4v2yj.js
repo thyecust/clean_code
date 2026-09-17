@@ -21,7 +21,7 @@ import { runWithCwd } from "../../01-核心基础设施/共享小工具-未细�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getGlobalClaudeFile, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { C_, yi, Ow, parseSettingsFileUncached } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { HOOK_EVENT_NAMES, SETTINGS_SOURCE_ORDER, PROJECT_SCOPED_SETTINGS_SOURCE_SET, parseSettingsFileUncached } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
   resolveHookCommandScript,
   isPathWithin,
@@ -93,7 +93,7 @@ import { getSettingsFilePathForSource, getSettingsForSource } from "../../01-核
 import { isProjectScopeTrustAccepted } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isViolinWoodEnabledCached, isViolinAmatiEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
-import { hD } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { getPreferredShellToolName } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { untrustedDeviceHint } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
 import { primeUnattendedServingConsent } from "../AutoMode-自动模式/unattended-serving-consent.js";
 import { p2n, m2n } from "../远程工具执行/chunk-66axrkvh.js";
@@ -261,7 +261,7 @@ function _e() {
 function Re(e) {
   let o = { ...en(e.launchDir), ...e.deps },
     { memory: d } = e;
-  ((d.reachBaseline ??= new Map(yi.map((D) => [D, o.scopeWriteEntries(D)]))),
+  ((d.reachBaseline ??= new Map(SETTINGS_SOURCE_ORDER.map((D) => [D, o.scopeWriteEntries(D)]))),
     (d.commonRoots ??= o.commonWriteRoots()));
   let { reachBaseline: t, commonRoots: r, syncRoots: k, stickyRoots: R } = d,
     _ = (D) => {
@@ -1117,7 +1117,7 @@ function Fe(e, o) {
     : (o === "python3" || o === "python") && d.length === 2;
 }
 function Mn(e) {
-  return C_.includes(e);
+  return HOOK_EVENT_NAMES.includes(e);
 }
 var An = new Set(["/usr/bin/env", "/bin/env"]);
 function On(e) {
@@ -1799,7 +1799,7 @@ function oIt(e, o, d = (t) => getSettingsForSource(t)?.env) {
   return Object.assign(
     {},
     r ? o.env : {},
-    ...yi.filter((k) => !Ow.has(k) && !t(k)).map((k) => d(k) ?? {}),
+    ...SETTINGS_SOURCE_ORDER.filter((k) => !PROJECT_SCOPED_SETTINGS_SOURCE_SET.has(k) && !t(k)).map((k) => d(k) ?? {}),
   );
 }
 function sIt(e, o) {
@@ -1913,7 +1913,7 @@ function Be({
           home: getHomeDirFromEnv(S),
           hookCwd: H,
           projectDir: e,
-          defaultShell: hD(),
+          defaultShell: getPreferredShellToolName(),
           shellPrefix: rIt(S),
         });
       },
@@ -1946,7 +1946,7 @@ function Be({
       childEnvironment: (p, S) => computeSubprocessEnv(p, S, subprocessEnv()),
       placePath: resolvePathAllowingMissing,
       resolveProgram: resolveProgramPath,
-      defaultShell: () => hD(),
+      defaultShell: () => getPreferredShellToolName(),
     }),
     E = qn({
       servicer: w,
@@ -2028,7 +2028,7 @@ function ze({
           realpath: te,
           open: D,
           home: getHomeDirFromEnv(W),
-          defaultShell: hD(),
+          defaultShell: getPreferredShellToolName(),
           shellPrefix: rIt(W),
         },
       );

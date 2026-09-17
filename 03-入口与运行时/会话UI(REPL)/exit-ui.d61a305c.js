@@ -30,7 +30,7 @@ import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-�
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
-import { HB, h6e } from "./会话UI(REPL).qs63rzfp.js";
+import { detachToBackgroundDaemon, ExitSessionDialog } from "./会话UI(REPL).qs63rzfp.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
@@ -167,13 +167,13 @@ function L() {
   return pickRandom(H) ?? "Goodbye!";
 }
 async function Be(s, o) {
-  if (isBgSession()) return (s(), HB(), null);
+  if (isBgSession()) return (s(), detachToBackgroundDaemon(), null);
   let m = getCurrentWorktreeSession() !== null,
     u = buildInFlightTaskItems(),
     y =
       m || u.length > 0
         ? (g) =>
-            e(h6e, {
+            e(ExitSessionDialog, {
               showWorktree: m,
               backgroundItems: u,
               messages: o.messages,

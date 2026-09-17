@@ -22,7 +22,7 @@ import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { areBackgroundTasksDisabled, BACKGROUND_TASKS_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { getSessionRuntimeState } from "../权限系统/chunk-ynkf3yy4.js";
-import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { formatDisplayText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var sp = "(no content)",
   ER = "No response requested.",
@@ -1353,7 +1353,7 @@ function ze(e) {
   let t = Object.keys(e).filter((s) => !Pe.has(s));
   if (t.length > 0) {
     logFeatureBad("bridge_flag_settings", "unsupported_key");
-    let s = t.slice(0, Ue).map((S) => Vn(S, $e)),
+    let s = t.slice(0, Ue).map((S) => formatDisplayText(S, $e)),
       d = t.length > s.length ? ` (+${t.length - s.length} more)` : "";
     return {
       ok: !1,

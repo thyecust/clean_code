@@ -94,9 +94,9 @@ import {
 import { fc, w_ } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { isRestrictedToPluginOnly, isSourceAdminTrusted } from "../Skills技能/chunk-sapykxw7.js";
-import { Doe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isEapModelId } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { X_ } from "../Teammates团队/chunk-g6nvp9mm.js";
-import { XS } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { TODO_WRITE_TOOL_NAME } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { primePlanSlugCollisions, getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import { Vre } from "../后台任务-Shell管理/chunk-x3txegas.js";
@@ -217,7 +217,7 @@ function ue(e) {
     let t = e[o];
     if (t?.type !== "assistant") continue;
     let r = t.message.content.find(
-      (l) => l.type === "tool_use" && l.name === XS,
+      (l) => l.type === "tool_use" && l.name === TODO_WRITE_TOOL_NAME,
     );
     if (!r || r.type !== "tool_use") continue;
     let s = r.input;
@@ -404,7 +404,7 @@ function IZ(e, o, t, r = (s) => s()) {
       logEvent("tengu_resume_model_restore", {
         outcome: fromEnum("declined"),
         decline_reason: fromEnumOpt(s.reason),
-        is_eap: Doe(s.model),
+        is_eap: isEapModelId(s.model),
       }),
     );
   if (s.kind === "declined") {
@@ -440,9 +440,9 @@ function J(e, o) {
       continue;
     let c = l.message.model,
       m = getUserSpecifiedModelSetting();
-    if (isModeDependentModelSetting(m) && !Doe(c) && pe(m, getCanonicalName(c)))
+    if (isModeDependentModelSetting(m) && !isEapModelId(c) && pe(m, getCanonicalName(c)))
       return { kind: "mode_dependent_setting" };
-    let h = !(t.has(getCanonicalName(c)) || Doe(c) || er(c) === s)
+    let h = !(t.has(getCanonicalName(c)) || isEapModelId(c) || er(c) === s)
       ? "unknown_family"
       : !isExemptDefaultResolvingPick(c) && !isModelAllowed(c)
         ? "not_allowed"
@@ -489,7 +489,7 @@ function ye(e) {
     : void 0;
 }
 function T(e, o) {
-  logEvent("tengu_resume_model_restore", { outcome: fromEnum(e), is_eap: Doe(o) });
+  logEvent("tengu_resume_model_restore", { outcome: fromEnum(e), is_eap: isEapModelId(o) });
 }
 function V(e, o) {
   import("../上下文压缩-Compact/chunk-npckj9cm.js").then((t) => t.fetchBootstrapData(e, o));

@@ -18,13 +18,13 @@ import { useTheme, useThemeSetting, useCustomThemes } from "./chunk-w5jaj6kg.js"
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { isCustomizationDisabled } from "./chunk-dqyc6kge.js";
 import { getThemesDir, customThemeRef, parseCustomThemeRef, saveCustomTheme, slugify } from "./custom-themes.js";
-import { zl } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { omitObjectKeys } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { FULL_BLOCK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { jx, S6e } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { DimParenthetical, SearchablePickerDialog } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
@@ -171,7 +171,7 @@ function Ee(Br) {
       if (a === null || !Tj(O)) {
         return;
       }
-      (S(f, O === v[a] ? zl(m, a) : { ...m, [a]: O }), ro(null));
+      (S(f, O === v[a] ? omitObjectKeys(m, a) : { ...m, [a]: O }), ro(null));
     }),
       (s[31] = S),
       (s[32] = O),
@@ -198,7 +198,7 @@ function Ee(Br) {
       if (!(er in m)) {
         return;
       }
-      S(f, zl(m, er));
+      S(f, omitObjectKeys(m, er));
     }),
       (s[41] = S),
       (s[42] = m),
@@ -535,7 +535,7 @@ function Ee(Br) {
           e(U, { value: R(co) }),
           e(t, { children: " " }),
           e(t, { color: Yr ? "suggestion" : void 0, children: co }),
-          e(jx, { when: Gr, children: "custom" }),
+          e(DimParenthetical, { when: Gr, children: "custom" }),
         ],
       });
     }),
@@ -574,7 +574,7 @@ function Ee(Br) {
     s[149] !== w ||
     s[150] !== y
   )
-    ((A = e(S6e, {
+    ((A = e(SearchablePickerDialog, {
       title: K,
       placeholder: "Filter color tokens\u2026",
       items: to,

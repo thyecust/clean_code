@@ -41,7 +41,7 @@ import { z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱�
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { INVISIBLE_CHAR_CLASS } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { ay, wr, yHn, ott, Al, zt, z6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { describeSettingsSourceShort, sanitizeForDisplay, formatLongDisplayText, truncateWithEllipsis, toDisplayText, formatQuotedDisplayText, CLAUDE_AI_MARKETPLACE_NAME_PREFIX } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { readBoundedFile } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, se, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -210,7 +210,7 @@ function ove(e) {
 }
 function xEt(e) {
   let t = wR(e.normalize("NFKC"));
-  return t.startsWith(z6) || ove(t).toLowerCase().startsWith(z6);
+  return t.startsWith(CLAUDE_AI_MARKETPLACE_NAME_PREFIX) || ove(t).toLowerCase().startsWith(CLAUDE_AI_MARKETPLACE_NAME_PREFIX);
 }
 function KEn(e) {
   return ove(wR(e.normalize("NFKC"))).toLowerCase();
@@ -352,133 +352,133 @@ function UJ(e) {
   );
 }
 function vm(e) {
-  return wr(ke(e));
+  return sanitizeForDisplay(ke(e));
 }
 function ke(e) {
   switch (e.type) {
     case "generic-error":
-      return ott(e.error);
+      return truncateWithEllipsis(e.error);
     case "path-not-found":
-      return `Path not found: ${Al(e.path)} (${zt(e.component)}${e.errno ? `, ${zt(e.errno)}` : ""})`;
+      return `Path not found: ${toDisplayText(e.path)} (${formatQuotedDisplayText(e.component)}${e.errno ? `, ${formatQuotedDisplayText(e.errno)}` : ""})`;
     case "path-traversal":
-      return `Path escapes plugin directory: ${Al(e.path)} (${zt(e.component)})${e.reason ? ` \u2014 ${Al(e.reason)}` : ""}`;
+      return `Path escapes plugin directory: ${toDisplayText(e.path)} (${formatQuotedDisplayText(e.component)})${e.reason ? ` \u2014 ${toDisplayText(e.reason)}` : ""}`;
     case "git-auth-failed":
-      return `Git authentication failed (${zt(e.authType)}): ${Al(e.gitUrl)}`;
+      return `Git authentication failed (${formatQuotedDisplayText(e.authType)}): ${toDisplayText(e.gitUrl)}`;
     case "git-timeout":
-      return `Git ${zt(e.operation)} timeout: ${Al(e.gitUrl)}`;
+      return `Git ${formatQuotedDisplayText(e.operation)} timeout: ${toDisplayText(e.gitUrl)}`;
     case "network-error":
-      return `Network error: ${Al(e.url)}${e.details ? ` - ${zt(e.details)}` : ""}`;
+      return `Network error: ${toDisplayText(e.url)}${e.details ? ` - ${formatQuotedDisplayText(e.details)}` : ""}`;
     case "manifest-parse-error":
-      return `Manifest parse error: ${zt(e.parseError)}`;
+      return `Manifest parse error: ${formatQuotedDisplayText(e.parseError)}`;
     case "manifest-validation-error":
-      return `Manifest validation failed: ${zt(e.validationErrors.join(", "))}`;
+      return `Manifest validation failed: ${formatQuotedDisplayText(e.validationErrors.join(", "))}`;
     case "plugin-not-found":
-      return `Plugin ${zt(e.pluginId)} not found in marketplace ${zt(e.marketplace)}`;
+      return `Plugin ${formatQuotedDisplayText(e.pluginId)} not found in marketplace ${formatQuotedDisplayText(e.marketplace)}`;
     case "marketplace-not-found":
-      return `Marketplace ${zt(e.marketplace)} not found`;
+      return `Marketplace ${formatQuotedDisplayText(e.marketplace)} not found`;
     case "marketplace-load-failed":
-      return `Marketplace ${zt(e.marketplace)} failed to load: ${zt(e.reason)}`;
+      return `Marketplace ${formatQuotedDisplayText(e.marketplace)} failed to load: ${formatQuotedDisplayText(e.reason)}`;
     case "mcp-config-invalid":
-      return `MCP server ${zt(e.serverName)} invalid: ${zt(e.validationError)}`;
+      return `MCP server ${formatQuotedDisplayText(e.serverName)} invalid: ${formatQuotedDisplayText(e.validationError)}`;
     case "hook-load-failed":
-      return `Hook load failed: ${zt(e.reason)}`;
+      return `Hook load failed: ${formatQuotedDisplayText(e.reason)}`;
     case "component-load-failed":
-      return `${zt(e.component)} load failed from ${Al(e.path)}: ${zt(e.reason)}`;
+      return `${formatQuotedDisplayText(e.component)} load failed from ${toDisplayText(e.path)}: ${formatQuotedDisplayText(e.reason)}`;
     case "mcpb-download-failed":
-      return `Failed to download MCPB from ${Al(e.url)}: ${zt(e.reason)}`;
+      return `Failed to download MCPB from ${toDisplayText(e.url)}: ${formatQuotedDisplayText(e.reason)}`;
     case "mcpb-extract-failed":
-      return `Failed to extract MCPB ${Al(e.mcpbPath)}: ${zt(e.reason)}`;
+      return `Failed to extract MCPB ${toDisplayText(e.mcpbPath)}: ${formatQuotedDisplayText(e.reason)}`;
     case "mcpb-invalid-manifest":
-      return `MCPB manifest invalid at ${Al(e.mcpbPath)}: ${zt(e.validationError)}`;
+      return `MCPB manifest invalid at ${toDisplayText(e.mcpbPath)}: ${formatQuotedDisplayText(e.validationError)}`;
     case "lsp-config-invalid":
-      return `Plugin "${zt(e.plugin)}" has invalid LSP server config for "${zt(e.serverName)}": ${zt(e.validationError)}`;
+      return `Plugin "${formatQuotedDisplayText(e.plugin)}" has invalid LSP server config for "${formatQuotedDisplayText(e.serverName)}": ${formatQuotedDisplayText(e.validationError)}`;
     case "lsp-server-start-failed":
-      return `Plugin "${zt(e.plugin)}" failed to start LSP server "${zt(e.serverName)}": ${zt(e.reason)}`;
+      return `Plugin "${formatQuotedDisplayText(e.plugin)}" failed to start LSP server "${formatQuotedDisplayText(e.serverName)}": ${formatQuotedDisplayText(e.reason)}`;
     case "lsp-server-crashed":
       if (e.signal)
-        return `Plugin "${zt(e.plugin)}" LSP server "${zt(e.serverName)}" crashed with signal ${e.signal}`;
-      return `Plugin "${zt(e.plugin)}" LSP server "${zt(e.serverName)}" crashed with exit code ${e.exitCode ?? "unknown"}`;
+        return `Plugin "${formatQuotedDisplayText(e.plugin)}" LSP server "${formatQuotedDisplayText(e.serverName)}" crashed with signal ${e.signal}`;
+      return `Plugin "${formatQuotedDisplayText(e.plugin)}" LSP server "${formatQuotedDisplayText(e.serverName)}" crashed with exit code ${e.exitCode ?? "unknown"}`;
     case "lsp-request-timeout":
-      return `Plugin "${zt(e.plugin)}" LSP server "${zt(e.serverName)}" timed out on ${zt(e.method)} request after ${e.timeoutMs}ms`;
+      return `Plugin "${formatQuotedDisplayText(e.plugin)}" LSP server "${formatQuotedDisplayText(e.serverName)}" timed out on ${formatQuotedDisplayText(e.method)} request after ${e.timeoutMs}ms`;
     case "lsp-request-failed":
-      return `Plugin "${zt(e.plugin)}" LSP server "${zt(e.serverName)}" ${zt(e.method)} request failed: ${zt(e.error)}`;
+      return `Plugin "${formatQuotedDisplayText(e.plugin)}" LSP server "${formatQuotedDisplayText(e.serverName)}" ${formatQuotedDisplayText(e.method)} request failed: ${formatQuotedDisplayText(e.error)}`;
     case "marketplace-blocked-by-policy":
       if (e.blockedByBlocklist)
-        return `Marketplace '${zt(e.marketplace)}' is blocked by enterprise policy`;
-      return `Marketplace '${zt(e.marketplace)}' is not in the allowed marketplace list`;
+        return `Marketplace '${formatQuotedDisplayText(e.marketplace)}' is blocked by enterprise policy`;
+      return `Marketplace '${formatQuotedDisplayText(e.marketplace)}' is not in the allowed marketplace list`;
     case "dependency-unsatisfied": {
       let t = Aa("plugin install", e.dependency),
         i =
           e.reason === "not-enabled"
             ? "disabled \u2014 enable it or remove the dependency"
             : `not installed \u2014 ${t ? `run \`${t}\`, or ` : ""}check that its marketplace is added`;
-      return `Dependency "${zt(e.dependency)}" is ${i}`;
+      return `Dependency "${formatQuotedDisplayText(e.dependency)}" is ${i}`;
     }
     case "dependency-version-unsatisfied":
-      return `Requires "${zt(e.dependency)}" ${zt(e.required)}, installed ${zt(e.installed ?? "version unknown")}`;
+      return `Requires "${formatQuotedDisplayText(e.dependency)}" ${formatQuotedDisplayText(e.required)}, installed ${formatQuotedDisplayText(e.installed ?? "version unknown")}`;
     case "plugin-cache-miss":
-      return `Plugin "${zt(e.plugin)}" not cached at ${Al(e.installPath)} \u2014 run /plugin to refresh`;
+      return `Plugin "${formatQuotedDisplayText(e.plugin)}" not cached at ${toDisplayText(e.installPath)} \u2014 run /plugin to refresh`;
     case "plugin-not-installed": {
       let t = Aa("plugin install", e.source, "--scope project");
-      return `Plugin "${zt(e.plugin)}" is enabled in project settings but isn't installed${t ? ` \u2014 run \`${t}\`` : " \u2014 install it at project scope (from /plugin or claude plugin install)"}`;
+      return `Plugin "${formatQuotedDisplayText(e.plugin)}" is enabled in project settings but isn't installed${t ? ` \u2014 run \`${t}\`` : " \u2014 install it at project scope (from /plugin or claude plugin install)"}`;
     }
     case "autoupdate-deferred-entry-helper":
     case "autoupdate-disabled-by-policy":
       return e.message;
     case "autoupdate-blocked-by-pinner": {
-      let t = e.heldAt ? ` at ${Al(e.heldAt)}` : "",
-        i = zt(e.blockedBy.join(", ")),
+      let t = e.heldAt ? ` at ${toDisplayText(e.heldAt)}` : "",
+        i = formatQuotedDisplayText(e.blockedBy.join(", ")),
         r =
           e.disabledPinners.length > 0
-            ? ` (note: ${zt(e.disabledPinners.join(", "))} ${e.disabledPinners.length === 1 ? "is" : "are"} currently disabled)`
+            ? ` (note: ${formatQuotedDisplayText(e.disabledPinners.join(", "))} ${e.disabledPinners.length === 1 ? "is" : "are"} currently disabled)`
             : "";
-      return `Autoupdate held "${zt(e.plugin)}"${t} \u2014 version constraint from ${i}${r}`;
+      return `Autoupdate held "${formatQuotedDisplayText(e.plugin)}"${t} \u2014 version constraint from ${i}${r}`;
     }
   }
 }
 function K$(e) {
-  return wr(Se(e));
+  return sanitizeForDisplay(Se(e));
 }
 function Se(e) {
   switch (e.type) {
     case "folder-shadowed-by-manifest": {
       let t = W(e.manifestFields);
-      return `Default ${zt(e.component)}/ folder is ignored because the manifest sets ${t}`;
+      return `Default ${formatQuotedDisplayText(e.component)}/ folder is ignored because the manifest sets ${t}`;
     }
     case "mcp-server-suppressed-duplicate": {
       let t = e.duplicateOf.startsWith("plugin:")
-        ? `server provided by plugin "${zt(e.duplicateOf.split(":")[1] ?? "?")}"`
-        : `already-configured "${zt(e.duplicateOf)}"`;
-      return `MCP server "${zt(e.serverName)}" skipped \u2014 same command/URL as ${t}`;
+        ? `server provided by plugin "${formatQuotedDisplayText(e.duplicateOf.split(":")[1] ?? "?")}"`
+        : `already-configured "${formatQuotedDisplayText(e.duplicateOf)}"`;
+      return `MCP server "${formatQuotedDisplayText(e.serverName)}" skipped \u2014 same command/URL as ${t}`;
     }
     case "plugin-renamed":
       return e.renamedTo === null
-        ? `Removed from the "${zt(e.marketplace)}" marketplace`
-        : `Renamed to "${zt(e.renamedTo)}" in the "${zt(e.marketplace)}" marketplace`;
+        ? `Removed from the "${formatQuotedDisplayText(e.marketplace)}" marketplace`
+        : `Renamed to "${formatQuotedDisplayText(e.renamedTo)}" in the "${formatQuotedDisplayText(e.marketplace)}" marketplace`;
     case "lsp-extension-conflict": {
       let t = e.activeServer.startsWith("plugin:")
           ? e.activeServer.split(":")[1]
           : void 0,
-        i = t ? `plugin "${zt(t)}"` : `"${zt(e.activeServer)}"`;
-      return `LSP server "${zt(e.serverName)}" is not used for ${zt(e.extension)} files \u2014 ${i} already registered a server for that extension`;
+        i = t ? `plugin "${formatQuotedDisplayText(t)}"` : `"${formatQuotedDisplayText(e.activeServer)}"`;
+      return `LSP server "${formatQuotedDisplayText(e.serverName)}" is not used for ${formatQuotedDisplayText(e.extension)} files \u2014 ${i} already registered a server for that extension`;
     }
     case "project-scope-suppressed-untrusted":
     case "project-scope-server-stripped":
-      return yHn(e.warning);
+      return formatLongDisplayText(e.warning);
     case "broken-wikilink":
-      return `${zt(e.raw)} in ${Al(e.filePath)}:${e.line} doesn't resolve to a skill`;
+      return `${formatQuotedDisplayText(e.raw)} in ${toDisplayText(e.filePath)}:${e.line} doesn't resolve to a skill`;
     case "synced-plugin-shadowed":
-      return `"${zt(e.source)}" from claude.ai not loaded \u2014 "${zt(e.shadowedBy)}" on this machine has the same name and takes precedence`;
+      return `"${formatQuotedDisplayText(e.source)}" from claude.ai not loaded \u2014 "${formatQuotedDisplayText(e.shadowedBy)}" on this machine has the same name and takes precedence`;
     case "managed-hooks-restricted":
-      return `"${zt(e.source)}" loads because its sync attribution matches a plugin your organization's managed settings turn on, but any hooks it ships are NOT running \u2014 allowManagedHooksOnly runs hooks only from plugins installed under managed settings' exact plugin@marketplace id`;
+      return `"${formatQuotedDisplayText(e.source)}" loads because its sync attribution matches a plugin your organization's managed settings turn on, but any hooks it ships are NOT running \u2014 allowManagedHooksOnly runs hooks only from plugins installed under managed settings' exact plugin@marketplace id`;
     case "managed-plugin-disabled-by-settings":
-      return `"${zt(e.source)}" is disabled by your settings, though its sync attribution matches a plugin your organization's managed settings turn on \u2014 if this copy is the org's delivery, that plugin is not running`;
+      return `"${formatQuotedDisplayText(e.source)}" is disabled by your settings, though its sync attribution matches a plugin your organization's managed settings turn on \u2014 if this copy is the org's delivery, that plugin is not running`;
     case "ineffective-disable":
-      return `Disabled in ~/.claude/settings.json but still loads \u2014 ${ay(e.overriddenBy)} settings enable it, which overrides your user setting`;
+      return `Disabled in ~/.claude/settings.json but still loads \u2014 ${describeSettingsSourceShort(e.overriddenBy)} settings enable it, which overrides your user setting`;
   }
 }
 function qzt(e) {
-  return wr(ve(e));
+  return sanitizeForDisplay(ve(e));
 }
 function ve(e) {
   switch (e.type) {
@@ -495,25 +495,25 @@ function ve(e) {
     case "broken-wikilink":
       return e.reason === "invalid"
         ? "Wikilink names may use letters, digits, dash, underscore \u2014 rename the link"
-        : `Create one of: ${e.tried.map((t) => Al(t)).join(" or ")}, or fix the link spelling`;
+        : `Create one of: ${e.tried.map((t) => toDisplayText(t)).join(" or ")}, or fix the link spelling`;
     case "mcp-server-suppressed-duplicate": {
       if (e.duplicateOf.startsWith("plugin:")) {
         let t = e.duplicateOf.split(":")[1] ?? "the other plugin";
-        return `Disable plugin "${zt(t)}" if you want this plugin's version instead`;
+        return `Disable plugin "${formatQuotedDisplayText(t)}" if you want this plugin's version instead`;
       }
-      return `Remove "${zt(e.duplicateOf)}" from your MCP config if you want the plugin's version instead`;
+      return `Remove "${formatQuotedDisplayText(e.duplicateOf)}" from your MCP config if you want the plugin's version instead`;
     }
     case "lsp-extension-conflict": {
       let t = e.activeServer.startsWith("plugin:")
         ? (e.activeServer.split(":")[1] ?? "the other plugin")
         : e.activeServer;
       if (t === e.plugin)
-        return `Plugin "${zt(e.plugin)}" declares two LSP servers for ${zt(e.extension)} \u2014 remove or reorder "${zt(e.serverName)}" in its lspServers config`;
-      return `Disable plugin "${zt(t)}" to use this plugin's LSP server for ${zt(e.extension)} files, or disable "${zt(e.plugin)}" to silence this warning`;
+        return `Plugin "${formatQuotedDisplayText(e.plugin)}" declares two LSP servers for ${formatQuotedDisplayText(e.extension)} \u2014 remove or reorder "${formatQuotedDisplayText(e.serverName)}" in its lspServers config`;
+      return `Disable plugin "${formatQuotedDisplayText(t)}" to use this plugin's LSP server for ${formatQuotedDisplayText(e.extension)} files, or disable "${formatQuotedDisplayText(e.plugin)}" to silence this warning`;
     }
     case "synced-plugin-shadowed": {
       let t = Aa("plugin enable", e.source);
-      return `To use the claude.ai copy instead, ${t ? `run \`${t}\`` : "enable it from /plugin"}, then disable or remove "${zt(e.shadowedBy)}"`;
+      return `To use the claude.ai copy instead, ${t ? `run \`${t}\`` : "enable it from /plugin"}, then disable or remove "${formatQuotedDisplayText(e.shadowedBy)}"`;
     }
     case "managed-hooks-restricted":
       return "If this plugin is org-mandated and its hooks are required, ask your administrator to install it under the exact plugin@marketplace id managed settings name; if you did not expect this copy, remove its directory";
@@ -523,16 +523,16 @@ function ve(e) {
     }
     case "plugin-renamed":
       return e.renamedTo === null
-        ? `Remove "${zt(e.source)}" from enabledPlugins if you still see this on the next start`
-        : `If you still see this on the next start, update enabledPlugins to use "${zt(e.renamedTo)}@${zt(e.marketplace)}" (managed settings are not rewritten automatically)`;
+        ? `Remove "${formatQuotedDisplayText(e.source)}" from enabledPlugins if you still see this on the next start`
+        : `If you still see this on the next start, update enabledPlugins to use "${formatQuotedDisplayText(e.renamedTo)}@${formatQuotedDisplayText(e.marketplace)}" (managed settings are not rewritten automatically)`;
     case "ineffective-disable":
       switch (e.overriddenBy) {
         case "projectSettings":
-          return `Set "enabledPlugins": {"${zt(e.source)}": false} in .claude/settings.local.json instead \u2014 project settings override ~/.claude/settings.json`;
+          return `Set "enabledPlugins": {"${formatQuotedDisplayText(e.source)}": false} in .claude/settings.local.json instead \u2014 project settings override ~/.claude/settings.json`;
         case "localSettings":
           return "Change it to false in .claude/settings.local.json \u2014 that file currently enables it";
         case "flagSettings":
-          return `Remove "${zt(e.source)}" from the --settings value \u2014 that flag overrides all settings files`;
+          return `Remove "${formatQuotedDisplayText(e.source)}" from the --settings value \u2014 that flag overrides all settings files`;
         case "policySettings":
           return "Managed policy can't be overridden locally \u2014 contact your administrator";
         case "userSettings":

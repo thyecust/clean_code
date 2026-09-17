@@ -18,7 +18,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { findLastPeerHopChain, parsePeerAddress, validateMessageTarget, slugify, parseAgentDisplayName, formatCandidateSummary } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { normalizeSingleLineText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -41,7 +41,7 @@ import {
   classifySelfNameMatch,
   formatOwnSessionMessage,
 } from "../Teammates团队/peer-target-guard.js";
-import { ni, sm, READ_PATH_PROBE, readPermissionDecisionForPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { findMatchingDenyRule, findMatchingAskRule, READ_PATH_PROBE, readPermissionDecisionForPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { createConcurrencyLimiter, SEND_FILE_TOOL_NAME, SEND_FILE_TOOL_DESCRIPTION, buildSendFileToolPrompt, BoundedTtlCache, getCurrentSessionPeerNameFor } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { $Ae, UAe, z3t, BAe, xSn, mD } from "./chunk-ddtmwhn7.js";
 import { LIST_AGENTS_TOOL_NAME } from "../Teammates团队/list-agents-tool-constants.js";
@@ -359,7 +359,7 @@ var SendFileTool = buildTool({
   },
   async checkPermissions(e, o) {
     let a = getToolPermissionContext(o),
-      f = ni(a, READ_PATH_PROBE);
+      f = findMatchingDenyRule(a, READ_PATH_PROBE);
     if (f)
       return {
         behavior: "deny",
@@ -380,7 +380,7 @@ var SendFileTool = buildTool({
         if (t === void 0) t = h;
       }
     if (p !== void 0) return te(p, o, e);
-    let _ = sm(a, READ_PATH_PROBE);
+    let _ = findMatchingAskRule(a, READ_PATH_PROBE);
     if (_)
       return te(
         {
@@ -399,7 +399,7 @@ var SendFileTool = buildTool({
         ((h = await se(e.to, e.message ?? "", o)), _e(o, e, h));
       } catch (C) {
         n(
-          `[SendFile] up-front resolve failed (${BU(l(C))}) \u2014 asking as usual`,
+          `[SendFile] up-front resolve failed (${normalizeSingleLineText(l(C))}) \u2014 asking as usual`,
           { level: "warn" },
         );
       }

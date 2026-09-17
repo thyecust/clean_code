@@ -21,7 +21,7 @@ import { BASH_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../../02-功能模块/认�
 import { ike } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { escapeShellCommandMarkers, findSkillShellCommands, addMcpConfig, userScopeMcpServerExists, readRawMcpJsonServersFromCwd } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { G$ } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isSyncOwnedRootName } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { stringifyYaml } from "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import { MAX_SKILL_FILE_BYTES } from "../共享小工具-未细化/chunk-7wm8t84g.js";
 import { s, T, O, se, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -738,7 +738,7 @@ ${w.instructions ?? ""}
           return {
             skipped: `${g}: path escapes \`${e}\` (symlink) or is missing`,
           };
-        if (G$(g))
+        if (isSyncOwnedRootName(g))
           return {
             skipped: `${g}: "${g}" is a reserved skills directory name (the claude.ai skills-sync root) and would never load \u2014 rename the skill directory and import it manually`,
           };

@@ -13,7 +13,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { te } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
 import { PROPORTION_GLYPH, THINKING_SPINNER_FRAMES } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { o, t, ct, iO } from "./chunk-k8hr56nm.js";
-import { LYt } from "../../02-功能模块/Workflow编排/chunk-0t0sve49.js";
+import { ENGINE_ORIGIN } from "../../02-功能模块/Workflow编排/chunk-0t0sve49.js";
 import { HooksError } from "../../02-功能模块/Hooks钩子/chunk-bzqqe6xh.js";
 import {
   handlePluginInputEvent,
@@ -444,7 +444,7 @@ function Ne(s, p, { version: i, staticFrame: f, submittedBy: u }) {
               if (!y.signal.aborted) x(g);
             },
             (g) => {
-              if ((_e(p, g), !y.signal.aborted)) x(LYt);
+              if ((_e(p, g), !y.signal.aborted)) x(ENGINE_ORIGIN);
             },
           ),
         () => {

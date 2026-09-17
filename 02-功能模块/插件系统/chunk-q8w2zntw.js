@@ -18,17 +18,17 @@ import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { pluralize, formatShortText } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
-  yi,
-  ay,
-  ms,
-  zl,
-  wr,
-  ntt,
-  Vn,
-  Al,
-  zt,
-  MQ,
-  Om,
+  SETTINGS_SOURCE_ORDER,
+  describeSettingsSourceShort,
+  getEnabledSettingsSources,
+  omitObjectKeys,
+  sanitizeForDisplay,
+  sanitizeCommandRequest,
+  formatDisplayText,
+  toDisplayText,
+  formatQuotedDisplayText,
+  shouldAutoUpdateMarketplace,
+  isLocalMarketplaceSource,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Gu, El } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsForSource, updateSettingsForSourceWithTransform } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -158,7 +158,7 @@ import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chu
 async function bUn(e, t, s) {
   if (shouldSkipPluginAutoupdate()) return "ineligible";
   if (!t?.source || !isSourceAllowedByPolicy(t.source)) return "ineligible";
-  if (!MQ(e, t, getDeclaredMarketplaces()[e]?.autoUpdate)) return "ineligible";
+  if (!shouldAutoUpdateMarketplace(e, t, getDeclaredMarketplaces()[e]?.autoUpdate)) return "ineligible";
   try {
     return (
       await refreshMarketplace(e, s, void 0, { skipIfRecent: !0 }),
@@ -188,7 +188,7 @@ async function d0e(e, t, s) {
     return { outcome: "ineligible" };
   let r = t.source.source;
   if (r !== "github" && r !== "git" && r !== "url" && r !== "claudeai") {
-    if (Om(t.source) || r === "settings") $t().marketplaces.delete(e);
+    if (isLocalMarketplaceSource(t.source) || r === "settings") $t().marketplaces.delete(e);
     return { outcome: "ineligible" };
   }
   try {
@@ -699,7 +699,7 @@ async function $e(e, t, s, r, i) {
             ...O.enabled.filter((q) => q.isBuiltin),
           ]);
         if (ue !== void 0)
-          de = ` (a local copy, ${wr(ue.source)}, currently takes precedence over the synced one \u2014 disable it in /plugin to run this copy)`;
+          de = ` (a local copy, ${sanitizeForDisplay(ue.source)}, currently takes precedence over the synced one \u2014 disable it in /plugin to run this copy)`;
       }
       if (t && a === INLINE_PLUGIN_SOURCE && !j) {
         let { name: K } = splitPluginIdOnLastAt(h),
@@ -753,7 +753,7 @@ async function $e(e, t, s, r, i) {
         J = v?.enabled ?? I !== !0,
         te = v === void 0 ? void 0 : O[v.index]?.source;
       if (J !== t && te !== void 0) {
-        let B = ay(te),
+        let B = describeSettingsSourceShort(te),
           K =
             te === "localSettings" ||
             te === "projectSettings" ||
@@ -767,8 +767,8 @@ async function $e(e, t, s, r, i) {
           };
         ge = ` (still ${t ? "disabled" : "enabled"} here: ${B} settings govern it${K})`;
       }
-      if (!ms().includes(oe))
-        ge += ` (this session ignores ${ay(oe)} settings: --setting-sources)`;
+      if (!getEnabledSettingsSources().includes(oe))
+        ge += ` (this session ignores ${describeSettingsSourceShort(oe)} settings: --setting-sources)`;
     }
     for (let { scope: O, key: v } of z) {
       if (O === F && normalizeLookupKey(v) === normalizeLookupKey(h)) continue;
@@ -872,7 +872,7 @@ async function $e(e, t, s, r, i) {
           : ", or disable them together in /plugin.";
       return {
         success: !1,
-        message: `${j} is still required by ${z.map(wr).join(", ")}. Disable ${pluralize(z.length, "that plugin", "those plugins")} first${de}`,
+        message: `${j} is still required by ${z.map(sanitizeForDisplay).join(", ")}. Disable ${pluralize(z.length, "that plugin", "those plugins")} first${de}`,
         reverseDependents: z,
       };
     }
@@ -1008,7 +1008,7 @@ async function AUn(e) {
   for (let [_] of t) {
     let N = await $e(_, !1, void 0, { bypassDependentsBlock: !0 }, e);
     if (N.success) A.push(_);
-    else c.push(wr(`${_}: ${N.message}`));
+    else c.push(sanitizeForDisplay(`${_}: ${N.message}`));
   }
   for (let _ of X) {
     let { error: N } = await updateSettingsForSourceWithTransform(
@@ -1017,7 +1017,7 @@ async function AUn(e) {
       void 0,
       e,
     );
-    if (N) c.push(wr(`${_}: ${N.message}`));
+    if (N) c.push(sanitizeForDisplay(`${_}: ${N.message}`));
     else A.push(_);
   }
   if (X.length > 0) refreshPluginState(e);
@@ -1112,14 +1112,14 @@ async function qe(
     if (u.length > 1)
       return {
         outcome: "failed",
-        message: `Plugin "${Vn(S, 200)}" is installed from more than one marketplace. Include the marketplace name to pick one: ${u.map((L) => `\`claude plugin update ${Vn(L, 200)}\``).join(" or ")}`,
+        message: `Plugin "${formatDisplayText(S, 200)}" is installed from more than one marketplace. Include the marketplace name to pick one: ${u.map((L) => `\`claude plugin update ${formatDisplayText(L, 200)}\``).join(" or ")}`,
         scope: t,
         failureCode: "ambiguous_marketplace",
       };
     if (u.length === 0)
       return {
         outcome: "failed",
-        message: `Plugin "${Vn(S, 200)}" is not installed`,
+        message: `Plugin "${formatDisplayText(S, 200)}" is not installed`,
         scope: t,
         failureCode: "not_installed",
       };
@@ -1132,7 +1132,7 @@ async function qe(
   if (isPluginBlockedByPolicy(c))
     return {
       outcome: "failed",
-      message: `Plugin "${Vn(c, 200)}" is blocked by your organization's policy and was not updated`,
+      message: `Plugin "${formatDisplayText(c, 200)}" is blocked by your organization's policy and was not updated`,
       pluginId: c,
       scope: t,
       failureCode: "plugin_policy_blocked",
@@ -1223,10 +1223,10 @@ async function qe(
         outcome: "failed",
         message:
           r && !Z
-            ? `${Vn(S, 200)} is installed by running a command, which the background marketplace update never runs; it is left to the per-session re-resolve (when that is enabled) or an explicit update \u2014 ${rA("plugin update", c, { extra: Q, fallback: "a per-plugin update reviews it" })}.`
+            ? `${formatDisplayText(S, 200)} is installed by running a command, which the background marketplace update never runs; it is left to the per-session re-resolve (when that is enabled) or an explicit update \u2014 ${rA("plugin update", c, { extra: Q, fallback: "a per-plugin update reviews it" })}.`
             : u
               ? COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE
-              : `${Vn(S, 200)} is disabled, so the command that installs it was not run. Enable it first, then ${rA("plugin update", c, { extra: Q, fallback: "update it explicitly" })}.`,
+              : `${formatDisplayText(S, 200)} is disabled, so the command that installs it was not run. Enable it first, then ${rA("plugin update", c, { extra: Q, fallback: "update it explicitly" })}.`,
         pluginId: c,
         scope: t,
         failureCode:
@@ -1379,7 +1379,7 @@ async function qe(
       return {
         outcome: "skipped",
         message:
-          `Skipped \u2014 "${zt(d.name)}" fetches its archive through a headersHelper, which only runs when you update it yourself. Update it from /plugin` +
+          `Skipped \u2014 "${formatQuotedDisplayText(d.name)}" fetches its archive through a headersHelper, which only runs when you update it yourself. Update it from /plugin` +
           (Oe ? ` (or \`${Oe}\`).` : "."),
         pluginId: c,
         scope: t,
@@ -1483,7 +1483,7 @@ async function qe(
     }
     ((we = L.marketplaceDir), (v = L.entryPath));
     let G = O[A ?? ""],
-      Z = G !== void 0 && Om(G.source);
+      Z = G !== void 0 && isLocalMarketplaceSource(G.source);
     try {
       if (Z) await statLocalMarketplacePath(a, v, u);
       else await ee.stat(v);
@@ -1491,7 +1491,7 @@ async function qe(
       if (W(se))
         return {
           outcome: "failed",
-          message: `Plugin source not found at ${Al(v)}`,
+          message: `Plugin source not found at ${toDisplayText(v)}`,
           pluginId: c,
           scope: t,
           failureCode: "source_missing",
@@ -1663,7 +1663,7 @@ async function g0e(e, t, s) {
   return uXe(k, r.source.url);
 }
 function oOt(e) {
-  let t = ntt(e);
+  let t = sanitizeCommandRequest(e);
   return (
     `Fetching this plugin's archive sends helper-minted headers to ${t.destination}; ` +
     (t.hiddenCharactersWarning
@@ -1761,7 +1761,7 @@ function Je(e, t, s) {
 }
 var Ve = [...jB].sort((e, t) => fe[t] - fe[e]);
 function Le(e, t, s, r) {
-  let i = isEqualIgnoringCase(r, e) ? "" : ` via its legacy "${wr(r)}" entry`,
+  let i = isEqualIgnoringCase(r, e) ? "" : ` via its legacy "${sanitizeForDisplay(r)}" entry`,
     o = i ? ` (remove that entry, or add "${e}": true beside it)` : "";
   if (s === "policySettings")
     return {
@@ -1779,7 +1779,7 @@ function Le(e, t, s, r) {
 }
 function en(e, t) {
   if (!isTrustedBuiltinPlugin(e)) return;
-  let s = new Set(ms());
+  let s = new Set(getEnabledSettingsSources());
   for (let r of ["policySettings", "flagSettings"]) {
     if (!s.has(r)) continue;
     let i = getSettingsForSource(r)?.enabledPlugins?.[e];
@@ -1822,11 +1822,11 @@ function Ne(e, t, s) {
   return tn.map((r) => {
     let i = getSettingsForSource(r)?.enabledPlugins;
     if (r !== e) return { source: r, record: i };
-    let o = zl(i ?? {}, Be(i, t));
+    let o = omitObjectKeys(i ?? {}, Be(i, t));
     return { source: r, record: s === void 0 ? o : { ...o, [t]: s } };
   });
 }
-var tn = [...yi].reverse();
+var tn = [...SETTINGS_SOURCE_ORDER].reverse();
 var WB = "claude-cli";
 function Ue(e, { allowNewlineAndTab: t = !1 } = {}) {
   for (let s = 0; s < e.length; s++) {

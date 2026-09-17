@@ -23,7 +23,7 @@ import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te, truncateToWidth, formatRelativeTimeAgo, formatLogMetadata } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { B2e } from "./chunk-mkmy4cx2.js";
-import { Oq } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { Fuse } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { jY } from "../状态栏-主题/chunk-jz6b76hr.js";
 import { useResolvedTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
@@ -47,7 +47,7 @@ import {
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { Bz, jz } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { WelcomeChrome, ConversationMessageList } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
@@ -143,7 +143,7 @@ function pt(mo) {
     return fe;
   }
   let Ae;
-  if (R[17] === MEMO_CACHE_SENTINEL) ((Ae = e(Bz, { latchAnnouncementSlot: !1 })), (R[17] = Ae));
+  if (R[17] === MEMO_CACHE_SENTINEL) ((Ae = e(WelcomeChrome, { latchAnnouncementSlot: !1 })), (R[17] = Ae));
   else Ae = R[17];
   let fe;
   if (R[18] !== At || R[19] !== Ut)
@@ -157,7 +157,7 @@ function pt(mo) {
   else Jn = R[21];
   let ct;
   if (R[22] !== fe)
-    ((ct = e(jz, {
+    ((ct = e(ConversationMessageList, {
       source: fe,
       tools: bo,
       commands: Jn,

@@ -16,15 +16,15 @@ import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cw
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
-import { jn, Pt, Ks, findGitRoot, gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel, findGitRoot, gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { OP, Vet, Ket } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { yieldToEventLoop, YIELD_BUDGET_MS, FuzzyFilePathIndex } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { kJ, MK, UTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { nodeIgnoreModule, filterCompilableIgnorePatterns, splitNonEmptyLines } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getEffectiveFileSuggestion, runRipgrepSearch, MARKDOWN_SUBDIRS, getMarkdownFiles, createBaseHookInput, executeFileSuggestionCommand } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var w = toESM(kJ(), 1);
+var w = toESM(nodeIgnoreModule(), 1);
 import { statSync } from "fs";
 import * as m from "path";
 function M() {
@@ -99,9 +99,9 @@ async function y(e, r, s) {
     let g = m.join(r, e[o]);
     if (
       ((t[o] = m.relative(s, g)),
-      (o & 255) === 255 && performance.now() - a > Vet)
+      (o & 255) === 255 && performance.now() - a > YIELD_BUDGET_MS)
     )
-      (await OP(), (a = performance.now()));
+      (await yieldToEventLoop(), (a = performance.now()));
   }
   return t;
 }
@@ -141,7 +141,7 @@ async function P(e, r, s) {
     );
   for (let [x, F] of d.entries()) {
     if (F === null) continue;
-    (c.add(MK(UTt(F), "file_suggestions_ignore")),
+    (c.add(filterCompilableIgnorePatterns(splitNonEmptyLines(F), "file_suggestions_ignore")),
       (u = !0),
       n(`[FileIndex] loaded ignore patterns from ${f[x]}`));
   }
@@ -154,8 +154,8 @@ async function T(e, r) {
   for (let a = 0; a < r.length; a++) {
     let o = r[a];
     if (!w.default.isPathValid(o) || !e.ignores(o)) s.push(o);
-    if ((a & 255) === 255 && performance.now() - t > Vet)
-      (await OP(), (t = performance.now()));
+    if ((a & 255) === 255 && performance.now() - t > YIELD_BUDGET_MS)
+      (await yieldToEventLoop(), (t = performance.now()));
   }
   return s;
 }
@@ -243,8 +243,8 @@ async function b(e) {
   let r = new Set(),
     s = performance.now();
   for (let t = 0; t < e.length; t++)
-    if ((L(e, t, t + 1, r), (t & 255) === 255 && performance.now() - s > Vet))
-      (await OP(), (s = performance.now()));
+    if ((L(e, t, t + 1, r), (t & 255) === 255 && performance.now() - s > YIELD_BUDGET_MS))
+      (await yieldToEventLoop(), (s = performance.now()));
   return [...r].map((t) => t + m.sep);
 }
 function L(e, r, s, t) {
@@ -306,7 +306,7 @@ async function E(e, r, s) {
 }
 async function N(e, r) {
   let s = AbortSignal.timeout(1e4),
-    t = (e.fileIndex ??= new Ket());
+    t = (e.fileIndex ??= new FuzzyFilePathIndex());
   try {
     let a = getInitialSettings(),
       o = getGlobalConfig(),
@@ -374,7 +374,7 @@ function startBackgroundCacheRefresh(e, r) {
   }
   let t = e.cacheGeneration,
     a = Date.now();
-  ((e.fileIndex ??= new Ket()),
+  ((e.fileIndex ??= new FuzzyFilePathIndex()),
     (e.fileListRefreshPromise = N(e, r)
       .then((o) => {
         if (t !== e.cacheGeneration) return o;
@@ -396,7 +396,7 @@ function startBackgroundCacheRefresh(e, r) {
           t === e.cacheGeneration)
         )
           e.fileListRefreshPromise = null;
-        return (e.fileIndex ??= new Ket());
+        return (e.fileIndex ??= new FuzzyFilePathIndex());
       })));
 }
 async function O() {
@@ -418,7 +418,7 @@ async function O() {
   }
 }
 async function generateFileSuggestions(e, r, s = !1, t) {
-  if (Pt()) {
+  if (isRemoteActive()) {
     if (!r && !s) return [];
     return U(r);
   }
@@ -461,8 +461,8 @@ async function generateFileSuggestions(e, r, s = !1, t) {
   }
 }
 async function U(e) {
-  let r = jn();
-  if (!r || !Ks()) return [];
+  let r = getRemoteTransport();
+  if (!r || !hasRemoteControlChannel()) return [];
   try {
     return (
       await r.sendControlRequest({ subtype: "file_suggestions", query: e })

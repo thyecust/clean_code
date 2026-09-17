@@ -10,13 +10,13 @@
 
 // [preload stripped] 原本在此预载 231 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { wle, VB } from "../后台任务-Shell管理/chunk-c7mzes79.js";
+import { useOnSettingsChange, useSessionHooksRegistry } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { he, MA, LL, Mx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { getClaudeConfigDir, isSafeMode, getSafeModeExitHint } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { capitalize, pluralize, escapeInvisibleCharacters, escapeAllControlCharacters } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { zar, yi } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { SESSION_END_REASONS, SETTINGS_SOURCE_ORDER } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { NOTIFICATION_TYPES } from "../图片-截图-ComputerUse/settings-option-values.js";
@@ -57,7 +57,7 @@ import {
 import { oBe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
-import { hD } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { getPreferredShellToolName } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { xC } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { nIt, rIt, P6e, oIt } from "./chunk-6wg4v2yj.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -71,7 +71,7 @@ import { useKeybinding } from "../../01-核心基础设施/共享小工具-未�
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
-import { Vi, Qot, J1n } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { Table, hasPolicySettings, addEnabledDefaultTools } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -251,7 +251,7 @@ async function Fo({
           Ee,
           await realpath(Ee).catch(() => Ee),
         ],
-        reachBaseline: k.reachBaseline ?? new Map(yi.map((b) => [b, getWriteEntriesForSource(b, n)])),
+        reachBaseline: k.reachBaseline ?? new Map(SETTINGS_SOURCE_ORDER.map((b) => [b, getWriteEntriesForSource(b, n)])),
         scopeSettingsFile: (b) => getSettingsFilePathForSource(b) ?? null,
         realpath: realpath,
         commonRoots: () => k.commonRoots ?? getCommonWriteRoots(n),
@@ -305,7 +305,7 @@ async function Fo({
           realpath: realpath,
           open: getRealFileSystemAccess().openNoFollow,
           home: getHomeDirFromEnv(no),
-          defaultShell: hD(),
+          defaultShell: getPreferredShellToolName(),
           shellPrefix: rIt(no),
         },
       ),
@@ -707,7 +707,7 @@ Other exit codes - show stderr to user only`,
       description: `Input to command is JSON with session end reason.
 Exit code 0 - command completes successfully
 Other exit codes - show stderr to user only`,
-      matcherMetadata: { fieldToMatch: "reason", values: [...zar] },
+      matcherMetadata: { fieldToMatch: "reason", values: [...SESSION_END_REASONS] },
     },
     PermissionRequest: {
       summary: "When a permission dialog is displayed",
@@ -1704,7 +1704,7 @@ function To(rc) {
   else ni = M[2];
   let At;
   if (M[3] !== v.event)
-    ((At = r(Vi.Row, { children: [ni, e(t, { children: v.event })] })),
+    ((At = r(Table.Row, { children: [ni, e(t, { children: v.event })] })),
       (M[3] = v.event),
       (M[4] = At));
   else At = M[4];
@@ -1712,7 +1712,7 @@ function To(rc) {
   if (M[5] !== $n || M[6] !== v.matcher)
     ((Ft =
       $n &&
-      r(Vi.Row, {
+      r(Table.Row, {
         children: [
           e(N, { children: "Matcher:" }),
           e(t, { children: v.matcher ? escapeAllControlCharacters(v.matcher) : "(all)" }),
@@ -1727,7 +1727,7 @@ function To(rc) {
   else si = M[8];
   let Wt;
   if (M[9] !== v.config.type)
-    ((Wt = r(Vi.Row, { children: [si, e(t, { children: v.config.type })] })),
+    ((Wt = r(Table.Row, { children: [si, e(t, { children: v.config.type })] })),
       (M[9] = v.config.type),
       (M[10] = Wt));
   else Wt = M[10];
@@ -1740,7 +1740,7 @@ function To(rc) {
   else Jt = M[13];
   let jt;
   if (M[14] !== Jt)
-    ((jt = r(Vi.Row, { children: [ii, e(t, { dimColor: !0, children: Jt })] })),
+    ((jt = r(Table.Row, { children: [ii, e(t, { dimColor: !0, children: Jt })] })),
       (M[14] = Jt),
       (M[15] = jt));
   else jt = M[15];
@@ -1748,7 +1748,7 @@ function To(rc) {
   if (M[16] !== v.pluginName)
     ((Bt =
       v.pluginName &&
-      r(Vi.Row, {
+      r(Table.Row, {
         children: [
           e(N, { children: "Plugin:" }),
           e(t, { dimColor: !0, children: escapeAllControlCharacters(v.pluginName) }),
@@ -1762,7 +1762,7 @@ function To(rc) {
     ((Lt =
       "statusMessage" in v.config &&
       v.config.statusMessage &&
-      r(Vi.Row, {
+      r(Table.Row, {
         children: [
           e(N, { children: "Status message:" }),
           e(t, { dimColor: !0, children: escapeAllControlCharacters(v.config.statusMessage) }),
@@ -1780,7 +1780,7 @@ function To(rc) {
     M[24] !== Ft ||
     M[25] !== Wt
   )
-    (($t = r(Vi, { columns: ti, children: [At, Ft, Wt, jt, Bt, Lt] })),
+    (($t = r(Table, { columns: ti, children: [At, Ft, Wt, jt, Bt, Lt] })),
       (M[20] = jt),
       (M[21] = Bt),
       (M[22] = Lt),
@@ -1968,12 +1968,12 @@ function dn(Bc) {
     }),
       (m[7] = ui));
   else ui = m[7];
-  wle(ui);
+  useOnSettingsChange(ui);
   let Zt = l.mode,
     go = "event" in l ? l.event : "PreToolUse",
     Xn = "matcher" in l ? l.matcher : null,
     Qn = useAppStateSelector($i),
-    Zn = VB(),
+    Zn = useSessionHooksRegistry(),
     hi;
   if (m[8] !== Qn.tools || m[9] !== Yn)
     ((hi = [...Yn, ...Qn.tools.map(Ui)]),
@@ -2275,7 +2275,7 @@ function dn(Bc) {
       let T;
       if (m[80] === MEMO_CACHE_SENTINEL)
         ((T = isSafeMode()
-          ? { exitHint: getSafeModeExitHint(), managedHooksStillApply: Qot() }
+          ? { exitHint: getSafeModeExitHint(), managedHooksStillApply: hasPolicySettings() }
           : void 0),
           (m[80] = T));
       else T = m[80];
@@ -2509,7 +2509,7 @@ function dn(Bc) {
 var wd = async (n, a) => {
   logEvent("tengu_hooks_command", {});
   let s = getToolPermissionContext(a),
-    g = J1n(getBuiltinToolsForContext(s), s).map((k) => k.name);
+    g = addEnabledDefaultTools(getBuiltinToolsForContext(s), s).map((k) => k.name);
   return e(dn, { toolNames: g, onExit: n });
 };
 export { wd as call };

@@ -125,21 +125,21 @@ import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chal
 import { stripProtoFields, logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  ea,
-  da,
-  Pw,
-  ms,
-  Tb,
-  tlr,
-  s8t,
-  i8t,
-  a8t,
-  Vn,
-  Js,
-  Oa,
+  pickBy,
+  getHostSettingsStore,
+  getMergedSettings,
+  getEnabledSettingsSources,
+  getManagedSettingsDirPath,
+  findTextIssue,
+  findTrimmedTextIssue,
+  measureText,
+  describeTextIssue,
+  formatDisplayText,
+  parseMcpToolName as Js,
+  getMcpToolPrefix,
   isRemoteManagedSettingsVerified,
   getRemoteSettingsPathOverride,
-  X6,
+  resolveLocalSettingsStoreRoot,
   getRelativeSettingsFilePathForSource,
   isAdminPolicyOrigin,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -150,9 +150,9 @@ import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工�
 import { Jcr, wS, Bf, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { GIT_HARDENED_ARGS, execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING, execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import {
-  Pt,
-  Ks,
-  sxt,
+  isRemoteActive,
+  hasRemoteControlChannel,
+  watchFileSafely,
   getCachedHead,
   findGitRootUncached,
   findGitRootThroughBackendUncached,
@@ -12386,7 +12386,7 @@ function getFastModeUnavailableReason(e) {
   if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_penguins_off", null) !== null) return "unknown";
   if (!isModelAllowed(getFastModeModelId())) {
     let r = e !== void 0 ? (e ?? getDefaultMainLoopModelSetting()) : getMainLoopModel();
-    if (!(!Ks() && modelSupportsFastMode(r) && isModelAllowed(r))) return "model_not_allowed";
+    if (!(!hasRemoteControlChannel() && modelSupportsFastMode(r) && isModelAllowed(r))) return "model_not_allowed";
   }
   let t = getSettingsForSource("flagSettings")?.fastMode === !0;
   if (ke() && Rrt() && !t) return "sdk_opt_in_required";
@@ -12436,7 +12436,7 @@ function getFastModeModelId() {
 }
 function shouldEnableFastModeForModel(e, t) {
   if (!isFastModeEnabled()) return !1;
-  return !!e && (Pt() || isFastModeAvailable() || t);
+  return !!e && (isRemoteActive() || isFastModeAvailable() || t);
 }
 function shouldStartWithFastMode(e) {
   if (!isFastModeEnabled()) return !1;
@@ -12459,7 +12459,7 @@ function modelSupportsFastMode(e) {
   return o.includes("opus-4-8") || o.includes("opus-5");
 }
 function resolveFastModeForModel(e, t) {
-  if (Pt()) {
+  if (isRemoteActive()) {
     if (e === null) return !!t;
     return !!t && modelSupportsFastMode(e);
   }
@@ -12471,7 +12471,7 @@ function logFastModeToggled(e, t) {
   logEvent("tengu_fast_mode_toggled", {
     enabled: t,
     source: fromEnum(t ? "model_switch_restore" : "model_switch_downgrade"),
-    remote: Ks(),
+    remote: hasRemoteControlChannel(),
   });
 }
 class Gx {
@@ -12985,10 +12985,10 @@ function Oee(e, t) {
 function za() {
   let e = !1;
   try {
-    let t = da().policy.orgPricing;
+    let t = getHostSettingsStore().policy.orgPricing;
     if (t !== void 0) return t.value;
     let r = getSettingsForSource("policySettings"),
-      o = da().policy;
+      o = getHostSettingsStore().policy;
     if (o.orgPricing === void 0) {
       let d = { value: void 0 };
       o.orgPricing = d;
@@ -13301,11 +13301,11 @@ function Dee(e) {
   }
 }
 function Un(e) {
-  let t = s8t(e),
-    r = i8t(e);
+  let t = findTrimmedTextIssue(e),
+    r = measureText(e);
   return t === null
     ? `it contains a character the HTTP runtime does not accept (${mp(r.length)})`
-    : a8t(t, r);
+    : describeTextIssue(t, r);
 }
 function mp(e) {
   return e === 1 ? "1 character" : `${e} characters`;
@@ -16287,7 +16287,7 @@ function maskModelCodename(e) {
   );
 }
 function getCuratedModelPicker() {
-  let e = ms(),
+  let e = getEnabledSettingsSources(),
     t = getSecuritySensitiveSettingWithSources("modelPicker").find((r) => e.includes(r.source));
   return t ? { picker: t.value, source: t.source } : void 0;
 }
@@ -16325,7 +16325,7 @@ dL({
   identitySpelling: (e) => firstPartyNameToCanonical(Xt(e.toLowerCase()).trim()),
   settingsBehavesAs: Are,
   hasSettingsBehavesAs: yre,
-  settingsGeneration: () => da().policy,
+  settingsGeneration: () => getHostSettingsStore().policy,
   knowledgeGeneration: () => null,
 });
 Yir((e, t) => BN(e, ...t));
@@ -23771,7 +23771,7 @@ function isCCREnvironmentKind(e) {
 }
 var mle = 120000;
 function _le(e) {
-  let t = typeof e.message === "string" ? Vn(e.message, 500).trim() : "";
+  let t = typeof e.message === "string" ? formatDisplayText(e.message, 500).trim() : "";
   if (t && t !== "<nil>") return t;
   let r = /^[A-Za-z][A-Za-z0-9_]{0,63}$/,
     o = [e.error_type, e.error_kind].find(
@@ -24030,7 +24030,7 @@ async function yl(e, t, r, o) {
       ok: !1,
       reason:
         typeof D === "string"
-          ? `${Vn(D, 300)} (HTTP ${I.status})`
+          ? `${formatDisplayText(D, 300)} (HTTP ${I.status})`
           : `HTTP ${I.status}`,
       status: I.status,
     };
@@ -25051,7 +25051,7 @@ var WRITE_TOOL_NAME = "Write";
 var GLOB_TOOL_NAME = "Glob";
 var GREP_TOOL_NAME = "Grep";
 function Yz(e) {
-  return Js(`${Oa(e)}tool`)?.serverName;
+  return Js(`${getMcpToolPrefix(e)}tool`)?.serverName;
 }
 function Gg(e) {
   let t = new Set();
@@ -29844,7 +29844,7 @@ async function workspacePersistedTrustThroughBackend(e) {
 }
 function isLocalSettingsGitTracked({ onIndeterminate: e }) {
   if (!checkHasTrustDialogAccepted()) {
-    if (Ode() && X6(he(), findCanonicalGitRoot) === lt(he())) return !1;
+    if (Ode() && resolveLocalSettingsStoreRoot(he(), findCanonicalGitRoot) === lt(he())) return !1;
     return !0;
   }
   let t = bB();
@@ -29880,7 +29880,7 @@ function Ode() {
 function kde() {
   let e = he(),
     t = [e],
-    r = X6(e, findCanonicalGitRoot);
+    r = resolveLocalSettingsStoreRoot(e, findCanonicalGitRoot);
   if (r !== lt(e)) t.push(r);
   let o = !1,
     d = !1;
@@ -30385,7 +30385,7 @@ function OB() {
   if (_o()) return;
   e.setFreshnessWatcherStarted(!0);
   let t = getGlobalClaudeFile();
-  (sxt(t, { interval: CB, persistent: !1 }, (r) => {
+  (watchFileSafely(t, { interval: CB, persistent: !1 }, (r) => {
     if (r.mtimeMs <= e.cache.mtime) return;
     if (e.pendingWriteCount(t) > 0) {
       e.deferExternalRefresh(r);
@@ -30651,7 +30651,7 @@ function getRemoteControlAtStartup() {
 function getDaemonColdStart() {
   let e = process.env.CLAUDE_CODE_DAEMON_COLD_START;
   if (e === "transient" || e === "ask") return e;
-  let t = Pw()?.settings.daemonColdStart;
+  let t = getMergedSettings()?.settings.daemonColdStart;
   if (t !== void 0) return t;
   return Cde?.daemonColdStartGbDefault() ?? "transient";
 }
@@ -30710,7 +30710,7 @@ async function _c(e, t, r) {
   Bi(e);
   let o = !1;
   try {
-    let d = ea(e, (p, _) => b(p) !== b(DEFAULT_GLOBAL_CONFIG[_]));
+    let d = pickBy(e, (p, _) => b(p) !== b(DEFAULT_GLOBAL_CONFIG[_]));
     if (isHoverRestEnabled() && r !== void 0) {
       await ae().mkdir(Ql(getGlobalClaudeFile()));
       let p = await r.write(STORAGE_KEYS.globalConfig(), b(d, null, 2), {
@@ -30951,7 +30951,7 @@ async function Hi(e, t, r, o, d, p) {
           !1
         );
     }
-    let te = ea(V, (re, ce) => b(re) !== b(E[ce]));
+    let te = pickBy(V, (re, ce) => b(re) !== b(E[ce]));
     return (
       await Sc(e, U),
       await wb(e, b(te, null, 2), {
@@ -31185,7 +31185,7 @@ async function $de(e, t, r, o, d) {
                 }
               );
           }
-          let Ke = ea(Oe, (xe, Ze) => b(xe) !== b(_[Ze]));
+          let Ke = pickBy(Oe, (xe, Ze) => b(xe) !== b(_[Ze]));
           return {
             write: b(Ke, null, 2),
             result: {
@@ -31695,7 +31695,7 @@ function saveCurrentProjectConfigSyncForExit(e) {
     if (E === _) return;
     let C = Nt({ ...p, projects: { ...p.projects, [o]: E } });
     if (Lt(C)) return;
-    let I = ea(C, (D, x) => b(D) !== b(DEFAULT_GLOBAL_CONFIG[x]));
+    let I = pickBy(C, (D, x) => b(D) !== b(DEFAULT_GLOBAL_CONFIG[x]));
     Kxn(r, b(I, null, 2), { encoding: "utf-8", mode: 384, allowSymlink: !0 });
   } catch {}
 }
@@ -31721,7 +31721,7 @@ function saveGlobalConfigSyncForExit(e) {
     if (p === d) return;
     let _ = Nt({ ...p, projects: Li(d.projects, p.projects) });
     if (Lt(_)) return;
-    let E = ea(_, (C, I) => b(C) !== b(DEFAULT_GLOBAL_CONFIG[I]));
+    let E = pickBy(_, (C, I) => b(C) !== b(DEFAULT_GLOBAL_CONFIG[I]));
     Kxn(r, b(E, null, 2), { encoding: "utf-8", mode: 384, allowSymlink: !0 });
   } catch {}
 }
@@ -31993,13 +31993,13 @@ function getMemoryPath(e) {
     case "Project":
       return Ve(t, "CLAUDE.md");
     case "Managed":
-      return Ve(Tb(), "CLAUDE.md");
+      return Ve(getManagedSettingsDirPath(), "CLAUDE.md");
     case "AutoMem":
       return getAutoMemEntrypoint();
   }
 }
 function getManagedClaudeRulesDir() {
-  return Ve(Tb(), ".claude", "rules");
+  return Ve(getManagedSettingsDirPath(), ".claude", "rules");
 }
 function getUserClaudeRulesDir() {
   return Ve(getClaudeConfigDir(), "rules");
@@ -34772,9 +34772,9 @@ async function _fe(e) {
   }
   let o = r.stdout?.trim();
   if (!o) throw Error("did not return a value");
-  let d = tlr(o, { maxLength: sfe });
+  let d = findTextIssue(o, { maxLength: sfe });
   if (d) {
-    let p = a8t(d, i8t(o));
+    let p = describeTextIssue(d, measureText(o));
     throw new R(
       `returned output that cannot be used as an API key: ${p}. The script must print only the key to stdout.`,
       "apiKeyHelper output rejected: not a printable-ASCII token",

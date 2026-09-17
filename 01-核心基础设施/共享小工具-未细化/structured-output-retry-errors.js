@@ -10,7 +10,7 @@
 import { truncateToCodeUnits, normalizeWhitespace, stripInvisibleCharacters } from "../核心工具-字符串与文本/string-utils.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { LINE_BREAK_REGEX, sanitizeSubagentText } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ti } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { STRUCTURED_OUTPUT_TOOL_NAME } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 var DEFAULT_MAX_STRUCTURED_OUTPUT_RETRIES = 5,
   STRUCTURED_OUTPUT_RETRACTED_MESSAGE =
     "Structured output was retracted by a model fallback and no retry produced a valid result",
@@ -65,7 +65,7 @@ function a(t) {
     if (e?.type !== "assistant") continue;
     let n = e.message.content;
     if (!Array.isArray(n)) continue;
-    for (let o of n) if (o.type === "tool_use" && o.name === ti) r.add(o.id);
+    for (let o of n) if (o.type === "tool_use" && o.name === STRUCTURED_OUTPUT_TOOL_NAME) r.add(o.id);
   }
   if (r.size === 0) return;
   for (let e = t.length - 1; e >= 0; e--) {

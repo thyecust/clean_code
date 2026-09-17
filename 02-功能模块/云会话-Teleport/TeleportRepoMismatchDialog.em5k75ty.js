@@ -21,7 +21,7 @@ import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
-import { kJt, xJt } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { doesDirectoryRemoteMatchRepo, removeTrackedRepoPath } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
@@ -56,11 +56,11 @@ function TeleportRepoMismatchDialog(ro) {
         s();
         return;
       }
-      if ((q(!0), j(null), await kJt(c, a))) {
+      if ((q(!0), j(null), await doesDirectoryRemoteMatchRepo(c, a))) {
         k(c);
         return;
       }
-      xJt(a, c, v);
+      removeTrackedRepoPath(a, c, v);
       let ao = i.filter((io) => io !== c);
       (no(ao),
         q(!1),

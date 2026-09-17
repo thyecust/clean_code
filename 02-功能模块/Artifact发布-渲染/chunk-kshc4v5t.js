@@ -15,7 +15,7 @@ import { $h, EYe, ne, xer, hTt, Her, Ier } from "./chunk-rr78st95.js";
 import { ARTIFACT_WATCH_LIFECYCLE_ORIGIN, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
-  qwt,
+  getArtifactReadInstruction,
   VER_SHAPE,
   recordOwnPublish,
   isOwnPublishedVer,
@@ -27,17 +27,17 @@ import {
   derivePublishContextFrom,
   mainObservedArtifactVersion,
   markAutoReactNoticePending,
-  Dqt,
-  AJ,
-  RN,
-  Ife,
-  Pfe,
-  Lqt,
-  Mqt,
-  IC,
-  yer,
-  gYe,
-  Ser,
+  deriveLiveSubscriptionTransport,
+  isArtifactGoneError,
+  isArtifactOtherOrgError,
+  ARTIFACT_OTHER_ORG_MESSAGE,
+  OTHER_ORG_SIGN_IN_HINT,
+  FRAME_REQUEST_TIMEOUT_MS,
+  fetchArtifactBootResponse,
+  readArtifactBoot,
+  readArtifactSubscription,
+  isTransientHttpStatus,
+  renewArtifactWatchToken,
 } from "./chunk-01ymf0ar.js";
 import { getUserAgent, isActingAsBgJob, sameOwnerAccount, getFeatureValue_CACHED_MAY_BE_STALE, readFreshOauthAccountFromDisk } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -122,26 +122,26 @@ import {
 import { ybe, R1t, Wdt, v7, WPe, Hqe, wsEgressDenyReason } from "../工具Monitor/工具Monitor.981fw9dy.js";
 import { isArtifactReplyYieldEnabled, registerPendingClaim, dropDeliveredSlug } from "./artifact-reply-yield.js";
 import {
-  k9,
-  _2,
-  QPe,
-  rpt,
-  x7,
-  AWn,
-  Xin,
-  nT,
-  Zqe,
-  q1t,
-  V1t,
-  OWn,
-  LWn,
-  Hbe,
-  rze,
-  Zu,
-  fpt,
-  oze,
-  H7,
-  x9,
+  describeArtifactCommentsAction,
+  selectArtifactToolsetText,
+  ensureAutoReactLedgerLoaded,
+  setAutoReactLedgerStorage,
+  scheduleAutoReactLedgerWrite,
+  clearAutoReactLedger,
+  resetAutoReactLedgerForSlug,
+  isArtifactCommentsAvailable,
+  stripWatchArtifactFlags,
+  removeWatchArtifactArg,
+  initCommentCensus,
+  markCommentCensusDirty,
+  deleteCommentCensusEntry,
+  resolveLiveSessionHolder,
+  isArtifactAutoReactOptedIn,
+  isArtifactAutoReactEnabled,
+  disarmArtifactAutoReact,
+  resetAutoReactStateForSlug,
+  formatArtifactDisplayName,
+  scheduleArtifactAutoReactWake,
 } from "./chunk-p1dkvpxj.js";
 import { ian, r9n, H9, hpt, Ibe, a9n } from "./chunk-5gz5xvw9.js";
 import { hasLiveAutoReactSupervision } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
@@ -328,7 +328,7 @@ async function Vn(e, t) {
   let i,
     d = Date.now();
   try {
-    i = await IC({ slug: e.slug, env: Vo() }, t.feature, e.abort.signal, {
+    i = await readArtifactBoot({ slug: e.slug, env: Vo() }, t.feature, e.abort.signal, {
       agentPeer: !0,
       speculative: !0,
       credentials: e.context.credentials,
@@ -338,8 +338,8 @@ async function Vn(e, t) {
   }
   if (!t.isCurrent()) return { outcome: "stale" };
   if (i.err !== null) {
-    if (RN(i)) return { outcome: "other_org" };
-    if (AJ(i)) return { outcome: "not_found" };
+    if (isArtifactOtherOrgError(i)) return { outcome: "other_org" };
+    if (isArtifactGoneError(i)) return { outcome: "not_found" };
     return {
       outcome: "boot_failed",
       status: i.status,
@@ -421,7 +421,7 @@ function $n(e, t, r) {
     case "dial_error":
       return t.deterministic ? "refused" : "dropped";
     case "boot":
-      if (gYe(t.status)) return "unavailable";
+      if (isTransientHttpStatus(t.status)) return "unavailable";
       if (t.noAnswer)
         return t.elapsedMs >= r.stallThresholdMs ? "unavailable" : "dropped";
       return "refused";
@@ -434,7 +434,7 @@ function $n(e, t, r) {
       }
       let i = v7(t.detail);
       if (i !== null)
-        return gYe(i.status) || i.cfMitigated || i.status === Jr
+        return isTransientHttpStatus(i.status) || i.cfMitigated || i.status === Jr
           ? "unavailable"
           : "refused";
       return t.detail === Wdt || t.ageMs >= r.stallThresholdMs
@@ -1102,7 +1102,7 @@ function Ti(e, t, r) {
 function Ei(e, t) {
   let r = ne().live,
     i = r.supervisors.get(e)?.context.storageV5 ?? r9n();
-  rpt(i);
+  setAutoReactLedgerStorage(i);
   let d;
   if (t.taskStop) {
     if ((ne().durable.stopLatches.confirmStop(e), !isSlugYielded(e)))
@@ -1123,7 +1123,7 @@ function Ei(e, t) {
     if (!xi(r, e, t)) return !1;
     (te(r, e), (d = !0));
   }
-  if (t.modelOrigin !== !0) q1t(e, i);
+  if (t.modelOrigin !== !0) removeWatchArtifactArg(e, i);
   return d;
 }
 function ur(e) {
@@ -1146,7 +1146,7 @@ function ur(e) {
   else te(i, t);
   for (let p of l) ((o = !0), e.killRow(p));
   if (o && isSlugSwept(t)) pauseAutoRepliesForSlug(t);
-  return (Xin(t), { wasWatching: o });
+  return (resetAutoReactLedgerForSlug(t), { wasWatching: o });
 }
 function xi(e, t, r) {
   let i = e.supervisors.get(t);
@@ -1194,7 +1194,7 @@ function sr(e, t) {
           !e.inFlightSubscribes.has(t.slug) &&
           frameLiveWatchRows(t.context, t.slug).length === 0)
       )
-        ((r.watchedSince = Date.now()), (r.armedVia = t.armedVia), V1t(t.slug));
+        ((r.watchedSince = Date.now()), (r.armedVia = t.armedVia), initCommentCensus(t.slug));
       else if (t.armedVia === "publish") r.armedVia = "publish";
       else if (r.armedVia === "mcp_write") r.armedVia = t.armedVia;
       if (d && r.armedVia !== "mcp_write") refreshSummonArmForSlug(e, t.slug);
@@ -1225,7 +1225,7 @@ function sr(e, t) {
       autoReactWiring: we(void 0, t.autoReactWiring, t.humanTurnWiring === !0),
     }),
   };
-  return (e.supervisors.set(t.slug, i), V1t(t.slug, i.watchedSince), i);
+  return (e.supervisors.set(t.slug, i), initCommentCensus(t.slug, i.watchedSince), i);
 }
 function Ci(e, t, r, i) {
   if (e.supervisors.get(r) === t) t.taskId = i;
@@ -1233,7 +1233,7 @@ function Ci(e, t, r, i) {
 function Wi(e, t) {
   let { rewatchTiming: r } = e;
   if (r.idleTtlMs <= 0) return !1;
-  let i = t.autoReactWiring !== void 0 && Zu() && (!isSlugStopped(t.slug) || isSlugSwept(t.slug));
+  let i = t.autoReactWiring !== void 0 && isArtifactAutoReactEnabled() && (!isSlugStopped(t.slug) || isSlugSwept(t.slug));
   return (
     !t.explicit &&
     !i &&
@@ -1309,12 +1309,12 @@ function Oi(e, t, r) {
 }
 function Ii(e) {
   let t = v7(e);
-  return t !== null && (gYe(t.status) || t.cfMitigated);
+  return t !== null && (isTransientHttpStatus(t.status) || t.cfMitigated);
 }
 function Mi(e) {
   return (
     Math.max(e.stallMaxMs, e.longStallMaxMs) +
-    2 * Lqt +
+    2 * FRAME_REQUEST_TIMEOUT_MS +
     e.handshakeDeadlineMs +
     60000
   );
@@ -1429,7 +1429,7 @@ function he(
   let l = t.resumeAnnounce;
   if (l !== void 0) ((t.resumeAnnounce = void 0), l.onGiveUp());
   if (t.armedVia === "mcp_write") return;
-  let p = H7(() => t.autoReactWiring?.title, t.url);
+  let p = formatArtifactDisplayName(() => t.autoReactWiring?.title, t.url);
   enqueuePendingNotification({
     value: buildTaskNotification({
       taskType: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
@@ -1535,7 +1535,7 @@ async function Pi(e, t) {
   i.probed = !0;
   let d;
   try {
-    d = await Mqt({ slug: t, env: Vo() }, r.abort.signal, {
+    d = await fetchArtifactBootResponse({ slug: t, env: Vo() }, r.abort.signal, {
       agentPeer: rt(t),
       syncLive: rt(t),
       credentials: r.context.credentials,
@@ -1544,12 +1544,12 @@ async function Pi(e, t) {
     return;
   }
   if (e.supervisors.get(t) !== r || r.stopped) return;
-  if (d.err === null && Dqt(d.data) !== void 0) {
+  if (d.err === null && deriveLiveSubscriptionTransport(d.data) !== void 0) {
     logFeatureOk("artifact_live_subscribe", { read_refused_boot_ok: !0 });
     return;
   }
-  if (d.err !== null && (d.status === 404 || RN(d))) {
-    let p = RN(d) ? "other_org" : "not_found";
+  if (d.err !== null && (d.status === 404 || isArtifactOtherOrgError(d))) {
+    let p = isArtifactOtherOrgError(d) ? "other_org" : "not_found";
     (logFeatureSad("artifact_live_subscribe", `read_stopped_${p}`),
       he(e, r, frameLiveSkipReasonPhrase(p) ?? p, Qt[p] ?? p, { advice: noRewatchAdvice(p) }));
     for (let _ of Object.values(r.context.taskRegistry.all()))
@@ -1593,8 +1593,8 @@ function Di(e) {
     let A = ne().live.supervisors.get(t);
     if (A && !A.stopped && A.armedVia !== "mcp_write")
       A.lastActivityAt = Date.now();
-    if ((OWn(t), o && Zu()))
-      x9({
+    if ((markCommentCensusDirty(t), o && isArtifactAutoReactEnabled()))
+      scheduleArtifactAutoReactWake({
         slug: t,
         url: r,
         env: o.env,
@@ -1638,12 +1638,12 @@ function Di(e) {
       l?.(A);
     } catch {}
     logFeatureOk("artifact_live_subscribe", { notified: !0, ...U });
-    let ot = `Artifact ${r} appears to have been republished elsewhere (by another session, or by someone saving from the page itself) \u2014 it is now version ${A}. Your copy is stale; re-read before editing or republishing (${qwt()}).`;
+    let ot = `Artifact ${r} appears to have been republished elsewhere (by another session, or by someone saving from the page itself) \u2014 it is now version ${A}. Your copy is stale; re-read before editing or republishing (${getArtifactReadInstruction()}).`;
     enqueueCoalescedArtifactNotice({
       queue: ar,
       slug: t,
       family: "artifact-changed",
-      artifactName: H7(p, r),
+      artifactName: formatArtifactDisplayName(p, r),
       detail: ot,
       mergeDetails: "latest",
     });
@@ -1746,13 +1746,13 @@ function mr(e, t) {
   );
 }
 function Hi(e) {
-  return isAutoReactArmedTask(e, Zu, { includeStopLatched: !0 });
+  return isAutoReactArmedTask(e, isArtifactAutoReactEnabled, { includeStopLatched: !0 });
 }
 function isClaimableAutoReactSubscription(e) {
-  return isAutoReactArmedTask(e, Zu);
+  return isAutoReactArmedTask(e, isArtifactAutoReactEnabled);
 }
 function killAutoReactSubscriptions(e, t) {
-  (rpt(t?.storageV5), resetWakeState(), bumpScanGeneration());
+  (setAutoReactLedgerStorage(t?.storageV5), resetWakeState(), bumpScanGeneration());
   let r = ne().live,
     i = t?.durable !== !1,
     d = 0,
@@ -1767,7 +1767,7 @@ function killAutoReactSubscriptions(e, t) {
         if (
           (killMonitorTask(l.id, e, { quiet: !0, userStop: !0 }), l.autoReactSlug !== void 0)
         )
-          (oze(l.autoReactSlug), o.add(l.autoReactSlug));
+          (resetAutoReactStateForSlug(l.autoReactSlug), o.add(l.autoReactSlug));
       } else if (l.autoReactSlug !== void 0) o.add(l.autoReactSlug);
       if (!p && !(l.autoReactSlug !== void 0 && !i && isSlugStopped(l.autoReactSlug))) {
         if ((d++, !i && l.autoReactSlug !== void 0))
@@ -1777,19 +1777,19 @@ function killAutoReactSubscriptions(e, t) {
   for (let l of r.supervisors.values()) {
     if (l.autoReactWiring === void 0) continue;
     if (i) delete l.autoReactWiring;
-    if (i && Zu() && (!isSlugStopped(l.slug) || o.has(l.slug)))
+    if (i && isArtifactAutoReactEnabled() && (!isSlugStopped(l.slug) || o.has(l.slug)))
       if (mr(e, l.slug) || r.inFlightSubscribes.has(l.slug)) Ti(r, l.slug, e);
-      else (te(r, l.slug), q1t(l.slug, l.context.storageV5));
-    if (!o.has(l.slug) && Zu() && !isSlugStopped(l.slug))
-      if ((o.add(l.slug), d++, i)) (oze(l.slug), stopSlug(l.slug));
+      else (te(r, l.slug), removeWatchArtifactArg(l.slug, l.context.storageV5));
+    if (!o.has(l.slug) && isArtifactAutoReactEnabled() && !isSlugStopped(l.slug))
+      if ((o.add(l.slug), d++, i)) (resetAutoReactStateForSlug(l.slug), stopSlug(l.slug));
       else stopSlugAndSweep(l.slug);
   }
-  if (i) fpt({ storageV5: t?.storageV5 });
-  else if (d > 0) x7({ flush: !0, storageV5: t?.storageV5 });
+  if (i) disarmArtifactAutoReact({ storageV5: t?.storageV5 });
+  else if (d > 0) scheduleAutoReactLedgerWrite({ flush: !0, storageV5: t?.storageV5 });
   return d;
 }
 function zt(e, t, r, i) {
-  if (!isSlugSwept(t) || isSlugSweptOrYielded(t) || !Zu()) return null;
+  if (!isSlugSwept(t) || isSlugSweptOrYielded(t) || !isArtifactAutoReactEnabled()) return null;
   let d = hr(e, t);
   if (d === void 0) return null;
   i?.();
@@ -1799,7 +1799,7 @@ function zt(e, t, r, i) {
   if (!isMonitorSocketOpen(d.id) || p === null) return "cleared";
   return (
     r?.(p),
-    x9({
+    scheduleArtifactAutoReactWake({
       ...p,
       seed: !1,
       confirm: void 0,
@@ -1831,12 +1831,12 @@ function Bi(e) {
   return r;
 }
 function hasStoppableAutoReactSupervision() {
-  return Zu() && hasLiveAutoReactSupervision();
+  return isArtifactAutoReactEnabled() && hasLiveAutoReactSupervision();
 }
 function frameLiveWatchRows(e, t) {
   let r = [],
     i,
-    d = () => (i ??= Zu()),
+    d = () => (i ??= isArtifactAutoReactEnabled()),
     o = ne(),
     l = o.autoReact.userDisarmed;
   for (let p of Object.values(e.taskRegistry.all())) {
@@ -1892,7 +1892,7 @@ function frameLiveStoppedRows(e, t) {
   let { live: r, autoReact: i, wakes: d } = ne(),
     o = [],
     l,
-    p = () => (l ??= Zu());
+    p = () => (l ??= isArtifactAutoReactEnabled());
   for (let _ of d.stoppedSlugs) {
     if (t !== void 0 && _ !== t) continue;
     if (
@@ -1963,7 +1963,7 @@ function Bt(e, t) {
   if (r === void 0 || r.stopped) return !1;
   return (
     r.explicit ||
-    (r.autoReactWiring !== void 0 && Zu() && (!isSlugStopped(t) || isSlugSwept(t))) ||
+    (r.autoReactWiring !== void 0 && isArtifactAutoReactEnabled() && (!isSlugStopped(t) || isSlugSwept(t))) ||
     cr(e, r)
   );
 }
@@ -1982,9 +1982,9 @@ function teardownFrameLiveForProcessHandoff() {
   let e = ne().live;
   ((e.handoffGeneration += 1),
     e.bootingWiredArms.clear(),
-    fae(Zqe(_B())),
-    x7({ flush: !0 }),
-    AWn(),
+    fae(stripWatchArtifactFlags(_B())),
+    scheduleAutoReactLedgerWrite({ flush: !0 }),
+    clearAutoReactLedger(),
     resetWakeState(),
     bumpScanGeneration());
   for (let t of [...e.supervisors.keys()]) te(e, t);
@@ -2046,13 +2046,13 @@ function unwatchFrameLive(e, t, r) {
   return (logFeatureOk("artifact_live_subscribe", { unwatched: i }), { wasWatching: i });
 }
 function endFrameLiveWatchOfDeletedArtifact(e, t) {
-  q1t(e, t.storageV5);
+  removeWatchArtifactArg(e, t.storageV5);
   let { wasWatching: r } = Sr(e, t);
   if (r) logFeatureOk("artifact_live_subscribe", { unwatched: !0, artifact_deleted: !0 });
 }
 function Sr(e, t) {
   let r = ne().live;
-  (rpt(t.storageV5), r.armOutcomes.delete(e), qt(r, e), LWn(e));
+  (setAutoReactLedgerStorage(t.storageV5), r.armOutcomes.delete(e), qt(r, e), deleteCommentCensusEntry(e));
   let i = r.supervisors.get(e)?.autoReactWiring !== void 0,
     { wasWatching: d } = ur({
       slug: e,
@@ -2068,10 +2068,10 @@ function Sr(e, t) {
           ),
           l && o.autoReactSlug !== void 0)
         )
-          oze(o.autoReactSlug);
+          resetAutoReactStateForSlug(o.autoReactSlug);
       },
     });
-  if (i) oze(e);
+  if (i) resetAutoReactStateForSlug(e);
   return { wasWatching: d };
 }
 async function watchFrameLive(e) {
@@ -2086,7 +2086,7 @@ async function watchFrameLive(e) {
   } = e;
   if (!isSocketHoldingPublishContext(i)) return { outcome: "skipped", reason: "publish_context" };
   let _ = ne().live,
-    S = l !== void 0 && p === !0 && Zu(),
+    S = l !== void 0 && p === !0 && isArtifactAutoReactEnabled(),
     v = !S
       ? void 0
       : !dse(o.messages)
@@ -2261,7 +2261,7 @@ async function resumeFrameLiveAutoReplies(e) {
   if (!e.commentVerbsInSchema)
     return { outcome: "skipped", reason: "comments_off" };
   if (!isSlugStopped(t)) return { outcome: "skipped", reason: "not_stopped" };
-  if (!Zu()) return { outcome: "skipped", reason: "not_enabled" };
+  if (!isArtifactAutoReactEnabled()) return { outcome: "skipped", reason: "not_enabled" };
   let l = ne().live;
   if (o.abortController.signal.aborted)
     return { outcome: "skipped", reason: "cancelled" };
@@ -2272,7 +2272,7 @@ async function resumeFrameLiveAutoReplies(e) {
       (S) => {
         (markAutoReactNoticePending(t),
           S.notify({
-            summary: formatAutoRepliesResumedSummary(H7(S.getTitle, r)),
+            summary: formatAutoRepliesResumedSummary(formatArtifactDisplayName(S.getTitle, r)),
             detail: `Auto-replies on artifact ${r} were resumed by a resume_replies request \u2014 they had been paused when the user interrupted the session (Ctrl+C or Stop). ${Ht}`,
           }));
       },
@@ -2442,7 +2442,7 @@ async function maybeSubscribeFrameLive(e) {
         ? "bare_watch_comments_off"
         : A.userDisarmed
           ? "bare_watch_session_disarmed"
-          : !rze()
+          : !isArtifactAutoReactOptedIn()
             ? "bare_watch_autoreact_off"
             : isSlugStopped(t) &&
                 !x &&
@@ -2470,7 +2470,7 @@ async function maybeSubscribeFrameLive(e) {
   return R;
 }
 function Me() {
-  return !ne().autoReact.userDisarmed && rze();
+  return !ne().autoReact.userDisarmed && isArtifactAutoReactOptedIn();
 }
 function Kt(e, t, r) {
   return `live updates for artifact ${e} (${armedViaWording(labelledArmedVia(t, r)).task})`;
@@ -2526,8 +2526,8 @@ var AUTO_REPLIES_ARMED_TOKEN = "auto-replies armed",
   AUTO_REPLIES_DENIED_ROW =
     "a permission rule or setting blocked the last comment's auto-reply (no notice); later comments are still checked";
 function $t() {
-  return nT()
-    ? `; a comment on it sent to Claude also reaches this session while this artifact's status row says ${AUTO_REPLIES_ARMED_TOKEN}, and plain comments never notify \u2014 read them with ${_2('action "comments"', () => `the ${k9("comments")}`)} when asked`
+  return isArtifactCommentsAvailable()
+    ? `; a comment on it sent to Claude also reaches this session while this artifact's status row says ${AUTO_REPLIES_ARMED_TOKEN}, and plain comments never notify \u2014 read them with ${selectArtifactToolsetText('action "comments"', () => `the ${describeArtifactCommentsAction("comments")}`)} when asked`
     : "";
 }
 function frameLiveSkipReasonPhrase(e) {
@@ -2547,7 +2547,7 @@ function frameLiveSkipReasonPhrase(e) {
     case "not_found":
       return "no such artifact for this account (it was deleted, or it has not been shared with the user)";
     case "other_org":
-      return Ife;
+      return ARTIFACT_OTHER_ORG_MESSAGE;
     case "not_editor":
       return "a restored publish decision does not carry for an artifact this account cannot publish to";
     case "no_subscription_token":
@@ -2579,7 +2579,7 @@ function frameLiveSubscriptionLine(e) {
     case "publish_adopted":
       return `Live subscription: this agent holds no watch; the session that launched it takes over live updates for this artifact when this agent finishes normally \u2014 that session is then notified when this artifact is republished elsewhere${$t()}.`;
     case "remote_unsupported": {
-      let t = nT();
+      let t = isArtifactCommentsAvailable();
       return `Live subscription: not supported yet from remote sessions \u2014 nothing notifies this session of new versions${t ? " or of comments sent to Claude" : ""}; re-read the artifact${t ? " (and its comments)" : ""} when the user asks.`;
     }
     default: {
@@ -2613,7 +2613,7 @@ async function pe(e, t) {
     explicit: S = !1,
     signal: v,
   } = t;
-  QPe();
+  ensureAutoReactLedgerLoaded();
   let E = e.supervisors.get(r)?.carriedVer;
   e.endAll ??= ji;
   let L =
@@ -2736,7 +2736,7 @@ async function pe(e, t) {
         Me())
       )
         a9n(r, { storageV5: l.storageV5 });
-      if (Q && rze())
+      if (Q && isArtifactAutoReactOptedIn())
         e.bootingWiredArms.set(r, {
           title: t.autoReactWiring.title,
           freshPublish: !0,
@@ -2777,7 +2777,7 @@ async function pe(e, t) {
     en = e.handoffGeneration;
   if (
     (setFrameLiveUserStopObserver(Ei),
-    setAutoReactDeliberateStopObserver(Xin),
+    setAutoReactDeliberateStopObserver(resetAutoReactLedgerForSlug),
     setAutoReactHumanTurnObserver(() => Bi(l.taskRegistry)),
     e.inFlightSubscribes.add(r),
     e.inFlightGenerations.set(r, en),
@@ -2792,7 +2792,7 @@ async function pe(e, t) {
       t.requireEditor !== !0 &&
       t.machineArm !== !0 &&
       t.userResumeWiring !== !0 &&
-      rze()
+      isArtifactAutoReactOptedIn()
     )
       e.bootingWiredArms.set(r, {
         title: t.autoReactWiring.title,
@@ -2843,7 +2843,7 @@ async function pe(e, t) {
       try {
         let G;
         if (w) {
-          let be = await Ser(r, v, l.credentials);
+          let be = await renewArtifactWatchToken(r, v, l.credentials);
           if (be.err === null) ((G = be), (tn = !0));
           else {
             logFeatureSad(
@@ -2856,7 +2856,7 @@ async function pe(e, t) {
           }
         }
         ((nn = Date.now()),
-          (M = G ?? (await yer(r, v, l.credentials, { syncLive: at }))));
+          (M = G ?? (await readArtifactSubscription(r, v, l.credentials, { syncLive: at }))));
       } catch {
         return J(
           e,
@@ -2874,7 +2874,7 @@ async function pe(e, t) {
           ? "cancelled"
           : M.status === 404
             ? "not_found"
-            : RN(M)
+            : isArtifactOtherOrgError(M)
               ? "other_org"
               : "boot_failed",
         G =
@@ -3106,7 +3106,7 @@ ${Nt(w.detail)}`,
                     kind: "task-notification",
                     source: "artifact-auto-react",
                     slug: r,
-                    displayName: H7(Ue, i),
+                    displayName: formatArtifactDisplayName(Ue, i),
                   },
                   agentId: ze(),
                 });
@@ -3246,14 +3246,14 @@ ${Nt(w.detail)}`,
                 Hr =
                   ce.liftedAtScanGeneration.get(r) === ce.scanGeneration ||
                   ce.humanTurnAtScanGeneration === ce.scanGeneration;
-              if (wn && !Hr && !isSlugStopped(r) && Zu())
+              if (wn && !Hr && !isSlugStopped(r) && isArtifactAutoReactEnabled())
                 (stopSlugAndSweep(r),
                   emitAutoReactStopNotification(1, [], {
                     catchUp: !1,
                     nameChordGesture: !ke(),
                     passive: !ke(),
                   }),
-                  x7({ flush: !0 }));
+                  scheduleAutoReactLedgerWrite({ flush: !0 }));
               if (A !== void 0 && !v.aborted) R.clearByApprovedRewatch(r, A);
               if (W !== void 0) getWakeState(r).lastWakeArgs = { slug: r, url: i, ...W };
               let vn = ee && F();
@@ -3272,31 +3272,31 @@ ${Nt(w.detail)}`,
                   (__t(r),
                     ce.liftedAtScanGeneration.set(r, ce.scanGeneration),
                     refreshSummonArmForSlug(e, r),
-                    x9({ slug: r, url: i, ...W, seed: !1 }));
+                    scheduleArtifactAutoReactWake({ slug: r, url: i, ...W, seed: !1 }));
                 else if (isSlugStopped(r) && (wn || Gr || vn || !(gn || ee)));
                 else if (isSlugStopped(r)) {
                   let N = isSlugSwept(r),
                     fe = isSlugYielded(r);
-                  if (Zu() && (ee || !N || fe))
+                  if (isArtifactAutoReactEnabled() && (ee || !N || fe))
                     (markAutoReactNoticePending(r),
                       W.notify({
-                        summary: (ee ? formatAutoRepliesResumedSummary : formatAutoRepliesReenabledSummary)(H7(W.getTitle, i)),
+                        summary: (ee ? formatAutoRepliesResumedSummary : formatAutoRepliesReenabledSummary)(formatArtifactDisplayName(W.getTitle, i)),
                         detail: `Auto-replies on artifact ${i} were ${ee ? "resumed by a resume_replies request" : "re-enabled by this publish"} \u2014 they had been ${fe ? "handed to another session of this conversation that resumed it or published there" : N ? "paused when the user interrupted the session (Ctrl+C or Stop) and the watch had since dropped" : "stopped when their live-updates task was killed"}. ${N && !fe ? Ht : yi}`,
                       }));
-                  if (!N || fe) oze(r);
+                  if (!N || fe) resetAutoReactStateForSlug(r);
                   (forgetYieldedSlug(r),
                     dropDeliveredSlug(r),
                     __t(r),
                     refreshSummonArmForSlug(e, r),
-                    x9({ slug: r, url: i, ...W, seed: !0 }));
+                    scheduleArtifactAutoReactWake({ slug: r, url: i, ...W, seed: !0 }));
                 } else {
                   if (ce.pendingResumeDisclosure.delete(r))
                     (markAutoReactNoticePending(r),
                       W.notify({
-                        summary: formatAutoRepliesResumedSummary(H7(W.getTitle, i)),
+                        summary: formatAutoRepliesResumedSummary(formatArtifactDisplayName(W.getTitle, i)),
                         detail: `Auto-replies on artifact ${i} were resumed by a resume_replies request \u2014 they had been paused when the user interrupted the session (Ctrl+C or Stop); the watch has now connected. ${Ht}`,
                       }));
-                  x9({
+                  scheduleArtifactAutoReactWake({
                     slug: r,
                     url: i,
                     ...W,
@@ -3342,7 +3342,7 @@ ${Nt(w.detail)}`,
                   let fe = await import("../跨会话消息(UDS)/chunk-ddtmwhn7.js"),
                     An = await import("../../01-核心基础设施/共享小工具-未细化/process-record.js"),
                     AnQ = await import("../../01-核心基础设施/核心工具-进程与信号/process-identity.js"),
-                    Ke = await Hbe({
+                    Ke = await resolveLiveSessionHolder({
                       records: await fe.listRegisteredSessionRecords(),
                       sessionId: pn,
                       selfPid: process.pid,
@@ -3367,7 +3367,7 @@ ${Nt(w.detail)}`,
                       })
                     ).yielded.has(r),
                     Rn = !Rt && (N?.lost.has(r) ?? !1),
-                    qe = H7(() => Ue(), i);
+                    qe = formatArtifactDisplayName(() => Ue(), i);
                   enqueuePendingNotification({
                     value: buildTaskNotification({
                       taskType: ARTIFACT_WATCH_LIFECYCLE_ORIGIN,
@@ -3630,7 +3630,7 @@ var Ar = "artifact not found",
   es =
     "there is nothing to retry unless the artifact is shared with the user again",
   Rr = "other organization",
-  ts = `there is nothing to retry until ${Pfe}`,
+  ts = `there is nothing to retry until ${OTHER_ORG_SIGN_IN_HINT}`,
   st =
     "it will not come back on its own \u2014 watch it again only if the user asks or your current task still depends on its republishes",
   ns = "there is nothing to re-watch while live updates are switched off";
@@ -3693,7 +3693,7 @@ function is(e, t, r, i) {
     o = noRewatchAdvice(i) ?? DEFAULT_WATCH_ADVICE;
   Er({
     slug: t,
-    artifactName: H7(r.getTitle, r.url),
+    artifactName: formatArtifactDisplayName(r.getTitle, r.url),
     shortReason: Qt[i] ?? "not armed",
     event: `The live subscription for ${r.url} did not arm \u2014 ${d}. This session is NOT watching it and will not hear when it is republished; ${o}, and do not claim to be watching it meanwhile.`,
   });
@@ -3728,11 +3728,11 @@ function onDurablePublishArmSettled(e) {
   let { reason: o, detail: l, serverMessage: p } = d,
     _ =
       i ??
-      `This session will NOT be woken when ${nT() ? "it is republished or a comment on it is sent to Claude" : "it is republished"}`,
+      `This session will NOT be woken when ${isArtifactCommentsAvailable() ? "it is republished or a comment on it is sent to Claude" : "it is republished"}`,
     S = f1t(o);
   Er({
     slug: t,
-    artifactName: H7(e.getTitle, r),
+    artifactName: formatArtifactDisplayName(e.getTitle, r),
     shortReason: "wake subscription not registered",
     event: `The durable wake subscription for ${r} was not registered (${o}${l !== void 0 ? `: ${l}` : ""}) \u2014 ${Pdt(o, p)} ${_}${S === null ? "" : `; ${S}`} \u2014 do not claim to be subscribed to it meanwhile.`,
   });

@@ -68,7 +68,7 @@ import {
   $t,
   dme,
 } from "./chunk-7s6mt1vg.js";
-import { Nr, jge, jBe, Vn, zt, mke, g8t, h8t } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { isSettingsSourceEnabled, isLoopbackOrMetadataHost, toUrlString, formatDisplayText, formatQuotedDisplayText, MAX_CONSENT_TEXT_LENGTH, ARCHIVE_URL_POLICY_MESSAGE, isAllowedArchiveUrl } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
   httpClient,
   refreshOAuthToken,
@@ -87,8 +87,8 @@ import {
   isWorkspacePersistedTrusted,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
-  die,
-  Hge,
+  getRespelledEnvVarsAndLostCredentials,
+  collectEnvVarsToScrub,
   parseSettingsFile,
   getSettingsFilePathForSource,
   getLegacyLocalSettingsFilePath,
@@ -414,7 +414,7 @@ var mt = 60,
   _t = new Set(aCe);
 async function wt(e) {
   let t = (e.timeout ?? mt) * 1000,
-    r = Vn(e.command, 200);
+    r = formatDisplayText(e.command, 200);
   n(`Plugin command source: running \`${r}\` (timeout ${t}ms)`);
   let o = await Ee(e.command, {
       cwd: ft(),
@@ -423,7 +423,7 @@ async function wt(e) {
       maxStdoutBytes: Re,
       maxStderrBytes: gt,
     }),
-    s = Vn(o.stderr.trim(), ve),
+    s = formatDisplayText(o.stderr.trim(), ve),
     c = s ? ` (stderr: ${s})` : "";
   switch (o.kind) {
     case "exited":
@@ -452,7 +452,7 @@ async function wt(e) {
     case "spawn-error":
       throw new R(
         `Plugin source command \`${r}\` could not be started: ` +
-          Vn(o.message, ve),
+          formatDisplayText(o.message, ve),
         "plugin command source failed to spawn",
       );
   }
@@ -473,17 +473,17 @@ async function wt(e) {
   let d = p[0];
   if (!isAbsolute(d))
     throw new R(
-      `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, which is not an absolute path.`,
+      `Plugin source command \`${r}\` printed \`${formatDisplayText(d, 200)}\`, which is not an absolute path.`,
       "plugin command source printed a relative path",
     );
   if ((getCurrentPlatform() === "windows" && Ww(d)) || jf(d))
     throw new Ui(
-      `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, a network path (UNC or automount), which is not supported as a plugin directory.`,
+      `Plugin source command \`${r}\` printed \`${formatDisplayText(d, 200)}\`, a network path (UNC or automount), which is not supported as a plugin directory.`,
       "plugin command source printed a network path",
     );
   if (jxe(d))
     throw new Ui(
-      `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, which is reached through a link onto a network location (or one that cannot be trusted); that is not supported as a plugin directory.`,
+      `Plugin source command \`${r}\` printed \`${formatDisplayText(d, 200)}\`, which is reached through a link onto a network location (or one that cannot be trusted); that is not supported as a plugin directory.`,
       "plugin command source printed a path through a suspect link",
     );
   let h;
@@ -491,7 +491,7 @@ async function wt(e) {
     h = await realpath(d);
   } catch (w) {
     throw new R(
-      `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, but that path could not be resolved (${A(w) ?? "unknown error"}).`,
+      `Plugin source command \`${r}\` printed \`${formatDisplayText(d, 200)}\`, but that path could not be resolved (${A(w) ?? "unknown error"}).`,
       "plugin command source path does not resolve",
     );
   }
@@ -506,7 +506,7 @@ async function wt(e) {
   } catch (w) {
     let S = A(w);
     throw new R(
-      `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, ` +
+      `Plugin source command \`${r}\` printed \`${formatDisplayText(d, 200)}\`, ` +
         (S === "ENOTDIR"
           ? "which is not a directory."
           : `which could not be read as a directory (${S ?? "unknown error"}).`),
@@ -515,7 +515,7 @@ async function wt(e) {
   }
   if (!_.some((w) => _t.has(w)))
     throw new R(
-      `Plugin source command \`${r}\` printed \`${Vn(d, 200)}\`, but that directory has no plugin content (expected .claude-plugin/ or a commands/, skills/, agents/, hooks/, themes/, output-styles/, monitors/, workflows/, SKILL.md, .mcp.json, or .lsp.json at the top level). Nothing was installed.`,
+      `Plugin source command \`${r}\` printed \`${formatDisplayText(d, 200)}\`, but that directory has no plugin content (expected .claude-plugin/ or a commands/, skills/, agents/, hooks/, themes/, output-styles/, monitors/, workflows/, SKILL.md, .mcp.json, or .lsp.json at the top level). Nothing was installed.`,
       "plugin command source directory has no plugin content",
     );
   return (n(`Plugin command source: resolved plugin directory ${h}`), h);
@@ -590,8 +590,8 @@ function aXe(e) {
 class Ui extends R {}
 function At(e, t) {
   if (t && t.kind !== "none" && t.command === vC(e)) return;
-  let r = Vn(e.command, mke) + (e.mode === "link" ? " [mode: link]" : ""),
-    o = t?.pluginId !== void 0 ? Vn(t.pluginId, 200) : void 0,
+  let r = formatDisplayText(e.command, MAX_CONSENT_TEXT_LENGTH) + (e.mode === "link" ? " [mode: link]" : ""),
+    o = t?.pluginId !== void 0 ? formatDisplayText(t.pluginId, 200) : void 0,
     s = o ?? "This plugin",
     c = o ?? "";
   if (t?.kind === "recorded" && t.command !== void 0)
@@ -636,7 +636,7 @@ async function Fe(e, t) {
   for (let { name: o, path: s } of t) {
     if (RHt(s, dirname(s)))
       throw new Ui(
-        `A top-level entry of the plugin directory (${Vn(o, 100)}) points at a network location or through a link that cannot be trusted; refusing to link it.`,
+        `A top-level entry of the plugin directory (${formatDisplayText(o, 100)}) points at a network location or through a link that cannot be trusted; refusing to link it.`,
         "plugin command source entry traverses a suspect link",
       );
     let c, p;
@@ -644,14 +644,14 @@ async function Fe(e, t) {
       ((c = await realpath(s)), (p = (await pt(c)).isDirectory()));
     } catch {
       throw new R(
-        `A top-level entry of the plugin directory its command produced could not be resolved (${Vn(o, 80)}); refusing to link it.`,
+        `A top-level entry of the plugin directory its command produced could not be resolved (${formatDisplayText(o, 80)}); refusing to link it.`,
         "plugin command source link entry unresolvable",
       );
     }
     let d = relative(e, c);
     if (d === "" || d === ".." || d.startsWith(`..${D}`) || isAbsolute(d))
       throw new Ui(
-        `A top-level entry of the plugin directory its command produced (${Vn(o, 80)}) points outside that directory; refusing to link it.`,
+        `A top-level entry of the plugin directory its command produced (${formatDisplayText(o, 80)}) points outside that directory; refusing to link it.`,
         "plugin command source link escapes producer directory",
       );
     r.push({ name: o, target: c, isDirectory: p });
@@ -687,7 +687,7 @@ async function uZn(e, t) {
     } catch (C) {
       if (W(C)) continue;
       throw new Ui(
-        `A link in the staged farm could not be read (${Vn(l(C), 120)}); refusing to relink it.`,
+        `A link in the staged farm could not be read (${formatDisplayText(l(C), 120)}); refusing to relink it.`,
         "plugin command source relink entry unreadable",
       );
     }
@@ -825,7 +825,7 @@ async function pZn(e, t, r, o) {
       let s = await wt(e);
       if (wh(s, he(), { foldCase: !0 }))
         throw new Ui(
-          `Plugin source command printed the working directory or one of its parents (${Vn(s, 300)}); refusing to use it as a plugin.`,
+          `Plugin source command printed the working directory or one of its parents (${formatDisplayText(s, 300)}); refusing to use it as a plugin.`,
           "plugin command source printed cwd or an ancestor",
         );
       if ((dme(s), e.mode === "link"))
@@ -897,7 +897,7 @@ function Ht(e) {
   let t = { ...subprocessEnv() };
   if (!e.scrubCredentialEnv) return { ...t, ...e.env };
   let r = [];
-  for (let p of Hge()) {
+  for (let p of collectEnvVarsToScrub()) {
     let d = process.env[p] ?? t[p];
     if (d !== void 0 && d !== "") r.push(d);
     delete t[p];
@@ -906,11 +906,11 @@ function Ht(e) {
     s = {};
   for (let p of new Set([...Object.keys(t), ...Object.keys(o)]))
     s[p] = o[p] ?? t[p];
-  for (let p of die(s).lostCredential) {
+  for (let p of getRespelledEnvVarsAndLostCredentials(s).lostCredential) {
     let d = s[p];
     if (d !== void 0 && d !== "") r.push(d);
   }
-  (Object.assign(t, die(t).respelled), r.sort((p, d) => d.length - p.length));
+  (Object.assign(t, getRespelledEnvVarsAndLostCredentials(t).respelled), r.sort((p, d) => d.length - p.length));
   let c = {};
   for (let [p, d] of Object.entries(e.env ?? {}))
     c[p] = r.reduce((h, _) => h.split(_).join("REDACTED"), d);
@@ -921,8 +921,8 @@ var iJ = 268435456,
   Ut = 120000,
   Hbn = "Claude-Code-Plugin-Manager";
 async function fZn(e, t = {}) {
-  if (!h8t(e))
-    throw new R(`${g8t}: ${fp(e)}`, "plugin archive URL policy rejected");
+  if (!isAllowedArchiveUrl(e))
+    throw new R(`${ARCHIVE_URL_POLICY_MESSAGE}: ${fp(e)}`, "plugin archive URL policy rejected");
   let r = fp(e);
   n(`Downloading plugin archive from ${r}`);
   let o = t.headers ?? {},
@@ -962,7 +962,7 @@ function De(e, t, r = "plugin archive") {
   let o = new Set(t.map((s) => s.toLowerCase()));
   return (s) => {
     if (o.size === 0 || !s.headers) return;
-    let c = jBe(s);
+    let c = toUrlString(s);
     if (c && fwt(e, c)) return;
     let p = 0;
     for (let d of Object.keys(s.headers))
@@ -976,11 +976,11 @@ function De(e, t, r = "plugin archive") {
 function Bt(e, t) {
   let r = De(e, t);
   return (o) => {
-    let s = jBe(o);
-    if (!h8t(s))
+    let s = toUrlString(o);
+    if (!isAllowedArchiveUrl(s))
       throw new R(
         "Plugin archive redirected to a disallowed URL and was refused \u2014 " +
-          `every hop must satisfy the archive URL policy (${g8t.replace(/^Archive URLs must /, "")}): ` +
+          `every hop must satisfy the archive URL policy (${ARCHIVE_URL_POLICY_MESSAGE.replace(/^Archive URLs must /, "")}): ` +
           (s ? fp(s) : "(unparseable redirect target)"),
         "plugin archive redirect policy rejected",
       );
@@ -990,10 +990,10 @@ function Bt(e, t) {
 function mZn(e, t) {
   let r = De(e, t, "marketplace catalog");
   return (o) => {
-    let s = jBe(o);
+    let s = toUrlString(o);
     if (!(
       s !== "" &&
-      (fwt(e, s) || (s.toLowerCase().startsWith("https:") && !jge(nn(s))))
+      (fwt(e, s) || (s.toLowerCase().startsWith("https:") && !isLoopbackOrMetadataHost(nn(s))))
     ))
       throw new R(
         "Marketplace catalog redirected to a disallowed URL and was refused \u2014 " +
@@ -1051,7 +1051,7 @@ function He(e) {
   return canonicalFetchSourceUrl(fp(e));
 }
 function dXe(e, t = "lockdown") {
-  let r = zt(e);
+  let r = formatQuotedDisplayText(e);
   if (t === "remote_policy_unconsented")
     return `"${r}" fetches its archive through a headersHelper command that was not run: ${REMOTE_POLICY_UNCONSENTED_MESSAGE}. The plugin was not installed or updated.`;
   return `"${r}" fetches its archive through a marketplace-declared headersHelper command, and your organization's managed settings disable marketplace-declared commands (disableCommandPluginSources / allowManagedHooksOnly). The plugin was not installed or updated and the command was not run; ask your admin to allow it or to declare the marketplace in managed settings.`;
@@ -1099,7 +1099,7 @@ class k$ extends Ui {
   }
 }
 function uwt(e, t, r) {
-  let o = zt(t),
+  let o = formatQuotedDisplayText(t),
     s =
       r === "update"
         ? "Review the command now shown, then update again."
@@ -1155,7 +1155,7 @@ function noe(e) {
 async function dwt(e, t) {
   if (e?.source !== "url") return {};
   let r = t.trustedDeclaration,
-    o = `marketplace ${zt(t.marketplaceName ?? fp(e.url))}`,
+    o = `marketplace ${formatQuotedDisplayText(t.marketplaceName ?? fp(e.url))}`,
     s = (d, h) =>
       pwt(d, `${o} (${h})`, { operatorAuthored: r?.operatorAuthored === !0 }),
     c = s(
@@ -1241,7 +1241,7 @@ async function Xt(e, t, r, o) {
 }
 async function Jt(e, t) {
   let r = (c) =>
-      pwt(c, `plugin ${zt(t.pluginName)}`, {
+      pwt(c, `plugin ${formatQuotedDisplayText(t.pluginName)}`, {
         operatorAuthored: t.operatorAuthored === !0,
       }),
     o = r(e.headers ?? {});
@@ -1300,14 +1300,14 @@ function pwt(e, t, { operatorAuthored: r = !1 } = {}) {
   let o = {};
   for (let [s, c] of Object.entries(e)) {
     if (!en.test(s) || /[\r\n\0]/.test(c)) {
-      n(`Dropping header "${zt(s)}" for ${t}: malformed name or value`, {
+      n(`Dropping header "${formatQuotedDisplayText(s)}" for ${t}: malformed name or value`, {
         level: "warn",
       });
       continue;
     }
     if (!r && Obn(s)) {
       n(
-        `Dropping header "${zt(s)}" for ${t}: request-routing/identity headers are not accepted from non-operator sources`,
+        `Dropping header "${formatQuotedDisplayText(s)}" for ${t}: request-routing/identity headers are not accepted from non-operator sources`,
         { level: "warn" },
       );
       continue;
@@ -1317,7 +1317,7 @@ function pwt(e, t, { operatorAuthored: r = !1 } = {}) {
   return o;
 }
 function te(e) {
-  return zt(e);
+  return formatQuotedDisplayText(e);
 }
 function $e(e, t) {
   if (t.disabledByPolicy !== null)
@@ -1512,7 +1512,7 @@ function ywt() {
   return vGt(I);
 }
 function lfe() {
-  return !isCustomizationDisabled("plugins") && Nr("userSettings");
+  return !isCustomizationDisabled("plugins") && isSettingsSourceEnabled("userSettings");
 }
 function rn() {
   return CGt(I);

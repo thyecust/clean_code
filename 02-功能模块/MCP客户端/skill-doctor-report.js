@@ -13,7 +13,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
-import { Pp } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { removeInvisibleChars } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { padEndToWidth, padStartToWidth, buildSkillTableLayout, SkillDoctorStageError, buildSkillDoctorContext, collectSkillUsageData } from "./skill-doctor-data.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function p(r) {
@@ -102,7 +102,7 @@ async function k(r) {
     (t.push(""), t.push(chalk.bold("Plugins not used recently")), t.push(""));
     for (let n of u)
       t.push(
-        `  ${chalk.yellow(Pp(n.name))}  ${chalk.dim(`last used ${n.daysSinceLastUse} days ago`)}`,
+        `  ${chalk.yellow(removeInvisibleChars(n.name))}  ${chalk.dim(`last used ${n.daysSinceLastUse} days ago`)}`,
       );
     (t.push(""), t.push(chalk.dim("  Manage these in /plugin")));
   }

@@ -30,7 +30,7 @@ import {
   sweptAskPath,
   splitWatchRows,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { yw, jg, getShareEntry, ownershipTag, shareAudienceParenthetical } from "./chunk-01ymf0ar.js";
+import { formatArtifactTitle, sanitizeDisplayText, getShareEntry, ownershipTag, shareAudienceParenthetical } from "./chunk-01ymf0ar.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
@@ -39,7 +39,7 @@ import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未�
 import { stripRejectNotice } from "./chunk-fx5ekm7e.js";
 import { wte, lwe, FS } from "./chunk-qpgskeea.js";
 import { ROOM_CONSENT_CLAUSE, DB_BATCH_OP, replayedPublishesRemaining, replayedPublishesResetAt, publishesRemainingLine } from "./chunk-pdd7kz7p.js";
-import { Sce, yPe, Mut, Nut, Fut, $ut, dM, artifactLivePathsSchemaOpen } from "./chunk-b6k1z7an.js";
+import { MAX_PREVIEW_WIDTHS, MAX_REPORTED_DROPPED_ISSUES, MAX_PREVIEW_SHOTS, MAX_PREVIEW_ISSUES, normalizePreviewWidths, normalizePreviewThemes, isArtifactRoomFeatureEnabled, artifactLivePathsSchemaOpen } from "./chunk-b6k1z7an.js";
 import "./chunk-x29r16ke.js";
 import "../../01-核心基础设施/共享小工具-未细化/claude-browser-mcp-server.js";
 import {
@@ -127,8 +127,8 @@ function renderToolUseMessage(s, m) {
       c = sweepProvenanceMarker(sweepAskCopy(a) ?? "(no file)");
     if (m?.verbose !== !0)
       return r(t, { children: ["preview ", truncatePathMiddle(basename(c), 60)] });
-    let f = Fut(d),
-      g = $ut(d);
+    let f = normalizePreviewWidths(d),
+      g = normalizePreviewThemes(d);
     return r(t, {
       children: [
         "preview ",
@@ -517,7 +517,7 @@ function renderToolUseMessage(s, m) {
   }
   let { file_path: b, url: w } = n,
     i = m?.verbose === !0,
-    l = i && dM() && kut(n) ? ROOM_CONSENT_CLAUSE.trimStart() : void 0,
+    l = i && isArtifactRoomFeatureEnabled() && kut(n) ? ROOM_CONSENT_CLAUSE.trimStart() : void 0,
     u = Xb(n);
   if (u !== void 0) {
     let d = canonicalArtifactTargetFor(u, "(unrecognized address)"),
@@ -592,10 +592,10 @@ function renderToolResultMessage(s, m, n) {
         ...s.preview,
         file: truncateToCodeUnits(s.preview.file, 4096),
         shots: s.preview.shots
-          .slice(0, Mut)
+          .slice(0, MAX_PREVIEW_SHOTS)
           .map((a) => ({ ...a, theme: truncateToCodeUnits(a.theme, 32) })),
-        issues: s.preview.issues.slice(0, Nut),
-        widths: s.preview.widths.slice(0, Sce),
+        issues: s.preview.issues.slice(0, MAX_PREVIEW_ISSUES),
+        widths: s.preview.widths.slice(0, MAX_PREVIEW_WIDTHS),
         themes: s.preview.themes.slice(0, 2).map((a) => truncateToCodeUnits(a, 32)),
       },
       l = countMatching(i.shots, (a) => a.error === void 0),
@@ -626,7 +626,7 @@ function renderToolResultMessage(s, m, n) {
                 ? i.renderError !== void 0
                   ? "browser did not start \u2014 static checks only"
                   : "no issues"
-                : `${u}${i.issuesDropped === yPe ? "+" : ""} ${pluralize(u, "issue")}`,
+                : `${u}${i.issuesDropped === MAX_REPORTED_DROPPED_ISSUES ? "+" : ""} ${pluralize(u, "issue")}`,
               l < i.shots.length && i.renderError === void 0
                 ? ` \xB7 ${l}/${i.shots.length} captured`
                 : "",
@@ -839,7 +839,7 @@ function renderToolResultMessage(s, m, n) {
         i.peers >= 0
           ? `${i.peers} ${pluralize(i.peers, "peer")}`
           : "? peers",
-      u = typeof i.reason === "string" ? jg(i.reason, { max: 32 }) : void 0;
+      u = typeof i.reason === "string" ? sanitizeDisplayText(i.reason, { max: 32 }) : void 0;
     return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
@@ -1131,7 +1131,7 @@ function renderToolResultMessage(s, m, n) {
           " ",
           l !== void 0
             ? e(R, {
-                name: (typeof s.title === "string" ? yw(s.title) : null) ?? l,
+                name: (typeof s.title === "string" ? formatArtifactTitle(s.title) : null) ?? l,
                 url: l,
               })
             : "(unrecognized address)",

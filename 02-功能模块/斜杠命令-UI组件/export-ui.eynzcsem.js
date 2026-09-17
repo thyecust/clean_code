@@ -30,7 +30,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js"
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
-import { est } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { renderTranscriptToText } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-aeg1pn1f.js";
 import "../插件系统/chunk-rbjz1q03.js";
 import "../插件系统/channel-gate.js";
@@ -319,7 +319,7 @@ function sanitizeFilename(n) {
     .replace(/^-|-$/g, "");
 }
 async function le(n, s, i) {
-  let a = await est(s.session, s.messages, s.options.tools || [], {
+  let a = await renderTranscriptToText(s.session, s.messages, s.options.tools || [], {
       storageV5: s.storageV5,
     }),
     l = i.trim();

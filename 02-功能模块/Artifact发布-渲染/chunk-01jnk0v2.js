@@ -36,21 +36,21 @@ import {
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { ne } from "./chunk-rr78st95.js";
 import {
-  Am,
-  TG,
-  hoe,
-  oqt,
-  MH,
-  bwn,
-  nP,
-  UXe,
-  Nd,
-  ACe,
-  yw,
-  Nj,
-  wD,
+  formatNotAuthenticatedMessage,
+  CCR_AGENT_TOKEN_FORBIDDEN_MESSAGE,
+  isNotFoundResponseBody,
+  FRAME_FAMILY_TYPE_CREATE,
+  canRelayFrameFamily,
+  hasAgentServiceClaims,
+  isFrameRelayAttemptError,
+  isMaxContentLengthError,
+  artifactFrameHttpClient,
+  formatArtifactDescription,
+  formatArtifactTitle,
+  CAPABILITY_NAME_PATTERN,
+  parseContractVersion,
   VER_SHAPE,
-  Fd,
+  buildFrameHeaders,
   isFrameListSharedScopeKilled,
   isFrameMultiFileEnabled,
   splitManifestPaths,
@@ -60,10 +60,10 @@ import {
   ARTIFACT_LIST_RELS,
   denyPolicyBody,
   errBody,
-  oTn,
-  IC,
-  ED,
-  Aoe,
+  wrapArtifactOriginNotes,
+  readArtifactBoot,
+  readArtifactContent,
+  getSafeArtifactReadError,
   isArtifactToolRegistered,
 } from "./chunk-01ymf0ar.js";
 import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
@@ -80,17 +80,17 @@ function swe() {
 }
 var Q = 65536;
 async function dcn(e, r, t) {
-  let o = await IC({ slug: e, env: Vo() }, "artifact_verify_read", r, {
+  let o = await readArtifactBoot({ slug: e, env: Vo() }, "artifact_verify_read", r, {
     credentials: t,
   });
   if (o.err !== null)
     return { err: o.err, ...(o.status !== void 0 && { status: o.status }) };
   let i;
   try {
-    i = await Nd.get(`/api/frame/diag/${e}/${o.ver}`, {
+    i = await artifactFrameHttpClient.get(`/api/frame/diag/${e}/${o.ver}`, {
       refreshOAuth: !0,
       credentials: t,
-      headers: Fd(),
+      headers: buildFrameHeaders(),
       timeout: 15000,
       maxContentLength: 2 * Q,
       signal: r,
@@ -302,7 +302,7 @@ function ke() {
 }
 var Ie = "tengu_cobalt_plinth_linden";
 function U() {
-  return (isAnthropicHostedEnvironment() || isByocEnvironment()) && getFeatureValue_CACHED_MAY_BE_STALE(Ie, !1) && bwn();
+  return (isAnthropicHostedEnvironment() || isByocEnvironment()) && getFeatureValue_CACHED_MAY_BE_STALE(Ie, !1) && hasAgentServiceClaims();
 }
 function U3n() {
   if (!a.CLAUDE_CODE_REMOTE) return !0;
@@ -311,7 +311,7 @@ function U3n() {
 var fcn =
   "Starting a new Artifact from a type isn't available in this cloud session right now, so nothing was created; do not retry here. If the type fits, tell the user its link so they can start it where creating is available, and offer to make it here another way instead \u2014 a skill or a file is fine for that.";
 function mcn() {
-  return isAnthropicHostedEnvironment() && !MH(oqt) && !U();
+  return isAnthropicHostedEnvironment() && !canRelayFrameFamily(FRAME_FAMILY_TYPE_CREATE) && !U();
 }
 var Oe = {
   ok: !1,
@@ -378,15 +378,15 @@ async function B3n(e, r) {
     },
     w = {
       refreshOAuth: !0,
-      headers: Fd(),
+      headers: buildFrameHeaders(),
       timeout: 60000,
       maxContentLength: $e,
       signal: r.signal,
       credentials: r.credentials,
     },
     _ = () => {
-      if (o) return Nd.post(A, C, w);
-      return mcn() ? Promise.resolve(Oe) : Nd.postRelayOnly(A, C, w);
+      if (o) return artifactFrameHttpClient.post(A, C, w);
+      return mcn() ? Promise.resolve(Oe) : artifactFrameHttpClient.postRelayOnly(A, C, w);
     },
     d;
   try {
@@ -402,9 +402,9 @@ async function B3n(e, r) {
         (t = d.route));
   } catch (h) {
     if (isCancel(h) || r.signal.aborted) throw h;
-    let E = nP(h);
+    let E = isFrameRelayAttemptError(h);
     if (E) t = "relay";
-    if (UXe(h))
+    if (isMaxContentLengthError(h))
       return l(
         "echo_too_large",
         `the server's answer was too large to read \u2014 ${M}`,
@@ -423,7 +423,7 @@ async function B3n(e, r) {
     return l(
       d.reason.replace(/-/g, "_"),
       d.reason === "no-auth"
-        ? Am(d.detail)
+        ? formatNotAuthenticatedMessage(d.detail)
         : `creating Artifacts is unavailable here: ${d.reason}`,
     );
   }
@@ -435,7 +435,7 @@ async function B3n(e, r) {
     );
   if (d.status === 404) return l("not_found", Ne, 404);
   if (d.status === 403) {
-    if (typeof d.data === "string" && d.data.startsWith(TG))
+    if (typeof d.data === "string" && d.data.startsWith(CCR_AGENT_TOKEN_FORBIDDEN_MESSAGE))
       return p("ccr_credential_refused", 403);
     let h = denyPolicyBody(d.data);
     if (o && !h) return p("agent_credential_refused", 403);
@@ -484,7 +484,7 @@ async function B3n(e, r) {
         url: artifactViewerUrl(R.slug),
         ...(R.title !== void 0 && { title: R.title }),
         ...(R.favicon !== void 0 && { favicon: R.favicon }),
-        storedContract: wD(R.contract),
+        storedContract: parseContractVersion(R.contract),
         typeLock: P,
         ownFiles: F.own,
         typeFiles: F.type,
@@ -498,7 +498,7 @@ async function gcn(e, r, t) {
   let l = await readFrameDecl(e, r, t);
   if (l === null || "err" in l || l.typeLock === void 0) return "";
   return `
-[${oTn(Ue(l.typeLock))} Publish data files to this URL with the Artifact tool (\`url\` plus \`file_path\`, more via \`files\`); its page and the type's other files can't be changed here.]`;
+[${wrapArtifactOriginNotes(Ue(l.typeLock))} Publish data files to this URL with the Artifact tool (\`url\` plus \`file_path\`, more via \`files\`); its page and the type's other files can't be changed here.]`;
 }
 function Ue(e) {
   return `Created from the Artifact type ${artifactViewerUrl(e.slug)}, release ${Ste(e.current)}.${hcn(e)}`;
@@ -674,7 +674,7 @@ var qe = createLazyValue(() =>
   ),
   y2 = "SKILL.md";
 function _e(e, r) {
-  return e === void 0 ? void 0 : (ACe(e, r) ?? void 0);
+  return e === void 0 ? void 0 : (formatArtifactDescription(e, r) ?? void 0);
 }
 function Ze(e) {
   let r;
@@ -696,7 +696,7 @@ function ge(e, r) {
   let t = Ze(e.listings),
     o = _e(e.description, r),
     i = e.release?.version,
-    l = yw(e.title ?? "");
+    l = formatArtifactTitle(e.title ?? "");
   return {
     typeUrl: artifactViewerUrl(e.slug),
     title: l ?? "Untitled",
@@ -711,16 +711,16 @@ function G(e) {
     e.ok &&
     e.fromFrame &&
     e.status === 404 &&
-    (e.route === "relay" || hoe(e.data))
+    (e.route === "relay" || isNotFoundResponseBody(e.data))
   );
 }
 async function q(e, r) {
   for (let t = 0; ; t++) {
     let o;
     try {
-      o = await Nd.get(e, {
+      o = await artifactFrameHttpClient.get(e, {
         refreshOAuth: !0,
-        headers: Fd(),
+        headers: buildFrameHeaders(),
         timeout: 15000,
         maxContentLength: r.maxContentLength,
         signal: r.signal,
@@ -728,7 +728,7 @@ async function q(e, r) {
       });
     } catch (p) {
       if (isCancel(p) || r.signal.aborted) throw p;
-      if (UXe(p))
+      if (isMaxContentLengthError(p))
         return (logFeatureBad(r.feature, "oversize_body"), { threw: !0, oversize: !0 });
       if (t === 0) {
         await sleep(300 + Math.random() * 500, r.signal, { throwOnAbort: !0 });
@@ -760,7 +760,7 @@ function K(e, r, t) {
     return o(
       "not_ok",
       e.reason === "no-auth"
-        ? Am(e.detail)
+        ? formatNotAuthenticatedMessage(e.detail)
         : `${t} unavailable here: ${e.reason}`,
     );
   if (!e.fromFrame)
@@ -819,7 +819,7 @@ async function bcn(e) {
       t.fromFrame &&
       t.status === 403 &&
       typeof t.data === "string" &&
-      t.data.startsWith(TG)
+      t.data.startsWith(CCR_AGENT_TOKEN_FORBIDDEN_MESSAGE)
       ? { ...w, reason: "ccr_credential_refused" }
       : w;
   }
@@ -970,7 +970,7 @@ async function p$t(e, r) {
   }
   let A = p.length - l.length,
     C = Object.keys(i.capabilities ?? {})
-      .filter((w) => Nj.test(w))
+      .filter((w) => CAPABILITY_NAME_PATTERN.test(w))
       .sort()
       .slice(0, Scn);
   return (
@@ -1087,7 +1087,7 @@ async function W3n(e, r) {
     t.fromFrame &&
     t.status === 403 &&
     typeof t.data === "string" &&
-    t.data.startsWith(TG)
+    t.data.startsWith(CCR_AGENT_TOKEN_FORBIDDEN_MESSAGE)
   )
     return (logFeatureSad("artifact_type_instances", "ccr_credential_refused"), ce);
   if (!t.ok || !t.fromFrame || t.status !== 200)
@@ -1152,7 +1152,7 @@ async function W3n(e, r) {
     let J = _e(h.description, t4e);
     x.push({
       url: artifactViewerUrl(h.slug),
-      title: yw(h.title ?? "") ?? "Untitled",
+      title: formatArtifactTitle(h.title ?? "") ?? "Untitled",
       ...(J !== void 0 && { description: J }),
       ...(h.created_at !== void 0 && { createdAt: h.created_at }),
       rel: E,
@@ -1206,10 +1206,10 @@ function Tcn(e) {
 async function Ecn(e, r, t, o) {
   let i = o !== void 0 && o.length > 0 ? o : void 0;
   if (i !== void 0 && !i.includes(y2)) return { kind: "none" };
-  let l = await ED({ ...e, file: y2 }, r, t, "artifact_type_instructions_read");
+  let l = await readArtifactContent({ ...e, file: y2 }, r, t, "artifact_type_instructions_read");
   if (l.err !== null) {
     if (l.missingFile === !0 && i === void 0) return { kind: "none" };
-    let p = Aoe(l);
+    let p = getSafeArtifactReadError(l);
     if (p !== l.err) n(`[artifact] type instructions read failed: ${l.err}`);
     return {
       kind: "unavailable",

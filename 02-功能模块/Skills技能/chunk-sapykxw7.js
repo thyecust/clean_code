@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, bi, K, jc, ke, m_e, V1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { Za } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { invalidateAllSettings } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isSafeMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -89,10 +89,10 @@ function shouldSkipSessionHooksByPolicy() {
   return shouldDisableAllHooksIncludingManaged() || shouldAllowManagedHooksOnlyByPolicy();
 }
 function captureHooksConfigSnapshot() {
-  (Za(), a().store(l()), V1());
+  (invalidateAllSettings(), a().store(l()), V1());
 }
 function updateHooksConfigSnapshot(t) {
-  (Za(t), a().store(l()), V1());
+  (invalidateAllSettings(t), a().store(l()), V1());
 }
 async function updateHooksConfigSnapshotThroughBackend(t) {
   let o = await resetSettingsCacheWithBackendRead(t);
@@ -108,7 +108,7 @@ function* listProcessHooksConfigSnapshots() {
 }
 function getHooksConfigFromSnapshot() {
   let t = a().current();
-  if (t.initialHooksConfig === null) (Za(), (t.initialHooksConfig = l()), V1());
+  if (t.initialHooksConfig === null) (invalidateAllSettings(), (t.initialHooksConfig = l()), V1());
   return t.initialHooksConfig;
 }
 function logGoalCleared(t, o) {

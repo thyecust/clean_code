@@ -12,14 +12,14 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { r8, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getOrCompute, getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
-import { Nr } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { isSettingsSourceEnabled } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { parseWorkflowScript, isValidWorkflowScript } from "./workflow-script.js";
 import { vm, $t, MEt } from "../插件系统/chunk-7s6mt1vg.js";
 import { readBoundedFileWithFs } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getProjectDirsUpToHome, loadAllPluginsCacheOnly } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Uh } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { MAX_WORKFLOW_SCRIPT_BYTES } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getBundledWorkflows } from "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
 import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
 import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
@@ -52,11 +52,11 @@ async function v(o, s, t, i, d) {
   let c = ae();
   if (r8(c, o, d)) return null;
   try {
-    let e = await readBoundedFileWithFs(c, o, Uh);
+    let e = await readBoundedFileWithFs(c, o, MAX_WORKFLOW_SCRIPT_BYTES);
     if (e === null)
       return (
         n(
-          `Plugin workflow ${o}: not a regular file or exceeds ${Uh} bytes \u2014 skipping`,
+          `Plugin workflow ${o}: not a regular file or exceeds ${MAX_WORKFLOW_SCRIPT_BYTES} bytes \u2014 skipping`,
           { level: "warn" },
         ),
         null
@@ -208,13 +208,13 @@ async function D(o, s, t, i) {
         let l = h(o, r.name),
           u;
         try {
-          u = await d.readFileBytes(l, Uh + 1);
+          u = await d.readFileBytes(l, MAX_WORKFLOW_SCRIPT_BYTES + 1);
         } catch {
           return (t.skippedUnreadable++, null);
         }
-        if (u.byteLength > Uh)
+        if (u.byteLength > MAX_WORKFLOW_SCRIPT_BYTES)
           return (
-            n(`Workflow ${l} exceeds ${Uh} bytes \u2014 skipping`, {
+            n(`Workflow ${l} exceeds ${MAX_WORKFLOW_SCRIPT_BYTES} bytes \u2014 skipping`, {
               level: "warn",
             }),
             t.skippedOversize++,
@@ -284,7 +284,7 @@ async function M(o, s, t) {
   return (
     await Promise.all(
       i.map(async ({ key: e, name: r }) => {
-        let l = await o.read([{ key: e, offset: 0, length: Uh + 1 }]);
+        let l = await o.read([{ key: e, offset: 0, length: MAX_WORKFLOW_SCRIPT_BYTES + 1 }]);
         if (!l.ok)
           return (
             n(
@@ -297,9 +297,9 @@ async function M(o, s, t) {
         let u = l.value.items[0];
         if (u === void 0 || !u.found) return (t.skippedUnreadable++, null);
         let m = h(s, r);
-        if (u.value.byteLength > Uh)
+        if (u.value.byteLength > MAX_WORKFLOW_SCRIPT_BYTES)
           return (
-            n(`Workflow ${m} exceeds ${Uh} bytes \u2014 skipping`, {
+            n(`Workflow ${m} exceeds ${MAX_WORKFLOW_SCRIPT_BYTES} bytes \u2014 skipping`, {
               level: "warn",
             }),
             t.skippedOversize++,
@@ -340,8 +340,8 @@ async function b(o, s) {
     },
     d = await T(o, i),
     [c, ...e] = await Promise.all([
-      Nr("userSettings") ? D(t, "userSettings", i, s) : Promise.resolve([]),
-      ...(Nr("projectSettings")
+      isSettingsSourceEnabled("userSettings") ? D(t, "userSettings", i, s) : Promise.resolve([]),
+      ...(isSettingsSourceEnabled("projectSettings")
         ? d.map((m) => D(m, "projectSettings", i))
         : []),
     ]),
@@ -355,7 +355,7 @@ async function b(o, s) {
       if (!W(p, r.get(p.name))) continue;
       r.set(p.name, p);
     }
-  let l = i.walkFailed && Nr("projectSettings"),
+  let l = i.walkFailed && isSettingsSourceEnabled("projectSettings"),
     u = i.skippedInvalidMeta + i.skippedOversize + i.skippedUnreadable;
   if (l || i.userListingTruncated || u > 0 || i.nearMissExt > 0)
     logFeatureSad(

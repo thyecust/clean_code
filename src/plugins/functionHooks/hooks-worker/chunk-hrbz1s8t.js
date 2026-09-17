@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Fn, He, gn, Bm, Hu, cot } from "./chunk-h4f48kbj.js";
+import { __classPrivateFieldSet, __classPrivateFieldGet, AnthropicError, loggerFor, ToolError, promiseWithResolvers } from "./chunk-h4f48kbj.js";
 import * as d from "fs/promises";
 import * as R from "fs";
 import * as u from "path";
@@ -56,7 +56,7 @@ async function et(r) {
       } catch {}
       if (a) {
         if (++i > 40)
-          throw new Hu(
+          throw new ToolError(
             `path ${JSON.stringify(r)} has too many levels of symbolic links`,
           );
         e = m.resolve(m.dirname(e), await b.readlink(e));
@@ -77,7 +77,7 @@ async function B(r, t, e) {
   if (i) return a;
   let s = await et(a);
   if (s !== n && !s.startsWith(n + m.sep))
-    throw new Hu(`path ${JSON.stringify(t)} escapes workdir`);
+    throw new ToolError(`path ${JSON.stringify(t)} escapes workdir`);
   return s;
 }
 async function F(r, t) {
@@ -131,7 +131,7 @@ var ot = it(rt);
 async function at(r) {
   let { client: t, sessionId: e } = r;
   if (!t || !e) return async () => {};
-  let i = Bm(t),
+  let i = loggerFor(t),
     n = await t.beta.sessions.retrieve(e),
     a = p.resolve(r.workdir, "skills"),
     s = [];
@@ -190,7 +190,7 @@ async function U(r, t, e) {
     )
       i = n.version;
   if (i === void 0)
-    throw new gn(
+    throw new AnthropicError(
       `skill ${JSON.stringify(t)} has no concrete version to resolve ${JSON.stringify(e)} against`,
     );
   return i;
@@ -201,7 +201,7 @@ function ct(r) {
     let e = t.trim();
     if (!e) continue;
     if (p.isAbsolute(e) || e.split(/[\\/]/).includes(".."))
-      throw new gn(`refusing to extract unsafe archive member: ${e}`);
+      throw new AnthropicError(`refusing to extract unsafe archive member: ${e}`);
   }
 }
 function lt(r) {
@@ -216,7 +216,7 @@ function lt(r) {
       e === "p" ||
       e === "s"
     )
-      throw new gn(
+      throw new AnthropicError(
         "refusing to extract archive with symlink/hardlink/device member",
       );
   }
@@ -227,7 +227,7 @@ async function L(r, t) {
     return e;
   } catch (e) {
     if (e != null && typeof e === "object" && e.code === "ENOENT")
-      throw new gn(
+      throw new AnthropicError(
         `skill extraction requires the \`${r}\` command, but it was not found on PATH`,
       );
     throw e;
@@ -252,7 +252,7 @@ function ft(r) {
 }
 async function C(r, t) {
   let e = p.join(t, `.skill-archive-${process.pid}-${Date.now()}`);
-  if (!r.body) throw new gn("skill download response had no body");
+  if (!r.body) throw new AnthropicError("skill download response had no body");
   await st(nt.fromWeb(r.body), q.createWriteStream(e));
   let i = p.join(p.dirname(t), `.skill-stage-${process.pid}-${Date.now()}`);
   try {
@@ -322,7 +322,7 @@ class X {
       S.set(this, !1),
       k.set(this, !1),
       _.set(this, null),
-      Fn(
+      __classPrivateFieldSet(
         this,
         w,
         W.spawn("/bin/bash", ["--noprofile", "--norc"], {
@@ -333,86 +333,86 @@ class X {
         }),
         "f",
       ),
-      He(this, w, "f").stdout.setEncoding("utf8"),
-      He(this, w, "f").stderr.setEncoding("utf8"),
-      He(this, w, "f").stdout.on("data", (e) =>
-        He(this, I, "m", D).call(this, e),
+      __classPrivateFieldGet(this, w, "f").stdout.setEncoding("utf8"),
+      __classPrivateFieldGet(this, w, "f").stderr.setEncoding("utf8"),
+      __classPrivateFieldGet(this, w, "f").stdout.on("data", (e) =>
+        __classPrivateFieldGet(this, I, "m", D).call(this, e),
       ),
-      He(this, w, "f").stderr.on("data", (e) =>
-        He(this, I, "m", D).call(this, e),
+      __classPrivateFieldGet(this, w, "f").stderr.on("data", (e) =>
+        __classPrivateFieldGet(this, I, "m", D).call(this, e),
       ),
-      He(this, w, "f").once("close", () => {
-        Fn(this, k, !0, "f");
-        let e = He(this, _, "f");
-        (Fn(this, _, null, "f"), e?.resolve());
+      __classPrivateFieldGet(this, w, "f").once("close", () => {
+        __classPrivateFieldSet(this, k, !0, "f");
+        let e = __classPrivateFieldGet(this, _, "f");
+        (__classPrivateFieldSet(this, _, null, "f"), e?.resolve());
       }));
   }
   get closed() {
-    return He(this, k, "f");
+    return __classPrivateFieldGet(this, k, "f");
   }
   async exec(r, t = {}) {
-    if (He(this, k, "f")) throw new gn("bash session terminated");
+    if (__classPrivateFieldGet(this, k, "f")) throw new AnthropicError("bash session terminated");
     let e = t.timeoutMs ?? z,
       i = t.signal;
-    if (i?.aborted) throw new gn("bash command aborted");
-    (Fn(this, g, "", "f"), Fn(this, S, !1, "f"));
+    if (i?.aborted) throw new AnthropicError("bash command aborted");
+    (__classPrivateFieldSet(this, g, "", "f"), __classPrivateFieldSet(this, S, !1, "f"));
     let n = `__ANT_CMD_${j.randomUUID()}_DONE__`,
       a = `${n.slice(0, 8)}''${n.slice(8)}`,
       s = `{ ${r}
 } </dev/null 2>&1; printf '\\n${a}%d\\n' $?
 `;
-    if ((He(this, w, "f").stdin.write(s), He(this, g, "f").indexOf(n) < 0)) {
-      let { promise: M, resolve: Z } = cot();
-      Fn(this, _, { sentinel: n, resolve: Z }, "f");
+    if ((__classPrivateFieldGet(this, w, "f").stdin.write(s), __classPrivateFieldGet(this, g, "f").indexOf(n) < 0)) {
+      let { promise: M, resolve: Z } = promiseWithResolvers();
+      __classPrivateFieldSet(this, _, { sentinel: n, resolve: Z }, "f");
       let N, A;
       try {
         await Promise.race([
           M,
           new Promise((V, P) => {
             N = setTimeout(
-              () => P(new gn(`bash command timed out after ${e}ms`)),
+              () => P(new AnthropicError(`bash command timed out after ${e}ms`)),
               e,
             );
           }),
           new Promise((V, P) => {
             if (!i) return;
-            ((A = () => P(new gn("bash command aborted"))),
+            ((A = () => P(new AnthropicError("bash command aborted"))),
               i.addEventListener("abort", A, { once: !0 }));
           }),
         ]);
       } finally {
         if (N) clearTimeout(N);
         if (A && i) i.removeEventListener("abort", A);
-        Fn(this, _, null, "f");
+        __classPrivateFieldSet(this, _, null, "f");
       }
     }
-    let o = He(this, g, "f").indexOf(n);
-    if (o < 0) throw new gn("bash session terminated");
-    let l = He(this, g, "f")
+    let o = __classPrivateFieldGet(this, g, "f").indexOf(n);
+    if (o < 0) throw new AnthropicError("bash session terminated");
+    let l = __classPrivateFieldGet(this, g, "f")
         .slice(o + n.length)
         .match(/^(-?\d+)/),
       f = l ? parseInt(l[1], 10) : -1,
-      h = He(this, g, "f").slice(0, o).replace(mt, "").replace(/\n+$/, "");
-    if (He(this, S, "f"))
+      h = __classPrivateFieldGet(this, g, "f").slice(0, o).replace(mt, "").replace(/\n+$/, "");
+    if (__classPrivateFieldGet(this, S, "f"))
       h = `[output truncated]
 ${h}`;
     return { output: h, exitCode: f };
   }
   close() {
-    if (He(this, k, "f")) return;
-    Fn(this, k, !0, "f");
-    let r = He(this, _, "f");
-    (Fn(this, _, null, "f"),
+    if (__classPrivateFieldGet(this, k, "f")) return;
+    __classPrivateFieldSet(this, k, !0, "f");
+    let r = __classPrivateFieldGet(this, _, "f");
+    (__classPrivateFieldSet(this, _, null, "f"),
       r?.resolve(),
-      He(this, w, "f").stdout.destroy(),
-      He(this, w, "f").stderr.destroy(),
-      He(this, w, "f").stdin.destroy());
+      __classPrivateFieldGet(this, w, "f").stdout.destroy(),
+      __classPrivateFieldGet(this, w, "f").stderr.destroy(),
+      __classPrivateFieldGet(this, w, "f").stdin.destroy());
     try {
-      process.kill(-He(this, w, "f").pid, "SIGKILL");
+      process.kill(-__classPrivateFieldGet(this, w, "f").pid, "SIGKILL");
     } catch {
-      He(this, w, "f").kill("SIGKILL");
+      __classPrivateFieldGet(this, w, "f").kill("SIGKILL");
     }
-    He(this, w, "f").unref();
+    __classPrivateFieldGet(this, w, "f").unref();
   }
 }
 ((w = new WeakMap()),
@@ -422,15 +422,15 @@ ${h}`;
   (_ = new WeakMap()),
   (I = new WeakSet()),
   (D = function (t) {
-    if ((Fn(this, g, He(this, g, "f") + t, "f"), He(this, g, "f").length > J))
-      (Fn(this, g, He(this, g, "f").slice(He(this, g, "f").length - J), "f"),
-        Fn(this, S, !0, "f"));
+    if ((__classPrivateFieldSet(this, g, __classPrivateFieldGet(this, g, "f") + t, "f"), __classPrivateFieldGet(this, g, "f").length > J))
+      (__classPrivateFieldSet(this, g, __classPrivateFieldGet(this, g, "f").slice(__classPrivateFieldGet(this, g, "f").length - J), "f"),
+        __classPrivateFieldSet(this, S, !0, "f"));
     if (
-      He(this, _, "f") &&
-      He(this, g, "f").indexOf(He(this, _, "f").sentinel) >= 0
+      __classPrivateFieldGet(this, _, "f") &&
+      __classPrivateFieldGet(this, g, "f").indexOf(__classPrivateFieldGet(this, _, "f").sentinel) >= 0
     ) {
-      let e = He(this, _, "f");
-      (Fn(this, _, null, "f"), e.resolve());
+      let e = __classPrivateFieldGet(this, _, "f");
+      (__classPrivateFieldSet(this, _, null, "f"), e.resolve());
     }
   }));
 function gt(r) {
@@ -456,7 +456,7 @@ function gt(r) {
     },
     run: async ({ command: i, restart: n, timeout_ms: a }, s) => {
       let o = e,
-        c = cot();
+        c = promiseWithResolvers();
       e = c.promise;
       try {
         await o;
@@ -465,7 +465,7 @@ function gt(r) {
         if (n) (t?.close(), (t = void 0));
         if (!i) {
           if (n) return "bash session restarted";
-          throw new Hu("bash: command is required");
+          throw new ToolError("bash: command is required");
         }
         t ?? (t = new X(r.workdir, r.env));
         try {
@@ -473,14 +473,14 @@ function gt(r) {
             timeoutMs: a ?? z,
             signal: s?.signal,
           });
-          if (f !== 0) throw new Hu(l || `exit ${f}`);
+          if (f !== 0) throw new ToolError(l || `exit ${f}`);
           return l;
         } catch (l) {
-          if (l instanceof Hu) throw l;
+          if (l instanceof ToolError) throw l;
           throw (
             t.close(),
             (t = void 0),
-            new Hu(`bash: ${l instanceof Error ? l.message : String(l)}`)
+            new ToolError(`bash: ${l instanceof Error ? l.message : String(l)}`)
           );
         }
       } finally {
@@ -509,25 +509,25 @@ function bt(r) {
       required: ["file_path"],
     },
     run: async ({ file_path: t, view_range: e }) => {
-      if (!t) throw new Hu("read: file_path is required");
+      if (!t) throw new ToolError("read: file_path is required");
       let i = await x(r, t),
         n;
       try {
         let f = await d.stat(i);
-        if (!f.isFile()) throw new Hu(`read: ${t} is not a regular file`);
+        if (!f.isFile()) throw new ToolError(`read: ${t} is not a regular file`);
         let h = K(r.maxFileBytes);
         if (h !== null && f.size > h)
-          throw new Hu(
+          throw new ToolError(
             `read: ${t} is ${f.size} bytes, exceeds ${h}-byte limit. Use bash (head/tail/sed) to read a slice.`,
           );
         n = await d.readFile(i, "utf8");
       } catch (f) {
-        if (f instanceof Hu) throw f;
-        throw new Hu(`read: ${O(f, t)}`);
+        if (f instanceof ToolError) throw f;
+        throw new ToolError(`read: ${O(f, t)}`);
       }
       if (!e) return n;
       if (e.length !== 2)
-        throw new Hu("read: view_range must be [start_line, end_line]");
+        throw new ToolError("read: view_range must be [start_line, end_line]");
       let [a, s] = e,
         o = n.split(`
 `),
@@ -552,13 +552,13 @@ function _t(r) {
       required: ["file_path", "content"],
     },
     run: async ({ file_path: t, content: e }) => {
-      if (!t) throw new Hu("write: file_path is required");
+      if (!t) throw new ToolError("write: file_path is required");
       let i = await x(r, t);
       try {
         (await d.mkdir(u.dirname(i), { recursive: !0, mode: E }),
           await F(i, e ?? ""));
       } catch (n) {
-        throw new Hu(`write: ${O(n, t)}`);
+        throw new ToolError(`write: ${O(n, t)}`);
       }
       return `wrote ${Buffer.byteLength(e ?? "")} bytes to ${t}`;
     },
@@ -585,30 +585,30 @@ function vt(r) {
       new_string: i,
       replace_all: n,
     }) => {
-      if (!t) throw new Hu("edit: file_path is required");
-      if (!e) throw new Hu("edit: old_string is required");
+      if (!t) throw new ToolError("edit: file_path is required");
+      if (!e) throw new ToolError("edit: old_string is required");
       let a = await x(r, t),
         s;
       try {
         let l = await d.stat(a);
-        if (!l.isFile()) throw new Hu(`edit: ${t} is not a regular file`);
+        if (!l.isFile()) throw new ToolError(`edit: ${t} is not a regular file`);
         let f = K(r.maxFileBytes);
         if (f !== null && l.size > f)
-          throw new Hu(
+          throw new ToolError(
             `edit: ${t} is ${l.size} bytes, exceeds ${f}-byte limit. Use bash (sed/awk) to edit a large file.`,
           );
         s = await d.readFile(a, "utf8");
       } catch (l) {
-        if (l instanceof Hu) throw l;
-        throw new Hu(`edit: ${O(l, t)}`);
+        if (l instanceof ToolError) throw l;
+        throw new ToolError(`edit: ${O(l, t)}`);
       }
       let o = s.split(e).length - 1;
-      if (o === 0) throw new Hu(`edit: old_string not found in ${t}`);
+      if (o === 0) throw new ToolError(`edit: old_string not found in ${t}`);
       let c;
       if (n) c = s.split(e).join(i);
       else {
         if (o > 1)
-          throw new Hu(
+          throw new ToolError(
             `edit: old_string appears ${o} times in ${t} (must be unique)`,
           );
         c = s.replace(e, () => i);
@@ -616,7 +616,7 @@ function vt(r) {
       try {
         await F(a, c);
       } catch (l) {
-        throw new Hu(`edit: write: ${O(l, t)}`);
+        throw new ToolError(`edit: write: ${O(l, t)}`);
       }
       return `edited ${t} (${n ? o : 1} replacement(s))`;
     },
@@ -639,16 +639,16 @@ function $t(r) {
       required: ["pattern"],
     },
     run: async ({ pattern: t, path: e }) => {
-      if (!t) throw new Hu("glob: pattern is required");
+      if (!t) throw new ToolError("glob: pattern is required");
       let i = u.resolve(r.workdir),
         n = t;
       if (u.isAbsolute(t)) {
         if (!r.unrestrictedPaths)
-          throw new Hu("glob: absolute pattern not permitted");
+          throw new ToolError("glob: absolute pattern not permitted");
         ((i = u.parse(t).root), (n = u.relative(i, t)));
       } else if (e) i = await x(r, e);
       if (!r.unrestrictedPaths && n.split(/[\\/]/).includes(".."))
-        throw new Hu('glob: ".." is not permitted in the pattern');
+        throw new ToolError('glob: ".." is not permitted in the pattern');
       let a = r.unrestrictedPaths ? i : await d.realpath(i).catch(() => i),
         s = [];
       try {
@@ -675,7 +675,7 @@ function $t(r) {
           s.push({ path: c, mtime: l });
         }
       } catch (o) {
-        throw new Hu(`glob: ${o instanceof Error ? o.message : String(o)}`);
+        throw new ToolError(`glob: ${o instanceof Error ? o.message : String(o)}`);
       }
       if (s.length === 0) return "no matches";
       return (
@@ -697,7 +697,7 @@ function kt(r) {
       required: ["pattern"],
     },
     run: async ({ pattern: t, path: e }, i) => {
-      if (!t) throw new Hu("grep: pattern is required");
+      if (!t) throw new ToolError("grep: pattern is required");
       let n = u.resolve(r.workdir);
       if (e) n = await x(r, e);
       let a = await It();
@@ -720,7 +720,7 @@ function Et(r, t, e, i) {
     }),
       s.stderr.on("data", (f) => (c += f)),
       s.on("close", (f) => {
-        if (i?.aborted) return a(new Hu("grep: aborted"));
+        if (i?.aborted) return a(new ToolError("grep: aborted"));
         if (l)
           return n(
             o +
@@ -729,11 +729,11 @@ function Et(r, t, e, i) {
           );
         if (f === 0) return n(o);
         if (f === 1) return n("no matches");
-        a(new Hu(`grep: rg failed: ${c || `exit ${f}`}`));
+        a(new ToolError(`grep: rg failed: ${c || `exit ${f}`}`));
       }),
       s.on("error", (f) => {
-        if (i?.aborted) return a(new Hu("grep: aborted"));
-        a(new Hu(`grep: rg failed: ${f.message}`));
+        if (i?.aborted) return a(new ToolError("grep: aborted"));
+        a(new ToolError(`grep: rg failed: ${f.message}`));
       }));
   });
 }
@@ -742,7 +742,7 @@ async function Ot(r, t, e) {
   try {
     i = new RegExp(r);
   } catch (c) {
-    throw new Hu(
+    throw new ToolError(
       `grep: invalid regex: ${c instanceof Error ? c.message : String(c)}`,
     );
   }
@@ -755,7 +755,7 @@ async function Ot(r, t, e) {
     };
   if ((await d.stat(t).catch(() => null))?.isFile()) await G(t, i, s);
   else await At(t, "", (c) => G(u.join(t, c), i, s), e);
-  if (e?.aborted) throw new Hu("grep: aborted");
+  if (e?.aborted) throw new ToolError("grep: aborted");
   if (n.length === 0) return "no matches";
   return n.join(`
 `);

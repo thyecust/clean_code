@@ -15,9 +15,9 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Vn, mke, MQ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { formatDisplayText, MAX_CONSENT_TEXT_LENGTH, shouldAutoUpdateMarketplace } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isRemoteActive } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE, shouldSkipPluginAutoupdate } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Aa, $t, Koe } from "./chunk-7s6mt1vg.js";
@@ -72,7 +72,7 @@ async function F(t) {
   for (let [p, o] of Object.entries(e)) {
     if (!isSourceAllowedByPolicy(o.source)) continue;
     if (isClaudeAiMarketplaceSource(o.source) && !w1e()) continue;
-    if (MQ(p, o, c[p]?.autoUpdate)) s.add(p.toLowerCase());
+    if (shouldAutoUpdateMarketplace(p, o, c[p]?.autoUpdate)) s.add(p.toLowerCase());
   }
   return s;
 }
@@ -273,9 +273,9 @@ async function I(t) {
               plugin: d,
               error:
                 (C
-                  ? `${Vn(d, 200)}'s marketplace entry now installs it by running a command`
-                  : `${Vn(d, 200)}'s marketplace entry changed the command it runs`) +
-                ` (\`${Vn(P.source.command, mke)}${P.source.mode === "link" ? " [mode: link]" : ""}\`). It was not re-run in the background; ${T.length > 0 ? `run ${T.join(" and ")}` : "an explicit per-scope plugin update is needed"} to review and accept it.`,
+                  ? `${formatDisplayText(d, 200)}'s marketplace entry now installs it by running a command`
+                  : `${formatDisplayText(d, 200)}'s marketplace entry changed the command it runs`) +
+                ` (\`${formatDisplayText(P.source.command, MAX_CONSENT_TEXT_LENGTH)}${P.source.mode === "link" ? " [mode: link]" : ""}\`). It was not re-run in the background; ${T.length > 0 ? `run ${T.join(" and ")}` : "an explicit per-scope plugin update is needed"} to review and accept it.`,
             }));
         }
         let U = f.filter((C) => C.sourceCommand === R);
@@ -322,7 +322,7 @@ function uQt(t) {
   let e = $t();
   return (
     (e.commandSourceReresolve ??= (async () => {
-      if (Pt()) return x();
+      if (isRemoteActive()) return x();
       let c = await I(t);
       if (c.attemptedCount > 0) Koe();
       try {

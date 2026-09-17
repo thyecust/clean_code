@@ -15,7 +15,7 @@ import { pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/
 import { capitalize, pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
-import { gHn, ts } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { isClaudeAiProxyServer, isConnectedMcpServer } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { isUnattendedBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { UP_ARROW_GLYPH, DOWN_ARROW_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
@@ -37,7 +37,7 @@ import "../认证-OAuth登录/url-and-error-redaction.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import "../插件系统/chunk-rbjz1q03.js";
 import "../插件系统/channel-gate.js";
-import { Vi, jx, Bae, P8 } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { Table, DimParenthetical, useMcpReconnect, useMcpToggleEnabled } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { _p } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { qm, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -209,30 +209,30 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
         ],
       }),
       children: [
-        r(Vi, {
+        r(Table, {
           columns: [{ bold: !0, width: 8 }, {}],
           children: [
-            r(Vi.Row, {
+            r(Table.Row, {
               children: [
                 e(N, { children: "Type:" }),
                 e(t, { dimColor: !0, children: s.transport }),
               ],
             }),
             s.url &&
-              r(Vi.Row, {
+              r(Table.Row, {
                 children: [
                   e(N, { children: "URL:" }),
                   e(t, { dimColor: !0, children: s.url }),
                 ],
               }),
             s.command &&
-              r(Vi.Row, {
+              r(Table.Row, {
                 children: [
                   e(N, { children: "Command:" }),
                   e(t, { dimColor: !0, children: s.command }),
                 ],
               }),
-            r(Vi.Row, {
+            r(Table.Row, {
               children: [
                 e(N, { children: "Used by:" }),
                 e(t, { dimColor: !0, children: s.sourceAgents.join(", ") }),
@@ -241,10 +241,10 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
           ],
         }),
         e(o, {
-          children: r(Vi, {
+          children: r(Table, {
             columns: [{ bold: !0, width: 8 }, {}],
             children: [
-              r(Vi.Row, {
+              r(Table.Row, {
                 children: [
                   e(N, { children: "Status:" }),
                   r(t, {
@@ -256,7 +256,7 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
                 ],
               }),
               s.needsAuth &&
-                r(Vi.Row, {
+                r(Table.Row, {
                   children: [
                     e(N, { children: "Auth:" }),
                     r(t, {
@@ -437,7 +437,7 @@ function Le(Jr) {
   const Zt = at ?? !1;
   let pt;
   if (Qt[2] !== at || Qt[3] !== Zt)
-    ((pt = e(jx, { when: Zt, children: at })),
+    ((pt = e(DimParenthetical, { when: Zt, children: at })),
       (Qt[2] = at),
       (Qt[3] = Zt),
       (Qt[4] = pt));
@@ -471,7 +471,7 @@ function wt({
       return f.filter((M) => !a.has(M.name));
     }, [s, f]),
     k = V(() => {
-      let a = s.filter((M) => !gHn(M.client.config));
+      let a = s.filter((M) => !isClaudeAiProxyServer(M.client.config));
       return ln(a);
     }, [s]),
     { claudeAiServers: S, unusedClaudeAiServers: T } = V(() => {
@@ -479,7 +479,7 @@ function wt({
         M = [],
         pe = [];
       for (let g of s) {
-        if (!gHn(g.client.config)) continue;
+        if (!isClaudeAiProxyServer(g.client.config)) continue;
         if (
           (g.client.type === "needs-auth" || g.client.type === "failed") &&
           !a.has(g.name)
@@ -1089,7 +1089,7 @@ function He(fs) {
           .mcpAuthModule();
         let vs = await new ys(Tt.name, Cs).tokens().catch(Rn);
         let bs = getSessionAccessToken() !== null && Tt.type === "connected";
-        let xs = ts(Tt) && getMcpServerTools(Q.tools, Tt.name).length > 0;
+        let xs = isConnectedMcpServer(Tt) && getMcpServerTools(Q.tools, Tt.name).length > 0;
         return Boolean(vs) || bs || xs;
       };
       let Oo = async function Oo() {
@@ -1394,7 +1394,7 @@ function Ft(oi) {
   let le = Tn,
     [Uo] = useTheme(),
     kt = useAppState(),
-    $t = Bae(),
+    $t = useMcpReconnect(),
     { storageV5: Dt } = useStorageV5Context(),
     { host: Ot } = useSession(),
     Et = useAppStateSession(),
@@ -1581,7 +1581,7 @@ function Wo(Li) {
   let Ui = _(8),
     { action: qe, target: ee, onComplete: Oe } = Li,
     Ht = useAppStateSelector(Vn),
-    Ke = P8(),
+    Ke = useMcpToggleEnabled(),
     zt = useAppStateSession(),
     Dn = C(!1),
     On,
@@ -1620,7 +1620,7 @@ function Wo(Li) {
               : Ve.some(Xn)
                 ? `MCP server "${sanitizeDisplayTextWithoutRedaction(ee)}" is pending approval \u2014 approve it via /mcp first`
                 : Ae && Ln === !0
-                  ? Ve.some(ts)
+                  ? Ve.some(isConnectedMcpServer)
                     ? formatStaleDisableMessage(ee)
                     : formatDisabledElsewhereMessage(ee)
                   : !Ae && Ln === !1

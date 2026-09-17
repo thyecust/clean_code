@@ -47,14 +47,13 @@ for (const f of dossierFiles) {
   checked++;
 
   const done = byId.get(id);
-  if (!done) { console.log(`  slice-${id}: 没有对应计划（${listed.length} 个名字未处理）`); uncovered += listed.length; continue; }
+  // 整片没有计划 = 这一片还没做，不是「漏了名字」——不计入未覆盖
+  if (!done) continue;
   const miss = listed.filter((x) => !done.has(x));
   const extra = [...done].filter((x) => !listed.includes(x));
   if (miss.length) {
     console.log(`  slice-${id}: 列出 ${listed.length} · 计划 ${done.size} · **未覆盖 ${miss.length}** -> ${miss.join(", ")}`);
     uncovered += miss.length;
-  } else {
-    console.log(`  slice-${id}: 列出 ${listed.length} · 计划 ${done.size} · 全覆盖`);
   }
   if (extra.length) console.log(`      （计划里有 ${extra.length} 个不在列出清单里：${extra.slice(0, 5).join(", ")}）`);
 }

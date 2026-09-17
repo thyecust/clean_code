@@ -10,7 +10,7 @@
 import { Qs } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { Pp, isRemoteManagedSettingsVerifiedAndConsented } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { removeInvisibleChars, isRemoteManagedSettingsVerifiedAndConsented } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { GITHUB_HOST, normalizeHostname, isGitHubHost, hasBackslashInUrlAuthority, isSuspiciousUrl } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { getSettingsForSource, getPolicySettingsOrigin } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { parseScpRemoteUrl } from "../../01-核心基础设施/共享小工具-未细化/git-remote-url.js";
@@ -59,7 +59,7 @@ function isHeadersHelperDisabledByPolicy(e, t) {
   return headersHelperPolicyRefusal(e, t) !== null;
 }
 function marketplacesRefusedByPolicyClause(e, t = []) {
-  let r = t.length > 0 ? `: ${t.map((o) => Pp(o)).join(", ")}` : "";
+  let r = t.length > 0 ? `: ${t.map((o) => removeInvisibleChars(o)).join(", ")}` : "";
   return `${e} ${pluralize(e, "marketplace")} not updated (managed policy) \u2014 ask your admin${r}`;
 }
 var COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE =

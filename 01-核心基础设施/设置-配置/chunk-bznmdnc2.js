@@ -36,15 +36,15 @@ import { xg } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "./chunk-zqr5ctyf.js";
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Nr, XBe } from "./设置-配置.aqbb35ee.js";
-import { Pt } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isSettingsSourceEnabled, CROSS_SESSION_INBOUND_MODES } from "./设置-配置.aqbb35ee.js";
+import { isRemoteActive } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getInitialSettings, updateSettingsForSource, getSecuritySensitiveSettingWithSources, getAskUserQuestionTimeout, getDialogExpiry, getModelProposedGoalsSettingParsed } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { formatLabelText } from "../共享小工具-未细化/text-sanitization.js";
 import { PERMISSION_MODES, LEFT_ARROW_GLYPH, isSelectablePermissionMode, getExternalPermissionMode, parsePermissionModeOrDefault } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { NOTIFICATION_CHANNELS, REMOTE_HOME_SETTINGS_MODES, TIME_FORMATS, THEME_OPTIONS, MODEL_PROPOSED_GOALS_MODES } from "../../02-功能模块/图片-截图-ComputerUse/settings-option-values.js";
 import { RP } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { saveUserIntentSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
-import { OYe, DCe, jfe, vTt, Xer, Yer } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isMonorepoWriteBlockEnabled, areOrgMemoryWriteGatesOpen, isOrgMemoryWriteOptedInForAccount, setOrgMemoryWriteOptIn, shouldOfferOrgMemoryReadSetting, setOrgMemoryReadEnabled } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { areWorkflowsEnabled, isWorkflowsEnabledByDefault } from "../共享小工具-未细化/workflow-feature-gates.js";
 import { Yk, iA, zG } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import {
@@ -103,7 +103,7 @@ function YDt(l) {
 }
 var ne = ["never", "60s", "5m", "10m"],
   ae = ["default", "60s", "5m", "10m", "never"],
-  se = ["default", ...XBe];
+  se = ["default", ...CROSS_SESSION_INBOUND_MODES];
 function Olt() {
   return {
     ...!1,
@@ -115,7 +115,7 @@ function Olt() {
   };
 }
 function ie(l) {
-  return getSecuritySensitiveSettingWithSources(l).find((r) => Nr(r.source));
+  return getSecuritySensitiveSettingWithSources(l).find((r) => isSettingsSourceEnabled(r.source));
 }
 function W(l) {
   let r = ie(l)?.source;
@@ -775,7 +775,7 @@ function gSe(l) {
           },
         ]
       : []),
-    ...(Ne(Xer())
+    ...(Ne(shouldOfferOrgMemoryReadSetting())
       ? [
           {
             id: "orgMemoryRead",
@@ -784,12 +784,12 @@ function gSe(l) {
             value: getCurrentProjectConfig().orgMemoryRead ?? !0,
             type: "boolean",
             onChange(e) {
-              (Yer(e, v), p((o) => ({ ...o })));
+              (setOrgMemoryReadEnabled(e, v), p((o) => ({ ...o })));
             },
           },
         ]
       : []),
-    ...(Fe(!OYe() && (DCe() || getCurrentProjectConfig().orgMemoryWrites === !0))
+    ...(Fe(!isMonorepoWriteBlockEnabled() && (areOrgMemoryWriteGatesOpen() || getCurrentProjectConfig().orgMemoryWrites === !0))
       ? [
           {
             id: "orgMemoryWrites",
@@ -797,13 +797,13 @@ function gSe(l) {
               getCurrentProjectConfig().orgMemoryRead === !1
                 ? "Synced project memory writes (enable reads first)"
                 : "Synced project memory writes (this directory; applies next session)",
-            value: jfe(),
+            value: isOrgMemoryWriteOptedInForAccount(),
             canWithdraw: () => getCurrentProjectConfig().orgMemoryWrites === !0,
             type: "boolean",
             consentGated: !0,
             onChange(e) {
-              let o = e && !jfe() && getCurrentProjectConfig().orgMemoryWrites === !0;
-              (vTt(o ? !1 : e, v), p((t) => ({ ...t })));
+              let o = e && !isOrgMemoryWriteOptedInForAccount() && getCurrentProjectConfig().orgMemoryWrites === !0;
+              (setOrgMemoryWriteOptIn(o ? !1 : e, v), p((t) => ({ ...t })));
             },
           },
         ]
@@ -1637,7 +1637,7 @@ function gSe(l) {
       : []),
   ];
   return {
-    settings: Pt() ? Z.filter((e) => !Oe(e.id)) : Z,
+    settings: isRemoteActive() ? Z.filter((e) => !Oe(e.id)) : Z,
     helpers: {
       onChangeMainModelConfig: z,
       onChangeVerbose: Y,

@@ -37,7 +37,7 @@ import "../../01-核心基础设施/共享小工具-未细化/queued-message-con
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { X8, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
-import { Yot, d6e, p6e, f6e } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { FlaggedItemsRemoveDialog, AutoModeSetupReviewDialog, AUTO_MODE_SETUP_REVIEW_DIALOG, AUTO_MODE_FLAGGED_ALLOW_DIALOG } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { PIe } from "./chunk-z0qj8awf.js";
 import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
@@ -364,7 +364,7 @@ function fe({
     });
   if (b === "review" && n.proposal) {
     let S = n.proposal;
-    return e(d6e, {
+    return e(AutoModeSetupReviewDialog, {
       hideIndexes: !0,
       proposal: S,
       onCancel: c,
@@ -396,7 +396,7 @@ function fe({
   if (b === "write") return e(SpinnerMessageLine, { message: "Saving\u2026" });
   if (b === "flagged" && n.proposal && n.saved) {
     let S = n.saved;
-    return e(Yot, {
+    return e(FlaggedItemsRemoveDialog, {
       hideIndexes: !0,
       flagged: n.proposal.remove_from_permissions_allow,
       initialPicking: n.flaggedPicking,
@@ -740,7 +740,7 @@ async function De(n, a, s) {
     return;
   }
   X(a, w, "completed");
-  let b = await M(p6e, { ...m.proposal, mode: n.mode }, { place: "under" });
+  let b = await M(AUTO_MODE_SETUP_REVIEW_DIALOG, { ...m.proposal, mode: n.mode }, { place: "under" });
   if (b !== "accept") {
     (T?.(
       createSystemInfoMessage(
@@ -767,7 +767,7 @@ async function De(n, a, s) {
   let z = { removed: 0, skipped: 0, notFound: 0 };
   if (m.proposal.remove_from_permissions_allow.length > 0) {
     let C = await M(
-        f6e,
+        AUTO_MODE_FLAGGED_ALLOW_DIALOG,
         { flagged: m.proposal.remove_from_permissions_allow, runId: a },
         { place: "under" },
       ),

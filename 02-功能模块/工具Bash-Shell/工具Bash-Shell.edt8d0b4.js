@@ -24,25 +24,25 @@ import { TruncatingOutputBuffer } from "../../01-核心基础设施/核心工具
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { emitTaskNotification, getOwnValue, isForegroundSubagentContext, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, POWERSHELL_TOOL_NAME, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { yS, hL, _L, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getToolResultsDirForSession, getSidecarKeyForToolResultFile, ensureToolResultsDirectory, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { nL, Iq } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { INLINE_CODE_FLAGS, isOutsideReadsBlockedAsk, outsideReadsRuntimePathAsk, outsideReadsTooComplexAsk, BASH_COMMAND_CLAMP_DENY_REASON, BASH_COMMAND_CLAMP_CRASH_REASON } from "../权限系统/chunk-e4pfvp7x.js";
 import { hge, Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { getHostCapabilityState, areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import {
-  Q_,
-  rme,
-  ah,
-  XCe,
-  Qj,
-  uEt,
-  dEt,
+  isWindowsNetworkPath,
+  buildDirectoryReadRuleUpdate,
+  collectRulesByContent,
+  extractRulePrefix,
+  matchesRuleGlob,
+  classifyRuleContent,
+  buildExactCommandAllowUpdate,
   normalizeCaseForComparison,
   allWorkingDirectories,
   matchingRuleForInput,
 } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Ys, jE } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { isBashToolAvailable, isGetTaskToolEnabled } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
@@ -2395,7 +2395,7 @@ function Gn(e, t, o = !1) {
         let oe = [];
         if (B && ie(E))
           if (_ === "read") {
-            let ye = rme(nL(B), "session");
+            let ye = buildDirectoryReadRuleUpdate(nL(B), "session");
             if (ye) oe.push(ye);
           } else
             oe.push({
@@ -2483,7 +2483,7 @@ function Gn(e, t, o = !1) {
           let se = [];
           if (E && ie(j))
             if (_ === "read") {
-              let oe = rme(nL(E), "session");
+              let oe = buildDirectoryReadRuleUpdate(nL(E), "session");
               if (oe) se.push(oe);
             } else
               se.push({
@@ -3336,7 +3336,7 @@ async function Wt(e) {
   return getLowercaseCommandNames(o)[0] ?? "";
 }
 function zt(e) {
-  return uEt(e);
+  return classifyRuleContent(e);
 }
 function jt(e) {
   let t = e.trimStart(),
@@ -3377,7 +3377,7 @@ function _e(e) {
     e.includes("*")
   )
     return [];
-  return dEt(POWERSHELL_TOOL_NAME, We(e));
+  return buildExactCommandAllowUpdate(POWERSHELL_TOOL_NAME, We(e));
 }
 function pt(e, t, o, r) {
   let a = We(e.command);
@@ -3423,7 +3423,7 @@ function pt(e, t, o, r) {
             break;
           case "wildcard":
             if (o === "exact") return !1;
-            return Qj(C.pattern, F, !0, !0);
+            return matchesRuleGlob(C.pattern, F, !0, !0);
         }
       }
       if (A(a)) return !0;
@@ -3448,7 +3448,7 @@ function pt(e, t, o, r) {
         if (Ef(b(F)) === x && o !== "exact") {
           let W = C.pattern.slice(F.length).replace(/^[\s\u0085\u180e]+/, " "),
             E = x + W;
-          if (Qj(E, L, !0, !0)) return !0;
+          if (matchesRuleGlob(E, L, !0, !0)) return !0;
         }
       }
       return !1;
@@ -3456,11 +3456,11 @@ function pt(e, t, o, r) {
     .map(([, _]) => _);
 }
 function Ae(e, t, o) {
-  let r = ah(t, POWERSHELL_TOOL_NAME, "deny"),
+  let r = collectRulesByContent(t, POWERSHELL_TOOL_NAME, "deny"),
     a = pt(e, r, o, "deny"),
-    d = ah(t, POWERSHELL_TOOL_NAME, "ask"),
+    d = collectRulesByContent(t, POWERSHELL_TOOL_NAME, "ask"),
     f = pt(e, d, o, "ask"),
-    b = ah(t, POWERSHELL_TOOL_NAME, "allow"),
+    b = collectRulesByContent(t, POWERSHELL_TOOL_NAME, "allow"),
     p = pt(e, b, o, "allow");
   return { matchingDenyRules: a, matchingAskRules: f, matchingAllowRules: p };
 }
@@ -3639,7 +3639,7 @@ async function Is(e, t, o) {
       message: createPermissionRequestMessage(POWERSHELL_TOOL_NAME),
       decisionReason: { type: "rule", rule: p[0] },
     };
-  if (I === null && Q_(r))
+  if (I === null && isWindowsNetworkPath(r))
     I = {
       behavior: "ask",
       message:
@@ -3782,7 +3782,7 @@ async function Is(e, t, o) {
         behavior: "ask",
         message: `Command argument '${v}' uses a non-filesystem provider path and requires approval`,
       };
-    if (Q_(N, !0))
+    if (isWindowsNetworkPath(N, !0))
       return {
         behavior: "ask",
         message: `Command argument '${v}' contains a UNC path that could trigger network requests`,
@@ -4509,14 +4509,14 @@ var Ks =
         return a.toLowerCase() === d ? [a] : [a, d];
       });
       return (r) => {
-        let a = XCe(r);
+        let a = extractRulePrefix(r);
         return o.some((d) => {
           if (a !== null) {
             let f = a.toLowerCase(),
               b = d.toLowerCase();
             return b === f || b.startsWith(`${f} `);
           }
-          return Qj(r, d, !0, !0);
+          return matchesRuleGlob(r, d, !0, !0);
         });
       };
     },
@@ -4549,7 +4549,7 @@ var Ks =
           logFeatureSad("sandbox_exec", "windows_policy_refusal"),
           { result: !1, message: t, errorCode: 11 }
         );
-      if (isMonitorToolEnabled() && Ys() && !areBackgroundTasksDisabled() && !e.run_in_background) {
+      if (isMonitorToolEnabled() && isBashToolAvailable() && !areBackgroundTasksDisabled() && !e.run_in_background) {
         let o = Us(e.command);
         if (o !== null)
           return {
@@ -4634,7 +4634,7 @@ var Ks =
             readToolName: READ_TOOL_NAME,
           })
         : "";
-      if (f && jE())
+      if (f && isGetTaskToolEnabled())
         return {
           tool_use_id: y,
           type: "tool_result",
@@ -4728,7 +4728,7 @@ var Ks =
             isMainThread: x,
             surface: "shell",
           });
-          if (jE())
+          if (isGetTaskToolEnabled())
             logEvent("tengu_bash_task_ack", {
               trigger: w.backgroundedByUser
                 ? S("user")
@@ -4810,10 +4810,10 @@ var Ks =
         let oe, fe;
         if (w.outputFilePath && w.outputTaskId)
           try {
-            let Y = yS(t.session);
-            await _L(Y, t.storageV5);
+            let Y = getToolResultsDirForSession(t.session);
+            await ensureToolResultsDirectory(Y, t.storageV5);
             let le = g7e(Y, w.outputTaskId, !1),
-              te = isHoverRestEnabled() && t.storageV5 !== void 0 ? hL($s(le), Ds(le)) : void 0,
+              te = isHoverRestEnabled() && t.storageV5 !== void 0 ? getSidecarKeyForToolResultFile($s(le), Ds(le)) : void 0,
               Te = !0;
             if (isHoverRestEnabled() && t.storageV5 !== void 0 && te !== void 0) {
               let ve = await storeShellOutputToStorage(t.storageV5, te, w.outputFilePath, MAX_PERSISTED_OUTPUT_BYTES, getTaskOutputRootDir());

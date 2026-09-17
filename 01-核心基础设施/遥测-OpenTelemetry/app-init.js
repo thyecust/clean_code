@@ -50,7 +50,7 @@ import {
   getOrCreateMachineID,
   recordFirstStartTime,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { da, primeRemoteManagedSettingsCache } from "../设置-配置/设置-配置.aqbb35ee.js";
+import { getHostSettingsStore, primeRemoteManagedSettingsCache } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { SRt } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
 import { getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -75,7 +75,7 @@ import {
 import { isScratchpadEnabled, ensureScratchpadDir } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { buildOtelResourceAttributes } from "./otel-events.js";
 import { isPolicyLimitsEligible } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { Bk, Ys } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { isPowerShellToolEnabled, isBashToolAvailable } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { seedUserSettings, primeSettings } from "../设置-配置/chunk-b536v45y.js";
 import { primePlanSlugCollisions } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { goe, dR } from "./chunk-x7kby92q.js";
@@ -136,7 +136,7 @@ async function T(t = {}) {
     let s = Date.now();
     if (isHoverRestEnabled() && e?.backend !== void 0)
       (await primeWorkspaceRoots(e.backend),
-        await Promise.all([enableConfigs(e.backend), seedUserSettings(e.backend, da())]));
+        await Promise.all([enableConfigs(e.backend), seedUserSettings(e.backend, getHostSettingsStore())]));
     else await enableConfigs();
     if (
       (writeDiagnosticsEvent("info", "init_configs_enabled", { duration_ms: Date.now() - s }),
@@ -169,7 +169,7 @@ async function T(t = {}) {
     let o = pinStorageV5(e),
       m = credentialsStoreFor(o);
     if (isHoverRestEnabled() && o !== void 0) await primeWorkspaceRoots(o);
-    if ((await primeSettings(o, da()), isHoverRestEnabled() && o !== void 0)) await hir(o);
+    if ((await primeSettings(o, getHostSettingsStore()), isHoverRestEnabled() && o !== void 0)) await hir(o);
     if (
       (qAn({ storageV5: o, credentials: m }),
       setGrowthBookCredentials(m),
@@ -239,8 +239,8 @@ async function T(t = {}) {
           { level: "warn" },
         );
       }
-    if ((SRt(), getCurrentPlatform() === "windows" && !Ys())) {
-      if (!Bk())
+    if ((SRt(), getCurrentPlatform() === "windows" && !isBashToolAvailable())) {
+      if (!isPowerShellToolEnabled())
         (console.error(`Claude Code on Windows requires a shell tool. Git Bash was not found and the PowerShell tool is disabled (CLAUDE_CODE_USE_POWERSHELL_TOOL=0).
   - Install Git for Windows: https://git-scm.com/downloads/win, or
   - Remove CLAUDE_CODE_USE_POWERSHELL_TOOL from your environment or settings.`),

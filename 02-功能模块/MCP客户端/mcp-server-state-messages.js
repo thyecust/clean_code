@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { mi } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { ts } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { isConnectedMcpServer } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { sanitizeDisplayTextWithoutRedaction, MCP_BLOCKED_BY_POLICY_MESSAGE, MCP_NOT_APPROVED_MESSAGE, isUnconfiguredMcpServer } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { V$ } from "../插件系统/chunk-7s6mt1vg.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -66,8 +66,8 @@ function formatBulkTogglePersistWarning(e, n, t) {
     (r) => r.type !== "disabled" && getMcpServerType(r) !== "needs-approval" && t(r.name),
   );
   if (o.length === 0) return null;
-  let i = countMatching(o, ts),
-    c = countMatching(o, (r) => !ts(r) && isUnconfiguredMcpServer(r)),
+  let i = countMatching(o, isConnectedMcpServer),
+    c = countMatching(o, (r) => !isConnectedMcpServer(r) && isUnconfiguredMcpServer(r)),
     p = o.length - i - c,
     a = [];
   if (p > 0)

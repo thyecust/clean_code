@@ -20,18 +20,18 @@ import { normalizeWhitespace } from "../../01-核心基础设施/核心工具-�
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
-  $U,
-  iL,
-  $ge,
-  Jet,
-  UU,
-  IRt,
-  MBe,
-  NBe,
-  LRt,
-  ett,
-  FBe,
-  dke,
+  PROVIDER_CONFIG_ENV_VARS,
+  BASE_URL_ENV_VARS,
+  BASE_URL_ENV_GROUPS,
+  ALL_BASE_URL_ENV_VARS,
+  API_KEY_ENV_VARS,
+  SKIP_AUTH_ENV_VARS,
+  AWS_ENV_VARS,
+  clearAwsEnvVars,
+  VERTEX_REGION_ENV_PREFIXES,
+  HOST_AUTH_ENV_VARS,
+  hasHostManagedAuth,
+  getHostAuthEnvVarName,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { PROCESS_WRAPPER_ENV_VAR, FAST_CRASH_WINDOW_MS, getLauncherArgv, getLauncherConfigError, isLauncherRunnable } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
@@ -809,29 +809,29 @@ function Xe(e, t, r, s, p) {
   if (e.isolation === "worktree") o.CLAUDE_BG_ISOLATION = "worktree";
   for (let m of le) if (!e.env?.[m]) delete o[m];
   for (let m of Object.keys(o))
-    if (LRt.some((k) => m.startsWith(k)) && !e.env?.[m]) delete o[m];
-  if (FBe(d) || E8(e)) {
-    for (let v of UU) delete o[v];
-    if (E8(e) || Ie(d.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST)) NBe(o, e.env);
-    let m = dke(d);
+    if (VERTEX_REGION_ENV_PREFIXES.some((k) => m.startsWith(k)) && !e.env?.[m]) delete o[m];
+  if (hasHostManagedAuth(d) || E8(e)) {
+    for (let v of API_KEY_ENV_VARS) delete o[v];
+    if (E8(e) || Ie(d.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST)) clearAwsEnvVars(o, e.env);
+    let m = getHostAuthEnvVarName(d);
     if (m) (te(o, [m]), delete o[m]);
     let k =
       e.env?.CLAUDE_CODE_HOST_CREDS_FILE ??
       (E8(e) ? d.CLAUDE_CODE_HOST_CREDS_FILE : void 0);
     if (k) o.CLAUDE_CODE_HOST_CREDS_FILE = k;
-    for (let v of Jet) delete o[v];
+    for (let v of ALL_BASE_URL_ENV_VARS) delete o[v];
   } else {
     let m = new Set(),
       k = new Set(),
       v = new Set(),
       _ = !1,
       w = !1;
-    for (let y of $ge) {
+    for (let y of BASE_URL_ENV_GROUPS) {
       let D = y.selection === void 0 || Ie(o[y.selection]);
       if (
         o[y.endpoint] === d[y.endpoint] &&
         (!o[y.endpoint] || D) &&
-        y.companions.every((T) => !IRt.includes(T) || Ie(o[T]) === Ie(d[T]))
+        y.companions.every((T) => !SKIP_AUTH_ENV_VARS.includes(T) || Ie(o[T]) === Ie(d[T]))
       ) {
         if (o[y.endpoint]) {
           for (let T of y.companions) m.add(T);
@@ -851,7 +851,7 @@ function Xe(e, t, r, s, p) {
   if (p) ((o.CLAUDE_BG_RV_AUTH = p.rvAuth), (o.CLAUDE_BG_PTY_AUTH = p.ptyAuth));
   if (r) delete o.CLAUDE_CODE_OAUTH_TOKEN;
   if (e.launch.mode === "exec") {
-    let m = $ge.some((k) => re(o, k));
+    let m = BASE_URL_ENV_GROUPS.some((k) => re(o, k));
     for (let k of Object.keys(o))
       if (
         (k.startsWith("CLAUDE_") &&
@@ -862,7 +862,7 @@ function Xe(e, t, r, s, p) {
       )
         delete o[k];
     if ((delete o.BROWSER, m)) delete o.ANTHROPIC_AUTH_TOKEN;
-    for (let k of Jet) delete o[k];
+    for (let k of ALL_BASE_URL_ENV_VARS) delete o[k];
     o.CLAUDE_PTY_HOST_EXEC = "1";
   }
   return o;
@@ -902,17 +902,17 @@ async function Ae(e, t) {
 }
 var le = [
     ...nyn,
-    ...$U,
+    ...PROVIDER_CONFIG_ENV_VARS,
     "CLAUDE_CODE_EXTRA_BODY",
-    ...iL,
-    ...IRt,
+    ...BASE_URL_ENV_VARS,
+    ...SKIP_AUTH_ENV_VARS,
     "ANTHROPIC_CUSTOM_HEADERS",
-    ...ett,
+    ...HOST_AUTH_ENV_VARS,
     "CLAUDE_CODE_HOST_CREDS_FILE",
   ],
   E8 = (e) => Ie(e.env?.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST),
   Tt = new Map(
-    [...NON_INHERITED_ENV_VARS, ...le, ...Jet, ...UU, ...MBe].map((e) => [e.toUpperCase(), e]),
+    [...NON_INHERITED_ENV_VARS, ...le, ...ALL_BASE_URL_ENV_VARS, ...API_KEY_ENV_VARS, ...AWS_ENV_VARS].map((e) => [e.toUpperCase(), e]),
   );
 function te(e, t = []) {
   if (getCurrentPlatform() !== "windows") return;
@@ -929,7 +929,7 @@ function re(e, t) {
   return (
     !!e[t.endpoint] &&
     (t.endpoint === "ANTHROPIC_BASE_URL" ||
-      t.companions.some((r) => IRt.includes(r) && Ie(e[r])))
+      t.companions.some((r) => SKIP_AUTH_ENV_VARS.includes(r) && Ie(e[r])))
   );
 }
 function ye(e) {
@@ -1655,7 +1655,7 @@ class qW {
         if (
           g.toUpperCase() === "PATH" ||
           g.toUpperCase() === "CLAUDE_CODE_EXTRA_BODY" ||
-          Jet.includes(g.toUpperCase())
+          ALL_BASE_URL_ENV_VARS.includes(g.toUpperCase())
         )
           delete t.dispatch.env[g];
     }
@@ -1971,7 +1971,7 @@ class qW {
           e === "CLAUDE_CODE_HOST_CREDS_FILE" ||
           e === "PATH" ||
           e.toUpperCase() === "CLAUDE_CODE_EXTRA_BODY" ||
-          Jet.includes(e.toUpperCase())
+          ALL_BASE_URL_ENV_VARS.includes(e.toUpperCase())
         )
           return;
         if (typeof t === "string" && t.length > je) return t.slice(0, je);
@@ -3052,15 +3052,15 @@ function Mt(e) {
   let t = { ...process.env };
   te(t);
   for (let r of NON_INHERITED_ENV_VARS) delete t[r];
-  if ((g4(t), removeBgDispatcherPlanEnvVars(t), removeGuiHostEntrypoint(t), FBe(t))) {
-    let r = dke(t);
+  if ((g4(t), removeBgDispatcherPlanEnvVars(t), removeGuiHostEntrypoint(t), hasHostManagedAuth(t))) {
+    let r = getHostAuthEnvVarName(t);
     if (r) (te(t, [r]), delete t[r]);
-    for (let s of UU) delete t[s];
-    if (Ie(t.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST)) NBe(t);
-  } else if ($ge.some((r) => re(t, r))) delete t.ANTHROPIC_AUTH_TOKEN;
+    for (let s of API_KEY_ENV_VARS) delete t[s];
+    if (Ie(t.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST)) clearAwsEnvVars(t);
+  } else if (BASE_URL_ENV_GROUPS.some((r) => re(t, r))) delete t.ANTHROPIC_AUTH_TOKEN;
   for (let r of le) delete t[r];
   for (let r of Object.keys(t))
-    if (LRt.some((s) => r.startsWith(s))) delete t[r];
+    if (VERTEX_REGION_ENV_PREFIXES.some((s) => r.startsWith(s))) delete t[r];
   if (getCurrentPlatform() === "macos") delete t.CLAUDE_CODE_OAUTH_TOKEN;
   return (
     Object.assign(t, {

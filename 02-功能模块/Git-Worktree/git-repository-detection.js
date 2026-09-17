@@ -12,7 +12,7 @@ import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cw
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { GIT_HARDENED_ARGS, execFileNoThrowWithCwd } from "./git-exec-hardening.js";
-import { Eu, gitExe, redactGitRemoteCredentials } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getGitRepoCache, gitExe, redactGitRemoteCredentials } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { getGitProvider, parseRemoteHostname } from "../../01-核心基础设施/共享小工具-未细化/git-remote-url.js";
 var REPO_PATH_SEGMENT_PATTERN = String.raw`(?!\.{1,2}(?:/|$))[A-Za-z0-9_.][\w.-]*`,
@@ -30,7 +30,7 @@ function isNestedGitLabProject(t) {
   return t.owner.includes("/");
 }
 function clearRepositoryCaches() {
-  (Eu().repositoryByCwd.clear(), Eu().remoteHostByCwd.clear());
+  (getGitRepoCache().repositoryByCwd.clear(), getGitRepoCache().remoteHostByCwd.clear());
 }
 async function detectCurrentRepository() {
   let t = await detectCurrentRepositoryWithHost();
@@ -108,7 +108,7 @@ async function G(t) {
 }
 async function detectCurrentRepositoryWithHost(t, r) {
   let e = t ?? getCwd(),
-    o = Eu().repositoryByCwd;
+    o = getGitRepoCache().repositoryByCwd;
   if (!r?.skipCache && o.has(e)) {
     let s = o.get(e) ?? null;
     if (!s || !isNestedGitLabProject(s)) return s;
@@ -122,7 +122,7 @@ async function detectCurrentRepositoryWithHost(t, r) {
     if ((n(`Git remote URL: ${redactGitRemoteCredentials(s)}`), !s))
       return (
         n("No git remote URL found"),
-        Eu().remoteHostByCwd.delete(e),
+        getGitRepoCache().remoteHostByCwd.delete(e),
         l(),
         null
       );
@@ -161,8 +161,8 @@ async function detectCurrentRepositoryWithHost(t, r) {
         `Parsed repository: ${i ? `${i.host}/${i.owner}/${i.name}` : null} from URL: ${redactGitRemoteCredentials(s)}`,
       ));
     let R = i?.host ?? parseRemoteHostname(s);
-    if (R) Eu().remoteHostByCwd.set(e, R);
-    else Eu().remoteHostByCwd.delete(e);
+    if (R) getGitRepoCache().remoteHostByCwd.set(e, R);
+    else getGitRepoCache().remoteHostByCwd.delete(e);
     if (i) o.set(e, i);
     else if (h) o.delete(e);
     return i;
@@ -171,12 +171,12 @@ async function detectCurrentRepositoryWithHost(t, r) {
   }
 }
 function getCachedRepository() {
-  let t = Eu().repositoryByCwd.get(getCwd());
+  let t = getGitRepoCache().repositoryByCwd.get(getCwd());
   if (!t || !isGitHubHost(t.host)) return null;
   return `${t.owner}/${t.name}`;
 }
 function getCachedRepositoryHost() {
-  return Eu().repositoryByCwd.get(getCwd())?.host ?? null;
+  return getGitRepoCache().repositoryByCwd.get(getCwd())?.host ?? null;
 }
 function isGitLabMrTarget(t) {
   if (isGitLabMergeRequestUrl(t) || /^!\d+$/.test(t)) return !0;
@@ -196,11 +196,11 @@ function glabMrProjectUrl(t) {
   return C.exec(t)?.[1] ?? null;
 }
 function getCachedRemoteHost() {
-  return Eu().remoteHostByCwd.get(getCwd()) ?? null;
+  return getGitRepoCache().remoteHostByCwd.get(getCwd()) ?? null;
 }
 function isCachedGitHubRepo() {
   let t = getCwd(),
-    r = Eu().repositoryByCwd;
+    r = getGitRepoCache().repositoryByCwd;
   if (!r.has(t)) return;
   let e = r.get(t);
   return !!e && isGitHubHost(e.host);

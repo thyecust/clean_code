@@ -30,13 +30,13 @@ import {
 import { clearResolveGitDirCache, clearIsGitMemoFor } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { clearRepositoryCaches } from "../Git-Worktree/git-repository-detection.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
-import { YSn } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { sessionDateCache } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { globalFileIndexCache, resetFileIndexCache } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
 import { GoalProposalState } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-state.js";
 import { clearSwarmPermissions } from "../权限系统/swarm-permission-poller.js";
 function clearSessionCaches(t, r = new Set(), i, o, l, m = !1) {
   let a = r.size > 0;
-  if ((clearUserContextCache(t), clearIsGitMemoFor(t), YSn.of(t).clear(), resetFileIndexCache(globalFileIndexCache), clearCommandsCache(), clearPromptCacheBreakState(r), jrt(null), !a))
+  if ((clearUserContextCache(t), clearIsGitMemoFor(t), sessionDateCache.of(t).clear(), resetFileIndexCache(globalFileIndexCache), clearCommandsCache(), clearPromptCacheBreakState(r), jrt(null), !a))
     deferredToolLedgerRegistry.peek(t)?.clear();
   let s = getTeleportCacheModule();
   if (s?.getTeleportCacheState().status === "active")

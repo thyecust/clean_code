@@ -11,11 +11,11 @@
 // [preload stripped] 原本在此预载 10 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { pluralize, truncateMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { AG } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { MarkdownEngine } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { go, I5t } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { computeMean } from "../成本-Token统计/eval-report.js";
-import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { formatDisplayText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { relative } from "path";
 var Z = /&(?!(?:#\d{1,7}|#[Xx][0-9a-fA-F]{1,6}|\w+);)/g,
@@ -25,7 +25,7 @@ function k(e) {
 }
 function T(e) {
   let s = e.renderImage ?? ((a, n) => k(a || n));
-  return new AG({
+  return new MarkdownEngine({
     gfm: !0,
     renderer: {
       html(a) {
@@ -127,7 +127,7 @@ function evalReportTitle(e) {
   return e.suite.plugins.length > 0
     ? e.suite.plugins
         .map((s) => {
-          let a = ie.test(s.name) ? s.name : b(Vn(F(s.name), 80));
+          let a = ie.test(s.name) ? s.name : b(formatDisplayText(F(s.name), 80));
           return s.version !== void 0 && oe.test(s.version)
             ? `${a} v${s.version}`
             : a;

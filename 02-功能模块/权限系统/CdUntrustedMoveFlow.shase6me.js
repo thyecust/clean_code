@@ -16,7 +16,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { isPathTrusted } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { parseSettingsFileUncached, X6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { parseSettingsFileUncached, resolveLocalSettingsStoreRoot } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { findCanonicalGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -26,9 +26,9 @@ import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
-import { Aot, Cot, vot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { NewMcpServerDialog, NewMcpServersDialog, getPendingMcpServers } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { Szt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getPermissionRulesFromSettings } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 import { recordDirectoryTrust, validateCdTarget, cdRuleRefusalMessage, relocateSession, reapplyProjectSettingsAfterTrustChange, withGatedGrantsApplied } from "../Memory-CLAUDE.md/chunk-br7dq41d.js";
 import {
@@ -68,7 +68,7 @@ function ge() {
 }
 function Oe(s) {
   let a = ao(s),
-    l = X6(a, findCanonicalGitRootUncached),
+    l = resolveLocalSettingsStoreRoot(a, findCanonicalGitRootUncached),
     c = parseSettingsFileUncached(le(a, ".claude", "settings.json")).settings,
     u = le(l, ".claude", "settings.local.json"),
     h = le(a, ".claude", "settings.local.json"),
@@ -94,8 +94,8 @@ function Oe(s) {
       read: (S) => g[S] ?? null,
       rules: (S) =>
         S === "localSettings"
-          ? v.flatMap((io) => Szt(io, S))
-          : Szt(g[S] ?? null, S),
+          ? v.flatMap((io) => getPermissionRulesFromSettings(io, S))
+          : getPermissionRulesFromSettings(g[S] ?? null, S),
     },
     i = (S) => hasApiKeyHelper(S) || hasAwsAuthCommands(S) || hasGcpAuthCommand(S) || hasOtelHeadersHelper(S) || hasProxyAuthHelper(S),
     m = [],
@@ -563,7 +563,7 @@ async function ut(s, a, l) {
 async function Mo(s) {
   let a = { pendingServers: [], pluginServerNames: new Set() };
   try {
-    let l = await vot(s.storageV5);
+    let l = await getPendingMcpServers(s.storageV5);
     if (l.pendingServers.length > 0 && getGatingSettingsErrors().length > 0)
       return (
         n(
@@ -607,7 +607,7 @@ function Y(St) {
     else V = qe[2];
     let So;
     if (qe[3] !== I || qe[4] !== A || qe[5] !== V)
-      ((So = e(Aot, { serverName: A, isPluginServer: V, onDone: I })),
+      ((So = e(NewMcpServerDialog, { serverName: A, isPluginServer: V, onDone: I })),
         (qe[3] = I),
         (qe[4] = A),
         (qe[5] = V),
@@ -621,7 +621,7 @@ function Y(St) {
     qe[8] !== J.pendingServers ||
     qe[9] !== J.pluginServerNames
   )
-    ((V = e(Cot, {
+    ((V = e(NewMcpServersDialog, {
       serverNames: J.pendingServers,
       pluginServerNames: J.pluginServerNames,
       onDone: I,

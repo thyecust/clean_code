@@ -28,88 +28,88 @@ import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj
 import { lit as S, fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import {
-  b0,
-  C_,
-  kRt,
-  da,
-  Za,
-  ms,
-  Ow,
-  Tb,
-  Dq,
-  glr,
-  vHn,
-  ptt,
-  RHn,
-  kHn,
-  xHn,
-  HHn,
-  IHn,
-  PHn,
-  w8t,
-  OHn,
-  hlr,
-  Uq,
-  Kge,
-  XT,
-  XRt,
-  mtt,
-  MHn,
+  mergeWith,
+  HOOK_EVENT_NAMES,
+  SandboxSettingsSchema,
+  getHostSettingsStore,
+  invalidateAllSettings,
+  getEnabledSettingsSources,
+  PROJECT_SCOPED_SETTINGS_SOURCE_SET,
+  getManagedSettingsDirPath,
+  normalizeSettingsAliases,
+  getPermissionsSchema,
+  isUncPath,
+  isNetworkAutomountPath,
+  isKernelMagicLinkPath,
+  isNormalizedPath,
+  WINDOWS_EXECUTABLE_SUFFIX_PATTERN,
+  isPowerShellScriptPath,
+  isPowerShellPathWithWildcards,
+  POWERSHELL_PATH_WILDCARD_MESSAGE,
+  MAX_TIMEOUT_MS,
+  PATH_SCRIPT_EXCLUSIVE_MESSAGE,
+  getInlinePolicyHelperConfigError,
+  POLICY_HELPER_PLATFORMS,
+  getStaticSettingsPayloadSchema,
+  getSettingsSchema,
+  getPolicyHelperCommand,
+  replaceNonPrintableAscii,
+  describePolicyHelperCommand,
   isRemoteManagedSettingsVerified,
   isRemoteManagedSettingsVerifiedAndConsented,
   registerSyncCacheResetListener,
   getEligibilityMemo,
   getRemoteManagedSettingsSyncFromCache,
-  v8t,
-  R8t,
-  wke,
-  XHn,
-  QBe,
-  ZBe,
-  rkt,
-  YHn,
-  WU,
-  Tke,
-  e2e,
-  Bq,
-  btt,
-  wtt,
-  n_,
-  Slr,
-  Eke,
-  I8t,
-  Ake,
-  Eie,
-  okt,
-  skt,
-  JHn,
-  blr,
-  jq,
-  ehe,
+  sanitizeSettingsWarnings,
+  parseManagedSettingsPayload,
+  collectSettingsWarnings,
+  resolveEnabledSettingsSources,
+  readManagedFileSettings,
+  getManagedSettingsDirs,
+  isManagedDropInSettingsFile,
+  reportSettingsReadError,
+  parseSettingsFileCached,
+  parseSettingsContentCached,
+  isManagedMcpServersKey,
+  loadRemoteManagedSettings,
+  loadParentManagedSettings,
+  loadSdkInlineSettings,
+  MAX_SETTINGS_FILE_BYTES,
+  readSettingsFileCached,
+  parseSettingsContent,
+  createUnparsableSettingsError,
+  logBrokenSettingsSymlink,
+  emptySettingsResult,
+  createSettingsReadError,
+  resolveSettingsSourceRootDir,
+  decideLocalSettingsStoreRoot,
+  resolveRuleAnchorRootForSource,
+  SETTINGS_FILENAMES,
+  resolveSettingsFilePathForSource,
   getRelativeSettingsFilePathForSource,
-  Aie,
-  QHn,
-  wlr,
-  Tlr,
-  Elr,
-  O8t,
-  Alr,
-  ZHn,
-  Clr,
-  lL,
-  e0n,
-  Wq,
-  vlr,
-  Rlr,
-  klr,
-  xlr,
-  Hlr,
-  D8t,
-  Ilr,
-  Ttt,
+  resolveLegacyLocalSettingsFilePath,
+  getSettingsForSourceCached,
+  resolvePairedPolicyModelOverrides,
+  resolveHostManagedModelPricing,
+  resolveHostManagedToolSearchEnv,
+  getPolicyTierSettings,
+  resolvePolicyForceLoginMethod,
+  resolveBasePolicySettingsOrigin,
+  resolveShadowedManagedSources,
+  hasSettingsContent,
+  resolveMergedPolicySources,
+  resolveArmedHelperOutput,
+  resolveMachineAdminTierSettings,
+  doesParentManagedTierParticipate,
+  isRemoteSettingsRefreshForced,
+  resolveDurablePolicyTierSettings,
+  resolveAdminTierEnvValue,
+  resolveSettingsForSourceWriteSeed,
+  collectSettingsParseErrorsForSource,
+  shallowMergeSettingsMaps,
   settingsMergeCustomizer,
-  Plr,
-  E0,
+  loadSettingsFromDisk,
+  stripAnsiControlCharacters,
 } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -160,7 +160,7 @@ import {
 } from "fs/promises";
 import { homedir } from "os";
 import { dirname as Jn, isAbsolute, join as Me } from "path";
-async function L5t(e, t) {
+async function isPathGitIgnored(e, t) {
   let { code: r } = await execFileNoThrowWithCwd("git", ["check-ignore", "--", e], {
     preserveOutputOnError: !1,
     cwd: t,
@@ -182,13 +182,13 @@ async function Xn(e) {
   if (d && isAbsolute(d)) return Me(d, "git", "ignore");
   return Me(homedir(), ".config", "git", "ignore");
 }
-async function M5t(e, t = getCwd()) {
+async function addGlobalGitignoreEntry(e, t = getCwd()) {
   try {
     if (!(await dirIsInGitRepo(t))) return { written: !1, effective: !1 };
     let r = e.replaceAll("\\", "/"),
       o = `**/${r}`,
       d = r.endsWith("/") ? `${r}sample-file.txt` : r;
-    if (await L5t(d, t)) return { written: !1, effective: !0 };
+    if (await isPathGitIgnored(d, t)) return { written: !1, effective: !0 };
     let _ = await Xn(t),
       p = Jn(_);
     await mkdir(p, { recursive: !0 });
@@ -219,7 +219,7 @@ ${o}
         );
       else throw O;
     }
-    if (!(await L5t(d, t))) {
+    if (!(await isPathGitIgnored(d, t))) {
       let O = (await dt(d, t)) ? "already_tracked" : "excludesfile_not_read";
       return (
         n(
@@ -252,18 +252,18 @@ function gt(e, t) {
     ? `'${t}' is tracked in the index; gitignore rules do not apply to tracked files`
     : "core.excludesfile may point elsewhere";
 }
-var Cet = 5000;
-function tRt(e) {
-  da().internalWrites.set(e, Date.now());
+var INTERNAL_WRITE_SUPPRESSION_MS = 5000;
+function markInternalWrite(e) {
+  getHostSettingsStore().internalWrites.set(e, Date.now());
 }
-function nRt(e, t) {
-  let r = da().internalWrites,
+function consumeInternalWrite(e, t) {
+  let r = getHostSettingsStore().internalWrites,
     o = r.get(e);
   if (o !== void 0 && Date.now() - o < t) return (r.delete(e), !0);
   return !1;
 }
-function uar() {
-  da().internalWrites.clear();
+function clearInternalWrites() {
+  getHostSettingsStore().internalWrites.clear();
 }
 import { join as J } from "path";
 var Z = Object.freeze({ settings: {}, errors: [] });
@@ -313,34 +313,34 @@ function te() {
 function Qn(e) {
   te().startLoad(e);
 }
-async function rRt() {
+async function awaitMdmSettingsLoaded() {
   let e = te();
   if (!e.loadPromise) Qn();
   await e.loadPromise;
 }
-function PU() {
+function getMdmSettings() {
   return te().mdm ?? Z;
 }
-function Rge() {
+function getHkcuSettings() {
   return te().hkcu ?? Z;
 }
-function S0() {
+function getWslInheritsWindowsSettings() {
   return te().wslInherits;
 }
-function vet(e, t, r) {
+function replaceMdmSettings(e, t, r) {
   te().replace(e, t, r);
 }
-async function oRt(e) {
+async function loadMdmSettingsFromOs(e) {
   let t = await fireRawRead();
   return ht(t, e);
 }
 function $e(e, t, { userWritable: r = !1 } = {}) {
   let o = xt(e, !1);
-  if (!isRecord(o)) return { settings: {}, errors: [I8t(t, { userWritable: r })] };
+  if (!isRecord(o)) return { settings: {}, errors: [createUnparsableSettingsError(t, { userWritable: r })] };
   let d = [],
     _ = o;
   if (r && "managedMcpServers" in o) {
-    if (((_ = { ...o }), delete _.managedMcpServers, !e2e("managedMcpServers")))
+    if (((_ = { ...o }), delete _.managedMcpServers, !isManagedMcpServersKey("managedMcpServers")))
       d.push({
         file: t,
         path: "managedMcpServers",
@@ -349,7 +349,7 @@ function $e(e, t, { userWritable: r = !1 } = {}) {
         statusOnly: !0,
       });
   }
-  let { settings: p, errors: E } = Tke(_, t),
+  let { settings: p, errors: E } = parseSettingsContentCached(_, t),
     O = [...d, ...E];
   return {
     settings: p ?? {},
@@ -437,7 +437,7 @@ async function ht(e, t) {
       continue;
     }
     let L = $e(O.stdout, I, { userWritable: N });
-    if (lL(L.settings))
+    if (hasSettingsContent(L.settings))
       return {
         mdm: {
           settings: L.settings,
@@ -465,7 +465,7 @@ async function ht(e, t) {
   let E = r.length > 0 ? { settings: {}, errors: r } : Z;
   if (_ && !p) return { mdm: E, hkcu: Z, wslInherits: !1 };
   if (d) {
-    if (lL(d.settings)) return { mdm: d, hkcu: Z, wslInherits: p };
+    if (hasSettingsContent(d.settings)) return { mdm: d, hkcu: Z, wslInherits: p };
   }
   if (await or(p, t)) return { mdm: E, hkcu: Z, wslInherits: p };
   if (e.hkcuStdout !== null) {
@@ -494,8 +494,8 @@ async function ht(e, t) {
   return { mdm: E, hkcu: Z, wslInherits: p };
 }
 async function Se(e, t) {
-  if (isHoverRestEnabled() && t !== void 0) return (await readFileWithMetadata(e, n_)).content;
-  return readFileSyncText(e, n_);
+  if (isHoverRestEnabled() && t !== void 0) return (await readFileWithMetadata(e, MAX_SETTINGS_FILE_BYTES)).content;
+  return readFileSyncText(e, MAX_SETTINGS_FILE_BYTES);
 }
 async function ke(e, t) {
   if (isHoverRestEnabled() && t !== void 0) return await ae().readdir(e);
@@ -503,14 +503,14 @@ async function ke(e, t) {
 }
 async function or(e, t) {
   if (e && (await Et(WSL_MANAGED_SETTINGS_DIR, t))) return !0;
-  return Et(Tb(), t);
+  return Et(getManagedSettingsDirPath(), t);
 }
 async function St(e, t) {
   let r = Ru(xt(await Se(e, t), !1));
   if (!r || typeof r !== "object") return !1;
-  return (wke(r, e, { skipMcpServerEntryFilter: !0, policySource: !0 }), lL(r));
+  return (collectSettingsWarnings(r, e, { skipMcpServerEntryFilter: !0, policySource: !0 }), hasSettingsContent(r));
 }
-async function lxn(e) {
+async function readWslManagedSettingsSnapshot(e) {
   if (!isRunningOnWsl() || !te().wslInherits) return "";
   let t = [];
   try {
@@ -555,12 +555,12 @@ async function sr(e) {
     try {
       p = await Se(_, e);
     } catch (O) {
-      if (!xe(O)) t.push(okt(_, O));
+      if (!xe(O)) t.push(createSettingsReadError(_, O));
       return !1;
     }
     if (p.trim() === "") return !1;
     let E = xt(p, !1);
-    if (!isRecord(E)) return (t.push(I8t(_)), !1);
+    if (!isRecord(E)) return (t.push(createUnparsableSettingsError(_)), !1);
     return E.wslInheritsWindowsSettings === !0;
   }
   if (await r(J(WSL_MANAGED_SETTINGS_DIR, "managed-settings.json"))) return { flag: !0, records: t };
@@ -569,7 +569,7 @@ async function sr(e) {
   try {
     d = await ke(o, e);
   } catch (_) {
-    if (!xe(_)) t.push(okt(o, _, "directory"));
+    if (!xe(_)) t.push(createSettingsReadError(o, _, "directory"));
     return { flag: !1, records: t };
   }
   for (let _ of d)
@@ -742,7 +742,7 @@ function Ct(e) {
   let { path: t } = e;
   if (t == null)
     return { error: "no path or script configured", code: "bad_path" };
-  if (getCurrentPlatform() !== "windows" || !HHn(t)) return { plan: { file: t, args: [] } };
+  if (getCurrentPlatform() !== "windows" || !isPowerShellScriptPath(t)) return { plan: { file: t, args: [] } };
   return At({ args: [...Pt, "-Command", _r], ps1Path: t });
 }
 function At(e) {
@@ -987,7 +987,7 @@ var Or = [
   Ir = new Set(Mt),
   Nr =
     /^(?:CARGO_REGISTRIES_[A-Z0-9_]+_INDEX|POETRY_REPOSITORIES_[A-Z0-9_]+_URL|NPM_CONFIG_@[^:]+:REGISTRY)$/i;
-function JRe(e) {
+function isRegistryIndexVar(e) {
   let t = e
     .toUpperCase()
     .replace(/-/g, "_")
@@ -1009,9 +1009,9 @@ var Ut = {
     UV_INDEX: "UV_DEFAULT_INDEX",
     UV_FIND_LINKS: "UV_DEFAULT_INDEX",
   },
-  uie = "http://index.invalid/",
+  MASKED_REGISTRY_INDEX_URL = "http://index.invalid/",
   Gt = { UV_DEFAULT_INDEX: ["UV_INDEX_URL"] };
-function cxn(e, t) {
+function isIndexVarOrAliasSet(e, t) {
   return [t, ...(Gt[t] ?? [])].some((r) => (e[r] ?? "") !== "");
 }
 var Cr = /^[a-z][a-z0-9+.-]*:\/\//i;
@@ -1022,8 +1022,8 @@ function br(e) {
     r = new URL(t ? `https:${e}` : e);
   } catch {
     let E = e.replace(/^([a-z][a-z0-9+.-]*:)?\/\/[^/?#]*@/i, "$1//");
-    return uS(E)
-      ? { text: uie, cut: !0 }
+    return looksLikeSecret(E)
+      ? { text: MASKED_REGISTRY_INDEX_URL, cut: !0 }
       : { text: E, cut: !1, stripped: E !== e };
   }
   let o =
@@ -1032,7 +1032,7 @@ function br(e) {
     d = o;
   if (o) ((r.username = ""), (r.password = ""));
   let _ = !1;
-  if (uS(Lr(r.search))) ((r.search = ""), (r.hash = ""), (_ = !0));
+  if (looksLikeSecret(Lr(r.search))) ((r.search = ""), (r.hash = ""), (_ = !0));
   let p = r.href;
   return { text: t ? p.replace(/^https:/, "") : p, cut: _, stripped: d };
 }
@@ -1043,7 +1043,7 @@ function Lr(e) {
     return e;
   }
 }
-function Ret(e, t) {
+function sanitizeIndexUrlValue(e, t) {
   if (t.trim() === "") return { value: t, cut: !1, stripped: !1 };
   let r = /^(?:INPUT_)?GOPROXY$/i.test(e),
     o = !/^INPUT_/i.test(e) && $t(e) !== void 0,
@@ -1058,8 +1058,8 @@ function Ret(e, t) {
           x = U ? U[1] : "",
           w = L.slice(x.length);
         if (!w.startsWith("//") && !Cr.test(w)) {
-          if (L.trim() !== "" && uS(L))
-            return ((d = !0), (_ = !0), [r ? "off" : uie]);
+          if (L.trim() !== "" && looksLikeSecret(L))
+            return ((d = !0), (_ = !0), [r ? "off" : MASKED_REGISTRY_INDEX_URL]);
           return [L];
         }
         let C = br(w);
@@ -1073,19 +1073,19 @@ function Ret(e, t) {
       })
       .join("");
   if (r) N = N.replace(/[,|\s]+$/, "");
-  if (N !== "" && uS(N))
-    return { value: r ? "off" : uie, cut: !0, stripped: !0 };
-  return { value: N === "" ? uie : N, cut: d, stripped: _ };
+  if (N !== "" && looksLikeSecret(N))
+    return { value: r ? "off" : MASKED_REGISTRY_INDEX_URL, cut: !0, stripped: !0 };
+  return { value: N === "" ? MASKED_REGISTRY_INDEX_URL : N, cut: d, stripped: _ };
 }
-function dar(e) {
+function getRespelledEnvVars(e) {
   return Wt(e).respelled;
 }
-function die(e) {
+function getRespelledEnvVarsAndLostCredentials(e) {
   let t = Wt(e);
   for (let [r, o] of Object.entries(e)) {
     if (o === void 0) continue;
     let d = typeof o === "string" ? o : String(o),
-      _ = ket(r, d);
+      _ = sanitizeBuildToolEnvValue(r, d);
     if (_ !== void 0 && _ !== d)
       ((t.respelled[r] = _), t.lostCredential.push(r));
   }
@@ -1095,21 +1095,21 @@ function Wt(e) {
   let t = {},
     r = [];
   for (let [o, d] of Object.entries(e)) {
-    if (d === void 0 || !JRe(o)) continue;
+    if (d === void 0 || !isRegistryIndexVar(o)) continue;
     let _ = typeof d === "string" ? d : String(d),
-      p = Ret(o, _);
+      p = sanitizeIndexUrlValue(o, _);
     if (p.value !== _) {
       if (((t[o] = p.value), p.cut || p.stripped)) r.push(o);
     }
     if (p.cut) {
-      let E = uxn(o, p.value);
-      if (E !== void 0 && !cxn(e, E.name) && t[E.name] === void 0)
+      let E = getIndexVarAliasAssignment(o, p.value);
+      if (E !== void 0 && !isIndexVarOrAliasSet(e, E.name) && t[E.name] === void 0)
         t[E.name] = E.value;
     }
   }
   return { respelled: t, lostCredential: r };
 }
-function uxn(e, t) {
+function getIndexVarAliasAssignment(e, t) {
   let r = /^INPUT_/i.test(e) ? void 0 : $t(e);
   if (r === void 0) return;
   let o = t
@@ -1118,19 +1118,19 @@ function uxn(e, t) {
         _.replace(/^[A-Za-z0-9_.-]+=(?=[a-z][a-z0-9+.-]*:\/\/|\/\/)/i, ""),
       )
       .find((_) => _.startsWith("//") || /^https?:\/\//i.test(_)),
-    d = uie;
+    d = MASKED_REGISTRY_INDEX_URL;
   if (o !== void 0)
     try {
       let _ = new URL(o.startsWith("//") ? `https:${o}` : o).origin;
-      d = _ === "null" ? uie : `${_}/`;
+      d = _ === "null" ? MASKED_REGISTRY_INDEX_URL : `${_}/`;
     } catch {
-      d = uie;
+      d = MASKED_REGISTRY_INDEX_URL;
     }
   return { name: r, value: d };
 }
-function QRe() {
+function getScrubbedEnvVarNames() {
   return (
-    N5t(),
+    initEnvScrubEnabled(),
     de
       ? Tr.flatMap((e) => [
           e,
@@ -1140,12 +1140,12 @@ function QRe() {
       : []
   );
 }
-function N5t() {
+function initEnvScrubEnabled() {
   let e = process.env.CLAUDE_CODE_SUBPROCESS_ENV_SCRUB;
   de ??= Lt(e) || (Lt(process.env.GITHUB_ACTIONS) && !Dr(e));
 }
 var de;
-function par() {
+function resetEnvScrubEnabled() {
   de = void 0;
 }
 function Dr(e) {
@@ -1155,9 +1155,9 @@ function Lt(e) {
   let t = e === void 0 ? void 0 : String(e).trim().toLowerCase();
   return t === "1" || t === "true" || t === "yes" || t === "on";
 }
-var kge = Or.flatMap((e) => [e, `INPUT_${e}`]),
+var CREDENTIAL_ENV_VAR_NAMES = Or.flatMap((e) => [e, `INPUT_${e}`]),
   Ve = /CONN(ECT(ION)?)?_?STR(ING)?S?(?=$|[_0-9])/i;
-function dxn(e) {
+function isConnectionStringEnvVar(e) {
   return Ve.test(e) || Ve.test(Kt(e));
 }
 var Bt = ["OAuth", "NextAuth"];
@@ -1218,24 +1218,24 @@ var Hr = ["CONN", "CONNECT", "CONNECTION"].flatMap((e) =>
 function Fr(e) {
   return /^GIT_CONFIG_(?:COUNT|PARAMETERS|(?:KEY|VALUE)_[0-9]+)$/.test(e);
 }
-function EBe(e) {
+function isGitConfigOrProxyVar(e) {
   return Fr(e) || Mr.test(e);
 }
 var Mr =
   /^(?:(?:https?|ftp|all|no)_proxy|npm_config_(?:https?_)?proxy|npm_config_noproxy|yarn_proxy|(?:yarn|global_agent|docker|claude_code)_(?:https?|no)_proxy|cloudsdk_proxy_[a-z]+|electron_get_use_proxy)$/i;
-function pxn(e, t) {
-  let r = ket(e, t);
-  return r === void 0 ? uS(t) : r !== t;
+function wouldEnvValueBeScrubbed(e, t) {
+  let r = sanitizeBuildToolEnvValue(e, t);
+  return r === void 0 ? looksLikeSecret(t) : r !== t;
 }
-function ket(e, t) {
-  if (iRt(e) === "GOFLAGS") return t.length > Ae ? "" : mi(t);
-  if (!qt.has(iRt(e))) return;
-  let r = t.length > Ae ? null : ZRe(t);
+function sanitizeBuildToolEnvValue(e, t) {
+  if (normalizeEnvVarName(e) === "GOFLAGS") return t.length > Ae ? "" : mi(t);
+  if (!qt.has(normalizeEnvVarName(e))) return;
+  let r = t.length > Ae ? null : splitShellWords(t);
   if (r === null) return "";
-  N5t();
+  initEnvScrubEnabled();
   let o = r.map((p, E) => {
     let O =
-      E > 0 && /^(?:-D|--define)$/.test(xge(r[E - 1])) ? `-D${p}` : tn(xge(p));
+      E > 0 && /^(?:-D|--define)$/.test(stripJavaOptionPrefix(r[E - 1])) ? `-D${p}` : tn(stripJavaOptionPrefix(p));
     return { raw: p, word: O, residual: en.test(O), goes: !1 };
   });
   for (let p = 0; p < o.length; p++) {
@@ -1251,23 +1251,23 @@ function ket(e, t) {
           !I.residual &&
           !ge(I.word) &&
           Ye.test(E.word) &&
-          uS(`${E.word} ${I.word}`))),
+          looksLikeSecret(`${E.word} ${I.word}`))),
       E.goes && I !== void 0 && !ge(I.word) && Ye.test(E.word))
     )
       I.goes = !0;
   }
   for (let p = 1; p < o.length; p++) {
     if (Gr.test(o[p - 1].word)) o[p].goes = !0;
-    if (o[p].goes && !xge(o[p].raw).startsWith("-") && xr(o[p - 1].word))
+    if (o[p].goes && !stripJavaOptionPrefix(o[p].raw).startsWith("-") && xr(o[p - 1].word))
       o[p - 1].goes = !0;
   }
   let d = o.filter((p) => !p.goes);
-  e: while (sRt(d.filter((p) => !p.residual).flatMap(Ht))) {
+  e: while (wordsLookLikeSecret(d.filter((p) => !p.residual).flatMap(Ht))) {
     let p = d.filter((E) => !E.residual);
     for (let E = 2; E <= 4; E++)
       for (let O = 0; O + E <= p.length; O++) {
         let I = p.slice(O, O + E);
-        if (sRt(I.flatMap(Ht))) {
+        if (wordsLookLikeSecret(I.flatMap(Ht))) {
           for (let N of I) N.goes = !0;
           d = d.filter((N) => !N.goes);
           continue e;
@@ -1277,7 +1277,7 @@ function ket(e, t) {
     d = d.filter((E) => !E.goes);
   }
   if (d.length === o.length) return t;
-  let _ = Jr.has(iRt(e)) ? Ur : Xt;
+  let _ = Jr.has(normalizeEnvVarName(e)) ? Ur : Xt;
   return d.every((p) => _.test(p.raw)) ? d.map((p) => p.raw).join(" ") : "";
 }
 var Xt = /^[A-Za-z0-9_.,:=\/@+~*?-]+$/,
@@ -1285,7 +1285,7 @@ var Xt = /^[A-Za-z0-9_.,:=\/@+~*?-]+$/,
   Ye =
     /(?:\b(?:Bearer|Basic|token)|authorization\s*[:=]\s*["']?(?:[a-z][a-z0-9_-]*)?|-token\s*[:=])\s*["']?$/i;
 function xr(e) {
-  return gxn(e) === "" || hxn(e) === "" || kr.test(e) || Qt.test(e);
+  return getBuildToolSettingsArgPath(e) === "" || getSbtStoreArgPath(e) === "" || kr.test(e) || Qt.test(e);
 }
 var kr =
     /^(?:-D|--define|-f|--file|-pl|--projects|-rf|--resume-from|-l|--log-file|-t|--toolchains|-gt|--global-toolchains|-itr|--install-toolchains|-P|--activate-profiles|-b|--builder|-T|--threads|-emp|--encrypt-master-password|-ep|--encrypt-password)$/,
@@ -1304,8 +1304,8 @@ function ge(e) {
 }
 var Kr =
   /^-(?:X(?:mx|ms|ss|mn|rs|int|comp|mixed|batch|diag|debug|future|prof|noclassgc|internalversion|check:jni|share:(?:on|off|auto|dump)|verify(?::[a-z]+)?|log(?::.*)?|loggc:.+|bootclasspath(?:\/[ap])?:.+|runjdwp:.+|dock:.+|startOnFirstThread|showSettings(?::[a-z]+)?)[0-9kKmMgGtT]*$|XX:[+-]?[A-Za-z]\w*(?:=.*)?$|(?:javaagent|agentlib|agentpath):.|verbose(?::[a-z]+)?$|[ed](?:s?a)(?::[a-z][\w$]*(?:\.[\w$]+)*(?:\.\.\.)?)?$|(?:server|client|d64|showversion)$|-(?:add-opens|add-exports|add-reads|add-modules|limit-modules|patch-module|module-path|upgrade-module-path|class-path|enable-native-access|illegal-access|enable-preview|source|release)(?:=.*)?$|(?:cp|classpath|p)$)/s;
-function sRt(e) {
-  return uS(
+function wordsLookLikeSecret(e) {
+  return looksLikeSecret(
     e
       .map((t) =>
         ge(t) ? `; ${t.includes("=") ? t.replace(/^[^=]*=/, "") : ""}` : t,
@@ -1320,14 +1320,14 @@ function jr(e, t) {
   return (
     zr(e) ||
     nn(o, e.slice(o.length + 3)) ||
-    sRt(r) ||
+    wordsLookLikeSecret(r) ||
     r.some(
       (d, _) =>
         wt(d, _ > 0 ? r[_ - 1] : null) ||
         (_ + 1 < r.length &&
           !ge(r[_ + 1]) &&
           Ye.test(d) &&
-          uS(`${d} ${r[_ + 1]}`)),
+          looksLikeSecret(`${d} ${r[_ + 1]}`)),
     )
   );
 }
@@ -1337,33 +1337,33 @@ function Ht(e) {
 function Zt(e) {
   let t = /^-D[^=]+=\s*(-.*)$/s.exec(e);
   if (t === null) return null;
-  return (ZRe(t[1]) ?? []).map(xge).filter((r) => !en.test(r));
+  return (splitShellWords(t[1]) ?? []).map(stripJavaOptionPrefix).filter((r) => !en.test(r));
 }
 function zr(e) {
   let t = /^-D[^=]+=\s*(-.*)$/s.exec(e);
-  return t !== null && ZRe(t[1]) === null;
+  return t !== null && splitShellWords(t[1]) === null;
 }
 function wt(e, t) {
   if (Wr.test(e)) return !0;
   let r = /^-D([^=]+)=(.+)$/s.exec(e);
   if (r !== null) {
     let [, o, d] = r;
-    if (nn(o, d) || uS(d)) return !0;
+    if (nn(o, d) || looksLikeSecret(d)) return !0;
     if (de === !0)
       return (
-        mxn.test(o) ||
+        STORE_RELOCATION_PROPERTY_PATTERN.test(o) ||
         e.includes("\\") ||
         (!Yr.test(o) &&
           !(
             /^sonar\./i.test(o) &&
-            !F5t(o) &&
+            !isCredentialKeyName(o) &&
             !/key.?store|cert|pkcs|p12|pfx|\.pem$/i.test(o)
           ) &&
           vt(d))
       );
     return !1;
   }
-  if (uS(e)) return !0;
+  if (looksLikeSecret(e)) return !0;
   if (de === !0) return !Vr.test(e) && !(t !== null && Qt.test(t)) && vt(e);
   return !1;
 }
@@ -1376,7 +1376,7 @@ var Vr =
     /^-(?:-(?:add-opens|add-exports|add-reads|add-modules|limit-modules|patch-module|module-path|upgrade-module-path|class-path|enable-native-access|source|release)|cp|classpath|p)$/,
   Yr =
     /^(?:javax\.net\.ssl\.trustStore|java\.io\.tmpdir|java\.security\.egd|java\.library\.path|jna\.library\.path|java\.class\.path|(?:https?|ftp)\.nonProxyHosts|socksNonProxyHosts|jna\.tmpdir|java\.util\.logging\.config\.file|log4j2?\.configurationFile|logback\.configurationFile|logging\.config|user\.dir|file\.encoding|maven\.multiModuleProjectDirectory|library\.jansi\.path|jansi\.tmpdir)$/i,
-  fxn = [
+  JAVA_OPTIONS_ENV_VAR_NAMES = [
     "JAVA_TOOL_OPTIONS",
     "JDK_JAVA_OPTIONS",
     "_JAVA_OPTIONS",
@@ -1396,7 +1396,7 @@ var Vr =
     "SONAR_SCANNER_OPTS",
     "SONAR_SCANNER_JAVA_OPTS",
   ];
-function iRt(e) {
+function normalizeEnvVarName(e) {
   return e
     .toUpperCase()
     .replace(/^INPUT_/, "")
@@ -1409,10 +1409,10 @@ var Jr = new Set([
     "IBM_JAVA_OPTIONS",
     "OPENJ9_JAVA_OPTIONS",
   ]),
-  qt = new Set(fxn),
+  qt = new Set(JAVA_OPTIONS_ENV_VAR_NAMES),
   en =
     /^-D(?:(?:(?:https?|ftp)\.proxy(?:User|Password)|socksProxy(?:User|Password)|java\.net\.socks\.(?:username|password))=\S*$|[\w.-]*trust-?store-?password=changeit$)/i;
-function ZRe(e) {
+function splitShellWords(e) {
   let t = [],
     r = "",
     o = !1,
@@ -1447,9 +1447,9 @@ function Re(e) {
     .replace(/([a-z0-9])([A-Z])/g, "$1_$2")
     .replace(/([A-Z])([A-Z][a-z])/g, "$1_$2");
 }
-var mxn =
+var STORE_RELOCATION_PROPERTY_PATTERN =
   /^(?:maven\.(?:user\.settings|global\.settings|installation\.settings|project\.settings|settings\.security|repo\.local|home)|settings\.security|gradle\.user\.home|sbt\.(?:boot\.credentials|repository\.config|global\.base|ivy\.home|boot\.directory)|user\.home)$/i;
-function gxn(e) {
+function getBuildToolSettingsArgPath(e) {
   if (/^-(?:show-version|strict-checksums)$/.test(e)) return null;
   let t =
     /^(?:--?settings|--?global-settings|--?install-settings|--?project-settings|-gs|-is|-ps|-s)(?:=(.+))?$/.exec(
@@ -1457,17 +1457,17 @@ function gxn(e) {
     ) ?? /^-g?s=?(.+)$/.exec(e);
   return t === null ? null : (t[1] ?? "");
 }
-function hxn(e) {
+function getSbtStoreArgPath(e) {
   let t = /^-{1,2}(?:ivy|sbt-dir|sbt-boot)(?:=(.+))?$/.exec(e);
   return t === null ? null : (t[1] ?? "");
 }
-function xge(e) {
+function stripJavaOptionPrefix(e) {
   return e.replace(/^-J(?=-)/, "");
 }
 function tn(e) {
   return e.replace(/^--define=/, "-D");
 }
-function aRt(e) {
+function normalizeDefineArgs(e) {
   let t = [];
   for (let r = 0; r < e.length; r++) {
     let o = e[r];
@@ -1483,27 +1483,27 @@ function nn(e, t) {
 function rn(e, t) {
   let r = e.split(".").at(-1) ?? "";
   return (
-    F5t(e) &&
+    isCredentialKeyName(e) &&
     (Xr.test(Re(e)) ||
       !/(?:user(?:name)?|id|store|file|path|dir|location|url|host|port|alias|type)$/i.test(
         r,
       )) &&
-    !_xn(e, t)
+    !isNonSecretLiteralValue(e, t)
   );
 }
 var Xr = /(?:PASSWORD|PASSWD|SECRET)S?[._-]ID$/i,
   Zr = new Set(["sonar.login", "sonar.token", "sonar.password"]),
   Qr = /^(?:projectKey|moduleKey|componentKey|ruleKey|resourceKey)$/,
   qr = new Set(["sonar.pullrequest.key"]);
-function _xn(e, t) {
+function isNonSecretLiteralValue(e, t) {
   let r = e.split(".").at(-1) ?? "";
   return (
     /^(?:\d+[a-z]{0,2}|true|false)$/i.test(t) &&
-    !kq(r.replace(/-/g, "_")) &&
+    !isCredentialEnvVarName(r.replace(/-/g, "_")) &&
     !Je(e)
   );
 }
-function F5t(e) {
+function isCredentialKeyName(e) {
   if (Zr.has(e.toLowerCase())) return !0;
   let t = e.split(".").at(-1) ?? "",
     r = Re(t)
@@ -1517,7 +1517,7 @@ function F5t(e) {
     if (o === "SECURED") return !0;
     if ((Qr.test(t) || qr.has(e.toLowerCase())) && !Je(e)) return !1;
   }
-  if (kq(t.replace(/-/g, "_")) || Je(e) || Ve.test(Re(e).replace(/[.-]/g, "_")))
+  if (isCredentialEnvVarName(t.replace(/-/g, "_")) || Je(e) || Ve.test(Re(e).replace(/[.-]/g, "_")))
     return !0;
   return o === "USERNAME" || (o === "USER" && r.length > 1);
 }
@@ -1538,9 +1538,9 @@ var ei =
     /^(?:PASSWORDS?|PASSWD|PASSPHRASE|SECRETS?|TOKENS?|KEYS?|APIKEY|CREDENTIALS?)$/,
   ti =
     /^(?:USER(?:NAME)?|ID|IDS|STORE|FILE|FILES|PATH|PATHS|DIR|DIRECTORY|LOCATION|URL|URI|HOST|PORT|ALIAS|TYPE|PREFERENCE|SCHEMES?|ENABLED?|DISABLED?|MODE|CLASS|PROVIDER|ALGORITHM|FORMAT|LENGTH|SIZE|BITS|TIMEOUT|TTL|HEADER|NAME|NAMES|PREFIX|SUFFIX|VERSION|ENCODING|POLICY|COUNT|CACHE|SERVICE|ENDPOINT|REGION|SCOPE|SCOPES|AUDIENCE|ISSUER|EXPIRY|EXPIRATION|ROTATION|REQUIRED|OPTIONAL|SECONDS?|SECS?|MS|MILLIS(?:ECONDS)?|MINUTES?|MINS?|HOURS?|DAYS?|AGE|CAPACITY|RATE|INTERVAL|DELAY|PERIOD|DURATION|VALIDITY|LIFETIME|WINDOW|MAX|MIN|LIMIT|THRESHOLD|BUDGET|RETRY|RETRIES|ATTEMPTS)$/;
-function kq(e) {
+function isCredentialEnvVarName(e) {
   let t = e.replace(ni, "").replace(/-/g, "_");
-  return (Dt.test(t) || Dt.test(Kt(t)) || dxn(t) || xet.test(t)) && !vr.test(e);
+  return (Dt.test(t) || Dt.test(Kt(t)) || isConnectionStringEnvVar(t) || BUNDLE_SEGMENT_ENV_VAR_PATTERN.test(t)) && !vr.test(e);
 }
 var ni = /^AUTH0_/i,
   ri = "[Aa][Uu][Tt][Hh]0_*",
@@ -1557,7 +1557,7 @@ var ni = /^AUTH0_/i,
     "ONLY",
   ],
   ii = "(?:[A-Za-z0-9]+(?:___[A-Za-z0-9]+)*__)+[A-Za-z]{2,}",
-  xet = new RegExp(
+  BUNDLE_SEGMENT_ENV_VAR_PATTERN = new RegExp(
     `^(?:INPUT_)?BUNDLE_(?!(?:${on.join("|")})__(?!${ii}$))\\w*__`,
     "i",
   ),
@@ -1581,10 +1581,10 @@ var ni = /^AUTH0_/i,
     "CLAUDE_CODE_ARG_KEY_SHAPE",
   ]),
   li = /^CLAUDE_CODE_SKIP_[A-Z0-9_]+_AUTH$/;
-function lRt(e) {
+function isClaudeCodeEnvVarAllowlisted(e) {
   return ai.has(e) || li.test(e);
 }
-var far = new Set([
+var GITHUB_TOKEN_ENV_VAR_NAMES = new Set([
     "GITHUB_TOKEN",
     "GH_TOKEN",
     "GH_ENTERPRISE_TOKEN",
@@ -1602,10 +1602,10 @@ var far = new Set([
   Xe = ["POETRY_HTTP_BASIC_", "CONAN_LOGIN_USERNAME_"],
   ci = new RegExp(`^(?:${sn.join("|")})`, "i"),
   ui = new RegExp(`^(?:INPUT_)?(?:${Xe.join("|")})`, "i");
-function Het(e) {
+function isCredentialPrefixedEnvVar(e) {
   let t = e.replace(/-/g, "_");
   return (
-    ci.test(t) && (ui.test(t) || /USER(?:_?NAME)?_?[0-9]*$/i.test(t) || kq(t))
+    ci.test(t) && (ui.test(t) || /USER(?:_?NAME)?_?[0-9]*$/i.test(t) || isCredentialEnvVarName(t))
   );
 }
 var di = Xe.flatMap((e) => [
@@ -1626,7 +1626,7 @@ var di = Xe.flatMap((e) => [
     )
     .join("|"),
   ue = "__CLAUDE_CC_KEEP_";
-function mar(e, t = {}) {
+function buildKeptEnvVars(e, t = {}) {
   let r = new Set((t.denied ?? []).map((_) => _.toUpperCase())),
     o = new Set((t.masked ?? []).map((_) => _.toUpperCase())),
     d = {};
@@ -1637,13 +1637,13 @@ function mar(e, t = {}) {
       p !== void 0 &&
       p.trim() !== "" &&
       /^[A-Za-z_][A-Za-z0-9_]*$/.test(_) &&
-      (JRe(_) || ket(_, "") !== void 0)
+      (isRegistryIndexVar(_) || sanitizeBuildToolEnvValue(_, "") !== void 0)
     )
       d[`${ue}${_}`] = p;
   }
   return d;
 }
-function gar({ sandboxMasked: e = [] } = {}) {
+function buildBashCredentialScrubScript({ sandboxMasked: e = [] } = {}) {
   let t = e.filter((H) => /^[A-Za-z_][A-Za-z0-9_]*$/.test(H)),
     o = `case "$__cc_name" in (${t.length > 0 ? t.join("|") : "''__cc_none__"}) \\builtin true;; (*) \\builtin false;; esac`,
     d = jt
@@ -1656,7 +1656,7 @@ function gar({ sandboxMasked: e = [] } = {}) {
       )
       .concat(Hr)
       .join("|"),
-    _ = [...kge, ...QRe(), "GITHUB_TOKEN", "GH_TOKEN"],
+    _ = [...CREDENTIAL_ENV_VAR_NAMES, ...getScrubbedEnvVarNames(), "GITHUB_TOKEN", "GH_TOKEN"],
     p = _.join(" "),
     E = _.map((H) => H.toUpperCase()).join(" "),
     O = `__cc_uc=; ( LC_ALL=C \\builtin eval ': "\${__cc_uc^^}"' ) 2>/dev/null && __cc_uc=b; \\builtin test -n "$__cc_uc" || { ( LC_ALL=C \\builtin eval ': "\${(U)__cc_uc}"' ) 2>/dev/null && __cc_uc=z; } || \\builtin true`,
@@ -1682,7 +1682,7 @@ function gar({ sandboxMasked: e = [] } = {}) {
       '{ (\\builtin unset -v "$__cc_name") && \\builtin unset -v "$__cc_name"; }',
     re = Mt.join(" "),
     ie = [...qt, "GOFLAGS"].join(" "),
-    X = ((H) => `'${H.replace(/'/g, "'\\''")}'`)(uie),
+    X = ((H) => `'${H.replace(/'/g, "'\\''")}'`)(MASKED_REGISTRY_INDEX_URL),
     le = Object.entries(
       Object.entries(Ut).reduce(
         (H, [ee, Fe]) => ((H[Fe] ??= []).push(ee), H),
@@ -1701,23 +1701,23 @@ function gar({ sandboxMasked: e = [] } = {}) {
     Bn = `__cc_visit() { ${`__cc_name=$1; case "$__cc_name" in ''|[0-9]*|*[!A-Za-z0-9_]*) return 0;; esac; ! ${o} || return 0; \\builtin eval "__cc_k=\\\${${ue}$__cc_name+x}; __cc_r=\\\${${ue}$__cc_name-}; __cc_val=\\\${$__cc_name-}; __cc_has=\\\${$__cc_name+x}"; if \\builtin test -n "$__cc_k"; then \\builtin test "$__cc_has$__cc_val" = "x$__cc_r" || { (\\builtin unset -v "$__cc_name") && \\builtin eval "$__cc_name=\\$__cc_r; \\builtin export $__cc_name"; }; else \\builtin test -n "$__cc_val" || return 0; case " ${ie} " in *" $__cc_name "*) { (\\builtin unset -v "$__cc_name") && \\builtin unset -v "$__cc_name"; };; *) __cc_r=${X}; { (\\builtin unset -v "$__cc_name") && \\builtin eval "$__cc_name=\\$__cc_r; \\builtin export $__cc_name"; };; esac; fi; return 0`}; }; for __cc_n in ${re} ${ie}; do __cc_visit "$__cc_n"; done; ${Gn}; ${le}; ${Wn}; \\builtin unset -f __cc_visit`;
   return `{ __cc_ncm=; \\builtin shopt -q nocasematch && __cc_ncm=1; \\builtin shopt -u nocasematch || \\builtin true; __cc_uc=; ( LC_ALL=C \\builtin eval ': "\${__cc_uc^^}"' ) 2>/dev/null && __cc_uc=b; \\builtin test -n "$__cc_uc" || { ( LC_ALL=C \\builtin eval ': "\${(U)__cc_uc}"' ) 2>/dev/null && __cc_uc=z; } || \\builtin true; while \\builtin read -r __cc_line; do __cc_name="\${__cc_line%%=*}"; case "$__cc_name" in ''|[0-9]*|*[!A-Za-z0-9_]*) \\builtin continue;; esac; __cc_upper="$__cc_name"; case "$__cc_uc" in b) LC_ALL=C \\builtin eval '__cc_upper="\${__cc_name^^}"';; z) LC_ALL=C \\builtin eval '__cc_upper="\${(U)__cc_name}"';; esac; case " ${E} " in *" $__cc_upper "*) ${N}; \\builtin continue;; esac; case "$__cc_name" in ${di}) ${N}; \\builtin continue;; esac; case "$__cc_name" in ${wr.join("|")}) ;; ${ri}) __cc_rest="\${__cc_name#*_}"; case "$__cc_rest" in ${d}) ${N};; *[[:lower:][:digit:]][[:upper:]]*|*[[:upper:]][[:upper:]][[:lower:]]*) ${w("__cc_rest")};; esac;; ${d}) ${N};; ${si}) __cc_rest="\${__cc_name#*__}"; __cc_rest="\${__cc_rest//___/-}"; case "$__cc_rest" in *__*[A-Za-z][A-Za-z]) ${N};; *) case "$__cc_name" in *[[:lower:][:digit:]][[:upper:]]*|*[[:upper:]][[:upper:]][[:lower:]]*) ${C};; esac;; esac;; ${oi}) ${N};; *[[:lower:][:digit:]][[:upper:]]*|*[[:upper:]][[:upper:]][[:lower:]]*) ${C};; esac; done < <({ \\builtin compgen -v || \\builtin set; }); for __cc_name in ${p}; do \\builtin eval "__cc_set=\\\${$__cc_name+x}"; \\builtin test -n "$__cc_set" && ${N}; done; ${Bn}; \\builtin test -z "$__cc_ncm" || \\builtin shopt -s nocasematch || \\builtin true; \\builtin unset -v __cc_line __cc_name __cc_rest __cc_set __cc_val __cc_r __cc_v __cc_k __cc_has __cc_n __cc_split __cc_fold __cc_prev __cc_i __cc_c __cc_ncm __cc_uc __cc_upper; \\builtin true; } 2>/dev/null`;
 }
-function Hge(e = {}) {
+function collectEnvVarsToScrub(e = {}) {
   let t = { ...process.env, ...e },
-    r = new Set(yxn(t));
+    r = new Set(collectCredentialEnvVarNames(t));
   for (let [o, d] of Object.entries(t))
     if (
       d !== void 0 &&
-      !EBe(o) &&
-      !JRe(o) &&
-      ket(o, "") === void 0 &&
-      pxn(o, typeof d === "string" ? d : String(d))
+      !isGitConfigOrProxyVar(o) &&
+      !isRegistryIndexVar(o) &&
+      sanitizeBuildToolEnvValue(o, "") === void 0 &&
+      wouldEnvValueBeScrubbed(o, typeof d === "string" ? d : String(d))
     )
       r.add(o);
   return [...r];
 }
-function yxn(e) {
-  let t = new Set([...kge, ...QRe(), "GITHUB_TOKEN", "GH_TOKEN"]);
-  for (let r of Object.keys(e)) if (kq(r) || Het(r)) t.add(r);
+function collectCredentialEnvVarNames(e) {
+  let t = new Set([...CREDENTIAL_ENV_VAR_NAMES, ...getScrubbedEnvVarNames(), "GITHUB_TOKEN", "GH_TOKEN"]);
+  for (let r of Object.keys(e)) if (isCredentialEnvVarName(r) || isCredentialPrefixedEnvVar(r)) t.add(r);
   return [...t];
 }
 function k(e) {
@@ -1725,7 +1725,7 @@ function k(e) {
     .map((t) => (t.toLowerCase() === t ? t : `[${t}${t.toLowerCase()}]`))
     .join("");
 }
-function uS(e) {
+function looksLikeSecret(e) {
   let t = e.length > Ae ? e.slice(0, Ae) : e,
     r = (d) => {
       let _ = d.search(/\s/),
@@ -1756,7 +1756,7 @@ function uS(e) {
     Ei.test(t) ||
     Si.test(t) ||
     /["']?sonar\.login["']?\s*[:=]\s*["']?[^\s"',}]{8,}/.test(t) ||
-    Sxn.test(t) ||
+    PRIVATE_KEY_BLOCK_PATTERN.test(t) ||
     /\bauthorization\s*[:=]\s*["']?[a-z][a-z0-9_-]*\s+[A-Za-z0-9._~+\/=-]{8,}/i.test(
       t,
     ) ||
@@ -1792,7 +1792,7 @@ var _i =
     /^(?:localhost|[a-z0-9_-]+(?:\.[a-z0-9_-]+)*\.(?=[a-z0-9-]*[a-z])[a-z0-9-]+|[a-z0-9_.-]+(?=:\d+(?:[/?#]|$))|\d{1,3}(?:\.\d{1,3}){3}|\[[0-9a-f:.]+\])(?::\d+)?(?:[/?#]|$)/i,
   fi =
     /^(?:(?=[a-z0-9._-]*[a-z])[a-z0-9._-]+|\d{1,3}(?:\.\d{1,3}){3}|\[[0-9a-f:.]+\])(?::\d+)?(?:[/?#]|$)/i,
-  Sxn = /-----BEGIN [A-Z ]*PRIVATE KEY(?: BLOCK)?-----/,
+  PRIVATE_KEY_BLOCK_PATTERN = /-----BEGIN [A-Z ]*PRIVATE KEY(?: BLOCK)?-----/,
   Si =
     /https:\/\/(?:hooks\.slack\.com\/(?:services|workflows|triggers)\/|(?:ptb\.|canary\.)?discord(?:app)?\.com\/api\/webhooks\/\d+\/|[\w.-]+\.webhook\.office\.com\/webhookb2\/)[\w\/@.~-]{16,}/i,
   Ei =
@@ -1810,7 +1810,7 @@ function mi(e) {
           bare: O,
           contribution: I,
           goes:
-            (/(?:^|[=\s])--?X\b/.test(O) && !/(?:^|=)--?X$/.test(O)) || uS(I),
+            (/(?:^|[=\s])--?X\b/.test(O) && !/(?:^|=)--?X$/.test(O)) || looksLikeSecret(I),
         };
       let U = L.at(-2) ?? "",
         x = U.split("/").at(-1) ?? "",
@@ -1819,7 +1819,7 @@ function mi(e) {
       return {
         bare: O,
         contribution: I,
-        goes: rn(x, w) || uS(w) || uS(U) || (C !== "" && uS(C)),
+        goes: rn(x, w) || looksLikeSecret(w) || looksLikeSecret(U) || (C !== "" && looksLikeSecret(C)),
       };
     });
   for (let E = 0; E < o.length; E++)
@@ -1830,7 +1830,7 @@ function mi(e) {
         I.slice(1).some((N) => N.bare.startsWith("-"))
       )
         break;
-      if (uS(I.map((N) => N.contribution).join(" "))) {
+      if (looksLikeSecret(I.map((N) => N.contribution).join(" "))) {
         for (let N of I) N.goes = !0;
         break;
       }
@@ -1951,11 +1951,11 @@ function Ci(e) {
 }
 function an(e, t) {
   let r = { ...e },
-    o = new Set(Hge(e).map((d) => d.toUpperCase()));
+    o = new Set(collectEnvVarsToScrub(e).map((d) => d.toUpperCase()));
   for (let d of Object.keys(r))
     if (Ci(d) || o.has(d.toUpperCase())) delete r[d];
   if (
-    (Object.assign(r, die(r).respelled),
+    (Object.assign(r, getRespelledEnvVarsAndLostCredentials(r).respelled),
     (r.PYTHONNOUSERSITE = "1"),
     (r.GIT_CONFIG_NOSYSTEM = "1"),
     t === "win32")
@@ -1985,11 +1985,11 @@ var Li = 1e4,
       appendSystemPrompt: s().optional(),
     }),
   ),
-  bxn = "<policyHelper>";
+  POLICY_HELPER_SYNTHETIC_PATH = "<policyHelper>";
 function ne() {
-  let e = da();
+  let e = getHostSettingsStore();
   if (isHoverRestEnabled() && e.primer !== void 0) e.invalidatePolicyLayer();
-  else Za();
+  else invalidateAllSettings();
 }
 class _n {
   state = null;
@@ -2054,7 +2054,7 @@ class _n {
   announceTierChange() {
     ne();
     try {
-      (da().changed.emit("policySettings"), this.refreshed.emit());
+      (getHostSettingsStore().changed.emit("policySettings"), this.refreshed.emit());
     } catch (e) {
       logError(e);
     }
@@ -2085,7 +2085,7 @@ class _n {
   }
   releaseLatchAfterTornDownExec() {
     if (((this.initializeAttempted = !1), this.readRemotePayload !== null))
-      U5t(this.readRemotePayload);
+      refreshPolicyHelperFromRemotePayload(this.readRemotePayload);
   }
   startRefreshTimer(e, t, r) {
     this.stopRefreshTimer();
@@ -2160,7 +2160,7 @@ class _n {
           })
           .finally(() => this.settleRefreshExec());
       },
-      Math.min(o, w8t),
+      Math.min(o, MAX_TIMEOUT_MS),
       e,
       t,
       r,
@@ -2170,9 +2170,9 @@ class _n {
 }
 var T = new _n(),
   Ss = lz({ clear: Ui }),
-  har = T.refreshed,
+  policyHelperRefreshedEvents = T.refreshed,
   pn = new Set(["plist", "hklm", "file"]);
-async function ABe(e, t, r) {
+async function runPolicyHelperPass(e, t, r) {
   let o = r.find(
     (L) =>
       L.startupFatal &&
@@ -2236,7 +2236,7 @@ async function ABe(e, t, r) {
       T.initializeAttempted = !1;
     return null;
   }
-  T.armedFromUserWritableBase = t === "plist" && PU().userWritable === !0;
+  T.armedFromUserWritableBase = t === "plist" && getMdmSettings().userWritable === !0;
   let O = d ? nt() : null,
     I = p ? null : Hi(d, O?.chain ?? []);
   if (I) return ((T.payloadRefusalError = I), I);
@@ -2296,8 +2296,8 @@ function En(e, t = Sn) {
   return e.length > t ? `${e.slice(0, t - 1)}\u2026` : e;
 }
 function Ze(e, t) {
-  let r = MHn(t),
-    o = mtt(e.replace(/\s+/gu, " ")),
+  let r = describePolicyHelperCommand(t),
+    o = replaceNonPrintableAscii(e.replace(/\s+/gu, " ")),
     d = En(`${fn}${r ? `${r}: ` : ""}${o}`);
   ((T.remoteNoticeSubject = t),
     T.selectionWarnings.push({
@@ -2316,7 +2316,7 @@ function De() {
 var Ie = "policyHelper refresh failing: ";
 function Qe(e, t, r) {
   let o = `; ${t}`,
-    d = En(mtt(e.replace(/\s+/gu, " ")), Sn - Ie.length - o.length),
+    d = En(replaceNonPrintableAscii(e.replace(/\s+/gu, " ")), Sn - Ie.length - o.length),
     _ = `${Ie}${d}${o}`;
   if (T.selectionWarnings.some((O) => O.message === _)) return;
   let p = T.selectionWarnings.filter((O) => !O.message.startsWith(Ie)),
@@ -2346,7 +2346,7 @@ function tt(e) {
   ((T.selectionWarnings = t), ne());
 }
 function Pn(e, t) {
-  let r = R8t(e, t);
+  let r = parseManagedSettingsPayload(e, t);
   for (let o of r.strippedKeys)
     n(`${t}: stripped ${o} from the settings payload (no recursion)`, {
       level: "warn",
@@ -2368,7 +2368,7 @@ function Hi(e, t) {
         mergesOutput: _?.outputBehavior === "merge",
       });
   }
-  for (let d of Uq) {
+  for (let d of POLICY_HELPER_PLATFORMS) {
     let _ = e[d]?.defaultSettings;
     if (_ !== void 0 && _ !== null && !t.includes(d))
       r.push({
@@ -2389,14 +2389,14 @@ function Hi(e, t) {
   for (let d of r) {
     if (d.raw !== null && typeof d.raw === "object" && !Array.isArray(d.raw)) {
       let { policyHelper: p, policyHelpers: E, ...O } = d.raw,
-        I = Kge().safeParse(O);
+        I = getStaticSettingsPayloadSchema().safeParse(O);
       if (!I.success)
         return (
           logFeatureBad("settings_policy_helpers_per_os", "default_payload_invalid"),
           `${d.field} is not a valid static settings payload (${I.error.issues[0]?.message ?? "failed validation"}); Claude Code will not start until it is fixed`
         );
     }
-    let _ = d.onChain && !o ? Pn(d.raw, d.field) : R8t(d.raw, d.field);
+    let _ = d.onChain && !o ? Pn(d.raw, d.field) : parseManagedSettingsPayload(d.raw, d.field);
     if ("error" in _)
       return (
         logFeatureBad("settings_policy_helpers_per_os", "default_payload_invalid"),
@@ -2448,14 +2448,14 @@ function nt() {
       return { platform: t, chain: [t] };
   }
 }
-function _ar(e) {
+function hasRemotePolicyHelperEntry(e) {
   return _e(e) !== void 0;
 }
 function An(e, t, r) {
   for (let o of t) {
     let d = e[o];
     if (d == null) continue;
-    if (r ? XRt(d) !== void 0 : d.path != null || d.script != null) {
+    if (r ? getPolicyHelperCommand(d) !== void 0 : d.path != null || d.script != null) {
       let { defaultSettings: p, ...E } = d;
       return E;
     }
@@ -2464,7 +2464,7 @@ function An(e, t, r) {
 }
 function _e(e) {
   let t = e?.policyHelpers;
-  return t ? XRt(An(t, nt().chain, !0)) : void 0;
+  return t ? getPolicyHelperCommand(An(t, nt().chain, !0)) : void 0;
 }
 function vi(e, t, r, o) {
   if (!e || !r) return t ? { kind: "helper", config: t, fromPerOs: !1 } : null;
@@ -2560,28 +2560,28 @@ function On() {
   let e = T.state;
   return e && !e.armedFromRemote ? e.output : void 0;
 }
-function cRt() {
+function getPolicyHelperClaudeMd() {
   return On()?.claudeMd ?? null;
 }
-function yar() {
+function getPolicyHelperAppendSystemPrompt() {
   return On()?.appendSystemPrompt ?? null;
 }
-function uRt() {
+function hasActivePolicyHelper() {
   return T.state !== null;
 }
-function Sar() {
+function wasPolicyHelperInitializeAttempted() {
   return T.initializeAttempted;
 }
 function Tn() {
   return T.state?.armedFromRemote === !0;
 }
-function $5t() {
+function isPolicyHelperArmedFromUserWritableSettings() {
   return T.state !== null && T.armedFromUserWritableBase;
 }
 function In() {
   return T.state?.mergesOutput === !0;
 }
-function bar(e) {
+function retireOsAdminPolicyHelper(e) {
   if (
     e !== "remote" ||
     !T.initializeAttempted ||
@@ -2618,7 +2618,7 @@ function be() {
 registerSyncCacheResetListener(be);
 function cn(e) {
   let t = T.readRemotePayload;
-  return t !== null && isRemoteManagedSettingsVerifiedAndConsented() && _e(t()) === XRt(e);
+  return t !== null && isRemoteManagedSettingsVerifiedAndConsented() && _e(t()) === getPolicyHelperCommand(e);
 }
 async function Fi(e, t) {
   try {
@@ -2672,10 +2672,10 @@ async function Fi(e, t) {
     logError(r);
   }
 }
-function war(e) {
+function enableMidSessionPolicyHelperArming(e) {
   ((T.midSessionArmingEnabled = !0), (T.osAdminArming = e ?? null));
 }
-function U5t(e) {
+function refreshPolicyHelperFromRemotePayload(e) {
   ($i(e), Mi());
 }
 function Mi() {
@@ -2689,7 +2689,7 @@ function Mi() {
     return;
   let { settings: t, origin: r, loadErrors: o } = e.readBase();
   if (r === null || !pn.has(r) || r === T.decidedOrigin) return;
-  ABe(t, r, o)
+  runPolicyHelperPass(t, r, o)
     .then((d) => {
       if (d !== null) {
         (n(
@@ -2720,7 +2720,7 @@ function $i(e) {
   let t = e();
   if (_e(t) === void 0) return;
   let r = T.retiredHelperPaths.size;
-  ABe(t, "remote", [])
+  runPolicyHelperPass(t, "remote", [])
     .catch((o) => {
       logError(o);
     })
@@ -2731,7 +2731,7 @@ function $i(e) {
       if (o || T.retiredHelperPaths.size > r) T.announceTierChange();
     });
 }
-function Tar(e) {
+function reconcileRemoteArmedPolicyHelper(e) {
   let t = T.state?.armedFromRemote
       ? T.state.config
       : (T.remoteArmingConfig ?? T.remoteFailedConfig),
@@ -2740,16 +2740,16 @@ function Tar(e) {
   let o = e(),
     d = _e(o);
   if (t) {
-    if (!isRemoteManagedSettingsVerifiedAndConsented() || d !== XRt(t)) be();
+    if (!isRemoteManagedSettingsVerifiedAndConsented() || d !== getPolicyHelperCommand(t)) be();
   } else if (d !== r) De();
 }
-function Ear() {
+function getActivePolicyHelperPath() {
   return T.state?.config?.path ?? null;
 }
-function Aar() {
+function getRetiredPolicyHelperPaths() {
   return [...T.retiredHelperPaths];
 }
-function Car(e) {
+function getConfiguredPolicyHelperPaths(e) {
   let t = e?.policyHelpers,
     r = t
       ? nt()
@@ -2765,7 +2765,7 @@ function Car(e) {
     if (typeof _.path === "string" && Dn(_, o, p, !1) === null) d.push(_.path);
   return d;
 }
-function Rar() {
+function isPolicyHelperServingDefaultPayload() {
   return T.state?.serving === "default";
 }
 function Nn() {
@@ -2775,12 +2775,12 @@ function Ui() {
   T.reset();
 }
 var Cn = null;
-function kar(e) {
+function setPreSettingsEnvSnapshotProvider(e) {
   Cn = e;
 }
 var un = 2048;
 function xi(e) {
-  let t = E0(e);
+  let t = stripAnsiControlCharacters(e);
   if (t.length <= un) return t;
   let r = truncateToCodeUnits(t, un);
   return `${r}\u2026 (+${t.length - r.length} chars not shown; the full output is in the debug log)`;
@@ -2796,7 +2796,7 @@ async function ki(e, t, r) {
   let _ = Ct(e);
   if ("error" in _) return _;
   let { plan: p } = _,
-    E = Math.min(e.timeoutMs ?? Li, w8t),
+    E = Math.min(e.timeoutMs ?? Li, MAX_TIMEOUT_MS),
     O = performance.now(),
     I = await bt(p, E, T.pendingStats);
   if (I) return { error: I, code: "not_a_file" };
@@ -2873,7 +2873,7 @@ async function ki(e, t, r) {
   if (z.data.managedSettings !== void 0) {
     let V = Pn(z.data.managedSettings, "policyHelper");
     if ("error" in V) return re({ error: V.error, code: "schema_rejected" });
-    if (((le = V.warnings), r)) ((le = v8t(le)), delete V.settings.claudeMd);
+    if (((le = V.warnings), r)) ((le = sanitizeSettingsWarnings(le)), delete V.settings.claudeMd);
     X.managedSettings = V.settings;
   }
   if (z.data.claudeMd !== void 0) X.claudeMd = z.data.claudeMd;
@@ -2888,30 +2888,30 @@ function Dn(e, t, r, o) {
   if (e.script == null && e.interpreter == null) return Gi(e.path, t, r, o);
   if (!r)
     return "inline scripts are not supported on the singular policyHelper key";
-  if (e.path != null) return OHn;
-  return hlr(e, t === "win32" ? "windows" : "linux");
+  if (e.path != null) return PATH_SCRIPT_EXCLUSIVE_MESSAGE;
+  return getInlinePolicyHelperConfigError(e, t === "win32" ? "windows" : "linux");
 }
 function Gi(e, t, r, o) {
   let d = t === "win32" ? gn : posix;
   if (typeof e !== "string") return "path must be a string";
   if (!d.isAbsolute(e)) return `path must be absolute: ${e}`;
   if (t === "win32") {
-    if (r && !xHn.test(e))
+    if (r && !WINDOWS_EXECUTABLE_SUFFIX_PATTERN.test(e))
       return `path must end in .exe or .ps1 on Windows: ${e}`;
     if (!r && !e.toLowerCase().endsWith(".exe"))
       return `path must end in .exe on Windows: ${e}`;
-    if (IHn(e)) return `${PHn}: ${e}`;
+    if (isPowerShellPathWithWildcards(e)) return `${POWERSHELL_PATH_WILDCARD_MESSAGE}: ${e}`;
   }
-  if (o && (t === "win32" ? vHn(e) : ptt(e) || RHn(e)))
+  if (o && (t === "win32" ? isUncPath(e) : isNetworkAutomountPath(e) || isKernelMagicLinkPath(e)))
     return `path must not be a UNC, network-automount (/net, /Network/Servers) or kernel magic-link (/proc, /dev/fd) path when delivered via remote managed settings: ${e}`;
-  if (!kHn(e, t, { rejectDriveRelative: t === "win32" }))
+  if (!isNormalizedPath(e, t, { rejectDriveRelative: t === "win32" }))
     return t === "win32"
       ? `path must be a drive-qualified (C:\\...) or UNC path in normalized form (no "." or ".." segments, no doubled or trailing separators, no ":" or trailing "."/space in a component, no device-namespace prefix): ${e}`
       : `path must be in normalized form (no "." or ".." segments, no doubled or trailing separators): ${e}`;
   return null;
 }
-async function B5t(e, t, r) {
-  let o = await e.read([{ key: STORAGE_KEYS.userSettings(), offset: 0, length: n_ + 1 }]);
+async function readUserSettingsSeed(e, t, r) {
+  let o = await e.read([{ key: STORAGE_KEYS.userSettings(), offset: 0, length: MAX_SETTINGS_FILE_BYTES + 1 }]);
   if (!o.ok)
     return {
       kind: "failing",
@@ -2920,9 +2920,9 @@ async function B5t(e, t, r) {
     };
   let d = o.value.items[0];
   if (!d.found) return Wi(e.hostFiles, t);
-  if (d.totalBytes > n_) return { kind: "oversize" };
+  if (d.totalBytes > MAX_SETTINGS_FILE_BYTES) return { kind: "oversize" };
   let _ = hashSha256(d.value),
-    p = r !== void 0 && r.contentHash === _ ? r.parsed : Eke(decodeBufferText(d.value), t);
+    p = r !== void 0 && r.contentHash === _ ? r.parsed : parseSettingsContent(decodeBufferText(d.value), t);
   return { kind: "seeded", contentHash: _, size: d.totalBytes, parsed: p };
 }
 async function Wi(e, t) {
@@ -2938,7 +2938,7 @@ async function Wi(e, t) {
       : { kind: "failing", code: r.value.kind };
   return fxe(r.error) ? { kind: "absent" } : He(r.error);
 }
-async function wxn(e, t) {
+async function reseedSettingsFileLayer(e, t) {
   if (!isHoverRestEnabled()) return;
   let r = e.epoch;
   try {
@@ -2947,10 +2947,10 @@ async function wxn(e, t) {
         o.kind === "seeded"
           ? o.parsed
           : o.kind === "absent" && t.whenAbsent === "seedAbsence"
-            ? Eie()
+            ? emptySettingsResult()
             : void 0;
     if (d === void 0) {
-      n(`settings: ${t.label} not re-seeded (${dRt(o)}); the file read serves`);
+      n(`settings: ${t.label} not re-seeded (${describeSettingsReadResult(o)}); the file read serves`);
       return;
     }
     if (t.source !== "userSettings" && e.walkReadDiffers(t.path, d)) {
@@ -2959,7 +2959,7 @@ async function wxn(e, t) {
       );
       return;
     }
-    if (o.kind === "absent") Ake(t.path);
+    if (o.kind === "absent") logBrokenSettingsSymlink(t.path);
     return e.seedParsedFile(t.path, t.source, d, r)
       ? e.retainLayer(t.path, d)
       : void 0;
@@ -2970,11 +2970,11 @@ async function wxn(e, t) {
     return;
   }
 }
-function Txn(e, t) {
+function createUserSettingsSeedSource(e, t) {
   return {
     source: "userSettings",
     path: t,
-    read: () => B5t(e, t),
+    read: () => readUserSettingsSeed(e, t),
     label: "user settings",
     whenAbsent: "seedAbsence",
   };
@@ -2993,7 +2993,7 @@ async function Ki(e, t, r) {
     parsed:
       r !== void 0 && r.contentHash === o.contentHash
         ? r.parsed
-        : Eke(decodeBufferText(o.bytes), t, !0),
+        : parseSettingsContent(decodeBufferText(o.bytes), t, !0),
   };
 }
 async function ji(e, t, r, o) {
@@ -3003,7 +3003,7 @@ async function ji(e, t, r, o) {
     kind: "seeded",
     contentHash: d.contentHash,
     size: d.size,
-    parsed: Eke(decodeBufferText(d.bytes), r, o),
+    parsed: parseSettingsContent(decodeBufferText(d.bytes), r, o),
   };
 }
 async function Hn(e, t) {
@@ -3011,11 +3011,11 @@ async function Hn(e, t) {
   if (!r.ok) return He(r.error);
   if (r.value.kind === "absent") return { kind: "absent" };
   if (r.value.kind !== "file") return { kind: "failing", code: r.value.kind };
-  if (r.value.size > n_) return { kind: "oversize" };
+  if (r.value.size > MAX_SETTINGS_FILE_BYTES) return { kind: "oversize" };
   let o = await e.readBytes(t);
   if (!o.ok) return He(o.error);
   if (!o.value.found) return { kind: "absent" };
-  if (o.value.bytes > n_) return { kind: "oversize" };
+  if (o.value.bytes > MAX_SETTINGS_FILE_BYTES) return { kind: "oversize" };
   return {
     kind: "bytes",
     bytes: o.value.value,
@@ -3023,7 +3023,7 @@ async function Hn(e, t) {
     size: o.value.bytes,
   };
 }
-async function xar(e, t) {
+async function listSettingsDropInFileNames(e, t) {
   let r = await e.listFolder(wc.system(t));
   if (!r.ok) {
     if (r.error.code === "Failed" && r.error.telemetryCode === "ENOTDIR")
@@ -3034,12 +3034,12 @@ async function xar(e, t) {
   return {
     kind: "listed",
     names: r.value.entries
-      .filter((o) => (o.kind === "file" || o.kind === "link") && rkt(o.name))
+      .filter((o) => (o.kind === "file" || o.kind === "link") && isManagedDropInSettingsFile(o.name))
       .map((o) => o.name)
       .sort(),
   };
 }
-function dRt(e) {
+function describeSettingsReadResult(e) {
   if (e.kind !== "failing") return e.kind;
   return e.code === SXt
     ? "the backend does not serve this space"
@@ -3052,7 +3052,7 @@ function He(e) {
     failureClass: e.failureClass,
   };
 }
-function Exn(e, t, r, o) {
+function createNamedSettingsSeedSource(e, t, r, o) {
   return {
     source: t,
     path: r,
@@ -3061,7 +3061,7 @@ function Exn(e, t, r, o) {
     whenAbsent: "seedAbsence",
   };
 }
-function Axn(e, t, r, o) {
+function createPolicySettingsSeedSource(e, t, r, o) {
   return {
     source: "policySettings",
     path: t,
@@ -3070,8 +3070,8 @@ function Axn(e, t, r, o) {
     whenAbsent: "fileServes",
   };
 }
-async function j5t(e, t, r) {
-  return wxn(t, Txn(e, r));
+async function reseedUserSettingsFile(e, t, r) {
+  return reseedSettingsFileLayer(t, createUserSettingsSeedSource(e, r));
 }
 class $n {
   firedSites = new Set();
@@ -3086,11 +3086,11 @@ class $n {
 }
 var legacyLocalSettingsProbes = new j(() => new $n());
 function parseSettingsFile(e, t, r) {
-  return WU(e, da(), t, r);
+  return parseSettingsFileCached(e, getHostSettingsStore(), t, r);
 }
 function D() {
   let e = {
-    store: da(),
+    store: getHostSettingsStore(),
     cwd: he(),
     allowedSources: gae(),
     onLegacyLocalSettingsRead: (t) => legacyLocalSettingsProbes.of(B().host).fire(t),
@@ -3101,35 +3101,35 @@ function D() {
     flagExpectedContent: MA() ?? d8(),
     coworkPlugins: Irt(),
     canonicalGitRoot: findCanonicalGitRoot,
-    mdm: () => PU(),
-    hkcu: () => Rge(),
+    mdm: () => getMdmSettings(),
+    hkcu: () => getHkcuSettings(),
     helper: () => yn(),
     helperArmedFromRemote: () => Tn(),
     helperMergesOutput: () => In(),
     helperWarnings: () => Nn(),
-    wslInherits: () => S0(),
+    wslInherits: () => getWslInheritsWindowsSettings(),
   };
-  return ((e.file = () => QBe(e)), e);
+  return ((e.file = () => readManagedFileSettings(e)), e);
 }
 function getSettingsRootPathForSource(e) {
-  return skt(e, D());
+  return resolveSettingsSourceRootDir(e, D());
 }
 function localSettingsStoreRootAwaitingOwnershipProbe() {
   let e = D(),
-    t = JHn(e.cwd, e.canonicalGitRoot);
+    t = decideLocalSettingsStoreRoot(e.cwd, e.canonicalGitRoot);
   return t.decided === void 0 ? t.root : void 0;
 }
 function getSettingsFilePathForSource(e) {
-  return ehe(e, D());
+  return resolveSettingsFilePathForSource(e, D());
 }
 function getSettingsParseErrorsForSource(e) {
-  return Ilr(e, D());
+  return collectSettingsParseErrorsForSource(e, D());
 }
 function getRuleAnchorRootForSource(e) {
-  return blr(e, D());
+  return resolveRuleAnchorRootForSource(e, D());
 }
 function getLegacyLocalSettingsFilePath() {
-  return Aie(D());
+  return resolveLegacyLocalSettingsFilePath(D());
 }
 function projectSettingsAliasesUserSettings() {
   let e = getSettingsFilePathForSource("projectSettings"),
@@ -3142,35 +3142,35 @@ function getLocalSettingsValidationErrors() {
   return parseSettingsFile(e).errors;
 }
 function parseRemoteManagedSettings() {
-  return Bq(D());
+  return loadRemoteManagedSettings(D());
 }
 function loadManagedFileSettings() {
-  return QBe(D());
+  return readManagedFileSettings(D());
 }
 function getSettingsForSource(e) {
-  if (G1() && Ow.has(e)) return null;
-  return QHn(e, D());
+  if (G1() && PROJECT_SCOPED_SETTINGS_SOURCE_SET.has(e)) return null;
+  return getSettingsForSourceCached(e, D());
 }
 function getPairedPolicyModelOverrides() {
-  return wlr(D());
+  return resolvePairedPolicyModelOverrides(D());
 }
 function getHostManagedModelPricing() {
-  return Tlr(D());
+  return resolveHostManagedModelPricing(D());
 }
 function getHostManagedToolSearchEnv() {
-  return Elr(D());
+  return resolveHostManagedToolSearchEnv(D());
 }
 function getSettingsForSourceWriteSeed(e) {
-  return D8t(e, D(), { includeLegacyLocalSettings: !1 });
+  return resolveSettingsForSourceWriteSeed(e, D(), { includeLegacyLocalSettings: !1 });
 }
 var repoDirSettingsParses = new j(() => new Map());
 function readRepoDirSettingsFresh(e) {
   let t = D(),
-    r = [ehe(e, t), ...(e === "localSettings" ? [Aie(t)] : [])].filter(
+    r = [resolveSettingsFilePathForSource(e, t), ...(e === "localSettings" ? [resolveLegacyLocalSettingsFilePath(t)] : [])].filter(
       (E) => E !== void 0,
     ),
     o = repoDirSettingsParses.of(B().host),
-    d = r.map((E) => Slr(E, o));
+    d = r.map((E) => readSettingsFileCached(E, o));
   if (
     d.some(
       ({ settings: E, errors: O }) =>
@@ -3180,28 +3180,28 @@ function readRepoDirSettingsFresh(e) {
     return "unreadable";
   let [_, p] = d.map(({ settings: E }) => E);
   return {
-    settings: p === null || p === void 0 ? (_ ?? null) : b0({}, p, _ ?? {}, settingsMergeCustomizer),
+    settings: p === null || p === void 0 ? (_ ?? null) : mergeWith({}, p, _ ?? {}, settingsMergeCustomizer),
   };
 }
 function flagInlineConsentDropped() {
   let e = D();
   if (!isRecord(e.flagInline)) return !1;
   if (!we(e.flagInline)) return !1;
-  return wtt(e).settings === null;
+  return loadSdkInlineSettings(e).settings === null;
 }
 function flagInlineSettingDropped(e) {
   let t = D();
   if (!isRecord(t.flagInline) || !(e in t.flagInline)) return !1;
-  return wtt(t).settings === null;
+  return loadSdkInlineSettings(t).settings === null;
 }
 function parentManagedTierParticipates() {
-  return Rlr(D());
+  return doesParentManagedTierParticipate(D());
 }
 function getArmedHelperOutput() {
-  return Wq(D());
+  return resolveArmedHelperOutput(D());
 }
 function getMergedPolicySources() {
-  return e0n(D());
+  return resolveMergedPolicySources(D());
 }
 function we(e) {
   if (!isRecord(e)) return !1;
@@ -3213,9 +3213,9 @@ function we(e) {
 }
 function flagFileConsentDropped() {
   let e = D(),
-    t = ehe("flagSettings", e);
+    t = resolveSettingsFilePathForSource("flagSettings", e);
   if (!t) return !1;
-  if (WU(t, e.store, e.flagExpectedContent).settings !== null) return !1;
+  if (parseSettingsFileCached(t, e.store, e.flagExpectedContent).settings !== null) return !1;
   if (e.flagExpectedContent !== void 0) {
     let r = xt(e.flagExpectedContent, !1);
     if (!isRecord(r)) return !0;
@@ -3227,7 +3227,7 @@ function ot(e) {
   let t;
   try {
     let { resolvedPath: r } = Ro(ae(), e);
-    t = xt(readFileSyncText(r, n_), !1);
+    t = xt(readFileSyncText(r, MAX_SETTINGS_FILE_BYTES), !1);
   } catch (r) {
     if (W(r)) return !1;
     return !0;
@@ -3237,9 +3237,9 @@ function ot(e) {
 }
 async function sourceFileConsentDropped(e, t) {
   let r = D(),
-    o = ehe(e, r);
+    o = resolveSettingsFilePathForSource(e, r);
   if (!o) return !1;
-  let d = WU(o, r.store);
+  let d = parseSettingsFileCached(o, r.store);
   if (d.settings !== null) return !1;
   if (d.errors.length === 0) return !1;
   if (isHoverRestEnabled() && t !== void 0 && ve(e, o)) {
@@ -3261,14 +3261,14 @@ async function sourceFileConsentDropped(e, t) {
   return ot(o);
 }
 function ve(e, t) {
-  return e === "userSettings" && basename(t) === jq.default;
+  return e === "userSettings" && basename(t) === SETTINGS_FILENAMES.default;
 }
 async function Un(e) {
   let t = await e.read([STORAGE_KEYS.userSettings()]);
   if (!t.ok) return { kind: "unreadable", code: t.error.code };
   let r = t.value.items[0];
   if (!r.found) return { kind: "absent" };
-  if (r.totalBytes > n_) return { kind: "oversize" };
+  if (r.totalBytes > MAX_SETTINGS_FILE_BYTES) return { kind: "oversize" };
   let o = decodeBufferText(r.value);
   if (!o.trim()) return { kind: "empty" };
   let d = xt(o, !1);
@@ -3277,49 +3277,49 @@ async function Un(e) {
 }
 function legacyLocalConsentDropped() {
   let e = D(),
-    t = Aie(e);
+    t = resolveLegacyLocalSettingsFilePath(e);
   if (!t) return !1;
-  let r = WU(t, e.store);
+  let r = parseSettingsFileCached(t, e.store);
   if (r.settings !== null) return !1;
   if (r.errors.length === 0) return !1;
   return ot(t);
 }
 function getLegacyLocalSettingsOverlay() {
   let e = D(),
-    t = Aie(e);
+    t = resolveLegacyLocalSettingsFilePath(e);
   if (!t) return null;
-  return WU(t, e.store).settings ?? null;
+  return parseSettingsFileCached(t, e.store).settings ?? null;
 }
 function getAllPolicyTierSettings() {
-  return O8t(D());
+  return getPolicyTierSettings(D());
 }
 function getMachineAdminTierSettings() {
-  return vlr(D());
+  return resolveMachineAdminTierSettings(D());
 }
 function getAdminTierEnvValue(e) {
-  return Hlr(D(), e);
+  return resolveAdminTierEnvValue(D(), e);
 }
 function getPolicyEnvCompositionForLogging() {
-  return da().lastPolicyEnvComposition;
+  return getHostSettingsStore().lastPolicyEnvComposition;
 }
 function getDurablePolicyTierSettings() {
-  return xlr(D());
+  return resolveDurablePolicyTierSettings(D());
 }
 function getInitialSettings() {
   return getSettingsWithErrors().settings || {};
 }
 var getSettings_DEPRECATED = getInitialSettings;
 function getSettingsWithSources() {
-  Za();
+  invalidateAllSettings();
   let e = [];
-  for (let t of ms()) {
+  for (let t of getEnabledSettingsSources()) {
     let r = getSettingsForSource(t);
     if (r && Object.keys(r).length > 0) e.push({ source: t, settings: r });
   }
   return { effective: getInitialSettings(), sources: e };
 }
 function getEffectiveSettingSource(e) {
-  let t = ms();
+  let t = getEnabledSettingsSources();
   for (let r = t.length - 1; r >= 0; r--) {
     let o = t[r];
     if (getSettingsForSource(o)?.[e] !== void 0) return o;
@@ -3327,31 +3327,31 @@ function getEffectiveSettingSource(e) {
   return null;
 }
 function getSettingsWithErrors() {
-  let e = da(),
+  let e = getHostSettingsStore(),
     t = e.mergedSettings;
   if (t !== null) return t;
   profileCheckpoint("loadSettingsFromDisk_start");
-  let r = Plr(D());
+  let r = loadSettingsFromDisk(D());
   return (profileCheckpoint("loadSettingsFromDisk_end"), (e.mergedSettings = r), r);
 }
 function getManagedFileSettingsPresence() {
-  for (let e of ZBe(S0())) {
+  for (let e of getManagedSettingsDirs(getWslInheritsWindowsSettings())) {
     let { settings: t } = parseSettingsFile(fe(e, "managed-settings.json"), void 0, !0),
-      r = t !== null && lL(t),
+      r = t !== null && hasSettingsContent(t),
       o = !1;
     try {
       let d = fe(e, "managed-settings.d"),
         _ = (E) => {
           let { settings: O } = parseSettingsFile(fe(d, E), void 0, !0);
-          return O !== null && lL(O);
+          return O !== null && hasSettingsContent(O);
         },
-        p = da().primedFolderListing(d);
+        p = getHostSettingsStore().primedFolderListing(d);
       if (p !== void 0) o = p.some(_);
       else
         o = ae()
           .readdirSync(d)
           .some((E) => {
-            if (!(E.isFile() || E.isSymbolicLink()) || !rkt(E.name)) return !1;
+            if (!(E.isFile() || E.isSymbolicLink()) || !isManagedDropInSettingsFile(E.name)) return !1;
             return _(E.name);
           });
     } catch {}
@@ -3360,7 +3360,7 @@ function getManagedFileSettingsPresence() {
   return { hasBase: !1, hasDropIns: !1 };
 }
 function Yi() {
-  let e = PU();
+  let e = getMdmSettings();
   return {
     settings: Object.keys(e.settings).length > 0 ? e.settings : null,
     errors: e.errors,
@@ -3368,76 +3368,76 @@ function Yi() {
 }
 function getBasePolicySettings() {
   let e = D(),
-    { settings: t } = Bq(e);
-  if (t && lL(t)) return t;
+    { settings: t } = loadRemoteManagedSettings(e);
+  if (t && hasSettingsContent(t)) return t;
   let { settings: r } = Yi();
-  if (r && lL(r)) return r;
+  if (r && hasSettingsContent(r)) return r;
   let { settings: o } = loadManagedFileSettings();
-  if (o && lL(o)) return o;
-  let { settings: d } = btt(e);
+  if (o && hasSettingsContent(o)) return o;
+  let { settings: d } = loadParentManagedSettings(e);
   if (d) return d;
-  let _ = Rge();
+  let _ = getHkcuSettings();
   return Object.keys(_.settings).length > 0 ? _.settings : null;
 }
 function getBasePolicySettingsOrigin() {
-  let e = ZHn({ ...D(), helper: void 0 });
+  let e = resolveBasePolicySettingsOrigin({ ...D(), helper: void 0 });
   return e === "helper" ? null : e;
 }
 function isForceRemoteSettingsRefreshConfigured() {
-  return klr(D());
+  return isRemoteSettingsRefreshForced(D());
 }
 function getPolicySettingsOrigin() {
-  let e = da(),
+  let e = getHostSettingsStore(),
     t = e.policy.origin;
   if (t !== void 0) return t.value;
-  let r = ZHn(D());
+  let r = resolveBasePolicySettingsOrigin(D());
   return ((e.policy.origin = { value: r }), r);
 }
 function getHostPolicyForceLoginMethod() {
-  let e = da(),
+  let e = getHostSettingsStore(),
     t = e.policy.hostForceLoginMethod;
   if (t !== void 0) return t.value;
-  let r = Alr(D());
+  let r = resolvePolicyForceLoginMethod(D());
   return ((e.policy.hostForceLoginMethod = { value: r }), r);
 }
 function getShadowedManagedSources() {
-  return Clr(D());
+  return resolveShadowedManagedSources(D());
 }
 function anyAdminPolicyTierGovernsRetention() {
-  let e = da(),
+  let e = getHostSettingsStore(),
     t = e.policy.adminRetentionGoverned;
   if (t !== void 0) return t;
-  let o = [Bq(D()).settings, PU().settings, QBe(D()).settings].some(
+  let o = [loadRemoteManagedSettings(D()).settings, getMdmSettings().settings, readManagedFileSettings(D()).settings].some(
     (d) => d?.cleanupPeriodDays !== void 0,
   );
   return ((e.policy.adminRetentionGoverned = o), o);
 }
 function getPolicySettingsLoadErrors() {
-  let e = da(),
+  let e = getHostSettingsStore(),
     t = e.policy.loadErrors;
   if (t !== void 0) return t;
   let r = [];
   return (
-    r.push(...Bq(D()).errors),
-    r.push(...PU().errors),
+    r.push(...loadRemoteManagedSettings(D()).errors),
+    r.push(...getMdmSettings().errors),
     r.push(...loadManagedFileSettings().errors),
-    r.push(...btt(D()).errors),
-    r.push(...Rge().errors),
+    r.push(...loadParentManagedSettings(D()).errors),
+    r.push(...getHkcuSettings().errors),
     (e.policy.loadErrors = r),
     r
   );
 }
 function getPolicyHelperSourceLoadErrors() {
-  return [...PU().errors, ...loadManagedFileSettings().errors];
+  return [...getMdmSettings().errors, ...loadManagedFileSettings().errors];
 }
 function Ji() {
-  let e = da(),
+  let e = getHostSettingsStore(),
     t = e.policy.adminLoadErrors;
   if (t !== void 0) return t;
   let r = [];
   return (
-    r.push(...Bq(D()).errors),
-    r.push(...PU().errors),
+    r.push(...loadRemoteManagedSettings(D()).errors),
+    r.push(...getMdmSettings().errors),
     r.push(...loadManagedFileSettings().errors),
     (e.policy.adminLoadErrors = r),
     r
@@ -3450,16 +3450,16 @@ function filterFatalPolicyErrors(e) {
   return e.filter((t) => t.severity !== "warning");
 }
 function hasSurvivingAdminPolicySource() {
-  let e = da(),
+  let e = getHostSettingsStore(),
     t = e.policy.adminSurvivor;
   if (t !== void 0) return t;
-  let r = (E) => E != null && lL(E),
+  let r = (E) => E != null && hasSettingsContent(E),
     o = D(),
-    d = Wq(o),
-    _ = PU(),
+    d = resolveArmedHelperOutput(o),
+    _ = getMdmSettings(),
     p =
-      (d.composes === "tier" && !$5t() && !_.userWritable) ||
-      r(Bq(o).settings) ||
+      (d.composes === "tier" && !isPolicyHelperArmedFromUserWritableSettings() && !_.userWritable) ||
+      r(loadRemoteManagedSettings(o).settings) ||
       (!_.userWritable && r(_.settings)) ||
       r(loadManagedFileSettings().settings);
   return ((e.policy.adminSurvivor = p), p);
@@ -3510,8 +3510,8 @@ async function Xi(e, t, r, o, d) {
     O;
   using I = { [Symbol.dispose]: () => O?.() };
   try {
-    let N = D8t(e, D(), { includeLegacyLocalSettings: !1 }),
-      L = N !== null && WU(r, D().store).errors.some((C) => C.preserveOnWrite);
+    let N = resolveSettingsForSourceWriteSeed(e, D(), { includeLegacyLocalSettings: !1 }),
+      L = N !== null && parseSettingsFileCached(r, D().store).errors.some((C) => C.preserveOnWrite);
     if (L) N = null;
     if (!N) {
       let C = null;
@@ -3532,7 +3532,7 @@ async function Xi(e, t, r, o, d) {
           );
         if (F && typeof F === "object") {
           let K = Ru(F);
-          (Dq(K, r),
+          (normalizeSettingsAliases(K, r),
             (N = K),
             n(
               L
@@ -3560,16 +3560,16 @@ async function Xi(e, t, r, o, d) {
       return { error: null };
     }
     await ae().mkdir(pe(r));
-    let x = b0(N || {}, U, (C, F, K, ce) => {
+    let x = mergeWith(N || {}, U, (C, F, K, ce) => {
       if (F === void 0 && ce && typeof K === "string") {
         delete ce[K];
         return;
       }
       if (Array.isArray(F)) return F;
-      if (K === "extraKnownMarketplaces" && isRecord(C) && isRecord(F)) return Ttt(C, F);
+      if (K === "extraKnownMarketplaces" && isRecord(C) && isRecord(F)) return shallowMergeSettingsMaps(C, F);
       return;
     });
-    tRt(r);
+    markInternalWrite(r);
     let w =
       b(x, null, 2) +
       `
@@ -3593,7 +3593,7 @@ async function Xi(e, t, r, o, d) {
         stagingDir: fe(pe(r), rL),
       });
     }
-    if ((Za(), _)) O = Zi(r, w);
+    if ((invalidateAllSettings(), _)) O = Zi(r, w);
     if (e === "localSettings" && !p) {
       let C = await Mn(t);
       if (C.error && C.phase !== void 0 && !kn(U))
@@ -3604,7 +3604,7 @@ async function Xi(e, t, r, o, d) {
       else E = C.error;
     }
     if (e === "localSettings")
-      M5t(getRelativeSettingsFilePathForSource("localSettings"), he()).then((C) => {
+      addGlobalGitignoreEntry(getRelativeSettingsFilePathForSource("localSettings"), he()).then((C) => {
         if (!C.written) return;
         if (C.effective) logFeatureOk("gitignore_global_rule");
         else if (C.reason === "already_tracked")
@@ -3626,18 +3626,18 @@ async function Xi(e, t, r, o, d) {
 async function vn(e, t) {
   let r = getSettingsFilePathForSource("userSettings");
   if (r === void 0 || r === t || !ve("userSettings", r)) return;
-  return j5t(e, da(), r);
+  return reseedUserSettingsFile(e, getHostSettingsStore(), r);
 }
 function Zi(e, t) {
-  if (Buffer.byteLength(t) > n_) return;
+  if (Buffer.byteLength(t) > MAX_SETTINGS_FILE_BYTES) return;
   let r;
   try {
-    r = Eke(t, e);
+    r = parseSettingsContent(t, e);
   } catch (d) {
     n(`updateSettingsForSource: written settings not seeded: ${l(d)}`);
     return;
   }
-  let o = da();
+  let o = getHostSettingsStore();
   return (o.seedParsedFile(e, "userSettings", r, o.epoch), o.retainLayer(e, r));
 }
 function kn(e) {
@@ -3647,17 +3647,17 @@ function kn(e) {
 }
 function Fn(e) {
   try {
-    da().changed.emit(e);
+    getHostSettingsStore().changed.emit(e);
   } catch (t) {
     for (let r of t instanceof AggregateError ? t.errors : [t]) logError(r);
   }
 }
 async function Mn(e) {
-  let t = Aie(D());
+  let t = resolveLegacyLocalSettingsFilePath(D());
   if (!t) return { changed: !1, error: null };
   let r;
   try {
-    r = (await readFileWithMetadata(t, n_)).content;
+    r = (await readFileWithMetadata(t, MAX_SETTINGS_FILE_BYTES)).content;
   } catch (I) {
     if (W(I)) return { changed: !1, error: null };
     let N = new R(
@@ -3673,7 +3673,7 @@ async function Mn(e) {
   if (!o || typeof o !== "object" || Array.isArray(o))
     return { changed: !1, error: null };
   let d = Ru(o);
-  Dq(d, t);
+  normalizeSettingsAliases(d, t);
   let _ = d,
     p;
   try {
@@ -3689,7 +3689,7 @@ async function Mn(e) {
     );
   }
   if (p === null) return { changed: !1, error: null };
-  let E = b0(Ru(_), p, (I, N, L, U) => {
+  let E = mergeWith(Ru(_), p, (I, N, L, U) => {
       if (N === void 0 && U && typeof L === "string") {
         delete U[L];
         return;
@@ -3700,7 +3700,7 @@ async function Mn(e) {
     O = projectRemovalsOnly(_, E);
   if (b(O) === b(_)) return { changed: !1, error: null };
   try {
-    tRt(t);
+    markInternalWrite(t);
     let I = isConfigDirPath(pe(t));
     return (
       await wb(
@@ -3715,7 +3715,7 @@ async function Mn(e) {
           stagingDir: fe(pe(t), rL),
         },
       ),
-      Za(),
+      invalidateAllSettings(),
       { changed: !0, error: null }
     );
   } catch (I) {
@@ -3742,13 +3742,13 @@ function projectRemovalsOnly(e, t) {
   return e;
 }
 function getManagedSettingsKeysForLogging(e) {
-  let t = XT().strip().parse(e),
+  let t = getSettingsSchema().strip().parse(e),
     r = ["permissions", "sandbox", "hooks"],
     o = [],
     d = {
-      permissions: new Set(Object.keys(glr().shape)),
-      sandbox: new Set(Object.keys(kRt().shape)),
-      hooks: new Set(C_),
+      permissions: new Set(Object.keys(getPermissionsSchema().shape)),
+      sandbox: new Set(Object.keys(SandboxSettingsSchema().shape)),
+      hooks: new Set(HOOK_EVENT_NAMES),
     };
   for (let _ of Object.keys(t))
     if (r.includes(_) && t[_] && typeof t[_] === "object") {
@@ -3761,7 +3761,7 @@ function getManagedSettingsKeysForLogging(e) {
   return o.sort();
 }
 function getSettingsAfterPluginLoad(e) {
-  if (!da().pluginBaseLoaded)
+  if (!getHostSettingsStore().pluginBaseLoaded)
     logEvent("tengu_plugin_settings_premature_read", { key: fromEnum(e) });
   let { settings: t } = getSettingsWithErrors();
   return (t || {})[e];
@@ -3801,10 +3801,10 @@ function hasSkipWorkflowUsageWarning() {
   );
 }
 function hasIsolatePeerMachines() {
-  return ms().some((e) => getSettingsForSource(e)?.isolatePeerMachines === !0);
+  return getEnabledSettingsSources().some((e) => getSettingsForSource(e)?.isolatePeerMachines === !0);
 }
 function hasDisableClaudeAiConnectors() {
-  return ms().some((e) => getSettingsForSource(e)?.disableClaudeAiConnectors === !0);
+  return getEnabledSettingsSources().some((e) => getSettingsForSource(e)?.disableClaudeAiConnectors === !0);
 }
 function hasAutoModeOptIn() {
   return !0;
@@ -3850,7 +3850,7 @@ var autoModeConfigSchema = createLazyValue(() =>
   AUTO_MODE_TRUSTED_SOURCES = ["userSettings", "flagSettings", "policySettings"];
 function getAutoModeConfig() {
   let e = autoModeConfigSchema(),
-    t = da();
+    t = getHostSettingsStore();
   if (!t.autoModeUntrustedSourceWarned)
     for (let E of ["projectSettings", "localSettings"]) {
       if (E === "projectSettings" && projectSettingsAliasesUserSettings()) continue;
@@ -3897,7 +3897,7 @@ function isAutoModeClassifyAllShellEnabled() {
 }
 async function rawSettingsKeyPresence(e, t, r) {
   let o = D(),
-    d = XHn(o),
+    d = resolveEnabledSettingsSources(o),
     _ = !1,
     p = !1;
   for (let E of d) {
@@ -3926,7 +3926,7 @@ async function rawSettingsKeyPresence(e, t, r) {
         _ = !0;
       continue;
     }
-    let I = ehe(E, o);
+    let I = resolveSettingsFilePathForSource(E, o);
     if (!I) continue;
     if (
       isHoverRestEnabled() &&
@@ -3936,7 +3936,7 @@ async function rawSettingsKeyPresence(e, t, r) {
       projectSettingsAliasesUserSettings()
     )
       continue;
-    let N = E === "localSettings" ? Aie(o) : void 0,
+    let N = E === "localSettings" ? resolveLegacyLocalSettingsFilePath(o) : void 0,
       L = N ? [I, N] : [I],
       U = isHoverRestEnabled() && t !== void 0 && ve(E, I);
     for (let x of L) {
@@ -3969,7 +3969,7 @@ async function rawSettingsKeyPresence(e, t, r) {
       }
       try {
         let { resolvedPath: w } = Ro(ae(), x),
-          C = readFileSyncText(w, n_);
+          C = readFileSyncText(w, MAX_SETTINGS_FILE_BYTES);
         if (!C.trim()) continue;
         let F = xt(C, !1);
         if (F === null || typeof F !== "object" || Array.isArray(F)) p = !0;
@@ -3980,7 +3980,7 @@ async function rawSettingsKeyPresence(e, t, r) {
         )
           _ = !0;
       } catch (w) {
-        if ((YHn(w, x), !W(w))) p = !0;
+        if ((reportSettingsReadError(w, x), !W(w))) p = !0;
       }
     }
   }
@@ -3988,84 +3988,84 @@ async function rawSettingsKeyPresence(e, t, r) {
   return _ ? "present" : "absent";
 }
 export {
-  L5t,
-  M5t,
+  isPathGitIgnored,
+  addGlobalGitignoreEntry,
   registerWriteQueueDrain,
   drainRegisteredWriteQueues,
-  Cet,
-  tRt,
-  nRt,
-  uar,
-  rRt,
-  PU,
-  Rge,
-  S0,
-  vet,
-  oRt,
-  lxn,
-  JRe,
-  uie,
-  cxn,
-  Ret,
-  dar,
-  die,
-  uxn,
-  QRe,
-  N5t,
-  par,
-  kge,
-  dxn,
-  EBe,
-  pxn,
-  ket,
-  sRt,
-  fxn,
-  iRt,
-  ZRe,
-  mxn,
-  gxn,
-  hxn,
-  xge,
-  aRt,
-  _xn,
-  F5t,
-  kq,
-  xet,
-  lRt,
-  far,
-  Het,
-  mar,
-  gar,
-  Hge,
-  yxn,
-  uS,
-  Sxn,
-  bxn,
-  har,
-  ABe,
-  _ar,
-  cRt,
-  yar,
-  uRt,
-  Sar,
-  $5t,
-  bar,
-  war,
-  U5t,
-  Tar,
-  Ear,
-  Aar,
-  Car,
-  Rar,
-  kar,
-  B5t,
-  wxn,
-  Txn,
-  xar,
-  dRt,
-  Exn,
-  Axn,
-  j5t,
+  INTERNAL_WRITE_SUPPRESSION_MS,
+  markInternalWrite,
+  consumeInternalWrite,
+  clearInternalWrites,
+  awaitMdmSettingsLoaded,
+  getMdmSettings,
+  getHkcuSettings,
+  getWslInheritsWindowsSettings,
+  replaceMdmSettings,
+  loadMdmSettingsFromOs,
+  readWslManagedSettingsSnapshot,
+  isRegistryIndexVar,
+  MASKED_REGISTRY_INDEX_URL,
+  isIndexVarOrAliasSet,
+  sanitizeIndexUrlValue,
+  getRespelledEnvVars,
+  getRespelledEnvVarsAndLostCredentials,
+  getIndexVarAliasAssignment,
+  getScrubbedEnvVarNames,
+  initEnvScrubEnabled,
+  resetEnvScrubEnabled,
+  CREDENTIAL_ENV_VAR_NAMES,
+  isConnectionStringEnvVar,
+  isGitConfigOrProxyVar,
+  wouldEnvValueBeScrubbed,
+  sanitizeBuildToolEnvValue,
+  wordsLookLikeSecret,
+  JAVA_OPTIONS_ENV_VAR_NAMES,
+  normalizeEnvVarName,
+  splitShellWords,
+  STORE_RELOCATION_PROPERTY_PATTERN,
+  getBuildToolSettingsArgPath,
+  getSbtStoreArgPath,
+  stripJavaOptionPrefix,
+  normalizeDefineArgs,
+  isNonSecretLiteralValue,
+  isCredentialKeyName,
+  isCredentialEnvVarName,
+  BUNDLE_SEGMENT_ENV_VAR_PATTERN,
+  isClaudeCodeEnvVarAllowlisted,
+  GITHUB_TOKEN_ENV_VAR_NAMES,
+  isCredentialPrefixedEnvVar,
+  buildKeptEnvVars,
+  buildBashCredentialScrubScript,
+  collectEnvVarsToScrub,
+  collectCredentialEnvVarNames,
+  looksLikeSecret,
+  PRIVATE_KEY_BLOCK_PATTERN,
+  POLICY_HELPER_SYNTHETIC_PATH,
+  policyHelperRefreshedEvents,
+  runPolicyHelperPass,
+  hasRemotePolicyHelperEntry,
+  getPolicyHelperClaudeMd,
+  getPolicyHelperAppendSystemPrompt,
+  hasActivePolicyHelper,
+  wasPolicyHelperInitializeAttempted,
+  isPolicyHelperArmedFromUserWritableSettings,
+  retireOsAdminPolicyHelper,
+  enableMidSessionPolicyHelperArming,
+  refreshPolicyHelperFromRemotePayload,
+  reconcileRemoteArmedPolicyHelper,
+  getActivePolicyHelperPath,
+  getRetiredPolicyHelperPaths,
+  getConfiguredPolicyHelperPaths,
+  isPolicyHelperServingDefaultPayload,
+  setPreSettingsEnvSnapshotProvider,
+  readUserSettingsSeed,
+  reseedSettingsFileLayer,
+  createUserSettingsSeedSource,
+  listSettingsDropInFileNames,
+  describeSettingsReadResult,
+  createNamedSettingsSeedSource,
+  createPolicySettingsSeedSource,
+  reseedUserSettingsFile,
   legacyLocalSettingsProbes,
   parseSettingsFile,
   getSettingsRootPathForSource,

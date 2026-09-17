@@ -17,19 +17,19 @@ import { parseConfigInteger } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import {
-  Pae,
-  qL,
-  P_e,
-  qHt,
-  Kje,
-  fot,
-  mot,
-  T8,
-  O_e,
-  Xje,
-  RB,
-  ANn,
-  _ot,
+  RUNNER_VERSION,
+  assertSafeIdentifier,
+  getHttpStatusFromError,
+  POLL_ERROR_KINDS,
+  classifyPollError,
+  createEmptyPollErrorCounts,
+  createRunnerApiClient,
+  UNKNOWN_CLIENT_PLATFORM,
+  normalizeClientPlatform,
+  escapeLogValue,
+  escapePrometheusLabelValue,
+  rejectOrchestratorProxyAuthorization,
+  assertFeatureSupportedOnPlatform,
 } from "./chunk-cgmv5fe7.js";
 import { $3e } from "../Git-Worktree/chunk-33y3h2sy.js";
 import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
@@ -104,10 +104,10 @@ function Y(e) {
   return !1;
 }
 async function ne(e) {
-  if ((qL(e.claims.jti, "spawn-hint jti"), e.claims.session_id))
-    qL(e.claims.session_id, "spawn-hint session_id");
-  if (e.claims.pool_id) qL(e.claims.pool_id, "spawn-hint environment_id");
-  if (e.claims.account_id) qL(e.claims.account_id, "spawn-hint account_id");
+  if ((assertSafeIdentifier(e.claims.jti, "spawn-hint jti"), e.claims.session_id))
+    assertSafeIdentifier(e.claims.session_id, "spawn-hint session_id");
+  if (e.claims.pool_id) assertSafeIdentifier(e.claims.pool_id, "spawn-hint environment_id");
+  if (e.claims.account_id) assertSafeIdentifier(e.claims.account_id, "spawn-hint account_id");
   if (Y(e.claims.account_email))
     throw Error("spawn-hint account_email: control character");
   for (let p of e.claims.repo_sources) {
@@ -130,13 +130,13 @@ async function ne(e) {
     e.claims.attempt < 0
   )
     throw Error("spawn-hint attempt: unsafe value");
-  let t = O_e(e.claims.client_platform);
+  let t = normalizeClientPlatform(e.claims.client_platform);
   if (
     e.claims.client_platform &&
-    e.claims.client_platform !== T8 &&
+    e.claims.client_platform !== UNKNOWN_CLIENT_PLATFORM &&
     t === void 0
   ) {
-    let p = Xje(e.claims.client_platform);
+    let p = escapeLogValue(e.claims.client_platform);
     (e.onDebug(
       `[runner:orchestrator] spawn-hint client_platform rejected by the env-export gate (CLAUDE_RUNNER_CLIENT_PLATFORM left unset): "${p}" (len=${e.claims.client_platform.length})`,
     ),
@@ -1009,7 +1009,7 @@ function mt(e, t = Date.now()) {
 }
 function ht(e, t = Date.now()) {
   let r = e.last_poll_at > 0 ? (t - e.last_poll_at) / 1000 : 0,
-    o = `version="${RB(e.version)}",pool_id="${RB(e.pool_id)}",orchestrator_uuid="${RB(e.orchestratorUuid)}",hostname="${RB(e.hostname)}"`,
+    o = `version="${escapePrometheusLabelValue(e.version)}",pool_id="${escapePrometheusLabelValue(e.pool_id)}",orchestrator_uuid="${escapePrometheusLabelValue(e.orchestratorUuid)}",hostname="${escapePrometheusLabelValue(e.hostname)}"`,
     d = "claude_code_self_hosted_orchestrator",
     n = "";
   if (
@@ -1123,7 +1123,7 @@ function ht(e, t = Date.now()) {
 `),
     (n += `# TYPE claude_code_self_hosted_orchestrator_poll_errors_total counter
 `));
-  for (let c of qHt)
+  for (let c of POLL_ERROR_KINDS)
     n += `claude_code_self_hosted_orchestrator_poll_errors_total{error_kind="${c}"} ${e.pollErrors[c]}
 `;
   if (
@@ -1263,7 +1263,7 @@ async function gt(e, t) {
         {
           orchestrator_uuid: o.orchestratorUuid,
           hostname: o.hostname,
-          client_version: Pae,
+          client_version: RUNNER_VERSION,
           max: s.hookConcurrency,
           expected_spawn_seconds: s.expectedSpawnSeconds,
           ...(s.minIdle > 0 && { min_idle: s.minIdle }),
@@ -1272,8 +1272,8 @@ async function gt(e, t) {
       );
     } catch (h) {
       if (t.aborted) break;
-      o.pollErrors[Kje(h)]++;
-      let f = P_e(h),
+      o.pollErrors[classifyPollError(h)]++;
+      let f = getHttpStatusFromError(h),
         S = redactSecrets(l(h));
       if (f !== void 0 && ot.has(f))
         ((o.connected = !1),
@@ -1505,7 +1505,7 @@ Debug:
   configureGlobalAgents();
   let t;
   try {
-    (_ot("orchestrator mode"), ANn(e), (t = ct(e)));
+    (assertFeatureSupportedOnPlatform("orchestrator mode"), rejectOrchestratorProxyAuthorization(e), (t = ct(e)));
   } catch (h) {
     (console.error(`error: ${redactSecrets(l(h))}
 Run 'claude self-hosted-runner orchestrator --help' for usage.`),
@@ -1551,11 +1551,11 @@ Run 'claude self-hosted-runner orchestrator --help' for usage.`),
     (s(`[runner:fatal] ${l(h)}`), process.exit(1));
   }
   s(`[runner:orchestrator] environment_id=${u}`);
-  let N = mot({ baseUrl: t.apiUrl, poolSecret: c, onDebug: n }),
+  let N = createRunnerApiClient({ baseUrl: t.apiUrl, poolSecret: c, onDebug: n }),
     y = {
       orchestratorUuid: p,
       hostname: a,
-      version: Pae,
+      version: RUNNER_VERSION,
       pool_id: u,
       connected: !1,
       last_poll_at: 0,
@@ -1570,7 +1570,7 @@ Run 'claude self-hosted-runner orchestrator --help' for usage.`),
       warm_hints_dispatched: 0,
       spawnHooks: { ok: 0, retryable: 0, nonRetryable: 0 },
       spawnHookDurations: rt(),
-      pollErrors: fot(),
+      pollErrors: createEmptyPollErrorCounts(),
       scm_connector: t.scmConnector ? ce() : null,
       sessionQueueWaits: it(),
     },

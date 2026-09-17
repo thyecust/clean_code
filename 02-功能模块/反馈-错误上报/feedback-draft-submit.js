@@ -37,7 +37,7 @@ import {
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
-import { C8, eHe, tHe, v8, ZHt, n0t, n6e } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { hasThirdPartyTranscriptMarkers, anyTranscriptEntryHasThirdPartyMarkers, MAX_RAW_TRANSCRIPT_BYTES, MAX_FEEDBACK_PAYLOAD_BYTES, measureFeedbackPayloadBytes, findRecentEntriesWithinByteBudget, postFeedbackRequest } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 var J = 65536;
 function H(e) {
   return Buffer.byteLength(Tc(Tc(e)).slice(1, -1));
@@ -47,15 +47,15 @@ function L(e) {
   return Buffer.byteLength(Tc(s).slice(1, -1));
 }
 function O(e) {
-  let s = ZHt(e);
-  if (s <= v8) return { payload: e, trim: null };
+  let s = measureFeedbackPayloadBytes(e);
+  if (s <= MAX_FEEDBACK_PAYLOAD_BYTES) return { payload: e, trim: null };
   using k = Np`fitFeedbackPayloadToBudget(${s})`;
-  let c = s - (v8 - J),
+  let c = s - (MAX_FEEDBACK_PAYLOAD_BYTES - J),
     t = e.transcript.map((T) => H(T) + 1),
     b = t.reduce((T, F) => T + F, 0),
     h = e.rawTranscriptJsonl === void 0 ? 0 : L(e.rawTranscriptJsonl),
     w = c <= b ? b - c : Math.max(0, b - Math.max(0, c - h)),
-    { start: m, keptBytes: l, oversized: p } = n0t(t, w),
+    { start: m, keptBytes: l, oversized: p } = findRecentEntriesWithinByteBudget(t, w),
     g = e.transcript.slice(m),
     C = p.size === 0 ? g : g.filter((T, F) => !p.has(m + F)),
     D = c - (b - l),
@@ -74,7 +74,7 @@ function O(e) {
 `,
           ),
         ),
-        { start: A, oversized: z } = n0t(q, T),
+        { start: A, oversized: z } = findRecentEntriesWithinByteBudget(q, T),
         P = F.slice(A),
         I = (z.size === 0 ? P : P.filter((E, j) => !z.has(A + j))).join(`
 `);
@@ -100,10 +100,10 @@ ${_}`,
       transcript: C,
       ...(d !== void 0 && { rawTranscriptJsonl: d }),
     },
-    o = ZHt(M);
-  if (o > v8)
+    o = measureFeedbackPayloadBytes(M);
+  if (o > MAX_FEEDBACK_PAYLOAD_BYTES)
     n(
-      `fitFeedbackPayloadToBudget: still ${o} bytes after trim (budget ${v8})`,
+      `fitFeedbackPayloadToBudget: still ${o} bytes after trim (budget ${MAX_FEEDBACK_PAYLOAD_BYTES})`,
       { level: "error" },
     );
   return { payload: M, trim: v };
@@ -230,14 +230,14 @@ async function submitFeedbackDraft({
     if (m) {
       if (((l = prepareApiMessages(k)), _ !== null))
         try {
-          let { content: R, bytesRead: B, bytesTotal: M } = await k_(_, tHe),
+          let { content: R, bytesRead: B, bytesTotal: M } = await k_(_, MAX_RAW_TRANSCRIPT_BYTES),
             o = R;
           if (B < M)
             o = o.slice(
               o.indexOf(`
 `) + 1,
             );
-          if (C8(o))
+          if (hasThirdPartyTranscriptMarkers(o))
             n(
               "rawTranscriptJsonl withheld from feedback draft submit: contains_3p_transcript_markers",
             );
@@ -245,7 +245,7 @@ async function submitFeedbackDraft({
         } catch {}
     } else if (_ !== null)
       try {
-        let { content: R, bytesRead: B, bytesTotal: M } = await k_(_, tHe),
+        let { content: R, bytesRead: B, bytesTotal: M } = await k_(_, MAX_RAW_TRANSCRIPT_BYTES),
           o = R;
         if (B < M)
           o = o.slice(
@@ -257,12 +257,12 @@ async function submitFeedbackDraft({
             "draft transcript withheld from feedback submit: identity_not_corroborated",
           );
         else {
-          if (((l = Y(o)), eHe(l)))
+          if (((l = Y(o)), anyTranscriptEntryHasThirdPartyMarkers(l)))
             ((l = []),
               n(
                 "draft transcript withheld from feedback submit: contains_3p_transcript_markers",
               ));
-          if (C8(o))
+          if (hasThirdPartyTranscriptMarkers(o))
             n(
               "rawTranscriptJsonl withheld from feedback draft submit: contains_3p_transcript_markers",
             );
@@ -287,7 +287,7 @@ async function submitFeedbackDraft({
       ...(p && { rawTranscriptJsonl: p }),
     },
     { payload: D, trim: d } = O(C),
-    r = await n6e(D, b, w);
+    r = await postFeedbackRequest(D, b, w);
   if (r.success) {
     try {
       await deleteFeedbackDraft(e.draft_id, h);

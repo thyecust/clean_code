@@ -23,7 +23,7 @@ import { getSettingsForSource } from "../../01-核心基础设施/核心工具-�
 import { formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { relocateBgSessionCwd } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { JYe, ON, Df, relativePath, patternWithRoot, normalizeTrustedSymlink } from "./Memory-CLAUDE.md.vx19drc8.js";
+import { hasRepoSettingsRequiringTrust, getAlwaysAllowRules, getAlwaysDenyRules, relativePath, patternWithRoot, normalizeTrustedSymlink } from "./Memory-CLAUDE.md.vx19drc8.js";
 import {
   getProjectDirsUpToHome,
   settingsChangeDetector,
@@ -42,7 +42,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
 import { skillChangeDetector } from "../文件监听-Watch/skill-change-detector.js";
-import { R8, $z } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { validateUntrustedPath, getUntrustedPathReason } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { escapePromptText } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { homedir } from "os";
@@ -53,13 +53,13 @@ function R(e, t) {
   let o = dedupe([...Tr(e.requestedPath), e.canonicalPath]),
     c = dedupe([e.canonicalPath, normalizeTrustedSymlink(e.canonicalPath)]),
     s = (r, d, m) => m.some((y) => D(r, d, y));
-  for (let r of Df(t)) {
+  for (let r of getAlwaysDenyRules(t)) {
     if (r.ruleValue.toolName !== _) continue;
     let d = r.ruleValue.ruleContent;
     if (d === void 0 || s(d, r.source, o))
       return { result: "blockedByRule", rule: r };
   }
-  let l = ON(t).filter((r) => r.ruleValue.toolName === _);
+  let l = getAlwaysAllowRules(t).filter((r) => r.ruleValue.toolName === _);
   if (l.length === 0) return { result: "allowed" };
   for (let r of l) {
     let d = r.ruleValue.ruleContent;
@@ -268,7 +268,7 @@ async function relocateSession(e, t, o, c) {
     ),
     v = !1;
   try {
-    v = !a.CLAUDE_CODE_SANDBOXED && !VR() && !isWorkspacePersistedTrusted() && JYe();
+    v = !a.CLAUDE_CODE_SANDBOXED && !VR() && !isWorkspacePersistedTrusted() && hasRepoSettingsRequiringTrust();
   } catch (p) {
     n(
       `directory move: probing the gated project grants failed (continuing): ${p}`,
@@ -333,7 +333,7 @@ async function handleSetCwdControlRequest(e, t) {
     };
   let c = !1;
   try {
-    c = R8(
+    c = validateUntrustedPath(
       e.path,
       ot(e.path),
       t.toolPermissionContext.trustedNetworkDirectories,
@@ -365,7 +365,7 @@ async function handleSetCwdControlRequest(e, t) {
     };
   if (
     "directory" in s &&
-    $z(s.directory, t.toolPermissionContext.trustedNetworkDirectories) !==
+    getUntrustedPathReason(s.directory, t.toolPermissionContext.trustedNetworkDirectories) !==
       void 0
   )
     return {
