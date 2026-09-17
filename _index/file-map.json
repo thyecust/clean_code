@@ -4620,7 +4620,7 @@
   "confidence": "low"
  },
  "chunk-ezxdt3dm.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-ezxdt3dm.js",
+  "path": "01-核心基础设施/共享小工具-未细化/request-id.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 0.7,
