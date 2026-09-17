@@ -15,23 +15,34 @@
 靠读代码与调用点恢复 —— 554 个模块、2,844 条导出名、465 个文件改名，见
 [为模块恢复可读导出名](#为模块恢复可读导出名)。
 
+**目录结构重组**（2026-09-17，最后一轮）在这之上纠结构：目录名统一成一种风格、
+`_未识别/` 按硬证据归位、466 个文件的「共享小工具-未细化」拆成 22 个模块、
+8 个放错模块的文件归位，见[目录结构重组](#目录结构重组)。
+
 ## 结构
 
 ```
-00-第三方库/          第三方库（lodash / zod / React / Ink / gRPC / AWS SDK …）
-01-核心基础设施/          核心基础设施（日志、路径、配置、遥测、共享小工具）
-02-功能模块/          功能模块（权限、MCP、插件、Skills、Teammates、Bridge …）
-03-入口与运行时/          入口与运行时（cli.js · main · Headless · 会话 UI）
+00-第三方库/          第三方库（lodash / zod / React / Ink / gRPC / AWS SDK / qrcode / fflate …）
+01-核心基础设施/       核心基础设施（日志、路径、配置、遥测、并发、UI 组件、内嵌资源…）
+02-功能模块/          功能模块（权限、MCP、插件、Skills、Teammates、远程控制…）
+03-入口与运行时/       入口与运行时（cli.js · main · Headless · 会话 UI）
 _index/
-  file-map.json     chunk id → 路径 / 模块 / 大小 / 置信度
+  file-map.json     稳定的 chunk id → 路径 / 模块 / 大小 / 置信度
   modules.md        每个模块下的文件清单
 cli.js              真入口（23 KB）
 ```
 
-- **1430 个文件**，159 个目录，共 41.5 MB
-- 文件名：**1063 个是可读名字**（来自调用方实际使用的名字、斜杠命令注册表、导出别名，
-  以及 2026-09-17 的导出名恢复），其余 367 个保留 `chunk-<id>.js`。
-  除恢复导出的那批外，一律带 chunk id 后缀（`permissions-ui.0a82g62e.js`），便于与原始 chunk 对照。
+- **1430 个 js 文件**（另有 255 个随行资源），**165 个目录**，约 48 MB
+- 文件名：多数是可读名字（来自调用方实际使用的名字、斜杠命令注册表、导出别名，
+  以及 2026-09-17 的导出名恢复），**262 个保留 `chunk-<id>.js`**。
+  多数可读名字带 chunk id 后缀（`permissions-ui.0a82g62e.js`），便于与原始 chunk 对照。
+- `_index/file-map.json` 的**键是稳定的 chunk id，不是文件名**：一个文件改名后（如
+  `chunk-0a82g62e.js` → `permissions-ui.0a82g62e.js`）键仍然保留原来的 id，
+  这是「交叉参照原始分析」的锚点。所以要按文件名找它，得看 `path` 字段而不是键。
+- 三个目录里附了说明，读之前值得先看：
+  `01-核心基础设施/内嵌资源与模块互操作/README.md`（一套解析基准很反直觉的懒加载机制）、
+  `01-核心基础设施/核心工具-未归类/README.md`（证据不足的那批文件，以及为什么留着）、
+  `00-第三方库/_未识别/README.md`（还没认定身份的第三方 chunk）。
 
 ## 完整性
 
@@ -50,7 +61,8 @@ import 路径按原始依赖图逐条重写并校验：
 `export { … } from`：
 
 ```
-01-核心基础设施/共享小工具-未细化/BRIEF_PROACTIVE_SECTION.c389azz5.js
+（示例，该桶已在这一步被删除）
+<某模块目录>/BRIEF_PROACTIVE_SECTION.c389azz5.js
 export { rbr as BRIEF_PROACTIVE_SECTION, bet as BRIEF_ENFORCE_SENTINEL, … } from "./chunk-q599wyee.js";
 ```
 
@@ -77,7 +89,8 @@ export { rbr as BRIEF_PROACTIVE_SECTION, bet as BRIEF_ENFORCE_SENTINEL, … } fr
 
 - `00-第三方库/parse5/parse5.2zwbfepc.js` 是**手写的 shim**（`import { parse } from "parse5"` 再转出
   `rAt`/`sse`…）。在它里面重命名会遮蔽 import，所以这 5 个名字保持原样，
-  连带的桶 `01-核心基础设施/共享小工具-未细化/parse.4jce22r9.js` 保留。
+  连带的那个桶（原先在「共享小工具」目录下）保留 —— 它后来随 2026-09-17 的目录重组
+  落到了 `01-核心基础设施/核心工具-未归类/parse.4jce22r9.js`。
 - 4 个桶把某个符号转出成 `default`。`default` 不是合法绑定名，所以那 4 个**绑定**保持混淆名，
   只在该模块的 export 表里加一条 `M as default`；引用它们的 36 处 import 相应写成
   `import { default as M }`。
@@ -104,7 +117,7 @@ export { rbr as BRIEF_PROACTIVE_SECTION, bet as BRIEF_ENFORCE_SENTINEL, … } fr
 
 ## 会话 UI 的别名去混淆（试点）
 
-`03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js`（2.5 MB、94,213 行、5,751 个模块级绑定）
+`03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js`（2.5 MB、94,213 行、5,751 个模块级绑定）
 里只做了 **import 别名这一层**：把混淆的局部名换成源模块导出的真名。
 
 ```
@@ -219,8 +232,9 @@ B 层是这次查冲突时冒出来的：`export { He as BedrockClient }` 声明
 
 前几轮恢复的名字在文件里**都有证据**：`import { 真名 as X }`、`export { X as 真名 }`。
 这一轮处理剩下那一层 —— 模块导出的混淆名在文件内**没有任何证据**，名字只能靠读代码与调用点推断。
-做法与两个示范提交一致（`01-核心基础设施/共享小工具-未细化/build-ref-name.js` 的
-`getBuildRefName`、同目录 `user-agent.js` 的 `getClientUserAgent`）：
+做法与两个示范提交一致（`build-ref-name.js` 的 `getBuildRefName`、`user-agent.js` 的
+`getClientUserAgent`；两文件当时都在「共享小工具」那个目录里，
+2026-09-17 重组后分别落到 `01-核心基础设施/核心工具-其他/` 与 `01-核心基础设施/HTTP-网络层/`）：
 
 ```
 - 01-…/chunk-1adkzsnc.js                              + 01-…/max-serialized-array-elements.js
@@ -335,6 +349,44 @@ CI 没拦住：`check-imports.mjs` 查的是解析 / 依赖边 / 具名 import �
 （`AI_AGENT` 已被设成 `claude-code_*` 时这个分支被 `||` 短路，bug 不显形 ——
 本地跑 CLI 要 `env -u AI_AGENT` 才看得到。）
 
+## 目录结构重组
+
+前面几轮把**代码**改得可读了，但**目录**还是第一遍粗分的产物：713 个文件的置信度是 `low`，
+一个 466 个文件的「共享小工具-未细化」收容所，`_未识别/` 里 14 个子目录与顶层包目录重复分组，
+命名四种风格混用。这一轮用恢复出来的文件名与导出名，把结构也纠一遍。
+工具链在 `.analysis/move/`，判定表三份（都是「判定交给人读，改写交给脚本」）：
+`rename-table.mjs`、`thirdparty-table.mjs`、`hub-plan.json` + `hub-table.mjs`、`misfiled-table.mjs`。
+
+| 步 | 做了什么 | 规模 |
+|---|---|---|
+| 1 | 修索引漂移：`file-map.json` 里一条记录的 path 指向早已改名的文件 | 1 条 |
+| 2 | 目录名统一成「中文在前、`-` 分隔」；括号式与纯英文式一并收敛 | 41 个改名（另 83 个已合规） |
+| 3 | `_未识别/` 按硬证据归位；撤掉那 14 个重复分组的子目录 | 48 个 chunk 进 13 个包目录 |
+| 4 | 拆「共享小工具-未细化」 | 466 个 js + 109 个资源 → 22 个模块 |
+| 5 | 放错模块 / 分层倒置的文件归位 | 8 个（三处跨模块被引 100+ 次、本目录内 0 次） |
+
+**判据是引用密度与文件内的硬证据，不是名字。** 一条文件被别的模块引用几十上百次、
+被自己所在目录引用 0–3 次，位置就是错的。归位 `chunk-27ncq5fr.js` 时，它跨模块被引 **244** 次、
+本目录内 **0** 次，导出全是 prompt XML tag —— 没有一个是 Bedrock/Vertex 的。
+
+**够不上硬证据的不搬。** 拆收容所后有 178 个文件进了 `01-核心基础设施/核心工具-未归类/`
+并附 README 逐条说明 —— 它们要么文件内没有任何可读字符串、要么调用点跨度过大、
+要么两个方向都说得通。仓库铁律：一个看起来合理但错的名字比没有名字更糟。
+
+**过程中的三个真 bug**（都在验证里现形，不是事后补的）：
+
+1. `move.mjs` 的说明符重写原先只判「**目标**搬了没有」，漏了「来源搬了、目标没搬」——
+   这时相对基准变了，说明符同样要改。第 2 步全是同深度的目录改名、说明符恰好不变，
+   把这个 bug 盖住了；第 3 步跨深度搬文件时炸成 **162 条悬空依赖 + `bun cli --help` 输出 0 行**。
+2. 懒加载那一步把 hub 的**目录**传给了只映射文件的 `newPath`，80 处基准算错。
+   首次试跑就报「懒加载 80 处重写」—— 正常应是 0 处（hub 与资产同进同出，说明符不该变）。
+3. 索引归属的判定原先放在落盘**之后**，于是「新目录没有索引归属」这类错误在树已搬动后才报出来，
+   留下「盘上搬了、索引没动」的中间态。现在归位判定在落盘之前。
+
+每步都跑同一套验证，全过才提交（往返逐字节还原 / 说明符与资源解析 / 导出面 / 自由标识符 /
+索引一致 / 懒加载基准 / `--help` md5 / 退出路径）。搬家用 `git mv`-式落盘，git 的改名检测
+把每一步都记成 `R`（改名前 247 个、第三方 575 个、放错模块 8 个）。
+
 ## 怎么读
 
 1. 先看 `_index/modules.md` —— 每个模块有哪些文件、各多大。
@@ -344,23 +396,34 @@ CI 没拦住：`check-imports.mjs` 查的是解析 / 依赖边 / 具名 import �
    例如 `{ planContent: F, planPath: L } = fe` 直接告诉你 F 是 planContent。
    去桶改造又给被转出过的符号补上了真名：`function adoptSubagentPublishArms(…)`、
    `import { getMainLoopModel as rt } from …` —— 后者把一行里每个混淆名都标注了出来。
-4. 交叉参照原始分析：`_index/file-map.json` 里有 chunk id。
+4. 交叉参照原始分析：`_index/file-map.json` 里有 chunk id —— 注意它是**键**而不是
+   `path` 的最后一段（见上面「结构」一节的说明）。
+5. 想知道某个目录为什么在那儿、哪些文件是「定不了」的，看那里的 `README.md`；
+   想知道整个结构是怎么走过来的，看上面「目录结构重组」一节。
 
 ## 随行资源（重要）
 
-打包产物不只是 JS。有 **171 个数据文件**（.zst / .md / .txt / .mjs）在运行时按**相对路径**加载，
-搬动文件时必须让资源跟着它的**加载方**走：
+打包产物不只是 JS。有 **267 个非 js 文件**（134 个 `.md`、103 个 `.zst`、21 个 `.txt`、
+5 个 `.node`、4 个 `.mjs`）在运行时按**相对路径**加载，搬动文件时必须让资源跟着它的加载方走。
+**这里有两套基准完全不同的机制，搬文件时最容易踩：**
 
-- **41 个 chunk** 用 `Ke(path, import.meta.dirname)` 读同目录的 .zst/.md
-  （如 `chunk-0z426rj0.js` → `./compare.mjs-4b810a57.txt.zst`，一行 wrapper）。
-- `chunk-2c9tjhwd.js` **捕获**了 `import.meta.require` 并导出为 `Ae`，
-  共 80 个资源按**它所在的目录**解析 —— 即使调用方在别的 chunk 也一样。
+- **跟引用方走** —— `readEmbeddedAssetSync("./x", import.meta.dirname)`。`import.meta.dirname`
+  是**调用方自己**的目录，所以资源必须与加载方同目录。全树 107 处（`.zst` 多为
+  `var J = "./compare.mjs-4b810a57.txt.zst"` 这种一行 wrapper）。同一份资源在多个目录各留一份
+  副本，就是因为这个 —— 例如 `02-功能模块/Skills技能/` 与 `02-功能模块/工具WebFetch-WebSearch/`
+  下各有一份 `build-report-lite-f76sjj5z.mjs`。
+- **跟 hub 走** —— `chunk-2c9tjhwd.js` 捕获了 `import.meta.require`（导出名
+  `importMetaRequire`）。**调用方在哪个目录不影响解析**：基准是捕获它的那个模块所在的目录。
+  全树 80 处相对调用（61 个 `.md`、12 个 `.txt`、5 个 `.node`、2 个 `.mjs`）都落在
+  `01-核心基础设施/内嵌资源与模块互操作/` —— hub 和这 80 个目标必须同进同出。
+  实验与说明见该目录的 `README.md`；CI 第 6 类检查逐个静态校验这条基准。
 - `cli.js` 引用 `./src/plugins/functionHooks/hooks-worker/hooks-worker.js`。这个 worker 是**自带依赖的
   独立 bundle**：目录里除入口外还有它的 10 个依赖文件（`chunk-0t0sve49.js`、`chunk-h4f48kbj.js` …），
   入口里的 `./chunk-*.js` 全部是**同目录**引用，少一个就起不来 —— 且它不在 `cli.js` 的静态依赖图上，
   漏掉时只有真去跑一次 hook 才会发现（CI 的第 4 类检查就是干这个的）。
 
-树已把这些资源复制到各自加载方旁边。改动目录结构时需保持这一点。
+树已把这些资源放在各自加载方旁边（或 hub 旁边）。改动目录结构时需保持这一点 ——
+`.analysis/move/move.mjs` 会按上面两套基准分别处理，`check-lazy-base.mjs` 负责验证。
 
 ## 运行时验证（bun 直接跑，与原 bundle 对比）
 
@@ -392,6 +455,22 @@ bun .analysis/check-imports.mjs --runtime  额外真跑一次 hooks worker
 | 3 | **导出面**：具名 import 的名字确实在被导入模块的导出里 | **改名只改了一半** | 链接期报缺导出 |
 | 4 | **单独入口**（`--runtime`）：真拉起 hooks worker | 入口旁边依赖不全 | worker 起不来 |
 
+上面那条只看 `.js` 之间的引用。2026-09-17 的目录重组又补了两条，补的都是
+**它看不见**的形状（脚本在 `.analysis/move/`）：
+
+```
+bun .analysis/move/check-index.mjs       索引与磁盘一致
+bun .analysis/move/check-lazy-base.mjs   两类懒加载的解析基准
+```
+
+| # | 检查 | 抓什么 |
+|---|---|---|
+| 5 | **索引一致**：`file-map.json` 每条 path 在磁盘上、每个主树 `.js` 都有记录 | 索引与实际脱节。**实测已经脱节过一次** —— 某条记录的 path 指向一个早已改名的文件，而改名后的文件在索引里没有记录 |
+| 6 | **懒加载基准**：`importMetaRequire("./x")` 按**捕获 `import.meta.require` 的模块所在目录**解析；`readEmbeddedAsset*("./x", …)` 按**引用方目录**解析 | 第 2 类检查的正则 `import\.meta\.require\(` 匹配不到 `importMetaRequire(`；`"./x"` 是普通字符串字面量，根本不是 import 说明符 |
+
+第 6 类那 4 个「已知缺失」的资源（`mermaid.min.js` 等）在本仓库里**从未存在过** ——
+只有加载器引用它们，git 里没有新增记录，是打包产物把它们留在了外部。检查要求这个集合不变。
+
 第 1、3 类正是 2026-09-17 那次事故的形状：全树别名去混淆把同一文件里两个压缩别名
 （`Mb`、`yr`）都落成了 `parseShortId`，重复声明 → 整块文件解析失败。它在运行时只表现为
 **卡住不动、10 秒后一句 `Claude Code could not start: BuildMessage` 然后退出**，
@@ -405,8 +484,10 @@ bun .analysis/check-imports.mjs --runtime  额外真跑一次 hooks worker
   再全文件兜底扫一遍 `export {…}`，两者有一个命中就算通过。宁可漏报一条坏边，
   也不让 CI 因为漏认一条导出而变红 —— 一个会误报的检查等于没有检查。
 
-当前全绿：1430 个文件 / 40.8 MB / 17,267 条相对依赖边（其中懒加载 301 条）0 失败。
-**没检查的**：`import.meta.require` 里非字面量的目标（约 60 处，静态看不见）；
+当前全绿：1430 个文件 / 43.0 MB / 17,267 条相对依赖边（其中懒加载 301 条）0 失败；
+第 5、6 类（索引一致、懒加载基准）同样 0 失败。
+**没检查的**：`importMetaRequire(...)` / `import.meta.require(...)` 里**非字面量**的目标
+（约 60 处，静态看不见 —— 第 6 类只查得到字面量那部分）；
 `_source/` 下的第三方原始源码（树外，且部分文件不可读）；`00-第三方库/` 里
 `import` 自己 `_source/` 的那种边只查文件在不在、不查导出面。CI 也不跑 `bun cli`——
 启动一次要读凭据 / 起遥测，放在 CI 里不稳；这条仍按上面的「运行时验证」手工做。
@@ -419,8 +500,11 @@ bun .analysis/check-imports.mjs --runtime  额外真跑一次 hooks worker
 - **打包器不把它当一条边**：`bun build` 会把它原样输出，目标模块根本不进包；
   即使另外补一条静态 `import` 把模块拉进包，`--compile` 后所有模块被内联成单个文件，
   `/$bunfs/root/` 下没有对应**路径**，运行时照样 `Cannot find module`。
-- 本树有 **367 个调用点**（58 个文件），其中 **528 个文件（37%）只靠懒加载入边被引用** ——
-  直接 compile 会集体丢失。
+- 懒加载调用点有**两族**：字面 `import.meta.require("./x")` **341 处（53 个文件）**，
+  以及 `importMetaRequire("./x")` **312 处（51 个文件，其中 80 处的解析基准是
+  `01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js` 所在目录**）。
+  两者都只是普通函数调用/字面量，**打包器一条都不当边**。
+  另有 **528 个文件（37%）只靠懒加载入边被引用** —— 直接 compile 会集体丢失。
 
 原版二进制没事，是因为它的 chunk 是作为**独立文件**存在于 `/$bunfs/root/` 的。
 要改造的话代价不在调用点本身，而在 **55 个 CJS 互操作 getter**（模块加载层）。
@@ -454,5 +538,7 @@ bun .analysis/check-imports.mjs --runtime  额外真跑一次 hooks worker
   它内部含工具定义、插件加载、SystemPrompt 等多个模块，但只能放在一个目录里。
 - **不能 `bun build --compile`。** `import.meta.require` 不是打包器的边，
   528 个文件只靠它被引用；要改造成 `await import` 得先处理 async 传染。见 [`BUN-COMPILE.md`](BUN-COMPILE.md)。
-- 818 个文件仍叫 `chunk-<id>.js` —— 它们是急切路径上的混淆块，打包器没保留任何人类名字。
+- **262 个文件仍叫 `chunk-<id>.js`** —— 它们是急切路径上的混淆块，打包器没保留任何人类名字。
+  结构重组没有给它们改名：只有读得出硬证据的才改，读不出的保持原名（`01-核心基础设施/核心工具-未归类/`
+  里那 178 个是同类情况的集中处）。
 - 第三方库目录里是**打包后的实现**。想换成上游源码，可按版本号 `npm pack`（见 `_index/` 与主图谱）。

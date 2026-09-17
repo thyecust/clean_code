@@ -75,5 +75,19 @@ cB, xA, lz, Jke, Ycr    ← 应用侧的小 helper，不是 lru-cache 的
 
 ## 未识别的部分
 
-`_未识别/` 下是还没认定的第三方 chunk。其中最大的一块是 `第三方库-AWSSDK`（16 个 chunk），
-它们确实是 AWS SDK 的客户端实现，只是没有逐个定版。
+2026-09-17 的目录重组把原先 `_未识别/` 下那 14 个**与顶层包目录重复分组**的子目录撤掉了，
+按硬证据归位了 48 个 chunk，并新建了 6 个包目录：
+
+| 归到 | 关键证据 |
+|---|---|
+| `@aws-sdk/`（18 个） | BedrockClient / BedrockRuntimeClient / STSClient；且 `chunk-jtb5q5xr` 被 **@aws-sdk/core 引用**（说明它在 core 之上） |
+| `parse5/` `zod/` `react/` `ajv/` `@anthropic-ai/sdk/` | 各自 import 该包的 chunk，或含包特征串（`ZodError`、`ajv implementation error`、React 自身报错） |
+| 新建 `semver/` `qrcode/` `fflate/` `supports-color/` `graceful-fs/` `@opentelemetry/` | 前两个的文件头注释就写着包名与版本；`fflate` 由 `Zip/ZipDeflate/unzipSync` 这个 API 认定 |
+
+判据只用三条硬证据：它 import 了某个包自己的 chunk；包名/API 名/错误串出现在文件里；
+本文档或 `REPLACED.md` 已写明。**够不上的一律留在原处** ——
+剩 8 个 chunk 仍没有身份（`Ink终端渲染器` 导出的 `runSteps`/`showScreen` 在 ink 的 `_source/`
+里查无此名；`第三方库-Azure身份认证` 内容全是 google-chrome 启动逻辑，与 Azure 无关……），
+现在铺平在 `_未识别/` 一层，目录里有 `README.md` 逐条写明知什么、为什么定不了。
+
+对照源码 `_source/` 跟着各自的 chunk 走（`qrcode/_source`、`@aws-sdk/_source`、`@opentelemetry/_source`）。
