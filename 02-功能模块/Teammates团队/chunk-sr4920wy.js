@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { _U, uf, ZQe, qCt, yr, jD, tZe, eRn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { _U, uf, ZQe, qCt, slugify, jD, tZe, eRn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getPeerBridgeIdentity } from "../权限系统/chunk-1y2g140m.js";
 import { pK } from "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
 import { cp } from "./chunk-enjekn9t.js";
@@ -88,14 +88,14 @@ function EPe(e) {
   if (o === void 0 || i === void 0 || uf(e).scheme !== "other") return "no";
   let r = jD(e);
   if (r !== null) {
-    let a = yr(r.name);
+    let a = slugify(r.name);
     if (!eRn(r.ref, "session", i)) return "no";
-    if (a !== yr(o.name)) {
+    if (a !== slugify(o.name)) {
       let c = n().get(a);
       if (c === void 0) return "no";
       return c === "derived" ? "categorical" : "note";
     }
-  } else if (yr(e) !== yr(o.name)) return "no";
+  } else if (slugify(e) !== slugify(o.name)) return "no";
   let { getSessionNamingState: l } = import.meta.require("../跨会话消息(UDS)/chunk-9kzxq41e.js");
   return o.source === "derived" ||
     ((o.source === "user" || o.source === "collision") &&

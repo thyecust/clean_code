@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { An, ac, li, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { K, fy } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { NP, ynt, rawPointerPathIsUnsafe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";

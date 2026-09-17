@@ -10,7 +10,7 @@
 import { j, bi } from "../lodash/lodash.2x3q7cfh.js";
 import { po } from "../lodash/lodash.207999qb.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad } from "../lodash/lodash.0vqzb8ad.js";
 import { R, A, Jr } from "../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";

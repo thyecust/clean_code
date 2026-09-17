@@ -13,7 +13,7 @@ import { Z, Dt, kt } from "../../01-核心基础设施/共享小工具-未细化
 import { Iz, tl, be, Lxe, uo, Hr, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { CLAUDE_AI_INFERENCE_SCOPE, CLAUDE_AI_PROFILE_SCOPE, OAUTH_BETA_HEADER, CLAUDE_AI_OAUTH_SCOPES, ALL_OAUTH_SCOPES, preservableScopesFrom, ALLOWED_OAUTH_BASE_URLS, getOauthConfig } from "./chunk-9g2q4bjq.js";
 import {
-  Mb,
+  parseShortId,
   Xn,
   Qs,
   j,
@@ -82,7 +82,7 @@ import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, Zt, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { getGlobalClaudeFile, kxt, getHostPlatformForAnalytics, getShellForAnalytics, TW, env as a, antEnv, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum, fromEnumOpt, fromNumber, fromSanitizer_SANITIZER_OUTPUT_ONLY, mcpNameForAnalytics_GATE_EVALUATED, agentTypeForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt, fromNumber, fromSanitizer_SANITIZER_OUTPUT_ONLY, mcpNameForAnalytics_GATE_EVALUATED, agentTypeForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import {
   ud,
   YR,
@@ -25159,7 +25159,7 @@ function SKt(e, t) {
   if (!_n(r) || e !== Jz(Xvn(), r)) return;
   return Ce.job(r, t);
 }
-var fA = 200;
+var maxSlugLength = 200;
 import { basename as wce } from "path";
 function ix(e, t) {
   return `${e}@${t}`;
@@ -25494,7 +25494,7 @@ function ege(e) {
 function Qvn(e) {
   return !ege(e) && e.connected === !1;
 }
-function yr(e) {
+function slugify(e) {
   return e
     .normalize("NFKC")
     .replace(/[\p{Cc}\p{Cf}]/gu, (t) => (/\s/.test(t) ? t : ""))
@@ -25518,8 +25518,8 @@ function nge(e, t) {
   return e.members.filter((r) => iRe(r, t) || !tge(r.name));
 }
 function l0(e) {
-  let t = yr(e);
-  return t === cp || t === fs || Mb(t) !== null;
+  let t = slugify(e);
+  return t === cp || t === fs || parseShortId(t) !== null;
 }
 var Ml = 6,
   Zvn = 12,
@@ -25641,21 +25641,21 @@ function bP(e, t) {
           (L.kind === "session" ||
             L.kind === "cloud-session" ||
             L.kind === "bridge-session") &&
-          yr(U) === cp;
+          slugify(U) === cp;
       return F || V || !tge(U) ? [{ ...L, name: U }] : [];
     }),
     D = new Set(),
     x = Ice(
       I.filter((L) => {
         if (L.kind !== "session") return !0;
-        let U = `${yr(L.name)}\x00${L.id}`;
+        let U = `${slugify(L.name)}\x00${L.id}`;
         if (D.has(U)) return !1;
         return (D.add(U), !0);
       }),
     ),
     N = new Map();
   for (let L of x) {
-    let U = yr(L.name),
+    let U = slugify(L.name),
       F = N.get(U);
     if (F) F.push(L);
     else N.set(U, [L]);
@@ -25664,7 +25664,7 @@ function bP(e, t) {
   for (let { rawName: L, socks: U } of p) {
     let F = uq(L);
     if (F === null || !Qg(F)) continue;
-    let V = yr(F),
+    let V = slugify(F),
       te = G.get(V) ?? new Set();
     for (let re of U) te.add(re);
     G.set(V, te);
@@ -25713,7 +25713,7 @@ function eZe(e, t) {
         : `, ${e.kind === "subagent" ? "started" : "active"} ${formatDuration(Math.max(0, t - e.lastActive), { mostSignificantOnly: !0 })} ago`;
   return `${bU(e)} \u2014 ${r}, ${o}${d}`;
 }
-var Mce = fA;
+var Mce = maxSlugLength;
 function uq(e) {
   if (typeof e !== "string") return null;
   return (
@@ -25743,7 +25743,7 @@ function Qg(e) {
   return !vUe(e) && a0(e) && !e.includes("@") && e !== "*";
 }
 function vUe(e) {
-  let t = yr(e);
+  let t = slugify(e);
   return uf(e).scheme !== "other" || uf(t).scheme !== "other" || Xg(e) || Xg(t);
 }
 function Ice(e) {
@@ -26084,7 +26084,7 @@ function Xor(e, t) {
   return;
 }
 function Yce(e) {
-  return [...e.replace(/[\x00-\x1f\x7f-\x9f]/g, "")].slice(0, fA).join("");
+  return [...e.replace(/[\x00-\x1f\x7f-\x9f]/g, "")].slice(0, maxSlugLength).join("");
 }
 function si(e) {
   return Yce(Sn(e.trim())).trim();
@@ -26207,21 +26207,21 @@ class CF {
   setRegisteredName(e, t) {
     let r = this.registeredName,
       o = Date.now(),
-      d = yr(e);
-    if (r && yr(r.name) === d) {
+      d = slugify(e);
+    if (r && slugify(r.name) === d) {
       this.registeredName = { name: e, source: t, since: r.since };
       return;
     }
-    if (r) this.heldNames.set(yr(r.name), r.source);
+    if (r) this.heldNames.set(slugify(r.name), r.source);
     if (
       (this.heldNames.delete(d),
-      (this.formerNames = this.formerNames.filter((p) => yr(p.name) !== d)),
+      (this.formerNames = this.formerNames.filter((p) => slugify(p.name) !== d)),
       r && r.source !== "derived" && o - r.since >= oue)
     ) {
-      let p = yr(r.name);
+      let p = slugify(r.name);
       this.formerNames = [
         { name: r.name, until: o },
-        ...this.formerNames.filter((_) => yr(_.name) !== p),
+        ...this.formerNames.filter((_) => slugify(_.name) !== p),
       ].slice(0, MAX_FORMER_NAMES);
     }
     this.registeredName = { name: e, source: t, since: o };
@@ -37873,7 +37873,7 @@ export {
   Ut,
   Xvn,
   SKt,
-  fA,
+  maxSlugLength,
   ix,
   Yvn,
   WCt,
@@ -37889,7 +37889,7 @@ export {
   bKt,
   ege,
   Qvn,
-  yr,
+  slugify,
   tge,
   iRe,
   SU,

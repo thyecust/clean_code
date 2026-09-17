@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 175 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { oo, Mb, ze, Dxe } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { oo, parseShortId, ze, Dxe } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, yt, R, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -33,11 +33,11 @@ import {
   Ovn,
   Xme,
   mc,
-  fA,
+  maxSlugLength,
   WCt,
   uf,
   GCt,
-  yr,
+  slugify,
   SU,
   nge,
   l0,
@@ -505,9 +505,9 @@ function de({
   else logFeatureOk("send_message_delivery", N);
 }
 var Rs = 100,
-  ke = fA + Rs,
+  ke = maxSlugLength + Rs,
   Os = 2 + Zvn + 1,
-  us = Math.max(fA + Os, Ovn),
+  us = Math.max(maxSlugLength + Os, Ovn),
   Te = /^[^\n\r]*$/u;
 function gs(e) {
   return new RegExp(`^[\\s\\S]{0,${e}}$`, "u");
@@ -934,7 +934,7 @@ function ns(e) {
   return "resume_failed";
 }
 function Ae(e) {
-  return Mb(e) ? oe(e, 7) : e;
+  return parseShortId(e) ? oe(e, 7) : e;
 }
 function os(e, t) {
   return {
@@ -2036,7 +2036,7 @@ ${w[0].text}`,
     }
     if (o.kind === "not-found") {
       let h = typeof e.message === "string" ? EPe(e.to) : "no",
-        I = o.closest.some((P) => yr(P.name) === yr(jD(e.to)?.name ?? e.to));
+        I = o.closest.some((P) => slugify(P.name) === slugify(jD(e.to)?.name ?? e.to));
       if (h === "categorical" && !I && TPe(o))
         return (
           i("unresolved", "invalid_target"),
@@ -2193,7 +2193,7 @@ ${D}${M}${x}${v}${S}${h !== "no" ? wPe(e.to, Yb(t)) : ""}`,
         I = `Not sent \u2014 '${U.name}' now means a different agent than it did earlier in this conversation; asked Claude to confirm which one it wants.`,
         D = U.previous.id,
         M =
-          Mb(D) !== null
+          parseShortId(D) !== null
             ? "If you need the earlier agent and it is still running, address it by its agent ID from its spawn result."
             : `The earlier recipient is ${sessionIdBody(D) !== D ? "a Claude session on another machine (cloud or Remote Control)" : _ce}; this name now belongs to an agent in this session.${X ? ` Use ${$i} if you still need that session.` : ""}`;
       if (U.next === void 0) {
@@ -2568,7 +2568,7 @@ ${M}`,
                       ? `Failed to resume teammate "${o.agentName}": ${l(S)}`
                       : S instanceof Ou &&
                           S.transcriptMissing &&
-                          Mb(o.agentName) !== null
+                          parseShortId(o.agentName) !== null
                         ? `Agent "${o.agentName}" could not be resumed: ${l(S)}. If you read this id in a message from another Claude Code process (e.g. the lead's subagent, seen from a teammate pane), it never ran in this session \u2014 reply through "${fs}" or the session that sent it instead of the raw id.`
                         : S instanceof Ou
                           ? `Agent "${o.agentName}" could not be resumed: ${l(S)}`

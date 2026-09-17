@@ -110,7 +110,7 @@ export { rbr as BRIEF_PROACTIVE_SECTION, bet as BRIEF_ENFORCE_SENTINEL, … } fr
 +        i("tengu_background_spawn_failed", { via: fromEnum(Ae) }),
 ```
 
-名字不是猜的：源模块那边去桶时已经把名字落到了定义处（`chunk-w76kejwn.js` 里就是
+名字不是猜的：源模块那边去桶时已经把名字落到了定义处（`analytics-fields.js` 里就是
 `function fromEnum(n)`），所以这一层的名字**可验证**，不是推断。
 
 **为什么只做这一层。** 这个文件里能机械恢复的名字只有这么多：
@@ -231,7 +231,10 @@ B 层是这次查冲突时冒出来的：`export { He as BedrockClient }` 声明
   （如 `chunk-0z426rj0.js` → `./compare.mjs-4b810a57.txt.zst`，一行 wrapper）。
 - `chunk-2c9tjhwd.js` **捕获**了 `import.meta.require` 并导出为 `Ae`，
   共 80 个资源按**它所在的目录**解析 —— 即使调用方在别的 chunk 也一样。
-- `cli.js` 引用 `./src/plugins/functionHooks/hooks-worker/hooks-worker.js`。
+- `cli.js` 引用 `./src/plugins/functionHooks/hooks-worker/hooks-worker.js`。这个 worker 是**自带依赖的
+  独立 bundle**：目录里除入口外还有它的 10 个依赖文件（`chunk-0t0sve49.js`、`chunk-h4f48kbj.js` …），
+  入口里的 `./chunk-*.js` 全部是**同目录**引用，少一个就起不来 —— 且它不在 `cli.js` 的静态依赖图上，
+  漏掉时只有真去跑一次 hook 才会发现（CI 的第 4 类检查就是干这个的）。
 
 树已把这些资源复制到各自加载方旁边。改动目录结构时需保持这一点。
 
@@ -245,6 +248,44 @@ B 层是这次查冲突时冒出来的：`export { He as BedrockClient }` 声明
 | `bun cli -v` | 一致 · exit 0 |
 
 即：1410 个文件、跨 158 个目录的 97,729 条依赖边在运行时全部解析成功。
+
+## CI（import 检查）
+
+上面那些验证都是手工跑一次的。`.github/workflows/import-checks.yml` 把它们里**静态可判**的
+那部分固化成 CI，每次 push / PR 跑一遍 —— 脚本 `.analysis/check-imports.mjs`，本地同样一条命令：
+
+```
+bun .analysis/check-imports.mjs            静态，不执行树里的代码
+bun .analysis/check-imports.mjs --runtime  额外真跑一次 hooks worker
+```
+
+四类检查，都是「改动前 0 失败、改动后也必须是 0」的性质：
+
+| # | 检查 | 抓什么 | 运行时的表现 |
+|---|---|---|---|
+| 1 | **解析**：每个 `.js` 过一遍 `Bun.Transpiler` | 重复绑定、括号不配 | `BuildMessage` |
+| 2 | **依赖边**：相对说明符能落到真实文件（静态 / `import()` / `import.meta.require` 字面量） | 搬文件漏了随行依赖 | `ResolveMessage`，或静默挂起 |
+| 3 | **导出面**：具名 import 的名字确实在被导入模块的导出里 | **改名只改了一半** | 链接期报缺导出 |
+| 4 | **单独入口**（`--runtime`）：真拉起 hooks worker | 入口旁边依赖不全 | worker 起不来 |
+
+第 1、3 类正是 2026-09-17 那次事故的形状：全树别名去混淆把同一文件里两个压缩别名
+（`Mb`、`yr`）都落成了 `parseShortId`，重复声明 → 整块文件解析失败。它在运行时只表现为
+**卡住不动、10 秒后一句 `Claude Code could not start: BuildMessage` 然后退出**，
+`--debug-file` 里连一条 `[ERROR]` 都没有，日志最后一行还停在不相干的插件加载上。
+
+设计上有两点是刻意的：
+
+- **不复用树的改造代码**（沿用上面「独立脚本」的约定），所以它不依赖任何构建产物，
+  也不 `import` 树里的模块 —— 检查工具自己坏掉时不会跟着一起坏。
+- **导出面用「宽松」判定**：先按行首锚定的 `export {…}` / `export function …` 精确取一遍，
+  再全文件兜底扫一遍 `export {…}`，两者有一个命中就算通过。宁可漏报一条坏边，
+  也不让 CI 因为漏认一条导出而变红 —— 一个会误报的检查等于没有检查。
+
+当前全绿：1430 个文件 / 40.8 MB / 17,267 条相对依赖边（其中懒加载 301 条）0 失败。
+**没检查的**：`import.meta.require` 里非字面量的目标（约 60 处，静态看不见）；
+`_source/` 下的第三方原始源码（树外，且部分文件不可读）；`00-第三方库/` 里
+`import` 自己 `_source/` 的那种边只查文件在不在、不查导出面。CI 也不跑 `bun cli`——
+启动一次要读凭据 / 起遥测，放在 CI 里不稳；这条仍按上面的「运行时验证」手工做。
 
 ## 能跑，但不能 `bun build --compile`
 

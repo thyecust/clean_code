@@ -16,7 +16,7 @@ import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { B1, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oy, ee, es, FZe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, l, A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum, mcpNameForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, mcpNameForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Kn } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";

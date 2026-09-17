@@ -13,7 +13,7 @@ import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { wa, E$, SJn, bJn, m7e, Xpe, CJn } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, cd, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";

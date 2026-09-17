@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 204 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";

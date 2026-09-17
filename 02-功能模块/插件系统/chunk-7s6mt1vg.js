@@ -21,7 +21,7 @@ import {
   yZ,
   Bxe,
   CHt,
-  Oje,
+  identity as Oje,
   IYt,
   PYt,
   OYt,

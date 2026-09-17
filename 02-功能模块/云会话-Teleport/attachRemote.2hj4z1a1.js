@@ -9,10 +9,10 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 252 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { _m, K, $p, Bw, s_e, Nn, kz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { identity as _m, K, $p, Bw, s_e, Nn, kz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { Iu, R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { deviceToolNoticesTo } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdeyn1dg.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";

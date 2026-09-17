@@ -46,7 +46,7 @@ import {
   dp,
 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { j, B, Ez, Az, dl } from "../lodash/lodash.2x3q7cfh.js";
-import { sE, Fm, Ie, po } from "../lodash/lodash.207999qb.js";
+import { root as globalObject, isObject as Fm, Ie, po } from "../lodash/lodash.207999qb.js";
 import { R, dt, ge, A, Po } from "../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { os, Yg, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -9290,7 +9290,7 @@ import {
   writeSync as $d,
 } from "fs";
 var yS = function () {
-    return sE.Date.now();
+    return globalObject.Date.now();
   },
   js = yS;
 var vS = "Expected a function",

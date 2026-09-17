@@ -74,21 +74,21 @@ import {
   mcpNameForAnalytics_GATE_EVALUATED,
   agentTypeForAnalytics_GATE_EVALUATED,
   pluginIdForAnalytics_GATE_EVALUATED,
-} from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+} from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import {
-  _m,
+  identity as _m,
   oo,
   j1,
   TXt,
-  Mb,
+  parseShortId,
   mB,
   Xn,
   bh,
-  EXt,
-  AXt,
+  SetCache as EXt,
+  cacheHas as AXt,
   Ynt,
   vg,
-  oZ,
+  isArrayLike as oZ,
   yxe,
   Qs,
   j,
@@ -104,8 +104,8 @@ import {
   x_,
   sZ,
   ort,
-  Sz,
-  GP,
+  toString as Sz,
+  baseIteratee as GP,
   Si,
   Gt,
   B,
@@ -342,7 +342,7 @@ import {
   b_e,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import {
-  Fm,
+  isObject as Fm,
   Ie,
   po,
   CS,
@@ -1429,13 +1429,13 @@ import {
   QQe,
   Wl,
   Ut,
-  fA,
+  maxSlugLength,
   ix,
   Yvn,
   WCt,
   uf,
   bKt,
-  yr,
+  slugify,
   l0,
   b5,
   bP,
@@ -3059,7 +3059,7 @@ import {
   u4t,
 } from "../../02-功能模块/工具Task-Agent调度/chunk-1px84m19.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
-import { mse } from "../../01-核心基础设施/共享小工具-未细化/chunk-ezxdt3dm.js";
+import { isValidRequestId } from "../../01-核心基础设施/共享小工具-未细化/request-id.js";
 import { CLAUDE_IN_CHROME_MCP_SERVER_NAME, f5t, isClaudeInChromeMCPServer, isClaudeInChromeMcpLaunch } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
 import { Kr } from "../../02-功能模块/对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
@@ -117392,7 +117392,7 @@ async function Dkn({
   declaredObserverType: t,
   storageV5: r,
 }) {
-  let o = e ? Mb(e) : void 0;
+  let o = e ? parseShortId(e) : void 0;
   if (!o) return { mode: "fresh" };
   let d;
   try {
@@ -118148,7 +118148,7 @@ function Cle(e) {
   return Fbo.find((t) => t === e) ?? "other";
 }
 function mIe(e) {
-  return mse(e) ? (Ee(e) ?? null) : null;
+  return isValidRequestId(e) ? (Ee(e) ?? null) : null;
 }
 function $bo(e) {
   let t = e ? ft(e, ";").trim().toLowerCase() : "";
@@ -175528,9 +175528,9 @@ function XFe(e, t, r) {
     };
   if (d.status === "found") return { status: "found", task: d.task };
   if (p) return { status: "found", task: p };
-  let _ = yr(e),
+  let _ = slugify(e),
     E = kzo(_, o),
-    C = wjn((I) => yr(I) === _, t, r);
+    C = wjn((I) => slugify(I) === _, t, r);
   if (E.length > 0 && C)
     return {
       status: "ambiguous",
@@ -175803,7 +175803,7 @@ async function $de(e, t) {
   } catch (r) {
     if (r instanceof fO) {
       if (r.code === "not_found") {
-        if (t.source === "user" && Mb(e) !== null)
+        if (t.source === "user" && parseShortId(e) !== null)
           updateAgentMetadata(oo(e), { stoppedByUser: !0 }, t.storageV5).catch((o) => {
             if (Rt(o) || FA(CB(o))) {
               n(`failed to persist stop marker for ${e}: ${f3(o)}`, {
@@ -176438,7 +176438,7 @@ async function Rjn(e, t, r) {
     };
   if (
     o !== void 0 &&
-    yr(o.name) === yr(e) &&
+    slugify(o.name) === slugify(e) &&
     o.source !== "auto" &&
     o.source !== "derived"
   )
@@ -183280,7 +183280,7 @@ function oWt(e) {
   return t === "" ? void 0 : t;
 }
 function mEe(e) {
-  return e.filter(mse).slice(-mKo);
+  return e.filter(isValidRequestId).slice(-mKo);
 }
 var G_t = ["bug", "idea", "missing_capability"],
   _Ko = [
@@ -239851,7 +239851,7 @@ var ifs = 20,
   afs = 3,
   _fr = new RegExp(`\\[${b5}\\]`, "i"),
   bfr = 128,
-  Sfr = fA;
+  Sfr = maxSlugLength;
 function lfs(e, t, r = Date.now()) {
   let o = bP(e, t),
     d = new Set([yr(cp)]);
@@ -239897,7 +239897,7 @@ function lfs(e, t, r = Date.now()) {
   return { candidates: C, inProcess: d, defaultNamed: D };
 }
 function kfr(e) {
-  let t = yr(e);
+  let t = slugify(e);
   if (
     e.includes('"') ||
     t.includes('"') ||
@@ -239942,7 +239942,7 @@ function B8n(e, t, r = Date.now()) {
   let o = [];
   for (let d of e.candidates) {
     if (o.length >= ifs) break;
-    let p = yr(d.name);
+    let p = slugify(d.name);
     if (e.inProcess.has(p) || Cfr(e, d) || !p.startsWith(t) || !kfr(d.name))
       continue;
     o.push({
@@ -239968,15 +239968,15 @@ function Tfr(e) {
     if (r.has(E)) continue;
     (r.add(E), t.push({ name: p, ref: _ }));
   }
-  let o = new Set(t.filter((d) => d.ref !== void 0).map((d) => yr(d.name)));
+  let o = new Set(t.filter((d) => d.ref !== void 0).map((d) => slugify(d.name)));
   return t.filter((d) => d.ref !== void 0 || !o.has(yr(d.name)));
 }
 function vfr(e, t) {
   let r = [];
   for (let { name: o, ref: d } of e) {
-    let p = yr(o);
+    let p = slugify(o);
     if (t.inProcess.has(p)) continue;
-    let _ = t.candidates.filter((D) => yr(D.name) === p),
+    let _ = t.candidates.filter((D) => slugify(D.name) === p),
       E = _.filter((D) => !Cfr(t, D)),
       C = Efr(o),
       I = d === void 0 ? C : `${C} [${d}]`;
@@ -263162,8 +263162,8 @@ function titleCacheStillOn(e, t, r) {
   let o = getCurrentSessionTitle(e),
     d = o && si(o);
   if (!d) return !0;
-  let p = yr(d);
-  return p === yr(t) || (r !== void 0 && p === yr(r));
+  let p = slugify(d);
+  return p === slugify(t) || (r !== void 0 && p === slugify(r));
 }
 function cacheHookSessionTitle(e) {
   if (isTeammate()) return;

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../共享小工具-未细化/analytics-fields.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, my, _Z, AHt, Tae } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Dt } from "../共享小工具-未细化/chunk-510m1t2d.js";

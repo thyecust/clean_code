@@ -12,7 +12,7 @@ import { Id, vu, Ag, BP, eje } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Dt, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { OR } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { parsePermissionMode, UNRECOGNIZED_PERMISSION_MODE_ERROR } from "../权限系统/chunk-e4pfvp7x.js";

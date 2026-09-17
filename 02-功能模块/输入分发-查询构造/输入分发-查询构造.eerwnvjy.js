@@ -88,7 +88,7 @@ import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-7
 import { le, Io, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { bc, ja, env as a, antEnv, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { OAUTH_BETA_HEADER, getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { lit as S, fromEnum, fromEnumOpt, fromNumber, fromNumberOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY, agentTypeForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt, fromNumber, fromNumberOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY, agentTypeForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import {
   ud,
   yt,

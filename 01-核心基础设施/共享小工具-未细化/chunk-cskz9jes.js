@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { lit as S, fromEnum } from "./chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "./analytics-fields.js";
 import { daemonDetachApc, writeStateAtomic, logJobWriteError, readJobState, isSettled } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { isBgSession, isDaemonBgWorker } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "./chunk-an83zrbx.js";

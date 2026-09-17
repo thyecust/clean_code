@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 248 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { fromEnum } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";

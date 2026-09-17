@@ -25,7 +25,7 @@ import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { kt } from "../共享小工具-未细化/chunk-510m1t2d.js";
 import { oe } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
 import {
   b0,

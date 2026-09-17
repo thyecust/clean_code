@@ -10,7 +10,7 @@
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { mz } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { IA, nxe } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";

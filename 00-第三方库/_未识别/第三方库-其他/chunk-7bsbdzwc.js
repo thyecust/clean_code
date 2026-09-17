@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { he, VR, u_e, ke } from "../../lodash/lodash.2x3q7cfh.js";
 import { i } from "../../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S } from "../../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S } from "../../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, z, n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getGlobalClaudeFile } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import {
-  _m,
+  identity as _m,
   oo,
   Xn,
   j,
@@ -122,7 +122,7 @@ import {
   Rt,
   Ps,
 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum, fromEnumOpt, fromNumber, concatSafe, fromEnumArr } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt, fromNumber, concatSafe, fromEnumArr } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import {
   We,
   Et,
@@ -276,10 +276,10 @@ import {
   jCt,
   tt,
   Ut,
-  fA,
+  maxSlugLength,
   ix,
   Dse,
-  yr,
+  slugify,
   si,
   Ia,
   kUe,
@@ -2539,22 +2539,22 @@ function rJe(w) {
     : { base: w, generation: 1 };
 }
 function f$t(w, I) {
-  let ne = yr(w),
+  let ne = slugify(w),
     { base: me } = rJe(w),
-    pe = yr(me),
+    pe = slugify(me),
     be = new Set(),
     xe = 1;
   for (let Oe of I) {
-    be.add(yr(Oe));
+    be.add(slugify(Oe));
     let He = rJe(Oe);
-    if (yr(He.base) === pe) xe = Math.max(xe, He.generation);
+    if (slugify(He.base) === pe) xe = Math.max(xe, He.generation);
   }
   if (!be.has(ne)) return w;
   let Ae = qr(To(me));
   for (let Oe = xe + 1; ; Oe++) {
     let He = ` (${Oe})`,
-      Ke = `${oe(Ae, fA - He.length)}${He}`;
-    if (!be.has(yr(Ke))) return Ke;
+      Ke = `${oe(Ae, maxSlugLength - He.length)}${He}`;
+    if (!be.has(slugify(Ke))) return Ke;
   }
 }
 async function t8(w, I) {
@@ -33108,14 +33108,14 @@ function Awe({
         }
         let ur = Ke !== "bash" ? Ko.substring(0, wr).match(fz) : null;
         if (ur) {
-          let yi = yr(ur[2] ?? ""),
+          let yi = slugify(ur[2] ?? ""),
             hi = _o.getState(),
             zn = [],
             xi = new Set();
           if (zr() && hi.teamContext)
             for (let Ri of Object.values(hi.teamContext.teammates ?? {})) {
               if (Ri.name === fs) continue;
-              if (!yr(Ri.name).startsWith(yi)) continue;
+              if (!slugify(Ri.name).startsWith(yi)) continue;
               (xi.add(Ri.name),
                 zn.push({
                   id: `dm-${Ri.name}`,
@@ -33125,7 +33125,7 @@ function Awe({
             }
           for (let [Ri, ns] of hi.agentNameRegistry) {
             if (xi.has(Ri)) continue;
-            if (!yr(Ri).startsWith(yi)) continue;
+            if (!slugify(Ri).startsWith(yi)) continue;
             let Xs = hi.tasks[ns]?.status;
             zn.push({
               id: `dm-${Ri}`,

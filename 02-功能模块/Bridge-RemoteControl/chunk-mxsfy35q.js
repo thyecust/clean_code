@@ -13,12 +13,12 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { validateBridgeId, toCompatSessionId, toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
-import { mse } from "../../01-核心基础设施/共享小工具-未细化/chunk-ezxdt3dm.js";
+import { isValidRequestId } from "../../01-核心基础设施/共享小工具-未细化/request-id.js";
 import { va, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 var k = /cloudflare/i;
 function dQe(e) {
   let r = e("request-id");
-  if (typeof r === "string" && mse(r.trim())) return "origin";
+  if (typeof r === "string" && isValidRequestId(r.trim())) return "origin";
   let i = e("cf-ray"),
     c = e("server");
   if (

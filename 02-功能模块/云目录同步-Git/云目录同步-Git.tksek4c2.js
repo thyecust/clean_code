@@ -12,7 +12,7 @@ import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { toCompatSessionId, toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { Ve, yt, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { lv, Ri } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, us, kr, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";

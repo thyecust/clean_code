@@ -14,7 +14,7 @@ import "../MCP客户端/chunk-98spw152.js";
 import { A1 } from "../MCP客户端/chunk-j8556pzt.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";

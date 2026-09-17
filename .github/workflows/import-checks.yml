@@ -1,0 +1,33 @@
+name: import checks
+
+# 这棵树是「重组 + 改名」出来的产物，最容易坏的形状是静态可判的：
+# 重复绑定（Bun 解析报错）、改名只改了一半（导出面不匹配）、
+# 搬文件时漏了随行依赖（相对路径落不到文件）。
+# 它们在运行时只表现为一句 `Claude Code could not start: BuildMessage`
+# 外加 10 秒看门狗，所以放在 CI 里，用秒级的静态检查拦住。
+#
+# 覆盖范围与「未检查项」见 README 的「CI（import 检查）」一节。
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check-imports:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      # 固定版本：Bun.Transpiler 的行为随版本变，检查结果要可复现。
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      # 纯静态，不执行树里的代码，也不读 node_modules。
+      # 末尾的 --runtime 额外把单独拉起的 hooks worker 真跑一次；
+      # 这一步依赖运行时环境，若在 CI 里不稳就直接去掉这个参数。
+      - name: 解析 / 依赖边 / 导出面 / 单独入口
+        run: bun .analysis/check-imports.mjs --runtime
