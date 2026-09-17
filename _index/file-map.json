@@ -3079,8 +3079,8 @@
   "kb": 258.6,
   "confidence": "medium"
  },
- "chunk-9v3x5my2.js": {
-  "path": "01-核心基础设施/共享小工具-未细化/chunk-9v3x5my2.js",
+ "build-ref-name.js": {
+  "path": "01-核心基础设施/共享小工具-未细化/build-ref-name.js",
   "module": "共享小工具 · 未细化",
   "tier": 1,
   "kb": 1.2,

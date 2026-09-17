@@ -7,7 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-function $x(
+
+// chunk-9v3x5my2.js
+function getBuildRefName(
   e = {
     ISSUES_EXPLAINER:
       "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -24,4 +26,4 @@ function $x(
 ) {
   return "";
 }
-export { $x };
+export { getBuildRefName };
