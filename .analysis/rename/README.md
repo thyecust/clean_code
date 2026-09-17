@@ -85,6 +85,14 @@ node verify.mjs $WORK/wave.json $WORK/backup
 3. 同一条数字规则 `^[A-Za-z]{1,3}[0-9]+[A-Za-z]*$`（本意抓 `G8`/`X0e`/`L8t`）
    拦住了 `is1mContextDisabled`/`has2faEnabled` —— 它只看开头几个字符，
    不看名字整体多长。已加长度上限（≤6 才判）。
+4. **单个首字母大写的人写单词被判为混淆** —— 例如 `Onboarding`。
+   `isClearlyReadable` 认「词连接」靠的是 `/[a-z][A-Z]/`（要求词内有第二个大写），
+   而 `Onboarding` 这种**内部无大写**的单词一条规则都不匹配，一路落到 `return false`。
+   只有 `SHORT_REAL_WORDS` 白名单能兜住它，而白名单是手工枚举的 —— `Server`/`Provider`
+   在里面，`Onboarding` 不在。判据应当是「首字母大写 + ≥4 个小写字母」（总长 ≥5），
+   混淆名只有 2–4 字符，不会落到这一档。
+   **尚未修**：实测这一档在 16–64KB 池里只命中 1 个名字（`Onboarding`），
+   且没有计划去改它，所以本轮零影响。修它必须重跑 `candidates.mjs`。
 
 **改动 `isMangled` 之后务必重新跑一遍 `candidates.mjs`**，否则 lint 用的还是旧白名单。
 （只改 `looksLikeManglerOutput` 不必重跑 —— 它只管新名的形状，不参与候选筛选。）
