@@ -618,7 +618,7 @@ import "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { xHt } from "../../01-核心基础设施/共享小工具-未细化/chunk-0cy1k3q5.js";
 import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
-import { HHt } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { ensureClientAgentEnv } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import "../../02-功能模块/图片-截图-ComputerUse/chunk-6kdvf977.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { pe, w, p, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -4524,7 +4524,7 @@ function ni({ interactivity: v }) {
   let k = process.argv.slice(2),
     O = v.kind === "non-interactive" || Air(k);
   if (O) CF();
-  if ((xDn(!O), cur(O), Crt(uur(k)), HHt(), !Ie(a.CLAUDE_CODE_REMOTE))) {
+  if ((xDn(!O), cur(O), Crt(uur(k)), ensureClientAgentEnv(), !Ie(a.CLAUDE_CODE_REMOTE))) {
     if (
       a.CLAUDE_CODE_OAUTH_TOKEN_FILE_DESCRIPTOR ||
       (a.CLAUDE_BG_AUTH_SNAPSHOT_PATH && !uo() && !a.CLAUDE_CODE_OAUTH_TOKEN)

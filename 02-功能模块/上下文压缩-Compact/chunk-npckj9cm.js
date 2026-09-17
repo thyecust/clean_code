@@ -49,7 +49,7 @@ import { xb, eB } from "../../01-核心基础设施/共享小工具-未细化/ch
 import { er, BR, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getWIFCredentials, getWIFTokenCache } from "../认证-OAuth登录/chunk-x3rm9w4b.js";
 import { lDe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { va } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 var X = m(() =>
   nt({
     client_data: hm(Xu()).nullish(),
@@ -489,7 +489,7 @@ async function ot(t) {
         headers: {
           Authorization: `Bearer ${e.jwt}`,
           "anthropic-version": "2023-06-01",
-          "User-Agent": va(),
+          "User-Agent": getClientUserAgent(),
         },
         params: { limit: 1000 },
         timeout: 5000,

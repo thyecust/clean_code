@@ -15,7 +15,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import { stat as I } from "fs/promises";
 var p = 5000,
   _ = i8(),

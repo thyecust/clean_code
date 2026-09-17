@@ -83,7 +83,7 @@ import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { ck } from "./chunk-5bg9xwqx.js";
 import { fM, Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { va } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 class ye extends Error {
@@ -285,7 +285,7 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
       let v = FKt(j);
       if ((await gsr(v), G !== R.current)) return;
       let Y = await externalHttp.get(`${v}/.well-known/oauth-authorization-server`, {
-        headers: { "User-Agent": va() },
+        headers: { "User-Agent": getClientUserAgent() },
         timeout: 1e4,
       });
       if (G !== R.current) return;
@@ -334,7 +334,7 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
           {
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              "User-Agent": va(),
+              "User-Agent": getClientUserAgent(),
             },
             timeout: 1e4,
             maxRedirects: 0,
@@ -373,7 +373,7 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
             {
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
-                "User-Agent": va(),
+                "User-Agent": getClientUserAgent(),
               },
               timeout: 1e4,
               maxRedirects: 0,

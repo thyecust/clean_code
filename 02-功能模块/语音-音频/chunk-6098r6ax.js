@@ -17,7 +17,7 @@ import { St, U1 } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getUserAgent, isAnthropicAuthEnabled, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefreshOAuthTokenIfNeeded, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Ext } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
-import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import m from "ws";
 var V = '{"type":"KeepAlive"}',
   F = '{"type":"CloseStream"}',

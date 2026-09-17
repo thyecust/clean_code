@@ -14,7 +14,7 @@ import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { validateBridgeId, toCompatSessionId, toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { isValidRequestId } from "../../01-核心基础设施/共享小工具-未细化/request-id.js";
-import { va, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 var k = /cloudflare/i;
 function dQe(e) {
   let r = e("request-id");
@@ -46,7 +46,7 @@ function oauthHeaders(e) {
     "Content-Type": "application/json",
     "anthropic-version": E,
     "anthropic-client-platform": getClientPlatform(),
-    "User-Agent": va(),
+    "User-Agent": getClientUserAgent(),
   };
 }
 function isCreateSessionFailure(e) {

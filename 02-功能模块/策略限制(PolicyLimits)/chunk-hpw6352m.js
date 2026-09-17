@@ -73,7 +73,7 @@ import {
   getResponseFromCache,
 } from "./chunk-8sw91yn5.js";
 import { QAn } from "../../01-核心基础设施/共享小工具-未细化/chunk-1945b2ak.js";
-import { va } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { statSync } from "fs";
 import { unlink, utimes, writeFile } from "fs/promises";
@@ -254,7 +254,7 @@ async function ke(e, t) {
         skipRetry: !0,
       };
     let s = ue(),
-      a = { ...o.headers, "User-Agent": va() };
+      a = { ...o.headers, "User-Agent": getClientUserAgent() };
     if (e) a["If-None-Match"] = `"${e}"`;
     let d = await at.get(s, {
       headers: a,
@@ -364,7 +364,7 @@ async function jAn(e, { timeoutMs: t = K } = {}) {
         headers: {
           Authorization: `Bearer ${e}`,
           "anthropic-beta": OAUTH_BETA_HEADER,
-          "User-Agent": va(),
+          "User-Agent": getClientUserAgent(),
         },
         timeout: t,
       }),

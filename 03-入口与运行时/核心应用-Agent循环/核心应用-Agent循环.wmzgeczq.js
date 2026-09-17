@@ -3100,7 +3100,7 @@ import { Ku, cB, xA } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.j
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
-import { va, getClientPlatform, PMn } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientUserAgent, getClientPlatform, getClientUserAgentWithSuffix } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import { gy } from "../../01-核心基础设施/共享小工具-未细化/chunk-1adkzsnc.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 import { G, Y, lc } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -41817,7 +41817,7 @@ function qOe(e) {
     CLAUDE_CODE_CHILD_SESSION: "1",
     CLAUDE_PID: String(process.pid),
   };
-  if (e.source === "agent") t.AI_AGENT = PMn("agent");
+  if (e.source === "agent") t.AI_AGENT = getClientUserAgentWithSuffix("agent");
   if (e.effortLevel !== void 0) t.CLAUDE_EFFORT = e.effortLevel;
   if (shouldPropagateTraceContext()) {
     let r = wue();
@@ -98004,7 +98004,7 @@ async function Jio(e) {
         Authorization: `Bearer ${d}`,
         Accept: "application/vnd.github+json",
         "X-GitHub-Api-Version": lan,
-        "User-Agent": va(),
+        "User-Agent": getClientUserAgent(),
         ...(_.etag && { "If-None-Match": _.etag }),
       },
       Me = (De) =>
@@ -98114,7 +98114,7 @@ async function Zio(e, t, r) {
       headers: {
         Authorization: `Bearer ${t}`,
         "Content-Type": "application/json",
-        "User-Agent": va(),
+        "User-Agent": getClientUserAgent(),
       },
       body: d,
       redirect: "error",
@@ -98181,7 +98181,7 @@ async function oao(e, t) {
         Authorization: `Bearer ${t}`,
         Accept: "application/vnd.github+json",
         "X-GitHub-Api-Version": lan,
-        "User-Agent": va(),
+        "User-Agent": getClientUserAgent(),
       },
       redirect: "error",
       signal: AbortSignal.timeout(_Re),
@@ -140807,7 +140807,7 @@ function Q0o(e, { orgUUID: t, trustedDeviceToken: r } = {}) {
     "anthropic-version": YOn,
     "anthropic-beta": Y0o,
     "anthropic-client-platform": getClientPlatform(),
-    "User-Agent": va(),
+    "User-Agent": getClientUserAgent(),
   };
   if (t !== void 0) o["x-organization-uuid"] = t;
   if (r !== void 0) o["X-Trusted-Device-Token"] = r;
@@ -140834,7 +140834,7 @@ async function i4n(e) {
               "Content-Type": "application/json",
               "anthropic-version": YOn,
               "anthropic-client-platform": getClientPlatform(),
-              "User-Agent": va(),
+              "User-Agent": getClientUserAgent(),
             },
             timeout: e.timeoutMs,
           },
@@ -200810,7 +200810,7 @@ async function CQo(e, t, r) {
           ...(d && { Authorization: `Bearer ${d}` }),
           Accept: "application/vnd.github+json",
           "X-GitHub-Api-Version": EQo,
-          "User-Agent": va(),
+          "User-Agent": getClientUserAgent(),
         },
         timeout: YJn,
         signal: AbortSignal.timeout(YJn),

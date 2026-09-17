@@ -33,7 +33,7 @@ import { dQe, fse } from "./chunk-mxsfy35q.js";
 import { FR } from "./chunk-4zd60pbm.js";
 import { pS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { s, O, se, v, c, it, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { va, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 var Ee = 1000,
   ke = 30000,
@@ -125,7 +125,7 @@ class VGe {
         Accept: "text/event-stream",
         "anthropic-version": "2023-06-01",
         "anthropic-client-platform": getClientPlatform(),
-        "User-Agent": va(),
+        "User-Agent": getClientUserAgent(),
       };
     if ((te(o, r), this.lastSequenceNum > 0))
       o["Last-Event-ID"] = String(this.lastSequenceNum);
@@ -491,7 +491,7 @@ class VGe {
       "Content-Type": "application/json",
       "anthropic-version": "2023-06-01",
       "anthropic-client-platform": getClientPlatform(),
-      "User-Agent": va(),
+      "User-Agent": getClientUserAgent(),
     };
     n(`SSETransport: POST body keys=${Object.keys(e).join(",")}`);
     for (let o = 1; o <= H; o++) {
@@ -1812,7 +1812,7 @@ class pM {
             "Content-Type": "application/json",
             "anthropic-version": "2023-06-01",
             "anthropic-client-platform": getClientPlatform(),
-            "User-Agent": va(),
+            "User-Agent": getClientUserAgent(),
           },
           body: b(r),
           signal: M?.signal ?? AbortSignal.timeout(d),
@@ -2648,7 +2648,7 @@ class pM {
           ...E,
           "anthropic-version": "2023-06-01",
           "anthropic-client-platform": getClientPlatform(),
-          "User-Agent": va(),
+          "User-Agent": getClientUserAgent(),
         },
         signal: p?.signal ?? AbortSignal.timeout(30000),
         ...getProxyFetchOptions({ url: o.toString() }),
@@ -2916,7 +2916,7 @@ class pM {
               ...r,
               "anthropic-version": "2023-06-01",
               "anthropic-client-platform": getClientPlatform(),
-              "User-Agent": va(),
+              "User-Agent": getClientUserAgent(),
             },
             signal: _
               ? AbortSignal.any([AbortSignal.timeout(30000), _])
