@@ -82,8 +82,17 @@ node verify.mjs $WORK/wave.json $WORK/backup
    候选模块 430 → 470，「导出名全混淆」49 → 400。
 2. `looksLikeManglerOutput` 的 `^[a-z]{1,2}[A-Z][a-z]{0,2}$` 拦住了
    `isWsl`/`isMac` 这类带前缀的短名；后加前缀白名单（`is`/`get`/`set`/`has`/…）。
+3. 同一条数字规则 `^[A-Za-z]{1,3}[0-9]+[A-Za-z]*$`（本意抓 `G8`/`X0e`/`L8t`）
+   拦住了 `is1mContextDisabled`/`has2faEnabled` —— 它只看开头几个字符，
+   不看名字整体多长。已加长度上限（≤6 才判）。
 
-改动判定后**务必重新跑一遍 `candidates.mjs`**，否则 lint 用的还是旧白名单。
+**改动 `isMangled` 之后务必重新跑一遍 `candidates.mjs`**，否则 lint 用的还是旧白名单。
+（只改 `looksLikeManglerOutput` 不必重跑 —— 它只管新名的形状，不参与候选筛选。）
+
+还有一层 lint 管不到的失败：**该改的名字漏了没改**。
+`lint-plans.mjs` 只校验「计划里的名字合法」，管不了「清单里的名字漏了」——
+漏掉的名字会静静留在混淆状态，谁也不会报错。用 `check-coverage.mjs` 补这一层：
+实跑过一次就抓到一片漏读了 3 个名字（agent 自己数错了列表长度，报的是「已全覆盖」）。
 
 ## 已知边界
 

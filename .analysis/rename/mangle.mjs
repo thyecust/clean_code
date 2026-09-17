@@ -72,7 +72,9 @@ export function looksLikeManglerOutput(n) {
     if (m && !KNOWN_PREFIXES.has(m[1])) return true;
   }
   if (/^[a-z][0-9][a-z]$/.test(n)) return true;                // b9e, t7t, q0e
-  if (/^[A-Za-z]{1,3}[0-9]+[A-Za-z]*$/.test(n)) return true;   // G8, X0e, L8t
+  // G8 / X0e / L8t — 但只在名字整体很短时才算。`is1mContextDisabled` 前几个字符里
+  // 也有数字，那是人写的（is 1m context disabled），不能用同一条规则拦。
+  if (n.length <= 6 && /^[A-Za-z]{1,3}[0-9]+[A-Za-z]*$/.test(n)) return true;
   if (/^[A-Z][a-z]?[A-Z][a-z]?$/.test(n)) return true;         // LPe, Aet, XFn
   return false;
 }

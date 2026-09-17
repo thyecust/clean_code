@@ -30,7 +30,9 @@ import { join, dirname, normalize, relative } from "node:path";
 
 const ROOT = normalize(join(import.meta.dir, ".."));
 // _source/ 是第三方库的原始源码（README：树外目标），且部分文件不可读，不参与检查。
-const SKIP_DIRS = new Set(["node_modules", "_source", ".git"]);
+// .analysis/ 是分析工具本身，不是这棵 bundle 树的一部分 —— 它的改造工具会在 .work/ 下
+// 留备份副本（那些 .js 是旧状态，引用的模块可能已经改名），扫进来会一路报假失败。
+const SKIP_DIRS = new Set(["node_modules", "_source", ".git", ".analysis"]);
 
 // 单独拉起、不是从 cli.js 静态可达的入口。搬动文件时要保证它们旁边的依赖齐全。
 const ENTRIES = ["src/plugins/functionHooks/hooks-worker/hooks-worker.js"];
