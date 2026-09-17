@@ -85,14 +85,20 @@ node verify.mjs $WORK/wave.json $WORK/backup
 3. 同一条数字规则 `^[A-Za-z]{1,3}[0-9]+[A-Za-z]*$`（本意抓 `G8`/`X0e`/`L8t`）
    拦住了 `is1mContextDisabled`/`has2faEnabled` —— 它只看开头几个字符，
    不看名字整体多长。已加长度上限（≤6 才判）。
-4. **单个首字母大写的人写单词被判为混淆** —— 例如 `Onboarding`。
+4. **单个首字母大写的人写单词被判为混淆** —— 例如 `Onboarding` / `Protocol` / `Login`。
    `isClearlyReadable` 认「词连接」靠的是 `/[a-z][A-Z]/`（要求词内有第二个大写），
-   而 `Onboarding` 这种**内部无大写**的单词一条规则都不匹配，一路落到 `return false`。
-   只有 `SHORT_REAL_WORDS` 白名单能兜住它，而白名单是手工枚举的 —— `Server`/`Provider`
-   在里面，`Onboarding` 不在。判据应当是「首字母大写 + ≥4 个小写字母」（总长 ≥5），
-   混淆名只有 2–4 字符，不会落到这一档。
-   **尚未修**：实测这一档在 16–64KB 池里只命中 1 个名字（`Onboarding`），
-   且没有计划去改它，所以本轮零影响。修它必须重跑 `candidates.mjs`。
+   而这类单词**内部无大写**，一条规则都不匹配，一路落到 `return false`；
+   只有 `SHORT_REAL_WORDS` 白名单能兜住它，而白名单是手工枚举的 ——
+   `Server`/`Provider` 在里面，`Onboarding` 不在。已加判据
+   「首字母大写 + ≥4 个小写字母」（总长 ≥5）；混淆名只有 2–4 字符，落不到这一档。
+   实测全树符合该形状的 15 个名字全是人写的英文词（`Tokenizer`/`Divider`/`Teleport`/
+   `Anthropic`/`Messages`…），无一混淆名。**已修**，候选池 84 → 75 个模块。
+
+   **这个 bug 是双向的，只修输入侧会漏掉更麻烦的一半**：它不只把「本来就是人写的名字」
+   的模块选进候选池，还会让**我们自己刚改出来的新名字**被重新判为混淆 ——
+   改完第九轮后，`Login`/`Markdown`/`Protocol`/`auth`/`Decorative`/`Newline` 这些新名
+   又出现在候选表里，那些模块被推回池子，下一轮会去「改」已经是好名字的名字。
+   （`auth` 是另一条：4 字符，卡在 `n.length < 5` 那条上。）
 
 **改动 `isMangled` 之后务必重新跑一遍 `candidates.mjs`**，否则 lint 用的还是旧白名单。
 （只改 `looksLikeManglerOutput` 不必重跑 —— 它只管新名的形状，不参与候选筛选。）

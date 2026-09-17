@@ -36,6 +36,13 @@ export function isClearlyReadable(n) {
   // The mangler's names with a mid-word capital are 3-4 chars (`uWe`, `pSe`, `aAe`);
   // human names with one are 5+ (`useApp`, `rootOf`, `gitExe`).
   if (n.length < 5) return false;
+  // 单个首字母大写的人写单词：`Login` / `Onboarding` / `Protocol` / `Markdown`。
+  // 词内没有第二个大写，所以下面那条 `[a-z][A-Z]`（认词连接）认不出它，会一路落到
+  // `return false` —— 这是本文件第四处判定错误。混淆名是 2–4 字符，长不成
+  // 「首字母大写 + 4 个以上小写字母」这个形状（实测全树符合该形状的 15 个名字
+  // 全是人写的英文词，见 README）。
+  // 注意：**改这条必须重跑 candidates.mjs**，否则 lint 用的还是旧白名单。
+  if (/^[A-Z][a-z]{4,}$/.test(n)) return true;
   // Long names are human: an underscore-separated composite
   // (`fromSanitizer_SANITIZER_OUTPUT_ONLY`) or a word join (`getClientPlatform`).
   // The mangler only ever emits `_` as a leading char on a 2-3 char name (`_0e`).
