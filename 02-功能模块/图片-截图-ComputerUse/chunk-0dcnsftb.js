@@ -17,7 +17,7 @@ import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isBunStandaloneExecutable, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { jo, Bf, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { jo, Bf, a_ } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";

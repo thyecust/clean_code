@@ -19,7 +19,7 @@ import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getHostManagedEnvVarsToStrip } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { jo } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { getExternalPermissionMode } from "../权限系统/chunk-e4pfvp7x.js";
 import { getCarriableEffortLevel } from "../权限系统/chunk-t3b7pg2x.js";

@@ -124,7 +124,7 @@ import {
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import "../../01-核心基础设施/共享小工具-未细化/open-flags.js";

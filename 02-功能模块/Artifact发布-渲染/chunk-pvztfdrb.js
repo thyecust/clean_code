@@ -262,7 +262,7 @@ import {
   getAnthropicApiKeyWithSourceSafe,
   getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { SW } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { SW } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { O_NONBLOCK_FLAG, O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
 import { isErrnoCode, openFileReadOnlyHardened, getToolResultsDirForSession, getCurrentToolResultsDir, getSidecarKeyForToolResultFile, ensureToolResultsDirectory, writeBytesExclusiveHardened } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";

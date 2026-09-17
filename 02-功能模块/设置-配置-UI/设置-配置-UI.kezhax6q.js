@@ -43,7 +43,7 @@ import {
   formatAutoUpdaterDisabledReason,
   getAutoUpdaterDisabledReason,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { wS } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { getRemoteTransport, isRemoteActive } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getStringWidth, formatDuration, formatNumber, formatTokens, formatRelativeTimeAgo, formatResetText } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";

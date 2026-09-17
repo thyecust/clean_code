@@ -19,7 +19,7 @@ import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { jo } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getStringWidth, truncateToWidth, formatRelativeTimeAgo, formatLogMetadata } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { listGitWorktrees } from "./chunk-mkmy4cx2.js";

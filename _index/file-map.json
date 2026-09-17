@@ -5978,7 +5978,7 @@
   "confidence": "low"
  },
  "chunk-knmpyrza.js": {
-  "path": "00-第三方库/which-isexe/ isexe.knmpyrza.js",
+  "path": "00-第三方库/which-isexe/isexe.knmpyrza.js",
   "module": "核心工具 · 进程与信号",
   "tier": 1,
   "kb": 59.1,

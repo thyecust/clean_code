@@ -13,7 +13,7 @@ import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isIterateeCall, sliceArrayRange, omitBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "./git-exec-hardening.js";
 import {
   isSignalAborted,

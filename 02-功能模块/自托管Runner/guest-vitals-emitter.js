@@ -12,7 +12,7 @@ import { resolveExecutablePathAsync, env as a } from "../../01-核心基础设�
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { wS } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { spawn } from "child_process";
 import { isAbsolute } from "path";
 import { createInterface } from "readline";

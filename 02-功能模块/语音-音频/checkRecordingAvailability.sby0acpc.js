@@ -13,7 +13,7 @@ import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { spawn } from "child_process";

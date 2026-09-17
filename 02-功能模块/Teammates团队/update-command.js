@@ -18,7 +18,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { isBgSession, isDaemonBgWorker, getScreenReaderEnvOverrides } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createSyntheticAssistantTextMessage } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { isTeammate } from "./teammate-context.js";
-import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { wS } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { buildCarriableSessionFlags, collectUncarriableLaunchReasons, buildCarriableRuleFlags, getOwnJobShortId, resolveBridgeHandoffIdentity, buildBridgeReattachEnv } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { getProjectDir } from "./transcript-paths.js";

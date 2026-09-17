@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { tur } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { tur } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { isInsideTmux, getLeaderPaneId, getUserTmuxSocket, isTmuxAvailable } from "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
 import { SwarmPaneError, assertNoControlCharacters } from "./team-file-store.js";

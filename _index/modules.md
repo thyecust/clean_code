@@ -1412,7 +1412,7 @@
 
 ## 核心工具 · 进程与信号  <sub>01-核心基础设施 · 7 个文件 · 0.10 MB</sub>
 
-- [`00-第三方库/which-isexe/ isexe.knmpyrza.js`](../00-第三方库/which-isexe/ isexe.knmpyrza.js) — 59.1 KB
+- [`00-第三方库/which-isexe/isexe.knmpyrza.js`](../00-第三方库/which-isexe/isexe.knmpyrza.js) — 59.1 KB
 - [`01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js`](../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js) — 16.6 KB
 - [`01-核心基础设施/核心工具-进程与信号/flushAnalyticsSinks.tbwzvw9n.js`](../01-核心基础设施/核心工具-进程与信号/flushAnalyticsSinks.tbwzvw9n.js) — 7.3 KB
 - [`01-核心基础设施/核心工具-进程与信号/process-identity.js`](../01-核心基础设施/核心工具-进程与信号/process-identity.js) — 7.2 KB
