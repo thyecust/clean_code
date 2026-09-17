@@ -16,19 +16,19 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import {
-  Hme,
-  hse,
-  Mve,
+  findInferenceProfileForModel,
+  applyInferenceProfilePrefix,
+  getInferenceProfilePrefixForRegion,
   DEFAULT_3P_SONNET_KEY,
   DEFAULT_3P_HAIKU_KEY,
   DEFAULT_BEDROCK_OPUS_KEY,
   DEFAULT_3P_FABLE_KEY,
-  GC,
-  DR,
-  Im,
-  VC,
-  Rw,
-  HCt,
+  supports1mContextBeta,
+  hasCustomApiKeyHeader,
+  getAuthorizationHeaderPin,
+  getAnthropicBetaHeaderPin,
+  authState,
+  getAwsChainResolveTimeoutMs,
   AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -519,20 +519,20 @@ F();
 var lt = toESM(fetchHttpHandlerModule(), 1);
 var oo = "Bedrock setup verification timed out";
 function ko(n) {
-  let s = Mve(n),
+  let s = getInferenceProfilePrefixForRegion(n),
     l = (c) => {
       let f = to[c].bedrock;
       if (f === null)
         throw Error(
           "A DEFAULT_3P_*_KEY points at a model config with bedrock: null \u2014 Bedrock setup has no fallback id for that tier",
         );
-      return { needle: to[c].firstParty, fallback: hse(f, s) };
+      return { needle: to[c].firstParty, fallback: applyInferenceProfilePrefix(f, s) };
     };
   return { sonnet: l(DEFAULT_3P_SONNET_KEY), opus: l(DEFAULT_BEDROCK_OPUS_KEY), haiku: l(DEFAULT_3P_HAIKU_KEY), fable: l(DEFAULT_3P_FABLE_KEY) };
 }
 async function Uo(n) {
   if (n.authMethod === "bearer") return xn(n);
-  let s = HCt();
+  let s = getAwsChainResolveTimeoutMs();
   try {
     let l = await ut(n),
       f = {
@@ -620,12 +620,12 @@ async function In(n) {
     m = {
       authToken: null,
       defaultHeaders: {
-        ...Im(),
-        ...VC(),
+        ...getAuthorizationHeaderPin(),
+        ...getAnthropicBetaHeaderPin(),
         Authorization: null,
-        ...(!DR() && { "X-Api-Key": null }),
+        ...(!hasCustomApiKeyHeader() && { "X-Api-Key": null }),
       },
-      ...Rw,
+      ...authState,
     };
   switch (f.kind) {
     case "bearer":
@@ -633,10 +633,10 @@ async function In(n) {
         ...c,
         apiKey: f.token,
         defaultHeaders: {
-          ...Im(),
-          ...VC(),
+          ...getAuthorizationHeaderPin(),
+          ...getAnthropicBetaHeaderPin(),
           Authorization: `Bearer ${f.token}`,
-          ...(!DR() && { "X-Api-Key": null }),
+          ...(!hasCustomApiKeyHeader() && { "X-Api-Key": null }),
         },
       });
     case "sigv4":
@@ -654,10 +654,10 @@ async function In(n) {
           ...c,
           apiKey: g,
           defaultHeaders: {
-            ...Im(),
-            ...VC(),
+            ...getAuthorizationHeaderPin(),
+            ...getAnthropicBetaHeaderPin(),
             Authorization: `Bearer ${g}`,
-            ...(!DR() && { "X-Api-Key": null }),
+            ...(!hasCustomApiKeyHeader() && { "X-Api-Key": null }),
           },
         });
       return new s({ ...c, ...m, providerChainResolver: () => ft(n, void 0) });
@@ -746,7 +746,7 @@ async function ft(n, s) {
       parentClientConfig: { region: n.region, requestHandler: f },
       clientConfig: { requestHandler: f },
     });
-  return (g) => withTimeout(m(g), HCt(), oo);
+  return (g) => withTimeout(m(g), getAwsChainResolveTimeoutMs(), oo);
 }
 function pt(n) {
   return (
@@ -859,7 +859,7 @@ function gr() {
   else zn = S[4];
   let Ln = zn,
     Fn;
-  if (S[5] !== P.region) ((Fn = Mve(P.region)), (S[5] = P.region), (S[6] = Fn));
+  if (S[5] !== P.region) ((Fn = getInferenceProfilePrefixForRegion(P.region)), (S[5] = P.region), (S[6] = Fn));
   else Fn = S[6];
   let ht = Fn,
     Un;
@@ -868,7 +868,7 @@ function gr() {
       Object.fromEntries(
         z.map(($o) => [
           $o,
-          Ln[$o] ?? Hme(ro, Co[$o].needle, ht) ?? Co[$o].fallback,
+          Ln[$o] ?? findInferenceProfileForModel(ro, Co[$o].needle, ht) ?? Co[$o].fallback,
         ]),
       )),
       (S[7] = ht),
@@ -1050,7 +1050,7 @@ function gr() {
       ao &&
       z.some((si) => {
         let ai = U[si];
-        return ai !== "pending" && ai.ok && GC(k[si]);
+        return ai !== "pending" && ai.ok && supports1mContextBeta(k[si]);
       })),
       (S[48] = ao),
       (S[49] = k),
@@ -1072,7 +1072,7 @@ function gr() {
             return;
           }
           let St = k[ci];
-          return Vo === "pin1m" && GC(St) ? xt(St) : St;
+          return Vo === "pin1m" && supports1mContextBeta(St) ? xt(St) : St;
         };
         Ho({
           pinSonnet: qo("sonnet"),

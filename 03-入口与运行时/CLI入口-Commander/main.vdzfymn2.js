@@ -70,29 +70,29 @@ import "../../01-核心基础设施/共享小工具-未细化/keychain-access.js
 import { startKeychainPrefetch, ensureKeychainPrefetchCompleted } from "../../01-核心基础设施/共享小工具-未细化/keychain-prefetch.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import {
-  q$e,
-  lU,
-  mg,
-  bt,
-  Mr,
-  NAt,
-  $rr,
-  jCn,
+  CLOUD_GATEWAY_SESSION_EXPIRED_MESSAGE,
+  resetUserData,
+  isAnalyticsDisabled,
+  getModelForAnalytics,
+  isFastModeEnabled,
+  shouldStartWithFastMode,
+  getModelDeprecationNotice,
+  formatModelDeprecationWarning,
   getMainLoopModel,
   getDefaultOpusModel,
   isOpus1mMergeEnabled,
   isLegacyModelRemapEnabled,
-  Tn,
-  Ise,
+  hashForTelemetry,
+  reportEventSignerLoadFailure,
   prepareApiRequest,
   fetchSession,
   sendEventToRemoteSession,
-  SP,
-  yU,
+  isXaaEnabled,
+  getXaaIdpConfig,
   isBgSession,
   isUnattendedInteractiveSession,
-  u0,
-  LUe,
+  getPlatformForAnalytics,
+  isHostPolicyForceLoginGateway,
   getUnapprovedCustomApiKey,
   getStoredOauthAccountInfo,
   getSubscriptionType,
@@ -100,26 +100,26 @@ import {
   isTeamPremiumSubscriber,
   isProSubscriber,
   validateForceLoginOrg,
-  df,
-  H,
-  od,
-  _q,
-  qUe,
-  VD,
-  Bo,
+  initializeGrowthBook,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  checkGate_CACHED_OR_BLOCKING,
+  refreshGrowthBookAfterAuthChange,
+  resetGrowthBook,
+  DEFAULT_GLOBAL_CONFIG,
+  checkHasTrustDialogAccepted,
   isWorkspacePersistedTrusted,
   getWorkspacePersistedTrustKey,
-  YC,
-  Te,
-  ee,
-  l5t,
-  KRn,
-  XRn,
-  es,
-  FZe,
-  Sq,
-  _Q,
-  eBe,
+  isLocalSettingsGitTracked,
+  saveGlobalConfig,
+  getGlobalConfig,
+  resolveExplicitRemoteControlAtStartup,
+  markConfigBootPhaseComplete,
+  getRawCurrentProjectConfigEntry,
+  getCurrentProjectConfig,
+  deleteCurrentProjectConfigFields,
+  isAutoUpdaterDisabled,
+  getMemoryPath,
+  getManagedClaudeRulesDir,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
@@ -2513,7 +2513,7 @@ Examples:
       new z(
         "--xaa",
         "Enable XAA (SEP-990) for this server. Requires 'claude mcp xaa setup' first. Also requires --client-id and --client-secret (for the MCP server's AS).",
-      ).hideHelp(!SP()),
+      ).hideHelp(!isXaaEnabled()),
     )
     .action(
       k(async (R, T, x, U, D) => {
@@ -2528,7 +2528,7 @@ Usage: claude mcp add <name> <command> [args...]`);
         try {
           let L = normalizeMcpScope(D.scope),
             W = normalizeMcpTransportType(D.transport);
-          if (D.xaa && !SP())
+          if (D.xaa && !isXaaEnabled())
             cliError(
               "Error: --xaa requires CLAUDE_CODE_ENABLE_XAA=1 in your environment",
             );
@@ -2537,7 +2537,7 @@ Usage: claude mcp add <name> <command> [args...]`);
             let q = [];
             if (!D.clientId) q.push("--client-id");
             if (!D.clientSecret) q.push("--client-secret");
-            if (!yU())
+            if (!getXaaIdpConfig())
               q.push("'claude mcp xaa setup' (settings.xaaIdp not configured)");
             if (q.length) cliError(`Error: --xaa requires: ${q.join(", ")}`);
           }
@@ -2683,7 +2683,7 @@ function vn(v, k) {
           return cliError(
             "Error: --client-secret requires MCP_XAA_IDP_CLIENT_SECRET env var",
           );
-        let N = yU(),
+        let N = getXaaIdpConfig(),
           I = N?.issuer,
           L = N?.clientId,
           { error: W } = await updateSettingsForSource(
@@ -2731,7 +2731,7 @@ function vn(v, k) {
         "Write this pre-obtained id_token directly to cache, skipping the OIDC browser login",
       )
       .action(async (R) => {
-        let T = yU();
+        let T = getXaaIdpConfig();
         if (!T)
           return cliError(
             "Error: no XAA IdP connection. Run 'claude mcp xaa setup' first.",
@@ -2774,7 +2774,7 @@ function vn(v, k) {
     O.command("show")
       .description("Show the current IdP connection config")
       .action(async () => {
-        let R = yU();
+        let R = getXaaIdpConfig();
         if (!R) return cliOk("No XAA IdP connection configured.");
         let T = (await Ke().getIdpClientSecret(R.issuer)) !== void 0,
           x = (await Ke().getCachedIdpIdToken(R.issuer)) !== void 0;
@@ -2799,7 +2799,7 @@ function vn(v, k) {
       .description("Clear the IdP connection config and cached id_token")
       .action(
         k(async (R) => {
-          let T = yU(),
+          let T = getXaaIdpConfig(),
             { error: x } = await updateSettingsForSource(
               "userSettings",
               { xaaIdp: void 0 },
@@ -2836,7 +2836,7 @@ function En(v, k) {
         }),
       ),
     Cn(O, k),
-    SP())
+    isXaaEnabled())
   )
     vn(O, k);
   (O.command("remove <name>")
@@ -3425,8 +3425,8 @@ function kn(v) {
   if (!k) return;
   let O = Ls[k.toLowerCase()];
   if (!O) return;
-  if (ee().deepLinkTerminal === O) return;
-  (Te((T) => ({ ...T, deepLinkTerminal: O }), v),
+  if (getGlobalConfig().deepLinkTerminal === O) return;
+  (saveGlobalConfig((T) => ({ ...T, deepLinkTerminal: O }), v),
     n(`Stored deep link terminal preference: ${O}`));
 }
 class yr {
@@ -3478,11 +3478,11 @@ function da(Ac) {
   return { ...Ac, phase: "save-failed" };
 }
 function ta(v) {
-  if (a.CLAUBBIT || !Bo()) return;
+  if (a.CLAUBBIT || !checkHasTrustDialogAccepted()) return;
   (Dx(!0), primePlanSlugCollisions(v));
 }
 function oa(v) {
-  Te(
+  saveGlobalConfig(
     (k) => ({
       ...k,
       hasCompletedOnboarding: !0,
@@ -3558,7 +3558,7 @@ function ra(v) {
   if (
     lrt().some((O) => O.workspaceKey === k) &&
     !isWorkspacePersistedTrusted() &&
-    YC({ onIndeterminate: "tracked" })
+    isLocalSettingsGitTracked({ onIndeterminate: "tracked" })
   )
     return (
       logFeatureSad("mcp_project_approval_dialog", "mcp_approval_persist_gated"),
@@ -3614,7 +3614,7 @@ function qt(v, k, O) {
 }
 async function io(v, k, O, R, T) {
   let x = showScreen(v, k);
-  (KRn(), E0t(O, R, T));
+  (markConfigBootPhaseComplete(), E0t(O, R, T));
   try {
     if (
       (await Promise.race([
@@ -3658,8 +3658,8 @@ async function Hn(v, k, O, R, T, x, U, D, N, I) {
     let K = [
       () => (
         Dx(!0),
-        qUe({ preservePendingExposures: !0 }),
-        df().catch((j) => logError(ge(j))),
+        resetGrowthBook({ preservePendingExposures: !0 }),
+        initializeGrowthBook().catch((j) => logError(ge(j))),
         getSystemContext(v),
         null
       ),
@@ -3712,7 +3712,7 @@ function ia(
   },
   I,
 ) {
-  let L = ee(),
+  let L = getGlobalConfig(),
     W = !1,
     K = !0;
   return [
@@ -3737,7 +3737,7 @@ function ia(
     },
     (j) => {
       if (a.CLAUBBIT) return null;
-      if (((K = Bo()), K && !shouldOfferTrustBackstop())) return null;
+      if (((K = checkHasTrustDialogAccepted()), K && !shouldOfferTrustBackstop())) return null;
       return (
         (W = !0),
         import("../../02-功能模块/权限系统/TrustDialog.syp7kdw2.js").then(({ TrustDialog: V }) =>
@@ -3751,9 +3751,9 @@ function ia(
         if ((clearPluginCache("post-trust: re-discover project @skills-dir plugins"), shouldFillPluginLoadWithStore(N)))
           loadAllPluginsCacheOnly(D, N).catch(() => {});
       }
-      if ((qUe({ preservePendingExposures: !0 }), L.hasCompletedOnboarding))
-        return (df().catch((j) => logError(ge(j))), null);
-      return (lU(), sa());
+      if ((resetGrowthBook({ preservePendingExposures: !0 }), L.hasCompletedOnboarding))
+        return (initializeGrowthBook().catch((j) => logError(ge(j))), null);
+      return (resetUserData(), sa());
     },
     () => {
       if (a.CLAUBBIT) return null;
@@ -3861,7 +3861,7 @@ function ia(
     },
     async (j) => {
       if (ym().length === 0 && (x?.length ?? 0) === 0) return null;
-      if ((await od("tengu_harbor"), !x || x.length === 0)) return null;
+      if ((await checkGate_CACHED_OR_BLOCKING("tengu_harbor"), !x || x.length === 0)) return null;
       let [
           { isChannelsEnabled: V },
           { isChannelsPolicyBlocked: q },
@@ -3886,7 +3886,7 @@ function ia(
       });
     },
     (j) => {
-      if (!T || ee().hasCompletedClaudeInChromeOnboarding) return null;
+      if (!T || getGlobalConfig().hasCompletedClaudeInChromeOnboarding) return null;
       return import("../../02-功能模块/ClaudeinChrome/ClaudeInChromeOnboarding.gf6zmqr4.js").then(
         ({ ClaudeInChromeOnboarding: V }) => e(V, { onDone: () => j() }),
       );
@@ -3900,7 +3900,7 @@ function ia(
           1500,
           "chrome extension scan timed out before offer",
         ).catch(() => !0),
-        J = Boolean(ee().chromeExtension?.pairedDeviceId);
+        J = Boolean(getGlobalConfig().chromeExtension?.pairedDeviceId);
       if (!q && !J)
         return (
           n(
@@ -3909,12 +3909,12 @@ function ia(
           null
         );
       await withTimeout(
-        df().catch(() => {}),
+        initializeGrowthBook().catch(() => {}),
         1500,
         "GrowthBook init timed out before chrome offer",
       ).catch(() => {});
-      let X = H("tengu_chrome_auto_enable", !1),
-        ce = ee().claudeInChromeDefaultEnabled !== void 0,
+      let X = getFeatureValue_CACHED_MAY_BE_STALE("tengu_chrome_auto_enable", !1),
+        ce = getGlobalConfig().claudeInChromeDefaultEnabled !== void 0,
         { doesEnterpriseMcpConfigExist: Me, isMcpServerDenied: Le } =
           await import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
         { CLAUDE_IN_CHROME_MCP_SERVER_NAME: qe } =
@@ -3933,7 +3933,7 @@ function ia(
           n(
             "[Claude in Chrome] Skipping offer: decision already recorded (another instance answered)",
           ),
-          (I.claudeInChromeAccepted = ee().claudeInChromeDefaultEnabled === !0),
+          (I.claudeInChromeAccepted = getGlobalConfig().claudeInChromeDefaultEnabled === !0),
           null
         );
       if (!X)
@@ -3957,7 +3957,7 @@ function ia(
 async function sa() {
   let v = Date.now();
   try {
-    (await withTimeout(df(), na, Mn),
+    (await withTimeout(initializeGrowthBook(), na, Mn),
       n(`[STARTUP] post-onboarding GB await ${Date.now() - v}ms`));
   } catch (k) {
     if (
@@ -4022,8 +4022,8 @@ function Dn(v, k) {
         ]),
         U =
           (v === "bedrock"
-            ? ee().bedrockDeclinedUpgrades
-            : ee().vertexDeclinedUpgrades) ?? {},
+            ? getGlobalConfig().bedrockDeclinedUpgrades
+            : getGlobalConfig().vertexDeclinedUpgrades) ?? {},
         D = T.filter((W) => U[W.tier] !== x(W));
       if (D.length === 0) return null;
       let [
@@ -4037,7 +4037,7 @@ function Dn(v, k) {
         let j = fromEnum(W.tier);
         if (!K)
           return (
-            await Te((J) => {
+            await saveGlobalConfig((J) => {
               let X =
                 v === "bedrock"
                   ? "bedrockDeclinedUpgrades"
@@ -4574,7 +4574,7 @@ function xr(v) {
   return v;
 }
 async function ii() {
-  let v = XRn();
+  let v = getRawCurrentProjectConfigEntry();
   if (!v) return;
   let k = (x) => x !== void 0 && (!Array.isArray(x) || x.length > 0),
     O = v.enableAllProjectMcpServers !== void 0,
@@ -4628,7 +4628,7 @@ async function ii() {
       return;
     }
     if (x.length > 0) {
-      if (!(await FZe(x))) {
+      if (!(await deleteCurrentProjectConfigFields(x))) {
         n(
           "migrateEnableAllProjectMcpServersToSettings: settings copy landed but legacy projectConfig fields could not be removed (unwritable config?); will retry next startup",
           { level: "error" },
@@ -4672,15 +4672,15 @@ async function si(v = ha, k) {
     );
   return (
     logEvent("tengu_alias_migration", {
-      from_model: bt(R),
-      to_model: bt(T),
+      from_model: getModelForAnalytics(R),
+      to_model: getModelForAnalytics(T),
       has_1m: x,
     }),
     !0
   );
 }
 async function ai(v) {
-  let k = ee();
+  let k = getGlobalConfig();
   if (k.autoUpdates !== !1 || k.autoUpdatesProtectedForNative === !0) return !0;
   try {
     let O = getSettingsForSource("userSettings") || {},
@@ -4697,7 +4697,7 @@ async function ai(v) {
         already_had_env_var: !!O.env?.DISABLE_AUTOUPDATER,
       }),
       a.set("DISABLE_AUTOUPDATER", !0),
-      await Te((T) => {
+      await saveGlobalConfig((T) => {
         let { autoUpdates: x, autoUpdatesProtectedForNative: U, ...D } = T;
         return D;
       }, v),
@@ -4717,7 +4717,7 @@ async function ai(v) {
   }
 }
 async function li(v) {
-  if (!ee().bypassPermissionsModeAccepted) return !0;
+  if (!getGlobalConfig().bypassPermissionsModeAccepted) return !0;
   try {
     if (!hasSkipDangerousModePermissionPrompt()) {
       let { error: O } = await updateSettingsForSource(
@@ -4730,7 +4730,7 @@ async function li(v) {
     }
     return (
       logEvent("tengu_migrate_bypass_permissions_accepted", {}),
-      await Te((O) => {
+      await saveGlobalConfig((O) => {
         if (!("bypassPermissionsModeAccepted" in O)) return O;
         let { bypassPermissionsModeAccepted: R, ...T } = O;
         return T;
@@ -4768,8 +4768,8 @@ async function ci(v) {
       logFeatureBad("migration_fable5_to_fable_alias", "migration_fable5_write_failed"),
       !1
     );
-  if (ee().numStartups > 1)
-    Te((x) => ({ ...x, fable5ToFableAliasMigrationTimestamp: Date.now() }), v);
+  if (getGlobalConfig().numStartups > 1)
+    saveGlobalConfig((x) => ({ ...x, fable5ToFableAliasMigrationTimestamp: Date.now() }), v);
   return (
     logEvent("tengu_fable5_to_fable_alias_migration", { from_model: fromEnum(k), has_1m: O }),
     logFeatureOk("migration_fable5_to_fable_alias"),
@@ -4800,7 +4800,7 @@ async function pi(v) {
       !1
     );
   return (
-    Te((R) => ({ ...R, legacyOpusMigrationTimestamp: Date.now() }), v),
+    saveGlobalConfig((R) => ({ ...R, legacyOpusMigrationTimestamp: Date.now() }), v),
     logEvent("tengu_legacy_opus_migration", { from_model: fromEnum(k) }),
     logFeatureOk("migration_legacy_opus_to_current"),
     !0
@@ -4808,7 +4808,7 @@ async function pi(v) {
 }
 var _a = { "subscription-switch": "subscriptionNoticeCount" };
 function ui(v) {
-  let k = ee();
+  let k = getGlobalConfig();
   if (k.seenNotifications !== void 0) return;
   let O = {};
   for (let [R, T] of Object.entries(_a)) {
@@ -4816,7 +4816,7 @@ function ui(v) {
     if (typeof x === "number" && x > 0) O[R] = x;
     else if (x === !0) O[R] = 1;
   }
-  (Te(
+  (saveGlobalConfig(
     (R) =>
       R.seenNotifications !== void 0 ? R : { ...R, seenNotifications: O },
     v,
@@ -4842,7 +4842,7 @@ async function mi(v) {
 function fi(v) {
   let k = !1;
   if (
-    (Te((O) => {
+    (saveGlobalConfig((O) => {
       let R = O.replBridgeEnabled;
       if (R === void 0) return O;
       if (O.remoteControlAtStartup !== void 0) return O;
@@ -4854,7 +4854,7 @@ function fi(v) {
     logFeatureOk("migration_repl_bridge_to_remote_control");
 }
 async function gi(v) {
-  if (ee().sonnet1m45MigrationComplete) return !0;
+  if (getGlobalConfig().sonnet1m45MigrationComplete) return !0;
   let O = !1;
   if (getSettingsForSource("userSettings")?.model === "sonnet[1m]") {
     let { error: x } = await updateSettingsForSource(
@@ -4874,7 +4874,7 @@ async function gi(v) {
     O = !0;
   }
   if (Ec() === "sonnet[1m]") (ad("sonnet-4-5-20250929[1m]"), (O = !0));
-  if ((Te((x) => ({ ...x, sonnet1m45MigrationComplete: !0 }), v), O))
+  if ((saveGlobalConfig((x) => ({ ...x, sonnet1m45MigrationComplete: !0 }), v), O))
     logFeatureOk("migration_sonnet1m_to_sonnet45");
   return !0;
 }
@@ -4902,8 +4902,8 @@ async function hi(v) {
       logFeatureBad("migration_sonnet45_to_sonnet46", "migration_sonnet45_write_failed"),
       !1
     );
-  if (ee().numStartups > 1)
-    Te((x) => ({ ...x, sonnet45To46MigrationTimestamp: Date.now() }), v);
+  if (getGlobalConfig().numStartups > 1)
+    saveGlobalConfig((x) => ({ ...x, sonnet45To46MigrationTimestamp: Date.now() }), v);
   return (
     logEvent("tengu_sonnet45_to_46_migration", { from_model: fromEnum(k), has_1m: O }),
     logFeatureOk("migration_sonnet45_to_sonnet46"),
@@ -4911,13 +4911,13 @@ async function hi(v) {
   );
 }
 async function _i(v) {
-  let k = ee(),
+  let k = getGlobalConfig(),
     O = getSettingsForSource("userSettings"),
     R = {};
   for (let T of USER_INTENT_SETTING_KEYS) {
     let x = k[T];
     if (x === void 0) continue;
-    if (x === VD[T]) continue;
+    if (x === DEFAULT_GLOBAL_CONFIG[T]) continue;
     if (O?.[T] !== void 0) continue;
     R[T] = x;
   }
@@ -4944,7 +4944,7 @@ async function _i(v) {
   }
 }
 async function Si(v) {
-  if (ee().hasResetAutoModeOptInForDefaultOffer) return !0;
+  if (getGlobalConfig().hasResetAutoModeOptInForDefaultOffer) return !0;
   if (getAutoModeEnabledState() !== "enabled") return !0;
   try {
     let O = getSettingsForSource("userSettings");
@@ -4959,7 +4959,7 @@ async function Si(v) {
       (logEvent("tengu_migrate_reset_auto_opt_in_for_default_offer", {}),
         logFeatureOk("migration_reset_auto_mode_opt_in"));
     }
-    Te((R) => {
+    saveGlobalConfig((R) => {
       if (R.hasResetAutoModeOptInForDefaultOffer) return R;
       return { ...R, hasResetAutoModeOptInForDefaultOffer: !0 };
     }, v);
@@ -4976,15 +4976,15 @@ async function Si(v) {
   return !0;
 }
 function wi(v) {
-  if (ee().opusProMigrationComplete) return;
+  if (getGlobalConfig().opusProMigrationComplete) return;
   if (getAPIProvider() !== "firstParty" || !isProSubscriber()) {
-    (Te((T) => ({ ...T, opusProMigrationComplete: !0 }), v),
+    (saveGlobalConfig((T) => ({ ...T, opusProMigrationComplete: !0 }), v),
       logEvent("tengu_reset_pro_to_opus_default", { skipped: !0 }));
     return;
   }
   if (getSettings_DEPRECATED()?.model === void 0) {
     let T = Date.now();
-    (Te(
+    (saveGlobalConfig(
       (x) => ({
         ...x,
         opusProMigrationComplete: !0,
@@ -4997,7 +4997,7 @@ function wi(v) {
         had_custom_model: !1,
       }));
   } else
-    (Te((T) => ({ ...T, opusProMigrationComplete: !0 }), v),
+    (saveGlobalConfig((T) => ({ ...T, opusProMigrationComplete: !0 }), v),
       logEvent("tengu_reset_pro_to_opus_default", {
         skipped: !1,
         had_custom_model: !0,
@@ -5006,7 +5006,7 @@ function wi(v) {
 }
 var Dr = 14;
 async function yi(v) {
-  if (ee().migrationVersion === Dr) return;
+  if (getGlobalConfig().migrationVersion === Dr) return;
   let k = [];
   if (
     (k.push(await ai(v)),
@@ -5030,7 +5030,7 @@ async function yi(v) {
     );
     return;
   }
-  await Te(
+  await saveGlobalConfig(
     (O) => (O.migrationVersion === Dr ? O : { ...O, migrationVersion: Dr }),
     v,
   );
@@ -5049,11 +5049,11 @@ async function Ci() {
 async function Sa() {
   if (isClaudeMdLoadingDisabled() || Pt()) return [];
   let v = new Set(),
-    k = es().hasClaudeMdExternalIncludesApproved || !1;
+    k = getCurrentProjectConfig().hasClaudeMdExternalIncludesApproved || !1;
   return [
-    ...(await loadMemoryFileWithIncludes(_Q("Managed"), "Managed", v, k)),
+    ...(await loadMemoryFileWithIncludes(getMemoryPath("Managed"), "Managed", v, k)),
     ...(await loadRulesDirMemoryFiles({
-      rulesDir: eBe(),
+      rulesDir: getManagedClaudeRulesDir(),
       type: "Managed",
       processedPaths: v,
       includeExternal: k,
@@ -5173,7 +5173,7 @@ async function bi(v, k) {
         St === null && Qt !== void 0 && isViolinWoodEnabledCached()
           ? import("../../02-功能模块/云会话-Teleport/deviceEventSignerFor.14ybgam1.js").then(
               ({ deviceEventSignerIfBoundHere: me }) => me(Qt, v.credentials),
-              Ise,
+              reportEventSignerLoadFailure,
             )
           : void 0,
       ft =
@@ -5283,7 +5283,7 @@ async function bi(v, k) {
       return cliErrorAfterAnalyticsFlush(jt ? void 0 : "Error: Unable to create cloud session");
     }
     await logEventAsync("tengu_remote_create_session_success", {
-      session_id: Tn(me.id),
+      session_id: hashForTelemetry(me.id),
       entry_point: fromEnum("pool_headless"),
       branch_mode: H8(Je, De),
     });
@@ -5314,7 +5314,7 @@ async function bi(v, k) {
   }
   if (Ve === "stream-json" || Ve === "json") rje(!0);
   (dR(), initializeTelemetryAfterTrust(v.storageV5));
-  let Lt = (k.continue || k.resume || se) && !CHe() ? null : jCn(ao ?? lo);
+  let Lt = (k.continue || k.resume || se) && !CHe() ? null : formatModelDeprecationWarning(ao ?? lo);
   if (Lt && Ve !== "json" && Ve !== "stream-json") cliWarn(Lt);
   let ae = performance.now(),
     He =
@@ -5343,7 +5343,7 @@ async function bi(v, k) {
       ...S$e(k.effort),
       ultracode: i4t(k.effort),
       autoCompactWindow: R,
-      ...(Mr() && { fastMode: NAt(je ?? null) }),
+      ...(isFastModeEnabled() && { fastMode: shouldStartWithFastMode(je ?? null) }),
       ...(isAdvisorToolEnabled() && j && { advisorModel: j }),
       ...(k.promptSuggestions !== void 0 && {
         promptSuggestionEnabled: k.promptSuggestions && isPromptSuggestionEnabled(),
@@ -6365,7 +6365,7 @@ function Ta() {
     resetRemoteSettingsSyncCache(),
     Za(),
     process.stderr.write(
-      q$e +
+      CLOUD_GATEWAY_SESSION_EXPIRED_MESSAGE +
         `
 `,
     ));
@@ -6389,7 +6389,7 @@ function Fr() {
       exitMessage: `Cloud gateway ${v} refused managed settings for this account (403): Claude Code may not be enabled for your organization. Contact your administrator; to sign in with a different account, run \`claude auth logout\` first, then start \`claude\` and sign in.`,
       gatewayUrl: v,
     };
-  let R = LUe()
+  let R = isHostPolicyForceLoginGateway()
     ? "sign in again with /login"
     : "run `claude auth login` to re-authenticate";
   return {
@@ -6400,7 +6400,7 @@ function Fr() {
 }
 function Oi({ remoteControlFlag: v, isRemoteThinClient: k }) {
   let O = a.CLAUDE_CODE_REMOTE,
-    R = l5t(),
+    R = resolveExplicitRemoteControlAtStartup(),
     T = !k && !O && !v && R.value === void 0 ? resolveCcrAutoConnectDefault() : void 0,
     x = !k && !O && (v || (R.value ?? T?.value ?? !1)),
     U = !1,
@@ -6506,7 +6506,7 @@ function Ua() {
   return v;
 }
 async function Na(v, k) {
-  if (mg()) return;
+  if (isAnalyticsDisabled()) return;
   let [O, R, T, x] = await Promise.all([
       getIsGit(),
       getWorktreeCount(),
@@ -6527,7 +6527,7 @@ async function Na(v, k) {
     are_unsandboxed_commands_allowed: SandboxManager.areUnsandboxedCommandsAllowed(),
     is_auto_bash_allowed_if_sandbox_enabled:
       SandboxManager.isAutoAllowBashIfSandboxedEnabled(),
-    auto_updater_disabled: Sq(),
+    auto_updater_disabled: isAutoUpdaterDisabled(),
     prefers_reduced_motion: getInitialSettings().prefersReducedMotion ?? !1,
     precompute_compaction_setting_enabled: resolveSetting(
       "precomputeCompactionEnabled",
@@ -6729,7 +6729,7 @@ async function ja(v) {
     )),
     kLn(Nt),
     n(`[STARTUP] showSetupScreens() completed in ${Date.now() - ao}ms`),
-    ((!V && Bo()) || (!q && isWorkspacePersistedTrusted())) && !J && !isSimpleMode() && !Nn())
+    ((!V && checkHasTrustDialogAccepted()) || (!q && isWorkspacePersistedTrusted())) && !J && !isSimpleMode() && !Nn())
   ) {
     let le = Date.now();
     $e = getClaudeCodeMcpConfigs(ut, { storageV5: fe, credentials: oe }).then(
@@ -6742,7 +6742,7 @@ async function ja(v) {
     );
   else if (et) {
     try {
-      logEvent("tengu_claude_in_chrome_setup", { platform: u0(getCurrentPlatform()) });
+      logEvent("tengu_claude_in_chrome_setup", { platform: getPlatformForAnalytics(getCurrentPlatform()) });
       let { mcpConfig: le, systemPrompt: mt } = setupClaudeInChrome();
       if (((ut = { ...ut, ...le }), mt))
         Rt = Rt
@@ -6751,7 +6751,7 @@ async function ja(v) {
 ${Rt}`
           : mt;
     } catch (le) {
-      (logEvent("tengu_claude_in_chrome_setup_failed", { platform: u0(getCurrentPlatform()) }),
+      (logEvent("tengu_claude_in_chrome_setup_failed", { platform: getPlatformForAnalytics(getCurrentPlatform()) }),
         logError(le),
         n(`[Claude in Chrome] Error (startup offer): ${le}`));
     }
@@ -6816,7 +6816,7 @@ ${Le ? "--rc and --project ignored." : "--rc flag ignored."}`);
     if (getAPIProvider() === "gateway") {
       if (hasPolicyDiverged())
         return (
-          await Te(
+          await saveGlobalConfig(
             (le) => ({
               ...le,
               hasCompletedOnboarding: !0,
@@ -6843,8 +6843,8 @@ ${Le ? "--rc and --project ignored." : "--rc flag ignored."}`);
       (resetAuthCachesAfterLogin("gateway"), dR());
     }
     (zJe(),
-      lU(),
-      _q(),
+      resetUserData(),
+      refreshGrowthBookAfterAuthChange(),
       import("../../02-功能模块/Bridge-RemoteControl/chunk-tyce0p0b.js").then(
         (le) => (
           le.clearTrustedDeviceToken(),
@@ -6962,15 +6962,15 @@ async function $a(v, k, O, R) {
       wasTrustedBeforeSetup: Ce,
     } = v;
   logEvent("tengu_startup_manual_model_config", {
-    cli_flag: bt(k.model),
-    env_var: bt(process.env.ANTHROPIC_MODEL),
-    default_env_var: bt(a.ANTHROPIC_DEFAULT_MODEL),
-    settings_file: bt(getInitialSettings().model),
+    cli_flag: getModelForAnalytics(k.model),
+    env_var: getModelForAnalytics(process.env.ANTHROPIC_MODEL),
+    default_env_var: getModelForAnalytics(a.ANTHROPIC_DEFAULT_MODEL),
+    settings_file: getModelForAnalytics(getInitialSettings().model),
     settings_source: fromEnumOpt(getEffectiveSettingSource("model")),
     subscriptionType: fromEnumOpt(getSubscriptionType()),
     agent: N,
   });
-  let Ye = $rr(Io ?? fo),
+  let Ye = getModelDeprecationNotice(Io ?? fo),
     tt = [];
   if (Bt)
     tt.push({
@@ -6981,8 +6981,8 @@ async function $a(v, k, O, R) {
   if (Yt)
     tt.push({ key: Yt.key, text: Yt.text, color: "warning", priority: "high" });
   let St = Ao;
-  if ((!Ce && Bo()) || (!ir && isWorkspacePersistedTrusted())) {
-    if (!Ce && Bo())
+  if ((!Ce && checkHasTrustDialogAccepted()) || (!ir && isWorkspacePersistedTrusted())) {
+    if (!Ce && checkHasTrustDialogAccepted())
       import("../../01-核心基础设施/共享小工具-未细化/parseGitHubRepository.3ng6714h.js").then((Oe) => {
         Oe.detectCurrentRepositoryWithHost();
       });
@@ -7021,7 +7021,7 @@ async function $a(v, k, O, R) {
       diffPanelVisible: !1,
       panelFileView: null,
       briefTranscript: No ? !1 : ut,
-      expandedView: ee().showExpandedTodos ? "tasks" : "none",
+      expandedView: getGlobalConfig().showExpandedTodos ? "tasks" : "none",
       coordinatorTaskIndex: -1,
       workflowFooterIndex: 0,
       viewSelectionMode: "none",
@@ -7119,7 +7119,7 @@ async function $a(v, k, O, R) {
       cacheMissAckedAtOutputTokens: -1,
       autoCompactWindow: L,
       activeOverlays: new Set(),
-      fastMode: NAt(fo),
+      fastMode: shouldStartWithFastMode(fo),
       ...(isAdvisorToolEnabled() && U && { advisorModel: U }),
       teamContext: gt,
       teammateColors: Ho?.teammateColors ?? {
@@ -7135,10 +7135,10 @@ async function $a(v, k, O, R) {
     };
   if (Ue && le === null) addHistoryEntry(String(Ue), ae);
   let Lo = _o ? [...Kt, _o] : Kt;
-  (Te((_e) => ({ ..._e, numStartups: (_e.numStartups ?? 0) + 1 }), ae),
+  (saveGlobalConfig((_e) => ({ ..._e, numStartups: (_e.numStartups ?? 0) + 1 }), ae),
     setImmediate(
       (_e, ve, Oe) => {
-        (Na(ee(), ve), A0t(_e, Oe));
+        (Na(getGlobalConfig(), ve), A0t(_e, Oe));
       },
       v.storageV5,
       Ve,
@@ -7315,7 +7315,7 @@ async function $a(v, k, O, R) {
         Qe = de ? randomUUID() : void 0,
         ue = Tt ? parsePermissionModeOrDefault(Tt) : void 0,
         Fe = ue && isSelectablePermissionMode(ue) && ue !== "bypassPermissions" ? ue : void 0,
-        ze = H("tengu_remote_backend", !1);
+        ze = getFeatureValue_CACHED_MAY_BE_STALE("tengu_remote_backend", !1);
       if (Z && !ze)
         return await Ne(
           se,
@@ -7691,7 +7691,7 @@ Usage: claude --cloud "your task description"`,
           ...(Vr !== void 0 && {
             eventSigner: import("../../02-功能模块/云会话-Teleport/deviceEventSignerFor.14ybgam1.js").then(
               ({ deviceEventSignerFor: nt }) => nt(Vr, He),
-              Ise,
+              reportEventSignerLoadFailure,
             ),
           }),
         },

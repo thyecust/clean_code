@@ -16,7 +16,7 @@ import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { pi, bytesPerTokenForModel, kw, mc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { emitTaskNotification, bytesPerTokenForModel, runWithAgentContext, getAgentDepth } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { FU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { hA } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { runWithTeammateContext } from "./teammate-context.js";
@@ -583,7 +583,7 @@ async function Je(s) {
   let B = {
       agentId: e.agentId,
       parentAgentId: d.agentId,
-      depth: mc(d.agentContext),
+      depth: getAgentDepth(d.agentContext),
       parentSessionId: e.parentSessionId,
       agentName: e.agentName,
       teamName: e.teamName,
@@ -815,7 +815,7 @@ ${W}`);
         te = null;
       if (
         (await runWithTeammateContext(T, async () =>
-          kw(B, async () => {
+          runWithAgentContext(B, async () => {
             (L(
               t,
               (r) => ({
@@ -1119,7 +1119,7 @@ ${W}`);
         inProgressToolUseIDs: new Set(),
       }));
     if ((evictTaskOutput(t), a.evictTerminal(t), !oe))
-      pi(t, "completed", { toolUseId: x, summary: e.agentId });
+      emitTaskNotification(t, "completed", { toolUseId: x, summary: e.agentId });
     if ((unregisterPerfettoAgent(e.agentId), we))
       logFeatureSad("swarm_in_process_run", "compact_blocked_by_hook");
     else logFeatureOk("swarm_in_process_run");
@@ -1162,7 +1162,7 @@ ${W}`);
         inProgressToolUseIDs: new Set(),
       }));
     if ((evictTaskOutput(t), a.evictTerminal(t), !W))
-      pi(t, "failed", { toolUseId: oe, summary: e.agentId });
+      emitTaskNotification(t, "failed", { toolUseId: oe, summary: e.agentId });
     if (!l) {
       let x;
       try {

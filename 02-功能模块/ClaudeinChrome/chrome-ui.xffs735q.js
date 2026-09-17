@@ -16,7 +16,7 @@ import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { isClaudeAISubscriber, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isClaudeAISubscriber, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -48,7 +48,7 @@ function ce(jo) {
     [He, Go] = d(!1),
     X = C(!1),
     oo;
-  if (x[0] === MEMO_CACHE_SENTINEL) ((oo = ee().chromeExtension?.pairedDeviceId), (x[0] = oo));
+  if (x[0] === MEMO_CACHE_SENTINEL) ((oo = getGlobalConfig().chromeExtension?.pairedDeviceId), (x[0] = oo));
   else oo = x[0];
   let no = oo,
     ro,
@@ -304,7 +304,7 @@ function Je(Sn) {
   let le = bo,
     j = le !== void 0,
     Co;
-  if (i[2] === MEMO_CACHE_SENTINEL) ((Co = ee().chromeExtension?.pairedDeviceName), (i[2] = Co));
+  if (i[2] === MEMO_CACHE_SENTINEL) ((Co = getGlobalConfig().chromeExtension?.pairedDeviceName), (i[2] = Co));
   else Co = i[2];
   let wo = Co,
     vo;
@@ -339,7 +339,7 @@ function Je(Sn) {
         }
         case "toggle-default": {
           let Do = !oe;
-          (Te((On) => ({ ...On, claudeInChromeDefaultEnabled: Do }), Le),
+          (saveGlobalConfig((On) => ({ ...On, claudeInChromeDefaultEnabled: Do }), Le),
             _n(Do));
           break bb19;
         }
@@ -577,7 +577,7 @@ var In = async function (b) {
         !1
       ),
     ),
-    w = ee(),
+    w = getGlobalConfig(),
     M = isClaudeAISubscriber(),
     D = a.isWslEnvironment();
   return e(Je, {

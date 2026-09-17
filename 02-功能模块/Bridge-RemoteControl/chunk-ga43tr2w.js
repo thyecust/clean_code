@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { r0, Cvn, gCt, qe, Ut, Ff, o5t, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isSemverLessThan, getCredentialInvalidation, getCredentialInvalidationGeneration, BASH_TOOL_NAME, POWERSHELL_TOOL_NAME, onGrowthBookRefresh, getFeatureValue_DEPRECATED, getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { hB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { isInProtectedNamespace } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -98,7 +98,7 @@ var Vn = {
       min_version: s()
         .refine((t) => {
           try {
-            return (r0(t, "0.0.0"), !0);
+            return (isSemverLessThan(t, "0.0.0"), !0);
           } catch {
             return !1;
           }
@@ -107,7 +107,7 @@ var Vn = {
     }),
   );
 async function Dt() {
-  let t = await o5t("tengu_bridge_repl_v2_config", Vn),
+  let t = await getFeatureValue_DEPRECATED("tengu_bridge_repl_v2_config", Vn),
     p = Mo().safeParse(t);
   return p.success ? p.data : Vn;
 }
@@ -115,7 +115,7 @@ async function ndt() {
   let t = await Dt();
   if (
     t.min_version &&
-    r0(
+    isSemverLessThan(
       {
         ISSUES_EXPLAINER:
           "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -218,7 +218,7 @@ function oi(t, p) {
     if (!(await ni())) return;
     let v = await ownProcStartAsync(),
       w = { pid: process.pid, procStart: v, createdAt: Date.now() };
-    await Te((I) => {
+    await saveGlobalConfig((I) => {
       let S = Object.entries(I.replBridgePlaceholders ?? {}).filter(
         ([B]) => !si(B, t),
       );
@@ -237,7 +237,7 @@ function oi(t, p) {
 }
 async function Xjn() {
   try {
-    let t = Object.values(ee().replBridgePlaceholders ?? {}),
+    let t = Object.values(getGlobalConfig().replBridgePlaceholders ?? {}),
       p = 1,
       v = new Set();
     for (let w of t) {
@@ -256,7 +256,7 @@ async function Xjn() {
 }
 function Ir(t, p) {
   return ii(async () => {
-    await Te((v) => {
+    await saveGlobalConfig((v) => {
       let w = Object.keys(v.replBridgePlaceholders ?? {}).filter((S) =>
         si(S, t),
       );
@@ -321,7 +321,7 @@ function ai(t) {
     (p.placeholderSweepStarted = !0),
     (async () => {
       if ((await sleep(t.startDelayMs ?? No), !(await ni()))) return;
-      let v = ee().replBridgePlaceholders;
+      let v = getGlobalConfig().replBridgePlaceholders;
       if (!v) return;
       let w = t.skipSessionId ? sessionIdBody(t.skipSessionId) : void 0,
         I = [];
@@ -335,7 +335,7 @@ function ai(t) {
         if ((await $o(S, L, t)) === "remove" || B > Do) I.push(S);
       }
       if (I.length > 0)
-        await Te((S) => {
+        await saveGlobalConfig((S) => {
           if (!S.replBridgePlaceholders) return S;
           let L = { ...S.replBridgePlaceholders };
           for (let B of I) delete L[B];
@@ -1060,34 +1060,34 @@ async function Yjn(t) {
   let sn = buildSessionApiUrl(K.api_base_url, b);
   n(`[remote-bridge] v2 session URL: ${sn}`);
   function Ji() {
-    return H("tengu_bridge_selfheal_heartbeats", !0);
+    return getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_selfheal_heartbeats", !0);
   }
   function gt() {
-    return H("tengu_bridge_recovery_patience", !0);
+    return getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_recovery_patience", !0);
   }
   function an() {
-    return H("tengu_dazzling_garden", !0);
+    return getFeatureValue_CACHED_MAY_BE_STALE("tengu_dazzling_garden", !0);
   }
   function Yi() {
-    return H("tengu_ccr_stream_event_flush_ms", KGe);
+    return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_stream_event_flush_ms", KGe);
   }
   function dn() {
-    return H("tengu_ccr_no_subscriber_flush_ms", 0);
+    return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_no_subscriber_flush_ms", 0);
   }
   function ze() {
-    return br ? 0 : H("tengu_ccr_no_subscriber_hold_ms", 0);
+    return br ? 0 : getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_no_subscriber_hold_ms", 0);
   }
   function Xi() {
-    return H("tengu_ccr_idle_heartbeat", !1);
+    return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_idle_heartbeat", !1);
   }
   function Qi() {
-    return H("tengu_ccr_reconnect_beat", !1);
+    return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_reconnect_beat", !1);
   }
   function Zi() {
-    return H("tengu_ccr_reactivation_beat", !1);
+    return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_reactivation_beat", !1);
   }
   function eo() {
-    return H("tengu_ccr_skip_redundant_heartbeat", !1);
+    return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_skip_redundant_heartbeat", !1);
   }
   let wr = rdt(),
     ro = createGzipRequestBodyFetch("ccr_worker", Ee);
@@ -1103,7 +1103,7 @@ async function Yjn(t) {
       idleTracker: wr,
       beatOnReactivation: Zi(),
       skipRedundantHeartbeats: eo(),
-      uploadTrim: () => H("tengu_ccr_upload_trim", {}),
+      uploadTrim: () => getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_upload_trim", {}),
       streamEventFlushIntervalMs: Yi(),
       gzipRequestBodyFetch: ro,
       noSubscriberStreamEventFlushIntervalMs: dn(),
@@ -1382,7 +1382,7 @@ async function Yjn(t) {
   }
   function wn(e) {
     if (!isBridgeHostDeclinedEndEnabled()) return;
-    let r = Cvn();
+    let r = getCredentialInvalidation();
     if (r === void 0 || r.generation <= e) return Tn();
     return Sn(r.reason);
   }
@@ -1399,8 +1399,8 @@ async function Yjn(t) {
   }
   function Tn() {
     if (xe === void 0) return;
-    if (xe.generation === gCt()) return xe.code;
-    let e = Cvn();
+    if (xe.generation === getCredentialInvalidationGeneration()) return xe.code;
+    let e = getCredentialInvalidation();
     return e === void 0 ? void 0 : Sn(e.reason);
   }
   function Cn(e) {
@@ -1610,7 +1610,7 @@ async function Yjn(t) {
                   else k.reportMetadata({ current_branches: { [j]: null } });
                 continue;
               }
-              if (C && H("tengu_ccr_handoff_metadata", !1)) {
+              if (C && getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_handoff_metadata", !1)) {
                 let [Ao, nt] = await Promise.all([
                   C.collectWorktreeState(Pe, ne),
                   C.withCollectTimeout(O(Pe)).catch(() => null),
@@ -1689,7 +1689,7 @@ async function Yjn(t) {
       n(`[remote-bridge] current_branches setup failed: ${l(e)}`),
     );
   let In = hB(() => wr.noteActivity()),
-    Pn = Ff(() => {
+    Pn = onGrowthBookRefresh(() => {
       (k.setNoSubscriberStreamEventFlushIntervalMs?.(dn()),
         k.setNoSubscriberUploadHoldMs?.(ze()));
     }),
@@ -1814,7 +1814,7 @@ async function Yjn(t) {
           if (Me !== void 0 && Y === void 0) (te(Me), (Me = void 0));
           else if (!a)
             ((lr = ae),
-              (xe = fe === void 0 ? void 0 : { code: fe, generation: gCt() }));
+              (xe = fe === void 0 ? void 0 : { code: fe, generation: getCredentialInvalidationGeneration() }));
           ((_ = A), (P = "refresh_credentials_rejected"), (O = U));
         }
         async function ge() {
@@ -1855,7 +1855,7 @@ async function Yjn(t) {
             )
               writeDiagnosticsEvent("error", "bridge_repl_v2_proactive_oauth_rejected");
             if (await ge()) return;
-            let Se = gCt(),
+            let Se = getCredentialInvalidationGeneration(),
               Ie = await bo(r),
               Or = ie() ?? r;
             if (await ge()) return;
@@ -2526,7 +2526,7 @@ async function Yjn(t) {
       if (await Ar("owner_changed_recovery", o)) return;
       let a = ie(),
         d = !0,
-        _ = gCt();
+        _ = getCredentialInvalidationGeneration();
       if (!Ae && Re[e].needsOAuthRefresh && re)
         try {
           d = await re(a ?? "");
@@ -2976,8 +2976,8 @@ async function Yjn(t) {
       let o = { ...e, session_id: b };
       if (r.subtype === "can_use_tool") {
         let a;
-        if (H("tengu_bridge_requires_action_details", !1)) {
-          let d = r.tool_name === qe || r.tool_name === Ut,
+        if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_requires_action_details", !1)) {
+          let d = r.tool_name === BASH_TOOL_NAME || r.tool_name === POWERSHELL_TOOL_NAME,
             _;
           if (r.tool_name === ASK_USER_QUESTION_TOOL_NAME) {
             let C = Array.isArray(r.input?.questions) ? r.input.questions : [],
@@ -3017,7 +3017,7 @@ async function Yjn(t) {
         ((Fe = !1), Oe("requires_action", a));
       } else if (r.subtype === "request_user_dialog") {
         let a;
-        if (H("tengu_bridge_requires_action_details", !1))
+        if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_requires_action_details", !1))
           a = buildPendingActionDetail(r.dialog_kind, r.payload, e.request_id, r.tool_use_id);
         if (a) be.set(e.request_id, { request: e, details: a });
         ((Fe = !1), Oe("requires_action", a));

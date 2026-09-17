@@ -15,7 +15,7 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isCCREnvironmentKind, yq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isCCREnvironmentKind, getRemoteControlAtStartup } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
@@ -303,7 +303,7 @@ async function P(s) {
   );
 }
 function A(s) {
-  return yq() ? { kind: "reconnect", oldSessionId: s } : { kind: "disconnect" };
+  return getRemoteControlAtStartup() ? { kind: "reconnect", oldSessionId: s } : { kind: "disconnect" };
 }
 var x =
   "/remote-control is no longer active. Run /remote-control to start a new session.";

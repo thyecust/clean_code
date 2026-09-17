@@ -13,7 +13,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { ja, JETBRAINS_IDES, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { FP, $w, khe, rB } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { a0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isLocalAddress } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { CT } from "../状态栏-主题/chunk-jz6b76hr.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -81,7 +81,7 @@ function A() {
   let t = dl();
   if (t) {
     if (t.mux !== "tmux" || !t.tmuxSocket) return null;
-    return isAbsolute(t.tmuxSocket) && a0(t.tmuxSocket) ? ["-S", t.tmuxSocket] : null;
+    return isAbsolute(t.tmuxSocket) && isLocalAddress(t.tmuxSocket) ? ["-S", t.tmuxSocket] : null;
   }
   return a.TMUX ? [] : null;
 }

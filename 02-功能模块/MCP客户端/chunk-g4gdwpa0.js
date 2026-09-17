@@ -24,7 +24,7 @@ import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { SECURE_STORAGE_READ_FAILED_SENTINEL, getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
-import { cq, la, i0, pA } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { readSecureStorageResilient, getMcpOAuthCredentialKey, configHasAuthorizationHeader, isFirstPartyDesignUrl } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   MCP_ACCOUNT_CHANGED_MESSAGE,
   DISCOVERY_CACHE_DRAIN_TIMEOUT_MS,
@@ -185,7 +185,7 @@ function xe(e) {
   return t.length === Pe ? t : void 0;
 }
 async function N() {
-  let e = await cq();
+  let e = await readSecureStorageResilient();
   if (e === SECURE_STORAGE_READ_FAILED_SENTINEL) return;
   let t = _e(e?.mcpDiscoveryCacheKey);
   if (t) return t;
@@ -201,7 +201,7 @@ async function N() {
     i = !1;
   }
   if (!i) return;
-  let o = await cq();
+  let o = await readSecureStorageResilient();
   if (o === SECURE_STORAGE_READ_FAILED_SENTINEL) return;
   return _e(o?.mcpDiscoveryCacheKey);
 }
@@ -408,7 +408,7 @@ function Ue(e) {
   if (e.type !== "http" && e.type !== "sse") return "transport";
   if (rS(e) || Jse(e)) return "cli-owned";
   if (wt(e)) return "env-placeholder";
-  if ((pA(e.url) && !i0(e)) || UR(e.url)) return "ambient-credential";
+  if ((isFirstPartyDesignUrl(e.url) && !configHasAuthorizationHeader(e)) || UR(e.url)) return "ambient-credential";
   let r = e;
   for (let { prop: i, reason: o, excludes: d } of ie) if (d(r[i])) return o;
   return;
@@ -422,9 +422,9 @@ async function St(e, t) {
 }
 async function Ve(e, t) {
   if (t.type !== "http" && t.type !== "sse") return { kind: "none" };
-  let r = await cq();
+  let r = await readSecureStorageResilient();
   if (r === SECURE_STORAGE_READ_FAILED_SENTINEL) return { kind: "degenerate" };
-  let i = r?.mcpOAuth?.[la(e, t)];
+  let i = r?.mcpOAuth?.[getMcpOAuthCredentialKey(e, t)];
   if (!i) return { kind: "none" };
   let o = i.refreshToken;
   if (!o) return { kind: "degenerate" };
@@ -760,9 +760,9 @@ function ae(e) {
 var Ye = 8;
 async function At(e, t) {
   if (t.type !== "http" && t.type !== "sse") return [];
-  let r = await cq();
+  let r = await readSecureStorageResilient();
   if (r === SECURE_STORAGE_READ_FAILED_SENTINEL) return SECURE_STORAGE_READ_FAILED_SENTINEL;
-  let i = la(e, t),
+  let i = getMcpOAuthCredentialKey(e, t),
     o = r?.mcpOAuth?.[i],
     d = [];
   if (typeof o?.accessToken === "string") d.push(o.accessToken);

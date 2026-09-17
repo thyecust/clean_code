@@ -7,18 +7,18 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { H, Te, ee } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { lit as S, fromEnumOpt } from "../共享小工具-未细化/analytics-fields.js";
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { getSettingsForSource, updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { parsePermissionMode } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { canCycleToAuto } from "../../02-功能模块/权限系统/permission-mode-cycle.js";
 function shouldShowAutoDefaultNudge(u, { requireOnboarding: r = !0 } = {}) {
-  let o = ee();
+  let o = getGlobalConfig();
   if (
     (r && !o.hasCompletedOnboarding) ||
     o.hasSeenAutoDefaultNudge ||
-    !H("tengu_maple_pier", !1)
+    !getFeatureValue_CACHED_MAY_BE_STALE("tengu_maple_pier", !1)
   )
     return null;
   let e = getSettingsForSource("userSettings")?.permissions?.defaultMode,
@@ -32,7 +32,7 @@ function shouldShowAutoDefaultNudge(u, { requireOnboarding: r = !0 } = {}) {
   return null;
 }
 function handleAutoDefaultNudgeEventFromHost(u, r, o) {
-  if (ee().hasSeenAutoDefaultNudge) return;
+  if (getGlobalConfig().hasSeenAutoDefaultNudge) return;
   let e = parsePermissionMode(r.current_mode);
   if (u === "shown") {
     logEvent("tengu_auto_default_nudge_shown", {
@@ -44,7 +44,7 @@ function handleAutoDefaultNudgeEventFromHost(u, r, o) {
   let t = r.choice === "accept" ? "accept" : "decline";
   if (t === "accept")
     updateSettingsForSource("userSettings", { permissions: { defaultMode: "auto" } }, void 0, o);
-  (Te(
+  (saveGlobalConfig(
     (n) =>
       n.hasSeenAutoDefaultNudge ? n : { ...n, hasSeenAutoDefaultNudge: !0 },
     o,

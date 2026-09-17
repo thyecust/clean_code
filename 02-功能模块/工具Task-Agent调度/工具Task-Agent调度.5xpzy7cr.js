@@ -10,7 +10,7 @@
 import { oo, ze, he, sn, ke, p_e, TB, EB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { my, li, $m, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { sr, kw, mc, o0, Ia, nRn, Qor } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getSessionStateStore, runWithAgentContext, getAgentDepth, getWorkflowRunMetadata, getCurrentWorktreeSession, wasAgentSpawnedInWorktree, wasAgentWorktreeRemovedCleanly } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, yt, l, A, Rt, FA, CB } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { WP, Xg, Sh, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -337,7 +337,7 @@ function Eon(e) {
 }
 async function ye(e, p) {
   let { agentId: c } = e,
-    { resumesInFlight: w } = sr();
+    { resumesInFlight: w } = getSessionStateStore();
   if (w.has(c)) throw new y9(`Agent ${c} is already running or being resumed`);
   w.add(c);
   let k = !0,
@@ -559,7 +559,7 @@ async function _t(
     v = d.get(e),
     le = isLocalAgentTask(v) ? v.result : void 0,
     tt = le?.modelsUsed ?? (le?.resolvedModel ? [le.resolvedModel] : void 0),
-    X = (isLocalAgentTask(v) ? v.spawnDepth : o?.spawnDepth) ?? mc(r.agentContext) + 1,
+    X = (isLocalAgentTask(v) ? v.spawnDepth : o?.spawnDepth) ?? getAgentDepth(r.agentContext) + 1,
     rt = isLocalAgentTask(v) ? v.startTime : Xe,
     P = Ze;
   if (!P) {
@@ -640,7 +640,7 @@ async function _t(
     );
   let Z = oe === "inline" || (oe === "reply" && (areBackgroundTasksDisabled() || isBuiltInWebFetchAgent(D))),
     U = (t, i) => {
-      let a = Ia(),
+      let a = getCurrentWorktreeSession(),
         _ = o?.cwd && !WP(o.cwd) ? o.cwd : getCwd(),
         je = resolveGitRootCandidates(_),
         ft =
@@ -703,7 +703,7 @@ async function _t(
       : void 0;
   if (
     ee === void 0 &&
-    !Qor(e) &&
+    !wasAgentWorktreeRemovedCleanly(e) &&
     ((o !== null &&
       o.spawnedWithWorktree === !0 &&
       o.worktreeCleanlyRemoved !== !0 &&
@@ -716,11 +716,11 @@ async function _t(
           )
         )?.worktreeCleanlyRemoved === !0
       )) ||
-      nRn(e))
+      wasAgentSpawnedInWorktree(e))
   )
     U("is not recorded for this isolated agent", {
       telemetryCode: "git_worktree_resume_binding_missing",
-      terminalOnUncovered: nRn(e),
+      terminalOnUncovered: wasAgentSpawnedInWorktree(e),
     });
   let L = B;
   if (B) {
@@ -1020,10 +1020,10 @@ async function _t(
       invocationEmitted: !1,
       parentPromptId: se,
       isBackgroundAgent: !0,
-      ...o0(r.agentContext),
+      ...getWorkflowRunMetadata(r.agentContext),
     },
     pt = c?.kind === "observer-activity" ? () => {} : d.takeConcurrencySlot(),
-    Be = kw(We, () =>
+    Be = runWithAgentContext(We, () =>
       runWithCwdOrDefault(Se.project.cwd, () =>
         runAsyncAgent({
           taskId: V.agentId,

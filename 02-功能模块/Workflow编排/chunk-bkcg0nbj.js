@@ -24,7 +24,7 @@ import { kd, getBranch, isBranchOnOrigin } from "../../01-核心基础设施/安
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { LOG_BULLET_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
-import { kw, fh, mc, archiveRemoteSession, qe, tt, Ut, wl, H, od } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { runWithAgentContext, isMainAgentContext, getAgentDepth, archiveRemoteSession, BASH_TOOL_NAME, READ_TOOL_NAME, POWERSHELL_TOOL_NAME, isToolDetailsLoggingEnabled, getFeatureValue_CACHED_MAY_BE_STALE, checkGate_CACHED_OR_BLOCKING } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { er } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import { getParentSessionId, isModelDrivenSession } from "../Teammates团队/teammate-context.js";
@@ -574,7 +574,7 @@ function min(t, l) {
 }
 function Nn(t, l) {
   let s = l.options.tools ?? [];
-  if (s.length > 0 && !s.some((m) => matchesToolName(m, tt)) && !s.some((m) => matchesToolName(m, Ni)))
+  if (s.length > 0 && !s.some((m) => matchesToolName(m, READ_TOOL_NAME)) && !s.some((m) => matchesToolName(m, Ni)))
     return !1;
   return readAutoAllowedForMutation(WORKFLOW_TOOL_NAME, t, l, getToolPermissionContext(l));
 }
@@ -1063,7 +1063,7 @@ async function wn() {
   let t = antEnv.CLAUDE_CODE_WORKFLOW_PROMPT_PROVENANCE;
   if (t !== void 0) return t;
   try {
-    return await od("tengu_bubbly_harbor");
+    return await checkGate_CACHED_OR_BLOCKING("tengu_bubbly_harbor");
   } catch {
     return !1;
   }
@@ -1703,9 +1703,9 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
           let De = _e.length === 0 ? void 0 : dedupe(_e).sort();
           for (let ot of De ?? []) {
             let { toolName: at, ruleContent: Ze } = parsePermissionRule(ot);
-            if (at !== qe || Ze === void 0 || Ze === "" || Ze !== Ze.trim())
+            if (at !== BASH_TOOL_NAME || Ze === void 0 || Ze === "" || Ze !== Ze.trim())
               throw new R(
-                `agent() opts.bashCommandClamp entry '${ot}' must be a '${qe}(<command or prefix>)' permission rule (tool name case-sensitive, non-empty content with no leading/trailing whitespace inside the parens); it parses to tool '${at}'` +
+                `agent() opts.bashCommandClamp entry '${ot}' must be a '${BASH_TOOL_NAME}(<command or prefix>)' permission rule (tool name case-sensitive, non-empty content with no leading/trailing whitespace inside the parens); it parses to tool '${at}'` +
                   (Ze === void 0 || Ze === ""
                     ? " with no rule content"
                     : Ze !== Ze.trim()
@@ -1924,7 +1924,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
       if (v.unsatisfiable) {
         let $e = `agent({schema}) received an unusable JSON Schema \u2014 ${ZAe(v.unsatisfiable)}`,
           { message: ie } = v.unsatisfiable;
-        if (H("tengu_workflow_schema_lint_enforce", !0))
+        if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_workflow_schema_lint_enforce", !0))
           throw new R(
             `${$e}: ${ie}. The subagent was not started \u2014 fix the schema and call agent() again.`,
             "Workflow agent({schema}) unsatisfiable JSON Schema",
@@ -1955,7 +1955,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
                 ...(Ke.disallowedTools ?? []),
                 ...(Le ?? []),
                 Ni,
-                ...(ye !== void 0 && ye.length > 0 ? ["mcp__*", Ut] : []),
+                ...(ye !== void 0 && ye.length > 0 ? ["mcp__*", POWERSHELL_TOOL_NAME] : []),
               ],
             }
           : Ke,
@@ -1967,7 +1967,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         skipReplFilter: !0,
         skillTools: yt.skillTools,
       }),
-      q = (v) => resolveAgentTools(Ue, v, !1, !1, !1, mc(Se) + 1),
+      q = (v) => resolveAgentTools(Ue, v, !1, !1, !1, getAgentDepth(Se) + 1),
       _e = (v) => {
         let $e = filterToolsByDenyRules([GlobTool, GrepTool, ...mbt([GrepTool.name, GlobTool.name])], ft).filter(
           (ie) => !v.some((Ee) => matchesToolName(Ee, ie.name)),
@@ -1976,7 +1976,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
       },
       De = bt;
     if (Le !== void 0 && Le.length > 0) {
-      if (shouldEnableFindGrepTools() && !q(De).resolvedTools.some((ie) => matchesToolName(ie, qe))) De = _e(De);
+      if (shouldEnableFindGrepTools() && !q(De).resolvedTools.some((ie) => matchesToolName(ie, BASH_TOOL_NAME))) De = _e(De);
       let v = getMcpServerSpecNames(Ue.mcpServers),
         $e = (ie) => {
           if (ie.length === 0) return;
@@ -2150,7 +2150,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
     if (ye !== void 0 && ye.length > 0) {
       let v = getToolPermissionContext(D).toolAliases,
         $e = D.options.toolAliases,
-        ie = [qe, MONITOR_TOOL_NAME, Ut].find(
+        ie = [BASH_TOOL_NAME, MONITOR_TOOL_NAME, POWERSHELL_TOOL_NAME].find(
           (Ee) => v?.[Ee] !== void 0 || $e?.[Ee] !== void 0,
         );
       if (ie !== void 0)
@@ -2167,12 +2167,12 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
     if (
       ye !== void 0 &&
       ye.length > 0 &&
-      !q(De).resolvedTools.some((v) => matchesToolName(v, qe))
+      !q(De).resolvedTools.some((v) => matchesToolName(v, BASH_TOOL_NAME))
     )
       throw (
         await sleep(0),
         new R(
-          `agent() opts.bashCommandClamp can bind nothing: the spawned agent's resolved tool pool has no ${qe} (removed by this spawn's disallowedTools, the agent definition's denies, or absent from the session pool). A clamp on a Bash-less agent ` +
+          `agent() opts.bashCommandClamp can bind nothing: the spawned agent's resolved tool pool has no ${BASH_TOOL_NAME} (removed by this spawn's disallowedTools, the agent definition's denies, or absent from the session pool). A clamp on a Bash-less agent ` +
             "means the commands it was meant to keep are unavailable \u2014 " +
             "refusing the spawn rather than running a blind agent. Drop the clamp or the Bash deny.",
           "agent() bashCommandClamp with no Bash in resolved pool \u2014 spawn refused",
@@ -2226,8 +2226,8 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
       Ne(Ve);
       let ae = {
           agentId: Ve,
-          parentAgentId: fh(Se) ? void 0 : Se?.agentId,
-          depth: mc(Se) + 1,
+          parentAgentId: isMainAgentContext(Se) ? void 0 : Se?.agentId,
+          depth: getAgentDepth(Se) + 1,
           parentSessionId: getParentSessionId(),
           agentType: "subagent",
           subagentName: Ue.agentType,
@@ -2328,7 +2328,7 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
         Ht = isBuiltInWebFetchAgent(Ue) ? createInitialWebFetchSavedFiles() : void 0;
       try {
         (p?.(Ve, ht),
-          await kw(ae, async () => {
+          await runWithAgentContext(ae, async () => {
             for await (let we of runAgent({
               agentDefinition: Ue,
               promptMessages:
@@ -3373,7 +3373,7 @@ function ur(t) {
 }
 function oo(t, l) {
   if (l) return t;
-  return wl() ? t : "custom";
+  return isToolDetailsLoggingEnabled() ? t : "custom";
 }
 function vqe(t, l) {
   return t === "built-in" && l;

@@ -12,7 +12,7 @@
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { J$e } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMainLoopCanonical } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -72,7 +72,7 @@ var f = createLazyValue(() => Qe({})),
       return END_CONVERSATION_TOOL_NAME;
     },
     isEnabled() {
-      let e = J$e();
+      let e = getMainLoopCanonical();
       return e !== void 0 && isEndConversationToolEnabled(e);
     },
     isReadOnly() {

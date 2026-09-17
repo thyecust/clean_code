@@ -15,7 +15,7 @@ import { OAUTH_BETA_HEADER, CLAUDE_AI_OAUTH_SCOPES, preservableScopesFrom } from
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  ht,
+  httpClient,
   refreshOAuthToken,
   isInvalidGrantError,
   saveRefreshedOAuthTokensRespectingLock,
@@ -36,7 +36,7 @@ function hasSessionAccessToken() {
   return getSessionAccessToken() !== null;
 }
 async function p(e, t, r, i, o) {
-  let s = await ht.post(
+  let s = await httpClient.post(
     R,
     { op: e, ...t },
     {
@@ -73,17 +73,17 @@ function f(e, t) {
 }
 async function getProjectDetail(e, t, r) {
   if (hasSessionAccessToken()) return p("detail", {}, "get project detail", t);
-  let i = await ht.get(f(e, "/detail"), d(t, r));
+  let i = await httpClient.get(f(e, "/detail"), d(t, r));
   return u(i, "get project detail");
 }
 async function readProjectDoc(e, t, r, i) {
   if (hasSessionAccessToken()) return p("read-doc", { doc_uuid: t }, "read doc", r);
-  let o = await ht.get(f(e, `/docs/${encodeURIComponent(t)}`), d(r, i));
+  let o = await httpClient.get(f(e, `/docs/${encodeURIComponent(t)}`), d(r, i));
   return u(o, "read doc");
 }
 async function readProjectFile(e, t, r, i) {
   if (hasSessionAccessToken()) return p("read-file", { file_uuid: t }, "read file", r);
-  let o = await ht.get(
+  let o = await httpClient.get(
     f(e, `/files/${encodeURIComponent(t)}/extracted`),
     d(r, i),
   );
@@ -93,7 +93,7 @@ var MAX_IN_SESSION_DOWNLOAD_BYTES = 20971520,
   k = Math.ceil((MAX_IN_SESSION_DOWNLOAD_BYTES * 4) / 3) + 65536;
 async function downloadProjectFileRaw(e, t, r, i) {
   if (hasSessionAccessToken()) return p("read-file-raw", { file_uuid: t }, "download file", r, k);
-  let o = await ht.get(f(e, `/files/${encodeURIComponent(t)}/raw`), {
+  let o = await httpClient.get(f(e, `/files/${encodeURIComponent(t)}/raw`), {
     ...d(r, i),
     maxContentLength: k,
   });
@@ -102,11 +102,11 @@ async function downloadProjectFileRaw(e, t, r, i) {
 async function createProjectDoc(e, t, r, i, o) {
   if (hasSessionAccessToken())
     return p("write-doc", { file_name: t, content: r }, "create doc", i);
-  let s = await ht.post(f(e, "/docs"), { file_name: t, content: r }, d(i, o));
+  let s = await httpClient.post(f(e, "/docs"), { file_name: t, content: r }, d(i, o));
   return u(s, "create doc");
 }
 async function updateProjectDoc(e, t, r, i, o) {
-  let s = await ht.patch(
+  let s = await httpClient.patch(
     f(e, `/docs/${encodeURIComponent(t)}`),
     { content: r },
     d(i, o),
@@ -118,7 +118,7 @@ async function deleteProjectDoc(e, t, r, i) {
     await p("delete-doc", { doc_uuid: t }, "delete doc", r);
     return;
   }
-  let o = await ht.delete(
+  let o = await httpClient.delete(
     f(e, `/docs/${encodeURIComponent(t)}`),
     void 0,
     d(r, i),
@@ -130,7 +130,7 @@ async function searchProjectKnowledgeBase(e, t, r, i, o) {
     return S(
       await p("kb-search", { query: t, n: r }, "search knowledge base", i),
     );
-  let s = await ht.get(
+  let s = await httpClient.get(
     f(e, `/kb/search?query=${encodeURIComponent(t)}&n=${r}`),
     d(i, o),
   );

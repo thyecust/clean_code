@@ -14,7 +14,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  g6,
+  CRON_WORKLOAD_NAME,
   isNonCustomOpusModel,
   isNonCustomSonnetModel,
   getUserSpecifiedModelSetting,
@@ -27,7 +27,7 @@ import {
   isUnattendedInteractiveSession,
   isClaudeAISubscriber,
   getOauthAccountInfo,
-  H,
+  getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSecuritySensitiveSetting, getSecuritySensitiveSettingWithSources, rawSettingsKeyPresence } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import {
@@ -105,7 +105,7 @@ function M(e, t, n = 0) {
 }
 var re = 60000;
 function q() {
-  return H(te, {});
+  return getFeatureValue_CACHED_MAY_BE_STALE(te, {});
 }
 function U() {
   let e = q();
@@ -533,7 +533,7 @@ function V(e, t = L) {
       origin: { kind: "auto-continuation" },
       isMeta: !0,
       skipSlashCommands: !0,
-      workload: g6,
+      workload: CRON_WORKLOAD_NAME,
     }));
 }
 function irn() {

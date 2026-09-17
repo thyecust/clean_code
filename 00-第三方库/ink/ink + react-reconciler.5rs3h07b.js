@@ -57,7 +57,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { usr, zg, n5t, Isr, Psr, Dsr, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { reportRenderError, isScreenReaderModeEnabled, endScreenReaderStartupQuiet, getScreenReaderStartupQuietRemainingMs, getScreenReaderPreParkDelayMs, drainScreenReaderAnnouncements, getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { chalk, getColorLevelGeneration } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { CT, xYn, HYn, iK, HNe, jY, IYn } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import { getAttachStampMs, isAttachQuietDrainActive, waitForAttachQuietDrainEnd } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
@@ -14511,7 +14511,7 @@ class Ru extends Cln {
       while (this.rawModeEnabledCount > 0) this.handleSetRawMode(!1);
   }
   componentDidCatch(t, s) {
-    (usr(t, s), this.handleExit(t));
+    (reportRenderError(t, s), this.handleExit(t));
   }
   handleSetRawMode = (t) => {
     let { stdin: s } = this.props;
@@ -14689,7 +14689,7 @@ function zd(t) {
 }
 function UE(t, s, c, f) {
   let m = isAttachQuietDrainActive(Date.now());
-  if (!m && s.some(zd)) (Ez(), n5t());
+  if (!m && s.some(zd)) (Ez(), endScreenReaderStartupQuiet());
   let y = ZUn(t.jediTermInput, s, performance.now(), t.emitJediTermScrollBug);
   KE(t, y);
   let b = countMatching(y, zd) === 1;
@@ -18981,11 +18981,11 @@ class Yye {
   }
   onRenderScreenReader() {
     if (!this.isExiting) {
-      let le = Isr();
+      let le = getScreenReaderStartupQuietRemainingMs();
       if (le > 0) {
         if (this.srStartupQuietTimer === null)
           this.srStartupQuietTimer = setTimeout(() => {
-            ((this.srStartupQuietTimer = null), n5t(), this.onRender());
+            ((this.srStartupQuietTimer = null), endScreenReaderStartupQuiet(), this.onRender());
           }, le);
         return;
       }
@@ -19028,7 +19028,7 @@ class Yye {
     }
     let E = this.computeScreenReaderPark(t, b, y, c),
       x = -1;
-    for (let le of Dsr()) {
+    for (let le of drainScreenReaderAnnouncements()) {
       let oe = Du(le);
       if (oe === "") continue;
       for (let fe of oe.split(`
@@ -19140,7 +19140,7 @@ class Yye {
       }
     }
     if (!this.isExiting && !O && x === -1 && !this.srPreParked) {
-      let le = Psr();
+      let le = getScreenReaderPreParkDelayMs();
       if (le > 0) {
         (this.options.stdout.write(nPn),
           (this.srPreParked = !0),
@@ -19955,10 +19955,10 @@ function lee() {
     if (isTmuxControlMode()) return (t.decstbmRendererEnabled = !1);
     if (!lDt()) return (t.decstbmRendererEnabled = !1);
     if (shouldUseFullscreen()) return (t.decstbmRendererEnabled = !1);
-    if (zg()) return (t.decstbmRendererEnabled = !1);
+    if (isScreenReaderModeEnabled()) return (t.decstbmRendererEnabled = !1);
     if (Ie(a.CLAUDE_CODE_DECSTBM)) return (t.decstbmRendererEnabled = !0);
     return (
-      (t.decstbmRendererEnabled = H("tengu_marlin_porch", !1)),
+      (t.decstbmRendererEnabled = getFeatureValue_CACHED_MAY_BE_STALE("tengu_marlin_porch", !1)),
       t.decstbmRendererEnabled
     );
   }
@@ -19968,14 +19968,14 @@ function lF() {
   let t = sk();
   if (t.nativeCursorEnabled !== void 0) return t.nativeCursorEnabled;
   if (a.CLAUDE_CODE_ACCESSIBILITY) return (t.nativeCursorEnabled = !0);
-  if (zg()) return (t.nativeCursorEnabled = !0);
+  if (isScreenReaderModeEnabled()) return (t.nativeCursorEnabled = !0);
   return (t.nativeCursorEnabled = !lee() && ktn());
 }
 function ktn() {
   if (a.CLAUDE_CODE_ACCESSIBILITY) return !0;
-  if (zg()) return !0;
+  if (isScreenReaderModeEnabled()) return !0;
   if (a.CLAUDE_CODE_NATIVE_CURSOR) return !0;
-  return H("tengu_native_cursor", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_native_cursor", !1);
 }
 export {
   r7,

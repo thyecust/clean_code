@@ -42,19 +42,19 @@ import {
   getSmallFastModel,
   getMainLoopModel,
   isAutoModeActive,
-  _5,
-  kw,
-  aa,
-  mc,
-  sx,
-  si,
+  getThinkingBudgetDefaults,
+  runWithAgentContext,
+  createMainAgentContext,
+  getAgentDepth,
+  effectiveModeForTool,
+  sanitizeSessionName,
   isUnattendedInteractiveSession,
   TMUX_LOCATION_RE,
   getClaudeAIOAuthTokenOriginAsync,
-  XC,
-  H,
-  xZe,
-  JRn,
+  hasFreshGrowthBookFeatures,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  refreshGrowthBookFeatures,
+  getOrCreateSummonSidKey,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { truncatePathMiddle, truncateToWidth, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -985,7 +985,7 @@ var Ht = "[Artifact comment sent to Claude]",
   mo = 32,
   di = "tengu_madrone_spindle_corbel";
 function cpt() {
-  return H(di, !1) === !0;
+  return getFeatureValue_CACHED_MAY_BE_STALE(di, !1) === !0;
 }
 var Kt = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/,
   ci = /^[1-9][0-9]{0,5}$/;
@@ -1293,7 +1293,7 @@ function san(e, t) {
       (e.nameSource === void 0 ||
         e.nameSource === "user" ||
         e.nameSource === "peer")
-        ? truncateToWidth(si(truncateToCodeUnits(e.name, Ao)).replace(_i, "'"), gi)
+        ? truncateToWidth(sanitizeSessionName(truncateToCodeUnits(e.name, Ao)).replace(_i, "'"), gi)
         : "",
     o =
       e.cwd !== void 0 && e.cwd !== "?"
@@ -1390,7 +1390,7 @@ function W1t() {
 }
 var wi = "action:reply";
 function G1t() {
-  return H("tengu_ochre_plover", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ochre_plover", !1);
 }
 function opt(e, t, n) {
   if (
@@ -1582,7 +1582,7 @@ import { createHmac } from "crypto";
 var Oi = 3600000,
   Mi = Number.MAX_SAFE_INTEGER;
 function Ii(e, t, n) {
-  return createHmac("sha256", JRn(n))
+  return createHmac("sha256", getOrCreateSummonSidKey(n))
     .update(e + t, "utf8")
     .digest("hex")
     .slice(0, 16);
@@ -1704,7 +1704,7 @@ function Jt(e) {
   return e.replace(/\s+/g, " ");
 }
 function K1t() {
-  return H("tengu_teal_corbel_finial", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_teal_corbel_finial", !0);
 }
 async function Qt(e, t, n) {
   let o = new Map();
@@ -2015,7 +2015,7 @@ function Wo() {
   return (
     (e.responderDispatchOptIn ??=
       a.CLAUDE_CODE_ARTIFACT_COMMENT_RESPONDER ??
-      H("tengu_bracken_sluice", !1)),
+      getFeatureValue_CACHED_MAY_BE_STALE("tengu_bracken_sluice", !1)),
     e.responderDispatchOptIn
   );
 }
@@ -2026,7 +2026,7 @@ var Xi = createLazyValue(() => c({ lane: X(["act", "pipeline"]) })),
     'You classify artifact comment threads for dispatch. Output ONLY a JSON object of the shape {"lane":"act"} or {"lane":"pipeline"} \u2014 no prose, no code fences.';
 async function Bo(e) {
   if (ke()) return "pipeline";
-  if (mc(e.context.agentContext) >= getMaxSubagentSpawnDepth()) return "pipeline";
+  if (getAgentDepth(e.context.agentContext) >= getMaxSubagentSpawnDepth()) return "pipeline";
   let t = zi().slice(0, 8),
     n = Ji,
     o = [];
@@ -2067,7 +2067,7 @@ Output the JSON verdict only.`;
         maxOutputTokensOverride: 128,
         stickyBetas: LA(pa()),
         proactivityLevel: getProactivityLevel(e.context),
-        agentContext: aa(),
+        agentContext: createMainAgentContext(),
         async getToolPermissionContext() {
           return createDefaultToolPermissionContext();
         },
@@ -2158,10 +2158,10 @@ var Ho = 4000,
 async function qo(e) {
   let { context: t, url: n, slug: o, thread: r } = e;
   if (ke()) return null;
-  if (mc(t.agentContext) >= getMaxSubagentSpawnDepth())
+  if (getAgentDepth(t.agentContext) >= getMaxSubagentSpawnDepth())
     return (logFeatureSad("artifact_comments_autoreact", "analyst_depth_refused"), null);
   let i = bh("comment-thread-analyst"),
-    d = mc(t.agentContext) + 1,
+    d = getAgentDepth(t.agentContext) + 1,
     [{ runAgent: l }, { COMMENT_ANALYST_AGENT: p }] = await Promise.all([
       import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
       import("./COMMENT_ANALYST_AGENT.bnd7s557.js"),
@@ -2182,7 +2182,7 @@ async function qo(e) {
     },
     R = `Analyze artifact comment thread ${r.id} on artifact ${n} (triggering comment id ${e.triggerComment.id}). Follow your workflow and output the analysis brief.`;
   try {
-    let w = await kw(S, () =>
+    let w = await runWithAgentContext(S, () =>
       ra(
         l({
           agentDefinition: p,
@@ -2251,19 +2251,19 @@ var ua =
   ma = "tengu_sorrel_trellis_weir",
   fa = "tengu_madrone_spindle";
 function en() {
-  return H(fa, !0) !== !1;
+  return getFeatureValue_CACHED_MAY_BE_STALE(fa, !0) !== !1;
 }
 var ha = "tengu_madrone_spindle_purlin",
   ga = 3600000;
 function rr() {
-  let e = H(ha, He);
+  let e = getFeatureValue_CACHED_MAY_BE_STALE(ha, He);
   return typeof e === "number" && Number.isFinite(e) && e > 0
     ? Math.min(e, ga)
     : He;
 }
 var _a = "tengu_sorrel_trellis_lintel";
 function ya() {
-  return H(_a, !1) === !0;
+  return getFeatureValue_CACHED_MAY_BE_STALE(_a, !1) === !0;
 }
 var Aa = 600000;
 function Ko(e, t) {
@@ -2273,7 +2273,7 @@ function Ko(e, t) {
 var ba = 1,
   wa = 600;
 function pn(e) {
-  let t = H(e, null),
+  let t = getFeatureValue_CACHED_MAY_BE_STALE(e, null),
     n = typeof t === "string" && t.trim() !== "" ? Number(t) : t;
   return typeof n === "number" && Number.isFinite(n) ? Math.round(n) : null;
 }
@@ -2440,15 +2440,15 @@ function rze() {
   return (
     (e.optIn ??=
       a.CLAUDE_CODE_ARTIFACT_COMMENTS_AUTOREACT ??
-      H("tengu_sorrel_trellis", !1)),
+      getFeatureValue_CACHED_MAY_BE_STALE("tengu_sorrel_trellis", !1)),
     e.optIn
   );
 }
 function ln() {
-  return a.CLAUDE_CODE_ARTIFACT_COMMENT_FAST_ACK ?? H("tengu_gorse_pylon", !1);
+  return a.CLAUDE_CODE_ARTIFACT_COMMENT_FAST_ACK ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_gorse_pylon", !1);
 }
 function cr() {
-  return H("tengu_ochre_bittern", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ochre_bittern", !1);
 }
 function Yo(e, t, n) {
   if (!cr() || t.heldReplyDeclined) return null;
@@ -2472,13 +2472,13 @@ function Ba(e) {
       (t === !1 ||
         (t !== void 0 &&
           a.CLAUDE_CODE_ARTIFACT_COMMENT_FAST_ACK_FIXED !== void 0))) ||
-    XC()
+    hasFreshGrowthBookFeatures()
   )
     return Promise.resolve();
   let o = ne().autoReact;
   return (
     (o.fastAckFlagRefresh ??= withDeadline(
-      xZe().catch(() => {}),
+      refreshGrowthBookFeatures().catch(() => {}),
       o.fastAckFlagRefreshDeadlineMsOverride ?? Wa,
     )),
     o.fastAckFlagRefresh
@@ -2488,7 +2488,7 @@ var Fe = "I\u2019m on it. I\u2019ll reply here once I\u2019ve taken a look.";
 function qa() {
   if (!ln()) return !1;
   return (
-    a.CLAUDE_CODE_ARTIFACT_COMMENT_FAST_ACK_FIXED ?? H("tengu_gorse_sill", !1)
+    a.CLAUDE_CODE_ARTIFACT_COMMENT_FAST_ACK_FIXED ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_gorse_sill", !1)
   );
 }
 var pt = Object.freeze(
@@ -2528,7 +2528,7 @@ function ur(e, t, n) {
 function At(e, t) {
   let n = getToolPermissionContext(t);
   return {
-    mode: sx(e, n),
+    mode: effectiveModeForTool(e, n),
     autoActive: isAutoModeActive(),
     chainOnAllow: isChainOnAllowActive(),
     avoidPrompts: n.shouldAvoidPermissionPrompts === !0,
@@ -4711,7 +4711,7 @@ Write the reply you would post to this thread: directly useful, brief, no preamb
           ...(l && { effortValue: Sr }),
           stickyBetas: LA(pa()),
           proactivityLevel: getProactivityLevel(t),
-          agentContext: aa(),
+          agentContext: createMainAgentContext(),
           async getToolPermissionContext() {
             return createDefaultToolPermissionContext();
           },
@@ -4778,7 +4778,7 @@ You are about to start working on the newest comment sent to you in this thread;
           maxOutputTokensOverride: 96,
           stickyBetas: LA(pa()),
           proactivityLevel: getProactivityLevel(e.context),
-          agentContext: aa(),
+          agentContext: createMainAgentContext(),
           async getToolPermissionContext() {
             return createDefaultToolPermissionContext();
           },
@@ -4839,7 +4839,7 @@ ${R}`,
             maxOutputTokensOverride: 5,
             stickyBetas: LA(pa()),
             proactivityLevel: getProactivityLevel(e.context),
-            agentContext: aa(),
+            agentContext: createMainAgentContext(),
             async getToolPermissionContext() {
               return createDefaultToolPermissionContext();
             },
@@ -4874,7 +4874,7 @@ var yn = 262144,
   wr = 180000,
   Sr = "medium";
 function Rr(e) {
-  return _5(e)[0] === void 0;
+  return getThinkingBudgetDefaults(e)[0] === void 0;
 }
 var fs = 1024,
   ps = 6144,
@@ -5117,7 +5117,7 @@ Rules for an edit: change only what the thread asked for and preserve everything
             ...(Rr(le) && { effortValue: Sr }),
             stickyBetas: LA(pa()),
             proactivityLevel: getProactivityLevel(i),
-            agentContext: aa(),
+            agentContext: createMainAgentContext(),
             async getToolPermissionContext() {
               return createDefaultToolPermissionContext();
             },

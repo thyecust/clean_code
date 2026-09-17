@@ -20,7 +20,7 @@ import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js
 import { We, b, t8, z, Is, Ru, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, countOccurrences, stripInvisibleCharacters } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { kd } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te, formatOverflowHint } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -2564,10 +2564,10 @@ var ut = {
     maxResultSizeChars: 1e5,
     isEnabled: () => areWorkflowsEnabled(),
     async prompt(e) {
-      return fin(isWorkflowAuthoringSkillAvailable(e?.tools)) + getWorkflowSizeGuidelinePromptText(ee().workflowSizeGuideline) + lt();
+      return fin(isWorkflowAuthoringSkillAvailable(e?.tools)) + getWorkflowSizeGuidelinePromptText(getGlobalConfig().workflowSizeGuideline) + lt();
     },
     async description(e, r) {
-      return fin(isWorkflowAuthoringSkillAvailable(r?.tools)) + getWorkflowSizeGuidelinePromptText(ee().workflowSizeGuideline) + lt();
+      return fin(isWorkflowAuthoringSkillAvailable(r?.tools)) + getWorkflowSizeGuidelinePromptText(getGlobalConfig().workflowSizeGuideline) + lt();
     },
     get inputSchema() {
       return Xt();

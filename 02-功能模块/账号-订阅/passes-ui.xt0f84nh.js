@@ -15,7 +15,7 @@ import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/c
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { setClipboard } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -416,10 +416,10 @@ async function ge(m, g) {
   }
 }
 async function us(m, g) {
-  let f = !ee().hasVisitedPasses;
+  let f = !getGlobalConfig().hasVisitedPasses;
   if (f) {
     let c = getCachedRemainingPasses();
-    await Te(
+    await saveGlobalConfig(
       (y) => ({
         ...y,
         hasVisitedPasses: !0,

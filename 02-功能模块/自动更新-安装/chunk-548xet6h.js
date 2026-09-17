@@ -13,7 +13,7 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { cf, ph, r0, sQ, Ms, u0, r1, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isSemverGreaterThan, isSemverAtLeast, isSemverLessThan, isSemverAtMost, getVersionForAnalytics, getPlatformForAnalytics, getDynamicConfig_BLOCKS_ON_INIT, saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { TZ, dt, l, A, Jr, Jg, W, Nz, Rt, Bp, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -99,7 +99,7 @@ async function Nbe(e, t, r) {
         s.code === 190 ? "in_progress" : "install_failed"
       );
     return (
-      await Te((c) => ({ ...c, installMethod: "local" }), r),
+      await saveGlobalConfig((c) => ({ ...c, installMethod: "local" }), r),
       logFeatureOk("update_apply"),
       "success"
     );
@@ -266,10 +266,10 @@ var He = "https://downloads.claude.ai/claude-code-releases";
 class Ee extends TZ {}
 async function N9n() {
   try {
-    let e = await r1("tengu_version_config", { minVersion: "0.0.0" });
+    let e = await getDynamicConfig_BLOCKS_ON_INIT("tengu_version_config", { minVersion: "0.0.0" });
     if (
       e.minVersion &&
-      r0(
+      isSemverLessThan(
         {
           ISSUES_EXPLAINER:
             "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -338,7 +338,7 @@ async function fte() {
     (n(`tengu_max_version_config has invalid version '${r}' \u2014 ignoring`, {
       level: "error",
     }),
-      logEvent("tengu_max_version_config_invalid", { raw_value: Ms(r) }));
+      logEvent("tengu_max_version_config_invalid", { raw_value: getVersionForAnalytics(r) }));
   return {
     maxVersion: o,
     forceDowngradeEnabled: e.external_force_downgrade === !0,
@@ -364,14 +364,14 @@ async function F9n() {
 }
 async function xe() {
   try {
-    return await r1("tengu_max_version_config", {});
+    return await getDynamicConfig_BLOCKS_ON_INIT("tengu_max_version_config", {});
   } catch (e) {
     return (logError(e), {});
   }
 }
 function cFt(e) {
   let t = getInitialSettings()?.minimumVersion;
-  if (t && !ph(e, t)) return `below your minimumVersion setting (${t})`;
+  if (t && !isSemverAtLeast(e, t)) return `below your minimumVersion setting (${t})`;
   let r = getSettingsForSource("policySettings")?.requiredMaximumVersion;
   if (r) {
     let o = U.parse(r)?.version;
@@ -380,7 +380,7 @@ function cFt(e) {
         `requiredMaximumVersion '${r}' is not a valid semver version \u2014 ignoring`,
         { level: "error" },
       );
-    else if (!sQ(e, o))
+    else if (!isSemverAtMost(e, o))
       return `above your organization's requiredMaximumVersion (${r})`;
   }
   return null;
@@ -811,7 +811,7 @@ async function Bbe(e, t) {
       }),
       logEvent("tengu_auto_updater_lock_contention", {
         pid: process.pid,
-        currentVersion: Ms(
+        currentVersion: getVersionForAnalytics(
           {
             ISSUES_EXPLAINER:
               "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -839,7 +839,7 @@ async function Bbe(e, t) {
         logFeatureBad("update_apply", "update_apply_wsl_windows_npm"),
         n("Windows NPM detected in WSL environment", { level: "error" }),
         logEvent("tengu_auto_updater_windows_npm_in_wsl", {
-          currentVersion: Ms(
+          currentVersion: getVersionForAnalytics(
             {
               ISSUES_EXPLAINER:
                 "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -1039,7 +1039,7 @@ To fix this issue:
               m != null &&
               (d != null
                 ? m === d
-                : cf(
+                : isSemverGreaterThan(
                     m,
                     {
                       ISSUES_EXPLAINER:
@@ -1062,7 +1062,7 @@ To fix this issue:
         }
         if (k)
           return (
-            await Te((v) => ({ ...v, installMethod: "global" }), t),
+            await saveGlobalConfig((v) => ({ ...v, installMethod: "global" }), t),
             (r.updateRestoreFailure = null),
             logFeatureSad("update_apply", "update_apply_npm_install_stderr_warning"),
             n(
@@ -1076,7 +1076,7 @@ To fix this issue:
           npm_exit_code: E.code,
           package_manager: fromEnum(s),
           is_bundled_mode: bc(),
-          platform: u0(getCurrentPlatform()),
+          platform: getPlatformForAnalytics(getCurrentPlatform()),
           windows_self_rename: fromEnum(C),
           stderr_signature: fromEnum(w),
           npm_error_code: nt(_) ?? S("none"),
@@ -1122,7 +1122,7 @@ To fix this issue:
       );
     }
     return (
-      await Te((_) => ({ ..._, installMethod: "global" }), t),
+      await saveGlobalConfig((_) => ({ ..._, installMethod: "global" }), t),
       (r.updateRestoreFailure = null),
       logFeatureOk("update_apply"),
       { status: "success" }

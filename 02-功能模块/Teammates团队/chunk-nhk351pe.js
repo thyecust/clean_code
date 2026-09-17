@@ -13,7 +13,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { OSt } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Zy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getCanonicalSocketPath } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
@@ -112,7 +112,7 @@ var d = new F(),
 function ysn(e, i, t, r, o, a, _, v) {
   if (!isUuidString(t))
     return (logFeatureSad("cross_session_notify_idle", "invalid_frame"), "invalid");
-  let b = Zy(i);
+  let b = getCanonicalSocketPath(i);
   if (b === void 0)
     return (logFeatureSad("cross_session_notify_idle", "invalid_frame"), "invalid");
   if (getInboundPolicy() === "refuse")
@@ -271,7 +271,7 @@ async function J(e, i, t, r, o) {
   let p = (l) => {
     if (l.verifiedPeerPid === void 0) return !1;
     let I = u.get(l.verifiedPeerPid);
-    return I !== void 0 && Zy(I) === l.targetKey;
+    return I !== void 0 && getCanonicalSocketPath(I) === l.targetKey;
   };
   await Promise.all(
     t.map((l) => {
@@ -376,7 +376,7 @@ function E(e) {
 }
 function Ssn(e, i, t) {
   let r = d.outstanding,
-    o = Zy(t);
+    o = getCanonicalSocketPath(t);
   if (o === void 0) return { ok: !1, reason: "invalid-target" };
   let a = K();
   for (let u = r.length - 1; u >= 0; u--) {

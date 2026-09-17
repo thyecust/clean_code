@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { parsePluginIdIgnoringReservedMarketplace } from "./chunk-33bdfgmx.js";
 import { s, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var l = createLazyValue(() => v(c({ marketplace: s(), plugin: s() })));
 function getChannelAllowlist() {
-  let e = H("tengu_harbor_ledger", []),
+  let e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_harbor_ledger", []),
     n = l().safeParse(e);
   return n.success ? n.data : [];
 }
 function isChannelsEnabled() {
-  return H("tengu_harbor", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_harbor", !1);
 }
 function isChannelAllowlisted(e) {
   if (!e) return !1;

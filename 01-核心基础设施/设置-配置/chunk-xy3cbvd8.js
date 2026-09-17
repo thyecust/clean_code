@@ -14,7 +14,7 @@ import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5
 import { getFileStorage } from "../共享小工具-未细化/file-storage.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
-import { Or, QN } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getProviderState, getModelCatalogCacheDir } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSettingsFilePathForSource, getLocalSettingsValidationErrors, getSettingsWithErrors } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { formatMcpScopeLocation, MCP_SETTINGS_SCOPES, getMcpConfigsByScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { s, T, c, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -129,10 +129,10 @@ var PUBLISHED_FLOOR_FILE_NAME = "published-floor.json",
     }),
   );
 function F() {
-  return _(QN(), PUBLISHED_FLOOR_FILE_NAME);
+  return _(getModelCatalogCacheDir(), PUBLISHED_FLOOR_FILE_NAME);
 }
 function l() {
-  return Or().publishedCatalogFloorMarks;
+  return getProviderState().publishedCatalogFloorMarks;
 }
 async function getPublishedCatalogFloorVersion(e) {
   return (await w(), l().get(e)?.version ?? 0);
@@ -149,7 +149,7 @@ async function recordPublishedCatalogFloorVersion(e, t, r = Date.now()) {
     await z());
 }
 function w() {
-  let e = Or();
+  let e = getProviderState();
   return (
     (e.publishedCatalogFloorRead ??= C().then(v)),
     e.publishedCatalogFloorRead
@@ -183,7 +183,7 @@ async function C() {
   return new Map(Object.entries(t.data.sources));
 }
 function z() {
-  let e = Or(),
+  let e = getProviderState(),
     t = (e.publishedCatalogFloorWrite ?? Promise.resolve()).then(P, P);
   return ((e.publishedCatalogFloorWrite = t), t);
 }
@@ -194,7 +194,7 @@ async function P() {
         .sort(([, r], [, o]) => o.recordedAt - r.recordedAt)
         .slice(0, R),
       t = getFileStorage();
-    (await t.mkdir(QN()),
+    (await t.mkdir(getModelCatalogCacheDir()),
       await t.atomicWrite(
         F(),
         b({ version: y, sources: Object.fromEntries(e) }),

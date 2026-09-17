@@ -42,7 +42,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { readJobStateFreshOrNull, readPinnedJobIds, isSettled } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { wvn, QN, H, getMemoryBaseDir, getAutoMemPath } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { MASKED_IDS_FILE_NAME, getModelCatalogCacheDir, getFeatureValue_CACHED_MAY_BE_STALE, getMemoryBaseDir, getAutoMemPath } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { LITE_READ_BUF_SIZE, extractFieldFromFirstEntryStrict, extractFieldFromLastEntryStrict, readHeadAndTail, anchorOffsetTail } from "./chunk-mkmy4cx2.js";
 import { The, lcr, txt, xIn, ccr, Ehe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -733,9 +733,9 @@ async function Ue() {
 }
 async function $e() {
   return v(
-    QN(),
+    getModelCatalogCacheDir(),
     (e) =>
-      e !== wvn &&
+      e !== MASKED_IDS_FILE_NAME &&
       e !== PUBLISHED_FLOOR_FILE_NAME &&
       (e.endsWith(".json") || e.includes(".json.tmp.")),
   );
@@ -1793,7 +1793,7 @@ async function _an(e) {
     if (p > 0) logEvent("tengu_worktree_cleanup", { removed: p });
     if (
       (await Ke(getClaudeConfigDir(), w),
-      isTainted("hipaa") && H("tengu_hipaa_history_retention_prune", !0))
+      isTainted("hipaa") && getFeatureValue_CACHED_MAY_BE_STALE("tengu_hipaa_history_retention_prune", !0))
     )
       ((f = await Xe(w)), o.push({ ...E(), errors: f.errors }));
   }

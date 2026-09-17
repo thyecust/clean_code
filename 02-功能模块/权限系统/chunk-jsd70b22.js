@@ -20,19 +20,19 @@ import { truncateToCodeUnits, truncateWithCharCount } from "../../01-核心基�
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
   isAutoClassifierActive,
-  Cor,
-  rx,
-  y5,
-  iQ,
-  KC,
-  LCt,
-  _U,
-  sx,
-  qe,
-  Ut,
-  Hn,
-  u0,
-  ee,
+  getHookCallerPluginName,
+  isPluginSteeredAgent,
+  isRemoteOrPluginRequestSource,
+  PERMISSION_PROMPT_DIALOG,
+  isSubagentContext,
+  isOutOfProcessAgentContext,
+  isSubagentSession,
+  effectiveModeForTool,
+  BASH_TOOL_NAME,
+  POWERSHELL_TOOL_NAME,
+  getSanitizedToolName,
+  getPlatformForAnalytics,
+  getGlobalConfig,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   isOtherBlockingDialogShowing,
@@ -208,10 +208,10 @@ function Uqe(e, r, o, t, s, k, R) {
     permissionMode: _,
     logDecision: d,
     logCancelled() {
-      logEvent("tengu_tool_use_cancelled", { messageID: sanitizeAnalyticsId(c), toolName: Hn(e.name) });
+      logEvent("tengu_tool_use_cancelled", { messageID: sanitizeAnalyticsId(c), toolName: getSanitizedToolName(e.name) });
     },
     persistPermissions(b) {
-      if (b.length === 0 || rx(o)) return !1;
+      if (b.length === 0 || isPluginSteeredAgent(o)) return !1;
       if ((RD(b, o.storageV5).catch(logError), R !== void 0)) R(Kk(unstripSkillInvocationAllowRules(getToolPermissionContext(o)), b));
       else
         (o.setSessionToolPermissionContext((p) => Kk(p, b)),
@@ -315,7 +315,7 @@ function Uqe(e, r, o, t, s, k, R) {
     handleUserAllow(b, p, F) {
       let A = bzt(p),
         D =
-          o.forRemoteExecution === !0 || rx(o)
+          o.forRemoteExecution === !0 || isPluginSteeredAgent(o)
             ? []
             : e.suppressesAllPermissionUpdates?.(r) === !0
               ? withoutGrantsForRemoteScope(A)
@@ -553,16 +553,16 @@ function Lv(e) {
       ) &&
       e.tool.suppressesAlwaysAllowRule?.(e.input) !== !0 &&
       e.tool.suppressesAllPermissionUpdates?.(e.input) !== !0 &&
-      !y5(e.requestSource),
+      !isRemoteOrPluginRequestSource(e.requestSource),
     requestSource: e.requestSource,
     hasExternalRacer: e.hasExternalRacer ?? !1,
   };
 }
 function Se(e) {
   if (e.forRemoteExecution === !0) return { type: "remote-agent" };
-  let r = Cor(e);
+  let r = getHookCallerPluginName(e);
   if (r !== void 0) return { type: "plugin", pluginName: r };
-  if (rx(e)) return { type: "plugin" };
+  if (isPluginSteeredAgent(e)) return { type: "plugin" };
   let o = e.spawnedByWorkflowRunId;
   if (o !== void 0)
     return {
@@ -574,7 +574,7 @@ function Se(e) {
   let t = e.agentContext;
   if (t.agentType === "teammate")
     return { type: "subagent", agentName: t.agentName };
-  if (KC(t) && _U(t))
+  if (isSubagentContext(t) && isSubagentSession(t))
     return { type: "subagent", agentName: t.displayName ?? t.subagentName };
   return;
 }
@@ -1297,7 +1297,7 @@ async function Ie(e) {
     completion_type: fromEnum(e.completion_type),
     language_name: await e.metadata.language_name,
     message_id: sanitizeAnalyticsId(e.metadata.message_id),
-    platform: u0(e.metadata.platform),
+    platform: getPlatformForAnalytics(e.metadata.platform),
     ...(e.metadata.hasFeedback !== void 0 && {
       hasFeedback: e.metadata.hasFeedback,
     }),
@@ -1476,7 +1476,7 @@ function co(e, r, o) {
   if (Wg(r)) return null;
   let t = o.options.mcpClients;
   if (!hasConnectedIdeClient(t)) return null;
-  if (ee().diffTool !== "auto") return null;
+  if (getGlobalConfig().diffTool !== "auto") return null;
   let s = $o(e, r);
   if (s === null) return null;
   let k = ot(s.filePath);
@@ -1523,7 +1523,7 @@ function po(e) {
         n(`closeTabInIDE failed: ${E}`, { level: "error" });
       }));
   }
-  let M = { ideName: mo(F), toolName: Hn(o.name), editCount: p.length };
+  let M = { ideName: mo(F), toolName: getSanitizedToolName(o.name), editCount: p.length };
   return (
     logEvent("tengu_ext_will_show_diff", {}),
     ao(b, p, r.toolUseContext, v, () => T)
@@ -1582,7 +1582,7 @@ function po(e) {
 import { randomUUID as Vo } from "crypto";
 function zo(e, r) {
   if (r.length === 0) return;
-  if (e.toolUseContext.forRemoteExecution === !0 || rx(e.toolUseContext))
+  if (e.toolUseContext.forRemoteExecution === !0 || isPluginSteeredAgent(e.toolUseContext))
     return;
   let o = [];
   for (let t of r)
@@ -1631,7 +1631,7 @@ function uo(e) {
   }
   if (A && T) {
     let I = "";
-    if (r.tool.name !== qe && r.tool.name !== Ut)
+    if (r.tool.name !== BASH_TOOL_NAME && r.tool.name !== POWERSHELL_TOOL_NAME)
       try {
         I =
           r.tool.getToolUseSummary?.(s) ??
@@ -1851,7 +1851,7 @@ var Go = [
   J({ matches: (e) => e === exitPlanModeTool, dialog: Lqe, build: to }),
   J({ matches: (e) => e === SkillTool, dialog: Fqe, build: eo }),
   ...[],
-  J({ matches: (e) => e.name === Ut, dialog: Nqe, build: oo }),
+  J({ matches: (e) => e.name === POWERSHELL_TOOL_NAME, dialog: Nqe, build: oo }),
   J({ matches: (e) => e === Qo, dialog: Mqe, build: Ke }),
   ...(fo !== null && go !== null
     ? [J({ matches: (e) => e === fo, dialog: go, build: Ze })]
@@ -1896,7 +1896,7 @@ async function Bqe(e, r) {
     };
   function F() {
     Pe(e, w, {
-      dialog: iQ,
+      dialog: PERMISSION_PROMPT_DIALOG,
       buildDescriptor: ({ input: D, permissionResult: v }) =>
         Lv({ ...p, input: D, permissionResult: v }),
     });
@@ -2100,7 +2100,7 @@ function Pe(e, r, o) {
   if (p === void 0) return;
   let F = p,
     A = t.toolUseContext.agentContext,
-    D = LCt(t.toolUseContext),
+    D = isOutOfProcessAgentContext(t.toolUseContext),
     v = k.askPatience;
   v?.hold();
   let T = Date.now(),
@@ -2133,13 +2133,13 @@ function Pe(e, r, o) {
     (t.toolUseContext.applyAttributionOp({ kind: "incrementPermissionPrompt" }),
       logEvent("tengu_tool_use_show_permission_request", {
         messageID: sanitizeAnalyticsId(t.messageId),
-        toolName: Hn(t.tool.name),
+        toolName: getSanitizedToolName(t.tool.name),
         isMcp: t.tool.isMcp ?? !1,
         decisionReasonType: fromEnumOpt(E.decisionReason?.type),
         sandboxEnabled: SandboxManager.isSandboxingEnabled(),
         permissionMode: fromEnum(C),
         requestSource: fromEnumOpt(Se(t.toolUseContext)?.type),
-        originAgentType: fromEnum(KC(A) && A.isMainSession ? "main" : A.agentType),
+        originAgentType: fromEnum(isSubagentContext(A) && A.isMainSession ? "main" : A.agentType),
       }),
       Ie({
         completion_type: q.completion_type,
@@ -2213,7 +2213,7 @@ function Pe(e, r, o) {
     },
     Te = toolPermissionContextChangeSignal.subscribe(() => {
       if (w()) return;
-      if (_e !== void 0 && !re && !isAutoClassifierActive(sx(t.tool, getToolPermissionContext(t.toolUseContext)))) Me();
+      if (_e !== void 0 && !re && !isAutoClassifierActive(effectiveModeForTool(t.tool, getToolPermissionContext(t.toolUseContext)))) Me();
       if (t.tool.requiresUserInteraction?.()) return;
       if (k.forcedByCaller === !0) return;
       hasPermissionsToUseTool(t.tool, t.input, t.toolUseContext, t.assistantMessage, t.toolUseID)
@@ -2453,7 +2453,7 @@ function Pe(e, r, o) {
       (me(),
         Y({ behavior: "deny", message: te }),
         logEvent("tengu_auto_mode_denial_dialog_auto_denied", {
-          toolName: Hn(t.tool.name),
+          toolName: getSanitizedToolName(t.tool.name),
           isMcp: t.tool.isMcp ?? !1,
           timeoutMs: C,
         }),

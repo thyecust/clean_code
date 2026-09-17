@@ -8,20 +8,20 @@
 
 // Version: 2.1.263
 import {
-  ege,
-  Qvn,
+  isCloudEnvironmentSession,
+  isOfflineRemoteSession,
   slugify,
-  tge,
-  iRe,
-  SU,
-  bP,
-  bU,
-  uq,
-  dq,
-  tZe,
-  vUe,
-  lRe,
-  nZe,
+  isUnusableRecipientName,
+  isTeamLeadMember,
+  getTeamLeadAgentId,
+  buildRecipientListing,
+  formatAgentDisplayName,
+  normalizeSessionName,
+  normalizePlainName,
+  normalizeUsableRecipientName,
+  looksLikeAddress,
+  createShortEntityRef,
+  isCloudSessionKnownLocally,
   FORMER_NAME_HINT_TTL_MS,
   getRegisteredSessionName,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -78,7 +78,7 @@ async function osn(e, n, i) {
       session: d,
     }));
   for (let d of r.sessions) {
-    if (nZe(g, d.id) || isOwnSessionId(d.id)) continue;
+    if (isCloudSessionKnownLocally(g, d.id) || isOwnSessionId(d.id)) continue;
     m.push({ transport: "cloud", address: void 0, session: d });
   }
   let a = uSn(c.rows, g, r.sessions);
@@ -101,12 +101,12 @@ async function osn(e, n, i) {
 }
 function j(e = !1) {
   let n = ownMessagingSocket(),
-    i = tZe(getRegisteredSessionName()?.name);
+    i = normalizeUsableRecipientName(getRegisteredSessionName()?.name);
   if (!n || i === null) return null;
   let s = getRegisteredSessionName();
   return {
     name: i,
-    token: `${i} [${lRe("session", n)}]`,
+    token: `${i} [${createShortEntityRef("session", n)}]`,
     callerIsSubagent: e,
     nameIsUserChosen:
       (s?.source === "user" || s?.source === "collision") &&
@@ -149,7 +149,7 @@ function Phr(
 ) {
   let c = e.flatMap((f) => (f.transport === "uds" ? [f.session] : [])),
     r = e.flatMap((f) => (f.transport === "cloud" ? [f.session] : [])),
-    o = bP(n.appState, {
+    o = buildRecipientListing(n.appState, {
       teamFile: n.teamFile,
       sessions: c,
       cloud: r,
@@ -232,8 +232,8 @@ function N(e, n, i) {
     u = new Set(t !== void 0 ? [t] : []),
     g = new Set();
   for (let o of e.agentNameRegistry.keys()) g.add(slugify(o));
-  let c = SU(e),
-    r = (o, m) => iRe({ name: o, agentId: m }, c) || !tge(o);
+  let c = getTeamLeadAgentId(e),
+    r = (o, m) => isTeamLeadMember({ name: o, agentId: m }, c) || !isUnusableRecipientName(o);
   for (let [o, m] of Object.entries(s?.teammates ?? {})) {
     if (u.has(o) || !r(m.name, o)) continue;
     u.add(o);
@@ -264,7 +264,7 @@ function N(e, n, i) {
   return p;
 }
 function x(e, n, i) {
-  let s = uq(e) ?? e;
+  let s = normalizeSessionName(e) ?? e;
   if (!i.has(slugify(s))) return !1;
   return n.agentNameRegistry.has(e) || s !== e ? "unreachable" : "bare-only";
 }
@@ -310,7 +310,7 @@ function W(e, n) {
     "Subagents",
     e.map((s) => {
       let t = s.name ? n.get(`subagent\x00${s.agentId}`) : void 0;
-      return P(t ? bU(t) : s.agentId, [
+      return P(t ? formatAgentDisplayName(t) : s.agentId, [
         s.agentType,
         s.status,
         `started ${y(i - s.startTime)} ago`,
@@ -323,9 +323,9 @@ function G(e, n) {
   return F("Teammates", e, (s) => {
     let t =
       s.nameShadowed !== !1 ? void 0 : n.get(`teammate\x00${s.teammateId}`);
-    return P(t ? bU(t) : (dq(s.name) ?? "(unnamed)"), [
-      dq(s.agentType) ?? void 0,
-      dq(s.status) ?? (s.backend === "in-process" ? void 0 : s.backend),
+    return P(t ? formatAgentDisplayName(t) : (normalizePlainName(s.name) ?? "(unnamed)"), [
+      normalizePlainName(s.agentType) ?? void 0,
+      normalizePlainName(s.status) ?? (s.backend === "in-process" ? void 0 : s.backend),
       _(s, i),
       s.nameShadowed === "unreachable"
         ? "not messageable by name while a subagent in this session is registered under that name (the name reaches the subagent)"
@@ -343,11 +343,11 @@ function X(e, n, i, s, t, l, p, u) {
           w =
             a.tmux !== void 0 &&
             /^[^\s/\\\p{Cc}\p{Cf}]{1,64}$/u.test(a.tmux) &&
-            !vUe(a.tmux)
+            !looksLikeAddress(a.tmux)
               ? a.tmux
               : void 0,
-          I = O(a, g, dq);
-        return P(d ? bU(d) : (dq(a.name || basename(a.cwd)) ?? "(untitled)"), [
+          I = O(a, g, normalizePlainName);
+        return P(d ? formatAgentDisplayName(d) : (normalizePlainName(a.name || basename(a.cwd)) ?? "(untitled)"), [
           I,
           a.kind,
           a.status,
@@ -357,7 +357,7 @@ function X(e, n, i, s, t, l, p, u) {
       }),
       ...i.map((a) => {
         let d = n.get(`cloud-session\x00${a.id}`);
-        return P(d ? bU(d) : (dq(a.title) ?? "(untitled)"), [
+        return P(d ? formatAgentDisplayName(d) : (normalizePlainName(a.title) ?? "(untitled)"), [
           a.remoteControl ? O3t : "cloud session",
           a.offline ? "offline" : C(a.workerStatus, a.workerStatus),
           a.lastActive === void 0
@@ -369,7 +369,7 @@ function X(e, n, i, s, t, l, p, u) {
       }),
       ...s.map(({ session: a }) => {
         let d = n.get(`bridge-session\x00${a.id}`);
-        return P(d ? bU(d) : sJn(a.title), [
+        return P(d ? formatAgentDisplayName(d) : sJn(a.title), [
           lSn(a),
           M(a, a.status),
           a.acceptsPeerMessages === !1 ? l7e : void 0,
@@ -474,8 +474,8 @@ function K(e) {
 function q(e) {
   let n = Date.now();
   return F("Teammates", e, (i) => {
-    let s = dq(i.name) ?? "(unnamed)",
-      t = dq(i.agentType),
+    let s = normalizePlainName(i.name) ?? "(unnamed)",
+      t = normalizePlainName(i.agentType),
       l = t ? `${s}  \xB7  ${t}` : s,
       p = _(i, n),
       u =
@@ -484,19 +484,19 @@ function q(e) {
           : i.nameShadowed === "bare-only"
             ? "  \xB7  exact name only (a subagent holds a variant)"
             : "";
-    return `  [${dq(i.status) ?? i.backend}]  \xB7  ${l}${p ? `  \xB7  ${p}` : ""}${u}`;
+    return `  [${normalizePlainName(i.status) ?? i.backend}]  \xB7  ${l}${p ? `  \xB7  ${p}` : ""}${u}`;
   });
 }
 function C(e, n) {
   return e === "requires_action" ? "waiting on a human" : n;
 }
 function M(e, n) {
-  if (ege(e)) return C(e.status, n);
-  return Qvn(e) ? "offline" : n;
+  if (isCloudEnvironmentSession(e)) return C(e.status, n);
+  return isOfflineRemoteSession(e) ? "offline" : n;
 }
 function b(e) {
   if (!e) return;
-  let n = uq(e);
+  let n = normalizeSessionName(e);
   return n === null || n === "untitled session" ? void 0 : n;
 }
 function z(e, n = !1) {

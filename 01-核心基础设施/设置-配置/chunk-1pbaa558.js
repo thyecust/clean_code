@@ -22,15 +22,15 @@ import { We, Et, b, z, n } from "../核心工具-日志与脱敏/核心工具-�
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import {
-  pRe,
-  fRn,
-  fRe,
-  OUe,
-  mRe,
-  evt,
-  DUe,
-  gRe,
-  C6,
+  getUrlHostname,
+  HTTP_LOOPBACK_FINGERPRINT,
+  GATEWAY_PIN_STORE_SYMLINK_ERROR,
+  GATEWAY_PIN_STORE_UNREADABLE_ERROR,
+  readGatewayTrustPin,
+  GATEWAY_PIN_MISMATCH_ERROR,
+  extractFingerprintMismatch,
+  createPinnedHttpsAgent,
+  refreshGatewayCredentialIfNeeded,
   isProfileRemoteSettingsCredential,
   getAnthropicApiKeyWithSourceSafe,
   getAnthropicApiKeyWithSource,
@@ -726,7 +726,7 @@ function _e() {
 var we = "gateway:",
   st = 256;
 function ve(e, t) {
-  if (!fv(e) || !t || t === fRn) return;
+  if (!fv(e) || !t || t === HTTP_LOOPBACK_FINGERPRINT) return;
   let o;
   try {
     o = new URL(e.url);
@@ -743,7 +743,7 @@ function ve(e, t) {
   };
 }
 async function ke(e, t) {
-  return mRe(pRe(new URL(e.url)), t);
+  return readGatewayTrustPin(getUrlHostname(new URL(e.url)), t);
 }
 async function V(e) {
   let t = ns();
@@ -815,7 +815,7 @@ async function Pe(e, t = !1, o) {
       d
     );
   try {
-    (await checkAndRefreshOAuthTokenIfNeeded({ credentials: o }), await C6(o));
+    (await checkAndRefreshOAuthTokenIfNeeded({ credentials: o }), await refreshGatewayCredentialIfNeeded(o));
     let d = await ot(o);
     if (
       ((r = d.accessToken),
@@ -841,7 +841,7 @@ async function Pe(e, t = !1, o) {
         Pragma: "no-cache",
       };
     if (e) w["If-None-Match"] = `"${e}"`;
-    let _ = gRe(d.pinnedFingerprint, R),
+    let _ = createPinnedHttpsAgent(d.pinnedFingerprint, R),
       v = await at.get(R, {
         headers: w,
         timeout: Ve,
@@ -905,22 +905,22 @@ async function Pe(e, t = !1, o) {
     );
   } catch (d) {
     let R = l(d?.cause);
-    if (l(d).includes(fRe))
+    if (l(d).includes(GATEWAY_PIN_STORE_SYMLINK_ERROR))
       return p({
         success: !1,
         error: "Cloud gateway TLS pin is in a symlinked credentials file",
         errorKind: "gateway_pin_refused",
         skipRetry: !0,
       });
-    if (l(d).includes(OUe))
+    if (l(d).includes(GATEWAY_PIN_STORE_UNREADABLE_ERROR))
       return p({
         success: !1,
         error:
           "Cloud gateway TLS pin could not be read from the credentials file",
         errorKind: "gateway_pin_unreadable",
       });
-    if (l(d).includes(evt) || R.includes(evt)) {
-      let P = DUe(d);
+    if (l(d).includes(GATEWAY_PIN_MISMATCH_ERROR) || R.includes(GATEWAY_PIN_MISMATCH_ERROR)) {
+      let P = extractFingerprintMismatch(d);
       return p({
         success: !1,
         error: "Cloud gateway TLS certificate does not match stored pin",

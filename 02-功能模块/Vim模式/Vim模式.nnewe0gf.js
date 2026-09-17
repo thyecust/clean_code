@@ -22,7 +22,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { useResolvedTheme, getCurrentKillRingText, getNextKillRingEntry, useKillRing } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { cf, ph, Ms, isClaudeAISubscriber, getSubscriptionName, ee, Sq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isSemverGreaterThan, isSemverAtLeast, getVersionForAnalytics, isClaudeAISubscriber, getSubscriptionName, getGlobalConfig, isAutoUpdaterDisabled } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
@@ -3430,7 +3430,7 @@ function Yst(l, b, x) {
             R.current = null;
             return;
           }
-          if (!(ee().copyOnSelect ?? !0)) return;
+          if (!(getGlobalConfig().copyOnSelect ?? !0)) return;
           let H = l.copySelectionNoClear();
           if (!H || !H.trim()) {
             O.current = !0;
@@ -4288,7 +4288,7 @@ function Ro({
       );
       return;
     }
-    if (Sq()) return;
+    if (isAutoUpdaterDisabled()) return;
     if ($be()) return;
     let me = {
         ISSUES_EXPLAINER:
@@ -4312,29 +4312,29 @@ function Ro({
       if (((ce = qce(me, J, "auto_updater")), ce)) de = J;
     }
     if (!de && oe) {
-      if (J && cf(oe, J))
+      if (J && isSemverGreaterThan(oe, J))
         if (
           (n(
             `AutoUpdater: maxVersion ${J} is set, capping update from ${oe} to ${J}`,
           ),
-          cf(J, me))
+          isSemverGreaterThan(J, me))
         )
           de = J;
         else
           n(
             `AutoUpdater: current version ${me} is already at or above maxVersion ${J}, skipping update`,
           );
-      else if (cf(oe, me)) de = oe;
+      else if (isSemverGreaterThan(oe, me)) de = oe;
     }
     if ((M({ global: me, latest: de ?? oe }), !de || zce(de))) return;
     if (ce)
       logEvent("tengu_auto_updater_forced_downgrade", {
-        from_version: Ms(me),
-        to_version: Ms(de),
+        from_version: getVersionForAnalytics(me),
+        to_version: getVersionForAnalytics(de),
       });
     let he = Date.now();
     b(!0);
-    let ne = ee();
+    let ne = getGlobalConfig();
     if (
       ne.installMethod !== "native" &&
       !Ie(process.env.DISABLE_INSTALLATION_CHECKS)
@@ -4390,16 +4390,16 @@ function Ro({
       );
     if (ge === "success")
       logEvent("tengu_auto_updater_success", {
-        fromVersion: Ms(me),
-        toVersion: Ms(de),
+        fromVersion: getVersionForAnalytics(me),
+        toVersion: getVersionForAnalytics(de),
         durationMs: Date.now() - he,
         wasMigrated: Y === "local",
         installationType: fromEnum(be),
       });
     else if (ge !== "in_progress")
       logEvent("tengu_auto_updater_fail", {
-        fromVersion: Ms(me),
-        attemptedVersion: Ms(de),
+        fromVersion: getVersionForAnalytics(me),
+        attemptedVersion: getVersionForAnalytics(de),
         status: ge,
         durationMs: Date.now() - he,
         wasMigrated: Y === "local",
@@ -4730,11 +4730,11 @@ function wo({
   async function q() {
     if (l) return;
     if (v?.status === "success") return;
-    if (Sq()) return;
+    if (isAutoUpdaterDisabled()) return;
     let G = await Dpt();
     if (
       G &&
-      cf(
+      isSemverGreaterThan(
         {
           ISSUES_EXPLAINER:
             "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -5010,7 +5010,7 @@ function Pr($p) {
       if (wt?.status === "success") {
         return;
       }
-      if (Sq()) {
+      if (isAutoUpdaterDisabled()) {
         return;
       }
       if ($be()) {
@@ -5032,12 +5032,12 @@ function Pr($p) {
         _n === "homebrew" ? await hze(_o ?? "claude-code", ki) : await uFt(ki);
       let fn = await Dpt();
       let Wu = !1;
-      if (fn && lt && cf(lt, fn)) {
+      if (fn && lt && isSemverGreaterThan(lt, fn)) {
         if (
           (n(
             `PackageManagerAutoUpdater: maxVersion ${fn} is set, capping update from ${lt} to ${fn}`,
           ),
-          ph(
+          isSemverAtLeast(
             {
               ISSUES_EXPLAINER:
                 "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -5066,7 +5066,7 @@ function Pr($p) {
       }
       let Ku =
         lt &&
-        !ph(
+        !isSemverAtLeast(
           {
             ISSUES_EXPLAINER:
               "report the issue at https://github.com/anthropics/claude-code/issues",

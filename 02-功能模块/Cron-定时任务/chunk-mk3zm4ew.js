@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_WITH_REFRESH } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { DEFAULT_CRON_JITTER_CONFIG } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { isMonitorToolEnabled } from "../工具Monitor/monitor-tool-description.js";
@@ -18,10 +18,10 @@ var CRON_CREATE_TOOL_NAME = "CronCreate",
 var t = 300000,
   DEFAULT_MAX_AGE_DAYS = DEFAULT_CRON_JITTER_CONFIG.recurringMaxAgeMs / 86400000;
 function isKairosCronEnabled() {
-  return !a.CLAUDE_CODE_DISABLE_CRON && m0("tengu_kairos_cron", !0, t);
+  return !a.CLAUDE_CODE_DISABLE_CRON && getFeatureValue_CACHED_WITH_REFRESH("tengu_kairos_cron", !0, t);
 }
 function isDurableCronEnabled() {
-  return m0("tengu_kairos_cron_durable", !0, t);
+  return getFeatureValue_CACHED_WITH_REFRESH("tengu_kairos_cron_durable", !0, t);
 }
 function buildCronCreateDescription(e) {
   return e

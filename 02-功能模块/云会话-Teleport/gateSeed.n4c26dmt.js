@@ -17,7 +17,7 @@ import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { CCR_SESSION_ID_RE } from "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { vCt, trustedDeviceHeaders, ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { parsePermissionModeFromSystemMessage, trustedDeviceHeaders, httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   xZ,
   iIt,
@@ -87,7 +87,7 @@ function B(e, t, s) {
     S = (async () => {
       await mkdir(u, { recursive: !0, mode: 448 });
       let c = async (o) =>
-          ht.get(`/v1/code/sessions/${e}/events?limit=${o}&sort_order=desc`, {
+          httpClient.get(`/v1/code/sessions/${e}/events?limit=${o}&sort_order=desc`, {
             auth: "teleport-org",
             credentials: t,
             headers: await trustedDeviceHeaders(),
@@ -252,7 +252,7 @@ function v(e) {
           continue;
         }
         if (
-          ((c = vCt(o.payload) ?? c),
+          ((c = parsePermissionModeFromSystemMessage(o.payload) ?? c),
           o.payload.type === "system" && o.payload.subtype === "init")
         ) {
           let { skills: P, plugins: A } = w6e(o.payload);

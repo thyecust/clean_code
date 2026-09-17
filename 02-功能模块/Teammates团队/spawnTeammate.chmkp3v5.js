@@ -13,7 +13,7 @@ import { K, Ec, q1, MA, kL, xL, hae, S_e } from "../../00-第三方库/lodash/lo
 import { it2SetupDialog } from "../../01-核心基础设施/共享小工具-未细化/it2-setup-dialog.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { bt, ZJ, isModelAllowed, getMainLoopModel, stepDownRestrictedFamilyAliasPick, getCanonicalName, parseUserSpecifiedModel, ix, l0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getModelForAnalytics, classifyModelFamily, isModelAllowed, getMainLoopModel, stepDownRestrictedFamilyAliasPick, getCanonicalName, parseUserSpecifiedModel, buildAgentId, isReservedRecipientName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -197,15 +197,15 @@ function H(t, e, o = "tool") {
         : (T === "tool" || T === "frontmatter") && !isModelAllowed(r),
     p = _ && stepDownRestrictedFamilyAliasPick(r) !== null,
     d = _ && !p,
-    s = ZJ(r, getCanonicalName(r)),
-    E = ZJ(i, getCanonicalName(i)),
+    s = classifyModelFamily(r, getCanonicalName(r)),
+    E = classifyModelFamily(i, getCanonicalName(i)),
     w = {
       source: S("teammate_spawn"),
       precedence: fromEnum(T),
       requested_family: fromEnum(s),
       resolved_family: fromEnum(E),
-      requested_model: bt(r) ?? S("none"),
-      resolved_model: bt(i) ?? S("none"),
+      requested_model: getModelForAnalytics(r) ?? S("none"),
+      resolved_model: getModelForAnalytics(i) ?? S("none"),
     };
   if (p) logFeatureSad("subagent_model_resolve", "family_alias_stepped_down", w);
   else if (d) logFeatureSad("subagent_model_resolve", "override_dropped", w);
@@ -283,7 +283,7 @@ async function W(t, e, o, i, c, m) {
     e,
     (p) => {
       let d = le(t, p),
-        s = ix(d, e),
+        s = buildAgentId(d, e),
         E = i.assign(s);
       return (
         p.members.push({
@@ -352,7 +352,7 @@ function le(t, e) {
     throw Error(
       '"main" is a reserved recipient name (SendMessage routes it to the main conversation) \u2014 choose another teammate name.',
     );
-  if (l0(o))
+  if (isReservedRecipientName(o))
     throw Error(
       'That teammate name is a reserved recipient ("main" or "team-lead", in any spelling) or has the shape of an agent id, which already addresses an agent directly \u2014 choose another teammate name.',
     );
@@ -788,7 +788,7 @@ async function z(t, e) {
         n(`[handleSpawnInProcess] Started agent execution for ${E}`));
       let I = i().teamContext?.leadAgentId,
         P = !I,
-        A = I ?? ix(TEAM_LEAD_AGENT_NAME, d),
+        A = I ?? buildAgentId(TEAM_LEAD_AGENT_NAME, d),
         U = P ? e.teammateColors.assign(A) : void 0;
       return (
         o((M) => {

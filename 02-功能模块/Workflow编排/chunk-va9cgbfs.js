@@ -10,7 +10,7 @@
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { pi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { emitTaskNotification } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { XZe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
@@ -238,7 +238,7 @@ function killWorkflowTask(e, r, o) {
     (t.v2Run?.kill(o),
       removeKeepaliveReason(t.ownerAgentId, `workflow:${e}`, r),
       evictTaskOutput(e),
-      pi(e, "stopped", { toolUseId: t.toolUseId, summary: t.description }),
+      emitTaskNotification(e, "stopped", { toolUseId: t.toolUseId, summary: t.description }),
       startKillEscalation(e));
   return t !== null;
 }

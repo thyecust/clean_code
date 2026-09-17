@@ -15,20 +15,20 @@ import { parseRegionName } from "./chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
-  cA,
-  RAt,
-  Hme,
-  hse,
-  mQe,
-  bt,
+  resolveAwsRegion,
+  getBedrockInferenceProfiles,
+  findInferenceProfileForModel,
+  applyInferenceProfilePrefix,
+  resolveInferenceProfilePrefix,
+  getModelForAnalytics,
   DEFAULT_3P_SONNET_KEY,
   DEFAULT_BEDROCK_OPUS_KEY,
   getMarketingNameForModel,
-  DR,
-  Im,
-  VC,
-  Rw,
-  nRe,
+  hasCustomApiKeyHeader,
+  getAuthorizationHeaderPin,
+  getAnthropicBetaHeaderPin,
+  authState,
+  getEnvAuthorizationHeader,
   isHostManagedProviderAuth,
   hostManagedAwsSdkCredentials,
   refreshAndGetAwsCredentials,
@@ -46,15 +46,15 @@ async function findBedrockUpgradeCandidates() {
   logEvent("tengu_bedrock_upgrade_check", { stale_tiers: fromNumber(o.length) });
   let s;
   try {
-    s = await RAt();
+    s = await getBedrockInferenceProfiles();
   } catch {
     return [];
   }
-  let t = mQe(await cA()),
+  let t = resolveInferenceProfilePrefix(await resolveAwsRegion()),
     c = [];
   for (let e of o) {
     let p = to[e.defaultKey].firstParty,
-      r = Hme(s, p, t);
+      r = findInferenceProfileForModel(s, p, t);
     if (!r) continue;
     let d = getMarketingNameForModel(to[e.pinnedKey].firstParty),
       l = getMarketingNameForModel(to[e.defaultKey].firstParty);
@@ -76,7 +76,7 @@ async function findBedrockUpgradeCandidates() {
         return (
           logEvent("tengu_bedrock_probe_result", {
             tier: fromEnum(e.tier),
-            model_id: bt(e.toBedrockId),
+            model_id: getModelForAnalytics(e.toBedrockId),
             accessible: p,
           }),
           p ? e : null
@@ -101,11 +101,11 @@ async function checkBedrockDefaultAvailability() {
   logEvent("tengu_bedrock_default_check", { unpinned_tiers: fromNumber(s.length) });
   let t;
   try {
-    t = await RAt();
+    t = await getBedrockInferenceProfiles();
   } catch {
     t = [];
   }
-  let c = mQe(await cA()),
+  let c = resolveInferenceProfilePrefix(await resolveAwsRegion()),
     g = await Promise.all(
       s.map(async (e) => {
         let p = to[e.defaultKey],
@@ -115,7 +115,7 @@ async function checkBedrockDefaultAvailability() {
         if (
           (logEvent("tengu_bedrock_probe_result", {
             tier: fromEnum(e.tier),
-            model_id: bt(r),
+            model_id: getModelForAnalytics(r),
             accessible: d,
           }),
           d)
@@ -147,10 +147,10 @@ async function checkBedrockDefaultAvailability() {
 }
 function h(o, s, t) {
   let c = to[o],
-    g = Hme(s, c.firstParty, t);
+    g = findInferenceProfileForModel(s, c.firstParty, t);
   if (g) return g;
   if (!c.bedrock) return null;
-  return hse(c.bedrock, t);
+  return applyInferenceProfilePrefix(c.bedrock, t);
 }
 async function A(o, s, t, c, g) {
   async function f(r, d) {
@@ -176,7 +176,7 @@ async function _(o, s) {
         ]),
       g =
         (s === "haiku" && parseRegionName(a.ANTHROPIC_SMALL_FAST_MODEL_AWS_REGION)) ||
-        (await cA()),
+        (await resolveAwsRegion()),
       f = {
         awsRegion: g,
         maxRetries: 0,
@@ -194,10 +194,10 @@ async function _(o, s) {
         ...f,
         apiKey: p,
         defaultHeaders: {
-          ...Im(),
-          ...VC(),
+          ...getAuthorizationHeaderPin(),
+          ...getAnthropicBetaHeaderPin(),
           Authorization: `Bearer ${p}`,
-          ...(!DR() && { "X-Api-Key": null }),
+          ...(!hasCustomApiKeyHeader() && { "X-Api-Key": null }),
         },
       });
     else {
@@ -206,14 +206,14 @@ async function _(o, s) {
         l = {
           authToken: null,
           defaultHeaders: {
-            ...Im(),
-            ...VC(),
+            ...getAuthorizationHeaderPin(),
+            ...getAnthropicBetaHeaderPin(),
             Authorization: null,
-            ...(!DR() && { "X-Api-Key": null }),
+            ...(!hasCustomApiKeyHeader() && { "X-Api-Key": null }),
           },
-          ...Rw,
+          ...authState,
         },
-        m = r ? nRe() : void 0,
+        m = r ? getEnvAuthorizationHeader() : void 0,
         k = r || d ? null : await refreshAndGetAwsCredentials();
       e = k
         ? new t({
@@ -229,13 +229,13 @@ async function _(o, s) {
               !m && {
                 skipAuth: !0,
                 authToken: null,
-                defaultHeaders: { ...VC() },
-                ...Rw,
+                defaultHeaders: { ...getAnthropicBetaHeaderPin() },
+                ...authState,
               }),
             ...(r &&
               m && {
                 apiKey: m.match(/^Bearer (.+)$/i)?.[1] ?? m,
-                defaultHeaders: { ...VC(), Authorization: m },
+                defaultHeaders: { ...getAnthropicBetaHeaderPin(), Authorization: m },
               }),
             ...(!r && l),
             ...(!r &&

@@ -10,7 +10,7 @@
 import { ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { getSessionRuntimeState, toCompatSessionId, sessionIdBody, isSelfAddressableSessionId } from "./chunk-ynkf3yy4.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { FT, tRe, updateSessionBridgeId } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { sanitizeDisplayName, buildBridgeAddress, updateSessionBridgeId } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getExternalPermissionMode } from "./chunk-e4pfvp7x.js";
 import { SAt, bAt } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 function l(e, o) {
@@ -114,7 +114,7 @@ function adoptSelfBridgeTitleFromRoster(e) {
   o.selfTitle = u(e);
 }
 function u(e) {
-  return typeof e === "string" && FT(e) !== "" ? e : void 0;
+  return typeof e === "string" && sanitizeDisplayName(e) !== "" ? e : void 0;
 }
 function d(e) {
   let o = walkCredentialKey(),
@@ -227,7 +227,7 @@ function getSelfBridgeCompatId() {
 }
 function ownBridgePeerAddress() {
   let e = getSelfBridgeCompatId();
-  return e ? tRe(e) : void 0;
+  return e ? buildBridgeAddress(e) : void 0;
 }
 function getRemoteControlSessionCompatId() {
   let e = getReplBridgeHandle();

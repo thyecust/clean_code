@@ -16,20 +16,20 @@ import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { getTeamName } from "./teammate-context.js";
 import {
-  FT,
+  sanitizeDisplayName,
   slugify,
-  tge,
-  iRe,
-  SU,
-  nge,
-  l0,
-  jD,
-  bP,
-  aRe,
-  zCt,
-  vUe,
-  lRe,
-  RUe,
+  isUnusableRecipientName,
+  isTeamLeadMember,
+  getTeamLeadAgentId,
+  getAddressableTeamMembers,
+  isReservedRecipientName,
+  parseAgentDisplayName,
+  buildRecipientListing,
+  resolveInProcessRecipient,
+  findMemberByName,
+  looksLikeAddress,
+  createShortEntityRef,
+  collectLocalBridgeSessionIds,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isLocalAgentTask, findNearNameMatches, isMainSessionLocalAgent, loadLivePeerSessions, getBridgeSessionListing } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
@@ -94,7 +94,7 @@ function XSe(e, i, o) {
           ...t,
           sendMessagePins: {
             ...t.sendMessagePins,
-            [s]: { id: o.id, name: i, ref: lRe(o.kind, o.id) },
+            [s]: { id: o.id, name: i, ref: createShortEntityRef(o.kind, o.id) },
           },
         },
   );
@@ -104,7 +104,7 @@ var wNt =
   _ce = "another Claude session on this machine";
 function PGe(e, i, o) {
   if (e === void 0) return { message: "", display: "" };
-  let s = (i && FT(i)) || "an agent in this session";
+  let s = (i && sanitizeDisplayName(i)) || "an agent in this session";
   return o.oneWay
     ? {
         message: "; sent under this session's address, not this agent's",
@@ -181,7 +181,7 @@ async function OGe(e, i, o, s, t, r) {
   let a = slugify(i),
     l = getTeamName(s.teamContext),
     d = null;
-  if (vUe(i)) return { kind: "not-found", closest: [] };
+  if (looksLikeAddress(i)) return { kind: "not-found", closest: [] };
   if (typeof o === "string") {
     if (i === MAIN_CONVERSATION_NAME) return { kind: "main" };
     let b = s.teamContext?.teammates ?? {},
@@ -197,11 +197,11 @@ async function OGe(e, i, o, s, t, r) {
         memberAgentId: k[0],
         memberIdentitySource: "team-context",
       };
-    let ne = jD(i);
+    let ne = parseAgentDisplayName(i);
     if (l) {
       if (i === TEAM_LEAD_AGENT_NAME) return { kind: "mailbox", recipientName: i };
       if (((d = await readTeamFileAsync(l, t)), ne === null && d !== null)) {
-        let h = nge(d, SU(s)).find((p) => p.name === i);
+        let h = getAddressableTeamMembers(d, getTeamLeadAgentId(s)).find((p) => p.name === i);
         if (h !== void 0)
           return {
             kind: "mailbox",
@@ -211,10 +211,10 @@ async function OGe(e, i, o, s, t, r) {
           };
       }
     }
-    let ke = SU(s),
+    let ke = getTeamLeadAgentId(s),
       V = Object.entries(b).find(
         ([h, p]) =>
-          (iRe({ name: p.name, agentId: h }, ke) || !tge(p.name)) &&
+          (isTeamLeadMember({ name: p.name, agentId: h }, ke) || !isUnusableRecipientName(p.name)) &&
           slugify(p.name) === a,
       );
     if (V !== void 0)
@@ -225,14 +225,14 @@ async function OGe(e, i, o, s, t, r) {
         memberIdentitySource: "team-context",
       };
     for (let [h, p] of s.agentNameRegistry)
-      if (!tge(h) && slugify(h) === a) return X(s, p, h);
+      if (!isUnusableRecipientName(h) && slugify(h) === a) return X(s, p, h);
     let A = ne;
     if (A) {
       let [h, p] = await Promise.all([loadLivePeerSessions(), jpe(e, r)]),
         F = h.sessions,
         W = await de(e, s.sendMessagePins, slugify(A.name), p, a, getBridgeSessionListing(e), r),
         { rows: G, unavailable: Re } = W,
-        S = bP(s, { teamFile: d, sessions: F, cloud: p.sessions, bridge: G }),
+        S = buildRecipientListing(s, { teamFile: d, sessions: F, cloud: p.sessions, bridge: G }),
         T = slugify(A.name),
         ie = (N, H, Ne, xe) => {
           let M = B(N, s);
@@ -253,7 +253,7 @@ async function OGe(e, i, o, s, t, r) {
       if (G === void 0) {
         let N = await q(e, p, a, r);
         if (((te = N.unavailable), (oe = N.truncated), N.rows.length > 0)) {
-          S = bP(s, {
+          S = buildRecipientListing(s, {
             teamFile: d,
             sessions: F,
             cloud: p.sessions,
@@ -266,23 +266,23 @@ async function OGe(e, i, o, s, t, r) {
       return {
         ...L(T, S),
         ...ue(p, te, h.unavailable, { remoteTruncated: oe }),
-        ...C(s.sendMessagePins, [T], RUe(F)),
+        ...C(s.sendMessagePins, [T], collectLocalBridgeSessionIds(F)),
       };
     }
   }
   if (typeof o !== "string") {
     if (o.type === "shutdown_response")
       return { kind: "mailbox", recipientName: i };
-    if (i !== TEAM_LEAD_AGENT_NAME && l0(i))
+    if (i !== TEAM_LEAD_AGENT_NAME && isReservedRecipientName(i))
       return L(
         slugify(i),
-        bP(s, { teamFile: null, sessions: [] }),
+        buildRecipientListing(s, { teamFile: null, sessions: [] }),
         (m) => m.kind === "teammate",
       );
     if (!l) return { kind: "mailbox", recipientName: i };
     if (i === TEAM_LEAD_AGENT_NAME) return { kind: "mailbox", recipientName: i };
     let b = Object.entries(s.teamContext?.teammates ?? {}).filter(
-        ([m, w]) => iRe({ name: w.name, agentId: m }, SU(s)) || !tge(w.name),
+        ([m, w]) => isTeamLeadMember({ name: w.name, agentId: m }, getTeamLeadAgentId(s)) || !isUnusableRecipientName(w.name),
       ),
       k = b.find(([, m]) => m.name === i);
     if (k)
@@ -292,8 +292,8 @@ async function OGe(e, i, o, s, t, r) {
         memberAgentId: k[0],
         memberIdentitySource: "team-context",
       };
-    if (((d = await readTeamFileAsync(l, t)), jD(i) === null && d !== null)) {
-      let m = nge(d, SU(s)).find((w) => w.name === i);
+    if (((d = await readTeamFileAsync(l, t)), parseAgentDisplayName(i) === null && d !== null)) {
+      let m = getAddressableTeamMembers(d, getTeamLeadAgentId(s)).find((w) => w.name === i);
       if (m !== void 0)
         return {
           kind: "mailbox",
@@ -310,8 +310,8 @@ async function OGe(e, i, o, s, t, r) {
         memberAgentId: _[0],
         memberIdentitySource: "team-context",
       };
-    if (jD(i) === null && d !== null) {
-      let m = zCt(nge(d, SU(s)), i);
+    if (parseAgentDisplayName(i) === null && d !== null) {
+      let m = findMemberByName(getAddressableTeamMembers(d, getTeamLeadAgentId(s)), i);
       if (m !== void 0)
         return {
           kind: "mailbox",
@@ -324,19 +324,19 @@ async function OGe(e, i, o, s, t, r) {
     if (d === null) return { kind: "mailbox", recipientName: i };
     return L(
       a,
-      bP(s, { teamFile: d, sessions: [] }),
+      buildRecipientListing(s, { teamFile: d, sessions: [] }),
       (m) => m.kind === "teammate",
     );
   }
   if (l && d === null) {
-    if (l0(i)) return L(a, bP(s, { teamFile: d, sessions: [] }));
+    if (isReservedRecipientName(i)) return L(a, buildRecipientListing(s, { teamFile: d, sessions: [] }));
     return { kind: "mailbox", recipientName: i };
   }
   let [u, c] = await Promise.all([loadLivePeerSessions(), jpe(e, r)]),
     v = u.sessions,
     z = await de(e, s.sendMessagePins, a, c, a, getBridgeSessionListing(e), r),
     { rows: I, unavailable: O, truncated: j } = z,
-    Q = RUe(v),
+    Q = collectLocalBridgeSessionIds(v),
     K = () => ({
       cloudUnavailable: ge(c.unavailable),
       bridgeUnavailable: O,
@@ -346,7 +346,7 @@ async function OGe(e, i, o, s, t, r) {
       socksMirroredRemotely: fe(v, c, I),
       searchTruncated: c.truncated === !0 || j,
     }),
-    R = bP(s, { teamFile: d, sessions: v, cloud: c.sessions, bridge: I }),
+    R = buildRecipientListing(s, { teamFile: d, sessions: v, cloud: c.sessions, bridge: I }),
     U = R.byName.get(a)?.length === 1 ? R.byName.get(a)[0] : void 0,
     Z = P(s.sendMessagePins, a),
     ye =
@@ -364,7 +364,7 @@ async function OGe(e, i, o, s, t, r) {
     ((I = b.rows),
       (O = b.unavailable),
       (j = b.truncated),
-      (R = bP(s, {
+      (R = buildRecipientListing(s, {
         teamFile: d,
         sessions: v,
         cloud: c.sessions,
@@ -378,7 +378,7 @@ async function OGe(e, i, o, s, t, r) {
     if (
       ((I = b.rows), (O = b.unavailable), (j = b.truncated), b.rows.length > 0)
     ) {
-      R = bP(s, {
+      R = buildRecipientListing(s, {
         teamFile: d,
         sessions: v,
         cloud: c.sessions,
@@ -456,7 +456,7 @@ function E(e) {
   };
 }
 function le(e, i, o, s, t) {
-  let r = aRe(e.byName, i, o);
+  let r = resolveInProcessRecipient(e.byName, i, o);
   if (r) {
     if (r.kind === "ambiguous") {
       let a = e.byName.get(i),
@@ -497,7 +497,7 @@ function Pe(e, i, o, s) {
   if (i.length >= 3) {
     let t = [...e.byName.keys()].filter((r) => r.startsWith(i));
     if (t.length === 1) {
-      let r = aRe(e.byName, t[0]),
+      let r = resolveInProcessRecipient(e.byName, t[0]),
         a = P(o.sendMessagePins, i),
         l =
           C(o.sendMessagePins, [i], s.localClaimedRemoteBodies)
@@ -570,7 +570,7 @@ function Pe(e, i, o, s) {
           ...D(
             t.flatMap((r) => {
               let a = e.byName.get(r),
-                l = aRe(e.byName, r);
+                l = resolveInProcessRecipient(e.byName, r);
               return l?.kind === "one" ? [l.candidate] : a;
             }),
             "prefix",
@@ -582,7 +582,7 @@ function Pe(e, i, o, s) {
 }
 function ce(e, i, o) {
   let s = e.byName.get(i) ?? [],
-    t = aRe(e.byName, i);
+    t = resolveInProcessRecipient(e.byName, i);
   return (t?.kind === "one" ? [t.candidate] : s).find((a) => a.ref === o);
 }
 async function q(e, i, o, s) {

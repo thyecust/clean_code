@@ -13,7 +13,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Tn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { hashForTelemetry } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -69,7 +69,7 @@ function j(e, r, s) {
     logEvent("tengu_mcp_skills_funnel", {
       step: fromEnum(e),
       client: S("claude-code-cli"),
-      server_name: Tn(r.name),
+      server_name: hashForTelemetry(r.name),
       cause: fromEnum(a),
       skill_count: s,
     }));
@@ -108,7 +108,7 @@ class I {
       if (c)
         (this.invalidate(getMcpServerConfigCacheKey(e.name, e.config)),
           (e.discoveryBearerRejected = !0));
-      if (s) logFeatureBad("skill_mcp_load", s, { mcp_server_sha12: Tn(e.name) });
+      if (s) logFeatureBad("skill_mcp_load", s, { mcp_server_sha12: hashForTelemetry(e.name) });
       else if (c) logFeatureSad("skill_mcp_load", "skill_mcp_claudeai_bearer_rejected");
       else if (m.length > 0) logFeatureOk("skill_mcp_load");
       if (m.length > 0)

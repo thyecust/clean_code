@@ -16,7 +16,7 @@ import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, Kd, Vje } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -50,7 +50,7 @@ function Z(e) {
 async function O(e) {
   if (ke()) return null;
   if (isEssentialTrafficOnly()) return null;
-  let t = ee(),
+  let t = getGlobalConfig(),
     o = Date.now();
   if (o - (t.closedIssuesLastChecked ?? 0) < Q) return null;
   let a = o,
@@ -113,7 +113,7 @@ async function O(e) {
   }
   let f = d.length !== w.length || d.some((r, p) => r !== w[p]);
   return (
-    await Te(
+    await saveGlobalConfig(
       (r) => ({
         ...r,
         closedIssuesLastChecked: o,
@@ -177,15 +177,15 @@ async function S(e) {
   }
 }
 function y(e) {
-  let t = new Set(ee().closedIssuesAcknowledged ?? []);
+  let t = new Set(getGlobalConfig().closedIssuesAcknowledged ?? []);
   return e.filter((o) => !t.has(o.number));
 }
 function x(e, t) {
   if (e.length === 0) return;
-  let o = ee().closedIssuesAcknowledged ?? [],
+  let o = getGlobalConfig().closedIssuesAcknowledged ?? [],
     a = dedupe([...o, ...e]);
   if (a.length === o.length) return;
-  Te((u) => ({ ...u, closedIssuesAcknowledged: a }), t);
+  saveGlobalConfig((u) => ({ ...u, closedIssuesAcknowledged: a }), t);
 }
 function ue(Xe) {
   return Xe.number;

@@ -19,7 +19,7 @@ import { Vn, mke, MQ } from "../../01-核心基础设施/设置-配置/设置-�
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { H, bq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE, shouldSkipPluginAutoupdate } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Aa, $t, Koe } from "./chunk-7s6mt1vg.js";
 import {
   isClaudeAiMarketplaceSource,
@@ -359,7 +359,7 @@ function N(t) {
             duration_ms: Date.now() - c,
           });
       };
-    if (bq()) {
+    if (shouldSkipPluginAutoupdate()) {
       (n("Plugin autoupdate: skipped (auto-updater disabled)"), p());
       return;
     }
@@ -371,7 +371,7 @@ function N(t) {
       }
       let g = Math.floor(Math.random() * D);
       (await sleep(g, void 0, { unref: !0 }), (c = Date.now()));
-      let b = H("tengu_plugin_autoupdate_allow_credential_helper", !1),
+      let b = getFeatureValue_CACHED_MAY_BE_STALE("tengu_plugin_autoupdate_allow_credential_helper", !1),
         k = await Promise.allSettled(
           Array.from(o).map(async (d) => {
             try {

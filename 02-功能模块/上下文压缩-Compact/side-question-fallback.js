@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { getMainLoopModel, getRuntimeMainLoopModel, JN, aa } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMainLoopModel, getRuntimeMainLoopModel, isThinkingEnabled, createMainAgentContext } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createTaskRegistry, asSystemPrompt, createQueuedNotificationsRegistry, getSystemContext, getUserContext, buildDefaultSystemPrompt, collectExcludedDynamicSections } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { artifactReadObservationIn, makeSetArtifactReadVersion, makeSetArtifactContractTarget, makeGetArtifactContractTarget } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
@@ -101,7 +101,7 @@ async function buildSideQuestionFallbackParams({
       session: s,
       storageV5: u,
       credentials: k,
-      agentContext: aa(),
+      agentContext: createMainAgentContext(),
       options: {
         commands: l,
         debug: !1,
@@ -109,7 +109,7 @@ async function buildSideQuestionFallbackParams({
         tools: n,
         verbose: !1,
         thinkingConfig:
-          S ?? (JN() !== !1 ? { type: "adaptive" } : { type: "disabled" }),
+          S ?? (isThinkingEnabled() !== !1 ? { type: "adaptive" } : { type: "disabled" }),
         mcpClients: m,
         mcpResources: {},
         isNonInteractiveSession: !0,

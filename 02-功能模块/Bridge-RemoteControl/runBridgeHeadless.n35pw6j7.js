@@ -28,7 +28,7 @@ import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共�
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { te, truncateToWidth, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { HCn, Wi, si, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { ENVIRONMENTS_BETA, readBoundedFile, sanitizeSessionName, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { redactGitRemoteCredentials } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { ea, Za, Nr, PBe, rc, ctt, Vge, x8t } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -111,7 +111,7 @@ function Xt(e) {
         Authorization: `Bearer ${w}`,
         "Content-Type": "application/json",
         "anthropic-version": "2023-06-01",
-        "anthropic-beta": HCn.header,
+        "anthropic-beta": ENVIRONMENTS_BETA.header,
         "x-environment-runner-version": e.runnerVersion,
         "User-Agent": getClientUserAgent(),
       },
@@ -1493,7 +1493,7 @@ function vr(e) {
     setSessionTitle(k, J) {
       let de = Ke.get(k);
       if (!de) return;
-      let be = si(J);
+      let be = sanitizeSessionName(J);
       if (((de.title = be), p === "reconnecting" || p === "failed")) return;
       if (X === 1) ((p = "titled"), (r = truncateToWidth(be, 40)));
       De();
@@ -1595,7 +1595,7 @@ var yn = 1500,
   Dn = "/proc/driver/nvidia/version",
   On = createLazyValue(() => c({ cuda: c({ version: s() }) }));
 function Pr() {
-  let e = H("tengu_bridge_host_profile", "off");
+  let e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_host_profile", "off");
   return Vge.find((t) => t === e) ?? "off";
 }
 function er(e) {
@@ -1765,7 +1765,7 @@ async function Nn(e, t) {
   }
 }
 async function Rr(e, t) {
-  let o = await Wi(e, $r);
+  let o = await readBoundedFile(e, $r);
   if (o === null) return;
   let d = parsePlist(o),
     p = isPlainObject(d) ? d[t] : void 0;
@@ -1798,7 +1798,7 @@ async function Fn(e) {
   e.androidSdk = "android-sdk";
 }
 async function jn(e) {
-  let t = await Wi(Mn, $r);
+  let t = await readBoundedFile(Mn, $r);
   if (t !== null) {
     let o = On().safeParse(xt(t, !1));
     e.cuda =

@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ls } from "./认证-OAuth登录.419zdfz3.js";
+import { otelApiModule } from "./认证-OAuth登录.419zdfz3.js";
 import { execAsyncModule } from "../../01-核心基础设施/共享小工具-未细化/exec-async-module.js";
 import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var o = commonJS(function (i) {
   Object.defineProperty(i, "__esModule", { value: !0 });
   i.getMachineId = void 0;
   var s = execAsyncModule(),
-    d = Ls();
+    d = otelApiModule();
   async function u() {
     try {
       let t = (

@@ -17,7 +17,7 @@ import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isNestedGitLabProject, repoDetectionGuards, resolveRemote, detectCurrentRepositoryWithHost } from "../Git-Worktree/git-repository-detection.js";
 import { findGitRoot, getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-import { od } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { checkGate_CACHED_OR_BLOCKING } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   createConcurrencyLimiter,
   isSelfHostedPoolId,
@@ -188,7 +188,7 @@ async function G(
     [p, c] = await Promise.all([
       a.CCR_ENABLE_BUNDLE === !0
         ? Promise.resolve(!0)
-        : od("tengu_ccr_bundle_seed_enabled"),
+        : checkGate_CACHED_OR_BLOCKING("tengu_ccr_bundle_seed_enabled"),
       f === null ? Promise.resolve(null) : H(l, r),
     ]);
   if (isSignalAborted(r)) return { offer: k("aborted"), facts: null, forecast: null };

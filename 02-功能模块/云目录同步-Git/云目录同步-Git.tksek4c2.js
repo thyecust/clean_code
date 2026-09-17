@@ -21,7 +21,7 @@ import { replaceControlChars, formatSingleLineText } from "../../01-核心基础
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { getEnvVarCaseInsensitive, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
@@ -1255,7 +1255,7 @@ async function Ao(e, t) {
 function Ji(e, t) {
   return (t ? e.replaceAll("\\", "/") : e)
     .split("/")
-    .some((o) => nc(o) === ".git");
+    .some((o) => normalizePathSegment(o) === ".git");
 }
 function Qi(e, t) {
   return (

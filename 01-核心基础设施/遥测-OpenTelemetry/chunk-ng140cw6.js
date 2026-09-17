@@ -8,15 +8,15 @@
 
 // Version: 2.1.263
 import { bee } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
-import { Ls, Ime, Mc } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { otelApiModule, otelSemanticConventionsModule, otelCoreModule } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { commonJS, importMetaRequire } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 var g = commonJS(function (R) {
   Object.defineProperty(R, "__esModule", { value: !0 });
   R.PrometheusSerializer = void 0;
-  var z = Ls(),
+  var z = otelApiModule(),
     l = bee(),
-    E = Mc(),
-    v = Ime(),
+    E = otelCoreModule(),
+    v = otelSemanticConventionsModule(),
     x = "otel.scope.schema_url";
   function m(e) {
     return e.replace(/\\/g, "\\\\").replace(/\n/g, "\\n");
@@ -208,8 +208,8 @@ ${s}
 var M = commonJS(function (U) {
   Object.defineProperty(U, "__esModule", { value: !0 });
   U.PrometheusExporter = void 0;
-  var h = Ls(),
-    j = Mc(),
+  var h = otelApiModule(),
+    j = otelCoreModule(),
     b = bee(),
     k = importMetaRequire("http"),
     G = g(),

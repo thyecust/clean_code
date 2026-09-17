@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 82 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { getOAuthHeaders, ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getOAuthHeaders, httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, dt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -29,7 +29,7 @@ import { open as pe, realpath, stat as he } from "fs/promises";
 import { extname, sep as Z, resolve } from "path";
 var le = "anthropic.omelette.api.v1alpha.OmeletteService";
 async function I(e, t, r, o) {
-  let i = await ht.post(`/${le}/${e}`, r, {
+  let i = await httpClient.post(`/${le}/${e}`, r, {
     auth: "none",
     headers: { ...getOAuthHeaders(t), "X-Anthropic-Client": "claude-cli-design-sync" },
     timeout: 60000,

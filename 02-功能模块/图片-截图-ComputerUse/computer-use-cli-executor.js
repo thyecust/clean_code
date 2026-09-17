@@ -14,7 +14,7 @@ import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { getComputerUseSession, getComputerUseNativeModule, runComputerUseNativeCall, notifyExpectedEscape } from "./computer-use-session.js";
 import { getComputerUseInputNativeModule } from "./computer-use-input-native.js";
 import { IMAGE_TOKEN_BUDGET, fitSizeToTokenBudget } from "../../01-核心基础设施/共享小工具-未细化/image-scaling.js";
-import { qvn, Mor, UCt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { DEFAULT_HOST_BUNDLE_ID, getHostBundleIdentifier, DEFAULT_COMPUTER_USE_CAPABILITIES } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var M = commonJS(function (k, E) {
   var H = importMetaRequire("path");
@@ -126,8 +126,8 @@ function createCliExecutor(o) {
   let t = getComputerUseNativeModule(),
     a = !1,
     { getMouseAnimationEnabled: f, getHideBeforeActionEnabled: d } = o,
-    y = Mor(),
-    b = y ?? qvn,
+    y = getHostBundleIdentifier(),
+    b = y ?? DEFAULT_HOST_BUNDLE_ID,
     h = (e) => (y === null ? [...e] : e.filter((r) => r !== y));
   return (
     n(
@@ -136,7 +136,7 @@ function createCliExecutor(o) {
         : "[computer-use] terminal not detected; falling back to sentinel host",
     ),
     {
-      capabilities: { ...UCt, hostBundleId: qvn },
+      capabilities: { ...DEFAULT_COMPUTER_USE_CAPABILITIES, hostBundleId: DEFAULT_HOST_BUNDLE_ID },
       async prepareForAction(e, r) {
         if (!d()) return [];
         return runComputerUseNativeCall(async () => {

@@ -11,7 +11,7 @@ import { Xn, j, B, he, pv } from "../../00-第三方库/lodash/lodash.2x3q7cfh.j
 import { Ie, zn, An, pl, ac, li, BL } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { Wi, si, ownStoredLoginPlanAttributes, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { readBoundedFile, sanitizeSessionName, ownStoredLoginPlanAttributes, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isRestrictedMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
@@ -390,7 +390,7 @@ async function tt(e = !1) {
 }
 async function mo(e) {
   try {
-    let t = await Wi(Ze(getAttachJournalDir(), e), Wt);
+    let t = await readBoundedFile(Ze(getAttachJournalDir(), e), Wt);
     if (t === null) return null;
     return Jn(t);
   } catch {
@@ -1661,7 +1661,7 @@ Run 'claude daemon uninstall' to undo.
       return KL({ forceTransient: !0, onStarting: o, spawnIntent: !0 }, t);
     case "never":
       return (
-        await Te(
+        await saveGlobalConfig(
           (c) =>
             c.daemonInstallPromptDismissed
               ? c
@@ -2627,7 +2627,7 @@ async function pi({ jobId: e, state: t, prompt: o }, r, s, c) {
     rle(
       p.short,
       o === void 0 && !t.queuedPrompt ? IDLE_DETAIL : void 0,
-      p.state.name ? si(p.state.name) || void 0 : void 0,
+      p.state.name ? sanitizeSessionName(p.state.name) || void 0 : void 0,
     ) +
       `
 `,
@@ -3814,7 +3814,7 @@ function Or(e) {
       s.includes("--dangerously-skip-permissions") ||
       s.includes("--allow-dangerously-skip-permissions")) &&
     !hasSkipDangerousModePermissionPrompt() &&
-    !ee().bypassPermissionsModeAccepted
+    !getGlobalConfig().bypassPermissionsModeAccepted
   )
     return "--bg with bypassPermissions requires accepting the disclaimer first. Run `claude --dangerously-skip-permissions` once interactively.";
   if (c.includes("auto") && !hasAutoModeOptIn())

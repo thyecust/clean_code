@@ -18,7 +18,7 @@ import { truncateToCodeUnits, stripAnsiAndControlChars } from "../../01-核心�
 import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { yir, bir } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ht, Rp, XC, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { httpClient, REMOTE_DEVICES_MCP_SERVER_NAME, hasFreshGrowthBookFeatures, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ts, Js } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { isDesktopHostEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
@@ -837,7 +837,7 @@ async function jt(e, r) {
 }
 function Xe() {
   if (a.CLAUDE_CODE_REMOTE && !isAnthropicHostedEnvironment()) return !1;
-  return a.CLAUDE_CODE_ARTIFACT_DELETE ?? H("tengu_cobalt_plinth_alder", !1);
+  return a.CLAUDE_CODE_ARTIFACT_DELETE ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_alder", !1);
 }
 function INt() {
   return isCoworkHostSession()
@@ -1044,7 +1044,7 @@ function Kon(e) {
 }
 function RNt() {
   if (a.CLAUDE_CODE_REMOTE && !isAnthropicHostedEnvironment()) return !1;
-  return a.CLAUDE_CODE_ARTIFACT_PIN ?? H("tengu_cobalt_plinth_holly", !1);
+  return a.CLAUDE_CODE_ARTIFACT_PIN ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_holly", !1);
 }
 var kNt =
   "Pinning artifacts isn't available in this cloud session yet, so nothing changed; do not retry here. The user can pin or unpin it themselves from the artifact's menu on claude.ai.";
@@ -1175,7 +1175,7 @@ async function Zt(e) {
       maxContentLength: Ze,
       credentials: e,
     },
-    i = await ht.get(Je, t);
+    i = await httpClient.get(Je, t);
   if (!i.ok) return;
   let o = isRecord(i.data) ? i.data : {},
     c = isRecord(o.artifact_pins_by_org) ? o.artifact_pins_by_org : {};
@@ -1184,7 +1184,7 @@ async function Zt(e) {
   for (let [d, b] of Object.entries(c))
     if (typeof b === "boolean" && d !== r) u[d] = b;
   let l = Object.entries(u).slice(0, Jt - 1);
-  await ht.patch(
+  await httpClient.patch(
     Je,
     { artifact_pins_by_org: { ...Object.fromEntries(l), [r]: !0 } },
     t,
@@ -1562,7 +1562,7 @@ function Jon(e) {
   return [...r.values()];
 }
 function Qon(e) {
-  let r = `mcp__${Rp}__`,
+  let r = `mcp__${REMOTE_DEVICES_MCP_SERVER_NAME}__`,
     t = new Set();
   for (let i of e) {
     if (!i.name.startsWith(r)) continue;
@@ -1607,7 +1607,7 @@ function lr(e) {
   };
 }
 function cr() {
-  return H("tengu_cobalt_plinth_yew", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_yew", !1);
 }
 function Zon(e, r) {
   let t = sr() ? lr(e) : null,
@@ -1627,7 +1627,7 @@ function Mjn(e, r) {
 }
 function ct() {
   return (
-    a.CLAUDE_CODE_ARTIFACT_OPEN_ACTION ?? H("tengu_cobalt_plinth_willow", !1)
+    a.CLAUDE_CODE_ARTIFACT_OPEN_ACTION ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_willow", !1)
   );
 }
 var be = ["light", "dark"],
@@ -1846,7 +1846,7 @@ function gr() {
     D = RNt();
   ((ne().frozenArtifactPins = D),
     n(
-      `Artifact input schema built: capabilities=${p} comments=${t} db=${i} assets=${w} files=${u} types=${l} type_catalog=${b} read_page_data=${r} room=${o} verify=${E} delete=${A} copy_from=${_} preview=${C} open=${M} endpoints=${P} pin=${D} flag_source=${Z3n()} gb_fresh=${XC()}`,
+      `Artifact input schema built: capabilities=${p} comments=${t} db=${i} assets=${w} files=${u} types=${l} type_catalog=${b} read_page_data=${r} room=${o} verify=${E} delete=${A} copy_from=${_} preview=${C} open=${M} endpoints=${P} pin=${D} flag_source=${Z3n()} gb_fresh=${hasFreshGrowthBookFeatures()}`,
     ),
     (ne().frozenReadPageDataSchemaNames = r ? new Set(e) : new Set()));
   let j = I?.liveEditGateOpen() === !0,

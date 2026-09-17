@@ -13,7 +13,7 @@ import { withTimeout } from "../../01-核心基础设施/共享小工具-未细�
 import { isSimpleMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { CLAUDE_AI_INFERENCE_SCOPE } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import {
-  r0,
+  isSemverLessThan,
   describeHowToDisableAuthTokenSource,
   getAuthTokenSource,
   getAnthropicApiKeyWithSource,
@@ -21,14 +21,14 @@ import {
   getClaudeAIOAuthTokens,
   isClaudeAISubscriber,
   hasProfileScope,
-  kZe,
-  XC,
-  CU,
-  H,
-  od,
-  _q,
-  Qh,
-  ee,
+  getAllGrowthBookFeatures,
+  hasFreshGrowthBookFeatures,
+  isGrowthBookEnabled,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  checkGate_CACHED_OR_BLOCKING,
+  refreshGrowthBookAfterAuthChange,
+  getDynamicConfig_CACHED_MAY_BE_STALE,
+  getGlobalConfig,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -45,7 +45,7 @@ function isBridgeFirstParty() {
   return !!a.ANTHROPIC_UNIX_SOCKET || isActualFirstPartyAnthropicBaseUrl();
 }
 function hasBridgeEntitlement() {
-  return isBridgeFirstParty() && l() && H("tengu_ccr_bridge", !1);
+  return isBridgeFirstParty() && l() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_bridge", !1);
 }
 function getBridgeEntitlementBlocker() {
   if (hasBridgeEntitlement()) return null;
@@ -72,7 +72,7 @@ function isRemoteControlDeploymentAvailable() {
 async function isBridgeEnabledBlocking() {
   if (u()) return !0;
   if (isRemoteControlHardDisabled()) return !1;
-  return isBridgeFirstParty() && !isRunningInRemoteEnvironment() && l() && (await od("tengu_ccr_bridge"));
+  return isBridgeFirstParty() && !isRunningInRemoteEnvironment() && l() && (await checkGate_CACHED_OR_BLOCKING("tengu_ccr_bridge"));
 }
 var O =
   "Remote Control is disabled by your organization's policy. Contact your organization admin for access.";
@@ -102,7 +102,7 @@ async function getBridgeDisabledReason() {
   let e = getRemoteControlPolicyVerdict();
   if (e === "unavailable") return REMOTE_CONTROL_POLICY_UNVERIFIABLE_MESSAGE;
   if (e === "denied") return T();
-  if (!CU()) {
+  if (!isGrowthBookEnabled()) {
     let o = getTelemetryDisabledEnvVar();
     if (o)
       return `Remote Control requires feature-flag evaluation, which is disabled because ${o} is set. Unset it (or run in a shell without it) to use Remote Control.`;
@@ -110,10 +110,10 @@ async function getBridgeDisabledReason() {
       return "Remote Control requires feature-flag evaluation, which is disabled because DISABLE_GROWTHBOOK is set. Unset it (or run in a shell without it) to use Remote Control.";
     return "Remote Control requires feature-flag evaluation, which is unavailable in this environment.";
   }
-  if (!(await od("tengu_ccr_bridge"))) {
-    if (!XC()) {
-      if ((_q(), await od("tengu_ccr_bridge"))) return null;
-      if (!XC())
+  if (!(await checkGate_CACHED_OR_BLOCKING("tengu_ccr_bridge"))) {
+    if (!hasFreshGrowthBookFeatures()) {
+      if ((refreshGrowthBookAfterAuthChange(), await checkGate_CACHED_OR_BLOCKING("tengu_ccr_bridge"))) return null;
+      if (!hasFreshGrowthBookFeatures())
         return "Couldn't verify Remote Control eligibility \u2014 the feature-flag service was unreachable (offline or blocked). Retry, or run with `--debug` / `claude doctor` for details.";
     }
     return "Remote Control isn't enabled for this account. If you recently changed plans, run `claude auth logout` then `claude auth login` to refresh your entitlements, or `claude doctor` for details.";
@@ -185,13 +185,13 @@ function getBridgeAuthDebugInfo() {
 }
 function v() {
   let e = (r) => (r ? "set" : "unset"),
-    o = kZe(),
+    o = getAllGrowthBookFeatures(),
     t = L();
   return [
-    `  isGrowthBookEnabled=${CU()}`,
+    `  isGrowthBookEnabled=${isGrowthBookEnabled()}`,
     `  telemetryDisabledBy=${getTelemetryDisabledEnvVar() ?? "none"}`,
     `  DISABLE_GROWTHBOOK=${e(process.env.DISABLE_GROWTHBOOK)}`,
-    `  hasFreshGrowthBookFeatures=${XC()}`,
+    `  hasFreshGrowthBookFeatures=${hasFreshGrowthBookFeatures()}`,
     `  growthBookFeaturesLoaded=${Object.keys(o).length}`,
     `  growthBookLastFetched=${t ? `${w(Date.now() - t)} ago` : "never"}`,
     `  tengu_ccr_bridge=${String(o.tengu_ccr_bridge ?? "unset")}`,
@@ -200,7 +200,7 @@ function v() {
 async function getBridgeDoctorInfo() {
   if (isRunningInRemoteEnvironment() && !u())
     return { disabledReason: null, inRemoteSession: !0, checks: [] };
-  (_q(), await ensurePolicyLimitsLoadedForDiagnostic());
+  (refreshGrowthBookAfterAuthChange(), await ensurePolicyLimitsLoadedForDiagnostic());
   let e = await getBridgeDisabledReason(),
     o = getTelemetryDisabledEnvVar() ?? (a.DISABLE_GROWTHBOOK ? "DISABLE_GROWTHBOOK" : null),
     t = isBridgeFirstParty(),
@@ -212,9 +212,9 @@ async function getBridgeDoctorInfo() {
     c = getRemoteControlPolicyVerdict(),
     m = S(),
     I = D(getComplianceTaints()),
-    E = CU(),
-    C = await od("tengu_ccr_bridge"),
-    R = XC(),
+    E = isGrowthBookEnabled(),
+    C = await checkGate_CACHED_OR_BLOCKING("tengu_ccr_bridge"),
+    R = hasFreshGrowthBookFeatures(),
     B = [
       {
         label: t
@@ -288,7 +288,7 @@ async function getBridgeDoctorInfo() {
 }
 function L() {
   try {
-    return ee().cachedGrowthBookFeaturesAt;
+    return getGlobalConfig().cachedGrowthBookFeaturesAt;
   } catch {
     return;
   }
@@ -366,7 +366,7 @@ function g() {
 }
 function h() {
   try {
-    return ee().oauthAccount;
+    return getGlobalConfig().oauthAccount;
   } catch {
     return;
   }
@@ -420,64 +420,64 @@ function isRunningInRemoteEnvironment() {
   return Ie(process.env.CLAUDE_CODE_REMOTE) || Nn();
 }
 function isCseShimEnabled() {
-  return H("tengu_bridge_repl_v2_cse_shim_enabled", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_repl_v2_cse_shim_enabled", !0);
 }
 function isBridgeStateFramesEnabled() {
-  return H("tengu_luminous_seal", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_luminous_seal", !0);
 }
 function isBridgePartialMessagesEnabled() {
-  return H("tengu_bridge_partial_messages", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_partial_messages", !1);
 }
 function isSdkBridgeStateAnnounceEnabled() {
-  return H("tengu_wobbly_pinwheel", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_wobbly_pinwheel", !0);
 }
 function isBridgeEffortSyncEnabled() {
-  return H("tengu_copper_kestrel", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_copper_kestrel", !0);
 }
 function isBridgeAuthReviveEnabled() {
-  return H("tengu_bridge_auth_revive", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_auth_revive", !0);
 }
 function isBridgeNonOrigin403RetryEnabled() {
-  return H("tengu_ethereal_mist", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ethereal_mist", !0);
 }
 function isBridgeResumeRespectsLocalOwnerEnabled() {
-  return H("tengu_bridge_resume_respects_local_owner", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_resume_respects_local_owner", !0);
 }
 function isBridgeRestoredMatchMintEnabled() {
-  return H("tengu_sequential_puffin", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_sequential_puffin", !0);
 }
 function isBridgeOwnerPinnedEndEnabled() {
-  return H("tengu_bridge_owner_pinned_end", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_owner_pinned_end", !0);
 }
 function isBridgeEnvReregisterEnabled() {
-  return H("tengu_glimmering_glade", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_glimmering_glade", !0);
 }
 function isBridgeHostDeclinedEndEnabled() {
-  return H("tengu_bridge_host_declined_end", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_host_declined_end", !0);
 }
 function isBridgeSignedOutNeutralEnabled() {
-  return H("tengu_bridge_signed_out_neutral", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_signed_out_neutral", !0);
 }
 function isCcrV2SendEventsEnabled() {
-  return H("tengu_ccr_v2_send_events_cli", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_v2_send_events_cli", !0);
 }
 function isCcrV2SessionCrudEnabled() {
-  return H("tengu_ccr_v2_session_crud_cli", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_v2_session_crud_cli", !1);
 }
 function isCcrV2BridgeCreateEnabled() {
-  return H("tengu_ccr_v2_bridge_create_cli", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_v2_bridge_create_cli", !1);
 }
 function isBridgeRateLimitEventEnabled() {
-  return H("tengu_composed_quail", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_composed_quail", !0);
 }
 function isQuotaRejectedReemitEnabled() {
-  return H("tengu_gravel_chorus", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_gravel_chorus", !0);
 }
 function checkBridgeMinVersion() {
-  let e = Qh("tengu_bridge_min_version", { minVersion: "0.0.0" });
+  let e = getDynamicConfig_CACHED_MAY_BE_STALE("tengu_bridge_min_version", { minVersion: "0.0.0" });
   if (
     e.minVersion &&
-    r0(
+    isSemverLessThan(
       {
         ISSUES_EXPLAINER:
           "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -506,7 +506,7 @@ function resolveCcrAutoConnectDefault() {
   if (isPersistentRemoteSessionEnabled()) return { value: !0, source: "persistent_remote_session" };
   let e = getPolicyDefault("remote_control_at_startup");
   if (e !== void 0) return { value: e, source: "org_policy" };
-  return { value: H("tengu_cobalt_harbor", !1), source: "growthbook" };
+  return { value: getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_harbor", !1), source: "growthbook" };
 }
 function isPersistentRemoteSessionEnabled() {
   return !1;
@@ -515,15 +515,15 @@ function isUdsEnableRemoteControlEnabled() {
   return !1;
 }
 function isRemoteControlInternalEventsEnabled() {
-  return H("tengu_amber_relay", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_amber_relay", !1);
 }
 function isBridgeServerSessionConfigEnabled() {
   return !1;
 }
 function getBridgeSubagentFrameGate() {
   return {
-    enabled: H("tengu_bridge_subagent_frames", !0),
-    forwardText: H("tengu_bridge_subagent_text", !1),
+    enabled: getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_subagent_frames", !0),
+    forwardText: getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_subagent_text", !1),
   };
 }
 function applyRemoteControlToAppState(e, o) {

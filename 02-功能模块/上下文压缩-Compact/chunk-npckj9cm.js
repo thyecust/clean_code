@@ -20,29 +20,29 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   withOAuth401Retry,
-  Orr,
+  formatModelCostPerMtok,
   isNonCustomFableModel,
   getMainLoopModel,
   firstPartyNameToCanonical,
   getMarketingNameForModel,
-  gU,
-  C6,
-  T5,
+  resetBetaCaches,
+  refreshGatewayCredentialIfNeeded,
+  invalidateToolDefinitionCache,
   shouldUseWIFAuth,
   getAnthropicApiKeySafe,
   getClaudeAIOAuthTokens,
   isClaudeAISubscriber,
   hasProfileScope,
-  s5t,
-  Bsr,
-  _vt,
-  jsr,
-  Te,
-  ee,
-  ZRn,
-  ekn,
-  tkn,
-  rkn,
+  buildClientDataCacheKey,
+  CLIENT_DATA_SLOT_STALE_AFTER_MS,
+  isClientDataCacheEntry,
+  upsertClientDataCacheSlot,
+  saveGlobalConfig,
+  getGlobalConfig,
+  setClientDataCacheKeyGetter,
+  setClientDataReadGate,
+  setClientDataStrictReadGate,
+  setClientDataStaleMatchGetter,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getEnvEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { formatLabelText, formatDescriptionText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
@@ -66,7 +66,7 @@ var X = createLazyValue(() =>
             _ = u;
           if (d && c && l == null) {
             let s = u ? (u.startsWith(c) ? u : `${c} \xB7 ${u}`) : c,
-              o = Orr(t);
+              o = formatModelCostPerMtok(t);
             _ = o && !isClaudeAISubscriber() && !s.includes("per Mtok") ? `${s} \xB7 ${o}` : s;
           }
           return {
@@ -148,13 +148,13 @@ function O() {
         "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
       DD_SOURCEMAP_GROUP: "darwin",
     }.VERSION,
-    organizationUuid: ee().oauthAccount?.organizationUuid ?? null,
+    organizationUuid: getGlobalConfig().oauthAccount?.organizationUuid ?? null,
   };
 }
 function J() {
-  ZRn(() => {
+  setClientDataCacheKeyGetter(() => {
     try {
-      return s5t(O());
+      return buildClientDataCacheKey(O());
     } catch (t) {
       return (logError(t), "bi1-key-unavailable");
     }
@@ -170,21 +170,21 @@ function E() {
 }
 function registerClientDataGetters() {
   try {
-    (ekn(() => {
+    (setClientDataReadGate(() => {
       try {
         return E();
       } catch (t) {
         return (logError(t), !0);
       }
     }),
-      tkn(() => {
+      setClientDataStrictReadGate(() => {
         try {
           return E();
         } catch (t) {
           return (logError(t), !1);
         }
       }),
-      rkn(() => {
+      setClientDataStaleMatchGetter(() => {
         try {
           if (!E()) return null;
           let t = O();
@@ -345,7 +345,7 @@ async function refreshBootstrapData(t, e, { keepRenderCaches: u = !1 } = {}) {
   registerClientDataGetters();
   try {
     let l = getAPIProvider() === "firstParty";
-    if (!l) (gU(), T5());
+    if (!l) (resetBetaCaches(), invalidateToolDefinitionCache());
     let d = O(),
       c = xW(),
       _ = await tt(d, e);
@@ -360,7 +360,7 @@ async function refreshBootstrapData(t, e, { keepRenderCaches: u = !1 } = {}) {
         !1
       );
     logFeatureOk("api_bootstrap_fetch");
-    let r = ee(),
+    let r = getGlobalConfig(),
       p = s.narrowed ?? o,
       A = p && s.additional_model_options == null,
       D = p && s.additional_model_costs == null,
@@ -389,15 +389,15 @@ async function refreshBootstrapData(t, e, { keepRenderCaches: u = !1 } = {}) {
         : v
           ? (r.orgModelDefaultCache ?? null)
           : null,
-      K = s5t({
+      K = buildClientDataCacheKey({
         ...d,
         organizationUuid: k?.organizationUuid ?? d.organizationUuid,
       }),
       F = r.clientDataCacheSlots?.[K],
-      w = _vt(F) ? F : void 0,
+      w = isClientDataCacheEntry(F) ? F : void 0,
       x = w !== void 0,
       q = Qs(k, r.oauthAccount),
-      N = l && w !== void 0 && Date.now() - w.at > Bsr,
+      N = l && w !== void 0 && Date.now() - w.at > CLIENT_DATA_SLOT_STALE_AFTER_MS,
       b = l && (w === void 0 || !Qs(w.data ?? null, T));
     logEvent("tengu_client_data_cache_key", {
       slot_hit: x,
@@ -428,14 +428,14 @@ async function refreshBootstrapData(t, e, { keepRenderCaches: u = !1 } = {}) {
     n("[Bootstrap] Cache updated, persisting to disk");
     let G = !1;
     if (
-      (await Te((C) => {
+      (await saveGlobalConfig((C) => {
         if (j !== xW()) return ((G = !0), C);
         let B = H(C.oauthAccount, s.oauth_account),
-          Y = s5t({ ...d, organizationUuid: B?.organizationUuid ?? null });
+          Y = buildClientDataCacheKey({ ...d, organizationUuid: B?.organizationUuid ?? null });
         return {
           ...C,
           clientDataCacheSlots: l
-            ? jsr(C.clientDataCacheSlots, Y, {
+            ? upsertClientDataCacheSlot(C.clientDataCacheSlots, Y, {
                 data: T,
                 at: Date.now(),
                 entrypoint: d.entrypoint ?? null,
@@ -460,7 +460,7 @@ async function refreshBootstrapData(t, e, { keepRenderCaches: u = !1 } = {}) {
       G)
     )
       return !1;
-    if (b && !u) (gU(), T5());
+    if (b && !u) (resetBetaCaches(), invalidateToolDefinitionCache());
     return !0;
   } catch (l) {
     if (cc(l))
@@ -481,7 +481,7 @@ var et = createLazyValue(() =>
   }),
 );
 async function ot(t) {
-  await C6(t);
+  await refreshGatewayCredentialIfNeeded(t);
   let e = ns();
   if (!e) return null;
   try {

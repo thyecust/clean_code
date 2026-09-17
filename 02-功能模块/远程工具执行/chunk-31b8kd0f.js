@@ -16,7 +16,7 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, z, pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { writeToStdout } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Ff, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { onGrowthBookRefresh, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isHumanTurnEvent } from "../Bridge-RemoteControl/bridge-inbound-origin.js";
 import {
   _Cn,
@@ -68,17 +68,17 @@ import { createWriteStream, fstatSync } from "fs";
 import { PassThrough } from "stream";
 import { URL as ie } from "url";
 function I0t() {
-  return H("tengu_ccr_subagent_skip_on_delta", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_subagent_skip_on_delta", !1);
 }
 function D() {
   return (
     a.CLAUDE_CODE_CCR_LAZY_SUBAGENT_HYDRATE ??
-    H("tengu_ccr_subagent_lazy_hydrate", !1)
+    getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_subagent_lazy_hydrate", !1)
   );
 }
 function j1n() {
   return (
-    a.CLAUDE_CODE_TRANSCRIPT_LOCAL_GC ?? H("tengu_transcript_local_gc", !1)
+    a.CLAUDE_CODE_TRANSCRIPT_LOCAL_GC ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_transcript_local_gc", !1)
   );
 }
 var le = "VERIFIED_BY_GATE",
@@ -497,14 +497,14 @@ class Uz extends Fae {
           if (c.length > 0) this.noteRequestsUpload(c, u);
         },
       }),
-      streamEventFlushIntervalMs: H("tengu_ccr_stream_event_flush_ms", KGe),
+      streamEventFlushIntervalMs: getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_stream_event_flush_ms", KGe),
       noSubscriberStreamEventFlushIntervalMs: ne(),
-      advertiseHeartbeatProbeSupport: H("tengu_ccr_idle_heartbeat", !1),
-      beatOnStaleReconnect: H("tengu_ccr_reconnect_beat", !1),
+      advertiseHeartbeatProbeSupport: getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_idle_heartbeat", !1),
+      beatOnStaleReconnect: getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_reconnect_beat", !1),
       idleTracker: this.idleTracker,
-      beatOnReactivation: H("tengu_ccr_reactivation_beat", !1),
-      skipRedundantHeartbeats: H("tengu_ccr_skip_redundant_heartbeat", !1),
-      uploadTrim: () => H("tengu_ccr_upload_trim", {}),
+      beatOnReactivation: getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_reactivation_beat", !1),
+      skipRedundantHeartbeats: getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_skip_redundant_heartbeat", !1),
+      uploadTrim: () => getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_upload_trim", {}),
       adoptRefreshedAuth: C,
       gzipRequestBodyFetch: createGzipRequestBodyFetch("ccr_worker", d),
       getAuthHeaders: o,
@@ -515,7 +515,7 @@ class Uz extends Fae {
         (this.ccrClient.reportDelivery(r.event_id, "received"),
           this.ccrClient.reportDelivery(r.event_id, "processed"));
       }),
-      (this.unsubscribeGrowthBookRefresh = Ff(() =>
+      (this.unsubscribeGrowthBookRefresh = onGrowthBookRefresh(() =>
         this.ccrClient.setNoSubscriberStreamEventFlushIntervalMs(ne()),
       )));
     let S =
@@ -892,7 +892,7 @@ class Uz extends Fae {
   }
 }
 function ne() {
-  return H("tengu_ccr_no_subscriber_flush_ms", 0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_no_subscriber_flush_ms", 0);
 }
 function ke(e) {
   let t = e,

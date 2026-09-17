@@ -10,7 +10,7 @@
 import { j, rE, B } from "../../lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../lodash/lodash.207999qb.js";
 import { logFeatureOk, logFeatureSad } from "../../lodash/lodash.0vqzb8ad.js";
-import { Hn } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getSanitizedToolName } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { findToolByName, isBatchToolDefinition } from "../../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
@@ -27,7 +27,7 @@ function b(e, r, a) {
   let i = findToolByName(r, e.name);
   if (i === void 0 || !isBatchToolDefinition(i)) return null;
   let l = (u) => (
-    logFeatureSad("batch_tools", u, { tool_name: Hn(i.name), isMcp: !1 }),
+    logFeatureSad("batch_tools", u, { tool_name: getSanitizedToolName(i.name), isMcp: !1 }),
     [
       {
         type: "tool_use",
@@ -91,7 +91,7 @@ function B3t(e, r, a) {
     }
     if (((i ??= e.slice(0, u)), i.push(...t.synthetics), t.decomposed))
       (l.push({ id: o.id, name: o.name }),
-        logFeatureOk("batch_tools", { tool_name: Hn(o.name), isMcp: !1 }));
+        logFeatureOk("batch_tools", { tool_name: getSanitizedToolName(o.name), isMcp: !1 }));
   }
   return { content: i ?? e, batchToolUses: l };
 }
@@ -121,7 +121,7 @@ function _Jn(e, r, a) {
       if (!d.has(t.id))
         (d.add(t.id),
           logFeatureSad("batch_tools", "reassemble_threw", {
-            tool_name: Hn(t.name),
+            tool_name: getSanitizedToolName(t.name),
             isMcp: !1,
           }));
     }

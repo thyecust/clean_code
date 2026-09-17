@@ -13,7 +13,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { o, t, ct, zb } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { CLAUDE_IN_CHROME_URL, isChromeExtensionInstalled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -36,7 +36,7 @@ function ClaudeInChromeOnboarding(J) {
     ((D = () => {
       (logEvent("tengu_claude_in_chrome_onboarding_shown", {}),
         isChromeExtensionInstalled().then(Q).catch(logError),
-        Te(P, a));
+        saveGlobalConfig(P, a));
     }),
       (R = [a]),
       (n[0] = a),

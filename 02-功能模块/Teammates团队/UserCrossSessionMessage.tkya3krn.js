@@ -12,7 +12,7 @@
 import { uCe, NGt, Ij } from "./chunk-g6nvp9mm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { shouldExpandContent } from "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import { FT, uf } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { sanitizeDisplayName, parsePeerAddress } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
@@ -40,7 +40,7 @@ function v(s) {
   return K(k, y);
 }
 function K(s, a) {
-  return (s && FT(s)) || (a && FT(S(a))) || B;
+  return (s && sanitizeDisplayName(s)) || (a && sanitizeDisplayName(S(a))) || B;
 }
 function UserCrossSessionMessage(se) {
   let i = _(23),
@@ -133,7 +133,7 @@ function UserCrossSessionMessage(se) {
   return J;
 }
 function S(s) {
-  let { scheme: a, target: l } = uf(s);
+  let { scheme: a, target: l } = parsePeerAddress(s);
   switch (a) {
     case "uds":
       return l

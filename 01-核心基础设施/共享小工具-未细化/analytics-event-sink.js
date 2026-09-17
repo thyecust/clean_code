@@ -10,38 +10,38 @@
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { stripProtoFields, attachAnalyticsSink } from "./analytics-event-queue.js";
 import {
-  GAt,
-  qrr,
+  maskModelIdIfConfidential,
+  maskModelIdsInPayload,
   getMainLoopModel,
-  tKt,
-  FQe,
-  HUe,
-  OKt,
-  IUe,
-  E_,
-  H,
-  tBe,
+  isServedCatalogMaskHydrated,
+  ensureServedCatalogMaskHydrated,
+  isAnalyticsSinkDisabled,
+  getEventSampleRate,
+  logFirstPartyEvent,
+  logFirstPartyEventAsync,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  trackDatadogEvent,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 var m = "tengu_log_datadog_events";
 function s() {
-  if (HUe("datadog")) return !1;
+  if (isAnalyticsSinkDisabled("datadog")) return !1;
   try {
-    return H(m, !1);
+    return getFeatureValue_CACHED_MAY_BE_STALE(m, !1);
   } catch {
     return !1;
   }
 }
 function f(t) {
   try {
-    GAt(getMainLoopModel());
+    maskModelIdIfConfidential(getMainLoopModel());
   } catch {}
-  return qrr(t);
+  return maskModelIdsInPayload(t);
 }
 function d(t, o, e) {
   let a = f(o),
     r = e !== null ? { ...a, sample_rate: e } : a;
-  if (s()) tBe(t, stripProtoFields(r));
-  IUe(t, r);
+  if (s()) trackDatadogEvent(t, stripProtoFields(r));
+  logFirstPartyEvent(t, r);
 }
 var i = !1;
 function u(t, o) {
@@ -54,9 +54,9 @@ function u(t, o) {
   }
   i = !0;
   try {
-    let e = OKt(t);
+    let e = getEventSampleRate(t);
     if (e === 0) return;
-    if (tKt()) {
+    if (isServedCatalogMaskHydrated()) {
       d(t, o, e);
       return;
     }
@@ -68,20 +68,20 @@ function u(t, o) {
         i = !1;
       }
     };
-    FQe().then(a, a);
+    ensureServedCatalogMaskHydrated().then(a, a);
   } finally {
     i = !1;
   }
 }
 async function g(t, o) {
-  let e = OKt(t);
+  let e = getEventSampleRate(t);
   if (e === 0) return;
-  if (!tKt()) await FQe();
+  if (!isServedCatalogMaskHydrated()) await ensureServedCatalogMaskHydrated();
   let a = f(o),
     r = e !== null ? { ...a, sample_rate: e } : a,
     l = [];
-  if (s()) l.push(tBe(t, stripProtoFields(r)));
-  (l.push(E_(t, r)), await Promise.all(l));
+  if (s()) l.push(trackDatadogEvent(t, stripProtoFields(r)));
+  (l.push(logFirstPartyEventAsync(t, r)), await Promise.all(l));
 }
 function initializeAnalyticsSink() {
   attachAnalyticsSink({ logEvent: u, logEventAsync: g });

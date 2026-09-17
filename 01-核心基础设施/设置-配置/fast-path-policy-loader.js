@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B, g_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
-import { Nse, ee, ARe } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { shouldForceGatewayLogin, getGlobalConfig, enableConfigs } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { da } from "./设置-配置.aqbb35ee.js";
 import { rRt, ABe, uRt, getBasePolicySettings, getBasePolicySettingsOrigin, getPolicyHelperSourceLoadErrors } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS, ensureKeychainPrefetchCompleted } from "../共享小工具-未细化/keychain-prefetch.js";
@@ -46,10 +46,10 @@ async function ensureFastPathSettingsLoaded(t) {
       import("../共享小工具-未细化/chunk-bgf8jybv.js"),
     ]);
     (await r(e),
-      await Promise.all([ARe(e), o(e, da())]),
-      i(ee().cachedGrowthBookFeatures?.tengu_windows_credman === !0),
+      await Promise.all([enableConfigs(e), o(e, da())]),
+      i(getGlobalConfig().cachedGrowthBookFeatures?.tengu_windows_credman === !0),
       await a(e));
-  } else await ARe();
+  } else await enableConfigs();
   if ((await rRt(), await ensureKeychainPrefetchCompleted(KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS), isHoverRestEnabled() && e !== void 0)) {
     let [
         { credentialsStoreFor: o },
@@ -63,7 +63,7 @@ async function ensureFastPathSettingsLoaded(t) {
       r = o(e);
     if (r !== void 0) (await i(r, { bgAuthSnapshot: "leave" }), await a(r));
   }
-  (g_e(Nse), goe());
+  (g_e(shouldForceGatewayLogin), goe());
   let n = checkVersionPolicy();
   if (n)
     (process.stderr.write(`${n}

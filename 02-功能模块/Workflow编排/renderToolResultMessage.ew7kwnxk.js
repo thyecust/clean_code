@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 134 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { pluralize, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
@@ -244,7 +244,7 @@ function K(he) {
 function W() {
   let H = _(2),
     oe;
-  if (H[0] === MEMO_CACHE_SENTINEL) ((oe = getSessionStartWorkflowSizeGuideline(ee().workflowSizeGuideline)), (H[0] = oe));
+  if (H[0] === MEMO_CACHE_SENTINEL) ((oe = getSessionStartWorkflowSizeGuideline(getGlobalConfig().workflowSizeGuideline)), (H[0] = oe));
   else oe = H[0];
   let { size: te, isDefault: Se } = oe;
   if (!Se || te === "unrestricted") {

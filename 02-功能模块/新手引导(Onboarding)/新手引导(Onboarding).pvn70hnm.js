@@ -10,7 +10,7 @@
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { CLAUDE_BULLET_GLYPH, EFFORT_MEDIUM_GLYPH, PAUSE_GLYPH, AUTO_ACCEPT_GLYPH, LOZENGE_OUTLINE_GLYPH, LOZENGE_FILLED_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
@@ -895,7 +895,7 @@ function Bt(fs) {
   return Vw.some((gs) => gs.id === fs);
 }
 function Dt() {
-  let ys = ee().powerupsUnlocked ?? [];
+  let ys = getGlobalConfig().powerupsUnlocked ?? [];
   return new Set(ys.filter(Bt));
 }
 function LHe(cs) {
@@ -934,7 +934,7 @@ function LHe(cs) {
       let ie = new Set(h).add(Ro);
       if (
         (ls(ie),
-        Te((ms) => ({ ...ms, powerupsUnlocked: [...ie] }), wo),
+        saveGlobalConfig((ms) => ({ ...ms, powerupsUnlocked: [...ie] }), wo),
         logEvent("tengu_powerup_lesson_completed", {
           lesson_id: fromEnum(Ro),
           unlocked_count: ie.size,

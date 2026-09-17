@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ff, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { onGrowthBookRefresh, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -21,7 +21,7 @@ import { MCP_SEND_MESSAGE_ORIGIN, SLACK_BOT_ORIGIN, enqueueReportingAdmission } 
 import { getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import { Nu } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 function isHarborKiteModeEmitEnabled() {
-  return H("tengu_harbor_kite_mode_emit", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_harbor_kite_mode_emit", !0);
 }
 function O() {
   switch (I().decidedBy) {
@@ -76,7 +76,7 @@ function setInboundAvailabilityPublisher(e) {
     (o.unsubscribeAvailabilityRefresh = null),
     e)
   )
-    (publishInboundAvailability(), (o.unsubscribeAvailabilityRefresh = Ff(publishInboundAvailability)));
+    (publishInboundAvailability(), (o.unsubscribeAvailabilityRefresh = onGrowthBookRefresh(publishInboundAvailability)));
 }
 function publishInboundAvailability() {
   getBridgeHostState().inbound.publishAvailability?.(getSessionRefuseCause() === void 0);

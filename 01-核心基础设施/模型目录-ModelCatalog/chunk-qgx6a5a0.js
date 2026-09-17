@@ -14,20 +14,20 @@ import { Lt, xu, xae, Hae, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk
 import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  Or,
-  Zl,
-  Mr,
-  af,
-  db,
-  pb,
-  QH,
-  VCn,
+  getProviderState,
+  getEffectiveModelStrings,
+  isFastModeEnabled,
+  modelSupportsFastMode,
+  resolveFastModeForModel,
+  logFastModeToggled,
+  clearFastModeCooldown,
+  collectUnentitledModelNames,
   isModelDenied,
   getModelEntitlementDenySet,
   isModelAllowed,
-  ZH,
-  UD,
-  zAt,
+  isOpus1mContextAvailable,
+  isSonnet1mContextAvailable,
+  formatUnrecognizedModelNotice,
   isPinnedFableModel,
   isFableFamilyOrPinnedModel,
   getModelUnavailabilityReason,
@@ -43,7 +43,7 @@ import {
   renderModelSetting,
   getCuratedModelPicker,
   parseUserSpecifiedModel,
-  tc,
+  hasLongContextSuffix,
   modelHasNative1MContext,
   isClaudeAISubscriber,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -81,14 +81,14 @@ function b(e, t, n) {
     i = r.includes("opus") || r.includes("fable"),
     s = r.includes("opus-4-6"),
     u = r.includes("sonnet-4-6");
-  if (t && af(e)) return !0;
+  if (t && modelSupportsFastMode(e)) return !0;
   if ((r.includes("fable") || isPinnedFableModel(o)) && !isUsageCreditsExempt() && (isFableUsageCreditsRequired() || isCreditsOnlyTierSubscription())) return !0;
-  if (!tc(r)) return !1;
+  if (!hasLongContextSuffix(r)) return !1;
   if (i && n) return !1;
   return s || u;
 }
 function p7(e, t, n, o) {
-  let r = Mr(),
+  let r = isFastModeEnabled(),
     i = r && t && (!e || o?.announceKeptOn === !0),
     s = r && !!e && !t;
   return (
@@ -104,7 +104,7 @@ function C2n(e, t, n) {
     : "Fast mode OFF";
 }
 function k() {
-  return Or().providerCache.validatedModels;
+  return getProviderState().providerCache.validatedModels;
 }
 async function Yle(e, t) {
   let n = e.trim();
@@ -248,7 +248,7 @@ function E() {
 function F(e) {
   let t = Qa(e)?.provider_ids.first_party,
     n = t !== void 0 ? QD[t] : void 0;
-  return n !== void 0 ? Zl()[n] : void 0;
+  return n !== void 0 ? getEffectiveModelStrings()[n] : void 0;
 }
 function P(e) {
   if (usesFirstPartyModelIds()) return;
@@ -272,7 +272,7 @@ async function x(e, t) {
         typeof s.entitled !== "boolean"
       )
         return !0;
-      return s.entitled || !isModelDenied(e, VCn([s]));
+      return s.entitled || !isModelDenied(e, collectUnentitledModelNames([s]));
     });
     return i.length === r.length ? o : { ...o, modelAccessCache: i };
   }, t);
@@ -347,7 +347,7 @@ async function ySe(e, t, n) {
           if (i.notOffered)
             return (
               logFeatureBad("model_switch", "not_offered"),
-              { ok: !1, message: zAt(o) }
+              { ok: !1, message: formatUnrecognizedModelNotice(o) }
             );
           return (
             logFeatureBad("model_switch", "disabled_by_org"),
@@ -473,9 +473,9 @@ function I3e(e, t, n, o, r, i, s, u) {
   if (s !== void 0) logFeatureSad("model_switch", "family_alias_stepped_down");
   else logFeatureOk("model_switch");
   let c = `${SET_MODEL_PREFIX}${formatInlineCode(Zg(t))}${r ? " and saved as your default for new sessions" : " for this session only"}`,
-    m = Mr() ? db(t, d) : !!d;
-  if (Mr()) {
-    if ((QH(), m !== !!d)) (o((p) => ({ ...p, fastMode: m })), pb(d, m));
+    m = isFastModeEnabled() ? resolveFastModeForModel(t, d) : !!d;
+  if (isFastModeEnabled()) {
+    if ((clearFastModeCooldown(), m !== !!d)) (o((p) => ({ ...p, fastMode: m })), logFastModeToggled(d, m));
   }
   return ((c += p7(d, m, t, { announceKeptOn: !0 })), (c += Qnn(t)), c);
 }
@@ -550,7 +550,7 @@ function Znn(e) {
   if (!(t.includes("opus") && t.includes("[1m]"))) return !1;
   if ((t.includes("opusplan") ? [getDefaultOpusModel(), parseUserSpecifiedModel(e)] : [parseUserSpecifiedModel(e)]).every((o) => modelHasNative1MContext(o)))
     return !1;
-  return !ZH() && !isOpus1mMergeEnabled();
+  return !isOpus1mContextAvailable() && !isOpus1mMergeEnabled();
 }
 function ern(e) {
   let t = e.toLowerCase();
@@ -561,7 +561,7 @@ function ern(e) {
   ))
     return !1;
   if (modelHasNative1MContext(parseUserSpecifiedModel(e))) return !1;
-  return !UD();
+  return !isSonnet1mContextAvailable();
 }
 function Zg(e) {
   let t = renderDefaultModelSetting(e ?? getDefaultMainLoopModelSetting());

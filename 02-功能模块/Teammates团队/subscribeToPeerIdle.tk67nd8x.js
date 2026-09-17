@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 203 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { hU, Dse, Uor, Zy, NOTIFY_IDLE_PEER_FEATURE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { buildUdsAddress, isSchemeQualifiedAddress, isPeerReplyAllowed, getCanonicalSocketPath, NOTIFY_IDLE_PEER_FEATURE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createMessageEnvelope } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import { dK, BAe, bbt, mD, sendStampedControlToUdsSocket, registeredLivePeerForSocket, ownMessagingSocket } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
@@ -34,9 +34,9 @@ async function y(e, r, s, i) {
   if (getInboundPolicy() === "refuse") return t("requester-refuses-inbound");
   let n = ownMessagingSocket();
   if (n === void 0) return t("no-inbox");
-  let a = Zy(e);
+  let a = getCanonicalSocketPath(e);
   if (a === void 0) return t("unreachable-namespace");
-  if (a === Zy(n)) return t("self-target");
+  if (a === getCanonicalSocketPath(n)) return t("self-target");
   let o;
   try {
     o = await registeredLivePeerForSocket(e);
@@ -45,7 +45,7 @@ async function y(e, r, s, i) {
   }
   if (o !== void 0 && !(o.features?.includes(NOTIFY_IDLE_PEER_FEATURE) ?? !1))
     return t("peer-unsupported");
-  if (!Uor(n, a, o?.features, await x()) || !Dse(hU(n)))
+  if (!isPeerReplyAllowed(n, a, o?.features, await x()) || !isSchemeQualifiedAddress(buildUdsAddress(n)))
     return t("unreachable-namespace");
   let p = getCurrentPlatform() !== "windows" ? o?.pid : void 0,
     u = createMessageEnvelope(),
@@ -58,7 +58,7 @@ async function y(e, r, s, i) {
         e,
         {
           action: "notify_when_idle",
-          from: hU(n),
+          from: buildUdsAddress(n),
           ...(i !== void 0 && { from_mode: i }),
         },
         u,

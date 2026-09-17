@@ -178,45 +178,45 @@ import {
 import { sessionTransportRegistry, mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { invertText, chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import {
-  XJ,
-  yrr,
-  mg,
-  cU,
-  Zk,
-  g6,
-  IAt,
+  getInferenceProfileBackingModel,
+  getUsageLimitGraceMock,
+  isAnalyticsDisabled,
+  isFeedbackSurveyForOtelEnabled,
+  shouldSuppressFeedbackSurvey,
+  CRON_WORKLOAD_NAME,
+  runWithWorkload,
   getUserAgent,
   getAuthHeaders,
   withOAuth401Retry,
-  ry,
-  bt,
-  sr,
-  yse,
-  ju,
-  SVt,
-  jve,
-  pi,
-  Mr,
-  Jy,
-  dU,
-  RR,
-  FCn,
-  af,
-  db,
-  pb,
-  Nc,
-  bVt,
-  wVt,
-  EQe,
-  QH,
-  krr,
-  Sse,
-  Z$e,
-  TVt,
-  bse,
-  Gve,
-  Ese,
-  UAt,
+  runtimeEnvironment,
+  getModelForAnalytics,
+  getSessionStateStore,
+  setSdkQueueEnqueueListener,
+  enqueueSdkEvent,
+  hasQueuedSdkEvent,
+  drainSdkEvents,
+  emitTaskNotification,
+  isFastModeEnabled,
+  isFastModeAvailable,
+  getFastModeUnavailableMessage,
+  getFastModeModelDisplayName,
+  shouldEnableFastModeForModel,
+  modelSupportsFastMode,
+  resolveFastModeForModel,
+  logFastModeToggled,
+  fastModeStore,
+  onFastModeCooldownTriggered,
+  onFastModeCooldownExpired,
+  getFastModeCooldownState,
+  clearFastModeCooldown,
+  onFastModeOverageRejected,
+  isFastModeInCooldown,
+  onOrgFastModeChange,
+  isOrgFastModeDisabledByServer,
+  prefetchOrgFastModeStatus,
+  getFastModeModelCosts,
+  formatCostsPerMtok,
+  formatLegacyModelRemapWarning,
   isModelAllowed,
   getMainLoopModel,
   isFableFamilyOrPinnedModel,
@@ -235,8 +235,8 @@ import {
   parseUserSpecifiedModel,
   resolveSkillModelOverride,
   modelDisplayString,
-  vp,
-  zVt,
+  getEffectiveContextWindow as vp,
+  computeContextUsagePercent,
   setAutoModeActive,
   isAutoModeActive,
   isAutoModeFromFallback,
@@ -244,47 +244,47 @@ import {
   setAutoModeEnvOnboardingEligible,
   getAutoModeEnvOnboardingShownLogged,
   setAutoModeEnvOnboardingShownLogged,
-  lor,
-  S6,
-  mUe,
-  zC,
-  JN,
-  Zve,
-  Tn,
-  Hse,
-  OR,
-  CCt,
-  _Ue,
-  vCt,
-  FT,
-  Ivn,
-  aKt,
-  Kme,
-  y5,
-  iQ,
-  jQe,
-  PCt,
-  aa,
+  resolveThinkingConfig,
+  isUltrathinkEnabled,
+  findUltrathinkMatches,
+  pickRainbowColor,
+  isThinkingEnabled,
+  isSkillModelSupportedInAutoMode,
+  hashForTelemetry,
+  isSemverString,
+  isAbortTerminalReason,
+  tryHandleFrame,
+  buildSuccessControlResponse,
+  parsePermissionModeFromSystemMessage,
+  sanitizeDisplayName as FT,
+  MAX_PREVIEW_WIDTH,
+  MAX_BODY_CODE_UNITS,
+  dropOriginBodyIfValueChanged,
+  isRemoteOrPluginRequestSource,
+  PERMISSION_PROMPT_DIALOG,
+  getLocalTurnAttributionKey,
+  getSingleTurnAttributionKey,
+  createMainAgentContext,
   updateSessionTitle,
   markSessionRead,
-  ht,
-  SP,
-  Qme,
-  qe,
-  Bt,
-  BCt,
-  jCt,
-  tt,
-  Ut,
+  httpClient,
+  isXaaEnabled,
+  isMcpServerAuthenticated,
+  BASH_TOOL_NAME,
+  EDIT_TOOL_NAME,
+  PROJECT_CLAUDE_DIR_GLOB,
+  USER_CLAUDE_DIR_GLOB,
+  READ_TOOL_NAME,
+  POWERSHELL_TOOL_NAME,
   maxSlugLength,
-  ix,
-  Dse,
+  buildAgentId,
+  isSchemeQualifiedAddress,
   slugify,
-  si,
-  Ia,
-  kUe,
-  T6,
-  Jh,
+  sanitizeSessionName,
+  getCurrentWorktreeSession,
+  setCurrentWorktreeSession,
+  clearPendingResumeWorktreeName,
+  getBgTakeover,
   getRegisteredSessionName,
   isBgSession,
   isUnattendedInteractiveSession,
@@ -297,13 +297,13 @@ import {
   clearSessionParked,
   updateSessionActivity,
   isRegistrySweepPermitted,
-  wl,
-  wP,
-  Hn,
-  cZe,
-  TP,
-  E_,
-  dsr,
+  isToolDetailsLoggingEnabled,
+  getMcpServerKeyHash,
+  getSanitizedToolName,
+  getVersionBase,
+  isTelemetryEnabled,
+  logFirstPartyEventAsync,
+  fetchOAuthProfileWithApiKey,
   shouldUseWIFAuth,
   isAnthropicAuthEnabled,
   describeHowToDisableAuthTokenSource,
@@ -327,26 +327,26 @@ import {
   getSubscriptionType,
   isEnterpriseSubscriber,
   toAccountInfo,
-  zg,
-  hq,
-  H6,
-  Ff,
-  df,
-  H,
-  od,
-  r1,
-  Qh,
+  isScreenReaderModeEnabled,
+  getScreenReaderEnvOverrides,
+  queueScreenReaderAnnouncement,
+  onGrowthBookRefresh,
+  initializeGrowthBook,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  checkGate_CACHED_OR_BLOCKING,
+  getDynamicConfig_BLOCKS_ON_INIT,
+  getDynamicConfig_CACHED_MAY_BE_STALE,
   isAutoMemoryEnabled,
-  Bo,
-  pge,
-  Te,
-  ERe,
-  ee,
-  sy,
-  es,
-  eu,
-  bq,
-  ql,
+  checkHasTrustDialogAccepted,
+  resetLocalSettingsGitTrackedCache,
+  saveGlobalConfig,
+  subscribeGlobalConfigInstalled,
+  getGlobalConfig,
+  readFreshOauthAccountFromDisk,
+  getCurrentProjectConfig,
+  saveCurrentProjectConfig,
+  shouldSkipPluginAutoupdate,
+  getCachedClientData,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { cmdFeature, logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -2726,7 +2726,7 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
         : void 0,
     to = (be.cliArg ?? []).filter(dyn),
     zt = (xe.cliArg ?? []).filter(bj),
-    ao = Ia(),
+    ao = getCurrentWorktreeSession(),
     co = !He?.keepParent && Boolean(ao && !ao.enteredExisting),
     go = (() => {
       if (!He?.keepParent) return null;
@@ -2898,7 +2898,7 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
       if (no && po) await SJe(_o, Ho, He.providedSessionId, He.storageV5);
       if (no && ao) {
         if (co && !ao.hookBased) await releaseOwnWorktreeLock(ao.worktreePath, ao.originalCwd);
-        (kUe(null), T6());
+        (setCurrentWorktreeSession(null), clearPendingResumeWorktreeName());
       }
     }
     if (Ae === "left_arrow")
@@ -2921,7 +2921,7 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
     await SJe(_o, Ho, nn, He?.storageV5);
   if (ao && !He?.keepParent) {
     if (co && !ao.hookBased) await releaseOwnWorktreeLock(ao.worktreePath, ao.originalCwd);
-    (kUe(null), T6());
+    (setCurrentWorktreeSession(null), clearPendingResumeWorktreeName());
   }
   if (it.name === void 0 && Kn.sessionId && !He?.keepParent) {
     let no = Kn.short,
@@ -3620,7 +3620,7 @@ var AUTO_DEFAULT_NOTICE_TITLE = "Auto mode is now Claude Code's default permissi
     "Auto mode lets Claude handle permission prompts automatically. Claude checks each tool call for risky actions and prompt injection before executing, runs the ones it assesses as lower-risk, and blocks the rest.",
   AUTO_DEFAULT_NOTICE_URL = "https://code.claude.com/docs/en/permission-modes";
 function shouldShowAutoDefaultNotice(w) {
-  let I = ee();
+  let I = getGlobalConfig();
   return (
     isAutoModeFromFallback() &&
     w === "auto" &&
@@ -3637,7 +3637,7 @@ function shouldShowAutoModeEntryWarning() {
   return (
     !["policySettings", "userSettings", "flagSettings"].some(
       (I) => getSettingsForSource(I)?.skipAutoPermissionPrompt === !0,
-    ) && !ee().hasSeenAutoModeEntryWarning
+    ) && !getGlobalConfig().hasSeenAutoModeEntryWarning
   );
 }
 function Q1(W2o) {
@@ -3704,7 +3704,7 @@ function nst(Mzo) {
     [Pme, fM] = d(!1),
     [Mme, EJe] = d(null),
     X$t;
-  if (Wy[0] === MEMO_CACHE_SENTINEL) ((X$t = EQe()), (Wy[0] = X$t));
+  if (Wy[0] === MEMO_CACHE_SENTINEL) ((X$t = getFastModeCooldownState()), (Wy[0] = X$t));
   else X$t = Wy[0];
   let Ame = X$t,
     t1t = Ame.status === "cooldown",
@@ -3712,8 +3712,8 @@ function nst(Mzo) {
     o1t;
   if (Wy[1] === MEMO_CACHE_SENTINEL) {
     let r1t = getMainLoopModel();
-    let Izo = af(r1t) ? getCanonicalName(r1t) : "claude-opus-5";
-    o1t = Ese(Gve(Izo));
+    let Izo = modelSupportsFastMode(r1t) ? getCanonicalName(r1t) : "claude-opus-5";
+    o1t = formatCostsPerMtok(getFastModeModelCosts(Izo));
     Wy[1] = o1t;
   } else o1t = Wy[1];
   let i1t = o1t,
@@ -3793,7 +3793,7 @@ ${l1t.map(Rl).join(`
 `)}`
           : "";
       let u1t = $y
-        ? `${renderFastModeIndicator($y)} ${FAST_MODE_ON_LABEL}${Lzo ? `${MODEL_SET_SUFFIX}${formatInlineCode(RR())}` : ""} \xB7 ${i1t}${Ozo}`
+        ? `${renderFastModeIndicator($y)} ${FAST_MODE_ON_LABEL}${Lzo ? `${MODEL_SET_SUFFIX}${formatInlineCode(getFastModeModelDisplayName())}` : ""} \xB7 ${i1t}${Ozo}`
         : "Fast mode OFF";
       if (!Ks()) {
         if (!$y) RB(_1t);
@@ -3912,7 +3912,7 @@ ${l1t.map(Rl).join(`
     return i0;
   }
   let i0;
-  if (Wy[29] === MEMO_CACHE_SENTINEL) ((i0 = RR()), (Wy[29] = i0));
+  if (Wy[29] === MEMO_CACHE_SENTINEL) ((i0 = getFastModeModelDisplayName()), (Wy[29] = i0));
   else i0 = Wy[29];
   let Nme;
   if (Wy[30] !== _w)
@@ -4022,7 +4022,7 @@ function LJe(Wzo) {
           "shortcut",
           void 0,
           bf.storageV5,
-          () => bse(bf.storageV5, bf.credentials),
+          () => prefetchOrgFastModeStatus(bf.storageV5, bf.credentials),
           yM.signal,
           () => {
             if (Ome) y1t("applying");
@@ -4101,12 +4101,12 @@ function LJe(Wzo) {
   }
 }
 async function Kmr(w, I, ne) {
-  if (!Mr()) return (w(dU() ?? "Fast mode is not available"), null);
+  if (!isFastModeEnabled()) return (w(getFastModeUnavailableMessage() ?? "Fast mode is not available"), null);
   let me = ne?.trim().toLowerCase();
   if (me === "on" || me === "off")
     return e(LJe, { enable: me === "on", context: I, onDone: w });
-  await withDeadline(bse(I.storageV5, I.credentials), FAST_MODE_HOOK_TIMEOUT_MS);
-  let pe = dU();
+  await withDeadline(prefetchOrgFastModeStatus(I.storageV5, I.credentials), FAST_MODE_HOOK_TIMEOUT_MS);
+  let pe = getFastModeUnavailableMessage();
   return (
     logEvent("tengu_fast_mode_picker_shown", { unavailable_reason: pe ?? "" }),
     e(nst, { onDone: w, unavailableReason: pe, storageV5: I.storageV5 })
@@ -4126,7 +4126,7 @@ async function rst(w, I, ne, me, pe, { responseStreaming: be, trial: xe }) {
       env: {
         CLAUDE_CODE_TUI_JUST_SWITCHED: w,
         ...(xe && w === "fullscreen" ? QNn : {}),
-        ...hq(),
+        ...getScreenReaderEnvOverrides(),
       },
       dropEnv: [
         "CLAUDE_CODE_NO_FLICKER",
@@ -4224,7 +4224,7 @@ var Xmr = async (w, I, ne) => {
       null
     );
   }
-  if (zg())
+  if (isScreenReaderModeEnabled())
     return (
       w(
         "Screen-reader mode always uses the classic renderer, so the tui setting has no effect while it is active.",
@@ -4307,7 +4307,7 @@ var Xmr = async (w, I, ne) => {
   if (
     be === "default" &&
     (jt || Zt === "gb_on" || Zt === "settings_on") &&
-    TP() &&
+    isTelemetryEnabled() &&
     isPolicyAllowed("allow_product_feedback")
   )
     return e(KJe, {
@@ -4411,13 +4411,13 @@ function KJe(IQo) {
         (async () => {
           if (Nx && Nx.toLowerCase().replace(/[^a-z]/g, "") !== VJe) {
             let FQo = qr(Nx).slice(0, GJe);
-            await E_("tengu_tui_optout_reason", {
+            await logFirstPartyEventAsync("tengu_tui_optout_reason", {
               reason: FQo,
               from_entry_path: fromEnum(pG),
               bounce: fG,
               downsell_gate: defaultFullscreenState.downsellGateCached === !0,
               revert_kind: fromEnum(hG),
-              downsell_seen_count: ee().fullscreenDownsellSeenCount ?? 0,
+              downsell_seen_count: getGlobalConfig().fullscreenDownsellSeenCount ?? 0,
             }).catch(logError);
           }
           if ((await sleep(CLOCK_TICK_INTERVAL_MS * 2), D1t)) {
@@ -4936,7 +4936,7 @@ Your conversation was backgrounded \u2014 resume it with: claude --resume ${it.f
     process.exit(0));
 }
 function J1t(w) {
-  return H("tengu_agentview_inherit_mode_demote", !0)
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_agentview_inherit_mode_demote", !0)
     ? { permissionMode: w, permissionModeInherited: !0 }
     : { permissionMode: w };
 }
@@ -5066,7 +5066,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
         Zt = it ? await t8(it, He) : { intent: "" },
         Ct = it && Zt.name !== it.name ? Zt.name : void 0,
         eo = K1t(),
-        jt = Ia(),
+        jt = getCurrentWorktreeSession(),
         Tt = Boolean(jt && !jt.enteredExisting),
         to = Oe?.taskRegistry?.all(),
         zt = to ? summarizeBackgroundTasks(to) : void 0,
@@ -5281,7 +5281,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
         (clearPendingGoalCheckinTimer(Oe.sessionScratch), stopWorkerCheckin(Oe.sessionScratch));
       (xe.removeByFilter(isCheckinOrigin), markSessionParked(go, He).catch(() => {}));
       let Sr = J1t(ne);
-      if (H("tengu_bg_leftarrow_inprocess", !0))
+      if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_bg_leftarrow_inprocess", !0))
         try {
           return await JJe(go, at, {
             ...(pv() && { dispatchExtraArgs: ["--restricted"] }),
@@ -5301,7 +5301,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
         args: ["agents", ...Eit(Sr)],
         env: {
           CLAUDE_AGENTS_SELECT: Oe?.autoOpenJobId ?? go,
-          ...hq(),
+          ...getScreenReaderEnvOverrides(),
           ...(pv() && { CLAUDE_CODE_RESTRICTED: "1" }),
         },
       });
@@ -5662,7 +5662,7 @@ class R8 {
           };
         if (ho === "defer-then-fork") {
           let Ho = be(),
-            po = H("tengu_defer_cap_ms", 1e4) ?? 1e4,
+            po = getFeatureValue_CACHED_MAY_BE_STALE("tengu_defer_cap_ms", 1e4) ?? 1e4,
             xo = pe.setTimeout(() => {
               let Wo = this.#n;
               if (!Wo || Wo.armedAtMs !== Ho) return;
@@ -8060,8 +8060,8 @@ function WVt(
             : QQt(me, I.pretendLastSeen, w),
       });
     }
-    let ne = ee().lastReleaseNotesSeen;
-    if (!Hse(ne) || !YW(ne, w)) return null;
+    let ne = getGlobalConfig().lastReleaseNotesSeen;
+    if (!isSemverString(ne) || !YW(ne, w)) return null;
     return A3e({ entries: QQt(JQt(), ne, w) });
   } catch (I) {
     return (
@@ -8143,10 +8143,10 @@ function g9() {
     QVt;
   if ($G[5] !== p0 || $G[6] !== ffe)
     ((GVt = () => {
-      if (p0 || !YW(ee().lastReleaseNotesSeen)) {
+      if (p0 || !YW(getGlobalConfig().lastReleaseNotesSeen)) {
         return;
       }
-      Te(JVt, ffe);
+      saveGlobalConfig(JVt, ffe);
     }),
       (QVt = [p0, ffe]),
       ($G[5] = p0),
@@ -8265,7 +8265,7 @@ import { relative as NKt } from "path";
 var Afe = 15000;
 function k9() {
   if (Ec() !== void 0) return !1;
-  let w = ee(),
+  let w = getGlobalConfig(),
     I = [
       w.sonnet45To46MigrationTimestamp,
       w.fable5ToFableAliasMigrationTimestamp,
@@ -8590,12 +8590,12 @@ var fGt = "tengu-top-of-feed-tip";
 function J3e() {
   let { storageV5: w } = useStorageV5Context(),
     I = V(jfe, []),
-    ne = V(() => ee().lastShownEmergencyTip, []),
+    ne = V(() => getGlobalConfig().lastShownEmergencyTip, []),
     me = $fe(I) && (I.persistent || I.tip !== ne);
   if (
     (E(() => {
       if (me && !I.persistent)
-        Te((pe) => {
+        saveGlobalConfig((pe) => {
           if (pe.lastShownEmergencyTip === I.tip) return pe;
           return { ...pe, lastShownEmergencyTip: I.tip };
         }, w);
@@ -8618,7 +8618,7 @@ function J3e() {
 }
 var gGt = { tip: "", color: "dim" };
 function jfe() {
-  return Qh(fGt, gGt);
+  return getDynamicConfig_CACHED_MAY_BE_STALE(fGt, gGt);
 }
 function $fe(w) {
   if (!w.tip) return !1;
@@ -8639,7 +8639,7 @@ function w9(w) {
   let ne = (getInitialSettings().companyAnnouncements ?? []).filter((pe) => pe);
   if (ne.length === 0) return null;
   let me =
-    ee().numStartups === 1 ? ne[0] : ne[Math.floor(Math.random() * ne.length)];
+    getGlobalConfig().numStartups === 1 ? ne[0] : ne[Math.floor(Math.random() * ne.length)];
   if (!me) return null;
   if (w) I.companyAnnouncement = me;
   return me;
@@ -8688,9 +8688,9 @@ function Vfe() {
 function RGt(w) {
   let I = getCachedRemainingPasses();
   if (I == null || I <= 0) return;
-  let me = ee().passesLastSeenRemaining ?? 0;
+  let me = getGlobalConfig().passesLastSeenRemaining ?? 0;
   if (I > me)
-    Te(
+    saveGlobalConfig(
       (pe) => ({
         ...pe,
         passesUpsellSeenCount: 0,
@@ -8704,14 +8704,14 @@ function r6e(w) {
   let { eligible: I, hasCache: ne } = getCachedPassesEligibility();
   if (!I || !ne) return !1;
   RGt(w);
-  let me = ee();
+  let me = getGlobalConfig();
   if ((me.passesUpsellSeenCount ?? 0) >= 3) return !1;
   if (me.hasVisitedPasses) return !1;
   return !0;
 }
 function n6e(w) {
   let I = 0;
-  (Te(
+  (saveGlobalConfig(
     (ne) => (
       (I = (ne.passesUpsellSeenCount ?? 0) + 1),
       { ...ne, passesUpsellSeenCount: I }
@@ -9042,7 +9042,7 @@ function P9(O9o) {
 var z6e = 5;
 function Z6e() {
   if (getFullscreenReason() !== "downsell_on") return !1;
-  return (ee().fullscreenDownsellSeenCount ?? 0) < z6e;
+  return (getGlobalConfig().fullscreenDownsellSeenCount ?? 0) < z6e;
 }
 function lge() {
   let tKt = _(3),
@@ -9059,7 +9059,7 @@ function lge() {
 async function G6e(w) {
   let I = 0;
   if (
-    (Te(
+    (saveGlobalConfig(
       (ne) => (
         (I = (ne.fullscreenDownsellSeenCount ?? 0) + 1),
         { ...ne, fullscreenDownsellSeenCount: I }
@@ -9137,7 +9137,7 @@ function age() {
 }
 var fU = "auto-mode-default";
 function o4e(w) {
-  (Te(
+  (saveGlobalConfig(
     (I) =>
       I.hasSeenAutoDefaultNotice ? I : { ...I, hasSeenAutoDefaultNotice: !0 },
     w,
@@ -9177,17 +9177,17 @@ function cge() {
 }
 async function c4e() {
   if (isClaudeAISubscriber()) return null;
-  let w = await dsr();
+  let w = await fetchOAuthProfileWithApiKey();
   if (!w) return null;
   if (w.account.has_claude_max && !Lwe()) return "Max";
   if (w.account.has_claude_pro && !QGn()) return "Pro";
   return null;
 }
 function u4e() {
-  return (ee().seenNotifications?.[SUBSCRIPTION_SWITCH_NOTICE_ID] ?? 0) < SUBSCRIPTION_SWITCH_NOTICE_MAX_IMPRESSIONS;
+  return (getGlobalConfig().seenNotifications?.[SUBSCRIPTION_SWITCH_NOTICE_ID] ?? 0) < SUBSCRIPTION_SWITCH_NOTICE_MAX_IMPRESSIONS;
 }
 function s4e(w) {
-  (Te((I) => {
+  (saveGlobalConfig((I) => {
     let ne = I.seenNotifications ?? {};
     return { ...I, seenNotifications: { ...ne, [SUBSCRIPTION_SWITCH_NOTICE_ID]: (ne[SUBSCRIPTION_SWITCH_NOTICE_ID] ?? 0) + 1 } };
   }, w),
@@ -9245,11 +9245,11 @@ var yKt = "tengu_velvet_harbor_owl",
     },
   };
 function k4e() {
-  let w = H(yKt, "off");
+  let w = getFeatureValue_CACHED_MAY_BE_STALE(yKt, "off");
   return w === "has_ce" || w === "no_ce" ? w : null;
 }
 function kKt() {
-  return (ee().seenNotifications?.[CC_CE_MIGRATE_NOTICE_ID] ?? 0) < CC_CE_MIGRATE_NOTICE_MAX_IMPRESSIONS;
+  return (getGlobalConfig().seenNotifications?.[CC_CE_MIGRATE_NOTICE_ID] ?? 0) < CC_CE_MIGRATE_NOTICE_MAX_IMPRESSIONS;
 }
 function v4e() {
   let w = k4e();
@@ -9260,7 +9260,7 @@ function v4e() {
   return !zae(B().host) && !isActingAsBgJob() && !a.CLAUDE_BRIDGE_REATTACH_SESSION;
 }
 function b4e(w, I) {
-  (Te((ne) => {
+  (saveGlobalConfig((ne) => {
     let me = ne.seenNotifications ?? {};
     return { ...ne, seenNotifications: { ...me, [CC_CE_MIGRATE_NOTICE_ID]: (me[CC_CE_MIGRATE_NOTICE_ID] ?? 0) + 1 } };
   }, I),
@@ -9350,7 +9350,7 @@ function Sge() {
       if (!pg) {
         return;
       }
-      Te(
+      saveGlobalConfig(
         (x4e) => ({
           ...x4e,
           announcementImpressions: {
@@ -9804,15 +9804,15 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
   h0 = "remote-control-auto-on",
   U4e = 3;
 function ZKt(w) {
-  if (!H("tengu_cobalt_harbor_notice", !0)) return !1;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_harbor_notice", !0)) return !1;
   if (!w.replBridgeAutoOnByDefault) return !1;
   if (!isBridgeEnabled()) return !1;
   if (!isPolicyLimitsCacheLoaded()) return !1;
   if (getRemoteControlPolicyVerdict() !== "allowed") return !1;
-  return (ee().seenNotifications?.[h0] ?? 0) < U4e;
+  return (getGlobalConfig().seenNotifications?.[h0] ?? 0) < U4e;
 }
 function N4e(w) {
-  Te((I) => {
+  saveGlobalConfig((I) => {
     let ne = I.seenNotifications ?? {},
       me = ne[h0] ?? 0;
     if (me >= U4e) return I;
@@ -9858,7 +9858,7 @@ var o2t = {
   id: h0,
   tier: "info",
   type: "info",
-  claimsFirstShow: () => (ee().seenNotifications?.[h0] ?? 0) === 0,
+  claimsFirstShow: () => (getGlobalConfig().seenNotifications?.[h0] ?? 0) === 0,
   isActive: (w) => ZKt(w),
   render: (w) => e(j4e, { ctx: w }),
 };
@@ -10032,7 +10032,7 @@ var r2t = {
     type: "info",
     promo: !1,
     priority: Nw.hint,
-    claimsFirstShow: () => (ee().fullscreenDownsellSeenCount ?? 0) === 0,
+    claimsFirstShow: () => (getGlobalConfig().fullscreenDownsellSeenCount ?? 0) === 0,
     isActive: () => a.CLAUDE_CODE_TUI_JUST_SWITCHED === void 0 && Z6e(),
     render: () => e(lge, {}),
   },
@@ -10240,7 +10240,7 @@ function O9(xge) {
     mtn = useAppStateSelectorUnchecked(Q2t) ?? 0;
   (Sfe(), useStoreSelector(eCn), wfe());
   let ftn = Ege(E2t, I2t, Zen);
-  const ytn = ee();
+  const ytn = getGlobalConfig();
   let Pge;
   bb0: {
     let Mge = Q4e?.modelRestrictedWarning;
@@ -12774,7 +12774,7 @@ function DYt(msn) {
   return msn.showMessageTimestamps;
 }
 function NYt() {
-  return H("tengu_silk_hinge", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_silk_hinge", !1);
 }
 function LYt(s_4) {
   return !1;
@@ -14438,7 +14438,7 @@ function OU({
   lZe(Ae);
   function Zt(zt, ao = !1) {
     let co = Xst(zt);
-    if (ao && getClipboardCopyStrategy() === "native" && ee().copyOnSelect === void 0) {
+    if (ao && getClipboardCopyStrategy() === "native" && getGlobalConfig().copyOnSelect === void 0) {
       if (at.current === -1)
         if (getSessionsSinceTipShown(iZe) >= I5t) (recordTipShown(iZe, Oe), (at.current = 0));
         else at.current = sZe;
@@ -14800,7 +14800,7 @@ function x0(Oan) {
         }
         Bk(Y5t);
       };
-      return (U5t(), Ff(U5t));
+      return (U5t(), onGrowthBookRefresh(U5t));
     }),
       (B5t = [Bk]),
       (lA[3] = Bk),
@@ -16000,7 +16000,7 @@ var ZXt = 604800000,
 function UU() {
   if (!isAutoModeSetupCommandEnabled()) return !1;
   if ((getAutoModeConfig()?.environment?.length ?? 0) > 0) return !1;
-  let w = ee();
+  let w = getGlobalConfig();
   if (w.numStartups < e3t) return !1;
   if ((w.autoModeEnvSetup?.denials ?? 0) < M7) return !1;
   if (o3t()) return !1;
@@ -16056,18 +16056,18 @@ function I7(nun) {
         case "accept": {
           if (
             (logEvent("tengu_auto_mode_env_onboarding_accept", {}),
-            ee().autoModeEnvSetup)
+            getGlobalConfig().autoModeEnvSetup)
           )
-            Te(r3t, R7);
+            saveGlobalConfig(r3t, R7);
           fet();
           break bb12;
         }
         case "later": {
-          (logEvent("tengu_auto_mode_env_onboarding_later", {}), Te(i3t, R7), get());
+          (logEvent("tengu_auto_mode_env_onboarding_later", {}), saveGlobalConfig(i3t, R7), get());
           break bb12;
         }
         case "dismiss": {
-          (logEvent("tengu_auto_mode_env_onboarding_dismiss", {}), Te(s3t, R7), het());
+          (logEvent("tengu_auto_mode_env_onboarding_dismiss", {}), saveGlobalConfig(s3t, R7), het());
         }
       }
     }),
@@ -16147,16 +16147,16 @@ function zy(w, I, { perReveal: ne = !1 } = {}) {
 function Cet() {
   if (isBgSession()) return !1;
   if (Nn()) return !1;
-  if (Jh() !== null) return !1;
+  if (getBgTakeover() !== null) return !1;
   if (a.CLAUDE_CODE_FORCE_FULLSCREEN_UPSELL) return !0;
   if (shouldUseFullscreen()) return !1;
-  if (zg()) return !1;
+  if (isScreenReaderModeEnabled()) return !1;
   if (getInitialSettings().tui !== void 0) return !1;
   if (getTuiTrialMode() === "fullscreen") return !1;
   if (isAutoDisabledFullscreenReason(getFullscreenReason())) return !1;
   if (isFullscreenGateFromFallback()) return !1;
   if (qP()) return !1;
-  if ((ee().fullscreenUpsellSeenCount ?? 0) >= MAX_FULLSCREEN_UPSELL_COUNT) return !1;
+  if ((getGlobalConfig().fullscreenUpsellSeenCount ?? 0) >= MAX_FULLSCREEN_UPSELL_COUNT) return !1;
   if (u0t()) return !1;
   return !0;
 }
@@ -16281,7 +16281,7 @@ async function xet(w, I, ne, me) {
 function m3t(w, I, ne) {
   let me = w === "accept" ? p3t(ne) : "declined";
   if (me !== "gate_off")
-    Te(
+    saveGlobalConfig(
       (pe) =>
         pe.hasSeenAutoDefaultNudge
           ? pe
@@ -16310,7 +16310,7 @@ function p3t({
           void 0,
           me,
         ).catch(logError),
-        H6(`[${getPermissionModeIndicator("auto")} on]`),
+        queueScreenReaderAnnouncement(`[${getPermissionModeIndicator("auto")} on]`),
         "switched"
       );
   }
@@ -16323,7 +16323,7 @@ function p3t({
       color: "warning",
       priority: "high",
     }),
-    H6(`[${be}]`),
+    queueScreenReaderAnnouncement(`[${be}]`),
     "gate_off"
   );
 }
@@ -16438,13 +16438,13 @@ function H7(w) {
   return Object.hasOwn(v2, I) ? I : void 0;
 }
 function Det({ model: w, effortValue: I, ultracode: ne }) {
-  let me = ee(),
+  let me = getGlobalConfig(),
     pe = H7(w);
   if (!me.hasCompletedOnboarding || pe === void 0 || v3t(me, pe)) return;
   let be = Vbe({ model: w, effortValue: I, ultracode: ne });
   if (be === void 0) return;
   let { cohort: xe, fromLevel: Ae } = be,
-    Oe = w3t(H(v2[pe].flag, {}));
+    Oe = w3t(getFeatureValue_CACHED_MAY_BE_STALE(v2[pe].flag, {}));
   if (Oe === void 0 || !Iet(Oe).includes(Ae)) return;
   let He = Oe.toEffort ?? Aet;
   return { ...Oe, cohort: xe, modelKey: pe, fromLevel: Ae, toLevel: He };
@@ -16597,7 +16597,7 @@ async function x3t(
   let Oe = {
     cohort: fromEnum(ne),
     option_order: fromEnum(I),
-    nudge_model: bt(me),
+    nudge_model: getModelForAnalytics(me),
     from_level: fromEnum(pe),
     to_level: fromEnum(be),
     warning_shown: xe === !0,
@@ -16610,7 +16610,7 @@ async function x3t(
         ...Oe,
       }));
     let Ke = "Effort setting unavailable right now \xB7 nothing changed";
-    (H6(`[${Ke}]`),
+    (queueScreenReaderAnnouncement(`[${Ke}]`),
       Ae.addNotification({
         key: "effort-medium-nudge-result",
         kind: "warning",
@@ -16621,7 +16621,7 @@ async function x3t(
     return;
   }
   let He = w === "accept" ? await P3t(Ae, be) : "declined";
-  if ((Te((Ke) => Net(Ke, me), Ae.storageV5).catch(logError), He === "write_failed"))
+  if ((saveGlobalConfig((Ke) => Net(Ke, me), Ae.storageV5).catch(logError), He === "write_failed"))
     logFeatureBad("effort_medium_nudge", "settings_write_failed");
   else logFeatureOk("effort_medium_nudge");
   logEvent("tengu_effort_medium_nudge_resolved", {
@@ -16645,7 +16645,7 @@ async function P3t({ setAppState: w, addNotification: I, storageV5: ne }, me) {
   let pe = await runEffortCommand(me, w, !0, ne);
   if (!pe.effortUpdate)
     return (
-      H6(`[${pe.message}]`),
+      queueScreenReaderAnnouncement(`[${pe.message}]`),
       I({
         key: "effort-medium-nudge-result",
         kind: "warning",
@@ -16661,7 +16661,7 @@ async function P3t({ setAppState: w, addNotification: I, storageV5: ne }, me) {
       ? `Effort set to ${me} and saved as your default`
       : pe.message;
   return (
-    H6(`[${be}]`),
+    queueScreenReaderAnnouncement(`[${be}]`),
     I({
       key: "effort-medium-nudge-result",
       kind: "feedback",
@@ -17976,7 +17976,7 @@ class z7 {
     )
       this.stops.push(
         skillChangeDetector.subscribe(this.reloadCommandsAndAgents),
-        Ff(this.refilterCommands),
+        onGrowthBookRefresh(this.refilterCommands),
         settingsChangeDetector.subscribe(this.refilterCommands),
       );
     this.refresh();
@@ -18273,7 +18273,7 @@ var p6t = 5000,
   mtt = [2000, 8000, 30000];
 async function f6t(w = new Set(), I) {
   let ne = new Set();
-  if (bq()) return ne;
+  if (shouldSkipPluginAutoupdate()) return ne;
   try {
     let me = await checkEnabledPlugins();
     if (me.length === 0) return ne;
@@ -18446,7 +18446,7 @@ async function ptt(w, I) {
   }
 }
 async function dSe(w, I) {
-  if ((n("performStartupChecks called"), !Bo())) {
+  if ((n("performStartupChecks called"), !checkHasTrustDialogAccepted())) {
     n(
       "Trust not accepted for current directory - skipping plugin installations",
     );
@@ -19129,7 +19129,7 @@ async function CSe(w, I, ne, me, pe) {
     n(`[TeammateInit] Team file not found for team: ${be}`);
     return;
   }
-  let He = ix(TEAM_LEAD_AGENT_NAME, be),
+  let He = buildAgentId(TEAM_LEAD_AGENT_NAME, be),
     Ke = Oe.teamAllowedPaths;
   if (Ke && Ke.length > 0 && iP())
     (n(
@@ -19433,7 +19433,7 @@ class MSe {
             continue;
           }
           if (!mCn(be)) continue;
-          CCt((xe) => this.routeInboundFrame(xe), be, "DirectConnect");
+          tryHandleFrame((xe) => this.routeInboundFrame(xe), be, "DirectConnect");
         }
       }),
       this.ws.addEventListener("close", () => {
@@ -19493,7 +19493,7 @@ class MSe {
       );
       return;
     }
-    this.ws.send(b(_Ue(w, I)));
+    this.ws.send(b(buildSuccessControlResponse(w, I)));
   }
   sendInterrupt() {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) return;
@@ -19646,7 +19646,7 @@ async function rZ(w) {
     pe = { ...ne, hasExternalRacer: !0 };
   if (!me)
     return {
-      dialog: iQ,
+      dialog: PERMISSION_PROMPT_DIALOG,
       descriptor: {
         ...Lv(pe),
         toolUseRenderFailed: !0,
@@ -19700,7 +19700,7 @@ async function rZ(w) {
         return { dialog: Nce, descriptor: Ke };
       } catch {
         return {
-          dialog: iQ,
+          dialog: PERMISSION_PROMPT_DIALOG,
           descriptor: {
             ...Lv(pe),
             toolUseRenderFailed: !0,
@@ -19720,7 +19720,7 @@ async function rZ(w) {
         toolPermissionContext: w.toolPermissionContext,
       }),
     };
-  return { dialog: iQ, descriptor: Lv(pe) };
+  return { dialog: PERMISSION_PROMPT_DIALOG, descriptor: Lv(pe) };
 }
 function o4t(w) {
   return w === WriteTool || w === FileEditTool;
@@ -19785,7 +19785,7 @@ async function r4t(w) {
 }
 function i4t(w, I) {
   logEvent("tengu_remote_tool_served_preview", {
-    tool: Hn(w.name),
+    tool: getSanitizedToolName(w.name),
     preview: fromEnum(I.preview),
     reason: fromEnumOpt(I.preview === "remote" ? I.reason : void 0),
   });
@@ -20417,7 +20417,7 @@ function aZ({
             )
               co(!0);
             if (Fn.type === "system" && Fn.subtype === "status") {
-              let Sn = vCt(Fn);
+              let Sn = parsePermissionModeFromSystemMessage(Fn);
               if (Sn !== void 0) at(Sn);
             }
             if (Fn.type === "system" && Fn.subtype === "init") {
@@ -20747,7 +20747,7 @@ function Htt(w, I, ne, me = () => createSettingsChangeDetector({ bridgeStore: !1
     () => logFeatureOk("remote_served_settings_watch"),
     () => logFeatureBad("remote_served_settings_watch", "watch_failed_to_start"),
   );
-  let xe = be.subscribe(() => pge()),
+  let xe = be.subscribe(() => resetLocalSettingsGitTrackedCache()),
     Ae = be.subscribe((Oe) => ne.servedSettingsChanged.emit(Oe));
   return {
     subscribe: (Oe) => {
@@ -22983,8 +22983,8 @@ var L0 = defineDialog({
   hideWhile: [],
 });
 function Xtt(w, I) {
-  if (!H("tengu_gleaming_fair", !1)) return null;
-  if (ee().resumeReturnDismissed) return null;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_gleaming_fair", !1)) return null;
+  if (getGlobalConfig().resumeReturnDismissed) return null;
   let ne = a.CLAUDE_CODE_RESUME_THRESHOLD_MINUTES ?? 70,
     me = a.CLAUDE_CODE_RESUME_TOKEN_THRESHOLD ?? 1e5,
     pe = Date.now() - 60000,
@@ -23012,7 +23012,7 @@ async function Ztt(w, I, { getMessageCount: ne, storage: me, runCompact: pe }) {
     }),
     be === "never")
   )
-    await Te((xe) => {
+    await saveGlobalConfig((xe) => {
       if (xe.resumeReturnDismissed) return xe;
       return { ...xe, resumeReturnDismissed: !0 };
     }, me);
@@ -23875,7 +23875,7 @@ async function J4t(w, I, ne) {
     let Ke = Ae instanceof Ou || !isResumableLocalAgent(I.get(w), { userInitiated: He });
     if (!Ke) appendTaskPendingMessages(w, Oe, I);
     throw (
-      sr().agentResumeFailed.emit(w, {
+      getSessionStateStore().agentResumeFailed.emit(w, {
         error: Ae,
         undeliverable: Ke ? Oe : [],
         terminal: Ke,
@@ -23921,7 +23921,7 @@ function o8t({
         };
         if (it.transient > uZ)
           throw (
-            sr().agentResumeFailed.emit(Ke, {
+            getSessionStateStore().agentResumeFailed.emit(Ke, {
               error: Je,
               undeliverable: drainTaskPendingMessages(Ke, w),
               terminal: !0,
@@ -23945,7 +23945,7 @@ function o8t({
               let Tt = new Ou(
                 `Agent ${Ke} was evicted before its stranded resume retry ran; nothing further will be delivered from its queue.`,
               );
-              (sr().agentResumeFailed.emit(Ke, {
+              (getSessionStateStore().agentResumeFailed.emit(Ke, {
                 error: Tt,
                 undeliverable: [],
                 terminal: !0,
@@ -23965,7 +23965,7 @@ function o8t({
                   : new Ou(
                       `Agent ${Ke} is ${jt} and cannot take queued messages.`,
                     );
-              (sr().agentResumeFailed.emit(Ke, {
+              (getSessionStateStore().agentResumeFailed.emit(Ke, {
                 error: Tt,
                 undeliverable: drainTaskPendingMessages(Ke, w),
                 terminal: !0,
@@ -24028,7 +24028,7 @@ function vot({
         });
       },
     }),
-    be = sr().agentStrandedMessages.subscribe((xe) => {
+    be = getSessionStateStore().agentStrandedMessages.subscribe((xe) => {
       pe.dispatch(xe);
     });
   return () => {
@@ -24109,7 +24109,7 @@ function xot({ clock: w, transcript: I, queue: ne }) {
       };
     return (
       gDt((Ae, Oe, He) => {
-        let Ke = typeof Oe === "string" && Dse(Oe) ? Oe : "";
+        let Ke = typeof Oe === "string" && isSchemeQualifiedAddress(Oe) ? Oe : "";
         if (Ae === "dropped") {
           let Je = me.dropped;
           if (Je.length < Cot)
@@ -24411,7 +24411,7 @@ function JSe(w) {
 function d8t(w) {
   let I = w.origin?.kind === "peer" ? w.origin : void 0,
     ne =
-      typeof I?.from === "string" && Dse(I.from)
+      typeof I?.from === "string" && isSchemeQualifiedAddress(I.from)
         ? JSe(I.from)
         : "an unidentified session",
     me =
@@ -24441,7 +24441,7 @@ function d8t(w) {
     Je =
       Ae.map((zt) => zt.replace(/\s+/g, " ").trim()).find((zt) => zt !== "") ??
       "",
-    Qe = truncateToWidthNoEllipsis(truncateToCodeUnits(Je, aKt), Ivn),
+    Qe = truncateToWidthNoEllipsis(truncateToCodeUnits(Je, MAX_BODY_CODE_UNITS), MAX_PREVIEW_WIDTH),
     it = Oe > 1 || Ke || Qe !== Je,
     at = Qe,
     Zt = it
@@ -24667,10 +24667,10 @@ function S8t({ session: w, storageV5: I, credentials: ne, setAppState: me }) {
           if (
             Je.name &&
             (Je.nameSource === "user" ||
-              (Je.nameSource === "collision" && si(Je.name) === getRegisteredSessionName()?.name)) &&
+              (Je.nameSource === "collision" && sanitizeSessionName(Je.name) === getRegisteredSessionName()?.name)) &&
             !Ct?.name
           ) {
-            let jt = si(Je.name);
+            let jt = sanitizeSessionName(Je.name);
             if (jt) eo.name = jt;
           }
           if (isAgentColorName(Je.color) && !Ct?.color) eo.color = Je.color;
@@ -24679,7 +24679,7 @@ function S8t({ session: w, storageV5: I, credentials: ne, setAppState: me }) {
         !Je.name)
       )
         return;
-      let Qe = si(Je.name);
+      let Qe = sanitizeSessionName(Je.name);
       if (!Qe) return;
       if (Qe === getCurrentSessionAgentName() || Qe === getCurrentSessionTitle(w.id)) return;
       if (Je.nameSource === "collision" && Qe !== getRegisteredSessionName()?.name) {
@@ -24726,7 +24726,7 @@ function k8t({ storageV5: w, credentials: I }) {
   if (Pt()) return () => {};
   return (
     mDt((ne) => {
-      let me = si(ne ?? "");
+      let me = sanitizeSessionName(ne ?? "");
       if (!me || me === getCurrentSessionAgentName()) return;
       Eot(me, "peer", w, I);
     }),
@@ -24741,7 +24741,7 @@ function v8t({
   onYieldedName: pe,
 }) {
   let be = (He, Ke) => {
-      let Je = si(He);
+      let Je = sanitizeSessionName(He);
       if (!Je || getRegisteredSessionName()?.name !== He) return;
       if ((me((Qe) => updateStandaloneAgentContext(Qe, { name: Je })), !getMaterializedSessionFile())) {
         if (titleCacheStillOn(w.id, Ke, Je)) (cacheSessionTitle(Je), cacheAgentName(Je));
@@ -25241,7 +25241,7 @@ class fZ {
         ),
         ne !== "fork")
       )
-        sr().inheritPredecessorLinks(taskOutputDirForSession(fo), I.modified.getTime());
+        getSessionStateStore().inheritPredecessorLinks(taskOutputDirForSession(fo), I.modified.getTime());
       if (ne !== "fork")
         o9n(I.artifactCommentMonitor, {
           ...(Ke !== void 0 && { storageV5: Ke }),
@@ -25398,7 +25398,7 @@ class fZ {
         (HL(kg().map((po) => po.id)), _He(jt, Oe, void 0, void 0, Ke));
       } else {
         sze({ ...(Ke !== void 0 && { storageV5: Ke }) });
-        let Ho = Ia();
+        let Ho = getCurrentWorktreeSession();
         if (Ho) saveWorktreeState(Ho, Ke);
         if (He.isolationLatch.current) saveIsolationLatch(He.isolationLatch.current, Ke);
       }
@@ -25540,7 +25540,7 @@ class fZ {
           },
         }),
       ),
-      w.push(sr().taskEvicted.subscribe(this._spinnerStore.evict)),
+      w.push(getSessionStateStore().taskEvicted.subscribe(this._spinnerStore.evict)),
       w.push(JNe.subscribe(this._spinnerStore.applyEvent)),
       w.push(
         vot({
@@ -25683,9 +25683,9 @@ class fZ {
       if (isActingAsBgJob()) {
         let Oe = getBgJobDir(),
           He = readAndConsumeAdoptJson(Oe, {
-            waitMs: isBgSession() || !Jh()?.expectHandoff ? 0 : TAKEOVER_ADOPT_WAIT_MS,
+            waitMs: isBgSession() || !getBgTakeover()?.expectHandoff ? 0 : TAKEOVER_ADOPT_WAIT_MS,
             extraShellOutputRoot: (() => {
-              let Qe = Jh();
+              let Qe = getBgTakeover();
               if (!Qe?.adoptShellOutputRoot) {
                 let it = worktreeStateStore.of(I.host).last;
                 return it ? ZYe(iEt(it.worktreePath)) : void 0;
@@ -25963,7 +25963,7 @@ class fZ {
       .catch(logError);
   }
   artifactMountGate = async () => {
-    await df().catch(() => null);
+    await initializeGrowthBook().catch(() => null);
     let w = this.turn.buildToolUseContext(
         this.initialMessages ?? [],
         [],
@@ -26111,7 +26111,7 @@ class fZ {
           ? { mainLoopModel: Je.model.value }
           : void 0,
       it = be.getState().fastMode,
-      at = Qe && Mr() ? db(Qe.mainLoopModel, it) : void 0,
+      at = Qe && isFastModeEnabled() ? resolveFastModeForModel(Qe.mainLoopModel, it) : void 0,
       Zt = I === "auto_restore_cancel" ? null : buildArtifactReadSeed(He, isArtifactConflictLegacy(), isResumeFrameSeedEligible());
     if (
       (be.setState((Ct) => ({
@@ -26128,7 +26128,7 @@ class fZ {
       })),
       at !== void 0)
     )
-      pb(it, at);
+      logFastModeToggled(it, at);
     logFeatureOk("repl_rewind_conversation");
   }
   restoreMessageSync = (w, I) => {
@@ -27569,9 +27569,9 @@ function Dke({
   ultracodeActive: me,
 }) {
   if (me) return;
-  let pe = H("tengu_ochre_gantry", {});
+  let pe = getFeatureValue_CACHED_MAY_BE_STALE("tengu_ochre_gantry", {});
   if (pe?.enabled === !1) return;
-  let be = resolveWorkflowSizeGuideline(ee().workflowSizeGuideline),
+  let be = resolveWorkflowSizeGuideline(getGlobalConfig().workflowSizeGuideline),
     xe = be.isDefault ? void 0 : getWorkflowSizeAgentLimit(be.size),
     Ae = wZ(a.CLAUDE_CODE_WORKFLOW_SIZE_WARNING_AGENTS),
     Oe = Ae ?? xe ?? wZ(pe?.agents) ?? z8t,
@@ -29302,7 +29302,7 @@ function qve(w) {
         if (isObserverAgent(Mn)) continue;
         if ((Qo.push(Mn.description), Mn.type === "in_process_teammate"))
           continue;
-        pi(Sn, "stopped", { toolUseId: Mn.toolUseId, summary: Mn.description });
+        emitTaskNotification(Sn, "stopped", { toolUseId: Mn.toolUseId, summary: Mn.description });
       }
       if (Qo.length === 0) return (ne(), !0);
       let Gn =
@@ -30497,7 +30497,7 @@ function xee(w, I, ne) {
   let me = commandStateStore.of(w);
   ne = dropShadowedBundledSkills(ne);
   let pe = I.slice(1).toLowerCase().trim(),
-    be = a.CLAUDE_CODE_ENABLE_MENU_KIND_LANES || H("tengu_mint_lanes", !1);
+    be = a.CLAUDE_CODE_ENABLE_MENU_KIND_LANES || getFeatureValue_CACHED_MAY_BE_STALE("tengu_mint_lanes", !1);
   if (pe === "") {
     let Je = ne.filter((zt) => !zt.isHidden && !isSkillOff(zt)),
       Qe = [],
@@ -34154,7 +34154,7 @@ var Uwe = "rc-active-badge",
 function kit() {
   let w = getSessionRuntimeState();
   if (w.verboseRcActive === void 0)
-    w.verboseRcActive = (ee().seenNotifications?.[Uwe] ?? 0) < _eo;
+    w.verboseRcActive = (getGlobalConfig().seenNotifications?.[Uwe] ?? 0) < _eo;
   return w.verboseRcActive;
 }
 function Lee(w) {
@@ -34185,7 +34185,7 @@ function Vwe(w) {
   if (I.rcActiveImpressionRecorded) return;
   if (!kit()) return;
   ((I.rcActiveImpressionRecorded = !0),
-    Te((ne) => {
+    saveGlobalConfig((ne) => {
       let me = ne.seenNotifications ?? {};
       return { ...ne, seenNotifications: { ...me, [Uwe]: (me[Uwe] ?? 0) + 1 } };
     }, w));
@@ -35486,7 +35486,7 @@ function OCe({ canEnter: w, onEnter: I }) {
   );
 }
 function zto() {
-  let w = ql()?.model_notices;
+  let w = getCachedClientData()?.model_notices;
   if (typeof w !== "object" || w === null || Array.isArray(w)) return {};
   let I = {};
   for (let [ne, me] of Object.entries(w))
@@ -35523,7 +35523,7 @@ function RZ({
   let { storageV5: Ke, credentials: Je } = useStorageV5Context(),
     Qe = useSetAppState(),
     { rows: it } = useVirtualScrollViewportSize(useTerminalSize()),
-    at = useAppStateSelector((Ki) => (Mr() ? Ki.fastMode : !1)),
+    at = useAppStateSelector((Ki) => (isFastModeEnabled() ? Ki.fastMode : !1)),
     [Zt] = d(at ?? !1),
     Ct = V(() => Oe ?? getModelPickerOptions(Zt), [Oe, Zt]),
     eo = useFeatureFlagVersion(),
@@ -35548,7 +35548,7 @@ function RZ({
       handlePaste: yn,
     } = OCe({ canEnter: !1, onEnter: () => logFeatureOk("model_picker_search") }),
     vo = Wo || on !== "" ? 4 : 0,
-    zo = Mr() && (xe || (Jy() && !Sse())),
+    zo = isFastModeEnabled() && (xe || (isFastModeAvailable() && !isFastModeInCooldown())),
     Sr = zo ? 3 : 0,
     Kn = Tt !== null ? 3 : 0,
     nn = Math.max(2, Math.min(10, Math.floor((it - tlt - vo - Sr - Kn) / 2))),
@@ -35636,7 +35636,7 @@ function RZ({
     if (!Xi?.includes("application-inference-profile")) return;
     let Ki = !1;
     return (
-      XJ(Xi).then(() => {
+      getInferenceProfileBackingModel(Xi).then(() => {
         if (!Ki) Ln();
       }),
       () => {
@@ -35874,7 +35874,7 @@ function RZ({
                       e(t, { bold: !0, children: "ON" }),
                       " and available with",
                       " ",
-                      RR(),
+                      getFastModeModelDisplayName(),
                       " (/fast). Switching to other models turns off fast mode.",
                     ],
                   }),
@@ -35887,7 +35887,7 @@ function RZ({
                       "Use ",
                       e(t, { bold: !0, children: "/fast" }),
                       " to turn on Fast mode (",
-                      RR(),
+                      getFastModeModelDisplayName(),
                       ").",
                     ],
                   }),
@@ -36788,7 +36788,7 @@ function yN(Qqn) {
   if (wno[2] !== Blt || wno[3] !== bTe)
     ((Cno = e(N, {
       children: bTe.map((Yqn, _no) =>
-        e(t, { color: zC(_no + Blt), children: Yqn }, _no),
+        e(t, { color: pickRainbowColor(_no + Blt), children: Yqn }, _no),
       ),
     })),
       (wno[2] = Blt),
@@ -42332,7 +42332,7 @@ async function _lo(w) {
   } catch {}
 }
 function Tlo(w, I) {
-  let ne = zVt(w, I);
+  let ne = computeContextUsagePercent(w, I);
   return {
     total_input_tokens: w
       ? w.input_tokens +
@@ -42375,7 +42375,7 @@ function xlo({
   thinkingEnabled: Zt,
 }) {
   let Ct = H_(),
-    eo = Ia(),
+    eo = getCurrentWorktreeSession(),
     jt = getRuntimeMainLoopModel({ permissionMode: I, mainLoopModel: Ae, exceeds200kTokens: ne }),
     Tt = pe?.outputStyle || DEFAULT_OUTPUT_STYLE_NAME,
     to = getLastMessageUsage(be),
@@ -42715,7 +42715,7 @@ function qlo() {
   return zz();
 }
 function Vlo() {
-  return Bo();
+  return checkHasTrustDialogAccepted();
 }
 function Glo(dAe) {
   return dAe.setupIssues.statuslineIssueCount === 1
@@ -43452,7 +43452,7 @@ function FAe() {
 }
 F();
 function TR() {
-  return (useAppStateSelector((w) => w.settings.editorMode), At(ERe, zz));
+  return (useAppStateSelector((w) => w.settings.editorMode), At(subscribeGlobalConfigInstalled, zz));
 }
 function Aco() {}
 function upt(m8n) {
@@ -44118,7 +44118,7 @@ function puo(w) {
   return 0;
 }
 function fuo() {
-  return ql()?.footer_indicator;
+  return getCachedClientData()?.footer_indicator;
 }
 function qpt({
   mode: w,
@@ -44149,7 +44149,7 @@ function qpt({
     go = Loe() && co > 0,
     fo = useAppStateSelector((ki) => ki.footerSelection === "memories");
   useFeatureFlagVersion();
-  let ro = H("tengu_copper_thistle", !1),
+  let ro = getFeatureValue_CACHED_MAY_BE_STALE("tengu_copper_thistle", !1),
     ho = useKeybindingDisplayText(GQ(), "Chat", "shift+tab"),
     _o = useAppStateSelector((ki) => ki.tasks),
     Ho = useAppStateSelector((ki) => ki.taskDecorations),
@@ -44177,21 +44177,21 @@ function qpt({
     lr = useKeybindingDisplayText("chat:cancel", "Chat", "esc").toLowerCase(),
     Io = useKeybindingDisplayText("app:toggleTodos", "Global", "ctrl+t"),
     So = useKeybindingDisplayText("voice:pushToTalk", "Chat", "space"),
-    [Go] = d(() => (ee().voiceFooterHintSeenCount ?? 0) < duo),
+    [Go] = d(() => (getGlobalConfig().voiceFooterHintSeenCount ?? 0) < duo),
     In = C(!1);
   E(() => {
     if (!zo || !Go) return;
     if (In.current) return;
     In.current = !0;
-    let ki = (ee().voiceFooterHintSeenCount ?? 0) + 1;
-    Te((yi) => {
+    let ki = (getGlobalConfig().voiceFooterHintSeenCount ?? 0) + 1;
+    saveGlobalConfig((yi) => {
       if ((yi.voiceFooterHintSeenCount ?? 0) >= ki) return yi;
       return { ...yi, voiceFooterHintSeenCount: ki };
     }, to);
   }, [zo, Go, to]);
   let Fn = tn(),
     Qo = Ine(),
-    Gn = At(ERe, fuo),
+    Gn = At(subscribeGlobalConfigInstalled, fuo),
     Sn = V(() => gJt(Gn), [Gn]);
   if (w === "bash")
     return e(t, { color: "bashBorder", children: "! for shell mode" });
@@ -44477,7 +44477,7 @@ function qpt({
           inFlight: { count: 0, kinds: [] },
         }),
       ) &&
-      ee().leftArrowOpensAgents !== !1 &&
+      getGlobalConfig().leftArrowOpensAgents !== !1 &&
       !Fn
         ? e(j_e, {}, "fg-agents")
         : null,
@@ -44500,7 +44500,7 @@ function qpt({
   if (cr) ss.push(cr);
   if (va) ss.push(e(fIe, {}, "diff-panel"));
   if (Qo > 0) ss.push(e(Mne, { count: Qo }, "feedback-drafts"));
-  let wr = ee().copyOnSelect ?? !0,
+  let wr = getGlobalConfig().copyOnSelect ?? !0,
     ur = nn && (!wr || Zd());
   if (zo && Kn) ss.push(e(BZ, {}, "voice-warmup"));
   else if (Tt && ur) {
@@ -44802,7 +44802,7 @@ function guo(w, I, ne, me, pe) {
 }
 function Vpt(w) {
   if (isBgSession() && w === "unknown") return !1;
-  return ee().prStatusFooterEnabled ?? !0;
+  return getGlobalConfig().prStatusFooterEnabled ?? !0;
 }
 function mIe(Y7n) {
   let Lne = _(17),
@@ -45289,8 +45289,8 @@ function pHe(Mer) {
   let XIe;
   if (Su[58] !== Ha || Su[59] !== uft)
     ((XIe =
-      Mr() &&
-      Jy() &&
+      isFastModeEnabled() &&
+      isFastModeAvailable() &&
       e(o, {
         children: e(t, {
           dimColor: Ha,
@@ -45478,7 +45478,7 @@ function zne(otr) {
     wft = vfe("hipaa");
   useFeatureFlagVersion();
   let Vuo;
-  if (_g[8] === MEMO_CACHE_SENTINEL) ((Vuo = H("tengu_copper_thistle", !1)), (_g[8] = Vuo));
+  if (_g[8] === MEMO_CACHE_SENTINEL) ((Vuo = getFeatureValue_CACHED_MAY_BE_STALE("tengu_copper_thistle", !1)), (_g[8] = Vuo));
   else Vuo = _g[8];
   let ntr = Vuo,
     cy = useAppStateSelector(sdo),
@@ -48247,7 +48247,7 @@ function _bt(Wsr) {
   else cpo = Ts[48];
   let Cu = cpo,
     upo;
-  if (Ts[49] !== Cu) ((upo = mUe(Cu)), (Ts[49] = Cu), (Ts[50] = upo));
+  if (Ts[49] !== Cu) ((upo = findUltrathinkMatches(Cu)), (Ts[49] = Cu), (Ts[50] = upo));
   else upo = Ts[50];
   let F$ = upo,
     oyt = useAppStateSelector(jgo),
@@ -48506,14 +48506,14 @@ function _bt(Wsr) {
         dimColor: !0,
         priority: 1,
       });
-    if (S6()) {
+    if (isUltrathinkEnabled()) {
       for (const LDe of F$) {
         for (let WY = LDe.start; WY < LDe.end; WY++)
           vT.push({
             start: WY,
             end: WY + 1,
-            color: zC(WY - LDe.start),
-            shimmerColor: zC(WY - LDe.start, !0),
+            color: pickRainbowColor(WY - LDe.start),
+            shimmerColor: pickRainbowColor(WY - LDe.start, !0),
             priority: 10,
           });
       }
@@ -48524,8 +48524,8 @@ function _bt(Wsr) {
           vT.push({
             start: qY,
             end: qY + 1,
-            color: zC(qY - FDe.start),
-            shimmerColor: zC(qY - FDe.start, !0),
+            color: pickRainbowColor(qY - FDe.start),
+            shimmerColor: pickRainbowColor(qY - FDe.start, !0),
             priority: 10,
           });
       }
@@ -48565,7 +48565,7 @@ function _bt(Wsr) {
     jpo;
   if (Ts[112] !== ku || Ts[113] !== Lm || Ts[114] !== F$.length)
     ((Hpo = () => {
-      if (F$.length && S6())
+      if (F$.length && isUltrathinkEnabled())
         ku({
           key: "ultrathink-active",
           kind: "feedback",
@@ -48715,7 +48715,7 @@ function _bt(Wsr) {
       let mar = tfo >= 20 && j$ <= 5;
       let par = dar >= 20 && j$ <= 5;
       if (mar && !par) {
-        if (!ee().hasUsedStash)
+        if (!getGlobalConfig().hasUsedStash)
           ku({
             key: "stash-hint",
             kind: "hint",
@@ -49409,7 +49409,7 @@ function _bt(Wsr) {
       let EI;
       try {
         let Xfo;
-        if (ee().externalEditorContext) {
+        if (getGlobalConfig().externalEditorContext) {
           let Zfo = getRecentAssistantMessages(xDe.getSnapshot()).messages.join(`
 
 `);
@@ -49468,7 +49468,7 @@ function _bt(Wsr) {
       if (bi.value.trim() === "" && bi.stashedPrompt !== void 0)
         (bi.popStash("input"), logFeatureOk("input_stash"));
       else if (bi.value.trim() !== "")
-        (bi.stash(), Te(Ggo, qht), logFeatureOk("input_stash"));
+        (bi.stash(), saveGlobalConfig(Ggo, qht), logFeatureOk("input_stash"));
     }),
       (Ts[272] = bi),
       (Ts[273] = qht),
@@ -50055,7 +50055,7 @@ function v0e() {
 }
 F();
 function qre() {
-  return H("tengu_jiggly_mochi", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_jiggly_mochi", !1);
 }
 var zgo = 3,
   Qgo = 20;
@@ -50087,7 +50087,7 @@ function w0e({
         return Oe
           ? "Press up to select a queued message to edit, or Enter to send them now"
           : "Press up to edit queued messages, Enter to send them immediately";
-      if ((ee().queuedCommandUpHintCount || 0) < zgo)
+      if ((getGlobalConfig().queuedCommandUpHintCount || 0) < zgo)
         return Oe
           ? "Press up to select a queued message, then Enter to edit it"
           : "Press up to edit queued messages";
@@ -50138,7 +50138,7 @@ function _0e(w, I) {
   let Oe = Math.floor(Ae / Tbt),
     He = resolveThemePalette(resolveSetting("theme", "dark").value),
     Ke = Array.from({ length: I }, (Je, Qe) =>
-      getThemeColor(zC(Qe + Oe), He)("\u2500"),
+      getThemeColor(pickRainbowColor(Qe + Oe), He)("\u2500"),
     ).join("");
   return [
     { content: Ke, position: "top", align: "start", offset: 0 },
@@ -50150,7 +50150,7 @@ function G$({ gesture: w, turn: I, transcript: ne, onDetachToCaller: me }) {
   let pe = useStoreSelector(I, (Oe) => Oe.isLoading),
     be = useStoreSelector(I, (Oe) => Oe.isExternalLoading),
     xe = mY({ turn: I, transcript: ne }),
-    Ae = ee().leftArrowOpensAgents !== !1;
+    Ae = getGlobalConfig().leftArrowOpensAgents !== !1;
   return V(
     () =>
       eXe(w, {
@@ -50172,8 +50172,8 @@ F();
 function A0e() {
   let [w, I] = d(xbt);
   E(() => {
-    let me = bVt((be) => I(be)),
-      pe = wVt(() => I(null));
+    let me = onFastModeCooldownTriggered((be) => I(be)),
+      pe = onFastModeCooldownExpired(() => I(null));
     return () => {
       (me(), pe());
     };
@@ -50181,13 +50181,13 @@ function A0e() {
   let ne = DB(w);
   return (
     E(() => {
-      if (ne) EQe();
+      if (ne) getFastModeCooldownState();
     }, [ne]),
-    Mr() && xbt() !== null && !ne
+    isFastModeEnabled() && xbt() !== null && !ne
   );
 }
 function xbt() {
-  let w = Nc.runtimeState;
+  let w = fastModeStore.runtimeState;
   return w.status === "cooldown" ? w.resetAt : null;
 }
 function Hbo(Opr) {
@@ -50274,7 +50274,7 @@ function dSo(rfr) {
   return rfr.thinkingEnabled;
 }
 function mSo(ifr) {
-  return Mr() ? ifr.fastMode : !1;
+  return isFastModeEnabled() ? ifr.fastMode : !1;
 }
 function pSo(sfr) {
   return sfr.ultracode;
@@ -50333,7 +50333,7 @@ function ESo(wfr) {
   return !wfr;
 }
 function DSo(Cfr) {
-  return Cfr ? null : { unavailableReason: dU() };
+  return Cfr ? null : { unavailableReason: getFastModeUnavailableMessage() };
 }
 function NSo(_fr) {
   return !_fr;
@@ -50884,7 +50884,7 @@ function Okt(pmr) {
       if (xSt === void 0) {
         return;
       }
-      if ((fm(xSt), xSt === "tasks" && !ee().hasSeenTasksHint)) Te(TSo, cp);
+      if ((fm(xSt), xSt === "tasks" && !getGlobalConfig().hasSeenTasksHint)) saveGlobalConfig(TSo, cp);
     }),
       ($i[106] = fm),
       ($i[107] = cp),
@@ -51489,7 +51489,7 @@ function Okt(pmr) {
         (!1
           ? { context: transitionPermissionMode(I5, null, QSt, "shift_tab") }
           : buildPermissionModeTransition(_T, hL, "shift_tab"));
-      H6(`[${getPermissionModeIndicator(YI)} on]`);
+      queueScreenReaderAnnouncement(`[${getPermissionModeIndicator(YI)} on]`);
       if (
         (logEvent("tengu_mode_cycle", { to: fromEnum(YI), trigger: fromEnum("shift_tab") }), !Ks())
       )
@@ -51502,7 +51502,7 @@ function Okt(pmr) {
         (zSt.kind === "carousel" || zSt.selection.mode === "plan")
       ) {
         let ipr = Date.now();
-        Te((spr) => T0e(spr, ipr), cp);
+        saveGlobalConfig((spr) => T0e(spr, ipr), cp);
       }
       (I2(Ra, { ...rpr, mode: YI }),
         (cho.current = cho.current.then(() => syncTeammateMode(YI, hL?.teamName, cp))),
@@ -51692,7 +51692,7 @@ function Okt(pmr) {
   useKeybindings(cpr, Yyo);
   let fNe;
   if ($i[253] !== Wp)
-    ((fNe = !Wp && Mr() && Jy()), ($i[253] = Wp), ($i[254] = fNe));
+    ((fNe = !Wp && isFastModeEnabled() && isFastModeAvailable()), ($i[253] = Wp), ($i[254] = fNe));
   else fNe = $i[254];
   let Jyo;
   if ($i[255] !== fNe)
@@ -52118,7 +52118,7 @@ function Okt(pmr) {
     RT = A0e(),
     bbo;
   if ($i[335] !== RT || $i[336] !== p5)
-    ((bbo = FCn(p5, RT)), ($i[335] = RT), ($i[336] = p5), ($i[337] = bbo));
+    ((bbo = shouldEnableFastModeForModel(p5, RT)), ($i[335] = RT), ($i[336] = p5), ($i[337] = bbo));
   else bbo = $i[337];
   let TNe = bbo,
     ckt = C0e(TNe ?? !1),
@@ -52225,13 +52225,13 @@ function Okt(pmr) {
       let sie = !1;
       if (N5?.fromUltracode) ese(MNe, cp);
       else if (N5 !== void 0) zG(N5.level, t2(TL), MNe, cp);
-      if ((Cz(), Mr())) QH();
+      if ((Cz(), isFastModeEnabled())) clearFastModeCooldown();
       if (
         (recordModelSwitchIfChanged(LS, _u.getState(), TL, "picker"),
         Ra(
           (pkt) => (
             (iie = !!pkt.fastMode),
-            (sie = Mr() ? db(TL, pkt.fastMode) : iie),
+            (sie = isFastModeEnabled() ? resolveFastModeForModel(TL, pkt.fastMode) : iie),
             {
               ...pkt,
               mainLoopModel: TL,
@@ -52244,7 +52244,7 @@ function Okt(pmr) {
             }
           ),
         ),
-        pb(iie, sie),
+        logFastModeToggled(iie, sie),
         MNe)
       )
         kIe(TL, cp);
@@ -52258,7 +52258,7 @@ function Okt(pmr) {
         priority: "immediate",
         timeoutMs: 3000,
       }),
-        logEvent("tengu_model_picker_hotkey", { model: bt(TL) }));
+        logEvent("tengu_model_picker_hotkey", { model: getModelForAnalytics(TL) }));
     }),
       ($i[364] = tc),
       ($i[365] = LS),
@@ -52352,10 +52352,10 @@ function Okt(pmr) {
     let xL;
     if ($i[377] !== p5 || $i[378] !== d5 || $i[379] !== u5)
       ((xL =
-        Mr() &&
+        isFastModeEnabled() &&
         p5 &&
-        af(getEffectiveSessionModel({ mainLoopModel: u5, mainLoopModelForSession: d5 })) &&
-        Jy()),
+        modelSupportsFastMode(getEffectiveSessionModel({ mainLoopModel: u5, mainLoopModelForSession: d5 })) &&
+        isFastModeAvailable()),
         ($i[377] = p5),
         ($i[378] = d5),
         ($i[379] = u5),
@@ -53087,7 +53087,7 @@ function mie(Jfr) {
       }
       let tgr = Fkt.getState();
       if (hasBackgroundableTask(tgr)) {
-        if ((backgroundAllForegroundTasks(Bkt), !ee().hasUsedBackgroundTask)) Te(rko, Ukt);
+        if ((backgroundAllForegroundTasks(Bkt), !getGlobalConfig().hasUsedBackgroundTask)) saveGlobalConfig(rko, Ukt);
       } else if (Ie("false") && m1) Hkt();
     }),
       (H5[0] = Fkt),
@@ -53149,10 +53149,10 @@ F();
 F();
 var iko = 2;
 function Vkt() {
-  return (ee().feedbackDraftsTurnOffPromptDeclines ?? 0) < iko;
+  return (getGlobalConfig().feedbackDraftsTurnOffPromptDeclines ?? 0) < iko;
 }
 function $Ne(w) {
-  Te(
+  saveGlobalConfig(
     (I) => ({
       ...I,
       feedbackDraftsTurnOffPromptDeclines:
@@ -55019,7 +55019,7 @@ function DL(w, I) {
   let [ne, me] = d(I);
   return (
     E(() => {
-      r1(w, I).then(me);
+      getDynamicConfig_BLOCKS_ON_INIT(w, I).then(me);
     }, [w, I]),
     ne
   );
@@ -55215,7 +55215,7 @@ async function tvo(w, I) {
   try {
     let ne = await withOAuth401Retry(
       () =>
-        ht.post("/api/claude_code_shared_session_transcripts", w, {
+        httpClient.post("/api/claude_code_shared_session_transcripts", w, {
           timeout: Xko,
           headers: { "Content-Type": "application/json", "User-Agent": getUserAgent() },
           credentials: I,
@@ -55530,9 +55530,9 @@ function ULe({
               submitCountAtLastAppearance: gn,
             };
           }),
-          ee().feedbackSurveyState?.lastShownTime !== On)
+          getGlobalConfig().feedbackSurveyState?.lastShownTime !== On)
         )
-          Te(
+          saveGlobalConfig(
             (ai) => ({ ...ai, feedbackSurveyState: { lastShownTime: On } }),
             pe,
           );
@@ -55558,7 +55558,7 @@ function ULe({
             event_type: "appeared",
             appearance_id: gn,
             survey_type: ne,
-            enabled_via_override: cU(),
+            enabled_via_override: isFeedbackSurveyForOtelEnabled(),
           }));
       },
       [vo, _o, ne, xe, w, I],
@@ -55580,7 +55580,7 @@ function ULe({
             appearance_id: gn,
             response: On,
             survey_type: ne,
-            enabled_via_override: cU(),
+            enabled_via_override: isFeedbackSurveyForOtelEnabled(),
           }));
       },
       [vo, ne, xe, w, I],
@@ -55599,7 +55599,7 @@ function ULe({
             event_type: "abandoned",
             appearance_id: gn,
             survey_type: ne,
-            enabled_via_override: cU(),
+            enabled_via_override: isFeedbackSurveyForOtelEnabled(),
           }));
       },
       [ne, xe, I],
@@ -55611,7 +55611,7 @@ function ULe({
         if (!isPolicyAllowed("allow_product_feedback")) return !1;
         if (Mae().kind === "disabled") return !1;
         if (Pie()) return !0;
-        if (ee().transcriptShareDismissed) return !1;
+        if (getGlobalConfig().transcriptShareDismissed) return !1;
         let On =
           gn === "bad"
             ? at.probability
@@ -55637,7 +55637,7 @@ function ULe({
             event_type: "transcript_prompt_appeared",
             appearance_id: gn,
             survey_type: ne,
-            enabled_via_override: cU(),
+            enabled_via_override: isFeedbackSurveyForOtelEnabled(),
           }));
       },
       [ne, xe, I],
@@ -55655,7 +55655,7 @@ function ULe({
             trigger: fromEnum(ai),
           });
         if (On === "dont_ask_again")
-          await Te((Oi) => ({ ...Oi, transcriptShareDismissed: !0 }), pe);
+          await saveGlobalConfig((Oi) => ({ ...Oi, transcriptShareDismissed: !0 }), pe);
         if (On === "yes") {
           let Oi = Ho.current ?? Rie(I.getSnapshot(), pe);
           Ho.current = null;
@@ -55697,7 +55697,7 @@ function ULe({
         if (ai !== "post" && ai !== "share") return !1;
         if (ai === "share" && getAuthHeaders().error) return !1;
         if (Qvt()) return (jt({ ...Wae, enabled: !0 }), to(!0), ho(), !0);
-        let Fr = H(gFn, Wae) ?? {},
+        let Fr = getFeatureValue_CACHED_MAY_BE_STALE(gFn, Wae) ?? {},
           Oi = (Wi, qs) =>
             typeof Wi === "number" && Number.isFinite(Wi) && Wi > 0 ? Wi : qs,
           rs = (Wi, qs) =>
@@ -55731,7 +55731,7 @@ function ULe({
             event_type: "followup_prompt_appeared",
             appearance_id: gn,
             survey_type: ne,
-            enabled_via_override: cU(),
+            enabled_via_override: isFeedbackSurveyForOtelEnabled(),
           }));
       },
       [ne, xe, I],
@@ -55751,7 +55751,7 @@ function ULe({
               event_type: "followup_skipped",
               appearance_id: gn,
               survey_type: ne,
-              enabled_via_override: cU(),
+              enabled_via_override: isFeedbackSurveyForOtelEnabled(),
             }),
             _o());
           return;
@@ -55769,7 +55769,7 @@ function ULe({
             event_type: "followup_submitted",
             appearance_id: gn,
             survey_type: ne,
-            enabled_via_override: cU(),
+            enabled_via_override: isFeedbackSurveyForOtelEnabled(),
           }));
         let Fr = fo.current ?? I.getSnapshot(),
           Oi = ro.current;
@@ -55846,7 +55846,7 @@ function ULe({
       if (Wo) return !1;
       if (me) return !1;
       if (a.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY) return !1;
-      if (Zk()) return !1;
+      if (shouldSuppressFeedbackSurvey()) return !1;
       if (!isPolicyAllowed("allow_product_feedback")) return !1;
       if (Ie(process.env.CLAUDE_FORCE_DISPLAY_SURVEY) && !Je.timeLastShown)
         return !0;
@@ -55868,7 +55868,7 @@ function ULe({
         ((on.current = He),
           (Ro.current = Math.random() <= (zt ?? it.probability)));
       if (!Ro.current) return !1;
-      let On = ee().feedbackSurveyState;
+      let On = getGlobalConfig().feedbackSurveyState;
       if (On?.lastShownTime) {
         if (Date.now() - On.lastShownTime < it.minTimeBetweenGlobalFeedbackMs)
           return !1;
@@ -56083,10 +56083,10 @@ function Nie(DSr) {
       if (!NL) {
         return;
       }
-      (LSr(mwt(H(nwt, ""))),
-        OSr(lwt(H(rwt, ""))),
-        FSr(uwt(H(iwt, ""))),
-        BSr(dwt(H(swt, ""))));
+      (LSr(mwt(getFeatureValue_CACHED_MAY_BE_STALE(nwt, ""))),
+        OSr(lwt(getFeatureValue_CACHED_MAY_BE_STALE(rwt, ""))),
+        FSr(uwt(getFeatureValue_CACHED_MAY_BE_STALE(iwt, ""))),
+        BSr(dwt(getFeatureValue_CACHED_MAY_BE_STALE(swt, ""))));
     }),
       (yvo = [NL]),
       (v1[5] = NL),
@@ -56120,7 +56120,7 @@ function Nie(DSr) {
       if (oJ === void 0) {
         return;
       }
-      if (Zk()) {
+      if (shouldSuppressFeedbackSurvey()) {
         return;
       }
       if (!isPolicyAllowed("allow_product_feedback")) {
@@ -56261,16 +56261,16 @@ function Bwt(w) {
   return w in nOe;
 }
 function Uwt() {
-  return H(owo, 0.2);
+  return getFeatureValue_CACHED_MAY_BE_STALE(owo, 0.2);
 }
 function Hwt() {
   return !1;
 }
 function jwt() {
   return (
-    H(two, !1) &&
+    getFeatureValue_CACHED_MAY_BE_STALE(two, !1) &&
     isAutoMemoryEnabled() &&
-    !Zk() &&
+    !shouldSuppressFeedbackSurvey() &&
     isPolicyAllowed("allow_product_feedback") &&
     !a.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY
   );
@@ -56364,7 +56364,7 @@ function Fie(bb, VLe, Tvo, KLe) {
         }),
         vwt === "dont_ask_again")
       )
-        await Te(swo, T1);
+        await saveGlobalConfig(swo, T1);
       if (vwt === "yes") {
         let wwt = await eJ(Avo.current, rE, kwt, T1, pwt);
         return (
@@ -56641,8 +56641,8 @@ async function fwo(w) {
 }
 async function Vwt(w, I) {
   if (a.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY) return null;
-  if (Zk()) return null;
-  if (mg()) return null;
+  if (shouldSuppressFeedbackSurvey()) return null;
+  if (isAnalyticsDisabled()) return null;
   if (!isPolicyAllowed("allow_product_feedback")) return null;
   if (isEssentialTrafficOnly()) return null;
   if (getAPIProvider() !== "firstParty") return null;
@@ -56653,7 +56653,7 @@ async function Vwt(w, I) {
   }
   if (!(await fwo(I)))
     return (logFeatureSad("cli_plugin_rating_store", "skip_org_unpinned"), null);
-  if ((await r1(uwo, cwo)).enabled !== !0) return null;
+  if ((await getDynamicConfig_BLOCKS_ON_INIT(uwo, cwo)).enabled !== !0) return null;
   return { marketplaceName: w.marketplace, pluginName: w.name };
 }
 function Gwt(w, I, ne) {
@@ -56685,7 +56685,7 @@ async function Bie(w, I, ne, me, pe) {
   let be = { ...dwo, credentials: pe },
     xe;
   try {
-    xe = I === "post" ? await ht.post(ne, me, be) : await ht.delete(ne, me, be);
+    xe = I === "post" ? await httpClient.post(ne, me, be) : await httpClient.delete(ne, me, be);
   } catch (Ae) {
     let { kind: Oe, status: He } = Ps(Ae),
       Ke =
@@ -56798,7 +56798,7 @@ function rOe(w, I, ne, me) {
     ...(me && { response: fromEnum(me) }),
     ...buildPluginTelemetryFields(ne.name, ne.marketplace),
   });
-  let pe = isOfficialPluginScope(getPluginScope(ne.name, ne.marketplace, null)) || wl();
+  let pe = isOfficialPluginScope(getPluginScope(ne.name, ne.marketplace, null)) || isToolDetailsLoggingEnabled();
   emitOtelEvent("feedback_survey", {
     event_type: w,
     appearance_id: I,
@@ -56863,7 +56863,7 @@ function sOe({
         if (!ro) return;
         let ho = Date.now(),
           _o = getPluginIdHash(ro.name, ro.marketplace);
-        (Te((Ho) => {
+        (saveGlobalConfig((Ho) => {
           let { [_o]: po, ...xo } = Ho.pluginSurveyState?.pending ?? {};
           return {
             ...Ho,
@@ -56916,16 +56916,16 @@ function sOe({
       if (me) return;
       if (!ne || Oe.probability <= 0) return;
       if (a.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY) return;
-      if (Zk()) return;
+      if (shouldSuppressFeedbackSurvey()) return;
       if (!isPolicyAllowed("allow_product_feedback")) return;
       let ro = Date.now(),
-        ho = ee().pluginSurveyState,
+        ho = getGlobalConfig().pluginSurveyState,
         _o = drainPluginActivitySince(it.current);
       it.current = ro;
       let Ho = ho?.pending ?? {},
         po = zwt(Ho, _o, Oe.enabledTriggers);
       if (po !== Ho)
-        Te(
+        saveGlobalConfig(
           (Ro) => ({
             ...Ro,
             pluginSurveyState: {
@@ -57065,7 +57065,7 @@ function Hie(P1, aOe, Swo, lOe) {
       if (!UL) {
         return;
       }
-      Ovr(H(tCt, !1));
+      Ovr(getFeatureValue_CACHED_MAY_BE_STALE(tCt, !1));
     }),
       (xwo = [UL]),
       (M1[4] = UL),
@@ -57103,7 +57103,7 @@ function Hie(P1, aOe, Swo, lOe) {
       if (uOe !== !0) {
         return;
       }
-      if (Zk()) {
+      if (shouldSuppressFeedbackSurvey()) {
         return;
       }
       if (!isPolicyAllowed("allow_product_feedback")) {
@@ -58623,7 +58623,7 @@ function nFe(JTr) {
 }
 F();
 function K1n() {
-  return H("tengu_marbled_teal", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_marbled_teal", !1);
 }
 function g6e(w, I) {
   if (!zh(w)) return null;
@@ -58672,7 +58672,7 @@ function RFe(Axr) {
       logEvent("tengu_effort_medium_nudge_shown", {
         cohort: fromEnum(ec.cohort),
         option_order: fromEnum(_J),
-        nudge_model: bt(ec.modelKey),
+        nudge_model: getModelForAnalytics(ec.modelKey),
         from_level: fromEnum(ec.fromLevel),
         to_level: fromEnum(ec.toLevel),
         warning_shown: ec.showWarning === !0,
@@ -59939,8 +59939,8 @@ function QFe(_Pr) {
 }
 function mTt(w) {
   if (isIdeOnboardingShown()) return;
-  let I = ry.terminal || "unknown";
-  (Te(
+  let I = runtimeEnvironment.terminal || "unknown";
+  (saveGlobalConfig(
     (ne) => ({
       ...ne,
       hasIdeOnboardingBeenShown: { ...ne.hasIdeOnboardingBeenShown, [I]: !0 },
@@ -60266,7 +60266,7 @@ function Mse(ZPr) {
   return uxo;
 }
 function zJt() {
-  return !ee().remoteDialogSeen;
+  return !getGlobalConfig().remoteDialogSeen;
 }
 function uBe(uMr) {
   let K1 = _(14),
@@ -60400,7 +60400,7 @@ Parse the user's input into ISO 8601 format. Return ONLY the formatted string, o
           hasAppendSystemPrompt: !1,
           mcpTools: [],
           enablePromptCaching: !1,
-          agentContext: aa(),
+          agentContext: createMainAgentContext(),
           credentials: me,
         },
       }),
@@ -63549,7 +63549,7 @@ function CUe(bEr) {
 }
 F();
 async function b6e() {
-  let [w, I] = await Promise.all([detectCurrentRepositoryWithHost(), od("tengu_ccr_bundle_seed_enabled")]),
+  let [w, I] = await Promise.all([detectCurrentRepositoryWithHost(), checkGate_CACHED_OR_BLOCKING("tengu_ccr_bundle_seed_enabled")]),
     ne = findGitRoot(getCwd()) !== null && (a.CCR_ENABLE_BUNDLE || I);
   if (!ne) return { cloneViable: !1, bundleSeedEnabled: ne };
   return {
@@ -66736,7 +66736,7 @@ function c$e(bOr) {
       }
       if (Qp)
         logEvent("tengu_ask_user_question_rejected", {
-          source_hash: Tn(Qp),
+          source_hash: hashForTelemetry(Qp),
           questionCount: pl.length,
           isInPlanMode: nh,
         });
@@ -66806,7 +66806,7 @@ function c$e(bOr) {
       }
       if (Qp)
         logEvent("tengu_ask_user_question_respond_to_claude", {
-          source_hash: Tn(Qp),
+          source_hash: hashForTelemetry(Qp),
           questionCount: pl.length,
           isInPlanMode: nh,
         });
@@ -66833,7 +66833,7 @@ function c$e(bOr) {
         return;
       }
       logEvent("tengu_ask_user_question_skipped", {
-        ...(Qp && { source_hash: Tn(Qp) }),
+        ...(Qp && { source_hash: hashForTelemetry(Qp) }),
         skippedCount: yIo,
         questionCount: pl.length,
         reason: fromEnum(POr),
@@ -66874,7 +66874,7 @@ function c$e(bOr) {
       }
       if (Qp)
         logEvent("tengu_ask_user_question_accepted", {
-          source_hash: Tn(Qp),
+          source_hash: hashForTelemetry(Qp),
           questionCount: pl.length,
           answerCount: Object.keys(t$e).length,
           isInPlanMode: nh,
@@ -67084,7 +67084,7 @@ function c$e(bOr) {
             return;
           }
           (logEvent("tengu_ask_user_question_afk_auto_advance", {
-            ...(Qp && { source_hash: Tn(Qp) }),
+            ...(Qp && { source_hash: hashForTelemetry(Qp) }),
             timeoutMs: NIo,
             questionCount: pl.length,
             hadPartialAnswers: Object.keys(Qm).length > 0,
@@ -67998,7 +67998,7 @@ function rAt({
       w.applies.some(
         (at) =>
           at.type === "addDirectories" ||
-          (at.type === "addRules" && at.rules.some((Zt) => Zt.toolName !== qe)),
+          (at.type === "addRules" && at.rules.some((Zt) => Zt.toolName !== BASH_TOOL_NAME)),
       );
     if (xe !== void 0 && Ae && !Qe && (Oe ?? w !== null))
       Je.push({
@@ -68034,12 +68034,12 @@ function rAt({
   else Je.push({ label: "No", value: "no" });
   return Je;
 }
-var vEo = (w) => $6e(w, qe, e1e);
+var vEo = (w) => $6e(w, BASH_TOOL_NAME, e1e);
 function wEo(w, I) {
   return qw(w, {
     displayedTypes: pIt,
     labelPredicate: vEo,
-    renderLabel: (ne) => fIt(ne, qe, e1e, I),
+    renderLabel: (ne) => fIt(ne, BASH_TOOL_NAME, e1e, I),
   });
 }
 function YX(w, I, ne, me = {}) {
@@ -68060,7 +68060,7 @@ function YX(w, I, ne, me = {}) {
       };
     }
     case "yes-prefix-edited": {
-      let pe = gIt(me.editablePrefixSeed, me.editablePrefix, qe);
+      let pe = gIt(me.editablePrefixSeed, me.editablePrefix, BASH_TOOL_NAME);
       if (pe === null) return { behavior: "allow", updatedInput: I.input };
       return {
         behavior: "allow",
@@ -68090,7 +68090,7 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
     Ke =
       findSafetyCheckReason(be, (un) => !un.classifierApprovable) !== void 0 ||
       w.isAskCappedByOrg ||
-      y5(w.requestSource),
+      isRemoteOrPluginRequestSource(w.requestSource),
     Je = Oe !== void 0,
     Qe = V(
       () =>
@@ -68103,7 +68103,7 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       [Ae, Ke, w.permissionResult.suggestions, Je, He],
     ),
     it = !Ke && !Ae && He !== void 0 && Qe === null,
-    at = V(() => Hn(w.toolName), [w.toolName]),
+    at = V(() => getSanitizedToolName(w.toolName), [w.toolName]),
     {
       acceptFeedback: Zt,
       rejectFeedback: Ct,
@@ -68127,7 +68127,7 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       if (Ae) return;
       if (ro) {
         let Io = QYe([...(Qe?.applies ?? [])]).filter(
-          (So) => So.toolName === qe && So.ruleContent,
+          (So) => So.toolName === BASH_TOOL_NAME && So.ruleContent,
         );
         if (Io.length === 1) return OB(Io[0].ruleContent);
         if (Io.length > 1) return;
@@ -68172,7 +68172,7 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       isSandboxed: An,
     } = V(() => {
       let un = typeof w.input.command === "string" ? w.input.command : pe,
-        lr = !Ae && H("tengu_destructive_command_warning", !1) ? getDestructiveCommandWarning(un) : null,
+        lr = !Ae && getFeatureValue_CACHED_MAY_BE_STALE("tengu_destructive_command_warning", !1) ? getDestructiveCommandWarning(un) : null,
         Io = SandboxManager.isSandboxingEnabled(),
         So =
           Io &&
@@ -69104,7 +69104,7 @@ var SF = defineDialog({
 });
 async function qAt(w, I) {
   if ((await w(SF, {})) === "cancelled") return;
-  (Te((me) => ({ ...me, hasAcknowledgedCostThreshold: !0 }), I),
+  (saveGlobalConfig((me) => ({ ...me, hasAcknowledgedCostThreshold: !0 }), I),
     logEvent("tengu_cost_threshold_acknowledged", {}));
 }
 F();
@@ -69345,7 +69345,7 @@ function NIt(w, I, ne, me, pe) {
     credentials: pe,
   })
     .then(async (xe) => {
-      let Ae = xe ? si(xe) : "";
+      let Ae = xe ? sanitizeSessionName(xe) : "";
       if (!Ae || getCurrentSessionTitle(K())) return;
       let Oe = K(),
         He = getSessionTranscriptPath();
@@ -69485,7 +69485,7 @@ function UIt(w, I) {
       exceeds200kTokens: !1,
     }),
     me = vp(ne, Up()),
-    { used: pe } = zVt(
+    { used: pe } = computeContextUsagePercent(
       {
         input_tokens: w.input_tokens,
         cache_creation_input_tokens: w.cache_creation_input_tokens ?? 0,
@@ -70388,7 +70388,7 @@ function H0o(w) {
   let ne = [];
   for (let be of I) {
     if (
-      be.toolName !== tt ||
+      be.toolName !== READ_TOOL_NAME ||
       be.ruleContent === void 0 ||
       !F6e(be.ruleContent) ||
       !n5(be.ruleContent)
@@ -70407,12 +70407,12 @@ function j0o(w, I, ne) {
   let me = F0o(w),
     pe = B0o(w);
   if ((me || pe) && I !== "read") {
-    let Qe = pe ? jCt : BCt,
+    let Qe = pe ? USER_CLAUDE_DIR_GLOB : PROJECT_CLAUDE_DIR_GLOB,
       it = qw(
         [
           {
             type: "addRules",
-            rules: [{ toolName: Bt, ruleContent: Qe }],
+            rules: [{ toolName: EDIT_TOOL_NAME, ruleContent: Qe }],
             behavior: "allow",
             destination: "session",
           },
@@ -70425,7 +70425,7 @@ function j0o(w, I, ne) {
               Zt === void 0 ||
               Zt.type !== "addRules" ||
               Zt.rules.length !== 1 ||
-              Zt.rules[0]?.toolName !== Bt ||
+              Zt.rules[0]?.toolName !== EDIT_TOOL_NAME ||
               Zt.rules[0]?.ruleContent !== Qe
             )
               return null;
@@ -71098,7 +71098,7 @@ function vEt({ payload: w, answer: I }) {
       [w.content.kind, w.renderedToolUseMessage, w.input],
     ),
     xe = V(() => hNo(w, me, pe), [w, me, pe]),
-    Ae = V(() => Hn(w.toolName), [w.toolName]),
+    Ae = V(() => getSanitizedToolName(w.toolName), [w.toolName]),
     { requestedMachine: Oe, runsOnMachine: He } = V(
       () => wzt(w.input),
       [w.input],
@@ -71128,7 +71128,7 @@ function vEt({ payload: w, answer: I }) {
     ao =
       (zt?.type === "safetyCheck" && !zt.classifierApprovable) ||
       w.isAskCappedByOrg ||
-      y5(w.requestSource) ||
+      isRemoteOrPluginRequestSource(w.requestSource) ||
       w.contentWithheld === !0 ||
       pe !== null ||
       be,
@@ -71889,7 +71889,7 @@ var fk = {
       },
       layout: "bottom",
     },
-    [iQ.kind]: { notification: VC },
+    [PERMISSION_PROMPT_DIALOG.kind]: { notification: VC },
     [$qe.kind]: { notification: VC },
     [Fqe.kind]: { notification: VC },
     [Nqe.kind]: { notification: VC },
@@ -72005,7 +72005,7 @@ function qEt({
       w.applies.some(
         (Je) =>
           Je.type === "addDirectories" ||
-          (Je.type === "addRules" && Je.rules.some((Qe) => Qe.toolName !== Ut)),
+          (Je.type === "addRules" && Je.rules.some((Qe) => Qe.toolName !== POWERSHELL_TOOL_NAME)),
       );
     if (be !== void 0 && xe && !Ke)
       Oe.push({
@@ -72140,12 +72140,12 @@ function BNo(w) {
   }
   return I.slice(0, ne).join(" ");
 }
-var UNo = (w) => $6e(w, Ut);
+var UNo = (w) => $6e(w, POWERSHELL_TOOL_NAME);
 function HNo(w) {
   return qw(w, {
     displayedTypes: pIt,
     labelPredicate: UNo,
-    renderLabel: (I) => fIt(I, Ut),
+    renderLabel: (I) => fIt(I, POWERSHELL_TOOL_NAME),
   });
 }
 function Wle(w, I, ne, me = {}) {
@@ -72166,7 +72166,7 @@ function Wle(w, I, ne, me = {}) {
       };
     }
     case "yes-prefix-edited": {
-      let pe = gIt(me.editablePrefixSeed, me.editablePrefix, Ut);
+      let pe = gIt(me.editablePrefixSeed, me.editablePrefix, POWERSHELL_TOOL_NAME);
       if (pe === null) return { behavior: "allow", updatedInput: I.input };
       return {
         behavior: "allow",
@@ -72184,7 +72184,7 @@ function Wle(w, I, ne, me = {}) {
 function KEt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
   let me = CommandSpecStore.of(useSession().host),
     pe = w.command,
-    be = V(() => Hn(w.toolName), [w.toolName]),
+    be = V(() => getSanitizedToolName(w.toolName), [w.toolName]),
     {
       acceptFeedback: xe,
       rejectFeedback: Ae,
@@ -72245,7 +72245,7 @@ function KEt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
     ro = V(() => km(w.input.command, { maxUnits: Rm }), [w.input.command]),
     ho = ro.kind === "withheld" || typeof w.input.command !== "string",
     _o = V(() => {
-      if (ho || !H("tengu_destructive_command_warning", !1)) return null;
+      if (ho || !getFeatureValue_CACHED_MAY_BE_STALE("tengu_destructive_command_warning", !1)) return null;
       let on = typeof w.input.command === "string" ? w.input.command : pe;
       return mzn(on);
     }, [pe, w.input, ho]),
@@ -72255,7 +72255,7 @@ function KEt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
         (on) => !on.classifierApprovable,
       ) !== void 0 ||
       w.isAskCappedByOrg ||
-      y5(w.requestSource),
+      isRemoteOrPluginRequestSource(w.requestSource),
     po = V(
       () => (ho || Ho ? null : HNo(w.permissionResult.suggestions)),
       [ho, Ho, w.permissionResult.suggestions],
@@ -72760,7 +72760,7 @@ function eVe(tKr) {
   let XEt = YNo,
     AP;
   if (Kf[15] !== Eu.toolName)
-    ((AP = Hn(Eu.toolName)), (Kf[15] = Eu.toolName), (Kf[16] = AP));
+    ((AP = getSanitizedToolName(Eu.toolName)), (Kf[15] = Eu.toolName), (Kf[16] = AP));
   else AP = Kf[16];
   let JNo;
   if (Kf[17] !== Eu.isMcp || Kf[18] !== AP)
@@ -73423,7 +73423,7 @@ var VVe = {
   ...fl(MCP_ELICITATION_DIALOG, QLo),
   ...fl(MCP_ELICITATION_WAITING_DIALOG, YLo),
   ...fl(MCP_URL_ELICITATION_DIALOG, JLo),
-  ...fl(iQ, EQt),
+  ...fl(PERMISSION_PROMPT_DIALOG, EQt),
   ...fl($qe, SVe),
   ...fl(Fqe, eVe),
   ...fl(Nqe, KEt),
@@ -73609,7 +73609,7 @@ function ace(Azr) {
     uOo = useStoreSelector(aOo, fOo),
     dOo = useStoreSelector(aOo, gOo),
     Izr = useTerminalFocus(),
-    mOo = getTerminalMultiplexer() !== null && H("tengu_static_title_under_mux", !0),
+    mOo = getTerminalMultiplexer() !== null && getFeatureValue_CACHED_MAY_BE_STALE("tengu_static_title_under_mux", !0),
     [Ezr, Dzr] = d(0),
     pOo;
   if (Nzr[0] === MEMO_CACHE_SENTINEL) ((pOo = () => Dzr(hOo)), (Nzr[0] = pOo));
@@ -74011,8 +74011,8 @@ function dce(AQr) {
   (E($Oo, WOo), YVe(IQr, uce, EQr));
   let qOo;
   if (cx[38] === MEMO_CACHE_SENTINEL) {
-    let BQr = H("tengu_terminal_sidebar", !1);
-    qOo = BQr && (ee().showStatusInTerminalTab ?? !1);
+    let BQr = getFeatureValue_CACHED_MAY_BE_STALE("tengu_terminal_sidebar", !1);
+    qOo = BQr && (getGlobalConfig().showStatusInTerminalTab ?? !1);
     cx[38] = qOo;
   } else qOo = cx[38];
   let VOo = qOo;
@@ -75977,7 +75977,7 @@ async function rLt(w) {
 `,
               )
             : "";
-    await IAt(vo, () =>
+    await runWithWorkload(vo, () =>
       runWithInteractionContext(no, async () => {
         let jo = go(),
           Cn = jo.localJsx;
@@ -76107,7 +76107,7 @@ async function rLt(w) {
             Fn = Go === "prompt" || (Go === "bash" && Ho),
             Qo = wn.some((Mn) => Mn.stopHookActive) ? !0 : void 0,
             Gn = So?.clientPlatform,
-            Sn = PCt(wn);
+            Sn = getSingleTurnAttributionKey(wn);
           ((Tt = H2n({
             turnUuids: to,
             isHumanTakeover:
@@ -76125,7 +76125,7 @@ async function rLt(w) {
               Ho,
               po ?? [],
               xo &&
-                Zve({
+                isSkillModelSupportedInAutoMode({
                   skillModel: xo,
                   mode: xe().toolPermissionContext.mode,
                   fastMode: xe().fastMode ?? !1,
@@ -76359,9 +76359,9 @@ async function cLt({
           if (
             (n(
               `[engine] turn ended in error: ${at}`,
-              OR(Qe.terminal_reason) ? void 0 : { level: "error" },
+              isAbortTerminalReason(Qe.terminal_reason) ? void 0 : { level: "error" },
             ),
-            Qe.subtype === "error_during_execution" && !OR(Qe.terminal_reason))
+            Qe.subtype === "error_during_execution" && !isAbortTerminalReason(Qe.terminal_reason))
           )
             try {
               pe(createApiErrorMessage({ content: at }));
@@ -76703,7 +76703,7 @@ class kKe {
     ) {
       let ne = this._apiMetrics.findLast((me) => me.id == null);
       if (ne?.thinkingTokenEstimate != null)
-        ju({
+        enqueueSdkEvent({
           type: "system",
           subtype: "thinking_tokens",
           estimated_tokens: ne.thinkingTokenEstimate,
@@ -76714,7 +76714,7 @@ class kKe {
         (me) => me.id == null,
       )?.thinkingTokenEstimate;
       if (ne != null && ne > I)
-        ju({
+        enqueueSdkEvent({
           type: "system",
           subtype: "thinking_tokens",
           estimated_tokens: ne,
@@ -77351,7 +77351,7 @@ class Wce {
       shouldStopBeforeNextApiCall: () => Ae.pending !== null,
       messageQueue: Oe,
       session: He,
-      agentContext: aa(),
+      agentContext: createMainAgentContext(),
       options: {
         commands: nn,
         tools: Sr,
@@ -77359,7 +77359,7 @@ class Wce {
         verbose: zo.verbose,
         mainLoopModel: pe,
         fallbackModel: Je,
-        thinkingConfig: lor(zo.thinkingEnabled, Qe),
+        thinkingConfig: resolveThinkingConfig(zo.thinkingEnabled, Qe),
         mcpClients: xe.computeMcpClients(),
         mcpResources: zo.mcp.resources,
         ideInstallationStatus: it,
@@ -77793,7 +77793,7 @@ class Wce {
             priority: vo.queuePriority,
             scheduledTaskId: vo.scheduledTaskId,
             scheduledFireId: vo.scheduledFireId,
-            workload: zo ? g6 : void 0,
+            workload: zo ? CRON_WORKLOAD_NAME : void 0,
             ...tXe(vo),
             inputSource:
               vo.promptSource === "suggestion_accepted"
@@ -78138,10 +78138,10 @@ class Wce {
         this._firstText === Gn &&
         this._textHeldToTurnEnd !== void 0 &&
         Br !== void 0 &&
-        !OR(Br)
+        !isAbortTerminalReason(Br)
       )
         Gn?.markFirstTextPainted("turn_end", this._textHeldToTurnEnd);
-      if ((Gn?.end(Br, OR(Br) || me.signal.aborted), this._firstText === Gn))
+      if ((Gn?.end(Br, isAbortTerminalReason(Br) || me.signal.aborted), this._firstText === Gn))
         this._firstText = null;
     }
     if (
@@ -78840,7 +78840,7 @@ function qce() {
 var oUo = 1e4;
 function vLt(w) {
   try {
-    let I = jve().filter(yAt).map(Zje);
+    let I = drainSdkEvents().filter(yAt).map(Zje);
     if (I.length > 0) w.writeSdkMessages(I);
   } catch (I) {
     n(`[bridge:repl] queued SDK event forward failed: ${l(I)}`, {
@@ -78849,7 +78849,7 @@ function vLt(w) {
   }
 }
 function wLt(w, I) {
-  return !I && !w.outboundOnly && SVt((ne) => ne.type === "conversation_reset");
+  return !I && !w.outboundOnly && hasQueuedSdkEvent((ne) => ne.type === "conversation_reset");
 }
 var _Ke = "\x00baseline-pending",
   nUo = 10;
@@ -79095,7 +79095,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
     let da = wi ? getExternalPermissionMode(qi.getState().toolPermissionContext.mode) : void 0,
       Wa =
         da !== void 0 &&
-        !SVt(
+        !hasQueuedSdkEvent(
           (vl) =>
             vl.type === "system" &&
             vl.subtype === "status" &&
@@ -79144,7 +79144,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
     }, [xi, Ri, qi]),
     E(() => {
       if (!xi) return;
-      let wi = Z$e(() => {
+      let wi = onOrgFastModeChange(() => {
           Is();
         }),
         Ms = subscribeMemoryStoreSkillChanges(() => {
@@ -79243,7 +79243,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                     accountUuid: Js.accountUuid,
                     organizationUuid: Js.organizationUuid,
                   }
-                : await sy(it).catch(() => {
+                : await readFreshOauthAccountFromDisk(it).catch(() => {
                     return;
                   });
             if (ai.current !== Ns) return;
@@ -79390,7 +79390,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
             let Wn = Fr.current,
               di = async () => {
                 if (Wn?.accountUuid === void 0) return;
-                let Ds = await sy(it).catch(() => {
+                let Ds = await readFreshOauthAccountFromDisk(it).catch(() => {
                   return;
                 });
                 if (!sameOwnerAccount(Ds, Wn)) return;
@@ -79743,7 +79743,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
             lr.current = Ys || Ds || (Wn && ac);
             let Ba =
               di ??
-              (await sy(it).catch(() => {
+              (await readFreshOauthAccountFromDisk(it).catch(() => {
                 return;
               }));
             if (zl) return;
@@ -79802,7 +79802,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                       );
                       for (let la of Bs)
                         logEvent("tengu_request_user_dialog_implicit_cancel", {
-                          dialog_kind: Tn(la),
+                          dialog_kind: hashForTelemetry(la),
                           reason: fromEnum("new_user_message"),
                           lane: S("repl_bridge"),
                         });
@@ -79902,13 +79902,13 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                       if (Fu !== null)
                         logFeatureSad("model_switch", "family_alias_stepped_down");
                       else logFeatureOk("model_switch");
-                      if (Mr()) QH();
+                      if (isFastModeEnabled()) clearFastModeCooldown();
                       ad(El);
                       let li, zi;
                       if (
                         (Wi((Hs) => {
                           li = !!Hs.fastMode;
-                          let tl = Mr() ? db(El, Hs.fastMode) : !!Hs.fastMode;
+                          let tl = isFastModeEnabled() ? resolveFastModeForModel(El, Hs.fastMode) : !!Hs.fastMode;
                           if (
                             ((zi = tl),
                             Hs.mainLoopModelForSession === El &&
@@ -79923,7 +79923,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                         }),
                         li !== void 0 && zi !== void 0)
                       ) {
-                        pb(li, zi);
+                        logFastModeToggled(li, zi);
                         let Hs = C2n(li, zi, El);
                         if (Hs !== null)
                           Ls({
@@ -79983,7 +79983,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                     Ei == null
                       ? He
                         ? He.type !== "disabled"
-                        : JN()
+                        : isThinkingEnabled()
                       : Ei !== 0;
                   Wi((la) => {
                     if (la.thinkingEnabled === Bs) return la;
@@ -80512,7 +80512,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
             ((vo.current = void 0), zo(Sr(Xu.sid)));
           (om(), ug(), aQe(void 0), no.current?.(), (no.current = void 0));
           let Ns = qi.getState().replBridgeSkipNextArchive,
-            Js = !wi && SVt((Ys) => Ys.type === "conversation_reset");
+            Js = !wi && hasQueuedSdkEvent((Ys) => Ys.type === "conversation_reset");
           if (Js)
             (logFeatureSad("bridge_conversation_reset", "undelivered_at_teardown"),
               Oi({ archiveAbandoned: Tt.current === null }),
@@ -80678,12 +80678,12 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
         if (!Ms || wLt(Ms, qi.getState().replBridgeSessionActive)) return;
         vLt(Ms);
       };
-      return (yse(wi), wi(), () => yse(null));
+      return (setSdkQueueEnqueueListener(wi), wi(), () => setSdkQueueEnqueueListener(null));
     }, [ss, hc]),
     SLt(ss, to),
     E(() => {
       if (!Bi) {
-        let wi = jve(),
+        let wi = drainSdkEvents(),
           Ms = !1,
           da = !1;
         for (let Wa of wi)
@@ -80837,7 +80837,7 @@ async function sUo(w, I, ne, me, pe, be, xe, Ae) {
       zt = !1;
     if (Qe?.kind === "peer")
       to = {
-        origin: Kme(Qe, eo, Ke.content),
+        origin: dropOriginBodyIfValueChanged(Qe, eo, Ke.content),
         isMeta: !0,
         skipAttachments: !0,
         ...(I6e(w) && { priority: "later" }),
@@ -80860,7 +80860,7 @@ async function sUo(w, I, ne, me, pe, be, xe, Ae) {
           }),
         }));
     }
-    let ao = jQe(Je, {
+    let ao = getLocalTurnAttributionKey(Je, {
         isCrossSession: isCrossSessionIngress({
           ingressOrigin: Qe,
           inboundOrigin: Ke.inboundOrigin,
@@ -81246,7 +81246,7 @@ class Kce {
       HB();
       return;
     }
-    let I = Ia() !== null,
+    let I = getCurrentWorktreeSession() !== null,
       ne = buildBackgroundTaskItems(this.#n.getState().tasks);
     if (I || ne.length > 0) {
       this.#a({
@@ -81703,10 +81703,10 @@ function PKe(w) {
     { storageV5: ne } = useStorageV5Context();
   E(() => {
     if (Nn()) return;
-    let me = es(),
-      pe = cZe();
+    let me = getCurrentProjectConfig(),
+      pe = getVersionBase();
     if (me.lastGracefulShutdown !== !1 || me.lastVersionBase !== pe)
-      eu(
+      saveCurrentProjectConfig(
         (Oe) => ({ ...Oe, lastGracefulShutdown: !1, lastVersionBase: pe }),
         ne,
       );
@@ -81987,7 +81987,7 @@ function FLt() {
                 reason: xUo,
                 timestamp: Date.now(),
               }),
-                Te(OUo, ILt));
+                saveGlobalConfig(OUo, ILt));
               let Jce = xUo;
               if (Jce.length > 80) Jce = `${truncateToCodeUnits(Jce, 79)}\u2026`;
               EKe({
@@ -82083,7 +82083,7 @@ function FLt() {
         IUo.then((DUo) => {
           if (DUo.behavior === "allow")
             (logEvent("tengu_auto_mode_subsequent_approval", {
-              toolName: Hn(YC.name),
+              toolName: getSanitizedToolName(YC.name),
               isMcp: YC.isMcp ?? !1,
               msSinceDeny: Date.now() - EUo.timestamp,
               allowReasonType: fromEnumOpt(DUo.decisionReason?.type),
@@ -83802,7 +83802,7 @@ function Mue(Kri) {
     [lf, Qri] = d(0),
     [P2e, rw] = d(),
     PHo;
-  if (nw[1] === MEMO_CACHE_SENTINEL) ((PHo = Ia()), (nw[1] = PHo));
+  if (nw[1] === MEMO_CACHE_SENTINEL) ((PHo = getCurrentWorktreeSession()), (nw[1] = PHo));
   else PHo = nw[1];
   let Sl = PHo,
     COt = useSession(HHo),
@@ -83833,7 +83833,7 @@ function Mue(Kri) {
             })
           : { stdout: "", stderr: "", code: 1, error: void 0 };
         if (Sl && !Sl.hookBased && ROt.code !== 0) {
-          (persistWorktreeSession(null, jh), T6(), await sw(Sl, jh));
+          (persistWorktreeSession(null, jh), clearPendingResumeWorktreeName(), await sw(Sl, jh));
           let Yri = Sl.tmuxSessionName
             ? `. Detached tmux session ${Sl.tmuxSessionName} may still be running \u2014 end it with: tmux kill-session -t ${Sl.tmuxSessionName}`
             : "";
@@ -84384,11 +84384,11 @@ function O2e(w, I, ne, me) {
             try {
               if (
                 (jo.config.type === "sse" || jo.config.type === "http") &&
-                (Qme(
+                (isMcpServerAuthenticated(
                   jo.config,
                   !!getClaudeAIOAuthTokens()?.accessToken || (await hasFirstPartyDesignAuth(xe).catch(() => !1)),
                 ) ||
-                  (SP() && !!jo.config.oauth?.xaa))
+                  (isXaaEnabled() && !!jo.config.oauth?.xaa))
               )
                 return;
               (xo({
@@ -84778,7 +84778,7 @@ function O2e(w, I, ne, me) {
                     On.then(
                       (Fi) => {
                         logEvent("tengu_mcp_list_changed", {
-                          mcpServerKeyHash: wP(no.name),
+                          mcpServerKeyHash: getMcpServerKeyHash(no.name),
                           type: S("tools"),
                           cause: Gi,
                           previousCount: Fi.length,
@@ -84787,7 +84787,7 @@ function O2e(w, I, ne, me) {
                       },
                       () => {
                         logEvent("tengu_mcp_list_changed", {
-                          mcpServerKeyHash: wP(no.name),
+                          mcpServerKeyHash: getMcpServerKeyHash(no.name),
                           type: S("tools"),
                           cause: Gi,
                           newCount: Oi,
@@ -84796,7 +84796,7 @@ function O2e(w, I, ne, me) {
                     );
                   else if (!rs)
                     logEvent("tengu_mcp_list_changed", {
-                      mcpServerKeyHash: wP(no.name),
+                      mcpServerKeyHash: getMcpServerKeyHash(no.name),
                       type: S("tools"),
                       cause: Gi,
                       newCount: Oi,
@@ -84844,7 +84844,7 @@ function O2e(w, I, ne, me) {
                   (yn({ ...no, commands: Gi ? void 0 : [...Xi, ...Ln] }),
                     N2e(),
                     logEvent("tengu_mcp_list_changed", {
-                      mcpServerKeyHash: wP(no.name),
+                      mcpServerKeyHash: getMcpServerKeyHash(no.name),
                       type: S("prompts"),
                       cause: getToolListChangeSource(Or),
                     }));
@@ -84915,7 +84915,7 @@ function O2e(w, I, ne, me) {
                     });
                   }
                   logEvent("tengu_mcp_list_changed", {
-                    mcpServerKeyHash: wP(no.name),
+                    mcpServerKeyHash: getMcpServerKeyHash(no.name),
                     type: S("resources"),
                     cause: getToolListChangeSource(Or),
                   });
@@ -85788,7 +85788,7 @@ var ujo = 3000,
   djo = "tengu_session_memory_share_event",
   zOt = "session_memory_rating";
 function mjo() {
-  return nJ() && !Zk() && !a.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY;
+  return nJ() && !shouldSuppressFeedbackSurvey() && !a.CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY;
 }
 function j2e(w) {
   let I = useClock(),
@@ -87085,7 +87085,7 @@ function Vze(w = JFt) {
   E(() => {
     if (Nn() || be.current) return;
     be.current = !0;
-    let xe = ee().seenNotifications ?? {},
+    let xe = getGlobalConfig().seenNotifications ?? {},
       Ae = [];
     Promise.allSettled(
       w.map(async (Oe) => {
@@ -87108,7 +87108,7 @@ function Vze(w = JFt) {
         if (He.status === "rejected")
           logError(dt(ge(He.reason), "startup notification spec failed"));
       if (Ae.length === 0) return;
-      Te((He) => {
+      saveGlobalConfig((He) => {
         let Ke = { ...(He.seenNotifications ?? {}) };
         for (let Je of Ae) Ke[Je] = (Ke[Je] ?? 0) + 1;
         return { ...He, seenNotifications: Ke };
@@ -87203,7 +87203,7 @@ var s$o = 800,
             if (Ae()) {
               let { getAutoModeDescription: Oe } =
                 await import("../../01-核心基础设施/共享小工具-未细化/getAutoModeDescription.z80978je.js");
-              (await Te(
+              (await saveGlobalConfig(
                 (He) =>
                   He.hasSeenAutoModeEntryWarning
                     ? He
@@ -87263,7 +87263,7 @@ var oBt = {
       if (Nn() || w) return;
       w = !0;
       let ne = S_e(),
-        me = ee();
+        me = getGlobalConfig();
       if (
         !(
           ne === !0 ||
@@ -87359,7 +87359,7 @@ var a$o = 5,
       ];
     },
     setup() {
-      let w = ee().hasAcknowledgedCostThreshold ? !1 : null;
+      let w = getGlobalConfig().hasAcknowledgedCostThreshold ? !1 : null;
       return ({
         turn: I,
         turnAtRender: { isLoading: ne, lastQueryCompletionTime: me },
@@ -87376,7 +87376,7 @@ var a$o = 5,
           if ((logEvent("tengu_cost_threshold_reached", {}), (w = shouldShowCostSummary()), !w)) return;
         }
         if (
-          ee().hasAcknowledgedCostThreshold ||
+          getGlobalConfig().hasAcknowledgedCostThreshold ||
           Ae.getState().open.some((He) => He.kind === SF.kind)
         )
           return;
@@ -87394,7 +87394,7 @@ var sBt = {
       mainLoopModel: ne,
       userSpecifiedModel: me,
     }) => {
-      let pe = UAt(me ?? ne);
+      let pe = formatLegacyModelRemapWarning(me ?? ne);
       if (pe && pe !== w)
         ((w = pe),
           I({
@@ -87436,8 +87436,8 @@ var lBt = "fast-mode-cooldown-started",
   };
 function c$o({ addNotification: w, fastMode: I, store: ne }) {
   if (Nn()) return;
-  if (!Mr()) return;
-  return Z$e((me) => {
+  if (!isFastModeEnabled()) return;
+  return onOrgFastModeChange((me) => {
     if (me)
       w({
         key: uBt,
@@ -87446,8 +87446,8 @@ function c$o({ addNotification: w, fastMode: I, store: ne }) {
         priority: "immediate",
         text: "Fast mode is now available \xB7 /fast to turn on",
       });
-    else if (I && TVt()) {
-      let pe = dU();
+    else if (I && isOrgFastModeDisabledByServer()) {
+      let pe = getFastModeUnavailableMessage();
       if (pe === null) return;
       (ne.setState((be) => ({ ...be, fastMode: !1 })),
         w({
@@ -87467,8 +87467,8 @@ var mBt = {
 };
 function u$o({ addNotification: w, store: I }) {
   if (Nn()) return;
-  if (!Mr()) return;
-  return krr((ne) => {
+  if (!isFastModeEnabled()) return;
+  return onFastModeOverageRejected((ne) => {
     (I.setState((me) => ({ ...me, fastMode: !1 })),
       w({
         key: l$o,
@@ -87487,7 +87487,7 @@ var pBt = {
 function d$o({ addNotification: w, fastMode: I }) {
   if (Nn()) return;
   if (!I) return;
-  let ne = bVt((pe, be) => {
+  let ne = onFastModeCooldownTriggered((pe, be) => {
       let xe = formatDuration(pe - Date.now(), { hideTrailingZeros: !0 }),
         Ae = m$o(be, xe);
       w({
@@ -87498,7 +87498,7 @@ function d$o({ addNotification: w, fastMode: I }) {
         priority: "immediate",
       });
     }),
-    me = wVt(() => {
+    me = onFastModeCooldownExpired(() => {
       w({
         key: cBt,
         kind: "event",
@@ -87776,7 +87776,7 @@ function C$o(w) {
   );
 }
 async function wBt(w) {
-  let I = ee();
+  let I = getGlobalConfig();
   if (!C$o(I)) {
     let me = I.officialMarketplaceAutoInstalled
       ? "already_installed"
@@ -87791,7 +87791,7 @@ async function wBt(w) {
     if (w$o())
       return (
         n("Official marketplace auto-install disabled via env var, skipping"),
-        await Te(
+        await saveGlobalConfig(
           (He) => ({
             ...He,
             officialMarketplaceAutoInstallAttempted: !0,
@@ -87810,7 +87810,7 @@ async function wBt(w) {
     if ((await getKnownMarketplaces(w))[ig])
       return (
         n(`Official marketplace '${ig}' already installed, skipping`),
-        await Te(
+        await saveGlobalConfig(
           (He) => ({
             ...He,
             officialMarketplaceAutoInstallAttempted: !0,
@@ -87827,7 +87827,7 @@ async function wBt(w) {
     if (!isSourceAllowedByPolicy(toe))
       return (
         n("Official marketplace blocked by enterprise policy, skipping"),
-        await Te(
+        await saveGlobalConfig(
           (He) => ({
             ...He,
             officialMarketplaceAutoInstallAttempted: !0,
@@ -87860,7 +87860,7 @@ async function wBt(w) {
             He
           );
         }, w),
-        await Te(
+        await saveGlobalConfig(
           (He) => ({
             ...He,
             officialMarketplaceAutoInstallAttempted: !0,
@@ -87879,7 +87879,7 @@ async function wBt(w) {
         }),
         { installed: !0, skipped: !1 }
       );
-    if (!H("tengu_plugin_official_mkt_git_fallback", !0)) {
+    if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_plugin_official_mkt_git_fallback", !0)) {
       (logFeatureBad("plugin_official_marketplace_fetch", "gcs_failed_fallback_disabled"),
         n(
           "Official marketplace GCS failed; git fallback disabled by flag \u2014 skipping install",
@@ -87888,7 +87888,7 @@ async function wBt(w) {
         Ke = Date.now(),
         Je = Ke + Gze(He);
       return (
-        await Te(
+        await saveGlobalConfig(
           (Qe) => ({
             ...Qe,
             officialMarketplaceAutoInstallAttempted: !0,
@@ -87917,7 +87917,7 @@ async function wBt(w) {
         Je = Gze(He),
         Qe = Ke + Je;
       return (
-        await Te(
+        await saveGlobalConfig(
           (it) => ({
             ...it,
             officialMarketplaceAutoInstallAttempted: !0,
@@ -87943,7 +87943,7 @@ async function wBt(w) {
       n("Successfully auto-installed official marketplace"));
     let Oe = I.officialMarketplaceAutoInstallRetryCount || 0;
     return (
-      await Te(
+      await saveGlobalConfig(
         (He) => ({
           ...He,
           officialMarketplaceAutoInstallAttempted: !0,
@@ -87988,7 +87988,7 @@ async function wBt(w) {
       Ae = Gze(be),
       Oe = xe + Ae;
     return (
-      await Te(
+      await saveGlobalConfig(
         (He) => ({
           ...He,
           officialMarketplaceAutoInstallAttempted: !0,
@@ -88167,7 +88167,7 @@ var xBt = {
       }
       if (w) return;
       ((w = !0),
-        Te(
+        saveGlobalConfig(
           (me) => ({
             ...me,
             promptQueueUseCount: (me.promptQueueUseCount ?? 0) + 1,
@@ -88678,10 +88678,10 @@ var KBt = {
         Nn() || isEssentialTrafficOnly() || !isClaudeAISubscriber() || !isPolicyAllowed("allow_remote_sessions") || !isPolicyAllowed(ALLOW_ROUTINES_POLICY))
       )
         return;
-      let pe = ee().routineFiredWatermark;
+      let pe = getGlobalConfig().routineFiredWatermark;
       if (pe === void 0) {
         let be = new Date().toISOString();
-        Te(
+        saveGlobalConfig(
           (xe) =>
             xe.routineFiredWatermark !== void 0
               ? xe
@@ -88712,7 +88712,7 @@ var KBt = {
             count: xe.length,
             trigger_ids: sanitizeAnalyticsIdList(xe.map((He) => He.id)),
           }),
-          await Te(
+          await saveGlobalConfig(
             (He) =>
               He.routineFiredWatermark !== void 0 &&
               !ode(Ae, He.routineFiredWatermark)
@@ -88827,7 +88827,7 @@ var sUt = {
 };
 var aUt = "usage-limit-grace";
 function Yze(w) {
-  let I = yrr();
+  let I = getUsageLimitGraceMock();
   if (I !== null)
     return {
       mock: I,
@@ -88840,7 +88840,7 @@ function Yze(w) {
   let ne = getActiveLimitGrace();
   return {
     mock: I,
-    graceWindow: ne !== null && H("tengu_lantern_sconce", !1) ? ne : null,
+    graceWindow: ne !== null && getFeatureValue_CACHED_MAY_BE_STALE("tengu_lantern_sconce", !1) ? ne : null,
   };
 }
 var lUt = {
@@ -88943,7 +88943,7 @@ var B$o = 15000,
     id: "worktree-sparse-tip",
     setup() {
       return ({ transcript: w }) => {
-        let I = Ia();
+        let I = getCurrentWorktreeSession();
         if (!I?.creationDurationMs || I.usedSparsePaths) return;
         if (I.creationDurationMs < B$o) return;
         let ne = Math.round(I.creationDurationMs / 1000);
@@ -89200,7 +89200,7 @@ async function X$o(w, I, ne, me) {
   ne({ force: !0 });
 }
 function Z$o() {
-  let w = H("tengu_sedge_lantern_config", { delayMs: mUt })?.delayMs;
+  let w = getFeatureValue_CACHED_MAY_BE_STALE("tengu_sedge_lantern_config", { delayMs: mUt })?.delayMs;
   return typeof w === "number" && Number.isFinite(w) ? Math.max(V$o, w) : mUt;
 }
 class Zze {
@@ -89552,7 +89552,7 @@ async function oQe(w, I, ne) {
   if (!me) return (n("[lspRecommendation] No file extension found"), []);
   n(`[lspRecommendation] Looking for LSP plugins for ${me}`);
   let pe = await i1o(ne),
-    xe = ee().lspRecommendationNeverPlugins ?? [],
+    xe = getGlobalConfig().lspRecommendationNeverPlugins ?? [],
     Ae = [];
   for (let [He, Ke] of pe) {
     if (!Ke.extensions.has(me)) continue;
@@ -89593,7 +89593,7 @@ async function oQe(w, I, ne) {
   );
 }
 function TUt(w, I) {
-  (Te((ne) => {
+  (saveGlobalConfig((ne) => {
     let me = ne.lspRecommendationNeverPlugins ?? [];
     if (me.includes(w)) return ne;
     return { ...ne, lspRecommendationNeverPlugins: [...me, w] };
@@ -89601,14 +89601,14 @@ function TUt(w, I) {
     n(`[lspRecommendation] Added ${w} to never suggest`));
 }
 function xUt(w) {
-  (Te((I) => {
+  (saveGlobalConfig((I) => {
     let ne = (I.lspRecommendationIgnoredCount ?? 0) + 1;
     return { ...I, lspRecommendationIgnoredCount: ne };
   }, w),
     n("[lspRecommendation] Incremented ignored count"));
 }
 function s1o() {
-  let w = ee();
+  let w = getGlobalConfig();
   return (
     w.lspRecommendationDisabled === !0 ||
     (w.lspRecommendationIgnoredCount ?? 0) >= n1o
@@ -89841,7 +89841,7 @@ function DUt({ pluginId: w, pluginName: I }, ne, me, pe) {
       TUt(w, pe);
       break;
     case "disable":
-      Te((be) => {
+      saveGlobalConfig((be) => {
         if (be.lspRecommendationDisabled) return be;
         return { ...be, lspRecommendationDisabled: !0 };
       }, pe);
@@ -89851,9 +89851,9 @@ function DUt({ pluginId: w, pluginName: I }, ne, me, pe) {
 F();
 var p1o = 100;
 function pQe(w, I) {
-  if (mg()) return;
+  if (isAnalyticsDisabled()) return;
   if (I.shownThisSession) return;
-  let ne = ee().claudeCodeHints;
+  let ne = getGlobalConfig().claudeCodeHints;
   if (ne?.disabled) return;
   let me = ne?.plugin ?? [];
   if (me.length >= p1o) return;
@@ -89900,7 +89900,7 @@ async function fQe(w, I) {
   };
 }
 function gQe(w, I) {
-  Te((ne) => {
+  saveGlobalConfig((ne) => {
     let me = ne.claudeCodeHints?.plugin ?? [];
     if (me.includes(w)) return ne;
     return {
@@ -89910,7 +89910,7 @@ function gQe(w, I) {
   }, I);
 }
 function hQe(w) {
-  Te((I) => {
+  saveGlobalConfig((I) => {
     if (I.claudeCodeHints?.disabled) return I;
     return { ...I, claudeCodeHints: { ...I.claudeCodeHints, disabled: !0 } };
   }, w);
@@ -90068,7 +90068,7 @@ function kQe() {
   E(() => {
     let ne = "",
       me = () => {
-        let pe = H("tengu_startup_notice", "");
+        let pe = getFeatureValue_CACHED_MAY_BE_STALE("tengu_startup_notice", "");
         if (pe === ne) return;
         if (((ne = pe), !pe)) {
           I(WUt);
@@ -90083,14 +90083,14 @@ function kQe() {
           fold: (be, xe) => xe,
         });
       };
-    return (me(), Ff(me));
+    return (me(), onGrowthBookRefresh(me));
   }, [w, I]);
 }
 F();
 function vQe() {
   let w = De(Z0),
     I = gi(),
-    ne = w !== null && zg() && !I && !lee() && a.terminal !== "WezTerm",
+    ne = w !== null && isScreenReaderModeEnabled() && !I && !lee() && a.terminal !== "WezTerm",
     me = re(() => {
       if (!ne || !w) return;
       w(formatOscSequence(OSC_CODES.SEMANTIC_PROMPT, "A", "redraw=0"));
@@ -91863,7 +91863,7 @@ function _Go(__i) {
   return Cy(__i) !== null;
 }
 function TGo() {
-  return ee().messageIdleNotifThresholdMs;
+  return getGlobalConfig().messageIdleNotifThresholdMs;
 }
 function xGo() {
   return [];
@@ -91889,7 +91889,7 @@ function DGo(_error, dGo) {
     "repl_diff_read",
     "render_threw",
     dGo.componentStack
-      ? { error_component_stack_hash: Tn(dGo.componentStack) }
+      ? { error_component_stack_hash: hashForTelemetry(dGo.componentStack) }
       : void 0,
   );
 }
@@ -92859,7 +92859,7 @@ function w5e(SCi) {
             )
           : _2(mc);
       wVo();
-      let r_i = Ff(wVo);
+      let r_i = onGrowthBookRefresh(wVo);
       return () => {
         (r_i(), _2(mc));
       };

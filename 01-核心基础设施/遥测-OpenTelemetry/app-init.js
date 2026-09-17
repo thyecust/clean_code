@@ -30,25 +30,25 @@ import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { profileCheckpoint } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import {
-  Or,
+  getProviderState,
   populateOAuthAccountInfoIfNeeded,
-  Nse,
+  shouldForceGatewayLogin,
   restoreGatewayAuth,
   primeStoredLogin,
   startupReadsStoredLogin,
   primeStoredLoginCopy,
   getForcedLoginMethod,
   adminPolicyUnreadable,
-  LRn,
-  MRn,
-  H,
-  Bo,
-  NR,
-  ee,
-  ARe,
-  dx,
-  CRe,
-  QRn,
+  setGrowthBookCredentials,
+  setGrowthBookStorageBackend,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  checkHasTrustDialogAccepted,
+  watchGlobalConfigThroughStorage,
+  getGlobalConfig,
+  enableConfigs,
+  getOrCreateUserID,
+  getOrCreateMachineID,
+  recordFirstStartTime,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { da, primeRemoteManagedSettingsCache } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { SRt } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -90,7 +90,7 @@ import { applyNodeExtraCaCertsFromConfig } from "../共享小工具-未细化/ap
 import { resetRemoteSettingsSyncCache } from "../共享小工具-未细化/remote-settings-eligibility.js";
 import { primePlatformDetection, getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 function w() {
-  let t = Or().providerCache;
+  let t = getProviderState().providerCache;
   if (t.preconnectFired) return;
   if (
     ((t.preconnectFired = !0),
@@ -136,14 +136,14 @@ async function T(t = {}) {
     let s = Date.now();
     if (isHoverRestEnabled() && e?.backend !== void 0)
       (await primeWorkspaceRoots(e.backend),
-        await Promise.all([ARe(e.backend), seedUserSettings(e.backend, da())]));
-    else await ARe();
+        await Promise.all([enableConfigs(e.backend), seedUserSettings(e.backend, da())]));
+    else await enableConfigs();
     if (
       (writeDiagnosticsEvent("info", "init_configs_enabled", { duration_ms: Date.now() - s }),
       profileCheckpoint("init_configs_enabled"),
       isHoverRestEnabled() && e?.backend !== void 0)
     )
-      primeWindowsCredManBackendEnabled(ee().cachedGrowthBookFeatures?.tengu_windows_credman === !0);
+      primeWindowsCredManBackendEnabled(getGlobalConfig().cachedGrowthBookFeatures?.tengu_windows_credman === !0);
     if (isHoverRestEnabled() && e?.backend !== void 0)
       (await primeRemoteManagedSettingsCache(e.backend), profileCheckpoint("init_remote_settings_primed"));
     let c = credentialsStoreFor(e?.backend);
@@ -152,7 +152,7 @@ async function T(t = {}) {
         profileCheckpoint("init_fd_credentials_primed"),
         await primeStoredLoginCopy(c),
         profileCheckpoint("init_stored_login_primed"));
-    g_e(Nse);
+    g_e(shouldForceGatewayLogin);
     let p = Date.now();
     if (
       (goe(),
@@ -172,15 +172,15 @@ async function T(t = {}) {
     if ((await primeSettings(o, da()), isHoverRestEnabled() && o !== void 0)) await hir(o);
     if (
       (qAn({ storageV5: o, credentials: m }),
-      LRn(m),
-      MRn(o),
+      setGrowthBookCredentials(m),
+      setGrowthBookStorageBackend(o),
       isHoverRestEnabled() && m !== void 0)
     ) {
       if ((await primeFileDescriptorCredentials(m), startupReadsStoredLogin())) await primeStoredLogin(m);
     }
     if (
       (await WAn(o),
-      NR(o),
+      watchGlobalConfigThroughStorage(o),
       registerStorageFlushHandlers(o),
       setupGracefulShutdown({ storageV5: o, credentials: m }),
       profileCheckpoint("init_after_graceful_shutdown"),
@@ -188,14 +188,14 @@ async function T(t = {}) {
         d.onGrowthBookRefresh(() => {});
       }),
       profileCheckpoint("init_after_1p_event_logging"),
-      Jir((i) => H(i, !1)),
+      Jir((i) => getFeatureValue_CACHED_MAY_BE_STALE(i, !1)),
       populateOAuthAccountInfoIfNeeded(m, o).catch(logError),
       profileCheckpoint("init_after_oauth_populate"),
       primePlanSlugCollisions(o),
       import("../../02-功能模块/AutoMode-自动模式/unattended-serving-consent.js")
         .then((i) => i.primeUnattendedServingConsent())
         .catch(() => {}),
-      setRepoDetectionGuards({ trustProbe: Bo }),
+      setRepoDetectionGuards({ trustProbe: checkHasTrustDialogAccepted }),
       detectCurrentRepository(),
       Rnn())
     )
@@ -203,11 +203,11 @@ async function T(t = {}) {
     if (isPolicyLimitsEligible()) zAn();
     if (
       (profileCheckpoint("init_after_remote_settings_check"),
-      QRn(o),
-      CRe(o),
+      recordFirstStartTime(o),
+      getOrCreateMachineID(o),
       isHoverRestEnabled() && o !== void 0)
     )
-      dx(o);
+      getOrCreateUserID(o);
     let g = Date.now();
     (n("[init] configureGlobalMTLS starting"),
       configureGlobalMTLS(),

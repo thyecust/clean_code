@@ -21,7 +21,7 @@ import { Zd } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm
 import { getCurrentKillRingText, getNextKillRingEntry, useKillRing } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
-import { getMainLoopModel, zg, H6, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMainLoopModel, isScreenReaderModeEnabled, queueScreenReaderAnnouncement, getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ea } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -72,7 +72,7 @@ import { stat as mt } from "fs/promises";
 import { homedir as tr } from "os";
 import { join as rr } from "path";
 async function nr(e, t) {
-  await Te(
+  await saveGlobalConfig(
     (r) => ({
       ...r,
       appleTerminalSetupInProgress: !0,
@@ -82,10 +82,10 @@ async function nr(e, t) {
   );
 }
 async function $e(e) {
-  await Te((t) => ({ ...t, appleTerminalSetupInProgress: !1 }), e);
+  await saveGlobalConfig((t) => ({ ...t, appleTerminalSetupInProgress: !1 }), e);
 }
 function ir() {
-  let e = ee();
+  let e = getGlobalConfig();
   return {
     inProgress: e.appleTerminalSetupInProgress ?? !1,
     backupPath: e.appleTerminalBackupPath || null,
@@ -259,7 +259,7 @@ async function setupTerminal(e, t, r) {
       break;
   }
   return (
-    await Te((l) => {
+    await saveGlobalConfig((l) => {
       if (o && yt.includes(a.terminal ?? "")) {
         if (l.shiftEnterKeyBindingInstalled === !0) return l;
         return { ...l, shiftEnterKeyBindingInstalled: !0 };
@@ -302,7 +302,7 @@ async function enableITerm2ClipboardAccess(e) {
   }
 }
 function isShiftEnterKeyBindingInstalled() {
-  return ee().shiftEnterKeyBindingInstalled === !0;
+  return getGlobalConfig().shiftEnterKeyBindingInstalled === !0;
 }
 var yt = ["vscode", "cursor", "windsurf", "alacritty", "zed"];
 function supportsShiftEnter() {
@@ -311,11 +311,11 @@ function supportsShiftEnter() {
   return yt.includes(a.terminal ?? "") && isShiftEnterKeyBindingInstalled();
 }
 function hasUsedBackslashReturn() {
-  return ee().hasUsedBackslashReturn === !0;
+  return getGlobalConfig().hasUsedBackslashReturn === !0;
 }
 function markBackslashReturnUsed(e) {
-  if (!ee().hasUsedBackslashReturn)
-    Te((r) => ({ ...r, hasUsedBackslashReturn: !0 }), e);
+  if (!getGlobalConfig().hasUsedBackslashReturn)
+    saveGlobalConfig((r) => ({ ...r, hasUsedBackslashReturn: !0 }), e);
 }
 async function call(e, t, r) {
   if (
@@ -634,7 +634,7 @@ async function gt(e) {
 }
 async function dr(e, t) {
   let r = (getMacOSMajorVersion() ?? 0) >= 27,
-    s = zg();
+    s = isScreenReaderModeEnabled();
   if (r && s)
     return `${getThemeColor("success", e)("No Terminal.app changes needed.")}${p}${chalk.dim("Shift+Return already enters a newline on this macOS version, and screen-reader mode leaves the audible bell setting unchanged.")}${p}`;
   try {
@@ -898,7 +898,7 @@ function COt(
   e,
   t,
   r,
-  s = H("tengu_left_arrow_editing_guard", !0),
+  s = getFeatureValue_CACHED_MAY_BE_STALE("tengu_left_arrow_editing_guard", !0),
   o = isAttachQuietDrainActive(t),
   l = getAttachStampMs(),
 ) {
@@ -1905,7 +1905,7 @@ var $r = () => {};
 function Sr(e, t) {
   if (e === "") return;
   if (t !== "") {
-    H6("deleted");
+    queueScreenReaderAnnouncement("deleted");
     return;
   }
   let r =
@@ -1923,7 +1923,7 @@ function Sr(e, t) {
             " ",
           )
           .trim();
-  H6(r);
+  queueScreenReaderAnnouncement(r);
 }
 var Er = new Set([
   "insert",

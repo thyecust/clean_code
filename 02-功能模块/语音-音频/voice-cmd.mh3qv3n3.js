@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 77 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Ije } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { isAnthropicAuthEnabled, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isAnthropicAuthEnabled, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getInitialSettings, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getKeybindingChord, isVoiceEnabled, isVoiceModeAvailable } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -124,7 +124,7 @@ Install SoX manually for audio recording.`
         ? `Tap ${g} (with input empty) to start, tap again to send.`
         : `Hold ${g} to record.`,
     n = Ije(a.language),
-    p = ee(),
+    p = getGlobalConfig(),
     f = p.voiceLangHintLastLanguage !== n.code,
     m = f ? 0 : (p.voiceLangHintShownCount ?? 0),
     u = !n.fellBackFrom && m < V,
@@ -133,7 +133,7 @@ Install SoX manually for audio recording.`
     d = ` Note: "${n.fellBackFrom}" is not a supported dictation language; using English. Change it via /config.`;
   else if (u) d = ` Dictation language: ${n.code} (/config to change).`;
   if (f || u)
-    await Te(
+    await saveGlobalConfig(
       (t) => ({
         ...t,
         voiceLangHintShownCount: m + (u ? 1 : 0),

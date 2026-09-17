@@ -14,7 +14,7 @@ import { Jr, hv, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj
 import { z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { le, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { Ls, Mc, ry, WQe, getOauthAccountInfo, getAuthenticatedAccountInfo, dx } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { otelApiModule, otelCoreModule, runtimeEnvironment, getWorkflowAnalyticsAttributes, getOauthAccountInfo, getAuthenticatedAccountInfo, getOrCreateUserID } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getEnvEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getSessionAccessToken } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
 import { decodeTokenClaims, encodeTaggedId } from "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
@@ -106,7 +106,7 @@ var R = 255,
     return t;
   });
 function buildOtelResourceAttributes() {
-  let e = dx(),
+  let e = getOrCreateUserID(),
     t = K(),
     r = getGatewayIdentityAttributes(),
     i = Object.keys(r).length > 0,
@@ -149,7 +149,7 @@ function buildOtelResourceAttributes() {
       if (l) o["user.account_id"] = l;
     }
   }
-  if ((Object.assign(o, r), ry.terminal)) o["terminal.type"] = ry.terminal;
+  if ((Object.assign(o, r), runtimeEnvironment.terminal)) o["terminal.type"] = runtimeEnvironment.terminal;
   return o;
 }
 var L = new j(() => ({ token: void 0, identity: null }));
@@ -171,7 +171,7 @@ function U() {
     emailAddress: o(i.account_email) ?? o(u.email),
   });
 }
-var E = toESM(Ls(), 1);
+var E = toESM(otelApiModule(), 1);
 import { AsyncLocalStorage } from "async_hooks";
 class b {
   als = new AsyncLocalStorage();
@@ -223,8 +223,8 @@ function getActiveOtelContext() {
   if (e !== E.ROOT_CONTEXT) return e;
   return getCurrentSpanContext() ?? e;
 }
-var f = toESM(Ls(), 1),
-  A = toESM(Mc(), 1);
+var f = toESM(otelApiModule(), 1),
+  A = toESM(otelCoreModule(), 1);
 class x {
   nextSequence = 0;
   warnedNoEventLogger = !1;
@@ -264,7 +264,7 @@ async function emitOtelEvent(e, t = {}, r) {
   if (u) o["prompt.id"] = u;
   let s = a.CLAUDE_CODE_WORKSPACE_HOST_PATHS;
   if (s) o["workspace.host_paths"] = s.split("|");
-  Object.assign(o, WQe(r));
+  Object.assign(o, getWorkflowAnalyticsAttributes(r));
   for (let [O, y] of Object.entries(t)) if (y !== void 0) o[O] = y;
   let c = new Date(),
     d = G(),

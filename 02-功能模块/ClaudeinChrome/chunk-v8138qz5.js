@@ -13,7 +13,7 @@ import { _ut } from "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { isAutoClassifierActive, sx, si } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isAutoClassifierActive, effectiveModeForTool, sanitizeSessionName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -422,7 +422,7 @@ function uon(e) {
           );
       }
       let u = getToolPermissionContext(s),
-        p = sx(
+        p = effectiveModeForTool(
           s.options?.tools?.find((c) => matchesToolName(c, t)),
           u,
         ),
@@ -581,7 +581,7 @@ function uon(e) {
           getClaudeInChromeState().resolvedUrlByToolUseId.delete(i));
       let l = getToolPermissionContext(s),
         a = s.options?.tools?.find((w) => matchesToolName(w, t)),
-        u = sx(a, l) === "bypassPermissions",
+        u = effectiveModeForTool(a, l) === "bypassPermissions",
         p = x(l),
         _ = p.allowed,
         b = [...p.allowedRaw];

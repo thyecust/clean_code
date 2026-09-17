@@ -19,7 +19,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getClaudeInChromeState } from "../ClaudeinChrome/claude-in-chrome-host.js";
 import { s, T, Jq, Uf, v, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var I = 50,
@@ -43,7 +43,7 @@ function closeSessionTabGroup({
   clientOverride: l,
   callTimeoutMs: u = P,
 }) {
-  if (a.CLAUDE_CODE_REMOTE_SESSION_ID || !H("tengu_chrome_tab_group_close", !0))
+  if (a.CLAUDE_CODE_REMOTE_SESSION_ID || !getFeatureValue_CACHED_MAY_BE_STALE("tengu_chrome_tab_group_close", !0))
     return Promise.resolve({ status: "disabled" });
   let r = getClaudeInChromeState().closesInFlight,
     p = r.get(e);

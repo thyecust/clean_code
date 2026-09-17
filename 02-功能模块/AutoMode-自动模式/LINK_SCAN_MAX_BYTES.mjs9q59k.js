@@ -56,14 +56,14 @@ import {
   getSmallFastModel,
   getMainLoopModel,
   classifierFlagshipRerouteTarget,
-  gUe,
-  Vme,
+  canDisableThinking,
+  supportsFirstPartyServerFeatures,
   isBgSession,
   isActingAsBgJob,
   isBeingWatched,
   isBeingWatchedV5,
   updateSessionActivity,
-  H,
+  getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -151,7 +151,7 @@ var _e = 15000,
   Ve = 240000,
   Se = 2048;
 function ae() {
-  return H("tengu_bg_classifier_config", {
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_bg_classifier_config", {
     useSmallFastModel: !0,
     disableThinking: !0,
     midTurnLlmDebounceMs: 60000,
@@ -162,7 +162,7 @@ function Ae() {
   return classifierFlagshipRerouteTarget(getMainLoopModel());
 }
 function Ee(e) {
-  if (gUe(e)) return [void 0, Se];
+  if (canDisableThinking(e)) return [void 0, Se];
   if (ae()?.disableThinking) return [!1, 0];
   return [void 0, Se];
 }
@@ -1032,7 +1032,7 @@ async function classify(e, r) {
       }),
       E = createCacheControl({
         ttl: usesOneHourPromptCacheTtl("agent_classifier") ? "1h" : void 0,
-        scope: Vme() ? "global" : void 0,
+        scope: supportsFirstPartyServerFeatures() ? "global" : void 0,
       }),
       V = Ae(),
       [te, ne] = Ee(V);

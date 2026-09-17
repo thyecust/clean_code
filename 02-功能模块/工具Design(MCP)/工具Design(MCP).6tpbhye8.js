@@ -18,7 +18,7 @@ import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Tn, ht, isHostManagedProviderAuth, getAuthTokenSource, getClaudeAIOAuthTokens, handleOAuth401Error, getClaudeAIOAuthTokensAsync, getAuthTokenSourceAsync } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { hashForTelemetry, httpClient, isHostManagedProviderAuth, getAuthTokenSource, getClaudeAIOAuthTokens, handleOAuth401Error, getClaudeAIOAuthTokensAsync, getAuthTokenSourceAsync } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isFirstPartyAnthropicHost } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
@@ -1333,7 +1333,7 @@ async function Se(e, t, n, r, d, o, p) {
           inputSchema: f.inputSchema,
         })),
         C = b({ tools: w }) ?? "",
-        I = Tn(C),
+        I = hashForTelemetry(C),
         h = n?.full;
       if (
         !(h !== void 0 && h !== !1 && h !== "false" && h !== 0 && h !== "") &&
@@ -1575,7 +1575,7 @@ async function te(e, t, n, r, d, o, p = !1) {
     throw Error(
       "Claude Design is only reachable from api.anthropic.com; the current OAuth base URL is not on the first-party allowlist.",
     );
-  let _ = await ht.post("/v1/design/mcp", e, {
+  let _ = await httpClient.post("/v1/design/mcp", e, {
     auth: "none",
     headers: {
       ...$e(t),

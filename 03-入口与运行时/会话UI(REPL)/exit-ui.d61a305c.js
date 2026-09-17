@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 276 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { Ia, isBgSession } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getCurrentWorktreeSession, isBgSession } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getConversationMessages, isResponseStreaming, listQueuedFeedbackDrafts, isSendFeedbackEnabled } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-jfk5mpe1.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-xmxjyg29.js";
@@ -168,7 +168,7 @@ function L() {
 }
 async function Be(s, o) {
   if (isBgSession()) return (s(), HB(), null);
-  let m = Ia() !== null,
+  let m = getCurrentWorktreeSession() !== null,
     u = buildInFlightTaskItems(),
     y =
       m || u.length > 0

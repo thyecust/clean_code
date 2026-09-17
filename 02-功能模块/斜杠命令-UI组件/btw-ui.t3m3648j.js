@@ -14,7 +14,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { isBgSession, isUnattendedBgSession, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isBgSession, isUnattendedBgSession, saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { formatSingleLineText, MAX_DESCRIPTION_LENGTH, MARKDOWN_SYNTAX_CHARS } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
@@ -786,7 +786,7 @@ async function dr(i, u, h) {
     });
   }
   if (
-    (await Te((b) => ({ ...b, btwUseCount: b.btwUseCount + 1 }), u.storageV5),
+    (await saveGlobalConfig((b) => ({ ...b, btwUseCount: b.btwUseCount + 1 }), u.storageV5),
     Ke())
   )
     return (vt(B, u), i(void 0, { display: "skip" }), null);

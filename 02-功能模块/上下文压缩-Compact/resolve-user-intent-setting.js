@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { VD, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { DEFAULT_GLOBAL_CONFIG, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ms } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { projectSettingsAliasesUserSettings, getSettingsForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 var USER_INTENT_SETTING_KEYS = [
@@ -39,8 +39,8 @@ function resolveSetting(n, s) {
   }
   if (USER_INTENT_SETTING_KEYS.includes(n)) {
     let t = n,
-      e = ee()[t];
-    if (e !== void 0 && e !== VD[t])
+      e = getGlobalConfig()[t];
+    if (e !== void 0 && e !== DEFAULT_GLOBAL_CONFIG[t])
       return { value: e, source: "legacyGlobalConfig" };
   }
   return { value: s, source: "default" };

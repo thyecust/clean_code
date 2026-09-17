@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B, ld } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { zg, CU, $f, H, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isScreenReaderModeEnabled, isGrowthBookEnabled, getFeatureValueWithSource_CACHED_MAY_BE_STALE, getFeatureValue_CACHED_MAY_BE_STALE, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
@@ -96,7 +96,7 @@ function getTuiTrialMode() {
 }
 function wasFullscreenAutoDisabledForVersion() {
   return (
-    ee().fullscreenAutoDisabled?.version ===
+    getGlobalConfig().fullscreenAutoDisabled?.version ===
     {
       ISSUES_EXPLAINER:
         "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -120,8 +120,8 @@ function s() {
 var MAX_FULLSCREEN_UPSELL_COUNT = 3;
 function d() {
   try {
-    if (CU()) return !1;
-    let e = ee();
+    if (isGrowthBookEnabled()) return !1;
+    let e = getGlobalConfig();
     return (
       e.firstStartVersion !== void 0 && (e.fullscreenUpsellSeenCount ?? 0) < MAX_FULLSCREEN_UPSELL_COUNT
     );
@@ -138,7 +138,7 @@ function S(e) {
 function shouldUseFullscreen(e = defaultFullscreenState) {
   if (getEnvEntrypoint() === "local-agent") return !1;
   if (a.CLAUDE_CODE_SESSION_KIND === "bg") return !0;
-  if (zg()) return !1;
+  if (isScreenReaderModeEnabled()) return !1;
   if (s()) return !1;
   if (a.CLAUDE_CODE_NO_FLICKER === !0) return !0;
   if (e.crashAutoOff) return !1;
@@ -167,19 +167,19 @@ function shouldUseFullscreen(e = defaultFullscreenState) {
   if (S(e)) return !0;
   if (p(e)) return !0;
   if (e.gbGateCached === void 0) {
-    let r = $f("tengu_pewter_brook", !1);
+    let r = getFeatureValueWithSource_CACHED_MAY_BE_STALE("tengu_pewter_brook", !1);
     ((e.gbGateCached = r.value), (e.gbGateSource = r.source));
   }
   return e.gbGateCached;
 }
 function p(e = defaultFullscreenState) {
   return (
-    (e.downsellGateCached ??= H("tengu_amber_creek", !1)),
+    (e.downsellGateCached ??= getFeatureValue_CACHED_MAY_BE_STALE("tengu_amber_creek", !1)),
     e.downsellGateCached
   );
 }
 function isFullscreenEnabled(e = defaultFullscreenState) {
-  if (zg()) return !1;
+  if (isScreenReaderModeEnabled()) return !1;
   if (s()) return !1;
   if (a.CLAUDE_CODE_NO_FLICKER === !0) return !0;
   if (e.crashAutoOff || wasFullscreenAutoDisabledForVersion()) return !1;
@@ -195,7 +195,7 @@ function isFullscreenEnabled(e = defaultFullscreenState) {
 }
 function getFullscreenReason(e = defaultFullscreenState) {
   if (a.CLAUDE_CODE_SESSION_KIND === "bg") return "bg_forced_on";
-  if (zg()) return "sr_auto_off";
+  if (isScreenReaderModeEnabled()) return "sr_auto_off";
   if (s()) return "env_off";
   if (a.CLAUDE_CODE_NO_FLICKER === !0) return "env_on";
   if (e.crashAutoOff) return "crash_auto_off";
@@ -209,8 +209,8 @@ function getFullscreenReason(e = defaultFullscreenState) {
       return "settings_off";
   }
   if (e.freshInstallCached ?? d()) return "fresh_install_on";
-  if (e.downsellGateCached ?? H("tengu_amber_creek", !1)) return "downsell_on";
-  return (e.gbGateCached ?? H("tengu_pewter_brook", !1)) ? "gb_on" : "gb_off";
+  if (e.downsellGateCached ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_amber_creek", !1)) return "downsell_on";
+  return (e.gbGateCached ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_pewter_brook", !1)) ? "gb_on" : "gb_off";
 }
 function fullscreenReasonToMode(e) {
   switch (e) {
@@ -242,7 +242,7 @@ function isAutoDisabledFullscreenReason(e) {
   );
 }
 function isFullscreenGateFromFallback(e = defaultFullscreenState) {
-  return CU() && e.gbGateSource === "fallback";
+  return isGrowthBookEnabled() && e.gbGateSource === "fallback";
 }
 function getNoFlickerEnvOverride() {
   if (a.CLAUDE_CODE_NO_FLICKER === !0) return "on";

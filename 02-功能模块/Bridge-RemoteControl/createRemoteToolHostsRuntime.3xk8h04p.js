@@ -24,7 +24,7 @@ import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Comma
 import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { CAN_USE_TOOL_STREAM_CLOSED_REASON, CAN_USE_TOOL_INVALID_RESULT_REASON, CAN_USE_TOOL_REQUEST_FAILED_REASON } from "../权限系统/chunk-e4pfvp7x.js";
 import { formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
-import { Tn, Rp, qe, Bt, tt, Mn, co, ro, Hn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { hashForTelemetry, REMOTE_DEVICES_MCP_SERVER_NAME, BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, getSanitizedToolName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { gc, _b, oS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isModelDrivenSession } from "../Teammates团队/teammate-context.js";
 import { getToolPermissionContext, getMainLoopModel, applyContextLayers } from "../权限系统/chunk-fjrcf22x.js";
@@ -207,16 +207,16 @@ function Lo(e) {
 }
 var wn =
     "The user's current files and edits, applications, disk and processes are all on this machine; its own Claude Code decides what may run there and may ask the user first.",
-  xo = `${wn} File tools (${tt}, ${Bt}, ${ro}, ${co}) work on THIS session's filesystem, not on that machine \u2014 for the project's current files use ${qe} there (cat, rg, sed \u2026)`;
+  xo = `${wn} File tools (${READ_TOOL_NAME}, ${EDIT_TOOL_NAME}, ${GREP_TOOL_NAME}, ${GLOB_TOOL_NAME}) work on THIS session's filesystem, not on that machine \u2014 for the project's current files use ${BASH_TOOL_NAME} there (cat, rg, sed \u2026)`;
 function Ho(e, o, t) {
   let r =
     t === ""
-      ? `run grep or find with ${qe} there`
+      ? `run grep or find with ${BASH_TOOL_NAME} there`
       : `use ${t} with "${vo}" (with no path they search its project folder)`;
   return `${wn} ${e} ${o} on the user's current files there, under that machine's own permission rules \u2014 give paths (file_path, or a search's path) as absolute paths on that machine; without "${vo}" they act on this session's snapshot. Searches made without "${vo}" only see this session's snapshot: to search the user's current files ${r}`;
 }
-var vn = [qe, tt, Mn, Bt, co, ro],
-  Rn = new Set([co, ro]),
+var vn = [BASH_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, EDIT_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME],
+  Rn = new Set([GLOB_TOOL_NAME, GREP_TOOL_NAME]),
   Fo =
     "- A housekeeping chore that does not say where (disk space, ports, stray processes, caches) may concern either machine: work out which one it is about, and when you cannot tell, take a quick read-only look on both before changing anything.",
   Bo = "- Results say where each call ran.",
@@ -225,7 +225,7 @@ var vn = [qe, tt, Mn, Bt, co, ro],
 function jo(e, o, t, r) {
   let s = o
     ? `read the file there with "${vo}"`
-    : `cat it there with ${qe} and "${vo}"`;
+    : `cat it there with ${BASH_TOOL_NAME} and "${vo}"`;
   if (t === "turn_end")
     return `- File sync timing: make your edits here, in the synced copy \u2014 they reach ${e} when your turn ends, not while it is still running. Files that a command on ${e} creates or changes arrive here only with the user's next message, and files git ignores never cross in either direction. So when you need the output of something you ran on ${e} during this turn, read it on ${e} itself \u2014 have the command print it, or ${s} \u2014 rather than expecting it here.`;
   if (t === "after_task")
@@ -287,7 +287,7 @@ function qo(e, { replMode: o, copyCleared: t = null, subagent: r = !1 }) {
   if (s.length === 0)
     return t === null ? null : { lines: [bn, yn("machine", t)] };
   let a = s.filter(
-      (p) => p.servedTools.has(qe) && p.protocol.kind !== "incompatible",
+      (p) => p.servedTools.has(BASH_TOOL_NAME) && p.protocol.kind !== "incompatible",
     ),
     d =
       a.find(
@@ -311,7 +311,7 @@ function qo(e, { replMode: o, copyCleared: t = null, subagent: r = !1 }) {
         p.takenOverAt === void 0 ? [] : [ot(q(p.name), p.takenOverAt)],
       ),
       ...(k === "here" && d !== void 0
-        ? [jo(q(d.name), d.servedTools.has(tt), kn(d, r), o)]
+        ? [jo(q(d.name), d.servedTools.has(READ_TOOL_NAME), kn(d, r), o)]
         : []),
       ...(c !== void 0 && (k === "here" || k === "refreshed")
         ? [Uo(q(c.name), nt(c))]
@@ -336,20 +336,20 @@ function zo(e) {
 }
 function Go(e, o, t) {
   if (o === void 0)
-    return `Machines attached to this session \u2014 their own MCP tools (mcp__${Rp}__\u2026) run there when called directly; everything else runs here (${kD()}, the default):`;
+    return `Machines attached to this session \u2014 their own MCP tools (mcp__${REMOTE_DEVICES_MCP_SERVER_NAME}__\u2026) run there when called directly; everything else runs here (${kD()}, the default):`;
   let r = vn.filter((c) => o.servedTools.has(c)),
     s = On(Cn(o)),
     a = r.some((c) => Rn.has(c)),
     d = e
-      ? `inside the REPL, ${qe} is callable as await ${qe}({command, \u2026})${s ? ` (the same argument works for ${s}, inside the REPL or as tools)` : ""}; add ${vo}: "<name>" to that call's arguments`
+      ? `inside the REPL, ${BASH_TOOL_NAME} is callable as await ${BASH_TOOL_NAME}({command, \u2026})${s ? ` (the same argument works for ${s}, inside the REPL or as tools)` : ""}; add ${vo}: "<name>" to that call's arguments`
       : `add "${vo}": "<name>" to a ${Fe(r)} call`;
   if (t === "machine") {
     let c = q(o.name),
       m = !s
         ? "run commands that read, search, build, test or change the project there"
         : a
-          ? `read, search and edit the project's files there and run its builds and tests there with ${qe}`
-          : `read and edit the project's files there and run its searches, builds and tests there with ${qe}`;
+          ? `read, search and edit the project's files there and run its builds and tests there with ${BASH_TOOL_NAME}`
+          : `read and edit the project's files there and run its searches, builds and tests there with ${BASH_TOOL_NAME}`;
     return `Machines attached to this session \u2014 the user's CURRENT project files live on ${c}, not here: ${d} to run it on that machine, and ${m}; omit it (runs here, ${kD()}) only for work that does not need the user's current files \u2014 scratch computation, fetching docs, tools you install for yourself:`;
   }
   return `Machines attached to this session \u2014 ${d} to run it on that machine; omit it to run here (${kD()}, the default):`;
@@ -409,7 +409,7 @@ function Xo(e) {
     ...(o === "" ? [] : [`Tools: ${o}.`]),
     ...(t
       ? [
-          `Its own MCP tools (mcp__${Rp}__<server>__\u2026) run there when called directly, with the logins saved on that machine; a server this session also runs itself appears a second time as mcp__<server>__\u2026, which runs here.`,
+          `Its own MCP tools (mcp__${REMOTE_DEVICES_MCP_SERVER_NAME}__<server>__\u2026) run there when called directly, with the logins saved on that machine; a server this session also runs itself appears a second time as mcp__<server>__\u2026, which runs here.`,
         ]
       : []),
     ...(r
@@ -518,12 +518,12 @@ function et(e, o, t) {
   }
 }
 function Cn(e) {
-  return vn.filter((o) => o !== qe && e.servedTools.has(o));
+  return vn.filter((o) => o !== BASH_TOOL_NAME && e.servedTools.has(o));
 }
 function nt(e) {
-  let o = [tt, co, ro].filter((t) => e.servedTools.has(t));
+  let o = [READ_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME].filter((t) => e.servedTools.has(t));
   return o.length === 0
-    ? `look for it there with ${qe} and "${vo}" (ls, cat, rg)`
+    ? `look for it there with ${BASH_TOOL_NAME} and "${vo}" (ls, cat, rg)`
     : `read or search it there with ${Fe(o)} and "${vo}"`;
 }
 function Fe(e) {
@@ -774,17 +774,17 @@ function pt(e) {
       return !1;
   }
 }
-var xn = new Set([qe, tt, Mn, Bt]);
+var xn = new Set([BASH_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, EDIT_TOOL_NAME]);
 var Fn = new Set(["dangerouslyDisableSandbox", ...[]]);
 var jn = 512;
 import { randomUUID } from "crypto";
-var kt = new Set([tt, co, ro]);
+var kt = new Set([READ_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME]);
 function wt(e, o) {
   let t = FILE_EDIT_TOOL_NAMES.has(e.name);
   return dedupe([
     e.name,
-    ...(t ? [Bt] : []),
-    ...(kt.has(e.name) || (t && o === "deny") ? [tt] : []),
+    ...(t ? [EDIT_TOOL_NAME] : []),
+    ...(kt.has(e.name) || (t && o === "deny") ? [READ_TOOL_NAME] : []),
   ]);
 }
 function vt(e, o) {
@@ -826,8 +826,8 @@ async function Ue({
           P.ruleValue.ruleContent === void 0
             ? `The rule ${formatPermissionRule(P.ruleValue)} denies this session the bridge that reaches ${s.name}, so its ${e.name} is not forwarded there either.`
             : e.isMcp === !0
-              ? `${KCe(e.name, P)} Rules on this tool apply to a forwarded call field by field; one this session cannot check that way (a field the tool does not declare, or a structured value) refuses every forwarded call, and a plain rule on mcp__${Rp} covers every attached machine's tools.`
-              : `${KCe(e.name, P)} Rules on the bridge's names apply to a forwarded call field by field, and one this session cannot check that way (a pattern over the command, or the machine field) refuses every forwarded ${e.name}: ${e.name}(\u2026) scopes a rule to commands, ${e.name}(${vo}:\u2026) to one machine, and a plain rule on mcp__${Rp} covers every attached machine whatever it calls itself.`,
+              ? `${KCe(e.name, P)} Rules on this tool apply to a forwarded call field by field; one this session cannot check that way (a field the tool does not declare, or a structured value) refuses every forwarded call, and a plain rule on mcp__${REMOTE_DEVICES_MCP_SERVER_NAME} covers every attached machine's tools.`
+              : `${KCe(e.name, P)} Rules on the bridge's names apply to a forwarded call field by field, and one this session cannot check that way (a pattern over the command, or the machine field) refuses every forwarded ${e.name}: ${e.name}(\u2026) scopes a rule to commands, ${e.name}(${vo}:\u2026) to one machine, and a plain rule on mcp__${REMOTE_DEVICES_MCP_SERVER_NAME} covers every attached machine whatever it calls itself.`,
       }),
     };
   let R = p ? Un(a, e, o, "ask") : null,
@@ -898,7 +898,7 @@ function Se(e) {
 }
 var Rt = { kind: "sandbox_auto_allow_suspended" };
 function Un(e, o, t, r) {
-  let s = [o.isMcp === !0 ? fS(o) : rc(Rp, o.name), Oa(Rp).replace(/__$/, "")],
+  let s = [o.isMcp === !0 ? fS(o) : rc(REMOTE_DEVICES_MCP_SERVER_NAME, o.name), Oa(REMOTE_DEVICES_MCP_SERVER_NAME).replace(/__$/, "")],
     a = s.reduce(
       (k, p) => k ?? (r === "deny" ? ni(e, { name: p }) : sm(e, { name: p })),
       null,
@@ -1122,7 +1122,7 @@ function Xn(e, o, t, r, s) {
     call_id: sanitizeAnalyticsId(s.callId),
     tool_use_id: sanitizeAnalyticsId(s.callId),
     host_epoch: sanitizeAnalyticsId(s.sentUnderEpoch),
-    handle_hash: o.description === void 0 ? void 0 : Tn(o.description.name),
+    handle_hash: o.description === void 0 ? void 0 : hashForTelemetry(o.description.name),
     criteria_version: S(Pnn),
   }),
     Jn(c));
@@ -1164,7 +1164,7 @@ function Ge(e, o, t, r) {
     Jn(t));
 }
 function Qn(e) {
-  return e.isMcp === !0 ? Hn("mcp__tool") : Hn(e.name);
+  return e.isMcp === !0 ? getSanitizedToolName("mcp__tool") : getSanitizedToolName(e.name);
 }
 var At = 32,
   to = 5000,
@@ -2638,7 +2638,7 @@ function Ce(e) {
 function Oe(e, o) {
   if (!w4(o.disposition)) return;
   if (o.output !== void 0) return o.output;
-  if (o.isError || e.name !== qe || !Ft(o.content)) return;
+  if (o.isError || e.name !== BASH_TOOL_NAME || !Ft(o.content)) return;
   let t = IHe(o.content),
     r = e.outputSchema?.safeParse({
       stdout: o.envelope === "present" ? t : iE(t, Pe),
@@ -2648,7 +2648,7 @@ function Oe(e, o) {
   return r?.success ? r.data : void 0;
 }
 function Ze(e, o) {
-  return e.name === qe ? Oe(e, o) : void 0;
+  return e.name === BASH_TOOL_NAME ? Oe(e, o) : void 0;
 }
 function Ft(e) {
   return typeof e === "string" || e.every((o) => o.type === "text");
@@ -2809,7 +2809,7 @@ async function qt(e, o, t, r, s) {
   }
 }
 function on(e) {
-  return e.mcpInfo?.serverName === Rp;
+  return e.mcpInfo?.serverName === REMOTE_DEVICES_MCP_SERVER_NAME;
 }
 function uo(e, o) {
   let t = e.mcpInfo?.toolName;
@@ -2965,7 +2965,7 @@ function tr(e, o) {
     !o.keepsStandingApprovals ||
     o.suggestions.length === 0 ||
     e.isMcp === !0 ||
-    e.name !== qe ||
+    e.name !== BASH_TOOL_NAME ||
     typeof t !== "string"
   )
     return;
@@ -2976,7 +2976,7 @@ function tr(e, o) {
         type: "addRules",
         behavior: "allow",
         destination: "localSettings",
-        rules: [{ toolName: qe, ruleContent: r }],
+        rules: [{ toolName: BASH_TOOL_NAME, ruleContent: r }],
       };
 }
 function po(e) {

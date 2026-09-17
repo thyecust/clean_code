@@ -14,7 +14,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { b, zR } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { logFeatureOkAsync, logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Mse, NR, EP } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { initializeFirstPartyEventLogging, watchGlobalConfigThroughStorage, seedInstallIDs } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { initializeAnalyticsSink } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
 import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
 import { resolveApiBaseUrl } from "../../01-核心基础设施/共享小工具-未细化/self-hosted-runner-api.js";
@@ -203,8 +203,8 @@ Any extra args are passed to the underlying Claude Code session.`);
   }
   (await ensureFastPathSettingsLoaded(r), initializeAnalyticsSink());
   let o = pinStorageV5(r);
-  if ((Mse(o), isHoverRestEnabled() && o !== void 0)) {
-    (zR({ storageV5: o }), NR(o));
+  if ((initializeFirstPartyEventLogging(o), isHoverRestEnabled() && o !== void 0)) {
+    (zR({ storageV5: o }), watchGlobalConfigThroughStorage(o));
     let [
       { composePolicyLimitsClient: n, primePolicyLimitsCache: d },
       { credentialsStoreFor: u },
@@ -214,7 +214,7 @@ Any extra args are passed to the underlying Claude Code session.`);
       import("../../01-核心基础设施/共享小工具-未细化/credentialsStoreFor.r7prg4pg.js"),
       import("../../01-核心基础设施/共享小工具-未细化/primeFastPathCredentials.eb5w3wem.js"),
     ]);
-    (n({ storageV5: o }), await p(u(o)), await d(o), await EP(o));
+    (n({ storageV5: o }), await p(u(o)), await d(o), await seedInstallIDs(o));
   }
   let s = l(resolveApiBaseUrl()),
     h = bc() ? [] : [process.argv[1]],

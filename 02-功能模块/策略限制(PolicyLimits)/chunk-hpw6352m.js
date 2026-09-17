@@ -30,7 +30,7 @@ import {
   checkAndRefreshOAuthTokenIfNeededWithOutcome,
   isClaudeAISubscriber,
   getStoredOauthAccountInfo,
-  H,
+  getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bke } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getAPIProvider, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -84,7 +84,7 @@ function N(e, t, r = {}) {
 }
 var he = 3;
 function fe() {
-  let e = H("tengu_zippy_gosling", 0);
+  let e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_zippy_gosling", 0);
   return typeof e === "number" && Number.isFinite(e) ? e : 0;
 }
 function I4t(e, t, r = {}) {
@@ -718,7 +718,7 @@ class GAn {
         if (
           (c.httpStatus === 404 || c.httpStatus === 304) &&
           getSessionCache() === null &&
-          !H("tengu_rustling_orbit", !1)
+          !getFeatureValue_CACHED_MAY_BE_STALE("tengu_rustling_orbit", !1)
         )
           return (
             n(

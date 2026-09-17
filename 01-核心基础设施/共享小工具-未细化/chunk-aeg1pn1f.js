@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 var POWERUP_DISCOVERY_COPY = {
   heading: "Learn the moves",
@@ -21,6 +21,6 @@ var POWERUP_DISCOVERY_COPY = {
 function resolvePowerupDiscoveryArm() {
   let e = a.CLAUDE_CODE_POWERUP_ONBOARDING;
   if (e === "banner" || e === "step") return e;
-  return H("tengu_birch_lantern", "off");
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_birch_lantern", "off");
 }
 export { POWERUP_DISCOVERY_COPY, resolvePowerupDiscoveryArm };

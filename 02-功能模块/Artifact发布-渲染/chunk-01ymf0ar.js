@@ -22,15 +22,15 @@ import { ARTIFACT_ORIGIN_NOTES_TAG, isEssentialTrafficOnly, logError } from "../
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  NCt,
-  TUe,
-  Ior,
-  FCt,
-  ht,
-  Gvn,
-  KQe,
-  mKt,
-  Lor,
+  getFrameBaseUrlOverride,
+  hashSha256Hex,
+  getClaudeAiTokenFingerprint,
+  isNonEssentialTrafficAllowed,
+  httpClient,
+  ALWAYS_INTERNAL_MCP_SERVER_NAMES,
+  findCanonicalMcpServerName,
+  isEquivalentMcpName,
+  isInternalMcpServerName,
   isBgSession,
   isWIFDispatchAuth,
   getClaudeAIOAuthTokenOrigin,
@@ -42,8 +42,8 @@ import {
   getOauthAccountInfo,
   getStoredOauthAccountInfo,
   getSubscriptionType,
-  H,
-  RU,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  hasReservedPathSegment,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ea, Pw, Nr, Vn, hke, $q } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
@@ -272,7 +272,7 @@ function MXe(e) {
   );
 }
 function ls() {
-  return !H("tengu_pewter_canteen", !1);
+  return !getFeatureValue_CACHED_MAY_BE_STALE("tengu_pewter_canteen", !1);
 }
 var lc = "data-chart-runtime";
 function cs(e) {
@@ -1729,9 +1729,9 @@ function sqt(e, t) {
 }
 function RK() {
   if (!isAnthropicHostedEnvironment() && !isByocEnvironment()) return !1;
-  if (NCt() !== void 0) return !1;
-  if (!H("tengu_cobalt_plinth_sorrel", !0)) return !1;
-  if (!isAnthropicHostedEnvironment() && !H("tengu_cobalt_plinth_madder", !0)) return !1;
+  if (getFrameBaseUrlOverride() !== void 0) return !1;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_sorrel", !0)) return !1;
+  if (!isAnthropicHostedEnvironment() && !getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_madder", !0)) return !1;
   return B1e();
 }
 function MH(e = null) {
@@ -1751,22 +1751,22 @@ function _oe() {
 }
 var ou = "tengu_cobalt_plinth_medlar";
 function Gs() {
-  return isByocEnvironment() && H(ou, !1) && Ts();
+  return isByocEnvironment() && getFeatureValue_CACHED_MAY_BE_STALE(ou, !1) && Ts();
 }
 function bwn() {
   if (isAnthropicHostedEnvironment()) return Ir() && Rs();
   return Gs();
 }
 function FXe() {
-  return (isAnthropicHostedEnvironment() || isByocEnvironment()) && H("tengu_cobalt_plinth_fennel", !1) && bwn();
+  return (isAnthropicHostedEnvironment() || isByocEnvironment()) && getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_fennel", !1) && bwn();
 }
 var au = "tengu_cobalt_plinth_comfrey";
 function UZn() {
-  return isByocEnvironment() && H(au, !1) && FXe();
+  return isByocEnvironment() && getFeatureValue_CACHED_MAY_BE_STALE(au, !1) && FXe();
 }
 function iqt(e) {
   let t = ru.get(e);
-  return t !== void 0 && isAnthropicHostedEnvironment() && H(t, !1) && Ps();
+  return t !== void 0 && isAnthropicHostedEnvironment() && getFeatureValue_CACHED_MAY_BE_STALE(t, !1) && Ps();
 }
 function TN(e) {
   return (ne().frameRelay.declinedUntil.get(e) ?? 0) > Date.now();
@@ -1860,11 +1860,11 @@ async function aqt(e, t, r, o, d) {
 function jr(e, t, r, o) {
   switch (e) {
     case "GET":
-      return ht.get(t, o);
+      return httpClient.get(t, o);
     case "POST":
-      return ht.post(t, r, o);
+      return httpClient.post(t, r, o);
     case "DELETE":
-      return ht.delete(t, r, o);
+      return httpClient.delete(t, r, o);
   }
 }
 function js(e, t, r, o) {
@@ -1877,15 +1877,15 @@ function js(e, t, r, o) {
   });
 }
 function lu() {
-  return NCt() !== void 0 ? a.CLAUDE_CODE_ARTIFACTS_API_TOKEN : void 0;
+  return getFrameBaseUrlOverride() !== void 0 ? a.CLAUDE_CODE_ARTIFACTS_API_TOKEN : void 0;
 }
 function lqt() {
   let e = lu();
-  if (e) return TUe(`Bearer ${e}`);
-  return Ior();
+  if (e) return hashSha256Hex(`Bearer ${e}`);
+  return getClaudeAiTokenFingerprint();
 }
 async function BZn(e) {
-  if (!FCt()) return;
+  if (!isNonEssentialTrafficAllowed()) return;
   try {
     await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });
   } catch {}
@@ -2983,7 +2983,7 @@ function bo(e, t, r, o = {}) {
     } else if (ce === null) C.push({ kind: "tools_shape", server: U });
     let q = Jn(U),
       ge = q === void 0 ? void 0 : _.get(Wn(q)),
-      pe = q === void 0 ? null : KQe(q),
+      pe = q === void 0 ? null : findCanonicalMcpServerName(q),
       Le = null,
       Ge = w.get(U);
     if (te !== void 0) {
@@ -3016,12 +3016,12 @@ function bo(e, t, r, o = {}) {
       C.push({ kind: "host_unavailable", server: U });
     else if (pe !== null) {
       let Te = (De) =>
-          mKt(De, pe) || mKt(beforeFirst(`${normalizeMcpName(De)}__`, "__"), pe) || mKt(wo(De), pe),
+          isEquivalentMcpName(De, pe) || isEquivalentMcpName(beforeFirst(`${normalizeMcpName(De)}__`, "__"), pe) || isEquivalentMcpName(wo(De), pe),
         Me = r.find(Te) ?? t.find((De) => Te(De.server))?.server;
       if (Me === void 0) Le = `host:${pe}`;
       else
         C.push({ kind: "local_server_as_first_party", server: U, local: Me });
-    } else if (Lor(q ?? "")) R.push(U);
+    } else if (isInternalMcpServerName(q ?? "")) R.push(U);
     else Le = U;
     if (Le !== null && ce !== null && ce.length > 0 && Gn(J))
       M.push({ ...J, server: Le, tools: ce });
@@ -3051,7 +3051,7 @@ function bo(e, t, r, o = {}) {
   let ae = [];
   for (let [V, J] of I) {
     let U = F[J.idx].tools.length,
-      te = KQe(Jn(V) ?? "") !== null;
+      te = findCanonicalMcpServerName(Jn(V) ?? "") !== null;
     if (J.from > 1 && !te) {
       let re = Y_(V),
         ce = an(V);
@@ -3094,13 +3094,13 @@ function KZn(e, t, r) {
   let o = e.mcp;
   if (!gn(o)) return [];
   let d = dedupe(o.servers.map(Xr).filter((_) => _ !== void 0)),
-    p = (_) => r.has(_) && !Gvn.has(_) && !t.some((w) => w.toolPrefix === _);
+    p = (_) => r.has(_) && !ALWAYS_INTERNAL_MCP_SERVER_NAMES.has(_) && !t.some((w) => w.toolPrefix === _);
   return d
     .filter((_) => {
       let w = Jn(_);
       if (w !== void 0) {
-        let E = KQe(w);
-        return E === null ? !p(w) : ![...r].some((R) => KQe(R) === E && p(R));
+        let E = findCanonicalMcpServerName(w);
+        return E === null ? !p(w) : ![...r].some((R) => findCanonicalMcpServerName(R) === E && p(R));
       }
       return (
         !r.has(_) &&
@@ -3570,7 +3570,7 @@ async function $o(e, t, r) {
     F = async (V) => {
       let J = Xe.resolve(R, V);
       if (!J.startsWith(R + Xe.sep)) return null;
-      if (RU(J, R + Xe.sep, DANGEROUS_FILES_LC))
+      if (hasReservedPathSegment(J, R + Xe.sep, DANGEROUS_FILES_LC))
         return (
           M.push({
             path: V,
@@ -6372,54 +6372,54 @@ var ha = null,
   MAX_ARTIFACT_BYTES = 16777216,
   Rf = "/api/frame/contract/latest";
 function isFrameBaseVersionEnabled() {
-  return H("tengu_cobalt_plinth_fern", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_fern", !0);
 }
 function isFrameStaleGuardAutoReadEnabled() {
-  return H("tengu_cobalt_plinth_moss", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_moss", !0);
 }
 function isFrameGuardOwnVersionProceedEnabled() {
-  return H("tengu_cobalt_plinth_teasel", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_teasel", !0);
 }
 function artifactPageInlineResultCap() {
-  let e = H("tengu_cobalt_plinth_sill", null);
+  let e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_sill", null);
   return typeof e === "number" && Number.isFinite(e) && e >= 0
     ? Math.min(Math.floor(e), ARTIFACT_DB_READ_MAX_RESULT_SIZE_CHARS)
     : ARTIFACT_PAGE_INLINE_RESULT_CAP;
 }
 function isArtifactConflictLegacy() {
-  return H("tengu_slate_quoin", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_slate_quoin", !1);
 }
 function isArtifactLangEnabled() {
-  return H("tengu_cobalt_plinth_laurel", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_laurel", !1);
 }
 function isFrameListSharedScopeKilled() {
-  return H("tengu_cobalt_plinth_osier", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_osier", !1);
 }
 function isFrameMultiFileEnabled() {
   return (
-    a.CLAUDE_CODE_ARTIFACT_MULTI_FILE ?? H("tengu_cobalt_plinth_bracken", !1)
+    a.CLAUDE_CODE_ARTIFACT_MULTI_FILE ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_bracken", !1)
   );
 }
 function isFrameCopyFromEnabled() {
-  return H("tengu_cobalt_plinth_samphire", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_samphire", !1);
 }
 function isFramePublicReadEnabled() {
-  return H("tengu_cobalt_plinth_sedge", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_sedge", !1);
 }
 function isFrameSameChannelRawReadEnabled() {
-  return H("tengu_cobalt_plinth_tansy", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_tansy", !1);
 }
 function isFrameLiveSubscribeEnabled() {
-  return H("tengu_slate_lantern", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_slate_lantern", !1);
 }
 function isFrameLiveTokenLeaseEnabled() {
-  return H("tengu_slate_lantern_ember", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_slate_lantern_ember", !1);
 }
 function Tf() {
-  return H("tengu_amber_quill_moth", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_amber_quill_moth", !1);
 }
 function isFrameDeclaredThumbnailEnabled() {
-  return H("tengu_cobalt_plinth_campion", !1) === !0;
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_campion", !1) === !0;
 }
 var Pf = createLazyValue(() =>
     c({
@@ -12025,7 +12025,7 @@ var Bl = MAX_ARTIFACT_BYTES + FRAME_RUNTIME_MAX_SPAN + Ol + 65536,
   };
 async function wh(e, t) {
   let r = (_) =>
-      ht.get(j1e(e.slug, _), {
+      httpClient.get(j1e(e.slug, _), {
         host: "ccr-gateway",
         auth: "session-jwt",
         headers: W1e(e.token),
@@ -12749,7 +12749,7 @@ function Ih() {
   return e === void 0 || e === "prosumer_oauth" || e === "no_auth";
 }
 function Jl() {
-  return (Ie(a.CLAUDE_CODE_ARTIFACT) && !1) || H("tengu_cobalt_plinth", Ih());
+  return (Ie(a.CLAUDE_CODE_ARTIFACT) && !1) || getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth", Ih());
 }
 function Zl() {
   return Jl() && Qi();
@@ -12899,11 +12899,11 @@ function isPlanArtifactEnabled() {
   return !1;
 }
 function isWorkshopEnabled() {
-  return isArtifactToolEnabled() && H("tengu_gable_onyx_sluice", !1);
+  return isArtifactToolEnabled() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_gable_onyx_sluice", !1);
 }
 jer(isWorkshopEnabled);
 function isWorkshopSchemaEnabled() {
-  return isArtifactToolRegistered() && H("tengu_gable_onyx_sluice", !1);
+  return isArtifactToolRegistered() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_gable_onyx_sluice", !1);
 }
 function isWhiteboardEnabled() {
   return !1;
@@ -12915,14 +12915,14 @@ function isPrototypeEnabled() {
   return !1;
 }
 function isDesignCanvasEnabled() {
-  return isArtifactToolEnabled() && H("tengu_ethereal_nova", !0);
+  return isArtifactToolEnabled() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_ethereal_nova", !0);
 }
 function isPlanWorkshopOfferEnabled() {
   return (
     isWorkshopEnabled() &&
     !areBundledSkillsDisabled() &&
-    !H("tengu_cedar_transom", !1) &&
-    H("tengu_larch_pavise", !1)
+    !getFeatureValue_CACHED_MAY_BE_STALE("tengu_cedar_transom", !1) &&
+    getFeatureValue_CACHED_MAY_BE_STALE("tengu_larch_pavise", !1)
   );
 }
 function isPlanPrototypeOfferEnabled() {
@@ -12935,7 +12935,7 @@ function isArtifactTemplateSkillsEnabled() {
   return !1;
 }
 function isRepublishInlinePromptEnabled() {
-  return H("tengu_cobalt_plinth_thrift", !1) === !0;
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_thrift", !1) === !0;
 }
 var Uh = "tengu_russet_pergola";
 function isProductivitySkillsEnabled() {
@@ -12945,7 +12945,7 @@ function isArtifactPrReviewEnabled() {
   return !1;
 }
 function isArtifactPrReviewComposeEnabled() {
-  return isArtifactPrReviewEnabled() && H("tengu_walnut_sconce", !1);
+  return isArtifactPrReviewEnabled() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_walnut_sconce", !1);
 }
 function zh() {
   return !1;

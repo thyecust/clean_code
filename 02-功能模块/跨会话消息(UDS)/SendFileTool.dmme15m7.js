@@ -17,7 +17,7 @@ import { Ve, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.j
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Xme, uf, GCt, slugify, jD, eZe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { findLastPeerHopChain, parsePeerAddress, validateMessageTarget, slugify, parseAgentDisplayName, formatCandidateSummary } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
@@ -116,7 +116,7 @@ var G = `use ${SEND_MESSAGE_TOOL_NAME} to "${MAIN_CONVERSATION_NAME}" and refere
       "target record advertises this session's own token \u2014 refused as impersonation",
   };
 async function se(e, o, a) {
-  let f = uf(e);
+  let f = parsePeerAddress(e);
   if (f.scheme === "uds") {
     if (isLikelyOwnMessagingSocket(f.target))
       return { kind: "refused", reason: "self", message: formatOwnAddressMessage(e) };
@@ -211,7 +211,7 @@ ${wNt}`
         return { kind: "refused", reason: "self", message: formatOwnSessionMessage(e, isTeammateContext(a), G) };
       let b = Date.now(),
         k = t.candidates.filter((C) => C.where !== "in-process"),
-        _ = k.map((C) => `  ${eZe(C, b)}`).join(`
+        _ = k.map((C) => `  ${formatCandidateSummary(C, b)}`).join(`
 `),
         h = t.bridgeUnavailable
           ? `
@@ -238,7 +238,7 @@ ${_}${h}${p !== "no" ? formatMainSessionNotice(e, isTeammateContext(a), G) : ""}
     }
     case "not-found": {
       let p = classifySelfNameMatch(e),
-        b = t.closest.some((w) => slugify(w.name) === slugify(jD(e)?.name ?? e));
+        b = t.closest.some((w) => slugify(w.name) === slugify(parseAgentDisplayName(e)?.name ?? e));
       if (p === "categorical" && !b && hasCompleteTargetLookup(t))
         return { kind: "refused", reason: "self", message: formatOwnSessionMessage(e, isTeammateContext(a), G) };
       let k = a.options.tools.some((w) => matchesToolName(w, LIST_AGENTS_TOOL_NAME)),
@@ -459,9 +459,9 @@ var SendFileTool = buildTool({
         }),
         { result: !1, message: Z, errorCode: 9 }
       );
-    let f = GCt(e, LIST_AGENTS_TOOL_NAME);
+    let f = validateMessageTarget(e, LIST_AGENTS_TOOL_NAME);
     if (f !== void 0) return { result: !1, message: f, errorCode: 9 };
-    let t = uf(e);
+    let t = parsePeerAddress(e);
     if (
       (t.scheme === "uds" && isLikelyOwnMessagingSocket(t.target)) ||
       (t.scheme === "bridge" && isOwnSessionId(t.target))
@@ -633,7 +633,7 @@ var SendFileTool = buildTool({
           o.storageV5,
           z,
           N,
-          Xme(o.messages),
+          findLastPeerHopChain(o.messages),
         );
         if ((B(!0, N.length), d.pin))
           XSe(o.setAppState, d.pin.displayName, d.pin);
@@ -736,7 +736,7 @@ var SendFileTool = buildTool({
         M(L.map((r) => r.file_name)),
         z,
         L,
-        Xme(o.messages),
+        findLastPeerHopChain(o.messages),
         void 0,
         o.credentials,
       );

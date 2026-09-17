@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { Aw, ht, isBgSession, isExtraUsageAllowed, getSubscriptionType, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getOverageBillingOverride, httpClient, isBgSession, isExtraUsageAllowed, getSubscriptionType, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -17,7 +17,7 @@ import { canSelfManageUsageCredits, USAGE_SETTINGS_URL, fetchUsageUtilization } 
 import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 async function d(t, r) {
   return withFeatureTelemetry("api_admin_request_create", async () => {
-    let e = await ht.post(
+    let e = await httpClient.post(
       "/api/oauth/organizations/:orgUUID/admin_requests",
       t,
       { auth: "teleport-org", credentials: r },
@@ -33,7 +33,7 @@ async function m(t, r, e) {
   return withFeatureTelemetry("api_admin_request_list", async () => {
     let i = new URLSearchParams({ request_type: t });
     for (let a of r) i.append("statuses", a);
-    let o = await ht.get(
+    let o = await httpClient.get(
       `/api/oauth/organizations/:orgUUID/admin_requests/me?${i}`,
       { auth: "teleport-org", credentials: e },
     );
@@ -46,7 +46,7 @@ async function m(t, r, e) {
 }
 async function p(t, r) {
   return withFeatureTelemetry("api_admin_request_eligibility", async () => {
-    let e = await ht.get(
+    let e = await httpClient.get(
       `/api/oauth/organizations/:orgUUID/admin_requests/eligibility?request_type=${t}`,
       { auth: "teleport-org", credentials: r },
     );
@@ -111,8 +111,8 @@ function canBuyUsageCreditsInApp() {
   {
     if (isBgSession()) return !1;
     let t = getSubscriptionType(),
-      r = Aw() !== null,
-      e = H("tengu_ember_latch", !1) || r,
+      r = getOverageBillingOverride() !== null,
+      e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_ember_latch", !1) || r,
       i = isExtraUsageAllowed() && (r || ((t === "pro" || t === "max") && !isEssentialTrafficOnly()));
     return e && i;
   }

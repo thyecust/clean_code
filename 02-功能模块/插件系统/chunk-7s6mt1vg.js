@@ -43,7 +43,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { INVISIBLE_CHAR_CLASS } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { ay, wr, yHn, ott, Al, zt, z6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
-import { Wi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { readBoundedFile } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, se, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
@@ -596,7 +596,7 @@ var xe = createLazyValue(() =>
   YEn = 4096;
 async function snr(e) {
   let t = e + ave,
-    i = await Wi(t, YEn);
+    i = await readBoundedFile(t, YEn);
   if (i === null) return {};
   let r;
   try {

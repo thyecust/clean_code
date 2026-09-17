@@ -13,7 +13,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { le, Io, cr, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ht, isClaudeAISubscriber, getOauthAccountInfo, getSubscriptionType, isConsumerSubscriber, Qh, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { httpClient, isClaudeAISubscriber, getOauthAccountInfo, getSubscriptionType, isConsumerSubscriber, getDynamicConfig_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { parseSlashCommandInput as mue, canSelfManageUsageCredits } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function parseReplacementMetadata(e) {
@@ -289,7 +289,7 @@ function A() {
   return R.of(B().host);
 }
 function getActiveFotwCampaign() {
-  let e = Qh(I, null);
+  let e = getDynamicConfig_CACHED_MAY_BE_STALE(I, null);
   if (e === null || e === void 0) return null;
   let t = A();
   if (t.parsedCampaign === null || t.parsedCampaign.raw !== e) {
@@ -389,7 +389,7 @@ async function O(e) {
   if (C(a, r.feature) !== null) return null;
   let i;
   try {
-    i = await ht.get(
+    i = await httpClient.get(
       `/api/oauth/organizations/:orgUUID/overage_credit_grant?campaign=${v}`,
       {
         auth: "teleport-org",
@@ -433,7 +433,7 @@ async function O(e) {
   );
 }
 function C(e, t) {
-  let a = ee().fotwEligibilityCache?.[e]?.[t];
+  let a = getGlobalConfig().fotwEligibilityCache?.[e]?.[t];
   if (!a) return null;
   if (Date.now() - a.timestamp > x) return null;
   return a.info;
@@ -446,7 +446,7 @@ async function claimFotwCredit(e, t) {
     l = getFotwCreditAmount(),
     o;
   try {
-    o = await ht.post(
+    o = await httpClient.post(
       "/api/oauth/organizations/:orgUUID/overage_credit_grant",
       { campaign: v, feature: a.feature, enable_overages: !0 },
       {
@@ -498,11 +498,11 @@ function U(e) {
   return t.success ? t.data.error.message : void 0;
 }
 function D(e, t) {
-  let r = ee().fotwClaimedFeatures;
+  let r = getGlobalConfig().fotwClaimedFeatures;
   return Boolean(r?.[e]?.includes(t));
 }
 function F(e, t) {
-  Te((r) => {
+  saveGlobalConfig((r) => {
     let a = r.fotwClaimedFeatures?.[e] ?? [];
     if (a.includes(t)) return r;
     return {
@@ -512,14 +512,14 @@ function F(e, t) {
   });
 }
 function N(e, t) {
-  let r = ee().fotwUpsellFulfilled;
+  let r = getGlobalConfig().fotwUpsellFulfilled;
   return Boolean(r?.[e]?.includes(t));
 }
 function markFotwUpsellFulfilled(e) {
   let t = p();
   if (!t || t.audience !== "viewer" || !isFotwCommand(e)) return;
   let { orgId: r, campaign: a } = t;
-  Te((i) => {
+  saveGlobalConfig((i) => {
     let l = i.fotwUpsellFulfilled?.[r] ?? [];
     if (l.includes(a.feature)) return i;
     return {
@@ -529,7 +529,7 @@ function markFotwUpsellFulfilled(e) {
   });
 }
 function S(e, t, r, { onlyIfAbsent: a = !1 } = {}) {
-  Te((i) => {
+  saveGlobalConfig((i) => {
     let l = i.fotwEligibilityCache?.[e]?.[t],
       o = l && Date.now() - l.timestamp <= x;
     if (a && o) return i;

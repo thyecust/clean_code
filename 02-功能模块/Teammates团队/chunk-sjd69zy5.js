@@ -10,7 +10,7 @@
 import { bh, K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { ix } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { buildAgentId } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { buildInProcessTeammateContext } from "./teammate-context.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
@@ -34,7 +34,7 @@ async function spawnInProcessTeammate(t, o) {
       model: P,
     } = t,
     { taskRegistry: A } = o,
-    s = ix(e, p),
+    s = buildAgentId(e, p),
     d = generateTaskId("in_process_teammate"),
     c = t.resumableAgentId ?? bh(e);
   n(`[spawnInProcessTeammate] Spawning ${s} (taskId: ${d})`);

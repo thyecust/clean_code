@@ -63,28 +63,28 @@ import { lit as S, fromEnum, fromNumber, mcpNameForAnalytics_GATE_EVALUATED } fr
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   getMCPUserAgent,
-  Tn,
-  lq,
-  oRe,
-  XQe,
-  i0,
-  pA,
-  EUe,
-  AUe,
-  sRe,
-  ZN,
-  wl,
-  wP,
-  oy,
-  uQ,
-  Ms,
-  dRe,
+  hashForTelemetry,
+  isComputerUseMcpServer,
+  readStoredMcpOAuth,
+  hasAuthorizationHeader,
+  configHasAuthorizationHeader,
+  isFirstPartyDesignUrl as pA,
+  configProvidesOwnAuth,
+  hasStoredRefreshToken,
+  needsMcpServerAuth,
+  isStdioMcpServer,
+  isToolDetailsLoggingEnabled,
+  getMcpServerKeyHash,
+  shouldSendMcpServerTelemetry,
+  getSampledMcpToolName,
+  getVersionForAnalytics,
+  redactSensitiveText,
   getClaudeAIOAuthTokens,
   handleOAuth401Error,
   getClaudeAIOAuthTokensAsync,
   readFreshOAuthAccessToken,
   checkAndRefreshOAuthTokenIfNeeded,
-  H,
+  getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, yt, R, ge, l, pot } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, Et, b, fp, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -1437,7 +1437,7 @@ async function isMcpAuthCached(e, t, r) {
       t.type === "claudeai-proxy" ||
       (t.pluginSource !== void 0 &&
         (t.type === "http" || t.type === "sse") &&
-        !EUe(t)),
+        !configProvidesOwnAuth(t)),
     p = c.ttlMs ?? (d ? no : oo),
     _ = Date.now() - c.timestamp;
   return _ > -io && _ < p;
@@ -1502,12 +1502,12 @@ function evictAllMcpMemosOnIdentityChange(e = new Set(), t = !0) {
 }
 function Le(e, t) {
   let r = getMcpServerBaseUrl(e),
-    o = t ? { mcpServerKeyHash: wP(t) } : {};
+    o = t ? { mcpServerKeyHash: getMcpServerKeyHash(t) } : {};
   if (r) return { mcpServerBaseUrl: r, ...o };
   return o;
 }
 function emitMcpServerConnectionEvent(e, t, r) {
-  let o = wl(),
+  let o = isToolDetailsLoggingEnabled(),
     c = t.pluginSource ? splitPluginId(t.pluginSource) : void 0,
     d = c && (isOfficialPluginScope(getPluginScope(c.name, c.marketplace, null)) || o);
   emitOtelEvent("mcp_server_connection", {
@@ -1540,7 +1540,7 @@ async function Sr(e, t, r, o, c, d, p) {
       e,
       `Authentication required for ${{ sse: "SSE", http: "HTTP", "claudeai-proxy": "claude.ai proxy" }[r]} server`,
     ));
-  let L = c && (t.type === "http" || t.type === "sse") && (await AUe(e, t)),
+  let L = c && (t.type === "http" || t.type === "sse") && (await hasStoredRefreshToken(e, t)),
     W = d === void 0 || mE(d);
   if (W) Lt(e, t.type === "claudeai-proxy" ? t.id : void 0, L ? so : void 0, p);
   if (isDiscoveryCacheUsable())
@@ -1869,7 +1869,7 @@ function isFirstPartyDesignServerConfig(e) {
     (e.type === "sse" || e.type === "http") &&
     pA(e.url) &&
     new URL(e.url).pathname.startsWith("/v1/design/") &&
-    !i0(e)
+    !configHasAuthorizationHeader(e)
   );
 }
 function consentAskCanReachUser(e) {
@@ -2071,7 +2071,7 @@ function Oo(e) {
   return vr(e.name);
 }
 function Pr(e, t) {
-  let r = H(e, []);
+  let r = getFeatureValue_CACHED_MAY_BE_STALE(e, []);
   if (!Array.isArray(r) || r.length === 0) return !1;
   if (r.includes("*")) return !0;
   if (!("url" in t) || typeof t.url !== "string") return !1;
@@ -2143,7 +2143,7 @@ var Bo = [
 ];
 function qo(e) {
   let t = new R(e, "MCP connection timeout");
-  if (H("tengu_mcp_connect_timeout_retry", !0))
+  if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_mcp_connect_timeout_retry", !0))
     return Object.assign(t, { code: "CONNECT_TIMEOUT" });
   return t;
 }
@@ -2217,7 +2217,7 @@ var connectToServer = lct(
         },
         D = Ivt(e, t),
         j = Jse(t),
-        ee = (t.type === "sse" || t.type === "http") && i0(t),
+        ee = (t.type === "sse" || t.type === "http") && configHasAuthorizationHeader(t),
         X =
           t.type === "sse" || t.type === "http" || t.type === "ws"
             ? await fct(e, t)
@@ -2225,7 +2225,7 @@ var connectToServer = lct(
         me =
           (t.type === "sse" || t.type === "http") &&
           !!t.headersHelper &&
-          XQe(X),
+          hasAuthorizationHeader(X),
         V =
           (t.type === "sse" || t.type === "http") &&
           !ee &&
@@ -2387,7 +2387,7 @@ var connectToServer = lct(
           };
         ((I = new StreamableHTTPClientTransport(new URL(N), we)),
           logMCPDebug(e, "claude.ai proxy transport created successfully"));
-      } else if (ZN(t) && isClaudeInChromeMCPServer(e)) {
+      } else if (isStdioMcpServer(t) && isClaudeInChromeMCPServer(e)) {
         let { isClaudeInChromeAllowed: w } =
           await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
         if (!w())
@@ -2423,7 +2423,7 @@ var connectToServer = lct(
         (await h.connect(Re),
           (I = _e),
           logMCPDebug(e, "In-process Chrome MCP server started"));
-      } else if (ZN(t) && lq(e)) {
+      } else if (isStdioMcpServer(t) && isComputerUseMcpServer(e)) {
         let { createComputerUseMcpServerForCli: w } =
             await import("../图片-截图-ComputerUse/runComputerUseMcpServer.cvpyez80.js"),
           { createLinkedTransportPair: O } =
@@ -2721,7 +2721,7 @@ var connectToServer = lct(
         let w = Date.now() - d;
         (logEvent("tengu_mcp_ide_server_connection_succeeded", {
           connectionDurationMs: w,
-          serverVersion: Ms(de?.version),
+          serverVersion: getVersionForAnalytics(de?.version),
         }),
           notifyIdeConnected(U).catch((O) => {
             logMCPError(e, `Failed to send ide_connected notification: ${formatConnectionError(O, t)}`);
@@ -3067,7 +3067,7 @@ var connectToServer = lct(
           connectionDurationMs: j,
           errorCode: sanitizeConnectErrorCodeForTelemetry(V),
           errorClassName: pot(D),
-          errorMessageHash: Tn(dRe(ee)),
+          errorMessageHash: hashForTelemetry(redactSensitiveText(ee)),
           totalServers: r?.totalServers || 1,
           stdioCount: r?.stdioCount || (t.type === "stdio" ? 1 : 0),
           sseCount: r?.sseCount || (t.type === "sse" ? 1 : 0),
@@ -3627,7 +3627,7 @@ function hydrateToolsFromListing(e, t, r, o, c) {
   let d = sanitizeDeep(t),
     p = getMcpServerBaseUrl(e.config),
     _ = Le(e.config, e.name),
-    T = mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(e.name), oy(e.name, e.config));
+    T = mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(e.name), shouldSendMcpServerTelemetry(e.name, e.config));
   if (d.length === 0 && o === "live")
     logEvent("tengu_mcp_degraded", {
       reason: S("connected_zero_tools"),
@@ -3774,7 +3774,7 @@ ${k.description}`
       mcpServerName: T,
       ..._,
     });
-  let E = () => oy(e.name, e.config);
+  let E = () => shouldSendMcpServerTelemetry(e.name, e.config);
   logMcpToolCallXmlInDescriptions(C, e.name, E(), p, e.instructions);
   let F = isFirstPartyDesignServerConfig(e.config),
     U = getOfficialPluginPromptOverrides(e.config),
@@ -4066,12 +4066,12 @@ ${k.description}`
             return `${e.name} - ${z} (MCP)`;
           },
           ...(isClaudeInChromeMCPServer(e.name) &&
-            ZN(e.config) && {
+            isStdioMcpServer(e.config) && {
               ...eo().getClaudeInChromeMCPToolOverrides(k.name),
               builtinRenderFamily: "claude-in-chrome",
             }),
-          ...(ZN(e.config) &&
-            lq(e.name) && {
+          ...(isStdioMcpServer(e.config) &&
+            isComputerUseMcpServer(e.name) && {
               ...to().getComputerUseMCPToolOverrides(k.name),
               builtinRenderFamily: "computer-use",
             }),
@@ -4085,7 +4085,7 @@ ${k.description}`
         (k.name === "file_upload" || k.name === "browser_batch")
       ) {
         let z =
-            !ZN(e.config) && !a.CLAUDE_CODE_REMOTE && a.CLAUDE_CODE_IS_COWORK,
+            !isStdioMcpServer(e.config) && !a.CLAUDE_CODE_REMOTE && a.CLAUDE_CODE_IS_COWORK,
           B = Q.call;
         Q.call = async (ye, Ee, le, ue, re) => {
           let {
@@ -4134,7 +4134,7 @@ ${k.description}`
               k.name,
               e.name,
               ue,
-              H("tengu_mcp_strip_trailing_xml_tags", !1),
+              getFeatureValue_CACHED_MAY_BE_STALE("tengu_mcp_strip_trailing_xml_tags", !1),
               p,
             ),
             B,
@@ -4154,12 +4154,12 @@ ${k.description}`
       alwaysLoadCount: countMatching(fe, (k) => k.alwaysLoad === !0),
       discoverySource: fromEnum(o),
       ..._,
-      mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(e.name), oy(e.name, e.config)),
+      mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(e.name), shouldSendMcpServerTelemetry(e.name, e.config)),
     }),
     o === "live")
   )
     logFeatureOk("mcp_list_tools");
-  if (ZN(e.config) && isClaudeInChromeMCPServer(e.name)) logChromeToolsAdded(fe.length, o);
+  if (isStdioMcpServer(e.config) && isClaudeInChromeMCPServer(e.name)) logChromeToolsAdded(fe.length, o);
   return fe;
 }
 var fetchToolsForClient = h7(
@@ -4229,7 +4229,7 @@ var fetchToolsForClient = h7(
           reason: S("tools_list_failed"),
           transportType: fromEnum(e.config.type ?? "stdio"),
           ...A,
-          mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(e.name), oy(e.name, e.config)),
+          mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(e.name), shouldSendMcpServerTelemetry(e.name, e.config)),
         });
       }
       return (ur().toolLists.delete(getMcpServerConfigCacheKey(e.name, e.config)), h);
@@ -4257,7 +4257,7 @@ function Dr(e, t, r, o, c, d) {
       reason: c,
       transportType: fromEnum(e.config.type ?? "stdio"),
       ...Le(e.config, e.name),
-      mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(e.name), oy(e.name, e.config)),
+      mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(e.name), shouldSendMcpServerTelemetry(e.name, e.config)),
     });
 }
 var fetchResourcesForClient = h7(
@@ -4697,7 +4697,7 @@ async function getMcpToolsCommandsAndResources(e, t, r, o) {
             E.type === "sse") &&
           !rS(E) &&
           ((await isMcpAuthCached(C, E, r)) ||
-            ((E.type === "http" || E.type === "sse") && sRe(C, E, await oRe())))
+            ((E.type === "http" || E.type === "sse") && needsMcpServerAuth(C, E, await readStoredMcpOAuth())))
         ) {
           if (E.type !== "claudeai-proxy" && E.pluginSource === void 0)
             logMCPDebug(C, "Skipping connection (cached needs-auth)");
@@ -5249,7 +5249,7 @@ async function processMCPResult(e, t, r, o, c, d, p) {
   let L = Date.now(),
     W = `mcp-${normalizeMcpName(r)}-${normalizeMcpName(t)}-${L}`,
     I = stripTextBlockMeta(_),
-    D = isMcpSubagentPromptEnabled() || H("tengu_mcp_singleton_unwrap", !0),
+    D = isMcpSubagentPromptEnabled() || getFeatureValue_CACHED_MAY_BE_STALE("tengu_mcp_singleton_unwrap", !0),
     j = Array.isArray(I) ? I.length : void 0,
     ee =
       D &&
@@ -5377,7 +5377,7 @@ async function callMCPToolWithUrlElicitationRetry({
                   !!j &&
                   !!I &&
                   !V &&
-                  H("tengu_mcp_proxy_needs_approval_retry", !0))),
+                  getFeatureValue_CACHED_MAY_BE_STALE("tengu_mcp_proxy_needs_approval_retry", !0))),
           },
           C,
         );
@@ -5398,7 +5398,7 @@ async function callMCPToolWithUrlElicitationRetry({
         j &&
         I &&
         !V &&
-        H("tengu_mcp_proxy_needs_approval_retry", !0)
+        getFeatureValue_CACHED_MAY_BE_STALE("tengu_mcp_proxy_needs_approval_retry", !0)
       ) {
         V = !0;
         let U = C.data ?? {},
@@ -5724,10 +5724,10 @@ async function callMCPTool({
           /^HTTP 40[13]\b/.test(F.message),
         de = Y === 401 || F instanceof XA || ae || (Y === 403 && fe),
         se =
-          (r.type === "http" || r.type === "sse") && !r.headersHelper && !i0(r)
+          (r.type === "http" || r.type === "sse") && !r.headersHelper && !configHasAuthorizationHeader(r)
             ? r
             : void 0,
-        ve = !j && de && !fe && se !== void 0 && (await AUe(t, se));
+        ve = !j && de && !fe && se !== void 0 && (await hasStoredRefreshToken(t, se));
       if ((fe || k || se !== void 0) && !j) {
         let Te = getMcpServerConfigCacheKey(t, r);
         if (ir() !== ie)
@@ -5839,7 +5839,7 @@ async function callMCPTool({
         logMCPDebug(t, "Tool call returned 401 Unauthorized - token may have expired");
         let Te = r.type === "claudeai-proxy" && r.eligible === !1,
           Q = Le(r, t),
-          Ce = oy(t, r);
+          Ce = shouldSendMcpServerTelemetry(t, r);
         throw (
           logEvent("tengu_mcp_tool_call_auth_error", {
             errorCode: fromNumber(Y ?? 401),
@@ -5847,7 +5847,7 @@ async function callMCPTool({
             authErrorKind: fromEnum(Te ? "not_connected" : "token_expired"),
             ...Q,
             mcpServerName: mcpNameForAnalytics_GATE_EVALUATED(normalizeMcpName(t), Ce),
-            mcpToolName: uQ(normalizeMcpName(t), normalizeMcpName(c), Ce),
+            mcpToolName: getSampledMcpToolName(normalizeMcpName(t), normalizeMcpName(c), Ce),
           }),
           new McpAuthError(
             t,
@@ -5869,8 +5869,8 @@ async function callMCPTool({
           `MCP session expired during tool call (${ke ? "stale session" : "connection closed"}), clearing connection cache for re-initialization`,
         );
         let Te = Le(r, t),
-          Q = oy(t, r),
-          Ce = uQ(normalizeMcpName(t), normalizeMcpName(c), Q);
+          Q = shouldSendMcpServerTelemetry(t, r),
+          Ce = getSampledMcpToolName(normalizeMcpName(t), normalizeMcpName(c), Q);
         throw (
           logEvent("tengu_mcp_session_expired", {
             errorCode: Y !== void 0 ? fromNumber(Y) : void 0,

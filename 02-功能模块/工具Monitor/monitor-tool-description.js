@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { PUSH_NOTIFICATION_TOOL_NAME, isAgentPushNotificationEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
 function getMonitorPushNotificationHint() {
@@ -18,7 +18,7 @@ When an event lands that the user would want to act on now \u2014 an error appea
     : "";
 }
 function isMonitorToolEnabled() {
-  return H("tengu_amber_sentinel", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_amber_sentinel", !1);
 }
 function getMonitorToolDescription() {
   let e = areBackgroundTasksDisabled();

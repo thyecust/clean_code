@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { sanitizeDisplayTextWithoutRedaction } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Aa } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
 var p = [
@@ -19,7 +19,7 @@ function i(e) {
   return e.toLowerCase().replace(/\.$/, "");
 }
 function u() {
-  let e = H("tengu_mcp_local_oauth_blocked_hosts", { hosts: p }),
+  let e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_mcp_local_oauth_blocked_hosts", { hosts: p }),
     t = p;
   if (
     e !== null &&

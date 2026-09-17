@@ -14,7 +14,7 @@ import { Ro, Tr, ae, Qhe, k_, n } from "../../01-核心基础设施/核心工具
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getProjectsDir } from "../Teammates团队/transcript-paths.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { sr, Jh } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getSessionStateStore, getBgTakeover } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { gh, xQ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { $d, bR, normalizeCaseForComparison } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { decodeTaggedId } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
@@ -567,9 +567,9 @@ function getTaskOutputRootDir() {
   return $d();
 }
 function getTaskOutputDir() {
-  let t = Jh()?.adoptShellOutputRoot;
+  let t = getBgTakeover()?.adoptShellOutputRoot;
   if (t !== void 0) return U(t, K(), "tasks");
-  let e = sr();
+  let e = getSessionStateStore();
   if (e.outputDir === void 0) e.outputDir = U(bR(), K(), "tasks");
   return e.outputDir;
 }
@@ -577,31 +577,31 @@ function taskOutputDirForSession(t) {
   return U(bR(), t, "tasks");
 }
 function peekTaskOutputDir() {
-  return Jh()?.adoptShellOutputRoot !== void 0
+  return getBgTakeover()?.adoptShellOutputRoot !== void 0
     ? getTaskOutputDir()
-    : (sr().outputDir ?? U(bR(), K(), "tasks"));
+    : (getSessionStateStore().outputDir ?? U(bR(), K(), "tasks"));
 }
 function te() {
-  let t = sr();
+  let t = getSessionStateStore();
   if (t.outputDir === void 0) {
-    if (Jh() !== null) return U(bR(), K(), "tasks");
+    if (getBgTakeover() !== null) return U(bR(), K(), "tasks");
     t.outputDir = U(bR(), K(), "tasks");
   }
   return t.outputDir;
 }
 function bindTaskOutputPath(t) {
-  let e = sr().outputPathBindings.get(t);
+  let e = getSessionStateStore().outputPathBindings.get(t);
   if (e !== void 0) return e;
   let i = U(getTaskOutputDir(), `${t}.output`);
-  return (sr().outputPathBindings.set(t, i), i);
+  return (getSessionStateStore().outputPathBindings.set(t, i), i);
 }
 function getTaskOutputPath(t) {
-  let e = sr().outputPathBindings.get(t);
+  let e = getSessionStateStore().outputPathBindings.get(t);
   if (e !== void 0) return e;
   return U(te(), `${t}.output`);
 }
 function kt(t) {
-  let e = sr().pendingOutputOps;
+  let e = getSessionStateStore().pendingOutputOps;
   return (e.add(t), t.finally(() => e.delete(t)).catch(() => {}), t);
 }
 var ee = 16777216,
@@ -739,8 +739,8 @@ class DiskTaskOutput {
   }
 }
 function ne(t) {
-  let e = sr().diskOutputs.get(t);
-  if (!e) ((e = new DiskTaskOutput(t)), sr().diskOutputs.set(t, e));
+  let e = getSessionStateStore().diskOutputs.get(t);
+  if (!e) ((e = new DiskTaskOutput(t)), getSessionStateStore().diskOutputs.set(t, e));
   return e;
 }
 function appendTaskOutput(t, e) {
@@ -749,7 +749,7 @@ function appendTaskOutput(t, e) {
 function evictTaskOutput(t) {
   return kt(
     (async () => {
-      let e = sr(),
+      let e = getSessionStateStore(),
         i = e.diskOutputs.get(t);
       if (i) {
         if ((await i.flush(), i.failing && i.unwrittenChars > 0))
@@ -764,9 +764,9 @@ function evictTaskOutput(t) {
   );
 }
 function releaseConvergentTaskOutputBinding(t) {
-  let e = sr().outputPathBindings.get(t);
-  if (e !== void 0 && Jh() === null && e === U(getTaskOutputDir(), `${t}.output`))
-    sr().outputPathBindings.delete(t);
+  let e = getSessionStateStore().outputPathBindings.get(t);
+  if (e !== void 0 && getBgTakeover() === null && e === U(getTaskOutputDir(), `${t}.output`))
+    getSessionStateStore().outputPathBindings.delete(t);
 }
 async function getTaskOutputDelta(t, e, i = Bt) {
   try {
@@ -838,7 +838,7 @@ async function getTaskOutputSize(t) {
   }
 }
 async function repointTaskOutputSymlinks(t, e) {
-  let i = sr(),
+  let i = getSessionStateStore(),
     o = dedupe([
       ...(i.outputDir !== void 0 ? [i.outputDir] : []),
       ...[...i.outputPathBindings.values()].map((s) => x(s)),
@@ -863,7 +863,7 @@ async function repointTaskOutputSymlinks(t, e) {
   }
 }
 async function ie(t, e, i, o, r) {
-  let s = sr().linkedOutputs;
+  let s = getSessionStateStore().linkedOutputs;
   for (let c of e) {
     if (!c.endsWith(".output")) continue;
     let a = U(t, c),
@@ -872,7 +872,7 @@ async function ie(t, e, i, o, r) {
     try {
       f = getCurrentPlatform() === "windows" ? void 0 : await tt(a, { replaceLeaf: !0 });
       let w = f?.ioPath ?? a;
-      if (u === void 0 && t === sr().outputDir)
+      if (u === void 0 && t === getSessionStateStore().outputDir)
         u = await Ht(a, w).catch(() => {
           return;
         });
@@ -990,12 +990,12 @@ async function Ht(t, e) {
       "output is an unregistered symlink of a shape this session does not create",
     );
   let r = await J(e);
-  if (!r.isSymbolicLink() || r.ctimeMs >= sr().linksInheritedBeforeFor(x(t)))
+  if (!r.isSymbolicLink() || r.ctimeMs >= getSessionStateStore().linksInheritedBeforeFor(x(t)))
     return b(t, "output is an unregistered symlink made during this session");
   return (await Lt(t, i), i);
 }
 async function St(t, e) {
-  let i = sr().linkedOutputs.get(t);
+  let i = getSessionStateStore().linkedOutputs.get(t);
   if (i === void 0) {
     if (!isTaskOutputFilePath(t))
       return b(
@@ -1052,7 +1052,7 @@ function Ut(t) {
 }
 async function Lt(t, e) {
   if (q(e)) await Mt(e);
-  sr().linkedOutputs.set(t, e);
+  getSessionStateStore().linkedOutputs.set(t, e);
 }
 async function Mt(t) {
   let e = await tt(t, { replaceLeaf: !0, create: !1 });
@@ -1218,8 +1218,8 @@ async function tailTaskOutput(t, e) {
   }
 }
 async function unlinkTaskOutput(t) {
-  let e = sr().linkedOutputs.get(t);
-  if ((sr().linkedOutputs.delete(t), e !== void 0)) Ot.delete(e);
+  let e = getSessionStateStore().linkedOutputs.get(t);
+  if ((getSessionStateStore().linkedOutputs.delete(t), e !== void 0)) Ot.delete(e);
   if (getCurrentPlatform() === "windows") {
     await unlink(t);
     return;
@@ -1528,7 +1528,7 @@ function initTaskOutputAsSymlink(t, e, i) {
               await r.recheckBeforeWrite(),
               await symlink(e, r.ioPath));
           }
-          sr().linkedOutputs.set(o, e);
+          getSessionStateStore().linkedOutputs.set(o, e);
         } finally {
           await r.close();
         }

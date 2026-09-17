@@ -27,7 +27,7 @@ import {
 import { An, my, gp, pl, li, $m, jf, Xo, FW } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import {
-  QJ,
+  isModelRetiredOrRemapped,
   isModelAllowed,
   getUserSpecifiedModelSetting,
   isModeDependentModelSetting,
@@ -35,10 +35,10 @@ import {
   isExemptDefaultResolvingPick,
   getCanonicalName,
   parseUserSpecifiedModel,
-  tc,
-  GC,
-  Ia,
-  a5t,
+  hasLongContextSuffix,
+  supports1mContextBeta,
+  getCurrentWorktreeSession,
+  isPathPersistedTrusted,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
@@ -334,7 +334,7 @@ async function HZ(e, o) {
     n(`Resume: refusing session home with unverifiable ancestry "${e}"`);
     return;
   }
-  if (!a5t(e)) {
+  if (!isPathPersistedTrusted(e)) {
     n(
       `Resume: not loading agents from session home "${e}" \u2014 workspace trust not persisted for it`,
     );
@@ -446,13 +446,13 @@ function J(e, o) {
       ? "unknown_family"
       : !isExemptDefaultResolvingPick(c) && !isModelAllowed(c)
         ? "not_allowed"
-        : QJ(c)
+        : isModelRetiredOrRemapped(c)
           ? "retired"
           : void 0;
     if (h) return { kind: "declined", model: c, reason: h };
     if (
-      ((o && tc(o)) || (r !== void 0 && tc(r))) &&
-      GC(c) &&
+      ((o && hasLongContextSuffix(o)) || (r !== void 0 && hasLongContextSuffix(r))) &&
+      supports1mContextBeta(c) &&
       (er(c) === s || (o && getCanonicalName(parseUserSpecifiedModel(er(o))) === getCanonicalName(c)))
     )
       return { kind: "ok", model: c + "[1m]" };
@@ -623,7 +623,7 @@ function DZ(e, o, t, r) {
   return (e.record(s), s);
 }
 function Se(e, o, t) {
-  let r = Ia();
+  let r = getCurrentWorktreeSession();
   if (r && t?.preserveBinding !== !0) return (saveWorktreeState(r), null);
   if (!e) {
     if (e === null)
@@ -825,7 +825,7 @@ function Se(e, o, t) {
   );
 }
 function SQt(e, o) {
-  let t = Ia();
+  let t = getCurrentWorktreeSession();
   if (!t) return;
   if ((restoreWorktreeSession(null), clearCurrentSessionMemoryFiles(), resetPromptStateAfterInvalidation("resume"), t.worktreePath === e)) {
     (getPlansDirectory.cache.clear?.(), primePlanSlugCollisions(o));

@@ -10,7 +10,7 @@
 import { ze, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ARTIFACT_WATCH_LIFECYCLE_ORIGIN } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { hU, Zy, ARTIFACT_YIELD_PEER_FEATURE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { buildUdsAddress, getCanonicalSocketPath, ARTIFACT_YIELD_PEER_FEATURE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
@@ -69,7 +69,7 @@ async function ee(e) {
   if (!isCrossSessionMessagingEnabled()) return { ...R, kind: "messaging_off" };
   let o = ownMessagingSocket();
   if (o === void 0 || e.holders.length === 0) return { ...R, kind: "no_inbox" };
-  let r = Zy(o),
+  let r = getCanonicalSocketPath(o),
     a = e.transport?.ownRecord ?? Z,
     s = await a().catch(() => {
       return;
@@ -94,7 +94,7 @@ async function ee(e) {
       t.sock === void 0 ||
       t.sock === "" ||
       !(t.peerFeatures?.includes(ARTIFACT_YIELD_PEER_FEATURE) ?? !1) ||
-      Zy(t.sock) === r ||
+      getCanonicalSocketPath(t.sock) === r ||
       dpt(t.kind)
     ) {
       if (e.alreadyReplying) continue;
@@ -107,7 +107,7 @@ async function ee(e) {
     u = e.transport?.sendControl ?? sendControlToUdsSocket,
     I = e.transport?.timers ?? unrefTimers,
     T = e.transport?.now ?? Date.now,
-    G = hU(o),
+    G = buildUdsAddress(o),
     Y = (t) => (getCurrentPlatform() !== "windows" ? { expectPeerPid: t } : {}),
     v = [],
     D = new Set(),
@@ -289,7 +289,7 @@ async function ee(e) {
 }
 function q(e, o, r, a) {
   let s = r.get(e);
-  return (s !== void 0 && s === hU(o.sock)) || (!a && !isSlugYielded(e));
+  return (s !== void 0 && s === buildUdsAddress(o.sock)) || (!a && !isSlugYielded(e));
 }
 function notifyTakenOverSlugStopped(e, o = sendControlToUdsSocket) {
   j(e, !0, o);

@@ -24,7 +24,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Ff, isAutoMemoryEnabled, isAutoMemoryDisabledForCurrentMainLoopModel, getAutoMemPath, ee, es } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { onGrowthBookRefresh, isAutoMemoryEnabled, isAutoMemoryDisabledForCurrentMainLoopModel, getAutoMemPath, getGlobalConfig, getCurrentProjectConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { jn, Ks, findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { formatTokens, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -910,7 +910,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     [q, jt] = d(CFe),
     at = q !== null && HK(q),
     [uo] = d(IK),
-    [ct] = d(() => es().orgMemoryRead ?? !0),
+    [ct] = d(() => getCurrentProjectConfig().orgMemoryRead ?? !0),
     [po, Te] = d(null),
     [fo, go] = d(!1),
     $t = C(!1),
@@ -1057,7 +1057,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     [Xe, Ro] = d(isAutoMemoryDisabledForCurrentMainLoopModel);
   E(
     () =>
-      Ff(() => {
+      onGrowthBookRefresh(() => {
         let S = isAutoMemoryDisabledForCurrentMainLoopModel();
         if (S !== Xe) (Ro(S), It(isAutoMemoryEnabled()));
       }),
@@ -1389,7 +1389,7 @@ function hn(w) {
   return sessionIdBody(w);
 }
 function mo(w) {
-  let b = ee().remoteHomeSettingsSent?.[hn(w)];
+  let b = getGlobalConfig().remoteHomeSettingsSent?.[hn(w)];
   if (b === void 0) return;
   let M = gn().safeParse(b);
   return M.success ? M.data : void 0;

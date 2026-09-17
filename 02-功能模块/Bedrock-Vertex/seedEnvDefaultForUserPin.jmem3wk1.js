@@ -14,7 +14,7 @@ import { fromEnum, fromNumber } from "../../01-核心基础设施/共享小工�
 import { buildVertexBaseUrl, getVertexRegionForModel } from "./chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { bt, DEFAULT_3P_SONNET_KEY, DEFAULT_VERTEX_OPUS_KEY, getMarketingNameForModel, Rw, nRe, isHostManagedProviderAuth, getConfiguredVertexProjectId, refreshGcpCredentialsIfNeeded } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getModelForAnalytics, DEFAULT_3P_SONNET_KEY, DEFAULT_VERTEX_OPUS_KEY, getMarketingNameForModel, authState, getEnvAuthorizationHeader, isHostManagedProviderAuth, getConfiguredVertexProjectId, refreshGcpCredentialsIfNeeded } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { to, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { tierConfig, collectStalePins, seedEnvDefaultForUserPin, collectUnpinnedTiers, predecessorsInTier } from "../../01-核心基础设施/共享小工具-未细化/chunk-nzt97y14.js";
@@ -35,7 +35,7 @@ async function findVertexUpgradeCandidates() {
         if (
           (logEvent("tengu_vertex_probe_result", {
             tier: fromEnum(e.tier),
-            model_id: bt(r),
+            model_id: getModelForAnalytics(r),
             accessible: t,
           }),
           !t)
@@ -78,7 +78,7 @@ async function checkVertexDefaultAvailability() {
         if (
           (logEvent("tengu_vertex_probe_result", {
             tier: fromEnum(r.tier),
-            model_id: bt(t.vertex),
+            model_id: getModelForAnalytics(t.vertex),
             accessible: l,
           }),
           l)
@@ -131,7 +131,7 @@ async function d(o) {
     if (!e && !r) await refreshGcpCredentialsIfNeeded();
     let t = await buildVertexGoogleAuth(e ? { kind: "skip" } : { kind: "default" }, getConfiguredVertexProjectId()),
       l = getVertexRegionForModel(o),
-      f = e ? nRe() : void 0;
+      f = e ? getEnvAuthorizationHeader() : void 0;
     return (
       await suppressVertexAuthRejection(
         new s({
@@ -139,7 +139,7 @@ async function d(o) {
           googleAuth: t,
           maxRetries: 0,
           defaultHeaders: vertexResidualCredentialPins(e ? { wireAuthorization: f } : !1),
-          ...Rw,
+          ...authState,
           timeout: 8000,
           fetchOptions: c({ url: a.ANTHROPIC_VERTEX_BASE_URL || buildVertexBaseUrl(l) }),
         }),

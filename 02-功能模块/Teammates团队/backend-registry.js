@@ -12,7 +12,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { terminalBackendRegistry, isInsideTmuxSync, isInsideTmux, isTmuxAvailable, isInITerm2, isIt2CliAvailable } from "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
-import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getTeammateModeFromSnapshot } from "./chunk-88ybhavr.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { homedir } from "os";
@@ -107,17 +107,17 @@ function getPythonApiSetupInstructions() {
   ];
 }
 function markIt2SetupComplete(e) {
-  if (ee().iterm2It2SetupComplete !== !0)
-    (Te((a) => ({ ...a, iterm2It2SetupComplete: !0 }), e),
+  if (getGlobalConfig().iterm2It2SetupComplete !== !0)
+    (saveGlobalConfig((a) => ({ ...a, iterm2It2SetupComplete: !0 }), e),
       n("[it2Setup] Marked it2 setup as complete"));
 }
 function setPreferTmuxOverIterm2(e, t) {
-  if (ee().preferTmuxOverIterm2 !== e)
-    (Te((s) => ({ ...s, preferTmuxOverIterm2: e }), t),
+  if (getGlobalConfig().preferTmuxOverIterm2 !== e)
+    (saveGlobalConfig((s) => ({ ...s, preferTmuxOverIterm2: e }), t),
       n(`[it2Setup] Set preferTmuxOverIterm2 = ${e}`));
 }
 function d() {
-  return ee().preferTmuxOverIterm2 === !0;
+  return getGlobalConfig().preferTmuxOverIterm2 === !0;
 }
 async function ensureBackendsRegistered(e = terminalBackendRegistry) {
   if (e.backendsRegistered) return;

@@ -17,7 +17,7 @@ import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { replaceInvisibleChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { gm, i_ } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Wi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { readBoundedFile } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { renameWithRetry, writeNewFileExclusive } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { clampColorLevelForAttacher } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
@@ -147,7 +147,7 @@ async function ne(e, t) {
   }
 }
 async function se(e) {
-  let t = await Wi(L(e, U), M);
+  let t = await readBoundedFile(L(e, U), M);
   if (!t) return null;
   let r = re(t);
   if (r === null)
@@ -477,7 +477,7 @@ class H {
     let e = a.CLAUDE_JOB_DIR;
     if (!e) return;
     let t = F(e, Y),
-      r = await Wi(t, 4 * Q);
+      r = await readBoundedFile(t, 4 * Q);
     if (r === null) return;
     await unlink(t).catch(() => {});
     let o = D(r);

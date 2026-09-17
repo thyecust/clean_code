@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "./storage-v5-context.js";
-import { Te } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { saveGlobalConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ConfirmPrompt } from "./confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -24,7 +24,7 @@ function ApproveApiKey(T) {
     ((v = function o(E) {
       bb2: switch (E) {
         case "yes": {
-          (Te(
+          (saveGlobalConfig(
             (A) => ({
               ...A,
               customApiKeyResponses: {
@@ -38,7 +38,7 @@ function ApproveApiKey(T) {
           break bb2;
         }
         case "no": {
-          (Te(
+          (saveGlobalConfig(
             (R) => ({
               ...R,
               customApiKeyResponses: {

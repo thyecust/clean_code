@@ -16,7 +16,7 @@ import { useAppStateSelector, useSetAppState, useAppState } from "../../01-核�
 import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { pluralize, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, Io, Xu, cr, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -244,7 +244,7 @@ var Nr = 65536,
 async function Kt(i, l, p, h) {
   let u;
   try {
-    u = await ht.post(
+    u = await httpClient.post(
       `/api/frame/retitle/${encodeURIComponent(i)}`,
       { title: l },
       {

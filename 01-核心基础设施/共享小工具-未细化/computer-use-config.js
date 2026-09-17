@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { getSubscriptionType, Qh } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getSubscriptionType, getDynamicConfig_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isTainted } from "./compliance-taints-store.js";
 import { getComputerUseSession } from "../../02-功能模块/图片-截图-ComputerUse/computer-use-session.js";
 var t = {
@@ -23,7 +23,7 @@ var t = {
   coordinateMode: "pixels",
 };
 function o() {
-  return { ...t, ...Qh("tengu_malort_pedway", t) };
+  return { ...t, ...getDynamicConfig_CACHED_MAY_BE_STALE("tengu_malort_pedway", t) };
 }
 function r() {
   let e = getSubscriptionType();

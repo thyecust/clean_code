@@ -21,7 +21,7 @@ import { le, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { bc, ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { getOtelHeadersHelperLastFailure, ee, ZUe, hQ } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getOtelHeadersHelperLastFailure, getGlobalConfig, formatAutoUpdaterDisabledReason, getAutoUpdaterDisabledReason } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Tb, Xge, lL } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { S0 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { WSL_MANAGED_SETTINGS_DIR } from "../../01-核心基础设施/共享小工具-未细化/mdm-policy-paths.js";
@@ -411,7 +411,7 @@ async function pe() {
   try {
     (await e.stat(l), t.push({ type: "native", path: l }));
   } catch {}
-  if (ee().installMethod === "native") {
+  if (getGlobalConfig().installMethod === "native") {
     let o = g(homedir(), ".local", "share", "claude");
     try {
       if ((await e.stat(o), !t.some((y) => y.type === "native")))
@@ -464,7 +464,7 @@ async function fe(e) {
       issue: `otelHeadersHelper is configured but its last invocation failed: ${r}`,
       fix: "Run the configured helper manually and confirm it prints a JSON object of string header values. If the value is a file path, confirm the file exists and is executable.",
     });
-  let s = ee();
+  let s = getGlobalConfig();
   if (e === "development") return t;
   if (e === "native") {
     let o = (a.PATH || "").split(delimiter),
@@ -750,10 +750,10 @@ async function Mbe({ probeKeychain: e = !1, storageV5: t } = {}) {
           fix: D ? `Run: rmdir /s /q "${f.path}"` : `Run: rm -rf ${f.path}`,
         });
   }
-  let u = ee().installMethod || "not set",
+  let u = getGlobalConfig().installMethod || "not set",
     p = null;
   if (i === "npm-global") {
-    if (((p = (await $9n()).hasPermissions), !p && !hQ()))
+    if (((p = (await $9n()).hasPermissions), !p && !getAutoUpdaterDisabledReason()))
       o.push({
         issue: "Can't auto-update: npm global folder isn't writable",
         fix: "Run `claude install` to switch to the native installer (no sudo)\nOr reinstall with a sudo-free npm (e.g. via nvm)\nOr `npm config set prefix ~/.npm-global`, add ~/.npm-global/bin to PATH, then reinstall",
@@ -774,8 +774,8 @@ async function Mbe({ probeKeychain: e = !1, storageV5: t } = {}) {
     invokedBinary: l,
     configInstallMethod: u,
     autoUpdates: (() => {
-      let w = hQ();
-      return w ? `disabled (${ZUe(w)})` : "enabled";
+      let w = getAutoUpdaterDisabledReason();
+      return w ? `disabled (${formatAutoUpdaterDisabledReason(w)})` : "enabled";
     })(),
     hasUpdatePermissions: p,
     lastUpdateResult: S,

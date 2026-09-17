@@ -17,7 +17,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { Zse, ASSET_ID_RE, ARTIFACT_SLUG_RE, INVISIBLE_BLANKS, isDecisionSurfaceControl, INVISIBLE_BLANK_CODE_POINT, scrubArtifactEnvelopeTags, scrubServerLine } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { $f, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValueWithSource_CACHED_MAY_BE_STALE, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import {
@@ -237,15 +237,15 @@ function re(t, e, n, r) {
   }
 }
 function tV() {
-  return a.CLAUDE_CODE_ARTIFACT_COMMENTS ?? H("tengu_teal_corbel", !1);
+  return a.CLAUDE_CODE_ARTIFACT_COMMENTS ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_teal_corbel", !1);
 }
 function Z3n() {
   return a.CLAUDE_CODE_ARTIFACT_COMMENTS !== void 0
     ? "env"
-    : $f("tengu_teal_corbel", !1).source;
+    : getFeatureValueWithSource_CACHED_MAY_BE_STALE("tengu_teal_corbel", !1).source;
 }
 function dwe() {
-  return H("tengu_medlar_quoin", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_medlar_quoin", !1);
 }
 var ke = 256;
 function we(t) {
@@ -966,7 +966,7 @@ async function j7(
   r = "artifact_comments_read",
   { skipBootProbe: o = !1 } = {},
 ) {
-  if (!H("tengu_onyx_sluice", !1))
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_onyx_sluice", !1))
     return (
       logFeatureSad(r, "cp_read_disabled"),
       {
@@ -1465,7 +1465,7 @@ function FS() {
   if (t.toolsetLatch === null)
     ((t.toolsetLatch =
       a.CLAUDE_CODE_ARTIFACT_TOOLSET ??
-      H("tengu_cobalt_plinth_damson", !1) === !0),
+      getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_damson", !1) === !0),
       logEvent("tengu_artifact_toolset", { on: t.toolsetLatch }));
   return t.toolsetLatch;
 }

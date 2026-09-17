@@ -12,7 +12,7 @@ import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { PUe, getClaudeAIOAuthTokenOriginAsync, getClaudeAIOAuthTokensAsync, readFreshOAuthCredentialSnapshot, getOauthAccountInfo, getAuthenticatedAccountInfo, ERe, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { validateOAuthToken, getClaudeAIOAuthTokenOriginAsync, getClaudeAIOAuthTokensAsync, readFreshOAuthCredentialSnapshot, getOauthAccountInfo, getAuthenticatedAccountInfo, subscribeGlobalConfigInstalled, readFreshOauthAccountFromDisk } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getBridgeTokenOverride } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { isBridgeFirstParty, isBridgeOwnerPinnedEndEnabled } from "./chunk-9estzwf5.js";
 import { getBridgeSession, updateBridgeSessionTitle } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -56,7 +56,7 @@ async function Z({
   if (!isBridgeOwnerPinnedEndEnabled() || isEssentialTrafficOnly()) return { pin: void 0, reason: "disabled" };
   if (r === void 0 && !(await isBridgeStoreLogin(e)))
     return { pin: void 0, reason: "not_store_login" };
-  let u = await sy(i),
+  let u = await readFreshOauthAccountFromDisk(i),
     a,
     c = d,
     f = !1;
@@ -228,7 +228,7 @@ async function Z({
     noteAcceptedToken(o) {
       let s = o !== c;
       if (((c = o), (h = 0), !s || m !== void 0 || !isBridgeOwnerPinnedEndEnabled())) return;
-      m = sy(i)
+      m = readFreshOauthAccountFromDisk(i)
         .then(async (S) => {
           if (!S?.accountUuid || p(S)) return;
           let O = await z();
@@ -246,7 +246,7 @@ async function Z({
     ownerVerified: () => f,
     subscribe(o) {
       w = o;
-      let s = ERe(() => {
+      let s = subscribeGlobalConfigInstalled(() => {
         try {
           if (Date.now() < C || !B()) return;
         } catch {
@@ -271,7 +271,7 @@ async function Z({
 }
 async function A(t) {
   let i = await withDeadline(
-    PUe(t).catch(() => {
+    validateOAuthToken(t).catch(() => {
       return;
     }),
     Q,

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ls } from "./认证-OAuth登录.419zdfz3.js";
+import { otelApiModule } from "./认证-OAuth登录.419zdfz3.js";
 import { execAsyncModule } from "../../01-核心基础设施/共享小工具-未细化/exec-async-module.js";
 import { commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var d = commonJS(function (n) {
@@ -15,7 +15,7 @@ var d = commonJS(function (n) {
   n.getMachineId = void 0;
   var i = importMetaRequire("process"),
     s = execAsyncModule(),
-    a = Ls();
+    a = otelApiModule();
   async function o() {
     let e = "%windir%\\System32\\REG.exe";
     if (i.arch === "ia32" && "PROCESSOR_ARCHITEW6432" in i.env)

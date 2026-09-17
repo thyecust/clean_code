@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 function t() {
   return process.argv.includes("--agent-teams");
 }
 function isAgentSwarmsEnabled() {
   if (!a.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS && !t()) return !1;
-  if (!H("tengu_amber_flint", !0)) return !1;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_amber_flint", !0)) return !1;
   return !0;
 }
 async function captureTeammateModeSnapshotIfEnabled() {

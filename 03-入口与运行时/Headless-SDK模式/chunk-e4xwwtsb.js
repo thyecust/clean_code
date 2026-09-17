@@ -9,21 +9,21 @@
 // Version: 2.1.263
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
-  Tn,
-  hor,
-  _or,
-  Rvn,
-  $Qe,
-  kvn,
-  xvn,
-  Hvn,
-  Sor,
-  rx,
-  kor,
-  qe,
-  Ut,
+  hashForTelemetry,
+  recordCredentialInvalidation,
+  clearCredentialInvalidation,
+  elicitationResponseSchema,
+  userDialogResponseSchema,
+  workSecretResponseSchema,
+  oauthTokenRefreshResponseSchema,
+  hostAuthTokenRefreshResponseSchema,
+  stdoutMessageSchema,
+  isPluginSteeredAgent,
+  getForegroundSubagentId,
+  BASH_TOOL_NAME,
+  POWERSHELL_TOOL_NAME,
   clearOAuthTokenCache,
-  H,
+  getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Xn, K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
@@ -128,7 +128,7 @@ var Je = createLazyValue(() =>
   D0t =
     "Expected {behavior: 'allow', updatedInput?: object} or {behavior: 'deny', message: string}.";
 function F(t, e, r, o, l) {
-  if (o.forRemoteExecution === !0 || rx(o)) return;
+  if (o.forRemoteExecution === !0 || isPluginSteeredAgent(o)) return;
   if (t && e.suppressesAllPermissionUpdates?.(r) === !0) {
     let d = withoutGrantsForRemoteScope(t);
     return d.length > 0 ? d : void 0;
@@ -163,7 +163,7 @@ function L0t(t, e, r, o, l = e, d = !1) {
 import { randomUUID as M } from "crypto";
 var _e = "tengu_cinder_swift";
 function j() {
-  return H(_e, "off") === "interrupt";
+  return getFeatureValue_CACHED_MAY_BE_STALE(_e, "off") === "interrupt";
 }
 function x(t, e, r) {
   if (a.CLAUDE_CODE_DISABLE_PERMISSION_PROMPT_NOTIFY_HOOKS) return () => {};
@@ -225,7 +225,7 @@ function ne(t, e, r, o, l) {
       input: e,
     };
   let p =
-      (t.name === qe || t.name === Ut) && typeof e.command === "string"
+      (t.name === BASH_TOOL_NAME || t.name === POWERSHELL_TOOL_NAME) && typeof e.command === "string"
         ? qr(e.command)
         : void 0,
     f =
@@ -267,7 +267,7 @@ function re(t) {
     let g = f.updatedInput ?? r,
       _ = f.suggestions;
     if (
-      e.name === qe &&
+      e.name === BASH_TOOL_NAME &&
       typeof g.command === "string" &&
       _?.length &&
       !_.some((w) => w.destination !== "session")
@@ -282,7 +282,7 @@ function re(t) {
       };
     R.addEventListener("abort", I, { once: !0 });
     let U = Re(),
-      W = kor(o.agentContext),
+      W = getForegroundSubagentId(o.agentContext),
       J,
       D;
     try {
@@ -293,7 +293,7 @@ function re(t) {
       }
       let A = f.decisionReason,
         T = findSafetyCheckReason(A),
-        pe = e.name === qe || e.name === Ut,
+        pe = e.name === BASH_TOOL_NAME || e.name === POWERSHELL_TOOL_NAME,
         G =
           (f.metadata && "command" in f.metadata
             ? f.metadata.command.description
@@ -785,7 +785,7 @@ class Fae {
         continue;
       if (!this.cancelDialogByMachine(o.request_id)) continue;
       (logEvent("tengu_request_user_dialog_implicit_cancel", {
-        dialog_kind: Tn(t),
+        dialog_kind: hashForTelemetry(t),
         reason: fromEnum(e),
       }),
         (r += 1));
@@ -820,7 +820,7 @@ class Fae {
     return (
       logEvent("tengu_request_user_dialog_response_ignored", {
         shape: fromEnum("error"),
-        dialog_kind: Tn(t.request.request.dialog_kind),
+        dialog_kind: hashForTelemetry(t.request.request.dialog_kind),
       }),
       n(
         `Ignoring error-shaped control_response for parked request_user_dialog request_id=${e.request_id} \u2014 not a human choice; dialog stays parked (error: ${de(e.error)})`,
@@ -1013,7 +1013,7 @@ class Fae {
                   : void 0,
               y = e.response.subtype;
             (logEvent("tengu_request_user_dialog_late_answer", {
-              dialog_kind: Tn(p.dialogKind),
+              dialog_kind: hashForTelemetry(p.dialogKind),
               lateness_ms: Date.now() - p.timedOutAt,
               response_subtype: fromEnum(
                 y === "success" || y === "error" ? y : "other",
@@ -1212,7 +1212,7 @@ class Fae {
       )),
         this.stallTimer.unref());
     if (t.type !== "system" && Math.random() < Ae) {
-      let e = Sor().safeParse(t);
+      let e = stdoutMessageSchema().safeParse(t);
       if (!e.success)
         logEvent("tengu_sdk_schema_violation", {
           message_type: fromEnum(t.type),
@@ -1552,7 +1552,7 @@ class Fae {
           display_name: f?.displayName,
           description: f?.description,
         },
-        Rvn(),
+        elicitationResponseSchema(),
         o,
       );
     } catch {
@@ -1569,7 +1569,7 @@ class Fae {
     (this.publishedPendingActionDetails.set(o, l),
       this.sessionState.notifyStateChanged("requires_action", l),
       this.onUserDialogParked?.(l),
-      logEvent("tengu_request_user_dialog_requires_action", { dialog_kind: Tn(t) }));
+      logEvent("tengu_request_user_dialog_requires_action", { dialog_kind: hashForTelemetry(t) }));
     let d = getUserDialogTimeoutMs(),
       p;
     if (d > 0)
@@ -1586,7 +1586,7 @@ class Fae {
             return;
           }
           logEvent("tengu_request_user_dialog_timeout", {
-            dialog_kind: Tn(g),
+            dialog_kind: hashForTelemetry(g),
             timeout_ms: _,
           });
         },
@@ -1604,7 +1604,7 @@ class Fae {
           payload: e,
           tool_use_id: r?.toolUseId,
         },
-        $Qe(),
+        userDialogResponseSchema(),
         r?.signal,
         { requestId: o },
       );
@@ -1702,7 +1702,7 @@ class Fae {
     try {
       e = await this.sendRequest(
         { subtype: "oauth_token_refresh" },
-        xvn(),
+        oauthTokenRefreshResponseSchema(),
         AbortSignal.timeout(Se),
       );
     } catch (o) {
@@ -1724,9 +1724,9 @@ class Fae {
       );
     }
     if (typeof e.accessToken === "string" && e.accessToken)
-      return (_or(), e.accessToken);
+      return (clearCredentialInvalidation(), e.accessToken);
     let r = e.reason;
-    if (r !== void 0) hor(r);
+    if (r !== void 0) recordCredentialInvalidation(r);
     return (
       logEvent("tengu_sdk_oauth_refresh_unfulfilled", {
         outcome: fromEnum(r !== void 0 ? "declined" : "null"),
@@ -1742,7 +1742,7 @@ class Fae {
         (
           await this.sendRequest(
             { subtype: "remote_control_work_secret", session_id: t },
-            kvn(),
+            workSecretResponseSchema(),
             AbortSignal.timeout(ke),
           )
         ).work_secret || null
@@ -1760,7 +1760,7 @@ class Fae {
   async requestHostAuthTokenRefresh(t = ve) {
     return this.sendRequest(
       { subtype: "host_auth_token_refresh" },
-      Hvn(),
+      hostAuthTokenRefreshResponseSchema(),
       AbortSignal.timeout(t),
     );
   }

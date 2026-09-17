@@ -15,7 +15,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { Mr, Tn, hasStoredOAuthToken, hQ } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isFastModeEnabled, hashForTelemetry, hasStoredOAuthToken, getAutoUpdaterDisabledReason } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { readUnattendedServingConsent } from "../AutoMode-自动模式/unattended-serving-consent.js";
 import { resolveSetting, saveUserIntentSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 import { areWorkflowsAvailable } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
@@ -84,7 +84,7 @@ async function applyConfigShorthand(n, o, t) {
 async function w(n, o, t) {
   let e = p(n, t);
   if (
-    (logEvent("tengu_config_shorthand", { key_hash: Tn(n), matched: e !== void 0 }),
+    (logEvent("tengu_config_shorthand", { key_hash: hashForTelemetry(n), matched: e !== void 0 }),
     !e)
   )
     return {
@@ -311,7 +311,7 @@ function c(n, o) {
     verbose: t.verbose,
     mainLoopModel: t.mainLoopModel,
     currentModel: getEffectiveSessionModel(t),
-    isFastMode: Mr() ? t.fastMode : !1,
+    isFastMode: isFastModeEnabled() ? t.fastMode : !1,
     promptSuggestionEnabled: t.promptSuggestionEnabled,
     awaySummaryEnabled: t.awaySummaryEnabled,
     showDefaultViewPicker: C,
@@ -325,7 +325,7 @@ function c(n, o) {
     autoContinueAtUsageLimitToggleable: u,
     artifactToggleable: h,
     shouldShowExternalIncludesToggle: !1,
-    autoUpdaterDisabledReason: hQ(),
+    autoUpdaterDisabledReason: getAutoUpdaterDisabledReason(),
     modelSwitchHooks: n.session
       ? {
           session: n.session,

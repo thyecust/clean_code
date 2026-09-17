@@ -14,7 +14,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly, isNonessentialTrafficRestricted } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getUserAgent, isAnthropicAuthEnabled, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefreshOAuthTokenIfNeeded, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getUserAgent, isAnthropicAuthEnabled, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefreshOAuthTokenIfNeeded, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { checkWebSocketEgress } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
 import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
@@ -55,7 +55,7 @@ async function probeVoiceConnectivity() {
 }
 function B() {
   if (a.CLAUDE_CODE_VOICE_FORWARD_INTERIMS_TYPED) return !0;
-  return H("tengu_brick_follow", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_brick_follow", !1);
 }
 function isVoiceStreamAvailable() {
   if (!isAnthropicAuthEnabled()) return !1;

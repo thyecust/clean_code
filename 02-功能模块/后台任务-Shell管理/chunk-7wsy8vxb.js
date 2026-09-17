@@ -18,7 +18,7 @@ import { $U, PRt, ORt } from "../../01-核心基础设施/设置-配置/设置-�
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { normalizeComparableText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { QJ, parseUserSpecifiedModel, Xvn, SKt, a0, si, Jh } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isModelRetiredOrRemapped, parseUserSpecifiedModel, getJobsDir as Xvn, getJobStorageKey, isLocalAddress, sanitizeSessionName, getBgTakeover } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { renameWithRetry, writeNewFileExclusive, writeNewFileAfterAbsenceCheck, writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
@@ -476,7 +476,7 @@ var BgDispatchSchema = createLazyValue(() =>
   KICKED_ATTACH_CODE = /^EKICKED:\s*/,
   SUPERVISOR_DETACH_CODE = /^E[A-Z]+:/;
 function Re() {
-  return s().refine(a0, "remote IPC path");
+  return s().refine(isLocalAddress, "remote IPC path");
 }
 var je = createLazyValue(() =>
   it({
@@ -1086,7 +1086,7 @@ function uyn() {
   if (e === void 0 || getAPIProvider() === "mantle") return;
   if (e === null) return "default";
   if (!e) return;
-  if (QJ(parseUserSpecifiedModel(e))) return;
+  if (isModelRetiredOrRemapped(parseUserSpecifiedModel(e))) return;
   if (vz()?.fallbackModel === e) return;
   if (!bj(e)) return;
   return e;
@@ -1461,7 +1461,7 @@ function getJobDir(e) {
 function getOwnJobShortId() {
   let e = a.CLAUDE_JOB_DIR;
   if (e) return basename(e);
-  let t = Jh();
+  let t = getBgTakeover();
   if (t) return basename(t.jobDir);
   return K().slice(0, 8);
 }
@@ -1469,7 +1469,7 @@ function st(e, t) {
   return isValidPathSegment(e) ? STORAGE_KEYS.job(e, t) : void 0;
 }
 function jobKeyFor(e, t) {
-  return SKt(e, t);
+  return getJobStorageKey(e, t);
 }
 function jobStateKey(e) {
   return STORAGE_KEYS.job(e, [ee]);
@@ -2051,7 +2051,7 @@ async function syncLiveInFlightSnapshot(e, t) {
 function ct(e, t) {
   if (t === void 0 || !e.name) return !0;
   if (e.nameSource === "auto" || e.nameSource === "collision") return !0;
-  return t.includes(si(e.name));
+  return t.includes(sanitizeSessionName(e.name));
 }
 async function syncRespawnFlag(e, t, r, o, d, g, p) {
   let y = a.CLAUDE_JOB_DIR;

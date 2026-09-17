@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { rge, getClaudeAIOAuthTokens, isClaudeAISubscriber, getOauthAccountInfo } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { fetchOAuthProfileWithToken, getClaudeAIOAuthTokens, isClaudeAISubscriber, getOauthAccountInfo } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R4 } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { N8, MHe, Kz } from "../../02-功能模块/Bridge-RemoteControl/chunk-3b6ct3yp.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -32,7 +32,7 @@ async function callUpgradeFromSurface(t, r, l) {
           o.subscriptionType === "max" &&
           o.rateLimitTier === "default_claude_max_20x";
       else if (o?.accessToken) {
-        let i = await rge(o.accessToken);
+        let i = await fetchOAuthProfileWithToken(o.accessToken);
         n =
           i?.organization?.organization_type === "claude_max" &&
           i?.organization?.rate_limit_tier === "default_claude_max_20x";

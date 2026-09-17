@@ -20,7 +20,7 @@ import { stripXmlTags, isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  si,
+  sanitizeSessionName,
   getOrganizationUUID,
   getOAuthAccountOnHold,
   isOAuthRefreshKnownDead,
@@ -33,9 +33,9 @@ import {
   getStoredOAuthTokenExpiresAt,
   hasStoredOAuthRefreshToken,
   getStoredOauthAccountInfo,
-  Te,
-  ee,
-  sy,
+  saveGlobalConfig,
+  getGlobalConfig,
+  readFreshOauthAccountFromDisk,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getProjectsDir, SKIP_PRECOMPACT_THRESHOLD } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { kd, snapshotGitEvidenceForBridge } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -137,7 +137,7 @@ async function mn(d, c, s) {
 }
 async function hn(d, c) {
   let s = getSecureStorage(),
-    r = await sy(d),
+    r = await readFreshOauthAccountFromDisk(d),
     h = !r?.accountUuid && Boolean(getStoredOauthAccountInfo()?.accountUuid);
   if (r?.accountUuid || h) {
     if ((await s.readAsync(c))?.claudeAiOauth?.refreshToken === "")
@@ -752,7 +752,7 @@ async function initReplBridge(d) {
     if (A) {
       let e = Boolean(A.ownerAccountUuid),
         t = e
-          ? await sy(O).catch(() => {
+          ? await readFreshOauthAccountFromDisk(O).catch(() => {
               return;
             })
           : void 0,
@@ -821,7 +821,7 @@ async function initReplBridge(d) {
   }
   if (ne && B) {
     if (Qt) ((I = !0), holdPrecautionarySuppressionFor(v), claimPrecautionHoldForObservedCause(v));
-    let e = await sy(O).catch(() => {
+    let e = await readFreshOauthAccountFromDisk(O).catch(() => {
       return;
     });
     if (Je && e?.accountUuid) {
@@ -965,7 +965,7 @@ async function initReplBridge(d) {
   if (!I && (isSessionHistorySuppressed() || isPrecautionarySuppressionHeldFor(v) || isSessionHistorySuppressedFor(v) || K() !== v))
     ((I = !0), (ue = et()), Be?.(ue));
   if (!getBridgeTokenOverride()) {
-    let e = ee();
+    let e = getGlobalConfig();
     if (
       e.bridgeOauthDeadExpiresAt != null &&
       (e.bridgeOauthDeadFailCount ?? 0) >= 3 &&
@@ -987,7 +987,7 @@ async function initReplBridge(d) {
         G?.("failed", LOGIN_SLASH_COMMAND, "auth"));
       let o = t;
       return (
-        await Te(
+        await saveGlobalConfig(
           (m) => ({
             ...m,
             bridgeOauthDeadExpiresAt: o,
@@ -1113,7 +1113,7 @@ async function initReplBridge(d) {
       });
     },
     en = (e) => {
-      let t = si(e);
+      let t = sanitizeSessionName(e);
       if (!t) return { ok: !1, error: "title must be non-empty" };
       if (((V = t), (Z = !0), (N = !0), te.add(t), te.add(e), Y)) {
         if (

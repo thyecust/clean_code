@@ -11,9 +11,9 @@ import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js
 import { b, z, Zhe, B1, n } from "./核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodePoints, toWellFormed } from "../核心工具-字符串与文本/string-utils.js";
 import { QUOTE_HOMOGLYPHS, INVISIBLE_BLANKS, isDecisionSurfaceControl } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 function isHarborPermissionsEnabled() {
-  return H("tengu_harbor_permissions", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_harbor_permissions", !1);
 }
 var J = "abcdefghijkmnopqrstuvwxyz",
   G = [

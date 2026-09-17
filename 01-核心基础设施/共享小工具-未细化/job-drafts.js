@@ -15,7 +15,7 @@ import { createLazyValue } from "./lazy-value.js";
 import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { b, z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { h3t, _3t, getJobsDir } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { Wi } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { readBoundedFile } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, T, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { createHash } from "crypto";
 import { mkdir, readdir, rm as w, unlink } from "fs/promises";
@@ -68,7 +68,7 @@ async function deleteJobDraft(t, r) {
 }
 var g = createLazyValue(() => c({ q: s(), collapsed: v(s()).optional(), ts: T() }));
 async function readJobDraft(t, r) {
-  let e = r ? await P(r, t) : await Wi(n(t), d);
+  let e = r ? await P(r, t) : await readBoundedFile(n(t), d);
   if (e === null) return;
   let a;
   try {
@@ -101,7 +101,7 @@ async function sweepStaleJobDrafts() {
         .filter((e) => e.startsWith(".draft-"))
         .map(async (e) => {
           let a = p(getJobsDir(), e),
-            i = await Wi(a, d);
+            i = await readBoundedFile(a, d);
           if (i !== null)
             try {
               let o = g().safeParse(z(i));

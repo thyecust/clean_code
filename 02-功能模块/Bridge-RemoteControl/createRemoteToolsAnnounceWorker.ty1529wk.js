@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 83 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { ECt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { remoteToolsAnnounceRequestSchema } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
@@ -48,7 +48,7 @@ function createRemoteToolsAnnounceWorker(e) {
         return a("invalid", "invalid_announce: request nested too deep");
       if (Tc(i).length > _)
         return a("invalid", "invalid_announce: request larger than 1 MiB");
-      let o = ECt().safeParse(i);
+      let o = remoteToolsAnnounceRequestSchema().safeParse(i);
       if (!o.success) {
         let h = o.error.issues[0];
         return a(

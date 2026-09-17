@@ -11,7 +11,7 @@ import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
-import { ph, sQ } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isSemverAtLeast, isSemverAtMost } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { toESM } from "./chunk-2c9tjhwd.js";
 var t = toESM(pg(), 1);
 var u = new Set(["update", "install", "doctor"]);
@@ -31,7 +31,7 @@ function l({
         `requiredMinimumVersion '${r}' is not a valid semver version \u2014 ignoring`,
         { level: "error" },
       );
-    else if (!ph(e, o))
+    else if (!isSemverAtLeast(e, o))
       return `Claude Code ${e} is older than the minimum version required by your organization (${r}).
 Update Claude Code using your organization's approved method, then try again. If automatic updates are available, \`claude update\` may also work.`;
   }
@@ -42,7 +42,7 @@ Update Claude Code using your organization's approved method, then try again. If
         `requiredMaximumVersion '${i}' is not a valid semver version \u2014 ignoring`,
         { level: "error" },
       );
-    else if (!sQ(e, o))
+    else if (!isSemverAtMost(e, o))
       return `Claude Code ${e} is newer than the maximum version allowed by your organization (${i}).
 Your organization requires version ${i} or older. Install an approved version using your organization's approved method. \`claude install <version>\` may also work.`;
   }

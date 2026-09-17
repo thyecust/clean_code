@@ -14,7 +14,7 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { P6 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isPathTrusted } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { parseSettingsFileUncached, X6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
@@ -523,7 +523,7 @@ async function ut(s, a, l) {
         { display: "system", metaMessages: [i] },
       );
     };
-  if (P6(h)) {
+  if (isPathTrusted(h)) {
     let i = await v();
     if (i === null) return null;
     if (i.projectGrantsGated) return e(ne, { outcome: i, onComplete: w });

@@ -49,7 +49,7 @@ import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工�
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { SHA256_HEX_REGEX, hashSha256, GITHUB_HOST } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { containsWildcard, matchesToolNameGlob, parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
-import { Rp, $Ct, Bt, tt, Mn, co, ro, Wl, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { REMOTE_DEVICES_MCP_SERVER_NAME, REMOTE_DEVICE_BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Js, rc, bie, Ske, XT, NQ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Cet, tRt, nRt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -329,17 +329,17 @@ var Br = [
   ],
   Kr = ["commit", "pr", "sessionUrl", "commitTrailers"],
   Ur = ["allow", "deny", "ask"],
-  $r = $Ct,
+  $r = REMOTE_DEVICE_BASH_TOOL_NAME,
   jr = 256,
   Gr = 8192,
   Vr = 1024,
   tn = 1000,
   Yr = 1048576,
-  un = new Set([...bie.filePatternTools, ro, "MultiEdit", "LS"]),
+  un = new Set([...bie.filePatternTools, GREP_TOOL_NAME, "MultiEdit", "LS"]),
   cn = [
-    tt,
-    ro,
-    co,
+    READ_TOOL_NAME,
+    GREP_TOOL_NAME,
+    GLOB_TOOL_NAME,
     LSP_TOOL_NAME,
     ...ARTIFACT_FAMILY_TOOL_NAMES,
     WORKFLOW_TOOL_NAME,
@@ -348,23 +348,23 @@ var Br = [
     "NotebookRead",
     "LS",
     ...bie.bashPrefixTools,
-    Ut,
+    POWERSHELL_TOOL_NAME,
     MONITOR_TOOL_NAME,
   ],
   Xr = ARTIFACT_FAMILY_TOOL_NAMES,
   qr = [...bie.bashPrefixTools, MONITOR_TOOL_NAME],
-  Zr = [Bt, Mn, Wl, ...ARTIFACT_FAMILY_TOOL_NAMES, "MultiEdit", ...cn];
+  Zr = [EDIT_TOOL_NAME, WRITE_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME, ...ARTIFACT_FAMILY_TOOL_NAMES, "MultiEdit", ...cn];
 function Jr(e) {
-  if (e === Bt) return Zr;
+  if (e === EDIT_TOOL_NAME) return Zr;
   if (e === ARTIFACT_TOOL_NAME) return Xr;
-  if (e === tt) return cn;
+  if (e === READ_TOOL_NAME) return cn;
   if (bie.bashPrefixTools.includes(e)) return qr;
   let t = Js(e);
   if (t !== null && t.toolName === void 0 && !containsWildcard(e))
     return [`${rc(t.serverName, "")}*`];
   return [e];
 }
-var Qr = new Set([...bie.bashPrefixTools, Ut]),
+var Qr = new Set([...bie.bashPrefixTools, POWERSHELL_TOOL_NAME]),
   eo = new Set([Cr, "WebBrowser"]),
   to = "/",
   fn = /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}\p{Default_Ignorable_Code_Point}]/u,
@@ -443,7 +443,7 @@ function lo(e, t) {
     return "invalid";
   let { toolName: n, ruleContent: r } = parsePermissionRule(e);
   if (!oo.test(n)) return "invalid";
-  if (Js(n)?.serverName === Rp)
+  if (Js(n)?.serverName === REMOTE_DEVICES_MCP_SERVER_NAME)
     return t === "allow" ? "device" : "keep_covers_device_tools";
   if (r !== void 0 && (un.has(n) || containsWildcard(n))) {
     let o = ko(r);
@@ -593,7 +593,7 @@ function po(e, t) {
           !/^~|:\**~/.test(d) &&
           !/^[A-Za-z]:(?!:)/.test(d) &&
           !/[:@]\//.test(d) &&
-          !(t === Ut && /^\**[A-Za-z][\w*]*:/.test(d)) &&
+          !(t === POWERSHELL_TOOL_NAME && /^\**[A-Za-z][\w*]*:/.test(d)) &&
           !bo(d, r !== null && _ > r && !d.startsWith("-"))),
     )
   );

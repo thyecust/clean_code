@@ -10,7 +10,7 @@
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { zn } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { tUe, ht, checkAndRefreshOAuthTokenIfNeeded } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { SESSION_ID_HEADER_NAME, httpClient, checkAndRefreshOAuthTokenIfNeeded } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -91,11 +91,11 @@ async function fe(r) {
     return d.success ? d.data : null;
   }
   try {
-    let d = await ht.get("/v1/ultrareview/preflight", {
+    let d = await httpClient.get("/v1/ultrareview/preflight", {
       auth: "teleport-org",
       timeout: 5000,
       credentials: r,
-      headers: { [tUe]: K() },
+      headers: { [SESSION_ID_HEADER_NAME]: K() },
     });
     if (!d.ok)
       switch (d.reason) {

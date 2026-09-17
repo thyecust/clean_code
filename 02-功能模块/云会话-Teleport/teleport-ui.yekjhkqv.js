@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 284 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isRemoteControlOfferable } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { isArtifactConflictLegacy } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -97,7 +97,7 @@ function L(W) {
     c = useAppStateSelector(B),
     D;
   if (i[4] !== c)
-    ((D = () => (c || isRemoteControlOfferable()) && H("tengu_teleport_send_to_cloud", !1)),
+    ((D = () => (c || isRemoteControlOfferable()) && getFeatureValue_CACHED_MAY_BE_STALE("tengu_teleport_send_to_cloud", !1)),
       (i[4] = c),
       (i[5] = D));
   else D = i[5];

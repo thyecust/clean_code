@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Ec, KR } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, po } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { tq, FD, H, ql } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isExperimentalBetasDisabled, isHipaaTaintActive, getFeatureValue_CACHED_MAY_BE_STALE, getCachedClientData } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { parseConfigInteger } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -33,7 +33,7 @@ function isModelVersionAtLeast(e, r) {
 var d = "force";
 function u() {
   try {
-    if (FD()) return !1;
+    if (isHipaaTaintActive()) return !1;
     if (getAPIProvider() !== "firstParty") return !1;
     let e = getAdminTierEnvValue("ENABLE_TOOL_SEARCH");
     if (e === d) return !0;
@@ -57,7 +57,7 @@ function p(e) {
   return po(e);
 }
 function isStandardToolSearchMode() {
-  return tq() && !u();
+  return isExperimentalBetasDisabled() && !u();
 }
 function parseToolSearchAutoPercent(e) {
   if (!e.startsWith("auto:")) return null;
@@ -102,7 +102,7 @@ function isVertexModelUnsupportedForToolSearch(e) {
 }
 function g() {
   try {
-    let e = H("tengu_tool_search_unsupported_models", null);
+    let e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_tool_search_unsupported_models", null);
     if (Array.isArray(e)) return e;
   } catch {}
   return E;
@@ -123,13 +123,13 @@ function A(e) {
 function getNonDeferrableBuiltinToolNames() {
   let e = new Set();
   try {
-    let r = A(H("tengu_non_deferrable_builtins", null));
+    let r = A(getFeatureValue_CACHED_MAY_BE_STALE("tengu_non_deferrable_builtins", null));
     if (Array.isArray(r)) {
       for (let t of r) if (typeof t === "string") e.add(t);
     }
   } catch {}
   try {
-    let r = ql()?.non_deferrable_builtins;
+    let r = getCachedClientData()?.non_deferrable_builtins;
     if (Array.isArray(r)) {
       for (let t of r) if (typeof t === "string") e.add(t);
     }
@@ -166,6 +166,6 @@ function isToolSearchEnabled() {
   return !0;
 }
 function shouldSurfaceFailedMcpServers() {
-  return H("tengu_surface_failed_mcp_servers", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_surface_failed_mcp_servers", !0);
 }
 export { isStandardToolSearchMode, isModelVersionAtLeast, parseToolSearchAutoPercent, getToolSearchMode, isVertexModelUnsupportedForToolSearch, getNonDeferrableBuiltinToolNames, isToolSearchSupportedModel, isToolSearchEnabled, shouldSurfaceFailedMcpServers };

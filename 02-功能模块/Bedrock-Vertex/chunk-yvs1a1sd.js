@@ -17,7 +17,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { DEFAULT_3P_SONNET_KEY, DEFAULT_3P_HAIKU_KEY, DEFAULT_VERTEX_OPUS_KEY, DEFAULT_3P_FABLE_KEY, GC, Rw } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { DEFAULT_3P_SONNET_KEY, DEFAULT_3P_HAIKU_KEY, DEFAULT_VERTEX_OPUS_KEY, DEFAULT_3P_FABLE_KEY, supports1mContextBeta, authState } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsFilePathForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Xt, to } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -405,7 +405,7 @@ async function Wr(n) {
       googleAuth: u,
       maxRetries: 0,
       defaultHeaders: vertexResidualCredentialPins(),
-      ...Rw,
+      ...authState,
       timeout: 15000,
       fetchOptions: c({ url: a.ANTHROPIC_VERTEX_BASE_URL || buildVertexBaseUrl(n.region) }),
     }),
@@ -668,7 +668,7 @@ function Bt() {
       Je &&
       L.some((pn) => {
         let mn = j[pn];
-        return mn !== "pending" && mn.ok && GC(g[pn]);
+        return mn !== "pending" && mn.ok && supports1mContextBeta(g[pn]);
       })),
       (A[39] = Je),
       (A[40] = g),
@@ -690,7 +690,7 @@ function Bt() {
             return;
           }
           let jo = g[fn];
-          return Tt === "pin1m" && GC(jo) ? Qo(jo) : jo;
+          return Tt === "pin1m" && supports1mContextBeta(jo) ? Qo(jo) : jo;
         };
         Et({
           pinSonnet: bt("sonnet"),

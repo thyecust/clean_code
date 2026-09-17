@@ -44,7 +44,7 @@ import {
   isValidGitBranchName,
   isValidGitRefName,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, T, O, se, v, c, $e, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var h = 1,
@@ -161,7 +161,7 @@ function isSyncableRelativePath(e) {
   );
 }
 function G(e) {
-  let n = nc(e);
+  let n = normalizePathSegment(e);
   return n === ".git" || /^git~\d+$/.test(n);
 }
 var V = createLazyValue(() => v(s().refine(isSyncableRelativePath)).max(MAX_LISTED_SKIPPED_FILES)),

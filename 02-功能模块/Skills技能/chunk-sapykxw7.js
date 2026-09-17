@@ -15,7 +15,7 @@ import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash
 import { isSafeMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getSettingsForSource, parentManagedTierParticipates, getSettings_DEPRECATED, getPolicySettingsLoadErrors, filterFatalPolicyErrors } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { resetSettingsCacheWithBackendRead } from "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
-import { Bo } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { checkHasTrustDialogAccepted } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 function isRestrictedToPluginOnly(t) {
   let o = getSettingsForSource("policySettings")?.strictPluginOnlyCustomization;
   if (o === !0) return !0;
@@ -157,7 +157,7 @@ var O =
     "/goal can't run while hooks are restricted (disableAllHooks or allowManagedHooksOnly is set in settings or by policy).";
 function getGoalGateError() {
   if (shouldSkipSessionHooksByPolicy()) return { message: C, code: "hooks_gate" };
-  if (!ke() && !Bo()) return { message: O, code: "trust_gate" };
+  if (!ke() && !checkHasTrustDialogAccepted()) return { message: O, code: "trust_gate" };
   return null;
 }
 function setQueuedGoalOrigin(t, o, s) {

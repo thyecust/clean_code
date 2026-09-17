@@ -10,14 +10,14 @@
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ACn, Srr, ht, getOauthAccountInfo, getSubscriptionType, Te, ee } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getProTrialOverride, setProTrialOverride, httpClient, getOauthAccountInfo, getSubscriptionType, saveGlobalConfig, getGlobalConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 var l = 14;
 function getProTrialDurationDays() {
   return getOauthAccountInfo()?.claudeCodeTrialDurationDays ?? null;
 }
 var s = { status: "ineligible", daysRemaining: null };
 function getProTrialState() {
-  let e = ACn();
+  let e = getProTrialOverride();
   if (e) return o(!0, e.endsAt);
   let t = getOauthAccountInfo();
   if (!t || getSubscriptionType() !== "pro") return s;
@@ -26,11 +26,11 @@ function getProTrialState() {
 }
 async function startProTrial(e, t) {
   return withFeatureTelemetry("api_pro_trial_start", async () => {
-    if (ACn()) {
+    if (getProTrialOverride()) {
       let i = new Date(Date.now() + l * 24 * 60 * 60 * 1000).toISOString();
-      return (Srr({ endsAt: i }), o(!0, i));
+      return (setProTrialOverride({ endsAt: i }), o(!0, i));
     }
-    let a = await ht.post(
+    let a = await httpClient.post(
       "/api/oauth/organizations/:orgUUID/claude_code/pro_trial",
       {},
       { auth: "teleport-org", credentials: t },
@@ -50,7 +50,7 @@ async function startProTrial(e, t) {
 }
 function shouldAutoOpenProTrialExpired() {
   if (getProTrialState().status !== "expired") return !1;
-  return ee().cachedExtraUsageDisabledReason !== null;
+  return getGlobalConfig().cachedExtraUsageDisabledReason !== null;
 }
 function formatTrialBadge(e) {
   switch (e.status) {
@@ -76,7 +76,7 @@ function o(e, t) {
   return { status: "active", daysRemaining: Math.ceil(a / 86400000) };
 }
 function u(e, t) {
-  Te((r) => {
+  saveGlobalConfig((r) => {
     if (!r.oauthAccount || r.oauthAccount.claudeCodeTrialEndsAt === e) return r;
     return {
       ...r,

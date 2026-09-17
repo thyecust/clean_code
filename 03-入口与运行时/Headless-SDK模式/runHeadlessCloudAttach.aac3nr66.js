@@ -26,9 +26,9 @@ import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync } from "
 import {
   getMainLoopModel,
   getDefaultOpusModel,
-  Tn,
-  SCt,
-  $Qe,
+  hashForTelemetry,
+  initializeRequestSchema,
+  userDialogResponseSchema,
   prepareApiRequest,
   fetchSession,
   updateSessionTitle,
@@ -877,7 +877,7 @@ class be {
       ask: (r, d) =>
         this.ports.io.passControlRequestToHost(t, {
           requestId: d,
-          schema: $Qe(),
+          schema: userDialogResponseSchema(),
           signal: r,
         }),
       answer: (r) => e.respondToUserDialogRequest(o, r),
@@ -1079,7 +1079,7 @@ function ct({ io: e, declaredKinds: t, clock: o }) {
     let w = o.now(),
       C = (O) => {
         logEvent("tengu_remote_headless_client_host_dialog", {
-          dialog_kind: Tn(d.kind),
+          dialog_kind: hashForTelemetry(d.kind),
           outcome: fromEnum(O),
           latency_ms: o.now() - w,
         });
@@ -2089,7 +2089,7 @@ class He {
   handleInitialize(e, t) {
     let o = !this.ports.openRequested(),
       { hooks: r, sdkMcpServers: d, sdkMcpServerConfigs: p, ..._ } = t,
-      w = SCt().safeParse(_),
+      w = initializeRequestSchema().safeParse(_),
       C = validateCloudInitializeOptions(
         t,
         this.ports.initializePolicy,
@@ -5261,7 +5261,7 @@ async function zs(
     j = Xt();
   if (j.status === "unbound") await ge();
   await logEventAsync("tengu_remote_create_session_success", {
-    session_id: Tn(x.id),
+    session_id: hashForTelemetry(x.id),
     entry_point: fromEnum("cloud_headless"),
     branch_mode: D,
     home_seed_started: x.homeSeed !== void 0,

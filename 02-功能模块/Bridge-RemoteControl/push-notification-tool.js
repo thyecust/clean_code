@@ -7,16 +7,16 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isRemoteTriggerEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { resolveSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 var PUSH_NOTIFICATION_TOOL_NAME = "PushNotification";
 var t = "<routine_summary>";
 function isPushNotificationsEnabled() {
-  return H("tengu_kairos_push_notifications", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_kairos_push_notifications", !1);
 }
 function isInputNeededPushEnabled() {
-  return H("tengu_kairos_input_needed_push", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_kairos_input_needed_push", !1);
 }
 function isAgentPushNotificationEnabled() {
   return isPushNotificationsEnabled() && resolveSetting("agentPushNotifEnabled", !1).value;

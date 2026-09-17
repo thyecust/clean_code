@@ -16,21 +16,21 @@ import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chun
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getProcessStartTokenLinuxSync, getAncestorPidsLinuxSync, getAncestorPidsCheckedAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import {
-  wor,
-  hU,
-  Kme,
-  Pse,
-  Dse,
-  uf,
-  a0,
-  Jvn,
-  VCt,
-  Wor,
-  Zy,
-  Gor,
-  qor,
-  Kor,
-  Xor,
+  isValidPeerFromMode,
+  buildUdsAddress,
+  dropOriginBodyIfValueChanged,
+  extractMessageOrigin,
+  isSchemeQualifiedAddress,
+  parsePeerAddress,
+  isLocalAddress,
+  isTrustedPeerSocket,
+  isWindowsPlatform,
+  createSessionTokens,
+  getCanonicalSocketPath,
+  publishMessagingKey,
+  removeMessagingKey,
+  isAuthRecord,
+  classifyAuthToken,
   isRegistrySweepPermitted,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -348,7 +348,7 @@ async function Je(e, t, i, r, d) {
       );
     }
   let u = await le(t, r, d),
-    _ = Kme(
+    _ = dropOriginBodyIfValueChanged(
       {
         kind: "peer",
         from: e.from ?? "unknown",
@@ -356,7 +356,7 @@ async function Je(e, t, i, r, d) {
         ...(i !== void 0 && { verifiedPeerProcStart: i }),
         ...(u && { selfSent: u }),
         ...(isUuidString(e.msg_id) && { msg_id: e.msg_id }),
-        ...Pse(s),
+        ...extractMessageOrigin(s),
       },
       E,
       s,
@@ -394,9 +394,9 @@ function Me(e) {
     noteVettedCorrespondent(t.from, t.verifiedPeerPid, t.verifiedPeerProcStart);
 }
 function hDt(e, t, i) {
-  if (!e.startsWith("uds:") || !Dse(e)) return;
-  let r = uf(e).target;
-  return r && Jvn(r, t, { verifiedPeerPid: i, ownerUids: c().peerDirOwnerUids })
+  if (!e.startsWith("uds:") || !isSchemeQualifiedAddress(e)) return;
+  let r = parsePeerAddress(e).target;
+  return r && isTrustedPeerSocket(r, t, { verifiedPeerPid: i, ownerUids: c().peerDirOwnerUids })
     ? r
     : void 0;
 }
@@ -476,7 +476,7 @@ async function ke(e, t, i, r, d) {
           `[uds-messaging] notify_when_idle dropped: reply address unshaped or outside our socket namespace (${Nu(o)})`,
         ),
           logFeatureSad("cross_session_notify_idle", "unvettable_reply_target"));
-      else if (Zy(p) === Zy(w))
+      else if (getCanonicalSocketPath(p) === getCanonicalSocketPath(w))
         (n(
           "[uds-messaging] notify_when_idle dropped: reply target is this session (self-target)",
         ),
@@ -542,7 +542,7 @@ async function ke(e, t, i, r, d) {
           logFeatureSad("artifact_comments_autoreact", "yield_unvettable_target"));
         return;
       }
-      if (Zy(o) === Zy(w)) {
+      if (getCanonicalSocketPath(o) === getCanonicalSocketPath(w)) {
         n(
           "[uds-messaging] yield_artifact_replies dropped: reply target is this session",
         );
@@ -678,10 +678,10 @@ function tn(e) {
     },
     b = (S) => {
       let R = !k;
-      if (((k = !0), Kor(S))) {
+      if (((k = !0), isAuthRecord(S))) {
         if (R) {
           if (
-            ((_ = Xor(S.token, c().activeTokens)),
+            ((_ = classifyAuthToken(S.token, c().activeTokens)),
             _ !== void 0 && !c().authOkReported)
           )
             ((c().authOkReported = !0), logFeatureOk("cross_session_inbox_auth"));
@@ -812,7 +812,7 @@ async function H(e, t, i, { settleHeld: r = !0 } = {}) {
   } catch {}
   let w = c();
   if (w.activeKeyFile !== void 0)
-    (await qor(w.activeKeyFile, i), (w.activeKeyFile = void 0));
+    (await removeMessagingKey(w.activeKeyFile, i), (w.activeKeyFile = void 0));
   Y();
 }
 function Y() {
@@ -1283,7 +1283,7 @@ async function Kdr(e) {
     throw new ud(
       `--messaging-socket-path must name a socket file inside a directory, got: ${e}`,
     );
-  if (!a0(r) || !a0(e))
+  if (!isLocalAddress(r) || !isLocalAddress(e))
     throw new ud(
       `--messaging-socket-path must be a local socket path, got: ${e}`,
     );
@@ -1401,7 +1401,7 @@ async function gn(e, t, i = {}) {
   if (
     ((c().lastStartFailureCause = "bind_failed"),
     (c().lastStartDegradedCause = void 0),
-    !a0(e))
+    !isLocalAddress(e))
   ) {
     if (
       (n(
@@ -1472,9 +1472,9 @@ async function gn(e, t, i = {}) {
   (d.on("error", (o) => {
     n(`[uds-messaging] Server error: ${o.message}`, { level: "error" });
   }),
-    (c().authRequired = i.requireAuth ?? VCt()),
+    (c().authRequired = i.requireAuth ?? isWindowsPlatform()),
     (c().firstLineDeadlineMs = i.firstLineDeadlineMs ?? ne));
-  let w = Wor();
+  let w = createSessionTokens();
   c().activeTokens = w;
   try {
     if (i.isExplicit) {
@@ -1495,7 +1495,7 @@ async function gn(e, t, i = {}) {
     });
     ((s = o), await chmod(e, 384));
     try {
-      ((c().activeKeyFile = await Gor(e, w.peerToken, t, {
+      ((c().activeKeyFile = await publishMessagingKey(e, w.peerToken, t, {
         sweepPermitted: await isRegistrySweepPermitted(),
       })),
         yn());
@@ -1525,8 +1525,8 @@ async function gn(e, t, i = {}) {
     }
     ((process.env.CLAUDE_CODE_MESSAGING_SOCKET = e),
       udsEnv.set("CLAUDE_CODE_MESSAGING_TOKEN", w.childToken),
-      vSn(hU(e)));
-    let p = hU(e);
+      vSn(buildUdsAddress(e)));
+    let p = buildUdsAddress(e);
     return (
       setCorrespondentRecorder(Me),
       (getSessionNamingState().senderMode = iBn),
@@ -1683,7 +1683,7 @@ function iBn() {
   return t !== void 0 ? classifyPermissionMode(t) : void 0;
 }
 function Ie(e) {
-  return wor(e) ? e : void 0;
+  return isValidPeerFromMode(e) ? e : void 0;
 }
 function le(e, t, i) {
   return _e({

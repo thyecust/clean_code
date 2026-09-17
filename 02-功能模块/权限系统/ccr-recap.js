@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, po } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { isBgSession, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isBgSession, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateAtWordBoundary } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -29,7 +29,7 @@ function isAwaySummaryEnabled() {
 function l() {
   let e = a.CLAUDE_CODE_ENABLE_REMOTE_RECAP;
   if (e !== void 0) return e;
-  return H("tengu_harbor_moth", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_harbor_moth", !1);
 }
 function maybeStartCcrRecap(e, t) {
   if (!t.onMetadataChanged) return;

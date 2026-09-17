@@ -18,7 +18,7 @@ import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { truncateToCodeUnits, truncateWithCharCount, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { ht, isClaudeAISubscriber } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { httpClient, isClaudeAISubscriber } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
@@ -655,7 +655,7 @@ var RemoteTriggerTool = buildTool({
             credentials: r,
             validateStatus: () => !0,
           },
-          k = h === "get" ? await ht.get(y, I) : await ht.post(y, R, I);
+          k = h === "get" ? await httpClient.get(y, I) : await httpClient.post(y, R, I);
         if (!k.ok)
           throw Error(
             k.reason === "no-auth"

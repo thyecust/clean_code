@@ -13,7 +13,7 @@ import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { Hn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getSanitizedToolName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
@@ -587,7 +587,7 @@ function WorkflowPermissionDialog(it) {
     Pe = Z;
     let C;
     if (g[69] !== m.toolName)
-      ((C = Hn(m.toolName)), (g[69] = m.toolName), (g[70] = C));
+      ((C = getSanitizedToolName(m.toolName)), (g[69] = m.toolName), (g[70] = C));
     else C = g[70];
     let q;
     if (g[71] !== m.isMcp || g[72] !== C)

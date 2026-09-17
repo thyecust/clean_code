@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { ZH, UD, getUserSpecifiedModelSetting, getDefaultOpusModel, getDefaultSonnetModel, modelHasNative1MContext } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isOpus1mContextAvailable, isSonnet1mContextAvailable, getUserSpecifiedModelSetting, getDefaultOpusModel, getDefaultSonnetModel, modelHasNative1MContext } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 function n() {
   let e = getUserSpecifiedModelSetting();
-  if (e === "opus" && ZH() && !modelHasNative1MContext(getDefaultOpusModel()))
+  if (e === "opus" && isOpus1mContextAvailable() && !modelHasNative1MContext(getDefaultOpusModel()))
     return { alias: "opus[1m]", name: "Opus 1M", multiplier: 5 };
-  else if (e === "sonnet" && UD() && !modelHasNative1MContext(getDefaultSonnetModel()))
+  else if (e === "sonnet" && isSonnet1mContextAvailable() && !modelHasNative1MContext(getDefaultSonnetModel()))
     return { alias: "sonnet[1m]", name: "Sonnet 1M", multiplier: 5 };
   return null;
 }

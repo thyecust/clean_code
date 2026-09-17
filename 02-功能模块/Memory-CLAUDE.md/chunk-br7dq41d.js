@@ -14,7 +14,7 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Tr, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { isWorkspacePersistedTrusted, P6, XUe, Gse } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isWorkspacePersistedTrusted, isPathTrusted, setPathTrusted, clearProjectPathForConfigCache } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { reanchorGitFileWatcher, findCanonicalGitRootUncached, clearIsGitMemoFor } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -103,7 +103,7 @@ async function recordDirectoryTrust(e, t) {
     (Dx(!0), Aje(!0));
     return;
   }
-  await XUe(e, t);
+  await setPathTrusted(e, t);
 }
 async function E(e) {
   let t = async (o) => {
@@ -210,7 +210,7 @@ async function relocateSession(e, t, o, c) {
         level: "error",
       });
     }
-  Gse();
+  clearProjectPathForConfigCache();
   try {
     await settingsChangeDetector.rehome();
   } catch (p) {
@@ -291,7 +291,7 @@ async function relocateSession(e, t, o, c) {
   };
 }
 function reapplyProjectSettingsAfterTrustChange() {
-  (Gse(), updateHooksConfigSnapshot(), settingsChangeDetector.notifyChange("projectSettings", { trustFlip: !0 }));
+  (clearProjectPathForConfigCache(), updateHooksConfigSnapshot(), settingsChangeDetector.notifyChange("projectSettings", { trustFlip: !0 }));
 }
 function withGatedGrantsApplied(e) {
   if (e.gatedNotice === "") return e.modelMessage;
@@ -418,7 +418,7 @@ async function handleSetCwdControlRequest(e, t) {
       },
     };
   let r = s.directory;
-  if (!P6(r)) {
+  if (!isPathTrusted(r)) {
     let f = findCanonicalGitRootUncached(r),
       w = f != null && f !== r && !k.test(f) ? f : void 0;
     if (!o)

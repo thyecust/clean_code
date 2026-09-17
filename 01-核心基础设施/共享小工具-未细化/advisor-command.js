@@ -10,7 +10,7 @@
 import { RL, cZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "./analytics-event-queue.js";
 import { lit as S } from "./analytics-fields.js";
-import { bt, renderDefaultModelSetting } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getModelForAnalytics, renderDefaultModelSetting } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { jn, Ks } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -30,7 +30,7 @@ function applyAdvisorModelSetting(t, n, a, l, s = !0, g = !1) {
         e === void 0
           ? S("off")
           : f
-            ? bt(t)
+            ? getModelForAnalytics(t)
             : DF(e)
               ? S("consent_pending")
               : S("invalid"),

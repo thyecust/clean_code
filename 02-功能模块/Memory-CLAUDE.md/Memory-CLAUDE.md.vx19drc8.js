@@ -62,36 +62,36 @@ import { Rvt } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getGlobalClaudeFile, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
-  bt,
-  Ad,
-  nQ,
+  getModelForAnalytics,
+  getOwnValue,
+  isServedCatalogSuppressed,
   getMainLoopModel,
   isOpus5FamilyModel,
   isRecognizedModel,
   getCanonicalName,
   strippedCanonicalName,
   isAutoClassifierActive,
-  MCt,
-  aQ,
-  rRe,
-  ht,
-  qe,
-  Bt,
-  BCt,
-  jCt,
-  tt,
-  co,
-  Ut,
+  getMemoryBaseUrlOverride,
+  hasMemoryBaseUrlOverride,
+  getMemoryHostRequestOptions,
+  httpClient,
+  BASH_TOOL_NAME,
+  EDIT_TOOL_NAME,
+  PROJECT_CLAUDE_DIR_GLOB,
+  USER_CLAUDE_DIR_GLOB,
+  READ_TOOL_NAME,
+  GLOB_TOOL_NAME,
+  POWERSHELL_TOOL_NAME,
   isBgSession,
   isClaudeAISubscriber,
   hasStoredOAuthToken,
   hasOAuthScope,
   getOauthAccountInfo,
-  ux,
-  H,
-  vU,
-  nc,
-  RU,
+  getSubagentSteerMode,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  getFeatureValue_SESSION_PINNED,
+  normalizePathSegment,
+  hasReservedPathSegment,
   isAutoMemoryEnabled,
   isAutoMemoryEnabledIgnoringPause,
   isMemoryRecallEnabled,
@@ -104,17 +104,17 @@ import {
   isAutoMemPath,
   AUTO_MEM_WRITE_ALLOW_REASON,
   isAutoMemPathSafeForCarveout,
-  k5,
-  Bo,
+  DEFAULT_PROJECT_CONFIG,
+  checkHasTrustDialogAccepted,
   isWorkspacePersistedTrusted,
   getWorkspacePersistedTrustKey,
-  YC,
-  VRn,
-  Te,
-  ee,
-  es,
-  eu,
-  ql,
+  isLocalSettingsGitTracked,
+  isLocalSettingsGitTrackedInIndex,
+  saveGlobalConfig,
+  getGlobalConfig,
+  getCurrentProjectConfig,
+  saveCurrentProjectConfig,
+  getCachedClientData,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { yi, ms, w0, fS, zRt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
@@ -678,7 +678,7 @@ function TTt(e) {
   );
 }
 function Ui() {
-  if (aQ()) return !0;
+  if (hasMemoryBaseUrlOverride()) return !0;
   if (!isFirstPartyAnthropicBaseUrl()) return !1;
   if (!isClaudeAISubscriber()) return !1;
   return hasStoredOAuthToken() && hasOAuthScope(CLAUDE_AI_INFERENCE_SCOPE) && hasOAuthScope(CLAUDE_AI_PROFILE_SCOPE);
@@ -686,11 +686,11 @@ function Ui() {
 function wt() {
   if (a.CLAUDE_CODE_DISABLE_ORG_MEMORY) return !1;
   if (isSafeMode()) return !1;
-  if (!H("tengu_haze_glass", !1)) return !1;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_haze_glass", !1)) return !1;
   if (process.env.CLAUDE_MEMORY_STORES?.trim()) return !1;
   if (getSessionAccessToken() !== null) return !1;
   if (!isPolicyAllowed("allow_memory_sync")) return !1;
-  return Ui() && (isClaudeAISubscriber() || aQ());
+  return Ui() && (isClaudeAISubscriber() || hasMemoryBaseUrlOverride());
 }
 var bc = createLazyValue(() =>
   c({
@@ -735,7 +735,7 @@ class zi {
     if (this.monorepoBlockLogged) return;
     ((this.monorepoBlockLogged = !0),
       logEvent("tengu_org_memory_writes_monorepo_blocked", {
-        stored_opt_in: es().orgMemoryWrites === !0,
+        stored_opt_in: getCurrentProjectConfig().orgMemoryWrites === !0,
       }));
   }
   record(e, t, r) {
@@ -796,7 +796,7 @@ function DCe() {
   return wt();
 }
 function N$() {
-  let e = es();
+  let e = getCurrentProjectConfig();
   if (!DCe() || e.orgMemoryWrites !== !0) return !1;
   let t = e.orgMemoryWritesAccount;
   return t !== void 0 && t === fn();
@@ -808,7 +808,7 @@ function qr(e) {
   return e !== null && Fe().pickedSelectionPrivateProbe?.(e) === !0;
 }
 function mn() {
-  if (aQ()) return "memory-dev/memory-dev";
+  if (hasMemoryBaseUrlOverride()) return "memory-dev/memory-dev";
   let e = getOauthAccountInfo();
   if (!e?.accountUuid || !e.organizationUuid) return null;
   return `${e.accountUuid}/${e.organizationUuid}`;
@@ -941,7 +941,7 @@ function Ker() {
   return Fe().lastAskDowngraded;
 }
 function jfe() {
-  let e = es();
+  let e = getCurrentProjectConfig();
   return (
     e.orgMemoryWrites === !0 &&
     e.orgMemoryWritesAccount !== void 0 &&
@@ -949,13 +949,13 @@ function jfe() {
   );
 }
 function vTt(e, t) {
-  if (e ? jfe() : (es().orgMemoryWrites ?? !1) === !1) return "noop";
+  if (e ? jfe() : (getCurrentProjectConfig().orgMemoryWrites ?? !1) === !1) return "noop";
   if (e && fn() === null) return "refused_identity";
   if (e && !DCe()) return "refused_gates";
-  if (e && es().orgMemoryRead === !1) return "refused_read_off";
+  if (e && getCurrentProjectConfig().orgMemoryRead === !1) return "refused_read_off";
   let r = fn();
   if (
-    (eu(
+    (saveCurrentProjectConfig(
       (o) =>
         (o.orgMemoryWrites ?? !1) === e &&
         (o.orgMemoryWritesAccount ?? void 0) === (e ? (r ?? void 0) : void 0)
@@ -976,13 +976,13 @@ function vTt(e, t) {
   );
 }
 function Xer() {
-  return es().orgMemoryRead === !1 || wt();
+  return getCurrentProjectConfig().orgMemoryRead === !1 || wt();
 }
 function Yer(e, t) {
-  if ((es().orgMemoryRead ?? !0) === e) return !1;
-  let r = es().orgMemoryWrites === !0;
+  if ((getCurrentProjectConfig().orgMemoryRead ?? !0) === e) return !1;
+  let r = getCurrentProjectConfig().orgMemoryWrites === !0;
   if (
-    (eu(
+    (saveCurrentProjectConfig(
       (o) =>
         (o.orgMemoryRead ?? !0) === e && (e || o.orgMemoryWrites === void 0)
           ? o
@@ -1188,7 +1188,7 @@ function reopenOrgMemoryDecision() {
   return Ze().reopen();
 }
 function Pr() {
-  if (!H("tengu_haze_glass", !1)) return !1;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_haze_glass", !1)) return !1;
   return !process.env.CLAUDE_MEMORY_STORES?.trim();
 }
 function jj() {
@@ -1215,7 +1215,7 @@ function HK(e) {
 }
 var Ec = /^[A-Za-z0-9_-]{1,128}$/;
 function Vqt() {
-  let e = es();
+  let e = getCurrentProjectConfig();
   if (
     e.orgMemorySelectionAccount === void 0 ||
     e.orgMemorySelectionAccount !== jj()
@@ -1234,16 +1234,16 @@ function zer(e, t) {
   let r = jj();
   if (e !== null && r === null) return "refused";
   if (e === null) {
-    let o = es();
+    let o = getCurrentProjectConfig();
     if (o.orgMemorySelection === void 0) return "noop";
     if (o.orgMemorySelectionAccount !== r) return "noop";
   } else {
-    let o = es();
+    let o = getCurrentProjectConfig();
     if (o.orgMemorySelection === e && o.orgMemorySelectionAccount === r)
       return "noop";
   }
   return (
-    eu((o) => {
+    saveCurrentProjectConfig((o) => {
       if (
         (o.orgMemorySelection ?? null) === e &&
         (o.orgMemorySelectionAccount ?? void 0) ===
@@ -1262,10 +1262,10 @@ function zer(e, t) {
 }
 function ns(e, t) {
   let r = jj(),
-    o = es();
+    o = getCurrentProjectConfig();
   if (o.orgMemorySelection !== e || o.orgMemorySelectionAccount !== r) return;
   (logFeatureSad("org_memory_picker", "selection_dropped"),
-    eu(
+    saveCurrentProjectConfig(
       (d) =>
         d.orgMemorySelection === e && d.orgMemorySelectionAccount === r
           ? {
@@ -1297,7 +1297,7 @@ async function Qn(e, t) {
   return r;
 }
 function is(e, t) {
-  return ht.post(
+  return httpClient.post(
     Rc,
     e.ask || e.selection !== null
       ? {
@@ -1311,7 +1311,7 @@ function is(e, t) {
           }),
         }
       : void 0,
-    { ...rRe(), credentials: t, timeout: Tc, validateStatus: () => !0 },
+    { ...getMemoryHostRequestOptions(), credentials: t, timeout: Tc, validateStatus: () => !0 },
   );
 }
 class ss {
@@ -1344,7 +1344,7 @@ class ss {
     this.storageV5 = e;
   }
   discardOnEndpointChange() {
-    let e = MCt() ?? null;
+    let e = getMemoryBaseUrlOverride() ?? null;
     if (this.mintEndpoint !== void 0 && this.mintEndpoint !== e) this.discard();
     this.mintEndpoint = e;
   }
@@ -1653,7 +1653,7 @@ function firstStorePullPending() {
 import { join as gs } from "path";
 function Bfe() {
   let e = getInitialSettings().viewMode;
-  return e ? e === "focus" : (ee().briefTranscript ?? !1);
+  return e ? e === "focus" : (getGlobalConfig().briefTranscript ?? !1);
 }
 var ls = ["", ":L"];
 function HYe() {
@@ -1922,12 +1922,12 @@ function Vt(e) {
   }
 }
 function oo() {
-  return aQ() ? null : mn();
+  return hasMemoryBaseUrlOverride() ? null : mn();
 }
 async function Vc(e) {
   try {
-    let t = await ht.get(Wc, {
-      ...rRe(),
+    let t = await httpClient.get(Wc, {
+      ...getMemoryHostRequestOptions(),
       credentials: e,
       timeout: 5000,
       validateStatus: (o) => o === 200 || o === 404,
@@ -2558,7 +2558,7 @@ class vs {
     if (
       (this.adoptHandIns(e, t),
       this.ensureShrinkSubscription(),
-      es().orgMemoryRead === !1)
+      getCurrentProjectConfig().orgMemoryRead === !1)
     )
       return (settleOrgMemoryDecisionOff("read_disabled"), null);
     return this.discoverMemoized();
@@ -2569,7 +2569,7 @@ class vs {
     return ((this.reconnectChain = r), r);
   }
   async runReconnect() {
-    if (!Bo()) return { kind: "refused", reason: "untrusted_workspace" };
+    if (!checkHasTrustDialogAccepted()) return { kind: "refused", reason: "untrusted_workspace" };
     let e = getOrgMemoryDecision(),
       t = getOrgMemoryServedIdentity();
     if (
@@ -2663,7 +2663,7 @@ function isMultiStoreSyncAvailable() {
   if (!isAutoMemoryEnabled()) return !1;
   if (isEssentialTrafficOnly()) return !1;
   if (!isPolicyAllowed("allow_memory_sync")) return !1;
-  return getSessionAccessToken() !== null || Pc() || aQ();
+  return getSessionAccessToken() !== null || Pc() || hasMemoryBaseUrlOverride();
 }
 var tu = { parse: cu };
 function nb() {
@@ -6779,7 +6779,7 @@ function Qs(e) {
     isStoreMountedRecall()
   )
     return (Yxt(!1), "files");
-  let r = H("tengu_linen_orbit", !1) || wt();
+  let r = getFeatureValue_CACHED_MAY_BE_STALE("tengu_linen_orbit", !1) || wt();
   if (r || e) Yxt(r);
   return r ? "tools" : "files";
 }
@@ -6787,7 +6787,7 @@ function IK() {
   if (!Ooe()) return !1;
   if (isEssentialTrafficOnly()) return !1;
   if (!wt()) return !1;
-  return es().orgMemoryRead !== !1;
+  return getCurrentProjectConfig().orgMemoryRead !== !1;
 }
 function gr() {
   return (getDecisionStores().length > 0 || (hasOrgMemoryDecisionRunStarted() && getOrgMemoryDecision().state === "undecided")) && IK();
@@ -6923,7 +6923,7 @@ class rn {
         host: "memory",
         timeout: pd,
         validateStatus: () => !0,
-        auth: rRe().auth === "none" ? "none" : getSessionAccessToken() ? "session-jwt" : void 0,
+        auth: getMemoryHostRequestOptions().auth === "none" ? "none" : getSessionAccessToken() ? "session-jwt" : void 0,
       }));
   }
   async send(e, t) {
@@ -6971,7 +6971,7 @@ class rn {
         ((_.depth = 1), (_.order_by = "path"), (_.order = "asc"));
       if (d) _.page = d;
       let L = await this.send(
-        (E) => ht.get(`${this.listBase}${ea(_)}`, E),
+        (E) => httpClient.get(`${this.listBase}${ea(_)}`, E),
         t?.signal,
       );
       if (!L.ok) nn(L, `list ${this.label}`);
@@ -7057,7 +7057,7 @@ class rn {
     );
   }
   async openExport(e, t) {
-    let r = await this.send((d) => ht.get(t, { ...d, responseType: "stream" }));
+    let r = await this.send((d) => httpClient.get(t, { ...d, responseType: "stream" }));
     if (!r.ok) nn(r, e);
     if (r.status >= 400) {
       if ((xo(r.data), r.status === 404)) throw new ug(this.label, "store");
@@ -7070,7 +7070,7 @@ class rn {
   }
   async read(e, t) {
     let r = `read ${this.label}:${e}`,
-      o = await this.send((p) => ht.get(this.entryPath(e), p), t?.signal);
+      o = await this.send((p) => httpClient.get(this.entryPath(e), p), t?.signal);
     if (!o.ok) nn(o, r);
     if (o.status === 404) throw new ug(e);
     if (o.status >= 400) tn(o.status, r, o.data);
@@ -7094,7 +7094,7 @@ class rn {
         r?.precondition === "not_exists"
           ? { path: o, content: t, precondition: { type: "not_exists" } }
           : { path: o, content: t },
-      _ = await this.send((x) => ht.post(this.listBase, p, x), r?.signal);
+      _ = await this.send((x) => httpClient.post(this.listBase, p, x), r?.signal);
     if (!_.ok) nn(_, d);
     if (_.status === 409) {
       let x = Ld().safeParse(_.data),
@@ -7128,7 +7128,7 @@ class rn {
       p = { content: t };
     if (r !== null)
       p.precondition = { type: "content_sha256", content_sha256: r };
-    let _ = await this.send((x) => ht.post(this.entryPath(e), p, x), o?.signal);
+    let _ = await this.send((x) => httpClient.post(this.entryPath(e), p, x), o?.signal);
     if (!_.ok) nn(_, d);
     if (_.status === 404) throw new ug(e);
     if (_.status === 409) throw new QE(e, r, void 0);
@@ -7147,7 +7147,7 @@ class rn {
       o = {};
     if (t !== null) o.expected_content_sha256 = t;
     let d = await this.send((p) =>
-      ht.delete(`${this.entryPath(e)}${ea(o)}`, void 0, p),
+      httpClient.delete(`${this.entryPath(e)}${ea(o)}`, void 0, p),
     );
     if (!d.ok) nn(d, r);
     if (d.status === 404) {
@@ -7471,7 +7471,7 @@ function iEn(e) {
 }
 var aEn = "memory-types";
 function lEn() {
-  return H("tengu_ochre_finch", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ochre_finch", !1);
 }
 var Bd = {
   user: "the user's role, expertise, or working preferences",
@@ -7637,7 +7637,7 @@ var PFe = [
     "When you save a `feedback` memory because the user corrected how you ran a repeatable step \u2014 how you verified, committed, opened a PR, or used a project skill \u2014 fold the same correction into the project skill that drives that step (`.claude/skills/<name>/SKILL.md`): a terse, general edit, so the next session gets it right unprompted. Edit existing skill files only; never create one \u2014 a new project skill silently shadows a same-named built-in skill. The single exception is verify, because how a project verifies changes is project-specific: put a verify correction in the `.claude/skills/verify/SKILL.md` closest to the code it covers \u2014 the repo root for repo-wide corrections, a subproject directory (e.g. `ios/.claude/skills/verify/SKILL.md`) for corrections that only apply to that subtree \u2014 and if that file does not exist, create it. Each correction lives in exactly one skill file: the closest-scoped one, never duplicated at broader scopes.",
   jd = ["## Project skill upkeep", "", Tn, ""];
 function OFe() {
-  return H("tengu_gorse_fathom", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_gorse_fathom", !1);
 }
 function $t() {
   return OFe() ? jd : [];
@@ -7676,7 +7676,7 @@ var Wt = [
     "A memory that summarizes repo state (activity logs, architecture snapshots) is frozen in time. If the user asks about *recent* or *current* state, prefer `git log` or reading the code over recalling the snapshot.",
   ];
 function Mn() {
-  return H(Yqt, !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE(Yqt, !1);
 }
 var _r =
     "Before saving, check for an existing file that already covers it. Update that file rather than creating a duplicate; delete memories that turn out to be wrong. Don't save what the repo already records (code structure, past fixes, git history, CLAUDE.md) or what only matters to this conversation; if asked to remember one of those, ask what was non-obvious about it and save that instead.",
@@ -8061,7 +8061,7 @@ var ha = "tengu_loggia_roster",
   Vd = createLazyValue(() => v(s().trim())),
   ya;
 function qd() {
-  let e = H(ha, ga),
+  let e = getFeatureValue_CACHED_MAY_BE_STALE(ha, ga),
     t = ya;
   if (t !== void 0 && t.raw === e) return t.ids;
   let r = Vd().safeParse(e);
@@ -8077,7 +8077,7 @@ function nzt(e) {
   return qd().some((t) => _0(e, t));
 }
 function va(e, t) {
-  let r = ql()?.[e];
+  let r = getCachedClientData()?.[e];
   return (
     typeof r === "object" &&
     r !== null &&
@@ -8090,14 +8090,14 @@ function gtr(e) {
 var ka = "tengu_thrifty_sonic";
 function Zd() {
   let e = an();
-  return nQ()
+  return isServedCatalogSuppressed()
     ? e.bashFirstSessionAssignmentCompiledOnly()
     : e.bashFirstSessionAssignment();
 }
 function ba() {
   let e = OK(getMainLoopModel()),
     t = getCanonicalName(e);
-  if (WG(t) || ql()?.[ka] === !0 || dm(t, "thrifty_sonic", e) === !0)
+  if (WG(t) || getCachedClientData()?.[ka] === !0 || dm(t, "thrifty_sonic", e) === !0)
     return "forced";
   return isOpus5FamilyModel(e) ? "cohort" : "none";
 }
@@ -8110,7 +8110,7 @@ function rzt() {
     case "none":
       return !1;
     case "cohort":
-      return H(ka, !1);
+      return getFeatureValue_CACHED_MAY_BE_STALE(ka, !1);
   }
 }
 var _a = "tengu_cozy_teapot";
@@ -8119,7 +8119,7 @@ function wa(e) {
 }
 function htr() {
   return (
-    a.CLAUDE_CODE_COZY_TEAPOT ?? wa(ql()?.[_a]) ?? wa(vU(_a, null)) ?? "strict"
+    a.CLAUDE_CODE_COZY_TEAPOT ?? wa(getCachedClientData()?.[_a]) ?? wa(getFeatureValue_SESSION_PINNED(_a, null)) ?? "strict"
   );
 }
 var Xd = "tengu_gault_kestrel",
@@ -8133,10 +8133,10 @@ var Xd = "tengu_gault_kestrel",
 function ozt(e) {
   if (e === void 0) return !1;
   if (dm(getCanonicalName(e), "opus_5_prompt_bundle", e) !== !0) return !1;
-  return !H(rf, !1);
+  return !getFeatureValue_CACHED_MAY_BE_STALE(rf, !1);
 }
 function on(e, t, r) {
-  return e || ozt(r) || ql()?.[t] === !0 || H(t, !1);
+  return e || ozt(r) || getCachedClientData()?.[t] === !0 || getFeatureValue_CACHED_MAY_BE_STALE(t, !1);
 }
 function _tr(e) {
   return on(a.CLAUDE_CODE_GAULT_KESTREL, Xd, e);
@@ -8158,7 +8158,7 @@ function wtr(e) {
   return on(a.CLAUDE_CODE_LARCH_CISTERN, ef, e);
 }
 function dEn() {
-  let e = ql()?.[Mo];
+  let e = getCachedClientData()?.[Mo];
   if (typeof e === "boolean") return e;
   if (e !== void 0) {
     let t = an();
@@ -8178,14 +8178,14 @@ function Ttr(e) {
   let r = getCanonicalName(e);
   if (WG(r)) return !0;
   if (dm(r, "opus_5_prompt_bundle", e) !== !0) return !1;
-  return H(Mo, !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE(Mo, !1);
 }
 function B$() {
   return a.CLAUDE_CODE_SIMPLE;
 }
 function pEn(e) {
   let t = an();
-  return nQ() ? t.preReadLineDroppedCompiledOnly(e) : t.preReadLineDropped(e);
+  return isServedCatalogSuppressed() ? t.preReadLineDroppedCompiledOnly(e) : t.preReadLineDropped(e);
 }
 function OTt(e) {
   return e.preReadLineDropped ?? pEn(e.model);
@@ -8214,7 +8214,7 @@ function of(e) {
 }
 function j$(e) {
   let t = an();
-  return nQ() ? t.leanPromptCompiledOnly(e) : t.leanPrompt(e);
+  return isServedCatalogSuppressed() ? t.leanPromptCompiledOnly(e) : t.leanPrompt(e);
 }
 function ZE(e) {
   return e.leanPrompt ?? j$(e.model);
@@ -8224,20 +8224,20 @@ function Sa(e) {
   if (Ie(a.CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT)) return !0;
   if (po(a.CLAUDE_CODE_SIMPLE_SYSTEM_PROMPT)) return !1;
   if (!of(e)) return !0;
-  if (H("tengu_velvet_tide", !1)) return !0;
+  if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_velvet_tide", !1)) return !0;
   return va("simple_system_prompt", getCanonicalName(e));
 }
 var sf = "breezy_horizon";
 function OK(e) {
   if (e === void 0) return;
   let t = an();
-  return nQ() ? t.modelForPromptCompiledOnly(e) : t.modelForPrompt(e);
+  return isServedCatalogSuppressed() ? t.modelForPromptCompiledOnly(e) : t.modelForPrompt(e);
 }
 function xa(e) {
   let t = a.CLAUDE_CODE_BREEZY_HORIZON;
   if (po(t)) return e;
   let r = strippedCanonicalName(e),
-    o = ql()?.[sf],
+    o = getCachedClientData()?.[sf],
     d =
       t ??
       (typeof o === "object" && o !== null
@@ -8259,8 +8259,8 @@ function xa(e) {
   if (!L.has(e))
     (L.add(e),
       logEvent("tengu_breezy_horizon", {
-        from_model: bt(r),
-        to_model: bt(_),
+        from_model: getModelForAnalytics(r),
+        to_model: getModelForAnalytics(_),
         source: fromEnum(p),
       }));
   return d;
@@ -8555,7 +8555,7 @@ metadata:
 {applicable, durable, and legible content}
 \`\`\``;
 function Oo() {
-  return H("tengu_stone_shell", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_stone_shell", !1);
 }
 function UYe() {
   return Oo();
@@ -9305,7 +9305,7 @@ function wf(e) {
 function MFe(e) {
   let t = bf(e),
     r = wf(t);
-  return r !== null && !RU(t, r);
+  return r !== null && !hasReservedPathSegment(t, r);
 }
 function LTt(e, t, r, o) {
   let d;
@@ -9552,10 +9552,10 @@ function Kj(e) {
   );
 }
 function W$(e) {
-  return nc(e).startsWith(".");
+  return normalizePathSegment(e).startsWith(".");
 }
 function _En(e) {
-  return nc(e) === ".git";
+  return normalizePathSegment(e) === ".git";
 }
 function G$(e) {
   return tb($Fe(e)) === Vj;
@@ -9577,7 +9577,7 @@ function yEn(e, t, r) {
 }
 function Yfe(e, t) {
   let r = Ha(e),
-    o = tb(nc(r));
+    o = tb(normalizePathSegment(r));
   if (o === IN || o === PN) {
     let d = r.toLowerCase();
     if (d === IN || d === PN)
@@ -9627,7 +9627,7 @@ var Ni = "REPL";
 function SEn(e, t) {
   if (ZE({ model: e, leanPrompt: t }))
     return 'Fast file pattern matching. Supports glob patterns like "**/*.js" or "src/**/*.ts". Returns matching file paths sorted by modification time.';
-  return ux() === "default" ? Uf : qa;
+  return getSubagentSteerMode() === "default" ? Uf : qa;
 }
 var qa = `- Fast file pattern matching tool that works with any codebase size
 - Supports glob patterns like "**/*.js" or "src/**/*.ts"
@@ -13192,7 +13192,7 @@ function Ntr(e) {
       };
     if (p.startsWith("-") || p.startsWith("|") || p.startsWith("&"))
       return { ok: !1, reason: "Command appears to be an incomplete fragment" };
-    let _ = Ad(CEn, p),
+    let _ = getOwnValue(CEn, p),
       L = p === "test" || p === "[" || p === "[[";
     if (_ !== void 0)
       for (let x = 1; x < o.length; x++) {
@@ -15041,9 +15041,9 @@ function Bm(e = {}) {
 function nEt(e) {
   let t = he(),
     r = Um.of(B().host),
-    o = YC({ onIndeterminate: "tracked" });
-  if (o && Bo()) {
-    if ((r.markTracked(t), !r.persistIssued(t) && VRn()))
+    o = isLocalSettingsGitTracked({ onIndeterminate: "tracked" });
+  if (o && checkHasTrustDialogAccepted()) {
+    if ((r.markTracked(t), !r.persistIssued(t) && isLocalSettingsGitTrackedInIndex()))
       (r.markPersistIssued(t), zm(e));
   }
   return o || r.isTracked(t) || jm()
@@ -15068,17 +15068,17 @@ class Cl {
 }
 var Um = new j(() => new Cl());
 function jm() {
-  return ee().projects?.[getWorkspacePersistedTrustKey()]?.localSettingsSeenGitTracked === !0;
+  return getGlobalConfig().projects?.[getWorkspacePersistedTrustKey()]?.localSettingsSeenGitTracked === !0;
 }
 function zm(e) {
   let t = getWorkspacePersistedTrustKey();
-  Te((r) => {
+  saveGlobalConfig((r) => {
     if (r.projects?.[t]?.localSettingsSeenGitTracked === !0) return r;
     return {
       ...r,
       projects: {
         ...r.projects,
-        [t]: { ...(r.projects?.[t] ?? k5), localSettingsSeenGitTracked: !0 },
+        [t]: { ...(r.projects?.[t] ?? DEFAULT_PROJECT_CONFIG), localSettingsSeenGitTracked: !0 },
       },
     };
   }, e);
@@ -15123,7 +15123,7 @@ function tme(e = {}) {
 function oEt() {
   return {
     gateProject: !projectSettingsAliasesUserSettings(),
-    gateLocal: YC({ onIndeterminate: "untracked" }),
+    gateLocal: isLocalSettingsGitTracked({ onIndeterminate: "untracked" }),
   };
 }
 function Al(e) {
@@ -15169,7 +15169,7 @@ function Ol(e, t, r) {
     (n(
       `Dropped ${t} project-scoped ${e} entr${t === 1 ? "y" : "ies"} \u2014 workspace not yet trusted`,
     ),
-    !ke() && (!Bo() || Gm()))
+    !ke() && (!checkHasTrustDialogAccepted() || Gm()))
   )
     return;
   let o = getWorkspacePersistedTrustKey(),
@@ -15707,7 +15707,7 @@ function rme(e, t = "session") {
         : `${o}/**`;
   return {
     type: "addRules",
-    rules: [{ toolName: tt, ruleContent: d }],
+    rules: [{ toolName: READ_TOOL_NAME, ruleContent: d }],
     behavior: "allow",
     destination: t,
   };
@@ -15878,7 +15878,7 @@ var np = [],
   },
   Bl = [...xEn, ...[]];
 function isDangerousBashPermission(e, t) {
-  if (e !== qe) return !1;
+  if (e !== BASH_TOOL_NAME) return !1;
   if (t === void 0 || t === "") return !0;
   if (/^[\s*]+$/.test(t)) return !0;
   return cEt(t, Bl);
@@ -15932,7 +15932,7 @@ function cEt(e, t) {
   return !1;
 }
 function isDangerousPowerShellPermission(e, t) {
-  if (e !== Ut) return !1;
+  if (e !== POWERSHELL_TOOL_NAME) return !1;
   if (t === void 0 || t === "") return !0;
   if (/^[\s*]+$/.test(t)) return !0;
   let r = t.trim().toLowerCase();
@@ -16015,7 +16015,7 @@ function tJe(e, t) {
   return (Ul.remember(r, d), d);
 }
 function isDangerousClassifierPermission(e, t) {
-  if ((e === qe || e === Ut) && zCe()) return !0;
+  if ((e === BASH_TOOL_NAME || e === POWERSHELL_TOOL_NAME) && zCe()) return !0;
   return tJe(e, t);
 }
 var qFe = [
@@ -16374,7 +16374,7 @@ function bp(e) {
         if ((p === "~/.claude/skills/" || Up().includes(_)) && (G$(D) || W$(D)))
           return null;
         let F = x.slice(C + 1).split(/[/\\]/);
-        if (nc(D) === ".claude" || F.some((V) => nc(V) === ".claude"))
+        if (normalizePathSegment(D) === ".claude" || F.some((V) => normalizePathSegment(V) === ".claude"))
           return null;
         return { skillName: D, pattern: p + D + "/**" };
       }
@@ -16438,7 +16438,7 @@ function Sp(e, t = getCwd()) {
   return o === r || o.startsWith(r + Re);
 }
 function isScratchpadEnabled() {
-  if (H("tengu_scratch", !1)) return !0;
+  if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_scratch", !1)) return !0;
   {
     let { isArtifactToolEligible: e } = import.meta.require(
       "../Artifact发布-渲染/chunk-01ymf0ar.js",
@@ -16504,7 +16504,7 @@ function isScratchpadPath(e) {
   if (t === null) return !1;
   return (
     t.comparePath === t.compareDir ||
-    (t.comparePath.startsWith(t.prefix) && !RU(t.comparePath, t.prefix, DANGEROUS_FILES_LC))
+    (t.comparePath.startsWith(t.prefix) && !hasReservedPathSegment(t.comparePath, t.prefix, DANGEROUS_FILES_LC))
   );
 }
 function isScratchpadDisplayPath(e) {
@@ -16512,12 +16512,12 @@ function isScratchpadDisplayPath(e) {
   return (
     t !== null &&
     t.comparePath.startsWith(t.prefix) &&
-    !RU(t.comparePath, t.prefix, DANGEROUS_FILES_LC)
+    !hasReservedPathSegment(t.comparePath, t.prefix, DANGEROUS_FILES_LC)
   );
 }
 function isWorkshopDisplayPath(e) {
   let t = ze(Zl(e) ? e : yp(getCwd(), e));
-  return isWorkshopFile(e) && !RU(t, "", DANGEROUS_FILES_LC);
+  return isWorkshopFile(e) && !hasReservedPathSegment(t, "", DANGEROUS_FILES_LC);
 }
 function xp(e) {
   let t = [xi(Ne(e, "seed-admin"))];
@@ -16528,7 +16528,7 @@ function xp(e) {
   return dedupe(t);
 }
 function xi(e) {
-  return ze(e).split(Re).map(nc).join(Re);
+  return ze(e).split(Re).map(normalizePathSegment).join(Re);
 }
 function ki(e) {
   let t = xi(e);
@@ -16622,7 +16622,7 @@ function rc(e) {
   if (!o.startsWith(r)) return !1;
   let d = o + Re + "tmp" + Re;
   if (!normalizeCaseForComparison(e).startsWith(normalizeCaseForComparison(d))) return !1;
-  return !RU(e, d, DANGEROUS_FILES_LC);
+  return !hasReservedPathSegment(e, d, DANGEROUS_FILES_LC);
 }
 function nt(e, t) {
   if (!t || t.size === 0) return !1;
@@ -16658,7 +16658,7 @@ function oc(e) {
     if (d === o.length) {
       let p = d;
       for (let _ = 0; _ < d; _++)
-        if (nc(o[_]) === ".claude" && nc(o[_ + 1] ?? "") !== "worktrees") {
+        if (normalizePathSegment(o[_]) === ".claude" && normalizePathSegment(o[_ + 1] ?? "") !== "worktrees") {
           p = _;
           break;
         }
@@ -16671,7 +16671,7 @@ function Hl(e) {
   let t = ot(e).split(Re),
     r = oc(t),
     o = 0;
-  for (let d = r; d < t.length; d++) if (nc(t[d]) === ".claude") o++;
+  for (let d = r; d < t.length; d++) if (normalizePathSegment(t[d]) === ".claude") o++;
   return o;
 }
 function vp(e, t) {
@@ -16695,7 +16695,7 @@ function vp(e, t) {
     )
       return !1;
   for (let p = o.length; p < d.length; p++)
-    if (nc(d[p]) === ".claude") return !0;
+    if (normalizePathSegment(d[p]) === ".claude") return !0;
   return !1;
 }
 function kp(e, t, r) {
@@ -16716,14 +16716,14 @@ function kp(e, t, r) {
     L = oc(d);
   for (let x = 0; x < d.length; x++) {
     let k = d[x],
-      E = nc(k);
+      E = normalizePathSegment(k);
     for (let C of DANGEROUS_DIRECTORIES) {
       if (E !== normalizeCaseForComparison(C)) continue;
       if (C === ".claude") {
         let D = x >= L;
         if (_) return !0;
         let F = d[x + 1],
-          V = F ? nc(F) : void 0;
+          V = F ? normalizePathSegment(F) : void 0;
         if (t && V) {
           if (V === "skills" || V === "agents" || V === "commands") {
             if (D) _ = !0;
@@ -16742,10 +16742,10 @@ function kp(e, t, r) {
   for (let x of DANGEROUS_DIRECTORY_PATHS) {
     let k = x.split("/");
     for (let E = 0; E + k.length <= d.length; E++)
-      if (k.every((C, D) => nc(d[E + D]) === normalizeCaseForComparison(C))) return !0;
+      if (k.every((C, D) => normalizePathSegment(d[E + D]) === normalizeCaseForComparison(C))) return !0;
   }
   if (p) {
-    let x = nc(p);
+    let x = normalizePathSegment(p);
     if (DANGEROUS_FILES.some((k) => normalizeCaseForComparison(k) === x)) return !0;
   }
   return !1;
@@ -16866,7 +16866,7 @@ function sc(e, t, r, o, d, p) {
   };
 }
 function isLinkedWorktreeFastPathEnabled() {
-  return H("tengu_auto_mode_worktree_fast_path", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_auto_mode_worktree_fast_path", !1);
 }
 async function verifiedLinkedWorktreeDirectories(e) {
   if (!isLinkedWorktreeFastPathEnabled()) return [];
@@ -17140,9 +17140,9 @@ function Yr(e, t, r) {
   let p = (() => {
       switch (t) {
         case "edit":
-          return Bt;
+          return EDIT_TOOL_NAME;
         case "read":
-          return tt;
+          return READ_TOOL_NAME;
       }
     })(),
     _ = ah(e, p, r),
@@ -17199,7 +17199,7 @@ function denyRuleMatchingAnywhere(e, t, r) {
   while (d[0] === "..") d.shift();
   if (d.length === 0) return null;
   let p = d.join("/"),
-    _ = ah(t, r === "read" ? tt : Bt, "deny"),
+    _ = ah(t, r === "read" ? READ_TOOL_NAME : EDIT_TOOL_NAME, "deny"),
     L = new Set();
   for (let [x, k] of _.entries()) {
     let { relativePattern: E, root: C } = patternWithRoot(x, k.source),
@@ -17307,7 +17307,7 @@ function normalizeTrustedSymlink(e) {
 function Ip(e) {
   return (
     !!e &&
-    (e.startsWith(BCt.slice(0, -2)) || e.startsWith(jCt.slice(0, -2))) &&
+    (e.startsWith(PROJECT_CLAUDE_DIR_GLOB.slice(0, -2)) || e.startsWith(USER_CLAUDE_DIR_GLOB.slice(0, -2))) &&
     !e.includes("..") &&
     e.endsWith("/**")
   );
@@ -17357,7 +17357,7 @@ function checkReadNetworkPathSafety(e, t, r, o) {
         "Automount browse surface detected (defense-in-depth check)",
       );
   }
-  if (e.name === co) {
+  if (e.name === GLOB_TOOL_NAME) {
     let L = t.pattern;
     if (typeof L === "string" && An(L) && !Oi(L) && !nt(L, p))
       return Tt(
@@ -17398,7 +17398,7 @@ function hasReadDenyRuleForPath(e, t) {
 }
 var READ_PATH_PROBE = new Proxy(
   {
-    name: tt,
+    name: READ_TOOL_NAME,
     mcpInfo: void 0,
     familyParentToolName: void 0,
     aliasSkillToolNames: void 0,
@@ -17431,7 +17431,7 @@ function Np(e, t) {
   let r = t.options.tools ?? [];
   return (
     r.some((o) => matchesToolName(o, e)) &&
-    !r.some((o) => matchesToolName(o, tt)) &&
+    !r.some((o) => matchesToolName(o, READ_TOOL_NAME)) &&
     !r.some((o) => matchesToolName(o, Ni))
   );
 }
@@ -17439,7 +17439,7 @@ function readAutoAllowedForMutation(e, t, r, o) {
   return !Np(e, r) && Dp(t, o);
 }
 function $p() {
-  return H("tengu_playful_lobster", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_playful_lobster", !0);
 }
 class lc {
   loggedPaths = new Set();
@@ -17666,7 +17666,7 @@ function checkWritePermissionForTool(e, t, r, o) {
         ? [
             {
               type: "addRules",
-              rules: [{ toolName: Bt, ruleContent: F.pattern }],
+              rules: [{ toolName: EDIT_TOOL_NAME, ruleContent: F.pattern }],
               behavior: "allow",
               destination: "session",
             },

@@ -13,7 +13,7 @@ import { _u } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { repeatString, firstLine, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -238,7 +238,7 @@ function ne(He) {
     ((ce = async function S(le) {
       let M = x(le);
       if (le === "always") {
-        if (!ee().copyFullResponse) await Te(Ae, U);
+        if (!getGlobalConfig().copyFullResponse) await saveGlobalConfig(Ae, U);
         logEvent("tengu_copy", { block_count: k.length, always: !0, message_age: P });
         let et = await v(M.text, M.filename);
         b(`${et}
@@ -390,7 +390,7 @@ var Qe = async (n, o, a) => {
   }
   let f = normalizeTablesInMarkdown(Td(s[c])),
     d = Ce(f),
-    m = ee();
+    m = getGlobalConfig();
   if (d.length === 0 || m.copyFullResponse) {
     logEvent("tengu_copy", {
       always: m.copyFullResponse,

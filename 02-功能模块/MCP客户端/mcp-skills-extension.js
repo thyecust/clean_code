@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 var MCP_SKILLS_EXTENSION_ID = "io.modelcontextprotocol/skills";
 function isMcpSkillsEnabled() {
-  return H("tengu_mcp_skills", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_mcp_skills", !1);
 }
 function isMcpSkillsCapable(e) {
   return isMcpSkillsEnabled() && !!e?.resources && declaresMcpSkillsExtension(e);

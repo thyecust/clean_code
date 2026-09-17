@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ee } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getGlobalConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { isDesktopHostEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
@@ -35,7 +35,7 @@ function i() {
       );
       return;
     }
-    let t = ee()?.env,
+    let t = getGlobalConfig()?.env,
       o = (Nr("userSettings") ? getSettingsForSource("userSettings") : void 0)?.env;
     n(
       `CA certs: Config fallback - globalEnv keys: ${t ? Object.keys(t).join(",") : "none"}, settingsEnv keys: ${o ? Object.keys(o).join(",") : "none"}`,

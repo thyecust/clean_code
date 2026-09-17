@@ -11,7 +11,7 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { u5t, d5t } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { createBatchedSender, DATADOG_CLIENT_TOKEN } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { externalHttp } from "./external-http.js";
 import { isErrorReportingAllowed } from "./error-reporting-eligibility.js";
@@ -35,7 +35,7 @@ async function f(e) {
   let r = b(e),
     s = new URLSearchParams({
       ddsource: "browser",
-      "dd-api-key": d5t,
+      "dd-api-key": DATADOG_CLIENT_TOKEN,
       "dd-evp-origin": "browser",
       "dd-evp-origin-version": {
         ISSUES_EXPLAINER:
@@ -70,7 +70,7 @@ class i {
   reportsEnqueued = 0;
   capSentinelSent = !1;
   cachedUserBucket = void 0;
-  sender = u5t({ maxBatchSize: g, getFlushIntervalMs: m, post: f });
+  sender = createBatchedSender({ maxBatchSize: g, getFlushIntervalMs: m, post: f });
 }
 var E = new j(() => new i());
 function errorTrackingClient() {

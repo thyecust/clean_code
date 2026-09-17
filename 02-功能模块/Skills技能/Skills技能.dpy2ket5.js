@@ -25,7 +25,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { getClaudeInChromeState, CFC_TOOL_PREFIX, detectAvailableBrowser, openInChrome } from "../ClaudeinChrome/claude-in-chrome-host.js";
-import { SQe, getCanonicalName, mc, isActingAsBgJob, r5t, GUe, H, isAutoMemoryEnabled, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { MCP_SERVERS_BETA, getCanonicalName, getAgentDepth, isActingAsBgJob, isCommitSkillRolloutEnabled, isVerifySkillRolloutEnabled, getFeatureValue_CACHED_MAY_BE_STALE, isAutoMemoryEnabled, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Pt, gitExe, getIsGit, getDefaultBranch, getGitPushShellPatterns } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { getSettingsFilePathForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -299,7 +299,7 @@ function fn(e, t, o) {
     A =
       r !== null
         ? ""
-        : ` In hermetic/CI sessions where connectors aren't loaded but \`$CLAUDE_CODE_OAUTH_TOKEN\` is set, fetch the list via Bash: \`curl -H 'anthropic-version: 2023-06-01' -H 'anthropic-beta: ${SQe.header}' -H "Authorization: Bearer $CLAUDE_CODE_OAUTH_TOKEN" ${getOauthConfig().BASE_API_URL}/v1/mcp_servers?limit=1000\`; in that case use each entry's \`display_name\` as the \`server\` value (exact display names are always accepted alongside tool-prefix segments).`;
+        : ` In hermetic/CI sessions where connectors aren't loaded but \`$CLAUDE_CODE_OAUTH_TOKEN\` is set, fetch the list via Bash: \`curl -H 'anthropic-version: 2023-06-01' -H 'anthropic-beta: ${MCP_SERVERS_BETA.header}' -H "Authorization: Bearer $CLAUDE_CODE_OAUTH_TOKEN" ${getOauthConfig().BASE_API_URL}/v1/mcp_servers?limit=1000\`; in that case use each entry's \`display_name\` as the \`server\` value (exact display names are always accepted alongside tool-prefix segments).`;
   return `${w}${k}${v}${C} The manifest's \`tools\` array takes the connector's upstream tool names (as returned by ${T}), which can differ from the normalized \`<toolName>\` segment when an upstream name contains \`.\` or spaces. Every \`servers[]\` entry needs a non-empty \`tools\` array naming the tools the page calls \u2014 an empty or omitted \`tools\` list is refused and never means "all tools"; to publish without connector access, leave \`mcp\` out of \`capabilities\` (pass \`capabilities: {}\` to clear a stored declaration) rather than declaring an empty \`servers\` list.${A}`;
 }
 var Qe =
@@ -585,7 +585,7 @@ var Cn = "<!-- dataviz-callout -->",
   En =
     "Load before writing any artifact, including a skill-instructed Markdown one - Markdown is never a shortcut past the design pass.";
 function Sn() {
-  if (H("tengu_cobalt_plinth_dataviz", !1) && getBundledSkills().some((e) => e.name === DATAVIZ_SKILL_NAME))
+  if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_dataviz", !1) && getBundledSkills().some((e) => e.name === DATAVIZ_SKILL_NAME))
     return `**When adding charts or diagrams** The craft shifts from identity to honesty \u2014 pick the form the data's shape calls for, keep encodings from exaggerating, title the finding rather than the axes. Load the \`${DATAVIZ_SKILL_NAME}\` skill for the specifics; this skill continues to govern the page the chart sits in.`;
   return "";
 }
@@ -873,7 +873,7 @@ async function wt(e, t) {
     if (d.signal.aborted) return;
     if (
       (w("connecting"),
-      Te(
+      saveGlobalConfig(
         (U) =>
           U.cachedChromeExtensionInstalled === !0
             ? U
@@ -1097,7 +1097,7 @@ async function jn(e, t) {
 function Fn(e, t, o) {
   return (
     gt(e, t),
-    Te(
+    saveGlobalConfig(
       (s) =>
         s.claudeInChromeDefaultEnabled === !0 &&
         s.hasCompletedClaudeInChromeOnboarding === !0 &&
@@ -1145,8 +1145,8 @@ function vt() {
     vje()?.isTeleported !== !0 &&
     !xg() &&
     !hasChromeExtensionEvidence() &&
-    ee().chromeInstallUpsellDismissed !== !0 &&
-    H("tengu_chrome_install_upsell", !1) &&
+    getGlobalConfig().chromeInstallUpsellDismissed !== !0 &&
+    getFeatureValue_CACHED_MAY_BE_STALE("tengu_chrome_install_upsell", !1) &&
     !ie()
   );
 }
@@ -1200,7 +1200,7 @@ async function qn(e, t) {
     );
   if (await isChromeExtensionInstalled().catch(() => !1))
     return (
-      Te(
+      saveGlobalConfig(
         (r) =>
           r.cachedChromeExtensionInstalled === !0
             ? r
@@ -1239,7 +1239,7 @@ async function qn(e, t) {
     case "dont_ask_again":
       return (
         logFeatureSad("chrome_install_upsell", "dont_ask_again"),
-        Te(
+        saveGlobalConfig(
           (r) =>
             r.chromeInstallUpsellDismissed === !0
               ? r
@@ -1325,7 +1325,7 @@ function _t(e, t) {
   return { rawFirstToken: s, flags: d, rest: r };
 }
 function be(e) {
-  if (e.agentContext && mc(e.agentContext) >= getMaxSubagentSpawnDepth()) return !1;
+  if (e.agentContext && getAgentDepth(e.agentContext) >= getMaxSubagentSpawnDepth()) return !1;
   let t = e.options?.tools;
   if (!t) return !0;
   return t.some((o) => matchesToolName(o, AGENT_TOOL_NAME));
@@ -2116,7 +2116,7 @@ After the findings are reported (and applied, when --fix was passed): if \`/${VE
 `;
 async function vi(e) {
   if (e.options?.isSkillPreload) return "";
-  if (!GUe()) return "";
+  if (!isVerifySkillRolloutEnabled()) return "";
   if (!oVe(e.getProactivityLevel())) return "";
   let t = e.options?.tools;
   if (t && !ZY() && !t.some((s) => matchesToolName(s, SKILL_TOOL_NAME))) return "";
@@ -2174,11 +2174,11 @@ function _e(e) {
   };
 }
 function _i() {
-  let e = ee().codeReviewLastEffort;
+  let e = getGlobalConfig().codeReviewLastEffort;
   return e !== void 0 && $C(e) ? e : void 0;
 }
 function Ei(e, t) {
-  Te(
+  saveGlobalConfig(
     (o) =>
       o.codeReviewLastEffort === e ? o : { ...o, codeReviewLastEffort: e },
     t,
@@ -2595,7 +2595,7 @@ function ro() {
     allowedTools: io,
     disallowedTools: Ri,
     userInvocable: !0,
-    isEnabled: () => r5t(),
+    isEnabled: () => isCommitSkillRolloutEnabled(),
     progressMessage: "creating commit",
     async getPromptForCommand(e, t) {
       let o = await getAllowlistedSkillCommands(sn(), t.storageV5),
@@ -3916,7 +3916,7 @@ function Bo() {
     getAllowedTools: gs,
     disallowedTools: ys,
     userInvocable: !0,
-    isEnabled: () => r5t(),
+    isEnabled: () => isCommitSkillRolloutEnabled(),
     progressMessage: "creating pull request",
     async getPromptForCommand(e, t) {
       logPrWritingGuidanceRendered("pr_skill");
@@ -4695,7 +4695,7 @@ function Zo() {
     name: VERIFY_SKILL_NAME,
     description: As,
     userInvocable: !0,
-    disableModelInvocation: () => !GUe(),
+    disableModelInvocation: () => !isVerifySkillRolloutEnabled(),
     files: () => Qo().then((e) => e.SKILL_FILES),
     async getPromptForCommand(e) {
       let { SKILL_MD: t } = await Qo(),

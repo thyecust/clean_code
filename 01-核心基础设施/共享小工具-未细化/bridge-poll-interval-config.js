@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { m0 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_WITH_REFRESH } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createLazyValue } from "./lazy-value.js";
 import { T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var t = {
@@ -63,7 +63,7 @@ var a = { message: "must be 0 (disabled) or \u2265100ms" },
       ),
   );
 function getBridgePollIntervalConfig() {
-  let _ = m0("tengu_bridge_poll_interval_config", t, 300000),
+  let _ = getFeatureValue_CACHED_WITH_REFRESH("tengu_bridge_poll_interval_config", t, 300000),
     e = l().safeParse(_);
   return e.success ? e.data : t;
 }

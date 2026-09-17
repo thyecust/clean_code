@@ -9,12 +9,12 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 214 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Mr, dU, bse } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isFastModeEnabled, getFastModeUnavailableMessage, prefetchOrgFastModeStatus } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { runFastModeToggle } from "../../01-核心基础设施/设置-配置/fast-mode.js";
 import "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
 async function l(a, e) {
-  if (!Mr())
-    return { type: "text", value: dU() ?? "Fast mode is not available" };
+  if (!isFastModeEnabled())
+    return { type: "text", value: getFastModeUnavailableMessage() ?? "Fast mode is not available" };
   let t = a.trim().toLowerCase(),
     o;
   if (t === "on") o = !0;
@@ -35,7 +35,7 @@ async function l(a, e) {
       "bridge",
       !e.options.isNonInteractiveSession,
       e.storageV5,
-      () => bse(e.storageV5, e.credentials),
+      () => prefetchOrgFastModeStatus(e.storageV5, e.credentials),
     ),
   };
 }

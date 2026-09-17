@@ -39,7 +39,7 @@ import {
   gYe,
   Ser,
 } from "./chunk-01ymf0ar.js";
-import { getUserAgent, isActingAsBgJob, sameOwnerAccount, H, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getUserAgent, isActingAsBgJob, sameOwnerAccount, getFeatureValue_CACHED_MAY_BE_STALE, readFreshOauthAccountFromDisk } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { pCn, gAt, dse } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -319,7 +319,7 @@ function Dn(e) {
 async function Vn(e, t) {
   let r = e.storedCap;
   if (!e.rebootNeeded && r !== void 0 && r.exp * 1000 - Date.now() > zr) {
-    let _ = await sy(e.context.storageV5).catch(() => {
+    let _ = await readFreshOauthAccountFromDisk(e.context.storageV5).catch(() => {
       return;
     });
     if (!t.isCurrent()) return { outcome: "stale" };
@@ -591,7 +591,7 @@ function Dt(e) {
   return e * 3 + 5000;
 }
 function ti() {
-  return a.CLAUDE_CODE_ARTIFACT_PRESENCE ?? H("tengu_brass_plover", !1);
+  return a.CLAUDE_CODE_ARTIFACT_PRESENCE ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_brass_plover", !1);
 }
 function tt(e) {
   if (!ti()) return "flag_off";
@@ -2815,7 +2815,7 @@ async function pe(e, t) {
           ? ge
           : void 0;
     if (D !== void 0 && D.transport === "sync") {
-      let w = await sy(l.storageV5).catch(() => {
+      let w = await readFreshOauthAccountFromDisk(l.storageV5).catch(() => {
         return;
       });
       if (!sameOwnerAccount(me(D.token), w)) D = void 0;

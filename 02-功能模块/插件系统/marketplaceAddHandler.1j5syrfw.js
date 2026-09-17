@@ -27,7 +27,7 @@ import { Ui, mXe } from "./chunk-ajtn749s.js";
 import { areLocalPluginDirsAllowedByPolicy, localPluginDirsBlockedMessage, marketplacesRefusedByPolicyClause } from "./plugin-source-policy.js";
 import { V$, Aa, vm, K$ } from "./chunk-7s6mt1vg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _se, brr, getMainLoopModel, Tn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getGitUserEmail, getGitUserName, getMainLoopModel, hashForTelemetry } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import {
   getPolicyPluginNames,
@@ -333,8 +333,8 @@ async function pluginInitHandler(a, o, s, d) {
       z(a, c, 1));
     return;
   }
-  let P = s.author ?? (await brr()),
-    R = s.authorEmail ?? (await _se());
+  let P = s.author ?? (await getGitUserName()),
+    R = s.authorEmail ?? (await getGitUserEmail());
   if (!P && s.authorEmail)
     c.push(
       `${figures.warning} --author-email was ignored because no author name was found. Pass --author or set git config user.name.`,
@@ -628,7 +628,7 @@ async function marketplaceAddHandler(a, o, s, d, c) {
         await logEventAsync("tengu_marketplace_added", {
           _PROTO_marketplace_name: R,
           source_type: fromEnum(p.source),
-          repo_hash: p.source === "github" ? Tn(p.repo) : void 0,
+          repo_hash: p.source === "github" ? hashForTelemetry(p.repo) : void 0,
           is_official_marketplace: isOfficialMarketplace(R),
         }),
         await logFeatureOkAsync("cli_marketplace_add"));

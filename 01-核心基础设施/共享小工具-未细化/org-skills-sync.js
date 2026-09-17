@@ -10,7 +10,7 @@
 import { Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeDiagnosticsEvent } from "./diagnostics-log.js";
 import { getEnvEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { ht } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { httpClient } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Voe } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
 import { iJ, bGt, wGt, gwt } from "../../02-功能模块/插件系统/chunk-ajtn749s.js";
 import { writeFile } from "fs/promises";
@@ -38,7 +38,7 @@ async function fetchOrgSkills(t = {}) {
   let r = getEnvEntrypoint(),
     s = r ? `${c}&entrypoint=${encodeURIComponent(r)}` : c;
   try {
-    let e = await ht.get(s, {
+    let e = await httpClient.get(s, {
       auth: "teleport-org",
       isBackground: t.isBackground,
       timeout: g,
@@ -58,7 +58,7 @@ async function downloadSkillArchive(t, r, s, e = {}) {
   if (s) o.push(`version=${encodeURIComponent(s)}`);
   let u = o.length > 0 ? `?${o.join("&")}` : "";
   try {
-    let i = await ht.get(
+    let i = await httpClient.get(
       `/api/oauth/organizations/:orgUUID/skills/${encodeURIComponent(t)}/download${u}`,
       {
         auth: "teleport-org",

@@ -23,26 +23,26 @@ import { escapeUntrustedText, escapeNonPrintableAscii, replaceControlChars } fro
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
-  qN,
+  computeModelCostUsd,
   getSmallFastModel,
   parseUserSpecifiedModel,
-  aa,
-  qe,
-  Bt,
-  tt,
-  Mn,
-  co,
-  ro,
-  Wl,
-  Ut,
-  C6,
+  createMainAgentContext,
+  BASH_TOOL_NAME,
+  EDIT_TOOL_NAME,
+  READ_TOOL_NAME,
+  WRITE_TOOL_NAME,
+  GLOB_TOOL_NAME,
+  GREP_TOOL_NAME,
+  NOTEBOOK_EDIT_TOOL_NAME,
+  POWERSHELL_TOOL_NAME,
+  refreshGatewayCredentialIfNeeded,
   shouldUseWIFAuth,
   effectiveAuthTokenEnv,
   getConfiguredApiKeyHelper,
   clearOAuthTokenCache,
   getClaudeAIOAuthTokensAsync,
   checkAndRefreshOAuthTokenIfNeeded,
-  H,
+  getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   partition,
@@ -253,7 +253,7 @@ async function $i({
         isNonInteractiveSession: !0,
         hasAppendSystemPrompt: !1,
         mcpTools: [],
-        agentContext: aa(),
+        agentContext: createMainAgentContext(),
         credentials: p,
       },
       C = d
@@ -4002,7 +4002,7 @@ async function _a(e, t) {
     let d = ns();
     if (d) {
       let p = Date.now() + t * 1000 + ya;
-      await C6(e, { force: d.expiresAt < p });
+      await refreshGatewayCredentialIfNeeded(e, { force: d.expiresAt < p });
       let h = ns() ?? d,
         w;
       if (h.expiresAt < p)
@@ -4652,23 +4652,23 @@ async function Nd(e, t, r, i, o, u, d) {
       Ud(Fd(r, t.cwd), [t.home, t.tmpDir, ...d.readRoots, ...u], d.readFiles),
       [t.cwd, t.tmpDir],
     ),
-    ...u.flatMap((S) => [tt, co, ro].map((C) => `${C}(${it(S)}/**)`)),
+    ...u.flatMap((S) => [READ_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME].map((C) => `${C}(${it(S)}/**)`)),
   ]);
   if (E.length > 0) p.push(`--allowed-tools=${E.join(",")}`);
   let _ = [
-    `${tt}(${it(t.configDir)}/**)`,
-    `${Bt}(${it(t.configDir)}/**)`,
-    `${tt}(${it(t.outDir)}/**)`,
-    `${Bt}(${it(t.outDir)}/**)`,
-    ...w.map((S) => `${Bt}(${it(S)}/**)`),
+    `${READ_TOOL_NAME}(${it(t.configDir)}/**)`,
+    `${EDIT_TOOL_NAME}(${it(t.configDir)}/**)`,
+    `${READ_TOOL_NAME}(${it(t.outDir)}/**)`,
+    `${EDIT_TOOL_NAME}(${it(t.outDir)}/**)`,
+    ...w.map((S) => `${EDIT_TOOL_NAME}(${it(S)}/**)`),
     ...Kd.flatMap((S) => [
-      `${Bt}(${it(k.join(t.cwd, S))})`,
-      `${Bt}(${it(k.join(t.cwd, S))}/**)`,
+      `${EDIT_TOOL_NAME}(${it(k.join(t.cwd, S))})`,
+      `${EDIT_TOOL_NAME}(${it(k.join(t.cwd, S))}/**)`,
     ]),
-    `${Bt}(${it(k.join(t.cwd, vt))})`,
-    `${Bt}(${it(k.join(t.cwd, vt))}/**)`,
+    `${EDIT_TOOL_NAME}(${it(k.join(t.cwd, vt))})`,
+    `${EDIT_TOOL_NAME}(${it(k.join(t.cwd, vt))}/**)`,
     ...d.denies,
-    ...d.denyPaths.flatMap((S) => [`${Bt}(${it(S)})`, `${Bt}(${it(S)}/**)`]),
+    ...d.denyPaths.flatMap((S) => [`${EDIT_TOOL_NAME}(${it(S)})`, `${EDIT_TOOL_NAME}(${it(S)}/**)`]),
   ];
   if (getCurrentPlatform() !== "windows") _.push(jd);
   for (let S of oi) if (!ii(r, S)) _.push(S);
@@ -5449,12 +5449,12 @@ async function Qa(e) {
       );
   return t;
 }
-var oi = [qe, Ut],
+var oi = [BASH_TOOL_NAME, POWERSHELL_TOOL_NAME],
   el = [MONITOR_TOOL_NAME, lR, Xre];
 function ii(e, t) {
   return e.some((r) => parsePermissionRule(r).toolName === t);
 }
-var si = new Set([Mn, Bt, Wl]);
+var si = new Set([WRITE_TOOL_NAME, EDIT_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME]);
 function Md(e, t) {
   let r = new Set(),
     i = [];
@@ -5467,11 +5467,11 @@ function Md(e, t) {
     i.push(u);
   }
   if (r.size === 0) return i;
-  let o = t.flatMap((u) => dedupe([Bt, ...r]).map((d) => `${d}(${it(u)}/**)`));
+  let o = t.flatMap((u) => dedupe([EDIT_TOOL_NAME, ...r]).map((d) => `${d}(${it(u)}/**)`));
   return dedupe([...i, ...o]);
 }
-var ai = new Set([tt, co, ro, LSP_TOOL_NAME]),
-  jd = `${tt}(//proc/**)`;
+var ai = new Set([READ_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, LSP_TOOL_NAME]),
+  jd = `${READ_TOOL_NAME}(//proc/**)`;
 function Fd(e, t) {
   return e.map((r) => {
     let i = parsePermissionRule(r);
@@ -5508,8 +5508,8 @@ function Ud(e, t, r = []) {
     o.push(p);
   }
   if (!i) return o;
-  let u = t.flatMap((p) => [tt, co, ro].map((h) => `${h}(${it(p)}/**)`)),
-    d = r.map((p) => `${tt}(${it(p)})`);
+  let u = t.flatMap((p) => [READ_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME].map((h) => `${h}(${it(p)}/**)`)),
+    d = r.map((p) => `${READ_TOOL_NAME}(${it(p)})`);
   return dedupe([...o, ...u, ...d]);
 }
 var Pa = /[()\[\]{}*?!#\\]/;
@@ -5767,7 +5767,7 @@ async function nl(e, t) {
         let ae = `tree:${k.normalize(Z)}`;
         if (xe.has(ae)) continue;
         (xe.add(ae),
-          Ae.push(`${tt}(${gt(Z)})`, `${tt}(${gt(Z)}/**)`),
+          Ae.push(`${READ_TOOL_NAME}(${gt(Z)})`, `${READ_TOOL_NAME}(${gt(Z)}/**)`),
           Qe.push(Z));
       }
     },
@@ -5780,7 +5780,7 @@ async function nl(e, t) {
       for (let Z of Mt(B)) {
         let ae = `file:${k.normalize(Z)}`;
         if (xe.has(ae)) continue;
-        (xe.add(ae), Ae.push(`${tt}(${gt(Z)})`), Qe.push(Z));
+        (xe.add(ae), Ae.push(`${READ_TOOL_NAME}(${gt(Z)})`), Qe.push(Z));
       }
     },
     mn = async (j) => {
@@ -5916,8 +5916,8 @@ async function nl(e, t) {
             }
             for (let I of kr)
               Ae.push(
-                `${tt}(${gt(pe)}/**/${I})`,
-                `${tt}(${gt(pe)}/**/${I}/**)`,
+                `${READ_TOOL_NAME}(${gt(pe)}/**/${I})`,
+                `${READ_TOOL_NAME}(${gt(pe)}/**/${I}/**)`,
               );
             for (let I of await U(pe)) Me(I);
             continue;
@@ -7626,7 +7626,7 @@ function Xf(e, t, r, i, { shellGranted: o }) {
             typeof F.usage === "object")
         )
           try {
-            E += qN(F.model, F.usage);
+            E += computeModelCostUsd(F.model, F.usage);
           } catch {}
       }
       let K = F?.content;
@@ -8899,7 +8899,7 @@ async function Pp() {
       }),
   );
 }
-var Dp = new Set([Mn, Bt, Wl, qe, Ut]);
+var Dp = new Set([WRITE_TOOL_NAME, EDIT_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME, BASH_TOOL_NAME, POWERSHELL_TOOL_NAME]);
 function gl(
   e,
   t,
@@ -9344,7 +9344,7 @@ async function qp(e, t) {
       isNonInteractiveSession: !0,
       hasAppendSystemPrompt: !1,
       mcpTools: [],
-      agentContext: aa(),
+      agentContext: createMainAgentContext(),
       onMediaStripped: (h, w) => {
         i = w;
       },
@@ -11479,7 +11479,7 @@ async function Xl(e) {
     (E ||
       (_ &&
         !a.CLAUDE_CODE_EVAL_INTERVIEW_SESSION &&
-        H("tengu_quartz_thimble", !0)));
+        getFeatureValue_CACHED_MAY_BE_STALE("tengu_quartz_thimble", !0)));
   try {
     let {
         evalReportTitle: C,

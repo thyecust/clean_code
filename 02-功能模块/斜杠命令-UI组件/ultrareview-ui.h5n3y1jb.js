@@ -12,7 +12,7 @@
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { isExtraUsageAllowed, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isExtraUsageAllowed, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { POST_IGNORED_NOTE, POST_DISABLED_NOTE, parseUltrareviewArgs, precheckLaunchScope, previewInstructions, checkOverageGate, launchRemoteReview, ultrareviewLaunchAcknowledgementNudge } from "../CodeReview/CodeReview.ddrd6y06.js";
@@ -32,7 +32,7 @@ import { Dn, kn, C, d, F } from "../../00-第三方库/_未识别/React运行时
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function qe() {
-  return !ee().hasSeenUltrareviewTerms;
+  return !getGlobalConfig().hasSeenUltrareviewTerms;
 }
 function ze() {
   return null;
@@ -74,7 +74,7 @@ function me(ho) {
         return;
       }
       if (((q.current = !0), z === "proceed" || z === "proceed-post")) {
-        if (T) Te(Qe, we);
+        if (T) saveGlobalConfig(Qe, we);
         (po(z),
           De(!0),
           be(Re.current.signal, { postToPR: z === "proceed-post" }).catch(

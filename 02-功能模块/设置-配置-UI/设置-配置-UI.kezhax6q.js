@@ -23,25 +23,25 @@ import { gi, o, t, ct, jr, tn, Od } from "../../01-核心基础设施/ANSI-样�
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  Mr,
-  Jy,
-  af,
+  isFastModeEnabled,
+  isFastModeAvailable,
+  modelSupportsFastMode,
   bytesPerTokenForModel,
   renderModelName,
-  Tn,
+  hashForTelemetry,
   isBgSession,
   isUnattendedBgSession,
-  fq,
+  getApiKeyFingerprint,
   isClaudeAISubscriber,
   hasStoredOAuthToken,
   getSubscriptionType,
   isConsumerSubscriber,
-  VD,
-  Te,
-  ee,
-  es,
-  ZUe,
-  hQ,
+  DEFAULT_GLOBAL_CONFIG,
+  saveGlobalConfig,
+  getGlobalConfig,
+  getCurrentProjectConfig,
+  formatAutoUpdaterDisabledReason,
+  getAutoUpdaterDisabledReason,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
@@ -1230,12 +1230,12 @@ var ta = [
     {
       id: "gitignore",
       isSet: ({ globalConfig: s }) =>
-        s.respectGitignore !== VD.respectGitignore,
+        s.respectGitignore !== DEFAULT_GLOBAL_CONFIG.respectGitignore,
     },
     {
       id: "copyFullResponse",
       isSet: ({ globalConfig: s }) =>
-        s.copyFullResponse !== VD.copyFullResponse,
+        s.copyFullResponse !== DEFAULT_GLOBAL_CONFIG.copyFullResponse,
     },
     {
       id: "recap",
@@ -1404,7 +1404,7 @@ function ga({
     Re = C(getInitialSettings()),
     [Ie, qe] = d(me?.outputStyle || DEFAULT_OUTPUT_STYLE_NAME),
     ke = C(Ie),
-    [Xe, Et] = d(() => es().hasClaudeMdExternalIncludesApproved === !0),
+    [Xe, Et] = d(() => getCurrentProjectConfig().hasClaudeMdExternalIncludesApproved === !0),
     [mt, Kt] = d(me?.language),
     tr = C(mt),
     [fe, He, Je] = qm(0),
@@ -1432,7 +1432,7 @@ function ga({
     vu = useMainLoopModelOverride() ?? Ws,
     Fp = useAppStateSelector((k) => k.verbose),
     xu = useAppStateSelector((k) => k.thinkingEnabled),
-    Mu = useAppStateSelector((k) => (Mr() ? k.fastMode : !1)),
+    Mu = useAppStateSelector((k) => (isFastModeEnabled() ? k.fastMode : !1)),
     Up = useAppStateSelector((k) => k.promptSuggestionEnabled),
     Wp = useAppStateSelector((k) => k.awaySummaryEnabled),
     Hp = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js").isBriefEntitled(),
@@ -1479,7 +1479,7 @@ function ga({
     tf = isArtifactConfigToggleable(),
     Lu = kn(getSessionMemoryFiles(B, !0, A, H)),
     of = hasExternalInstructionIncludes(Lu),
-    bt = hQ(),
+    bt = getAutoUpdaterDisabledReason(),
     rr = isPushNotificationsEnabled() && !isEssentialTrafficOnly() && hasStoredOAuthToken(),
     {
       settings: Po,
@@ -1645,16 +1645,16 @@ function ga({
           logEvent("tengu_config_changed", {
             key: Ae,
             setting: Ae,
-            value: Tn(String(Xs)),
+            value: hashForTelemetry(String(Xs)),
           }),
           `Set ${Ae} to ${chalk.bold(Xs)}`
         ),
       ),
       oe = xg() ? void 0 : a.ANTHROPIC_API_KEY,
       ne = Boolean(
-        oe && J.current.customApiKeyResponses?.approved?.includes(fq(oe)),
+        oe && J.current.customApiKeyResponses?.approved?.includes(getApiKeyFingerprint(oe)),
       ),
-      le = Boolean(oe && I.customApiKeyResponses?.approved?.includes(fq(oe)));
+      le = Boolean(oe && I.customApiKeyResponses?.approved?.includes(getApiKeyFingerprint(oe)));
     if (ne !== le)
       (k.push(`${le ? "Enabled" : "Disabled"} custom API key`),
         logEvent("tengu_config_changed", {
@@ -1741,7 +1741,7 @@ function ga({
     Ie,
     mt,
     me?.autoUpdatesChannel,
-    Mr() ? me?.fastMode : void 0,
+    isFastModeEnabled() ? me?.fastMode : void 0,
     s,
   ]);
   useKeybinding("confirm:no", Nu, {
@@ -1996,10 +1996,10 @@ function ga({
         if (!oe) return;
         let ne = !oe.value;
         if (oe.id === "leftArrowOpensAgents")
-          (Te((le) => ({ ...le, leftArrowOpensAgents: ne }), A),
+          (saveGlobalConfig((le) => ({ ...le, leftArrowOpensAgents: ne }), A),
             X((le) => ({ ...le, leftArrowOpensAgents: ne })));
         else
-          (Te((le) => ({ ...le, defaultToAgentsView: ne }), A),
+          (saveGlobalConfig((le) => ({ ...le, defaultToAgentsView: ne }), A),
             X((le) => ({ ...le, defaultToAgentsView: ne })));
         logEvent("tengu_config_changed", { setting: fromEnum(oe.id), value: ne });
       },
@@ -2112,7 +2112,7 @@ function ga({
                   onCancel: () => {
                     (De(null), m(!1));
                   },
-                  showFastModeNotice: Mr() ? Mu && af(vu) && Jy() : !1,
+                  showFastModeNotice: isFastModeEnabled() ? Mu && modelSupportsFastMode(vu) && isFastModeAvailable() : !1,
                 }),
                 e(t, {
                   dimColor: !0,
@@ -2151,7 +2151,7 @@ function ga({
                   if (k === "forward" || k === "keep_local")
                     X((oe) => ({
                       ...oe,
-                      remoteHomeSettingsMode: ee().remoteHomeSettingsMode,
+                      remoteHomeSettingsMode: getGlobalConfig().remoteHomeSettingsMode,
                     }));
                   (De(null), m(!1));
                 },
@@ -2161,7 +2161,7 @@ function ga({
                   children: [
                     e(ClaudeMdExternalIncludesDialog, {
                       onDone: () => {
-                        (Et(es().hasClaudeMdExternalIncludesApproved === !0),
+                        (Et(getCurrentProjectConfig().hasClaudeMdExternalIncludesApproved === !0),
                           De(null),
                           m(!1));
                       },
@@ -2417,7 +2417,7 @@ function ga({
                                       let oe = k;
                                       (De(null),
                                         m(!1),
-                                        Te(
+                                        saveGlobalConfig(
                                           (ne) => ({ ...ne, autoUpdates: !0 }),
                                           A,
                                         ),
@@ -2821,7 +2821,7 @@ function ga({
                                                                                               children:
                                                                                                 [
                                                                                                   "(",
-                                                                                                  ZUe(
+                                                                                                  formatAutoUpdaterDisabledReason(
                                                                                                     bt,
                                                                                                   ),
                                                                                                   ")",
@@ -3140,7 +3140,7 @@ function Vg(s, c) {
   if (s.id === "permissionMode") return getPermissionModeTitle(s.value);
   if (s.id === "workflowSizeGuideline") return formatWorkflowSizeGuidelineLabel(m, s.isDefaultValue ?? !1);
   if (s.id === "autoUpdatesChannel" && c.autoUpdaterDisabledReason)
-    return `disabled (${ZUe(c.autoUpdaterDisabledReason)})`;
+    return `disabled (${formatAutoUpdaterDisabledReason(c.autoUpdaterDisabledReason)})`;
   if (s.id === "notifChannel" && !c.revampSections) return cE(ha({ value: m }));
   return m;
 }

@@ -29,25 +29,25 @@ import { PERMISSION_MODES } from "../权限系统/chunk-e4pfvp7x.js";
 import { HU } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
   isAutoClassifierActive,
-  FT,
-  Ovn,
-  Xme,
-  mc,
+  sanitizeDisplayName,
+  MAX_ADDRESS_LENGTH,
+  findLastPeerHopChain,
+  getAgentDepth,
   maxSlugLength,
-  WCt,
-  uf,
-  GCt,
+  createRequestId,
+  parsePeerAddress,
+  validateMessageTarget,
   slugify,
-  SU,
-  nge,
-  l0,
-  Zvn,
-  jD,
-  bU,
-  TKt,
-  eZe,
-  zCt,
-  H,
+  getTeamLeadAgentId,
+  getAddressableTeamMembers,
+  isReservedRecipientName,
+  MAX_REF_LENGTH,
+  parseAgentDisplayName,
+  formatAgentDisplayName,
+  describeSessionLocation,
+  formatCandidateSummary,
+  findMemberByName,
+  getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getAgentId, getAgentName, getTeamName, isTeammate, getTeammateColor, isTeamLead } from "./teammate-context.js";
 import { qNe, $re, abt } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
@@ -269,7 +269,7 @@ async function Xe({
       logFeatureBad("swarm_in_process_resume", "no_team_context"),
       Error("Cannot resume teammate: no team is active in this session")
     );
-  if (l0(i))
+  if (isReservedRecipientName(i))
     throw (
       logFeatureBad("swarm_in_process_resume", "unclaimable_name"),
       Error(
@@ -506,8 +506,8 @@ function de({
 }
 var Rs = 100,
   ke = maxSlugLength + Rs,
-  Os = 2 + Zvn + 1,
-  us = Math.max(maxSlugLength + Os, Ovn),
+  Os = 2 + MAX_REF_LENGTH + 1,
+  us = Math.max(maxSlugLength + Os, MAX_ADDRESS_LENGTH),
   Te = /^[^\n\r]*$/u;
 function gs(e) {
   return new RegExp(`^[\\s\\S]{0,${e}}$`, "u");
@@ -813,7 +813,7 @@ async function Gs(e, t, p, r, d, _) {
       if (U !== null) {
         let F =
           d !== void 0
-            ? nge(U, SU(r.getAppState())).filter((ie) => ie.agentId === d)
+            ? getAddressableTeamMembers(U, getTeamLeadAgentId(r.getAppState())).filter((ie) => ie.agentId === d)
             : [];
         if (F.length > 1)
           return {
@@ -823,7 +823,7 @@ async function Gs(e, t, p, r, d, _) {
             },
             errorClass: "not_reachable",
           };
-        let Z = d !== void 0 ? F[0] : zCt(nge(U, SU(r.getAppState())), e);
+        let Z = d !== void 0 ? F[0] : findMemberByName(getAddressableTeamMembers(U, getTeamLeadAgentId(r.getAppState())), e);
         if (Z === void 0) {
           if (d !== void 0)
             return {
@@ -837,7 +837,7 @@ async function Gs(e, t, p, r, d, _) {
             data: {
               success: !1,
               message:
-                mc(r.agentContext) < getMaxSubagentSpawnDepth()
+                getAgentDepth(r.agentContext) < getMaxSubagentSpawnDepth()
                   ? `No teammate named '${e}' is currently on team '${w}'. Spawn one with ${AGENT_TOOL_NAME}({name: '${e}'}) \u2014 or message the lead to do so.`
                   : `No teammate named '${e}' is currently on team '${w}'. Message the lead to spawn one.`,
             },
@@ -952,7 +952,7 @@ async function Ys(e, t, p, r) {
   let d = r.getAppState(),
     _ = getTeamName(d.teamContext),
     i = Me(r),
-    w = WCt("shutdown", t),
+    w = createRequestId("shutdown", t),
     q = createShutdownRequestMessage({ requestId: w, from: i, reason: p });
   if (
     (await writeToMailbox(
@@ -1196,7 +1196,7 @@ function ms(e) {
     : "";
 }
 function Ts() {
-  return H("tengu_deep_feather", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_deep_feather", !0);
 }
 var SendMessageTool = buildTool({
   name: SEND_MESSAGE_TOOL_NAME,
@@ -1263,7 +1263,7 @@ var SendMessageTool = buildTool({
   },
   async checkPermissions(e, t) {
     if (hasIsolatePeerMachines() && !Ze(e.to)) {
-      let p = uf(e.to),
+      let p = parsePeerAddress(e.to),
         r = p.scheme;
       if (r === "bridge") {
         let d = qNe(t.session, p.target, e.to);
@@ -1469,7 +1469,7 @@ var SendMessageTool = buildTool({
         errorCode: 9,
       };
     {
-      let r = uf(e.to).scheme;
+      let r = parsePeerAddress(e.to).scheme;
       if ((r === "uds" || r === "bridge") && !isCrossSessionMessagingEnabled())
         return { result: !1, message: CROSS_SESSION_MESSAGING_DISABLED_MESSAGE, errorCode: 9 };
     }
@@ -1483,14 +1483,14 @@ var SendMessageTool = buildTool({
         };
       if (ve(e, t).refusedForPrincipal && e.message.trim().length === 0)
         return { result: !1, message: be, errorCode: 9 };
-      let r = uf(e.to).scheme;
+      let r = parsePeerAddress(e.to).scheme;
       if (r === "bridge" || r === "did")
         return { result: !1, message: fe, errorCode: 9 };
     }
-    let p = GCt(e.to, LIST_AGENTS_TOOL_NAME);
+    let p = validateMessageTarget(e.to, LIST_AGENTS_TOOL_NAME);
     if (p !== void 0) return { result: !1, message: p, errorCode: 9 };
     {
-      let r = uf(e.to);
+      let r = parsePeerAddress(e.to);
       if (r.scheme === "uds" && isLikelyOwnMessagingSocket(r.target))
         return { result: !1, message: formatOwnSessionMessage(e.to, isTeammateContext(t)), errorCode: 9 };
     }
@@ -1507,8 +1507,8 @@ var SendMessageTool = buildTool({
       !ne(e)
     )
       return { result: !1, message: vs, errorCode: 9 };
-    if (uf(e.to).scheme === "bridge") {
-      if (isOwnSessionId(uf(e.to).target))
+    if (parsePeerAddress(e.to).scheme === "bridge") {
+      if (isOwnSessionId(parsePeerAddress(e.to).target))
         return { result: !1, message: formatOwnSessionMessage(e.to, isTeammateContext(t)), errorCode: 9 };
       if (typeof e.message !== "string")
         return {
@@ -1519,7 +1519,7 @@ var SendMessageTool = buildTool({
         };
       return { result: !0 };
     }
-    if (uf(e.to).scheme === "uds" && typeof e.message === "string")
+    if (parsePeerAddress(e.to).scheme === "uds" && typeof e.message === "string")
       return { result: !0 };
     if (typeof e.message === "string") {
       if (isStructuredProtocolMessage(e.message))
@@ -1560,7 +1560,7 @@ var SendMessageTool = buildTool({
           "Structured team-protocol messages are only available with agent teams enabled.",
         errorCode: 9,
       };
-    if (uf(e.to).scheme !== "other")
+    if (parsePeerAddress(e.to).scheme !== "other")
       return {
         result: !1,
         message:
@@ -1766,7 +1766,7 @@ ${w[0].text}`,
     let q = d ? Ee(t, d) : void 0,
       N = q?.from;
     if (typeof e.message === "string") {
-      let h = uf(e.to),
+      let h = parsePeerAddress(e.to),
         I = !1;
       if (h.scheme === "bridge" && t.toolUseId) {
         let M = t.toolState.get(pe);
@@ -1838,7 +1838,7 @@ ${w[0].text}`,
             ee,
             D,
             void 0,
-            Xme(t.messages),
+            findLastPeerHopChain(t.messages),
             w,
             t.credentials,
           ),
@@ -1910,7 +1910,7 @@ ${w[0].text}`,
           ee = PGe(d, N, { oneWay: E() === void 0 });
         try {
           let j = x
-              ? await M(h.target, V, t.storageV5, D, void 0, Xme(t.messages), w)
+              ? await M(h.target, V, t.storageV5, D, void 0, findLastPeerHopChain(t.messages), w)
               : void 0,
             L = P ? await S(h.target, e.to, t.storageV5, w) : void 0;
           if (j)
@@ -2036,7 +2036,7 @@ ${w[0].text}`,
     }
     if (o.kind === "not-found") {
       let h = typeof e.message === "string" ? classifySelfNameMatch(e.to) : "no",
-        I = o.closest.some((P) => slugify(P.name) === slugify(jD(e.to)?.name ?? e.to));
+        I = o.closest.some((P) => slugify(P.name) === slugify(parseAgentDisplayName(e.to)?.name ?? e.to));
       if (h === "categorical" && !I && hasCompleteTargetLookup(o))
         return (
           i("unresolved", "invalid_target"),
@@ -2046,7 +2046,7 @@ ${w[0].text}`,
         );
       let D =
           o.closest.length > 0
-            ? ` Did you mean: ${o.closest.map((P) => (typeof e.message === "string" && P.where === "in-process" ? bU(P) : P.name)).join(", ")}?`
+            ? ` Did you mean: ${o.closest.map((P) => (typeof e.message === "string" && P.where === "in-process" ? formatAgentDisplayName(P) : P.name)).join(", ")}?`
             : "",
         M =
           typeof e.message === "string" && !0 && X
@@ -2099,7 +2099,7 @@ ${M}`,
           }
         );
       let I = Date.now(),
-        D = o.candidates.map((G) => `  ${eZe(G, I)}`).join(`
+        D = o.candidates.map((G) => `  ${formatCandidateSummary(G, I)}`).join(`
 `),
         M =
           o.total > o.candidates.length
@@ -2141,7 +2141,7 @@ Note: earlier in this conversation '${o.pinnedIdentityClaimedLocally}' was confi
           !o.localUnavailable &&
           !o.pinnedIdentityClaimedLocally
             ? `
-e.g. {"to": "${bU(o.candidates[0])}", ...}`
+e.g. {"to": "${formatAgentDisplayName(o.candidates[0])}", ...}`
             : "",
         C = o.searchTruncated ? { searchTruncated: !0 } : void 0;
       if (o.bridgeUnavailable === "timeout" || o.cloudUnavailable === "timeout")
@@ -2164,7 +2164,7 @@ e.g. {"to": "${bU(o.candidates[0])}", ...}`
           ? ` ${von(o.pinnedIdentityClaimedLocally)} \u2014 ask before confirming anyone.`
           : "",
         j = Con(o),
-        L = o.candidates.map((G) => `'${G.name}' ${TKt(G.where)}`).join(", "),
+        L = o.candidates.map((G) => `'${G.name}' ${describeSessionLocation(G.where)}`).join(", "),
         J = `${o.total === 1 ? (o.matchedBy === "prefix" ? `Not sent \u2014 no agent is named '${e.to}' exactly${E ? ` among the sessions that could be checked (${j})` : ""}; asked Claude to confirm it means '${V.name}'.` : o.pinnedIdentityClaimedLocally ? `Not sent \u2014 '${e.to}' needs a confirm before this send.` : E ? `Not sent yet \u2014 '${e.to}' matches '${V.name}', but ${j}; asked Claude to confirm.` : `Not sent \u2014 '${e.to}' needs a one-time confirm before this send; asked Claude to confirm it means '${V.name}'.`) : o.matchedBy === "prefix" ? `Not sent \u2014 '${e.to}' matches ${o.total} agents by prefix (${L}${o.total > o.candidates.length ? ", \u2026" : ""}); asked Claude to pick one.` : `Not sent \u2014 ${o.total} agents are named '${e.to}' (${L}${o.total > o.candidates.length ? ", \u2026" : ""}); asked Claude to pick one.`}${E && o.total !== 1 ? ` Note: ${j}.` : ""}${B}${ee}`;
       return {
         data: {
@@ -2214,9 +2214,9 @@ ${E}`,
           success: !1,
           message: `${h}
 It now resolves to:
-  ${eZe(U.next, Date.now())}
+  ${formatCandidateSummary(U.next, Date.now())}
 To message the new agent, re-send with its ref:
-e.g. {"to": "${bU(U.next)}", ...}
+e.g. {"to": "${formatAgentDisplayName(U.next)}", ...}
 ${M}`,
           display: I,
         },
@@ -2278,7 +2278,7 @@ ${M}`,
                   },
                 }
               );
-            let v = nge(P, SU(E)).filter((C) => C.agentId === o.memberAgentId);
+            let v = getAddressableTeamMembers(P, getTeamLeadAgentId(E)).filter((C) => C.agentId === o.memberAgentId);
             if (v.length > 1)
               return (
                 i("mailbox", "not_reachable"),
@@ -2340,7 +2340,7 @@ ${M}`,
       );
     }
     let Z = d !== void 0 && N !== void 0 ? formatAgentMessage(N, e.message) : e.message,
-      ie = q ? FT(q.displayName) : "",
+      ie = q ? sanitizeDisplayName(q.displayName) : "",
       le =
         d !== void 0 && N !== void 0
           ? {
@@ -2630,7 +2630,7 @@ ${M}`,
               t.storageV5,
               D,
               void 0,
-              Xme(t.messages),
+              findLastPeerHopChain(t.messages),
               w,
             ),
             x = S ? await M(o.sock, o.displayName, t.storageV5, w) : void 0,
@@ -2747,7 +2747,7 @@ ${V.display}`
             ee,
             j,
             void 0,
-            Xme(t.messages),
+            findLastPeerHopChain(t.messages),
             w,
             t.credentials,
           ),

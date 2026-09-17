@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { df, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { initializeGrowthBook, getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a, antEnv } from "../设置-配置/chunk-zqr5ctyf.js";
 import { capitalize } from "../核心工具-字符串与文本/string-utils.js";
@@ -30,12 +30,12 @@ async function ensureFleetGateHydrated(e = {}) {
     let { getSettingsWithErrors: t } = await import("../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js");
     t();
   }
-  if (e.kickGrowthBook !== !1) df().catch(() => {});
+  if (e.kickGrowthBook !== !1) initializeGrowthBook().catch(() => {});
 }
 function isPastSessionsExperimentEnabled() {
   return (
     antEnv.CLAUDE_CODE_FLEET_PAST_SESSIONS === !0 ||
-    H("tengu_fleet_past_sessions", !1)
+    getFeatureValue_CACHED_MAY_BE_STALE("tengu_fleet_past_sessions", !1)
   );
 }
 function isDaemonCliEnabled() {
@@ -45,13 +45,13 @@ function isDaemonWorkerRegistryEnabled() {
   return !1;
 }
 function isDaemonServiceInstallEnabled() {
-  return H("tengu_amber_anchor", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_amber_anchor", !1);
 }
 function isDaemonServiceRecalled() {
-  return H("tengu_copper_lantern", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_copper_lantern", !1);
 }
 function daemonColdStartGbDefault() {
-  return H("tengu_quiet_harbor", !1) ? "ask" : "transient";
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_quiet_harbor", !1) ? "ask" : "transient";
 }
 function bgSupervisorNoun() {
   return isDaemonServiceInstallEnabled() ? "daemon" : "background service";

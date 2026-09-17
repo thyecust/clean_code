@@ -10,7 +10,7 @@
 import { OHe } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { qP, Tz, c_e, ns, bje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { REMOTE_CALLOUT_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
-import { lU, isBgSession, _sr, sameOwnerAccount, getOauthAccountInfo, hq, _q } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { resetUserData, isBgSession, removeDiscardedGatewayCredential, sameOwnerAccount, getOauthAccountInfo, getScreenReaderEnvOverrides, refreshGrowthBookAfterAuthChange } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -87,7 +87,7 @@ async function N8(o, s, i) {
       if (!isExiting()) W.release?.();
     }
   } else mIe(showStandaloneSecurityDialog, o.storageV5, o.credentials);
-  (c_e(), zJe(), lU(), _q());
+  (c_e(), zJe(), resetUserData(), refreshGrowthBookAfterAuthChange());
   let { setAppState: g } = i,
     y = OHe.of(o.session),
     m = () => y.credentialsPersisted(),
@@ -169,7 +169,7 @@ async function le(o, s, i) {
   for (let g = bje(); g; g = bje()) await g.catch(() => {});
   let u = ns();
   if (
-    (await _sr(u && s && u.url === s.url ? u : s, o.credentials),
+    (await removeDiscardedGatewayCredential(u && s && u.url === s.url ? u : s, o.credentials),
     await hlt(o.storageV5),
     isExiting())
   )
@@ -272,7 +272,7 @@ async function fe(o, s, i) {
         freshIfNoTranscript: !0,
         extraArgs: [...vre(c, getSessionEffort(o)), ...Rre(c, Tz())],
         proactivity: y,
-        env: hq(),
+        env: getScreenReaderEnvOverrides(),
         preSpawn: () =>
           process.stdout.write(`
 ${s}

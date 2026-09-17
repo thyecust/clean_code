@@ -22,7 +22,7 @@ import { Ve, yt, G0, R, dt, ge, l, Ub, Po } from "../../00-第三方库/@anthrop
 import { Ro, D0, Tr, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { TruncatingOutputBuffer } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { pi, Ad, DCt, Bt, tt, Mn, co, ro, Ut, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { emitTaskNotification, getOwnValue, isForegroundSubagentContext, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, POWERSHELL_TOOL_NAME, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { yS, hL, _L, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -2021,7 +2021,7 @@ var jn = new Set(["StringConstant", "Parameter"]),
   ]);
 function Lt(e) {
   let t = Ef(e.name),
-    o = Ad(it, t);
+    o = getOwnValue(it, t);
   if (!o)
     return {
       paths: [],
@@ -2270,7 +2270,7 @@ function Gn(e, t, o = !1) {
         optionalWrite: C,
       } = Lt(y),
       A = Ef(y.name),
-      F = Ad(it, A) !== void 0;
+      F = getOwnValue(it, A) !== void 0;
     if (f && !F) {
       let E = qn(y, r, t, o);
       if (E?.behavior === "deny") return E;
@@ -2443,7 +2443,7 @@ function Gn(e, t, o = !1) {
         )
           d ??= outsideReadsRuntimePathAsk(A);
       }
-      if (_ !== "read" && !C && L.length === 0 && Ad(it, A) !== void 0) {
+      if (_ !== "read" && !C && L.length === 0 && getOwnValue(it, A) !== void 0) {
         a ??= {
           behavior: "ask",
           message: `${A} is a write operation but no target path could be determined; requires manual approval`,
@@ -3377,7 +3377,7 @@ function _e(e) {
     e.includes("*")
   )
     return [];
-  return dEt(Ut, We(e));
+  return dEt(POWERSHELL_TOOL_NAME, We(e));
 }
 function pt(e, t, o, r) {
   let a = We(e.command);
@@ -3456,11 +3456,11 @@ function pt(e, t, o, r) {
     .map(([, _]) => _);
 }
 function Ae(e, t, o) {
-  let r = ah(t, Ut, "deny"),
+  let r = ah(t, POWERSHELL_TOOL_NAME, "deny"),
     a = pt(e, r, o, "deny"),
-    d = ah(t, Ut, "ask"),
+    d = ah(t, POWERSHELL_TOOL_NAME, "ask"),
     f = pt(e, d, o, "ask"),
-    b = ah(t, Ut, "allow"),
+    b = ah(t, POWERSHELL_TOOL_NAME, "allow"),
     p = pt(e, b, o, "allow");
   return { matchingDenyRules: a, matchingAskRules: f, matchingAllowRules: p };
 }
@@ -3475,13 +3475,13 @@ function Ht(e, t) {
   if (a[0] !== void 0)
     return {
       behavior: "deny",
-      message: `Permission to use ${Ut} with command ${o} has been denied.`,
+      message: `Permission to use ${POWERSHELL_TOOL_NAME} with command ${o} has been denied.`,
       decisionReason: { type: "rule", rule: a[0] },
     };
   if (d[0] !== void 0)
     return {
       behavior: "ask",
-      message: createPermissionRequestMessage(Ut),
+      message: createPermissionRequestMessage(POWERSHELL_TOOL_NAME),
       decisionReason: { type: "rule", rule: d[0] },
     };
   if (f[0] !== void 0)
@@ -3493,7 +3493,7 @@ function Ht(e, t) {
   let b = { type: "other", reason: "This command requires approval" };
   return {
     behavior: "passthrough",
-    message: createPermissionRequestMessage(Ut, b),
+    message: createPermissionRequestMessage(POWERSHELL_TOOL_NAME, b),
     decisionReason: b,
     suggestions: _e(o),
   };
@@ -3511,13 +3511,13 @@ function As(e, t) {
   if (d[0] !== void 0)
     return {
       behavior: "deny",
-      message: `Permission to use ${Ut} with command ${o} has been denied.`,
+      message: `Permission to use ${POWERSHELL_TOOL_NAME} with command ${o} has been denied.`,
       decisionReason: { type: "rule", rule: d[0] },
     };
   if (f[0] !== void 0)
     return {
       behavior: "ask",
-      message: createPermissionRequestMessage(Ut),
+      message: createPermissionRequestMessage(POWERSHELL_TOOL_NAME),
       decisionReason: { type: "rule", rule: f[0] },
     };
   if (a.behavior === "allow") return a;
@@ -3530,7 +3530,7 @@ function As(e, t) {
   let p = { type: "other", reason: "This command requires approval" };
   return {
     behavior: "passthrough",
-    message: createPermissionRequestMessage(Ut, p),
+    message: createPermissionRequestMessage(POWERSHELL_TOOL_NAME, p),
     decisionReason: p,
     suggestions: _e(o),
   };
@@ -3629,14 +3629,14 @@ async function Is(e, t, o) {
   if (b[0] !== void 0)
     return {
       behavior: "deny",
-      message: `Permission to use ${Ut} with command ${r} has been denied.`,
+      message: `Permission to use ${POWERSHELL_TOOL_NAME} with command ${r} has been denied.`,
       decisionReason: { type: "rule", rule: b[0] },
     };
   let I = null;
   if (p[0] !== void 0)
     I = {
       behavior: "ask",
-      message: createPermissionRequestMessage(Ut),
+      message: createPermissionRequestMessage(POWERSHELL_TOOL_NAME),
       decisionReason: { type: "rule", rule: p[0] },
     };
   if (I === null && Q_(r))
@@ -3683,7 +3683,7 @@ async function Is(e, t, o) {
           if (ht[0] !== void 0)
             return {
               behavior: "deny",
-              message: `Permission to use ${Ut} with command ${r} has been denied.`,
+              message: `Permission to use ${POWERSHELL_TOOL_NAME} with command ${r} has been denied.`,
               decisionReason: { type: "rule", rule: ht[0] },
             };
           K ??= tn[0];
@@ -3704,7 +3704,7 @@ async function Is(e, t, o) {
         type: "other",
         reason: `Command contains malformed syntax that cannot be parsed: ${d.errors[0]?.message ?? "unknown error"}`,
       },
-      D = { behavior: "ask", decisionReason: ne, message: createPermissionRequestMessage(Ut, ne) };
+      D = { behavior: "ask", decisionReason: ne, message: createPermissionRequestMessage(POWERSHELL_TOOL_NAME, ne) };
     return U({
       ...D,
       decisionReason: { type: "subcommandResults", reasons: new Map([[r, D]]) },
@@ -3720,7 +3720,7 @@ async function Is(e, t, o) {
       let v = { type: "other", reason: L.message };
       y.push({
         behavior: "ask",
-        message: createPermissionRequestMessage(Ut, v),
+        message: createPermissionRequestMessage(POWERSHELL_TOOL_NAME, v),
         decisionReason: v,
         suggestions: _e(r),
       });
@@ -3733,7 +3733,7 @@ async function Is(e, t, o) {
     };
     y.push({
       behavior: "ask",
-      message: createPermissionRequestMessage(Ut, v),
+      message: createPermissionRequestMessage(POWERSHELL_TOOL_NAME, v),
       decisionReason: v,
       suggestions: _e(r),
     });
@@ -3746,7 +3746,7 @@ async function Is(e, t, o) {
     };
     y.push({
       behavior: "ask",
-      message: createPermissionRequestMessage(Ut, v),
+      message: createPermissionRequestMessage(POWERSHELL_TOOL_NAME, v),
       decisionReason: v,
       suggestions: _e(r),
     });
@@ -3759,7 +3759,7 @@ async function Is(e, t, o) {
     };
     y.push({
       behavior: "ask",
-      message: createPermissionRequestMessage(Ut, v),
+      message: createPermissionRequestMessage(POWERSHELL_TOOL_NAME, v),
       decisionReason: v,
       suggestions: _e(r),
     });
@@ -3832,13 +3832,13 @@ async function Is(e, t, o) {
     if (D !== void 0)
       y.push({
         behavior: "deny",
-        message: `Permission to use ${Ut} with command ${r} has been denied.`,
+        message: `Permission to use ${POWERSHELL_TOOL_NAME} with command ${r} has been denied.`,
         decisionReason: { type: "rule", rule: D },
       });
     else if (Z !== void 0)
       y.push({
         behavior: "ask",
-        message: createPermissionRequestMessage(Ut),
+        message: createPermissionRequestMessage(POWERSHELL_TOOL_NAME),
         decisionReason: { type: "rule", rule: Z },
       });
   }
@@ -4035,7 +4035,7 @@ async function Is(e, t, o) {
     if (U.behavior === "deny")
       return {
         behavior: "deny",
-        message: `Permission to use ${Ut} with command ${r} has been denied.`,
+        message: `Permission to use ${POWERSHELL_TOOL_NAME} with command ${r} has been denied.`,
         decisionReason: U.decisionReason,
       };
     if (U.behavior === "ask") {
@@ -4119,7 +4119,7 @@ async function Is(e, t, o) {
     if (getCommandSecurityPatterns(d).hasScriptBlocks) {
       let v = {
         behavior: "ask",
-        message: createPermissionRequestMessage(Ut),
+        message: createPermissionRequestMessage(POWERSHELL_TOOL_NAME),
         decisionReason: {
           type: "other",
           reason:
@@ -4152,7 +4152,7 @@ async function Is(e, t, o) {
   }
   let ve = {
     behavior: "passthrough",
-    message: createPermissionRequestMessage(Ut, te),
+    message: createPermissionRequestMessage(POWERSHELL_TOOL_NAME, te),
     decisionReason: te,
     suggestions: Te,
   };
@@ -4186,7 +4186,7 @@ async function Yt() {
   let e = Ls(),
     t = Ms(),
     o = await getPowerShellEdition(),
-    r = H("tengu_brass_sled", !1) ? await dur() : [],
+    r = getFeatureValue_CACHED_MAY_BE_STALE("tengu_brass_sled", !1) ? await dur() : [],
     a =
       getCurrentPlatform() === "windows"
         ? "\n   - Exception: the MSVC toolchain (`cl`, `nmake`, `msbuild`) is only on PATH inside a Visual Studio developer shell, so it may be installed even if not listed. Environment changes do NOT persist between commands, so initialize and build in ONE command: `cmd /c '\"C:\\Program Files\\Microsoft Visual Studio\\<year>\\<edition>\\VC\\Auxiliary\\Build\\vcvarsall.bat\" x64 && <build command>'`"
@@ -4272,15 +4272,15 @@ ${
 `
     : ""
 }  - Avoid using PowerShell to run commands that have dedicated tools, unless explicitly instructed:
-    - File search: Use ${co} (NOT Get-ChildItem -Recurse)
-    - Content search: Use ${ro} (NOT Select-String)
-    - Read files: Use ${tt} (NOT Get-Content)
-    - Edit files: Use ${Bt}
-    - Write files: Use ${Mn} (NOT Set-Content/Out-File)
+    - File search: Use ${GLOB_TOOL_NAME} (NOT Get-ChildItem -Recurse)
+    - Content search: Use ${GREP_TOOL_NAME} (NOT Select-String)
+    - Read files: Use ${READ_TOOL_NAME} (NOT Get-Content)
+    - Edit files: Use ${EDIT_TOOL_NAME}
+    - Write files: Use ${WRITE_TOOL_NAME} (NOT Set-Content/Out-File)
     - Communication: Output text directly (NOT Write-Output/Write-Host)
   - When issuing multiple commands:
-    - If the commands are independent and can run in parallel, make multiple ${Ut} tool calls in a single message.
-    - If the commands depend on each other and must run sequentially, chain them in a single ${Ut} call (see edition-specific chaining syntax above).
+    - If the commands are independent and can run in parallel, make multiple ${POWERSHELL_TOOL_NAME} tool calls in a single message.
+    - If the commands depend on each other and must run sequentially, chain them in a single ${POWERSHELL_TOOL_NAME} call (see edition-specific chaining syntax above).
     - Use \`;\` only when you need to run commands sequentially but don't care if earlier commands fail.
     - DO NOT use newlines to separate commands (newlines are ok in quoted strings and here-strings)
   - Do NOT prefix commands with \`cd\` or \`Set-Location\` -- the working directory is already set to the correct project directory automatically.${
@@ -4470,7 +4470,7 @@ var Ks =
     }),
   ),
   PowerShellTool = buildTool({
-    name: Ut,
+    name: POWERSHELL_TOOL_NAME,
     ruleContentField: "command",
     searchHint: "execute Windows PowerShell commands",
     enablesCodeExecution: !0,
@@ -4573,7 +4573,7 @@ var Ks =
         !Ze(e) &&
         Ze({ ...e, dangerouslyDisableSandbox: !1 })
       ) {
-        let r = hWt({ toolName: Ut, input: e, context: t });
+        let r = hWt({ toolName: POWERSHELL_TOOL_NAME, input: e, context: t });
         if (r) return r;
         return {
           behavior: "ask",
@@ -4631,7 +4631,7 @@ var Ks =
             backgroundedToDeliverMessage: p,
             timedOutAfterMs: I,
             reapedAtFinalResponse: x,
-            readToolName: tt,
+            readToolName: READ_TOOL_NAME,
           })
         : "";
       if (f && jE())
@@ -4720,7 +4720,7 @@ var Ks =
           if (resetCwdToOriginalIfNeeded(t.session, getToolPermissionContext(t))) z = appendShellCwdResetNotice("");
         }
         let q =
-          w.backgroundTaskId !== void 0 && DCt(t.agentContext) ? !0 : void 0;
+          w.backgroundTaskId !== void 0 && isForegroundSubagentContext(t.agentContext) ? !0 : void 0;
         if (w.backgroundTaskId) {
           let Y = extractAndSubmitPluginHints(w.stdout || "", {
             command: e.command,
@@ -4979,7 +4979,7 @@ async function* Qs({
       }
     );
   }
-  let Te = te.status !== "killed" ? claimSandboxAttemptOnce(Ut, C, w, { useSandbox: t }) : null,
+  let Te = te.status !== "killed" ? claimSandboxAttemptOnce(POWERSHELL_TOOL_NAME, C, w, { useSandbox: t }) : null,
     ve = te.result;
   if (Te)
     ve.then((D) => {
@@ -5049,7 +5049,7 @@ async function* Qs({
       if (X !== null) {
         if (((ne = X), X.backgroundTaskId !== void 0)) {
           if (finishBackgroundShellTask(X.backgroundTaskId, X, r))
-            pi(X.backgroundTaskId, getShellResultStatus(X), { toolUseId: p, summary: A || C });
+            emitTaskNotification(X.backgroundTaskId, getShellResultStatus(X), { toolUseId: p, summary: A || C });
           let Se = { ...X, backgroundTaskId: void 0 },
             { taskOutput: me } = te;
           if (me.stdoutToFile && !me.outputFileRedundant)

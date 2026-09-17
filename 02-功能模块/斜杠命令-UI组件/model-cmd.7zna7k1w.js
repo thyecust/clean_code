@@ -13,7 +13,7 @@ import { withDeadline } from "../../01-核心基础设施/共享小工具-未细
 import { HELP_FLAGS, INFO_SUBCOMMAND_ALIASES } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { renderFableModelName, parseUserSpecifiedModel, Tn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { renderFableModelName, parseUserSpecifiedModel, hashForTelemetry } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { RP } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { enqueueSessionTask } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ySe, P_, Rl, rI, I3e, P3e, n2 } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
@@ -33,7 +33,7 @@ ${s}`,
   if (HELP_FLAGS.includes(n)) return { type: "text", value: s };
   return (
     logEvent("tengu_model_command_inline", {
-      args_hash: Tn(n),
+      args_hash: hashForTelemetry(n),
       args_length: n.length,
     }),
     enqueueSessionTask(t.session, async () => {

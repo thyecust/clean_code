@@ -10,7 +10,7 @@
 import { j, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Te, ee, es, eu } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { saveGlobalConfig, getGlobalConfig, getCurrentProjectConfig, saveCurrentProjectConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { findGitRootRecheckingNegative } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -56,7 +56,7 @@ function diffPanelCanMount({
   return isReplDiffSidebarEnabled() && o && !r && i && n >= DIFF_SIDEBAR_MIN_COLS && s;
 }
 function shouldAutoOpenDiffSidebar(o) {
-  let n = ee().diffSidebarOpen;
+  let n = getGlobalConfig().diffSidebarOpen;
   if (n === !1) return !1;
   return o >= (n === !0 ? DIFF_SIDEBAR_MIN_COLS : DIFF_SIDEBAR_AUTO_OPEN_MIN_COLS) && diffSidebarHasGitRepo();
 }
@@ -69,7 +69,7 @@ function toggleReplDiffTab(o, n, r, i) {
         : { ...a, replTab: s, panelFileView: null },
     ));
   let l = s === "diff";
-  if (ee().diffSidebarOpen !== l) Te((a) => ({ ...a, diffSidebarOpen: l }), i);
+  if (getGlobalConfig().diffSidebarOpen !== l) saveGlobalConfig((a) => ({ ...a, diffSidebarOpen: l }), i);
   return (logFeatureOk("repl_tab_switch", { tab: fromEnum(s) }), s);
 }
 function resetReplTabToConvo(o, n) {
@@ -81,19 +81,19 @@ function resetReplTabToConvo(o, n) {
     ));
 }
 function closeReplDiffTab(o, n, r) {
-  if ((resetReplTabToConvo(o, n), ee().diffSidebarOpen !== !1))
-    Te((i) => ({ ...i, diffSidebarOpen: !1 }), r);
+  if ((resetReplTabToConvo(o, n), getGlobalConfig().diffSidebarOpen !== !1))
+    saveGlobalConfig((i) => ({ ...i, diffSidebarOpen: !1 }), r);
   logFeatureOk("repl_tab_switch", { tab: fromEnum("convo") });
 }
 var g = ["session", "uncommitted", "branch"];
 function getPersistedDiffBaseMode() {
-  let o = es().diffSidebarBaseMode;
+  let o = getCurrentProjectConfig().diffSidebarBaseMode;
   return o === "uncommitted" || o === "branch" ? o : "session";
 }
 function cycleDiffBaseMode(o, n) {
   let r = g[(g.indexOf(o) + 1) % g.length] ?? "session";
   return (
-    eu(
+    saveCurrentProjectConfig(
       (i) =>
         i.diffSidebarBaseMode === r ? i : { ...i, diffSidebarBaseMode: r },
       n,
