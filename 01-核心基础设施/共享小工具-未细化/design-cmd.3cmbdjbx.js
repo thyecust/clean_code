@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 81 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { w3e } from "./chunk-md00q5qh.js";
+import { runDesignCommand as w3e } from "./design-command-handler.js";
 import "../../02-功能模块/DesignSync/design-consent-and-grants.js";
 import "../../02-功能模块/DesignSync/design-oauth-credentials.js";
 import "../../02-功能模块/认证-OAuth登录/oauth-login-flow.js";

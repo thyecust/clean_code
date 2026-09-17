@@ -11,14 +11,14 @@ import { Wrn, VIe } from "./chunk-5wa92x7d.js";
 import { K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { executeElicitationHooks, executeElicitationResultHooks, executeNotificationHooks } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { jIe } from "./chunk-7gw5rbph.js";
-import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
+import { getOrCreateElicitationHandler } from "./mcp-elicitation-request-handler.js";
+import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js";
 function parseRelatedTaskMetadataV2(e) {
   let t = VIe.safeParse(e?.[Wrn]);
   return t.success ? { taskId: t.data.taskId } : null;
 }
 function registerElicitationHandlerV2(e, t, r, c) {
-  let n = jIe(e, {
+  let n = getOrCreateElicitationHandler(e, {
     serverName: t,
     requestDialog: r,
     transportErrorState: c,
@@ -58,7 +58,7 @@ function handleElicitationRequestV2({
   requestDialog: c,
   transportErrorState: n,
 }) {
-  return jIe(asMcpSdkClient(e.client), {
+  return getOrCreateElicitationHandler(asMcpSdkClient(e.client), {
     serverName: e.name,
     requestDialog: c,
     transportErrorState: e.transportErrorState,

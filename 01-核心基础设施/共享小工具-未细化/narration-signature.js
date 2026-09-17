@@ -13,7 +13,7 @@ var o = 2,
   a = 8,
   NARRATION_BLOCK_TAG = "narration",
   SUMMARIZED_HINT_LABEL = "summarized";
-function yGn(d) {
+function readNarrationBlockTag(d) {
   let n;
   try {
     n = atob(d);
@@ -28,4 +28,4 @@ function yGn(d) {
   if (i === void 0) return;
   return readProtoStringField(i, a);
 }
-export { NARRATION_BLOCK_TAG, SUMMARIZED_HINT_LABEL, yGn };
+export { NARRATION_BLOCK_TAG, SUMMARIZED_HINT_LABEL, readNarrationBlockTag };

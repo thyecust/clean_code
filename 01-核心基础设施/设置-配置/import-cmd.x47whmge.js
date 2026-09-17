@@ -14,7 +14,7 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pluralize } from "../核心工具-字符串与文本/string-utils.js";
 import { CXn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { fO, Qw, b3e, Ilt } from "./chunk-ncbnx9cz.js";
-import { wIe, classifyImportItem } from "../共享小工具-未细化/import-items.js";
+import { isAutoImportableItem, classifyImportItem } from "../共享小工具-未细化/import-items.js";
 import { countMatching } from "../共享小工具-未细化/chunk-d16fhdtx.js";
 import { createHash } from "crypto";
 function scanDigest(d) {
@@ -120,7 +120,7 @@ function v(d, p, u, r) {
     (o.push(
       "Summarise what was found in your own words, then ask the user how to proceed:",
     ),
-    m.some(wIe))
+    m.some(isAutoImportableItem))
   )
     o.push(
       `- To import the user-level items above (\u26A0-flagged items and skills are held back), they reply \`${s}\`.`,
@@ -147,7 +147,7 @@ function v(d, p, u, r) {
 async function S(d, p, u, r) {
   let t = d.flatMap((a) => a.result.items),
     n = d.flatMap((a) => a.result.unmappable),
-    g = t.filter(wIe),
+    g = t.filter(isAutoImportableItem),
     m = countMatching(t, (a) => classifyImportItem(a) === "project"),
     h = countMatching(t, (a) => classifyImportItem(a) === "warned"),
     c = [],

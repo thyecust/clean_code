@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 78 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
-  ny,
+  isAgentsFleetEnabled as ny,
   ensureFleetGateHydrated as C$e,
   isPastSessionsExperimentEnabled as FJe,
   isDaemonCliEnabled as Tve,
@@ -22,11 +22,11 @@ import {
   bgSupervisorNounCap as QK,
   daemonHint as zJ,
   fleetGateRejected as bme,
-  sAt,
+  AGENT_VIEW_RELAUNCH_ENV_KEY as sAt,
   isLaunchComposerEnabled as b4t,
   shouldShowLaunchComposer as Syr,
   isListReturnRelaunch as CAn,
-  vAn,
+  consumeAgentViewRelaunchMarker as vAn,
 } from "./agent-view-feature-gates.js";
 export {
   sAt as AGENT_VIEW_RELAUNCH_ENV_KEY,

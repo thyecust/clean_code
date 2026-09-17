@@ -188,7 +188,7 @@ import "../../01-核心基础设施/核心工具-进程与信号/process-identit
 import "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import "../../02-功能模块/Hooks钩子/session-feature-cache.js";
 import { USER_INTENT_SETTING_KEYS, resolveSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
-import { ny, isPastSessionsExperimentEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
+import { isAgentsFleetEnabled, isPastSessionsExperimentEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { printCliError, cliError, cliOk, cliWarn, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { Aa } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
 import "../../02-功能模块/ClaudeinChrome/claude-in-chrome-host.js";
@@ -349,9 +349,9 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js"
 import "../../02-功能模块/后台任务-Shell管理/chunk-djserjj5.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
-import "../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js";
+import "../../02-功能模块/认证-OAuth登录/wif-credentials.js";
 import "../../02-功能模块/Skills技能/bundled-skills.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-5jqttbex.js";
+import "../../01-核心基础设施/共享小工具-未细化/plugin-eval-quickref-asset.js";
 import { wa } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { isAgentSwarmsEnabled } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
@@ -574,7 +574,7 @@ import "../../01-核心基础设施/共享小工具-未细化/auto-react-state.j
 import "../../01-核心基础设施/共享小工具-未细化/lodash-to-number.js";
 import "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ck2sjz96.js";
+import "../../01-核心基础设施/共享小工具-未细化/org-skills-sync.js";
 import { isPluginEvalEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 import "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 import "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
@@ -584,7 +584,7 @@ import "../../02-功能模块/插件系统/chunk-33bdfgmx.js";
 import "../../02-功能模块/MCP客户端/mcp-skills-extension.js";
 import "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import "../../02-功能模块/DesignSync/design-sync-tool-metadata.js";
-import "../../02-功能模块/MCP客户端/chunk-tznd4407.js";
+import "../../02-功能模块/MCP客户端/mcp-task-id.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-timeouts.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js";
 import "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
@@ -594,7 +594,7 @@ import "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.j
 import "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
 import "../../02-功能模块/Teammates团队/permission-sync-mailbox.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
+import "../../01-核心基础设施/共享小工具-未细化/jittered-backoff-delay.js";
 import { resetRemoteSettingsSyncCache } from "../../01-核心基础设施/共享小工具-未细化/remote-settings-eligibility.js";
 import "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
 import "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
@@ -602,7 +602,7 @@ import "../../01-核心基础设施/共享小工具-未细化/disable-bundled-sk
 import "../../02-功能模块/工具ToolSearch/tool-search-enablement.js";
 import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
-import "../../02-功能模块/权限系统/chunk-pcxn6gwz.js";
+import "../../02-功能模块/权限系统/bypass-permissions-mode-policy.js";
 import "../../01-核心基础设施/共享小工具-未细化/expand-tabs.js";
 import "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { isFlagPresent, isNonInteractiveMode, findArgIndex, isCcProtocolUrl, isHelpRequested } from "../../02-功能模块/上下文压缩-Compact/cli-args.js";
@@ -7893,7 +7893,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
         }
       }
     }
-    if (ny() || (typeof k.resume === "string" && isTranscriptFileResumeArg(k.resume))) {
+    if (isAgentsFleetEnabled() || (typeof k.resume === "string" && isTranscriptFileResumeArg(k.resume))) {
       if (k.resume && typeof k.resume === "string" && !Ct) {
         let Z = null?.parseCcshareId(k.resume);
         if (isTranscriptFileResumeArg(k.resume)) {
@@ -8099,7 +8099,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
       k.watchArtifact === void 0 &&
       k.watchArtifactNoAutoreact === void 0 &&
       !cliCarriesSessionConfig(k) &&
-      ny() &&
+      isAgentsFleetEnabled() &&
       isPastSessionsExperimentEnabled()
     ) {
       (logEvent("tengu_fleetview", { viaResume: !0 }),

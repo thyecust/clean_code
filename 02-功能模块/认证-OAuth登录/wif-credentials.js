@@ -38,9 +38,9 @@ import { join as b } from "path";
 import { dirname } from "path";
 var P = { "fail-closed": 5, "fail-open": 15 };
 function E(e, t, r) {
-  return (s) => q8t(t, () => e(s), r);
+  return (s) => withCredentialsLock(t, () => e(s), r);
 }
-async function q8t(e, t, r = "fail-closed") {
+async function withCredentialsLock(e, t, r = "fail-closed") {
   let s = dirname(e),
     o = P[r],
     c;
@@ -416,4 +416,4 @@ async function K(e, t) {
   );
   return b(o, `${c}.json`);
 }
-export { q8t, getResolvedWIFBaseUrlSnapshot, getWIFCredentials, invalidateWIFToken, getWIFTokenCache, isWIFTransientExchangeError, resetWIFCredentialState };
+export { withCredentialsLock, getResolvedWIFBaseUrlSnapshot, getWIFCredentials, invalidateWIFToken, getWIFTokenCache, isWIFTransientExchangeError, resetWIFCredentialState };

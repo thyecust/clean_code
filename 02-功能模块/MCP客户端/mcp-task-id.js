@@ -12,17 +12,17 @@ import { formatDuration } from "../../01-核心基础设施/核心工具-字符�
 var MAX_MCP_TASK_ID_LENGTH = 128,
   MCP_TASK_ID_PATTERN = /^[\x21-\x7e]+$/,
   MCP_TASKS_EXTENSION_ID = "io.modelcontextprotocol/tasks";
-function e1e(r) {
+function sanitizeMcpTaskId(r) {
   return truncateToCodeUnits(
     r.replace(/[\p{Cc}\p{Cf}\p{Cs}\p{Zl}\p{Zp}\p{Variation_Selector}]+/gu, ""),
     MAX_MCP_TASK_ID_LENGTH,
   );
 }
 function shortenMcpTaskId(r) {
-  return truncateToCodeUnits(e1e(r), 8);
+  return truncateToCodeUnits(sanitizeMcpTaskId(r), 8);
 }
-function y7e(r) {
+function formatDurationMs(r) {
   if (!Number.isFinite(r) || r <= 0) return;
   return r < 1000 ? `${r}ms` : formatDuration(r);
 }
-export { MAX_MCP_TASK_ID_LENGTH, MCP_TASK_ID_PATTERN, MCP_TASKS_EXTENSION_ID, e1e, shortenMcpTaskId, y7e };
+export { MAX_MCP_TASK_ID_LENGTH, MCP_TASK_ID_PATTERN, MCP_TASKS_EXTENSION_ID, sanitizeMcpTaskId, shortenMcpTaskId, formatDurationMs };

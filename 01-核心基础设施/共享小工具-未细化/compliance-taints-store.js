@@ -38,7 +38,7 @@ function isTainted(i) {
 function getComplianceTaints() {
   return e().taints;
 }
-function qRe(i) {
+function subscribeComplianceTaints(i) {
   return e().changed.subscribe(i);
 }
 function registerPolicyVerdict(i) {
@@ -47,7 +47,7 @@ function registerPolicyVerdict(i) {
 function isPolicyAllowed(i) {
   return e().verdict?.isPolicyAllowed(i) ?? !1;
 }
-function zRe(i) {
+function getPolicyDenyKind(i) {
   let r = e().verdict;
   if (!r) return "unregistered";
   return r.policyDenyKind(i);
@@ -58,4 +58,4 @@ function getPolicyDeniedReason(i, r, t) {
 function areComplianceTaintsSettled() {
   return e().verdict?.complianceTaintsSettled() ?? !1;
 }
-export { setComplianceTaints, isTainted, getComplianceTaints, qRe, registerPolicyVerdict, isPolicyAllowed, zRe, getPolicyDeniedReason, areComplianceTaintsSettled };
+export { setComplianceTaints, isTainted, getComplianceTaints, subscribeComplianceTaints, registerPolicyVerdict, isPolicyAllowed, getPolicyDenyKind, getPolicyDeniedReason, areComplianceTaintsSettled };

@@ -233,7 +233,7 @@ function markWarmSpareClaimed() {
 function wasWarmSpareClaimed() {
   return n().wasWarmSpareClaimed();
 }
-function jXn() {
+function markHydratePrefetchSettled() {
   n().markHydratePrefetchSettled();
 }
 function markResumeHydratePrefetch(e, r) {
@@ -242,10 +242,10 @@ function markResumeHydratePrefetch(e, r) {
 function markResumeHydrateDelta(e, r, t, s, i, m) {
   n().markResumeHydrateDelta(e, r, t, s, i, m);
 }
-function qXn() {
+function recordFirstMessageReadFromSpawn() {
   n().recordFirstMessageReadFromSpawn();
 }
-function zXn() {
+function recordInputReadyFromSpawn() {
   n().recordInputReadyFromSpawn();
 }
 function consumeStartupTiming() {
@@ -257,4 +257,4 @@ function recordApiRequestSentFromSpawn() {
 function consumeApiRequestSentFromSpawn() {
   return n().consumeApiRequestSentFromSpawn();
 }
-export { recordStartupPhase, getRecordedStartupPhase, recordSpawnToExec, markWarmSpareClaimed, wasWarmSpareClaimed, jXn, markResumeHydratePrefetch, markResumeHydrateDelta, qXn, zXn, consumeStartupTiming, recordApiRequestSentFromSpawn, consumeApiRequestSentFromSpawn };
+export { recordStartupPhase, getRecordedStartupPhase, recordSpawnToExec, markWarmSpareClaimed, wasWarmSpareClaimed, markHydratePrefetchSettled, markResumeHydratePrefetch, markResumeHydrateDelta, recordFirstMessageReadFromSpawn, recordInputReadyFromSpawn, consumeStartupTiming, recordApiRequestSentFromSpawn, consumeApiRequestSentFromSpawn };

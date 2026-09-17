@@ -197,7 +197,7 @@ var STORAGE_KEYS = {
     sessionId: n,
   }),
 };
-function qcr(e, n) {
+function createSubagentsDirTranscriptKey(e, n) {
   return {
     namespace: "transcript",
     projectKey: e,
@@ -337,4 +337,4 @@ function createMarketplaceCacheKey(e, n) {
     ? { namespace: "marketplaceCache", marketplace: e }
     : { namespace: "marketplaceCache", marketplace: e, relPath: n };
 }
-export { isAsideName, isTempFileName, isValidPathSegment, hasValidPathSegments, isJsonlFileName, TEAM_MEMORY_DIR_NAME, getNormalizedNames, STORAGE_KEYS, qcr, serializeStorageKey, isSameStorageKey, createBridgeSpawnKey, createMarketplaceCacheKey };
+export { isAsideName, isTempFileName, isValidPathSegment, hasValidPathSegments, isJsonlFileName, TEAM_MEMORY_DIR_NAME, getNormalizedNames, STORAGE_KEYS, createSubagentsDirTranscriptKey, serializeStorageKey, isSameStorageKey, createBridgeSpawnKey, createMarketplaceCacheKey };

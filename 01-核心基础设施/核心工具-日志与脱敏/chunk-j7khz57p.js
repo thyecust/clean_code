@@ -12,7 +12,7 @@ import { b, z, Zhe, B1, n } from "./核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodePoints, toWellFormed } from "../核心工具-字符串与文本/string-utils.js";
 import { QUOTE_HOMOGLYPHS, INVISIBLE_BLANKS, isDecisionSurfaceControl } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-function nWn() {
+function isHarborPermissionsEnabled() {
   return H("tengu_harbor_permissions", !1);
 }
 var J = "abcdefghijkmnopqrstuvwxyz",
@@ -51,7 +51,7 @@ function j(r) {
   for (let t = 0; t < 5; t++) ((o += J[e % 25]), (e = Math.floor(e / 25)));
   return o;
 }
-function rWn(r) {
+function createProfanityFreeShortId(r) {
   let e = j(r);
   for (let o = 0; o < 10; o++) {
     if (!G.some((t) => e.includes(t))) return e;
@@ -149,7 +149,7 @@ function N(r) {
   }
   return !1;
 }
-function oWn(r) {
+function truncateForPreview(r) {
   try {
     if (r !== null && typeof r === "object" && !Array.isArray(r)) {
       let s = [],
@@ -305,21 +305,21 @@ function B(r) {
     s
   );
 }
-function zPe(r, e) {
+function hasExperimentalCapability(r, e) {
   return !!r?.experimental?.[e];
 }
-function sWn(r, e, o) {
+function findChannelPermissionServers(r, e, o) {
   return r.filter(
     (t) =>
       t.type === "connected" &&
       e(t.name) &&
-      zPe(t.capabilities, "claude/channel") &&
-      zPe(t.capabilities, "claude/channel/permission") &&
+      hasExperimentalCapability(t.capabilities, "claude/channel") &&
+      hasExperimentalCapability(t.capabilities, "claude/channel/permission") &&
       o(t.name) &&
       t.protocolEra !== "modern",
   );
 }
-function iWn(r) {
+function createChannelPermissionRequestRegistry(r) {
   let e = new Map();
   return {
     isServerRegistered: r,
@@ -340,4 +340,4 @@ function iWn(r) {
     },
   };
 }
-export { nWn, rWn, sanitizeAndTruncateText, oWn, zPe, sWn, iWn };
+export { isHarborPermissionsEnabled, createProfanityFreeShortId, sanitizeAndTruncateText, truncateForPreview, hasExperimentalCapability, findChannelPermissionServers, createChannelPermissionRequestRegistry };

@@ -12,11 +12,11 @@ function stripAnsi(e) {
   return Bun.stripANSI(e);
 }
 var s = "\\p{Default_Ignorable_Code_Point}\\u2800",
-  mhe = `\\p{Cc}\\p{Cf}\\p{Cs}\\p{Co}\\p{Cn}\\u2028\\u2029${s}`,
-  p = new RegExp(`[${mhe}]+`, "gu"),
+  INVISIBLE_CHAR_CLASS = `\\p{Cc}\\p{Cf}\\p{Cs}\\p{Co}\\p{Cn}\\u2028\\u2029${s}`,
+  p = new RegExp(`[${INVISIBLE_CHAR_CLASS}]+`, "gu"),
   o = "\\u200D\\uFE0E\\uFE0F",
-  c = new RegExp(`(?:(?![${o}])[${mhe}])+`, "gu"),
-  u = new RegExp(`(?:(?![${o}\\n])[${mhe}])+`, "gu"),
+  c = new RegExp(`(?:(?![${o}])[${INVISIBLE_CHAR_CLASS}])+`, "gu"),
+  u = new RegExp(`(?:(?![${o}\\n])[${INVISIBLE_CHAR_CLASS}])+`, "gu"),
   a = new RegExp(`(?<!\\S)[${o}]+`, "gu"),
   g = /\p{Cs}/gu;
 function replaceInvisibleChars(e, n, r) {
@@ -136,7 +136,7 @@ function toUnicodeEscape(e) {
 }
 export {
   stripAnsi,
-  mhe,
+  INVISIBLE_CHAR_CLASS,
   replaceInvisibleChars,
   stripInvisibleChars,
   normalizeComparableText,

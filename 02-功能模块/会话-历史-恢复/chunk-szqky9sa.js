@@ -46,7 +46,7 @@ import { wvn, QN, H, getMemoryBaseDir, getAutoMemPath } from "../认证-OAuth登
 import { isSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { LITE_READ_BUF_SIZE, extractFieldFromFirstEntryStrict, extractFieldFromLastEntryStrict, readHeadAndTail, anchorOffsetTail } from "./chunk-mkmy4cx2.js";
 import { The, lcr, txt, xIn, ccr, Ehe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { kPn } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { isDesktopHostEntrypointValue } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getSettingsForSource, getSettings_DEPRECATED, anyAdminPolicyTierGovernsRetention, getPolicySettingsLoadErrors, getSecuritySensitiveSetting, rawSettingsKeyPresence } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { isTainted } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
@@ -67,7 +67,7 @@ import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路�
 import { emitRetentionSweepEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { MCP_SKILL_ARCHIVES_DIR_NAME, readMcpSkillCacheMeta } from "../Skills技能/mcp-skill-cache.js";
 import { MAX_FILE_READ_LINES, MAX_FILE_READ_BYTES, parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
-import { k9n, PUBLISHED_FLOOR_FILE_NAME, getSettingsWithMcpErrors } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
+import { cleanupStaleImageCacheDirs, PUBLISHED_FLOOR_FILE_NAME, getSettingsWithMcpErrors } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { getProjectsDir } from "../Teammates团队/transcript-paths.js";
 import { resetPlanFileCacheToUnknown } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { NON_REGULAR_PATH_ERRNOS } from "../图片-截图-ComputerUse/computer-use-lock.js";
@@ -500,7 +500,7 @@ async function Be() {
           let B = R.size > LITE_READ_BUF_SIZE ? anchorOffsetTail(_) : _,
             k = extractFieldFromFirstEntryStrict(b, "entrypoint"),
             I = extractFieldFromLastEntryStrict(B, "entrypoint");
-          if (!((k !== void 0 && kPn(k)) || (I !== void 0 && kPn(I))))
+          if (!((k !== void 0 && isDesktopHostEntrypointValue(k)) || (I !== void 0 && isDesktopHostEntrypointValue(I))))
             return !1;
           let Y = basename(D).startsWith("agent-")
             ? (extractFieldFromFirstEntryStrict(b, "sessionId") ?? extractFieldFromLastEntryStrict(B, "sessionId"))
@@ -1731,7 +1731,7 @@ async function de(e, t, r) {
   return (await O(e, r), a);
 }
 async function _an(e) {
-  await k9n();
+  await cleanupStaleImageCacheDirs();
   let t = await Ept(e),
     r = getSettings_DEPRECATED()?.cleanupPeriodDays;
   if (t !== null) {

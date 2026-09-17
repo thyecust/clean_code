@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 211 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { brn, pLt } from "../../02-功能模块/工具WebFetch-WebSearch/chunk-1mxgbqzj.js";
+import { clearSessionCaches as brn, dropBashPromptSkillListingPin as pLt } from "../../02-功能模块/工具WebFetch-WebSearch/clear-session-caches.js";
 import "../../02-功能模块/工具Glob-Grep-搜索/chunk-57axeagj.js";
 import "../../02-功能模块/权限系统/swarm-permission-poller.js";
 export { brn as clearSessionCaches, pLt as dropBashPromptSkillListingPin };

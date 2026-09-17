@@ -36,7 +36,7 @@ async function u(e) {
     .replace(/\+/g, "-")
     .replace(/=/g, "");
 }
-async function kGe(e) {
+async function generatePkceChallenge(e) {
   if (!e) e = 43;
   if (e < 43 || e > 128)
     throw `Expected a length between 43 and 128. Received ${e}.`;
@@ -44,4 +44,4 @@ async function kGe(e) {
     t = await u(a);
   return { code_verifier: a, code_challenge: t };
 }
-export { kGe };
+export { generatePkceChallenge };

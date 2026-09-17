@@ -31,7 +31,7 @@ import "../Diff引擎/structured-diff.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { CodeBlock } from "../语法高亮-Markdown渲染/code-block.js";
 import { TruncatedFilePath } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
-import { RejectedToolUseDiff, wWe } from "../Diff引擎/diff-tool-result-render.js";
+import { RejectedToolUseDiff, ToolUseDiff } from "../Diff引擎/diff-tool-result-render.js";
 import "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -423,7 +423,7 @@ function Pe(i, a, { style: s, verbose: l, replacedUndiffedContent: f = !1 }) {
           replacedUndiffedContent: !0,
         });
       let V = c.startsWith(getPlansDirectory());
-      return e(wWe, {
+      return e(ToolUseDiff, {
         filePath: c,
         structuredPatch: k,
         firstLine: firstLine(u),

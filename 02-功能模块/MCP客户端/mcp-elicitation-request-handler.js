@@ -128,10 +128,10 @@ function w(e) {
   return e.mode === "url" ? "url" : "form";
 }
 var m = new WeakMap();
-function jIe(e, t) {
+function getOrCreateElicitationHandler(e, t) {
   let o = m.get(e);
   if (o) return (o.rebind(t), o);
   let r = new g(t);
   return (m.set(e, r), r);
 }
-export { jIe };
+export { getOrCreateElicitationHandler };

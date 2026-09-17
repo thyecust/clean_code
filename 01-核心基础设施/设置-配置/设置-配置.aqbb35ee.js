@@ -69,16 +69,16 @@ import { getClaudeConfigDir, isSameAsConfigDir } from "../../02-功能模块/Bed
 import { capitalize, pluralize, truncateToCodeUnits, isWellFormed, removeLoneSurrogates, beforeFirst, countOccurrences, escapeAllControlCharacters } from "../核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { Ghe, env as a } from "./chunk-zqr5ctyf.js";
-import { mhe, replaceInvisibleChars, replaceControlChars } from "../共享小工具-未细化/text-sanitization.js";
+import { INVISIBLE_CHAR_CLASS, replaceInvisibleChars, replaceControlChars } from "../共享小工具-未细化/text-sanitization.js";
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { EXTERNAL_PERMISSION_MODES, PERMISSION_MODES, normalizePermissionModeAlias } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
-import { NOTIFICATION_CHANNELS, tHn, TIME_FORMATS, TEAMMATE_MODES, THEME_OPTIONS, MODEL_PROPOSED_GOALS_MODES, AUTO_COMPACT_WINDOW_MIN, AUTO_COMPACT_WINDOW_MAX } from "../../02-功能模块/图片-截图-ComputerUse/settings-option-values.js";
+import { NOTIFICATION_CHANNELS, EDITOR_MODES, TIME_FORMATS, TEAMMATE_MODES, THEME_OPTIONS, MODEL_PROPOSED_GOALS_MODES, AUTO_COMPACT_WINDOW_MIN, AUTO_COMPACT_WINDOW_MAX } from "../../02-功能模块/图片-截图-ComputerUse/settings-option-values.js";
 import { hashSha256, isGitHubHost, isSuspiciousUrl } from "../共享小工具-未细化/git-host-utils.js";
 import { containsWildcard, matchesToolNameGlob, parseToolRuleSpec, parsePermissionRule, formatPermissionRule } from "../../02-功能模块/工具Bash-Shell/permission-rule-parsing.js";
 import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
 import { isHostManagedSettingsEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { WSL_MANAGED_SETTINGS_DIR } from "../共享小工具-未细化/mdm-policy-paths.js";
-import { ZOD_ISSUE_CODES, oHn } from "../共享小工具-未细化/chunk-p3e024j6.js";
+import { ZOD_ISSUE_CODES, createCoercedZodString } from "../共享小工具-未细化/zod-helpers.js";
 import { normalizeMcpName } from "../共享小工具-未细化/mcp-name-normalization.js";
 import { isFileTooLargeError, decodeBufferText, readFileSyncText } from "../共享小工具-未细化/safe-file-read.js";
 import {
@@ -5604,8 +5604,8 @@ var wx = createLazyValue(() =>
       "Plugin ID must be in format: plugin@marketplace",
     ),
   ),
-  alr = new RegExp(`[@:\\s/\\\\${mhe}]`, "u"),
-  llr = new RegExp(`[${mhe}]`, "u"),
+  alr = new RegExp(`[@:\\s/\\\\${INVISIBLE_CHAR_CLASS}]`, "u"),
+  llr = new RegExp(`[${INVISIBLE_CHAR_CLASS}]`, "u"),
   ltt = /[\p{Cc}\u200E\u200F\u202A-\u202E\u2066-\u2069]/u,
   Uc = /^[A-Za-z0-9][-A-Za-z0-9._]*(@[A-Za-z0-9][-A-Za-z0-9._]*)?(@\^[^@]*)?$/,
   zc = createLazyValue(() =>
@@ -6261,7 +6261,7 @@ function xs(e) {
 }
 var XBe = ["accept", "hold", "refuse"],
   Vge = ["off", "basic", "full"],
-  qc = createLazyValue(() => fe(s(), oHn()));
+  qc = createLazyValue(() => fe(s(), createCoercedZodString()));
 function Hs(e) {
   return c({
     allow: v(Ps())
@@ -7758,7 +7758,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
       .optional()
       .catch(void 0)
       .describe("Color theme for the UI"),
-    editorMode: X(tHn)
+    editorMode: X(EDITOR_MODES)
       .optional()
       .catch(void 0)
       .describe("Key binding mode for the prompt input"),

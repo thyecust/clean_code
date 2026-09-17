@@ -488,7 +488,7 @@ import { isProcessProvablyGone, isSameProcessAsync, provenSameProcessAsync, ownP
 import { ownPidSpace } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import { id } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Xt, er, Qa, getAPIProvider, usesFirstPartyModelIds } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { isTainted, getComplianceTaints, qRe } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
+import { isTainted, getComplianceTaints, subscribeComplianceTaints } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { MAX_URL_LENGTH, isGitLabMergeRequestUrl, isNestedGitLabProject, detectCurrentRepositoryWithHost, isCachedGitHubRepo, parseGitRemote } from "../../02-功能模块/Git-Worktree/git-repository-detection.js";
 import {
   D6,
@@ -1381,20 +1381,20 @@ import {
 import {
   defaultFullscreenState,
   isTmuxControlMode,
-  a1e,
+  getTuiTrialMode,
   wasFullscreenAutoDisabledForVersion,
-  l1e,
+  MAX_FULLSCREEN_UPSELL_COUNT,
   shouldUseFullscreen,
   getFullscreenReason,
   fullscreenReasonToMode,
   isAutoDisabledFullscreenReason,
-  jJn,
+  isFullscreenGateFromFallback,
   getMouseMode,
-  $7e,
+  hasMouseObserved,
   subscribeMouseObserved,
   isFullscreenActive,
   getTmuxMouseHint,
-  zJn,
+  getTmuxFocusHint,
 } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { getSessionTranscriptPath } from "../../02-功能模块/Teammates团队/transcript-paths.js";
 import {
@@ -1586,7 +1586,7 @@ import { JNe } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-64
 import { getMcpServerConfigCacheKey, invokeMcpToolRaw, registerMcpNotificationHandler } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { resolveSetting, saveUserIntentSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
 import { vJ, xoe, ICe } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
-import { zs, getTerminalFocus, subscribeTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
+import { appStateStore, getTerminalFocus, subscribeTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
 import { readTeamFileAsync, removeTeammateFromTeamFile, syncTeammateMode, setMemberActive } from "../../02-功能模块/Teammates团队/team-file-store.js";
 import { QNe, wa, TJn, q3t, vJn } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { isAgentSwarmsEnabled } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
@@ -1644,7 +1644,7 @@ import {
 import { _$ } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
 import { getComputerUseNativeModule } from "../../02-功能模块/图片-截图-ComputerUse/computer-use-session.js";
 import { LOGIN_SLASH_COMMAND, REMOTE_CONTROL_MALFORMED_RESPONSE_MESSAGE, REMOTE_CONTROL_ACCOUNT_UNVERIFIED_MESSAGE, REMOTE_CONTROL_PREVIOUS_SESSION_UNAVAILABLE_MESSAGE } from "../../02-功能模块/Bridge-RemoteControl/remote-control-messages.js";
-import { ny } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
+import { isAgentsFleetEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { qHe, vWe, Eit, IWe, eF, rle, Cit } from "../../02-功能模块/后台任务-Shell管理/chunk-xmxjyg29.js";
 import {
   sk,
@@ -1697,7 +1697,7 @@ import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { CLOCK_TICK_INTERVAL_MS, useTerminalFocus, useTerminalFocusState, setTimeoutWithCancel, ClockContext } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { VAn } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
-import { fireDeadProbeAdoptTick, y9e, killIfSameProcess } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
+import { fireDeadProbeAdoptTick, getProcessStartTimeTicksAsync, killIfSameProcess } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
 import {
   v2n,
   R2n,
@@ -1796,7 +1796,7 @@ import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未�
 import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { WA, Vx, Sv, Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { getPromptInputStore, x3n, setPromptInputValue, setPromptStash, setPromptInputActive, setSessionPromptInputActive, setPromptVimMode, setPromptLaunchWarning } from "../../01-核心基础设施/共享小工具-未细化/prompt-input-store.js";
+import { getPromptInputStore, getPromptInputValue, setPromptInputValue, setPromptStash, setPromptInputActive, setSessionPromptInputActive, setPromptVimMode, setPromptLaunchWarning } from "../../01-核心基础设施/共享小工具-未细化/prompt-input-store.js";
 import { Pze, sendRv, markReplayNoOp } from "../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js";
 import { CommandQueueProvider, useCommandQueue } from "../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
 import { useTaskRegistry } from "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
@@ -1948,7 +1948,7 @@ import {
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { Act, Cct, ir, xh, xct, gE, Qx, Oct } from "../../02-功能模块/MCP客户端/chunk-g4gdwpa0.js";
 import { pickRandom, useSpinnerStore, useSpinnerRetryStatus } from "../../02-功能模块/Hooks钩子/spinner-store.js";
-import { useTasksV2, useTasksV2Snapshot, useTasksV2Subscription, qUn } from "../../02-功能模块/工具TodoWrite-Tasks/tasks-v2-store.js";
+import { useTasksV2, useTasksV2Snapshot, useTasksV2Subscription, useTasksV2HasTasks } from "../../02-功能模块/工具TodoWrite-Tasks/tasks-v2-store.js";
 import { worktreeStateStore } from "../../01-核心基础设施/共享小工具-未细化/worktree-state-store.js";
 import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
 import { isArtifactReplyYieldEnabled } from "../../02-功能模块/Artifact发布-渲染/artifact-reply-yield.js";
@@ -2190,7 +2190,7 @@ import { StructuredDiff } from "../../02-功能模块/Diff引擎/structured-diff
 import { OverflowHint, isToolResultTruncated } from "./tool-result-display.js";
 import { AUTO_CONTINUE_PREFILL_TEXT, stripAutoContinuePrefill, resetRateLimitCheckpoint } from "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
 import { ExpandedContentProvider } from "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import { pOt } from "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
+import { QueuedMessageProvider } from "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { useElapsedDuration } from "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
 import { renderToolUseMessageForTool, renderToolUseMessageByToolName } from "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
 import { resolveAgentColor } from "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
@@ -2300,7 +2300,7 @@ import {
 } from "../../02-功能模块/Hooks钩子/chunk-6wg4v2yj.js";
 import { isSlashCommandBlockedByEndedByModel, looksLikeCommand, commandThrowTextForTranscript } from "../../02-功能模块/斜杠命令-框架/chunk-s195n5de.js";
 import { globalFileIndexCache, findLongestCommonPrefix, startBackgroundCacheRefresh, generateFileSuggestions, applyFileSuggestion } from "../../02-功能模块/工具Glob-Grep-搜索/chunk-57axeagj.js";
-import { pLt } from "../../02-功能模块/工具WebFetch-WebSearch/chunk-1mxgbqzj.js";
+import { dropBashPromptSkillListingPin } from "../../02-功能模块/工具WebFetch-WebSearch/clear-session-caches.js";
 import { generateSessionName, buildSessionNameYieldedNotice } from "../../02-功能模块/Teammates团队/rename-session.js";
 import { collectArtifactStateFromMessages, buildArtifactReadSeed, rehydrateArtifactFrameState } from "../../02-功能模块/Artifact发布-渲染/chunk-fx5ekm7e.js";
 import { getSendMessagePinsIfChanged } from "../../01-核心基础设施/共享小工具-未细化/send-message-pins.js";
@@ -2326,7 +2326,7 @@ import {
 } from "../../02-功能模块/权限系统/cross-session-inbound-gate.js";
 import { JNt, ZNt, e1t, n1t, wsn, Tsn, Asn } from "../../02-功能模块/Teammates团队/chunk-nhk351pe.js";
 import { REMOTE_CALLOUT_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
-import { ORG_TIP_ID_PREFIX, dOt, shouldExcludeDefaultTips } from "../../01-核心基础设施/设置-配置/spinner-tips-override.js";
+import { ORG_TIP_ID_PREFIX, CUSTOM_TIP_ID_PREFIX, shouldExcludeDefaultTips } from "../../01-核心基础设施/设置-配置/spinner-tips-override.js";
 import { lOt, qf, Xit, cOt, uOt, yo, IUn } from "../../02-功能模块/状态栏-主题/chunk-jrr487ty.js";
 import { pWe, $He } from "../../02-功能模块/Workflow编排/chunk-dyq13fbm.js";
 import { createDialFailureLatch } from "../../01-核心基础设施/共享小工具-未细化/chunk-aqawy2mp.js";
@@ -2349,9 +2349,9 @@ import {
   isInProcessEnabled,
 } from "../../02-功能模块/Teammates团队/backend-registry.js";
 import { useTaskBackgroundKeybinding, BackgroundHint } from "../../02-功能模块/后台任务-Shell管理/background-task-renderers.js";
-import { cWe } from "../../01-核心基础设施/设置-配置/chunk-tswdb9jt.js";
+import { ManagedSettingsApprovalDialog } from "../../01-核心基础设施/设置-配置/managed-settings-approval-dialog.js";
 import { K6e, X6e } from "../../02-功能模块/Skills技能/Skills技能.dpy2ket5.js";
-import { oPe } from "../../02-功能模块/图片-截图-ComputerUse/chunk-1c6fx285.js";
+import { COMPUTER_USE_APPROVAL_DIALOG } from "../../02-功能模块/图片-截图-ComputerUse/computer-use-approval-dialog.js";
 import { MCP_URL_ELICITATION_DIALOG, clearMcpNeedsAuthCache, createMcpAuthStubTools, initMcpDiscoveryCacheKillSwitch } from "../../02-功能模块/MCP客户端/mcp-auth-cache.js";
 import { CodeBlock } from "../../02-功能模块/语法高亮-Markdown渲染/code-block.js";
 import { it2SetupDialog } from "../../01-核心基础设施/共享小工具-未细化/it2-setup-dialog.js";
@@ -2374,7 +2374,7 @@ import { nZt } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { canCycleToAuto, canUseBypassPermissions, getNextPermissionMode, buildPermissionModeTransition } from "../../02-功能模块/权限系统/permission-mode-cycle.js";
 import { ClawdMascot } from "./clawd-mascot.js";
 import { DiffHunks } from "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
-import { ShellOutputView, vZt } from "../../02-功能模块/工具Bash-Shell/shell-output-view.js";
+import { ShellOutputView, isShellOutputTruncated } from "../../02-功能模块/工具Bash-Shell/shell-output-view.js";
 import { MAX_VISIBLE_LIST_ITEMS } from "../../01-核心基础设施/共享小工具-未细化/max-visible-list-items.js";
 import { DashedBorderBox } from "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
 import { PermissionRequestHeader, PermissionDialogFrame } from "../../02-功能模块/权限系统/permission-dialog.js";
@@ -2399,20 +2399,20 @@ import { getManagedSettingsStatus, formatManagedSettingsError } from "../../01-�
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { PerClassInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/per-class-instance-registry.js";
 import { BRIDGE_FAILED_ERROR, BRIDGE_DISABLED_AFTER_FAILURES_ERROR, REMOTE_CONTROL_NOT_STARTED_PREFIX, formatRemoteControlElsewhereMessage, getRemoteControlStatus, formatCodeAnywhereMessage, formatContinueCodingMessage, RETRY_REMOTE_CONTROL_MESSAGE } from "../../02-功能模块/Bridge-RemoteControl/remote-control-ui-strings.js";
-import { sSe, markUltrareviewOverageConfirmed, makeToolPermissionContextSetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js";
-import { $9e } from "../../02-功能模块/权限系统/ccr-recap.js";
+import { markPrResolvedThisSession, markUltrareviewOverageConfirmed, makeToolPermissionContextSetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-p11r6cth.js";
+import { generateCcrRecap } from "../../02-功能模块/权限系统/ccr-recap.js";
 import { USAGE_CREDITS_ADMIN_REQUEST_NOTICE, submitUsageCreditsRequest, canBuyUsageCreditsInApp, resolveExtraUsageOutcome } from "../../02-功能模块/成本-Token统计/usage-credits-flow.js";
 import { isTaskAdoptionEnabled, buildBackgroundTaskItems, classifyBackgroundActivity, summarizeBackgroundTasks, summarizeAdoptableTasks, formatDetachedBackgroundMessage } from "../../02-功能模块/后台任务-Shell管理/background-task-inventory.js";
 import { formatBackgroundTaskSummary, isSingleUltraplanTask } from "../../02-功能模块/Teammates团队/background-task-summary.js";
 import { EDt, refreshActivePlugins, getPluginReloadCacheImpact } from "../../02-功能模块/MCP客户端/plugin-reload-cache-impact.js";
 import { PluginStateStore } from "../../02-功能模块/插件系统/plugin-state-store.js";
 import { SUBSCRIPTION_SWITCH_NOTICE_ID, SUBSCRIPTION_SWITCH_NOTICE_MAX_IMPRESSIONS, CC_CE_MIGRATE_NOTICE_ID, CC_CE_MIGRATE_NOTICE_MAX_IMPRESSIONS } from "../../01-核心基础设施/共享小工具-未细化/announcement-notices.js";
-import { getReconnectMcpServer, getIsMcpServerDisabled, y2n, registerMcpControlHandlers, clearMcpControlHandlers } from "../../01-核心基础设施/共享小工具-未细化/mcp-control-handlers.js";
-import { b2n, updateStandaloneAgentContext } from "../../01-核心基础设施/共享小工具-未细化/standalone-agent-context.js";
+import { getReconnectMcpServer, getIsMcpServerDisabled, getMcpDialBlockCause, registerMcpControlHandlers, clearMcpControlHandlers } from "../../01-核心基础设施/共享小工具-未细化/mcp-control-handlers.js";
+import { getStandaloneAgentName, updateStandaloneAgentContext } from "../../01-核心基础设施/共享小工具-未细化/standalone-agent-context.js";
 import { buildCacheSafeParams } from "../../02-功能模块/权限系统/cache-safe-params.js";
 import { get1MContextSuggestion } from "../../01-核心基础设施/共享小工具-未细化/model-1m-context-suggestion.js";
 import { getTimeFormatConfig, buildTimeFormatIntlOptions, formatDateWithPreset, formatDateWithPattern } from "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
-import { renderFastModeIndicator, FAST_MODE_HOOK_TIMEOUT_MS, FAST_MODE_CANCELLED_MESSAGE, getFastModeTargetModel, tLt, UNVETTED_FAST_MODE_TARGET, k3e, x3e, runFastModeToggle } from "../../01-核心基础设施/设置-配置/fast-mode.js";
+import { renderFastModeIndicator, FAST_MODE_HOOK_TIMEOUT_MS, FAST_MODE_CANCELLED_MESSAGE, getFastModeTargetModel, vetFastModeTargetModel, UNVETTED_FAST_MODE_TARGET, formatFastModeRemoteResult, applyFastModeSetting, runFastModeToggle } from "../../01-核心基础设施/设置-配置/fast-mode.js";
 import { applyFlagSettingsPatch } from "../../02-功能模块/上下文压缩-Compact/apply-flag-settings.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import {
@@ -2430,7 +2430,7 @@ import {
 import { pruneAgentNameRegistry, createAgentLifecycle } from "../../02-功能模块/Teammates团队/agent-lifecycle.js";
 import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
 import { formatServerDisabledHint, formatDisabledElsewhereMessage, formatMcpServerBlockedMessage, createMcpServerBlockedError, getBlockedServerErrorFields, assertMcpServerReconnectable } from "../../02-功能模块/MCP客户端/mcp-server-state-messages.js";
-import { DEFAULT_GRANT_FLAGS, yGe } from "../../01-核心基础设施/共享小工具-未细化/app-permission-categories.js";
+import { DEFAULT_GRANT_FLAGS, getAppPermissionCategory } from "../../01-核心基础设施/共享小工具-未细化/app-permission-categories.js";
 import { getPlanApprovalPermissionMode } from "../../01-核心基础设施/共享小工具-未细化/plan-approval-permission-mode.js";
 import {
   isBetweenCalls,
@@ -2452,7 +2452,7 @@ import { truncateForDisplay } from "../../01-核心基础设施/共享小工具-
 import { hasFirstPartyDesignAuth, takePendingScopeExpansionNotice } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
 import { ALLOWED_HYPERLINK_SCHEMES, openHyperlink, tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { ALLOW_ROUTINES_POLICY } from "../../01-核心基础设施/共享小工具-未细化/routines-policy.js";
-import { nWn, zPe, iWn } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
+import { isHarborPermissionsEnabled, hasExperimentalCapability, createChannelPermissionRequestRegistry } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 import { registerSwarmPermissionCallback, unregisterSwarmPermissionCallback, hasPermissionCallback, processMailboxPermissionResponse, registerSandboxPermissionCallback, hasSandboxPermissionCallback, processSandboxPermissionResponse } from "../../02-功能模块/权限系统/swarm-permission-poller.js";
 import { queueTeammateUserMessage } from "../../02-功能模块/Teammates团队/teammate-task-messages.js";
 import { formatSubprotocolList } from "../../01-核心基础设施/共享小工具-未细化/websocket-subprotocols.js";
@@ -2488,13 +2488,13 @@ import { resolveTranscriptLocator } from "../../01-核心基础设施/共享小�
 import { getEndedByModel, appendEndedByModelSuffix } from "../../01-核心基础设施/共享小工具-未细化/ended-by-model.js";
 import { isNonMarketplacePluginSource, getNonMarketplacePluginSource, isNonMarketplaceOrBuiltinPluginSource, splitPluginId, findKeyIgnoringCase, isOfficialMarketplace } from "../../02-功能模块/插件系统/chunk-33bdfgmx.js";
 import { isMcpSkillsEnabled } from "../../02-功能模块/MCP客户端/mcp-skills-extension.js";
-import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
+import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js";
 import { Bg, lK, Z3, hSn } from "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { shortenMcpTaskId } from "../../02-功能模块/MCP客户端/chunk-tznd4407.js";
+import { shortenMcpTaskId } from "../../02-功能模块/MCP客户端/mcp-task-id.js";
 import { isMonitorToolEnabled } from "../../02-功能模块/工具Monitor/monitor-tool-description.js";
 import { isCoordinatorModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
 import { escapeAngleBrackets } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
-import { v1e, createPermissionRequest, isTeammateWorker, sendPermissionRequestToLeader, sendPermissionResponseToWorker, yZn, sendSandboxPermissionRequestToLeader, sendSandboxPermissionResponseToWorker } from "../../02-功能模块/Teammates团队/permission-sync-mailbox.js";
+import { createToolCallInputFingerprint, createPermissionRequest, isTeammateWorker, sendPermissionRequestToLeader, sendPermissionResponseToWorker, createSandboxPermissionRequestId, sendSandboxPermissionRequestToLeader, sendSandboxPermissionResponseToWorker } from "../../02-功能模块/Teammates团队/permission-sync-mailbox.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { createFieldUpdater, createFieldAccessor, createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { AGENT_TOOL_NAME } from "../../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
@@ -2502,7 +2502,7 @@ import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/�
 import { INVALID_TOOL_NAME_PLACEHOLDER, defineDialog, createDialogRequester } from "../../02-功能模块/对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { TEAM_LEAD_AGENT_NAME, getSwarmTmuxSocketName } from "../../02-功能模块/Teammates团队/chunk-enjekn9t.js";
-import { createCoercedZodNumber, createCoercedZodBoolean } from "../../01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js";
+import { createCoercedZodNumber, createCoercedZodBoolean } from "../../01-核心基础设施/共享小工具-未细化/zod-helpers.js";
 import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
 import { createMutex } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
 import { s, T, O, se, T7t, v, c, $e, fe, X, k, qd } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -3159,7 +3159,7 @@ async function $0t(w) {
   };
 }
 function WJt(w) {
-  return ny() && !isBgSession() && !isTranscriptPersistenceDisabled() && isTaskAdoptionEnabled() && Uae(w, "") !== null;
+  return isAgentsFleetEnabled() && !isBgSession() && !isTranscriptPersistenceDisabled() && isTaskAdoptionEnabled() && Uae(w, "") !== null;
 }
 function U0t(g2o) {
   let S$t = _(11),
@@ -3737,7 +3737,7 @@ function nst(Mzo) {
         (EJe(m8), fM(!0));
         let s1t = !1;
         Ym(Ex, () =>
-          tLt(Ex, Rme.getState, m8.signal).then(async (Ime) => {
+          vetFastModeTargetModel(Ex, Rme.getState, m8.signal).then(async (Ime) => {
             if (m8.signal.aborted) {
               return;
             }
@@ -3780,7 +3780,7 @@ function nst(Mzo) {
       let Nzo = p8 === void 0 ? UNVETTED_FAST_MODE_TARGET : p8;
       let l1t = g8 === void 0 ? [] : g8;
       let Lzo = getFastModeTargetModel(Rme.getState()) !== void 0;
-      let c1t = x3e(Ex, $y, RB, void 0, cG, Nzo);
+      let c1t = applyFastModeSetting(Ex, $y, RB, void 0, cG, Nzo);
       logEvent("tengu_fast_mode_toggled", {
         enabled: $y,
         source: S("picker"),
@@ -3798,13 +3798,13 @@ ${l1t.map(Rl).join(`
       if (!Ks()) {
         if (!$y) RB(_1t);
         return c1t.then(
-          (DJe) => (fM(!1), Yb(DJe === void 0 ? u1t : k3e(DJe, $y)), DJe),
+          (DJe) => (fM(!1), Yb(DJe === void 0 ? u1t : formatFastModeRemoteResult(DJe, $y)), DJe),
         );
       }
       return (
         fM(!0),
         c1t.then(
-          (NJe) => (fM(!1), Yb(NJe === void 0 ? u1t : k3e(NJe, $y)), NJe),
+          (NJe) => (fM(!1), Yb(NJe === void 0 ? u1t : formatFastModeRemoteResult(NJe, $y)), NJe),
         )
       );
     }
@@ -3829,7 +3829,7 @@ ${l1t.map(Rl).join(`
   )
     ((p8 = function y8() {
       if (_w) {
-        if (d8) Ym(Ex, () => x3e(Ex, !1, RB, void 0, cG)).catch(T1t);
+        if (d8) Ym(Ex, () => applyFastModeSetting(Ex, !1, RB, void 0, cG)).catch(T1t);
         Yb("Fast mode OFF", { display: "system" });
         return;
       }
@@ -7532,7 +7532,7 @@ function Jpe(V3o) {
   let $qt = jqt,
     qpe = useKeybindingDisplayText("scroll:bottom", "Scroll", t3e),
     Wqt = useKeybindingDisplayText("scroll:pageDown", "Scroll", $qt),
-    z3o = At(subscribeMouseObserved, $7e),
+    z3o = At(subscribeMouseObserved, hasMouseObserved),
     qqt;
   if (nU[3] !== c9)
     ((qqt = c9 > 0 ? `${c9} new ${pluralize(c9, "message")}` : "Jump to bottom"),
@@ -8071,12 +8071,12 @@ function WVt(
   }
 }
 function dfe() {
-  if (zs.startupUpdateSummary === void 0) {
+  if (appStateStore.startupUpdateSummary === void 0) {
     let w = WVt();
-    if (((zs.startupUpdateSummary = w), w !== null && !pit()))
+    if (((appStateStore.startupUpdateSummary = w), w !== null && !pit()))
       logFeatureOk("startup_update_summary");
   }
-  return zs.startupUpdateSummary;
+  return appStateStore.startupUpdateSummary;
 }
 F();
 function I3e(w) {
@@ -8191,10 +8191,10 @@ F();
 F();
 F();
 function Sfe() {
-  return At(qRe, getComplianceTaints);
+  return At(subscribeComplianceTaints, getComplianceTaints);
 }
 function vfe(w) {
-  return At(qRe, () => isTainted(w));
+  return At(subscribeComplianceTaints, () => isTainted(w));
 }
 F();
 function wfe() {
@@ -16152,11 +16152,11 @@ function Cet() {
   if (shouldUseFullscreen()) return !1;
   if (zg()) return !1;
   if (getInitialSettings().tui !== void 0) return !1;
-  if (a1e() === "fullscreen") return !1;
+  if (getTuiTrialMode() === "fullscreen") return !1;
   if (isAutoDisabledFullscreenReason(getFullscreenReason())) return !1;
-  if (jJn()) return !1;
+  if (isFullscreenGateFromFallback()) return !1;
   if (qP()) return !1;
-  if ((ee().fullscreenUpsellSeenCount ?? 0) >= l1e) return !1;
+  if ((ee().fullscreenUpsellSeenCount ?? 0) >= MAX_FULLSCREEN_UPSELL_COUNT) return !1;
   if (u0t()) return !1;
   return !0;
 }
@@ -16821,7 +16821,7 @@ class j7 {
             });
         })
         .catch(logError);
-    zJn()
+    getTmuxFocusHint()
       .then((be) => {
         if (be)
           ne({
@@ -22898,24 +22898,24 @@ function FSe() {
   return At(w.subscribe, () => w.getState().launchWarning);
 }
 function R2(w) {
-  zs.blockingToolProgress.setState((I) => (I.active === w ? I : { active: w }));
+  appStateStore.blockingToolProgress.setState((I) => (I.active === w ? I : { active: w }));
 }
 function ztt() {
-  return zs.blockingToolProgress.getState().active;
+  return appStateStore.blockingToolProgress.getState().active;
 }
 function _4t() {
-  return At(zs.blockingToolProgress.subscribe, ztt);
+  return At(appStateStore.blockingToolProgress.subscribe, ztt);
 }
 function P2(w) {
-  zs.dialogHostUnmounted.setState((I) =>
+  appStateStore.dialogHostUnmounted.setState((I) =>
     I.unmounted === w ? I : { unmounted: w },
   );
 }
 function Qtt() {
-  return zs.dialogHostUnmounted.getState().unmounted;
+  return appStateStore.dialogHostUnmounted.getState().unmounted;
 }
 function Ytt() {
-  return At(zs.dialogHostUnmounted.subscribe, Qtt);
+  return At(appStateStore.dialogHostUnmounted.subscribe, Qtt);
 }
 function rS() {
   let w = _4t(),
@@ -22958,8 +22958,8 @@ function Jtt(w, I) {
       let me = [
         w.subscribe(ne),
         I.subscribe(ne),
-        zs.blockingToolProgress.subscribe(ne),
-        zs.dialogHostUnmounted.subscribe(ne),
+        appStateStore.blockingToolProgress.subscribe(ne),
+        appStateStore.dialogHostUnmounted.subscribe(ne),
       ];
       return () => {
         for (let pe of me) pe();
@@ -23635,7 +23635,7 @@ class QSe {
       if ((process.kill(this.#e, 0), this.#t !== void 0)) {
         if (!(await isSameProcessAsync(this.#e, this.#t))) w = !1;
       } else if (this.#o !== void 0) {
-        let I = await y9e(this.#e);
+        let I = await getProcessStartTimeTicksAsync(this.#e);
         if (I !== null && I !== this.#o) w = !1;
       }
     } catch {
@@ -25272,7 +25272,7 @@ class fZ {
               (po.status === "running" || (nr(po) && Yf(po))),
           ))
         )
-          pLt();
+          dropBashPromptSkillListingPin();
       }
       if (
         (EHe(eo, pe.setState, this.sessionHooks, {
@@ -26396,7 +26396,7 @@ Error: sandbox required but unavailable: ${me}
           ),
           !1
         );
-      let Qe = yZn();
+      let Qe = createSandboxPermissionRequestId();
       if (!(await sendSandboxPermissionRequestToLeader(w.host, Qe, void 0, me)))
         return Ae.ask(w, { forwardToBridge: !1 });
       return new Promise((at) => {
@@ -29336,7 +29336,7 @@ function qve(w) {
           },
           Or = cancelAllLoopWakeups();
         if (Or > 0) ho((Wi) => Wi + 1);
-        let Br = x3n(eo) === "",
+        let Br = getPromptInputValue(eo) === "",
           fi = !Fn || Br,
           Xi = xIe() && fi,
           Ln = !1;
@@ -43783,7 +43783,7 @@ function Mne(r9n) {
 }
 F();
 function zAe() {
-  return At(zs.feedbackNotice.subscribe, () => zs.feedbackNotice.getState());
+  return At(appStateStore.feedbackNotice.subscribe, () => appStateStore.feedbackNotice.getState());
 }
 function Ine() {
   let w = zAe(),
@@ -44173,7 +44173,7 @@ function qpt({
     no = aO().getState,
     jo = uuo?.isCoordinatorMode() === !0,
     Cn = V(() => countMatching(Object.values(_o), B8), [_o]),
-    un = qUn(),
+    un = useTasksV2HasTasks(),
     lr = useKeybindingDisplayText("chat:cancel", "Chat", "esc").toLowerCase(),
     Io = useKeybindingDisplayText("app:toggleTodos", "Global", "ctrl+t"),
     So = useKeybindingDisplayText("voice:pushToTalk", "Chat", "space"),
@@ -46499,7 +46499,7 @@ function cht() {
     if (rre[11] !== vY || rre[12] !== ire || rre[13] !== ore)
       ((are = (nnr, eht) =>
         e(
-          pOt,
+          QueuedMessageProvider,
           {
             isFirst: eht === 0,
             useBriefLayout: ore,
@@ -47873,7 +47873,7 @@ function kI(w) {
   let Ke = me
       ? Ae.agentDefinitions.activeAgents.find((it) => it.agentType === me)
       : void 0,
-    Je = b2n(Ae),
+    Je = getStandaloneAgentName(Ae),
     Qe = ne?.color;
   if (!w?.hideSessionTitle && (Je || Qe))
     return {
@@ -54020,16 +54020,16 @@ function uvt({
 }
 var dvt = 30000;
 function cLe(w) {
-  zs.pendingSurveyFeedbackSource = w;
+  appStateStore.pendingSurveyFeedbackSource = w;
 }
 function z1n() {
-  let w = zs.pendingSurveyFeedbackSource;
+  let w = appStateStore.pendingSurveyFeedbackSource;
   return w !== null && Date.now() - w.setAt <= dvt;
 }
 function V1n() {
-  let w = zs.pendingSurveyFeedbackSource;
+  let w = appStateStore.pendingSurveyFeedbackSource;
   if (
-    ((zs.pendingSurveyFeedbackSource = null), !w || Date.now() - w.setAt > dvt)
+    ((appStateStore.pendingSurveyFeedbackSource = null), !w || Date.now() - w.setAt > dvt)
   )
     return null;
   return w;
@@ -62700,7 +62700,7 @@ var vxt = {
 function wxt(w) {
   function I(me) {
     if (!me.resolved) return 0;
-    let pe = yGe(me.resolved.bundleId) ? 1 : 0;
+    let pe = getAppPermissionCategory(me.resolved.bundleId) ? 1 : 0;
     return 4 + (me.alreadyGranted ? 0 : 2) + pe;
   }
   let ne = new Map();
@@ -62712,7 +62712,7 @@ function wxt(w) {
   return [...ne.values()];
 }
 function Cxt(w) {
-  return w.resolved && !w.alreadyGranted && yGe(w.resolved.bundleId) ? 2 : 1;
+  return w.resolved && !w.alreadyGranted && getAppPermissionCategory(w.resolved.bundleId) ? 2 : 1;
 }
 function sUe(mIr) {
   let Gu = _(79),
@@ -62947,7 +62947,7 @@ function sUe(mIr) {
             gW.bundleId,
           );
         }
-        let _Ro = yGe(gW.bundleId);
+        let _Ro = getAppPermissionCategory(gW.bundleId);
         let TIr = Mv.has(gW.bundleId);
         return r(
           o,
@@ -71295,13 +71295,13 @@ function vEt({ payload: w, answer: I }) {
 F();
 F();
 function CEt(w) {
-  zs.mainLoopBusy.setState((I) => (I.busy === w ? I : { busy: w }));
+  appStateStore.mainLoopBusy.setState((I) => (I.busy === w ? I : { busy: w }));
 }
 function OWe() {
-  return At(zs.mainLoopBusy.subscribe, wEt, wEt);
+  return At(appStateStore.mainLoopBusy.subscribe, wEt, wEt);
 }
 function wEt() {
-  return zs.mainLoopBusy.getState().busy;
+  return appStateStore.mainLoopBusy.getState().busy;
 }
 function _No(vqr) {
   return vqr.activeGoal;
@@ -71833,7 +71833,7 @@ var fk = {
         type: "agent_needs_input",
       },
     },
-    [oPe.kind]: {
+    [COMPUTER_USE_APPROVAL_DIALOG.kind]: {
       needs: "choose: allow or deny the computer-use action",
       notification: VC,
     },
@@ -73210,7 +73210,7 @@ var GLo = ({ payload: w, answer: I, wouldTakeAnswer: ne }) =>
     }),
   KLo = ({ payload: w, answer: I }) => e(CUe, { plan: w.plan, onDone: I }),
   zLo = ({ payload: w, answer: I, wouldTakeAnswer: ne }) =>
-    e(cWe, {
+    e(ManagedSettingsApprovalDialog, {
       settings: w.settings,
       baseline: w.baseline,
       reveal: w.reveal,
@@ -73404,7 +73404,7 @@ function fl(w, I) {
 var VVe = {
   ...fl(localJsxDialog, t0t),
   ...fl(it2SetupDialog, LLo),
-  ...fl(oPe, OLo),
+  ...fl(COMPUTER_USE_APPROVAL_DIALOG, OLo),
   ...fl(SF, FLo),
   ...fl(L0, BLo),
   ...fl(I0, zLo),
@@ -74412,7 +74412,7 @@ function nBo(R5r) {
   return R5r.open;
 }
 function rBo() {
-  zs.autoDenyPresence.emit();
+  appStateStore.autoDenyPresence.emit();
 }
 function NP(S5r) {
   let AF = _(44),
@@ -75524,7 +75524,7 @@ function Hce(w, I = "spinner", ne) {
   let me =
     w.id.startsWith("marketplace-plugin:") && w.id.includes("@")
       ? "marketplace-plugin:org-marketplace"
-      : w.id.startsWith(ORG_TIP_ID_PREFIX) || w.id.startsWith(dOt)
+      : w.id.startsWith(ORG_TIP_ID_PREFIX) || w.id.startsWith(CUSTOM_TIP_ID_PREFIX)
         ? "org-tip"
         : w.id;
   logEvent("tengu_tip_shown", {
@@ -77385,7 +77385,7 @@ class Wce {
       },
       getAppState: () => be.getState(),
       setAppState: to,
-      markPrResolvedThisSession: () => sSe(Tt),
+      markPrResolvedThisSession: () => markPrResolvedThisSession(Tt),
       isUltrareviewOverageConfirmed: () =>
         be.getState().ultrareviewOverageConfirmed,
       markUltrareviewOverageConfirmed: () => markUltrareviewOverageConfirmed(Tt),
@@ -80053,7 +80053,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                       formatDisabledElsewhereMessage(Ei),
                       "MCP server disabled in another session; auth refused",
                     );
-                  let Fu = y2n()?.(Ei, Xc);
+                  let Fu = getMcpDialBlockCause()?.(Ei, Xc);
                   if (Fu === "project-approval")
                     throw new mi(
                       formatMcpServerBlockedMessage(Ei, Fu),
@@ -81804,7 +81804,7 @@ async function IKe(w) {
           requestId: eo.id,
           toolUseId: I.toolUseID,
           toolName: eo.toolName,
-          inputDigest: v1e(eo.toolName, Ae),
+          inputDigest: createToolCallInputFingerprint(eo.toolName, Ae),
           onAllow(jt, Tt, to, zt) {
             if (!Zt()) return;
             Oe();
@@ -82424,7 +82424,7 @@ function XKe(Boi) {
     [joi, rHo] = d(!1),
     iHo;
   if (QF[0] !== QLt || QF[1] !== JC || QF[2] !== yx || QF[3] !== _q)
-    ((iHo = !_q && yx !== null && (JC || vZt(yx, QLt))),
+    ((iHo = !_q && yx !== null && (JC || isShellOutputTruncated(yx, QLt))),
       (QF[0] = QLt),
       (QF[1] = JC),
       (QF[2] = yx),
@@ -82899,7 +82899,7 @@ class r2e {
           zo,
           Sr;
         try {
-          ((zo = v1e(An, Ro.input)),
+          ((zo = createToolCallInputFingerprint(An, Ro.input)),
             (Sr = await rZ({
               tool: on,
               input: Ro.input,
@@ -84358,11 +84358,11 @@ function O2e(w, I, ne, me) {
     _o = C(new Set()),
     Ho = C(new Set()),
     po = C(null);
-  if (po.current === null && !pe) po.current = iWn((no) => Ho.current.has(no));
+  if (po.current === null && !pe) po.current = createChannelPermissionRequestRegistry((no) => Ho.current.has(no));
   E(() => {
     let no = po.current;
     if (!no) return;
-    if (!nWn()) return;
+    if (!isHarborPermissionsEnabled()) return;
     return (
       ne.setChannel(no),
       () => {
@@ -84656,7 +84656,7 @@ function O2e(w, I, ne, me) {
                         skipAttachments: !0,
                       }));
                   }),
-                  zPe(no.capabilities, "claude/channel/permission"))
+                  hasExperimentalCapability(no.capabilities, "claude/channel/permission"))
                 )
                   Qc().onMcpNotification(no, ChannelPermissionNotificationSchema(), async (Or) => {
                     let { request_id: Br, behavior: fi } = Or.params,
@@ -87317,7 +87317,7 @@ var nBt = {
               text: `${D6(be)} \xB7 some features are restricted \xB7 /status for details`,
             });
         }
-        return (ne(getComplianceTaints()), qRe(ne));
+        return (ne(getComplianceTaints()), subscribeComplianceTaints(ne));
       };
     },
   },
@@ -88582,7 +88582,7 @@ var qBt = {
       return ({ screen: w, hasOpenDialog: I }) => {
         if (w === "transcript" && I)
           (logEvent("tengu_dialog_waiting_in_transcript", {}),
-            zs.autoDenyPresence.emit());
+            appStateStore.autoDenyPresence.emit());
       };
     },
   },
@@ -89416,7 +89416,7 @@ function eQe(w, I, ne = !0) {
           focus: { getSnapshot: () => getTerminalFocus(), subscribe: (Qe) => subscribeTerminalFocus(Qe) },
           clock: pe,
           now: () => Date.now(),
-          generate: (Qe) => $9e(Qe),
+          generate: (Qe) => generateCcrRecap(Qe),
           getPendingBackgroundWork: () =>
             tle({
               tasks: xe.getState().tasks,

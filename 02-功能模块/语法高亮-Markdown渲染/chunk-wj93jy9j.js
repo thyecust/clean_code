@@ -18,7 +18,7 @@ import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { te, dp } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { $7e, subscribeMouseObserved } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { hasMouseObserved, subscribeMouseObserved } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { rre } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import {
@@ -641,7 +641,7 @@ function lt({
   o0e();
   let A = useHyperlinkSupport(),
     L = tn(),
-    P = At(subscribeMouseObserved, $7e),
+    P = At(subscribeMouseObserved, hasMouseObserved),
     { markdownTokens: B } = ree(),
     N = V(() => {
       let R = m && !f ? rre(s) : s,

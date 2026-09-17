@@ -17,7 +17,7 @@ import { Nk, Tj } from "./chunk-jz6b76hr.js";
 import { useTheme, useThemeSetting, useCustomThemes } from "./chunk-w5jaj6kg.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { isCustomizationDisabled } from "./chunk-dqyc6kge.js";
-import { getThemesDir, customThemeRef, parseCustomThemeRef, $ze, slugify } from "./custom-themes.js";
+import { getThemesDir, customThemeRef, parseCustomThemeRef, saveCustomTheme, slugify } from "./custom-themes.js";
 import { zl } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { FULL_BLOCK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -134,7 +134,7 @@ function Ee(Br) {
     ((Yo = function S(Go, no) {
       (qr(no),
         u(no),
-        $ze(
+        saveCustomTheme(
           { slug: Go, name: l.trim(), base: h, overrides: no, source: "user" },
           de,
         ).catch((zr) => {
@@ -267,7 +267,7 @@ function Ee(Br) {
         (Ur(z),
           wo(ke),
           Ar("colors"),
-          $ze({ slug: z, name: ke, base: h, overrides: m, source: "user" }, de)
+          saveCustomTheme({ slug: z, name: ke, base: h, overrides: m, source: "user" }, de)
             .then(() => Se())
             .then(() => {
               Ze(customThemeRef(z));

@@ -26,7 +26,7 @@ import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51
 import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
+import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";

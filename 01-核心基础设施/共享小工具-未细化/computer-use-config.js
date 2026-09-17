@@ -33,7 +33,7 @@ function isComputerUseEnabled() {
   if (isTainted("hipaa")) return !1;
   return r() && o().enabled;
 }
-function iNt() {
+function getComputerUseSubGates() {
   let { enabled: e, coordinateMode: a, ...n } = o();
   return n;
 }
@@ -44,4 +44,4 @@ function getFrozenCoordinateMode() {
     e.frozenCoordinateMode
   );
 }
-export { isComputerUseEnabled, iNt, getFrozenCoordinateMode };
+export { isComputerUseEnabled, getComputerUseSubGates, getFrozenCoordinateMode };

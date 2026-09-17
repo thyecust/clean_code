@@ -40,7 +40,7 @@ import { j, rE, B, he, Irt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.
 import { z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { mhe } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { INVISIBLE_CHAR_CLASS } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { ay, wr, yHn, ott, Al, zt, z6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { Wi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -570,7 +570,7 @@ var ave = ".meta.json",
   ume = "server_plugin_id",
   DEt = "marketplace_name",
   LEt = "installation_preference",
-  V = new RegExp(`^(?!\\s)(?![\\s\\S]*\\s$)[^@${mhe}]{1,128}$`, "u");
+  V = new RegExp(`^(?!\\s)(?![\\s\\S]*\\s$)[^@${INVISIBLE_CHAR_CLASS}]{1,128}$`, "u");
 function XEn(e) {
   return V.test(e);
 }

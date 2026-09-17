@@ -8,18 +8,18 @@
 
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-var aIe = "CLAUDE_CODE_RELAUNCH_TERMINAL_SIZE";
+var RELAUNCH_TERMINAL_SIZE_ENV_VAR = "CLAUDE_CODE_RELAUNCH_TERMINAL_SIZE";
 function getRelaunchTerminalSizeEnv() {
   let { columns: r, rows: e } = process.stdout;
   if (!r || !e) return {};
-  return { [aIe]: `${r}x${e}` };
+  return { [RELAUNCH_TERMINAL_SIZE_ENV_VAR]: `${r}x${e}` };
 }
-function kBn() {
+function applyRelaunchTerminalSizeEnv() {
   let r = a.CLAUDE_CODE_RELAUNCH_TERMINAL_SIZE;
-  if ((delete process.env[aIe], r === void 0 || !process.stdout.isTTY)) return;
+  if ((delete process.env[RELAUNCH_TERMINAL_SIZE_ENV_VAR], r === void 0 || !process.stdout.isTTY)) return;
   let e = /^([1-9]\d{0,3})x([1-9]\d{0,3})$/.exec(r);
   if (!e) return;
   ((process.stdout.columns ||= Number(e[1])),
     (process.stdout.rows ||= Number(e[2])));
 }
-export { aIe, getRelaunchTerminalSizeEnv, kBn };
+export { RELAUNCH_TERMINAL_SIZE_ENV_VAR, getRelaunchTerminalSizeEnv, applyRelaunchTerminalSizeEnv };

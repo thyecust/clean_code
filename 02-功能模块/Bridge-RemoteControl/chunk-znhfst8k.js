@@ -23,7 +23,7 @@ import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/ht
 import { getSessionAccessToken, getSessionAuthHeaders } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { recordStartupPhase } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { GGn, Dzn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { t6n } from "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
+import { isReplyDegraded } from "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
 import { setActivityCallback, clearActivityCallback, getMainLoopRefcount } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import { SSEParser } from "../../01-核心基础设施/共享小工具-未细化/sse-parser.js";
 import { DRAIN_RESPONSE_TIMEOUT_MS, drainResponseBody } from "../../01-核心基础设施/共享小工具-未细化/drain-response-body.js";
@@ -1937,7 +1937,7 @@ class pM {
       this.workerState.enqueue({
         worker_status: e,
         requires_action_details: t ? Se(t) : null,
-        internal_metadata: { reply_degraded: t6n() },
+        internal_metadata: { reply_degraded: isReplyDegraded() },
       }),
       this.applyUploadHold(e === "running" ? "idle" : e));
   }

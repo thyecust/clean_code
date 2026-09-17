@@ -18,7 +18,7 @@ import {
   parseCustomThemeRef as Zb,
   readThemesFromPathAsync as FFt,
   loadCustomThemes as _Oe,
-  $ze,
+  saveCustomTheme as $ze,
   slugify as wln,
   watchCustomThemes as $Ft,
 } from "../../02-功能模块/状态栏-主题/custom-themes.js";

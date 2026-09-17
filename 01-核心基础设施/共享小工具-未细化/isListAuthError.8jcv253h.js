@@ -9,6 +9,6 @@
 // Version: 2.1.263
 import { isClaudeAiBearerRejectedError as nce, isListAuthError as rct } from "./auth-error-predicates.js";
 import "../../02-功能模块/认证-OAuth登录/chunk-j990pwax.js";
-import "../../02-功能模块/认证-OAuth登录/chunk-3wfaaze4.js";
+import "../../02-功能模块/认证-OAuth登录/pkce-challenge.js";
 import "../../02-功能模块/MCP客户端/chunk-tv3jbp8f.js";
 export { nce as isClaudeAiBearerRejectedError, rct as isListAuthError };

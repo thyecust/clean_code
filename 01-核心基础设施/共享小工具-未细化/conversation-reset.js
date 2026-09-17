@@ -14,7 +14,7 @@ import { listGoalStopHooks } from "../../02-功能模块/Skills技能/chunk-sapy
 import { runBundledSkillSessionResets } from "../../02-功能模块/Skills技能/bundled-skills.js";
 import { Jx } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { transcriptReplacedBus } from "./transcript-replaced-bus.js";
-function nWe(o, e, r, i) {
+function resetConversation(o, e, r, i) {
   (Jx("conversation_reset"),
     yk("conversation_reset"),
     Hy(n3),
@@ -36,4 +36,4 @@ function nWe(o, e, r, i) {
     ),
     o.applyMessageOp({ type: "replace-all", messages: e }));
 }
-export { nWe };
+export { resetConversation };

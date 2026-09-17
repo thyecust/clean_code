@@ -7,11 +7,21 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-var e = null;
-function mWn(r) {
-  e = r;
+function isGitCommitCommand(t) {
+  return /\bgit\b(?:\s+(?:-C\s+\S+|-c\s+\S+=\S+|--\S+))*\s+commit(?:\s|$)/.test(
+    t,
+  );
 }
-function gWn() {
-  return e;
+function looksLikeGitCommitOutput(t, n, s) {
+  if (s !== void 0) return s === 0;
+  let e = [
+      /\[\w+[^\]]*\]\s+/,
+      /create mode/,
+      /\d+ files? changed/,
+      /\d+ insertions?/,
+      /\d+ deletions?/,
+    ],
+    i = t + n;
+  return e.some((o) => o.test(i));
 }
-export { mWn, gWn };
+export { isGitCommitCommand, looksLikeGitCommitOutput };

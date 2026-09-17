@@ -21,7 +21,7 @@ import { getBridgeAccessToken, getBridgeAccessTokenAsync } from "../../01-核心
 import { getBridgeDisabledReason } from "./chunk-9estzwf5.js";
 import { ndt } from "./chunk-ga43tr2w.js";
 import { PROACTIVE_ENROLLMENT_DISABLED_MESSAGE, isProactiveEnrollmentDisabled, isTrustedDeviceUnenrolled, enrollTrustedDeviceIfNeeded } from "./chunk-tyce0p0b.js";
-import { vAe, REMOTE_CONTROL_DISCONNECTED_MESSAGE } from "./remote-control-messages.js";
+import { REMOTE_CONTROL_SUBSCRIPTION_REQUIRED_MESSAGE, REMOTE_CONTROL_DISCONNECTED_MESSAGE } from "./remote-control-messages.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -47,11 +47,11 @@ import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
+import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
 import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
-import "../../01-核心基础设施/设置-配置/chunk-tswdb9jt.js";
+import "../../01-核心基础设施/设置-配置/managed-settings-approval-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
@@ -666,7 +666,7 @@ async function ie(l) {
   let b = await ndt();
   if (b) return { kind: "error", message: b };
   if (!(isHoverRestEnabled() && l !== void 0 ? await getBridgeAccessTokenAsync(l) : getBridgeAccessToken()))
-    return { kind: "error", message: vAe };
+    return { kind: "error", message: REMOTE_CONTROL_SUBSCRIPTION_REQUIRED_MESSAGE };
   if ((await enrollTrustedDeviceIfNeeded(l), await isTrustedDeviceUnenrolled())) {
     if (isProactiveEnrollmentDisabled()) return { kind: "error", message: PROACTIVE_ENROLLMENT_DISABLED_MESSAGE };
     return { kind: "unenrolled-trusted-device" };

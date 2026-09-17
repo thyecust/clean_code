@@ -25,14 +25,14 @@ function setContextCwd(t) {
   if (r) r.cwd = zn(t);
   else s_e(t);
 }
-function yPn() {
+function getContextCwd() {
   return e.getStore()?.cwd ?? Bw();
 }
 function getCwd() {
   try {
-    return yPn();
+    return getContextCwd();
   } catch {
     return he();
   }
 }
-export { runWithCwd, runWithCwdOrDefault, hasCwdContext, setContextCwd, yPn, getCwd };
+export { runWithCwd, runWithCwdOrDefault, hasCwdContext, setContextCwd, getContextCwd, getCwd };

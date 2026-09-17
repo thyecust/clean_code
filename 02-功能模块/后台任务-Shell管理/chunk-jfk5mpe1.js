@@ -73,7 +73,7 @@ import { createBackendHandle, createTranscriptSource } from "../../01-核心基�
 import { getLocalBinDir } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
-import { mPn } from "../../01-核心基础设施/共享小工具-未细化/user-prompt-text.js";
+import { CONTROL_PROMPT_PREFIX_RE } from "../../01-核心基础设施/共享小工具-未细化/user-prompt-text.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import {
@@ -1224,7 +1224,7 @@ function zt(t) {
   if (e === "") return [];
   let o = /^<bash-input>([\s\S]*?)<\/bash-input>/.exec(e);
   if (o) e = `! ${o[1].trim()}`;
-  else if (mPn.test(e)) return [];
+  else if (CONTROL_PROMPT_PREFIX_RE.test(e)) return [];
   return [{ role: "user", text: e }];
 }
 function fn(t, e) {

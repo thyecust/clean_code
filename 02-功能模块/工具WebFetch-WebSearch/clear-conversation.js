@@ -76,7 +76,7 @@ import { syncJobResumeSessionId } from "../后台任务-Shell管理/chunk-7wsy8v
 import { GOAL_PROPOSAL_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
 import { resetTransientSessionState, closeAllWebViews } from "../上下文压缩-Compact/chunk-1ntrf0ja.js";
 import { sessionAnnouncementStateStore } from "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
-import { brn } from "./chunk-1mxgbqzj.js";
+import { clearSessionCaches } from "./clear-session-caches.js";
 import { pruneAgentNameRegistry } from "../Teammates团队/agent-lifecycle.js";
 import { isTerminalTaskStatus } from "../Teammates团队/chunk-mrfx53ye.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -131,7 +131,7 @@ async function* clearConversation({
           (e.status === "running" || (nr(e) && Yf(e))),
       )
     : !1;
-  brn(t, c, k, M, o, B);
+  clearSessionCaches(t, c, k, M, o, B);
   let O = he();
   try {
     pu(O);

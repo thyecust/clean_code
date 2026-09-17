@@ -34,7 +34,7 @@ var g = 30000,
   S = 16777216,
   c =
     "/api/oauth/organizations/:orgUUID/skills/list-skills?include_wiggle_skills=true";
-async function i4e(t = {}) {
+async function fetchOrgSkills(t = {}) {
   let r = getEnvEntrypoint(),
     s = r ? `${c}&entrypoint=${encodeURIComponent(r)}` : c;
   try {
@@ -51,7 +51,7 @@ async function i4e(t = {}) {
     return wGt(e);
   }
 }
-async function bGn(t, r, s, e = {}) {
+async function downloadSkillArchive(t, r, s, e = {}) {
   let l = getEnvEntrypoint(),
     o = [];
   if (l) o.push(`entrypoint=${encodeURIComponent(l)}`);
@@ -91,4 +91,4 @@ async function bGn(t, r, s, e = {}) {
     return (writeDiagnosticsEvent("warn", "skills_sync_download_exception", { kind: n }), !1);
   }
 }
-export { i4e, bGn };
+export { fetchOrgSkills, downloadSkillArchive };

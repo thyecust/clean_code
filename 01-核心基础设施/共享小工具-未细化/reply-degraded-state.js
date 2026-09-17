@@ -25,7 +25,7 @@ function recordReplyDegradedState(n, r) {
   if (o === "downstream_unreachable") e.degraded = !0;
   else if (o === "downstream_error") e.degraded = !1;
 }
-function t6n() {
+function isReplyDegraded() {
   return t().degraded;
 }
-export { recordReplyDegradedState, t6n };
+export { recordReplyDegradedState, isReplyDegraded };

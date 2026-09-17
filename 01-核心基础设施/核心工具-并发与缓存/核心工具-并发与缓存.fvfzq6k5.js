@@ -405,7 +405,7 @@ async function writeSignatureSidecar(e, t) {
 async function deleteSignatureSidecars(e) {
   await Promise.all([x(getSignatureSidecarPath(e)), x(getSignatureIatSidecarPath(e))]);
 }
-async function XJe(e, t) {
+async function pruneStaleSignatureSidecars(e, t) {
   if (!t && (await ze(e))) return !1;
   return (await deleteSignatureSidecars(e), !0);
 }
@@ -537,7 +537,7 @@ export {
   extractSignatureHeader,
   writeSignatureSidecar,
   deleteSignatureSidecars,
-  XJe,
+  pruneStaleSignatureSidecars,
   readStoredSignature,
   readAcceptedSignatureIat,
   recordAcceptedSignatureIat,

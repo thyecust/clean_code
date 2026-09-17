@@ -44,7 +44,7 @@ async function S(e, t) {
   e.inFlight?.abort();
   let r = new AbortController();
   e.inFlight = r;
-  let o = await $9e(r.signal);
+  let o = await generateCcrRecap(r.signal);
   if (r.signal.aborted) return;
   if (o.kind !== "ok") {
     if (o.kind !== "no-turn") logFeatureBad("ccr_recap_generate", o.kind);
@@ -61,7 +61,7 @@ async function S(e, t) {
 var k =
     "The user stepped away and is coming back. Recap in under 40 words, 1-2 plain sentences, no markdown. Lead with the overall goal and current task, then the one next action. Skip root-cause narrative, fix internals, secondary to-dos, and em-dash tangents.",
   m = 400;
-async function $9e(e, t) {
+async function generateCcrRecap(e, t) {
   let r = getLastCacheSafeParams();
   if (!r && t) {
     if (e.aborted) return { kind: "aborted" };
@@ -127,4 +127,4 @@ function p(e, t) {
       .join(""),
   ).trim();
 }
-export { isAwaySummaryEnabled, maybeStartCcrRecap, resetCcrRecap, $9e };
+export { isAwaySummaryEnabled, maybeStartCcrRecap, resetCcrRecap, generateCcrRecap };

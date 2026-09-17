@@ -17,9 +17,9 @@ function isAgentSwarmsEnabled() {
   if (!H("tengu_amber_flint", !0)) return !1;
   return !0;
 }
-async function z_n() {
+async function captureTeammateModeSnapshotIfEnabled() {
   if (!isAgentSwarmsEnabled()) return;
   let { captureTeammateModeSnapshot: e } = await import("./chunk-88ybhavr.js");
   e();
 }
-export { isAgentSwarmsEnabled, z_n };
+export { isAgentSwarmsEnabled, captureTeammateModeSnapshotIfEnabled };

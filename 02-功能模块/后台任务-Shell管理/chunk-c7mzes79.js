@@ -118,7 +118,7 @@ import { $h, $fe, ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { DYn, hw, ONe, FYn, $pe, LNe, X3 } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { pauseWorkflowTask } from "../Workflow编排/chunk-va9cgbfs.js";
 import { ize } from "../Artifact发布-渲染/chunk-5gz5xvw9.js";
-import { y9e, killIfSameProcess } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
+import { getProcessStartTimeTicksAsync, killIfSameProcess } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
 import {
   EMPTY_ARTIFACT_PLAN_PUBLISH_CONSENT_PATHS,
   EMPTY_ARTIFACT_DB_READ_CONSENT_SLUGS,
@@ -159,9 +159,9 @@ import { getBlockedServerErrorFields } from "../MCP客户端/mcp-server-state-me
 import { getWorkflowTranscriptDir } from "../Workflow编排/workflow-snapshots.js";
 import { getAutoReactWiredSlugs, getBootingAutoReactArmSlugs, disposeSupervisors, MAX_UNATTENDED_REPLIES, drainUnattendedReplies } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
 import { Qt, re, De, E, vr, dn, V, C, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
+import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js";
 import { createFieldAccessor, createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
-import { isBypassPermissionsModeDisabled } from "../权限系统/chunk-pcxn6gwz.js";
+import { isBypassPermissionsModeDisabled } from "../权限系统/bypass-permissions-mode-policy.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -569,7 +569,7 @@ async function detachAndSerializeShell(t, o) {
     taskId: t.id,
     pid: r,
     procStart: await captureProcessStartTimeAsync(r),
-    startTimeTicks: (await y9e(r)) ?? void 0,
+    startTimeTicks: (await getProcessStartTimeTicksAsync(r)) ?? void 0,
     command: t.command,
     description: t.description,
     outputPath: s,

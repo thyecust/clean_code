@@ -15,13 +15,13 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { AltScreenContainer } from "./alt-screen-container.js";
 import { isFullscreenEnabled, getMouseMode } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import { getCachedSystemTheme, hOe, resolveThemeName } from "./theme-resolution.js";
+import { getCachedSystemTheme, subscribeSystemThemeChange, resolveThemeName } from "./theme-resolution.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { MEMO_CACHE_SENTINEL } from "./chunk-2c9tjhwd.js";
 F();
 var T = { light: "#f9f9f7", dark: "#1f1f1e" };
-function e$n(t, o, n) {
+function resolveSurfaceBackground(t, o, n) {
   if (!n) return;
   let i;
   if (t === "auto") {
@@ -36,15 +36,15 @@ function f() {
     S,
     k;
   if (y[0] === MEMO_CACHE_SENTINEL)
-    ((S = () => hOe(() => x(getCachedSystemTheme()))), (k = []), (y[0] = S), (y[1] = k));
+    ((S = () => subscribeSystemThemeChange(() => x(getCachedSystemTheme()))), (k = []), (y[0] = S), (y[1] = k));
   else ((S = y[0]), (k = y[1]));
   E(S, k);
   let N;
-  if (y[2] !== l) ((N = e$n(getStoredThemeSetting(), l, isLaunchComposerEnabled())), (y[2] = l), (y[3] = N));
+  if (y[2] !== l) ((N = resolveSurfaceBackground(getStoredThemeSetting(), l, isLaunchComposerEnabled())), (y[2] = l), (y[3] = N));
   else N = y[3];
   return N;
 }
-function kIt(I) {
+function FleetViewScreen(I) {
   let R = _(9),
     { children: u, mouseTracking: c, killRing: g } = I,
     h = f(),
@@ -76,4 +76,4 @@ function applyFleetViewHostWindowsEnv() {
   if (getCurrentPlatform() === "windows" || a.WT_SESSION)
     process.env.CLAUDE_CODE_ALT_SCREEN_FULL_REPAINT ??= "1";
 }
-export { e$n, kIt, applyFleetViewHostWindowsEnv };
+export { resolveSurfaceBackground, FleetViewScreen, applyFleetViewHostWindowsEnv };

@@ -26,7 +26,7 @@ function createRemoteAutocompactStateEmitter(t) {
   return {
     notify(n, c) {
       let o = r(n, c);
-      if (e !== void 0 && iQt(e, o)) return;
+      if (e !== void 0 && isSameRemoteAutocompactState(e, o)) return;
       ((e = o), t(o));
     },
     reset() {
@@ -34,7 +34,7 @@ function createRemoteAutocompactStateEmitter(t) {
     },
   };
 }
-function iQt(t, e) {
+function isSameRemoteAutocompactState(t, e) {
   return (
     t.enabled === e.enabled &&
     t.effectiveWindow === e.effectiveWindow &&
@@ -43,4 +43,4 @@ function iQt(t, e) {
     t.source === e.source
   );
 }
-export { createRemoteAutocompactStateEmitter, iQt };
+export { createRemoteAutocompactStateEmitter, isSameRemoteAutocompactState };

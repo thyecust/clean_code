@@ -15,7 +15,7 @@ function getProcParentPid(n) {
     e = t === void 0 ? NaN : Number.parseInt(t, 10);
   return Number.isNaN(e) ? void 0 : e;
 }
-function nXt(n) {
+function getProcGroupId(n) {
   let t = n.slice(n.lastIndexOf(")") + 2).split(" ")[2],
     e = t === void 0 ? NaN : Number.parseInt(t, 10);
   return Number.isNaN(e) ? void 0 : e;
@@ -31,4 +31,4 @@ function getProcState(n) {
 function isExitedProcessState(n) {
   return n === "Z" || n === "X";
 }
-export { getProcStartTime, getProcParentPid, nXt, getProcState, isExitedProcessState };
+export { getProcStartTime, getProcParentPid, getProcGroupId, getProcState, isExitedProcessState };

@@ -77,7 +77,7 @@ import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
 import { y0e } from "../Bedrock-Vertex/chunk-yvs1a1sd.js";
-import { finalizeOAuthLogin, _en, refreshAuthStateAfterLogin } from "./oauth-login-completion.js";
+import { finalizeOAuthLogin, applyOAuthLoginIdentity, refreshAuthStateAfterLogin } from "./oauth-login-completion.js";
 import { showNotification } from "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { OAuthLoginFlow } from "./oauth-login-flow.js";
@@ -131,7 +131,7 @@ async function Wt(s, c, { loginHint: M, loginMethod: H, orgUUID: D }) {
     z = jt(T);
   if (z instanceof Error) throw (await ut(T), z);
   await Xt(await Vt());
-  let ee = await _en(T, {}),
+  let ee = await applyOAuthLoginIdentity(T, {}),
     R;
   try {
     let U = T.tokenAccount;

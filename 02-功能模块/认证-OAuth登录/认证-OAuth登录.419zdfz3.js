@@ -263,7 +263,7 @@ import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js"
 import { sampleChildProcessPeaks } from "../../01-核心基础设施/核心工具-进程与信号/sdk-memory-summary.js";
 import { isBgAuthSnapshotPending, waitForBgAuthSnapshot, hasCredentialDescriptor, getOAuthToken, getOAuthTokenWithBgSnapshot, getGatewayToken, getApiKey, getSessionAccessToken } from "./credential-file-descriptors.js";
 import { parseGitHubRepository } from "../Git-Worktree/git-repository-detection.js";
-import { dz } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
+import { ensureAxiosEgressGuardInstalled } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
 import { SECURE_STORAGE_READ_FAILED_SENTINEL, invalidateCredentialsCopyCache, getSecureStorage } from "./secure-storage.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { getSecureStorageDir, getKeychainServiceName, getKeychainAccountName, invalidateKeychainCache, classifyKeychainError } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
@@ -24391,7 +24391,7 @@ function FCt() {
   return Dz({}) === void 0;
 }
 async function Er(e, t, r, o = {}, d = !1) {
-  dz();
+  ensureAxiosEgressGuardInstalled();
   let p = Dz(o);
   if (p !== void 0) return { ok: !1, reason: p };
   if (o.frameTunnel && (o.host !== "frame" || o.auth !== "none"))
@@ -28297,7 +28297,7 @@ class gm {
   async authHeadersForSend() {
     if (!(getAnthropicApiKeySafe() === null && shouldUseWIFAuth())) return getAuthHeadersAsync();
     let { getResolvedWIFBaseUrlSnapshot: t } =
-        await import("./chunk-x3rm9w4b.js"),
+        await import("./wif-credentials.js"),
       r = jF(t());
     if (r === void 0 || r !== WF(this.endpoint) || !fm(this.endpoint))
       return {
@@ -37132,7 +37132,7 @@ async function getAuthHeadersAsync() {
   if (!getAnthropicApiKeySafe() && shouldUseWIFAuth())
     try {
       let { getWIFCredentials: e, getWIFTokenCache: t } =
-          await import("./chunk-x3rm9w4b.js"),
+          await import("./wif-credentials.js"),
         [r, o] = await Promise.all([t(), e()]);
       if (r !== null)
         return {

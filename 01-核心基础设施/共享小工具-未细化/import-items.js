@@ -16,7 +16,7 @@ var AGENT_INSTRUCTION_FILE_NAMES = new Set(["agents.md", "agents.override.md", "
     mcp: 4,
     skill: 5,
   };
-function wIe(e) {
+function isAutoImportableItem(e) {
   return e.scope === "user" && !e.warning && e.kind !== "skill";
 }
 function classifyImportItem(e) {
@@ -30,4 +30,4 @@ function compareImportItems(e, t) {
   if (e.scope !== t.scope) return e.scope === "project" ? -1 : 1;
   return e.label.localeCompare(t.label);
 }
-export { AGENT_INSTRUCTION_FILE_NAMES, wIe, classifyImportItem, compareImportItems };
+export { AGENT_INSTRUCTION_FILE_NAMES, isAutoImportableItem, classifyImportItem, compareImportItems };

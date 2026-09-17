@@ -17,7 +17,7 @@ import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-key
 import { We, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
-import { sanitizePeerFileName, peerFileFailureNote, peerFileCountCapNote, tFt, nFt, rFt } from "../跨会话消息(UDS)/peer-file-transfer.js";
+import { sanitizePeerFileName, peerFileFailureNote, peerFileCountCapNote, verifyPeerFileIntegrity, emitPeerFileReceiveTelemetry, injectPeerFilePrefix } from "../跨会话消息(UDS)/peer-file-transfer.js";
 import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { parseFileAttachments, dropEmptyTextBlocks } from "../Bridge-RemoteControl/bridge-inbound-origin.js";
 import { Ds, bTe, Vzn, Kzn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -66,7 +66,7 @@ async function D(e, s, l, m, p) {
   }
   if (
     typeof e.sha256 === "string" &&
-    !tFt(r, { sha256: e.sha256, file_size: e.file_size })
+    !verifyPeerFileIntegrity(r, { sha256: e.sha256, file_size: e.file_size })
   )
     return (
       a(`fetch ${e.file_uuid} failed integrity verification`),
@@ -134,7 +134,7 @@ async function H(e, s, l, m, p) {
     ) {
       let t = i.length - MAX_TRANSFER_FILE_COUNT,
         I = t > 0 ? i.slice(0, MAX_TRANSFER_FILE_COUNT) : i;
-      nFt("bridge", I.length, 0);
+      emitPeerFileReceiveTelemetry("bridge", I.length, 0);
       let w = t > 0 ? " " + peerFileCountCapNote(t) : "";
       return {
         prefix:
@@ -186,7 +186,7 @@ async function H(e, s, l, m, p) {
     }),
     v > 0)
   )
-    nFt("bridge", v, F);
+    emitPeerFileReceiveTelemetry("bridge", v, F);
   let E = B.length + o.length;
   if (E === 0)
     logFeatureBad("bridge_attachment_resolve", x ? "digest_mismatch" : "all_failed");
@@ -205,14 +205,14 @@ async function H(e, s, l, m, p) {
 }
 function X(e, s) {
   if (!s) return e;
-  if (typeof e === "string") return rFt(e, s);
+  if (typeof e === "string") return injectPeerFilePrefix(e, s);
   let l = e.findLastIndex((m) => m.type === "text");
   if (l !== -1) {
     let m = e[l];
     if (m.type === "text")
       return [
         ...e.slice(0, l),
-        { ...m, text: rFt(m.text, s) },
+        { ...m, text: injectPeerFilePrefix(m.text, s) },
         ...e.slice(l + 1),
       ];
   }
@@ -228,7 +228,7 @@ function G(e, s) {
       : dropEmptyTextBlocks(e);
   return [...s, ...l];
 }
-async function dIt(e, s, l, m, p) {
+async function resolveAndPrepend(e, s, l, m, p) {
   let i = s ?? "",
     r = parseFileAttachments(e);
   if (r.length === 0) return { content: i, inlinedImagePaths: [] };
@@ -249,4 +249,4 @@ async function dIt(e, s, l, m, p) {
     };
   return { content: G(X(i, d), h), inlinedImagePaths: k };
 }
-export { dIt };
+export { resolveAndPrepend };

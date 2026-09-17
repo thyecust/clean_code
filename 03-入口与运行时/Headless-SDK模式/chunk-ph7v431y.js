@@ -17,7 +17,7 @@ import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-�
 import { IT } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { sDe, b6t, createAttachmentMessage, Vc, Re, wH } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { xZ, Pst } from "../../02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js";
-import { iQt } from "../../01-核心基础设施/共享小工具-未细化/remote-autocompact-state.js";
+import { isSameRemoteAutocompactState } from "../../01-核心基础设施/共享小工具-未细化/remote-autocompact-state.js";
 import { AGENT_TOOL_NAME } from "../../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
@@ -325,7 +325,7 @@ function G0t(e, s, r) {
     (e((a) => {
       if (
         a.remoteAutocompactState !== void 0 &&
-        iQt(a.remoteAutocompactState, t)
+        isSameRemoteAutocompactState(a.remoteAutocompactState, t)
       )
         return a;
       return ((l = !0), { ...a, remoteAutocompactState: t });

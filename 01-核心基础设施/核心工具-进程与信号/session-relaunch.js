@@ -34,7 +34,7 @@ import { drainRegisteredWriteQueues } from "../核心工具-路径与平台/核�
 import { getProjectDir } from "../../02-功能模块/Teammates团队/transcript-paths.js";
 import { resolveWrappedClaudeInvocation, applyProcessWrapper } from "../共享小工具-未细化/claude-launcher-invocation.js";
 import { jlt, Wlt, Tee } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { aIe, getRelaunchTerminalSizeEnv } from "../共享小工具-未细化/relaunch-terminal-size.js";
+import { RELAUNCH_TERMINAL_SIZE_ENV_VAR, getRelaunchTerminalSizeEnv } from "../共享小工具-未细化/relaunch-terminal-size.js";
 import { copyEnvWithoutUndefined } from "../共享小工具-未细化/copy-env-without-undefined.js";
 import { resolveTranscriptLocator } from "../共享小工具-未细化/hover-rest-transcript.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
@@ -184,7 +184,7 @@ async function relaunchClaudeCode(e = {}, t) {
     delete i.CLAUDE_BRIDGE_REATTACH_OWNER_ACCT,
     delete i.CLAUDE_BRIDGE_REATTACH_OWNER_ORG,
     delete i.CLAUDE_BRIDGE_REATTACH_NO_BACKFILL,
-    delete i[aIe],
+    delete i[RELAUNCH_TERMINAL_SIZE_ENV_VAR],
     Object.assign(i, e.env));
   for (let u of e.dropEnv ?? []) delete i[u];
   Object.assign(i, getRelaunchTerminalSizeEnv());

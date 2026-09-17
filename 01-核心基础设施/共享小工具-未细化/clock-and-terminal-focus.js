@@ -56,7 +56,7 @@ var setTimeoutWithCancel = (n, r) => {
     return () => clearTimeout(t);
   },
   noopSubscribe = () => () => {},
-  sDt = () => null;
+  getNullSnapshot = () => null;
 function S(n) {
   let r = new Map(),
     t = null,
@@ -132,4 +132,4 @@ function ClockProvider(Y) {
   else O = A[6];
   return O;
 }
-export { CLOCK_TICK_INTERVAL_MS, TerminalFocusProvider, useTerminalFocus, useTerminalFocusState, setTimeoutWithCancel, noopSubscribe, sDt, ClockContext, ClockProvider };
+export { CLOCK_TICK_INTERVAL_MS, TerminalFocusProvider, useTerminalFocus, useTerminalFocusState, setTimeoutWithCancel, noopSubscribe, getNullSnapshot, ClockContext, ClockProvider };

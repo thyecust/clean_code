@@ -70,9 +70,9 @@ import { Qn } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js
 import { isRemoteControlHardDisabled, isBridgeEnabled, getRemoteControlPolicyLockReason, applyRemoteControlToAppState } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
 import { isInputNeededPushEnabled } from "../../02-功能模块/Bridge-RemoteControl/push-notification-tool.js";
 import { resolveArtifactEnableSetting, getArtifactDefaultOn } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
-import { zs } from "../共享小工具-未细化/terminal-focus-state.js";
+import { appStateStore } from "../共享小工具-未细化/terminal-focus-state.js";
 import { isAgentSwarmsEnabled } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
-import { ny } from "../共享小工具-未细化/agent-view-feature-gates.js";
+import { isAgentsFleetEnabled } from "../共享小工具-未细化/agent-view-feature-gates.js";
 import { isUnattendedServingEnabledCached, writeUnattendedServingConsent, unattendedServingConsentView, managedSettingsForbidUnattendedServing, unattendedServingForbiddenBy, unattendedServingConsentMayHoldYes } from "../../02-功能模块/AutoMode-自动模式/unattended-serving-consent.js";
 import { parseCustomThemeRef } from "../../02-功能模块/状态栏-主题/custom-themes.js";
 import { Ult } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
@@ -83,7 +83,7 @@ import { sanitizeTimeFormatPattern } from "../核心工具-日期与本地化/�
 import { getFastModeTargetModel } from "./fast-mode.js";
 import { p7, P_, Rl, rI, Znn, ern, t2, n2, Qle } from "../模型目录-ModelCatalog/chunk-qgx6a5a0.js";
 import { isAgentsViewAvailable } from "../../02-功能模块/后台任务-Shell管理/chunk-531ast3t.js";
-import { _dt } from "../共享小工具-未细化/chunk-ch1x7wx1.js";
+import { isProposeGoalEnabled } from "../共享小工具-未细化/propose-goal-feature-gate.js";
 import { WORKFLOW_SIZE_GUIDELINE_VALUES, parseWorkflowSizeGuideline, resolveWorkflowSizeGuideline } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 import { getLanguageDisplayNames } from "../共享小工具-未细化/intl-text-utils.js";
 function F(l, r) {
@@ -195,10 +195,10 @@ function De(l) {
 var B = () => {},
   w2n = { setGlobalConfig: B, setSettingsData: B, setChanges: B };
 function Fe(l) {
-  return ((zs.orgMemoryWritesRowSeen ||= l), zs.orgMemoryWritesRowSeen);
+  return ((appStateStore.orgMemoryWritesRowSeen ||= l), appStateStore.orgMemoryWritesRowSeen);
 }
 function Ne(l) {
-  return ((zs.orgMemoryReadRowSeen ||= l), zs.orgMemoryReadRowSeen);
+  return ((appStateStore.orgMemoryReadRowSeen ||= l), appStateStore.orgMemoryReadRowSeen);
 }
 var U = {
     accepted: "Allowed",
@@ -213,7 +213,7 @@ function re() {
   return unattendedServingForbiddenBy() === "user" ? Ue : xe;
 }
 function Le(l) {
-  return ((zs.remoteHomeSettingsRowSeen ||= l), zs.remoteHomeSettingsRowSeen);
+  return ((appStateStore.remoteHomeSettingsRowSeen ||= l), appStateStore.remoteHomeSettingsRowSeen);
 }
 function gSe(l) {
   let {
@@ -1109,14 +1109,14 @@ function gSe(l) {
         ]
       : []),
     ...(hpe()
-      ? ny() || isAgentsViewAvailable()
+      ? isAgentsFleetEnabled() || isAgentsViewAvailable()
         ? [
             {
               id: "agentsView",
               label: "Agents view",
               value:
                 (isAgentsViewAvailable() && (r.leftArrowOpensAgents ?? !0)) ||
-                (ny() && (r.defaultToAgentsView ?? !1))
+                (isAgentsFleetEnabled() && (r.defaultToAgentsView ?? !1))
                   ? "on"
                   : "off",
               type: "managedEnum",
@@ -1125,7 +1125,7 @@ function gSe(l) {
           ]
         : []
       : [
-          ...(ny()
+          ...(isAgentsFleetEnabled()
             ? [
                 {
                   id: "defaultToAgentsView",
@@ -1328,7 +1328,7 @@ function gSe(l) {
             },
           },
         ]),
-    ...(_dt()
+    ...(isProposeGoalEnabled()
       ? [
           {
             id: "modelProposedGoals",

@@ -37,7 +37,7 @@ import "../../01-核心基础设施/共享小工具-未细化/feature-flag-versi
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
+import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";

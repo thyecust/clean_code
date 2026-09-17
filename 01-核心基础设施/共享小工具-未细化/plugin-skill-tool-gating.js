@@ -22,7 +22,7 @@ class r {
   }
 }
 var o = new r();
-function _un(e) {
+function registerSuggestRolloutPinReader(e) {
   o.register(e);
 }
 function isPluginSkillToolEnabled() {
@@ -30,8 +30,8 @@ function isPluginSkillToolEnabled() {
   if (isFirstPartyRemoteSession()) return !0;
   return isDesktopHostSession() && isFirstPartyProvider() && o.read();
 }
-function u_r(e) {
+function isPluginSkillToolAdvertised(e) {
   if (!PLUGIN_SKILL_DISCOVERY_TOOL_NAMES.includes(e)) return !0;
   return isPluginSkillToolEnabled();
 }
-export { _un, isPluginSkillToolEnabled, u_r };
+export { registerSuggestRolloutPinReader, isPluginSkillToolEnabled, isPluginSkillToolAdvertised };

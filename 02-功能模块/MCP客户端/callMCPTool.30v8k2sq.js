@@ -48,7 +48,7 @@ import {
   McpError,
 } from "./chunk-tv3jbp8f.js";
 import { uhe, C1, C2e, Xtt, xkt, Ytt, Hkt, Ikt } from "./chunk-98spw152.js";
-import "../认证-OAuth登录/chunk-3wfaaze4.js";
+import "../认证-OAuth登录/pkce-challenge.js";
 import { XA, u2, aPe } from "../认证-OAuth登录/chunk-j990pwax.js";
 import { Qs, K, he, sn, yB, Mrt, Lx, Nrt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
@@ -225,7 +225,7 @@ import "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-g
 import { noopTaskRegistry } from "../工具WebFetch-WebSearch/noop-task-registry.js";
 import { SdkMcpClientTransport } from "../../01-核心基础设施/共享小工具-未细化/sdk-mcp-transports.js";
 import { stripTextBlockMeta, estimateContentTokens, shouldTruncateOutput, maybeTruncateOutput } from "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
-import "./chunk-7gw5rbph.js";
+import "./mcp-elicitation-request-handler.js";
 import { hce } from "../../00-第三方库/_未识别/第三方库-Nodepolyfill/chunk-5y6047zm.js";
 import { logChromeToolsAdded } from "../Hooks钩子/chrome-telemetry-events.js";
 import { collectResourceLinks, stripReservedMetaKeys } from "../../01-核心基础设施/共享小工具-未细化/mcp-tool-result-fields.js";
@@ -235,7 +235,7 @@ import { hasChannelCapability } from "../../01-核心基础设施/共享小工�
 import { resolveProxyFetchOptions } from "../../01-核心基础设施/共享小工具-未细化/proxy-fetch-options.js";
 import { splitPluginId } from "../插件系统/chunk-33bdfgmx.js";
 import { isMcpSkillsEnabled, isMcpSkillsCapable } from "./mcp-skills-extension.js";
-import { n7e, asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
+import { asMcpClient, asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js";
 import { Bg } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { getMcpTimeoutMs } from "../../01-核心基础设施/共享小工具-未细化/mcp-timeouts.js";
 import { isClaudeInChromeMCPServer } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
@@ -3010,7 +3010,7 @@ var connectToServer = lct(
         writeDiagnosticsEvent("info", "mcp_connect_complete", { transport: T, duration_ms: Ae }));
       let Fe = {
         name: e,
-        client: n7e(U),
+        client: asMcpClient(U),
         type: "connected",
         capabilities: ae ?? {},
         serverInfo: de,
@@ -5944,7 +5944,7 @@ async function setupSdkMcpClients(e, t, r) {
             name: T,
             capabilities: W || {},
             instructions: D,
-            client: n7e(L),
+            client: asMcpClient(L),
             config: { ...h, scope: "dynamic" },
             cleanup: async () => {
               await L.close();

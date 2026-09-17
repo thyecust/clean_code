@@ -23,7 +23,7 @@ import { registerBundledSkill } from "./bundled-skills.js";
 import { SKILL_TOOL_NAME } from "../权限系统/chunk-fjrcf22x.js";
 import { ALLOW_ROUTINES_POLICY } from "../../01-核心基础设施/共享小工具-未细化/routines-policy.js";
 import { LOOP_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
-import { SCHEDULE_WAKEUP_TOOL_NAME, sCe, AUTONOMOUS_LOOP_DYNAMIC_SENTINEL, TASK_LIST_TOOL_NAME, TASK_STOP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
+import { SCHEDULE_WAKEUP_TOOL_NAME, AUTONOMOUS_LOOP_SENTINEL, AUTONOMOUS_LOOP_DYNAMIC_SENTINEL, TASK_LIST_TOOL_NAME, TASK_STOP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 var r = import.meta.require("../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js"),
   b = "10m";
@@ -199,7 +199,7 @@ ${s}
 
 ${n}`;
   }
-  let l = e ? r.LOOP_FILE_SENTINEL : sCe,
+  let l = e ? r.LOOP_FILE_SENTINEL : AUTONOMOUS_LOOP_SENTINEL,
     u = e
       ? `# /loop \u2014 schedule loop.md tasks
 

@@ -14,11 +14,11 @@ import {
   assertNextArgumentIsRecord,
   isAbortSignal,
   createEnvironmentUnloadedError,
-  eNn,
+  transpileHooksModuleSource,
   BUILTIN_MODULE_SPECIFIER,
-  nNn,
-  rNn,
-  aNn,
+  createDisallowedImportError,
+  isRelativeModuleSpecifier,
+  resolveHooksModuleImport,
   CORE_OPERATION_EVENT_NAMES,
   BUILTIN_HOOK_EVENT_NAMES,
   isBuiltinHookEventName,
@@ -3456,11 +3456,11 @@ async function Hf({ args: e, context: t, intoEnvironment: r, stamped: o }) {
     d = Uo(e.links);
   async function u(w, S) {
     if (w === BUILTIN_MODULE_SPECIFIER) return c;
-    if (!rNn(w)) throw nNn(s, w, jf(a, S.identifier) || n);
+    if (!isRelativeModuleSpecifier(w)) throw createDisallowedImportError(s, w, jf(a, S.identifier) || n);
     let O = d.get(ze(_t(S.identifier), w)),
       C = O === void 0 ? void 0 : m.get(O);
     if (O !== void 0 && C !== void 0) return b(O, C);
-    let R = await aNn(
+    let R = await resolveHooksModuleImport(
       { spelled: w, importer: S.identifier, root: a, pluginName: s },
       m,
     );
@@ -3470,7 +3470,7 @@ async function Hf({ args: e, context: t, intoEnvironment: r, stamped: o }) {
   function b(w, S) {
     let O = f.get(w);
     if (O) return O;
-    let C = new Ve.SourceTextModule(eNn(w, S), {
+    let C = new Ve.SourceTextModule(transpileHooksModuleSource(w, S), {
       context: t,
       identifier: w,
       initializeImportMeta: (R) => {

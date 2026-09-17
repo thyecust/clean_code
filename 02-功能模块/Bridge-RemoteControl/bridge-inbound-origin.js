@@ -132,7 +132,7 @@ function isHumanTurnEvent(e, r, t = !1) {
   } catch {
     return !1;
   }
-  if (!a || vPe(a.content)) return !1;
+  if (!a || parsePeerEnvelopeSender(a.content)) return !1;
   let { clientPlatform: d, inboundOrigin: o } = a;
   if (o !== void 0) return r === "bridge" ? isHumanRelayTurn(d, o) : isHumanRelayOrigin(o, t);
   return R(d, void 0) || (r === "remote-worker" && isClaudeCodeClientPlatform(d));
@@ -140,7 +140,7 @@ function isHumanTurnEvent(e, r, t = !1) {
 function isHumanRelayOrigin(e, r = !1) {
   return e === P || e === w || e === H || (r && e === C);
 }
-function o6n({ isRelayHuman: e, isSynthetic: r, ccrTurnId: t }) {
+function buildRelayTurnFields({ isRelayHuman: e, isSynthetic: r, ccrTurnId: t }) {
   if (!e) return {};
   return {
     ...(!r && { verifiedSlackHumanTurn: !0 }),
@@ -148,7 +148,7 @@ function o6n({ isRelayHuman: e, isSynthetic: r, ccrTurnId: t }) {
   };
 }
 function classifyInboundOrigin(e, r, t, a, d, o) {
-  let f = vPe(e);
+  let f = parsePeerEnvelopeSender(e);
   if (f) return { kind: "peer", from: f, inbound_origin: t, ...Pse(e) };
   if (t === v) return p(t);
   if (t && G.has(t)) return p(t);
@@ -192,8 +192,8 @@ function getInboundOriginOverride(e, r, t) {
   if (r && h.has(r)) return { kind: "human" };
   return;
 }
-function s6n(e, r, t, a, d, o = !1, f = !1) {
-  let l = vPe(e);
+function classifyRemoteIngressOrigin(e, r, t, a, d, o = !1, f = !1) {
+  let l = parsePeerEnvelopeSender(e);
   if (l) return { kind: "peer", from: l, inbound_origin: t, ...Pse(e) };
   if (t && !B.has(t)) {
     if (t === C)
@@ -212,7 +212,7 @@ function s6n(e, r, t, a, d, o = !1, f = !1) {
 function isVerifiedSlackHumanTurn(e) {
   return e.verifiedSlackHumanTurn === !0 && e.priority !== "now";
 }
-function i6n(e, r) {
+function resolvePeerTriggerPriority(e, r) {
   if (e === "now") return e;
   return r ? "later" : e;
 }
@@ -269,12 +269,12 @@ function parseInboundUserEvent(e) {
     activityObservation: l,
   };
 }
-function vPe(e) {
+function parsePeerEnvelopeSender(e) {
   if (typeof e !== "string") return;
   return e.match(new RegExp(`^<${CROSS_SESSION_MESSAGE_TAG} from="([^"]+)"`))?.[1];
 }
 function hasPeerEnvelope(e) {
-  if (typeof e === "string") return vPe(e) !== void 0;
+  if (typeof e === "string") return parsePeerEnvelopeSender(e) !== void 0;
   if (!Array.isArray(e)) return !1;
   return e.some(
     (r) =>
@@ -284,7 +284,7 @@ function hasPeerEnvelope(e) {
       r.type === "text" &&
       "text" in r &&
       typeof r.text === "string" &&
-      vPe(r.text) !== void 0,
+      parsePeerEnvelopeSender(r.text) !== void 0,
   );
 }
 function dropEmptyTextBlocks(e) {
@@ -328,16 +328,16 @@ export {
   r6n,
   isHumanTurnEvent,
   isHumanRelayOrigin,
-  o6n,
+  buildRelayTurnFields,
   classifyInboundOrigin,
   getInboundOriginOverride,
-  s6n,
+  classifyRemoteIngressOrigin,
   isVerifiedSlackHumanTurn,
-  i6n,
+  resolvePeerTriggerPriority,
   stripSystemReminderWrappers,
   stripSystemRemindersFromBlocks,
   parseInboundUserEvent,
-  vPe,
+  parsePeerEnvelopeSender,
   hasPeerEnvelope,
   dropEmptyTextBlocks,
 };

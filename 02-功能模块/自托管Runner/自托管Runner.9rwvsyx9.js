@@ -102,7 +102,7 @@ import { SCHEDULE_WAKEUP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js"
 import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
 import { decodeTokenClaims, getTokenExpiry, createTokenRefreshScheduler, decodeTaggedId } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { readFileWithMetadata } from "../../01-核心基础设施/共享小工具-未细化/safe-file-read.js";
-import { getProcStartTime, getProcParentPid, nXt, getProcState, isExitedProcessState } from "../../01-核心基础设施/共享小工具-未细化/linux-proc-stat.js";
+import { getProcStartTime, getProcParentPid, getProcGroupId, getProcState, isExitedProcessState } from "../../01-核心基础设施/共享小工具-未细化/linux-proc-stat.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { execFileSync } from "child_process";
@@ -205,7 +205,7 @@ async function Br(e, t) {
         let h = await di(`/proc/${p}/stat`, "utf8").catch(() => {
           return;
         });
-        if (h !== void 0 && getProcStartTime(h) === i && !isExitedProcessState(getProcState(h))) r.set(p, nXt(h));
+        if (h !== void 0 && getProcStartTime(h) === i && !isExitedProcessState(getProcState(h))) r.set(p, getProcGroupId(h));
       })));
   else
     c = Ur(n, async ([p, i]) => {
@@ -315,7 +315,7 @@ function li() {
       t.push({
         pid: Number(n),
         ppid: s,
-        pgrp: nXt(r),
+        pgrp: getProcGroupId(r),
         token: d !== void 0 && d.length > 0 ? d : void 0,
       });
     } catch {}
@@ -324,7 +324,7 @@ function li() {
 }
 function pi() {
   try {
-    return nXt(readFileSync("/proc/self/stat", "utf8"));
+    return getProcGroupId(readFileSync("/proc/self/stat", "utf8"));
   } catch {
     return;
   }

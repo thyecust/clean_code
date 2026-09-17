@@ -12,7 +12,7 @@
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { _4t, readEmbeddedAsset, readEmbeddedAssetSync } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
+import { resolveEmbeddedAssetPath, readEmbeddedAsset, readEmbeddedAssetSync } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
 var D = "./SKILL-59d7da6d.md.zst";
 var E = readEmbeddedAssetSync(D, import.meta.dirname);
 var H = "./payload.template.html.asset";
@@ -30,7 +30,7 @@ async function loadSkillFiles() {
       logError(P),
       logFeatureBad("skill_bundled_extract", "design_canvas_payload_unreadable"),
       new R(
-        `design canvas: editor payload unreadable at ${_4t(H, import.meta.dirname)} (${A(P) ?? "unknown"})`,
+        `design canvas: editor payload unreadable at ${resolveEmbeddedAssetPath(H, import.meta.dirname)} (${A(P) ?? "unknown"})`,
         "design canvas: editor payload unreadable",
       )
     );

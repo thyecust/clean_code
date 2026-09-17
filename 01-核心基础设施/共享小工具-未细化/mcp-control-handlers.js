@@ -11,13 +11,13 @@ import { jt } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 function getReconnectMcpServer() {
   return jt().reconnect;
 }
-function _2n() {
+function getToggleMcpServer() {
   return jt().toggle;
 }
 function getIsMcpServerDisabled() {
   return jt().isDisabled;
 }
-function y2n() {
+function getMcpDialBlockCause() {
   return jt().dialBlockCause;
 }
 function registerMcpControlHandlers(e, n, r, c) {
@@ -34,4 +34,4 @@ function clearMcpControlHandlers() {
     (e.isDisabled = null),
     (e.dialBlockCause = null));
 }
-export { getReconnectMcpServer, _2n, getIsMcpServerDisabled, y2n, registerMcpControlHandlers, clearMcpControlHandlers };
+export { getReconnectMcpServer, getToggleMcpServer, getIsMcpServerDisabled, getMcpDialBlockCause, registerMcpControlHandlers, clearMcpControlHandlers };

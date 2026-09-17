@@ -68,7 +68,7 @@ import { isBridgeEnvReregisterEnabled, isCcrV2SendEventsEnabled, isCcrV2SessionC
 import { debugTruncate, debugBody, describeAxiosError, parseRetryAfterHeader, extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { getAttestationFilterPolicy, getTrustedDeviceToken, withUntrustedDeviceRecovery } from "./chunk-tyce0p0b.js";
 import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeSessionNamePrefix } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
-import { vAe, REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE, BRIDGE_WORK_STATE_QUEUED } from "./remote-control-messages.js";
+import { REMOTE_CONTROL_SUBSCRIPTION_REQUIRED_MESSAGE, REMOTE_CONTROL_NOT_LOGGED_IN_MESSAGE, BRIDGE_WORK_STATE_QUEUED } from "./remote-control-messages.js";
 import "../自动更新-安装/chunk-brx72pf1.js";
 import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
 import { removeGuiHostEntrypoint, g4 } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
@@ -78,7 +78,7 @@ import { getBridgePollIntervalConfig } from "../../01-核心基础设施/共享�
 import { parseWorkSecret, sessionIdsMatch, buildSessionApiUrl, registerWorker } from "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
 import { resolveBridgeDaemonOwner, createBridgeTitleWriter } from "./chunk-1g5kqtqx.js";
 import { isPlainObject, parsePlist } from "../../01-核心基础设施/共享小工具-未细化/plist-parser.js";
-import { yBn, formatClockTime, buildSessionWebUrl, formatCodeAnywhereMessage, formatContinueCodingMessage, RERUN_REMOTE_CONTROL_CLI_MESSAGE, formatTerminalHyperlink } from "./remote-control-ui-strings.js";
+import { RECENT_ACTIVITY_WINDOW_MS, formatClockTime, buildSessionWebUrl, formatCodeAnywhereMessage, formatContinueCodingMessage, RERUN_REMOTE_CONTROL_CLI_MESSAGE, formatTerminalHyperlink } from "./remote-control-ui-strings.js";
 import { trySetRawMode } from "../../01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js";
 import { appendClaudeCodeArgs } from "../../01-核心基础设施/共享小工具-未细化/claude-code-args.js";
 import { getCooContextProperties } from "../../01-核心基础设施/共享小工具-未细化/coo-context-properties.js";
@@ -121,7 +121,7 @@ function Xt(e) {
   }
   function r() {
     let w = e.getAccessToken();
-    if (!w) throw Error(vAe);
+    if (!w) throw Error(REMOTE_CONTROL_SUBSCRIPTION_REQUIRED_MESSAGE);
     return w;
   }
   async function C(w, _) {
@@ -354,7 +354,7 @@ function wt(e, t, o, d) {
   switch (e) {
     case 401:
       throw new Le(
-        `${o}: Authentication failed (401)${p ? `: ${p}` : ""}. ${vAe}`,
+        `${o}: Authentication failed (401)${p ? `: ${p}` : ""}. ${REMOTE_CONTROL_SUBSCRIPTION_REQUIRED_MESSAGE}`,
         401,
         r,
       );
@@ -405,7 +405,7 @@ function Kt(e) {
 function ar(e) {
   if (e instanceof Le) return e.status === 401 ? "auth_failed" : "http_error";
   if (e instanceof Error) {
-    if (e.message === vAe) return "no_token";
+    if (e.message === REMOTE_CONTROL_SUBSCRIPTION_REQUIRED_MESSAGE) return "no_token";
     if ("status" in e && typeof e.status === "number") return "http_error";
   }
   return "request_failed";
@@ -1289,7 +1289,7 @@ function vr(e) {
       j(`    ${chalk.dim(ze)}
 `);
     }
-    if (X === 1 && !k && ae && Date.now() - ce < yBn)
+    if (X === 1 && !k && ae && Date.now() - ce < RECENT_ACTIVITY_WINDOW_MS)
       j(`  ${chalk.dim(truncateToWidth(ae, 60))}
 `);
     let ot = N ?? E;

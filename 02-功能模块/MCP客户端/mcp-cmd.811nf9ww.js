@@ -31,7 +31,7 @@ import "../Bridge-RemoteControl/chunk-bm9p9vh6.js";
 import "../Bridge-RemoteControl/remote-session-host-registry.js";
 import "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
-import { getReconnectMcpServer, _2n, getIsMcpServerDisabled } from "../../01-核心基础设施/共享小工具-未细化/mcp-control-handlers.js";
+import { getReconnectMcpServer, getToggleMcpServer, getIsMcpServerDisabled } from "../../01-核心基础设施/共享小工具-未细化/mcp-control-handlers.js";
 import { getMcpServerType, getBlockingMcpServerState, formatDisabledElsewhereMessage, formatDisableNotPersistedMessage, formatBulkTogglePersistWarning, formatStaleDisableMessage } from "./mcp-server-state-messages.js";
 import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -143,7 +143,7 @@ ${j}`),
         : `There's no MCP server named "${m(e)}". Run \`/mcp\` in the terminal to see configured servers.`,
     );
   let p = getReconnectMcpServer(),
-    N = _2n(),
+    N = getToggleMcpServer(),
     b = getIsMcpServerDisabled();
   if (!p || !N || !b) {
     if (ke())

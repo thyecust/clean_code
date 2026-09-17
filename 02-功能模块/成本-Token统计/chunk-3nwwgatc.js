@@ -29,7 +29,7 @@ import {
   net,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isPolicyAllowed, policyDeniedReason, policyDenyKind } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { DEFAULT_MAX_PAGES, runPaginatedScan, createPageBudget, $cr, getAdditionalTruncationCount } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
+import { DEFAULT_MAX_PAGES, runPaginatedScan, createPageBudget, classifyScanOutcome, getAdditionalTruncationCount } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
 var Te = "allow_usage_transcript_scan",
   he = "allow_skill_doctor_transcript_scan",
   Me = {
@@ -373,7 +373,7 @@ async function le(e, t, o, s, r) {
   return i.concat(f.flat());
 }
 function q(e, t, o) {
-  let s = $cr(t, o);
+  let s = classifyScanOutcome(t, o);
   if (t.status === "error")
     n(`foldRecentRecords: v5 ${e} listing failed: ${t.error.code}`);
   else if (s === "first-truncation")

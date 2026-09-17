@@ -20,7 +20,7 @@ import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { hashStringWithBun, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { toInfraSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { qRe } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
+import { subscribeComplianceTaints } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { h5t } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { isViolinWoodEnabled, isViolinWoodServedOff } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
@@ -1192,7 +1192,7 @@ function c6e(e) {
           if (!Ge())
             (n("[deviceBridge] stopping: the gate turned off"), H("gate_off"));
         },
-        Ue = (e.onEgressGateChange ?? qRe)(fe),
+        Ue = (e.onEgressGateChange ?? subscribeComplianceTaints)(fe),
         Fe = (e.onEnabledChange ?? Ff)(ve),
         me = !1,
         be = () => {

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { default as at, isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { dz } from "./test-egress-guard.js";
+import { ensureAxiosEgressGuardInstalled } from "./test-egress-guard.js";
 var r = /(^|\.)(anthropic\.com|claude\.ai|claude\.com)$/i,
   i = /(^|\.)downloads\.claude\.ai$/i;
 function s(e) {
@@ -54,22 +54,22 @@ function o(e, t) {
 }
 var externalHttp = {
   get(e, t) {
-    return (o(e, t), dz(), at.get(e, t));
+    return (o(e, t), ensureAxiosEgressGuardInstalled(), at.get(e, t));
   },
   head(e, t) {
-    return (o(e, t), dz(), at.head(e, t));
+    return (o(e, t), ensureAxiosEgressGuardInstalled(), at.head(e, t));
   },
   post(e, t, n) {
-    return (o(e, n), dz(), at.post(e, t, n));
+    return (o(e, n), ensureAxiosEgressGuardInstalled(), at.post(e, t, n));
   },
   put(e, t, n) {
-    return (o(e, n), dz(), at.put(e, t, n));
+    return (o(e, n), ensureAxiosEgressGuardInstalled(), at.put(e, t, n));
   },
   patch(e, t, n) {
-    return (o(e, n), dz(), at.patch(e, t, n));
+    return (o(e, n), ensureAxiosEgressGuardInstalled(), at.patch(e, t, n));
   },
   delete(e, t) {
-    return (o(e, t), dz(), at.delete(e, t));
+    return (o(e, t), ensureAxiosEgressGuardInstalled(), at.delete(e, t));
   },
 };
 export { isAnthropicHost, isClaudeDownloadsHost, isTransportError, externalHttp };

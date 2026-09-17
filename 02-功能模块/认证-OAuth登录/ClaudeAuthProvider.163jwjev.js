@@ -38,7 +38,7 @@ import "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitter
 import "../../01-核心基础设施/共享小工具-未细化/oauth-callback.js";
 import "./url-and-error-redaction.js";
 import "./chunk-j990pwax.js";
-import "./chunk-3wfaaze4.js";
+import "./pkce-challenge.js";
 import "../MCP客户端/chunk-tv3jbp8f.js";
 export {
   K3e as AuthenticationCancelledError,

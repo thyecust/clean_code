@@ -27,7 +27,7 @@ import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { ALLOW_ROUTINES_POLICY } from "../../01-核心基础设施/共享小工具-未细化/routines-policy.js";
 import { isPlainObject } from "../../01-核心基础设施/共享小工具-未细化/chunk-1w1x0pyk.js";
-import { oHn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js";
+import { createCoercedZodString } from "../../01-核心基础设施/共享小工具-未细化/zod-helpers.js";
 import { s, T, O, se, v, c, Qe, $e, fe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 var q = createLazyValue(() => c({ data: v(se()), next_cursor: s().nullish() })),
@@ -403,7 +403,7 @@ var de = createLazyValue(() =>
   ge = createLazyValue(() => {
     let e = s().transform((r) => r || void 0);
     return c({
-      id: oHn(),
+      id: createCoercedZodString(),
       enabled: O(),
       next_run_at: s(),
       cron_expression: e,

@@ -144,7 +144,7 @@ import {
   isSelfDriving,
   al,
 } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { isPastSessionsExperimentEnabled, sAt } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
+import { isPastSessionsExperimentEnabled, AGENT_VIEW_RELAUNCH_ENV_KEY } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { useVoiceSelector, useVoiceGetState } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import { openDaemonLease } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
@@ -191,7 +191,7 @@ import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工�
 import { hasTeammateModeSnapshot, captureTeammateModeSnapshot } from "../Teammates团队/chunk-88ybhavr.js";
 import { createFleetViewHost, useAttachFleetOwners } from "../../01-核心基础设施/共享小工具-未细化/chunk-6nr84z8c.js";
 import { DotSeparatedList, useDoublePressConfirm } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { kIt } from "../../01-核心基础设施/共享小工具-未细化/fleet-view-screen.js";
+import { FleetViewScreen } from "../../01-核心基础设施/共享小工具-未细化/fleet-view-screen.js";
 import { dd, iat, _le, Fye } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import {
@@ -237,7 +237,7 @@ import { Nl, re, E, dn, V, pk, C, d, F } from "../../00-第三方库/_未识别/
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { createHoverRestOptions, resolveTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { lK, Z3 } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { isBypassPermissionsModeDisabled } from "../权限系统/chunk-pcxn6gwz.js";
+import { isBypassPermissionsModeDisabled } from "../权限系统/bypass-permissions-mode-policy.js";
 import { getGraphemeSegmenter, countGraphemes, splitGraphemes } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -9361,7 +9361,7 @@ function Sg(s, { cwdFilter: c, onError: m }) {
           launcher: b,
           args: ["agents", ...(c ? ["--cwd", c] : []), ...j$n()],
           env: {
-            [sAt]: "1",
+            [AGENT_VIEW_RELAUNCH_ENV_KEY]: "1",
             ...(s === "auto" && { [au]: String(Date.now()) }),
             ...hq(),
           },
@@ -10635,7 +10635,7 @@ async function BQt(s, c) {
       be ??
       (await new Promise((xe) => {
         I.render(
-          e(kIt, {
+          e(FleetViewScreen, {
             killRing: w.killRing,
             children: e(
               AppRoot,

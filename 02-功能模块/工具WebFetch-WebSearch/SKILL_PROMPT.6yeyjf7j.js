@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { ySt } from "../../01-核心基础设施/共享小工具-未细化/chunk-5jqttbex.js";
+import { PLUGIN_EVAL_QUICKREF_MD } from "../../01-核心基础设施/共享小工具-未细化/plugin-eval-quickref-asset.js";
 import { readEmbeddedAssetSync } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
 import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var e = importMetaRequire("./claude-tag-dht2qzjm.md");
@@ -20,7 +20,7 @@ var SKILL_PROMPT = s,
   SKILL_FILES = {
     "references/claude-tag.md": e,
     "references/live-sources.md": t,
-    "references/plugin-eval-quickref.md": ySt,
+    "references/plugin-eval-quickref.md": PLUGIN_EVAL_QUICKREF_MD,
     "references/plugin-eval.md": n,
     "references/recent-changes.md": o,
   };

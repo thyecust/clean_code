@@ -11,7 +11,7 @@ import { truncateToCodeUnits, takeLastCodeUnits, removeLoneSurrogates, countOccu
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { S6, LQe, mUe, zC } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { w0e } from "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
+import { useQueuedMessageContext } from "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { js } from "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import { Divider } from "../../01-核心基础设施/共享小工具-未细化/divider.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -77,7 +77,7 @@ var Ae = { year: "numeric", month: "2-digit", day: "2-digit" };
 var Se = 1e4,
   ke = 2500,
   $e = 2500;
-function AWe(n) {
+function truncateMiddleText(n) {
   if (n.length <= Se) return n;
   let i = truncateToCodeUnits(n, ke),
     c = takeLastCodeUnits(n, $e),
@@ -101,7 +101,7 @@ function UserPromptText(Je) {
   let T = _(33),
     { text: l, useBriefLayout: Ve, timestamp: K, bodyOnly: De } = Je,
     R = De === void 0 ? !1 : De,
-    F = w0e(),
+    F = useQueuedMessageContext(),
     C = F?.isQueued ?? !1,
     f = typeof l === "object",
     Pe;
@@ -313,7 +313,7 @@ function TruncatedText(st) {
   if (fe[0] !== pe) {
     ge = EARLY_RETURN_SENTINEL;
     bb0: {
-      let H = AWe(pe);
+      let H = truncateMiddleText(pe);
       if (typeof H === "string") {
         ge = e(t, { wrap: "wrap", children: y(H) });
         break bb0;
@@ -375,4 +375,4 @@ function TruncatedText(st) {
   else Me = fe[18];
   return Me;
 }
-export { formatTimestamp, AWe, UserPromptText, TruncatedText };
+export { formatTimestamp, truncateMiddleText, UserPromptText, TruncatedText };

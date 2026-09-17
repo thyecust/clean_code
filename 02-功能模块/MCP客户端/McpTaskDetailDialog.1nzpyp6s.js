@@ -19,7 +19,7 @@ import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.
 import { useDetailDialogKeys } from "../../01-核心基础设施/共享小工具-未细化/detail-dialog-keys.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { e1e, y7e } from "./chunk-tznd4407.js";
+import { sanitizeMcpTaskId, formatDurationMs } from "./mcp-task-id.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function McpTaskDetailDialog(so) {
   let s = _(63),
@@ -49,7 +49,7 @@ function McpTaskDetailDialog(so) {
     b = useElapsedDuration(n.startTime, n.status === "running", 1000, 0, n.endTime),
     U;
   if (s[8] !== n.pollIntervalMs)
-    ((U = n.pollIntervalMs === void 0 ? void 0 : y7e(n.pollIntervalMs)),
+    ((U = n.pollIntervalMs === void 0 ? void 0 : formatDurationMs(n.pollIntervalMs)),
       (s[8] = n.pollIntervalMs),
       (s[9] = U));
   else U = s[9];
@@ -97,7 +97,7 @@ function McpTaskDetailDialog(so) {
   else y = s[27];
   let I;
   if (s[28] !== a)
-    ((I = a && r(t, { dimColor: !0, children: ["server task ", e1e(a)] })),
+    ((I = a && r(t, { dimColor: !0, children: ["server task ", sanitizeMcpTaskId(a)] })),
       (s[28] = a),
       (s[29] = I));
   else I = s[29];

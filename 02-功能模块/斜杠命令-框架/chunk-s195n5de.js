@@ -119,7 +119,7 @@ import {
 import { appendEndedByModelSuffix } from "../../01-核心基础设施/共享小工具-未细化/ended-by-model.js";
 import { isMcpSkillsEnabled } from "../MCP客户端/mcp-skills-extension.js";
 import { CODE_REVIEW_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
-import { iCe } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
+import { isCoordinatorMainSession } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
 import { isModelInvocable } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { randomUUID } from "crypto";
 function Me(e, o, t, m, l) {
@@ -1338,7 +1338,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
               let C = s.getDefaultEffort?.(I, t)?.notice;
               if (C) b = Ht(C, "notice");
             }
-          if (Y$t(s, I, t) === "fork" && !iCe(t)) {
+          if (Y$t(s, I, t) === "fork" && !isCoordinatorMainSession(t)) {
             let C = `/${e} ${o}`.trim(),
               E = B_([...m, { type: "text", text: C }]) ?? C;
             if (!V)
@@ -1726,7 +1726,7 @@ async function processPromptSlashCommand(e, o, t, m, l = !1) {
 async function ve(e, o, t, m = [], l = [], c, _ = [], v, T, U, P = !1) {
   if (e.loadedFrom === "syncedSkills" && wV())
     throw new YP(`Unknown command: ${Qn(e.name)}`);
-  if (iCe(t) && !P) {
+  if (isCoordinatorMainSession(t) && !P) {
     let r = Ue(e, o),
       k = e.isMcp && e.loadedFrom !== "mcp",
       C = isSkillExcludedFromModel(e);

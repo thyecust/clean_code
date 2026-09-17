@@ -90,7 +90,7 @@ function getTuiTrialState() {
 function latchTuiTrialFromEnv() {
   getTuiTrialState().latchFromEnv();
 }
-function a1e() {
+function getTuiTrialMode() {
   let e = getTuiTrialState();
   return (e.latchFromEnv(), e.mode);
 }
@@ -117,13 +117,13 @@ function s() {
     a.CLAUDE_CODE_NO_FLICKER === !1 || a.CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN
   );
 }
-var l1e = 3;
+var MAX_FULLSCREEN_UPSELL_COUNT = 3;
 function d() {
   try {
     if (CU()) return !1;
     let e = ee();
     return (
-      e.firstStartVersion !== void 0 && (e.fullscreenUpsellSeenCount ?? 0) < l1e
+      e.firstStartVersion !== void 0 && (e.fullscreenUpsellSeenCount ?? 0) < MAX_FULLSCREEN_UPSELL_COUNT
     );
   } catch {
     return;
@@ -158,7 +158,7 @@ function shouldUseFullscreen(e = defaultFullscreenState) {
         ));
     return !1;
   }
-  switch (getInitialSettings().tui ?? a1e()) {
+  switch (getInitialSettings().tui ?? getTuiTrialMode()) {
     case "fullscreen":
       return !0;
     case "default":
@@ -202,7 +202,7 @@ function getFullscreenReason(e = defaultFullscreenState) {
   if (isTmuxControlMode(e)) return "tmux_cc_auto_off";
   if (u()) return "win_ssh_auto_off";
   let r = getInitialSettings().tui;
-  switch (r ?? a1e()) {
+  switch (r ?? getTuiTrialMode()) {
     case "fullscreen":
       return r === "fullscreen" ? "settings_on" : "upsell_trial_on";
     case "default":
@@ -241,7 +241,7 @@ function isAutoDisabledFullscreenReason(e) {
     e === "win_ssh_auto_off"
   );
 }
-function jJn(e = defaultFullscreenState) {
+function isFullscreenGateFromFallback(e = defaultFullscreenState) {
   return CU() && e.gbGateSource === "fallback";
 }
 function getNoFlickerEnvOverride() {
@@ -269,10 +269,10 @@ class _ {
   }
 }
 var i = new j(() => new _());
-function zSn() {
+function markMouseObserved() {
   i.of(B().host).note();
 }
-function $7e() {
+function hasMouseObserved() {
   return i.of(B().host).hasObserved;
 }
 function subscribeMouseObserved(e) {
@@ -306,11 +306,11 @@ function t(e, r) {
     e[o]
   );
 }
-function qJn(e = defaultFullscreenState) {
+function prefetchTmuxOptionProbes(e = defaultFullscreenState) {
   if (!a.TMUX || f()) return;
   (t(e, "mouse"), t(e, "focus-events"));
 }
-async function zJn(e = defaultFullscreenState) {
+async function getTmuxFocusHint(e = defaultFullscreenState) {
   if (!a.TMUX) return null;
   if (isTmuxControlMode(e)) return null;
   if (e.checkedTmuxFocusHint) return null;
@@ -324,22 +324,22 @@ export {
   isTmuxControlMode,
   getTuiTrialState,
   latchTuiTrialFromEnv,
-  a1e,
+  getTuiTrialMode,
   wasFullscreenAutoDisabledForVersion,
-  l1e,
+  MAX_FULLSCREEN_UPSELL_COUNT,
   shouldUseFullscreen,
   isFullscreenEnabled,
   getFullscreenReason,
   fullscreenReasonToMode,
   isAutoDisabledFullscreenReason,
-  jJn,
+  isFullscreenGateFromFallback,
   getNoFlickerEnvOverride,
   getMouseMode,
-  zSn,
-  $7e,
+  markMouseObserved,
+  hasMouseObserved,
   subscribeMouseObserved,
   isFullscreenActive,
   getTmuxMouseHint,
-  qJn,
-  zJn,
+  prefetchTmuxOptionProbes,
+  getTmuxFocusHint,
 };

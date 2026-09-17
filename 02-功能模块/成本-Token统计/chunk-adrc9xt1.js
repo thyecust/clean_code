@@ -22,7 +22,7 @@ import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { o, t, tn, n9, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { zs } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
+import { appStateStore } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { ui, Gm, fa, $o, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
@@ -397,10 +397,10 @@ function Bt(be, ae, cs, ds) {
 }
 var Cs = ["skip", "jump", "look", "spin"];
 function xs() {
-  if (zs.clawdEntranceTaken) return;
+  if (appStateStore.clawdEntranceTaken) return;
   if (!pit() && !YW(ee().lastClawdEntranceVersion)) return;
   return (
-    (zs.clawdEntranceTaken = !0),
+    (appStateStore.clawdEntranceTaken = !0),
     Cs[Math.floor(Math.random() * Cs.length)]
   );
 }

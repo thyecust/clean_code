@@ -40,7 +40,7 @@ import { tqn, yk, xzn, Izn, Pzn, ET } from "../../03-入口与运行时/核心�
 import { clearOrgMemoryCredential } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { emitAuthEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { Der, Ler } from "../Artifact发布-渲染/chunk-rr78st95.js";
-import { q8t, resetWIFCredentialState } from "./chunk-x3rm9w4b.js";
+import { withCredentialsLock, resetWIFCredentialState } from "./wif-credentials.js";
 import { getAccountSettings, getGroveConfig, githubConnectionStatusStore } from "../Grove-隐私设置/chunk-a4mdm49v.js";
 import { cGn } from "../Artifact发布-渲染/chunk-y8j05azr.js";
 import { Jx } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
@@ -196,7 +196,7 @@ async function WBn(e) {
   let o = await ODt();
   return (
     await mkdir(C(o.configDir, "credentials"), { recursive: !0, mode: 448 }),
-    q8t(w(o.configDir, o.profile), () => q(e))
+    withCredentialsLock(w(o.configDir, o.profile), () => q(e))
   );
 }
 async function q(e) {
@@ -256,7 +256,7 @@ async function L({ revoke: e } = {}) {
     let i = await k(C(o, "configs", `${t}.json`));
     if (i === null || !F(i)) return { removed: !1 };
     if ((await S(w(o, t))) === null) return { removed: !1 };
-    return await q8t(w(o, t), () => V(e));
+    return await withCredentialsLock(w(o, t), () => V(e));
   } catch (o) {
     if (A(o) === "ENOENT") return { removed: !1 };
     return (

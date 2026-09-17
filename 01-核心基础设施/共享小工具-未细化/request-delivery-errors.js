@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Ve } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-class d3e extends Ve {
+class ServingInstanceGoneError extends Ve {
   why;
   constructor(e) {
     super(`serving client ${e} while the request was pending`);
@@ -16,7 +16,7 @@ class d3e extends Ve {
     this.name = "ServingInstanceGoneError";
   }
 }
-class p3e extends Ve {
+class RequestDeliveryUnknownError extends Ve {
   status;
   constructor(e) {
     super(
@@ -32,7 +32,7 @@ class RequestWithdrawnUnsentError extends Ve {
     this.name = "RequestWithdrawnUnsentError";
   }
 }
-class f3e extends Ve {
+class RequestNotDeliveredError extends Ve {
   status;
   constructor(e) {
     super("request event refused by the session service; not delivered");
@@ -40,4 +40,4 @@ class f3e extends Ve {
     this.name = "RequestNotDeliveredError";
   }
 }
-export { d3e, p3e, RequestWithdrawnUnsentError, f3e };
+export { ServingInstanceGoneError, RequestDeliveryUnknownError, RequestWithdrawnUnsentError, RequestNotDeliveredError };

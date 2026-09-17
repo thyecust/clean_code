@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 18 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
-import { yCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-xm1bhjkr.js";
+import { WORKER_AGENT_TYPE } from "../../01-核心基础设施/共享小工具-未细化/worker-agent-type.js";
 import { AGENT_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
 function e() {
   return `You are a worker agent executing a task assigned by the coordinator.
@@ -56,7 +56,7 @@ Good summary: "Added Redis cache implementation. Tests pass, typecheck clean. Co
 Bad summary: "I looked at files X, Y, and Z. Y has the changes you mentioned."`;
 }
 var t = {
-  agentType: yCe,
+  agentType: WORKER_AGENT_TYPE,
   whenToUse:
     "For executing tasks autonomously \u2014 research, implementation, or verification.",
   tools: ["*"],

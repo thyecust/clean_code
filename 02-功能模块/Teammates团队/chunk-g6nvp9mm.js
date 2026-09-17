@@ -26,7 +26,7 @@ import { createMessageEnvelope, getBridgeHostState } from "../../01-核心基础
 import { externalPermissionModeSchema } from "../权限系统/chunk-e4pfvp7x.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getTeammateContext, getTeamName } from "./teammate-context.js";
-import { gCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
+import { createJitteredBackoffDelay } from "../../01-核心基础设施/共享小工具-未细化/jittered-backoff-delay.js";
 import { SEND_MESSAGE_TOOL_NAME, SEND_MESSAGE_SUMMARY_MAX_LENGTH } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
 import { s, O, se, v, c, it, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -665,7 +665,7 @@ async function tt(e, t, r, o) {
   return (await writeFile(u, b(d, null, 2), { encoding: "utf8" }), L(), d);
 }
 var It = 5,
-  vt = gCe(50);
+  vt = createJitteredBackoffDelay(50);
 async function ke(e, t, r, o) {
   let i = J(t, r);
   for (let d = 1; ; d++) {

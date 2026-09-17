@@ -49,7 +49,7 @@ var y = {
 };
 var E = Object.keys(y);
 var getLoaderForFileName = (r) => y[E.find((o) => r.endsWith(o)) ?? ""] ?? "js";
-function eNn(r, o) {
+function transpileHooksModuleSource(r, o) {
   let e = getLoaderForFileName(r);
   return e === "js"
     ? o
@@ -57,7 +57,7 @@ function eNn(r, o) {
         e === "ts" ? o : `${h}${o}`,
       );
 }
-var tNn = 1048576;
+var MAX_HOOKS_MODULE_FILE_BYTES = 1048576;
 var MAX_HOOKS_MODULE_FILES = 512;
 var MAX_HOOKS_MODULE_TOTAL_BYTES = 8388608;
 var c = (r) => (r instanceof Error && "code" in r ? String(r.code) : "EIO");
@@ -70,10 +70,10 @@ async function g(r, o) {
   }
 }
 var V = (r, o, e) => new HooksError(`${r}: ${o}: not readable (${c(e)})`);
-var oNn = (r, o) => new HooksError(`${r}: ${o} is over ${tNn} bytes and was not read`);
+var createModuleFileSizeError = (r, o) => new HooksError(`${r}: ${o} is over ${MAX_HOOKS_MODULE_FILE_BYTES} bytes and was not read`);
 import { lstat as Y, realpath as S } from "fs/promises";
 import { basename as B, isAbsolute as q, relative as G, sep as J } from "path";
-async function sNn(r, o, e) {
+async function resolvePluginModuleFile(r, o, e) {
   let p = await g(S(o), (m) => V(e, B(o), m)),
     f = (m) => w(e, r, m),
     t = await g(S(r), f),
@@ -84,9 +84,9 @@ async function sNn(r, o, e) {
   if (!x.isFile()) throw new HooksError(`${e}: ${r}: not a regular file`);
   return { real: t, size: x.size };
 }
-async function iNn(r, o, e) {
-  let { real: p, size: f } = await sNn(r, o, e);
-  if (f > tNn) throw oNn(e, r);
+async function readPluginModuleFile(r, o, e) {
+  let { real: p, size: f } = await resolvePluginModuleFile(r, o, e);
+  if (f > MAX_HOOKS_MODULE_FILE_BYTES) throw createModuleFileSizeError(e, r);
   try {
     return await rr(p, "utf8");
   } catch (t) {
@@ -104,14 +104,14 @@ function O(r) {
   return o;
 }
 var BUILTIN_MODULE_SPECIFIER = "claude-code";
-var nNn = (r, o, e) =>
+var createDisallowedImportError = (r, o, e) =>
   new HooksError(
     `${r}: cannot import "${o}" (from ${e}): a hooks module imports its own files by relative path and "${BUILTIN_MODULE_SPECIFIER}", nothing else`,
   );
 import { dirname as b, resolve as _ } from "path";
 var T = (r, o) =>
   [".", "..", "./", "../"].includes(o) ? _(b(r), o, "index") : _(b(r), o);
-var rNn = (r) =>
+var isRelativeModuleSpecifier = (r) =>
   r === "." || r === ".." || r.startsWith("./") || r.startsWith("../");
 var H = [
   "no such file",
@@ -120,7 +120,7 @@ var H = [
 ];
 import { isAbsolute as xr, relative as N, sep as nr } from "path";
 var A = (r, o) => (o.startsWith(`${r}: `) ? o.slice(`${r}: `.length) : o);
-async function aNn({ spelled: r, importer: o, root: e, pluginName: p }, f) {
+async function resolveHooksModuleImport({ spelled: r, importer: o, root: e, pluginName: p }, f) {
   let t = `${p}: cannot import "${r}" (from ${N(e, o) || o}):`,
     a = T(o, r),
     x = N(e, a);
@@ -131,7 +131,7 @@ async function aNn({ spelled: r, importer: o, root: e, pluginName: p }, f) {
     let v = f.get(u);
     if (v !== void 0) return { file: u, source: v };
     try {
-      let n = await iNn(u, e, p);
+      let n = await readPluginModuleFile(u, e, p);
       return { file: u, source: n };
     } catch (n) {
       let d = l(n);
@@ -231,17 +231,17 @@ export {
   isAbortSignal,
   createEnvironmentUnloadedError,
   getLoaderForFileName,
-  eNn,
-  tNn,
+  transpileHooksModuleSource,
+  MAX_HOOKS_MODULE_FILE_BYTES,
   MAX_HOOKS_MODULE_FILES,
   MAX_HOOKS_MODULE_TOTAL_BYTES,
   BUILTIN_MODULE_SPECIFIER,
-  nNn,
-  rNn,
-  oNn,
-  sNn,
-  iNn,
-  aNn,
+  createDisallowedImportError,
+  isRelativeModuleSpecifier,
+  createModuleFileSizeError,
+  resolvePluginModuleFile,
+  readPluginModuleFile,
+  resolveHooksModuleImport,
   createModuleTotalSizeError,
   createModuleFileLimitError,
   CORE_OPERATION_EVENT_NAMES,

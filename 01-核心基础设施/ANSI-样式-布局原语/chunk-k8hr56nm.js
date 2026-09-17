@@ -38,7 +38,7 @@ import {
   lF,
 } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { TERMINAL_MODE_CODES, DISABLE_MOUSE_TRACKING } from "../共享小工具-未细化/terminal-mode-sequences.js";
-import { CLOCK_TICK_INTERVAL_MS, useTerminalFocusState, setTimeoutWithCancel, noopSubscribe, sDt, ClockContext } from "../共享小工具-未细化/clock-and-terminal-focus.js";
+import { CLOCK_TICK_INTERVAL_MS, useTerminalFocusState, setTimeoutWithCancel, noopSubscribe, getNullSnapshot, ClockContext } from "../共享小工具-未细化/clock-and-terminal-focus.js";
 import { uee, Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
 import { useClock } from "../共享小工具-未细化/use-clock.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -1553,7 +1553,7 @@ function nk(r, s) {
   c.current = r;
   let f = C(null),
     h = re((b) => () => f.current?.(), []);
-  At(h, sDt);
+  At(h, getNullSnapshot);
   let m = l?.setTimeout ?? setTimeoutWithCancel;
   return V(() => {
     let b = (...S) => {
@@ -1644,7 +1644,7 @@ function ko(r, s, l) {
             },
       [f, s, h],
     );
-  At(b, sDt);
+  At(b, getNullSnapshot);
 }
 function e7(r, s, l) {
   let c = !1,

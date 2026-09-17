@@ -13,7 +13,7 @@ import { startExtraUsageFlow as lye } from "../../01-核心基础设施/共享�
 import "../Bridge-RemoteControl/chunk-3b6ct3yp.js";
 import "../../01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
-import "../../01-核心基础设施/设置-配置/chunk-tswdb9jt.js";
+import "../../01-核心基础设施/设置-配置/managed-settings-approval-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
 import "../权限系统/permission-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
@@ -37,7 +37,7 @@ import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
+import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";

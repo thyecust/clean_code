@@ -13,7 +13,7 @@ import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js
 import { J0 } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getBaseRenderOptions } from "./base-render-options.js";
 import { AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
-import { cWe } from "../设置-配置/chunk-tswdb9jt.js";
+import { ManagedSettingsApprovalDialog } from "../设置-配置/managed-settings-approval-dialog.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 var showStandaloneSecurityDialog = (p, r, m) =>
   new Promise((i, s) => {
@@ -32,7 +32,7 @@ var showStandaloneSecurityDialog = (p, r, m) =>
           AppRoot,
           {
             session: B(),
-            children: e(cWe, {
+            children: e(ManagedSettingsApprovalDialog, {
               settings: p,
               baseline: m,
               reveal: "default",

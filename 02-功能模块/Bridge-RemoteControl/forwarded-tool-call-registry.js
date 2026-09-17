@@ -168,7 +168,7 @@ class o {
     );
   }
 }
-class j6e {
+class ForwardedToolCallRegistry {
   now = Date.now;
   #e = new Map();
   #t = [];
@@ -212,4 +212,4 @@ class j6e {
     if ((this.#t.splice(t + 1, 0, n), this.#t.length > a)) this.#t.shift();
   }
 }
-export { j6e };
+export { ForwardedToolCallRegistry };

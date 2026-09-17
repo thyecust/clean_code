@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { normalizeMcpName } from "./mcp-name-normalization.js";
 var CLAUDE_IN_CHROME_MCP_SERVER_NAME = "claude-in-chrome",
-  f5t = "javascript_tool";
+  JAVASCRIPT_TOOL_NAME = "javascript_tool";
 function isClaudeInChromeMCPServer(e) {
   return normalizeMcpName(e) === CLAUDE_IN_CHROME_MCP_SERVER_NAME;
 }
@@ -22,7 +22,7 @@ function isClaudeInChromeMcpLaunch(e) {
 }
 var eir = ["file_upload", "browser_batch"],
   CLAUDE_IN_CHROME_TOOL_NAMES = [
-    f5t,
+    JAVASCRIPT_TOOL_NAME,
     "read_page",
     "find",
     "form_input",
@@ -45,4 +45,4 @@ var eir = ["file_upload", "browser_batch"],
     "list_connected_browsers",
     "select_browser",
   ];
-export { CLAUDE_IN_CHROME_MCP_SERVER_NAME, f5t, isClaudeInChromeMCPServer, isClaudeInChromeMcpLaunch, eir, CLAUDE_IN_CHROME_TOOL_NAMES };
+export { CLAUDE_IN_CHROME_MCP_SERVER_NAME, JAVASCRIPT_TOOL_NAME, isClaudeInChromeMCPServer, isClaudeInChromeMcpLaunch, eir, CLAUDE_IN_CHROME_TOOL_NAMES };

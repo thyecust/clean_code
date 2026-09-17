@@ -59,9 +59,9 @@ import {
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { captureHooksConfigSnapshot, updateHooksConfigSnapshot, updateHooksConfigSnapshotThroughBackend } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
 import { primePlanSlugCollisions, getPlanSlug, getPlansDirectory } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { qJn } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { prefetchTmuxOptionProbes } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { recordStartupPhase } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
-import { isAgentSwarmsEnabled, z_n } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
+import { isAgentSwarmsEnabled, captureTeammateModeSnapshotIfEnabled } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
 import { hw, NYn } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { publishInboundAvailability } from "../../02-功能模块/权限系统/cross-session-inbound-gate.js";
 import { o$n } from "../../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
@@ -342,7 +342,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
     let { startRendezvousServer: t } = await import("../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js");
     t(s);
   }
-  await z_n();
+  await captureTeammateModeSnapshotIfEnabled();
   {
     let { installObserverSpawner: t } = await import("../../02-功能模块/权限系统/installObserverSpawner.hb2mjtdb.js");
     t(B());
@@ -563,7 +563,7 @@ To attach: ${chalk.bold(`tmux attach -t ${b}`)}`),
       trustAccepted: Bo(),
     }))
   )
-    qJn();
+    prefetchTmuxOptionProbes();
   profileCheckpoint("setup_after_prefetch");
   {
     let t = performance.now(),

@@ -12,7 +12,7 @@ import { logEvent } from "./analytics-event-queue.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { handleStreamGoneErrors } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { lm, zg } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { kBn } from "./relaunch-terminal-size.js";
+import { applyRelaunchTerminalSizeEnv } from "./relaunch-terminal-size.js";
 import { getFirstPositionalArg } from "../../02-功能模块/上下文压缩-Compact/cli-args.js";
 import { openSync } from "fs";
 import { ReadStream } from "tty";
@@ -59,7 +59,7 @@ class o {
 }
 var f = new o();
 function getBaseRenderOptions(t = !1) {
-  kBn();
+  applyRelaunchTerminalSizeEnv();
   let e = f.get(),
     r = { exitOnCtrlC: t };
   if (e) r.stdin = e;

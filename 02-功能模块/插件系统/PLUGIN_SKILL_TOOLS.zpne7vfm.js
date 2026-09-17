@@ -16,12 +16,12 @@ import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isPolicyAllowed, zRe, getPolicyDeniedReason } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
+import { isPolicyAllowed, getPolicyDenyKind, getPolicyDeniedReason } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { sJ, TGt, pXe, fXe, cJ, roe } from "./chunk-ajtn749s.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { _un, isPluginSkillToolEnabled } from "../../01-核心基础设施/共享小工具-未细化/plugin-skill-tool-gating.js";
-import { i4e } from "../../01-核心基础设施/共享小工具-未细化/chunk-ck2sjz96.js";
+import { registerSuggestRolloutPinReader, isPluginSkillToolEnabled } from "../../01-核心基础设施/共享小工具-未细化/plugin-skill-tool-gating.js";
+import { fetchOrgSkills } from "../../01-核心基础设施/共享小工具-未细化/org-skills-sync.js";
 import "../../01-核心基础设施/共享小工具-未细化/first-party-remote-session.js";
 import { SEARCH_PLUGINS_TOOL_NAME, SEARCH_SKILLS_TOOL_NAME, SUGGEST_PLUGIN_INSTALL_TOOL_NAME, SUGGEST_SKILLS_TOOL_NAME, LIST_PLUGINS_TOOL_NAME, LIST_SKILLS_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/plugin-skill-tool-names.js";
 import { s, O, v, c, Qe, it, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -46,7 +46,7 @@ var ee = 15000,
 async function D(e, t, r, o, i) {
   let p = t === L ? "skill_search" : "plugin_search";
   if (!isPolicyAllowed("allow_plugin_skill_search")) {
-    let S = zRe("allow_plugin_skill_search");
+    let S = getPolicyDenyKind("allow_plugin_skill_search");
     throw (
       logFeatureBad(
         p,
@@ -228,7 +228,7 @@ var q =
     name: LIST_SKILLS_TOOL_NAME,
     subject: "the user's enabled claude.ai skills",
     async fetch(e, t, r) {
-      let o = await i4e({ credentials: r });
+      let o = await fetchOrgSkills({ credentials: r });
       if (!o.success) {
         if (o.status === 403)
           return (
@@ -404,7 +404,7 @@ function ae() {
   }
   return e.suggestRolloutEnabled;
 }
-_un(ae);
+registerSuggestRolloutPinReader(ae);
 var ue = createLazyValue(() =>
     Qe({
       keywords: v(s().min(1).max(64))

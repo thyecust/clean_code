@@ -12,14 +12,14 @@
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getClaimRegistry } from "./host-claim-registry.js";
 import "./protobuf-decoding.js";
-import { NARRATION_BLOCK_TAG, yGn } from "./narration-signature.js";
+import { NARRATION_BLOCK_TAG, readNarrationBlockTag } from "./narration-signature.js";
 var t = new WeakMap();
 function isNarrationTaggedBlock(n) {
   try {
     if (n.type !== "thinking" || !n.signature) return !1;
     let r;
     if (t.has(n)) r = t.get(n);
-    else ((r = yGn(n.signature)), t.set(n, r));
+    else ((r = readNarrationBlockTag(n.signature)), t.set(n, r));
     return r === NARRATION_BLOCK_TAG;
   } catch (r) {
     if (getClaimRegistry().claim("narration_classifier_error")) logError(r);

@@ -33,10 +33,10 @@ import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
+import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
-import { k0t } from "../../01-核心基础设施/共享小工具-未细化/chunk-4q59mpqf.js";
+import { ApproveApiKey } from "../../01-核心基础设施/共享小工具-未细化/approve-api-key.js";
 import "../认证-OAuth登录/chunk-9g86t9bp.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
@@ -433,7 +433,7 @@ function Yt({ host: s, onDone: c }) {
   if ((k.push({ id: "theme", component: fe }), re))
     k.push({
       id: "api-key",
-      component: e(k0t, { customApiKeyTruncated: re, onDone: xe }),
+      component: e(ApproveApiKey, { customApiKeyTruncated: re, onDone: xe }),
     });
   if (m)
     k.push({

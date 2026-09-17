@@ -40,7 +40,7 @@ import {
   Xne,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ys } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { hWn, formatSubprotocolList } from "../../01-核心基础设施/共享小工具-未细化/websocket-subprotocols.js";
+import { formatSubprotocolSuffix, formatSubprotocolList } from "../../01-核心基础设施/共享小工具-未细化/websocket-subprotocols.js";
 import { generateTaskId, createPendingTask } from "../Teammates团队/chunk-mrfx53ye.js";
 import { getMonitorPushNotificationHint, isMonitorToolEnabled, getMonitorToolDescription, MONITOR_WS_SOURCE_HELP } from "./monitor-tool-description.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
@@ -640,7 +640,7 @@ var be = {
       return me();
     },
     toAutoClassifierInput(e) {
-      return e.ws ? `websocket ${e.ws.url}${hWn(e.ws)}` : (e.command ?? "");
+      return e.ws ? `websocket ${e.ws.url}${formatSubprotocolSuffix(e.ws)}` : (e.command ?? "");
     },
     async checkPermissions(e, t) {
       if (e.ws) {

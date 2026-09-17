@@ -38,7 +38,7 @@ import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
+import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { TeleportResumeWrapper } from "../Bridge-RemoteControl/teleport-resume-ui.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import "../认证-OAuth登录/chunk-9g86t9bp.js";
@@ -54,8 +54,8 @@ import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
 import "./teleport-errors.js";
 import { appendCancelledContinueNotice } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import "../../01-核心基础设施/共享小工具-未细化/transcript-replaced-bus.js";
-import { nWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-vm6pzj28.js";
-import { oWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0dk7tzf3.js";
+import { resetConversation } from "../../01-核心基础设施/共享小工具-未细化/conversation-reset.js";
+import { fetchRemoteEnvironments } from "../../01-核心基础设施/共享小工具-未细化/remote-environments.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import "../认证-OAuth登录/oauth-login-completion.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
@@ -229,7 +229,7 @@ async function P(s) {
   let _ = m.outcomeBranch,
     T;
   try {
-    T = await oWe(s.storageV5, s.credentials);
+    T = await fetchRemoteEnvironments(s.storageV5, s.credentials);
   } catch (p) {
     return (
       logFeatureBad("teleport_to_cloud", "env_lookup_failed"),
@@ -431,7 +431,7 @@ function TeleportMenu({
   if (_ === "resume")
     return e(TeleportResumeWrapper, {
       onComplete: (k) => {
-        (nWe(a, k.log, h, R),
+        (resetConversation(a, k.log, h, R),
           s("Session resumed successfully", { display: "system" }));
       },
       onCancel: () => s("Teleport cancelled", { display: "system" }),

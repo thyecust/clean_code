@@ -60,10 +60,10 @@ import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化
 import { usr, zg, n5t, Isr, Psr, Dsr, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { chalk, getColorLevelGeneration } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { CT, xYn, HYn, iK, HNe, jY, IYn } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
-import { getAttachStampMs, Nze, aft } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
+import { getAttachStampMs, isAttachQuietDrainActive, waitForAttachQuietDrainEnd } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import { getSessionFeatureCache } from "../../02-功能模块/Hooks钩子/session-feature-cache.js";
 import { stopCapturingEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
-import { isTmuxControlMode, shouldUseFullscreen, zSn } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { isTmuxControlMode, shouldUseFullscreen, markMouseObserved } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { wrapOscForMultiplexer, setClipboard, readClipboard, formatHyperlinkStart, HYPERLINK_END, CLEAR_ITERM2_PROGRESS_SEQUENCE, RESET_TAB_STATUS_SEQUENCE, isTabStatusEnabled } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
@@ -14644,7 +14644,7 @@ Read about how to prevent this error on https://github.com/vadimdemedes/ink/#isr
       !this.attachProbeDeferred
     )
       ((this.attachProbeDeferred = !0),
-        aft().then(() => {
+        waitForAttachQuietDrainEnd().then(() => {
           if (
             ((this.attachProbeDeferred = !1),
             this.querier && !this.hasReleasedTerminal)
@@ -14688,7 +14688,7 @@ function zd(t) {
   return t.sequence !== jke && t.sequence !== xhe;
 }
 function UE(t, s, c, f) {
-  let m = Nze(Date.now());
+  let m = isAttachQuietDrainActive(Date.now());
   if (!m && s.some(zd)) (Ez(), n5t());
   let y = ZUn(t.jediTermInput, s, performance.now(), t.emitJediTermScrollBug);
   KE(t, y);
@@ -14706,7 +14706,7 @@ function UE(t, s, c, f) {
       continue;
     }
     if (S.kind === "mouse") {
-      if ((zSn(), S.action === "press" && !Ud(S.button) && !isTerminalFocused()))
+      if ((markMouseObserved(), S.action === "press" && !Ud(S.button) && !isTerminalFocused()))
         t.handleTerminalFocus(!0);
       if (t.props.getMouseMode?.() === "scroll" && (S.button & 3) === 0)
         continue;
@@ -14742,7 +14742,7 @@ function UE(t, s, c, f) {
       S.name === "wheeldown" ||
       S.name === "mouse"
     ) {
-      if (S.name !== "mouse") (zSn(), t.props.dispatchWheelEvent(S));
+      if (S.name !== "mouse") (markMouseObserved(), t.props.dispatchWheelEvent(S));
     } else t.props.dispatchKeyboardEvent(S, { soloKeypress: b });
   }
 }

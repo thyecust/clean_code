@@ -78,7 +78,7 @@ function isHostManagedSettingsEntrypoint() {
   let e = a.CLAUDE_CODE_ENTRYPOINT;
   return e !== void 0 && l.has(e);
 }
-function kPn(e) {
+function isDesktopHostEntrypointValue(e) {
   return r.has(e === "local_agent" ? "local-agent" : e);
 }
 function isNonTerminalEntrypoint(e) {
@@ -261,7 +261,7 @@ export {
   getEntrypointDisplayName,
   isDesktopHostEntrypoint,
   isHostManagedSettingsEntrypoint,
-  kPn,
+  isDesktopHostEntrypointValue,
   isNonTerminalEntrypoint,
   isClaudeDesktopAppSession,
   isRemoteTriggerEntrypoint,

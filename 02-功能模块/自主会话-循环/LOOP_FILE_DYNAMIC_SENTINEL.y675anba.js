@@ -17,7 +17,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { PUSH_NOTIFICATION_TOOL_NAME, isAgentPushNotificationEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
-import { SCHEDULE_WAKEUP_TOOL_NAME, sCe, AUTONOMOUS_LOOP_DYNAMIC_SENTINEL, TASK_LIST_TOOL_NAME, TASK_STOP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
+import { SCHEDULE_WAKEUP_TOOL_NAME, AUTONOMOUS_LOOP_SENTINEL, AUTONOMOUS_LOOP_DYNAMIC_SENTINEL, TASK_LIST_TOOL_NAME, TASK_STOP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { readFileSync } from "fs";
@@ -60,7 +60,7 @@ Run the autonomous check using the loop instructions established earlier in this
 You scheduled this tick via the ${SCHEDULE_WAKEUP_TOOL_NAME} tool (not a recurring cron). To keep the loop alive, call ${SCHEDULE_WAKEUP_TOOL_NAME} again at the end of this turn with \`prompt\` set to the literal sentinel \`${AUTONOMOUS_LOOP_DYNAMIC_SENTINEL}\` and \`noop\` set to \`true\` if this tick changed nothing (or \`false\` if it did) \u2014 otherwise the loop ends after this tick.${m}${h()}`;
 }
 function I(e) {
-  return e === sCe || e === AUTONOMOUS_LOOP_DYNAMIC_SENTINEL;
+  return e === AUTONOMOUS_LOOP_SENTINEL || e === AUTONOMOUS_LOOP_DYNAMIC_SENTINEL;
 }
 function L(e, t) {
   if (!I(t)) return null;

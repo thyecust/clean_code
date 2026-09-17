@@ -11,7 +11,7 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { DesignSessionState } from "../../02-功能模块/Memory-CLAUDE.md/chunk-9b6sc1gb.js";
 import { postDesignConsent, revokeDesignConsent } from "../../02-功能模块/DesignSync/design-consent-and-grants.js";
 var s = "Usage: /design consent | /design revoke",
-  w3e = async (r, e) => {
+  runDesignCommand = async (r, e) => {
     let n = r.trim().split(/\s+/).filter(Boolean)[0],
       a = "your Claude Design projects",
       o = e.toolState.get(DesignSessionState);
@@ -49,4 +49,4 @@ var s = "Usage: /design consent | /design revoke",
       }
     return { type: "text", value: s };
   };
-export { w3e };
+export { runDesignCommand };

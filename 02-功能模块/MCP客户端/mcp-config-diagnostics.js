@@ -244,7 +244,7 @@ function O(ze) {
   else me = c[37];
   return me;
 }
-function i9e() {
+function McpConfigDiagnostics() {
   let Y = _(3),
     S;
   if (Y[0] === MEMO_CACHE_SENTINEL) {
@@ -345,4 +345,4 @@ function re(m, s) {
     };
   });
 }
-export { i9e };
+export { McpConfigDiagnostics };

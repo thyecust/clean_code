@@ -94,7 +94,7 @@ import { buildLocalDisplayOnlyDenialResult } from "../../01-核心基础设施/�
 import { registerSwarmPermissionCallback, unregisterSwarmPermissionCallback, processMailboxPermissionResponse } from "../权限系统/swarm-permission-poller.js";
 import { appendMessageToTaskTranscript } from "./teammate-task-messages.js";
 import { TASK_LIST_TOOL_NAME } from "./chunk-z2t8b9yc.js";
-import { v1e, createPermissionRequest, sendPermissionRequestToLeader } from "./permission-sync-mailbox.js";
+import { createToolCallInputFingerprint, createPermissionRequest, sendPermissionRequestToLeader } from "./permission-sync-mailbox.js";
 import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 import { TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -165,7 +165,7 @@ function Ge(s, e, t, _) {
         requestId: k.id,
         toolUseId: M,
         toolName: k.toolName,
-        inputDigest: v1e(k.toolName, p),
+        inputDigest: createToolCallInputFingerprint(k.toolName, p),
         onAllow(a, D, F, B) {
           R();
           let z =

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { LO, q2, LM, MM, ejt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-async function oWe(g, r) {
+async function fetchRemoteEnvironments(g, r) {
   let [o, s] = await Promise.allSettled([MM(void 0, g, r), ejt(void 0, r)]),
     i = o.status === "rejected" ? l(o.reason) : null,
     d = o.status === "fulfilled" ? o.value : [],
@@ -47,4 +47,4 @@ async function oWe(g, r) {
     ignoredUntrustedPool: u,
   };
 }
-export { oWe };
+export { fetchRemoteEnvironments };

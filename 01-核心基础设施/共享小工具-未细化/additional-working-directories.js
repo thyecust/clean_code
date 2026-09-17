@@ -33,7 +33,7 @@ function n() {
 function getAdditionalWorkingDirectories() {
   return n().get();
 }
-function hLt(o) {
+function publishAdditionalWorkingDirectories(o) {
   return n().publish(o);
 }
-export { getAdditionalWorkingDirectories, hLt };
+export { getAdditionalWorkingDirectories, publishAdditionalWorkingDirectories };

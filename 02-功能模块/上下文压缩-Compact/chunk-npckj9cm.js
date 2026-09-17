@@ -47,7 +47,7 @@ import {
 import { getEnvEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { formatLabelText, formatDescriptionText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { er, BR, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { getWIFCredentials, getWIFTokenCache } from "../认证-OAuth登录/chunk-x3rm9w4b.js";
+import { getWIFCredentials, getWIFTokenCache } from "../认证-OAuth登录/wif-credentials.js";
 import { lDe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 var X = createLazyValue(() =>

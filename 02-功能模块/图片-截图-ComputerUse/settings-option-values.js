@@ -32,11 +32,11 @@ var NOTIFICATION_CHANNELS = [
     "quota_auto_resume_stale",
     "quota_auto_resume_disabled",
   ],
-  tHn = ["normal", "vim"],
+  EDITOR_MODES = ["normal", "vim"],
   REMOTE_HOME_SETTINGS_MODES = ["forward", "keep_local"],
   TIME_FORMATS = ["auto", "12-hour", "24-hour", "24-hour-utc"],
   TEAMMATE_MODES = ["auto", "tmux", "iterm2", "in-process"],
-  nHn = [
+  BUILTIN_THEME_NAMES = [
     "dark",
     "light",
     "light-daltonized",
@@ -44,8 +44,8 @@ var NOTIFICATION_CHANNELS = [
     "light-ansi",
     "dark-ansi",
   ],
-  THEME_OPTIONS = ["auto", ...nHn],
+  THEME_OPTIONS = ["auto", ...BUILTIN_THEME_NAMES],
   MODEL_PROPOSED_GOALS_MODES = ["auto", "alwaysAsk", "disabled"],
   AUTO_COMPACT_WINDOW_MIN = 1e5,
   AUTO_COMPACT_WINDOW_MAX = 1e6;
-export { NOTIFICATION_CHANNELS, NOTIFICATION_TYPES, tHn, REMOTE_HOME_SETTINGS_MODES, TIME_FORMATS, TEAMMATE_MODES, nHn, THEME_OPTIONS, MODEL_PROPOSED_GOALS_MODES, AUTO_COMPACT_WINDOW_MIN, AUTO_COMPACT_WINDOW_MAX };
+export { NOTIFICATION_CHANNELS, NOTIFICATION_TYPES, EDITOR_MODES, REMOTE_HOME_SETTINGS_MODES, TIME_FORMATS, TEAMMATE_MODES, BUILTIN_THEME_NAMES, THEME_OPTIONS, MODEL_PROPOSED_GOALS_MODES, AUTO_COMPACT_WINDOW_MIN, AUTO_COMPACT_WINDOW_MAX };

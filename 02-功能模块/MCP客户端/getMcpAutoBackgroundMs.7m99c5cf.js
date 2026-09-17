@@ -23,7 +23,7 @@ import { pS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb
 import { attachDetachableAbortRelay } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { ha } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "./chunk-tv3jbp8f.js";
-import "../认证-OAuth登录/chunk-3wfaaze4.js";
+import "../认证-OAuth登录/pkce-challenge.js";
 import "../认证-OAuth登录/chunk-j990pwax.js";
 import { createMcpTaskRecord } from "../../01-核心基础设施/共享小工具-未细化/mcp-task-record.js";
 import { StreamableHTTPError } from "../MCP传输(stdio-SSE-HTTP)/streamable-http-client-transport.js";

@@ -7,7 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { readEmbeddedAssetSync } from "./embedded-text-asset.js";
-var e = "./plugin-eval-quickref-bb13424e.md.zst";
-var ySt = readEmbeddedAssetSync(e, import.meta.dirname);
-export { ySt };
+var e = null;
+function setServerApprovalWatchProvider(r) {
+  e = r;
+}
+function getServerApprovalWatchProvider() {
+  return e;
+}
+export { setServerApprovalWatchProvider, getServerApprovalWatchProvider };

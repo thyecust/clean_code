@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 213 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { clearConversation as yrn, hasAgentTaskSurvivingClear as Srn } from "../工具WebFetch-WebSearch/clear-conversation.js";
-import "../工具WebFetch-WebSearch/chunk-1mxgbqzj.js";
+import "../工具WebFetch-WebSearch/clear-session-caches.js";
 import "../工具Glob-Grep-搜索/chunk-57axeagj.js";
 import "../上下文压缩-Compact/chunk-1ntrf0ja.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";

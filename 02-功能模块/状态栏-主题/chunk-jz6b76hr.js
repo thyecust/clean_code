@@ -10,7 +10,7 @@
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { ChalkInstance, invertText, chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
-import { nHn } from "../图片-截图-ComputerUse/settings-option-values.js";
+import { BUILTIN_THEME_NAMES } from "../图片-截图-ComputerUse/settings-option-values.js";
 class u {
   proc;
   constructor(r = process) {
@@ -243,7 +243,7 @@ function GSt(r) {
   return r.startsWith("light");
 }
 function qSt(r) {
-  return typeof r === "string" && nHn.includes(r);
+  return typeof r === "string" && BUILTIN_THEME_NAMES.includes(r);
 }
 function w3t(r) {
   return Object.hasOwn(B, r);

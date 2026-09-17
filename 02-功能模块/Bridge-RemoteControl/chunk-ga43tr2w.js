@@ -26,7 +26,7 @@ import { getSessionRuntimeState, sessionIdBody } from "../权限系统/chunk-ynk
 import { buildBearerAuthHeader, setSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { FRe, WT } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isProcessProvablyGone, isSameProcessAsync, ownProcStartAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
-import { REMOTE_CONTROL_MALFORMED_RESPONSE_MESSAGE, b3t, REMOTE_CONTROL_HOST_SIGNED_OUT_MESSAGE, REMOTE_CONTROL_HOST_ACCOUNT_CHANGED_MESSAGE, REMOTE_CONTROL_PREVIOUS_SESSION_UNAVAILABLE_MESSAGE } from "./remote-control-messages.js";
+import { REMOTE_CONTROL_MALFORMED_RESPONSE_MESSAGE, REMOTE_CONTROL_SIGNED_IN_ACCOUNT_CHANGED_MESSAGE, REMOTE_CONTROL_HOST_SIGNED_OUT_MESSAGE, REMOTE_CONTROL_HOST_ACCOUNT_CHANGED_MESSAGE, REMOTE_CONTROL_PREVIOUS_SESSION_UNAVAILABLE_MESSAGE } from "./remote-control-messages.js";
 import { fmt, wgt, i4n, getBridgeSessionOrStatus, Ly, QWt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { Wh } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
@@ -1469,12 +1469,12 @@ async function Yjn(t) {
     )
       (De(e),
         (X = !0),
-        J(b3t, "terminal"),
+        J(REMOTE_CONTROL_SIGNED_IN_ACCOUNT_CHANGED_MESSAGE, "terminal"),
         k.write(hCn(b, "account_changed")),
         await Cr(ze() > 0 ? D.teardown_archive_timeout_ms : di).catch(() => {
           return;
         }));
-    else if (!dr) J(b3t, "terminal");
+    else if (!dr) J(REMOTE_CONTROL_SIGNED_IN_ACCOUNT_CHANGED_MESSAGE, "terminal");
     else Kr();
     if ((jr?.(), Ur(), !R)) k.close();
     if (se !== void 0) return;

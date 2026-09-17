@@ -21,7 +21,7 @@ import { DesignSessionState, normalizeRelativePath, isClaudeInstructionPath, isG
 import { isDesignConsentBit, getDesignConsentPrompt, seedDesignConsentBit, resolveDesignAuth, wouldNeedDesignConsent, needsDesignAuthorization, postDesignConsent } from "./design-consent-and-grants.js";
 import { isDesignOauthClientConfigured, isRemoteSession, startDesignBrowserLogin } from "./design-oauth-credentials.js";
 import "../认证-OAuth登录/oauth-login-flow.js";
-import { DESIGN_SYNC_TOOL_NAME, DESIGN_SYNC_TOOL_DESCRIPTION, uK } from "./design-sync-tool-metadata.js";
+import { DESIGN_SYNC_TOOL_NAME, DESIGN_SYNC_TOOL_DESCRIPTION, isDesignSyncPolicyAllowed } from "./design-sync-tool-metadata.js";
 import { s, T, O, v, c, Qe, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { constants } from "fs";
@@ -526,7 +526,7 @@ var DesignSyncTool = buildTool({
   shouldDefer: !0,
   maxResultSizeChars: 300000,
   isEnabled() {
-    return uK();
+    return isDesignSyncPolicyAllowed();
   },
   async description() {
     return DESIGN_SYNC_TOOL_DESCRIPTION;

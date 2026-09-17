@@ -22,7 +22,7 @@ var r = new Gt(() => o());
 function getPromptInputStore(n) {
   return r.of(n);
 }
-function x3n(n) {
+function getPromptInputValue(n) {
   return getPromptInputStore(n).getState().value;
 }
 function setPromptInputValue(n, e) {
@@ -56,4 +56,4 @@ function setPromptLaunchWarning(n, e) {
 function setSessionPromptLaunchWarning(n, e) {
   setPromptLaunchWarning(getPromptInputStore(n), e);
 }
-export { getPromptInputStore, x3n, setPromptInputValue, setPromptStash, setPromptInputActive, setSessionPromptInputActive, setPromptVimMode, setPromptLaunchWarning, setSessionPromptLaunchWarning };
+export { getPromptInputStore, getPromptInputValue, setPromptInputValue, setPromptStash, setPromptInputActive, setSessionPromptInputActive, setPromptVimMode, setPromptLaunchWarning, setSessionPromptLaunchWarning };

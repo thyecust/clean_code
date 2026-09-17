@@ -22,7 +22,7 @@ function r() {
     return "is disabled by the 'disableAgentView' setting";
   return null;
 }
-function ny() {
+function isAgentsFleetEnabled() {
   return !isAgentViewDisabled();
 }
 async function ensureFleetGateHydrated(e = {}) {
@@ -39,7 +39,7 @@ function isPastSessionsExperimentEnabled() {
   );
 }
 function isDaemonCliEnabled() {
-  return ny();
+  return isAgentsFleetEnabled();
 }
 function isDaemonWorkerRegistryEnabled() {
   return !1;
@@ -68,7 +68,7 @@ function fleetGateRejected(e, t) {
 `),
     process.exit(1));
 }
-var sAt = "CLAUDE_CODE_AGENT_VIEW_RELAUNCH";
+var AGENT_VIEW_RELAUNCH_ENV_KEY = "CLAUDE_CODE_AGENT_VIEW_RELAUNCH";
 function isLaunchComposerEnabled() {
   return !1;
 }
@@ -78,13 +78,13 @@ function shouldShowLaunchComposer(e) {
 function isListReturnRelaunch() {
   return !!a.CLAUDE_AGENTS_SELECT;
 }
-function vAn() {
-  let e = Ie(process.env[sAt]);
-  return (delete process.env[sAt], e);
+function consumeAgentViewRelaunchMarker() {
+  let e = Ie(process.env[AGENT_VIEW_RELAUNCH_ENV_KEY]);
+  return (delete process.env[AGENT_VIEW_RELAUNCH_ENV_KEY], e);
 }
 export {
   isAgentViewDisabled,
-  ny,
+  isAgentsFleetEnabled,
   ensureFleetGateHydrated,
   isPastSessionsExperimentEnabled,
   isDaemonCliEnabled,
@@ -96,9 +96,9 @@ export {
   bgSupervisorNounCap,
   daemonHint,
   fleetGateRejected,
-  sAt,
+  AGENT_VIEW_RELAUNCH_ENV_KEY,
   isLaunchComposerEnabled,
   shouldShowLaunchComposer,
   isListReturnRelaunch,
-  vAn,
+  consumeAgentViewRelaunchMarker,
 };

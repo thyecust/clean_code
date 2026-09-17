@@ -10,11 +10,11 @@
 
 // [preload stripped] 原本在此预载 211 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { parseRelatedTaskMetadataV2 as khr, registerElicitationHandlerV2 as xhr, handleElicitationRequestV2 as Drn, runElicitationHooksV2 as Mct, runElicitationResultHooksV2 as Nct } from "./mcp-elicitation-handlers-v2.js";
-import "./chunk-7gw5rbph.js";
+import "./mcp-elicitation-request-handler.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-elicitation-dialogs.js";
 import "./chunk-78r8f7dw.js";
 import "./chunk-5wa92x7d.js";
-import "../认证-OAuth登录/chunk-3wfaaze4.js";
+import "../认证-OAuth登录/pkce-challenge.js";
 export {
   Drn as handleElicitationRequest,
   khr as parseRelatedTaskMetadata,

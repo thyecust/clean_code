@@ -126,7 +126,7 @@ import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys
 import { hashSha256 } from "../共享小工具-未细化/git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { profileCheckpoint } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
-import { HKLM_POLICY_REGISTRY_PATH, yRt, SETTINGS_REGISTRY_VALUE_NAME, WSL_MANAGED_SETTINGS_DIR, xBe } from "../共享小工具-未细化/mdm-policy-paths.js";
+import { HKLM_POLICY_REGISTRY_PATH, HKCU_POLICY_REGISTRY_PATH, SETTINGS_REGISTRY_VALUE_NAME, WSL_MANAGED_SETTINGS_DIR, isRunningOnWsl } from "../共享小工具-未细化/mdm-policy-paths.js";
 import { fireRawRead, getMdmRawReadPromise } from "./mdm-raw-read.js";
 import { decodeBufferText, readFileSyncText, readFileWithMetadata } from "../共享小工具-未细化/safe-file-read.js";
 import { createKeyedSerialQueue } from "../共享小工具-未细化/async-serialization.js";
@@ -422,7 +422,7 @@ function ft(e, t) {
 }
 function ir(e, t) {
   return {
-    is_wsl: xBe(),
+    is_wsl: isRunningOnWsl(),
     await_ms: t,
     ...ft("hklm", e.outcomes.hklm),
     ...ft("hkcu", e.outcomes.hkcu),
@@ -454,7 +454,7 @@ async function ht(e, t) {
   if (e.hklmStdout !== null) d = $e(pt(e.hklmStdout) ?? "", o);
   else if (e.hklmUnreadReason !== void 0) r.push(_t(o, e.hklmUnreadReason, !1));
   if (d) r.push(...d.errors);
-  let _ = xBe(),
+  let _ = isRunningOnWsl(),
     p = !1;
   if (_) {
     if (((p = d?.settings.wslInheritsWindowsSettings === !0), !p)) {
@@ -469,7 +469,7 @@ async function ht(e, t) {
   }
   if (await or(p, t)) return { mdm: E, hkcu: Z, wslInherits: p };
   if (e.hkcuStdout !== null) {
-    let O = $e(pt(e.hkcuStdout) ?? "", `Registry: ${yRt}\\${SETTINGS_REGISTRY_VALUE_NAME}`, {
+    let O = $e(pt(e.hkcuStdout) ?? "", `Registry: ${HKCU_POLICY_REGISTRY_PATH}\\${SETTINGS_REGISTRY_VALUE_NAME}`, {
       userWritable: !0,
     });
     if (!_ || O.settings.wslInheritsWindowsSettings === !0) {
@@ -511,7 +511,7 @@ async function St(e, t) {
   return (wke(r, e, { skipMcpServerEntryFilter: !0, policySource: !0 }), lL(r));
 }
 async function lxn(e) {
-  if (!xBe() || !te().wslInherits) return "";
+  if (!isRunningOnWsl() || !te().wslInherits) return "";
   let t = [];
   try {
     t.push(await Se(J(WSL_MANAGED_SETTINGS_DIR, "managed-settings.json"), e));

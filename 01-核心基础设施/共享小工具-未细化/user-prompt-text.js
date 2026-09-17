@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { truncateToCodeUnits } from "../核心工具-字符串与文本/string-utils.js";
-var mPn = /^(?:\s*<[a-z][\w-]*[\s>]|\[Request interrupted by user[^\]]*\])/,
+var CONTROL_PROMPT_PREFIX_RE = /^(?:\s*<[a-z][\w-]*[\s>]|\[Request interrupted by user[^\]]*\])/,
   a = /<command-name>(.*?)<\/command-name>/;
 function extractUserPromptText(t, i) {
   if (t.type !== "user") return;
@@ -40,10 +40,10 @@ function extractUserPromptText(t, i) {
     }
     let u = /<bash-input>([\s\S]*?)<\/bash-input>/.exec(e);
     if (u) return `! ${u[1].trim()}`;
-    if (mPn.test(e)) continue;
+    if (CONTROL_PROMPT_PREFIX_RE.test(e)) continue;
     if (e.length > 200) e = truncateToCodeUnits(e, 200).trim() + "\u2026";
     return e;
   }
   return;
 }
-export { mPn, extractUserPromptText };
+export { CONTROL_PROMPT_PREFIX_RE, extractUserPromptText };

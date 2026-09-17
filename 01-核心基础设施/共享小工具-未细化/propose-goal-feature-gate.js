@@ -7,12 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { sleep } from "./async-timeout-utils.js";
-function gCe(e) {
-  return function (r) {
-    let t = e * 2 ** (r - 1),
-      i = Math.round(t * (0.5 + Math.random() / 2));
-    return sleep(i);
-  };
+import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+function isProposeGoalEnabled() {
+  return H("tengu_propose_goal", !1);
 }
-export { gCe };
+export { isProposeGoalEnabled };

@@ -149,7 +149,7 @@ function Pt(Yt) {
 function ht(Zt, $t) {
   return Zt + countMatching($t.lines, Pt);
 }
-function wWe(Ft) {
+function ToolUseDiff(Ft) {
   let a = _(25),
     {
       filePath: ot,
@@ -270,4 +270,4 @@ function wWe(Ft) {
   else pt = a[24];
   return pt;
 }
-export { RejectedToolUseDiff, wWe };
+export { RejectedToolUseDiff, ToolUseDiff };

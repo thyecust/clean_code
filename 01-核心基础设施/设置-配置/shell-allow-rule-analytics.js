@@ -46,7 +46,7 @@ function y(l) {
     }
   return ((e.total_shell_allow_rules = o), e);
 }
-function tWn(l) {
+function logShellAllowRulesAtInit(l) {
   logEvent("tengu_shell_allow_rules_at_init", y(l));
 }
 function logShellAllowRulesAdded(l) {
@@ -65,4 +65,4 @@ function logShellAllowRulesAdded(l) {
     }
   }
 }
-export { tWn, logShellAllowRulesAdded };
+export { logShellAllowRulesAtInit, logShellAllowRulesAdded };

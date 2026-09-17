@@ -156,7 +156,7 @@ import { o6, CJe, rAn, BG_WORKER_IDENTITY_ENV_VARS, isArtifactDevBaseUrlVar, sub
 import { gJ, Cr, XXe, rFe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { lR, Xre } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { Rbn, aCe } from "./chunk-ajtn749s.js";
-import { getWIFTokenCache } from "../认证-OAuth登录/chunk-x3rm9w4b.js";
+import { getWIFTokenCache } from "../认证-OAuth登录/wif-credentials.js";
 import { NON_INHERITED_SESSION_ENV_VARS } from "../Workflow编排/session-env-vars.js";
 import { removeGuiHostEntrypoint, NON_INHERITED_ENV_VARS } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import { _ee } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
