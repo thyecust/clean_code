@@ -28,7 +28,7 @@ import "../认证-OAuth登录/console-profile-auth.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../向导UI-Wizard/向导UI-Wizard.7xe5wk62.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-2x6t9gq6.js";
 import "../模型接入-Bedrock-Vertex/bedrock-setup-wizard.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
@@ -54,7 +54,7 @@ import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../远程控制-Bridge/remote-control-ui-strings.js";
 import "../认证-OAuth登录/oauth-login-flow.js";
-import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 F();
 function B(b) {
   return Boolean(b.replBridgeSessionId) && !b.replBridgeOutboundOnly;

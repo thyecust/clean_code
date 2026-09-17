@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 120 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { eI } from "../../00-第三方库/_未识别/第三方库-其他/chunk-x46ksw6d.js";
+import { eI } from "../../00-第三方库/qrcode/chunk-x46ksw6d.js";
 import { Box, Text, useIsScreenReaderEnabled } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -18,9 +18,9 @@ import { isRemoteActive, hasRemoteCapability } from "../../01-核心基础设施
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
-import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { Qr } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Dn, kn, V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Dn, kn, V, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function x(ro) {

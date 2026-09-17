@@ -856,7 +856,7 @@ import { isWorktreeModeEnabled } from "../../01-核心基础设施/共享小工�
 import { collectContextData } from "../上下文压缩-Compact/context-usage.js";
 import { parseWatchArtifactTarget, setStartupWatchTarget } from "../制品发布-Artifact/chunk-p1dkvpxj.js";
 import { killAutoReactSubscriptions } from "../制品发布-Artifact/chunk-kshc4v5t.js";
-import { Zd } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
+import { Zd } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import { generateSessionTitle } from "../会话-历史-恢复/session-title.js";
 import { filterCollection, FleetNudgeStore } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
@@ -874,8 +874,8 @@ import { useIsMountRecent, useSettleAfterChange, useRefusedInputWindow, NO_COMMI
 import { shouldOfferTerminalSetup } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
-import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { lE } from "../../01-核心基础设施/UI组件-TUI/chunk-dhg42t8r.js";
+import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { flushAnalyticsSinks } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import {
   refreshMarketplaceForScopedInstall,
@@ -927,7 +927,7 @@ import { getCooContextProperties } from "../../01-核心基础设施/共享小�
 import { isDesignSyncEnabled } from "../../01-核心基础设施/共享小工具-未细化/design-feature-gates.js";
 import { flushPendingScopeExpansionNotice } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
 import { logShellAllowRulesAtInit } from "../../01-核心基础设施/设置-配置/shell-allow-rule-analytics.js";
-import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { re, E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { fetchOrgSkills, downloadSkillArchive } from "../../01-核心基础设施/共享小工具-未细化/org-skills-sync.js";
 import { hasActiveAgentTask, figures, isWorkflowSizeGuidelineConfigured, resolveWorkflowSizeGuideline } from "../Teammates团队/chunk-mrfx53ye.js";
 import { isProjectSkillsDirPlugin, splitPluginId, getPluginMarketplace, parsePluginIdIgnoringReservedMarketplace } from "../插件系统/chunk-33bdfgmx.js";
@@ -943,7 +943,7 @@ import { createFieldUpdater } from "../../01-核心基础设施/共享小工具-
 import { isBypassPermissionsModeDisabled } from "../权限系统/bypass-permissions-mode-policy.js";
 import { AGENT_TOOL_NAME, TASK_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
 import { REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE } from "../远程控制-Bridge/remote-control-policy-messages.js";
-import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
+import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { getFirstPositionalArg } from "../上下文压缩-Compact/cli-args.js";
@@ -2054,7 +2054,7 @@ async function writeFeedbackBundleZip(w, I = "feedback.json") {
     ne = lc(te, `${V}.zip`);
   try {
     await Zg(te, { recursive: !0, mode: 448 });
-    let { Zip: me, ZipDeflate: Me } = await import("../../00-第三方库/_未识别/第三方库-其他/zipSync.gv6wj3ch.js"),
+    let { Zip: me, ZipDeflate: Me } = await import("../../00-第三方库/fflate/zipSync.gv6wj3ch.js"),
       Se = createWriteStream(ne, { mode: 384 });
     return (
       await new Promise((xe, De) => {

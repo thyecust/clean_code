@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 263 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import "../向导UI-Wizard/向导UI-Wizard.7xe5wk62.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-2x6t9gq6.js";
 import { BedrockSetupWizard } from "./bedrock-setup-wizard.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";

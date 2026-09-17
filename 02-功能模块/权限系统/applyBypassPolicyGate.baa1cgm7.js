@@ -44,7 +44,7 @@ async function ensureAgentsBypassConsent(s, o, r) {
   if (isBypassPermissionsModeDisabled()) return;
   if (hasSkipDangerousModePermissionPrompt() || getGlobalConfig().bypassPermissionsModeAccepted) return;
   let [{ runSteps: n }, t] = await Promise.all([
-    import("../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js"),
+    import("../../00-第三方库/_未识别/chunk-cq8x5zt4.js"),
     import("../斜杠命令-UI组件/BypassPermissionsModeDialog.d9va36zm.js"),
   ]);
   await n(

@@ -19,7 +19,7 @@ import { getClaudeConfigDir } from "../模型接入-Bedrock-Vertex/chunk-5ndhfaq
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isPluginEvalEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
-import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
+import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var c = toESM(pg(), 1);
 import { dirname, join as b } from "path";

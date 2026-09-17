@@ -265,7 +265,7 @@ import { isBgAuthSnapshotPending, waitForBgAuthSnapshot, hasCredentialDescriptor
 import { parseGitHubRepository } from "../工作树-Git/git-repository-detection.js";
 import { ensureAxiosEgressGuardInstalled } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
 import { SECURE_STORAGE_READ_FAILED_SENTINEL, invalidateCredentialsCopyCache, getSecureStorage } from "./secure-storage.js";
-import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import { Cs } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import { getSecureStorageDir, getKeychainServiceName, getKeychainAccountName, invalidateKeychainCache, classifyKeychainError } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import { getLegacyApiKeyPrefetchResult, clearLegacyApiKeyPrefetch } from "../../01-核心基础设施/共享小工具-未细化/keychain-prefetch.js";
 import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
@@ -6096,7 +6096,7 @@ function getBedrockInferenceProfiles() {
 async function SH() {
   let [e, { ListInferenceProfilesCommand: t }] = await Promise.all([
       r_(),
-      import("../../00-第三方库/_未识别/第三方库-AWSSDK/BedrockClient.8qdd522x.js"),
+      import("../../00-第三方库/@aws-sdk/BedrockClient.8qdd522x.js"),
     ]),
     r = [],
     o;
@@ -6141,7 +6141,7 @@ function findInferenceProfileForModel(e, t, r) {
   return e.find((o) => n_(o, t)) ?? null;
 }
 async function r_() {
-  let { BedrockClient: e } = await import("../../00-第三方库/_未识别/第三方库-AWSSDK/BedrockClient.8qdd522x.js"),
+  let { BedrockClient: e } = await import("../../00-第三方库/@aws-sdk/BedrockClient.8qdd522x.js"),
     t = await resolveAwsRegion(),
     r = a.CLAUDE_CODE_SKIP_BEDROCK_AUTH,
     o = await getAWSClientProxyConfig({
@@ -6184,7 +6184,7 @@ async function r_() {
   return new e(d);
 }
 async function createBedrockRuntimeClient() {
-  let { BedrockRuntimeClient: e } = await import("../../00-第三方库/_未识别/第三方库-AWSSDK/BedrockRuntimeClient.nv86vjtp.js"),
+  let { BedrockRuntimeClient: e } = await import("../../00-第三方库/@aws-sdk/BedrockRuntimeClient.nv86vjtp.js"),
     t = await resolveAwsRegion(),
     r = a.CLAUDE_CODE_SKIP_BEDROCK_AUTH,
     o = await getAWSClientProxyConfig({
@@ -6229,7 +6229,7 @@ async function createBedrockRuntimeClient() {
   return new e(d);
 }
 async function countBedrockTokens(e, t, r, o) {
-  let { CountTokensCommand: d } = await import("../../00-第三方库/_未识别/第三方库-AWSSDK/BedrockRuntimeClient.nv86vjtp.js");
+  let { CountTokensCommand: d } = await import("../../00-第三方库/@aws-sdk/BedrockRuntimeClient.nv86vjtp.js");
   return (
     (
       await e.send(
@@ -6265,7 +6265,7 @@ async function TH(e) {
   try {
     let [r, { GetInferenceProfileCommand: o }] = await Promise.all([
         r_(),
-        import("../../00-第三方库/_未识别/第三方库-AWSSDK/BedrockClient.8qdd522x.js"),
+        import("../../00-第三方库/@aws-sdk/BedrockClient.8qdd522x.js"),
       ]),
       p = (
         await r.send(new o({ inferenceProfileIdentifier: e }), {
@@ -33419,7 +33419,7 @@ function getAwsChainResolveTimeoutMs() {
 }
 async function h0() {
   let [{ STSClient: e, GetCallerIdentityCommand: t }, r] = await Promise.all([
-      import("../../00-第三方库/_未识别/第三方库-AWSSDK/GetCallerIdentityCommand.z4m8wtvr.js"),
+      import("../../00-第三方库/@aws-sdk/GetCallerIdentityCommand.z4m8wtvr.js"),
       resolveAwsRegion(),
     ]),
     o = new e({

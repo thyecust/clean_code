@@ -1582,7 +1582,7 @@ import { getHostStateStore } from "../../01-核心基础设施/共享小工具-�
 import { OFFICIAL_MARKETPLACE_SOURCE, OFFICIAL_MARKETPLACE_NAME, PluginSourceError, describePluginFailure, lookupMarketplaceSource } from "../../02-功能模块/插件系统/chunk-ajtn749s.js";
 import { isPluginBlockedByPolicy, isSourceAllowedByPolicy } from "../../02-功能模块/插件系统/plugin-source-policy.js";
 import { AGENT_COLOR_THEME_KEYS, AGENT_COLOR_NAMES, isAgentColorName, resolveAgentColorName, getAgentTypeColorThemeKey } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
-import { JNe } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
+import { JNe } from "../../00-第三方库/zod/chunk-6421ybjb.js";
 import { getMcpServerConfigCacheKey, invokeMcpToolRaw, registerMcpNotificationHandler } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { resolveSetting, saveUserIntentSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
 import { rearmWatchNoticeBudgets, disposeArtifactRoom, retireLiveDocWatches } from "../../02-功能模块/制品发布-Artifact/chunk-rr78st95.js";
@@ -1662,7 +1662,7 @@ import {
   Kx,
   Z0,
   qA,
-} from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
+} from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import { ENABLE_SYNCHRONIZED_UPDATE, DISABLE_SYNCHRONIZED_UPDATE, SHOW_CURSOR, HIDE_CURSOR } from "../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
 import { getThemeStore, readThemesFromPathAsync } from "../../02-功能模块/状态栏-主题/custom-themes.js";
 import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
@@ -1791,11 +1791,11 @@ import { formatKeybindingChord, KeybindingHint } from "../../02-功能模块/键
 import { DotSeparatedList, useDoublePressConfirm } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useVoiceSelector } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import { shouldShowNotification, useNotificationQueue, NOTIFICATION_PRIORITY_RANK } from "./notification-queue.js";
-import { nat, rat, f9e, hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
+import { nat, rat, f9e, hn } from "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
-import { WA, Vx, Sv, Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { WA, Vx, Sv, Qr, de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { getPromptInputStore, getPromptInputValue, setPromptInputValue, setPromptStash, setPromptInputActive, setSessionPromptInputActive, setPromptVimMode, setPromptLaunchWarning } from "../../01-核心基础设施/共享小工具-未细化/prompt-input-store.js";
 import { registerPeerReplyResolver, sendRv, markReplayNoOp } from "../../02-功能模块/后台任务-Shell管理/bg-rendezvous-server.js";
 import { CommandQueueProvider, useCommandQueue } from "../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
@@ -1950,7 +1950,7 @@ import { setIdentityChangeHandler, consumeUnownedIdentityTrip, getIdentityEpoch,
 import { pickRandom, useSpinnerStore, useSpinnerRetryStatus } from "../../02-功能模块/Hooks钩子/spinner-store.js";
 import { useTasksV2, useTasksV2Snapshot, useTasksV2Subscription, useTasksV2HasTasks } from "../../02-功能模块/工具TodoWrite-Tasks/tasks-v2-store.js";
 import { worktreeStateStore } from "../../01-核心基础设施/共享小工具-未细化/worktree-state-store.js";
-import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
+import { showScreen } from "../../00-第三方库/_未识别/chunk-cq8x5zt4.js";
 import { isArtifactReplyYieldEnabled } from "../../02-功能模块/制品发布-Artifact/artifact-reply-yield.js";
 import {
   registerHeldReplyCanUseTool,
@@ -2020,7 +2020,7 @@ import {
   jHe,
   hp,
   C$n,
-} from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
+} from "../../01-核心基础设施/UI组件-TUI/React组件(TUI视图).ym1wn9mq.js";
 import { ScrollBox } from "./scroll-box.js";
 import {
   ReplDiffPanelStateStore,
@@ -2197,7 +2197,7 @@ import { resolveAgentColor } from "../../01-核心基础设施/共享小工具-�
 import { DiffStatLabel, CURRENT_PR_LINK_KEY, buildPullRequestLink, AZt, PullRequestBadge } from "../../02-功能模块/GitHub集成/chunk-bfz9rjjm.js";
 import { createCloudPluginsForwarder, isCloudSessionSyncEqual, describeProjectFilesSync, getWhileClosedDirection, getUploadOriginFacts, describeSettingsSync, createSettingsSeedState, describePluginsSync } from "../../02-功能模块/远程控制-Bridge/chunk-sc8n0cp3.js";
 import { openFileInEditor, resolveEditorCommand, getEditorDisplayName, editFileInExternalEditor, editTextInExternalEditor } from "./external-editor.js";
-import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
+import { lE } from "../../01-核心基础设施/UI组件-TUI/chunk-dhg42t8r.js";
 import { useAnswerRefusalState } from "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
 import { runEffortCommand } from "../../02-功能模块/斜杠命令-UI组件/effort-level.js";
 import { registerManagedSettingsConsentRequester, isConsentHandoffHeld, isConsentHandoffRevealActive, subscribeConsentHandoffHolds } from "../../01-核心基础设施/设置-配置/remote-managed-settings.js";
@@ -2482,7 +2482,7 @@ import {
   d,
   At,
   F,
-} from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+} from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { isTerminalTaskStatus, hasActiveAgentTask, hasActiveShellTask, figures, sanitizeDisplayName, formatModelRestrictedMessage, getWorkflowSizeAgentLimit, resolveWorkflowSizeGuideline } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 import { resolveTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { getEndedByModel, appendEndedByModelSuffix } from "../../01-核心基础设施/共享小工具-未细化/ended-by-model.js";

@@ -30,13 +30,13 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useTerminalSize } from "../共享小工具-未细化/use-terminal-size.js";
 import { useStoreSelector } from "../共享小工具-未细化/use-store-selector.js";
-import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
+import { hn } from "../UI组件-TUI/chunk-tp42fv8j.js";
 import { StaticFrameContext } from "../共享小工具-未细化/one-shot-render.js";
 import { useForcedExpandedContent } from "../共享小工具-未细化/expanded-content-context.js";
 import { useQueuedMessageContext } from "../共享小工具-未细化/queued-message-context.js";
 import { LinkifiedText } from "../共享小工具-未细化/linkified-text.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Qt, Ry, De, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Qt, Ry, De, E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { defineExportGetters } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 var le = 600;

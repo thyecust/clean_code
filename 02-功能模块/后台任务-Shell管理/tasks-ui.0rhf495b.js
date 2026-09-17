@@ -18,7 +18,7 @@ import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
@@ -32,7 +32,7 @@ import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js"
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import "../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
+import "../../01-核心基础设施/UI组件-TUI/React组件(TUI视图).ym1wn9mq.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
@@ -45,7 +45,7 @@ import "../../01-核心基础设施/共享小工具-未细化/mcp-tool-base.js";
 import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../差异引擎-Diff/structured-diff.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-jjqazdgg.js";
 import "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/verb-conjugation.js";
@@ -73,7 +73,7 @@ import "../../01-核心基础设施/核心工具-日期与本地化/核心工具
 import "../../01-核心基础设施/共享小工具-未细化/slack-send-tool.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
 import "../Teammates团队/teammate-task-messages.js";
-import { dn, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { dn, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function wo(Qo) {

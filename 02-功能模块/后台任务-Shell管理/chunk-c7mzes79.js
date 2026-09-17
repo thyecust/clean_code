@@ -140,7 +140,7 @@ import { useClock } from "../../01-核心基础设施/共享小工具-未细化/
 import { NotificationProvider } from "../../03-入口与运行时/会话UI-REPL/notification-queue.js";
 import { StorageV5ContextProvider, useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { r7, KB, U0e, XB, p4 } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { ga } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
+import { ga } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import { sessionServicesFor } from "../认证-OAuth登录/credentials-store.js";
 import { buildInkKeyEvent, createKeyHandlerRegistry, KeybindingProvider, useKeybindingContext } from "../键位绑定-Keybindings/keybinding-context.js";
 import { SessionProvider, useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
@@ -158,7 +158,7 @@ import { PluginStateStore } from "../插件系统/plugin-state-store.js";
 import { getBlockedServerErrorFields } from "../MCP客户端/mcp-server-state-messages.js";
 import { getWorkflowTranscriptDir } from "../编排-Workflow/workflow-snapshots.js";
 import { getAutoReactWiredSlugs, getBootingAutoReactArmSlugs, disposeSupervisors, MAX_UNATTENDED_REPLIES, drainUnattendedReplies } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
-import { Qt, re, De, E, vr, dn, V, C, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Qt, re, De, E, vr, dn, V, C, d, At, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/mcp-client-type-casts.js";
 import { createFieldAccessor, createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { isBypassPermissionsModeDisabled } from "../权限系统/bypass-permissions-mode-policy.js";

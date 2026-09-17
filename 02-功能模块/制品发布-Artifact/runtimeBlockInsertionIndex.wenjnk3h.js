@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { sse } from "../../00-第三方库/parse5/parse5.2zwbfepc.js";
-import { y4t } from "../../00-第三方库/_未识别/第三方库-parse5/chunk-psby6rnv.js";
+import { y4t } from "../../00-第三方库/parse5/chunk-psby6rnv.js";
 var m = /<\/(?:body|html)[\t\n\f\r />]/i;
 function runtimeBlockInsertionIndex(o) {
   if (!m.test(o)) return o.length;

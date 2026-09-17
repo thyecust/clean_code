@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ydr, Jdr, eI, Qdr, Zdr, epr, tpr } from "../../00-第三方库/_未识别/第三方库-其他/chunk-x46ksw6d.js";
+import { Ydr, Jdr, eI, Qdr, Zdr, epr, tpr } from "../../00-第三方库/qrcode/chunk-x46ksw6d.js";
 export {
   Ydr as create,
   Jdr as toCanvas,

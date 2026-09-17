@@ -25,7 +25,7 @@ import { Box, Text, useIsScreenReaderEnabled } from "../../01-核心基础设施
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
@@ -47,7 +47,7 @@ import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../远程控制-Bridge/remote-control-ui-strings.js";
 import "../工作树-Git/git-operations.js";
 import { toInteger } from "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
-import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { E, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { generateTaskId, createPendingTask, figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var Me = "Expected a function";

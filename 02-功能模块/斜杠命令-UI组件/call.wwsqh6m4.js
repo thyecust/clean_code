@@ -12,7 +12,7 @@
 import { isUnattendedBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { buildSessionContext } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import "../../03-入口与运行时/会话UI-REPL/scroll-box.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-yhkvt9ba.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../使用时长-Wellbeing/使用时长-Wellbeing.0s8r3ncd.js";
@@ -22,7 +22,7 @@ import "../../01-核心基础设施/共享小工具-未细化/expanded-content-c
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { PluginsDialog } from "../插件系统/chunk-jwm9gdkd.js";
 import "../插件系统/chunk-akd9b588.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-2x6t9gq6.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js";
 import "../认证-OAuth登录/url-and-error-redaction.js";

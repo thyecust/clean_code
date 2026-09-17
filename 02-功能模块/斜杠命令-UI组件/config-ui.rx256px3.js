@@ -14,7 +14,7 @@ import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import "../../03-入口与运行时/会话UI-REPL/scroll-box.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-yhkvt9ba.js";
 import "../插件系统/chunk-rbjz1q03.js";
 import "../插件系统/channel-gate.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
@@ -75,7 +75,7 @@ import "../../01-核心基础设施/设置-配置/fast-mode.js";
 import "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
 import "../../01-核心基础设施/共享小工具-未细化/propose-goal-feature-gate.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
-import { E, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { E, C, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 F();
 var J = async (t, o, r) => {
   let s = r?.trim() || "";

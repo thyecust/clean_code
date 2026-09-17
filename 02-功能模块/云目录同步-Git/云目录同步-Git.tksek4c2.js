@@ -23,7 +23,7 @@ import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-m
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import { Cs, hf } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import { getEnvVarCaseInsensitive, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import {
   createConcurrencyLimiter,

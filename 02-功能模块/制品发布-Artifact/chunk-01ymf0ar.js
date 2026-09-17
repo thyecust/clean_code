@@ -156,7 +156,7 @@ import {
   extractWorkshopDecisions,
   registerWorkshopEnabledGate,
 } from "./chunk-rr78st95.js";
-import { bFe, tf } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
+import { bFe, tf } from "../../00-第三方库/@anthropic-ai/sdk/chunk-k58dgrhz.js";
 import { DANGEROUS_FILES_LC } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { isPolicyLimitsEligible, getPolicyLimitsIneligibleReason, isPolicyAllowed, isPolicyRouteMissing, getResponseFromCache } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
 import { getRemoteControlSessionCompatId } from "../权限系统/chunk-1y2g140m.js";

@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Bat } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
+import { Bat } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import { stripAnsi } from "./text-sanitization.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useApp, render } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { N, e } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Qt, dn, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Qt, dn, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 F();
 import { PassThrough } from "stream";
 function l() {}

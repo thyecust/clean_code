@@ -25,7 +25,7 @@ import {
   parseDecisionIslandItems,
   deriveIslandWorkshopState,
 } from "./chunk-rr78st95.js";
-import { TAn } from "../../00-第三方库/_未识别/第三方库-parse5/chunk-psby6rnv.js";
+import { TAn } from "../../00-第三方库/parse5/chunk-psby6rnv.js";
 import { isSafeExternalUrl } from "./chunk-01ymf0ar.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 var S = new RegExp(`^${DECISION_ID_PATTERN}$`),

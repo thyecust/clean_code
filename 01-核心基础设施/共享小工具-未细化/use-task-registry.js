@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { createTaskRegistry } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useAppState } from "./app-state-context.js";
-import { V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { V, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 F();
 function useTaskRegistry() {
   let t = useAppState();

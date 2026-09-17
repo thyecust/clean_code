@@ -21,7 +21,7 @@ import { truncateToCodeUnits, firstLine } from "../../01-核心基础设施/核�
 import { escapeHtmlAttribute, neutralizeOpeningTags } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { isAgentColorName } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import { Cs, hf } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import { createMessageEnvelope, getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import { externalPermissionModeSchema } from "../权限系统/chunk-e4pfvp7x.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";

@@ -28,14 +28,14 @@ import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { buildVertexGoogleAuth, suppressVertexAuthRejection, vertexResidualCredentialPins } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
+import { hn } from "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var H = {
   AUTH_METHOD: 0,

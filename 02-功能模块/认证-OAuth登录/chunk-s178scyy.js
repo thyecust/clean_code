@@ -8,5 +8,5 @@
 
 // Version: 2.1.263
 import { getNodeConfigProviderModule } from "../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
-import "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js";
+import "../../00-第三方库/@aws-sdk/chunk-z7ktsccq.js";
 export default getNodeConfigProviderModule();

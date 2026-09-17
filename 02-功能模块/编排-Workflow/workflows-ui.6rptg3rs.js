@@ -26,7 +26,7 @@ import { pauseWorkflowTask, killWorkflowTask, skipWorkflowAgent, retryWorkflowAg
 import { parseWorkflowScript } from "./workflow-script.js";
 import { PROMPT_RESERVED_ROWS } from "./workflow-progress-ui.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
@@ -50,7 +50,7 @@ import "../../01-核心基础设施/共享小工具-未细化/summarize-tool-inp
 import { loadWorkflowSnapshots } from "./workflow-snapshots.js";
 import "./workflow-registry.js";
 import "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
-import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";

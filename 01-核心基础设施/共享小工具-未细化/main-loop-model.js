@@ -11,7 +11,7 @@ import { useAppStateSelector } from "./app-state-context.js";
 import { getDefaultMainLoopModelSetting, parseUserSpecifiedModel } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { useFeatureFlagVersion } from "./feature-flag-version.js";
 import { useSettings } from "./use-settings.js";
-import { V, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { V, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { resolveAllowedModel, getSessionModelOverride } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 F();
 function resolveMainLoopModelSetting(o, n) {

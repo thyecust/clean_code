@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { tslibAwait, tslibAsyncGenerator, tslibAsyncValues } from "../../../01-核心基础设施/共享小工具-未细化/tslib-helpers.js";
 import { H0n, Hke } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { E$e } from "../../_未识别/第三方库-加密库/第三方库-加密库.z54vzq0y.js";
-import { pg } from "../../_未识别/第三方库-其他/chunk-jm5cswvd.js";
+import { E$e } from "../../_未识别/第三方库-加密库.z54vzq0y.js";
+import { pg } from "../../semver/chunk-jm5cswvd.js";
 import { APn, Mnt } from "../../axios/axios.t0fczzmz.js";
 import { toESM, commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var Ol = commonJS(function (ze) {
@@ -13857,7 +13857,7 @@ function Xt(e, t, r = {}) {
       return {
         openBrowser: async (se) => {
           await (
-            await import("../../_未识别/第三方库-Azure身份认证/default.wzx01n9v.js")
+            await import("../../_未识别/default.wzx01n9v.js")
           ).default(se, { wait: !0, newInstance: !0 });
         },
         scopes: A,

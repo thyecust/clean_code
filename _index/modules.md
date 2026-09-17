@@ -732,25 +732,28 @@
 
 - [`00-第三方库/@grpc/grpc-js/grpc-js.5zkynjxh.js`](../00-第三方库/@grpc/grpc-js/grpc-js.5zkynjxh.js) — 604.9 KB
 
-## 第三方库 · AWS SDK  <sub>00-第三方库 · 17 个文件 · 0.57 MB</sub>
+## 第三方库 · AWS SDK  <sub>00-第三方库 · 20 个文件 · 0.66 MB</sub>
 
 - [`00-第三方库/@aws-sdk/core/core.7j004336.js`](../00-第三方库/@aws-sdk/core/core.7j004336.js) — 262.8 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/BedrockRuntimeClient.nv86vjtp.js`](../00-第三方库/_未识别/第三方库-AWSSDK/BedrockRuntimeClient.nv86vjtp.js) — 35.9 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/chunk-mkw5nmp8.js`](../00-第三方库/_未识别/第三方库-AWSSDK/chunk-mkw5nmp8.js) — 33.3 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/GetCallerIdentityCommand.z4m8wtvr.js`](../00-第三方库/_未识别/第三方库-AWSSDK/GetCallerIdentityCommand.z4m8wtvr.js) — 29.9 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/BedrockClient.8qdd522x.js`](../00-第三方库/_未识别/第三方库-AWSSDK/BedrockClient.8qdd522x.js) — 27.0 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/chunk-ck8mz0z4.js`](../00-第三方库/_未识别/第三方库-AWSSDK/chunk-ck8mz0z4.js) — 24.7 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/CreateOAuth2TokenCommand.a99y1qer.js`](../00-第三方库/_未识别/第三方库-AWSSDK/CreateOAuth2TokenCommand.a99y1qer.js) — 21.8 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/chunk-mwf4pmq2.js`](../00-第三方库/_未识别/第三方库-AWSSDK/chunk-mwf4pmq2.js) — 20.8 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/chunk-03pqme4r.js`](../00-第三方库/_未识别/第三方库-AWSSDK/chunk-03pqme4r.js) — 20.7 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/chunk-mjf8wc6r.js`](../00-第三方库/_未识别/第三方库-AWSSDK/chunk-mjf8wc6r.js) — 20.6 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/chunk-dm9sg03f.js`](../00-第三方库/_未识别/第三方库-AWSSDK/chunk-dm9sg03f.js) — 17.7 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/chunk-6ydmdmy7.js`](../00-第三方库/_未识别/第三方库-AWSSDK/chunk-6ydmdmy7.js) — 17.3 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/chunk-zdrvwe5r.js`](../00-第三方库/_未识别/第三方库-AWSSDK/chunk-zdrvwe5r.js) — 15.8 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/chunk-w3axq133.js`](../00-第三方库/_未识别/第三方库-AWSSDK/chunk-w3axq133.js) — 12.0 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/ENV_CMDS_RELATIVE_URI.zcs53e9c.js`](../00-第三方库/_未识别/第三方库-AWSSDK/ENV_CMDS_RELATIVE_URI.zcs53e9c.js) — 10.9 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js`](../00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js) — 7.1 KB
-- [`00-第三方库/_未识别/第三方库-AWSSDK/ENV_KEY.axscv2na.js`](../00-第三方库/_未识别/第三方库-AWSSDK/ENV_KEY.axscv2na.js) — 0.7 KB
+- [`00-第三方库/@aws-sdk/chunk-jtb5q5xr.js`](../00-第三方库/@aws-sdk/chunk-jtb5q5xr.js) — 73.3 KB
+- [`00-第三方库/@aws-sdk/BedrockRuntimeClient.nv86vjtp.js`](../00-第三方库/@aws-sdk/BedrockRuntimeClient.nv86vjtp.js) — 35.9 KB
+- [`00-第三方库/@aws-sdk/chunk-mkw5nmp8.js`](../00-第三方库/@aws-sdk/chunk-mkw5nmp8.js) — 33.3 KB
+- [`00-第三方库/@aws-sdk/GetCallerIdentityCommand.z4m8wtvr.js`](../00-第三方库/@aws-sdk/GetCallerIdentityCommand.z4m8wtvr.js) — 29.9 KB
+- [`00-第三方库/@aws-sdk/BedrockClient.8qdd522x.js`](../00-第三方库/@aws-sdk/BedrockClient.8qdd522x.js) — 27.0 KB
+- [`00-第三方库/@aws-sdk/chunk-ck8mz0z4.js`](../00-第三方库/@aws-sdk/chunk-ck8mz0z4.js) — 24.7 KB
+- [`00-第三方库/@aws-sdk/CreateOAuth2TokenCommand.a99y1qer.js`](../00-第三方库/@aws-sdk/CreateOAuth2TokenCommand.a99y1qer.js) — 21.8 KB
+- [`00-第三方库/@aws-sdk/chunk-cpfawwsx.js`](../00-第三方库/@aws-sdk/chunk-cpfawwsx.js) — 21.1 KB
+- [`00-第三方库/@aws-sdk/chunk-mwf4pmq2.js`](../00-第三方库/@aws-sdk/chunk-mwf4pmq2.js) — 20.8 KB
+- [`00-第三方库/@aws-sdk/chunk-03pqme4r.js`](../00-第三方库/@aws-sdk/chunk-03pqme4r.js) — 20.7 KB
+- [`00-第三方库/@aws-sdk/chunk-mjf8wc6r.js`](../00-第三方库/@aws-sdk/chunk-mjf8wc6r.js) — 20.6 KB
+- [`00-第三方库/@aws-sdk/chunk-dm9sg03f.js`](../00-第三方库/@aws-sdk/chunk-dm9sg03f.js) — 17.7 KB
+- [`00-第三方库/@aws-sdk/chunk-6ydmdmy7.js`](../00-第三方库/@aws-sdk/chunk-6ydmdmy7.js) — 17.3 KB
+- [`00-第三方库/@aws-sdk/chunk-zdrvwe5r.js`](../00-第三方库/@aws-sdk/chunk-zdrvwe5r.js) — 15.8 KB
+- [`00-第三方库/@aws-sdk/chunk-w3axq133.js`](../00-第三方库/@aws-sdk/chunk-w3axq133.js) — 12.0 KB
+- [`00-第三方库/@aws-sdk/ENV_CMDS_RELATIVE_URI.zcs53e9c.js`](../00-第三方库/@aws-sdk/ENV_CMDS_RELATIVE_URI.zcs53e9c.js) — 10.9 KB
+- [`00-第三方库/@aws-sdk/chunk-z7ktsccq.js`](../00-第三方库/@aws-sdk/chunk-z7ktsccq.js) — 7.1 KB
+- [`00-第三方库/@aws-sdk/ENV_KEY.axscv2na.js`](../00-第三方库/@aws-sdk/ENV_KEY.axscv2na.js) — 0.7 KB
+- [`00-第三方库/@aws-sdk/defaultProvider.27d886dy.js`](../00-第三方库/@aws-sdk/defaultProvider.27d886dy.js) — 0.7 KB
 
 ## Teammates 团队  <sub>02-功能模块 · 48 个文件 · 0.54 MB</sub>
 
@@ -803,11 +806,17 @@
 - [`02-功能模块/Teammates团队/chunk-5nnwwahg.js`](../02-功能模块/Teammates团队/chunk-5nnwwahg.js) — 1.0 KB
 - [`02-功能模块/Teammates团队/agent-swarms-enablement.js`](../02-功能模块/Teammates团队/agent-swarms-enablement.js) — 1.0 KB
 
-## Ink 终端渲染器  <sub>00-第三方库 · 3 个文件 · 0.56 MB</sub>
+## Ink 终端渲染器  <sub>00-第三方库 · 9 个文件 · 0.61 MB</sub>
 
 - [`00-第三方库/ink/ink + react-reconciler.5rs3h07b.js`](../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js) — 548.8 KB
-- [`00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js`](../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js) — 17.4 KB
-- [`00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js`](../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js) — 5.7 KB
+- [`00-第三方库/_未识别/chunk-hm8z9h7j.js`](../00-第三方库/_未识别/chunk-hm8z9h7j.js) — 17.4 KB
+- [`00-第三方库/_未识别/第三方库-加密库.z54vzq0y.js`](../00-第三方库/_未识别/第三方库-加密库.z54vzq0y.js) — 16.4 KB
+- [`00-第三方库/_未识别/default.wzx01n9v.js`](../00-第三方库/_未识别/default.wzx01n9v.js) — 12.0 KB
+- [`00-第三方库/_未识别/chunk-5y6047zm.js`](../00-第三方库/_未识别/chunk-5y6047zm.js) — 8.2 KB
+- [`00-第三方库/_未识别/chunk-10wtfjv0.js`](../00-第三方库/_未识别/chunk-10wtfjv0.js) — 6.6 KB
+- [`00-第三方库/_未识别/chunk-e0ewk5yt.js`](../00-第三方库/_未识别/chunk-e0ewk5yt.js) — 6.4 KB
+- [`00-第三方库/_未识别/chunk-cq8x5zt4.js`](../00-第三方库/_未识别/chunk-cq8x5zt4.js) — 5.7 KB
+- [`00-第三方库/_未识别/chunk-jd89krpb.js`](../00-第三方库/_未识别/chunk-jd89krpb.js) — 0.6 KB
 
 ## 斜杠命令 · UI 组件  <sub>02-功能模块 · 34 个文件 · 0.54 MB</sub>
 
@@ -859,20 +868,9 @@
 - [`02-功能模块/输入分发-查询构造/startEventLoopStallDetector.hwq92489.js`](../02-功能模块/输入分发-查询构造/startEventLoopStallDetector.hwq92489.js) — 6.8 KB
 - [`02-功能模块/输入分发-查询构造/buildSettingsFixPrompt.h2f8g4n5.js`](../02-功能模块/输入分发-查询构造/buildSettingsFixPrompt.h2f8g4n5.js) — 2.2 KB
 
-## React 组件 (TUI 视图)  <sub>00-第三方库 · 7 个文件 · 0.47 MB</sub>
-
-- [`00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js`](../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js) — 406.7 KB
-- [`00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js`](../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js) — 20.3 KB
-- [`00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js`](../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js) — 13.3 KB
-- [`00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js`](../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js) — 13.3 KB
-- [`00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js`](../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js) — 12.8 KB
-- [`00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js`](../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js) — 10.3 KB
-- [`00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js`](../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js) — 4.2 KB
-
-## 第三方库 · Azure 身份认证  <sub>00-第三方库 · 2 个文件 · 0.45 MB</sub>
+## 第三方库 · Azure 身份认证  <sub>00-第三方库 · 1 个文件 · 0.43 MB</sub>
 
 - [`00-第三方库/@azure/msal-node/msal-node + proxy-agent.t44yq2d3.js`](../00-第三方库/@azure/msal-node/msal-node + proxy-agent.t44yq2d3.js) — 445.1 KB
-- [`00-第三方库/_未识别/第三方库-Azure身份认证/default.wzx01n9v.js`](../00-第三方库/_未识别/第三方库-Azure身份认证/default.wzx01n9v.js) — 12.0 KB
 
 ## 自托管 Runner  <sub>02-功能模块 · 10 个文件 · 0.44 MB</sub>
 
@@ -957,18 +955,6 @@
 - [`03-入口与运行时/CLI入口-Commander/setupTokenHandler.q3zjg9cb.js`](../03-入口与运行时/CLI入口-Commander/setupTokenHandler.q3zjg9cb.js) — 8.8 KB
 - [`03-入口与运行时/CLI入口-Commander/runPreload.b1nzv31f.js`](../03-入口与运行时/CLI入口-Commander/runPreload.b1nzv31f.js) — 4.4 KB
 
-## 第三方库 · 其他  <sub>00-第三方库 · 9 个文件 · 0.33 MB</sub>
-
-- [`00-第三方库/_未识别/第三方库-其他/chunk-x46ksw6d.js`](../00-第三方库/_未识别/第三方库-其他/chunk-x46ksw6d.js) — 88.8 KB
-- [`00-第三方库/_未识别/第三方库-其他/chunk-jtb5q5xr.js`](../00-第三方库/_未识别/第三方库-其他/chunk-jtb5q5xr.js) — 73.3 KB
-- [`00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js`](../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js) — 40.4 KB
-- [`00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js`](../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js) — 36.4 KB
-- [`00-第三方库/_未识别/第三方库-其他/chunk-7bsbdzwc.js`](../00-第三方库/_未识别/第三方库-其他/chunk-7bsbdzwc.js) — 35.0 KB
-- [`00-第三方库/_未识别/第三方库-其他/zipSync.gv6wj3ch.js`](../00-第三方库/_未识别/第三方库-其他/zipSync.gv6wj3ch.js) — 28.8 KB
-- [`00-第三方库/_未识别/第三方库-其他/chunk-cpfawwsx.js`](../00-第三方库/_未识别/第三方库-其他/chunk-cpfawwsx.js) — 21.1 KB
-- [`00-第三方库/_未识别/第三方库-其他/chunk-10wtfjv0.js`](../00-第三方库/_未识别/第三方库-其他/chunk-10wtfjv0.js) — 6.6 KB
-- [`00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js`](../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js) — 5.4 KB
-
 ## Hooks 钩子  <sub>02-功能模块 · 15 个文件 · 0.28 MB</sub>
 
 - [`02-功能模块/Hooks钩子/hooks-ui.zqb5agde.js`](../02-功能模块/Hooks钩子/hooks-ui.zqb5agde.js) — 81.0 KB
@@ -999,17 +985,16 @@
 ## 第三方库 · @anthropic-ai/sdk  <sub>00-第三方库 · 2 个文件 · 0.25 MB</sub>
 
 - [`00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js`](../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js) — 241.3 KB
-- [`00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js`](../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js) — 10.2 KB
+- [`00-第三方库/@anthropic-ai/sdk/chunk-k58dgrhz.js`](../00-第三方库/@anthropic-ai/sdk/chunk-k58dgrhz.js) — 10.2 KB
 
-## 第三方库 · Google 认证  <sub>00-第三方库 · 2 个文件 · 0.24 MB</sub>
+## 第三方库 · Google 认证  <sub>00-第三方库 · 1 个文件 · 0.24 MB</sub>
 
 - [`00-第三方库/google-auth-library/google-auth-library.m2b2q6sk.js`](../00-第三方库/google-auth-library/google-auth-library.m2b2q6sk.js) — 242.4 KB
-- [`00-第三方库/_未识别/第三方库-Google认证/chunk-jd89krpb.js`](../00-第三方库/_未识别/第三方库-Google认证/chunk-jd89krpb.js) — 0.6 KB
 
 ## 第三方库 · parse5  <sub>00-第三方库 · 2 个文件 · 0.24 MB</sub>
 
 - [`00-第三方库/parse5/parse5.2zwbfepc.js`](../00-第三方库/parse5/parse5.2zwbfepc.js) — 233.4 KB
-- [`00-第三方库/_未识别/第三方库-parse5/chunk-psby6rnv.js`](../00-第三方库/_未识别/第三方库-parse5/chunk-psby6rnv.js) — 8.5 KB
+- [`00-第三方库/parse5/chunk-psby6rnv.js`](../00-第三方库/parse5/chunk-psby6rnv.js) — 8.5 KB
 
 ## 云会话 / Teleport  <sub>02-功能模块 · 20 个文件 · 0.20 MB</sub>
 
@@ -1056,7 +1041,7 @@
 
 - [`00-第三方库/zod/zod.5ef0bk11.js`](../00-第三方库/zod/zod.5ef0bk11.js) — 117.8 KB
 - [`00-第三方库/zod/zod.3g334xwq.js`](../00-第三方库/zod/zod.3g334xwq.js) — 86.5 KB
-- [`00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js`](../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js) — 8.7 KB
+- [`00-第三方库/zod/chunk-6421ybjb.js`](../00-第三方库/zod/chunk-6421ybjb.js) — 8.7 KB
 
 ## 工具: Bash/Shell  <sub>02-功能模块 · 6 个文件 · 0.20 MB</sub>
 
@@ -1105,9 +1090,10 @@
 - [`02-功能模块/斜杠命令-框架/default.dhdcsavf.js`](../02-功能模块/斜杠命令-框架/default.dhdcsavf.js) — 0.9 KB
 - [`02-功能模块/斜杠命令-框架/default.q2xj3ye7.js`](../02-功能模块/斜杠命令-框架/default.q2xj3ye7.js) — 0.8 KB
 
-## 第三方库 · ajv  <sub>00-第三方库 · 1 个文件 · 0.17 MB</sub>
+## 第三方库 · ajv  <sub>00-第三方库 · 2 个文件 · 0.20 MB</sub>
 
 - [`00-第三方库/ajv/ajv.2q22bct4.js`](../00-第三方库/ajv/ajv.2q22bct4.js) — 171.0 KB
+- [`00-第三方库/ajv/chunk-7bsbdzwc.js`](../00-第三方库/ajv/chunk-7bsbdzwc.js) — 35.0 KB
 
 ## 成本 / Token 统计  <sub>02-功能模块 · 6 个文件 · 0.16 MB</sub>
 
@@ -1118,10 +1104,9 @@
 - [`02-功能模块/成本-Token统计/upgrade-ui.4jn476kj.js`](../02-功能模块/成本-Token统计/upgrade-ui.4jn476kj.js) — 10.3 KB
 - [`02-功能模块/成本-Token统计/usage-credits-flow.js`](../02-功能模块/成本-Token统计/usage-credits-flow.js) — 6.2 KB
 
-## 第三方库 · Node polyfill  <sub>00-第三方库 · 2 个文件 · 0.16 MB</sub>
+## 第三方库 · Node polyfill  <sub>00-第三方库 · 1 个文件 · 0.15 MB</sub>
 
 - [`00-第三方库/axios/axios.t0fczzmz.js`](../00-第三方库/axios/axios.t0fczzmz.js) — 153.5 KB
-- [`00-第三方库/_未识别/第三方库-Nodepolyfill/chunk-5y6047zm.js`](../00-第三方库/_未识别/第三方库-Nodepolyfill/chunk-5y6047zm.js) — 8.2 KB
 
 ## 核心工具 · 路径与平台  <sub>01-核心基础设施 · 6 个文件 · 0.15 MB</sub>
 
@@ -1238,8 +1223,8 @@
 
 ## 第三方库 · OpenTelemetry  <sub>00-第三方库 · 2 个文件 · 0.09 MB</sub>
 
-- [`00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js`](../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js) — 84.7 KB
-- [`00-第三方库/_未识别/第三方库-OpenTelemetry/chunk-3zapb67e.js`](../00-第三方库/_未识别/第三方库-OpenTelemetry/chunk-3zapb67e.js) — 6.3 KB
+- [`00-第三方库/@opentelemetry/第三方库-OpenTelemetry.fy6ebeyr.js`](../00-第三方库/@opentelemetry/第三方库-OpenTelemetry.fy6ebeyr.js) — 84.7 KB
+- [`00-第三方库/@opentelemetry/chunk-3zapb67e.js`](../00-第三方库/@opentelemetry/chunk-3zapb67e.js) — 6.3 KB
 
 ## 提示词 / System Prompt  <sub>01-核心基础设施 · 2 个文件 · 0.08 MB</sub>
 
@@ -1287,10 +1272,9 @@
 - [`01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js`](../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js) — 55.2 KB
 - [`01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js`](../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js) — 8.9 KB
 
-## 第三方库 · HTTP 代理  <sub>00-第三方库 · 2 个文件 · 0.06 MB</sub>
+## 第三方库 · HTTP 代理  <sub>00-第三方库 · 1 个文件 · 0.06 MB</sub>
 
 - [`00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js`](../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js) — 62.4 KB
-- [`00-第三方库/_未识别/第三方库-HTTP代理/defaultProvider.27d886dy.js`](../00-第三方库/_未识别/第三方库-HTTP代理/defaultProvider.27d886dy.js) — 0.7 KB
 
 ## 反馈 / 错误上报  <sub>02-功能模块 · 4 个文件 · 0.06 MB</sub>
 
@@ -1370,11 +1354,6 @@
 
 - [`02-功能模块/工具RemoteTrigger/工具RemoteTrigger.dr5cd8kh.js`](../02-功能模块/工具RemoteTrigger/工具RemoteTrigger.dr5cd8kh.js) — 23.1 KB
 
-## 第三方库 · 加密库  <sub>00-第三方库 · 2 个文件 · 0.02 MB</sub>
-
-- [`00-第三方库/_未识别/第三方库-加密库/第三方库-加密库.z54vzq0y.js`](../00-第三方库/_未识别/第三方库-加密库/第三方库-加密库.z54vzq0y.js) — 16.4 KB
-- [`00-第三方库/_未识别/第三方库-加密库/chunk-e0ewk5yt.js`](../00-第三方库/_未识别/第三方库-加密库/chunk-e0ewk5yt.js) — 6.4 KB
-
 ## 工具: TodoWrite/Tasks  <sub>02-功能模块 · 2 个文件 · 0.02 MB</sub>
 
 - [`02-功能模块/工具TodoWrite-Tasks/工具TodoWrite-Tasks.6rz6gx06.js`](../02-功能模块/工具TodoWrite-Tasks/工具TodoWrite-Tasks.6rz6gx06.js) — 12.4 KB
@@ -1432,7 +1411,7 @@
 
 ## React 运行时 / JSX  <sub>00-第三方库 · 3 个文件 · 0.01 MB</sub>
 
-- [`00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js`](../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js) — 9.8 KB
+- [`00-第三方库/react/React运行时-JSX.j03jpdbn.js`](../00-第三方库/react/React运行时-JSX.j03jpdbn.js) — 9.8 KB
 - [`00-第三方库/react/react.kwtapczy.js`](../00-第三方库/react/react.kwtapczy.js) — 1.0 KB
 - [`00-第三方库/react/react.zhnvc798.js`](../00-第三方库/react/react.zhnvc798.js) — 0.7 KB
 
@@ -1845,3 +1824,33 @@
 - [`02-功能模块/协议-Protobuf-gRPC/OTLPLogExporter.rv1gzm0a.js`](../02-功能模块/协议-Protobuf-gRPC/OTLPLogExporter.rv1gzm0a.js) — 1.1 KB
 - [`02-功能模块/协议-Protobuf-gRPC/OTLPMetricExporter.xk2et39h.js`](../02-功能模块/协议-Protobuf-gRPC/OTLPMetricExporter.xk2et39h.js) — 1.1 KB
 - [`02-功能模块/协议-Protobuf-gRPC/OTLPTraceExporter.pre219yw.js`](../02-功能模块/协议-Protobuf-gRPC/OTLPTraceExporter.pre219yw.js) — 1.1 KB
+
+## 第三方库 · qrcode  <sub>00-第三方库 · 1 个文件 · 0.09 MB</sub>
+
+- [`00-第三方库/qrcode/chunk-x46ksw6d.js`](../00-第三方库/qrcode/chunk-x46ksw6d.js) — 88.8 KB
+
+## 第三方库 · semver  <sub>00-第三方库 · 1 个文件 · 0.04 MB</sub>
+
+- [`00-第三方库/semver/chunk-jm5cswvd.js`](../00-第三方库/semver/chunk-jm5cswvd.js) — 40.4 KB
+
+## 第三方库 · graceful-fs  <sub>00-第三方库 · 1 个文件 · 0.04 MB</sub>
+
+- [`00-第三方库/graceful-fs/chunk-8fpdwg2e.js`](../00-第三方库/graceful-fs/chunk-8fpdwg2e.js) — 36.4 KB
+
+## 第三方库 · fflate  <sub>00-第三方库 · 1 个文件 · 0.03 MB</sub>
+
+- [`00-第三方库/fflate/zipSync.gv6wj3ch.js`](../00-第三方库/fflate/zipSync.gv6wj3ch.js) — 28.8 KB
+
+## 第三方库 · supports-color  <sub>00-第三方库 · 1 个文件 · 0.01 MB</sub>
+
+- [`00-第三方库/supports-color/chunk-gdyh44zt.js`](../00-第三方库/supports-color/chunk-gdyh44zt.js) — 5.4 KB
+
+## UI 组件 / TUI  <sub>01-核心基础设施 · 7 个文件 · 0.47 MB</sub>
+
+- [`01-核心基础设施/UI组件-TUI/React组件(TUI视图).ym1wn9mq.js`](../01-核心基础设施/UI组件-TUI/React组件(TUI视图).ym1wn9mq.js) — 406.7 KB
+- [`01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js`](../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js) — 20.3 KB
+- [`01-核心基础设施/UI组件-TUI/chunk-2x6t9gq6.js`](../01-核心基础设施/UI组件-TUI/chunk-2x6t9gq6.js) — 13.3 KB
+- [`01-核心基础设施/UI组件-TUI/chunk-dhg42t8r.js`](../01-核心基础设施/UI组件-TUI/chunk-dhg42t8r.js) — 13.3 KB
+- [`01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js`](../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js) — 12.8 KB
+- [`01-核心基础设施/UI组件-TUI/chunk-yhkvt9ba.js`](../01-核心基础设施/UI组件-TUI/chunk-yhkvt9ba.js) — 10.3 KB
+- [`01-核心基础设施/UI组件-TUI/chunk-jjqazdgg.js`](../01-核心基础设施/UI组件-TUI/chunk-jjqazdgg.js) — 4.2 KB

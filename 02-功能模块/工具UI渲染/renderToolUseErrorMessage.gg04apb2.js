@@ -16,7 +16,7 @@ import { ExpandedTranscriptProvider, OverflowHint, ToolErrorMessage } from "../.
 import { collectToolUseLookupsWithInProgress } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { bf, VL } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
+import { bf, VL } from "../../01-核心基础设施/UI组件-TUI/React组件(TUI视图).ym1wn9mq.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
@@ -35,7 +35,7 @@ import "../../01-核心基础设施/共享小工具-未细化/mcp-tool-base.js";
 import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../差异引擎-Diff/structured-diff.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-jjqazdgg.js";
 import "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";

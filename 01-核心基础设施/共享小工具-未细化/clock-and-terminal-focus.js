@@ -10,7 +10,7 @@
 import { isTerminalFocused, getTerminalFocus, subscribeTerminalFocus } from "./terminal-focus-state.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Qt, De, E, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Qt, De, E, d, At, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 var CLOCK_TICK_INTERVAL_MS = 16;
 F();
 F();

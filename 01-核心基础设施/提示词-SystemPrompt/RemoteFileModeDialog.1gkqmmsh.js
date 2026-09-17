@@ -20,10 +20,10 @@ import { Select } from "../../02-功能模块/交互UI-选择器/交互UI-选择
 import { useKeybinding } from "../共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useGlobalExitKeybinding } from "../共享小工具-未细化/exit-keybinding-hooks.js";
-import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { de } from "../UI组件-TUI/chunk-92g8hxqw.js";
 import { ActionKeybindingHint } from "../共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 F();
 function RemoteFileModeDialog({ repositoryRoot: _, onDone: a, storageV5: w }) {
   let [s, x] = d(!1),

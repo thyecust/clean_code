@@ -16,7 +16,7 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import { E, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { E, C, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { isReplDiffSidebarEnabled } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 F();
 function h(M) {

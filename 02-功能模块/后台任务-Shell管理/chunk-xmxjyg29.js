@@ -42,8 +42,8 @@ import { buildBgDispatcherEnvVars } from "../认证-OAuth登录/chunk-wk0e3dz4.j
 import { provenSameProcessAsync, ownProcStartAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { bgSupervisorNoun, bgSupervisorNounCap, daemonHint } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { killIfSameProcess } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
-import { Itn, nBn, Jye, G0e, Nat, uF } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
-import { Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
+import { Itn, nBn, Jye, G0e, Nat, uF } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
+import { Tf } from "../../00-第三方库/supports-color/chunk-gdyh44zt.js";
 import { enableTerminalMode, disableTerminalMode, DISABLE_SYNCHRONIZED_UPDATE, SHOW_CURSOR, HIDE_CURSOR, DISABLE_WIN32_INPUT_MODE } from "../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
 import { CLEAR_ITERM2_PROGRESS_SEQUENCE } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import {

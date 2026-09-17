@@ -27,7 +27,7 @@ import { useSession } from "../../01-核心基础设施/共享小工具-未细�
 import { createCronScheduler } from "../工具AskUserQuestion/工具AskUserQuestion.72ht85nd.js";
 import { useCommandQueue } from "../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
 import { queueTeammateUserMessage } from "./teammate-task-messages.js";
-import { E, vr, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { E, vr, C, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { isTerminalTaskStatus } from "./chunk-mrfx53ye.js";
 import { SCHEDULE_WAKEUP_TOOL_NAME } from "./chunk-z2t8b9yc.js";
 F();

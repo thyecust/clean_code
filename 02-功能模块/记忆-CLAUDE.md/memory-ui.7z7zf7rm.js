@@ -35,7 +35,7 @@ import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chal
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
-import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { KeybindingScope } from "../../01-核心基础设施/共享小工具-未细化/keybinding-scope.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
@@ -107,7 +107,7 @@ import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../远程控制-Bridge/remote-control-ui-strings.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
 import { openPathInDefaultApp } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
-import { Dn, jFt, kn, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Dn, jFt, kn, E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { escapeMarkupText } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { s, T, O, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";

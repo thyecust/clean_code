@@ -57,10 +57,10 @@ import "../语法高亮-Markdown渲染/markdown-renderer.js";
 import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../差异引擎-Diff/structured-diff.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
+import "../../01-核心基础设施/UI组件-TUI/React组件(TUI视图).ym1wn9mq.js";
 import "../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
 import "../../03-入口与运行时/会话UI-REPL/chunk-vpp75aza.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-jjqazdgg.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-tool-base.js";
@@ -88,7 +88,7 @@ import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
-import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { Qr } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/共享小工具-未细化/managed-settings-status.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../远程控制-Bridge/remote-control-ui-strings.js";
@@ -96,7 +96,7 @@ import "../../01-核心基础设施/共享小工具-未细化/model-1m-context-s
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import "../../01-核心基础设施/共享小工具-未细化/slack-send-tool.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
-import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { re, E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 F();
 function q(s) {

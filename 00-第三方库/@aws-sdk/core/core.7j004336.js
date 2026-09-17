@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { G0n, Lm } from "../../_未识别/第三方库-AWSSDK/chunk-w3axq133.js";
+import { G0n, Lm } from "../chunk-w3axq133.js";
 import { getNodeConfigProviderModule } from "../../../01-核心基础设施/共享小工具-未细化/node-config-provider.js";
-import { HA } from "../../_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js";
-import { gL, cy } from "../../_未识别/第三方库-AWSSDK/chunk-dm9sg03f.js";
+import { HA } from "../chunk-z7ktsccq.js";
+import { gL, cy } from "../chunk-dm9sg03f.js";
 import { nu } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { lhe } from "../../_未识别/第三方库-AWSSDK/chunk-zdrvwe5r.js";
-import { ta } from "../../_未识别/第三方库-AWSSDK/chunk-mwf4pmq2.js";
-import { Rb, z0n, w2e, Oke } from "../../_未识别/第三方库-其他/chunk-jtb5q5xr.js";
+import { lhe } from "../chunk-zdrvwe5r.js";
+import { ta } from "../chunk-mwf4pmq2.js";
+import { Rb, z0n, w2e, Oke } from "../chunk-jtb5q5xr.js";
 import { utilBufferFromModule, utilUtf8Module, utilBase64Module } from "../../../02-功能模块/模型接入-Bedrock-Vertex/chunk-p991cddr.js";
 import { awsSdkCoreClientModule } from "../../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
 import { smithyContextModule } from "../../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
@@ -7034,7 +7034,7 @@ var iW = commonJS(function (Dd) {
       if (!process.env[Nd])
         try {
           let { getInstanceMetadataEndpoint: e, httpRequest: t } =
-              await import("../../_未识别/第三方库-AWSSDK/ENV_CMDS_RELATIVE_URI.zcs53e9c.js"),
+              await import("../ENV_CMDS_RELATIVE_URI.zcs53e9c.js"),
             r = await e();
           return (await t({ ...r, path: _d })).toString();
         } catch (e) {}

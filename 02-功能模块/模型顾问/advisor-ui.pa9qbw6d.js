@@ -18,7 +18,7 @@ import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { baseModelSupportsAdvisor, isValidAdvisorModelString, getAdvisorModelAliases, isValidAdvisorModel, isAdvisorModelPendingCreditsConsent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import { useMainLoopModel } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
@@ -26,7 +26,7 @@ import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { formatAdvisorConsentHint, applyAdvisorModelSetting } from "../../01-核心基础设施/共享小工具-未细化/advisor-command.js";
 import { validateModelAvailability, formatModelDisplayName } from "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
-import { E, vr, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { E, vr, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function lo(Do) {

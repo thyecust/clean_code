@@ -38,7 +38,7 @@ import "../../01-核心基础设施/共享小工具-未细化/authentication-sta
 import "../模型接入-Bedrock-Vertex/bedrock-setup-wizard.js";
 import "../模型接入-Bedrock-Vertex/vertex-setup-wizard.js";
 import "../向导UI-Wizard/向导UI-Wizard.7xe5wk62.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-2x6t9gq6.js";
 import "../通知-Notifications/通知-Notifications.g4xng0pg.js";
 import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";

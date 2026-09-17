@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { klt } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry/chunk-3zapb67e.js";
+import { klt } from "../../00-第三方库/@opentelemetry/chunk-3zapb67e.js";
 import { m3e } from "../../00-第三方库/@grpc/grpc-js/grpc-js.5zkynjxh.js";
 import { otlpTransformerModule } from "./遥测-OpenTelemetry.0xhcvej6.js";
-import "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
+import "../../00-第三方库/@opentelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
 import { commonJS } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 var i = commonJS(function (c) {
   Object.defineProperty(c, "__esModule", { value: !0 });

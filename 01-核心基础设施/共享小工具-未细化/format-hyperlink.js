@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
-import { uee, Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
+import { uee, Tf } from "../../00-第三方库/supports-color/chunk-gdyh44zt.js";
 import { isLightThemeName } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import { stripAnsi } from "./text-sanitization.js";
 var n = "\x1B]8;;",

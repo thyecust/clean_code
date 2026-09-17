@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Uze, F } from "../_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Uze, F } from "./React运行时-JSX.j03jpdbn.js";
 F();
 var r = Uze;
 var _ = function (e) {

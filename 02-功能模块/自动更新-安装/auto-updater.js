@@ -26,7 +26,7 @@ import { getSettingsForSource, getInitialSettings } from "../../01-核心基础�
 import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import { gracefulShutdownSync } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { claudeDownloadsHttpClient } from "../插件系统/chunk-ajtn749s.js";
-import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
+import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { access as Ae, chmod, writeFile as Me } from "fs/promises";

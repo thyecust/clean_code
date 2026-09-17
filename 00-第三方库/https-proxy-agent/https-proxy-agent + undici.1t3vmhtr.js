@@ -2270,7 +2270,7 @@ function resolveStsEndpointForProxyUrl(e) {
 async function getAWSClientProxyConfig(e) {
   let t = await getAWSProxyRequestHandler(e);
   if (!t) return {};
-  let { defaultProvider: r } = await import("../_未识别/第三方库-HTTP代理/defaultProvider.27d886dy.js");
+  let { defaultProvider: r } = await import("../@aws-sdk/defaultProvider.27d886dy.js");
   return {
     requestHandler: t,
     credentials: r({

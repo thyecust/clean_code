@@ -17,7 +17,7 @@ import { describeStorageError, logForDebugging } from "../../01-核心基础设�
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isTeamLead } from "../Teammates团队/teammate-context.js";
 import { subscribeToTaskListUpdates, resetTaskList, getTaskListId, sanitizeStorageId, getTaskListDir, readTaskList, readAllTasks } from "../Teammates团队/chunk-g6nvp9mm.js";
-import { Qt, re, De, E, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Qt, re, De, E, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { hasTaskListTools } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 F();
 import { watch } from "fs";

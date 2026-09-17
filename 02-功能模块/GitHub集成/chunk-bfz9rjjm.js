@@ -13,11 +13,11 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
-import { uee, Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
+import { uee, Tf } from "../../00-第三方库/supports-color/chunk-gdyh44zt.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { formatPrUrlWithTemplate } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { E, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { E, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 function DiffStatLabel(Te) {
   let j = _(10),
     { added: T, removed: k, bold: S } = Te;

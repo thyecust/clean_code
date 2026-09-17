@@ -32,7 +32,7 @@ import { RejectedToolUseDiff, ToolUseDiff } from "../差异引擎-Diff/diff-tool
 import "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Dn, kn, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Dn, kn, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 F();
 function renderToolUseMessage({ file_path: r }, { verbose: s }) {
   if (!r) return null;

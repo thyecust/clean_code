@@ -73,7 +73,7 @@ import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未
 import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { useFocusTrap } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
+import { qp, ss, Jd } from "../../01-核心基础设施/UI组件-TUI/chunk-yhkvt9ba.js";
 import { isChannelsEnabled } from "../插件系统/chunk-rbjz1q03.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { isChannelsPolicyBlocked } from "../插件系统/channel-gate.js";
@@ -119,10 +119,10 @@ import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未
 import { flattenNodeText, useStateWithGetter, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { Table, ModelPicker, SelectableRow } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI-REPL/notification-queue.js";
-import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
+import { hn } from "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
 import { ThemePicker } from "../状态栏-主题/theme-picker.js";
 import { useVimModeInput, SearchInput } from "../Vim模式/Vim模式.nnewe0gf.js";
-import { WA, Vx, Sv, Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { WA, Vx, Sv, Qr, de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { RemoteHomeSettingsDialog } from "../记忆-CLAUDE.md/chunk-54xx04er.js";
 import { recordExternalIncludesDecision, ClaudeMdExternalIncludesDialog } from "../记忆-CLAUDE.md/claude-md-external-includes-dialog.js";
 import { getEffectiveAutoContinueAtUsageLimit, isAutoContinueSettingUserControlled } from "../状态管理-AppState/状态管理-AppState.wyzjbwp5.js";
@@ -169,7 +169,7 @@ import {
   At,
   WFt,
   F,
-} from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+} from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { isSkillDoctorEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 import { figures, formatWorkflowSizeGuidelineLabel, isWorkflowSizeGuidelineConfigured } from "../Teammates团队/chunk-mrfx53ye.js";
 import { quotePowerShellLiteral } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";

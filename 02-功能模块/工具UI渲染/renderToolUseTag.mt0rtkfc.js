@@ -21,13 +21,13 @@ import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-vie
 import { ToolResultContent } from "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import "../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-jjqazdgg.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import "../语法高亮-Markdown渲染/markdown-renderer.js";
-import { hye, _We } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
+import { hye, _We } from "../../01-核心基础设施/UI组件-TUI/React组件(TUI视图).ym1wn9mq.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";

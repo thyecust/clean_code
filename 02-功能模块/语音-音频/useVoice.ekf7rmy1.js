@@ -28,7 +28,7 @@ import { useClock } from "../../01-核心基础设施/共享小工具-未细化/
 import { probeVoiceConnectivity, isVoiceStreamAvailable, connectVoiceStream } from "./chunk-6098r6ax.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
-import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { E, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { getResolvedLanguage } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 F();
 var w = 1e4,

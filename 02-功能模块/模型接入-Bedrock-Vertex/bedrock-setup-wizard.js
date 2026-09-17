@@ -38,9 +38,9 @@ import { resolveStsEndpointForProxyUrl, getAWSClientProxyConfig, getAWSProxyRequ
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { WizardProvider, useWizard, WizardStepFrame } from "../向导UI-Wizard/向导UI-Wizard.7xe5wk62.js";
-import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
+import { hn } from "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
-import { XL } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
+import { XL } from "../../01-核心基础设施/UI组件-TUI/chunk-2x6t9gq6.js";
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
@@ -49,7 +49,7 @@ import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细
 import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { fetchHttpHandlerModule } from "./chunk-p991cddr.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { toESM, MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -545,11 +545,11 @@ async function Uo(n) {
         ...(l && { credentials: l }),
       },
       { STSClient: m, GetCallerIdentityCommand: g } =
-        await import("../../00-第三方库/_未识别/第三方库-AWSSDK/GetCallerIdentityCommand.z4m8wtvr.js"),
+        await import("../../00-第三方库/@aws-sdk/GetCallerIdentityCommand.z4m8wtvr.js"),
       O = await withTimeout(new m(f).send(new g({})), s, oo),
       b = O.Arn ?? O.UserId ?? "(unknown)",
       { BedrockClient: h, ListInferenceProfilesCommand: M } =
-        await import("../../00-第三方库/_未识别/第三方库-AWSSDK/BedrockClient.8qdd522x.js"),
+        await import("../../00-第三方库/@aws-sdk/BedrockClient.8qdd522x.js"),
       y = new h(f),
       B = [],
       q;

@@ -52,7 +52,7 @@ import {
   createPermissionRetryMessage,
   isAutoModeSetupCommandEnabled,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
+import { hn } from "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { applyPermissionUpdate, persistPermissionUpdate, getAlwaysAllowRules, getAlwaysDenyRules, getAlwaysAskRules } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { MAX_DISPLAY_TEXT_UNITS, MAX_DISPLAY_PAYLOAD_UNITS, prepareDisplayText, toUniqueDisplayLabels, replaceLineBreaks, formatValueListForDisplay } from "../策略限制-PolicyLimits/chunk-8sw91yn5.js";
@@ -63,11 +63,11 @@ import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import "../../03-入口与运行时/会话UI-REPL/scroll-box.js";
-import { qp, ss, a0e, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
+import { qp, ss, a0e, Jd } from "../../01-核心基础设施/UI组件-TUI/chunk-yhkvt9ba.js";
 import { useAutoModeDenials } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { useVimModeInput, SearchInput } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
-import { Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { Qr, de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { AddDirectoryToWorkspaceDialog } from "./add-directory-to-workspace.js";
 import { MAX_AUTO_MODE_ENTRIES, MAX_PERMISSION_RULE_LENGTH, describeAutoModeWriteError, validateAutoModeEntries, stripVariationSelectors } from "./chunk-4wrkmv3h.js";
@@ -88,7 +88,7 @@ import "../远程控制-Bridge/remote-control-ui-strings.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import "../工作树-Git/git-operations.js";
-import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { s, se, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";

@@ -17,7 +17,7 @@ import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化
 import { readBoundedFile, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { sigtermThenKill, reapDetachedRepl, captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
-import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
+import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { lstat, readdir, unlink } from "fs/promises";

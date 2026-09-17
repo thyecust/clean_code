@@ -40,10 +40,10 @@ import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js"
 import "../../02-功能模块/后台任务-Shell管理/bg-rendezvous-server.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import { COORDINATOR_FORK_REFUSAL, spawnBackgroundFork, deriveBackgroundSeed } from "./会话UI-REPL.qs63rzfp.js";
-import { git, mWe, fZt, ZIt } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
+import { git, mWe, fZt, ZIt } from "../../01-核心基础设施/UI组件-TUI/React组件(TUI视图).ym1wn9mq.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
-import { E, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { E, C, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { isCoordinatorModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
 import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";

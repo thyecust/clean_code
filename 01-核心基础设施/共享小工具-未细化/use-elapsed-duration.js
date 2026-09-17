@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { formatDuration } from "../核心工具-字符串与文本/ansi-text-utils.js";
 import { useClock } from "./use-clock.js";
-import { re, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { re, At, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 F();
 function useElapsedDuration(c, o, t = 1000, i = 0, m) {
   let e = useClock(),

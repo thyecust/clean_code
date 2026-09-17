@@ -16,8 +16,8 @@ import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核�
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { cs, IBe, Wet, vRt, ike, rHn, qar } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
-import { Zd } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
+import { Tf } from "../../00-第三方库/supports-color/chunk-gdyh44zt.js";
+import { Zd } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import { getCurrentKillRingText, getNextKillRingEntry, useKillRing } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
@@ -42,7 +42,7 @@ import { useVoiceLevelSmoother, useVoiceSelector } from "../../01-核心基础�
 import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import { buildDraftText, isBashModeShortcut } from "../../01-核心基础设施/共享小工具-未细化/bash-mode-draft-text.js";
-import { re, De, E, vr, dn, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { re, De, E, vr, dn, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { LARGE_PASTE_CHAR_THRESHOLD, readClipboardImage, isImageFilePath, readPastedImageFile } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { getGraphemeSegmenter, getFirstGrapheme, getWordSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { getCurrentPlatform, getMacOSMajorVersion } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";

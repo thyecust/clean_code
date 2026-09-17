@@ -47,7 +47,7 @@ async function ensureAgentsWorkspaceTrust(r, i, o) {
     case "ask": {
       let [{ runSteps: t }, { TrustDialog: s }, { getCommands: n }] =
           await Promise.all([
-            import("../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js"),
+            import("../../00-第三方库/_未识别/chunk-cq8x5zt4.js"),
             import("./TrustDialog.syp7kdw2.js"),
             import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
           ]),

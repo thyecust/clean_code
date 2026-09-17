@@ -77,7 +77,7 @@ import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未
 import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { qp, ss } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
+import { qp, ss } from "../../01-核心基础设施/UI组件-TUI/chunk-yhkvt9ba.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import { useMcpConnections, useActivePlugins, useAppStateSession, useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
@@ -180,7 +180,7 @@ import { OFFICIAL_MARKETPLACE_NAME, LINK_MODE_WINDOWS_UNSUPPORTED_MESSAGE, getSo
 import { isPluginBlockedByPolicy, areCommandPluginSourcesDisabledByPolicy, COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE, getPluginTrustMessage, getPluginSuggestionMarketplaces, isMarketplaceSourceDeclaredByPolicy } from "./plugin-source-policy.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { getPluginEditableScopes, editableScopeOf } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
-import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
+import { hn } from "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
 import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import { useVimModeInput, SearchInput } from "../Vim模式/Vim模式.nnewe0gf.js";
 import {
@@ -198,8 +198,8 @@ import {
   createPluginVersionTag,
   buildVersionTagMessage,
 } from "./chunk-akd9b588.js";
-import { Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { XL } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
+import { Qr, de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
+import { XL } from "../../01-核心基础设施/UI组件-TUI/chunk-2x6t9gq6.js";
 import {
   refreshMarketplaceOnCatalogMiss,
   logPluginInstallRefreshOutcome,
@@ -259,7 +259,7 @@ import {
   C,
   d,
   F,
-} from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+} from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { isSkillDoctorEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import {

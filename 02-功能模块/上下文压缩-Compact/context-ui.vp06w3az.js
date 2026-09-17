@@ -23,7 +23,7 @@ import { getRemoteTransport, REMOTE_WAIT_STOPPED_MESSAGE, hasRemoteCapability } 
 import { formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { fl } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
+import { fl } from "../../01-核心基础设施/UI组件-TUI/chunk-jjqazdgg.js";
 import { analyzeContextUsage, sliceFromLastCompactBoundary } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { WEB_FETCH_TOOL_NAME } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { renderToAnsiText } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";

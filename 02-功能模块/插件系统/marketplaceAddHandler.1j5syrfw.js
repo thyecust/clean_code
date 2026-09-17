@@ -103,7 +103,7 @@ import {
 } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { resolveMissingDependencies } from "./plugin-dependency-resolution.js";
-import { Dn, kn, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Dn, kn, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import {
   INLINE_PLUGIN_SOURCE,

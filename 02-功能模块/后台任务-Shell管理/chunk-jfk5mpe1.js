@@ -71,7 +71,7 @@ import { fromJobState } from "../../01-核心基础设施/共享小工具-未细
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { createBackendHandle, createTranscriptSource } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { getLocalBinDir } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
-import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
+import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { CONTROL_PROMPT_PREFIX_RE } from "../../01-核心基础设施/共享小工具-未细化/user-prompt-text.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";

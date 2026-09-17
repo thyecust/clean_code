@@ -22,8 +22,8 @@ import { useSession } from "../../01-核心基础设施/共享小工具-未细�
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { hn } from "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
+import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js";
@@ -45,10 +45,10 @@ import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js
 import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../差异引擎-Diff/structured-diff.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
+import "../../01-核心基础设施/UI组件-TUI/React组件(TUI视图).ym1wn9mq.js";
 import "../../03-入口与运行时/会话UI-REPL/tool-result-display.js";
 import "../../03-入口与运行时/会话UI-REPL/chunk-vpp75aza.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-jjqazdgg.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
@@ -82,7 +82,7 @@ import "../../01-核心基础设施/共享小工具-未细化/model-1m-context-s
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import "../../01-核心基础设施/共享小工具-未细化/slack-send-tool.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
-import { re, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { re, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 import { mkdir, writeFile } from "fs/promises";
