@@ -11,7 +11,7 @@ import { parseShortId, Qs } from "../../00-第三方库/lodash/lodash.2x3q7cfh.j
 import { createLazyValue } from "./lazy-value.js";
 import { getTeamName } from "../../02-功能模块/Teammates团队/teammate-context.js";
 import { readTeamFileAsync } from "../../02-功能模块/Teammates团队/team-file-store.js";
-import { maxSlugLength, slugify, b5, jD, bP, aRe, lRe } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { maxSlugLength, slugify, AGENT_REF_PATTERN, parseAgentDisplayName, buildRecipientListing, resolveInProcessRecipient, createShortEntityRef } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jpe } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
 import { listPeerSessions, getBridgeSessionRows } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { SEND_MESSAGE_TOOL_NAME } from "./send-message-constants.js";
@@ -33,19 +33,19 @@ async function resolveSendMessagePin({
     p = Object.hasOwn(n.sendMessagePins, g) ? n.sendMessagePins[g] : void 0;
   if (p !== void 0 && p.id === i.id) return { kind: "proceed", pin: p };
   if (p !== void 0) {
-    let y = jD(t) !== null;
+    let y = parseAgentDisplayName(t) !== null;
     if (!y && t === i.name && t !== p.name)
       return { kind: "proceed", pin: void 0 };
     if (!y) {
       let S = getTeamName(n.teamContext),
         [P, M, R] = await Promise.all([S ? readTeamFileAsync(S, a) : null, listPeerSessions(), jpe(e, l)]),
-        x = bP(n, {
+        x = buildRecipientListing(n, {
           teamFile: P,
           sessions: M,
           cloud: R.sessions,
           bridge: getBridgeSessionRows(e),
         }),
-        f = aRe(x.byName, g);
+        f = resolveInProcessRecipient(x.byName, g);
       return {
         kind: "rebound",
         name: i.name,
@@ -55,7 +55,7 @@ async function resolveSendMessagePin({
       };
     }
   }
-  let u = { id: i.id, name: i.name, ref: lRe(i.kind, i.id) };
+  let u = { id: i.id, name: i.name, ref: createShortEntityRef(i.kind, i.id) };
   return (d.setSendMessagePin(g, u), { kind: "proceed", pin: u });
 }
 function b(e) {
@@ -82,7 +82,7 @@ var A = createLazyValue(() =>
       id: s()
         .max(1024)
         .refine((e) => parseShortId(e) !== null),
-      ref: s().regex(new RegExp(`^${b5}$`)),
+      ref: s().regex(new RegExp(`^${AGENT_REF_PATTERN}$`)),
     }),
   }),
 );

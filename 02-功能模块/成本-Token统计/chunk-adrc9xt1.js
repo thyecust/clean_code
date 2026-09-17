@@ -16,7 +16,7 @@ import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { Aw, getMainLoopModel, isFableFamilyOrPinnedModel, cf, Hse, uRe, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getOverageBillingOverride, getMainLoopModel, isFableFamilyOrPinnedModel, isSemverGreaterThan, isSemverString, getSanitizedShortCode, getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -72,7 +72,7 @@ F();
 function pit() {
   let s = antEnv.CLAUDE_CODE_FORCE_FIRST_LAUNCH;
   if (s === void 0) return;
-  if (Hse(s)) return { pretendLastSeen: s };
+  if (isSemverString(s)) return { pretendLastSeen: s };
   return Ie(s) ? { pretendLastSeen: void 0 } : void 0;
 }
 function YW(
@@ -91,10 +91,10 @@ function YW(
     DD_SOURCEMAP_GROUP: "darwin",
   }.VERSION,
 ) {
-  if (!Hse(a)) return !1;
-  if (!Hse(s)) return !0;
+  if (!isSemverString(a)) return !1;
+  if (!isSemverString(s)) return !0;
   try {
-    return cf(a, s);
+    return isSemverGreaterThan(a, s);
   } catch {
     return !0;
   }
@@ -398,7 +398,7 @@ function Bt(be, ae, cs, ds) {
 var Cs = ["skip", "jump", "look", "spin"];
 function xs() {
   if (appStateStore.clawdEntranceTaken) return;
-  if (!pit() && !YW(ee().lastClawdEntranceVersion)) return;
+  if (!pit() && !YW(getGlobalConfig().lastClawdEntranceVersion)) return;
   return (
     (appStateStore.clawdEntranceTaken = !0),
     Cs[Math.floor(Math.random() * Cs.length)]
@@ -416,10 +416,10 @@ function jIt(bs) {
     Zl;
   if (Jl[2] !== Oo || Jl[3] !== Et)
     ((Ql = () => {
-      if (Oo === void 0 || !YW(ee().lastClawdEntranceVersion)) {
+      if (Oo === void 0 || !YW(getGlobalConfig().lastClawdEntranceVersion)) {
         return;
       }
-      Te(ou, Et);
+      saveGlobalConfig(ou, Et);
     }),
       (Zl = [Oo, Et]),
       (Jl[2] = Oo),
@@ -608,7 +608,7 @@ function vl({
   async function pe(m = !0) {
     if (m) c({ s: "loading" });
     try {
-      let A = Aw(),
+      let A = getOverageBillingOverride(),
         re;
       if (A)
         re = {
@@ -633,7 +633,7 @@ function vl({
       (ie(as.length > 0 ? as : rs === "USD" ? DEFAULT_USD_CREDIT_BUNDLES : []),
         Fe(Mo?.stripe_product_id));
       let Ao = Mo?.expiry_policy_months ?? Ae?.expiry_policy_months ?? null;
-      if ((te(Ao), H("tengu_satchel_banjo", !1))) {
+      if ((te(Ao), getFeatureValue_CACHED_MAY_BE_STALE("tengu_satchel_banjo", !1))) {
         if (Ao !== null)
           if (Number.isInteger(Ao) && Ao > 0) logFeatureOk("extra_usage_expiry_notice");
           else logFeatureBad("extra_usage_expiry_notice", "invalid_months");
@@ -698,9 +698,9 @@ function vl({
             !m)
           )
             return !1;
-          if (!Aw())
+          if (!getOverageBillingOverride())
             (fl(k),
-              await Te((A) => {
+              await saveGlobalConfig((A) => {
                 if (!A.oauthAccount) return A;
                 if (A.oauthAccount.hasExtraUsageEnabled === !0) return A;
                 return {
@@ -754,7 +754,7 @@ function vl({
       enabled: m,
       threshold_cents: A,
       reload_to_cents: re,
-      currency: uRe(R),
+      currency: getSanitizedShortCode(R),
     });
     let oe = updateAutoReloadSettings(m, A, re, R, b),
       Ae = m
@@ -782,7 +782,7 @@ function vl({
       (logEvent("tengu_extra_usage_inline_dialog_buy_confirm", {
         amount_cents: m,
         preset: !!A,
-        currency: uRe(R),
+        currency: getSanitizedShortCode(R),
       }),
       c({ s: "buy_purchasing" }),
       P)
@@ -838,7 +838,7 @@ function vl({
       old_cents: A ?? void 0,
       new_cents: m ?? void 0,
       unlimited: m === null,
-      currency: uRe(R),
+      currency: getSanitizedShortCode(R),
     }),
       c({ s: "adjusting" }));
     let re = await updateOverageSpendLimit(m, R, b);
@@ -1284,7 +1284,7 @@ function rd(s, a) {
   return Math.round((c(a) - c(s)) / 86400000);
 }
 function xl(s, a) {
-  if (!H("tengu_juniper_bassoon", !1)) return null;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_juniper_bassoon", !1)) return null;
   let c = null;
   for (let b of s?.promo_tranches ?? []) {
     let w = b.remaining_amount_minor_units,
@@ -1315,7 +1315,7 @@ function xl(s, a) {
   return { text: `${g} expires ${k}${x}`, urgent: !1 };
 }
 function ad(s) {
-  if (!H("tengu_satchel_banjo", !1)) return null;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_satchel_banjo", !1)) return null;
   if (s === null || !Number.isInteger(s) || s <= 0) return null;
   return `Usage credits are valid for ${s} ${s === 1 ? "month" : "months"}. Learn more: ${EXTRA_USAGE_ARTICLE_URL}`;
 }

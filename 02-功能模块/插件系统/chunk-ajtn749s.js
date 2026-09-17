@@ -70,7 +70,7 @@ import {
 } from "./chunk-7s6mt1vg.js";
 import { Nr, jge, jBe, Vn, zt, mke, g8t, h8t } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
-  ht,
+  httpClient,
   refreshOAuthToken,
   isInvalidGrantError,
   getAuthTokenSource,
@@ -83,7 +83,7 @@ import {
   OAuthRefreshLockContendedError as lge,
   withOAuthRefreshLock,
   checkAndRefreshOAuthTokenIfNeeded,
-  H,
+  getFeatureValue_CACHED_MAY_BE_STALE,
   isWorkspacePersistedTrusted,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
@@ -225,7 +225,7 @@ function _1e() {
   return V();
 }
 function V() {
-  return H("tengu_plugin_command_source_refresh", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_plugin_command_source_refresh", !0);
 }
 var ot = 30000;
 function afe() {
@@ -1463,7 +1463,7 @@ function hwt() {
   return getAuthTokenSource().source === "claude.ai" && !Nn();
 }
 function O(e) {
-  return H(e.flagName, !1) === !0;
+  return getFeatureValue_CACHED_MAY_BE_STALE(e.flagName, !1) === !0;
 }
 function vGt(e) {
   if (isRemoteOrCoworkSession()) return !1;
@@ -1772,7 +1772,7 @@ async function We(e) {
   try {
     for (let r = 0; r < ne; r++) {
       let o = r * Ye,
-        s = await ht.get(`${wn}&limit=${Ye}&offset=${o}`, {
+        s = await httpClient.get(`${wn}&limit=${Ye}&offset=${o}`, {
           auth: "teleport-org",
           isBackground: e.isBackground,
           timeout: yn,
@@ -1817,7 +1817,7 @@ async function kn(e, t, r, o) {
     let S = function () {
         ((p = !0), w.destroy(Error("plugin download stream stalled")));
       },
-      d = await ht.get(s, {
+      d = await httpClient.get(s, {
         auth: "teleport-org",
         isBackground: o.isBackground,
         timeout: oe,
@@ -1898,7 +1898,7 @@ async function kn(e, t, r, o) {
 }
 async function En(e, t, r) {
   try {
-    let o = await ht.get(e, {
+    let o = await httpClient.get(e, {
       auth: "teleport-org",
       isBackground: r.isBackground,
       timeout: oe,
@@ -1993,7 +1993,7 @@ async function Rn() {
 }
 async function qe() {
   try {
-    let e = await ht.get("/worker/skill-manifest", {
+    let e = await httpClient.get("/worker/skill-manifest", {
       host: "ccr-session",
       auth: "session-jwt",
       headers: { "anthropic-version": "2023-06-01" },

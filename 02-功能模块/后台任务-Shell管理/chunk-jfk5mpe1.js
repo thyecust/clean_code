@@ -28,7 +28,7 @@ import { removeGuiHostEntrypoint, g4, removeBgDispatcherPlanEnvVars } from "../.
 import { $U, iL, UU, Qet, NBe, dke } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { resolveWrappedClaudeInvocation, resolveClaudeInvocation, getInstalledClaudePath, applyProcessWrapper, findInstalledVersionBinary } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
-import { Wi, Ms, H, ee, c5t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { readBoundedFile, getVersionForAnalytics, getFeatureValue_CACHED_MAY_BE_STALE, getGlobalConfig, getDaemonColdStart } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { te, gm, mW, i_, dp, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { quarantineJobTranscript, resolveJobTranscript } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
@@ -878,7 +878,7 @@ function Wt(t) {
 async function qe(t, e = !1) {
   if (t.stderr === null || e)
     t.stderr = t.stderrPath
-      ? ((await Wi(t.stderrPath, 1048576)) ?? "").slice(0, 2000)
+      ? ((await readBoundedFile(t.stderrPath, 1048576)) ?? "").slice(0, 2000)
       : "";
   return t.stderr;
 }
@@ -1391,7 +1391,7 @@ var He = 1048576,
   Sn = 6000,
   En = 30000;
 function bn() {
-  let t = H("tengu_bg_attach_stall_ms", _n);
+  let t = getFeatureValue_CACHED_MAY_BE_STALE("tengu_bg_attach_stall_ms", _n);
   if (t === 0) return 0;
   let e = getLauncherArgv().length > 0 ? wn : 2000;
   return Math.max(e, t);
@@ -2525,7 +2525,7 @@ async function Dn(t, e) {
           logEvent("tengu_bg_skew_nudge", {
             converged: !0,
             duration_ms: Date.now() - o,
-            daemon_version: Ms(_.version),
+            daemon_version: getVersionForAnalytics(_.version),
             skewed: k,
           });
         return "up";
@@ -2560,7 +2560,7 @@ async function Dn(t, e) {
       restarting: d === "restarting",
       etimeout: d === "etimeout",
       enoconn: d === "enoconn",
-      daemon_version: Ms(s),
+      daemon_version: getVersionForAnalytics(s),
       ...(m && { connect_errno: m }),
     }),
     "down"
@@ -2636,9 +2636,9 @@ async function or(t, e, o) {
   if (
     !_ &&
     !t.forceTransient &&
-    c5t() === "ask" &&
+    getDaemonColdStart() === "ask" &&
     (await sr()) &&
-    !ee().daemonInstallPromptDismissed
+    !getGlobalConfig().daemonInstallPromptDismissed
   )
     return (
       logEvent("tengu_bg_daemon_cold_start_ask", {}),
@@ -2903,7 +2903,7 @@ function In(t) {
 }
 async function On(t, e, o, c, s) {
   if (getLauncherConfigError() !== null) return !1;
-  if (!H("tengu_bg_binary_takeover", !0)) return !1;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_bg_binary_takeover", !0)) return !1;
   let d =
       t !==
       {
@@ -2926,9 +2926,9 @@ async function On(t, e, o, c, s) {
   if (await ir()) return !1;
   if (
     !e &&
-    c5t() === "ask" &&
+    getDaemonColdStart() === "ask" &&
     (await sr()) &&
-    !ee().daemonInstallPromptDismissed
+    !getGlobalConfig().daemonInstallPromptDismissed
   )
     return !1;
   let w = await realpath(tt()).catch(() => null);
@@ -3007,7 +3007,7 @@ async function On(t, e, o, c, s) {
       daemon_age_ms: Date.now() - E.startedAt,
       via_prefix: T,
       via_version: N,
-      daemon_version: Ms(E.version),
+      daemon_version: getVersionForAnalytics(E.version),
     }),
     !0
   );

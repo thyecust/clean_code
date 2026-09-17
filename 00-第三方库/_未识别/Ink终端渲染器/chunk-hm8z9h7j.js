@@ -44,7 +44,7 @@ import {
   DISABLE_MOUSE_TRACKING,
   getMouseTrackingSequence,
 } from "../../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
-import { ph } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isSemverAtLeast } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatOscSequence, wrapOscForMultiplexer, OSC_CODES, formatHyperlinkStart, ITERM2_OSC_COMMANDS, ITERM2_PROGRESS_STATES } from "../../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { e } from "../../react/react.kwtapczy.js";
 import { Qt, re, De, V, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -245,8 +245,8 @@ function Jye() {
   if (a.ConEmuANSI || a.ConEmuPID || a.ConEmuTask) return !0;
   let r = b.coerce(a.TERM_PROGRAM_VERSION);
   if (!r) return !1;
-  if (a.TERM_PROGRAM === "ghostty") return ph(r.version, "1.2.0");
-  if (a.TERM_PROGRAM === "iTerm.app") return ph(r.version, "3.6.6");
+  if (a.TERM_PROGRAM === "ghostty") return isSemverAtLeast(r.version, "1.2.0");
+  if (a.TERM_PROGRAM === "iTerm.app") return isSemverAtLeast(r.version, "3.6.6");
   return !1;
 }
 var ee = [

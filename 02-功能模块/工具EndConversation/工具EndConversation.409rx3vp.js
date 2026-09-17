@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSessionEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { END_CONVERSATION_TOOL_NAME, END_CONVERSATION_GB_FLAG } from "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
 import { isEndConversationDisabled, appendEndedByModelSuffix } from "../../01-核心基础设施/共享小工具-未细化/ended-by-model.js";
@@ -91,7 +91,7 @@ function isEndConversationToolEnabled(e) {
   let t = getSessionEntrypoint();
   if (t === void 0) return !1;
   if (!r(e)) return !1;
-  let { enabled: o, allowedEntrypoints: s } = l(H(END_CONVERSATION_GB_FLAG, !1));
+  let { enabled: o, allowedEntrypoints: s } = l(getFeatureValue_CACHED_MAY_BE_STALE(END_CONVERSATION_GB_FLAG, !1));
   if (isEndConversationDisabled()) return !1;
   return o && s.test(t);
 }

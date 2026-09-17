@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 200 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Wi, w5, E_, Mse, df, H, NR, EP, x5, tBe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { readBoundedFile, shutdownFirstPartyEventLogging, logFirstPartyEventAsync, initializeFirstPartyEventLogging, initializeGrowthBook, getFeatureValue_CACHED_MAY_BE_STALE, watchGlobalConfigThroughStorage, seedInstallIDs, shutdownDatadog, trackDatadogEvent } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { lit as S, fromEnum, fromNumber, concatSafe } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
@@ -524,7 +524,7 @@ async function St(t, e = {}) {
         O = !1,
         V = e.spawnPty === void 0,
         q = () => {
-          if (!H("tengu_bg_spare_enable", !0)) {
+          if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_bg_spare_enable", !0)) {
             if (v) (v.dispose(), (v = null));
             return;
           }
@@ -710,7 +710,7 @@ async function St(t, e = {}) {
                   "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
                 DD_SOURCEMAP_GROUP: "darwin",
               }.VERSION &&
-            H("tengu_bg_spare_enable", !0)
+            getFeatureValue_CACHED_MAY_BE_STALE("tengu_bg_spare_enable", !0)
           ) {
             let c = v;
             v = null;
@@ -1043,7 +1043,7 @@ async function St(t, e = {}) {
             }
           }
           if (!le && isBackgroundAttachUpgradeEnabled()) {
-            let c = H("tengu_bg_prewarm_per_sweep", 3),
+            let c = getFeatureValue_CACHED_MAY_BE_STALE("tengu_bg_prewarm_per_sweep", 3),
               I = 12;
             for (let j of m.values()) {
               if (c <= 0 || I <= 0) break;
@@ -1113,9 +1113,9 @@ async function St(t, e = {}) {
       }
       Be.unref();
       async function _e() {
-        let m = H("tengu_bg_prewarm_burst_delay_ms", 15000);
+        let m = getFeatureValue_CACHED_MAY_BE_STALE("tengu_bg_prewarm_burst_delay_ms", 15000);
         if ((await sleep(m, void 0, { unref: !0 }), _)) return;
-        let T = H("tengu_bg_prewarm_burst_concurrency", 3);
+        let T = getFeatureValue_CACHED_MAY_BE_STALE("tengu_bg_prewarm_burst_concurrency", 3);
         if (T <= 0 || !isBackgroundAttachUpgradeEnabled()) return;
         let K = await Xe(e.storageV5),
           ee = new Set(
@@ -1555,7 +1555,7 @@ async function cr(t, e, o = {}) {
           N());
         return;
       }
-      (o.storageV5 ? readStoredPtyPid(o.storageV5, _) : Wi(B, MAX_PTY_PID_FILE_BYTES))
+      (o.storageV5 ? readStoredPtyPid(o.storageV5, _) : readBoundedFile(B, MAX_PTY_PID_FILE_BYTES))
         .then((O) => {
           if (O === null) return;
           if (!isProcessRunning(Number(O)))
@@ -2097,7 +2097,7 @@ async function It(t) {
     "supervisor",
     `\u2500\u2500\u2500 daemon start \u2500\u2500\u2500 version=${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION} pid=${process.pid} origin=${r}`,
   ),
-    df());
+    initializeGrowthBook());
   let C = await getVerifiedDaemonLock(LOCK_VERIFY_ATTEMPTS, E),
     N = !1;
   if (C && C.origin === "transient" && r !== "transient") {
@@ -2349,7 +2349,7 @@ async function It(t) {
       if (
         c !== null &&
         isNewerBuildTimestamp(q.target, c.target) &&
-        H("tengu_daemon_refuse_stale_upgrade", !0)
+        getFeatureValue_CACHED_MAY_BE_STALE("tengu_daemon_refuse_stale_upgrade", !0)
       ) {
         if (((Q = null), he !== c.target))
           ((he = c.target),
@@ -2378,7 +2378,7 @@ async function It(t) {
         De = !1;
       }
       let ae = X?.busyWorkerCount() ?? 0;
-      if (ae > 0 && c !== null && H("tengu_daemon_upgrade_defer_busy", !0)) {
+      if (ae > 0 && c !== null && getFeatureValue_CACHED_MAY_BE_STALE("tengu_daemon_upgrade_defer_busy", !0)) {
         if (Q === null)
           Q = {
             target: c.target,
@@ -2872,7 +2872,7 @@ function Nt(t) {
 }
 async function se(t) {
   (await Promise.race([
-    Promise.all([w5(), x5()]),
+    Promise.all([shutdownFirstPartyEventLogging(), shutdownDatadog()]),
     sleep(500, void 0, { unref: !0 }),
   ]).catch(() => {}),
     process.exit(t));
@@ -2904,7 +2904,7 @@ async function daemonMain(t, e) {
   if (Ur.has(k) && !isDaemonWorkerRegistryEnabled()) return fleetGateRejected(`daemon ${k}`);
   let D = pinStorageV5(e);
   if (isHoverRestEnabled() && D !== void 0) {
-    (zR({ storageV5: D }), NR(D));
+    (zR({ storageV5: D }), watchGlobalConfigThroughStorage(D));
     let [
         { composePolicyLimitsClient: _, primePolicyLimitsCache: B },
         { primeFastPathCredentials: E },
@@ -2920,9 +2920,9 @@ async function daemonMain(t, e) {
       _({ storageV5: D, credentials: C }),
       await E(C),
       await B(D),
-      await EP(D));
+      await seedInstallIDs(D));
   }
-  switch ((Mse(D), k)) {
+  switch ((initializeFirstPartyEventLogging(D), k)) {
     case "list": {
       Re(d, ["--json"]);
       let { handleListAllKinds: _ } = await import("../Bridge-RemoteControl/handleListAllKinds.tcxk2866.js");
@@ -2982,8 +2982,8 @@ async function daemonMain(t, e) {
           logError(V),
           logFeatureBad("daemon_start", "daemon_start_crash"),
           await Promise.all([
-            E_("tengu_daemon_startup_crash", {}),
-            tBe("tengu_daemon_startup_crash", {}),
+            logFirstPartyEventAsync("tengu_daemon_startup_crash", {}),
+            trackDatadogEvent("tengu_daemon_startup_crash", {}),
           ]),
           se(1)
         );
@@ -3000,7 +3000,7 @@ async function daemonMain(t, e) {
           U(
             `\`claude daemon ${k}\` is disabled in this version \u2014 the daemon runs on demand and exits when the last client disconnects.`,
           ),
-          await E_("tengu_daemon_install", { ok: !1, disabled: !0 }),
+          await logFirstPartyEventAsync("tengu_daemon_install", { ok: !1, disabled: !0 }),
           se(1)
         );
       if (!(await ole()))
@@ -3023,7 +3023,7 @@ async function daemonMain(t, e) {
       if (_)
         return (
           logFeatureBad("daemon_service_install", "daemon_service_install_launcher"),
-          await E_("tengu_daemon_install", { ok: !1, launcher: !0 }),
+          await logFirstPartyEventAsync("tengu_daemon_install", { ok: !1, launcher: !0 }),
           U(`install refused: ${_}`),
           se(1)
         );
@@ -3031,7 +3031,7 @@ async function daemonMain(t, e) {
       if (B.kind === "foreground")
         return (
           logFeatureBad("daemon_service_install", "daemon_service_install_foreground"),
-          await E_("tengu_daemon_install", { ok: !1, foreground: !0 }),
+          await logFirstPartyEventAsync("tengu_daemon_install", { ok: !1, foreground: !0 }),
           U(Ot("install", B.lock.pid)),
           se(1)
         );
@@ -3043,7 +3043,7 @@ async function daemonMain(t, e) {
               ? "daemon_service_install_holder_unverified"
               : "daemon_service_install_holder_alive",
           ),
-          await E_("tengu_daemon_install", {
+          await logFirstPartyEventAsync("tengu_daemon_install", {
             ok: !1,
             holderAlive: !0,
             holderUnverified: B.outcome === "unverified",
@@ -3057,7 +3057,7 @@ async function daemonMain(t, e) {
             "daemon_service_install",
             "daemon_service_install_holder_unknown_origin",
           ),
-          await E_("tengu_daemon_install", {
+          await logFirstPartyEventAsync("tengu_daemon_install", {
             ok: !1,
             holderAlive: !0,
             holderUnknownOrigin: !0,
@@ -3069,7 +3069,7 @@ async function daemonMain(t, e) {
       let E = await OWe({ jsonPath: r, logPath: a });
       if (!E.ok) {
         if (
-          (await E_("tengu_daemon_install", { ok: !1 }),
+          (await logFirstPartyEventAsync("tengu_daemon_install", { ok: !1 }),
           logFeatureBad("daemon_service_install", "daemon_service_install_failed"),
           U(`install failed: ${E.error}`),
           E.servicePath)
@@ -3080,7 +3080,7 @@ async function daemonMain(t, e) {
       (logFeatureOk("daemon_service_install"), F(`installed: ${E.servicePath}`));
       let v = await kPt(K0, D);
       if (
-        (await E_("tengu_daemon_install", { ok: !0, reachable: v !== null }), v)
+        (await logFirstPartyEventAsync("tengu_daemon_install", { ok: !0, reachable: v !== null }), v)
       )
         F(
           `running: pid=${v.pid} origin=${v.origin} (managed by ${getCurrentPlatform() === "macos" ? "launchd" : "systemd"})`,
@@ -3098,7 +3098,7 @@ async function daemonMain(t, e) {
           U(
             `\`claude daemon ${k}\` is disabled in this version \u2014 the daemon runs on demand and exits when the last client disconnects.`,
           ),
-          await E_("tengu_daemon_install", { ok: !1, disabled: !0 }),
+          await logFirstPartyEventAsync("tengu_daemon_install", { ok: !1, disabled: !0 }),
           se(1)
         );
       if (!(await ole()))
@@ -3118,7 +3118,7 @@ async function daemonMain(t, e) {
       if (_)
         return (
           logFeatureBad("daemon_service_install", "daemon_service_install_launcher"),
-          await E_("tengu_daemon_control", {
+          await logFirstPartyEventAsync("tengu_daemon_control", {
             op_start: k === "start",
             op_restart: k === "restart",
             ok: !1,
@@ -3131,7 +3131,7 @@ async function daemonMain(t, e) {
       if (B.kind === "foreground")
         return (
           logFeatureBad("daemon_service_install", "daemon_service_install_foreground"),
-          await E_("tengu_daemon_control", {
+          await logFirstPartyEventAsync("tengu_daemon_control", {
             op_start: k === "start",
             op_restart: k === "restart",
             ok: !1,
@@ -3148,7 +3148,7 @@ async function daemonMain(t, e) {
               ? "daemon_service_install_holder_unverified"
               : "daemon_service_install_holder_alive",
           ),
-          await E_("tengu_daemon_control", {
+          await logFirstPartyEventAsync("tengu_daemon_control", {
             op_start: k === "start",
             op_restart: k === "restart",
             holderUnverified: B.outcome === "unverified",
@@ -3164,7 +3164,7 @@ async function daemonMain(t, e) {
             "daemon_service_install",
             "daemon_service_install_holder_unknown_origin",
           ),
-          await E_("tengu_daemon_control", {
+          await logFirstPartyEventAsync("tengu_daemon_control", {
             op_start: k === "start",
             op_restart: k === "restart",
             ok: !1,
@@ -3185,7 +3185,7 @@ async function daemonMain(t, e) {
         let C = await OWe({ jsonPath: r, logPath: a }),
           N = C.ok && (await kPt(K0, D)) !== null;
         if (
-          (await E_("tengu_daemon_control", {
+          (await logFirstPartyEventAsync("tengu_daemon_control", {
             op_start: k === "start",
             op_restart: k === "restart",
             ok: C.ok,
@@ -3202,7 +3202,7 @@ async function daemonMain(t, e) {
       let v = await (k === "start" ? vPt() : V$n());
       if (!v.ok)
         return (
-          await E_("tengu_daemon_control", {
+          await logFirstPartyEventAsync("tengu_daemon_control", {
             op_start: k === "start",
             op_restart: k === "restart",
             ok: !1,
@@ -3212,7 +3212,7 @@ async function daemonMain(t, e) {
         );
       let s = (await kPt(K0, D)) !== null;
       if (
-        (await E_("tengu_daemon_control", {
+        (await logFirstPartyEventAsync("tengu_daemon_control", {
           op_start: k === "start",
           op_restart: k === "restart",
           ok: !0,
@@ -3228,7 +3228,7 @@ async function daemonMain(t, e) {
       Re(d, []);
       let _ = await XHe();
       if (
-        (await E_("tengu_daemon_control", { op_uninstall: !0, ok: _.ok }), _.ok)
+        (await logFirstPartyEventAsync("tengu_daemon_control", { op_uninstall: !0, ok: _.ok }), _.ok)
       )
         (logFeatureOk("daemon_service_uninstall"), F("uninstalled"));
       else
@@ -3253,7 +3253,7 @@ async function daemonMain(t, e) {
           if (L) logFeatureOk("daemon_stop");
           else logFeatureBad("daemon_stop", ne);
           return (
-            await E_("tengu_daemon_control", {
+            await logFirstPartyEventAsync("tengu_daemon_control", {
               op_stop: !0,
               ok: L,
               reaped: X,
@@ -3493,7 +3493,7 @@ async function en(t, e, o, r) {
         ? null
         : `spawned but never became reachable within ${K0 / 1000}s`;
   if (w !== null) {
-    let d = p ? redactDaemonNonce(((await Wi(p, 1048576)) ?? "").trim()).slice(-2000) : "",
+    let d = p ? redactDaemonNonce(((await readBoundedFile(p, 1048576)) ?? "").trim()).slice(-2000) : "",
       k = await Le(e).catch(() => null);
     if (
       (k?.write(
@@ -3504,14 +3504,14 @@ async function en(t, e, o, r) {
       await k?.close(),
       !a)
     )
-      await E_("tengu_daemon_upgrade_respawn_unreachable", {
+      await logFirstPartyEventAsync("tengu_daemon_upgrade_respawn_unreachable", {
         stderr_captured: d.length > 0,
       });
   }
   if (p) Lr(dirname(p), { recursive: !0, force: !0 }).catch(() => {});
   if (a)
     (logError(`daemon: upgrade self-respawn failed: ${l(a)}`),
-      await E_("tengu_bg_daemon_spawn_failed", {
+      await logFirstPartyEventAsync("tengu_bg_daemon_spawn_failed", {
         respawn: !0,
         errno_enoent: A(a) === "ENOENT",
         errno_eacces: A(a) === "EACCES",

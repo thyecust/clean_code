@@ -10,7 +10,7 @@
 import { oo, bh, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { sr, kw, mc, o0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getSessionStateStore, runWithAgentContext, getAgentDepth, getWorkflowRunMetadata } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getParentSessionId } from "../Teammates团队/teammate-context.js";
 import {
   FORK_AGENT,
@@ -57,7 +57,7 @@ async function spawnForkFromDirective(t, e, a, m, p) {
     n = bh(r),
     { taskRegistry: s } = e,
     T = Date.now(),
-    d = mc(e.agentContext) + 1,
+    d = getAgentDepth(e.agentContext) + 1,
     S = resolveSubagentModel(FORK_AGENT.model, e.options.mainLoopModel, "inherit", getToolPermissionContext(e).mode),
     u = registerBackgroundAgentTask({
       agentId: n,
@@ -73,7 +73,7 @@ async function spawnForkFromDirective(t, e, a, m, p) {
     }),
     k = u.abortController;
   (e.agentLifecycle.registerName(r, oo(n)),
-    sr().agentSpawned.emit({
+    getSessionStateStore().agentSpawned.emit({
       agentId: n,
       agentType: FORK_AGENT.agentType,
       parentAgentId: e.agentId,
@@ -102,11 +102,11 @@ async function spawnForkFromDirective(t, e, a, m, p) {
       isBuiltIn: !0,
       invocationKind: "spawn",
       invocationEmitted: !1,
-      ...o0(e.agentContext),
+      ...getWorkflowRunMetadata(e.agentContext),
     },
     P = s.takeConcurrencySlot();
   return (
-    kw(A, () =>
+    runWithAgentContext(A, () =>
       runAsyncAgent({
         taskId: u.agentId,
         abortController: k,

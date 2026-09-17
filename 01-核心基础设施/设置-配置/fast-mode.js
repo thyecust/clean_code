@@ -15,13 +15,13 @@ import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.
 import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
 import { FAST_MODE_GLYPH } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import {
-  dU,
-  RR,
-  Q$e,
-  af,
-  QH,
-  Gve,
-  Ese,
+  getFastModeUnavailableMessage,
+  getFastModeModelDisplayName,
+  getFastModeModelId,
+  modelSupportsFastMode,
+  clearFastModeCooldown,
+  getFastModeModelCosts,
+  formatCostsPerMtok,
   getMainLoopModel,
   getDefaultMainLoopModelSetting,
   getCanonicalName,
@@ -45,8 +45,8 @@ function renderFastModeIndicator(t = !0, e = !1) {
 var FAST_MODE_HOOK_TIMEOUT_MS = 8000,
   FAST_MODE_CANCELLED_MESSAGE = "Fast mode unchanged (cancelled)";
 function getFastModeTargetModel(t) {
-  if (af(getConfiguredSessionModel({ ...t, toolPermissionContext: { mode: "default" } }))) return;
-  let e = Q$e();
+  if (modelSupportsFastMode(getConfiguredSessionModel({ ...t, toolPermissionContext: { mode: "default" } }))) return;
+  let e = getFastModeModelId();
   return parseUserSpecifiedModel(e) === parseUserSpecifiedModel(getDefaultMainLoopModelSetting()) ? null : e;
 }
 async function vetFastModeTargetModel(t, e, o) {
@@ -78,7 +78,7 @@ function formatFastModeRemoteResult(t, e) {
   }
 }
 function applyFastModeSetting(t, e, o, m = !0, a, f = UNVETTED_FAST_MODE_TARGET) {
-  QH();
+  clearFastModeCooldown();
   let S = () => {
       if (m) return;
       cZ({ ...(RL() ?? {}), fastMode: e });
@@ -99,7 +99,7 @@ function applyFastModeSetting(t, e, o, m = !0, a, f = UNVETTED_FAST_MODE_TARGET)
     S();
     let r = jn()?.sendControlRequest({
       subtype: "apply_flag_settings",
-      settings: { fastMode: e ? !0 : null, ...(e && { model: Q$e() }) },
+      settings: { fastMode: e ? !0 : null, ...(e && { model: getFastModeModelId() }) },
     });
     if (!r) return (c(), Promise.resolve(void 0));
     return r.then(
@@ -135,7 +135,7 @@ async function runFastModeToggle(t, e, o, m, a, f = !0, S, c, r, s) {
   let d = await enqueueSessionTask(t, async () => {
     if (c) await withDeadline(c(), FAST_MODE_HOOK_TIMEOUT_MS);
     if (r?.aborted) return { kind: "refused", refusal: FAST_MODE_CANCELLED_MESSAGE };
-    let M = dU();
+    let M = getFastModeUnavailableMessage();
     if (M) return { kind: "refused", refusal: `Fast mode unavailable: ${M}` };
     let F = UNVETTED_FAST_MODE_TARGET,
       p = [];
@@ -163,10 +163,10 @@ async function runFastModeToggle(t, e, o, m, a, f = !0, S, c, r, s) {
     e)
   ) {
     let M = renderFastModeIndicator(!0),
-      F = d.willPromote ? `${MODEL_SET_SUFFIX}${formatInlineCode(RR())}` : "",
+      F = d.willPromote ? `${MODEL_SET_SUFFIX}${formatInlineCode(getFastModeModelDisplayName())}` : "",
       p = getMainLoopModel(),
-      h = af(p) ? getCanonicalName(p) : "claude-opus-5",
-      k = Ese(Gve(h)),
+      h = modelSupportsFastMode(p) ? getCanonicalName(p) : "claude-opus-5",
+      k = formatCostsPerMtok(getFastModeModelCosts(h)),
       g = f ? "" : " (this session only)",
       w =
         d.hookMessages.length > 0

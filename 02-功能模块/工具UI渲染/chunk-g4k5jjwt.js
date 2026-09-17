@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { truncateToCodeUnits, takeLastCodeUnits, removeLoneSurrogates, countOccurrences, CONTROL_CHARS_REGEX } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { S6, LQe, mUe, zC } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isUltrathinkEnabled, hasUltrathinkTrigger, findUltrathinkMatches, pickRainbowColor } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useQueuedMessageContext } from "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { js } from "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
@@ -106,7 +106,7 @@ function UserPromptText(Je) {
     f = typeof l === "object",
     Pe;
   if (T[0] !== C || T[1] !== l || T[2] !== f)
-    ((Pe = !f && !C && l.length <= me && !(S6() && LQe(l))),
+    ((Pe = !f && !C && l.length <= me && !(isUltrathinkEnabled() && hasUltrathinkTrigger(l))),
       (T[0] = C),
       (T[1] = l),
       (T[2] = f),
@@ -274,7 +274,7 @@ function P(ve) {
   if (ze[0] !== X || ze[1] !== D) {
     ue = EARLY_RETURN_SENTINEL;
     bb0: {
-      let Le = S6() ? mUe(D) : [];
+      let Le = isUltrathinkEnabled() ? findUltrathinkMatches(D) : [];
       if (Le.length === 0) {
         ue = e(t, { color: X, children: D });
         break bb0;
@@ -287,7 +287,7 @@ function P(ve) {
             e(t, { color: X, children: D.slice(k, E.start) }, `plain-${k}`),
           );
         for (let Q = E.start; Q < E.end; Q++)
-          V.push(e(t, { color: zC(Q - E.start), children: D[Q] }, `rb-${Q}`));
+          V.push(e(t, { color: pickRainbowColor(Q - E.start), children: D[Q] }, `rb-${Q}`));
         k = E.end;
       }
       if (k < D.length)

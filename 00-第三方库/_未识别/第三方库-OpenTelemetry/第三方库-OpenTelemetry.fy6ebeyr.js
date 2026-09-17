@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ls, Mc, V$e } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { otelApiModule, otelCoreModule, otelResourcesModule } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { commonJS } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var H = commonJS(function (Oe) {
   Object.defineProperty(Oe, "__esModule", { value: !0 });
@@ -599,7 +599,7 @@ var St = commonJS(function (Mt) {
     void 0;
   var Qs = b(),
     G = d(),
-    en = Ls(),
+    en = otelApiModule(),
     mt = $e(),
     pt = dt(),
     tn = z();
@@ -919,7 +919,7 @@ var Tt = commonJS(function (xt) {
   Object.defineProperty(xt, "__esModule", { value: !0 });
   xt.LastValueAggregator = xt.LastValueAccumulation = void 0;
   var on = b(),
-    U = Mc(),
+    U = otelCoreModule(),
     an = d();
   class B {
     startTime;
@@ -1132,7 +1132,7 @@ var Vt = commonJS(function (Lt) {
     Lt.SumAggregation =
     Lt.DropAggregation =
       void 0;
-  var dn = Ls(),
+  var dn = otelApiModule(),
     p = Ct(),
     g = d();
   class Y {
@@ -1300,7 +1300,7 @@ var pe = commonJS(function (jt) {
 var fe = commonJS(function (Kt) {
   Object.defineProperty(Kt, "__esModule", { value: !0 });
   Kt.MetricReader = void 0;
-  var zt = Ls(),
+  var zt = otelApiModule(),
     Wt = _(),
     Xt = pe();
   class Yt {
@@ -1377,8 +1377,8 @@ var fe = commonJS(function (Kt) {
 var rr = commonJS(function (er) {
   Object.defineProperty(er, "__esModule", { value: !0 });
   er.PeriodicExportingMetricReader = void 0;
-  var Z = Ls(),
-    Q = Mc(),
+  var Z = otelApiModule(),
+    Q = otelCoreModule(),
     On = fe(),
     Zt = _(),
     A = d();
@@ -1496,7 +1496,7 @@ var rr = commonJS(function (er) {
 var ar = commonJS(function (nr) {
   Object.defineProperty(nr, "__esModule", { value: !0 });
   nr.InMemoryMetricExporter = void 0;
-  var ir = Mc();
+  var ir = otelCoreModule();
   class sr {
     _shutdown = !1;
     _aggregationTemporality;
@@ -1533,7 +1533,7 @@ var ar = commonJS(function (nr) {
 var hr = commonJS(function (ur) {
   Object.defineProperty(ur, "__esModule", { value: !0 });
   ur.ConsoleMetricExporter = void 0;
-  var cr = Mc(),
+  var cr = otelCoreModule(),
     Pn = pe();
   class Me {
     _shutdown = !1;
@@ -1613,7 +1613,7 @@ var V = commonJS(function (Mr) {
     Mr.createInstrumentDescriptorWithView =
     Mr.createInstrumentDescriptor =
       void 0;
-  var pr = Ls(),
+  var pr = otelApiModule(),
     Rn = _();
   function Nn(e, t, r) {
     if (!fr(e))
@@ -1669,8 +1669,8 @@ var ee = commonJS(function (vr) {
     vr.UpDownCounterInstrument =
     vr.SyncInstrument =
       void 0;
-  var I = Ls(),
-    qn = Mc();
+  var I = otelApiModule(),
+    qn = otelCoreModule();
   class O {
     _writableMetricStorage;
     _descriptor;
@@ -2186,7 +2186,7 @@ var si = commonJS(function (ri) {
   Object.defineProperty(ri, "__esModule", { value: !0 });
   ri.MetricStorageRegistry = void 0;
   var mo = V(),
-    ti = Ls(),
+    ti = otelApiModule(),
     te = ei();
   class Te {
     _sharedRegistry = new Map();
@@ -2289,7 +2289,7 @@ var ci = commonJS(function (oi) {
 var di = commonJS(function (_i) {
   Object.defineProperty(_i, "__esModule", { value: !0 });
   _i.BatchObservableResultImpl = _i.ObservableResultImpl = void 0;
-  var R = Ls(),
+  var R = otelApiModule(),
     ui = k(),
     po = ee();
   class li {
@@ -2350,7 +2350,7 @@ var di = commonJS(function (_i) {
 var Si = commonJS(function (Mi) {
   Object.defineProperty(Mi, "__esModule", { value: !0 });
   Mi.ObservableRegistry = void 0;
-  var Mo = Ls(),
+  var Mo = otelApiModule(),
     mi = ee(),
     pi = di(),
     Ee = _();
@@ -2667,7 +2667,7 @@ var Di = commonJS(function (Ui) {
 var Fi = commonJS(function (Vi) {
   Object.defineProperty(Vi, "__esModule", { value: !0 });
   Vi.MetricCollector = void 0;
-  var Fo = Mc();
+  var Fo = otelCoreModule();
   class qi {
     _sharedState;
     _metricReader;
@@ -2870,8 +2870,8 @@ var os = commonJS(function (ss) {
 var ls = commonJS(function (cs) {
   Object.defineProperty(cs, "__esModule", { value: !0 });
   cs.MeterProvider = void 0;
-  var se = Ls(),
-    Ko = V$e(),
+  var se = otelApiModule(),
+    Ko = otelResourcesModule(),
     Jo = Di(),
     Zo = Fi(),
     Qo = os();

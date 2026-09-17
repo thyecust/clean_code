@@ -17,7 +17,7 @@ import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { createSystemInfoMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getSettingsForSource, autoModeConfigSchema } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { pi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { emitTaskNotification } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { OIe, wSe } from "../权限系统/chunk-4wrkmv3h.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -111,7 +111,7 @@ function X(n, a, s) {
     }),
     w)
   )
-    pi(n, s, { skipTranscript: !0, ambient: !0 });
+    emitTaskNotification(n, s, { skipTranscript: !0, ambient: !0 });
 }
 F();
 function J(n) {

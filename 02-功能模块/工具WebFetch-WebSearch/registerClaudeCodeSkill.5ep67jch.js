@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 98 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { sQ, isUsing3PServices, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isSemverAtMost, isUsing3PServices, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -106,7 +106,7 @@ ${e.join(`
       "-",
     ),
     b = Qst(s)
-      .filter(([e]) => sQ(e, y))
+      .filter(([e]) => isSemverAtMost(e, y))
       .slice(-10)
       .reverse();
   if (b.length > 0) {
@@ -162,7 +162,7 @@ function registerClaudeCodeSkill({ disabled: a = !1 } = {}) {
     userInvocable: !0,
     files: () => v().then((s) => s.SKILL_FILES),
     isEnabled() {
-      return !a && H("tengu_birch_kettle", !1);
+      return !a && getFeatureValue_CACHED_MAY_BE_STALE("tengu_birch_kettle", !1);
     },
     async getPromptForCommand(s, n) {
       logEvent("tengu_claude_code_skill_loaded", { has_args: s.trim().length > 0 });

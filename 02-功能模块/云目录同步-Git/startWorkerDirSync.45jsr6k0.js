@@ -19,7 +19,7 @@ import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱�
 import { truncateToCodeUnits, toWellFormed, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ht, nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { httpClient, normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
@@ -5315,7 +5315,7 @@ function di(e) {
   );
 }
 function Sd(e) {
-  let t = nc(e);
+  let t = normalizePathSegment(e);
   return t === ".git" || /^git~\d+$/.test(t);
 }
 var Id = 600,
@@ -7960,7 +7960,7 @@ function ra() {
     async beginUpload(e, t, r, o) {
       if (r === "" || !Number.isSafeInteger(t)) return { kind: "failed" };
       let l = await _i("begin", o, () =>
-        ht.post(
+        httpClient.post(
           "/worker/synced_file/uploads",
           {
             path: wi(e),
@@ -7989,7 +7989,7 @@ function ra() {
     async commitUpload(e, t, r, o, l) {
       if (o === "") return { kind: "failed" };
       let h = await _i("commit", l, () =>
-        ht.post(
+        httpClient.post(
           "/worker/synced_file/uploads/commit",
           {
             path: wi(e),
@@ -8010,7 +8010,7 @@ function ra() {
     },
     async getDownload(e, t) {
       let r = await _i("download", t, () =>
-        ht.get(
+        httpClient.get(
           `/worker/synced_file/download?path=${encodeURIComponent(wi(e))}`,
           { ...yi, timeout: ea, signal: t },
         ),

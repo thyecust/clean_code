@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 70 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { bCt } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { mcpCallRequestSchema } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createAbortController } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { Si } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -104,7 +104,7 @@ function dt(e) {
   return "";
 }
 async function ft(e, t) {
-  let a = bCt().safeParse(e);
+  let a = mcpCallRequestSchema().safeParse(e);
   if (!a.success) return r("tool_error", `invalid request: ${a.error.message}`);
   let i = a.data;
   if (getCurrentPlatform() === "windows")

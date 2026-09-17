@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { XC, $f, H, od } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { hasFreshGrowthBookFeatures, getFeatureValueWithSource_CACHED_MAY_BE_STALE, getFeatureValue_CACHED_MAY_BE_STALE, checkGate_CACHED_OR_BLOCKING } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 var o = "tengu_violin_pegbox";
 function n() {
@@ -15,42 +15,42 @@ function n() {
 }
 async function r() {
   try {
-    return await od(o);
+    return await checkGate_CACHED_OR_BLOCKING(o);
   } catch {
     return !1;
   }
 }
 function i() {
   try {
-    return H(o, !1);
+    return getFeatureValue_CACHED_MAY_BE_STALE(o, !1);
   } catch {
     return !1;
   }
 }
 async function l() {
   try {
-    return await od("tengu_violin_strad");
+    return await checkGate_CACHED_OR_BLOCKING("tengu_violin_strad");
   } catch {
     return !1;
   }
 }
 function u() {
   try {
-    return H("tengu_violin_strad", !1);
+    return getFeatureValue_CACHED_MAY_BE_STALE("tengu_violin_strad", !1);
   } catch {
     return !1;
   }
 }
 async function isViolinWoodEnabled() {
   try {
-    return (await od("tengu_violin_wood")) && (!n() || (await r()));
+    return (await checkGate_CACHED_OR_BLOCKING("tengu_violin_wood")) && (!n() || (await r()));
   } catch {
     return !1;
   }
 }
 function isViolinWoodEnabledCached() {
   try {
-    return H("tengu_violin_wood", !1) && (!n() || i());
+    return getFeatureValue_CACHED_MAY_BE_STALE("tengu_violin_wood", !1) && (!n() || i());
   } catch {
     return !1;
   }
@@ -63,7 +63,7 @@ function isSettingsToCloudEnabledCached() {
 }
 function isViolinWoodServedOff() {
   try {
-    let { value: e, source: t } = $f("tengu_violin_wood", !1);
+    let { value: e, source: t } = getFeatureValueWithSource_CACHED_MAY_BE_STALE("tengu_violin_wood", !1);
     return e === !1 && s(t);
   } catch {
     return !1;
@@ -76,13 +76,13 @@ function s(e) {
     case "disabled":
       return !0;
     case "fallback":
-      return XC();
+      return hasFreshGrowthBookFeatures();
     case "disk":
       return !1;
   }
 }
 function c(e) {
-  return s($f(e, !1).source);
+  return s(getFeatureValueWithSource_CACHED_MAY_BE_STALE(e, !1).source);
 }
 function isAccountGateServed(e) {
   try {
@@ -93,14 +93,14 @@ function isAccountGateServed(e) {
 }
 async function isViolinAmatiEnabled() {
   try {
-    return await od("tengu_violin_amati");
+    return await checkGate_CACHED_OR_BLOCKING("tengu_violin_amati");
   } catch {
     return !1;
   }
 }
 function isViolinAmatiEnabledCached() {
   try {
-    return H("tengu_violin_amati", !1);
+    return getFeatureValue_CACHED_MAY_BE_STALE("tengu_violin_amati", !1);
   } catch {
     return !1;
   }

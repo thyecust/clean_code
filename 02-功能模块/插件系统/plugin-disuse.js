@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { MC, $t } from "./chunk-7s6mt1vg.js";
 import { getStrictKnownMarketplaces } from "./plugin-source-policy.js";
@@ -24,7 +24,7 @@ async function getDisusedPlugins() {
     if (s.length === 0) return [];
     let u = getPolicyPluginNames(),
       l = MC(),
-      g = ee().numStartups,
+      g = getGlobalConfig().numStartups,
       c = Date.now(),
       r = [];
     for (let t of s) {
@@ -54,7 +54,7 @@ function getPluginDaysSinceLastUse(e) {
   let s = getPluginUsage(e);
   if (!s) return null;
   if (hasPendingPluginUsage(e)) return 0;
-  return getPluginUsageStaleness(s, ee().numStartups, Date.now()).daysSinceLastUse;
+  return getPluginUsageStaleness(s, getGlobalConfig().numStartups, Date.now()).daysSinceLastUse;
 }
 function p(e) {
   return Boolean(

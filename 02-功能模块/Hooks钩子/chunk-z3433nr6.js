@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { $f, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValueWithSource_CACHED_MAY_BE_STALE, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -37,7 +37,7 @@ import { INLINE_PLUGIN_SOURCE, BUILTIN_PLUGIN_SOURCE } from "../插件系统/chu
 import { Sfe, Fwt } from "../../01-核心基础设施/共享小工具-未细化/chunk-smrdr8gc.js";
 var ESt = "tengu_plugin_hooks_modules";
 var M = () => !1;
-var s3t = () => a.CLAUDE_CODE_ENABLE_FUNCTION_HOOKS ?? H(ESt, M());
+var s3t = () => a.CLAUDE_CODE_ENABLE_FUNCTION_HOOKS ?? getFeatureValue_CACHED_MAY_BE_STALE(ESt, M());
 var le =
   "overridden by the CLAUDE_CODE_ENABLE_FUNCTION_HOOKS environment variable";
 var ce = {
@@ -51,7 +51,7 @@ var ce = {
 function dfr() {
   return a.CLAUDE_CODE_ENABLE_FUNCTION_HOOKS !== void 0
     ? le
-    : ce[$f(ESt, M()).source];
+    : ce[getFeatureValueWithSource_CACHED_MAY_BE_STALE(ESt, M()).source];
 }
 var uD = ["userSettings", "flagSettings", "policySettings"];
 function i3t(e) {

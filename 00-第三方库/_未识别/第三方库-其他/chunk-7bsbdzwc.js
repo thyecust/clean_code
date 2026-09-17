@@ -18,7 +18,7 @@ import { writeToStderr } from "../../../02-功能模块/后台任务-Shell管理
 import { logMCPError, logMCPDebug } from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { writeDiagnosticsEvent } from "../../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { jt } from "../../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
-import { getAnthropicApiKeyWithSource, hasStoredOAuthToken, getOauthAccountInfo, H, getWorkspacePersistedTrustKey } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getAnthropicApiKeyWithSource, hasStoredOAuthToken, getOauthAccountInfo, getFeatureValue_CACHED_MAY_BE_STALE, getWorkspacePersistedTrustKey } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../lodash/lodash.0vqzb8ad.js";
 import { lke } from "../../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { replaceControlChars } from "../../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
@@ -923,7 +923,7 @@ function U(e, t, r) {
   return (e.set(t, s), s);
 }
 function Xe() {
-  return H("tengu_mcp_claudeai_eligibility_gate", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_mcp_claudeai_eligibility_gate", !1);
 }
 function cct(e) {
   return e.type === "claudeai-proxy" && e.eligible === !1 && Xe();

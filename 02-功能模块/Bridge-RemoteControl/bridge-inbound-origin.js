@@ -14,7 +14,7 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isSlackEntrypoint, isTeamsEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { Pse } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { extractMessageOrigin } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { MCP_SEND_MESSAGE_ORIGIN, SLACK_BOT_ORIGIN, HEARTH_AGENT_ORIGIN } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { N3t } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { s, T, O, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -149,7 +149,7 @@ function buildRelayTurnFields({ isRelayHuman: e, isSynthetic: r, ccrTurnId: t })
 }
 function classifyInboundOrigin(e, r, t, a, d, o) {
   let f = parsePeerEnvelopeSender(e);
-  if (f) return { kind: "peer", from: f, inbound_origin: t, ...Pse(e) };
+  if (f) return { kind: "peer", from: f, inbound_origin: t, ...extractMessageOrigin(e) };
   if (t === v) return p(t);
   if (t && G.has(t)) return p(t);
   let l = j(t);
@@ -179,7 +179,7 @@ function classifyInboundOrigin(e, r, t, a, d, o) {
       kind: "peer",
       from: "unknown",
       inbound_origin: t,
-      ...Pse(e),
+      ...extractMessageOrigin(e),
       ...(o !== void 0 &&
         t !== void 0 &&
         B.has(t) && { activityObservation: o }),
@@ -194,7 +194,7 @@ function getInboundOriginOverride(e, r, t) {
 }
 function classifyRemoteIngressOrigin(e, r, t, a, d, o = !1, f = !1) {
   let l = parsePeerEnvelopeSender(e);
-  if (l) return { kind: "peer", from: l, inbound_origin: t, ...Pse(e) };
+  if (l) return { kind: "peer", from: l, inbound_origin: t, ...extractMessageOrigin(e) };
   if (t && !B.has(t)) {
     if (t === C)
       if (o) logFeatureOk("bridge_projects_human_origin");

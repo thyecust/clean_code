@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import {
   Err,
-  mU,
-  HVt,
-  Vrr,
-  Ume,
-  Krr,
+  isActiveCatalogFromServer,
+  getModelEffortLevels,
+  getModelDefaultEffort,
+  getApplicableOrgDefaultModel,
+  getOrgDefaultModelUpdatedAt,
   isModelAllowed,
   isUnservedFamilySpelling,
   isPinnedFableModel,
@@ -25,17 +25,17 @@ import {
   getCanonicalName,
   parseUserSpecifiedModel,
   strip1mTag as n0,
-  oQ,
-  Tn,
+  getModelCapabilityOverride,
+  hashForTelemetry,
   isBgSession,
   getModelAccessCache,
   getOrgModelDefaultCache,
   isProSubscriber,
-  $f,
-  H,
-  Te,
-  ee,
-  nkn,
+  getFeatureValueWithSource_CACHED_MAY_BE_STALE,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  saveGlobalConfig,
+  getGlobalConfig,
+  getCachedClientDataStrict,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { MXt, Xxt, jc, drt, ke, gae, bHt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
@@ -91,10 +91,10 @@ var im = ["low", "medium", "high", "xhigh", "max"],
     "May use excessive tokens resulting in long response times or overthinking. Use sparingly for the hardest tasks.";
 function zh(e) {
   if (bHt(e)) return !1;
-  let t = oQ(e, "effort");
+  let t = getModelCapabilityOverride(e, "effort");
   if (t !== void 0) return t;
   let o = getCanonicalName(e),
-    r = HVt(e, o);
+    r = getModelEffortLevels(e, o);
   if (r !== void 0) return r.length > 0;
   if (
     o.includes("claude-3-") ||
@@ -111,10 +111,10 @@ function zh(e) {
 }
 function FN(e) {
   if (bHt(e)) return !1;
-  let t = oQ(e, "max_effort");
+  let t = getModelCapabilityOverride(e, "max_effort");
   if (t !== void 0) return t;
   let o = getCanonicalName(e),
-    r = HVt(e, o);
+    r = getModelEffortLevels(e, o);
   if (r !== void 0) return r.includes("max");
   if (
     o.includes("claude-3-") ||
@@ -131,10 +131,10 @@ function FN(e) {
 }
 function i6(e) {
   if (bHt(e)) return !1;
-  let t = oQ(e, "xhigh_effort");
+  let t = getModelCapabilityOverride(e, "xhigh_effort");
   if (t !== void 0) return t;
   let o = getCanonicalName(e),
-    r = HVt(e, o);
+    r = getModelEffortLevels(e, o);
   if (r !== void 0) return r.includes("xhigh");
   if (
     o.includes("claude-3-") ||
@@ -276,14 +276,14 @@ function VH() {
 function UN(e) {
   if (MXt()) return !1;
   let t = getCanonicalName(e);
-  if (t.includes("opus-4-7")) return !ee().unpinOpus47LaunchEffort;
-  if (t.includes("opus-4-8")) return !ee().unpinOpus48LaunchEffort;
+  if (t.includes("opus-4-7")) return !getGlobalConfig().unpinOpus47LaunchEffort;
+  if (t.includes("opus-4-8")) return !getGlobalConfig().unpinOpus48LaunchEffort;
   if (Xt(t) === "claude-fable-5" || (isPinnedFableModel(e) && !fve(t)))
-    return !ee().unpinFable5LaunchEffort;
+    return !getGlobalConfig().unpinFable5LaunchEffort;
   return !1;
 }
 function W() {
-  let e = ee();
+  let e = getGlobalConfig();
   return Boolean(
     e.unpinOpus47LaunchEffort &&
     e.unpinOpus48LaunchEffort &&
@@ -383,7 +383,7 @@ function _ve(e) {
     : void 0;
 }
 function iA(e) {
-  Te(
+  saveGlobalConfig(
     (t) =>
       t.unpinOpus47LaunchEffort &&
       t.unpinOpus48LaunchEffort &&
@@ -504,7 +504,7 @@ function te(e) {
 function mAn(e) {
   if (typeof e === "string") {
     let t = te(e);
-    if (e === "high" && isProSubscriber() && H("tengu_slate_finch", !1))
+    if (e === "high" && isProSubscriber() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_slate_finch", !1))
       return `${t} \xB7 burns fastest \u2014 medium handles most tasks`;
     return t;
   }
@@ -514,7 +514,7 @@ function D(e) {
   return gve(e) ?? ne(e) ?? oe(e);
 }
 function ne(e) {
-  let t = Vrr(e, getCanonicalName(e));
+  let t = getModelDefaultEffort(e, getCanonicalName(e));
   return t !== void 0 && $C(t) ? t : void 0;
 }
 function oe(e) {
@@ -530,7 +530,7 @@ function I(e) {
   return KK(e.settings.effortLevel);
 }
 function Y() {
-  let { value: e, source: t } = $f("tengu_auto_mode_config", {});
+  let { value: e, source: t } = getFeatureValueWithSource_CACHED_MAY_BE_STALE("tengu_auto_mode_config", {});
   if (e?.enabled !== "disabled") return !1;
   return t === "override" || t === "payload";
 }
@@ -613,7 +613,7 @@ function fAn(e) {
         ),
         c.length === 0)
       )
-        (logEvent("tengu_ccr_unsupported_default_mode_ignored", { mode_hash: Tn(f) }),
+        (logEvent("tengu_ccr_unsupported_default_mode_ignored", { mode_hash: hashForTelemetry(f) }),
           c.push("default"));
     } else if (f === "bypassPermissions") {
       if (l || t.allowDangerouslySkipPermissions) c.push(f);
@@ -643,7 +643,7 @@ function fAn(e) {
         `settings defaultMode "${f}" is not supported in CLAUDE_CODE_REMOTE \u2014 only acceptEdits, plan, default, and auto are allowed`,
         { level: "warn" },
       ),
-        logEvent("tengu_ccr_unsupported_default_mode_ignored", { mode_hash: Tn(f) }));
+        logEvent("tengu_ccr_unsupported_default_mode_ignored", { mode_hash: hashForTelemetry(f) }));
     else if (f === "bypassPermissions")
       if (!C("bypassPermissions")) {
         if (
@@ -703,7 +703,7 @@ function fAn(e) {
     if (
       m &&
       GEt() &&
-      (!t.isNonInteractiveSession || isVsCodeExtensionSession() || H("tengu_moss_anchor", !1))
+      (!t.isNonInteractiveSession || isVsCodeExtensionSession() || getFeatureValue_CACHED_MAY_BE_STALE("tengu_moss_anchor", !1))
     )
       ((f = "auto"), (h = !0));
     S = { mode: f, notification: y };
@@ -756,16 +756,16 @@ function se(e) {
   }
 }
 function fe(e, t, o) {
-  if (mU()) {
-    let g = Krr();
+  if (isActiveCatalogFromServer()) {
+    let g = getOrgDefaultModelUpdatedAt();
     if (
       g !== null &&
       !t &&
       gae().includes("userSettings") &&
       new Date(g).getTime() >
-        new Date(ee().lastSeenOrgDefaultUpdatedAt ?? 0).getTime()
+        new Date(getGlobalConfig().lastSeenOrgDefaultUpdatedAt ?? 0).getTime()
     )
-      Te(
+      saveGlobalConfig(
         (c) =>
           c.lastSeenOrgDefaultUpdatedAt === g
             ? c
@@ -777,16 +777,16 @@ function fe(e, t, o) {
     if (m === "policySettings" || m === "flagSettings") return e;
     return;
   }
-  let r = Ume();
+  let r = getApplicableOrgDefaultModel();
   if (!r || getBootstrapOrgDefaultEffect() === null) return e;
   let u = e ? getEffectiveSettingSource("model") : null;
   if (u === "policySettings" || u === "flagSettings") return e;
   let d = gae().includes("userSettings"),
-    s = ee().lastSeenOrgDefaultUpdatedAt,
+    s = getGlobalConfig().lastSeenOrgDefaultUpdatedAt,
     l = new Date(r.updated_at).getTime() > new Date(s ?? 0).getTime(),
     p = l && !t && d,
     E = () =>
-      Te(
+      saveGlobalConfig(
         (g) =>
           g.lastSeenOrgDefaultUpdatedAt === r.updated_at
             ? g
@@ -877,7 +877,7 @@ ${r}`
   return { systemPrompt: t, appendSystemPrompt: o };
 }
 function GEt() {
-  return H("tengu_harbor_willow", !1) || nkn()?.meadow_lantern === !0;
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_harbor_willow", !1) || getCachedClientDataStrict()?.meadow_lantern === !0;
 }
 var de = ["policySettings", "flagSettings", "userSettings"],
   ae = ["acceptEdits", "plan", "default", "auto"];
@@ -963,7 +963,7 @@ var x =
 function O(e) {
   if (!isBgSession()) return !1;
   if (e === "bypassPermissions")
-    return !hasVouchedSkipDangerousModePermissionPrompt() && !ee().bypassPermissionsModeAccepted;
+    return !hasVouchedSkipDangerousModePermissionPrompt() && !getGlobalConfig().bypassPermissionsModeAccepted;
   return !1;
 }
 function j(e, t, o) {

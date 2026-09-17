@@ -14,7 +14,7 @@ import { ge, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.j
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getMcpServerConfigCacheKey, invokeMcpToolRaw, listMcpToolsRaw } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { g0, UR, VZe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { _U } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isSubagentSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { rc } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -517,7 +517,7 @@ async function Ue(t, e, r, o) {
   let s = getMcpClients(t),
     d = Ye(s);
   if (d === void 0) {
-    if (_U(t.agentContext)) return;
+    if (isSubagentSession(t.agentContext)) return;
     if ((Ge(s, e, o), (e.failedAt = void 0), (e.lastListingFailed = !1), I(t)))
       e.unconnectedSince ??= Date.now();
     else ((e.provisional = void 0), (e.unconnectedSince = void 0));

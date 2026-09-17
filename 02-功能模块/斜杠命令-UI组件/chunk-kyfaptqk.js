@@ -15,7 +15,7 @@ import { firstLine } from "../../01-核心基础设施/核心工具-字符串与
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { aa, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { createMainAgentContext, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jn, Pt, getIsGit, getGitState } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -106,7 +106,7 @@ function gt({
     [ie, Ct] = d("session"),
     ye = useAppStateSelector((i) => i.transcripts),
     vt = useTerminalSize().columns - 4,
-    fe = H("tengu_amber_lynx", !1),
+    fe = getFeatureValue_CACHED_MAY_BE_STALE("tengu_amber_lynx", !1),
     Ft = re(async () => {
       if ((R("submitting"), I(null), O(null), g === "bundle")) {
         let oe = await mJt({
@@ -600,7 +600,7 @@ async function ft(u, s, f) {
           agents: [],
           querySource: "feedback",
           mcpTools: [],
-          agentContext: aa(),
+          agentContext: createMainAgentContext(),
           credentials: f,
         },
       }),

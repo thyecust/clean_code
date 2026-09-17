@@ -15,9 +15,9 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { getVerifiedDaemonLock } from "../后台任务-Shell管理/daemon-lock.js";
 import { isClaudeMdLoadingDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import {
-  Lve,
-  cA,
-  wCn,
+  getAwsRegionOrDefault,
+  resolveAwsRegion,
+  resolveAwsRegionWithSource,
   modelDisplayString,
   shouldUseWIFAuth,
   isAnthropicAuthEnabled,
@@ -421,7 +421,7 @@ function Dit() {
     let n = a.ANTHROPIC_AWS_WORKSPACE_ID;
     if (n) e.push({ label: "Workspace ID", value: n });
     if (
-      (e.push({ label: "AWS region", value: Lve() }),
+      (e.push({ label: "AWS region", value: getAwsRegionOrDefault() }),
       a.CLAUDE_CODE_SKIP_ANTHROPIC_AWS_AUTH)
     )
       e.push({ value: "Claude Platform on AWS auth skipped" });
@@ -472,7 +472,7 @@ function Dit() {
   return e;
 }
 function b() {
-  let { region: s, source: e } = wCn();
+  let { region: s, source: e } = resolveAwsRegionWithSource();
   switch (e) {
     case "env":
       return s;
@@ -481,7 +481,7 @@ function b() {
     case "env-invalid":
     case "default":
       return (
-        cA(),
+        resolveAwsRegion(),
         e === "env-invalid"
           ? `${s} (default \u2014 region env var invalid, ignored; fix or unset AWS_REGION / AWS_DEFAULT_REGION)`
           : `${s} (default \u2014 set AWS_REGION or add a region to your AWS config)`

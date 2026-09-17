@@ -11,7 +11,7 @@ import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodePoints, normalizeFullWidthDigits, normalizeIdeographicSpaces } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { getMainLoopModel, fvt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMainLoopModel, isScreenReaderArrowNavEnabled } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { te, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t, ct, jr, tn, zye, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -315,7 +315,7 @@ function X8(wf) {
     [Uo, Dt, Ke] = qn(),
     [_o, io] = d(null),
     Bs;
-  if (mn[0] === MEMO_CACHE_SENTINEL) ((Bs = fvt()), (mn[0] = Bs));
+  if (mn[0] === MEMO_CACHE_SENTINEL) ((Bs = isScreenReaderArrowNavEnabled()), (mn[0] = Bs));
   else Bs = mn[0];
   let Ai = Bs,
     [Vt, lo, Fn] = dn(null),
@@ -631,7 +631,7 @@ function fOt(Df) {
     [Xo, Et, Me] = qn(),
     [Yo, Mn] = d(null),
     au;
-  if (ke[2] === MEMO_CACHE_SENTINEL) ((au = fvt()), (ke[2] = au));
+  if (ke[2] === MEMO_CACHE_SENTINEL) ((au = isScreenReaderArrowNavEnabled()), (ke[2] = au));
   else au = ke[2];
   let so = au,
     [Pt, uo, xn] = dn(null),

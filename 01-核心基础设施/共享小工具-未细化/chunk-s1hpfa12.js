@@ -10,7 +10,7 @@
 import { ke, ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
-import { Jh, isBgSession, isBeingWatched, isBeingWatchedV5, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getBgTakeover, isBgSession, isBeingWatched, isBeingWatchedV5, getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { eE } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -20,7 +20,7 @@ var u = new Set(["remote", "remote_cowork", "remote_desktop", "remote_mobile"]);
 function detectSurfaces(e) {
   if (isBgSession()) return new Set(["bg"]);
   let t = new Set();
-  if ((e ?? isBeingWatched()) || Jh() !== null) t.add("watched");
+  if ((e ?? isBeingWatched()) || getBgTakeover() !== null) t.add("watched");
   if (hasCcrSurface()) t.add("ccr");
   if (a.CLAUDE_CODE_ENVIRONMENT_KIND === "bridge" || ic()) t.add("bridge");
   if (a.CLAUDE_CODE_ENTRYPOINT === "claude-desktop") t.add("desktop");
@@ -51,13 +51,13 @@ var i = {
 };
 function sinksFor(e) {
   let t = new Set(),
-    s = c(H("tengu_classifier_disabled_surfaces", ""));
+    s = c(getFeatureValue_CACHED_MAY_BE_STALE("tengu_classifier_disabled_surfaces", ""));
   for (let r of e) {
     if (s.has(r)) continue;
     for (let o of i[r]) t.add(o);
   }
   if (e.has("bg")) t.delete("summary");
-  if (H("tengu_classifier_summary_kill", !1)) t.delete("summary");
+  if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_classifier_summary_kill", !1)) t.delete("summary");
   return t;
 }
 function c(e) {
@@ -85,10 +85,10 @@ function engineFor(e) {
           ? "llm"
           : "heuristic"
         : l();
-  return t === "llm" && H("tengu_cobalt_wren", !1) ? "heuristic" : t;
+  return t === "llm" && getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_wren", !1) ? "heuristic" : t;
 }
 function l() {
-  if (H("tengu_classifier_summary_llm_emit", !1)) return "llm";
+  if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_classifier_summary_llm_emit", !1)) return "llm";
   return "heuristic";
 }
 function isPostTurnSummaryVisibleInCli() {

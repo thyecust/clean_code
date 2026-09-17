@@ -14,7 +14,7 @@ import { logEventAsync } from "../../01-核心基础设施/共享小工具-未�
 import { logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { i0, pA, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { configHasAuthorizationHeader, isFirstPartyDesignUrl, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getClaudeAiConnectorsUrl, buildClaudeAiMcpAuthUrl, getAllMcpConfigs, isMcpServerDisabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
 import { stopCapturingEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
@@ -75,8 +75,8 @@ async function v(t, e, o, u) {
   return p;
 }
 async function C(t, e) {
-  if (i0(t)) return "static_auth_header";
-  if (pA(t.url) && isFirstPartyProvider()) {
+  if (configHasAuthorizationHeader(t)) return "static_auth_header";
+  if (isFirstPartyDesignUrl(t.url) && isFirstPartyProvider()) {
     let o;
     if (isHoverRestEnabled() && e !== void 0) o = (await getClaudeAIOAuthTokensAsync(e))?.accessToken;
     else o = getClaudeAIOAuthTokens()?.accessToken;

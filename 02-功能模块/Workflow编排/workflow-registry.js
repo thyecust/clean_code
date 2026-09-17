@@ -17,7 +17,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { parseWorkflowScript, isValidWorkflowScript } from "./workflow-script.js";
 import { vm, $t, MEt } from "../插件系统/chunk-7s6mt1vg.js";
-import { ax } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { readBoundedFileWithFs } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getProjectDirsUpToHome, loadAllPluginsCacheOnly } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Uh } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getBundledWorkflows } from "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
@@ -52,7 +52,7 @@ async function v(o, s, t, i, d) {
   let c = ae();
   if (r8(c, o, d)) return null;
   try {
-    let e = await ax(c, o, Uh);
+    let e = await readBoundedFileWithFs(c, o, Uh);
     if (e === null)
       return (
         n(

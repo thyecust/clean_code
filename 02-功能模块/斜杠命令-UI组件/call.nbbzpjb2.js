@@ -14,7 +14,7 @@ import { ke, bB, ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { archiveRemoteSession, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { archiveRemoteSession, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
@@ -357,7 +357,7 @@ function De({ owner: a, repo: n, host: c }) {
   return isGitHubHost(c) ? `${a}/${n}` : `${c}/${a}/${n}`;
 }
 function lt() {
-  return !ee().hasSeenAutofixPrChatOpsNotice;
+  return !getGlobalConfig().hasSeenAutofixPrChatOpsNotice;
 }
 function ft(He) {
   return He.hasSeenAutofixPrChatOpsNotice
@@ -416,7 +416,7 @@ function Ve(Qt) {
   let he;
   if (V[9] !== Z || V[10] !== y)
     ((he = (rr) => {
-      if (rr === "continue") (Te(ft, Z.storageV5), er(!1));
+      if (rr === "continue") (saveGlobalConfig(ft, Z.storageV5), er(!1));
       else y("Autofix PR cancelled", { display: "system" });
     }),
       (V[9] = Z),

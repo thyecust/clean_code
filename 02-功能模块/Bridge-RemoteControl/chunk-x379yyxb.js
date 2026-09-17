@@ -29,7 +29,7 @@ import { dJ, Ij, aoe } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { oKt, CCt, _Ue, prepareApiRequest, getSessionRequestHeaders, sendEventToRemoteSession, sendBashCommandToRemoteSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { signClientEvent, tryHandleFrame, buildSuccessControlResponse, prepareApiRequest, getSessionRequestHeaders, sendEventToRemoteSession, sendBashCommandToRemoteSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { isViolinWoodEnabled, isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
@@ -1126,7 +1126,7 @@ class de {
     }
   }
   deliver(e, t) {
-    if (!CCt((o) => this.callbacks.onMessage(o, t), e, "SessionsV2Client"))
+    if (!tryHandleFrame((o) => this.callbacks.onMessage(o, t), e, "SessionsV2Client"))
       logFeatureSad("remote_connect", "remote_connect_frame_handler_threw");
   }
   handleStreamEnd() {
@@ -1225,7 +1225,7 @@ class de {
       );
     let o = `${getOauthConfig().BASE_API_URL}/v1/code/sessions/${this.sessionId}/events`;
     try {
-      let r = await oKt(this.eventSigner, this.sessionId, e),
+      let r = await signClientEvent(this.eventSigner, this.sessionId, e),
         a = { session_id: this.sessionId, events: [r] },
         p = await this.authHeaders(),
         d = await this.postEvents(o, a, p, t.timeoutMs);
@@ -2560,7 +2560,7 @@ class D6e {
     (this.retirePermissionRequest(e),
       this.recordSeenControlResponseId(e),
       this.reviveStreamForUserSend());
-    let r = _Ue(
+    let r = buildSuccessControlResponse(
       e,
       t,
       this.config.nameToolOnPermissionAllow === !0 ? o.tool_name : void 0,

@@ -13,7 +13,7 @@ import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { The, txt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
@@ -160,7 +160,7 @@ function Ce({ name: e, email: t, unixSeconds: r, utcOffsetMinutes: a }) {
   return `${e} <${t}> ${r} ${a < 0 ? "-" : "+"}${d.padStart(4, "0")}`;
 }
 function be(e) {
-  return e.split("\\").map((t) => nc(beforeFirst(t, ":")));
+  return e.split("\\").map((t) => normalizePathSegment(beforeFirst(t, ":")));
 }
 function De(e, t) {
   let r = Array.from(

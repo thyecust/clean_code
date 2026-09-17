@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { truncateToCodePoints, truncateToCodeUnits } from "../核心工具-字符串与文本/string-utils.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -19,7 +19,7 @@ var C = 0.5,
 function u() {
   let e = a.MAX_MCP_OUTPUT_TOKENS;
   if (e !== void 0 && e > 0) return e;
-  let t = H("tengu_velvet_ibis", {})?.mcp_tool;
+  let t = getFeatureValue_CACHED_MAY_BE_STALE("tengu_velvet_ibis", {})?.mcp_tool;
   if (typeof t === "number" && Number.isFinite(t) && t > 0) return t;
   return d;
 }

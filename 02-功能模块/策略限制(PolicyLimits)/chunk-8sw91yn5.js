@@ -18,12 +18,12 @@ import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { truncateToCodeUnits, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
-  cU,
-  fVt,
-  gU,
-  DR,
-  Aor,
-  KC,
+  isFeedbackSurveyForOtelEnabled,
+  getCurrentWorkload,
+  resetBetaCaches,
+  hasCustomApiKeyHeader,
+  hasCustomAuthorizationHeader,
+  isSubagentContext,
   shouldUseWIFAuth,
   isAnthropicAuthEnabled,
   effectiveAuthTokenEnv,
@@ -61,9 +61,9 @@ function D4t(e, t, r, o, i) {
   let p = `${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}.${e}`,
     f = process.env.CLAUDE_CODE_ENTRYPOINT ?? "unknown",
     d = (l === "firstParty" && isFirstPartyAnthropicBaseUrl()) || l === "vertex" ? " cch=00000;" : "",
-    h = fVt(),
+    h = getCurrentWorkload(),
     _ = h ? ` cc_workload=${h};` : "",
-    S = KC(t) && !t.isMainSession ? " cc_is_subagent=true;" : "",
+    S = isSubagentContext(t) && !t.isMainSession ? " cc_is_subagent=true;" : "",
     E =
       r !== void 0 &&
       /^req_[A-Za-z0-9_-]{1,36}$/.test(r) &&
@@ -850,7 +850,7 @@ class PolicyState {
       K(e?.monitoring_notice ?? null),
       t.length !== r.length || r.some((o) => !t.includes(o)))
     )
-      gU();
+      resetBetaCaches();
   }
 }
 var policyStates = new j(() => new PolicyState());
@@ -997,7 +997,7 @@ function isPolicyAllowed(e) {
   if (!t) {
     if (Ye.has(e)) {
       if (isPolicyLimitsEligible()) return !1;
-      if (qe.has(e) && isEssentialTrafficOnly() && !(e === "allow_product_feedback" && cU()))
+      if (qe.has(e) && isEssentialTrafficOnly() && !(e === "allow_product_feedback" && isFeedbackSurveyForOtelEnabled()))
         return !1;
     }
     return !0;
@@ -1049,8 +1049,8 @@ function policyDeniedHint(e, t) {
 }
 function areComplianceTaintsSettled() {
   if (
-    DR() ||
-    Aor() ||
+    hasCustomApiKeyHeader() ||
+    hasCustomAuthorizationHeader() ||
     !isActualFirstPartyAnthropicBaseUrl() ||
     getAPIProvider() !== "firstParty" ||
     a.ANTHROPIC_UNIX_SOCKET !== void 0 ||

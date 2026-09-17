@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "./analytics-fields.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -33,7 +33,7 @@ function getMcpSdkGeneration() {
         `MCP_SDK_GENERATION=${e} is invalid; expected 'v1' or 'v2' \u2014 ignoring`,
         { level: "warn" },
       );
-    let d = t === void 0 && H("tengu_brindle_causeway", !1) === !0,
+    let d = t === void 0 && getFeatureValue_CACHED_MAY_BE_STALE("tengu_brindle_causeway", !1) === !0,
       r = t ?? (d ? "v2" : "v1"),
       c = t !== void 0 ? "env" : d ? "growthbook" : "default";
     return (

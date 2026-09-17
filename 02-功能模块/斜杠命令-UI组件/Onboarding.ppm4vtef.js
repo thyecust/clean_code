@@ -18,7 +18,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { getUserAgent, isAnthropicAuthEnabled, getUnapprovedCustomApiKey, gatewaySignInScreenConfigured, adminPolicyUnreadable, zg } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getUserAgent, isAnthropicAuthEnabled, getUnapprovedCustomApiKey, gatewaySignInScreenConfigured, adminPolicyUnreadable, isScreenReaderModeEnabled } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getProxyUrlWithSource, getProxyAuthFromHelper, getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { o, t, zb, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -466,7 +466,7 @@ function Yt({ host: s, onDone: c }) {
                   "for your terminal:",
                   " ",
                   a.terminal === "Apple_Terminal"
-                    ? zg()
+                    ? isScreenReaderModeEnabled()
                       ? "Option+Enter for newlines"
                       : "Option+Enter for newlines and no audible bell"
                     : "Shift+Enter for newlines",

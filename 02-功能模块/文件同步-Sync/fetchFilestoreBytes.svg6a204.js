@@ -15,7 +15,7 @@ import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工�
 import { STAGE_TMP_PREFIX, getStageFileRoot, getOutputsRoot, AEt } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { VQe, Hor, ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getTrustedOrigin, getUntrustedOriginReason, httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createWriteStream } from "fs";
 import {
   chmod,
@@ -319,7 +319,7 @@ async function F() {
   let t = performance.now(),
     s = () => Math.round(performance.now() - t);
   try {
-    let e = await ht.get("/worker/files", {
+    let e = await httpClient.get("/worker/files", {
       auth: "session-jwt",
       host: "ccr-session",
       headers: { "anthropic-version": "2023-06-01" },
@@ -346,10 +346,10 @@ async function F() {
       d = e.data.filesystem_id;
     if (!r || !d)
       return { ok: !1, error: "list returned incomplete credential" };
-    let l = VQe(e.data.filestore_url);
+    let l = getTrustedOrigin(e.data.filestore_url);
     if (e.data.filestore_url && !l)
       writeDiagnosticsEvent("warn", "stage_file_filestore_url_rejected", {
-        reason: Hor(e.data.filestore_url),
+        reason: getUntrustedOriginReason(e.data.filestore_url),
       });
     return {
       ok: !0,
@@ -387,7 +387,7 @@ async function oe(t, s) {
       };
     w();
     try {
-      let o = await ht.post(
+      let o = await httpClient.post(
         "/v1/filestore/fs/readFile",
         { filesystem_id: l.filesystemId, path: t },
         {
@@ -493,7 +493,7 @@ async function fetchFilestoreBytes(t) {
   if (!r.ok) return r;
   let { filestoreJwt: d, filesystemId: l, filestoreUrl: g } = r.cred;
   try {
-    let _ = await ht.post(
+    let _ = await httpClient.post(
       "/v1/filestore/fs/readFile",
       { filesystem_id: l, path: t },
       {

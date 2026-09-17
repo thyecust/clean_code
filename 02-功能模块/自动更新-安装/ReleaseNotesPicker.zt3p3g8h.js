@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 254 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { cf } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isSemverGreaterThan } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { createSystemInfoMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -40,7 +40,7 @@ ${g}`;
 function formatAll(s) {
   return s
     .slice()
-    .sort(([n], [i]) => (cf(n, i) ? 1 : -1))
+    .sort(([n], [i]) => (isSemverGreaterThan(n, i) ? 1 : -1))
     .map(([n, i]) => formatVersion(n, i)).join(`
 
 `);
@@ -56,7 +56,7 @@ var ee = async (s, n) => {
   let i = await tWe(n.storageV5),
     g = Qst(i)
       .slice()
-      .sort(([a], [S]) => (cf(a, S) ? -1 : 1));
+      .sort(([a], [S]) => (isSemverGreaterThan(a, S) ? -1 : 1));
   if (g.length === 0)
     return (y(`See the full changelog at: ${t$n}`, n.applyMessageOp, s), null);
   return e(ReleaseNotesPicker, { notes: g, applyMessageOp: n.applyMessageOp, onDone: s });

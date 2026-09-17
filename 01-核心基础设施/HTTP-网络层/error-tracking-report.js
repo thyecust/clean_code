@@ -33,7 +33,7 @@ import {
 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { dl, Trt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { Mrr, fU, getMainLoopModel, getCanonicalName, envSessionKind, kZe, NRn, dx, CRe } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { redactKnownPaths, sanitizeErrorMessage, getMainLoopModel, getCanonicalName, envSessionKind, getAllGrowthBookFeatures, getNonDefaultFeatureKeys, getOrCreateUserID, getOrCreateMachineID } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getEnvEntrypoint, isSdkEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { Xt } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { shouldReportErrors } from "../共享小工具-未细化/error-reporting-eligibility.js";
@@ -261,7 +261,7 @@ var re = 30;
 function oe() {
   let e = errorTrackingClient();
   if (e.cachedUserBucket !== void 0) return e.cachedUserBucket;
-  let n = dx(),
+  let n = getOrCreateUserID(),
     t = createHash("sha256").update(n).digest("hex");
   return (
     (e.cachedUserBucket = parseInt(t.slice(0, 8), 16) % re),
@@ -322,8 +322,8 @@ function ae() {
 var ce = 50;
 function ue() {
   try {
-    let e = kZe(),
-      n = NRn(),
+    let e = getAllGrowthBookFeatures(),
+      n = getNonDefaultFeatureKeys(),
       t = {},
       r = 0;
     for (let [o, s] of Object.entries(e))
@@ -386,7 +386,7 @@ function Ee(e, n, t) {
     i =
       o && s === void 0
         ? `thrown outside the Claude Code bundle (${t})`
-        : fU(Mrr(e, s ?? le(e) ?? e.message ?? String(e))),
+        : sanitizeErrorMessage(redactKnownPaths(e, s ?? le(e) ?? e.message ?? String(e))),
     c = v({ name: t, message: i }, r),
     { version: u, sourcemapGroup: m } = te(
       {
@@ -451,7 +451,7 @@ function Ee(e, n, t) {
     origin: n,
     host_platform: getCurrentPlatform(),
     host_os_release: R,
-    host_name_redacted: CRe().slice(0, 12),
+    host_name_redacted: getOrCreateMachineID().slice(0, 12),
     entrypoint: _,
     node_version: process.versions.node,
     bun_version: "1.4.1",

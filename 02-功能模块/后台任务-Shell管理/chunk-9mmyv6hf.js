@@ -36,7 +36,7 @@ import {
 import { PROCESS_WRAPPER_ENV_VAR, FAST_CRASH_WINDOW_MS, getLauncherArgv, getLauncherConfigError, isLauncherRunnable } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { Bs, eur } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { Wi, Ms, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { readBoundedFile, getVersionForAnalytics, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jke, xhe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { quarantineJobTranscript, isTranscriptFileResumeArg, resolveJobTranscript } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
@@ -272,7 +272,7 @@ function ae(e, t, r) {
     m.emit({ exitCode: E, signal: I, hostStderr: O });
   }
   function ge(E) {
-    let I = Wi(getPtyHostStderrPath(e), 1048576)
+    let I = readBoundedFile(getPtyHostStderrPath(e), 1048576)
       .then((x) => x ?? "")
       .catch(() => "");
     (I.then((x) => {
@@ -391,7 +391,7 @@ function ae(e, t, r) {
           L = `${O}.read`;
         if (
           (rename(O, L)
-            .then(() => Wi(L, 1048576))
+            .then(() => readBoundedFile(L, 1048576))
             .then((V) => {
               let Y = (V ?? "").slice(0, 2000).trim();
               if (Y.length > 0)
@@ -422,7 +422,7 @@ ${Y}`,
       process.kill(t, 0);
     } catch {
       ((w = !0),
-        Wi(getPtyLateOutputPath(e), 8388608)
+        readBoundedFile(getPtyLateOutputPath(e), 8388608)
           .then((I) => I ?? "")
           .then((I) => {
             if (!G && I.length > 0) g.emit(I.replaceAll(DAEMON_DETACH_APC, ""));
@@ -455,7 +455,7 @@ ${Y}`,
           } catch {}
         }
       ((w = !0),
-        Wi(getPtyLateOutputPath(e), 8388608)
+        readBoundedFile(getPtyLateOutputPath(e), 8388608)
           .then((O) => O ?? "")
           .then((O) => {
             if (!G && O.length > 0) g.emit(O.replaceAll(DAEMON_DETACH_APC, ""));
@@ -466,7 +466,7 @@ ${Y}`,
                   j(V, Y);
                   return;
                 }
-                Wi(getPtyHostStderrPath(e), 1048576).then(
+                readBoundedFile(getPtyHostStderrPath(e), 1048576).then(
                   (_e) => j(V, Y, Me(_e ?? "")),
                   () => j(V, Y),
                 );
@@ -691,7 +691,7 @@ var _t = 1e4,
   Fe = 20,
   St = new Set([129, 143]);
 function $e() {
-  return H("tengu_bg_revival_guard", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_bg_revival_guard", !0);
 }
 var kt =
     "Continue from where you left off. Note: this session was automatically restarted after its process exited unexpectedly; the user has not sent a new message since the restart. Re-verify anything time-sensitive (branch state, running processes, prior partial work) before continuing.",
@@ -783,7 +783,7 @@ function Xe(e, t, r, s, p) {
   let o = {
       ...d,
       ...(r && { CLAUDE_BG_AUTH_SNAPSHOT_PATH: r }),
-      ...(isHoverRestEnabled() && H("tengu_hover_rest", !1) && { CLAUDE_CODE_HOVER_REST: "1" }),
+      ...(isHoverRestEnabled() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_hover_rest", !1) && { CLAUDE_CODE_HOVER_REST: "1" }),
       ...(getCurrentPlatform() === "windows" && { CLAUDE_CODE_ALT_SCREEN_FULL_REPAINT: "1" }),
       ...e.env,
       CLAUDE_CODE_SESSION_KIND: "bg",
@@ -1144,7 +1144,7 @@ class qW {
       logEvent("tengu_bg_respawn_downgrade_refused", {
         short: bgShort(this.dispatch.short),
         trigger: fromEnum(e),
-        worker_cli_version: Ms(this.record.cliVersion),
+        worker_cli_version: getVersionForAnalytics(this.record.cliVersion),
       }));
   }
   async respawnIfIdleStale(e, t = "sweep") {
@@ -1234,7 +1234,7 @@ class qW {
         short: bgShort(this.dispatch.short),
         rvSent: this.shutdownWorker(),
         trigger: fromEnum(t),
-        worker_cli_version: Ms(this.record.cliVersion),
+        worker_cli_version: getVersionForAnalytics(this.record.cliVersion),
       }),
       { respawned: !0 }
     );
@@ -1295,7 +1295,7 @@ class qW {
             settledForMs: T,
             state: S("stale-spare"),
             cause: S("stale-spare"),
-            worker_cli_version: Ms(this.record.cliVersion),
+            worker_cli_version: getVersionForAnalytics(this.record.cliVersion),
           }),
           { retired: !0, cause: "stale-spare", idleMs: T }
         );
@@ -1326,7 +1326,7 @@ class qW {
           settledForMs: N,
           state: S("empty-idle"),
           cause: S("empty-idle"),
-          worker_cli_version: Ms(this.record.cliVersion),
+          worker_cli_version: getVersionForAnalytics(this.record.cliVersion),
         }),
         { retired: !0, cause: "empty-idle", idleMs: N }
       );
@@ -1436,7 +1436,7 @@ class qW {
         detritusOnly: k,
         state: fromJobState(s.state),
         cause: fromEnum(B),
-        worker_cli_version: Ms(this.record.cliVersion),
+        worker_cli_version: getVersionForAnalytics(this.record.cliVersion),
       }),
       { retired: !0, cause: B, idleMs: y }
     );
@@ -2468,7 +2468,7 @@ class qW {
         launch_mode: fromEnum(this.dispatch.launch.mode),
         outcome: fromEnumOpt(K),
         exitCause: lNn(w),
-        worker_cli_version: Ms(this.record.cliVersion),
+        worker_cli_version: getVersionForAnalytics(this.record.cliVersion),
         worker_stale: this.isVersionStale,
       }),
       this.phase.kind === "retiring")
@@ -2653,7 +2653,7 @@ class qW {
       outcome: fromEnum(e),
       uptimeMs: Date.now() - this.record.startedAt,
       attempt: this.attempt,
-      worker_cli_version: Ms(this.record.cliVersion),
+      worker_cli_version: getVersionForAnalytics(this.record.cliVersion),
       worker_stale: this.isVersionStale,
     }),
       this.transitionTo({ kind: "retired", outcome: e }),
@@ -2822,7 +2822,7 @@ class qW {
       recycled: e,
       fromPoll: t,
       uptimeMs: Date.now() - this.record.startedAt,
-      worker_cli_version: Ms(this.record.cliVersion),
+      worker_cli_version: getVersionForAnalytics(this.record.cliVersion),
       worker_stale: this.isVersionStale,
     });
   }
@@ -3013,7 +3013,7 @@ async function QYt(e) {
             if (isHoverRestEnabled() && e.credentials !== void 0)
               e.credentials.discardSpentCredentialFile(o).catch(() => {});
             else X(o).catch(() => {});
-          let N = ((await Wi(getPtyHostStderrPath(r), 1048576)) ?? "").slice(0, 2000).trim();
+          let N = ((await readBoundedFile(getPtyHostStderrPath(r), 1048576)) ?? "").slice(0, 2000).trim();
           if (N.length > 0)
             n(
               `bg spare host pid=${_.pid} exit stderr:

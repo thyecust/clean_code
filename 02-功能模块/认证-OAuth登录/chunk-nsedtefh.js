@@ -41,7 +41,7 @@ import { SR, UH, tf } from "../../00-第三方库/_未识别/第三方库-@anthr
 import { jt } from "./chunk-wk0e3dz4.js";
 import { authLostEmitter } from "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
-import { SP, yU, cq, la } from "./认证-OAuth登录.419zdfz3.js";
+import { isXaaEnabled, getXaaIdpConfig, readSecureStorageResilient, getMcpOAuthCredentialKey } from "./认证-OAuth登录.419zdfz3.js";
 import { Pu, FIe, gE } from "../MCP客户端/chunk-g4gdwpa0.js";
 import { McpCredentialStoreUnavailableError, MCP_DOWNSTREAM_UNREACHABLE_CODES, getMcpServerBaseUrl } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { renderOAuthCallbackPage, buildOAuthCallbackUrl, pickOAuthCallbackPort } from "../../01-核心基础设施/共享小工具-未细化/oauth-callback.js";
@@ -528,7 +528,7 @@ function _hr(e) {
   return jt().activeOAuthFlows.get(e);
 }
 async function CLt(e, t) {
-  let r = la(e, t),
+  let r = getMcpOAuthCredentialKey(e, t),
     n = (await getSecureStorage().readAsync())?.mcpOAuth?.[r];
   if (!n || n.accessToken || n.refreshToken) return;
   try {
@@ -581,7 +581,7 @@ async function Ue({
   }
 }
 async function yhr(e, t) {
-  let n = (await getSecureStorage().readAsync())?.mcpOAuth?.[la(e, t)];
+  let n = (await getSecureStorage().readAsync())?.mcpOAuth?.[getMcpOAuthCredentialKey(e, t)];
   if (!n?.accessToken && !n?.refreshToken) return;
   return {
     accessToken: n.accessToken || void 0,
@@ -667,7 +667,7 @@ async function Ie(e, t, r) {
 async function Shr(e, t, r) {
   let n;
   try {
-    let d = (await getSecureStorage().readAsync())?.mcpOAuth?.[la(e, t)],
+    let d = (await getSecureStorage().readAsync())?.mcpOAuth?.[getMcpOAuthCredentialKey(e, t)],
       p = {
         ...r,
         accessToken:
@@ -698,7 +698,7 @@ async function bhr(e, t, { preserveStepUpState: r = !1 } = {}) {
     logFeatureOk("mcp_oauth_revoke");
     return;
   }
-  let p = la(e, t),
+  let p = getMcpOAuthCredentialKey(e, t),
     o = d.mcpOAuth[p],
     _;
   if (o?.accessToken || o?.refreshToken)
@@ -759,7 +759,7 @@ async function bhr(e, t, { preserveStepUpState: r = !1 } = {}) {
   else logFeatureOk("mcp_oauth_revoke");
 }
 async function G2n(e, t, r) {
-  let n = la(e, t),
+  let n = getMcpOAuthCredentialKey(e, t),
     d;
   if (
     (await getSecureStorage().mutate((p) => {
@@ -802,7 +802,7 @@ function be(e, t, r, n) {
 }
 async function tt(e, t, r, n, d) {
   if (!t.oauth?.xaa) throw Error("XAA: oauth.xaa must be set");
-  let p = yU();
+  let p = getXaaIdpConfig();
   if (!p)
     throw Error(
       "XAA: no IdP connection configured. Run 'claude mcp xaa setup --issuer <url> --client-id <id> --client-secret' to configure.",
@@ -814,7 +814,7 @@ async function tt(e, t, r, n, d) {
     );
   let h = (await q2n(e, t))?.clientSecret;
   if (!h) {
-    let w = la(e, t),
+    let w = getMcpOAuthCredentialKey(e, t),
       E = Object.keys((await getSecureStorage().readAsync())?.mcpOAuthClientConfig ?? {}),
       M = redactHeaders(t.headers ?? {});
     throw (
@@ -881,7 +881,7 @@ async function tt(e, t, r, n, d) {
       else if (x.includes("jwt-bearer")) C = "jwt_bearer";
       throw U;
     }
-    let O = la(e, t),
+    let O = getMcpOAuthCredentialKey(e, t),
       T = Pu();
     (T.record(M.access_token), T.record(M.refresh_token));
     let I, j;
@@ -937,7 +937,7 @@ async function tt(e, t, r, n, d) {
 }
 async function whr(e, t, r, n, d) {
   if (t.oauth?.xaa) {
-    if (!SP())
+    if (!isXaaEnabled())
       throw Error(
         `XAA is not enabled (set CLAUDE_CODE_ENABLE_XAA=1). Remove 'oauth.xaa' from server '${e}' to use the standard consent flow.`,
       );
@@ -951,7 +951,7 @@ async function whr(e, t, r, n, d) {
     return;
   }
   let p = getSecureStorage(),
-    o = la(e, t),
+    o = getMcpOAuthCredentialKey(e, t),
     _ = (await p.readAsync())?.mcpOAuth?.[o],
     h = _?.stepUpScope,
     k = _?.discoveryState?.resourceMetadataUrl,
@@ -1263,7 +1263,7 @@ async function whr(e, t, r, n, d) {
         O.errorCode === "invalid_client" ||
           O.errorCode === "unauthorized_client")
       ) {
-        let Y = la(e, t);
+        let Y = getMcpOAuthCredentialKey(e, t);
         try {
           await getSecureStorage().mutate((L) => {
             let F = L.mcpOAuth?.[Y];
@@ -1282,7 +1282,7 @@ async function whr(e, t, r, n, d) {
       }
     }
     if (T === "timeout" || U.includes("OAuth error:")) {
-      let Y = la(e, t);
+      let Y = getMcpOAuthCredentialKey(e, t);
       await getSecureStorage()
         .mutate((L) => {
           let F = L.mcpOAuth?.[Y];
@@ -1412,7 +1412,7 @@ class X3e {
   }
   sawAuthChallenge = !1;
   async readCredentialStore() {
-    let e = await cq();
+    let e = await readSecureStorageResilient();
     if (e === SECURE_STORAGE_READ_FAILED_SENTINEL)
       throw (
         logMCPDebug(
@@ -1439,7 +1439,7 @@ class X3e {
   }
   async resolveClientInformation() {
     let e = await this.readCredentialStore(),
-      t = la(this.serverName, this.serverConfig),
+      t = getMcpOAuthCredentialKey(this.serverName, this.serverConfig),
       r = e?.mcpOAuthClientConfig?.[t]?.clientSecret,
       n = this.serverConfig.oauth?.clientId,
       d = e?.mcpOAuth?.[t],
@@ -1539,7 +1539,7 @@ class X3e {
   async saveClientInformation(e) {
     (this._presented.record(e.client_secret),
       this._presented.record(FIe(e.client_id, e.client_secret)));
-    let t = la(this.serverName, this.serverConfig);
+    let t = getMcpOAuthCredentialKey(this.serverName, this.serverConfig);
     try {
       if (
         (
@@ -1573,10 +1573,10 @@ class X3e {
   }
   async tokens() {
     let e = await this.readCredentialStore(),
-      t = la(this.serverName, this.serverConfig),
+      t = getMcpOAuthCredentialKey(this.serverName, this.serverConfig),
       r = e?.mcpOAuth?.[t];
     if (
-      SP() &&
+      isXaaEnabled() &&
       this.serverConfig.oauth?.xaa &&
       !r?.refreshToken &&
       (!r?.accessToken ||
@@ -1688,7 +1688,7 @@ class X3e {
     (this._presented.record(e.access_token),
       this._presented.record(e.refresh_token),
       (this._pendingStepUpScope = void 0));
-    let t = la(this.serverName, this.serverConfig);
+    let t = getMcpOAuthCredentialKey(this.serverName, this.serverConfig);
     (logMCPDebug(this.serverName, "Saving tokens"),
       logMCPDebug(this.serverName, `Token expires in: ${e.expires_in}`),
       logMCPDebug(this.serverName, `Has refresh token: ${!!e.refresh_token}`));
@@ -1723,7 +1723,7 @@ class X3e {
     be(this.serverName, this.serverConfig, e, t);
   }
   async xaaRefresh() {
-    let e = yU();
+    let e = getXaaIdpConfig();
     if (!e) return;
     let t = await getCachedIdpIdToken(e.issuer);
     if (!t) {
@@ -1764,7 +1764,7 @@ class X3e {
           },
           this.serverName,
         ),
-        _ = la(this.serverName, this.serverConfig),
+        _ = getMcpOAuthCredentialKey(this.serverName, this.serverConfig),
         h,
         k;
       try {
@@ -1863,7 +1863,7 @@ class X3e {
       else logMCPDebug(this.serverName, "No scopes available from URL or metadata");
     }
     if (this._scopes && !this.handleRedirection && this._pendingStepUpScope) {
-      let E = la(this.serverName, this.serverConfig),
+      let E = getMcpOAuthCredentialKey(this.serverName, this.serverConfig),
         M = this._scopes,
         O = !1;
       try {
@@ -1946,7 +1946,7 @@ class X3e {
       return;
     }
     let t = e,
-      r = la(this.serverName, this.serverConfig),
+      r = getMcpOAuthCredentialKey(this.serverName, this.serverConfig),
       n = !1;
     try {
       let d = this._lastServedClientId,
@@ -2014,7 +2014,7 @@ class X3e {
     if (n) logMCPDebug(this.serverName, `Invalidated credentials (scope: ${e})`);
   }
   async saveDiscoveryState(e) {
-    let t = la(this.serverName, this.serverConfig);
+    let t = getMcpOAuthCredentialKey(this.serverName, this.serverConfig);
     logMCPDebug(
       this.serverName,
       `Saving discovery state (authServer: ${redactUrl(e.authorizationServerUrl)})`,
@@ -2064,7 +2064,7 @@ class X3e {
       return;
     }
     let r = await getSecureStorage().readAsync(),
-      n = la(this.serverName, this.serverConfig),
+      n = getMcpOAuthCredentialKey(this.serverName, this.serverConfig),
       d = r?.mcpOAuth?.[n]?.discoveryState;
     if (d?.authorizationServerUrl)
       return (
@@ -2082,7 +2082,7 @@ class X3e {
     return;
   }
   async refreshAuthorization(e) {
-    let t = la(this.serverName, this.serverConfig),
+    let t = getMcpOAuthCredentialKey(this.serverName, this.serverConfig),
       r = getSecureStorageDir();
     await ae().mkdir(r);
     let n = t.replace(/[^a-zA-Z0-9]/g, "_"),
@@ -2164,7 +2164,7 @@ class X3e {
   async readConcurrentRefreshWinner() {
     invalidateKeychainCache();
     let t = (await getSecureStorage().readAsync())?.mcpOAuth?.[
-        la(this.serverName, this.serverConfig)
+        getMcpOAuthCredentialKey(this.serverName, this.serverConfig)
       ],
       r = t?.expiresAt != null ? (t.expiresAt - Date.now()) / 1000 : void 0;
     if (t?.accessToken && (r == null || r > 300)) {
@@ -2388,7 +2388,7 @@ async function Thr() {
   });
 }
 async function Ehr(e, t, r) {
-  let n = la(e, t);
+  let n = getMcpOAuthCredentialKey(e, t);
   try {
     return await getSecureStorage().mutate((d) => ({
       ...d,
@@ -2402,7 +2402,7 @@ async function Ehr(e, t, r) {
   }
 }
 async function Ahr(e, t) {
-  let r = la(e, t);
+  let r = getMcpOAuthCredentialKey(e, t);
   await getSecureStorage().mutate((n) => {
     if (!n.mcpOAuthClientConfig?.[r]) return n;
     let d = { ...n.mcpOAuthClientConfig };
@@ -2411,7 +2411,7 @@ async function Ahr(e, t) {
 }
 async function q2n(e, t) {
   let n = await getSecureStorage().readAsync(),
-    d = la(e, t);
+    d = getMcpOAuthCredentialKey(e, t);
   return n?.mcpOAuthClientConfig?.[d];
 }
 function Me(e) {

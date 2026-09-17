@@ -16,7 +16,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { We, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { jt, wQ } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { rc } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -409,7 +409,7 @@ function initMcpDiscoveryCacheKillSwitch() {
     e;
   setDiscoveryCacheKillSwitch(() => {
     if (!t)
-      ((t = !0), (e = H("tengu_mcp_discovery_cache_enable", null) ?? void 0));
+      ((t = !0), (e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_mcp_discovery_cache_enable", null) ?? void 0));
     return e;
   });
 }

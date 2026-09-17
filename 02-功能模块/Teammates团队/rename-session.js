@@ -10,7 +10,7 @@
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { asSystemPrompt, applySessionNameAndTitle, getLastCacheSafeParams, isMainThreadCacheWarm, runForkedAgent, createUserMessage, joinTextBlocks, wrapSystemReminder, runSmallFastModelQuery } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { aa, si, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { createMainAgentContext, sanitizeSessionName, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { isTeammate } from "./teammate-context.js";
 import { collectConversationText } from "../会话-历史-恢复/session-title.js";
@@ -62,7 +62,7 @@ async function f(t) {
   }
 }
 async function generateSessionName(t, e, a) {
-  if (a.preferFork && H("tengu_rename_full_session_fork", !1) && isMainThreadCacheWarm()) {
+  if (a.preferFork && getFeatureValue_CACHED_MAY_BE_STALE("tengu_rename_full_session_fork", !1) && isMainThreadCacheWarm()) {
     let r = await f(e);
     if (r) return r;
     if (e.aborted) return null;
@@ -93,7 +93,7 @@ ${o}
           isNonInteractiveSession: !1,
           hasAppendSystemPrompt: !1,
           mcpTools: [],
-          agentContext: aa(),
+          agentContext: createMainAgentContext(),
           credentials: a.credentials,
         },
       }),
@@ -113,7 +113,7 @@ function buildRenameSystemReminder(t, e = t) {
   );
 }
 function buildSessionNameYieldedNotice(t, e) {
-  return `Another live session on this machine goes by "${si(t)}", so this session is now "${si(e)}". Use /rename to pick a different name.`;
+  return `Another live session on this machine goes by "${sanitizeSessionName(t)}", so this session is now "${sanitizeSessionName(e)}". Use /rename to pick a different name.`;
 }
 async function performRename(t, e, a) {
   if (isTeammate())
@@ -144,7 +144,7 @@ async function performRename(t, e, a) {
     };
   let i = s.name;
   e.setAppState((m) => updateStandaloneAgentContext(m, { name: i }));
-  let c = si(r),
+  let c = sanitizeSessionName(r),
     u =
       s.outcome === "yielded"
         ? `Session renamed to: ${i} ("${c}" is held by another live session on this machine)`

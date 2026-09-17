@@ -10,21 +10,21 @@
 
 // [preload stripped] 原本在此预载 60 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
-  Ls,
-  Ime,
-  Mc,
-  V$e,
-  dVt,
-  K$e,
-  Pme,
-  ND,
-  HAt,
+  otelApiModule,
+  otelSemanticConventionsModule,
+  otelCoreModule,
+  otelResourcesModule,
+  otelLogsApi,
+  OtelLoggerProvider,
+  OtelBatchLogRecordProcessor,
+  TELEMETRY_LOG_PREFIX,
+  TelemetryExportFailureReporter,
   getAuthHeadersAsync,
   withOAuth401Retry,
-  mVt,
-  YJ,
-  ht,
-  C6,
+  buildGzippedBodyIfEnabled,
+  withholdCredentialsForMisroutedHost,
+  httpClient,
+  refreshGatewayCredentialIfNeeded,
   isHostManagedProviderAuth,
   shouldUseWIFAuth,
   getAnthropicApiKeySafe,
@@ -35,10 +35,10 @@ import {
   is1PApiCustomer as cge,
   getSubscriptionType,
   getOtelHeadersFromHelper,
-  H,
-  Bo,
-  Te,
-  ee,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  checkHasTrustDialogAccepted,
+  saveGlobalConfig,
+  getGlobalConfig,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCACertificates, getMTLSConfig, Hke, getUsableProxyUrl, shouldBypassProxy } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import {
@@ -81,10 +81,10 @@ import { cB } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { getCurrentPlatform, getWslVersion } from "../核心工具-路径与平台/platform-detection.js";
 import { getClientUserAgent } from "../共享小工具-未细化/user-agent.js";
 import { toESM } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
-var C = toESM(Ls(), 1);
-var le = toESM(Mc(), 1),
-  w = toESM(V$e(), 1);
-var re = toESM(Mc());
+var C = toESM(otelApiModule(), 1);
+var le = toESM(otelCoreModule(), 1),
+  w = toESM(otelResourcesModule(), 1);
+var re = toESM(otelCoreModule());
 class de {
   export(e, t) {
     this._sendLogRecords(e, t);
@@ -112,13 +112,13 @@ class de {
   }
 }
 var k = toESM(bee(), 1);
-var Ge = toESM(Mc()),
-  ze = toESM(V$e());
-var g = toESM(Ls()),
-  q = toESM(Mc());
-var S = toESM(Ls()),
-  T = toESM(Mc()),
-  x = toESM(Ime());
+var Ge = toESM(otelCoreModule()),
+  ze = toESM(otelResourcesModule());
+var g = toESM(otelApiModule()),
+  q = toESM(otelCoreModule());
+var S = toESM(otelApiModule()),
+  T = toESM(otelCoreModule()),
+  x = toESM(otelSemanticConventionsModule());
 var Ne = "exception";
 class me {
   _spanContext;
@@ -339,8 +339,8 @@ class me {
     return e;
   }
 }
-var ne = toESM(Ls()),
-  A = toESM(Mc());
+var ne = toESM(otelApiModule()),
+  A = toESM(otelCoreModule());
 var M;
 (function (e) {
   ((e[(e.NOT_RECORD = 0)] = "NOT_RECORD"),
@@ -363,8 +363,8 @@ class N {
     return "AlwaysOnSampler";
   }
 }
-var G = toESM(Ls()),
-  De = toESM(Mc());
+var G = toESM(otelApiModule()),
+  De = toESM(otelCoreModule());
 class Y {
   _root;
   _remoteParentSampled;
@@ -399,7 +399,7 @@ class Y {
     return `ParentBased{root=${this._root.toString()}, remoteParentSampled=${this._remoteParentSampled.toString()}, remoteParentNotSampled=${this._remoteParentNotSampled.toString()}, localParentSampled=${this._localParentSampled.toString()}, localParentNotSampled=${this._localParentNotSampled.toString()}}`;
   }
 }
-var Be = toESM(Ls());
+var Be = toESM(otelApiModule());
 class oe {
   _ratio;
   _upperBound;
@@ -507,7 +507,7 @@ function Ue() {
     );
   return e;
 }
-var J = toESM(Mc()),
+var J = toESM(otelCoreModule()),
   ct = 128,
   pt = 1 / 0;
 function Fe(e) {
@@ -542,8 +542,8 @@ function $e(e) {
     Object.assign({}, e, { spanLimits: t })
   );
 }
-var D = toESM(Ls()),
-  L = toESM(Mc());
+var D = toESM(otelApiModule()),
+  L = toESM(otelCoreModule());
 class fe {
   _exporter;
   _maxExportBatchSize;
@@ -794,7 +794,7 @@ class Ee {
     return this._spanLimits;
   }
 }
-var He = toESM(Mc());
+var He = toESM(otelCoreModule());
 class _e {
   _spanProcessors;
   constructor(e) {
@@ -904,7 +904,7 @@ class Z {
     return this._activeSpanProcessor.shutdown();
   }
 }
-var te = toESM(Mc());
+var te = toESM(otelCoreModule());
 class ce {
   export(e, t) {
     return this._sendSpans(e, t);
@@ -938,23 +938,23 @@ class ce {
     if (t) return t({ code: te.ExportResultCode.SUCCESS });
   }
 }
-var U = toESM(Ime(), 1),
+var U = toESM(otelSemanticConventionsModule(), 1),
   tt = toESM(Hke(), 1);
 import Pt from "http";
 import Lt from "https";
-var I = toESM(Mc(), 1),
+var I = toESM(otelCoreModule(), 1),
   ge = toESM(bee(), 1);
 var ut = 3600000,
   je = 86400000,
   Ve = "/api/claude_code/organizations/metrics_enabled";
 class ue extends Error {}
 async function lt() {
-  let e = YJ(await getAuthHeadersAsync(), `${getOauthConfig().BASE_API_URL}${Ve}`);
+  let e = withholdCredentialsForMisroutedHost(await getAuthHeadersAsync(), `${getOauthConfig().BASE_API_URL}${Ve}`);
   if (e.error)
     throw new ue(
       "Auth error: no credential usable for the metrics opt-out check",
     );
-  let t = await ht.get(Ve, {
+  let t = await httpClient.get(Ve, {
     auth: "none",
     headers: e.headers,
     timeout: 5000,
@@ -975,7 +975,7 @@ async function dt(e) {
     });
     return (
       n(
-        `${ND} Metrics opt-out API response: enabled=${t.metrics_logging_enabled}`,
+        `${TELEMETRY_LOG_PREFIX} Metrics opt-out API response: enabled=${t.metrics_logging_enabled}`,
       ),
       logFeatureOk("api_metrics_opt_out_check"),
       { enabled: t.metrics_logging_enabled, hasError: !1 }
@@ -983,7 +983,7 @@ async function dt(e) {
   } catch (t) {
     return (
       n(
-        `${ND} Failed to check metrics opt-out status: ${l(t)}`,
+        `${TELEMETRY_LOG_PREFIX} Failed to check metrics opt-out status: ${l(t)}`,
         t instanceof ue ? { level: "error" } : void 0,
       ),
       logFeatureBad("api_metrics_opt_out_check", "request_failed"),
@@ -1001,11 +1001,11 @@ function ft() {
 async function Qe(e) {
   let t = await ft();
   if (t.hasError) return t;
-  let r = ee().metricsStatusCache;
+  let r = getGlobalConfig().metricsStatusCache;
   if (r !== void 0 && r.enabled === t.enabled && Date.now() - r.timestamp < je)
     return t;
   return (
-    await Te(
+    await saveGlobalConfig(
       (o) => ({
         ...o,
         metricsStatusCache: { enabled: t.enabled, timestamp: Date.now() },
@@ -1017,7 +1017,7 @@ async function Qe(e) {
 }
 async function We(e) {
   if (isClaudeAISubscriber() && !hasProfileScope()) return { enabled: !1, hasError: !1 };
-  let t = ee().metricsStatusCache;
+  let t = getGlobalConfig().metricsStatusCache;
   if (t) {
     if (Date.now() - t.timestamp > je) Qe(e).catch(logError);
     return { enabled: t.enabled, hasError: !1 };
@@ -1071,7 +1071,7 @@ class Oe {
   pendingExports = [];
   isShutdown = !1;
   reportedFailures = new Set();
-  failures = new HAt("BigQuery metrics");
+  failures = new TelemetryExportFailureReporter("BigQuery metrics");
   successReported = !1;
   inFlight = 0;
   oauthRefreshAttempted = !1;
@@ -1085,7 +1085,7 @@ class Oe {
   }
   async export(e, t) {
     if (this.isShutdown) {
-      (n(`${ND} BigQuery metrics export arrived after shutdown, skipping`),
+      (n(`${TELEMETRY_LOG_PREFIX} BigQuery metrics export arrived after shutdown, skipping`),
         t({ code: I.ExportResultCode.SUCCESS }));
       return;
     }
@@ -1098,29 +1098,29 @@ class Oe {
   }
   async doExport(e, t) {
     try {
-      if (!(Bo() || ke())) {
-        (n(`${ND} BigQuery metrics export: trust not established, skipping`),
+      if (!(checkHasTrustDialogAccepted() || ke())) {
+        (n(`${TELEMETRY_LOG_PREFIX} BigQuery metrics export: trust not established, skipping`),
           t({ code: I.ExportResultCode.SUCCESS }));
         return;
       }
       if (!this.dispatchHostMatchesEndpoint()) {
         (n(
-          `${ND} BigQuery metrics export: WIF dispatch host differs from the metrics endpoint host, skipping`,
+          `${TELEMETRY_LOG_PREFIX} BigQuery metrics export: WIF dispatch host differs from the metrics endpoint host, skipping`,
         ),
           t({ code: I.ExportResultCode.SUCCESS }));
         return;
       }
       let s = await getAuthHeadersAsync(),
-        o = YJ(s, this.endpoint).reasonCode === "misrouted_credential";
+        o = withholdCredentialsForMisroutedHost(s, this.endpoint).reasonCode === "misrouted_credential";
       if (o && !this.isAntEndpointOverride) {
         (n(
-          `${ND} BigQuery metrics export: credential does not belong to the metrics endpoint host, skipping`,
+          `${TELEMETRY_LOG_PREFIX} BigQuery metrics export: credential does not belong to the metrics endpoint host, skipping`,
         ),
           t({ code: I.ExportResultCode.SUCCESS }));
         return;
       }
       let i =
-        YJ(
+        withholdCredentialsForMisroutedHost(
           s,
           `${getOauthConfig().BASE_API_URL}/api/claude_code/organizations/metrics_enabled`,
         ).reasonCode === "misrouted_credential";
@@ -1141,14 +1141,14 @@ class Oe {
         }
         if (!m.enabled) {
           (n(
-            `${ND} BigQuery metrics export disabled by organization setting, skipping`,
+            `${TELEMETRY_LOG_PREFIX} BigQuery metrics export disabled by organization setting, skipping`,
           ),
             t({ code: I.ExportResultCode.SUCCESS }));
           return;
         }
       }
       let c = this.transformMetricsForInternal(e),
-        p = YJ(await getAuthHeadersAsync(), this.endpoint),
+        p = withholdCredentialsForMisroutedHost(await getAuthHeadersAsync(), this.endpoint),
         u = p.reasonCode === "misrouted_credential";
       if (p.error && !u) {
         if (p.reasonCode === "wif_error") this.reportFailure("wif_error");
@@ -1163,16 +1163,16 @@ class Oe {
         throw (this.reportFailure(..._t(m)), m);
       }
       if (
-        (n(`${ND} BigQuery metrics exported successfully`),
+        (n(`${TELEMETRY_LOG_PREFIX} BigQuery metrics exported successfully`),
         !this.successReported)
       )
         ((this.successReported = !0), logFeatureOk("internal_metrics_export"));
-      (n(`${ND} BigQuery API Response: ${b(d.data, null, 2)}`),
+      (n(`${TELEMETRY_LOG_PREFIX} BigQuery API Response: ${b(d.data, null, 2)}`),
         t({ code: I.ExportResultCode.SUCCESS }));
     } catch (r) {
       let { kind: s, status: o } = Ps(r);
       if (s === "other" && o === void 0)
-        n(`${ND} BigQuery metrics export threw before the request: ${Ye(r)}`, {
+        n(`${TELEMETRY_LOG_PREFIX} BigQuery metrics export threw before the request: ${Ye(r)}`, {
           level: "error",
         });
       (this.failures.record(Ye(r)), t({ code: I.ExportResultCode.SUCCESS }));
@@ -1226,7 +1226,7 @@ class Oe {
   }
   postOnce(e, t) {
     let r = { "Content-Type": "application/json", "User-Agent": getClientUserAgent(), ...t },
-      s = mVt({ url: this.endpoint, payload: e, storageV5: this.storageV5 });
+      s = buildGzippedBodyIfEnabled({ url: this.endpoint, payload: e, storageV5: this.storageV5 });
     return at.post(this.endpoint, s?.body ?? e, {
       timeout: this.timeout,
       maxRedirects: 0,
@@ -1279,7 +1279,7 @@ class Oe {
   async shutdown() {
     ((this.isShutdown = !0),
       await this.forceFlush(),
-      n(`${ND} BigQuery metrics exporter shutdown complete`));
+      n(`${TELEMETRY_LOG_PREFIX} BigQuery metrics exporter shutdown complete`));
   }
   armShutdownReport() {
     let e = Ot();
@@ -1289,14 +1289,14 @@ class Oe {
   reportInFlightAtShutdown() {
     if (this.inFlight === 0) return;
     (n(
-      `${ND} BigQuery metrics export still in flight at the shutdown budget (${this.inFlight})`,
+      `${TELEMETRY_LOG_PREFIX} BigQuery metrics export still in flight at the shutdown budget (${this.inFlight})`,
     ),
       this.reportFailure("pending_at_shutdown"));
   }
   async forceFlush() {
     (await Promise.all(this.pendingExports),
       this.failures.logSummary(),
-      n(`${ND} BigQuery metrics exporter flush complete`));
+      n(`${TELEMETRY_LOG_PREFIX} BigQuery metrics exporter flush complete`));
   }
   convertAttributes(e) {
     let t = {};
@@ -1314,7 +1314,7 @@ class Oe {
     return ge.AggregationTemporality.DELTA;
   }
 }
-var Re = toESM(Mc(), 1),
+var Re = toESM(otelCoreModule(), 1),
   Ke = 64,
   qe = { code: Re.ExportResultCode.SUCCESS };
 function Je(e) {
@@ -1454,12 +1454,12 @@ function nt() {
     s = new Z({ resource: e, spanProcessors: [r] });
   (C.trace.setGlobalTracerProvider(s), eYt(s));
   let o = new Le(),
-    i = new K$e({
+    i = new OtelLoggerProvider({
       resource: e,
-      processors: [new Pme(o, { scheduledDelayMillis: rt })],
+      processors: [new OtelBatchLogRecordProcessor(o, { scheduledDelayMillis: rt })],
     });
-  (dVt.setGlobalLoggerProvider(i), XXt(i));
-  let c = dVt.getLogger(
+  (otelLogsApi.setGlobalLoggerProvider(i), XXt(i));
+  let c = otelLogsApi.getLogger(
     "com.anthropic.claude_code.events",
     {
       ISSUES_EXPLAINER:
@@ -1673,7 +1673,7 @@ function Mt() {
   return Ie(process.env.CLAUDE_CODE_ENABLE_TELEMETRY);
 }
 function Nt() {
-  let e = H("tengu_cozy_dusk", Ae);
+  let e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_cozy_dusk", Ae);
   return typeof e === "number" && Number.isFinite(e)
     ? Math.min(Math.max(e, Ae), wt)
     : Ae;
@@ -1780,16 +1780,16 @@ async function initializeTelemetry(e) {
     if (
       (n(`[3P telemetry] Created ${p.length} log exporter(s)`), p.length > 0)
     ) {
-      let u = new K$e({
+      let u = new OtelLoggerProvider({
         resource: o,
         processors: p.map(
           (m) =>
-            new Pme(m, {
+            new OtelBatchLogRecordProcessor(m, {
               scheduledDelayMillis: a.OTEL_LOGS_EXPORT_INTERVAL ?? rt,
             }),
         ),
       });
-      (dVt.setGlobalLoggerProvider(u), XXt(u));
+      (otelLogsApi.setGlobalLoggerProvider(u), XXt(u));
       let d = u.getLogger(
         "com.anthropic.claude_code.events",
         {
@@ -1926,7 +1926,7 @@ function Me(e) {
     return (
       (r.url = `${c}/v1/${e}`),
       (r.headers = async () => {
-        await C6();
+        await refreshGatewayCredentialIfNeeded();
         let p = ns();
         if (!p || p.url !== c) return {};
         return { Authorization: `Bearer ${p.jwt}` };

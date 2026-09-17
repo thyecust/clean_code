@@ -8,19 +8,19 @@
 
 // Version: 2.1.263
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { getMainLoopModel, getCanonicalName, H, ql } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMainLoopModel, getCanonicalName, getFeatureValue_CACHED_MAY_BE_STALE, getCachedClientData } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 function o() {
-  let e = ql()?.pewter_owl_model;
+  let e = getCachedClientData()?.pewter_owl_model;
   if (typeof e === "string" && e !== "") return e;
-  return H("tengu_pewter_owl_model", "");
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_pewter_owl_model", "");
 }
 function r(e) {
   if (a.CLAUDE_CODE_PEWTER_OWL !== void 0) return a.CLAUDE_CODE_PEWTER_OWL;
   if (ke()) return !1;
   let t = o();
   if (t !== "" && !getCanonicalName(getMainLoopModel()).includes(t)) return !1;
-  return H(`tengu_${e}`, !1) || ql()?.[e] === !0;
+  return getFeatureValue_CACHED_MAY_BE_STALE(`tengu_${e}`, !1) || getCachedClientData()?.[e] === !0;
 }
 function isPewterOwlTool() {
   if (a.CLAUDE_CODE_PEWTER_OWL_TOOL !== void 0)

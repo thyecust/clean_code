@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Vxt, eMn, mv, jrt, pa } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { T5 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { invalidateToolDefinitionCache } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   getMemoryCitationTracker,
   clearLastIngressUuidCache,
@@ -89,6 +89,6 @@ function dropBashPromptSkillListingPin() {
   let t = getSessionFeatureCache();
   ((t.bashPromptSkillCommands = void 0),
     (t.workflowAuthoringSkillAvailable = void 0),
-    T5());
+    invalidateToolDefinitionCache());
 }
 export { clearSessionCaches, dropBashPromptSkillListingPin };

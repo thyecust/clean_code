@@ -29,7 +29,7 @@ import { streamRipgrepSearch, runRipgrepSearch, DEFAULTS_SLOT_MARKER, getAutoMod
 import { n_, jq } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsFilePathForSource, updateSettingsForSourceWithTransform, autoModeConfigSchema } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
-import { qe, tt, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { BASH_TOOL_NAME, READ_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { wTt, nb, findCommandNode, extractCommandArguments, zCe, tJe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getProjectsDir, getProjectDir } from "../Teammates团队/transcript-paths.js";
@@ -532,9 +532,9 @@ function or(e) {
 }
 function Bt(e, t) {
   if (t === void 0 || t === "") return !1;
-  if (e === qe) return nr(t);
-  if (e === Ut) return or(t);
-  if (e === tt) return pt.test(t);
+  if (e === BASH_TOOL_NAME) return nr(t);
+  if (e === POWERSHELL_TOOL_NAME) return or(t);
+  if (e === READ_TOOL_NAME) return pt.test(t);
   return !1;
 }
 var ze = /^(?!\.{1,2}$)[A-Za-z0-9_.][A-Za-z0-9_.-]*$/,
@@ -988,7 +988,7 @@ var ye = 1e4,
   $e = 4000,
   dn = 50,
   ce = Symbol("deadline reached"),
-  fn = `"${qe}"`,
+  fn = `"${BASH_TOOL_NAME}"`,
   Dr = 4194304,
   Tr = 104857600,
   Pr = 8000,
@@ -1759,7 +1759,7 @@ async function Wr(e) {
         for (let D of O) {
           if (
             D.type === "tool_use" &&
-            D.name === qe &&
+            D.name === BASH_TOOL_NAME &&
             typeof D.input?.command === "string"
           )
             o.push(
@@ -2236,7 +2236,7 @@ async function an(
           for (let Le of Oe)
             if (
               Le.type === "tool_use" &&
-              Le.name === qe &&
+              Le.name === BASH_TOOL_NAME &&
               typeof Le.input?.command === "string"
             )
               (N++,

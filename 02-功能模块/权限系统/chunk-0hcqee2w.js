@@ -16,7 +16,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
-import { y5, tt, Hn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isRemoteOrPluginRequestSource, READ_TOOL_NAME, getSanitizedToolName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Js } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -259,7 +259,7 @@ function $6e(u, s, n) {
     if (!a) return !1;
     return Boolean(n ? n(a) : a);
   }
-  if (u.toolName === tt) return Boolean(F6e(u.ruleContent));
+  if (u.toolName === READ_TOOL_NAME) return Boolean(F6e(u.ruleContent));
   return !1;
 }
 function OB(u) {
@@ -289,7 +289,7 @@ function fIt(u, s, n, a) {
   )
     return null;
   if (l.length + c.length > LZ) return null;
-  let A = l.filter((g) => g.toolName === tt),
+  let A = l.filter((g) => g.toolName === READ_TOOL_NAME),
     f = l.filter((g) => g.toolName === s);
   if (
     c.some(
@@ -2141,7 +2141,7 @@ function nn(u) {
   return (
     findSafetyCheckReason(s, (a) => !a.classifierApprovable) !== void 0 ||
     u.isAskCappedByOrg ||
-    y5(u.requestSource)
+    isRemoteOrPluginRequestSource(u.requestSource)
   );
 }
 function Wst(u) {
@@ -2449,7 +2449,7 @@ function EQt(Sl) {
   let RD = Ou,
     Be;
   if (O[73] !== S.toolName)
-    ((Be = Hn(S.toolName)), (O[73] = S.toolName), (O[74] = Be));
+    ((Be = getSanitizedToolName(S.toolName)), (O[73] = S.toolName), (O[74] = Be));
   else Be = O[74];
   let Yr;
   if (O[75] !== S.isMcp || O[76] !== Be)

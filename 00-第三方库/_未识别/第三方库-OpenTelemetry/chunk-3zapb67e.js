@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { pO, tI, mF } from "../../../01-核心基础设施/遥测-OpenTelemetry/遥测-OpenTelemetry.0xhcvej6.js";
 import { bee } from "./第三方库-OpenTelemetry.fy6ebeyr.js";
-import { Ls, Mc } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { otelApiModule, otelCoreModule } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { commonJS } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var a = commonJS(function (m) {
   Object.defineProperty(m, "__esModule", { value: !0 });
@@ -32,11 +32,11 @@ var u = commonJS(function (O) {
     O.DeltaTemporalitySelector =
     O.CumulativeTemporalitySelector =
       void 0;
-  var f = Mc(),
+  var f = otelCoreModule(),
     r = bee(),
     E = a(),
     v = pO(),
-    R = Ls(),
+    R = otelApiModule(),
     C = () => r.AggregationTemporality.CUMULATIVE;
   O.CumulativeTemporalitySelector = C;
   var U = (e) => {

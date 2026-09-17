@@ -17,7 +17,7 @@ import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js"
 import { runWithCwd } from "../共享小工具-未细化/cwd-context.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { wb } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
-import { qe, Ut } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { BASH_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ike } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { escapeShellCommandMarkers, findSkillShellCommands, addMcpConfig, userScopeMcpServerExists, readRawMcpJsonServersFromCwd } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -1306,7 +1306,7 @@ async function bt(e, t, r) {
         let L = {
             ...(j && { description: de(j) }),
             ...(w && {
-              "allowed-tools": [qe, Ut],
+              "allowed-tools": [BASH_TOOL_NAME, POWERSHELL_TOOL_NAME],
               "disable-model-invocation": !0,
             }),
           },

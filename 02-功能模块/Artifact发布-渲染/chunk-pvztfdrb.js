@@ -247,20 +247,20 @@ import { RENAME_FALLBACK_ERRNOS, buildTempFilePath, renameWithRetry } from "../.
 import { ot, gh, DU, bA, _ie, yx, W6 } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { hasCredentialDescriptor, getApiKey } from "../认证-OAuth登录/credential-file-descriptors.js";
 import {
-  sr,
+  getSessionStateStore,
   isAutoClassifierActive,
-  rx,
-  Ji,
-  mc,
-  ht,
-  Rp,
-  Bt,
-  Mn,
+  isPluginSteeredAgent,
+  isDelegatedObservationAgent,
+  getAgentDepth,
+  httpClient,
+  REMOTE_DEVICES_MCP_SERVER_NAME,
+  EDIT_TOOL_NAME,
+  WRITE_TOOL_NAME,
   isBgSession,
   describeHowToDisableAuthTokenSource,
   getAuthTokenSource,
   getAnthropicApiKeyWithSourceSafe,
-  H,
+  getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { SW } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { O_NONBLOCK_FLAG, O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
@@ -937,7 +937,7 @@ async function Za(e, t, o, r, d, w = !0, p = !1) {
     B;
   try {
     if (I) {
-      let te = await ht.get(j1e(C.slug, t), {
+      let te = await httpClient.get(j1e(C.slug, t), {
         host: "ccr-gateway",
         auth: "session-jwt",
         headers: W1e(D),
@@ -1682,7 +1682,7 @@ function Oc(e) {
   };
 }
 function Ic() {
-  return FK() && (isVsCodeExtensionSession() || (isClaudeDesktopAppSession() && !isClaudecodeEnv())) && H("tengu_teal_corbel_newel", !1);
+  return FK() && (isVsCodeExtensionSession() || (isClaudeDesktopAppSession() && !isClaudecodeEnv())) && getFeatureValue_CACHED_MAY_BE_STALE("tengu_teal_corbel_newel", !1);
 }
 function He(e, t) {
   let o =
@@ -1723,7 +1723,7 @@ function ii(e) {
   return ne().typeCapabilityReads.get(e)?.capabilities?.includes("room") === !0;
 }
 function al(e, t) {
-  if (Ji(t.agentContext)) return;
+  if (isDelegatedObservationAgent(t.agentContext)) return;
   if (ds(e, t))
     t.setAppState((o) =>
       o.artifactWatchApproved ? o : { ...o, artifactWatchApproved: !0 },
@@ -1744,7 +1744,7 @@ var Nc = {
   replayed: { pages: !1, cursor: "", none: "" },
 };
 function Lc(e, t) {
-  if (Ji(e.agentContext)) return;
+  if (isDelegatedObservationAgent(e.agentContext)) return;
   e.setAppState((o) =>
     o.artifactReadPageDataApproved &&
     (!t || o.artifactReadPageDataHumanApproved)
@@ -1769,7 +1769,7 @@ function Gm(e) {
   return Reflect.get(e, yr) === !0;
 }
 function zc(e, t, o) {
-  if (Ji(t.agentContext)) return;
+  if (isDelegatedObservationAgent(t.agentContext)) return;
   if (!ds(e, t) || ownedByUser(getShareEntry(o))) return;
   let r = Co(e, t);
   t.setAppState((d) =>
@@ -1792,7 +1792,7 @@ function zc(e, t, o) {
   );
 }
 function dl(e, t) {
-  if (Ji(t.agentContext)) return;
+  if (isDelegatedObservationAgent(t.agentContext)) return;
   if (!ds(e, t)) return;
   let o = Co(e, t);
   t.setAppState((r) =>
@@ -1812,7 +1812,7 @@ function Rs(e) {
   return e?.typeLocked === !0 || e?.typeLock != null;
 }
 function to(e, t, o) {
-  if (Ji(t.agentContext)) return;
+  if (isDelegatedObservationAgent(t.agentContext)) return;
   let r = getShareEntry(o),
     d = Reflect.get(e, gO),
     w = (E) => typeof d === "object" && d !== null && Reflect.get(d, E) === !0,
@@ -1839,7 +1839,7 @@ function to(e, t, o) {
   );
 }
 function Fc(e, t, o) {
-  if (Ji(t.agentContext)) return;
+  if (isDelegatedObservationAgent(t.agentContext)) return;
   if (!ds(e, t) || (getToolPermissionContext(t).mode === "auto" && !othersArtifactReadIsUserOnly(Vm(e))) || ownedByUser(getShareEntry(o))) return;
   t.setAppState((r) =>
     r.artifactReadConsentSlugs?.[o] === !0
@@ -1851,7 +1851,7 @@ function Fc(e, t, o) {
   );
 }
 function ea(e, t, o) {
-  if (Ji(t.agentContext)) return;
+  if (isDelegatedObservationAgent(t.agentContext)) return;
   if (!ds(e, t) || getToolPermissionContext(t).mode === "auto") return;
   let r = Co(e, t);
   t.setAppState((d) =>
@@ -1934,7 +1934,7 @@ function qm(e, t) {
   return;
 }
 function ul(e, t, o) {
-  if (Ji(t.agentContext)) return;
+  if (isDelegatedObservationAgent(t.agentContext)) return;
   let r = Reflect.get(e, zr);
   if ((r !== !0 && r !== "auto") || consentMustDeny(t)) return;
   let d = ta(e, t) ? "classifier" : !0;
@@ -2094,7 +2094,7 @@ function io(e, t, o, r) {
     : ne().shareStatus.noticeReadSights[e].take(t.toolUseId, o) === !0;
 }
 function Vc(e, t) {
-  if (Ji(t.agentContext)) return !1;
+  if (isDelegatedObservationAgent(t.agentContext)) return !1;
   return (e[xt] ?? !1) && getToolPermissionContext(t).mode === "plan" && consentAskCanReachUser(t);
 }
 function Dn(e) {
@@ -2113,7 +2113,7 @@ function gl(e) {
   return t === "user_temporary" || t === "user_permanent";
 }
 function da(e) {
-  return ao(e) && !Ji(e.agentContext) ? REPLIES_CONSENT_WRITER : void 0;
+  return ao(e) && !isDelegatedObservationAgent(e.agentContext) ? REPLIES_CONSENT_WRITER : void 0;
 }
 function yl(e) {
   return s5(e) && !WT(e);
@@ -3075,7 +3075,7 @@ function kg(e, t) {
     FK() &&
     e.options.isNonInteractiveSession &&
     e.forRemoteExecution !== !0 &&
-    !rx(e) &&
+    !isPluginSteeredAgent(e) &&
     o.mode !== "plan" &&
     !Yin(o, t, ["reply"])
   );
@@ -3507,7 +3507,7 @@ var gu = ["reply", "comments"],
     async checkPermissions(e, t, o) {
       if (t.action === "comments") {
         let r = t.url !== void 0 ? parseArtifactUrl(t.url) : null,
-          d = r !== null && hasAutoReactNoticePending(r.slug) && !Ji(o.agentContext),
+          d = r !== null && hasAutoReactNoticePending(r.slug) && !isDelegatedObservationAgent(o.agentContext),
           w = { action: t.action },
           p = r === null ? null : Hh(getToolPermissionContext(o), r, t.url, "deny", w);
         if (p !== null) return Nn(p);
@@ -3866,7 +3866,7 @@ var gu = ["reply", "comments"],
           );
         let d = ps(o, r, t.url, "nothing was read", { action: t.action });
         if (d !== void 0) throw d;
-        if (io("comments", o, r.slug, !0) && !Ji(o.agentContext)) clearAutoReactNoticePending(r.slug);
+        if (io("comments", o, r.slug, !0) && !isDelegatedObservationAgent(o.agentContext)) clearAutoReactNoticePending(r.slug);
         let w = eze(r.slug),
           p = await j7(r, o.abortController.signal, o.credentials);
         if (p.err !== null)
@@ -3913,7 +3913,7 @@ var gu = ["reply", "comments"],
         let D = {
           ...(p.threadsDropped && { threads_dropped: !0 }),
           ...(_ !== void 0 && { thread_filter: _ }),
-          ...(Ji(o.agentContext) && { scoped_dispatch: !0 }),
+          ...(isDelegatedObservationAgent(o.agentContext) && { scoped_dispatch: !0 }),
           ...(E !== void 0 && { cursor: E }),
           threads: K1t()
             ? await qWn(
@@ -3938,7 +3938,7 @@ var gu = ["reply", "comments"],
               )
             : Lcn(p.threads),
         };
-        if (o.agentId === void 0 && !Ji(o.agentContext)) {
+        if (o.agentId === void 0 && !isDelegatedObservationAgent(o.agentContext)) {
           let I = Sg(D);
           (DWn(r.slug, I.commentIds, p.threads, w, p.threadsDropped === !0),
             BWn(
@@ -6455,7 +6455,7 @@ var Qu = {
         if (F !== null) return F;
         let B = getShareEntry(r.slug),
           ue = ownedByUser(B),
-          J = hasAutoReactNoticePending(r.slug) && !Ji(o.agentContext),
+          J = hasAutoReactNoticePending(r.slug) && !isDelegatedObservationAgent(o.agentContext),
           re = getToolPermissionContext(o),
           q = re.mode === "plan",
           pe = Hh(re, r, t.url, "deny", N);
@@ -7251,7 +7251,7 @@ var Qu = {
               );
             te = { dir: re.dir, approvedPaths: Me };
           }
-          if (d && !Ji(o.agentContext)) clearAutoReactNoticePending(r.slug);
+          if (d && !isDelegatedObservationAgent(o.agentContext)) clearAutoReactNoticePending(r.slug);
           if (Kr(t, "read_db", r.slug)) zc(t, o, r.slug);
           let Re = await uGn(
             o.session.host,
@@ -10391,9 +10391,9 @@ var Tb = {
   Ob = 1400000,
   Wf =
     "the browser preview would launch lives somewhere this session's commands can write without asking (a working directory, temp dir, or sandbox write root), where they could have planted or altered it \u2014 install Chrome outside those, or point BUN_CHROME_PATH at one from your shell.",
-  Ib = [Mn, Bt],
+  Ib = [WRITE_TOOL_NAME, EDIT_TOOL_NAME],
   Db = {
-    name: Mn,
+    name: WRITE_TOOL_NAME,
     mcpInfo: void 0,
     inputSchema: c({ file_path: s() }),
     getPath: (e) => String(e.file_path),
@@ -11888,7 +11888,7 @@ var sp = {
             "`action` or `url` no longer names the artifact watch that was approved \u2014 nothing was armed; retry so it is checked again",
             "watch_target_changed",
           );
-        if (I !== void 0 && !Ji(o.agentContext) && ao(o)) {
+        if (I !== void 0 && !isDelegatedObservationAgent(o.agentContext) && ao(o)) {
           if ((D.clearByApprovedRewatch(_.slug, I), !D.isStopped(_.slug)))
             ize(_.slug, { storageV5: o.storageV5 });
         }
@@ -11912,9 +11912,9 @@ var sp = {
             }
           );
         let F = approveTakenRepliesConsent(w, p, _.slug, ds(t, o) && gl(o));
-        if (V && ll(o) && !Ji(o.agentContext) && ao(o) && dse(o.messages))
+        if (V && ll(o) && !isDelegatedObservationAgent(o.agentContext) && ao(o) && dse(o.messages))
           D.noteApprovedWatch(_.slug);
-        if (N && !Ji(o.agentContext)) C.liveDocArmDeclined.delete(_.slug);
+        if (N && !isDelegatedObservationAgent(o.agentContext)) C.liveDocArmDeclined.delete(_.slug);
         let B;
         if (a.CLAUDE_CODE_REMOTE) {
           let ae = await xNt({ slug: _.slug, context: o });
@@ -12025,7 +12025,7 @@ var sp = {
             o.toolUseId === void 0
               ? void 0
               : C.wakes.resumeSights.take(o.toolUseId, _.slug),
-          V = Ji(o.agentContext) ? void 0 : I;
+          V = isDelegatedObservationAgent(o.agentContext) ? void 0 : I;
         if (a.CLAUDE_CODE_REMOTE)
           return {
             data: {
@@ -12387,7 +12387,7 @@ function Fd(e) {
   (TYe(e, "page_rehomed"), ne().coordinatorEditors.delete(e));
 }
 function n_(e) {
-  return sr().agentSettled.subscribe((t, o) => {
+  return getSessionStateStore().agentSettled.subscribe((t, o) => {
     if (o === "completed") return;
     try {
       for (let [r, d] of e.coordinatorEditors)
@@ -14704,7 +14704,7 @@ ${Re}
 }
 function bh(e, t) {
   let o = ne();
-  if (o.designGuardFired || H("tengu_cobalt_plinth_sorb", !1) !== !0)
+  if (o.designGuardFired || getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_sorb", !1) !== !0)
     return null;
   let { action: r, file_path: d } = e;
   if (
@@ -14733,7 +14733,7 @@ function bh(e, t) {
   );
 }
 function Rh(e) {
-  return e.mcpInfo?.serverName === Rp && e.mcpInfo.serverType !== "sdk";
+  return e.mcpInfo?.serverName === REMOTE_DEVICES_MCP_SERVER_NAME && e.mcpInfo.serverType !== "sdk";
 }
 var ee = null,
   qt = null,
@@ -15427,7 +15427,7 @@ function pv(e, t, o, r) {
   if (d !== null) return { rule: d, behavior: "deny" };
   let w = Hh(e, o, r, "ask");
   if (w !== null) return { rule: w, behavior: "ask" };
-  return hasAutoReactNoticePending(o.slug) && !Ji(t) ? { behavior: "notice" } : null;
+  return hasAutoReactNoticePending(o.slug) && !isDelegatedObservationAgent(t) ? { behavior: "notice" } : null;
 }
 function kut(e) {
   return mi(e) && e[zr] !== !1;
@@ -15955,7 +15955,7 @@ var hv = {
         ut = Hh(dt, De, r.url, "deny", qe);
       if (ut !== null) return Nn(ut);
       let Dt = Hh(dt, De, r.url, "ask", qe),
-        Yt = hasAutoReactNoticePending(De.slug) && !Ji(t.agentContext);
+        Yt = hasAutoReactNoticePending(De.slug) && !isDelegatedObservationAgent(t.agentContext);
       oo("verify", t, De.slug, Yt);
       let vt = {
         ...r,
@@ -16048,7 +16048,7 @@ var hv = {
         Hn = vt ?? pn,
         Wn = getShareEntry(_e.slug),
         Lt = ownedByUser(Wn),
-        Gt = hasAutoReactNoticePending(_e.slug) && !Ji(t.agentContext);
+        Gt = hasAutoReactNoticePending(_e.slug) && !isDelegatedObservationAgent(t.agentContext);
       oo("read", t, _e.slug, Gt);
       let Vn = { [li]: { action: r.action, slug: _e.slug } };
       if (Lt && !Gt && Hn === null)
@@ -17597,7 +17597,7 @@ var hv = {
         getToolPermissionContext(t).mode !== "plan" &&
         !(_n.type === "safetyCheck" && !_n.classifierApprovable) &&
         t.forRemoteExecution !== !0 &&
-        !rx(t) &&
+        !isPluginSteeredAgent(t) &&
         Ic()
           ? [Oc((en?.suggestions?.length ?? 0) > 0), ...(en?.suggestions ?? [])]
           : en?.suggestions;
@@ -19479,7 +19479,7 @@ ${B}`,
           "read_page_data_schema_unavailable",
         );
       let de = ie.reg.doc,
-        ve = de.name === Yon.name && !Ji(t.agentContext),
+        ve = de.name === Yon.name && !isDelegatedObservationAgent(t.agentContext),
         Ue = wn(p.url),
         Ne = artifactViewerUrlFor(Ue);
       if (Qn(p, "read_page_data", Ue.slug))
@@ -19548,7 +19548,7 @@ ${B}`,
       if (
         isFrameBaseVersionEnabled() &&
         mt &&
-        !Ji(t.agentContext) &&
+        !isDelegatedObservationAgent(t.agentContext) &&
         !readPendingFor(t.agentId, Ue.slug, Ge.ver)
       ) {
         let Pt = isArtifactConflictLegacy() ? void 0 : observationStamp(t.agentId, r?.message.id, "page_data");
@@ -19610,7 +19610,7 @@ ${B}`,
         );
       let ve = ps(t, de, p.url, "nothing was read", { action: p.action });
       if (ve !== void 0) throw ve;
-      if (io("verify", t, de.slug, !1) && !Ji(t.agentContext)) clearAutoReactNoticePending(de.slug);
+      if (io("verify", t, de.slug, !1) && !isDelegatedObservationAgent(t.agentContext)) clearAutoReactNoticePending(de.slug);
       let Ue = artifactViewerUrlFor(de),
         Ne = !1,
         ze = await dcn(de.slug, t.abortController.signal, t.credentials);
@@ -19648,7 +19648,7 @@ ${B}`,
           waited: Ne,
           explicit_url: ie,
         }),
-        !Ji(t.agentContext))
+        !isDelegatedObservationAgent(t.agentContext))
       )
         L.reads.set(de.slug, {
           agentId: t.agentContext?.agentId ?? null,
@@ -20036,7 +20036,7 @@ ${B}`,
           `Reading this artifact is blocked by your ${Ge.ruleValue.toolName} deny rule (${formatPermissionRule(Ge.ruleValue)}) \u2014 nothing was read`,
           "read_denied",
         );
-      if (ze && !Ji(t.agentContext)) clearAutoReactNoticePending(de.slug);
+      if (ze && !isDelegatedObservationAgent(t.agentContext)) clearAutoReactNoticePending(de.slug);
       if (Ne) Fc(p, t, de.slug);
       let at = await ucn({
         parsedArtifact: de,
@@ -21848,7 +21848,7 @@ ${B}`,
         else if (
           En &&
           we.liveVersion &&
-          !Ji(t.agentContext) &&
+          !isDelegatedObservationAgent(t.agentContext) &&
           ne().accountEpoch === _ &&
           ne().conversationEpoch === E
         )
@@ -22063,11 +22063,11 @@ ${B}`,
       if (L.roomArmRefusedByUser.has(`path:${Se}`) || (Pe === null && Xh(L)))
         L.roomStoppedByUser.add(we.slug);
       let de = L.accountEpoch === _ && L.conversationEpoch === E;
-      if ((L.strandedMints.delete(we.slug), !Ji(t.agentContext) && de)) {
+      if ((L.strandedMints.delete(we.slug), !isDelegatedObservationAgent(t.agentContext) && de)) {
         if (
           (L.ownPublishedSlugs.set(we.slug, { env: Vo() }),
           (ie.lastPublish = { slug: we.slug, env: Vo() }),
-          t.agentId !== void 0 && isCoordinatorModeEnabled() && mc(t.agentContext) <= 1)
+          t.agentId !== void 0 && isCoordinatorModeEnabled() && getAgentDepth(t.agentContext) <= 1)
         )
           lp(we.slug, {
             agentId: t.agentId,
@@ -22383,7 +22383,7 @@ function nm({
     H9({ storageV5: C.storageV5 });
     let V = frameLivePublishSkipReason({ slug: e, publishContext: d }),
       F =
-        p && V === "publish_context" && !w && !Ji(C.agentContext)
+        p && V === "publish_context" && !w && !isDelegatedObservationAgent(C.agentContext)
           ? subagentPublishAdopter({ publishContext: d, context: C })
           : null,
       B = F !== null ? frameLivePublishSkipReason({ slug: e, publishContext: F }) : null;

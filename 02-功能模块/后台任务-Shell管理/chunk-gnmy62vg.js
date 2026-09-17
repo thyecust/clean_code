@@ -14,7 +14,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getPtySocketDir, getPtySocketPath, getSparePtyDir, getPtyPidDir, getPtyPidFilePath, getPtyHostStderrPath, getPtyLateOutputPath, getPtyExecExitPath, encodeControlFrame } from "./chunk-djserjj5.js";
 import { readRoster, updateRoster, writeReapedTerminalState, Ep, al } from "./chunk-7wsy8vxb.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { Wi, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { readBoundedFile, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { sigtermThenKill, reapDetachedRepl, captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
@@ -26,7 +26,7 @@ import { basename, join as x } from "path";
 async function readExecExitStatus(e, t) {
   if (t.launch.mode !== "exec" || !e) return null;
   try {
-    let i = await Wi(getPtyExecExitPath(e), 8192);
+    let i = await readBoundedFile(getPtyExecExitPath(e), 8192);
     if (i == null) return null;
     let r = JSON.parse(i);
     if (typeof r?.code !== "number") return null;
@@ -94,7 +94,7 @@ async function reapAllDaemonWorkers(e = {}, t) {
       let o = a.slice(0, -l.length);
       if (r.has(o)) continue;
       let u = s
-        ? Number((t ? await readStoredPtyPid(t, o) : await Wi(getPtyPidFilePath(o), MAX_PTY_PID_FILE_BYTES)) ?? "0")
+        ? Number((t ? await readStoredPtyPid(t, o) : await readBoundedFile(getPtyPidFilePath(o), MAX_PTY_PID_FILE_BYTES)) ?? "0")
         : 0;
       r.set(o, { pid: u, ptySock: getPtySocketPath(o) });
     }
@@ -377,7 +377,7 @@ function createDecModeTracker() {
 }
 import { freemem } from "os";
 function getLowMemoryStatus() {
-  let e = H("tengu_bg_low_mem_mb", 1024) * 1024 * 1024;
+  let e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_bg_low_mem_mb", 1024) * 1024 * 1024;
   if (e <= 0) return { lowMem: !1, level: void 0 };
   if (getCurrentPlatform() !== "macos") return { lowMem: freemem() < e, level: void 0 };
   let t = I();
@@ -401,7 +401,7 @@ function I() {
   }
 }
 function isBackgroundAttachUpgradeEnabled() {
-  return H("tengu_bg_attach_upgrade", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_bg_attach_upgrade", !0);
 }
 export {
   getVersionTarget,

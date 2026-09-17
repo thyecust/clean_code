@@ -13,7 +13,7 @@ import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { tRe, kCt, yUe, isCCREnvironmentKind } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { buildBridgeAddress, appendHopToChain, buildCrossSessionEnvelope, isCCREnvironmentKind } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { FAe } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { toCompatSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
@@ -207,8 +207,8 @@ async function postInterClaudeMessage(t, i, u, w, P, k, x) {
   if (!/^session_[A-Za-z0-9_-]+$/.test(o))
     return { ok: !1, error: `invalid session ID format: ${t}` };
   let g = getSelfBridgeCompatId() ?? getRemoteSessionCompatId(),
-    m = g ? tRe(g) : "unknown",
-    _ = yUe(m, getSelfBridgeTitle() ?? u, i, void 0, kCt(P, g ? FAe(m) : void 0), k),
+    m = g ? buildBridgeAddress(g) : "unknown",
+    _ = buildCrossSessionEnvelope(m, getSelfBridgeTitle() ?? u, i, void 0, appendHopToChain(P, g ? FAe(m) : void 0), k),
     y = createMessageEnvelope(),
     c = {
       ...y,

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { qe, Bt, tt, Mn, Wl, Ut } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { AGENT_TOOL_NAME } from "../../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
 var r = null,
   s = null,
@@ -19,12 +19,12 @@ var r = null,
   },
   M = [
     AGENT_TOOL_NAME,
-    qe,
-    Bt,
-    Mn,
-    tt,
-    Wl,
-    Ut,
+    BASH_TOOL_NAME,
+    EDIT_TOOL_NAME,
+    WRITE_TOOL_NAME,
+    READ_TOOL_NAME,
+    NOTEBOOK_EDIT_TOOL_NAME,
+    POWERSHELL_TOOL_NAME,
     ...(r ? [r.name] : []),
     ...(s ? [s.name] : []),
     ...(n ? [n.name] : []),
@@ -41,22 +41,22 @@ var r = null,
     get [AGENT_TOOL_NAME]() {
       return import.meta.require("../../02-功能模块/工具Task-Agent调度/renderGroupedAgentToolUse.5y53hkmt.js").renderToolUseMessage;
     },
-    get [qe]() {
+    get [BASH_TOOL_NAME]() {
       return import.meta.require("../../02-功能模块/工具UI渲染/BackgroundHint.nne14pfp.js").renderToolUseMessage;
     },
-    get [Bt]() {
+    get [EDIT_TOOL_NAME]() {
       return import.meta.require("../../02-功能模块/工具文件读写编辑/renderToolUseErrorMessage.8cb1t7h1.js").renderToolUseMessage;
     },
-    get [Mn]() {
+    get [WRITE_TOOL_NAME]() {
       return import.meta.require("../../02-功能模块/工具UI渲染/isResultTruncated.y9qtnzef.js").renderToolUseMessage;
     },
-    get [tt]() {
+    get [READ_TOOL_NAME]() {
       return import.meta.require("../../02-功能模块/工具文件读写编辑/renderToolUseTag.1xg51k6k.js").renderToolUseMessage;
     },
-    get [Wl]() {
+    get [NOTEBOOK_EDIT_TOOL_NAME]() {
       return import.meta.require("../../02-功能模块/Notebook(.ipynb)/Notebook(.ipynb).zmx4vxzb.js").renderToolUseMessage;
     },
-    get [Ut]() {
+    get [POWERSHELL_TOOL_NAME]() {
       return import.meta.require("../../02-功能模块/工具Bash-Shell/renderToolUseErrorMessage.fxtssd7a.js").renderToolUseMessage;
     },
     ...(r && { [r.name]: r.ui.renderToolUseMessage }),

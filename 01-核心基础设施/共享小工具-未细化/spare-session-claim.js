@@ -10,7 +10,7 @@
 import { identity as _m, $p, irt, cOn, uLn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { z, Yu, JPn } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { lU, resetEnvDerivedAuthCaches, qUe, LZe, Gse } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { resetUserData, resetEnvDerivedAuthCaches, resetGrowthBook, resetTrustDialogAcceptedCache, clearProjectPathForConfigCache } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { canonicalizePath } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import { Za, MRt, NRt, uke } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { addStartupContext } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
@@ -80,8 +80,8 @@ async function bootClaimedSpare(e, m) {
   else irt(n);
   if (
     (Za(),
-    Gse(),
-    LZe(),
+    clearProjectPathForConfigCache(),
+    resetTrustDialogAcceptedCache(),
     cOn(),
     markWarmSpareClaimed(),
     addStartupContext({ warm_spare_claimed: 1 }),
@@ -102,8 +102,8 @@ async function bootClaimedSpare(e, m) {
     resetEnvDerivedAuthCaches(),
     Avt(),
     resetRemoteSettingsSyncCache(),
-    qUe({ preservePendingExposures: !0, preserveLoggedExposures: !0 }),
-    lU(),
+    resetGrowthBook({ preservePendingExposures: !0, preserveLoggedExposures: !0 }),
+    resetUserData(),
     gwn(),
     clearProxyCache(),
     configureGlobalAgents());

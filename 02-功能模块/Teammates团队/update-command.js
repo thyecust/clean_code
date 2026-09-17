@@ -15,7 +15,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { isBgSession, isDaemonBgWorker, hq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isBgSession, isDaemonBgWorker, getScreenReaderEnvOverrides } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Z4t } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { isTeammate } from "./teammate-context.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
@@ -180,7 +180,7 @@ var runUpdateCommand = async (d, t) => {
       await n.teardown({ skipArchive: !0 }));
   let m = {};
   if (b) m.CLAUDE_INTERNAL_ASSISTANT_TEAM_NAME = b;
-  (Object.assign(m, hq()),
+  (Object.assign(m, getScreenReaderEnvOverrides()),
     Object.assign(m, buildBridgeReattachEnv(S, E, I, T, resolveBridgeHandoffIdentity(n, getCurrentSessionBridge())) ?? {}));
   let B = await resolveLauncher(),
     C = await recordExitTranscript(t.messages, "relaunch", {}, t.storageV5);

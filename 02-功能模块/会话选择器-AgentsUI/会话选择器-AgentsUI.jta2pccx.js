@@ -30,11 +30,11 @@ import {
   touchFleetViewHeartbeat,
   clearFleetViewHeartbeat,
   getAuthTokenSource,
-  zg,
-  hq,
-  H,
-  Te,
-  ee,
+  isScreenReaderModeEnabled,
+  getScreenReaderEnvOverrides,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  saveGlobalConfig,
+  getGlobalConfig,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, w8, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
@@ -371,7 +371,7 @@ function ec(s) {
   let c = s?.agent ?? getInitialSettings().agent;
   if (!s && !c) return;
   let m = s?.permissionMode ? parsePermissionModeOrDefault(s.permissionMode) : void 0,
-    b = !isBypassPermissionsModeDisabled() && (hasSkipDangerousModePermissionPrompt() || Boolean(ee().bypassPermissionsModeAccepted)),
+    b = !isBypassPermissionsModeDisabled() && (hasSkipDangerousModePermissionPrompt() || Boolean(getGlobalConfig().bypassPermissionsModeAccepted)),
     k = m === "bypassPermissions" && !b ? void 0 : m,
     w = s?.allowBypass && b ? !0 : void 0,
     v = s?.effort ? KEt(s.effort).level : void 0;
@@ -1318,7 +1318,7 @@ class kc {
     this.load();
   };
   load = async () => {
-    if (isCrossSessionMessagingEnabled() && H("tengu_fleetview_peers", !1))
+    if (isCrossSessionMessagingEnabled() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_fleetview_peers", !1))
       this.#e.touchFleetViewHeartbeat(this.#n);
     let s = ++this.#f,
       [c, m] = await Promise.all([
@@ -1419,7 +1419,7 @@ class kc {
       A = W - this.#y >= ic(isTerminalFocused(), W - Nm());
     if (O.length > 0 && A) {
       this.#y = W;
-      let I = H("tengu_fleetview_pr_batch", !0);
+      let I = getFeatureValue_CACHED_MAY_BE_STALE("tengu_fleetview_pr_batch", !0);
       (async () => {
         let q;
         if (I) {
@@ -1519,7 +1519,7 @@ class kc {
               ? w
               : m,
           ),
-          isCrossSessionMessagingEnabled() && H("tengu_fleetview_peers", !1))
+          isCrossSessionMessagingEnabled() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_fleetview_peers", !1))
         ) {
           let w = new Set((this.#t.jobs ?? []).map((O) => O.state.sessionId)),
             v = Date.now(),
@@ -2521,7 +2521,7 @@ function Nc(s, c) {
   return [...s, ...c.filter((b) => !m.has(b.name.toLowerCase()))];
 }
 function Tc(s) {
-  let c = ee().agentLastUsed ?? {};
+  let c = getGlobalConfig().agentLastUsed ?? {};
   return s.slice().sort((m, b) => {
     let k = c[m.name] ?? 0,
       w = c[b.name] ?? 0;
@@ -2660,7 +2660,7 @@ async function Vc(s) {
   let c = await listJobs(void 0, s).catch(() => []),
     m = !1;
   return (
-    Te((b) => {
+    saveGlobalConfig((b) => {
       let k = b.agentLastUsed ?? {},
         w = { ...k };
       for (let v of c) {
@@ -3011,7 +3011,7 @@ function Uc(s, c) {
         if (Xt) {
           let Ae = !1;
           if (
-            (Te((Be) => {
+            (saveGlobalConfig((Be) => {
               let et = Date.now(),
                 ae = Be.agentLastUsed?.[Xt];
               if (ae !== void 0 && et - ae < 60000) return Be;
@@ -3680,7 +3680,7 @@ function Wa(s, c) {
   return Nb(s.state.tokens, c.word === uo.working);
 }
 function $a(s, c, m, b) {
-  let k = zg() ? 1 / 0 : Math.max(24, Math.min(72, Math.floor(b * 0.55))),
+  let k = isScreenReaderModeEnabled() ? 1 / 0 : Math.max(24, Math.min(72, Math.floor(b * 0.55))),
     w = (A) => (k === 1 / 0 ? A : truncateToWidth(A, k));
   if (jn(s.state, m) === "done") return;
   let R = s.state.needs && s.state.needs !== IDLE_NEEDS ? s.state.needs : void 0;
@@ -8370,7 +8370,7 @@ class pg {
 }
 function fg(s, c) {
   if (s.view) return s.view;
-  let m = ee().fleetViewGroupMode ?? "state";
+  let m = getGlobalConfig().fleetViewGroupMode ?? "state";
   return (s.view = new pg({ groupMode: m === "group" && !c ? "state" : m }));
 }
 function mg(s) {
@@ -9045,7 +9045,7 @@ function wg(s, c) {
       Be = fe[(Ae + 1) % fe.length];
     if (Be === "group") logFeatureOk("fleet_view_group_mode");
     (w.setGroupMode(Be),
-      Te(
+      saveGlobalConfig(
         (et) =>
           et.fleetViewGroupMode === Be ? et : { ...et, fleetViewGroupMode: Be },
         R,
@@ -9363,7 +9363,7 @@ function Sg(s, { cwdFilter: c, onError: m }) {
           env: {
             [AGENT_VIEW_RELAUNCH_ENV_KEY]: "1",
             ...(s === "auto" && { [au]: String(Date.now()) }),
-            ...hq(),
+            ...getScreenReaderEnvOverrides(),
           },
           preSpawn: () =>
             process.stdout.write(
@@ -9533,7 +9533,7 @@ function Cg({
     { stdin: q, isRawModeSupported: K } = useStdin(),
     { credentials: J } = useStorageV5Context(),
     j = useKeybindingContext()?.bindings,
-    ne = a.CLAUDE_CODE_FLEETVIEW_SIMPLE || H("tengu_fleetview_simple", !1),
+    ne = a.CLAUDE_CODE_FLEETVIEW_SIMPLE || getFeatureValue_CACHED_MAY_BE_STALE("tengu_fleetview_simple", !1),
     se = !ne || !!c?.startsWith("remote-");
   Un(
     () => {
@@ -9964,7 +9964,7 @@ function Cg({
       if ((xe.setActiveTab(T), Ye(null), T === "remote")) de.loadRemote();
     },
     Iu = (T) => de.liveStatus(T),
-    th = isCrossSessionMessagingEnabled() && H("tengu_fleetview_peers", !1),
+    th = isCrossSessionMessagingEnabled() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_fleetview_peers", !1),
     [, oh] = d(0),
     na = Date.now(),
     Pu = V(
@@ -9991,7 +9991,7 @@ function Cg({
   let { addNotification: rh } = useNotificationQueue(),
     Ri = aO();
   (Yst(Ri, !0, (T) => rh(Xst(T))), Jst(Ri));
-  let Au = ZFn(Ri, ee().copyOnSelect ?? !0);
+  let Au = ZFn(Ri, getGlobalConfig().copyOnSelect ?? !0);
   (Kst(Ri),
     dn(() => {
       let T = getInkInstanceRegistry().get(process.stdout);
@@ -10562,11 +10562,11 @@ async function BQt(s, c) {
   (B$n(c?.dispatchExtraArgs ?? []),
     logEvent("tengu_bg_agent_action", {
       action: S("list_open"),
-      mode: fromEnum(ee().fleetViewGroupMode ?? "state"),
+      mode: fromEnum(getGlobalConfig().fleetViewGroupMode ?? "state"),
     }));
   let w = c?.host ?? createFleetViewHost();
-  if ((oc(w.resultSeen, c?.entryChannel), !ee().hasOpenedAgentsView))
-    await Te((le) => ({ ...le, hasOpenedAgentsView: !0 }), c?.storageV5);
+  if ((oc(w.resultSeen, c?.entryChannel), !getGlobalConfig().hasOpenedAgentsView))
+    await saveGlobalConfig((le) => ({ ...le, hasOpenedAgentsView: !0 }), c?.storageV5);
   let v = [];
   function R() {
     let le;

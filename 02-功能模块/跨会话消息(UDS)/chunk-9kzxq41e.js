@@ -10,7 +10,7 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { maxSlugLength, uf, qCt, slugify, si, getRegisteredSessionName, whenSessionRegistered, updateSessionName, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { maxSlugLength, parsePeerAddress, isPossiblySamePath, slugify, sanitizeSessionName, getRegisteredSessionName, whenSessionRegistered, updateSessionName, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -78,7 +78,7 @@ class N {
   yielded = Le();
   pendingYield = void 0;
   noteCorrespondent(e, i, s) {
-    if (!e || uf(e).scheme !== "uds") return;
+    if (!e || parsePeerAddress(e).scheme !== "uds") return;
     if (
       (this.correspondents.delete(e),
       this.correspondents.set(e, { pid: i, procStart: s }),
@@ -115,7 +115,7 @@ function takePendingYield() {
 }
 var w = { whenRegistered: whenSessionRegistered, listLive: listAllLiveSessions };
 function v() {
-  return H("tengu_session_name_uniqueness", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_session_name_uniqueness", !0);
 }
 async function claimUniqueSessionName(e, i, s = w, t = e) {
   if (!v()) return { name: e, yielded: !1 };
@@ -135,7 +135,7 @@ async function claimUniqueSessionName(e, i, s = w, t = e) {
     });
     if (a.kind === "keep") return { name: e, yielded: !1 };
     let c = U(e, o),
-      d = si(c !== void 0 && slugify(c) !== slugify(e) ? c : a.newName) || a.newName;
+      d = sanitizeSessionName(c !== void 0 && slugify(c) !== slugify(e) ? c : a.newName) || a.newName;
     return (
       n(
         `[session-name] "${e}" is held by live pid ${a.holders[0]?.pid}; this session takes "${d}"`,
@@ -244,7 +244,7 @@ function renameSupersededDuringScan(e, i, s) {
 }
 async function reclaimSessionNameOnResume(e, i, s = {}) {
   let t = s.deps ?? w,
-    r = e ? si(e) : "";
+    r = e ? sanitizeSessionName(e) : "";
   if (!r || !(await t.whenRegistered())) return;
   if (s.autoOnly) {
     await updateSessionName(r, i, "auto");
@@ -278,7 +278,7 @@ async function reclaimSessionNameOnResume(e, i, s = {}) {
 async function notifyCorrespondentsOfRename(e, i, s, t, r = sendToUdsSocket, o = w.listLive) {
   if (!v() || !isCrossSessionMessagingEnabled() || getSessionNamingState().correspondents.size === 0) return;
   let a = ownMessagingSocket(),
-    [c, d, u] = [e, i, s].map(si),
+    [c, d, u] = [e, i, s].map(sanitizeSessionName),
     p = `This session was renamed from "${c}" to "${d}" ("${u}" is held by another live session on this machine). Address this one as "${d}" from now on.`,
     g;
   try {
@@ -291,8 +291,8 @@ async function notifyCorrespondentsOfRename(e, i, s, t, r = sendToUdsSocket, o =
   }
   await Promise.all(
     [...getSessionNamingState().correspondents].map(async ([m, { pid: C, procStart: k }]) => {
-      let { scheme: _, target: S } = uf(m);
-      if (_ !== "uds" || !S || (a !== void 0 && qCt(S, a)) || g.get(C) !== S)
+      let { scheme: _, target: S } = parsePeerAddress(m);
+      if (_ !== "uds" || !S || (a !== void 0 && isPossiblySamePath(S, a)) || g.get(C) !== S)
         return;
       try {
         await r(S, p, t, d, void 0, void 0, getSessionNamingState().senderMode?.(), {

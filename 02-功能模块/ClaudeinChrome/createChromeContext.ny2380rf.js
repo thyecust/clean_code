@@ -17,7 +17,7 @@ import "../MCP客户端/mcp-server.js";
 import "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import { aNt } from "../Bridge-RemoteControl/chunk-hbndb8am.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { w5, PUe, getClaudeAIOAuthTokens, checkAndRefreshOAuthTokenIfNeeded, Te, NR, ee, EP, x5 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { shutdownFirstPartyEventLogging, validateOAuthToken, getClaudeAIOAuthTokens, checkAndRefreshOAuthTokenIfNeeded, saveGlobalConfig, watchGlobalConfigThroughStorage, getGlobalConfig, seedInstallIDs, shutdownDatadog } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { zR, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fileSuffixForOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
@@ -96,7 +96,7 @@ function createChromeContext(e, r) {
     },
     onExtensionPaired: (t, s) => {
       if (o) logChromeExtensionConnected();
-      (Te((d) => {
+      (saveGlobalConfig((d) => {
         if (
           d.chromeExtension?.pairedDeviceId === t &&
           d.chromeExtension?.pairedDeviceName === s
@@ -109,21 +109,21 @@ function createChromeContext(e, r) {
       }, c),
         m.info(`Paired with "${s}" (${t.slice(0, 8)})`));
     },
-    getPersistedDeviceId: () => ee().chromeExtension?.pairedDeviceId,
+    getPersistedDeviceId: () => getGlobalConfig().chromeExtension?.pairedDeviceId,
     askUserToolName: ASK_USER_QUESTION_TOOL_NAME,
     ...(h !== void 0 && { getScreenshotSaveDir: () => h }),
     bridgeConfig: {
       url: _,
       getUserId: async () => {
         let t =
-          ee().oauthAccount?.accountUuid ||
+          getGlobalConfig().oauthAccount?.accountUuid ||
           process.env.CLAUDE_CODE_ACCOUNT_UUID;
         if (getAPIProvider() !== "firstParty") return ((p = !1), t);
         await checkAndRefreshOAuthTokenIfNeeded({ credentials: u, storageV5: c }).catch(() => {});
         let s = getClaudeAIOAuthTokens()?.accessToken;
         if (!s) return ((p = !1), t);
         if (C?.token !== s) {
-          let g = await PUe(s).catch(() => {
+          let g = await validateOAuthToken(s).catch(() => {
             return;
           });
           if (!g?.account_uuid) return ((p = !1), t);
@@ -134,7 +134,7 @@ function createChromeContext(e, r) {
         if (l && !p)
           (logEvent("tengu_chrome_bridge_account_mismatch", {
             has_env_token: Boolean(a.CLAUDE_CODE_OAUTH_TOKEN),
-            persisted_from_config: Boolean(ee().oauthAccount?.accountUuid),
+            persisted_from_config: Boolean(getGlobalConfig().oauthAccount?.accountUuid),
           }),
             m.warn(
               "The OAuth token in use resolves to a different claude.ai account than the persisted Claude Code login. Using the token-derived account for the browser bridge. If CLAUDE_CODE_OAUTH_TOKEN is set, unset it or re-mint it for this account, then /logout and /login.",
@@ -241,9 +241,9 @@ async function runClaudeInChromeMcpServer(e) {
     let o = pinStorageV5(e),
       c = credentialsStoreFor(o);
     if (isHoverRestEnabled() && o !== void 0) {
-      (zR({ storageV5: o }), NR(o));
+      (zR({ storageV5: o }), watchGlobalConfigThroughStorage(o));
       let { primeFastPathCredentials: C } = await import("../../01-核心基础设施/共享小工具-未细化/primeFastPathCredentials.eb5w3wem.js");
-      (await C(c), await EP(o));
+      (await C(c), await seedInstallIDs(o));
     }
     configureGlobalAgents();
     let u = await F({ credentials: c, storageV5: o, timeoutMs: B });
@@ -251,8 +251,8 @@ async function runClaudeInChromeMcpServer(e) {
       (process.stderr.write(`${D}
 `),
         logFeatureBad("chrome_mcp_server_start", u.cause),
-        await w5(),
-        await x5(),
+        await shutdownFirstPartyEventLogging(),
+        await shutdownDatadog(),
         process.exit(1));
     if (!u.verified)
       n(`[Claude in Chrome] ${k(u.unverified)}`, { level: "warn" });
@@ -266,7 +266,7 @@ async function runClaudeInChromeMcpServer(e) {
       h = !1,
       _ = async () => {
         if (h) return;
-        ((h = !0), await w5(), await x5(), process.exit(0));
+        ((h = !0), await shutdownFirstPartyEventLogging(), await shutdownDatadog(), process.exit(0));
       };
     (process.stdin.on("end", () => void _()),
       process.stdin.on("error", () => void _()),

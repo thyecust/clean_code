@@ -18,7 +18,7 @@ import { R, dt, ge, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, beforeFirst, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { LOCAL_COMMAND_TAGS, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getDefaultOpusModel, aa } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getDefaultOpusModel, createMainAgentContext } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { go } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { getProjectsDir } from "../Teammates团队/transcript-paths.js";
@@ -558,7 +558,7 @@ async function tt(e, t) {
         hasAppendSystemPrompt: !1,
         mcpTools: [],
         maxOutputTokensOverride: 500,
-        agentContext: aa(),
+        agentContext: createMainAgentContext(),
         credentials: t,
       },
     });
@@ -758,7 +758,7 @@ RESPOND WITH ONLY A VALID JSON OBJECT matching this schema:
           hasAppendSystemPrompt: !1,
           mcpTools: [],
           maxOutputTokensOverride: 4096,
-          agentContext: aa(),
+          agentContext: createMainAgentContext(),
           credentials: o,
         },
       }),
@@ -1091,7 +1091,7 @@ DATA:
           hasAppendSystemPrompt: !1,
           mcpTools: [],
           maxOutputTokensOverride: e.maxTokens,
-          agentContext: aa(),
+          agentContext: createMainAgentContext(),
           credentials: o,
         },
       }),

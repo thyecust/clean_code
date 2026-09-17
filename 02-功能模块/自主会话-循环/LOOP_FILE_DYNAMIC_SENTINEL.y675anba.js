@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 73 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -26,7 +26,7 @@ var p = importMetaRequire("./loopAutonomousPreamble-07qcyhv4.md");
 var y = importMetaRequire("./loopAutonomousPreamblePersistent-3zqtkrvg.md");
 function g() {
   if (a.CLAUDE_CODE_LOOP_PERSISTENT) return !0;
-  return H("tengu_kairos_loop_persistent", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_kairos_loop_persistent", !1);
 }
 function getAutonomousLoopPreamble() {
   return g() ? y : p;

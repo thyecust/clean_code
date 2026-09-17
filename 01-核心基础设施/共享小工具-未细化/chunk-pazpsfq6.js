@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { AGENT_COLOR_THEME_KEYS, isAgentColorName } from "./agent-color-palette.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Pvn, UQe } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { buildMessagePreview, slugifyDisplayName } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindingChordText } from "./use-keybinding-chord-text.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
@@ -33,11 +33,11 @@ function CollapsedMessagesHint(K) {
     C = useKeybindingChordText("app:toggleTranscript", "Global", "ctrl+o"),
     S;
   if (i[0] !== O || i[1] !== x)
-    ((S = UQe(O) || x), (i[0] = O), (i[1] = x), (i[2] = S));
+    ((S = slugifyDisplayName(O) || x), (i[0] = O), (i[1] = x), (i[2] = S));
   else S = i[2];
   let E = S,
     B;
-  if (i[3] !== a) ((B = a ? Pvn(a) : ""), (i[3] = a), (i[4] = B));
+  if (i[3] !== a) ((B = a ? buildMessagePreview(a) : ""), (i[3] = a), (i[4] = B));
   else B = i[4];
   let m = B;
   const u = Q ? 1 : 0;

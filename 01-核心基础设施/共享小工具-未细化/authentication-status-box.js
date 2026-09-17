@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { EU } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { AuthenticationStatusStore } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { o, t, ct } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { TitledBorderBox } from "./titled-border-box.js";
 import { ErrorMessage } from "./error-message.js";
@@ -35,13 +35,13 @@ var A = /https?:\/\/\S+/;
 function AuthenticationStatusBox() {
   let i = _(10),
     R;
-  if (i[0] === MEMO_CACHE_SENTINEL) ((R = EU.getInstance().getStatus()), (i[0] = R));
+  if (i[0] === MEMO_CACHE_SENTINEL) ((R = AuthenticationStatusStore.getInstance().getStatus()), (i[0] = R));
   else R = i[0];
   let [n, G] = d(R),
     C,
     I;
   if (i[1] === MEMO_CACHE_SENTINEL)
-    ((C = () => EU.getInstance().subscribe(G)),
+    ((C = () => AuthenticationStatusStore.getInstance().subscribe(G)),
       (I = []),
       (i[1] = C),
       (i[2] = I));

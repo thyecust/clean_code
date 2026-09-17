@@ -16,34 +16,34 @@ import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
-  Tn,
-  UQe,
-  tRe,
-  hU,
-  BQe,
-  Tor,
-  Eor,
-  kCt,
-  yUe,
+  hashForTelemetry,
+  slugifyDisplayName,
+  buildBridgeAddress,
+  buildUdsAddress,
+  MAX_HOP_CHAIN_LENGTH,
+  computeHopHash,
+  isValidSenderAddress,
+  appendHopToChain,
+  buildCrossSessionEnvelope,
   maxSlugLength,
-  uf,
-  a0,
-  ZQe,
-  cQ,
-  Wi,
-  VCt,
-  EKt,
-  e1,
-  Zy,
-  zor,
-  tRn,
-  Vor,
+  parsePeerAddress,
+  isLocalAddress,
+  isDefinitelySamePath,
+  parseWindowsPipeName,
+  readBoundedFile,
+  isWindowsPlatform,
+  TORN_RECORD_REREAD_DELAY_MS,
+  getSessionsDir,
+  getCanonicalSocketPath,
+  resolveMessagingKey,
+  formatAuthLine,
+  AUTH_LINE_BASE_LENGTH,
   MAX_FORMER_NAMES,
   isRegistrySweepPermitted,
   reapKeysOfReapedRecord,
   mayReapRecordFromThisDomain,
-  H,
-  m0,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  getFeatureValue_CACHED_WITH_REFRESH,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isProcessProvablyGone, getProcessStartTokenLinuxSync, isSameProcessAsync, provenSameProcessAsync, getProcessCreationTimeMsAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
@@ -116,7 +116,7 @@ var S7e = 1048576;
 import { randomBytes } from "crypto";
 var _e = randomBytes(32);
 function FAe(e) {
-  return Tor(e, _e);
+  return computeHopHash(e, _e);
 }
 function O(e, t, r, d, s) {
   let l = Math.max(0, r - t) / 1000;
@@ -237,7 +237,7 @@ function RSn() {
   let d = t?.();
   if (d) r.add(FAe(d));
   let s = getRemoteSessionCompatId();
-  if (s) r.add(FAe(tRe(s)));
+  if (s) r.add(FAe(buildBridgeAddress(s)));
   return r;
 }
 var Ee = {
@@ -250,8 +250,8 @@ var Ee = {
 };
 function j(e) {
   return {
-    from: Eor(e.from) ? e.from : "(unrenderable sender address)",
-    name: e.name ? UQe(e.name) : "",
+    from: isValidSenderAddress(e.from) ? e.from : "(unrenderable sender address)",
+    name: e.name ? slugifyDisplayName(e.name) : "",
   };
 }
 function PJn(e) {
@@ -379,11 +379,11 @@ var ve = 50,
       bucketCapacity: T().min(5).max(500).catch(D.bucketCapacity),
       refillPerSecond: T().min(0.05).max(50).catch(D.refillPerSecond),
       dedupWindowMs: T().int().min(0).max(600000).catch(D.dedupWindowMs),
-      maxSelfHops: T().int().min(3).max(BQe).catch(D.maxSelfHops),
+      maxSelfHops: T().int().min(3).max(MAX_HOP_CHAIN_LENGTH).catch(D.maxSelfHops),
       maxChainLength: T()
         .int()
         .min(8)
-        .max(BQe - 1)
+        .max(MAX_HOP_CHAIN_LENGTH - 1)
         .catch(D.maxChainLength),
       maxTrackedSenders: T().int().min(16).max(1e5).catch(D.maxTrackedSenders),
       maxQueuedPeerMessages: T()
@@ -395,7 +395,7 @@ var ve = 50,
   ),
   Te = 300000;
 function w7e() {
-  let e = m0("tengu_harbor_kite_limits", K, Te),
+  let e = getFeatureValue_CACHED_WITH_REFRESH("tengu_harbor_kite_limits", K, Te),
     t = De().safeParse(e);
   if (!t.success)
     return (
@@ -459,7 +459,7 @@ function ee(e, t = Date.now) {
 }
 var Le = /[0-9a-f]{32,}/gi;
 function ne(e) {
-  return e.replace(Le, (t) => `<hex:${Tn(t)}>`);
+  return e.replace(Le, (t) => `<hex:${hashForTelemetry(t)}>`);
 }
 function Nu(e, t = 120) {
   if (/token/i.test(e)) return "(withheld)";
@@ -557,7 +557,7 @@ function je() {
 var Ke = { ok: !0, refund: () => {} };
 function We() {
   if (a.CLAUDE_CODE_HARBOR_KITE_PACING_OFF) return !1;
-  return !H("tengu_harbor_kite_pacing_off", !1);
+  return !getFeatureValue_CACHED_MAY_BE_STALE("tengu_harbor_kite_pacing_off", !1);
 }
 function creditPacerForHeldSend(e) {
   fe(e, (t, r) => t.credit(r));
@@ -568,9 +568,9 @@ function debitPacerForReleasedSend(e) {
 function fe(e, t) {
   let r = getBridgeHostState().outbound.pacer;
   if (!r) return;
-  let { scheme: d, target: s } = uf(e);
+  let { scheme: d, target: s } = parsePeerAddress(e);
   if (d !== "uds") return;
-  t(r, Zy(s) ?? s);
+  t(r, getCanonicalSocketPath(s) ?? s);
 }
 async function sendToUdsSocket(
   e,
@@ -583,8 +583,8 @@ async function sendToUdsSocket(
   { trackReceipts: u = !0, expectPeerPid: i, expectPeerProcStart: o } = {},
 ) {
   let p = ownMessagingSocket(),
-    k = p ? hU(p) : void 0,
-    h = yUe(k, d, t, void 0, kCt(l, k ? FAe(k) : void 0), f),
+    k = p ? buildUdsAddress(p) : void 0,
+    h = buildCrossSessionEnvelope(k, d, t, void 0, appendHopToChain(l, k ? FAe(k) : void 0), f),
     S = createMessageEnvelope(),
     w = {
       ...S,
@@ -597,7 +597,7 @@ async function sendToUdsSocket(
     _ = me(w),
     y =
       (k !== void 0 || getCurrentPlatform() !== "windows") && We()
-        ? je().reserve(Zy(e) ?? e)
+        ? je().reserve(getCanonicalSocketPath(e) ?? e)
         : Ke;
   if (!y.ok)
     throw (
@@ -607,7 +607,7 @@ async function sendToUdsSocket(
       ae(y.sentInBurst)
     );
   if ((n(`[uds-client] Sending ${t.length} chars to ${Nu(e)}`), u))
-    Xe(S.msg_id, hU(e));
+    Xe(S.msg_id, buildUdsAddress(e));
   try {
     await ge(e, w, r, {
       noFollowSymlink: !0,
@@ -694,10 +694,10 @@ async function sendStampedControlToUdsSocket(
 }
 var Ve = 150;
 async function registeredLivePeerForSocket(e) {
-  let t = Zy(e);
+  let t = getCanonicalSocketPath(e);
   if (t === void 0) return;
   for (let r of await L()) {
-    if (!r.sock || Zy(r.sock) !== t) continue;
+    if (!r.sock || getCanonicalSocketPath(r.sock) !== t) continue;
     if (await X(r))
       return {
         pid: r.pid,
@@ -712,7 +712,7 @@ async function registeredInboxesOfPids(e) {
   let t = dedupe(e),
     r = new Map();
   if (t.length === 0) return r;
-  let d = e1(),
+  let d = getSessionsDir(),
     l = (await Promise.all(t.map((u) => V(d, `${u}.json`)))).filter(
       (u) => u !== null && Boolean(u.sock),
     ),
@@ -731,15 +731,15 @@ async function X(e) {
 }
 function me(e) {
   let t = b(e),
-    r = Vor + t.length + 1;
+    r = AUTH_LINE_BASE_LENGTH + t.length + 1;
   if (r > S7e) throw se(r, S7e);
   return t;
 }
 async function Je(e) {
-  let t = Zy(e);
+  let t = getCanonicalSocketPath(e);
   if (t === void 0) return !1;
   for (let r of await L()) {
-    if (!r.sock || Zy(r.sock) !== t) continue;
+    if (!r.sock || getCanonicalSocketPath(r.sock) !== t) continue;
     if (isProcessProvablyGone(r.pid)) continue;
     if ((r.procStartFt ?? r.procStart) !== void 0) {
       if (await X(r)) return !0;
@@ -761,13 +761,13 @@ async function ge(
   } = {},
 ) {
   let u = f ?? me(t);
-  if (!a0(e))
+  if (!isLocalAddress(e))
     throw new uN(
       "non-local",
       `Refusing to connect: not a usable local IPC path (remote/UNC host, or a pipe name with extra segments or a trailing dot/space): ${e}`,
     );
-  let i = VCt(),
-    o = await zor(e, r, { requireLiveOwner: i }),
+  let i = isWindowsPlatform(),
+    o = await resolveMessagingKey(e, r, { requireLiveOwner: i }),
     p = o.kind === "token" ? o.token : void 0;
   if (i && o.kind !== "token") {
     if (!(o.kind === "no-key" && (await Je(e))))
@@ -777,8 +777,8 @@ async function ge(
       );
     p = void 0;
   }
-  let k = p !== void 0 ? tRn(p) : "";
-  if (d && !(getCurrentPlatform() === "windows" && cQ(e) !== void 0)) {
+  let k = p !== void 0 ? formatAuthLine(p) : "";
+  if (d && !(getCurrentPlatform() === "windows" && parseWindowsPipeName(e) !== void 0)) {
     let S;
     try {
       S = (await lstat(e)).isSymbolicLink();
@@ -894,7 +894,7 @@ async function ge(
 }
 function Se(e) {
   return new Promise((t) => {
-    if (!a0(e)) {
+    if (!isLocalAddress(e)) {
       t(!1);
       return;
     }
@@ -916,7 +916,7 @@ class SessionRecordsUnreadableError extends Error {
   }
 }
 async function L(e) {
-  let t = e1(),
+  let t = getSessionsDir(),
     r;
   try {
     r = await readdir(t);
@@ -942,7 +942,7 @@ async function V(e, t, r) {
     let { pid: u } = f;
     if (!f.canonical) return (unlink(l).catch(() => {}), null);
     s = u;
-    let i = await Wi(l, MAX_SESSION_RECORD_BYTES);
+    let i = await readBoundedFile(l, MAX_SESSION_RECORD_BYTES);
     if (i === null) return null;
     d = !0;
     let o = z(i),
@@ -1000,7 +1000,7 @@ async function V(e, t, r) {
     };
   } catch {
     if (r?.rejectTornLiveRecord && d && s !== void 0 && isProcessRunning(s)) {
-      if (!r.isReread) return (await sleep(EKt), V(e, t, { ...r, isReread: !0 }));
+      if (!r.isReread) return (await sleep(TORN_RECORD_REREAD_DELAY_MS), V(e, t, { ...r, isReread: !0 }));
       let [f, u] = await Promise.all([
         Ue(l).then(
           (i) => i.mtimeMs,
@@ -1060,7 +1060,7 @@ function ownMessagingSocket() {
 async function listLivePeerSessions(e) {
   let t = ownMessagingSocket(),
     r = (await L({ rejectUnreadable: !0 })).filter(
-      (u) => u.sock && !(t && ZQe(u.sock, t)) && !ye(u),
+      (u) => u.sock && !(t && isDefinitelySamePath(u.sock, t)) && !ye(u),
     ),
     d = await Promise.all(r.map((u) => Se(u.sock))),
     s = await isRegistrySweepPermitted(),
@@ -1076,7 +1076,7 @@ async function listLivePeerSessions(e) {
 async function findLivePeerBySessionId(e) {
   let t = ownMessagingSocket(),
     r = await L(),
-    d = (i) => Boolean(i.sock) && !(t && ZQe(i.sock, t)),
+    d = (i) => Boolean(i.sock) && !(t && isDefinitelySamePath(i.sock, t)),
     s = new Set(
       r
         .filter((i) => i.sessionId === e && i.parkedJobId !== void 0)

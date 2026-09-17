@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { ht, Hn, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { httpClient, getSanitizedToolName, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { ge, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ou, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -58,7 +58,7 @@ var Gre = "<persisted-output>",
 function m7e(t, e, r = u1, s = !1) {
   if (!Number.isFinite(e)) return e;
   if (s) return Math.min(e, r);
-  let o = H(G, {})?.[t];
+  let o = getFeatureValue_CACHED_MAY_BE_STALE(G, {})?.[t];
   if (typeof o === "number" && Number.isFinite(o) && o > 0) return o;
   return Math.min(e, r);
 }
@@ -188,7 +188,7 @@ async function J(t, e, r, s, a) {
   let o = t.content;
   if (j(o))
     return (
-      logEvent("tengu_tool_empty_result", { toolName: Hn(e) }),
+      logEvent("tengu_tool_empty_result", { toolName: getSanitizedToolName(e) }),
       { ...t, content: `(${e} completed with no output)` }
     );
   if (!o) return t;
@@ -201,7 +201,7 @@ async function J(t, e, r, s, a) {
   let f = Vpe(h);
   return (
     logEvent("tengu_tool_result_persisted", {
-      toolName: Hn(e),
+      toolName: getSanitizedToolName(e),
       originalSizeBytes: h.originalSize,
       persistedSizeBytes: f.length,
       estimatedOriginalTokens: Math.ceil(h.originalSize / Mvt),
@@ -228,7 +228,7 @@ function wJn(t) {
   return { seenIds: new Set(t.seenIds), replacements: new Map(t.replacements) };
 }
 function TJn(t, e) {
-  if (!H("tengu_hawthorn_steeple", !1)) return;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_hawthorn_steeple", !1)) return;
   if (t) return q3t(t, e ?? []);
   return hbt();
 }
@@ -473,7 +473,7 @@ function CJn(t) {
   return e.getTime() > 0 ? e : void 0;
 }
 async function vJn(t) {
-  let e = await ht.get("/v1/code/triggers", {
+  let e = await httpClient.get("/v1/code/triggers", {
     auth: "teleport-org",
     headers: { "anthropic-beta": Xpe },
     credentials: t,

@@ -20,7 +20,7 @@ import { Et, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱
 import { setBgExitCause } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
-import { Ia, isBgSession, getBgJobDir, prefetchApiKeyFromApiKeyHelperIfSafe, Ff, H, Bo, Te, ee, es } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getCurrentWorktreeSession, isBgSession, getBgJobDir, prefetchApiKeyFromApiKeyHelperIfSafe, onGrowthBookRefresh, getFeatureValue_CACHED_MAY_BE_STALE, checkHasTrustDialogAccepted, saveGlobalConfig, getGlobalConfig, getCurrentProjectConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
@@ -78,7 +78,7 @@ import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路
 import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function X(e, o) {
   let r = !1,
-    c = Ff(() => {
+    c = onGrowthBookRefresh(() => {
       if (r || isShuttingDown() || Nn() || !isCrossSessionMessagingEnabled()) return;
       return ((r = !0), c(), se(e, o));
     });
@@ -174,10 +174,10 @@ import { copyFile, stat as me } from "fs/promises";
 import { homedir } from "os";
 import { join as de } from "path";
 async function R(e) {
-  await Te((o) => ({ ...o, iterm2SetupInProgress: !1 }), e);
+  await saveGlobalConfig((o) => ({ ...o, iterm2SetupInProgress: !1 }), e);
 }
 function ue() {
-  let e = ee();
+  let e = getGlobalConfig();
   return {
     inProgress: e.iterm2SetupInProgress ?? !1,
     backupPath: e.iterm2BackupPath || null,
@@ -279,7 +279,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
     ),
       process.exit(1));
   if (a.CLAUDE_BG_BACKEND === "daemon") {
-    let t = H("tengu_bg_worker_ctty", !0)
+    let t = getFeatureValue_CACHED_MAY_BE_STALE("tengu_bg_worker_ctty", !0)
       ? await J()
       : (await W())
         ? "already"
@@ -493,7 +493,7 @@ To attach: ${chalk.bold(`tmux attach -t ${b}`)}`),
     (getPlansDirectory.cache.clear?.(),
       primePlanSlugCollisions(s),
       recordStartupPhase("setup_worktree_ms", performance.now() - G, G));
-  } else if (isBgSession() && !Ia()) {
+  } else if (isBgSession() && !getCurrentWorktreeSession()) {
     let t = performance.now();
     try {
       let d = getBgJobDir(),
@@ -533,7 +533,7 @@ To attach: ${chalk.bold(`tmux attach -t ${b}`)}`),
       import("../../02-功能模块/Hooks钩子/registerUltrareviewPostCommitHook.t2cxwtta.js").then((t) =>
         t.registerUltrareviewPostCommitHook(),
       ),
-      !Nn() && Bo())
+      !Nn() && checkHasTrustDialogAccepted())
     )
       import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then((t) => t.startMemoryWatcher(s, T));
   }
@@ -552,7 +552,7 @@ To attach: ${chalk.bold(`tmux attach -t ${b}`)}`),
       fromProjectOrLocal:
         getSettingsForSource("projectSettings")?.proxyAuthHelper === F ||
         getSettingsForSource("localSettings")?.proxyAuthHelper === F,
-      trustAccepted: Bo,
+      trustAccepted: checkHasTrustDialogAccepted,
     }),
     prefetchProxyAuthFromHelperIfSafe(),
     be({
@@ -560,7 +560,7 @@ To attach: ${chalk.bold(`tmux attach -t ${b}`)}`),
       isRemoteMode: Nn(),
       isBareMode: isSimpleMode(),
       exitAfterFirstRender: a.CLAUDE_CODE_EXIT_AFTER_FIRST_RENDER,
-      trustAccepted: Bo(),
+      trustAccepted: checkHasTrustDialogAccepted(),
     }))
   )
     prefetchTmuxOptionProbes();
@@ -584,7 +584,7 @@ To attach: ${chalk.bold(`tmux attach -t ${b}`)}`),
       ),
         process.exit(1));
   }
-  let p = es();
+  let p = getCurrentProjectConfig();
   if (p.lastCost !== void 0 && p.lastDuration !== void 0)
     logEvent("tengu_exit", {
       last_session_cost: p.lastCost,
@@ -626,7 +626,7 @@ class re {
 var we = new j(() => new re());
 function maybePrewarmRecallIndex(e) {
   if (!we.of(e.host).claim()) return;
-  if (Nn() || !Bo()) return;
+  if (Nn() || !checkHasTrustDialogAccepted()) return;
   (async () => {
     let [o, r] = await Promise.all([
       import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),

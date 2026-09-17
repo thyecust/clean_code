@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 202 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { kCn, tt, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { CONTEXT_HINT_BETA, READ_TOOL_NAME, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Lt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -19,11 +19,11 @@ import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Comma
 import { isBetaHeaderCapabilityRejected, estimateTokensForMessages, MICROCOMPACT_MIN_TOKENS_SAVED, planToolResultClearing, runKeepRecentMicrocompact } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Gre, TSn, tG, nG } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 function c() {
-  return H("tengu_hazel_osprey", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_hazel_osprey", !1);
 }
 var A = 75000;
 function m() {
-  return H("tengu_hazel_osprey_floor", A);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_hazel_osprey_floor", A);
 }
 function p(e) {
   return e instanceof Lt && (e.status === 422 || e.status === 424);
@@ -69,7 +69,7 @@ async function b(e, t, o) {
   if (nG(a)) return null;
   return `${Gre}Tool result saved to: ${a.filepath}
 
-Use ${tt} to view${TSn}`;
+Use ${READ_TOOL_NAME} to view${TSn}`;
 }
 async function P(e, t, o, a) {
   let l = estimateTokensForMessages(e),
@@ -126,7 +126,7 @@ function createContextHintController(e) {
       let u = planToolResultClearing(r, S).tokensSaved >= MICROCOMPACT_MIN_TOKENS_SAVED,
         s = m();
       return {
-        beta: kCn,
+        beta: CONTEXT_HINT_BETA,
         body: u
           ? {
               context_hint: {

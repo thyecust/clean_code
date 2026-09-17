@@ -16,7 +16,7 @@ import { Zd, m4, uF, ga, Kx, Z0 } from "../../00-第三方库/_未识别/Ink终�
 import { ThemeProvider, useResolvedTheme, KillRingProvider } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { StorageV5ContextProvider } from "../共享小工具-未细化/storage-v5-context.js";
-import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { te, X5, _h, Ccr, vcr, ePn, sB } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -213,14 +213,14 @@ function zUn() {
   go(r.getStylePool());
 }
 function qe() {
-  let r = H("tengu_xterm_atlas_reset", !0),
-    s = H("tengu_basalt_meadow", !1);
+  let r = getFeatureValue_CACHED_MAY_BE_STALE("tengu_xterm_atlas_reset", !0),
+    s = getFeatureValue_CACHED_MAY_BE_STALE("tengu_basalt_meadow", !1);
   return { autoResetEnabled: r, recording: r || s };
 }
 function go(r) {
   let s = r.atlasRecorder;
   if (s.debugTainted) return;
-  if (!H("tengu_basalt_meadow", !1)) {
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_basalt_meadow", !1)) {
     if (!s.autoResetEnabled) s.recording = !1;
     return;
   }

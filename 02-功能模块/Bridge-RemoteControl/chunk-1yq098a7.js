@@ -17,7 +17,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { ju, ege, dq, RUe, nZe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { enqueueSdkEvent, isCloudEnvironmentSession, normalizePlainName, collectLocalBridgeSessionIds, isCloudSessionKnownLocally } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { describeAxiosError } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
@@ -181,7 +181,7 @@ class s7e {
       ((this.hasTaskSummary = !1),
         this.notifyMetadataChanged({ task_summary: null }));
     if (a.CLAUDE_CODE_EMIT_SESSION_STATE_EVENTS)
-      ju({ type: "system", subtype: "session_state_changed", state: e });
+      enqueueSdkEvent({ type: "system", subtype: "session_state_changed", state: e });
   }
   republishPendingAction(e) {
     ((this.hasPendingAction = !0),
@@ -209,7 +209,7 @@ class s7e {
       this.hasTerminalGoalSnapshot = e.goal?.met === !0;
     if ("task_summary" in e) {
       if (e.task_summary != null) this.hasTaskSummary = !0;
-      ju({
+      enqueueSdkEvent({
         type: "system",
         subtype: "task_summary",
         detail: e.task_summary ?? null,
@@ -254,10 +254,10 @@ Re-create them if still needed.
 }
 var O3t = "Remote Control";
 function lSn(e) {
-  return ege(e) ? "cloud" : O3t;
+  return isCloudEnvironmentSession(e) ? "cloud" : O3t;
 }
 function sJn(e) {
-  return dq(e) ?? "(untitled)";
+  return normalizePlainName(e) ?? "(untitled)";
 }
 var M = 300000;
 class C {
@@ -402,8 +402,8 @@ function cSn(e) {
   return;
 }
 function uSn(e, t, i) {
-  let r = RUe(t),
-    s = new Set(i.filter((o) => !nZe(t, o.id)).map((o) => sessionIdBody(o.id)));
+  let r = collectLocalBridgeSessionIds(t),
+    s = new Set(i.filter((o) => !isCloudSessionKnownLocally(t, o.id)).map((o) => sessionIdBody(o.id)));
   return e.filter((o) => {
     let u = sessionIdBody(o.id);
     return !r.has(u) && !s.has(u);
@@ -593,7 +593,7 @@ function abt(e, t) {
     let i = sessionIdBody(t),
       r = ibt(e)?.find((o) => sessionIdBody(o.id) === i),
       s = sbt(e)?.find((o) => sessionIdBody(o.id) === i);
-    if ((r !== void 0 && !r.remoteControl) || (s !== void 0 && ege(s)))
+    if ((r !== void 0 && !r.remoteControl) || (s !== void 0 && isCloudEnvironmentSession(s)))
       return !1;
     if (s?.inboundReportUnavailable && r?.acceptsPeerMessages === void 0)
       return !1;

@@ -22,7 +22,7 @@ import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Bt, Mn, Wl } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { EDIT_TOOL_NAME, WRITE_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
@@ -4336,7 +4336,7 @@ async function No(e, t, n) {
       for (let H of le) {
         if (typeof H !== "string") continue;
         let fe = parsePermissionRule(H);
-        if (![Bt, Mn, Wl].includes(fe.toolName)) continue;
+        if (![EDIT_TOOL_NAME, WRITE_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME].includes(fe.toolName)) continue;
         if (fe.ruleContent === void 0) {
           r.push({
             path: Ge,

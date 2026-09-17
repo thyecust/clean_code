@@ -12,7 +12,7 @@ import { $Be } from "../../01-核心基础设施/设置-配置/设置-配置.aqb
 import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
-import { qe, YC } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { BASH_TOOL_NAME, isLocalSettingsGitTracked } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { oEt, qCe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { isAbsolute } from "path";
 function S() {
@@ -20,7 +20,7 @@ function S() {
 }
 var m = () => {
   let { gateProject: t } = oEt(),
-    e = YC({ onIndeterminate: "tracked" });
+    e = isLocalSettingsGitTracked({ onIndeterminate: "tracked" });
   return [
     ...(t ? [["projectSettings", ".claude/settings.json"]] : []),
     ...(e ? [["localSettings", ".claude/settings.local.json"]] : []),
@@ -53,8 +53,8 @@ function l(t) {
   return t.some(
     (e) =>
       e.ruleBehavior === "allow" &&
-      (e.ruleValue.toolName === qe ||
-        e.ruleValue.toolName.startsWith(qe + "(")),
+      (e.ruleValue.toolName === BASH_TOOL_NAME ||
+        e.ruleValue.toolName.startsWith(BASH_TOOL_NAME + "(")),
   );
 }
 var R = /[\x00-\x1f\x7f-\x9f\u2028\u2029]|\p{Cf}/gu,
@@ -64,7 +64,7 @@ function d(t) {
   return e.length > a ? `${truncateToCodeUnits(e, a)}\u2026` : e;
 }
 var x = new Set([
-  qe,
+  BASH_TOOL_NAME,
   "PowerShell",
   "Write",
   "Edit",

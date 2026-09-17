@@ -13,7 +13,7 @@ import { fileSuffixForOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.j
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum, fromEnumOpt, fromNumber, fromNumberOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { qe, Ff } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { BASH_TOOL_NAME, onGrowthBookRefresh } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -1193,7 +1193,7 @@ function c6e(e) {
             (n("[deviceBridge] stopping: the gate turned off"), H("gate_off"));
         },
         Ue = (e.onEgressGateChange ?? subscribeComplianceTaints)(fe),
-        Fe = (e.onEnabledChange ?? Ff)(ve),
+        Fe = (e.onEnabledChange ?? onGrowthBookRefresh)(ve),
         me = !1,
         be = () => {
           let U = (e.isMuted ?? isRemoteToolServingMuted)();
@@ -1532,7 +1532,7 @@ function gn(e) {
     ),
     logEvent("tengu_device_bridge_connect_frame", {
       tool_count: o.length,
-      serves_bash: r.includes(qe),
+      serves_bash: r.includes(BASH_TOOL_NAME),
       mcp_tool_count: countMatching(r, (a) => a.includes("__")),
     }),
     o

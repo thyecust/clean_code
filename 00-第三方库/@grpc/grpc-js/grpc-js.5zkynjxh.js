@@ -19,7 +19,7 @@ import {
   qnn,
   mF,
 } from "../../../01-核心基础设施/遥测-OpenTelemetry/遥测-OpenTelemetry.0xhcvej6.js";
-import { Ls, Mc } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { otelApiModule, otelCoreModule } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var To = commonJS(function (Co) {
   Object.defineProperty(Co, "__esModule", { value: !0 });
@@ -20242,7 +20242,7 @@ var Sg = commonJS(function (yg) {
   var mg = pO(),
     ni = si(),
     XO = importMetaRequire("url"),
-    pg = Ls();
+    pg = otelApiModule();
   function vg(e) {
     if (((e = e.trim()), !e.match(/^([\w]{1,8}):\/\//))) e = `https://${e}`;
     let r = new XO.URL(e);
@@ -20295,12 +20295,12 @@ var Sg = commonJS(function (yg) {
 var wg = commonJS(function (bg) {
   Object.defineProperty(bg, "__esModule", { value: !0 });
   bg.getOtlpGrpcConfigurationFromEnv = void 0;
-  var Cg = Mc(),
+  var Cg = otelCoreModule(),
     ai = si(),
     rw = mF(),
     iw = importMetaRequire("fs"),
     sw = importMetaRequire("path"),
-    Tg = Ls();
+    Tg = otelApiModule();
   function mo(e, t) {
     if (e != null && e !== "") return e;
     if (t != null && t !== "") return t;
@@ -20404,7 +20404,7 @@ var wg = commonJS(function (bg) {
 var Mg = commonJS(function (Pg) {
   Object.defineProperty(Pg, "__esModule", { value: !0 });
   Pg.convertLegacyOtlpGrpcOptions = void 0;
-  var fw = Ls(),
+  var fw = otelApiModule(),
     Ag = Sg(),
     pw = si(),
     gw = wg();

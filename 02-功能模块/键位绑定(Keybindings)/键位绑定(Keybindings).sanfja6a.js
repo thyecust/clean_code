@@ -14,7 +14,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Tvn, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { satisfiesSemverRange, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Hx, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -165,8 +165,8 @@ var B = getCurrentPlatform(),
   ge =
     B !== "windows" ||
     (Hx()
-      ? Tvn("1.4.1", ">=1.2.23")
-      : Tvn(process.versions.node, ">=22.17.0 <23.0.0 || >=24.2.0")),
+      ? satisfiesSemverRange("1.4.1", ">=1.2.23")
+      : satisfiesSemverRange(process.versions.node, ">=22.17.0 <23.0.0 || >=24.2.0")),
   q = ge ? "shift+tab" : "meta+m",
   K3 = [
     {
@@ -1118,7 +1118,7 @@ function I(e, r) {
   });
 }
 function iN() {
-  return H("tengu_keybinding_customization_release", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_keybinding_customization_release", !0);
 }
 var je = 500,
   Re = 200;

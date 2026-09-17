@@ -13,7 +13,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { aa } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { createMainAgentContext } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { asSystemPrompt, joinTextBlocks, runSmallFastModelQuery } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -104,7 +104,7 @@ ${u}`,
         isNonInteractiveSession: ke(),
         hasAppendSystemPrompt: !1,
         mcpTools: [],
-        agentContext: aa(),
+        agentContext: createMainAgentContext(),
         promptTooLongIsHandled: !0,
         credentials: e,
       },

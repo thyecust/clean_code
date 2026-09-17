@@ -13,7 +13,7 @@ import { externalHttp } from "../../01-核心基础设施/共享小工具-未细
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { cf, ph, sQ, Hse, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isSemverGreaterThan, isSemverAtLeast, isSemverAtMost, isSemverString, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -42,7 +42,7 @@ class v {
 }
 var E = new j(() => new v());
 async function n$n(a) {
-  let t = ee();
+  let t = getGlobalConfig();
   if (!t.cachedChangelog) return;
   if (isHoverRestEnabled() && a) {
     let r = await a.write(p(), t.cachedChangelog, {
@@ -57,7 +57,7 @@ async function n$n(a) {
       (await getFileStorage().mkdir(dirname(r)), await getFileStorage().writeExclusive(r, t.cachedChangelog));
     } catch {}
   }
-  await Te(({ cachedChangelog: r, ...e }) => e, a);
+  await saveGlobalConfig(({ cachedChangelog: r, ...e }) => e, a);
 }
 async function YQt(a) {
   if (ke()) return;
@@ -79,7 +79,7 @@ async function YQt(a) {
     } else await getFileStorage().write(o, e);
     i.remember(e);
     let l = Date.now();
-    await Te((s) => ({ ...s, changelogLastFetched: l }), a);
+    await saveGlobalConfig((s) => ({ ...s, changelogLastFetched: l }), a);
   }
 }
 async function tWe(a) {
@@ -153,7 +153,7 @@ function QQt(
     o = c.coerce(r),
     l =
       i && o
-        ? e.filter(({ base: s }) => cf(s, i.version) && sQ(s, o.version))
+        ? e.filter(({ base: s }) => isSemverGreaterThan(s, i.version) && isSemverAtMost(s, o.version))
         : [];
   return (l.length, l.flatMap(({ notes: s }) => s));
 }
@@ -164,20 +164,20 @@ function r$n(a) {
 function C(a) {
   let t = new Map();
   for (let [r, e] of Object.entries(d(a))) {
-    if (!Hse(r)) continue;
+    if (!isSemverString(r)) continue;
     let i = c.coerce(r)?.version;
     if (i === void 0 || t.has(i)) continue;
     t.set(i, e);
   }
   return [...t]
     .map(([r, e]) => ({ base: r, notes: e }))
-    .sort((r, e) => (cf(r.base, e.base) ? -1 : cf(e.base, r.base) ? 1 : 0));
+    .sort((r, e) => (isSemverGreaterThan(r.base, e.base) ? -1 : isSemverGreaterThan(e.base, r.base) ? 1 : 0));
 }
 function Qst(a = k()) {
   try {
     let t = d(a);
     return Object.keys(t)
-      .sort((e, i) => (cf(e, i) ? 1 : -1))
+      .sort((e, i) => (isSemverGreaterThan(e, i) ? 1 : -1))
       .map((e) => {
         let i = t[e];
         if (!i || i.length === 0) return null;
@@ -217,7 +217,7 @@ function S(a, t) {
   if (!r) return !1;
   return !Object.keys(d(a)).some((i) => {
     try {
-      return ph(i, r.version);
+      return isSemverAtLeast(i, r.version);
     } catch {
       return !1;
     }

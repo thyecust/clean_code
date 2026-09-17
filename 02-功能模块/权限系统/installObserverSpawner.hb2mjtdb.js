@@ -13,7 +13,7 @@ import { oo, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { runWithCwdOrDefault, getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { clampPermissionMode } from "./chunk-e4pfvp7x.js";
-import { kw, mc, o0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { runWithAgentContext, getAgentDepth, getWorkflowRunMetadata } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getParentSessionId } from "../Teammates团队/teammate-context.js";
 import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 import {
@@ -62,7 +62,7 @@ var b = {
       c = { ...m, mode: g },
       w = t.options.tools.filter(isMcpTool),
       l = `${e.agentType}@${r.observedEnvelopeName}`,
-      i = mc(t.agentContext) + 1,
+      i = getAgentDepth(t.agentContext) + 1,
       A = gNt(
         resolveAgentTools(e, buildSessionTools(c, excludeCoordinatorCommsMcpTools(w), { skipReplFilter: !0 }), !0, !1, !1, i)
           .resolvedTools,
@@ -103,9 +103,9 @@ var b = {
         isBuiltIn: isBuiltInAgent(e),
         invocationKind: "spawn",
         invocationEmitted: !1,
-        ...o0(t.agentContext),
+        ...getWorkflowRunMetadata(t.agentContext),
       };
-    await kw(k, () =>
+    await runWithAgentContext(k, () =>
       runWithCwdOrDefault(d.project.cwd, () =>
         runAsyncAgent({
           taskId: s,

@@ -24,16 +24,16 @@ import {
   getMainLoopModel,
   getCanonicalName,
   bytesPerTokenForModel,
-  Tn,
-  ht,
-  i0,
-  Qme,
+  hashForTelemetry,
+  httpClient,
+  configHasAuthorizationHeader,
+  isMcpServerAuthenticated,
   isUnattendedBgSession,
   getClaudeAIOAuthTokens,
-  H,
-  Te,
-  ee,
-  bq,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  saveGlobalConfig,
+  getGlobalConfig,
+  shouldSkipPluginAutoupdate,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { truncatePathMiddle, truncateToWidth, formatTokenEstimate, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -393,7 +393,7 @@ function Ol({
           logEvent("tengu_marketplace_added", {
             _PROTO_marketplace_name: Je,
             source_type: fromEnum(xt.source),
-            repo_hash: xt.source === "github" ? Tn(xt.repo) : void 0,
+            repo_hash: xt.source === "github" ? hashForTelemetry(xt.repo) : void 0,
             is_official_marketplace: isOfficialMarketplace(Je),
           }));
         let Mt = [];
@@ -4264,7 +4264,7 @@ function wc({
           value: "update",
         },
       ];
-      if (!bq())
+      if (!shouldSkipPluginAutoupdate())
         Ce.push({
           label: ne.autoUpdate ? "Disable auto-update" : "Enable auto-update",
           value: "toggle-auto-update",
@@ -4709,7 +4709,7 @@ function wc({
             }),
           }),
         !ne &&
-          !bq() &&
+          !shouldSkipPluginAutoupdate() &&
           Be.autoUpdate &&
           e(o, {
             marginTop: 1,
@@ -5449,7 +5449,7 @@ function sye(bo) {
     ib;
   if (Si[0] !== bi || Si[1] !== Wr)
     ((ib =
-      (bi.type === "sse" || bi.type === "http") && Qme(bi, Wr) !== Qme(bi, !0)),
+      (bi.type === "sse" || bi.type === "http") && isMcpServerAuthenticated(bi, Wr) !== isMcpServerAuthenticated(bi, !0)),
       (Si[0] = bi),
       (Si[1] = Wr),
       (Si[2] = ib));
@@ -6076,10 +6076,10 @@ function Rm({
     Oe.push({ label: "Enable", value: "toggle-enabled" });
   if (ts(a.client) && k > 0) Oe.push({ label: "View tools", value: "tools" });
   let ie =
-      (a.config.type === "sse" || a.config.type === "http") && i0(a.config),
+      (a.config.type === "sse" || a.config.type === "http") && configHasAuthorizationHeader(a.config),
     kt =
       (a.config.type === "sse" || a.config.type === "http") &&
-      Qme(a.config, A || (Q !== null && kn(Q))),
+      isMcpServerAuthenticated(a.config, A || (Q !== null && kn(Q))),
     $t =
       a.client.type === "failed" &&
       a.client.errorCode === "HEADERS_HELPER_AUTH_REJECTED",
@@ -6903,9 +6903,9 @@ function Nb(a, k) {
   return ((a.skillHealthMap ??= Lb(k)), a.skillHealthMap);
 }
 async function Lb(a) {
-  if (!H("tengu_skills_dashboard_enabled", !1)) return null;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_skills_dashboard_enabled", !1)) return null;
   try {
-    let k = await ht.get("/api/claude_code/skills", {
+    let k = await httpClient.get("/api/claude_code/skills", {
       auth: "async",
       timeout: 5000,
       validateStatus: () => !0,
@@ -7210,7 +7210,7 @@ function ox(na) {
   );
 }
 function Xa(a, k) {
-  let v = ee().skillUsage ?? {},
+  let v = getGlobalConfig().skillUsage ?? {},
     b = [];
   for (let w of k) {
     if (w.type !== "prompt" || w.pluginInfo?.pluginManifest.name !== a)
@@ -8647,7 +8647,7 @@ function pu({
               .filter((Ke) => Ke.marketplace === SKILLS_DIR_PLUGIN_SOURCE)
               .map((Ke) => Ke.plugin.name),
           ),
-          Pt = ee().skillUsage ?? {},
+          Pt = getGlobalConfig().skillUsage ?? {},
           Vt = Date.now(),
           dn = T.skillOverrides ?? {},
           Un = getSettingsForSource("policySettings")?.skillOverrides ?? {},
@@ -8808,7 +8808,7 @@ function pu({
   E(() => {
     if (xn.length > 0) rFn(xn, I);
   }, [xn, I]);
-  let [si, ci] = d(() => new Set((ee().favoritePlugins ?? []).map(s9e))),
+  let [si, ci] = d(() => new Set((getGlobalConfig().favoritePlugins ?? []).map(s9e))),
     io = V(
       () =>
         (Q ?? []).flatMap((T) =>
@@ -8823,7 +8823,7 @@ function pu({
       (T) => {
         ci((Z) => {
           let oe = xg(Z, T, io);
-          return (Te((le) => ({ ...le, favoritePlugins: [...oe] }), I), oe);
+          return (saveGlobalConfig((le) => ({ ...le, favoritePlugins: [...oe] }), I), oe);
         });
       },
       [io, I],

@@ -10,7 +10,7 @@
 import { OAUTH_BETA_HEADER } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { ht, hasStoredOAuthToken, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { httpClient, hasStoredOAuthToken, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 var u = 1e4,
   a = { auth: "teleport-org", timeout: u, headers: { "anthropic-beta": OAUTH_BETA_HEADER } };
@@ -18,7 +18,7 @@ function isOnboardingGuideSharingEnabled() {
   if (isEssentialTrafficOnly()) return !1;
   if (!isPolicyAllowed("allow_team_onboarding")) return !1;
   if (!hasStoredOAuthToken()) return !1;
-  return H("tengu_flint_harbor_share", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_flint_harbor_share", !1);
 }
 function o(e) {
   if (!e.ok)
@@ -35,7 +35,7 @@ function t() {
 }
 async function createOnboardingGuide(e, n, r) {
   t();
-  let d = await ht.post(
+  let d = await httpClient.post(
       "/api/organizations/:orgUUID/claude_code/onboarding",
       { content: e, name: n },
       { ...a, credentials: r },
@@ -45,7 +45,7 @@ async function createOnboardingGuide(e, n, r) {
 }
 async function updateOnboardingGuide(e, n, r) {
   t();
-  let d = await ht.put(
+  let d = await httpClient.put(
       `/api/organizations/:orgUUID/claude_code/onboarding/${encodeURIComponent(e)}`,
       { content: n },
       { ...a, credentials: r },
@@ -55,7 +55,7 @@ async function updateOnboardingGuide(e, n, r) {
 }
 async function deleteOnboardingGuide(e, n) {
   t();
-  let r = await ht.delete(
+  let r = await httpClient.delete(
     `/api/organizations/:orgUUID/claude_code/onboarding/${encodeURIComponent(e)}`,
     void 0,
     { ...a, credentials: n },
@@ -64,7 +64,7 @@ async function deleteOnboardingGuide(e, n) {
 }
 async function listOnboardingGuides(e) {
   t();
-  let n = await ht.get("/api/organizations/:orgUUID/claude_code/onboarding", {
+  let n = await httpClient.get("/api/organizations/:orgUUID/claude_code/onboarding", {
     ...a,
     credentials: e,
   });

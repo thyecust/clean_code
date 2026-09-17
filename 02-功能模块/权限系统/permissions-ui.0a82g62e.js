@@ -18,7 +18,7 @@ import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
-import { qe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { BASH_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { yi, ay, cke, getRelativeSettingsFilePathForSource } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { jn, Pt, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -361,7 +361,7 @@ function md(i, u, f) {
     (S) => S.ruleValue.toolName === a && S.ruleValue.ruleContent === void 0,
   );
   if (!w) return { shadowed: !1 };
-  if (a === qe && f.sandboxAutoAllowEnabled) {
+  if (a === BASH_TOOL_NAME && f.sandboxAutoAllowEnabled) {
     if (!dd(w.source)) return { shadowed: !1 };
   }
   return { shadowed: !0, shadowedBy: w, shadowType: "ask" };

@@ -18,18 +18,18 @@ import { HELP_FLAGS, isInfoSubcommandAlias, isEssentialTrafficOnly, logError } f
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  CAt,
-  vAt,
-  Or,
-  bt,
-  Mr,
-  Jy,
-  af,
-  db,
-  pb,
-  QH,
-  UAt,
-  mU,
+  getAuthenticatedAccountKey,
+  getFableEntitlementProbe,
+  getProviderState,
+  getModelForAnalytics,
+  isFastModeEnabled,
+  isFastModeAvailable,
+  modelSupportsFastMode,
+  resolveFastModeForModel,
+  logFastModeToggled,
+  clearFastModeCooldown,
+  formatLegacyModelRemapWarning,
+  isActiveCatalogFromServer,
   isModelAllowed,
   isFableModelValue,
   bootstrapHasAnswered,
@@ -38,9 +38,9 @@ import {
   getDefaultMainLoopModelSetting,
   renderFableModelName,
   parseUserSpecifiedModel,
-  Tn,
+  hashForTelemetry,
   getAdditionalModelOptionsCache,
-  H,
+  getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jn, Pt, Ks, eE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Xt, getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -116,21 +116,21 @@ var Ot = "tengu_swift_garden",
   et = 2,
   ze = 15000;
 function tt() {
-  return Or().providerCache.fableEntitlementProbeInFlight;
+  return getProviderState().providerCache.fableEntitlementProbeInFlight;
 }
 function Ye() {
-  let r = Or().providerCache;
+  let r = getProviderState().providerCache;
   if (r.fableEntitlementProbeInFlight === void 0) return ze;
   return Math.max(0, ze - (Date.now() - r.fableEntitlementProbeStartedAt));
 }
 function Ue() {
-  if (!H(Ot, !0)) return !1;
-  let r = Or().providerCache;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE(Ot, !0)) return !1;
+  let r = getProviderState().providerCache;
   if (r.fableEntitlementProbeInFlight !== void 0) return Ye() > 0;
-  if (vAt() !== void 0 || r.fableEntitlementProbeAttempts >= et || ot(r))
+  if (getFableEntitlementProbe() !== void 0 || r.fableEntitlementProbeAttempts >= et || ot(r))
     return !1;
   if (getAPIProvider() !== "firstParty" || !isFirstPartyAnthropicBaseUrl()) return !1;
-  if (mU()) return !1;
+  if (isActiveCatalogFromServer()) return !1;
   if (isEssentialTrafficOnly() || !bootstrapHasAnswered()) return !1;
   if (getAdditionalModelOptionsCache().some((o) => typeof o.value === "string" && isFableModelValue(o.value))) return !1;
   let t = getDefaultFableModel();
@@ -140,18 +140,18 @@ function ot(r) {
   return (
     r.fableEntitlementProbeAccount !== void 0 &&
     r.fableEntitlementProbeAccount !== null &&
-    CAt() === null
+    getAuthenticatedAccountKey() === null
   );
 }
 function nt({ credentials: r }) {
-  let t = Or().providerCache;
+  let t = getProviderState().providerCache;
   if (t.fableEntitlementProbeInFlight !== void 0)
     return t.fableEntitlementProbeInFlight;
-  let o = vAt();
+  let o = getFableEntitlementProbe();
   if (o !== void 0) return Promise.resolve(o);
   if (t.fableEntitlementProbeAttempts >= et || ot(t))
     return Promise.resolve("failed");
-  let O = CAt(),
+  let O = getAuthenticatedAccountKey(),
     T = getDefaultFableModel();
   ((t.fableEntitlementProbeAttempts += 1),
     (t.fableEntitlementProbeAccount = O),
@@ -168,8 +168,8 @@ async function Tt(r, t, o, O) {
   let T = r.fableEntitlementProbeGeneration;
   try {
     let c = await Yle(t, { forceServerProbe: !0, credentials: O }),
-      M = CAt(),
-      q = Or().providerCache;
+      M = getAuthenticatedAccountKey(),
+      q = getProviderState().providerCache;
     if (
       q !== r ||
       r.fableEntitlementProbeGeneration !== T ||
@@ -370,9 +370,9 @@ function io({
   function B(s, w, ne) {
     if (
       (logEvent("tengu_model_command_menu", {
-        action: bt(s),
-        from_model: bt(M),
-        to_model: bt(s),
+        action: getModelForAnalytics(s),
+        from_model: getModelForAnalytics(M),
+        to_model: getModelForAnalytics(s),
       }),
       w?.fromUltracode)
     )
@@ -381,12 +381,12 @@ function io({
     Cz();
     let Y = !1,
       N = !1;
-    if (Mr()) QH();
+    if (isFastModeEnabled()) clearFastModeCooldown();
     (recordModelSwitchIfChanged(T, c.getState(), s, "picker"),
       ee(
         (ve) => (
           (Y = !!ve.fastMode),
-          (N = Mr() ? db(s, ve.fastMode) : Y),
+          (N = isFastModeEnabled() ? resolveFastModeForModel(s, ve.fastMode) : Y),
           {
             ...ve,
             mainLoopModel: s,
@@ -399,7 +399,7 @@ function io({
           }
         ),
       ),
-      pb(Y, N));
+      logFastModeToggled(Y, N));
     let se = ne;
     if (se) kIe(s, o);
     (logFeatureOk("model_switch"), Ze(s, de));
@@ -484,7 +484,7 @@ ${Q.current.map(Rl).join(`
     onCancel: A,
     isStandaloneCommand: !0,
     skipSettingsWrite: !0,
-    showFastModeNotice: Mr() && X && af(x) && Jy(),
+    showFastModeNotice: isFastModeEnabled() && X && modelSupportsFastMode(x) && isFastModeAvailable(),
   });
 }
 function Rt(yn) {
@@ -830,7 +830,7 @@ ${qt.map(Rl).join(`
               if (
                 (be(
                   (qe) => (
-                    (Mt = Mr() && !!qe.fastMode && !db(z, qe.fastMode)),
+                    (Mt = isFastModeEnabled() && !!qe.fastMode && !resolveFastModeForModel(z, qe.fastMode)),
                     recordModelSwitchIfChanged(ae, qe, z, "command"),
                     {
                       ...qe,
@@ -842,7 +842,7 @@ ${qt.map(Rl).join(`
                 ),
                 Mt)
               )
-                pb(!0, !1);
+                logFastModeToggled(!0, !1);
               if (Ke.current) {
                 Fe({
                   key: `remote-model-switch-landed-${z ?? "default"}`,
@@ -1080,7 +1080,7 @@ ${qt.map(Rl).join(`
   return null;
 }
 function Ze(r, t) {
-  let o = UAt(r);
+  let o = formatLegacyModelRemapWarning(r);
   if (!o) return;
   t({
     key: "model-deprecation-warning",
@@ -1125,7 +1125,7 @@ var bn = async (r, t, o) => {
   if (o)
     return (
       logEvent("tengu_model_command_inline", {
-        args_hash: Tn(o),
+        args_hash: hashForTelemetry(o),
         args_length: o.length,
       }),
       e(De, {

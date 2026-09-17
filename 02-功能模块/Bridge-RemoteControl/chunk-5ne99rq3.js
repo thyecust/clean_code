@@ -13,7 +13,7 @@ import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withTimeout, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { OR } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isAbortTerminalReason } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { parsePermissionMode, UNRECOGNIZED_PERMISSION_MODE_ERROR } from "../权限系统/chunk-e4pfvp7x.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -1395,7 +1395,7 @@ function ze(e) {
 }
 function gCn(e, t) {
   let r = t?.outcome,
-    s = r !== void 0 && OR(r.terminal_reason),
+    s = r !== void 0 && isAbortTerminalReason(r.terminal_reason),
     d = {
       type: "result",
       ...(!s && t?.userMessageUuid && { user_message_uuid: t.userMessageUuid }),

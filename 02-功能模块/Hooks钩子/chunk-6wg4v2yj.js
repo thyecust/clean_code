@@ -90,7 +90,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { findGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { getSettingsFilePathForSource, getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { I6 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isProjectScopeTrustAccepted } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isViolinWoodEnabledCached, isViolinAmatiEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { hD } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
@@ -1872,7 +1872,7 @@ function Be({
   respond: t,
   release: r,
   onLine: k,
-  trustAccepted: R = I6,
+  trustAccepted: R = isProjectScopeTrustAccepted,
   isMuted: _,
 }) {
   let C = () => null,

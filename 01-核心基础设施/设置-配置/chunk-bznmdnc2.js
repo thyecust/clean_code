@@ -12,24 +12,24 @@ import { lit as S, fromEnum } from "../共享小工具-未细化/analytics-field
 import { Cz, lZ, ML, mv } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import {
-  bt,
-  Mr,
-  Jy,
-  RR,
-  Q$e,
-  db,
-  pb,
-  QH,
+  getModelForAnalytics,
+  isFastModeEnabled,
+  isFastModeAvailable,
+  getFastModeModelDisplayName,
+  getFastModeModelId,
+  resolveFastModeForModel,
+  logFastModeToggled,
+  clearFastModeCooldown,
   isModelAllowed,
   isFableAvailable,
   modelDisplayString,
-  fq,
-  H,
-  Te,
-  ee,
-  YUe,
-  yq,
-  es,
+  getApiKeyFingerprint,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  saveGlobalConfig,
+  getGlobalConfig,
+  getExplicitRemoteControlAtStartup,
+  getRemoteControlAtStartup,
+  getCurrentProjectConfig,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { xg } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -136,7 +136,7 @@ function Oe(l) {
   );
 }
 function AIe() {
-  let l = ee(),
+  let l = getGlobalConfig(),
     r = getInitialSettings();
   return {
     ...l,
@@ -154,7 +154,7 @@ function AIe() {
       r.terminalProgressBarEnabled ?? l.terminalProgressBarEnabled,
     todoFeatureEnabled: r.todoFeatureEnabled ?? l.todoFeatureEnabled,
     teammateMode: r.teammateMode ?? l.teammateMode,
-    remoteControlAtStartup: YUe(),
+    remoteControlAtStartup: getExplicitRemoteControlAtStartup(),
     autoUploadSessions: r.autoUploadSessions ?? l.autoUploadSessions,
     inputNeededNotifEnabled:
       r.inputNeededNotifEnabled ?? l.inputNeededNotifEnabled,
@@ -265,13 +265,13 @@ function gSe(l) {
     else saveUserIntentSetting(e, o);
   }
   function E(e) {
-    if (isHoverRestEnabled() && v !== void 0) Te(e, v);
-    else Te(e);
+    if (isHoverRestEnabled() && v !== void 0) saveGlobalConfig(e, v);
+    else saveGlobalConfig(e);
   }
   async function z(e, o) {
     let t = ge,
       s = Qle(e, o);
-    logEvent("tengu_config_model_changed", { from_model: bt(t), to_model: bt(e) });
+    logEvent("tengu_config_model_changed", { from_model: getModelForAnalytics(t), to_model: getModelForAnalytics(e) });
     let d = n2(e),
       c = "";
     if (C) {
@@ -303,13 +303,13 @@ function gSe(l) {
     }
     if (s?.fromUltracode) iA(v);
     else if (s !== void 0) zG(s.level, t2(e), void 0, v);
-    if ((Cz(), Mr())) QH();
+    if ((Cz(), isFastModeEnabled())) clearFastModeCooldown();
     let b = !1,
       _ = !1;
     (A(
       (T) => (
         (b = !!T.fastMode),
-        (_ = Mr() ? db(e, T.fastMode) : b),
+        (_ = isFastModeEnabled() ? resolveFastModeForModel(e, T.fastMode) : b),
         {
           ...T,
           mainLoopModel: e,
@@ -322,7 +322,7 @@ function gSe(l) {
         }
       ),
     ),
-      pb(b, _));
+      logFastModeToggled(b, _));
     let O = p7(b, _, e);
     w((T) => {
       let N =
@@ -397,7 +397,7 @@ function gSe(l) {
       (k("remoteControlAtStartup", t),
         p((s) => ({ ...s, remoteControlAtStartup: t })));
     }
-    let o = yq();
+    let o = getRemoteControlAtStartup();
     A((t) => applyRemoteControlToAppState(t, o));
     return;
   }
@@ -629,11 +629,11 @@ function gSe(l) {
           logFeatureOk("thinking_toggle"));
       },
     },
-    ...(Mr() && Jy()
+    ...(isFastModeEnabled() && isFastModeAvailable()
       ? [
           {
             id: "fast",
-            label: `Fast mode (${RR()})`,
+            label: `Fast mode (${getFastModeModelDisplayName()})`,
             value: !!fe,
             type: "boolean",
             async onChange(e) {
@@ -654,7 +654,7 @@ function gSe(l) {
                       ),
                     };
                 }
-                (QH(), h({ fastMode: !0 }));
+                (clearFastModeCooldown(), h({ fastMode: !0 }));
                 let c;
                 return (
                   A((b) => {
@@ -675,7 +675,7 @@ function gSe(l) {
                   }),
                   w((b) => ({
                     ...b,
-                    ...(c !== void 0 && { model: c ?? Q$e() }),
+                    ...(c !== void 0 && { model: c ?? getFastModeModelId() }),
                     "Fast mode": "ON",
                   })),
                   d ? { messageSuffix: d } : void 0
@@ -720,7 +720,7 @@ function gSe(l) {
               if (e) return o(void 0, !1, "");
               else {
                 let t = () => {
-                  (QH(),
+                  (clearFastModeCooldown(),
                     h({ fastMode: void 0 }),
                     A((s) => ({ ...s, fastMode: !1 })),
                     w((s) => ({ ...s, "Fast mode": "OFF" })));
@@ -733,7 +733,7 @@ function gSe(l) {
           },
         ]
       : []),
-    ...(H("tengu_chomp_inflection", !1)
+    ...(getFeatureValue_CACHED_MAY_BE_STALE("tengu_chomp_inflection", !1)
       ? [
           {
             id: "promptSuggestionEnabled",
@@ -781,7 +781,7 @@ function gSe(l) {
             id: "orgMemoryRead",
             label:
               "Synced project memory (this directory; applies next session)",
-            value: es().orgMemoryRead ?? !0,
+            value: getCurrentProjectConfig().orgMemoryRead ?? !0,
             type: "boolean",
             onChange(e) {
               (Yer(e, v), p((o) => ({ ...o })));
@@ -789,20 +789,20 @@ function gSe(l) {
           },
         ]
       : []),
-    ...(Fe(!OYe() && (DCe() || es().orgMemoryWrites === !0))
+    ...(Fe(!OYe() && (DCe() || getCurrentProjectConfig().orgMemoryWrites === !0))
       ? [
           {
             id: "orgMemoryWrites",
             label:
-              es().orgMemoryRead === !1
+              getCurrentProjectConfig().orgMemoryRead === !1
                 ? "Synced project memory writes (enable reads first)"
                 : "Synced project memory writes (this directory; applies next session)",
             value: jfe(),
-            canWithdraw: () => es().orgMemoryWrites === !0,
+            canWithdraw: () => getCurrentProjectConfig().orgMemoryWrites === !0,
             type: "boolean",
             consentGated: !0,
             onChange(e) {
-              let o = e && !jfe() && es().orgMemoryWrites === !0;
+              let o = e && !jfe() && getCurrentProjectConfig().orgMemoryWrites === !0;
               (vTt(o ? !1 : e, v), p((t) => ({ ...t })));
             },
           },
@@ -904,7 +904,7 @@ function gSe(l) {
           logEvent("tengu_terminal_progress_bar_setting_changed", { enabled: e }));
       },
     },
-    ...(H("tengu_terminal_sidebar", !1)
+    ...(getFeatureValue_CACHED_MAY_BE_STALE("tengu_terminal_sidebar", !1)
       ? [
           {
             id: "showStatusInTerminalTab",
@@ -930,7 +930,7 @@ function gSe(l) {
           logEvent("tengu_show_turn_duration_setting_changed", { enabled: e }));
       },
     },
-    ...(H("tengu_sepia_moth", !1)
+    ...(getFeatureValue_CACHED_MAY_BE_STALE("tengu_sepia_moth", !1)
       ? [
           {
             id: "precomputeCompactionEnabled",
@@ -947,7 +947,7 @@ function gSe(l) {
           },
         ]
       : []),
-    ...(H("tengu_silk_hinge", !1)
+    ...(getFeatureValue_CACHED_MAY_BE_STALE("tengu_silk_hinge", !1)
       ? [
           {
             id: "timestamps",
@@ -1575,12 +1575,12 @@ function gSe(l) {
             id: "apiKey",
             consentGated: !0,
             label: "Use custom API key: ",
-            labelBoldSuffix: fq(a.ANTHROPIC_API_KEY),
+            labelBoldSuffix: getApiKeyFingerprint(a.ANTHROPIC_API_KEY),
             searchText: "Use custom API key",
             value: Boolean(
               a.ANTHROPIC_API_KEY &&
               r.customApiKeyResponses?.approved?.includes(
-                fq(a.ANTHROPIC_API_KEY),
+                getApiKeyFingerprint(a.ANTHROPIC_API_KEY),
               ),
             ),
             type: "boolean",
@@ -1600,7 +1600,7 @@ function gSe(l) {
                     rejected: [],
                   };
                 if (a.ANTHROPIC_API_KEY) {
-                  let s = fq(a.ANTHROPIC_API_KEY);
+                  let s = getApiKeyFingerprint(a.ANTHROPIC_API_KEY);
                   if (e)
                     t.customApiKeyResponses = {
                       ...t.customApiKeyResponses,

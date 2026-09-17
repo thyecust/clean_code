@@ -17,7 +17,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { withOAuth401Retry, ht, hasProfileScope, getOauthAccountInfo } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { withOAuth401Retry, httpClient, hasProfileScope, getOauthAccountInfo } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import {
@@ -212,7 +212,7 @@ async function E(e) {
   try {
     let r = await withOAuth401Retry(
       () =>
-        ht.post(
+        httpClient.post(
           `/api/organizations/${t}/reset_rate_limits`,
           { program: I },
           {

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { l0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isReservedRecipientName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Qs } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isInProcessTeammateTask, IDLE_WINDOW_KEEPALIVE_REASON, isAgentParkedOnKeepalive } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -58,7 +58,7 @@ function createAgentLifecycle(r, i) {
       );
     },
     registerName(t, e) {
-      if (l0(t)) {
+      if (isReservedRecipientName(t)) {
         n(
           `[registerName] refused reserved or agent-id-shaped name "${t}" for ${e}`,
         );
@@ -79,7 +79,7 @@ function createAgentLifecycle(r, i) {
         );
       for (let o = 1; ; o++) {
         let m = o === 1 ? e : `${e}-${o}`;
-        if (l0(m) || g.has(m)) continue;
+        if (isReservedRecipientName(m) || g.has(m)) continue;
         let d = a.get(m);
         if (d === void 0 || f(s.tasks, d) === void 0) return m;
       }
@@ -101,7 +101,7 @@ function createAgentLifecycle(r, i) {
       });
     },
     setTeammate(t, e) {
-      if (e !== void 0 && l0(e.name)) {
+      if (e !== void 0 && isReservedRecipientName(e.name)) {
         n(
           `[setTeammate] refused reserved or agent-id-shaped teammate name "${e.name}" for ${t}`,
         );

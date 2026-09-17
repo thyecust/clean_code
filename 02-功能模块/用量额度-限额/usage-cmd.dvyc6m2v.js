@@ -13,7 +13,7 @@ import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
-import { isClaudeAISubscriber, hasProfileScope, getSubscriptionType, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isClaudeAISubscriber, hasProfileScope, getSubscriptionType, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatResetTime, formatResetText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -93,7 +93,7 @@ ${c}`;
 
 ${g}
 ${o.reason}`;
-      if (H("tengu_amber_lark", !1)) {
+      if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_amber_lark", !1)) {
         let m = formatCostBreakdown();
         if (m)
           s += `

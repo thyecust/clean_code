@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { NR, EP } from "./认证-OAuth登录.419zdfz3.js";
+import { watchGlobalConfigThroughStorage, seedInstallIDs } from "./认证-OAuth登录.419zdfz3.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -643,7 +643,7 @@ async function Lgr(e, t) {
     k = credentialsStoreFor(f),
     w = re(p.initialAccessToken, k, f);
   if (isHoverRestEnabled() && f !== void 0) {
-    (zR({ storageV5: f }), NR(f));
+    (zR({ storageV5: f }), watchGlobalConfigThroughStorage(f));
     let [
       { composePolicyLimitsClient: v, primePolicyLimitsCache: g },
       { primeFastPathCredentials: S },
@@ -658,7 +658,7 @@ async function Lgr(e, t) {
       D(f),
       await S(k),
       await g(f),
-      await EP(f));
+      await seedInstallIDs(f));
   }
   try {
     await y.run(

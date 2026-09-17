@@ -19,7 +19,7 @@ import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { uRe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getSanitizedShortCode } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -577,10 +577,10 @@ class L {
     (logFeatureOk("voice_start"),
       logEvent("tengu_voice_recording_started", {
         focusTriggered: this.#i,
-        sttLanguage: uRe(D.code),
+        sttLanguage: getSanitizedShortCode(D.code),
         sttLanguageIsDefault: !b?.trim(),
         sttLanguageFellBack: D.fellBackFrom !== void 0,
-        systemLocaleLanguage: R == null ? void 0 : uRe(R),
+        systemLocaleLanguage: R == null ? void 0 : getSanitizedShortCode(R),
       }));
     let v = !1,
       _ = () => this.#u !== c,

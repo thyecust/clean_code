@@ -13,7 +13,7 @@ import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chal
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { Ia, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getCurrentWorktreeSession, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
@@ -71,7 +71,7 @@ function ne(_o) {
       }
       Le.current = !0;
       let Fo = Po === "yes";
-      (await Te(
+      (await saveGlobalConfig(
         (Ao) => ({
           ...Ao,
           autoConnectIde: Fo,
@@ -154,7 +154,7 @@ function ne(_o) {
   return wt;
 }
 function De() {
-  let n = ee();
+  let n = getGlobalConfig();
   return (
     !isSupportedIdeTerminal() &&
     n.autoConnectIde !== !0 &&
@@ -168,7 +168,7 @@ function re(Mo) {
     Et;
   if (ge[0] !== H || ge[1] !== Ye)
     ((Et = () => {
-      (Te(St, Ye), H(!0));
+      (saveGlobalConfig(St, Ye), H(!0));
     }),
       (ge[0] = H),
       (ge[1] = Ye),
@@ -213,7 +213,7 @@ function re(Mo) {
   return vt;
 }
 function Ce() {
-  let n = ee();
+  let n = getGlobalConfig();
   return !isSupportedIdeTerminal() && n.autoConnectIde === !0;
 }
 function ro(Ke, kt) {
@@ -623,7 +623,7 @@ async function cn(n, s, m) {
     onChangeDynamicMcpConfig: h,
   } = s;
   if (m?.trim() === "open") {
-    let I = Ia(),
+    let I = getCurrentWorktreeSession(),
       x = I ? I.worktreePath : getCwd(),
       b = (await discoverIdeServers(!0)).filter((T) => T.isValid);
     if (b.length === 0)

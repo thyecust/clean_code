@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 72 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { lZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -20,7 +20,7 @@ import { O, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var r = createLazyValue(() => c({ enable_slash_command: O() })),
   n = { enable_slash_command: !1 };
 function a() {
-  let t = H("tengu_kairos_brief_config", n),
+  let t = getFeatureValue_CACHED_MAY_BE_STALE("tengu_kairos_brief_config", n),
     o = r().safeParse(t);
   return o.success ? o.data : n;
 }

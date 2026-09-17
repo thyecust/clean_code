@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { bee } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
-import { Ls, Mc } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { otelApiModule, otelCoreModule } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { commonJS, importMetaRequire } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 var ve = commonJS(function (he) {
   Object.defineProperty(he, "__esModule", { value: !0 });
@@ -118,7 +118,7 @@ var _t = commonJS(function (Pe) {
 var Le = commonJS(function (Ie) {
   Object.defineProperty(Ie, "__esModule", { value: !0 });
   Ie.createLoggingPartialSuccessResponseHandler = void 0;
-  var Go = Ls();
+  var Go = otelApiModule();
   function Yo(l) {
     return Object.prototype.hasOwnProperty.call(l, "partialSuccess");
   }
@@ -144,10 +144,10 @@ var Le = commonJS(function (Ie) {
 var At = commonJS(function (De) {
   Object.defineProperty(De, "__esModule", { value: !0 });
   De.createOtlpExportDelegate = void 0;
-  var rt = Mc(),
+  var rt = otelCoreModule(),
     Re = vt(),
     $o = Le(),
-    Xo = Ls();
+    Xo = otelApiModule();
   class ke {
     _transport;
     _serializer;
@@ -13223,7 +13223,7 @@ var Nt = commonJS(function (Kr) {
     Kr.toLongBits =
     Kr.hrTimeToNanos =
       void 0;
-  var bi = Mc(),
+  var bi = otelCoreModule(),
     zt = Vr();
   function Jt(l) {
     let u = BigInt(1e9);
@@ -13425,7 +13425,7 @@ var Qt = commonJS(function (pn) {
     pn.toScopeMetrics =
     pn.toResourceMetrics =
       void 0;
-  var on = Ls(),
+  var on = otelApiModule(),
     lt = bee(),
     un = nn(),
     zi = Nt(),
@@ -13858,7 +13858,7 @@ var tI = commonJS(function (et) {
 var Kn = commonJS(function (Hn) {
   Object.defineProperty(Hn, "__esModule", { value: !0 });
   Hn.validateAndNormalizeHeaders = void 0;
-  var Du = Ls();
+  var Du = otelApiModule();
   function Mu(l) {
     let u = {};
     return (
@@ -14166,8 +14166,8 @@ var go = commonJS(function (xo) {
 var ue = commonJS(function (Po) {
   Object.defineProperty(Po, "__esModule", { value: !0 });
   Po.getSharedConfigurationFromEnvironment = void 0;
-  var wo = Mc(),
-    Eo = Ls();
+  var wo = otelCoreModule(),
+    Eo = otelApiModule();
   function No(l) {
     let u = (0, wo.getNumberFromEnv)(l);
     if (u != null) {
@@ -14206,8 +14206,8 @@ var Ao = commonJS(function (Io) {
   Io.getNodeHttpConfigurationFromEnvironment = void 0;
   var xl = importMetaRequire("fs"),
     Sl = importMetaRequire("path"),
-    G = Mc(),
-    Pt = Ls(),
+    G = otelCoreModule(),
+    Pt = otelApiModule(),
     gl = ue(),
     Nl = at(),
     Tl = Et();
@@ -14326,7 +14326,7 @@ var ko = commonJS(function (Lo) {
 var Vo = commonJS(function (Mo) {
   Object.defineProperty(Mo, "__esModule", { value: !0 });
   Mo.convertLegacyHttpOptions = void 0;
-  var Ml = Ls(),
+  var Ml = otelApiModule(),
     Do = Et(),
     Cl = mF(),
     Vl = Ao(),

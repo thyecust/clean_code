@@ -1463,7 +1463,7 @@ var PT = commonJS(function (kT) {
   var jK = OT();
   kT.trace = jK.TraceAPI.getInstance();
 });
-var Ls = commonJS(function (Re) {
+var otelApiModule = commonJS(function (Re) {
   Object.defineProperty(Re, "__esModule", { value: !0 });
   Re.trace =
     Re.propagation =
@@ -1687,7 +1687,7 @@ var Ls = commonJS(function (Re) {
 var zo = commonJS(function (HT) {
   Object.defineProperty(HT, "__esModule", { value: !0 });
   HT.isTracingSuppressed = HT.unsuppressTracing = HT.suppressTracing = void 0;
-  var sj = Ls(),
+  var sj = otelApiModule(),
     hd = (0, sj.createContextKey)(
       "OpenTelemetry SDK Context Key SUPPRESS_TRACING",
     );
@@ -1729,7 +1729,7 @@ var Sd = commonJS(function (eb) {
     eb.getKeyPairs =
     eb.serializeKeyPairs =
       void 0;
-  var Ej = Ls(),
+  var Ej = otelApiModule(),
     Gr = Ed();
   function Sj(e) {
     return e.reduce((t, r) => {
@@ -1784,7 +1784,7 @@ var Sd = commonJS(function (eb) {
 var ib = commonJS(function (rb) {
   Object.defineProperty(rb, "__esModule", { value: !0 });
   rb.W3CBaggagePropagator = void 0;
-  var Td = Ls(),
+  var Td = otelApiModule(),
     Rj = zo(),
     or = Ed(),
     bd = Sd();
@@ -1846,7 +1846,7 @@ var cb = commonJS(function (ab) {
 var Rb = commonJS(function (yb) {
   Object.defineProperty(yb, "__esModule", { value: !0 });
   yb.isAttributeValue = yb.isAttributeKey = yb.sanitizeAttributes = void 0;
-  var _b = Ls();
+  var _b = otelApiModule();
   function Cj(e) {
     let t = {};
     if (typeof e !== "object" || e == null) return t;
@@ -1907,7 +1907,7 @@ var Rb = commonJS(function (yb) {
 var yd = commonJS(function (Cb) {
   Object.defineProperty(Cb, "__esModule", { value: !0 });
   Cb.loggingErrorHandler = void 0;
-  var Pj = Ls();
+  var Pj = otelApiModule();
   function Mj() {
     return (e) => {
       Pj.diag.error(Ij(e));
@@ -1954,7 +1954,7 @@ var Vb = commonJS(function (Bb) {
     Bb.getStringFromEnv =
     Bb.getNumberFromEnv =
       void 0;
-  var Nb = Ls(),
+  var Nb = otelApiModule(),
     zb = importMetaRequire("util");
   function zj(e) {
     let t = process.env[e];
@@ -4084,7 +4084,7 @@ var lM = commonJS(function (sM) {
   sM.EVENT_EXCEPTION = void 0;
   sM.EVENT_EXCEPTION = "exception";
 });
-var Ime = commonJS(function (Ft) {
+var otelSemanticConventionsModule = commonJS(function (Ft) {
   var e8 =
       (Ft && Ft.__createBinding) ||
       (Object.create
@@ -4130,7 +4130,7 @@ var gM = commonJS(function (pM) {
   Object.defineProperty(pM, "__esModule", { value: !0 });
   pM.SDK_INFO = void 0;
   var t8 = qb(),
-    Gs = Ime(),
+    Gs = otelSemanticConventionsModule(),
     n8 = dM();
   pM.SDK_INFO = {
     [Gs.ATTR_TELEMETRY_SDK_NAME]: "opentelemetry",
@@ -4355,7 +4355,7 @@ var OM = commonJS(function (CM) {
 var IM = commonJS(function (PM) {
   Object.defineProperty(PM, "__esModule", { value: !0 });
   PM.CompositePropagator = void 0;
-  var kM = Ls();
+  var kM = otelApiModule();
   class wM {
     _propagators;
     _fields;
@@ -4498,7 +4498,7 @@ var jM = commonJS(function (VM) {
     VM.TRACE_STATE_HEADER =
     VM.TRACE_PARENT_HEADER =
       void 0;
-  var Xs = Ls(),
+  var Xs = otelApiModule(),
     H8 = zo(),
     G8 = Md();
   VM.TRACE_PARENT_HEADER = "traceparent";
@@ -4557,7 +4557,7 @@ var qM = commonJS(function ($M) {
     $M.setRPCMetadata =
     $M.RPCType =
       void 0;
-  var X8 = Ls(),
+  var X8 = otelApiModule(),
     Id = (0, X8.createContextKey)("OpenTelemetry SDK Context Key RPC_METADATA"),
     J8;
   (function (e) {
@@ -4822,7 +4822,7 @@ var vI = commonJS(function (AI) {
 var kI = commonJS(function (CI) {
   Object.defineProperty(CI, "__esModule", { value: !0 });
   CI.diagLogLevelFromString = void 0;
-  var un = Ls(),
+  var un = otelApiModule(),
     RI = {
       ALL: un.DiagLogLevel.ALL,
       VERBOSE: un.DiagLogLevel.VERBOSE,
@@ -4849,7 +4849,7 @@ var kI = commonJS(function (CI) {
 var II = commonJS(function (PI) {
   Object.defineProperty(PI, "__esModule", { value: !0 });
   PI._export = void 0;
-  var wI = Ls(),
+  var wI = otelApiModule(),
     y9 = zo();
   function v9(e, t) {
     return new Promise((r) => {
@@ -4860,7 +4860,7 @@ var II = commonJS(function (PI) {
   }
   PI._export = v9;
 });
-var Mc = commonJS(function (ue) {
+var otelCoreModule = commonJS(function (ue) {
   Object.defineProperty(ue, "__esModule", { value: !0 });
   ue.internal =
     ue.diagLogLevelFromString =
@@ -5264,9 +5264,9 @@ var zd = commonJS(function (KI) {
     KI.resourceFromDetectedResource =
     KI.resourceFromAttributes =
       void 0;
-  var Wo = Ls(),
-    Ld = Mc(),
-    fr = Ime(),
+  var Wo = otelApiModule(),
+    Ld = otelCoreModule(),
+    fr = otelSemanticConventionsModule(),
     H9 = Nd(),
     jo = GI();
   class $o {
@@ -5403,7 +5403,7 @@ var zd = commonJS(function (KI) {
 var qI = commonJS(function ($I) {
   Object.defineProperty($I, "__esModule", { value: !0 });
   $I.detectResources = void 0;
-  var WI = Ls(),
+  var WI = otelApiModule(),
     Fd = zd(),
     X9 = (e = {}) =>
       (e.detectors || [])
@@ -5427,9 +5427,9 @@ var qI = commonJS(function ($I) {
 var eD = commonJS(function (QI) {
   Object.defineProperty(QI, "__esModule", { value: !0 });
   QI.envDetector = void 0;
-  var J9 = Ls(),
-    Q9 = Ime(),
-    XI = Mc();
+  var J9 = otelApiModule(),
+    Q9 = otelSemanticConventionsModule(),
+    XI = otelCoreModule();
   class JI {
     _MAX_LENGTH = 255;
     _COMMA_SEPARATOR = ",";
@@ -5666,7 +5666,7 @@ var ED = commonJS(function (_D) {
 var AD = commonJS(function (TD) {
   Object.defineProperty(TD, "__esModule", { value: !0 });
   TD.processDetector = void 0;
-  var $Z = Ls(),
+  var $Z = otelApiModule(),
     dn = Yo(),
     YZ = importMetaRequire("os");
   class SD {
@@ -5839,7 +5839,7 @@ var ID = commonJS(function (Dn) {
     },
   });
 });
-var V$e = commonJS(function (Mt) {
+var otelResourcesModule = commonJS(function (Mt) {
   Object.defineProperty(Mt, "__esModule", { value: !0 });
   Mt.defaultServiceName =
     Mt.emptyResource =
@@ -5922,11 +5922,11 @@ import { exec as B0, execFile } from "child_process";
 import { createHash as tfe } from "crypto";
 import { readFile as nfe, realpath, stat as Km } from "fs/promises";
 import { dirname as ofe, join as jm, resolve as O0 } from "path";
-var q$e = "Cloud gateway session expired \u2014 run /login to reconnect.";
+var CLOUD_GATEWAY_SESSION_EXPIRED_MESSAGE = "Cloud gateway session expired \u2014 run /login to reconnect.";
 function Pc() {
   return parseRegionName(a.AWS_REGION) || parseRegionName(a.AWS_DEFAULT_REGION);
 }
-function Lve() {
+function getAwsRegionOrDefault() {
   return Pc() || "us-east-1";
 }
 function wc() {
@@ -5969,24 +5969,24 @@ var _H = new j(() => new Zm());
 function e_() {
   return _H.of(B().host);
 }
-async function cA() {
+async function resolveAwsRegion() {
   let e = Pc();
   if (e) return e;
-  return (await e_().readAwsSharedConfigRegion()) || Lve();
+  return (await e_().readAwsSharedConfigRegion()) || getAwsRegionOrDefault();
 }
-function cVt() {
-  return wCn().region;
+function getAwsRegion() {
+  return resolveAwsRegionWithSource().region;
 }
-function wCn() {
+function resolveAwsRegionWithSource() {
   let e = Pc();
   if (e) return { region: e, source: "env" };
   let t = e_().resolvedSharedConfigRegions.get(wc());
   if (t) return { region: t, source: "shared-config" };
   let r = !!(a.AWS_REGION || a.AWS_DEFAULT_REGION);
-  return { region: Lve(), source: r ? "env-invalid" : "default" };
+  return { region: getAwsRegionOrDefault(), source: r ? "env-invalid" : "default" };
 }
 var Ic = toESM(EA(), 1);
-function TCn() {
+function createProviderCache() {
   return {
     validatedModels: new Set(),
     bedrockInferenceProfiles: void 0,
@@ -6005,12 +6005,12 @@ function TCn() {
     fableEntitlementProbeModel: void 0,
   };
 }
-function CAt() {
+function getAuthenticatedAccountKey() {
   let e = cHt();
   return e === null ? null : `${e.accountUuid}|${e.organizationUuid ?? ""}`;
 }
-function uVt() {
-  let e = Or().providerCache;
+function resetFableEntitlementProbe() {
+  let e = getProviderState().providerCache;
   if (e.fableEntitlementProbeModel !== void 0)
     e.validatedModels.delete(e.fableEntitlementProbeModel);
   ((e.fableEntitlementProbe = void 0),
@@ -6022,16 +6022,16 @@ function uVt() {
     (e.fableEntitlementProbeGeneration += 1),
     (e.fableEntitlementProbeModel = void 0));
 }
-function vAt() {
-  let e = Or().providerCache;
+function getFableEntitlementProbe() {
+  let e = getProviderState().providerCache;
   if (e.fableEntitlementProbeAccount === void 0) return;
-  let t = CAt();
+  let t = getAuthenticatedAccountKey();
   if (t === null) return e.fableEntitlementProbe;
   if (e.fableEntitlementProbeAccount === null)
     if (xW() === e.fableEntitlementProbeEpoch + 1)
       e.fableEntitlementProbeAccount = t;
-    else uVt();
-  else if (e.fableEntitlementProbeAccount !== t) uVt();
+    else resetFableEntitlementProbe();
+  else if (e.fableEntitlementProbeAccount !== t) resetFableEntitlementProbe();
   return e.fableEntitlementProbe;
 }
 function To() {
@@ -6044,7 +6044,7 @@ function To() {
 }
 function hH() {
   return {
-    providerCache: TCn(),
+    providerCache: createProviderCache(),
     betas: To(),
     betasCompiledOnly: To(),
     fablePromo: {
@@ -6085,11 +6085,11 @@ function hH() {
   };
 }
 var EH = new Gt(() => hH());
-function Or() {
+function getProviderState() {
   return EH.of(B());
 }
-function RAt() {
-  let e = Or().providerCache;
+function getBedrockInferenceProfiles() {
+  let e = getProviderState().providerCache;
   if (e.bedrockInferenceProfiles === void 0) e.bedrockInferenceProfiles = SH();
   return e.bedrockInferenceProfiles;
 }
@@ -6133,7 +6133,7 @@ function n_(e, t) {
     r = o + 1;
   }
 }
-function Hme(e, t, r) {
+function findInferenceProfileForModel(e, t, r) {
   if (r) {
     let o = e.find((d) => d.startsWith(`${r}.`) && n_(d, t));
     if (o) return o;
@@ -6142,7 +6142,7 @@ function Hme(e, t, r) {
 }
 async function r_() {
   let { BedrockClient: e } = await import("../../00-第三方库/_未识别/第三方库-AWSSDK/BedrockClient.8qdd522x.js"),
-    t = await cA(),
+    t = await resolveAwsRegion(),
     r = a.CLAUDE_CODE_SKIP_BEDROCK_AUTH,
     o = await getAWSClientProxyConfig({
       url: a.ANTHROPIC_BEDROCK_BASE_URL || `https://bedrock.${t}.amazonaws.com`,
@@ -6183,9 +6183,9 @@ async function r_() {
     }
   return new e(d);
 }
-async function grr() {
+async function createBedrockRuntimeClient() {
   let { BedrockRuntimeClient: e } = await import("../../00-第三方库/_未识别/第三方库-AWSSDK/BedrockRuntimeClient.nv86vjtp.js"),
-    t = await cA(),
+    t = await resolveAwsRegion(),
     r = a.CLAUDE_CODE_SKIP_BEDROCK_AUTH,
     o = await getAWSClientProxyConfig({
       url:
@@ -6228,7 +6228,7 @@ async function grr() {
     }
   return new e(d);
 }
-async function kAt(e, t, r, o) {
+async function countBedrockTokens(e, t, r, o) {
   let { CountTokensCommand: d } = await import("../../00-第三方库/_未识别/第三方库-AWSSDK/BedrockRuntimeClient.nv86vjtp.js");
   return (
     (
@@ -6248,14 +6248,14 @@ async function kAt(e, t, r, o) {
     ).inputTokens ?? null
   );
 }
-function XJ(e) {
+function getInferenceProfileBackingModel(e) {
   let t = er(e),
-    r = Or().providerCache.inferenceProfileBackingModels,
+    r = getProviderState().providerCache.inferenceProfileBackingModels,
     o = r.get(t);
   if (o === void 0) ((o = TH(t)), r.set(t, o));
   return o;
 }
-function gse(e) {
+function isUnresolvedInferenceProfileArn(e) {
   return (
     e.includes("application-inference-profile") && typeof OW(er(e)) !== "string"
   );
@@ -6284,27 +6284,27 @@ async function TH(e) {
   }
   return (CMn(e, t), t);
 }
-function fQe(e) {
+function isUnprefixedAnthropicModelId(e) {
   return e.startsWith("anthropic.");
 }
-function ECn(e) {
+function getArnResourceName(e) {
   if (!e.startsWith("arn:")) return e;
   let t = e.lastIndexOf("/");
   if (t === -1) return e;
   return e.substring(t + 1);
 }
-function z$e(e) {
-  let t = ECn(e);
+function getInferenceProfilePrefixFromModelId(e) {
+  let t = getArnResourceName(e);
   for (let r of TW) if (t.startsWith(`${r}.anthropic.`)) return r;
   return;
 }
-function hse(e, t) {
-  let r = z$e(e);
+function applyInferenceProfilePrefix(e, t) {
+  let r = getInferenceProfilePrefixFromModelId(e);
   if (r) return e.replace(`${r}.`, `${t}.`);
-  if (fQe(e)) return `${t}.${e}`;
+  if (isUnprefixedAnthropicModelId(e)) return `${t}.${e}`;
   return e;
 }
-function Mve(e) {
+function getInferenceProfilePrefixForRegion(e) {
   let t = e ?? "";
   if (t.startsWith("us-gov-")) return "us-gov";
   if (t.startsWith("us-")) return "us";
@@ -6312,9 +6312,9 @@ function Mve(e) {
   if (t.startsWith("ap-")) return "apac";
   return "global";
 }
-function mQe(e) {
+function resolveInferenceProfilePrefix(e) {
   if (e?.startsWith("us-gov-")) return "us-gov";
-  return a.ANTHROPIC_BEDROCK_REGION_PREFIX ?? Mve(e);
+  return a.ANTHROPIC_BEDROCK_REGION_PREFIX ?? getInferenceProfilePrefixForRegion(e);
 }
 async function i_() {
   let e = await import("./chunk-v3686d7w.js").then((m) => toESM(m.default, 1));
@@ -6326,18 +6326,18 @@ function ub(e) {
 var Dc = Object.keys(to);
 function bo(e, t) {
   let r = Dc.find((p) => to[p][e] !== null),
-    o = e === "bedrock" ? mQe(t ?? cVt()) : void 0,
+    o = e === "bedrock" ? resolveInferenceProfilePrefix(t ?? getAwsRegion()) : void 0,
     d = {};
   for (let p of Dc) {
     let _ = to[p][e] ?? (r ? to[r][e] : to[p].firstParty);
-    d[p] = ub(o ? hse(_, o) : _);
+    d[p] = ub(o ? applyInferenceProfilePrefix(_, o) : _);
   }
   return d;
 }
 async function bH() {
-  let e = await cA(),
-    t = mQe(e),
-    r = Mve(e),
+  let e = await resolveAwsRegion(),
+    t = resolveInferenceProfilePrefix(e),
+    r = getInferenceProfilePrefixForRegion(e),
     o = bo("bedrock", e),
     d = () => {
       if (t !== r)
@@ -6348,7 +6348,7 @@ async function bH() {
     },
     p;
   try {
-    p = await RAt();
+    p = await getBedrockInferenceProfiles();
   } catch (C) {
     return (
       n(
@@ -6364,7 +6364,7 @@ async function bH() {
     E = [];
   for (let C of Dc) {
     let I = to[C].firstParty,
-      D = Hme(p, I, t) || o[C];
+      D = findInferenceProfileForModel(p, I, t) || o[C];
     if (((_[C] = ub(D)), t !== r && !D.startsWith(`${t}.`))) E.push(I);
   }
   if (E.length > 0)
@@ -6384,7 +6384,7 @@ function s_(e) {
   }
   return r;
 }
-function gQe(e) {
+function getModelOverrideSourceId(e) {
   let t;
   try {
     t = getInitialSettings().modelOverrides;
@@ -6413,7 +6413,7 @@ function xc() {
   }
   l_();
 }
-function Zl() {
+function getEffectiveModelStrings() {
   let e = fje();
   if (e === null) return (xc(), s_(bo(getAPIProvider())));
   return s_(e);
@@ -6423,14 +6423,14 @@ function Wt() {
   if (e === null) return (xc(), bo(getAPIProvider()));
   return e;
 }
-async function xAt(e) {
+async function resolveModelStrings(e) {
   if (fje() !== null) return;
   if (getAPIProvider() !== "bedrock") {
     nHt(bo(getAPIProvider()));
     return;
   }
   if (a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST && e?.sessionModelIsProviderId) {
-    (await cA(), xc());
+    (await resolveAwsRegion(), xc());
     return;
   }
   await l_();
@@ -6789,7 +6789,7 @@ function vH() {
   return (e.enabled, null);
   return e.headers;
 }
-function hrr(e) {
+function withRateLimitHeaders(e) {
   let t = vH();
   if (!t) return e;
   let r = new globalThis.Headers(e);
@@ -6800,7 +6800,7 @@ function hrr(e) {
     r
   );
 }
-function Nve() {
+function shouldAttachRateLimitHeaders() {
   return !1;
 }
 function Lc() {
@@ -6817,13 +6817,13 @@ function Hc() {
   let e = on();
   return e.enabled && e.subscriptionType !== null && !1;
 }
-function _rr() {
+function getSelfManageUsageCreditsOverride() {
   return null;
 }
-function Aw() {
+function getOverageBillingOverride() {
   return null;
 }
-function ACn() {
+function getProTrialOverride() {
   return null;
   switch (t) {
     case "not-started":
@@ -6838,10 +6838,10 @@ function ACn() {
     }
   }
 }
-function yrr() {
+function getUsageLimitGraceMock() {
   return null;
 }
-function Srr(e) {
+function setProTrialOverride(e) {
   return;
 }
 import { randomBytes as bm, randomUUID as Rde } from "crypto";
@@ -9137,13 +9137,13 @@ function zt() {
   return wG.of(B().host);
 }
 var PG = "tengu_ax_sr_arrow_nav";
-function fvt() {
+function isScreenReaderArrowNavEnabled() {
   return zt().isArrowNavEnabled();
 }
-function zg() {
+function isScreenReaderModeEnabled() {
   return zt().isEnabled();
 }
-function xsr() {
+function formatScreenReaderStatusLabel() {
   {
     let e = zt();
     if (e.isEnabled()) {
@@ -9157,13 +9157,13 @@ function xsr() {
 }
 var MG = 3000,
   IG = 600000;
-function Hsr() {
+function markScreenReaderAnnouncementWritten() {
   zt().markAnnouncementWritten(Date.now());
 }
-function n5t() {
+function endScreenReaderStartupQuiet() {
   zt().endStartupQuiet();
 }
-function Isr() {
+function getScreenReaderStartupQuietRemainingMs() {
   {
     let e = zt().startupQuietOpenedAtMs();
     if (e === null) return 0;
@@ -9175,14 +9175,14 @@ function Isr() {
 }
 var DG = 50,
   xG = 5000;
-function Psr() {
+function getScreenReaderPreParkDelayMs() {
   return Math.min(a.CLAUDE_AX_PREPARK_MS ?? DG, xG);
 }
-function hq() {
+function getScreenReaderEnvOverrides() {
   if (zt().isEnabled()) return { CLAUDE_AX_SCREEN_READER: "1" };
   return {};
 }
-function Osr() {
+function getScreenReaderTelemetryProps() {
   {
     let e = zt();
     if (e.isEnabled())
@@ -9194,10 +9194,10 @@ function Osr() {
   return {};
 }
 var X_ = 16;
-function H6(e) {
+function queueScreenReaderAnnouncement(e) {
   zt().queueAnnouncement(e);
 }
-function Dsr() {
+function drainScreenReaderAnnouncements() {
   return zt().drainAnnouncements();
 }
 var Z_ = "tengu_thistle_grebe";
@@ -9243,10 +9243,10 @@ function nh(e) {
 function rh(e) {
   return vs.registerFeature(e);
 }
-function Lsr(e) {
+function registerModelSteerFloor(e) {
   return Rs().registerModelFloor(e);
 }
-function Msr(e) {
+function recordSteerPromptModel(e) {
   Rs().recordPromptModel(e);
 }
 function ys(e) {
@@ -9271,7 +9271,7 @@ function LG(e) {
   }
   return { steer: "default", source: "default" };
 }
-function ux() {
+function getSubagentSteerMode() {
   let e = Rs();
   if (e.latched !== void 0) return e.latched;
   let { steer: t, source: r } = LG(e);
@@ -9279,10 +9279,10 @@ function ux() {
     logEvent("tengu_subagent_steer_applied", { steer: fromEnum(t), source: fromEnum(r) });
   return t;
 }
-function Nsr() {
+function resetSubagentSteerLatch() {
   Rs().resetLatch();
 }
-var Fsr = `## Delegating to subagents
+var SUBAGENT_STEER_DELEGATION_PROMPT = `## Delegating to subagents
 
 Subagents multiply cost and time: each one re-establishes context, re-explores, and reports back, and you then re-read its report. Delegate only when the payoff clearly exceeds that overhead. Before spawning, apply these tests:
 
@@ -9305,7 +9305,7 @@ var ih = new oh();
 function sh(e) {
   return ih.register(e);
 }
-function r5t() {
+function isCommitSkillRolloutEnabled() {
   let e = yOn();
   if (e !== null) return e;
   let t = ih.reader;
@@ -9326,7 +9326,7 @@ var lh = new ah();
 function ch(e) {
   return lh.register(e);
 }
-function GUe() {
+function isVerifySkillRolloutEnabled() {
   let e = hOn();
   if (e !== null) return e;
   let t = lh.reader;
@@ -9359,121 +9359,121 @@ function me(e, t) {
   return Object.freeze({ name: e, header: t });
 }
 var Qn = me("claude_code", "claude-code-20250219"),
-  Fve = me("oauth_auth", OAUTH_BETA_HEADER),
+  OAUTH_AUTH_BETA = me("oauth_auth", OAUTH_BETA_HEADER),
   xr = me("interleaved_thinking", "interleaved-thinking-2025-05-14"),
-  fP = me("long_context", "context-1m-2025-08-07"),
-  X$e = me("context_management", "context-management-2025-06-27"),
-  c5 = me("structured_outputs", "structured-outputs-2025-12-15"),
+  LONG_CONTEXT_BETA = me("long_context", "context-1m-2025-08-07"),
+  CONTEXT_MANAGEMENT_BETA = me("context_management", "context-management-2025-06-27"),
+  STRUCTURED_OUTPUTS_BETA = me("structured_outputs", "structured-outputs-2025-12-15"),
   Po = me("web_search", "web-search-2025-03-05"),
   cu = me("tool_search", "advanced-tool-use-2025-11-20"),
   Nr = me("tool_search", "tool-search-tool-2025-10-19"),
-  hQe = me("effort", "effort-2025-11-24"),
-  hVt = me("task_budgets", "task-budgets-2026-03-13"),
-  _Qe = me("prompt_caching_scope", "prompt-caching-scope-2026-01-05"),
-  Ome = me("prompt_caching_evict", "prompt-caching-evict-2026-05-12"),
-  Y$e = me("extended_cache_ttl", "extended-cache-ttl-2025-04-11"),
-  yQe = me("speed", "fast-mode-2026-02-01"),
-  OAt = me("redact_thinking", "redact-thinking-2026-02-12"),
-  uA = me("thinking_token_count", "thinking-token-count-2026-05-13"),
-  CR = me("afk_mode", "afk-mode-2026-01-31"),
-  RCn = me("advisor_tool", "advisor-tool-2026-03-01"),
-  Dme = me("cache_diagnosis", "cache-diagnosis-2026-04-07"),
-  kCn = me("context_hint", "context-hint-2026-04-09"),
-  SQe = me("mcp_servers", "mcp-servers-2025-12-04"),
-  xCn = me("files_api", "files-api-2025-04-14"),
-  HCn = me("environments", "environments-2025-11-01"),
-  ICn = me("ccr_byoc", "ccr-byoc-2025-07-29"),
-  vR = me("mid_conversation_system", "mid-conversation-system-2026-04-07"),
-  JH = me("per_message_effort", "per-turn-control-2026-07-01"),
-  Cw = me("mid_conv_tool_change", "mid-conversation-tool-changes-2026-07-01"),
-  nx = me("server_side_fallback", "server-side-fallback-2026-06-01"),
-  gg = me("server_side_fallback_category", "server-side-fallback-2026-07-01"),
-  mP = me("fallback_credit", "fallback-credit-2026-06-01"),
-  DAt = me(
+  EFFORT_BETA = me("effort", "effort-2025-11-24"),
+  TASK_BUDGETS_BETA = me("task_budgets", "task-budgets-2026-03-13"),
+  PROMPT_CACHING_SCOPE_BETA = me("prompt_caching_scope", "prompt-caching-scope-2026-01-05"),
+  PROMPT_CACHING_EVICT_BETA = me("prompt_caching_evict", "prompt-caching-evict-2026-05-12"),
+  EXTENDED_CACHE_TTL_BETA = me("extended_cache_ttl", "extended-cache-ttl-2025-04-11"),
+  FAST_MODE_BETA = me("speed", "fast-mode-2026-02-01"),
+  REDACT_THINKING_BETA = me("redact_thinking", "redact-thinking-2026-02-12"),
+  THINKING_TOKEN_COUNT_BETA = me("thinking_token_count", "thinking-token-count-2026-05-13"),
+  AFK_MODE_BETA = me("afk_mode", "afk-mode-2026-01-31"),
+  ADVISOR_TOOL_BETA = me("advisor_tool", "advisor-tool-2026-03-01"),
+  CACHE_DIAGNOSIS_BETA = me("cache_diagnosis", "cache-diagnosis-2026-04-07"),
+  CONTEXT_HINT_BETA = me("context_hint", "context-hint-2026-04-09"),
+  MCP_SERVERS_BETA = me("mcp_servers", "mcp-servers-2025-12-04"),
+  FILES_API_BETA = me("files_api", "files-api-2025-04-14"),
+  ENVIRONMENTS_BETA = me("environments", "environments-2025-11-01"),
+  CCR_BYOC_BETA_HEADER = me("ccr_byoc", "ccr-byoc-2025-07-29"),
+  MID_CONVERSATION_SYSTEM_BETA = me("mid_conversation_system", "mid-conversation-system-2026-04-07"),
+  PER_TURN_CONTROL_BETA = me("per_message_effort", "per-turn-control-2026-07-01"),
+  MID_CONVERSATION_TOOL_CHANGES_BETA = me("mid_conv_tool_change", "mid-conversation-tool-changes-2026-07-01"),
+  SERVER_SIDE_FALLBACK_BETA = me("server_side_fallback", "server-side-fallback-2026-06-01"),
+  SERVER_SIDE_FALLBACK_CATEGORY_BETA = me("server_side_fallback_category", "server-side-fallback-2026-07-01"),
+  FALLBACK_CREDIT_BETA = me("fallback_credit", "fallback-credit-2026-06-01"),
+  MID_CONV_CACHE_PROMOTION_LATCH_BETA = me(
     "mid_conv_cache_promotion_latch",
     "x-cc-internal-mid-conv-cache-promotion",
   ),
-  PCn = me(
+  MID_CONV_CACHE_PROMOTION_OK_LATCH_BETA = me(
     "mid_conv_cache_promotion_ok_latch",
     "x-cc-internal-mid-conv-cache-promotion-ok",
   ),
   bQe = null,
-  OCn = me("auto_mode_classifier", "auto-mode-classifier-2026-07-16"),
-  h6 = me("dangerous_tool_use", "dangerous-tool-use-2026-09-03"),
-  u5 = me("thinking_display_updates", "thinking-display-updates-2026-08-18"),
-  uU = me("thinking_binding_controls", "thinking-binding-controls-2026-08-01"),
+  AUTO_MODE_CLASSIFIER_BETA = me("auto_mode_classifier", "auto-mode-classifier-2026-07-16"),
+  DANGEROUS_TOOL_USE_BETA = me("dangerous_tool_use", "dangerous-tool-use-2026-09-03"),
+  THINKING_DISPLAY_UPDATES_BETA = me("thinking_display_updates", "thinking-display-updates-2026-08-18"),
+  THINKING_BINDING_CONTROLS_BETA = me("thinking_binding_controls", "thinking-binding-controls-2026-08-01"),
   LAt = null,
   FG = Object.freeze(
     [
       Qn,
-      Fve,
+      OAUTH_AUTH_BETA,
       xr,
-      fP,
-      X$e,
-      c5,
+      LONG_CONTEXT_BETA,
+      CONTEXT_MANAGEMENT_BETA,
+      STRUCTURED_OUTPUTS_BETA,
       Po,
       cu,
       Nr,
-      hQe,
-      hVt,
-      _Qe,
-      Ome,
-      Y$e,
-      yQe,
-      OAt,
-      uA,
-      CR,
-      RCn,
-      Dme,
-      kCn,
-      SQe,
-      xCn,
-      HCn,
-      ICn,
-      vR,
-      JH,
-      Cw,
-      nx,
-      gg,
-      mP,
+      EFFORT_BETA,
+      TASK_BUDGETS_BETA,
+      PROMPT_CACHING_SCOPE_BETA,
+      PROMPT_CACHING_EVICT_BETA,
+      EXTENDED_CACHE_TTL_BETA,
+      FAST_MODE_BETA,
+      REDACT_THINKING_BETA,
+      THINKING_TOKEN_COUNT_BETA,
+      AFK_MODE_BETA,
+      ADVISOR_TOOL_BETA,
+      CACHE_DIAGNOSIS_BETA,
+      CONTEXT_HINT_BETA,
+      MCP_SERVERS_BETA,
+      FILES_API_BETA,
+      ENVIRONMENTS_BETA,
+      CCR_BYOC_BETA_HEADER,
+      MID_CONVERSATION_SYSTEM_BETA,
+      PER_TURN_CONTROL_BETA,
+      MID_CONVERSATION_TOOL_CHANGES_BETA,
+      SERVER_SIDE_FALLBACK_BETA,
+      SERVER_SIDE_FALLBACK_CATEGORY_BETA,
+      FALLBACK_CREDIT_BETA,
       bQe,
-      OCn,
-      h6,
-      u5,
+      AUTO_MODE_CLASSIFIER_BETA,
+      DANGEROUS_TOOL_USE_BETA,
+      THINKING_DISPLAY_UPDATES_BETA,
       LAt,
-      uU,
+      THINKING_BINDING_CONTROLS_BETA,
     ].filter((e) => e !== null),
   ),
   hh = new Map(FG.map((e) => [e.header, e]));
-function Lme(e) {
+function getBetaByHeader(e) {
   return hh.get(e);
 }
 function uu(e) {
   return hh.get(e) ?? Object.freeze({ name: e, header: e });
 }
-function jC(e) {
+function getBetaHeaders(e) {
   return e.map((t) => t.header);
 }
-var du = new Set([xr, fP, Nr]),
-  _Vt = new Set([Qn, xr, X$e, Fve]);
+var du = new Set([xr, LONG_CONTEXT_BETA, Nr]),
+  COUNT_TOKENS_SUPPORTED_BETAS = new Set([Qn, xr, CONTEXT_MANAGEMENT_BETA, OAUTH_AUTH_BETA]);
 function ks() {
   let e = getAPIProvider();
   return e === "firstParty" || isClaudePlatformProvider(e) || e === "foundry";
 }
-function tq() {
-  return a.CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS || FD();
+function isExperimentalBetasDisabled() {
+  return a.CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS || isHipaaTaintActive();
 }
-function FD() {
+function isHipaaTaintActive() {
   return isTainted("hipaa");
 }
-function wQe(e) {
-  return FD() ? void 0 : e;
+function withholdBetasIfHipaaTainted(e) {
+  return isHipaaTaintActive() ? void 0 : e;
 }
-function Kh() {
-  return ks() && !tq();
+function canUseExperimentalBetas() {
+  return ks() && !isExperimentalBetasDisabled();
 }
 var Eh = null;
-function Trr(e) {
+function registerPerTurnEffortCapabilityResolver(e) {
   Eh = e;
 }
 var Sh = "tengu_sprightly_lagoon",
@@ -9481,23 +9481,23 @@ var Sh = "tengu_sprightly_lagoon",
 function bh(e) {
   Th = e;
 }
-function MAt(e, t) {
-  if (!Kh() || !hasFirstPartyCapabilities(getProviderForModel(e))) return !1;
+function supportsPerTurnEffort(e, t) {
+  if (!canUseExperimentalBetas() || !hasFirstPartyCapabilities(getProviderForModel(e))) return !1;
   if (dm(t, "per_turn_effort", e) !== !0 && Eh?.(t, e) !== !0) return !1;
   return Th?.() !== !0;
 }
 function Err(e, t) {
-  if (!MAt(e, t)) return !1;
+  if (!supportsPerTurnEffort(e, t)) return !1;
   let r = pa();
-  return !x_(r, JH) && !x_(r, vR);
+  return !x_(r, PER_TURN_CONTROL_BETA) && !x_(r, MID_CONVERSATION_SYSTEM_BETA);
 }
 class Rh {
   cachedEmail = null;
   emailFetchPromise = null;
   coreUserData = rs(
     (e) => {
-      let t = dx(),
-        r = ee(),
+      let t = getOrCreateUserID(),
+        r = getGlobalConfig(),
         o,
         d,
         p;
@@ -9579,10 +9579,10 @@ var Ah = null;
 function Mo() {
   return ((Ah ??= new Rh()), Ah);
 }
-function pVt() {
+function initUserData() {
   return Mo().init();
 }
-function lU() {
+function resetUserData() {
   Mo().reset();
 }
 function ws(e) {
@@ -9591,10 +9591,10 @@ function ws(e) {
 function Ch() {
   return ws(!0);
 }
-function _se() {
+function getGitUserEmail() {
   return Mo().gitEmail();
 }
-function brr() {
+function getGitUserName() {
   return Mo().gitUserName();
 }
 var BG = 8;
@@ -10185,8 +10185,8 @@ function kh(e) {
     logError(t);
   }
 }
-var $F = toESM(V$e(), 1);
-var ei = toESM(Ls());
+var $F = toESM(otelResourcesModule(), 1);
+var ei = toESM(otelApiModule());
 class Xo {
   emit(e) {}
 }
@@ -10277,12 +10277,12 @@ class Sa {
     (delete Wr[Zo], (this._proxyLoggerProvider = new ha()));
   }
 }
-var dVt = Sa.getInstance();
-var XD = toESM(V$e()),
-  Ta = toESM(Mc());
-var LD = toESM(Ls());
-var Qt = toESM(Ls()),
-  qr = toESM(Mc());
+var otelLogsApi = Sa.getInstance();
+var XD = toESM(otelResourcesModule()),
+  Ta = toESM(otelCoreModule());
+var LD = toESM(otelApiModule());
+var Qt = toESM(otelApiModule()),
+  qr = toESM(otelCoreModule());
 class Yd {
   hrTime;
   hrTimeObserved;
@@ -10439,7 +10439,7 @@ class qd {
     (this._sharedState.activeProcessor.onEmit(r, t), r._makeReadonly());
   }
 }
-var mr = toESM(Mc());
+var mr = toESM(otelCoreModule());
 function HD() {
   return {
     forceFlushTimeoutMillis: 30000,
@@ -10476,7 +10476,7 @@ class Xd {
     return Promise.resolve();
   }
 }
-var YD = toESM(Mc());
+var YD = toESM(otelCoreModule());
 class Jd {
   processors;
   forceFlushTimeoutMillis;
@@ -10521,7 +10521,7 @@ class Qd {
   }
 }
 var u7 = "unknown";
-class K$e {
+class OtelLoggerProvider {
   _shutdownOnce;
   _sharedState;
   constructor(e = {}) {
@@ -10577,8 +10577,8 @@ class K$e {
     return this._sharedState.activeProcessor.shutdown();
   }
 }
-var JD = toESM(Ls()),
-  je = toESM(Mc());
+var JD = toESM(otelApiModule()),
+  je = toESM(otelCoreModule());
 class Zd {
   _exporter;
   _maxExportBatchSize;
@@ -10712,14 +10712,14 @@ class Zd {
       );
   }
 }
-class Pme extends Zd {
+class OtelBatchLogRecordProcessor extends Zd {
   onShutdown() {}
 }
-var Kl = toESM(Ime(), 1);
+var Kl = toESM(otelSemanticConventionsModule(), 1);
 import { randomUUID as YF } from "crypto";
-var ep = toESM(Mc(), 1);
-var ND = "[Anthropic telemetry]";
-class HAt {
+var ep = toESM(otelCoreModule(), 1);
+var TELEMETRY_LOG_PREFIX = "[Anthropic telemetry]";
+class TelemetryExportFailureReporter {
   pipeline;
   count = 0;
   reportedCount = 0;
@@ -10730,14 +10730,14 @@ class HAt {
   record(e) {
     if ((this.count++, (this.last = e), this.count === 1))
       n(
-        `${ND} ${this.pipeline} export failed (${e}). This is Anthropic's own telemetry pipeline, not your OTel collector; further failures are counted and summarised at shutdown.`,
+        `${TELEMETRY_LOG_PREFIX} ${this.pipeline} export failed (${e}). This is Anthropic's own telemetry pipeline, not your OTel collector; further failures are counted and summarised at shutdown.`,
       );
   }
   logSummary() {
     if (this.count === this.reportedCount) return;
     ((this.reportedCount = this.count),
       n(
-        `${ND} ${this.pipeline} export: ${this.count} failure(s) this session (last: ${this.last})`,
+        `${TELEMETRY_LOG_PREFIX} ${this.pipeline} export: ${this.count} failure(s) this session (last: ${this.last})`,
       ));
   }
 }
@@ -10777,17 +10777,17 @@ function mx() {
 function p7() {
   return a.CLAUDE_CODE_CUSTOM_OAUTH_URL !== void 0;
 }
-function mg() {
+function isAnalyticsDisabled() {
   return d7() || ns() !== null || isNonessentialTrafficRestricted() || p7();
 }
-function cU() {
+function isFeedbackSurveyForOtelEnabled() {
   return a.CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL;
 }
-function Zk() {
-  if (cU()) return !1;
+function shouldSuppressFeedbackSurvey() {
+  if (isFeedbackSurveyForOtelEnabled()) return !1;
   return isNonessentialTrafficRestricted();
 }
-var Bn = toESM(Mc(), 1);
+var Bn = toESM(otelCoreModule(), 1);
 import { createHash as xue, randomUUID as Nue } from "crypto";
 import {
   appendFile,
@@ -11540,7 +11540,7 @@ function ct(e) {
 }
 import { gzipSync } from "zlib";
 var Ra = null;
-function PAt(e) {
+function padBodyWithRandomWhitespace(e) {
   return (
     e +
     `
@@ -11550,20 +11550,20 @@ function PAt(e) {
     ).join("")
   );
 }
-function wrr(e) {
+function setRequestBodyGzipPlanner(e) {
   let t = Ra;
   return ((Ra = e), t);
 }
-function mVt({ url: e, payload: t, storageV5: r }) {
+function buildGzippedBodyIfEnabled({ url: e, payload: t, storageV5: r }) {
   if (Ra === null) return null;
   let o = b(t);
   if (typeof o !== "string") return null;
   let d = Ra(e, o, r);
   if (d === void 0 || !d.gzip) return null;
-  return { body: gzipSync(PAt(o)), headers: { "Content-Encoding": "gzip" } };
+  return { body: gzipSync(padBodyWithRandomWhitespace(o)), headers: { "Content-Encoding": "gzip" } };
 }
 var ka = /^[a-z]+-\d/;
-function gVt(e, t) {
+function containsAnyIgnoreCase(e, t) {
   let r = e.toLowerCase();
   for (let o of t)
     if (typeof o === "string" && o.length > 0 && r.includes(o.toLowerCase()))
@@ -11870,7 +11870,7 @@ function Px() {
     return;
   }
 }
-function YJ(e, t) {
+function withholdCredentialsForMisroutedHost(e, t) {
   if (!(
     ("x-api-key" in e.headers && !q7(t)) ||
     ("Authorization" in e.headers && !Q7(t))
@@ -11906,9 +11906,9 @@ function eee(e) {
   return isFirstPartyAnthropicHost(`https://${e}`) || ALLOWED_OAUTH_BASE_URLS.some((t) => xa(t) === e);
 }
 import { extname } from "path";
-var vCn = 2048;
-function JJ(e) {
-  return toWellFormed(e.slice(0, vCn));
+var MAX_ATTRIBUTE_VALUE_LENGTH = 2048;
+function toWellFormedAttributeValue(e) {
+  return toWellFormed(e.slice(0, MAX_ATTRIBUTE_VALUE_LENGTH));
 }
 class Mx {
   sources;
@@ -11987,7 +11987,7 @@ function ree() {
 function oee() {
   return !1;
 }
-var ry = {
+var runtimeEnvironment = {
   terminal:
     a.TERMINAL_EMULATOR === "JetBrains-JediTerm" && a.platform !== "darwin"
       ? "pycharm"
@@ -12010,7 +12010,7 @@ var ry = {
   isMuslEnvironment: ree,
   isAndroidEnvironment: oee,
 };
-var DCn = {
+var MAIN_THREAD_QUERY_SOURCES = {
     repl_main_thread: !0,
     "repl_main_thread:outputStyle:custom": !0,
     "repl_main_thread:outputStyle:Concise": !0,
@@ -12020,7 +12020,7 @@ var DCn = {
     sdk: !0,
   },
   iee = new Set([
-    ...Object.keys(DCn),
+    ...Object.keys(MAIN_THREAD_QUERY_SOURCES),
     "agent:custom",
     "agent:default",
     "agent:builtin",
@@ -12039,28 +12039,28 @@ var DCn = {
     "chrome_mcp",
     "artifact_comment_reply",
   ]);
-function $ve(e) {
+function isKnownQuerySource(e) {
   if (e === void 0) return !0;
   if (e.startsWith("agent:")) return !0;
   return iee.has(e);
 }
-function ji(e) {
+function getQuerySourceKind(e) {
   if (e === void 0) return;
   if (e.startsWith("repl_main_thread") || e === "sdk") return "main";
   if (e.startsWith("agent:") || e === "hook_agent") return "subagent";
   return "auxiliary";
 }
-function Uve(e) {
-  return e === void 0 || ji(e) === "main";
+function isMainThreadQuerySource(e) {
+  return e === void 0 || getQuerySourceKind(e) === "main";
 }
-function Mme(e) {
+function isAutoModeQuerySource(e) {
   return e === "auto_mode" || e === "auto_mode_investigator" || !1;
 }
-function LCn(e) {
+function getQuerySourcePrefix(e) {
   let t = e.indexOf(":");
   return t > 0 ? e.slice(0, t) : void 0;
 }
-function WN(e) {
+function normalizeQuerySource(e) {
   if (e?.startsWith("agent:custom:")) return "agent:custom";
   return e;
 }
@@ -12068,24 +12068,24 @@ var Ix = "tengu_mossy_lantern";
 function Dx(e) {
   m1().mainLoopCanonical = e;
 }
-function J$e() {
+function getMainLoopCanonical() {
   return m1().mainLoopCanonical?.();
 }
 var see = /^[A-Za-z0-9._:[\]-]{1,100}$/,
   aee = /^[A-Za-z0-9._:[\]-]{1,91}@\d{8}(\[\d{1,3}[mM]\])?$/;
-function bt(e) {
+function getModelForAnalytics(e) {
   if (e == null) return;
   return see.test(e) || aee.test(e) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(e) : S("nonconforming");
 }
-function Arr(e, t) {
+function getModelListForAnalytics(e, t) {
   return fromSanitizer_SANITIZER_OUTPUT_ONLY(
     e
       .slice(0, t)
-      .map((r) => bt(r))
+      .map((r) => getModelForAnalytics(r))
       .join(","),
   );
 }
-function TQe(e) {
+function getModelBucketForAnalytics(e) {
   let t = e
     .replace(/\[1m\]$/i, "")
     .replace(/^claude-/, "")
@@ -12190,21 +12190,21 @@ class Lx {
   }
 }
 var lee = new j(() => new Lx());
-function sr() {
+function getSessionStateStore() {
   return lee.of(B().host);
 }
 function Ux(e) {
-  if (sr().terminalEmitClaims.has(e)) return !1;
-  return (sr().terminalEmitClaims.add(e), !0);
+  if (getSessionStateStore().terminalEmitClaims.has(e)) return !1;
+  return (getSessionStateStore().terminalEmitClaims.add(e), !0);
 }
-function MCn(e) {
-  return sr().terminalEmitClaims.delete(e);
+function releaseTerminalEmitClaim(e) {
+  return getSessionStateStore().terminalEmitClaims.delete(e);
 }
 var cee = 1000,
-  yVt = "cli",
+  DEFAULT_SDK_QUEUE_KEY = "cli",
   uee = 1000;
 class Fx {
-  queueKey = () => yVt;
+  queueKey = () => DEFAULT_SDK_QUEUE_KEY;
   queuesByKey = new Map();
   evictedKeys = new Set();
   enqueueListener = null;
@@ -12226,7 +12226,7 @@ class Fx {
   reset() {
     (this.queuesByKey.clear(),
       this.evictedKeys.clear(),
-      (this.queueKey = () => yVt),
+      (this.queueKey = () => DEFAULT_SDK_QUEUE_KEY),
       (this.enqueueListener = null),
       (this.queueUsedReported = !1),
       (this.nonbookendEvictionReported = !1),
@@ -12316,25 +12316,25 @@ function eo() {
 function pee() {
   return eo().currentKey();
 }
-var Crr = pee;
-function yse(e) {
+var getCurrentSdkQueueKey = pee;
+function setSdkQueueEnqueueListener(e) {
   eo().setEnqueueListener(e);
 }
-function ju(e) {
+function enqueueSdkEvent(e) {
   eo().enqueue(e);
 }
-function SVt(e) {
+function hasQueuedSdkEvent(e) {
   return eo().hasQueued(e);
 }
-function jve() {
+function drainSdkEvents() {
   return eo().drain();
 }
-function NCn(e) {
+function drainSdkEventsForSession(e) {
   return eo().drainForSession(e);
 }
-function pi(e, t, r) {
+function emitTaskNotification(e, t, r) {
   if (!Ux(e)) return;
-  ju({
+  enqueueSdkEvent({
     type: "system",
     subtype: "task_notification",
     task_id: e,
@@ -12348,16 +12348,16 @@ function pi(e, t, r) {
     ...(r?.ambient && { ambient: !0 }),
   });
 }
-function Mr() {
+function isFastModeEnabled() {
   if (getAPIProvider() !== "firstParty") return !1;
   return !a.CLAUDE_CODE_DISABLE_FAST_MODE;
 }
 function La() {
   return a.CLAUDE_CODE_SKIP_FAST_MODE_ORG_CHECK;
 }
-function Jy(e) {
-  if (!Mr()) return !1;
-  return dU(e) === null;
+function isFastModeAvailable(e) {
+  if (!isFastModeEnabled()) return !1;
+  return getFastModeUnavailableMessage(e) === null;
 }
 function Hx() {
   return isExtraUsageAllowed()
@@ -12380,29 +12380,29 @@ function Bx(e, t) {
       return "Fast mode is currently unavailable";
   }
 }
-function GN(e) {
-  if (!Mr())
+function getFastModeUnavailableReason(e) {
+  if (!isFastModeEnabled())
     return getAPIProvider() !== "firstParty" ? "not_first_party" : "disabled_by_env";
-  if (H("tengu_penguins_off", null) !== null) return "unknown";
-  if (!isModelAllowed(Q$e())) {
+  if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_penguins_off", null) !== null) return "unknown";
+  if (!isModelAllowed(getFastModeModelId())) {
     let r = e !== void 0 ? (e ?? getDefaultMainLoopModelSetting()) : getMainLoopModel();
-    if (!(!Ks() && af(r) && isModelAllowed(r))) return "model_not_allowed";
+    if (!(!Ks() && modelSupportsFastMode(r) && isModelAllowed(r))) return "model_not_allowed";
   }
   let t = getSettingsForSource("flagSettings")?.fastMode === !0;
   if (ke() && Rrt() && !t) return "sdk_opt_in_required";
-  if (Nc.orgStatus.status === "pending" && !La() && !t) return "pending";
-  if (Nc.orgStatus.status === "disabled" && !La()) {
+  if (fastModeStore.orgStatus.status === "pending" && !La() && !t) return "pending";
+  if (fastModeStore.orgStatus.status === "disabled" && !La()) {
     if (
-      Vx(Nc.orgStatus.reason) &&
+      Vx(fastModeStore.orgStatus.reason) &&
       (a.CLAUDE_CODE_SKIP_FAST_MODE_NETWORK_ERRORS || t)
     )
       return null;
-    return Nc.orgStatus.reason;
+    return fastModeStore.orgStatus.reason;
   }
   return null;
 }
-function dU(e) {
-  let t = GN(e);
+function getFastModeUnavailableMessage(e) {
+  let t = getFastModeUnavailableReason(e);
   if (t === null) return null;
   let r = fee(t);
   return (n(`Fast mode unavailable: ${r}`), r);
@@ -12414,13 +12414,13 @@ function fee(e) {
     case "disabled_by_env":
       return "Fast mode is not available";
     case "model_not_allowed":
-      return `${RR()} is not in your organization's allowed models`;
+      return `${getFastModeModelDisplayName()} is not in your organization's allowed models`;
     case "sdk_opt_in_required":
       return "Fast mode is not available in the Agent SDK";
     case "pending":
       return "Checking fast mode availability";
     case "unknown":
-      return H("tengu_penguins_off", null) ?? Bx("unknown", "oauth");
+      return getFeatureValue_CACHED_MAY_BE_STALE("tengu_penguins_off", null) ?? Bx("unknown", "oauth");
     case "free":
     case "preference":
     case "extra_usage_disabled":
@@ -12428,45 +12428,45 @@ function fee(e) {
       return Bx(e, getClaudeAIOAuthTokens() !== null ? "oauth" : "api-key");
   }
 }
-function RR() {
+function getFastModeModelDisplayName() {
   return "Opus 5";
 }
-function Q$e() {
+function getFastModeModelId() {
   return "opus" + (isOpus1mMergeEnabled() ? "[1m]" : "");
 }
-function FCn(e, t) {
-  if (!Mr()) return !1;
-  return !!e && (Pt() || Jy() || t);
+function shouldEnableFastModeForModel(e, t) {
+  if (!isFastModeEnabled()) return !1;
+  return !!e && (Pt() || isFastModeAvailable() || t);
 }
-function NAt(e) {
-  if (!Mr()) return !1;
-  if (!Jy(e)) return !1;
-  if (!af(e)) return !1;
-  return $Cn(getInitialSettings());
+function shouldStartWithFastMode(e) {
+  if (!isFastModeEnabled()) return !1;
+  if (!isFastModeAvailable(e)) return !1;
+  if (!modelSupportsFastMode(e)) return !1;
+  return isFastModeEnabledInSettings(getInitialSettings());
 }
-function $Cn(e) {
+function isFastModeEnabledInSettings(e) {
   if (e.fastMode !== !0) return !1;
   if (!e.fastModePerSessionOptIn) return !0;
   if (getSettingsForSource("policySettings")?.fastModePerSessionOptIn === !0) return !1;
   return getSettingsForSource("flagSettings")?.fastMode === !0;
 }
-function af(e) {
-  if (!Mr()) return !1;
+function modelSupportsFastMode(e) {
+  if (!isFastModeEnabled()) return !1;
   let t = e ?? getDefaultMainLoopModelSetting(),
     r = parseUserSpecifiedModel(t);
   if (dm(getCanonicalName(r), "fast_mode", r)) return !0;
   let o = r.toLowerCase();
   return o.includes("opus-4-8") || o.includes("opus-5");
 }
-function db(e, t) {
+function resolveFastModeForModel(e, t) {
   if (Pt()) {
     if (e === null) return !!t;
-    return !!t && af(e);
+    return !!t && modelSupportsFastMode(e);
   }
-  if (!af(e)) return !1;
-  return !!t || NAt(e);
+  if (!modelSupportsFastMode(e)) return !1;
+  return !!t || shouldStartWithFastMode(e);
 }
-function pb(e, t) {
+function logFastModeToggled(e, t) {
   if (!!e === t) return;
   logEvent("tengu_fast_mode_toggled", {
     enabled: t,
@@ -12525,62 +12525,62 @@ class Gx {
     if (this.inflightPrefetch === e) this.inflightPrefetch = null;
   }
 }
-var Nc = new Gx();
-function bVt(e) {
-  return Nc.cooldownTriggered.subscribe(e);
+var fastModeStore = new Gx();
+function onFastModeCooldownTriggered(e) {
+  return fastModeStore.cooldownTriggered.subscribe(e);
 }
-function wVt(e) {
-  return Nc.cooldownExpired.subscribe(e);
+function onFastModeCooldownExpired(e) {
+  return fastModeStore.cooldownExpired.subscribe(e);
 }
-function EQe() {
-  let e = Nc.runtimeState;
+function getFastModeCooldownState() {
+  let e = fastModeStore.runtimeState;
   if (e.status === "cooldown" && Date.now() >= e.resetAt) {
-    if (Mr() && !Nc.hasLoggedCooldownExpiry)
+    if (isFastModeEnabled() && !fastModeStore.hasLoggedCooldownExpiry)
       (n("Fast mode cooldown expired, re-enabling fast mode"),
-        Nc.markCooldownExpiryLogged(),
-        Nc.cooldownExpired.emit());
-    Nc.clearCooldown();
+        fastModeStore.markCooldownExpiryLogged(),
+        fastModeStore.cooldownExpired.emit());
+    fastModeStore.clearCooldown();
   }
-  return Nc.runtimeState;
+  return fastModeStore.runtimeState;
 }
-function vrr(e, t) {
-  if (!Mr()) return;
-  Nc.enterCooldown(e, t);
+function enterFastModeCooldown(e, t) {
+  if (!isFastModeEnabled()) return;
+  fastModeStore.enterCooldown(e, t);
   let r = e - Date.now();
   (n(`Fast mode cooldown triggered (${t}), duration ${Math.round(r / 1000)}s`),
     logEvent("tengu_fast_mode_fallback_triggered", {
       cooldown_duration_ms: r,
       cooldown_reason: fromEnum(t),
     }),
-    Nc.cooldownTriggered.emit(e, t));
+    fastModeStore.cooldownTriggered.emit(e, t));
 }
-function QH() {
-  Nc.clearCooldown();
+function clearFastModeCooldown() {
+  fastModeStore.clearCooldown();
 }
-function Rrr(e) {
+function disableOrgFastMode(e) {
   if (
-    Nc.orgStatus.status === "disabled" &&
-    Nc.orgStatus.source === "server" &&
-    !Vx(Nc.orgStatus.reason)
+    fastModeStore.orgStatus.status === "disabled" &&
+    fastModeStore.orgStatus.source === "server" &&
+    !Vx(fastModeStore.orgStatus.reason)
   )
     return;
-  (Nc.replaceOrgStatus({
+  (fastModeStore.replaceOrgStatus({
     status: "disabled",
     reason: "preference",
     source: "server",
   }),
     updateSettingsForSource("userSettings", { fastMode: void 0 }, void 0, e),
-    Te(
+    saveGlobalConfig(
       (t) =>
         t.penguinModeOrgEnabled === !1
           ? t
           : { ...t, penguinModeOrgEnabled: !1 },
       e,
     ),
-    Nc.orgFastModeChange.emit(!1));
+    fastModeStore.orgFastModeChange.emit(!1));
 }
-function krr(e) {
-  return Nc.overageRejection.subscribe(e);
+function onFastModeOverageRejected(e) {
+  return fastModeStore.overageRejection.subscribe(e);
 }
 function gee(e) {
   switch (e) {
@@ -12605,32 +12605,32 @@ function gee(e) {
       return "Fast mode disabled \xB7 usage credits not available";
   }
 }
-function FAt(e) {
+function isCreditsExhaustedReason(e) {
   return (
     e === "org_level_disabled_until" ||
     e === "org_spend_cap_reached" ||
     e === "out_of_credits"
   );
 }
-function $At() {
-  Nc.rearmCreditsExhaustedNotice();
+function rearmFastModeCreditsNotice() {
+  fastModeStore.rearmCreditsExhaustedNotice();
 }
-function xrr(e, t) {
+function handleFastModeOverageRejection(e, t) {
   let r = gee(e);
   if (
     (n(`Fast mode overage rejection: ${e ?? "unknown"} \u2014 ${r}`),
     logEvent("tengu_fast_mode_overage_rejected", {
       overage_disabled_reason: Ub(e ?? "unknown"),
     }),
-    FAt(e))
+    isCreditsExhaustedReason(e))
   ) {
-    if (!Nc.claimCreditsExhaustedNotice()) {
+    if (!fastModeStore.claimCreditsExhaustedNotice()) {
       n(
         "Fast mode credits rejection already surfaced this turn, suppressing repeat",
       );
       return;
     }
-    ju({
+    enqueueSdkEvent({
       type: "system",
       subtype: "notification",
       key: "fast-mode-overage-rejected",
@@ -12640,27 +12640,27 @@ function xrr(e, t) {
     });
   } else
     (updateSettingsForSource("userSettings", { fastMode: void 0 }, void 0, t),
-      Te(
+      saveGlobalConfig(
         (o) =>
           o.penguinModeOrgEnabled === !1
             ? o
             : { ...o, penguinModeOrgEnabled: !1 },
         t,
       ),
-      Nc.replaceOrgStatus({
+      fastModeStore.replaceOrgStatus({
         status: "disabled",
         reason: "extra_usage_disabled",
         source: "server",
       }),
-      Nc.orgFastModeChange.emit(!1));
-  Nc.overageRejection.emit(r);
+      fastModeStore.orgFastModeChange.emit(!1));
+  fastModeStore.overageRejection.emit(r);
 }
-function Sse() {
-  return EQe().status === "cooldown";
+function isFastModeInCooldown() {
+  return getFastModeCooldownState().status === "cooldown";
 }
-function pU(e, t) {
-  let r = Mr() && Jy() && !!t && af(e);
-  if (r && Sse()) return "cooldown";
+function getFastModeStatus(e, t) {
+  let r = isFastModeEnabled() && isFastModeAvailable() && !!t && modelSupportsFastMode(e);
+  if (r && isFastModeInCooldown()) return "cooldown";
   if (r) return "on";
   return "off";
 }
@@ -12678,28 +12678,28 @@ function _ee(e) {
       ? "preference"
       : "unknown";
 }
-function Z$e(e) {
-  return Nc.orgFastModeChange.subscribe(e);
+function onOrgFastModeChange(e) {
+  return fastModeStore.orgFastModeChange.subscribe(e);
 }
-function TVt() {
-  return Nc.orgStatus.status === "disabled" && Nc.orgStatus.source === "server";
+function isOrgFastModeDisabledByServer() {
+  return fastModeStore.orgStatus.status === "disabled" && fastModeStore.orgStatus.source === "server";
 }
 function Vx(e) {
   return e === "network_error" || e === "unknown";
 }
 function dp(e) {
-  let t = Nc.replaceOrgStatus(e);
+  let t = fastModeStore.replaceOrgStatus(e);
   if (e.status === "pending") return;
   let r =
       t.status !== "pending"
         ? t.status === "enabled"
-        : ee().penguinModeOrgEnabled === !0,
+        : getGlobalConfig().penguinModeOrgEnabled === !0,
     o = e.status === "enabled",
     d =
       t.status === "disabled" &&
       e.status === "disabled" &&
       t.reason !== e.reason;
-  if (r !== o || d) Nc.orgFastModeChange.emit(o);
+  if (r !== o || d) fastModeStore.orgFastModeChange.emit(o);
 }
 async function hee(e) {
   let t = `${getOauthConfig().BASE_API_URL}/api/claude_code_penguin_mode`,
@@ -12710,38 +12710,38 @@ async function hee(e) {
   return (await at.get(t, { headers: r })).data;
 }
 var Eee = 30000;
-function UCn() {
-  if (!Mr()) return;
-  if (Nc.orgStatus.status !== "pending") return;
+function resolveOrgFastModeStatusFromCache() {
+  if (!isFastModeEnabled()) return;
+  if (fastModeStore.orgStatus.status !== "pending") return;
   if (La()) {
-    Nc.replaceOrgStatus({ status: "enabled" });
+    fastModeStore.replaceOrgStatus({ status: "enabled" });
     return;
   }
   let e = !1,
-    t = ee().penguinModeOrgEnabled === !0;
-  Nc.replaceOrgStatus(
+    t = getGlobalConfig().penguinModeOrgEnabled === !0;
+  fastModeStore.replaceOrgStatus(
     e || t
       ? { status: "enabled" }
       : { status: "disabled", reason: "unknown", source: "guess" },
   );
 }
-async function bse(e, t) {
-  if ((UCn(), isEssentialTrafficOnly())) return;
-  if (!Mr()) return;
+async function prefetchOrgFastModeStatus(e, t) {
+  if ((resolveOrgFastModeStatusFromCache(), isEssentialTrafficOnly())) return;
+  if (!isFastModeEnabled()) return;
   if (La()) {
-    Nc.replaceOrgStatus({ status: "enabled" });
+    fastModeStore.replaceOrgStatus({ status: "enabled" });
     return;
   }
-  if (Nc.inflightPrefetch)
+  if (fastModeStore.inflightPrefetch)
     return (
       n("Fast mode prefetch in progress, returning in-flight promise"),
-      Nc.inflightPrefetch
+      fastModeStore.inflightPrefetch
     );
   let r = getAnthropicApiKeySafe();
   if (!(getClaudeAIOAuthTokens()?.accessToken && hasProfileScope()) && !r) {
-    if (TVt()) return;
+    if (isOrgFastModeDisabledByServer()) return;
     let E = !1,
-      C = ee().penguinModeOrgEnabled === !0;
+      C = getGlobalConfig().penguinModeOrgEnabled === !0;
     dp(
       E || C
         ? { status: "enabled" }
@@ -12749,7 +12749,7 @@ async function bse(e, t) {
     );
     return;
   }
-  if (!Nc.beginPrefetchWindow(Date.now(), Eee)) {
+  if (!fastModeStore.beginPrefetchWindow(Date.now(), Eee)) {
     n("Skipping fast mode prefetch, fetched recently");
     return;
   }
@@ -12783,9 +12783,9 @@ async function bse(e, t) {
         } else throw I;
       }
       let C =
-        Nc.orgStatus.status !== "pending"
-          ? Nc.orgStatus.status === "enabled"
-          : ee().penguinModeOrgEnabled;
+        fastModeStore.orgStatus.status !== "pending"
+          ? fastModeStore.orgStatus.status === "enabled"
+          : getGlobalConfig().penguinModeOrgEnabled;
       if (
         (dp(
           E.enabled
@@ -12800,22 +12800,22 @@ async function bse(e, t) {
       ) {
         if (!E.enabled)
           await updateSettingsForSource("userSettings", { fastMode: void 0 }, void 0, e);
-        await Te((I) => ({ ...I, penguinModeOrgEnabled: E.enabled }), e);
+        await saveGlobalConfig((I) => ({ ...I, penguinModeOrgEnabled: E.enabled }), e);
       }
       n(
         `Org fast mode: ${E.enabled ? "enabled" : `disabled (${E.disabled_reason ?? "preference"})`}`,
       );
     } catch (E) {
-      let I = ee().penguinModeOrgEnabled === !0;
-      if (!TVt())
+      let I = getGlobalConfig().penguinModeOrgEnabled === !0;
+      if (!isOrgFastModeDisabledByServer())
         dp(
           I
             ? { status: "enabled" }
             : { status: "disabled", reason: "network_error", source: "guess" },
         );
       let D =
-        Nc.orgStatus.status === "disabled"
-          ? `disabled (${Nc.orgStatus.reason})`
+        fastModeStore.orgStatus.status === "disabled"
+          ? `disabled (${fastModeStore.orgStatus.reason})`
           : "enabled (cached)";
       (n(`Failed to fetch org fast mode status, standing on ${D}: ${E}`, {
         level: "error",
@@ -12825,12 +12825,12 @@ async function bse(e, t) {
   }
   let _ = p();
   return (
-    Nc.trackInflightPrefetch(_),
-    _.finally(() => Nc.clearInflightPrefetch(_)),
+    fastModeStore.trackInflightPrefetch(_),
+    _.finally(() => fastModeStore.clearInflightPrefetch(_)),
     _
   );
 }
-function Wve(e, t, r) {
+function defineEnumerableProperty(e, t, r) {
   Object.defineProperty(e, t, {
     value: r,
     enumerable: !0,
@@ -12838,7 +12838,7 @@ function Wve(e, t, r) {
     configurable: !0,
   });
 }
-function Ad(e, t) {
+function getOwnValue(e, t) {
   return Object.hasOwn(e, t) ? e[t] : void 0;
 }
 var See = {
@@ -12865,16 +12865,16 @@ var See = {
     promptCacheReadTokens: 1,
     webSearchRequests: 0.01,
   },
-  eUe = See;
-function Gve(e) {
-  if (!Mr()) return wse[e] ?? eUe;
+  DEFAULT_MODEL_COSTS = See;
+function getFastModeModelCosts(e) {
+  if (!isFastModeEnabled()) return MODEL_COSTS_BY_CANONICAL_NAME[e] ?? DEFAULT_MODEL_COSTS;
   if (e === "claude-opus-4-8" || e === "claude-opus-5") return Ua;
   return Wx;
 }
 function $x(e) {
   let t = Qa(e),
     r = t === void 0 ? void 0 : Qkn(t);
-  return r === void 0 ? void 0 : Ese(Yx(e, r));
+  return r === void 0 ? void 0 : formatCostsPerMtok(Yx(e, r));
 }
 function Yx(e, t) {
   let {
@@ -12917,7 +12917,7 @@ function bee() {
   }
   return e;
 }
-var wse = Object.assign(Object.create(null), {
+var MODEL_COSTS_BY_CANONICAL_NAME = Object.assign(Object.create(null), {
   [firstPartyNameToCanonical(_Be.firstParty)]: Ua,
   [firstPartyNameToCanonical(ear.firstParty)]: Ua,
   ...bee(),
@@ -12933,7 +12933,7 @@ var yee = 1.1;
 function vee(e) {
   return e.inference_geo === "us" ? yee : 1;
 }
-function qve(e, t) {
+function computeUsageCostUsd(e, t) {
   let r =
       (t.input_tokens / 1e6) * e.inputTokens +
       (t.output_tokens / 1e6) * e.outputTokens +
@@ -12960,11 +12960,11 @@ var Cee = createLazyValue(() => {
     webSearchRequests: e,
   });
 });
-function EVt(e, t) {
+function resolveModelCosts(e, t) {
   let r = getCanonicalName(e),
     o = getCanonicalName(e, { identity: !0 });
   if (o !== r) {
-    let E = ee().additionalModelCostsCache,
+    let E = getGlobalConfig().additionalModelCostsCache,
       C = Kx(E, Xt(e)) ?? Kx(E, Xt(o));
     if (C) return C;
   }
@@ -12972,15 +12972,15 @@ function EVt(e, t) {
     if (r === "claude-opus-4-8" || r === "claude-opus-5") return Ua;
     if (r === "claude-opus-4-6" || r === "claude-opus-4-7") return Wx;
   }
-  let d = wse[r];
+  let d = MODEL_COSTS_BY_CANONICAL_NAME[r];
   if (d) return d;
-  let p = ee().additionalModelCostsCache,
-    _ = p ? (Ad(p, e) ?? Ad(p, r)) : void 0;
+  let p = getGlobalConfig().additionalModelCostsCache,
+    _ = p ? (getOwnValue(p, e) ?? getOwnValue(p, r)) : void 0;
   if (_) return _;
-  return (Oee(e, r), wse[getCanonicalName(getDefaultMainLoopModel())] ?? eUe);
+  return (Oee(e, r), MODEL_COSTS_BY_CANONICAL_NAME[getCanonicalName(getDefaultMainLoopModel())] ?? DEFAULT_MODEL_COSTS);
 }
 function Oee(e, t) {
-  (logEvent("tengu_unknown_model_cost", { model: bt(e), shortName: bt(t) }), POn());
+  (logEvent("tengu_unknown_model_cost", { model: getModelForAnalytics(e), shortName: getModelForAnalytics(t) }), POn());
 }
 function za() {
   let e = !1;
@@ -13031,7 +13031,7 @@ function kee(e, t) {
         outputTokens: p.output,
         promptCacheReadTokens: p.cacheRead,
         promptCacheWriteTokens: p.cacheWrite,
-        webSearchRequests: eUe.webSearchRequests,
+        webSearchRequests: DEFAULT_MODEL_COSTS.webSearchRequests,
       },
       E = er(d).toLowerCase();
     if (r.has(E)) {
@@ -13079,46 +13079,46 @@ function fp(e, t) {
       : void 0)
   );
 }
-function Hrr() {
+function hasOrgConfiguredPricing() {
   return za() !== void 0;
 }
-function Irr(e, t) {
+function computeCostWithPricingSource(e, t) {
   let r = za(),
     o = r?.multiplier ?? 1,
     d = r ? fp(r, e) : void 0;
   if (d)
     return {
-      usd: qve(d, { ...t, inference_geo: null }) * o,
+      usd: computeUsageCostUsd(d, { ...t, inference_geo: null }) * o,
       pricing: "configured",
     };
   let p = Pee(e);
   if (p)
-    return { usd: qve(p, t) * o, pricing: o !== 1 ? "configured" : "catalog" };
-  return { usd: qve(eUe, t) * o, pricing: "default" };
+    return { usd: computeUsageCostUsd(p, t) * o, pricing: o !== 1 ? "configured" : "catalog" };
+  return { usd: computeUsageCostUsd(DEFAULT_MODEL_COSTS, t) * o, pricing: "default" };
 }
-function Tse(e) {
+function hasKnownModelCosts(e) {
   let t = getCanonicalName(e);
-  if (wse[t] !== void 0) return !0;
-  let r = ee().additionalModelCostsCache;
-  return !!r && (Ad(r, e) !== void 0 || Ad(r, t) !== void 0);
+  if (MODEL_COSTS_BY_CANONICAL_NAME[t] !== void 0) return !0;
+  let r = getGlobalConfig().additionalModelCostsCache;
+  return !!r && (getOwnValue(r, e) !== void 0 || getOwnValue(r, t) !== void 0);
 }
-function Prr(e) {
+function getCostBasis(e) {
   let t = za(),
     r = e.includes("application-inference-profile") ? (OW(er(e)) ?? e) : e;
   if (t && fp(t, r) !== void 0) return "managed";
-  if (!Tse(r)) return "unknown";
+  if (!hasKnownModelCosts(r)) return "unknown";
   return t && t.multiplier !== 1 ? "managed" : "list";
 }
-function qN(e, t) {
+function computeModelCostUsd(e, t) {
   let r = za();
-  if (!r) return qve(EVt(e, t), t);
+  if (!r) return computeUsageCostUsd(resolveModelCosts(e, t), t);
   let o = fp(r, e);
   return (
-    (o ? qve(o, { ...t, inference_geo: null }) : qve(EVt(e, t), t)) *
+    (o ? computeUsageCostUsd(o, { ...t, inference_geo: null }) : computeUsageCostUsd(resolveModelCosts(e, t), t)) *
     r.multiplier
   );
 }
-function zve(e, t, r) {
+function computeModelUsageCostUsd(e, t, r) {
   let o = {
     input_tokens: t.inputTokens,
     output_tokens: t.outputTokens,
@@ -13128,22 +13128,22 @@ function zve(e, t, r) {
     ...(r?.inferenceGeo !== void 0 && { inference_geo: r.inferenceGeo }),
     ...(r?.serverToolUse !== void 0 && { server_tool_use: r.serverToolUse }),
   };
-  return qN(e, o);
+  return computeModelCostUsd(e, o);
 }
 function jx(e) {
   if (Number.isInteger(e)) return `$${e}`;
   return `$${e.toFixed(2)}`;
 }
-function Ese(e) {
+function formatCostsPerMtok(e) {
   return `${jx(e.inputTokens)}/${jx(e.outputTokens)} per Mtok`;
 }
-function Orr(e) {
+function formatModelCostPerMtok(e) {
   let t = getCanonicalName(e),
-    r = wse[t];
+    r = MODEL_COSTS_BY_CANONICAL_NAME[t];
   if (!r) return;
-  return Ese(r);
+  return formatCostsPerMtok(r);
 }
-function Drr(e) {
+function computeUsageCostWithFallback(e) {
   let { primaryUsage: t, usage: r, model: o, fallbackFrom: d } = e,
     p =
       t && r
@@ -13157,20 +13157,20 @@ function Drr(e) {
           }
         : r;
   if (!p || !o) return;
-  return zve(o, p) + (t && d ? zve(d, t) : 0);
+  return computeModelUsageCostUsd(o, p) + (t && d ? computeModelUsageCostUsd(d, t) : 0);
 }
 function Pee(e) {
   let t = getCanonicalName(e),
-    r = wse[t];
+    r = MODEL_COSTS_BY_CANONICAL_NAME[t];
   if (r) return r;
-  let o = ee().additionalModelCostsCache;
-  return (o ? (Ad(o, e) ?? Ad(o, t)) : void 0) || void 0;
+  let o = getGlobalConfig().additionalModelCostsCache;
+  return (o ? (getOwnValue(o, e) ?? getOwnValue(o, t)) : void 0) || void 0;
 }
 import { readFileSync as Rne } from "fs";
 import { mkdir as SN, writeFile as Cne } from "fs/promises";
 import { join as bN } from "path";
-var tUe = "X-Claude-Code-Session-Id";
-class $D extends R {
+var SESSION_ID_HEADER_NAME = "X-Claude-Code-Session-Id";
+class InvalidRequestHeaderValueError extends R {
   header;
   source;
   constructor(e, t, r) {
@@ -13188,7 +13188,7 @@ class $D extends R {
 }
 var Mee = new Set([
     "x-app",
-    tUe,
+    SESSION_ID_HEADER_NAME,
     "x-claude-code-agent-id",
     "x-claude-code-parent-agent-id",
     "x-anthropic-additional-protection",
@@ -13218,7 +13218,7 @@ var Mee = new Set([
     unknown: "",
     "claude-code": "",
   };
-function AVt({
+function validateRequestHeaders({
   apiKey: e,
   getApiKeySource: t,
   authToken: r,
@@ -13230,7 +13230,7 @@ function AVt({
 }) {
   if (e !== null && gp("x-api-key", e)) {
     let C = t();
-    throw new $D(
+    throw new InvalidRequestHeaderValueError(
       `Invalid X-Api-Key header value${ui[C]}: ${Un(e)}.`,
       "X-Api-Key",
       C,
@@ -13241,7 +13241,7 @@ function AVt({
     let D = _.indexOf(C),
       x = `distinct header ${D + 1} of ${_.length} parsed from ANTHROPIC_CUSTOM_HEADERS`;
     if (Dee(C))
-      throw new $D(
+      throw new InvalidRequestHeaderValueError(
         D === -1
           ? `Invalid request header name: the HTTP runtime does not accept it (${mp(C.length)}).`
           : `Invalid name for ${x}: the HTTP runtime does not accept it (${mp(C.length)}).`,
@@ -13250,26 +13250,26 @@ function AVt({
       );
     let N = Iee[C];
     if (N !== void 0 && E.has(C))
-      throw new $D(`Invalid ${C} header value${ui[N]}: ${Un(I)}.`, "other", N);
+      throw new InvalidRequestHeaderValueError(`Invalid ${C} header value${ui[N]}: ${Un(I)}.`, "other", N);
     let G = C === "Authorization" && p !== null;
     if (C.toLowerCase() === "authorization") {
       let L = G ? p : D === -1 ? "unknown" : "ANTHROPIC_CUSTOM_HEADERS",
         U = G && I.startsWith("Bearer ") ? I.slice(7) : I;
-      throw new $D(
+      throw new InvalidRequestHeaderValueError(
         `Invalid Authorization header value${ui[L]}: ${Un(U)}.`,
         "Authorization",
         L,
       );
     }
     if (D !== -1)
-      throw new $D(
+      throw new InvalidRequestHeaderValueError(
         `Invalid value for ${x}: ${Un(I)}.`,
         C.toLowerCase() === "x-api-key" ? "X-Api-Key" : "other",
         "ANTHROPIC_CUSTOM_HEADERS",
       );
     if (N !== void 0)
-      throw new $D(`Invalid ${C} header value${ui[N]}: ${Un(I)}.`, "other", N);
-    throw new $D(
+      throw new InvalidRequestHeaderValueError(`Invalid ${C} header value${ui[N]}: ${Un(I)}.`, "other", N);
+    throw new InvalidRequestHeaderValueError(
       Mee.has(C)
         ? `Invalid ${C} header value: ${Un(I)}.`
         : `Invalid request header value: ${Un(I)}.`,
@@ -13279,7 +13279,7 @@ function AVt({
   }
   if (r !== null && gp("authorization", `Bearer ${r}`)) {
     let C = o();
-    throw new $D(
+    throw new InvalidRequestHeaderValueError(
       `Invalid Authorization header value${ui[C]}: ${Un(r)}.`,
       "Authorization",
       C,
@@ -13379,7 +13379,7 @@ var Qye = new RegExp(
   Uee = /\beyJ(?:[A-Za-z0-9_-]{256}|[A-Za-z0-9_-]{8,2048}\.[A-Za-z0-9_-]{10})/,
   hp = [_p.bearer, _p.basic, ...Xx, _p.sk, ...Jx],
   Ep = [...Qx, Lee];
-function nq(e) {
+function redactSecretsInText(e) {
   return [...hp, ...Ep].reduce((t, [r, o]) => t.replace(r, o), String(e));
 }
 var zee = [
@@ -13389,7 +13389,7 @@ var zee = [
   ),
   Uee,
 ];
-function BCn(e) {
+function containsSecret(e) {
   return zee.some((t) => t.test(e));
 }
 function di(e, t, r, o, d = "", p = "", _ = "g") {
@@ -13820,7 +13820,7 @@ var yne = new RegExp(
 function vne(e) {
   return e.replace(yne, "$1<path>");
 }
-function Mrr(e, t) {
+function redactKnownPaths(e, t) {
   let r = e;
   return [r?.path, r?.dest]
     .filter((o) => typeof o === "string" && o.length > 0)
@@ -13828,7 +13828,7 @@ function Mrr(e, t) {
     .reduce((o, d) => o.split(d).join("<path>"), t);
 }
 var rN = 4000;
-function fU(e) {
+function sanitizeErrorMessage(e) {
   let t = Ote(e),
     r = t.length > rN ? t.slice(0, rN) + "\u2026<truncated>" : t,
     o = zte(r),
@@ -13879,9 +13879,9 @@ function Ka(e) {
   return t.success ? t.data : null;
 }
 function fi() {
-  return Or().gatewayModelsByCachePath;
+  return getProviderState().gatewayModelsByCachePath;
 }
-function yN(e, t = Or().gatewayModelsStorageV5) {
+function yN(e, t = getProviderState().gatewayModelsStorageV5) {
   let r = fi();
   if (r.has(e)) return r.get(e) ?? null;
   if (t) return null;
@@ -13894,7 +13894,7 @@ function yN(e, t = Or().gatewayModelsStorageV5) {
   }
   return (r.set(e, o), o);
 }
-async function Nrr(e) {
+async function primeGatewayModelCache(e) {
   if (!e || !Pp()) return;
   let t = Mp();
   if (fi().has(t)) return;
@@ -13907,12 +13907,12 @@ async function Nrr(e) {
   if (!o.found) return;
   let d = Ka(Buffer.from(o.value).toString("utf-8"));
   if (d === null) return;
-  let p = Or();
+  let p = getProviderState();
   if (!p.gatewayModelsByCachePath.has(t)) p.gatewayModelsByCachePath.set(t, d);
   p.gatewayModelsStorageV5 = e;
 }
 var TN = new WeakMap();
-function Nme() {
+function getGatewayModelOptions() {
   if (!Pp()) return [];
   let e = yN(Mp());
   if (!e || e.baseUrl !== a.ANTHROPIC_BASE_URL) return [];
@@ -13925,10 +13925,10 @@ function Nme() {
   }));
   return (TN.set(e, r), r);
 }
-function CVt(e) {
+function hasDefaultModelOptionLabel(e) {
   return typeof e.value === "string" && e.label === formatLabelText(e.value);
 }
-async function Frr(e) {
+async function fetchAndCacheGatewayModels(e) {
   if (!Pp()) {
     if (a.CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY) {
       let t = getAPIProvider();
@@ -13975,7 +13975,7 @@ async function Frr(e) {
     }
     let I = Object.keys(E),
       D = new Set(I.map((te) => te.toLowerCase()));
-    AVt({
+    validateRequestHeaders({
       apiKey: D.has("x-api-key") ? null : _ || null,
       getApiKeySource: () => {
         let { source: te } = getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 });
@@ -14057,7 +14057,7 @@ async function Frr(e) {
       n(`[gatewayDiscovery] cached ${U.length} models`));
   } catch (t) {
     n(
-      t instanceof $D
+      t instanceof InvalidRequestHeaderValueError
         ? `[gatewayDiscovery] skipped: ${t.message}`
         : `[gatewayDiscovery] failed: ${t instanceof Error ? Ap(t.message) : "unknown"}`,
     );
@@ -14149,7 +14149,7 @@ function gi(e) {
   let t = getCanonicalName(Xt(e), { identity: !0 }),
     r = getAPIProvider(),
     o = e.trim().toLowerCase(),
-    d = tc(o) ? Xt(o).trim() : o,
+    d = hasLongContextSuffix(o) ? Xt(o).trim() : o,
     p = usesFirstPartyModelIds() && isLegacyOpusFirstParty(d) && isLegacyModelRemapEnabled(),
     _ = Object.hasOwn(vN, t) ? vN[t] : void 0;
   if (_) {
@@ -14173,7 +14173,7 @@ function gi(e) {
 function RN(e) {
   return gi(e).isDeprecated;
 }
-function QJ(e) {
+function isModelRetiredOrRemapped(e) {
   if (usesFirstPartyModelIds() && isLegacyOpusFirstParty(getCanonicalName(Xt(e), { identity: !0 })) && isLegacyModelRemapEnabled()) return !0;
   let t = gi(e);
   if (!t.isDeprecated) return !1;
@@ -14186,7 +14186,7 @@ function QJ(e) {
       return !1;
   }
 }
-function $rr(e) {
+function getModelDeprecationNotice(e) {
   if (!e) return null;
   let t = gi(e);
   if (!t.isDeprecated) return null;
@@ -14205,15 +14205,15 @@ function $rr(e) {
       return null;
   }
 }
-function UAt(e) {
+function formatLegacyModelRemapWarning(e) {
   if (!e) return null;
   let t = gi(e);
-  if (!t.isDeprecated || t.copy.kind !== "remap") return jCn(e);
+  if (!t.isDeprecated || t.copy.kind !== "remap") return formatModelDeprecationWarning(e);
   let r = getDefaultOpusModel(),
     o = getMarketingNameForModel(r) ?? r;
   return `\u26A0 ${t.modelName.replace(/^Claude /, "")} remaps to ${o}. CLAUDE_CODE_DISABLE_LEGACY_MODEL_REMAP=1 opts out`;
 }
-function jCn(e) {
+function formatModelDeprecationWarning(e) {
   if (!e) return null;
   let t = gi(e);
   if (!t.isDeprecated) return null;
@@ -14231,7 +14231,7 @@ function jCn(e) {
       return null;
   }
 }
-function ZJ(e, t) {
+function classifyModelFamily(e, t) {
   let r = Xt(e).toLowerCase(),
     o = Gvt.find((p) => p === r);
   if (o) return o;
@@ -14239,31 +14239,31 @@ function ZJ(e, t) {
   let d = Xt(t).toLowerCase();
   return Gvt.find((p) => d.includes(p)) ?? "other";
 }
-function Qy(e) {
+function getCatalogModels(e) {
   return e.config.models ?? [];
 }
-function Fme(e) {
-  return Qy(e).filter(d5);
+function getSelectableCatalogModels(e) {
+  return getCatalogModels(e).filter(isCatalogModelSelectable);
 }
-function d5(e) {
+function isCatalogModelSelectable(e) {
   return e.disabled !== !0 && e.section !== "deprecated";
 }
-function Urr(e) {
-  return Fme(e).map((t) => t.id);
+function getSelectableModelIds(e) {
+  return getSelectableCatalogModels(e).map((t) => t.id);
 }
-function WCn(e) {
+function getCatalogDefaultModel(e) {
   return e.state?.model;
 }
-function AQe(e) {
+function getModelFamily(e) {
   let t = e.runtime?.family?.trim().toLowerCase();
   if (t) return t;
-  let r = ZJ(e.id, e.id);
+  let r = classifyModelFamily(e.id, e.id);
   return r === "other" ? void 0 : r;
 }
 function CN(e) {
   let t = {};
   for (let r of e) {
-    let o = AQe(r);
+    let o = getModelFamily(r);
     if ((o === "opus" || o === "sonnet" || o === "haiku") && t[o] === void 0)
       t[o] = r.id;
   }
@@ -14290,39 +14290,39 @@ function Dne(e, t) {
     .toLowerCase();
   return o !== void 0 && Ine(o) ? o : void 0;
 }
-function eQ(e, t) {
-  let r = ec(t);
-  return Qy(e).find((o) => ec(o.id) === r);
+function findCatalogModel(e, t) {
+  let r = normalizeModelId(t);
+  return getCatalogModels(e).find((o) => normalizeModelId(o.id) === r);
 }
-function Brr(e, t) {
-  let r = eQ(e, t);
+function getModelContextWindow(e, t) {
+  let r = findCatalogModel(e, t);
   return r?.runtime?.max_input_tokens ?? r?.context_window;
 }
-function jrr(e, t) {
-  return eQ(e, t)?.runtime?.max_output_tokens;
+function getModelMaxOutputTokens(e, t) {
+  return findCatalogModel(e, t)?.runtime?.max_output_tokens;
 }
-function vVt(e) {
-  return Qy(e).some((t) => t.runtime !== void 0);
+function catalogHasRuntimeInfo(e) {
+  return getCatalogModels(e).some((t) => t.runtime !== void 0);
 }
-function Wrr(e) {
+function getConfidentialModelIds(e) {
   return new Set(
-    Qy(e)
+    getCatalogModels(e)
       .filter((t) => t.confidential === !0)
-      .map((t) => ec(t.id)),
+      .map((t) => normalizeModelId(t.id)),
   );
 }
 function ON(e) {
   return new Set(
-    Qy(e)
+    getCatalogModels(e)
       .filter((t) => t.confidential !== !0)
-      .map((t) => ec(t.id)),
+      .map((t) => normalizeModelId(t.id)),
   );
 }
 function kN(e) {
   let t = new Set();
-  for (let r of Qy(e)) {
+  for (let r of getCatalogModels(e)) {
     if (r.confidential !== !0) continue;
-    t.add(ec(r.id));
+    t.add(normalizeModelId(r.id));
     for (let o of ["default", "fast"]) {
       let d = Dne(r, o);
       if (d !== void 0) t.add(d);
@@ -14330,29 +14330,29 @@ function kN(e) {
   }
   return t;
 }
-function Vve(e) {
+function getMaskedModelIds(e) {
   let t = kN(e);
-  for (let o of e.config.dropped_model_ids ?? []) t.add(ec(o));
-  let r = WCn(e);
-  if (r !== void 0 && eQ(e, r) === void 0) t.add(ec(r));
+  for (let o of e.config.dropped_model_ids ?? []) t.add(normalizeModelId(o));
+  let r = getCatalogDefaultModel(e);
+  if (r !== void 0 && findCatalogModel(e, r) === void 0) t.add(normalizeModelId(r));
   return t;
 }
-function BAt(e) {
+function hasDroppedUnidentifiedRows(e) {
   return e.config.dropped_unidentified_rows === !0;
 }
-function RVt(e) {
+function getDroppedConfidentialModelIds(e) {
   let t = kN(e);
-  for (let r of e.config.dropped_confidential_ids ?? []) t.add(ec(r));
+  for (let r of e.config.dropped_confidential_ids ?? []) t.add(normalizeModelId(r));
   return t;
 }
-function jAt(e) {
-  return (e.config.dropped_model_ids?.length ?? 0) > 0 || BAt(e);
+function hasDroppedCatalogRows(e) {
+  return (e.config.dropped_model_ids?.length ?? 0) > 0 || hasDroppedUnidentifiedRows(e);
 }
-function ec(e) {
+function normalizeModelId(e) {
   return er(e).trim().toLowerCase();
 }
-var tQ = "confidential";
-function GCn(e, t, r = !1) {
+var CONFIDENTIAL_MODEL_ID = "confidential";
+function setServedCatalog(e, t, r = !1) {
   PN({
     catalog: e,
     source: e === null ? "fallback" : "served",
@@ -14360,7 +14360,7 @@ function GCn(e, t, r = !1) {
     stale: r,
   });
 }
-function qCn(e, t, r = !1) {
+function setPublishedCatalog(e, t, r = !1) {
   PN({
     catalog: e,
     source: e === null ? "fallback" : "published",
@@ -14369,21 +14369,21 @@ function qCn(e, t, r = !1) {
   });
 }
 function PN(e) {
-  let t = Or();
+  let t = getProviderState();
   if (
     ((t.servedCatalogActive = e),
     (t.servedCatalogDeactivatedRows = void 0),
     t.familySpellingVerdicts.clear(),
     e.catalog !== null)
   )
-    WAt(e.catalog);
+    applyCatalogMasking(e.catalog);
 }
-function kVt(e) {
-  let t = Or().servedCatalogPublicIds;
+function registerCatalogPublicIds(e) {
+  let t = getProviderState().servedCatalogPublicIds;
   for (let r of ON(e)) t.set(r, ja(r));
 }
-function Grr() {
-  let e = Or(),
+function deactivateServedCatalog() {
+  let e = getProviderState(),
     t = e.servedCatalogActive;
   if (t?.source === "served")
     ((e.servedCatalogDeactivatedRows = t.catalog ?? void 0),
@@ -14395,24 +14395,24 @@ function Grr() {
       }));
   e.servedCatalogPublicIds.clear();
 }
-function Kve() {
-  return Or().servedCatalogMaskedIds;
+function getSessionMaskedModelIds() {
+  return getProviderState().servedCatalogMaskedIds;
 }
 function hr(e) {
-  let t = Or().servedCatalogMaskedIds;
+  let t = getProviderState().servedCatalogMaskedIds;
   for (let r of e) {
-    let o = ec(r);
+    let o = normalizeModelId(r);
     if (o.length > 0 && !oo(o)) t.add(o);
   }
 }
-function WAt(e) {
-  if ((hr(Vve(e)), BAt(e))) Or().servedCatalogMasksEveryId = !0;
+function applyCatalogMasking(e) {
+  if ((hr(getMaskedModelIds(e)), hasDroppedUnidentifiedRows(e))) getProviderState().servedCatalogMasksEveryId = !0;
 }
 function MN() {
-  return Or().servedCatalogMasksEveryId;
+  return getProviderState().servedCatalogMasksEveryId;
 }
 function ja(e) {
-  let t = ec(e);
+  let t = normalizeModelId(e);
   return g1(t.includes("claude-") ? t : `claude-${t}`);
 }
 function xne(e, t) {
@@ -14431,7 +14431,7 @@ var Nne = createLazyValue(() =>
   }),
 );
 function Lne(e) {
-  let t = ec(e);
+  let t = normalizeModelId(e);
   if (um(t) || t === hBe) return !0;
   if (xN(e)) return !0;
   let r = ja(e);
@@ -14444,19 +14444,19 @@ function DN(e) {
 function oo(e) {
   return DN(e);
 }
-function zCn(e) {
-  let t = ec(e);
+function isCompiledModelId(e) {
+  let t = normalizeModelId(e);
   if (um(t) || t === hBe) return !0;
   let r = ja(t);
   return F6(r) && IN.has(r.family);
 }
 function Une(e) {
-  return NN() && !xN(e) && !zCn(e);
+  return NN() && !xN(e) && !isCompiledModelId(e);
 }
 function xN(e) {
-  let t = Or().servedCatalogPublicIds;
+  let t = getProviderState().servedCatalogPublicIds;
   if (t.size === 0) return !1;
-  if (t.has(ec(e))) return !0;
+  if (t.has(normalizeModelId(e))) return !0;
   let r = ja(e);
   if (!F6(r)) return !1;
   for (let o of t.values())
@@ -14467,14 +14467,14 @@ function xN(e) {
 function NN() {
   return isFirstPartyProvider();
 }
-function GAt(e) {
-  if (xVt(e, Kve())) return tQ;
-  if (Une(e) || (MN() && !Lne(e))) return (hr([e]), tQ);
+function maskModelIdIfConfidential(e) {
+  if (isModelIdMasked(e, getSessionMaskedModelIds())) return CONFIDENTIAL_MODEL_ID;
+  if (Une(e) || (MN() && !Lne(e))) return (hr([e]), CONFIDENTIAL_MODEL_ID);
   return e;
 }
-function xVt(e, t) {
+function isModelIdMasked(e, t) {
   if (t.size === 0) return !1;
-  let r = ec(e);
+  let r = normalizeModelId(e);
   if (t.has(r) && !oo(r)) return !0;
   for (let o of t) {
     if (o.length === 0 || oo(o)) continue;
@@ -14500,9 +14500,9 @@ function zne(e) {
   );
 }
 var Fne = new Set(["chain_entry", "fallbackFrom", "shortName"]);
-function qrr(e) {
+function maskModelIdsInPayload(e) {
   let t = NN() || MN();
-  if (Kve().size === 0 && !t) return e;
+  if (getSessionMaskedModelIds().size === 0 && !t) return e;
   let r,
     o = Object.entries(e);
   for (let d of [!0, !1])
@@ -14516,12 +14516,12 @@ function qrr(e) {
   return r ?? e;
 }
 function Bne(e) {
-  return g1(ec(e)) !== null;
+  return g1(normalizeModelId(e)) !== null;
 }
 function Hne(e, t, r) {
   let o = (_) => {
-    if (t && (r ? /[-0-9]/.test(_) : Bne(_))) return GAt(_) === tQ ? tQ : _;
-    return xVt(_, Kve()) ? tQ : _;
+    if (t && (r ? /[-0-9]/.test(_) : Bne(_))) return maskModelIdIfConfidential(_) === CONFIDENTIAL_MODEL_ID ? CONFIDENTIAL_MODEL_ID : _;
+    return isModelIdMasked(_, getSessionMaskedModelIds()) ? CONFIDENTIAL_MODEL_ID : _;
   };
   if (!e.includes(",")) return o(e);
   let d = !1,
@@ -14532,39 +14532,39 @@ function Hne(e, t, r) {
     });
   return d ? p.join(",") : e;
 }
-function $me() {
-  return Or().servedCatalogActive?.source;
+function getServedCatalogSource() {
+  return getProviderState().servedCatalogActive?.source;
 }
-function kR() {
-  let e = Or();
+function getActiveServedCatalog() {
+  let e = getProviderState();
   if (e.servedCatalogSuppressDepth > 0) return null;
   let t = e.servedCatalogActive?.catalog ?? null;
   if (t !== null && !isFirstPartyApiBackend()) return null;
   return t;
 }
 function Wa() {
-  let e = kR();
+  let e = getActiveServedCatalog();
   if (e !== null) return e;
-  let t = Or(),
+  let t = getProviderState(),
     r = t.servedCatalogDeactivatedRows;
   if (r === void 0 || t.servedCatalogSuppressDepth > 0 || !isFirstPartyApiBackend()) return null;
   return r;
 }
-function mU() {
-  return kR() !== null && Or().servedCatalogActive?.source === "served";
+function isActiveCatalogFromServer() {
+  return getActiveServedCatalog() !== null && getProviderState().servedCatalogActive?.source === "served";
 }
-function zrr() {
-  return kR() !== null && Or().servedCatalogActive?.source === "published";
+function isActiveCatalogPublished() {
+  return getActiveServedCatalog() !== null && getProviderState().servedCatalogActive?.source === "published";
 }
 function Ip() {
-  return kR() !== null;
+  return getActiveServedCatalog() !== null;
 }
 function io() {
-  let e = kR();
-  return e === null ? [] : Qy(e);
+  let e = getActiveServedCatalog();
+  return e === null ? [] : getCatalogModels(e);
 }
-function gP(e) {
-  let t = Or();
+function withServedCatalogSuppressed(e) {
+  let t = getProviderState();
   t.servedCatalogSuppressDepth++;
   try {
     return e();
@@ -14572,49 +14572,49 @@ function gP(e) {
     t.servedCatalogSuppressDepth--;
   }
 }
-function nQ() {
-  return Or().servedCatalogSuppressDepth > 0;
+function isServedCatalogSuppressed() {
+  return getProviderState().servedCatalogSuppressDepth > 0;
 }
-function Xve(...e) {
+function findServedCatalogModel(...e) {
   return UN(Wa(), e);
 }
 function LN(...e) {
-  return UN(kR(), e);
+  return UN(getActiveServedCatalog(), e);
 }
 function UN(e, t) {
   if (e === null) return;
   let [r, ...o] = t;
   if (r !== void 0) {
-    let d = eQ(e, r) ?? Gne(e, r);
+    let d = findCatalogModel(e, r) ?? Gne(e, r);
     if (d !== void 0) return d;
   }
   for (let d of o) {
     if (d === void 0) continue;
-    let p = eQ(e, d);
+    let p = findCatalogModel(e, d);
     if (p !== void 0) return p;
   }
   return;
 }
 function Gne(e, t) {
   let r = m1().modelKnowledge?.identitySpelling(t);
-  return r === void 0 || ec(r) === ec(t) ? void 0 : eQ(e, r);
+  return r === void 0 || normalizeModelId(r) === normalizeModelId(t) ? void 0 : findCatalogModel(e, r);
 }
 function $a(...e) {
-  return Xve(...e)?.runtime;
+  return findServedCatalogModel(...e)?.runtime;
 }
 var Vne = { min: 8192, max: 1e6 },
   Kne = { min: 1024, max: 128000 };
 function Ya(...e) {
-  let t = Xve(...e);
+  let t = findServedCatalogModel(...e);
   return $N(t?.runtime?.max_input_tokens ?? t?.context_window, Vne);
 }
 function FN(...e) {
   return $N($a(...e)?.max_output_tokens, Kne);
 }
-function HVt(...e) {
+function getModelEffortLevels(...e) {
   return $a(...e)?.effort_levels?.map((t) => t.trim().toLowerCase());
 }
-function Vrr(...e) {
+function getModelDefaultEffort(...e) {
   let t = $a(...e)?.default_effort;
   return t === void 0 ? void 0 : t.trim().toLowerCase();
 }
@@ -14628,11 +14628,11 @@ function BN(e, ...t) {
   return r.some((d) => d.trim().toLowerCase() === o) ? !0 : void 0;
 }
 function HN(...e) {
-  let t = Xve(...e);
-  return t === void 0 ? void 0 : AQe(t);
+  let t = findServedCatalogModel(...e);
+  return t === void 0 ? void 0 : getModelFamily(t);
 }
 function jN() {
-  let e = kR()?.state;
+  let e = getActiveServedCatalog()?.state;
   if (e === void 0) return;
   let t = e.org_enforced_default_model?.trim();
   if (t) return { model: t, orgConfigured: !0, enforced: !0 };
@@ -14654,7 +14654,7 @@ function $N(e, t) {
 function rL(e) {
   return getCanonicalName(Xt(e.trim().toLowerCase()), { identity: !0 });
 }
-function VCn(e) {
+function collectUnentitledModelNames(e) {
   let t = new Set();
   for (let r of e ?? []) if (!r.entitled) t.add(rL(r.apiName));
   return t;
@@ -14688,7 +14688,7 @@ function isModelDenied(e, t) {
 function getModelEntitlementDenySet() {
   let e = getAPIProvider();
   if (e !== "firstParty" && e !== "gateway") return new Set();
-  return VCn(getModelAccessCache());
+  return collectUnentitledModelNames(getModelAccessCache());
 }
 function isEntitlementOverlayUnavailable() {
   return (
@@ -14699,20 +14699,20 @@ function isEntitlementOverlayUnavailable() {
     getModelAccessCache().length === 0
   );
 }
-function Ume() {
+function getApplicableOrgDefaultModel() {
   if (getAPIProvider() !== "firstParty") return null;
-  if (mU()) return null;
+  if (isActiveCatalogFromServer()) return null;
   return getOrgModelDefaultCache();
 }
-function Krr() {
+function getOrgDefaultModelUpdatedAt() {
   if (getAPIProvider() !== "firstParty") return null;
   return getOrgModelDefaultCache()?.updated_at ?? null;
 }
-function qAt(e) {
+function pickNewestPermittedFamilyModel(e) {
   let t = Object.keys(to);
   for (let r = t.length - 1; r >= 0; r--) {
     let o = to[t[r]].firstParty;
-    if (Dp(getCanonicalName(o), e) && isModelAllowed(o) && !QJ(o) && !RN(o)) return o;
+    if (Dp(getCanonicalName(o), e) && isModelAllowed(o) && !isModelRetiredOrRemapped(o) && !RN(o)) return o;
   }
   return null;
 }
@@ -14800,7 +14800,7 @@ function isModelAllowed(e, t) {
     _ =
       C?.availableModels !== void 0
         ? nL(e, C.modelOverrides ?? getPairedPolicyModelOverrides() ?? {})
-        : gQe(e);
+        : getModelOverrideSourceId(e);
   }
   let E = Xt(_.trim().toLowerCase());
   if (d.includes(E)) {
@@ -14826,7 +14826,7 @@ function isModelAllowed(e, t) {
   return !1;
 }
 function iL() {
-  let e = ee().cachedExtraUsageDisabledReason;
+  let e = getGlobalConfig().cachedExtraUsageDisabledReason;
   if (e === void 0) return !1;
   if (e === null) return !0;
   switch (e) {
@@ -14852,20 +14852,20 @@ function iL() {
 function sL() {
   return isClaudeAISubscriber() && (!!a.ANTHROPIC_UNIX_SOCKET || isFirstPartyAnthropicBaseUrl());
 }
-function ZH() {
-  if (XN()) return !1;
+function isOpus1mContextAvailable() {
+  if (isLongContextDisabled()) return !1;
   if (sL()) return iL();
   return !0;
 }
-function UD() {
-  if (XN()) return !1;
+function isSonnet1mContextAvailable() {
+  if (isLongContextDisabled()) return !1;
   if (sL()) return iL();
   return !0;
 }
 function Xne() {
   return null;
 }
-function IVt() {
+function getRegistryAliasEntries() {
   return [];
 }
 function rUe(e, t) {
@@ -14877,8 +14877,8 @@ function aL(e) {
 var Jne = 8,
   uL = { status: "known" },
   lL = { status: "unknown" },
-  PVt = "Update Claude Code to use this model";
-function zAt(e) {
+  MODEL_NEEDS_UPDATE_NOTICE = "Update Claude Code to use this model";
+function formatUnrecognizedModelNotice(e) {
   return `"${e}" isn't described by this version's model catalog; update Claude Code, or map it with behavesAs on a modelPicker row (or modelOverrides, if it is a provider id of a model this version knows).`;
 }
 function dL(e) {
@@ -14894,7 +14894,7 @@ function pL() {
   };
 }
 function Np(e) {
-  let t = Or(),
+  let t = getProviderState(),
     r = e.settingsGeneration(),
     o = e.knowledgeGeneration(),
     d = t.behavesAsMemo;
@@ -14927,7 +14927,7 @@ function Lp(e) {
     e.settingsMappingsDeclared
   );
 }
-function CQe(e, t) {
+function resolveModelBehavesAs(e, t) {
   let r = m1().modelKnowledge;
   if (r === void 0) return uL;
   let o = Np(r),
@@ -14941,7 +14941,7 @@ function CQe(e, t) {
 function Zne(e, t, r) {
   if (r.lookup.isKnown(t)) return uL;
   if (e === null && !Lp(r)) return lL;
-  let d = new Set([ec(t)]),
+  let d = new Set([normalizeModelId(t)]),
     p = gL(e, t, r, d, 0);
   return p === void 0
     ? lL
@@ -14950,7 +14950,7 @@ function Zne(e, t, r) {
 function gL(e, t, r, o, d) {
   if (d >= Jne) return;
   for (let p of ere(e, t, r)) {
-    let _ = ec(p.target);
+    let _ = normalizeModelId(p.target);
     if (_ === "" || o.has(_)) continue;
     if (r.lookup.isKnown(p.target))
       return { target: p.target, source: p.source, hops: d + 1 };
@@ -14964,7 +14964,7 @@ function gL(e, t, r, o, d) {
 function ere(e, t, r) {
   let o = [],
     d = tre(t, r),
-    p = e === null ? void 0 : cL(d, (_) => eQ(e, _)?.behaves_as);
+    p = e === null ? void 0 : cL(d, (_) => findCatalogModel(e, _)?.behaves_as);
   if (p !== void 0) o.push({ target: p, source: "served" });
   if (Lp(r)) {
     let _ = cL(d, (E) => r.lookup.settingsBehavesAs(E));
@@ -14974,7 +14974,7 @@ function ere(e, t, r) {
 }
 function tre(e, t) {
   let r = t.lookup.identitySpelling(e);
-  return ec(r) === ec(e) ? [e] : [e, r];
+  return normalizeModelId(r) === normalizeModelId(e) ? [e] : [e, r];
 }
 function cL(e, t) {
   for (let r of e) {
@@ -14984,51 +14984,51 @@ function cL(e, t) {
   return;
 }
 function mL(e) {
-  return CQe(Wa(), e);
+  return resolveModelBehavesAs(Wa(), e);
 }
 function _L(e) {
   let t = m1().modelKnowledge;
   if (t === void 0) return e;
   let r = Wa();
   if (r === null && !Lp(Np(t))) return e;
-  let o = CQe(r, e);
+  let o = resolveModelBehavesAs(r, e);
   return o.status === "mapped" ? o.target : e;
 }
 function hL(e, t) {
-  return CQe(e, t.id);
+  return resolveModelBehavesAs(e, t.id);
 }
-function oUe(e, t) {
-  return d5(t) && hL(e, t).status !== "unknown";
+function isOfferedModelRow(e, t) {
+  return isCatalogModelSelectable(t) && hL(e, t).status !== "unknown";
 }
-function Bme(e) {
+function getOfferedModelRows(e) {
   let t = m1().modelKnowledge;
-  if (t === void 0) return Qy(e).filter((o) => oUe(e, o));
+  if (t === void 0) return getCatalogModels(e).filter((o) => isOfferedModelRow(e, o));
   let r = fL(Np(t), e);
-  return ((r.offeredRows ??= Qy(e).filter((o) => oUe(e, o))), r.offeredRows);
+  return ((r.offeredRows ??= getCatalogModels(e).filter((o) => isOfferedModelRow(e, o))), r.offeredRows);
 }
-function Xrr(e) {
-  return Bme(e).map((t) => t.id);
+function getOfferedModelRowIds(e) {
+  return getOfferedModelRows(e).map((t) => t.id);
 }
-function vQe(e) {
-  return CN(Bme(e));
+function getOfferedModelAliasMap(e) {
+  return CN(getOfferedModelRows(e));
 }
-function Yrr(e) {
-  return Qy(e).filter((t) => d5(t) && hL(e, t).status === "unknown");
+function getNotOfferedModelRows(e) {
+  return getCatalogModels(e).filter((t) => isCatalogModelSelectable(t) && hL(e, t).status === "unknown");
 }
 function SL(e) {
-  let t = kR();
-  return t === null ? void 0 : vQe(t)[e];
+  let t = getActiveServedCatalog();
+  return t === null ? void 0 : getOfferedModelAliasMap(t)[e];
 }
 function zp(e) {
   return;
 }
 function TL(e) {
-  let t = kR();
+  let t = getActiveServedCatalog();
   if (t === null) return !1;
-  let r = ec(e);
-  return Bme(t).some((o) => ec(o.id) === r);
+  let r = normalizeModelId(e);
+  return getOfferedModelRows(t).some((o) => normalizeModelId(o.id) === r);
 }
-function OVt(e) {
+function isTierPinnedByEnv(e) {
   return [
     a.ANTHROPIC_DEFAULT_FABLE_MODEL,
     a.ANTHROPIC_DEFAULT_OPUS_MODEL,
@@ -15088,24 +15088,24 @@ function isNonCustomMythosModel(e) {
 }
 function swapShrinksContextWindow(e, t) {
   let r = Up();
-  return vp(t, r) < vp(e, r);
+  return getEffectiveContextWindow(t, r) < getEffectiveContextWindow(e, r);
 }
 function preserve1mContextForRefusalFallback(e, t) {
   let r = Up(),
-    o = vp(e, r);
-  if (vp(t, r) >= o) {
-    if (tc(t)) {
-      if (!tc(e)) {
+    o = getEffectiveContextWindow(e, r);
+  if (getEffectiveContextWindow(t, r) >= o) {
+    if (hasLongContextSuffix(t)) {
+      if (!hasLongContextSuffix(e)) {
         let p = strip1mTag(t);
-        return vp(p, r) >= o ? p : void 0;
+        return getEffectiveContextWindow(p, r) >= o ? p : void 0;
       }
       if (zL(t)) return;
     }
     return t;
   }
-  if (!tc(e)) return;
+  if (!hasLongContextSuffix(e)) return;
   let d = Je(t);
-  return eligible1mSuffixTarget(d) && vp(d, r) >= o ? d : void 0;
+  return eligible1mSuffixTarget(d) && getEffectiveContextWindow(d, r) >= o ? d : void 0;
 }
 function isNonCustomOpusModel(e) {
   return nl(e, "opus");
@@ -15147,7 +15147,7 @@ function rre(e) {
     if (typeof r === "string" && ao(r) === e) return !0;
   if (getAdditionalModelOptionsCache().some((r) => typeof r.value === "string" && ao(r.value) === e))
     return !0;
-  for (let r of Or().providerCache.validatedModels) if (ao(r) === e) return !0;
+  for (let r of getProviderState().providerCache.validatedModels) if (ao(r) === e) return !0;
   return !1;
 }
 function isUnservedFamilySpelling(e) {
@@ -15180,7 +15180,7 @@ function ore() {
   let e = Za[wL()];
   if (e !== void 0) {
     let t = e.defaultModel(),
-      r = Or();
+      r = getProviderState();
     if (r.resolvingBestModel) return t;
     r.resolvingBestModel = !0;
     try {
@@ -15207,7 +15207,7 @@ function isMythosModelValue(e) {
 function isFableAvailable() {
   if (Ip()) {
     if (ML(isFableModelValue, getCanonicalName(getDefaultFableModel(), { identity: !0 }))) return !1;
-    if (mU()) {
+    if (isActiveCatalogFromServer()) {
       if (a.ANTHROPIC_DEFAULT_FABLE_MODEL) return !0;
       return yL(isFableModelValue);
     }
@@ -15224,7 +15224,7 @@ function isFableAvailable() {
   return bL(isFableModelValue) || serverProbeAcceptedFable();
 }
 function serverProbeAcceptedFable() {
-  return vAt() === "accepted";
+  return getFableEntitlementProbe() === "accepted";
 }
 function bootstrapHasAnswered() {
   return getAdditionalModelOptionsCache().length > 0 || hasBootstrapModelOptions();
@@ -15250,12 +15250,12 @@ function PL(e, t, r) {
   return d.length > 0 && d.every(r);
 }
 function ML(e, t) {
-  if (kR() === null) return !1;
+  if (getActiveServedCatalog() === null) return !1;
   let r = io().filter((o) => e(o.id));
   return PL(
     r,
     (o) => t !== void 0 && getCanonicalName(o.id, { identity: !0 }) === t,
-    (o) => !d5(o),
+    (o) => !isCatalogModelSelectable(o),
   );
 }
 function isMythosAvailable(e) {
@@ -15267,15 +15267,15 @@ function isMythosAvailable(e) {
       return (_.length > 0 ? _ : p).some((E) => E.enabled);
     },
     d = () => {
-      let p = kR();
+      let p = getActiveServedCatalog();
       return o(
         io().flatMap((_) => {
           let E = t(getCanonicalName(_.id));
-          return E && p !== null ? [{ canonical: E, enabled: oUe(p, _) }] : [];
+          return E && p !== null ? [{ canonical: E, enabled: isOfferedModelRow(p, _) }] : [];
         }),
       );
     };
-  if (mU()) return d();
+  if (isActiveCatalogFromServer()) return d();
   if (Ip()) {
     if (ML(isMythosModelValue, r)) return !1;
     if (!bootstrapHasAnswered()) return d();
@@ -15289,9 +15289,9 @@ function isMythosAvailable(e) {
   );
 }
 function yL(e) {
-  let t = kR();
+  let t = getActiveServedCatalog();
   if (t === null) return !1;
-  return io().some((r) => oUe(t, r) && e(r.id));
+  return io().some((r) => isOfferedModelRow(t, r) && e(r.id));
 }
 function isPinnedFableModel(e) {
   let t = a.ANTHROPIC_DEFAULT_FABLE_MODEL;
@@ -15317,14 +15317,14 @@ function isAntInternalFastModelId(e) {
 function sre(e) {
   let t = a.ANTHROPIC_DEFAULT_OPUS_MODEL;
   if (t === void 0) {
-    let r = Zl();
+    let r = getEffectiveModelStrings();
     if (((t = r.opus5), getAPIProvider() === "firstParty"))
       t = exn.map((o) => r[o]).find((o) => isModelAllowed(o)) ?? r.opus5;
   }
   return IL(ub(t), e);
 }
 function IL(e, t) {
-  if ((tc(t) || modelHasNative1MContext(t)) && !tc(e) && !kse(getCanonicalName(e))) return ub(e + "[1m]");
+  if ((hasLongContextSuffix(t) || modelHasNative1MContext(t)) && !hasLongContextSuffix(e) && !lacks1mContextSupport(getCanonicalName(e))) return ub(e + "[1m]");
   return e;
 }
 function are(e) {
@@ -15342,24 +15342,24 @@ function are(e) {
         : r;
   if (d !== void 0 && !((isModelAllowedUnderActiveEnforcement(d) ?? isModelAllowed(d)) && !isModelDenied(d, getModelEntitlementDenySet()))) return;
   if (d === void 0) {
-    let p = Zl().sonnet5;
+    let p = getEffectiveModelStrings().sonnet5;
     if (!isModelAllowed(p)) return;
     d = p;
   }
   return IL(ub(d), e);
 }
 function getPermissionClassifierExternalDefault(e) {
-  return gP(() => are(e));
+  return withServedCatalogSuppressed(() => are(e));
 }
 function classifierFlagshipRerouteTarget(e) {
   if (isFableFamilyOrPinnedModel(e) || ire(e)) return sre(e);
   return e;
 }
 function getPermissionClassifierFlagshipRerouteTarget(e) {
-  return gP(() => classifierFlagshipRerouteTarget(e));
+  return withServedCatalogSuppressed(() => classifierFlagshipRerouteTarget(e));
 }
 function getActiveOpusLineupIds() {
-  let e = Zl();
+  let e = getEffectiveModelStrings();
   return exn.map((t) => e[t]);
 }
 function getModelUnavailabilityReason(e, t) {
@@ -15370,8 +15370,8 @@ function getModelUnavailabilityReason(e, t) {
     p = o(r),
     _ =
       LN(e, r, d, p) ??
-      io().find((I) => !d5(I) && (o(I.id) === d || o(I.id) === p));
-  if (_ !== void 0 && !d5(_))
+      io().find((I) => !isCatalogModelSelectable(I) && (o(I.id) === d || o(I.id) === p));
+  if (_ !== void 0 && !isCatalogModelSelectable(_))
     return {
       reason: "disabled",
       description:
@@ -15380,8 +15380,8 @@ function getModelUnavailabilityReason(e, t) {
         "Not available",
     };
   if (_ !== void 0 && mL(_.id).status === "unknown")
-    return { reason: "disabled", description: PVt, notOffered: !0 };
-  if (!mU()) {
+    return { reason: "disabled", description: MODEL_NEEDS_UPDATE_NOTICE, notOffered: !0 };
+  if (!isActiveCatalogFromServer()) {
     let I = getAdditionalModelOptionsCache().find(
       (D) =>
         D.disabled === !0 &&
@@ -15391,8 +15391,8 @@ function getModelUnavailabilityReason(e, t) {
     if (I) return { reason: "disabled", description: I.description };
   }
   let E = t?.ignoreModelOverrides ? firstPartyNameToCanonical(r) : getCanonicalName(r, { identity: !0 }),
-    C = mU()
-      ? io().some((I) => d5(I) && (o(I.id) === d || o(I.id) === p))
+    C = isActiveCatalogFromServer()
+      ? io().some((I) => isCatalogModelSelectable(I) && (o(I.id) === d || o(I.id) === p))
       : getAdditionalModelOptionsCache().some(
           (I) =>
             I.disabled !== !0 &&
@@ -15447,7 +15447,7 @@ function dre(e, t, r) {
   return p !== void 0 ? t[p] : ub(o);
 }
 function il(e) {
-  return dre(e, Zl(), getAPIProvider());
+  return dre(e, getEffectiveModelStrings(), getAPIProvider());
 }
 function getDefaultFableModel() {
   let e = a.ANTHROPIC_DEFAULT_FABLE_MODEL;
@@ -15461,7 +15461,7 @@ function DL(e) {
 function pre(e) {
   return !1;
 }
-function Bp(e = Zl()) {
+function Bp(e = getEffectiveModelStrings()) {
   let t = rl("fable", e) ?? e.fable51;
   return DL(t);
 }
@@ -15470,7 +15470,7 @@ function getDefaultOpusModel() {
   if (e !== void 0) return ub(e);
   return il("opus") ?? en();
 }
-function en(e = Zl()) {
+function en(e = getEffectiveModelStrings()) {
   return rl("opus", e) ?? e.opus5;
 }
 function enforcementDefaultOpusModel() {
@@ -15481,7 +15481,7 @@ function getDefaultSonnetModel() {
   if (e !== void 0) return ub(e);
   return il("sonnet") ?? el();
 }
-function el(e = Zl()) {
+function el(e = getEffectiveModelStrings()) {
   return rl("sonnet", e) ?? e.sonnet46;
 }
 function getDefaultHaikuModel() {
@@ -15489,7 +15489,7 @@ function getDefaultHaikuModel() {
   if (e !== void 0) return ub(e);
   return il("haiku") ?? Hp();
 }
-function Hp(e = Zl()) {
+function Hp(e = getEffectiveModelStrings()) {
   return rl("haiku", e) ?? e.haiku45;
 }
 function isModeDependentModelSetting(e) {
@@ -15509,10 +15509,10 @@ function stepDownRestrictedFamilyAliasPick(e) {
   if (!_A(r) || !usesFirstPartyModelIds()) return null;
   let o = getModelEntitlementDenySet();
   if (!(getSettings_DEPRECATED() || {}).availableModels && o.size === 0) return null;
-  let d = qAt(r);
+  let d = pickNewestPermittedFamilyModel(r);
   if (d === null || !(isModelAllowedUnderActiveEnforcement(d) ?? isModelAllowed(d)) || isModelDenied(d, o)) return null;
   if (r === t) return d;
-  return (r === "opus" ? ZH() : r === "sonnet" ? UD() : !0) && eligible1mSuffixTarget(d)
+  return (r === "opus" ? isOpus1mContextAvailable() : r === "sonnet" ? isSonnet1mContextAvailable() : !0) && eligible1mSuffixTarget(d)
     ? `${d}[1m]`
     : d;
 }
@@ -15548,7 +15548,7 @@ function Je(e) {
   return e.replace(/(\[1m\])+$/i, "") + "[1m]";
 }
 function getResolvedOrgDefaultModel() {
-  let e = Ume();
+  let e = getApplicableOrgDefaultModel();
   if (!e) return null;
   if (!isRecognizedOrgDefaultName(e.name)) {
     let t = `Org default model "${e.name}" is not one this build recognizes; using the standard default instead`;
@@ -15558,7 +15558,7 @@ function getResolvedOrgDefaultModel() {
   return xL(e.name);
 }
 function getBootstrapOrgDefaultEffect() {
-  let e = Ume();
+  let e = getApplicableOrgDefaultModel();
   if (!e) return null;
   if (isRecognizedOrgDefaultName(e.name)) {
     let t = getResolvedOrgDefaultModel();
@@ -15574,10 +15574,10 @@ function isDeploymentVouchedModel(e) {
   return (
     (a.ANTHROPIC_CUSTOM_MODEL_OPTION !== void 0 &&
       _0(a.ANTHROPIC_CUSTOM_MODEL_OPTION, e)) ||
-    OVt(e) ||
-    gQe(e) !== e ||
+    isTierPinnedByEnv(e) ||
+    getModelOverrideSourceId(e) !== e ||
     getAdditionalModelOptionsCache().some((t) => typeof t.value === "string" && _0(t.value, e)) ||
-    Nme().some((t) => typeof t.value === "string" && _0(t.value, e)) ||
+    getGatewayModelOptions().some((t) => typeof t.value === "string" && _0(t.value, e)) ||
     (getCuratedModelPicker()?.picker.options.some((t) => _0(t.model.trim(), e)) ?? !1)
   );
 }
@@ -15611,7 +15611,7 @@ function resolveDefaultMainLoopModelSetting() {
   let e = LL();
   if (e !== null && e.enforced)
     return { setting: e.setting, attribution: e.attribution };
-  let t = mU(),
+  let t = isActiveCatalogFromServer(),
     r = ZOn(),
     o;
   if (t) o = null;
@@ -15654,11 +15654,11 @@ function LL() {
   };
 }
 function getOrgLockedDefaultModel() {
-  if (mU()) {
+  if (isActiveCatalogFromServer()) {
     let e = LL();
     return e !== null && e.enforced ? { model: e.setting, kind: "org" } : null;
   }
-  return Ume()?.override_user_selection ? getBootstrapOrgDefaultEffect() : null;
+  return getApplicableOrgDefaultModel()?.override_user_selection ? getBootstrapOrgDefaultEffect() : null;
 }
 function fre(e) {
   if (e === null) return !1;
@@ -15678,7 +15678,7 @@ function Kp(e) {
     p = d !== -1 ? d : isFableFamilyOrPinnedModel(parseUserSpecifiedModel(e)) ? 0 : 1;
   for (let { family: _, model: E } of r.slice(p)) {
     if (isModelAllowed(E)) return E;
-    let C = qAt(_);
+    let C = pickNewestPermittedFamilyModel(_);
     if (C !== null) return C;
   }
   return null;
@@ -15709,7 +15709,7 @@ function UL() {
   let e = getAPIProvider();
   if (e === "mantle")
     return {
-      setting: Zl()[DEFAULT_MANTLE_OPUS_KEY],
+      setting: getEffectiveModelStrings()[DEFAULT_MANTLE_OPUS_KEY],
       envFamily: null,
       concreteBaseline: String(Wt()[DEFAULT_MANTLE_OPUS_KEY]),
     };
@@ -15747,7 +15747,7 @@ function jp(e, t, r) {
       ve = ve.trim();
       {
         let Oe = Xt(ve).trim().toLowerCase(),
-          Ke = tc(ve),
+          Ke = hasLongContextSuffix(ve),
           xe = um(Oe) ? Xa(Oe) : null;
         if (xe !== null) ve = Ke ? Je(xe) : xe;
         else {
@@ -15764,13 +15764,13 @@ function jp(e, t, r) {
         return He;
       }
       if (De !== He) return eligible1mSuffixTarget(ve, D) ? Je(ve) : strip1mTag(ve);
-      if (tc(ve) && !eligible1mSuffixTarget(ve, D)) return strip1mTag(ve);
+      if (hasLongContextSuffix(ve) && !eligible1mSuffixTarget(ve, D)) return strip1mTag(ve);
       return ve;
     },
     G = null,
     L = String(e),
     U = Xt(L.trim().toLowerCase()),
-    F = tc(e),
+    F = hasLongContextSuffix(e),
     V = U.startsWith("claude-") ? U : `claude-${U}`,
     te = isLegacyOpusFirstParty(V) ? en(Wt()) : Xa(U);
   if (te !== null) {
@@ -15885,9 +15885,9 @@ function zL(e, t) {
   let r = e.trim(),
     o = strip1mTag(r).trim(),
     d = firstPartyNameToCanonical(o);
-  if (d.startsWith("claude-")) return kse(d);
-  if (kse(getCanonicalName(o, t))) return !0;
-  return o !== r && t?.overridesMap === void 0 && kse(getCanonicalName(r));
+  if (d.startsWith("claude-")) return lacks1mContextSupport(d);
+  if (lacks1mContextSupport(getCanonicalName(o, t))) return !0;
+  return o !== r && t?.overridesMap === void 0 && lacks1mContextSupport(getCanonicalName(r));
 }
 function gre(e) {
   return [
@@ -15897,7 +15897,7 @@ function gre(e) {
   ];
 }
 function st() {
-  return Or().warnedEnforcementMessages;
+  return getProviderState().warnedEnforcementMessages;
 }
 function _i() {
   try {
@@ -16202,21 +16202,21 @@ function getClaudeAiUserDefaultModelDescription(e = !1) {
   let { setting: t, attribution: r } = resolveDefaultMainLoopModelSetting();
   if (r === "served") {
     let d = getMarketingNameForModel(er(t)) ?? renderModelName(t),
-      p = HN(t) ?? ZJ(t, getCanonicalName(parseUserSpecifiedModel(t))),
+      p = HN(t) ?? classifyModelFamily(t, getCanonicalName(parseUserSpecifiedModel(t))),
       _ =
         p === "opus"
           ? " \xB7 Best for everyday, complex tasks"
           : p === "sonnet"
             ? " \xB7 Efficient for routine tasks"
             : "",
-      E = e && af(t) ? getModelPricingSuffix(!0, t) : "";
+      E = e && modelSupportsFastMode(t) ? getModelPricingSuffix(!0, t) : "";
     return `${d}${_}${E}`;
   }
   if (r !== "tier") return `${getMarketingNameForModel(er(parseUserSpecifiedModel(t))) ?? renderModelName(t)}${defaultModelAttributionSuffix(r)}`;
   if (isOpusDefaultSubscriber()) {
     let d = getDefaultOpusModel(),
       p = getMarketingNameForModel(er(d)) ?? "Opus",
-      _ = e && af(d);
+      _ = e && modelSupportsFastMode(d);
     if (isOpus1mMergeEnabled())
       return `${p} with 1M context \xB7 Best for everyday, complex tasks${_ ? getModelPricingSuffix(!0, d) : ""}`;
     return `${p} \xB7 Best for everyday, complex tasks${_ ? getModelPricingSuffix(!0, d) : ""}`;
@@ -16230,7 +16230,7 @@ function renderDefaultModelSetting(e) {
 function getModelPricingSuffix(e, t) {
   if (!usesFirstPartyPricing()) return "";
   let r = firstPartyNameToCanonical(t),
-    o = e ? Ese(Gve(r)) : $x(r);
+    o = e ? formatCostsPerMtok(getFastModeModelCosts(r)) : $x(r);
   if (o === void 0) return "";
   return ` \xB7${e ? ` (${FAST_MODE_GLYPH})` : ""} ${o}`;
 }
@@ -16239,7 +16239,7 @@ function isOpusDefaultSubscriber() {
   return isEnterpriseSubscriber() && !kL();
 }
 function isOpus1mMergeEnabled() {
-  if (XN() || isProSubscriber() || getAPIProvider() !== "firstParty") return !1;
+  if (isLongContextDisabled() || isProSubscriber() || getAPIProvider() !== "firstParty") return !1;
   if (isClaudeAISubscriber() && getSubscriptionType() === null) return !1;
   if (a.ANTHROPIC_DEFAULT_OPUS_MODEL === void 0) {
     let e = il("opus");
@@ -16251,7 +16251,7 @@ function Tre(e) {
   let t = getCanonicalName(e),
     r = Ya(e, t),
     o = getCanonicalName(e, { identity: !0 }) !== t;
-  if (kse(t) && !(o && r !== void 0)) return !1;
+  if (lacks1mContextSupport(t) && !(o && r !== void 0)) return !1;
   return r === void 0 || r >= 1e6;
 }
 function renderModelSetting(e) {
@@ -16299,10 +16299,10 @@ function bre(e) {
   return r === "" ? void 0 : r;
 }
 function Are(e) {
-  let t = ec(e);
+  let t = normalizeModelId(e);
   if (t === "") return;
   let r = getCuratedModelPicker()
-    ?.picker.options.find((o) => ec(o.model) === t)
+    ?.picker.options.find((o) => normalizeModelId(o.model) === t)
     ?.behavesAs?.trim();
   return r === void 0 || r === "" ? void 0 : r;
 }
@@ -16317,7 +16317,7 @@ dL({
   registryNamesFamily: (e) => !1,
   isClientSpelling: nre,
   clientSpellingGeneration: () =>
-    `${[...Or().providerCache.validatedModels].join(",")}|${getAdditionalModelOptionsCache()
+    `${[...getProviderState().providerCache.validatedModels].join(",")}|${getAdditionalModelOptionsCache()
       .map((e) => (typeof e.value === "string" ? e.value : ""))
       .join(
         ",",
@@ -16334,7 +16334,7 @@ function renderModelName(e) {
   if (t !== void 0) return t;
   let r = er(e);
   if (BR(r) === null) {
-    let d = Xve(r, getCanonicalName(r, { identity: !0 }));
+    let d = findServedCatalogModel(r, getCanonicalName(r, { identity: !0 }));
     if (d !== void 0) {
       let C = formatLabelText(d.name ?? "");
       if (C) return C;
@@ -16344,10 +16344,10 @@ function renderModelName(e) {
       }
     }
     let p = (C) => typeof C.value === "string" && er(C.value) === r,
-      _ = Nme().find(p),
-      E = _ ?? (mU() ? void 0 : getAdditionalModelOptionsCache().find(p));
+      _ = getGatewayModelOptions().find(p),
+      E = _ ?? (isActiveCatalogFromServer() ? void 0 : getAdditionalModelOptionsCache().find(p));
     if (E?.label) {
-      if (E === _ && CVt(E)) return nameForUnnamedModelId(E.value) ?? E.label;
+      if (E === _ && hasDefaultModelOptionLabel(E)) return nameForUnnamedModelId(E.value) ?? E.label;
       return E.label;
     }
   }
@@ -16370,13 +16370,13 @@ function getPublicModelName(e) {
 function parseUserSpecifiedModel(e) {
   let t = e.trim(),
     r = t.toLowerCase(),
-    o = tc(r),
+    o = hasLongContextSuffix(r),
     d = o ? Xt(r).trim() : r;
   if (um(d))
     switch (d) {
       case "fable": {
         let p = getDefaultFableModel();
-        return ub(p + (o && !isFirstPartyApiBackend() && !tc(p) ? "[1m]" : ""));
+        return ub(p + (o && !isFirstPartyApiBackend() && !hasLongContextSuffix(p) ? "[1m]" : ""));
       }
       case "opusplan":
         return o ? ub(Je(getDefaultSonnetModel())) : getDefaultSonnetModel();
@@ -16409,12 +16409,12 @@ function resolveSkillModelOverride(e, t) {
       ),
       t
     );
-  let o = tc(t) || modelHasNative1MContext(t) || antGrants1MContext(t);
-  if (tc(e) || !o) return e;
+  let o = hasLongContextSuffix(t) || modelHasNative1MContext(t) || antGrants1MContext(t);
+  if (hasLongContextSuffix(e) || !o) return e;
   let d = parseUserSpecifiedModel(e);
   if (modelHasNative1MContext(d)) return d;
   if (antGrants1MContext(d)) return d;
-  if (GC(d)) return e + "[1m]";
+  if (supports1mContextBeta(d)) return e + "[1m]";
   return e;
 }
 var vre = [
@@ -16457,7 +16457,7 @@ function nameForUnnamedModelId(e) {
     r = t.toLowerCase();
   if (/\s/.test(r)) return;
   let o = Ore(Xt(t));
-  if (o !== void 0) return BL(o, tc(t)) ?? void 0;
+  if (o !== void 0) return BL(o, hasLongContextSuffix(t)) ?? void 0;
   let d = r,
     p = g1(d);
   if (!p) {
@@ -16471,7 +16471,7 @@ function nameForUnnamedModelId(e) {
     /-fast(?![a-z0-9])/.test(d.slice(d.lastIndexOf(p.base) + p.base.length))
   )
     return;
-  return getPublicModelDisplayName(tc(d) ? d : Xt(d)) ?? void 0;
+  return getPublicModelDisplayName(hasLongContextSuffix(d) ? d : Xt(d)) ?? void 0;
 }
 function Ore(e) {
   return mi(sl(), e, !1) ?? mi(getPairedPolicyModelOverrides(), e, !0);
@@ -16509,7 +16509,7 @@ function toProviderWireModelId(e) {
     C = _?.modelOverrides ?? getPairedPolicyModelOverrides() ?? {},
     I,
     D;
-  if (E === void 0) ((I = Zl()[o]), (D = I !== d));
+  if (E === void 0) ((I = getEffectiveModelStrings()[o]), (D = I !== d));
   else {
     if (!isModelAllowed(r, { allowlist: E, overridesMap: C, envFreeAliasResolution: !0 }))
       return t;
@@ -16539,7 +16539,7 @@ var VL = createLazyValue(() =>
     }).strip(),
   ),
   Mre = createLazyValue(() => c({ models: v(VL()), timestamp: T() }));
-function eor(e) {
+function parseModelCapabilitiesEntry(e) {
   let t = VL().safeParse(e);
   return t.success ? t.data : void 0;
 }
@@ -16556,7 +16556,7 @@ function al(e) {
   let t = Mre().safeParse(xt(e, !1));
   return t.success ? t.data.models : null;
 }
-function qVt() {
+function isModelCapabilitiesCacheEnabled() {
   return !1;
 }
 function Ire(e) {
@@ -16565,9 +16565,9 @@ function Ire(e) {
   );
 }
 function hi() {
-  return Or().modelCapabilitiesByCachePath;
+  return getProviderState().modelCapabilitiesByCachePath;
 }
-function KL(e, t = Or().modelCapabilitiesStorageV5) {
+function KL(e, t = getProviderState().modelCapabilitiesStorageV5) {
   let r = hi();
   if (r.has(e)) return r.get(e) ?? null;
   if (t) return null;
@@ -16580,8 +16580,8 @@ function KL(e, t = Or().modelCapabilitiesStorageV5) {
   }
   return (r.set(e, o), o);
 }
-async function tor(e) {
-  if (!e || !qVt()) return;
+async function primeModelCapabilitiesCache(e) {
+  if (!e || !isModelCapabilitiesCacheEnabled()) return;
   let t = qp();
   if (hi().has(t)) return;
   let r = await e.read([Yp()]);
@@ -16593,13 +16593,13 @@ async function tor(e) {
   if (!o.found) return;
   let d = al(Buffer.from(o.value).toString("utf-8"));
   if (d === null) return;
-  let p = Or();
+  let p = getProviderState();
   if (!p.modelCapabilitiesByCachePath.has(t))
     p.modelCapabilitiesByCachePath.set(t, d);
   p.modelCapabilitiesStorageV5 = e;
 }
 function jL(e) {
-  if (!qVt()) return;
+  if (!isModelCapabilitiesCacheEnabled()) return;
   let t = KL(qp());
   if (!t || t.length === 0) return;
   let r = e.toLowerCase(),
@@ -16607,7 +16607,7 @@ function jL(e) {
   if (o) return o;
   return t.find((d) => r.includes(d.id.toLowerCase()));
 }
-async function nor(e, t) {
+async function writeModelCapabilitiesCache(e, t) {
   let r = qp(),
     o = Ire(e);
   if (isHoverRestEnabled() && t !== void 0) {
@@ -16651,15 +16651,15 @@ async function nor(e, t) {
     hi().delete(r),
     n(`[modelCapabilities] cached ${o.length} models`));
 }
-var zme = 200000,
-  KN = 200000,
+var DEFAULT_CONTEXT_WINDOW_TOKENS = 200000,
+  STANDARD_CONTEXT_WINDOW_TOKENS = 200000,
   WL = 32000,
   Dre = 128000;
-function XN() {
+function isLongContextDisabled() {
   return a.CLAUDE_CODE_DISABLE_1M_CONTEXT;
 }
-function tc(e) {
-  if (XN()) return !1;
+function hasLongContextSuffix(e) {
+  if (isLongContextDisabled()) return !1;
   return Wp(e);
 }
 function Wp(e) {
@@ -16678,7 +16678,7 @@ function $L(e) {
   let t = Xt(e);
   return Qa(t)?.context?.native_1m === !0 || t === hBe;
 }
-function sCt(e) {
+function isNative1mContextModel(e) {
   return YL(e) !== void 0;
 }
 function ror(e) {
@@ -16694,7 +16694,7 @@ function qL(e) {
   return !d.startsWith("claude-") || d !== o;
 }
 function modelHasNative1MContext(e) {
-  if (XN()) return !1;
+  if (isLongContextDisabled()) return !1;
   let t = YL(e);
   if (t === void 0) return !1;
   let r = Qa(Xt(t))?.context,
@@ -16715,7 +16715,7 @@ function xre(e, t) {
       return !1;
   }
 }
-function kse(e) {
+function lacks1mContextSupport(e) {
   return (
     e.includes("claude-3-") ||
     e === "claude-opus-4-0" ||
@@ -16724,29 +16724,29 @@ function kse(e) {
     e === "claude-haiku-4-5"
   );
 }
-function GC(e) {
-  if (XN()) return !1;
+function supports1mContextBeta(e) {
+  if (isLongContextDisabled()) return !1;
   let t = getCanonicalName(e);
-  if (kse(t)) return !1;
+  if (lacks1mContextSupport(t)) return !1;
   if (Qa(t)?.context?.supports_1m_beta) return !0;
   return hasFirstPartyCapabilities(getProviderForModel(e));
 }
-function vp(e, t) {
+function getEffectiveContextWindow(e, t) {
   let r = XL();
   if (r !== void 0) return r;
-  if (lvn(e, t)) return KN;
+  if (isContextWindowAboveStandard(e, t)) return STANDARD_CONTEXT_WINDOW_TOKENS;
   return JL(e, t);
 }
-function avn(e, t = getCanonicalName(e)) {
+function resolveContextWindowBelief(e, t = getCanonicalName(e)) {
   let r = Ya(e, t);
   if (r === void 0) return;
-  if (r > zme && !Nre(e)) return { declared: r, believed: zme };
+  if (r > DEFAULT_CONTEXT_WINDOW_TOKENS && !Nre(e)) return { declared: r, believed: DEFAULT_CONTEXT_WINDOW_TOKENS };
   return { declared: r, believed: r };
 }
 function Nre(e) {
   if (modelHasNative1MContext(e)) return !0;
   let t = getAntContextWindow(e);
-  return t !== void 0 && t > zme;
+  return t !== void 0 && t > DEFAULT_CONTEXT_WINDOW_TOKENS;
 }
 function XL() {
   if (Ie(process.env.DISABLE_COMPACT)) {
@@ -16755,40 +16755,40 @@ function XL() {
   }
   return;
 }
-function lvn(e, t) {
-  return dje() && XL() === void 0 && JL(e, t) > KN;
+function isContextWindowAboveStandard(e, t) {
+  return dje() && XL() === void 0 && JL(e, t) > STANDARD_CONTEXT_WINDOW_TOKENS;
 }
 function JL(e, t) {
-  if (tc(e)) return 1e6;
-  if (wQe(t)?.includes(fP.header) && GC(e)) return 1e6;
-  let r = avn(e);
-  if (r !== void 0) return iCt(e) ?? r.believed;
+  if (hasLongContextSuffix(e)) return 1e6;
+  if (withholdBetasIfHipaaTainted(t)?.includes(LONG_CONTEXT_BETA.header) && supports1mContextBeta(e)) return 1e6;
+  let r = resolveContextWindowBelief(e);
+  if (r !== void 0) return getServedSonnet46ContextWindow(e) ?? r.believed;
   if (modelHasNative1MContext(e)) return 1e6;
-  let o = iCt(e);
+  let o = getServedSonnet46ContextWindow(e);
   if (o !== null) return o;
   let d = a.CLAUDE_CODE_MAX_CONTEXT_TOKENS;
   if (d !== void 0 && d > 0 && qL(e)) return d;
-  return zme;
+  return DEFAULT_CONTEXT_WINDOW_TOKENS;
 }
-function oor() {
-  return okn();
+function getServedAutoCompactWindows() {
+  return getCachedClientDataForContextWindow();
 }
-function sor() {
+function getCachedAutoCompactWindows() {
   if (getAPIProvider() !== "firstParty") return null;
-  return ee().autoCompactWindowsCache ?? null;
+  return getGlobalConfig().autoCompactWindowsCache ?? null;
 }
 var Lre = 1e6;
-function iCt(e) {
-  if (XN()) return null;
-  if (tc(e)) return null;
+function getServedSonnet46ContextWindow(e) {
+  if (isLongContextDisabled()) return null;
+  if (hasLongContextSuffix(e)) return null;
   if (getCanonicalName(e) !== "claude-sonnet-4-6") return null;
-  let t = okn()?.kelp_forest_sonnet;
+  let t = getCachedClientDataForContextWindow()?.kelp_forest_sonnet;
   if (typeof t !== "string") return null;
   let r = parseInt(t, 10);
-  if (!Number.isFinite(r) || r <= zme || r > Lre) return null;
+  if (!Number.isFinite(r) || r <= DEFAULT_CONTEXT_WINDOW_TOKENS || r > Lre) return null;
   return r;
 }
-function zVt(e, t) {
+function computeContextUsagePercent(e, t) {
   if (!e) return { used: null, remaining: null };
   let r =
       e.input_tokens +
@@ -16799,13 +16799,13 @@ function zVt(e, t) {
   return { used: d, remaining: 100 - d };
 }
 function Ure(e) {
-  let t = ql()?.heather_vale;
+  let t = getCachedClientData()?.heather_vale;
   if (typeof t !== "object" || t === null || Array.isArray(t)) return null;
   let r = t[e];
   if (typeof r !== "number" || !Number.isInteger(r) || r <= 0) return null;
   return r;
 }
-function h5(e) {
+function getMaxOutputTokens(e) {
   let t,
     r,
     o = getCanonicalName(e),
@@ -16824,8 +16824,8 @@ function h5(e) {
     ((r = E.max_tokens), (t = Math.min(t, r)));
   return { default: t, upperLimit: r };
 }
-function ior(e) {
-  return h5(e).upperLimit - 1;
+function getMaxThinkingBudget(e) {
+  return getMaxOutputTokens(e).upperLimit - 1;
 }
 var zre = [
   {
@@ -16849,10 +16849,10 @@ var zre = [
     capabilitiesEnvVar: "ANTHROPIC_CUSTOM_MODEL_OPTION_SUPPORTED_CAPABILITIES",
   },
 ];
-function oQ(e, t) {
+function getModelCapabilityOverride(e, t) {
   let r = e.toLowerCase(),
     o = `${r}:${t}`,
-    d = Or().providerCache.capabilityOverrides;
+    d = getProviderState().providerCache.capabilityOverrides;
   if (d.has(o)) return d.get(o);
   let p = Fre(r, t);
   return (d.set(o, p), p);
@@ -17001,28 +17001,28 @@ function getAutoModeEnvOnboardingShownLogged() {
 function setAutoModeEnvOnboardingShownLogged(e) {
   getAutoModeState().setEnvOnboardingShownLogged(e);
 }
-function cCt() {
+function shouldShowThinkingSummaries() {
   return getInitialSettings().showThinkingSummaries ?? !1;
 }
-function gvn({
+function resolveThinkingDisplayMode({
   explicitDisplay: e,
   isNonInteractive: t,
   outputFormat: r,
   verbose: o,
 }) {
   if (e) return e;
-  if (!t) return cCt() ? "summarized" : void 0;
-  if (hvn({ isNonInteractive: t, outputFormat: r, verbose: o }))
+  if (!t) return shouldShowThinkingSummaries() ? "summarized" : void 0;
+  if (shouldOmitThinkingDisplay({ isNonInteractive: t, outputFormat: r, verbose: o }))
     return "omitted";
   return;
 }
-function hvn({ isNonInteractive: e, outputFormat: t, verbose: r }) {
+function shouldOmitThinkingDisplay({ isNonInteractive: e, outputFormat: t, verbose: r }) {
   return e && (t === "text" || (t === "json" && !r));
 }
-function lor(e, t) {
+function resolveThinkingConfig(e, t) {
   if (e === !1) return { type: "disabled" };
   if (t.type !== "disabled") return t;
-  let r = gvn({
+  let r = resolveThinkingDisplayMode({
     explicitDisplay: void 0,
     isNonInteractive: !1,
     outputFormat: "text",
@@ -17030,7 +17030,7 @@ function lor(e, t) {
   });
   return r ? { type: "adaptive", display: r } : { type: "adaptive" };
 }
-function cor(
+function normalizeThinkingConfigDisplay(
   e,
   {
     useExactTools: t,
@@ -17052,13 +17052,13 @@ function cor(
     return e;
   return { ...e, display: "omitted", displayExplicit: !1 };
 }
-function S6() {
-  return H("tengu_turtle_carbon", !0);
+function isUltrathinkEnabled() {
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_turtle_carbon", !0);
 }
-function LQe(e) {
+function hasUltrathinkTrigger(e) {
   return /\bultrathink\b/i.test(e);
 }
-function mUe(e) {
+function findUltrathinkMatches(e) {
   let t = [],
     r = e.matchAll(/\bultrathink\b/gi);
   for (let o of r)
@@ -17084,16 +17084,16 @@ var Bre = [
     "rainbow_indigo_shimmer",
     "rainbow_violet_shimmer",
   ];
-function zC(e, t = !1) {
+function pickRainbowColor(e, t = !1) {
   let r = t ? Hre : Bre;
   return r[e % r.length];
 }
-function _vn(e) {
-  let t = oQ(e, "thinking");
+function isThinkingSupported(e) {
+  let t = getModelCapabilityOverride(e, "thinking");
   if (t !== void 0) return t;
   return !getCanonicalName(e).includes("claude-3-");
 }
-function gUe(e) {
+function canDisableThinking(e) {
   let t = getCanonicalName(e);
   if (
     t.includes("claude-3-") ||
@@ -17114,22 +17114,22 @@ function gUe(e) {
   if (dm(t, "rejects_disabled_thinking", e)) return !0;
   return hasFirstPartyCapabilities(getProviderForModel(e));
 }
-function _5(e) {
-  if (gUe(e)) return [void 0, 2048];
+function getThinkingBudgetDefaults(e) {
+  if (canDisableThinking(e)) return [void 0, 2048];
   return [!1, 0];
 }
-function uor(e) {
-  return gP(() => _5(e));
+function getCachedThinkingBudgetDefaults(e) {
+  return withServedCatalogSuppressed(() => getThinkingBudgetDefaults(e));
 }
-function YVt({ runtimeOverride: e, resolvedModel: t, canonicalModel: r }) {
+function resolveThinkingMode({ runtimeOverride: e, resolvedModel: t, canonicalModel: r }) {
   if (e !== void 0) return e;
   let o =
     a.CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING &&
     (r.includes("opus-4-6") || r.includes("sonnet-4-6"));
-  return MQe(t) && !o ? "adaptive" : "enabled";
+  return canUseAdaptiveThinking(t) && !o ? "adaptive" : "enabled";
 }
-function MQe(e) {
-  let t = oQ(e, "adaptive_thinking");
+function canUseAdaptiveThinking(e) {
+  let t = getModelCapabilityOverride(e, "adaptive_thinking");
   if (t !== void 0) return t;
   let r = getCanonicalName(e);
   if (
@@ -17145,7 +17145,7 @@ function MQe(e) {
   if (dm(r, "adaptive_thinking", e) || r === "claude-mythos-5") return !0;
   return hasFirstPartyCapabilities(getProviderForModel(e));
 }
-function yvn() {
+function getThinkingDisabledReason() {
   if (process.env.MAX_THINKING_TOKENS)
     return parseConfigInteger(process.env.MAX_THINKING_TOKENS) > 0
       ? null
@@ -17153,22 +17153,22 @@ function yvn() {
   let { settings: e } = getSettingsWithErrors();
   return e.alwaysThinkingEnabled === !1 ? "alwaysThinkingEnabled" : null;
 }
-function JN() {
-  if (yvn() !== null) return !1;
+function isThinkingEnabled() {
+  if (getThinkingDisabledReason() !== null) return !1;
   return !0;
 }
-var QL = new Set([fP]);
+var QL = new Set([LONG_CONTEXT_BETA]);
 function Gre(e) {
   let t = [],
     r = [];
   for (let o of e) {
-    let d = Lme(o);
+    let d = getBetaByHeader(o);
     if (d && QL.has(d)) t.push(o);
     else r.push(o);
   }
   return { allowed: t, disallowed: r };
 }
-function dor(e) {
+function filterAllowedCustomBetas(e) {
   if (!e || e.length === 0) return;
   if (isClaudeAISubscriber()) {
     console.warn(
@@ -17179,12 +17179,12 @@ function dor(e) {
   let { allowed: t, disallowed: r } = Gre(e);
   for (let o of r)
     console.warn(
-      `Warning: Beta header '${o}' is not allowed. Only the following betas are supported: ${jC([...QL]).join(", ")}`,
+      `Warning: Beta header '${o}' is not allowed. Only the following betas are supported: ${getBetaHeaders([...QL]).join(", ")}`,
     );
   return t.length > 0 ? t : void 0;
 }
-function uCt(e) {
-  let t = oQ(e, "interleaved_thinking");
+function supportsInterleavedThinking(e) {
+  let t = getModelCapabilityOverride(e, "interleaved_thinking");
   if (t !== void 0) return t;
   let r = getCanonicalName(e),
     o = getProviderForModel(e);
@@ -17220,7 +17220,7 @@ function Kre(e) {
   if (hasFirstPartyCapabilities(r)) return !t.includes("claude-3-");
   return dm(t, "context_management", e) || t === "claude-mythos-5";
 }
-function dCt(e) {
+function supportsStructuredOutputs(e) {
   let t = getCanonicalName(e),
     r = getProviderForModel(e);
   if (!hasFirstPartyCapabilities(r)) return !1;
@@ -17233,29 +17233,29 @@ function dCt(e) {
   return !0;
 }
 function jre() {
-  let e = Or();
-  return nQ() ? e.betasCompiledOnly : e.betas;
+  let e = getProviderState();
+  return isServedCatalogSuppressed() ? e.betasCompiledOnly : e.betas;
 }
 function ll(e, t, r) {
   let o = e(jre()),
     d = o.get(t);
   if (d !== void 0) return d;
   let p = r();
-  if ((o.set(t, p), !nQ())) {
-    let _ = e(Or().betasCompiledOnly);
-    if (!_.has(t)) _.set(t, gP(r));
+  if ((o.set(t, p), !isServedCatalogSuppressed())) {
+    let _ = e(getProviderState().betasCompiledOnly);
+    if (!_.has(t)) _.set(t, withServedCatalogSuppressed(r));
   }
   return p;
 }
-function Qve(e) {
+function supportsMidConversationSystem(e) {
   return ll(
     (t) => t.midConversationSystem,
     e,
     () => $re(e),
   );
 }
-function NQe(e) {
-  if (!Kh() || !Qve(e)) return !1;
+function supportsMidConversationToolChange(e) {
+  if (!canUseExperimentalBetas() || !supportsMidConversationSystem(e)) return !1;
   if (a.CLAUDE_CODE_FORCE_MID_CONVERSATION_SYSTEM) return !0;
   let t = getCanonicalName(e);
   if (EMn(t)) return !1;
@@ -17266,12 +17266,12 @@ function NQe(e) {
   );
 }
 function Wre() {
-  return Bve() && H(Ix, !1);
+  return Bve() && getFeatureValue_CACHED_MAY_BE_STALE(Ix, !1);
 }
 function $re(e) {
   if (isTainted("hipaa")) return !1;
   if (a.CLAUDE_CODE_FORCE_MID_CONVERSATION_SYSTEM) return !0;
-  let t = oQ(e, "mid_conversation_system");
+  let t = getModelCapabilityOverride(e, "mid_conversation_system");
   if (t !== void 0) return t;
   let r = getCanonicalName(e);
   if (
@@ -17290,11 +17290,11 @@ function $re(e) {
   if (dm(r, "mid_conv_system", e) || r === "claude-mythos-5") return !0;
   return hasFirstPartyCapabilities(getProviderForModel(e));
 }
-function JVt(e) {
+function isSonnet5Model(e) {
   return getCanonicalName(e) === "claude-sonnet-5";
 }
-function QVt(e) {
-  let t = oQ(e, "temperature");
+function supportsTemperatureParameter(e) {
+  let t = getModelCapabilityOverride(e, "temperature");
   if (t !== void 0) return t;
   let r = getCanonicalName(e);
   if (
@@ -17327,14 +17327,14 @@ function Yre(e) {
     return !1;
   return !0;
 }
-function ZVt() {
+function isThirdPartyProvider() {
   let e = getAPIProvider();
   return e !== "firstParty" && !isClaudePlatformProvider(e);
 }
-function Svn() {
-  return Kh() || ZVt();
+function areExperimentalBetasAllowed() {
+  return canUseExperimentalBetas() || isThirdPartyProvider();
 }
-function xse(e) {
+function isFastModeSupported(e) {
   let t = getCanonicalName(e),
     r = getAPIProvider();
   if (
@@ -17357,16 +17357,16 @@ function xse(e) {
     return !1;
   return !0;
 }
-function bvn({ model: e, fastMode: t, disableFastMode: r }) {
+function getFastModeSupport({ model: e, fastMode: t, disableFastMode: r }) {
   let o = r && (t || isAntInternalFastModelId(e));
-  return { supported: xse(e) && !o, disableFastModeBreakerFires: o };
+  return { supported: isFastModeSupported(e) && !o, disableFastModeBreakerFires: o };
 }
-function Zve({ skillModel: e, mode: t, fastMode: r }) {
+function isSkillModelSupportedInAutoMode({ skillModel: e, mode: t, fastMode: r }) {
   if (!isAutoClassifierActive(t)) return !0;
-  let { supported: o, disableFastModeBreakerFires: d } = bvn({
+  let { supported: o, disableFastModeBreakerFires: d } = getFastModeSupport({
     model: parseUserSpecifiedModel(e),
     fastMode: r,
-    disableFastMode: !!H("tengu_auto_mode_config", {})?.disableFastMode,
+    disableFastMode: !!getFeatureValue_CACHED_MAY_BE_STALE("tengu_auto_mode_config", {})?.disableFastMode,
   });
   if (o) return !0;
   return (
@@ -17379,19 +17379,19 @@ function Zve({ skillModel: e, mode: t, fastMode: r }) {
     !1
   );
 }
-function por() {
+function getToolSearchBeta() {
   let e = getAPIProvider();
   if (e === "vertex" || e === "bedrock" || e === "mantle" || e === "gateway")
     return Nr;
-  if (tq()) return Nr;
+  if (isExperimentalBetasDisabled()) return Nr;
   return cu;
 }
-function hUe(e = getAPIProvider()) {
+function isDefaultProviderEndpoint(e = getAPIProvider()) {
   if (e === "anthropicAws") return a.ANTHROPIC_AWS_BASE_URL === void 0;
   return e === "firstParty" && isFirstPartyAnthropicBaseUrl();
 }
-function Vme() {
-  if (!Kh()) return !1;
+function supportsFirstPartyServerFeatures() {
+  if (!canUseExperimentalBetas()) return !1;
   if (!isFirstPartyAnthropicBaseUrl()) return !1;
   let e = getAPIProvider();
   return e === "firstParty" || e === "anthropicAws";
@@ -17408,31 +17408,31 @@ function qre(e) {
     r = getCanonicalName(e),
     o = r.includes("haiku"),
     d = getAPIProvider(),
-    p = Kh();
+    p = canUseExperimentalBetas();
   if (!o) t.push(Qn);
-  if (isClaudeAISubscriber() || (ks() && !hasAnthropicApiKey() && shouldUseWIFAuth())) t.push(Fve);
-  if (tc(e)) t.push(fP);
-  if (!a.DISABLE_INTERLEAVED_THINKING && uCt(e)) t.push(xr);
-  if (p && uCt(e) && !ke() && !cCt()) t.push(OAt);
+  if (isClaudeAISubscriber() || (ks() && !hasAnthropicApiKey() && shouldUseWIFAuth())) t.push(OAUTH_AUTH_BETA);
+  if (hasLongContextSuffix(e)) t.push(LONG_CONTEXT_BETA);
+  if (!a.DISABLE_INTERLEAVED_THINKING && supportsInterleavedThinking(e)) t.push(xr);
+  if (p && supportsInterleavedThinking(e) && !ke() && !shouldShowThinkingSummaries()) t.push(REDACT_THINKING_BETA);
   if (
-    uA &&
-    uCt(e) &&
-    !tq() &&
+    THINKING_TOKEN_COUNT_BETA &&
+    supportsInterleavedThinking(e) &&
+    !isExperimentalBetasDisabled() &&
     (d === "firstParty" || ((d === "bedrock" || d === "mantle") && Yre(e)))
   )
-    t.push(uA);
+    t.push(THINKING_TOKEN_COUNT_BETA);
   let _ = a.USE_API_CONTEXT_MANAGEMENT && !1,
     E = Kre(e);
-  if (hasFirstPartyCapabilities(getProviderForModel(e)) && !tq() && (_ || E)) t.push(X$e);
-  let C = H("tengu_tool_pear", !1);
-  if (hasFirstPartyCapabilities(getProviderForModel(e)) && !tq() && dCt(e) && C) t.push(c5);
+  if (hasFirstPartyCapabilities(getProviderForModel(e)) && !isExperimentalBetasDisabled() && (_ || E)) t.push(CONTEXT_MANAGEMENT_BETA);
+  let C = getFeatureValue_CACHED_MAY_BE_STALE("tengu_tool_pear", !1);
+  if (hasFirstPartyCapabilities(getProviderForModel(e)) && !isExperimentalBetasDisabled() && supportsStructuredOutputs(e) && C) t.push(STRUCTURED_OUTPUTS_BETA);
   if (d === "vertex" && Vre(r)) t.push(Po);
   if (d === "foundry") t.push(Po);
-  if (p) t.push(_Qe);
-  if (Qve(e)) t.push(vR);
+  if (p) t.push(PROMPT_CACHING_SCOPE_BETA);
+  if (supportsMidConversationSystem(e)) t.push(MID_CONVERSATION_SYSTEM_BETA);
   let I = a.ANTHROPIC_BETAS;
   if (I)
-    if (FD())
+    if (isHipaaTaintActive())
       n(
         "ANTHROPIC_BETAS ignored: experimental betas are disabled by org compliance policy",
         { level: "debug" },
@@ -17446,7 +17446,7 @@ function qre(e) {
       );
   return t;
 }
-function b6(e) {
+function getModelBetas(e) {
   return ll(
     (t) => t.modelBetas,
     e,
@@ -17457,23 +17457,23 @@ function b6(e) {
     },
   );
 }
-function mor(e) {
+function getBedrockExtraBodyParamsBetas(e) {
   return ll(
     (t) => t.bedrockExtraBodyParamsBetas,
     e,
     () => Xp(e).filter((t) => du.has(t)),
   );
 }
-function pCt(e, t) {
-  let r = [...b6(e)];
+function resolveRequestBetas(e, t) {
+  let r = [...getModelBetas(e)];
   if (t?.isAgenticQuery) {
     if (!r.includes(Qn)) r.push(Qn);
   }
-  if (MAt(e, getCanonicalName(e)) && !r.includes(JH)) r.push(JH);
-  if (Wre() && NQe(e) && !r.includes(Cw)) r.push(Cw);
+  if (supportsPerTurnEffort(e, getCanonicalName(e)) && !r.includes(PER_TURN_CONTROL_BETA)) r.push(PER_TURN_CONTROL_BETA);
+  if (Wre() && supportsMidConversationToolChange(e) && !r.includes(MID_CONVERSATION_TOOL_CHANGES_BETA)) r.push(MID_CONVERSATION_TOOL_CHANGES_BETA);
   let o = Up();
   if (!o || o.length === 0) return r;
-  let d = wQe(o);
+  let d = withholdBetasIfHipaaTainted(o);
   if (!d)
     return (
       n(
@@ -17483,7 +17483,7 @@ function pCt(e, t) {
       r
     );
   let p = d.map(uu);
-  if (!Kh())
+  if (!canUseExperimentalBetas())
     p = p.filter((_) => {
       if (ZL.has(_)) return !0;
       return (
@@ -17493,33 +17493,33 @@ function pCt(e, t) {
     });
   return [...r, ...p.filter((_) => !r.includes(_))];
 }
-function fCt(e) {
-  return Xp(e).includes(c5);
+function hasStructuredOutputsBeta(e) {
+  return Xp(e).includes(STRUCTURED_OUTPUTS_BETA);
 }
-function gU() {
-  let e = Or();
+function resetBetaCaches() {
+  let e = getProviderState();
   ((e.betas = To()), (e.betasCompiledOnly = To()));
 }
 var ZL = new Set([
   Qn,
   xr,
-  fP,
-  X$e,
-  c5,
+  LONG_CONTEXT_BETA,
+  CONTEXT_MANAGEMENT_BETA,
+  STRUCTURED_OUTPUTS_BETA,
   Po,
-  hQe,
+  EFFORT_BETA,
   Nr,
-  CR,
-  mP,
-  vR,
-  ...(uA ? [uA] : []),
+  AFK_MODE_BETA,
+  FALLBACK_CREDIT_BETA,
+  MID_CONVERSATION_SYSTEM_BETA,
+  ...(THINKING_TOKEN_COUNT_BETA ? [THINKING_TOKEN_COUNT_BETA] : []),
 ]);
-function eKt(e) {
+function filterSupportedBetas(e) {
   if (ks()) return e;
   return e.filter((t) => ZL.has(t));
 }
 import { join as Qp } from "path";
-var wvn = "masked-ids.json",
+var MASKED_IDS_FILE_NAME = "masked-ids.json",
   nU = 512,
   Xre = 64,
   Jre = 5000,
@@ -17529,22 +17529,22 @@ var wvn = "masked-ids.json",
   iU = "masked-ids.unparseable.json",
   Qre = 3,
   Zre = createLazyValue(() => c({ version: k(oU), ids: v(se()) }));
-function QN() {
+function getModelCatalogCacheDir() {
   return Qp(getClaudeConfigDir(), "cache", "model-catalog");
 }
 function sU() {
-  return Qp(QN(), wvn);
+  return Qp(getModelCatalogCacheDir(), MASKED_IDS_FILE_NAME);
 }
 function eoe() {
-  return Qp(QN(), iU);
+  return Qp(getModelCatalogCacheDir(), iU);
 }
-function tKt(e = Date.now()) {
-  let t = Or();
+function isServedCatalogMaskHydrated(e = Date.now()) {
+  let t = getProviderState();
   return t.servedCatalogMaskHydrated || e < t.servedCatalogMaskRetryAt;
 }
-function FQe() {
-  let e = Or();
-  if (tKt()) return Promise.resolve();
+function ensureServedCatalogMaskHydrated() {
+  let e = getProviderState();
+  if (isServedCatalogMaskHydrated()) return Promise.resolve();
   return (
     (e.servedCatalogMaskHydration ??= toe()
       .catch((t) => {
@@ -17552,16 +17552,16 @@ function FQe() {
           `[servedCatalog] mask hydration failed: ${t instanceof Error ? t.name : "unknown"}`,
           { level: "error" },
         ),
-          (Or().servedCatalogMaskHydrated = !0));
+          (getProviderState().servedCatalogMaskHydrated = !0));
       })
       .finally(() => {
-        Or().servedCatalogMaskHydration = void 0;
+        getProviderState().servedCatalogMaskHydration = void 0;
       })),
     e.servedCatalogMaskHydration
   );
 }
 async function toe() {
-  let e = Or(),
+  let e = getProviderState(),
     t = await Jp();
   if (t.status === "unreadable") {
     e.servedCatalogMaskRetryAt = Date.now() + Jre;
@@ -17614,8 +17614,8 @@ function tU(e) {
     );
   return t;
 }
-function nKt(e) {
-  let t = dedupe([...e].map(ec).filter((p) => p.length > 0 && !oo(p)));
+function persistMaskedModelIds(e) {
+  let t = dedupe([...e].map(normalizeModelId).filter((p) => p.length > 0 && !oo(p)));
   if (t.length === 0) return Promise.resolve();
   hr(t);
   let r = t.filter((p) => rU.test(p)).slice(0, Xre);
@@ -17624,14 +17624,14 @@ function nKt(e) {
       `[servedCatalog] ${t.length - r.length} confidential ids masked this session but not persisted (outside the id charset or over the per-entry cap)`,
     );
   if (r.length === 0) return Promise.resolve();
-  let o = Or(),
+  let o = getProviderState(),
     d = (o.servedCatalogMaskWrite ?? Promise.resolve()).then(() => noe(r));
   return ((o.servedCatalogMaskWrite = d), d);
 }
 async function noe(e) {
   try {
-    await FQe();
-    let t = Or(),
+    await ensureServedCatalogMaskHydrated();
+    let t = getProviderState(),
       r = t.servedCatalogPersistedMaskedIds;
     if (r === void 0) {
       n("[servedCatalog] mask file unreadable; not rewriting it this session");
@@ -17650,7 +17650,7 @@ async function noe(e) {
       }
       if ((hr(_.ids), _.status === "foreign")) await roe(_.bytes);
       let E = dedupe([...e, ..._.ids, ...o]).slice(0, nU);
-      (await d.mkdir(QN()),
+      (await d.mkdir(getModelCatalogCacheDir()),
         await d.atomicWrite(sU(), b({ version: oU, ids: E }), 384));
       let C = await Jp();
       if (C.status !== "ok") {
@@ -17685,7 +17685,7 @@ async function roe(e) {
   }
 }
 import { createHash as ooe } from "crypto";
-function Tn(e) {
+function hashForTelemetry(e) {
   return fromSanitizer_SANITIZER_OUTPUT_ONLY(ooe("sha256").update(e).digest("hex").slice(0, 12));
 }
 import { createHash as Rle } from "crypto";
@@ -17698,30 +17698,30 @@ function ul(e, t) {
     throw dt(ge(r), ioe);
   }
 }
-function cf(e, t) {
+function isSemverGreaterThan(e, t) {
   return ul(e, t) === 1;
 }
-function ph(e, t) {
+function isSemverAtLeast(e, t) {
   return ul(e, t) >= 0;
 }
-function r0(e, t) {
+function isSemverLessThan(e, t) {
   return ul(e, t) === -1;
 }
-function sQ(e, t) {
+function isSemverAtMost(e, t) {
   return ul(e, t) <= 0;
 }
-function Tvn(e, t) {
+function satisfiesSemverRange(e, t) {
   return Bun.semver.satisfies(e, t);
 }
 var soe = /^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/;
-function Hse(e) {
+function isSemverString(e) {
   return typeof e === "string" && soe.test(e);
 }
-var mCt = 60000,
+var DEFAULT_TRANSFER_STALL_MS = 60000,
   loe = 8388608,
   OU = 32768,
   aU = 262144;
-function Evn(e, t) {
+function computeTransferStallMs(e, t) {
   let r = Math.min(e, loe);
   return Math.max(t, Math.ceil((r / OU) * 1000));
 }
@@ -17729,7 +17729,7 @@ function PU(e, t) {
   return Math.max(t, Math.ceil((e / OU) * 1000));
 }
 function MU() {
-  return ph("1.4.1", "1.4.0");
+  return isSemverAtLeast("1.4.1", "1.4.0");
 }
 class pl extends Error {
   waitedMs;
@@ -17739,7 +17739,7 @@ class pl extends Error {
     this.name = "UploadStalledError";
   }
 }
-function rKt(e, t) {
+function createStallWatchdog(e, t) {
   let r = !1,
     o = !1,
     d = (_, E) => {
@@ -17760,23 +17760,23 @@ function rKt(e, t) {
     fired: () => r,
   };
 }
-function* Avn(e, t) {
+function* iterateUploadChunks(e, t) {
   for (let r = 0; r < e.length; r += aU)
     (t(r), yield e.subarray(r, Math.min(r + aU, e.length)));
   t(e.length);
 }
 function DU(e, t = {}) {
-  let r = t.stallMs ?? mCt,
-    o = Math.max(Evn(e.length, r), t.tailFloorMs ?? 0),
+  let r = t.stallMs ?? DEFAULT_TRANSFER_STALL_MS,
+    o = Math.max(computeTransferStallMs(e.length, r), t.tailFloorMs ?? 0),
     d = new AbortController(),
     p = () => d.abort(t.signal?.reason);
   if (t.signal?.aborted) p();
   else t.signal?.addEventListener("abort", p, { once: !0 });
-  let _ = rKt(d, r),
+  let _ = createStallWatchdog(d, r),
     E = 0;
   return {
     body: aoe.from(
-      Avn(e, (C) => {
+      iterateUploadChunks(e, (C) => {
         if (((E = C), C === e.length)) _.relax(o);
         else _.touch();
       }),
@@ -17796,7 +17796,7 @@ function DU(e, t = {}) {
 import { Readable as Cle } from "stream";
 import { createHash as gle } from "crypto";
 import { randomUUID as coe } from "crypto";
-async function oKt(e, t, r) {
+async function signClientEvent(e, t, r) {
   let o = await e?.catch(() => {
     return;
   });
@@ -17834,7 +17834,7 @@ function poe(e) {
     });
   }
 }
-function Ise(e) {
+function reportEventSignerLoadFailure(e) {
   (n(`[clientEventSigner] the signer module did not load: ${l(e)}`, {
     level: "warn",
   }),
@@ -17854,21 +17854,21 @@ function foe(e, t) {
     logFeatureBad("client_event_signer", "sign_failed"));
 }
 var Zp = ["signed_out", "identity_changed", "transient", "refresh_failed"];
-function gor(e) {
+function isCredentialInvalidationReason(e) {
   return Zp.some((t) => t === e);
 }
 var fl = 0,
   ef;
-function hor(e) {
+function recordCredentialInvalidation(e) {
   (fl++, (ef = { reason: e, generation: fl }));
 }
-function _or() {
+function clearCredentialInvalidation() {
   (fl++, (ef = void 0));
 }
-function Cvn() {
+function getCredentialInvalidation() {
   return ef;
 }
-function gCt() {
+function getCredentialInvalidationGeneration() {
   return fl;
 }
 var goe = [
@@ -17895,10 +17895,10 @@ var goe = [
     "turn_setup_failed",
   ],
   xU = [...goe, ...moe];
-function OR(e) {
+function isAbortTerminalReason(e) {
   return e === "aborted_streaming" || e === "aborted_tools";
 }
-function hCt(e) {
+function isErrorTerminalReason(e) {
   if (e === void 0) return !1;
   switch (e) {
     case "blocking_limit":
@@ -17926,13 +17926,13 @@ function hCt(e) {
       return !1;
   }
 }
-function yor(e) {
+function formatTerminalReasonKey(e) {
   return e.reason === "api_error"
     ? `api_error_${e.errorKind ?? "unknown"}`
     : e.reason;
 }
-function _Ct(e) {
-  return OR(e) || hCt(e);
+function isFailedTerminalReason(e) {
+  return isAbortTerminalReason(e) || isErrorTerminalReason(e);
 }
 var NU = [
   "user-rejected",
@@ -18837,7 +18837,7 @@ var Yoe = createLazyValue(() =>
   hie = createLazyValue(() =>
     Se().and(c({ hook_event_name: k("SessionEnd"), reason: _ie() })),
   ),
-  sKt = createLazyValue(() =>
+  getHookOutputSchema = createLazyValue(() =>
     $e([
       woe(),
       Moe(),
@@ -19262,7 +19262,7 @@ var Yoe = createLazyValue(() =>
       "Source for loading filesystem-based settings. 'user' - Global user settings (~/.claude/settings.json). 'project' - Project settings (.claude/settings.json). 'local' - Local settings (.claude/settings.local.json).",
     ),
   ),
-  yCt = createLazyValue(() =>
+  getPluginConfigSchema = createLazyValue(() =>
     c({
       type: k("local").describe(
         "Plugin type. Currently only 'local' is supported",
@@ -21642,7 +21642,7 @@ var _z = createLazyValue(() =>
       timeout: T().optional(),
     }).describe("Configuration for matching and routing hook callbacks."),
   ),
-  SCt = createLazyValue(() =>
+  initializeRequestSchema = createLazyValue(() =>
     c({
       subtype: k("initialize"),
       hooks: fe(HU(), v(Tae())).optional(),
@@ -21709,7 +21709,7 @@ var _z = createLazyValue(() =>
         .describe(
           "Declares that this consumer renders a per-task stop control wired to the `stop_task` control request, so the user can stop an individual background task. When declared, an interrupt on an open-input (interactive stream-json) session spares running background agents/workflows (Stop only aborts the turn). Closed-input exception: a one-shot run (string prompt / -p closes stdin) still kills hold-back tasks at the held-result release regardless of the declaration \u2014 with stdin closed, a stop_task control could never be delivered, so the fail-closed kill stands. ABSENCE also fails closed: the interrupt kills background tasks, since the user would otherwise have no way to stop a runaway one. First-attached-client-wins on multi-client sessions; later initializes do not change it.",
         ),
-      plugins: v(yCt())
+      plugins: v(getPluginConfigSchema())
         .optional()
         .describe(
           "Plugins to load for the session, in the same shape as the SDK `plugins` option: the stdin form of one --plugin-dir flag per entry (--plugin-dir-no-mcp when skipMcpDiscovery is set), so the launch command line does not grow with the plugin count. Loaded only by a CLI launched with --await-initialize, which reads this request during startup before any plugin work. Without that flag, on a repeated initialize, or over a remote session transport the field loads nothing; plugins_applied in the response reports whether the listed plugins are in fact loaded.",
@@ -22214,7 +22214,7 @@ var _z = createLazyValue(() =>
       "Breakdown of current context window usage by category (system prompt, tools, messages, etc.).",
     ),
   ),
-  bCt = createLazyValue(() =>
+  mcpCallRequestSchema = createLazyValue(() =>
     c({
       subtype: k("mcp_call"),
       tool: s().describe(
@@ -22462,7 +22462,7 @@ var _z = createLazyValue(() =>
     c({
       subtype: k("hook_callback"),
       callback_id: s(),
-      input: sKt(),
+      input: getHookOutputSchema(),
       tool_use_id: s().optional(),
       issued_at: T()
         .int()
@@ -22486,7 +22486,7 @@ var _z = createLazyValue(() =>
   Sz = new RegExp(`^${Ez}$`),
   kf = new RegExp(`^${hz}/${Ez}/\\d{1,4}$`),
   rg = /^[0-9a-f]{64}$/,
-  vvn = /^[A-Za-z0-9+/]*={0,2}$/,
+  BASE64_REGEX = /^[A-Za-z0-9+/]*={0,2}$/,
   Gae = /^[^\p{Cc}\p{Cf}\u2028\u2029]+$/u,
   cz = 4096,
   Vae = createLazyValue(() =>
@@ -22610,7 +22610,7 @@ var _z = createLazyValue(() =>
       "@internal Counts of this device's hooks that were not forwarded, for the session line. Each such hook is counted in exactly one field, the first that applies in this order: plugin or managed (by its source); other, when its event is not forwarded at all; kind_unsupported; after_edit; other again for anything else, such as a duplicate or an entry beyond a cap. Absent fields mean zero.",
     ),
   ),
-  wCt = createLazyValue(() =>
+  registerDeviceHooksRequestSchema = createLazyValue(() =>
     c({
       subtype: k("register_device_hooks"),
       instance_id: s()
@@ -22695,7 +22695,7 @@ var _z = createLazyValue(() =>
       .min(1)
       .describe("@internal The worker life that answered."),
   })),
-  eRe = createLazyValue(() =>
+  registerDeviceHooksResponseSchema = createLazyValue(() =>
     Ko("status", [
       c({
         status: k("registered"),
@@ -22753,7 +22753,7 @@ var _z = createLazyValue(() =>
       "@internal Success payload answering register_device_hooks: 'registered' while this instance holds entries and a lease; 'unregistered' when an empty inventory removed them, or when nothing it sent could be held (every entry ignored, no template stored or installed) \u2014 then ignored_ids and templates say why.",
     ),
   ),
-  TCt = createLazyValue(() =>
+  uploadDeviceHookTemplateRequestSchema = createLazyValue(() =>
     c({
       subtype: k("upload_device_hook_template"),
       template: s().regex(tn).describe("@internal Built-in template id."),
@@ -22764,7 +22764,7 @@ var _z = createLazyValue(() =>
         ),
       content_base64: s()
         .max(360000)
-        .regex(vvn)
+        .regex(BASE64_REGEX)
         .describe(
           "@internal The template script bytes, base64; decoded size must not exceed the template's cap (at most 256 KiB).",
         ),
@@ -22788,7 +22788,7 @@ var _z = createLazyValue(() =>
       "@internal Success payload answering upload_device_hook_template.",
     ),
   ),
-  ECt = createLazyValue(() =>
+  remoteToolsAnnounceRequestSchema = createLazyValue(() =>
     c({
       subtype: k("remote_tools_announce"),
       instance_id: s()
@@ -23240,7 +23240,7 @@ var _z = createLazyValue(() =>
       "Requests the SDK consumer to handle an MCP elicitation (user input request).",
     ),
   ),
-  Rvn = createLazyValue(() =>
+  elicitationResponseSchema = createLazyValue(() =>
     c({
       action: X(["accept", "decline", "cancel"]),
       content: fe(s(), se()).optional(),
@@ -23260,7 +23260,7 @@ var _z = createLazyValue(() =>
       "Requests the SDK consumer to render a tool-driven blocking dialog and return the user choice. Used by tools that previously rendered Ink JSX via setToolJSX with an onDone callback.",
     ),
   ),
-  $Qe = createLazyValue(() =>
+  userDialogResponseSchema = createLazyValue(() =>
     c({
       behavior: X(["completed", "cancelled"]),
       result: se()
@@ -23328,7 +23328,7 @@ var _z = createLazyValue(() =>
       "@internal Request from the CLI subprocess to the SDK host for the session's re-dispatched work secret, sent when a bridge attached with `remote_control {work_secret}` needs a fresh worker token (before expiry, or during auth recovery). The host re-queues the session on its bridge environment and answers with the secret its next work poll delivers, or null when it has none yet \u2014 the CLI asks again on its own retry cadence.",
     ),
   ),
-  kvn = createLazyValue(() =>
+  workSecretResponseSchema = createLazyValue(() =>
     c({ work_secret: s().nullable() }).describe(
       "@internal The re-dispatched base64url work secret for the requested session, or null when the host has none available yet.",
     ),
@@ -23338,7 +23338,7 @@ var _z = createLazyValue(() =>
       "@internal Request from the CLI subprocess to the SDK host for a fresh OAuth access token after a 401 with no local refresh token.",
     ),
   ),
-  xvn = createLazyValue(() =>
+  oauthTokenRefreshResponseSchema = createLazyValue(() =>
     c({
       accessToken: s().nullable(),
       reason: X(Zp)
@@ -23356,7 +23356,7 @@ var _z = createLazyValue(() =>
       "@internal Request from the CLI subprocess to the SDK host for a fresh provider credential after a 401 or AWS credential-expiry error when the host owns the credential (Cowork 3P).",
     ),
   ),
-  Hvn = createLazyValue(() =>
+  hostAuthTokenRefreshResponseSchema = createLazyValue(() =>
     c({
       authToken: s().nullable(),
       materialUnchanged: O().optional(),
@@ -23364,7 +23364,7 @@ var _z = createLazyValue(() =>
       "@internal Fresh provider bearer token returned by the SDK host getHostAuthToken callback, or null if the credential was refreshed out-of-band. materialUnchanged is only consulted when authToken is null (out-of-band delivery) \u2014 true tells the CLI to fast-fail instead of backing off.",
     ),
   ),
-  ACt = createLazyValue(() =>
+  messageRatedRequestSchema = createLazyValue(() =>
     c({
       subtype: k("message_rated"),
       messageUuid: s().describe("UUID of the assistant message being rated."),
@@ -23406,7 +23406,7 @@ var _z = createLazyValue(() =>
   Hwe = createLazyValue(() =>
     $e([
       wf(),
-      SCt(),
+      initializeRequestSchema(),
       If(),
       Df(),
       xf(),
@@ -23418,7 +23418,7 @@ var _z = createLazyValue(() =>
       Wf(),
       Yf(),
       qf(),
-      bCt(),
+      mcpCallRequestSchema(),
       Vf(),
       Xf(),
       Jf(),
@@ -23435,16 +23435,16 @@ var _z = createLazyValue(() =>
       Ag(),
       vg(),
       fg(),
-      wCt(),
-      TCt(),
-      ACt(),
+      registerDeviceHooksRequestSchema(),
+      uploadDeviceHookTemplateRequestSchema(),
+      messageRatedRequestSchema(),
       Rg(),
       Og(),
       kg(),
       Pg(),
       Mg(),
       Ng(),
-      ECt(),
+      remoteToolsAnnounceRequestSchema(),
     ]).describe(
       "Control requests a client sends to drive the loop \u2014 the client\u2192loop command slice of SDKControlRequestInner. The remaining members are loop\u2192client RPCs that block on a reply (see AgentOriginatedControlRequest).",
     ),
@@ -23453,7 +23453,7 @@ var _z = createLazyValue(() =>
     $e([
       wf(),
       Pf(),
-      SCt(),
+      initializeRequestSchema(),
       If(),
       Df(),
       xf(),
@@ -23465,7 +23465,7 @@ var _z = createLazyValue(() =>
       Wf(),
       Yf(),
       qf(),
-      bCt(),
+      mcpCallRequestSchema(),
       Vf(),
       ng(),
       ag(),
@@ -23484,9 +23484,9 @@ var _z = createLazyValue(() =>
       Ag(),
       vg(),
       fg(),
-      wCt(),
-      TCt(),
-      ACt(),
+      registerDeviceHooksRequestSchema(),
+      uploadDeviceHookTemplateRequestSchema(),
+      messageRatedRequestSchema(),
       Ug(),
       Fg(),
       Rg(),
@@ -23497,7 +23497,7 @@ var _z = createLazyValue(() =>
       Ig(),
       Dg(),
       Ng(),
-      ECt(),
+      remoteToolsAnnounceRequestSchema(),
       og(),
       ig(),
       sg(),
@@ -23510,7 +23510,7 @@ function de(e, t, r) {
 var Gwe = createLazyValue(() => [
     de(wf(), "client", vae()),
     de(Pf(), "agent", BU()),
-    de(SCt(), "client", yae()),
+    de(initializeRequestSchema(), "client", yae()),
     de(If(), "client", Rae()),
     de(Df(), "client", null),
     de(xf(), "client", null),
@@ -23522,7 +23522,7 @@ var Gwe = createLazyValue(() => [
     de(Wf(), "client", wae()),
     de(Yf(), "client", Pae()),
     de(qf(), "client", Mae()),
-    de(bCt(), "client", Nae()),
+    de(mcpCallRequestSchema(), "client", Nae()),
     de(Vf(), "client", Oae()),
     de(ng(), "agent", jU()),
     de(ag(), "both", Jae()),
@@ -23541,24 +23541,24 @@ var Gwe = createLazyValue(() => [
     de(Ag(), "client", null),
     de(vg(), "client", void 0),
     de(fg(), "client", rle()),
-    de(wCt(), "client", eRe()),
-    de(TCt(), "client", Wae()),
-    de(ACt(), "client", ale()),
-    de(Ug(), "agent", xvn()),
-    de(Fg(), "agent", Hvn()),
+    de(registerDeviceHooksRequestSchema(), "client", registerDeviceHooksResponseSchema()),
+    de(uploadDeviceHookTemplateRequestSchema(), "client", Wae()),
+    de(messageRatedRequestSchema(), "client", ale()),
+    de(Ug(), "agent", oauthTokenRefreshResponseSchema()),
+    de(Fg(), "agent", hostAuthTokenRefreshResponseSchema()),
     de(Rg(), "client", null),
     de(Og(), "client", ole()),
     de(kg(), "client", null),
     de(Pg(), "client", ile()),
     de(Mg(), "client", null),
-    de(Ig(), "agent", Rvn()),
-    de(Dg(), "agent", $Qe()),
+    de(Ig(), "agent", elicitationResponseSchema()),
+    de(Dg(), "agent", userDialogResponseSchema()),
     de(Ng(), "client", sle()),
-    de(ECt(), "client", $ae()),
+    de(remoteToolsAnnounceRequestSchema(), "client", $ae()),
     de(og(), "agent", Yae()),
     de(ig(), "agent", qae()),
     de(sg(), "agent", Xae()),
-    de(Lg(), "agent", kvn()),
+    de(Lg(), "agent", workSecretResponseSchema()),
   ]),
   El = createLazyValue(() =>
     c({
@@ -23689,7 +23689,7 @@ var Gwe = createLazyValue(() => [
       "Observational messages the agent loop emits \u2014 fire-and-forget, no reply expected. The remaining StdoutMessage members are control-protocol traffic (requests the loop originates and needs a reply to, responses to client-originated requests, keep-alives). This sub-union is the target for QueryEvent convergence so a Transport-shaped REPL can consume events without filtering control noise.",
     ),
   ),
-  Sor = createLazyValue(() =>
+  stdoutMessageSchema = createLazyValue(() =>
     $e([Cf(), Tf(), bf(), Af(), vf(), Sl(), El(), bl(), yz(), Rf()]).describe(
       "Everything the CLI writes to its output stream (stdout in stream-json mode): exactly one StdoutMessage per line, as a single JSON object. Besides the SDKMessage members this includes the control protocol - control requests the CLI originates, control responses to the client's requests, cancellations and keep-alives.",
     ),
@@ -23700,7 +23700,7 @@ var Gwe = createLazyValue(() => [
     ),
   );
 import { randomUUID as Al } from "crypto";
-function CCt(e, t, r) {
+function tryHandleFrame(e, t, r) {
   try {
     return (e(t), !0);
   } catch (o) {
@@ -23713,7 +23713,7 @@ function CCt(e, t, r) {
     );
   }
 }
-function _Ue(e, t, r) {
+function buildSuccessControlResponse(e, t, r) {
   return {
     type: "control_response",
     response: {
@@ -23724,13 +23724,13 @@ function _Ue(e, t, r) {
     },
   };
 }
-var bor = { subtype: "interrupt", cancel_queued: !0 };
-function vCt(e) {
+var CANCEL_QUEUED_INTERRUPT_REQUEST = { subtype: "interrupt", cancel_queued: !0 };
+function parsePermissionModeFromSystemMessage(e) {
   if (e.type !== "system" || !("permissionMode" in e)) return;
   return parsePermissionMode(e.permissionMode);
 }
-var RCt = "Session not found:",
-  iKt = "invalid session ID";
+var SESSION_NOT_FOUND_PREFIX = "Session not found:",
+  INVALID_SESSION_ID_PREFIX = "invalid session ID";
 var vz = [2000, 4000, 8000, 16000],
   Bg = vz.length,
   CCR_BYOC_BETA = "ccr-byoc-2025-07-29";
@@ -23945,7 +23945,7 @@ async function fetchSession(e, t, r) {
   if (p.status !== 200) {
     let C = p.data?.error?.message;
     if (p.status === 404) {
-      let I = `${RCt} ${e}`;
+      let I = `${SESSION_NOT_FOUND_PREFIX} ${e}`;
       throw new Iu(I, I);
     }
     if (p.status === 401)
@@ -23953,11 +23953,11 @@ async function fetchSession(e, t, r) {
         "Session expired. Please run /login to sign in again.",
         "Session expired. Please run /login to sign in again.",
       );
-    if (p.status === 400 && C?.startsWith(iKt)) throw new Iu(C, C);
+    if (p.status === 400 && C?.startsWith(INVALID_SESSION_ID_PREFIX)) throw new Iu(C, C);
     throw Error(C || `Failed to fetch session: ${p.status} ${p.statusText}`);
   }
   let _ = p.data.response_shape ?? p.data.session;
-  if (!_?.id) throw Error(`${RCt} ${e}`);
+  if (!_?.id) throw Error(`${SESSION_NOT_FOUND_PREFIX} ${e}`);
   let E = Date.parse(String(p.headers?.date ?? ""));
   return Ele(_, { serverNow: Number.isFinite(E) ? E : void 0 });
 }
@@ -24007,7 +24007,7 @@ async function yl(e, t, r, o) {
       p = `${getOauthConfig().BASE_API_URL}/v1/code/sessions/${e}/events`,
       _ = await getSessionRequestHeaders(d);
     n(`${r} Sending event to session ${e}`);
-    let E = await oKt(o, e, t),
+    let E = await signClientEvent(o, e, t),
       C = (x) =>
         at.post(
           p,
@@ -24078,7 +24078,7 @@ async function sendControlRequestToRemoteSession(e, t, r) {
 async function sendControlResponseToRemoteSession(e, t, r) {
   return yl(
     e,
-    { uuid: Al(), ..._Ue(t, r) },
+    { uuid: Al(), ...buildSuccessControlResponse(t, r) },
     "[sendControlResponseToRemoteSession]",
   );
 }
@@ -24261,14 +24261,14 @@ var yle = new j(() => new Cz());
 function vle() {
   return yle.of(B().host);
 }
-function MCt() {
+function getMemoryBaseUrlOverride() {
   return;
 }
-function aQ() {
-  return MCt() !== void 0;
+function hasMemoryBaseUrlOverride() {
+  return getMemoryBaseUrlOverride() !== void 0;
 }
-function rRe() {
-  if (!aQ()) return { host: "memory", auth: "async", refreshOAuth: !0 };
+function getMemoryHostRequestOptions() {
+  if (!hasMemoryBaseUrlOverride()) return { host: "memory", auth: "async", refreshOAuth: !0 };
   let e = antEnv.CLAUDE_CODE_MEMORY_API_TOKEN;
   return {
     host: "memory",
@@ -24299,7 +24299,7 @@ function wle(e) {
   if (a.CLAUDE_CODE_CUSTOM_OAUTH_URL) return !1;
   return kle.has(e.origin);
 }
-function VQe(e) {
+function getTrustedOrigin(e) {
   let t = Pz(e);
   return t.ok ? t.origin : void 0;
 }
@@ -24317,7 +24317,7 @@ function Pz(e) {
   if (!wle(t)) return { ok: !1, reason: "untrusted_origin" };
   return { ok: !0, origin: t.origin };
 }
-function Hor(e) {
+function getUntrustedOriginReason(e) {
   let t = Pz(e);
   return t.ok ? void 0 : t.reason;
 }
@@ -24329,7 +24329,7 @@ function Ple(e, t) {
     ? t.baseUrl
     : e;
 }
-function NCt() {
+function getFrameBaseUrlOverride() {
   return;
 }
 function Mle(e) {
@@ -24342,9 +24342,9 @@ function Mle(e) {
     case "mcp-proxy":
       return t.MCP_PROXY_URL;
     case "frame":
-      return NCt() ?? t.BASE_API_URL;
+      return getFrameBaseUrlOverride() ?? t.BASE_API_URL;
     case "memory":
-      return MCt() ?? t.BASE_API_URL;
+      return getMemoryBaseUrlOverride() ?? t.BASE_API_URL;
     case "ccr-session":
       return Oz(e).href.replace(/\/$/, "");
     case "ccr-gateway":
@@ -24372,14 +24372,14 @@ function Oz(e) {
       return bQ(new URL(t.url));
   }
 }
-function TUe(e) {
+function hashSha256Hex(e) {
   return Rle("sha256").update(e).digest("hex");
 }
-function Ior() {
+function getClaudeAiTokenFingerprint() {
   let e = getClaudeAIOAuthTokens(),
     t = e?.accessToken;
   if (!isUsableClaudeAILoginRecord(e) || !t) return null;
-  return TUe(`Bearer ${t}`);
+  return hashSha256Hex(`Bearer ${t}`);
 }
 function Dz(e) {
   if (!e.bypassEssentialTrafficOnly && !0 && isEssentialTrafficOnly())
@@ -24387,7 +24387,7 @@ function Dz(e) {
   if (getAPIProvider() !== "firstParty") return "data-residency";
   return;
 }
-function FCt() {
+function isNonEssentialTrafficAllowed() {
   return Dz({}) === void 0;
 }
 async function Er(e, t, r, o = {}, d = !1) {
@@ -24441,12 +24441,12 @@ async function Er(e, t, r, o = {}, d = !1) {
   }
   if (
     o.host === "frame" &&
-    NCt() !== void 0 &&
+    getFrameBaseUrlOverride() !== void 0 &&
     a.CLAUDE_CODE_ARTIFACTS_API_TOKEN
   )
     _ = { Authorization: `Bearer ${a.CLAUDE_CODE_ARTIFACTS_API_TOKEN}` };
   if (o.host === "memory") {
-    let F = rRe();
+    let F = getMemoryHostRequestOptions();
     if (F.auth === "none") _ = F.headers ?? {};
   }
   let I = { "User-Agent": getUserAgent(), ..._, ...o.headers };
@@ -24458,7 +24458,7 @@ async function Er(e, t, r, o = {}, d = !1) {
     let F;
     for (let [V, te] of Object.entries(I))
       if (V.toLowerCase() === "authorization") F = te;
-    D = F === void 0 ? null : TUe(F);
+    D = F === void 0 ? null : hashSha256Hex(F);
   }
   let x = o.maxRedirects ?? (o.host === "frame" ? 0 : void 0),
     N = r,
@@ -24472,7 +24472,7 @@ async function Er(e, t, r, o = {}, d = !1) {
         "Request body larger than maxBodyLength limit",
         AxiosError.ERR_BAD_REQUEST,
       );
-    let te = o.streamUpload.stallMs ?? mCt,
+    let te = o.streamUpload.stallMs ?? DEFAULT_TRANSFER_STALL_MS,
       re = o.streamUpload.tailFloorMs?.(F.length);
     if (MU())
       ((L = DU(F, {
@@ -24602,7 +24602,7 @@ async function wz(e, t, r) {
     };
   return null;
 }
-var ht = {
+var httpClient = {
   get(e, t) {
     return Er("GET", e, void 0, t);
   },
@@ -24636,7 +24636,7 @@ function Uz(e) {
   }
 }
 function Lle() {
-  let e = H("tengu_mcp_directory_visibility", Nz);
+  let e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_mcp_directory_visibility", Nz);
   return Array.isArray(e) && e.every((t) => typeof t === "string")
     ? e.filter((t) => t.length > 0)
     : Nz;
@@ -24652,7 +24652,7 @@ async function Ule(e) {
       visibility: r,
     });
     if (o) p.set("cursor", o);
-    let _ = await ht.get(`/mcp-registry/v0/servers?${p}`, {
+    let _ = await httpClient.get(`/mcp-registry/v0/servers?${p}`, {
       auth: "none",
       timeout: 5000,
     });
@@ -24673,7 +24673,7 @@ async function zle(e) {
   for (let d = 0; d < Lz; d++) {
     let p = new URLSearchParams({ limit: "500", visibility: r });
     if (o) p.set("cursor", o);
-    let _ = await ht.get(`/api/directory/servers?${p}`, {
+    let _ = await httpClient.get(`/api/directory/servers?${p}`, {
       auth: "none",
       timeout: 5000,
     });
@@ -24689,10 +24689,10 @@ async function zle(e) {
   }
   return t;
 }
-async function Por() {
+async function refreshOfficialMcpRegistryUrls() {
   if (isEssentialTrafficOnly()) return;
   if (M0()) return;
-  let e = H("tengu_mcp_directory_bff", !1),
+  let e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_mcp_directory_bff", !1),
     t = S(e ? "bff" : "legacy"),
     r = Lle();
   if (r.length === 0) {
@@ -24735,16 +24735,16 @@ async function Por() {
 function zz(e) {
   return jt().officialUrls?.has(e) ?? !1;
 }
-var Rp = "remote-devices",
-  $Ct = "mcp__remote-devices__device_bash";
-var Oor = "mcp__ide__executeCode",
-  Dor = [
+var REMOTE_DEVICES_MCP_SERVER_NAME = "remote-devices",
+  REMOTE_DEVICE_BASH_TOOL_NAME = "mcp__remote-devices__device_bash";
+var IDE_EXECUTE_CODE_TOOL_NAME = "mcp__ide__executeCode",
+  REMOTE_DEVICE_TOOL_NAMES = [
     "mcp__remote-devices__device_bash",
     "mcp__remote-devices__device_list_dir",
     "mcp__remote-devices__device_stage_files",
     "mcp__remote-devices__device_commit_files",
   ],
-  Gvn = new Set(["ide", "remote-devices"]),
+  ALWAYS_INTERNAL_MCP_SERVER_NAMES = new Set(["ide", "remote-devices"]),
   Fle = [
     "claude_in_chrome",
     "claude_browser",
@@ -24780,25 +24780,25 @@ function Hg(e) {
     .replace(/-/g, "_");
 }
 var Bz = ["claude_browser"];
-function KQe(e, t = Bz) {
+function findCanonicalMcpServerName(e, t = Bz) {
   let r = Hg(e);
   return t.find((o) => Hg(o) === r) ?? null;
 }
 function Fz(e) {
   return e.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
-function mKt(e, t) {
+function isEquivalentMcpName(e, t) {
   let r = Fz(e);
   return r.length > 0 && r === Fz(t);
 }
-function Lor(e, t = Bz) {
-  if (Gvn.has(e)) return !0;
-  if (KQe(e, t) !== null) return !1;
+function isInternalMcpServerName(e, t = Bz) {
+  if (ALWAYS_INTERNAL_MCP_SERVER_NAMES.has(e)) return !0;
+  if (findCanonicalMcpServerName(e, t) !== null) return !1;
   let r = Hg(e);
   return Ble.has(r) || Fle.some((o) => r.startsWith(o));
 }
-var s0 = "computer-use",
-  qvn = "com.anthropic.claude-code.cli-no-window",
+var COMPUTER_USE_MCP_SERVER_NAME = "computer-use",
+  DEFAULT_HOST_BUNDLE_ID = "com.anthropic.claude-code.cli-no-window",
   Hle = {
     "iTerm.app": "com.googlecode.iterm2",
     Apple_Terminal: "com.apple.Terminal",
@@ -24807,19 +24807,19 @@ var s0 = "computer-use",
     WarpTerminal: "dev.warp.Warp-Stable",
     vscode: "com.microsoft.VSCode",
   };
-function Mor() {
+function getHostBundleIdentifier() {
   let e = a.__CFBundleIdentifier;
   if (e) return e;
   return Hle[a.terminal ?? ""] ?? null;
 }
-var UCt = {
+var DEFAULT_COMPUTER_USE_CAPABILITIES = {
   screenshotFiltering: "native",
   platform: "darwin",
   adaptiveResolution: !1,
   saveToDisk: !1,
 };
-function lq(e) {
-  return normalizeMcpName(e) === s0;
+function isComputerUseMcpServer(e) {
+  return normalizeMcpName(e) === COMPUTER_USE_MCP_SERVER_NAME;
 }
 var Hz = [
   "request_access",
@@ -24866,13 +24866,13 @@ var Hz = [
   "request_full_control",
 ];
 import { createHash as Gle } from "crypto";
-function SP() {
+function isXaaEnabled() {
   return a.CLAUDE_CODE_ENABLE_XAA;
 }
-function yU() {
+function getXaaIdpConfig() {
   return getInitialSettings().xaaIdp;
 }
-async function oRe() {
+async function readStoredMcpOAuth() {
   return (await getSecureStorage().readAsync())?.mcpOAuth;
 }
 var Vle = 1000,
@@ -24887,7 +24887,7 @@ var Vle = 1000,
 function Gz(e) {
   return e !== SECURE_STORAGE_READ_FAILED_SENTINEL && (!e || Object.keys(e).length === 0);
 }
-async function cq() {
+async function readSecureStorageResilient() {
   let e = getSecureStorage(),
     t = await e.readAsync(),
     r = jle.of(B().host),
@@ -24917,19 +24917,19 @@ async function Wle(e, t) {
     e.inFlight = null;
   }
 }
-function la(e, t) {
+function getMcpOAuthCredentialKey(e, t) {
   let r = b({ type: t.type, url: t.url, headers: t.headers || {} }),
     o = Gle("sha256").update(r).digest("hex").substring(0, 16);
   return `${e}|${o}`;
 }
-function XQe(e) {
+function hasAuthorizationHeader(e) {
   return Object.keys(e).some((t) => t.toLowerCase() === "authorization");
 }
-function i0(e) {
-  return XQe(e.headers ?? {});
+function configHasAuthorizationHeader(e) {
+  return hasAuthorizationHeader(e.headers ?? {});
 }
 var $le = ["/v1/design/"];
-function pA(e) {
+function isFirstPartyDesignUrl(e) {
   try {
     let t = new URL(e);
     return (
@@ -24941,24 +24941,24 @@ function pA(e) {
     return !1;
   }
 }
-function EUe(e) {
-  if (SP() && e.oauth?.xaa) return !0;
+function configProvidesOwnAuth(e) {
+  if (isXaaEnabled() && e.oauth?.xaa) return !0;
   if (e.headersHelper || (e.headers && Object.keys(e.headers).length > 0))
     return !0;
-  if (pA(e.url)) return !0;
+  if (isFirstPartyDesignUrl(e.url)) return !0;
   return !1;
 }
-function Qme(e, t) {
-  return i0(e) || rS(e) || (pA(e.url) && isFirstPartyProvider() && t);
+function isMcpServerAuthenticated(e, t) {
+  return configHasAuthorizationHeader(e) || rS(e) || (isFirstPartyDesignUrl(e.url) && isFirstPartyProvider() && t);
 }
-async function AUe(e, t) {
-  let r = await cq();
+async function hasStoredRefreshToken(e, t) {
+  let r = await readSecureStorageResilient();
   if (r === SECURE_STORAGE_READ_FAILED_SENTINEL) return !0;
-  return !!r?.mcpOAuth?.[la(e, t)]?.refreshToken;
+  return !!r?.mcpOAuth?.[getMcpOAuthCredentialKey(e, t)]?.refreshToken;
 }
-function sRe(e, t, r) {
-  if (EUe(t)) return !1;
-  let o = r?.[la(e, t)];
+function needsMcpServerAuth(e, t, r) {
+  if (configProvidesOwnAuth(t)) return !1;
+  let o = r?.[getMcpOAuthCredentialKey(e, t)];
   return (
     o !== void 0 &&
     !o.accessToken &&
@@ -24966,9 +24966,9 @@ function sRe(e, t, r) {
     o.discoveryState?.oauthMetadataFound === !0
   );
 }
-function Nor(e, t, r) {
-  if (EUe(t)) return !1;
-  let o = r?.[la(e, t)];
+function isMcpServerTokenExpired(e, t, r) {
+  if (configProvidesOwnAuth(t)) return !1;
+  let o = r?.[getMcpOAuthCredentialKey(e, t)];
   return (
     o !== void 0 &&
     !!o.accessToken &&
@@ -24977,25 +24977,25 @@ function Nor(e, t, r) {
     o.expiresAt < Date.now()
   );
 }
-var CUe = new Set(["Claude Preview", "Claude Browser"]),
+var CLAUDE_DESKTOP_MCP_SERVER_NAMES = new Set(["Claude Preview", "Claude Browser"]),
   Kz = new Set(["claude-in-chrome", "Claude in Chrome"]),
-  gKt = new Set([...Kz, ...CUe]),
+  FIRST_PARTY_APP_MCP_SERVER_NAMES = new Set([...Kz, ...CLAUDE_DESKTOP_MCP_SERVER_NAMES]),
   Yle = "remote-devices",
   jz = ["Claude_Browser__"],
   Wz = ["claude-in-chrome__", "Claude_in_Chrome__"],
-  For = [...jz, ...Wz];
+  FIRST_PARTY_APP_MCP_TOOL_PREFIXES = [...jz, ...Wz];
 function $z(e, t) {
   if (e?.serverName !== Yle) return !1;
   let r = normalizeMcpName(e.toolName);
   return t.some((o) => r.startsWith(o));
 }
 function qle(e) {
-  return (e !== void 0 && CUe.has(e.serverName)) || $z(e, jz);
+  return (e !== void 0 && CLAUDE_DESKTOP_MCP_SERVER_NAMES.has(e.serverName)) || $z(e, jz);
 }
 function Xle(e) {
   return (e !== void 0 && Kz.has(e.serverName)) || $z(e, Wz);
 }
-function sx(e, t) {
+function effectiveModeForTool(e, t) {
   let r = e?.mcpInfo?.serverName,
     o = r !== void 0 ? t.mcpPermissionModeOverrides?.[r] : void 0,
     d =
@@ -25011,7 +25011,7 @@ function sx(e, t) {
     return t.canAutoClassifierRun === !0 ? "auto" : "default";
   return t.mode;
 }
-function $or(e) {
+function clampControlChannelOverride(e) {
   if (e === null) return { ok: !0, override: void 0 };
   if (e === "default" || e === "auto") return { ok: !0, override: e };
   return { ok: !1, rejected: e };
@@ -25019,37 +25019,37 @@ function $or(e) {
 function Jle(e) {
   return e.mode === "plan";
 }
-function YQe(e) {
+function isPlanModeOrAutoAllowSuspended(e) {
   return Jle(e) || e.sandboxAutoAllowSuspended === !0;
 }
-var qe = "Bash";
-var Bt = "Edit",
-  BCt = "/.claude/**",
-  jCt = "~/.claude/**",
-  hKt = "File has not been read yet. Read it first before writing to it.",
-  JQe = "File is in a directory that is denied by your permission settings.",
-  zvn =
+var BASH_TOOL_NAME = "Bash";
+var EDIT_TOOL_NAME = "Edit",
+  PROJECT_CLAUDE_DIR_GLOB = "/.claude/**",
+  USER_CLAUDE_DIR_GLOB = "~/.claude/**",
+  FILE_NOT_READ_ERROR_MESSAGE = "File has not been read yet. Read it first before writing to it.",
+  FILE_DIR_DENIED_MESSAGE = "File is in a directory that is denied by your permission settings.",
+  FILE_READ_DENY_EDIT_MESSAGE =
     "File is covered by a Read deny rule in your permission settings and cannot be edited.",
-  Vvn =
+  FILE_READ_DENY_WRITE_MESSAGE =
     "File is covered by a Read deny rule in your permission settings and cannot be written.",
-  _Kt =
+  FILE_MODIFIED_SINCE_READ_MESSAGE =
     "File content has changed since it was last read. This commonly happens when a linter or formatter run via Bash rewrites the file. Call Read on this file to refresh, then retry the edit.";
-class lQ extends Error {
+class FileStateError extends Error {
   constructor(e) {
     super(e);
     this.name = "FileStateError";
   }
 }
 import Qle from "path";
-var tt = "Read",
-  Kvn = new Set(["png", "jpg", "jpeg", "gif", "webp"]);
-function yKt(e) {
+var READ_TOOL_NAME = "Read",
+  IMAGE_FILE_EXTENSIONS = new Set(["png", "jpg", "jpeg", "gif", "webp"]);
+function isImageOrPdfPath(e) {
   let t = Qle.extname(e).toLowerCase().slice(1);
-  return Kvn.has(t) || t === "pdf";
+  return IMAGE_FILE_EXTENSIONS.has(t) || t === "pdf";
 }
-var Mn = "Write";
-var co = "Glob";
-var ro = "Grep";
+var WRITE_TOOL_NAME = "Write";
+var GLOB_TOOL_NAME = "Glob";
+var GREP_TOOL_NAME = "Grep";
 function Yz(e) {
   return Js(`${Oa(e)}tool`)?.serverName;
 }
@@ -25061,11 +25061,11 @@ function Gg(e) {
   }
   return t;
 }
-var qz = new Set(["hearthbot", Rp]),
+var qz = new Set(["hearthbot", REMOTE_DEVICES_MCP_SERVER_NAME]),
   Zle = Gg(qz),
-  ece = Gg(CUe),
-  tce = Gg([...gKt, s0, WORKSPACE_MCP_SERVER_NAME]);
-function Zme(e, t) {
+  ece = Gg(CLAUDE_DESKTOP_MCP_SERVER_NAMES),
+  tce = Gg([...FIRST_PARTY_APP_MCP_SERVER_NAMES, COMPUTER_USE_MCP_SERVER_NAME, WORKSPACE_MCP_SERVER_NAME]);
+function isReservedMcpServerName(e, t) {
   if (e === "Slack sign-in (Claude Code tag)") return !0;
   let r = Yz(e);
   if (r === void 0) return !1;
@@ -25075,7 +25075,7 @@ function Zme(e, t) {
 }
 var nce = new Set(["127.0.0.1", "[::1]", "::1"]);
 function rce(e, t) {
-  if (!CUe.has(e) || t.type !== "http") return !1;
+  if (!CLAUDE_DESKTOP_MCP_SERVER_NAMES.has(e) || t.type !== "http") return !1;
   let r;
   try {
     r = new URL(t.url);
@@ -25089,11 +25089,11 @@ function rce(e, t) {
     nce.has(r.hostname)
   );
 }
-function ZN(e) {
+function isStdioMcpServer(e) {
   return e.type === "stdio" || !e.type;
 }
 function Xz(e, t) {
-  return ZN(t) && (isClaudeInChromeMCPServer(e) || lq(e));
+  return isStdioMcpServer(t) && (isClaudeInChromeMCPServer(e) || isComputerUseMcpServer(e));
 }
 var oce = new Set(CLAUDE_IN_CHROME_TOOL_NAMES.map((e) => normalizeMcpName(e))),
   ice = new Set(Hz.map((e) => normalizeMcpName(e))),
@@ -25101,12 +25101,12 @@ var oce = new Set(CLAUDE_IN_CHROME_TOOL_NAMES.map((e) => normalizeMcpName(e))),
     "list_devices",
     "get_device_info",
     "device_bash",
-    qe,
-    tt,
-    Mn,
-    Bt,
-    co,
-    ro,
+    BASH_TOOL_NAME,
+    READ_TOOL_NAME,
+    WRITE_TOOL_NAME,
+    EDIT_TOOL_NAME,
+    GLOB_TOOL_NAME,
+    GREP_TOOL_NAME,
     "sync_files",
     "device_list_dir",
     "device_stage_files",
@@ -25130,14 +25130,14 @@ function cce() {
   let e = getSessionEntrypoint();
   return e === void 0 || !lce.has(e);
 }
-function QQe(e) {
+function getFirstPartyMcpToolNames(e) {
   if (isClaudeInChromeMCPServer(e)) return oce;
-  if (lq(e)) return ice;
-  if (e === Rp && cce()) return ace;
+  if (isComputerUseMcpServer(e)) return ice;
+  if (e === REMOTE_DEVICES_MCP_SERVER_NAME && cce()) return ace;
   return;
 }
-var Wl = "NotebookEdit";
-var Ut = "PowerShell";
+var NOTEBOOK_EDIT_TOOL_NAME = "NotebookEdit";
+var POWERSHELL_TOOL_NAME = "PowerShell";
 import { statSync, unlinkSync } from "fs";
 import {
   chmod,
@@ -25151,23 +25151,23 @@ import {
 import { homedir as bF } from "os";
 import { basename as nue, join as It, sep as rue } from "path";
 import { basename as uce, join as Jz } from "path";
-function Xvn() {
+function getJobsDir() {
   return Jz(getClaudeConfigDir(), "jobs");
 }
-function SKt(e, t) {
+function getJobStorageKey(e, t) {
   let r = uce(e);
-  if (!isValidPathSegment(r) || e !== Jz(Xvn(), r)) return;
+  if (!isValidPathSegment(r) || e !== Jz(getJobsDir(), r)) return;
   return STORAGE_KEYS.job(r, t);
 }
 var maxSlugLength = 200;
 import { basename as wce } from "path";
-function ix(e, t) {
+function buildAgentId(e, t) {
   return `${e}@${t}`;
 }
-function Yvn(e) {
+function encodeHeaderValue(e) {
   return e.replace(/%|[^\x20-\x7e]/gu, (t) => encodeURIComponent(t));
 }
-function WCt(e, t) {
+function createRequestId(e, t) {
   let r = Date.now();
   return `${e}-${r}@${t}`;
 }
@@ -25177,7 +25177,7 @@ var pce = /[^\p{L}\p{N}._-]+/gu,
   fce = /^[._-]+|[._-]+$/gu,
   gce = /[\p{L}\p{N}]/u,
   mce = 20;
-function FT(e) {
+function sanitizeDisplayName(e) {
   let t = _ce(e).trim(),
     r = [...t];
   return r.length > 64 ? `${r.slice(0, 64).join("")}\u2026` : t;
@@ -25185,10 +25185,10 @@ function FT(e) {
 function _ce(e) {
   return e.replace(/[\p{Cf}\p{Cc}\p{Cs}\p{Zl}\p{Zp}]/gu, "");
 }
-var Ivn = 120,
-  aKt = 512,
-  Kg = 4 * aKt;
-function Pvn(e) {
+var MAX_PREVIEW_WIDTH = 120,
+  MAX_BODY_CODE_UNITS = 512,
+  Kg = 4 * MAX_BODY_CODE_UNITS;
+function buildMessagePreview(e) {
   let t = 0;
   while (t <= e.length) {
     let r = e.indexOf(
@@ -25201,24 +25201,24 @@ function Pvn(e) {
       p = truncateToCodeUnits(e.slice(t, Math.min(o, t + Kg)), Kg),
       _ = replaceInvisibleChars(p, " ", { keepEmojiJoiners: !0 }).replace(/\s+/g, " ").trim();
     if (_ !== "" || !d) {
-      let E = truncateToCodeUnits(_, aKt),
+      let E = truncateToCodeUnits(_, MAX_BODY_CODE_UNITS),
         C = !d || E.length < _.length;
-      return truncateToWidth(C ? `${E}\u2026` : E, Ivn);
+      return truncateToWidth(C ? `${E}\u2026` : E, MAX_PREVIEW_WIDTH);
     }
     if (r === -1) break;
     t = r + 1;
   }
   return "";
 }
-function UQe(e) {
-  let t = FT(e).replace(pce, "-").replace(fce, "");
+function slugifyDisplayName(e) {
+  let t = sanitizeDisplayName(e).replace(pce, "-").replace(fce, "");
   if (!gce.test(t)) return "";
   let r = truncateToCodeUnits(t, mce);
   return r === t ? t : `${r}\u2026`;
 }
 var Zz = ["bypass", "prompting"],
   hce = new Set(Zz);
-function wor(e) {
+function isValidPeerFromMode(e) {
   return hce.has(e);
 }
 function eF(e) {
@@ -25230,10 +25230,10 @@ function eF(e) {
     ).join(""),
   );
 }
-function tRe(e) {
+function buildBridgeAddress(e) {
   return `bridge:${eF(e)}`;
 }
-function hU(e) {
+function buildUdsAddress(e) {
   return `uds:${eF(e)}`;
 }
 function jg(e) {
@@ -25244,26 +25244,26 @@ function jg(e) {
   }
 }
 var tF = /^[A-Za-z0-9_-]{1,80}$/,
-  BQe = 32,
+  MAX_HOP_CHAIN_LENGTH = 32,
   nF = 24;
-function Tor(e, t) {
+function computeHopHash(e, t) {
   return createHmac("sha256", t).update(e).digest("hex").slice(0, nF);
 }
 var Rl = "A-Za-z0-9%:_/.\\\\-",
   Qz = `[0-9a-f]{${nF}}`,
-  Ece = `${Qz}(?:,${Qz}){0,${BQe - 1}}`,
+  Ece = `${Qz}(?:,${Qz}){0,${MAX_HOP_CHAIN_LENGTH - 1}}`,
   rF = new RegExp(`^${Ece}$`),
-  Ovn = 300,
-  Sce = new RegExp(`^[${Rl}]{1,${Ovn}}$`);
-function Eor(e) {
+  MAX_ADDRESS_LENGTH = 300,
+  Sce = new RegExp(`^[${Rl}]{1,${MAX_ADDRESS_LENGTH}}$`);
+function isValidSenderAddress(e) {
   return Sce.test(e);
 }
-function kCt(e, t) {
+function appendHopToChain(e, t) {
   if (e === void 0) return;
   let r = [...e];
   if (t) r.push(t);
   if (r.length === 0) return;
-  return r.length > BQe ? r.slice(r.length - BQe) : r;
+  return r.length > MAX_HOP_CHAIN_LENGTH ? r.slice(r.length - MAX_HOP_CHAIN_LENGTH) : r;
 }
 function Tce(e, t, r, o, d) {
   let p = [];
@@ -25273,12 +25273,12 @@ function Tce(e, t, r, o, d) {
     let E = o.join(",");
     if (rF.test(E)) p.push(`hop-chain="${E}"`);
   }
-  let _ = t === void 0 ? void 0 : FT(t.replace(/["<>]/g, ""));
+  let _ = t === void 0 ? void 0 : sanitizeDisplayName(t.replace(/["<>]/g, ""));
   if (_) p.push(`from-name="${_}"`);
   if (d) p.push(`from-mode="${d}"`);
   return p.length > 0 ? ` ${p.join(" ")}` : "";
 }
-function yUe(e, t, r, o, d, p) {
+function buildCrossSessionEnvelope(e, t, r, o, d, p) {
   let _ = Tce(e, t, o, d, p);
   return `<${CROSS_SESSION_MESSAGE_TAG}${_}>
 ${YRe(CROSS_SESSION_MESSAGE_TAG, r)}
@@ -25298,7 +25298,7 @@ function oF(e) {
     if (!d) return;
     let p = d[3] !== void 0 ? d[3].split(",") : void 0,
       _ = d[5];
-    if (yUe(d[1], d[4], d[6] ?? "", d[2], p, _) !== o) return;
+    if (buildCrossSessionEnvelope(d[1], d[4], d[6] ?? "", d[2], p, _) !== o) return;
     return {
       ...(d[1] !== void 0 && { from: d[1] }),
       ...(d[2] !== void 0 && { fromSession: d[2] }),
@@ -25310,20 +25310,20 @@ function oF(e) {
   }
   return;
 }
-function Dvn(e) {
+function stripHopChainFromMessage(e) {
   let t = oF(e);
   if (!t || t.hopChain === void 0) return e;
-  return yUe(t.from, t.fromName, t.body, t.fromSession, void 0, t.fromMode);
+  return buildCrossSessionEnvelope(t.from, t.fromName, t.body, t.fromSession, void 0, t.fromMode);
 }
-function Kme(e, t, r) {
+function dropOriginBodyIfValueChanged(e, t, r) {
   if (e.body === void 0 || t === r) return e;
   let { body: o, ...d } = e;
   return d;
 }
-function Pse(e) {
+function extractMessageOrigin(e) {
   let t = oF(e);
   if (!t) return {};
-  let r = t.fromName ? FT(t.fromName) : "";
+  let r = t.fromName ? sanitizeDisplayName(t.fromName) : "";
   return {
     ...(r && { name: r }),
     ...(t.fromSession !== void 0 && { fromSession: t.fromSession }),
@@ -25332,7 +25332,7 @@ function Pse(e) {
     body: t.body,
   };
 }
-function Xme(e) {
+function findLastPeerHopChain(e) {
   for (let t = e.length - 1; t >= 0; t--) {
     let r = e[t];
     if (r.type !== "user" || r.toolUseResult || r.isCompactSummary) continue;
@@ -25341,7 +25341,7 @@ function Xme(e) {
   return;
 }
 var Ace = new RegExp(`^(?:uds|bridge|did):[${Rl}]{1,200}$`);
-function Dse(e) {
+function isSchemeQualifiedAddress(e) {
   return Ace.test(e);
 }
 var yce = /^\/\S*\.sock$/,
@@ -25350,7 +25350,7 @@ var yce = /^\/\S*\.sock$/,
 function Xg(e) {
   return Rce.test(e);
 }
-function uf(e) {
+function parsePeerAddress(e) {
   if (e.startsWith("uds:")) return { scheme: "uds", target: jg(e.slice(4)) };
   if (e.startsWith("bridge:"))
     return { scheme: "bridge", target: jg(e.slice(7)) };
@@ -25358,31 +25358,31 @@ function uf(e) {
   if (yce.test(e) || vce.test(e)) return { scheme: "uds", target: e };
   return { scheme: "other", target: e };
 }
-function GCt(e, t) {
+function validateMessageTarget(e, t) {
   if (e.trim().length === 0) return "to must not be empty";
-  let r = uf(e);
+  let r = parsePeerAddress(e);
   if (
     (r.scheme === "bridge" || r.scheme === "uds") &&
     r.target.trim().length === 0
   )
     return "address target must not be empty";
-  if (!a0(r.target) || !a0(e))
+  if (!isLocalAddress(r.target) || !isLocalAddress(e))
     return `'${e}' is not a local socket address. Use an address from ${t}.`;
   return;
 }
-function a0(e) {
+function isLocalAddress(e) {
   if (!An(e)) return !0;
-  return cQ(e) !== void 0;
+  return parseWindowsPipeName(e) !== void 0;
 }
-function ZQe(e, t) {
+function isDefinitelySamePath(e, t) {
   return aF(e, t) === "same";
 }
-function qCt(e, t) {
+function isPossiblySamePath(e, t) {
   return aF(e, t) !== "different";
 }
 function aF(e, t) {
-  let r = cQ(e),
-    o = cQ(t);
+  let r = parseWindowsPipeName(e),
+    o = parseWindowsPipeName(t);
   if (r !== void 0 || o !== void 0) {
     if (r === void 0 || o === void 0) return "different";
     if (kl(r) === kl(o)) return "same";
@@ -25431,16 +25431,16 @@ function Ci(e) {
     r = /^\/private(\/(?:var|tmp|etc)(?:\/.*)?)$/.exec(t);
   return r ? r[1] : t;
 }
-function cQ(e) {
+function parseWindowsPipeName(e) {
   let t = /^[\\/]{2}[.?][\\/]pipe[\\/](?:(LOCAL)[\\/])?([^\\/]+)$/i.exec(e);
   if (t === null || t[2] === "." || t[2] === "..") return;
   if (/[. ]$/.test(t[2])) return;
   if (e.startsWith("\\\\?\\") && e.includes("/")) return;
   return t[1] === void 0 ? t[2] : `${uF}\\${t[2]}`;
 }
-function Jvn(e, t, r) {
-  if (cQ(t) !== void 0) {
-    let o = cQ(e);
+function isTrustedPeerSocket(e, t, r) {
+  if (parseWindowsPipeName(t) !== void 0) {
+    let o = parseWindowsPipeName(e);
     return o !== void 0 && kce.test(o);
   }
   if (my(e)) return !1;
@@ -25468,31 +25468,31 @@ function lF(e, t) {
   }
   return !1;
 }
-function Uor(e, t, r, o = []) {
-  let d = cQ(e),
-    p = cQ(t);
+function isPeerReplyAllowed(e, t, r, o = []) {
+  let d = parseWindowsPipeName(e),
+    p = parseWindowsPipeName(t);
   if (d !== void 0 && p !== void 0 && sF.test(p) && !sF.test(d)) return !1;
-  if (Jvn(e, t)) return !0;
+  if (isTrustedPeerSocket(e, t)) return !0;
   return (r?.includes(Jg) ?? !1) && lF(e, o);
 }
 var cF = "cc-msg-",
   uF = "LOCAL",
   kce = new RegExp(`^(?:${uF}\\\\)?${cF}[0-9a-f]{32}$`, "i"),
   sF = new RegExp(`^${cF}[0-9a-f]{32}$`, "i");
-function bKt(e) {
+function isPlaceholderSessionTitle(e) {
   let t = typeof e === "string" ? e.trim() : "",
-    r = uq(t);
+    r = normalizeSessionName(t);
   return (
     !t ||
     !r ||
     (r === "untitled session" && t.toLowerCase() !== "untitled session")
   );
 }
-function ege(e) {
+function isCloudEnvironmentSession(e) {
   return e.environmentKind !== void 0 && e.environmentKind !== "bridge";
 }
-function Qvn(e) {
-  return !ege(e) && e.connected === !1;
+function isOfflineRemoteSession(e) {
+  return !isCloudEnvironmentSession(e) && e.connected === !1;
 }
 function slugify(e) {
   return e
@@ -25502,34 +25502,34 @@ function slugify(e) {
     .toLowerCase()
     .replace(/\s+/g, "-");
 }
-function tge(e) {
-  return typeof e !== "string" || l0(e);
+function isUnusableRecipientName(e) {
+  return typeof e !== "string" || isReservedRecipientName(e);
 }
-function iRe(e, t) {
+function isTeamLeadMember(e, t) {
   return e.name === TEAM_LEAD_AGENT_NAME && t !== void 0 && e.agentId === t;
 }
-function SU(e) {
+function getTeamLeadAgentId(e) {
   let t = e.teamContext;
   if (t?.leadAgentId && t.isLeader !== !1) return t.leadAgentId;
   let r = getTeamName(t);
-  return r ? ix(TEAM_LEAD_AGENT_NAME, r) : void 0;
+  return r ? buildAgentId(TEAM_LEAD_AGENT_NAME, r) : void 0;
 }
-function nge(e, t) {
-  return e.members.filter((r) => iRe(r, t) || !tge(r.name));
+function getAddressableTeamMembers(e, t) {
+  return e.members.filter((r) => isTeamLeadMember(r, t) || !isUnusableRecipientName(r.name));
 }
-function l0(e) {
+function isReservedRecipientName(e) {
   let t = slugify(e);
   return t === MAIN_CONVERSATION_NAME || t === TEAM_LEAD_AGENT_NAME || parseShortId(t) !== null;
 }
 var Ml = 6,
-  Zvn = 12,
-  b5 = `[0-9a-f]{${Ml},${Zvn}}`,
-  Pce = new RegExp(`^(.*\\S)\\s*\\[(${b5})\\]$`);
-function jD(e) {
+  MAX_REF_LENGTH = 12,
+  AGENT_REF_PATTERN = `[0-9a-f]{${Ml},${MAX_REF_LENGTH}}`,
+  Pce = new RegExp(`^(.*\\S)\\s*\\[(${AGENT_REF_PATTERN})\\]$`);
+function parseAgentDisplayName(e) {
   let t = Pce.exec(e.trim());
   return t ? { name: t[1], ref: t[2] } : null;
 }
-function bP(e, t) {
+function buildRecipientListing(e, t) {
   let r = [];
   r.push({
     name: MAIN_CONVERSATION_NAME,
@@ -25591,7 +25591,7 @@ function bP(e, t) {
     }
   let p = [];
   for (let L of t.cloud ?? []) {
-    if (nZe(t.sessions, L.id)) {
+    if (isCloudSessionKnownLocally(t.sessions, L.id)) {
       p.push({ rawName: L.title || "untitled", socks: d.get(sessionIdBody(L.id)) ?? [] });
       continue;
     }
@@ -25599,7 +25599,7 @@ function bP(e, t) {
       name: L.title || "untitled",
       id: L.id,
       kind: "cloud-session",
-      ...(bKt(L.title) && { derivedName: !0 }),
+      ...(isPlaceholderSessionTitle(L.title) && { derivedName: !0 }),
       ...(L.acceptsPeerMessages === !0 && { reportsInbound: !0 }),
       where: L.remoteControl ? "remote" : "cloud",
       lastActive: L.lastActive,
@@ -25608,7 +25608,7 @@ function bP(e, t) {
     });
   }
   let _ = new Set((t.cloud ?? []).map((L) => sessionIdBody(L.id))),
-    E = RUe(t.sessions);
+    E = collectLocalBridgeSessionIds(t.sessions);
   for (let L of t.bridge ?? []) {
     let U = sessionIdBody(L.id);
     if (_.has(U)) continue;
@@ -25621,28 +25621,28 @@ function bP(e, t) {
       name: L.title || "untitled",
       id: L.id,
       kind: "bridge-session",
-      ...(bKt(L.title) && { derivedName: !0 }),
+      ...(isPlaceholderSessionTitle(L.title) && { derivedName: !0 }),
       ...(L.acceptsPeerMessages === !0 && { reportsInbound: !0 }),
       ...(L.inboundReportUnavailable && { inboundReportUnavailable: !0 }),
-      where: ege(L) ? "cloud" : "remote",
+      where: isCloudEnvironmentSession(L) ? "cloud" : "remote",
       lastActive: Number.isNaN(F) ? void 0 : F,
       sock: void 0,
-      ...(Qvn(L) && { offline: !0 }),
+      ...(isOfflineRemoteSession(L) && { offline: !0 }),
     });
   }
-  let C = SU(e),
+  let C = getTeamLeadAgentId(e),
     I = r.flatMap((L) => {
-      let U = uq(L.name);
+      let U = normalizeSessionName(L.name);
       if (U === null || !Qg(U)) return [];
       let F =
           L.kind === "main" ||
-          (L.kind === "teammate" && iRe({ name: L.name, agentId: L.id }, C)),
+          (L.kind === "teammate" && isTeamLeadMember({ name: L.name, agentId: L.id }, C)),
         V =
           (L.kind === "session" ||
             L.kind === "cloud-session" ||
             L.kind === "bridge-session") &&
           slugify(U) === MAIN_CONVERSATION_NAME;
-      return F || V || !tge(U) ? [{ ...L, name: U }] : [];
+      return F || V || !isUnusableRecipientName(U) ? [{ ...L, name: U }] : [];
     }),
     D = new Set(),
     x = Ice(
@@ -25662,7 +25662,7 @@ function bP(e, t) {
   }
   let G = new Map();
   for (let { rawName: L, socks: U } of p) {
-    let F = uq(L);
+    let F = normalizeSessionName(L);
     if (F === null || !Qg(F)) continue;
     let V = slugify(F),
       te = G.get(V) ?? new Set();
@@ -25671,7 +25671,7 @@ function bP(e, t) {
   }
   return { candidates: x, byName: N, remoteNamesClaimedLocally: G };
 }
-function aRe(e, t, r) {
+function resolveInProcessRecipient(e, t, r) {
   let o = e.get(t);
   if (!o || o.length === 0) return;
   let d = r === void 0 ? [] : o.filter((E) => E.name === r),
@@ -25679,13 +25679,13 @@ function aRe(e, t, r) {
   if (_.where === "in-process") return { kind: "one", candidate: _ };
   return { kind: "ambiguous" };
 }
-function bU(e) {
+function formatAgentDisplayName(e) {
   return `${e.name} [${e.ref}]`;
 }
-function wKt(e) {
-  return e === "remote" ? `${TKt(e)} (Remote Control)` : TKt(e);
+function describeSessionLocationWithRemoteControl(e) {
+  return e === "remote" ? `${describeSessionLocation(e)} (Remote Control)` : describeSessionLocation(e);
 }
-function TKt(e) {
+function describeSessionLocation(e) {
   switch (e) {
     case "in-process":
       return "in this session";
@@ -25697,7 +25697,7 @@ function TKt(e) {
       return "on this machine";
   }
 }
-function eZe(e, t) {
+function formatCandidateSummary(e, t) {
   let r =
       e.kind === "main"
         ? "main conversation"
@@ -25706,15 +25706,15 @@ function eZe(e, t) {
             e.kind === "bridge-session"
           ? "Claude session"
           : e.kind,
-    o = wKt(e.where),
+    o = describeSessionLocationWithRemoteControl(e.where),
     d =
       e.lastActive === void 0
         ? ""
         : `, ${e.kind === "subagent" ? "started" : "active"} ${formatDuration(Math.max(0, t - e.lastActive), { mostSignificantOnly: !0 })} ago`;
-  return `${bU(e)} \u2014 ${r}, ${o}${d}`;
+  return `${formatAgentDisplayName(e)} \u2014 ${r}, ${o}${d}`;
 }
 var Mce = maxSlugLength;
-function uq(e) {
+function normalizeSessionName(e) {
   if (typeof e !== "string") return null;
   return (
     [
@@ -25728,23 +25728,23 @@ function uq(e) {
       .trim() || "untitled session"
   );
 }
-function zCt(e, t) {
-  return e.find((r) => r.name === t) ?? e.find((r) => uq(r.name) === t);
+function findMemberByName(e, t) {
+  return e.find((r) => r.name === t) ?? e.find((r) => normalizeSessionName(r.name) === t);
 }
-function dq(e) {
-  let t = uq(e);
-  return t !== null && !vUe(t) && a0(t) ? t : null;
+function normalizePlainName(e) {
+  let t = normalizeSessionName(e);
+  return t !== null && !looksLikeAddress(t) && isLocalAddress(t) ? t : null;
 }
-function tZe(e) {
-  let t = uq(e);
-  return t !== null && Qg(t) && !l0(t) ? t : null;
+function normalizeUsableRecipientName(e) {
+  let t = normalizeSessionName(e);
+  return t !== null && Qg(t) && !isReservedRecipientName(t) ? t : null;
 }
 function Qg(e) {
-  return !vUe(e) && a0(e) && !e.includes("@") && e !== "*";
+  return !looksLikeAddress(e) && isLocalAddress(e) && !e.includes("@") && e !== "*";
 }
-function vUe(e) {
+function looksLikeAddress(e) {
   let t = slugify(e);
-  return uf(e).scheme !== "other" || uf(t).scheme !== "other" || Xg(e) || Xg(t);
+  return parsePeerAddress(e).scheme !== "other" || parsePeerAddress(t).scheme !== "other" || Xg(e) || Xg(t);
 }
 function Ice(e) {
   let t = e.map((_) => Pl(_.kind, _.id)),
@@ -25771,20 +25771,20 @@ function dF(e, t) {
   return r;
 }
 function Pl(e, t) {
-  return String(Tn(`${e}:${t}`));
+  return String(hashForTelemetry(`${e}:${t}`));
 }
-function lRe(e, t) {
+function createShortEntityRef(e, t) {
   return Pl(e, t).slice(0, Ml);
 }
-function eRn(e, t, r) {
+function isEntityRefPrefix(e, t, r) {
   return e.length >= Ml && Pl(t, r).startsWith(e);
 }
-function RUe(e) {
+function collectLocalBridgeSessionIds(e) {
   return new Set(
     e.flatMap((t) => (t.bridgeSessionId ? [sessionIdBody(t.bridgeSessionId)] : [])),
   );
 }
-function nZe(e, t) {
+function isCloudSessionKnownLocally(e, t) {
   let r = sessionIdBody(t);
   return e.some(
     (o) => o.bridgeSessionId !== void 0 && sessionIdBody(o.bridgeSessionId) === r,
@@ -25797,7 +25797,7 @@ function pF(e) {
 }
 import { readFileSync as Nce, lstatSync } from "fs";
 import { lstat as Uce, readFile as zce } from "fs/promises";
-async function Wi(e, t) {
+async function readBoundedFile(e, t) {
   try {
     let r = await Uce(e);
     if (!r.isFile() || r.size > t) return null;
@@ -25806,7 +25806,7 @@ async function Wi(e, t) {
     return null;
   }
 }
-function Bor(e, t) {
+function readBoundedFileSync(e, t) {
   try {
     let r = lstatSync(e);
     if (!r.isFile() || r.size > t) return null;
@@ -25815,12 +25815,12 @@ function Bor(e, t) {
     return null;
   }
 }
-async function ax(e, t, r, o) {
+async function readBoundedFileWithFs(e, t, r, o) {
   let d = await e.stat(t);
   if (!d.isFile() || d.size > r) return (o?.(d), null);
   return await e.readFile(t, { encoding: "utf8" });
 }
-function jor(e, t, r) {
+function readBoundedFileWithFsSync(e, t, r) {
   let o = e.statSync(t);
   if (!o.isFile() || o.size > r) return null;
   return e.readFileSync(t, { encoding: "utf8" });
@@ -25875,27 +25875,27 @@ var mF = "auth",
       pidDomain: s().optional(),
     }),
   );
-function VCt() {
+function isWindowsPlatform() {
   return getCurrentPlatform() === "windows";
 }
-function Wor() {
+function createSessionTokens() {
   return {
     peerToken: fF(Zg).toString("hex"),
     childToken: fF(Zg).toString("hex"),
   };
 }
-var EKt = 25;
-function e1() {
+var TORN_RECORD_REREAD_DELAY_MS = 25;
+function getSessionsDir() {
   return go(getClaudeConfigDir(), "sessions");
 }
-function Zy(e) {
-  let t = cQ(e);
+function getCanonicalSocketPath(e) {
+  let t = parseWindowsPipeName(e);
   if (t !== void 0) return `\\\\.\\pipe\\${kl(t)}`;
   if (my(e)) return;
   return Gce(e);
 }
 function hF(e) {
-  let t = Zy(e);
+  let t = getCanonicalSocketPath(e);
   return t === void 0 ? void 0 : Fce("sha256").update(t).digest("hex");
 }
 function EF(e, t) {
@@ -25906,9 +25906,9 @@ function EF(e, t) {
     );
   return `${e}.${r}.key`;
 }
-async function Gor(e, t, r, { sweepPermitted: o }) {
+async function publishMessagingKey(e, t, r, { sweepPermitted: o }) {
   if (isHoverRestEnabled() && r !== void 0) return jce(r, e, t);
-  let d = e1();
+  let d = getSessionsDir();
   (await Bce(d, { recursive: !0, mode: 448 }), await Wce(d, o));
   let p = go(d, EF(process.pid, e));
   try {
@@ -25944,11 +25944,11 @@ async function jce(e, t, r) {
       n(`[uds-auth] key publish failed: ${We(p.error)}`),
       Error("messaging key could not be published through storage")
     );
-  return go(e1(), o);
+  return go(getSessionsDir(), o);
 }
 async function ki(e) {
   try {
-    let t = await Wi(e, Dl);
+    let t = await readBoundedFile(e, Dl);
     if (t === null) return;
     let r = _F().safeParse(Is(t));
     return r.success ? r.data.pidDomain : void 0;
@@ -25977,7 +25977,7 @@ async function Wce(e, t) {
     }),
   );
 }
-async function qor(e, t) {
+async function removeMessagingKey(e, t) {
   if (isHoverRestEnabled() && t !== void 0) {
     try {
       await t.delete(STORAGE_KEYS.session(Hce(e)));
@@ -25988,8 +25988,8 @@ async function qor(e, t) {
     await em(e);
   } catch {}
 }
-async function zor(e, t, r) {
-  let o = e1(),
+async function resolveMessagingKey(e, t, r) {
+  let o = getSessionsDir(),
     d;
   if (isHoverRestEnabled() && t !== void 0) {
     let D = await Il(t, { partialOnCap: !1 });
@@ -26013,7 +26013,7 @@ async function zor(e, t, r) {
       .filter((D) => D !== void 0);
   if (E.length === 0) return { kind: "no-key" };
   let C = async (D) => {
-    let x = isHoverRestEnabled() && t !== void 0 ? await $ce(t, D) : await Wi(go(o, D), Dl);
+    let x = isHoverRestEnabled() && t !== void 0 ? await $ce(t, D) : await readBoundedFile(go(o, D), Dl);
     if (x === null) return;
     try {
       let N = _F().safeParse(Is(x));
@@ -26066,18 +26066,18 @@ async function $ce(e, t) {
     return null;
   }
 }
-function tRn(e) {
+function formatAuthLine(e) {
   return (
     b({ type: mF, token: e }) +
     `
 `
   );
 }
-var Vor = tRn("0".repeat(Zg * 2)).length;
-function Kor(e) {
+var AUTH_LINE_BASE_LENGTH = formatAuthLine("0".repeat(Zg * 2)).length;
+function isAuthRecord(e) {
   return typeof e === "object" && e !== null && "type" in e && e.type === mF;
 }
-function Xor(e, t) {
+function classifyAuthToken(e, t) {
   if (t === void 0) return;
   if (timingSafeStringEqual(e, t.peerToken)) return "peer";
   if (timingSafeStringEqual(e, t.childToken)) return "child";
@@ -26086,7 +26086,7 @@ function Xor(e, t) {
 function Yce(e) {
   return [...e.replace(/[\x00-\x1f\x7f-\x9f]/g, "")].slice(0, maxSlugLength).join("");
 }
-function si(e) {
+function sanitizeSessionName(e) {
   return Yce(replaceControlChars(e.trim())).trim();
 }
 class SF {
@@ -26133,37 +26133,37 @@ var qce = new j(() => new TF());
 function Kt() {
   return bi(qce);
 }
-function Ia() {
+function getCurrentWorktreeSession() {
   return Kt().currentSession;
 }
-function kUe(e) {
+function setCurrentWorktreeSession(e) {
   Kt().setCurrentSession(e);
 }
-function Yor() {
+function getPendingResumeWorktreeName() {
   return Kt().getResumeHintWorktreeName();
 }
-function T6() {
+function clearPendingResumeWorktreeName() {
   Kt().clearResumeHintWorktreeName();
 }
-function Jh() {
+function getBgTakeover() {
   return Kt().bgTakeover;
 }
-function AKt(e) {
+function recordAgentWorktreeSpawn(e) {
   Kt().agentIsolationEvidence.recordSpawned(e);
 }
-function nRn(e) {
+function wasAgentSpawnedInWorktree(e) {
   return Kt().agentIsolationEvidence.spawned.has(e);
 }
-function Jor(e) {
+function recordAgentWorktreeRemoval(e) {
   Kt().agentIsolationEvidence.recordCleanlyRemoved(e);
 }
-function Qor(e) {
+function wasAgentWorktreeRemovedCleanly(e) {
   return Kt().agentIsolationEvidence.cleanlyRemoved.has(e);
 }
-function Zor(e) {
+function isWorktreeIsolationUnavailableFor(e) {
   return Kt().isolationUnavailableCwd === e;
 }
-function esr(e) {
+function markWorktreeIsolationUnavailable(e) {
   Kt().markIsolationUnavailable(e);
 }
 var FORMER_NAME_HINT_TTL_MS = 600000,
@@ -26256,9 +26256,9 @@ class CF {
     )
       return !1;
     if (
-      ry.getIsBubblewrapSandbox() ||
+      runtimeEnvironment.getIsBubblewrapSandbox() ||
       Ie(a.IS_SANDBOX) ||
-      (await ry.getIsDocker())
+      (await runtimeEnvironment.getIsDocker())
     )
       return !1;
     return looksLikeFullHostProcessTable();
@@ -26293,10 +26293,10 @@ function isUnattendedBgSession() {
   return isBgSession() && !dl();
 }
 function isActingAsBgJob() {
-  return isBgSession() || Jh() !== null;
+  return isBgSession() || getBgTakeover() !== null;
 }
 function getBgJobDir() {
-  return Jh()?.jobDir ?? a.CLAUDE_JOB_DIR;
+  return getBgTakeover()?.jobDir ?? a.CLAUDE_JOB_DIR;
 }
 function isDaemonBgWorker() {
   return a.CLAUDE_BG_BACKEND === "daemon";
@@ -26323,7 +26323,7 @@ async function touchFleetViewHeartbeat(e) {
     return;
   }
   try {
-    await rm(It(e1(), Nl), String(Date.now()));
+    await rm(It(getSessionsDir(), Nl), String(Date.now()));
   } catch {}
 }
 async function clearFleetViewHeartbeat(e) {
@@ -26334,7 +26334,7 @@ async function clearFleetViewHeartbeat(e) {
     return;
   }
   try {
-    await wi(It(e1(), Nl));
+    await wi(It(getSessionsDir(), Nl));
   } catch {}
 }
 var lue = 1000;
@@ -26349,7 +26349,7 @@ function isBeingWatched() {
   if (r !== void 0) return r;
   let o = !1;
   try {
-    let { mtimeMs: d } = statSync(It(e1(), Nl));
+    let { mtimeMs: d } = statSync(It(getSessionsDir(), Nl));
     o = t - d < OF;
   } catch (d) {
     if (!W(d)) n(`[concurrentSessions] heartbeat stat failed: ${l(d)}`);
@@ -26389,9 +26389,9 @@ async function cue(e, t) {
   e.bornSpare = o === "bg" && a.CLAUDE_BG_SOURCE === "spare";
   let d = e.bornSpare && !(await MF(t)),
     p = a.CLAUDE_CODE_SESSION_NAME
-      ? si(a.CLAUDE_CODE_SESSION_NAME) || void 0
+      ? sanitizeSessionName(a.CLAUDE_CODE_SESSION_NAME) || void 0
       : void 0,
-    _ = e1(),
+    _ = getSessionsDir(),
     E = It(_, `${process.pid}.json`);
   (process.on("exit", () => {
     try {
@@ -26480,7 +26480,7 @@ async function cue(e, t) {
   }
 }
 async function hn(e, t) {
-  let r = It(e1(), `${process.pid}.json`),
+  let r = It(getSessionsDir(), `${process.pid}.json`),
     o = yt(),
     d = o.pidFileWriteChain.then(async () => {
       try {
@@ -26589,7 +26589,7 @@ async function MF(e) {
   let t = getBgJobDir();
   if (!t) return !1;
   if (isHoverRestEnabled() && e !== void 0) {
-    let r = SKt(t, ["state.json"]);
+    let r = getJobStorageKey(t, ["state.json"]);
     if (r !== void 0)
       try {
         let o = await e.statMeta(r);
@@ -26711,7 +26711,7 @@ function mayReapRecordFromThisDomain(e, t, r = []) {
   }
 }
 async function countConcurrentSessions(e) {
-  let t = e1(),
+  let t = getSessionsDir(),
     r;
   if (e) {
     let D = await IF(e);
@@ -26757,15 +26757,15 @@ async function countConcurrentSessions(e) {
     let N = It(t, D),
       G = e
         ? await AF(e, D)
-        : await Wi(N, MAX_SESSION_RECORD_BYTES)
+        : await readBoundedFile(N, MAX_SESSION_RECORD_BYTES)
             .then((V) => (V === null ? null : tm().safeParse(z(V))))
             .catch(() => null),
       L = G?.success ? G.data : null;
     if (L === null) {
-      await sleep(EKt);
+      await sleep(TORN_RECORD_REREAD_DELAY_MS);
       let V = e
         ? await AF(e, D)
-        : await Wi(N, MAX_SESSION_RECORD_BYTES)
+        : await readBoundedFile(N, MAX_SESSION_RECORD_BYTES)
             .then((te) => (te === null ? null : tm().safeParse(z(te))))
             .catch(() => null);
       L = V?.success ? V.data : null;
@@ -26801,7 +26801,7 @@ async function countConcurrentSessions(e) {
       ),
         logEvent("tengu_unclean_exit", {
           session_age_sec: Math.round((Date.now() - L.startedAt) / 1000),
-          prior_version: Ms(L.version),
+          prior_version: getVersionForAnalytics(L.version),
           on_current_version:
             L.version ===
             {
@@ -26855,16 +26855,16 @@ async function mue() {
   return t === 0 ? r.trim() : void 0;
 }
 import { AsyncLocalStorage as hue } from "async_hooks";
-function Cor(e) {
+function getHookCallerPluginName(e) {
   return e.hookCaller;
 }
-function rx(e) {
+function isPluginSteeredAgent(e) {
   return e.hookCaller !== void 0 || e.pluginSteered === !0;
 }
-function y5(e) {
+function isRemoteOrPluginRequestSource(e) {
   return e?.type === "remote-agent" || e?.type === "plugin";
 }
-var iQ = defineDialog({
+var PERMISSION_PROMPT_DIALOG = defineDialog({
   kind: "permission_prompt",
   payload: createLazyValue(() =>
     customSchema(
@@ -26883,117 +26883,117 @@ var iQ = defineDialog({
 });
 import { AsyncLocalStorage as _ue } from "async_hooks";
 var Ul = new _ue();
-function cKt(e, t) {
+function runWithTurnAttributionKey(e, t) {
   return Ul.run({ key: e }, t);
 }
-function ICt() {
+function getTurnAttributionKey() {
   return Ul.getStore()?.key;
 }
-function Lvn() {
+function clearTurnAttributionKey() {
   let e = Ul.getStore();
   if (e) e.key = void 0;
 }
-function vor(e) {
+function adoptTurnAttributionKeyFromMessages(e) {
   let t = Ul.getStore(),
-    r = Mvn(e.filter((o) => !o.isMeta));
+    r = findLastTurnAttributionKey(e.filter((o) => !o.isMeta));
   if (t && r !== void 0) t.key = r;
 }
-function jQe(e, { isCrossSession: t }) {
+function getLocalTurnAttributionKey(e, { isCrossSession: t }) {
   return !t && typeof e === "string" ? e : void 0;
 }
-function Ror(e) {
+function getEffectiveTurnAttributionKey(e) {
   if (e.turnAttributionKey !== void 0) return e.turnAttributionKey;
   return e.mode === "task-notification"
     ? Mi(e.inheritedTurnAttributionKey)
     : void 0;
 }
-function Mvn(e) {
+function findLastTurnAttributionKey(e) {
   return e.findLast((t) => Mi(t.turnAttributionKey) !== void 0)
     ?.turnAttributionKey;
 }
 function Mi(e) {
   return Xn(e) ?? void 0;
 }
-function PCt(e) {
+function getSingleTurnAttributionKey(e) {
   let t = e.filter((r) => r.turnAttributionKey !== void 0 && !r.isMeta);
   return t.length === 1 ? Mi(t[0]?.turnAttributionKey) : void 0;
 }
-var OCt = new hue();
-function kw(e, t) {
-  if (!("turnAttributionKey" in e)) e.turnAttributionKey = ICt();
-  return OCt.run(e, () => cKt(e.turnAttributionKey, t));
+var agentContextStorage = new hue();
+function runWithAgentContext(e, t) {
+  if (!("turnAttributionKey" in e)) e.turnAttributionKey = getTurnAttributionKey();
+  return agentContextStorage.run(e, () => runWithTurnAttributionKey(e.turnAttributionKey, t));
 }
-function aa() {
+function createMainAgentContext() {
   return { agentType: "main", agentId: K() };
 }
-function fh(e) {
+function isMainAgentContext(e) {
   return e.agentType === "main";
 }
-function uKt(e) {
+function resolveTurnAttributionKey(e) {
   return Mi(
-    e && !fh(e) && "turnAttributionKey" in e ? e.turnAttributionKey : ICt(),
+    e && !isMainAgentContext(e) && "turnAttributionKey" in e ? e.turnAttributionKey : getTurnAttributionKey(),
   );
 }
-function Ji(e) {
+function isDelegatedObservationAgent(e) {
   return e?.agentType === "subagent" && e.delegatedObservation === !0;
 }
-function mc(e) {
+function getAgentDepth(e) {
   if (e.agentType === "main") return 0;
   return e.depth ?? 0;
 }
-function kor(e) {
+function getForegroundSubagentId(e) {
   if (!e || e.agentType === "main") return;
   if (e.isBackgroundAgent) return;
   if ("isMainSession" in e && e.isMainSession) return;
   return e.agentId;
 }
-function dKt(e) {
+function getBackgroundAgentId(e) {
   if (!e || e.agentType === "main") return;
   return e.isBackgroundAgent ? e.agentId : void 0;
 }
-function DCt(e) {
+function isForegroundSubagentContext(e) {
   return e !== void 0 && e.agentType === "subagent" && e.isAsync === !1;
 }
-function KC(e) {
+function isSubagentContext(e) {
   return e.agentType === "subagent";
 }
-function LCt(e) {
+function isOutOfProcessAgentContext(e) {
   return (
     e.agentContext.agentType === "teammate" ||
-    (KC(e.agentContext) && e.agentContext.isAsync === !0) ||
+    (isSubagentContext(e.agentContext) && e.agentContext.isAsync === !0) ||
     e.forRemoteExecution === !0 ||
-    rx(e)
+    isPluginSteeredAgent(e)
   );
 }
-function _U(e) {
-  return KC(e) && !e.isMainSession;
+function isSubagentSession(e) {
+  return isSubagentContext(e) && !e.isMainSession;
 }
-function Nvn(e) {
-  if (!KC(e) || !e.subagentName) return;
+function getSubagentNameForAnalytics(e) {
+  if (!isSubagentContext(e) || !e.subagentName) return;
   return e.isBuiltIn ? agentTypeForAnalytics_GATE_EVALUATED(e.subagentName, !0) : S("user-defined");
 }
-function Yme(e) {
+function getSubagentAnalyticsFields(e) {
   try {
-    if (!KC(e)) return {};
-    let t = Nvn(e);
+    if (!isSubagentContext(e)) return {};
+    let t = getSubagentNameForAnalytics(e);
     if (t === void 0) return {};
     return { subagent_type: t, is_built_in_agent: e.isBuiltIn ?? !1 };
   } catch {
     return {};
   }
 }
-function WQe(e) {
-  if (!e || !KC(e) || !e.workflowRunId) return {};
+function getWorkflowAnalyticsAttributes(e) {
+  if (!e || !isSubagentContext(e) || !e.workflowRunId) return {};
   return {
     "workflow.run_id": e.workflowRunId,
     ...(e.workflowName && { "workflow.name": e.workflowName }),
   };
 }
-function o0(e) {
-  if (!e || !KC(e) || !e.workflowRunId) return {};
+function getWorkflowRunMetadata(e) {
+  if (!e || !isSubagentContext(e) || !e.workflowRunId) return {};
   return { workflowRunId: e.workflowRunId, workflowName: e.workflowName };
 }
-function Fvn(e) {
+function claimAgentInvocation(e) {
   if (e.agentType === "main" || !e.invokingRequestId || e.invocationEmitted)
     return;
   return (
@@ -27001,37 +27001,37 @@ function Fvn(e) {
     { invokingRequestId: e.invokingRequestId, invocationKind: e.invocationKind }
   );
 }
-function wl() {
+function isToolDetailsLoggingEnabled() {
   return a.OTEL_LOG_TOOL_DETAILS;
 }
 var Bl = { [WORKSPACE_MCP_BASH_TOOL_NAME]: "Bash", [WORKSPACE_MCP_WEB_FETCH_TOOL_NAME]: "WebFetch" };
-function aZe(e) {
+function isWorkspaceMcpToolName(e) {
   return Object.hasOwn(Bl, e);
 }
-function wP(e) {
-  return Tn(e);
+function getMcpServerKeyHash(e) {
+  return hashForTelemetry(e);
 }
 function UF(e) {
   return e === "mcp_tool" || Object.values(Bl).includes(e);
 }
-function Hn(e) {
+function getSanitizedToolName(e) {
   let t = Object.hasOwn(Bl, e) ? Bl[e] : void 0;
   if (t) return fromSanitizer_SANITIZER_OUTPUT_ONLY(t);
   if (e.startsWith("mcp__")) return S("mcp_tool");
   return fromSanitizer_SANITIZER_OUTPUT_ONLY(e);
 }
-function tsr(e) {
+function classifyUnknownToolName(e) {
   if (e.startsWith("mcp__")) return S("mcp_tool");
   if (e.startsWith("skill__")) return S("skill_tool");
   return S("unknown_tool");
 }
-function nsr(e, t, r) {
+function getMcpToolAnalyticsFieldsForAllowedServer(e, t, r) {
   if (!t) return {};
-  let o = cRe(e);
+  let o = parseMcpToolName(e);
   if (!o) return {};
   if (!r && !zF.has(o.serverName)) return {};
   let d = mcpNameForAnalytics_GATE_EVALUATED(o.serverName, t);
-  if (QQe(o.serverName)?.has(o.mcpToolName))
+  if (getFirstPartyMcpToolNames(o.serverName)?.has(o.mcpToolName))
     return { mcpServerName: d, mcpToolName: mcpNameForAnalytics_GATE_EVALUATED(o.mcpToolName, t) };
   return { mcpServerName: d };
 }
@@ -27042,55 +27042,55 @@ var DF = {
   "Claude Code iOS Simulator": "mobile_simulator_ios",
   "Claude Code Android Emulator": "mobile_simulator_android",
 };
-function rsr(e) {
+function getSdkHostMcpToolFeatureName(e) {
   if (!e || !Hl(e)) return;
   let { serverName: t } = e;
   return t !== void 0 && Object.hasOwn(DF, t) ? DF[t] : void 0;
 }
-function IKt(e) {
+function getToolSourceFields(e) {
   let t = !e ? "builtin" : Hl(e) ? "sdk_host_builtin_mcp" : "mcp";
   return { tool_source: fromEnum(t) };
 }
-function ca(e) {
-  return fromSanitizer_SANITIZER_OUTPUT_ONLY(WN(e) ?? "");
+function getSanitizedQuerySource(e) {
+  return fromSanitizer_SANITIZER_OUTPUT_ONLY(normalizeQuerySource(e) ?? "");
 }
-function lZe() {
+function isToolContentLoggingEnabled() {
   return Ie(process.env.OTEL_LOG_TOOL_CONTENT);
 }
 function xF(e, t) {
   if (process.env.CLAUDE_CODE_ENTRYPOINT === "local-agent") return !0;
   if (e === "claudeai-proxy") return !0;
   if (t && zz(t)) return !0;
-  if (t && pA(t)) return !0;
+  if (t && isFirstPartyDesignUrl(t)) return !0;
   return !1;
 }
-var zF = new Set([s0]);
-function oy(e, t) {
+var zF = new Set([COMPUTER_USE_MCP_SERVER_NAME]);
+function shouldSendMcpServerTelemetry(e, t) {
   if (t === void 0) {
     if (zF.has(e)) return !0;
     return xF(void 0, void 0);
   }
   if (Xz(e, t)) return !0;
-  if ("url" in t && VZe(t.url) && normalizeMcpName(e) === Rp) return !0;
+  if ("url" in t && VZe(t.url) && normalizeMcpName(e) === REMOTE_DEVICES_MCP_SERVER_NAME) return !0;
   return xF(t.type, DRe(t));
 }
-function A6(e, t) {
+function getMcpToolAnalyticsFields(e, t) {
   if (!t) return {};
-  let r = cRe(e);
+  let r = parseMcpToolName(e);
   if (!r) return {};
   let o = mcpNameForAnalytics_GATE_EVALUATED(r.serverName, t),
-    d = QQe(r.serverName);
+    d = getFirstPartyMcpToolNames(r.serverName);
   if (d !== void 0 && !d.has(r.mcpToolName)) return { mcpServerName: o };
   return { mcpServerName: o, mcpToolName: mcpNameForAnalytics_GATE_EVALUATED(r.mcpToolName, t) };
 }
-function uQ(e, t, r) {
+function getSampledMcpToolName(e, t, r) {
   if (!r) return;
-  let o = QQe(e);
+  let o = getFirstPartyMcpToolNames(e);
   if (o === void 0) return fromSanitizer_SANITIZER_OUTPUT_ONLY(t);
   let d = normalizeMcpName(t);
   return o.has(d) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(d) : void 0;
 }
-function cRe(e) {
+function parseMcpToolName(e) {
   if (!e.startsWith("mcp__")) return;
   let t = e.split("__");
   if (t.length < 3) return;
@@ -27099,7 +27099,7 @@ function cRe(e) {
   if (!r || !o) return;
   return { serverName: r, mcpToolName: o };
 }
-function lRn(e, t, r) {
+function getSkillNameFromToolInput(e, t, r) {
   if (e !== "Skill") return;
   if (
     typeof t === "object" &&
@@ -27110,7 +27110,7 @@ function lRn(e, t, r) {
     return t.skill;
   return;
 }
-function cRn(e, t) {
+function getSubagentTypeFromToolInput(e, t) {
   if (e !== "Agent" && e !== "Task") return;
   if (
     typeof t === "object" &&
@@ -27121,16 +27121,16 @@ function cRn(e, t) {
     return t.subagent_type;
   return;
 }
-function JCt(e, t, r, o) {
+function buildToolTelemetryFields(e, t, r, o) {
   let d = {};
-  if (!wl()) {
+  if (!isToolDetailsLoggingEnabled()) {
     if (o && Hl(o))
-      ((d.mcp_server_name = JJ(o.serverName)),
-        (d.mcp_tool_name = JJ(o.toolName)));
+      ((d.mcp_server_name = toWellFormedAttributeValue(o.serverName)),
+        (d.mcp_tool_name = toWellFormedAttributeValue(o.toolName)));
     return d;
   }
   let p =
-      e === qe &&
+      e === BASH_TOOL_NAME &&
       t !== null &&
       typeof t === "object" &&
       "command" in t &&
@@ -27164,16 +27164,16 @@ function JCt(e, t, r, o) {
       d.timeout = I.timeout_ms;
   }
   if (o && Hl(o))
-    ((d.mcp_server_name = JJ(o.serverName)),
-      (d.mcp_tool_name = JJ(o.toolName)));
+    ((d.mcp_server_name = toWellFormedAttributeValue(o.serverName)),
+      (d.mcp_tool_name = toWellFormedAttributeValue(o.toolName)));
   else {
-    let I = cRe(e);
+    let I = parseMcpToolName(e);
     if (I)
       ((d.mcp_server_name = I.serverName), (d.mcp_tool_name = I.mcpToolName));
   }
-  let E = lRn(e, t, r);
+  let E = getSkillNameFromToolInput(e, t, r);
   if (E) d.skill_name = E;
-  let C = cRn(e, t);
+  let C = getSubagentTypeFromToolInput(e, t);
   if (C) d.subagent_type = C;
   return d;
 }
@@ -27208,15 +27208,15 @@ function im(e, t = 0) {
   }
   return String(e);
 }
-function osr(e) {
-  if (!wl()) return;
+function serializeToolInputForOtel(e) {
+  if (!isToolDetailsLoggingEnabled()) return;
   let t = im(e),
     r = b(t);
   if (r.length > NF) r = r.slice(0, NF) + "\u2026[truncated]";
   return r;
 }
 var Aue = 10;
-function c0(e) {
+function getFileExtension(e) {
   let t = extname(e).toLowerCase();
   if (!t || t === ".") return;
   let r = t.slice(1);
@@ -27244,12 +27244,12 @@ var yue = new Set([
   ]),
   vue = /\s*(?:&&|\|\||[;|])\s*/,
   Rue = /\s+/;
-function ssr(e, t) {
+function getFileExtensionsFromFileCommands(e, t) {
   if (!e.includes(".") && !t) return;
   let r,
     o = new Set();
   if (t) {
-    let d = c0(t);
+    let d = getFileExtension(t);
     if (d) (o.add(d), (r = d));
   }
   for (let d of e.split(vue)) {
@@ -27263,7 +27263,7 @@ function ssr(e, t) {
     for (let I = 1; I < p.length; I++) {
       let D = p[I];
       if (D.charCodeAt(0) === 45) continue;
-      let x = c0(D);
+      let x = getFileExtension(D);
       if (x && !o.has(x)) (o.add(x), (r = r ? r + "," + x : x));
     }
   }
@@ -27271,7 +27271,7 @@ function ssr(e, t) {
   return fromSanitizer_SANITIZER_OUTPUT_ONLY(r);
 }
 var Cue = /\.(csv|docx?|html|json|md|od[pst]|pdf|pptx?|rtf|txt|xlsx?)\b/g;
-function PKt(e) {
+function getDocumentFileExtensionsInCommand(e) {
   if (!e.includes(".")) return;
   let t = new Set();
   for (let o of e.toLowerCase().matchAll(Cue)) t.add(o[1]);
@@ -27285,7 +27285,7 @@ function Ii(e) {
     messageID: e.messageID,
     activity: fromEnum(e.activity),
     fileExtension: e.fileExtension,
-    toolName: Hn(e.toolName),
+    toolName: getSanitizedToolName(e.toolName),
     isNewFile: e.isNewFile,
     deliverChannel: fromEnumOpt(e.deliverChannel),
   });
@@ -27303,7 +27303,7 @@ function Fl(e, t, r, o) {
     )
       _ = p.file_name;
     else continue;
-    let E = c0(_);
+    let E = getFileExtension(_);
     if (d.has(E)) continue;
     (d.add(E),
       Ii({
@@ -27316,42 +27316,42 @@ function Fl(e, t, r, o) {
       }));
   }
 }
-function isr(e, t, r) {
+function logToolFileActivity(e, t, r) {
   if (!t || typeof t !== "object") return;
   let o = t,
     d = sanitizeAnalyticsId(r);
-  if (e === Bt && typeof o.file_path === "string")
+  if (e === EDIT_TOOL_NAME && typeof o.file_path === "string")
     Ii({
       activity: "edit",
-      fileExtension: c0(o.file_path),
+      fileExtension: getFileExtension(o.file_path),
       toolName: e,
       isNewFile: o.old_string === "",
       deliverChannel: void 0,
       messageID: d,
     });
-  else if (e === Mn && typeof o.file_path === "string")
+  else if (e === WRITE_TOOL_NAME && typeof o.file_path === "string")
     Ii({
       activity: "write",
-      fileExtension: c0(o.file_path),
+      fileExtension: getFileExtension(o.file_path),
       toolName: e,
       isNewFile: void 0,
       deliverChannel: void 0,
       messageID: d,
     });
-  else if (e === Wl && typeof o.notebook_path === "string")
+  else if (e === NOTEBOOK_EDIT_TOOL_NAME && typeof o.notebook_path === "string")
     Ii({
       activity: "notebook_edit",
-      fileExtension: c0(o.notebook_path),
+      fileExtension: getFileExtension(o.notebook_path),
       toolName: e,
       isNewFile: !1,
       deliverChannel: void 0,
       messageID: d,
     });
   else if (
-    (e === qe || e === WORKSPACE_MCP_BASH_TOOL_NAME || e === Ut) &&
+    (e === BASH_TOOL_NAME || e === WORKSPACE_MCP_BASH_TOOL_NAME || e === POWERSHELL_TOOL_NAME) &&
     typeof o.command === "string"
   ) {
-    let p = PKt(o.command);
+    let p = getDocumentFileExtensionsInCommand(o.command);
     if (p)
       for (let _ of p.split(","))
         Ii({
@@ -27371,7 +27371,7 @@ function isr(e, t, r) {
   else if (e === BRIEF_TOOL_NAME && Array.isArray(o.attachments))
     Fl(o.attachments, e, "brief", d);
 }
-function asr(e) {
+function sumAttachmentBytesInMessages(e) {
   if (!e) return 0;
   let t = 0;
   for (let r of e) {
@@ -27385,7 +27385,7 @@ function asr(e) {
 }
 var kue =
   /^\d+\.\d+\.\d+(-(?:dev|alpha|beta|rc|test|nightly|engine)(?![a-z_-])\d{0,8}(?:\.[a-z0-9.]{0,40})?)?/;
-function Ms(e) {
+function getVersionForAnalytics(e) {
   if (e == null) return S("none");
   let t = e.match(kue);
   if (t) return fromSanitizer_SANITIZER_OUTPUT_ONLY(t[0]);
@@ -27408,18 +27408,18 @@ var wue = new Set([
   "wsl",
   "unknown",
 ]);
-function u0(e) {
+function getPlatformForAnalytics(e) {
   if (e == null) return S("none");
   if (wue.has(e)) return fromSanitizer_SANITIZER_OUTPUT_ONLY(e);
   return S("other");
 }
 var Pue = /^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})?$/;
-function uRe(e) {
+function getSanitizedShortCode(e) {
   if (Pue.test(e)) return fromSanitizer_SANITIZER_OUTPUT_ONLY(e);
   return S("nonconforming");
 }
 function Mue() {
-  let e = OCt.getStore();
+  let e = agentContextStorage.getStore();
   if (e) {
     let E = {
       agentId: e.agentId,
@@ -27445,7 +27445,7 @@ function Mue() {
   if (_) return { parentSessionId: _ };
   return {};
 }
-function cZe() {
+function getVersionBase() {
   let e = {
     ISSUES_EXPLAINER:
       "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -27473,7 +27473,7 @@ async function Iue() {
     platformRaw: process.env.CLAUDE_CODE_HOST_PLATFORM || "darwin",
     arch: a.arch,
     nodeVersion: a.nodeVersion,
-    terminal: ry.terminal,
+    terminal: runtimeEnvironment.terminal,
     shell: getShellForAnalytics(),
     packageManagers: e.join(","),
     runtimes: t.join(","),
@@ -27510,7 +27510,7 @@ async function Iue() {
         "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
       DD_SOURCEMAP_GROUP: "darwin",
     }.VERSION,
-    versionBase: cZe(),
+    versionBase: getVersionBase(),
     buildTime: {
       ISSUES_EXPLAINER:
         "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -27547,7 +27547,7 @@ class FF {
   memPeaks = { rss: 0, heapUsed: 0, external: 0 };
 }
 var BF = new j(() => new FF());
-function lsr() {
+function getMemoryPeaks() {
   return { ...BF.of(B().host).memPeaks };
 }
 function Due(e) {
@@ -27593,12 +27593,12 @@ function Due(e) {
 }
 async function Vl(e = {}) {
   let t = e.model ? String(e.model) : getMainLoopModel(),
-    r = typeof e.betas === "string" ? e.betas : jC(b6(t)).join(","),
+    r = typeof e.betas === "string" ? e.betas : getBetaHeaders(getModelBetas(t)).join(","),
     o = fZ(),
     d = BF.of(B().host);
   d.envContext ??= Iue();
-  let [p, _, E] = await Promise.all([d.envContext, getRepoRemoteHash(), getCachedHead(), FQe()]),
-    C = GAt(t),
+  let [p, _, E] = await Promise.all([d.envContext, getRepoRemoteHash(), getCachedHead(), ensureServedCatalogMaskHydrated()]),
+    C = maskModelIdIfConfidential(t),
     I = Due(d),
     D = envSessionKind(),
     x = D ? (dl() ? "1" : "0") : void 0,
@@ -27613,7 +27613,7 @@ async function Vl(e = {}) {
     ...(process.env.CLAUDE_CODE_ENTRYPOINT && { entrypoint: getEnvEntrypoint() ?? "other" }),
     ...(D && { sessionKind: D }),
     ...(x && { hasAttacher: x }),
-    ...(G && { agentSdkVersion: G === "unknown" ? "unknown" : Ms(G) }),
+    ...(G && { agentSdkVersion: G === "unknown" ? "unknown" : getVersionForAnalytics(G) }),
     isInteractive: String(ld()),
     clientType: wrt(),
     ...(I && { processMetrics: I }),
@@ -28328,7 +28328,7 @@ class gm {
         "User-Agent": getClientUserAgent(),
         "x-service-name": "claude-code",
       },
-      o = Bo() || ke();
+      o = checkHasTrustDialogAccepted() || ke();
     if (
       o &&
       !this.skipAuth &&
@@ -28355,10 +28355,10 @@ class gm {
           }
         : await this.authHeadersForSend(),
       _ = !d && p.reasonCode === "no_api_key" ? (Gue(this.endpoint) ?? p) : p,
-      E = YJ(_, this.endpoint),
+      E = withholdCredentialsForMisroutedHost(_, this.endpoint),
       C = !E.error,
       I = C ? { ...r, ...E.headers } : r,
-      D = mVt({ url: this.endpoint, payload: e, storageV5: this.storageV5 });
+      D = buildGzippedBodyIfEnabled({ url: this.endpoint, payload: e, storageV5: this.storageV5 });
     try {
       let x = await at.post(this.endpoint, D?.body ?? e, {
         timeout: this.timeout,
@@ -28535,14 +28535,14 @@ function Vue(e) {
   return t.join(", ");
 }
 var Kue = "tengu_frond_boric";
-function HUe(e) {
-  return Qh(Kue, {})?.[e] === !0;
+function isAnalyticsSinkDisabled(e) {
+  return getDynamicConfig_CACHED_MAY_BE_STALE(Kue, {})?.[e] === !0;
 }
 var jue = "tengu_event_sampling_config";
 function Wue() {
-  return Qh(jue, {});
+  return getDynamicConfig_CACHED_MAY_BE_STALE(jue, {});
 }
-function OKt(e) {
+function getEventSampleRate(e) {
   let r = Wue()[e];
   if (!r) return null;
   let o = r.sample_rate;
@@ -28554,7 +28554,7 @@ function OKt(e) {
 var qF = 2000,
   $ue = "tengu_1p_event_batch_config";
 function XF() {
-  return Qh($ue, {});
+  return getDynamicConfig_CACHED_MAY_BE_STALE($ue, {});
 }
 var JF = 1024;
 class QF {
@@ -28567,13 +28567,13 @@ class QF {
   reinitInFlight = null;
 }
 var Ar = new j(() => new QF());
-async function $yr() {
+async function beginFirstPartyExporterShutdown() {
   let { firstPartyEventExporter: e } = Ar.of(B().host);
   try {
     await e?.beginShutdown(qF);
   } catch {}
 }
-async function w5() {
+async function shutdownFirstPartyEventLogging() {
   let { firstPartyEventLoggerProvider: e, firstPartyEventExporter: t } = Ar.of(
     B().host,
   );
@@ -28584,10 +28584,10 @@ async function w5() {
   } catch {}
 }
 function Yue() {
-  return H("tengu_swift_whistle", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_swift_whistle", !1);
 }
-function TP() {
-  return !mg();
+function isTelemetryEnabled() {
+  return !isAnalyticsDisabled();
 }
 async function ZF(e, t, r = {}) {
   try {
@@ -28599,43 +28599,43 @@ async function ZF(e, t, r = {}) {
         user_metadata: ws(!0),
         event_metadata: r,
       },
-      p = dx();
+      p = getOrCreateUserID();
     if (p) d.user_id = p;
     let _ = new Date();
     e.emit({ timestamp: _, observedTimestamp: _, body: t, attributes: d });
   } catch (o) {}
 }
-function IUe(e, t = {}) {
-  if (!TP()) return;
+function logFirstPartyEvent(e, t = {}) {
+  if (!isTelemetryEnabled()) return;
   let { firstPartyEventLogger: r, preInitQueue: o } = Ar.of(B().host);
   if (!r) {
     if (o !== null && o.length < JF) o.push({ eventName: e, metadata: t });
     return;
   }
-  if (HUe("firstParty")) return;
+  if (isAnalyticsSinkDisabled("firstParty")) return;
   ZF(r, e, t);
 }
-async function E_(e, t = {}) {
-  if (!TP()) return;
+async function logFirstPartyEventAsync(e, t = {}) {
+  if (!isTelemetryEnabled()) return;
   let { firstPartyEventLogger: r, preInitQueue: o } = Ar.of(B().host);
   if (!r) {
     if (o !== null && o.length < JF) o.push({ eventName: e, metadata: t });
     return;
   }
-  if (HUe("firstParty")) return;
+  if (isAnalyticsSinkDisabled("firstParty")) return;
   return ZF(r, e, t);
 }
 function que() {
   return "production";
 }
-function csr(e) {
-  if (!TP() || HUe("firstParty")) return !0;
+function logGrowthBookExposure(e) {
+  if (!isTelemetryEnabled() || isAnalyticsSinkDisabled("firstParty")) return !0;
   let { firstPartyEventLogger: t, lastBatchConfig: r } = Ar.of(B().host);
   if (!t) {
     if (r === null) return !0;
     return !1;
   }
-  let o = dx(),
+  let o = getOrCreateUserID(),
     { accountUuid: d, organizationUuid: p } = ws(!0),
     _ = {
       event_type: "GrowthbookExperimentEvent",
@@ -28668,10 +28668,10 @@ function csr(e) {
 var Xue = 1e4,
   Jue = 200,
   Que = 8192;
-function Mse(e) {
+function initializeFirstPartyEventLogging(e) {
   let t = Ar.of(B().host);
   if (e !== void 0 && t.retainedStorageV5 === void 0) t.retainedStorageV5 = e;
-  if ((profileCheckpoint("1p_event_logging_start"), !TP())) {
+  if ((profileCheckpoint("1p_event_logging_start"), !isTelemetryEnabled())) {
     t.preInitQueue = null;
     return;
   }
@@ -28711,16 +28711,16 @@ function Mse(e) {
         maxAttempts: o.maxAttempts,
         path: o.path,
         baseUrl: o.baseUrl,
-        isKilled: () => HUe("firstParty"),
+        isKilled: () => isAnalyticsSinkDisabled("firstParty"),
         storageV5: t.retainedStorageV5,
       }),
-      new HAt("1P event logging"),
+      new TelemetryExportFailureReporter("1P event logging"),
     );
   if (
-    ((t.firstPartyEventLoggerProvider = new K$e({
+    ((t.firstPartyEventLoggerProvider = new OtelLoggerProvider({
       resource: I,
       processors: [
-        new Pme(D, {
+        new OtelBatchLogRecordProcessor(D, {
           scheduledDelayMillis: d,
           maxExportBatchSize: p,
           maxQueueSize: _,
@@ -28749,10 +28749,10 @@ function Mse(e) {
   ) {
     let x = t.preInitQueue;
     t.preInitQueue = null;
-    for (let { eventName: N, metadata: G } of x) IUe(N, G);
+    for (let { eventName: N, metadata: G } of x) logFirstPartyEvent(N, G);
   }
 }
-function Uyr() {
+function reinitializeFirstPartyEventLogging() {
   let e = Ar.of(B().host);
   return (
     (e.reinitInFlight ??= Zue(e).finally(() => {
@@ -28762,7 +28762,7 @@ function Uyr() {
   );
 }
 async function Zue(e) {
-  if (!TP() || !e.firstPartyEventLoggerProvider) return;
+  if (!isTelemetryEnabled() || !e.firstPartyEventLoggerProvider) return;
   let t = XF();
   if (Qs(t, e.lastBatchConfig)) return;
   let {
@@ -28776,7 +28776,7 @@ async function Zue(e) {
   } catch {}
   e.firstPartyEventLoggerProvider = null;
   try {
-    Mse();
+    initializeFirstPartyEventLogging();
   } catch (p) {
     ((e.firstPartyEventLoggerProvider = r),
       (e.firstPartyEventLogger = o),
@@ -28800,59 +28800,59 @@ function ft() {
   let e = nB();
   if (e.client === null)
     e.client = new fu({
-      isEnabled: () => CU(),
+      isEnabled: () => isGrowthBookEnabled(),
       isDiskCacheReadableWhileDisabled: () => rde(),
       hasWorkspaceTrust: () => nde(),
       getAuthHeaders: () => getAuthHeadersAsync(),
       refreshOAuthTokenIfNeeded: (t, r) => checkAndRefreshOAuthTokenIfNeeded({ credentials: t, storageV5: r }),
-      getUserAttributes: () => Usr(),
-      rereadUserAttributes: () => (Tkn(), lU(), pVt(), Usr()),
-      readGlobalConfig: () => ee(),
+      getUserAttributes: () => getUserAttributes(),
+      rereadUserAttributes: () => (Tkn(), resetUserData(), initUserData(), getUserAttributes()),
+      readGlobalConfig: () => getGlobalConfig(),
       saveGlobalConfig: (t, r) => {
-        Te(t, r);
+        saveGlobalConfig(t, r);
       },
       readEnvironmentOverrides: () => a.CLAUDE_INTERNAL_FC_OVERRIDES,
-      logExposure: (t) => csr(t),
+      logExposure: (t) => logGrowthBookExposure(t),
       fetchRemoteEvalFromSdk: ede,
       getRefreshCadence: () => ide(),
       sleep: (t, r, o) => sleep(t, r, o),
     });
   return e.client;
 }
-function LRn(e) {
+function setGrowthBookCredentials(e) {
   if (e === void 0) return;
   ft().setCredentials(e);
 }
-function MRn(e) {
+function setGrowthBookStorageBackend(e) {
   if (e === void 0) return;
   ft().setStorageBackend(e);
 }
 function nde() {
-  return Bo() || g8() || ke();
+  return checkHasTrustDialogAccepted() || g8() || ke();
 }
-function Ff(e) {
+function onGrowthBookRefresh(e) {
   return ft().onRefresh(e);
 }
-function $sr(e) {
+function hasGrowthBookOverride(e) {
   return ft().hasOverride(e);
 }
-function kZe() {
+function getAllGrowthBookFeatures() {
   return ft().getAllFeatures();
 }
-function TRe() {
+function isGrowthBookCacheEmpty() {
   return (
     !ft().hasFreshFeatures() &&
-    Object.keys(ee().cachedGrowthBookFeatures ?? {}).length === 0
+    Object.keys(getGlobalConfig().cachedGrowthBookFeatures ?? {}).length === 0
   );
 }
-function XC() {
+function hasFreshGrowthBookFeatures() {
   return ft().hasFreshFeatures();
 }
-function NRn() {
+function getNonDefaultFeatureKeys() {
   return ft().getNonDefaultFeatureKeys();
 }
-function CU() {
-  return !a.DISABLE_GROWTHBOOK && TP();
+function isGrowthBookEnabled() {
+  return !a.DISABLE_GROWTHBOOK && isTelemetryEnabled();
 }
 function rde() {
   return (
@@ -28873,7 +28873,7 @@ function ode() {
     return;
   }
 }
-function Usr() {
+function getUserAttributes() {
   let e = Ch(),
     t = void 0,
     r = e.email,
@@ -28890,7 +28890,7 @@ function Usr() {
       C?.organizationUuid ||
       t?.organizationUuid ||
       void 0,
-    x = ee().oauthAccount,
+    x = getGlobalConfig().oauthAccount,
     N = x?.organizationRole,
     G = x?.subscriptionCreatedAt,
     L = G ? Date.parse(/(z|[+-]\d{2}:?\d{2})$/i.test(G) ? G : G + "Z") : NaN;
@@ -28916,37 +28916,37 @@ function Usr() {
     ...(d && { releaseChannel: d }),
     ...(_ && { entrypoint: _ }),
     ...(E && { sessionOrigin: E }),
-    ...(es().hasUsedRemoteSession && { hasUsedRemoteSession: !0 }),
-    ...(ee().hasRemoteEnvironment && { hasRemoteEnvironment: !0 }),
+    ...(getCurrentProjectConfig().hasUsedRemoteSession && { hasUsedRemoteSession: !0 }),
+    ...(getGlobalConfig().hasRemoteEnvironment && { hasRemoteEnvironment: !0 }),
   };
 }
-function df() {
+function initializeGrowthBook() {
   return ft().initialize();
 }
-async function o5t(e, t) {
+async function getFeatureValue_DEPRECATED(e, t) {
   return ft().getFeatureValueBlocking(e, t);
 }
-function $f(e, t) {
+function getFeatureValueWithSource_CACHED_MAY_BE_STALE(e, t) {
   return ft().getFeatureValueWithSource(e, t);
 }
-function H(e, t) {
-  return $f(e, t).value;
+function getFeatureValue_CACHED_MAY_BE_STALE(e, t) {
+  return getFeatureValueWithSource_CACHED_MAY_BE_STALE(e, t).value;
 }
-function vU(e, t) {
+function getFeatureValue_SESSION_PINNED(e, t) {
   let r = (getSessionFeatureCache().pinnedFeatureValues ??= new Map());
-  if (!r.has(e)) r.set(e, H(e, t));
+  if (!r.has(e)) r.set(e, getFeatureValue_CACHED_MAY_BE_STALE(e, t));
   return r.get(e);
 }
-function m0(e, t, r) {
-  return H(e, t);
+function getFeatureValue_CACHED_WITH_REFRESH(e, t, r) {
+  return getFeatureValue_CACHED_MAY_BE_STALE(e, t);
 }
-async function od(e) {
+async function checkGate_CACHED_OR_BLOCKING(e) {
   return ft().checkGateCachedOrBlocking(e);
 }
-function _q(e) {
+function refreshGrowthBookAfterAuthChange(e) {
   ft().refreshAfterAuthChange(e);
 }
-function qUe(e) {
+function resetGrowthBook(e) {
   let t = nB();
   if (t.client === null) return;
   if (e === void 0) {
@@ -28957,7 +28957,7 @@ function qUe(e) {
 }
 function ide() {
   let t = 360,
-    r = H("tengu_gb_refresh_interval_minutes", null);
+    r = getFeatureValue_CACHED_MAY_BE_STALE("tengu_gb_refresh_interval_minutes", null);
   if (r === null) return { intervalMs: t * 60 * 1000, flagged: !1 };
   let o = typeof r === "string" ? Number(r) : r,
     d =
@@ -28971,12 +28971,12 @@ function ide() {
     flagged: !0,
   };
 }
-var FRn = "x-cc-atis";
-function zUe() {
-  let e = ql()?.atis;
+var ATIS_REQUEST_HEADER = "x-cc-atis";
+function getClientDataAtis() {
+  let e = getCachedClientData()?.atis;
   return typeof e === "string" && e.length > 0 ? e : void 0;
 }
-function mvt(e) {
+function atisPin(e) {
   let [t, r, ...o] = e.split(".");
   return t === "v1" &&
     r !== void 0 &&
@@ -28987,39 +28987,39 @@ function mvt(e) {
     : e;
 }
 function sde() {
-  return H("tengu_kestrel_moor", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_kestrel_moor", !0);
 }
-function $Rn() {
-  if (!sde()) return zUe();
+function getRequestAtis() {
+  if (!sde()) return getClientDataAtis();
   let e = X1();
-  if (e === void 0) return zUe();
+  if (e === void 0) return getClientDataAtis();
   return e.length > 0 ? e : void 0;
 }
-function URn() {
+function latchConversationAtis() {
   if (X1() === void 0) {
-    let e = zUe();
+    let e = getClientDataAtis();
     bae(e !== void 0 && /^[\x21-\x7e]+$/.test(e) ? e : "");
   }
 }
-async function xZe() {
+async function refreshGrowthBookFeatures() {
   return ft().refreshFeatures();
 }
-async function r1(e, t) {
-  return o5t(e, t);
+async function getDynamicConfig_BLOCKS_ON_INIT(e, t) {
+  return getFeatureValue_DEPRECATED(e, t);
 }
-function Qh(e, t) {
-  return H(e, t);
+function getDynamicConfig_CACHED_MAY_BE_STALE(e, t) {
+  return getFeatureValue_CACHED_MAY_BE_STALE(e, t);
 }
-J_(H);
-rh(H);
-ch($f);
-sh($f);
-dir(H);
-_h(H);
-Jcr(H, Ff);
-jir(H);
-bh(() => H(Sh, !1));
-function HZe(e) {
+J_(getFeatureValue_CACHED_MAY_BE_STALE);
+rh(getFeatureValue_CACHED_MAY_BE_STALE);
+ch(getFeatureValueWithSource_CACHED_MAY_BE_STALE);
+sh(getFeatureValueWithSource_CACHED_MAY_BE_STALE);
+dir(getFeatureValue_CACHED_MAY_BE_STALE);
+_h(getFeatureValue_CACHED_MAY_BE_STALE);
+Jcr(getFeatureValue_CACHED_MAY_BE_STALE, onGrowthBookRefresh);
+jir(getFeatureValue_CACHED_MAY_BE_STALE);
+bh(() => getFeatureValue_CACHED_MAY_BE_STALE(Sh, !1));
+function getCachedGitRoot(e) {
   return null;
 }
 var kze = createLazyValue(() => c({ root: s(), primary: s().nullish() }));
@@ -29027,7 +29027,7 @@ async function oB(e) {
   return null;
 }
 import { sep as dde } from "path";
-var IZe = new Set([
+var RESERVED_DIRECTORY_NAMES_LC = new Set([
   ".git",
   "hooks",
   ".husky",
@@ -29048,7 +29048,7 @@ var IZe = new Set([
   ".yarn",
   ".mvn",
 ]);
-function nc(e) {
+function normalizePathSegment(e) {
   let t = e
     .toLowerCase()
     .replace(/\u0131/g, "i")
@@ -29060,12 +29060,12 @@ function nc(e) {
       .replace(/[. ]+$/, "") || t
   );
 }
-function RU(e, t, r) {
+function hasReservedPathSegment(e, t, r) {
   let o = e.slice(t.length).split(dde),
     d = o.length - 1;
   for (let p = 0; p < o.length; p++) {
-    let _ = nc(o[p]);
-    if (IZe.has(_)) return !0;
+    let _ = normalizePathSegment(o[p]);
+    if (RESERVED_DIRECTORY_NAMES_LC.has(_)) return !0;
     if (p === d && r?.has(_)) return !0;
   }
   return !1;
@@ -29093,26 +29093,26 @@ function isAutoMemoryEnabledIgnoringPause() {
   return !0;
 }
 function isIndexRecallEnabled() {
-  return H("tengu_mill_orange", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_mill_orange", !1);
 }
 function isMemoryRecallEnabled() {
-  if (H("tengu_moth_copse", !1)) return !0;
+  if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_moth_copse", !1)) return !0;
   return isStoreMountedRecall();
 }
 function isStoreMountedRecall() {
   return !!process.env.CLAUDE_MEMORY_STORES?.trim();
 }
 function isAutoMemoryDisabledForCurrentMainLoopModel() {
-  let e = H("tengu_sepia_cormorant", null);
+  let e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_sepia_cormorant", null);
   if (!Array.isArray(e) || e.length === 0) return !1;
   let t = Ec(),
     r = t !== void 0 ? t : KR();
-  if (typeof r !== "string" || !gVt(r, e)) return !1;
-  return H("tengu_umber_petrel", !1);
+  if (typeof r !== "string" || !containsAnyIgnoreCase(r, e)) return !1;
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_umber_petrel", !1);
 }
 function isExtractModeActive() {
-  if (!H("tengu_passport_quail", !1)) return !1;
-  return !ke() || H("tengu_slate_thimble", !1);
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_passport_quail", !1)) return !1;
+  return !ke() || getFeatureValue_CACHED_MAY_BE_STALE("tengu_slate_thimble", !1);
 }
 function getMemoryBaseDir() {
   if (process.env.CLAUDE_CODE_REMOTE_MEMORY_DIR)
@@ -29160,7 +29160,7 @@ function sB() {
   let t = [
     "policySettings",
     "flagSettings",
-    ...(I6() ? ["localSettings", "projectSettings"] : []),
+    ...(isProjectScopeTrustAccepted() ? ["localSettings", "projectSettings"] : []),
     "userSettings",
   ];
   for (let r of t) {
@@ -29204,7 +29204,7 @@ class aB {
   );
   memoKey() {
     let e = sn();
-    return `${e}|${I6()}|${this.canonicalWcRootForProject(e) ?? ""}`;
+    return `${e}|${isProjectScopeTrustAccepted()}|${this.canonicalWcRootForProject(e) ?? ""}`;
   }
   defaultPath() {
     let e = getMemoryBaseDir(),
@@ -29255,11 +29255,11 @@ function isAutoMemPathSafeForCarveout(e, t = getAutoMemPath()) {
   if (!t.endsWith(Yl) || iB(t.replace(/[/\\]+$/, ""))) return !1;
   let r = normalize(e);
   if (!r.startsWith(t)) return !1;
-  return !RU(r, t);
+  return !hasReservedPathSegment(r, t);
 }
 import { createHash as Sde } from "crypto";
 var lB = "bi1-";
-function s5t(e) {
+function buildClientDataCacheKey(e) {
   let t = JSON.stringify([
       e.entrypoint ?? null,
       e.model,
@@ -29270,10 +29270,10 @@ function s5t(e) {
   return lB + r.slice(0, 16);
 }
 var Tde = 12,
-  Bsr = 86400000,
+  CLIENT_DATA_SLOT_STALE_AFTER_MS = 86400000,
   bde = 604800000,
   Ade = 300000;
-function _vt(e) {
+function isClientDataCacheEntry(e) {
   return (
     typeof e === "object" &&
     e !== null &&
@@ -29282,11 +29282,11 @@ function _vt(e) {
     typeof e.at === "number"
   );
 }
-function jsr(e, t, r) {
+function upsertClientDataCacheSlot(e, t, r) {
   let o =
     typeof e === "object" && e !== null
       ? Object.entries(e)
-          .filter((d) => d[0] !== t && d[0].startsWith(lB) && _vt(d[1]))
+          .filter((d) => d[0] !== t && d[0].startsWith(lB) && isClientDataCacheEntry(d[1]))
           .sort(([, d], [, p]) => p.at - d.at)
           .slice(0, Tde - 1)
       : [];
@@ -29298,7 +29298,7 @@ function hm(e, t) {
 function Xl(e, t) {
   if (typeof e !== "object" || e === null) return null;
   let r = e[t];
-  return _vt(r) ? { data: r.data ?? null } : null;
+  return isClientDataCacheEntry(r) ? { data: r.data ?? null } : null;
 }
 function uB(e, t) {
   if (typeof e !== "object" || e === null) return null;
@@ -29308,7 +29308,7 @@ function uB(e, t) {
     p = null;
   for (let _ of Object.values(e)) {
     if (
-      !_vt(_) ||
+      !isClientDataCacheEntry(_) ||
       (_.entrypoint ?? null) !== t.entrypoint ||
       _.model !== t.model ||
       _.org !== t.org
@@ -29618,22 +29618,22 @@ function Ni() {
     schemaDescFixes: t.thistle_skein === !0,
   });
 }
-function WRn() {
+function getToolSearchReminderConfig() {
   return Ni().toolSearchReminder;
 }
-function Wsr() {
+function isToolParamStrictnessEnabled() {
   return Ni().toolParamStrictness;
 }
-function Gsr() {
+function isEmptyInputRepairEnabled() {
   return Ni().emptyInputRepair;
 }
-function qsr() {
+function isToolSearchFetchRuleEnabled() {
   return Ni().toolSearchFetchRule;
 }
-function GRn() {
+function isSchemaDescFixesEnabled() {
   return Ni().schemaDescFixes;
 }
-function qRn(e) {
+function isEmptyObject(e) {
   return (
     typeof e === "object" &&
     e !== null &&
@@ -29641,7 +29641,7 @@ function qRn(e) {
     Object.keys(e).length === 0
   );
 }
-function zsr(e, t) {
+function buildEmptyInputRepairMessage(e, t) {
   try {
     if (!(t instanceof Jkt)) return null;
     let r = t.shape,
@@ -29672,7 +29672,7 @@ function yde(e, t) {
   return `<${e}>`;
 }
 var Cde = import.meta.require("../../01-核心基础设施/共享小工具-未细化/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js"),
-  k5 = {
+  DEFAULT_PROJECT_CONFIG = {
     allowedTools: [],
     mcpContextUris: [],
     mcpServers: {},
@@ -29724,19 +29724,19 @@ function Ye() {
     unpinFable5LaunchEffort: !1,
   };
 }
-var VD = Ye(),
-  Yfr = new j(
+var DEFAULT_GLOBAL_CONFIG = Ye(),
+  globalConfigStores = new j(
     () =>
       new Em({
         now: Date.now,
-        testGlobalConfig: { ...VD, autoUpdates: !1 },
-        testProjectConfig: { ...k5 },
+        testGlobalConfig: { ...DEFAULT_GLOBAL_CONFIG, autoUpdates: !1 },
+        testProjectConfig: { ...DEFAULT_PROJECT_CONFIG },
       }),
   );
 function Q() {
-  return bi(Yfr);
+  return bi(globalConfigStores);
 }
-var i5t = [
+var GLOBAL_CONFIG_KEYS = [
   "apiKeyHelper",
   "installMethod",
   "autoUpdates",
@@ -29785,47 +29785,47 @@ var i5t = [
   "remoteDialogSeen",
   "workflowSizeGuideline",
 ];
-function aSr(e) {
-  return i5t.includes(e);
+function isGlobalConfigKey(e) {
+  return GLOBAL_CONFIG_KEYS.includes(e);
 }
-var Jfr = ["allowedTools", "hasTrustDialogAccepted"];
-function LZe() {
+var PROJECT_CONFIG_KEYS = ["allowedTools", "hasTrustDialogAccepted"];
+function resetTrustDialogAcceptedCache() {
   Q().setTrustAccepted(!1);
 }
-function Bo() {
+function checkHasTrustDialogAccepted() {
   let e = Q();
   if (e.trustAccepted) return !0;
   let t = Pde();
   if (t) e.setTrustAccepted(!0);
   return t;
 }
-function I6() {
+function isProjectScopeTrustAccepted() {
   if (ke()) return !0;
-  return Bo();
+  return checkHasTrustDialogAccepted();
 }
 function isWorkspacePersistedTrusted(e) {
-  return a5t(e ?? he());
+  return isPathPersistedTrusted(e ?? he());
 }
-function a5t(e) {
-  return MZe(KUe(e));
+function isPathPersistedTrusted(e) {
+  return isTrustKeyPersistedTrusted(getPersistedTrustKeyForPath(e));
 }
-function MZe(e) {
+function isTrustKeyPersistedTrusted(e) {
   if (qDn(e)) return !1;
-  return ee().projects?.[e]?.hasTrustDialogAccepted === !0;
+  return getGlobalConfig().projects?.[e]?.hasTrustDialogAccepted === !0;
 }
 function getWorkspacePersistedTrustKey(e) {
-  return KUe(e ?? he());
+  return getPersistedTrustKeyForPath(e ?? he());
 }
-function KUe(e) {
+function getPersistedTrustKeyForPath(e) {
   return y1(findCanonicalGitRootUncached(e) ?? zn(lt(e)));
 }
-function Vsr(e) {
-  return MZe(Qfr(e));
+function isPathPersistedTrustedCwdExact(e) {
+  return isTrustKeyPersistedTrusted(getPersistedTrustKeyForExactPath(e));
 }
-function Qfr(e) {
+function getPersistedTrustKeyForExactPath(e) {
   return y1(zn(lt(e)));
 }
-async function Zfr(e, t) {
+async function persistedTrustKeyThroughBackend(e, t) {
   if (e.hostFiles.serving("workspace") !== "host") return;
   let r = lt(t),
     o = await findGitRootThroughBackendUncached(e.hostFiles, r);
@@ -29833,17 +29833,17 @@ async function Zfr(e, t) {
   if (o.gitRoot === null) return y1(zn(r));
   return o.entry === "directory" ? y1(o.gitRoot) : void 0;
 }
-async function zRn(e) {
+async function workspacePersistedTrustThroughBackend(e) {
   try {
-    let t = await Zfr(e, he());
-    return t === void 0 ? void 0 : MZe(t);
+    let t = await persistedTrustKeyThroughBackend(e, he());
+    return t === void 0 ? void 0 : isTrustKeyPersistedTrusted(t);
   } catch (t) {
     logError(t);
     return;
   }
 }
-function YC({ onIndeterminate: e }) {
-  if (!Bo()) {
+function isLocalSettingsGitTracked({ onIndeterminate: e }) {
+  if (!checkHasTrustDialogAccepted()) {
     if (Ode() && X6(he(), findCanonicalGitRoot) === lt(he())) return !1;
     return !0;
   }
@@ -29851,8 +29851,8 @@ function YC({ onIndeterminate: e }) {
   if (t === "indeterminate") return e === "tracked";
   return t === "tracked" || t === "tracked_in_index";
 }
-function VRn() {
-  if (!Bo()) return !1;
+function isLocalSettingsGitTrackedInIndex() {
+  if (!checkHasTrustDialogAccepted()) return !1;
   return bB() === "tracked_in_index";
 }
 function bB() {
@@ -29866,7 +29866,7 @@ function bB() {
     ((r = kde()), e.setLocalSettingsGitTracked({ cwd: t, value: r }));
   return r;
 }
-function pge() {
+function resetLocalSettingsGitTrackedCache() {
   Q().setLocalSettingsGitTracked(void 0);
 }
 function Ode() {
@@ -29959,8 +29959,8 @@ function Pde() {
   if (a.CLAUDE_CODE_SANDBOXED) return !0;
   if (g8()) return !0;
   if (isBgSession()) return !0;
-  let e = ee(),
-    t = JUe();
+  let e = getGlobalConfig(),
+    t = getProjectPathForConfig();
   if (e.projects?.[t]?.hasTrustDialogAccepted) return !0;
   return AB(e, he());
 }
@@ -29982,33 +29982,33 @@ function yB(e, t, r) {
     o = p;
   }
 }
-function P6(e, { advisoryNoFsProbe: t = !1 } = {}) {
-  let r = ee();
+function isPathTrusted(e, { advisoryNoFsProbe: t = !1 } = {}) {
+  let r = getGlobalConfig();
   if (t) return yB(r, zn(lt(e)), null);
   if (r.projects?.[getWorkspacePersistedTrustKey(e)]?.hasTrustDialogAccepted === !0) return !0;
   return AB(r, e);
 }
-function XUe(e, t) {
+function setPathTrusted(e, t) {
   let r = getWorkspacePersistedTrustKey(e);
-  return Te((o) => {
+  return saveGlobalConfig((o) => {
     if (o.projects?.[r]?.hasTrustDialogAccepted) return o;
     return {
       ...o,
       projects: {
         ...o.projects,
-        [r]: { ...(o.projects?.[r] ?? k5), hasTrustDialogAccepted: !0 },
+        [r]: { ...(o.projects?.[r] ?? DEFAULT_PROJECT_CONFIG), hasTrustDialogAccepted: !0 },
       },
     };
   }, t);
 }
-function lSr(e) {
+function _setUseRealConfigPipelineForTesting(e) {
   Q().setUseRealPipelineUnderTest(e);
 }
 function En() {
   return !1;
 }
-function cSr(e) {
-  return Jfr.includes(e);
+function isProjectConfigKey(e) {
+  return PROJECT_CONFIG_KEYS.includes(e);
 }
 function Lt(e) {
   let t = Q().cache.config;
@@ -30095,7 +30095,7 @@ function Dde(e, t) {
     r.every((o) => o === "lastGracefulShutdown" || o === "lastVersionBase")
   );
 }
-var emr = [30000, 120000];
+var CONFIG_CRASH_MARKER_REENQUEUE_DELAYS_MS = [30000, 120000];
 function xde(e, t) {
   return ym(e, t).every((r) => {
     if (r === "projects") {
@@ -30169,10 +30169,10 @@ function Fi(e, t) {
     })
   );
 }
-function Ksr() {
+function drainConfigWrites() {
   return Q().writeQueues.drain();
 }
-registerWriteQueueDrain(Ksr);
+registerWriteQueueDrain(drainConfigWrites);
 function uc(e) {
   let t = Q(),
     r = t.cache.config;
@@ -30195,12 +30195,12 @@ function dc(e, t) {
     !0
   );
 }
-function Te(e, t) {
+function saveGlobalConfig(e, t) {
   return Rm(e, t).then(() => {
     return;
   });
 }
-function yvt(e, t) {
+function saveGlobalConfigDurably(e, t) {
   return Rm(e, t).catch(() => !1);
 }
 function Rm(e, t) {
@@ -30455,7 +30455,7 @@ async function wB() {
 function rc() {
   Q().writeQueues.run(vm, () => wB().catch(() => {}));
 }
-async function NR(e) {
+async function watchGlobalConfigThroughStorage(e) {
   let t = Q();
   if (e === void 0) {
     if (t.freshnessBackend !== void 0) Fde();
@@ -30574,10 +30574,10 @@ function Bi(e) {
   }
   t.writeThrough(e);
 }
-function ERe(e) {
+function subscribeGlobalConfigInstalled(e) {
   return Q().installed.subscribe(e);
 }
-function ee() {
+function getGlobalConfig() {
   let e = Q();
   if (En()) return e.testGlobalConfig;
   let t = e.readCache();
@@ -30585,7 +30585,7 @@ function ee() {
   if (!e.enableSettled) throw Error("Config accessed before allowed.");
   return Ui(Ye());
 }
-async function sy(e) {
+async function readFreshOauthAccountFromDisk(e) {
   if (En()) return Q().testGlobalConfig.oauthAccount;
   try {
     let t;
@@ -30613,10 +30613,10 @@ async function sy(e) {
     return;
   }
 }
-function YUe() {
-  return l5t().value;
+function getExplicitRemoteControlAtStartup() {
+  return resolveExplicitRemoteControlAtStartup().value;
 }
-function l5t() {
+function resolveExplicitRemoteControlAtStartup() {
   let e = import.meta.require("../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js"),
     t = e.projectSettingsAliasesUserSettings()
       ? void 0
@@ -30625,7 +30625,7 @@ function l5t() {
   if (t === !1 || r === !1)
     return { value: !1, source: "project_or_local_false" };
   let o = e.getSecuritySensitiveSettingWithSources("remoteControlAtStartup")[0],
-    d = ee().remoteControlAtStartup,
+    d = getGlobalConfig().remoteControlAtStartup,
     p =
       o !== void 0
         ? { value: o.value, source: Bde[o.source] }
@@ -30643,28 +30643,28 @@ var Bde = {
   flagSettings: "flag",
   userSettings: "user",
 };
-function yq() {
-  let e = YUe();
+function getRemoteControlAtStartup() {
+  let e = getExplicitRemoteControlAtStartup();
   if (e !== void 0) return e;
   return import.meta.require("../Bridge-RemoteControl/chunk-9estzwf5.js").getCcrAutoConnectDefault();
 }
-function c5t() {
+function getDaemonColdStart() {
   let e = process.env.CLAUDE_CODE_DAEMON_COLD_START;
   if (e === "transient" || e === "ask") return e;
   let t = Pw()?.settings.daemonColdStart;
   if (t !== void 0) return t;
   return Cde?.daemonColdStartGbDefault() ?? "transient";
 }
-function Xsr(e) {
-  let t = ee();
+function getCustomApiKeyStatus(e) {
+  let t = getGlobalConfig();
   if (t.customApiKeyResponses?.approved?.includes(e)) return "approved";
   if (t.customApiKeyResponses?.rejected?.includes(e)) return "rejected";
   return "new";
 }
-var Ysr = [200, 400, 800, 1600, 3200, 4000],
-  tmr = 1500,
+var CONFIG_LOCK_RETRY_DELAYS_MS = [200, 400, 800, 1600, 3200, 4000],
+  CONFIG_LOCK_BOOT_SAVE_RETRY_BUDGET_MS = 1500,
   Hde = 30000;
-function KRn() {
+function markConfigBootPhaseComplete() {
   Q().closeBootPhase();
 }
 function Gde(e) {
@@ -30672,14 +30672,14 @@ function Gde(e) {
     return e.bootPhaseSignalForTesting;
   if (!e.bootPhaseStillOpen(Hde)) return;
   let t = new AbortController();
-  return (setTimeout((o) => o.abort(), tmr, t).unref?.(), t.signal);
+  return (setTimeout((o) => o.abort(), CONFIG_LOCK_BOOT_SAVE_RETRY_BUDGET_MS, t).unref?.(), t.signal);
 }
-var nmr = [50, 150, 450];
+var CONFIG_READ_RETRY_DELAYS_MS = [50, 150, 450];
 async function Om(e, t, r) {
   let o = Q(),
     d = await Tm(e, t, r),
     p = o.lastGetConfigOutcome;
-  for (let _ of nmr) {
+  for (let _ of CONFIG_READ_RETRY_DELAYS_MS) {
     if (p !== "read-error") break;
     (await sleep(_), (d = await Tm(e, t, r)), (p = o.lastGetConfigOutcome));
   }
@@ -30688,7 +30688,7 @@ async function Om(e, t, r) {
 function Gn(e) {
   return A(e) === "ELOCKED";
 }
-var uSr = Gn;
+var _isLockContentionErrorForTesting = Gn;
 function fc(e, t = !1) {
   (n(
     `Config lock still held by a live process after retries; skipping the unlocked fallback write (${e}) to avoid clobbering the lock holder${t ? " and re-enqueueing it through the locked path" : ""}. See gh-73364.`,
@@ -30710,7 +30710,7 @@ async function _c(e, t, r) {
   Bi(e);
   let o = !1;
   try {
-    let d = ea(e, (p, _) => b(p) !== b(VD[_]));
+    let d = ea(e, (p, _) => b(p) !== b(DEFAULT_GLOBAL_CONFIG[_]));
     if (isHoverRestEnabled() && r !== void 0) {
       await ae().mkdir(Ql(getGlobalClaudeFile()));
       let p = await r.write(STORAGE_KEYS.globalConfig(), b(d, null, 2), {
@@ -30863,8 +30863,8 @@ async function Hi(e, t, r, o, d, p) {
         break;
       } catch (ce) {
         let _e = d?.lockRetrySignal;
-        if (!Gn(ce) || re >= Ysr.length || _e?.aborted) throw ce;
-        await sleep(Ysr[re] * (1 + Math.random()), _e);
+        if (!Gn(ce) || re >= CONFIG_LOCK_RETRY_DELAYS_MS.length || _e?.aborted) throw ce;
+        await sleep(CONFIG_LOCK_RETRY_DELAYS_MS[re] * (1 + Math.random()), _e);
       }
     let G = Date.now() - N;
     if (G > 100)
@@ -31288,7 +31288,7 @@ function ac(e) {
       else oc();
     }));
 }
-function ARe(e, t) {
+function enableConfigs(e, t) {
   let r = Q(),
     o = r.enable(() => qde(e, t));
   if (!isHoverRestEnabled() || e === void 0) return o;
@@ -31545,7 +31545,7 @@ async function Tm(e, t, r) {
     return t();
   }
 }
-function JUe() {
+function getProjectPathForConfig() {
   let e = Q();
   if (e.projectPathForConfig !== null) return e.projectPathForConfig;
   let t = he(),
@@ -31553,32 +31553,32 @@ function JUe() {
     o = r ? y1(r) : y1(zn(lt(t)));
   return (e.setProjectPathForConfig(o), o);
 }
-function Gse() {
+function clearProjectPathForConfigCache() {
   Q().setProjectPathForConfig(null);
 }
-function XRn() {
-  return ee().projects?.[JUe()];
+function getRawCurrentProjectConfigEntry() {
+  return getGlobalConfig().projects?.[getProjectPathForConfig()];
 }
-function es() {
+function getCurrentProjectConfig() {
   if (En()) return Q().testProjectConfig;
-  let e = JUe(),
-    t = ee();
-  if (!t.projects) return k5;
-  let r = t.projects[e] ?? k5;
+  let e = getProjectPathForConfig(),
+    t = getGlobalConfig();
+  if (!t.projects) return DEFAULT_PROJECT_CONFIG;
+  let r = t.projects[e] ?? DEFAULT_PROJECT_CONFIG;
   if (typeof r.allowedTools === "string")
     r.allowedTools = xt(r.allowedTools) ?? [];
   return r;
 }
-function eu(e, t) {
+function saveCurrentProjectConfig(e, t) {
   let r = Q();
   if (En()) {
     let p = e(r.testProjectConfig);
     if (p === r.testProjectConfig) return Promise.resolve();
     return (r.overwriteTestProjectConfig(p), Promise.resolve());
   }
-  let o = JUe(),
+  let o = getProjectPathForConfig(),
     d = uc((p) => {
-      let _ = p.projects?.[o] ?? k5,
+      let _ = p.projects?.[o] ?? DEFAULT_PROJECT_CONFIG,
         E = e(_);
       if (E === _) return p;
       if (
@@ -31603,7 +31603,7 @@ async function GB(e, t, r, o, d) {
         getGlobalClaudeFile(),
         Ye,
         (C) => {
-          let I = C.projects?.[t] ?? k5,
+          let I = C.projects?.[t] ?? DEFAULT_PROJECT_CONFIG,
             D = e(I);
           if (D === I) return C;
           return ((_ = Nt({ ...C, projects: { ...C.projects, [t]: D } })), _);
@@ -31624,11 +31624,11 @@ async function GB(e, t, r, o, d) {
     }
     let I = C.config;
     if (Gn(E) && !C.cacheDerived) {
-      let N = I.projects?.[t] ?? k5,
+      let N = I.projects?.[t] ?? DEFAULT_PROJECT_CONFIG,
         G = e(N);
       if (G === N) return;
       if (vB(N, G)) {
-        let L = Dde(N, G) ? emr[d] : void 0;
+        let L = Dde(N, G) ? CONFIG_CRASH_MARKER_REENQUEUE_DELAYS_MS[d] : void 0;
         if ((fc("save_project", L !== void 0), L !== void 0))
           sleep(L, void 0, { unref: !0 })
             .then(() => {
@@ -31664,14 +31664,14 @@ async function GB(e, t, r, o, d) {
         return;
       }
     }
-    let D = I.projects?.[t] ?? k5,
+    let D = I.projects?.[t] ?? DEFAULT_PROJECT_CONFIG,
       x = e(D);
     if (x === D) return;
     ((_ = Nt({ ...I, projects: { ...I.projects, [t]: x } })),
       await _c(_, "save_project", o));
   }
 }
-function QUe(e) {
+function saveCurrentProjectConfigSyncForExit(e) {
   let t = Q();
   if (En()) {
     let r = e(t.testProjectConfig);
@@ -31681,7 +31681,7 @@ function QUe(e) {
   if (isHoverRestEnabled() && t.unhandedWritesInMemory) return;
   try {
     let r = getGlobalClaudeFile(),
-      o = JUe(),
+      o = getProjectPathForConfig(),
       d = null;
     try {
       d = SB(r, { encoding: "utf-8" });
@@ -31690,16 +31690,16 @@ function QUe(e) {
     }
     let p = Ye();
     if (d !== null) p = { ...p, ...z(cs(d)) };
-    let _ = p.projects?.[o] ?? k5,
+    let _ = p.projects?.[o] ?? DEFAULT_PROJECT_CONFIG,
       E = e(_);
     if (E === _) return;
     let C = Nt({ ...p, projects: { ...p.projects, [o]: E } });
     if (Lt(C)) return;
-    let I = ea(C, (D, x) => b(D) !== b(VD[x]));
+    let I = ea(C, (D, x) => b(D) !== b(DEFAULT_GLOBAL_CONFIG[x]));
     Kxn(r, b(I, null, 2), { encoding: "utf-8", mode: 384, allowSymlink: !0 });
   } catch {}
 }
-function NZe(e) {
+function saveGlobalConfigSyncForExit(e) {
   let t = Q();
   if (En()) {
     let r = e(t.testGlobalConfig);
@@ -31721,11 +31721,11 @@ function NZe(e) {
     if (p === d) return;
     let _ = Nt({ ...p, projects: Li(d.projects, p.projects) });
     if (Lt(_)) return;
-    let E = ea(_, (C, I) => b(C) !== b(VD[I]));
+    let E = ea(_, (C, I) => b(C) !== b(DEFAULT_GLOBAL_CONFIG[I]));
     Kxn(r, b(E, null, 2), { encoding: "utf-8", mode: 384, allowSymlink: !0 });
   } catch {}
 }
-function YRn(e, t) {
+function deleteProjectConfig(e, t) {
   if (En()) return Promise.resolve(!0);
   let r = Q();
   if (dc(t, "deleteProjectConfig")) {
@@ -31786,11 +31786,11 @@ async function Xde(e, t, r) {
     return ((d = Nt({ ...C, projects: D })), _c(d, "delete_project", r));
   }
 }
-function FZe(e, t) {
+function deleteCurrentProjectConfigFields(e, t) {
   let r = Q();
   if (En()) return (r.deleteTestProjectConfigFields(e), Promise.resolve(!0));
   if (dc(t, "deleteCurrentProjectConfigFields")) {
-    let d = JUe(),
+    let d = getProjectPathForConfig(),
       p = r.cache.config?.projects?.[d],
       _ = p !== void 0 && e.some((E) => E in p);
     if (_) uc((E) => ({ ...E, projects: { ...E.projects, [d]: VB(p, e) } }));
@@ -31799,7 +31799,7 @@ function FZe(e, t) {
   let o = r.cache.config;
   return Fi(getGlobalClaudeFile(), () =>
     KB(e, {
-      projectPath: JUe,
+      projectPath: getProjectPathForConfig,
       saveWithLock: (d) => Hi(getGlobalClaudeFile(), Ye, d, o, void 0, t),
       writeCache: Bi,
       readConfigFallback: () => zi(o, t),
@@ -31810,7 +31810,7 @@ function FZe(e, t) {
     }),
   );
 }
-function dSr(e, t) {
+function _deleteCurrentProjectConfigFieldsForTesting(e, t) {
   return KB(e, t);
 }
 function VB(e, t) {
@@ -31867,13 +31867,13 @@ async function KB(e, t) {
     );
   }
 }
-function Sq() {
-  return hQ() !== null;
+function isAutoUpdaterDisabled() {
+  return getAutoUpdaterDisabledReason() !== null;
 }
-function bq() {
-  return Sq() && !a.FORCE_AUTOUPDATE_PLUGINS;
+function shouldSkipPluginAutoupdate() {
+  return isAutoUpdaterDisabled() && !a.FORCE_AUTOUPDATE_PLUGINS;
 }
-function ZUe(e) {
+function formatAutoUpdaterDisabledReason(e) {
   switch (e.type) {
     case "development":
       return "development build";
@@ -31883,13 +31883,13 @@ function ZUe(e) {
       return "config";
   }
 }
-function hQ() {
+function getAutoUpdaterDisabledReason() {
   if (a.DISABLE_UPDATES) return { type: "env", envVar: "DISABLE_UPDATES" };
   if (Ie(process.env.DISABLE_AUTOUPDATER))
     return { type: "env", envVar: "DISABLE_AUTOUPDATER" };
   let e = getNonessentialTrafficDisabledEnvVar();
   if (e) return { type: "env", envVar: e };
-  let t = ee();
+  let t = getGlobalConfig();
   if (
     t.autoUpdates === !1 &&
     (t.installMethod !== "native" || t.autoUpdatesProtectedForNative !== !0)
@@ -31898,40 +31898,40 @@ function hQ() {
   return null;
 }
 var Nm = /^[0-9a-f]{64}$/;
-function dx(e) {
+function getOrCreateUserID(e) {
   let t = Q(),
-    r = ee();
+    r = getGlobalConfig();
   if (typeof r.userID === "string" && Nm.test(r.userID)) return r.userID;
   if (t.generatedUserID) return t.generatedUserID;
   let o = bm(32).toString("hex");
-  return (t.setGeneratedUserID(o), Te((d) => ({ ...d, userID: o }), e), o);
+  return (t.setGeneratedUserID(o), saveGlobalConfig((d) => ({ ...d, userID: o }), e), o);
 }
-function CRe(e) {
+function getOrCreateMachineID(e) {
   let t = Q(),
-    r = ee();
+    r = getGlobalConfig();
   if (typeof r.machineID === "string" && Nm.test(r.machineID))
     return r.machineID;
   if (t.generatedMachineID) return t.generatedMachineID;
   let o = bm(32).toString("hex");
   return (
     t.setGeneratedMachineID(o),
-    Te((d) => ({ ...d, machineID: o }), e),
+    saveGlobalConfig((d) => ({ ...d, machineID: o }), e),
     o
   );
 }
-async function EP(e) {
-  (dx(e), CRe(e), await Ksr());
+async function seedInstallIDs(e) {
+  (getOrCreateUserID(e), getOrCreateMachineID(e), await drainConfigWrites());
 }
-function JRn(e) {
+function getOrCreateSummonSidKey(e) {
   let t = Q(),
-    r = ee();
+    r = getGlobalConfig();
   if (typeof r.summonSidKey === "string" && Nm.test(r.summonSidKey))
     return r.summonSidKey;
   if (t.generatedSummonSidKey) return t.generatedSummonSidKey;
   let o = bm(32).toString("hex");
   return (
     t.setGeneratedSummonSidKey(o),
-    Te((d) => ({ ...d, summonSidKey: o }), e),
+    saveGlobalConfig((d) => ({ ...d, summonSidKey: o }), e),
     o
   );
 }
@@ -31939,11 +31939,11 @@ var Jde = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 function EB(e) {
   return typeof e === "string" && Jde.test(e);
 }
-function pSr(e) {
+function getOrCreateRemoteControlMachineId(e) {
   return Q().remoteControlMachineIdOnceFrom(() => Qde(e));
 }
 async function Qde(e) {
-  let t = ee();
+  let t = getGlobalConfig();
   if (EB(t.remoteControlMachineId)) return t.remoteControlMachineId;
   let r = Rde(),
     o = r;
@@ -31957,13 +31957,13 @@ async function Qde(e) {
     ? o
     : null;
 }
-function QRn(e) {
-  if (!ee().firstStartTime) {
+function recordFirstStartTime(e) {
+  if (!getGlobalConfig().firstStartTime) {
     let t = new Date().toISOString();
-    Te((r) => rmr(r, t), e);
+    saveGlobalConfig((r) => stampFirstStart(r, t), e);
   }
 }
-function rmr(e, t) {
+function stampFirstStart(e, t) {
   if (e.firstStartTime) return e;
   return {
     ...e,
@@ -31983,7 +31983,7 @@ function rmr(e, t) {
     }.VERSION,
   };
 }
-function _Q(e) {
+function getMemoryPath(e) {
   let t = he();
   switch (e) {
     case "User":
@@ -31998,109 +31998,109 @@ function _Q(e) {
       return getAutoMemEntrypoint();
   }
 }
-function eBe() {
+function getManagedClaudeRulesDir() {
   return Ve(Tb(), ".claude", "rules");
 }
-function fge() {
+function getUserClaudeRulesDir() {
   return Ve(getClaudeConfigDir(), "rules");
 }
-var fSr = Tm,
-  mSr = Lt,
-  gSr = Hi,
-  hSr = Cm,
-  _Sr = wB,
-  ySr = PB,
-  SSr = pc,
-  bSr = wm,
-  wSr = ac;
-function TSr() {
+var _getConfigForTesting = Tm,
+  _wouldLoseAuthStateForTesting = Lt,
+  _saveConfigWithLockForTesting = Hi,
+  _refreshGlobalConfigCacheFromExternalWriteForTesting = Cm,
+  _refreshGlobalConfigCacheThroughStorageForTesting = wB,
+  _onGlobalConfigStorageEventForTesting = PB,
+  _subscribeGlobalConfigFreshnessForTesting = pc,
+  _loadGlobalConfigThroughStorageForTesting = wm,
+  _startGlobalConfigFreshnessThroughStorageForTesting = ac;
+function _getFreshnessBackendForTesting() {
   return Q().freshnessBackend;
 }
-function ESr(e) {
+function _setLoadedVersionForTesting(e) {
   Q().setLoadedVersion(e);
 }
-function ASr(e) {
+function _setFreshnessBackendForTesting(e) {
   Q().setFreshnessBackend(e);
 }
-function CSr(e) {
+function _setFreshnessWatcherStartedForTesting(e) {
   Q().setFreshnessWatcherStarted(e);
 }
-function vSr() {
+function _getFreshnessWatcherStartedForTesting() {
   return Q().freshnessWatcherStarted;
 }
-function RSr(e) {
+function _setFileWatchFallbackForTesting(e) {
   Q().setFileWatchFallback(e);
 }
-function kSr(e) {
+function _setWritersWithoutBackendForTesting(e) {
   Q().setUnhandedWritesInMemory(e === "memory");
 }
-function xSr() {
+function _getConfigWriteGenerationForTesting() {
   return Q().writeGeneration;
 }
-var HSr = LB,
-  ISr = zi,
-  PSr = Sc,
-  OSr = mo;
-function DSr() {
+var _installGlobalConfigReloadedThroughStorageForTesting = LB,
+  _readGlobalConfigForFallbackForTesting = zi,
+  _takeTimestampedConfigBackupForTesting = Sc,
+  _findMostRecentBackupForTesting = mo;
+function _resetEnableConfigsForTesting() {
   Q().resetEnableGate();
 }
-function LSr() {
+function _resetParseErrorDedupForTesting() {
   Q().clearParseErrorDedup();
 }
-function MSr() {
+function _getLastGetConfigWasParseErrorForTesting() {
   return Q().lastGetConfigOutcome === "parse-error";
 }
-function NSr(e) {
+function _setLastGetConfigWasParseErrorForTesting(e) {
   Q().setLastGetConfigOutcome(e ? "parse-error" : "parsed");
 }
-var FSr = Te,
-  $Sr = yvt,
-  USr = eu,
-  BSr = ee,
-  jSr = es,
-  WSr = CRe,
-  GSr = Jl;
-function qSr() {
+var _saveGlobalConfigForTesting = saveGlobalConfig,
+  _saveGlobalConfigDurablyForTesting = saveGlobalConfigDurably,
+  _saveCurrentProjectConfigForTesting = saveCurrentProjectConfig,
+  _getGlobalConfigForTesting = getGlobalConfig,
+  _getCurrentProjectConfigForTesting = getCurrentProjectConfig,
+  _getOrCreateMachineIDForTesting = getOrCreateMachineID,
+  _removeProjectHistoryForTesting = Jl;
+function _getTestGlobalConfigForTesting() {
   return Q().testGlobalConfig;
 }
-function zSr(e) {
+function _setGlobalConfigCacheForTesting(e) {
   let t = Q();
   if (e) t.applyOptimistic(e);
   else t.clearCache();
 }
-function VSr(e) {
+function _setLastReadFileStatsForTesting(e) {
   Q().setLastReadFileStats(e);
 }
-function KSr() {
+function _resetRemoteControlMachineIdForTesting() {
   Q().clearRemoteControlMachineIdOnce();
 }
-function XSr() {
+function _resetGeneratedMachineIDForTesting() {
   Q().clearGeneratedMachineID();
 }
-function YSr() {
+function _resetGeneratedSummonSidKeyForTesting() {
   Q().clearGeneratedSummonSidKey();
 }
-function ZRn(e) {
+function setClientDataCacheKeyGetter(e) {
   Q().setClientDataCacheKeyGetter(e);
 }
-function ql() {
+function getCachedClientData() {
   let e = Q();
   if (e.clientDataReadGate && !e.clientDataReadGate()) return null;
   if (!e.clientDataCacheKeyGetter) return null;
-  let t = ee(),
+  let t = getGlobalConfig(),
     r = e.clientDataCacheKeyGetter(),
     o = t.clientDataCacheSlots;
   if (o != null && Object.hasOwn(o, r)) return hm(o, r);
   let d = t.clientDataCache;
   return typeof d === "object" && d !== null ? d : null;
 }
-function ekn(e) {
+function setClientDataReadGate(e) {
   Q().setClientDataReadGate(e);
 }
-function tkn(e) {
+function setClientDataStrictReadGate(e) {
   Q().setClientDataStrictReadGate(e);
 }
-function omr(e, t, r) {
+function readStrictClientData(e, t, r) {
   if (!t || !t()) return null;
   if (!r) return null;
   let o = r(),
@@ -32108,18 +32108,18 @@ function omr(e, t, r) {
   if (d != null && Object.hasOwn(d, o)) return hm(d, o);
   return null;
 }
-function nkn() {
+function getCachedClientDataStrict() {
   let e = Q();
-  return omr(ee(), e.clientDataStrictReadGate, e.clientDataCacheKeyGetter);
+  return readStrictClientData(getGlobalConfig(), e.clientDataStrictReadGate, e.clientDataCacheKeyGetter);
 }
-function rkn(e) {
+function setClientDataStaleMatchGetter(e) {
   Q().setClientDataStaleMatchGetter(e);
 }
-function okn() {
+function getCachedClientDataForContextWindow() {
   let e = Q();
   if (e.clientDataReadGate && !e.clientDataReadGate()) return null;
   if (!e.clientDataCacheKeyGetter) return null;
-  let t = ee(),
+  let t = getGlobalConfig(),
     r = t.clientDataCacheSlots,
     o = e.clientDataCacheKeyGetter();
   if (r != null && Object.hasOwn(r, o)) {
@@ -32134,16 +32134,16 @@ function okn() {
   let p = t.clientDataCache;
   return typeof p === "object" && p !== null ? p : null;
 }
-function skn() {
+function hasClientDataCacheSlot() {
   let e = Q();
   if (!e.clientDataCacheKeyGetter) return !1;
-  let t = ee().clientDataCacheSlots;
+  let t = getGlobalConfig().clientDataCacheSlots;
   return Xl(t, e.clientDataCacheKeyGetter()) !== null;
 }
-hB(() => ql());
-nh(() => ql());
+hB(() => getCachedClientData());
+nh(() => getCachedClientData());
 import { createHash as Zde } from "crypto";
-function u5t({ maxBatchSize: e, getFlushIntervalMs: t, post: r }) {
+function createBatchedSender({ maxBatchSize: e, getFlushIntervalMs: t, post: r }) {
   let o = [],
     d = null;
   async function p() {
@@ -32180,7 +32180,7 @@ function u5t({ maxBatchSize: e, getFlushIntervalMs: t, post: r }) {
   };
 }
 var epe = "https://http-intake.logs.us5.datadoghq.com/api/v2/logs",
-  d5t = "pubea5604404508cdd34afb69e6f42a05bc",
+  DATADOG_CLIENT_TOKEN = "pubea5604404508cdd34afb69e6f42a05bc",
   tpe = 15000,
   npe = 100,
   rpe = 5000,
@@ -32503,7 +32503,7 @@ function mpe(e, t, r, o) {
 async function _pe(e) {
   try {
     await externalHttp.post(epe, e, {
-      headers: { "Content-Type": "application/json", "DD-API-KEY": d5t },
+      headers: { "Content-Type": "application/json", "DD-API-KEY": DATADOG_CLIENT_TOKEN },
       timeout: rpe,
     });
   } catch (t) {
@@ -32514,7 +32514,7 @@ var hpe = 30;
 class WB {
   datadogInitialized = null;
   builtUnredacted = new WeakSet();
-  sender = u5t({
+  sender = createBatchedSender({
     maxBatchSize: npe,
     getFlushIntervalMs: Tpe,
     post: (e) => this.postCurrent(e),
@@ -32524,7 +32524,7 @@ class WB {
     return t.length > 0 ? _pe(t) : Promise.resolve();
   }
   initializeDatadog = rs(async () => {
-    if (mg() || mx()) return ((this.datadogInitialized = !1), !1);
+    if (isAnalyticsDisabled() || mx()) return ((this.datadogInitialized = !1), !1);
     try {
       return ((this.datadogInitialized = !0), !0);
     } catch (e) {
@@ -32532,18 +32532,18 @@ class WB {
     }
   });
   getUserBucket = rs(() => {
-    let e = dx(),
+    let e = getOrCreateUserID(),
       t = Zde("sha256").update(e).digest("hex");
     return parseInt(t.slice(0, 8), 16) % hpe;
   });
   peerRateWindows = new Map();
 }
 var Lm = new j(() => new WB());
-function ikn() {
+function resetDatadogInit() {
   let e = Lm.of(B().host);
   (e.initializeDatadog.cache?.clear?.(), (e.datadogInitialized = null));
 }
-async function x5() {
+async function shutdownDatadog() {
   await Lm.of(B().host).sender.shutdown();
 }
 function Epe(e) {
@@ -32554,12 +32554,12 @@ function Epe(e) {
 }
 function Spe(e, { isTrustedAnt: t, onAnthropicHost: r }) {
   if (t) return e;
-  if (e === tQ && r) return e;
+  if (e === CONFIDENTIAL_MODEL_ID && r) return e;
   if (!e.toLowerCase().includes("claude")) return null;
   let o = getCanonicalName(Xt(e), { identity: !0 });
-  return o in wse ? o : "other";
+  return o in MODEL_COSTS_BY_CANONICAL_NAME ? o : "other";
 }
-async function tBe(e, t) {
+async function trackDatadogEvent(e, t) {
   if (getAPIProvider() !== "firstParty") return;
   let r = Lm.of(B().host),
     o = r.datadogInitialized;
@@ -32637,7 +32637,7 @@ async function tBe(e, t) {
 function Tpe() {
   return a.CLAUDE_CODE_DATADOG_FLUSH_INTERVAL_MS || tpe;
 }
-function dRe(e) {
+function redactSensitiveText(e) {
   return e
     .slice(0, 500)
     .replace(/https?:\/\/\S+/gi, "<url>")
@@ -32692,10 +32692,10 @@ function Ape(e) {
     return "[unstringifiable]";
   }
 }
-function lm(e) {
+function getErrorTelemetryFields(e) {
   try {
     let t = Ape(e instanceof Error ? e.message : e),
-      r = { error_message_hash: Tn(dRe(t)) },
+      r = { error_message_hash: hashForTelemetry(redactSensitiveText(t)) },
       o = Jr(e);
     if (o !== void 0) r.error_code = o;
     if (!(e instanceof Error)) return r;
@@ -32703,7 +32703,7 @@ function lm(e) {
     if (d !== void 0) r.error_constructor = d;
     if (typeof e.stack !== "string") return r;
     let { names: p, topFrame: _ } = bpe(e.stack);
-    if (p.length > 0) r.error_stack_hash = Tn(p.join("|"));
+    if (p.length > 0) r.error_stack_hash = hashForTelemetry(p.join("|"));
     let E = _ !== void 0 ? uNn(_) : void 0;
     if (E !== void 0) r.error_top_frame = E;
     return r;
@@ -32711,7 +32711,7 @@ function lm(e) {
     return {};
   }
 }
-function usr(e, t) {
+function reportRenderError(e, t) {
   let r = Gw(e) ?? S("unknown");
   try {
     n(`[reportRenderError] React boundary caught ${r}: ${l(e)}`, {
@@ -32723,11 +32723,11 @@ function usr(e, t) {
     try {
       (await logEventAsync("tengu_uncaught_exception", {
         error_name: r,
-        ...lm(e),
+        ...getErrorTelemetryFields(e),
         source: S("react_render"),
-        ...(o && { error_component_stack_hash: Tn(o) }),
+        ...(o && { error_component_stack_hash: hashForTelemetry(o) }),
       }),
-        await Promise.all([w5(), x5()]));
+        await Promise.all([shutdownFirstPartyEventLogging(), shutdownDatadog()]));
     } catch {}
   })();
 }
@@ -32760,8 +32760,8 @@ function qB(e) {
   let { kind: t, status: r } = Ps(e);
   return t === "other" || r === void 0 ? "unexpected_error" : `http_${r}`;
 }
-async function dsr() {
-  let t = ee().oauthAccount?.accountUuid,
+async function fetchOAuthProfileWithApiKey() {
+  let t = getGlobalConfig().oauthAccount?.accountUuid,
     r = getAnthropicApiKey();
   if (!t || !r) return;
   let o = `${getOauthConfig().BASE_API_URL}/api/claude_cli_profile`;
@@ -32785,7 +32785,7 @@ async function dsr() {
     else (logFeatureBad("oauth_profile_fetch", `api_key_${qB(d)}`), logError(d));
   }
 }
-async function rge(e) {
+async function fetchOAuthProfileWithToken(e) {
   let t = `${getOauthConfig().BASE_API_URL}/api/oauth/profile`;
   try {
     let r = await at.get(t, {
@@ -32806,7 +32806,7 @@ async function rge(e) {
     else (logFeatureBad("oauth_profile_fetch", `token_${qB(r)}`), logError(r));
   }
 }
-async function PUe(e) {
+async function validateOAuthToken(e) {
   let t = `${getOauthConfig().BASE_API_URL}/api/oauth/validate`;
   try {
     let r = await at.post(t, null, {
@@ -32948,7 +32948,7 @@ async function refreshOAuthToken(
       U = resolveRefreshTokenExpiresAt(D.refresh_token_expires_in, !1),
       F = parseScopes(D.scope);
     (logEvent("tengu_oauth_token_refresh_success", {}), logFeatureOk("oauth_token_refresh"));
-    let V = ee(),
+    let V = getGlobalConfig(),
       te = d ? null : getClaudeAIOAuthTokens(),
       re =
         V.oauthAccount?.billingType !== void 0 &&
@@ -32976,7 +32976,7 @@ async function refreshOAuthToken(
           (_e.seatTier = ce.seatTier),
           (_e.profileFetchedAt = Date.now()));
       if (Object.keys(_e).length > 0)
-        await Te(
+        await saveGlobalConfig(
           (Be) => ({
             ...Be,
             oauthAccount: Be.oauthAccount
@@ -33007,7 +33007,7 @@ async function refreshOAuthToken(
   } catch (I) {
     if (
       (logEvent("tengu_oauth_token_refresh_failure", {
-        ...lm(I),
+        ...getErrorTelemetryFields(I),
         ...extractOAuthErrorFields(I),
         ...(_ && { context: fromEnum(_) }),
       }),
@@ -33050,12 +33050,12 @@ async function fetchAndStoreUserRoles(e, t) {
       Error(`Failed to fetch user roles: ${r.statusText}`)
     );
   let o = r.data;
-  if (!ee().oauthAccount)
+  if (!getGlobalConfig().oauthAccount)
     throw (
       logFeatureBad("oauth_fetch_roles", "oauth_roles_no_account"),
       Error("OAuth account information not found in config")
     );
-  (await Te(
+  (await saveGlobalConfig(
     (p) => ({
       ...p,
       oauthAccount: p.oauthAccount
@@ -33093,7 +33093,7 @@ async function createAndStoreApiKey(e, t) {
     return (logFeatureBad("oauth_create_api_key", "oauth_api_key_empty_response"), null);
   } catch (r) {
     throw (
-      logEvent("tengu_oauth_api_key", { status: S("failure"), ...lm(r) }),
+      logEvent("tengu_oauth_api_key", { status: S("failure"), ...getErrorTelemetryFields(r) }),
       logFeatureBad("oauth_create_api_key", "oauth_api_key_request_failed"),
       r
     );
@@ -33111,7 +33111,7 @@ var Cpe = new Map([
   ["claude_team", "team"],
 ]);
 async function fetchProfileInfo(e) {
-  let t = await rge(e),
+  let t = await fetchOAuthProfileWithToken(e),
     r = t?.organization?.organization_type,
     d = {
       subscriptionType: (r !== void 0 ? Cpe.get(r) : void 0) ?? null,
@@ -33134,11 +33134,11 @@ async function fetchProfileInfo(e) {
 async function getOrganizationUUID() {
   let e = a.CLAUDE_CODE_ORGANIZATION_UUID;
   if (e) return e;
-  let r = ee().oauthAccount?.organizationUuid;
+  let r = getGlobalConfig().oauthAccount?.organizationUuid;
   if (r) return r;
   let o = getClaudeAIOAuthTokens()?.accessToken;
   if (o === void 0 || !hasProfileScope()) return null;
-  let p = (await rge(o))?.organization?.uuid;
+  let p = (await fetchOAuthProfileWithToken(o))?.organization?.uuid;
   if (!p) return null;
   return p;
 }
@@ -33150,9 +33150,9 @@ async function populateOAuthAccountInfoIfNeeded(e, t) {
       r && o && d
         ? { accountUuid: r, emailAddress: o, organizationUuid: d }
         : null;
-  if (p && !ee().oauthAccount) storeOAuthAccountInfo(p, t);
+  if (p && !getGlobalConfig().oauthAccount) storeOAuthAccountInfo(p, t);
   await checkAndRefreshOAuthTokenIfNeeded({ credentials: e, storageV5: t });
-  let _ = ee(),
+  let _ = getGlobalConfig(),
     E = _.oauthAccount?.profileFetchedAt,
     C = E !== void 0 && Date.now() - E < vpe;
   if (
@@ -33168,7 +33168,7 @@ async function populateOAuthAccountInfoIfNeeded(e, t) {
     return !1;
   let I = getClaudeAIOAuthTokens();
   if (!I?.accessToken) return !1;
-  let D = await rge(I.accessToken);
+  let D = await fetchOAuthProfileWithToken(I.accessToken);
   if (!D?.account || !D.organization) return !1;
   if (p)
     n("OAuth profile fetch succeeded, overriding env var account info", {
@@ -33233,7 +33233,7 @@ function storeOAuthAccountInfo(
   if (o) U.displayName = o;
   if (d) U.fullName = d;
   if (G !== void 0) U.profileFetchedAt = G;
-  Te((F) => {
+  saveGlobalConfig((F) => {
     if (
       G === void 0 &&
       F.oauthAccount?.accountUuid === U.accountUuid &&
@@ -33325,18 +33325,18 @@ async function XB() {
       );
   }
 }
-function fq(e) {
+function getApiKeyFingerprint(e) {
   return e.trim().slice(-20);
 }
-function lKt(e) {
+function isCredentialsProviderError(e) {
   return GW(e, (t) => t.name === "CredentialsProviderError") !== void 0;
 }
 var Ppe =
   /ExpiredToken|InvalidSignature|SignatureDoesNotMatch|UnrecognizedClient|InvalidClientTokenId|security token.*(invalid|expired)|signature we calculated does not match|Bearer Token has expired|Authentication failed.*API Key|Missing required parameters in the API Key/i;
-function DR() {
+function hasCustomApiKeyHeader() {
   return QB("x-api-key");
 }
-function Aor() {
+function hasCustomAuthorizationHeader() {
   return QB("authorization");
 }
 function QB(e) {
@@ -33347,7 +33347,7 @@ function QB(e) {
     return o !== -1 && r.slice(0, o).trim().toLowerCase() === e;
   });
 }
-function Im() {
+function getAuthorizationHeaderPin() {
   let e = { Authorization: void 0 };
   for (let t of (a.ANTHROPIC_CUSTOM_HEADERS ?? "").split(`
 `)) {
@@ -33357,9 +33357,9 @@ function Im() {
   }
   return e;
 }
-function VC() {
+function getAnthropicBetaHeaderPin() {
   let e = {};
-  if (!FD()) return e;
+  if (!isHipaaTaintActive()) return e;
   for (let t of (a.ANTHROPIC_CUSTOM_HEADERS ?? "").split(`
 `)) {
     let r = t.indexOf(":"),
@@ -33368,10 +33368,10 @@ function VC() {
   }
   return e;
 }
-function xCt(e, t) {
+function isAwsAuthError(e, t) {
   return Ppe.test(`${e ?? ""} ${t ?? ""}`);
 }
-var Rw = {
+var authState = {
   __auth: {
     provider: null,
     tokenCache: null,
@@ -33380,7 +33380,7 @@ var Rw = {
     extraHeaders: {},
   },
 };
-function nRe() {
+function getEnvAuthorizationHeader() {
   let e = a.ANTHROPIC_AUTH_TOKEN;
   if (e) return `Bearer ${e}`;
   let t = a.ANTHROPIC_CUSTOM_HEADERS;
@@ -33414,26 +33414,26 @@ function ZB(e) {
   return null;
 }
 var g0 = 30000;
-function HCt() {
+function getAwsChainResolveTimeoutMs() {
   return a.CLAUDE_CODE_AWS_CHAIN_RESOLVE_TIMEOUT_MS ?? 60000;
 }
 async function h0() {
   let [{ STSClient: e, GetCallerIdentityCommand: t }, r] = await Promise.all([
       import("../../00-第三方库/_未识别/第三方库-AWSSDK/GetCallerIdentityCommand.z4m8wtvr.js"),
-      cA(),
+      resolveAwsRegion(),
     ]),
     o = new e({
       region: r,
       ...(await getAWSClientProxyConfig({ url: resolveStsEndpointForProxyUrl(r), region: r, requestTimeoutMs: g0 })),
     });
-  await withTimeout(o.send(new t({})), HCt(), "AWS STS");
+  await withTimeout(o.send(new t({})), getAwsChainResolveTimeoutMs(), "AWS STS");
 }
 async function E0() {
   try {
     n("Clearing AWS credential provider cache");
     let [{ fromIni: e }, t] = await Promise.all([
         import("../../01-核心基础设施/共享小工具-未细化/fromIni.7gtjb5bg.js"),
-        cA(),
+        resolveAwsRegion(),
       ]),
       r = await getAWSProxyRequestHandler({ url: resolveStsEndpointForProxyUrl(t), requestTimeoutMs: g0 }),
       o = e({
@@ -33443,14 +33443,14 @@ async function E0() {
           parentClientConfig: { requestHandler: r, region: t },
         }),
       });
-    (await withTimeout(o(), HCt(), "AWS ini cache refresh"),
+    (await withTimeout(o(), getAwsChainResolveTimeoutMs(), "AWS ini cache refresh"),
       n("AWS credential provider cache refreshed"));
   } catch (e) {
     n(`Failed to refresh AWS credential cache: ${l(e)}`);
   }
 }
 var Mpe = 15000;
-class EU {
+class AuthenticationStatusStore {
   status = { isAuthenticating: !1, output: [] };
   changed = Le();
   dismissTimer = null;
@@ -33491,7 +33491,7 @@ class EU {
       (clearTimeout(this.dismissTimer), (this.dismissTimer = null));
   }
 }
-var Ipe = new j(() => new EU());
+var Ipe = new j(() => new AuthenticationStatusStore());
 function Dpe() {
   return Ipe.of(B().host);
 }
@@ -33501,7 +33501,7 @@ import { Agent as Npe, request as Lpe } from "https";
 import { isIPv4, isIPv6 } from "net";
 import { connect, checkServerIdentity } from "tls";
 var Fpe = new Set(["localhost", "127.0.0.1", "[::1]"]);
-function FKt(e) {
+function normalizeGatewayUrl(e) {
   let t = e.trim();
   if (!/^https?:\/\//i.test(t)) t = `https://${t}`;
   t = t.replace(/\/$/, "");
@@ -33533,12 +33533,12 @@ function vc(e) {
   return (o >= 65152 && o <= 65215) || (o >= 64512 && o <= 65023);
 }
 var Bpe = new Set(["claude.fedstart.com", "claude.palantirfedstart.com"]);
-function pRe(e) {
+function getUrlHostname(e) {
   return e.hostname.replace(/^\[|\]$/g, "");
 }
-async function gsr(e) {
+async function assertGatewayHostIsPrivate(e) {
   let t = new URL(e),
-    r = pRe(t),
+    r = getUrlHostname(t),
     o = isIPv4(r) || isIPv6(r);
   if (t.protocol === "https:" && Bpe.has(r)) return;
   let d = getProxyUrl();
@@ -33602,11 +33602,11 @@ async function gsr(e) {
     );
   }
 }
-var fRn = "http-loopback";
-async function ZCt(e, t = 1e4) {
+var HTTP_LOOPBACK_FINGERPRINT = "http-loopback";
+async function probeTlsFingerprint(e, t = 1e4) {
   let r = new URL(e),
-    o = pRe(r);
-  if (r.protocol !== "https:") return { hostname: o, fingerprint: fRn };
+    o = getUrlHostname(r);
+  if (r.protocol !== "https:") return { hostname: o, fingerprint: HTTP_LOOPBACK_FINGERPRINT };
   let d = r.port ? Number(r.port) : 443,
     p = getCACertificates(),
     _ = getMTLSConfig(),
@@ -33678,10 +33678,10 @@ function Hpe(e, t, r, o = 1e4) {
       N.end());
   });
 }
-var fRe = "gateway TLS pin store refused: the credentials file is a symlink",
-  OUe =
+var GATEWAY_PIN_STORE_SYMLINK_ERROR = "gateway TLS pin store refused: the credentials file is a symlink",
+  GATEWAY_PIN_STORE_UNREADABLE_ERROR =
     "gateway TLS pin store unreadable: the credentials file could not be read";
-async function mRe(e, t) {
+async function readGatewayTrustPin(e, t) {
   let r = await getSecureStorage().readAsync(t),
     o = r?.gatewayTrust?.[e];
   if (o !== void 0) return o;
@@ -33691,28 +33691,28 @@ async function mRe(e, t) {
       case "present":
         return p.data.gatewayTrust?.[e];
       case "refused-symlink":
-        throw Error(fRe);
+        throw Error(GATEWAY_PIN_STORE_SYMLINK_ERROR);
       case "read-failed":
-        throw Error(OUe);
+        throw Error(GATEWAY_PIN_STORE_UNREADABLE_ERROR);
       case "absent":
       case "corrupt":
         return;
       default: {
         let _ = p;
-        throw Error(OUe);
+        throw Error(GATEWAY_PIN_STORE_UNREADABLE_ERROR);
       }
     }
   }
   return;
 }
-var evt = "gateway TLS certificate does not match the pinned fingerprint";
-function DUe(e) {
+var GATEWAY_PIN_MISMATCH_ERROR = "gateway TLS certificate does not match the pinned fingerprint";
+function extractFingerprintMismatch(e) {
   let t =
     typeof e === "object" && e !== null && "cause" in e ? e.cause : void 0;
   for (let r of [e, t])
     if (
       r instanceof Error &&
-      r.message.includes(evt) &&
+      r.message.includes(GATEWAY_PIN_MISMATCH_ERROR) &&
       "pinnedFingerprint" in r &&
       typeof r.pinnedFingerprint === "string" &&
       "presentedFingerprint" in r &&
@@ -33738,13 +33738,13 @@ function Gpe(e) {
           : "";
       if (p !== e) {
         let _ = { pinnedFingerprint: e, presentedFingerprint: p };
-        return Object.assign(Error(evt), _);
+        return Object.assign(Error(GATEWAY_PIN_MISMATCH_ERROR), _);
       }
       return;
     },
   });
 }
-function gRe(e, t) {
+function createPinnedHttpsAgent(e, t) {
   if (!e || new URL(t).protocol !== "https:") return;
   if (getUsableProxyUrl() && !shouldBypassProxy(t)) {
     n(
@@ -33755,7 +33755,7 @@ function gRe(e, t) {
   }
   return Gpe(e);
 }
-async function hsr(e, t, r) {
+async function persistGatewayTlsPin(e, t, r) {
   let o = await getSecureStorage().mutate(
     (d) => ({ ...d, gatewayTrust: { ...(d.gatewayTrust ?? {}), [e]: t } }),
     r,
@@ -33766,11 +33766,11 @@ async function hsr(e, t, r) {
     );
 }
 var Vpe = 300000,
-  mRn = createLazyValue(() =>
+  getGatewayTokenResponseSchema = createLazyValue(() =>
     nt({ access_token: le(), expires_in: Zt(), refresh_token: le().nullish() }),
   );
-function C6(e, { force: t = !1 } = {}) {
-  if (tvt()) Rc();
+function refreshGatewayCredentialIfNeeded(e, { force: t = !1 } = {}) {
+  if (isHostManagedUnpinnedGateway()) Rc();
   let r = ns();
   if (!r?.idpRefreshToken || (!t && r.expiresAt - Date.now() >= Vpe))
     return Promise.resolve();
@@ -33797,7 +33797,7 @@ function Rc() {
     let o = r?.url;
     if (!o)
       try {
-        o = FKt(e);
+        o = normalizeGatewayUrl(e);
       } catch (p) {
         throw new ud(
           `CLAUDE_CODE_USE_GATEWAY is set but ANTHROPIC_BASE_URL is invalid: ${l(p)}`,
@@ -33816,13 +33816,13 @@ function Rc() {
   }
   return !1;
 }
-function tvt() {
+function isHostManagedUnpinnedGateway() {
   return a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST && ns()?.unpinned === !0;
 }
 async function Kpe(e, t, r) {
   try {
     let o = e.tokenEndpoint ?? `${e.url}/oauth/token`,
-      d = gRe(await mRe(pRe(new URL(o)), r), o),
+      d = createPinnedHttpsAgent(await readGatewayTrustPin(getUrlHostname(new URL(o)), r), o),
       { data: p } = await externalHttp.post(
         o,
         new URLSearchParams({
@@ -33839,7 +33839,7 @@ async function Kpe(e, t, r) {
           ...(d && { httpsAgent: d }),
         },
       ),
-      _ = mRn().safeParse(p);
+      _ = getGatewayTokenResponseSchema().safeParse(p);
     if (!_.success) {
       n("[gateway-refresh] malformed response; will retry later");
       return;
@@ -33862,7 +33862,7 @@ async function Kpe(e, t, r) {
     ),
       n("[gateway-refresh] refreshed gateway JWT"));
   } catch (o) {
-    if (gRn(o) === "invalid_grant") {
+    if (getOAuthErrorCode(o) === "invalid_grant") {
       if (ns() !== e) {
         n(
           "[gateway-refresh] auth changed mid-refresh; discarding invalid_grant",
@@ -33887,8 +33887,8 @@ async function Kpe(e, t, r) {
   }
 }
 function jpe(e) {
-  if (DUe(e) !== void 0) return "certificate changed since sign-in";
-  if (l(e).includes(fRe)) return "pin store is a symlink and was refused";
+  if (extractFingerprintMismatch(e) !== void 0) return "certificate changed since sign-in";
+  if (l(e).includes(GATEWAY_PIN_STORE_SYMLINK_ERROR)) return "pin store is a symlink and was refused";
   return;
 }
 async function b0(e, t, r, o) {
@@ -33912,7 +33912,7 @@ async function b0(e, t, r, o) {
   }
   kW(d);
 }
-function gRn(e) {
+function getOAuthErrorCode(e) {
   if (!e || typeof e !== "object" || !("isAxiosError" in e) || !e.isAxiosError)
     return;
   let t = e.response?.data;
@@ -33922,7 +33922,7 @@ function gRn(e) {
   }
   return;
 }
-async function _sr(e, t) {
+async function removeDiscardedGatewayCredential(e, t) {
   if (!e) return;
   let r = (o) => o?.url === e.url && o.jwt === e.jwt;
   if (r(ns())) kW(null);
@@ -33944,7 +33944,7 @@ async function _sr(e, t) {
     );
   }
 }
-async function ysr(e, t) {
+async function persistGatewayCredential(e, t) {
   kW(e);
   let r = await getSecureStorage().mutate((o) => ({ ...o, enterpriseGateway: e }), t);
   if (!r.success)
@@ -33960,7 +33960,7 @@ var A0 = [
   "CLAUDE_CODE_USE_MANTLE",
   "CLAUDE_CODE_USE_VERTEX",
 ];
-function $Kt() {
+function getPolicyForcedLoginConfig() {
   if (!isAdminPolicyOrigin(getPolicySettingsOrigin())) return {};
   let e = getSettingsForSource("policySettings");
   return {
@@ -33968,16 +33968,16 @@ function $Kt() {
     forceLoginGatewayUrl: e?.forceLoginGatewayUrl,
   };
 }
-function LUe() {
+function isHostPolicyForceLoginGateway() {
   return getHostPolicyForceLoginMethod() === "gateway";
 }
-function Nse() {
-  return !a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST && !Wpe() && LUe();
+function shouldForceGatewayLogin() {
+  return !a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST && !Wpe() && isHostPolicyForceLoginGateway();
 }
 function Wpe() {
   return A0.some((e) => a[e]);
 }
-function oge() {
+function createValueSlot() {
   let e = null;
   return {
     get: () => e,
@@ -33987,8 +33987,8 @@ function oge() {
   };
 }
 function $pe() {
-  let e = oge(),
-    t = oge();
+  let e = createValueSlot(),
+    t = createValueSlot();
   return {
     setToolDescribeResolver: e.set,
     resolveToolDescription: (r, o) => e.get()?.(r, o) ?? Promise.resolve(o),
@@ -33997,10 +33997,10 @@ function $pe() {
   };
 }
 var Kn = $pe();
-var Pfr = Kn.invalidateToolDescriptions;
-var Ofr = Kn.resolveToolDescription;
+var invalidateToolDescriptions = Kn.invalidateToolDescriptions;
+var resolveToolDescription = Kn.resolveToolDescription;
 var Jpe = Kn.setToolDescribeInvalidator;
-var Dfr = Kn.setToolDescribeResolver;
+var setToolDescribeResolver = Kn.setToolDescribeResolver;
 class R0 {
   byKey = new Map();
   generation = 0;
@@ -34027,7 +34027,7 @@ var Qpe = new j(() => new R0());
 function ho() {
   return Qpe.of(B().host);
 }
-var MUe = {
+var toolDefinitionCache = {
   get(e) {
     return ho().get(e);
   },
@@ -34041,13 +34041,13 @@ var MUe = {
     return ho().size;
   },
 };
-function T5() {
+function invalidateToolDefinitionCache() {
   ho().invalidateAll();
 }
 function C0() {
   ho().dropInFlightComposes();
 }
-Jpe(T5);
+Jpe(invalidateToolDefinitionCache);
 var ife = 300000,
   H0 = 30000,
   sfe = 16384;
@@ -34356,7 +34356,7 @@ async function restoreGatewayAuth(e) {
     let t = await getSecureStorage().readAsync(e),
       r = t?.enterpriseGateway;
     if (!r) return;
-    let o = pRe(new URL(r.url)),
+    let o = getUrlHostname(new URL(r.url)),
       d = t?.gatewayTrust?.[o];
     if (!d) {
       if (!ke())
@@ -34368,14 +34368,14 @@ async function restoreGatewayAuth(e) {
     if (r.expiresAt <= Date.now() && !r.idpRefreshToken) {
       if (!ke())
         process.stderr.write(
-          q$e +
+          CLOUD_GATEWAY_SESSION_EXPIRED_MESSAGE +
             `
 `,
         );
       return;
     }
     try {
-      let p = await ZCt(r.url, 3000);
+      let p = await probeTlsFingerprint(r.url, 3000);
       if (p.fingerprint !== d) {
         if (!ke())
           process.stderr
@@ -34486,14 +34486,14 @@ function isApiKeyHelperTheActiveCredential() {
 }
 var w0 = new WeakMap();
 function hasBootstrapModelOptions() {
-  let e = ee();
+  let e = getGlobalConfig();
   return (
     Array.isArray(e.additionalModelOptionsCache) &&
     typeof e.additionalModelOptionsAnsweredAt === "number"
   );
 }
 function getAdditionalModelOptionsCache() {
-  let e = ee().additionalModelOptionsCache;
+  let e = getGlobalConfig().additionalModelOptionsCache;
   if (!Array.isArray(e)) return [];
   let t = w0.get(e);
   if (t) return t;
@@ -34518,7 +34518,7 @@ function getAdditionalModelOptionsCache() {
   return (w0.set(e, r), r);
 }
 function getModelAccessCache() {
-  let e = ee().modelAccessCache;
+  let e = getGlobalConfig().modelAccessCache;
   return (Array.isArray(e) ? e : []).filter(
     (t) =>
       t != null &&
@@ -34528,7 +34528,7 @@ function getModelAccessCache() {
   );
 }
 function getOrgModelDefaultCache() {
-  let e = ee(),
+  let e = getGlobalConfig(),
     t = e.orgModelDefaultCache;
   if (
     t == null ||
@@ -34606,7 +34606,7 @@ function getAnthropicApiKeyWithSource(e = {}) {
     if (t) return { key: t, source: "ANTHROPIC_API_KEY" };
     return { key: null, source: "none" };
   }
-  if (t && ee().customApiKeyResponses?.approved?.includes(fq(t)))
+  if (t && getGlobalConfig().customApiKeyResponses?.approved?.includes(getApiKeyFingerprint(t)))
     return { key: t, source: "ANTHROPIC_API_KEY" };
   let r = getApiKey();
   if (r) return { key: r, source: "ANTHROPIC_API_KEY" };
@@ -34622,8 +34622,8 @@ function getAnthropicApiKeyWithSource(e = {}) {
 function getUnapprovedCustomApiKey() {
   let e = a.ANTHROPIC_API_KEY;
   if (!e || xg() || !isFirstPartyProvider()) return;
-  let t = fq(e);
-  return Xsr(t) === "new" ? t : void 0;
+  let t = getApiKeyFingerprint(e);
+  return getCustomApiKeyStatus(t) === "new" ? t : void 0;
 }
 function getConfiguredApiKeyHelper() {
   if (isSimpleMode()) return getSettingsForSource("flagSettings")?.apiKeyHelper;
@@ -34739,7 +34739,7 @@ async function P0(e, t, r, o) {
     )
       return ((e.cache = { ...e.cache, timestamp: Date.now() }), e.cache.value);
     if (((e.lastFailure = p), isApiKeyHelperTheActiveCredential())) {
-      let _ = EU.getInstance();
+      let _ = AuthenticationStatusStore.getInstance();
       (_.startAuthentication(),
         _.setError(`apiKeyHelper failed: ${p}`),
         _.endAuthentication(!1));
@@ -34753,7 +34753,7 @@ async function _fe(e) {
   let t = getConfiguredApiKeyHelper();
   if (!t) return null;
   if (W0()) {
-    if (!Bo() && !e) {
+    if (!checkHasTrustDialogAccepted() && !e) {
       let _ = Error(
         `Security: apiKeyHelper executed before workspace trust is confirmed. If you see this message, post in ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.FEEDBACK_CHANNEL}.`,
       );
@@ -34794,7 +34794,7 @@ function clearApiKeyHelperCache() {
   (e.epoch++, (e.cache = null), (e.inflight = null));
 }
 function isApiKeyHelperSafeToInvoke() {
-  return !(W0() && !Bo());
+  return !(W0() && !checkHasTrustDialogAccepted());
 }
 function prefetchApiKeyFromApiKeyHelperIfSafe(e) {
   if (!isApiKeyHelperSafeToInvoke()) return;
@@ -34816,7 +34816,7 @@ async function Tfe() {
     r = e.epoch;
   if (!t) return !1;
   if (isAwsAuthRefreshFromProjectSettings()) {
-    if (!Bo() && !ke()) {
+    if (!checkHasTrustDialogAccepted() && !ke()) {
       let d = Error(
         `Security: awsAuthRefresh executed before workspace trust is confirmed. If you see this message, post in ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.FEEDBACK_CHANNEL}.`,
       );
@@ -34855,7 +34855,7 @@ async function Tfe() {
 var D0 = 180000;
 function refreshAwsAuth(e, t) {
   n("Running AWS auth refresh command");
-  let r = EU.getInstance();
+  let r = AuthenticationStatusStore.getInstance();
   return (
     r.startAuthentication(),
     new Promise((o) => {
@@ -34924,7 +34924,7 @@ async function bfe() {
   let e = Wm();
   if (!e) return null;
   if (isAwsCredentialExportFromProjectSettings()) {
-    if (!Bo() && !ke()) {
+    if (!checkHasTrustDialogAccepted() && !ke()) {
       let r = Error(
         `Security: awsCredentialExport executed before workspace trust is confirmed. If you see this message, post in ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.FEEDBACK_CHANNEL}.`,
       );
@@ -35137,7 +35137,7 @@ async function Ofe() {
   let e = getConfiguredGcpAuthRefresh();
   if (!e) return !1;
   if (isGcpAuthRefreshFromProjectSettings()) {
-    if (!Bo() && !ke()) {
+    if (!checkHasTrustDialogAccepted() && !ke()) {
       let p = Error(
         `Security: gcpAuthRefresh executed before workspace trust is confirmed. If you see this message, post in ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.FEEDBACK_CHANNEL}.`,
       );
@@ -35177,7 +35177,7 @@ async function Ofe() {
 var kfe = 180000;
 function refreshGcpAuth(e) {
   n("Running GCP auth refresh command");
-  let t = EU.getInstance();
+  let t = AuthenticationStatusStore.getInstance();
   return (
     t.startAuthentication(),
     new Promise((r) => {
@@ -35222,7 +35222,7 @@ function clearGcpCredentialsCache() {
 function prefetchGcpCredentialsIfSafe() {
   if (!getConfiguredGcpAuthRefresh()) return;
   if (isGcpAuthRefreshFromProjectSettings()) {
-    if (!Bo() && !ke()) return;
+    if (!checkHasTrustDialogAccepted() && !ke()) return;
   }
   refreshGcpCredentialsIfNeeded();
 }
@@ -35231,9 +35231,9 @@ function prefetchAwsCredentialsAndBedRockInfoIfSafe() {
     t = Wm();
   if (!e && !t) return;
   if (isAwsAuthRefreshFromProjectSettings() || isAwsCredentialExportFromProjectSettings()) {
-    if (!Bo() && !ke()) return;
+    if (!checkHasTrustDialogAccepted() && !ke()) return;
   }
-  (refreshAndGetAwsCredentials(), Zl());
+  (refreshAndGetAwsCredentials(), getEffectiveModelStrings());
 }
 function wfe() {
   if (isSimpleMode() || isHostManagedProviderAuth()) return null;
@@ -35253,7 +35253,7 @@ function wfe() {
       }
     }
   }
-  let e = ee();
+  let e = getGlobalConfig();
   if (!e.primaryApiKey) return null;
   return { key: e.primaryApiKey, source: "/login managed key" };
 }
@@ -35297,7 +35297,7 @@ async function saveApiKey(e, t) {
       throw (
         logEvent("tengu_api_key_keychain_error", {
           error_class: fromEnum(classifyKeychainError(D)),
-          error_hash: Tn(dRe(D)),
+          error_hash: hashForTelemetry(redactSensitiveText(D)),
           exit_code: I.exitCode ?? -1,
         }),
         Error(
@@ -35307,8 +35307,8 @@ async function saveApiKey(e, t) {
     }
     logEvent("tengu_api_key_saved_to_keychain", {});
   } else logEvent("tengu_api_key_saved_to_config", {});
-  let d = fq(e);
-  (await Te((p) => {
+  let d = getApiKeyFingerprint(e);
+  (await saveGlobalConfig((p) => {
     let _ = p.customApiKeyResponses?.approved ?? [];
     return {
       ...p,
@@ -35326,7 +35326,7 @@ async function saveApiKey(e, t) {
 async function removeApiKey(e) {
   let t = $i();
   (await X0(),
-    await Te((r) => ({ ...r, primaryApiKey: void 0 }), e),
+    await saveGlobalConfig((r) => ({ ...r, primaryApiKey: void 0 }), e),
     t.clear(),
     clearLegacyApiKeyPrefetch());
 }
@@ -35405,7 +35405,7 @@ async function saveRefreshedOAuthTokensRespectingLock({
       if ((iH(), N !== void 0)) await primeStoredLogin(N, G);
     }
     if (D)
-      logEvent("tengu_oauth_tokens_save_exception", { storageBackend: C, ...lm(x) });
+      logEvent("tengu_oauth_tokens_save_exception", { storageBackend: C, ...getErrorTelemetryFields(x) });
     if (!E && !D)
       logEvent(
         I.success
@@ -35471,7 +35471,7 @@ async function saveOAuthTokensIfNeeded(e, t) {
   } catch (D) {
     return (
       n(`Failed to save OAuth tokens: ${l(D)}`, { level: "error" }),
-      logEvent("tengu_oauth_tokens_save_exception", { storageBackend: I, ...lm(D) }),
+      logEvent("tengu_oauth_tokens_save_exception", { storageBackend: I, ...getErrorTelemetryFields(D) }),
       { success: !1, warning: "Failed to save OAuth tokens" }
     );
   }
@@ -35649,7 +35649,7 @@ function oH() {
   if ((clearOAuthTokenMemos(), invalidateKeychainCache(), isHoverRestEnabled())) invalidateCredentialsCopyCache();
 }
 function $m() {
-  (gU(), C0());
+  (resetBetaCaches(), C0());
 }
 function iH() {
   (clearOAuthTokenMemos(), invalidateKeychainCache(), $m());
@@ -35658,7 +35658,7 @@ function clearOAuthTokenCache() {
   if ((iH(), isHoverRestEnabled())) invalidateCredentialsCopyCache();
 }
 function resetEnvDerivedAuthCaches() {
-  if ((clearOAuthTokenMemos(), $i().clear(), clearApiKeyHelperCache(), clearAwsCredentialsCache(), resetAwsAuthRefreshCooldown(), clearGcpCredentialsCache(), gU(), T5(), isHoverRestEnabled())) invalidateCredentialsCopyCache();
+  if ((clearOAuthTokenMemos(), $i().clear(), clearApiKeyHelperCache(), clearAwsCredentialsCache(), resetAwsAuthRefreshCooldown(), clearGcpCredentialsCache(), resetBetaCaches(), invalidateToolDefinitionCache(), isHoverRestEnabled())) invalidateCredentialsCopyCache();
 }
 function _resetCredentialsChangeCheckForTesting() {
   oauthTokenReadMemos.of(B().host).resetChangeCheck();
@@ -35979,7 +35979,7 @@ function sameOwnerAccount(e, t) {
 }
 async function readFreshOAuthCredentialSnapshot(e, t) {
   oH();
-  let [r, o] = await Promise.all([getClaudeAIOAuthTokensAsync(t), isAnthropicAuthEnabled() ? sy(e) : void 0]);
+  let [r, o] = await Promise.all([getClaudeAIOAuthTokensAsync(t), isAnthropicAuthEnabled() ? readFreshOauthAccountFromDisk(e) : void 0]);
   if (!r?.accessToken) return;
   return {
     accessToken: r.accessToken,
@@ -36215,7 +36215,7 @@ async function Gm(e, t, r, o, d, p, _, E) {
     }
     return (
       logError(F),
-      logEvent("tengu_oauth_token_refresh_lock_error", { ...lm(F) }),
+      logEvent("tengu_oauth_token_refresh_lock_error", { ...getErrorTelemetryFields(F) }),
       logFeatureBad("oauth_token_refresh", "oauth_refresh_lock_error"),
       "lock_error"
     );
@@ -36379,14 +36379,14 @@ function is1PApiCustomer() {
   return !0;
 }
 function getOauthAccountInfo() {
-  return isAnthropicAuthEnabled() ? ee().oauthAccount : void 0;
+  return isAnthropicAuthEnabled() ? getGlobalConfig().oauthAccount : void 0;
 }
 function getAuthenticatedAccountInfo() {
   if (!isAnthropicAuthEnabled()) return;
   return cHt() ?? void 0;
 }
 function getStoredOauthAccountInfo() {
-  return ee().oauthAccount;
+  return getGlobalConfig().oauthAccount;
 }
 var uH = new Set([
   "stripe_subscription",
@@ -36404,7 +36404,7 @@ function isOverageProvisioningAllowed() {
 }
 function isExtraUsageAllowed() {
   if (a.DISABLE_EXTRA_USAGE_COMMAND) return !1;
-  if (Aw() !== null) return !0;
+  if (getOverageBillingOverride() !== null) return !0;
   return isOverageProvisioningAllowed();
 }
 function hasOpusAccess() {
@@ -36541,7 +36541,7 @@ async function getOtelHeadersFromHelper() {
   if (r.cache && Date.now() - r.timestamp < t) return r.cache;
   if (r.inflight) return r.inflight;
   if (isOtelHeadersHelperFromProjectOrLocalSettings()) {
-    if (!Bo()) return {};
+    if (!checkHasTrustDialogAccepted()) return {};
   }
   return (
     (r.inflight = (async () => {
@@ -36703,7 +36703,7 @@ async function Gfe() {
       }
     }
   }
-  let e = ee();
+  let e = getGlobalConfig();
   if (!e.primaryApiKey) return null;
   return { key: e.primaryApiKey, source: "/login managed key" };
 }
@@ -36738,7 +36738,7 @@ async function getAnthropicApiKeyWithSourceAsync(e = {}) {
     if (t) return { key: t, source: "ANTHROPIC_API_KEY" };
     return { key: null, source: "none" };
   }
-  if (t && ee().customApiKeyResponses?.approved?.includes(fq(t)))
+  if (t && getGlobalConfig().customApiKeyResponses?.approved?.includes(getApiKeyFingerprint(t)))
     return { key: t, source: "ANTHROPIC_API_KEY" };
   let r = getApiKey();
   if (r) return { key: r, source: "ANTHROPIC_API_KEY" };
@@ -36827,7 +36827,7 @@ async function is1PApiCustomerAsync(e) {
   return !0;
 }
 async function getOauthAccountInfoAsync() {
-  return (await isAnthropicAuthEnabledAsync()) ? ee().oauthAccount : void 0;
+  return (await isAnthropicAuthEnabledAsync()) ? getGlobalConfig().oauthAccount : void 0;
 }
 async function isOverageProvisioningAllowedAsync(e) {
   let t = (await getOauthAccountInfoAsync())?.billingType;
@@ -36959,13 +36959,13 @@ async function validateForceLoginOrg(e) {
     if (o && Vfe())
       return {
         valid: !1,
-        message: LUe()
+        message: isHostPolicyForceLoginGateway()
           ? `Administrator policy requires a Cloud gateway sign-in on this machine; the
 Anthropic-issued credential configured here (ANTHROPIC_API_KEY,
 ANTHROPIC_AUTH_TOKEN, or apiKeyHelper) is not used.
 
 ` +
-            (Nse()
+            (shouldForceGatewayLogin()
               ? "Remove it, then start `claude` and sign in with /login."
               : "Remove it; this session's cloud provider (CLAUDE_CODE_USE_*) needs no sign-in.")
           : `This machine's managed settings require a first-party login, but an
@@ -37021,7 +37021,7 @@ Contact your administrator.`,
     C =
       E === "CLAUDE_CODE_OAUTH_TOKEN" ||
       E === "CLAUDE_CODE_OAUTH_TOKEN_FILE_DESCRIPTOR",
-    I = await PUe(_.accessToken);
+    I = await validateOAuthToken(_.accessToken);
   if (!I)
     return {
       valid: !1,
@@ -37052,13 +37052,13 @@ Please log in with a permitted organization: claude auth login`,
   };
 }
 function getForcedLoginMethod() {
-  if (LUe()) return "gateway";
+  if (isHostPolicyForceLoginGateway()) return "gateway";
   let e = getInitialSettings()?.forceLoginMethod;
   return e === "gateway" ? void 0 : e;
 }
 function gatewaySignInScreenConfigured() {
-  if (LUe()) return !0;
-  let { forceLoginMethod: e, forceLoginGatewayUrl: t } = $Kt();
+  if (isHostPolicyForceLoginGateway()) return !0;
+  let { forceLoginMethod: e, forceLoginGatewayUrl: t } = getPolicyForcedLoginConfig();
   return e === void 0 && t !== void 0;
 }
 function adminPolicyUnreadable() {
@@ -37096,12 +37096,12 @@ function validateForceLoginMethod(e) {
 }
 class Vm extends Error {}
 import { AsyncLocalStorage as jfe } from "async_hooks";
-var g6 = "cron",
+var CRON_WORKLOAD_NAME = "cron",
   mH = new jfe();
-function fVt() {
+function getCurrentWorkload() {
   return mH.getStore()?.workload;
 }
-function IAt(e, t) {
+function runWithWorkload(e, t) {
   return mH.run({ workload: e }, t);
 }
 function getUserAgent() {
@@ -37111,7 +37111,7 @@ function getUserAgent() {
     t = a.CLAUDE_AGENT_SDK_CLIENT_APP
       ? `, client-app/${a.CLAUDE_AGENT_SDK_CLIENT_APP}`
       : "",
-    r = fVt(),
+    r = getCurrentWorkload(),
     o = r ? `, workload/${r}` : "";
   return `claude-cli/${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION} (external, ${a.CLAUDE_CODE_ENTRYPOINT ?? "cli"}${e}${t}${o})`;
 }
@@ -37239,257 +37239,257 @@ async function withOAuth401Retry(e, t) {
   }
 }
 export {
-  q$e,
-  Lve,
-  cA,
-  cVt,
-  wCn,
-  TCn,
-  CAt,
-  uVt,
-  vAt,
-  Or,
-  RAt,
-  Hme,
-  grr,
-  kAt,
-  XJ,
-  gse,
-  fQe,
-  ECn,
-  z$e,
-  hse,
-  Mve,
-  mQe,
+  CLOUD_GATEWAY_SESSION_EXPIRED_MESSAGE,
+  getAwsRegionOrDefault,
+  resolveAwsRegion,
+  getAwsRegion,
+  resolveAwsRegionWithSource,
+  createProviderCache,
+  getAuthenticatedAccountKey,
+  resetFableEntitlementProbe,
+  getFableEntitlementProbe,
+  getProviderState,
+  getBedrockInferenceProfiles,
+  findInferenceProfileForModel,
+  createBedrockRuntimeClient,
+  countBedrockTokens,
+  getInferenceProfileBackingModel,
+  isUnresolvedInferenceProfileArn,
+  isUnprefixedAnthropicModelId,
+  getArnResourceName,
+  getInferenceProfilePrefixFromModelId,
+  applyInferenceProfilePrefix,
+  getInferenceProfilePrefixForRegion,
+  resolveInferenceProfilePrefix,
   ub,
-  gQe,
-  Zl,
-  xAt,
-  hrr,
-  Nve,
-  _rr,
-  Aw,
-  ACn,
-  yrr,
-  Srr,
-  Ls,
-  Ime,
-  Mc,
-  V$e,
-  dVt,
-  K$e,
-  Pme,
-  ND,
-  HAt,
-  pVt,
-  lU,
-  _se,
-  brr,
-  mg,
-  cU,
-  Zk,
-  g6,
-  fVt,
-  IAt,
+  getModelOverrideSourceId,
+  getEffectiveModelStrings,
+  resolveModelStrings,
+  withRateLimitHeaders,
+  shouldAttachRateLimitHeaders,
+  getSelfManageUsageCreditsOverride,
+  getOverageBillingOverride,
+  getProTrialOverride,
+  getUsageLimitGraceMock,
+  setProTrialOverride,
+  otelApiModule,
+  otelSemanticConventionsModule,
+  otelCoreModule,
+  otelResourcesModule,
+  otelLogsApi,
+  OtelLoggerProvider,
+  OtelBatchLogRecordProcessor,
+  TELEMETRY_LOG_PREFIX,
+  TelemetryExportFailureReporter,
+  initUserData,
+  resetUserData,
+  getGitUserEmail,
+  getGitUserName,
+  isAnalyticsDisabled,
+  isFeedbackSurveyForOtelEnabled,
+  shouldSuppressFeedbackSurvey,
+  CRON_WORKLOAD_NAME,
+  getCurrentWorkload,
+  runWithWorkload,
   getUserAgent,
   getMCPUserAgent,
   getWebFetchUserAgent,
   getAuthHeadersAsync,
   getAuthHeaders,
   withOAuth401Retry,
-  PAt,
-  wrr,
-  mVt,
-  gVt,
-  YJ,
-  vCn,
-  JJ,
-  ry,
-  Fve,
-  fP,
-  X$e,
-  c5,
-  hQe,
-  hVt,
-  _Qe,
-  Ome,
-  Y$e,
-  yQe,
-  OAt,
-  uA,
-  CR,
-  RCn,
-  Dme,
-  kCn,
-  SQe,
-  xCn,
-  HCn,
-  ICn,
-  vR,
-  JH,
-  Cw,
-  nx,
-  gg,
-  mP,
-  DAt,
-  PCn,
+  padBodyWithRandomWhitespace,
+  setRequestBodyGzipPlanner,
+  buildGzippedBodyIfEnabled,
+  containsAnyIgnoreCase,
+  withholdCredentialsForMisroutedHost,
+  MAX_ATTRIBUTE_VALUE_LENGTH,
+  toWellFormedAttributeValue,
+  runtimeEnvironment,
+  OAUTH_AUTH_BETA,
+  LONG_CONTEXT_BETA,
+  CONTEXT_MANAGEMENT_BETA,
+  STRUCTURED_OUTPUTS_BETA,
+  EFFORT_BETA,
+  TASK_BUDGETS_BETA,
+  PROMPT_CACHING_SCOPE_BETA,
+  PROMPT_CACHING_EVICT_BETA,
+  EXTENDED_CACHE_TTL_BETA,
+  FAST_MODE_BETA,
+  REDACT_THINKING_BETA,
+  THINKING_TOKEN_COUNT_BETA,
+  AFK_MODE_BETA,
+  ADVISOR_TOOL_BETA,
+  CACHE_DIAGNOSIS_BETA,
+  CONTEXT_HINT_BETA,
+  MCP_SERVERS_BETA,
+  FILES_API_BETA,
+  ENVIRONMENTS_BETA,
+  CCR_BYOC_BETA_HEADER,
+  MID_CONVERSATION_SYSTEM_BETA,
+  PER_TURN_CONTROL_BETA,
+  MID_CONVERSATION_TOOL_CHANGES_BETA,
+  SERVER_SIDE_FALLBACK_BETA,
+  SERVER_SIDE_FALLBACK_CATEGORY_BETA,
+  FALLBACK_CREDIT_BETA,
+  MID_CONV_CACHE_PROMOTION_LATCH_BETA,
+  MID_CONV_CACHE_PROMOTION_OK_LATCH_BETA,
   bQe,
-  OCn,
-  h6,
-  u5,
-  uU,
+  AUTO_MODE_CLASSIFIER_BETA,
+  DANGEROUS_TOOL_USE_BETA,
+  THINKING_DISPLAY_UPDATES_BETA,
+  THINKING_BINDING_CONTROLS_BETA,
   LAt,
-  Lme,
-  jC,
-  _Vt,
-  DCn,
-  $ve,
-  ji,
-  Uve,
-  Mme,
-  LCn,
-  WN,
-  tq,
-  FD,
-  wQe,
-  Kh,
+  getBetaByHeader,
+  getBetaHeaders,
+  COUNT_TOKENS_SUPPORTED_BETAS,
+  MAIN_THREAD_QUERY_SOURCES,
+  isKnownQuerySource,
+  getQuerySourceKind,
+  isMainThreadQuerySource,
+  isAutoModeQuerySource,
+  getQuerySourcePrefix,
+  normalizeQuerySource,
+  isExperimentalBetasDisabled,
+  isHipaaTaintActive,
+  withholdBetasIfHipaaTainted,
+  canUseExperimentalBetas,
   Bve,
-  Trr,
-  MAt,
+  registerPerTurnEffortCapabilityResolver,
+  supportsPerTurnEffort,
   Err,
-  J$e,
-  bt,
-  Arr,
-  TQe,
-  sr,
-  MCn,
-  yVt,
-  Crr,
-  yse,
-  ju,
-  SVt,
-  jve,
-  NCn,
-  pi,
-  Mr,
-  Jy,
-  GN,
-  dU,
-  RR,
-  Q$e,
-  FCn,
-  NAt,
-  $Cn,
-  af,
-  db,
-  pb,
-  Nc,
-  bVt,
-  wVt,
-  EQe,
-  vrr,
-  QH,
-  Rrr,
-  krr,
-  FAt,
-  $At,
-  xrr,
-  Sse,
-  pU,
-  Z$e,
-  TVt,
-  UCn,
-  bse,
-  Wve,
-  Ad,
-  eUe,
-  Gve,
-  wse,
-  qve,
-  EVt,
-  Hrr,
-  Irr,
-  Tse,
-  Prr,
-  qN,
-  zve,
-  Ese,
-  Orr,
-  Drr,
-  tUe,
-  $D,
-  AVt,
+  getMainLoopCanonical,
+  getModelForAnalytics,
+  getModelListForAnalytics,
+  getModelBucketForAnalytics,
+  getSessionStateStore,
+  releaseTerminalEmitClaim,
+  DEFAULT_SDK_QUEUE_KEY,
+  getCurrentSdkQueueKey,
+  setSdkQueueEnqueueListener,
+  enqueueSdkEvent,
+  hasQueuedSdkEvent,
+  drainSdkEvents,
+  drainSdkEventsForSession,
+  emitTaskNotification,
+  isFastModeEnabled,
+  isFastModeAvailable,
+  getFastModeUnavailableReason,
+  getFastModeUnavailableMessage,
+  getFastModeModelDisplayName,
+  getFastModeModelId,
+  shouldEnableFastModeForModel,
+  shouldStartWithFastMode,
+  isFastModeEnabledInSettings,
+  modelSupportsFastMode,
+  resolveFastModeForModel,
+  logFastModeToggled,
+  fastModeStore,
+  onFastModeCooldownTriggered,
+  onFastModeCooldownExpired,
+  getFastModeCooldownState,
+  enterFastModeCooldown,
+  clearFastModeCooldown,
+  disableOrgFastMode,
+  onFastModeOverageRejected,
+  isCreditsExhaustedReason,
+  rearmFastModeCreditsNotice,
+  handleFastModeOverageRejection,
+  isFastModeInCooldown,
+  getFastModeStatus,
+  onOrgFastModeChange,
+  isOrgFastModeDisabledByServer,
+  resolveOrgFastModeStatusFromCache,
+  prefetchOrgFastModeStatus,
+  defineEnumerableProperty,
+  getOwnValue,
+  DEFAULT_MODEL_COSTS,
+  getFastModeModelCosts,
+  MODEL_COSTS_BY_CANONICAL_NAME,
+  computeUsageCostUsd,
+  resolveModelCosts,
+  hasOrgConfiguredPricing,
+  computeCostWithPricingSource,
+  hasKnownModelCosts,
+  getCostBasis,
+  computeModelCostUsd,
+  computeModelUsageCostUsd,
+  formatCostsPerMtok,
+  formatModelCostPerMtok,
+  computeUsageCostWithFallback,
+  SESSION_ID_HEADER_NAME,
+  InvalidRequestHeaderValueError,
+  validateRequestHeaders,
   Lrr,
-  nq,
-  BCn,
-  Mrr,
-  fU,
-  Nrr,
-  Nme,
-  CVt,
-  Frr,
-  QJ,
-  $rr,
-  UAt,
-  jCn,
-  ZJ,
-  Qy,
-  Fme,
-  d5,
-  Urr,
-  WCn,
-  AQe,
-  eQ,
-  Brr,
-  jrr,
-  vVt,
-  Wrr,
-  Vve,
-  BAt,
-  RVt,
-  jAt,
-  ec,
-  tQ,
-  GCn,
-  qCn,
-  kVt,
-  Grr,
-  Kve,
-  WAt,
-  zCn,
-  GAt,
-  xVt,
-  qrr,
-  $me,
-  kR,
-  mU,
-  zrr,
-  gP,
-  nQ,
-  Xve,
-  HVt,
-  Vrr,
-  VCn,
+  redactSecretsInText,
+  containsSecret,
+  redactKnownPaths,
+  sanitizeErrorMessage,
+  primeGatewayModelCache,
+  getGatewayModelOptions,
+  hasDefaultModelOptionLabel,
+  fetchAndCacheGatewayModels,
+  isModelRetiredOrRemapped,
+  getModelDeprecationNotice,
+  formatLegacyModelRemapWarning,
+  formatModelDeprecationWarning,
+  classifyModelFamily,
+  getCatalogModels,
+  getSelectableCatalogModels,
+  isCatalogModelSelectable,
+  getSelectableModelIds,
+  getCatalogDefaultModel,
+  getModelFamily,
+  findCatalogModel,
+  getModelContextWindow,
+  getModelMaxOutputTokens,
+  catalogHasRuntimeInfo,
+  getConfidentialModelIds,
+  getMaskedModelIds,
+  hasDroppedUnidentifiedRows,
+  getDroppedConfidentialModelIds,
+  hasDroppedCatalogRows,
+  normalizeModelId,
+  CONFIDENTIAL_MODEL_ID,
+  setServedCatalog,
+  setPublishedCatalog,
+  registerCatalogPublicIds,
+  deactivateServedCatalog,
+  getSessionMaskedModelIds,
+  applyCatalogMasking,
+  isCompiledModelId,
+  maskModelIdIfConfidential,
+  isModelIdMasked,
+  maskModelIdsInPayload,
+  getServedCatalogSource,
+  getActiveServedCatalog,
+  isActiveCatalogFromServer,
+  isActiveCatalogPublished,
+  withServedCatalogSuppressed,
+  isServedCatalogSuppressed,
+  findServedCatalogModel,
+  getModelEffortLevels,
+  getModelDefaultEffort,
+  collectUnentitledModelNames,
   isModelDenied,
   getModelEntitlementDenySet,
   isEntitlementOverlayUnavailable,
-  Ume,
-  Krr,
-  qAt,
+  getApplicableOrgDefaultModel,
+  getOrgDefaultModelUpdatedAt,
+  pickNewestPermittedFamilyModel,
   isModelAllowed,
-  ZH,
-  UD,
-  IVt,
+  isOpus1mContextAvailable,
+  isSonnet1mContextAvailable,
+  getRegistryAliasEntries,
   rUe,
-  PVt,
-  zAt,
-  CQe,
-  oUe,
-  Bme,
-  Xrr,
-  vQe,
-  Yrr,
-  OVt,
+  MODEL_NEEDS_UPDATE_NOTICE,
+  formatUnrecognizedModelNotice,
+  resolveModelBehavesAs,
+  isOfferedModelRow,
+  getOfferedModelRows,
+  getOfferedModelRowIds,
+  getOfferedModelAliasMap,
+  getNotOfferedModelRows,
+  isTierPinnedByEnv,
   hasDedicatedSmallFastModel,
   getSmallFastModel,
   isNonCustomFableModel,
@@ -37596,29 +37596,29 @@ export {
   modelSettingResolvesThroughModelStrings,
   toProviderWireModelId,
   strip1mTag,
-  eor,
-  qVt,
-  tor,
-  nor,
-  zme,
-  KN,
-  XN,
-  tc,
-  sCt,
+  parseModelCapabilitiesEntry,
+  isModelCapabilitiesCacheEnabled,
+  primeModelCapabilitiesCache,
+  writeModelCapabilitiesCache,
+  DEFAULT_CONTEXT_WINDOW_TOKENS,
+  STANDARD_CONTEXT_WINDOW_TOKENS,
+  isLongContextDisabled,
+  hasLongContextSuffix,
+  isNative1mContextModel,
   ror,
   modelHasNative1MContext,
-  kse,
-  GC,
-  vp,
-  avn,
-  lvn,
-  oor,
-  sor,
-  iCt,
-  zVt,
-  h5,
-  ior,
-  oQ,
+  lacks1mContextSupport,
+  supports1mContextBeta,
+  getEffectiveContextWindow,
+  resolveContextWindowBelief,
+  isContextWindowAboveStandard,
+  getServedAutoCompactWindows,
+  getCachedAutoCompactWindows,
+  getServedSonnet46ContextWindow,
+  computeContextUsagePercent,
+  getMaxOutputTokens,
+  getMaxThinkingBudget,
+  getModelCapabilityOverride,
   AutoModeState,
   autoModeStates,
   getAutoModeState,
@@ -37640,150 +37640,150 @@ export {
   setAutoModeEnvOnboardingEligible,
   getAutoModeEnvOnboardingShownLogged,
   setAutoModeEnvOnboardingShownLogged,
-  cCt,
-  gvn,
-  hvn,
-  lor,
-  cor,
-  S6,
-  LQe,
-  mUe,
-  zC,
-  _vn,
-  gUe,
-  _5,
-  uor,
-  YVt,
-  MQe,
-  yvn,
-  JN,
-  dor,
-  uCt,
-  dCt,
-  Qve,
-  NQe,
-  JVt,
-  QVt,
-  ZVt,
-  Svn,
-  xse,
-  bvn,
-  Zve,
-  por,
-  hUe,
-  Vme,
-  b6,
-  mor,
-  pCt,
-  fCt,
-  gU,
-  eKt,
-  wvn,
-  QN,
-  tKt,
-  FQe,
-  nKt,
-  Tn,
-  cf,
-  ph,
-  r0,
-  sQ,
-  Tvn,
-  Hse,
-  mCt,
-  Evn,
-  rKt,
-  Avn,
-  oKt,
-  Ise,
-  gor,
-  hor,
-  _or,
-  Cvn,
-  gCt,
-  OR,
-  hCt,
-  yor,
-  _Ct,
-  sKt,
-  yCt,
-  SCt,
-  bCt,
-  vvn,
-  wCt,
-  eRe,
-  TCt,
-  ECt,
-  Rvn,
-  $Qe,
-  kvn,
-  xvn,
-  Hvn,
-  ACt,
-  Sor,
-  CCt,
-  _Ue,
-  bor,
-  vCt,
-  RCt,
-  iKt,
-  FT,
-  Ivn,
-  aKt,
-  Pvn,
-  UQe,
-  wor,
-  tRe,
-  hU,
-  BQe,
-  Tor,
-  Ovn,
-  Eor,
-  kCt,
-  yUe,
-  Dvn,
-  Kme,
-  Pse,
-  Xme,
-  lKt,
-  DR,
-  Aor,
-  Im,
-  VC,
-  xCt,
-  Rw,
-  nRe,
-  HCt,
-  Cor,
-  rx,
-  y5,
-  iQ,
-  cKt,
-  ICt,
-  Lvn,
-  vor,
-  jQe,
-  Ror,
-  Mvn,
-  PCt,
-  OCt,
-  kw,
-  aa,
-  fh,
-  uKt,
-  Ji,
-  mc,
-  kor,
-  dKt,
-  DCt,
-  KC,
-  LCt,
-  _U,
-  Nvn,
-  Yme,
-  WQe,
-  o0,
-  Fvn,
+  shouldShowThinkingSummaries,
+  resolveThinkingDisplayMode,
+  shouldOmitThinkingDisplay,
+  resolveThinkingConfig,
+  normalizeThinkingConfigDisplay,
+  isUltrathinkEnabled,
+  hasUltrathinkTrigger,
+  findUltrathinkMatches,
+  pickRainbowColor,
+  isThinkingSupported,
+  canDisableThinking,
+  getThinkingBudgetDefaults,
+  getCachedThinkingBudgetDefaults,
+  resolveThinkingMode,
+  canUseAdaptiveThinking,
+  getThinkingDisabledReason,
+  isThinkingEnabled,
+  filterAllowedCustomBetas,
+  supportsInterleavedThinking,
+  supportsStructuredOutputs,
+  supportsMidConversationSystem,
+  supportsMidConversationToolChange,
+  isSonnet5Model,
+  supportsTemperatureParameter,
+  isThirdPartyProvider,
+  areExperimentalBetasAllowed,
+  isFastModeSupported,
+  getFastModeSupport,
+  isSkillModelSupportedInAutoMode,
+  getToolSearchBeta,
+  isDefaultProviderEndpoint,
+  supportsFirstPartyServerFeatures,
+  getModelBetas,
+  getBedrockExtraBodyParamsBetas,
+  resolveRequestBetas,
+  hasStructuredOutputsBeta,
+  resetBetaCaches,
+  filterSupportedBetas,
+  MASKED_IDS_FILE_NAME,
+  getModelCatalogCacheDir,
+  isServedCatalogMaskHydrated,
+  ensureServedCatalogMaskHydrated,
+  persistMaskedModelIds,
+  hashForTelemetry,
+  isSemverGreaterThan,
+  isSemverAtLeast,
+  isSemverLessThan,
+  isSemverAtMost,
+  satisfiesSemverRange,
+  isSemverString,
+  DEFAULT_TRANSFER_STALL_MS,
+  computeTransferStallMs,
+  createStallWatchdog,
+  iterateUploadChunks,
+  signClientEvent,
+  reportEventSignerLoadFailure,
+  isCredentialInvalidationReason,
+  recordCredentialInvalidation,
+  clearCredentialInvalidation,
+  getCredentialInvalidation,
+  getCredentialInvalidationGeneration,
+  isAbortTerminalReason,
+  isErrorTerminalReason,
+  formatTerminalReasonKey,
+  isFailedTerminalReason,
+  getHookOutputSchema,
+  getPluginConfigSchema,
+  initializeRequestSchema,
+  mcpCallRequestSchema,
+  BASE64_REGEX,
+  registerDeviceHooksRequestSchema,
+  registerDeviceHooksResponseSchema,
+  uploadDeviceHookTemplateRequestSchema,
+  remoteToolsAnnounceRequestSchema,
+  elicitationResponseSchema,
+  userDialogResponseSchema,
+  workSecretResponseSchema,
+  oauthTokenRefreshResponseSchema,
+  hostAuthTokenRefreshResponseSchema,
+  messageRatedRequestSchema,
+  stdoutMessageSchema,
+  tryHandleFrame,
+  buildSuccessControlResponse,
+  CANCEL_QUEUED_INTERRUPT_REQUEST,
+  parsePermissionModeFromSystemMessage,
+  SESSION_NOT_FOUND_PREFIX,
+  INVALID_SESSION_ID_PREFIX,
+  sanitizeDisplayName,
+  MAX_PREVIEW_WIDTH,
+  MAX_BODY_CODE_UNITS,
+  buildMessagePreview,
+  slugifyDisplayName,
+  isValidPeerFromMode,
+  buildBridgeAddress,
+  buildUdsAddress,
+  MAX_HOP_CHAIN_LENGTH,
+  computeHopHash,
+  MAX_ADDRESS_LENGTH,
+  isValidSenderAddress,
+  appendHopToChain,
+  buildCrossSessionEnvelope,
+  stripHopChainFromMessage,
+  dropOriginBodyIfValueChanged,
+  extractMessageOrigin,
+  findLastPeerHopChain,
+  isCredentialsProviderError,
+  hasCustomApiKeyHeader,
+  hasCustomAuthorizationHeader,
+  getAuthorizationHeaderPin,
+  getAnthropicBetaHeaderPin,
+  isAwsAuthError,
+  authState,
+  getEnvAuthorizationHeader,
+  getAwsChainResolveTimeoutMs,
+  getHookCallerPluginName,
+  isPluginSteeredAgent,
+  isRemoteOrPluginRequestSource,
+  PERMISSION_PROMPT_DIALOG,
+  runWithTurnAttributionKey,
+  getTurnAttributionKey,
+  clearTurnAttributionKey,
+  adoptTurnAttributionKeyFromMessages,
+  getLocalTurnAttributionKey,
+  getEffectiveTurnAttributionKey,
+  findLastTurnAttributionKey,
+  getSingleTurnAttributionKey,
+  agentContextStorage,
+  runWithAgentContext,
+  createMainAgentContext,
+  isMainAgentContext,
+  resolveTurnAttributionKey,
+  isDelegatedObservationAgent,
+  getAgentDepth,
+  getForegroundSubagentId,
+  getBackgroundAgentId,
+  isForegroundSubagentContext,
+  isSubagentContext,
+  isOutOfProcessAgentContext,
+  isSubagentSession,
+  getSubagentNameForAnalytics,
+  getSubagentAnalyticsFields,
+  getWorkflowAnalyticsAttributes,
+  getWorkflowRunMetadata,
+  claimAgentInvocation,
   CCR_BYOC_BETA,
   sessionsApiWire,
   isTransientNetworkError,
@@ -37807,140 +37807,140 @@ export {
   getAccessTokenWithCcrFallback,
   pollRemoteSessionEvents,
   archiveRemoteSession,
-  MCt,
-  aQ,
-  rRe,
-  VQe,
-  Hor,
-  NCt,
-  TUe,
-  Ior,
-  FCt,
-  ht,
-  Por,
-  Rp,
-  $Ct,
-  Oor,
-  Dor,
-  Gvn,
-  KQe,
-  mKt,
-  Lor,
-  s0,
-  qvn,
-  Mor,
-  UCt,
-  lq,
-  SP,
-  yU,
-  oRe,
-  cq,
-  la,
-  XQe,
-  i0,
-  pA,
-  EUe,
-  Qme,
-  AUe,
-  sRe,
-  Nor,
-  CUe,
-  gKt,
-  For,
-  sx,
-  $or,
-  YQe,
-  qe,
-  Bt,
-  BCt,
-  jCt,
-  hKt,
-  JQe,
-  zvn,
-  Vvn,
-  _Kt,
-  lQ,
-  tt,
-  Kvn,
-  yKt,
-  Mn,
-  co,
-  ro,
-  Zme,
-  ZN,
-  QQe,
-  Wl,
-  Ut,
-  Xvn,
-  SKt,
+  getMemoryBaseUrlOverride,
+  hasMemoryBaseUrlOverride,
+  getMemoryHostRequestOptions,
+  getTrustedOrigin,
+  getUntrustedOriginReason,
+  getFrameBaseUrlOverride,
+  hashSha256Hex,
+  getClaudeAiTokenFingerprint,
+  isNonEssentialTrafficAllowed,
+  httpClient,
+  refreshOfficialMcpRegistryUrls,
+  REMOTE_DEVICES_MCP_SERVER_NAME,
+  REMOTE_DEVICE_BASH_TOOL_NAME,
+  IDE_EXECUTE_CODE_TOOL_NAME,
+  REMOTE_DEVICE_TOOL_NAMES,
+  ALWAYS_INTERNAL_MCP_SERVER_NAMES,
+  findCanonicalMcpServerName,
+  isEquivalentMcpName,
+  isInternalMcpServerName,
+  COMPUTER_USE_MCP_SERVER_NAME,
+  DEFAULT_HOST_BUNDLE_ID,
+  getHostBundleIdentifier,
+  DEFAULT_COMPUTER_USE_CAPABILITIES,
+  isComputerUseMcpServer,
+  isXaaEnabled,
+  getXaaIdpConfig,
+  readStoredMcpOAuth,
+  readSecureStorageResilient,
+  getMcpOAuthCredentialKey,
+  hasAuthorizationHeader,
+  configHasAuthorizationHeader,
+  isFirstPartyDesignUrl,
+  configProvidesOwnAuth,
+  isMcpServerAuthenticated,
+  hasStoredRefreshToken,
+  needsMcpServerAuth,
+  isMcpServerTokenExpired,
+  CLAUDE_DESKTOP_MCP_SERVER_NAMES,
+  FIRST_PARTY_APP_MCP_SERVER_NAMES,
+  FIRST_PARTY_APP_MCP_TOOL_PREFIXES,
+  effectiveModeForTool,
+  clampControlChannelOverride,
+  isPlanModeOrAutoAllowSuspended,
+  BASH_TOOL_NAME,
+  EDIT_TOOL_NAME,
+  PROJECT_CLAUDE_DIR_GLOB,
+  USER_CLAUDE_DIR_GLOB,
+  FILE_NOT_READ_ERROR_MESSAGE,
+  FILE_DIR_DENIED_MESSAGE,
+  FILE_READ_DENY_EDIT_MESSAGE,
+  FILE_READ_DENY_WRITE_MESSAGE,
+  FILE_MODIFIED_SINCE_READ_MESSAGE,
+  FileStateError,
+  READ_TOOL_NAME,
+  IMAGE_FILE_EXTENSIONS,
+  isImageOrPdfPath,
+  WRITE_TOOL_NAME,
+  GLOB_TOOL_NAME,
+  GREP_TOOL_NAME,
+  isReservedMcpServerName,
+  isStdioMcpServer,
+  getFirstPartyMcpToolNames,
+  NOTEBOOK_EDIT_TOOL_NAME,
+  POWERSHELL_TOOL_NAME,
+  getJobsDir,
+  getJobStorageKey,
   maxSlugLength,
-  ix,
-  Yvn,
-  WCt,
-  Dse,
-  uf,
-  GCt,
-  a0,
-  ZQe,
-  qCt,
-  cQ,
-  Jvn,
-  Uor,
-  bKt,
-  ege,
-  Qvn,
+  buildAgentId,
+  encodeHeaderValue,
+  createRequestId,
+  isSchemeQualifiedAddress,
+  parsePeerAddress,
+  validateMessageTarget,
+  isLocalAddress,
+  isDefinitelySamePath,
+  isPossiblySamePath,
+  parseWindowsPipeName,
+  isTrustedPeerSocket,
+  isPeerReplyAllowed,
+  isPlaceholderSessionTitle,
+  isCloudEnvironmentSession,
+  isOfflineRemoteSession,
   slugify,
-  tge,
-  iRe,
-  SU,
-  nge,
-  l0,
-  Zvn,
-  b5,
-  jD,
-  bP,
-  aRe,
-  bU,
-  wKt,
-  TKt,
-  eZe,
-  uq,
-  zCt,
-  dq,
-  tZe,
-  vUe,
-  lRe,
-  eRn,
-  RUe,
-  nZe,
-  Wi,
-  Bor,
-  ax,
-  jor,
-  VCt,
-  Wor,
-  EKt,
-  e1,
-  Zy,
-  Gor,
-  qor,
-  zor,
-  tRn,
-  Vor,
-  Kor,
-  Xor,
-  si,
-  Ia,
-  kUe,
-  Yor,
-  T6,
-  Jh,
-  AKt,
-  nRn,
-  Jor,
-  Qor,
-  Zor,
-  esr,
+  isUnusableRecipientName,
+  isTeamLeadMember,
+  getTeamLeadAgentId,
+  getAddressableTeamMembers,
+  isReservedRecipientName,
+  MAX_REF_LENGTH,
+  AGENT_REF_PATTERN,
+  parseAgentDisplayName,
+  buildRecipientListing,
+  resolveInProcessRecipient,
+  formatAgentDisplayName,
+  describeSessionLocationWithRemoteControl,
+  describeSessionLocation,
+  formatCandidateSummary,
+  normalizeSessionName,
+  findMemberByName,
+  normalizePlainName,
+  normalizeUsableRecipientName,
+  looksLikeAddress,
+  createShortEntityRef,
+  isEntityRefPrefix,
+  collectLocalBridgeSessionIds,
+  isCloudSessionKnownLocally,
+  readBoundedFile,
+  readBoundedFileSync,
+  readBoundedFileWithFs,
+  readBoundedFileWithFsSync,
+  isWindowsPlatform,
+  createSessionTokens,
+  TORN_RECORD_REREAD_DELAY_MS,
+  getSessionsDir,
+  getCanonicalSocketPath,
+  publishMessagingKey,
+  removeMessagingKey,
+  resolveMessagingKey,
+  formatAuthLine,
+  AUTH_LINE_BASE_LENGTH,
+  isAuthRecord,
+  classifyAuthToken,
+  sanitizeSessionName,
+  getCurrentWorktreeSession,
+  setCurrentWorktreeSession,
+  getPendingResumeWorktreeName,
+  clearPendingResumeWorktreeName,
+  getBgTakeover,
+  recordAgentWorktreeSpawn,
+  wasAgentSpawnedInWorktree,
+  recordAgentWorktreeRemoval,
+  wasAgentWorktreeRemovedCleanly,
+  isWorktreeIsolationUnavailableFor,
+  markWorktreeIsolationUnavailable,
   FORMER_NAME_HINT_TTL_MS,
   MAX_FORMER_NAMES,
   PEER_PROTOCOL,
@@ -37972,50 +37972,50 @@ export {
   mayReapRecordFromThisDomain,
   countConcurrentSessions,
   TMUX_LOCATION_RE,
-  wl,
-  aZe,
-  wP,
-  Hn,
-  tsr,
-  nsr,
-  rsr,
-  IKt,
-  ca,
-  lZe,
-  oy,
-  A6,
-  uQ,
-  cRe,
-  lRn,
-  cRn,
-  JCt,
-  osr,
-  c0,
-  ssr,
-  PKt,
-  isr,
-  asr,
-  Ms,
-  u0,
-  uRe,
-  cZe,
-  lsr,
-  HUe,
-  OKt,
-  $yr,
-  w5,
-  TP,
-  IUe,
-  E_,
-  csr,
-  Mse,
-  Uyr,
-  dRe,
-  lm,
-  usr,
-  dsr,
-  rge,
-  PUe,
+  isToolDetailsLoggingEnabled,
+  isWorkspaceMcpToolName,
+  getMcpServerKeyHash,
+  getSanitizedToolName,
+  classifyUnknownToolName,
+  getMcpToolAnalyticsFieldsForAllowedServer,
+  getSdkHostMcpToolFeatureName,
+  getToolSourceFields,
+  getSanitizedQuerySource,
+  isToolContentLoggingEnabled,
+  shouldSendMcpServerTelemetry,
+  getMcpToolAnalyticsFields,
+  getSampledMcpToolName,
+  parseMcpToolName,
+  getSkillNameFromToolInput,
+  getSubagentTypeFromToolInput,
+  buildToolTelemetryFields,
+  serializeToolInputForOtel,
+  getFileExtension,
+  getFileExtensionsFromFileCommands,
+  getDocumentFileExtensionsInCommand,
+  logToolFileActivity,
+  sumAttachmentBytesInMessages,
+  getVersionForAnalytics,
+  getPlatformForAnalytics,
+  getSanitizedShortCode,
+  getVersionBase,
+  getMemoryPeaks,
+  isAnalyticsSinkDisabled,
+  getEventSampleRate,
+  beginFirstPartyExporterShutdown,
+  shutdownFirstPartyEventLogging,
+  isTelemetryEnabled,
+  logFirstPartyEvent,
+  logFirstPartyEventAsync,
+  logGrowthBookExposure,
+  initializeFirstPartyEventLogging,
+  reinitializeFirstPartyEventLogging,
+  redactSensitiveText,
+  getErrorTelemetryFields,
+  reportRenderError,
+  fetchOAuthProfileWithApiKey,
+  fetchOAuthProfileWithToken,
+  validateOAuthToken,
   resolveRefreshTokenExpiresAt,
   shouldUseClaudeAIAuth,
   parseScopes,
@@ -38036,35 +38036,35 @@ export {
   isInvalidScopeError,
   isExpectedOAuthTokenError,
   extractOAuthErrorFields,
-  fq,
-  EU,
-  FKt,
-  pRe,
-  gsr,
-  fRn,
-  ZCt,
-  fRe,
-  OUe,
-  mRe,
-  evt,
-  DUe,
-  gRe,
-  hsr,
-  mRn,
-  C6,
-  tvt,
-  gRn,
-  _sr,
-  ysr,
-  $Kt,
-  LUe,
-  Nse,
-  oge,
-  Pfr,
-  Ofr,
-  Dfr,
-  MUe,
-  T5,
+  getApiKeyFingerprint,
+  AuthenticationStatusStore,
+  normalizeGatewayUrl,
+  getUrlHostname,
+  assertGatewayHostIsPrivate,
+  HTTP_LOOPBACK_FINGERPRINT,
+  probeTlsFingerprint,
+  GATEWAY_PIN_STORE_SYMLINK_ERROR,
+  GATEWAY_PIN_STORE_UNREADABLE_ERROR,
+  readGatewayTrustPin,
+  GATEWAY_PIN_MISMATCH_ERROR,
+  extractFingerprintMismatch,
+  createPinnedHttpsAgent,
+  persistGatewayTlsPin,
+  getGatewayTokenResponseSchema,
+  refreshGatewayCredentialIfNeeded,
+  isHostManagedUnpinnedGateway,
+  getOAuthErrorCode,
+  removeDiscardedGatewayCredential,
+  persistGatewayCredential,
+  getPolicyForcedLoginConfig,
+  isHostPolicyForceLoginGateway,
+  shouldForceGatewayLogin,
+  createValueSlot,
+  invalidateToolDescriptions,
+  resolveToolDescription,
+  setToolDescribeResolver,
+  toolDefinitionCache,
+  invalidateToolDefinitionCache,
   isHostManagedProviderAuth,
   hostManagedNoCredsError,
   hostManagedAwsProviderChain,
@@ -38242,55 +38242,55 @@ export {
   adminPolicyUnreadable,
   policyUnreadableForEnforcement,
   validateForceLoginMethod,
-  fvt,
-  zg,
-  xsr,
-  Hsr,
-  n5t,
-  Isr,
-  Psr,
-  hq,
-  Osr,
-  H6,
-  Dsr,
-  Lsr,
-  Msr,
-  ux,
-  Nsr,
-  Fsr,
-  r5t,
-  GUe,
-  LRn,
-  MRn,
-  Ff,
-  $sr,
-  kZe,
-  TRe,
-  XC,
-  NRn,
-  CU,
-  Usr,
-  df,
-  o5t,
-  $f,
-  H,
-  vU,
-  m0,
-  od,
-  _q,
-  qUe,
-  FRn,
-  zUe,
-  mvt,
-  $Rn,
-  URn,
-  xZe,
-  r1,
-  Qh,
-  HZe,
-  IZe,
-  nc,
-  RU,
+  isScreenReaderArrowNavEnabled,
+  isScreenReaderModeEnabled,
+  formatScreenReaderStatusLabel,
+  markScreenReaderAnnouncementWritten,
+  endScreenReaderStartupQuiet,
+  getScreenReaderStartupQuietRemainingMs,
+  getScreenReaderPreParkDelayMs,
+  getScreenReaderEnvOverrides,
+  getScreenReaderTelemetryProps,
+  queueScreenReaderAnnouncement,
+  drainScreenReaderAnnouncements,
+  registerModelSteerFloor,
+  recordSteerPromptModel,
+  getSubagentSteerMode,
+  resetSubagentSteerLatch,
+  SUBAGENT_STEER_DELEGATION_PROMPT,
+  isCommitSkillRolloutEnabled,
+  isVerifySkillRolloutEnabled,
+  setGrowthBookCredentials,
+  setGrowthBookStorageBackend,
+  onGrowthBookRefresh,
+  hasGrowthBookOverride,
+  getAllGrowthBookFeatures,
+  isGrowthBookCacheEmpty,
+  hasFreshGrowthBookFeatures,
+  getNonDefaultFeatureKeys,
+  isGrowthBookEnabled,
+  getUserAttributes,
+  initializeGrowthBook,
+  getFeatureValue_DEPRECATED,
+  getFeatureValueWithSource_CACHED_MAY_BE_STALE,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  getFeatureValue_SESSION_PINNED,
+  getFeatureValue_CACHED_WITH_REFRESH,
+  checkGate_CACHED_OR_BLOCKING,
+  refreshGrowthBookAfterAuthChange,
+  resetGrowthBook,
+  ATIS_REQUEST_HEADER,
+  getClientDataAtis,
+  atisPin,
+  getRequestAtis,
+  latchConversationAtis,
+  refreshGrowthBookFeatures,
+  getDynamicConfig_BLOCKS_ON_INIT,
+  getDynamicConfig_CACHED_MAY_BE_STALE,
+  getCachedGitRoot,
+  RESERVED_DIRECTORY_NAMES_LC,
+  normalizePathSegment,
+  hasReservedPathSegment,
   isAutoMemoryEnabled,
   isAutoMemoryEnabledIgnoringPause,
   isIndexRecallEnabled,
@@ -38308,135 +38308,135 @@ export {
   isAutoMemPath,
   AUTO_MEM_WRITE_ALLOW_REASON,
   isAutoMemPathSafeForCarveout,
-  s5t,
-  Bsr,
-  _vt,
-  jsr,
-  WRn,
-  Wsr,
-  Gsr,
-  qsr,
-  GRn,
-  qRn,
-  zsr,
-  k5,
-  VD,
-  Yfr,
-  i5t,
-  aSr,
-  Jfr,
-  LZe,
-  Bo,
-  I6,
+  buildClientDataCacheKey,
+  CLIENT_DATA_SLOT_STALE_AFTER_MS,
+  isClientDataCacheEntry,
+  upsertClientDataCacheSlot,
+  getToolSearchReminderConfig,
+  isToolParamStrictnessEnabled,
+  isEmptyInputRepairEnabled,
+  isToolSearchFetchRuleEnabled,
+  isSchemaDescFixesEnabled,
+  isEmptyObject,
+  buildEmptyInputRepairMessage,
+  DEFAULT_PROJECT_CONFIG,
+  DEFAULT_GLOBAL_CONFIG,
+  globalConfigStores,
+  GLOBAL_CONFIG_KEYS,
+  isGlobalConfigKey,
+  PROJECT_CONFIG_KEYS,
+  resetTrustDialogAcceptedCache,
+  checkHasTrustDialogAccepted,
+  isProjectScopeTrustAccepted,
   isWorkspacePersistedTrusted,
-  a5t,
-  MZe,
+  isPathPersistedTrusted,
+  isTrustKeyPersistedTrusted,
   getWorkspacePersistedTrustKey,
-  KUe,
-  Vsr,
-  Qfr,
-  Zfr,
-  zRn,
-  YC,
-  VRn,
-  pge,
-  P6,
-  XUe,
-  lSr,
-  cSr,
-  emr,
-  Ksr,
-  Te,
-  yvt,
-  NR,
-  ERe,
-  ee,
-  sy,
-  YUe,
-  l5t,
-  yq,
-  c5t,
-  Xsr,
-  Ysr,
-  tmr,
-  KRn,
-  nmr,
-  uSr,
-  ARe,
-  JUe,
-  Gse,
-  XRn,
-  es,
-  eu,
-  QUe,
-  NZe,
-  YRn,
-  FZe,
-  dSr,
-  Sq,
-  bq,
-  ZUe,
-  hQ,
-  dx,
-  CRe,
-  EP,
-  JRn,
-  pSr,
-  QRn,
-  rmr,
-  _Q,
-  eBe,
-  fge,
-  fSr,
-  mSr,
-  gSr,
-  hSr,
-  _Sr,
-  ySr,
-  SSr,
-  bSr,
-  wSr,
-  TSr,
-  ESr,
-  ASr,
-  CSr,
-  vSr,
-  RSr,
-  kSr,
-  xSr,
-  HSr,
-  ISr,
-  PSr,
-  OSr,
-  DSr,
-  LSr,
-  MSr,
-  NSr,
-  FSr,
-  $Sr,
-  USr,
-  BSr,
-  jSr,
-  WSr,
-  GSr,
-  qSr,
-  zSr,
-  VSr,
-  KSr,
-  XSr,
-  YSr,
-  ZRn,
-  ql,
-  ekn,
-  tkn,
-  omr,
-  nkn,
-  rkn,
-  okn,
-  skn,
-  u5t,
-  d5t,
-  ikn,
-  x5,
-  tBe,
+  getPersistedTrustKeyForPath,
+  isPathPersistedTrustedCwdExact,
+  getPersistedTrustKeyForExactPath,
+  persistedTrustKeyThroughBackend,
+  workspacePersistedTrustThroughBackend,
+  isLocalSettingsGitTracked,
+  isLocalSettingsGitTrackedInIndex,
+  resetLocalSettingsGitTrackedCache,
+  isPathTrusted,
+  setPathTrusted,
+  _setUseRealConfigPipelineForTesting,
+  isProjectConfigKey,
+  CONFIG_CRASH_MARKER_REENQUEUE_DELAYS_MS,
+  drainConfigWrites,
+  saveGlobalConfig,
+  saveGlobalConfigDurably,
+  watchGlobalConfigThroughStorage,
+  subscribeGlobalConfigInstalled,
+  getGlobalConfig,
+  readFreshOauthAccountFromDisk,
+  getExplicitRemoteControlAtStartup,
+  resolveExplicitRemoteControlAtStartup,
+  getRemoteControlAtStartup,
+  getDaemonColdStart,
+  getCustomApiKeyStatus,
+  CONFIG_LOCK_RETRY_DELAYS_MS,
+  CONFIG_LOCK_BOOT_SAVE_RETRY_BUDGET_MS,
+  markConfigBootPhaseComplete,
+  CONFIG_READ_RETRY_DELAYS_MS,
+  _isLockContentionErrorForTesting,
+  enableConfigs,
+  getProjectPathForConfig,
+  clearProjectPathForConfigCache,
+  getRawCurrentProjectConfigEntry,
+  getCurrentProjectConfig,
+  saveCurrentProjectConfig,
+  saveCurrentProjectConfigSyncForExit,
+  saveGlobalConfigSyncForExit,
+  deleteProjectConfig,
+  deleteCurrentProjectConfigFields,
+  _deleteCurrentProjectConfigFieldsForTesting,
+  isAutoUpdaterDisabled,
+  shouldSkipPluginAutoupdate,
+  formatAutoUpdaterDisabledReason,
+  getAutoUpdaterDisabledReason,
+  getOrCreateUserID,
+  getOrCreateMachineID,
+  seedInstallIDs,
+  getOrCreateSummonSidKey,
+  getOrCreateRemoteControlMachineId,
+  recordFirstStartTime,
+  stampFirstStart,
+  getMemoryPath,
+  getManagedClaudeRulesDir,
+  getUserClaudeRulesDir,
+  _getConfigForTesting,
+  _wouldLoseAuthStateForTesting,
+  _saveConfigWithLockForTesting,
+  _refreshGlobalConfigCacheFromExternalWriteForTesting,
+  _refreshGlobalConfigCacheThroughStorageForTesting,
+  _onGlobalConfigStorageEventForTesting,
+  _subscribeGlobalConfigFreshnessForTesting,
+  _loadGlobalConfigThroughStorageForTesting,
+  _startGlobalConfigFreshnessThroughStorageForTesting,
+  _getFreshnessBackendForTesting,
+  _setLoadedVersionForTesting,
+  _setFreshnessBackendForTesting,
+  _setFreshnessWatcherStartedForTesting,
+  _getFreshnessWatcherStartedForTesting,
+  _setFileWatchFallbackForTesting,
+  _setWritersWithoutBackendForTesting,
+  _getConfigWriteGenerationForTesting,
+  _installGlobalConfigReloadedThroughStorageForTesting,
+  _readGlobalConfigForFallbackForTesting,
+  _takeTimestampedConfigBackupForTesting,
+  _findMostRecentBackupForTesting,
+  _resetEnableConfigsForTesting,
+  _resetParseErrorDedupForTesting,
+  _getLastGetConfigWasParseErrorForTesting,
+  _setLastGetConfigWasParseErrorForTesting,
+  _saveGlobalConfigForTesting,
+  _saveGlobalConfigDurablyForTesting,
+  _saveCurrentProjectConfigForTesting,
+  _getGlobalConfigForTesting,
+  _getCurrentProjectConfigForTesting,
+  _getOrCreateMachineIDForTesting,
+  _removeProjectHistoryForTesting,
+  _getTestGlobalConfigForTesting,
+  _setGlobalConfigCacheForTesting,
+  _setLastReadFileStatsForTesting,
+  _resetRemoteControlMachineIdForTesting,
+  _resetGeneratedMachineIDForTesting,
+  _resetGeneratedSummonSidKeyForTesting,
+  setClientDataCacheKeyGetter,
+  getCachedClientData,
+  setClientDataReadGate,
+  setClientDataStrictReadGate,
+  readStrictClientData,
+  getCachedClientDataStrict,
+  setClientDataStaleMatchGetter,
+  getCachedClientDataForContextWindow,
+  hasClientDataCacheSlot,
+  createBatchedSender,
+  DATADOG_CLIENT_TOKEN,
+  resetDatadogInit,
+  shutdownDatadog,
+  trackDatadogEvent,
 };

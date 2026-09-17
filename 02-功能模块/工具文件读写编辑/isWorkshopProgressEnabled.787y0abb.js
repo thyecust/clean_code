@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 80 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Bt, Mn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { EDIT_TOOL_NAME, WRITE_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { dt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -50,7 +50,7 @@ function resetAuthoringProgress() {
 function onToolUseStart(t, r) {
   let e = VY(r),
     o = e ?? r;
-  if (o !== Bt && o !== Mn) return;
+  if (o !== EDIT_TOOL_NAME && o !== WRITE_TOOL_NAME) return;
   a(() => {
     let { slotsByBlockIndex: n } = ne().authoringProgress;
     if (n.size >= _ || !isWorkshopProgressEnabled()) return;

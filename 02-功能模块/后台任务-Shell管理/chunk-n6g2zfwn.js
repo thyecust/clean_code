@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import {
-  pi,
-  GN,
-  pU,
+  emitTaskNotification,
+  getFastModeUnavailableReason,
+  getFastModeStatus,
   isModelAllowed,
   getMainLoopModel,
   stepDownRestrictedFamilyAliasPick,
@@ -20,14 +20,14 @@ import {
   getDefaultMainLoopModel,
   getCanonicalName,
   parseUserSpecifiedModel,
-  tc,
-  OR,
-  FT,
+  hasLongContextSuffix,
+  isAbortTerminalReason,
+  sanitizeDisplayName as FT,
   isBgSession,
   isActingAsBgJob,
-  H,
-  Qh,
-  ee,
+  getFeatureValue_CACHED_MAY_BE_STALE,
+  getDynamicConfig_CACHED_MAY_BE_STALE,
+  getGlobalConfig,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { parseShortId, Qs, j, K, ze, he, Rg, bB, kg, m8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
@@ -178,7 +178,7 @@ var Gn = createLazyValue(() =>
   ),
   Lt = [];
 function Dt() {
-  let e = Qh("tengu_startup_announcements", Lt),
+  let e = getDynamicConfig_CACHED_MAY_BE_STALE("tengu_startup_announcements", Lt),
     t = Gn().safeParse(e);
   return t.success ? t.data : Lt;
 }
@@ -188,7 +188,7 @@ function Ut(e) {
 function W_e(e) {
   let t = getSessionAnnouncementState();
   if (t.startupAnnouncementPick !== void 0) return t.startupAnnouncementPick;
-  let o = ee().announcementImpressions ?? {},
+  let o = getGlobalConfig().announcementImpressions ?? {},
     r = Dt()
       .filter((s) => (o[s.id] ?? 0) < s.maxImpressions && Ut(s))
       .sort((s, d) => d.priority - s.priority)[0];
@@ -1639,7 +1639,7 @@ async function po({ asyncAgents: e, notifiedTaskIds: t }, o, r, s, d) {
     c.length > Be)
   ) {
     for (let v of c)
-      pi(v.agentId, "failed", { summary: gt, outputFile: pt(v) });
+      emitTaskNotification(v.agentId, "failed", { summary: gt, outputFile: pt(v) });
     ht("failed", "agent", "agent", c, (v) => Nt(v.agentId), p);
     return;
   }
@@ -1694,7 +1694,7 @@ async function po({ asyncAgents: e, notifiedTaskIds: t }, o, r, s, d) {
           : `Background agent "${Nt(T.description)}" was running when the previous Claude Code process exited and did not complete. Its in-process state was lost. ${T.isWebFetchLaunch ? "Launch it again if its report is still needed." : "Check its worktree/output for partial work before assuming the task landed."}`;
     if (T.redispatched) xe(T, J, Z);
     else E[J].push({ agent: T, summary: Z });
-    pi(T.agentId, J, { summary: SA(Z), outputFile: pt(T) });
+    emitTaskNotification(T.agentId, J, { summary: SA(Z), outputFile: pt(T) });
   }
   for (let v of ["stopped", "failed"]) {
     let T = E[v],
@@ -1807,7 +1807,7 @@ function ho({ bgShells: e, notifiedTaskIds: t, stoppedTaskIds: o }, r) {
     s.length > 1)
   ) {
     for (let c of s)
-      pi(c.taskId, "stopped", { toolUseId: c.toolUseId, summary: gt });
+      emitTaskNotification(c.taskId, "stopped", { toolUseId: c.toolUseId, summary: gt });
     ht("stopped", "shell", "shell command", s, (c) => Nt(c.taskId), d);
     return;
   }
@@ -1826,7 +1826,7 @@ function ho({ bgShells: e, notifiedTaskIds: t, stoppedTaskIds: o }, r) {
       priority: "next",
       shouldQuery: !1,
     }),
-      pi(c.taskId, "stopped", {
+      emitTaskNotification(c.taskId, "stopped", {
         toolUseId: c.toolUseId,
         summary:
           "No completion record was found for this background shell command from the previous session. It may have been stopped (via the UI, Monitor timeout, or agent teardown \u2014 these leave no transcript marker), or it may have been running when the previous Claude Code process exited. Check the output file for partial results before assuming it completed.",
@@ -1852,7 +1852,7 @@ function yo({ workflows: e, notifiedTaskIds: t, stoppedTaskIds: o }, r) {
     s.length > Be)
   ) {
     for (let c of s)
-      pi(c.taskId, "stopped", { toolUseId: c.toolUseId, summary: gt });
+      emitTaskNotification(c.taskId, "stopped", { toolUseId: c.toolUseId, summary: gt });
     ht("stopped", "workflow", "workflow", s, (c) => Nt(c.taskId), d);
     return;
   }
@@ -1876,7 +1876,7 @@ function yo({ workflows: e, notifiedTaskIds: t, stoppedTaskIds: o }, r) {
       priority: "next",
       shouldQuery: !1,
     }),
-      pi(c.taskId, "stopped", { toolUseId: c.toolUseId, summary: E }));
+      emitTaskNotification(c.taskId, "stopped", { toolUseId: c.toolUseId, summary: E }));
   }
 }
 function ht(e, t, o, r, s, d) {
@@ -2245,8 +2245,8 @@ function _st({
     pluginErrors: [],
     pluginWarnings: [],
     mcpServerErrors: [],
-    fastModeState: pU(e, c),
-    fastModeDisabledReason: GN(e) ?? void 0,
+    fastModeState: getFastModeStatus(e, c),
+    fastModeDisabledReason: getFastModeUnavailableReason(e) ?? void 0,
     effort: getEffectiveEffortLevel(e, p),
   });
 }
@@ -2260,7 +2260,7 @@ function x6e(e, t, o) {
   if (e === "now") return "now";
   if (o) return "later";
   if (e !== void 0) return e;
-  return H("tengu_pencil_farmer", !1) ? "next" : "later";
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_pencil_farmer", !1) ? "next" : "later";
 }
 function mn(e) {
   return e.verifiedSlackHumanTurn === !0 && e.priority === "later";
@@ -2282,7 +2282,7 @@ function SFn(e, t) {
   return e.dequeue((r) => r === o);
 }
 function yst(e) {
-  if (!H("tengu_bridge_initialize_commands", !1)) return [];
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_initialize_commands", !1)) return [];
   if (Rg()) return [];
   let t = toBridgeSlashCommands(e);
   return (logFeatureOk("bridge_initialize_commands"), t);
@@ -2364,7 +2364,7 @@ function sQt({ appliedModel: e, previousModel: t, conversationModel: o }) {
     s = At(r);
   if (At(parseUserSpecifiedModel(o)) !== s) return !0;
   let d = parseUserSpecifiedModel(t);
-  return At(d) === s && tc(d) !== tc(r);
+  return At(d) === s && hasLongContextSuffix(d) !== hasLongContextSuffix(r);
 }
 function hn(e) {
   if (e.trim().toLowerCase() === "default") return { kind: "default" };
@@ -3377,7 +3377,7 @@ function QJt({
           Z("painted", void 0);
       });
     },
-    end(O, W = OR(O)) {
+    end(O, W = isAbortTerminalReason(O)) {
       B("settle", () => Z(W ? "interrupted" : "no_text", O));
     },
   };

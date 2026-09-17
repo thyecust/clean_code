@@ -12,20 +12,20 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { CLAUDE_AI_INFERENCE_SCOPE, CLAUDE_AI_PROFILE_SCOPE } from "./chunk-9g2q4bjq.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  uVt,
-  Or,
-  lU,
-  Grr,
-  gU,
+  resetFableEntitlementProbe,
+  getProviderState,
+  resetUserData,
+  deactivateServedCatalog,
+  resetBetaCaches,
   isBgSession,
   revokeOAuthToken,
-  T5,
+  invalidateToolDefinitionCache,
   isProfileAuthShadowed,
   removeApiKey,
   clearOAuthTokenMemos,
   getAnthropicApiKeyWithSourceAsyncSafe,
-  _q,
-  Te,
+  refreshGrowthBookAfterAuthChange,
+  saveGlobalConfig,
 } from "./认证-OAuth登录.419zdfz3.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -466,7 +466,7 @@ async function performLogout({
       incomingIdentity: g,
       credentials: p,
     }),
-    await Te((d) => {
+    await saveGlobalConfig((d) => {
       let r = { ...d };
       if (e) {
         if (
@@ -516,21 +516,21 @@ async function clearAuthRelatedCaches(
 ) {
   if ((clearOAuthTokenMemos(), isHoverRestEnabled() && f === void 0)) invalidateCredentialsCopyCache();
   (clearTrustedDeviceTokenCache(),
-    gU(),
-    Or().providerCache.modelConfigs.clear(),
-    uVt(),
-    Or().providerCache.validatedModels.clear(),
-    Grr(),
-    T5(),
+    resetBetaCaches(),
+    getProviderState().providerCache.modelConfigs.clear(),
+    resetFableEntitlementProbe(),
+    getProviderState().providerCache.validatedModels.clear(),
+    deactivateServedCatalog(),
+    invalidateToolDefinitionCache(),
     clearOrgMemoryCredential());
   let c = B();
   if (
     (cGn(c.host),
     Der(t, i),
     githubConnectionStatusStore.of(c.host).clear(),
-    lU(),
+    resetUserData(),
     invalidateUserContext(c, "account_change"),
-    _q(),
+    refreshGrowthBookAfterAuthChange(),
     getGroveConfig.cache?.clear?.(),
     getAccountSettings.cache?.clear?.(),
     await hlt(e),

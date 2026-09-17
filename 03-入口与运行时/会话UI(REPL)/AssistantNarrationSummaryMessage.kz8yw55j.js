@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { CLAUDE_BULLET_GLYPH } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
-import { getCanonicalName, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getCanonicalName, getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { useFeatureFlagValue } from "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, pd } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -32,7 +32,7 @@ function AssistantNarrationSummaryMessage(N) {
   if (n[0] !== i)
     ((x = () =>
       (typeof i === "string" && resolveModelCapability("quizzical_shore", void 0, getCanonicalName(i), i)) ||
-      H("tengu_quizzical_shore", !1)),
+      getFeatureValue_CACHED_MAY_BE_STALE("tengu_quizzical_shore", !1)),
       (n[0] = i),
       (n[1] = x));
   else x = n[1];

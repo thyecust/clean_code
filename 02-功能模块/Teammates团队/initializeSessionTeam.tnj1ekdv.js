@@ -13,7 +13,7 @@ import { K, he, TYt, QLn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js
 import { AGENT_COLOR_NAMES } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { TZn, Wk, CXe } from "./chunk-g6nvp9mm.js";
 import { getTeamFilePath, readTeamFileAsync, logTeamFileWriteFailure, writeTeamFileAsync, registerTeamForSessionCleanup } from "./team-file-store.js";
-import { ix } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { buildAgentId } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
 import { rename } from "fs/promises";
 var l = "session";
@@ -30,7 +30,7 @@ function p() {
 async function initializeSessionTeam(t, n) {
   let i = t?.existingTeamName || p(),
     e = i ?? c(K()),
-    a = ix(TEAM_LEAD_AGENT_NAME, e),
+    a = buildAgentId(TEAM_LEAD_AGENT_NAME, e),
     m = getTeamFilePath(e);
   if (!(i ? await readTeamFileAsync(e, n) : null)) {
     let r = {

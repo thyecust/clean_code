@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Zd } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { figures } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
@@ -48,6 +48,6 @@ function StatusIndicator(m) {
 }
 function shouldReduceMotion(a) {
   if (a) return !0;
-  return Zd() && H("tengu_cedar_marsh", !1);
+  return Zd() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_cedar_marsh", !1);
 }
 export { STATUS_PRESENTATION, StatusIndicator, shouldReduceMotion };

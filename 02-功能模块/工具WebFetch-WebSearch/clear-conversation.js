@@ -21,7 +21,7 @@ import {
   ic,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ju, Ia } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { enqueueSdkEvent, getCurrentWorktreeSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -222,7 +222,7 @@ async function* clearConversation({
   if (_ !== void 0) bae(_);
   let w = randomUUID();
   if (ke() || (ic() && isBridgeStateFramesEnabled()))
-    (ju({ type: "conversation_reset", new_conversation_id: w }),
+    (enqueueSdkEvent({ type: "conversation_reset", new_conversation_id: w }),
       logFeatureOk("bridge_conversation_reset"));
   (yield { type: "conversation_reset", newConversationId: w }, aDn(o), c_e());
   let P = pinSessionId(K()),
@@ -246,7 +246,7 @@ async function* clearConversation({
       { isCoordinatorMode: r } = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js");
     e(r() ? "coordinator" : "normal");
   }
-  let R = Ia();
+  let R = getCurrentWorktreeSession();
   if (R) saveWorktreeState(R, o);
   if (d?.current) saveIsolationLatch(d.current, o);
   let D = await runSessionStartHooks(t, "clear", { storageV5: o, credentials: I });

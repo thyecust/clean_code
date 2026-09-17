@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -17,7 +17,7 @@ import { isProcessProvablyGone, provenSameProcessAsync } from "../../01-核心�
 import { Nu, qI, mD } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { s, T, O, se, v, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 function isArtifactReplyYieldEnabled() {
-  return H("tengu_cobalt_plinth_thistle", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_thistle", !1);
 }
 var A = 4000,
   MAX_YIELD_SLUGS = 16,

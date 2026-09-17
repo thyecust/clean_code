@@ -17,7 +17,7 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { qe, Bo, eu } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { BASH_TOOL_NAME, checkHasTrustDialogAccepted, saveCurrentProjectConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
@@ -48,7 +48,7 @@ import { E, V, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Qt(Mt) {
-  return Mt === qe || Mt.startsWith(qe + "(");
+  return Mt === BASH_TOOL_NAME || Mt.startsWith(BASH_TOOL_NAME + "(");
 }
 function Nt(Q) {
   return (
@@ -59,7 +59,7 @@ function Nt(Q) {
   );
 }
 function Ut(Vt) {
-  return Vt === qe || Vt.startsWith(qe + "(");
+  return Vt === BASH_TOOL_NAME || Vt.startsWith(BASH_TOOL_NAME + "(");
 }
 function Kt(b) {
   return (
@@ -154,7 +154,7 @@ function TrustDialog(wo) {
   let So = Dt,
     g = yo.length > 0 || xo || So,
     Ht;
-  if (s[16] === MEMO_CACHE_SENTINEL) ((Ht = Bo()), (s[16] = Ht));
+  if (s[16] === MEMO_CACHE_SENTINEL) ((Ht = checkHasTrustDialogAccepted()), (s[16] = Ht));
   else Ht = s[16];
   let vt = Ht,
     w = vt,
@@ -255,7 +255,7 @@ function TrustDialog(wo) {
         Pt)
       )
         (Dx(!0), Aje(!0));
-      else eu(qt, Ce);
+      else saveCurrentProjectConfig(qt, Ce);
       I();
     }),
       (s[24] = g),

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { ix } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { buildAgentId } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { appendTranscriptMessage, findTeammateTaskByAgentId, createUserMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isTerminalTaskStatus } from "./chunk-mrfx53ye.js";
 function appendMessageToTaskTranscript(e, a, s) {
@@ -31,7 +31,7 @@ function queueTeammateUserMessage(e, a, s, t) {
     })));
 }
 function wakeTeammateTask(e, a, s) {
-  let t = findTeammateTaskByAgentId(ix(a, s), e);
+  let t = findTeammateTaskByAgentId(buildAgentId(a, s), e);
   if (t?.status === "running") t.retryWake?.emit();
 }
 export { appendMessageToTaskTranscript, queueTeammateUserMessage, wakeTeammateTask };

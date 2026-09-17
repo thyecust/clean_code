@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { getSubscriptionType, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getSubscriptionType, getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Pw } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { isPolicyAllowed } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 function areWorkflowsDisabledBySettings() {
@@ -47,22 +47,22 @@ function isWorkflowsAllowedByPolicy() {
 function shouldSkipWorkflowWarmup() {
   if (areWorkflowsDisabledBySettings() || !isWorkflowsAllowedByPolicy()) return !0;
   if (Pw()?.settings.enableWorkflows === !1) return !0;
-  return a.CLAUDE_CODE_WORKFLOWS === !1 || !H("tengu_workflows_enabled", !0);
+  return a.CLAUDE_CODE_WORKFLOWS === !1 || !getFeatureValue_CACHED_MAY_BE_STALE("tengu_workflows_enabled", !0);
 }
 function o() {
   return n.of(B().host).resolve();
 }
 function i() {
   if (a.CLAUDE_CODE_WORKFLOWS === !0) {
-    let e = H("tengu_workflows_enabled", !0);
+    let e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_workflows_enabled", !0);
     return { available: e, defaultOn: e };
   }
   if (a.CLAUDE_CODE_WORKFLOWS === !1) return { available: !1, defaultOn: !1 };
-  if (!H("tengu_workflows_enabled", !0))
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_workflows_enabled", !0))
     return { available: !1, defaultOn: !1 };
   return { available: !0, defaultOn: getSubscriptionType() !== "pro" };
 }
 function isJadeCompassEnabled() {
-  return H("tengu_jade_compass", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_jade_compass", !0);
 }
 export { areWorkflowsDisabledBySettings, areWorkflowsEnabled, isWorkflowsEnabledByDefault, areWorkflowsAvailable, isWorkflowKeywordTriggerEnabled, isWorkflowsAllowedByPolicy, shouldSkipWorkflowWarmup, isJadeCompassEnabled };

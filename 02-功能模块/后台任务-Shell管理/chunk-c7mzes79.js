@@ -44,17 +44,17 @@ import { OP, yi, zl, r8t, ts, fke, Oa, hasPolicySettingsNotified } from "../../0
 import { getJobDir, getOwnJobShortId, listJobs, IDLE_NEEDS, terminalOutcome, isSettled, isSelfDriving } from "./chunk-7wsy8vxb.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
-  pi,
-  Mr,
-  db,
-  pb,
-  JN,
-  Jh,
+  emitTaskNotification,
+  isFastModeEnabled,
+  resolveFastModeForModel,
+  logFastModeToggled,
+  isThinkingEnabled,
+  getBgTakeover,
   isActingAsBgJob,
   getBgJobDir,
-  pge,
-  eu,
-  QUe,
+  resetLocalSettingsGitTrackedCache,
+  saveCurrentProjectConfig,
+  saveCurrentProjectConfigSyncForExit,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -1626,7 +1626,7 @@ function lt(t, o, r, s = ze()) {
     priority: "next",
     taskId: t,
   }),
-    pi(t, "failed", { summary: o }));
+    emitTaskNotification(t, "failed", { summary: o }));
 }
 function resolveAdoptedScriptPath(t) {
   let o = kt(() => [getProjectsDir()]).safeParse(t);
@@ -1877,7 +1877,7 @@ function aF() {
     artifactReadPageDataHumanApproved: !1,
     artifactPlanPublishConsentPaths: EMPTY_ARTIFACT_PLAN_PUBLISH_CONSENT_PATHS,
     ultrareviewOverageConfirmed: !1,
-    thinkingEnabled: JN(),
+    thinkingEnabled: isThinkingEnabled(),
     promptSuggestionEnabled: resolvePromptSuggestionsEnabled(),
     awaySummaryEnabled: isAwaySummaryEnabled(),
     displayedMessageContent: {},
@@ -2089,7 +2089,7 @@ function Ct(Nl) {
           ? dv(async () => {
               let hi = Be.getAll();
               if (Object.keys(hi).length > 0)
-                await eu((jl) => ({ ...jl, lastSessionMetrics: hi }), Pt);
+                await saveCurrentProjectConfig((jl) => ({ ...jl, lastSessionMetrics: hi }), Pt);
               gi = !0;
             })
           : void 0;
@@ -2099,7 +2099,7 @@ function Ct(Nl) {
         }
         let Si = Be.getAll();
         if (Object.keys(Si).length > 0)
-          QUe((Ul) => ({ ...Ul, lastSessionMetrics: Si }));
+          saveCurrentProjectConfigSyncForExit((Ul) => ({ ...Ul, lastSessionMetrics: Si }));
       };
       return (
         process.on("exit", ki),
@@ -3273,7 +3273,7 @@ var rs = 2000,
 function qn() {
   let t = worktreeStateStore.of(B().host).last;
   return [
-    ...(Jh()?.adoptShellOutputReadRoot ? [Jh().adoptShellOutputReadRoot] : []),
+    ...(getBgTakeover()?.adoptShellOutputReadRoot ? [getBgTakeover().adoptShellOutputReadRoot] : []),
     ...(t ? [ZYe(iEt(t.worktreePath))] : []),
   ];
 }
@@ -3297,7 +3297,7 @@ function Yn(t) {
       jobDir: void 0,
       agentTranscriptPaths: {},
       workflowTranscriptDirs: {},
-      projectTempDir: Jh()?.adoptShellOutputRoot ?? bR(),
+      projectTempDir: getBgTakeover()?.adoptShellOutputRoot ?? bR(),
       mergeShellOutputReadRoots: qn(),
     };
   }
@@ -3340,7 +3340,7 @@ function Yn(t) {
       workflowTranscriptDirs: Object.fromEntries(
         l.map((O) => [O.workflowRunId, getWorkflowTranscriptDir(O.workflowRunId)]),
       ),
-      projectTempDir: Jh()?.adoptShellOutputRoot ?? bR(),
+      projectTempDir: getBgTakeover()?.adoptShellOutputRoot ?? bR(),
       mergeShellOutputReadRoots: qn(),
     }
   );
@@ -3472,7 +3472,7 @@ function $t(t, o = new Set()) {
         continue;
       } else if ("abortController" in r) r.abortController?.abort();
       if (!isObserverAgent(r))
-        pi(r.id, "stopped", {
+        emitTaskNotification(r.id, "stopped", {
           toolUseId: r.toolUseId,
           summary: r.description,
           ambient: isAmbientTask(r),
@@ -3504,7 +3504,7 @@ function is(t, o) {
   if (
     (o((l) => {
       let k = t.overrideValue ?? t.forSessionValue ?? t.appStateModel,
-        c = Mr() ? db(k, l.fastMode) : !!l.fastMode;
+        c = isFastModeEnabled() ? resolveFastModeForModel(k, l.fastMode) : !!l.fastMode;
       return (
         (r = l.fastMode),
         (s = c),
@@ -3522,14 +3522,14 @@ function is(t, o) {
     }),
     s !== void 0)
   )
-    pb(r, s);
+    logFastModeToggled(r, s);
   ad(t.overrideValue);
 }
 import { resolve } from "path";
 var rtn = new Gt(() => Le());
 function Eat(t, o, r, s, l) {
   let k = getInitialSettings();
-  (n(`Settings changed from ${o}, updating app state`), pge());
+  (n(`Settings changed from ${o}, updating app state`), resetLocalSettingsGitTrackedCache());
   let c = OG();
   (updateHooksConfigSnapshot({ userLayer: "retain" }), clearCommandMemoizationCaches());
   let v = !1;

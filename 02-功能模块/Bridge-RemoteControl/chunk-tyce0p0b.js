@@ -12,7 +12,7 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { H, od } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE, checkGate_CACHED_OR_BLOCKING } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -34,7 +34,7 @@ var g = new j(() => new C()),
   PROACTIVE_ENROLLMENT_DISABLED_MESSAGE =
     "Your organization requires Trusted Devices for Remote Control, but enrollment is temporarily disabled. Please try again later, or contact your administrator.";
 function isProactiveEnrollmentDisabled() {
-  return H(h, !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE(h, !1);
 }
 function L() {
   return import.meta.require("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
@@ -43,11 +43,11 @@ function T() {
   return import.meta.require("../策略限制(PolicyLimits)/chunk-8sw91yn5.js");
 }
 function isTrustedDeviceGateEnabled() {
-  if (!H(m, !1)) return !1;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE(m, !1)) return !1;
   return T().isPolicyAllowed(c);
 }
 function p() {
-  if (!H(m, !1)) return !1;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE(m, !1)) return !1;
   return T().isPolicyEnforced(c);
 }
 function isRemoteControlPeerUnreachableFromHere() {
@@ -59,9 +59,9 @@ function formatUnreachableElevatedRefusal(e) {
   return `Nothing was sent: Remote Control session '${e}' is ${CLOUD_CANNOT_REACH_ELEVATED_HINT}.`;
 }
 function getAttestationFilterPolicy() {
-  if (!H("tengu_bridge_attestation_enforce", !1)) return eVt;
+  if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_attestation_enforce", !1)) return eVt;
   if (!p()) return eVt;
-  let t = H("tengu_bridge_attestation_enforce_config", {});
+  let t = getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_attestation_enforce_config", {});
   return mrr(t);
 }
 function readStoredTrustedDeviceToken() {
@@ -90,7 +90,7 @@ async function I() {
   return "Your organization requires Trusted Devices for Remote Control, but this device is not enrolled. Please run `/login` in Claude Code to enroll this device.";
 }
 async function preflightTrustedDeviceBlocking(e) {
-  return (await od(m), await enrollTrustedDeviceIfNeeded(e), I());
+  return (await checkGate_CACHED_OR_BLOCKING(m), await enrollTrustedDeviceIfNeeded(e), I());
 }
 function clearTrustedDeviceTokenCache() {
   g.of(B().host).storedTokenRead = void 0;
@@ -162,7 +162,7 @@ async function enrollTrustedDevice({ trigger: e = "proactive", credentials: t })
   } = import.meta.require("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js");
   if (!isFirstPartyProvider() || !r()) return;
   try {
-    if (!(await od(m))) {
+    if (!(await checkGate_CACHED_OR_BLOCKING(m))) {
       n(`[trusted-device] Gate ${m} is off, skipping enrollment`);
       return;
     }

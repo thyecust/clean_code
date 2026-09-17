@@ -14,7 +14,7 @@ import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS, SETUP_TOKEN_DEFAULT_EXPIRY_DAYS } f
 import { writeToStdout } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
-import { h5, isAnthropicAuthEnabled, validateForceLoginMethod } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMaxOutputTokens, isAnthropicAuthEnabled, validateForceLoginMethod } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
@@ -231,7 +231,7 @@ async function doctorHandler(c) {
     let y = [
       { name: "BASH_MAX_OUTPUT_LENGTH", default: DEFAULT_BASH_OUTPUT_CHARS, upperLimit: MAX_BASH_OUTPUT_CHARS },
       { name: "TASK_MAX_OUTPUT_LENGTH", default: DEFAULT_TASK_MAX_OUTPUT_LENGTH, upperLimit: TASK_MAX_OUTPUT_LENGTH_UPPER_LIMIT },
-      { name: "CLAUDE_CODE_MAX_OUTPUT_TOKENS", ...h5("claude-opus-4-6") },
+      { name: "CLAUDE_CODE_MAX_OUTPUT_TOKENS", ...getMaxOutputTokens("claude-opus-4-6") },
     ]
       .map((s) => ({
         name: s.name,

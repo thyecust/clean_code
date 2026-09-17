@@ -12,7 +12,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ht, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefreshOAuthTokenIfNeeded } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { httpClient, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefreshOAuthTokenIfNeeded } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { clearPlans, clearApprovedPlans, addVerifiedProjectGrant, shouldRecardProject, markAllProjectsForRecard, markProjectGrantIneligible } from "../Memory-CLAUDE.md/chunk-9b6sc1gb.js";
 import { readDesignOauthTokens, ensureDesignAccessToken } from "./design-oauth-credentials.js";
@@ -52,7 +52,7 @@ async function c(e) {
 }
 async function _(e) {
   try {
-    let t = await ht.get("/v1/design/consent", {
+    let t = await httpClient.get("/v1/design/consent", {
       ...(await c(e)),
       validateStatus: (r) => r < 500,
     });
@@ -141,7 +141,7 @@ async function needsDesignAuthorization(e) {
 }
 async function postDesignConsent(e, t, s) {
   try {
-    let r = await ht.post(
+    let r = await httpClient.post(
       "/v1/design/consent",
       { consent: t },
       { ...(await c(s)), validateStatus: (o) => o < 300 },
@@ -158,7 +158,7 @@ async function postDesignConsent(e, t, s) {
 }
 async function revokeDesignConsent(e, t, s) {
   try {
-    let r = await ht.delete(
+    let r = await httpClient.delete(
       "/v1/design/consent",
       { consent: t },
       { ...(await c(s)), validateStatus: (o) => o < 300 || o === 404 },
@@ -175,7 +175,7 @@ async function revokeDesignConsent(e, t, s) {
 }
 async function k(e) {
   try {
-    let t = await ht.get("/v1/design/grants", {
+    let t = await httpClient.get("/v1/design/grants", {
       ...(await c(e)),
       validateStatus: (o) => o < 500,
     });
@@ -222,7 +222,7 @@ async function checkDesignProjectGrant(e, t, s) {
 async function recordDesignProjectGrant(e, t, s) {
   let r;
   try {
-    let o = await ht.post(
+    let o = await httpClient.post(
       "/v1/design/grants",
       { project_id: t },
       { ...(await c(s)), validateStatus: (a) => a < 300 || a === 404 },
@@ -252,7 +252,7 @@ function createDesignGrantWatcher(e, t, s) {
   async function o() {
     let a;
     try {
-      let i = await ht.get("/v1/design/grants", {
+      let i = await httpClient.get("/v1/design/grants", {
         ...(await c(s)),
         validateStatus: (d) => d < 500,
       });

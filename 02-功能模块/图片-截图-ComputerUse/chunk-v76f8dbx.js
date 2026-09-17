@@ -12,7 +12,7 @@ import { McpServer } from "../MCP客户端/mcp-server.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getComputerUseSession, getComputerUseNativeModule } from "./computer-use-session.js";
 import { createCliExecutor } from "./computer-use-cli-executor.js";
-import { s0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { COMPUTER_USE_MCP_SERVER_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { WSe } from "./chunk-6842b6x1.js";
 import { isComputerUseEnabled, getComputerUseSubGates } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
 import { DEFAULT_GRANT_FLAGS, isKnownAppBundleId } from "../../01-核心基础设施/共享小工具-未细化/app-permission-categories.js";
@@ -5478,7 +5478,7 @@ function put() {
   if (e.hostAdapter) return e.hostAdapter;
   return (
     (e.hostAdapter = {
-      serverName: s0,
+      serverName: COMPUTER_USE_MCP_SERVER_NAME,
       logger: new An(),
       executor: createCliExecutor({
         getMouseAnimationEnabled: () => getComputerUseSubGates().mouseAnimation,

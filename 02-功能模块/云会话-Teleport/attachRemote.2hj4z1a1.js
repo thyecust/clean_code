@@ -16,7 +16,7 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { deviceToolNoticesTo } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdeyn1dg.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { Ise, RCt, iKt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { reportEventSignerLoadFailure, SESSION_NOT_FOUND_PREFIX, INVALID_SESSION_ID_PREFIX } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { createSystemInfoMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
@@ -25,12 +25,12 @@ import { buildCloudSessionStatusMessage } from "../../01-核心基础设施/共�
 function de(r) {
   if (!(r instanceof Iu)) return null;
   let e = r.formattedMessage;
-  return e.startsWith(RCt)
+  return e.startsWith(SESSION_NOT_FOUND_PREFIX)
     ? {
         reason: "not_found",
         message: `${e} \u2014 it doesn't match a cloud session you can access from this organization.`,
       }
-    : e.startsWith(iKt)
+    : e.startsWith(INVALID_SESSION_ID_PREFIX)
       ? { reason: "invalid_id", message: e }
       : null;
 }
@@ -229,7 +229,7 @@ View it at ${wa(e, void 0, { from: "cli", m: "0" })}`)
                 ),
                 t?.credentials,
               ),
-            Ise,
+            reportEventSignerLoadFailure,
           ),
         }),
       onAuth401: (o) => F(o, t?.credentials, t?.storageV5),

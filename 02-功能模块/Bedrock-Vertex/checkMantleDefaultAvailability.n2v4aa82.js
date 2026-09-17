@@ -14,16 +14,16 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
-  cA,
+  resolveAwsRegion,
   getUserSpecifiedModelSetting,
   DEFAULT_MANTLE_OPUS_KEY,
   getMarketingNameForModel,
   toProviderWireModelId,
-  DR,
-  Im,
-  VC,
-  Rw,
-  nRe,
+  hasCustomApiKeyHeader,
+  getAuthorizationHeaderPin,
+  getAnthropicBetaHeaderPin,
+  authState,
+  getEnvAuthorizationHeader,
   isHostManagedProviderAuth,
   hostManagedAwsSdkCredentials,
   refreshAndGetAwsCredentials,
@@ -170,7 +170,7 @@ async function O(e) {
         import("./AnthropicBedrockMantle.wb95xgtr.js"),
         import("../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js"),
       ]),
-    c = await cA(),
+    c = await resolveAwsRegion(),
     m = {
       awsRegion: c,
       maxRetries: 0,
@@ -188,10 +188,10 @@ async function O(e) {
       ...m,
       apiKey: d,
       defaultHeaders: {
-        ...Im(),
-        ...VC(),
+        ...getAuthorizationHeaderPin(),
+        ...getAnthropicBetaHeaderPin(),
         Authorization: `Bearer ${d}`,
-        ...(!DR() && { "X-Api-Key": null }),
+        ...(!hasCustomApiKeyHeader() && { "X-Api-Key": null }),
       },
     });
   else {
@@ -200,14 +200,14 @@ async function O(e) {
       g = {
         authToken: null,
         defaultHeaders: {
-          ...Im(),
-          ...VC(),
+          ...getAuthorizationHeaderPin(),
+          ...getAnthropicBetaHeaderPin(),
           Authorization: null,
-          ...(!DR() && { "X-Api-Key": null }),
+          ...(!hasCustomApiKeyHeader() && { "X-Api-Key": null }),
         },
-        ...Rw,
+        ...authState,
       },
-      p = l ? nRe() : void 0,
+      p = l ? getEnvAuthorizationHeader() : void 0,
       k = l || f ? null : await refreshAndGetAwsCredentials();
     o = k
       ? new s({
@@ -223,13 +223,13 @@ async function O(e) {
             !p && {
               skipAuth: !0,
               authToken: null,
-              defaultHeaders: { ...VC() },
-              ...Rw,
+              defaultHeaders: { ...getAnthropicBetaHeaderPin() },
+              ...authState,
             }),
           ...(l &&
             p && {
               apiKey: p.match(/^Bearer (.+)$/i)?.[1] ?? p,
-              defaultHeaders: { ...VC(), Authorization: p },
+              defaultHeaders: { ...getAnthropicBetaHeaderPin(), Authorization: p },
             }),
           ...(!l && g),
           ...(!l &&

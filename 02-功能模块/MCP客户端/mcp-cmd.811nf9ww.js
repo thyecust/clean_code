@@ -20,7 +20,7 @@ import { HELP_FLAGS, INFO_SUBCOMMAND_ALIASES } from "../Bedrock-Vertex/chunk-27n
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { ts, Js, Oa } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Rp } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { REMOTE_DEVICES_MCP_SERVER_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { V$ } from "../插件系统/chunk-7s6mt1vg.js";
 import { sanitizeDisplayTextWithoutRedaction, sanitizeDisplayText, isUnconfiguredMcpServer, ToolHostRegistry } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -360,7 +360,7 @@ var oe = {
   incompatible: "unreachable (version mismatch)",
 };
 function re(t) {
-  return `  ${_(m(t.serverName))}  ${_(oe[t.hostStatus])}  via ${Rp}${X(t.toolCount)}`;
+  return `  ${_(m(t.serverName))}  ${_(oe[t.hostStatus])}  via ${REMOTE_DEVICES_MCP_SERVER_NAME}${X(t.toolCount)}`;
 }
 function _(t) {
   return t + " ".repeat(Math.max(0, 28 - te(t)));

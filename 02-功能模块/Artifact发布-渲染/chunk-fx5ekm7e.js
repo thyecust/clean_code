@@ -12,7 +12,7 @@ import { ne, HCe, vTn, ker, PCe } from "./chunk-rr78st95.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { ARTIFACT_TOOL_NAME, PR_REVIEW_SECURITY_WALL, ArtifactInputError, ARTIFACT_VERSION_SAFE_RE, ARTIFACT_DELETED_NOTE_TAG, ARTIFACT_DELETED_NOTE_RE, uuidSlugFromUrl, canonicalArtifactTargetFor, sanitizeArtifactTitle } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { runBundledSkillSessionResets } from "../Skills技能/bundled-skills.js";
-import { Tn, tt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { hashForTelemetry, READ_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Js } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Cr, yw, linkPathToSlug, unlinkPath, retainPathLinks } from "./chunk-01ymf0ar.js";
@@ -61,7 +61,7 @@ function stripRejectNotice(e) {
 var N = "live_edit_conflict";
 function j(e, r, t) {
   let n = stripRejectNotice(r),
-    a = t === N ? Tn(n + U(e, n)) : Tn(n);
+    a = t === N ? hashForTelemetry(n + U(e, n)) : hashForTelemetry(n);
   return S(e, t, a)
     ? `${O(t)}
 
@@ -170,7 +170,7 @@ function collectArtifactStateFromMessages(e, r) {
       if (c.type === "tool_use") {
         if (c.name === ARTIFACT_TOOL_NAME) t.add(c.id);
         else if (c.name === Cr) n.add(c.id);
-        else if (c.name === tt) a.add(c.id);
+        else if (c.name === READ_TOOL_NAME) a.add(c.id);
       }
   }
   let s = {},

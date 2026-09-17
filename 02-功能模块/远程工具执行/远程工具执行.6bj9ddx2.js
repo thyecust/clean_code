@@ -28,7 +28,7 @@ import {
   PERMISSION_DENIED_PREFIX,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { qe, Bt, tt, Mn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ea } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { sanitizeDeep } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { vo, kD, DC, IT } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
@@ -578,9 +578,9 @@ function Ee(e, t, r, { afterReconnect: o = !1, dirSync: d, call: a } = {}) {
             : "";
   switch (r.outcome) {
     case "completed": {
-      let y = ue(e.name === tt ? Te(r.content, r.documents) : r.content),
+      let y = ue(e.name === READ_TOOL_NAME ? Te(r.content, r.documents) : r.content),
         _ = Pe(e, r, a),
-        w = e.name === qe ? Se(_.output) : { output: _.output, truncated: !1 };
+        w = e.name === BASH_TOOL_NAME ? Se(_.output) : { output: _.output, truncated: !1 };
       return {
         kind: "completed",
         host: f,
@@ -668,7 +668,7 @@ function Pe(e, t, r) {
   if (f === void 0) return { output: void 0, hostLocal: a };
   let g = ea(o, (_, w) => f.has(w)),
     p =
-      e.name === qe
+      e.name === BASH_TOOL_NAME
         ? g
         : t.is_error || t.truncated === !0
           ? void 0
@@ -682,7 +682,7 @@ function Le(e, t, r) {
   if (r === void 0 || !Ue(t.structuredPatch)) return;
   let o = r.input.file_path;
   if (typeof o !== "string") return;
-  if (e === Bt)
+  if (e === EDIT_TOOL_NAME)
     return {
       filePath: o,
       oldString: r.input.old_string,
@@ -692,7 +692,7 @@ function Le(e, t, r) {
       structuredPatch: t.structuredPatch,
       userModified: r.editedByApproval,
     };
-  if (e === Mn) {
+  if (e === WRITE_TOOL_NAME) {
     let d =
       t.type === "create" ||
       (Array.isArray(t.structuredPatch) && t.structuredPatch.length === 0);
@@ -1644,7 +1644,7 @@ async function FQt({
       case "kept_here":
         return _(
           void 0,
-          `Directory sync: what that command changed stays on ${f} for now (its Claude Code says: ${y.detail}); read what you need there with ${qe} on ${f}.`,
+          `Directory sync: what that command changed stays on ${f} for now (its Claude Code says: ${y.detail}); read what you need there with ${BASH_TOOL_NAME} on ${f}.`,
         );
       case "failed":
         return _(

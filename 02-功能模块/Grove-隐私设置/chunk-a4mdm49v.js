@@ -17,7 +17,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { writeToStderr } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { withOAuth401Retry, ICn, prepareApiRequest, ht, getClaudeAIOAuthTokenOrigin, getOauthAccountInfo, isConsumerSubscriber, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { withOAuth401Retry, CCR_BYOC_BETA_HEADER, prepareApiRequest, httpClient, getClaudeAIOAuthTokenOrigin, getOauthAccountInfo, isConsumerSubscriber, getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { gracefulShutdown } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { s, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -31,7 +31,7 @@ var v = 86400000,
           data: (
             await withOAuth401Retry(
               async () => {
-                let o = await ht.get("/api/oauth/account/settings", {
+                let o = await httpClient.get("/api/oauth/account/settings", {
                   timeout: S,
                   credentials: t,
                 });
@@ -58,7 +58,7 @@ async function markGroveNoticeViewed(t) {
   try {
     (await withOAuth401Retry(
       async () => {
-        let e = await ht.post(
+        let e = await httpClient.post(
           "/api/oauth/account/grove_notice_viewed",
           {},
           { credentials: t },
@@ -83,7 +83,7 @@ async function updateGroveSettings(t, e) {
   try {
     (await withOAuth401Retry(
       async () => {
-        let o = await ht.patch(
+        let o = await httpClient.patch(
           "/api/oauth/account/settings",
           { grove_enabled: t },
           { credentials: e },
@@ -104,7 +104,7 @@ async function shouldShowGroveNotice(t, e) {
   if (!isConsumerSubscriber()) return !1;
   let o = getOauthAccountInfo()?.accountUuid;
   if (!o) return !1;
-  let u = ee().groveConfigCache?.[o],
+  let u = getGlobalConfig().groveConfigCache?.[o],
     l = Date.now();
   if (!u)
     return (
@@ -129,9 +129,9 @@ async function _(t, e, o) {
     let r = await getGroveConfig(o);
     if (!r.success) return;
     let u = r.data.grove_enabled,
-      l = ee().groveConfigCache?.[t];
+      l = getGlobalConfig().groveConfigCache?.[t];
     if (l?.grove_enabled === u && Date.now() - l.timestamp <= v) return;
-    await Te(
+    await saveGlobalConfig(
       (d) => ({
         ...d,
         groveConfigCache: {
@@ -150,7 +150,7 @@ var getGroveConfig = rs(
     try {
       let e = await withOAuth401Retry(
           async () => {
-            let d = await ht.get("/api/claude_code_grove", {
+            let d = await httpClient.get("/api/claude_code_grove", {
               timeout: S,
               credentials: t,
             });
@@ -250,11 +250,11 @@ class RedactedGitHubToken {
 async function importGitHubToken(t, e) {
   let o;
   try {
-    o = await ht.post(
+    o = await httpClient.post(
       "/v1/code/github/import-token",
       { token: t.reveal() },
       {
-        headers: { "anthropic-beta": ICn.header },
+        headers: { "anthropic-beta": CCR_BYOC_BETA_HEADER.header },
         auth: "teleport-org",
         timeout: 15000,
         validateStatus: () => !0,
@@ -289,7 +289,7 @@ async function canPrepareApiRequest(t) {
 }
 async function k(t, { timeout: e, isBackground: o }) {
   try {
-    let r = await ht.get("/api/oauth/organizations/:orgUUID/sync/github/auth", {
+    let r = await httpClient.get("/api/oauth/organizations/:orgUUID/sync/github/auth", {
       auth: "teleport-org",
       timeout: e,
       isBackground: o,
@@ -351,7 +351,7 @@ class G {
   seedFromPersisted() {
     if (this.status !== void 0 || this.inFlight) return;
     let t = A();
-    if (t) this.status = E(ee(), t);
+    if (t) this.status = E(getGlobalConfig(), t);
   }
   fetch(t, e) {
     let o = this.generation,
@@ -376,7 +376,7 @@ class G {
 }
 var githubConnectionStatusStore = new j(() => new G());
 function b() {
-  return H("tengu_cheerful_horizon", !1);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cheerful_horizon", !1);
 }
 var P = createLazyValue(() =>
   c({
@@ -406,7 +406,7 @@ function E(t, e) {
 function w(t, e) {
   let o = A();
   if (!o) return;
-  Te(
+  saveGlobalConfig(
     (r) =>
       E(r, o) === t
         ? r

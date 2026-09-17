@@ -14,7 +14,7 @@ import { le, cr, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { _5, getSubscriptionType } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getThinkingBudgetDefaults, getSubscriptionType } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { tJe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
@@ -95,7 +95,7 @@ async function PIe(o, s, t, i = P2n, a = sideQuery, e, k) {
           "No model is available for the scan in this session\u2019s auto-mode configuration. Check with whoever manages your organization\u2019s Claude models, or re-run after it changes.",
       }
     );
-  let [c] = _5(r),
+  let [c] = getThinkingBudgetDefaults(r),
     b = c === void 0 ? C : 0,
     S = async (d) => {
       try {
@@ -160,7 +160,7 @@ async function PIe(o, s, t, i = P2n, a = sideQuery, e, k) {
         { level: "warn" },
       ),
         (r = d),
-        ([c] = _5(r)),
+        ([c] = getThinkingBudgetDefaults(r)),
         (b = c === void 0 ? C : 0),
         (E = !0),
         (u = await S([{ role: "user", content: p }])));

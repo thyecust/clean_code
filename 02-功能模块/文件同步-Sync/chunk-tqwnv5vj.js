@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { IZe, nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { RESERVED_DIRECTORY_NAMES_LC, normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { DANGEROUS_FILES_LC } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
@@ -235,17 +235,17 @@ async function V(e) {
 }
 var Ce = /[\u200c-\u200f\u202a-\u202e\u206a-\u206f\ufeff]/g;
 function EFt(e) {
-  let t = nc(e);
+  let t = normalizePathSegment(e);
   return t === ".git" || /^git~\d+$/.test(t);
 }
 var Oe = ".claude",
   Ie = new Set([".mcp.json", ".claude.json"]);
 function aOe(e, t) {
-  let r = e.map(nc);
+  let r = e.map(normalizePathSegment);
   return r.includes(Oe) || (t === "file" && Ie.has(r.at(-1) ?? ""));
 }
 var Pe = new Set(
-  [...IZe, ...DEPENDENCY_DIR_NAMES]
+  [...RESERVED_DIRECTORY_NAMES_LC, ...DEPENDENCY_DIR_NAMES]
     .filter((e) => e.startsWith(".") || e.length > 8)
     .map((e) =>
       e
@@ -260,7 +260,7 @@ function Gan(e) {
   return t !== null && Pe.has(t);
 }
 function ge(e) {
-  return /^(.{1,6})~\d+$/.exec(nc(e))?.[1] ?? null;
+  return /^(.{1,6})~\d+$/.exec(normalizePathSegment(e))?.[1] ?? null;
 }
 function Vpt(e, t = !1) {
   return lOe(e, "/", "file", t);
@@ -284,13 +284,13 @@ function lOe(e, t, r, a = !1) {
           o.length === 1 &&
           c === i &&
           s.slice(0, -1).every((d) => {
-            let u = nc(d);
+            let u = normalizePathSegment(d);
             return !DEPENDENCY_DIR_NAMES.has(u) || u === d;
           })
         ) &&
-          isUnderDependencyDir(s.map(nc).join("/"))) ||
+          isUnderDependencyDir(s.map(normalizePathSegment).join("/"))) ||
         s.some(EFt) ||
-        (r === "file" && nc(s.at(-1) ?? "") === "head") ||
+        (r === "file" && normalizePathSegment(s.at(-1) ?? "") === "head") ||
         (r === "file" ? s.slice(0, -1) : s).some((d) => ge(d) !== null) ||
         (r === "file" && s.slice(-1).some(Gan)) ||
         (getCurrentPlatform() === "wsl" && looksLikeWindowsShortName(c))
@@ -317,7 +317,7 @@ async function Kpt(e, t, r, a = !1) {
 }
 function Xce(e) {
   return dedupe([e, normalizeUnicodeForm(e)]).some((t) => {
-    let r = nc(t.split("/").at(-1) ?? "");
+    let r = normalizePathSegment(t.split("/").at(-1) ?? "");
     return DANGEROUS_FILES_LC.has(r) || Fe.has(xe(r) ?? "");
   });
 }

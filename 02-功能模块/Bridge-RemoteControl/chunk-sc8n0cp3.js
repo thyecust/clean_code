@@ -24,7 +24,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import { uD } from "../Hooks钩子/chunk-z3433nr6.js";
-import { YC } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isLocalSettingsGitTracked } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { toe, ig } from "../插件系统/chunk-ajtn749s.js";
 import { areLocalPluginDirsAllowedByPolicy, isMarketplaceRestrictionPolicyActive, isSourceAllowedByPolicy } from "../插件系统/plugin-source-policy.js";
 import { isTrustedBuiltinPlugin, isRemoteToolServingMuted, onServingMuteRecheck, CLOUD_SESSION_CONSENT_MESSAGES, sanitizeForDisplay, isPersistedWorkspaceTrusted, getKnownMarketplacesOrEmpty, getReservedMarketplaceNameError, getInstalledPluginsViaStorage, isInstallationInCurrentScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -683,7 +683,7 @@ async function rPt(e) {
     folderTrustedForProjectPlugins: d,
     localSettingsAreOwnChoice:
       !(isRecord(S) && Object.keys(S).length > 0) ||
-      !YC({ onIndeterminate: "tracked" }),
+      !isLocalSettingsGitTracked({ onIndeterminate: "tracked" }),
     directoryPluginsAllowedByPolicy: areLocalPluginDirsAllowedByPolicy(),
     builtinPluginIds: new Set(
       [...getHostStateStore().builtinPlugins.keys()].map((a) => `${a}@${BUILTIN_PLUGIN_SOURCE}`),

@@ -15,7 +15,7 @@ import { Ve, yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isPolicyAllowed, getPolicyDenyKind, getPolicyDeniedReason } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { sJ, TGt, pXe, fXe, cJ, roe } from "./chunk-ajtn749s.js";
@@ -66,7 +66,7 @@ async function D(e, t, r, o, i) {
   }
   if (t === I) await sJ(e, o, i);
   let u = t === I && a.CLAUDE_CODE_CCR_SURFACE === "tag",
-    h = await ht.post(
+    h = await httpClient.post(
       t,
       u
         ? { keywords: r, included_default_marketplaces: ["claude-tag-plugins"] }

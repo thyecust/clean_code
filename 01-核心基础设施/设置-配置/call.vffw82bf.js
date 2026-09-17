@@ -17,7 +17,7 @@ import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js
 import { Av, iDt, j0e } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../共享小工具-未细化/storage-v5-context.js";
-import { Ms } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getVersionForAnalytics } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { Gu } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsFilePathForSource, updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -173,7 +173,7 @@ function ae(Rt) {
         saw_trackpad: Ue.current,
         editor_wheel_sensitivity: A?.sensitivity ?? void 0,
         term_program: sanitizeTerminalName(f.termProgram),
-        term_program_version: Ms(f.termProgramVersion),
+        term_program_version: getVersionForAnalytics(f.termProgramVersion),
       });
       let et = `\`${Gu(getSettingsFilePathForSource("userSettings") ?? "settings.json")}\``;
       k(

@@ -12,7 +12,7 @@ import { useAppStateSelector, useAppStateSelectorUnchecked } from "../../01-核�
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { X_ } from "../Teammates团队/chunk-g6nvp9mm.js";
-import { getMainLoopModel, H, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMainLoopModel, getFeatureValue_CACHED_MAY_BE_STALE, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { te, truncateToWidth, formatDuration, formatDurationCoarse, formatNumber, formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { CLAUDE_ASTERISK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
@@ -1746,7 +1746,7 @@ function cOt(Jt) {
   let Fa = La.useRenderInput("Spinner", bi, xi),
     Si;
   if (or[6] !== er || or[7] !== nr)
-    ((Si = Ox() && (Ka || H("tengu_kairos_brief", !1)) && er && !nr),
+    ((Si = Ox() && (Ka || getFeatureValue_CACHED_MAY_BE_STALE("tengu_kairos_brief", !1)) && er && !nr),
       (or[6] = er),
       (or[7] = nr),
       (or[8] = Si));
@@ -1854,13 +1854,13 @@ function dr({
     Zt = "claudeShimmer",
     fe = g ?? zt,
     bt = h ?? Zt,
-    Ht = H("tengu_shining_fractals", !1),
+    Ht = getFeatureValue_CACHED_MAY_BE_STALE("tengu_shining_fractals", !1),
     Vt = useAppStateSelector((J) => J.narration),
     de = useAppStateSelector((J) => J.briefTranscript),
     yt = !1,
     gt = P.spinnerTipsEnabled !== !1,
     Wt = gt && xt > 1800000,
-    pe = gt && xt > 30000 && !ee().btwUseCount,
+    pe = gt && xt > 30000 && !getGlobalConfig().btwUseCount,
     Kt = yt
       ? q
       : shouldExcludeDefaultTips()

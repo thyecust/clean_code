@@ -21,7 +21,7 @@ import { jo, Bf, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
-import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isDesktopHostSession } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { ot, _ie, W6 } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSdkHostedBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
@@ -1012,7 +1012,7 @@ function ubt(e) {
   if (a.CLAUDE_CODE_REMOTE_ENVIRONMENT_TYPE) return "env_ccr";
   if (a.CLAUDE_CODE_REMOTE) return "env_byoc";
   if (getSdkHostedBridgeHandle() !== null && ic())
-    return H("tengu_async_goblet", !0) ? "sdk_hosted" : "sdk_hosted_disabled";
+    return getFeatureValue_CACHED_MAY_BE_STALE("tengu_async_goblet", !0) ? "sdk_hosted" : "sdk_hosted_disabled";
   return "none";
 }
 function dbt(e) {

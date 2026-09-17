@@ -12,7 +12,7 @@
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { ee } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getGlobalConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { URL_HANDLER_BUNDLE_ID } from "../../02-功能模块/深链接-URL协议/深链接-URL协议.wjw0bmt6.js";
@@ -48,7 +48,7 @@ var u = [
     "xterm",
   ];
 async function F() {
-  let r = ee().deepLinkTerminal;
+  let r = getGlobalConfig().deepLinkTerminal;
   if (r) {
     let e = u.find((s) => s.app === r);
     if (e) return { name: e.name, command: e.app };

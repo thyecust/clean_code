@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { ry, cf, ph, r0, Ms, u0, df, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { runtimeEnvironment, isSemverGreaterThan, isSemverAtLeast, isSemverLessThan, getVersionForAnalytics, getPlatformForAnalytics, initializeGrowthBook, getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, po } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
@@ -216,7 +216,7 @@ async function Lt(e = "latest", t, r) {
         http_status: v,
         is_timeout: Me(o),
         attempt: p,
-        platform: u0(Xt()),
+        platform: getPlatformForAnalytics(Xt()),
         channel: fromEnum(e),
       }));
     let S = new R(
@@ -412,7 +412,7 @@ async function We(e, t, r, d = {}, p) {
   throw o ?? Error("Download failed after all retries");
 }
 function Xe(e) {
-  let t = H("tengu_elegant_pancake", null);
+  let t = getFeatureValue_CACHED_MAY_BE_STALE("tengu_elegant_pancake", null);
   return e === "always" ? t !== !1 : t === !0;
 }
 function Ut() {
@@ -464,7 +464,7 @@ async function Qe(
         latency_ms: M,
         http_status: _e(x),
         is_timeout: Me(x),
-        platform: u0(p),
+        platform: getPlatformForAnalytics(p),
       }),
       n(`Failed to fetch manifest from ${e}/${t}/manifest.json: ${C}`, {
         level: "error",
@@ -521,14 +521,14 @@ async function Qe(
       }
     } catch (D) {
       if (!(D instanceof rT)) throw D;
-      await df().catch(() => null);
+      await initializeGrowthBook().catch(() => null);
       let N = Bt();
       if (
         (logEvent("tengu_binary_manifest_signature_failed", {
           reason: fromEnum(D.reason),
           http_status: C,
           enforced: N,
-          platform: u0(p),
+          platform: getPlatformForAnalytics(p),
           latency_ms: Date.now() - M,
         }),
         N)
@@ -655,7 +655,7 @@ async function Gt(e, t, r, { authConfig: d, signaturePolicy: p }) {
         is_timeout: Me(O),
         is_checksum_mismatch: ie,
         attempt: Yt(O),
-        platform: u0(_),
+        platform: getPlatformForAnalytics(_),
         compressed: Y,
       }),
       n(`Failed to download binary from ${U}: ${J}`, { level: "error" }),
@@ -666,7 +666,7 @@ async function Gt(e, t, r, { authConfig: d, signaturePolicy: p }) {
 function Ze(e, { explicitVersionRequested: t, requireEnforcingRelease: r }) {
   return r
     ? "require-enforcing-release"
-    : t && r0(e, $e)
+    : t && isSemverLessThan(e, $e)
       ? "allow-unsigned-legacy"
       : "require";
 }
@@ -966,8 +966,8 @@ function G4() {
   }
   if (mn) t = "arm64";
   if (e === "linux") {
-    if (ry.isAndroidEnvironment()) return `linux-${t}-android`;
-    if (ry.isMuslEnvironment()) return `linux-${t}-musl`;
+    if (runtimeEnvironment.isAndroidEnvironment()) return `linux-${t}-android`;
+    if (runtimeEnvironment.isMuslEnvironment()) return `linux-${t}-musl`;
   }
   return `${e}-${t}`;
 }
@@ -1391,7 +1391,7 @@ function vn(e, { versions: t, executable: r, isWindows: d }) {
 }
 function bn() {
   try {
-    let e = H("tengu_canary", {});
+    let e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_canary", {});
     return (typeof e.external === "string" && ht.valid(e.external)) || null;
   } catch (e) {
     return (
@@ -1432,18 +1432,18 @@ async function En(e, t = !1) {
   let S = p && (await wn());
   if (e === "latest" && !w) {
     let C = bn(),
-      D = C && o && cf(C, o);
-    if (C && cf(C, v) && !D)
+      D = C && o && isSemverGreaterThan(C, o);
+    if (C && isSemverGreaterThan(C, v) && !D)
       (n(`Native installer: canary ${C} active, overriding ${v}`), (v = C));
     else if (D)
       n(`Native installer: canary ${C} exceeds maxVersion ${o}, not applying`);
   }
-  if (!w && !t && o && cf(v, o)) {
+  if (!w && !t && o && isSemverGreaterThan(v, o)) {
     if (
       (n(
         `Native installer: maxVersion ${o} is set, capping update from ${v} to ${o}`,
       ),
-      ph(
+      isSemverAtLeast(
         {
           ISSUES_EXPLAINER:
             "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -1466,8 +1466,8 @@ async function En(e, t = !1) {
         ),
         logEvent("tengu_native_update_skipped_max_version", {
           latency_ms: Date.now() - r,
-          max_version: Ms(o),
-          available_version: Ms(v),
+          max_version: getVersionForAnalytics(o),
+          available_version: getVersionForAnalytics(v),
         }),
         { success: !0, wasSkipped: !0, latestVersion: v }
       );
@@ -1506,7 +1506,7 @@ async function En(e, t = !1) {
     return (
       logEvent("tengu_native_update_skipped_minimum_version", {
         latency_ms: Date.now() - r,
-        target_version: Ms(v),
+        target_version: getVersionForAnalytics(v),
       }),
       { success: !0, wasSkipped: !0, latestVersion: v }
     );
@@ -1525,7 +1525,7 @@ async function En(e, t = !1) {
           "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
         DD_SOURCEMAP_GROUP: "darwin",
       }.VERSION,
-      to_version: Ms(v),
+      to_version: getVersionForAnalytics(v),
     });
   let F = !1,
     I = !1,
@@ -1587,7 +1587,7 @@ async function En(e, t = !1) {
     return (
       logEvent("tengu_native_update_skipped_unverified_release", {
         latency_ms: M,
-        target_version: Ms(v),
+        target_version: getVersionForAnalytics(v),
       }),
       n(
         `Native installer: resolved ${v} predates manifest signature enforcement; staying on ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}`,
@@ -1755,7 +1755,7 @@ async function Bce(e = !1) {
   if (Ie(process.env.DISABLE_INSTALLATION_CHECKS)) return [];
   let t = await dte();
   if (t === "development") return [];
-  let r = ee();
+  let r = getGlobalConfig();
   if (!(e || t === "native" || r.installMethod === "native")) return [];
   let p = Q(),
     o = [],
@@ -1881,8 +1881,8 @@ async function dt(e, t = !1, r) {
       skippedUnverifiedRelease: !0,
       lockFailed: !1,
     };
-  if (ee().installMethod !== "native")
-    (await Te(
+  if (getGlobalConfig().installMethod !== "native")
+    (await saveGlobalConfig(
       (o) => ({
         ...o,
         installMethod: "native",

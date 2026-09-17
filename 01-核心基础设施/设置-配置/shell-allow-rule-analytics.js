@@ -11,7 +11,7 @@ import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js"
 import { fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { parsePermissionRule } from "../../02-功能模块/工具Bash-Shell/permission-rule-parsing.js";
 import { isDangerousBashPermission, isDangerousPowerShellPermission } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { qe, Ut } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { BASH_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 var p = [
   "userSettings",
   "projectSettings",
@@ -21,15 +21,15 @@ var p = [
   "session",
 ];
 function s(l) {
-  if (l === qe) return qe;
-  if (l === Ut) return Ut;
+  if (l === BASH_TOOL_NAME) return BASH_TOOL_NAME;
+  if (l === POWERSHELL_TOOL_NAME) return POWERSHELL_TOOL_NAME;
   return null;
 }
 function c(l, e) {
   let o = s(l);
   if (o === null) return null;
   if (e === void 0 || e === "" || /^[\s*]+$/.test(e)) return "bare";
-  return (o === qe ? isDangerousBashPermission(o, e) : isDangerousPowerShellPermission(o, e)) ? "dangerous_prefix" : "scoped";
+  return (o === BASH_TOOL_NAME ? isDangerousBashPermission(o, e) : isDangerousPowerShellPermission(o, e)) ? "dangerous_prefix" : "scoped";
 }
 function y(l) {
   let e = {},

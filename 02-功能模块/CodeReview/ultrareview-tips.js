@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { ht, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { httpClient, getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Zt, Io, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
@@ -37,7 +37,7 @@ async function v(e) {
       return (n(`fetchUltrareviewQuota fixture parse failed: ${t}`), null);
     }
   try {
-    let t = await ht.get("/v1/ultrareview/quota", {
+    let t = await httpClient.get("/v1/ultrareview/quota", {
       auth: "teleport-org",
       timeout: 3000,
       credentials: e,
@@ -77,8 +77,8 @@ function getUltrareviewQuota(e) {
   return r.quota;
 }
 function recordTipShown(e, r) {
-  let t = ee().numStartups;
-  Te((o) => {
+  let t = getGlobalConfig().numStartups;
+  saveGlobalConfig((o) => {
     let l = o.tipsHistory ?? {};
     if (l[e] === t) return o;
     let s = o.tipLifetimeShownCounts ?? {};
@@ -90,23 +90,23 @@ function recordTipShown(e, r) {
   }, r);
 }
 function getTipLifetimeShownCount(e) {
-  return ee().tipLifetimeShownCounts?.[e] ?? 0;
+  return getGlobalConfig().tipLifetimeShownCounts?.[e] ?? 0;
 }
 function getPluginSuggestionShownCount(e) {
-  return ee().pluginSuggestionShownCounts?.[e] ?? 0;
+  return getGlobalConfig().pluginSuggestionShownCounts?.[e] ?? 0;
 }
 function getSessionsSinceTipShown(e) {
-  let r = ee(),
+  let r = getGlobalConfig(),
     t = r.tipsHistory?.[e];
   if (!t) return 1 / 0;
   return r.numStartups - t;
 }
 function getPluginSuggestionDiscoverShownCount(e) {
-  return ee().pluginSuggestionDiscoverShownCounts?.[e] ?? 0;
+  return getGlobalConfig().pluginSuggestionDiscoverShownCounts?.[e] ?? 0;
 }
 function recordPluginSuggestionDiscoverShown(e, r) {
   if (e.length === 0) return;
-  Te((t) => {
+  saveGlobalConfig((t) => {
     let o = t.pluginSuggestionDiscoverShownCounts ?? {};
     if (e.every((s) => (o[s] ?? 0) > 0)) return t;
     let l = { ...o };
@@ -116,7 +116,7 @@ function recordPluginSuggestionDiscoverShown(e, r) {
 }
 var h = "tengu_ultrareview_awareness";
 function _() {
-  return H(h, null) ?? {};
+  return getFeatureValue_CACHED_MAY_BE_STALE(h, null) ?? {};
 }
 function isUltrareviewAwarenessEnabled(e) {
   if (!canUseCloudReview()) return !1;
@@ -124,10 +124,10 @@ function isUltrareviewAwarenessEnabled(e) {
   return _()[e] === !0;
 }
 function hasRunUltrareview() {
-  return ee().hasRunUltrareview === !0;
+  return getGlobalConfig().hasRunUltrareview === !0;
 }
 function markUltrareviewRun(e) {
-  Te((r) => (r.hasRunUltrareview ? r : { ...r, hasRunUltrareview: !0 }), e);
+  saveGlobalConfig((r) => (r.hasRunUltrareview ? r : { ...r, hasRunUltrareview: !0 }), e);
 }
 function C(e) {
   logEvent("tengu_ultrareview_awareness_shown", { surface: fromEnum(e) });

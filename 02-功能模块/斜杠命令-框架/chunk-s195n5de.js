@@ -16,7 +16,7 @@ import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/
 import { COMMAND_NAME_TAG, COMMAND_MESSAGE_TAG, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { cmdFeature, logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { nq, inlineSkillModelOverride, mc, o0, isBgSession, wl, Ms } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { redactSecretsInText, inlineSkillModelOverride, getAgentDepth, getWorkflowRunMetadata, isBgSession, isToolDetailsLoggingEnabled, getVersionForAnalytics } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { C_ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { nxt, Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
@@ -336,14 +336,14 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
       ? {
           agentId: x,
           parentAgentId: t.agentId,
-          depth: mc(t.agentContext) + 1,
+          depth: getAgentDepth(t.agentContext) + 1,
           agentType: "subagent",
           isAsync: !1,
           isBackgroundAgent:
             t.agentContext && "isBackgroundAgent" in t.agentContext
               ? t.agentContext.isBackgroundAgent
               : void 0,
-          ...o0(t.agentContext),
+          ...getWorkflowRunMetadata(t.agentContext),
         }
       : void 0,
     {
@@ -747,7 +747,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
             re === "stale_list" ? "cmd_stale_list" : `cmd_policy_${re}`,
           ));
         let me = escapeForkedSkillLaunchTag(Qn(d)),
-          ue = !p ? "" : isSensitiveCommandInput(X, p) ? "***" : escapeForkedSkillLaunchTag(nq(p));
+          ue = !p ? "" : isSensitiveCommandInput(X, p) ? "***" : escapeForkedSkillLaunchTag(redactSecretsInText(p));
         if (l.options.isNonInteractiveSession)
           return {
             messages: [
@@ -779,7 +779,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
         }),
           logFeatureBad("cmd_dispatch", "cmd_unavailable_headless"));
         let re = findCommand(d, X),
-          me = !p ? "" : re !== void 0 && isSensitiveCommandInput(re, p) ? "***" : escapeForkedSkillLaunchTag(nq(p));
+          me = !p ? "" : re !== void 0 && isSensitiveCommandInput(re, p) ? "***" : escapeForkedSkillLaunchTag(redactSecretsInText(p));
         return {
           messages: [
             ...m,
@@ -819,7 +819,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
         return {
           messages: [
             ...m,
-            createLocalCommandMessage(`/${ee}${p ? ` ${escapeForkedSkillLaunchTag(nq(p))}` : ""}`),
+            createLocalCommandMessage(`/${ee}${p ? ` ${escapeForkedSkillLaunchTag(redactSecretsInText(p))}` : ""}`),
             createLocalCommandMessage(`<local-command-stdout>${ye}</local-command-stdout>`),
           ],
           shouldQuery: !1,
@@ -829,7 +829,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
         messages: [
           ...m,
           createSystemInfoMessage(ye, "warning"),
-          ...(p ? [createSystemInfoMessage(`Args from unknown skill: ${nq(p)}`, "warning")] : []),
+          ...(p ? [createSystemInfoMessage(`Args from unknown skill: ${redactSecretsInText(p)}`, "warning")] : []),
         ],
         shouldQuery: !1,
         resultText: ye,
@@ -853,7 +853,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
         prompt_length: String(R.length),
         prompt: redactPromptUnlessEnabled(R),
         "prompt.id": w,
-        command_name: O === "builtin" || wl() ? d : O,
+        command_name: O === "builtin" || isToolDetailsLoggingEnabled() ? d : O,
         command_source: O,
       }));
   }
@@ -891,7 +891,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
     if (F.type === "prompt" && F.pluginInfo) {
       Object.assign(w, getPluginNameFields(F));
       let L = F.pluginInfo.pluginManifest.version;
-      if (L && isOfficialMarketplacePlugin(F)) w.plugin_version = Ms(L);
+      if (L && isOfficialMarketplacePlugin(F)) w.plugin_version = getVersionForAnalytics(L);
     }
     if (F.type === "prompt") Object.assign(w, getServerAttributionFields(F));
     logEvent("tengu_input_command", {
@@ -1024,7 +1024,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
       };
     }
     let p = `Skill "${sanitizeDisplayTextWithoutRedaction(s.name, 200)}" is disabled via skillOverrides. Re-enable it in /skills or remove the override from your settings to run it.`,
-      A = !o ? "" : isSensitiveCommandInput(s, o) ? "***" : escapeForkedSkillLaunchTag(nq(o));
+      A = !o ? "" : isSensitiveCommandInput(s, o) ? "***" : escapeForkedSkillLaunchTag(redactSecretsInText(o));
     return {
       messages: [
         createSystemInfoMessage(p, "warning"),
@@ -1572,7 +1572,7 @@ function ie(e, o) {
   return buildCommandTags(getCommandName(e), isSensitiveCommandInput(e, o) ? "***" : o);
 }
 function we(e, o) {
-  return buildCommandTags(Qn(getCommandName(e)), isSensitiveCommandInput(e, o) ? "***" : nq(o));
+  return buildCommandTags(Qn(getCommandName(e)), isSensitiveCommandInput(e, o) ? "***" : redactSecretsInText(o));
 }
 var Oe = 5;
 function Xe(e, o, t, m) {

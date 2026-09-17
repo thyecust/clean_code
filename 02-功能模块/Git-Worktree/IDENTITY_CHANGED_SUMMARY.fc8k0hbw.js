@@ -54,7 +54,7 @@ import {
   hasWorktreeChanges as o_t,
   execIntoTmuxWorktree as T_r,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Ia } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getCurrentWorktreeSession as Ia } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 export {
   Pde as IDENTITY_CHANGED_SUMMARY,
   r_t as UNVERIFIED_WORKTREE_SUMMARY,

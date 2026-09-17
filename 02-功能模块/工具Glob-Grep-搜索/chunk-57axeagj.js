@@ -17,7 +17,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { jn, Pt, Ks, findGitRoot, gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { OP, Vet, Ket } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { kJ, MK, UTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
@@ -309,7 +309,7 @@ async function N(e, r) {
     t = (e.fileIndex ??= new Ket());
   try {
     let a = getInitialSettings(),
-      o = ee(),
+      o = getGlobalConfig(),
       g = a.respectGitignore ?? o.respectGitignore ?? !0,
       c = getCwd(),
       [u, f] = await Promise.all([E(e, s, g), A(c, r)]);

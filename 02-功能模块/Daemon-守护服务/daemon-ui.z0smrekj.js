@@ -15,7 +15,7 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { P6, XUe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isPathTrusted, setPathTrusted } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { findCanonicalGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te, truncateStartToWidth, formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -282,7 +282,7 @@ function tt(nn) {
   if (P[11] !== M)
     ((qe = (an) => {
       let so = resolve(Ju(an.trim() || M));
-      return P6(so, { advisoryNoFsProbe: !0 })
+      return isPathTrusted(so, { advisoryNoFsProbe: !0 })
         ? "Available on claude.ai/code and the Claude mobile app."
         : `${so} is not yet trusted \u2014 you'll be asked to trust it on submit.`;
     }),
@@ -370,7 +370,7 @@ function tt(nn) {
       if (je) {
         return;
       }
-      if (!P6(Ie)) {
+      if (!isPathTrusted(Ie)) {
         Xe({ dir: Ie, trustRoot: findCanonicalGitRootUncached(Ie) });
         return;
       }
@@ -394,7 +394,7 @@ function tt(nn) {
     let Ue;
     if (P[33] !== le || P[34] !== Z.dir || P[35] !== Te)
       ((Ue = () => {
-        (XUe(Z.dir, Te).then(() => le(Z.dir)), Xe(null));
+        (setPathTrusted(Z.dir, Te).then(() => le(Z.dir)), Xe(null));
       }),
         (P[33] = le),
         (P[34] = Z.dir),

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getAuthHeaders, TUe, FCt, checkAndRefreshOAuthTokenIfNeeded, H, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getAuthHeaders, hashSha256Hex, isNonEssentialTrafficAllowed, checkAndRefreshOAuthTokenIfNeeded, getFeatureValue_CACHED_MAY_BE_STALE, readFreshOauthAccountFromDisk } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, Io, MPn, Xu, cr, nt, hm, Cu } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -19,7 +19,7 @@ import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { ARTIFACT_SLUG_RE } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { bCe, Am, TG, jZn, nP, Nd, Fd } from "./chunk-01ymf0ar.js";
 function vft() {
-  return a.CLAUDE_CODE_ARTIFACT_DB ?? H("tengu_umber_lattice", !1);
+  return a.CLAUDE_CODE_ARTIFACT_DB ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_umber_lattice", !1);
 }
 var Y = "/api/frame/db/agent",
   L = String.raw`(?!\.\.?(?:/|$))[A-Za-z0-9_\-.~:@+]{1,200}`,
@@ -304,15 +304,15 @@ async function Oe(e, r) {
   return t ? ee(t, e) : null;
 }
 async function K(e, r, t) {
-  let c = await sy(t);
+  let c = await readFreshOauthAccountFromDisk(t);
   return c?.accountUuid !== void 0 && ee(c.accountUuid, e) === r;
 }
 function U() {
   let e = getAuthHeaders().headers.Authorization;
-  return e === void 0 ? null : TUe(e);
+  return e === void 0 ? null : hashSha256Hex(e);
 }
 async function te(e) {
-  if (!FCt()) return;
+  if (!isNonEssentialTrafficAllowed()) return;
   for (let r = 0; r < 2; r++)
     try {
       await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });

@@ -35,8 +35,8 @@ import { env as a } from "../../../01-核心基础设施/设置-配置/chunk-zqr
 import { _ } from "../../react/react.zhnvc798.js";
 import { logEvent } from "../../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import {
-  Nve,
-  sr,
+  shouldAttachRateLimitHeaders,
+  getSessionStateStore,
   getUserSpecifiedModelSetting,
   getMainLoopModel,
   getDefaultSonnetModel,
@@ -45,23 +45,23 @@ import {
   renderFableModelName,
   parseUserSpecifiedModel,
   getMarketingNameForModel,
-  FT,
-  s0,
-  qe,
-  Bt,
-  tt,
-  Mn,
-  co,
-  ro,
-  Wl,
-  Ut,
+  sanitizeDisplayName as FT,
+  COMPUTER_USE_MCP_SERVER_NAME,
+  BASH_TOOL_NAME,
+  EDIT_TOOL_NAME,
+  READ_TOOL_NAME,
+  WRITE_TOOL_NAME,
+  GLOB_TOOL_NAME,
+  GREP_TOOL_NAME,
+  NOTEBOOK_EDIT_TOOL_NAME,
+  POWERSHELL_TOOL_NAME,
   isBgSession,
-  aZe,
-  Hn,
+  isWorkspaceMcpToolName,
+  getSanitizedToolName,
   isClaudeAISubscriber,
   getSubscriptionType,
   getRateLimitTier,
-  H,
+  getFeatureValue_CACHED_MAY_BE_STALE,
   getAutoMemPath,
   isAutoMemPath,
 } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -1283,7 +1283,7 @@ function tp(v2) {
     vL = MS === "team" || MS === "enterprise",
     IL = MS === "max" && D2 === "default_claude_max_20x",
     DL;
-  if (ho[2] === MEMO_CACHE_SENTINEL) ((DL = Nve() || isClaudeAISubscriber()), (ho[2] = DL));
+  if (ho[2] === MEMO_CACHE_SENTINEL) ((DL = shouldAttachRateLimitHeaders() || isClaudeAISubscriber()), (ho[2] = DL));
   else DL = ho[2];
   let BL = DL,
     Ke = QR(),
@@ -1326,7 +1326,7 @@ function tp(v2) {
     KL;
   if (ho[12] !== Ke.overageDisabledReason)
     ((KL =
-      H(fWe, !1) &&
+      getFeatureValue_CACHED_MAY_BE_STALE(fWe, !1) &&
       !vL &&
       Ke.overageDisabledReason === "org_level_disabled_until" &&
       GL &&
@@ -1398,7 +1398,7 @@ function tp(v2) {
   else oO = ho[28];
   let SS = oO,
     nO;
-  if (ho[29] !== SS) ((nO = SS && H(VELLUM_ANCHOR_FLAG, !1)), (ho[29] = SS), (ho[30] = nO));
+  if (ho[29] !== SS) ((nO = SS && getFeatureValue_CACHED_MAY_BE_STALE(VELLUM_ANCHOR_FLAG, !1)), (ho[29] = SS), (ho[30] = nO));
   else nO = ho[30];
   let Xd = nO,
     Qd = useRateLimitCheckpointResult(),
@@ -4937,7 +4937,7 @@ var _y = {
       renderToolUseTag: w$n,
       userFacingNameBackgroundColor: getAgentToolUserFacingBackgroundColor,
     },
-    get [qe]() {
+    get [BASH_TOOL_NAME]() {
       let l = import.meta.require("../../../02-功能模块/工具UI渲染/BackgroundHint.nne14pfp.js");
       return {
         renderToolResultMessage: l.renderToolResultMessage,
@@ -4955,7 +4955,7 @@ var _y = {
     },
     [BRIEF_TOOL_NAME]: { renderToolResultMessage: yC },
     [Jc]: { renderToolResultMessage: zP, renderToolUseRejectedMessage: KP },
-    get [Bt]() {
+    get [EDIT_TOOL_NAME]() {
       let l = import.meta.require("../../../02-功能模块/工具文件读写编辑/renderToolUseErrorMessage.8cb1t7h1.js");
       return {
         renderToolResultMessage: l.renderToolResultMessage,
@@ -4963,7 +4963,7 @@ var _y = {
         renderToolUseErrorMessage: l.renderToolUseErrorMessage,
       };
     },
-    get [Mn]() {
+    get [WRITE_TOOL_NAME]() {
       let l = import.meta.require("../../../02-功能模块/工具UI渲染/isResultTruncated.y9qtnzef.js");
       return {
         renderToolResultMessage: l.renderToolResultMessage,
@@ -4980,7 +4980,7 @@ var _y = {
         isResultTruncated: l.isResultTruncated,
       };
     },
-    get [tt]() {
+    get [READ_TOOL_NAME]() {
       let l = import.meta.require("../../../02-功能模块/工具文件读写编辑/renderToolUseTag.1xg51k6k.js");
       return {
         renderToolResultMessage: l.renderToolResultMessage,
@@ -4996,7 +4996,7 @@ var _y = {
         renderToolUseTag: l.renderToolUseTag,
       };
     },
-    get [Wl]() {
+    get [NOTEBOOK_EDIT_TOOL_NAME]() {
       let l = import.meta.require("../../../02-功能模块/Notebook(.ipynb)/Notebook(.ipynb).zmx4vxzb.js");
       return {
         renderToolResultMessage: l.renderToolResultMessage,
@@ -5004,7 +5004,7 @@ var _y = {
         renderToolUseErrorMessage: l.renderToolUseErrorMessage,
       };
     },
-    get [Ut]() {
+    get [POWERSHELL_TOOL_NAME]() {
       let l = import.meta.require("../../../02-功能模块/工具Bash-Shell/renderToolUseErrorMessage.fxtssd7a.js");
       return {
         renderToolResultMessage: l.renderToolResultMessage,
@@ -5013,8 +5013,8 @@ var _y = {
         renderToolUseQueuedMessage: l.renderToolUseQueuedMessage,
       };
     },
-    [ro]: { renderToolResultMessage: ry, renderToolUseErrorMessage: ty },
-    [co]: { renderToolResultMessage: ry, renderToolUseErrorMessage: ty },
+    [GREP_TOOL_NAME]: { renderToolResultMessage: ry, renderToolUseErrorMessage: ty },
+    [GLOB_TOOL_NAME]: { renderToolResultMessage: ry, renderToolUseErrorMessage: ty },
     [Cr]: { renderToolResultMessage: renderWebFetchResultMessage, renderToolUseProgressMessage: renderWebFetchProgressMessage },
     [_D]: { renderToolResultMessage: BC, renderToolUseProgressMessage: DC },
     [REPORT_FINDINGS_TOOL_NAME]: { renderToolResultMessage: EC },
@@ -5161,7 +5161,7 @@ var _y = {
       },
     }),
   },
-  uD = `mcp__${s0}__`;
+  uD = `mcp__${COMPUTER_USE_MCP_SERVER_NAME}__`;
 function mD(l, f) {
   if (l.builtinRenderFamily === "claude-in-chrome") {
     let g = l.name.slice(CFC_TOOL_PREFIX.length);
@@ -6064,7 +6064,7 @@ F();
 import { basename as yU, sep as RU } from "path";
 function ym() {
   if (ke()) return !1;
-  return H("tengu_coordinator_panel", !0);
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_coordinator_panel", !0);
 }
 F();
 import { relative as bw } from "path";
@@ -7692,7 +7692,7 @@ function ol(B9) {
   return qB;
 }
 function KB() {
-  return H("tengu_brass_condor_loupe", "hidden") === "summary"
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_brass_condor_loupe", "hidden") === "summary"
     ? "summary"
     : "hidden";
 }
@@ -7771,7 +7771,7 @@ function Ai(s8) {
           wi !== void 0 &&
           jE() &&
           (Am === void 0 ||
-            sr().bashTaskDeliveryOutcomes.get(Am) !== "no_host")),
+            getSessionStateStore().bashTaskDeliveryOutcomes.get(Am) !== "no_host")),
           (Nr[15] = Am),
           (Nr[16] = wi),
           (Nr[17] = nl));
@@ -8521,7 +8521,7 @@ function ck(KJ) {
     ZJ = a.CLAUDE_CODE_BRIEF,
     j1;
   if (qm[0] !== Y0 || qm[1] !== K0 || qm[2] !== V0)
-    ((j1 = Ox() && (ZJ || H("tengu_kairos_brief", !1)) && Y0 && !K0 && !V0),
+    ((j1 = Ox() && (ZJ || getFeatureValue_CACHED_MAY_BE_STALE("tengu_kairos_brief", !1)) && Y0 && !K0 && !V0),
       (qm[0] = Y0),
       (qm[1] = K0),
       (qm[2] = V0),
@@ -10782,12 +10782,12 @@ function ji(Eoe) {
   return Dt;
 }
 function Ej(l) {
-  if (aZe(l)) return Hn(l);
+  if (isWorkspaceMcpToolName(l)) return getSanitizedToolName(l);
   if (l.startsWith("mcp__")) return "mcp_tool";
   if (l.startsWith("skill__")) return "skill_tool";
   if (l.startsWith("eval_registered__")) return "eval_registered_tool";
   if (l.includes("__")) return "dynamic_tool";
-  return Hn(l);
+  return getSanitizedToolName(l);
 }
 function Ml(l, f, g) {
   if (typeof f !== "string" && typeof f !== "number" && typeof f !== "bigint")

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { CLAUDE_AI_INFERENCE_SCOPE } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
-import { mg, getAuthTokenSource, getConfiguredApiKeyHelper, hasStoredOAuthToken, hasOAuthScope, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isAnalyticsDisabled, getAuthTokenSource, getConfiguredApiKeyHelper, hasStoredOAuthToken, hasOAuthScope, getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { isPolicyAllowed, areComplianceTaintsSettled, getResponseFromCache } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
@@ -18,7 +18,7 @@ var t = "tengu_orford_ness",
   n = "2.1.193";
 function l() {
   try {
-    return H(t, !1);
+    return getFeatureValue_CACHED_MAY_BE_STALE(t, !1);
   } catch {
     return !1;
   }
@@ -44,7 +44,7 @@ function isErrorReportingAllowed() {
 }
 function shouldReportErrors() {
   if (process.env.DISABLE_ERROR_REPORTING) return !1;
-  if (mg()) return !1;
+  if (isAnalyticsDisabled()) return !1;
   if (getAPIProvider() !== "firstParty" || !isFirstPartyAnthropicBaseUrl()) return !1;
   if (
     !r.gte(

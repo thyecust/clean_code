@@ -14,7 +14,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { B1, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oy, ee, es, FZe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { shouldSendMcpServerTelemetry, getGlobalConfig, getCurrentProjectConfig, deleteCurrentProjectConfigFields } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, l, A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, mcpNameForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { writeToStdout } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
@@ -452,7 +452,7 @@ async function mcpRemoveHandler(h, s, v, a) {
     },
     i;
   try {
-    let M = oy(s, getSettingsMcpConfigByName(s) ?? void 0);
+    let M = shouldSendMcpServerTelemetry(s, getSettingsMcpConfigByName(s) ?? void 0);
     if (v.scope) {
       let g = normalizeMcpScope(v.scope);
       (await logEventAsync("tengu_mcp_delete", { name: mcpNameForAnalytics_GATE_EVALUATED(s, M), scope: fromEnum(g) }),
@@ -461,8 +461,8 @@ async function mcpRemoveHandler(h, s, v, a) {
         await y(),
         (i = g));
     } else {
-      let g = es(),
-        C = ee(),
+      let g = getCurrentProjectConfig(),
+        C = getGlobalConfig(),
         O = await readRawMcpJsonServersFromCwd().catch((c) => {
           if (c instanceof R || A(c) !== void 0) throw c;
           return {};
@@ -666,7 +666,7 @@ async function mcpListHandler(h, s, v) {
     await gracefulShutdown(0));
 }
 async function mcpGetHandler(h, s, v, a) {
-  (await logEventAsync("tengu_mcp_get", { name: mcpNameForAnalytics_GATE_EVALUATED(s, oy(s, getSettingsMcpConfigByName(s) ?? void 0)) }),
+  (await logEventAsync("tengu_mcp_get", { name: mcpNameForAnalytics_GATE_EVALUATED(s, shouldSendMcpServerTelemetry(s, getSettingsMcpConfigByName(s) ?? void 0)) }),
     await V0({ hasDynamicMcpConfig: !1 }));
   let {
       servers: f,
@@ -864,7 +864,7 @@ async function mcpAddFromDesktopHandler(h, s) {
 async function mcpResetChoicesHandler(h, s) {
   if (
     (await logEventAsync("tengu_mcp_reset_mcpjson_choices", {}),
-    !(await FZe(
+    !(await deleteCurrentProjectConfigFields(
       [
         "enabledMcpjsonServers",
         "disabledMcpjsonServers",

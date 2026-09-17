@@ -16,7 +16,7 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { getPublicModelDisplayName, qe, tt, ro, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getPublicModelDisplayName, BASH_TOOL_NAME, READ_TOOL_NAME, GREP_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { S1, xRt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { jn, nxt, eE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -80,18 +80,18 @@ function Oo(d, i) {
 function Fo(d, i, g) {
   let u = formatTokens(i);
   switch (d) {
-    case qe:
-    case Ut:
+    case BASH_TOOL_NAME:
+    case POWERSHELL_TOOL_NAME:
       return {
         severity: "warning",
         title: `${d} results using ${u} tokens (${g.toFixed(0)}%)`,
         detail:
-          d === Ut
+          d === POWERSHELL_TOOL_NAME
             ? "Pipe output through Select-Object -First/-Last or Select-String to reduce result size. Avoid Get-Content on large files \u2014 use Read with offset/limit instead."
             : "Pipe output through head, tail, or grep to reduce result size. Avoid cat on large files \u2014 use Read with offset/limit instead.",
         savingsTokens: Math.floor(i * 0.5),
       };
-    case tt:
+    case READ_TOOL_NAME:
       return {
         severity: "info",
         title: `Read results using ${u} tokens (${g.toFixed(0)}%)`,
@@ -99,7 +99,7 @@ function Fo(d, i, g) {
           "Use offset and limit parameters to read only the sections you need. Avoid re-reading entire files when you only need a few lines.",
         savingsTokens: Math.floor(i * 0.3),
       };
-    case ro:
+    case GREP_TOOL_NAME:
       return {
         severity: "info",
         title: `Grep results using ${u} tokens (${g.toFixed(0)}%)`,
@@ -128,7 +128,7 @@ function Fo(d, i, g) {
 }
 function $o(d, i) {
   if (!d.messageBreakdown) return;
-  let u = d.messageBreakdown.toolCallsByType.find((j) => j.name === tt);
+  let u = d.messageBreakdown.toolCallsByType.find((j) => j.name === READ_TOOL_NAME);
   if (!u) return;
   let f = u.callTokens + u.resultTokens,
     C = (f / d.rawMaxTokens) * 100,

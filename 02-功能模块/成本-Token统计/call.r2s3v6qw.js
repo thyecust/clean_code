@@ -12,7 +12,7 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { Aw, getOauthAccountInfo, getSubscriptionType, getRateLimitTier, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getOverageBillingOverride, getOauthAccountInfo, getSubscriptionType, getRateLimitTier, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -130,7 +130,7 @@ function Ge(bn) {
     ui;
   if (b[2] !== v.credentials)
     ((li = () => {
-      let Dt = Aw();
+      let Dt = getOverageBillingOverride();
       if (Dt) {
         (at(Dt.spendLimitCents), ye(Dt.spendLimitCents));
         return;
@@ -509,7 +509,7 @@ function zt(co) {
     Pi = getOauthAccountInfo()?.billingType === "usage_based",
     _o = Bt === "max" && fo === "default_claude_max_20x",
     Et = Bt === "team" || Bt === "enterprise",
-    go = H("tengu_jade_anvil_4", !1),
+    go = getFeatureValue_CACHED_MAY_BE_STALE("tengu_jade_anvil_4", !1),
     Ye = n.upgradePaths,
     Qt = DB(n.resetsAt !== void 0 ? n.resetsAt * 1000 : null),
     Ui;
@@ -538,7 +538,7 @@ function zt(co) {
   let xe = Ni,
     [yo, bo] = d(!1),
     Ai;
-  if (l[14] === MEMO_CACHE_SENTINEL) ((Ai = H(fWe, !1)), (l[14] = Ai));
+  if (l[14] === MEMO_CACHE_SENTINEL) ((Ai = getFeatureValue_CACHED_MAY_BE_STALE(fWe, !1)), (l[14] = Ai));
   else Ai = l[14];
   let Ro = Ai,
     Ii;

@@ -19,7 +19,7 @@ import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
-import { getMainLoopModel, qe, Bt, tt, Mn, co, ro, Wl, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMainLoopModel, BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { vo } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { FILE_STATE_MAX_ENTRIES, createFileStateCache } from "../MCP客户端/chunk-3kmsshb6.js";
 import { createDefaultToolPermissionContext, findToolByName, parseToolInput, getToolRemoteExecution, isBatchToolDefinition } from "../权限系统/chunk-qdy0h5k2.js";
@@ -57,7 +57,7 @@ import { noopTaskRegistry } from "../工具WebFetch-WebSearch/noop-task-registry
 import { BufferCoercingStdioServerTransport } from "../../01-核心基础设施/共享小工具-未细化/buffer-coercing-stdio-transport.js";
 import "../../01-核心基础设施/共享小工具-未细化/stdio-server-transport.js";
 import "../../01-核心基础设施/共享小工具-未细化/stdio-message-framing.js";
-var N = new Set([qe, tt, Bt, Mn, ro, co, Wl, Ut]),
+var N = new Set([BASH_TOOL_NAME, READ_TOOL_NAME, EDIT_TOOL_NAME, WRITE_TOOL_NAME, GREP_TOOL_NAME, GLOB_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME, POWERSHELL_TOOL_NAME]),
   k = REFUSED_TOOL_INPUT_FIELDS;
 function G(e, m) {
   if (e.properties === void 0 || m.length === 0) return e;

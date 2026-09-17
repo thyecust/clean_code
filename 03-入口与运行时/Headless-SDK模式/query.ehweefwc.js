@@ -15,7 +15,7 @@ import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-
 import { createAbortController } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { takeLastCodeUnits, isWellFormed } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { getClaudeConfigDir, parseProjectDirName } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { Ls, nq, gor } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { otelApiModule, redactSecretsInText, isCredentialInvalidationReason } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, J1, x_e, ge, l, A, Jr, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
@@ -298,7 +298,7 @@ class We {
       if (k) return;
       let T = g.write(E);
       if (((this.stderrTail += T), this.stderrTail.length > 2 * He))
-        this.stderrTail = takeLastCodeUnits(nq(this.stderrTail), He);
+        this.stderrTail = takeLastCodeUnits(redactSecretsInText(this.stderrTail), He);
       if (C) (x(T), this.options.stderr?.(T));
     }),
       f.stderr.on("error", (E) => {
@@ -548,7 +548,7 @@ class We {
             code: Jr(v),
           };
           ((this.exitError = J1(
-            Error(`Failed to spawn Claude Code process: ${nq(v.message)}`),
+            Error(`Failed to spawn Claude Code process: ${redactSecretsInText(v.message)}`),
             O,
           )),
             J1(v, O),
@@ -601,7 +601,7 @@ class We {
     return;
   }
   formatStderrTail() {
-    let e = takeLastCodeUnits(nq(this.stderrTail), He).trim();
+    let e = takeLastCodeUnits(redactSecretsInText(this.stderrTail), He).trim();
     return e ? `. stderr: ${e}` : "";
   }
   write(e) {
@@ -807,7 +807,7 @@ function vs(e) {
 }
 function Es(e, t) {
   let r = t ? "native binary" : "executable",
-    o = nq(e);
+    o = redactSecretsInText(e);
   if (gs(e))
     return {
       message: t
@@ -1298,7 +1298,7 @@ class _e {
           (await this.getOAuthToken({
             signal: t,
             onDecline: (d) => {
-              if (gor(d)) r = d;
+              if (isCredentialInvalidationReason(d)) r = d;
             },
           })) ?? null;
       return o === null && r !== void 0
@@ -2143,7 +2143,7 @@ class Qe {
     }
   }
 }
-var De = toESM(Ls(), 1);
+var De = toESM(otelApiModule(), 1);
 import {
   copyFile,
   readFile as Ns,

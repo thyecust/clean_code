@@ -16,7 +16,7 @@ import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { getOauthAccountInfo, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getOauthAccountInfo, saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getBridgeAccessToken, getBridgeAccessTokenAsync } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { getBridgeDisabledReason } from "./chunk-9estzwf5.js";
 import { ndt } from "./chunk-ga43tr2w.js";
@@ -192,7 +192,7 @@ function ze(_o) {
                 "[bridge:repl] Remote Control callout answered under a different account than it was asked for \u2014 not enabling",
               );
             if (Ae)
-              (Te(kr, g?.storageV5),
+              (saveGlobalConfig(kr, g?.storageV5),
                 logEvent("tengu_bridge_command", { action: S("connect") }));
             W((O) => {
               if (Ae) {

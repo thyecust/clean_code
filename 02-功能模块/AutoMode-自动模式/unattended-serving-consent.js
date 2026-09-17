@@ -14,7 +14,7 @@ import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱�
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { getSettingsForSource, getAllPolicyTierSettings, getDurablePolicyTierSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { H, od } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE, checkGate_CACHED_OR_BLOCKING } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isViolinWoodEnabled, isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { s, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { homedir, hostname } from "os";
@@ -28,14 +28,14 @@ function a(e) {
 var f = "tengu_violin_fret";
 async function w() {
   try {
-    return await od(f);
+    return await checkGate_CACHED_OR_BLOCKING(f);
   } catch {
     return !1;
   }
 }
 function C() {
   try {
-    return H(f, !1);
+    return getFeatureValue_CACHED_MAY_BE_STALE(f, !1);
   } catch {
     return !1;
   }

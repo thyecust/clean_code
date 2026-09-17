@@ -13,7 +13,7 @@ import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodePoints, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { isEgressAllowed } from "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
 import { getPlatformDisplayName } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
@@ -127,7 +127,7 @@ async function H(e, i, r) {
   if (s.rowPk)
     return (logFeatureOk("device_registry_register"), { deviceUUID: s.rowPk, priv: t });
   let c = createPublicKey(t).export({ type: "spki", format: "der" }).toString("base64"),
-    o = await ht
+    o = await httpClient
       .post(
         P,
         { display_name: E(i), platform: x(), public_key: c },

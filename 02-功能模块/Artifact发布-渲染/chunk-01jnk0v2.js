@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -76,7 +76,7 @@ import { lW, s, T, O, se, v, c, it, fe, X, k } from "../../00-第三方库/zod/z
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 function swe() {
   if (a.CLAUDE_CODE_REMOTE) return !1;
-  return a.CLAUDE_CODE_ARTIFACT_VERIFY ?? H("tengu_osier_pylon_trace", !1);
+  return a.CLAUDE_CODE_ARTIFACT_VERIFY ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_osier_pylon_trace", !1);
 }
 var Q = 65536;
 async function dcn(e, r, t) {
@@ -207,7 +207,7 @@ function Ee() {
 }
 function iwe() {
   if (a.CLAUDE_CODE_REMOTE || !Ee()) return !1;
-  return a.CLAUDE_CODE_ARTIFACT_PREVIEW ?? H("tengu_cobalt_plinth_aspen", !1);
+  return a.CLAUDE_CODE_ARTIFACT_PREVIEW ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_aspen", !1);
 }
 function N3n() {
   if (D === null)
@@ -294,15 +294,15 @@ function $3n(e) {
     : 'with `action: "write_db"`';
 }
 function awe() {
-  return a.CLAUDE_CODE_ARTIFACT_TYPES ?? H("tengu_cobalt_plinth_larch", !1);
+  return a.CLAUDE_CODE_ARTIFACT_TYPES ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_larch", !1);
 }
 var Le = "tengu_cobalt_plinth_hazel";
 function ke() {
-  return a.CLAUDE_CODE_ARTIFACT_TYPE_CLOUD_CREATE ?? H(Le, !1);
+  return a.CLAUDE_CODE_ARTIFACT_TYPE_CLOUD_CREATE ?? getFeatureValue_CACHED_MAY_BE_STALE(Le, !1);
 }
 var Ie = "tengu_cobalt_plinth_linden";
 function U() {
-  return (isAnthropicHostedEnvironment() || isByocEnvironment()) && H(Ie, !1) && bwn();
+  return (isAnthropicHostedEnvironment() || isByocEnvironment()) && getFeatureValue_CACHED_MAY_BE_STALE(Ie, !1) && bwn();
 }
 function U3n() {
   if (!a.CLAUDE_CODE_REMOTE) return !0;
@@ -575,7 +575,7 @@ function u$t(e, r) {
 }
 var Ye = "tengu_cobalt_plinth_rowan";
 function _cn() {
-  return a.CLAUDE_CODE_ARTIFACT_TYPE_CATALOG ?? H(Ye, !1);
+  return a.CLAUDE_CODE_ARTIFACT_TYPE_CATALOG ?? getFeatureValue_CACHED_MAY_BE_STALE(Ye, !1);
 }
 var ue = "anthropic";
 function Ve(e, r = !1) {

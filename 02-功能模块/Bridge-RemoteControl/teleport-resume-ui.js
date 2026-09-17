@@ -13,7 +13,7 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Iu, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { fetchCodeSessionsFromSessionsAPI, si } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { fetchCodeSessionsFromSessionsAPI, sanitizeSessionName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { truncateToWidth, formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { detectCurrentRepository } from "../Git-Worktree/git-repository-detection.js";
@@ -252,7 +252,7 @@ function ee({ onSelect: h, onCancel: a, isEmbedded: C = !1 }) {
                   L,
                 ],
               }),
-            truncateToWidth(si(f).replace(/\s+/g, " ").trim(), Ae),
+            truncateToWidth(sanitizeSessionName(f).replace(/\s+/g, " ").trim(), Ae),
           ],
         }),
         value: S,

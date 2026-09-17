@@ -10,7 +10,7 @@
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { VBe } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { splitPluginId, isOfficialMarketplace, isFirstPartyPlugin } from "./chunk-33bdfgmx.js";
 import { s, se, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var f = createLazyValue(() =>
@@ -29,7 +29,7 @@ function getOfficialPluginPromptOverrides(e) {
   if (!e.pluginSource) return;
   let { name: r, marketplace: i } = splitPluginId(e.pluginSource);
   if (!isOfficialMarketplace(i) && !isFirstPartyPlugin(r, i)) return;
-  let u = H("tengu_official_plugin_prompt_overrides", {}),
+  let u = getFeatureValue_CACHED_MAY_BE_STALE("tengu_official_plugin_prompt_overrides", {}),
     t = l().safeParse(u);
   if (!t.success) {
     n(

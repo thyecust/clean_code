@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 10 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { wCt, eRe, TCt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { registerDeviceHooksRequestSchema, registerDeviceHooksResponseSchema, uploadDeviceHookTemplateRequestSchema } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { z1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -130,7 +130,7 @@ function createDeviceHooksWorker(t) {
           outcome: "invalid",
           ...s,
         };
-      let r = wCt().safeParse(l.request);
+      let r = registerDeviceHooksRequestSchema().safeParse(l.request);
       if (!r.success)
         return {
           ok: !1,
@@ -176,7 +176,7 @@ function createDeviceHooksWorker(t) {
       let r = s.parsed,
         c = t.projectRoot(),
         d = t.cwd(),
-        i = eRe().safeParse({
+        i = registerDeviceHooksResponseSchema().safeParse({
           status: "unregistered",
           project_dir: c,
           cwd: d,
@@ -441,7 +441,7 @@ function createDeviceHooksWorker(t) {
           s("invalid"),
           { kind: "error", error: "invalid_upload: request larger than 400 KB" }
         );
-      let r = TCt().safeParse(l.request);
+      let r = uploadDeviceHookTemplateRequestSchema().safeParse(l.request);
       if (!r.success)
         return (
           s("invalid"),

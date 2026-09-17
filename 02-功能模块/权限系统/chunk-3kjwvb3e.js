@@ -21,7 +21,7 @@ import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j
 import { parseCronExpression, DEFAULT_CRON_JITTER_CONFIG, computeRecurringTaskFireTime } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { getLauncherConfigError } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
-import { g6 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { CRON_WORKLOAD_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { getDaemonJsonPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
 import { s, T, O, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -343,7 +343,7 @@ var runScheduledWorker = async (o, t, e, r, a) => {
           executableArgs: S.prefixArgs,
           abortController: k,
           stderr: (g) => e(`[${i.id}] ${g.trimEnd()}`),
-          workload: g6,
+          workload: CRON_WORKLOAD_NAME,
         },
       });
       for await (let g of w)

@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "./chunk-zqr5ctyf.js";
 function isSkillDoctorEnabled() {
-  return H("tengu_lantern_prism", !1) || a.CLAUDE_CODE_LANTERN_PRISM;
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_lantern_prism", !1) || a.CLAUDE_CODE_LANTERN_PRISM;
 }
 function isPluginEvalEnabled() {
-  return H("tengu_walnut_spire", !1) || a.CLAUDE_CODE_WALNUT_SPIRE;
+  return getFeatureValue_CACHED_MAY_BE_STALE("tengu_walnut_spire", !1) || a.CLAUDE_CODE_WALNUT_SPIRE;
 }
 function getPluginEvalAvailabilityNotice() {
   if (isPluginEvalEnabled())

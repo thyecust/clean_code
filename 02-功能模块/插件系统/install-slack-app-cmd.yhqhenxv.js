@@ -10,13 +10,13 @@
 
 // [preload stripped] 原本在此预载 76 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 var o = "https://slack.com/marketplace/A08SF47R6P4-claude";
 async function p(e, a) {
   if (
     (logEvent("tengu_install_slack_app_clicked", {}),
-    await Te(
+    await saveGlobalConfig(
       (t) => ({
         ...t,
         slackAppInstallCount: (t.slackAppInstallCount ?? 0) + 1,

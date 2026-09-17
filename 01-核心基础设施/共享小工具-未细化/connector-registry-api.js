@@ -11,7 +11,7 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "./lazy-value.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ht } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { httpClient } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, O, v, c, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var getConnectorSchema = createLazyValue(() => it({ name: s().optional() })),
   g = createLazyValue(() =>
@@ -35,7 +35,7 @@ var p = 15000,
   _ = "/api/oauth/organizations/:orgUUID/mcp/connectors/suggest",
   S = "/api/oauth/organizations/:orgUUID/mcp/connectors/list";
 async function d(e, r, a, t) {
-  let o = await ht.post(e, r, {
+  let o = await httpClient.post(e, r, {
     auth: "teleport-org",
     timeout: p,
     signal: a,

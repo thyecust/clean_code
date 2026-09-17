@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 2 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { vvn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { BASE64_REGEX } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getHookTemplateById } from "./hook-template-catalog.js";
 import { createHash } from "crypto";
 function createDeviceHookTemplateStore(d = { byId: getHookTemplateById }) {
@@ -29,7 +29,7 @@ function createDeviceHookTemplateStore(d = { byId: getHookTemplateById }) {
           kind: "refused",
           error: "template_refused: version_mismatch",
         };
-      if (!vvn.test(s) || s.length % 4 === 1)
+      if (!BASE64_REGEX.test(s) || s.length % 4 === 1)
         return { ok: !1, kind: "invalid", error: "invalid_upload: bad_base64" };
       let a = Buffer.from(s, "base64");
       if (a.length > o.maxBytes)

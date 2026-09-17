@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isCrossSessionMessagingEnabled } from "./chunk-rfb3s38d.js";
 var MAX_TRANSFER_SIZE_BYTES = 31457280,
   MAX_TRANSFER_FILE_COUNT = 16;
 function isSendFileEnabled() {
-  return isCrossSessionMessagingEnabled() && H("tengu_send_file", !1);
+  return isCrossSessionMessagingEnabled() && getFeatureValue_CACHED_MAY_BE_STALE("tengu_send_file", !1);
 }
 var FILE_TRANSFER_ERROR_MESSAGE = `could not be read, is not a regular file, or exceeds the ${MAX_TRANSFER_SIZE_BYTES / 1048576} MiB transfer limit`,
   RECEIVED_FILES_MAX_AGE_DAYS = 1;

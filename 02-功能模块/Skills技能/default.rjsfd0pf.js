@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 70 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { H, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -364,7 +364,7 @@ If the tool returns 'unavailable' at any point, skip that call and use the manua
     source: "builtin",
     disableModelInvocation: !0,
     async getPromptForCommand(u, a) {
-      let t = H("tengu_flint_harbor_prompt", {}),
+      let t = getFeatureValue_CACHED_MAY_BE_STALE("tengu_flint_harbor_prompt", {}),
         m = typeof t?.prompt === "string" ? t.prompt : K,
         h = typeof t?.guideTemplate === "string" ? t.guideTemplate : Y,
         d =
@@ -372,7 +372,7 @@ If the tool returns 'unavailable' at any point, skip that call and use the manua
             ? Math.min(Math.max(Math.floor(t.windowDays), 1), 365)
             : G;
       (logEvent("tengu_team_onboarding_invoked", { window_days: d }),
-        await Te(
+        await saveGlobalConfig(
           (s) => ({ ...s, teamOnboardingLastUsedAt: Date.now() }),
           a.storageV5,
         ));

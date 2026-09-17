@@ -12,8 +12,8 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  ht,
-  rge,
+  httpClient,
+  fetchOAuthProfileWithToken,
   shouldUseClaudeAIAuth,
   fetchAndStoreUserRoles,
   createAndStoreApiKey,
@@ -26,8 +26,8 @@ import {
   sameOwnerAccount,
   getOauthAccountInfo,
   getAuthenticatedAccountInfo,
-  Te,
-  ee,
+  saveGlobalConfig,
+  getGlobalConfig,
 } from "./认证-OAuth登录.419zdfz3.js";
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -37,11 +37,11 @@ import { performLogout, clearAuthRelatedCaches } from "./chunk-9g86t9bp.js";
 import { fetchBootstrapData } from "../上下文压缩-Compact/chunk-npckj9cm.js";
 async function m(e, o) {
   try {
-    if (ee().claudeCodeFirstTokenDate !== void 0) {
+    if (getGlobalConfig().claudeCodeFirstTokenDate !== void 0) {
       logFeatureOk("api_first_token_date_fetch");
       return;
     }
-    let s = await ht.get("/api/organization/claude_code_first_token_date", {
+    let s = await httpClient.get("/api/organization/claude_code_first_token_date", {
       auth: "async",
       timeout: 1e4,
       credentials: o,
@@ -64,7 +64,7 @@ async function m(e, o) {
         return;
       }
     }
-    (await Te((c) => ({ ...c, claudeCodeFirstTokenDate: r }), e),
+    (await saveGlobalConfig((c) => ({ ...c, claudeCodeFirstTokenDate: r }), e),
       logFeatureOk("api_first_token_date_fetch"));
   } catch (t) {
     if (cc(t))
@@ -118,7 +118,7 @@ async function applyOAuthLoginIdentity(e, { storageV5: o, credentials: t }) {
     credentials: t,
   }),
     p8(null));
-  let a = e.profile ?? (await rge(e.accessToken));
+  let a = e.profile ?? (await fetchOAuthProfileWithToken(e.accessToken));
   if (a?.account && a.organization)
     storeOAuthAccountInfo(
       {

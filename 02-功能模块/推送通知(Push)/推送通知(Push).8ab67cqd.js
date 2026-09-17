@@ -13,7 +13,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ht, isClaudeAISubscriber, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { httpClient, isClaudeAISubscriber, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { getInitialSettings, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
@@ -51,7 +51,7 @@ function subscribePushPreferencesHydrated(e) {
 }
 function P() {
   let e = getInitialSettings(),
-    t = ee();
+    t = getGlobalConfig();
   return {
     agentPushNotifEnabled: e.agentPushNotifEnabled ?? t.agentPushNotifEnabled,
     inputNeededNotifEnabled:
@@ -65,7 +65,7 @@ function h() {
 async function E() {
   if (!h()) return { ok: !1, reason: "no_auth" };
   try {
-    let e = await ht.get(N, { timeout: b });
+    let e = await httpClient.get(N, { timeout: b });
     if (!e.ok) return { ok: !1, reason: "fetch_failed" };
     let t = _().safeParse(e.data);
     if (!t.success)
@@ -87,7 +87,7 @@ async function E() {
 async function k(e) {
   if (!h()) return;
   try {
-    if (!(await ht.patch(N, e, { timeout: b })).ok) {
+    if (!(await httpClient.patch(N, e, { timeout: b })).ok) {
       logFeatureSad("notif_prefs_patch", "no_auth");
       return;
     }

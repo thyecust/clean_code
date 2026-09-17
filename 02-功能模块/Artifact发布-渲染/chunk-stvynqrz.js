@@ -17,7 +17,7 @@ import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, Io, cr, nt, Cu } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { G5, KU } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
@@ -513,7 +513,7 @@ async function N(e, r) {
     p = async () =>
       v
         ? (await aqt("POST", u, t, C, wN)).res
-        : ht.post(u, t, {
+        : httpClient.post(u, t, {
             ...C,
             host: "frame",
             auth: "claude-ai-oauth",
@@ -937,7 +937,7 @@ async function J3n(e, r, s, u) {
     p;
   try {
     if (o) {
-      let w = await ht.get(j1e(e.slug, d), {
+      let w = await httpClient.get(j1e(e.slug, d), {
         host: "ccr-gateway",
         auth: "session-jwt",
         headers: W1e(l),

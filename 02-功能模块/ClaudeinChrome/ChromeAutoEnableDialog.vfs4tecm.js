@@ -12,7 +12,7 @@
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
@@ -69,7 +69,7 @@ function ChromeAutoEnableDialog(Co) {
       }
       if (
         ((Z.current = !0),
-        Te(
+        saveGlobalConfig(
           (Do) => ({
             ...Do,
             claudeInChromeDefaultEnabled: m,

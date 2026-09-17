@@ -13,22 +13,22 @@ import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS, CLAUDE_AI_INFERENCE_SCOPE } from ".
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  lm,
+  getErrorTelemetryFields,
   revokeOAuthToken,
   fetchAndStoreUserRoles,
-  FKt,
-  gsr,
-  ZCt,
-  fRe,
-  OUe,
-  mRe,
-  DUe,
-  gRe,
-  hsr,
-  mRn,
-  gRn,
-  ysr,
-  $Kt,
+  normalizeGatewayUrl,
+  assertGatewayHostIsPrivate,
+  probeTlsFingerprint,
+  GATEWAY_PIN_STORE_SYMLINK_ERROR,
+  GATEWAY_PIN_STORE_UNREADABLE_ERROR,
+  readGatewayTrustPin,
+  extractFingerprintMismatch,
+  createPinnedHttpsAgent,
+  persistGatewayTlsPin,
+  getGatewayTokenResponseSchema,
+  getOAuthErrorCode,
+  persistGatewayCredential,
+  getPolicyForcedLoginConfig,
   getConfiguredAwsAuthRefresh,
   isAwsAuthRefreshFromProjectSettings,
   refreshAwsAuth,
@@ -39,8 +39,8 @@ import {
   getForcedLoginMethod,
   gatewaySignInScreenConfigured,
   policyUnreadableForEnforcement,
-  Bo,
-  Te,
+  checkHasTrustDialogAccepted,
+  saveGlobalConfig,
 } from "./认证-OAuth登录.419zdfz3.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
@@ -210,11 +210,11 @@ var uo = "urn:ietf:params:oauth:grant-type:device_code",
     "The gateway's TLS certificate changed during sign-in: it no longer matches the one you trusted. Aborting without storing credentials; start the sign-in again to review the new certificate.";
 function Ve(s) {
   let c = l(s);
-  if (c.includes(fRe))
+  if (c.includes(GATEWAY_PIN_STORE_SYMLINK_ERROR))
     return "Claude Code's credentials file (where a gateway's TLS pin is kept) is a symlink, which it does not follow. Replace the link with the file itself and try again.";
-  if (c.includes(OUe))
+  if (c.includes(GATEWAY_PIN_STORE_UNREADABLE_ERROR))
     return "Claude Code's credentials file (where a gateway's TLS pin is kept) could not be read. Try again; if it keeps failing, check the file.";
-  if (DUe(s) !== void 0) return _t;
+  if (extractFingerprintMismatch(s) !== void 0) return _t;
   return c;
 }
 function mo(s) {
@@ -282,8 +282,8 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
     let G = ++R.current;
     z({ state: "connecting" });
     try {
-      let v = FKt(j);
-      if ((await gsr(v), G !== R.current)) return;
+      let v = normalizeGatewayUrl(j);
+      if ((await assertGatewayHostIsPrivate(v), G !== R.current)) return;
       let Y = await externalHttp.get(`${v}/.well-known/oauth-authorization-server`, {
         headers: { "User-Agent": getClientUserAgent() },
         timeout: 1e4,
@@ -299,9 +299,9 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
           ),
           tokenEndpoint: ht(v, oe?.token_endpoint, "/oauth/token"),
         },
-        { hostname: V, fingerprint: w } = await ZCt(v);
+        { hostname: V, fingerprint: w } = await probeTlsFingerprint(v);
       if (G !== R.current) return;
-      let B = await mRe(V, D);
+      let B = await readGatewayTrustPin(V, D);
       if (G !== R.current) return;
       if (B === w) await fe(v, K, w);
       else
@@ -327,7 +327,7 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
     let Y = ++R.current;
     z({ state: "connecting" });
     try {
-      let P = gRe(v, G.deviceAuthorizationEndpoint),
+      let P = createPinnedHttpsAgent(v, G.deviceAuthorizationEndpoint),
         { data: oe } = await externalHttp.post(
           G.deviceAuthorizationEndpoint,
           new URLSearchParams({ surface: fo }).toString(),
@@ -366,7 +366,7 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
     while (P === R.current) {
       if ((await sleep(K * 1000), P !== R.current)) return;
       try {
-        let V = gRe(oe, G),
+        let V = createPinnedHttpsAgent(oe, G),
           { data: w } = await externalHttp.post(
             G,
             new URLSearchParams({ grant_type: uo, device_code: v }).toString(),
@@ -381,14 +381,14 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
             },
           );
         if (P !== R.current) return;
-        let B = mRn().safeParse(w);
+        let B = getGatewayTokenResponseSchema().safeParse(w);
         if (!B.success)
           throw Error("gateway token endpoint returned malformed response");
         await te(j, G, B.data, P);
         return;
       } catch (V) {
         if (P !== R.current) return;
-        let w = gRn(V);
+        let w = getOAuthErrorCode(V);
         if (w === "authorization_pending") continue;
         if (w === "slow_down") {
           K += 5;
@@ -419,16 +419,16 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
         tokenEndpoint: G,
         ...(v.refresh_token && { idpRefreshToken: v.refresh_token }),
       },
-      { hostname: oe, fingerprint: K } = await ZCt(j);
+      { hostname: oe, fingerprint: K } = await probeTlsFingerprint(j);
     if (Y !== R.current) return;
-    let V = await mRe(oe, D);
+    let V = await readGatewayTrustPin(oe, D);
     if (Y !== R.current) return;
     if (V !== K) {
       z({ state: "error", message: _t });
       return;
     }
     try {
-      await ysr(P, D);
+      await persistGatewayCredential(P, D);
     } catch (w) {
       if (Y !== R.current) return;
       let B = l(w);
@@ -540,7 +540,7 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
             focus: "cancel",
             onConfirm: () => {
               let j = R.current;
-              hsr(T.hostname, T.fingerprint, D)
+              persistGatewayTlsPin(T.hostname, T.fingerprint, D)
                 .then(() => {
                   if (j !== R.current) return;
                   return fe(T.url, T.endpoints, T.fingerprint);
@@ -716,7 +716,7 @@ function V8({
     de = (R ? Sv : 0) + ee,
     te = getSettings_DEPRECATED() || {},
     I = getForcedLoginMethod() === "gateway",
-    { forceLoginGatewayUrl: j } = $Kt(),
+    { forceLoginGatewayUrl: j } = getPolicyForcedLoginConfig(),
     G = te.forceLoginMethod === "gateway" && !I ? void 0 : te.forceLoginMethod,
     v = z ?? G,
     Y = gatewaySignInScreenConfigured(),
@@ -801,7 +801,7 @@ function V8({
     () => {
       if (at.current) return;
       ((at.current = !0),
-        Te(
+        saveGlobalConfig(
           (q) => ({
             ...q,
             hasCompletedOnboarding: !0,
@@ -950,7 +950,7 @@ function V8({
                     : { state: "idle" },
               }),
               logEvent("tengu_oauth_token_exchange_error", {
-                ...lm(L),
+                ...getErrorTelemetryFields(L),
                 ssl_error: lt !== null,
               }),
               L
@@ -991,7 +991,7 @@ function V8({
           message: ne ?? L,
           toRetry: { state: D === "setup-token" ? "ready_to_start" : "idle" },
         }),
-          logEvent("tengu_oauth_error", { ...lm(X), ssl_error: ne !== null }));
+          logEvent("tengu_oauth_error", { ...getErrorTelemetryFields(X), ssl_error: ne !== null }));
       }
     }, [he, ge, et, Ie, D, T, Me, K, V, c, U, Q, it]),
     Ge = C(!1);
@@ -1172,7 +1172,7 @@ function Je(tn) {
         Re(!1);
         return;
       }
-      if (isAwsAuthRefreshFromProjectSettings() && !Bo()) {
+      if (isAwsAuthRefreshFromProjectSettings() && !checkHasTrustDialogAccepted()) {
         Re(!1);
         return;
       }

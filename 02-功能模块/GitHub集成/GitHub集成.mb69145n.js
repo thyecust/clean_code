@@ -19,7 +19,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { isUnattendedBgSession, lm, isAnthropicAuthEnabled, getAnthropicApiKeySafe, validateForceLoginMethod, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isUnattendedBgSession, getErrorTelemetryFields, isAnthropicAuthEnabled, getAnthropicApiKeySafe, validateForceLoginMethod, saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
@@ -1495,7 +1495,7 @@ function Ut(yu) {
           n(`OAuth flow failed in install-github-app: ${nn}`, {
             level: "error",
           }),
-          logEvent("tengu_oauth_error", { ...lm(rn) }));
+          logEvent("tengu_oauth_error", { ...getErrorTelemetryFields(rn) }));
       }
     }),
       (le[8] = Nt),
@@ -2320,7 +2320,7 @@ Need help? Common issues:
       selected_claude_review_workflow: v.includes("claude-review"),
       ...A,
     }),
-      Te(
+      saveGlobalConfig(
         (T) => ({
           ...T,
           githubActionSetupCount: (T.githubActionSetupCount ?? 0) + 1,
