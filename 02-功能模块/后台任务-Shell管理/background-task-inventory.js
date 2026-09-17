@@ -14,7 +14,7 @@ import { truncate, formatDuration } from "../../01-核心基础设施/核心工�
 import { getSessionProjectDir } from "../MCP客户端/mcp-task-metadata.js";
 import { isLocalBashTask, TASK_TYPE_LABELS, isLiveBackgroundTask, isIdleTeammateTask, isTaskAutoReactArmed, isMonitorTaskLeaseLive } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { parseCronExpression, getNextCronFireDate, formatCronSchedule } from "./scheduled-tasks.js";
-import { gNe } from "./chunk-7wsy8vxb.js";
+import { getInFlightSnapshot } from "./chunk-7wsy8vxb.js";
 import { formatBackgroundTaskSummary } from "../Teammates团队/background-task-summary.js";
 import { getAutoReactWiredSlugs, getBootingAutoReactArmSlugs, hasArmedAutoReactSupervisor } from "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -60,7 +60,7 @@ var b = {
   mcp: "MCP task",
 };
 function buildInFlightTaskItems() {
-  let { items: e, kinds: o } = gNe(),
+  let { items: e, kinds: o } = getInFlightSnapshot(),
     n = [];
   for (let t of e) {
     if (t.kind === "todo" || t.doneAt !== void 0) continue;
@@ -155,7 +155,7 @@ function summarizeAdoptableTasks(e, o) {
   return { count: i, kinds: s, summary: u.filter(Boolean).join(", ") };
 }
 function formatDetachedBackgroundMessage() {
-  let { tasks: e } = gNe();
+  let { tasks: e } = getInFlightSnapshot();
   if (e === 0) return;
   return `Detached \u2014 ${e} ${pluralize(e, "task")} still running. Run \`claude agents\` to see your background sessions.`;
 }

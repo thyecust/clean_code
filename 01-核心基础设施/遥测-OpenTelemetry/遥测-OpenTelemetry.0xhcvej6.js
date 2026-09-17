@@ -261,7 +261,7 @@ var Be = commonJS(function (Ce) {
   }
   Ce.createOtlpNetworkExportDelegate = ei;
 });
-var pO = commonJS(function (Z) {
+var otlpExporterBaseModule = commonJS(function (Z) {
   Object.defineProperty(Z, "__esModule", { value: !0 });
   Z.createOtlpNetworkExportDelegate =
     Z.CompressionAlgorithm =
@@ -312,7 +312,7 @@ var pO = commonJS(function (Z) {
     },
   });
 });
-var jnn = commonJS(function (cc, He) {
+var createAsPromise = commonJS(function (cc, He) {
   He.exports = li;
   function li(l, u) {
     var f = Array(arguments.length - 1),
@@ -683,7 +683,7 @@ var tr = commonJS(function (pc, Qe) {
     return ((l[u] << 24) | (l[u + 1] << 16) | (l[u + 2] << 8) | l[u + 3]) >>> 0;
   }
 });
-var zDt = commonJS(function (ft, Lt) {
+var longModule = commonJS(function (ft, Lt) {
   (function (l, u) {
     function f(d) {
       return d.default || d;
@@ -1325,7 +1325,7 @@ var rr = commonJS(function (sc, er) {
     try {
       var u =
         l === "long"
-          ? zDt()
+          ? longModule()
           : l === "buffer"
             ? importMetaRequire("buffer")
             : l === "fs"
@@ -1421,7 +1421,7 @@ var ur = commonJS(function (hc, ir) {
 });
 var cr = commonJS(function (mc, lr) {
   lr.exports = R;
-  var pt = See();
+  var pt = protobufUtilModule();
   function R(l, u) {
     ((this.lo = l >>> 0), (this.hi = u >>> 0));
   }
@@ -1539,9 +1539,9 @@ var cr = commonJS(function (mc, lr) {
         : 10;
   };
 });
-var See = commonJS(function (Dt) {
+var protobufUtilModule = commonJS(function (Dt) {
   var x = Dt;
-  x.asPromise = jnn();
+  x.asPromise = createAsPromise();
   x.base64 = ze();
   x.EventEmitter = Ge();
   x.float = tr();
@@ -1717,9 +1717,9 @@ var See = commonJS(function (Dt) {
         }));
   };
 });
-var VDt = commonJS(function (bc, yr) {
+var protobufWriterModule = commonJS(function (bc, yr) {
   yr.exports = T;
-  var F = See(),
+  var F = protobufUtilModule(),
     Mt,
     { LongBits: xt, base64: pr, utf8: sr } = F;
   function st(l, u, f) {
@@ -1896,9 +1896,9 @@ var VDt = commonJS(function (bc, yr) {
 });
 var vr = commonJS(function (Oc, mr) {
   mr.exports = J;
-  var hr = VDt();
+  var hr = protobufWriterModule();
   (J.prototype = Object.create(hr.prototype)).constructor = J;
-  var tt = See();
+  var tt = protobufUtilModule();
   function J() {
     hr.call(this);
   }
@@ -1934,9 +1934,9 @@ var vr = commonJS(function (Oc, mr) {
   };
   J._configure();
 });
-var KDt = commonJS(function (xc, gr) {
+var protobufReaderModule = commonJS(function (xc, gr) {
   gr.exports = U;
-  var K = See(),
+  var K = protobufUtilModule(),
     Kt,
     { LongBits: xr, utf8: hi } = K;
   function z(l, u) {
@@ -2158,9 +2158,9 @@ var KDt = commonJS(function (xc, gr) {
 });
 var Er = commonJS(function (Sc, wr) {
   wr.exports = ot;
-  var Tr = KDt();
+  var Tr = protobufReaderModule();
   (ot.prototype = Object.create(Tr.prototype)).constructor = ot;
-  var Nr = See();
+  var Nr = protobufUtilModule();
   function ot(l) {
     Tr.call(this, l);
   }
@@ -2184,7 +2184,7 @@ var Er = commonJS(function (Sc, wr) {
 });
 var Ur = commonJS(function (gc, Pr) {
   Pr.exports = dt;
-  var jt = See();
+  var jt = protobufUtilModule();
   (dt.prototype = Object.create(jt.EventEmitter.prototype)).constructor = dt;
   function dt(l, u, f) {
     if (typeof l !== "function") throw TypeError("rpcImpl must be a function");
@@ -2238,23 +2238,23 @@ var Ur = commonJS(function (gc, Pr) {
     return this;
   };
 });
-var Wnn = commonJS(function (Ir) {
+var protobufRpcModule = commonJS(function (Ir) {
   var mi = Ir;
   mi.Service = Ur();
 });
-var Gnn = commonJS(function (Tc, _r) {
+var protobufRootsModule = commonJS(function (Tc, _r) {
   _r.exports = {};
 });
-var qnn = commonJS(function (Lr) {
+var protobufMinimalModule = commonJS(function (Lr) {
   var C = Lr;
   C.build = "minimal";
-  C.Writer = VDt();
+  C.Writer = protobufWriterModule();
   C.BufferWriter = vr();
-  C.Reader = KDt();
+  C.Reader = protobufReaderModule();
   C.BufferReader = Er();
-  C.util = See();
-  C.rpc = Wnn();
-  C.roots = Gnn();
+  C.util = protobufUtilModule();
+  C.rpc = protobufRpcModule();
+  C.roots = protobufRootsModule();
   C.configure = Ar;
   function Ar() {
     (C.util._configure(),
@@ -2265,7 +2265,7 @@ var qnn = commonJS(function (Lr) {
 });
 var gt = commonJS(function (Rr, kr) {
   Object.defineProperty(Rr, "__esModule", { value: !0 });
-  var S = qnn(),
+  var S = protobufMinimalModule(),
     { Reader: h, Writer: g, util: p } = S,
     a = S.roots.default || (S.roots.default = {});
   a.opentelemetry = (function () {
@@ -13803,7 +13803,7 @@ var qn = commonJS(function (ie) {
     },
   });
 });
-var tI = commonJS(function (et) {
+var otlpTransformerModule = commonJS(function (et) {
   Object.defineProperty(et, "__esModule", { value: !0 });
   et.JsonTraceSerializer =
     et.JsonMetricsSerializer =
@@ -14328,7 +14328,7 @@ var Vo = commonJS(function (Mo) {
   Mo.convertLegacyHttpOptions = void 0;
   var Ml = otelApiModule(),
     Do = Et(),
-    Cl = mF(),
+    Cl = otlpHttpExporterBaseModule(),
     Vl = Ao(),
     Bl = ko();
   function ql(l) {
@@ -14356,7 +14356,7 @@ var Vo = commonJS(function (Mo) {
   }
   Mo.convertLegacyHttpOptions = Hl;
 });
-var mF = commonJS(function (ct) {
+var otlpHttpExporterBaseModule = commonJS(function (ct) {
   Object.defineProperty(ct, "__esModule", { value: !0 });
   ct.convertLegacyHttpOptions =
     ct.getSharedConfigurationFromEnvironment =
@@ -14392,4 +14392,4 @@ var mF = commonJS(function (ct) {
     },
   });
 });
-export { pO, jnn, zDt, See, VDt, KDt, Wnn, Gnn, qnn, tI, mF };
+export { otlpExporterBaseModule, createAsPromise, longModule, protobufUtilModule, protobufWriterModule, protobufReaderModule, protobufRpcModule, protobufRootsModule, protobufMinimalModule, otlpTransformerModule, otlpHttpExporterBaseModule };

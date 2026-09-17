@@ -452,7 +452,7 @@ import {
   isAdvisorToolEnabled,
   baseModelSupportsAdvisor,
   isValidAdvisorModel,
-  DF,
+  isAdvisorModelPendingCreditsConsent,
   getAdvisorCreditsNotice,
   isAdvisorCapableForBaseModel,
   getConfiguredAdvisorModel,
@@ -504,7 +504,7 @@ import {
   mergeKeyedRowsPreferFirst,
   mergeStringListsExcluding,
   parseValidRows,
-  tBt,
+  mergeRowsTrackingAttribution,
   omitKeys,
   readFileTextOrNull,
   parseJsonWithSchema,
@@ -650,7 +650,7 @@ import {
   createToolUseSummaryMessage,
   hasDisplayableContent,
   buildResultDiagnostics,
-  s5n,
+  resolveAutoCompactWindowSetting,
   emitAutoReactStopNotification,
   drainAutoReactNotifications,
   checkUnseenTeamArtifacts,
@@ -6475,7 +6475,7 @@ async function xh(w, I, O) {
     }
     for (let He of on) if (await dn(He)) (on.delete(He), $n.add(He));
     if ($n.size > 0 || Kt.size > 0) te = !0;
-    let $t = tBt(
+    let $t = mergeRowsTrackingAttribution(
       We?.skills ?? [],
       [...Nt, ...Ye.flatMap(({ prev: He }) => He ?? [])],
       (He) => He.skillId,
@@ -13735,7 +13735,7 @@ ${Le}`);
   }
   let It = I.disableSlashCommands || !1;
   HLn(It);
-  let cn = s5n(I.autocompact, getInitialSettings().autoCompactWindow),
+  let cn = resolveAutoCompactWindowSetting(I.autocompact, getInitialSettings().autoCompactWindow),
     ln = isWorktreeModeEnabled() ? I.worktree : void 0,
     et = typeof ln === "string" ? ln : void 0,
     tt = ln !== void 0,
@@ -14779,7 +14779,7 @@ ${so}`
       }
       let Ve = er(parseUserSpecifiedModel(Le));
       if (!isValidAdvisorModel(Ve)) {
-        let st = DF(Ve),
+        let st = isAdvisorModelPendingCreditsConsent(Ve),
           Wt = st
             ? `${getAdvisorCreditsNotice(Ve)} Run /model fable${fn ? " in an interactive session" : ""} to review and enable.`
             : `Error: The model "${Le}" cannot be used as an advisor.`;

@@ -32,7 +32,7 @@ import { getCommandName, sanitizeForDisplay, estimateSkillTokenCount, clearComma
 import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
+import { useVimModeInput, SearchInput } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { NIt, iye } from "../插件系统/chunk-jwm9gdkd.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
@@ -335,7 +335,7 @@ function Ae(Es) {
     cursorOffset: co,
     handleKeyDown: mo,
     handlePaste: uo,
-  } = jp(pt);
+  } = useVimModeInput(pt);
   useGlobalExitKeybinding();
   let po;
   bb1: {
@@ -591,7 +591,7 @@ function Ae(Es) {
   else Q = i[61];
   let W;
   if (i[62] !== v || i[63] !== ao || i[64] !== co || i[65] !== u)
-    ((W = e(Xd, {
+    ((W = e(SearchInput, {
       query: u,
       isFocused: v,
       isTerminalFocused: ao,

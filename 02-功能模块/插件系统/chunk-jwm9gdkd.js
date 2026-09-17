@@ -72,7 +72,7 @@ import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/c
 import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { dd } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { useFocusTrap } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
@@ -182,7 +182,7 @@ import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具
 import { getPluginEditableScopes, editableScopeOf } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
-import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
+import { useVimModeInput, SearchInput } from "../Vim模式/Vim模式.nnewe0gf.js";
 import {
   QPt,
   z8,
@@ -2346,7 +2346,7 @@ function Ka({
       setCursorOffset: ae,
       handleKeyDown: Re,
       handlePaste: Mt,
-    } = jp({ isActive: se && xe && !b, onExit: tt, onExitUp: tt }),
+    } = useVimModeInput({ isActive: se && xe && !b, onExit: tt, onExitUp: tt }),
     Lt = xe && pt !== "";
   (E(() => {
     A(Lt);
@@ -2972,7 +2972,7 @@ function cc({
             }),
         ],
       }),
-      e(o, { marginBottom: 1, children: e(Xd, { ...pe }) }),
+      e(o, { marginBottom: 1, children: e(SearchInput, { ...pe }) }),
       Rt.length === 0 &&
         Be &&
         e(o, {
@@ -3505,7 +3505,7 @@ function dc({
             }),
         ],
       }),
-      e(o, { marginBottom: 1, children: e(Xd, { ...Be }) }),
+      e(o, { marginBottom: 1, children: e(SearchInput, { ...Be }) }),
       yn &&
         e(o, {
           marginBottom: 1,
@@ -5219,7 +5219,7 @@ function hm(bE) {
       (Qo[16] = pn.cursor),
       (Qo[17] = Jk));
   else Jk = Qo[17];
-  if ((E(Yk, Jk), dd(za, !Tc), Go === 0)) {
+  if ((E(Yk, Jk), useFocusTrap(za, !Tc), Go === 0)) {
     let qr;
     if (Qo[18] !== Pc)
       ((qr = Pc && e(t, { dimColor: !0, children: Pc })),
@@ -8465,7 +8465,7 @@ function pu({
       setCursorOffset: nt,
       handleKeyDown: at,
       handlePaste: Be,
-    } = jp({ isActive: ae === "plugin-list" && Fe, onExit: xe, onExitUp: xe }),
+    } = useVimModeInput({ isActive: ae === "plugin-list" && Fe, onExit: xe, onExitUp: xe }),
     Ct = Fe && Mt !== "";
   (E(() => {
     b(Ct);
@@ -10510,7 +10510,7 @@ function pu({
     children: [
       e(o, {
         marginBottom: 1,
-        children: e(Xd, {
+        children: e(SearchInput, {
           query: Mt,
           isFocused: Fe,
           isTerminalFocused: we,

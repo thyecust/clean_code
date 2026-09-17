@@ -11,7 +11,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { K, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { OSt } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { preclassifyStatusFromMarkers } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCanonicalSocketPath } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -343,7 +343,7 @@ function ee() {
   if (e.trim().length === 0) return;
   let i;
   try {
-    i = OSt(e)?.detail;
+    i = preclassifyStatusFromMarkers(e)?.detail;
   } catch {
     i = void 0;
   }

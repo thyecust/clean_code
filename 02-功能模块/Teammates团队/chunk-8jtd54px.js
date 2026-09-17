@@ -62,9 +62,9 @@ import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { TASK_CREATE_TOOL_NAME, TASK_GET_TOOL_NAME, TASK_UPDATE_TOOL_NAME } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import {
-  loe,
-  RC,
-  RZn,
+  updateTask,
+  readAllTasks,
+  claimTask,
   readMailbox,
   writeToMailbox,
   markSingleMessageAsRead,
@@ -88,7 +88,7 @@ import {
 import { evictTaskOutput } from "../后台任务-Shell管理/chunk-x3txegas.js";
 import { removeMemberByAgentId } from "./team-file-store.js";
 import { hbt } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { Pqe, Uqe, Bqe, eWn, Tbe, Kdt } from "../权限系统/chunk-jsd70b22.js";
+import { runCoordinatorAutomatedPermissionCheck, createPermissionDecisionContext, requestToolPermission, getIdleNotificationResult, tryBuildIdleNotification, permissionContextSetterStore } from "../权限系统/chunk-jsd70b22.js";
 import { TEAMMATE_SYSTEM_PROMPT_ADDENDUM } from "./chunk-5nnwwahg.js";
 import { buildLocalDisplayOnlyDenialResult } from "../../01-核心基础设施/共享小工具-未细化/local-display-only-denial.js";
 import { registerSwarmPermissionCallback, unregisterSwarmPermissionCallback, processMailboxPermissionResponse } from "../权限系统/swarm-permission-poller.js";
@@ -114,11 +114,11 @@ function Ge(s, e, t, _) {
           tools: T.options.tools,
         });
     if (T.requestDialog !== void 0) {
-      let l = Kdt.of(T.session).permissionContextSetter,
-        ee = Uqe(o, m, T, d, M, _, (D) => {
+      let l = permissionContextSetterStore.of(T.session).permissionContextSetter,
+        ee = createPermissionDecisionContext(o, m, T, d, M, _, (D) => {
           l?.(D, { preserveMode: !0 });
         }),
-        j = await Pqe({
+        j = await runCoordinatorAutomatedPermissionCheck({
           ctx: ee,
           updatedInput: w.updatedInput,
           suggestions: w.suggestions,
@@ -131,7 +131,7 @@ function Ge(s, e, t, _) {
       let a = Date.now();
       try {
         return await new Promise((D, F) => {
-          Bqe(
+          requestToolPermission(
             {
               ctx: ee,
               description: R,
@@ -306,16 +306,16 @@ ${s.description}`;
 async function De(s, e, t, _) {
   if (!t) return;
   try {
-    let o = await RC(s, _),
+    let o = await readAllTasks(s, _),
       m = He(o);
     if (!m) return;
-    let T = await RZn(s, m.id, e, void 0, _);
+    let T = await claimTask(s, m.id, e, void 0, _);
     if (!T.success) {
       n(`[inProcessRunner] Failed to claim task #${m.id}: ${T.reason}`);
       return;
     }
     return (
-      await loe(s, m.id, { status: "in_progress" }, _),
+      await updateTask(s, m.id, { status: "in_progress" }, _),
       n(`[inProcessRunner] Claimed task #${m.id}: ${m.subject}`),
       Ve(m)
     );
@@ -653,7 +653,7 @@ ${W}`);
     re = !1,
     Me = (k?.length ?? 0) > 0,
     we = !1,
-    ge = k ? Tbe(k).result : void 0,
+    ge = k ? tryBuildIdleNotification(k).result : void 0,
     fe = !1,
     ke = async (P) => {
       switch (((re = !1), P.type)) {
@@ -995,7 +995,7 @@ ${W}`);
         }
         if (r) {
           try {
-            let { result: c, summary: N } = Tbe(U, { emitTelemetry: !0 });
+            let { result: c, summary: N } = tryBuildIdleNotification(U, { emitTelemetry: !0 });
             if (c !== void 0 || se !== void 0) {
               if (
                 (await Ae(
@@ -1046,7 +1046,7 @@ ${W}`);
       );
       let Ie = se?.reason;
       if (!Fe && !l) {
-        let r = Tbe(U, { emitTelemetry: !ae }),
+        let r = tryBuildIdleNotification(U, { emitTelemetry: !ae }),
           c = ae ? void 0 : r.result,
           N = await Ae(
             e.agentName,
@@ -1166,7 +1166,7 @@ ${W}`);
     if (!l) {
       let x;
       try {
-        x = fe ? void 0 : eWn(U);
+        x = fe ? void 0 : getIdleNotificationResult(U);
       } catch (v) {
         n(
           `[inProcessRunner] ${e.agentName} failed to extract partial result: ${v}`,

@@ -142,7 +142,7 @@ import {
   jobMatchesCwd,
   isLoopJob,
   isSelfDriving,
-  al,
+  clipWithEllipsis,
 } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { isPastSessionsExperimentEnabled, AGENT_VIEW_RELAUNCH_ENV_KEY } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { useVoiceSelector, useVoiceGetState } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
@@ -192,29 +192,29 @@ import { hasTeammateModeSnapshot, captureTeammateModeSnapshot } from "../Teammat
 import { createFleetViewHost, useAttachFleetOwners } from "../../01-核心基础设施/共享小工具-未细化/chunk-6nr84z8c.js";
 import { DotSeparatedList, useDoublePressConfirm } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { FleetViewScreen } from "../../01-核心基础设施/共享小工具-未细化/fleet-view-screen.js";
-import { dd, iat, _le, Fye } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { useFocusTrap, getSpinnerFrames, getSpinnerPingPongFrames, usePasteHandler } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import {
-  M8,
-  jp,
-  Xd,
-  ZFn,
-  Kst,
-  Xst,
-  Yst,
-  Jst,
-  FZ,
-  PHe,
-  J6e,
-  Q6e,
-  JR,
-  Y_e,
-  Yae,
-  UZ,
-  Z6e,
-  BZ,
-  J_e,
-  Q_e,
+  SuggestionList,
+  useVimModeInput,
+  SearchInput,
+  createSelectionKeyDownHandler,
+  useSelectionClearKeybinding,
+  buildSelectionCopiedNotification,
+  useCopyOnSelect,
+  useSelectionBackgroundColor,
+  truncatePathSegments,
+  getFooterInfo,
+  useIdeAtMentionNotification,
+  formatAtMention,
+  useVoiceAvailable,
+  useVoiceComposer,
+  useVoiceKeybindings,
+  VoiceStatusIndicator,
+  VoiceCursorChar,
+  VoiceWarmupHint,
+  AutoUpdaterWrapper,
+  CurrentNotification,
 } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { ScrollBox } from "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { DiffStatLabel, PullRequestBadge } from "../GitHub集成/chunk-bfz9rjjm.js";
@@ -3380,10 +3380,10 @@ function op(s, c, m, b) {
   return { age: k, label: w, artifact: v, detail: R };
 }
 function np() {
-  return iat();
+  return getSpinnerFrames();
 }
 function Xc() {
-  return _le();
+  return getSpinnerPingPongFrames();
 }
 function kb() {
   return np()[4];
@@ -4619,7 +4619,7 @@ function bp(s) {
       }
     );
   }, []),
-    J6e(c, s));
+    useIdeAtMentionNotification(c, s));
 }
 function Zb(vC) {
   return vC.sessionModel;
@@ -4656,11 +4656,11 @@ function rl(yC) {
     vn[4] !== Xa ||
     vn[5] !== ps
   ) {
-    let { version: Lr, cwd: Yb } = PHe();
+    let { version: Lr, cwd: Yb } = getFooterInfo();
     ms = Lr;
     Rn = Xa ? `${renderModelSetting(Xa)} (session)` : renderModelSetting(wp?.model ?? getMainLoopModel());
     Mr = !!Yb && ps !== yp && ps !== Sp;
-    zb = FZ(Mr ? Gu(ps) : Yb, Math.max(Dr - 11 - (Rn ? te(Rn) + 3 : 0), 10));
+    zb = truncatePathSegments(Mr ? Gu(ps) : Yb, Math.max(Dr - 11 - (Rn ? te(Rn) + 3 : 0), 10));
     ((vn[0] = Sp),
       (vn[1] = Dr),
       (vn[2] = wp?.model),
@@ -5742,7 +5742,7 @@ function od(CE) {
                               ? Ze.group === UNGROUPED
                                 ? "Ungrouped"
                                 : truncate(Ze.group, Math.max(Cn - 10, 10))
-                              : FZ(_a(Ze.group), Math.max(Cn - 10, 10)),
+                              : truncatePathSegments(_a(Ze.group), Math.max(Cn - 10, 10)),
                       $E &&
                         r(N, {
                           children: [" ", e(t, { dimColor: !0, children: WE })],
@@ -6256,7 +6256,7 @@ function fd(hx) {
     } = useStoreSelector(kx),
     { query: Fo, error: rd, hint: id, expandHintPasteId: Lf } = useStoreSelector(vx),
     { pending: sd } = useStoreSelector(Rx),
-    Ds = JR(),
+    Ds = useVoiceAvailable(),
     Jf = useAppStateSelector(Fw),
     ad = useVoiceSelector(Mw),
     Bf = useVoiceSelector(Lw),
@@ -6376,9 +6376,9 @@ function fd(hx) {
           : rd
             ? e(t, { color: "error", wrap: "truncate-end", children: rd })
             : Ds && Bf
-              ? e(BZ, {})
+              ? e(VoiceWarmupHint, {})
               : Ds && ad !== "idle"
-                ? e(UZ, { voiceState: ad })
+                ? e(VoiceStatusIndicator, { voiceState: ad })
                 : id
                   ? e(t, { dimColor: !0, wrap: "truncate-end", children: id })
                   : ii && !nd && Fo === ""
@@ -6996,7 +6996,7 @@ function Nd({
   let Ce = ke ? formatDuration(Math.max(0, j - K), { mostSignificantOnly: !0 }) : "",
     be = C(!1),
     le = C(null);
-  dd(le, !0);
+  useFocusTrap(le, !0);
   let Fe = W.replyDraft(s.id) ?? "",
     [pe, je] = d(getDraftMode(Fe) === "bash" ? "bash" : "prompt"),
     We = C(pe),
@@ -7010,7 +7010,7 @@ function Nd({
       s.state.suggestedReply
         ? normalizeWhitespace(s.state.suggestedReply) || void 0
         : void 0,
-    xe = JR(),
+    xe = useVoiceAvailable(),
     nt = useAppStateSelector((ae) => ae.settings.voice?.mode ?? "hold"),
     tt = useClock(),
     ye = C(null),
@@ -7030,7 +7030,7 @@ function Nd({
     setCursorOffset: xt,
     handleKeyDown: Ut,
     handlePaste: He,
-  } = jp({
+  } = useVimModeInput({
     isActive: !0,
     multiline: !0,
     honorEditorMode: !0,
@@ -7130,7 +7130,7 @@ function Nd({
     }, [W, Ue]),
     E(() => registerPasteIdCarrier(() => [Ue.current]), [Ue]));
   let Tt = $i(() => W.pastes, He, { onMinted: W.noteMintedPaste }),
-    { handleKeyDown: zt, handlePaste: Wt } = Fye({
+    { handleKeyDown: zt, handlePaste: Wt } = usePasteHandler({
       handleKeyDown: Ut,
       onPaste: (ae) =>
         He(
@@ -7155,7 +7155,7 @@ function Nd({
         (ze(ae), xt(gt));
       },
     })),
-    Ve = Y_e({ composer: Je }),
+    Ve = useVoiceComposer({ composer: Je }),
     Ye = useVoiceSelector((ae) => ae.voiceState),
     lt = useVoiceSelector((ae) => ae.voiceWarmingUp);
   E(() => {
@@ -7164,7 +7164,7 @@ function Nd({
   let dt = useAppStateSelector((ae) => shouldReduceMotion(ae.settings.prefersReducedMotion)),
     Dt = useAppStateSelector((ae) => ae.settings?.prUrlTemplate),
     ut = Ye === "recording" && !dt,
-    { handleKeyDown: Lt } = Yae({
+    { handleKeyDown: Lt } = useVoiceKeybindings({
       voiceHandleKeyEvent: Ve.handleKeyEvent,
       voiceCancelRecording: Ve.cancelRecording,
       stripTrailing: Ve.stripTrailing,
@@ -7438,7 +7438,7 @@ function Nd({
           e(o, { flexGrow: 1 }),
           e(o, {
             marginTop: 1,
-            children: e(Xd, {
+            children: e(SearchInput, {
               query: ot,
               cursorOffset: Ht,
               onCursorOffsetChange: xt,
@@ -7456,7 +7456,7 @@ function Nd({
               dimRange: Ve.interimRange
                 ? [Ve.interimRange.start, Ve.interimRange.end]
                 : void 0,
-              cursorChar: ut ? e(Z6e, {}) : void 0,
+              cursorChar: ut ? e(VoiceCursorChar, {}) : void 0,
               isFocused: !I,
               isTerminalFocused: R,
               width: "100%",
@@ -7477,9 +7477,9 @@ function Nd({
         paddingLeft: 2,
         children:
           xe && lt && !I
-            ? e(BZ, {})
+            ? e(VoiceWarmupHint, {})
             : xe && Ye !== "idle" && !I
-              ? e(UZ, { voiceState: Ye })
+              ? e(VoiceStatusIndicator, { voiceState: Ye })
               : e(t, {
                   dimColor: !0,
                   children: I
@@ -7773,7 +7773,7 @@ function qd(SP) {
   else Kd = ur[24];
   let $d;
   if (ur[25] !== Cm)
-    (($d = e(J_e, {
+    (($d = e(AutoUpdaterWrapper, {
       isUpdating: Cm,
       onChangeIsUpdating: EP,
       showSuccessMessage: !0,
@@ -7905,7 +7905,7 @@ function ou(oA) {
       previewOpen: qm,
       resumePicker: Ym,
     } = useStoreSelector(iA),
-    Qm = JR(),
+    Qm = useVoiceAvailable(),
     Xm = useVoiceSelector(By),
     Zm = useVoiceSelector(Ny),
     {
@@ -7966,7 +7966,7 @@ function ou(oA) {
       alignItems: "flex-end",
       justifyContent: "flex-end",
       overflow: "hidden",
-      children: e(Q_e, {}),
+      children: e(CurrentNotification, {}),
     })),
       (fr[8] = Ry));
   else Ry = fr[8];
@@ -8019,7 +8019,7 @@ function ou(oA) {
           borderRight: !1,
           borderColor: cr ? "bashBorder" : void 0,
           borderDimColor: !cr,
-          children: e(Xd, {
+          children: e(SearchInput, {
             query: cn,
             cursorOffset: Um,
             onCursorOffsetChange: Lm,
@@ -8034,7 +8034,7 @@ function ou(oA) {
             dimRange: bi.interimRange
               ? [bi.interimRange.start, bi.interimRange.end]
               : void 0,
-            cursorChar: bi.showCursor ? e(Z6e, {}) : void 0,
+            cursorChar: bi.showCursor ? e(VoiceCursorChar, {}) : void 0,
             isFocused: !qm && ig === null && jm === null && Ym === null,
             isTerminalFocused: Bm,
             width: "100%",
@@ -9474,7 +9474,7 @@ function $y(s, c) {
       case "blocked":
         (b.push({
           message: w.needs
-            ? `${w.label} needs your input: ${al(w.needs, Ky)}`
+            ? `${w.label} needs your input: ${clipWithEllipsis(w.needs, Ky)}`
             : `${w.label} needs your input`,
           notificationType: "agent_needs_input",
         }),
@@ -9700,8 +9700,8 @@ function Cg({
     [ht] = d(() => Date.now()),
     Ct = C(null),
     $t = C(null);
-  dd($t, ce !== null && !Ue);
-  let Vt = JR(),
+  useFocusTrap($t, ce !== null && !Ue);
+  let Vt = useVoiceAvailable(),
     Ne = useAppStateSelector((T) => T.settings.voice?.mode ?? "hold"),
     No = useVoiceGetState(),
     wi = () => {
@@ -9723,7 +9723,7 @@ function Cg({
       handleKeyDown: pn,
       handlePaste: fu,
       vimMode: Eg,
-    } = jp({
+    } = useVimModeInput({
       buffer: He,
       isActive: Mt,
       multiline: !0,
@@ -9747,7 +9747,7 @@ function Cg({
     });
   bp((T) => {
     let { query: Oe, cursorOffset: De } = He.getSnapshot();
-    He.insertText(Q6e(T, Oe[De - 1]));
+    He.insertText(formatAtMention(T, Oe[De - 1]));
   });
   let mu = $i(() => He.pastes, fu, { onMinted: He.noteMintedPaste });
   (E(() => {
@@ -9763,12 +9763,12 @@ function Cg({
       },
       setValueWithCursor: (T, Oe) => He.setQueryAndCursor(T, Oe),
     })),
-    mr = Y_e({ composer: gu, isActive: Mt }),
+    mr = useVoiceComposer({ composer: gu, isActive: Mt }),
     Ks = useVoiceSelector((T) => T.voiceState);
   E(() => {
     if (Ks !== "idle") xe.cancelPeekTap();
   }, [xe, Ks]);
-  let { handleKeyDown: xg } = Yae({
+  let { handleKeyDown: xg } = useVoiceKeybindings({
       voiceHandleKeyEvent: mr.handleKeyEvent,
       voiceCancelRecording: mr.cancelRecording,
       stripTrailing: mr.stripTrailing,
@@ -9797,7 +9797,7 @@ function Cg({
       cursorOffset: Dg,
       handleKeyDown: Fg,
       handlePaste: Mg,
-    } = jp({
+    } = useVimModeInput({
       isActive: dt !== null,
       honorEditorMode: !0,
       backspaceExitsOnEmpty: !1,
@@ -9814,7 +9814,7 @@ function Cg({
       cursorOffset: Jg,
       handleKeyDown: Bg,
       handlePaste: Ng,
-    } = jp({
+    } = useVimModeInput({
       isActive: ye !== null,
       backspaceExitsOnEmpty: !1,
       onExit: () => bg(ua()),
@@ -9990,9 +9990,9 @@ function Cg({
     E(() => Jt.loadTarget(mn, A), [Jt, mn, A]));
   let { addNotification: rh } = useNotificationQueue(),
     Ri = aO();
-  (Yst(Ri, !0, (T) => rh(Xst(T))), Jst(Ri));
-  let Au = ZFn(Ri, getGlobalConfig().copyOnSelect ?? !0);
-  (Kst(Ri),
+  (useCopyOnSelect(Ri, !0, (T) => rh(buildSelectionCopiedNotification(T))), useSelectionBackgroundColor(Ri));
+  let Au = createSelectionKeyDownHandler(Ri, getGlobalConfig().copyOnSelect ?? !0);
+  (useSelectionClearKeybinding(Ri),
     dn(() => {
       let T = getInkInstanceRegistry().get(process.stdout);
       if (!T) return;
@@ -10362,7 +10362,7 @@ function Cg({
       attachPastedImage: mu,
     }),
     bh = (T) => wg(ua(), T),
-    { handleKeyDown: wh, handlePaste: yh } = Fye({
+    { handleKeyDown: wh, handlePaste: yh } = usePasteHandler({
       handleKeyDown: bh,
       onPaste: (T) =>
         Wc(
@@ -10410,7 +10410,7 @@ function Cg({
         ? e(o, {
             paddingLeft: 2,
             marginBottom: 1,
-            children: e(M8, {
+            children: e(SuggestionList, {
               suggestions: Go.map((T) => ({
                 id: `${T.kind}:${T.name}`,
                 displayText: ea ? T.name : `${Pa[T.kind]}${T.name}`,

@@ -18,7 +18,7 @@ import { stripAnsi } from "../../../01-核心基础设施/共享小工具-未细
 import { o, t, jr, tn, bs } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { lF } from "../../ink/ink + react-reconciler.5rs3h07b.js";
 import { NI, nK, Ape, fNe } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
-import { dd, _p, m9e, T0e, Fye } from "../../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { useFocusTrap, useCursorDeclaration, useTextInput, useVoiceLevelMeter, usePasteHandler } from "../../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { getKeybindingChord } from "../../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { NO_ANIMATION_INDEX, useReducedMotion } from "../../../01-核心基础设施/共享小工具-未细化/reduced-motion.js";
 import { e, r } from "../../react/react.kwtapczy.js";
@@ -414,7 +414,7 @@ function f9e(Uo) {
       (W[3] = Be),
       (W[4] = kt));
   else kt = W[4];
-  let Fe = _p(kt),
+  let Fe = useCursorDeclaration(kt),
     St = C(null),
     wt;
   if (W[5] !== Fe)
@@ -429,7 +429,7 @@ function f9e(Uo) {
       handleKeyDown: Le,
       handlePaste: Ke,
       isPasting: Nt,
-    } = Fye({
+    } = usePasteHandler({
       onPaste: g.onPaste,
       handleKeyDown: (he) => {
         if (
@@ -448,7 +448,7 @@ function f9e(Uo) {
     if (_e) _e(Nt);
   }, [Nt, _e]);
   let de = g.focus !== !1;
-  dd(St, de);
+  useFocusTrap(St, de);
   let Rt;
   if (W[7] === MEMO_CACHE_SENTINEL) ((Rt = lF()), (W[7] = Rt));
   else Rt = W[7];
@@ -588,7 +588,7 @@ function hn(n) {
   let pn = Dt,
     ge = tn(),
     Ye = useVoiceSelector(_t) === "recording",
-    [$e, G] = T0e();
+    [$e, G] = useVoiceLevelMeter();
   const Je = !!n.onImagePaste;
   let Bt;
   if (L[1] !== R || L[2] !== Je)
@@ -741,7 +741,7 @@ function hn(n) {
       (L[42] = xe),
       (L[43] = Lt));
   else Lt = L[43];
-  let Ze = m9e(Lt);
+  let Ze = useTextInput(Lt);
   const et = G != null;
   let pe;
   if (

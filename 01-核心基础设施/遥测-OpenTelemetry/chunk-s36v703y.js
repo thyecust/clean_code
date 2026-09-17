@@ -8,15 +8,15 @@
 
 // Version: 2.1.263
 import { m3e } from "../../00-第三方库/@grpc/grpc-js/grpc-js.5zkynjxh.js";
-import { pO, tI } from "./遥测-OpenTelemetry.0xhcvej6.js";
+import { otlpExporterBaseModule, otlpTransformerModule } from "./遥测-OpenTelemetry.0xhcvej6.js";
 import "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
 import { commonJS } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 var s = commonJS(function (o) {
   Object.defineProperty(o, "__esModule", { value: !0 });
   o.OTLPLogExporter = void 0;
   var r = m3e(),
-    u = tI(),
-    L = pO();
+    u = otlpTransformerModule(),
+    L = otlpExporterBaseModule();
   class t extends L.OTLPExporterBase {
     constructor(c = {}) {
       super(

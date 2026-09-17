@@ -8,23 +8,23 @@
 
 // Version: 2.1.263
 import "../../02-功能模块/MCP客户端/chunk-5wa92x7d.js";
-import { Go, Ki } from "../../02-功能模块/MCP客户端/chunk-78r8f7dw.js";
+import { ErrorCode, ProtocolError } from "../../02-功能模块/MCP客户端/chunk-78r8f7dw.js";
 import "../../02-功能模块/认证-OAuth登录/pkce-challenge.js";
-var n = new Set([-32002, Go.InvalidParams]);
+var n = new Set([-32002, ErrorCode.InvalidParams]);
 function getMcpErrorCode(o) {
-  return o instanceof Ki ? o.code : void 0;
+  return o instanceof ProtocolError ? o.code : void 0;
 }
 function isMcpMethodNotFoundError(o) {
-  return o instanceof Ki && o.code === Go.MethodNotFound;
+  return o instanceof ProtocolError && o.code === ErrorCode.MethodNotFound;
 }
 function isMcpResourceNotFoundError(o) {
-  return o instanceof Ki && n.has(o.code);
+  return o instanceof ProtocolError && n.has(o.code);
 }
 function isMcpNotADirectoryError(o) {
-  return o instanceof Ki && o.code === Go.InvalidParams;
+  return o instanceof ProtocolError && o.code === ErrorCode.InvalidParams;
 }
 function isUrlElicitationRequiredMcpError(o) {
-  return o instanceof Ki && o.code === Go.UrlElicitationRequired;
+  return o instanceof ProtocolError && o.code === ErrorCode.UrlElicitationRequired;
 }
 export {
   getMcpErrorCode,

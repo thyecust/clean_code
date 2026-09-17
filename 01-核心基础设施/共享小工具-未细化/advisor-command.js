@@ -16,14 +16,14 @@ import { getRemoteTransport, hasRemoteControlChannel } from "../安全文件系�
 import { updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { stripAnsi } from "./text-sanitization.js";
 import { er } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { baseModelSupportsAdvisor, tDe, getAdvisorModelAliases, DF, getAdvisorCreditsNotice, isAdvisorCapableForBaseModel } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { baseModelSupportsAdvisor, isValidAdvisorModelString, getAdvisorModelAliases, isAdvisorModelPendingCreditsConsent, getAdvisorCreditsNotice, isAdvisorCapableForBaseModel } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function formatAdvisorConsentHint(t, n = !1) {
   return `${getAdvisorCreditsNotice(t)} Run /model fable${n ? " in an interactive terminal session" : ""} to review and enable, then set it as the advisor.`;
 }
 function applyAdvisorModelSetting(t, n, a, l, s = !0, g = !1) {
   let r = hasRemoteControlChannel(),
     e = t === "off" ? void 0 : er(t),
-    f = e === void 0 || tDe(e);
+    f = e === void 0 || isValidAdvisorModelString(e);
   if (
     (logEvent("tengu_advisor_command", {
       advisor:
@@ -31,7 +31,7 @@ function applyAdvisorModelSetting(t, n, a, l, s = !0, g = !1) {
           ? S("off")
           : f
             ? getModelForAnalytics(t)
-            : DF(e)
+            : isAdvisorModelPendingCreditsConsent(e)
               ? S("consent_pending")
               : S("invalid"),
       remote: r,
@@ -62,7 +62,7 @@ function applyAdvisorModelSetting(t, n, a, l, s = !0, g = !1) {
     return `Advisor disabled${m}`;
   }
   if (!f) {
-    if (DF(e)) return formatAdvisorConsentHint(e, g);
+    if (isAdvisorModelPendingCreditsConsent(e)) return formatAdvisorConsentHint(e, g);
     let o = [...getAdvisorModelAliases(), "off"].join(", ");
     return `${stripAnsi(renderDefaultModelSetting(e))} cannot be used as an advisor. Valid options: ${o}`;
   }

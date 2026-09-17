@@ -21,7 +21,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { nke, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isRemoteActive, findGitRoot, gitExe, getGitDir, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { X_, zE, RC } from "../Teammates团队/chunk-g6nvp9mm.js";
+import { areTasksEnabled, getTaskListId, readAllTasks } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { publishRateLimitCheckpointResult, getInFlightRateLimitCheckpoint, setInFlightRateLimitCheckpoint } from "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
 import {
@@ -54,9 +54,9 @@ async function performRateLimitCheckpoint(o) {
   publishRateLimitCheckpointResult(null);
   let r = (async () => {
     let a = o.todos;
-    if (a.length === 0 && X_())
+    if (a.length === 0 && areTasksEnabled())
       try {
-        a = (await RC(zE())).map((l) => ({
+        a = (await readAllTasks(getTaskListId())).map((l) => ({
           content: l.subject,
           status: l.status,
           activeForm: l.activeForm ?? l.subject,

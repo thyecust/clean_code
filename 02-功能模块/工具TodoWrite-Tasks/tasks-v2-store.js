@@ -16,7 +16,7 @@ import { l, A, Bp, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48k
 import { We, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isTeamLead } from "../Teammates团队/teammate-context.js";
-import { EZn, AZn, zE, VE, Wk, CZn, RC } from "../Teammates团队/chunk-g6nvp9mm.js";
+import { subscribeToTaskListUpdates, resetTaskList, getTaskListId, sanitizeStorageId, getTaskListDir, readTaskList, readAllTasks } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { Qt, re, De, E, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { hasTaskListTools } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 F();
@@ -58,7 +58,7 @@ class TasksV2Store {
   subscribe = (e) => {
     let s = this.#y.subscribe(e);
     if ((this.#g++, !this.#a))
-      ((this.#a = !0), (this.#b = EZn(this.#h)), this.#v());
+      ((this.#a = !0), (this.#b = subscribeToTaskListUpdates(this.#h)), this.#v());
     let t = !1;
     return () => {
       if (t) return;
@@ -73,7 +73,7 @@ class TasksV2Store {
       this.#T(this.#r, e, !1);
       return;
     }
-    let s = Wk(e);
+    let s = getTaskListDir(e);
     if (s === this.#f && this.#n !== null) return;
     (this.#n?.close(), (this.#n = null), (this.#f = s));
     try {
@@ -139,7 +139,7 @@ class TasksV2Store {
       a;
     try {
       a = e.subscribe(
-        { target: "scope", scope: { namespace: "task", listId: VE(s) } },
+        { target: "scope", scope: { namespace: "task", listId: sanitizeStorageId(s) } },
         (o) => this.#x(o, r),
       );
     } catch (o) {
@@ -189,11 +189,11 @@ class TasksV2Store {
   refetch = () => this.#v();
   #v = async () => {
     let e = ++this.#R,
-      s = zE();
+      s = getTaskListId();
     this.#F(s);
     let t;
     try {
-      t = await CZn(s, this.#r);
+      t = await readTaskList(s, this.#r);
     } catch (a) {
       (n(`Task list read failed: ${l(a)}`, { level: "warn" }), (t = null));
     }
@@ -227,15 +227,15 @@ class TasksV2Store {
   };
   #B(e) {
     this.#o = null;
-    let s = zE();
+    let s = getTaskListId();
     if (s !== e) return;
     ((this.#p = !0),
-      RC(s, this.#r)
+      readAllTasks(s, this.#r)
         .then(async (t) => {
           if (
             t.length > 0 &&
             t.every((r) => r.status === "completed") &&
-            (await AZn(s, this.#r))
+            (await resetTaskList(s, this.#r))
           )
             ((this.#c = []), this.#w(!0));
           this.#V();

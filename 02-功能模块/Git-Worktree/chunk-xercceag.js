@@ -95,7 +95,7 @@ import { fc, w_ } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { isRestrictedToPluginOnly, isSourceAdminTrusted } from "../Skills技能/chunk-sapykxw7.js";
 import { isEapModelId } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { X_ } from "../Teammates团队/chunk-g6nvp9mm.js";
+import { areTasksEnabled } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { TODO_WRITE_TOOL_NAME } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { primePlanSlugCollisions, getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
@@ -243,7 +243,7 @@ function EHe(e, o, t, r) {
     (import.meta
       .require("../../01-核心基础设施/共享小工具-未细化/chunk-wdns14nh.js")
       .restoreGoalFromTranscript(e.messages, o, t),
-    !X_() && e.messages && e.messages.length > 0)
+    !areTasksEnabled() && e.messages && e.messages.length > 0)
   ) {
     let s = ue(e.messages);
     if (s.length > 0) {

@@ -7,24 +7,24 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { ao, So, Cy, Ki, zA } from "../../02-功能模块/MCP客户端/chunk-78r8f7dw.js";
+import { ProtocolErrorCode, SdkError, SdkHttpError, ProtocolError, UnauthorizedError } from "../../02-功能模块/MCP客户端/chunk-78r8f7dw.js";
 function isClaudeAiBearerRejectedError(r) {
   return (
     r instanceof Error && "code" in r && r.code === "CLAUDEAI_BEARER_REJECTED"
   );
 }
 function isListAuthError(r) {
-  if (r instanceof zA) return !0;
+  if (r instanceof UnauthorizedError) return !0;
   if (isClaudeAiBearerRejectedError(r)) return !1;
-  if (r instanceof Cy && (r.status === 403 || r.status === 401))
+  if (r instanceof SdkHttpError && (r.status === 403 || r.status === 401))
     return (
-      r.code !== ao.ClientHttpAuthentication &&
-      r.code !== ao.ClientHttpForbidden
+      r.code !== ProtocolErrorCode.ClientHttpAuthentication &&
+      r.code !== ProtocolErrorCode.ClientHttpForbidden
     );
   if (
     r instanceof Error &&
-    !(r instanceof Ki) &&
-    !(r instanceof So) &&
+    !(r instanceof ProtocolError) &&
+    !(r instanceof SdkError) &&
     "code" in r &&
     (r.code === 403 || r.code === 401)
   )

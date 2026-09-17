@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { pO, tI, mF } from "../../01-核心基础设施/遥测-OpenTelemetry/遥测-OpenTelemetry.0xhcvej6.js";
+import { otlpExporterBaseModule, otlpTransformerModule, otlpHttpExporterBaseModule } from "../../01-核心基础设施/遥测-OpenTelemetry/遥测-OpenTelemetry.0xhcvej6.js";
 import "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var t = toESM(pO()),
-  e = toESM(tI()),
-  o = toESM(mF());
+var t = toESM(otlpExporterBaseModule()),
+  e = toESM(otlpTransformerModule()),
+  o = toESM(otlpHttpExporterBaseModule());
 class r extends t.OTLPExporterBase {
   constructor(p = {}) {
     super(

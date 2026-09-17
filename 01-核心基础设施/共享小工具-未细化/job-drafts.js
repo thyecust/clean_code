@@ -14,7 +14,7 @@ import { writeFileAtomic, writeFileAtomicSync } from "../安全文件系统(FS�
 import { createLazyValue } from "./lazy-value.js";
 import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { b, z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h3t, _3t, getJobsDir } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { jobDraftStore, readJobDraftText, getJobsDir } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { readBoundedFile } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, T, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { createHash } from "crypto";
@@ -82,10 +82,10 @@ async function readJobDraft(t, r) {
   return { q: i, collapsed: o ?? [] };
 }
 async function P(t, r) {
-  return _3t(t, STORAGE_KEYS.jobDraft(f(r)), { cap: d, screens: x(), screenKey: n(r) });
+  return readJobDraftText(t, STORAGE_KEYS.jobDraft(f(r)), { cap: d, screens: x(), screenKey: n(r) });
 }
 function x() {
-  return h3t.of(B().host).drafts;
+  return jobDraftStore.of(B().host).drafts;
 }
 async function sweepStaleJobDrafts() {
   return withFeatureTelemetry("job_sweep_drafts", async () => {

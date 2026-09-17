@@ -54,8 +54,8 @@ import {
   isFableUsageCreditsRequired,
   isUsageCreditsExempt,
   isCreditsOnlyTierSubscription,
-  Mwe,
-  ZGn,
+  isFableBlockedByUsageCredits,
+  isFableBlockedByCreditsOrOverage,
   isModelUsableInPicker,
   getLatchedFallbackModelInfo,
   formatAutoSwitchedModelNote,
@@ -596,11 +596,11 @@ Base model: ${t}`;
 function rLt(e) {
   let t = e ?? getDefaultMainLoopModelSetting();
   if (!isFableFamilyOrPinnedModel(parseUserSpecifiedModel(t))) return !1;
-  return ZGn();
+  return isFableBlockedByCreditsOrOverage();
 }
 function n2(e) {
   if (e === null) return !1;
-  return isFableFamilyOrPinnedModel(parseUserSpecifiedModel(e)) && Mwe();
+  return isFableFamilyOrPinnedModel(parseUserSpecifiedModel(e)) && isFableBlockedByUsageCredits();
 }
 function Qle(e, t) {
   if (t === void 0) return;

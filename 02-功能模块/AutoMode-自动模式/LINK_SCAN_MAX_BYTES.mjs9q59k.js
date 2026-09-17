@@ -22,12 +22,12 @@ import { truncateToCodePoints, takeLastCodeUnits, countOccurrences } from "../..
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
-  vpe,
-  Rpe,
-  mNe,
-  gNe,
-  lYn,
-  cYn,
+  getBudgetProgressBucket,
+  getFanItemsFingerprint,
+  getInFlightCounters,
+  getInFlightSnapshot,
+  subscribeInFlightSnapshot,
+  isBgDispatchSource,
   getJobDir,
   getOwnJobShortId,
   writeStateAtomic,
@@ -39,17 +39,17 @@ import {
   isOverlayNeeds,
   isTerminal,
   isSettled,
-  Ep,
-  pYn,
-  al,
-  fYn,
-  mYn,
-  OSt,
-  Tyn,
-  gYn,
-  hYn,
-  _Yn,
-  DSt,
+  MAX_DETAIL_CHARS,
+  CLASSIFY_TAIL_CHARS,
+  clipWithEllipsis,
+  classifyApiErrorToStatus,
+  classifyClosingShape,
+  preclassifyStatusFromMarkers,
+  classifyStatusFromTail,
+  STATUS_CLASSIFIER_SYSTEM_PROMPT,
+  buildStatusClassifierPrompt,
+  parseStatusClassifierResponse,
+  normalizeStatusClassification,
 } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import {
@@ -188,7 +188,7 @@ function je(e, r, t) {
   let s = a.CLAUDE_BG_SOURCE;
   logEvent("tengu_bg_agent_dispatch", {
     agent: r,
-    source: s === void 0 ? S("shell") : cYn(s) ? fromEnum(s) : S("other"),
+    source: s === void 0 ? S("shell") : isBgDispatchSource(s) ? fromEnum(s) : S("other"),
     intentLength: e.capturedIntent.length,
     ...le(t),
   });
@@ -305,7 +305,7 @@ async function ve(e, r, t) {
     f = [o.intent, o.initialPrompt].some(
       (w) => !!w && qr(w).replace(/\s+/g, " ").trim() === c,
     ),
-    _ = c && !f ? al(c, Ep) : void 0;
+    _ = c && !f ? clipWithEllipsis(c, MAX_DETAIL_CHARS) : void 0;
   if (
     (await N(
       s,
@@ -313,7 +313,7 @@ async function ve(e, r, t) {
         ...o,
         ...(_ !== void 0 && { detail: _ }),
         tempo: "active",
-        inFlight: mNe(),
+        inFlight: getInFlightCounters(),
         needs: void 0,
         block: void 0,
         suggestedReply: void 0,
@@ -357,7 +357,7 @@ async function setPermissionBlock(e, r, t, s) {
     {
       ...w,
       tempo: k,
-      inFlight: mNe(),
+      inFlight: getInFlightCounters(),
       needs: l ?? void 0,
       needsOverlay: l && d ? l : void 0,
       block: r?.questions ? { questions: r.questions } : void 0,
@@ -410,7 +410,7 @@ function ensurePermissionBridge(e) {
           }),
         );
     }),
-    s = lYn(() => {
+    s = subscribeInFlightSnapshot(() => {
       if (!isActingAsBgJob()) return;
       let o = getOwnJobShortId();
       e.bridgeWriteChain = e.bridgeWriteChain
@@ -432,10 +432,10 @@ async function pushInFlightProgress(e, r) {
     s = await readJobState(t, r);
   if (!s || isSettled(s)) return;
   if (s.tempo === "blocked") return;
-  let o = gNe(),
+  let o = getInFlightSnapshot(),
     l = o.items.length > 0 ? o.items : void 0,
-    d = l === void 0 || Rpe(l) === Rpe(s.fan),
-    c = vpe(o.budget) === vpe(s.budget);
+    d = l === void 0 || getFanItemsFingerprint(l) === getFanItemsFingerprint(s.fan),
+    c = getBudgetProgressBucket(o.budget) === getBudgetProgressBucket(s.budget);
   if (d && c) return;
   await N(
     t,
@@ -443,7 +443,7 @@ async function pushInFlightProgress(e, r) {
       ...s,
       fan: d ? s.fan : l,
       budget: c ? s.budget : o.budget,
-      inFlight: mNe(),
+      inFlight: getInFlightCounters(),
       updatedAt: new Date().toISOString(),
     },
     {},
@@ -495,7 +495,7 @@ function markTurnAborted(e, r) {
           linkScanOffset: d.linkScanOffset,
           linkScanPath: o,
           ...worktreeOwnershipFields(d.worktree, c),
-          inFlight: mNe(),
+          inFlight: getInFlightCounters(),
           updatedAt: new Date().toISOString(),
         },
         f ? { tempo: "idle" } : {},
@@ -505,7 +505,7 @@ function markTurnAborted(e, r) {
     .catch(logJobWriteError);
 }
 async function markApiFailure(e, r, t, s, o) {
-  let l = fYn(t, s, o);
+  let l = classifyApiErrorToStatus(t, s, o);
   if (!l) return;
   let d = getJobDir(r),
     c = s
@@ -513,7 +513,7 @@ async function markApiFailure(e, r, t, s, o) {
       .replace(/^Failed to authenticate\. /, "")
       .replace(/ \u00B7 Please run \/login$/, "")
       .replace(/^Not logged in$/, ""),
-    f = truncate(qr(c.replace(/\s+/g, " ").trim()), Ep),
+    f = truncate(qr(c.replace(/\s+/g, " ").trim()), MAX_DETAIL_CHARS),
     _ = `${l.needs}${f ? ` \xB7 ${f}` : ""}`,
     w = isActingAsBgJob();
   ((e.bridgeWriteChain = e.bridgeWriteChain
@@ -536,7 +536,7 @@ async function markApiFailure(e, r, t, s, o) {
           state: l.state,
           detail: f,
           tempo: P,
-          inFlight: mNe(),
+          inFlight: getInFlightCounters(),
           needs: E,
           block: void 0,
           children: m.children,
@@ -682,7 +682,7 @@ function Ze(e, r) {
       let d = s[l];
       if (d.type === "text") {
         let c = qr(d.text).replace(/\s+/g, " ").trim();
-        if (c.length > 8) return al(c, Ep);
+        if (c.length > 8) return clipWithEllipsis(c, MAX_DETAIL_CHARS);
       }
       if (d.type === "tool_use" && o === void 0) {
         let c = d.input,
@@ -693,7 +693,7 @@ function Ze(e, r) {
               : void 0,
           _ = typeof c?.description === "string" ? c.description : "",
           w = f ?? tryConjugateVerbPhrase(_)?.running ?? (_ || (r?.(d.name, c ?? {}) ?? ""));
-        o = w ? al(qr(w).replace(/\s+/g, " ").trim(), Ep) : "";
+        o = w ? clipWithEllipsis(qr(w).replace(/\s+/g, " ").trim(), MAX_DETAIL_CHARS) : "";
       }
     }
     if (o !== void 0) return o;
@@ -845,14 +845,14 @@ async function et(e, r, t, s, o, l, d, c, f) {
     O = new Date().toISOString(),
     p = (await readJobState(w, e.storageV5)) ?? E,
     J = parseForkSourceAlive(a.CLAUDE_CODE_RESUME_SOURCE_ALIVE),
-    L = gNe(),
+    L = getInFlightSnapshot(),
     U =
-      Rpe(L.items) === Rpe(p?.fan)
+      getFanItemsFingerprint(L.items) === getFanItemsFingerprint(p?.fan)
         ? p?.fan
         : L.items.length > 0
           ? L.items
           : void 0,
-    Pe = vpe(L.budget) === vpe(p?.budget) ? p?.budget : L.budget,
+    Pe = getBudgetProgressBucket(L.budget) === getBudgetProgressBucket(p?.budget) ? p?.budget : L.budget,
     X = p?.tempo === "blocked" && p.updatedAt !== k?.updatedAt && !isOverlayNeeds(p),
     me = isTerminal(m.state) && !p?.firstTerminalAt;
   if (me)
@@ -883,7 +883,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
       state: m.state,
       detail: m.detail,
       tempo: ie,
-      inFlight: mNe(),
+      inFlight: getInFlightCounters(),
       fan: U,
       budget: Pe,
       tokens: Math.max(p?.tokens ?? 0, jc()),
@@ -1008,7 +1008,7 @@ async function classify(e, r) {
     } = r,
     f = r.surfaces ?? new Set(),
     _ = Date.now(),
-    w = OSt(e),
+    w = preclassifyStatusFromMarkers(e),
     k,
     A = {
       input_tokens: 0,
@@ -1018,12 +1018,12 @@ async function classify(e, r) {
     },
     m = 0,
     C;
-  if (w) ((k = "preclassify"), (C = { ...DSt({}, t, w), source: k }));
+  if (w) ((k = "preclassify"), (C = { ...normalizeStatusClassification({}, t, w), source: k }));
   else if (d === "heuristic")
-    ((k = "heuristic"), (C = { ...DSt({}, t, Tyn(e)), source: k }));
+    ((k = "heuristic"), (C = { ...normalizeStatusClassification({}, t, classifyStatusFromTail(e)), source: k }));
   else {
-    let I = e.slice(-pYn),
-      P = hYn({
+    let I = e.slice(-CLASSIFY_TAIL_CHARS),
+      P = buildStatusClassifierPrompt({
         tail: I,
         prev: t,
         latestAsk: s,
@@ -1049,7 +1049,7 @@ async function classify(e, r) {
           max_tokens: 1024 + ne,
           skipSystemPromptPrefix: !0,
           credentials: c,
-          system: [{ type: "text", text: gYn, cache_control: E }],
+          system: [{ type: "text", text: STATUS_CLASSIFIER_SYSTEM_PROMPT, cache_control: E }],
           messages: [
             {
               role: "user",
@@ -1082,11 +1082,11 @@ Previous response was not valid JSON. Respond with ONLY the JSON object, nothing
         );
         continue;
       }
-      j = _Yn(L);
+      j = parseStatusClassifierResponse(L);
     }
     C = j
-      ? { ...DSt(j, t, null), source: "llm" }
-      : { ...DSt({}, t, Tyn(e)), source: "heuristic" };
+      ? { ...normalizeStatusClassification(j, t, null), source: "llm" }
+      : { ...normalizeStatusClassification({}, t, classifyStatusFromTail(e)), source: "heuristic" };
   }
   return (
     logEvent("tengu_bg_classify", {
@@ -1094,7 +1094,7 @@ Previous response was not valid JSON. Respond with ONLY the JSON object, nothing
       engine: fromEnum(d),
       ...le(f),
       branch: fromEnum(w?.branch ?? (k === "heuristic" ? "heuristic" : "none")),
-      closingShape: fromEnum(mYn(e)),
+      closingShape: fromEnum(classifyClosingShape(e)),
       prevState: fromJobState(t),
       newState: fromJobState(C?.state) ?? S("null"),
       stateChanged: C !== null && C.state !== t,
@@ -1192,7 +1192,7 @@ function Te(e, r) {
             href: f.frameUrl,
             kind: "frame",
             ...(typeof f.title === "string" &&
-              f.title && { title: al(f.title, 120) }),
+              f.title && { title: clipWithEllipsis(f.title, 120) }),
           }));
       }
     } catch {}

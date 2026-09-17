@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { dd } from "../../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { useFocusTrap } from "../../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { normalizeFullWidthDigits, normalizeIdeographicSpaces } from "../../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../react/react.zhnvc798.js";
 import { o, t, tn } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -302,7 +302,7 @@ function he(gt) {
   else je = w[14];
   let a = ie(je),
     He = C(null);
-  dd(He, !p);
+  useFocusTrap(He, !p);
   let [Fe, ze] = d(!1),
     z = u9e(),
     Le;

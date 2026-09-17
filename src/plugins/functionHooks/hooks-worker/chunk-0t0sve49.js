@@ -42,7 +42,7 @@ function Yt() {
   return () => `${Jt}${++e}`;
 }
 var qt = Yt();
-function Cl(e) {
+function stableStringify(e) {
   try {
     return JSON.stringify(e, Gt);
   } catch {
@@ -104,7 +104,7 @@ function er(e, t) {
   for (let r of e) we(r, t);
   Object.freeze(e);
 }
-function cdr(e) {
+function cloneWithCutReport(e) {
   let t = { cut: void 0 };
   return { value: et(e, new Map(), t), cut: t.cut };
 }
@@ -231,7 +231,7 @@ function or() {
 }
 var Te = or();
 var h = Te.get;
-var jMn = Te.set;
+var setHooksLogger = Te.set;
 function Xn(e, t) {
   if (t.length > be)
     return (
@@ -256,7 +256,7 @@ function ve(e) {
   }
   return e;
 }
-function BMn(e) {
+function encodeMatcherTable(e) {
   let t = {};
   for (let [r, o] of e) t[r] = ve(o);
   return t;
@@ -266,10 +266,10 @@ function Jn(e, t) {
     throw new HooksError(`${t}: the matcher must be a plain object (a partial of e)`);
   it(e, t, "");
 }
-var xmr = (e, t = "matcher") => ot(e, t, "");
-var WMn = (e, t) => fe(e, t, Xn);
-var GMn = (e, t) => fe(e, t, () => !0);
-var udr = (e, t, r) => !W(e) || !Object.hasOwn(e, t) || GMn(e[t], r);
+var decodeMatcher = (e, t = "matcher") => ot(e, t, "");
+var matcherMatchesValue = (e, t) => fe(e, t, Xn);
+var matcherMatchesValueIgnoringRegExp = (e, t) => fe(e, t, () => !0);
+var matcherPermitsEntry = (e, t, r) => !W(e) || !Object.hasOwn(e, t) || matcherMatchesValueIgnoringRegExp(e[t], r);
 var Q = "$shadowed";
 var Se = ["tool", "tool_use_id", "consent", Q];
 function nr(e) {
@@ -282,8 +282,8 @@ function Oe(e, t, r) {
     { consent: n, ...s } = r;
   return { ...s, tool: e, tool_use_id: t, ...(o !== void 0 && { [Q]: o }) };
 }
-var MYt = (e, t, r) => Oe(e, t, r);
-var qMn = (e, t) =>
+var withToolUseId = (e, t, r) => Oe(e, t, r);
+var joinTextBlocks = (e, t) =>
   Array.isArray(e)
     ? e
         .flatMap((r) =>
@@ -293,26 +293,26 @@ var qMn = (e, t) =>
         )
         .join(t)
     : "";
-function v_e(e) {
+function unwrapToolArgument(e) {
   let { tool: t, tool_use_id: r, consent: o, [Q]: n, ...s } = e;
   return isRecord(n) ? { ...s, ...n } : s;
 }
-var Hmr = (e, t) => Oe(e, void 0, t);
-function zMn(e) {
+var withToolName = (e, t) => Oe(e, void 0, t);
+function contentToText(e) {
   return typeof e === "string"
     ? e
-    : qMn(
+    : joinTextBlocks(
         e,
         `
 `,
       );
 }
 import * as j from "vm";
-function S8(e, t) {
+function makeVmTimeoutOptions(e, t) {
   if (t != null) return { timeout: t };
   return { timeout: e };
 }
-function Cae(e) {
+function hardenVmIntrinsics(e) {
   j.runInContext(
     `(() => {
     Object.defineProperty(Error, 'prepareStackTrace', {
@@ -452,13 +452,13 @@ function Cae(e) {
     e,
   );
 }
-function qxe(e) {
+function makeVmAwait(e) {
   return j.runInContext("(async v => ({__proto__: null, v: await v}))", e);
 }
-function Qrt(e) {
+function makeVmApply(e) {
   return j.runInContext("((fn, ...args) => fn(...args))", e);
 }
-function bZ(e) {
+function makeVmErrorExtractor(e) {
   return j.runInContext(
     `(e => {
       let name = 'Error', message = '', stack = ''
@@ -478,7 +478,7 @@ function bZ(e) {
     e,
   );
 }
-function Zrt(e) {
+function makeVmClone(e) {
   return j.runInContext(
     `(() => {
       const _WeakMap = WeakMap, _WeakSet = WeakSet, _isArray = Array.isArray,
@@ -555,10 +555,10 @@ function Zrt(e) {
     e,
   );
 }
-function eot(e) {
+function makeVmAsyncWrapper(e) {
   return j.runInContext("(hostFn => async (...a) => hostFn(...a))", e);
 }
-function Y1(e, t = "Error", r) {
+function makePlainError(e, t = "Error", r) {
   let o = () => `${t}: ${e}`;
   return (
     Object.setPrototypeOf(o, null),
@@ -579,7 +579,7 @@ function ns() {
       { __proto__: null },
       { codeGeneration: { strings: !1, wasm: !1 } },
     );
-    (Cae(e),
+    (hardenVmIntrinsics(e),
       (at = j.runInContext(
         `(e => {
         // Independent try blocks \u2014 a throwing .name getter must not discard
@@ -604,7 +604,7 @@ function ns() {
   }
   return at;
 }
-function DHt(e) {
+function getVmErrorInfo(e) {
   try {
     let t = ns()(e);
     return {
@@ -616,29 +616,29 @@ function DHt(e) {
     return { msg: "<unprintable thrown value>", name: "Error" };
   }
 }
-function tot(e) {
+function formatConsoleArg(e) {
   if (e == null || (typeof e !== "object" && typeof e !== "function"))
     return String(e);
   return `[${typeof e}]`;
 }
-function NA(e) {
+function wrapSyncHostFunction(e) {
   let t = (...r) => {
     try {
       return e(...r);
     } catch (o) {
-      let { msg: n, name: s, stack: p } = DHt(o);
-      throw Y1(n, s, p);
+      let { msg: n, name: s, stack: p } = getVmErrorInfo(o);
+      throw makePlainError(n, s, p);
     }
   };
   return (Object.setPrototypeOf(t, null), t);
 }
-function vae(e) {
+function wrapAsyncHostFunction(e) {
   let t = async (...r) => {
     try {
       return await e(...r);
     } catch (o) {
-      let { msg: n, name: s, stack: p } = DHt(o);
-      throw Y1(n, s, p);
+      let { msg: n, name: s, stack: p } = getVmErrorInfo(o);
+      throw makePlainError(n, s, p);
     }
   };
   return (Object.setPrototypeOf(t, null), t);
@@ -668,7 +668,7 @@ function ar(e) {
     );
   return t;
 }
-function LHt(e, t = new WeakMap()) {
+function cloneValueAcrossBoundary(e, t = new WeakMap()) {
   if (typeof e === "function") return;
   if (e === null || typeof e !== "object") return e;
   let r = t.get(e);
@@ -679,7 +679,7 @@ function LHt(e, t = new WeakMap()) {
     let p = ar(e);
     for (let i = 0; i < p; i++)
       try {
-        s[i] = LHt(e[i], t);
+        s[i] = cloneValueAcrossBoundary(e[i], t);
       } catch (a) {
         if (ir(a)) throw a;
         s[i] = void 0;
@@ -699,14 +699,14 @@ function LHt(e, t = new WeakMap()) {
     try {
       let p = e[s];
       if (typeof p === "function") continue;
-      o[s] = LHt(p, t);
+      o[s] = cloneValueAcrossBoundary(p, t);
     } catch (p) {
       if (ir(p)) throw p;
     }
   }
   return o;
 }
-function $Yt(e) {
+function snapshotArray(e) {
   if (e === null || typeof e !== "object") return [];
   let t = ar(e),
     r = [];
@@ -718,7 +718,7 @@ function $Yt(e) {
     }
   return r;
 }
-function UYt(e) {
+function makeVmStringUtils(e) {
   return j.runInContext(
     `((S, JS) => ({
       vmToStr: v => { try { return S(v) } catch { return '<unprintable>' } },
@@ -731,7 +731,7 @@ function UYt(e) {
     e,
   );
 }
-function Mje(e) {
+function makeVmSanitizers(e) {
   return j.runInContext(
     `(() => {
       const _WeakMap = WeakMap, _WeakSet = WeakSet, _isArray = Array.isArray,
@@ -815,14 +815,14 @@ function Mje(e) {
     e,
   );
 }
-function not(e) {
+function toDisplayString(e) {
   if (typeof e === "string") return e;
   if (e === null || (typeof e !== "object" && typeof e !== "function"))
     return String(e);
   return typeof e === "function" ? "[function]" : "[object]";
 }
 var L = (e) => e.isCore === !0 || e.isManaged === !0;
-var Lje = 5000;
+var HOOK_GRACE_MS = 5000;
 import { AsyncLocalStorage as ds } from "async_hooks";
 var ft = new ds();
 async function gs(e) {
@@ -870,7 +870,7 @@ function Os(e, t, r) {
       if (o || L(t)) return;
       let p = Re(
         t,
-        `still running ${Lje}ms after its budget ran out; ignores its signal`,
+        `still running ${HOOK_GRACE_MS}ms after its budget ran out; ignores its signal`,
       );
       (h().log(`hook overran: ${p} (${r.event})`, "error"),
         h().hookFailed({
@@ -880,9 +880,9 @@ function Os(e, t, r) {
           effect: "counted toward a runaway",
           hasOverrun: !0,
         }));
-    }, Lje).unref?.());
+    }, HOOK_GRACE_MS).unref?.());
 }
-function $0(e, t) {
+function linkAbortSignal(e, t) {
   if (e === void 0) return () => {};
   if (e.aborted) return (t.abort(e.reason), () => {});
   let r = () => t.abort(e.reason);
@@ -903,8 +903,8 @@ function Is({
   async function i(a, f) {
     if (p.pendingDownstream++ === 0) n.pause();
     let c = new AbortController(),
-      m = $0(s, c),
-      d = $0(f, c),
+      m = linkAbortSignal(s, c),
+      d = linkAbortSignal(f, c),
       u = t(a, c.signal).then(
         (y) => {
           let b = r.carry === void 0 ? y : r.carry(y, a, o);
@@ -981,7 +981,7 @@ function ge(e) {
     Object.freeze(s)
   );
 }
-var Yrt = (e) => e?.at(-1) ?? ct;
+var innermostOrigin = (e) => e?.at(-1) ?? ct;
 var yr = ({ call: e, signal: t, event: r, origin: o }) =>
   ge({ call: e, signal: t, is: Fs(r), event: r, origin: o });
 var gr = () => ({
@@ -1004,9 +1004,9 @@ var Vs =
   async (p, i) => {
     let a = gr(),
       f = new AbortController(),
-      c = $0(i, f),
+      c = linkAbortSignal(i, f),
       m = new AbortController(),
-      d = $0(i, m),
+      d = linkAbortSignal(i, m),
       u = Xs(e.budgetMs ?? o, i),
       { call: y, runBelow: b } = Is({
         handler: e,
@@ -1051,7 +1051,7 @@ var Vs =
     }
     return w;
   };
-function PHt() {
+function createHookResultLog() {
   let e = [];
   return {
     keep: (t, r) => e.push({ input: t, made: r }),
@@ -1060,12 +1060,12 @@ function PHt() {
     ran: () => e.length > 0,
   };
 }
-async function Aae({
+async function runHookChain({
   e,
   handlers: t,
   site: r,
   signal: o = new AbortController().signal,
-  budgetMs: n = Jrt,
+  budgetMs: n = DEFAULT_HOOK_BUDGET_MS,
   bottom: s,
   origin: p = ct,
 }) {
@@ -1087,7 +1087,7 @@ async function Aae({
       throw (h().log(`hooks chain failed: ${errorMessage(a)}`, "error"), a);
     });
 }
-var kmr = {
+var EVENT_SUMMARY_BUILDERS = {
   "session.start": (e) => ({ cwd: e.cwd }),
   "turn.start": (e) => ({ turnId: e.turnId }),
   "turn.step": (e) => ({ turnId: e.turnId, index: e.index }),
@@ -1104,12 +1104,12 @@ function ut(e, t, r) {
       : void 0
     : "a deny that is not a string";
 }
-var Qs = (e, t) => Cl(e) !== Cl(t);
-function $Mn(e) {
+var Qs = (e, t) => stableStringify(e) !== stableStringify(t);
+function dropUnsetIsError(e) {
   let { isError: t, ...r } = e;
   return t === !0 ? e : r;
 }
-function Eae(e) {
+function asStringList(e) {
   if (!Array.isArray(e)) return;
   let t = e.length,
     r = [];
@@ -1120,7 +1120,7 @@ function Eae(e) {
   }
   return r;
 }
-var UMn = (e) => Eae(e) !== void 0;
+var isStringList = (e) => asStringList(e) !== void 0;
 function kr(e, t) {
   let r = new Map();
   for (let o of e) r.set(o, (r.get(o) ?? 0) + 1);
@@ -1138,12 +1138,12 @@ var Ie = ({ event: e, check: t, checkArgument: r }) => ({
 });
 var ri = (e) => (e === void 0 ? void 0 : "a drop that carries a context");
 function oi(e, t) {
-  return Cl(e) === Cl(t)
+  return stableStringify(e) === stableStringify(t)
     ? void 0
     : "an origin other than the engine set (next(e) passes e.origin on; to have the prompt proceed as the user's own, answer { text })";
 }
 var lt = 32;
-var jL = 32000;
+var MAX_HOOK_TEXT_LENGTH = 32000;
 function br(e, t) {
   let { blocks: r } = e;
   if (!Array.isArray(r)) return "no { blocks } (a list of { name, text })";
@@ -1164,16 +1164,16 @@ function br(e, t) {
       return `two blocks named ${c} (the engine keys the context by name)`;
     if ((n.add(c), o.get(c) !== m)) s += m.length;
   }
-  return s > jL
-    ? `blocks over ${jL} characters beyond the engine's own`
+  return s > MAX_HOOK_TEXT_LENGTH
+    ? `blocks over ${MAX_HOOK_TEXT_LENGTH} characters beyond the engine's own`
     : void 0;
 }
 function ii(e, t) {
-  if (e !== void 0 && !UMn(e)) return "a context that is not a list of texts";
-  let r = Eae(e) ?? [];
+  if (e !== void 0 && !isStringList(e)) return "a context that is not a list of texts";
+  let r = asStringList(e) ?? [];
   if (r.some((f) => f === "")) return "a context with an empty entry";
-  if (r.reduce((f, c) => f + c.length, 0) > jL)
-    return `a context over ${jL} characters`;
+  if (r.reduce((f, c) => f + c.length, 0) > MAX_HOOK_TEXT_LENGTH)
+    return `a context over ${MAX_HOOK_TEXT_LENGTH} characters`;
   let s = t.filter((f) => f !== void 0 && f.length > 0),
     p = new Set(r),
     i = (f) => (f ?? []).every((c) => p.has(c));
@@ -1181,19 +1181,19 @@ function ii(e, t) {
     ? void 0
     : "a context without an entry a hook below attached (a hook adds to the context its next gave it; it may not leave an entry out)";
 }
-var BW = 4096;
+var MAX_HOOK_DROP_LENGTH = 4096;
 function ai(e, t) {
-  return t.includes(e) || e.length <= BW
+  return t.includes(e) || e.length <= MAX_HOOK_DROP_LENGTH
     ? void 0
-    : `a drop over ${BW} characters`;
+    : `a drop over ${MAX_HOOK_DROP_LENGTH} characters`;
 }
 function fi(e, t) {
-  return e === void 0 || Cl(e) === Cl(t)
+  return e === void 0 || stableStringify(e) === stableStringify(t)
     ? void 0
     : "an origin the engine did not set (a hook may leave the origin out of its answer, or answer it as received; it may not set one)";
 }
 function K(e, t) {
-  return e === t || e.length <= jL ? void 0 : `a text over ${jL} characters`;
+  return e === t || e.length <= MAX_HOOK_TEXT_LENGTH ? void 0 : `a text over ${MAX_HOOK_TEXT_LENGTH} characters`;
 }
 function mi(e, t) {
   return e === t
@@ -1203,32 +1203,32 @@ function mi(e, t) {
       : "no { wait }";
 }
 function wr(e, t) {
-  return e.length <= t.length + jL
+  return e.length <= t.length + MAX_HOOK_TEXT_LENGTH
     ? void 0
-    : `a text over ${jL} characters beyond the skill's own`;
+    : `a text over ${MAX_HOOK_TEXT_LENGTH} characters beyond the skill's own`;
 }
 function ui(e, t, r) {
-  if (e !== void 0 && !Eae(e)) return "a context that is not a list of texts";
-  let o = e === void 0 ? [] : (Eae(e) ?? []);
+  if (e !== void 0 && !asStringList(e)) return "a context that is not a list of texts";
+  let o = e === void 0 ? [] : (asStringList(e) ?? []);
   if (o.some((c) => c === "")) return "a context with an empty entry";
-  if (o.reduce((c, m) => c + m.length, 0) > jL)
-    return `a context over ${jL} characters`;
-  let p = Cl(t),
-    i = r.filter((c) => Cl(c.result) === p),
-    a = (c) => kr(o, Eae(c.context) ?? []);
+  if (o.reduce((c, m) => c + m.length, 0) > MAX_HOOK_TEXT_LENGTH)
+    return `a context over ${MAX_HOOK_TEXT_LENGTH} characters`;
+  let p = stableStringify(t),
+    i = r.filter((c) => stableStringify(c.result) === p),
+    a = (c) => kr(o, asStringList(c.context) ?? []);
   return (i.length === 0 ? r : i).every(a)
     ? void 0
     : "a context without an entry a hook below attached (a hook adds to the context its next gave it; it may not leave an entry out)";
 }
 function Er(e, t) {
-  return e === t || e.length <= BW ? void 0 : `a text over ${BW} characters`;
+  return e === t || e.length <= MAX_HOOK_DROP_LENGTH ? void 0 : `a text over ${MAX_HOOK_DROP_LENGTH} characters`;
 }
 var Pe = (e) => ({
   event: e,
   refuse: Ae,
   check: _((t) => ut(t, "{ value }", (r) => Object.hasOwn(r, "value"))),
 });
-var LYt = { type: "engine", ref: 0 };
+var ENGINE_ORIGIN = { type: "engine", ref: 0 };
 var Tr = (e) => (typeof e.cwd === "string" ? void 0 : "no { cwd }");
 var vr = (e) => (typeof e.turnId === "string" ? void 0 : "no { turnId }");
 var Sr = (e) =>
@@ -1345,7 +1345,7 @@ var Pr = {
 var gt = "PermissionRequest";
 var xt = ["surface", "component", "requestId", "viewport"];
 function Cr(e, t) {
-  let r = xt.find((o) => Cl(e[o]) !== Cl(t[o]));
+  let r = xt.find((o) => stableStringify(e[o]) !== stableStringify(t[o]));
   if (!r) return;
   return `a changed ${r} (the envelope is the engine's; a rewrite keeps ${xt.join(", ")})`;
 }
@@ -1392,7 +1392,7 @@ var _e = (e) =>
         ? "missing"
         : `a ${typeof e}`;
 function Hr(e, t) {
-  return t.component === "UserMessage" && Cl(e.origin) !== Cl(t.props.origin)
+  return t.component === "UserMessage" && stableStringify(e.origin) !== stableStringify(t.props.origin)
     ? "a props.origin other than the engine drew (the row names its message's origin; a rewrite changes the text alone)"
     : void 0;
 }
@@ -1435,7 +1435,7 @@ var Wi = {
   event: "ui.render",
   checkArgument: $r,
   checkMatcher: (e) =>
-    Object.hasOwn(e, "component") && WMn(e.component, gt)
+    Object.hasOwn(e, "component") && matcherMatchesValue(e.component, gt)
       ? `${gt} is drawn by the engine alone; its answer authorises an action. A plugin adds context with $.ui.notice`
       : void 0,
   check: (e) =>
@@ -2198,7 +2198,7 @@ function wt(e, t) {
   return Br(tp(e, o, ...n));
 }
 var cp = (e) => xe.mark((t) => ae(wt(e, t)), e);
-var Dje = {
+var SURFACE_ELEMENT_TAGS = {
   terminal: [
     "Box",
     "Text",
@@ -2223,7 +2223,7 @@ var Dje = {
     "Link",
   ],
 };
-var Ne = dedupe([...Dje.terminal, ...Dje.desktop]);
+var Ne = dedupe([...SURFACE_ELEMENT_TAGS.terminal, ...SURFACE_ELEMENT_TAGS.desktop]);
 var Dr = (e) => ae(wt(ep, e));
 function gp(e, t, r) {
   let o = {};
@@ -2234,7 +2234,7 @@ function gp(e, t, r) {
 }
 function xp(e) {
   let t = Object.create(null);
-  for (let r of Dje[e]) t[r] = cp(r);
+  for (let r of SURFACE_ELEMENT_TAGS[e]) t[r] = cp(r);
   return Object.freeze(t);
 }
 function hp(e) {
@@ -2269,7 +2269,7 @@ var Ep = {
     typeof e.isOffered === "boolean" ? void 0 : "no { isOffered } (a boolean)",
   ),
 };
-var IHt = ["tool_use_id", "name", "fork", "parentModel", "permissionMode"];
+var AGENT_SPAWN_IDENTITY_KEYS = ["tool_use_id", "name", "fork", "parentModel", "permissionMode"];
 import { isAbsolute as vp } from "path";
 function Kr(e, t) {
   let { prompt: r, model: o, cwd: n } = e;
@@ -2312,19 +2312,19 @@ var Op = {
   checkArgument(e, t) {
     return (
       Ir({
-        keys: IHt,
+        keys: AGENT_SPAWN_IDENTITY_KEYS,
         passed: e,
         received: t,
-        explanation: `the identity of the spawn and its parent is pinned; a rewrite keeps ${IHt.join(", ")}`,
+        explanation: `the identity of the spawn and its parent is pinned; a rewrite keeps ${AGENT_SPAWN_IDENTITY_KEYS.join(", ")}`,
       }) ?? Kr(e, t)
     );
   },
   check: _((e) => ut(e, "{ model }", (t) => typeof t.model === "string")),
-  carry: $Mn,
+  carry: dropUnsetIsError,
 };
 var Wr = Object.freeze(Array(1));
 function Me(e, t) {
-  let r = Se.find((o) => Cl(e[o]) !== Cl(t[o]));
+  let r = Se.find((o) => stableStringify(e[o]) !== stableStringify(t[o]));
   if (!r) return;
   return `a changed ${r} (the envelope is the engine's; a rewrite keeps ${Se.join(", ")})`;
 }
@@ -2340,12 +2340,12 @@ var Ip = {
   ),
   carry: (e, t, r) =>
     e.updatedInput === void 0 && e.deny === void 0 && Qs(t, r)
-      ? { ...e, updatedInput: v_e(t) }
+      ? { ...e, updatedInput: unwrapToolArgument(t) }
       : e,
 };
 function zr(e) {
   let t = { ...e };
-  return t.context === void 0 ? t : { ...t, context: Eae(t.context) ?? Wr };
+  return t.context === void 0 ? t : { ...t, context: asStringList(t.context) ?? Wr };
 }
 var Cp = {
   event: "tool.call",
@@ -2365,7 +2365,7 @@ var Cp = {
         : void 0)
     );
   }),
-  carry: $Mn,
+  carry: dropUnsetIsError,
 };
 var _p = {
   event: "tool.describe",
@@ -2383,7 +2383,7 @@ var _p = {
       : "no { description } (a string)";
   }),
 };
-var Sm = {
+var HOOK_SITES = {
   ...Object.fromEntries(CORE_OPERATION_EVENT_NAMES.map((e) => [e, Pe(e)])),
   PreToolUse: Ip,
   "tool.call": Cp,
@@ -2416,10 +2416,10 @@ var Sm = {
   "ui.select": wp,
   "engine.create": hi,
 };
-function NYt(e) {
-  return isBuiltinHookEventName(e) ? Sm[e] : Pe(e);
+function siteForEvent(e) {
+  return isBuiltinHookEventName(e) ? HOOK_SITES[e] : Pe(e);
 }
-var Imr = (e, t, r = {}) => Aae({ e, handlers: t, site: Sm.PreToolUse, ...r });
+var runPreToolUseHooks = (e, t, r = {}) => runHookChain({ e, handlers: t, site: HOOK_SITES.PreToolUse, ...r });
 function Gr(e, t) {
   let r = e,
     o = Date.now(),
@@ -2469,13 +2469,13 @@ function Xs(e, t) {
     p = Promise.withResolvers();
   function i() {
     if (
-      ((n = Gr(Lje, `did not settle within ${Lje}ms of its signal aborting`)),
+      ((n = Gr(HOOK_GRACE_MS, `did not settle within ${HOOK_GRACE_MS}ms of its signal aborting`)),
       r > 0)
     )
       n.pause();
     n.expired.catch(p.reject);
   }
-  let a = $0(t, { abort: i });
+  let a = linkAbortSignal(t, { abort: i });
   return {
     expired: Tt(Promise.race([s.expired, p.promise])),
     isExpired: () => s.isExpired(),
@@ -2490,7 +2490,7 @@ function Xs(e, t) {
     },
   };
 }
-var Jrt = 1e4;
+var DEFAULT_HOOK_BUDGET_MS = 1e4;
 import { resolve as qf } from "path";
 import * as se from "vm";
 function Dp({
@@ -2582,17 +2582,17 @@ function Zr(e, t, r) {
   return E(o);
 }
 var re = Object.freeze(Object.create(null));
-var R_e = "core";
+var CORE_OWNER_NAME = "core";
 var Yp = (e) => e.withheldBy?.at(-1);
-var ddr = (e, t) => `$.${e}: removed by plugin \`${t}\``;
+var formatRemovedInterfaceMessage = (e, t) => `$.${e}: removed by plugin \`${t}\``;
 function ke(e, t, r) {
-  let o = (n) => r(() => Promise.reject(new HooksError(ddr(`${e}.${n}`, t))));
+  let o = (n) => r(() => Promise.reject(new HooksError(formatRemovedInterfaceMessage(`${e}.${n}`, t))));
   return new Proxy(re, { get: (n, s) => (Le(s) ? o(s) : void 0) });
 }
 function St(e, t, r) {
   let o = Yp(r);
   if (o !== void 0) return ke(t, o, e.wrapMethod);
-  if (r.owner === R_e) {
+  if (r.owner === CORE_OWNER_NAME) {
     let n = e.local[t];
     if (!n)
       throw new HooksError(
@@ -2690,8 +2690,8 @@ function De() {
 var ma = (e) =>
   E({ value: (t, r) => e("flag.value", { name: t, fallback: r }) });
 var ca = "flag";
-var VMn = () => !1;
-var la = (e) => e !== ca || VMn();
+var isFlagInterfaceEnabled = () => !1;
+var la = (e) => e !== ca || isFlagInterfaceEnabled();
 function da(e, t, r) {
   let { register: o } = typeof e === "object" && e ? e : {};
   if (typeof o !== "function")
@@ -2795,7 +2795,7 @@ function wa({ pluginName: e, live: t, unloaded: r, invoke: o, signalFrom: n }) {
           u,
         );
         if (m)
-          b = $0(m, {
+          b = linkAbortSignal(m, {
             abort: () => {
               (clearTimeout(w), T(), y(Rt(m)));
             },
@@ -2851,7 +2851,7 @@ var co = (e, t) =>
   [...t]
     .sort((r, o) => o.length - r.length)
     .find((r) => new RegExp(`(^|\\W)${escapeRegExp(r)}(\\W|$)`, "i").test(e));
-async function Omr({
+async function classifyTextWithModel({
   pluginName: e,
   complete: t,
   defaultModel: r,
@@ -2941,7 +2941,7 @@ var Ha = (e) =>
     surface: () => e("session.surface", {}),
     authorize: () => e("session.authorize", {}),
   });
-var k_e = 4194304;
+var MAX_STORE_VALUE_LENGTH = 4194304;
 function go(e, t) {
   let r;
   try {
@@ -2953,9 +2953,9 @@ function go(e, t) {
     throw new HooksError(
       `${t}: $.store.set: value is not JSON data (${e === void 0 ? "undefined" : `a ${typeof e}`})`,
     );
-  if (r.length > k_e)
+  if (r.length > MAX_STORE_VALUE_LENGTH)
     throw new HooksError(
-      `${t}: $.store.set: the value is ${r.length} characters, over the ${k_e} limit`,
+      `${t}: $.store.set: the value is ${r.length} characters, over the ${MAX_STORE_VALUE_LENGTH} limit`,
     );
   return JSON.parse(r);
 }
@@ -2988,7 +2988,7 @@ var bo = (e, t) => ({
   ...(e.name !== void 0 && { name: e.name }),
   ...(e.cwd !== void 0 && { cwd: e.cwd }),
 });
-function KMn(e) {
+function getResolvedModel(e) {
   let t = isRecord(e) ? e.resolvedModel : void 0;
   return typeof t === "string" ? t : void 0;
 }
@@ -3004,7 +3004,7 @@ var Ua = (e, t) =>
       let s = await t("agent.spawn", bo(r, o));
       return s.deny === void 0
         ? E({
-            model: KMn(s.result) ?? r.model ?? "inherit",
+            model: getResolvedModel(s.result) ?? r.model ?? "inherit",
             text: s.text ?? "",
             ...(s.isError === !0 && { isError: !0 }),
           })
@@ -3172,10 +3172,10 @@ function Io() {
   return Object.freeze(e);
 }
 var Po = Io();
-function FYt() {
+function buildCoreInterfaceTable() {
   let e = {};
   for (let [t, r] of Object.entries(Po))
-    if (la(t)) e[t] = { owner: R_e, methods: [...r] };
+    if (la(t)) e[t] = { owner: CORE_OWNER_NAME, methods: [...r] };
   return e;
 }
 function _o(
@@ -3191,7 +3191,7 @@ function jo(e, t) {
     { matcher: o } = t;
   if (o === void 0) return { run: r };
   return {
-    run: (n, s) => (e.stamped(() => WMn(o, n)) ? r(n, s) : s(n)),
+    run: (n, s) => (e.stamped(() => matcherMatchesValue(o, n)) ? r(n, s) : s(n)),
     matcher: o,
   };
 }
@@ -3199,7 +3199,7 @@ function Ue(e, t) {
   let { pluginName: r, registrations: o, wrapMethod: n } = e,
     { event: s, matcher: p } = t;
   if (p !== void 0) {
-    let c = NYt(s).checkMatcher?.(p);
+    let c = siteForEvent(s).checkMatcher?.(p);
     if (c !== void 0) throw new HooksError(`${r}: ${s}: ${c}`);
   }
   let i = jo(e, t),
@@ -3781,19 +3781,19 @@ async function Qf(e, t, r = {}) {
     f = 0,
     c = bf(),
     m = se.createContext(c, { codeGeneration: { strings: !1, wasm: !1 } });
-  (wf(m), Cae(m));
-  let d = Qrt(m),
+  (wf(m), hardenVmIntrinsics(m));
+  let d = makeVmApply(m),
     u = se.runInContext(
       "((self, fn, ...args) => Reflect.apply(fn, self, args))",
       m,
     ),
-    y = qxe(m),
-    b = bZ(m),
+    y = makeVmAwait(m),
+    b = makeVmErrorExtractor(m),
     T = xf(m),
     w = gf(m),
-    S = Zrt(m),
+    S = makeVmClone(m),
     O = (x) => ae(S(x)),
-    C = eot(m),
+    C = makeVmAsyncWrapper(m),
     R = se.runInContext(qi, m)(Ff(qf(e.pluginRoot))),
     { fromEnvironment: J, intoEnvironment: I } = Fo(b, R, T),
     M = se.runInContext($f, m)(B(I));
@@ -3872,7 +3872,7 @@ async function Qf(e, t, r = {}) {
       }),
     ),
     ie = (x) =>
-      B(M((...v) => h().log(`[${o}] console.${x}: ${v.map(tot).join(" ")}`)));
+      B(M((...v) => h().log(`[${o}] console.${x}: ${v.map(formatConsoleArg).join(" ")}`)));
   Object.assign(c, {
     setTimeout: zt(!1),
     setInterval: zt(!0),
@@ -3925,7 +3925,7 @@ async function Qf(e, t, r = {}) {
     argumentFor: O,
     nextFor: (x, v) => {
       let { signal: A, abort: H } = R.makeSignal();
-      $0(x.signal, { abort: (F) => H(I(F)) });
+      linkAbortSignal(x.signal, { abort: (F) => H(I(F)) });
       let N = v === "ui.resolve" ? Kt : S;
       return ge({
         signal: A,
@@ -3950,10 +3950,10 @@ function Mt(e) {
   let t = Object.getOwnPropertyDescriptor(e, "message")?.value;
   return typeof t === "string" ? t : Mt(Object.getPrototypeOf(e));
 }
-function XMn(e) {
+function getErrorMessage(e) {
   return typeof e !== "object" && typeof e !== "function" ? String(e) : Mt(e);
 }
-var Dmr = 8;
+var STAMP_SLOT_COUNT = 8;
 function Zo(e, t, r) {
   if (!e) return r();
   let o = Array.from({ length: e.length - 1 }, (n, s) =>
@@ -3966,7 +3966,7 @@ function Zo(e, t, r) {
     for (let [n, s] of o.entries()) Atomics.store(e, n + 1, s);
   }
 }
-function YMn(e) {
+function formatNotAwaitedFailure(e) {
   let t = `${e.plugin}: `,
     { message: r } = e;
   return `${e.plugin}: $.${e.op} (not awaited): ${r.startsWith(t) ? r.slice(t.length) : r}`;
@@ -4002,10 +4002,10 @@ function on({ environment: e, name: t, event: r, e: o }) {
   try {
     return { argument: e.argumentFor(o) };
   } catch (n) {
-    let { value: s, cut: p } = cdr(o);
+    let { value: s, cut: p } = cloneWithCutReport(o);
     if (p === void 0) throw n;
     let i = `${t}: ${r}: ${tt(p)}`,
-      { refuse: a } = NYt(r);
+      { refuse: a } = siteForEvent(r);
     if (a !== void 0)
       return (h().log(`${i}; refused`, "warn"), { answer: a(i) });
     return (
@@ -4015,11 +4015,11 @@ function on({ environment: e, name: t, event: r, e: o }) {
   }
 }
 var nn = (e) => e === "Button" || e === "Input" || e === "Select";
-function OHt(e) {
+function collectPressHandles(e) {
   if (typeof e !== "object" || !e || Array.isArray(e)) return [];
   let t = e,
     r = t.type;
-  if (!nn(r)) return Array.isArray(t.children) ? t.children.flatMap(OHt) : [];
+  if (!nn(r)) return Array.isArray(t.children) ? t.children.flatMap(collectPressHandles) : [];
   let { press: o, props: n } = t;
   if (!(typeof o === "object" && o !== null)) return [];
   let { plugin: p, handle: i } = o,
@@ -4050,7 +4050,7 @@ function Bt(e, t) {
   let { children: o } = e;
   return o === void 0 ? e : { ...e, children: o.map((s) => Bt(s, t)) };
 }
-var Pmr = (e, t) => Bt(e, t);
+var remapTreePressHandles = (e, t) => Bt(e, t);
 var pn = { Button: "a Button", Input: "an Input", Select: "a Select" };
 function an(e, t, r) {
   let o = { plugin: t, handle: r };
@@ -4100,7 +4100,7 @@ function _m(e, t, r) {
   let o = e.taking.get(t);
   if ((e.taking.delete(t), o === void 0)) return;
   let n = new Set();
-  for (let { plugin: s, handle: p } of OHt(r))
+  for (let { plugin: s, handle: p } of collectPressHandles(r))
     for (let [i, a] of e.environments) if (a.name === s) n.add(X(i, p));
   for (let s of o) if (!n.has(s)) e.presses.delete(s);
 }
@@ -4144,7 +4144,7 @@ function Dt(e, t) {
                 ae(assertNextArgumentIsRecord(b, p));
                 let T = await f(b);
                 if (o === "ui.render")
-                  for (let w of OHt(T)) m.add(Lt(w.plugin, w.handle));
+                  for (let w of collectPressHandles(T)) m.add(Lt(w.plugin, w.handle));
                 return T;
               },
               signal: f.signal,
@@ -4165,7 +4165,7 @@ function Dt(e, t) {
 }
 async function cn(e, t, r) {
   let { e: o, signal: n } = r;
-  return Aae({
+  return runHookChain({
     e: o,
     handlers: (
       await e.hostOps({
@@ -4180,7 +4180,7 @@ async function cn(e, t, r) {
       .map((s) =>
         Dt(e, { environmentId: s, event: "ui.resolve", resolver: t }),
       ),
-    site: Sm["ui.resolve"],
+    site: HOOK_SITES["ui.resolve"],
     signal: n,
     bottom: (s) => Promise.resolve(xp(s.surface)),
     origin: G(e, t).name,
@@ -4206,19 +4206,19 @@ var Km = (e, t) => (r, o, n) =>
 var Vm = (e, t) => {
   e.delete(t);
 };
-function JMn(e, t) {
+function createHooksManager(e, t) {
   let r = fm(e, t),
     { environments: o, loading: n, dispatching: s, serving: p, presses: i } = r;
   async function a(f, c, m) {
     if (f.event === "ui.render") r.taking.set(f.id, new Set());
     let d;
     try {
-      d = await Aae({
+      d = await runHookChain({
         e: f.payload,
         handlers: f.environments.map((u) =>
           Dt(r, { environmentId: u, event: f.event }),
         ),
-        site: NYt(f.event),
+        site: siteForEvent(f.event),
         signal: m,
         bottom: (u, y) => c(u, y),
         origin: f.origin,
@@ -4269,7 +4269,7 @@ function JMn(e, t) {
     callInterface(f, { name: c, method: m, args: d }, u) {
       let { environment: y } = G(r, f);
       if (u) r.servingLive.add(u.callId);
-      let b = u ? setTimeout(Vm, Jrt, r.servingLive, u.callId) : void 0;
+      let b = u ? setTimeout(Vm, DEFAULT_HOOK_BUDGET_MS, r.servingLive, u.callId) : void 0;
       function T() {
         if ((clearTimeout(b), u)) r.servingLive.delete(u.callId);
       }
@@ -4303,76 +4303,76 @@ function JMn(e, t) {
     },
   };
 }
-function Dz(e, t) {
+function takeFromMap(e, t) {
   let r = e.get(t);
   return (e.delete(t), r);
 }
-function MHt(e, t) {
+function rejectAllPending(e, t) {
   for (let r of e.values()) r.reject(new HooksError(t));
   e.clear();
 }
 export {
-  Cl,
-  kmr,
-  $Mn,
-  Eae,
-  UMn,
-  jL,
-  BW,
-  LYt,
-  cdr,
-  BMn,
-  jMn,
-  xmr,
-  WMn,
-  GMn,
-  udr,
-  Dje,
-  IHt,
-  qMn,
-  v_e,
-  Hmr,
-  MYt,
-  zMn,
-  Sm,
-  NYt,
-  Lje,
-  $0,
-  Yrt,
-  PHt,
-  Aae,
-  Imr,
-  Jrt,
-  OHt,
-  Pmr,
-  R_e,
-  ddr,
-  VMn,
-  Omr,
-  k_e,
-  KMn,
-  FYt,
-  S8,
-  Cae,
-  qxe,
-  Qrt,
-  bZ,
-  Zrt,
-  eot,
-  Y1,
-  DHt,
-  tot,
-  NA,
-  vae,
-  LHt,
-  $Yt,
-  UYt,
-  Mje,
-  not,
-  XMn,
-  Dmr,
-  YMn,
-  JMn,
-  MHt,
-  Dz,
+  stableStringify,
+  EVENT_SUMMARY_BUILDERS,
+  dropUnsetIsError,
+  asStringList,
+  isStringList,
+  MAX_HOOK_TEXT_LENGTH,
+  MAX_HOOK_DROP_LENGTH,
+  ENGINE_ORIGIN,
+  cloneWithCutReport,
+  encodeMatcherTable,
+  setHooksLogger,
+  decodeMatcher,
+  matcherMatchesValue,
+  matcherMatchesValueIgnoringRegExp,
+  matcherPermitsEntry,
+  SURFACE_ELEMENT_TAGS,
+  AGENT_SPAWN_IDENTITY_KEYS,
+  joinTextBlocks,
+  unwrapToolArgument,
+  withToolName,
+  withToolUseId,
+  contentToText,
+  HOOK_SITES,
+  siteForEvent,
+  HOOK_GRACE_MS,
+  linkAbortSignal,
+  innermostOrigin,
+  createHookResultLog,
+  runHookChain,
+  runPreToolUseHooks,
+  DEFAULT_HOOK_BUDGET_MS,
+  collectPressHandles,
+  remapTreePressHandles,
+  CORE_OWNER_NAME,
+  formatRemovedInterfaceMessage,
+  isFlagInterfaceEnabled,
+  classifyTextWithModel,
+  MAX_STORE_VALUE_LENGTH,
+  getResolvedModel,
+  buildCoreInterfaceTable,
+  makeVmTimeoutOptions,
+  hardenVmIntrinsics,
+  makeVmAwait,
+  makeVmApply,
+  makeVmErrorExtractor,
+  makeVmClone,
+  makeVmAsyncWrapper,
+  makePlainError,
+  getVmErrorInfo,
+  formatConsoleArg,
+  wrapSyncHostFunction,
+  wrapAsyncHostFunction,
+  cloneValueAcrossBoundary,
+  snapshotArray,
+  makeVmStringUtils,
+  makeVmSanitizers,
+  toDisplayString,
+  getErrorMessage,
+  STAMP_SLOT_COUNT,
+  formatNotAwaitedFailure,
+  createHooksManager,
+  rejectAllPending,
+  takeFromMap,
 };

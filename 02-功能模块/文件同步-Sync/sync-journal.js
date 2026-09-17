@@ -32,7 +32,7 @@ import {
   MAX_LISTED_COMMITS,
   MAX_REPORT_ENTRIES,
   MAX_TEXT_CODE_UNITS,
-  rmn,
+  MAX_SYNC_PATH_CODE_UNITS,
   MAX_LISTED_SKIPPED_FILES,
   MAX_LISTED_CONFLICTED_COMMITS,
   MAX_CONFLICT_CODE_UNITS,
@@ -152,12 +152,12 @@ var H = createLazyValue(() =>
   W = /[\p{Cc}\\]|^[A-Za-z]:/u;
 function isSyncableRelativePath(e) {
   return (
-    e.length <= 2 * rmn &&
+    e.length <= 2 * MAX_SYNC_PATH_CODE_UNITS &&
     isSafeRelativePath(e) &&
     !W.test(e) &&
     !e.split("/").some(G) &&
     isWellFormed(e) &&
-    Array.from(e).length <= rmn
+    Array.from(e).length <= MAX_SYNC_PATH_CODE_UNITS
   );
 }
 function G(e) {

@@ -21,7 +21,7 @@ import { useClock } from "../../01-核心基础设施/共享小工具-未细化/
 import { DEFAULT_RECENT_WINDOW_MS, isRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
-import { dd, _p } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { useFocusTrap, useCursorDeclaration } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
@@ -330,7 +330,7 @@ function X8(wf) {
   if (zs !== jo && ut !== null) (Bn(oa), Ke(ra));
   let $e = ut !== null && Te[ut - 1]?.type === "input" ? Te[ut - 1] : null,
     Gs = C(null);
-  (dd(Gs, !sn), useActiveOverlay("select", !!st && !sn));
+  (useFocusTrap(Gs, !sn), useActiveOverlay("select", !!st && !sn));
   let Hs;
   if (
     mn[3] !== Je ||
@@ -538,7 +538,7 @@ function X8(wf) {
       (mn[36] = Pi),
       (mn[37] = ru));
   else ru = mn[37];
-  let Ni = _p(ru),
+  let Ni = useCursorDeclaration(ru),
     Go;
   if (mn[38] !== Ei || mn[39] !== sn)
     ((Go = sn ? {} : { tabIndex: 0, onKeyDown: Ei }),
@@ -679,7 +679,7 @@ function fOt(Df) {
   if (du !== Zo && Ye !== null) (Dn(Sa), Me(wa));
   let Pe = Ye && ie[Ye.index - 1]?.type === "input" ? ie[Ye.index - 1] : null,
     xu = C(null);
-  (dd(xu, !un), useActiveOverlay("multi-select", !!ft && !un));
+  (useFocusTrap(xu, !un), useActiveOverlay("multi-select", !!ft && !un));
   let hu;
   if (
     ke[13] !== $i ||
@@ -1000,7 +1000,7 @@ function fOt(Df) {
       (ke[61] = Gi),
       (ke[62] = Nu));
   else Nu = ke[62];
-  let Hi = _p(Nu),
+  let Hi = useCursorDeclaration(Nu),
     Wu;
   if (ke[63] !== vn) ((Wu = new Set(vn)), (ke[63] = vn), (ke[64] = Wu));
   else Wu = ke[64];
@@ -1087,7 +1087,7 @@ function jt(_f) {
       ($t[0] = Yi),
       ($t[1] = Lu));
   else Lu = $t[1];
-  let Qi = _p(Lu),
+  let Qi = useCursorDeclaration(Lu),
     Uu;
   if ($t[2] !== Wt.label)
     ((Uu = cE(Wt.label)), ($t[2] = Wt.label), ($t[3] = Uu));
@@ -1138,7 +1138,7 @@ function mOt(zf) {
     [qf, ul, zn] = qn(),
     [pr, zu] = d(null),
     Gu = C(null);
-  (dd(Gu, !0), useActiveOverlay("select", !0));
+  (useFocusTrap(Gu, !0), useActiveOverlay("select", !0));
   let { refuse: al, refuseCharacter: cl } = wr(Gf, Hf),
     Hu;
   if (an[0] !== Ut || an[1] !== al)
@@ -1232,7 +1232,7 @@ function mOt(zf) {
       (an[20] = mr),
       (an[21] = Yu));
   else Yu = an[21];
-  let pl = _p(Yu),
+  let pl = useCursorDeclaration(Yu),
     br;
   if (an[22] !== il) ((br = cE(il)), (an[22] = il), (an[23] = br));
   else br = an[23];
@@ -1346,7 +1346,7 @@ function nl(lp) {
   if (gn[7] !== yl)
     ((nc = { line: 0, column: 0, active: yl }), (gn[7] = yl), (gn[8] = nc));
   else nc = gn[8];
-  let Tl = _p(nc);
+  let Tl = useCursorDeclaration(nc);
   const Ol = Ya ? xl : void 0;
   let Mr;
   if (gn[9] !== zt || gn[10] !== Gt)
@@ -2916,7 +2916,7 @@ function Ii(Qm) {
   else fd = Ue[35];
   let { handleKeyDown: as } = ii(fd),
     pd = C(null);
-  dd(pd, !nn);
+  useFocusTrap(pd, !nn);
   let vi, bi, xi, ko;
   if (
     Ue[36] !== Co ||
@@ -3573,7 +3573,7 @@ function Ci(sb) {
   if (Ro[0] !== no)
     ((Bd = { line: 0, column: 0, active: no }), (Ro[0] = no), (Ro[1] = Bd));
   else Bd = Ro[1];
-  let Ms = _p(Bd),
+  let Ms = useCursorDeclaration(Bd),
     Oi;
   if (Ro[2] !== _n)
     ((Oi = _n ? () => jd(!0) : void 0), (Ro[2] = _n), (Ro[3] = Oi));

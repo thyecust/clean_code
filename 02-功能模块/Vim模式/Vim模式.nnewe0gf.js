@@ -38,18 +38,18 @@ import { lF } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import {
-  _p,
+  useCursorDeclaration,
   supportsShiftEnter,
   hasUsedBackslashReturn,
-  hle,
-  TOt,
-  Nye,
-  Zs,
-  m9e,
-  by,
-  PS,
-  wy,
-  T0e,
+  isWordChar,
+  isWhitespace,
+  isPunctuation,
+  TextCursor,
+  useTextInput,
+  quantizeToEighth,
+  interpolateColor,
+  formatRgbColor,
+  useVoiceLevelMeter,
 } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
@@ -109,7 +109,7 @@ class Wo {
       this.#t.emit());
   }
 }
-var OHe = new Gt(() => new Wo());
+var authStateStore = new Gt(() => new Wo());
 F();
 var bn = /\s+/g,
   na = 5;
@@ -546,7 +546,7 @@ var ns = Yl(function (Tl) {
   else Bn = Ue[94];
   return Bn;
 });
-function M8({
+function SuggestionList({
   suggestions: l,
   selectedSuggestion: b,
   maxColumnWidth: x,
@@ -625,7 +625,7 @@ function M8({
     ],
   });
 }
-var jQt = Yl(M8);
+var MemoizedSuggestionList = Yl(SuggestionList);
 function zr(l) {
   let x =
       l.kind === void 0 || l.kind === "action"
@@ -674,10 +674,10 @@ function ts(l, b) {
   return O;
 }
 F();
-function zz() {
+function isVimModeEnabled() {
   return resolveSetting("editorMode", "normal").value === "vim";
 }
-function WQt() {
+function getNewlineKeyHint() {
   if (supportsShiftEnter()) return "shift + \u23CE for newline";
   return hasUsedBackslashReturn()
     ? "\\\u23CE for newline"
@@ -716,12 +716,12 @@ var sa = new Set([
   "f11",
   "f12",
 ]);
-function GQt(l, b) {
+function shouldPrependSpace(l, b) {
   if (b.ctrl || b.meta) return !1;
   if (sa.has(l)) return !1;
   return l.length > 0 && !/^\s/.test(l);
 }
-function qQt(l) {
+function startsWithPunctuation(l) {
   return l.length > 0 && ".,?!:;)]".includes(l.charAt(0));
 }
 F();
@@ -795,8 +795,8 @@ var aa = {
   "`": ["`", "`"],
 };
 function Hn(l, b, x, O) {
-  if (x === "w") return ss(l, b, O, hle);
-  if (x === "W") return ss(l, b, O, (v) => !TOt(v));
+  if (x === "w") return ss(l, b, O, isWordChar);
+  if (x === "W") return ss(l, b, O, (v) => !isWhitespace(v));
   let R = aa[x];
   if (R) {
     let [v, w] = R;
@@ -820,9 +820,9 @@ function ss(l, b, x, O) {
   }
   let w = (q) => R[q]?.segment ?? "",
     S = (q) => (q < R.length ? R[q].index : l.length),
-    M = (q) => TOt(w(q)),
+    M = (q) => isWhitespace(w(q)),
     D = (q) => O(w(q)),
-    P = (q) => Nye(w(q)),
+    P = (q) => isPunctuation(w(q)),
     H = v,
     B = v;
   if (D(v)) {
@@ -913,7 +913,7 @@ function Dt(l, b, x, O) {
 function Gn(l, b, x, O, R) {
   let v = R.cursor.findCharacter(x, b, O);
   if (v === null) return;
-  let w = new Zs(R.cursor.measuredText, v),
+  let w = new TextCursor(R.cursor.measuredText, v),
     S = ca(R.cursor, w, b);
   (Qt(l, S.from, S.to, R),
     R.setLastFind(b, x),
@@ -991,7 +991,7 @@ function zn(l, b) {
     v = b.text.slice(0, x) + b.text.slice(O);
   (b.setRegister(R, !1),
     b.setText(v),
-    b.setOffset(NZ(v, x)),
+    b.setOffset(snapOffsetOffNewline(v, x)),
     b.recordChange({ type: "x", count: l }));
 }
 function Yn(l, b) {
@@ -1091,7 +1091,7 @@ function xn(l, b, x) {
       P = x.text.slice(0, D) + w + x.text.slice(D),
       H = w.includes(`
 `)
-        ? NZ(P, D)
+        ? snapOffsetOffNewline(P, D)
         : D + w.length - (getLastGrapheme(w).length || 1);
     (x.setText(P), x.setOffset(H));
   }
@@ -1205,13 +1205,13 @@ function Qt(l, b, x, O, R = !1) {
   if ((O.setRegister(v, R), l === "yank")) O.setOffset(b);
   else if (l === "delete") {
     let w = O.text.slice(0, b) + O.text.slice(x);
-    (O.setText(w), O.setOffset(NZ(w, b)));
+    (O.setText(w), O.setOffset(snapOffsetOffNewline(w, b)));
   } else if (l === "change") {
     let w = O.text.slice(0, b) + O.text.slice(x);
     (O.setText(w), O.enterInsert(b));
   }
 }
-function NZ(l, b) {
+function snapOffsetOffNewline(l, b) {
   if (
     l[b] ===
       `
@@ -2212,7 +2212,7 @@ function ao(l) {
   function se(I) {
     let z = oe.current;
     if (!z) return;
-    let K = Zs.fromText(b, O, I.offset);
+    let K = TextCursor.fromText(b, O, I.offset);
     ue(z, K, ge(K, I, !0));
   }
   function Ee(I, z) {
@@ -2221,7 +2221,7 @@ function ao(l) {
       Ve = () => {
         let ve = oe.current;
         if (!ve) return;
-        let Ne = Zs.fromText(K, O, X);
+        let Ne = TextCursor.fromText(K, O, X);
         ue(ve, Ne, {
           ...ge(Ne, z, !0),
           text: K,
@@ -2246,7 +2246,7 @@ function ao(l) {
             ne(z, { buffer: { text: K, offset: X }, claimEmptyInsert: !0 }));
           return;
         }
-        let je = Zs.fromText(K, O, X).insert(Re);
+        let je = TextCursor.fromText(K, O, X).insert(Re);
         (x(je.text),
           z.setOffset(je.offset),
           (B.current = {
@@ -2267,7 +2267,7 @@ function ao(l) {
         be(X, ae === "V" ? "line" : "char");
         return;
       }
-      let le = Zs.fromText(K, O, X),
+      let le = TextCursor.fromText(K, O, X),
         xe = {
           ...ge(le, z, !1),
           text: K,
@@ -2293,7 +2293,7 @@ function ao(l) {
   }
   function Oe(I, z) {
     let K = B.current,
-      X = Zs.fromText(b, O, z.offset),
+      X = TextCursor.fromText(b, O, z.offset),
       Ve = () => H?.(I.key, I);
     if (!(
       I.name === "left" &&
@@ -2573,7 +2573,7 @@ function ao(l) {
     cancelPendingRemap: ce,
   };
 }
-function JFn(l) {
+function useVimTextInput(l) {
   let { inputFilter: b } = l,
     x = C(null),
     O = ao({
@@ -2604,7 +2604,7 @@ function JFn(l) {
         }),
       inputFilter: b,
     }),
-    R = m9e({
+    R = useTextInput({
       ...l,
       selectionAnchor: O.visualAnchor,
       selectionLinewise: O.mode === "VISUAL LINE",
@@ -2661,7 +2661,7 @@ var La = new Set([
   "f11",
   "f12",
 ]);
-function jp({
+function useVimModeInput({
   isActive: l,
   onExit: b,
   onCancel: x,
@@ -2754,7 +2754,7 @@ function jp({
       if (!l) return;
       let ve = ge.current,
         Ne = Y.current,
-        ae = Zs.fromText(ve, Z, Ne);
+        ae = TextCursor.fromText(ve, Z, Ne);
       if (!Ea(W) && !Va(W)) ie.dispatch({ type: "interrupt" });
       if (W.ctrl && w.includes(W.key.toLowerCase())) return;
       if (W.name === "return") {
@@ -2990,7 +2990,7 @@ function jp({
         (ue(le.text), se(le.offset));
       }
     },
-    I = q && zz(),
+    I = q && isVimModeEnabled(),
     z = ao({
       value: ce,
       onChange: ue,
@@ -3030,14 +3030,14 @@ function jp({
           )
         : (W.text.split(/\r\n|\r|\n/, 2)[0] ?? "");
       if (ve.length === 0) return;
-      let ae = Zs.fromText(ge.current, Z, Y.current).insert(ve);
+      let ae = TextCursor.fromText(ge.current, Z, Y.current).insert(ve);
       (ue(ae.text), se(ae.offset));
     },
     vimMode: I ? z.mode : void 0,
   };
 }
 F();
-function Vst(l, b) {
+function buildTextLayout(l, b) {
   let x = Math.max(1, Math.floor(b) || 1),
     O = b > 0 ? dp(l, x, { hard: !0, trim: !1 }) : l,
     R = [],
@@ -3183,7 +3183,7 @@ function fr(l) {
 function Ds(l, b, x) {
   return l < b ? b : l > x ? x : l;
 }
-function Xd({
+function SearchInput({
   query: l,
   placeholder: b = "Search\u2026",
   isFocused: x,
@@ -3206,13 +3206,13 @@ function Xd({
     G = S ? 0 : 1,
     oe = `${R} ${l}`,
     J = R.length + 1,
-    ye = V(() => Vst(oe, Te ?? 0), [oe, Te]),
+    ye = V(() => buildTextLayout(oe, Te ?? 0), [oe, Te]),
     de = V(lF, []),
     ce =
       a.CLAUDE_CODE_ALT_SCREEN_FULL_REPAINT &&
       a.CLAUDE_CODE_SESSION_KIND !== "bg",
     he = Ns(ye, J + Z),
-    ne = _p({
+    ne = useCursorDeclaration({
       line: G + he.line,
       column: me + he.column,
       active: x,
@@ -3317,7 +3317,7 @@ function Pa(l, b, x, O, R) {
   }
   return D;
 }
-function QFn(l) {
+function shouldClearSelectionForKey(l) {
   if (l.wheelUp || l.wheelDown || l.escape) return !1;
   if (l.pageUp || l.pageDown) return !1;
   if ((l.home || l.end) && l.ctrl) return !1;
@@ -3349,7 +3349,7 @@ function Da(l) {
     return !1;
   return !0;
 }
-function ZFn(l, b) {
+function createSelectionKeyDownHandler(l, b) {
   return (x) => {
     if (!l.hasSelection()) return;
     if (x.key === "c" && !x.meta && (x.ctrl || x.superKey)) {
@@ -3361,7 +3361,7 @@ function ZFn(l, b) {
     if (Da(x)) l.clearSelection();
   };
 }
-function Kst(l, b = !0) {
+function useSelectionClearKeybinding(l, b = !0) {
   useKeybindings(
     {
       "selection:clear": () => {
@@ -3373,7 +3373,7 @@ function Kst(l, b = !0) {
   );
 }
 F();
-function Xst(l) {
+function buildSelectionCopiedNotification(l) {
   let b = getClipboardCopyStrategy(),
     x = countGraphemes(l),
     O = x === 1 ? "char" : "chars",
@@ -3400,7 +3400,7 @@ function Xst(l) {
     timeoutMs: v ? 6000 : b === "native" ? 2000 : 4000,
   };
 }
-function Yst(l, b, x) {
+function useCopyOnSelect(l, b, x) {
   let O = C(!1),
     R = C(null),
     [v] = d(() => ({
@@ -3443,7 +3443,7 @@ function Yst(l, b, x) {
     v
   );
 }
-function Jst(l) {
+function useSelectionBackgroundColor(l) {
   let b = useResolvedTheme();
   E(() => {
     l.setSelectionBgColor(b.selectionBg);
@@ -3471,7 +3471,7 @@ class Us {
     this.ultraEffortObserved = l;
   }
 }
-var $Z = new j(() => new Us());
+var sessionStateStore = new j(() => new Us());
 F();
 import Ua from "path";
 var Wa = "at_mentioned",
@@ -3485,7 +3485,7 @@ var Wa = "at_mentioned",
       }),
     }),
   );
-function J6e(l, b) {
+function useIdeAtMentionNotification(l, b) {
   let x = V(() => getConnectedIdeClient(l), [l]),
     O = C(void 0);
   E(() => {
@@ -3504,7 +3504,7 @@ function J6e(l, b) {
     });
   }, [x, b]);
 }
-function Q6e(l, b) {
+function formatAtMention(l, b) {
   let x = Ua.relative(getCwd(), l.filePath),
     O;
   if (l.lineStart && l.lineEnd)
@@ -3517,13 +3517,13 @@ function Q6e(l, b) {
   return O;
 }
 F();
-function Y6e() {
+function useLoginCompleted() {
   let l = useSession();
-  return useStoreSelector(OHe.of(l), (b) => b.loginCompleted);
+  return useStoreSelector(authStateStore.of(l), (b) => b.loginCompleted);
 }
-function JR() {
+function useVoiceAvailable() {
   let l = useAppStateSelector((O) => isVoiceEnabled(O.settings)),
-    b = Y6e(),
+    b = useLoginCompleted(),
     x = V(() => l && hasVoiceAuth(), [b, l]);
   return (
     E(() => {
@@ -3608,7 +3608,7 @@ function ci(l) {
 function fi() {
   return zSt(hw);
 }
-function Y_e({ composer: l, isActive: b = !0 }) {
+function useVoiceComposer({ composer: l, isActive: b = !0 }) {
   let { addNotification: x } = useNotificationQueue(),
     O = useVoiceSetState(),
     R = useVoiceGetState(),
@@ -3650,7 +3650,7 @@ function Y_e({ composer: l, isActive: b = !0 }) {
         (w.current = ""),
         l.setValueWithCursor(G + oe, G.length));
     }, [l]),
-    P = JR(),
+    P = useVoiceAvailable(),
     H = useAppStateSelector((G) => G.settings.voice?.autoSubmit === !0),
     B = useAppStateSelector((G) => G.settings.voice?.mode ?? "hold"),
     q = useVoiceSelector((G) => G.voiceState),
@@ -3748,7 +3748,7 @@ function Y_e({ composer: l, isActive: b = !0 }) {
     }
   );
 }
-function Yae(Vf) {
+function useVoiceKeybindings(Vf) {
   let Zt = _(32),
     {
       voiceHandleKeyEvent: vn,
@@ -3762,7 +3762,7 @@ function Yae(Vf) {
     nt = useVoiceSetState(),
     ja = useKeybindingContext(),
     js = useHasNonAutocompleteOverlay(),
-    uo = JR(),
+    uo = useVoiceAvailable(),
     lo = useVoiceSelector(eu),
     co = useAppStateSelector(tu),
     pr = useClock(),
@@ -4054,11 +4054,11 @@ function Yae(Vf) {
   else Qa = Zt[31];
   return Qa;
 }
-function zQt(l) {
+function getLayoutModeForWidth(l) {
   if (l >= 70) return "horizontal";
   return "compact";
 }
-function FZ(l, b) {
+function truncatePathSegments(l, b) {
   if (te(l) <= b) return l;
   let x = "/",
     O = "\u2026",
@@ -4091,7 +4091,7 @@ function FZ(l, b) {
   if (B.length === 0) return `${S}${x}${O}${x}${M}`;
   return `${S}${x}${O}${x}${B.join(x)}${x}${M}`;
 }
-function PHe() {
+function getFooterInfo() {
   let l =
       a.DEMO_VERSION ??
       `${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}${getBuildRefName()}`,
@@ -4107,7 +4107,7 @@ function PHe() {
     w = getInitialSettings().agent;
   return { version: l, cwd: O, billingType: v, agentName: w };
 }
-function VQt(l, b, x) {
+function layoutModelAndBilling(l, b, x) {
   if (te(l) + 3 + te(b) > x)
     return {
       shouldSplit: !0,
@@ -4126,7 +4126,7 @@ function mu(md) {
 var gi = { r: 153, g: 153, b: 153 },
   hi = { r: 185, g: 185, b: 185 },
   bi = 2;
-function UZ(fd) {
+function VoiceStatusIndicator(fd) {
   let di = _(3),
     { voiceState: dd } = fd,
     pd = useAppStateSelector(mu);
@@ -4163,9 +4163,9 @@ function UZ(fd) {
     }
   }
 }
-function Z6e() {
+function VoiceCursorChar() {
   let gd = _(2),
-    [, yr] = T0e(),
+    [, yr] = useVoiceLevelMeter(),
     lu;
   if (gd[0] !== yr)
     ((lu = yr ? e(t, { color: yr.hex, children: yr.char }) : null),
@@ -4174,7 +4174,7 @@ function Z6e() {
   else lu = gd[1];
   return lu;
 }
-function BZ() {
+function VoiceWarmupHint() {
   let hd = _(1),
     fu;
   if (hd[0] === MEMO_CACHE_SENTINEL)
@@ -4200,8 +4200,8 @@ function xo() {
     ho = (Math.sin((yd * Math.PI * 2) / bi) + 1) / 2,
     Or;
   if (go[1] !== ho) {
-    let Od = Zd() ? by(ho) : ho;
-    Or = wy(PS(gi, hi, Od));
+    let Od = Zd() ? quantizeToEighth(ho) : ho;
+    Or = formatRgbColor(interpolateColor(gi, hi, Od));
     ((go[1] = ho), (go[2] = Or));
   } else Or = go[2];
   let mi = Or,
@@ -4973,7 +4973,7 @@ function Pr($p) {
     } = $p,
     wt = useAppStateSelector(Xu),
     Lr = useSetAppState(),
-    cn = $Z.of(useSession().host),
+    cn = sessionStateStore.of(useSession().host),
     [Hp, Lu] = d(cn.packageManagerLatestVersion),
     [Bt, Gp] = d("unknown"),
     [wi, qp] = d(null),
@@ -5297,7 +5297,7 @@ function Pr($p) {
   else zu = Qe[38];
   return zu;
 }
-function J_e(hm) {
+function AutoUpdaterWrapper(hm) {
   let Lo = _(13),
     {
       isUpdating: Mn,
@@ -5373,7 +5373,7 @@ function J_e(hm) {
   else Dr = Lo[12];
   return Dr;
 }
-function eWe({ segments: l }) {
+function NotificationSegments({ segments: l }) {
   return l.map((b, x) => {
     let O = e(
       t,
@@ -5389,7 +5389,7 @@ function rl(Am) {
 function ol(Nm) {
   return Nm.diffPanelVisible;
 }
-function Q_e() {
+function CurrentNotification() {
   let Po = _(12),
     De = useAppStateSelector(rl),
     Lm = useAppStateSelector(ol);
@@ -5409,7 +5409,7 @@ function Q_e() {
   if ("segments" in De) {
     let pt;
     if (Po[3] !== De.segments)
-      ((pt = e(eWe, { segments: De.segments })),
+      ((pt = e(NotificationSegments, { segments: De.segments })),
         (Po[3] = De.segments),
         (Po[4] = pt));
     else pt = Po[4];
@@ -5439,39 +5439,39 @@ function Q_e() {
   return Ur;
 }
 export {
-  M8,
-  jQt,
-  zz,
-  WQt,
-  GQt,
-  qQt,
-  NZ,
-  JFn,
-  jp,
-  Vst,
-  Xd,
-  QFn,
-  ZFn,
-  Kst,
-  Xst,
-  Yst,
-  Jst,
-  zQt,
-  FZ,
-  PHe,
-  VQt,
-  OHe,
-  Y6e,
-  $Z,
-  J6e,
-  Q6e,
-  JR,
-  Y_e,
-  Yae,
-  UZ,
-  Z6e,
-  BZ,
-  J_e,
-  eWe,
-  Q_e,
+  SuggestionList,
+  MemoizedSuggestionList,
+  isVimModeEnabled,
+  getNewlineKeyHint,
+  shouldPrependSpace,
+  startsWithPunctuation,
+  snapOffsetOffNewline,
+  useVimTextInput,
+  useVimModeInput,
+  buildTextLayout,
+  SearchInput,
+  shouldClearSelectionForKey,
+  createSelectionKeyDownHandler,
+  useSelectionClearKeybinding,
+  buildSelectionCopiedNotification,
+  useCopyOnSelect,
+  useSelectionBackgroundColor,
+  getLayoutModeForWidth,
+  truncatePathSegments,
+  getFooterInfo,
+  layoutModelAndBilling,
+  authStateStore,
+  useLoginCompleted,
+  sessionStateStore,
+  useIdeAtMentionNotification,
+  formatAtMention,
+  useVoiceAvailable,
+  useVoiceComposer,
+  useVoiceKeybindings,
+  VoiceStatusIndicator,
+  VoiceCursorChar,
+  VoiceWarmupHint,
+  AutoUpdaterWrapper,
+  NotificationSegments,
+  CurrentNotification,
 };

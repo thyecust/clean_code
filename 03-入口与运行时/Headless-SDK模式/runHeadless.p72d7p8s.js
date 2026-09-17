@@ -304,7 +304,7 @@ import {
   createQueuedCommandMessage,
   createToolHostResultMessage,
   createLocalCommandOutputMessage,
-  t5n,
+  getAssistantResultText,
   getInMemoryErrorsSince,
   shouldForwardSubagentFrame,
   toSdkOutputMessages,
@@ -696,7 +696,7 @@ import {
   xme,
   yAt,
 } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { dCe, readUnreadMessages, MARK_READ_FAILURE_CAP, markMessagesAsRead, formatTeammateMessages, isShutdownApproved, isHeadlessLeadDisplayableMessage } from "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
+import { unassignAgentTasks, readUnreadMessages, MARK_READ_FAILURE_CAP, markMessagesAsRead, formatTeammateMessages, isShutdownApproved, isHeadlessLeadDisplayableMessage } from "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
 import { isRemoteControlDeploymentAvailable, isRunningInRemoteEnvironment, isBridgeStateFramesEnabled, isSdkBridgeStateAnnounceEnabled, isQuotaRejectedReemitEnabled, getCcrAutoConnectDefault, isPersistentRemoteSessionEnabled, isRemoteControlInternalEventsEnabled, getBridgeSubagentFrameGate } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
 import { areSideloadFlagsDisabledByPolicy } from "../../02-功能模块/插件系统/plugin-source-policy.js";
 import { ComputerUseMcpStateStore, ComputerUseLockOwnerContext } from "../../02-功能模块/图片-截图-ComputerUse/computer-use-lock.js";
@@ -3974,7 +3974,7 @@ function Lu(e) {
               An = mr.findLast(
                 (ds) => ds.type === "assistant" || ds.type === "user",
               ),
-              Cr = An?.type === "assistant" ? t5n(An, Ao.get(An)) : void 0,
+              Cr = An?.type === "assistant" ? getAssistantResultText(An, Ao.get(An)) : void 0,
               vo = En.fields();
             So = {
               ...De,
@@ -11374,7 +11374,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     if (wr)
                       (await removeTeammateFromTeamFile(Hn, { agentId: wr, name: Sn }, w.storageV5),
                         n(`[print.ts] Removed ${Sn} from team file`),
-                        await dCe(Hn, wr, Sn, "shutdown", w.storageV5),
+                        await unassignAgentTasks(Hn, wr, Sn, "shutdown", w.storageV5),
                         C((fr) => {
                           if (!fr.teamContext?.teammates) return fr;
                           if (!(wr in fr.teamContext.teammates)) return fr;

@@ -1814,7 +1814,7 @@ function Rs(e) {
 function to(e, t, o) {
   if (isDelegatedObservationAgent(t.agentContext)) return;
   let r = getShareEntry(o),
-    d = Reflect.get(e, gO),
+    d = Reflect.get(e, ARTIFACT_ASSET_TARGET_PIN),
     w = (E) => typeof d === "object" && d !== null && Reflect.get(d, E) === !0,
     p = w("classifier") || (getToolPermissionContext(t).mode === "auto" && !w("userOnly"));
   if (!ds(e, t) || w("once") || p || (ownedByUser(r) && !qn(r) && !Rs(r))) return;
@@ -1952,7 +1952,7 @@ function ul(e, t, o) {
         },
   );
 }
-function mO(e) {
+function parseArtifactReplyInput(e) {
   let t =
       "thread_id" in e && typeof e.thread_id === "string"
         ? e.thread_id
@@ -1974,7 +1974,7 @@ function Bc(e, t) {
   }
   return { tid: o, audience: r };
 }
-function Mee(e) {
+function parseArtifactAssetInput(e) {
   let t = (o) => {
     let r = e[o];
     return typeof r === "string" ? r : void 0;
@@ -2043,17 +2043,17 @@ var zr = "__artifactRoomJoinDisclosed",
   no = "__artifactTypeCreatePin",
   ai = "__artifactAssetUploadPin",
   Ms = "__artifactRoomSendTarget",
-  gO = "__artifactAssetTargetPin",
+  ARTIFACT_ASSET_TARGET_PIN = "__artifactAssetTargetPin",
   li = "__artifactReadTargetPin",
   $o = "__artifactDeletePin",
-  vut = "__artifactDeleteTarget",
-  M4 = "__artifactDisplayTarget",
+  ARTIFACT_DELETE_TARGET = "__artifactDeleteTarget",
+  ARTIFACT_DISPLAY_TARGET = "__artifactDisplayTarget",
   oi = "__artifactConsentPin",
   hl = "__artifactSyncTargetPin";
 function Kt(e, t) {
   return { [oi]: t === null ? null : { action: e, slug: t.slug } };
 }
-var ml = [wr, ai, Ms, gO, li, $o, oi, hl];
+var ml = [wr, ai, Ms, ARTIFACT_ASSET_TARGET_PIN, li, $o, oi, hl];
 function vr(e, t) {
   return ml.some((o) => o !== t && Reflect.get(e, o) !== void 0);
 }
@@ -2076,7 +2076,7 @@ var la = "__artifactDbReadTargetPin",
   di = "__artifactDbWriteSourcePin",
   Km = "__artifactHandlersPin",
   Xm = "__artifactLiveDocStandIn",
-  Jm = [Rt, Xm, xt, yr, oa, ...ml, zr, no, ia, aa, la, di, Km, vut, M4, ARTIFACT_COMMENT_TARGET_FIELD];
+  Jm = [Rt, Xm, xt, yr, oa, ...ml, zr, no, ia, aa, la, di, Km, ARTIFACT_DELETE_TARGET, ARTIFACT_DISPLAY_TARGET, ARTIFACT_COMMENT_TARGET_FIELD];
 function Hc(e) {
   return (
     typeof e === "object" &&
@@ -2410,7 +2410,7 @@ import { unlink as bg } from "fs/promises";
 import { join as fa, normalize, sep as iu } from "path";
 var su = null,
   vg = 80;
-function Nee(e) {
+function truncateArtifactTitle(e) {
   let t = sweepAskCopy(sanitizeArtifactTitle(e ?? "") ?? "") ?? "",
     o = truncateToCodeUnits(t, vg);
   return o === t ? t : `${o}\u2026`;
@@ -2424,7 +2424,7 @@ function Po(e, t) {
     : { type: "other", reason: t };
 }
 function js(e, t) {
-  let o = Nee(
+  let o = truncateArtifactTitle(
     getShareEntry(e.slug)?.title ||
       getNonOpenedFrameUrlEntries(t.getAppState().frameUrls).find(
         ([, r]) => r.title && uuidSlugFromUrl(r.url) === e.slug,
@@ -2480,7 +2480,7 @@ function co(e, t, o) {
     d = ownedByUser(r);
   return (d && !qn(r) && !(o === "files" && Rs(r))) || sue(e, t, d);
 }
-function pPe(e, t) {
+function formatOwnershipParenthetical(e, t) {
   return ownedByUser(e) && qn(e)
     ? " (yours; a co-writer has also published to it)"
     : t === "files" && ownedByUser(e) && Rs(e)
@@ -2533,8 +2533,8 @@ function ma(e, t, o, r, d, w, p = !1) {
       )
     );
 }
-function YSe(e) {
-  let { assetId: t, outDir: o } = Mee(e);
+function resolveArtifactAssetPath(e) {
+  let { assetId: t, outDir: o } = parseArtifactAssetInput(e);
   if (t === void 0 || !ASSET_ID_RE.test(t)) return;
   try {
     return fa(ot(o === void 0 || o === "" ? getCwd() : o), t);
@@ -2542,15 +2542,15 @@ function YSe(e) {
     return;
   }
 }
-function JSe(e) {
+function parseArtifactFilePathInput(e) {
   let t = (o) => {
     let r = e[o];
     return typeof r === "string" ? r : void 0;
   };
   return { path: t("path"), outDir: t("out_dir") };
 }
-function QSe(e, { outDirJudged: t = !1 } = {}) {
-  let { path: o, outDir: r } = JSe(e);
+function resolveArtifactReadDestination(e, { outDirJudged: t = !1 } = {}) {
+  let { path: o, outDir: r } = parseArtifactFilePathInput(e);
   if (o === void 0)
     return {
       reason:
@@ -2636,7 +2636,7 @@ async function fi(e, t, o) {
     throw new rr(e, d, r);
   }
 }
-function b9(e) {
+function parseArtifactDbInput(e) {
   let t = (p) => {
       let _ = e[p];
       return typeof _ === "string" ? _ : void 0;
@@ -2655,12 +2655,12 @@ function b9(e) {
     filePath: t("file_path"),
   };
 }
-function w9(e) {
+function parseArtifactDbBatchWrites(e) {
   let t = e.writes;
   if (!Array.isArray(t)) return [];
   return t.map((o) => {
     let r = o !== null && typeof o === "object" ? { ...o, db_op: o.op } : {},
-      { dbOp: d, collection: w, docId: p, data: _, filePath: E } = b9(r);
+      { dbOp: d, collection: w, docId: p, data: _, filePath: E } = parseArtifactDbInput(r);
     return { op: d, collection: w, docId: p, data: _, filePath: E };
   });
 }
@@ -2675,11 +2675,11 @@ function ya(e) {
 function pi(e) {
   return sanitizeDisplayText(e.ruleValue.ruleContent ?? "", { max: 1024 }).replace(DECISION_SURFACE_BRACKETS_RE, " ");
 }
-function Xb(e) {
+function getArtifactTypeUrl(e) {
   let t = e?.type_url;
   return typeof t === "string" ? t : void 0;
 }
-function fPe(e) {
+function getArtifactTypeName(e) {
   let t = e?.type;
   return typeof t === "string" ? t : void 0;
 }
@@ -2691,8 +2691,8 @@ function ba(e) {
     ? "after_first_write"
     : "at_create";
 }
-function yce(e) {
-  let { outDir: t, collection: o } = b9(e);
+function resolveArtifactDbReadDir(e) {
+  let { outDir: t, collection: o } = parseArtifactDbInput(e);
   if (t === void 0) return { kind: "inline" };
   let r;
   try {
@@ -2735,7 +2735,7 @@ function uo(e) {
 function hi(e) {
   if (typeof e !== "object" || e === null || e.action !== "write_db") return !1;
   if (typeof e.file_path === "string") return !0;
-  return w9(e).some((t) => t.filePath !== void 0);
+  return parseArtifactDbBatchWrites(e).some((t) => t.filePath !== void 0);
 }
 var $l = 3000;
 function _a(e) {
@@ -2817,7 +2817,7 @@ function Aa(e) {
     p = w.length === 1 ? ", so" : " \u2014 so";
   return ` Of the ${e.length} local files being copied, ${w.join("; ")}${p} only you can approve this.`;
 }
-function E7(e) {
+function formatArtifactPayloadPreview(e) {
   if (e === void 0) return "";
   try {
     let t = b(e),
@@ -2917,7 +2917,7 @@ function mi(e) {
   if (e.action !== void 0 && e.action !== "publish") return !1;
   let t = getDeclaredCapabilities(e);
   if (t !== void 0) return isRecord(t) && t.room !== void 0;
-  let o = Xb(e);
+  let o = getArtifactTypeUrl(e);
   if (o !== void 0) {
     let w = parseArtifactUrl(o);
     return w !== null && ii(w.slug);
@@ -2948,7 +2948,7 @@ function wn(e) {
 function Io(e, t, o, r) {
   if (typeof o !== "object" || o === null || !ya(o)) return;
   let { writes: d, ...w } = o;
-  for (let [p, _] of w9(o).entries()) {
+  for (let [p, _] of parseArtifactDbBatchWrites(o).entries()) {
     let E = evaluateArtifactPermissionWithAction(
       t,
       e,
@@ -2989,7 +2989,7 @@ function hu(e, t, o, r) {
   return {
     behavior: "ask",
     message: `Claude wants to write a batch to this artifact's database, and writes[${d.index}] matches your ask rule ${Cs(d.rule)} \u2014 the full permission check could not complete, so approving covers only this call.`,
-    updatedInput: { ...r, [Rt]: !1, [M4]: p === null ? null : js(p, t) },
+    updatedInput: { ...r, [Rt]: !1, [ARTIFACT_DISPLAY_TARGET]: p === null ? null : js(p, t) },
     suppressAlwaysAllowRule: !0,
     decisionReason: { type: "rule", rule: d.rule },
   };
@@ -3080,7 +3080,7 @@ function kg(e, t) {
     !isArtifactActionCoveredByRule(o, t, ["reply"])
   );
 }
-function mPe(e) {
+function formatArtifactReplyText(e) {
   if (e === void 0 || e === "") return "";
   let t = normalizeCommentText(e);
   return Array.from(e).length > nV ? `${scrubArtifactEnvelopeTags(truncateToCodePoints(t, nV))}\u2026` : t;
@@ -3513,7 +3513,7 @@ var gu = ["reply", "comments"],
         if (p !== null) return Nn(p);
         if (r !== null) oo("comments", o, r.slug, d);
         if (r !== null && d) {
-          let { threadId: E } = mO(t),
+          let { threadId: E } = parseArtifactReplyInput(t),
             C = { parsed: r, rawUrl: t.url },
             D = findArtifactReplyAllowRule(getToolPermissionContext(o), C, gu) !== null,
             [, I] =
@@ -3576,10 +3576,10 @@ var gu = ["reply", "comments"],
       }
       if (t.action === "reply") {
         let r = t.url !== void 0 ? parseArtifactUrl(t.url) : null,
-          { threadId: d, replyText: w } = mO(t),
+          { threadId: d, replyText: w } = parseArtifactReplyInput(t),
           p = { parsed: r, rawUrl: t.url },
           _ = findArtifactReplyAllowRule(getToolPermissionContext(o), p, ["reply"]) !== null,
-          E = mPe(w),
+          E = formatArtifactReplyText(w),
           [, C] =
             r !== null
               ? await Promise.all([
@@ -3687,7 +3687,7 @@ var gu = ["reply", "comments"],
         if (!E.ok)
           return { result: !1, message: E.message, errorCode: E.errorCode };
         if (r === "comments") {
-          let { threadId: C, cursor: D } = mO(t);
+          let { threadId: C, cursor: D } = parseArtifactReplyInput(t);
           if (C !== void 0 && D !== void 0)
             return {
               result: !1,
@@ -3711,7 +3711,7 @@ var gu = ["reply", "comments"],
             };
         }
         if (r === "reply") {
-          let { threadId: C, replyText: D } = mO(t);
+          let { threadId: C, replyText: D } = parseArtifactReplyInput(t);
           if (C === void 0 || D === void 0)
             return {
               result: !1,
@@ -3731,7 +3731,7 @@ var gu = ["reply", "comments"],
               message: "text must not be empty",
               errorCode: 11,
             };
-          if (mPe(D) === "")
+          if (formatArtifactReplyText(D) === "")
             return {
               result: !1,
               message:
@@ -3754,7 +3754,7 @@ var gu = ["reply", "comments"],
             };
         }
         if (r === "resolve") {
-          let { threadId: C } = mO(t);
+          let { threadId: C } = parseArtifactReplyInput(t);
           if (C === void 0)
             return {
               result: !1,
@@ -3770,7 +3770,7 @@ var gu = ["reply", "comments"],
             };
         }
         if (r === "reply" || r === "resolve") {
-          let { threadId: C } = mO(t),
+          let { threadId: C } = parseArtifactReplyInput(t),
             D = parseArtifactUrl(d);
           if (C !== void 0 && D !== null)
             settleSummonSeed(D.slug, C, kme(o.messages).decider?.text);
@@ -3787,7 +3787,7 @@ var gu = ["reply", "comments"],
           : "read artifact comments (read-only)";
       }
       if (e?.action === "resolve") {
-        let { threadId: t } = mO(e),
+        let { threadId: t } = parseArtifactReplyInput(e),
           o = t !== void 0 && ARTIFACT_SLUG_RE.test(t) ? t : "(invalid)",
           r = typeof e.url === "string" ? parseArtifactUrl(e.url) : null,
           d = r !== null ? getShareEntry(r.slug) : void 0;
@@ -3795,10 +3795,10 @@ var gu = ["reply", "comments"],
       }
       if (e?.action === "reply")
         try {
-          let { threadId: t, replyText: o } = mO(e),
+          let { threadId: t, replyText: o } = parseArtifactReplyInput(e),
             r = t !== void 0 && ARTIFACT_SLUG_RE.test(t) ? t : "(invalid)",
             d = typeof e.url === "string" ? parseArtifactUrl(e.url) : null,
-            w = mPe(o).replace(DECISION_SURFACE_BRACKETS_RE, " "),
+            w = formatArtifactReplyText(o).replace(DECISION_SURFACE_BRACKETS_RE, " "),
             p = d !== null ? ne().ownPublishedSlugs.get(d.slug) : void 0,
             _ = p !== void 0 && p.env === d?.env ? SESSION_PUBLISHED_CLASSIFIER_MARK : "",
             E = d !== null ? getShareEntry(d.slug) : void 0,
@@ -3836,7 +3836,7 @@ var gu = ["reply", "comments"],
           : "read artifact comments (read-only)";
       }
       if (e?.action === "reply") {
-        let t = mPe(mO(e).replyText).replace(DECISION_SURFACE_BRACKETS_RE, " "),
+        let t = formatArtifactReplyText(parseArtifactReplyInput(e).replyText).replace(DECISION_SURFACE_BRACKETS_RE, " "),
           o = typeof e.url === "string" ? parseArtifactUrl(e.url) : null,
           r = o !== null ? getShareEntry(o.slug) : void 0,
           d = shareAudienceMark(r);
@@ -3884,7 +3884,7 @@ var gu = ["reply", "comments"],
             "comments could not be read reliably right now \u2014 try again",
             "comments_degraded",
           );
-        let { threadId: _, cursor: E } = mO(t);
+        let { threadId: _, cursor: E } = parseArtifactReplyInput(t);
         if (_ !== void 0 && E !== void 0)
           throw new ArtifactInputError(
             "`thread_id` (read one thread) and `cursor` (continue the list) cannot be combined \u2014 pass one.",
@@ -3950,7 +3950,7 @@ var gu = ["reply", "comments"],
       }
       if (t.action === "reply") {
         let r = t.url !== void 0 ? parseArtifactUrl(t.url) : null,
-          { threadId: d, replyText: w } = mO(t);
+          { threadId: d, replyText: w } = parseArtifactReplyInput(t);
         if (r === null || d === void 0 || w === void 0)
           throw new ArtifactInputError(
             'url, thread_id and text are required for action "reply"',
@@ -3961,7 +3961,7 @@ var gu = ["reply", "comments"],
             "text contains invisible or control characters, or a run of exotic blanks (non-breaking/ideographic spaces, braille blanks), that consent surfaces cannot display faithfully \u2014 note this includes the joiner/variation-selector code points inside most emoji; resend the reply as plain text without emoji, using ordinary spaces only",
             "reply_hidden_code_points",
           );
-        if (w.trim() === "" || mPe(w) === "")
+        if (w.trim() === "" || formatArtifactReplyText(w) === "")
           throw new ArtifactInputError(
             "text is empty or visually blank after permission or hook rewrites \u2014 a reply no approval surface could display is not posted",
             "reply_empty_text",
@@ -4075,7 +4075,7 @@ var gu = ["reply", "comments"],
       }
       if (t.action === "resolve") {
         let r = t.url !== void 0 ? parseArtifactUrl(t.url) : null,
-          { threadId: d } = mO(t);
+          { threadId: d } = parseArtifactReplyInput(t);
         if (r === null || d === void 0)
           throw new ArtifactInputError(
             'url and thread_id are required for action "resolve"',
@@ -4266,7 +4266,7 @@ var Au =
         D = C("deny");
       if (D !== null) return Nn(D, "nothing was copied", !0);
       let I = (ke) => ({
-          [gO]: {
+          [ARTIFACT_ASSET_TARGET_PIN]: {
             action: "copy_from",
             slug: p.slug,
             from: _.slug,
@@ -4428,9 +4428,9 @@ var Au =
       let E = Dl(w);
       if (E !== void 0 || w === void 0)
         throw new ArtifactInputError(E ?? "asset_ids missing", "asset_copy_bad_ids");
-      let C = Reflect.get(t, gO);
+      let C = Reflect.get(t, ARTIFACT_ASSET_TARGET_PIN);
       if (
-        vr(t, gO) ||
+        vr(t, ARTIFACT_ASSET_TARGET_PIN) ||
         (C !== void 0 &&
           (C?.action !== "copy_from" ||
             C.slug !== p.slug ||
@@ -4490,7 +4490,7 @@ var Au =
         _ = r !== void 0 ? parseArtifactUrl(r) : null,
         E = d !== void 0 ? parseArtifactUrl(d) : null,
         C = _ !== null ? getShareEntry(_.slug) : void 0,
-        D = pPe(E !== null ? getShareEntry(E.slug) : void 0, "assets"),
+        D = formatOwnershipParenthetical(E !== null ? getShareEntry(E.slug) : void 0, "assets"),
         I = C?.probeFailed
           ? "share status unconfirmed"
           : C !== void 0 && C.mode !== "owner"
@@ -4506,7 +4506,7 @@ var Au =
         p = o !== void 0 ? parseArtifactUrl(o) : null,
         _ = w !== null ? getShareEntry(w.slug) : void 0,
         E = p !== null ? getShareEntry(p.slug) : void 0;
-      return `copy ${d} ${pluralize(d, "asset")} from ${canonicalArtifactTargetFor(o, "(unrecognized address)")}${pPe(E, "assets")} into an artifact's asset store${shareAudienceMark(_)}${ownershipTag(_)}`;
+      return `copy ${d} ${pluralize(d, "asset")} from ${canonicalArtifactTargetFor(o, "(unrecognized address)")}${formatOwnershipParenthetical(E, "assets")} into an artifact's asset store${shareAudienceMark(_)}${ownershipTag(_)}`;
     },
   },
   Su = (e, t) => {
@@ -5974,9 +5974,9 @@ function dd(e) {
 function Zr(e) {
   return W7.some((t) => t === e);
 }
-function gjn(e) {
-  let { dbOp: t, collection: o, docId: r } = b9(e);
-  if (t === DB_BATCH_OP) return { opLabel: DB_BATCH_OP, docTarget: cd(w9(e)) };
+function describeArtifactDbWriteOp(e) {
+  let { dbOp: t, collection: o, docId: r } = parseArtifactDbInput(e);
+  if (t === DB_BATCH_OP) return { opLabel: DB_BATCH_OP, docTarget: cd(parseArtifactDbBatchWrites(e)) };
   let d = (w) =>
     w !== void 0 ? sanitizeDisplayText(w, { max: QA }).replace(DECISION_SURFACE_BRACKETS_RE, " ") : "(missing)";
   return {
@@ -5996,7 +5996,7 @@ function cd(e) {
     d = e.map((w) => `"${r(w.collection)}/${r(w.docId)}"`);
   return `${e.length} ${pluralize(e.length, "document")} (${t.join(", ") || "none"}): ${va(d, uu)}`;
 }
-function kon(e) {
+function describeArtifactLocalFiles(e) {
   return e.length === 0
     ? ""
     : `${e.length} from local ${pluralize(e.length, "file")} ${va(e, Tl)}`;
@@ -6090,13 +6090,13 @@ function Ku(e, t, o, r = "") {
     );
 }
 async function Fy(e, t, o) {
-  let r = w9(e);
+  let r = parseArtifactDbBatchWrites(e);
   if (r.length === 0 || r.length > mk)
     throw new ArtifactInputError(
       `db_op "${DB_BATCH_OP}" requires \`writes\` with 1-${mk} entries`,
       "db_missing_field",
     );
-  let { collection: d, docId: w, data: p, query: _, filePath: E } = b9(e);
+  let { collection: d, docId: w, data: p, query: _, filePath: E } = parseArtifactDbInput(e);
   if (
     d !== void 0 ||
     w !== void 0 ||
@@ -6300,7 +6300,7 @@ function Ju(e, t, o, r, d, w) {
   return { result: !0 };
 }
 function My(e, t, o) {
-  let r = w9(t);
+  let r = parseArtifactDbBatchWrites(t);
   if (r.length === 0)
     return {
       result: !1,
@@ -6382,7 +6382,7 @@ var Qu = {
               classifierApprovable: !1,
             },
           };
-        let d = yce(t);
+        let d = resolveArtifactDbReadDir(t);
         if (d.kind === "unresolvable")
           return {
             behavior: "deny",
@@ -6404,7 +6404,7 @@ var Qu = {
               reason: "Database reads write only local, non-network paths",
             },
           };
-        let { dbOp: p, docId: _ } = b9(t),
+        let { dbOp: p, docId: _ } = parseArtifactDbInput(t),
           E = w === void 0 ? void 0 : Tr(w),
           C =
             w === void 0
@@ -6711,7 +6711,7 @@ var Qu = {
               classifierApprovable: !1,
             },
           };
-        let d = t.db_op === DB_BATCH_OP ? w9(t) : void 0,
+        let d = t.db_op === DB_BATCH_OP ? parseArtifactDbBatchWrites(t) : void 0,
           w = gi(e.tool, getToolPermissionContext(o), t);
         if (w) return w;
         let p = Io(e.tool, getToolPermissionContext(o), t, "ask"),
@@ -6820,7 +6820,7 @@ var Qu = {
             Ae.find((Ce) => Ce.pathAsk !== void 0) ??
             Ae[0],
           Ee = pe.some((Ce) => Ce.hardLinked),
-          Ie = kon(
+          Ie = describeArtifactLocalFiles(
             Ae.map((Ce) => `"${Ce.askPath}"${Ce.outside}${Ce.linkNote}`),
           ),
           ke =
@@ -6842,7 +6842,7 @@ var Qu = {
             [xt]: Re,
             [yr]: !1,
             ...Kt(t.action, r),
-            [M4]: js(r, o),
+            [ARTIFACT_DISPLAY_TARGET]: js(r, o),
           },
           ...(he?.pathAsk && {
             suggestions: he.pathAsk.suggestions,
@@ -6918,7 +6918,7 @@ var Qu = {
           data: F,
           query: B,
           outDir: ue,
-        } = b9(t);
+        } = parseArtifactDbInput(t);
         if (I === void 0 || N === void 0)
           return {
             result: !1,
@@ -6999,7 +6999,7 @@ var Qu = {
             errorCode: 8,
           };
         if (r === "read_db" && ue !== void 0) {
-          let re = yce(t);
+          let re = resolveArtifactDbReadDir(t);
           if (re.kind !== "dir" || B7(re.dir))
             return {
               result: !1,
@@ -7017,7 +7017,7 @@ var Qu = {
     toAutoClassifierInput(e) {
       if (e?.action === "read_db") {
         let t = canonicalArtifactTargetFor(e.url, "(no artifact url)"),
-          { collection: o } = b9(e),
+          { collection: o } = parseArtifactDbInput(e),
           r = o !== void 0 ? ` collection ${fs(o, QA)}` : "",
           d = typeof e.url === "string" ? parseArtifactUrl(e.url) : null,
           w =
@@ -7027,7 +7027,7 @@ var Qu = {
           p = d !== null ? getShareEntry(d.slug) : void 0,
           _ = ownershipClassifierMark(p),
           E = shareAudienceMark(p),
-          C = yce(e);
+          C = resolveArtifactDbReadDir(e);
         return `read an artifact's database (${C.kind === "dir" ? `writes local files \u2014 saves the documents as JSON under ${fs(C.dir)}` : C.kind === "unresolvable" ? "writes local files under an unresolvable out_dir" : "read-only"}${w})${r}${_}${E} \u2192 ${t}`;
       }
       if (e?.action === "write_db") {
@@ -7037,17 +7037,17 @@ var Qu = {
           d = shareAudienceMark(o);
         try {
           let w = canonicalArtifactTargetFor(e.url, "(no artifact url)"),
-            { dbOp: p, collection: _, docId: E, data: C, filePath: D } = b9(e),
+            { dbOp: p, collection: _, docId: E, data: C, filePath: D } = parseArtifactDbInput(e),
             I = (B) => (B !== void 0 ? fs(B, QA) : "(missing)"),
             N = fs,
             V = (B, ue) =>
               B !== void 0
-                ? ` data: ${E7(B)}`
+                ? ` data: ${formatArtifactPayloadPreview(B)}`
                 : ue !== void 0
                   ? ` data from local file ${Ny(ue) ? N(ue) : `${N(ue)} (at ${N(ot(ue))})`}`
                   : "";
           if (p === DB_BATCH_OP) {
-            let B = w9(e),
+            let B = parseArtifactDbBatchWrites(e),
               ue = B.map(
                 (J, re) =>
                   `[${re + 1}] ${J.op !== void 0 && Zr(J.op) ? J.op : "(unrecognized op)"} collection ${I(J.collection)}, document ${I(J.docId)}${V(J.data, J.filePath)}`,
@@ -7087,7 +7087,7 @@ var Qu = {
               ? `shared \u2014 visible to ${shareAudience(d.mode)}`
               : "visible to anyone who can open the artifact",
           p = hi(t),
-          _ = ya(t) ? w9(t) : void 0,
+          _ = ya(t) ? parseArtifactDbBatchWrites(t) : void 0,
           E =
             _ !== void 0
               ? `Write ${_.length} ${pluralize(_.length, "document")}${p ? " (some from local JSON files)" : ""} to a published artifact's database in one batch, ${ad()}`
@@ -7119,12 +7119,12 @@ var Qu = {
         return `read an artifact's database (${d})${r}${ownershipTag(o)}`;
       }
       if (e?.action === "write_db") {
-        let { dbOp: t } = b9(e),
+        let { dbOp: t } = parseArtifactDbInput(e),
           o = typeof e.url === "string" ? parseArtifactUrl(e.url) : null,
           r = o !== null ? getShareEntry(o.slug) : void 0,
           d = shareAudienceMark(r);
         if (t === DB_BATCH_OP) {
-          let p = w9(e),
+          let p = parseArtifactDbBatchWrites(e),
             _ = countMatching(p, (C) => C.filePath !== void 0),
             E = _ > 0 ? `, ${_} from local ${pluralize(_, "file")}` : "";
           return `write to an artifact's database (batch of ${cd(p)}${E})${d}${ownershipTag(r)}`;
@@ -7147,7 +7147,7 @@ var Qu = {
         let d =
             t.action === "read_db" &&
             io("read_db", o, r.slug, Kr(t, "read_db", r.slug)),
-          { dbOp: w, collection: p, docId: _, data: E, query: C } = b9(t);
+          { dbOp: w, collection: p, docId: _, data: E, query: C } = parseArtifactDbInput(t);
         if (t.action === "write_db" && w === DB_BATCH_OP)
           return { data: await Fy(t, r, o) };
         if (w === void 0 || p === void 0)
@@ -7208,7 +7208,7 @@ var Qu = {
             );
           let J = ps(o, r, t.url, "nothing was read", { action: t.action });
           if (J !== void 0) throw J;
-          let re = yce(t),
+          let re = resolveArtifactDbReadDir(t),
             q = (Le) => checkWritePermissionForTool(e.tool, t, getToolPermissionContext(o), Tr(Le)).behavior === "deny",
             pe = t[la],
             te;
@@ -7885,22 +7885,22 @@ ${p.join(`
       return He("db.db_write", e);
     },
   };
-function Fee(e) {
+function isListArtifactsByType(e) {
   return (
     typeof e === "object" &&
     e !== null &&
     e.action === "list" &&
-    (fPe(e) !== void 0 || Xb(e) !== void 0)
+    (getArtifactTypeName(e) !== void 0 || getArtifactTypeUrl(e) !== void 0)
   );
 }
 var fd = 200;
 function tf(e) {
-  let t = fPe(e);
+  let t = getArtifactTypeName(e);
   return t !== void 0
     ? `the type named ${fs(t, fd)}`
-    : canonicalArtifactTargetFor(Xb(e), "(unrecognized address)");
+    : canonicalArtifactTargetFor(getArtifactTypeUrl(e), "(unrecognized address)");
 }
-function DGe(e) {
+function getArtifactListScope(e) {
   return e.scope === void 0 ? "all" : listScopeFrom(e);
 }
 var nf =
@@ -7929,8 +7929,8 @@ function rf(e) {
       message: `action "list" with \`type\` or \`type_url\` takes only \`scope\` and \`limit\` \u2014 remove ${t.join(", ")}.${ne().frozenArtifactTypes?.typeCreateOn === !0 ? " To start a new Artifact from the type, omit `action` and pass its `type_url`." : ""}`,
       errorCode: 8,
     };
-  let o = fPe(e),
-    r = Xb(e);
+  let o = getArtifactTypeName(e),
+    r = getArtifactTypeUrl(e);
   if (o !== void 0 && r !== void 0)
     return { result: !1, message: jy, errorCode: 8 };
   if (o !== void 0)
@@ -7946,18 +7946,18 @@ var sf =
   of =
     "titles, descriptions and links of Artifacts other people in the organization published will be read into the conversation";
 function af(e) {
-  let t = DGe(e);
+  let t = getArtifactListScope(e);
   return `list artifacts made from a type (read-only, scope: ${t}${t === "mine" ? "" : " \u2014 includes titles and descriptions of artifacts other users in the organization published"}): ${tf(e)}`;
 }
 function pd(e) {
-  let t = DGe(e),
+  let t = getArtifactListScope(e),
     o = tf(e);
   return t === "mine"
     ? `List the user's own Artifacts made from one Artifact type (${o}) \u2014 titles and links (read-only).`
     : `List the Artifacts made from one Artifact type (${o}) that ${t === "shared" ? "other people in the organization published" : "the user can open"} \u2014 ${of} (read-only).`;
 }
 function lf(e) {
-  let t = DGe(e);
+  let t = getArtifactListScope(e);
   return t === "mine"
     ? "list artifacts made from a type (read-only)"
     : `list artifacts made from a type (read-only, scope: ${t} \u2014 ${of})`;
@@ -7965,13 +7965,13 @@ function lf(e) {
 async function df(e, t) {
   if (ne().frozenArtifactTypes?.typeCatalogOn !== !0)
     throw new ArtifactInputError(nf, "list_type_unavailable");
-  let o = DGe(e),
-    r = fPe(e),
+  let o = getArtifactListScope(e),
+    r = getArtifactTypeName(e),
     d,
     w;
-  if (r === void 0) w = wn(Xb(e)).slug;
+  if (r === void 0) w = wn(getArtifactTypeUrl(e)).slug;
   else {
-    if (((d = Jr(r.trim(), fd)), Xb(e) !== void 0 || n4e(r) === ""))
+    if (((d = Jr(r.trim(), fd)), getArtifactTypeUrl(e) !== void 0 || n4e(r) === ""))
       throw new ArtifactInputError(
         "pass the type as `type` (its name) or `type_url` (its link) \u2014 exactly one",
         "list_type_name_bad",
@@ -8147,7 +8147,7 @@ var uf = {
     actions: ["list"],
     async checkPermissions(e, t, o) {
       if (t.action === "list") {
-        if (Fee(t) && t.scope === void 0) {
+        if (isListArtifactsByType(t) && t.scope === void 0) {
           let r = { ...t, scope: "all" },
             d = getToolPermissionContext(o),
             w = findRuleMatchingInputFields(d, e.tool, r, "deny");
@@ -8170,7 +8170,7 @@ var uf = {
           updatedInput: t,
           decisionReason: {
             type: "other",
-            reason: Fee(t)
+            reason: isListArtifactsByType(t)
               ? sf
               : listScopeFrom(t) === "mine"
                 ? "Listing the user's own artifacts is a read-only action"
@@ -8183,7 +8183,7 @@ var uf = {
     async validateInput(e, t) {
       let { action: o } = t;
       if (o === "list") {
-        if (Fee(t)) return rf(t);
+        if (isListArtifactsByType(t)) return rf(t);
         let r = Object.keys(t).filter(
           (d) =>
             d !== "action" && d !== "limit" && d !== "scope" && t[d] !== void 0,
@@ -8200,7 +8200,7 @@ var uf = {
     },
     toAutoClassifierInput(e) {
       if (e?.action === "list") {
-        if (Fee(e)) return af(e);
+        if (isListArtifactsByType(e)) return af(e);
         let t = listScopeFrom(e);
         return t === "mine"
           ? "list artifacts (read-only)"
@@ -8210,7 +8210,7 @@ var uf = {
     },
     async description(e, t) {
       if (t?.action === "list") {
-        if (Fee(t)) return pd(t);
+        if (isListArtifactsByType(t)) return pd(t);
         let o = listScopeFrom(t);
         return o === "mine"
           ? "List the user's published artifacts \u2014 titles and links from their earlier sessions (read-only)."
@@ -8222,7 +8222,7 @@ var uf = {
     },
     getToolUseSummary(e) {
       if (e?.action === "list") {
-        if (Fee(e)) return lf(e);
+        if (isListArtifactsByType(e)) return lf(e);
         let t = listScopeFrom(e);
         return t === "mine"
           ? "list artifacts (read-only)"
@@ -8234,7 +8234,7 @@ var uf = {
     },
     async call(e, t, o) {
       if (t.action === "list") {
-        if (Fee(t)) return df(t, o);
+        if (isListArtifactsByType(t)) return df(t, o);
         let r = listScopeFrom(t),
           d = await listArtifacts(t.limit ?? DEFAULT_LIST_LIMIT, {
             scope: r,
@@ -8570,7 +8570,7 @@ function gd(e, t, o) {
       ...e,
       [Rt]: !1,
       [xt]: !1,
-      [M4]: void 0,
+      [ARTIFACT_DISPLAY_TARGET]: void 0,
       ...(o !== void 0 && Kt("pin", o)),
     },
     decisionReason: { type: "other", reason: t },
@@ -8613,7 +8613,7 @@ var gf = {
         },
       };
     let p = js(r, o),
-      _ = Nee(p.title),
+      _ = truncateArtifactTitle(p.title),
       E = pinCardLede(_ ? `"${_}"` : p.url),
       C = isSomeoneElses(w)
         ? " (someone else's artifact)"
@@ -8625,7 +8625,7 @@ var gf = {
         ...t,
         [Rt]: consentAskCanReachUser(o),
         [xt]: getToolPermissionContext(o).mode === "plan",
-        [M4]: p,
+        [ARTIFACT_DISPLAY_TARGET]: p,
         ...Kt("pin", r),
       },
       suppressAlwaysAllowRule: !0,
@@ -8699,7 +8699,7 @@ var gf = {
   },
   async description(e, t) {
     let o = typeof t?.url === "string" ? parseArtifactUrl(t.url) : null,
-      r = Nee(o !== null ? getShareEntry(o.slug)?.title : void 0),
+      r = truncateArtifactTitle(o !== null ? getShareEntry(o.slug)?.title : void 0),
       d = r ? `"${r}"` : canonicalArtifactTargetFor(t?.url, "(unrecognized address)");
     return t?.action === "unpin"
       ? `Remove ${d} from the user's pinned artifacts`
@@ -10808,12 +10808,12 @@ var Ub = {
     };
   };
 var Mb = null;
-function ZSe(e) {
+function parseArtifactRoomSendInput(e) {
   let t = "topic" in e && typeof e.topic === "string" ? e.topic : void 0,
     o = "data" in e ? e.data : void 0;
   return { topic: t, data: o };
 }
-function LGe(e, t = (o) => o) {
+function formatArtifactRoomTopic(e, t = (o) => o) {
   return e !== void 0 && Mb?.ROOM_TOPIC_RE.test(e) === !0
     ? t(e)
     : "(invalid topic)";
@@ -10867,9 +10867,9 @@ var Qf = {
           d = r();
         if (d !== null) return d;
         let w = t.url !== void 0 ? parseArtifactUrl(t.url) : null,
-          { topic: p, data: _ } = ZSe(t),
-          E = LGe(p, (F) => `"${F}"`),
-          C = _ !== void 0 ? `: ${E7(_)}` : "";
+          { topic: p, data: _ } = parseArtifactRoomSendInput(t),
+          E = formatArtifactRoomTopic(p, (F) => `"${F}"`),
+          C = _ !== void 0 ? `: ${formatArtifactPayloadPreview(_)}` : "";
         if (w !== null) {
           await warmShareEntry(w, o, "room_send");
           let F = Ht(w, "Nothing was sent");
@@ -10919,7 +10919,7 @@ var Qf = {
         let _ = parseArtifactUrlForSession(r);
         if (!_.ok)
           return { result: !1, message: _.message, errorCode: _.errorCode };
-        let { topic: E, data: C } = ZSe(t);
+        let { topic: E, data: C } = parseArtifactRoomSendInput(t);
         if (E === void 0)
           return {
             result: !1,
@@ -10961,9 +10961,9 @@ var Qf = {
           r = o !== null ? getShareEntry(o.slug) : void 0,
           d = `${ownershipClassifierMark(r)}${shareAudienceMark(r)}`;
         try {
-          let { topic: w, data: p } = ZSe(e),
-            _ = LGe(w, (C) => `"${C}"`),
-            E = p !== void 0 ? ` data: ${E7(p)}` : "";
+          let { topic: w, data: p } = parseArtifactRoomSendInput(e),
+            _ = formatArtifactRoomTopic(w, (C) => `"${C}"`),
+            E = p !== void 0 ? ` data: ${formatArtifactPayloadPreview(p)}` : "";
           return `broadcast a live event to everyone currently viewing an artifact (not stored)${d}: topic ${_}${E} \u2192 ${t}`;
         } catch {
           return `broadcast a live event to everyone currently viewing an artifact${d} \u2192 ${t}`;
@@ -10986,12 +10986,12 @@ var Qf = {
     },
     getToolUseSummary(e) {
       if (e?.action === "room_send") {
-        let { topic: t, data: o } = ZSe(e),
+        let { topic: t, data: o } = parseArtifactRoomSendInput(e),
           r = typeof e.url === "string" ? parseArtifactUrl(e.url) : null,
           d = r !== null ? getShareEntry(r.slug) : void 0,
           w = `${shareAudienceMark(d)}${ownershipTag(d)}`,
-          p = o !== void 0 ? `: ${E7(o)}` : "";
-        return `broadcast a live event ${LGe(t, (_) => `("${_}")`)} to an artifact's current viewers${w}${p}`;
+          p = o !== void 0 ? `: ${formatArtifactPayloadPreview(o)}` : "";
+        return `broadcast a live event ${formatArtifactRoomTopic(t, (_) => `("${_}")`)} to an artifact's current viewers${w}${p}`;
       }
       return He("roomSend.getToolUseSummary", e);
     },
@@ -11008,7 +11008,7 @@ var Qf = {
             "`action` or `url` no longer names the room_send that was approved \u2014 nothing was sent; retry so it is checked again",
             "room_send_target_changed",
           );
-        let { topic: d, data: w } = ZSe(t);
+        let { topic: d, data: w } = parseArtifactRoomSendInput(t);
         if (d === void 0)
           throw new ArtifactInputError(
             'topic is required for action "room_send"',
@@ -11048,7 +11048,7 @@ var Qf = {
               "This record of a room message is unreadable \u2014 whether it was sent is unknown; room messages are at-most-once and not stored, so send it again only if the user still wants it sent.",
           };
         let o = e.room_send,
-          r = LGe(typeof o.topic === "string" ? o.topic : void 0),
+          r = formatArtifactRoomTopic(typeof o.topic === "string" ? o.topic : void 0),
           d =
             typeof o.peers === "number" &&
             Number.isSafeInteger(o.peers) &&
@@ -12366,10 +12366,10 @@ function op(e) {
   return zd.some(([t]) => t in e);
 }
 function ip(e) {
-  let t = CNt(e);
+  let t = getArtifactResultKind(e);
   return t === null ? null : (t_.get(t) ?? null);
 }
-function CNt(e) {
+function getArtifactResultKind(e) {
   for (let t of Qb) if (t in e) return t;
   return null;
 }
@@ -13193,14 +13193,14 @@ function m_(e) {
     }),
   });
 }
-var hjn = createLazyValue(() => p_(artifactSchemaGates(), inputSchema())),
-  _jn = createLazyValue(() => h_(inputSchema())),
-  yjn = createLazyValue(() => m_(artifactSchemaGates()));
-function xon(e, t, o) {
+var artifactCommentsInputSchema = createLazyValue(() => p_(artifactSchemaGates(), inputSchema())),
+  artifactDataInputSchema = createLazyValue(() => h_(inputSchema())),
+  artifactCheckInputSchema = createLazyValue(() => m_(artifactSchemaGates()));
+function getMatchingAskRule(e, t, o) {
   let r = o !== void 0 && typeof t === "object" && t !== null ? o(t, e) : t;
   return findArtifactUrlRule(getToolPermissionContext(e), r, "ask");
 }
-function Hon(e, t, o, r, d, w, p = { deny: null, ask: () => null }) {
+function buildPermissionCheckFailureDecision(e, t, o, r, d, w, p = { deny: null, ask: () => null }) {
   let _ = getToolPermissionContext(d),
     E = w !== void 0 && typeof o === "object" && o !== null ? w(o, d) : o,
     C = p.deny ?? findArtifactUrlRule(_, E, "deny");
@@ -13223,7 +13223,7 @@ function Hon(e, t, o, r, d, w, p = { deny: null, ask: () => null }) {
         decisionReason: { type: "rule", rule: I },
       };
 }
-async function Sjn(e, t, o) {
+async function applyAskRuleToDecision(e, t, o) {
   if (t === null || e.behavior === "deny") return e;
   return e.behavior === "ask"
     ? { ...e, matchedAskRule: e.matchedAskRule ?? t }
@@ -13239,7 +13239,7 @@ function $i(e) {
   let t = e?.action;
   return typeof t === "string" ? t : void 0;
 }
-function Rut(e, t) {
+function mapDecisionUpdatedInput(e, t) {
   if (e === void 0 || !("updatedInput" in e) || e.updatedInput === void 0)
     return e;
   return { ...e, updatedInput: t(e.updatedInput) };
@@ -13363,11 +13363,11 @@ function Up(e, t = {}) {
             I = D ? wte(_) : _,
             N = getToolPermissionContext(C),
             V = { name: r.name, ruleContentField: r.ruleContentField };
-          return Hon(
+          return buildPermissionCheckFailureDecision(
             r.name,
             () => {
               let F = r.permissionCheckFailureDecision.call(e, I, ...E);
-              return D ? Fp(Rut(F, Eft)) : F;
+              return D ? Fp(mapDecisionUpdatedInput(F, Eft)) : F;
             },
             I,
             _,
@@ -13407,12 +13407,12 @@ function Up(e, t = {}) {
             decisionReason: { type: "rule", rule: J },
           };
         let re = await r.checkPermissions.call(e, I, ...E),
-          q = D ? Fp(Rut(re, Eft)) : re;
+          q = D ? Fp(mapDecisionUpdatedInput(re, Eft)) : re;
         if (q.behavior !== "deny") {
           let pe =
             (V ? findRuleMatchingInputFields(ue, B, F, "ask") : null) ??
             (D ? null : findArtifactActionToolRule(ue, B, I, "ask")) ??
-            xon(C, I, t.ruleTargetInput);
+            getMatchingAskRule(C, I, t.ruleTargetInput);
           if (pe)
             return q.behavior === "ask"
               ? { ...q, matchedAskRule: pe }
@@ -14766,7 +14766,7 @@ function ev(e, t) {
     : `Durable wake subscription: arming in the background \u2014 not registered yet, so this is not a subscription until \`status\` lists it (you are told if it cannot be registered). Once registered, ${w}.`;
 }
 function Bo(e) {
-  return sweepProvenanceMarker(Nee(e).replace(DECISION_SURFACE_BRACKETS_RE, " ")).trim();
+  return sweepProvenanceMarker(truncateArtifactTitle(e).replace(DECISION_SURFACE_BRACKETS_RE, " ")).trim();
 }
 function tv(e) {
   let t = typeof e?.url === "string";
@@ -14865,7 +14865,7 @@ function Di(e) {
     } catch {
       return;
     }
-  let o = Xb(e ?? void 0),
+  let o = getArtifactTypeUrl(e ?? void 0),
     r = o !== void 0 ? parseArtifactUrl(o) : null;
   return r !== null ? `type:${r.slug}` : void 0;
 }
@@ -14948,13 +14948,13 @@ function ov(e) {
   return Tr(e).every((t) => isScratchpadPath(t));
 }
 var iv = 3;
-function Ion(e) {
-  let t = e.flatMap((o) => (o.data !== void 0 ? [E7(o.data)] : []));
+function dbBatchPayloadsForConsent(e) {
+  let t = e.flatMap((o) => (o.data !== void 0 ? [formatArtifactPayloadPreview(o.data)] : []));
   if (t.length === 0) return "";
   if (t.length <= iv) return t.join("; ");
   return `${t[0]} and ${t.length - 1} more ${pluralize(t.length - 1, "payload")}`;
 }
-function Pon(e) {
+function dbBatchFileSpellings(e) {
   return e.flatMap((t) =>
     t.filePath !== void 0
       ? [`"${truncatePathMiddle(sweepAskCopy(t.filePath) ?? "(unprintable path)", 256)}"`]
@@ -15042,7 +15042,7 @@ function jo(e, t) {
               ? " (a version from its history)"
               : "";
       return w !== null
-        ? `${artifactViewerUrlFor(w)}${pPe(getShareEntry(w.slug), "files")}${p}`
+        ? `${artifactViewerUrlFor(w)}${formatOwnershipParenthetical(getShareEntry(w.slug), "files")}${p}`
         : "(unrecognized address)";
     }),
   );
@@ -15360,7 +15360,7 @@ async function pc(e) {
 }
 async function Lh(e, t) {
   if (e.file_path === void 0) return null;
-  if (checkReadPermissionForTool(lk, e, getToolPermissionContext(t)).behavior !== "allow") return null;
+  if (checkReadPermissionForTool(ArtifactTool, e, getToolPermissionContext(t)).behavior !== "allow") return null;
   let r = ot(e.file_path);
   if (ku(r)) return null;
   try {
@@ -15429,7 +15429,7 @@ function pv(e, t, o, r) {
   if (w !== null) return { rule: w, behavior: "ask" };
   return hasAutoReactNoticePending(o.slug) && !isDelegatedObservationAgent(t) ? { behavior: "notice" } : null;
 }
-function kut(e) {
+function publishInputJoinsRoom(e) {
   return mi(e) && e[zr] !== !1;
 }
 var hv = {
@@ -15635,7 +15635,7 @@ var hv = {
           classifierApprovable: !1,
         },
       };
-    let d = gi(lk, getToolPermissionContext(t), e);
+    let d = gi(ArtifactTool, getToolPermissionContext(t), e);
     if (d) return d;
     let w =
         r === "upload_asset" ||
@@ -15682,7 +15682,7 @@ var hv = {
             classifierApprovable: !1,
           },
         };
-      return hu(lk, t, getToolPermissionContext(t), e);
+      return hu(ArtifactTool, t, getToolPermissionContext(t), e);
     }
     return {
       behavior: "deny",
@@ -15742,7 +15742,7 @@ var hv = {
       e?.action === "run_script" ||
       e?.action === "pin" ||
       e?.action === "unpin" ||
-      Xb(e) !== void 0 ||
+      getArtifactTypeUrl(e) !== void 0 ||
       Va(e) ||
       Uh(e) !== null ||
       Oh(e) ||
@@ -15750,20 +15750,20 @@ var hv = {
     );
   },
   getPath(e) {
-    if (e.action === "read_asset") return YSe(e) ?? getCwd();
+    if (e.action === "read_asset") return resolveArtifactAssetPath(e) ?? getCwd();
     if (e.action === "read_file") {
-      let t = QSe(e);
+      let t = resolveArtifactReadDestination(e);
       return "dest" in t ? t.dest : getCwd();
     }
     if (e.action === "read_db") {
-      let t = yce(e);
+      let t = resolveArtifactDbReadDir(e);
       return t.kind === "dir" ? t.dir : getCwd();
     }
     return e.file_path ? ot(e.file_path) : getCwd();
   },
   async checkPermissions(e, t) {
     if (e.action !== "read") {
-      let _e = findArtifactUrlRule(getToolPermissionContext(t), MGe(e, t), "deny");
+      let _e = findArtifactUrlRule(getToolPermissionContext(t), artifactRuleTargetInput(e, t), "deny");
       if (_e !== null)
         return {
           behavior: "deny",
@@ -16178,7 +16178,7 @@ var hv = {
         tt = Hcn(De, Je, We),
         dt = (cn, _s) => {
           let kn = zo(
-            lk,
+            ArtifactTool,
             r,
             De,
             Je,
@@ -16271,7 +16271,7 @@ var hv = {
           [Rt]: Wn && consentAskCanReachUser(t),
           [xt]: Lt,
           [yr]: !1,
-          [M4]: js(_e, t),
+          [ARTIFACT_DISPLAY_TARGET]: js(_e, t),
         },
         ...(Xn && { suggestions: Xn.suggestions, blockedPath: Xn.blockedPath }),
         suppressAlwaysAllowRule: !0,
@@ -16307,7 +16307,7 @@ var hv = {
         tt;
       if (r.action === "read_asset") {
         if (
-          ((We = YSe(r)), (tt = We !== void 0 ? Ba(We) : void 0), We === void 0)
+          ((We = resolveArtifactAssetPath(r)), (tt = We !== void 0 ? Ba(We) : void 0), We === void 0)
         )
           return {
             behavior: "deny",
@@ -16320,7 +16320,7 @@ var hv = {
             },
           };
       } else if (r.action === "read_file") {
-        let At = QSe(r);
+        let At = resolveArtifactReadDestination(r);
         if ("reason" in At)
           return {
             behavior: "deny",
@@ -16346,7 +16346,7 @@ var hv = {
         We === void 0
           ? void 0
           : await ee?.workingCopyLocationRefusal(
-              r.action === "read_file" ? JSe(r).path : void 0,
+              r.action === "read_file" ? parseArtifactFilePathInput(r).path : void 0,
               We,
             );
       if (dt !== void 0)
@@ -16371,18 +16371,18 @@ var hv = {
         Lt,
         Gt = (At) => {
           if (We === void 0) return;
-          let is = checkWritePermissionForTool(lk, r, At, Hn);
+          let is = checkWritePermissionForTool(ArtifactTool, r, At, Hn);
           if (is.behavior === "deny") return is;
           let Fs = is;
           if (Lt !== void 0) {
-            let As = checkWritePermissionForTool(lk, r, At, Lt);
+            let As = checkWritePermissionForTool(ArtifactTool, r, At, Lt);
             if (As.behavior === "deny") return As;
             if (Us(As) > Us(Fs)) Fs = As;
           }
           let ri,
             Hi = 0;
           for (let As of Wn) {
-            let hr = checkWritePermissionForTool(lk, r, At, As);
+            let hr = checkWritePermissionForTool(ArtifactTool, r, At, As);
             if (hr.behavior === "deny") ((ri ??= hr), Hi++);
             else if (Us(hr) > Us(Fs)) Fs = hr;
           }
@@ -16429,15 +16429,15 @@ var hv = {
       let kn = _s?.behavior === "ask" ? _s : void 0,
         Xs = { [Rt]: !1, [xt]: !1 },
         Zo = {
-          [gO]: {
+          [ARTIFACT_ASSET_TARGET_PIN]: {
             action: r.action,
             slug: qe.slug,
             ...(r.action === "read_asset" && {
-              assetId: Mee(r).assetId,
+              assetId: parseArtifactAssetInput(r).assetId,
               stem: We,
             }),
             ...(r.action === "read_file" && {
-              path: JSe(r).path,
+              path: parseArtifactFilePathInput(r).path,
               stem: We,
               ...(On !== void 0 && { liveCopy: !0 }),
             }),
@@ -16620,8 +16620,8 @@ var hv = {
             : "",
         ti = Qo(ji),
         Qs = {
-          [gO]: {
-            ...Zo[gO],
+          [ARTIFACT_ASSET_TARGET_PIN]: {
+            ...Zo[ARTIFACT_ASSET_TARGET_PIN],
             ...(!cn && ei && { userOnly: !0 }),
             ...(!cn && In.mode === "auto" && !ei && { classifier: !0 }),
           },
@@ -16648,7 +16648,7 @@ var hv = {
     }
     if (r.action === "delete_asset") {
       let _e = typeof r.url === "string" ? parseArtifactUrl(r.url) : null,
-        { assetId: De } = Mee(r);
+        { assetId: De } = parseArtifactAssetInput(r);
       if (_e === null || De === void 0 || !ASSET_ID_RE.test(De))
         return {
           behavior: "deny",
@@ -16686,7 +16686,7 @@ var hv = {
         message: `Claude wants to ${tt}; each delete asks separately.${We}`,
         updatedInput: {
           ...r,
-          [gO]: { action: r.action, slug: _e.slug, assetId: De },
+          [ARTIFACT_ASSET_TARGET_PIN]: { action: r.action, slug: _e.slug, assetId: De },
           [Rt]: !1,
           [xt]: !1,
         },
@@ -16788,7 +16788,7 @@ var hv = {
           ([, Lt]) => uuidSlugFromUrl(Lt.url) === qe.slug,
         ),
         Dt = Sh(ut),
-        Yt = Nee(tt?.title || ut.find(([, Lt]) => Lt.title)?.[1].title),
+        Yt = truncateArtifactTitle(tt?.title || ut.find(([, Lt]) => Lt.title)?.[1].title),
         vt = rv(tt),
         pn = Dt !== void 0 ? "" : " This conversation did not publish it.",
         Wn = `Claude wants to permanently delete ${Yt ? `the artifact "${Yt}"` : `the artifact at ${dt}`} (${vt}). Its link will stop working for everyone, its comments and version history are deleted too, and this can't be undone.${pn}`;
@@ -16798,7 +16798,7 @@ var hv = {
         updatedInput: {
           ...r,
           [$o]: { slug: qe.slug },
-          [vut]: {
+          [ARTIFACT_DELETE_TARGET]: {
             url: dt,
             ...(Yt && { title: Yt }),
             audience: vt,
@@ -16816,7 +16816,7 @@ var hv = {
         defaultToNo: !0,
       };
     }
-    let p = Xb(r),
+    let p = getArtifactTypeUrl(r),
       _ = p !== void 0 ? parseArtifactUrl(p) : null;
     if (p !== void 0) {
       if (ne().frozenArtifactTypes?.typeCreateOn !== !0)
@@ -16934,7 +16934,7 @@ var hv = {
         },
       };
     let D = getToolPermissionContext(t),
-      I = checkReadPermissionForTool(lk, r, D);
+      I = checkReadPermissionForTool(ArtifactTool, r, D);
     if (I.behavior === "deny") return I;
     let N = I.behavior === "ask",
       V = r.files,
@@ -17556,7 +17556,7 @@ var hv = {
       !(Br && !Os) &&
       (_n.type === "other" ||
         (_n.type === "safetyCheck" && _n.classifierApprovable === !0)) &&
-      wouldAutoApproveToolCall(lk, r, t)
+      wouldAutoApproveToolCall(ArtifactTool, r, t)
     ) {
       if (
         ((Me.sha256 ??= await od(be, Me.pin)), Me.sha256 === bs.contentSha256)
@@ -17592,7 +17592,7 @@ var hv = {
       ko =
         t.options.isNonInteractiveSession &&
         !Ro &&
-        !lk.suppressesAlwaysAllowRule(qo) &&
+        !ArtifactTool.suppressesAlwaysAllowRule(qo) &&
         !Yo &&
         getToolPermissionContext(t).mode !== "plan" &&
         !(_n.type === "safetyCheck" && !_n.classifierApprovable) &&
@@ -17624,7 +17624,7 @@ var hv = {
     if (e?.action === "list_types")
       return "list published artifact types (read-only; titles and descriptions written by their publishers)";
     if (e?.action === "describe_type")
-      return `describe artifact type (read-only): ${canonicalArtifactTargetFor(Xb(e), "(unrecognized address)")}`;
+      return `describe artifact type (read-only): ${canonicalArtifactTargetFor(getArtifactTypeUrl(e), "(unrecognized address)")}`;
     if (e?.action === "sync")
       return ee ? ee.classifySync(e) : "sync artifact working copy";
     if (e?.action === "version")
@@ -17666,7 +17666,7 @@ var hv = {
               : ownershipClassifierMark(re),
         pe = canonicalArtifactTargetFor(e.url, "(no artifact url)");
       if (e.action === "read_file") {
-        let te = QSe(e),
+        let te = resolveArtifactReadDestination(e),
           Re =
             "dest" in te
               ? `"${sanitizeDisplayText(te.dest, { max: 1024 }).replace(DECISION_SURFACE_BRACKETS_RE, " ")}"`
@@ -17692,12 +17692,12 @@ var hv = {
             ? " [co-written: a non-owner has published to this artifact]"
             : ownershipClassifierMark(re),
         pe = canonicalArtifactTargetFor(e.url, "(no artifact url)"),
-        { assetId: te } = Mee(e),
+        { assetId: te } = parseArtifactAssetInput(e),
         Re = te !== void 0 && ASSET_ID_RE.test(te) ? ` ${te}` : " (no valid asset id)";
       if (e.action === "delete_asset")
         return `permanently delete an artifact asset (irreversible)${q}${shareAudienceMark(re)}: asset${Re} of ${pe}`;
       if (e.action === "read_asset") {
-        let U = YSe(e),
+        let U = resolveArtifactAssetPath(e),
           Ae =
             U !== void 0
               ? `"${sanitizeDisplayText(U, { max: 1024 }).replace(DECISION_SURFACE_BRACKETS_RE, " ")}.*"`
@@ -17726,7 +17726,7 @@ var hv = {
       return `read data island${typeof re === "string" && SCHEMA_TOKEN_RE.test(re) ? ` [schema: ${re}]` : " [schema: invalid]"} \u2192 ${J} (validated typed fields only; no page content)`;
     }
     let { file_path: o, url: r } = e,
-      d = Xb(e),
+      d = getArtifactTypeUrl(e),
       w = d !== void 0 ? sv(d) : void 0;
     if (d !== void 0 && typeof o !== "string") {
       let J = w?.room !== void 0 && ne().roomJoinArming.has(Di(e) ?? "");
@@ -17872,7 +17872,7 @@ var hv = {
     if (e?.action === "list_types")
       return "List the published Artifact types this account can start a new Artifact from \u2014 titles, descriptions and links written by their publishers will be read into the conversation (read-only).";
     if (e?.action === "describe_type")
-      return `Read one Artifact type's details (${canonicalArtifactTargetFor(Xb(e), "(unrecognized address)")}) \u2014 its description, file names and capabilities, written by its publisher, will be read into the conversation (read-only).`;
+      return `Read one Artifact type's details (${canonicalArtifactTargetFor(getArtifactTypeUrl(e), "(unrecognized address)")}) \u2014 its description, file names and capabilities, written by its publisher, will be read into the conversation (read-only).`;
     if (e?.action === "sync") {
       let I = typeof e.url === "string" ? parseArtifactUrl(e.url) : null,
         N = I !== null ? getShareEntry(I.slug) : void 0;
@@ -17939,8 +17939,8 @@ var hv = {
           ? `Save one file from a published artifact's asset store${ownershipTag(N)} into a local directory; reads of the user's own artifacts need no separate approval, anyone else's ask once per artifact${artifactCopyFromFrozen() ? " \u2014 an approval also covers server-side copies of them into other artifacts" : ""}, and the destination follows the file-edit rules.`
           : `List the files in a published artifact's asset store${ownershipTag(N)} (ids, types, sizes); the user's own artifacts list without asking, anyone else's ask once per artifact${artifactCopyFromFrozen() ? " \u2014 an approval also covers server-side copies of them into other artifacts" : ""}.`;
     }
-    let r = kut(e) ? ROOM_CONSENT_CLAUSE : "";
-    if (Xb(e) !== void 0) {
+    let r = publishInputJoinsRoom(e) ? ROOM_CONSENT_CLAUSE : "";
+    if (getArtifactTypeUrl(e) !== void 0) {
       let I = (typeof e?.file_path === "string" ? 1 : 0) + wo(e?.files);
       return I === 0
         ? `Create a new private Artifact on claude.ai from an existing Artifact type \u2014 no local files are uploaded; its page was written by the type's publisher.${r}`
@@ -17997,7 +17997,7 @@ var hv = {
     if (e?.action === "list_types")
       return "list published artifact types (read-only)";
     if (e?.action === "describe_type")
-      return `describe an artifact type (read-only): ${canonicalArtifactTargetFor(Xb(e), "(unrecognized address)")}`;
+      return `describe an artifact type (read-only): ${canonicalArtifactTargetFor(getArtifactTypeUrl(e), "(unrecognized address)")}`;
     if (e?.action === "sync") {
       let I = typeof e.url === "string" ? parseArtifactUrl(e.url) : null,
         N = I !== null ? getShareEntry(I.slug) : void 0;
@@ -18052,8 +18052,8 @@ var hv = {
           ? `save a file from an artifact's asset store to a local directory${ownershipTag(N)}`
           : `list the files in an artifact's asset store (read-only)${ownershipTag(N)}`;
     }
-    let o = kut(e) ? `; ${ROOM_CONSENT_SUMMARY}` : "";
-    if (Xb(e) !== void 0) {
+    let o = publishInputJoinsRoom(e) ? `; ${ROOM_CONSENT_SUMMARY}` : "";
+    if (getArtifactTypeUrl(e) !== void 0) {
       let I = (typeof e?.file_path === "string" ? 1 : 0) + wo(e?.files);
       return I === 0
         ? `create a private Artifact from an Artifact type (no local files uploaded)${o}`
@@ -18272,7 +18272,7 @@ ${VERIFY_PROMPT_PARAGRAPH}`;
           message: `action "describe_type" takes only \`type_url\` \u2014 remove ${ae.join(", ")}.${ne().frozenArtifactTypes?.typeCreateOn === !0 ? " To start a new Artifact from the type, omit `action`." : ""}`,
           errorCode: 8,
         };
-      let Te = Xb(r);
+      let Te = getArtifactTypeUrl(r);
       if (Te === void 0)
         return {
           result: !1,
@@ -18328,7 +18328,7 @@ ${VERIFY_PROMPT_PARAGRAPH}`;
         Ce = eV(be);
       if (Ce.kind === "network")
         return { result: !1, message: `${y$t}.`, errorCode: 17 };
-      return Fo(lk, r, be, Ce, t, {
+      return Fo(ArtifactTool, r, be, Ce, t, {
         maxBytes: ke,
         notAFile: _$t,
         empty: vcn,
@@ -18393,7 +18393,7 @@ ${VERIFY_PROMPT_PARAGRAPH}`;
         return { result: !1, message: he.message, errorCode: he.errorCode };
       let Ee = nn(I);
       if (Ee !== void 0) return Ee;
-      let { assetId: Ie, after: ke } = Mee(r);
+      let { assetId: Ie, after: ke } = parseArtifactAssetInput(r);
       if (E !== "list_assets") {
         if (Ie === void 0)
           return {
@@ -18416,7 +18416,7 @@ ${VERIFY_PROMPT_PARAGRAPH}`;
           errorCode: 1,
         };
       if (E === "read_asset") {
-        let be = YSe(r);
+        let be = resolveArtifactAssetPath(r);
         if (be === void 0 || B7(be))
           return {
             result: !1,
@@ -18461,7 +18461,7 @@ ${VERIFY_PROMPT_PARAGRAPH}`;
       );
       if (Ee !== void 0) return Ee;
       if (E === "read_file") {
-        let Ie = QSe(r);
+        let Ie = resolveArtifactReadDestination(r);
         if ("reason" in Ie)
           return { result: !1, message: Ie.reason, errorCode: 1 };
         if (B7(Ie.dest))
@@ -18476,7 +18476,7 @@ ${VERIFY_PROMPT_PARAGRAPH}`;
       }
       return { result: !0 };
     }
-    let N = Xb(r),
+    let N = getArtifactTypeUrl(r),
       V = ne().frozenArtifactTypes,
       F;
     if (N !== void 0) {
@@ -18608,7 +18608,7 @@ ${VERIFY_PROMPT_PARAGRAPH}`;
         errorCode: 8,
       };
     {
-      let { threadId: ae, replyText: Te, cursor: he } = mO(r);
+      let { threadId: ae, replyText: Te, cursor: he } = parseArtifactReplyInput(r);
       if (ae !== void 0 || Te !== void 0)
         return {
           result: !1,
@@ -19758,10 +19758,10 @@ ${B}`,
           `\`url\` must be an artifact URL for action "${p.action}"`,
           "file_bad_url",
         );
-      let ie = p[gO],
-        { path: de } = JSe(p);
+      let ie = p[ARTIFACT_ASSET_TARGET_PIN],
+        { path: de } = parseArtifactFilePathInput(p);
       if (
-        vr(p, gO) ||
+        vr(p, ARTIFACT_ASSET_TARGET_PIN) ||
         (ie !== void 0 &&
           (ie === null ||
             ie.action !== p.action ||
@@ -19806,7 +19806,7 @@ ${B}`,
           }
         );
       }
-      let ze = QSe(p, { outDirJudged: ve });
+      let ze = resolveArtifactReadDestination(p, { outDirJudged: ve });
       if ("reason" in ze) throw new ArtifactInputError(ze.reason, "file_read_bad_path");
       let Ge = ze.dest;
       if (de === void 0 || B7(Ge))
@@ -19829,7 +19829,7 @@ ${B}`,
       if (ee != null) {
         let bt = ee.liveFileCopyPathForRead(
           L.slug,
-          ve ? { path: de } : { path: de, out_dir: JSe(p).outDir },
+          ve ? { path: de } : { path: de, out_dir: parseArtifactFilePathInput(p).outDir },
         );
         if (ve && ie.liveCopy === !0) {
           if (!(
@@ -19848,7 +19848,7 @@ ${B}`,
         zt = await ee?.workingCopyLocationRefusal(de, Ge);
       if (zt !== void 0) throw new ArtifactInputError(zt, "file_read_onto_working_copy");
       let mr = () =>
-        checkWritePermissionForTool(lk, p, getToolPermissionContext(t), dedupe([...mt, ...Tr(Ge)])).behavior === "deny";
+        checkWritePermissionForTool(ArtifactTool, p, getToolPermissionContext(t), dedupe([...mt, ...Tr(Ge)])).behavior === "deny";
       if (mr())
         throw (
           logFeatureBad("artifact_file_read", "write_denied"),
@@ -19873,7 +19873,7 @@ ${B}`,
         Zn,
         gt = Nt;
       if (ee != null && gt !== void 0) {
-        if (checkWritePermissionForTool(lk, p, getToolPermissionContext(t), Tr(gt)).behavior === "deny")
+        if (checkWritePermissionForTool(ArtifactTool, p, getToolPermissionContext(t), Tr(gt)).behavior === "deny")
           throw (
             logFeatureBad("artifact_file_read", "write_denied"),
             new ArtifactInputError(ee.liveCopyWriteDeniedLine(or(gt)), "file_read_write_denied")
@@ -20150,10 +20150,10 @@ ${B}`,
           `\`url\` must be an artifact URL for action "${p.action}"`,
           "asset_bad_url",
         );
-      let { assetId: ie, after: de } = Mee(p),
-        ve = p[gO];
+      let { assetId: ie, after: de } = parseArtifactAssetInput(p),
+        ve = p[ARTIFACT_ASSET_TARGET_PIN];
       if (
-        vr(p, gO) ||
+        vr(p, ARTIFACT_ASSET_TARGET_PIN) ||
         (ve !== void 0 &&
           (ve?.action !== p.action ||
             ve.slug !== L.slug ||
@@ -20231,7 +20231,7 @@ ${B}`,
           throw new ArtifactInputError(gt.message, `asset_delete_${gt.reason}`);
         return { data: { asset_delete: { id: ie, deleted: gt.deleted } } };
       }
-      let Ne = YSe(p);
+      let Ne = resolveArtifactAssetPath(p);
       if (Ne === void 0 || B7(Ne))
         throw new ArtifactInputError(
           "read_asset saves only to local directories \u2014 out_dir names a network path or cannot be resolved",
@@ -20252,7 +20252,7 @@ ${B}`,
         at = await ee?.workingCopyLocationRefusal(void 0, Ne);
       if (at !== void 0) throw new ArtifactInputError(at, "asset_read_onto_working_copy");
       let Nt = (gt) =>
-        checkWritePermissionForTool(lk, p, getToolPermissionContext(t), dedupe([...(gt === Ne ? Ge : []), ...Tr(gt)])).behavior ===
+        checkWritePermissionForTool(ArtifactTool, p, getToolPermissionContext(t), dedupe([...(gt === Ne ? Ge : []), ...Tr(gt)])).behavior ===
         "deny";
       if (Nt(Ne))
         throw (
@@ -20395,7 +20395,7 @@ ${B}`,
           "describing an Artifact type is not available in this session",
           "describe_type_unavailable",
         );
-      let { slug: L } = wn(Xb(p)),
+      let { slug: L } = wn(getArtifactTypeUrl(p)),
         ie = await p$t(L, {
           signal: t.abortController.signal,
           credentials: t.credentials,
@@ -20428,7 +20428,7 @@ ${B}`,
     let U = wr in p ? p[wr] : void 0,
       Ae = pl(p),
       ae = getDeclaredCapabilities(p),
-      Te = Xb(p),
+      Te = getArtifactTypeUrl(p),
       he = Te !== void 0 ? parseArtifactUrl(Te) : null,
       Ee = ne().frozenArtifactTypes,
       Ie = Ee?.typesOn === !0,
@@ -20618,7 +20618,7 @@ ${B}`,
         if ((logFeatureOk("artifact_publish_resume", { carried: Ue }), !Ue))
           logFeatureSad("artifact_publish", "source_unpinned");
         let Ne = getToolPermissionContext(t),
-          ze = checkReadPermissionForTool(lk, p, Ne);
+          ze = checkReadPermissionForTool(ArtifactTool, p, Ne);
         if (ze.behavior === "deny") throw new ArtifactInputError(ze.message, "source_refused");
         if (ze.behavior === "ask" && ze.decisionReason?.type !== "workingDir")
           throw new ArtifactInputError(td, "source_refused");
@@ -22115,7 +22115,7 @@ ${B}`,
           return;
         });
     let ri = getToolPermissionContext(t),
-      Hi = (L) => checkWritePermissionForTool(lk, p, ri, Tr(L)).behavior === "allow",
+      Hi = (L) => checkWritePermissionForTool(ArtifactTool, p, ri, Tr(L)).behavior === "allow",
       As =
         ee != null && (we.bornLive?.length ?? 0) > 0
           ? await ee.bindBornLiveWorkingCopies({
@@ -22407,7 +22407,7 @@ function nm({
         slug: e,
         url: t,
         title: r,
-        tool: lk,
+        tool: ArtifactTool,
         commentVerbsInSchema: D,
       });
     let ue = getDurableWatchRow(e) !== void 0,
@@ -22449,7 +22449,7 @@ function nm({
       : void 0;
   return (
     maybeSubscribeFrameLive({
-      tool: lk,
+      tool: ArtifactTool,
       slug: e,
       url: t,
       ...(o !== void 0 && { version: o }),
@@ -22468,7 +22468,7 @@ function nm({
 function qa(e, t) {
   if (e === void 0) return;
   e.result = {
-    block: lk.mapToolResultToToolResultBlockParam(t, e.toolUseId),
+    block: ArtifactTool.mapToolResultToToolResultBlockParam(t, e.toolUseId),
     data: t,
   };
 }
@@ -22485,9 +22485,9 @@ function om(e, t, o, r) {
   });
 }
 var im = withArtifactRejectBreaker(hv),
-  lk = buildTool(Up(im, { ruleTargetInput: MGe })),
-  MS = im;
-function MGe(e, t) {
+  ArtifactTool = buildTool(Up(im, { ruleTargetInput: artifactRuleTargetInput })),
+  artifactLegacyHost = im;
+function artifactRuleTargetInput(e, t) {
   let o = ee?.fillShimUrl(e) ?? e,
     r = o;
   if (
@@ -22506,7 +22506,7 @@ function MGe(e, t) {
 }
 var Ga = {
   get tool() {
-    return lk;
+    return ArtifactTool;
   },
 };
 function lc() {
@@ -22997,41 +22997,41 @@ ${p}`
   return `Created a new Artifact at ${o} (version ${Ste(e.version)}) from the Artifact type ${r}, but publishing the files to it failed: ${sweepResultLineText(t, ARTIFACT_MAX_RESULT_SIZE_CHARS / 2)}. The new Artifact exists \u2014 ${d}, WITHOUT \`type_url\` (passing it again would create another Artifact).${w}${uc(e)}${_}`;
 }
 export {
-  mO,
-  Mee,
-  gO,
-  vut,
-  M4,
-  Nee,
-  pPe,
-  YSe,
-  JSe,
-  QSe,
-  b9,
-  w9,
-  Xb,
-  fPe,
-  yce,
-  E7,
-  mPe,
-  gjn,
-  kon,
-  Fee,
-  DGe,
-  ZSe,
-  LGe,
-  CNt,
-  hjn,
-  _jn,
-  yjn,
-  xon,
-  Hon,
-  Sjn,
-  Rut,
-  Ion,
-  Pon,
-  kut,
-  lk,
-  MS,
-  MGe,
+  parseArtifactReplyInput,
+  parseArtifactAssetInput,
+  ARTIFACT_ASSET_TARGET_PIN,
+  ARTIFACT_DELETE_TARGET,
+  ARTIFACT_DISPLAY_TARGET,
+  truncateArtifactTitle,
+  formatOwnershipParenthetical,
+  resolveArtifactAssetPath,
+  parseArtifactFilePathInput,
+  resolveArtifactReadDestination,
+  parseArtifactDbInput,
+  parseArtifactDbBatchWrites,
+  getArtifactTypeUrl,
+  getArtifactTypeName,
+  resolveArtifactDbReadDir,
+  formatArtifactPayloadPreview,
+  formatArtifactReplyText,
+  describeArtifactDbWriteOp,
+  describeArtifactLocalFiles,
+  isListArtifactsByType,
+  getArtifactListScope,
+  parseArtifactRoomSendInput,
+  formatArtifactRoomTopic,
+  getArtifactResultKind,
+  artifactCommentsInputSchema,
+  artifactDataInputSchema,
+  artifactCheckInputSchema,
+  getMatchingAskRule,
+  buildPermissionCheckFailureDecision,
+  applyAskRuleToDecision,
+  mapDecisionUpdatedInput,
+  dbBatchPayloadsForConsent,
+  dbBatchFileSpellings,
+  publishInputJoinsRoom,
+  ArtifactTool,
+  artifactLegacyHost,
+  artifactRuleTargetInput,
 };

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 231 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Ion, Pon, kut, lk, MS, MGe } from "./chunk-pvztfdrb.js";
+import { dbBatchPayloadsForConsent as Ion, dbBatchFileSpellings as Pon, publishInputJoinsRoom as kut, ArtifactTool as lk, artifactLegacyHost as MS, artifactRuleTargetInput as MGe } from "./chunk-pvztfdrb.js";
 import "./chunk-fx5ekm7e.js";
 import "../Teammates团队/chunk-y89mhs4a.js";
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";

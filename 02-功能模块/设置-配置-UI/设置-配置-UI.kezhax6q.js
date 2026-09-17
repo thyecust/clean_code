@@ -72,7 +72,7 @@ import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小�
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
-import { dd } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { useFocusTrap } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import { isChannelsEnabled } from "../插件系统/chunk-rbjz1q03.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
@@ -121,7 +121,7 @@ import { Table, ModelPicker, SelectableRow } from "../../03-入口与运行时/�
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { ThemePicker } from "../状态栏-主题/theme-picker.js";
-import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
+import { useVimModeInput, SearchInput } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { WA, Vx, Sv, Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { RemoteHomeSettingsDialog } from "../Memory-CLAUDE.md/chunk-54xx04er.js";
 import { recordExternalIncludesDecision, ClaudeMdExternalIncludesDialog } from "../Memory-CLAUDE.md/claude-md-external-includes-dialog.js";
@@ -995,7 +995,7 @@ function ea(qC) {
     } = qC,
     [Zn, fg] = d(0),
     gg = C(null);
-  dd(gg, !0);
+  useFocusTrap(gg, !0);
   let hg;
   if (Qe[0] !== bd) ((hg = YDt(bd)), (Qe[0] = bd), (Qe[1] = hg));
   else hg = Qe[1];
@@ -1456,7 +1456,7 @@ function ga({
       cursorOffset: zp,
       handleKeyDown: Iu,
       handlePaste: Yp,
-    } = jp({
+    } = useVimModeInput({
       isActive: tt && Fe === null && !Z,
       onExit: () => zt(!1),
       onExitUp: Q,
@@ -2568,7 +2568,7 @@ function ga({
                                     r(o, {
                                       flexDirection: "column",
                                       children: [
-                                        e(Xd, {
+                                        e(SearchInput, {
                                           query: ar,
                                           isFocused: tt && !Z,
                                           isTerminalFocused: qo,
@@ -3151,7 +3151,7 @@ function fa(Nk) {
     ui = C(""),
     [ia, Ud] = d(null),
     Ng = C(null);
-  dd(Ng, !0);
+  useFocusTrap(Ng, !0);
   let Bg;
   if (an[0] === MEMO_CACHE_SENTINEL)
     ((Bg = ($k) => {

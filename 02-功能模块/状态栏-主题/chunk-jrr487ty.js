@@ -11,7 +11,7 @@ import { ze, Ox } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { useAppStateSelector, useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { X_ } from "../Teammates团队/chunk-g6nvp9mm.js";
+import { areTasksEnabled } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { getMainLoopModel, getFeatureValue_CACHED_MAY_BE_STALE, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { te, truncateToWidth, formatDuration, formatDurationCoarse, formatNumber, formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -26,7 +26,7 @@ import { AGENT_COLOR_THEME_KEYS } from "../../01-核心基础设施/共享小工
 import { isAgentSwarmsEnabled } from "../Teammates团队/agent-swarms-enablement.js";
 import { Ya, IJe } from "../权限系统/chunk-t3b7pg2x.js";
 import { getLowPriorityCopy, getRateLimitTypeLabel, getStatusPageHint, isInProcessTeammateTask, isLiveBackgroundTask, summarizeRecentActivities } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { iat, _le, by, lat, PS, wy, Wb } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { getSpinnerFrames, getSpinnerPingPongFrames, quantizeToEighth, getPulseProgress, interpolateColor, formatRgbColor, parseRgbColor } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { nF, QL, La, QZ, jA } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { shouldExcludeDefaultTips } from "../../01-核心基础设施/设置-配置/spinner-tips-override.js";
@@ -109,7 +109,7 @@ function We({ tasks: n, isStandalone: s = !1 }) {
       if (Y === 1 / 0) return;
       return b.setTimeout(() => g((z) => z + 1), Y - m);
     }, [n, b, x, f]),
-    !X_())
+    !areTasksEnabled())
   )
     return null;
   if (n.length === 0) return null;
@@ -379,18 +379,18 @@ function o4(As) {
     Ds = _r === void 0 ? 0 : _r,
     ke = useResolvedTheme();
   if (Ps) {
-    let hn = 1 - lat(Ds, mo);
+    let hn = 1 - getPulseProgress(Ds, mo);
     let gn = Bt > 0 ? "warning" : Xt;
     let Tn = ke[gn];
     let be;
     if (Nt[0] !== Tn || Nt[1] !== hn || Nt[2] !== Bt) {
       be = EARLY_RETURN_SENTINEL;
       bb0: {
-        let co = Tn ? Wb(Tn) : null;
+        let co = Tn ? parseRgbColor(Tn) : null;
         if (co) {
-          let Ls = PS(co, fo, 0.5);
-          let Ws = PS(Ls, co, by(hn));
-          const mt = e(t, { color: wy(Ws), bold: Bt >= 0.5, children: Ge });
+          let Ls = interpolateColor(co, fo, 0.5);
+          let Ws = interpolateColor(Ls, co, quantizeToEighth(hn));
+          const mt = e(t, { color: formatRgbColor(Ws), bold: Bt >= 0.5, children: Ge });
           let st;
           if (Nt[4] !== mt)
             ((st = e(o, {
@@ -429,7 +429,7 @@ function o4(As) {
     return Yt;
   }
   let be;
-  if (Nt[10] === MEMO_CACHE_SENTINEL) ((be = _le()), (Nt[10] = be));
+  if (Nt[10] === MEMO_CACHE_SENTINEL) ((be = getSpinnerPingPongFrames()), (Nt[10] = be));
   else be = Nt[10];
   let Cr = be,
     ht = Cr[vs % Cr.length];
@@ -439,10 +439,10 @@ function o4(As) {
     if (Nt[11] !== kn || Nt[12] !== ht || Nt[13] !== $e) {
       mt = EARLY_RETURN_SENTINEL;
       bb1: {
-        let Ir = kn ? Wb(kn) : null;
+        let Ir = kn ? parseRgbColor(kn) : null;
         if (Ir) {
-          let $s = PS(Ir, uo, by($e));
-          const st = e(t, { color: wy($s), children: ht });
+          let $s = interpolateColor(Ir, uo, quantizeToEighth($e));
+          const st = e(t, { color: formatRgbColor($s), children: ht });
           let Yt;
           if (Nt[15] !== st)
             ((Yt = e(o, {
@@ -489,12 +489,12 @@ function o4(As) {
     ) {
       mt = EARLY_RETURN_SENTINEL;
       bb2: {
-        let Er = bn ? Wb(bn) : null;
-        let Br = Wb(ke.warning);
+        let Er = bn ? parseRgbColor(bn) : null;
+        let Br = parseRgbColor(ke.warning);
         je = Bt >= 0.5;
         if (Er && Br) {
-          let js = PS(Er, Br, by(Bt));
-          const st = e(t, { bold: je, color: wy(js), children: ht });
+          let js = interpolateColor(Er, Br, quantizeToEighth(Bt));
+          const st = e(t, { bold: je, color: formatRgbColor(js), children: ht });
           let Yt;
           if (Nt[26] !== st)
             ((Yt = e(o, {
@@ -631,10 +631,10 @@ function l9e(cc) {
     if (D[7] !== yn || D[8] !== O || D[9] !== Ke) {
       it = EARLY_RETURN_SENTINEL;
       bb0: {
-        let Wr = yn ? Wb(yn) : null;
+        let Wr = yn ? parseRgbColor(yn) : null;
         if (Wr) {
-          let mc = PS(Wr, wo, by(Ke));
-          let we = wy(mc);
+          let mc = interpolateColor(Wr, wo, quantizeToEighth(Ke));
+          let we = formatRgbColor(mc);
           let M;
           if (D[11] !== we || D[12] !== O)
             ((M = e(t, { color: we, children: O })),
@@ -689,11 +689,11 @@ function l9e(cc) {
     if (D[27] !== _n || D[28] !== O || D[29] !== ie.warning || D[30] !== Fe) {
       it = EARLY_RETURN_SENTINEL;
       bb1: {
-        let $r = _n ? Wb(_n) : null;
-        let jr = Wb(ie.warning);
+        let $r = _n ? parseRgbColor(_n) : null;
+        let jr = parseRgbColor(ie.warning);
         if ($r && jr) {
-          let uc = PS($r, jr, by(Fe));
-          let Me = wy(uc);
+          let uc = interpolateColor($r, jr, quantizeToEighth(Fe));
+          let Me = formatRgbColor(uc);
           let M;
           if (D[32] !== Me || D[33] !== O)
             ((M = e(t, { color: Me, children: O })),
@@ -759,11 +759,11 @@ function l9e(cc) {
     ) {
       it = EARLY_RETURN_SENTINEL;
       bb2: {
-        let Gr = Cn ? Wb(Cn) : null;
-        let Hr = In ? Wb(In) : null;
+        let Gr = Cn ? parseRgbColor(Cn) : null;
+        let Hr = In ? parseRgbColor(In) : null;
         if (Gr && Hr) {
-          let fc = PS(Gr, Hr, by(Rn));
-          const M = e(t, { color: wy(fc), children: O });
+          let fc = interpolateColor(Gr, Hr, quantizeToEighth(Rn));
+          const M = e(t, { color: formatRgbColor(fc), children: O });
           let y;
           if (D[54] !== W)
             ((y = e(t, { color: W, children: " " })), (D[54] = W), (D[55] = y));
@@ -996,8 +996,8 @@ var Ur = [1e4, 45000, 300000],
   Qr = 30000,
   Zr = 45000;
 function ti(n) {
-  let s = lat(n, Xr);
-  return Math.round(s * (iat().length - 1));
+  let s = getPulseProgress(n, Xr);
+  return Math.round(s * (getSpinnerFrames().length - 1));
 }
 function ei(n) {
   if (n >= Zr) return "almost done thinking";
@@ -1007,7 +1007,7 @@ function ei(n) {
   return "thinking";
 }
 function ni(n) {
-  return by((Math.sin((n / 1000) * Math.PI) + 1) / 2);
+  return quantizeToEighth((Math.sin((n / 1000) * Math.PI) + 1) / 2);
 }
 function Bo({
   mode: n,
@@ -1236,8 +1236,8 @@ var ui = te(" \xB7 "),
 function ki(n, s, c) {
   let l = (n - Ko) / 1000,
     f = n < Ko ? 0 : (Math.sin((l * Math.PI * 2) / Ti) + 1) / 2,
-    g = PS(hi, gi, by(f));
-  return wy(c && s > 0 ? PS(g, c, by(s)) : g);
+    g = interpolateColor(hi, gi, quantizeToEighth(f));
+  return formatRgbColor(c && s > 0 ? interpolateColor(g, c, quantizeToEighth(s)) : g);
 }
 function Fo({
   mode: n,
@@ -1319,7 +1319,7 @@ function Fo({
     Pe = J + (ft ? zt + ne : 0),
     oe = $t && Zt > 0 && _t > Pe + bt,
     Ft = St && Mt.kind === "thinking" && !S && !ft && !oe,
-    he = lt > 0 ? Wb(q.warning) : null,
+    he = lt > 0 ? parseRgbColor(q.warning) : null,
     pt = ki(m, lt, he),
     re = !he && lt > 0.5 ? "warning" : void 0,
     wt = lt > 0 ? "warning" : void 0,
@@ -2202,7 +2202,7 @@ function yo() {
     return ve;
   }
   let Ze;
-  if (Qe[3] === MEMO_CACHE_SENTINEL) ((Ze = _le()), (Qe[3] = Ze));
+  if (Qe[3] === MEMO_CACHE_SENTINEL) ((Ze = getSpinnerPingPongFrames()), (Qe[3] = Ze));
   else Ze = Qe[3];
   let $i = Ze,
     sl = Math.floor(il / 120) % $i.length;

@@ -31,7 +31,7 @@ import { useClock } from "../../01-核心基础设施/共享小工具-未细化/
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
+import { useVimModeInput, SearchInput } from "../Vim模式/Vim模式.nnewe0gf.js";
 import {
   PR_URL_REGEX,
   parsePrUrl,
@@ -586,7 +586,7 @@ function rit({
       cursorOffset: Cn,
       handleKeyDown: wn,
       handlePaste: vn,
-    } = jp({
+    } = useVimModeInput({
       isActive: v === "search",
       onExit: () => {
         (B("list"), logEvent("tengu_session_search_toggled", { enabled: !1 }));
@@ -922,7 +922,7 @@ function rit({
             ],
           }),
         }),
-        e(Xd, {
+        e(SearchInput, {
           query: Le,
           isFocused: v === "search",
           isTerminalFocused: Oe,

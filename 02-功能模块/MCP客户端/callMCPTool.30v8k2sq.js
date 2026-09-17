@@ -111,7 +111,7 @@ import {
   isMcpServerUsedByHooks,
   trackMcpServerProcess,
   truncateOtelContent,
-  W9,
+  isMcpRpcTracingEnabled,
   getCurrentTraceparent,
   runInOtelSpan,
   getPolicyPluginNames,
@@ -5347,7 +5347,7 @@ async function callMCPToolWithUrlElicitationRetry({
             credentials: X,
           }),
         E;
-      if (!W9()) E = await C();
+      if (!isMcpRpcTracingEnabled()) E = await C();
       else {
         let F;
         try {

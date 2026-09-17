@@ -44,8 +44,8 @@ import { readLinuxProcState, sigtermThenKill, reapDetachedRepl, getProcessStartT
 import { readSocketTokenFile } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import { removeGuiHostEntrypoint, NON_INHERITED_ENV_VARS, g4, removeBgDispatcherPlanEnvVars } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import {
-  nyn,
-  yj,
+  MODEL_ENV_KEYS,
+  normalizeCliArgPaths,
   BG_PROTO,
   DAEMON_DETACH_APC,
   wrapDaemonHint,
@@ -64,8 +64,8 @@ import {
   ABANDONED_WORKER_MS,
   terminalOutcome,
   isSettled,
-  Ep,
-  al,
+  MAX_DETAIL_CHARS,
+  clipWithEllipsis,
 } from "./chunk-7wsy8vxb.js";
 import {
   NOT_OWNED_ERROR_CODE,
@@ -117,7 +117,7 @@ import {
 } from "fs/promises";
 import { basename, dirname } from "path";
 var Pe = 2000,
-  ne = Ep,
+  ne = MAX_DETAIL_CHARS,
   st = /\x1b\[\d*D/g;
 function Se(e, t) {
   let r = "",
@@ -127,7 +127,7 @@ function Se(e, t) {
     o = "",
     c = !1;
   function g(k, v) {
-    let _ = al(qr(s), ne),
+    let _ = clipWithEllipsis(qr(s), ne),
       w = `${k}|${v}|${_}`;
     if (w === o) return;
     ((o = w),
@@ -187,7 +187,7 @@ function Se(e, t) {
         ((c = !0), clearInterval(m));
       },
       get lastLine() {
-        return al(qr(s), ne);
+        return clipWithEllipsis(qr(s), ne);
       },
     }
   );
@@ -766,16 +766,16 @@ function JYt() {
 }
 function Ye(e, t, r, s, p, d) {
   if (e.launch.mode === "exec") return e.launch.args.map(Fb);
-  if (t > 1 && r) return yj(["--resume", p ?? s, ...stripEnvironmentFlags(d)]);
-  if (t > 1 && s !== e.sessionId) return yj(["--session-id", s, ...stripEnvironmentFlags(d)]);
+  if (t > 1 && r) return normalizeCliArgPaths(["--resume", p ?? s, ...stripEnvironmentFlags(d)]);
+  if (t > 1 && s !== e.sessionId) return normalizeCliArgPaths(["--session-id", s, ...stripEnvironmentFlags(d)]);
   if (e.launch.mode === "resume")
-    return yj([
+    return normalizeCliArgPaths([
       ...(e.launch.fork ? ["--session-id", e.sessionId, "--fork-session"] : []),
       "--resume",
       e.launch.transcriptPath ?? e.launch.sessionId,
       ...stripEnvironmentFlags(e.launch.flagArgs),
     ]);
-  return yj(stripEnvironmentFlags(e.launch.args));
+  return normalizeCliArgPaths(stripEnvironmentFlags(e.launch.args));
 }
 function Xe(e, t, r, s, p) {
   let d = { ...process.env };
@@ -901,7 +901,7 @@ async function Ae(e, t) {
   }
 }
 var le = [
-    ...nyn,
+    ...MODEL_ENV_KEYS,
     ...PROVIDER_CONFIG_ENV_VARS,
     "CLAUDE_CODE_EXTRA_BODY",
     ...BASE_URL_ENV_VARS,
@@ -2414,7 +2414,7 @@ class qW {
     this.lastExitExternalStop = (t !== void 0 || St.has(e ?? -1)) && !p;
     let g = this.workerReady ? void 0 : this.preInitErrorTail(),
       m = getLauncherArgv()[0],
-      k = r ? al(normalizeWhitespace(stripAnsi(r)), he) || void 0 : void 0,
+      k = r ? clipWithEllipsis(normalizeWhitespace(stripAnsi(r)), he) || void 0 : void 0,
       v =
         m && !this.workerReady && !g && k
           ? `(launch command: \`${m}\` \u2026): ${k}`
@@ -2422,7 +2422,7 @@ class qW {
       _ = !!m && e === 0 && !this.workerReady && s !== void 0 && s < FAST_CRASH_WINDOW_MS,
       w = e !== 0 ? readAndClearBgExitCause(getJobDir(this.dispatch.short)) : void 0,
       y = w ? readAndClearBgExitDetail(getJobDir(this.dispatch.short), w) : void 0,
-      D = y ? al(normalizeWhitespace(stripAnsi(y)), he) || void 0 : void 0,
+      D = y ? clipWithEllipsis(normalizeWhitespace(stripAnsi(y)), he) || void 0 : void 0,
       B = !g && D ? `: ${D}` : "",
       T = d && !!w && w === this.lastExitCause;
     this.lastExitCause = d ? w : void 0;

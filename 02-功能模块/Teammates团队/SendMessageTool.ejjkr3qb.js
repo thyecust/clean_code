@@ -85,7 +85,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isCrossSessionMessagingEnabled, CROSS_SESSION_MESSAGING_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { Sbt, $Ae, UAe, V3t, dK, BAe, bbt, uN } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { FGt, $Gt, writeToMailbox, createShutdownRequestMessage, createShutdownApprovedMessage, createShutdownRejectedMessage, isStructuredProtocolMessage, markMessagesAsReadByPredicate } from "./chunk-g6nvp9mm.js";
+import { getCleanMessageSplit, repairSendMessageInput, writeToMailbox, createShutdownRequestMessage, createShutdownApprovedMessage, createShutdownRejectedMessage, isStructuredProtocolMessage, markMessagesAsReadByPredicate } from "./chunk-g6nvp9mm.js";
 import { isAgentSwarmsEnabled } from "./agent-swarms-enablement.js";
 import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
 import { primePeerIdentityOwner, getPeerBridgeIdentity } from "../权限系统/chunk-1y2g140m.js";
@@ -671,7 +671,7 @@ function ks(e, t) {
   if (p === void 0 || p.type !== "tool_use") return;
   let r = p.input;
   if (typeof r !== "object" || r === null) return;
-  let d = $Gt(r, { applySplit: Ts() }),
+  let d = repairSendMessageInput(r, { applySplit: Ts() }),
     _ = d !== null && isRecord(d.input) ? d.input : r;
   return {
     message: "message" in _ ? _.message : void 0,
@@ -1208,7 +1208,7 @@ var SendMessageTool = buildTool({
   get inputSchema() {
     return Se();
   },
-  coerceInput: (e) => $Gt(e, { applySplit: Ts() }),
+  coerceInput: (e) => repairSendMessageInput(e, { applySplit: Ts() }),
   shouldDefer: !0,
   isReadOnly(e) {
     return typeof e.message === "string";
@@ -1216,7 +1216,7 @@ var SendMessageTool = buildTool({
   backfillObservableInput(e) {
     if ("type" in e) return;
     if (typeof e.to !== "string") return;
-    if (FGt(e) !== void 0) return;
+    if (getCleanMessageSplit(e) !== void 0) return;
     let t = e.message ?? "";
     if (typeof t === "string")
       ((e.type = "message"), (e.recipient = e.to), (e.content = truncate(t, 50)));
@@ -1231,7 +1231,7 @@ var SendMessageTool = buildTool({
   },
   toAutoClassifierInput(e) {
     let t = (w, q) => (q ? ` [${w}: ${q}]` : ""),
-      p = $Gt(e),
+      p = repairSendMessageInput(e),
       r = p !== null && isRecord(p.input) ? p.input : void 0,
       d = t(
         "summary",

@@ -137,7 +137,7 @@ import { customSchema, defineDialog, isAsyncIterable } from "../对话框-确认
 import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME } from "../Teammates团队/chunk-enjekn9t.js";
 import { isNotRegularFileError, isFileTooLargeError, readFileSyncText, readFileWithMetadata } from "../../01-核心基础设施/共享小工具-未细化/safe-file-read.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-async function Pqe(e) {
+async function runCoordinatorAutomatedPermissionCheck(e) {
   let { ctx: r, updatedInput: o, suggestions: t, permissionMode: s } = e,
     k = !1;
   try {
@@ -160,10 +160,10 @@ async function Pqe(e) {
   }
   return null;
 }
-function x1t({ feedback: e, contentBlocks: r, isSubagent: o }) {
+function shouldInterruptOnDenial({ feedback: e, contentBlocks: r, isSubagent: o }) {
   return !e && !r?.length && !o;
 }
-function H1t(e) {
+function createResolveOnceGuard(e) {
   let r = !1,
     o = !1;
   return {
@@ -180,7 +180,7 @@ function H1t(e) {
     },
   };
 }
-function Uqe(e, r, o, t, s, k, R) {
+function createPermissionDecisionContext(e, r, o, t, s, k, R) {
   let c = t.message.id,
     _ = getToolPermissionContext(o).mode;
   function d(b, p) {
@@ -231,7 +231,7 @@ function Uqe(e, r, o, t, s, k, R) {
       let D = !!o.agentId,
         v = b ? `${D ? PERMISSION_DENIED_PREFIX : USER_REJECTED_TOOL_USE_PREFIX}${b}` : D ? PERMISSION_DENIED_MESSAGE : USER_REJECTED_TOOL_USE_MESSAGE,
         T = D ? v : appendAutoMemoryReminder(v);
-      if (p || x1t({ feedback: b, contentBlocks: F, isSubagent: D }))
+      if (p || shouldInterruptOnDenial({ feedback: b, contentBlocks: F, isSubagent: D }))
         (n(
           `Aborting: tool=${e.name} isAbort=${p} hasFeedback=${!!b} isSubagent=${D}`,
         ),
@@ -380,7 +380,7 @@ function ze(e) {
     text: t && !s.includes(t) ? formatNeedsText(`approve ${s}: ${t}`) : `approve ${s}`,
   };
 }
-var Sbe = defineDialog({
+var ASK_USER_QUESTION_PERMISSION_DIALOG = defineDialog({
   kind: "permission_ask_user_question",
   payload: createLazyValue(() =>
     customSchema(
@@ -398,7 +398,7 @@ var Sbe = defineDialog({
   ),
   default: { behavior: "cancelled" },
 });
-var bbe = defineDialog({
+var BASH_PERMISSION_DIALOG = defineDialog({
   kind: "permission_bash",
   payload: createLazyValue(() =>
     customSchema(
@@ -417,7 +417,7 @@ var bbe = defineDialog({
   ),
   default: { behavior: "cancelled" },
 });
-var Oqe = defineDialog({
+var BROWSER_PERMISSION_DIALOG = defineDialog({
   kind: "permission_browser",
   payload: createLazyValue(() =>
     customSchema(
@@ -435,7 +435,7 @@ var Oqe = defineDialog({
   ),
   default: { behavior: "cancelled" },
 });
-var Dqe = defineDialog({
+var ENTER_PLAN_MODE_PERMISSION_DIALOG = defineDialog({
   kind: "permission_enter_plan_mode",
   payload: createLazyValue(() =>
     customSchema(
@@ -452,7 +452,7 @@ var Dqe = defineDialog({
   ),
   default: { behavior: "cancelled" },
 });
-var Lqe = defineDialog({
+var EXIT_PLAN_MODE_PERMISSION_DIALOG = defineDialog({
   kind: "permission_exit_plan_mode_v2",
   payload: createLazyValue(() =>
     customSchema(
@@ -470,7 +470,7 @@ var Lqe = defineDialog({
   ),
   default: { behavior: "cancelled" },
 });
-var Nce = defineDialog({
+var FILE_PERMISSION_DIALOG = defineDialog({
   kind: "permission_file",
   payload: createLazyValue(() =>
     customSchema(
@@ -502,7 +502,7 @@ function So(e) {
   }
   return o;
 }
-function Lv(e) {
+function buildBasePermissionDescriptor(e) {
   let r = e.tool.isMcp === !0 ? e.tool.mcpInfo : void 0,
     o = e.tool.isMcp === !0,
     t;
@@ -579,7 +579,7 @@ function Se(e) {
   return;
 }
 function Ge(e) {
-  let r = Lv(e),
+  let r = buildBasePermissionDescriptor(e),
     o = e.permissionResult.metadata?.command?.chrome;
   if (!o && typeof e.input.url === "string")
     try {
@@ -589,7 +589,7 @@ function Ge(e) {
   return { ...r, chrome: o, verbPhrase: getBrowserToolVerbPhrase(e.tool.name, e.input) };
 }
 function Xe(e) {
-  let r = Lv(e),
+  let r = buildBasePermissionDescriptor(e),
     o = e.input.url,
     t = "";
   if (typeof o === "string")
@@ -601,7 +601,7 @@ function Xe(e) {
   return { ...r, hostname: t };
 }
 function Je(e) {
-  let r = Lv(e),
+  let r = buildBasePermissionDescriptor(e),
     o = askUserQuestionTool.inputSchema.safeParse(e.input),
     t = o.success ? (o.data.questions ?? []) : [],
     s = o.success ? o.data.metadata?.source : void 0;
@@ -612,7 +612,7 @@ function Eo(e) {
   return km(e.args, { scrub: "key", maxUnits: Rm });
 }
 function Ke(e) {
-  let r = Lv(e),
+  let r = buildBasePermissionDescriptor(e),
     o =
       typeof e.input.command === "string"
         ? km(e.input.command, { maxUnits: Rm })
@@ -632,7 +632,7 @@ function Ke(e) {
     _ =
       R !== void 0
         ? {
-            url: km(qPe(R), { maxUnits: Rm }),
+            url: km(normalizeUrlString(R), { maxUnits: Rm }),
             protocols: c?.map((b, p) => (p < MAX_SUBPROTOCOLS ? Oo(Tme(truncateToCodeUnits(b, BC))) : "")),
             protocolsWithheld: c?.slice(0, MAX_SUBPROTOCOLS).some((b) => {
               let p = truncateToCodeUnits(b, BC);
@@ -665,7 +665,7 @@ function ve(e, r) {
   let o = e[r];
   return typeof o === "string" ? o : void 0;
 }
-function qPe(e) {
+function normalizeUrlString(e) {
   try {
     return new URL(e).href;
   } catch {
@@ -673,7 +673,7 @@ function qPe(e) {
   }
 }
 function Ye(e) {
-  let r = Lv(e),
+  let r = buildBasePermissionDescriptor(e),
     o = typeof e.input.runId === "string" && typeof e.input.script !== "string",
     t =
       typeof e.input.script === "string"
@@ -704,7 +704,7 @@ function Ye(e) {
   };
 }
 function Ze(e) {
-  let r = Lv(e),
+  let r = buildBasePermissionDescriptor(e),
     o = typeof e.input.filePath === "string" ? e.input.filePath : "",
     t = typeof e.input.title === "string" ? e.input.title : "",
     s = Rve(t) ? "" : JG(t),
@@ -750,7 +750,7 @@ function Ze(e) {
   };
 }
 function eo(e) {
-  let r = Lv(e),
+  let r = buildBasePermissionDescriptor(e),
     o = e.permissionResult.metadata,
     t =
       o !== null &&
@@ -769,7 +769,7 @@ function eo(e) {
   return { ...r, skill: c, skillDescription: k };
 }
 function oo(e) {
-  let r = Lv(e),
+  let r = buildBasePermissionDescriptor(e),
     o =
       typeof e.input.command === "string" && e.input.command.length <= Rm
         ? ps(e.input.command)
@@ -781,7 +781,7 @@ function oo(e) {
   return { ...r, renderedToolUseMessage: t, command: o };
 }
 function to(e) {
-  let r = Lv(e),
+  let r = buildBasePermissionDescriptor(e),
     o = getPlanFilePath();
   notePlanFileForgotten(o);
   let t = getPlan() ?? "",
@@ -796,8 +796,8 @@ function to(e) {
         : void 0;
   return { ...r, plan: t, planFilePath: o, usage: k };
 }
-function k1t(e) {
-  let r = Lv(e),
+function buildBashPermissionDescriptor(e) {
+  let r = buildBasePermissionDescriptor(e),
     o =
       typeof e.input.command === "string" && e.input.command.length <= Rm
         ? ps(e.input.command)
@@ -815,7 +815,7 @@ function k1t(e) {
   };
 }
 var ne = 200000;
-function zdt(e) {
+function isFileTool(e) {
   switch (e) {
     case FileEditTool:
     case WriteTool:
@@ -828,7 +828,7 @@ function zdt(e) {
       return !1;
   }
 }
-function Z6n(e) {
+function isWriteFileTool(e) {
   switch (e) {
     case FileEditTool:
     case WriteTool:
@@ -838,7 +838,7 @@ function Z6n(e) {
       return !1;
   }
 }
-function Vdt(e, r) {
+function getToolFilePath(e, r) {
   try {
     let o = e;
     if (typeof o.getPath !== "function") return null;
@@ -1081,10 +1081,10 @@ async function Fo(e) {
     content: { kind: "tool-use-line" },
   };
 }
-async function wbe(e) {
-  let r = Lv(e),
+async function buildFilePermissionDescriptor(e) {
+  let r = buildBasePermissionDescriptor(e),
     o = e.tool;
-  if (!zdt(o))
+  if (!isFileTool(o))
     throw Error(
       `buildFilePermissionDescriptor called with non-file tool: ${e.tool.name}`,
     );
@@ -1131,7 +1131,7 @@ function no(e, r, o) {
   return { completion_type: "tool_use_single", language_name: resolveLanguageNameFromPath(o) };
 }
 async function xe(e) {
-  let r = Lv(e),
+  let r = buildBasePermissionDescriptor(e),
     o = e.sedInfo.filePath,
     t = ot(o),
     s = ((An(o) || An(t)) && !(Oi(o) || Oi(t))) || Dr(o) || Dr(t),
@@ -1218,7 +1218,7 @@ function ye(e) {
   return truncateWithCharCount(sanitizeForDisplay(e), Mo);
 }
 var Mo = 160;
-var Mqe = defineDialog({
+var MONITOR_PERMISSION_DIALOG = defineDialog({
   kind: "permission_monitor",
   payload: createLazyValue(() =>
     customSchema(
@@ -1236,7 +1236,7 @@ var Mqe = defineDialog({
   ),
   default: { behavior: "cancelled" },
 });
-var Nqe = defineDialog({
+var POWERSHELL_PERMISSION_DIALOG = defineDialog({
   kind: "permission_powershell",
   payload: createLazyValue(() =>
     customSchema(
@@ -1254,7 +1254,7 @@ var Nqe = defineDialog({
   ),
   default: { behavior: "cancelled" },
 });
-var Fqe = defineDialog({
+var SKILL_PERMISSION_DIALOG = defineDialog({
   kind: "permission_skill",
   payload: createLazyValue(() =>
     customSchema(
@@ -1272,7 +1272,7 @@ var Fqe = defineDialog({
   ),
   default: { behavior: "cancelled" },
 });
-var $qe = defineDialog({
+var WEB_FETCH_PERMISSION_DIALOG = defineDialog({
   kind: "permission_webfetch",
   payload: createLazyValue(() =>
     customSchema(
@@ -1844,15 +1844,15 @@ function J(e) {
   return e;
 }
 var Go = [
-  J({ matches: (e) => e === WebFetchTool, dialog: $qe, build: Xe }),
-  J({ matches: (e) => e.name.startsWith(CFC_TOOL_PREFIX), dialog: Oqe, build: Ge }),
-  J({ matches: (e) => e === askUserQuestionTool, dialog: Sbe, build: Je }),
-  J({ matches: (e) => e === enterPlanModeTool, dialog: Dqe, build: Lv }),
-  J({ matches: (e) => e === exitPlanModeTool, dialog: Lqe, build: to }),
-  J({ matches: (e) => e === SkillTool, dialog: Fqe, build: eo }),
+  J({ matches: (e) => e === WebFetchTool, dialog: WEB_FETCH_PERMISSION_DIALOG, build: Xe }),
+  J({ matches: (e) => e.name.startsWith(CFC_TOOL_PREFIX), dialog: BROWSER_PERMISSION_DIALOG, build: Ge }),
+  J({ matches: (e) => e === askUserQuestionTool, dialog: ASK_USER_QUESTION_PERMISSION_DIALOG, build: Je }),
+  J({ matches: (e) => e === enterPlanModeTool, dialog: ENTER_PLAN_MODE_PERMISSION_DIALOG, build: buildBasePermissionDescriptor }),
+  J({ matches: (e) => e === exitPlanModeTool, dialog: EXIT_PLAN_MODE_PERMISSION_DIALOG, build: to }),
+  J({ matches: (e) => e === SkillTool, dialog: SKILL_PERMISSION_DIALOG, build: eo }),
   ...[],
-  J({ matches: (e) => e.name === POWERSHELL_TOOL_NAME, dialog: Nqe, build: oo }),
-  J({ matches: (e) => e === Qo, dialog: Mqe, build: Ke }),
+  J({ matches: (e) => e.name === POWERSHELL_TOOL_NAME, dialog: POWERSHELL_PERMISSION_DIALOG, build: oo }),
+  J({ matches: (e) => e === Qo, dialog: MONITOR_PERMISSION_DIALOG, build: Ke }),
   ...(fo !== null && go !== null
     ? [J({ matches: (e) => e === fo, dialog: go, build: Ze })]
     : []),
@@ -1860,13 +1860,13 @@ var Go = [
     ? [J({ matches: (e) => e === De, dialog: ho, build: Ye })]
     : []),
   ...(yo !== null && Po !== null
-    ? [J({ matches: (e) => e === yo, dialog: Po, build: Lv })]
+    ? [J({ matches: (e) => e === yo, dialog: Po, build: buildBasePermissionDescriptor })]
     : []),
 ];
-function Rin(e) {
+function findPermissionDialogForTool(e) {
   return Go.find((r) => r.matches(e));
 }
-async function Bqe(e, r) {
+async function requestToolPermission(e, r) {
   let { ctx: o, description: t, result: s } = e,
     k = Se(o.toolUseContext),
     R =
@@ -1883,7 +1883,7 @@ async function Bqe(e, r) {
             (o.toolUseContext.session.outsideReadPrompt.closeFor(o.toolUseID),
               r(D));
           },
-    { resolve: c, isResolved: _, claim: d } = H1t(R),
+    { resolve: c, isResolved: _, claim: d } = createResolveOnceGuard(R),
     w = { resolve: c, isResolved: _, claim: d },
     b = "dark",
     p = {
@@ -1898,10 +1898,10 @@ async function Bqe(e, r) {
     Pe(e, w, {
       dialog: PERMISSION_PROMPT_DIALOG,
       buildDescriptor: ({ input: D, permissionResult: v }) =>
-        Lv({ ...p, input: D, permissionResult: v }),
+        buildBasePermissionDescriptor({ ...p, input: D, permissionResult: v }),
     });
   }
-  let A = Rin(o.tool);
+  let A = findPermissionDialogForTool(o.tool);
   if (A !== void 0) {
     let D = !!(
       e.bridgeCallbacks ||
@@ -1914,15 +1914,15 @@ async function Bqe(e, r) {
     });
     return;
   }
-  if (zdt(o.tool)) {
+  if (isFileTool(o.tool)) {
     let D = s.updatedInput ?? o.input,
-      v = Vdt(o.tool, D);
+      v = getToolFilePath(o.tool, D);
     if (v !== null) {
       let T = co(o.tool, D, o.toolUseContext),
         x = Date.now(),
         M,
         E = o.toolUseContext.forRemoteExecution === !0 || hasRequestedMachine(D),
-        V = await wbe({
+        V = await buildFilePermissionDescriptor({
           ...p,
           input: D,
           permissionResult: s,
@@ -1931,7 +1931,7 @@ async function Bqe(e, r) {
         });
       if (o.resolveIfAborted(w.resolve)) return;
       Pe(e, w, {
-        dialog: Nce,
+        dialog: FILE_PERMISSION_DIALOG,
         buildDescriptor: ({ input: j, permissionResult: N }) => {
           if (M?.isReprompted() !== !0) {
             if (T !== null)
@@ -1945,12 +1945,12 @@ async function Bqe(e, r) {
           }
           return (async function* () {
             try {
-              let I = Vdt(o.tool, j);
+              let I = getToolFilePath(o.tool, j);
               if (I === null)
                 throw Error(
                   "no file path could be derived from the hook-rewritten input",
                 );
-              yield await wbe({
+              yield await buildFilePermissionDescriptor({
                 ...p,
                 input: j,
                 permissionResult: N,
@@ -2014,7 +2014,7 @@ async function Bqe(e, r) {
       if (o.resolveIfAborted(w.resolve)) return;
       let E;
       Pe(e, w, {
-        dialog: Nce,
+        dialog: FILE_PERMISSION_DIALOG,
         buildDescriptor: ({ input: V, permissionResult: j }) => {
           if (E?.isReprompted() !== !0) return { ...M, permissionResult: j };
           return (async function* () {
@@ -2072,9 +2072,9 @@ async function Bqe(e, r) {
     }
     let x = getToolPermissionContext(o.toolUseContext);
     Pe(e, w, {
-      dialog: bbe,
+      dialog: BASH_PERMISSION_DIALOG,
       buildDescriptor: ({ input: M, permissionResult: E }) =>
-        k1t({
+        buildBashPermissionDescriptor({
           ...p,
           input: M,
           permissionResult: E,
@@ -2579,10 +2579,10 @@ ${p}`
   }
   return { result: void 0, summary: s };
 }
-function eWn(e) {
+function getIdleNotificationResult(e) {
   return wo(e).result;
 }
-function Tbe(e, r) {
+function tryBuildIdleNotification(e, r) {
   try {
     return wo(e, r);
   } catch (o) {
@@ -2628,32 +2628,32 @@ class Do {
     this.permissionContextSetter = null;
   }
 }
-var Kdt = new Gt(() => new Do());
+var permissionContextSetterStore = new Gt(() => new Do());
 export {
-  Pqe,
-  Sbe,
-  bbe,
-  Oqe,
-  Dqe,
-  Lqe,
-  Nce,
-  Lv,
-  qPe,
-  k1t,
-  zdt,
-  Z6n,
-  Vdt,
-  wbe,
-  Mqe,
-  Nqe,
-  Fqe,
-  $qe,
-  x1t,
-  H1t,
-  Uqe,
-  Rin,
-  Bqe,
-  eWn,
-  Tbe,
-  Kdt,
+  runCoordinatorAutomatedPermissionCheck,
+  ASK_USER_QUESTION_PERMISSION_DIALOG,
+  BASH_PERMISSION_DIALOG,
+  BROWSER_PERMISSION_DIALOG,
+  ENTER_PLAN_MODE_PERMISSION_DIALOG,
+  EXIT_PLAN_MODE_PERMISSION_DIALOG,
+  FILE_PERMISSION_DIALOG,
+  buildBasePermissionDescriptor,
+  normalizeUrlString,
+  buildBashPermissionDescriptor,
+  isFileTool,
+  isWriteFileTool,
+  getToolFilePath,
+  buildFilePermissionDescriptor,
+  MONITOR_PERMISSION_DIALOG,
+  POWERSHELL_PERMISSION_DIALOG,
+  SKILL_PERMISSION_DIALOG,
+  WEB_FETCH_PERMISSION_DIALOG,
+  shouldInterruptOnDenial,
+  createResolveOnceGuard,
+  createPermissionDecisionContext,
+  findPermissionDialogForTool,
+  requestToolPermission,
+  getIdleNotificationResult,
+  tryBuildIdleNotification,
+  permissionContextSetterStore,
 };
