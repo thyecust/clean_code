@@ -3099,7 +3099,7 @@ import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/ch
 import { Ku, cB, xA } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { $x } from "../../01-核心基础设施/共享小工具-未细化/chunk-9v3x5my2.js";
+import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
 import { va, getClientPlatform, PMn } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 import { gy } from "../../01-核心基础设施/共享小工具-未细化/chunk-1adkzsnc.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
@@ -237810,7 +237810,7 @@ var Gus = {
     requires: { ink: !0 },
   },
   zus = async () => {
-    let e = `${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}${$x()}`;
+    let e = `${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}${getBuildRefName()}`;
     return {
       type: "text",
       value: {

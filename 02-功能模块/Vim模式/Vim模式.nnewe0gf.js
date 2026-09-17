@@ -90,7 +90,7 @@ import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { s, T, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Xs, Wke, P1, iB, Lcr } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
-import { $x } from "../../01-核心基础设施/共享小工具-未细化/chunk-9v3x5my2.js";
+import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
 import { pe, p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 class Wo {
   #e = { credentialsPersisted: 0, loginCompleted: 0 };
@@ -4094,7 +4094,7 @@ function FZ(l, b) {
 function PHe() {
   let l =
       a.DEMO_VERSION ??
-      `${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}${$x()}`,
+      `${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}${getBuildRefName()}`,
     b = uOn(),
     x = a.DEMO_VERSION ? "/code/claude" : Ao(Q()),
     O = a.CLAUDE_CODE_HIDE_CWD

@@ -10,7 +10,7 @@
 import { M } from "./01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { lit as S } from "./01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { kHt, Wxe, Gxe, sdr, xHt } from "./01-核心基础设施/共享小工具-未细化/chunk-0cy1k3q5.js";
-import { $x } from "./01-核心基础设施/共享小工具-未细化/chunk-9v3x5my2.js";
+import { getBuildRefName } from "./01-核心基础设施/共享小工具-未细化/build-ref-name.js";
 import { HHt } from "./01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 function et() {
   try {
@@ -103,7 +103,7 @@ async function Lt() {
   ) {
     if (
       (console.log(
-        `${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION} (Claude Code)${$x()}`,
+        `${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION} (Claude Code)${getBuildRefName()}`,
       ),
       t.length === 2 &&
         {
